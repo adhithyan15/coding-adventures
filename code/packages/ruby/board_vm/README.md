@@ -64,6 +64,29 @@ session result for debugging.
 Tests and alternate runtimes can inject any transport object that responds to
 `transact(frame, timeout_ms:)` or `write(frame)`.
 
+Scripts can avoid hard-coded serial paths when the board is discoverable:
+
+```ruby
+CodingAdventures::BoardVM.esp32(flash: true, firmware_image: "board-vm-esp32.bin") do |board|
+  board.led.blink
+end
+```
+
+`connect` resolves the board/device through the Rust-owned discovery metadata.
+Connection options are also selected from the Rust target registry:
+
+```ruby
+CodingAdventures::BoardVM.uno_r4_wifi(via: :wifi, transport: wifi_endpoint) do |board|
+  board.session { |vm| vm.hello }
+end
+```
+
+`via:` accepts friendly names such as `:serial`, `"Wi-Fi"`, and `"BLE"`.
+`pick_connection: true` prints the board's available transports and lets a REPL
+user choose one. Until the host Wi-Fi/Bluetooth endpoint layers land, wireless
+choices require an injected transport object; they never silently fall back to a
+serial port.
+
 `time.now_ms` follows the same path and returns through Rust-decoded run-report
 values:
 
@@ -112,6 +135,7 @@ CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
     vm.hello
     vm.capabilities
     vm.run_command("blink 24")
+    vm.run_command("store-program 1 0 run-if-no-host")
     vm.run_command("gpio-read 13 pullup 24")
     vm.run_command("gpio-write 13 high 24")
     vm.run_command("time-now 24")
@@ -120,12 +144,44 @@ CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
 end
 ```
 
-`hello`, `capabilities`, `upload_blink`, `upload_gpio_read`, `upload_time_now`,
-`upload_time_sleep_ms`, `upload_gpio_write`, `run`, `stop`, `blink`,
-`gpio_read`, `gpio_write`, `time_now`, `time_sleep_ms`, and `run_command` return
-dispatch results with the Rust-produced frame, optional raw response bytes, and
-optional Rust-decoded response hash. The text command parser is Ruby sugar only;
-every dispatched frame still comes from `CodingAdventures::BoardVM::Native::Session`.
+`hello`, `capabilities`, `upload_blink`, `store_program`, `upload_gpio_read`,
+`upload_time_now`, `upload_time_sleep_ms`, `upload_gpio_write`,
+`upload_gpio_open`, `upload_gpio_handle_read`, `upload_gpio_handle_write`,
+`upload_gpio_handle_close`, `run`, `stop`, `blink`, `gpio_read`, `gpio_write`,
+`gpio_open`, `gpio_handle_read`, `gpio_handle_write`, `gpio_handle_close`,
+`time_now`, `time_sleep_ms`, and `run_command` return dispatch results with the
+Rust-produced frame, optional raw response bytes, and optional Rust-decoded
+response hash. The text command parser is Ruby sugar only; every dispatched
+frame still comes from
+`CodingAdventures::BoardVM::Native::Session`.
+
+`run` also accepts protocol-level options without moving protocol work into
+Ruby:
+
+```ruby
+board.session do |vm|
+  vm.run(program_id: 1, keep_handles: true, background: false, time_budget_ms: 250)
+end
+```
+
+Ruby turns friendly keywords into a flag mask; the RUN request payload and wire
+frame are still built by `board-vm-language-core`.
+
+For REPL-style GPIO sessions, Ruby can keep a VM stack handle open across
+commands:
+
+```ruby
+board.session do |vm|
+  vm.gpio_open(pin: 13, mode: :output)
+  vm.gpio_handle_write(value: :high)
+  vm.gpio_handle_read
+  vm.gpio_handle_close
+end
+```
+
+Those calls still upload and run Rust-built modules. The open module duplicates
+the handle so the host can receive it in the decoded run report while the VM
+keeps the original as the top stack value for later read/write/close helpers.
 
 Capability reports can be lifted into Ruby objects after Rust decodes the board
 response:
@@ -143,6 +199,20 @@ The descriptor exposes board/runtime ids, VM limits, store-program support, and
 capability groups such as `gpio`, `time`, and `program`. Capability flag names
 and booleans are supplied by the Rust language core, keeping Ruby out of the
 protocol-bit interpretation business.
+
+For lower-level language experiments, Ruby can pass raw bytecode while still
+leaving module framing to Rust:
+
+```ruby
+board.session do |vm|
+  module_bytes = vm.raw_module(code: "\x00".b, max_stack: 1)
+  vm.upload(program_id: 42, module_bytes: module_bytes)
+end
+```
+
+`raw_module` is still sugar over `CodingAdventures::BoardVM::Native::Session`;
+the BVM header, length encoding, validation, and upload frames are produced by
+`board-vm-language-core`.
 
 The DSL also exposes the current board-agnostic blink ejection path:
 

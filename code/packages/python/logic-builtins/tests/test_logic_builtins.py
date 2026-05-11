@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -36,6 +37,8 @@ from logic_builtins import (
     __version__,
     abolisho,
     acyclic_termo,
+    absolute_file_nameo,
+    access_fileo,
     add,
     all_differento,
     argo,
@@ -77,10 +80,18 @@ from logic_builtins import (
     current_streamo,
     cuto,
     cyclic_termo,
+    copy_fileo,
+    delete_directory_and_contentso,
+    delete_directoryo,
+    delete_fileo,
     difo,
+    directory_fileso,
+    directory_file_patho,
     div,
     dynamico,
     excludeo,
+    expand_file_nameo,
+    exists_directoryo,
     exists_fileo,
     failo,
     falseo,
@@ -105,6 +116,9 @@ from logic_builtins import (
     fd_sum_relationo,
     fd_sumo,
     findallo,
+    file_base_nameo,
+    file_directory_nameo,
+    file_name_extensiono,
     floordiv,
     flush_current_outputo,
     flush_outputo,
@@ -112,8 +126,12 @@ from logic_builtins import (
     forallo,
     functoro,
     geqo,
+    get_byteo,
     get_charo,
+    get_codeo,
+    get_current_byteo,
     get_current_charo,
+    get_current_codeo,
     groundo,
     gto,
     ifthenelseo,
@@ -126,6 +144,8 @@ from logic_builtins import (
     labelingo,
     leqo,
     lto,
+    make_directory_patho,
+    make_directoryo,
     maplisto,
     mod,
     mul,
@@ -147,19 +167,33 @@ from logic_builtins import (
     open_optionso,
     openo,
     partitiono,
+    peek_byteo,
+    peek_charo,
+    peek_codeo,
+    peek_current_byteo,
+    peek_current_charo,
+    peek_current_codeo,
     predicate_propertyo,
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    put_byteo,
+    put_charo,
+    put_codeo,
+    put_current_byteo,
+    put_current_charo,
+    put_current_codeo,
     read_current_line_to_stringo,
     read_current_stringo,
     read_file_to_codeso,
     read_file_to_stringo,
     read_line_to_stringo,
     read_stringo,
+    rename_fileo,
     repeato,
     retractallo,
     retracto,
+    same_fileo,
     same_termo,
     scanlo,
     seeko,
@@ -169,6 +203,7 @@ from logic_builtins import (
     set_stream_positiono,
     setofo,
     setup_call_cleanupo,
+    size_fileo,
     stream_propertyo,
     string_charso,
     string_codeso,
@@ -187,6 +222,7 @@ from logic_builtins import (
     termo_leqo,
     termo_lto,
     throwo,
+    time_fileo,
     trueo,
     unifiableo,
     unify_with_occurs_checko,
@@ -195,6 +231,7 @@ from logic_builtins import (
     varo,
     write_currento,
     writeo,
+    working_directoryo,
 )
 
 
@@ -244,6 +281,176 @@ class TestFileTextBuiltins:
             codes,
             read_file_to_codeso(string(str(source_path)), codes),
         ) == [logic_list([num(65), num(10)])]
+
+    def test_file_path_metadata_facade(self, tmp_path: Path) -> None:
+        directory = tmp_path / "nested"
+        directory.mkdir()
+        source_path = directory / "story.pl"
+        source_path.write_text("fact(a).\n", encoding="utf-8")
+        symlink_path = tmp_path / "story-link.pl"
+        try:
+            symlink_path.symlink_to(source_path)
+        except OSError:
+            symlink_path = source_path
+
+        directory_answer = var("Directory")
+        base_answer = var("Base")
+        joined_answer = var("Joined")
+        name_answer = var("Name")
+        extension_answer = var("Extension")
+        absolute_answer = var("Absolute")
+        size_answer = var("Size")
+        time_answer = var("Time")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                exists_directoryo(atom(str(directory))),
+                access_fileo(atom(str(source_path)), atom("read")),
+                absolute_file_nameo(atom(str(source_path)), absolute_answer),
+                file_directory_nameo(atom(str(source_path)), directory_answer),
+                file_base_nameo(atom(str(source_path)), base_answer),
+                directory_file_patho(directory_answer, base_answer, joined_answer),
+                file_name_extensiono(name_answer, extension_answer, base_answer),
+                same_fileo(atom(str(source_path)), atom(str(symlink_path))),
+                size_fileo(atom(str(source_path)), size_answer),
+                time_fileo(atom(str(source_path)), time_answer),
+                eq(
+                    result,
+                    term(
+                        "file_metadata",
+                        directory_answer,
+                        base_answer,
+                        joined_answer,
+                        name_answer,
+                        extension_answer,
+                        absolute_answer,
+                        size_answer,
+                        time_answer,
+                    ),
+                ),
+            ),
+        )
+
+        assert len(answers) == 1
+        [answer] = answers
+        assert isinstance(answer, Compound)
+        assert answer.functor.name == "file_metadata"
+        (
+            directory_term,
+            base_term,
+            joined_term,
+            name_term,
+            extension_term,
+            absolute_term,
+            size_term,
+            time_term,
+        ) = answer.args
+        assert directory_term == atom(str(directory))
+        assert base_term == atom("story.pl")
+        assert joined_term == atom(str(source_path))
+        assert name_term == atom("story")
+        assert extension_term == atom("pl")
+        assert absolute_term == atom(str(source_path.resolve(strict=False)))
+        assert size_term == num(len("fact(a).\n"))
+        assert isinstance(time_term, Number)
+        assert isinstance(time_term.value, int | float)
+
+    def test_file_operation_facade_mutates_bounded_paths(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        old_cwd = Path.cwd()
+
+        entries = var("Entries")
+        old_directory = var("OldDirectory")
+        cwd_entries = var("CwdEntries")
+        result = var("Result")
+
+        try:
+            answers = solve_all(
+                program(),
+                result,
+                conj(
+                    make_directoryo(atom(str(created_directory))),
+                    rename_fileo(atom(str(source_path)), atom(str(renamed_path))),
+                    directory_fileso(atom(str(tmp_path)), entries),
+                    delete_fileo(atom(str(renamed_path))),
+                    delete_directoryo(atom(str(created_directory))),
+                    working_directoryo(old_directory, atom(str(tmp_path))),
+                    directory_fileso(atom("."), cwd_entries),
+                    eq(
+                        result,
+                        term(
+                            "file_operations",
+                            entries,
+                            old_directory,
+                            cwd_entries,
+                        ),
+                    ),
+                ),
+            )
+        finally:
+            os.chdir(old_cwd)
+
+        assert answers == [
+            term(
+                "file_operations",
+                logic_list(["created", "final.txt"]),
+                atom(str(old_cwd)),
+                logic_list([]),
+            ),
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
+
+    def test_recursive_file_operation_facade_uses_bounded_paths(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        nested_directory = tmp_path / "nested" / "deep"
+        source_path = nested_directory / "alpha.txt"
+        copied_path = nested_directory / "alpha-copy.txt"
+
+        matches = var("Matches")
+        copied_contents = var("CopiedContents")
+        result = var("Result")
+        pattern = str(tmp_path / "**" / "*.txt")
+
+        assert solve_all(
+            program(),
+            atom("ok"),
+            conj(
+                make_directory_patho(atom(str(nested_directory))),
+                eq(atom("ok"), atom("ok")),
+            ),
+        ) == [atom("ok")]
+        source_path.write_text("alpha\n", encoding="utf-8")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                copy_fileo(atom(str(source_path)), atom(str(copied_path))),
+                expand_file_nameo(atom(pattern), matches),
+                read_file_to_stringo(atom(str(copied_path)), copied_contents),
+                delete_directory_and_contentso(atom(str(tmp_path / "nested"))),
+                eq(result, term("recursive_file_ops", matches, copied_contents)),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "recursive_file_ops",
+                logic_list([str(copied_path), str(source_path)]),
+                string("alpha\n"),
+            ),
+        ]
+        assert not nested_directory.exists()
 
     def test_file_stream_read_facade_tracks_cursor(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.txt"
@@ -403,6 +610,183 @@ class TestFileTextBuiltins:
             conj(closeo(opened_stream), eq("ok", "ok")),
         ) == [atom("ok")]
 
+    def test_file_stream_character_and_code_io(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "chars-input.txt"
+        output_path = tmp_path / "chars-output.txt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        peeked = var("Peeked")
+        first_code = var("FirstCode")
+        peeked_code = var("PeekedCode")
+        second_char = var("SecondChar")
+        newline_code = var("NewlineCode")
+        eof_code = var("EofCode")
+        current_peek = var("CurrentPeek")
+        current_first = var("CurrentFirst")
+        current_next_code = var("CurrentNextCode")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([term("alias", atom("char_input"))]),
+                ),
+                peek_charo(input_stream, peeked),
+                get_codeo(input_stream, first_code),
+                peek_codeo(input_stream, peeked_code),
+                get_charo(input_stream, second_char),
+                get_codeo(input_stream, newline_code),
+                get_codeo(input_stream, eof_code),
+                set_stream_positiono(atom("char_input"), num(0)),
+                set_inputo(input_stream),
+                peek_current_charo(current_peek),
+                get_current_charo(current_first),
+                peek_current_codeo(current_next_code),
+                get_current_codeo(current_next_code),
+                closeo(input_stream),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([term("alias", atom("char_output"))]),
+                ),
+                put_charo(output_stream, atom("h")),
+                put_codeo(output_stream, num(ord("i"))),
+                set_outputo(atom("char_output")),
+                put_current_charo(atom("!")),
+                put_current_codeo(num(10)),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "chars",
+                        peeked,
+                        first_code,
+                        peeked_code,
+                        second_char,
+                        newline_code,
+                        eof_code,
+                        current_peek,
+                        current_first,
+                        current_next_code,
+                    ),
+                ),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "chars",
+                atom("A"),
+                num(ord("A")),
+                num(ord("z")),
+                atom("z"),
+                num(10),
+                num(-1),
+                atom("A"),
+                atom("A"),
+                num(ord("z")),
+            ),
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
+    def test_binary_file_stream_byte_io(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "bytes-input.bin"
+        output_path = tmp_path / "bytes-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        peeked = var("Peeked")
+        first = var("First")
+        zero = var("Zero")
+        high = var("High")
+        eof = var("Eof")
+        current_peek = var("CurrentPeek")
+        current_first = var("CurrentFirst")
+        type_property = var("TypeProperty")
+        position = var("Position")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([
+                        term("alias", atom("byte_input")),
+                        term("type", atom("binary")),
+                    ]),
+                ),
+                stream_propertyo(input_stream, type_property),
+                eq(type_property, term("type", atom("binary"))),
+                peek_byteo(input_stream, peeked),
+                get_byteo(input_stream, first),
+                get_byteo(input_stream, zero),
+                stream_propertyo(input_stream, term("position", position)),
+                peek_byteo(input_stream, high),
+                get_byteo(input_stream, high),
+                get_byteo(input_stream, eof),
+                at_end_of_streamo(input_stream),
+                set_stream_positiono(atom("byte_input"), num(1)),
+                set_inputo(input_stream),
+                peek_current_byteo(current_peek),
+                get_current_byteo(current_first),
+                closeo(input_stream),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([
+                        term("alias", atom("byte_output")),
+                        term("type", atom("binary")),
+                    ]),
+                ),
+                put_byteo(output_stream, num(65)),
+                put_byteo(output_stream, num(0)),
+                set_outputo(atom("byte_output")),
+                put_current_byteo(num(255)),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "bytes",
+                        peeked,
+                        first,
+                        zero,
+                        position,
+                        high,
+                        eof,
+                        current_peek,
+                        current_first,
+                    ),
+                ),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "bytes",
+                num(65),
+                num(65),
+                num(0),
+                num(2),
+                num(255),
+                num(-1),
+                num(0),
+                num(0),
+            ),
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
+
     def test_current_stream_facade_reads_and_writes_selected_streams(
         self,
         tmp_path: Path,
@@ -484,6 +868,55 @@ class TestFileTextBuiltins:
         assert chunk_answer == string("bc")
         assert line_answer == string("def")
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
+    def test_standard_streams_are_available_by_default(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        current_input = var("CurrentInput")
+        current_output = var("CurrentOutput")
+        path = var("Path")
+        mode = var("Mode")
+        handle = var("Handle")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                set_inputo(atom("user_input")),
+                set_outputo(atom("user_output")),
+                current_inputo(current_input),
+                current_outputo(current_output),
+                at_end_of_current_streamo(),
+                write_currento(string("stdout")),
+                nl_currento(),
+                writeo(atom("user_error"), string("stderr")),
+                flush_current_outputo(),
+                flush_outputo(atom("user_error")),
+                stream_propertyo(atom("user_input"), term("alias", atom("user_input"))),
+                stream_propertyo(
+                    atom("user_output"),
+                    term("alias", atom("user_output")),
+                ),
+                current_streamo(path, mode, handle),
+                eq(path, atom("user_error")),
+                eq(mode, atom("append")),
+                eq(handle, atom("$stream_user_error")),
+                eq(result, term("standard_streams", current_input, current_output)),
+            ),
+        )
+
+        captured = capsys.readouterr()
+        assert answers == [
+            term(
+                "standard_streams",
+                atom("$stream_user_input"),
+                atom("$stream_user_output"),
+            ),
+        ]
+        assert captured.out == "stdout\n"
+        assert captured.err == "stderr"
 
 
 class TestAdvancedControlBuiltins:

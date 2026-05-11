@@ -58,16 +58,29 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt higher-order list predicates such as `maplist/2..5`, `convlist/3`,
   `include/3`, `exclude/3`, `partition/4`, `foldl/4..7`, and `scanl/4..7`
   into callable-term-backed builtin goals
-- adapt bounded UTF-8 file text and stream predicates such as `exists_file/1`,
+- adapt bounded file metadata, UTF-8 file text, and stream predicates such as
+  `exists_file/1`, `exists_directory/1`, `absolute_file_name/2`,
+  `access_file/2`, `file_directory_name/2`, `file_base_name/2`,
+  `directory_file_path/3`, `file_name_extension/3`, `same_file/2`,
+  `size_file/2`, `time_file/2`, `directory_files/2`, `make_directory/1`,
+  `delete_file/1`, `delete_directory/1`, `rename_file/2`,
+  `working_directory/2`, `expand_file_name/2`, `make_directory_path/1`,
+  `delete_directory_and_contents/1`, `copy_file/2`,
   `read_file_to_string/2`, `read_file_to_codes/2`, `open/3`, `close/1`,
   `read_string/3`, `read_line_to_string/2`, `get_char/2`,
   `at_end_of_stream/1`, `write/2`, `nl/1`, `open/4`, `current_stream/3`,
   `stream_property/2`, `flush_output/1`, `set_stream_position/2`, and
-  `seek/4`
+  `seek/4`, including standard `user_input`, `user_output`, and `user_error`
+  streams plus accepted `reposition`, `eof_action`, `buffer`, and
+  `close_on_abort` options
 - adapt selected current-stream predicates including `set_input/1`,
   `set_output/1`, `current_input/1`, `current_output/1`, `get_char/1`,
   `read_string/2`, `read_line_to_string/1`, `at_end_of_stream/0`,
   `write/1`, `nl/0`, and `flush_output/0`
+- adapt bounded character/code stream predicates including `get_code/1,2`,
+  `peek_char/1,2`, `peek_code/1,2`, `put_char/1,2`, and `put_code/1,2`
+- adapt bounded binary byte stream predicates including `open/4`
+  `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`, and `put_byte/1,2`
 - adapt parser-backed stream term I/O predicates including `read/1`,
   `read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and
   `write_term/3`

@@ -356,6 +356,12 @@ impl Tokenizer {
         self
     }
 
+    /// Seed the tokenizer return state used by character-reference continuations.
+    pub fn with_return_state(mut self, state: &str) -> Result<Self> {
+        self.set_return_state(state)?;
+        Ok(self)
+    }
+
     /// Store the tokenizer temporary buffer used by continuation states.
     pub fn set_temporary_buffer(&mut self, value: impl Into<String>) {
         self.temporary_buffer = value.into();
@@ -364,6 +370,20 @@ impl Tokenizer {
     /// Clear the tokenizer temporary buffer.
     pub fn clear_temporary_buffer(&mut self) {
         self.temporary_buffer.clear();
+    }
+
+    /// Store the tokenizer return state used by continuation states.
+    pub fn set_return_state(&mut self, state: &str) -> Result<()> {
+        if !self.machine.has_state(state) {
+            return Err(TokenizerError::Machine(format!("Unknown state '{state}'")));
+        }
+        self.return_state = Some(state.to_string());
+        Ok(())
+    }
+
+    /// Clear the tokenizer return state.
+    pub fn clear_return_state(&mut self) {
+        self.return_state = None;
     }
 
     /// Push one chunk of Unicode text into the tokenizer.
@@ -784,7 +804,15 @@ impl Tokenizer {
                     }
                 }
                 "recover_named_character_reference_to_attribute_value" => {
-                    if let Some(reference) =
+                    if is_ambiguous_attribute_named_character_reference(
+                        &self.temporary_buffer,
+                        current,
+                    ) {
+                        let temporary_buffer = std::mem::take(&mut self.temporary_buffer);
+                        self.attribute_mut(action)?
+                            .value
+                            .push_str(&temporary_buffer);
+                    } else if let Some(reference) =
                         consume_named_character_reference(&self.temporary_buffer, true)
                     {
                         let remainder = reference.remainder.to_string();
@@ -1671,6 +1699,20 @@ fn consume_named_character_reference(
     }
 
     None
+}
+
+fn is_ambiguous_attribute_named_character_reference(buffer: &str, current: Option<char>) -> bool {
+    let Some(current) = current else {
+        return false;
+    };
+    if !current.is_ascii_alphanumeric() && current != '=' {
+        return false;
+    }
+
+    let body = buffer.strip_prefix('&').unwrap_or(buffer);
+    !body.ends_with(';')
+        && is_legacy_named_character_reference_name(body)
+        && named_character_reference_name(body).is_some()
 }
 
 fn is_legacy_named_character_reference_name(name: &str) -> bool {

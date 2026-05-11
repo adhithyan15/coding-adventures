@@ -32,6 +32,20 @@ pub enum Node {
 impl Node {
     pub fn element(name: impl Into<String>, attributes: Vec<Attribute>) -> Self {
         Self::Element(Element {
+            namespace: None,
+            name: name.into(),
+            attributes,
+            children: Vec::new(),
+        })
+    }
+
+    pub fn namespaced_element(
+        namespace: impl Into<String>,
+        name: impl Into<String>,
+        attributes: Vec<Attribute>,
+    ) -> Self {
+        Self::Element(Element {
+            namespace: Some(namespace.into()),
             name: name.into(),
             attributes,
             children: Vec::new(),
@@ -73,6 +87,7 @@ pub struct DocumentType {
 /// An element node.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Element {
+    pub namespace: Option<String>,
     pub name: String,
     pub attributes: Vec<Attribute>,
     pub children: Vec<Node>,

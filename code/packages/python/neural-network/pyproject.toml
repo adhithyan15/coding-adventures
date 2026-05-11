@@ -10,6 +10,7 @@ requires-python = ">=3.9"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
+dependencies = ["coding-adventures-multi-directed-graph"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
@@ -19,4 +20,4 @@ packages = ["src/neural_network"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "../multi-directed-graph/src"]

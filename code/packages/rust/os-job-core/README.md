@@ -9,12 +9,19 @@ call site, this crate gives the repository one shared vocabulary:
 - `JobAction`
 - `JobTrigger`
 - `InstallPlan`
+- `InstalledJob`
+- `JobRunReceipt`
+- `JobStatus`
 - `JobBackend`
 - validation and repository-owned errors
 
 ## What this crate owns
 
 - Portable job data types
+- Installed-job, status, and run-receipt records for runtime APIs
+- Bounded read-side queries for installed jobs and runtime status records
+- Aggregate status summaries for D18C/D18D tools that need stable runtime
+  health counts
 - Validation for identifiers, triggers, retry policy, and environment entries
 - A deterministic install-plan shape that higher layers can inspect before
   mutating the OS

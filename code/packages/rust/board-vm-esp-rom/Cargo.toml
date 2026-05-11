@@ -1,0 +1,12 @@
+[package]
+name = "board-vm-esp-rom"
+version = "0.1.0"
+edition = "2021"
+description = "ESP ROM bootloader protocol helpers for Board VM targets"
+
+[dependencies]
+coding_adventures_md5 = { path = "../md5" }
+serialport = { version = "4", default-features = false }
+
+[lib]
+path = "src/lib.rs"

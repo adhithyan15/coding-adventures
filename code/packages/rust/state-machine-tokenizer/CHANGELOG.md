@@ -48,3 +48,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Added `DoctypeSeed` and current-DOCTYPE seeding helpers so wrapper packages
   can resume DOCTYPE continuation states while preserving partial name,
   identifier, and force-quirks data.
+- Added public return-state seeding helpers so wrapper packages can resume
+  continuation states such as HTML character-reference recovery.

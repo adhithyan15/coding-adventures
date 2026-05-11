@@ -36,10 +36,11 @@ This first slice intentionally starts small:
 - parser options for scripting-sensitive tokenizer handoff, including
   `noscript`
 - parser-approved initial tokenizer contexts for data-state documents and
-  RCDATA/RAWTEXT, PLAINTEXT, foreign-content CDATA, comment, script-state, and
-  intermediate tokenizer fragments exposed by the lexer, including resumable
-  end-tag-open, seeded end-tag continuation, and seeded comment continuation
-  contexts
+  RCDATA/RAWTEXT, PLAINTEXT, foreign-content CDATA, comment, DOCTYPE,
+  script-state, and intermediate tokenizer fragments exposed by the lexer,
+  including resumable end-tag-open, seeded end-tag continuation, seeded comment
+  continuation, seeded text/RCDATA character-reference continuation, and seeded
+  DOCTYPE continuation contexts
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, legacy paragraph/block boundaries, and
   raw-text block starts
@@ -55,6 +56,8 @@ This first slice intentionally starts small:
   boundaries in documents that rely on implied wrapper elements
 - initial line-feed stripping for `pre`, `listing`, and `textarea`
 - parser diagnostics for unmatched end tags
+- body-fragment parsing that returns DOM nodes without the implied
+  `html/head/body` shell while preserving lexer/parser diagnostics
 
 Future batches can layer the full WHATWG HTML tree-construction insertion modes
 onto the same DOM target. A separate adapter can project DOM into
@@ -65,7 +68,8 @@ onto the same DOM target. A separate adapter can project DOM into
 ```rust
 use coding_adventures_html_lexer::HtmlScriptingMode;
 use coding_adventures_html_parser::{
-    parse_html, parse_html_with_options, HtmlInitialTokenizerContext, HtmlParseOptions,
+    parse_html, parse_html_fragment, parse_html_with_options, HtmlInitialTokenizerContext,
+    HtmlParseOptions,
 };
 use dom_core::Node;
 
@@ -75,6 +79,9 @@ match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),
     other => panic!("expected element, got {other:?}"),
 }
+
+let fragment_nodes = parse_html_fragment("<p>One<p>Two").unwrap();
+assert_eq!(fragment_nodes.len(), 2);
 
 let no_script_document = parse_html_with_options(
     "<noscript><p>Fallback</p></noscript>",
@@ -107,6 +114,15 @@ let comment_fragment = parse_html_with_options(
     " body --><p>done</p>",
     HtmlParseOptions {
         initial_tokenizer_context: HtmlInitialTokenizerContext::Comment,
+        ..HtmlParseOptions::default()
+    },
+)
+.unwrap();
+
+let doctype_fragment = parse_html_with_options(
+    "ml><p>done</p>",
+    HtmlParseOptions {
+        initial_tokenizer_context: HtmlInitialTokenizerContext::DoctypeName,
         ..HtmlParseOptions::default()
     },
 )

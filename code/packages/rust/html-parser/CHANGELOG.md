@@ -45,6 +45,9 @@ documented in this file.
   continuation substates, carrying current comment data through comment body,
   pending dash/bang, nested-comment, abrupt-close, and bogus-comment recovery
   paths exposed by the lexer.
+- Parser-approved initial tokenizer contexts now include seeded text/RCDATA
+  character-reference continuation substates, carrying temporary buffers and
+  return states through named, numeric, decimal, and hexadecimal recovery paths.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
@@ -96,6 +99,8 @@ documented in this file.
 - Omitted-shell `</head>`, `</body>`, and `</html>` boundaries now recover
   without noisy unmatched-end diagnostics by closing the current lightweight
   body-content stack before subsequent text or element siblings are appended.
+- Body-fragment parsing APIs now return DOM nodes without the implied document
+  shell while preserving lexer/parser diagnostics and parser options.
 - Implied end-tag recovery is now scope-aware for paragraphs, list items,
   definition items, select options, headings, ruby annotations, and table
   caption/column/row/cell contexts, so omitted-end boundaries close correctly

@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
+import pytest
 from logic_engine import Compound, Number, atom, logic_list, num, string, term
 
 from prolog_vm_compiler import (
@@ -308,6 +310,138 @@ class TestPrologBytecodeVMStress:
             },
         ]
 
+    def test_file_metadata_predicates_match_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "nested" / "story.data"
+        source_path.parent.mkdir()
+        source_path.write_text("bytecode\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- exists_directory('{dir_atom}'),
+               access_file('{path_atom}', read),
+               absolute_file_name('{path_atom}', Absolute),
+               file_directory_name('{path_atom}', Directory),
+               file_base_name('{path_atom}', Base),
+               directory_file_path(Directory, Base, Joined),
+               file_name_extension(Name, Extension, Base),
+               same_file('{path_atom}', Joined),
+               size_file('{path_atom}', Size),
+               time_file('{path_atom}', Time).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _answer_dicts(answers) == _answer_dicts(
+            run_compiled_prolog_query_answers(compiled),
+        )
+        assert _project_answers(
+            answers,
+            "Absolute",
+            "Directory",
+            "Base",
+            "Joined",
+            "Name",
+            "Extension",
+            "Size",
+        ) == [
+            {
+                "Absolute": atom(str(source_path.resolve(strict=False))),
+                "Directory": atom(str(source_path.parent)),
+                "Base": atom("story.data"),
+                "Joined": atom(str(source_path)),
+                "Name": atom("story"),
+                "Extension": atom("data"),
+                "Size": num(len("bytecode\n")),
+            },
+        ]
+        assert isinstance(answers[0].as_dict()["Time"], Number)
+
+    def test_file_operation_predicates_run_through_bytecode_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        renamed_atom = str(renamed_path).replace("\\", "\\\\").replace("'", "\\'")
+        created_atom = str(created_directory).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        old_cwd = Path.cwd()
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- make_directory('{created_atom}'),
+               rename_file('{path_atom}', '{renamed_atom}'),
+               directory_files('{root_atom}', Entries),
+               delete_file('{renamed_atom}'),
+               delete_directory('{created_atom}'),
+               working_directory(OldDirectory, '{root_atom}'),
+               directory_files('.', CwdEntries).
+            """,
+        )
+
+        try:
+            answers = run_compiled_prolog_bytecode_query_answers(compiled)
+        finally:
+            os.chdir(old_cwd)
+
+        assert _answer_dicts(answers) == [
+            {
+                "Entries": logic_list(["created", "final.txt"]),
+                "OldDirectory": atom(str(old_cwd)),
+                "CwdEntries": logic_list([]),
+            },
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
+
+    def test_recursive_file_operation_predicates_run_through_bytecode_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "source.txt"
+        target_directory = tmp_path / "made" / "deep"
+        copied_path = target_directory / "source-copy.txt"
+        source_path.write_text("alpha\n", encoding="utf-8")
+        source_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        target_dir_atom = str(target_directory).replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        copied_atom = str(copied_path).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        pattern_atom = str(tmp_path / "**" / "*.txt").replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- make_directory_path('{target_dir_atom}'),
+               copy_file('{source_atom}', '{copied_atom}'),
+               expand_file_name('{pattern_atom}', Matches),
+               read_file_to_string('{copied_atom}', Contents),
+               delete_directory_and_contents('{root_atom}/made').
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _answer_dicts(answers) == [
+            {
+                "Matches": logic_list([str(copied_path), str(source_path)]),
+                "Contents": string("alpha\n"),
+            },
+        ]
+        assert source_path.exists()
+        assert not target_directory.exists()
+
     def test_file_stream_io_matches_structured_vm(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.pltxt"
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
@@ -352,10 +486,17 @@ class TestPrologBytecodeVMStress:
         compiled = compile_swi_prolog_source(
             f"""
             ?- open('{path_atom}', write, Out,
-                    [alias(bytecode_report), encoding(utf8), type(text)]),
+                    [alias(bytecode_report), encoding(utf8), type(text),
+                     reposition(true), eof_action(eof_code), buffer(line),
+                     close_on_abort(false)]),
                write(bytecode_report, "tea"),
                flush_output(bytecode_report),
                stream_property(bytecode_report, alias(Alias)),
+               stream_property(bytecode_report, encoding(Encoding)),
+               stream_property(bytecode_report, reposition(Reposition)),
+               stream_property(bytecode_report, eof_action(EofAction)),
+               stream_property(bytecode_report, buffer(Buffer)),
+               stream_property(bytecode_report, close_on_abort(CloseOnAbort)),
                current_stream(Path, Mode, Out),
                close(bytecode_report).
             """,
@@ -363,15 +504,28 @@ class TestPrologBytecodeVMStress:
 
         answers = run_compiled_prolog_bytecode_query_answers(compiled)
 
-        assert _project_answers(answers, "Alias", "Path", "Mode") == _project_answers(
-            run_compiled_prolog_query_answers(compiled),
+        names = (
             "Alias",
+            "Encoding",
+            "Reposition",
+            "EofAction",
+            "Buffer",
+            "CloseOnAbort",
             "Path",
             "Mode",
         )
-        assert _project_answers(answers, "Alias", "Path", "Mode") == [
+        assert _project_answers(answers, *names) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            *names,
+        )
+        assert _project_answers(answers, *names) == [
             {
                 "Alias": atom("bytecode_report"),
+                "Encoding": atom("utf8"),
+                "Reposition": atom("true"),
+                "EofAction": atom("eof_code"),
+                "Buffer": atom("line"),
+                "CloseOnAbort": atom("false"),
                 "Path": atom(str(source_path)),
                 "Mode": atom("write"),
             },
@@ -437,6 +591,171 @@ class TestPrologBytecodeVMStress:
             },
         ]
 
+    def test_stream_character_code_io_matches_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "bytecode-chars-input.pltxt"
+        output_path = tmp_path / "bytecode-chars-output.pltxt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In, [alias(bytecode_char_input)]),
+               peek_char(In, Peeked),
+               get_code(In, FirstCode),
+               peek_code(In, PeekedCode),
+               get_char(In, SecondChar),
+               get_code(In, NewlineCode),
+               get_code(In, EofCode),
+               set_stream_position(bytecode_char_input, 0),
+               set_input(In),
+               get_char(CurrentFirst),
+               peek_code(CurrentNextCode),
+               get_code(CurrentNextCode),
+               close(In),
+               open('{output_atom}', write, Out, [alias(bytecode_char_output)]),
+               put_char(Out, h),
+               put_code(Out, 105),
+               set_output(bytecode_char_output),
+               put_char('!'),
+               put_code(10),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "FirstCode",
+            "PeekedCode",
+            "SecondChar",
+            "NewlineCode",
+            "EofCode",
+            "CurrentFirst",
+            "CurrentNextCode",
+        ) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "Peeked",
+            "FirstCode",
+            "PeekedCode",
+            "SecondChar",
+            "NewlineCode",
+            "EofCode",
+            "CurrentFirst",
+            "CurrentNextCode",
+        )
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "FirstCode",
+            "PeekedCode",
+            "SecondChar",
+            "NewlineCode",
+            "EofCode",
+            "CurrentFirst",
+            "CurrentNextCode",
+        ) == [
+            {
+                "Peeked": atom("A"),
+                "FirstCode": num(ord("A")),
+                "PeekedCode": num(ord("z")),
+                "SecondChar": atom("z"),
+                "NewlineCode": num(10),
+                "EofCode": num(-1),
+                "CurrentFirst": atom("A"),
+                "CurrentNextCode": num(ord("z")),
+            },
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
+    def test_binary_byte_stream_io_matches_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "bytecode-bytes-input.bin"
+        output_path = tmp_path / "bytecode-bytes-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In,
+                    [alias(bytecode_byte_input), type(binary)]),
+               stream_property(In, type(binary)),
+               peek_byte(In, Peeked),
+               get_byte(In, First),
+               get_byte(In, Zero),
+               stream_property(In, position(Position)),
+               peek_byte(In, High),
+               get_byte(In, High),
+               get_byte(In, Eof),
+               at_end_of_stream(In),
+               set_stream_position(bytecode_byte_input, 1),
+               set_input(In),
+               peek_byte(CurrentPeek),
+               get_byte(CurrentFirst),
+               close(In),
+               open('{output_atom}', write, Out,
+                    [alias(bytecode_byte_output), type(binary)]),
+               put_byte(Out, 65),
+               put_byte(Out, 0),
+               set_output(bytecode_byte_output),
+               put_byte(255),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "First",
+            "Zero",
+            "Position",
+            "High",
+            "Eof",
+            "CurrentPeek",
+            "CurrentFirst",
+        ) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "Peeked",
+            "First",
+            "Zero",
+            "Position",
+            "High",
+            "Eof",
+            "CurrentPeek",
+            "CurrentFirst",
+        )
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "First",
+            "Zero",
+            "Position",
+            "High",
+            "Eof",
+            "CurrentPeek",
+            "CurrentFirst",
+        ) == [
+            {
+                "Peeked": num(65),
+                "First": num(65),
+                "Zero": num(0),
+                "Position": num(2),
+                "High": num(255),
+                "Eof": num(-1),
+                "CurrentPeek": num(0),
+                "CurrentFirst": num(0),
+            },
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
+
     def test_current_stream_facade_matches_structured_vm(
         self,
         tmp_path: Path,
@@ -495,6 +814,45 @@ class TestPrologBytecodeVMStress:
             "Line": string("def"),
         }
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
+    def test_standard_streams_match_structured_vm(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- set_input(user_input),
+               set_output(user_output),
+               current_input(CurrentIn),
+               current_output(CurrentOut),
+               at_end_of_stream,
+               write("stdout"),
+               nl,
+               write(user_error, "stderr"),
+               flush_output,
+               flush_output(user_error),
+               stream_property(user_input, alias(user_input)),
+               stream_property(user_output, alias(user_output)),
+               current_stream(user_error, append, '$stream_user_error').
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+        bytecode_capture = capsys.readouterr()
+        structured_answers = run_compiled_prolog_query_answers(compiled)
+        structured_capture = capsys.readouterr()
+
+        assert _project_answers(answers, "CurrentIn", "CurrentOut") == (
+            _project_answers(structured_answers, "CurrentIn", "CurrentOut")
+        )
+        assert _project_answers(answers, "CurrentIn", "CurrentOut") == [
+            {
+                "CurrentIn": atom("$stream_user_input"),
+                "CurrentOut": atom("$stream_user_output"),
+            },
+        ]
+        assert bytecode_capture.out == structured_capture.out == "stdout\n"
+        assert bytecode_capture.err == structured_capture.err == "stderr"
 
     def test_stream_term_io_matches_structured_vm(self, tmp_path: Path) -> None:
         input_path = tmp_path / "bytecode-terms.pltxt"

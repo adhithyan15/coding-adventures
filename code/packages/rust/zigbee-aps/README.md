@@ -12,6 +12,7 @@ boundary:
 - cluster/profile ids
 - cluster/profile classification helpers
 - binding table records for device and group destinations
+- body-free frame and binding-table summaries for read-side supervision
 - APS counters
 - payload preservation
 

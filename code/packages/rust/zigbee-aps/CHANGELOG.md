@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `ApsFrameSummary` for payload-free APS routing, delivery, profile, and
+  cluster read models.
+- `BindingTableSummary` for counting group/device bindings, cluster families,
+  and unique APS binding endpoints.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added

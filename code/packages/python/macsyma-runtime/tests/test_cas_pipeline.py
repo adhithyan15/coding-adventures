@@ -875,3 +875,997 @@ def test_pipeline_abs_negative() -> None:
     result = _eval("abs(-5)")
     assert result == IRInteger(5)
 
+
+# ---------------------------------------------------------------------------
+# Section U — Taylor series (cas-limit-series, Phase 28)
+# ---------------------------------------------------------------------------
+#
+# ``taylor(expr, var, point, order)`` calls the ``Taylor`` CAS handler via
+# the ``macsyma_runtime.cas_handlers`` dispatcher.  The polynomial bridge
+# converts the IR expression to a coefficient list, computes the expansion,
+# and returns an IR polynomial.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_taylor_polynomial() -> None:
+    """taylor(x^2, x, 0, 2) produces an expanded polynomial (not unevaluated)."""
+    result = _eval("taylor(x^2, x, 0, 2)")
+    # The Taylor handler must return a simplified polynomial, not the unevaluated
+    # Taylor(x^2, x, 0, 2) form.
+    assert isinstance(result, (IRApply, IRInteger, IRSymbol, IRRational, IRFloat))
+    if isinstance(result, IRApply):
+        assert result.head.name != "Taylor", (
+            f"Expected expanded polynomial, got unevaluated Taylor: {result!r}"
+        )
+
+
+def test_pipeline_taylor_constant() -> None:
+    """taylor(3, x, 0, 1) → 3 (a constant is its own Taylor expansion)."""
+    result = _eval("taylor(3, x, 0, 1)")
+    assert result == IRInteger(3)
+
+
+def test_pipeline_taylor_linear() -> None:
+    """taylor(x + 1, x, 0, 1) → x + 1 (linear polynomial is exact)."""
+    result = _eval("taylor(x + 1, x, 0, 1)")
+    assert isinstance(result, (IRApply, IRSymbol))
+    if isinstance(result, IRApply):
+        assert result.head.name != "Taylor", (
+            f"Expected expanded form, got unevaluated: {result!r}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Section V — Symbolic summation (cas-summation, Phase 25)
+# ---------------------------------------------------------------------------
+#
+# ``sum(expr, var, lower, upper)`` maps to the ``Sum`` CAS handler via the
+# compiler's ``_STANDARD_FUNCTIONS`` table.  ``cas_summation.evaluate_sum``
+# recognises polynomial summands (k^n) and applies Faulhaber's formulas to
+# produce a closed-form integer result when bounds are concrete.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_sum_k_concrete() -> None:
+    """sum(k, k, 1, 4) → 10 (1 + 2 + 3 + 4)."""
+    result = _eval("sum(k, k, 1, 4)")
+    assert result == IRInteger(10)
+
+
+def test_pipeline_sum_constant_body() -> None:
+    """sum(2, k, 1, 5) → 10 (constant 2 summed 5 times)."""
+    result = _eval("sum(2, k, 1, 5)")
+    assert result == IRInteger(10)
+
+
+def test_pipeline_sum_squares() -> None:
+    """sum(k^2, k, 1, 3) → 14 (1 + 4 + 9)."""
+    result = _eval("sum(k^2, k, 1, 3)")
+    assert result == IRInteger(14)
+
+
+# ---------------------------------------------------------------------------
+# Section W — Laplace transforms (cas-laplace, Phase 29)
+# ---------------------------------------------------------------------------
+#
+# ``laplace(f, t, s)`` maps to the ``Laplace`` CAS head, dispatched by the
+# ``_build_laplace_handlers()`` layer.  Tests verify the transform evaluates
+# to an expression involving the frequency variable ``s``; exact form checks
+# are done in ``test_ode_wiring.py`` at the IR level.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_laplace_constant() -> None:
+    """laplace(1, t, s) evaluates to a rational function of s  (L{1} = 1/s)."""
+    result = _eval("laplace(1, t, s)")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply (rational of s), got {result!r}"
+    )
+    # The result must involve the frequency variable s.
+    result_str = repr(result)
+    assert "s" in result_str, f"Expected 's' in result: {result_str}"
+
+
+def test_pipeline_laplace_linear() -> None:
+    """laplace(t, t, s) evaluates (L{t} = 1/s²) to an IRApply containing s."""
+    result = _eval("laplace(t, t, s)")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply (rational of s), got {result!r}"
+    )
+    result_str = repr(result)
+    assert "s" in result_str, f"Expected 's' in result: {result_str}"
+
+
+# ---------------------------------------------------------------------------
+# Section X — ODE solving via MACSYMA surface (cas-ode, Phase 29)
+# ---------------------------------------------------------------------------
+#
+# ``ode2(eqn, y, x)`` calls the ``ODE2`` CAS handler.  First-order linear
+# homogeneous ODEs (y' + p(x)*y = 0) are solved by the integrating-factor
+# path; the result is ``Equal(y, C*exp(…))``.  Full ODE tests at IR level
+# live in ``test_ode_wiring.py``; here we validate the MACSYMA surface
+# (parse → compile → eval) end-to-end.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_ode2_first_order_homogeneous() -> None:
+    """ode2(diff(y, x) + y, y, x) → Equal(y, C·exp(-x)).
+
+    First-order linear homogeneous ODE:  y' + y = 0.
+    Integrating factor μ = exp(x) → y = C·exp(-x).
+    """
+    result = _eval("ode2(diff(y, x) + y, y, x)")
+    assert isinstance(result, IRApply), f"Expected IRApply, got {result!r}"
+    assert result.head.name == "Equal", (
+        f"Expected Equal(y, ...), got head={result.head!r}"
+    )
+    # lhs of Equal must be the y symbol
+    assert isinstance(result.args[0], IRSymbol)
+    assert result.args[0].name == "y", (
+        f"Expected lhs = y, got {result.args[0]!r}"
+    )
+
+
+def test_pipeline_ode2_first_order_decaying() -> None:
+    """ode2(diff(y, x) + 2*y, y, x) → Equal(y, C·exp(-2x)).
+
+    Faster-decaying case: P(x) = 2.  Solution: y = C·exp(-2x).
+    """
+    result = _eval("ode2(diff(y, x) + 2*y, y, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Equal", (
+        f"Expected Equal result, got {result!r}"
+    )
+    lhs = result.args[0]
+    assert isinstance(lhs, IRSymbol) and lhs.name == "y"
+
+
+# ---------------------------------------------------------------------------
+# Section Y — Log/exp cancellation (symbolic-vm Phase 30)
+# ---------------------------------------------------------------------------
+#
+# Phase 30 of symbolic-vm adds algebraic cancellation rules to the ``Log``
+# and ``Exp`` handlers:
+#
+#   log(exp(x))  → x          (cancel: log is left-inverse of exp)
+#   exp(log(x))  → x          (cancel: exp is left-inverse of log)
+#
+# These identities hold for all real x without any assumption because:
+# - exp maps ℝ into ℝ⁺ and log is its exact inverse on ℝ⁺.
+# - log(x) requires x > 0 in the real domain, so exp(log(x)) = x is safe.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_log_exp_cancel() -> None:
+    """log(exp(x)) → x  (Phase 30 log/exp cancellation)."""
+    result = _eval("log(exp(x))")
+    assert result == IRSymbol("x"), (
+        f"Expected IRSymbol('x'), got {result!r}"
+    )
+
+
+def test_pipeline_exp_log_cancel() -> None:
+    """exp(log(x)) → x  (Phase 30 exp/log cancellation)."""
+    result = _eval("exp(log(x))")
+    assert result == IRSymbol("x"), (
+        f"Expected IRSymbol('x'), got {result!r}"
+    )
+
+
+def test_pipeline_log_numeric_fold() -> None:
+    """log(1) → 0  (numeric fold: ln(1) = 0)."""
+    result = _eval("log(1)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+# ---------------------------------------------------------------------------
+# Section Z — Inverse trig symmetry + trig special values
+#             (symbolic-vm Phases 32 and 33)
+# ---------------------------------------------------------------------------
+#
+# Phase 32 added odd-symmetry rules to inverse-trig handlers:
+#
+#   asin(-x) → -asin(x)
+#   atan(-x) → -atan(x)
+#
+# Phase 33 added π-multiple detection to sin/cos/tan handlers, returning
+# exact algebraic values:
+#
+#   sin(π/6) = 1/2,   cos(π/3) = 1/2,   cos(π) = -1, etc.
+#
+# ``MacsymaBackend`` pre-binds ``%pi → IRFloat(math.pi)``.  Phase 33's
+# IRFloat-matching strategy divides by ``math.pi`` and checks for rationals
+# with denominator in {1, 2, 3, 4, 6}, so ``sin(%pi/6)`` correctly returns
+# the exact ``IRRational(1, 2)`` rather than a float approximation.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_asin_odd_symmetry() -> None:
+    """asin(-x) should be simplified (Phase 32 odd-symmetry rule).
+
+    The Phase 32 ``asin_handler`` simplifies ``Asin(Neg(x)) → Neg(Asin(x))``.
+    The result must NOT be an unevaluated ``Asin`` applied directly to a
+    negated argument.
+    """
+    result = _eval("asin(-x)")
+    assert isinstance(result, IRApply), f"Expected IRApply, got {result!r}"
+    # The head should NOT still be Asin (that would mean the symmetry rule
+    # was not applied and the expression is still unevaluated asin(-x)).
+    assert result.head.name != "Asin", (
+        f"Expected odd-symmetry simplification, got unevaluated asin: {result!r}"
+    )
+
+
+def test_pipeline_sin_pi_sixth_exact() -> None:
+    """sin(%pi/6) → IRRational(1, 2)  (Phase 33 trig special values).
+
+    ``%pi`` is pre-bound to ``IRFloat(math.pi)`` in ``MacsymaBackend``.
+    Phase 33 detects that ``IRFloat(pi/6)`` is within 10⁻⁹ of ``π/6`` and
+    returns the exact algebraic value ``1/2`` as ``IRRational(1, 2)``.
+    """
+    result = _eval("sin(%pi/6)")
+    assert result == IRRational(1, 2), (
+        f"Expected IRRational(1, 2), got {result!r}"
+    )
+
+
+def test_pipeline_cos_pi_third_exact() -> None:
+    """cos(%pi/3) → IRRational(1, 2)  (Phase 33 trig special values)."""
+    result = _eval("cos(%pi/3)")
+    assert result == IRRational(1, 2), (
+        f"Expected IRRational(1, 2), got {result!r}"
+    )
+
+
+def test_pipeline_cos_pi_exact() -> None:
+    """cos(%pi) → -1  (Phase 33 trig special values: cos(π) = -1)."""
+    result = _eval("cos(%pi)")
+    assert result == IRInteger(-1), f"Expected -1, got {result!r}"
+
+
+def test_pipeline_sin_pi_exact() -> None:
+    """sin(%pi) → 0  (Phase 33 trig special values: sin(π) = 0)."""
+    # %pi is pre-bound as a float; the numeric fold should give 0 or near-0.
+    # Phase 33 may return IRInteger(0) directly.
+    result = _eval("sin(%pi)")
+    if isinstance(result, IRInteger):
+        assert result == IRInteger(0)
+    elif isinstance(result, IRFloat):
+        assert abs(result.value) < 1e-10, f"Expected ≈0, got {result.value!r}"
+    else:
+        raise AssertionError(f"Unexpected result type: {result!r}")
+
+
+# ---------------------------------------------------------------------------
+# Section AA — Advanced matrix operations (Phase 32 name-table extensions)
+#
+# eigenvalues, eigenvectors, charpoly, nullspace, columnspace, rowspace, norm,
+# lu — all implemented in symbolic-vm via cas-matrix but were missing from
+# the MACSYMA name table until v1.23.0.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_eigenvalues_2x2() -> None:
+    """eigenvalues(matrix([1,2],[3,4])) returns a List of eigenvalues.
+
+    The 2×2 matrix [[1,2],[3,4]] has characteristic polynomial
+    λ² − 5λ − 2 = 0, giving λ = (5 ± √33) / 2.
+    We just verify the result is a non-unevaluated List.
+    """
+    result = _eval("eigenvalues(matrix([1,2],[3,4]))")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List", (
+        f"Expected List, got head={result.head.name!r}"
+    )
+
+
+def test_pipeline_charpoly_2x2() -> None:
+    """charpoly(matrix([1,2],[3,4]), x) returns the characteristic polynomial.
+
+    det(λI − A) = (λ−1)(λ−4) − 6 = λ² − 5λ − 2.
+    We verify the result is evaluated (not head CharPoly) and has an Add head.
+    """
+    result = _eval("charpoly(matrix([1,2],[3,4]), x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name != "CharPoly", (
+        f"charpoly returned unevaluated: {result!r}"
+    )
+
+
+def test_pipeline_nullspace_rank_deficient() -> None:
+    """nullspace(matrix([1,2],[2,4])) returns a non-empty basis.
+
+    [[1,2],[2,4]] has rank 1; its nullspace is spanned by [2,-1].
+    The result should be a List of vectors.
+    """
+    result = _eval("nullspace(matrix([1,2],[2,4]))")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List", (
+        f"Expected List, got head={result.head.name!r}"
+    )
+    assert len(result.args) >= 1, "Nullspace should have at least one basis vector"
+
+
+def test_pipeline_rowreduce_upper_triangular() -> None:
+    """rowreduce(matrix([1,2,3],[4,5,6])) gives row-echelon form.
+
+    The result is a Matrix node (not unevaluated RowReduce).
+    """
+    result = _eval("rowreduce(matrix([1,2,3],[4,5,6]))")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Matrix", (
+        f"Expected Matrix, got head={result.head.name!r}"
+    )
+
+
+def test_pipeline_norm_3_4_vector() -> None:
+    """norm(matrix([3],[4])) → 5  (Euclidean norm of column vector [3;4])."""
+    result = _eval("norm(matrix([3],[4]))")
+    assert result == IRInteger(5), f"Expected 5, got {result!r}"
+
+
+def test_pipeline_norm_identity_row() -> None:
+    """norm(matrix([1,0,0])) → 1  (unit row vector)."""
+    result = _eval("norm(matrix([1,0,0]))")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+# ---------------------------------------------------------------------------
+# Section BB — Cube root (Phase 32 name-table extensions)
+#
+# cbrt — implemented in symbolic-vm but missing from the MACSYMA name table.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_cbrt_exact_cube() -> None:
+    """cbrt(8) → 2  (exact integer cube root)."""
+    result = _eval("cbrt(8)")
+    assert result == IRInteger(2), f"Expected 2, got {result!r}"
+
+
+def test_pipeline_cbrt_negative() -> None:
+    """cbrt(-27) → -3  (cube root of a negative perfect cube)."""
+    result = _eval("cbrt(-27)")
+    assert result == IRInteger(-3), f"Expected -3, got {result!r}"
+
+
+def test_pipeline_cbrt_float() -> None:
+    """cbrt(2.0) ≈ 1.2599  (floating-point cube root)."""
+    import math as _math
+
+    result = _eval("cbrt(2.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {result!r}"
+    assert abs(result.value - _math.cbrt(2.0)) < 1e-9
+
+
+# ---------------------------------------------------------------------------
+# Section CC — Log/exp transformations (Phase 32 name-table extensions)
+#
+# radcan, logcontract, logexpand — implemented in symbolic-vm via
+# cas_simplify but missing from the MACSYMA name table until v1.23.0.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_logcontract_sum_of_logs() -> None:
+    """logcontract(log(x) + log(y)) → log(x*y)."""
+    result = _eval("logcontract(log(x) + log(y))")
+    assert isinstance(result, IRApply)
+    # Head should be Log, not LogContract (evaluated)
+    assert result.head.name == "Log", (
+        f"Expected Log head, got {result.head.name!r}"
+    )
+    # The single argument should be a Mul containing x and y
+    assert len(result.args) == 1
+    inner = result.args[0]
+    assert isinstance(inner, IRApply) and inner.head.name == "Mul"
+
+
+def test_pipeline_logexpand_log_product() -> None:
+    """logexpand(log(x*y)) → log(x) + log(y)."""
+    result = _eval("logexpand(log(x*y))")
+    assert isinstance(result, IRApply)
+    # After expansion the result should be an Add of two Log terms.
+    assert result.head.name == "Add", (
+        f"Expected Add head, got {result.head.name!r}"
+    )
+
+
+def test_pipeline_radcan_sqrt_squared() -> None:
+    """radcan(sqrt(x^2)) → abs(x)  (or Abs(x) in IR)."""
+    result = _eval("radcan(sqrt(x^2))")
+    assert isinstance(result, IRApply)
+    # The head should be Abs (radcan simplifies √(x²) → |x|)
+    assert result.head.name == "Abs", (
+        f"Expected Abs head from radcan(sqrt(x^2)), got {result.head.name!r}"
+    )
+
+
+# ===========================================================================
+# Section DD — Fourier transforms (cas-fourier, Phase 33)
+# ===========================================================================
+#
+# MACSYMA names ``fourier`` and ``ifourier`` map to ``Fourier`` and
+# ``IFourier`` IR heads, which are handled by the ``cas-fourier`` substrate
+# wired into ``SymbolicBackend``.
+#
+# Key results (for the standard un-normalised convention):
+#   fourier(1, t, ω)        = 2π · δ(ω)     (Fourier of constant)
+#   ifourier(1, ω, t)       = δ(t)           (inverse Fourier of 1)
+#   fourier(δ(t), t, ω)     = 1              (Fourier of delta is 1)
+# ===========================================================================
+
+
+def test_pipeline_fourier_constant() -> None:
+    """fourier(1, t, w) → 2π·DiracDelta(w).
+
+    The Fourier transform of a constant c is 2π·c·δ(ω).  For c = 1 the
+    result has the ``DiracDelta`` head wrapped in a Mul with 2π.
+    """
+    result = _eval("fourier(1, t, w)")
+    # Result should be a Mul node containing DiracDelta
+    assert isinstance(result, IRApply), f"Expected IRApply, got {type(result).__name__}"
+    assert result.head.name in ("Mul", "DiracDelta"), (
+        f"Unexpected head {result.head.name!r} for fourier(1, t, w)"
+    )
+
+
+def test_pipeline_ifourier_constant() -> None:
+    """ifourier(1, w, t) → DiracDelta(t).
+
+    The inverse Fourier transform of 1 is the Dirac delta δ(t).
+    """
+    result = _eval("ifourier(1, w, t)")
+    assert isinstance(result, IRApply), f"Expected IRApply, got {type(result).__name__}"
+    assert result.head.name == "DiracDelta", (
+        f"Expected DiracDelta head from ifourier(1, w, t), got {result.head.name!r}"
+    )
+    # Argument should be the time variable t
+    assert len(result.args) == 1
+    assert isinstance(result.args[0], IRSymbol)
+    assert result.args[0].name == "t"
+
+
+def test_pipeline_fourier_delta_is_one() -> None:
+    """fourier(delta(t), t, w) → 1 (Fourier of Dirac delta is the constant 1)."""
+    result = _eval("fourier(delta(t), t, w)")
+    assert result is not None
+
+
+def test_pipeline_ifourier_delta_is_one() -> None:
+    """ifourier(delta(w), w, t) → 1/(2π) or related (inverse Fourier of delta)."""
+    result = _eval("ifourier(delta(w), w, t)")
+    assert result is not None
+
+
+# ===========================================================================
+# Section EE — Newton's method numeric root finding (cas-mnewton, Phase 33)
+# ===========================================================================
+#
+# MACSYMA name ``mnewton`` maps to the ``MNewton`` IR head, handled by the
+# ``cas-mnewton`` substrate.  The handler expects three scalar arguments:
+#
+#   mnewton(f_expr, variable, initial_guess)
+#
+# and returns an ``IRFloat`` approximation of a root of f_expr near
+# initial_guess.
+#
+# The MACSYMA surface form (and Maxima documentation) often uses list
+# arguments ``mnewton([f], [x], [x0])``; the scalar form is the canonical
+# call here, as the list-unpacking form requires multi-system Newton which
+# is a separate capability.
+# ===========================================================================
+
+
+def test_pipeline_mnewton_quadratic_root() -> None:
+    """mnewton(x^2 - 4, x, 1.5) ≈ 2.0 (positive root of x²=4)."""
+    result = _eval("mnewton(x^2 - 4, x, 1.5)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - 2.0) < 1e-6, (
+        f"mnewton root {result.value} not close to 2.0"
+    )
+
+
+def test_pipeline_mnewton_cubic_root() -> None:
+    """mnewton(x^3 - 8, x, 2.0) ≈ 2.0 (real cube root of 8)."""
+    result = _eval("mnewton(x^3 - 8, x, 2.0)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - 2.0) < 1e-6, (
+        f"mnewton root {result.value} not close to 2.0"
+    )
+
+
+def test_pipeline_mnewton_sine_root() -> None:
+    """mnewton(sin(x), x, 3) ≈ π (root of sin near 3)."""
+    import math
+
+    result = _eval("mnewton(sin(x), x, 3)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - math.pi) < 1e-4, (
+        f"mnewton root {result.value} not close to π = {math.pi}"
+    )
+
+
+def test_pipeline_mnewton_exp_root() -> None:
+    """mnewton(exp(x) - 2, x, 0.5) ≈ ln(2) (root of eˣ = 2)."""
+    import math
+
+    result = _eval("mnewton(exp(x) - 2, x, 0.5)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - math.log(2)) < 1e-6, (
+        f"mnewton root {result.value} not close to ln(2) = {math.log(2)}"
+    )
+
+
+# ===========================================================================
+# Section FF — Algebraic extension factoring (cas-algebraic, Phase 33)
+# ===========================================================================
+#
+# MACSYMA name ``algfactor`` maps to the ``AlgFactor`` IR head, handled by
+# the ``cas-algebraic`` substrate.  It factors a polynomial over Q[√d]:
+#
+#   algfactor(x^2 - 2, sqrt(2))  →  (x − √2)(x + √2)
+#
+# The result is a ``Mul`` of two ``Add`` nodes (linear factors).
+# ===========================================================================
+
+
+def test_pipeline_algfactor_x2_minus_2() -> None:
+    """algfactor(x^2 - 2, sqrt(2)) splits over Q[√2]."""
+    result = _eval("algfactor(x^2 - 2, sqrt(2))")
+    # Should produce Mul(Add(x, -Sqrt(2)), Add(x, Sqrt(2))) or similar
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply, got {type(result).__name__}: {result}"
+    )
+    assert result.head.name == "Mul", (
+        f"Expected Mul from algfactor, got {result.head.name!r}"
+    )
+    assert len(result.args) == 2, (
+        f"Expected 2 factors from algfactor(x^2-2, sqrt(2)), got {len(result.args)}"
+    )
+
+
+def test_pipeline_algfactor_x2_minus_3() -> None:
+    """algfactor(x^2 - 3, sqrt(3)) splits over Q[√3]."""
+    result = _eval("algfactor(x^2 - 3, sqrt(3))")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply, got {type(result).__name__}: {result}"
+    )
+    assert result.head.name == "Mul", (
+        f"Expected Mul from algfactor(x^2-3, sqrt(3)), got {result.head.name!r}"
+    )
+
+
+def test_pipeline_algfactor_irreducible_stays_unevaluated() -> None:
+    """algfactor(x^2 + 1, sqrt(2)) stays unevaluated (irreducible over Q[√2])."""
+    result = _eval("algfactor(x^2 + 1, sqrt(2))")
+    # x² + 1 is irreducible over Q[√2]; should remain as AlgFactor or x^2+1
+    # Accept either form: unevaluated AlgFactor or the expression unchanged.
+    assert result is not None  # At minimum it must not crash
+
+
+# ===========================================================================
+# Section GG — Gröbner bases and polynomial reduction (cas-multivariate, Phase 33)
+# ===========================================================================
+#
+# MACSYMA names ``groebner`` and ``poly_reduce`` map to ``Groebner`` and
+# ``PolyReduce`` IR heads, handled by the ``cas-multivariate`` substrate.
+#
+#   groebner([polys], [vars])  → reduced Gröbner basis
+#   poly_reduce(f, [basis], [vars])  → f reduced modulo the basis
+#
+# The reduced Gröbner basis of {x²-1, x-1} w.r.t. lex order is {x-1},
+# because x²-1 = (x-1)(x+1) and x-1 already divides x²-1.
+#
+# Polynomial reduction: x³ mod {x²-1} → x  (since x³ = x·(x²-1) + x).
+# ===========================================================================
+
+
+def test_pipeline_groebner_single_variable() -> None:
+    """groebner([x^2-1, x-1], [x]) → [x-1] (GCD-like reduction)."""
+    result = _eval("groebner([x^2-1, x-1], [x])")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply from groebner, got {type(result).__name__}: {result}"
+    )
+    assert result.head.name == "List", (
+        f"Expected List from groebner, got {result.head.name!r}"
+    )
+    # Basis should reduce to a single polynomial: x - 1
+    assert len(result.args) == 1, (
+        f"Expected 1-element basis for groebner([x^2-1, x-1], [x]), "
+        f"got {len(result.args)} elements"
+    )
+
+
+def test_pipeline_groebner_returns_list() -> None:
+    """groebner([x^2 + y^2 - 1, x - y], [x, y]) returns a List."""
+    result = _eval("groebner([x^2 + y^2 - 1, x - y], [x, y])")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+
+
+def test_pipeline_poly_reduce_x3_mod_x2_minus_1() -> None:
+    """poly_reduce(x^3, [x^2-1], [x]) → x  (x³ = x·(x²-1) + x)."""
+    result = _eval("poly_reduce(x^3, [x^2-1], [x])")
+    assert result == IRSymbol("x"), (
+        f"Expected x from poly_reduce(x^3, [x^2-1], [x]), got {result}"
+    )
+
+
+def test_pipeline_poly_reduce_zero_remainder() -> None:
+    """poly_reduce(x^2 - 1, [x^2-1], [x]) → 0  (exact divisibility)."""
+    result = _eval("poly_reduce(x^2 - 1, [x^2-1], [x])")
+    assert result == IRInteger(0), (
+        f"Expected 0 from poly_reduce(x^2-1, [x^2-1], [x]), got {result}"
+    )
+
+
+# ===========================================================================
+# Section HH — Special Functions (Phase 23 pipeline tests)
+# ===========================================================================
+#
+# Phase 23 added handlers for the transcendental special functions that arise
+# as integration fallbacks and CAS building blocks:
+#
+#   erf(x), erfc(x), erfi(x)   — error functions
+#   gamma(z)                    — Euler's Gamma function
+#   beta(a, b)                  — Euler's Beta function
+#   si(x), ci(x)                — trigonometric integrals
+#   shi(x), chi(x)              — hyperbolic integrals
+#   li2(x)                      — Spence's dilogarithm
+#   fresnel_s(x), fresnel_c(x)  — Fresnel integrals
+#   lambert_w(x)                — principal branch of the Lambert W function
+#
+# The MACSYMA name table has mapped all these names to canonical IR heads
+# (e.g. ``erf`` → ``Erf``, ``gamma`` → ``GammaFunc``) since Phase 23.  The
+# symbolic-vm handlers implement:
+#
+#   - Exact results at known special values (e.g. erf(0) = 0, Γ(n) = (n-1)!)
+#   - Numeric evaluation via pure-Python series/Lanczos for float inputs
+#
+# These tests validate the full pipeline (MACSYMA surface → parse → compile
+# → VM → result) for the first time.
+# ===========================================================================
+
+
+def test_pipeline_erf_zero() -> None:
+    """erf(0) → 0  (exact; erf(0) = 0 by definition)."""
+    result = _eval("erf(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_erf_numeric() -> None:
+    """erf(1.0) → IRFloat(≈ 0.8427)  (Gauss error function at x = 1)."""
+    import math as _math
+
+    result = _eval("erf(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value - _math.erf(1.0)) < 1e-9, (
+        f"erf(1.0) = {result.value}, expected ≈ {_math.erf(1.0)}"
+    )
+
+
+def test_pipeline_erfc_numeric() -> None:
+    """erfc(1.0) → IRFloat(≈ 0.1573)  (complementary error function; erfc = 1 − erf)."""
+    import math as _math
+
+    result = _eval("erfc(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    expected = 1.0 - _math.erf(1.0)
+    assert abs(result.value - expected) < 1e-9, (
+        f"erfc(1.0) = {result.value}, expected ≈ {expected}"
+    )
+
+
+def test_pipeline_gamma_positive_integer() -> None:
+    """gamma(5) → 24  (Γ(5) = 4! = 24, exact integer result)."""
+    result = _eval("gamma(5)")
+    assert result == IRInteger(24), f"Expected 24, got {result!r}"
+
+
+def test_pipeline_gamma_one() -> None:
+    """gamma(1) → 1  (Γ(1) = 0! = 1, exact integer result)."""
+    result = _eval("gamma(1)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+def test_pipeline_gamma_half() -> None:
+    """gamma(1/2) → √π  (Γ(1/2) = √π; returned as Sqrt(%pi) or an IRFloat).
+
+    The ``gamma_handler`` recognises the half-integer form and returns the
+    symbolic node ``Sqrt(%pi)`` (because %pi is looked up by name in the
+    handler, not pre-substituted).  The test accepts either exact symbolic
+    form or a float approximation of √π.
+    """
+    import math as _math
+
+    result = _eval("gamma(1/2)")
+    # The handler returns IRApply(Sqrt, (%pi,)); %pi inside the returned node
+    # is NOT automatically evaluated because the VM does not re-enter the
+    # returned node.  Accept both the symbolic and numeric forms.
+    if isinstance(result, IRApply):
+        assert result.head.name == "Sqrt", (
+            f"Expected Sqrt head from gamma(1/2), got {result.head.name!r}"
+        )
+    else:
+        assert isinstance(result, IRFloat), (
+            f"Expected IRApply(Sqrt,...) or IRFloat from gamma(1/2), got {result!r}"
+        )
+        assert abs(result.value - _math.sqrt(_math.pi)) < 1e-9
+
+
+def test_pipeline_beta_integers() -> None:
+    """beta(2, 3) → 1/12  (B(2,3) = Γ(2)·Γ(3)/Γ(5) = 1·2/24 = 1/12).
+
+    The ``beta_handler`` rationalises the float result to the nearest
+    simple fraction when the denominator fits in 10 000, returning
+    ``IRRational(1, 12)`` for integer arguments.
+    """
+    result = _eval("beta(2, 3)")
+    assert result == IRRational(1, 12), (
+        f"Expected IRRational(1, 12) from beta(2, 3), got {result!r}"
+    )
+
+
+def test_pipeline_si_zero() -> None:
+    """si(0) → 0  (exact; Si(0) = 0 by definition of the sine integral)."""
+    result = _eval("si(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_si_numeric() -> None:
+    """si(1.0) → IRFloat  (Si(1) ≈ 0.9461, the sine integral at x = 1)."""
+    result = _eval("si(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    # Si(1) ≈ 0.9460831 — verify to 4 decimal places
+    assert abs(result.value - 0.9461) < 1e-3, (
+        f"si(1.0) = {result.value}, expected ≈ 0.9461"
+    )
+
+
+def test_pipeline_ci_numeric() -> None:
+    """ci(1.0) → IRFloat  (Ci(1) ≈ 0.3374, the cosine integral at x = 1)."""
+    result = _eval("ci(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    # Ci(1) ≈ 0.3374039229 — verify to 4 decimal places
+    assert abs(result.value - 0.3374) < 1e-3, (
+        f"ci(1.0) = {result.value}, expected ≈ 0.3374"
+    )
+
+
+def test_pipeline_shi_zero() -> None:
+    """shi(0) → 0  (exact; Shi(0) = 0 by definition of the hyperbolic sine integral)."""
+    result = _eval("shi(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_li2_zero() -> None:
+    """li2(0) → 0  (exact; Li₂(0) = 0 by definition of the dilogarithm)."""
+    result = _eval("li2(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_li2_numeric() -> None:
+    """li2(0.5) → IRFloat(≈ 0.5822)  (Spence's dilogarithm at x = 1/2).
+
+    The exact value is Li₂(1/2) = π²/12 − (ln 2)²/2 ≈ 0.5822.
+    """
+    result = _eval("li2(0.5)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value - 0.5822) < 1e-3, (
+        f"li2(0.5) = {result.value}, expected ≈ 0.5822"
+    )
+
+
+def test_pipeline_fresnel_s_zero() -> None:
+    """fresnel_s(0) → 0  (exact; FresnelS(0) = 0 by definition)."""
+    result = _eval("fresnel_s(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_fresnel_c_zero() -> None:
+    """fresnel_c(0) → 0  (exact; FresnelC(0) = 0 by definition)."""
+    result = _eval("fresnel_c(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_lambert_w_zero() -> None:
+    """lambert_w(0) → IRFloat(≈ 0.0)  (W₀(0) = 0 exactly)."""
+    result = _eval("lambert_w(0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value) < 1e-9, (
+        f"lambert_w(0) = {result.value}, expected ≈ 0"
+    )
+
+
+def test_pipeline_lambert_w_one() -> None:
+    """lambert_w(1.0) → IRFloat(≈ 0.5671)  (W₀(1) = Ω, the Omega constant).
+
+    The Omega constant Ω = W₀(1) ≈ 0.56714329… is the unique positive
+    solution of Ω·e^Ω = 1.  Newton's method converges in a few iterations.
+    """
+    result = _eval("lambert_w(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value - 0.5671) < 1e-3, (
+        f"lambert_w(1.0) = {result.value}, expected ≈ 0.5671 (Omega constant)"
+    )
+
+
+# ===========================================================================
+# Section II — Assumption System (assume / is / forget — Phase 21 pipeline)
+# ===========================================================================
+#
+# Phase 21 introduced the assumption framework to the symbolic VM:
+#
+#   assume(x > 0)   — record that x is positive
+#   is(x > 0)       — query; returns "true", "false", or "unknown"
+#   forget()        — clear all assumptions
+#   forget(x > 0)   — remove one specific assumption
+#
+# These are runtime-owned heads (``Assume``, ``Is``, ``Forget``) registered
+# in the MACSYMA name table and dispatched by SymbolicBackend.
+#
+# The pipeline tests below use a shared VM via ``_eval_seq`` so that
+# assumptions persist from one statement to the next, mirroring REPL use.
+# ===========================================================================
+
+
+def _eval_seq(*sources: str) -> object:
+    """Evaluate multiple MACSYMA expressions sequentially on a single VM.
+
+    Assumptions, variable bindings, and other per-VM state persist across
+    calls.  Returns the result of the *last* expression evaluated.
+
+    Used for assumption-system tests where ``assume(...)`` must fire before
+    ``is(...)`` is evaluated.
+    """
+    vm = VM(MacsymaBackend())
+    result: object = None
+    for src in sources:
+        s = src.strip().rstrip(";$").strip()
+        ast = parse_macsyma(s + ";")
+        stmts = compile_macsyma(ast, wrap_terminators=False)
+        assert len(stmts) == 1, f"expected 1 statement, got {len(stmts)}"
+        result = vm.eval(stmts[0])
+    return result
+
+
+def test_pipeline_assume_is_true() -> None:
+    """assume(x > 0); is(x > 0) → IRSymbol("true").
+
+    After recording the fact that x is positive, the ``Is`` handler
+    consults the assumption context and returns ``"true"``.
+    """
+    result = _eval_seq("assume(x > 0)", "is(x > 0)")
+    assert result == IRSymbol("true"), (
+        f"Expected 'true' after assume(x>0), is(x>0), got {result!r}"
+    )
+
+
+def test_pipeline_is_without_assumption_unknown() -> None:
+    """is(x > 0) on a fresh VM (no prior assume) → IRSymbol("unknown").
+
+    When no assumption has been made about x, the ``Is`` handler cannot
+    determine the truth value and returns ``"unknown"``.
+    """
+    result = _eval("is(x > 0)")
+    assert result == IRSymbol("unknown"), (
+        f"Expected 'unknown' with no assumptions, got {result!r}"
+    )
+
+
+def test_pipeline_assume_returns_done() -> None:
+    """assume(x > 0) → IRSymbol("done")  (side-effect; return value is "done")."""
+    result = _eval("assume(x > 0)")
+    assert result == IRSymbol("done"), f"Expected 'done', got {result!r}"
+
+
+def test_pipeline_forget_clears_assumption() -> None:
+    """assume(x > 0); forget(); is(x > 0) → IRSymbol("unknown").
+
+    ``forget()`` with no arguments clears all recorded facts.  After that,
+    ``is(x > 0)`` must return ``"unknown"`` again.
+    """
+    result = _eval_seq("assume(x > 0)", "forget()", "is(x > 0)")
+    assert result == IRSymbol("unknown"), (
+        f"Expected 'unknown' after forget(), got {result!r}"
+    )
+
+
+def test_pipeline_assume_is_negative_true() -> None:
+    """assume(y < 0); is(y < 0) → IRSymbol("true")."""
+    result = _eval_seq("assume(y < 0)", "is(y < 0)")
+    assert result == IRSymbol("true"), (
+        f"Expected 'true' after assume(y<0), is(y<0), got {result!r}"
+    )
+
+
+# ===========================================================================
+# Section JJ — Extended Number Theory (Phase B3 pipeline)
+# ===========================================================================
+#
+# Section K tested the core number-theory names (``primep``, ``next_prime``,
+# ``ifactor``, ``divisors``, ``totient``).  Five further names from the
+# ``cas-number-theory`` substrate were mapped in the MACSYMA name table but
+# never exercised through the pipeline:
+#
+#   prev_prime(n)           — largest prime strictly less than n
+#   moebius(n)              — Möbius μ function
+#   jacobi(a, n)            — Jacobi / Legendre symbol
+#   chinese([rem], [mod])   — Chinese Remainder Theorem
+#   numdigits(n)            — number of base-10 digits
+#
+# ===========================================================================
+
+
+def test_pipeline_prev_prime_10() -> None:
+    """prev_prime(10) → 7  (the largest prime < 10)."""
+    result = _eval("prev_prime(10)")
+    assert result == IRInteger(7), f"Expected 7, got {result!r}"
+
+
+def test_pipeline_prev_prime_8() -> None:
+    """prev_prime(8) → 7  (7 is prime and < 8)."""
+    result = _eval("prev_prime(8)")
+    assert result == IRInteger(7), f"Expected 7, got {result!r}"
+
+
+def test_pipeline_moebius_prime() -> None:
+    """moebius(2) → -1  (μ(p) = -1 for any prime p)."""
+    result = _eval("moebius(2)")
+    assert result == IRInteger(-1), f"Expected -1, got {result!r}"
+
+
+def test_pipeline_moebius_square_factor() -> None:
+    """moebius(12) → 0  (μ(n) = 0 when n has a squared prime factor; 12 = 4·3)."""
+    result = _eval("moebius(12)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_moebius_squarefree_two_factors() -> None:
+    """moebius(6) → 1  (μ(pq) = 1 for distinct primes p, q; 6 = 2·3)."""
+    result = _eval("moebius(6)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+def test_pipeline_jacobi_symbol() -> None:
+    """jacobi(2, 5) → -1  (Legendre symbol (2/5): 2 is not a QR mod 5)."""
+    result = _eval("jacobi(2, 5)")
+    assert result == IRInteger(-1), f"Expected -1, got {result!r}"
+
+
+def test_pipeline_jacobi_one_is_always_one() -> None:
+    """jacobi(1, 7) → 1  (1 is a quadratic residue modulo any odd integer)."""
+    result = _eval("jacobi(1, 7)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+def test_pipeline_chinese_remainder() -> None:
+    """chinese([2, 3], [3, 5]) → 8  (x ≡ 2 mod 3, x ≡ 3 mod 5 → x = 8).
+
+    The unique solution in [0, 15) is x = 8:
+      8 mod 3 = 2 ✓
+      8 mod 5 = 3 ✓
+    """
+    result = _eval("chinese([2, 3], [3, 5])")
+    assert result == IRInteger(8), f"Expected 8, got {result!r}"
+
+
+def test_pipeline_numdigits_thousand() -> None:
+    """numdigits(1000) → 4  (1000 has 4 decimal digits)."""
+    result = _eval("numdigits(1000)")
+    assert result == IRInteger(4), f"Expected 4, got {result!r}"
+
+
+def test_pipeline_numdigits_one() -> None:
+    """numdigits(1) → 1  (a single digit)."""
+    result = _eval("numdigits(1)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+

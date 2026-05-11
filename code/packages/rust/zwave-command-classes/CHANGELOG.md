@@ -12,4 +12,8 @@ All notable changes to this package will be documented in this file.
 - Value-report parsing for common actuator and sensor command classes.
 - Notification report parsing and D23 state-delta mapping for motion, contact,
   lock, and alarm-style sensor events.
+- Battery Get/Report primitives and D23 `sensor.battery` projection.
+- Meter Get/Report primitives and D23 energy/power state projection.
+- Command-class interview descriptors that expose state-query commands and D23
+  capability projection for supported classes.
 - D23 capability and state-delta mapping for common reports.

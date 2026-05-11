@@ -6,6 +6,20 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- standard `user_input`, `user_output`, and `user_error` stream aliases plus
+  richer accepted `open_optionso/4` metadata for `reposition`, `eof_action`,
+  `buffer`, and `close_on_abort`.
+- `expand_file_nameo/2`, `make_directory_patho/1`,
+  `delete_directory_and_contentso/1`, and `copy_fileo/2` for bounded
+  recursive/wildcard filesystem operations over bound atom/string paths.
+- `directory_fileso/2`, `make_directoryo/1`, `delete_fileo/1`,
+  `delete_directoryo/1`, `rename_fileo/2`, and `working_directoryo/2` for
+  bounded explicit filesystem operations over bound atom/string paths.
+- `exists_directoryo/1`, `absolute_file_nameo/2`, `access_fileo/2`,
+  `file_directory_nameo/2`, `file_base_nameo/2`, `directory_file_patho/3`,
+  `file_name_extensiono/3`, `same_fileo/2`, `size_fileo/2`, and
+  `time_fileo/2` for bounded read-only filesystem/path metadata over bound
+  atom/string paths.
 - `exists_fileo(path)`, `read_file_to_stringo(path, contents)`, and
   `read_file_to_codeso(path, codes)` for bounded UTF-8 file text I/O from
   bound atom/string paths.
@@ -19,6 +33,11 @@ All notable changes to this package will be documented in this file.
   repositioning.
 - `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,
   and current-stream read/write forms for selected bounded streams.
+- `get_codeo/2`, `peek_charo/2`, `peek_codeo/2`, `put_charo/2`,
+  `put_codeo/2`, and current-stream variants for bounded UTF-8
+  character/code stream I/O.
+- `get_byteo/2`, `peek_byteo/2`, `put_byteo/2`, and current-stream variants
+  for bounded binary file stream I/O opened with `type(binary)`.
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,

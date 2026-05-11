@@ -88,11 +88,71 @@ pub struct AuthAssertion {
     pub key_contribution: Option<Zeroizing<Vec<u8>>>,
 }
 
+impl AuthAssertion {
+    /// Return a credential-safe summary of this assertion.
+    ///
+    /// The summary reports only factor identity, mode, and whether bind-mode
+    /// key material exists. It never exposes the key-contribution bytes.
+    pub fn summary(&self) -> AuthAssertionSummary {
+        AuthAssertionSummary {
+            kind: self.kind,
+            mode: self.mode,
+            has_key_contribution: self.key_contribution.is_some(),
+            key_contribution_len: self
+                .key_contribution
+                .as_ref()
+                .map_or(0, |contribution| contribution.len()),
+        }
+    }
+}
+
 impl Drop for AuthAssertion {
     fn drop(&mut self) {
         if let Some(k) = self.key_contribution.as_mut() {
             k.zeroize();
         }
+    }
+}
+
+/// Credential-safe read model for a successful authentication assertion.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AuthAssertionSummary {
+    /// Stable factor kind, such as `"password"` or `"totp"`.
+    pub kind: &'static str,
+    /// Whether the factor was gate-only or contributed bind material.
+    pub mode: Mode,
+    /// Whether bind-mode key material is present.
+    pub has_key_contribution: bool,
+    /// Length of the key contribution, if present.
+    pub key_contribution_len: usize,
+}
+
+impl AuthAssertionSummary {
+    /// Return true when this summary represents a bind-mode factor with key material.
+    pub fn contributes_key_material(&self) -> bool {
+        self.mode == Mode::Bind && self.has_key_contribution && self.key_contribution_len > 0
+    }
+}
+
+/// Aggregate read model for a set of successful authentication assertions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct AuthAssertionSetSummary {
+    /// Number of assertions in the set.
+    pub assertion_count: usize,
+    /// Number of gate-mode factors.
+    pub gate_count: usize,
+    /// Number of bind-mode factors.
+    pub bind_count: usize,
+    /// Number of bind-mode factors that carry key contribution bytes.
+    pub key_contribution_count: usize,
+    /// Total key-contribution byte length across bind-mode factors.
+    pub total_key_contribution_len: usize,
+}
+
+impl AuthAssertionSetSummary {
+    /// Return true if the assertion set has at least one bind-mode contribution.
+    pub fn can_derive_unlock_key(&self) -> bool {
+        self.key_contribution_count > 0 && self.total_key_contribution_len > 0
     }
 }
 
@@ -197,6 +257,26 @@ pub fn combine_key_contributions(
     Ok(out)
 }
 
+/// Summarize successful authentication assertions without exposing credentials.
+pub fn summarize_auth_assertions(factors: &[&AuthAssertion]) -> AuthAssertionSetSummary {
+    let mut summary = AuthAssertionSetSummary {
+        assertion_count: factors.len(),
+        ..AuthAssertionSetSummary::default()
+    };
+    for assertion in factors {
+        let assertion_summary = assertion.summary();
+        match assertion_summary.mode {
+            Mode::Gate => summary.gate_count += 1,
+            Mode::Bind => summary.bind_count += 1,
+        }
+        if assertion_summary.contributes_key_material() {
+            summary.key_contribution_count += 1;
+            summary.total_key_contribution_len += assertion_summary.key_contribution_len;
+        }
+    }
+    summary
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // 2. PasswordAuthenticator
 // ─────────────────────────────────────────────────────────────────────
@@ -227,10 +307,14 @@ impl PasswordAuthenticator {
         verifier: Vec<u8>,
     ) -> Result<Self, AuthError> {
         if salt.len() < 8 {
-            return Err(AuthError::InvalidParameter { what: "salt < 8 bytes" });
+            return Err(AuthError::InvalidParameter {
+                what: "salt < 8 bytes",
+            });
         }
         if verifier.is_empty() {
-            return Err(AuthError::InvalidParameter { what: "verifier empty" });
+            return Err(AuthError::InvalidParameter {
+                what: "verifier empty",
+            });
         }
         if time_cost == 0 || memory_cost < 8 || parallelism == 0 {
             return Err(AuthError::InvalidParameter {
@@ -257,9 +341,21 @@ impl PasswordAuthenticator {
         parallelism: u32,
         tag_length: u32,
     ) -> Result<Vec<u8>, AuthError> {
-        let opts = ArgonOptions { key: None, associated_data: None, version: None };
-        argon2id(password, salt, time_cost, memory_cost, parallelism, tag_length, &opts)
-            .map_err(|_| AuthError::Crypto)
+        let opts = ArgonOptions {
+            key: None,
+            associated_data: None,
+            version: None,
+        };
+        argon2id(
+            password,
+            salt,
+            time_cost,
+            memory_cost,
+            parallelism,
+            tag_length,
+            &opts,
+        )
+        .map_err(|_| AuthError::Crypto)
     }
 }
 
@@ -274,7 +370,11 @@ impl Authenticator for PasswordAuthenticator {
         if credential.is_empty() {
             return Err(AuthError::MalformedCredential);
         }
-        let opts = ArgonOptions { key: None, associated_data: None, version: None };
+        let opts = ArgonOptions {
+            key: None,
+            associated_data: None,
+            version: None,
+        };
         let candidate = argon2id(
             credential,
             &self.salt,
@@ -340,17 +440,26 @@ impl TotpAuthenticator {
     ) -> Result<Self, AuthError> {
         let secret: Zeroizing<Vec<u8>> = Zeroizing::new(secret.into());
         if secret.is_empty() {
-            return Err(AuthError::InvalidParameter { what: "TOTP secret empty" });
+            return Err(AuthError::InvalidParameter {
+                what: "TOTP secret empty",
+            });
         }
         if period == 0 {
-            return Err(AuthError::InvalidParameter { what: "TOTP period 0" });
+            return Err(AuthError::InvalidParameter {
+                what: "TOTP period 0",
+            });
         }
         if !(4..=10).contains(&digits) {
             return Err(AuthError::InvalidParameter {
                 what: "TOTP digits must be 4..=10",
             });
         }
-        Ok(Self { secret, period, digits, window })
+        Ok(Self {
+            secret,
+            period,
+            digits,
+            window,
+        })
     }
 
     /// Compute the TOTP code at the given UNIX time (seconds).
@@ -365,11 +474,10 @@ impl TotpAuthenticator {
         let mac = hmac_sha1(&self.secret, &counter_be).map_err(|_| AuthError::Crypto)?;
         // Dynamic truncation — RFC 4226 §5.3.
         let offset = (mac[19] & 0x0F) as usize;
-        let bin =
-            ((mac[offset] as u32 & 0x7F) << 24)
+        let bin = ((mac[offset] as u32 & 0x7F) << 24)
             | ((mac[offset + 1] as u32) << 16)
             | ((mac[offset + 2] as u32) << 8)
-            |  (mac[offset + 3] as u32);
+            | (mac[offset + 3] as u32);
         let modulus = 10u32.pow(self.digits);
         Ok(bin % modulus)
     }
@@ -456,8 +564,25 @@ mod tests {
         let assertion = auth.verify(b"correct horse battery staple").unwrap();
         assert_eq!(assertion.kind, "password");
         assert_eq!(assertion.mode, Mode::Bind);
-        let k = assertion.key_contribution.as_ref().expect("bind-mode contribution");
+        let k = assertion
+            .key_contribution
+            .as_ref()
+            .expect("bind-mode contribution");
         assert_eq!(k.len(), 32);
+    }
+
+    #[test]
+    fn password_assertion_summary_hides_key_bytes() {
+        let auth = fast_password_authenticator(b"correct horse battery staple");
+        let assertion = auth.verify(b"correct horse battery staple").unwrap();
+
+        let summary = assertion.summary();
+
+        assert_eq!(summary.kind, "password");
+        assert_eq!(summary.mode, Mode::Bind);
+        assert!(summary.has_key_contribution);
+        assert_eq!(summary.key_contribution_len, 32);
+        assert!(summary.contributes_key_material());
     }
 
     #[test]
@@ -467,7 +592,11 @@ mod tests {
             Err(AuthError::InvalidCredential) => {}
             other => panic!(
                 "expected InvalidCredential, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if matches!(other, Ok(_)) {
+                    "Ok"
+                } else {
+                    "different Err"
+                }
             ),
         }
     }
@@ -479,7 +608,11 @@ mod tests {
             Err(AuthError::MalformedCredential) => {}
             other => panic!(
                 "expected MalformedCredential, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if matches!(other, Ok(_)) {
+                    "Ok"
+                } else {
+                    "different Err"
+                }
             ),
         }
     }
@@ -490,7 +623,11 @@ mod tests {
             Err(AuthError::InvalidParameter { .. }) => {}
             other => panic!(
                 "expected InvalidParameter, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if matches!(other, Ok(_)) {
+                    "Ok"
+                } else {
+                    "different Err"
+                }
             ),
         }
     }
@@ -558,7 +695,11 @@ mod tests {
             Err(AuthError::InvalidCredential) => {}
             other => panic!(
                 "expected InvalidCredential outside window, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if matches!(other, Ok(_)) {
+                    "Ok"
+                } else {
+                    "different Err"
+                }
             ),
         }
     }
@@ -647,6 +788,44 @@ mod tests {
             Err(AuthError::NoBindFactors) => {}
             _ => panic!("expected NoBindFactors when only gate factors are present"),
         }
+    }
+
+    #[test]
+    fn assertion_set_summary_counts_gate_and_bind_factors() {
+        let auth = fast_password_authenticator(b"pw");
+        let bind = auth.verify(b"pw").unwrap();
+        let gate = AuthAssertion {
+            kind: "totp",
+            mode: Mode::Gate,
+            key_contribution: None,
+        };
+
+        let summary = summarize_auth_assertions(&[&bind, &gate]);
+
+        assert_eq!(summary.assertion_count, 2);
+        assert_eq!(summary.bind_count, 1);
+        assert_eq!(summary.gate_count, 1);
+        assert_eq!(summary.key_contribution_count, 1);
+        assert_eq!(summary.total_key_contribution_len, 32);
+        assert!(summary.can_derive_unlock_key());
+    }
+
+    #[test]
+    fn assertion_set_summary_marks_gate_only_sets_as_not_derivable() {
+        let gate = AuthAssertion {
+            kind: "totp",
+            mode: Mode::Gate,
+            key_contribution: None,
+        };
+
+        let summary = summarize_auth_assertions(&[&gate]);
+
+        assert_eq!(summary.assertion_count, 1);
+        assert_eq!(summary.bind_count, 0);
+        assert_eq!(summary.gate_count, 1);
+        assert_eq!(summary.key_contribution_count, 0);
+        assert_eq!(summary.total_key_contribution_len, 0);
+        assert!(!summary.can_derive_unlock_key());
     }
 
     #[test]

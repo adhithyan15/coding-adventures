@@ -8,6 +8,10 @@ bridges:
 - `JobRequest<T>` carries a typed unit of work.
 - `JobResponse<U>` carries a typed result or portable error.
 - `JobMetadata` carries routing, ordering, priority, trace, and affinity facts.
+- Metadata helpers validate portable envelopes and compute deadline/attempt facts
+  without depending on a runtime scheduler.
+- `JobRetryPolicy` classifies retryable errors, exhausted attempts, and capped
+  exponential backoff using the same metadata across runtimes.
 - JSON-line codec helpers provide a phase-one process/stdio wire format.
 
 It intentionally does not implement a thread pool, process pool, TCP runtime, or

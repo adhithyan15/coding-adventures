@@ -62,6 +62,93 @@ impl Default for ExecutorLimits {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExecutorSnapshot {
+    pub worker_count: usize,
+    pub live_workers: usize,
+    pub in_flight_jobs: usize,
+    pub queued_jobs: usize,
+    pub running_jobs: usize,
+    pub shutting_down: bool,
+    pub max_queue_depth: usize,
+    pub max_payload_bytes: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorHealth {
+    Idle,
+    Busy,
+    Saturated,
+    Draining,
+    Offline,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorSupervisionAction {
+    None,
+    ObserveDraining,
+    ApplyBackpressure,
+    RestartWorkers,
+}
+
+impl ExecutorSnapshot {
+    pub fn remaining_queue_capacity(&self) -> usize {
+        self.max_queue_depth.saturating_sub(self.in_flight_jobs)
+    }
+
+    pub fn is_saturated(&self) -> bool {
+        self.in_flight_jobs >= self.max_queue_depth
+    }
+
+    pub fn pending_jobs(&self) -> usize {
+        self.queued_jobs.saturating_add(self.running_jobs)
+    }
+
+    pub fn has_live_capacity(&self) -> bool {
+        !self.shutting_down && self.live_workers > 0 && self.remaining_queue_capacity() > 0
+    }
+
+    pub fn health(&self) -> ExecutorHealth {
+        if self.shutting_down {
+            return ExecutorHealth::Draining;
+        }
+        if self.live_workers == 0 {
+            return ExecutorHealth::Offline;
+        }
+        if self.is_saturated() {
+            return ExecutorHealth::Saturated;
+        }
+        if self.pending_jobs() > 0 {
+            return ExecutorHealth::Busy;
+        }
+        ExecutorHealth::Idle
+    }
+
+    pub fn needs_supervisor_attention(&self) -> bool {
+        matches!(
+            self.health(),
+            ExecutorHealth::Offline | ExecutorHealth::Saturated
+        )
+    }
+
+    pub fn queue_pressure_percent(&self) -> u8 {
+        if self.max_queue_depth == 0 {
+            return 100;
+        }
+        let percent = self.in_flight_jobs.saturating_mul(100) / self.max_queue_depth;
+        percent.min(100) as u8
+    }
+
+    pub fn recommended_supervision_action(&self) -> ExecutorSupervisionAction {
+        match self.health() {
+            ExecutorHealth::Idle | ExecutorHealth::Busy => ExecutorSupervisionAction::None,
+            ExecutorHealth::Draining => ExecutorSupervisionAction::ObserveDraining,
+            ExecutorHealth::Saturated => ExecutorSupervisionAction::ApplyBackpressure,
+            ExecutorHealth::Offline => ExecutorSupervisionAction::RestartWorkers,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StdioWorkerCommand {
     pub program: String,
     pub args: Vec<String>,
@@ -323,6 +410,31 @@ where
             Ok(response) => Ok(Some(response)),
             Err(mpsc::RecvTimeoutError::Timeout) => Ok(None),
             Err(mpsc::RecvTimeoutError::Disconnected) => Ok(None),
+        }
+    }
+
+    pub fn snapshot(&self) -> ExecutorSnapshot {
+        self.expire_timed_out_jobs();
+        let queue = self
+            .inner
+            .queue
+            .lock()
+            .expect("thread pool queue mutex poisoned");
+        let queued_jobs = queue.jobs.len();
+        let pending_jobs = queue.pending.len();
+        ExecutorSnapshot {
+            worker_count: self.inner.worker_count,
+            live_workers: if self.inner.shutting_down.load(Ordering::SeqCst) {
+                0
+            } else {
+                self.inner.worker_count
+            },
+            in_flight_jobs: self.inner.in_flight.load(Ordering::SeqCst),
+            queued_jobs,
+            running_jobs: pending_jobs.saturating_sub(queued_jobs),
+            shutting_down: queue.closed || self.inner.shutting_down.load(Ordering::SeqCst),
+            max_queue_depth: self.inner.limits.max_queue_depth,
+            max_payload_bytes: self.inner.limits.max_payload_bytes,
         }
     }
 
@@ -761,6 +873,31 @@ where
             Ok(response) => Ok(Some(response)),
             Err(mpsc::RecvTimeoutError::Timeout) => Ok(None),
             Err(mpsc::RecvTimeoutError::Disconnected) => Ok(None),
+        }
+    }
+
+    pub fn snapshot(&self) -> ExecutorSnapshot {
+        self.expire_timed_out_jobs();
+        let pending_jobs = self
+            .inner
+            .pending
+            .lock()
+            .expect("pending job table mutex poisoned")
+            .len();
+        ExecutorSnapshot {
+            worker_count: self.inner.workers.len(),
+            live_workers: self
+                .inner
+                .worker_alive
+                .iter()
+                .filter(|alive| alive.load(Ordering::SeqCst))
+                .count(),
+            in_flight_jobs: self.inner.in_flight.load(Ordering::SeqCst),
+            queued_jobs: 0,
+            running_jobs: pending_jobs,
+            shutting_down: self.inner.shutting_down.load(Ordering::SeqCst),
+            max_queue_depth: self.inner.limits.max_queue_depth,
+            max_payload_bytes: self.inner.limits.max_payload_bytes,
         }
     }
 
@@ -1404,6 +1541,176 @@ for line in sys.stdin:
             .expect_err("second job should hit backpressure");
         assert_eq!(err, SubmitError::QueueFull);
         open_gate(&gate);
+    }
+
+    #[test]
+    fn thread_pool_snapshot_reports_capacity_and_lifecycle() {
+        let entered = Arc::new(AtomicUsize::new(0));
+        let gate = Arc::new((Mutex::new(false), Condvar::new()));
+        let handler_entered = Arc::clone(&entered);
+        let handler_gate = Arc::clone(&gate);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 2,
+                    max_payload_bytes: 256,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            move |request: JobRequest<EchoJob>| {
+                handler_entered.fetch_add(1, Ordering::SeqCst);
+                wait_for_gate(&handler_gate);
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "running".to_string(),
+            },
+        ))
+        .expect("submit running job");
+        wait_until(|| entered.load(Ordering::SeqCst) == 1);
+        pool.try_submit(JobRequest::new(
+            "job-2",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "queued".to_string(),
+            },
+        ))
+        .expect("submit queued job");
+
+        let snapshot = pool.snapshot();
+        assert_eq!(snapshot.worker_count, 1);
+        assert_eq!(snapshot.live_workers, 1);
+        assert_eq!(snapshot.in_flight_jobs, 2);
+        assert_eq!(snapshot.queued_jobs, 1);
+        assert_eq!(snapshot.running_jobs, 1);
+        assert_eq!(snapshot.max_queue_depth, 2);
+        assert_eq!(snapshot.max_payload_bytes, 256);
+        assert_eq!(snapshot.remaining_queue_capacity(), 0);
+        assert!(snapshot.is_saturated());
+        assert_eq!(snapshot.pending_jobs(), 2);
+        assert_eq!(snapshot.health(), ExecutorHealth::Saturated);
+        assert!(!snapshot.has_live_capacity());
+        assert!(snapshot.needs_supervisor_attention());
+        assert!(!snapshot.shutting_down);
+
+        open_gate(&gate);
+        let mut responses = Vec::new();
+        for _ in 0..100 {
+            responses.extend(pool.drain_responses(4));
+            if responses.len() == 2 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        assert_eq!(responses.len(), 2);
+
+        let idle_pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits::default(),
+                default_job_timeout: None,
+            },
+            |_request: JobRequest<EchoJob>| JobResult::Ok {
+                payload: EchoResponse {
+                    stream_id: "idle".to_string(),
+                    counter: 1,
+                    text: "idle".to_string(),
+                },
+            },
+        );
+        assert!(!idle_pool.snapshot().shutting_down);
+        idle_pool.shutdown();
+        let shutdown_snapshot = idle_pool.snapshot();
+        assert!(shutdown_snapshot.shutting_down);
+        assert_eq!(shutdown_snapshot.live_workers, 0);
+        assert_eq!(shutdown_snapshot.health(), ExecutorHealth::Draining);
+        assert!(!shutdown_snapshot.needs_supervisor_attention());
+    }
+
+    #[test]
+    fn executor_snapshot_health_classifies_supervisor_states() {
+        let idle = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        assert_eq!(idle.health(), ExecutorHealth::Idle);
+        assert_eq!(idle.queue_pressure_percent(), 0);
+        assert_eq!(
+            idle.recommended_supervision_action(),
+            ExecutorSupervisionAction::None
+        );
+        assert!(idle.has_live_capacity());
+        assert!(!idle.needs_supervisor_attention());
+
+        let busy = ExecutorSnapshot {
+            in_flight_jobs: 1,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(busy.health(), ExecutorHealth::Busy);
+        assert_eq!(busy.pending_jobs(), 1);
+        assert_eq!(busy.queue_pressure_percent(), 25);
+        assert_eq!(
+            busy.recommended_supervision_action(),
+            ExecutorSupervisionAction::None
+        );
+        assert!(busy.has_live_capacity());
+
+        let saturated = ExecutorSnapshot {
+            in_flight_jobs: 4,
+            queued_jobs: 3,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(saturated.health(), ExecutorHealth::Saturated);
+        assert_eq!(saturated.queue_pressure_percent(), 100);
+        assert_eq!(
+            saturated.recommended_supervision_action(),
+            ExecutorSupervisionAction::ApplyBackpressure
+        );
+
+        let offline = ExecutorSnapshot {
+            live_workers: 0,
+            ..idle.clone()
+        };
+        assert_eq!(offline.health(), ExecutorHealth::Offline);
+        assert_eq!(
+            offline.recommended_supervision_action(),
+            ExecutorSupervisionAction::RestartWorkers
+        );
+        assert!(offline.needs_supervisor_attention());
+
+        let draining = ExecutorSnapshot {
+            live_workers: 0,
+            shutting_down: true,
+            ..idle
+        };
+        assert_eq!(draining.health(), ExecutorHealth::Draining);
+        assert_eq!(
+            draining.recommended_supervision_action(),
+            ExecutorSupervisionAction::ObserveDraining
+        );
+        assert!(!draining.has_live_capacity());
+        assert!(!draining.needs_supervisor_attention());
     }
 
     #[test]

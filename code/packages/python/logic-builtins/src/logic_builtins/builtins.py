@@ -14,6 +14,10 @@ keeps the user-facing predicates in a separate library layer.
 
 from __future__ import annotations
 
+import glob
+import os
+import shutil
+import sys
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from hashlib import blake2b
@@ -79,7 +83,9 @@ from logic_engine import (
 
 __all__ = [
     "add",
+    "absolute_file_nameo",
     "acyclic_termo",
+    "access_fileo",
     "all_differento",
     "argo",
     "atom_concato",
@@ -104,6 +110,7 @@ __all__ = [
     "compound_name_arityo",
     "compoundo",
     "compare_termo",
+    "copy_fileo",
     "copytermo",
     "convlisto",
     "current_atomo",
@@ -115,10 +122,17 @@ __all__ = [
     "current_streamo",
     "cuto",
     "cyclic_termo",
+    "delete_directory_and_contentso",
+    "delete_directoryo",
+    "delete_fileo",
     "difo",
+    "directory_fileso",
+    "directory_file_patho",
     "dynamico",
     "div",
+    "expand_file_nameo",
     "exists_fileo",
+    "exists_directoryo",
     "fd_eqo",
     "fd_elemento",
     "fd_geqo",
@@ -146,6 +160,9 @@ __all__ = [
     "FiniteDomainConstraint",
     "FiniteDomainStore",
     "findallo",
+    "file_base_nameo",
+    "file_directory_nameo",
+    "file_name_extensiono",
     "floordiv",
     "foldlo",
     "forallo",
@@ -153,8 +170,12 @@ __all__ = [
     "flush_current_outputo",
     "functoro",
     "geqo",
+    "get_byteo",
     "get_charo",
+    "get_codeo",
+    "get_current_byteo",
     "get_current_charo",
+    "get_current_codeo",
     "gto",
     "groundo",
     "ifthenelseo",
@@ -166,6 +187,8 @@ __all__ = [
     "leqo",
     "labelingo",
     "lto",
+    "make_directory_patho",
+    "make_directoryo",
     "maplisto",
     "mod",
     "mul",
@@ -187,13 +210,26 @@ __all__ = [
     "open_optionso",
     "bagofo",
     "partitiono",
+    "peek_byteo",
+    "peek_charo",
+    "peek_codeo",
+    "peek_current_byteo",
+    "peek_current_charo",
+    "peek_current_codeo",
     "predicate_propertyo",
+    "put_byteo",
+    "put_charo",
+    "put_codeo",
+    "put_current_byteo",
+    "put_current_charo",
+    "put_current_codeo",
     "read_file_to_codeso",
     "read_file_to_stringo",
     "read_line_to_stringo",
     "read_stringo",
     "read_current_line_to_stringo",
     "read_current_stringo",
+    "rename_fileo",
     "repeato",
     "PrologEvaluationError",
     "PrologFlagStore",
@@ -214,6 +250,7 @@ __all__ = [
     "retractallo",
     "retracto",
     "same_termo",
+    "same_fileo",
     "scanlo",
     "seeko",
     "set_inputo",
@@ -221,6 +258,7 @@ __all__ = [
     "setofo",
     "set_prolog_flago",
     "set_stream_positiono",
+    "size_fileo",
     "setup_call_cleanupo",
     "char_codeo",
     "clauseo",
@@ -241,6 +279,7 @@ __all__ = [
     "term_hash_boundedo",
     "term_hasho",
     "throwo",
+    "time_fileo",
     "trueo",
     "univo",
     "unifiableo",
@@ -248,6 +287,7 @@ __all__ = [
     "varo",
     "write_currento",
     "writeo",
+    "working_directoryo",
     "not_variant_termo",
     "subsumes_termo",
     "variant_termo",
@@ -268,20 +308,54 @@ _DEFAULT_TERM_HASH_RANGE = 2_147_483_647
 
 @dataclass(slots=True)
 class _TextStream:
-    """Host-side UTF-8 text stream used by the bounded Prolog facade."""
+    """Host-side stream used by the bounded Prolog facade."""
 
     mode: str
     path: Path
+    stream_type: str = "text"
     contents: str = ""
+    binary_contents: bytes = b""
     cursor: int = 0
     alias: str | None = None
+    display_name: str | None = None
+    standard_stream: str | None = None
+    option_properties: tuple[Term, ...] = ()
 
 
 _STREAM_IDS = count(1)
-_STREAMS: dict[str, _TextStream] = {}
-_STREAM_ALIASES: dict[str, str] = {}
-_CURRENT_INPUT_HANDLE: str | None = None
-_CURRENT_OUTPUT_HANDLE: str | None = None
+_STANDARD_INPUT_HANDLE = "$stream_user_input"
+_STANDARD_OUTPUT_HANDLE = "$stream_user_output"
+_STANDARD_ERROR_HANDLE = "$stream_user_error"
+_STREAMS: dict[str, _TextStream] = {
+    _STANDARD_INPUT_HANDLE: _TextStream(
+        mode="read",
+        path=Path("<user_input>"),
+        alias="user_input",
+        display_name="user_input",
+        standard_stream="user_input",
+    ),
+    _STANDARD_OUTPUT_HANDLE: _TextStream(
+        mode="append",
+        path=Path("<user_output>"),
+        alias="user_output",
+        display_name="user_output",
+        standard_stream="user_output",
+    ),
+    _STANDARD_ERROR_HANDLE: _TextStream(
+        mode="append",
+        path=Path("<user_error>"),
+        alias="user_error",
+        display_name="user_error",
+        standard_stream="user_error",
+    ),
+}
+_STREAM_ALIASES: dict[str, str] = {
+    "user_input": _STANDARD_INPUT_HANDLE,
+    "user_output": _STANDARD_OUTPUT_HANDLE,
+    "user_error": _STANDARD_ERROR_HANDLE,
+}
+_CURRENT_INPUT_HANDLE: str | None = _STANDARD_INPUT_HANDLE
+_CURRENT_OUTPUT_HANDLE: str | None = _STANDARD_OUTPUT_HANDLE
 
 
 @dataclass(frozen=True, slots=True)
@@ -464,6 +538,10 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("forallo", 2),
     ("functoro", 3),
     ("geqo", 2),
+    ("get_charo", 2),
+    ("get_codeo", 2),
+    ("get_current_charo", 1),
+    ("get_current_codeo", 1),
     ("groundo", 1),
     ("gto", 2),
     ("ifthenelseo", 3),
@@ -491,7 +569,15 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("numbero", 1),
     ("onceo", 1),
     ("partitiono", 4),
+    ("peek_charo", 2),
+    ("peek_codeo", 2),
+    ("peek_current_charo", 1),
+    ("peek_current_codeo", 1),
     ("predicate_propertyo", 3),
+    ("put_charo", 2),
+    ("put_codeo", 2),
+    ("put_current_charo", 1),
+    ("put_current_codeo", 1),
     ("repeato", 0),
     ("retractallo", 1),
     ("retracto", 1),
@@ -4825,6 +4911,410 @@ def exists_fileo(path_value: object) -> GoalExpr:
     return native_goal(run, path_value)
 
 
+def exists_directoryo(path_value: object) -> GoalExpr:
+    """Succeed when a bound atom/string path names an existing directory."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        if Path(path_text).is_dir():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def absolute_file_nameo(path_value: object, absolute_value: object) -> GoalExpr:
+    """Relate a bound path to a deterministic absolute pathname atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, absolute_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            absolute_text = str(Path(path_text).expanduser().resolve(strict=False))
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(absolute_term, atom(absolute_text)), state)
+
+    return native_goal(run, path_value, absolute_value)
+
+
+def _access_mode(term_value: Term) -> int | None:
+    mode_text = _plain_atom_text(term_value)
+    if mode_text == "read":
+        return os.R_OK
+    if mode_text == "write":
+        return os.W_OK
+    if mode_text == "execute":
+        return os.X_OK
+    if mode_text == "exist":
+        return os.F_OK
+    return None
+
+
+def access_fileo(path_value: object, mode_value: object) -> GoalExpr:
+    """Succeed when a bound path has the requested bounded access mode."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term = args
+        path_text = _path_text(_reified(path_term, state))
+        access_mode = _access_mode(_reified(mode_term, state))
+        if path_text is None or access_mode is None:
+            return
+        if os.access(path_text, access_mode):
+            yield state
+
+    return native_goal(run, path_value, mode_value)
+
+
+def file_directory_nameo(path_value: object, directory_value: object) -> GoalExpr:
+    """Relate a bound path to its directory component as an atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, directory_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        directory_text = os.path.dirname(path_text) or "."
+        yield from solve_from(program_value, eq(directory_term, atom(directory_text)), state)
+
+    return native_goal(run, path_value, directory_value)
+
+
+def file_base_nameo(path_value: object, base_value: object) -> GoalExpr:
+    """Relate a bound path to its final path component as an atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, base_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(base_term, atom(os.path.basename(path_text))),
+            state,
+        )
+
+    return native_goal(run, path_value, base_value)
+
+
+def directory_file_patho(
+    directory_value: object,
+    file_value: object,
+    path_value: object,
+) -> GoalExpr:
+    """Relate directory/file components to a pathname atom in finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        directory_term, file_term, path_term = args
+        directory_text = _path_text(_reified(directory_term, state))
+        file_text = _path_text(_reified(file_term, state))
+        path_text = _path_text(_reified(path_term, state))
+
+        goals: list[GoalExpr] = []
+        if directory_text is not None and file_text is not None:
+            goals.append(eq(path_term, atom(str(Path(directory_text) / file_text))))
+        elif path_text is not None:
+            goals.append(eq(directory_term, atom(os.path.dirname(path_text) or ".")))
+            goals.append(eq(file_term, atom(os.path.basename(path_text))))
+        else:
+            return
+
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, directory_value, file_value, path_value)
+
+
+def _file_name_extension_parts(name_text: str) -> tuple[str, str]:
+    base_text, extension_text = os.path.splitext(name_text)
+    if extension_text.startswith("."):
+        extension_text = extension_text[1:]
+    return base_text, extension_text
+
+
+def _join_file_name_extension(base_text: str, extension_text: str) -> str:
+    if extension_text == "":
+        return base_text
+    return f"{base_text}.{extension_text}"
+
+
+def file_name_extensiono(
+    base_value: object,
+    extension_value: object,
+    name_value: object,
+) -> GoalExpr:
+    """Relate a file base, extension, and name in finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        base_term, extension_term, name_term = args
+        base_text = _path_text(_reified(base_term, state))
+        extension_text = _plain_atom_text(_reified(extension_term, state))
+        name_text = _path_text(_reified(name_term, state))
+
+        goals: list[GoalExpr] = []
+        if name_text is not None:
+            parsed_base, parsed_extension = _file_name_extension_parts(name_text)
+            goals.append(eq(base_term, atom(parsed_base)))
+            goals.append(eq(extension_term, atom(parsed_extension)))
+        elif base_text is not None and extension_text is not None:
+            goals.append(
+                eq(name_term, atom(_join_file_name_extension(base_text, extension_text))),
+            )
+        else:
+            return
+
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, base_value, extension_value, name_value)
+
+
+def same_fileo(left_value: object, right_value: object) -> GoalExpr:
+    """Succeed when two bound paths refer to the same existing file."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        left_text = _path_text(_reified(left_term, state))
+        right_text = _path_text(_reified(right_term, state))
+        if left_text is None or right_text is None:
+            return
+        try:
+            if Path(left_text).samefile(right_text):
+                yield state
+        except OSError:
+            return
+
+    return native_goal(run, left_value, right_value)
+
+
+def size_fileo(path_value: object, size_value: object) -> GoalExpr:
+    """Relate a bound regular file path to its byte size."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, size_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            stat_result = Path(path_text).stat()
+        except OSError:
+            return
+        if not Path(path_text).is_file():
+            return
+        yield from solve_from(program_value, eq(size_term, num(stat_result.st_size)), state)
+
+    return native_goal(run, path_value, size_value)
+
+
+def time_fileo(path_value: object, time_value: object) -> GoalExpr:
+    """Relate a bound existing path to its modification timestamp."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, time_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            modified_at = Path(path_text).stat().st_mtime
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(time_term, num(modified_at)), state)
+
+    return native_goal(run, path_value, time_value)
+
+
+def directory_fileso(path_value: object, entries_value: object) -> GoalExpr:
+    """Relate a bound directory path to a sorted list of entry-name atoms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, entries_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            entries = sorted(path.name for path in Path(path_text).iterdir())
+        except OSError:
+            return
+        yield from solve_from(
+            program_value,
+            eq(entries_term, logic_list([atom(entry) for entry in entries])),
+            state,
+        )
+
+    return native_goal(run, path_value, entries_value)
+
+
+def make_directoryo(path_value: object) -> GoalExpr:
+    """Create one bound directory path if the immediate parent exists."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).mkdir()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_fileo(path_value: object) -> GoalExpr:
+    """Delete one bound regular file path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).unlink()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_directoryo(path_value: object) -> GoalExpr:
+    """Delete one bound empty directory path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).rmdir()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def rename_fileo(old_path_value: object, new_path_value: object) -> GoalExpr:
+    """Rename one bound filesystem path to another bound path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        old_path_term, new_path_term = args
+        old_path_text = _path_text(_reified(old_path_term, state))
+        new_path_text = _path_text(_reified(new_path_term, state))
+        if old_path_text is None or new_path_text is None:
+            return
+        try:
+            Path(old_path_text).rename(new_path_text)
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, old_path_value, new_path_value)
+
+
+def working_directoryo(old_value: object, new_value: object) -> GoalExpr:
+    """Relate the current working directory and change to a bound directory."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        old_term, new_term = args
+        new_text = _path_text(_reified(new_term, state))
+        if new_text is None:
+            return
+        old_text = os.getcwd()
+        try:
+            os.chdir(new_text)
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(old_term, atom(old_text)), state)
+
+    return native_goal(run, old_value, new_value)
+
+
+def expand_file_nameo(pattern_value: object, matches_value: object) -> GoalExpr:
+    """Relate a bound wildcard path pattern to sorted matching path atoms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        pattern_term, matches_term = args
+        pattern_text = _path_text(_reified(pattern_term, state))
+        if pattern_text is None:
+            return
+        try:
+            expanded_pattern = os.path.expanduser(pattern_text)
+            matches = sorted(glob.glob(expanded_pattern, recursive=True))
+        except OSError:
+            return
+        yield from solve_from(
+            program_value,
+            eq(matches_term, logic_list([atom(match) for match in matches])),
+            state,
+        )
+
+    return native_goal(run, pattern_value, matches_value)
+
+
+def make_directory_patho(path_value: object) -> GoalExpr:
+    """Create a bound directory path and any missing parents."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).mkdir(parents=True, exist_ok=True)
+        except OSError:
+            return
+        if Path(path_text).is_dir():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_directory_and_contentso(path_value: object) -> GoalExpr:
+    """Delete a bound directory path and its contents recursively."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        path = Path(path_text)
+        if not path.is_dir():
+            return
+        try:
+            shutil.rmtree(path)
+        except OSError:
+            return
+        if not path.exists():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def copy_fileo(source_value: object, target_value: object) -> GoalExpr:
+    """Copy one bound regular file path to another bound path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, target_term = args
+        source_text = _path_text(_reified(source_term, state))
+        target_text = _path_text(_reified(target_term, state))
+        if source_text is None or target_text is None:
+            return
+        if not Path(source_text).is_file():
+            return
+        try:
+            shutil.copyfile(source_text, target_text)
+        except OSError:
+            return
+        if Path(target_text).is_file():
+            yield state
+
+    return native_goal(run, source_value, target_value)
+
+
 def read_file_to_stringo(path_value: object, contents: object) -> GoalExpr:
     """Relate a bound atom/string path to the file's UTF-8 contents as a string."""
 
@@ -4901,25 +5391,73 @@ def _open_text_stream(
     mode_text: str,
     *,
     alias_text: str | None = None,
+    stream_type: str = "text",
+    option_properties: tuple[Term, ...] = (),
 ) -> _TextStream | None:
     path = Path(path_text)
     try:
-        if mode_text == "read":
-            if not path.is_file():
-                return None
-            return _TextStream(
-                mode=mode_text,
-                path=path,
-                contents=path.read_text(encoding="utf-8"),
-                alias=alias_text,
-            )
-        if mode_text == "write":
-            path.write_text("", encoding="utf-8")
-            return _TextStream(mode=mode_text, path=path, alias=alias_text)
-        if mode_text == "append":
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.open("a", encoding="utf-8").close()
-            return _TextStream(mode=mode_text, path=path, alias=alias_text)
+        if stream_type == "text":
+            if mode_text == "read":
+                if not path.is_file():
+                    return None
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    contents=path.read_text(encoding="utf-8"),
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "write":
+                path.write_text("", encoding="utf-8")
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "append":
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.open("a", encoding="utf-8").close()
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+        if stream_type == "binary":
+            if mode_text == "read":
+                if not path.is_file():
+                    return None
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    binary_contents=path.read_bytes(),
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "write":
+                path.write_bytes(b"")
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "append":
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.open("ab").close()
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
     except OSError:
         return None
     except UnicodeDecodeError:
@@ -4927,12 +5465,22 @@ def _open_text_stream(
     return None
 
 
-def _open_options(term_value: Term) -> tuple[str | None] | None:
+def _boolean_option_value(term_value: Term) -> str | None:
+    value_text = _plain_atom_text(term_value)
+    if value_text in {"true", "false"}:
+        return value_text
+    return None
+
+
+def _open_options(term_value: Term) -> tuple[str | None, str, tuple[Term, ...]] | None:
     items = _proper_list_items(term_value)
     if items is None:
         return None
 
     alias_text: str | None = None
+    stream_type = "text"
+    has_encoding = False
+    option_properties: list[Term] = []
     for item in items:
         if not isinstance(item, Compound) or len(item.args) != 1:
             return None
@@ -4950,16 +5498,50 @@ def _open_options(term_value: Term) -> tuple[str | None] | None:
             encoding_text = _plain_atom_text(option_arg)
             if encoding_text not in {"utf8", "utf-8"}:
                 return None
+            has_encoding = True
+            option_properties.append(term("encoding", atom("utf8")))
             continue
 
         if option_name == "type":
-            if _plain_atom_text(option_arg) != "text":
+            parsed_type = _plain_atom_text(option_arg)
+            if parsed_type not in {"text", "binary"}:
                 return None
+            stream_type = parsed_type
+            continue
+
+        if option_name == "reposition":
+            reposition_text = _boolean_option_value(option_arg)
+            if reposition_text is None:
+                return None
+            option_properties.append(term("reposition", atom(reposition_text)))
+            continue
+
+        if option_name == "eof_action":
+            eof_action_text = _plain_atom_text(option_arg)
+            if eof_action_text not in {"eof_code", "error", "reset"}:
+                return None
+            option_properties.append(term("eof_action", atom(eof_action_text)))
+            continue
+
+        if option_name == "buffer":
+            buffer_text = _plain_atom_text(option_arg)
+            if buffer_text not in {"full", "line", "false"}:
+                return None
+            option_properties.append(term("buffer", atom(buffer_text)))
+            continue
+
+        if option_name == "close_on_abort":
+            close_on_abort_text = _boolean_option_value(option_arg)
+            if close_on_abort_text is None:
+                return None
+            option_properties.append(term("close_on_abort", atom(close_on_abort_text)))
             continue
 
         return None
 
-    return (alias_text,)
+    if stream_type == "binary" and has_encoding:
+        return None
+    return (alias_text, stream_type, tuple(option_properties))
 
 
 def _register_stream(handle: Atom, stream: _TextStream) -> bool:
@@ -5010,8 +5592,14 @@ def open_optionso(
         if path_text is None or mode_text is None or parsed_options is None:
             return
 
-        [alias_text] = parsed_options
-        stream = _open_text_stream(path_text, mode_text, alias_text=alias_text)
+        alias_text, stream_type, option_properties = parsed_options
+        stream = _open_text_stream(
+            path_text,
+            mode_text,
+            alias_text=alias_text,
+            stream_type=stream_type,
+            option_properties=option_properties,
+        )
         if stream is None:
             return
 
@@ -5032,6 +5620,12 @@ def closeo(stream_value: object) -> GoalExpr:
         [stream_term] = args
         handle_text = _stream_key(_reified(stream_term, state))
         if handle_text is None or handle_text not in _STREAMS:
+            return
+        if handle_text in {
+            _STANDARD_INPUT_HANDLE,
+            _STANDARD_OUTPUT_HANDLE,
+            _STANDARD_ERROR_HANDLE,
+        }:
             return
         stream = _STREAMS.pop(handle_text)
         if stream.alias is not None:
@@ -5063,11 +5657,39 @@ def _read_stream(term_value: Term) -> _TextStream | None:
     return None if resolved is None else resolved[1]
 
 
+def _read_text_stream(term_value: Term) -> _TextStream | None:
+    stream = _read_stream(term_value)
+    if stream is None or stream.stream_type != "text":
+        return None
+    return stream
+
+
+def _read_binary_stream(term_value: Term) -> _TextStream | None:
+    stream = _read_stream(term_value)
+    if stream is None or stream.stream_type != "binary":
+        return None
+    return stream
+
+
 def _current_input_stream() -> _TextStream | None:
     if _CURRENT_INPUT_HANDLE is None:
         return None
     stream = _STREAMS.get(_CURRENT_INPUT_HANDLE)
     if stream is None or stream.mode != "read":
+        return None
+    return stream
+
+
+def _current_input_text_stream() -> _TextStream | None:
+    stream = _current_input_stream()
+    if stream is None or stream.stream_type != "text":
+        return None
+    return stream
+
+
+def _current_input_binary_stream() -> _TextStream | None:
+    stream = _current_input_stream()
+    if stream is None or stream.stream_type != "binary":
         return None
     return stream
 
@@ -5079,6 +5701,12 @@ def _current_output_stream_term() -> Atom | None:
     if stream is None or stream.mode not in {"write", "append"}:
         return None
     return atom(_CURRENT_OUTPUT_HANDLE)
+
+
+def _stream_length(stream: _TextStream) -> int:
+    if stream.stream_type == "binary":
+        return len(stream.binary_contents)
+    return len(stream.contents)
 
 
 def current_inputo(stream_value: object) -> GoalExpr:
@@ -5143,12 +5771,12 @@ def set_outputo(stream_value: object) -> GoalExpr:
 
 
 def at_end_of_streamo(stream_value: object) -> GoalExpr:
-    """Succeed when a bounded read stream has consumed all available text."""
+    """Succeed when a bounded read stream has consumed all available data."""
 
     def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [stream_term] = args
         stream = _read_stream(_reified(stream_term, state))
-        if stream is not None and stream.cursor >= len(stream.contents):
+        if stream is not None and stream.cursor >= _stream_length(stream):
             yield state
 
     return native_goal(run, stream_value)
@@ -5159,7 +5787,7 @@ def at_end_of_current_streamo() -> GoalExpr:
 
     def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
         stream = _current_input_stream()
-        if stream is not None and stream.cursor >= len(stream.contents):
+        if stream is not None and stream.cursor >= _stream_length(stream):
             yield state
 
     return native_goal(run)
@@ -5173,7 +5801,7 @@ def _stream_position(term_value: object) -> int | None:
 
 
 def _set_read_stream_position(stream: _TextStream, position: int) -> bool:
-    if position < 0 or position > len(stream.contents):
+    if position < 0 or position > _stream_length(stream):
         return False
     stream.cursor = position
     return True
@@ -5202,7 +5830,7 @@ def _seek_target(stream: _TextStream, offset: int, method: str) -> int | None:
     if method == "current":
         return stream.cursor + offset
     if method == "eof":
-        return len(stream.contents) + offset
+        return _stream_length(stream) + offset
     return None
 
 
@@ -5232,7 +5860,7 @@ def seeko(
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, offset_term, method_term, new_location_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         offset = _seek_offset(_reified(offset_term, state))
         method = _plain_atom_text(_reified(method_term, state))
         if stream is None or offset is None or method is None:
@@ -5260,7 +5888,7 @@ def read_stringo(
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, length_term, string_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         length = _reified_integer(length_term, state)
         if stream is None or length is None or length < 0:
             return
@@ -5281,7 +5909,7 @@ def read_current_stringo(length_value: object, string_value: object) -> GoalExpr
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         length_term, string_term = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         length = _reified_integer(length_term, state)
         if stream is None or length is None or length < 0:
             return
@@ -5302,7 +5930,7 @@ def read_line_to_stringo(stream_value: object, string_value: object) -> GoalExpr
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, string_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         if stream is None:
             return
 
@@ -5331,7 +5959,7 @@ def read_current_line_to_stringo(string_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [string_term] = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         if stream is None:
             return
 
@@ -5360,7 +5988,7 @@ def get_charo(stream_value: object, char_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, char_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         if stream is None:
             return
 
@@ -5384,7 +6012,7 @@ def get_current_charo(char_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [char_term] = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         if stream is None:
             return
 
@@ -5401,6 +6029,320 @@ def get_current_charo(char_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(char_term, atom(character)), state)
 
     return native_goal(run, char_value)
+
+
+def _peek_stream_character(stream: _TextStream) -> str | None:
+    if stream.cursor >= len(stream.contents):
+        return None
+    return stream.contents[stream.cursor]
+
+
+def _read_stream_character(stream: _TextStream) -> str | None:
+    character = _peek_stream_character(stream)
+    if character is not None:
+        stream.cursor += 1
+    return character
+
+
+def _character_atom_term(character: str | None) -> Atom:
+    return atom("end_of_file") if character is None else atom(character)
+
+
+def _character_code_term(character: str | None) -> Number:
+    return num(-1 if character is None else ord(character))
+
+
+def _peek_stream_byte(stream: _TextStream) -> int | None:
+    if stream.cursor >= len(stream.binary_contents):
+        return None
+    return stream.binary_contents[stream.cursor]
+
+
+def _read_stream_byte(stream: _TextStream) -> int | None:
+    byte = _peek_stream_byte(stream)
+    if byte is not None:
+        stream.cursor += 1
+    return byte
+
+
+def _byte_term(byte_value: int | None) -> Number:
+    return num(-1 if byte_value is None else byte_value)
+
+
+def _write_character_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text is None or len(text) != 1:
+        return None
+    return text
+
+
+def _write_code_text(term_value: Term) -> str | None:
+    code = _integer_value(term_value)
+    if code is None or code < 0:
+        return None
+    try:
+        return chr(code)
+    except ValueError:
+        return None
+
+
+def _write_byte_value(term_value: Term) -> int | None:
+    byte_value = _integer_value(term_value)
+    if byte_value is None or byte_value < 0 or byte_value > 255:
+        return None
+    return byte_value
+
+
+def get_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Read one Unicode code point from a bounded read stream or ``-1`` at EOF."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_read_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, code_value)
+
+
+def get_current_codeo(code_value: object) -> GoalExpr:
+    """Read one Unicode code point from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_read_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, code_value)
+
+
+def get_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Read one byte from a bounded binary stream or ``-1`` at EOF."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        stream = _read_binary_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_read_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def get_current_byteo(byte_value: object) -> GoalExpr:
+    """Read one byte from the selected binary input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        stream = _current_input_binary_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_read_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, byte_value)
+
+
+def peek_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Peek one character atom from a bounded read stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(char_term, _character_atom_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, char_value)
+
+
+def peek_current_charo(char_value: object) -> GoalExpr:
+    """Peek one character atom from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(char_term, _character_atom_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, char_value)
+
+
+def peek_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Peek one Unicode code point from a bounded read stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, code_value)
+
+
+def peek_current_codeo(code_value: object) -> GoalExpr:
+    """Peek one Unicode code point from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, code_value)
+
+
+def peek_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Peek one byte from a bounded binary stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        stream = _read_binary_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_peek_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def peek_current_byteo(byte_value: object) -> GoalExpr:
+    """Peek one byte from the selected binary input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        stream = _current_input_binary_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_peek_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, byte_value)
+
+
+def put_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Write one character atom to a bounded write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        text = _write_character_text(_reified(char_term, state))
+        if text is not None and _write_stream(_reified(stream_term, state), text):
+            yield state
+
+    return native_goal(run, stream_value, char_value)
+
+
+def put_current_charo(char_value: object) -> GoalExpr:
+    """Write one character atom to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        text = _write_character_text(_reified(char_term, state))
+        if text is not None and _write_current_stream(text):
+            yield state
+
+    return native_goal(run, char_value)
+
+
+def put_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Write one Unicode code point to a bounded write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        text = _write_code_text(_reified(code_term, state))
+        if text is not None and _write_stream(_reified(stream_term, state), text):
+            yield state
+
+    return native_goal(run, stream_value, code_value)
+
+
+def put_current_codeo(code_value: object) -> GoalExpr:
+    """Write one Unicode code point to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        text = _write_code_text(_reified(code_term, state))
+        if text is not None and _write_current_stream(text):
+            yield state
+
+    return native_goal(run, code_value)
+
+
+def put_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Write one byte to a bounded binary write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        byte = _write_byte_value(_reified(byte_term, state))
+        if byte is not None and _write_byte_stream(_reified(stream_term, state), byte):
+            yield state
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def put_current_byteo(byte_value: object) -> GoalExpr:
+    """Write one byte to the selected binary output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        byte = _write_byte_value(_reified(byte_term, state))
+        if byte is not None and _write_current_byte_stream(byte):
+            yield state
+
+    return native_goal(run, byte_value)
 
 
 def _stream_write_text(term_value: Term) -> str | None:
@@ -5420,11 +6362,44 @@ def _write_stream(term_value: Term, text: str) -> bool:
     if handle_text is None:
         return False
     stream = _STREAMS.get(handle_text)
-    if stream is None or stream.mode not in {"write", "append"}:
+    if (
+        stream is None
+        or stream.mode not in {"write", "append"}
+        or stream.stream_type != "text"
+    ):
         return False
+    if stream.standard_stream == "user_output":
+        sys.stdout.write(text)
+        stream.contents += text
+        stream.cursor += len(text)
+        return True
+    if stream.standard_stream == "user_error":
+        sys.stderr.write(text)
+        stream.contents += text
+        stream.cursor += len(text)
+        return True
     try:
         with stream.path.open("a", encoding="utf-8") as file:
             file.write(text)
+    except OSError:
+        return False
+    return True
+
+
+def _write_byte_stream(term_value: Term, byte_value: int) -> bool:
+    handle_text = _stream_key(term_value)
+    if handle_text is None:
+        return False
+    stream = _STREAMS.get(handle_text)
+    if (
+        stream is None
+        or stream.mode not in {"write", "append"}
+        or stream.stream_type != "binary"
+    ):
+        return False
+    try:
+        with stream.path.open("ab") as file:
+            file.write(bytes([byte_value]))
     except OSError:
         return False
     return True
@@ -5435,6 +6410,13 @@ def _write_current_stream(text: str) -> bool:
     if output_stream is None:
         return False
     return _write_stream(output_stream, text)
+
+
+def _write_current_byte_stream(byte_value: int) -> bool:
+    output_stream = _current_output_stream_term()
+    if output_stream is None:
+        return False
+    return _write_byte_stream(output_stream, byte_value)
 
 
 def writeo(stream_value: object, term_value: object) -> GoalExpr:
@@ -5492,6 +6474,10 @@ def flush_outputo(stream_value: object) -> GoalExpr:
         handle_text = _stream_key(_reified(stream_term, state))
         stream = _STREAMS.get(handle_text) if handle_text is not None else None
         if stream is not None and stream.mode in {"write", "append"}:
+            if stream.standard_stream == "user_output":
+                sys.stdout.flush()
+            if stream.standard_stream == "user_error":
+                sys.stderr.flush()
             yield state
 
     return native_goal(run, stream_value)
@@ -5501,7 +6487,13 @@ def flush_current_outputo() -> GoalExpr:
     """Validate the selected output stream; writes are already flushed."""
 
     def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
-        if _current_output_stream_term() is not None:
+        output_stream = _current_output_stream_term()
+        if output_stream is not None:
+            stream = _STREAMS.get(output_stream.symbol.name)
+            if stream is not None and stream.standard_stream == "user_output":
+                sys.stdout.flush()
+            if stream is not None and stream.standard_stream == "user_error":
+                sys.stderr.flush()
             yield state
 
     return native_goal(run)
@@ -5520,7 +6512,7 @@ def current_streamo(
             yield from solve_from(
                 program_value,
                 conj(
-                    eq(path_term, atom(str(stream.path))),
+                    eq(path_term, atom(_stream_display_name(stream))),
                     eq(mode_term, atom(stream.mode)),
                     eq(stream_term, atom(handle_text)),
                 ),
@@ -5530,17 +6522,22 @@ def current_streamo(
     return native_goal(run, path_value, mode_value, stream_value)
 
 
+def _stream_display_name(stream: _TextStream) -> str:
+    return stream.display_name if stream.display_name is not None else str(stream.path)
+
+
 def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...]:
     properties: list[Term] = [
-        term("file_name", atom(str(stream.path))),
+        term("file_name", atom(_stream_display_name(stream))),
         term("mode", atom(stream.mode)),
+        term("type", atom(stream.stream_type)),
         term("position", num(stream.cursor)),
     ]
     if stream.mode == "read":
         properties.append(atom("input"))
         if handle_text == _CURRENT_INPUT_HANDLE:
             properties.append(atom("current_input"))
-        eof_state = "at" if stream.cursor >= len(stream.contents) else "not"
+        eof_state = "at" if stream.cursor >= _stream_length(stream) else "not"
         properties.append(term("end_of_stream", atom(eof_state)))
     else:
         properties.append(atom("output"))
@@ -5548,6 +6545,7 @@ def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...
             properties.append(atom("current_output"))
     if stream.alias is not None:
         properties.append(term("alias", atom(stream.alias)))
+    properties.extend(stream.option_properties)
     properties.append(term("handle", atom(handle_text)))
     return tuple(properties)
 

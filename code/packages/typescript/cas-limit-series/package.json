@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/cas-limit-series",
+  "version": "0.1.0",
+  "description": "Pure TypeScript direct limits and polynomial Taylor expansion over symbolic IR",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["cas", "limit", "series", "taylor", "browser"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/cas-substitution": "file:../cas-substitution",
+    "@coding-adventures/symbolic-ir": "file:../symbolic-ir"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -46,12 +46,12 @@ assert_eq!(pixels.height, 100);
 | PaintLine     | Fully implemented |
 | PaintGroup    | Fully implemented |
 | PaintClip     | Fully implemented |
-| PaintGlyphRun | Planned |
-| PaintEllipse  | Planned |
-| PaintPath     | Planned |
-| PaintLayer    | Planned |
-| PaintGradient | Planned |
-| PaintImage    | Planned |
+| PaintGlyphRun | Fully implemented |
+| PaintEllipse  | Fully implemented |
+| PaintPath     | Fully implemented |
+| PaintLayer    | Fully implemented |
+| PaintGradient | Fully implemented |
+| PaintImage    | Fully implemented |
 
 ## Platform
 

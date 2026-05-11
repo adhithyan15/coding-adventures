@@ -10,10 +10,18 @@ than a backend-specific index.
 ## What it owns
 
 - `MemoryRecord`
+- `MemoryRecordSummary`
 - `MemoryClass`
 - confidence/review updates
 - supersede, expiry, and tombstone transitions
-- lexical search across subject/body/tags
+- lexical search across subject/body/tags, including active-at filtering and
+  bounded result sets for tool calls
+- bounded read selectors for class, tag, source, active-at, confidence,
+  tombstone inclusion, sorting, and limits
+- metadata-only memory summaries for read tools that should not return memory
+  body text
+- deterministic review candidates for low-confidence, stale, expiring, and
+  expired memories
 
 ## Key layout
 
@@ -25,9 +33,14 @@ than a backend-specific index.
 - `fetch_memory()`
 - `update_confidence()`
 - `supersede_old_memory()`
+- `list_memories_with_options()`
+- `list_memory_summaries()`
 - `list_by_class()`
 - `list_by_tag()`
 - `search_lexical()`
+- `search_lexical_with_options()`
+- `search_active_lexical_at()`
+- `review_candidates()`
 - `mark_expired()`
 - `forget_tombstone()`
 

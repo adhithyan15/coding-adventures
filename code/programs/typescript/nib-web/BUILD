@@ -1,4 +1,5 @@
 cd ../../../packages/typescript/directed-graph && npm ci --quiet
+cd ../../../packages/typescript/cli-builder && npm ci --quiet
 cd ../../../packages/typescript/grammar-tools && npm ci --quiet
 cd ../../../packages/typescript/lexer && npm ci --quiet
 cd ../../../packages/typescript/state-machine && npm ci --quiet

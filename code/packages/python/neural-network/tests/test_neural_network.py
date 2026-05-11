@@ -9,11 +9,13 @@ from neural_network import (
     create_neural_network,
     create_xor_network,
 )
+from multi_directed_graph import MultiDirectedGraph
 
 
 def test_creates_neural_graph_metadata():
     graph = create_neural_graph("tiny-model")
 
+    assert isinstance(graph, MultiDirectedGraph)
     assert graph.graph_properties() == {"nn.version": "0", "nn.name": "tiny-model"}
 
 

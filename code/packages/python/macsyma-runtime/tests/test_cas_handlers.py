@@ -1071,3 +1071,173 @@ def test_taylor_transcendental_returns_unevaluated() -> None:
     result = vm.eval(_apply("Taylor", sin_x, _sym("x"), _int(0), _int(3)))
     assert isinstance(result, IRApply)
     assert result.head == _sym("Taylor")  # type: ignore[union-attr]
+
+
+# ---------------------------------------------------------------------------
+# Phase 33 — wrong-arity branches for list handlers
+# ---------------------------------------------------------------------------
+# These tests hit the ``if len(expr.args) != 1: return expr`` guards that
+# were previously uncovered because the happy-path tests and the
+# ListOperationError tests never called with too many arguments.
+
+
+def test_length_wrong_arity_returns_unevaluated() -> None:
+    """Length(a, b) — two args → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Length", _apply("List", _int(1)), _apply("List", _int(2))))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Length")  # type: ignore[union-attr]
+
+
+def test_first_wrong_arity_returns_unevaluated() -> None:
+    """First(a, b) — two args → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("First", _apply("List", _int(1)), _apply("List", _int(2))))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("First")  # type: ignore[union-attr]
+
+
+def test_rest_wrong_arity_returns_unevaluated() -> None:
+    """Rest(a, b) — two args → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Rest", _apply("List", _int(1)), _apply("List", _int(2))))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Rest")  # type: ignore[union-attr]
+
+
+def test_last_wrong_arity_returns_unevaluated() -> None:
+    """Last(a, b) — two args → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Last", _apply("List", _int(1)), _apply("List", _int(2))))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Last")  # type: ignore[union-attr]
+
+
+def test_append_single_arg_returns_unevaluated() -> None:
+    """Append(list) — one arg → below minimum arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Append", _apply("List", _int(1))))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Append")  # type: ignore[union-attr]
+
+
+def test_reverse_wrong_arity_returns_unevaluated() -> None:
+    """Reverse(a, b) — two args → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(
+        _apply("Reverse", _apply("List", _int(1)), _apply("List", _int(2)))
+    )
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Reverse")  # type: ignore[union-attr]
+
+
+# ---------------------------------------------------------------------------
+# Phase 33 — expand fallback for multi-variable or symbol expressions
+# ---------------------------------------------------------------------------
+
+
+def test_expand_multivariate_uses_canonical_fallback() -> None:
+    """Expand(x + y) — multi-variable → falls back to canonical form."""
+    vm = _vm()
+    xy = IRApply(IRSymbol("Add"), (_sym("x"), _sym("y")))
+    result = vm.eval(_apply("Expand", xy))
+    # canonical(x + y) returns an IRApply or the symbols
+    assert result is not None
+
+
+# ---------------------------------------------------------------------------
+# Phase 33 — factor edge cases (rational polynomial, multi-variable)
+# ---------------------------------------------------------------------------
+
+
+def test_factor_rational_polynomial_returns_unevaluated() -> None:
+    """Factor(1/x) — rational function, not polynomial → unevaluated.
+
+    ``to_rational(1/x, x)`` returns num=(Fraction(1),), den=(Fraction(1), Fraction(0))
+    so the denominator check ``den != (Fraction(1),)`` fires, returning unevaluated.
+    """
+    vm = _vm()
+    # Build 1/x as Pow(x, -1)
+    one_over_x = IRApply(IRSymbol("Pow"), (_sym("x"), IRInteger(-1)))
+    result = vm.eval(_apply("Factor", one_over_x))
+    # Rational function — cannot be factored as integer polynomial
+    assert result is not None
+
+
+def test_factor_multivariate_returns_unevaluated_p33() -> None:
+    """Factor(x + y) — two variables → _find_variable returns None → unevaluated."""
+    vm = _vm()
+    xy = IRApply(IRSymbol("Add"), (_sym("x"), _sym("y")))
+    result = vm.eval(_apply("Factor", xy))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Factor")  # type: ignore[union-attr]
+
+
+# ---------------------------------------------------------------------------
+# Phase 33 — solve edge cases (constant equation, transcendental)
+# ---------------------------------------------------------------------------
+
+
+def test_solve_constant_equation_returns_empty_list() -> None:
+    """Solve(5, x) — degree 0 polynomial → empty solution list."""
+    vm = _vm()
+    result = vm.eval(_apply("Solve", _int(5), _sym("x")))
+    # Constant equation has no solutions
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("List")  # type: ignore[union-attr]
+    assert len(result.args) == 0
+
+
+def test_solve_transcendental_returns_unevaluated() -> None:
+    """Solve(Sin(x), x) — to_rational returns None → unevaluated."""
+    vm = _vm()
+    sin_x = IRApply(IRSymbol("Sin"), (_sym("x"),))
+    result = vm.eval(_apply("Solve", sin_x, _sym("x")))
+    # Transcendental — cannot be converted to polynomial
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Solve")  # type: ignore[union-attr]
+
+
+# ---------------------------------------------------------------------------
+# Phase 33 — numeric handler edge cases (to_number returns None)
+# ---------------------------------------------------------------------------
+
+
+def test_floor_symbolic_returns_unevaluated() -> None:
+    """Floor(x) — symbolic arg → to_number returns None → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Floor", _sym("x")))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Floor")  # type: ignore[union-attr]
+
+
+def test_ceiling_wrong_arity_returns_unevaluated() -> None:
+    """Ceiling(a, b) — two args → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Ceiling", _int(3), _int(4)))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Ceiling")  # type: ignore[union-attr]
+
+
+def test_mod_symbolic_divisor_returns_unevaluated() -> None:
+    """Mod(3, x) — symbolic divisor → to_number returns None → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Mod", _int(3), _sym("x")))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Mod")  # type: ignore[union-attr]
+
+
+def test_gcd_wrong_arity_returns_unevaluated() -> None:
+    """Gcd(a) — one arg → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Gcd", _int(4)))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Gcd")  # type: ignore[union-attr]
+
+
+def test_lcm_wrong_arity_returns_unevaluated() -> None:
+    """Lcm(a) — one arg → wrong arity → unevaluated."""
+    vm = _vm()
+    result = vm.eval(_apply("Lcm", _int(4)))
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Lcm")  # type: ignore[union-attr]

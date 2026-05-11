@@ -8,7 +8,9 @@ from typing import Protocol
 
 from logic_builtins import (
     abolisho,
+    absolute_file_nameo,
     acyclic_termo,
+    access_fileo,
     all_differento,
     argo,
     assertao,
@@ -48,9 +50,17 @@ from logic_builtins import (
     current_streamo,
     cuto,
     cyclic_termo,
+    copy_fileo,
+    delete_directory_and_contentso,
+    delete_directoryo,
+    delete_fileo,
     difo,
+    directory_fileso,
+    directory_file_patho,
     dynamico,
     excludeo,
+    expand_file_nameo,
+    exists_directoryo,
     exists_fileo,
     failo,
     falseo,
@@ -80,8 +90,15 @@ from logic_builtins import (
     foldlo,
     forallo,
     functoro,
+    file_base_nameo,
+    file_directory_nameo,
+    file_name_extensiono,
+    get_byteo,
     get_charo,
+    get_codeo,
+    get_current_byteo,
     get_current_charo,
+    get_current_codeo,
     groundo,
     ifthenelseo,
     iftheno,
@@ -91,6 +108,8 @@ from logic_builtins import (
     labeling_optionso,
     labelingo,
     maplisto,
+    make_directory_patho,
+    make_directoryo,
     nl_currento,
     nlo,
     nonvaro,
@@ -106,6 +125,12 @@ from logic_builtins import (
     open_optionso,
     openo,
     partitiono,
+    peek_byteo,
+    peek_charo,
+    peek_codeo,
+    peek_current_byteo,
+    peek_current_charo,
+    peek_current_codeo,
     predicate_propertyo,
     prolog_geqo,
     prolog_gto,
@@ -114,15 +139,23 @@ from logic_builtins import (
     prolog_lto,
     prolog_numeqo,
     prolog_numneqo,
+    put_byteo,
+    put_charo,
+    put_codeo,
+    put_current_byteo,
+    put_current_charo,
+    put_current_codeo,
     read_current_line_to_stringo,
     read_current_stringo,
     read_file_to_codeso,
     read_file_to_stringo,
     read_line_to_stringo,
     read_stringo,
+    rename_fileo,
     repeato,
     retractallo,
     retracto,
+    same_fileo,
     same_termo,
     scanlo,
     seeko,
@@ -132,6 +165,7 @@ from logic_builtins import (
     set_stream_positiono,
     setofo,
     setup_call_cleanupo,
+    size_fileo,
     stream_propertyo,
     string_charso,
     string_codeso,
@@ -149,6 +183,7 @@ from logic_builtins import (
     termo_leqo,
     termo_lto,
     throwo,
+    time_fileo,
     trueo,
     unifiableo,
     unify_with_occurs_checko,
@@ -157,6 +192,7 @@ from logic_builtins import (
     varo,
     write_currento,
     writeo,
+    working_directoryo,
 )
 from logic_builtins.builtins import (
     _current_input_stream,
@@ -583,6 +619,46 @@ def _adapt_relation_call(
         return read_file_to_stringo(*args)
     if name == "read_file_to_codes" and goal.relation.arity == 2:
         return read_file_to_codeso(*args)
+    if name == "exists_directory" and goal.relation.arity == 1:
+        return exists_directoryo(*args)
+    if name == "absolute_file_name" and goal.relation.arity == 2:
+        return absolute_file_nameo(*args)
+    if name == "access_file" and goal.relation.arity == 2:
+        return access_fileo(*args)
+    if name == "file_directory_name" and goal.relation.arity == 2:
+        return file_directory_nameo(*args)
+    if name == "file_base_name" and goal.relation.arity == 2:
+        return file_base_nameo(*args)
+    if name == "directory_file_path" and goal.relation.arity == 3:
+        return directory_file_patho(*args)
+    if name == "file_name_extension" and goal.relation.arity == 3:
+        return file_name_extensiono(*args)
+    if name == "same_file" and goal.relation.arity == 2:
+        return same_fileo(*args)
+    if name == "size_file" and goal.relation.arity == 2:
+        return size_fileo(*args)
+    if name == "time_file" and goal.relation.arity == 2:
+        return time_fileo(*args)
+    if name == "directory_files" and goal.relation.arity == 2:
+        return directory_fileso(*args)
+    if name == "make_directory" and goal.relation.arity == 1:
+        return make_directoryo(*args)
+    if name == "delete_file" and goal.relation.arity == 1:
+        return delete_fileo(*args)
+    if name == "delete_directory" and goal.relation.arity == 1:
+        return delete_directoryo(*args)
+    if name == "rename_file" and goal.relation.arity == 2:
+        return rename_fileo(*args)
+    if name == "working_directory" and goal.relation.arity == 2:
+        return working_directoryo(*args)
+    if name == "expand_file_name" and goal.relation.arity == 2:
+        return expand_file_nameo(*args)
+    if name == "make_directory_path" and goal.relation.arity == 1:
+        return make_directory_patho(*args)
+    if name == "delete_directory_and_contents" and goal.relation.arity == 1:
+        return delete_directory_and_contentso(*args)
+    if name == "copy_file" and goal.relation.arity == 2:
+        return copy_fileo(*args)
     if name == "open" and goal.relation.arity == 3:
         return openo(*args)
     if name == "open" and goal.relation.arity == 4:
@@ -617,6 +693,38 @@ def _adapt_relation_call(
         return get_charo(*args)
     if name == "get_char" and goal.relation.arity == 1:
         return get_current_charo(*args)
+    if name == "get_code" and goal.relation.arity == 2:
+        return get_codeo(*args)
+    if name == "get_code" and goal.relation.arity == 1:
+        return get_current_codeo(*args)
+    if name == "get_byte" and goal.relation.arity == 2:
+        return get_byteo(*args)
+    if name == "get_byte" and goal.relation.arity == 1:
+        return get_current_byteo(*args)
+    if name == "peek_char" and goal.relation.arity == 2:
+        return peek_charo(*args)
+    if name == "peek_char" and goal.relation.arity == 1:
+        return peek_current_charo(*args)
+    if name == "peek_code" and goal.relation.arity == 2:
+        return peek_codeo(*args)
+    if name == "peek_code" and goal.relation.arity == 1:
+        return peek_current_codeo(*args)
+    if name == "peek_byte" and goal.relation.arity == 2:
+        return peek_byteo(*args)
+    if name == "peek_byte" and goal.relation.arity == 1:
+        return peek_current_byteo(*args)
+    if name == "put_char" and goal.relation.arity == 2:
+        return put_charo(*args)
+    if name == "put_char" and goal.relation.arity == 1:
+        return put_current_charo(*args)
+    if name == "put_code" and goal.relation.arity == 2:
+        return put_codeo(*args)
+    if name == "put_code" and goal.relation.arity == 1:
+        return put_current_codeo(*args)
+    if name == "put_byte" and goal.relation.arity == 2:
+        return put_byteo(*args)
+    if name == "put_byte" and goal.relation.arity == 1:
+        return put_current_byteo(*args)
     if name == "write" and goal.relation.arity == 2:
         return writeo(*args)
     if name == "write" and goal.relation.arity == 1:

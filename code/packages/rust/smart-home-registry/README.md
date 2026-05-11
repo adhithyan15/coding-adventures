@@ -21,10 +21,13 @@ Current scope:
 - refresh-result application with refreshed/missing entity reports
 - state snapshot cache
 - immutable event log in arrival order
+- selector-based event-log queries for bounded replay windows
 - state updates from normalized event deltas
 - conflict detection for duplicate protocol identifiers
 - capability-grant storage and active-grant lookup by Chief of Staff agent
 - authorization-decision audit storage and principal/outcome lookup
+- read-only and read-write view wrappers so D18D read tools can be handed a
+  query-only registry surface while mutation paths stay explicit
 
 Out of scope:
 

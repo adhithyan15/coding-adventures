@@ -14,8 +14,8 @@ It is deliberately more structured than the existing CAS `BlobStore` trait:
 
 ## What this crate owns
 
-- `StorageRecord`, `StoragePutInput`, `StorageStat`, `StoragePage`, and
-  `StorageLease`
+- `StorageRecord`, `StorageRecordSummary`, `StoragePutInput`, `StorageStat`,
+  `StoragePage`, `StorageSummaryPage`, and `StorageLease`
 - `StorageBackend`, the backend trait implemented by local-folder, SQLite, and
   future backends
 - `InMemoryStorageBackend`, a pure Rust backend for tests and examples
@@ -104,6 +104,11 @@ let input = StoragePutInput::new(
 
 assert_eq!(input.namespace, "context");
 ```
+
+`StorageBackend` also includes default `get_summary()` and `list_summaries()`
+helpers. Backends can override them to serve read models without loading record
+bodies, while simple implementations can rely on the default projection from
+`stat()` and `list()`.
 
 ## Development
 

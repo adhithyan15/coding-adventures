@@ -27,7 +27,7 @@
  *
  * Generated output shape (json.tokens → json-tokens.ts):
  *
- *   // AUTO-GENERATED FILE — DO NOT EDIT
+ *   // AUTO-GENERATED FILE - DO NOT EDIT
  *   // Source: json.tokens
  *
  *   import type { TokenGrammar } from "@coding-adventures/grammar-tools";
@@ -86,7 +86,7 @@ export function compileTokenGrammar(
   const groupsLit = groupsObjLit(grammar.groups ?? {}, "  ");
 
   return [
-    "// AUTO-GENERATED FILE \u2014 DO NOT EDIT",
+    "// AUTO-GENERATED FILE - DO NOT EDIT",
     sourceLine + `// Regenerate with: grammar-tools compile-tokens ${sourceFile}`,
     "//",
     "// This file embeds a TokenGrammar as native TypeScript object literals.",
@@ -109,6 +109,7 @@ export function compileTokenGrammar(
     `  contextKeywords: ${JSON.stringify(grammar.contextKeywords ?? [])},`,
     `  errorDefinitions: ${errLit},`,
     `  groups: ${groupsLit},`,
+    `  softKeywords: ${JSON.stringify(grammar.softKeywords ?? [])},`,
     "};",
     "",
   ].join("\n");
@@ -139,7 +140,7 @@ export function compileParserGrammar(
         ",\n]";
 
   return [
-    "// AUTO-GENERATED FILE \u2014 DO NOT EDIT",
+    "// AUTO-GENERATED FILE - DO NOT EDIT",
     sourceLine + `// Regenerate with: grammar-tools compile-grammar ${sourceFile}`,
     "//",
     "// This file embeds a ParserGrammar as native TypeScript object literals.",

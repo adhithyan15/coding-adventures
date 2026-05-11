@@ -6,6 +6,10 @@ TOTP, WebAuthn, FIDO2-PRF, OPAQUE, SMS, OIDC, mTLS, AppRole,
 Kubernetes-SA, etc. — without the vault core caring which.
 
 This v0.1 ships **PasswordAuthenticator** and **TotpAuthenticator**.
+Successful assertions can also be projected into credential-safe
+`AuthAssertionSummary` / `AuthAssertionSetSummary` read models so
+policy and audit layers can inspect factor coverage without touching
+key-contribution bytes.
 
 ## Two operating modes
 

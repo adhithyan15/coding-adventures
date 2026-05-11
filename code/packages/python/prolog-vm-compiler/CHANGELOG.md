@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- Run standard stream aliases and richer accepted stream options through
+  structured and bytecode VM paths, including `user_input`, `user_output`,
+  `user_error`, `reposition/1`, `eof_action/1`, `buffer/1`, and
+  `close_on_abort/1`.
+- Run bounded source-level recursive/wildcard filesystem operation predicates
+  through structured and bytecode VM paths, including `expand_file_name/2`,
+  `make_directory_path/1`, `delete_directory_and_contents/1`, and
+  `copy_file/2`.
+- Run bounded source-level filesystem operation predicates through structured
+  and bytecode VM paths, including `directory_files/2`, `make_directory/1`,
+  `delete_file/1`, `delete_directory/1`, `rename_file/2`, and
+  `working_directory/2`.
+- Run bounded source-level read-only filesystem metadata predicates through
+  structured and bytecode VM paths, including `exists_directory/1`,
+  `absolute_file_name/2`, `access_file/2`, `file_directory_name/2`,
+  `file_base_name/2`, `directory_file_path/3`, `file_name_extension/3`,
+  `same_file/2`, `size_file/2`, and `time_file/2`.
 - Run bounded source-level UTF-8 file text I/O predicates through structured
   and bytecode VM paths, including `exists_file/1`,
   `read_file_to_string/2`, and `read_file_to_codes/2`.
@@ -23,8 +40,14 @@
 - Run term I/O convenience predicates through structured and bytecode VM paths,
   including `read_term` `singletons/1`, `writeq/1,2`,
   `write_canonical/1,2`, `writeln/1,2`, and `portray_clause/1,2`.
+- Run bounded character/code stream predicates through structured and bytecode
+  VM paths, including `get_code/1,2`, `peek_char/1,2`, `peek_code/1,2`,
+  `put_char/1,2`, and `put_code/1,2`.
+- Run bounded binary byte stream predicates through structured and bytecode VM
+  paths, including `open/4` `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`,
+  and `put_byte/1,2`.
 - Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
-  so scripts and future planning can distinguish the completed PR00-PR84 track
+  so scripts and future planning can distinguish the completed PR00-PR90 track
   from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.

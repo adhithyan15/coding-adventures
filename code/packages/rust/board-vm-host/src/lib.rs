@@ -1,7 +1,8 @@
 use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_GPIO_CLOSE,
     CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    FLAG_PROGRAM_MAY_RUN_FOREVER, MODULE_MAGIC, MODULE_VERSION,
+    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MODULE_MAGIC,
+    MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -14,12 +15,21 @@ use board_vm_protocol::{
 pub const DEFAULT_HOST_NAME: &str = "board-vm-host";
 pub const DEFAULT_PROGRAM_ID: u16 = 1;
 pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 1000;
+pub const DEFAULT_RUN_FLAGS: u8 = RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN;
 pub const BLINK_CODE_LEN: usize = 26;
 pub const BLINK_MODULE_LEN: usize = 36;
 pub const GPIO_WRITE_CODE_LEN: usize = 12;
 pub const GPIO_WRITE_MODULE_LEN: usize = 22;
 pub const GPIO_READ_CODE_LEN: usize = 13;
 pub const GPIO_READ_MODULE_LEN: usize = 23;
+pub const GPIO_OPEN_CODE_LEN: usize = 8;
+pub const GPIO_OPEN_MODULE_LEN: usize = 18;
+pub const GPIO_HANDLE_READ_CODE_LEN: usize = 4;
+pub const GPIO_HANDLE_READ_MODULE_LEN: usize = 14;
+pub const GPIO_HANDLE_WRITE_CODE_LEN: usize = 4;
+pub const GPIO_HANDLE_WRITE_MODULE_LEN: usize = 14;
+pub const GPIO_HANDLE_CLOSE_CODE_LEN: usize = 2;
+pub const GPIO_HANDLE_CLOSE_MODULE_LEN: usize = 12;
 pub const TIME_NOW_CODE_LEN: usize = 3;
 pub const TIME_NOW_MODULE_LEN: usize = 13;
 pub const TIME_SLEEP_MS_CODE_LEN: usize = 5;
@@ -126,6 +136,103 @@ pub struct GpioWriteProgram {
     pub pin: u8,
     pub value: bool,
     pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioOpenProgram {
+    pub pin: u8,
+    pub mode: u8,
+    pub max_stack: u8,
+}
+
+impl GpioOpenProgram {
+    pub const fn output(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_OUTPUT,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pullup(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLUP,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pulldown(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLDOWN,
+            max_stack: 2,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioHandleReadProgram {
+    pub max_stack: u8,
+}
+
+impl GpioHandleReadProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for GpioHandleReadProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioHandleWriteProgram {
+    pub value: bool,
+    pub max_stack: u8,
+}
+
+impl GpioHandleWriteProgram {
+    pub const fn high() -> Self {
+        Self {
+            value: true,
+            max_stack: 3,
+        }
+    }
+
+    pub const fn low() -> Self {
+        Self {
+            value: false,
+            max_stack: 3,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioHandleCloseProgram {
+    pub max_stack: u8,
+}
+
+impl GpioHandleCloseProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for GpioHandleCloseProgram {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GpioWriteProgram {
@@ -325,12 +432,31 @@ impl HostSession {
         payload_out: &mut [u8],
         frame_out: &mut [u8],
     ) -> Result<WrittenFrame, HostError> {
+        self.run_frame(
+            program_id,
+            DEFAULT_RUN_FLAGS,
+            instruction_budget,
+            0,
+            payload_out,
+            frame_out,
+        )
+    }
+
+    pub fn run_frame(
+        &mut self,
+        program_id: u16,
+        flags: u8,
+        instruction_budget: u32,
+        time_budget_ms: u32,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
         let payload_len = encode_run_request(
             &RunRequest {
                 program_id,
-                flags: RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN,
+                flags,
                 instruction_budget,
-                time_budget_ms: 0,
+                time_budget_ms,
             },
             payload_out,
         )?;
@@ -344,11 +470,28 @@ impl HostSession {
         payload_out: &mut [u8],
         frame_out: &mut [u8],
     ) -> Result<WrittenFrame, HostError> {
+        self.store_program_with_boot_policy_frame(
+            program_id,
+            slot,
+            BOOT_RUN_IF_NO_HOST,
+            payload_out,
+            frame_out,
+        )
+    }
+
+    pub fn store_program_with_boot_policy_frame(
+        &mut self,
+        program_id: u16,
+        slot: u8,
+        boot_policy: u8,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
         let payload_len = encode_store_program(
             &StoreProgram {
                 program_id,
                 slot,
-                boot_policy: BOOT_RUN_IF_NO_HOST,
+                boot_policy,
             },
             payload_out,
         )?;
@@ -541,9 +684,174 @@ pub fn write_gpio_write_module(
     Ok(offset)
 }
 
+pub fn write_gpio_open_code(program: GpioOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < GPIO_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+    validate_gpio_mode(program.mode)?;
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.mode)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_open_module(
+    program: GpioOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_OPEN_CODE_LEN];
+    let code_len = write_gpio_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_read_code(
+    _program: GpioHandleReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_read_module(
+    program: GpioHandleReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_HANDLE_READ_CODE_LEN];
+    let code_len = write_gpio_handle_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_write_code(
+    program: GpioHandleWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(
+        out,
+        &mut offset,
+        if program.value {
+            OP_PUSH_TRUE
+        } else {
+            OP_PUSH_FALSE
+        },
+    )?;
+    write_call_u8(out, &mut offset, CAP_GPIO_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_write_module(
+    program: GpioHandleWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_HANDLE_WRITE_CODE_LEN];
+    let code_len = write_gpio_handle_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_close_code(
+    _program: GpioHandleCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_CLOSE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_GPIO_CLOSE)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_close_module(
+    program: GpioHandleCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_CLOSE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_HANDLE_CLOSE_CODE_LEN];
+    let code_len = write_gpio_handle_close_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
 fn validate_gpio_read_mode(mode: u8) -> Result<(), HostError> {
     match mode {
         GPIO_MODE_INPUT | GPIO_MODE_INPUT_PULLUP | GPIO_MODE_INPUT_PULLDOWN => Ok(()),
+        other => Err(HostError::InvalidGpioReadMode(other)),
+    }
+}
+
+fn validate_gpio_mode(mode: u8) -> Result<(), HostError> {
+    match mode {
+        GPIO_MODE_INPUT | GPIO_MODE_OUTPUT | GPIO_MODE_INPUT_PULLUP | GPIO_MODE_INPUT_PULLDOWN => {
+            Ok(())
+        }
         other => Err(HostError::InvalidGpioReadMode(other)),
     }
 }
@@ -734,7 +1042,8 @@ mod tests {
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
-        decode_run_request, MessageType, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
+        decode_run_request, MessageType, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+        RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
 
     const BLINK_MODULE_HEX: [u8; BLINK_MODULE_LEN] = [
@@ -749,6 +1058,19 @@ mod tests {
     const GPIO_WRITE_HIGH_MODULE_HEX: [u8; GPIO_WRITE_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0C, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01,
         0x20, 0x11, 0x40, 0x02, 0x40, 0x04, 0x00,
+    ];
+    const GPIO_OPEN_OUTPUT_MODULE_HEX: [u8; GPIO_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x08, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01,
+        0x20, 0x50, 0x00,
+    ];
+    const GPIO_HANDLE_READ_MODULE_HEX: [u8; GPIO_HANDLE_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x03, 0x50, 0x00,
+    ];
+    const GPIO_HANDLE_WRITE_HIGH_MODULE_HEX: [u8; GPIO_HANDLE_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x04, 0x20, 0x11, 0x40, 0x02, 0x00,
+    ];
+    const GPIO_HANDLE_CLOSE_MODULE_HEX: [u8; GPIO_HANDLE_CLOSE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x01, 0x00, 0x02, 0x40, 0x04, 0x00,
     ];
     const TIME_NOW_MODULE_HEX: [u8; TIME_NOW_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x11, 0x50, 0x00,
@@ -815,6 +1137,41 @@ mod tests {
             &capabilities[..count],
             &[CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_GPIO_CLOSE]
         );
+    }
+
+    #[test]
+    fn builds_gpio_handle_modules_for_repl_sessions() {
+        let mut open = [0u8; GPIO_OPEN_MODULE_LEN];
+        let open_len = write_gpio_open_module(GpioOpenProgram::output(13), &mut open).unwrap();
+        assert_eq!(open_len, GPIO_OPEN_MODULE_LEN);
+        assert_eq!(open, GPIO_OPEN_OUTPUT_MODULE_HEX);
+        let parsed = parse_module(&open).unwrap();
+        assert_eq!(parsed.flags, 0);
+        validate(&parsed, CapabilitySet::blink_mvp(), 2).unwrap();
+
+        let mut read = [0u8; GPIO_HANDLE_READ_MODULE_LEN];
+        let read_len =
+            write_gpio_handle_read_module(GpioHandleReadProgram::new(), &mut read).unwrap();
+        assert_eq!(read_len, GPIO_HANDLE_READ_MODULE_LEN);
+        assert_eq!(read, GPIO_HANDLE_READ_MODULE_HEX);
+        let parsed = parse_module(&read).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 2).unwrap();
+
+        let mut write = [0u8; GPIO_HANDLE_WRITE_MODULE_LEN];
+        let write_len =
+            write_gpio_handle_write_module(GpioHandleWriteProgram::high(), &mut write).unwrap();
+        assert_eq!(write_len, GPIO_HANDLE_WRITE_MODULE_LEN);
+        assert_eq!(write, GPIO_HANDLE_WRITE_HIGH_MODULE_HEX);
+        let parsed = parse_module(&write).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 3).unwrap();
+
+        let mut close = [0u8; GPIO_HANDLE_CLOSE_MODULE_LEN];
+        let close_len =
+            write_gpio_handle_close_module(GpioHandleCloseProgram::new(), &mut close).unwrap();
+        assert_eq!(close_len, GPIO_HANDLE_CLOSE_MODULE_LEN);
+        assert_eq!(close, GPIO_HANDLE_CLOSE_MODULE_HEX);
+        let parsed = parse_module(&close).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 1).unwrap();
     }
 
     #[test]
@@ -971,6 +1328,31 @@ mod tests {
             RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
         );
         assert_eq!(run_payload.instruction_budget, DEFAULT_INSTRUCTION_BUDGET);
+    }
+
+    #[test]
+    fn writes_configurable_run_frame() {
+        let mut session = HostSession::new();
+        let mut payload = [0u8; 16];
+        let mut frame = [0u8; 48];
+
+        let written = session
+            .run_frame(
+                42,
+                RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+                777,
+                250,
+                &mut payload,
+                &mut frame,
+            )
+            .unwrap();
+        let decoded = decode_frame(&frame[..written.len]).unwrap();
+        assert_eq!(decoded.message_type, MessageType::RUN);
+        let run_payload = decode_run_request(decoded.payload).unwrap();
+        assert_eq!(run_payload.program_id, 42);
+        assert_eq!(run_payload.flags, RUN_FLAG_KEEP_HANDLES_AFTER_RUN);
+        assert_eq!(run_payload.instruction_budget, 777);
+        assert_eq!(run_payload.time_budget_ms, 250);
     }
 
     #[test]

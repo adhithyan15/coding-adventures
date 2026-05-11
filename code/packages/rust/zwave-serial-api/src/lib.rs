@@ -26,6 +26,71 @@ impl FunctionId {
     pub const REQUEST_NODE_INFO: Self = Self(0x60);
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum SerialApiBootstrapStep {
+    GetVersion,
+    MemoryGetId,
+    GetControllerCapabilities,
+    SerialApiGetInitData,
+}
+
+impl SerialApiBootstrapStep {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::GetVersion => "get_version",
+            Self::MemoryGetId => "memory_get_id",
+            Self::GetControllerCapabilities => "get_controller_capabilities",
+            Self::SerialApiGetInitData => "serial_api_get_init_data",
+        }
+    }
+
+    pub fn function_id(self) -> FunctionId {
+        match self {
+            Self::GetVersion => FunctionId::GET_VERSION,
+            Self::MemoryGetId => FunctionId::MEMORY_GET_ID,
+            Self::GetControllerCapabilities => FunctionId::GET_CONTROLLER_CAPABILITIES,
+            Self::SerialApiGetInitData => FunctionId::SERIAL_API_GET_INIT_DATA,
+        }
+    }
+
+    pub fn request(self) -> SerialMessage {
+        match self {
+            Self::GetVersion => get_version_request(),
+            Self::MemoryGetId => memory_get_id_request(),
+            Self::GetControllerCapabilities => get_controller_capabilities_request(),
+            Self::SerialApiGetInitData => serial_api_get_init_data_request(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SerialApiBootstrapRequest {
+    pub step: SerialApiBootstrapStep,
+    pub message: SerialMessage,
+}
+
+pub const DEFAULT_BOOTSTRAP_STEPS: [SerialApiBootstrapStep; 4] = [
+    SerialApiBootstrapStep::GetVersion,
+    SerialApiBootstrapStep::MemoryGetId,
+    SerialApiBootstrapStep::GetControllerCapabilities,
+    SerialApiBootstrapStep::SerialApiGetInitData,
+];
+
+pub fn default_bootstrap_steps() -> &'static [SerialApiBootstrapStep] {
+    &DEFAULT_BOOTSTRAP_STEPS
+}
+
+pub fn serial_api_bootstrap_requests() -> Vec<SerialApiBootstrapRequest> {
+    default_bootstrap_steps()
+        .iter()
+        .copied()
+        .map(|step| SerialApiBootstrapRequest {
+            step,
+            message: step.request(),
+        })
+        .collect()
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SerialMessageKind {
     Request,
@@ -102,6 +167,17 @@ impl ControllerCapabilities {
             supports_timers: flags & 0x10 != 0,
         }
     }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::GET_CONTROLLER_CAPABILITIES)?;
+        let Some(flags) = message.payload.first() else {
+            return Err(SerialApiError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        Ok(Self::parse(*flags))
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -176,6 +252,42 @@ impl SerialApiInitData {
 
     pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
         expect_function(message, FunctionId::SERIAL_API_GET_INIT_DATA)?;
+        Self::parse(&message.payload)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SerialApiVersion {
+    pub version: String,
+    pub library_type: u8,
+}
+
+impl SerialApiVersion {
+    pub fn parse(payload: &[u8]) -> Result<Self, SerialApiError> {
+        let Some((&library_type, version_bytes)) = payload.split_last() else {
+            return Err(SerialApiError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        let version_len = version_bytes
+            .iter()
+            .position(|byte| *byte == 0)
+            .unwrap_or(version_bytes.len());
+        let version = std::str::from_utf8(&version_bytes[..version_len])
+            .map_err(|error| {
+                SerialApiError::Core(format!("invalid Z-Wave version string: {error}"))
+            })?
+            .trim()
+            .to_string();
+        Ok(Self {
+            version,
+            library_type,
+        })
+    }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::GET_VERSION)?;
         Self::parse(&message.payload)
     }
 }
@@ -395,6 +507,101 @@ impl SendDataCallback {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SendDataFailure {
+    RejectedByController,
+    TransmitStatus(SendDataTransmitStatus),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SendDataTransactionState {
+    AwaitingResponse,
+    AwaitingCallback,
+    Succeeded,
+    Failed(SendDataFailure),
+    TimedOut,
+}
+
+impl SendDataTransactionState {
+    pub fn is_terminal(self) -> bool {
+        matches!(self, Self::Succeeded | Self::Failed(_) | Self::TimedOut)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SendDataTransaction {
+    pub callback_id: u8,
+    pub sent_at_ms: u64,
+    pub timeout_at_ms: u64,
+    state: SendDataTransactionState,
+}
+
+impl SendDataTransaction {
+    pub fn new(request: &SendDataRequest, sent_at_ms: u64, timeout_ms: u64) -> Self {
+        Self {
+            callback_id: request.callback_id,
+            sent_at_ms,
+            timeout_at_ms: sent_at_ms.saturating_add(timeout_ms),
+            state: SendDataTransactionState::AwaitingResponse,
+        }
+    }
+
+    pub fn state(&self) -> SendDataTransactionState {
+        self.state
+    }
+
+    pub fn is_terminal(&self) -> bool {
+        self.state.is_terminal()
+    }
+
+    pub fn on_response(&mut self, response: SendDataResponse) -> SendDataTransactionState {
+        if self.is_terminal() {
+            return self.state;
+        }
+        self.state = if response.accepted {
+            SendDataTransactionState::AwaitingCallback
+        } else {
+            SendDataTransactionState::Failed(SendDataFailure::RejectedByController)
+        };
+        self.state
+    }
+
+    pub fn on_callback(
+        &mut self,
+        callback: SendDataCallback,
+    ) -> Result<SendDataTransactionState, SerialApiError> {
+        if callback.callback_id != self.callback_id {
+            return Err(SerialApiError::UnexpectedCallbackId {
+                expected: self.callback_id,
+                actual: callback.callback_id,
+            });
+        }
+        if self.is_terminal() {
+            return Ok(self.state);
+        }
+
+        self.state = if callback.transmit_status.is_success() {
+            SendDataTransactionState::Succeeded
+        } else {
+            SendDataTransactionState::Failed(SendDataFailure::TransmitStatus(
+                callback.transmit_status,
+            ))
+        };
+        Ok(self.state)
+    }
+
+    pub fn has_timed_out_at(&self, now_ms: u64) -> bool {
+        !self.is_terminal() && now_ms >= self.timeout_at_ms
+    }
+
+    pub fn expire_at(&mut self, now_ms: u64) -> SendDataTransactionState {
+        if self.has_timed_out_at(now_ms) {
+            self.state = SendDataTransactionState::TimedOut;
+        }
+        self.state
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MemoryId {
     pub home_id: HomeId,
@@ -416,6 +623,11 @@ impl MemoryId {
             controller_node_id: NodeId::classic(payload[4])
                 .map_err(|err| SerialApiError::Core(err.to_string()))?,
         })
+    }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::MEMORY_GET_ID)?;
+        Self::parse(&message.payload)
     }
 }
 
@@ -517,6 +729,10 @@ pub enum SerialApiError {
     },
     PayloadTooLong(usize),
     UnsupportedLongRangeNodeId(u16),
+    UnexpectedCallbackId {
+        expected: u8,
+        actual: u8,
+    },
     NotRequest,
     Core(String),
 }
@@ -538,6 +754,10 @@ impl fmt::Display for SerialApiError {
                 f,
                 "classic Z-Wave SendData does not support Long Range node id {node_id}"
             ),
+            Self::UnexpectedCallbackId { expected, actual } => write!(
+                f,
+                "expected Z-Wave SendData callback id 0x{expected:02x}, got 0x{actual:02x}"
+            ),
             Self::NotRequest => write!(f, "only request messages can be tracked"),
             Self::Core(message) => write!(f, "Z-Wave core error: {message}"),
         }
@@ -550,6 +770,22 @@ impl From<ZWaveError> for SerialApiError {
     fn from(error: ZWaveError) -> Self {
         Self::Core(error.to_string())
     }
+}
+
+pub fn serial_api_get_init_data_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::SERIAL_API_GET_INIT_DATA, Vec::new())
+}
+
+pub fn get_controller_capabilities_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::GET_CONTROLLER_CAPABILITIES, Vec::new())
+}
+
+pub fn get_version_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::GET_VERSION, Vec::new())
+}
+
+pub fn memory_get_id_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::MEMORY_GET_ID, Vec::new())
 }
 
 fn callback_id_for(function_id: FunctionId, payload: &[u8]) -> Option<u8> {
@@ -648,6 +884,99 @@ mod tests {
         assert!(!caps.was_real_primary);
         assert!(caps.is_suc);
         assert!(caps.supports_timers);
+    }
+
+    #[test]
+    fn bootstrap_request_builders_use_expected_function_ids() {
+        let requests = [
+            (
+                serial_api_get_init_data_request(),
+                FunctionId::SERIAL_API_GET_INIT_DATA,
+            ),
+            (
+                get_controller_capabilities_request(),
+                FunctionId::GET_CONTROLLER_CAPABILITIES,
+            ),
+            (get_version_request(), FunctionId::GET_VERSION),
+            (memory_get_id_request(), FunctionId::MEMORY_GET_ID),
+        ];
+
+        for (request, function_id) in requests {
+            assert_eq!(request.kind, SerialMessageKind::Request);
+            assert_eq!(request.function_id, function_id);
+            assert_eq!(request.callback_id, None);
+            assert!(request.payload.is_empty());
+        }
+    }
+
+    #[test]
+    fn bootstrap_plan_orders_controller_startup_requests() {
+        let steps = default_bootstrap_steps();
+        let requests = serial_api_bootstrap_requests();
+
+        assert_eq!(
+            steps,
+            &[
+                SerialApiBootstrapStep::GetVersion,
+                SerialApiBootstrapStep::MemoryGetId,
+                SerialApiBootstrapStep::GetControllerCapabilities,
+                SerialApiBootstrapStep::SerialApiGetInitData,
+            ]
+        );
+        assert_eq!(requests.len(), steps.len());
+        assert_eq!(requests[0].step.as_str(), "get_version");
+        assert!(requests.iter().all(|request| {
+            request.message.kind == SerialMessageKind::Request
+                && request.message.callback_id.is_none()
+                && request.message.payload.is_empty()
+                && request.message.function_id == request.step.function_id()
+        }));
+        assert_eq!(
+            requests
+                .iter()
+                .map(|request| request.message.function_id)
+                .collect::<Vec<_>>(),
+            vec![
+                FunctionId::GET_VERSION,
+                FunctionId::MEMORY_GET_ID,
+                FunctionId::GET_CONTROLLER_CAPABILITIES,
+                FunctionId::SERIAL_API_GET_INIT_DATA,
+            ]
+        );
+    }
+
+    #[test]
+    fn controller_capabilities_from_message_reads_response_payload() {
+        let message = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::GET_CONTROLLER_CAPABILITIES,
+            callback_id: None,
+            payload: vec![0b0001_0011],
+        };
+
+        let caps = ControllerCapabilities::from_message(&message).unwrap();
+
+        assert!(caps.is_secondary);
+        assert!(caps.is_sis_present);
+        assert!(!caps.is_suc);
+        assert!(caps.supports_timers);
+    }
+
+    #[test]
+    fn serial_api_version_parses_nul_terminated_version_and_library_type() {
+        let mut payload = b"Z-Wave 7.18\0\0".to_vec();
+        payload.push(0x01);
+        let message = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::GET_VERSION,
+            callback_id: None,
+            payload,
+        };
+
+        let version = SerialApiVersion::from_message(&message).unwrap();
+
+        assert_eq!(version.version, "Z-Wave 7.18");
+        assert_eq!(version.library_type, 0x01);
     }
 
     #[test]
@@ -768,6 +1097,90 @@ mod tests {
     }
 
     #[test]
+    fn send_data_transaction_tracks_successful_response_and_callback() {
+        let request = SendDataRequest::new(
+            NodeId::Classic(5),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x42,
+        );
+        let mut transaction = SendDataTransaction::new(&request, 1_000, 5_000);
+
+        assert_eq!(
+            transaction.on_response(SendDataResponse { accepted: true }),
+            SendDataTransactionState::AwaitingCallback
+        );
+        assert_eq!(
+            transaction
+                .on_callback(SendDataCallback {
+                    callback_id: 0x42,
+                    transmit_status: SendDataTransmitStatus::CompleteOk,
+                })
+                .unwrap(),
+            SendDataTransactionState::Succeeded
+        );
+        assert!(transaction.is_terminal());
+    }
+
+    #[test]
+    fn send_data_transaction_records_rejection_and_transmit_failures() {
+        let request = SendDataRequest::new(
+            NodeId::Classic(5),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x42,
+        );
+        let mut rejected = SendDataTransaction::new(&request, 1_000, 5_000);
+        let mut failed = SendDataTransaction::new(&request, 1_000, 5_000);
+
+        assert_eq!(
+            rejected.on_response(SendDataResponse { accepted: false }),
+            SendDataTransactionState::Failed(SendDataFailure::RejectedByController)
+        );
+        failed.on_response(SendDataResponse { accepted: true });
+        assert_eq!(
+            failed
+                .on_callback(SendDataCallback {
+                    callback_id: 0x42,
+                    transmit_status: SendDataTransmitStatus::NoRoute,
+                })
+                .unwrap(),
+            SendDataTransactionState::Failed(SendDataFailure::TransmitStatus(
+                SendDataTransmitStatus::NoRoute
+            ))
+        );
+    }
+
+    #[test]
+    fn send_data_transaction_rejects_mismatched_callback_id_and_times_out() {
+        let request = SendDataRequest::new(
+            NodeId::Classic(5),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x42,
+        );
+        let mut transaction = SendDataTransaction::new(&request, 1_000, 500);
+        transaction.on_response(SendDataResponse { accepted: true });
+
+        assert_eq!(
+            transaction.on_callback(SendDataCallback {
+                callback_id: 0x41,
+                transmit_status: SendDataTransmitStatus::CompleteOk,
+            }),
+            Err(SerialApiError::UnexpectedCallbackId {
+                expected: 0x42,
+                actual: 0x41,
+            })
+        );
+        assert!(!transaction.has_timed_out_at(1_499));
+        assert_eq!(
+            transaction.expire_at(1_500),
+            SendDataTransactionState::TimedOut
+        );
+        assert!(transaction.is_terminal());
+    }
+
+    #[test]
     fn classic_send_data_rejects_long_range_node_ids() {
         let request = SendDataRequest::new(
             NodeId::LongRange(256),
@@ -797,7 +1210,13 @@ mod tests {
 
     #[test]
     fn memory_id_extracts_home_and_controller_node() {
-        let id = MemoryId::parse(&[0x12, 0x34, 0x56, 0x78, 0x05]).unwrap();
+        let message = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::MEMORY_GET_ID,
+            callback_id: None,
+            payload: vec![0x12, 0x34, 0x56, 0x78, 0x05],
+        };
+        let id = MemoryId::from_message(&message).unwrap();
 
         assert_eq!(id.home_id, HomeId(0x1234_5678));
         assert_eq!(id.controller_node_id, NodeId::Classic(5));

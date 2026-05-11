@@ -11,9 +11,20 @@ use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SmartHomeError {
-    EmptyIdentifier { kind: &'static str },
-    InvalidPercentage { value: u16 },
-    MissingCapability { command_type: CommandType },
+    EmptyIdentifier {
+        kind: &'static str,
+    },
+    InvalidPercentage {
+        value: u16,
+    },
+    InvalidMqttTopic {
+        kind: &'static str,
+        value: String,
+        reason: &'static str,
+    },
+    MissingCapability {
+        command_type: CommandType,
+    },
 }
 
 impl fmt::Display for SmartHomeError {
@@ -23,6 +34,11 @@ impl fmt::Display for SmartHomeError {
             Self::InvalidPercentage { value } => {
                 write!(f, "percentage value {value} is outside 0..=100")
             }
+            Self::InvalidMqttTopic {
+                kind,
+                value,
+                reason,
+            } => write!(f, "{kind} `{value}` is invalid: {reason}"),
             Self::MissingCapability { command_type } => {
                 write!(
                     f,
@@ -132,6 +148,7 @@ pub enum CapabilityMode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ValueKind {
+    Null,
     Boolean,
     Integer,
     Number,
@@ -193,6 +210,11 @@ impl Capability {
         self
     }
 
+    pub fn with_unit(mut self, unit: impl Into<String>) -> Self {
+        self.unit = Some(unit.into());
+        self
+    }
+
     pub fn light_on_off() -> Self {
         Self::new(
             CapabilityId::trusted("light.on_off"),
@@ -210,14 +232,46 @@ impl Capability {
         .with_range(0.0, 100.0, Some(1.0))
     }
 
+    pub fn light_color() -> Self {
+        Self::new(
+            CapabilityId::trusted("light.color"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
     pub fn light_color_temperature() -> Self {
-        let mut capability = Self::new(
+        Self::new(
             CapabilityId::trusted("light.color_temperature"),
             CapabilityMode::ObserveAndCommand,
             ValueKind::Integer,
-        );
-        capability.unit = Some("mirek".to_string());
-        capability
+        )
+        .with_unit("mirek")
+    }
+
+    pub fn scene_recall() -> Self {
+        Self::new(
+            CapabilityId::trusted("scene.recall"),
+            CapabilityMode::Command,
+            ValueKind::Null,
+        )
+    }
+
+    pub fn lock_state() -> Self {
+        Self::new(
+            CapabilityId::trusted("lock.state"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Text,
+        )
+    }
+
+    pub fn climate_setpoint() -> Self {
+        Self::new(
+            CapabilityId::trusted("climate.setpoint"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Number,
+        )
+        .with_unit("temperature")
     }
 
     pub fn sensor_occupancy() -> Self {
@@ -226,6 +280,50 @@ impl Capability {
             CapabilityMode::Observe,
             ValueKind::Boolean,
         )
+    }
+
+    pub fn sensor_contact() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.contact"),
+            CapabilityMode::Observe,
+            ValueKind::Boolean,
+        )
+    }
+
+    pub fn sensor_temperature() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.temperature"),
+            CapabilityMode::Observe,
+            ValueKind::Number,
+        )
+        .with_unit("temperature")
+    }
+
+    pub fn sensor_humidity() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.humidity"),
+            CapabilityMode::Observe,
+            ValueKind::Percentage,
+        )
+        .with_range(0.0, 100.0, Some(1.0))
+    }
+
+    pub fn sensor_illuminance() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.illuminance"),
+            CapabilityMode::Observe,
+            ValueKind::Number,
+        )
+        .with_unit("lux")
+    }
+
+    pub fn sensor_battery() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.battery"),
+            CapabilityMode::Observe,
+            ValueKind::Percentage,
+        )
+        .with_range(0.0, 100.0, Some(1.0))
     }
 
     pub fn input_button() -> Self {
@@ -237,6 +335,25 @@ impl Capability {
     }
 }
 
+pub fn canonical_capability_catalog() -> Vec<Capability> {
+    vec![
+        Capability::light_on_off(),
+        Capability::light_brightness(),
+        Capability::light_color(),
+        Capability::light_color_temperature(),
+        Capability::scene_recall(),
+        Capability::lock_state(),
+        Capability::climate_setpoint(),
+        Capability::sensor_occupancy(),
+        Capability::sensor_contact(),
+        Capability::sensor_temperature(),
+        Capability::sensor_humidity(),
+        Capability::sensor_illuminance(),
+        Capability::sensor_battery(),
+        Capability::input_button(),
+    ]
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProtocolFamily {
     Hue,
@@ -246,6 +363,20 @@ pub enum ProtocolFamily {
     Matter,
     Mqtt,
     Vendor(String),
+}
+
+impl ProtocolFamily {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::Hue => "hue",
+            Self::Zigbee => "zigbee",
+            Self::ZWave => "zwave",
+            Self::Thread => "thread",
+            Self::Matter => "matter",
+            Self::Mqtt => "mqtt",
+            Self::Vendor(name) => name.as_str(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -281,6 +412,135 @@ impl ProtocolIdentifier {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct MqttTopicName(String);
+
+impl MqttTopicName {
+    pub fn new(value: impl Into<String>) -> Result<Self, SmartHomeError> {
+        let value = value.into();
+        validate_mqtt_topic_name(&value)?;
+        Ok(Self(value))
+    }
+
+    pub fn trusted(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    pub fn as_protocol_identifier(&self, kind: impl Into<String>) -> ProtocolIdentifier {
+        ProtocolIdentifier {
+            family: ProtocolFamily::Mqtt,
+            kind: kind.into(),
+            value: self.0.clone(),
+        }
+    }
+}
+
+impl fmt::Display for MqttTopicName {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct MqttTopicFilter(String);
+
+impl MqttTopicFilter {
+    pub fn new(value: impl Into<String>) -> Result<Self, SmartHomeError> {
+        let value = value.into();
+        validate_mqtt_topic_filter(&value)?;
+        Ok(Self(value))
+    }
+
+    pub fn trusted(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    pub fn matches(&self, topic: &MqttTopicName) -> bool {
+        mqtt_filter_matches_topic(&self.0, topic.as_str())
+    }
+}
+
+impl fmt::Display for MqttTopicFilter {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MqttQualityOfService {
+    AtMostOnce,
+    AtLeastOnce,
+    ExactlyOnce,
+}
+
+impl MqttQualityOfService {
+    pub fn level(self) -> u8 {
+        match self {
+            Self::AtMostOnce => 0,
+            Self::AtLeastOnce => 1,
+            Self::ExactlyOnce => 2,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MqttTopicRole {
+    Discovery,
+    Availability,
+    State,
+    Command,
+    Event,
+}
+
+impl MqttTopicRole {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Discovery => "discovery",
+            Self::Availability => "availability",
+            Self::State => "state",
+            Self::Command => "command",
+            Self::Event => "event",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MqttTopicBinding {
+    pub role: MqttTopicRole,
+    pub topic: MqttTopicName,
+    pub qos: MqttQualityOfService,
+    pub retain: bool,
+}
+
+impl MqttTopicBinding {
+    pub fn new(role: MqttTopicRole, topic: MqttTopicName) -> Self {
+        Self {
+            role,
+            topic,
+            qos: MqttQualityOfService::AtLeastOnce,
+            retain: false,
+        }
+    }
+
+    pub fn with_qos(mut self, qos: MqttQualityOfService) -> Self {
+        self.qos = qos;
+        self
+    }
+
+    pub fn with_retain(mut self, retain: bool) -> Self {
+        self.retain = retain;
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Metadata {
     pub key: String,
@@ -305,6 +565,206 @@ pub struct IntegrationDescriptor {
     pub capabilities: Vec<CapabilityId>,
     pub discovery_roles: Vec<String>,
     pub pairing_roles: Vec<String>,
+}
+
+impl IntegrationDescriptor {
+    pub fn new(
+        integration_id: IntegrationId,
+        display_name: impl Into<String>,
+        version: impl Into<String>,
+        runtime_kind: RuntimeKind,
+    ) -> Self {
+        Self {
+            integration_id,
+            display_name: display_name.into(),
+            version: version.into(),
+            runtime_kind,
+            capabilities: Vec::new(),
+            discovery_roles: Vec::new(),
+            pairing_roles: Vec::new(),
+        }
+    }
+
+    pub fn with_capabilities<I>(mut self, capabilities: I) -> Self
+    where
+        I: IntoIterator<Item = CapabilityId>,
+    {
+        self.capabilities = capabilities.into_iter().collect();
+        self
+    }
+
+    pub fn with_discovery_roles<I, S>(mut self, discovery_roles: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<String>,
+    {
+        self.discovery_roles = discovery_roles.into_iter().map(Into::into).collect();
+        self
+    }
+
+    pub fn with_pairing_roles<I, S>(mut self, pairing_roles: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<String>,
+    {
+        self.pairing_roles = pairing_roles.into_iter().map(Into::into).collect();
+        self
+    }
+
+    pub fn supports_capability(&self, capability_id: &CapabilityId) -> bool {
+        self.capabilities.contains(capability_id)
+    }
+
+    pub fn supports_discovery_role(&self, role: &str) -> bool {
+        self.discovery_roles
+            .iter()
+            .any(|candidate| candidate == role)
+    }
+
+    pub fn supports_pairing_role(&self, role: &str) -> bool {
+        self.pairing_roles.iter().any(|candidate| candidate == role)
+    }
+}
+
+pub fn canonical_integration_catalog() -> Vec<IntegrationDescriptor> {
+    vec![
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("hue"),
+            "Philips Hue Bridge",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "scene.recall",
+            "sensor.battery",
+        ]))
+        .with_discovery_roles(["mdns", "lan-http", "hue-bridge"])
+        .with_pairing_roles(["link-button", "vault-token"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("zigbee"),
+            "Zigbee Coordinator",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.illuminance",
+            "sensor.battery",
+            "input.button",
+        ]))
+        .with_discovery_roles(["serial-adapter", "network-steering", "permit-join"])
+        .with_pairing_roles(["install-code", "touchlink", "permit-join"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("zwave"),
+            "Z-Wave Controller",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.battery",
+        ]))
+        .with_discovery_roles(["serial-controller", "node-interview"])
+        .with_pairing_roles(["inclusion", "smart-start"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("thread"),
+            "Thread Border Router",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.battery",
+        ]))
+        .with_discovery_roles(["border-router", "mesh-diagnostic"])
+        .with_pairing_roles(["commissioning-dataset", "joiner"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("matter"),
+            "Matter Controller",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.illuminance",
+            "sensor.battery",
+            "input.button",
+        ]))
+        .with_discovery_roles(["mdns", "fabric", "commissionable-node"])
+        .with_pairing_roles(["commissioning-code", "fabric-join"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("mqtt"),
+            "MQTT Bridge",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "scene.recall",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.illuminance",
+            "sensor.battery",
+            "input.button",
+        ]))
+        .with_discovery_roles(["broker-subscribe", "home-assistant-discovery"])
+        .with_pairing_roles(["broker-credentials", "topic-namespace"]),
+    ]
+}
+
+pub fn canonical_integration_descriptor(
+    integration_id: &IntegrationId,
+) -> Option<IntegrationDescriptor> {
+    canonical_integration_catalog()
+        .into_iter()
+        .find(|descriptor| &descriptor.integration_id == integration_id)
+}
+
+pub fn canonical_integrations_for_capability(
+    capability_id: &CapabilityId,
+) -> Vec<IntegrationDescriptor> {
+    canonical_integration_catalog()
+        .into_iter()
+        .filter(|descriptor| descriptor.supports_capability(capability_id))
+        .collect()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -592,6 +1052,7 @@ pub enum SmartHomeTool {
     Subscribe,
     DescribeCapabilities,
     GetHealth,
+    ObserveSupervision,
 }
 
 impl SmartHomeTool {
@@ -621,6 +1082,7 @@ impl SmartHomeTool {
             Self::Subscribe => read_tool("smart_home.subscribe"),
             Self::DescribeCapabilities => read_tool("smart_home.describe_capabilities"),
             Self::GetHealth => read_tool("smart_home.get_health"),
+            Self::ObserveSupervision => read_tool("smart_home.observe_supervision"),
         }
     }
 }
@@ -928,6 +1390,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::Subscribe,
         SmartHomeTool::DescribeCapabilities,
         SmartHomeTool::GetHealth,
+        SmartHomeTool::ObserveSupervision,
     ]
     .into_iter()
     .map(SmartHomeTool::descriptor)
@@ -1045,6 +1508,112 @@ fn push_unique_grant_id(values: &mut Vec<CapabilityGrantId>, value: CapabilityGr
     }
 }
 
+fn capability_ids<const N: usize>(values: [&str; N]) -> Vec<CapabilityId> {
+    values.into_iter().map(CapabilityId::trusted).collect()
+}
+
+fn validate_mqtt_topic_name(value: &str) -> Result<(), SmartHomeError> {
+    if value.is_empty() {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic name",
+            value,
+            "must not be empty",
+        ));
+    }
+    if value.contains('\0') {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic name",
+            value,
+            "must not contain null bytes",
+        ));
+    }
+    if value.contains('+') || value.contains('#') {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic name",
+            value,
+            "wildcards are only valid in topic filters",
+        ));
+    }
+    Ok(())
+}
+
+fn validate_mqtt_topic_filter(value: &str) -> Result<(), SmartHomeError> {
+    if value.is_empty() {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic filter",
+            value,
+            "must not be empty",
+        ));
+    }
+    if value.contains('\0') {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic filter",
+            value,
+            "must not contain null bytes",
+        ));
+    }
+
+    let levels = value.split('/').collect::<Vec<_>>();
+    for (index, level) in levels.iter().enumerate() {
+        if level.contains('#') && *level != "#" {
+            return Err(invalid_mqtt_topic(
+                "mqtt topic filter",
+                value,
+                "`#` must occupy an entire topic level",
+            ));
+        }
+        if *level == "#" && index + 1 != levels.len() {
+            return Err(invalid_mqtt_topic(
+                "mqtt topic filter",
+                value,
+                "`#` must be the final topic level",
+            ));
+        }
+        if level.contains('+') && *level != "+" {
+            return Err(invalid_mqtt_topic(
+                "mqtt topic filter",
+                value,
+                "`+` must occupy an entire topic level",
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn invalid_mqtt_topic(kind: &'static str, value: &str, reason: &'static str) -> SmartHomeError {
+    SmartHomeError::InvalidMqttTopic {
+        kind,
+        value: value.to_string(),
+        reason,
+    }
+}
+
+fn mqtt_filter_matches_topic(filter: &str, topic: &str) -> bool {
+    let filter_levels = filter.split('/').collect::<Vec<_>>();
+    let topic_levels = topic.split('/').collect::<Vec<_>>();
+    let mut topic_index = 0usize;
+
+    for filter_level in &filter_levels {
+        match *filter_level {
+            "#" => return true,
+            "+" => {
+                if topic_index >= topic_levels.len() {
+                    return false;
+                }
+                topic_index += 1;
+            }
+            literal => {
+                if topic_levels.get(topic_index) != Some(&literal) {
+                    return false;
+                }
+                topic_index += 1;
+            }
+        }
+    }
+
+    topic_index == topic_levels.len()
+}
+
 fn read_tool(tool_id: &'static str) -> ToolDescriptor {
     ToolDescriptor {
         tool_id,
@@ -1085,6 +1654,70 @@ mod tests {
         assert_ne!(hue.family, zigbee.family);
         assert_eq!(hue.kind, "light");
         assert_eq!(zigbee.kind, "ieee_address");
+    }
+
+    #[test]
+    fn mqtt_topic_names_reject_filter_wildcards() {
+        assert_eq!(
+            MqttTopicName::new("home/+/state"),
+            Err(SmartHomeError::InvalidMqttTopic {
+                kind: "mqtt topic name",
+                value: "home/+/state".to_string(),
+                reason: "wildcards are only valid in topic filters",
+            })
+        );
+        assert_eq!(
+            MqttTopicName::new("home/kitchen/light/state")
+                .unwrap()
+                .as_str(),
+            "home/kitchen/light/state"
+        );
+    }
+
+    #[test]
+    fn mqtt_topic_filters_validate_wildcard_shape() {
+        assert!(MqttTopicFilter::new("home/+/state").is_ok());
+        assert!(MqttTopicFilter::new("home/#").is_ok());
+        assert!(MqttTopicFilter::new("home/#/state").is_err());
+        assert!(MqttTopicFilter::new("home/te+st/state").is_err());
+    }
+
+    #[test]
+    fn mqtt_topic_filters_match_topic_names() {
+        let kitchen_state = MqttTopicName::new("home/kitchen/light/state").unwrap();
+        let kitchen_command = MqttTopicName::new("home/kitchen/light/set").unwrap();
+
+        assert!(MqttTopicFilter::new("home/+/light/state")
+            .unwrap()
+            .matches(&kitchen_state));
+        assert!(MqttTopicFilter::new("home/#")
+            .unwrap()
+            .matches(&kitchen_state));
+        assert!(!MqttTopicFilter::new("home/+/light/state")
+            .unwrap()
+            .matches(&kitchen_command));
+    }
+
+    #[test]
+    fn mqtt_topic_bindings_capture_role_qos_and_retain_policy() {
+        let binding = MqttTopicBinding::new(
+            MqttTopicRole::State,
+            MqttTopicName::new("home/kitchen/light/state").unwrap(),
+        )
+        .with_qos(MqttQualityOfService::AtLeastOnce)
+        .with_retain(true);
+
+        assert_eq!(binding.role.as_str(), "state");
+        assert_eq!(binding.qos.level(), 1);
+        assert!(binding.retain);
+        assert_eq!(
+            binding
+                .topic
+                .as_protocol_identifier("state_topic")
+                .family
+                .as_str(),
+            "mqtt"
+        );
     }
 
     #[test]
@@ -1135,6 +1768,117 @@ mod tests {
     }
 
     #[test]
+    fn canonical_capability_catalog_covers_first_integration_families() {
+        let catalog = canonical_capability_catalog();
+        let ids = catalog
+            .iter()
+            .map(|capability| capability.capability_id.as_str())
+            .collect::<Vec<_>>();
+
+        assert_eq!(catalog.len(), 14);
+        assert_eq!(ids[0], "light.on_off");
+        assert!(ids.contains(&"light.color"));
+        assert!(ids.contains(&"scene.recall"));
+        assert!(ids.contains(&"lock.state"));
+        assert!(ids.contains(&"climate.setpoint"));
+        assert!(ids.contains(&"sensor.contact"));
+        assert!(ids.contains(&"sensor.temperature"));
+        assert!(ids.contains(&"sensor.humidity"));
+        assert!(ids.contains(&"sensor.illuminance"));
+        assert!(ids.contains(&"sensor.battery"));
+
+        let scene_recall = catalog
+            .iter()
+            .find(|capability| capability.capability_id.as_str() == "scene.recall")
+            .unwrap();
+        assert_eq!(scene_recall.mode, CapabilityMode::Command);
+        assert_eq!(scene_recall.value_kind, ValueKind::Null);
+
+        let illuminance = catalog
+            .iter()
+            .find(|capability| capability.capability_id.as_str() == "sensor.illuminance")
+            .unwrap();
+        assert_eq!(illuminance.unit.as_deref(), Some("lux"));
+    }
+
+    #[test]
+    fn command_capabilities_are_present_in_canonical_capability_catalog() {
+        let catalog_ids = canonical_capability_catalog()
+            .into_iter()
+            .map(|capability| capability.capability_id)
+            .collect::<Vec<_>>();
+        let command_types = [
+            CommandType::TurnOn,
+            CommandType::TurnOff,
+            CommandType::SetBrightness,
+            CommandType::SetColor,
+            CommandType::SetColorTemperature,
+            CommandType::RecallScene,
+            CommandType::SetLock,
+            CommandType::SetThermostatSetpoint,
+        ];
+
+        for command_type in command_types {
+            let capability_id = command_type.canonical_capability_id().unwrap();
+            assert!(
+                catalog_ids.contains(&capability_id),
+                "missing catalog capability for {command_type:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn canonical_integration_catalog_covers_initial_protocol_families() {
+        let catalog = canonical_integration_catalog();
+        let ids = catalog
+            .iter()
+            .map(|descriptor| descriptor.integration_id.as_str())
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            ids,
+            vec!["hue", "zigbee", "zwave", "thread", "matter", "mqtt"]
+        );
+        assert!(catalog
+            .iter()
+            .all(|descriptor| !descriptor.capabilities.is_empty()));
+        assert!(catalog
+            .iter()
+            .all(|descriptor| !descriptor.discovery_roles.is_empty()));
+        assert!(catalog
+            .iter()
+            .all(|descriptor| !descriptor.pairing_roles.is_empty()));
+
+        let hue = canonical_integration_descriptor(&IntegrationId::trusted("hue")).unwrap();
+        assert_eq!(hue.display_name, "Philips Hue Bridge");
+        assert!(hue.supports_discovery_role("mdns"));
+        assert!(hue.supports_pairing_role("link-button"));
+        assert!(hue.supports_capability(&CapabilityId::trusted("light.color_temperature")));
+
+        let zwave = canonical_integration_descriptor(&IntegrationId::trusted("zwave")).unwrap();
+        assert!(zwave.supports_capability(&CapabilityId::trusted("lock.state")));
+        assert!(zwave.supports_pairing_role("smart-start"));
+        assert!(canonical_integration_descriptor(&IntegrationId::trusted("missing")).is_none());
+    }
+
+    #[test]
+    fn canonical_integrations_can_be_filtered_by_capability() {
+        let lock_integrations =
+            canonical_integrations_for_capability(&CapabilityId::trusted("lock.state"))
+                .into_iter()
+                .map(|descriptor| descriptor.integration_id.as_str().to_string())
+                .collect::<Vec<_>>();
+        let scene_integrations =
+            canonical_integrations_for_capability(&CapabilityId::trusted("scene.recall"))
+                .into_iter()
+                .map(|descriptor| descriptor.integration_id.as_str().to_string())
+                .collect::<Vec<_>>();
+
+        assert_eq!(lock_integrations, vec!["zigbee", "zwave", "matter", "mqtt"]);
+        assert_eq!(scene_integrations, vec!["hue", "mqtt"]);
+    }
+
+    #[test]
     fn tool_catalog_exposes_model_facing_smart_home_surface() {
         let catalog = smart_home_tool_catalog();
         let command = catalog
@@ -1142,12 +1886,17 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 9);
+        assert_eq!(catalog.len(), 10);
         assert_eq!(command.side_effects, ToolSideEffects::External);
         assert_eq!(
             command.required_capabilities,
             vec![CapabilityId::trusted("smart_home.command.light")]
         );
+        assert!(catalog
+            .iter()
+            .any(|tool| tool.tool_id == "smart_home.observe_supervision"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
     }
 
     #[test]

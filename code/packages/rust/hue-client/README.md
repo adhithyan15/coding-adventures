@@ -11,15 +11,21 @@ Included surfaces:
 
 - bridge registration request/response parsing
 - resource snapshot and collection requests
+- typed aggregate resource snapshots from a single CLIP v2 snapshot envelope
 - resource-specific reads
 - structured command request bodies from `hue-core`
 - event-stream request shape
 - event-stream batch parsing from Server-Sent Events data frames
+- incremental event-stream decoding for split Server-Sent Events chunks
 - Hue v2 envelope/error parsing
 - Hue bridge resource decoding for paired bridge identity and time zone data
 - Hue device resource decoding with product metadata and service references
+- Hue grouped-light resource decoding for room/zone aggregate lights
+- Hue room, zone, and scene resource decoding
+- Hue motion and button resource decoding for sensor/input entities
 - Hue light resource decoding
-- Hue light state update extraction from snapshots and event-stream batches
+- Hue light, grouped-light, motion, and button state update extraction from
+  snapshots and event-stream batches
 
 ## Dependencies
 

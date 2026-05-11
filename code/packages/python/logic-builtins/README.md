@@ -56,18 +56,32 @@ ordinary logic goal expressions.
   atom composition and number/string conversion modes
 - `atom_lengtho/2`, `string_lengtho/2`, `sub_atomo/5`, and `sub_stringo/5` for
   finite text inspection and slicing modes
-- `exists_fileo/1`, `read_file_to_stringo/2`, and `read_file_to_codeso/2` for
-  bounded UTF-8 file text reads
+- `exists_fileo/1`, `exists_directoryo/1`, `absolute_file_nameo/2`,
+  `access_fileo/2`, `file_directory_nameo/2`, `file_base_nameo/2`,
+  `directory_file_patho/3`, `file_name_extensiono/3`, `same_fileo/2`,
+  `size_fileo/2`, `time_fileo/2`, `directory_fileso/2`,
+  `make_directoryo/1`, `delete_fileo/1`, `delete_directoryo/1`,
+  `rename_fileo/2`, `working_directoryo/2`, `expand_file_nameo/2`,
+  `make_directory_patho/1`, `delete_directory_and_contentso/1`,
+  `copy_fileo/2`, `read_file_to_stringo/2`, and `read_file_to_codeso/2` for
+  bounded file metadata, explicit filesystem operations, recursive/wildcard
+  filesystem helpers, and UTF-8 file text reads
 - `openo/3`, `closeo/1`, `read_stringo/3`, `read_line_to_stringo/2`,
   `get_charo/2`, `at_end_of_streamo/1`, `writeo/2`, and `nlo/1` for bounded
   UTF-8 file stream handles
 - `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
-  `flush_outputo/1` for bounded stream aliases, option validation, and
-  metadata
+  `flush_outputo/1` for bounded stream aliases, option validation, metadata,
+  standard `user_input`/`user_output`/`user_error` streams, and accepted
+  `reposition`, `eof_action`, `buffer`, and `close_on_abort` options
 - `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
   repositioning
 - `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,
   and current-stream read/write forms for selected bounded streams
+- `get_codeo/2`, `peek_charo/2`, `peek_codeo/2`, `put_charo/2`,
+  `put_codeo/2`, and current-stream variants for bounded UTF-8
+  character/code stream I/O
+- `get_byteo/2`, `peek_byteo/2`, `put_byteo/2`, and current-stream variants
+  for bounded binary file stream I/O opened with `type(binary)`
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,

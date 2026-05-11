@@ -2,22 +2,56 @@
 
 from __future__ import annotations
 
+import pathlib
+import socket
+import subprocess
+import sys
+import time
 from dataclasses import dataclass
 from typing import Any, Iterable
+from urllib.parse import urlparse
 
 from . import board_vm_native as _native
 
 
+DEFAULT_RUST_WORKSPACE = pathlib.Path(__file__).resolve().parents[4] / "rust"
 DEFAULT_HOST_NAME = "python-board-vm"
 DEFAULT_HOST_NONCE = 0xB0A2D001
 DEFAULT_PROGRAM_ID = 1
 DEFAULT_INSTRUCTION_BUDGET = 12
+DEFAULT_TIMEOUT_MS = 1_000
+DEFAULT_PICO_RUNTIME_PORT_WAIT_MS = 5_000
+DEFAULT_PICO_RUNTIME_PORT_POLL_MS = 250
+BOOT_POLICIES = {
+    "store_only": 0,
+    "store-only": 0,
+    "run_at_boot": 1,
+    "run-at-boot": 1,
+    "run_if_no_host": 2,
+    "run-if-no-host": 2,
+}
+RUN_FLAG_RESET_VM_BEFORE_RUN = 0x01
+RUN_FLAG_KEEP_HANDLES_AFTER_RUN = 0x02
+RUN_FLAG_BACKGROUND_RUN = 0x04
+DEFAULT_RUN_FLAGS = RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
+RUN_FLAGS = {
+    "reset_vm_before_run": RUN_FLAG_RESET_VM_BEFORE_RUN,
+    "reset-vm-before-run": RUN_FLAG_RESET_VM_BEFORE_RUN,
+    "keep_handles_after_run": RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+    "keep-handles-after-run": RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+    "background_run": RUN_FLAG_BACKGROUND_RUN,
+    "background-run": RUN_FLAG_BACKGROUND_RUN,
+}
 GPIO_READ_MODES = {
     "input": 0,
     "input_pullup": 2,
     "pullup": 2,
     "input_pulldown": 3,
     "pulldown": 3,
+}
+GPIO_MODES = {
+    **GPIO_READ_MODES,
+    "output": 1,
 }
 
 
@@ -117,6 +151,221 @@ class BoardDescriptor:
 
 
 @dataclass(frozen=True)
+class BoardTarget:
+    raw: dict[str, Any]
+
+    @property
+    def board_id(self) -> str:
+        return str(self.raw["board_id"])
+
+    @property
+    def display_name(self) -> str:
+        return str(self.raw["display_name"])
+
+    @property
+    def family(self) -> str:
+        return str(self.raw["family"])
+
+    @property
+    def runtime_id(self) -> str:
+        return str(self.raw["runtime_id"])
+
+    @property
+    def mcu(self) -> str:
+        return str(self.raw["mcu"])
+
+    @property
+    def core(self) -> str:
+        return str(self.raw["core"])
+
+    @property
+    def rust_target(self) -> str:
+        return str(self.raw["rust_target"])
+
+    @property
+    def clock_hz(self) -> int:
+        return int(self.raw["clock_hz"])
+
+    @property
+    def operating_voltage_mv(self) -> int:
+        return int(self.raw["operating_voltage_mv"])
+
+    @property
+    def onboard_led(self) -> dict[str, Any] | None:
+        led = self.raw.get("onboard_led")
+        return None if led is None else dict(led)
+
+    @property
+    def onboard_led_pin(self) -> int | None:
+        led = self.onboard_led
+        if led is None:
+            return None
+        return int(led["pin"])
+
+    @property
+    def digital_pin_count(self) -> int:
+        return int(self.raw["digital_pin_count"])
+
+    @property
+    def wireless(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("wireless", [])]
+
+    @property
+    def wireless_transports(self) -> list[str]:
+        return [str(item["transport"]) for item in self.wireless]
+
+    @property
+    def connection_options(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("connection_options", [])]
+
+    @property
+    def command_transports(self) -> list[str]:
+        return [
+            str(item["transport"])
+            for item in self.connection_options
+            if item.get("command_transport")
+        ]
+
+    @property
+    def ota_transports(self) -> list[str]:
+        return [
+            str(item["transport"])
+            for item in self.connection_options
+            if item.get("ota_update")
+        ]
+
+    def supports_command_transport(self, transport: str) -> bool:
+        return str(transport) in self.command_transports
+
+    def supports_wireless_transport(self, transport: str) -> bool:
+        return str(transport) in self.wireless_transports
+
+    @property
+    def supports_wifi(self) -> bool:
+        return self.supports_wireless_transport("wifi")
+
+    @property
+    def supports_bluetooth(self) -> bool:
+        return any(
+            transport.startswith("bluetooth")
+            for transport in self.wireless_transports
+        )
+
+    @property
+    def supports_ota_update(self) -> bool:
+        return bool(self.ota_transports)
+
+    @property
+    def capabilities(self) -> list[str]:
+        return [str(capability) for capability in self.raw.get("capabilities", [])]
+
+
+@dataclass(frozen=True)
+class EspUploadOptions:
+    raw: dict[str, Any]
+
+    @property
+    def board_id(self) -> str:
+        return str(self.raw["board_id"])
+
+    @property
+    def baud_rate(self) -> int:
+        return int(self.raw["baud_rate"])
+
+    @property
+    def timeout_ms(self) -> int:
+        return int(self.raw["timeout_ms"])
+
+    @property
+    def reset_into_bootloader(self) -> bool:
+        return bool(self.raw["reset_into_bootloader"])
+
+    @property
+    def offset(self) -> int:
+        return int(self.raw["offset"])
+
+    @property
+    def block_size(self) -> int:
+        return int(self.raw["block_size"])
+
+    @property
+    def flash_size(self) -> int | None:
+        value = self.raw.get("flash_size")
+        return None if value is None else int(value)
+
+    @property
+    def verify_md5(self) -> bool:
+        return bool(self.raw["verify_md5"])
+
+    @property
+    def stay_in_bootloader(self) -> bool:
+        return bool(self.raw["stay_in_bootloader"])
+
+
+@dataclass(frozen=True)
+class PicoUf2UploadOptions:
+    raw: dict[str, Any]
+
+    @property
+    def board_id(self) -> str:
+        return str(self.raw["board_id"])
+
+    @property
+    def command(self) -> str:
+        return str(self.raw["command"])
+
+    @property
+    def volume_label(self) -> str:
+        return str(self.raw["volume_label"])
+
+    @property
+    def image_extension(self) -> str:
+        return str(self.raw["image_extension"])
+
+    @property
+    def auto_detect_mount(self) -> bool:
+        return bool(self.raw["auto_detect_mount"])
+
+
+@dataclass(frozen=True)
+class BoardDevice:
+    raw: dict[str, Any]
+
+    @property
+    def id(self) -> str:
+        return str(self.raw["id"])
+
+    @property
+    def port(self) -> str:
+        return str(self.raw["port"])
+
+    @property
+    def transport(self) -> str:
+        return str(self.raw["transport"])
+
+    @property
+    def display_name(self) -> str:
+        return str(self.raw["display_name"])
+
+    @property
+    def target(self) -> BoardTarget | None:
+        target = self.raw.get("target")
+        return None if target is None else BoardTarget(target)
+
+    @property
+    def target_confidence(self) -> int:
+        return int(self.raw.get("target_confidence", 0))
+
+    @property
+    def bootloader(self) -> bool:
+        return bool(self.raw.get("bootloader", False))
+
+    @property
+    def tags(self) -> list[str]:
+        return [str(tag) for tag in self.raw.get("tags", [])]
+
+
+@dataclass(frozen=True)
 class ProtocolResult:
     command: str
     frame: bytes
@@ -167,6 +416,61 @@ class SessionResult:
         return None
 
 
+class TcpTransport:
+    FRAME_DELIMITER = b"\x00"
+
+    def __init__(self, endpoint: str, *, timeout_ms: int = DEFAULT_TIMEOUT_MS):
+        self.endpoint = str(endpoint)
+        self.timeout_ms = int(timeout_ms)
+        self.host, self.port = _parse_tcp_endpoint(self.endpoint)
+        self._socket: socket.socket | None = None
+
+    def transact(self, frame: bytes, timeout_ms: int | None = None) -> bytes:
+        self.write(frame)
+        return self._read_frame(timeout_ms=self.timeout_ms if timeout_ms is None else int(timeout_ms))
+
+    def write(self, frame: bytes) -> None:
+        try:
+            self._io().sendall(bytes(frame))
+        except OSError as error:
+            raise OSError(f"failed to write Board VM frame to {self.endpoint}: {error}") from error
+
+    def close(self) -> None:
+        if self._socket is not None:
+            self._socket.close()
+            self._socket = None
+
+    def _io(self) -> socket.socket:
+        if self._socket is None:
+            try:
+                self._socket = socket.create_connection(
+                    (self.host, self.port),
+                    timeout=self.timeout_ms / 1000.0,
+                )
+                self._socket.settimeout(self.timeout_ms / 1000.0)
+                self._socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            except OSError as error:
+                raise OSError(f"failed to open Board VM TCP endpoint {self.endpoint}: {error}") from error
+        return self._socket
+
+    def _read_frame(self, *, timeout_ms: int) -> bytes:
+        stream = self._io()
+        stream.settimeout(timeout_ms / 1000.0)
+        response = bytearray()
+        try:
+            while True:
+                byte = stream.recv(1)
+                if not byte:
+                    raise OSError(f"Board VM TCP endpoint {self.endpoint} closed")
+                response.extend(byte)
+                if byte == self.FRAME_DELIMITER:
+                    return bytes(response)
+        except socket.timeout as error:
+            raise TimeoutError(f"timed out waiting for Board VM response on {self.endpoint}") from error
+        except OSError as error:
+            raise OSError(f"failed to read Board VM response from {self.endpoint}: {error}") from error
+
+
 class Session:
     def __init__(self, *, next_request_id: int = 1, transport: Any = None, timeout_ms: int = 1000):
         self.next_request_id = next_request_id
@@ -186,6 +490,18 @@ class Session:
     def board_descriptor(self) -> BoardDescriptor | None:
         return self.capabilities().board_descriptor
 
+    def smoke(
+        self,
+        *,
+        host_name: str = DEFAULT_HOST_NAME,
+        host_nonce: int = DEFAULT_HOST_NONCE,
+        query_caps: bool = True,
+    ) -> SessionResult:
+        results = [self.hello(host_name=host_name, host_nonce=host_nonce)]
+        if query_caps:
+            results.append(self.capabilities())
+        return SessionResult(results)
+
     def blink_module(self, pin: int = 13, high_ms: int = 250, low_ms: int = 250, max_stack: int = 4) -> bytes:
         return _native.blink_module(pin, high_ms, low_ms, max_stack)
 
@@ -195,11 +511,35 @@ class Session:
     def gpio_write_module(self, *, pin: int, value: bool, max_stack: int = 3) -> bytes:
         return _native.gpio_write_module(pin, 1 if value else 0, max_stack)
 
+    def gpio_open_module(self, *, pin: int, mode: str | int = "output", max_stack: int = 2) -> bytes:
+        return _native.gpio_open_module(pin, self._gpio_mode(mode), max_stack)
+
+    def gpio_handle_read_module(self, max_stack: int = 2) -> bytes:
+        return _native.gpio_handle_read_module(max_stack)
+
+    def gpio_handle_write_module(self, *, value: bool, max_stack: int = 3) -> bytes:
+        return _native.gpio_handle_write_module(1 if value else 0, max_stack)
+
+    def gpio_handle_close_module(self, max_stack: int = 1) -> bytes:
+        return _native.gpio_handle_close_module(max_stack)
+
     def time_now_module(self, max_stack: int = 1) -> bytes:
         return _native.time_now_module(max_stack)
 
     def time_sleep_ms_module(self, duration_ms: int, max_stack: int = 1) -> bytes:
         return _native.time_sleep_ms_module(duration_ms, max_stack)
+
+    def raw_module(
+        self,
+        *,
+        code: bytes | bytearray,
+        max_stack: int,
+        flags: int = 0,
+        const_pool: bytes | bytearray = b"",
+    ) -> bytes:
+        return _native.raw_module(flags, max_stack, bytes(code), bytes(const_pool))
+
+    module = raw_module
 
     def upload(self, *, program_id: int = DEFAULT_PROGRAM_ID, module_bytes: bytes) -> SessionResult:
         return SessionResult([
@@ -207,6 +547,21 @@ class Session:
             self._dispatch("program_chunk", self._call_native(_native.program_chunk_wire, program_id, 0, module_bytes)),
             self._dispatch("program_end", self._call_native(_native.program_end_wire, program_id)),
         ])
+
+    def store_program(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        slot: int = 0,
+        boot_policy: str | int = "run_if_no_host",
+    ) -> ProtocolResult:
+        frame = self._call_native(
+            _native.store_program_wire,
+            program_id,
+            slot,
+            self._boot_policy(boot_policy),
+        )
+        return self._dispatch("store_program", frame)
 
     def upload_blink(
         self,
@@ -248,6 +603,53 @@ class Session:
             module_bytes=self.gpio_write_module(pin=pin, value=value, max_stack=max_stack),
         )
 
+    def upload_gpio_open(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        pin: int,
+        mode: str | int = "output",
+        max_stack: int = 2,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_open_module(pin=pin, mode=mode, max_stack=max_stack),
+        )
+
+    def upload_gpio_handle_read(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        max_stack: int = 2,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_handle_read_module(max_stack=max_stack),
+        )
+
+    def upload_gpio_handle_write(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        value: bool,
+        max_stack: int = 3,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_handle_write_module(value=value, max_stack=max_stack),
+        )
+
+    def upload_gpio_handle_close(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_handle_close_module(max_stack=max_stack),
+        )
+
     def upload_time_now(
         self,
         *,
@@ -271,8 +673,48 @@ class Session:
             module_bytes=self.time_sleep_ms_module(duration_ms, max_stack=max_stack),
         )
 
-    def run(self, *, program_id: int = DEFAULT_PROGRAM_ID, instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET) -> ProtocolResult:
-        frame = self._call_native(_native.run_background_wire, program_id, instruction_budget)
+    def upload_raw_module(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        code: bytes | bytearray,
+        max_stack: int,
+        flags: int = 0,
+        const_pool: bytes | bytearray = b"",
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.raw_module(
+                code=code,
+                max_stack=max_stack,
+                flags=flags,
+                const_pool=const_pool,
+            ),
+        )
+
+    def run(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        flags: int | None = None,
+        reset_vm: bool = True,
+        keep_handles: bool = False,
+        background: bool = True,
+        time_budget_ms: int = 0,
+    ) -> ProtocolResult:
+        frame = self._call_native(
+            _native.run_wire,
+            program_id,
+            self._run_flags(
+                flags=flags,
+                reset_vm=reset_vm,
+                keep_handles=keep_handles,
+                background=background,
+            ),
+            instruction_budget,
+            time_budget_ms,
+        )
         return self._dispatch("run", frame)
 
     def stop(self) -> ProtocolResult:
@@ -368,6 +810,101 @@ class Session:
     def gpio_low(self, *, pin: int, **options: Any) -> SessionResult:
         return self.gpio_write(pin=pin, value=False, **options)
 
+    def gpio_open(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        handshake: bool = False,
+        query_caps: bool = False,
+        pin: int,
+        mode: str | int = "output",
+        max_stack: int = 2,
+    ) -> SessionResult:
+        results: list[ProtocolResult] = []
+        if handshake:
+            results.append(self.hello())
+        if query_caps:
+            results.append(self.capabilities())
+        results.extend(
+            self.upload_gpio_open(
+                program_id=program_id,
+                pin=pin,
+                mode=mode,
+                max_stack=max_stack,
+            ).results
+        )
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                keep_handles=True,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
+    def gpio_handle_read(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: int = 2,
+    ) -> SessionResult:
+        results = self.upload_gpio_handle_read(program_id=program_id, max_stack=max_stack).results
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                reset_vm=False,
+                keep_handles=True,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
+    def gpio_handle_write(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        value: bool,
+        max_stack: int = 3,
+    ) -> SessionResult:
+        results = self.upload_gpio_handle_write(
+            program_id=program_id,
+            value=value,
+            max_stack=max_stack,
+        ).results
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                reset_vm=False,
+                keep_handles=True,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
+    def gpio_handle_close(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        results = self.upload_gpio_handle_close(program_id=program_id, max_stack=max_stack).results
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                reset_vm=False,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
     def time_now(
         self,
         *,
@@ -435,6 +972,20 @@ class Session:
             return self.upload_gpio_write(
                 **self._with_gpio_write_options(words, command, options, allow_budget=False)
             )
+        if command in {"upload-gpio-open", "upload-gpio.open"}:
+            return self.upload_gpio_open(
+                **self._with_gpio_open_options(words, command, options, allow_budget=False)
+            )
+        if command in {"upload-gpio-handle-read", "upload-gpio.handle-read"}:
+            self._ensure_no_extra(words, command)
+            return self.upload_gpio_handle_read(**options)
+        if command in {"upload-gpio-handle-write", "upload-gpio.handle-write"}:
+            return self.upload_gpio_handle_write(
+                **self._with_gpio_handle_write_options(words, command, options, allow_budget=False)
+            )
+        if command in {"upload-gpio-handle-close", "upload-gpio.handle-close"}:
+            self._ensure_no_extra(words, command)
+            return self.upload_gpio_handle_close(**options)
         if command in {"upload-time-now", "upload-time.now"}:
             self._ensure_no_extra(words, command)
             return self.upload_time_now(**options)
@@ -442,6 +993,8 @@ class Session:
             return self.upload_time_sleep_ms(
                 **self._with_time_sleep_ms_options(words, command, options, allow_budget=False)
             )
+        if command in {"store-program", "store.program"}:
+            return SessionResult([self.store_program(**self._with_store_program_options(words, command, options))])
         if command == "run":
             return SessionResult([self.run(**self._with_optional_budget(words, command, options))])
         if command == "stop":
@@ -457,6 +1010,16 @@ class Session:
             return self.gpio_write(**self._with_gpio_level_options(words, command, options, value=True))
         if command in {"gpio-low", "gpio.low"}:
             return self.gpio_write(**self._with_gpio_level_options(words, command, options, value=False))
+        if command in {"gpio-open", "gpio.open"}:
+            return self.gpio_open(**self._with_gpio_open_options(words, command, options))
+        if command in {"gpio-handle-read", "gpio.handle-read"}:
+            return self.gpio_handle_read(**self._with_optional_budget(words, command, options))
+        if command in {"gpio-handle-write", "gpio.handle-write"}:
+            return self.gpio_handle_write(
+                **self._with_gpio_handle_write_options(words, command, options)
+            )
+        if command in {"gpio-handle-close", "gpio.handle-close"}:
+            return self.gpio_handle_close(**self._with_optional_budget(words, command, options))
         if command in {"time-now", "time.now", "now"}:
             return self.time_now(**self._with_optional_budget(words, command, options))
         if command in {"time-sleep-ms", "time.sleep_ms", "sleep-ms"}:
@@ -497,6 +1060,41 @@ class Session:
         merged = dict(options)
         if words:
             merged["instruction_budget"] = int(words.pop(0))
+        self._ensure_no_extra(words, command)
+        return merged
+
+    @staticmethod
+    def _run_flags(
+        *,
+        flags: int | None,
+        reset_vm: bool,
+        keep_handles: bool,
+        background: bool,
+    ) -> int:
+        if flags is not None:
+            return int(flags)
+        value = 0
+        if reset_vm:
+            value |= RUN_FLAG_RESET_VM_BEFORE_RUN
+        if keep_handles:
+            value |= RUN_FLAG_KEEP_HANDLES_AFTER_RUN
+        if background:
+            value |= RUN_FLAG_BACKGROUND_RUN
+        return value
+
+    def _with_store_program_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["program_id"] = int(words.pop(0))
+        if words:
+            merged["slot"] = int(words.pop(0))
+        if words:
+            merged["boot_policy"] = words.pop(0)
         self._ensure_no_extra(words, command)
         return merged
 
@@ -554,6 +1152,30 @@ class Session:
         except KeyError as exc:
             raise ValueError(f"unsupported GPIO read mode: {mode!r}") from exc
 
+    @staticmethod
+    def _gpio_mode(mode: str | int) -> int:
+        if isinstance(mode, int):
+            return mode
+        normalized = str(mode).replace("-", "_")
+        if normalized.isdecimal():
+            return int(normalized)
+        try:
+            return GPIO_MODES[normalized]
+        except KeyError as exc:
+            raise ValueError(f"unsupported GPIO mode: {mode!r}") from exc
+
+    @staticmethod
+    def _boot_policy(policy: str | int) -> int:
+        if isinstance(policy, int):
+            return policy
+        normalized = str(policy).replace("-", "_")
+        if normalized.isdecimal():
+            return int(normalized)
+        try:
+            return BOOT_POLICIES[normalized]
+        except KeyError as exc:
+            raise ValueError(f"unsupported boot policy: {policy!r}") from exc
+
     def _with_gpio_write_options(
         self,
         words: list[str],
@@ -572,6 +1194,48 @@ class Session:
         self._ensure_no_extra(words, command)
         if "pin" not in merged:
             raise ValueError(f"{command} requires pin")
+        if "value" not in merged:
+            raise ValueError(f"{command} requires value")
+        return merged
+
+    def _with_gpio_open_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+        *,
+        allow_budget: bool = True,
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["pin"] = int(words.pop(0))
+        if words:
+            mode_or_budget = words.pop(0)
+            if allow_budget and mode_or_budget.isdecimal():
+                merged["instruction_budget"] = int(mode_or_budget)
+            else:
+                merged["mode"] = mode_or_budget
+        if allow_budget and words:
+            merged["instruction_budget"] = int(words.pop(0))
+        self._ensure_no_extra(words, command)
+        if "pin" not in merged:
+            raise ValueError(f"{command} requires pin")
+        return merged
+
+    def _with_gpio_handle_write_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+        *,
+        allow_budget: bool = True,
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["value"] = self._gpio_write_value(words.pop(0))
+        if allow_budget and words:
+            merged["instruction_budget"] = int(words.pop(0))
+        self._ensure_no_extra(words, command)
         if "value" not in merged:
             raise ValueError(f"{command} requires value")
         return merged
@@ -609,11 +1273,892 @@ class Session:
         raise ValueError(f"unsupported GPIO write value: {value!r}")
 
 
+class Connection:
+    def __init__(
+        self,
+        *,
+        target: BoardTarget,
+        port: str | None,
+        transport: Any = None,
+        endpoint: str | None = None,
+        connection_option: dict[str, Any] | None = None,
+        runner: Any = None,
+        cargo_workspace: str | pathlib.Path | None = None,
+        firmware_image: str | pathlib.Path | None = None,
+        device_discovery: Any = None,
+        pico_uf2_mount: str | pathlib.Path | None = None,
+        pico_uf2_roots: Iterable[str | pathlib.Path] | None = None,
+        pico_runtime_port: bool = True,
+        pico_runtime_port_wait_ms: int = DEFAULT_PICO_RUNTIME_PORT_WAIT_MS,
+        pico_runtime_port_poll_ms: int = DEFAULT_PICO_RUNTIME_PORT_POLL_MS,
+        esp_upload_options: dict[str, Any] | None = None,
+        pico_uf2_upload_options: dict[str, Any] | None = None,
+    ):
+        self.target = target
+        self.port = None if port is None else str(port)
+        self.transport = transport
+        self.endpoint = None if endpoint is None else str(endpoint)
+        self.connection_option = dict(connection_option or select_connection_option(target.board_id))
+        self.runner = _default_runner if runner is None else runner
+        self.cargo_workspace = pathlib.Path(cargo_workspace or DEFAULT_RUST_WORKSPACE)
+        self.firmware_image = None if firmware_image is None else str(firmware_image)
+        self.device_discovery = devices if device_discovery is None else device_discovery
+        self.pico_uf2_mount = None if pico_uf2_mount is None else str(pico_uf2_mount)
+        self.pico_uf2_roots = None if pico_uf2_roots is None else [str(root) for root in pico_uf2_roots]
+        self.pico_runtime_port = pico_runtime_port
+        self.pico_runtime_port_wait_ms = int(pico_runtime_port_wait_ms)
+        self.pico_runtime_port_poll_ms = int(pico_runtime_port_poll_ms)
+        self.esp_upload_options = dict(esp_upload_options or {})
+        self.pico_uf2_upload_options = dict(pico_uf2_upload_options or {})
+
+    @property
+    def board_id(self) -> str:
+        return self.target.board_id
+
+    @property
+    def family(self) -> str:
+        return self.target.family
+
+    @property
+    def connection_transport(self) -> str | None:
+        transport = self.connection_option.get("transport")
+        return None if transport is None else str(transport)
+
+    @property
+    def serial_connection(self) -> bool:
+        return self.connection_transport in {None, "serial"}
+
+    @property
+    def wireless_connection(self) -> bool:
+        return not self.serial_connection
+
+    @property
+    def ota_connection(self) -> bool:
+        return bool(self.connection_option.get("ota_update"))
+
+    def session(self, **options: Any) -> Session:
+        options.setdefault("transport", self._active_transport())
+        return Session(**options)
+
+    def smoke(
+        self,
+        *,
+        host_name: str = DEFAULT_HOST_NAME,
+        host_nonce: int = DEFAULT_HOST_NONCE,
+        query_caps: bool = True,
+    ) -> SessionResult:
+        return self.session().smoke(
+            host_name=host_name,
+            host_nonce=host_nonce,
+            query_caps=query_caps,
+        )
+
+    def flash(self) -> Any:
+        if self.firmware_image is None:
+            raise ValueError("Board VM flash requires firmware_image")
+        if not self.serial_connection and self.family != "raspberry_pi_pico":
+            display_name = self.connection_option.get("display_name", self.connection_transport)
+            raise ValueError(
+                f"{display_name} flashing is known in target metadata, but Python host flashing "
+                f"over {self.connection_transport} is not wired yet; choose via='serial'"
+            )
+        if self.family == "esp32":
+            command = esp_upload_command(
+                self.board_id,
+                port=self.port,
+                image=self.firmware_image,
+                **self.esp_upload_options,
+            )
+            return self._run_board_vm(command)
+        if self.family == "raspberry_pi_pico":
+            command = pico_uf2_upload_command(
+                self.board_id,
+                image=self.firmware_image,
+                mount=self.pico_uf2_mount,
+                roots=self.pico_uf2_roots,
+                **self.pico_uf2_upload_options,
+            )
+            result = self._run_board_vm(command)
+            if self.pico_runtime_port:
+                self.rediscover_runtime_port()
+            return result
+        raise ValueError(f"Python flash sugar does not support {self.board_id!r}")
+
+    def _active_transport(self) -> Any:
+        if self.transport is not None:
+            return self.transport
+        if self._tcp_endpoint_connection():
+            if self.endpoint is None or not self.endpoint:
+                display_name = self.connection_option.get("display_name", self.connection_transport)
+                raise ValueError(
+                    f"{display_name} requires a Board VM TCP endpoint; "
+                    "pass endpoint='tcp://host:port' or choose via='serial'"
+                )
+            self.transport = TcpTransport(self.endpoint, timeout_ms=DEFAULT_TIMEOUT_MS)
+            return self.transport
+        return None
+
+    def _tcp_endpoint_connection(self) -> bool:
+        return (
+            self.connection_option.get("endpoint_transport") == "tcp_socket"
+            or self.connection_option.get("endpoint_scheme") == "tcp"
+        )
+
+    def rediscover_runtime_port(self) -> BoardDevice:
+        deadline = time.monotonic() + (self.pico_runtime_port_wait_ms / 1000)
+        last_error: ValueError | None = None
+        while True:
+            try:
+                selected = select_runtime_device(
+                    self.board_id,
+                    device_candidates=self.device_discovery(),
+                )
+                self.port = selected.port
+                return selected
+            except ValueError as error:
+                last_error = error
+
+            if self.pico_runtime_port_wait_ms <= 0 or time.monotonic() >= deadline:
+                break
+            remaining = max(0, deadline - time.monotonic())
+            poll_seconds = max(self.pico_runtime_port_poll_ms / 1000, 0.01)
+            time.sleep(min(poll_seconds, remaining))
+
+        detail = "" if last_error is None else f"\n{last_error}"
+        raise ValueError(
+            f"Pico UF2 upload finished, but no runtime serial device was found for {self.board_id!r}.{detail}"
+        )
+
+    def _run_board_vm(self, args: list[str]) -> Any:
+        command = ["cargo", "run", "-p", "board-vm-cli", "--bin", "board-vm", "--", *args]
+        return self.runner(command, cwd=str(self.cargo_workspace))
+
+
+def _default_runner(command: list[str], *, cwd: str | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(command, cwd=cwd, check=True, capture_output=True, text=True)
+
+
+def known_targets() -> list[BoardTarget]:
+    return [BoardTarget(raw) for raw in _native.known_targets()]
+
+
+def detect_target(selector: str) -> BoardTarget | None:
+    raw = _native.detect_target(str(selector))
+    if raw is None:
+        return None
+    return BoardTarget(raw)
+
+
+def find_target(board_id: str) -> BoardTarget | None:
+    return detect_target(board_id)
+
+
+def bluetooth_endpoint(endpoint: str) -> dict[str, Any] | None:
+    parsed = _native.bluetooth_endpoint(str(endpoint))
+    return None if parsed is None else dict(parsed)
+
+
+def bluetooth_devices() -> list[dict[str, Any]]:
+    return [dict(device) for device in _native.bluetooth_devices()]
+
+
+def bluetooth_endpoint_candidates(
+    devices: Iterable[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    normalized = []
+    source_devices = bluetooth_devices() if devices is None else devices
+    for device in source_devices:
+        device_id = _bluetooth_device_field(device, "id")
+        if device_id is None:
+            raise ValueError("Bluetooth discovered device id is required")
+
+        normalized.append(
+            {
+                "id": str(device_id),
+                "name": _optional_str(_bluetooth_device_field(device, "name")),
+                "address": _optional_str(_bluetooth_device_field(device, "address")),
+                "paired": bool(_bluetooth_device_field(device, "paired")),
+                "service_uuids": [
+                    str(value)
+                    for value in _bluetooth_device_sequence(device, "service_uuids")
+                ],
+                "characteristic_uuids": [
+                    str(value)
+                    for value in _bluetooth_device_sequence(device, "characteristic_uuids")
+                ],
+                "board_vm_rfcomm_channels": [
+                    int(value)
+                    for value in _bluetooth_device_sequence(
+                        device, "board_vm_rfcomm_channels"
+                    )
+                ],
+            }
+        )
+
+    candidates = []
+    for candidate in _native.bluetooth_endpoint_candidates(normalized):
+        value = dict(candidate)
+        value["endpoint"] = dict(value["endpoint"])
+        candidates.append(value)
+    return candidates
+
+
+def _bluetooth_device_field(device: Any, key: str) -> Any:
+    if isinstance(device, dict):
+        return device.get(key)
+    return getattr(device, key, None)
+
+
+def _optional_str(value: Any) -> str | None:
+    return None if value is None else str(value)
+
+
+def _bluetooth_device_sequence(device: Any, key: str) -> list[Any]:
+    value = _bluetooth_device_field(device, key)
+    if value is None:
+        return []
+    return list(value)
+
+
+def connection_options(selector: str) -> list[dict[str, Any]]:
+    target = detect_target(selector)
+    if target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+    return target.connection_options
+
+
+def connection_option_list(selector: str) -> str:
+    options = connection_options(selector)
+    if not options:
+        return f"No Board VM connection options found for {selector}."
+
+    lines = []
+    for index, option in enumerate(options, start=1):
+        badges = []
+        if option.get("command_transport"):
+            badges.append("commands")
+        if option.get("ota_update"):
+            badges.append("OTA")
+        badge_label = f" [{', '.join(badges)}]" if badges else ""
+        lines.append(
+            f"{index}. {option['display_name']}{badge_label} - requires {option['requires']}"
+        )
+    return "\n".join(lines)
+
+
+def select_connection_option(
+    selector: str,
+    *,
+    transport: str | None = None,
+    ota: bool = False,
+) -> dict[str, Any]:
+    options = connection_options(selector)
+    matches = [option for option in options if option.get("command_transport")]
+    if ota:
+        matches = [option for option in matches if option.get("ota_update")]
+
+    if transport is not None:
+        normalized_transport = _normalize_connection_transport(transport)
+        selected = next(
+            (option for option in options if option["transport"] == normalized_transport),
+            None,
+        )
+        if selected is not None and (not ota or selected.get("ota_update")):
+            return dict(selected)
+        raise ValueError(
+            f"No {normalized_transport} connection option for {selector!r}.\n"
+            f"{connection_option_list(selector)}"
+        )
+
+    serial = next((option for option in matches if option["transport"] == "serial"), None)
+    if serial is not None and not ota:
+        return dict(serial)
+    if len(matches) == 1:
+        return dict(matches[0])
+
+    reason = "No matching connection option" if not matches else "Multiple connection options match"
+    raise ValueError(f"{reason} for {selector!r}.\n{connection_option_list(selector)}")
+
+
+def _normalize_connection_transport(transport: str) -> str:
+    normalized = str(transport).strip().lower().replace("-", "_").replace(" ", "_").replace("/", "_")
+    aliases = {
+        "usb": "serial",
+        "usb_serial": "serial",
+        "serial_port": "serial",
+        "wi_fi": "wifi",
+        "wireless": "wifi",
+        "ble": "bluetooth_le",
+        "bluetooth": "bluetooth_le",
+        "bluetooth_low_energy": "bluetooth_le",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def pick_connection_option(
+    selector: str,
+    *,
+    input_func: Any = input,
+    output: Any = None,
+) -> dict[str, Any]:
+    options = connection_options(selector)
+    if not options:
+        raise ValueError(f"No Board VM connection options found for {selector!r}.")
+
+    output = sys.stdout if output is None else output
+    output.write(connection_option_list(selector))
+    output.write("\n")
+    output.write(f"Select connection [1-{len(options)}]: ")
+    choice = input_func("")
+    try:
+        index = int(str(choice).strip())
+    except ValueError as error:
+        raise ValueError(f"Invalid Board VM connection selection: {choice!r}") from error
+    if not 1 <= index <= len(options):
+        raise ValueError(f"Invalid Board VM connection selection: {choice!r}")
+    return dict(options[index - 1])
+
+
+def esp_upload_options(
+    selector: str = "esp32-devkit-v1",
+    **overrides: Any,
+) -> EspUploadOptions | None:
+    raw = _native.esp_upload_options(str(selector))
+    if raw is None:
+        return None
+    merged = dict(raw)
+    merged.update(overrides)
+    return EspUploadOptions(merged)
+
+
+def pico_uf2_upload_options(
+    selector: str = "raspberry-pi-pico",
+    **overrides: Any,
+) -> PicoUf2UploadOptions | None:
+    raw = _native.pico_uf2_upload_options(str(selector))
+    if raw is None:
+        return None
+    merged = dict(raw)
+    merged.update(overrides)
+    return PicoUf2UploadOptions(merged)
+
+
+def pico_uf2_mounts(roots: Iterable[str] | None = None) -> list[str]:
+    if roots is None:
+        return [str(mount) for mount in _native.pico_uf2_mounts()]
+    return [str(mount) for mount in _native.pico_uf2_mounts([str(root) for root in roots])]
+
+
+def _pico_uf2_mount_list(mounts: Iterable[str]) -> str:
+    return "\n".join(f"{index}. {mount}" for index, mount in enumerate(mounts, start=1))
+
+
+def pico_uf2_mount(roots: Iterable[str] | None = None) -> str:
+    mounts = pico_uf2_mounts(roots)
+    if len(mounts) == 1:
+        return mounts[0]
+    if not mounts:
+        raise ValueError(
+            "No Pico BOOTSEL UF2 mount found. "
+            "Hold BOOTSEL while plugging in the Pico/Pico W."
+        )
+    raise ValueError(
+        "Multiple Pico BOOTSEL UF2 mounts found; choose one.\n"
+        f"{_pico_uf2_mount_list(mounts)}"
+    )
+
+
+DeviceReference = BoardDevice | dict[str, Any] | str | int
+
+
+def select_device(
+    selector: str = "auto",
+    *,
+    device: DeviceReference | None = None,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+) -> BoardDevice:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+    ]
+
+    if isinstance(device, BoardDevice):
+        return device
+    if isinstance(device, dict):
+        return BoardDevice(device)
+    if isinstance(device, int):
+        try:
+            return candidates[device]
+        except IndexError as error:
+            raise ValueError(f"No Board VM device at index {device}.") from error
+    if device is not None:
+        needle = str(device)
+        for candidate in candidates:
+            if candidate.id == needle or candidate.port == needle:
+                return candidate
+        raise ValueError(f"No Board VM device named {needle!r}.\n{device_list(candidates)}")
+
+    target = None if selector == "auto" else detect_target(selector)
+    if selector != "auto" and target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+
+    if target is None:
+        matches = [candidate for candidate in candidates if candidate.target is not None]
+    else:
+        exact_matches = [
+            candidate
+            for candidate in candidates
+            if candidate.target is not None and candidate.target.board_id == target.board_id
+        ]
+        matches = exact_matches or [
+            candidate for candidate in candidates if candidate.target is None
+        ]
+
+    if target is None and not matches and len(candidates) == 1:
+        matches = candidates
+    if len(matches) == 1:
+        return matches[0]
+
+    if not candidates:
+        raise ValueError("No Board VM devices found. Plug in a board or pass an explicit device.")
+
+    if not matches and target is None:
+        reason = "Multiple Board VM devices found; choose one"
+    elif not matches:
+        reason = "No matching Board VM device found"
+    else:
+        reason = "Multiple Board VM devices match"
+    raise ValueError(f"{reason}.\n{device_list(candidates)}")
+
+
+def runtime_devices(
+    selector: str = "auto",
+    *,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+) -> list[BoardDevice]:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+        if not (item.bootloader if isinstance(item, BoardDevice) else item.get("bootloader", False))
+    ]
+    target = None if selector == "auto" else detect_target(selector)
+    if selector != "auto" and target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+
+    if target is None:
+        matches = [candidate for candidate in candidates if candidate.target is not None]
+        if not matches and len(candidates) == 1:
+            return candidates
+        return matches
+
+    exact_matches = [
+        candidate
+        for candidate in candidates
+        if candidate.target is not None and candidate.target.board_id == target.board_id
+    ]
+    if exact_matches:
+        return exact_matches
+    return [candidate for candidate in candidates if candidate.target is None]
+
+
+def select_runtime_device(
+    selector: str = "auto",
+    *,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+) -> BoardDevice:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+    ]
+    matches = runtime_devices(selector, device_candidates=candidates)
+    if len(matches) == 1:
+        return matches[0]
+
+    if not candidates:
+        raise ValueError(
+            "No Board VM runtime serial devices found. "
+            "Plug in a board or pass an explicit port."
+        )
+
+    reason = (
+        "No matching runtime serial device found"
+        if not matches
+        else "Multiple runtime serial devices match"
+    )
+    raise ValueError(f"{reason}.\n{device_list(candidates)}")
+
+
+def pick_device(
+    selector: str = "auto",
+    *,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+    input_func: Any = input,
+    output: Any = None,
+) -> BoardDevice:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+    ]
+    if not candidates:
+        raise ValueError("No Board VM devices found. Plug in a board.")
+
+    try:
+        return select_device(selector, device_candidates=candidates)
+    except ValueError:
+        pass
+
+    output = sys.stdout if output is None else output
+    output.write(device_list(candidates))
+    output.write("\n")
+    output.write(f"Select board [1-{len(candidates)}]: ")
+    choice = input_func("")
+    try:
+        index = int(str(choice).strip())
+    except ValueError as error:
+        raise ValueError(f"Invalid Board VM device selection: {choice!r}") from error
+    if not 1 <= index <= len(candidates):
+        raise ValueError(f"Invalid Board VM device selection: {choice!r}")
+
+    selected = candidates[index - 1]
+    target = None if selector == "auto" else detect_target(selector)
+    if target is not None and selected.target is not None and selected.target.board_id != target.board_id:
+        raise ValueError(
+            f"Selected {selected.port} is {selected.target.board_id}, not {target.board_id}."
+        )
+    return selected
+
+
+def esp_upload_command(
+    selector: str = "esp32-devkit-v1",
+    *,
+    port: str | None = None,
+    device: DeviceReference | None = None,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+    image: str,
+    **overrides: Any,
+) -> list[str]:
+    options = esp_upload_options(selector, **overrides)
+    if options is None:
+        raise ValueError(f"ESP upload is not supported for {selector!r}")
+
+    if port is None:
+        port = select_device(
+            selector,
+            device=device,
+            device_candidates=device_candidates,
+        ).port
+
+    command = [
+        "esp-upload",
+        "--port",
+        str(port),
+        "--image",
+        str(image),
+        "--baud",
+        str(options.baud_rate),
+        "--timeout-ms",
+        str(options.timeout_ms),
+        "--offset",
+        str(options.offset),
+        "--block-size",
+        str(options.block_size),
+    ]
+    if options.flash_size is not None:
+        command.extend(["--flash-size", str(options.flash_size)])
+    if not options.reset_into_bootloader:
+        command.append("--no-reset")
+    if not options.verify_md5:
+        command.append("--no-verify")
+    if options.stay_in_bootloader:
+        command.append("--stay-in-bootloader")
+    return command
+
+
+def pico_uf2_upload_command(
+    selector: str = "raspberry-pi-pico",
+    *,
+    image: str,
+    mount: str | None = None,
+    roots: Iterable[str] | None = None,
+    auto_mount: bool = True,
+    **overrides: Any,
+) -> list[str]:
+    options = pico_uf2_upload_options(selector, **overrides)
+    if options is None:
+        raise ValueError(f"Pico UF2 upload is not supported for {selector!r}")
+
+    selected_mount = mount
+    if selected_mount is None and auto_mount:
+        selected_mount = pico_uf2_mount(roots)
+
+    command = [
+        options.command,
+        "--image",
+        str(image),
+    ]
+    if selected_mount is not None:
+        command.extend(["--mount", str(selected_mount)])
+    return command
+
+
+def connect(
+    selector: str = "auto",
+    *,
+    port: str | None = None,
+    device: DeviceReference | None = None,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+    pick: bool = False,
+    via: str | None = None,
+    connection_option: dict[str, Any] | None = None,
+    pick_connection: bool = False,
+    input_func: Any = input,
+    output: Any = None,
+    flash: bool = False,
+    smoke: bool = False,
+    transport: Any = None,
+    endpoint: str | None = None,
+    runner: Any = None,
+    cargo_workspace: str | pathlib.Path | None = None,
+    firmware_image: str | pathlib.Path | None = None,
+    esp_image: str | pathlib.Path | None = None,
+    device_discovery: Any = None,
+    pico_uf2_mount: str | pathlib.Path | None = None,
+    pico_uf2_roots: Iterable[str | pathlib.Path] | None = None,
+    pico_runtime_port: bool = True,
+    pico_runtime_port_wait_ms: int = DEFAULT_PICO_RUNTIME_PORT_WAIT_MS,
+    pico_runtime_port_poll_ms: int = DEFAULT_PICO_RUNTIME_PORT_POLL_MS,
+    esp_upload_options: dict[str, Any] | None = None,
+    pico_uf2_upload_options: dict[str, Any] | None = None,
+) -> Connection:
+    selected_device = None
+    explicit_target = None if selector == "auto" else detect_target(selector)
+    if selector != "auto" and explicit_target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+
+    selected_connection_option = None
+    if explicit_target is not None:
+        selected_connection_option = _resolve_connection_option(
+            explicit_target.board_id,
+            via=via,
+            connection_option=connection_option,
+            pick_connection=pick_connection,
+            input_func=input_func,
+            output=output,
+        )
+
+    needs_device_for_target = explicit_target is None and port is None
+    needs_serial_port = _connection_uses_serial_port(selected_connection_option) and not _flash_without_port(
+        explicit_target.board_id if explicit_target is not None else selector,
+        flash,
+    )
+    if pick and port is None and device is None and (needs_device_for_target or needs_serial_port):
+        selected_device = pick_device(
+            selector,
+            device_candidates=device_candidates,
+            input_func=input_func,
+            output=output,
+        )
+    elif device is not None:
+        selected_device = select_device(
+            selector,
+            device=device,
+            device_candidates=device_candidates,
+        )
+    elif port is None and (needs_device_for_target or needs_serial_port):
+        selected_device = select_device(selector, device_candidates=device_candidates)
+
+    selected_port = port or (selected_device.port if selected_device is not None else None)
+    target = _connection_target(selector, selected_device, selected_port)
+    selected_connection_option = selected_connection_option or _resolve_connection_option(
+        target.board_id,
+        via=via,
+        connection_option=connection_option,
+        pick_connection=pick_connection,
+        input_func=input_func,
+        output=output,
+    )
+    connection = Connection(
+        target=target,
+        port=selected_port,
+        transport=transport,
+        endpoint=endpoint,
+        connection_option=selected_connection_option,
+        runner=runner,
+        cargo_workspace=cargo_workspace,
+        firmware_image=firmware_image or esp_image,
+        device_discovery=device_discovery,
+        pico_uf2_mount=pico_uf2_mount,
+        pico_uf2_roots=pico_uf2_roots,
+        pico_runtime_port=pico_runtime_port,
+        pico_runtime_port_wait_ms=pico_runtime_port_wait_ms,
+        pico_runtime_port_poll_ms=pico_runtime_port_poll_ms,
+        esp_upload_options=esp_upload_options,
+        pico_uf2_upload_options=pico_uf2_upload_options,
+    )
+    if flash:
+        connection.flash()
+    if smoke:
+        connection.smoke()
+    return connection
+
+
+def _resolve_connection_option(
+    selector: str,
+    *,
+    via: str | None,
+    connection_option: dict[str, Any] | None,
+    pick_connection: bool,
+    input_func: Any,
+    output: Any,
+) -> dict[str, Any]:
+    if connection_option is not None:
+        return dict(connection_option)
+    if pick_connection:
+        return pick_connection_option(selector, input_func=input_func, output=output)
+    return select_connection_option(selector, transport=via)
+
+
+def _connection_uses_serial_port(connection_option: dict[str, Any] | None) -> bool:
+    return connection_option is None or connection_option.get("transport") == "serial"
+
+
+def _parse_tcp_endpoint(endpoint: str) -> tuple[str, int]:
+    parsed = urlparse(endpoint if "://" in endpoint else f"tcp://{endpoint}")
+    if parsed.scheme != "tcp" or parsed.hostname is None or parsed.port is None:
+        raise ValueError("Board VM TCP endpoint must look like tcp://host:port")
+    return parsed.hostname, int(parsed.port)
+
+
+def uno_r4_wifi(**options: Any) -> Connection:
+    return connect("arduino-uno-r4-wifi", **options)
+
+
+def esp32_devkit_v1(**options: Any) -> Connection:
+    return connect("esp32-devkit-v1", **options)
+
+
+def esp32(**options: Any) -> Connection:
+    return esp32_devkit_v1(**options)
+
+
+def raspberry_pi_pico(**options: Any) -> Connection:
+    return connect("raspberry-pi-pico", **options)
+
+
+def pico(**options: Any) -> Connection:
+    return raspberry_pi_pico(**options)
+
+
+def raspberry_pi_pico_w(**options: Any) -> Connection:
+    return connect("raspberry-pi-pico-w", **options)
+
+
+def pico_w(**options: Any) -> Connection:
+    return raspberry_pi_pico_w(**options)
+
+
+def _connection_target(
+    selector: str,
+    selected_device: BoardDevice | None,
+    selected_port: str | None,
+) -> BoardTarget:
+    if selector != "auto":
+        target = detect_target(selector)
+        if target is None:
+            raise ValueError(f"unsupported board: {selector!r}")
+        return target
+    if selected_device is not None and selected_device.target is not None:
+        return selected_device.target
+    if selected_port is not None:
+        target = detect_target("arduino-uno-r4-wifi")
+        if target is not None:
+            return target
+    raise ValueError(f"Could not infer the board for {selected_port or 'the selected device'}.\n{device_list()}")
+
+
+def _flash_without_port(selector: str, flash: bool) -> bool:
+    if not flash:
+        return False
+    target = detect_target(selector)
+    return target is not None and target.family == "raspberry_pi_pico"
+
+
+def devices(paths: Iterable[str] | None = None) -> list[BoardDevice]:
+    raw_devices = (
+        _native.discover_devices()
+        if paths is None
+        else _native.classify_devices([str(path) for path in paths])
+    )
+    return [BoardDevice(raw) for raw in raw_devices]
+
+
+def device_list(device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None) -> str:
+    items = list(devices() if device_candidates is None else device_candidates)
+    if not items:
+        return "No Board VM devices found."
+
+    lines = []
+    for index, item in enumerate(items, start=1):
+        device = item if isinstance(item, BoardDevice) else BoardDevice(item)
+        target = device.target
+        target_name = target.display_name if target is not None else "Unknown board"
+        confidence = f", {device.target_confidence}% match" if device.target_confidence > 0 else ""
+        tags = f" [{', '.join(device.tags)}]" if device.tags else ""
+        lines.append(f"{index}. {target_name} - {device.port}{confidence}{tags}")
+    return "\n".join(lines)
+
+
 __all__ = [
+    "BoardDevice",
     "BoardDescriptor",
+    "BoardTarget",
+    "BOOT_POLICIES",
     "Capability",
+    "Connection",
+    "DEFAULT_PICO_RUNTIME_PORT_POLL_MS",
+    "DEFAULT_PICO_RUNTIME_PORT_WAIT_MS",
+    "DEFAULT_RUN_FLAGS",
+    "DEFAULT_RUST_WORKSPACE",
+    "EspUploadOptions",
+    "GPIO_MODES",
     "GPIO_READ_MODES",
+    "PicoUf2UploadOptions",
     "ProtocolResult",
+    "RUN_FLAG_BACKGROUND_RUN",
+    "RUN_FLAG_KEEP_HANDLES_AFTER_RUN",
+    "RUN_FLAG_RESET_VM_BEFORE_RUN",
+    "RUN_FLAGS",
     "Session",
     "SessionResult",
+    "TcpTransport",
+    "bluetooth_devices",
+    "bluetooth_endpoint",
+    "bluetooth_endpoint_candidates",
+    "connection_option_list",
+    "connect",
+    "connection_options",
+    "device_list",
+    "devices",
+    "detect_target",
+    "esp32",
+    "esp32_devkit_v1",
+    "esp_upload_command",
+    "esp_upload_options",
+    "find_target",
+    "known_targets",
+    "pico",
+    "pico_w",
+    "pick_connection_option",
+    "pico_uf2_mount",
+    "pico_uf2_upload_command",
+    "pico_uf2_mounts",
+    "pico_uf2_upload_options",
+    "pick_device",
+    "raspberry_pi_pico",
+    "raspberry_pi_pico_w",
+    "runtime_devices",
+    "select_connection_option",
+    "select_device",
+    "select_runtime_device",
+    "uno_r4_wifi",
 ]

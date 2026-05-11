@@ -7,11 +7,11 @@ coordinator policy. It provides:
 
 - ZCL cluster and attribute identifiers for common smart-home clusters
 - foundation and cluster-specific frame control parsing/encoding
-- read-attributes and on/off command frame builders
+- read-attributes, on/off, level, and color-temperature command frame builders
 - typed attribute report parsing
 - D23 capability projection for common clusters
 - D23 `StateDelta` projection for on/off, level, color-temperature, occupancy,
-  and lock-state reports
+  lock-state, temperature, humidity, and illuminance reports
 - endpoint references grounded in `zigbee-nwk` network addresses
 
 ## Dependencies

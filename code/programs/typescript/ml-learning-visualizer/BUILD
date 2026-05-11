@@ -11,6 +11,7 @@ set -eu
 (cd ../../../packages/typescript/paint-vm-svg && npm install)
 (cd ../../../packages/typescript/two-layer-network && npm install)
 (cd ../../../packages/typescript/state-machine && npm install)
+(cd ../../../packages/typescript/cli-builder && npm install)
 (cd ../../../packages/typescript/grammar-tools && npm install)
 (cd ../../../packages/typescript/lexer && npm install)
 (cd ../../../packages/typescript/parser && npm install)

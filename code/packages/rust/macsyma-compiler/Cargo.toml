@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-macsyma-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compile MACSYMA grammar ASTs to symbolic IR"
+license = "MIT"
+
+[dependencies]
+coding-adventures-macsyma-parser = { path = "../macsyma-parser" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+symbolic-ir = { path = "../symbolic-ir" }

@@ -40,6 +40,8 @@ struct FixtureCase {
     current_doctype: Option<FixtureDoctypeSeed>,
     #[serde(default)]
     temporary_buffer: Option<String>,
+    #[serde(default)]
+    return_state: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -74,6 +76,8 @@ struct Html5libTokenizerTest {
     current_end_tag: Option<String>,
     #[serde(default, rename = "temporaryBuffer")]
     temporary_buffer: Option<String>,
+    #[serde(default, rename = "returnState")]
+    return_state: Option<String>,
     #[serde(default, rename = "currentComment")]
     current_comment: Option<String>,
     #[serde(default, rename = "currentDoctype")]
@@ -294,6 +298,15 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
                 == Some("DOCTYPE public identifier double quoted state")),
         "normalized fixtures should include seeded doctype continuation states"
     );
+    assert!(
+        normalized
+            .cases
+            .iter()
+            .any(|case| case.return_state.as_deref() == Some("RCDATA state")
+                && case.temporary_buffer.as_deref() == Some("&a")
+                && case.initial_state.as_deref() == Some("Named character reference state")),
+        "normalized fixtures should include seeded character-reference continuation states"
+    );
 }
 
 #[test]
@@ -412,6 +425,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
                 && case.current_comment.is_none()
                 && case.current_doctype.is_none()
                 && case.temporary_buffer.is_none()
+                && case.return_state.is_none()
         }
         Some(initial_state) => {
             let Some(state) = HtmlTokenizerState::from_html5lib_state(initial_state) else {
@@ -421,16 +435,33 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
                 case.current_end_tag.is_some() && case.temporary_buffer.is_some();
             let has_comment_seed = case.current_comment.is_some();
             let has_doctype_seed = case.current_doctype.is_some();
-            state.requires_last_start_tag() == case.last_start_tag.is_some()
+            let has_character_reference_seed =
+                case.return_state.is_some() && case.temporary_buffer.is_some();
+            let return_state = case
+                .return_state
+                .as_deref()
+                .and_then(HtmlTokenizerState::from_html5lib_state);
+            let needs_last_start_tag = state.requires_last_start_tag()
+                || (state.requires_character_reference_seed()
+                    && return_state == Some(HtmlTokenizerState::Rcdata));
+            needs_last_start_tag == case.last_start_tag.is_some()
                 && state.requires_end_tag_seed() == has_end_tag_seed
                 && state.requires_comment_seed() == has_comment_seed
                 && state.requires_doctype_seed() == has_doctype_seed
+                && state.requires_character_reference_seed() == has_character_reference_seed
                 && (has_end_tag_seed
+                    || has_character_reference_seed
                     || (case.current_end_tag.is_none() && case.temporary_buffer.is_none()))
                 && (!has_doctype_seed
                     || (case.current_end_tag.is_none()
                         && case.current_comment.is_none()
                         && case.temporary_buffer.is_none()))
+                && (!has_character_reference_seed
+                    || (case.current_end_tag.is_none()
+                        && case.current_comment.is_none()
+                        && case.current_doctype.is_none()
+                        && return_state
+                            .is_some_and(HtmlTokenizerState::is_character_reference_return_state)))
         }
     }
 }
@@ -503,6 +534,13 @@ fn configure_lexer_for_case(
     }
     if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
         context = context.with_temporary_buffer(temporary_buffer);
+    }
+    if let Some(return_state) = case
+        .return_state
+        .as_deref()
+        .and_then(HtmlTokenizerState::from_html5lib_state)
+    {
+        context = context.with_return_state(return_state);
     }
     apply_html_lex_context(lexer, &context)
 }

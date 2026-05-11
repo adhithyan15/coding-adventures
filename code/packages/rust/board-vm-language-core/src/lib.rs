@@ -6,18 +6,37 @@
 //! already share the same implementation.
 
 use std::cell::{Cell, RefCell};
+use std::collections::BTreeMap;
+use std::env;
 use std::ffi::CString;
+use std::fs;
 use std::panic::{self, AssertUnwindSafe};
+use std::path::{Path, PathBuf};
 use std::ptr;
 use std::slice;
 use std::str;
 
+use board_vm_bluetooth::{
+    board_vm_endpoint_candidates as board_vm_bluetooth_endpoint_candidates,
+    discover_bluetooth_devices as discover_board_vm_bluetooth_devices,
+    parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint, BluetoothDiscoveredDevice,
+    BluetoothEndpoint, BluetoothEndpointCandidate,
+};
+use board_vm_esp_rom::{
+    DEFAULT_BAUD_RATE as ESP_DEFAULT_BAUD_RATE,
+    DEFAULT_FLASH_BLOCK_SIZE as ESP_DEFAULT_FLASH_BLOCK_SIZE,
+    DEFAULT_TIMEOUT_MS as ESP_DEFAULT_TIMEOUT_MS,
+};
 use board_vm_host::{
-    write_blink_module, write_gpio_read_module, write_gpio_write_module, write_time_now_module,
-    write_time_sleep_ms_module, BlinkProgram, GpioReadProgram, GpioWriteProgram, HostError,
-    HostSession, TimeNowProgram, TimeSleepMsProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
-    DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
-    TIME_SLEEP_MS_MODULE_LEN,
+    write_blink_module, write_gpio_handle_close_module, write_gpio_handle_read_module,
+    write_gpio_handle_write_module, write_gpio_open_module, write_gpio_read_module,
+    write_gpio_write_module, write_module, write_time_now_module, write_time_sleep_ms_module,
+    BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
+    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, ModuleSpec,
+    TimeNowProgram, TimeSleepMsProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
+    DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN,
+    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -26,10 +45,23 @@ use board_vm_protocol::{
     RunStatus, Value as ProtocolValue, CAP_FLAG_BOARD_METADATA, CAP_FLAG_BYTECODE_CALLABLE,
     CAP_FLAG_PROTOCOL_FEATURE, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
+use board_vm_targets::{
+    all_targets, BoardFamily, BoardTargetInfo, OnboardLed as TargetOnboardLed,
+    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
+};
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
 pub const LANGUAGE_CORE_VERSION_MINOR: u16 = 1;
 pub const LANGUAGE_CORE_VERSION_PATCH: u16 = 0;
+pub const LANGUAGE_DEFAULT_RUN_FLAGS: u8 = DEFAULT_RUN_FLAGS;
+pub const LANGUAGE_RUN_FLAG_RESET_VM_BEFORE_RUN: u8 =
+    board_vm_protocol::RUN_FLAG_RESET_VM_BEFORE_RUN;
+pub const LANGUAGE_RUN_FLAG_KEEP_HANDLES_AFTER_RUN: u8 =
+    board_vm_protocol::RUN_FLAG_KEEP_HANDLES_AFTER_RUN;
+pub const LANGUAGE_RUN_FLAG_BACKGROUND_RUN: u8 = board_vm_protocol::RUN_FLAG_BACKGROUND_RUN;
+pub const LANGUAGE_ESP_DEFAULT_FLASH_OFFSET: u32 = 0x1000;
+pub const LANGUAGE_ESP_DEFAULT_FLASH_SIZE: u32 = 4 * 1024 * 1024;
+pub const LANGUAGE_BOARD_VM_WIRE_PROTOCOL: &str = "board_vm_cobs_crc";
 
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -224,6 +256,147 @@ pub struct LanguageBoardDescriptor {
     pub capabilities: Vec<LanguageCapability>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageBoardFamily {
+    ArduinoUnoR4,
+    Esp32,
+    RaspberryPiPico,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageOnboardLed {
+    Gpio(u8),
+    WirelessChipGpio(u8),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageWirelessTransport {
+    Wifi,
+    BluetoothLe,
+    BluetoothClassic,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageConnectionTransport {
+    Serial,
+    Wifi,
+    BluetoothLe,
+    BluetoothClassic,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageHostEndpointTransport {
+    SerialPort,
+    TcpSocket,
+    BluetoothLeGatt,
+    BluetoothClassicRfcomm,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageWirelessInterface {
+    pub transport: LanguageWirelessTransport,
+    pub chip: String,
+    pub command_transport: bool,
+    pub ota_update: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageConnectionOption {
+    pub transport: LanguageConnectionTransport,
+    pub display_name: String,
+    pub command_transport: bool,
+    pub ota_update: bool,
+    pub requires: String,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+    pub wire_protocol: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBluetoothEndpoint {
+    pub endpoint: String,
+    pub transport: LanguageConnectionTransport,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+    pub device: String,
+    pub service_uuid: Option<String>,
+    pub write_characteristic_uuid: Option<String>,
+    pub notify_characteristic_uuid: Option<String>,
+    pub channel: Option<u8>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBluetoothDiscoveredDevice {
+    pub id: String,
+    pub name: Option<String>,
+    pub address: Option<String>,
+    pub paired: bool,
+    pub service_uuids: Vec<String>,
+    pub characteristic_uuids: Vec<String>,
+    pub board_vm_rfcomm_channels: Vec<u8>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBluetoothEndpointCandidate {
+    pub endpoint: LanguageBluetoothEndpoint,
+    pub device: String,
+    pub display_name: String,
+    pub paired: bool,
+    pub requires_pairing: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageTargetInfo {
+    pub board_id: String,
+    pub display_name: String,
+    pub family: LanguageBoardFamily,
+    pub runtime_id: String,
+    pub mcu: String,
+    pub core: String,
+    pub rust_target: String,
+    pub clock_hz: u32,
+    pub operating_voltage_mv: u16,
+    pub onboard_led: Option<LanguageOnboardLed>,
+    pub digital_pin_count: usize,
+    pub wireless: Vec<LanguageWirelessInterface>,
+    pub connection_options: Vec<LanguageConnectionOption>,
+    pub capabilities: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageEspUploadOptions {
+    pub board_id: String,
+    pub baud_rate: u32,
+    pub timeout_ms: u64,
+    pub reset_into_bootloader: bool,
+    pub offset: u32,
+    pub block_size: u32,
+    pub flash_size: Option<u32>,
+    pub verify_md5: bool,
+    pub stay_in_bootloader: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguagePicoUf2UploadOptions {
+    pub board_id: String,
+    pub command: String,
+    pub volume_label: String,
+    pub image_extension: String,
+    pub auto_detect_mount: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageHostDevice {
+    pub id: String,
+    pub port: String,
+    pub transport: String,
+    pub display_name: String,
+    pub target: Option<LanguageTargetInfo>,
+    pub target_confidence: u8,
+    pub bootloader: bool,
+    pub tags: Vec<String>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageProgramBegin {
     pub program_id: u16,
@@ -322,6 +495,49 @@ pub const fn capability_board_metadata(flags: u16) -> bool {
     flags & CAP_FLAG_BOARD_METADATA != 0
 }
 
+pub const fn board_family_name(family: LanguageBoardFamily) -> &'static str {
+    match family {
+        LanguageBoardFamily::ArduinoUnoR4 => "arduino_uno_r4",
+        LanguageBoardFamily::Esp32 => "esp32",
+        LanguageBoardFamily::RaspberryPiPico => "raspberry_pi_pico",
+    }
+}
+
+pub const fn onboard_led_kind(led: LanguageOnboardLed) -> &'static str {
+    match led {
+        LanguageOnboardLed::Gpio(_) => "gpio",
+        LanguageOnboardLed::WirelessChipGpio(_) => "wireless_chip_gpio",
+    }
+}
+
+pub const fn wireless_transport_name(transport: LanguageWirelessTransport) -> &'static str {
+    match transport {
+        LanguageWirelessTransport::Wifi => "wifi",
+        LanguageWirelessTransport::BluetoothLe => "bluetooth_le",
+        LanguageWirelessTransport::BluetoothClassic => "bluetooth_classic",
+    }
+}
+
+pub const fn connection_transport_name(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "serial",
+        LanguageConnectionTransport::Wifi => "wifi",
+        LanguageConnectionTransport::BluetoothLe => "bluetooth_le",
+        LanguageConnectionTransport::BluetoothClassic => "bluetooth_classic",
+    }
+}
+
+pub const fn host_endpoint_transport_name(
+    transport: LanguageHostEndpointTransport,
+) -> &'static str {
+    match transport {
+        LanguageHostEndpointTransport::SerialPort => "serial_port",
+        LanguageHostEndpointTransport::TcpSocket => "tcp_socket",
+        LanguageHostEndpointTransport::BluetoothLeGatt => "bluetooth_le_gatt",
+        LanguageHostEndpointTransport::BluetoothClassicRfcomm => "bluetooth_classic_rfcomm",
+    }
+}
+
 pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
     let mut count = 0;
     if capability_bytecode_callable(flags) {
@@ -334,6 +550,617 @@ pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
         count = push_flag_name(out, count, "board_metadata");
     }
     count
+}
+
+pub fn known_targets() -> Vec<LanguageTargetInfo> {
+    all_targets().iter().map(language_target_info).collect()
+}
+
+pub fn known_target(board_id: &str) -> Option<LanguageTargetInfo> {
+    all_targets()
+        .iter()
+        .find(|target| target.board_id == board_id)
+        .map(language_target_info)
+}
+
+pub fn detect_target(selector: &str) -> Option<LanguageTargetInfo> {
+    let normalized = normalize_target_selector(selector);
+    if normalized.is_empty() {
+        return None;
+    }
+
+    for target in all_targets() {
+        if normalize_target_selector(target.board_id) == normalized
+            || normalize_target_selector(target.display_name) == normalized
+        {
+            return Some(language_target_info(target));
+        }
+    }
+
+    let board_id = match normalized.as_str() {
+        "uno_r4" | "uno_r4_wifi" | "arduino_uno_r4" | "arduino_uno_r4_wifi" => {
+            "arduino-uno-r4-wifi"
+        }
+        "uno_r4_minima" | "arduino_uno_r4_minima" => "arduino-uno-r4-minima",
+        "esp" | "esp32" | "esp32_devkit" | "esp32_devkit_v1" | "espressif_esp32" => {
+            "esp32-devkit-v1"
+        }
+        "pico" | "rp2040" | "rpi_pico" | "raspberry_pico" | "raspberry_pi_pico" => {
+            "raspberry-pi-pico"
+        }
+        "pico_w"
+        | "picow"
+        | "rp2040_w"
+        | "rpi_pico_w"
+        | "raspberry_pico_w"
+        | "raspberry_pi_pico_w" => "raspberry-pi-pico-w",
+        _ => return None,
+    };
+    known_target(board_id)
+}
+
+pub fn esp_upload_options_for_target(selector: &str) -> Option<LanguageEspUploadOptions> {
+    let target = detect_target(selector)?;
+    if target.family != LanguageBoardFamily::Esp32 {
+        return None;
+    }
+
+    Some(LanguageEspUploadOptions {
+        board_id: target.board_id,
+        baud_rate: ESP_DEFAULT_BAUD_RATE,
+        timeout_ms: ESP_DEFAULT_TIMEOUT_MS,
+        reset_into_bootloader: true,
+        offset: LANGUAGE_ESP_DEFAULT_FLASH_OFFSET,
+        block_size: ESP_DEFAULT_FLASH_BLOCK_SIZE,
+        flash_size: Some(LANGUAGE_ESP_DEFAULT_FLASH_SIZE),
+        verify_md5: true,
+        stay_in_bootloader: false,
+    })
+}
+
+pub fn pico_uf2_upload_options_for_target(selector: &str) -> Option<LanguagePicoUf2UploadOptions> {
+    let target = detect_target(selector)?;
+    if target.family != LanguageBoardFamily::RaspberryPiPico {
+        return None;
+    }
+
+    Some(LanguagePicoUf2UploadOptions {
+        board_id: target.board_id,
+        command: "pico-uf2".to_owned(),
+        volume_label: "RPI-RP2".to_owned(),
+        image_extension: ".uf2".to_owned(),
+        auto_detect_mount: true,
+    })
+}
+
+pub fn connection_options_for_target(selector: &str) -> Option<Vec<LanguageConnectionOption>> {
+    let target = detect_target(selector)?;
+    Some(target.connection_options)
+}
+
+pub fn parse_bluetooth_endpoint(endpoint: &str) -> Option<LanguageBluetoothEndpoint> {
+    language_bluetooth_endpoint(parse_board_vm_bluetooth_endpoint(endpoint).ok()?)
+}
+
+pub fn bluetooth_endpoint_candidates_from_devices(
+    devices: &[LanguageBluetoothDiscoveredDevice],
+) -> Vec<LanguageBluetoothEndpointCandidate> {
+    let devices: Vec<_> = devices
+        .iter()
+        .map(|device| BluetoothDiscoveredDevice {
+            id: device.id.clone(),
+            name: device.name.clone(),
+            address: device.address.clone(),
+            paired: device.paired,
+            service_uuids: device.service_uuids.clone(),
+            characteristic_uuids: device.characteristic_uuids.clone(),
+            board_vm_rfcomm_channels: device.board_vm_rfcomm_channels.clone(),
+        })
+        .collect();
+
+    board_vm_bluetooth_endpoint_candidates(&devices)
+        .into_iter()
+        .filter_map(language_bluetooth_endpoint_candidate)
+        .collect()
+}
+
+pub fn discover_bluetooth_devices() -> Vec<LanguageBluetoothDiscoveredDevice> {
+    discover_board_vm_bluetooth_devices()
+        .unwrap_or_default()
+        .into_iter()
+        .map(language_bluetooth_discovered_device)
+        .collect()
+}
+
+pub fn discover_bluetooth_endpoint_candidates() -> Vec<LanguageBluetoothEndpointCandidate> {
+    let devices = discover_bluetooth_devices();
+    bluetooth_endpoint_candidates_from_devices(&devices)
+}
+
+fn language_bluetooth_discovered_device(
+    device: BluetoothDiscoveredDevice,
+) -> LanguageBluetoothDiscoveredDevice {
+    LanguageBluetoothDiscoveredDevice {
+        id: device.id,
+        name: device.name,
+        address: device.address,
+        paired: device.paired,
+        service_uuids: device.service_uuids,
+        characteristic_uuids: device.characteristic_uuids,
+        board_vm_rfcomm_channels: device.board_vm_rfcomm_channels,
+    }
+}
+
+fn language_bluetooth_endpoint(endpoint: BluetoothEndpoint) -> Option<LanguageBluetoothEndpoint> {
+    match endpoint {
+        BluetoothEndpoint::BleGatt(endpoint) => Some(LanguageBluetoothEndpoint {
+            endpoint: endpoint.endpoint,
+            transport: LanguageConnectionTransport::BluetoothLe,
+            endpoint_transport: LanguageHostEndpointTransport::BluetoothLeGatt,
+            endpoint_scheme: "ble".to_owned(),
+            device: endpoint.device,
+            service_uuid: Some(endpoint.service_uuid),
+            write_characteristic_uuid: Some(endpoint.write_characteristic_uuid),
+            notify_characteristic_uuid: Some(endpoint.notify_characteristic_uuid),
+            channel: None,
+        }),
+        BluetoothEndpoint::Rfcomm(endpoint) => Some(LanguageBluetoothEndpoint {
+            endpoint: endpoint.endpoint.clone(),
+            transport: LanguageConnectionTransport::BluetoothClassic,
+            endpoint_transport: LanguageHostEndpointTransport::BluetoothClassicRfcomm,
+            endpoint_scheme: bluetooth_endpoint_scheme(&endpoint.endpoint).to_owned(),
+            device: endpoint.device,
+            service_uuid: None,
+            write_characteristic_uuid: None,
+            notify_characteristic_uuid: None,
+            channel: Some(endpoint.channel),
+        }),
+    }
+}
+
+fn language_bluetooth_endpoint_candidate(
+    candidate: BluetoothEndpointCandidate,
+) -> Option<LanguageBluetoothEndpointCandidate> {
+    Some(LanguageBluetoothEndpointCandidate {
+        endpoint: language_bluetooth_endpoint(candidate.endpoint)?,
+        device: candidate.device,
+        display_name: candidate.display_name,
+        paired: candidate.paired,
+        requires_pairing: candidate.requires_pairing,
+    })
+}
+
+pub fn discover_devices() -> Vec<LanguageHostDevice> {
+    let mut paths = env_device_paths();
+
+    #[cfg(unix)]
+    paths.extend(unix_device_paths());
+
+    #[cfg(windows)]
+    paths.extend(windows_device_paths());
+
+    discover_devices_from_paths(paths)
+}
+
+pub fn discover_devices_from_paths<I, S>(paths: I) -> Vec<LanguageHostDevice>
+where
+    I: IntoIterator<Item = S>,
+    S: AsRef<str>,
+{
+    let mut devices = BTreeMap::new();
+    for path in paths {
+        let path = path.as_ref().trim();
+        if path.is_empty() || !is_serial_candidate(path) {
+            continue;
+        }
+        let device = classify_host_device(path);
+        devices.entry(device_dedupe_key(path)).or_insert(device);
+    }
+    devices.into_values().collect()
+}
+
+pub fn discover_pico_bootsel_mounts() -> Vec<String> {
+    discover_pico_bootsel_mounts_in_roots(default_pico_mount_roots())
+}
+
+pub fn discover_pico_bootsel_mounts_in_roots<I, P>(roots: I) -> Vec<String>
+where
+    I: IntoIterator<Item = P>,
+    P: AsRef<Path>,
+{
+    let mut mounts = Vec::new();
+    for root in roots {
+        let Ok(entries) = fs::read_dir(root.as_ref()) else {
+            continue;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if is_pico_bootsel_mount(&path) {
+                mounts.push(path.to_string_lossy().into_owned());
+            }
+        }
+    }
+    mounts.sort();
+    mounts.dedup();
+    mounts
+}
+
+pub fn normalize_target_selector(selector: &str) -> String {
+    let mut normalized = String::new();
+    let mut last_was_separator = false;
+    for character in selector.trim().chars() {
+        if character.is_ascii_alphanumeric() {
+            normalized.push(character.to_ascii_lowercase());
+            last_was_separator = false;
+        } else if character == '-' || character == '_' || character.is_ascii_whitespace() {
+            if !normalized.is_empty() && !last_was_separator {
+                normalized.push('_');
+                last_was_separator = true;
+            }
+        }
+    }
+    if normalized.ends_with('_') {
+        normalized.pop();
+    }
+    normalized
+}
+
+fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
+    LanguageTargetInfo {
+        board_id: target.board_id.to_owned(),
+        display_name: target.display_name.to_owned(),
+        family: language_family(target.family),
+        runtime_id: target.runtime_id.to_owned(),
+        mcu: target.mcu.to_owned(),
+        core: target.core.to_owned(),
+        rust_target: target.rust_target.to_owned(),
+        clock_hz: target.clock_hz,
+        operating_voltage_mv: target.operating_voltage_mv,
+        onboard_led: target.onboard_led.map(language_onboard_led),
+        digital_pin_count: target.digital_pin_count,
+        wireless: target
+            .wireless
+            .iter()
+            .map(language_wireless_interface)
+            .collect(),
+        connection_options: language_connection_options(target),
+        capabilities: target
+            .capabilities
+            .iter()
+            .map(|capability| (*capability).to_owned())
+            .collect(),
+    }
+}
+
+fn language_wireless_interface(interface: &TargetWirelessInterface) -> LanguageWirelessInterface {
+    LanguageWirelessInterface {
+        transport: language_wireless_transport(interface.transport),
+        chip: interface.chip.to_owned(),
+        command_transport: interface.command_transport,
+        ota_update: interface.ota_update,
+    }
+}
+
+fn language_wireless_transport(transport: TargetWirelessTransport) -> LanguageWirelessTransport {
+    match transport {
+        TargetWirelessTransport::Wifi => LanguageWirelessTransport::Wifi,
+        TargetWirelessTransport::BluetoothLe => LanguageWirelessTransport::BluetoothLe,
+        TargetWirelessTransport::BluetoothClassic => LanguageWirelessTransport::BluetoothClassic,
+    }
+}
+
+fn language_connection_options(target: &BoardTargetInfo) -> Vec<LanguageConnectionOption> {
+    let mut options = Vec::new();
+    if target.capabilities.contains(&"transport.serial") {
+        options.push(LanguageConnectionOption {
+            transport: LanguageConnectionTransport::Serial,
+            display_name: "USB/serial".to_owned(),
+            command_transport: true,
+            ota_update: false,
+            requires: "serial_port".to_owned(),
+            endpoint_transport: LanguageHostEndpointTransport::SerialPort,
+            endpoint_scheme: "serial".to_owned(),
+            wire_protocol: LANGUAGE_BOARD_VM_WIRE_PROTOCOL.to_owned(),
+        });
+    }
+
+    for interface in target.wireless {
+        let transport = language_connection_transport(interface.transport);
+        options.push(LanguageConnectionOption {
+            transport,
+            display_name: connection_transport_display_name(transport).to_owned(),
+            command_transport: interface.command_transport,
+            ota_update: interface.ota_update,
+            requires: connection_transport_requires(transport).to_owned(),
+            endpoint_transport: connection_endpoint_transport(transport),
+            endpoint_scheme: connection_endpoint_scheme(transport).to_owned(),
+            wire_protocol: LANGUAGE_BOARD_VM_WIRE_PROTOCOL.to_owned(),
+        });
+    }
+
+    options
+}
+
+fn language_connection_transport(
+    transport: TargetWirelessTransport,
+) -> LanguageConnectionTransport {
+    match transport {
+        TargetWirelessTransport::Wifi => LanguageConnectionTransport::Wifi,
+        TargetWirelessTransport::BluetoothLe => LanguageConnectionTransport::BluetoothLe,
+        TargetWirelessTransport::BluetoothClassic => LanguageConnectionTransport::BluetoothClassic,
+    }
+}
+
+const fn connection_transport_display_name(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "USB/serial",
+        LanguageConnectionTransport::Wifi => "Wi-Fi",
+        LanguageConnectionTransport::BluetoothLe => "Bluetooth LE",
+        LanguageConnectionTransport::BluetoothClassic => "Bluetooth Classic",
+    }
+}
+
+const fn connection_transport_requires(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "serial_port",
+        LanguageConnectionTransport::Wifi => "network_endpoint",
+        LanguageConnectionTransport::BluetoothLe
+        | LanguageConnectionTransport::BluetoothClassic => "paired_device",
+    }
+}
+
+const fn connection_endpoint_transport(
+    transport: LanguageConnectionTransport,
+) -> LanguageHostEndpointTransport {
+    match transport {
+        LanguageConnectionTransport::Serial => LanguageHostEndpointTransport::SerialPort,
+        LanguageConnectionTransport::Wifi => LanguageHostEndpointTransport::TcpSocket,
+        LanguageConnectionTransport::BluetoothLe => LanguageHostEndpointTransport::BluetoothLeGatt,
+        LanguageConnectionTransport::BluetoothClassic => {
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        }
+    }
+}
+
+const fn connection_endpoint_scheme(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "serial",
+        LanguageConnectionTransport::Wifi => "tcp",
+        LanguageConnectionTransport::BluetoothLe => "ble",
+        LanguageConnectionTransport::BluetoothClassic => "btspp",
+    }
+}
+
+fn bluetooth_endpoint_scheme(endpoint: &str) -> &str {
+    endpoint
+        .split_once("://")
+        .map(|(scheme, _)| scheme)
+        .unwrap_or("")
+}
+
+fn language_family(family: BoardFamily) -> LanguageBoardFamily {
+    match family {
+        BoardFamily::ArduinoUnoR4 => LanguageBoardFamily::ArduinoUnoR4,
+        BoardFamily::Esp32 => LanguageBoardFamily::Esp32,
+        BoardFamily::RaspberryPiPico => LanguageBoardFamily::RaspberryPiPico,
+    }
+}
+
+fn language_onboard_led(led: TargetOnboardLed) -> LanguageOnboardLed {
+    match led {
+        TargetOnboardLed::Gpio(pin) => LanguageOnboardLed::Gpio(pin),
+        TargetOnboardLed::WirelessChipGpio(pin) => LanguageOnboardLed::WirelessChipGpio(pin),
+    }
+}
+
+fn env_device_paths() -> Vec<String> {
+    env::var_os("BOARD_VM_DEVICE_PATHS")
+        .map(|paths| {
+            env::split_paths(&paths)
+                .map(|path| path.to_string_lossy().into_owned())
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+#[cfg(unix)]
+fn unix_device_paths() -> Vec<String> {
+    let mut paths = Vec::new();
+    collect_matching_dir_paths("/dev", &mut paths, |name| {
+        let lower = name.to_ascii_lowercase();
+        lower.starts_with("cu.usbmodem")
+            || lower.starts_with("tty.usbmodem")
+            || lower.starts_with("cu.usbserial")
+            || lower.starts_with("tty.usbserial")
+            || lower.starts_with("cu.wchusbserial")
+            || lower.starts_with("tty.wchusbserial")
+            || lower.starts_with("cu.slab_usbtouart")
+            || lower.starts_with("tty.slab_usbtouart")
+            || lower.starts_with("ttyacm")
+            || lower.starts_with("ttyusb")
+    });
+    collect_matching_dir_paths("/dev/serial/by-id", &mut paths, |_| true);
+    paths
+}
+
+#[cfg(windows)]
+fn windows_device_paths() -> Vec<String> {
+    Vec::new()
+}
+
+fn collect_matching_dir_paths(dir: &str, paths: &mut Vec<String>, matches: impl Fn(&str) -> bool) {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let name = entry.file_name();
+        let name = name.to_string_lossy();
+        if matches(&name) {
+            paths.push(entry.path().to_string_lossy().into_owned());
+        }
+    }
+}
+
+fn default_pico_mount_roots() -> Vec<PathBuf> {
+    let mut roots = Vec::new();
+    #[cfg(unix)]
+    {
+        roots.push(PathBuf::from("/Volumes"));
+        roots.push(PathBuf::from("/mnt"));
+        if let Some(home) = env::var_os("HOME") {
+            if let Some(user) = Path::new(&home).file_name() {
+                roots.push(PathBuf::from("/media").join(user));
+                roots.push(PathBuf::from("/run/media").join(user));
+            }
+        }
+        if let Some(user) = env::var_os("USER") {
+            roots.push(PathBuf::from("/media").join(&user));
+            roots.push(PathBuf::from("/run/media").join(&user));
+        }
+    }
+    #[cfg(windows)]
+    {
+        for drive in b'A'..=b'Z' {
+            roots.push(PathBuf::from(format!("{}:\\", drive as char)));
+        }
+    }
+    roots
+}
+
+fn is_pico_bootsel_mount(path: &Path) -> bool {
+    if !path.is_dir() {
+        return false;
+    }
+
+    let info = path.join("INFO_UF2.TXT");
+    if !info.is_file() {
+        return false;
+    }
+
+    let has_index = path.join("INDEX.HTM").is_file() || path.join("INDEX.HTML").is_file();
+    if !has_index {
+        return false;
+    }
+
+    let Ok(contents) = fs::read_to_string(info) else {
+        return false;
+    };
+    let lower = contents.to_ascii_lowercase();
+    lower.contains("uf2 bootloader")
+        && (lower.contains("rp2") || lower.contains("rp2040") || lower.contains("raspberry pi"))
+}
+
+fn is_serial_candidate(path: &str) -> bool {
+    let lower = path.to_ascii_lowercase();
+    lower.contains("usbmodem")
+        || lower.contains("usbserial")
+        || lower.contains("wchusbserial")
+        || lower.contains("slab_usbtouart")
+        || lower.contains("ttyacm")
+        || lower.contains("ttyusb")
+        || lower.contains("cp210")
+        || lower.contains("ch340")
+        || lower.contains("ftdi")
+        || lower.contains("arduino")
+        || lower.contains("espressif")
+        || lower.contains("esp32")
+        || lower.contains("pico")
+        || lower.contains("rp2040")
+        || lower.starts_with("com")
+        || lower.starts_with(r"\\.\com")
+}
+
+fn classify_host_device(path: &str) -> LanguageHostDevice {
+    let lower = path.to_ascii_lowercase();
+    let normalized = normalize_target_selector(path);
+    let mut tags = Vec::new();
+    push_unique_tag(&mut tags, "serial");
+
+    let (board_id, confidence) = if normalized.contains("pico_w")
+        || normalized.contains("picow")
+        || normalized.contains("raspberry_pi_pico_w")
+    {
+        push_unique_tag(&mut tags, "pico");
+        push_unique_tag(&mut tags, "rp2040");
+        (Some("raspberry-pi-pico-w"), 95)
+    } else if normalized.contains("pico") || normalized.contains("rp2040") {
+        push_unique_tag(&mut tags, "pico");
+        push_unique_tag(&mut tags, "rp2040");
+        (Some("raspberry-pi-pico"), 95)
+    } else if normalized.contains("esp32")
+        || normalized.contains("espressif")
+        || normalized.contains("silicon_labs")
+        || normalized.contains("cp210")
+        || normalized.contains("ch340")
+        || normalized.contains("wchusbserial")
+        || normalized.contains("slab_usbtouart")
+        || normalized.contains("usbserial")
+    {
+        push_unique_tag(&mut tags, "esp");
+        push_unique_tag(&mut tags, "uart");
+        (Some("esp32-devkit-v1"), 70)
+    } else if normalized.contains("arduino")
+        || normalized.contains("uno_r4")
+        || normalized.contains("renesas")
+    {
+        push_unique_tag(&mut tags, "arduino");
+        push_unique_tag(&mut tags, "usb_cdc");
+        (Some("arduino-uno-r4-wifi"), 85)
+    } else {
+        if lower.contains("usbmodem") || lower.contains("ttyacm") {
+            push_unique_tag(&mut tags, "usb_cdc");
+        }
+        (None, 0)
+    };
+
+    let bootloader = normalized.contains("boot")
+        || normalized.contains("bootloader")
+        || normalized.contains("cmsis_dap")
+        || normalized.contains("daplink")
+        || normalized.contains("uf2");
+    if bootloader {
+        push_unique_tag(&mut tags, "bootloader");
+    } else {
+        push_unique_tag(&mut tags, "runtime_or_upload");
+    }
+
+    let target = board_id.and_then(known_target);
+    let target_name = target
+        .as_ref()
+        .map(|target| target.display_name.as_str())
+        .unwrap_or("Board VM serial device");
+
+    LanguageHostDevice {
+        id: device_id(path),
+        port: path.to_owned(),
+        transport: "serial".to_owned(),
+        display_name: format!("{target_name} on {path}"),
+        target,
+        target_confidence: confidence,
+        bootloader,
+        tags,
+    }
+}
+
+fn device_dedupe_key(path: &str) -> String {
+    fs::canonicalize(path)
+        .unwrap_or_else(|_| PathBuf::from(path))
+        .to_string_lossy()
+        .into_owned()
+}
+
+fn device_id(path: &str) -> String {
+    let name = Path::new(path)
+        .file_name()
+        .map(|name| name.to_string_lossy())
+        .unwrap_or_else(|| path.into());
+    normalize_target_selector(&name).replace('_', "-")
+}
+
+fn push_unique_tag(tags: &mut Vec<String>, tag: &str) {
+    if !tags.iter().any(|existing| existing == tag) {
+        tags.push(tag.to_owned());
+    }
 }
 
 fn push_flag_name(out: &mut [&'static str], count: usize, name: &'static str) -> usize {
@@ -427,6 +1254,34 @@ pub fn build_gpio_write_module(
     Ok(write_gpio_write_module(program, out)?)
 }
 
+pub fn build_gpio_open_module(
+    program: GpioOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_open_module(program, out)?)
+}
+
+pub fn build_gpio_handle_read_module(
+    program: GpioHandleReadProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_handle_read_module(program, out)?)
+}
+
+pub fn build_gpio_handle_write_module(
+    program: GpioHandleWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_handle_write_module(program, out)?)
+}
+
+pub fn build_gpio_handle_close_module(
+    program: GpioHandleCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_handle_close_module(program, out)?)
+}
+
 pub fn build_time_now_module(
     program: TimeNowProgram,
     out: &mut [u8],
@@ -439,6 +1294,29 @@ pub fn build_time_sleep_ms_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_time_sleep_ms_module(program, out)?)
+}
+
+pub fn build_raw_module(
+    flags: u8,
+    max_stack: u8,
+    code: &[u8],
+    const_pool: &[u8],
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_module(
+        ModuleSpec::new(flags, max_stack, code).const_pool(const_pool),
+        out,
+    )?)
+}
+
+pub fn raw_module_len(code_len: u64, const_pool_len: u64) -> Result<usize, LanguageCoreError> {
+    if code_len > u32::MAX as u64 || const_pool_len > u32::MAX as u64 {
+        return Err(LanguageCoreError::ValueTooLarge);
+    }
+    let code_len = usize::try_from(code_len).map_err(|_| LanguageCoreError::ValueTooLarge)?;
+    let const_pool_len =
+        usize::try_from(const_pool_len).map_err(|_| LanguageCoreError::ValueTooLarge)?;
+    checked_module_len(code_len, const_pool_len)
 }
 
 pub fn build_program_begin_wire_frame(
@@ -495,17 +1373,66 @@ pub fn build_program_end_wire_frame(
     })
 }
 
+pub fn build_store_program_wire_frame(
+    session: &mut BoardVmLanguageSession,
+    program_id: u16,
+    slot: u8,
+    boot_policy: u8,
+    wire_out: &mut [u8],
+) -> Result<BuiltWireFrame, LanguageCoreError> {
+    let mut payload = [0u8; 8];
+    let mut raw = [0u8; 16];
+    let mut host = session.host_session();
+    let written = host.store_program_with_boot_policy_frame(
+        program_id,
+        slot,
+        boot_policy,
+        &mut payload,
+        &mut raw,
+    )?;
+    let wire_len = encode_wire_frame(&raw[..written.len], wire_out)?;
+    session.update_from_host_session(&host);
+    Ok(BuiltWireFrame {
+        request_id: written.request_id,
+        len: wire_len,
+    })
+}
+
 pub fn build_run_background_wire_frame(
     session: &mut BoardVmLanguageSession,
     program_id: u16,
     instruction_budget: u32,
     wire_out: &mut [u8],
 ) -> Result<BuiltWireFrame, LanguageCoreError> {
+    build_run_wire_frame(
+        session,
+        program_id,
+        DEFAULT_RUN_FLAGS,
+        instruction_budget,
+        0,
+        wire_out,
+    )
+}
+
+pub fn build_run_wire_frame(
+    session: &mut BoardVmLanguageSession,
+    program_id: u16,
+    flags: u8,
+    instruction_budget: u32,
+    time_budget_ms: u32,
+    wire_out: &mut [u8],
+) -> Result<BuiltWireFrame, LanguageCoreError> {
     let mut payload = [0u8; 16];
     let mut raw = [0u8; 32];
     let mut host = session.host_session();
-    let written =
-        host.run_background_frame(program_id, instruction_budget, &mut payload, &mut raw)?;
+    let written = host.run_frame(
+        program_id,
+        flags,
+        instruction_budget,
+        time_budget_ms,
+        &mut payload,
+        &mut raw,
+    )?;
     let wire_len = encode_wire_frame(&raw[..written.len], wire_out)?;
     session.update_from_host_session(&host);
     Ok(BuiltWireFrame {
@@ -865,6 +1792,86 @@ pub unsafe extern "C" fn board_vm_language_gpio_write_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_open_module(
+    pin: u8,
+    mode: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_open_module(
+            GpioOpenProgram {
+                pin,
+                mode,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_handle_read_module(
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_handle_read_module(GpioHandleReadProgram { max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_handle_write_module(
+    value: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_handle_write_module(
+            GpioHandleWriteProgram {
+                value: value != 0,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_handle_close_module(
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_handle_close_module(GpioHandleCloseProgram { max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_time_now_module(
     max_stack: u8,
     module_out: *mut u8,
@@ -896,6 +1903,29 @@ pub unsafe extern "C" fn board_vm_language_time_sleep_ms_module(
             },
             module_out,
         )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_raw_module(
+    flags: u8,
+    max_stack: u8,
+    code: *const u8,
+    code_len: u64,
+    const_pool: *const u8,
+    const_pool_len: u64,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let code = unsafe { in_slice(code, code_len, "code") }?;
+        let const_pool = unsafe { in_slice(const_pool, const_pool_len, "const_pool") }?;
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_raw_module(flags, max_stack, code, const_pool, module_out)?;
         Ok(BoardVmLanguageStatus {
             len: len as u64,
             ..BoardVmLanguageStatus::ok()
@@ -965,6 +1995,27 @@ pub unsafe extern "C" fn board_vm_language_program_end_wire(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_store_program_wire(
+    session: *mut BoardVmLanguageSession,
+    program_id: u16,
+    slot: u8,
+    boot_policy: u8,
+    wire_out: *mut u8,
+    wire_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let session = unsafe { mut_ref(session, "board_vm_language_store_program_wire session") }?;
+        let wire_out = unsafe { out_slice(wire_out, wire_cap, "wire_out") }?;
+        let written =
+            build_store_program_wire_frame(session, program_id, slot, boot_policy, wire_out)?;
+        Ok(BoardVmLanguageStatus::written(
+            written.request_id,
+            written.len,
+        ))
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_run_background_wire(
     session: *mut BoardVmLanguageSession,
     program_id: u16,
@@ -977,6 +2028,34 @@ pub unsafe extern "C" fn board_vm_language_run_background_wire(
         let wire_out = unsafe { out_slice(wire_out, wire_cap, "wire_out") }?;
         let written =
             build_run_background_wire_frame(session, program_id, instruction_budget, wire_out)?;
+        Ok(BoardVmLanguageStatus::written(
+            written.request_id,
+            written.len,
+        ))
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_run_wire(
+    session: *mut BoardVmLanguageSession,
+    program_id: u16,
+    flags: u8,
+    instruction_budget: u32,
+    time_budget_ms: u32,
+    wire_out: *mut u8,
+    wire_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let session = unsafe { mut_ref(session, "board_vm_language_run_wire session") }?;
+        let wire_out = unsafe { out_slice(wire_out, wire_cap, "wire_out") }?;
+        let written = build_run_wire_frame(
+            session,
+            program_id,
+            flags,
+            instruction_budget,
+            time_budget_ms,
+            wire_out,
+        )?;
         Ok(BoardVmLanguageStatus::written(
             written.request_id,
             written.len,
@@ -1026,6 +2105,51 @@ pub extern "C" fn board_vm_language_default_instruction_budget() -> u32 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_default_run_flags() -> u8 {
+    LANGUAGE_DEFAULT_RUN_FLAGS
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_baud_rate() -> u32 {
+    ESP_DEFAULT_BAUD_RATE
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_timeout_ms() -> u64 {
+    ESP_DEFAULT_TIMEOUT_MS
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_flash_offset() -> u32 {
+    LANGUAGE_ESP_DEFAULT_FLASH_OFFSET
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_flash_block_size() -> u32 {
+    ESP_DEFAULT_FLASH_BLOCK_SIZE
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_flash_size() -> u32 {
+    LANGUAGE_ESP_DEFAULT_FLASH_SIZE
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_run_flag_reset_vm_before_run() -> u8 {
+    LANGUAGE_RUN_FLAG_RESET_VM_BEFORE_RUN
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_run_flag_keep_handles_after_run() -> u8 {
+    LANGUAGE_RUN_FLAG_KEEP_HANDLES_AFTER_RUN
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_run_flag_background_run() -> u8 {
+    LANGUAGE_RUN_FLAG_BACKGROUND_RUN
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_blink_module_len() -> u64 {
     BLINK_MODULE_LEN as u64
 }
@@ -1041,6 +2165,26 @@ pub extern "C" fn board_vm_language_gpio_write_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_gpio_open_module_len() -> u64 {
+    GPIO_OPEN_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_handle_read_module_len() -> u64 {
+    GPIO_HANDLE_READ_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_handle_write_module_len() -> u64 {
+    GPIO_HANDLE_WRITE_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_handle_close_module_len() -> u64 {
+    GPIO_HANDLE_CLOSE_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_time_now_module_len() -> u64 {
     TIME_NOW_MODULE_LEN as u64
 }
@@ -1048,6 +2192,19 @@ pub extern "C" fn board_vm_language_time_now_module_len() -> u64 {
 #[no_mangle]
 pub extern "C" fn board_vm_language_time_sleep_ms_module_len() -> u64 {
     TIME_SLEEP_MS_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_raw_module_len(code_len: u64, const_pool_len: u64) -> u64 {
+    clear_error();
+    match raw_module_len(code_len, const_pool_len) {
+        Ok(len) => len as u64,
+        Err(error) => {
+            let code = status_code_for_error(&error);
+            set_error(code, error_message(&error));
+            0
+        }
+    }
 }
 
 fn catch_status(
@@ -1097,6 +2254,27 @@ fn clear_error() {
 fn set_error(code: BoardVmLanguageStatusCode, message: impl AsRef<str>) {
     LAST_ERROR_CODE.with(|slot| slot.set(code as u32));
     LAST_ERROR_MESSAGE.with(|slot| *slot.borrow_mut() = Some(sanitize_message(message.as_ref())));
+}
+
+fn checked_module_len(code_len: usize, const_pool_len: usize) -> Result<usize, LanguageCoreError> {
+    let code_len_len = uleb128_len(code_len)?;
+    let const_pool_len_len = uleb128_len(const_pool_len)?;
+    8usize
+        .checked_add(code_len_len)
+        .and_then(|len| len.checked_add(code_len))
+        .and_then(|len| len.checked_add(const_pool_len_len))
+        .and_then(|len| len.checked_add(const_pool_len))
+        .ok_or(LanguageCoreError::ValueTooLarge)
+}
+
+fn uleb128_len(value: usize) -> Result<usize, LanguageCoreError> {
+    let mut value = u32::try_from(value).map_err(|_| LanguageCoreError::ValueTooLarge)?;
+    let mut len = 1usize;
+    while value >= 0x80 {
+        value >>= 7;
+        len += 1;
+    }
+    Ok(len)
 }
 
 fn sanitize_message(message: &str) -> CString {
@@ -1182,7 +2360,7 @@ mod tests {
         encode_caps_report, encode_frame, encode_hello_ack, encode_value, encode_wire_frame,
         CapabilityDescriptor, CapsReportHeader, Frame, HelloAck, MessageType, RunReportHeader,
         RunStatus, Value, FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1,
-        RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
+        RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_KEEP_HANDLES_AFTER_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
 
     #[test]
@@ -1196,6 +2374,303 @@ mod tests {
         assert_eq!(written.len, GOLDEN_HELLO_WIRE_FRAME_BVM_V1.len());
         assert_eq!(&wire[..written.len], GOLDEN_HELLO_WIRE_FRAME_BVM_V1);
         assert_eq!(session.next_request_id(), 0x1235);
+    }
+
+    #[test]
+    fn known_targets_are_owned_by_rust_language_core() {
+        let targets = known_targets();
+        let esp32 = known_target("esp32-devkit-v1").unwrap();
+        let pico_w = known_target("raspberry-pi-pico-w").unwrap();
+
+        assert!(targets
+            .iter()
+            .any(|target| target.board_id == esp32.board_id));
+        assert_eq!(esp32.family, LanguageBoardFamily::Esp32);
+        assert_eq!(board_family_name(esp32.family), "esp32");
+        assert_eq!(esp32.runtime_id, "board-vm-esp32");
+        assert_eq!(esp32.onboard_led, Some(LanguageOnboardLed::Gpio(2)));
+        assert!(esp32.capabilities.contains(&"gpio.open".to_owned()));
+        assert!(esp32
+            .capabilities
+            .contains(&"transport.bluetooth_classic".to_owned()));
+        assert!(esp32.wireless.iter().any(|interface| interface.transport
+            == LanguageWirelessTransport::Wifi
+            && interface.command_transport
+            && interface.ota_update));
+        assert!(esp32
+            .connection_options
+            .iter()
+            .any(
+                |option| option.transport == LanguageConnectionTransport::BluetoothClassic
+                    && option.command_transport
+                    && !option.ota_update
+                    && option.requires == "paired_device"
+            ));
+        assert_eq!(
+            pico_w.onboard_led,
+            Some(LanguageOnboardLed::WirelessChipGpio(0))
+        );
+        assert!(pico_w.capabilities.contains(&"transport.wifi".to_owned()));
+        assert!(known_target("raspberry-pi-pico")
+            .unwrap()
+            .wireless
+            .is_empty());
+    }
+
+    #[test]
+    fn connection_options_are_owned_by_rust_language_core() {
+        let uno = connection_options_for_target("uno-r4-wifi").unwrap();
+        let pico = connection_options_for_target("pico").unwrap();
+
+        assert!(uno.iter().any(
+            |option| option.transport == LanguageConnectionTransport::Serial
+                && option.display_name == "USB/serial"
+                && option.command_transport
+                && !option.ota_update
+                && option.requires == "serial_port"
+                && option.endpoint_transport == LanguageHostEndpointTransport::SerialPort
+                && option.endpoint_scheme == "serial"
+                && option.wire_protocol == LANGUAGE_BOARD_VM_WIRE_PROTOCOL
+        ));
+        assert!(uno.iter().any(
+            |option| option.transport == LanguageConnectionTransport::Wifi
+                && option.command_transport
+                && option.ota_update
+                && option.requires == "network_endpoint"
+                && option.endpoint_transport == LanguageHostEndpointTransport::TcpSocket
+                && option.endpoint_scheme == "tcp"
+        ));
+        assert!(uno.iter().any(|option| option.transport
+            == LanguageConnectionTransport::BluetoothLe
+            && option.command_transport
+            && !option.ota_update
+            && option.requires == "paired_device"
+            && option.endpoint_transport == LanguageHostEndpointTransport::BluetoothLeGatt
+            && option.endpoint_scheme == "ble"));
+        assert_eq!(
+            pico.iter()
+                .map(|option| option.transport)
+                .collect::<Vec<_>>(),
+            vec![LanguageConnectionTransport::Serial]
+        );
+        assert_eq!(
+            connection_transport_name(LanguageConnectionTransport::BluetoothLe),
+            "bluetooth_le"
+        );
+        assert_eq!(
+            host_endpoint_transport_name(LanguageHostEndpointTransport::BluetoothClassicRfcomm),
+            "bluetooth_classic_rfcomm"
+        );
+        assert!(connection_options_for_target("not-a-board").is_none());
+    }
+
+    #[test]
+    fn bluetooth_endpoint_metadata_is_owned_by_rust_language_core() {
+        let ble = parse_bluetooth_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a").unwrap();
+        let rfcomm = parse_bluetooth_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+
+        assert_eq!(ble.transport, LanguageConnectionTransport::BluetoothLe);
+        assert_eq!(
+            ble.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothLeGatt
+        );
+        assert_eq!(ble.endpoint_scheme, "ble");
+        assert_eq!(ble.device, "uno-r4-wifi");
+        assert_eq!(ble.service_uuid.as_deref(), Some("180f"));
+        assert_eq!(ble.write_characteristic_uuid.as_deref(), Some("2a19"));
+        assert_eq!(ble.notify_characteristic_uuid.as_deref(), Some("2a1a"));
+        assert_eq!(ble.channel, None);
+
+        assert_eq!(
+            rfcomm.transport,
+            LanguageConnectionTransport::BluetoothClassic
+        );
+        assert_eq!(
+            rfcomm.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        );
+        assert_eq!(rfcomm.endpoint_scheme, "btspp");
+        assert_eq!(rfcomm.device, "ESP32-BoardVM");
+        assert_eq!(rfcomm.channel, Some(3));
+        assert!(parse_bluetooth_endpoint("tcp://board-vm.local:4170").is_none());
+    }
+
+    #[test]
+    fn bluetooth_endpoint_candidates_are_planned_by_rust_language_core() {
+        let devices = vec![
+            LanguageBluetoothDiscoveredDevice {
+                id: "esp32-board-vm".to_owned(),
+                name: Some("ESP32 Board VM".to_owned()),
+                address: None,
+                paired: true,
+                service_uuids: vec![],
+                characteristic_uuids: vec![],
+                board_vm_rfcomm_channels: vec![3, 3, 31],
+            },
+            LanguageBluetoothDiscoveredDevice {
+                id: "uno-r4".to_owned(),
+                name: Some("Uno R4 Board VM".to_owned()),
+                address: Some("AA:BB:CC:DD:EE:FF".to_owned()),
+                paired: false,
+                service_uuids: vec!["6E400001-B5A3-F393-E0A9-E50E24DCCA9E".to_owned()],
+                characteristic_uuids: vec![],
+                board_vm_rfcomm_channels: vec![],
+            },
+        ];
+
+        let candidates = bluetooth_endpoint_candidates_from_devices(&devices);
+
+        assert_eq!(candidates.len(), 2);
+        let rfcomm = candidates
+            .iter()
+            .find(|candidate| candidate.endpoint.channel == Some(3))
+            .unwrap();
+        assert_eq!(rfcomm.display_name, "ESP32 Board VM");
+        assert_eq!(
+            rfcomm.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        );
+        assert_eq!(rfcomm.endpoint.endpoint, "btspp://esp32-board-vm:3");
+        assert!(rfcomm.paired);
+        assert!(!rfcomm.requires_pairing);
+
+        let ble = candidates
+            .iter()
+            .find(|candidate| candidate.endpoint.service_uuid.is_some())
+            .unwrap();
+        assert_eq!(ble.display_name, "Uno R4 Board VM");
+        assert_eq!(
+            ble.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothLeGatt
+        );
+        assert_eq!(ble.device, "AA:BB:CC:DD:EE:FF");
+        assert_eq!(
+            ble.endpoint.service_uuid.as_deref(),
+            Some("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
+        );
+        assert!(!ble.paired);
+        assert!(ble.requires_pairing);
+    }
+
+    #[test]
+    fn bluetooth_discovery_adapter_is_safe_for_language_frontends() {
+        let devices = discover_bluetooth_devices();
+        let candidates = discover_bluetooth_endpoint_candidates();
+
+        for device in &devices {
+            assert!(!device.id.trim().is_empty());
+        }
+        for candidate in &candidates {
+            assert!(!candidate.endpoint.endpoint.trim().is_empty());
+        }
+    }
+
+    #[test]
+    fn rust_core_detects_targets_from_human_selectors() {
+        assert_eq!(
+            detect_target("UNO R4 WiFi").unwrap().board_id,
+            "arduino-uno-r4-wifi"
+        );
+        assert_eq!(detect_target("esp32").unwrap().board_id, "esp32-devkit-v1");
+        assert_eq!(
+            detect_target("pico-w").unwrap().board_id,
+            "raspberry-pi-pico-w"
+        );
+        assert_eq!(
+            detect_target("Raspberry Pi Pico").unwrap().rust_target,
+            "thumbv6m-none-eabi"
+        );
+        assert_eq!(
+            normalize_target_selector("ESP32 DevKit V1"),
+            "esp32_devkit_v1"
+        );
+        assert!(detect_target("definitely-not-a-board").is_none());
+    }
+
+    #[test]
+    fn esp_upload_options_are_owned_by_rust_language_core() {
+        let options = esp_upload_options_for_target("esp32").unwrap();
+
+        assert_eq!(options.board_id, "esp32-devkit-v1");
+        assert_eq!(options.baud_rate, ESP_DEFAULT_BAUD_RATE);
+        assert_eq!(options.timeout_ms, ESP_DEFAULT_TIMEOUT_MS);
+        assert!(options.reset_into_bootloader);
+        assert_eq!(options.offset, LANGUAGE_ESP_DEFAULT_FLASH_OFFSET);
+        assert_eq!(options.block_size, ESP_DEFAULT_FLASH_BLOCK_SIZE);
+        assert_eq!(options.flash_size, Some(LANGUAGE_ESP_DEFAULT_FLASH_SIZE));
+        assert!(options.verify_md5);
+        assert!(!options.stay_in_bootloader);
+        assert!(esp_upload_options_for_target("pico").is_none());
+    }
+
+    #[test]
+    fn pico_uf2_upload_options_are_owned_by_rust_language_core() {
+        let options = pico_uf2_upload_options_for_target("pico").unwrap();
+
+        assert_eq!(options.board_id, "raspberry-pi-pico");
+        assert_eq!(options.command, "pico-uf2");
+        assert_eq!(options.volume_label, "RPI-RP2");
+        assert_eq!(options.image_extension, ".uf2");
+        assert!(options.auto_detect_mount);
+        assert!(pico_uf2_upload_options_for_target("pico-w").is_some());
+        assert!(pico_uf2_upload_options_for_target("esp32").is_none());
+    }
+
+    #[test]
+    fn pico_bootsel_mount_discovery_is_owned_by_rust_language_core() {
+        let root = unique_temp_dir("language-core-pico-uf2");
+        let mount = root.join("RPI-RP2");
+        fs::create_dir_all(&mount).unwrap();
+        fs::write(
+            mount.join("INFO_UF2.TXT"),
+            "UF2 Bootloader v3.0\nModel: Raspberry Pi RP2\n",
+        )
+        .unwrap();
+        fs::write(mount.join("INDEX.HTM"), "<html></html>").unwrap();
+        fs::create_dir_all(root.join("NOT-PICO")).unwrap();
+
+        let mounts = discover_pico_bootsel_mounts_in_roots([&root]);
+
+        assert_eq!(mounts, vec![mount.to_string_lossy().into_owned()]);
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn host_device_discovery_classifies_serial_candidates() {
+        let devices = discover_devices_from_paths([
+            "/dev/cu.usbmodem1101",
+            "/dev/tty.usbserial-CP2102-esp32",
+            "/dev/serial/by-id/usb-Raspberry_Pi_Pico_E660-DAPLINK-if00",
+            "/tmp/not-a-board",
+        ]);
+
+        assert_eq!(devices.len(), 3);
+        assert_eq!(devices[0].port, "/dev/cu.usbmodem1101");
+        assert_eq!(devices[0].target, None);
+        assert!(devices[0].tags.contains(&"usb_cdc".to_owned()));
+
+        let pico = devices
+            .iter()
+            .find(|device| device.port.contains("Raspberry_Pi_Pico"))
+            .unwrap();
+        assert_eq!(pico.target.as_ref().unwrap().board_id, "raspberry-pi-pico");
+        assert!(pico.bootloader);
+        assert!(pico.target_confidence >= 90);
+
+        let esp = devices
+            .iter()
+            .find(|device| device.port.contains("usbserial"))
+            .unwrap();
+        assert_eq!(esp.target.as_ref().unwrap().board_id, "esp32-devkit-v1");
+        assert!(esp.tags.contains(&"uart".to_owned()));
+    }
+
+    fn unique_temp_dir(name: &str) -> PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        std::env::temp_dir().join(format!("{name}-{}-{nonce}", std::process::id()))
     }
 
     #[test]
@@ -1267,6 +2742,71 @@ mod tests {
         assert_eq!(gpio_write_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(gpio_write_status.len, GPIO_WRITE_MODULE_LEN as u64);
 
+        let mut gpio_open_module = [0u8; GPIO_OPEN_MODULE_LEN];
+        let gpio_open_status = unsafe {
+            board_vm_language_gpio_open_module(
+                13,
+                board_vm_host::GPIO_MODE_OUTPUT,
+                2,
+                gpio_open_module.as_mut_ptr(),
+                gpio_open_module.len() as u64,
+            )
+        };
+        assert_eq!(gpio_open_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(gpio_open_status.len, GPIO_OPEN_MODULE_LEN as u64);
+
+        let mut gpio_handle_read_module = [0u8; GPIO_HANDLE_READ_MODULE_LEN];
+        let gpio_handle_read_status = unsafe {
+            board_vm_language_gpio_handle_read_module(
+                2,
+                gpio_handle_read_module.as_mut_ptr(),
+                gpio_handle_read_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            gpio_handle_read_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            gpio_handle_read_status.len,
+            GPIO_HANDLE_READ_MODULE_LEN as u64
+        );
+
+        let mut gpio_handle_write_module = [0u8; GPIO_HANDLE_WRITE_MODULE_LEN];
+        let gpio_handle_write_status = unsafe {
+            board_vm_language_gpio_handle_write_module(
+                1,
+                3,
+                gpio_handle_write_module.as_mut_ptr(),
+                gpio_handle_write_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            gpio_handle_write_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            gpio_handle_write_status.len,
+            GPIO_HANDLE_WRITE_MODULE_LEN as u64
+        );
+
+        let mut gpio_handle_close_module = [0u8; GPIO_HANDLE_CLOSE_MODULE_LEN];
+        let gpio_handle_close_status = unsafe {
+            board_vm_language_gpio_handle_close_module(
+                1,
+                gpio_handle_close_module.as_mut_ptr(),
+                gpio_handle_close_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            gpio_handle_close_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            gpio_handle_close_status.len,
+            GPIO_HANDLE_CLOSE_MODULE_LEN as u64
+        );
+
         let begin = unsafe {
             board_vm_language_program_begin_wire(
                 &mut session,
@@ -1317,6 +2857,28 @@ mod tests {
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
         assert_eq!(decode_program_end(frame.payload).unwrap().program_id, 7);
 
+        let store = unsafe {
+            board_vm_language_store_program_wire(
+                &mut session,
+                7,
+                2,
+                board_vm_protocol::BOOT_RUN_AT_BOOT,
+                wire.as_mut_ptr(),
+                wire.len() as u64,
+            )
+        };
+        assert_eq!(store.request_id, 4);
+        let decoded = decode_wire_frame_into_raw(&wire[..store.len as usize], &mut raw).unwrap();
+        assert_eq!(decoded.message_type, MessageType::STORE_PROGRAM.0);
+        let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
+        let store_payload = board_vm_protocol::decode_store_program(frame.payload).unwrap();
+        assert_eq!(store_payload.program_id, 7);
+        assert_eq!(store_payload.slot, 2);
+        assert_eq!(
+            store_payload.boot_policy,
+            board_vm_protocol::BOOT_RUN_AT_BOOT
+        );
+
         let run = unsafe {
             board_vm_language_run_background_wire(
                 &mut session,
@@ -1326,7 +2888,7 @@ mod tests {
                 wire.len() as u64,
             )
         };
-        assert_eq!(run.request_id, 4);
+        assert_eq!(run.request_id, 5);
         let decoded = decode_wire_frame_into_raw(&wire[..run.len as usize], &mut raw).unwrap();
         assert_eq!(decoded.message_type, MessageType::RUN.0);
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
@@ -1337,14 +2899,51 @@ mod tests {
             RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
         );
 
+        let run = unsafe {
+            board_vm_language_run_wire(
+                &mut session,
+                7,
+                RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+                456,
+                250,
+                wire.as_mut_ptr(),
+                wire.len() as u64,
+            )
+        };
+        assert_eq!(run.request_id, 6);
+        let decoded = decode_wire_frame_into_raw(&wire[..run.len as usize], &mut raw).unwrap();
+        assert_eq!(decoded.message_type, MessageType::RUN.0);
+        let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
+        let run_payload = decode_run_request(frame.payload).unwrap();
+        assert_eq!(run_payload.program_id, 7);
+        assert_eq!(run_payload.flags, RUN_FLAG_KEEP_HANDLES_AFTER_RUN);
+        assert_eq!(run_payload.instruction_budget, 456);
+        assert_eq!(run_payload.time_budget_ms, 250);
+
         let stop = unsafe {
             board_vm_language_stop_wire(&mut session, wire.as_mut_ptr(), wire.len() as u64)
         };
-        assert_eq!(stop.request_id, 5);
+        assert_eq!(stop.request_id, 7);
         let decoded = decode_wire_frame_into_raw(&wire[..stop.len as usize], &mut raw).unwrap();
         assert_eq!(decoded.message_type, MessageType::STOP.0);
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
         assert!(frame.payload.is_empty());
+    }
+
+    #[test]
+    fn rust_core_builds_raw_module_from_code_and_const_pool() {
+        let code = [0x00];
+        let const_pool = [0xAA, 0x55];
+        let expected_len = raw_module_len(code.len() as u64, const_pool.len() as u64).unwrap();
+        let mut module = vec![0u8; expected_len];
+
+        let len = build_raw_module(0, 1, &code, &const_pool, &mut module).unwrap();
+
+        assert_eq!(len, expected_len);
+        assert_eq!(
+            module,
+            [0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x02, 0xAA, 0x55,]
+        );
     }
 
     #[test]

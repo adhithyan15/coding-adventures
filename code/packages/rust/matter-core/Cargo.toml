@@ -1,0 +1,9 @@
+[package]
+name = "matter-core"
+version = "0.1.0"
+edition = "2021"
+description = "Matter cluster, endpoint, attribute, and D23 mapping primitives"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }

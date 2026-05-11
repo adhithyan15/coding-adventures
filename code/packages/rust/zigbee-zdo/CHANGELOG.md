@@ -9,4 +9,9 @@ All notable changes to this package will be documented in this file.
 - ZDO descriptor and active-endpoint response parsing.
 - APS request builders for node descriptor, simple descriptor, and active
   endpoint discovery.
+- APS request builders and status parsers for bind/unbind requests.
+- Deterministic interview planning for node descriptor, active endpoint, and
+  simple descriptor request sequencing.
+- Compact node/simple descriptor and interview read summaries for discovery
+  tooling.
 - Zigbee interview summary projection into `smart-home-core` device records.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -1485,6 +1486,143 @@ class TestPrologGoalAdapter:
             adapted,
         ) == [(string("hi\n"), logic_list([104, 105, 10]))]
 
+    def test_adapt_prolog_goal_rewrites_file_metadata_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "nested" / "story.data"
+        source_path.parent.mkdir()
+        source_path.write_text("tea\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- exists_directory('{dir_atom}'), "
+            f"access_file('{path_atom}', read), "
+            f"absolute_file_name('{path_atom}', Absolute), "
+            f"file_directory_name('{path_atom}', Directory), "
+            f"file_base_name('{path_atom}', Base), "
+            "directory_file_path(Directory, Base, Joined), "
+            "file_name_extension(Name, Extension, Base), "
+            f"same_file('{path_atom}', Joined), "
+            f"size_file('{path_atom}', Size), "
+            f"time_file('{path_atom}', Time).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Absolute"],
+                parsed.variables["Directory"],
+                parsed.variables["Base"],
+                parsed.variables["Joined"],
+                parsed.variables["Name"],
+                parsed.variables["Extension"],
+                parsed.variables["Size"],
+                parsed.variables["Time"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        absolute, directory, base, joined, name, extension, size, timestamp = answers[0]
+        assert absolute == atom(str(source_path.resolve(strict=False)))
+        assert directory == atom(str(source_path.parent))
+        assert base == atom("story.data")
+        assert joined == atom(str(source_path))
+        assert name == atom("story")
+        assert extension == atom("data")
+        assert size == num(len("tea\n"))
+        assert isinstance(timestamp, Number)
+
+    def test_adapt_prolog_goal_rewrites_file_operation_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        renamed_atom = str(renamed_path).replace("\\", "\\\\").replace("'", "\\'")
+        created_atom = str(created_directory).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        old_cwd = Path.cwd()
+        parsed = parse_swi_query(
+            f"?- make_directory('{created_atom}'), "
+            f"rename_file('{path_atom}', '{renamed_atom}'), "
+            f"directory_files('{root_atom}', Entries), "
+            f"delete_file('{renamed_atom}'), "
+            f"delete_directory('{created_atom}'), "
+            f"working_directory(OldDirectory, '{root_atom}'), "
+            "directory_files('.', CwdEntries).",
+        )
+
+        try:
+            answers = solve_all(
+                program(),
+                (
+                    parsed.variables["Entries"],
+                    parsed.variables["OldDirectory"],
+                    parsed.variables["CwdEntries"],
+                ),
+                adapt_prolog_goal(parsed.goal),
+            )
+        finally:
+            os.chdir(old_cwd)
+
+        assert answers == [
+            (
+                logic_list(["created", "final.txt"]),
+                atom(str(old_cwd)),
+                logic_list([]),
+            ),
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
+
+    def test_adapt_prolog_goal_rewrites_recursive_file_operation_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "source.txt"
+        target_directory = tmp_path / "made" / "deep"
+        copied_path = target_directory / "source-copy.txt"
+        source_path.write_text("alpha\n", encoding="utf-8")
+        source_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        target_dir_atom = str(target_directory).replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        copied_atom = str(copied_path).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        pattern_atom = str(tmp_path / "**" / "*.txt").replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- make_directory_path('{target_dir_atom}'), "
+            f"copy_file('{source_atom}', '{copied_atom}'), "
+            f"expand_file_name('{pattern_atom}', Matches), "
+            f"read_file_to_string('{copied_atom}', Contents), "
+            f"delete_directory_and_contents('{root_atom}/made').",
+        )
+
+        answers = solve_all(
+            program(),
+            (parsed.variables["Matches"], parsed.variables["Contents"]),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                logic_list([str(copied_path), str(source_path)]),
+                string("alpha\n"),
+            ),
+        ]
+        assert source_path.exists()
+        assert not target_directory.exists()
+
     def test_adapt_prolog_goal_rewrites_file_stream_predicates(
         self,
         tmp_path: Path,
@@ -1523,10 +1661,17 @@ class TestPrologGoalAdapter:
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
         parsed = parse_swi_query(
             f"?- open('{path_atom}', write, Out, "
-            "[alias(report_stream), encoding(utf8), type(text)]), "
+            "[alias(report_stream), encoding(utf8), type(text), "
+            "reposition(true), eof_action(eof_code), buffer(line), "
+            "close_on_abort(false)]), "
             'write(report_stream, "tea"), '
             "flush_output(report_stream), "
             "stream_property(report_stream, alias(Alias)), "
+            "stream_property(report_stream, encoding(Encoding)), "
+            "stream_property(report_stream, reposition(Reposition)), "
+            "stream_property(report_stream, eof_action(EofAction)), "
+            "stream_property(report_stream, buffer(Buffer)), "
+            "stream_property(report_stream, close_on_abort(CloseOnAbort)), "
             "current_stream(Path, Mode, Out), "
             "close(report_stream).",
         )
@@ -1535,12 +1680,59 @@ class TestPrologGoalAdapter:
             program(),
             (
                 parsed.variables["Alias"],
+                parsed.variables["Encoding"],
+                parsed.variables["Reposition"],
+                parsed.variables["EofAction"],
+                parsed.variables["Buffer"],
+                parsed.variables["CloseOnAbort"],
                 parsed.variables["Path"],
                 parsed.variables["Mode"],
             ),
             adapt_prolog_goal(parsed.goal),
-        ) == [(atom("report_stream"), atom(str(source_path)), atom("write"))]
+        ) == [
+            (
+                atom("report_stream"),
+                atom("utf8"),
+                atom("true"),
+                atom("eof_code"),
+                atom("line"),
+                atom("false"),
+                atom(str(source_path)),
+                atom("write"),
+            ),
+        ]
         assert source_path.read_text(encoding="utf-8") == "tea"
+
+    def test_adapt_prolog_goal_rewrites_standard_streams(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        parsed = parse_swi_query(
+            "?- set_input(user_input), "
+            "set_output(user_output), "
+            "current_input(CurrentIn), "
+            "current_output(CurrentOut), "
+            "at_end_of_stream, "
+            'write("stdout"), '
+            "nl, "
+            'write(user_error, "stderr"), '
+            "flush_output, "
+            "flush_output(user_error), "
+            "stream_property(user_input, alias(user_input)), "
+            "stream_property(user_output, alias(user_output)), "
+            "current_stream(user_error, append, '$stream_user_error').",
+        )
+
+        answers = solve_all(
+            program(),
+            (parsed.variables["CurrentIn"], parsed.variables["CurrentOut"]),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        captured = capsys.readouterr()
+        assert answers == [(atom("$stream_user_input"), atom("$stream_user_output"))]
+        assert captured.out == "stdout\n"
+        assert captured.err == "stderr"
 
     def test_adapt_prolog_goal_rewrites_stream_positioning(
         self,
@@ -1574,6 +1766,131 @@ class TestPrologGoalAdapter:
             ),
             adapt_prolog_goal(parsed.goal),
         ) == [(string("ab"), num(2), string("ab"), num(5), num(5), string("f"))]
+
+    def test_adapt_prolog_goal_rewrites_stream_character_code_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "char-input.txt"
+        output_path = tmp_path / "char-output.txt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, [alias(char_input)]), "
+            "peek_char(In, Peeked), "
+            "get_code(In, FirstCode), "
+            "peek_code(In, PeekedCode), "
+            "get_char(In, SecondChar), "
+            "get_code(In, NewlineCode), "
+            "get_code(In, EofCode), "
+            "set_stream_position(char_input, 0), "
+            "set_input(In), "
+            "get_char(CurrentFirst), "
+            "peek_code(CurrentNextCode), "
+            "get_code(CurrentNextCode), "
+            "close(In), "
+            f"open('{output_atom}', write, Out, [alias(char_output)]), "
+            "put_char(Out, h), "
+            "put_code(Out, 105), "
+            "set_output(char_output), "
+            "put_char('!'), "
+            "put_code(10), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Peeked"],
+                parsed.variables["FirstCode"],
+                parsed.variables["PeekedCode"],
+                parsed.variables["SecondChar"],
+                parsed.variables["NewlineCode"],
+                parsed.variables["EofCode"],
+                parsed.variables["CurrentFirst"],
+                parsed.variables["CurrentNextCode"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                atom("A"),
+                num(ord("A")),
+                num(ord("z")),
+                atom("z"),
+                num(10),
+                num(-1),
+                atom("A"),
+                num(ord("z")),
+            ),
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
+    def test_adapt_prolog_goal_rewrites_binary_byte_stream_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "byte-input.bin"
+        output_path = tmp_path / "byte-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, "
+            "[alias(byte_input), type(binary)]), "
+            "stream_property(In, type(binary)), "
+            "peek_byte(In, Peeked), "
+            "get_byte(In, First), "
+            "get_byte(In, Zero), "
+            "stream_property(In, position(Position)), "
+            "peek_byte(In, High), "
+            "get_byte(In, High), "
+            "get_byte(In, Eof), "
+            "at_end_of_stream(In), "
+            "set_stream_position(byte_input, 1), "
+            "set_input(In), "
+            "peek_byte(CurrentPeek), "
+            "get_byte(CurrentFirst), "
+            "close(In), "
+            f"open('{output_atom}', write, Out, "
+            "[alias(byte_output), type(binary)]), "
+            "put_byte(Out, 65), "
+            "put_byte(Out, 0), "
+            "set_output(byte_output), "
+            "put_byte(255), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Peeked"],
+                parsed.variables["First"],
+                parsed.variables["Zero"],
+                parsed.variables["Position"],
+                parsed.variables["High"],
+                parsed.variables["Eof"],
+                parsed.variables["CurrentPeek"],
+                parsed.variables["CurrentFirst"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                num(65),
+                num(65),
+                num(0),
+                num(2),
+                num(255),
+                num(-1),
+                num(0),
+                num(0),
+            ),
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
 
     def test_adapt_prolog_goal_rewrites_current_stream_facade(
         self,

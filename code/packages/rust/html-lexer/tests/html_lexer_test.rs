@@ -1768,6 +1768,21 @@ fn default_html_lexer_closes_dash_prefixed_empty_html_comment() {
 }
 
 #[test]
+fn default_html_lexer_preserves_extra_dash_before_comment_close() {
+    let tokens = lex_html("Before<!----->After").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("-".to_string()),
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_nested_comment_opener() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -1904,6 +1919,13 @@ fn default_html_lexer_reports_recoverable_comment_eof_diagnostic() {
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "eof-in-comment"));
+}
+
+#[test]
+fn default_html_lexer_does_not_include_comment_end_dashes_at_eof() {
+    let tokens = lex_html("<!--x--").unwrap();
+
+    assert_eq!(tokens, vec![Token::Comment("x".to_string()), Token::Eof]);
 }
 
 #[test]
@@ -2592,7 +2614,8 @@ fn default_html_lexer_supports_markup_cdata_section_flow() {
         lexer.drain_tokens(),
         vec![
             Token::Text("Before".to_string()),
-            Token::Text("<not-markup> &amp; After".to_string()),
+            Token::Comment("[CDATA[<not-markup".to_string()),
+            Token::Text(" & ]]>After".to_string()),
             Token::Eof,
         ]
     );
@@ -4443,7 +4466,7 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer
-        .push("<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin;>")
+        .push("<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin; gt=\"&gt=\">")
         .unwrap();
     lexer.finish().unwrap();
 
@@ -4464,6 +4487,10 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
                     Attribute {
                         name: "data".to_string(),
                         value: "\u{2209}".to_string(),
+                    },
+                    Attribute {
+                        name: "gt".to_string(),
+                        value: "&gt=".to_string(),
                     },
                 ],
                 self_closing: false,
@@ -4857,6 +4884,10 @@ fn parser_facing_context_maps_script_and_plaintext_elements() {
             Token::Eof
         ]
     );
+    assert_eq!(
+        lex_html_fragment("X</SCRipt", &script).unwrap(),
+        vec![Token::Text("X</SCRipt".to_string()), Token::Eof]
+    );
 
     let plaintext = HtmlLexContext::for_element_text("plaintext").unwrap();
     assert_eq!(plaintext.initial_state, HtmlTokenizerState::Plaintext);
@@ -5090,6 +5121,12 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "doctype_system_identifier_single_quoted",
             "after_doctype_system_identifier",
             "bogus_doctype",
+            "text_character_reference",
+            "text_named_character_reference",
+            "text_numeric_character_reference",
+            "text_numeric_hex_character_reference_start",
+            "text_numeric_hex_character_reference",
+            "text_numeric_decimal_character_reference",
             "script_data",
             "script_data_less_than_sign",
             "script_data_end_tag_open",
@@ -5184,10 +5221,18 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
     assert!(HtmlTokenizerState::DoctypeName.requires_doctype_seed());
     assert!(HtmlTokenizerState::AfterDoctypePublicIdentifier.requires_doctype_seed());
     assert!(HtmlTokenizerState::BogusDoctype.requires_doctype_seed());
+    assert!(HtmlTokenizerState::TextCharacterReference.requires_character_reference_seed());
+    assert!(HtmlTokenizerState::TextNamedCharacterReference.requires_character_reference_seed());
+    assert!(
+        HtmlTokenizerState::TextNumericHexCharacterReference.requires_character_reference_seed()
+    );
+    assert!(HtmlTokenizerState::Data.is_character_reference_return_state());
+    assert!(HtmlTokenizerState::Rcdata.is_character_reference_return_state());
     assert!(!HtmlTokenizerState::RcdataEndTagOpen.requires_end_tag_seed());
     assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
     assert!(!HtmlTokenizerState::Data.requires_comment_seed());
     assert!(!HtmlTokenizerState::Data.requires_doctype_seed());
+    assert!(!HtmlTokenizerState::Rawtext.is_character_reference_return_state());
 
     assert_eq!(
         HTML_DOCTYPE_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
@@ -5610,6 +5655,90 @@ fn parser_facing_context_seeds_doctype_continuation_states() {
 
     assert_eq!(
         HtmlLexContext::doctype_continuation(HtmlTokenizerState::Rcdata, DoctypeSeed::new()),
+        None
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_character_reference_continuation_states() {
+    let named = HtmlLexContext::character_reference_continuation(
+        HtmlTokenizerState::TextNamedCharacterReference,
+        HtmlTokenizerState::Data,
+        "&co",
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("py;!", &named).unwrap(),
+        vec![Token::Text("©!".to_string()), Token::Eof]
+    );
+
+    let rcdata = HtmlLexContext::character_reference_continuation(
+        HtmlTokenizerState::TextNamedCharacterReference,
+        HtmlTokenizerState::Rcdata,
+        "&a",
+    )
+    .unwrap()
+    .with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("mp; &amp;</title>", &rcdata).unwrap(),
+        vec![
+            Token::Text("& &".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let decimal = HtmlLexContext::character_reference_continuation(
+        HtmlTokenizerState::TextNumericDecimalCharacterReference,
+        HtmlTokenizerState::Data,
+        "&#6",
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("5;!", &decimal).unwrap(),
+        vec![Token::Text("A!".to_string()), Token::Eof]
+    );
+
+    let mut lexer = create_html_lexer_with_context(
+        &HtmlLexContext::character_reference_continuation(
+            HtmlTokenizerState::TextNumericHexCharacterReference,
+            HtmlTokenizerState::Data,
+            "&#x4",
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    lexer.push("1!").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("A!".to_string()), Token::Eof]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["missing-semicolon-after-character-reference"]
+    );
+
+    assert_eq!(
+        HtmlLexContext::character_reference_continuation(
+            HtmlTokenizerState::TextNamedCharacterReference,
+            HtmlTokenizerState::Rawtext,
+            "&amp",
+        ),
+        None
+    );
+    assert_eq!(
+        HtmlLexContext::character_reference_continuation(
+            HtmlTokenizerState::Rcdata,
+            HtmlTokenizerState::Data,
+            "&",
+        ),
         None
     );
 }

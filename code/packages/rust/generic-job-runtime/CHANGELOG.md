@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added queue-pressure percentages and recommended supervision actions for
+  executor snapshots so D18C supervisors can choose backpressure, worker
+  restart, or graceful-drain behavior without reinterpreting raw counters.
+
 ## [0.1.1] - 2026-04-22
 
 ### Added
@@ -20,6 +28,10 @@ All notable changes to this package will be documented in this file.
   modes for reviving dead stdio worker slots.
 - Added tests proving restarted workers can accept new jobs and bounded restart
   policies stop crash loops.
+- Added non-consuming executor snapshots for supervisor/read-side tools to
+  inspect worker liveness, queue saturation, and in-flight job counts.
+- Added executor snapshot health classification for supervisor/read-side tools
+  to identify idle, busy, saturated, draining, and offline executors.
 
 ## [0.1.0] - 2026-04-21
 

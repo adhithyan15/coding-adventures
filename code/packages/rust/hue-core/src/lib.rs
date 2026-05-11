@@ -10,8 +10,8 @@
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, Device, DeviceId, Entity,
     EntityId, EntityKind, Health, IntegrationDescriptor, IntegrationId, Metadata, ProtocolFamily,
-    ProtocolIdentifier, RuntimeKind, StateConfidence, StateDelta, StateSnapshot, StateSource,
-    Value,
+    ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
+    StateDelta, StateSnapshot, StateSource, Value,
 };
 use std::fmt;
 
@@ -379,6 +379,257 @@ impl HueLightResource {
             on,
         }
     }
+
+    pub fn command_set_brightness(&self, brightness: u8) -> HueCommand {
+        HueCommand::SetLightBrightness {
+            light_id: self.id.clone(),
+            brightness,
+        }
+    }
+
+    pub fn command_set_color_temperature(&self, mirek: u16) -> HueCommand {
+        HueCommand::SetLightColorTemperature {
+            light_id: self.id.clone(),
+            mirek,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct HueGroupedLightResource {
+    pub id: HueResourceId,
+    pub owner: HueResourceRef,
+    pub name: String,
+    pub on: Option<bool>,
+    pub brightness: Option<u8>,
+}
+
+impl HueGroupedLightResource {
+    pub fn command_set_on(&self, on: bool) -> HueCommand {
+        HueCommand::SetGroupedLightOn {
+            grouped_light_id: self.id.clone(),
+            on,
+        }
+    }
+
+    pub fn command_set_brightness(&self, brightness: u8) -> HueCommand {
+        HueCommand::SetGroupedLightBrightness {
+            grouped_light_id: self.id.clone(),
+            brightness,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueGroupedLightStateUpdate {
+    pub id: HueResourceId,
+    pub owner: Option<HueResourceRef>,
+    pub name: Option<String>,
+    pub on: Option<bool>,
+    pub brightness: Option<u8>,
+}
+
+impl HueGroupedLightStateUpdate {
+    pub fn from_grouped_light_resource(grouped_light: &HueGroupedLightResource) -> Self {
+        Self {
+            id: grouped_light.id.clone(),
+            owner: Some(grouped_light.owner.clone()),
+            name: Some(grouped_light.name.clone()),
+            on: grouped_light.on,
+            brightness: grouped_light.brightness,
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        self.on.is_some() || self.brightness.is_some()
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        hue_grouped_light_state_deltas(self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueRoomResource {
+    pub id: HueResourceId,
+    pub name: String,
+    pub archetype: Option<String>,
+    pub children: Vec<HueResourceRef>,
+    pub services: Vec<HueResourceRef>,
+}
+
+impl HueRoomResource {
+    pub fn grouped_light_service(&self) -> Option<&HueResourceRef> {
+        self.services
+            .iter()
+            .find(|service| service.resource_type == HueResourceType::GroupedLight)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueZoneResource {
+    pub id: HueResourceId,
+    pub name: String,
+    pub archetype: Option<String>,
+    pub children: Vec<HueResourceRef>,
+    pub services: Vec<HueResourceRef>,
+}
+
+impl HueZoneResource {
+    pub fn grouped_light_service(&self) -> Option<&HueResourceRef> {
+        self.services
+            .iter()
+            .find(|service| service.resource_type == HueResourceType::GroupedLight)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueSceneAction {
+    pub target: HueResourceRef,
+    pub on: Option<bool>,
+    pub brightness: Option<u8>,
+    pub color_temperature_mirek: Option<u16>,
+}
+
+impl HueSceneAction {
+    pub fn has_state(&self) -> bool {
+        self.on.is_some() || self.brightness.is_some() || self.color_temperature_mirek.is_some()
+    }
+
+    pub fn desired_state(&self) -> Value {
+        let mut fields = Vec::new();
+        if let Some(on) = self.on {
+            fields.push(("light.on_off".to_string(), Value::Bool(on)));
+        }
+        if let Some(brightness) = self.brightness {
+            fields.push((
+                "light.brightness".to_string(),
+                Value::Percentage(brightness),
+            ));
+        }
+        if let Some(mirek) = self.color_temperature_mirek {
+            fields.push((
+                "light.color_temperature".to_string(),
+                Value::Integer(i64::from(mirek)),
+            ));
+        }
+        Value::Object(fields)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueSceneResource {
+    pub id: HueResourceId,
+    pub group: HueResourceRef,
+    pub name: String,
+    pub actions: Vec<HueSceneAction>,
+}
+
+impl HueSceneResource {
+    pub fn command_recall(&self) -> HueCommand {
+        HueCommand::RecallScene {
+            scene_id: self.id.clone(),
+        }
+    }
+
+    pub fn to_core(&self, bridge_id: &BridgeId) -> Scene {
+        Scene {
+            scene_id: SceneId::trusted(format!("hue.scene.{}.{}", bridge_id, self.id)),
+            scope: scene_scope_for_group(&self.group),
+            native_ref: Some(
+                HueResourceRef::new(HueResourceType::Scene, self.id.clone()).protocol_identifier(),
+            ),
+            actions: self
+                .actions
+                .iter()
+                .filter(|action| action.has_state())
+                .map(|action| SceneAction {
+                    entity_id: hue_entity_id_for_resource_ref(bridge_id, &action.target),
+                    desired_state: action.desired_state(),
+                })
+                .collect(),
+            metadata: vec![
+                Metadata::new("hue.resource_type", "scene"),
+                Metadata::new("hue.resource_id", self.id.as_str()),
+                Metadata::new("hue.name", &self.name),
+                Metadata::new("hue.group_type", self.group.resource_type.as_hue_type()),
+                Metadata::new("hue.group_id", self.group.id.as_str()),
+            ],
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueMotionResource {
+    pub id: HueResourceId,
+    pub owner_device_id: HueResourceId,
+    pub name: String,
+    pub motion: Option<bool>,
+    pub motion_valid: Option<bool>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueButtonResource {
+    pub id: HueResourceId,
+    pub owner_device_id: HueResourceId,
+    pub name: String,
+    pub last_event: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueMotionStateUpdate {
+    pub id: HueResourceId,
+    pub owner_device_id: Option<HueResourceId>,
+    pub name: Option<String>,
+    pub motion: Option<bool>,
+    pub motion_valid: Option<bool>,
+}
+
+impl HueMotionStateUpdate {
+    pub fn from_motion_resource(motion: &HueMotionResource) -> Self {
+        Self {
+            id: motion.id.clone(),
+            owner_device_id: Some(motion.owner_device_id.clone()),
+            name: Some(motion.name.clone()),
+            motion: motion.motion,
+            motion_valid: motion.motion_valid,
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        self.motion.is_some()
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        hue_motion_state_deltas(self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueButtonStateUpdate {
+    pub id: HueResourceId,
+    pub owner_device_id: Option<HueResourceId>,
+    pub name: Option<String>,
+    pub last_event: Option<String>,
+}
+
+impl HueButtonStateUpdate {
+    pub fn from_button_resource(button: &HueButtonResource) -> Self {
+        Self {
+            id: button.id.clone(),
+            owner_device_id: Some(button.owner_device_id.clone()),
+            name: Some(button.name.clone()),
+            last_event: button.last_event.clone(),
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        self.last_event.is_some()
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        hue_button_state_deltas(self)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -480,6 +731,46 @@ pub fn hue_light_state_deltas(update: &HueLightStateUpdate) -> Vec<StateDelta> {
     deltas
 }
 
+pub fn hue_grouped_light_state_deltas(update: &HueGroupedLightStateUpdate) -> Vec<StateDelta> {
+    let mut deltas = Vec::new();
+    if let Some(on) = update.on {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted("light.on_off"),
+            value: Value::Bool(on),
+        });
+    }
+    if let Some(brightness) = update.brightness {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted("light.brightness"),
+            value: Value::Percentage(brightness),
+        });
+    }
+    deltas
+}
+
+pub fn hue_motion_state_deltas(update: &HueMotionStateUpdate) -> Vec<StateDelta> {
+    update
+        .motion
+        .map(|motion| StateDelta {
+            capability_id: CapabilityId::trusted("sensor.occupancy"),
+            value: Value::Bool(motion),
+        })
+        .into_iter()
+        .collect()
+}
+
+pub fn hue_button_state_deltas(update: &HueButtonStateUpdate) -> Vec<StateDelta> {
+    update
+        .last_event
+        .as_ref()
+        .map(|last_event| StateDelta {
+            capability_id: CapabilityId::trusted("input.button"),
+            value: Value::Text(last_event.clone()),
+        })
+        .into_iter()
+        .collect()
+}
+
 pub fn hue_device_to_core(
     bridge_id: &BridgeId,
     hue_device_id: HueResourceId,
@@ -520,9 +811,9 @@ pub fn hue_light_to_entity(
     let state = light.on.map(|on| StateSnapshot {
         entity_id: entity_id.clone(),
         value: Value::Object(vec![
-            ("on".to_string(), Value::Bool(on)),
+            ("light.on_off".to_string(), Value::Bool(on)),
             (
-                "brightness".to_string(),
+                "light.brightness".to_string(),
                 light
                     .brightness
                     .map(Value::Percentage)
@@ -548,6 +839,98 @@ pub fn hue_light_to_entity(
             Metadata::new("hue.resource_id", light.id.as_str()),
         ],
     }
+}
+
+pub fn hue_motion_to_entity(
+    bridge_id: &BridgeId,
+    device_id: DeviceId,
+    motion: HueMotionResource,
+    received_at_ms: u64,
+) -> Entity {
+    let entity_id = EntityId::trusted(format!("hue.motion.{}.{}", bridge_id, motion.id));
+    let state = motion.motion.map(|active| StateSnapshot {
+        entity_id: entity_id.clone(),
+        value: Value::Object(vec![
+            ("sensor.occupancy".to_string(), Value::Bool(active)),
+            (
+                "hue.motion_valid".to_string(),
+                motion.motion_valid.map(Value::Bool).unwrap_or(Value::Null),
+            ),
+        ]),
+        source: StateSource::Poll,
+        observed_at_ms: received_at_ms,
+        received_at_ms,
+        expires_at_ms: None,
+        confidence: if motion.motion_valid == Some(false) {
+            StateConfidence::Stale
+        } else {
+            StateConfidence::Confirmed
+        },
+    });
+
+    Entity {
+        entity_id,
+        device_id,
+        kind: EntityKind::Sensor,
+        name: motion.name,
+        capabilities: vec![Capability::sensor_occupancy()],
+        state,
+        metadata: vec![
+            Metadata::new("hue.resource_type", "motion"),
+            Metadata::new("hue.resource_id", motion.id.as_str()),
+            Metadata::new("hue.owner_device_id", motion.owner_device_id.as_str()),
+        ],
+    }
+}
+
+pub fn hue_button_to_entity(
+    bridge_id: &BridgeId,
+    device_id: DeviceId,
+    button: HueButtonResource,
+    received_at_ms: u64,
+) -> Entity {
+    let entity_id = EntityId::trusted(format!("hue.button.{}.{}", bridge_id, button.id));
+    let state = button.last_event.clone().map(|last_event| StateSnapshot {
+        entity_id: entity_id.clone(),
+        value: Value::Object(vec![("input.button".to_string(), Value::Text(last_event))]),
+        source: StateSource::Poll,
+        observed_at_ms: received_at_ms,
+        received_at_ms,
+        expires_at_ms: None,
+        confidence: StateConfidence::Confirmed,
+    });
+
+    Entity {
+        entity_id,
+        device_id,
+        kind: EntityKind::Input,
+        name: button.name,
+        capabilities: vec![Capability::input_button()],
+        state,
+        metadata: vec![
+            Metadata::new("hue.resource_type", "button"),
+            Metadata::new("hue.resource_id", button.id.as_str()),
+            Metadata::new("hue.owner_device_id", button.owner_device_id.as_str()),
+        ],
+    }
+}
+
+fn scene_scope_for_group(group: &HueResourceRef) -> SceneScope {
+    match group.resource_type {
+        HueResourceType::Room => SceneScope::Room,
+        HueResourceType::Zone => SceneScope::Zone,
+        HueResourceType::Bridge => SceneScope::Bridge,
+        _ => SceneScope::Custom,
+    }
+}
+
+fn hue_entity_id_for_resource_ref(bridge_id: &BridgeId, resource: &HueResourceRef) -> EntityId {
+    EntityId::trusted(format!(
+        "hue.{}.{}.{}",
+        resource.resource_type.as_hue_type(),
+        bridge_id,
+        resource.id
+    ))
 }
 
 pub fn validate_brightness(value: u16) -> Result<u8, HueError> {
@@ -653,7 +1036,237 @@ mod tests {
             .iter()
             .any(|capability| capability.capability_id.as_str() == "light.color_temperature"));
         assert_eq!(entity.metadata[1].value, "light-1");
-        assert_eq!(entity.state.unwrap().confidence, StateConfidence::Confirmed);
+        let state = entity.state.unwrap();
+        assert_eq!(state.confidence, StateConfidence::Confirmed);
+        assert_eq!(
+            state.value,
+            Value::Object(vec![
+                ("light.on_off".to_string(), Value::Bool(true)),
+                ("light.brightness".to_string(), Value::Percentage(42)),
+            ])
+        );
+    }
+
+    #[test]
+    fn hue_light_resource_builds_direct_light_commands() {
+        let light = HueLightResource {
+            id: HueResourceId::trusted("light-1"),
+            owner_device_id: HueResourceId::trusted("device-1"),
+            name: "Kitchen".to_string(),
+            on: Some(true),
+            brightness: Some(42),
+            color_temperature_mirek: Some(366),
+        };
+
+        assert_eq!(
+            light.command_set_on(false).to_request().body,
+            Some(HueRequestBody::SetOn { on: false })
+        );
+        assert_eq!(
+            light.command_set_brightness(55).to_request().body,
+            Some(HueRequestBody::SetBrightness { brightness: 55 })
+        );
+        assert_eq!(
+            light.command_set_color_temperature(370).to_request().body,
+            Some(HueRequestBody::SetColorTemperature { mirek: 370 })
+        );
+    }
+
+    #[test]
+    fn hue_grouped_light_resource_builds_group_commands() {
+        let grouped = HueGroupedLightResource {
+            id: HueResourceId::trusted("grouped-light-1"),
+            owner: HueResourceRef::new(HueResourceType::Room, HueResourceId::trusted("room-1")),
+            name: "Kitchen".to_string(),
+            on: Some(false),
+            brightness: Some(20),
+        };
+
+        assert_eq!(
+            grouped.command_set_on(true).to_request(),
+            HueRequest {
+                method: HueMethod::Put,
+                path: "/clip/v2/resource/grouped_light/grouped-light-1".to_string(),
+                body: Some(HueRequestBody::SetOn { on: true }),
+            }
+        );
+        assert_eq!(
+            grouped.command_set_brightness(55).to_request().body,
+            Some(HueRequestBody::SetBrightness { brightness: 55 })
+        );
+        assert_eq!(grouped.owner.resource_type, HueResourceType::Room);
+
+        let update = HueGroupedLightStateUpdate::from_grouped_light_resource(&grouped);
+        assert!(update.has_state());
+        assert_eq!(
+            update.owner.as_ref().unwrap().resource_type,
+            HueResourceType::Room
+        );
+        let deltas = update.state_deltas();
+        assert_eq!(deltas.len(), 2);
+        assert_eq!(deltas[0].capability_id.as_str(), "light.on_off");
+        assert_eq!(deltas[1].capability_id.as_str(), "light.brightness");
+    }
+
+    #[test]
+    fn hue_room_and_zone_resources_expose_grouped_light_services() {
+        let room = HueRoomResource {
+            id: HueResourceId::trusted("room-1"),
+            name: "Kitchen".to_string(),
+            archetype: Some("kitchen".to_string()),
+            children: vec![HueResourceRef::new(
+                HueResourceType::Device,
+                HueResourceId::trusted("device-1"),
+            )],
+            services: vec![HueResourceRef::new(
+                HueResourceType::GroupedLight,
+                HueResourceId::trusted("grouped-light-1"),
+            )],
+        };
+        let zone = HueZoneResource {
+            id: HueResourceId::trusted("zone-1"),
+            name: "Downstairs".to_string(),
+            archetype: None,
+            children: vec![HueResourceRef::new(
+                HueResourceType::Room,
+                HueResourceId::trusted("room-1"),
+            )],
+            services: room.services.clone(),
+        };
+
+        assert_eq!(
+            room.grouped_light_service().unwrap().id.as_str(),
+            "grouped-light-1"
+        );
+        assert_eq!(
+            zone.grouped_light_service().unwrap().resource_type,
+            HueResourceType::GroupedLight
+        );
+    }
+
+    #[test]
+    fn hue_scene_resource_builds_recall_command_and_core_scene() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-1"),
+            group: HueResourceRef::new(HueResourceType::Room, HueResourceId::trusted("room-1")),
+            name: "Dinner".to_string(),
+            actions: vec![HueSceneAction {
+                target: HueResourceRef::new(
+                    HueResourceType::Light,
+                    HueResourceId::trusted("light-1"),
+                ),
+                on: Some(true),
+                brightness: Some(66),
+                color_temperature_mirek: Some(366),
+            }],
+        };
+
+        assert_eq!(
+            scene.command_recall().to_request().path,
+            "/clip/v2/resource/scene/scene-1"
+        );
+
+        let core_scene = scene.to_core(&bridge_id);
+
+        assert_eq!(
+            core_scene.scene_id.as_str(),
+            "hue.scene.hue.bridge.001788.scene-1"
+        );
+        assert_eq!(core_scene.scope, SceneScope::Room);
+        assert_eq!(core_scene.native_ref.as_ref().unwrap().kind, "scene");
+        assert_eq!(core_scene.actions.len(), 1);
+        assert_eq!(
+            core_scene.actions[0].entity_id.as_str(),
+            "hue.light.hue.bridge.001788.light-1"
+        );
+        assert_eq!(
+            core_scene.actions[0].desired_state,
+            Value::Object(vec![
+                ("light.on_off".to_string(), Value::Bool(true)),
+                ("light.brightness".to_string(), Value::Percentage(66)),
+                ("light.color_temperature".to_string(), Value::Integer(366)),
+            ])
+        );
+    }
+
+    #[test]
+    fn hue_motion_resource_maps_to_occupancy_entity() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let entity = hue_motion_to_entity(
+            &bridge_id,
+            DeviceId::trusted("hue.device.1"),
+            HueMotionResource {
+                id: HueResourceId::trusted("motion-1"),
+                owner_device_id: HueResourceId::trusted("device-1"),
+                name: "Hallway motion".to_string(),
+                motion: Some(true),
+                motion_valid: Some(true),
+            },
+            1_000,
+        );
+
+        assert_eq!(entity.kind, EntityKind::Sensor);
+        assert_eq!(
+            entity.capabilities[0].capability_id.as_str(),
+            "sensor.occupancy"
+        );
+        assert_eq!(entity.metadata[1].value, "motion-1");
+        assert_eq!(
+            entity.state.unwrap().value,
+            Value::Object(vec![
+                ("sensor.occupancy".to_string(), Value::Bool(true)),
+                ("hue.motion_valid".to_string(), Value::Bool(true)),
+            ])
+        );
+    }
+
+    #[test]
+    fn hue_invalid_motion_marks_state_stale() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let entity = hue_motion_to_entity(
+            &bridge_id,
+            DeviceId::trusted("hue.device.1"),
+            HueMotionResource {
+                id: HueResourceId::trusted("motion-1"),
+                owner_device_id: HueResourceId::trusted("device-1"),
+                name: "Hallway motion".to_string(),
+                motion: Some(false),
+                motion_valid: Some(false),
+            },
+            1_000,
+        );
+
+        assert_eq!(entity.state.unwrap().confidence, StateConfidence::Stale);
+    }
+
+    #[test]
+    fn hue_button_resource_maps_to_input_entity() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let entity = hue_button_to_entity(
+            &bridge_id,
+            DeviceId::trusted("hue.device.1"),
+            HueButtonResource {
+                id: HueResourceId::trusted("button-1"),
+                owner_device_id: HueResourceId::trusted("device-1"),
+                name: "Dimmer button".to_string(),
+                last_event: Some("short_release".to_string()),
+            },
+            1_000,
+        );
+
+        assert_eq!(entity.kind, EntityKind::Input);
+        assert_eq!(
+            entity.capabilities[0].capability_id.as_str(),
+            "input.button"
+        );
+        assert_eq!(
+            entity.state.unwrap().value,
+            Value::Object(vec![(
+                "input.button".to_string(),
+                Value::Text("short_release".to_string()),
+            )])
+        );
     }
 
     #[test]
@@ -715,6 +1328,52 @@ mod tests {
                     value: Value::Integer(366),
                 },
             ]
+        );
+    }
+
+    #[test]
+    fn hue_motion_state_update_maps_occupancy_delta() {
+        let motion = HueMotionResource {
+            id: HueResourceId::trusted("motion-1"),
+            owner_device_id: HueResourceId::trusted("device-1"),
+            name: "Hallway motion".to_string(),
+            motion: Some(true),
+            motion_valid: Some(true),
+        };
+        let update = HueMotionStateUpdate::from_motion_resource(&motion);
+
+        assert!(update.has_state());
+        assert_eq!(
+            update.owner_device_id.as_ref().unwrap().as_str(),
+            "device-1"
+        );
+        assert_eq!(
+            update.state_deltas(),
+            vec![StateDelta {
+                capability_id: CapabilityId::trusted("sensor.occupancy"),
+                value: Value::Bool(true),
+            }]
+        );
+    }
+
+    #[test]
+    fn hue_button_state_update_maps_last_event_delta() {
+        let button = HueButtonResource {
+            id: HueResourceId::trusted("button-1"),
+            owner_device_id: HueResourceId::trusted("device-1"),
+            name: "Dimmer button".to_string(),
+            last_event: Some("short_release".to_string()),
+        };
+        let update = HueButtonStateUpdate::from_button_resource(&button);
+
+        assert!(update.has_state());
+        assert_eq!(update.name.as_deref(), Some("Dimmer button"));
+        assert_eq!(
+            update.state_deltas(),
+            vec![StateDelta {
+                capability_id: CapabilityId::trusted("input.button"),
+                value: Value::Text("short_release".to_string()),
+            }]
         );
     }
 
