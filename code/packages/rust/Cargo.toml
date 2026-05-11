@@ -173,6 +173,7 @@ members = [
     "logic-engine",
     "adjudication-ir",
     "adjudication-connector",
+    "adjudication-coverage",
     "loss-functions",
     "markov-chain",
     "note-frequency",
