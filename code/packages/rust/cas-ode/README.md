@@ -9,6 +9,8 @@ The crate ports the Python `code/packages/python/cas-ode` package's core
 - separable ODEs
 - Bernoulli ODEs
 - exact first-order ODEs when the exactness check can be proven structurally
+- homogeneous-type first-order ODEs of the form `y' = f(y/x)`, including the
+  degenerate `y = %c*x` case and symbolic implicit `Integrate(...)` fallback
 - second-order constant-coefficient homogeneous and non-homogeneous ODEs
 - Euler-Cauchy homogeneous ODEs
 - variation-of-parameters fallback, emitted with symbolic `Integrate(...)`

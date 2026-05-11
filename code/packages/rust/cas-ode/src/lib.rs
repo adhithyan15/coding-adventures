@@ -257,6 +257,41 @@ fn integrate(expr: IRNode, var: IRNode) -> IRNode {
     apply(sym(INTEGRATE), vec![expr, var])
 }
 
+fn subst_ir(node: &IRNode, var: &IRNode, replacement: &IRNode) -> IRNode {
+    if node == var {
+        return replacement.clone();
+    }
+    match node {
+        IRNode::Apply(app) => apply(
+            app.head.clone(),
+            app.args
+                .iter()
+                .map(|arg| subst_ir(arg, var, replacement))
+                .collect(),
+        ),
+        _ => node.clone(),
+    }
+}
+
+fn subst_ratio_ir(node: &IRNode, y: &IRNode, x: &IRNode, v: &IRNode) -> Option<IRNode> {
+    if node == y {
+        return None;
+    }
+    if binary_args(node, DIV).is_some_and(|(a, b)| a == y && b == x) {
+        return Some(v.clone());
+    }
+    match node {
+        IRNode::Apply(app) => Some(apply(
+            app.head.clone(),
+            app.args
+                .iter()
+                .map(|arg| subst_ratio_ir(arg, y, x, v))
+                .collect::<Option<Vec<_>>>()?,
+        )),
+        _ => Some(node.clone()),
+    }
+}
+
 fn signed_frac_to_ir(f: Frac) -> IRNode {
     f.to_ir()
 }
@@ -664,6 +699,34 @@ fn try_separable(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
     None
 }
 
+fn try_homogeneous_type(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
+    let rhs = rhs_from_y_prime_zero_form(expr, y, x)?;
+    if is_const_wrt(&rhs, y) {
+        return None;
+    }
+
+    let v = sym("_hom_v");
+    let f_v = fold_numeric(subst_ratio_ir(&rhs, y, x, &v)?);
+    if !is_const_wrt(&f_v, x) {
+        return None;
+    }
+
+    if f_v == v {
+        return Some(equal(y.clone(), mul(c(), x.clone())));
+    }
+
+    let denom_v = if let Some(alpha) = extract_linear_coeff(&f_v, &v) {
+        mul((alpha - Frac::ONE).to_ir(), v.clone())
+    } else {
+        fold_numeric(sub(f_v, v.clone()))
+    };
+    let integrand_v = fold_numeric(div(one(), denom_v));
+    let h_v = integrate_basic(&integrand_v, &v);
+    let y_over_x = div(y.clone(), x.clone());
+    let h_yx = subst_ir(&h_v, &v, &y_over_x);
+    Some(equal(h_yx, add(log(x.clone()), c())))
+}
+
 fn pow_y_exponent(node: &IRNode, y: &IRNode) -> Option<i64> {
     let (base, exp) = binary_args(node, POW)?;
     if base == y {
@@ -872,6 +935,11 @@ fn integrate_basic(node: &IRNode, var: &IRNode) -> IRNode {
         }
     }
     if let Some((a, b)) = binary_args(node, DIV) {
+        if is_const_wrt(a, var) {
+            if let Some(alpha) = extract_linear_coeff(b, var) {
+                return mul(div(a.clone(), alpha.to_ir()), log(var.clone()));
+            }
+        }
         if is_int(a, 1) && b == var {
             return log(var.clone());
         }
@@ -1279,6 +1347,9 @@ pub fn solve_ode(expr: IRNode, y: IRNode, x: IRNode) -> Option<IRNode> {
     if let Some(result) = try_separable(&expr, &y, &x) {
         return Some(result);
     }
+    if let Some(result) = try_homogeneous_type(&expr, &y, &x) {
+        return Some(result);
+    }
     try_exact(&expr, &y, &x)
 }
 
@@ -1323,6 +1394,10 @@ mod tests {
         deriv(y(), x())
     }
 
+    fn y_over_x() -> IRNode {
+        div(y(), x())
+    }
+
     fn yd() -> IRNode {
         deriv(yp(), x())
     }
@@ -1357,6 +1432,97 @@ mod tests {
         let result = solve_ode(expr, y(), x()).unwrap();
         assert!(format!("{result}").contains("Integrate(Div(1, Sin(y)), y)"));
         assert!(format!("{result}").contains("Integrate(x, x)"));
+    }
+
+    #[test]
+    fn subst_ratio_replaces_only_exact_y_over_x() {
+        let v = sym("v");
+        assert_eq!(subst_ratio_ir(&y_over_x(), &y(), &x(), &v), Some(v.clone()));
+
+        let squared = pow(y_over_x(), int(2));
+        assert_eq!(
+            subst_ratio_ir(&squared, &y(), &x(), &v),
+            Some(pow(v, int(2)))
+        );
+        assert_eq!(subst_ratio_ir(&int(3), &y(), &x(), &sym("v")), Some(int(3)));
+    }
+
+    #[test]
+    fn subst_ratio_rejects_bare_or_nested_y_outside_ratio() {
+        let v = sym("v");
+        assert_eq!(subst_ratio_ir(&y(), &y(), &x(), &v), None);
+        assert_eq!(subst_ratio_ir(&mul(y(), x()), &y(), &x(), &v), None);
+        assert_eq!(
+            subst_ratio_ir(&div(add(y(), x()), x()), &y(), &x(), &v),
+            None
+        );
+    }
+
+    #[test]
+    fn homogeneous_type_degenerate_y_prime_equals_y_over_x() {
+        let expr = sub(yp(), y_over_x());
+        let solution = assert_equal_y(solve_ode(expr, y(), x()).unwrap());
+        assert_eq!(solution, mul(sym("%c"), x()));
+    }
+
+    #[test]
+    fn homogeneous_type_ratio_squared_returns_symbolic_implicit_solution() {
+        let expr = sub(yp(), pow(y_over_x(), int(2)));
+        let result = solve_ode(expr, y(), x()).unwrap();
+        assert!(head_is(&result, EQUAL));
+
+        let result_str = format!("{result}");
+        assert!(result_str.contains("Integrate"));
+        assert!(result_str.contains("Pow(Div(y, x), 2)"));
+        assert!(result_str.contains("Log(x)"));
+        assert!(result_str.contains("%c"));
+    }
+
+    #[test]
+    fn homogeneous_type_transcendental_ratio_keeps_symbolic_integral() {
+        let expr = sub(yp(), exp(y_over_x()));
+        let result = solve_ode(expr, y(), x()).unwrap();
+        let result_str = format!("{result}");
+        assert!(result_str.contains("Integrate"));
+        assert!(result_str.contains("Exp(Div(y, x))"));
+        assert!(result_str.contains("Log(x)"));
+        assert!(result_str.contains("%c"));
+    }
+
+    #[test]
+    fn homogeneous_type_ratio_squared_plus_ratio_back_substitutes_ratio() {
+        let ratio = y_over_x();
+        let rhs = add(pow(ratio.clone(), int(2)), ratio);
+        let result = solve_ode(sub(yp(), rhs), y(), x()).unwrap();
+        let result_str = format!("{result}");
+        assert!(result_str.contains("Integrate"));
+        assert!(result_str.contains("Div(y, x)"));
+        assert!(result_str.contains("Log(x)"));
+    }
+
+    #[test]
+    fn homogeneous_type_two_times_ratio_uses_basic_log_primitive() {
+        let result = solve_ode(sub(yp(), mul(int(2), y_over_x())), y(), x()).unwrap();
+        let result_str = format!("{result}");
+        assert!(result_str.contains("Log(Div(y, x))"));
+        assert!(result_str.contains("Log(x)"));
+        assert!(result_str.contains("%c"));
+    }
+
+    #[test]
+    fn homogeneous_type_falls_through_for_non_ratio_y_forms() {
+        assert!(try_homogeneous_type(&sub(yp(), sin(x())), &y(), &x()).is_none());
+        assert!(try_homogeneous_type(&sub(yp(), add(y(), x())), &y(), &x()).is_none());
+        assert!(try_homogeneous_type(&sub(yp(), mul(y(), x())), &y(), &x()).is_none());
+        assert!(try_homogeneous_type(&add(y(), x()), &y(), &x()).is_none());
+    }
+
+    #[test]
+    fn ode2_dispatches_homogeneous_type_degenerate_case() {
+        let eqn = apply(sym(EQUAL), vec![yp(), y_over_x()]);
+        let ode = apply(sym(ODE2), vec![eqn, y(), x()]);
+        let solution = assert_equal_y(ode2_handler(&ode));
+        assert_eq!(solution, mul(sym("%c"), x()));
     }
 
     #[test]
