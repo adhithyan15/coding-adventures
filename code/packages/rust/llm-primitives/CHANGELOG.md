@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-11
+
+### Added
+
+- `render_node` module — second concrete primitive from LM00b.
+  Faithful natural-language rendering of one IR node. Takes a
+  caller-formatted `node_description`, a `document_excerpt` for
+  grounding, and a target `RenderStyle` (`Plain` / `Clinical` /
+  `Legal`); returns a `rendering` string plus the `LlmCallRecord`.
+- `RenderStyle` enum + `as_str()` for audit-trail tags and
+  per-style prompt directives (plain English / clinical shorthand /
+  formal legal register).
+- Routes via `LlmClient::complete` (free-form text, not JSON).
+  The only structural failure surfaced is whitespace-only output,
+  which returns `PrimitiveError::ValidationExhausted` so ADJ06 can
+  clarify. Substantive faithfulness is ADJ04's job via `entail`.
+- `LlmCallRecord` populated with `primitive = "render_node"`,
+  `role = "renderer"`, `prompt_version = "render-node-v1"`, content-
+  addressed `prompt_hash`, plus provider identity, token usage,
+  finish reason, and latency from the gateway response.
+- 8 new tests. Coverage: `RenderStyle::as_str` stability,
+  `NoClientForRole` when renderer is unregistered, happy-path
+  trimmed-rendering with full `call_record` population, style
+  directives in the user message (Clinical and Legal),
+  whitespace-only response → `ValidationExhausted`, `RateLimit`
+  propagates as `Gateway`, `prompt_hash` matches an
+  independently-built request, `finish_reason` passes through to
+  the call record.
+
+### Notes
+
+`render_node`'s `RenderNodeRequest.node_description` is a string at
+v0.3 — the caller formats their IR node however they like. A
+follow-up will swap to typed `adjudication_ir::IRNode` once that
+crate ships its `serde` feature; the prompt and wire shape stay
+unchanged.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added
