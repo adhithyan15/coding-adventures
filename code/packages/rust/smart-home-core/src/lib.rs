@@ -7,7 +7,7 @@
 
 #![forbid(unsafe_code)]
 
-use std::fmt;
+use std::{collections::BTreeSet, fmt};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SmartHomeError {
@@ -624,6 +624,87 @@ impl IntegrationDescriptor {
     pub fn supports_pairing_role(&self, role: &str) -> bool {
         self.pairing_roles.iter().any(|candidate| candidate == role)
     }
+
+    pub fn is_discoverable(&self) -> bool {
+        !self.discovery_roles.is_empty()
+    }
+
+    pub fn is_pairable(&self) -> bool {
+        !self.pairing_roles.is_empty()
+    }
+
+    pub fn capability_count(&self) -> usize {
+        self.capabilities.len()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationCatalogSummary {
+    pub total_integrations: usize,
+    pub in_process_rust_integrations: usize,
+    pub rust_worker_process_integrations: usize,
+    pub total_capability_mappings: usize,
+    pub unique_capabilities: usize,
+    pub total_discovery_roles: usize,
+    pub total_pairing_roles: usize,
+    pub discoverable_integrations: usize,
+    pub pairable_integrations: usize,
+}
+
+impl IntegrationCatalogSummary {
+    pub fn empty() -> Self {
+        Self {
+            total_integrations: 0,
+            in_process_rust_integrations: 0,
+            rust_worker_process_integrations: 0,
+            total_capability_mappings: 0,
+            unique_capabilities: 0,
+            total_discovery_roles: 0,
+            total_pairing_roles: 0,
+            discoverable_integrations: 0,
+            pairable_integrations: 0,
+        }
+    }
+
+    pub fn from_descriptors<'a, I>(descriptors: I) -> Self
+    where
+        I: IntoIterator<Item = &'a IntegrationDescriptor>,
+    {
+        let mut summary = Self::empty();
+        let mut capabilities = BTreeSet::new();
+
+        for descriptor in descriptors {
+            summary.total_integrations += 1;
+            summary.total_capability_mappings += descriptor.capabilities.len();
+            summary.total_discovery_roles += descriptor.discovery_roles.len();
+            summary.total_pairing_roles += descriptor.pairing_roles.len();
+
+            match descriptor.runtime_kind {
+                RuntimeKind::InProcessRust => summary.in_process_rust_integrations += 1,
+                RuntimeKind::RustWorkerProcess => summary.rust_worker_process_integrations += 1,
+            }
+
+            if descriptor.is_discoverable() {
+                summary.discoverable_integrations += 1;
+            }
+            if descriptor.is_pairable() {
+                summary.pairable_integrations += 1;
+            }
+
+            capabilities.extend(descriptor.capabilities.iter().cloned());
+        }
+
+        summary.unique_capabilities = capabilities.len();
+        summary
+    }
+
+    pub fn all_integrations_discoverable(&self) -> bool {
+        self.total_integrations == self.discoverable_integrations
+    }
+
+    pub fn all_integrations_pairable(&self) -> bool {
+        self.total_integrations == self.pairable_integrations
+    }
 }
 
 pub fn canonical_integration_catalog() -> Vec<IntegrationDescriptor> {
@@ -765,6 +846,11 @@ pub fn canonical_integrations_for_capability(
         .into_iter()
         .filter(|descriptor| descriptor.supports_capability(capability_id))
         .collect()
+}
+
+pub fn canonical_integration_catalog_summary() -> IntegrationCatalogSummary {
+    let catalog = canonical_integration_catalog();
+    IntegrationCatalogSummary::from_descriptors(catalog.iter())
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1946,6 +2032,27 @@ mod tests {
 
         assert_eq!(lock_integrations, vec!["zigbee", "zwave", "matter", "mqtt"]);
         assert_eq!(scene_integrations, vec!["hue", "mqtt"]);
+    }
+
+    #[test]
+    fn canonical_integration_catalog_summary_counts_runtime_and_capability_coverage() {
+        let summary = canonical_integration_catalog_summary();
+        let hue = canonical_integration_descriptor(&IntegrationId::trusted("hue")).unwrap();
+
+        assert_eq!(summary.total_integrations, 6);
+        assert_eq!(summary.in_process_rust_integrations, 0);
+        assert_eq!(summary.rust_worker_process_integrations, 6);
+        assert_eq!(summary.total_capability_mappings, 59);
+        assert_eq!(summary.unique_capabilities, 14);
+        assert_eq!(summary.total_discovery_roles, 15);
+        assert_eq!(summary.total_pairing_roles, 13);
+        assert_eq!(summary.discoverable_integrations, 6);
+        assert_eq!(summary.pairable_integrations, 6);
+        assert!(summary.all_integrations_discoverable());
+        assert!(summary.all_integrations_pairable());
+        assert!(hue.is_discoverable());
+        assert!(hue.is_pairable());
+        assert_eq!(hue.capability_count(), 6);
     }
 
     #[test]

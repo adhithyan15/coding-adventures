@@ -9,6 +9,8 @@ All notable changes to this package will be documented in this file.
 - `IntegrationDescriptor` builder/query helpers plus a canonical integration
   descriptor catalog for Hue, Zigbee, Z-Wave, Thread, Matter, and MQTT
   bootstrap families.
+- `IntegrationCatalogSummary` and `canonical_integration_catalog_summary()` for
+  compact read-side inspection of integration coverage.
 - `SmartHomeToolCatalogSummary` and `smart_home_tool_catalog_summary()` for
   compact read-side inspection of the smart-home tool surface.
 

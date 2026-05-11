@@ -33,6 +33,8 @@ Current scope:
   and input families
 - canonical integration descriptors for Hue, Zigbee, Z-Wave, Thread, Matter,
   and MQTT bootstrap families
+- compact integration catalog summaries for runtime, discovery, pairing, and
+  capability coverage
 - immutable device events and command requests
 - command risk tier helpers
 - state freshness helpers
