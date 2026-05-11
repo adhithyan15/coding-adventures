@@ -89,7 +89,14 @@ pub fn lower_to_kb(ir_doc: &IRDocument) -> Result<KnowledgeBase, LoweringError> 
             NodeKind::Query
             | NodeKind::Uncertainty
             | NodeKind::Exception
-            | NodeKind::Discarded => {}
+            | NodeKind::Discarded
+            | NodeKind::TextRun => {
+                // v2: TextRun nodes carry only structural decomposition
+                // and do not produce engine clauses. Query nodes are
+                // returned by extract_queries; Uncertainty / Exception /
+                // Discarded participate in clarification, audit, and
+                // rule priority but do not lower to clauses.
+            }
         }
     }
     Ok(kb)
@@ -132,6 +139,15 @@ fn lower_fact(kb: &mut KnowledgeBase, node: &IRNode) -> Result<(), LoweringError
             // validation was bypassed; silently treat as Affirmed for
             // robustness rather than panicking. (A pre-validated
             // IRDocument never hits this branch.)
+            kb.add_fact(Fact::certain(node.term.clone()));
+        }
+        Polarity::Inherit => {
+            // v2: Inherit means "use the structural ancestor's
+            // polarity". An ADJ03-v2 propagation pass should have
+            // resolved this before lowering. If we see Inherit here
+            // the upstream pass didn't run; fall back to the
+            // framework default (Affirmed) for robustness.
+            // A pre-resolved IRDocument never hits this branch.
             kb.add_fact(Fact::certain(node.term.clone()));
         }
     }
@@ -362,6 +378,7 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
+            part_of: None,
             lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
@@ -377,6 +394,7 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
+            part_of: None,
             lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
@@ -392,6 +410,7 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
+            part_of: None,
             lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
@@ -407,6 +426,7 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
+            part_of: None,
             lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
