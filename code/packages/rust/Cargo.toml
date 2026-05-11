@@ -171,6 +171,7 @@ members = [
     "logic-gates",
     "logic-core",
     "logic-engine",
+    "adjudication-ir",
     "loss-functions",
     "markov-chain",
     "note-frequency",

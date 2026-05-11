@@ -1,0 +1,8 @@
+[package]
+name = "adjudication-ir"
+version = "0.1.0"
+edition = "2021"
+description = "The typed intermediate representation for rule-based adjudication (ADJ01)."
+
+[dependencies]
+logic-core = { path = "../logic-core" }
