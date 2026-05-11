@@ -1,0 +1,10 @@
+[package]
+name = "mosaic-emit-html"
+version = "0.1.0"
+edition = "2021"
+description = "Pure HTML backend: emits a static standalone HTML file from MosaicIR"
+
+[dependencies]
+mosaic-vm = { path = "../mosaic-vm" }
+mosaic-analyzer = { path = "../mosaic-analyzer" }
+serde_json = "1"

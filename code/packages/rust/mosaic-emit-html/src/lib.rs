@@ -1,0 +1,912 @@
+//! # mosaic-emit-html — Pure HTML static snapshot backend.
+//!
+//! This crate is the static HTML backend for the Mosaic compiler. It
+//! implements [`MosaicRenderer`] and is driven by [`MosaicVM`]. The output is
+//! a complete `<!DOCTYPE html>` file with no JavaScript, no runtime, and fully
+//! inlined styles.
+//!
+//! ## Use cases
+//!
+//! - **Design reviews** — share a rendered snapshot without a dev server.
+//! - **Screenshot tests** — feed to headless Chrome / Playwright for visual
+//!   regression testing.
+//! - **Static documentation** — embed rendered component previews in docs.
+//! - **e2e test fixtures** — stable reference HTML for integration tests.
+//!
+//! ## Fixture file
+//!
+//! An optional JSON fixture file provides concrete values for slots:
+//!
+//! ```json
+//! {
+//!   "display-name": "Jane Doe",
+//!   "avatar-url": "https://example.com/avatar.png",
+//!   "count": 42,
+//!   "visible": true,
+//!   "items": ["Alpha", "Beta", "Gamma"]
+//! }
+//! ```
+//!
+//! Slots absent from the fixture render as `[slot: name]` placeholders.
+//!
+//! ## Output structure
+//!
+//! ```html
+//! <!DOCTYPE html>
+//! <html lang="en">
+//! <head>
+//!   <meta charset="UTF-8">
+//!   <title>ProfileCard</title>
+//!   <style>…</style>
+//! </head>
+//! <body>
+//!   <div style="display:flex;flex-direction:column">
+//!     <span>Jane Doe</span>
+//!   </div>
+//! </body>
+//! </html>
+//! ```
+
+use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
+use mosaic_analyzer::{MosaicSlot, MosaicType};
+
+// ===========================================================================
+// HtmlRenderer
+// ===========================================================================
+
+/// The pure-HTML static snapshot backend for the Mosaic compiler.
+///
+/// Construct with [`HtmlRenderer::new`], passing fixture values and an optional
+/// CSS string. Then drive it with [`MosaicVM::run`].
+///
+/// # Example
+///
+/// ```no_run
+/// use mosaic_emit_html::HtmlRenderer;
+/// use mosaic_vm::MosaicVM;
+/// use mosaic_analyzer::analyze;
+/// use serde_json::json;
+///
+/// let fixtures = json!({"display-name": "Jane"}).as_object().cloned().unwrap();
+/// let renderer = HtmlRenderer::new(fixtures, None);
+/// let file = analyze("component Card { slot display-name: text; Text { content: @display-name; } }").unwrap();
+/// let vm = MosaicVM::new(file);
+/// let result = vm.run(renderer).unwrap();
+/// println!("{}", result.output);
+/// ```
+pub struct HtmlRenderer {
+    component_name: String,
+    slots: Vec<MosaicSlot>,
+    /// Fixture values for slots provided at compile time.
+    /// Keys are kebab-case slot names; values are JSON values.
+    fixtures: serde_json::Map<String, serde_json::Value>,
+    /// Stack of open element frames during depth-first traversal.
+    stack: Vec<HtmlFrame>,
+    /// HTML lines accumulated at the root level (outside any frame).
+    root_lines: Vec<String>,
+    /// Suppression counter: when > 0 we are inside a false `when` block
+    /// and must not emit any HTML. Nested false blocks increment further.
+    suppress: usize,
+    /// Optional CSS to inline inside the `<style>` tag in `<head>`.
+    css: Option<String>,
+    /// Loop variable bindings: (var_name, fixture_value).
+    /// When an `each` block is active, the first fixture array element is
+    /// substituted wherever the loop variable appears as a slot ref.
+    loop_bindings: Vec<(String, Option<serde_json::Value>)>,
+}
+
+/// A single open element frame on the traversal stack.
+struct HtmlFrame {
+    /// The HTML close tag (empty for self-closing elements like `<hr>`).
+    close_tag: String,
+    /// HTML lines accumulated as children of this element.
+    lines: Vec<String>,
+}
+
+impl HtmlRenderer {
+    /// Create a new `HtmlRenderer`.
+    ///
+    /// - `fixtures` — a JSON object mapping slot names to values.
+    /// - `css` — optional CSS string to inline in `<style>`.
+    pub fn new(
+        fixtures: serde_json::Map<String, serde_json::Value>,
+        css: Option<String>,
+    ) -> Self {
+        Self {
+            component_name: String::new(),
+            slots: Vec::new(),
+            fixtures,
+            stack: Vec::new(),
+            root_lines: Vec::new(),
+            suppress: 0,
+            css,
+            loop_bindings: Vec::new(),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Name-conversion helpers
+    // -----------------------------------------------------------------------
+
+    /// Convert a PascalCase component name to a human-readable title.
+    ///
+    /// We insert spaces before each uppercase letter following a lowercase one:
+    /// `ProfileCard` → `Profile Card`.
+    fn to_title(name: &str) -> String {
+        let mut result = String::new();
+        let mut prev_lower = false;
+        for ch in name.chars() {
+            if ch.is_uppercase() && prev_lower {
+                result.push(' ');
+            }
+            prev_lower = ch.is_lowercase();
+            result.push(ch);
+        }
+        result
+    }
+
+    // -----------------------------------------------------------------------
+    // Fixture resolution
+    // -----------------------------------------------------------------------
+
+    /// Resolve a slot reference to a string value.
+    ///
+    /// Resolution order:
+    /// 1. Active loop bindings (innermost-first).
+    /// 2. The fixture map.
+    /// 3. Placeholder `[slot: name]`.
+    fn resolve_slot(&self, name: &str) -> String {
+        // Check loop bindings innermost first.
+        for (var_name, val) in self.loop_bindings.iter().rev() {
+            if var_name == name {
+                return match val {
+                    Some(v) => json_to_string(v),
+                    None => format!("[{name}]"),
+                };
+            }
+        }
+        // Fall back to fixture map.
+        match self.fixtures.get(name) {
+            Some(v) => json_to_string(v),
+            None => format!("[slot: {name}]"),
+        }
+    }
+
+    /// Resolve a `ResolvedValue` to a displayable string.
+    fn resolve_value(&self, v: &ResolvedValue) -> String {
+        match v {
+            ResolvedValue::String(s) => s.clone(),
+            ResolvedValue::Number(n) => n.to_string(),
+            ResolvedValue::Dimension(n, unit) => match unit.as_str() {
+                "dp" | "sp" => format!("{n}px"),
+                "%" => format!("{n}%"),
+                _ => format!("{n}{unit}"),
+            },
+            ResolvedValue::Color(r, g, b, a) => {
+                if *a == 255 {
+                    format!("rgb({r},{g},{b})")
+                } else {
+                    let alpha = *a as f64 / 255.0;
+                    format!("rgba({r},{g},{b},{alpha:.3})")
+                }
+            }
+            ResolvedValue::Bool(b) => b.to_string(),
+            ResolvedValue::Enum { namespace, member } => format!("{namespace}-{member}"),
+            ResolvedValue::SlotRef { name, .. } => self.resolve_slot(name),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // HTML building helpers
+    // -----------------------------------------------------------------------
+
+    /// Push a line into the current open frame or root accumulator.
+    fn push_line(&mut self, line: String) {
+        if self.suppress > 0 {
+            return; // Suppressed by a false `when` block.
+        }
+        if let Some(frame) = self.stack.last_mut() {
+            frame.lines.push(line);
+        } else {
+            self.root_lines.push(line);
+        }
+    }
+
+    /// Build an inline style string from resolved properties.
+    fn build_style(&self, props: &[ResolvedProperty]) -> String {
+        let skip = ["content", "source", "a11y-label", "a11y-role", "a11y-hidden", "style"];
+        let entries: Vec<String> = props
+            .iter()
+            .filter(|p| !skip.contains(&p.name.as_str()))
+            .map(|p| {
+                let css_name = &p.name;
+                let val = self.resolve_value(&p.value);
+                format!("{css_name}:{val}")
+            })
+            .collect();
+        entries.join(";")
+    }
+
+    /// Get the CSS class from a `style: namespace.member` prop.
+    fn get_class(props: &[ResolvedProperty]) -> String {
+        props
+            .iter()
+            .find(|p| p.name == "style")
+            .map(|p| match &p.value {
+                ResolvedValue::Enum { namespace, member } => {
+                    format!("mosaic-{namespace}-{member}")
+                }
+                ResolvedValue::String(s) => s.clone(),
+                _ => String::new(),
+            })
+            .unwrap_or_default()
+    }
+
+    /// Build the opening HTML tag for a primitive Mosaic node.
+    ///
+    /// Returns `(open_tag, close_tag)`. Self-closing tags have an empty close.
+    fn primitive_open(&self, tag: &str, props: &[ResolvedProperty]) -> (String, String) {
+        let extra_style = self.build_style(props);
+        let class = Self::get_class(props);
+
+        match tag {
+            "Box" => {
+                let combined = combine_styles("", &extra_style);
+                (format_div(&combined, &class, props), "</div>".into())
+            }
+            "Stack" => {
+                let combined = combine_styles("position:relative", &extra_style);
+                (format_div(&combined, &class, props), "</div>".into())
+            }
+            "Column" => {
+                let combined = combine_styles("display:flex;flex-direction:column", &extra_style);
+                (format_div(&combined, &class, props), "</div>".into())
+            }
+            "Row" => {
+                let combined = combine_styles("display:flex;flex-direction:row", &extra_style);
+                (format_div(&combined, &class, props), "</div>".into())
+            }
+            "Text" => {
+                let content = props
+                    .iter()
+                    .find(|p| p.name == "content")
+                    .map(|p| html_escape(&self.resolve_value(&p.value)))
+                    .unwrap_or_default();
+                let mut attrs = String::new();
+                if !extra_style.is_empty() {
+                    attrs.push_str(&format!(" style=\"{extra_style}\""));
+                }
+                if !class.is_empty() {
+                    attrs.push_str(&format!(" class=\"{class}\""));
+                }
+                // Text is self-contained — content and close tag together.
+                (format!("<span{attrs}>{content}</span>"), String::new())
+            }
+            "Image" => {
+                let src = props
+                    .iter()
+                    .find(|p| p.name == "source")
+                    .map(|p| html_escape(&self.resolve_value(&p.value)))
+                    .unwrap_or_default();
+                let alt = props
+                    .iter()
+                    .find(|p| p.name == "a11y-label")
+                    .map(|p| html_escape(&self.resolve_value(&p.value)))
+                    .unwrap_or_default();
+                (format!("<img src=\"{src}\" alt=\"{alt}\">"), String::new())
+            }
+            "Spacer" => {
+                let combined = combine_styles("flex:1", &extra_style);
+                (format_div(&combined, &class, props), "</div>".into())
+            }
+            "Scroll" => {
+                let combined = combine_styles("overflow:auto", &extra_style);
+                (format_div(&combined, &class, props), "</div>".into())
+            }
+            "Divider" => ("<hr>".into(), String::new()),
+            "Icon" => {
+                let class_val = if class.is_empty() {
+                    "icon".to_string()
+                } else {
+                    format!("icon {class}")
+                };
+                (format!("<span class=\"{class_val}\">"), "</span>".into())
+            }
+            "Grid" => {
+                // Resolve the headers and rows fixture arrays.
+                let headers_slot = props
+                    .iter()
+                    .find(|p| p.name == "headers" || p.name == "column-headers")
+                    .and_then(|p| {
+                        if let ResolvedValue::SlotRef { name, .. } = &p.value {
+                            Some(name.clone())
+                        } else {
+                            None
+                        }
+                    })
+                    .unwrap_or_else(|| "headers".to_string());
+
+                let rows_slot = props
+                    .iter()
+                    .find(|p| p.name == "rows" || p.name == "viewport-rows")
+                    .and_then(|p| {
+                        if let ResolvedValue::SlotRef { name, .. } = &p.value {
+                            Some(name.clone())
+                        } else {
+                            None
+                        }
+                    })
+                    .unwrap_or_else(|| "rows".to_string());
+
+                let headers: Vec<String> = self
+                    .fixtures
+                    .get(&headers_slot)
+                    .and_then(|v| v.as_array())
+                    .map(|arr| arr.iter().map(|h| html_escape(&json_to_string(h))).collect())
+                    .unwrap_or_else(|| vec![format!("[{headers_slot}]")]);
+
+                let rows: Vec<String> = self
+                    .fixtures
+                    .get(&rows_slot)
+                    .and_then(|v| v.as_array())
+                    .map(|arr| arr.iter().map(|r| html_escape(&json_to_string(r))).collect())
+                    .unwrap_or_else(|| vec![format!("[{rows_slot}]")]);
+
+                let style_attr = if extra_style.is_empty() {
+                    String::new()
+                } else {
+                    format!(" style=\"{extra_style}\"")
+                };
+
+                let header_cells: String = headers
+                    .iter()
+                    .map(|h| format!("<th>{h}</th>"))
+                    .collect();
+                let row_cells: String = rows
+                    .iter()
+                    .map(|r| format!("<tr><td>{r}</td></tr>"))
+                    .collect();
+
+                let table = format!(
+                    "<table{style_attr}><thead><tr>{header_cells}</tr></thead><tbody>{row_cells}</tbody></table>",
+                );
+                (table, String::new())
+            }
+            _ => {
+                // Unknown primitive: generic div.
+                let combined = combine_styles("", &extra_style);
+                (format_div(&combined, &class, props), "</div>".into())
+            }
+        }
+    }
+
+    /// Minimal CSS reset emitted when no external CSS is provided.
+    fn minimal_reset() -> &'static str {
+        "*, *::before, *::after { box-sizing: border-box; }\nbody { margin: 0; font-family: sans-serif; }"
+    }
+}
+
+impl MosaicRenderer for HtmlRenderer {
+    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot]) {
+        self.component_name = name.to_string();
+        self.slots = slots.to_vec();
+    }
+
+    fn end_component(&mut self) {}
+
+    fn begin_node(&mut self, tag: &str, is_primitive: bool, props: &[ResolvedProperty]) {
+        if self.suppress > 0 {
+            // Inside a false `when` — push a frame to maintain stack balance
+            // but do not emit anything. We still need to balance the stack
+            // because `end_node` will pop without checking suppress.
+            self.stack.push(HtmlFrame {
+                close_tag: String::new(),
+                lines: Vec::new(),
+            });
+            return;
+        }
+
+        let (open, close) = if is_primitive {
+            self.primitive_open(tag, props)
+        } else {
+            // Composite component — use a semantic div with a data-component attr.
+            let tag_lower = tag.to_lowercase();
+            (
+                format!("<div data-component=\"{tag_lower}\">"),
+                "</div>".into(),
+            )
+        };
+
+        // For self-contained tags (Text, Image, Grid, Divider), open is the full
+        // element and close is empty — push both together.
+        if close.is_empty() {
+            self.push_line(open);
+            // Push a dummy frame to stay balanced; end_node will pop it.
+            self.stack.push(HtmlFrame {
+                close_tag: String::new(),
+                lines: Vec::new(),
+            });
+        } else {
+            self.push_line(open);
+            self.stack.push(HtmlFrame {
+                close_tag: close,
+                lines: Vec::new(),
+            });
+        }
+    }
+
+    fn end_node(&mut self, _tag: &str) {
+        if let Some(frame) = self.stack.pop() {
+            if self.suppress > 0 {
+                return; // Suppressed — discard the frame silently.
+            }
+            let inner = frame.lines.join("\n");
+            let close = frame.close_tag;
+            // Only emit inner + close if there's meaningful content.
+            if !close.is_empty() {
+                if inner.is_empty() {
+                    self.push_line(close);
+                } else {
+                    self.push_line(inner);
+                    self.push_line(close);
+                }
+            } else if !inner.is_empty() {
+                self.push_line(inner);
+            }
+        }
+    }
+
+    fn render_slot_child(&mut self, slot_name: &str, _slot_type: &MosaicType) {
+        if self.suppress > 0 {
+            return;
+        }
+        // Emit a visible placeholder div for node/component slot children.
+        let placeholder = format!(
+            "<div class=\"mos-slot\" data-slot=\"{slot_name}\"><!-- slot: {slot_name} --></div>"
+        );
+        self.push_line(placeholder);
+    }
+
+    fn begin_when(&mut self, slot_name: &str) {
+        if self.suppress > 0 {
+            // Nested false `when` — increment suppress further.
+            self.suppress += 1;
+            return;
+        }
+        // Evaluate the fixture value as a boolean.
+        // Missing fixtures default to true (show content for design review purposes).
+        let is_true = match self.fixtures.get(slot_name) {
+            None => true, // Unknown at snapshot time → show.
+            Some(v) => v.as_bool().unwrap_or(false),
+        };
+
+        if !is_true {
+            self.suppress += 1;
+        }
+        // If true, nothing to do — children will be emitted normally.
+    }
+
+    fn end_when(&mut self) {
+        if self.suppress > 0 {
+            self.suppress -= 1;
+        }
+        // If suppress is 0, the `when` was true; nothing to do.
+    }
+
+    fn begin_each(&mut self, slot_name: &str, item_name: &str, _element_type: &MosaicType) {
+        if self.suppress > 0 {
+            return;
+        }
+        // Look up the fixture array for this slot. Take the first element for v1.
+        // If absent or empty, use None (renders a placeholder).
+        let first_item = self
+            .fixtures
+            .get(slot_name)
+            .and_then(|v| v.as_array())
+            .and_then(|arr| arr.first())
+            .cloned();
+
+        self.loop_bindings.push((item_name.to_string(), first_item));
+    }
+
+    fn end_each(&mut self) {
+        if self.suppress > 0 {
+            return;
+        }
+        self.loop_bindings.pop();
+    }
+
+    fn emit(self) -> EmitResult {
+        let title = Self::to_title(&self.component_name);
+        let css = self
+            .css
+            .as_deref()
+            .unwrap_or(Self::minimal_reset())
+            .to_string();
+        let html_body = self.root_lines.join("\n");
+
+        let output = format!(
+            r#"<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{title}</title>
+  <style>
+{css}
+  </style>
+</head>
+<body>
+{body}
+</body>
+</html>
+"#,
+            title = title,
+            css = css,
+            body = html_body,
+        );
+
+        EmitResult {
+            output,
+            component_name: self.component_name,
+        }
+    }
+}
+
+// ===========================================================================
+// Free helpers
+// ===========================================================================
+
+/// HTML-escape a string for safe embedding in attribute values or text content.
+pub fn html_escape(s: &str) -> String {
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+}
+
+/// Convert a JSON value to a displayable string.
+fn json_to_string(v: &serde_json::Value) -> String {
+    match v {
+        serde_json::Value::String(s) => s.clone(),
+        serde_json::Value::Number(n) => n.to_string(),
+        serde_json::Value::Bool(b) => b.to_string(),
+        serde_json::Value::Null => String::new(),
+        serde_json::Value::Array(_) => "[array]".to_string(),
+        serde_json::Value::Object(_) => "[object]".to_string(),
+    }
+}
+
+/// Combine two CSS style strings with a semicolon separator.
+fn combine_styles(base: &str, extra: &str) -> String {
+    match (base.is_empty(), extra.is_empty()) {
+        (true, true) => String::new(),
+        (true, false) => extra.to_string(),
+        (false, true) => base.to_string(),
+        (false, false) => format!("{base};{extra}"),
+    }
+}
+
+/// Format a `<div>` with optional style, class, and a11y attributes.
+fn format_div(style: &str, class: &str, props: &[ResolvedProperty]) -> String {
+    let mut attrs = Vec::new();
+    if !style.is_empty() {
+        attrs.push(format!("style=\"{style}\""));
+    }
+    if !class.is_empty() {
+        attrs.push(format!("class=\"{class}\""));
+    }
+    for p in props {
+        match p.name.as_str() {
+            "a11y-label" => {
+                if let ResolvedValue::String(s) = &p.value {
+                    attrs.push(format!("aria-label=\"{}\"", html_escape(s)));
+                }
+            }
+            "a11y-role" => {
+                if let ResolvedValue::String(s) = &p.value {
+                    attrs.push(format!("role=\"{}\"", html_escape(s)));
+                }
+            }
+            "a11y-hidden" => {
+                attrs.push("aria-hidden=\"true\"".into());
+            }
+            _ => {}
+        }
+    }
+    if attrs.is_empty() {
+        "<div>".into()
+    } else {
+        format!("<div {}>", attrs.join(" "))
+    }
+}
+
+// ===========================================================================
+// Tests
+// ===========================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use mosaic_vm::MosaicVM;
+    use mosaic_analyzer::analyze;
+    use serde_json::json;
+
+    /// Build an `HtmlRenderer` with the given fixture JSON, run it on `src`.
+    fn emit_with(src: &str, fixtures: serde_json::Value, css: Option<String>) -> String {
+        let map = fixtures.as_object().cloned().unwrap_or_default();
+        let renderer = HtmlRenderer::new(map, css);
+        let file = analyze(src).unwrap();
+        let vm = MosaicVM::new(file);
+        vm.run(renderer).unwrap().output
+    }
+
+    /// Emit with an empty fixture map and no CSS.
+    fn emit(src: &str) -> String {
+        emit_with(src, json!({}), None)
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 1: Output has correct HTML document structure
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_html_document_structure() {
+        let out = emit(r#"component X { Box { } }"#);
+        assert!(out.starts_with("<!DOCTYPE html>"), "Expected DOCTYPE: {out}");
+        assert!(out.contains("<html lang=\"en\">"), "Expected <html>: {out}");
+        assert!(out.contains("<head>"), "Expected <head>: {out}");
+        assert!(out.contains("<body>"), "Expected <body>: {out}");
+        assert!(out.contains("</html>"), "Expected </html>: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 2: <title> contains component name
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_component_title() {
+        let out = emit(r#"component ProfileCard { Box { } }"#);
+        assert!(out.contains("<title>Profile Card</title>"), "Expected title: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 3: Box renders as <div>
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_box_renders_div() {
+        let out = emit(r#"component X { Box { } }"#);
+        assert!(out.contains("<div"), "Expected <div: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 4: Column → flex-direction:column inline style
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_column_flex_style() {
+        let out = emit(r#"component X { Column { } }"#);
+        assert!(
+            out.contains("flex-direction:column"),
+            "Expected flex-direction:column: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 5: Row → flex-direction:row inline style
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_row_flex_style() {
+        let out = emit(r#"component X { Row { } }"#);
+        assert!(
+            out.contains("flex-direction:row"),
+            "Expected flex-direction:row: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 6: Text content resolved from fixture
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_text_content_from_fixture() {
+        let out = emit_with(
+            r#"component Card { slot title: text; Text { content: @title; } }"#,
+            json!({"title": "Hello World"}),
+            None,
+        );
+        assert!(out.contains("Hello World"), "Expected fixture value: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 7: Text content uses placeholder when slot not in fixture
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_text_content_placeholder() {
+        let out = emit(r#"component Card { slot title: text; Text { content: @title; } }"#);
+        assert!(
+            out.contains("[slot: title]"),
+            "Expected placeholder: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 8: when block with fixture = true renders its body
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_when_true_renders() {
+        let out = emit_with(
+            r#"component X {
+              slot show: bool;
+              Column {
+                when @show {
+                  Text { content: "Visible"; }
+                }
+              }
+            }"#,
+            json!({"show": true}),
+            None,
+        );
+        assert!(out.contains("Visible"), "Expected body when show=true: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 9: when block with fixture = false suppresses its body
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_when_false_suppresses() {
+        let out = emit_with(
+            r#"component X {
+              slot show: bool;
+              Column {
+                when @show {
+                  Text { content: "Hidden"; }
+                }
+              }
+            }"#,
+            json!({"show": false}),
+            None,
+        );
+        assert!(!out.contains("Hidden"), "Expected body suppressed when show=false: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 10: when block with no fixture defaults to showing (design review)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_when_missing_renders() {
+        let out = emit(
+            r#"component X {
+              slot show: bool;
+              Column {
+                when @show {
+                  Text { content: "DefaultVisible"; }
+                }
+              }
+            }"#,
+        );
+        assert!(
+            out.contains("DefaultVisible"),
+            "Expected body shown when fixture missing: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 11: each block with fixture array renders first item
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_each_with_fixture() {
+        let out = emit_with(
+            r#"component X {
+              slot items: list<text>;
+              Column {
+                each @items as item {
+                  Text { content: @item; }
+                }
+              }
+            }"#,
+            json!({"items": ["FirstItem", "SecondItem"]}),
+            None,
+        );
+        // v1: renders the first item.
+        assert!(out.contains("FirstItem"), "Expected first fixture item: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 12: each block without fixture renders placeholder
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_each_without_fixture() {
+        let out = emit(
+            r#"component X {
+              slot items: list<text>;
+              Column {
+                each @items as item {
+                  Text { content: @item; }
+                }
+              }
+            }"#,
+        );
+        // Without fixture, loop var resolves to [item] placeholder.
+        assert!(out.contains("[item]"), "Expected placeholder for loop var: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 13: CSS string appears inside <style> tag
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_css_inlined() {
+        let css = "body { background: red; }".to_string();
+        let out = emit_with(r#"component X { Box { } }"#, json!({}), Some(css));
+        assert!(
+            out.contains("body { background: red; }"),
+            "Expected CSS in <style>: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 14: Slot values with HTML characters are escaped
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_slot_value_html_escaped() {
+        let out = emit_with(
+            r#"component X { slot code: text; Text { content: @code; } }"#,
+            json!({"code": "<script>alert(1)</script>"}),
+            None,
+        );
+        assert!(
+            out.contains("&lt;script&gt;"),
+            "Expected escaped <script>: {out}"
+        );
+        assert!(
+            !out.contains("<script>"),
+            "Must NOT contain raw <script>: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 15: Divider → <hr>
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_divider_hr() {
+        let out = emit(r#"component X { Column { Divider { } } }"#);
+        assert!(out.contains("<hr>"), "Expected <hr>: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 16: Minimal CSS reset is emitted when no CSS provided
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_minimal_reset_emitted() {
+        let out = emit(r#"component X { Box { } }"#);
+        assert!(out.contains("box-sizing: border-box"), "Expected reset CSS: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 17: Slot node child renders placeholder div
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_slot_node_placeholder() {
+        let out = emit(r#"component X { slot header: node; Column { @header; } }"#);
+        assert!(
+            out.contains("mos-slot"),
+            "Expected mos-slot placeholder: {out}"
+        );
+        assert!(
+            out.contains("data-slot=\"header\""),
+            "Expected data-slot attr: {out}"
+        );
+    }
+}
