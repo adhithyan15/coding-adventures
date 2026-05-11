@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-05-11
+
+### Added
+
+- `decompose_text` module — **the headline extraction primitive**.
+  Given source text + a domain hint, calls the `Extractor` role's
+  client to produce a hierarchical IR document (per ADJ01 v2). The
+  pipeline runs `check_coverage` and `check_propagation` against the
+  result.
+- `DecomposeTextRequest { document_id, source_text, domain_hint,
+  language_hint }` and `DecomposeTextResponse { ir_document,
+  structural_ok, call_record }`.
+- `ir_document` is a `serde_json::Value` at v0.6 because
+  `adjudication_ir::IRDocument` doesn't yet derive `Serialize` /
+  `Deserialize`. A future version will swap to the typed shape; the
+  on-wire JSON is unchanged.
+- Lightweight structural sanity check: `structural_ok = true` iff
+  the response is an object with a non-empty string `document_id`
+  matching the request AND an array `nodes`. Full ADJ01 v2
+  well-formedness lives in `adjudication_ir::validate` and is the
+  caller's job.
+- Routes via `LlmClient::complete_json` with `max_tokens: 8192`
+  (IR documents for long sources can run to several thousand
+  tokens). Schema: top-level object with required `document_id`
+  (string ≥ 1 char) and `nodes` (array), `additionalProperties:
+  true` so the LLM can include richer per-node fields beyond the
+  primitive's minimal probe.
+- `LlmCallRecord`: `primitive="decompose_text"`, `role="extractor"`,
+  `prompt_version="decompose-text-v1"`, content-addressed
+  `prompt_hash`, provider, usage, latency.
+- Re-exported at the crate root: `decompose_text`,
+  `DecomposeTextRequest`, `DecomposeTextResponse`.
+- 11 new tests. Coverage: `NoClientForRole` when Extractor
+  unregistered; happy path with full IR + call record; user message
+  tags DOMAIN / LANGUAGE / DOCUMENT_ID / SOURCE; missing
+  `language_hint` renders `"auto-detect"`; `ContextTooLarge` gateway
+  error propagates; non-object response → `ValidationExhausted`;
+  `structural_ok` false-positives covered (missing / wrong
+  `document_id`; non-array `nodes`); empty-`nodes` array is
+  structurally OK; `prompt_hash` matches an independently-built
+  request; the IR JSON round-trips unchanged.
+
+### Notes
+
+This is the **single-shot bottom layer** of the LM00b spec's retry-
+with-correction loop. A future retry harness will wrap it with a
+policy + count; the primitive owns the single LLM round-trip.
+
+`domain_hint` and `language_hint` stay free-form strings at v0.6 to
+avoid binding to a not-yet-existent `DomainHints` enum.
+
+With this primitive, the **input side of the semantic source map is
+complete** — source text → IR happens through the primitive layer.
+
 ## [0.5.0] - 2026-05-11
 
 ### Added
@@ -31,15 +85,14 @@ All notable changes to this project will be documented in this file.
 - `LlmCallRecord` populated: `primitive = "find_contradicting_reading"`,
   `role = "adversary"`, `prompt_version = "adversary-v1"`,
   content-addressed `prompt_hash`, provider, usage, latency.
-- 11 new tests (55 total in crate, all passing). Coverage: missing
-  client → `NoClientForRole`; CONCURS response is recognised; full
-  Reading response with text + explanation; user message tags
-  SOURCE / IR-RENDERED / DOMAIN separately; gateway `Refused`
-  propagates as `Gateway`; missing or wrong-typed `concurs` →
-  `ValidationExhausted`; `concurs: false` with empty `text` or empty
-  `explanation` → `ValidationExhausted`; Reading text and
-  explanation are trimmed on success; `prompt_hash` matches an
-  independently-built request.
+- 11 new tests. Coverage: missing client → `NoClientForRole`; CONCURS
+  response is recognised; full Reading response with text +
+  explanation; user message tags SOURCE / IR-RENDERED / DOMAIN
+  separately; gateway `Refused` propagates as `Gateway`; missing or
+  wrong-typed `concurs` → `ValidationExhausted`; `concurs: false`
+  with empty `text` or empty `explanation` → `ValidationExhausted`;
+  Reading text and explanation are trimmed on success; `prompt_hash`
+  matches an independently-built request.
 
 ### Notes
 

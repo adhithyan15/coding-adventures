@@ -1,8 +1,8 @@
 [package]
 name = "llm-primitives"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "LM00b — typed LLM primitives layer. v0.1 scaffolding. v0.2 entail. v0.3 render_node. v0.4 judge_plausibility. v0.5 find_contradicting_reading (ADJ05 adversary). decompose_text + extract_rules follow."
+description = "LM00b — typed LLM primitives layer. v0.1 scaffolding. v0.2 entail. v0.3 render_node. v0.4 judge_plausibility. v0.5 find_contradicting_reading (ADJ05 adversary). v0.6 decompose_text (headline extractor). extract_rules follows."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }
