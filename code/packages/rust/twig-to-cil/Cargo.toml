@@ -1,0 +1,19 @@
+[package]
+name = "twig-to-cil"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Twig → CLR CIL pipeline: source → IIR → type check → builtin lowering → CILProgramArtifact"
+
+[lib]
+name = "twig_to_cil"
+path = "src/lib.rs"
+
+[dependencies]
+twig-ir-compiler     = { path = "../twig-ir-compiler" }
+iir-type-checker     = { path = "../iir-type-checker" }
+iir-builtin-lowering = { path = "../iir-builtin-lowering" }
+iir-to-cil-bytecode  = { path = "../iir-to-cil-bytecode" }
+interpreter-ir       = { path = "../interpreter-ir" }
+ir-to-cil-bytecode   = { path = "../ir-to-cil-bytecode" }
+
+[dev-dependencies]
