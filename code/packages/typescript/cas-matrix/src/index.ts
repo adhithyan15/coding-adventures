@@ -8,7 +8,9 @@ import {
   app,
   headName,
   int,
+  rational,
   sym,
+  type IRInteger,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
 
@@ -170,6 +172,75 @@ export function inverse(node: IRNode): IRNode {
   return matrix(adjugate.map((row) => row.map((cell) => app(DIV, [cell, determinantNode]))));
 }
 
+export function rowReduce(node: IRNode): IRNode {
+  const frows = matrixToRationals(node);
+  const nrows = frows.length;
+  const ncols = frows[0]?.length ?? 0;
+
+  let pivotRow = 0;
+  for (let col = 0; col < ncols && pivotRow < nrows; col += 1) {
+    let pivotPos = -1;
+    for (let row = pivotRow; row < nrows; row += 1) {
+      if (!frows[row][col].isZero()) {
+        pivotPos = row;
+        break;
+      }
+    }
+    if (pivotPos === -1) continue;
+
+    if (pivotPos !== pivotRow) {
+      [frows[pivotRow], frows[pivotPos]] = [frows[pivotPos], frows[pivotRow]];
+    }
+
+    const pivot = frows[pivotRow][col];
+    frows[pivotRow] = frows[pivotRow].map((entry) => entry.div(pivot));
+
+    for (let row = 0; row < nrows; row += 1) {
+      if (row === pivotRow) continue;
+      const factor = frows[row][col];
+      if (factor.isZero()) continue;
+      frows[row] = frows[row].map((entry, entryCol) => entry.sub(factor.mul(frows[pivotRow][entryCol])));
+    }
+
+    pivotRow += 1;
+  }
+
+  return matrix(frows.map((row) => row.map(rationalToIr)));
+}
+
+export function rank(node: IRNode): IRInteger {
+  const frows = matrixToRationals(node);
+  const nrows = frows.length;
+  const ncols = frows[0]?.length ?? 0;
+
+  let pivotRow = 0;
+  for (let col = 0; col < ncols && pivotRow < nrows; col += 1) {
+    let pivotPos = -1;
+    for (let row = pivotRow; row < nrows; row += 1) {
+      if (!frows[row][col].isZero()) {
+        pivotPos = row;
+        break;
+      }
+    }
+    if (pivotPos === -1) continue;
+
+    [frows[pivotRow], frows[pivotPos]] = [frows[pivotPos], frows[pivotRow]];
+    const pivot = frows[pivotRow][col];
+    frows[pivotRow] = frows[pivotRow].map((entry) => entry.div(pivot));
+
+    for (let row = pivotRow + 1; row < nrows; row += 1) {
+      const factor = frows[row][col];
+      if (factor.isZero()) continue;
+      frows[row] = frows[row].map((entry, entryCol) => entry.sub(factor.mul(frows[pivotRow][entryCol])));
+    }
+
+    pivotRow += 1;
+  }
+
+  const nonZeroRows = frows.filter((row) => row.some((entry) => !entry.isZero())).length;
+  return int(nonZeroRows);
+}
+
 function rowArgs(row: IRNode): IRNode[] {
   if (row.kind === "apply" && headName(row.head) === LIST.name) {
     return [...row.args];
@@ -210,4 +281,68 @@ function minor(rows: MatrixRows, skipRow: number, skipCol: number): MatrixRows {
   return rows
     .filter((_, rowIndex) => rowIndex !== skipRow)
     .map((row) => row.filter((_, colIndex) => colIndex !== skipCol));
+}
+
+function matrixToRationals(node: IRNode): RationalValue[][] {
+  return rowsOf(node).map((row) => row.map(entryToRational));
+}
+
+function entryToRational(node: IRNode): RationalValue {
+  if (node.kind === "integer") return new RationalValue(node.value, 1n);
+  if (node.kind === "rational") return new RationalValue(node.numer, node.denom);
+  throw new MatrixError(`rowReduce/rank: symbolic entry not supported: ${node.kind}`);
+}
+
+function rationalToIr(value: RationalValue): IRNode {
+  return value.denom === 1n ? int(value.numer) : rational(value.numer, value.denom);
+}
+
+class RationalValue {
+  readonly numer: bigint;
+  readonly denom: bigint;
+
+  constructor(numer: bigint, denom: bigint) {
+    if (denom === 0n) throw new RangeError("Rational denominator cannot be zero");
+    let n = numer;
+    let d = denom;
+    if (d < 0n) {
+      n = -n;
+      d = -d;
+    }
+    const g = gcd(abs(n), d);
+    this.numer = n / g;
+    this.denom = d / g;
+  }
+
+  isZero(): boolean {
+    return this.numer === 0n;
+  }
+
+  sub(other: RationalValue): RationalValue {
+    return new RationalValue(this.numer * other.denom - other.numer * this.denom, this.denom * other.denom);
+  }
+
+  mul(other: RationalValue): RationalValue {
+    return new RationalValue(this.numer * other.numer, this.denom * other.denom);
+  }
+
+  div(other: RationalValue): RationalValue {
+    if (other.isZero()) throw new RangeError("Rational division by zero");
+    return new RationalValue(this.numer * other.denom, this.denom * other.numer);
+  }
+}
+
+function gcd(a: bigint, b: bigint): bigint {
+  let x = a;
+  let y = b;
+  while (y !== 0n) {
+    const t = y;
+    y = x % y;
+    x = t;
+  }
+  return x === 0n ? 1n : x;
+}
+
+function abs(value: bigint): bigint {
+  return value < 0n ? -value : value;
 }

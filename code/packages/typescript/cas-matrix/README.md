@@ -28,3 +28,5 @@ fold numeric entries.
 | `trace(m)` | Main diagonal sum |
 | `determinant(m)` | Symbolic cofactor determinant |
 | `inverse(m)` | Symbolic adjugate inverse |
+| `rowReduce(m)` | Exact rational reduced row echelon form for integer/rational matrices |
+| `rank(m)` | Exact rational matrix rank for integer/rational matrices |

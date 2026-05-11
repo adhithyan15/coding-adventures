@@ -13,14 +13,16 @@ import {
   matrix,
   numCols,
   numRows,
+  rank,
   rowsOf,
+  rowReduce,
   scalarMultiply,
   subMatrices,
   trace,
   transpose,
   zeroMatrix,
 } from "../src/index";
-import { ADD, LIST, MUL, SUB, app, equals, int, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, LIST, MUL, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 
 function irow(values: readonly number[]): IRNode[] {
   return values.map((value) => int(value));
@@ -150,5 +152,50 @@ describe("determinant and inverse", () => {
     expect(numRows(inv1)).toBe(1);
     expect(numCols(inv1)).toBe(1);
     expect(() => inverse(matrix([irow([1, 2, 3])]))).toThrow(MatrixError);
+  });
+});
+
+describe("rowReduce and rank", () => {
+  it("leaves identity matrices unchanged and reports full rank", () => {
+    const eye = identityMatrix(3);
+    expect(rowReduce(eye)).toEqual(eye);
+    expect(rank(eye)).toEqual(int(3));
+  });
+
+  it("keeps zero matrices at rank zero", () => {
+    const zero = zeroMatrix(2, 3);
+    expect(rowReduce(zero)).toEqual(zero);
+    expect(rank(zero)).toEqual(int(0));
+  });
+
+  it("reduces a full-rank 2x2 matrix to identity", () => {
+    const m = matrix([irow([2, 4]), irow([1, 3])]);
+    expect(rowReduce(m)).toEqual(identityMatrix(2));
+    expect(rank(m)).toEqual(int(2));
+  });
+
+  it("reduces a singular 3x3 matrix and reports rank two", () => {
+    const m = matrix([irow([1, 2, 3]), irow([4, 5, 6]), irow([7, 8, 9])]);
+    expect(rowReduce(m)).toEqual(matrix([irow([1, 0, -1]), irow([0, 1, 2]), irow([0, 0, 0])]));
+    expect(rank(m)).toEqual(int(2));
+  });
+
+  it("handles rational dependent rows exactly", () => {
+    const m = matrix([[rational(1, 2), int(1)], [int(1), int(2)]]);
+    expect(rowReduce(m)).toEqual(matrix([[int(1), int(2)], [int(0), int(0)]]));
+    expect(rank(m)).toEqual(int(1));
+  });
+
+  it("reports rank for wide and tall matrices", () => {
+    const wide = matrix([irow([1, 0, 2, 1]), irow([0, 1, 3, -1])]);
+    const tall = matrix([irow([1, 0]), irow([0, 1]), irow([1, 1]), irow([2, 3])]);
+    expect(rank(wide)).toEqual(int(2));
+    expect(rank(tall)).toEqual(int(2));
+  });
+
+  it("rejects symbolic entries for exact row reduction", () => {
+    const m = matrix([[sym("a"), int(1)], [int(0), int(1)]]);
+    expect(() => rowReduce(m)).toThrow(MatrixError);
+    expect(() => rank(m)).toThrow(MatrixError);
   });
 });
