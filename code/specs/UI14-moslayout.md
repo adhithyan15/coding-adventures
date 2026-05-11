@@ -3,7 +3,7 @@
 ## Overview
 
 `moslayout` is a strictly compiled language for declaring the **structural
-arrangement** of a UI component. A `.moslayout` file answers exactly one
+arrangement** of a UI component. A `.mll` file answers exactly one
 question: *how are a component's primitives arranged in space, and how do they
 connect to the component's interface?*
 
@@ -12,10 +12,10 @@ layout primitives (Box, Row, Column, Text, Image, Spacer, Scroll, Grid). The
 compiler knows exactly which primitives exist and what structural properties
 each accepts. Anything outside that vocabulary is a compile error.
 
-Three things are explicitly forbidden in `.moslayout` files:
+Three things are explicitly forbidden in `.mll` files:
 
 1. **Style properties** — no color, font, border, shadow, opacity, or any other
-   visual property. These belong in `.mosstyle`.
+   visual property. These belong in `.msl`.
 2. **Arbitrary logic** — no `if` statements, no loops, no expressions beyond
    slot references. Conditional structure is handled by platform-specific layout
    variants.
@@ -30,13 +30,13 @@ the mosmodel interface or the mosstyle file.
 ## Position in the Stack
 
 ```
-mosmodel (.mosmodel)          ← UI13-mosmodel.md
+mosmodel (.mil)          ← UI13-mosmodel.md
      │  exports: slot names, emit names
      ▼
-moslayout (.moslayout)        ← THIS SPEC
+moslayout (.mll)        ← THIS SPEC
      │  exports: part names
      ▼
-mosstyle (.mosstyle)          ← UI15-mosstyle.md
+mosstyle (.msl)          ← UI15-mosstyle.md
      │  references: part names, token names
      ▼
 backend emitter
@@ -53,17 +53,17 @@ named layout nodes that `mosstyle` can style independently.
 A component may have multiple layout files, one per target platform:
 
 ```
-Button.mosmodel              ← universal interface
-Button.moslayout             ← default layout (used if no better match)
-Button.desktop.moslayout     ← desktop override
-Button.mobile.moslayout      ← mobile override
-Button.watch.moslayout       ← watch override
+Button.mil              ← universal interface
+Button.mll             ← default layout (used if no better match)
+Button.desktop.mll     ← desktop override
+Button.mobile.mll      ← mobile override
+Button.watch.mll       ← watch override
 ```
 
 The compiler selects the most specific layout file for the target backend. If
-`Button.mobile.moslayout` exists and the target is iOS, it is used. If not, it
-falls back to `Button.moslayout`. All variants are validated against the same
-`Button.mosmodel` interface — they all reference the same slot and emit names.
+`Button.mobile.mll` exists and the target is iOS, it is used. If not, it
+falls back to `Button.mll`. All variants are validated against the same
+`Button.mil` interface — they all reference the same slot and emit names.
 
 Platform tokens used in file names:
 
@@ -136,7 +136,7 @@ Text [ part-name ] ( slot: <slot-name> )
 ```
 
 The slot must be of type `text`. The visual properties of the text (font,
-color, size, weight) are declared in `.mosstyle`, not here.
+color, size, weight) are declared in `.msl`, not here.
 
 ### Image
 
@@ -268,7 +268,7 @@ layout Button {
 
 Exports parts: `root`, `icon`, `label`.
 
-### Button — mobile variant (`Button.mobile.moslayout`)
+### Button — mobile variant (`Button.mobile.mll`)
 
 Same interface, different structure. The mobile variant stacks vertically and
 uses a larger touch target.
@@ -482,7 +482,7 @@ component_binding = KW_SLOT KEBAB_IDENT COLON KW_SLOT COLON KEBAB_IDENT
 
 ### Inputs
 
-1. A `.moslayout` file (or platform-specific variant).
+1. A `.mll` file (or platform-specific variant).
 2. The interface descriptor JSON exported by the `mosmodel` compiler for the
    same component.
 

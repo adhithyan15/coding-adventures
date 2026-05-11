@@ -1,12 +1,12 @@
 # mosmodel-compiler
 
-Compiles `.mosmodel` component interface files to an interface descriptor JSON
+Compiles `.mil` component interface files to an interface descriptor JSON
 and target-language bindings.
 
 ## What is mosmodel?
 
 `mosmodel` is the component interface language for the Mosaic UI stack.
-A `.mosmodel` file answers exactly one question:
+A `.mil` file answers exactly one question:
 
 > *What does the outside world need to know to use this component?*
 
@@ -46,13 +46,13 @@ component Grid {
 ## Where it fits
 
 ```
-mosmodel (.mosmodel)           ← this crate compiles these
+mosmodel (.mil)           ← this crate compiles these
      │  declares interface
      ▼
-moslayout (.moslayout)         ← moslayout-compiler
+moslayout (.mll)         ← moslayout-compiler
      │  references slot/emit names, arranges primitives
      ▼
-mosstyle (.mosstyle)           ← mosstyle-compiler
+mosstyle (.msl)           ← mosstyle-compiler
      │  references part names, declares visual appearance
      ▼
 backend emitter
@@ -64,7 +64,7 @@ Rust struct / Swift class / JSX component / Qt QObject / …
 ## Compile pipeline
 
 ```
-.mosmodel source
+.mil source
       │  tokenize()
       ▼
 Vec<Token>        (mosmodel.tokens grammar via GrammarLexer)
@@ -151,12 +151,12 @@ kinds from the spec §6: `DuplicateName`, `NameConflict`, `UnknownType`,
 ## Design principles
 
 1. **The interface is the only public API.** Layout and style are implementation
-   details; `.mosmodel` is the only stable, public contract.
+   details; `.mil` is the only stable, public contract.
 2. **One direction per construct.** Slots carry data inward. Emits carry signals
    outward. No two-way binding.
 3. **The compiler is the enforcer.** Grammar rules make invalid constructs
    impossible to express.
-4. **Backend-agnostic by construction.** The same `.mosmodel` file drives Rust,
+4. **Backend-agnostic by construction.** The same `.mil` file drives Rust,
    Swift, React, Qt, and Web Component code generation.
 
 ## Relationship to other specs
