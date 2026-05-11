@@ -52,12 +52,20 @@ export const MacsymaDialect: Dialect = {
     TrigReduce: "trigreduce",
     Select: "sublist",
     MakeList: "makelist",
+    Inverse: "invert",
     Re: "realpart",
     Im: "imagpart",
     Arg: "carg",
+    RectForm: "rectform",
+    PolarForm: "polarform",
     IsPrime: "primep",
+    NextPrime: "next_prime",
+    PrevPrime: "prev_prime",
     FactorInteger: "ifactor",
+    Divisors: "divisors",
+    Totient: "totient",
     MoebiusMu: "moebius",
+    JacobiSymbol: "jacobi",
     ChineseRemainder: "chinese",
     IntegerLength: "numdigits",
   },
@@ -180,11 +188,22 @@ function sugarApply(node: Extract<IRNode, { kind: "apply" }>): IRNode {
   const name = headName(node.head);
   if (name === ADD.name && node.args.length === 2) {
     const [a, b] = node.args;
-    if (b.kind === "apply" && headName(b.head) === NEG.name && b.args.length === 1) {
-      return { kind: "apply", head: SUB, args: Object.freeze([a, b.args[0]]) };
+    const sugaredB = b.kind === "apply" ? sugarApply(b) : b;
+    if (sugaredB.kind === "apply" && headName(sugaredB.head) === NEG.name && sugaredB.args.length === 1) {
+      return { kind: "apply", head: SUB, args: Object.freeze([a, sugaredB.args[0]]) };
     }
     if (a.kind === "integer" && a.value < 0n) {
       return { kind: "apply", head: SUB, args: Object.freeze([b, { kind: "integer", value: -a.value }]) };
+    }
+  }
+  if (name === MUL.name && node.args.length >= 2) {
+    const [a, b] = node.args;
+    if (a.kind === "integer" && a.value === -1n) {
+      const rest = node.args.slice(1);
+      const inner = rest.length === 1
+        ? rest[0]
+        : { kind: "apply" as const, head: MUL, args: Object.freeze(rest) };
+      return { kind: "apply", head: NEG, args: Object.freeze([inner]) };
     }
   }
   if (name === MUL.name && node.args.length === 2) {
@@ -192,8 +211,12 @@ function sugarApply(node: Extract<IRNode, { kind: "apply" }>): IRNode {
     if (b.kind === "apply" && headName(b.head) === INV.name && b.args.length === 1) {
       return { kind: "apply", head: DIV, args: Object.freeze([a, b.args[0]]) };
     }
-    if (a.kind === "integer" && a.value === -1n) {
-      return { kind: "apply", head: NEG, args: Object.freeze([b]) };
+    if (b.kind === "apply" && headName(b.head) === NEG.name && b.args.length === 1) {
+      return {
+        kind: "apply",
+        head: NEG,
+        args: Object.freeze([{ kind: "apply", head: MUL, args: Object.freeze([a, b.args[0]]) }]),
+      };
     }
   }
   return node;
