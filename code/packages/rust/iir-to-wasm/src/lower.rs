@@ -1,0 +1,1433 @@
+//! Two-pass IIR → WASM lowering.
+//!
+//! # Overview
+//!
+//! This module implements the main lowering pass: it takes an `IIRModule` and
+//! produces a `WasmModule`.  The algorithm runs in two passes per function:
+//!
+//! **Pass 1 — Register allocation**
+//! Scan the function's parameters and instructions and assign a unique WASM
+//! local-variable index to each IIR variable.  Parameters are indices 0..N-1;
+//! additional IIR variables are indices N..total-1.  A single extra local is
+//! appended at index `total` to serve as the **dispatch variable** (used by the
+//! dispatch-loop control-flow pattern).
+//!
+//! **Pass 2 — Code generation**
+//! Translate each `IIRInstr` to WASM bytecode, using the register map from
+//! Pass 1.  The output is a `FunctionBody` whose `locals` list declares the
+//! extra (non-parameter) local variables and whose `code` field contains the
+//! raw WASM instruction bytes.
+//!
+//! # Control flow: dispatch-loop
+//!
+//! WASM uses *structured* control flow — no raw labels or unconditional jumps.
+//! To represent IIR's label/jmp/jmp_if patterns, we use the **dispatch-loop**
+//! pattern:
+//!
+//! ```text
+//! (block $exit       ;; break here = leave function body (no return value needed)
+//!   (loop $dispatch  ;; break with depth 0 = re-enter loop top
+//!
+//!     ;; N nested blocks — one per basic block — innermost = block 0
+//!     (block $bb_N-1 ... (block $bb_0
+//!       local.get $dispatch
+//!       br_table 0 1 … N-1   ;; dispatch[i] → break out of i levels
+//!       ;; default (depth N) → break out of all blocks, exit loop, exit function
+//!     ) … )
+//!
+//!     ;; Basic block 0 body (after all nested block ends are emitted)
+//!     …
+//!     ;; At end: set dispatch to next block index, br to $dispatch (depth 0)
+//!
+//!     ;; Basic block 1 body
+//!     …
+//!
+//!     ;; Basic block N-1 body
+//!     …
+//!   )
+//! )
+//! ```
+//!
+//! The key insight is that `br_table 0 1 … N-1` exits blocks at depths
+//! 0, 1, …, N-1.  Exiting depth 0 (innermost) puts execution just after
+//! `block $bb_0`'s `end`, which is where we put bb_0's body.  Exiting depth 1
+//! skips bb_0's body and puts execution after `block $bb_1`'s `end`, etc.
+//!
+//! For functions **without** any label/jmp instructions (the common case for
+//! purely arithmetic programs), we skip the dispatch-loop entirely and emit
+//! instructions linearly.
+//!
+//! # Type mapping
+//!
+//! ```text
+//! IIR type hint              →  WASM ValueType
+//! ─────────────────────────────────────────────
+//! i8, i16, i32, u8, u16, u32, bool  →  I32
+//! i64, u64                           →  I64
+//! f32                                →  F32
+//! f64                                →  F64
+//! void                               →  (no return type)
+//! ```
+
+use std::collections::HashMap;
+
+use interpreter_ir::{IIRFunction, IIRModule, Operand};
+use wasm_types::{ExternalKind, Export, FuncType, FunctionBody, ValueType, WasmModule};
+
+use crate::codegen::{
+    encode_br, encode_br_table, encode_call, encode_f32_const, encode_f64_const,
+    encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
+    DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
+    F32_NE, F32_SUB, F64_ADD, F64_DIV, F64_EQ, F64_GE, F64_GT, F64_LE, F64_LT, F64_MUL,
+    F64_NEG, F64_NE, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
+    I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
+    I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
+    I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GT_S, I64_LE_S, I64_LT_S, I64_MUL,
+    I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SUB, I64_XOR,
+    LOOP, RETURN,
+};
+use crate::validate::validate_for_wasm;
+
+// ---------------------------------------------------------------------------
+// Error type
+// ---------------------------------------------------------------------------
+
+/// Errors produced during IIR → WASM lowering.
+///
+/// Variants are designed to be specific enough to help the front-end author
+/// understand what went wrong without needing to read the lowering source.
+#[derive(Debug, Clone, PartialEq)]
+pub enum IIRWasmError {
+    /// The module failed pre-flight validation.
+    /// The inner vector contains the human-readable error strings from
+    /// [`validate_for_wasm`].
+    ValidationFailed(Vec<String>),
+
+    /// An instruction uses an opcode that the WASM backend does not know
+    /// how to lower.
+    UnsupportedOp {
+        /// Name of the function that contains the unsupported instruction.
+        function: String,
+        /// The unrecognised opcode string.
+        op: String,
+    },
+
+    /// An instruction's `type_hint` cannot be mapped to a WASM `ValueType`.
+    UnsupportedType {
+        function: String,
+        type_hint: String,
+    },
+
+    /// A branch or jump targets a label that was not defined in the function.
+    UndefinedLabel {
+        function: String,
+        label: String,
+    },
+
+    /// A source operand refers to a variable that was never assigned a
+    /// register index (not a parameter and never defined by any instruction).
+    UndefinedVariable {
+        function: String,
+        name: String,
+    },
+
+    /// An instruction's operand list is structurally invalid (wrong count,
+    /// wrong kind, etc.).
+    InvalidOperand {
+        function: String,
+        detail: String,
+    },
+}
+
+impl std::fmt::Display for IIRWasmError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IIRWasmError::ValidationFailed(errs) => {
+                write!(f, "ValidationFailed: {}", errs.join("; "))
+            }
+            IIRWasmError::UnsupportedOp { function, op } => {
+                write!(f, "UnsupportedOp in {function:?}: op {op:?}")
+            }
+            IIRWasmError::UnsupportedType {
+                function,
+                type_hint,
+            } => {
+                write!(
+                    f,
+                    "UnsupportedType in {function:?}: type_hint {type_hint:?}"
+                )
+            }
+            IIRWasmError::UndefinedLabel { function, label } => {
+                write!(f, "UndefinedLabel in {function:?}: label {label:?}")
+            }
+            IIRWasmError::UndefinedVariable { function, name } => {
+                write!(f, "UndefinedVariable in {function:?}: var {name:?}")
+            }
+            IIRWasmError::InvalidOperand { function, detail } => {
+                write!(f, "InvalidOperand in {function:?}: {detail}")
+            }
+        }
+    }
+}
+
+impl std::error::Error for IIRWasmError {}
+
+// ---------------------------------------------------------------------------
+// Configuration
+// ---------------------------------------------------------------------------
+
+/// Configuration for the IIR → WASM lowering pass.
+///
+/// Currently only carries the module name (written into a WASM custom section
+/// or used for debugging).  Additional options (e.g. optimisation level,
+/// memory model) can be added here in future versions.
+#[derive(Debug, Clone)]
+pub struct IIRWasmConfig {
+    /// The name embedded in the WASM module (used for identification).
+    pub module_name: String,
+}
+
+impl Default for IIRWasmConfig {
+    fn default() -> Self {
+        Self {
+            module_name: "iir_module".to_string(),
+        }
+    }
+}
+
+impl IIRWasmConfig {
+    /// Create a new config with the given module name.
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            module_name: name.into(),
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Type helpers
+// ---------------------------------------------------------------------------
+
+/// Map an IIR `type_hint` string to a WASM `ValueType`.
+///
+/// Returns `None` for hints that have no numeric WASM equivalent (`"void"`,
+/// `"str"`, `"ref<…>"`, `"any"`, etc.).  The caller decides whether `None`
+/// is an error (for typed destinations) or acceptable (for void returns).
+///
+/// ```text
+/// IIR hint            → WASM ValueType
+/// ────────────────────────────────────
+/// i8 / i16 / i32      → I32
+/// u8 / u16 / u32      → I32
+/// bool                → I32   (0 = false, non-zero = true)
+/// i64 / u64           → I64
+/// f32                 → F32
+/// f64                 → F64
+/// (everything else)   → None
+/// ```
+pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
+    match hint {
+        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => Some(ValueType::I32),
+        "i64" | "u64" => Some(ValueType::I64),
+        "f32" => Some(ValueType::F32),
+        "f64" => Some(ValueType::F64),
+        _ => None,
+    }
+}
+
+/// Return `true` if the type hint represents a 64-bit integer type.
+///
+/// Used during arithmetic to select `i64.*` vs `i32.*` opcodes.
+fn is_i64_hint(hint: &str) -> bool {
+    matches!(hint, "i64" | "u64")
+}
+
+/// Return `true` if the type hint represents an unsigned integer type.
+///
+/// Used to select `_u` (unsigned) vs `_s` (signed) comparison and division
+/// opcodes for `i32` types.  For `i64` we always use signed in v1 (matching
+/// the IIR spec's signed-default model).
+fn is_unsigned_hint(hint: &str) -> bool {
+    matches!(hint, "u8" | "u16" | "u32" | "u64")
+}
+
+/// Return `true` if the type hint represents a floating-point type.
+fn is_float_hint(hint: &str) -> bool {
+    matches!(hint, "f32" | "f64")
+}
+
+// ---------------------------------------------------------------------------
+// Register allocation (Pass 1)
+// ---------------------------------------------------------------------------
+
+/// Build a map from IIR variable name → WASM local index for one function.
+///
+/// **Algorithm:**
+///
+/// 1. Assign indices 0..param_count-1 to the function parameters, in order.
+///    These are already "free" locals in WASM — they receive the call arguments.
+///
+/// 2. Walk all instructions in order.  For each instruction:
+///    - If it has a `dest` variable not yet in the map, assign the next index.
+///    - For each source operand that is a `Var`, if not yet in the map,
+///      assign the next index (handles uses of variables that are defined
+///      earlier in the program — they will already be in the map — but also
+///      catches any forward references that a front-end might produce).
+///
+/// 3. The resulting map covers every variable that appears anywhere in the
+///    function.  Indices are compact: 0, 1, 2, …, N-1.
+///
+/// The returned count includes parameters.  Locals for `FunctionBody.locals`
+/// are indices `param_count..total_vars-1`.  An extra dispatch local is added
+/// on top at index `total_vars`.
+fn build_register_map(fn_: &IIRFunction) -> HashMap<String, u32> {
+    let mut map: HashMap<String, u32> = HashMap::new();
+    let mut next_idx: u32 = 0;
+
+    // Parameters come first (they receive the call arguments in WASM).
+    for (param_name, _) in &fn_.params {
+        map.entry(param_name.clone()).or_insert_with(|| {
+            let idx = next_idx;
+            next_idx += 1;
+            idx
+        });
+    }
+
+    // Walk instructions in program order.
+    for instr in &fn_.instructions {
+        // Destination variable.
+        if let Some(dest) = &instr.dest {
+            map.entry(dest.clone()).or_insert_with(|| {
+                let idx = next_idx;
+                next_idx += 1;
+                idx
+            });
+        }
+
+        // Source variables.
+        for src in &instr.srcs {
+            if let Operand::Var(name) = src {
+                map.entry(name.clone()).or_insert_with(|| {
+                    let idx = next_idx;
+                    next_idx += 1;
+                    idx
+                });
+            }
+        }
+    }
+
+    map
+}
+
+/// Infer the WASM ValueType for each local variable beyond the parameters.
+///
+/// We scan instructions for type hints associated with each variable index and
+/// return a `Vec<ValueType>` parallel to indices `param_count..total_vars`.
+/// If a variable has no type information, we default to `I32` (the most
+/// common type and the natural choice for boolean/integer values).
+fn infer_local_types(
+    fn_: &IIRFunction,
+    reg_map: &HashMap<String, u32>,
+    param_count: u32,
+    total_vars: u32,
+) -> Vec<ValueType> {
+    // Build a map: var_index → best known type hint.
+    let mut var_type: HashMap<u32, String> = HashMap::new();
+
+    // Seed from parameter types.
+    for (i, (param_name, param_type)) in fn_.params.iter().enumerate() {
+        if let Some(&idx) = reg_map.get(param_name) {
+            var_type.insert(idx, param_type.clone());
+        }
+        let _ = i; // suppress unused warning
+    }
+
+    // Walk instructions: use the dest type_hint as the type for the dest var.
+    for instr in &fn_.instructions {
+        if let Some(dest) = &instr.dest {
+            if let Some(&idx) = reg_map.get(dest) {
+                // Only update if we don't already have a type (first definition wins).
+                var_type.entry(idx).or_insert_with(|| instr.type_hint.clone());
+            }
+        }
+    }
+
+    // Build the locals list: one ValueType per index from param_count to total_vars-1.
+    (param_count..total_vars)
+        .map(|idx| {
+            let hint = var_type.get(&idx).map(|s| s.as_str()).unwrap_or("i32");
+            hint_to_value_type(hint).unwrap_or(ValueType::I32)
+        })
+        .collect()
+}
+
+// ---------------------------------------------------------------------------
+// Basic block splitting
+// ---------------------------------------------------------------------------
+
+/// A basic block: a slice of IIR instructions that starts at a label (or at
+/// the implicit function entry) and runs until the next label or end of
+/// function.
+///
+/// We own the instructions by cloning them from the function so the codegen
+/// pass can work with owned data.
+struct BasicBlock {
+    /// Instructions in this block (does not include the `label` instruction
+    /// that names this block).
+    instrs: Vec<interpreter_ir::IIRInstr>,
+}
+
+/// Split a function's instruction list into basic blocks.
+///
+/// The first block (index 0) is the implicit entry block; it contains all
+/// instructions before the first `label` instruction.  Each subsequent label
+/// starts a new block.
+///
+/// Returns:
+/// - `blocks`: a `Vec<BasicBlock>` in order.
+/// - `label_to_block`: a map from label name to block index (0-based).
+fn split_into_blocks(
+    fn_: &IIRFunction,
+) -> (Vec<BasicBlock>, HashMap<String, u32>) {
+    // We always have at least one block: the implicit entry block.
+    let mut blocks: Vec<BasicBlock> = vec![BasicBlock { instrs: Vec::new() }];
+    let mut label_to_block: HashMap<String, u32> = HashMap::new();
+
+    for instr in &fn_.instructions {
+        if instr.op == "label" {
+            // Start a new basic block.  The label name identifies it.
+            let block_idx = blocks.len() as u32;
+            if let Some(Operand::Var(label_name)) = instr.srcs.first() {
+                label_to_block.insert(label_name.clone(), block_idx);
+            }
+            blocks.push(BasicBlock { instrs: Vec::new() });
+        } else {
+            // Append to the current (last) block.
+            blocks
+                .last_mut()
+                .expect("blocks always has at least one entry")
+                .instrs
+                .push(instr.clone());
+        }
+    }
+
+    (blocks, label_to_block)
+}
+
+/// Return `true` if the function contains any `label`, `jmp`, `jmp_if_true`,
+/// or `jmp_if_false` instructions.
+///
+/// Functions without control-flow instructions can use simple linear code
+/// emission, which is faster and produces smaller binaries.
+fn has_control_flow(fn_: &IIRFunction) -> bool {
+    fn_.instructions.iter().any(|i| {
+        matches!(
+            i.op.as_str(),
+            "label" | "jmp" | "jmp_if_true" | "jmp_if_false"
+        )
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Instruction code generation
+// ---------------------------------------------------------------------------
+
+/// Emit WASM bytes for a single IIR instruction.
+///
+/// This is the heart of the backend.  The function pattern-matches on `op`
+/// and emits the correct sequence of WASM opcodes + immediates into `code`.
+///
+/// For binary arithmetic: load the two source locals, emit the arithmetic
+/// opcode, store the result into the destination local:
+///
+/// ```text
+/// local.get <r1>
+/// local.get <r2>
+/// <opcode>
+/// local.set <rd>
+/// ```
+///
+/// For unary arithmetic: load the one source local, emit negation or bitwise-
+/// not, store result:
+///
+/// ```text
+/// ;; neg (i32):  0 - r  →  i32.const 0; local.get r; i32.sub; local.set rd
+/// ;; not (i32):  r ^ -1 →  local.get r; i32.const -1; i32.xor; local.set rd
+/// ```
+///
+/// For constants:
+///
+/// ```text
+/// i32.const <value> ; local.set rd
+/// i64.const <value> ; local.set rd
+/// f64.const <value> ; local.set rd
+/// ```
+///
+/// For comparisons: same as binary arithmetic — result is always `i32`
+/// (WASM boolean conventions: 0 = false, 1 = true).
+///
+/// # Parameters
+///
+/// - `code` — output buffer to append bytes into.
+/// - `instr` — the instruction to emit.
+/// - `reg_map` — variable name → local index map built in Pass 1.
+/// - `fn_map` — function name → WASM function index map.
+/// - `fn_name` — the enclosing function name (for error context).
+/// - `dispatch_reg` — local index of the dispatch variable (for control flow).
+/// - `label_to_block` — label name → block index map.
+/// - `n_blocks` — total number of basic blocks in the function.
+/// - `is_dispatch_loop` — whether we are inside a dispatch-loop structure.
+///   When `true`, `jmp`/`jmp_if_*` instructions set the dispatch variable and
+///   branch to the loop.  When `false`, they emit simplified forms.
+#[allow(clippy::too_many_arguments)]
+fn emit_instr(
+    code: &mut Vec<u8>,
+    instr: &interpreter_ir::IIRInstr,
+    reg_map: &HashMap<String, u32>,
+    fn_map: &HashMap<String, u32>,
+    fn_name: &str,
+    dispatch_reg: u32,
+    label_to_block: &HashMap<String, u32>,
+    _n_blocks: usize,
+    is_dispatch_loop: bool,
+) -> Result<(), IIRWasmError> {
+    // Helper closures to resolve variable names.
+    let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
+        reg_map.get(var).copied().ok_or_else(|| IIRWasmError::UndefinedVariable {
+            function: fn_name.to_string(),
+            name: var.to_string(),
+        })
+    };
+
+    let get_label = |label: &str| -> Result<u32, IIRWasmError> {
+        label_to_block
+            .get(label)
+            .copied()
+            .ok_or_else(|| IIRWasmError::UndefinedLabel {
+                function: fn_name.to_string(),
+                label: label.to_string(),
+            })
+    };
+
+    // The type of the current instruction's destination/operands.
+    let ty = instr.type_hint.as_str();
+
+    match instr.op.as_str() {
+        // ── const ────────────────────────────────────────────────────────────
+        //
+        // Load an immediate value (integer, float, or bool) into a local.
+        "const" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "const must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let src = instr.srcs.first().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "const must have exactly one source".to_string(),
+            })?;
+
+            match src {
+                Operand::Int(v) => {
+                    if is_i64_hint(ty) {
+                        code.extend(encode_i64_const(*v));
+                    } else {
+                        code.extend(encode_i32_const(*v as i32));
+                    }
+                }
+                Operand::Bool(b) => {
+                    // Booleans are represented as i32: true = 1, false = 0.
+                    code.extend(encode_i32_const(if *b { 1 } else { 0 }));
+                }
+                Operand::Float(v) => {
+                    // Float constants are natively supported in WASM.
+                    // Use f32 or f64 based on the type hint.
+                    if ty == "f32" {
+                        code.extend(encode_f32_const(*v as f32));
+                    } else {
+                        // Default to f64 for any other float hint.
+                        code.extend(encode_f64_const(*v));
+                    }
+                }
+                Operand::Var(name) => {
+                    // `const` from a variable name is unusual but valid —
+                    // emit a local.get (copy).
+                    let src_reg = get_reg(name)?;
+                    code.extend(encode_local_get(src_reg));
+                }
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── Binary arithmetic ────────────────────────────────────────────────
+        //
+        // Pattern: local.get r1; local.get r2; <opcode>; local.set rd
+        "add" | "sub" | "mul" | "div" | "rem" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            let r1 = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            let r2 = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+
+            code.extend(encode_local_get(r1));
+            code.extend(encode_local_get(r2));
+
+            let opcode: u8 = match (instr.op.as_str(), ty) {
+                ("add", t) if is_i64_hint(t) => I64_ADD,
+                ("add", t) if is_float_hint(t) && t == "f32" => F32_ADD,
+                ("add", t) if is_float_hint(t) => F64_ADD,
+                ("add", _) => I32_ADD,
+                ("sub", t) if is_i64_hint(t) => I64_SUB,
+                ("sub", t) if is_float_hint(t) && t == "f32" => F32_SUB,
+                ("sub", t) if is_float_hint(t) => F64_SUB,
+                ("sub", _) => I32_SUB,
+                ("mul", t) if is_i64_hint(t) => I64_MUL,
+                ("mul", t) if is_float_hint(t) && t == "f32" => F32_MUL,
+                ("mul", t) if is_float_hint(t) => F64_MUL,
+                ("mul", _) => I32_MUL,
+                ("div", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_DIV_U,
+                ("div", t) if is_i64_hint(t) => I64_DIV_S,
+                ("div", t) if is_float_hint(t) && t == "f32" => F32_DIV,
+                ("div", t) if is_float_hint(t) => F64_DIV,
+                ("div", t) if is_unsigned_hint(t) => I32_DIV_U,
+                ("div", _) => I32_DIV_S,
+                ("rem", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_REM_U,
+                ("rem", t) if is_i64_hint(t) => I64_REM_S,
+                ("rem", t) if is_unsigned_hint(t) => I32_REM_U,
+                ("rem", _) => I32_REM_S,
+                _ => unreachable!("matched outer pattern"),
+            };
+            code.push(opcode);
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── Bitwise / shift ───────────────────────────────────────────────────
+        "and" | "or" | "xor" | "shl" | "shr" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            let r1 = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            let r2 = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+
+            code.extend(encode_local_get(r1));
+            code.extend(encode_local_get(r2));
+
+            let opcode: u8 = match (instr.op.as_str(), ty) {
+                ("and", t) if is_i64_hint(t) => I64_AND,
+                ("and", _) => I32_AND,
+                ("or", t) if is_i64_hint(t) => I64_OR,
+                ("or", _) => I32_OR,
+                ("xor", t) if is_i64_hint(t) => I64_XOR,
+                ("xor", _) => I32_XOR,
+                ("shl", t) if is_i64_hint(t) => I64_SHL,
+                ("shl", _) => I32_SHL,
+                ("shr", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_SHR_S, // i64 has no _u for hint-based default in v1
+                ("shr", t) if is_i64_hint(t) => I64_SHR_S,
+                ("shr", t) if is_unsigned_hint(t) => I32_SHR_U,
+                ("shr", _) => I32_SHR_S,
+                _ => unreachable!(),
+            };
+            code.push(opcode);
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── Comparisons ───────────────────────────────────────────────────────
+        //
+        // WASM comparisons always produce an i32 result (0 or 1).
+        // The source operands have the type described by `ty`; the result
+        // is always i32.
+        "eq" | "ne" | "lt" | "le" | "gt" | "ge" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            let r1 = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            let r2 = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+
+            code.extend(encode_local_get(r1));
+            code.extend(encode_local_get(r2));
+
+            let opcode: u8 = match (instr.op.as_str(), ty) {
+                // i64
+                ("eq", t) if is_i64_hint(t) => I64_EQ,
+                ("ne", t) if is_i64_hint(t) => I64_NE,
+                ("lt", t) if is_i64_hint(t) => I64_LT_S,
+                ("le", t) if is_i64_hint(t) => I64_LE_S,
+                ("gt", t) if is_i64_hint(t) => I64_GT_S,
+                ("ge", t) if is_i64_hint(t) => I64_GE_S,
+                // f32
+                ("eq", "f32") => F32_EQ,
+                ("ne", "f32") => F32_NE,
+                ("lt", "f32") => F32_LT,
+                ("le", "f32") => F32_LE,
+                ("gt", "f32") => F32_GT,
+                ("ge", "f32") => F32_GE,
+                // f64
+                ("eq", t) if is_float_hint(t) => F64_EQ,
+                ("ne", t) if is_float_hint(t) => F64_NE,
+                ("lt", t) if is_float_hint(t) => F64_LT,
+                ("le", t) if is_float_hint(t) => F64_LE,
+                ("gt", t) if is_float_hint(t) => F64_GT,
+                ("ge", t) if is_float_hint(t) => F64_GE,
+                // i32 (signed)
+                ("eq", _) => I32_EQ,
+                ("ne", _) => I32_NE,
+                ("lt", t) if is_unsigned_hint(t) => I32_LT_U,
+                ("lt", _) => I32_LT_S,
+                ("le", t) if is_unsigned_hint(t) => I32_LE_U,
+                ("le", _) => I32_LE_S,
+                ("gt", t) if is_unsigned_hint(t) => I32_GT_U,
+                ("gt", _) => I32_GT_S,
+                ("ge", t) if is_unsigned_hint(t) => I32_GE_U,
+                ("ge", _) => I32_GE_S,
+                _ => unreachable!(),
+            };
+            code.push(opcode);
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── Unary negation ────────────────────────────────────────────────────
+        //
+        // WASM has no single "neg" opcode for integers.  We synthesise it:
+        //   i32: `0 - r`  →  `i32.const 0; local.get r; i32.sub`
+        //   i64: `0 - r`  →  `i64.const 0; local.get r; i64.sub`
+        //   f32: direct `f32.neg`
+        //   f64: direct `f64.neg`
+        "neg" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "neg must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+
+            if ty == "f32" {
+                code.extend(encode_local_get(r));
+                code.push(F32_NEG);
+            } else if is_float_hint(ty) {
+                code.extend(encode_local_get(r));
+                code.push(F64_NEG);
+            } else if is_i64_hint(ty) {
+                code.extend(encode_i64_const(0));
+                code.extend(encode_local_get(r));
+                code.push(I64_SUB);
+            } else {
+                code.extend(encode_i32_const(0));
+                code.extend(encode_local_get(r));
+                code.push(I32_SUB);
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── Bitwise NOT ───────────────────────────────────────────────────────
+        //
+        // WASM has no single "not" opcode.  Synthesise with XOR -1:
+        //   i32: `local.get r; i32.const -1; i32.xor`
+        //   i64: `local.get r; i64.const -1; i64.xor`
+        "not" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "not must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+
+            code.extend(encode_local_get(r));
+            if is_i64_hint(ty) {
+                code.extend(encode_i64_const(-1));
+                code.push(I64_XOR);
+            } else {
+                code.extend(encode_i32_const(-1));
+                code.push(I32_XOR);
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── Logical NOT (boolean) ─────────────────────────────────────────────
+        //
+        // IIR `lnot` converts a boolean/i32 value to its logical inverse:
+        //   i32.eqz pushes 1 if the value is 0, else 0.
+        "lnot" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "lnot must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+
+            code.extend(encode_local_get(r));
+            code.push(I32_EQZ);
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── move / copy ───────────────────────────────────────────────────────
+        //
+        // `mov rd, rs` — copy a variable.  Emit: local.get rs; local.set rd
+        "mov" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "mov must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            code.extend(encode_local_get(r));
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── call ──────────────────────────────────────────────────────────────
+        //
+        // IIR `call callee_name [arg0, arg1, …]` → WASM `call fn_idx`.
+        //
+        // Push all arguments onto the stack first (left to right), then
+        // emit `call <fn_idx>`.  If the call has a destination, the return
+        // value is on top of the stack → store it with local.set.
+        "call" => {
+            // First source is the callee name (Operand::Var).
+            let callee_name =
+                instr.srcs.first().and_then(|s| s.as_var()).ok_or_else(|| {
+                    IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call: first src must be the callee name".to_string(),
+                    }
+                })?;
+
+            let fn_idx = fn_map.get(callee_name).copied().ok_or_else(|| {
+                IIRWasmError::UndefinedVariable {
+                    function: fn_name.to_string(),
+                    name: callee_name.to_string(),
+                }
+            })?;
+
+            // Remaining sources are the arguments.
+            for src in instr.srcs.iter().skip(1) {
+                match src {
+                    Operand::Var(name) => {
+                        let r = get_reg(name)?;
+                        code.extend(encode_local_get(r));
+                    }
+                    Operand::Int(v) => {
+                        code.extend(encode_i32_const(*v as i32));
+                    }
+                    Operand::Float(v) => {
+                        code.extend(encode_f64_const(*v));
+                    }
+                    Operand::Bool(b) => {
+                        code.extend(encode_i32_const(if *b { 1 } else { 0 }));
+                    }
+                }
+            }
+
+            code.extend(encode_call(fn_idx));
+
+            // If there is a destination, the return value is now on the stack.
+            if let Some(dest) = &instr.dest {
+                let rd = get_reg(dest)?;
+                code.extend(encode_local_set(rd));
+            } else if instr.type_hint != "void" {
+                // Callee returned a value but we don't use it — drop it.
+                code.push(DROP);
+            }
+        }
+
+        // ── ret ───────────────────────────────────────────────────────────────
+        //
+        // `ret <src>` — load the return value and emit `return`.
+        "ret" => {
+            if let Some(src) = instr.srcs.first() {
+                match src {
+                    Operand::Var(name) => {
+                        let r = get_reg(name)?;
+                        code.extend(encode_local_get(r));
+                    }
+                    Operand::Int(v) => {
+                        if is_i64_hint(ty) {
+                            code.extend(encode_i64_const(*v));
+                        } else {
+                            code.extend(encode_i32_const(*v as i32));
+                        }
+                    }
+                    Operand::Float(v) => {
+                        if ty == "f32" {
+                            code.extend(encode_f32_const(*v as f32));
+                        } else {
+                            code.extend(encode_f64_const(*v));
+                        }
+                    }
+                    Operand::Bool(b) => {
+                        code.extend(encode_i32_const(if *b { 1 } else { 0 }));
+                    }
+                }
+            }
+            code.push(RETURN);
+        }
+
+        // ── ret_void ──────────────────────────────────────────────────────────
+        //
+        // `ret_void` — return with no value.
+        "ret_void" => {
+            code.push(RETURN);
+        }
+
+        // ── label ─────────────────────────────────────────────────────────────
+        //
+        // `label name` — marks the start of a basic block.
+        //
+        // In the dispatch-loop scheme, labels are split out by the basic-block
+        // splitter before codegen, so individual `label` instructions inside
+        // emit_instr are NOP equivalents.  We emit a `nop` to preserve
+        // instruction count for debuggers.
+        "label" => {
+            // NOP — handled structurally by the dispatch-loop builder.
+        }
+
+        // ── jmp ───────────────────────────────────────────────────────────────
+        //
+        // `jmp <label>` — unconditional branch.
+        //
+        // Dispatch-loop: set the dispatch variable to the target block index,
+        // then break back to the loop (depth 0 from inside the loop body).
+        //
+        // Non-dispatch: emit `return` (simplified — loop-free functions with
+        // jmp are unusual; this keeps v1 simple).
+        "jmp" => {
+            let label = instr
+                .srcs
+                .first()
+                .and_then(|s| s.as_var())
+                .ok_or_else(|| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "jmp requires a label name as first src".to_string(),
+                })?;
+
+            if is_dispatch_loop {
+                let block_idx = get_label(label)?;
+                code.extend(encode_i32_const(block_idx as i32));
+                code.extend(encode_local_set(dispatch_reg));
+                // Depth 0 inside the loop = branch back to the loop's start.
+                // The loop is at nesting depth 0 from inside the basic block
+                // area (just `loop` + `block` around us).
+                code.extend(encode_br(0));
+            } else {
+                // Simplified: emit RETURN (matches "exit" semantics for
+                // straight-line code that happens to have a terminal jmp).
+                code.push(RETURN);
+            }
+        }
+
+        // ── jmp_if_true ───────────────────────────────────────────────────────
+        //
+        // `jmp_if_true <cond_var>, <label>` — branch if the condition is truthy.
+        //
+        // Dispatch-loop: if cond != 0, set dispatch = target and loop.
+        "jmp_if_true" => {
+            let cond = instr
+                .srcs
+                .first()
+                .and_then(|s| s.as_var())
+                .ok_or_else(|| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "jmp_if_true: first src must be condition variable".to_string(),
+                })?;
+            let label = instr
+                .srcs
+                .get(1)
+                .and_then(|s| s.as_var())
+                .ok_or_else(|| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "jmp_if_true: second src must be label name".to_string(),
+                })?;
+
+            let cond_reg = get_reg(cond)?;
+
+            if is_dispatch_loop {
+                let block_idx = get_label(label)?;
+                // Emit: if cond != 0 { dispatch = block_idx; br $loop }
+                // We use the `if` block for correctness:
+                //   local.get cond
+                //   if (then
+                //     i32.const block_idx; local.set dispatch; br $loop
+                //   end)
+                code.extend(encode_local_get(cond_reg));
+                // if (empty block type, no result)
+                code.push(crate::codegen::IF);
+                code.push(BLOCK_EMPTY);
+                code.extend(encode_i32_const(block_idx as i32));
+                code.extend(encode_local_set(dispatch_reg));
+                code.extend(encode_br(1)); // depth 1: exit the `if` block AND continue loop
+                code.push(END); // end of if
+            } else {
+                // Simplified: just consume the condition (drop it).
+                code.extend(encode_local_get(cond_reg));
+                code.push(DROP);
+            }
+        }
+
+        // ── jmp_if_false ──────────────────────────────────────────────────────
+        //
+        // `jmp_if_false <cond_var>, <label>` — branch if the condition is falsy.
+        //
+        // Like jmp_if_true but with the condition inverted via i32.eqz.
+        "jmp_if_false" => {
+            let cond = instr
+                .srcs
+                .first()
+                .and_then(|s| s.as_var())
+                .ok_or_else(|| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "jmp_if_false: first src must be condition variable".to_string(),
+                })?;
+            let label = instr
+                .srcs
+                .get(1)
+                .and_then(|s| s.as_var())
+                .ok_or_else(|| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "jmp_if_false: second src must be label name".to_string(),
+                })?;
+
+            let cond_reg = get_reg(cond)?;
+
+            if is_dispatch_loop {
+                let block_idx = get_label(label)?;
+                // Emit: if cond == 0 { dispatch = block_idx; br $loop }
+                code.extend(encode_local_get(cond_reg));
+                code.push(I32_EQZ);
+                code.push(crate::codegen::IF);
+                code.push(BLOCK_EMPTY);
+                code.extend(encode_i32_const(block_idx as i32));
+                code.extend(encode_local_set(dispatch_reg));
+                code.extend(encode_br(1));
+                code.push(END);
+            } else {
+                code.extend(encode_local_get(cond_reg));
+                code.push(DROP);
+            }
+        }
+
+        // ── nop / phi / other metadata ops ───────────────────────────────────
+        "nop" | "phi" => {
+            // nop: emit WASM nop.
+            // phi: SSA phi nodes are resolved during register allocation
+            //      (all phi inputs map to the same local) — nothing to emit.
+        }
+
+        // ── Unknown op ────────────────────────────────────────────────────────
+        _ => {
+            return Err(IIRWasmError::UnsupportedOp {
+                function: fn_name.to_string(),
+                op: instr.op.clone(),
+            });
+        }
+    }
+
+    Ok(())
+}
+
+/// Resolve the register index for source operand at position `idx`.
+///
+/// Returns an error if the operand is not a `Var` or the variable is not in
+/// the register map.  Immediate operands (Int/Float/Bool) cannot serve as
+/// direct source operands for binary instructions — the front-end is expected
+/// to have lowered them through a `const` instruction first.
+fn get_src_reg(
+    srcs: &[Operand],
+    idx: usize,
+    reg_map: &HashMap<String, u32>,
+    fn_name: &str,
+) -> Result<u32, IIRWasmError> {
+    match srcs.get(idx) {
+        Some(Operand::Var(name)) => {
+            reg_map.get(name).copied().ok_or_else(|| IIRWasmError::UndefinedVariable {
+                function: fn_name.to_string(),
+                name: name.clone(),
+            })
+        }
+        Some(other) => Err(IIRWasmError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!("expected Var at src[{idx}], got {:?}", other),
+        }),
+        None => Err(IIRWasmError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!("missing src operand at index {idx}"),
+        }),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Function body lowering
+// ---------------------------------------------------------------------------
+
+/// Lower one `IIRFunction` to a `FunctionBody`.
+///
+/// This is where the two-pass strategy described at the module level is
+/// implemented:
+///
+/// 1. Build the register map (Pass 1).
+/// 2. Determine local types.
+/// 3. If the function has control flow (labels/jmps): use the dispatch-loop
+///    pattern.  Otherwise: emit instructions linearly.
+/// 4. Terminate with the WASM function `end` opcode.
+fn lower_function(
+    fn_: &IIRFunction,
+    fn_map: &HashMap<String, u32>,
+) -> Result<FunctionBody, IIRWasmError> {
+    let param_count = fn_.params.len() as u32;
+    let reg_map = build_register_map(fn_);
+    let total_vars = reg_map.len() as u32;
+    // The dispatch variable sits at the next available local index.
+    let dispatch_reg = total_vars;
+
+    // Infer types for non-parameter locals.
+    let mut local_types = infer_local_types(fn_, &reg_map, param_count, total_vars);
+    // Append the dispatch variable (always I32 — it holds a block index).
+    local_types.push(ValueType::I32);
+
+    let use_dispatch = has_control_flow(fn_);
+    let (blocks, label_to_block) = split_into_blocks(fn_);
+    let n_blocks = blocks.len();
+
+    let mut code: Vec<u8> = Vec::new();
+
+    if use_dispatch {
+        // ── Dispatch-loop pattern ────────────────────────────────────────────
+        //
+        // Initialise dispatch to 0 (start at entry block).
+        code.extend(encode_i32_const(0));
+        code.extend(encode_local_set(dispatch_reg));
+
+        // Outer block (exit): breaking out of this block terminates the loop.
+        code.push(BLOCK);
+        code.push(BLOCK_EMPTY);
+
+        // Loop: breaking to depth 0 (the loop itself) re-enters at the top.
+        code.push(LOOP);
+        code.push(BLOCK_EMPTY);
+
+        // N nested blocks — one per basic block — innermost first (bb_0).
+        // They are emitted in "innermost first" order so that br_table depth 0
+        // exits the innermost block, placing execution in bb_0's body.
+        for _ in 0..n_blocks {
+            code.push(BLOCK);
+            code.push(BLOCK_EMPTY);
+        }
+
+        // Dispatch: pop block index, jump to the corresponding block.
+        //
+        // `br_table [0, 1, …, N-1] default=N`
+        //   depth 0 → exits bb_0's block → execution falls into bb_0 body
+        //   depth 1 → exits bb_1's block → execution falls into bb_1 body
+        //   …
+        //   depth N → exits the outer loop block (impossible in normal use)
+        code.extend(encode_local_get(dispatch_reg));
+        let targets: Vec<u32> = (0..n_blocks as u32).collect();
+        code.extend(encode_br_table(&targets, n_blocks as u32));
+
+        // Emit the END of each nested block followed by that block's body.
+        //
+        // After the br_table, WASM execution is "between" blocks — the
+        // innermost block(s) have been exited by the branch, and we are in
+        // the scope of the next outer block.  Closing each block with `end`
+        // and then emitting the block's instructions is the standard trick.
+        for (block_idx, block) in blocks.iter().enumerate() {
+            // Close the nested block for `block_idx`.
+            code.push(END);
+
+            // Emit the body instructions of this basic block.
+            for instr in &block.instrs {
+                emit_instr(
+                    &mut code,
+                    instr,
+                    &reg_map,
+                    fn_map,
+                    &fn_.name,
+                    dispatch_reg,
+                    &label_to_block,
+                    n_blocks,
+                    true, // inside dispatch-loop
+                )?;
+            }
+
+            // At the end of each block, if execution reaches here (i.e. it
+            // was not ended by a ret/jmp), advance to the next block and
+            // loop back.  For the last block this is unreachable in
+            // well-formed programs, but we emit it for safety.
+            let last_op = block.instrs.last().map(|i| i.op.as_str()).unwrap_or("");
+            if !matches!(last_op, "ret" | "ret_void" | "jmp") {
+                let next_block = (block_idx + 1) as i32;
+                if block_idx + 1 < n_blocks {
+                    code.extend(encode_i32_const(next_block));
+                    code.extend(encode_local_set(dispatch_reg));
+                }
+                // `br 0` branches back to the loop (depth 0 from inside
+                // the loop body = the loop instruction itself).
+                code.extend(encode_br(0));
+            }
+        }
+
+        // End the loop and the outer exit block.
+        code.push(END); // end loop
+        code.push(END); // end exit block
+    } else {
+        // ── Linear emission (no control flow) ────────────────────────────────
+        //
+        // For functions without labels or jumps, we emit instructions in order.
+        for instr in &fn_.instructions {
+            emit_instr(
+                &mut code,
+                instr,
+                &reg_map,
+                fn_map,
+                &fn_.name,
+                dispatch_reg,
+                &label_to_block,
+                n_blocks,
+                false, // no dispatch loop
+            )?;
+        }
+    }
+
+    // Every WASM function body must end with the `end` opcode.
+    code.push(END);
+
+    Ok(FunctionBody {
+        locals: local_types,
+        code,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Module lowering (main entry point)
+// ---------------------------------------------------------------------------
+
+/// Lower an `IIRModule` to a `WasmModule`.
+///
+/// # Algorithm
+///
+/// 1. **Validate** — run `validate_for_wasm`.  Return `Err(ValidationFailed)`
+///    if there are any errors.
+///
+/// 2. **Build the function index map** — iterate over all functions in order
+///    and assign consecutive WASM function indices (0, 1, 2, …).
+///
+/// 3. **Lower each function** — for each `IIRFunction`:
+///    a. Build the WASM function type (`FuncType`) from the parameter types
+///       and return type.
+///    b. Lower the function body to a `FunctionBody`.
+///    c. Record an export so the function is callable from the host.
+///
+/// 4. **Assemble the `WasmModule`** — fill in `types`, `functions`, `exports`,
+///    and `code` fields.
+///
+/// # Returns
+///
+/// `Ok(WasmModule)` on success.  The module can be passed to
+/// `wasm_module_encoder::encode_module` to produce raw `.wasm` bytes.
+pub fn lower_iir_to_wasm(
+    module: &IIRModule,
+    _config: &IIRWasmConfig,
+) -> Result<WasmModule, IIRWasmError> {
+    // ── Step 1: Validate ─────────────────────────────────────────────────────
+    let errors = validate_for_wasm(module);
+    if !errors.is_empty() {
+        return Err(IIRWasmError::ValidationFailed(errors));
+    }
+
+    // ── Step 2: Build function index map ─────────────────────────────────────
+    //
+    // WASM function indices are contiguous starting from 0.  We build this map
+    // before lowering so that `call` instructions can look up the callee's
+    // index.
+    let fn_map: HashMap<String, u32> = module
+        .functions
+        .iter()
+        .enumerate()
+        .map(|(i, f)| (f.name.clone(), i as u32))
+        .collect();
+
+    // ── Step 3: Lower each function ──────────────────────────────────────────
+
+    let mut types: Vec<FuncType> = Vec::new();
+    let mut functions: Vec<u32> = Vec::new(); // type indices
+    let mut exports: Vec<Export> = Vec::new();
+    let mut code: Vec<FunctionBody> = Vec::new();
+
+    for (fn_idx, fn_) in module.functions.iter().enumerate() {
+        // Build the WASM FuncType for this function.
+        let param_types: Vec<ValueType> = fn_
+            .params
+            .iter()
+            .filter_map(|(_, type_hint)| hint_to_value_type(type_hint))
+            .collect();
+
+        let result_types: Vec<ValueType> = if fn_.return_type == "void" {
+            vec![]
+        } else {
+            match hint_to_value_type(&fn_.return_type) {
+                Some(vt) => vec![vt],
+                None => vec![], // unknown return type → treat as void
+            }
+        };
+
+        let func_type = FuncType {
+            params: param_types,
+            results: result_types,
+        };
+
+        // Deduplicate types: check if we already have this FuncType.
+        let type_idx = if let Some(pos) = types.iter().position(|t| *t == func_type) {
+            pos as u32
+        } else {
+            let idx = types.len() as u32;
+            types.push(func_type);
+            idx
+        };
+
+        functions.push(type_idx);
+
+        // Export the function by name.
+        exports.push(Export {
+            name: fn_.name.clone(),
+            kind: ExternalKind::Function,
+            index: fn_idx as u32,
+        });
+
+        // Lower the function body.
+        let body = lower_function(fn_, &fn_map)?;
+        code.push(body);
+    }
+
+    Ok(WasmModule {
+        types,
+        functions,
+        exports,
+        code,
+        ..Default::default()
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+
+    fn single_fn(
+        name: &str,
+        params: Vec<(&str, &str)>,
+        ret: &str,
+        instrs: Vec<IIRInstr>,
+    ) -> IIRModule {
+        let fn_ = IIRFunction::new(
+            name,
+            params.into_iter().map(|(n, t)| (n.into(), t.into())).collect(),
+            ret,
+            instrs,
+        );
+        IIRModule {
+            name: "test".into(),
+            functions: vec![fn_],
+            entry_point: Some(name.into()),
+            language: "test".into(),
+        }
+    }
+
+    #[test]
+    fn lower_void_function() {
+        let m = single_fn("main", vec![], "void", vec![
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        assert_eq!(wm.functions.len(), 1);
+        assert_eq!(wm.exports.len(), 1);
+        assert_eq!(wm.code.len(), 1);
+        assert!(!wm.code[0].code.is_empty());
+    }
+
+    #[test]
+    fn lower_add_i32() {
+        let m = single_fn(
+            "add",
+            vec![("a", "i32"), ("b", "i32")],
+            "i32",
+            vec![
+                IIRInstr::new("add", Some("v0".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+            ],
+        );
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        // The code should contain I32_ADD (0x6A).
+        assert!(wm.code[0].code.contains(&0x6A));
+    }
+
+    #[test]
+    fn lower_const_i32() {
+        let m = single_fn("f", vec![], "i32", vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        // Code should contain I32_CONST (0x41).
+        assert!(wm.code[0].code.contains(&0x41));
+    }
+
+    #[test]
+    fn lower_f64_const_accepted() {
+        // Float constants are valid in the WASM backend (unlike BEAM).
+        let m = single_fn("f", vec![], "f64", vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
+        ]);
+        let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
+        assert!(result.is_ok(), "f64 const should succeed; err: {:?}", result);
+    }
+
+    #[test]
+    fn lower_validation_failure_propagates() {
+        // A module with no functions → ValidationFailed.
+        let m = IIRModule {
+            name: "empty".into(),
+            functions: vec![],
+            entry_point: None,
+            language: "test".into(),
+        };
+        let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
+        assert!(matches!(result, Err(IIRWasmError::ValidationFailed(_))));
+    }
+
+    #[test]
+    fn function_type_recorded_correctly() {
+        let m = single_fn(
+            "add",
+            vec![("a", "i32"), ("b", "i32")],
+            "i32",
+            vec![
+                IIRInstr::new("add", Some("v0".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+            ],
+        );
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        assert_eq!(wm.types[0].params, vec![ValueType::I32, ValueType::I32]);
+        assert_eq!(wm.types[0].results, vec![ValueType::I32]);
+    }
+
+    #[test]
+    fn export_has_correct_name() {
+        let m = single_fn("my_fn", vec![], "void", vec![
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        assert_eq!(wm.exports[0].name, "my_fn");
+        assert_eq!(wm.exports[0].kind, ExternalKind::Function);
+        assert_eq!(wm.exports[0].index, 0);
+    }
+}

@@ -1,0 +1,20 @@
+[package]
+name = "iir-to-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "IIR → WASM backend — lowers IIRModule to WasmModule without compiler-ir"
+
+[lib]
+name = "iir_to_wasm"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir      = { path = "../interpreter-ir" }
+wasm-types          = { path = "../wasm-types" }
+wasm-module-encoder = { path = "../wasm-module-encoder" }
+wasm-leb128         = { path = "../wasm-leb128" }
+codegen-core        = { path = "../codegen-core" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"
