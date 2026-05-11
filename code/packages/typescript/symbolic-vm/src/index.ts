@@ -19,6 +19,7 @@ import {
   GREATER,
   GREATER_EQUAL,
   IF,
+  INTEGRATE,
   INV,
   IRApply,
   IRNode,
@@ -348,9 +349,103 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   table.set(LIST.name, (_vm, expr) => expr);
   if (simplify) {
     table.set(D.name, differentiate());
+    table.set(INTEGRATE.name, integrate());
   }
 
   return table;
+}
+
+function integrate(): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 2) {
+      throw new ArityError(`Integrate expects 2 arguments, got ${expr.args.length}`);
+    }
+    const [f, x] = expr.args;
+    if (x.kind !== "symbol") {
+      return expr;
+    }
+    const result = integrateIndefinite(f, x);
+    if (result === undefined) {
+      return expr;
+    }
+    return isDeferredIntegral(result, f, x) ? result : vm.eval(result);
+  };
+}
+
+function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
+  if (!dependsOn(f, x)) {
+    return app(MUL, [f, x]);
+  }
+  if (equals(f, x)) {
+    return app(MUL, [rational(1, 2), app(POW, [x, int(2)])]);
+  }
+  if (f.kind !== "apply") {
+    return undefined;
+  }
+
+  if (equals(f.head, ADD)) {
+    const pieces = f.args.map((arg) => integrateIndefinite(arg, x));
+    if (pieces.some((piece) => piece === undefined)) return undefined;
+    return binaryChain(ADD, pieces as IRNode[]);
+  }
+  if (equals(f.head, SUB)) {
+    const [a, b] = binaryArgs(f);
+    const ia = integrateIndefinite(a, x);
+    const ib = integrateIndefinite(b, x);
+    return ia === undefined || ib === undefined ? undefined : app(SUB, [ia, ib]);
+  }
+  if (equals(f.head, NEG)) {
+    const [inner] = unaryArgs(f);
+    const integrated = integrateIndefinite(inner, x);
+    return integrated === undefined ? undefined : app(NEG, [integrated]);
+  }
+  if (equals(f.head, MUL)) {
+    const [a, b] = binaryArgs(f);
+    if (!dependsOn(a, x)) {
+      const ib = integrateIndefinite(b, x);
+      return ib === undefined ? undefined : app(MUL, [a, ib]);
+    }
+    if (!dependsOn(b, x)) {
+      const ia = integrateIndefinite(a, x);
+      return ia === undefined ? undefined : app(MUL, [b, ia]);
+    }
+    return undefined;
+  }
+  if (equals(f.head, DIV)) {
+    const [numerator, denominator] = binaryArgs(f);
+    if (!dependsOn(numerator, x) && equals(denominator, x)) {
+      return app(MUL, [numerator, app(LOG, [x])]);
+    }
+    return undefined;
+  }
+  if (equals(f.head, POW)) {
+    const [base, exponent] = binaryArgs(f);
+    if (equals(base, x) && exactRational(exponent) !== undefined) {
+      const n = exactRational(exponent)!;
+      if (n.numer === -n.denom) {
+        return app(LOG, [x]);
+      }
+      const next = makeRat(n.numer + n.denom, n.denom);
+      return app(MUL, [fromNumeric(divNumeric({ kind: "int", value: 1n }, next)), app(POW, [x, fromNumeric(next)])]);
+    }
+    if (!dependsOn(base, x) && equals(exponent, x)) {
+      return app(DIV, [f, app(LOG, [base])]);
+    }
+    return undefined;
+  }
+
+  const [inner] = f.args.length === 1 ? [f.args[0]] : [undefined];
+  if (inner !== undefined && equals(inner, x)) {
+    if (equals(f.head, SIN)) return app(NEG, [app(COS, [x])]);
+    if (equals(f.head, COS)) return app(SIN, [x]);
+    if (equals(f.head, EXP)) return app(EXP, [x]);
+    if (equals(f.head, LOG)) return app(SUB, [app(MUL, [x, app(LOG, [x])]), x]);
+    if (equals(f.head, SQRT)) {
+      return app(MUL, [rational(2, 3), app(POW, [x, rational(3, 2)])]);
+    }
+  }
+
+  return undefined;
 }
 
 function differentiate(): Handler {
@@ -482,12 +577,33 @@ function dependsOn(node: IRNode, variable: IRNode): boolean {
   return false;
 }
 
+function isDeferredIntegral(node: IRNode, f: IRNode, x: IRNode): boolean {
+  return node.kind === "apply"
+    && equals(node.head, INTEGRATE)
+    && node.args.length === 2
+    && equals(node.args[0], f)
+    && equals(node.args[1], x);
+}
+
 function isDeferredDerivative(node: IRNode, f: IRNode, x: IRNode): boolean {
   return node.kind === "apply"
     && equals(node.head, D)
     && node.args.length === 2
     && equals(node.args[0], f)
     && equals(node.args[1], x);
+}
+
+function binaryChain(head: IRNode, pieces: readonly IRNode[]): IRNode {
+  if (pieces.length === 0) {
+    throw new ArityError(`${headName(head) || "<non-symbol-head>"} requires at least one argument`);
+  }
+  return pieces.slice(1).reduce((left, right) => app(head, [left, right]), pieces[0]);
+}
+
+function exactRational(node: IRNode): { readonly numer: bigint; readonly denom: bigint } | undefined {
+  if (node.kind === "integer") return { numer: node.value, denom: 1n };
+  if (node.kind === "rational") return { numer: node.numer, denom: node.denom };
+  return undefined;
 }
 
 type Numeric =
