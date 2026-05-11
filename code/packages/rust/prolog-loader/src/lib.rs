@@ -14,7 +14,7 @@
 //! `BodyLiteral::Pos(_)`.
 
 use logic_core::Term;
-use logic_engine::{BodyLiteral, Fact, KnowledgeBase, Rule};
+use logic_engine::{search, BodyLiteral, Fact, KnowledgeBase, Rule, SearchMode, SearchResult};
 use parser::grammar_parser::GrammarParseError;
 use prolog_parser::{collect_clauses_and_queries, ProgramItem};
 
@@ -85,6 +85,128 @@ pub fn load_program_items(items: Vec<ProgramItem>) -> Result<LoadedProgram, Load
     }
 
     Ok(LoadedProgram { kb, queries })
+}
+
+// ---------------------------------------------------------------------------
+// End-to-end runner — text → KB → answers
+// ---------------------------------------------------------------------------
+
+/// One query and the engine's answer for it. Kept as a separate type
+/// so callers can pattern-match on the engine result and pretty-print
+/// it however they like — the loader stays neutral about output format.
+#[derive(Debug, Clone)]
+pub struct QueryRun {
+    /// The original goal list as it appeared in the source (e.g.,
+    /// `[parent(X, Y), parent(Y, Z)]` for `?- parent(X, Y), parent(Y, Z).`).
+    pub goals: Vec<Term>,
+    /// The single term the engine actually searched for. For a
+    /// one-goal query this equals `goals[0]`. For a conjunction it
+    /// equals the synthetic head atom (`__query_N`) of the rule
+    /// added to the KB at execute time — see
+    /// [`run_all_queries`] for the rewrite.
+    pub searched: Term,
+    /// What the engine returned.
+    pub result: SearchResult,
+}
+
+impl QueryRun {
+    /// True iff the engine found at least one proof. Works for both
+    /// `FindFirstResult(Some)` and any `EnumerateAllResult` whose DAG
+    /// has at least one derivation (`probability > 0.0`).
+    pub fn succeeded(&self) -> bool {
+        match &self.result {
+            SearchResult::FindFirstResult(opt) => opt.is_some(),
+            SearchResult::EnumerateAllResult { probability, .. } => *probability > 0.0,
+        }
+    }
+
+    /// Probability of the query under the engine's WMC, when an
+    /// `EnumerateAllResult` is available. Returns `1.0` if the engine
+    /// short-circuited via `FindFirst` and succeeded, `0.0` if it
+    /// failed. The 1/0 mapping matches LP19's "every certain-clause
+    /// proof is fully confident" rule.
+    pub fn probability(&self) -> f64 {
+        match &self.result {
+            SearchResult::FindFirstResult(opt) => {
+                if opt.is_some() {
+                    1.0
+                } else {
+                    0.0
+                }
+            }
+            SearchResult::EnumerateAllResult { probability, .. } => *probability,
+        }
+    }
+}
+
+/// Run every query in `loaded.queries` against `loaded.kb`. The
+/// `mode` argument is forwarded to `logic_engine::search`; deployments
+/// that don't care should pass `SearchMode::AutoDetect`, which uses
+/// the cheap `FindFirst` path on certain-only KBs and falls back to
+/// `EnumerateAll` + WMC when any clause is probabilistic.
+///
+/// ## How multi-goal queries become single-term searches
+///
+/// `logic_engine::search` takes one term and matches it against KB
+/// clauses — it has no built-in handling for the `,/2` conjunction
+/// operator. The runner translates each multi-goal query
+/// `?- g1, g2, ..., gn.` into a *synthetic rule* added to the KB:
+///
+/// ```text
+///     __query_N :- g1, g2, ..., gn.
+/// ```
+///
+/// then searches the atom `__query_N`. This is the canonical Prolog
+/// rewrite (the same trick a top-level uses internally) and routes
+/// conjunction handling through the engine's existing body-literal
+/// machinery. Single-goal queries skip the rewrite and search their
+/// goal directly.
+///
+/// The synthetic rules accumulate in the KB across queries; they
+/// don't interfere with each other because each has a unique
+/// `__query_N` head.
+pub fn run_all_queries(loaded: &mut LoadedProgram, mode: SearchMode) -> Vec<QueryRun> {
+    let mut runs = Vec::with_capacity(loaded.queries.len());
+    for (i, goals) in loaded.queries.clone().into_iter().enumerate() {
+        let searched = match goals.len() {
+            0 => Term::Atom("true".to_string()),
+            1 => goals[0].clone(),
+            _ => {
+                // Mint a fresh synthetic head and install the rule.
+                let head_name = format!("__query_{i}");
+                let head = Term::Atom(head_name);
+                let body: Vec<BodyLiteral> = goals.iter().cloned().map(naf_or_pos).collect();
+                loaded.kb.add_rule(Rule::certain(head.clone(), body));
+                head
+            }
+        };
+        let result = search(&searched, &loaded.kb, mode);
+        runs.push(QueryRun {
+            goals,
+            searched,
+            result,
+        });
+    }
+    runs
+}
+
+/// One-call end-to-end: parse a Prolog source string, build the KB,
+/// and run every `?-` query the file contains. Returns the KB (so
+/// callers can ask follow-up questions) and a [`QueryRun`] per query.
+///
+/// This is the canonical entry point for end-to-end tests and for any
+/// caller that wants "give me a string of Prolog and the answers in
+/// one call." Errors surface as [`LoaderError`] just like
+/// [`load_source`].
+///
+/// The returned `KnowledgeBase` includes the synthetic
+/// `__query_N` rules that the runner installed for multi-goal queries
+/// (see [`run_all_queries`]). Callers who want to ask follow-up
+/// questions can ignore those — they don't collide with user predicates.
+pub fn execute(src: &str, mode: SearchMode) -> Result<(KnowledgeBase, Vec<QueryRun>), LoaderError> {
+    let mut loaded = load_source(src)?;
+    let runs = run_all_queries(&mut loaded, mode);
+    Ok((loaded.kb, runs))
 }
 
 /// Translate a Prolog body goal into a `BodyLiteral`. Recognizes the
