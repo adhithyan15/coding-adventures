@@ -8,8 +8,8 @@ use cas_pretty_printer::{
     MapleDialect, MathematicaDialect,
 };
 use symbolic_ir::{
-    apply, flt, int, rat, str_node, sym, IRNode, ADD, AND, COS, D, DIV, EQUAL, GREATER, INV,
-    LESS, LIST, MUL, NEG, NOT_EQUAL, OR, POW, SIN, SUB,
+    apply, flt, int, rat, str_node, sym, IRNode, ADD, AND, COS, D, DIV, EQUAL, GREATER, INV, LESS,
+    LIST, MUL, NEG, NOT_EQUAL, OR, POW, SIN, SUB,
 };
 
 // Shorthand helpers used throughout.
@@ -59,6 +59,11 @@ fn macsyma_string() {
 #[test]
 fn macsyma_symbol() {
     assert_eq!(macsyma(&sym("x")), "x");
+}
+
+#[test]
+fn macsyma_imaginary_unit_symbol_alias() {
+    assert_eq!(macsyma(&sym("ImaginaryUnit")), "%i");
 }
 
 // ---------------------------------------------------------------------------
@@ -174,6 +179,37 @@ fn macsyma_neg_via_minus_one() {
     assert_eq!(macsyma(&expr), "-x");
 }
 
+#[test]
+fn macsyma_neg_via_minus_one_keeps_long_product_flat() {
+    let (x, y) = (sym("x"), sym("y"));
+    let expr = apply(sym(MUL), vec![int(-1), x, y]);
+    assert_eq!(macsyma(&expr), "-x*y");
+}
+
+#[test]
+fn macsyma_add_negative_literal_sugar() {
+    let y = sym("y");
+    let expr = apply(sym(ADD), vec![int(-5), y]);
+    assert_eq!(macsyma(&expr), "y - 5");
+}
+
+#[test]
+fn macsyma_mul_neg_arg_sugar() {
+    let (a, b) = (sym("a"), sym("b"));
+    let expr = apply(sym(MUL), vec![a, apply(sym(NEG), vec![b])]);
+    assert_eq!(macsyma(&expr), "-(a*b)");
+}
+
+#[test]
+fn macsyma_add_mul_neg_arg_sugar() {
+    let (a, b, c) = (sym("a"), sym("b"), sym("c"));
+    let expr = apply(
+        sym(ADD),
+        vec![a, apply(sym(MUL), vec![b, apply(sym(NEG), vec![c])])],
+    );
+    assert_eq!(macsyma(&expr), "a - b*c");
+}
+
 // ---------------------------------------------------------------------------
 // MACSYMA dialect — containers
 // ---------------------------------------------------------------------------
@@ -206,6 +242,40 @@ fn macsyma_diff_call() {
     let x = sym("x");
     let expr = apply(sym(D), vec![apply(sym(POW), vec![x.clone(), int(2)]), x]);
     assert_eq!(macsyma(&expr), "diff(x^2, x)");
+}
+
+#[test]
+fn macsyma_python_parity_function_aliases() {
+    let x = sym("x");
+    let aliases = [
+        ("Select", "sublist(x)"),
+        ("MakeList", "makelist(x)"),
+        ("Inverse", "invert(x)"),
+        ("RatSimplify", "ratsimp(x)"),
+        ("Apart", "partfrac(x)"),
+        ("TrigSimplify", "trigsimp(x)"),
+        ("TrigExpand", "trigexpand(x)"),
+        ("TrigReduce", "trigreduce(x)"),
+        ("Re", "realpart(x)"),
+        ("Im", "imagpart(x)"),
+        ("Arg", "carg(x)"),
+        ("RectForm", "rectform(x)"),
+        ("PolarForm", "polarform(x)"),
+        ("IsPrime", "primep(x)"),
+        ("NextPrime", "next_prime(x)"),
+        ("PrevPrime", "prev_prime(x)"),
+        ("FactorInteger", "ifactor(x)"),
+        ("Divisors", "divisors(x)"),
+        ("Totient", "totient(x)"),
+        ("MoebiusMu", "moebius(x)"),
+        ("JacobiSymbol", "jacobi(x)"),
+        ("ChineseRemainder", "chinese(x)"),
+        ("IntegerLength", "numdigits(x)"),
+    ];
+
+    for (head, expected) in aliases {
+        assert_eq!(macsyma(&apply(sym(head), vec![x.clone()])), expected);
+    }
 }
 
 #[test]
@@ -286,7 +356,10 @@ fn macsyma_diff_compound_arg() {
     let x = sym("x");
     let inner = apply(
         sym(ADD),
-        vec![apply(sym(SIN), vec![x.clone()]), apply(sym(COS), vec![x.clone()])],
+        vec![
+            apply(sym(SIN), vec![x.clone()]),
+            apply(sym(COS), vec![x.clone()]),
+        ],
     );
     let expr = apply(sym(D), vec![inner, x]);
     assert_eq!(macsyma(&expr), "diff(sin(x) + cos(x), x)");
@@ -502,12 +575,24 @@ fn custom_dialect_by_overriding_binary_ops() {
     struct VerboseDialect;
 
     impl Dialect for VerboseDialect {
-        fn name(&self) -> &str { "verbose" }
-        fn format_integer(&self, v: i64) -> String { v.to_string() }
-        fn format_rational(&self, n: i64, d: i64) -> String { format!("{}/{}", n, d) }
-        fn format_float(&self, v: f64) -> String { format!("{:?}", v) }
-        fn format_string(&self, s: &str) -> String { format!("\"{}\"", s) }
-        fn format_symbol(&self, n: &str) -> String { n.to_string() }
+        fn name(&self) -> &str {
+            "verbose"
+        }
+        fn format_integer(&self, v: i64) -> String {
+            v.to_string()
+        }
+        fn format_rational(&self, n: i64, d: i64) -> String {
+            format!("{}/{}", n, d)
+        }
+        fn format_float(&self, v: f64) -> String {
+            format!("{:?}", v)
+        }
+        fn format_string(&self, s: &str) -> String {
+            format!("\"{}\"", s)
+        }
+        fn format_symbol(&self, n: &str) -> String {
+            n.to_string()
+        }
         fn binary_op(&self, head: &str) -> Option<String> {
             if head == "Add" {
                 Some(" plus ".to_string())
@@ -521,13 +606,21 @@ fn custom_dialect_by_overriding_binary_ops() {
         fn function_name(&self, head: &str) -> String {
             cas_pretty_printer::dialect::default_function_name(head)
         }
-        fn list_brackets(&self) -> (&'static str, &'static str) { ("[", "]") }
-        fn call_brackets(&self) -> (&'static str, &'static str) { ("(", ")") }
+        fn list_brackets(&self) -> (&'static str, &'static str) {
+            ("[", "]")
+        }
+        fn call_brackets(&self) -> (&'static str, &'static str) {
+            ("(", ")")
+        }
         fn precedence(&self, head: &str) -> u32 {
             cas_pretty_printer::dialect::default_precedence(head)
         }
-        fn is_right_associative(&self, head: &str) -> bool { head == "Pow" }
-        fn try_sugar(&self, _node: &IRApply) -> Option<IRNode> { None }
+        fn is_right_associative(&self, head: &str) -> bool {
+            head == "Pow"
+        }
+        fn try_sugar(&self, _node: &IRApply) -> Option<IRNode> {
+            None
+        }
     }
 
     let expr = apply(sym(ADD), vec![sym("a"), sym("b")]);

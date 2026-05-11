@@ -6,8 +6,8 @@
 //! - Lists use square brackets: `[1, 2, 3]`.
 //! - Power is `^` (MACSYMA also accepts `**` on input; output uses `^`).
 //! - Equality is `=`; not-equal is `#`.
-//! - Function names are lowercase: `sin`, `cos`, `log`, `exp`, `diff`,
-//!   `integrate`.
+//! - Function names are lowercase, with MACSYMA-specific aliases where the
+//!   canonical spelling differs: `sin`, `diff`, `ratsimp`, `realpart`, etc.
 //!
 //! # Surface sugar
 //!
@@ -17,12 +17,15 @@
 //! | Input IR                       | Rewrites to  | Displays as |
 //! |-------------------------------|--------------|-------------|
 //! | `Mul(-1, x)`                  | `Neg(x)`     | `-x`        |
-//! | `Mul(-1, x, y, …)`            | `Neg(Mul(x, y, …))` | `-x*y*…` |
+//! | `Mul(-1, x, y, …)`            | `Mul(Neg(x), y, …)` | `-x*y*…` |
 //! | `Add(a, Neg(b))` _(2-arg)_   | `Sub(a, b)`  | `a - b`     |
+//! | `Add(a, Mul(b, Neg(c)))` _(2-arg)_ | `Sub(a, Mul(b, c))` | `a - b*c` |
+//! | `Add(-n, y)`                 | `Sub(y, n)`  | `y - n`     |
 //! | `Mul(a, Inv(b))` _(2-arg)_   | `Div(a, b)`  | `a/b`       |
+//! | `Mul(a, Neg(b))` _(2-arg)_   | `Neg(Mul(a, b))` | `-(a*b)` |
 //!
-//! The walker applies sugar recursively, so `Mul(-1, Inv(y))` → `Neg(Inv(y))`
-//! and then formats as `-Inv(y)` (Inv has no infix form by default).
+//! The walker applies sugar recursively, so these small local rewrites compose
+//! with normal precedence handling.
 
 use symbolic_ir::{apply, sym, IRApply, IRNode, DIV, INV, MUL, NEG, SUB};
 
@@ -65,7 +68,11 @@ impl Dialect for MacsymaDialect {
     }
 
     fn format_symbol(&self, name: &str) -> String {
-        name.to_string()
+        match name {
+            "ImaginaryUnit" => "%i",
+            other => other,
+        }
+        .to_string()
     }
 
     // ---- operators ---------------------------------------------------------
@@ -79,7 +86,33 @@ impl Dialect for MacsymaDialect {
     }
 
     fn function_name(&self, head_name: &str) -> String {
-        default_function_name(head_name)
+        match head_name {
+            "Select" => "sublist",
+            "MakeList" => "makelist",
+            "Inverse" => "invert",
+            "RatSimplify" => "ratsimp",
+            "Apart" => "partfrac",
+            "TrigSimplify" => "trigsimp",
+            "TrigExpand" => "trigexpand",
+            "TrigReduce" => "trigreduce",
+            "Re" => "realpart",
+            "Im" => "imagpart",
+            "Arg" => "carg",
+            "RectForm" => "rectform",
+            "PolarForm" => "polarform",
+            "IsPrime" => "primep",
+            "NextPrime" => "next_prime",
+            "PrevPrime" => "prev_prime",
+            "FactorInteger" => "ifactor",
+            "Divisors" => "divisors",
+            "Totient" => "totient",
+            "MoebiusMu" => "moebius",
+            "JacobiSymbol" => "jacobi",
+            "ChineseRemainder" => "chinese",
+            "IntegerLength" => "numdigits",
+            other => return default_function_name(other),
+        }
+        .to_string()
     }
 
     // ---- containers --------------------------------------------------------
@@ -125,52 +158,75 @@ pub(crate) fn macsyma_sugar(node: &IRApply) -> Option<IRNode> {
     };
 
     // Rule 1: Mul(-1, x) → Neg(x)
-    //         Mul(-1, x, y, …) → Neg(Mul(x, y, …))
+    //         Mul(-1, x, y, …) → Mul(Neg(x), y, …)
     //
-    // This turns `Mul(-1, x)` into `-x` via the Neg unary op.
+    // This turns `Mul(-1, x)` into `-x` and keeps longer products as
+    // `-x*y*...` instead of wrapping the whole product.
     if head_name == MUL && node.args.len() >= 2 {
         if let IRNode::Integer(-1) = &node.args[0] {
             let rest = node.args[1..].to_vec();
             let inner = if rest.len() == 1 {
                 rest.into_iter().next().unwrap()
             } else {
-                apply(sym(MUL), rest)
+                let mut negated_product = Vec::with_capacity(rest.len());
+                let mut rest_iter = rest.into_iter();
+                negated_product.push(apply(sym(NEG), vec![rest_iter.next().unwrap()]));
+                negated_product.extend(rest_iter);
+                return Some(apply(sym(MUL), negated_product));
             };
             return Some(apply(sym(NEG), vec![inner]));
         }
     }
 
     // Rule 2: Add(a, Neg(b)) → Sub(a, b)  [2-arg case only]
+    //         Add(a, Mul(b, Neg(c))) → Sub(a, Mul(b, c))
+    //         Add(-n, y) → Sub(y, n)
     //
-    // Only the trailing-negated-argument case is sugar'd; multi-negative
-    // Add expressions are left to the generic Add infix rule.
+    // Peek one sugar level into the second argument so a negated product
+    // becomes a clean subtraction, matching the Python reference behavior.
     if head_name == "Add" && node.args.len() == 2 {
         let (a, b) = (&node.args[0], &node.args[1]);
+
+        let mut sugared_b: Option<IRNode> = None;
         if let IRNode::Apply(b_apply) = b {
-            if let IRNode::Symbol(b_head) = &b_apply.head {
-                if b_head.as_str() == NEG && b_apply.args.len() == 1 {
-                    return Some(apply(
-                        sym(SUB),
-                        vec![a.clone(), b_apply.args[0].clone()],
-                    ));
-                }
+            sugared_b = macsyma_sugar(b_apply);
+        }
+        let b_effective = sugared_b.as_ref().unwrap_or(b);
+
+        if let IRNode::Apply(b_apply) = b_effective {
+            if matches!(&b_apply.head, IRNode::Symbol(b_head) if b_head.as_str() == NEG)
+                && b_apply.args.len() == 1
+            {
+                return Some(apply(sym(SUB), vec![a.clone(), b_apply.args[0].clone()]));
+            }
+        }
+
+        if let IRNode::Integer(value) = a {
+            if *value < 0 {
+                return Some(apply(sym(SUB), vec![b.clone(), IRNode::Integer(-*value)]));
             }
         }
     }
 
     // Rule 3: Mul(a, Inv(b)) → Div(a, b)  [2-arg case only]
+    //         Mul(a, Neg(b)) → Neg(Mul(a, b))
     //
     // Same caution as Rule 2: only the simple 2-arg multiplication by an
-    // inverse is sugar'd.
+    // inverse or negated factor is sugar'd.
     if head_name == MUL && node.args.len() == 2 {
         let (a, b) = (&node.args[0], &node.args[1]);
         if let IRNode::Apply(b_apply) = b {
             if let IRNode::Symbol(b_head) = &b_apply.head {
-                if b_head.as_str() == INV && b_apply.args.len() == 1 {
-                    return Some(apply(
-                        sym(DIV),
-                        vec![a.clone(), b_apply.args[0].clone()],
-                    ));
+                if b_apply.args.len() == 1 {
+                    if b_head.as_str() == INV {
+                        return Some(apply(sym(DIV), vec![a.clone(), b_apply.args[0].clone()]));
+                    }
+                    if b_head.as_str() == NEG {
+                        return Some(apply(
+                            sym(NEG),
+                            vec![apply(sym(MUL), vec![a.clone(), b_apply.args[0].clone()])],
+                        ));
+                    }
                 }
             }
         }
