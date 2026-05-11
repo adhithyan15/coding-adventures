@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-coverage"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Coverage checker for the adjudication IR (ADJ02). Verifies every meaningful input span belongs to some IR node."
+description = "ADJ02 v2 — structural tree-coverage check over the hierarchical IR. Language-agnostic; no tagger, no stopwords, no NegEx triggers."
 
 [dependencies]
 adjudication-ir = { path = "../adjudication-ir" }
