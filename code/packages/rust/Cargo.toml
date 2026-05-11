@@ -319,6 +319,7 @@ members = [
     "mosaic-lexer",
     "mosaic-parser",
     "mosaic-vm",
+    "mosmodel-compiler",
     "node-bridge",
     "objc-bridge",
     "paint-codec-png",

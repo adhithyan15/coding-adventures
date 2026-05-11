@@ -1,0 +1,14 @@
+[package]
+name = "mosmodel-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compiles .mosmodel component interface files to interface descriptor JSON and target-language bindings"
+
+[dependencies]
+grammar-tools  = { path = "../grammar-tools" }
+lexer          = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser         = { path = "../parser" }
+state-machine  = { path = "../state-machine" }
+serde          = { version = "1", features = ["derive"] }
+serde_json     = "1"
