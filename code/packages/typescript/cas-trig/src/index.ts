@@ -175,14 +175,111 @@ export function expandTrig(expr: IRNode): IRNode {
 }
 
 export function powerReduce(expr: IRNode): IRNode {
-  if (expr.kind !== "apply") return expr;
-  if (headName(expr.head) === "Pow" && expr.args.length === 2 && equals(expr.args[1], int(2))) {
-    const sinArg = unaryArg(expr.args[0], "Sin");
-    if (sinArg !== null) return sinSquared(sinArg);
-    const cosArg = unaryArg(expr.args[0], "Cos");
-    if (cosArg !== null) return cosSquared(cosArg);
+  return trigReduce(expr);
+}
+
+export function trigReduce(expr: IRNode): IRNode {
+  let current = expr;
+  for (let i = 0; i < 20; i += 1) {
+    const next = reduceWalk(current);
+    if (equals(next, current)) return next;
+    current = next;
   }
-  return app(expr.head, expr.args.map(powerReduce));
+  return current;
+}
+
+function reduceWalk(expr: IRNode): IRNode {
+  if (expr.kind !== "apply") return expr;
+  const reducedArgs = expr.args.map(reduceWalk);
+  const name = headName(expr.head);
+
+  if (name === "Pow" && reducedArgs.length === 2) {
+    const [base, exponent] = reducedArgs;
+    if (exponent.kind === "integer" && exponent.value >= 2n && exponent.value <= 6n) {
+      const reducedPower = reduceTrigPower(base, Number(exponent.value));
+      if (reducedPower !== null) return reducedPower;
+    }
+  }
+
+  if (name === "Mul") {
+    const product = reduceSinCosProduct(reducedArgs);
+    if (product !== null) return product;
+  }
+
+  return app(expr.head, reducedArgs);
+}
+
+function reduceTrigPower(base: IRNode, exponent: number): IRNode | null {
+  const sinArg = unaryArg(base, "Sin");
+  if (sinArg !== null) return sinPower(sinArg, exponent);
+  const cosArg = unaryArg(base, "Cos");
+  if (cosArg !== null) return cosPower(cosArg, exponent);
+  return null;
+}
+
+function sinPower(x: IRNode, exponent: number): IRNode | null {
+  switch (exponent) {
+    case 2:
+      return sinSquared(x);
+    case 3:
+      return frac(sub(mul(int(3), app(SIN, [x])), sinNx(3, x)), 4);
+    case 4:
+      return frac(add(sub(int(3), mul(int(4), cosNx(2, x))), cosNx(4, x)), 8);
+    case 5:
+      return frac(add(sub(mul(int(10), app(SIN, [x])), mul(int(5), sinNx(3, x))), sinNx(5, x)), 16);
+    case 6:
+      return frac(sub(add(sub(int(10), mul(int(15), cosNx(2, x))), mul(int(6), cosNx(4, x))), cosNx(6, x)), 32);
+    default:
+      return null;
+  }
+}
+
+function cosPower(x: IRNode, exponent: number): IRNode | null {
+  switch (exponent) {
+    case 2:
+      return cosSquared(x);
+    case 3:
+      return frac(add(mul(int(3), app(COS, [x])), cosNx(3, x)), 4);
+    case 4:
+      return frac(add(add(int(3), mul(int(4), cosNx(2, x))), cosNx(4, x)), 8);
+    case 5:
+      return frac(add(add(mul(int(10), app(COS, [x])), mul(int(5), cosNx(3, x))), cosNx(5, x)), 16);
+    case 6:
+      return frac(add(add(add(int(10), mul(int(15), cosNx(2, x))), mul(int(6), cosNx(4, x))), cosNx(6, x)), 32);
+    default:
+      return null;
+  }
+}
+
+function reduceSinCosProduct(args: readonly IRNode[]): IRNode | null {
+  if (args.length < 2) return null;
+
+  let sinArg: IRNode | null = null;
+  let cosArg: IRNode | null = null;
+  const other: IRNode[] = [];
+
+  for (const arg of args) {
+    if (sinArg === null) {
+      const currentSinArg = unaryArg(arg, "Sin");
+      if (currentSinArg !== null) {
+        sinArg = currentSinArg;
+        continue;
+      }
+    }
+    if (cosArg === null) {
+      const currentCosArg = unaryArg(arg, "Cos");
+      if (currentCosArg !== null) {
+        cosArg = currentCosArg;
+        continue;
+      }
+    }
+    other.push(arg);
+  }
+
+  if (sinArg === null || cosArg === null || !equals(sinArg, cosArg)) return null;
+
+  const halfSinDoubleAngle = frac(sinNx(2, sinArg), 2);
+  return other.length === 0 ? halfSinDoubleAngle : app(MUL, [...other, halfSinDoubleAngle]);
 }
 
 function sinNumeric(value: number): IRNode {
@@ -296,17 +393,27 @@ function extractDoubleAngle(args: readonly IRNode[]): IRNode | null {
 }
 
 function sinSquared(inner: IRNode): IRNode {
-  const innerReduced = powerReduce(inner);
-  return app(MUL, [rational(1, 2), app(SUB, [int(1), app(COS, [app(MUL, [int(2), innerReduced])])])]);
+  return frac(app(SUB, [int(1), cosNx(2, inner)]), 2);
 }
 
 function cosSquared(inner: IRNode): IRNode {
-  const innerReduced = powerReduce(inner);
-  return app(MUL, [rational(1, 2), app(ADD, [int(1), app(COS, [app(MUL, [int(2), innerReduced])])])]);
+  return frac(app(ADD, [int(1), cosNx(2, inner)]), 2);
 }
 
 function unaryArg(node: IRNode, name: string): IRNode | null {
   return node.kind === "apply" && headName(node.head) === name && node.args.length === 1 ? node.args[0] : null;
+}
+
+function sinNx(n: number, x: IRNode): IRNode {
+  return app(SIN, [mul(int(n), x)]);
+}
+
+function cosNx(n: number, x: IRNode): IRNode {
+  return app(COS, [mul(int(n), x)]);
+}
+
+function frac(numerator: IRNode, denominator: number): IRNode {
+  return app(MUL, [rational(1, denominator), numerator]);
 }
 
 function add(a: IRNode, b: IRNode): IRNode {

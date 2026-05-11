@@ -10,6 +10,7 @@ import {
   powerReduce,
   sinEval,
   tanEval,
+  trigReduce,
   trigSimplify,
 } from "../src/index";
 import {
@@ -178,5 +179,115 @@ describe("powerReduce", () => {
       expect(equals(result.head, ADD)).toBe(true);
       expect(result.args.every((arg) => arg.kind === "apply" && equals(arg.head, MUL))).toBe(true);
     }
+  });
+});
+
+describe("trigReduce", () => {
+  it("keeps powerReduce-compatible square reductions", () => {
+    const x = sym("x");
+    const cos2x = app(COS, [app(MUL, [int(2), x])]);
+    expect(equals(trigReduce(app(POW, [app(SIN, [x]), int(2)])), app(MUL, [rational(1, 2), app(SUB, [int(1), cos2x])]))).toBe(true);
+    expect(equals(trigReduce(app(POW, [app(COS, [x]), int(2)])), app(MUL, [rational(1, 2), app(ADD, [int(1), cos2x])]))).toBe(true);
+  });
+
+  it("reduces cubic trig powers to multiple-angle forms", () => {
+    const x = sym("x");
+    expect(equals(trigReduce(app(POW, [app(SIN, [x]), int(3)])), app(MUL, [
+      rational(1, 4),
+      app(SUB, [
+        app(MUL, [int(3), app(SIN, [x])]),
+        app(SIN, [app(MUL, [int(3), x])]),
+      ]),
+    ]))).toBe(true);
+    expect(equals(trigReduce(app(POW, [app(COS, [x]), int(3)])), app(MUL, [
+      rational(1, 4),
+      app(ADD, [
+        app(MUL, [int(3), app(COS, [x])]),
+        app(COS, [app(MUL, [int(3), x])]),
+      ]),
+    ]))).toBe(true);
+  });
+
+  it("reduces fourth, fifth, and sixth powers", () => {
+    const x = sym("x");
+    expect(equals(trigReduce(app(POW, [app(SIN, [x]), int(4)])), app(MUL, [
+      rational(1, 8),
+      app(ADD, [
+        app(SUB, [int(3), app(MUL, [int(4), app(COS, [app(MUL, [int(2), x])])])]),
+        app(COS, [app(MUL, [int(4), x])]),
+      ]),
+    ]))).toBe(true);
+    expect(equals(trigReduce(app(POW, [app(COS, [x]), int(5)])), app(MUL, [
+      rational(1, 16),
+      app(ADD, [
+        app(ADD, [
+          app(MUL, [int(10), app(COS, [x])]),
+          app(MUL, [int(5), app(COS, [app(MUL, [int(3), x])])]),
+        ]),
+        app(COS, [app(MUL, [int(5), x])]),
+      ]),
+    ]))).toBe(true);
+    expect(equals(trigReduce(app(POW, [app(SIN, [x]), int(6)])), app(MUL, [
+      rational(1, 32),
+      app(SUB, [
+        app(ADD, [
+          app(SUB, [int(10), app(MUL, [int(15), app(COS, [app(MUL, [int(2), x])])])]),
+          app(MUL, [int(6), app(COS, [app(MUL, [int(4), x])])]),
+        ]),
+        app(COS, [app(MUL, [int(6), x])]),
+      ]),
+    ]))).toBe(true);
+  });
+
+  it("reduces sin-cos products and preserves scalar multipliers", () => {
+    const x = sym("x");
+    expect(equals(trigReduce(app(MUL, [app(SIN, [x]), app(COS, [x])])), app(MUL, [
+      rational(1, 2),
+      app(SIN, [app(MUL, [int(2), x])]),
+    ]))).toBe(true);
+    expect(equals(trigReduce(app(MUL, [int(5), app(SIN, [x]), app(COS, [x])])), app(MUL, [
+      int(5),
+      app(MUL, [rational(1, 2), app(SIN, [app(MUL, [int(2), x])])]),
+    ]))).toBe(true);
+  });
+
+  it("recurses through nested expressions until stable", () => {
+    const x = sym("x");
+    const y = sym("y");
+    const expr = app(ADD, [
+      app(POW, [app(SIN, [app(POW, [app(COS, [x]), int(2)])]), int(2)]),
+      app(MUL, [app(SIN, [y]), app(COS, [y]), app(SIN, [x]), app(COS, [x])]),
+    ]);
+    const result = trigReduce(expr);
+
+    expect(equals(result, expr)).toBe(false);
+    expect(equals(result, app(ADD, [
+      app(MUL, [
+        rational(1, 2),
+        app(SUB, [
+          int(1),
+          app(COS, [
+            app(MUL, [
+              int(2),
+              app(MUL, [rational(1, 2), app(ADD, [int(1), app(COS, [app(MUL, [int(2), x])])])]),
+            ]),
+          ]),
+        ]),
+      ]),
+      app(MUL, [
+        app(MUL, [rational(1, 2), app(SIN, [app(MUL, [int(2), y])])]),
+        app(MUL, [rational(1, 2), app(SIN, [app(MUL, [int(2), x])])]),
+      ]),
+    ]))).toBe(true);
+  });
+
+  it("leaves powers greater than six unchanged after reducing children", () => {
+    const x = sym("x");
+    const expr = app(POW, [app(SIN, [x]), int(7)]);
+    expect(equals(trigReduce(expr), expr)).toBe(true);
+    expect(equals(trigReduce(app(POW, [app(SIN, [app(POW, [app(COS, [x]), int(2)])]), int(7)])), app(POW, [
+      app(SIN, [app(MUL, [rational(1, 2), app(ADD, [int(1), app(COS, [app(MUL, [int(2), x])])])])]),
+      int(7),
+    ]))).toBe(true);
   });
 });
