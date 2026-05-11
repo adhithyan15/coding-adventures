@@ -896,6 +896,19 @@ fn emit_instruction(
             }
         }
 
+        // ── Forward-compatibility catch-all ────────────────────────────────
+        //
+        // When new IrOp variants are added to compiler-ir before this backend
+        // gains explicit lowering support for them, this arm prevents a
+        // compilation failure (E0004 non-exhaustive patterns).  The runtime
+        // error mirrors what validate_for_clr() would have reported.
+        #[allow(unreachable_patterns)]
+        _ => {
+            return Err(CILBackendError(
+                format!("op {} not yet supported by CLR backend", instr.opcode),
+            ));
+        }
+
     }
 
     Ok(())
