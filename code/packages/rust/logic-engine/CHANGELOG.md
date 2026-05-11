@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+- `proof_dag` module: `ProofDAG`, `Proof`, `ProofStep`, `DerivationOrigin`
+  — the engine's return type when enumeration is active. Each `Proof`
+  records its final substitution, an ordered list of derivation steps,
+  and de-duplicated `via_facts` / `via_rules` lists that name every
+  probabilistic clause the proof depends on.
+- `enumerate` module: `enumerate_all(query, kb)` — exhaustive SLD that
+  collects every successful derivation rather than stopping at the
+  first. Uses the same fresh-variable renaming as `find_first` so that
+  multiple clause instantiations don't share variable identity.
+  Negation-as-failure is the well-founded reading per LP19.
+- `wmc` module: `weighted_model_count(dag, kb)` — naïve enumeration
+  over `2^n` worlds, where `n` is the count of distinct probabilistic
+  clauses across all proofs. Certain clauses are automatically true
+  and do not contribute degrees of freedom. The shared-fact case is
+  handled correctly because WMC counts worlds, not paths.
+- `SearchResult` enum with `FindFirstResult` and `EnumerateAllResult`
+  variants, plus a top-level `search(query, kb, mode)` function. In
+  `AutoDetect` mode the engine inspects `kb.is_all_certain()` and
+  selects `FindFirst` when every clause is `Certain` — the LP19
+  short-circuit theorem made executable.
+- `KnowledgeBase::find_fact_by_id` and `find_rule_by_id` — linear-scan
+  lookup used by the WMC backend to recover Bernoulli parameters from
+  clause ids. Sufficient at current scale; an indexed alternative may
+  arrive in a later slice.
+- 11 new tests (4 enumerate, 7 wmc, 4 integration) including the
+  canonical `P(path(a,c)) = 0.86` graph reachability and the
+  shared-fact case that fails under naïve inclusion-exclusion (correctly
+  returns 0.5 here, would be 0.75 under the wrong algorithm). Total:
+  30 tests.
+
+### Scope notes
+
+This slice completes the probabilistic core specified in
+[`LP19`](../../../specs/LP19-probabilistic-logic-core.md) for the naïve
+inference path. `d-DNNF` / `SDD` compilation (LP19a), rational
+arithmetic (LP19b), conditional probability with evidence (LP19c), and
+approximate inference (LP19d) remain as planned follow-ups.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

@@ -32,9 +32,17 @@
 //! Not in this slice: proof DAG construction, EnumerateAll / AutoDetect
 //! mode implementations, weighted model counting.
 
+pub mod enumerate;
+pub mod proof_dag;
+pub mod wmc;
+
 use std::collections::HashMap;
 
 use logic_core::{LogicVar, Substitution, Term, unify};
+
+pub use enumerate::enumerate_all;
+pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
+pub use wmc::weighted_model_count;
 
 // ---------------------------------------------------------------------------
 // Identities and probability
@@ -215,18 +223,30 @@ impl KnowledgeBase {
         id
     }
 
-    fn facts_for(&self, term: &Term) -> &[Fact] {
+    pub(crate) fn facts_for(&self, term: &Term) -> &[Fact] {
         ClauseIndex::from_term(term)
             .and_then(|idx| self.facts.get(&idx))
             .map(|v| v.as_slice())
             .unwrap_or(&[])
     }
 
-    fn rules_for(&self, term: &Term) -> &[Rule] {
+    pub(crate) fn rules_for(&self, term: &Term) -> &[Rule] {
         ClauseIndex::from_term(term)
             .and_then(|idx| self.rules.get(&idx))
             .map(|v| v.as_slice())
             .unwrap_or(&[])
+    }
+
+    /// Look up a Fact by its `FactId`. O(N) over all facts; sufficient
+    /// for current scale. Used by the weighted-model-counting backend
+    /// when it needs to recover a probabilistic clause's parameter.
+    pub fn find_fact_by_id(&self, id: FactId) -> Option<&Fact> {
+        self.facts.values().flatten().find(|f| f.id == id)
+    }
+
+    /// Look up a Rule by its `RuleId`. O(N) over all rules.
+    pub fn find_rule_by_id(&self, id: RuleId) -> Option<&Rule> {
+        self.rules.values().flatten().find(|r| r.id == id)
     }
 
     /// Walk every Fact and every Rule once; return `true` iff every
@@ -251,14 +271,61 @@ impl KnowledgeBase {
 // Search modes (only FindFirst is implemented in this slice)
 // ---------------------------------------------------------------------------
 
-/// Per LP19, three modes are defined; this slice implements only
-/// `FindFirst`. `EnumerateAll` and `AutoDetect` will arrive in
-/// subsequent PRs along with the proof DAG.
+/// Per LP19, three search modes are defined. `FindFirst` stops at the
+/// first successful derivation; `EnumerateAll` traverses every branch
+/// and returns the complete proof DAG; `AutoDetect` chooses between
+/// them based on whether the knowledge base is all-`Certain`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SearchMode {
     FindFirst,
     EnumerateAll,
     AutoDetect,
+}
+
+/// What a search call returns. `FindFirstResult` is the cheap path —
+/// at most one substitution. `EnumerateAllResult` carries the full proof
+/// DAG along with the engine's computed probability for probabilistic
+/// queries.
+#[derive(Debug, Clone, PartialEq)]
+pub enum SearchResult {
+    /// Deterministic find-first: at most one binding, no DAG.
+    FindFirstResult(Option<Substitution>),
+    /// All-proofs enumeration with the (possibly trivial) WMC.
+    EnumerateAllResult {
+        dag: ProofDAG,
+        /// `P(query)`. Equals 1.0 if every clause used is `Certain`
+        /// and at least one proof exists; equals 0.0 if no proof.
+        probability: f64,
+    },
+}
+
+/// Run a query against the KB under the chosen search mode. When mode
+/// is `AutoDetect`, the engine inspects `kb.is_all_certain()` and picks
+/// `FindFirst` if every clause is `Certain`, otherwise `EnumerateAll`
+/// — this is the LP19 short-circuit theorem made explicit.
+pub fn search(query: &Term, kb: &KnowledgeBase, mode: SearchMode) -> SearchResult {
+    let effective = match mode {
+        SearchMode::FindFirst => SearchMode::FindFirst,
+        SearchMode::EnumerateAll => SearchMode::EnumerateAll,
+        SearchMode::AutoDetect => {
+            if kb.is_all_certain() {
+                SearchMode::FindFirst
+            } else {
+                SearchMode::EnumerateAll
+            }
+        }
+    };
+
+    match effective {
+        SearchMode::FindFirst => SearchResult::FindFirstResult(find_first(query, kb)),
+        SearchMode::EnumerateAll => {
+            let dag = enumerate_all(query, kb);
+            let probability = weighted_model_count(&dag, kb);
+            SearchResult::EnumerateAllResult { dag, probability }
+        }
+        // AutoDetect was rewritten above.
+        SearchMode::AutoDetect => unreachable!(),
+    }
 }
 
 // ---------------------------------------------------------------------------
