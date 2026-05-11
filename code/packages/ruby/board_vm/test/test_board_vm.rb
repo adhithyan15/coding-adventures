@@ -152,6 +152,33 @@ module CodingAdventures
         end
       end
 
+      def test_bluetooth_connection_endpoint_filters_to_the_selected_transport
+        option = BoardVM.select_connection_option(:uno_r4_wifi, transport: "BLE")
+
+        endpoint = BoardVM.bluetooth_connection_endpoint(
+          option,
+          devices: [
+            {
+              "id" => "esp32-board-vm",
+              "name" => "ESP32 Board VM",
+              "paired" => true,
+              "board_vm_rfcomm_channels" => [3]
+            },
+            {
+              "id" => "uno-r4",
+              "name" => "Uno R4 Board VM",
+              "address" => "AA:BB:CC:DD:EE:FF",
+              "service_uuids" => ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]
+            }
+          ]
+        )
+
+        assert_equal "ble://AA:BB:CC:DD:EE:FF" \
+          "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e", endpoint
+      end
+
       def test_connection_options_can_be_selected_without_exposing_ports
         default = BoardVM.select_connection_option(:uno_r4_wifi)
         wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: :wifi)
@@ -216,6 +243,29 @@ module CodingAdventures
         assert connection.wireless_connection?
         assert connection.ota_connection?
         assert_equal 2, transport.frames.length
+      end
+
+      def test_connect_auto_selects_bluetooth_endpoint_candidates
+        connection = BoardVM.uno_r4_wifi(
+          via: "BLE",
+          bluetooth_devices: [
+            {
+              "id" => "uno-r4",
+              "name" => "Uno R4 Board VM",
+              "address" => "AA:BB:CC:DD:EE:FF",
+              "service_uuids" => ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]
+            }
+          ],
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_nil connection.port
+        assert_equal "bluetooth_le", connection.connection_transport
+        assert_equal "ble://AA:BB:CC:DD:EE:FF" \
+          "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e", connection.endpoint
       end
 
       def test_connect_builds_a_tcp_transport_for_wifi_endpoints

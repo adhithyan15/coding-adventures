@@ -1503,6 +1503,33 @@ def bluetooth_endpoint_candidates(
     return candidates
 
 
+def bluetooth_connection_endpoint(
+    connection_option: dict[str, Any],
+    *,
+    devices: Iterable[dict[str, Any]] | None = None,
+) -> str:
+    option = dict(connection_option)
+    matches = [
+        candidate
+        for candidate in bluetooth_endpoint_candidates(devices)
+        if _bluetooth_candidate_matches_connection(candidate, option)
+    ]
+    if len(matches) == 1:
+        return str(matches[0]["endpoint"]["endpoint"])
+
+    display_name = option.get("display_name") or option.get("transport") or "Bluetooth"
+    if not matches:
+        raise ValueError(
+            f"{display_name} found no Board VM Bluetooth endpoints; "
+            "pair or power on the board, pass endpoint=..., or choose via='serial'"
+        )
+
+    raise ValueError(
+        f"Multiple Board VM Bluetooth endpoints match {display_name}; pass endpoint=...\n"
+        f"{_bluetooth_endpoint_choice_list(matches)}"
+    )
+
+
 def _bluetooth_device_field(device: Any, key: str) -> Any:
     if isinstance(device, dict):
         return device.get(key)
@@ -1518,6 +1545,40 @@ def _bluetooth_device_sequence(device: Any, key: str) -> list[Any]:
     if value is None:
         return []
     return list(value)
+
+
+def _bluetooth_candidate_matches_connection(
+    candidate: dict[str, Any],
+    connection_option: dict[str, Any],
+) -> bool:
+    endpoint = candidate.get("endpoint") or {}
+    transport = connection_option.get("transport")
+    endpoint_transport = connection_option.get("endpoint_transport")
+    endpoint_scheme = connection_option.get("endpoint_scheme")
+    return (
+        (transport is not None and endpoint.get("transport") == transport)
+        or (
+            endpoint_transport is not None
+            and endpoint.get("endpoint_transport") == endpoint_transport
+        )
+        or (
+            endpoint_scheme is not None
+            and endpoint.get("endpoint_scheme") == endpoint_scheme
+        )
+    )
+
+
+def _bluetooth_endpoint_choice_list(candidates: Iterable[dict[str, Any]]) -> str:
+    lines = []
+    for index, candidate in enumerate(candidates, start=1):
+        endpoint = candidate["endpoint"]
+        display_name = (
+            candidate.get("display_name")
+            or candidate.get("device")
+            or endpoint["endpoint"]
+        )
+        lines.append(f"{index}. {display_name} - {endpoint['endpoint']}")
+    return "\n".join(lines)
 
 
 def connection_options(selector: str) -> list[dict[str, Any]]:
@@ -1917,6 +1978,7 @@ def connect(
     smoke: bool = False,
     transport: Any = None,
     endpoint: str | None = None,
+    bluetooth_devices: Iterable[dict[str, Any]] | None = None,
     runner: Any = None,
     cargo_workspace: str | pathlib.Path | None = None,
     firmware_image: str | pathlib.Path | None = None,
@@ -1977,11 +2039,19 @@ def connect(
         input_func=input_func,
         output=output,
     )
+    selected_endpoint = endpoint
+    if selected_endpoint is None and _connection_uses_bluetooth_endpoint(
+        selected_connection_option
+    ):
+        selected_endpoint = bluetooth_connection_endpoint(
+            selected_connection_option,
+            devices=bluetooth_devices,
+        )
     connection = Connection(
         target=target,
         port=selected_port,
         transport=transport,
-        endpoint=endpoint,
+        endpoint=selected_endpoint,
         connection_option=selected_connection_option,
         runner=runner,
         cargo_workspace=cargo_workspace,
@@ -2020,6 +2090,17 @@ def _resolve_connection_option(
 
 def _connection_uses_serial_port(connection_option: dict[str, Any] | None) -> bool:
     return connection_option is None or connection_option.get("transport") == "serial"
+
+
+def _connection_uses_bluetooth_endpoint(connection_option: dict[str, Any] | None) -> bool:
+    if connection_option is None:
+        return False
+    return (
+        connection_option.get("transport") in {"bluetooth_le", "bluetooth_classic"}
+        or connection_option.get("endpoint_transport")
+        in {"bluetooth_le_gatt", "bluetooth_classic_rfcomm"}
+        or connection_option.get("endpoint_scheme") in {"ble", "btspp", "rfcomm"}
+    )
 
 
 def _parse_tcp_endpoint(endpoint: str) -> tuple[str, int]:
@@ -2131,6 +2212,7 @@ __all__ = [
     "Session",
     "SessionResult",
     "TcpTransport",
+    "bluetooth_connection_endpoint",
     "bluetooth_devices",
     "bluetooth_endpoint",
     "bluetooth_endpoint_candidates",

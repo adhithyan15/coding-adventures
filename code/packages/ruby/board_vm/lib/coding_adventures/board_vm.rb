@@ -174,6 +174,26 @@ module CodingAdventures
       Native.bluetooth_endpoint_candidates(normalized)
     end
 
+    def bluetooth_connection_endpoint(connection_option, devices: nil)
+      option = normalize_connection_option_hash(connection_option)
+      matches = bluetooth_endpoint_candidates(devices).select do |candidate|
+        bluetooth_candidate_matches_connection?(candidate, option)
+      end
+
+      return matches.first.fetch("endpoint").fetch("endpoint").to_s if matches.length == 1
+
+      display_name = option["display_name"] || option["transport"] || "Bluetooth"
+      if matches.empty?
+        raise DeviceSelectionError,
+          "#{display_name} found no Board VM Bluetooth endpoints; " \
+          "pair or power on the board, pass endpoint: ..., or choose via: :serial"
+      end
+
+      raise DeviceSelectionError,
+        "Multiple Board VM Bluetooth endpoints match #{display_name}; pass endpoint: ...\n" \
+        "#{bluetooth_endpoint_choice_list(matches)}"
+    end
+
     def connection_options(board)
       target = detect_target(board)
       unless target
@@ -341,6 +361,7 @@ module CodingAdventures
       runner: CommandRunner.new,
       transport: nil,
       endpoint: nil,
+      bluetooth_devices: nil,
       via: nil,
       connection_option: nil,
       pick_connection: false,
@@ -359,6 +380,13 @@ module CodingAdventures
         input: input,
         output: output
       )
+      resolved_endpoint = endpoint
+      if resolved_endpoint.nil? && connection_uses_bluetooth_endpoint?(selection.fetch(:connection_option))
+        resolved_endpoint = bluetooth_connection_endpoint(
+          selection.fetch(:connection_option),
+          devices: bluetooth_devices
+        )
+      end
       connection = Connection.new(
         board: selection.fetch(:board),
         port: selection.fetch(:port),
@@ -366,7 +394,7 @@ module CodingAdventures
         runner: runner,
         transport: transport,
         connection_option: selection.fetch(:connection_option),
-        endpoint: endpoint,
+        endpoint: resolved_endpoint,
         baud_rate: options.delete(:baud_rate) || options.delete(:baud) || DEFAULT_BAUD_RATE,
         timeout_ms: options.delete(:timeout_ms) || DEFAULT_TIMEOUT_MS,
         **options
@@ -488,6 +516,33 @@ module CodingAdventures
 
     def connection_uses_serial_port?(connection_option)
       connection_option.nil? || connection_option.fetch("transport") == "serial"
+    end
+
+    def connection_uses_bluetooth_endpoint?(connection_option)
+      return false if connection_option.nil?
+
+      %w[bluetooth_le bluetooth_classic].include?(connection_option["transport"]) ||
+        %w[bluetooth_le_gatt bluetooth_classic_rfcomm].include?(connection_option["endpoint_transport"]) ||
+        %w[ble btspp rfcomm].include?(connection_option["endpoint_scheme"])
+    end
+
+    def bluetooth_candidate_matches_connection?(candidate, connection_option)
+      endpoint = candidate.fetch("endpoint", {})
+      transport = connection_option["transport"]
+      endpoint_transport = connection_option["endpoint_transport"]
+      endpoint_scheme = connection_option["endpoint_scheme"]
+
+      (transport && endpoint["transport"] == transport) ||
+        (endpoint_transport && endpoint["endpoint_transport"] == endpoint_transport) ||
+        (endpoint_scheme && endpoint["endpoint_scheme"] == endpoint_scheme)
+    end
+
+    def bluetooth_endpoint_choice_list(candidates)
+      candidates.each_with_index.map do |candidate, index|
+        endpoint = candidate.fetch("endpoint")
+        display_name = candidate["display_name"] || candidate["device"] || endpoint.fetch("endpoint")
+        "#{index + 1}. #{display_name} - #{endpoint.fetch("endpoint")}"
+      end.join("\n")
     end
 
     def flash_without_port?(board, flash)

@@ -120,6 +120,61 @@ local function connection_uses_tcp_endpoint(connection_option)
     )
 end
 
+local function connection_uses_bluetooth_endpoint(connection_option)
+    return connection_option ~= nil and (
+        connection_option.transport == "bluetooth_le" or
+        connection_option.transport == "bluetooth_classic" or
+        connection_option.endpoint_transport == "bluetooth_le_gatt" or
+        connection_option.endpoint_transport == "bluetooth_classic_rfcomm" or
+        connection_option.endpoint_scheme == "ble" or
+        connection_option.endpoint_scheme == "btspp" or
+        connection_option.endpoint_scheme == "rfcomm"
+    )
+end
+
+local function bluetooth_candidate_matches_connection(candidate, connection_option)
+    local endpoint = candidate.endpoint or {}
+    return (
+        connection_option.transport ~= nil and endpoint.transport == connection_option.transport
+    ) or (
+        connection_option.endpoint_transport ~= nil and endpoint.endpoint_transport == connection_option.endpoint_transport
+    ) or (
+        connection_option.endpoint_scheme ~= nil and endpoint.endpoint_scheme == connection_option.endpoint_scheme
+    )
+end
+
+local function bluetooth_endpoint_choice_list(candidates)
+    local lines = {}
+    for index, candidate in ipairs(candidates) do
+        local endpoint = candidate.endpoint or {}
+        local display_name = candidate.display_name or candidate.device or endpoint.endpoint
+        table.insert(lines, tostring(index) .. ". " .. tostring(display_name) .. " - " .. tostring(endpoint.endpoint))
+    end
+    return table.concat(lines, "\n")
+end
+
+function M.bluetooth_connection_endpoint(connection_option, devices)
+    local matches = {}
+    for _, candidate in ipairs(M.bluetooth_endpoint_candidates(devices)) do
+        if bluetooth_candidate_matches_connection(candidate, connection_option) then
+            table.insert(matches, candidate)
+        end
+    end
+
+    if #matches == 1 then
+        return tostring(matches[1].endpoint.endpoint)
+    end
+
+    local display_name = connection_option.display_name or connection_option.transport or "Bluetooth"
+    if #matches == 0 then
+        error(display_name ..
+            " found no Board VM Bluetooth endpoints; pair or power on the board, pass endpoint = ..., or choose via = \"serial\"")
+    end
+
+    error("Multiple Board VM Bluetooth endpoints match " ..
+        display_name .. "; pass endpoint = ...\n" .. bluetooth_endpoint_choice_list(matches))
+end
+
 local function parse_tcp_endpoint(endpoint)
     local authority = tostring(endpoint or ""):gsub("^tcp://", "")
     local host, port = authority:match("^%[([^%]]+)%]:(%d+)$")
@@ -634,13 +689,18 @@ function M.connect(selector, options)
         ota = options.ota,
     })
 
+    local endpoint = options.endpoint
+    if endpoint == nil and connection_uses_bluetooth_endpoint(connection_option) then
+        endpoint = M.bluetooth_connection_endpoint(connection_option, options.bluetooth_devices)
+    end
+
     return Connection.new({
         target = target,
         port = port,
         device = device,
         connection_option = connection_option,
         transport = options.transport,
-        endpoint = options.endpoint,
+        endpoint = endpoint,
         timeout_ms = options.timeout_ms,
     })
 end

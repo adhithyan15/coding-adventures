@@ -15,6 +15,7 @@ from board_vm_native import (
     ProtocolResult,
     Session,
     TcpTransport,
+    bluetooth_connection_endpoint,
     bluetooth_devices,
     bluetooth_endpoint,
     bluetooth_endpoint_candidates,
@@ -271,6 +272,35 @@ def test_bluetooth_endpoint_candidates_default_to_host_discovery(monkeypatch):
     assert candidates[0]["endpoint"]["endpoint"] == "btspp://esp32-board-vm:3"
 
 
+def test_bluetooth_connection_endpoint_filters_to_the_selected_transport():
+    option = select_connection_option("uno-r4-wifi", transport="BLE")
+
+    endpoint = bluetooth_connection_endpoint(
+        option,
+        devices=[
+            {
+                "id": "esp32-board-vm",
+                "name": "ESP32 Board VM",
+                "paired": True,
+                "board_vm_rfcomm_channels": [3],
+            },
+            {
+                "id": "uno-r4",
+                "name": "Uno R4 Board VM",
+                "address": "AA:BB:CC:DD:EE:FF",
+                "service_uuids": ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"],
+            },
+        ],
+    )
+
+    assert endpoint == (
+        "ble://AA:BB:CC:DD:EE:FF"
+        "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+        "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+        "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+    )
+
+
 def test_connection_options_can_be_selected_without_exposing_ports():
     default = select_connection_option("uno-r4-wifi")
     wifi = select_connection_option("uno-r4-wifi", transport="wifi")
@@ -336,6 +366,30 @@ def test_connect_can_use_a_wireless_connection_option_with_an_injected_endpoint(
     assert connection.wireless_connection is True
     assert connection.ota_connection is True
     assert len(transport.frames) == 2
+
+
+def test_connect_auto_selects_bluetooth_endpoint_candidates():
+    connection = connect(
+        "uno-r4-wifi",
+        via="BLE",
+        bluetooth_devices=[
+            {
+                "id": "uno-r4",
+                "name": "Uno R4 Board VM",
+                "address": "AA:BB:CC:DD:EE:FF",
+                "service_uuids": ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"],
+            }
+        ],
+    )
+
+    assert connection.port is None
+    assert connection.connection_transport == "bluetooth_le"
+    assert connection.endpoint == (
+        "ble://AA:BB:CC:DD:EE:FF"
+        "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+        "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+        "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+    )
 
 
 def test_connect_builds_a_tcp_transport_for_wifi_endpoints():
