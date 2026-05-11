@@ -268,6 +268,57 @@ module CodingAdventures
           "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e", connection.endpoint
       end
 
+      def test_bluetooth_transport_uses_rust_backend_open_plan
+        transport = BluetoothTransport.new(
+          endpoint: "btspp://ESP32-BoardVM:3",
+          timeout_ms: 500,
+          backend: {
+            "endpoint" => BoardVM.bluetooth_endpoint("btspp://ESP32-BoardVM:3"),
+            "backend" => "macos_rfcomm",
+            "status" => "ready",
+            "stream_path" => "/dev/cu.ESP32-BoardVM",
+            "message" => nil
+          }
+        )
+
+        assert_equal "btspp://ESP32-BoardVM:3", transport.endpoint
+        assert_equal "ready", transport.status
+        assert_equal "/dev/cu.ESP32-BoardVM", transport.stream_path
+        assert_equal "bluetooth_classic_rfcomm", transport.backend.fetch("endpoint").fetch("endpoint_transport")
+      end
+
+      def test_connect_builds_a_bluetooth_transport_from_rust_backend_plan
+        connection = BoardVM.esp32(
+          via: "bluetooth_classic",
+          bluetooth_devices: [
+            {
+              "id" => "esp32-board-vm",
+              "name" => "ESP32 Board VM",
+              "paired" => true,
+              "board_vm_rfcomm_channels" => [3]
+            }
+          ],
+          bluetooth_backend_plan: {
+            "endpoint" => BoardVM.bluetooth_endpoint("btspp://esp32-board-vm:3"),
+            "backend" => "macos_rfcomm",
+            "status" => "ready",
+            "stream_path" => "/dev/cu.ESP32-BoardVM",
+            "message" => nil
+          },
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        transport = connection.send(:active_transport)
+
+        assert_nil connection.port
+        assert_equal "bluetooth_classic", connection.connection_transport
+        assert_equal "btspp://esp32-board-vm:3", connection.endpoint
+        assert_instance_of BluetoothTransport, transport
+        assert_equal "macos_rfcomm", transport.backend.fetch("backend")
+        assert_equal "/dev/cu.ESP32-BoardVM", transport.stream_path
+      end
+
       def test_connect_builds_a_tcp_transport_for_wifi_endpoints
         connection = BoardVM.uno_r4_wifi(
           via: "Wi-Fi",

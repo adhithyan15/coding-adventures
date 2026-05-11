@@ -218,5 +218,83 @@ module CodingAdventures
         Process.clock_gettime(Process::CLOCK_MONOTONIC)
       end
     end
+
+    class BluetoothTransport
+      FRAME_DELIMITER = "\x00".b
+
+      attr_reader :endpoint, :backend, :stream_path
+
+      def initialize(endpoint:, timeout_ms:, backend: nil)
+        @endpoint = endpoint.to_s
+        @timeout_ms = timeout_ms
+        @backend = backend || BoardVM.bluetooth_backend(@endpoint)
+        raise TransportError, "unsupported Board VM Bluetooth endpoint #{@endpoint.inspect}" unless @backend
+
+        @stream_path = @backend["stream_path"]
+        @io = nil
+      end
+
+      def status
+        @backend["status"]
+      end
+
+      def transact(frame, timeout_ms: @timeout_ms)
+        write(frame)
+        read_frame(timeout_ms: timeout_ms)
+      end
+
+      def write(frame)
+        io.write(frame.b)
+        io.flush
+      rescue SystemCallError, IOError => e
+        raise TransportError, "failed to write Board VM frame to #{@endpoint}: #{e.message}"
+      end
+
+      def close
+        @io&.close
+      ensure
+        @io = nil
+      end
+
+      private
+
+      def io
+        @io ||= begin
+          unless status == "ready" && @stream_path && !@stream_path.empty?
+            message = @backend["message"] || "Bluetooth backend is not ready"
+            raise TransportError, "failed to open Board VM Bluetooth endpoint #{@endpoint}: #{message}"
+          end
+          File.open(@stream_path, "r+b")
+        rescue SystemCallError => e
+          raise TransportError, "failed to open Board VM Bluetooth stream #{@stream_path}: #{e.message}"
+        end
+      end
+
+      def read_frame(timeout_ms:)
+        deadline = monotonic_now + (timeout_ms.to_f / 1000.0)
+        response = +"".b
+
+        loop do
+          remaining = deadline - monotonic_now
+          raise TransportError, "timed out waiting for Board VM response on #{@endpoint}" if remaining <= 0
+
+          readable = IO.select([io], nil, nil, remaining)
+          next if readable.nil?
+
+          byte = io.read_nonblock(1, exception: false)
+          next if byte == :wait_readable
+          raise TransportError, "Board VM Bluetooth endpoint #{@endpoint} closed" if byte.nil? || byte.empty?
+
+          response << byte
+          return response if byte == FRAME_DELIMITER
+        end
+      rescue SystemCallError, IOError => e
+        raise TransportError, "failed to read Board VM response from #{@endpoint}: #{e.message}"
+      end
+
+      def monotonic_now
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      end
+    end
   end
 end

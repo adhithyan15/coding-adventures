@@ -70,6 +70,10 @@ function M.bluetooth_endpoint(endpoint)
     return native().bluetooth_endpoint(endpoint)
 end
 
+function M.bluetooth_backend(endpoint)
+    return native().bluetooth_backend(endpoint)
+end
+
 function M.bluetooth_devices()
     return native().bluetooth_devices()
 end
@@ -255,6 +259,75 @@ function TcpTransport:close()
 end
 
 M.TcpTransport = TcpTransport
+
+local BluetoothTransport = {}
+BluetoothTransport.__index = BluetoothTransport
+
+function BluetoothTransport.new(options)
+    options = options or {}
+    local endpoint = tostring(options.endpoint or "")
+    local backend = options.backend or M.bluetooth_backend(endpoint)
+    if backend == nil then
+        error("unsupported Board VM Bluetooth endpoint: " .. endpoint)
+    end
+    return setmetatable({
+        endpoint = endpoint,
+        timeout_ms = options.timeout_ms or 1000,
+        backend = backend,
+        stream_path = backend.stream_path,
+        file = nil,
+    }, BluetoothTransport)
+end
+
+function BluetoothTransport:status()
+    return self.backend.status
+end
+
+function BluetoothTransport:_io()
+    if self.file then
+        return self.file
+    end
+    if self.backend.status ~= "ready" or self.stream_path == nil or tostring(self.stream_path) == "" then
+        error("failed to open Board VM Bluetooth endpoint " ..
+            self.endpoint .. ": " .. tostring(self.backend.message or "Bluetooth backend is not ready"))
+    end
+    local file, err = io.open(self.stream_path, "r+b")
+    if file == nil then
+        error("failed to open Board VM Bluetooth stream " .. tostring(self.stream_path) .. ": " .. tostring(err))
+    end
+    self.file = file
+    return self.file
+end
+
+function BluetoothTransport:write(frame)
+    assert(self:_io():write(frame))
+    assert(self:_io():flush())
+end
+
+function BluetoothTransport:transact(frame, options)
+    options = options or {}
+    self:write(frame)
+    local chunks = {}
+    while true do
+        local byte = self:_io():read(1)
+        if byte == nil or byte == "" then
+            error("Board VM Bluetooth endpoint " .. self.endpoint .. " closed")
+        end
+        table.insert(chunks, byte)
+        if byte:byte(1) == 0 then
+            return table.concat(chunks)
+        end
+    end
+end
+
+function BluetoothTransport:close()
+    if self.file then
+        self.file:close()
+        self.file = nil
+    end
+end
+
+M.BluetoothTransport = BluetoothTransport
 
 local function clone_table(value)
     if type(value) ~= "table" then
@@ -577,6 +650,7 @@ function Connection.new(options)
         transport = options.transport,
         endpoint = options.endpoint,
         timeout_ms = options.timeout_ms or 1000,
+        bluetooth_backend_plan = options.bluetooth_backend_plan,
     }, Connection)
 end
 
@@ -627,6 +701,18 @@ function Connection:active_transport()
         self.transport = TcpTransport.new({
             endpoint = self.endpoint,
             timeout_ms = self.timeout_ms,
+        })
+        return self.transport
+    end
+    if connection_uses_bluetooth_endpoint(self.connection_option) then
+        if self.endpoint == nil or tostring(self.endpoint) == "" then
+            error((self.connection_option.display_name or "Board VM Bluetooth connection") ..
+                " requires a Board VM Bluetooth endpoint; pass endpoint = ... or choose via = \"serial\"")
+        end
+        self.transport = BluetoothTransport.new({
+            endpoint = self.endpoint,
+            timeout_ms = self.timeout_ms,
+            backend = self.bluetooth_backend_plan,
         })
         return self.transport
     end
@@ -702,6 +788,7 @@ function M.connect(selector, options)
         transport = options.transport,
         endpoint = endpoint,
         timeout_ms = options.timeout_ms,
+        bluetooth_backend_plan = options.bluetooth_backend_plan,
     })
 end
 

@@ -248,6 +248,54 @@ describe("coding_adventures.board_vm_native", function()
         )
     end)
 
+    it("builds Bluetooth transports from Rust backend plans", function()
+        local backend = {
+            endpoint = board_vm.bluetooth_endpoint("btspp://ESP32-BoardVM:3"),
+            backend = "macos_rfcomm",
+            status = "ready",
+            stream_path = "/dev/cu.ESP32-BoardVM",
+            message = nil,
+        }
+        local transport = board_vm.BluetoothTransport.new({
+            endpoint = "btspp://ESP32-BoardVM:3",
+            timeout_ms = 500,
+            backend = backend,
+        })
+
+        assert.are.equal("btspp://ESP32-BoardVM:3", transport.endpoint)
+        assert.are.equal("ready", transport:status())
+        assert.are.equal("/dev/cu.ESP32-BoardVM", transport.stream_path)
+        assert.are.equal("bluetooth_classic_rfcomm", transport.backend.endpoint.endpoint_transport)
+    end)
+
+    it("connects Bluetooth sessions through Rust backend plans", function()
+        local connection = board_vm.connect("esp32", {
+            via = "bluetooth_classic",
+            bluetooth_devices = {
+                {
+                    id = "esp32-board-vm",
+                    name = "ESP32 Board VM",
+                    paired = true,
+                    board_vm_rfcomm_channels = { 3 },
+                },
+            },
+            bluetooth_backend_plan = {
+                endpoint = board_vm.bluetooth_endpoint("btspp://esp32-board-vm:3"),
+                backend = "macos_rfcomm",
+                status = "ready",
+                stream_path = "/dev/cu.ESP32-BoardVM",
+                message = nil,
+            },
+        })
+        local session = connection:session()
+
+        assert.is_nil(connection.port)
+        assert.are.equal("bluetooth_classic", connection:connection_transport())
+        assert.are.equal("btspp://esp32-board-vm:3", connection.endpoint)
+        assert.are.equal("macos_rfcomm", session.transport.backend.backend)
+        assert.are.equal("/dev/cu.ESP32-BoardVM", session.transport.stream_path)
+    end)
+
     it("builds TCP transports for Wi-Fi endpoints", function()
         local connection = board_vm.connect("uno-r4-wifi", {
             via = "Wi-Fi",

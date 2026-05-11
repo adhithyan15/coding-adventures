@@ -43,7 +43,8 @@ module CodingAdventures
         pico_uf2_upload_options: nil,
         pico_runtime_port: true,
         pico_runtime_port_wait_ms: DEFAULT_PICO_RUNTIME_PORT_WAIT_MS,
-        pico_runtime_port_poll_ms: DEFAULT_PICO_RUNTIME_PORT_POLL_MS
+        pico_runtime_port_poll_ms: DEFAULT_PICO_RUNTIME_PORT_POLL_MS,
+        bluetooth_backend_plan: nil
       )
         @board = board
         @port = port
@@ -78,6 +79,7 @@ module CodingAdventures
         @pico_runtime_port = pico_runtime_port
         @pico_runtime_port_wait_ms = pico_runtime_port_wait_ms
         @pico_runtime_port_poll_ms = pico_runtime_port_poll_ms
+        @bluetooth_backend_plan = bluetooth_backend_plan
       end
 
       def led
@@ -522,6 +524,19 @@ module CodingAdventures
           return @transport = TcpTransport.new(endpoint: endpoint, timeout_ms: timeout_ms)
         end
 
+        if bluetooth_endpoint_connection?
+          unless endpoint && !endpoint.to_s.empty?
+            raise TransportError,
+              "#{connection_display_name} requires a Board VM Bluetooth endpoint; pass endpoint: ... or choose via: :serial"
+          end
+
+          return @transport = BluetoothTransport.new(
+            endpoint: endpoint,
+            timeout_ms: timeout_ms,
+            backend: @bluetooth_backend_plan
+          )
+        end
+
         unless serial_connection?
           raise TransportError,
             "#{connection_display_name} requires an injected Board VM transport endpoint; pass transport: or choose via: :serial"
@@ -537,6 +552,13 @@ module CodingAdventures
         connection_option &&
           (connection_option["endpoint_transport"] == "tcp_socket" ||
             connection_option["endpoint_scheme"] == "tcp")
+      end
+
+      def bluetooth_endpoint_connection?
+        connection_option &&
+          (["bluetooth_le", "bluetooth_classic"].include?(connection_option["transport"]) ||
+            ["bluetooth_le_gatt", "bluetooth_classic_rfcomm"].include?(connection_option["endpoint_transport"]) ||
+            ["ble", "btspp", "rfcomm"].include?(connection_option["endpoint_scheme"]))
       end
 
       def connection_display_name

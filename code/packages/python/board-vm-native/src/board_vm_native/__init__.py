@@ -471,6 +471,71 @@ class TcpTransport:
             raise OSError(f"failed to read Board VM response from {self.endpoint}: {error}") from error
 
 
+class BluetoothTransport:
+    FRAME_DELIMITER = b"\x00"
+
+    def __init__(
+        self,
+        endpoint: str,
+        *,
+        timeout_ms: int = DEFAULT_TIMEOUT_MS,
+        backend: dict[str, Any] | None = None,
+    ):
+        self.endpoint = str(endpoint)
+        self.timeout_ms = int(timeout_ms)
+        self.backend = dict(backend or bluetooth_backend(self.endpoint) or {})
+        if not self.backend:
+            raise ValueError(f"unsupported Board VM Bluetooth endpoint: {self.endpoint}")
+        self.stream_path = self.backend.get("stream_path")
+        self._stream: Any = None
+
+    @property
+    def status(self) -> str:
+        return str(self.backend.get("status"))
+
+    def transact(self, frame: bytes, timeout_ms: int | None = None) -> bytes:
+        self.write(frame)
+        return self._read_frame(timeout_ms=self.timeout_ms if timeout_ms is None else int(timeout_ms))
+
+    def write(self, frame: bytes) -> None:
+        try:
+            self._io().write(bytes(frame))
+            self._io().flush()
+        except OSError as error:
+            raise OSError(f"failed to write Board VM frame to {self.endpoint}: {error}") from error
+
+    def close(self) -> None:
+        if self._stream is not None:
+            self._stream.close()
+            self._stream = None
+
+    def _io(self) -> Any:
+        if self._stream is None:
+            if self.status != "ready" or not self.stream_path:
+                message = self.backend.get("message") or "Bluetooth backend is not ready"
+                raise OSError(f"failed to open Board VM Bluetooth endpoint {self.endpoint}: {message}")
+            try:
+                self._stream = open(str(self.stream_path), "r+b", buffering=0)
+            except OSError as error:
+                raise OSError(
+                    f"failed to open Board VM Bluetooth stream {self.stream_path}: {error}"
+                ) from error
+        return self._stream
+
+    def _read_frame(self, *, timeout_ms: int) -> bytes:
+        response = bytearray()
+        try:
+            while True:
+                byte = self._io().read(1)
+                if not byte:
+                    raise OSError(f"Board VM Bluetooth endpoint {self.endpoint} closed")
+                response.extend(byte)
+                if byte == self.FRAME_DELIMITER:
+                    return bytes(response)
+        except OSError as error:
+            raise OSError(f"failed to read Board VM response from {self.endpoint}: {error}") from error
+
+
 class Session:
     def __init__(self, *, next_request_id: int = 1, transport: Any = None, timeout_ms: int = 1000):
         self.next_request_id = next_request_id
@@ -1291,6 +1356,8 @@ class Connection:
         pico_runtime_port: bool = True,
         pico_runtime_port_wait_ms: int = DEFAULT_PICO_RUNTIME_PORT_WAIT_MS,
         pico_runtime_port_poll_ms: int = DEFAULT_PICO_RUNTIME_PORT_POLL_MS,
+        timeout_ms: int = DEFAULT_TIMEOUT_MS,
+        bluetooth_backend_plan: dict[str, Any] | None = None,
         esp_upload_options: dict[str, Any] | None = None,
         pico_uf2_upload_options: dict[str, Any] | None = None,
     ):
@@ -1308,6 +1375,8 @@ class Connection:
         self.pico_runtime_port = pico_runtime_port
         self.pico_runtime_port_wait_ms = int(pico_runtime_port_wait_ms)
         self.pico_runtime_port_poll_ms = int(pico_runtime_port_poll_ms)
+        self.timeout_ms = int(timeout_ms)
+        self.bluetooth_backend_plan = None if bluetooth_backend_plan is None else dict(bluetooth_backend_plan)
         self.esp_upload_options = dict(esp_upload_options or {})
         self.pico_uf2_upload_options = dict(pico_uf2_upload_options or {})
 
@@ -1394,7 +1463,20 @@ class Connection:
                     f"{display_name} requires a Board VM TCP endpoint; "
                     "pass endpoint='tcp://host:port' or choose via='serial'"
                 )
-            self.transport = TcpTransport(self.endpoint, timeout_ms=DEFAULT_TIMEOUT_MS)
+            self.transport = TcpTransport(self.endpoint, timeout_ms=self.timeout_ms)
+            return self.transport
+        if self._bluetooth_endpoint_connection():
+            if self.endpoint is None or not self.endpoint:
+                display_name = self.connection_option.get("display_name", self.connection_transport)
+                raise ValueError(
+                    f"{display_name} requires a Board VM Bluetooth endpoint; "
+                    "pass endpoint=... or choose via='serial'"
+                )
+            self.transport = BluetoothTransport(
+                self.endpoint,
+                timeout_ms=self.timeout_ms,
+                backend=self.bluetooth_backend_plan,
+            )
             return self.transport
         return None
 
@@ -1403,6 +1485,9 @@ class Connection:
             self.connection_option.get("endpoint_transport") == "tcp_socket"
             or self.connection_option.get("endpoint_scheme") == "tcp"
         )
+
+    def _bluetooth_endpoint_connection(self) -> bool:
+        return _connection_uses_bluetooth_endpoint(self.connection_option)
 
     def rediscover_runtime_port(self) -> BoardDevice:
         deadline = time.monotonic() + (self.pico_runtime_port_wait_ms / 1000)
@@ -1456,6 +1541,15 @@ def find_target(board_id: str) -> BoardTarget | None:
 def bluetooth_endpoint(endpoint: str) -> dict[str, Any] | None:
     parsed = _native.bluetooth_endpoint(str(endpoint))
     return None if parsed is None else dict(parsed)
+
+
+def bluetooth_backend(endpoint: str) -> dict[str, Any] | None:
+    plan = _native.bluetooth_backend(str(endpoint))
+    if plan is None:
+        return None
+    value = dict(plan)
+    value["endpoint"] = dict(value["endpoint"])
+    return value
 
 
 def bluetooth_devices() -> list[dict[str, Any]]:
@@ -1979,6 +2073,8 @@ def connect(
     transport: Any = None,
     endpoint: str | None = None,
     bluetooth_devices: Iterable[dict[str, Any]] | None = None,
+    bluetooth_backend_plan: dict[str, Any] | None = None,
+    timeout_ms: int = DEFAULT_TIMEOUT_MS,
     runner: Any = None,
     cargo_workspace: str | pathlib.Path | None = None,
     firmware_image: str | pathlib.Path | None = None,
@@ -2062,6 +2158,8 @@ def connect(
         pico_runtime_port=pico_runtime_port,
         pico_runtime_port_wait_ms=pico_runtime_port_wait_ms,
         pico_runtime_port_poll_ms=pico_runtime_port_poll_ms,
+        timeout_ms=timeout_ms,
+        bluetooth_backend_plan=bluetooth_backend_plan,
         esp_upload_options=esp_upload_options,
         pico_uf2_upload_options=pico_uf2_upload_options,
     )
@@ -2194,6 +2292,7 @@ __all__ = [
     "BoardDescriptor",
     "BoardTarget",
     "BOOT_POLICIES",
+    "BluetoothTransport",
     "Capability",
     "Connection",
     "DEFAULT_PICO_RUNTIME_PORT_POLL_MS",
@@ -2212,6 +2311,7 @@ __all__ = [
     "Session",
     "SessionResult",
     "TcpTransport",
+    "bluetooth_backend",
     "bluetooth_connection_endpoint",
     "bluetooth_devices",
     "bluetooth_endpoint",

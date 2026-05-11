@@ -10,6 +10,7 @@ use board_vm_host::{
     GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
+    bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
     bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
     build_caps_query_wire_frame, build_gpio_handle_close_module, build_gpio_handle_read_module,
     build_gpio_handle_write_module, build_gpio_open_module, build_gpio_read_module,
@@ -28,7 +29,7 @@ use board_vm_language_core::{
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
     program_format_name, raw_module_len, run_status_name, wireless_transport_name,
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
+    LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
     LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
@@ -428,6 +429,15 @@ extern "C" fn native_bluetooth_endpoint(_self_val: VALUE, endpoint_val: VALUE) -
         .unwrap_or_else(|| ruby_bridge::raise_arg_error("endpoint must be a Ruby String"));
     match core_parse_bluetooth_endpoint(&endpoint) {
         Some(endpoint) => bluetooth_endpoint_to_rb(&endpoint),
+        None => ruby_bridge::nil_value(),
+    }
+}
+
+extern "C" fn native_bluetooth_backend(_self_val: VALUE, endpoint_val: VALUE) -> VALUE {
+    let endpoint = ruby_bridge::str_from_rb(endpoint_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("endpoint must be a Ruby String"));
+    match core_bluetooth_backend_open_plan(&endpoint) {
+        Some(plan) => bluetooth_backend_open_plan_to_rb(&plan),
         None => ruby_bridge::nil_value(),
     }
 }
@@ -833,6 +843,30 @@ fn bluetooth_endpoint_to_rb(endpoint: &LanguageBluetoothEndpoint) -> VALUE {
         endpoint
             .channel
             .map(rb_usize)
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash
+}
+
+fn bluetooth_backend_open_plan_to_rb(plan: &LanguageBluetoothBackendOpenPlan) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "endpoint", bluetooth_endpoint_to_rb(&plan.endpoint));
+    hash_set(hash, "backend", ruby_bridge::str_to_rb(&plan.backend));
+    hash_set(hash, "status", ruby_bridge::str_to_rb(&plan.status));
+    hash_set(
+        hash,
+        "stream_path",
+        plan.stream_path
+            .as_ref()
+            .map(|value| ruby_bridge::str_to_rb(value))
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash_set(
+        hash,
+        "message",
+        plan.message
+            .as_ref()
+            .map(|value| ruby_bridge::str_to_rb(value))
             .unwrap_or_else(ruby_bridge::nil_value),
     );
     hash
@@ -1353,6 +1387,12 @@ pub extern "C" fn Init_board_vm_native() {
         native,
         "bluetooth_endpoint",
         native_bluetooth_endpoint as *const c_void,
+        1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "bluetooth_backend",
+        native_bluetooth_backend as *const c_void,
         1,
     );
     ruby_bridge::define_module_function_raw(

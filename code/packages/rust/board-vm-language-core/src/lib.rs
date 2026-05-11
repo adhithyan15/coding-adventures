@@ -18,10 +18,12 @@ use std::str;
 
 use board_vm_bluetooth::{
     board_vm_endpoint_candidates as board_vm_bluetooth_endpoint_candidates,
-    discover_bluetooth_devices as discover_board_vm_bluetooth_devices,
+    discover_bluetooth_devices as discover_board_vm_bluetooth_devices, macos_rfcomm_device_path,
     parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint, BluetoothDiscoveredDevice,
     BluetoothEndpoint, BluetoothEndpointCandidate,
 };
+#[cfg(target_os = "macos")]
+use board_vm_bluetooth::{MacosDevRfcommDeviceResolver, MacosRfcommDeviceResolver};
 use board_vm_esp_rom::{
     DEFAULT_BAUD_RATE as ESP_DEFAULT_BAUD_RATE,
     DEFAULT_FLASH_BLOCK_SIZE as ESP_DEFAULT_FLASH_BLOCK_SIZE,
@@ -343,6 +345,15 @@ pub struct LanguageBluetoothEndpointCandidate {
     pub display_name: String,
     pub paired: bool,
     pub requires_pairing: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBluetoothBackendOpenPlan {
+    pub endpoint: LanguageBluetoothEndpoint,
+    pub backend: String,
+    pub status: String,
+    pub stream_path: Option<String>,
+    pub message: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -675,6 +686,126 @@ pub fn discover_bluetooth_devices() -> Vec<LanguageBluetoothDiscoveredDevice> {
 pub fn discover_bluetooth_endpoint_candidates() -> Vec<LanguageBluetoothEndpointCandidate> {
     let devices = discover_bluetooth_devices();
     bluetooth_endpoint_candidates_from_devices(&devices)
+}
+
+pub fn bluetooth_backend_open_plan(endpoint: &str) -> Option<LanguageBluetoothBackendOpenPlan> {
+    let endpoint = parse_board_vm_bluetooth_endpoint(endpoint).ok()?;
+    match endpoint {
+        BluetoothEndpoint::BleGatt(endpoint) => Some(language_bluetooth_ble_open_plan(endpoint)),
+        BluetoothEndpoint::Rfcomm(endpoint) => {
+            #[cfg(target_os = "macos")]
+            {
+                let mut resolver = MacosDevRfcommDeviceResolver;
+                match resolver.rfcomm_device_paths() {
+                    Ok(paths) => Some(language_bluetooth_rfcomm_open_plan_from_paths(
+                        endpoint, paths,
+                    )),
+                    Err(error) => {
+                        let endpoint =
+                            language_bluetooth_endpoint(BluetoothEndpoint::Rfcomm(endpoint))?;
+                        Some(LanguageBluetoothBackendOpenPlan {
+                            endpoint,
+                            backend: "macos_rfcomm".to_owned(),
+                            status: "unavailable".to_owned(),
+                            stream_path: None,
+                            message: Some(format!(
+                                "macOS RFCOMM device discovery failed: {error:?}"
+                            )),
+                        })
+                    }
+                }
+            }
+            #[cfg(not(target_os = "macos"))]
+            {
+                let endpoint = language_bluetooth_endpoint(BluetoothEndpoint::Rfcomm(endpoint))?;
+                Some(unsupported_bluetooth_backend_open_plan(endpoint))
+            }
+        }
+    }
+}
+
+pub fn bluetooth_backend_open_plan_from_rfcomm_paths<I, S>(
+    endpoint: &str,
+    paths: I,
+) -> Option<LanguageBluetoothBackendOpenPlan>
+where
+    I: IntoIterator<Item = S>,
+    S: AsRef<str>,
+{
+    let endpoint = parse_board_vm_bluetooth_endpoint(endpoint).ok()?;
+    match endpoint {
+        BluetoothEndpoint::BleGatt(endpoint) => Some(language_bluetooth_ble_open_plan(endpoint)),
+        BluetoothEndpoint::Rfcomm(endpoint) => Some(
+            language_bluetooth_rfcomm_open_plan_from_paths(endpoint, paths),
+        ),
+    }
+}
+
+fn language_bluetooth_rfcomm_open_plan_from_paths<I, S>(
+    endpoint: board_vm_bluetooth::RfcommEndpoint,
+    paths: I,
+) -> LanguageBluetoothBackendOpenPlan
+where
+    I: IntoIterator<Item = S>,
+    S: AsRef<str>,
+{
+    let stream_path = macos_rfcomm_device_path(&endpoint, paths);
+    let device = endpoint.device.clone();
+    let channel = endpoint.channel;
+    let endpoint = language_bluetooth_endpoint(BluetoothEndpoint::Rfcomm(endpoint))
+        .expect("parsed RFCOMM endpoint should map to language metadata");
+    match stream_path {
+        Some(stream_path) => LanguageBluetoothBackendOpenPlan {
+            endpoint,
+            backend: "macos_rfcomm".to_owned(),
+            status: "ready".to_owned(),
+            stream_path: Some(stream_path),
+            message: None,
+        },
+        None => LanguageBluetoothBackendOpenPlan {
+            endpoint,
+            backend: "macos_rfcomm".to_owned(),
+            status: "not_found".to_owned(),
+            stream_path: None,
+            message: Some(format!(
+                "no macOS RFCOMM serial device found for {device} channel {channel}"
+            )),
+        },
+    }
+}
+
+fn language_bluetooth_ble_open_plan(
+    endpoint: board_vm_bluetooth::BleGattEndpoint,
+) -> LanguageBluetoothBackendOpenPlan {
+    let endpoint = language_bluetooth_endpoint(BluetoothEndpoint::BleGatt(endpoint))
+        .expect("parsed BLE endpoint should map to language metadata");
+    #[cfg(target_os = "macos")]
+    let backend = "macos_core_bluetooth";
+    #[cfg(not(target_os = "macos"))]
+    let backend = "unsupported";
+    LanguageBluetoothBackendOpenPlan {
+        endpoint,
+        backend: backend.to_owned(),
+        status: "unavailable".to_owned(),
+        stream_path: None,
+        message: Some("BLE GATT backend opening is not wired yet".to_owned()),
+    }
+}
+
+#[cfg(not(target_os = "macos"))]
+fn unsupported_bluetooth_backend_open_plan(
+    endpoint: LanguageBluetoothEndpoint,
+) -> LanguageBluetoothBackendOpenPlan {
+    LanguageBluetoothBackendOpenPlan {
+        endpoint,
+        backend: "unsupported".to_owned(),
+        status: "unsupported".to_owned(),
+        stream_path: None,
+        message: Some(format!(
+            "Board VM Bluetooth backend opening is unsupported on {}",
+            std::env::consts::OS
+        )),
+    }
 }
 
 fn language_bluetooth_discovered_device(
@@ -2550,6 +2681,51 @@ mod tests {
         );
         assert!(!ble.paired);
         assert!(ble.requires_pairing);
+    }
+
+    #[test]
+    fn bluetooth_backend_open_plan_is_owned_by_rust_language_core() {
+        let plan = bluetooth_backend_open_plan_from_rfcomm_paths(
+            "btspp://ESP32-BoardVM:3",
+            ["/dev/tty.ESP32-BoardVM", "/dev/cu.ESP32-BoardVM"],
+        )
+        .unwrap();
+
+        assert_eq!(plan.backend, "macos_rfcomm");
+        assert_eq!(plan.status, "ready");
+        assert_eq!(
+            plan.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        );
+        assert_eq!(plan.endpoint.endpoint, "btspp://ESP32-BoardVM:3");
+        assert_eq!(plan.stream_path.as_deref(), Some("/dev/cu.ESP32-BoardVM"));
+        assert_eq!(plan.message, None);
+
+        let missing = bluetooth_backend_open_plan_from_rfcomm_paths(
+            "btspp://ESP32-BoardVM:3",
+            ["/dev/cu.NotBoardVM"],
+        )
+        .unwrap();
+        assert_eq!(missing.backend, "macos_rfcomm");
+        assert_eq!(missing.status, "not_found");
+        assert_eq!(missing.stream_path, None);
+        assert!(missing
+            .message
+            .as_deref()
+            .unwrap()
+            .contains("no macOS RFCOMM serial device found"));
+
+        let ble = bluetooth_backend_open_plan_from_rfcomm_paths(
+            "ble://uno-r4-wifi/180f/2a19/2a1a",
+            ["/dev/cu.ESP32-BoardVM"],
+        )
+        .unwrap();
+        assert_eq!(ble.status, "unavailable");
+        assert_eq!(
+            ble.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothLeGatt
+        );
+        assert!(ble.stream_path.is_none());
     }
 
     #[test]
