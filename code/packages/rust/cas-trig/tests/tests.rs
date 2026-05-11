@@ -1,7 +1,7 @@
 // Integration tests for cas-trig.
 
 use cas_trig::{
-    asin_eval, atan_eval, cos_eval, expand_trig, power_reduce, sin_eval, tan_eval,
+    asin_eval, atan_eval, cos_eval, expand_trig, power_reduce, sin_eval, tan_eval, trig_reduce,
     trig_simplify, PI,
 };
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, COS, MUL, NEG, POW, SIN, SQRT, SUB, TAN};
@@ -18,6 +18,30 @@ fn pi_mult(n: i64, d: i64) -> IRNode {
 /// Build `Sqrt(n)`.
 fn sqrt_of(n: i64) -> IRNode {
     apply(sym(SQRT), vec![int(n)])
+}
+
+fn sin_of(arg: IRNode) -> IRNode {
+    apply(sym(SIN), vec![arg])
+}
+
+fn cos_of(arg: IRNode) -> IRNode {
+    apply(sym(COS), vec![arg])
+}
+
+fn pow_of(base: IRNode, exp: i64) -> IRNode {
+    apply(sym(POW), vec![base, int(exp)])
+}
+
+fn sin_nx(n: i64, x: IRNode) -> IRNode {
+    sin_of(apply(sym(MUL), vec![int(n), x]))
+}
+
+fn cos_nx(n: i64, x: IRNode) -> IRNode {
+    cos_of(apply(sym(MUL), vec![int(n), x]))
+}
+
+fn frac(numerator: IRNode, denominator: i64) -> IRNode {
+    apply(sym(MUL), vec![rat(1, denominator), numerator])
 }
 
 // ---------------------------------------------------------------------------
@@ -423,10 +447,13 @@ fn trig_simplify_cos_of_pi() {
 #[test]
 fn trig_simplify_walks_into_add() {
     // Add(Sin(0), Cos(Pi)) → both trig nodes simplified
-    let expr = apply(sym(ADD), vec![
-        apply(sym(SIN), vec![int(0)]),
-        apply(sym(COS), vec![sym(PI)]),
-    ]);
+    let expr = apply(
+        sym(ADD),
+        vec![
+            apply(sym(SIN), vec![int(0)]),
+            apply(sym(COS), vec![sym(PI)]),
+        ],
+    );
     let result = trig_simplify(&expr);
     if let IRNode::Apply(a) = &result {
         assert_eq!(a.args[0], int(0));
@@ -446,10 +473,7 @@ fn trig_simplify_symbolic_stays_unevaluated() {
 #[test]
 fn trig_simplify_nested_cos_then_sin() {
     // Sin(Mul(1/2, Pi)) → 1, inside a Mul
-    let expr = apply(sym(MUL), vec![
-        int(3),
-        apply(sym(SIN), vec![pi_mult(1, 2)]),
-    ]);
+    let expr = apply(sym(MUL), vec![int(3), apply(sym(SIN), vec![pi_mult(1, 2)])]);
     let result = trig_simplify(&expr);
     if let IRNode::Apply(a) = &result {
         assert_eq!(a.head, sym(MUL));
@@ -466,76 +490,104 @@ fn trig_simplify_nested_cos_then_sin() {
 #[test]
 fn expand_sin_of_sum() {
     // sin(x + y) → sin(x)·cos(y) + cos(x)·sin(y)
-    let expr = apply(sym(SIN), vec![
-        apply(sym(ADD), vec![sym("x"), sym("y")])
-    ]);
-    let expected = apply(sym(ADD), vec![
-        apply(sym(MUL), vec![
-            apply(sym(SIN), vec![sym("x")]),
-            apply(sym(COS), vec![sym("y")]),
-        ]),
-        apply(sym(MUL), vec![
-            apply(sym(COS), vec![sym("x")]),
-            apply(sym(SIN), vec![sym("y")]),
-        ]),
-    ]);
+    let expr = apply(sym(SIN), vec![apply(sym(ADD), vec![sym("x"), sym("y")])]);
+    let expected = apply(
+        sym(ADD),
+        vec![
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(SIN), vec![sym("x")]),
+                    apply(sym(COS), vec![sym("y")]),
+                ],
+            ),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(COS), vec![sym("x")]),
+                    apply(sym(SIN), vec![sym("y")]),
+                ],
+            ),
+        ],
+    );
     assert_eq!(expand_trig(&expr), expected);
 }
 
 #[test]
 fn expand_cos_of_sum() {
     // cos(x + y) → cos(x)·cos(y) - sin(x)·sin(y)
-    let expr = apply(sym(COS), vec![
-        apply(sym(ADD), vec![sym("x"), sym("y")])
-    ]);
-    let expected = apply(sym(SUB), vec![
-        apply(sym(MUL), vec![
-            apply(sym(COS), vec![sym("x")]),
-            apply(sym(COS), vec![sym("y")]),
-        ]),
-        apply(sym(MUL), vec![
-            apply(sym(SIN), vec![sym("x")]),
-            apply(sym(SIN), vec![sym("y")]),
-        ]),
-    ]);
+    let expr = apply(sym(COS), vec![apply(sym(ADD), vec![sym("x"), sym("y")])]);
+    let expected = apply(
+        sym(SUB),
+        vec![
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(COS), vec![sym("x")]),
+                    apply(sym(COS), vec![sym("y")]),
+                ],
+            ),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(SIN), vec![sym("x")]),
+                    apply(sym(SIN), vec![sym("y")]),
+                ],
+            ),
+        ],
+    );
     assert_eq!(expand_trig(&expr), expected);
 }
 
 #[test]
 fn expand_sin_of_difference() {
     // sin(x - y) → sin(x)·cos(y) - cos(x)·sin(y)
-    let expr = apply(sym(SIN), vec![
-        apply(sym(SUB), vec![sym("x"), sym("y")])
-    ]);
-    let expected = apply(sym(SUB), vec![
-        apply(sym(MUL), vec![
-            apply(sym(SIN), vec![sym("x")]),
-            apply(sym(COS), vec![sym("y")]),
-        ]),
-        apply(sym(MUL), vec![
-            apply(sym(COS), vec![sym("x")]),
-            apply(sym(SIN), vec![sym("y")]),
-        ]),
-    ]);
+    let expr = apply(sym(SIN), vec![apply(sym(SUB), vec![sym("x"), sym("y")])]);
+    let expected = apply(
+        sym(SUB),
+        vec![
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(SIN), vec![sym("x")]),
+                    apply(sym(COS), vec![sym("y")]),
+                ],
+            ),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(COS), vec![sym("x")]),
+                    apply(sym(SIN), vec![sym("y")]),
+                ],
+            ),
+        ],
+    );
     assert_eq!(expand_trig(&expr), expected);
 }
 
 #[test]
 fn expand_cos_of_difference() {
     // cos(x - y) → cos(x)·cos(y) + sin(x)·sin(y)
-    let expr = apply(sym(COS), vec![
-        apply(sym(SUB), vec![sym("x"), sym("y")])
-    ]);
-    let expected = apply(sym(ADD), vec![
-        apply(sym(MUL), vec![
-            apply(sym(COS), vec![sym("x")]),
-            apply(sym(COS), vec![sym("y")]),
-        ]),
-        apply(sym(MUL), vec![
-            apply(sym(SIN), vec![sym("x")]),
-            apply(sym(SIN), vec![sym("y")]),
-        ]),
-    ]);
+    let expr = apply(sym(COS), vec![apply(sym(SUB), vec![sym("x"), sym("y")])]);
+    let expected = apply(
+        sym(ADD),
+        vec![
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(COS), vec![sym("x")]),
+                    apply(sym(COS), vec![sym("y")]),
+                ],
+            ),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(SIN), vec![sym("x")]),
+                    apply(sym(SIN), vec![sym("y")]),
+                ],
+            ),
+        ],
+    );
     assert_eq!(expand_trig(&expr), expected);
 }
 
@@ -558,31 +610,36 @@ fn expand_cos_of_neg() {
 #[test]
 fn expand_sin_double_angle() {
     // sin(2*x) → 2*sin(x)*cos(x)
-    let expr = apply(sym(SIN), vec![
-        apply(sym(MUL), vec![int(2), sym("x")])
-    ]);
-    let expected = apply(sym(MUL), vec![
-        int(2),
-        apply(sym(MUL), vec![
-            apply(sym(SIN), vec![sym("x")]),
-            apply(sym(COS), vec![sym("x")]),
-        ]),
-    ]);
+    let expr = apply(sym(SIN), vec![apply(sym(MUL), vec![int(2), sym("x")])]);
+    let expected = apply(
+        sym(MUL),
+        vec![
+            int(2),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(SIN), vec![sym("x")]),
+                    apply(sym(COS), vec![sym("x")]),
+                ],
+            ),
+        ],
+    );
     assert_eq!(expand_trig(&expr), expected);
 }
 
 #[test]
 fn expand_cos_double_angle() {
     // cos(2*x) → cos(x)^2 - sin(x)^2  [represented as Mul(Cos(x), Cos(x)) - Mul(Sin(x), Sin(x))]
-    let expr = apply(sym(COS), vec![
-        apply(sym(MUL), vec![int(2), sym("x")])
-    ]);
+    let expr = apply(sym(COS), vec![apply(sym(MUL), vec![int(2), sym("x")])]);
     let sin_x = apply(sym(SIN), vec![sym("x")]);
     let cos_x = apply(sym(COS), vec![sym("x")]);
-    let expected = apply(sym(SUB), vec![
-        apply(sym(MUL), vec![cos_x.clone(), cos_x]),
-        apply(sym(MUL), vec![sin_x.clone(), sin_x]),
-    ]);
+    let expected = apply(
+        sym(SUB),
+        vec![
+            apply(sym(MUL), vec![cos_x.clone(), cos_x]),
+            apply(sym(MUL), vec![sin_x.clone(), sin_x]),
+        ],
+    );
     assert_eq!(expand_trig(&expr), expected);
 }
 
@@ -606,30 +663,24 @@ fn expand_atom_unchanged() {
 #[test]
 fn reduce_sin_squared() {
     // sin²(x) → (1 - cos(2x)) / 2  = Mul(1/2, Sub(1, Cos(Mul(2, x))))
-    let expr = apply(sym(POW), vec![
-        apply(sym(SIN), vec![sym("x")]),
-        int(2),
-    ]);
+    let expr = apply(sym(POW), vec![apply(sym(SIN), vec![sym("x")]), int(2)]);
     let cos_2x = apply(sym(COS), vec![apply(sym(MUL), vec![int(2), sym("x")])]);
-    let expected = apply(sym(MUL), vec![
-        rat(1, 2),
-        apply(sym(SUB), vec![int(1), cos_2x]),
-    ]);
+    let expected = apply(
+        sym(MUL),
+        vec![rat(1, 2), apply(sym(SUB), vec![int(1), cos_2x])],
+    );
     assert_eq!(power_reduce(&expr), expected);
 }
 
 #[test]
 fn reduce_cos_squared() {
     // cos²(x) → (1 + cos(2x)) / 2  = Mul(1/2, Add(1, Cos(Mul(2, x))))
-    let expr = apply(sym(POW), vec![
-        apply(sym(COS), vec![sym("x")]),
-        int(2),
-    ]);
+    let expr = apply(sym(POW), vec![apply(sym(COS), vec![sym("x")]), int(2)]);
     let cos_2x = apply(sym(COS), vec![apply(sym(MUL), vec![int(2), sym("x")])]);
-    let expected = apply(sym(MUL), vec![
-        rat(1, 2),
-        apply(sym(ADD), vec![int(1), cos_2x]),
-    ]);
+    let expected = apply(
+        sym(MUL),
+        vec![rat(1, 2), apply(sym(ADD), vec![int(1), cos_2x])],
+    );
     assert_eq!(power_reduce(&expr), expected);
 }
 
@@ -669,6 +720,205 @@ fn reduce_walks_into_add() {
 fn reduce_atom_unchanged() {
     assert_eq!(power_reduce(&int(7)), int(7));
     assert_eq!(power_reduce(&sym("y")), sym("y"));
+}
+
+#[test]
+fn trig_reduce_sin_cubed() {
+    // sin³(x) → (3sin(x) - sin(3x)) / 4
+    let x = sym("x");
+    let expr = pow_of(sin_of(x.clone()), 3);
+    let expected = frac(
+        apply(
+            sym(SUB),
+            vec![
+                apply(sym(MUL), vec![int(3), sin_of(x.clone())]),
+                sin_nx(3, x),
+            ],
+        ),
+        4,
+    );
+    assert_eq!(trig_reduce(&expr), expected);
+}
+
+#[test]
+fn trig_reduce_cos_cubed() {
+    // cos³(x) → (3cos(x) + cos(3x)) / 4
+    let x = sym("x");
+    let expr = pow_of(cos_of(x.clone()), 3);
+    let expected = frac(
+        apply(
+            sym(ADD),
+            vec![
+                apply(sym(MUL), vec![int(3), cos_of(x.clone())]),
+                cos_nx(3, x),
+            ],
+        ),
+        4,
+    );
+    assert_eq!(trig_reduce(&expr), expected);
+}
+
+#[test]
+fn trig_reduce_sin_fourth_and_fifth() {
+    let x = sym("x");
+    let sin_fourth = pow_of(sin_of(x.clone()), 4);
+    let expected_fourth = frac(
+        apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(SUB),
+                    vec![int(3), apply(sym(MUL), vec![int(4), cos_nx(2, x.clone())])],
+                ),
+                cos_nx(4, x.clone()),
+            ],
+        ),
+        8,
+    );
+    assert_eq!(trig_reduce(&sin_fourth), expected_fourth);
+
+    let sin_fifth = pow_of(sin_of(x.clone()), 5);
+    let expected_fifth = frac(
+        apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(SUB),
+                    vec![
+                        apply(sym(MUL), vec![int(10), sin_of(x.clone())]),
+                        apply(sym(MUL), vec![int(5), sin_nx(3, x.clone())]),
+                    ],
+                ),
+                sin_nx(5, x),
+            ],
+        ),
+        16,
+    );
+    assert_eq!(trig_reduce(&sin_fifth), expected_fifth);
+}
+
+#[test]
+fn trig_reduce_cos_fourth_and_fifth() {
+    let x = sym("x");
+    let cos_fourth = pow_of(cos_of(x.clone()), 4);
+    let expected_fourth = frac(
+        apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![int(3), apply(sym(MUL), vec![int(4), cos_nx(2, x.clone())])],
+                ),
+                cos_nx(4, x.clone()),
+            ],
+        ),
+        8,
+    );
+    assert_eq!(trig_reduce(&cos_fourth), expected_fourth);
+
+    let cos_fifth = pow_of(cos_of(x.clone()), 5);
+    let expected_fifth = frac(
+        apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(MUL), vec![int(10), cos_of(x.clone())]),
+                        apply(sym(MUL), vec![int(5), cos_nx(3, x.clone())]),
+                    ],
+                ),
+                cos_nx(5, x),
+            ],
+        ),
+        16,
+    );
+    assert_eq!(trig_reduce(&cos_fifth), expected_fifth);
+}
+
+#[test]
+fn trig_reduce_sixth_powers() {
+    let x = sym("x");
+    let sin_sixth = pow_of(sin_of(x.clone()), 6);
+    let expected_sin = frac(
+        apply(
+            sym(SUB),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(SUB),
+                            vec![
+                                int(10),
+                                apply(sym(MUL), vec![int(15), cos_nx(2, x.clone())]),
+                            ],
+                        ),
+                        apply(sym(MUL), vec![int(6), cos_nx(4, x.clone())]),
+                    ],
+                ),
+                cos_nx(6, x.clone()),
+            ],
+        ),
+        32,
+    );
+    assert_eq!(trig_reduce(&sin_sixth), expected_sin);
+
+    let cos_sixth = pow_of(cos_of(x.clone()), 6);
+    let expected_cos = frac(
+        apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                int(10),
+                                apply(sym(MUL), vec![int(15), cos_nx(2, x.clone())]),
+                            ],
+                        ),
+                        apply(sym(MUL), vec![int(6), cos_nx(4, x.clone())]),
+                    ],
+                ),
+                cos_nx(6, x),
+            ],
+        ),
+        32,
+    );
+    assert_eq!(trig_reduce(&cos_sixth), expected_cos);
+}
+
+#[test]
+fn trig_reduce_sin_cos_product() {
+    let x = sym("x");
+    let expr = apply(sym(MUL), vec![sin_of(x.clone()), cos_of(x.clone())]);
+    assert_eq!(trig_reduce(&expr), frac(sin_nx(2, x), 2));
+}
+
+#[test]
+fn trig_reduce_scalar_sin_cos_product() {
+    let x = sym("x");
+    let expr = apply(sym(MUL), vec![int(3), sin_of(x.clone()), cos_of(x.clone())]);
+    let expected = apply(sym(MUL), vec![int(3), frac(sin_nx(2, x), 2)]);
+    assert_eq!(trig_reduce(&expr), expected);
+}
+
+#[test]
+fn trig_reduce_nested_recursion() {
+    let y = sym("y");
+    let inner = pow_of(sin_of(y.clone()), 2);
+    let expr = apply(sym(ADD), vec![int(1), sin_of(inner)]);
+    let reduced_inner = frac(apply(sym(SUB), vec![int(1), cos_nx(2, y)]), 2);
+    let expected = apply(sym(ADD), vec![int(1), sin_of(reduced_inner)]);
+    assert_eq!(trig_reduce(&expr), expected);
+}
+
+#[test]
+fn trig_reduce_power_above_six_keeps_outer_power() {
+    let expr = pow_of(sin_of(sym("x")), 7);
+    assert_eq!(trig_reduce(&expr), expr);
 }
 
 // ---------------------------------------------------------------------------
@@ -730,9 +980,7 @@ fn angle_addition_sin_numerically() {
     // sin(a + b) = sin(a)cos(b) + cos(a)sin(b) — verify at a=1.1, b=0.7
     let a = IRNode::Float(1.1);
     let b = IRNode::Float(0.7);
-    let expr = apply(sym(SIN), vec![
-        apply(sym(ADD), vec![a.clone(), b.clone()])
-    ]);
+    let expr = apply(sym(SIN), vec![apply(sym(ADD), vec![a.clone(), b.clone()])]);
     let expanded = expand_trig(&expr);
     let direct: f64 = (1.1_f64 + 0.7).sin();
     check_near(&expanded, direct, 1e-10);
@@ -742,9 +990,7 @@ fn angle_addition_sin_numerically() {
 fn double_angle_sin_numerically() {
     // sin(2x) = 2*sin(x)*cos(x) — verify at x = 0.8
     let x = IRNode::Float(0.8);
-    let expr = apply(sym(SIN), vec![
-        apply(sym(MUL), vec![int(2), x.clone()])
-    ]);
+    let expr = apply(sym(SIN), vec![apply(sym(MUL), vec![int(2), x.clone()])]);
     let expanded = expand_trig(&expr);
     let direct: f64 = (2.0 * 0.8_f64).sin();
     check_near(&expanded, direct, 1e-10);

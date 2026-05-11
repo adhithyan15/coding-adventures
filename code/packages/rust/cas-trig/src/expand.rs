@@ -157,9 +157,7 @@ fn expand_cos(arg: &IRNode) -> IRNode {
             add(mul(cos_a, cos_b), mul(sin_a, sin_b))
         }
         // cos(−a) = cos(a)
-        IRNode::Apply(a) if is_head(&a.head, "Neg") && a.args.len() == 1 => {
-            expand_cos(&a.args[0])
-        }
+        IRNode::Apply(a) if is_head(&a.head, "Neg") && a.args.len() == 1 => expand_cos(&a.args[0]),
         // cos(2·a) = cos²(a) − sin²(a)
         IRNode::Apply(a) if is_head(&a.head, "Mul") && a.args.len() == 2 => {
             if let Some(inner) = extract_double_angle(&a.args) {

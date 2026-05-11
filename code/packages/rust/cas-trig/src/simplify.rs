@@ -34,8 +34,9 @@
 use symbolic_ir::{apply, sym, IRNode, ACOS, ASIN, ATAN, COS, SIN, TAN};
 
 use crate::constants::PI_SYMBOL;
-use crate::numeric::{acos_numeric, asin_numeric, atan_numeric, cos_numeric, sin_numeric,
-                     tan_numeric, to_float};
+use crate::numeric::{
+    acos_numeric, asin_numeric, atan_numeric, cos_numeric, sin_numeric, tan_numeric, to_float,
+};
 use crate::special::{cos_at_pi_multiple, sin_at_pi_multiple, tan_at_pi_multiple};
 
 // ---------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 //! | **Special values** | `sin(π/6)`, `cos(π/4)`, `tan(π/3)` etc. returned as exact `Integer`, `Rational`, or `Sqrt(…)` IR nodes |
 //! | **Numeric evaluation** | Any fully-numeric argument (Integer, Float, Rational, or `Pi`) → `Float` with near-integer snapping |
 //! | **Angle addition** | `sin(a±b)` and `cos(a±b)` expanded via the angle-addition identities (opt-in via `expand_trig`) |
-//! | **Power reduction** | `sin²(x)` and `cos²(x)` rewritten to half-angle forms (opt-in via `power_reduce`) |
+//! | **Trig reduction** | `sinⁿ(x)` and `cosⁿ(x)` for n ≤ 6, plus `sin(x)cos(x)`, rewritten to multiple-angle forms (opt-in via `trig_reduce`) |
 //! | **Tree walker** | `trig_simplify` applies evaluation rules everywhere in an expression tree |
 //!
 //! ## Special-value table
@@ -31,7 +31,7 @@
 //!
 //! ```rust
 //! use cas_trig::{sin_eval, cos_eval, tan_eval, trig_simplify, expand_trig,
-//!                power_reduce, PI};
+//!                trig_reduce, PI};
 //! use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, COS, MUL, POW, SIN};
 //!
 //! // sin(π/6) = 1/2 (exact)
@@ -58,7 +58,7 @@
 //!
 //! // Reduce sin²(x)
 //! let sin_sq = apply(sym(POW), vec![apply(sym(SIN), vec![sym("x")]), int(2)]);
-//! let _reduced = power_reduce(&sin_sq);
+//! let _reduced = trig_reduce(&sin_sq);
 //! ```
 
 pub mod constants;
@@ -72,7 +72,7 @@ pub mod special;
 pub use constants::{E_SYMBOL as E, PI_SYMBOL as PI};
 pub use expand::expand_trig;
 pub use numeric::to_float;
-pub use reduce::power_reduce;
+pub use reduce::{power_reduce, trig_reduce};
 pub use simplify::{
     acos_eval, asin_eval, atan_eval, cos_eval, extract_pi_multiple, sin_eval, tan_eval,
     trig_simplify,
