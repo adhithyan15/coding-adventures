@@ -1,7 +1,7 @@
-//! # mosmodel-compiler — Compiling `.mosmodel` component interface files.
+//! # mosmodel-compiler — Compiling `.mil` component interface files.
 //!
 //! `mosmodel` is the component interface language for the Mosaic UI stack.
-//! A `.mosmodel` file answers exactly one question: *what does the outside
+//! A `.mil` file answers exactly one question: *what does the outside
 //! world need to know to use this component?*
 //!
 //! It answers with two constructs:
@@ -14,7 +14,7 @@
 //! # Pipeline
 //!
 //! ```text
-//! .mosmodel source
+//! .mil source
 //!       │
 //!       ▼  tokenize()
 //! Vec<Token>       (mosmodel.tokens grammar via GrammarLexer)
@@ -78,7 +78,7 @@ pub struct CompileOutput {
 // Typed IR
 // ===========================================================================
 
-/// The compiled representation of a single `.mosmodel` file.
+/// The compiled representation of a single `.mil` file.
 ///
 /// A mosmodel file declares exactly one component.  The compiler maps the
 /// raw syntax tree into this strongly-typed struct before validation and
@@ -254,7 +254,7 @@ pub fn create_mosmodel_lexer(source: &str) -> GrammarLexer<'_> {
 ///
 /// # Panics
 ///
-/// Panics on unexpected characters.  Well-formed `.mosmodel` source never
+/// Panics on unexpected characters.  Well-formed `.mil` source never
 /// triggers this; callers that handle arbitrary user input should use
 /// `create_mosmodel_lexer` and check the result.
 pub fn tokenize(source: &str) -> Vec<Token> {
@@ -1008,7 +1008,7 @@ fn camel_to_snake(s: &str) -> String {
 // Top-level compile entry point
 // ===========================================================================
 
-/// Compile a `.mosmodel` source string.
+/// Compile a `.mil` source string.
 ///
 /// Runs the full pipeline: tokenize → parse → analyze → validate → emit.
 ///
