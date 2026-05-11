@@ -1,320 +1,302 @@
-# ADJ02 — Coverage Checker: Every Meaningful Span Must Be Accounted For
+# ADJ02 — Coverage Checker: Structural Tree Check Over the Hierarchical IR
+
+> **Revision v2 (2026-05-11): structural coverage.** v1 of this spec
+> defined coverage as a token-level check driven by a language-
+> specific tagger. That approach baked English-language assumptions
+> into the framework core. This revision replaces the tagger-based
+> path with a **structural tree check** over the hierarchical IR
+> introduced in [`ADJ01` v2](ADJ01-adjudication-ir-grammar.md). The
+> check is language-agnostic by construction, deterministic, linear
+> in IR node count, and requires no stopword lists or tokenizers.
 
 ## Overview
 
-This spec defines the **coverage** invariant: the first and cheapest of the
-four checker passes described in [`ADJ00`](ADJ00-adjudication-framework.md).
-Coverage is what catches the extractor *silently dropping* clinically or
-domain-meaningful spans of the input.
+The coverage invariant in v2 is:
 
-The invariant is one sentence:
+> Every byte of the document's normalized text is in the source
+> spans of some leaf in the IR's decomposition tree.
 
-> Every meaningful token in the input must belong to the source spans of
-> at least one IR node — either as part of a Fact, Query, Uncertainty, or
-> as an explicit Discarded node citing a reason.
+Equivalently: every `TextRun` parent's children's `source_spans`
+union to the parent's `source_spans`, and the root's `source_spans`
+cover the document. By induction, every byte ends up in some leaf.
 
-"Meaningful" is domain-specific; a token classifier (or LLM call) decides
-which tokens carry meaning. Coverage is then a structural property of the
-IR document against the input.
+There is no language-specific knowledge in this check. There is no
+tagger. There is no stopword list. The LLM that produced the IR
+chose how to decompose the document; the framework verifies the
+decomposition is complete.
 
-## Why a Coverage Invariant Matters
+## What the Check Catches
 
-The failure mode coverage catches is the one most invisible to chain-of-
-thought, retrieval, or self-refinement: extraction that silently *omits*
-information. A patient's note that mentions a recent foreign travel
-relevant to differential diagnosis, an LAG-rule input that mentions a
-specific ml volume, a license disclosure that mentions a date — these can
-be dropped by an extractor focused on the "main" content, and downstream
-reasoners have no way to know.
+| v1 (rule-based) caught | v2 (structural) catches |
+|---|---|
+| English tokens not covered by any IR node | Any byte of any document, in any language, not transitively covered by a leaf |
+| Silent extraction omission (the canonical case) | Same — same failure mode, language-agnostic check |
+| `Unparseable` Discarded as hard failure | Same — `Unparseable` remains a hard failure |
 
-Coverage as a *hard* invariant — not a soft metric — means the system
-refuses to ship an IR that misses meaningful input. Failure routes to
-clarification, not to a wrong answer with no signal.
+The class of failure caught is the same: silent omission. What
+changes is the *mechanism* of detection. v1 needed to know which
+tokens were "meaningful." v2 needs only the IR's structural tree —
+which the LLM produced — and verifies the tree tiles the document.
 
 ## Layer Position
 
 ```
-   ADJ01 IR grammar
+   ADJ01 v2 hierarchical IR
         │
         ▼
-   ADJ02 Coverage Checker          ← this document
+   ADJ02 v2 structural coverage    ← this document
         │
         ▼
-   ADJ03 polarity/modality checker
+   ADJ03 v2 propagation consistency
         │
         ▼
-   ADJ04 round-trip verifier
+   ADJ04 round-trip entailment
         │
         ▼
    ADJ05 adversarial verifier
 ```
 
-The four checker passes run in order. Coverage runs first because it is
-the cheapest and because subsequent passes assume that every meaningful
-span is already linked to an IR node.
-
 ## Inputs and Outputs
 
 The coverage check takes:
 
-- **`Document`** — the input document (per `ADJ01`), with byte-offset
-  ranges over normalized text.
-- **`Document.normalized_text`** — the text the extractor saw.
-- **`IRDocument`** — the IR produced by extraction (per `ADJ01`).
-- **`Tagger`** — the token classifier (described below) appropriate to
-  the adjudication domain.
+- A `Document` carrying `(DocumentId, normalized_text)`. The check
+  reads only the *length* of `normalized_text` (the byte count); it
+  never inspects the bytes.
+- An `IRDocument`: a list of `IRNode`s with `part_of` edges forming
+  a forest of trees.
 
 It returns either:
 
-- **`Pass`** — every meaningful token is covered.
-- **`Fail(uncovered_spans)`** — at least one meaningful span is not
-  covered by any IR node. The list of uncovered spans is the seed for
-  clarification questions.
+- **`Pass`** — every byte is covered.
+- **`Fail(violations)`** — one or more structural-coverage
+  violations.
 
-The check is **deterministic** and does **not** call an LLM at check time.
-The tagger may itself be an LLM call, but that call happens *before* the
-check and its output is treated as data.
+The check is **deterministic and language-free**. It does not call
+an LLM at check time.
 
-## The Token Classifier (Tagger)
+## The Five Structural Conditions
 
-The tagger is a function:
+For an IR document to satisfy coverage:
 
-```text
-classify_tokens : Document -> [TokenAnnotation]
+1. **Span-validity**: every `Span.start < Span.end`, both within
+   `[0, len(normalized_text)]` for the document's id.
+2. **Root coverage**: the union of the roots' `source_spans` (roots
+   = nodes with `part_of = None`) equals `[(doc, 0, len)]`. The
+   roots collectively tile the whole document.
+3. **Parent-child containment**: for every node `X` with
+   `X.part_of = Some(Y)`, `X.source_spans ⊆ Y.source_spans`.
+4. **TextRun tiling**: for every `TextRun` `Y`, the union of `Y`'s
+   children's `source_spans` equals `Y.source_spans`. Every byte of
+   the parent's spans is covered by some child.
+5. **No `Unparseable`**: any `Discarded` node with `discard_reason
+   = Unparseable` is a hard coverage failure (per ADJ01).
 
-TokenAnnotation := {
-    span:    Span,
-    label:   Meaningful | NonMeaningful,
-    reason:  Option<String>,  // for telemetry / debugging
-}
-```
+These five conditions together imply the headline invariant.
+Verification is linear in the number of nodes plus the total length
+of source-span lists.
 
-Implementations:
-
-1. **Rule-based tagger.** A configurable set of regex patterns and stopword
-   lists. Reproducible, fast, debuggable. Sufficient for narrow domains
-   like TSA carry-on rules.
-2. **Small classifier model.** A purpose-trained classifier (BiLSTM or
-   tiny transformer) running locally. Sufficient for medium-complexity
-   domains.
-3. **LLM call with constrained output.** An LLM prompted to label each
-   token with a single label, with output constrained to the label
-   vocabulary. Required for complex domains (clinical notes); accepted
-   despite cost because the output is data, not reasoning.
-
-Whichever implementation is used, the tagger's *output* is what the
-coverage check operates on. The check itself is mechanical.
-
-**Versioning is mandatory.** Every IR document records the tagger version
-that produced its meaningful-token annotation. Re-running coverage with a
-different tagger version produces a different result and is a
-re-adjudication, not a re-check.
-
-## What Counts as Meaningful
-
-The tagger's vocabulary is domain-specific, but the framework specifies a
-common shape for `NonMeaningful` reasons so coverage failures are
-auditable:
+## The Algorithm
 
 ```text
-NonMeaningfulReason :=
-    Whitespace
-    Punctuation
-    Stopword               -- "the", "a", "of", language-dependent list
-    SocialPleasantry       -- "hello, doctor", "thanks for seeing me"
-    DocumentChrome         -- headers, footers, page numbers
-    Boilerplate            -- "signed electronically by"
-    Determiner             -- "this", "that" — usually safely ignored
-    Filler                 -- "umm", "you know"
-```
+coverage_check(doc, ir_doc) -> Result:
+    violations = []
 
-Anything not falling into one of these categories is `Meaningful` by
-default. The defaulting direction matters: false-negative `Meaningful`
-labels are corrected by an over-eager coverage pass (which routes to
-clarification, slowing the system but never producing wrong output);
-false-positive `NonMeaningful` labels are silent extraction errors and
-must be designed against.
-
-Domains may extend the `NonMeaningful` vocabulary by registering new
-reasons with a domain tagger. Extensions are recorded in a domain
-configuration file alongside the tagger version.
-
-## The Coverage Algorithm
-
-Given the tagger output and the IR document, the coverage check is a
-classical interval-cover problem.
-
-```text
-coverage_check(doc, ir_doc, tagger) -> Result:
-    annotations = tagger.classify_tokens(doc)
-    meaningful_spans = [a.span for a in annotations if a.label == Meaningful]
-
-    covered_spans = []
+    # 1. Span validity (constant per span)
     for node in ir_doc.nodes:
-        covered_spans.extend(node.source_spans)
+        for span in node.source_spans:
+            if span.document_id != doc.id:
+                violations.push(SpanWrongDocument { node.id, span })
+                continue
+            if span.start >= span.end:
+                violations.push(InvalidSpan { node.id, span })
+            elif span.end > len(doc.normalized_text):
+                violations.push(SpanOutOfBounds { node.id, span })
 
-    # interval-cover: is every meaningful span fully contained in the
-    # union of covered_spans?
-    uncovered = []
-    for m in meaningful_spans:
-        if not is_fully_covered(m, covered_spans):
-            uncovered.append(m)
+    # 2. Unparseable hard failure
+    for node in ir_doc.nodes:
+        if node.kind == Discarded and node.discard_reason == Unparseable:
+            violations.push(UnparseableDiscarded { node.id })
 
-    return Pass if uncovered.is_empty() else Fail(uncovered)
+    # 3+4. Build child lists per parent, including roots.
+    children_of = collect_children(ir_doc.nodes)
+    roots       = [n for n in ir_doc.nodes if n.part_of is None]
+
+    # 5. Root tiling: union(roots' spans) == doc's full range.
+    if not spans_equal(union(roots.map(.source_spans)),
+                       [(doc.id, 0, len(doc.normalized_text))]):
+        violations.push(RootsDoNotTileDocument)
+
+    # 6. For each non-root, parent-child containment.
+    for node in ir_doc.nodes:
+        if node.part_of is None: continue
+        parent = ir_doc.find(node.part_of)
+        if parent is None:
+            violations.push(DanglingPartOf { node.id })
+            continue
+        if not is_subset(node.source_spans, parent.source_spans):
+            violations.push(ChildSpansExceedParent { node.id, parent.id })
+
+    # 7. For each TextRun, children tile parent.
+    for parent in ir_doc.nodes:
+        if parent.kind != TextRun: continue
+        kids = children_of.get(parent.id, [])
+        if not spans_equal(union(kids.map(.source_spans)),
+                           parent.source_spans):
+            violations.push(ChildrenDoNotTileParent { parent.id })
+
+    return Pass if violations is empty else Fail(violations)
 ```
 
-`is_fully_covered` is a straightforward interval check: the meaningful
-span's `[start, end)` is a subset of the union of the covered spans
-restricted to the same document. Implementations should pre-sort and merge
-covered spans to make the check linear in their count.
+`union`, `is_subset`, and `spans_equal` operate on lists of byte
+ranges, sorted and merged in `O(n log n)` per call. The overall
+check is `O(N log N)` where `N` is the total span count.
 
-## Multi-Span and Overlap Handling
-
-Several edge cases require explicit policy:
-
-1. **Multiple IR nodes covering the same span.** Permitted. A negation
-   span like *"denies chest pain"* may belong to both a `Fact(chest_pain,
-   Denied)` node and to an internal `Discarded` node citing the "denies"
-   trigger. Both source-span entries count toward coverage.
-2. **An IR node citing more text than just its meaningful core.** The
-   extractor is expected to cite the *minimum span that captures the
-   meaning*. Citing extra surrounding text is permitted but logged; it is
-   not a coverage failure but it makes downstream polarity/modality checks
-   slower and more error-prone.
-3. **A meaningful span spanning a node boundary.** Permitted as long as
-   *every byte* of the span is covered by some node. The coverage check
-   does not require a single node to fully contain a meaningful span —
-   only that the union of all node spans does.
-4. **Empty IR.** An IR document with zero nodes against an input with at
-   least one meaningful token fails coverage. The framework's idea of
-   "this input is irrelevant" is a single `Discarded(NonDomainContent)`
-   node covering the input, *not* an empty IR.
-
-## Failure Modes and Clarification
-
-A coverage failure produces a list of uncovered spans. The clarification
-generator (specified in `ADJ06`) turns each uncovered span into a question
-shaped like:
-
-> "You did not account for *'\<text of uncovered span\>'*. What does it
-> mean in this context?"
-
-If multiple adjacent uncovered spans are short, they are merged into a
-single clarification before being surfaced, so the user is not asked to
-clarify three consecutive words separately.
-
-Coverage failures are *not* fatal on their own. The escalation ladder
-applies (per `ADJ00`): the cheapest response is to re-prompt the extractor
-with the specific uncovered spans. Only if re-prompting fails does the
-question reach a human.
-
-## Special Case: The Unparseable Discard Reason
-
-`ADJ01` specifies that the `Unparseable` discard reason is always a
-coverage failure. The coverage check enforces this:
+## Violation Types
 
 ```text
-For every Discarded node N:
-    if N.discard_reason == Unparseable:
-        Fail([N.source_spans])
+CoverageViolation :=
+    SpanWrongDocument { node_id, span }
+  | InvalidSpan { node_id, span }
+  | SpanOutOfBounds { node_id, span }
+  | UnparseableDiscarded { node_id }
+  | RootsDoNotTileDocument { missing_ranges }
+  | DanglingPartOf { node_id, missing_parent }
+  | ChildSpansExceedParent { child_id, parent_id }
+  | ChildrenDoNotTileParent { parent_id, missing_ranges }
 ```
 
-This is the rule that prevents extractors from quietly "shipping" spans
-they don't understand. An Unparseable span is a clarification trigger, not
-a valid IR shape.
+Each variant carries enough information for `ADJ06` to render a
+clarification question. `missing_ranges` lists the specific byte
+ranges that were not covered, so the framework can surface those
+specific portions of the input back to the extractor or the user.
 
-## Configuration Surface
+## Clarification Generation
 
-A coverage configuration declares:
+When the check fails, the violation types map to question shapes:
 
-- **Tagger:** which classifier to use (and its version).
-- **Extended NonMeaningfulReasons:** domain-specific additions.
-- **Strictness mode:**
-  - `strict`: any uncovered byte fails coverage.
-  - `permissive`: uncovered tokens flagged as `Filler` or `Determiner`
-    are allowed, all others fail.
-  - `audit-only`: never blocks; logs failures for offline review.
-- **Span-overlap policy:** see Multi-Span section above. Default is
-  permissive overlap, audit-only logging on excess citation.
+| Violation | Clarification question shape |
+|---|---|
+| `RootsDoNotTileDocument` or `ChildrenDoNotTileParent` | *"You did not account for this portion of the input: \<text of missing range\>. What does it mean?"* |
+| `ChildSpansExceedParent` | *"This claim's spans extend beyond its parent context — please re-examine."* (re-prompt the LLM rather than the user) |
+| `UnparseableDiscarded` | *"The span '\<text\>' could not be interpreted. Could you rephrase it, or confirm it can be discarded with a specific reason?"* |
+| `DanglingPartOf` or `InvalidSpan` | Re-prompt the LLM with the malformed-IR detail. |
 
-Configurations are versioned alongside the tagger and are part of the
-audit-trail metadata for every adjudication.
+Per `ADJ06`, the cheapest rung (re-prompt the extractor) handles the
+malformed-IR cases. Genuine missing-content cases escalate via the
+ladder.
 
-## Worked Example
+## Strictness — Reduced from v1
 
-Continuing the TSA running example:
+v1 specified `Strict` / `Permissive` / `AuditOnly` strictness modes
+because the rule-based tagger could classify ambiguous tokens. v2's
+check has nothing to be lenient about — either every byte is in
+some leaf or it isn't. The strictness configuration is removed.
 
-Input span 142..168: `"I am not bringing matches"`
+`AuditOnly` is replaced by a `report_only: bool` field in the
+caller's configuration: when true, violations are reported in
+telemetry but do not gate the adjudication. The check itself is
+unchanged.
 
-Tagger annotations:
+## Comparison to v1
 
-| Tokens | Label | Reason |
+| Aspect | v1 (rule-based) | v2 (structural) |
 |---|---|---|
-| `I am` | NonMeaningful | Determiner/auxiliary |
-| `not bringing` | Meaningful | (default) |
-| `matches` | Meaningful | (default) |
+| Tagger / stopword list | Required, English-specific | Removed |
+| NegEx / ConText triggers | Required by ADJ03 | Removed (moved to LLM) |
+| Languages supported | English (effectively) | Any language the LLM handles |
+| Algorithm | Token classification + interval cover | Tree-shape verification |
+| Asymptotic complexity | `O(tokens × IR nodes)` | `O(IR nodes log N)` |
+| Determinism | Yes (rule-based) | Yes (structural) |
+| LLM calls at check time | Zero | Zero |
+| Failure modes caught | Silent omission via untagged tokens | Silent omission via gaps in the tree |
 
-The extractor produces:
+The check is **strictly cheaper** in v2 (no token classification) and
+**strictly more general** (no English assumption).
 
-```text
-F6 {
-    kind:         Fact,
-    term:         carry_on_item(matches),
-    polarity:     Denied,
-    source_spans: [(doc1, 142, 168)],
-}
-```
+## Worked Example (Revised)
 
-`F6.source_spans` covers the whole `"I am not bringing matches"` span,
-which is a superset of both meaningful sub-spans. Coverage check: **pass**.
-
-Counterexample: if the extractor instead produced
+Continuing the TSA case. The LLM produces this decomposition:
 
 ```text
-F6' {
-    kind:         Fact,
-    term:         carry_on_item(matches),
-    polarity:     Affirmed,
-    source_spans: [(doc1, 161, 168)],   // just "matches"
-}
+N0 TextRun                     spans = [(doc, 0, 209)]
+   ├── F1..F5  (Facts: toothpaste, perfume, batteries, wine, knife)
+   │           spans tile (0, 149)
+   ├── N2 TextRun polarity=Denied   spans = [(doc, 150, 176)]
+   │     └── F6 Fact carry_on_item(matches)  spans = [(doc, 150, 176)]
+   └── F7  Fact carry_on_item(lighter, ...)  spans = [(doc, 177, 209)]
 ```
 
-then the meaningful span `"not bringing"` (149..160) is uncovered.
-Coverage **fails**, clarification fires: *"You did not account for 'not
-bringing'. What does it mean in this context?"*. The re-prompted extractor
-should then produce the correct `Denied` polarity by including the
-negation phrase in `source_spans`. This is the exact failure mode the
-polarity check (`ADJ03`) is designed to catch, but coverage catches it
-first and cheaper.
+Coverage check:
+
+- Span validity: every span is in `[0, 209]` and `start < end`. **Pass**.
+- No `Unparseable`. **Pass**.
+- Roots: N0 has spans `[(doc, 0, 209)]`; that equals the document's
+  full range. **Pass**.
+- Parent-child containment: every child's spans are inside N0's
+  (and N2's children inside N2's). **Pass**.
+- TextRun tiling:
+  - N0's children's spans are F1..F5 (0..149) + N2 (150..176) +
+    F7 (177..209). Union = `[(doc, 0, 209)]` = N0's spans. **Pass**.
+  - N2's children are just F6 with `(150, 176)`. Union = N2's spans.
+    **Pass**.
+
+Result: **Pass**. No bytes uncovered; no `Unparseable`; tree well-
+formed.
+
+Now the counterexample. The LLM emits the same decomposition but
+forgets to include F7:
+
+```text
+N0 TextRun     spans = [(doc, 0, 209)]
+   ├── F1..F5  spans tile (0, 149)
+   └── N2 TextRun spans = [(doc, 150, 176)]
+         └── F6 spans = [(doc, 150, 176)]
+```
+
+Now N0's children's spans union to `(0, 149) ∪ (150, 176) = (0, 176)`.
+But N0's spans are `(0, 209)`. The tiling check fails with
+`ChildrenDoNotTileParent { parent_id: N0, missing_ranges: [(177, 209)] }`.
+
+Clarification fires: *"You did not account for this portion of the
+input: 'only a single disposable lighter.'. What does it mean?"*
+The user (or the extractor on re-prompt) responds; F7 is added; the
+check re-runs and passes.
 
 ## Open Questions
 
-1. **Punctuation that carries meaning.** "Don't" vs. "Do not" — the
-   apostrophe is structurally meaningful for negation parsing. Current
-   spec lumps punctuation under NonMeaningful; clinical and legal
-   subdomains may need to special-case some punctuation.
-2. **Quoted speech.** "Patient said 'I don't want surgery'" — the quoted
-   span contains its own polarity that must be preserved. Probably handled
-   by Modality (a separate node with `Hypothetical` modality and a
-   `quoted_speech` metadata flag), but worth specifying.
-3. **Tabular and form data.** Documents with structure (vitals tables,
-   medication lists) carry meaning through *layout*, not just tokens.
-   Currently treated as if the table were linearized; structured-doc
-   extraction is `ADJ02a` future work.
+1. **Empty TextRuns.** A TextRun with zero children is structurally
+   ill-formed (it doesn't tile its own spans). Currently the check
+   reports `ChildrenDoNotTileParent { parent_id, missing_ranges =
+   parent.source_spans }`. This is the right diagnostic but a
+   `TextRunHasNoChildren` variant would be more specific. Open.
+2. **Overlapping siblings.** Two children may have overlapping spans
+   if a phrase is genuinely double-classified. Currently `spans_equal`
+   uses set equality of merged intervals, so overlap doesn't break
+   the tile check. Whether the framework should *flag* overlap as a
+   warning is open.
+3. **Documents with whitespace-only trailing content.** A document
+   ending in `"\n\n\n"` may yield a tree where the LLM didn't
+   produce a leaf for the trailing newlines. Currently the check
+   reports those bytes as uncovered. The pragmatic fix is for the
+   document normalizer to trim trailing whitespace before the IR is
+   built; the framework does not normalize at check time.
 
 ## Limitations
 
-1. Coverage cannot catch *incorrect* extraction whose source spans happen
-   to cover the right input. That's what passes 2–4 are for.
-2. The tagger is a dependency. A bad tagger produces bad coverage. The
-   versioning discipline is the mitigation, not a fix.
-3. For very long documents (multi-thousand-word clinical histories),
-   coverage may have many uncovered spans simultaneously. The
-   clarification UX may need batching or summarization, specified in
-   `ADJ06`.
+1. **The check is structural, not semantic.** A TextRun that
+   correctly tiles the document but groups unrelated content
+   together (one paragraph spanning two unrelated topics) is
+   accepted. Semantic grouping quality is verified by `ADJ04`
+   (round-trip) and `ADJ05` (adversarial), not here.
+2. **The check trusts the LLM's decomposition.** The framework
+   verifies tree shape, not that the LLM made the *right* tree.
+   Different LLMs may produce different valid decompositions of the
+   same document. Reproducibility relies on the audit-trail
+   discipline (versioned models, prompts, seeds).
 
 ## Status
 
-Draft. Sufficient to implement against. Sub-spec `ADJ02a` will follow once
-the first concrete tagger is built, formalizing the structured-document
-extension.
+v2 draft. Replaces the v1 tagger-based path. Implementation depends
+on the `ADJ01` v2 grammar; the Rust crate `adjudication-coverage` is
+being rewritten in parallel (the v1 `RuleBasedTagger` is retired).
