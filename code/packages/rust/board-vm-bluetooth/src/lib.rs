@@ -1,4 +1,4 @@
-use std::io::{Read, Write};
+use std::io::{self, Read, Write};
 
 use board_vm_client::{RawFrameTransport, TransportError};
 use board_vm_protocol::{decode_wire_frame, encode_wire_frame, ProtocolError};
@@ -143,6 +143,12 @@ pub enum BluetoothDiscoveryError {
     },
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BluetoothOpenError {
+    UnsupportedPlatform { platform: &'static str },
+    Backend { message: String },
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BluetoothTransportError {
     Link,
@@ -180,6 +186,87 @@ pub trait BleGattIo {
         characteristic_uuid: &str,
         out: &mut [u8],
     ) -> Result<usize, BluetoothTransportError>;
+}
+
+pub trait BluetoothBackend {
+    type BleGattLink: BleGattIo;
+    type RfcommStream: Read + Write;
+
+    fn open_ble_gatt(
+        &mut self,
+        endpoint: &BleGattEndpoint,
+    ) -> Result<Self::BleGattLink, BluetoothOpenError>;
+
+    fn open_rfcomm(
+        &mut self,
+        endpoint: &RfcommEndpoint,
+    ) -> Result<Self::RfcommStream, BluetoothOpenError>;
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub struct UnsupportedBluetoothBackend;
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub struct UnsupportedBleGattLink;
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub struct UnsupportedRfcommStream;
+
+impl BluetoothBackend for UnsupportedBluetoothBackend {
+    type BleGattLink = UnsupportedBleGattLink;
+    type RfcommStream = UnsupportedRfcommStream;
+
+    fn open_ble_gatt(
+        &mut self,
+        _endpoint: &BleGattEndpoint,
+    ) -> Result<Self::BleGattLink, BluetoothOpenError> {
+        Err(BluetoothOpenError::UnsupportedPlatform {
+            platform: std::env::consts::OS,
+        })
+    }
+
+    fn open_rfcomm(
+        &mut self,
+        _endpoint: &RfcommEndpoint,
+    ) -> Result<Self::RfcommStream, BluetoothOpenError> {
+        Err(BluetoothOpenError::UnsupportedPlatform {
+            platform: std::env::consts::OS,
+        })
+    }
+}
+
+impl BleGattIo for UnsupportedBleGattLink {
+    fn write_characteristic(
+        &mut self,
+        _characteristic_uuid: &str,
+        _bytes: &[u8],
+    ) -> Result<(), BluetoothTransportError> {
+        Err(BluetoothTransportError::Link)
+    }
+
+    fn read_notification(
+        &mut self,
+        _characteristic_uuid: &str,
+        _out: &mut [u8],
+    ) -> Result<usize, BluetoothTransportError> {
+        Err(BluetoothTransportError::Link)
+    }
+}
+
+impl Read for UnsupportedRfcommStream {
+    fn read(&mut self, _buf: &mut [u8]) -> io::Result<usize> {
+        Err(unsupported_bluetooth_io_error())
+    }
+}
+
+impl Write for UnsupportedRfcommStream {
+    fn write(&mut self, _buf: &[u8]) -> io::Result<usize> {
+        Err(unsupported_bluetooth_io_error())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        Err(unsupported_bluetooth_io_error())
+    }
 }
 
 pub struct BoardBleGattTransport<L, const WIRE_BYTES: usize = 1024> {
@@ -366,6 +453,67 @@ where
     ) -> Result<usize, TransportError> {
         self.exchange_raw_frame_checked(request, response_out)
             .map_err(BluetoothTransportError::as_transport_error)
+    }
+}
+
+pub enum BoardBluetoothTransport<L, S, const WIRE_BYTES: usize = 1024> {
+    BleGatt(BoardBleGattTransport<L, WIRE_BYTES>),
+    Rfcomm(BoardRfcommTransport<S, WIRE_BYTES>),
+}
+
+impl<L, S, const WIRE_BYTES: usize> BoardBluetoothTransport<L, S, WIRE_BYTES> {
+    pub const fn endpoint_transport(&self) -> BluetoothEndpointTransport {
+        match self {
+            Self::BleGatt(_) => BluetoothEndpointTransport::BleGatt,
+            Self::Rfcomm(_) => BluetoothEndpointTransport::Rfcomm,
+        }
+    }
+
+    pub fn device(&self) -> &str {
+        match self {
+            Self::BleGatt(transport) => &transport.endpoint().device,
+            Self::Rfcomm(transport) => &transport.endpoint().device,
+        }
+    }
+}
+
+impl<L, S, const WIRE_BYTES: usize> RawFrameTransport for BoardBluetoothTransport<L, S, WIRE_BYTES>
+where
+    L: BleGattIo,
+    S: Read + Write,
+{
+    fn exchange_raw_frame(
+        &mut self,
+        request: &[u8],
+        response_out: &mut [u8],
+    ) -> Result<usize, TransportError> {
+        match self {
+            Self::BleGatt(transport) => transport.exchange_raw_frame(request, response_out),
+            Self::Rfcomm(transport) => transport.exchange_raw_frame(request, response_out),
+        }
+    }
+}
+
+pub fn open_bluetooth_endpoint<B, const WIRE_BYTES: usize>(
+    backend: &mut B,
+    endpoint: BluetoothEndpoint,
+) -> Result<BoardBluetoothTransport<B::BleGattLink, B::RfcommStream, WIRE_BYTES>, BluetoothOpenError>
+where
+    B: BluetoothBackend,
+{
+    match endpoint {
+        BluetoothEndpoint::BleGatt(endpoint) => {
+            let link = backend.open_ble_gatt(&endpoint)?;
+            Ok(BoardBluetoothTransport::BleGatt(
+                BoardBleGattTransport::new(endpoint, link),
+            ))
+        }
+        BluetoothEndpoint::Rfcomm(endpoint) => {
+            let stream = backend.open_rfcomm(&endpoint)?;
+            Ok(BoardBluetoothTransport::Rfcomm(
+                BoardRfcommTransport::from_stream(endpoint, stream),
+            ))
+        }
     }
 }
 
@@ -626,6 +774,13 @@ fn map_protocol_error(error: ProtocolError) -> BluetoothTransportError {
     }
 }
 
+fn unsupported_bluetooth_io_error() -> io::Error {
+    io::Error::new(
+        io::ErrorKind::Other,
+        "Board VM Bluetooth backend is unsupported on this platform",
+    )
+}
+
 fn endpoint_scheme(endpoint: &str) -> &str {
     endpoint
         .split_once("://")
@@ -826,6 +981,39 @@ mod tests {
 
         fn flush(&mut self) -> io::Result<()> {
             Ok(())
+        }
+    }
+
+    #[derive(Default)]
+    struct FakeBluetoothBackend {
+        ble_notifications: VecDeque<Vec<u8>>,
+        rfcomm_read: Vec<u8>,
+        ble_opened: Vec<String>,
+        rfcomm_opened: Vec<(String, u8)>,
+    }
+
+    impl BluetoothBackend for FakeBluetoothBackend {
+        type BleGattLink = FakeBleGattLink;
+        type RfcommStream = FakeRfcommStream;
+
+        fn open_ble_gatt(
+            &mut self,
+            endpoint: &BleGattEndpoint,
+        ) -> Result<Self::BleGattLink, BluetoothOpenError> {
+            self.ble_opened.push(endpoint.device.clone());
+            Ok(FakeBleGattLink {
+                writes: Vec::new(),
+                notifications: std::mem::take(&mut self.ble_notifications),
+            })
+        }
+
+        fn open_rfcomm(
+            &mut self,
+            endpoint: &RfcommEndpoint,
+        ) -> Result<Self::RfcommStream, BluetoothOpenError> {
+            self.rfcomm_opened
+                .push((endpoint.device.clone(), endpoint.channel));
+            Ok(FakeRfcommStream::new(std::mem::take(&mut self.rfcomm_read)))
         }
     }
 
@@ -1116,5 +1304,69 @@ Bluetooth:
         assert_eq!(response_len, response.len());
         assert_eq!(&raw_out[..response_len], response);
         assert_eq!(&decoded_request[..request_len], request);
+    }
+
+    #[test]
+    fn backend_opener_builds_ble_gatt_raw_frame_transport() {
+        let endpoint = parse_bluetooth_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let response = [0x21, 0x22];
+        let mut response_wire = [0u8; 16];
+        let response_wire_len = encode_wire_frame(&response, &mut response_wire).unwrap();
+        let mut backend = FakeBluetoothBackend::default();
+        backend
+            .ble_notifications
+            .push_back(response_wire[..response_wire_len].to_vec());
+
+        let mut transport = open_bluetooth_endpoint::<_, 32>(&mut backend, endpoint).unwrap();
+        let mut raw_out = [0u8; 16];
+        let response_len = transport.exchange_raw_frame(&[0x11], &mut raw_out).unwrap();
+
+        assert_eq!(
+            transport.endpoint_transport(),
+            BluetoothEndpointTransport::BleGatt
+        );
+        assert_eq!(transport.device(), "esp32");
+        assert_eq!(&raw_out[..response_len], response);
+        assert_eq!(backend.ble_opened, vec!["esp32".to_owned()]);
+    }
+
+    #[test]
+    fn backend_opener_builds_rfcomm_raw_frame_transport() {
+        let endpoint = parse_bluetooth_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let response = [0x31, 0x32, 0x33];
+        let mut response_wire = [0u8; 16];
+        let response_wire_len = encode_wire_frame(&response, &mut response_wire).unwrap();
+        let mut backend = FakeBluetoothBackend {
+            rfcomm_read: response_wire[..response_wire_len].to_vec(),
+            ..FakeBluetoothBackend::default()
+        };
+
+        let mut transport = open_bluetooth_endpoint::<_, 32>(&mut backend, endpoint).unwrap();
+        let mut raw_out = [0u8; 16];
+        let response_len = transport.exchange_raw_frame(&[0x30], &mut raw_out).unwrap();
+
+        assert_eq!(
+            transport.endpoint_transport(),
+            BluetoothEndpointTransport::Rfcomm
+        );
+        assert_eq!(transport.device(), "ESP32-BoardVM");
+        assert_eq!(&raw_out[..response_len], response);
+        assert_eq!(backend.rfcomm_opened, vec![("ESP32-BoardVM".to_owned(), 3)]);
+    }
+
+    #[test]
+    fn unsupported_backend_reports_platform_before_transport_use() {
+        let endpoint = parse_bluetooth_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let mut backend = UnsupportedBluetoothBackend;
+        let result = open_bluetooth_endpoint::<_, 32>(&mut backend, endpoint);
+
+        assert!(matches!(
+            result.err(),
+            Some(BluetoothOpenError::UnsupportedPlatform { platform })
+                if platform == std::env::consts::OS
+        ));
     }
 }
