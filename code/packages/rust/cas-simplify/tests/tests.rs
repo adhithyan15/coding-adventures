@@ -4,9 +4,13 @@
 // code/packages/python/cas-simplify/tests/ to ensure the Rust port is
 // behaviourally equivalent.
 
-use cas_simplify::{canonical, numeric_fold, simplify};
+use cas_simplify::{
+    canonical, demoivre, exponentialize, logcontract, logexpand, numeric_fold, radcan, simplify,
+    AssumptionContext,
+};
 use symbolic_ir::{
-    apply, flt, int, rat, sym, IRNode, ADD, COS, DIV, EXP, LOG, MUL, POW, SIN, SUB,
+    apply, flt, int, rat, sym, IRNode, ADD, COS, COSH, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL,
+    LESS, LOG, MUL, NOT_EQUAL, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
 };
 
 // ---------------------------------------------------------------------------
@@ -36,6 +40,10 @@ fn zero() -> IRNode {
 }
 fn one() -> IRNode {
     int(1)
+}
+
+fn i() -> IRNode {
+    sym("ImaginaryUnit")
 }
 
 // ---------------------------------------------------------------------------
@@ -313,20 +321,14 @@ fn simplify_div_self() {
 fn simplify_log_exp() {
     // Log(Exp(x)) → x
     let inner = apply(sym(EXP), vec![x()]);
-    assert_eq!(
-        simplify(apply(sym(LOG), vec![inner]), 50),
-        x()
-    );
+    assert_eq!(simplify(apply(sym(LOG), vec![inner]), 50), x());
 }
 
 #[test]
 fn simplify_exp_log() {
     // Exp(Log(x)) → x
     let inner = apply(sym(LOG), vec![x()]);
-    assert_eq!(
-        simplify(apply(sym(EXP), vec![inner]), 50),
-        x()
-    );
+    assert_eq!(simplify(apply(sym(EXP), vec![inner]), 50), x());
 }
 
 #[test]
@@ -428,4 +430,254 @@ fn simplify_atom_unchanged() {
     assert_eq!(simplify(x(), 50), x());
     assert_eq!(simplify(int(42), 50), int(42));
     assert_eq!(simplify(flt(3.14), 50), flt(3.14));
+}
+
+// ---------------------------------------------------------------------------
+// Phase 21 — assumptions, radcan, log helpers, exponentialize, DeMoivre
+// ---------------------------------------------------------------------------
+
+#[test]
+fn assumptions_track_relation_and_property_facts() {
+    let mut ctx = AssumptionContext::new();
+    assert_eq!(ctx.is_positive("x"), None);
+    assert!(!ctx.is_integer("n"));
+
+    ctx.assume_relation(&apply(sym(GREATER), vec![x(), int(0)]));
+    assert_eq!(ctx.is_positive("x"), Some(true));
+    assert_eq!(ctx.is_negative("x"), Some(false));
+    assert_eq!(ctx.sign_of("x"), Some(1));
+    assert_eq!(
+        ctx.is_true_relation(&apply(sym(GREATER), vec![x(), int(0)])),
+        Some(true)
+    );
+
+    ctx.assume_relation(&apply(sym(LESS), vec![y(), int(0)]));
+    assert_eq!(ctx.is_negative("y"), Some(true));
+    assert_eq!(ctx.sign_of("y"), Some(-1));
+
+    ctx.assume_relation(&apply(sym(EQUAL), vec![z(), int(0)]));
+    assert_eq!(ctx.sign_of("z"), Some(0));
+    ctx.assume_relation(&apply(sym(NOT_EQUAL), vec![a(), int(0)]));
+    assert_eq!(
+        ctx.is_true_relation(&apply(sym(EQUAL), vec![a(), int(0)])),
+        Some(false)
+    );
+
+    ctx.assume_relation(&apply(sym(GREATER_EQUAL), vec![b(), int(0)]));
+    assert_eq!(ctx.is_nonneg("b"), Some(true));
+    ctx.assume_property(&sym("n"), &sym("integer"));
+    assert!(ctx.is_integer("n"));
+
+    ctx.forget_relation(&apply(sym(GREATER), vec![x(), int(0)]));
+    assert_eq!(ctx.is_positive("x"), None);
+    ctx.forget_all();
+    assert!(!ctx.has_any_facts("n"));
+}
+
+#[test]
+fn radcan_simplifies_square_roots_and_exp_log_pairs() {
+    assert_eq!(radcan(apply(sym(SQRT), vec![int(4)]), None), int(2));
+    assert_eq!(
+        radcan(apply(sym(SQRT), vec![int(2)]), None),
+        apply(sym(SQRT), vec![int(2)])
+    );
+
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&apply(sym(GREATER), vec![x(), int(0)]));
+    let x_sq = apply(sym(POW), vec![x(), int(2)]);
+    assert_eq!(
+        radcan(apply(sym(SQRT), vec![x_sq.clone()]), Some(&ctx)),
+        x()
+    );
+    assert_ne!(radcan(apply(sym(SQRT), vec![x_sq]), None), x());
+
+    let inner = apply(sym(MUL), vec![apply(sym(POW), vec![x(), int(2)]), y()]);
+    let result = radcan(apply(sym(SQRT), vec![inner]), Some(&ctx));
+    match result {
+        IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(MUL));
+            assert!(ap.args.contains(&x()));
+            assert!(ap.args.contains(&apply(sym(SQRT), vec![y()])));
+        }
+        other => panic!("expected Mul, got {other:?}"),
+    }
+
+    assert_eq!(
+        radcan(
+            apply(sym(POW), vec![apply(sym(SQRT), vec![x()]), int(2)]),
+            None
+        ),
+        x()
+    );
+    assert_eq!(
+        radcan(apply(sym(EXP), vec![apply(sym(LOG), vec![x()])]), None),
+        x()
+    );
+    assert_eq!(
+        radcan(apply(sym(LOG), vec![apply(sym(EXP), vec![x()])]), None),
+        x()
+    );
+}
+
+#[test]
+fn radcan_merges_sqrt_products_and_common_rational_exponents() {
+    let merged = radcan(
+        apply(
+            sym(MUL),
+            vec![apply(sym(SQRT), vec![a()]), apply(sym(SQRT), vec![b()])],
+        ),
+        None,
+    );
+    match merged {
+        IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(SQRT));
+            let IRNode::Apply(inner) = &ap.args[0] else {
+                panic!("expected inner Mul");
+            };
+            assert_eq!(inner.head, sym(MUL));
+            assert!(inner.args.contains(&a()));
+            assert!(inner.args.contains(&b()));
+        }
+        other => panic!("expected Sqrt, got {other:?}"),
+    }
+
+    let third = rat(1, 3);
+    let collected = radcan(
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(POW), vec![a(), third.clone()]),
+                apply(sym(POW), vec![b(), third.clone()]),
+            ],
+        ),
+        None,
+    );
+    match collected {
+        IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(POW));
+            assert_eq!(ap.args[1], third);
+            let IRNode::Apply(base) = &ap.args[0] else {
+                panic!("expected merged base");
+            };
+            assert_eq!(base.head, sym(MUL));
+            assert!(base.args.contains(&a()));
+            assert!(base.args.contains(&b()));
+        }
+        other => panic!("expected Pow, got {other:?}"),
+    }
+}
+
+#[test]
+fn logcontract_combines_log_sums_differences_and_coefficients() {
+    let sum = logcontract(apply(
+        sym(ADD),
+        vec![apply(sym(LOG), vec![a()]), apply(sym(LOG), vec![b()])],
+    ));
+    match sum {
+        IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(LOG));
+            assert!(matches!(&ap.args[0], IRNode::Apply(inner) if inner.head == sym(MUL)));
+        }
+        other => panic!("expected Log, got {other:?}"),
+    }
+
+    let diff = logcontract(apply(
+        sym(SUB),
+        vec![apply(sym(LOG), vec![a()]), apply(sym(LOG), vec![b()])],
+    ));
+    assert!(
+        matches!(diff, IRNode::Apply(ap) if ap.head == sym(LOG) && matches!(&ap.args[0], IRNode::Apply(inner) if inner.head == sym(DIV)))
+    );
+
+    let coeff = logcontract(apply(sym(MUL), vec![int(2), apply(sym(LOG), vec![x()])]));
+    assert!(
+        matches!(coeff, IRNode::Apply(ap) if ap.head == sym(LOG) && matches!(&ap.args[0], IRNode::Apply(inner) if inner.head == sym(POW) && inner.args[1] == int(2)))
+    );
+    let non_numeric = apply(sym(MUL), vec![x(), apply(sym(LOG), vec![y()])]);
+    assert_eq!(logcontract(non_numeric.clone()), non_numeric);
+}
+
+#[test]
+fn logexpand_distributes_over_powers_products_and_quotients() {
+    let power = logexpand(
+        apply(sym(LOG), vec![apply(sym(POW), vec![x(), int(3)])]),
+        None,
+    );
+    assert!(matches!(power, IRNode::Apply(ap) if ap.head == sym(MUL) && ap.args.contains(&int(3))));
+
+    let product = logexpand(
+        apply(sym(LOG), vec![apply(sym(MUL), vec![a(), b(), x()])]),
+        None,
+    );
+    fn count_logs(node: &IRNode) -> usize {
+        match node {
+            IRNode::Apply(ap) if ap.head == sym(LOG) => 1,
+            IRNode::Apply(ap) => ap.args.iter().map(count_logs).sum(),
+            _ => 0,
+        }
+    }
+    assert_eq!(count_logs(&product), 3);
+
+    let quotient = logexpand(apply(sym(LOG), vec![apply(sym(DIV), vec![a(), b()])]), None);
+    assert_eq!(
+        quotient,
+        apply(
+            sym(SUB),
+            vec![apply(sym(LOG), vec![a()]), apply(sym(LOG), vec![b()])]
+        )
+    );
+}
+
+#[test]
+fn exponentialize_rewrites_trig_and_hyperbolic_heads() {
+    let sin_out = exponentialize(apply(sym(SIN), vec![x()]));
+    assert!(
+        matches!(sin_out, IRNode::Apply(ap) if ap.head == sym(DIV) && matches!(&ap.args[0], IRNode::Apply(num) if num.head == sym(SUB)))
+    );
+
+    let cos_out = exponentialize(apply(sym(COS), vec![x()]));
+    assert!(matches!(cos_out, IRNode::Apply(ap) if ap.head == sym(DIV) && ap.args[1] == int(2)));
+
+    let tan_out = exponentialize(apply(sym(TAN), vec![x()]));
+    assert!(
+        matches!(tan_out, IRNode::Apply(ap) if ap.head == sym(DIV) && matches!(&ap.args[1], IRNode::Apply(den) if den.head == sym(ADD)))
+    );
+
+    for head in [SINH, COSH, TANH] {
+        let out = exponentialize(apply(sym(head), vec![x()]));
+        assert!(matches!(out, IRNode::Apply(ap) if ap.head == sym(DIV)));
+    }
+}
+
+#[test]
+fn demoivre_splits_pure_and_mixed_complex_exponentials() {
+    let pure = demoivre(apply(sym(EXP), vec![apply(sym(MUL), vec![i(), y()])]));
+    match pure {
+        IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(ADD));
+            assert!(
+                matches!(&ap.args[0], IRNode::Apply(cos) if cos.head == sym(COS) && cos.args[0] == y())
+            );
+            assert!(
+                matches!(&ap.args[1], IRNode::Apply(mul) if mul.head == sym(MUL) && mul.args.contains(&i()))
+            );
+        }
+        other => panic!("expected Add, got {other:?}"),
+    }
+
+    let bare = demoivre(apply(sym(EXP), vec![i()]));
+    assert!(
+        matches!(bare, IRNode::Apply(ap) if ap.head == sym(ADD) && matches!(&ap.args[0], IRNode::Apply(cos) if cos.args[0] == int(1)))
+    );
+
+    let mixed = demoivre(apply(
+        sym(EXP),
+        vec![apply(sym(ADD), vec![x(), apply(sym(MUL), vec![i(), y()])])],
+    ));
+    assert!(
+        matches!(mixed, IRNode::Apply(ap) if ap.head == sym(MUL) && ap.args.iter().any(|arg| matches!(arg, IRNode::Apply(exp) if exp.head == sym(EXP) && exp.args[0] == x())))
+    );
+
+    let real_only = apply(sym(EXP), vec![x()]);
+    assert_eq!(demoivre(real_only.clone()), real_only);
 }

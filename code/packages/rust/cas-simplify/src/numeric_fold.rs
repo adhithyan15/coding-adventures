@@ -67,14 +67,24 @@ fn numeric_fold_apply(node: IRApply) -> IRNode {
 
             // Empty container (shouldn't happen after canonical, but be safe).
             if folded.is_empty() {
-                return if is_mul { IRNode::Integer(1) } else { IRNode::Integer(0) };
+                return if is_mul {
+                    IRNode::Integer(1)
+                } else {
+                    IRNode::Integer(0)
+                };
             }
 
-            return IRNode::Apply(Box::new(IRApply { head: new_head, args: folded }));
+            return IRNode::Apply(Box::new(IRApply {
+                head: new_head,
+                args: folded,
+            }));
         }
     }
 
-    IRNode::Apply(Box::new(IRApply { head: new_head, args: new_args }))
+    IRNode::Apply(Box::new(IRApply {
+        head: new_head,
+        args: new_args,
+    }))
 }
 
 // ---------------------------------------------------------------------------

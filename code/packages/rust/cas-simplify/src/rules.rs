@@ -91,14 +91,8 @@ pub fn build_identity_rules() -> Vec<IRNode> {
         //   Log(Exp(x)) → x
         //   Exp(Log(x)) → x
         // ----------------------------------------------------------------
-        rule(
-            apply(sym(LOG), vec![apply(sym(EXP), vec![x()])]),
-            x(),
-        ),
-        rule(
-            apply(sym(EXP), vec![apply(sym(LOG), vec![x()])]),
-            x(),
-        ),
+        rule(apply(sym(LOG), vec![apply(sym(EXP), vec![x()])]), x()),
+        rule(apply(sym(EXP), vec![apply(sym(LOG), vec![x()])]), x()),
         // ----------------------------------------------------------------
         // Trig at zero
         //   Sin(0) → 0

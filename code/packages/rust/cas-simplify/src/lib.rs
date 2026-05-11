@@ -34,12 +34,21 @@
 //! assert_eq!(simplify(expr3, 50), int(1));
 //! ```
 
+pub mod assumptions;
 pub mod canonical;
+pub mod exponentialize;
+pub mod heads;
+pub mod logcontract;
 pub mod numeric_fold;
+pub mod radcan;
 pub mod rules;
 pub mod simplifier;
 
+pub use assumptions::AssumptionContext;
 pub use canonical::canonical;
+pub use exponentialize::{demoivre, exponentialize};
+pub use logcontract::{logcontract, logexpand};
 pub use numeric_fold::numeric_fold;
+pub use radcan::radcan;
 pub use rules::build_identity_rules;
 pub use simplifier::simplify;
