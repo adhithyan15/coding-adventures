@@ -7,7 +7,7 @@ import {
   int,
   sym,
 } from "@coding-adventures/symbolic-ir";
-import { MacsymaSession, evalSourceJson } from "../src/index.js";
+import { History, MacsymaBackend, MacsymaSession, evalSourceJson } from "../src/index.js";
 
 describe("macsyma-runtime", () => {
   it("evaluates arithmetic programs", () => {
@@ -38,6 +38,62 @@ describe("macsyma-runtime", () => {
     expect(session.history().getInput(1)).toEqual(app(ADD, [int(2), int(3)]));
     expect(session.history().getOutput(1)).toEqual(int(5));
     expect(session.history().nextInputIndex()).toBe(5);
+  });
+
+  it("exposes Python-parity history symbol resolution", () => {
+    const history = new History();
+    const input = app(ADD, [int(2), int(3)]);
+    history.recordInput(input);
+    history.recordOutput(int(5));
+    history.recordOutput(int(10));
+
+    expect(history.resolveHistorySymbol("%")).toEqual(int(10));
+    expect(history.resolveHistorySymbol("%i1")).toEqual(input);
+    expect(history.resolveHistorySymbol("%o1")).toEqual(int(5));
+    expect(history.resolveHistorySymbol("%o2")).toEqual(int(10));
+  });
+
+  it("returns undefined for unknown or out-of-range history symbols", () => {
+    const history = new History();
+    history.recordInput(sym("x"));
+    history.recordOutput(int(1));
+
+    expect(history.resolveHistorySymbol("xyz")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%foo")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%i999")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%o999")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%i0")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%o0")).toBeUndefined();
+  });
+
+  it("returns undefined for history symbols before any history is recorded", () => {
+    const history = new History();
+    expect(history.resolveHistorySymbol("%")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%i1")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%o1")).toBeUndefined();
+  });
+
+  it("clears resolvable history symbols on reset", () => {
+    const history = new History();
+    history.recordInput(int(1));
+    history.recordOutput(int(2));
+    history.reset();
+
+    expect(history.nextInputIndex()).toBe(1);
+    expect(history.resolveHistorySymbol("%")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%i1")).toBeUndefined();
+    expect(history.resolveHistorySymbol("%o1")).toBeUndefined();
+  });
+
+  it("keeps env bindings ahead of history fallback in backend lookup", () => {
+    const history = new History();
+    history.recordOutput(int(42));
+    const backend = new MacsymaBackend(history);
+    backend.bind("%o1", int(99));
+
+    expect(backend.lookup("%o1")).toEqual(int(99));
+    expect(backend.lookup("%")).toEqual(int(42));
+    expect(backend.lookup("not_history")).toBeUndefined();
   });
 
   it("evaluates function definitions across statements", () => {
