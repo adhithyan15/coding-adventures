@@ -1,5 +1,14 @@
 # Changelog — cas-matrix (Rust)
 
+## Unreleased
+
+### Added
+
+- `rowreduce` module with exact rational Gauss-Jordan `row_reduce(m)` and
+  forward-elimination `rank(m)` for integer/rational matrices.
+- Row-reduction tests covering identity, zero, full-rank, singular, rational
+  dependent rows, wide/tall rank, and symbolic-entry errors.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

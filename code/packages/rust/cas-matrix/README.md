@@ -24,6 +24,8 @@ All arithmetic produces unevaluated IR; pass through `cas_simplify::simplify` to
 | `dot(a, b)` | Matrix product |
 | `determinant(m)` | Cofactor expansion (O(n!)) |
 | `inverse(m)` | Adjugate/determinant (symbolic) |
+| `row_reduce(m)` | Exact rational Gauss-Jordan RREF for integer/rational entries |
+| `rank(m)` | Exact rational row rank for integer/rational entries |
 
 ## Usage
 
@@ -46,6 +48,9 @@ let d = determinant(&m).unwrap();
 ## Error handling
 
 All fallible operations return `MatrixResult<IRNode>` (= `Result<IRNode, MatrixError>`).
+
+`row_reduce` and `rank` are numeric-only: integer and rational entries are
+accepted, while symbolic entries return `MatrixError`.
 
 ## Stack position
 
