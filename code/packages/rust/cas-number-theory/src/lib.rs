@@ -7,8 +7,8 @@
 //!
 //! | Module | Functions |
 //! |--------|-----------|
-//! | [`arithmetic`] | [`gcd`], [`lcm`], [`extended_gcd`], [`totient`], [`mod_inverse`], [`mod_pow`] |
-//! | [`primality`] | [`is_prime`], [`primes_up_to`], [`next_prime`], [`nth_prime`] |
+//! | [`arithmetic`] | [`gcd`], [`lcm`], [`extended_gcd`], [`totient`], [`divisors`], [`moebius_mu`], [`jacobi_symbol`], [`integer_length`], [`mod_inverse`], [`mod_pow`] |
+//! | [`primality`] | [`is_prime`], [`primes_up_to`], [`next_prime`], [`prev_prime`], [`nth_prime`] |
 //! | [`factorize`] | [`factor_integer`], [`factorize_ir`] |
 //! | [`crt`] | [`crt`] |
 //!
@@ -38,10 +38,13 @@ pub mod primality;
 // Re-export the full public API.
 
 // arithmetic
-pub use arithmetic::{extended_gcd, gcd, lcm, mod_inverse, mod_pow, totient};
+pub use arithmetic::{
+    divisors, extended_gcd, gcd, integer_length, jacobi_symbol, lcm, mod_inverse, mod_pow,
+    moebius_mu, totient,
+};
 
 // primality
-pub use primality::{is_prime, next_prime, nth_prime, primes_up_to};
+pub use primality::{is_prime, next_prime, nth_prime, prev_prime, primes_up_to};
 
 // factorize
 pub use factorize::{factor_integer, factorize_ir};

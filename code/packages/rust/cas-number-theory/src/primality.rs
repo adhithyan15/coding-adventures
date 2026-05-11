@@ -140,6 +140,41 @@ pub fn next_prime(n: i64) -> i64 {
     }
 }
 
+/// Return the largest prime strictly less than `n`.
+///
+/// Returns `None` when there is no such prime.
+///
+/// # Examples
+///
+/// ```rust
+/// use cas_number_theory::prev_prime;
+///
+/// assert_eq!(prev_prime(10), Some(7));
+/// assert_eq!(prev_prime(3), Some(2));
+/// assert_eq!(prev_prime(2), None);
+/// ```
+pub fn prev_prime(n: i64) -> Option<i64> {
+    if n <= 2 {
+        return None;
+    }
+
+    let mut candidate = n - 1;
+    if candidate == 2 {
+        return Some(2);
+    }
+    if candidate % 2 == 0 {
+        candidate -= 1;
+    }
+
+    while candidate >= 2 {
+        if is_prime(candidate) {
+            return Some(candidate);
+        }
+        candidate -= 2;
+    }
+    None
+}
+
 /// Return the `k`-th prime (1-indexed: `nth_prime(1) = 2`).
 ///
 /// # Examples
