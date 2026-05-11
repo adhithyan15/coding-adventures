@@ -1,6 +1,6 @@
 [package]
 name = "ir-to-wasm-compiler"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 description = "Lower the generic compiler IR into WebAssembly 1.0 modules"
 
