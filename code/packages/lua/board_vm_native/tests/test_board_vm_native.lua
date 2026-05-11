@@ -129,6 +129,32 @@ describe("coding_adventures.board_vm_native", function()
         assert.are.equal("table", type(board_vm.bluetooth_endpoint_candidates()))
     end)
 
+    it("filters Bluetooth endpoint candidates to the selected transport", function()
+        local option = board_vm.select_connection_option("uno-r4-wifi", { via = "BLE" })
+        local endpoint = board_vm.bluetooth_connection_endpoint(option, {
+            {
+                id = "esp32-board-vm",
+                name = "ESP32 Board VM",
+                paired = true,
+                board_vm_rfcomm_channels = { 3 },
+            },
+            {
+                id = "uno-r4",
+                name = "Uno R4 Board VM",
+                address = "AA:BB:CC:DD:EE:FF",
+                service_uuids = { "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" },
+            },
+        })
+
+        assert.are.equal(
+            "ble://AA:BB:CC:DD:EE:FF" ..
+            "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+            endpoint
+        )
+    end)
+
     it("classifies host devices through Rust-owned discovery rules", function()
         local devices = board_vm.devices({
             "/dev/cu.usbmodem1101",
@@ -196,6 +222,30 @@ describe("coding_adventures.board_vm_native", function()
         assert.are.equal(2, #transport.frames)
         assert.is_string(transport.frames[1])
         assert.are.equal(0, transport.frames[1]:byte(#transport.frames[1]))
+    end)
+
+    it("auto-selects Bluetooth endpoint candidates while connecting", function()
+        local connection = board_vm.connect("uno-r4-wifi", {
+            via = "BLE",
+            bluetooth_devices = {
+                {
+                    id = "uno-r4",
+                    name = "Uno R4 Board VM",
+                    address = "AA:BB:CC:DD:EE:FF",
+                    service_uuids = { "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" },
+                },
+            },
+        })
+
+        assert.is_nil(connection.port)
+        assert.are.equal("bluetooth_le", connection:connection_transport())
+        assert.are.equal(
+            "ble://AA:BB:CC:DD:EE:FF" ..
+            "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+            connection.endpoint
+        )
     end)
 
     it("builds TCP transports for Wi-Fi endpoints", function()
