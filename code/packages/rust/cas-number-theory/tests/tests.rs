@@ -1,8 +1,9 @@
 // Integration tests for cas-number-theory.
 
 use cas_number_theory::{
-    crt, extended_gcd, factor_integer, factorize_ir, gcd, is_prime, lcm, mod_inverse, mod_pow,
-    next_prime, nth_prime, primes_up_to, totient,
+    crt, divisors, extended_gcd, factor_integer, factorize_ir, gcd, integer_length, is_prime,
+    jacobi_symbol, lcm, mod_inverse, mod_pow, moebius_mu, next_prime, nth_prime, prev_prime,
+    primes_up_to, totient,
 };
 use symbolic_ir::{apply, int, sym, IRNode, MUL, POW};
 
@@ -80,7 +81,13 @@ fn extended_gcd_bezout_identity() {
     // Verify a*s + b*t = g for various inputs.
     for (a, b) in &[(3i64, 5), (12, 8), (100, 37), (7, 13), (0, 5)] {
         let (g, s, t) = extended_gcd(*a, *b);
-        assert_eq!(a * s + b * t, g, "Bézout identity failed for ({}, {})", a, b);
+        assert_eq!(
+            a * s + b * t,
+            g,
+            "Bézout identity failed for ({}, {})",
+            a,
+            b
+        );
         assert_eq!(g, gcd(*a, *b));
     }
 }
@@ -112,16 +119,16 @@ fn totient_prime() {
 #[test]
 fn totient_prime_power() {
     // φ(p^k) = p^(k-1)·(p-1)
-    assert_eq!(totient(4), 2);   // φ(2²) = 2
-    assert_eq!(totient(8), 4);   // φ(2³) = 4
-    assert_eq!(totient(9), 6);   // φ(3²) = 6
+    assert_eq!(totient(4), 2); // φ(2²) = 2
+    assert_eq!(totient(8), 4); // φ(2³) = 4
+    assert_eq!(totient(9), 6); // φ(3²) = 6
 }
 
 #[test]
 fn totient_composite() {
-    assert_eq!(totient(12), 4);   // φ(4·3) = 2·2
-    assert_eq!(totient(36), 12);  // φ(4·9) = 2·6
-    assert_eq!(totient(30), 8);   // φ(2·3·5) = 1·2·4
+    assert_eq!(totient(12), 4); // φ(4·3) = 2·2
+    assert_eq!(totient(36), 12); // φ(4·9) = 2·6
+    assert_eq!(totient(30), 8); // φ(2·3·5) = 1·2·4
 }
 
 #[test]
@@ -131,18 +138,87 @@ fn totient_nonpositive() {
 }
 
 // ---------------------------------------------------------------------------
+// arithmetic — divisors / moebius / jacobi / integer_length
+// ---------------------------------------------------------------------------
+
+#[test]
+fn divisors_python_examples() {
+    assert_eq!(divisors(1), vec![1]);
+    assert_eq!(divisors(12), vec![1, 2, 3, 4, 6, 12]);
+    assert_eq!(divisors(30), vec![1, 2, 3, 5, 6, 10, 15, 30]);
+}
+
+#[test]
+fn divisors_abs_and_zero() {
+    assert_eq!(divisors(-12), vec![1, 2, 3, 4, 6, 12]);
+    assert_eq!(divisors(0), Vec::<i64>::new());
+}
+
+#[test]
+fn moebius_python_examples() {
+    assert_eq!(moebius_mu(1), 1);
+    assert_eq!(moebius_mu(2), -1);
+    assert_eq!(moebius_mu(3), -1);
+    assert_eq!(moebius_mu(4), 0);
+    assert_eq!(moebius_mu(9), 0);
+    assert_eq!(moebius_mu(6), 1);
+}
+
+#[test]
+fn moebius_nonpositive_returns_zero() {
+    assert_eq!(moebius_mu(0), 0);
+    assert_eq!(moebius_mu(-6), 0);
+}
+
+#[test]
+fn jacobi_symbol_python_examples() {
+    assert_eq!(jacobi_symbol(2, 3), -1);
+    assert_eq!(jacobi_symbol(1, 5), 1);
+    assert_eq!(jacobi_symbol(0, 5), 0);
+    assert_eq!(jacobi_symbol(1001, 9907), -1);
+}
+
+#[test]
+#[should_panic(expected = "jacobi_symbol requires odd positive n")]
+fn jacobi_symbol_even_modulus_panics() {
+    jacobi_symbol(2, 4);
+}
+
+#[test]
+#[should_panic(expected = "jacobi_symbol requires odd positive n")]
+fn jacobi_symbol_nonpositive_modulus_panics() {
+    jacobi_symbol(2, -5);
+}
+
+#[test]
+fn integer_length_python_examples() {
+    assert_eq!(integer_length(0, 10), 1);
+    assert_eq!(integer_length(9, 10), 1);
+    assert_eq!(integer_length(10, 10), 2);
+    assert_eq!(integer_length(100, 10), 3);
+    assert_eq!(integer_length(8, 2), 4);
+    assert_eq!(integer_length(-100, 10), 3);
+}
+
+#[test]
+#[should_panic(expected = "integer_length requires base >= 2")]
+fn integer_length_invalid_base_panics() {
+    integer_length(10, 1);
+}
+
+// ---------------------------------------------------------------------------
 // arithmetic — mod_inverse
 // ---------------------------------------------------------------------------
 
 #[test]
 fn mod_inverse_basic() {
-    assert_eq!(mod_inverse(3, 7), Some(5));   // 3*5=15≡1 (mod 7)
+    assert_eq!(mod_inverse(3, 7), Some(5)); // 3*5=15≡1 (mod 7)
     assert_eq!(mod_inverse(1, 5), Some(1));
 }
 
 #[test]
 fn mod_inverse_no_inverse() {
-    assert_eq!(mod_inverse(2, 4), None);   // gcd(2,4)=2≠1
+    assert_eq!(mod_inverse(2, 4), None); // gcd(2,4)=2≠1
     assert_eq!(mod_inverse(6, 9), None);
 }
 
@@ -152,9 +228,9 @@ fn mod_inverse_no_inverse() {
 
 #[test]
 fn mod_pow_basic() {
-    assert_eq!(mod_pow(2, 10, 1000), 24);   // 2^10 = 1024 ≡ 24 (mod 1000)
-    assert_eq!(mod_pow(3, 4, 7), 4);         // 81 ≡ 4 (mod 7)
-    assert_eq!(mod_pow(3, 0, 7), 1);         // anything^0 = 1
+    assert_eq!(mod_pow(2, 10, 1000), 24); // 2^10 = 1024 ≡ 24 (mod 1000)
+    assert_eq!(mod_pow(3, 4, 7), 4); // 81 ≡ 4 (mod 7)
+    assert_eq!(mod_pow(3, 0, 7), 1); // anything^0 = 1
 }
 
 #[test]
@@ -227,6 +303,16 @@ fn next_prime_basic() {
     assert_eq!(next_prime(2), 3);
     assert_eq!(next_prime(10), 11);
     assert_eq!(next_prime(13), 17);
+}
+
+#[test]
+fn prev_prime_basic() {
+    assert_eq!(prev_prime(10), Some(7));
+    assert_eq!(prev_prime(3), Some(2));
+    assert_eq!(prev_prime(2), None);
+    assert_eq!(prev_prime(1), None);
+    assert_eq!(prev_prime(0), None);
+    assert_eq!(prev_prime(-10), None);
 }
 
 #[test]
@@ -376,7 +462,11 @@ fn crt_solution_unique_mod_lcm() {
     // Result should be in [0, lcm(moduli)).
     let result = crt(&[2, 3, 2], &[3, 5, 7]).unwrap();
     // lcm(3,5,7) = 105
-    assert!(result >= 0 && result < 105, "result {} not in [0, 105)", result);
+    assert!(
+        result >= 0 && result < 105,
+        "result {} not in [0, 105)",
+        result
+    );
     // Verify each congruence.
     assert_eq!(result % 3, 2);
     assert_eq!(result % 5, 3);

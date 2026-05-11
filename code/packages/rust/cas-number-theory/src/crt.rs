@@ -99,8 +99,8 @@ pub fn crt(remainders: &[i64], moduli: &[i64]) -> Option<i64> {
         // (M/g)·s ≡ 1 (mod n/g), i.e. s is the inverse of M/g mod n/g.
         let n_g = n / g;
         // Avoid overflow by using i128 for the intermediate product.
-        let t = ((diff / g).rem_euclid(n_g) as i128 * s.rem_euclid(n_g) as i128
-            % n_g as i128) as i64;
+        let t =
+            ((diff / g).rem_euclid(n_g) as i128 * s.rem_euclid(n_g) as i128 % n_g as i128) as i64;
         let t = t.rem_euclid(n_g); // ensure non-negative
 
         // New modulus is lcm(M, n).

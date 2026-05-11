@@ -39,6 +39,8 @@
 //! The formula used here: for each prime factor `p` of `n`,
 //! multiply the running total by `(p − 1) / p`.
 
+use crate::factor_integer;
+
 // ---------------------------------------------------------------------------
 // GCD / LCM
 // ---------------------------------------------------------------------------
@@ -182,6 +184,158 @@ pub fn totient(n: i64) -> i64 {
         result -= result / n;
     }
     result
+}
+
+// ---------------------------------------------------------------------------
+// Divisors and multiplicative functions
+// ---------------------------------------------------------------------------
+
+/// Return the sorted positive divisors of `|n|`.
+///
+/// Returns an empty vector for `n = 0`.
+///
+/// # Examples
+///
+/// ```rust
+/// use cas_number_theory::divisors;
+///
+/// assert_eq!(divisors(1), vec![1]);
+/// assert_eq!(divisors(12), vec![1, 2, 3, 4, 6, 12]);
+/// assert_eq!(divisors(-12), vec![1, 2, 3, 4, 6, 12]);
+/// assert_eq!(divisors(0), Vec::<i64>::new());
+/// ```
+pub fn divisors(n: i64) -> Vec<i64> {
+    let n = n.abs();
+    if n == 0 {
+        return vec![];
+    }
+
+    let mut divs = Vec::new();
+    let mut i = 1i64;
+    while i * i <= n {
+        if n % i == 0 {
+            divs.push(i);
+            let pair = n / i;
+            if pair != i {
+                divs.push(pair);
+            }
+        }
+        i += 1;
+    }
+    divs.sort_unstable();
+    divs
+}
+
+/// Möbius function μ(n).
+///
+/// Returns `0` if `n <= 0` or if `n` has a squared prime factor.  Otherwise
+/// returns `(-1)^k`, where `k` is the number of distinct prime factors.
+///
+/// # Examples
+///
+/// ```rust
+/// use cas_number_theory::moebius_mu;
+///
+/// assert_eq!(moebius_mu(1), 1);
+/// assert_eq!(moebius_mu(2), -1);
+/// assert_eq!(moebius_mu(4), 0);
+/// assert_eq!(moebius_mu(6), 1);
+/// ```
+pub fn moebius_mu(n: i64) -> i64 {
+    if n <= 0 {
+        return 0;
+    }
+    if n == 1 {
+        return 1;
+    }
+
+    let factors = factor_integer(n);
+    if factors.iter().any(|(_, exp)| *exp > 1) {
+        return 0;
+    }
+    if factors.len() % 2 == 0 {
+        1
+    } else {
+        -1
+    }
+}
+
+/// Jacobi symbol `(a/n)`.
+///
+/// `n` must be a positive odd integer.  Returns `-1`, `0`, or `1`.
+///
+/// # Panics
+///
+/// Panics when `n <= 0` or `n` is even.
+///
+/// # Examples
+///
+/// ```rust
+/// use cas_number_theory::jacobi_symbol;
+///
+/// assert_eq!(jacobi_symbol(2, 3), -1);
+/// assert_eq!(jacobi_symbol(1, 5), 1);
+/// assert_eq!(jacobi_symbol(0, 5), 0);
+/// ```
+pub fn jacobi_symbol(mut a: i64, mut n: i64) -> i64 {
+    assert!(n > 0 && n % 2 == 1, "jacobi_symbol requires odd positive n");
+
+    a = a.rem_euclid(n);
+    let mut result = 1i64;
+    while a != 0 {
+        while a % 2 == 0 {
+            a /= 2;
+            if matches!(n % 8, 3 | 5) {
+                result = -result;
+            }
+        }
+
+        std::mem::swap(&mut a, &mut n);
+        if a % 4 == 3 && n % 4 == 3 {
+            result = -result;
+        }
+        a %= n;
+    }
+
+    if n == 1 {
+        result
+    } else {
+        0
+    }
+}
+
+/// Number of digits of `|n|` in `base`.
+///
+/// Zero has length `1`.
+///
+/// # Panics
+///
+/// Panics when `base < 2`.
+///
+/// # Examples
+///
+/// ```rust
+/// use cas_number_theory::integer_length;
+///
+/// assert_eq!(integer_length(0, 10), 1);
+/// assert_eq!(integer_length(100, 10), 3);
+/// assert_eq!(integer_length(8, 2), 4);
+/// assert_eq!(integer_length(-100, 10), 3);
+/// ```
+pub fn integer_length(n: i64, base: i64) -> i64 {
+    assert!(base >= 2, "integer_length requires base >= 2");
+
+    let mut n = n.abs();
+    if n == 0 {
+        return 1;
+    }
+
+    let mut count = 0i64;
+    while n > 0 {
+        n /= base;
+        count += 1;
+    }
+    count
 }
 
 // ---------------------------------------------------------------------------
