@@ -161,6 +161,9 @@ export function solveOde(equation: IRNode, y: IRNode, x: IRNode, options: SolveO
   const separable = trySeparable(expr, y, x, ops);
   if (separable !== null) return separable;
 
+  const homogeneous = tryHomogeneousType(expr, y, x, ops);
+  if (homogeneous !== null) return homogeneous;
+
   return null;
 }
 
@@ -299,6 +302,56 @@ function tryExact(expr: IRNode, y: IRNode, x: IRNode, ops: Ops): IRNode | null {
   const g = ops.integrate(gPrime, y);
   if (isApplyOf(g, INTEGRATE)) return null;
   return app(EQUAL, [ops.simp(add(F, g)), C]);
+}
+
+export function substRatioIr(node: IRNode, y: IRNode, x: IRNode, v: IRNode): IRNode | null {
+  if (equals(node, y)) return null;
+  if (node.kind !== "apply") return node;
+
+  if (headName(node.head) === DIV.name && node.args.length === 2 && equals(node.args[0], y) && equals(node.args[1], x)) {
+    return v;
+  }
+
+  const args: IRNode[] = [];
+  for (const arg of node.args) {
+    const substituted = substRatioIr(arg, y, x, v);
+    if (substituted === null) return null;
+    args.push(substituted);
+  }
+  return app(node.head, args);
+}
+
+function tryHomogeneousType(expr: IRNode, y: IRNode, x: IRNode, ops: Ops): IRNode | null {
+  const extracted = extractFirstOrderRhs(expr, y, x);
+  if (extracted === null) return null;
+
+  const rhs = ops.simp(extracted);
+  if (isConstWrt(rhs, y)) return null;
+
+  const v = sym("_hom_v");
+  const fRaw = substRatioIr(rhs, y, x, v);
+  if (fRaw === null) return null;
+
+  const f = ops.simp(fRaw);
+  if (!isConstWrt(f, x)) return null;
+  if (equals(f, v)) return app(EQUAL, [y, ops.simp(mul(C, x))]);
+
+  const denom = simplifyLinearInVariable(ops.simp(sub(f, v)), v);
+  const integrand = ops.simp(div(ONE, denom));
+  const hV = ops.integrate(integrand, v);
+  const yOverX = div(y, x);
+  const hYX = ops.simp(substIr(hV, v, yOverX));
+  return app(EQUAL, [hYX, ops.simp(add(app(LOG, [x]), C))]);
+}
+
+function simplifyLinearInVariable(node: IRNode, variable: IRNode): IRNode {
+  let coeff = Frac.zero();
+  for (const term of flattenAdd(node)) {
+    const termCoeff = extractLinearCoeff(term, variable);
+    if (termCoeff === null) return node;
+    coeff = coeff.add(termCoeff);
+  }
+  return mul(coeff.toIr(), variable);
 }
 
 function collectSecondOrderCoeffs(expr: IRNode, y: IRNode, x: IRNode): { a: Frac; b: Frac; c: Frac } | null {
@@ -847,6 +900,12 @@ function extractLinearCoeff(node: IRNode, variable: IRNode): Frac | null {
 function isConstWrt(node: IRNode, variable: IRNode): boolean {
   if (equals(node, variable)) return false;
   return node.kind !== "apply" || node.args.every((arg) => isConstWrt(arg, variable));
+}
+
+function substIr(node: IRNode, from: IRNode, to: IRNode): IRNode {
+  if (equals(node, from)) return to;
+  if (node.kind !== "apply") return node;
+  return app(node.head, node.args.map((arg) => substIr(arg, from, to)));
 }
 
 function applyArgs(node: IRNode, head: IRNode): readonly IRNode[] | undefined {

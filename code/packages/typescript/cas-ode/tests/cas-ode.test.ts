@@ -19,7 +19,7 @@ import {
   sym,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
-import { C, C1, C2, ODE2, buildOdeHandlerTable, ode2, solveOde } from "../src/index";
+import { C, C1, C2, ODE2, buildOdeHandlerTable, ode2, solveOde, substRatioIr } from "../src/index";
 
 const x = sym("x");
 const y = sym("y");
@@ -44,6 +44,12 @@ function rhsOfEqual(node: IRNode): IRNode {
   return (node as Extract<IRNode, { kind: "apply" }>).args[1];
 }
 
+function lhsOfEqual(node: IRNode): IRNode {
+  expect(node.kind).toBe("apply");
+  expect(node.kind === "apply" && equals(node.head, EQUAL)).toBe(true);
+  return (node as Extract<IRNode, { kind: "apply" }>).args[0];
+}
+
 describe("cas-ode package shape", () => {
   it("exports an ODE2 handler table", () => {
     const table = buildOdeHandlerTable();
@@ -57,6 +63,22 @@ describe("cas-ode package shape", () => {
 });
 
 describe("first-order ODEs", () => {
+  it("substitutes exact y/x ratios for the homogeneous recognizer", () => {
+    const v = sym("v");
+    const yOverX = app(DIV, [y, x]);
+    expectEqual(substRatioIr(yOverX, y, x, v)!, v);
+    expectEqual(substRatioIr(app(POW, [yOverX, int(2)]), y, x, v)!, app(POW, [v, int(2)]));
+    expectEqual(substRatioIr(app(ADD, [yOverX, yOverX]), y, x, v)!, app(ADD, [v, v]));
+  });
+
+  it("rejects y when it is not structurally y/x", () => {
+    const v = sym("v");
+    expect(substRatioIr(y, y, x, v)).toBeNull();
+    expect(substRatioIr(app(DIV, [app(ADD, [y, x]), x]), y, x, v)).toBeNull();
+    expect(substRatioIr(app(MUL, [y, x]), y, x, v)).toBeNull();
+    expectEqual(substRatioIr(x, y, x, v)!, x);
+  });
+
   it("solves first-order linear equations with symbolic integrating factors", () => {
     const equation = app(SUB, [yp, app(MUL, [int(2), y])]);
     const result = solveOde(equation, y, x);
@@ -91,6 +113,38 @@ describe("first-order ODEs", () => {
     const result = solveOde(equation, y, x);
     const expectedPotential = app(ADD, [x, app(MUL, [y, app(POW, [x, int(2)])])]);
     expectEqual(result!, app(EQUAL, [expectedPotential, C]));
+  });
+
+  it("solves the homogeneous degenerate y prime equals y over x case", () => {
+    const equation = app(SUB, [yp, app(DIV, [y, x])]);
+    const result = solveOde(equation, y, x);
+    expectEqual(result!, app(EQUAL, [y, app(MUL, [C, x])]));
+  });
+
+  it("returns an implicit homogeneous solution when the v integral is symbolic", () => {
+    const yOverX = app(DIV, [y, x]);
+    const equation = app(SUB, [yp, app(EXP, [yOverX])]);
+    const result = solveOde(equation, y, x);
+    expect(result).not.toBeNull();
+    expect(hasHead(lhsOfEqual(result!), INTEGRATE.name)).toBe(true);
+    expect(hasHead(rhsOfEqual(result!), LOG.name)).toBe(true);
+    expect(display(result!)).toContain("%c");
+    expect(display(result!)).not.toContain("_hom_v");
+  });
+
+  it("uses primitive homogeneous integration when the v integral is available", () => {
+    const yOverX = app(DIV, [y, x]);
+    const equation = app(SUB, [yp, app(MUL, [int(2), yOverX])]);
+    const result = solveOde(equation, y, x);
+    expect(result).not.toBeNull();
+    expect(hasHead(lhsOfEqual(result!), LOG.name)).toBe(true);
+    expect(hasHead(rhsOfEqual(result!), LOG.name)).toBe(true);
+  });
+
+  it("falls through when y also appears outside y over x", () => {
+    const yOverX = app(DIV, [y, x]);
+    const unsupported = app(SUB, [yp, app(ADD, [app(MUL, [y, x]), yOverX])]);
+    expectEqual(ode2(unsupported, y, x), app(ODE2, [unsupported, y, x]));
   });
 });
 
