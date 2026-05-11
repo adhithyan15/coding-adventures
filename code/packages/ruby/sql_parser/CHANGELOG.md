@@ -2,6 +2,14 @@
 
 All notable changes to `coding_adventures_sql_parser` will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Removed `test_error_on_select_without_from` test. The `sql.grammar` was
+  updated in PR #2067 to allow `SELECT` without a `FROM` clause (SQLite
+  convergence — e.g., `SELECT 1 + 1` is valid). The test assertion was stale.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

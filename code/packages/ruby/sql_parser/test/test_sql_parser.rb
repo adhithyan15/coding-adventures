@@ -576,11 +576,6 @@ class TestSqlParser < Minitest::Test
     assert_raises(StandardError) { parse("") }
   end
 
-  def test_error_on_select_without_from
-    # "SELECT *" alone without FROM is incomplete per the grammar
-    assert_raises(StandardError) { parse("SELECT *") }
-  end
-
   def test_error_on_unknown_token
     assert_raises(StandardError) { parse("@@invalid") }
   end

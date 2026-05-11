@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Bug fixes
+
+- **SIGSEGV at 0x10 on Ruby 3.4** — replaced all hardcoded `ruby_bridge::QNIL`
+  (0x08) with `ruby_bridge::nil_value()` in the native extension. The constant
+  was wrong for Ruby builds that do not use USE_FLONUM (QNIL = 0x04). Passing
+  0x08 to `rb_set_errinfo` left `$!` in a non-nil state; Ruby's subsequent
+  method dispatch tried `RBASIC_CLASS(0x08)` = `*(0x08+8)` = address 0x10,
+  causing a segfault. Now the actual runtime nil VALUE is used in all Ruby API
+  calls and comparisons.
+
 ### Phase 3 — Sinatra DSL (WEB02)
 
 - **`HaltError`** — new exception class carrying `status`, `body`, and
