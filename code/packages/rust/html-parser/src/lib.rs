@@ -2213,6 +2213,24 @@ impl HtmlParser {
             "p" if !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() => {}
+            "p" if self.current_parent_has_element_ancestor("button")
+                && !self.current_parent_has_element_in_button_scope("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_node(Node::element("p".to_string(), Vec::new()));
+            }
+            "p" if self.current_parent_has_table_ancestor()
+                && !self.current_parent_has_element_in_table_scope("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.insert_node_before_open_table(Node::element("p".to_string(), Vec::new()));
+            }
             "p" if self.has_open_element("p")
                 && !self.has_open_element_before_namespace_boundary("p") =>
             {
@@ -2337,7 +2355,11 @@ impl HtmlParser {
             if is_formatting_element(name) && self.adopt_formatting_end_tag_across_div(index) {
                 return;
             }
-            if special_scope_blocks_end_tag(name) && self.has_special_element_above(index) {
+            if special_scope_blocks_end_tag(name)
+                && self.has_special_element_above(index)
+                && !(is_paragraph_boundary_element(name)
+                    && self.has_element_above(index, |candidate| candidate == "button"))
+            {
                 return;
             }
             let path = self.open_elements[index].clone();
@@ -2460,13 +2482,19 @@ impl HtmlParser {
 
     fn apply_simple_implied_end_tags(&mut self, incoming_name: &str) {
         if incoming_name == "p" {
-            self.close_open_element_if(|name| name == "p");
+            if !self.current_parent_has_element_ancestor("button") {
+                self.close_open_element_if(|name| name == "p");
+            }
         } else if incoming_name == "li" {
-            self.close_open_element_if(|name| name == "p");
-            self.close_open_list_item_if_in_scope();
+            if !self.current_parent_has_element_ancestor("button") {
+                self.close_open_element_if(|name| name == "p");
+                self.close_open_list_item_if_in_scope();
+            }
         } else if incoming_name == "dt" || incoming_name == "dd" {
-            self.close_open_element_if(|name| name == "p");
-            self.close_open_element_if(|name| name == "dt" || name == "dd");
+            if !self.current_parent_has_element_ancestor("button") {
+                self.close_open_element_if(|name| name == "p");
+                self.close_open_element_if(|name| name == "dt" || name == "dd");
+            }
         } else if incoming_name == "option" {
             self.close_open_element_if(|name| name == "option");
         } else if incoming_name == "optgroup" {
@@ -2482,10 +2510,15 @@ impl HtmlParser {
             self.close_open_ruby_element_if(|name| name == "rb" || name == "rt" || name == "rp");
             self.close_open_ruby_element_if(|name| name == "rtc");
         } else if is_heading_element(incoming_name) {
-            self.close_open_element_if(|name| name == "p");
+            if !self.current_parent_has_element_ancestor("button") {
+                self.close_open_element_if(|name| name == "p");
+            }
             self.close_open_heading_if_in_scope(None);
         } else if is_paragraph_boundary_element(incoming_name) {
             if incoming_name == "table" && self.quirks_mode {
+                return;
+            }
+            if self.current_parent_has_element_ancestor("button") {
                 return;
             }
             self.close_open_element_if(|name| name == "p");
@@ -3301,6 +3334,45 @@ impl HtmlParser {
         })
     }
 
+    fn current_parent_has_element_ancestor(&self, ancestor_name: &str) -> bool {
+        let current_parent_path = self.current_parent_path();
+        self.open_elements.iter().any(|path| {
+            current_parent_path.starts_with(path)
+                && element_at_path(&self.document, path).is_some_and(|name| name == ancestor_name)
+        })
+    }
+
+    fn current_parent_has_element_in_button_scope(&self, target_name: &str) -> bool {
+        let current_parent_path = self.current_parent_path();
+        let Some(button_index) = self.open_elements.iter().rposition(|path| {
+            current_parent_path.starts_with(path)
+                && element_at_path(&self.document, path).is_some_and(|name| name == "button")
+        }) else {
+            return false;
+        };
+        self.open_elements
+            .iter()
+            .skip(button_index + 1)
+            .any(|path| {
+                current_parent_path.starts_with(path)
+                    && element_at_path(&self.document, path).is_some_and(|name| name == target_name)
+            })
+    }
+
+    fn current_parent_has_element_in_table_scope(&self, target_name: &str) -> bool {
+        let current_parent_path = self.current_parent_path();
+        let Some(table_index) = self.open_elements.iter().rposition(|path| {
+            current_parent_path.starts_with(path)
+                && element_at_path(&self.document, path).is_some_and(is_table_context_element)
+        }) else {
+            return false;
+        };
+        self.open_elements.iter().skip(table_index + 1).any(|path| {
+            current_parent_path.starts_with(path)
+                && element_at_path(&self.document, path).is_some_and(|name| name == target_name)
+        })
+    }
+
     fn has_special_element_above(&self, element_index: usize) -> bool {
         self.open_elements
             .iter()
@@ -3308,6 +3380,13 @@ impl HtmlParser {
             .any(|path| {
                 element_at_path(&self.document, path).is_some_and(is_special_scope_boundary_element)
             })
+    }
+
+    fn has_element_above(&self, element_index: usize, predicate: impl Fn(&str) -> bool) -> bool {
+        self.open_elements
+            .iter()
+            .skip(element_index + 1)
+            .any(|path| element_at_path(&self.document, path).is_some_and(&predicate))
     }
 
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
@@ -4704,7 +4783,6 @@ fn is_paragraph_boundary_element(name: &str) -> bool {
         "article",
         "aside",
         "blockquote",
-        "button",
         "center",
         "details",
         "dialog",
@@ -5224,64 +5302,65 @@ mod tests {
     }
 
     #[test]
-    fn closes_paragraph_before_button_and_legacy_block_boundaries() {
+    fn keeps_buttons_inside_paragraph_and_closes_legacy_block_boundaries() {
         let document = parse_html(
             "<p>Button<button>Click<button>Again</button><p>Centered<center>Block</center><p>Search<search>Find</search><p>Heading<hgroup>Title</hgroup><p>Listing<listing>Block</listing><p>Directory<dir><li>Item",
         )
         .unwrap();
 
         let body = body(&document);
-        assert_eq!(body.children.len(), 13);
+        assert_eq!(body.children.len(), 11);
 
         let button_intro = element(&body.children[0]);
         assert_eq!(button_intro.name, "p");
-        assert_eq!(button_intro.children, vec![Node::text("Button")]);
+        assert_eq!(button_intro.children.len(), 3);
+        assert_eq!(button_intro.children[0], Node::text("Button"));
 
-        let first_button = element(&body.children[1]);
+        let first_button = element(&button_intro.children[1]);
         assert_eq!(first_button.name, "button");
         assert_eq!(first_button.children, vec![Node::text("Click")]);
 
-        let second_button = element(&body.children[2]);
+        let second_button = element(&button_intro.children[2]);
         assert_eq!(second_button.name, "button");
         assert_eq!(second_button.children, vec![Node::text("Again")]);
 
-        let centered_intro = element(&body.children[3]);
+        let centered_intro = element(&body.children[1]);
         assert_eq!(centered_intro.name, "p");
         assert_eq!(centered_intro.children, vec![Node::text("Centered")]);
 
-        let center = element(&body.children[4]);
+        let center = element(&body.children[2]);
         assert_eq!(center.name, "center");
         assert_eq!(center.children, vec![Node::text("Block")]);
 
-        let search_intro = element(&body.children[5]);
+        let search_intro = element(&body.children[3]);
         assert_eq!(search_intro.name, "p");
         assert_eq!(search_intro.children, vec![Node::text("Search")]);
 
-        let search = element(&body.children[6]);
+        let search = element(&body.children[4]);
         assert_eq!(search.name, "search");
         assert_eq!(search.children, vec![Node::text("Find")]);
 
-        let heading_intro = element(&body.children[7]);
+        let heading_intro = element(&body.children[5]);
         assert_eq!(heading_intro.name, "p");
         assert_eq!(heading_intro.children, vec![Node::text("Heading")]);
 
-        let hgroup = element(&body.children[8]);
+        let hgroup = element(&body.children[6]);
         assert_eq!(hgroup.name, "hgroup");
         assert_eq!(hgroup.children, vec![Node::text("Title")]);
 
-        let listing_intro = element(&body.children[9]);
+        let listing_intro = element(&body.children[7]);
         assert_eq!(listing_intro.name, "p");
         assert_eq!(listing_intro.children, vec![Node::text("Listing")]);
 
-        let listing = element(&body.children[10]);
+        let listing = element(&body.children[8]);
         assert_eq!(listing.name, "listing");
         assert_eq!(listing.children, vec![Node::text("Block")]);
 
-        let directory_intro = element(&body.children[11]);
+        let directory_intro = element(&body.children[9]);
         assert_eq!(directory_intro.name, "p");
         assert_eq!(directory_intro.children, vec![Node::text("Directory")]);
 
-        let directory = element(&body.children[12]);
+        let directory = element(&body.children[10]);
         assert_eq!(directory.name, "dir");
         assert_eq!(directory.children.len(), 1);
         let item = element(&directory.children[0]);
