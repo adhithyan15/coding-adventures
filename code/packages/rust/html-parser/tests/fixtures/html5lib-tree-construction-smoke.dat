@@ -18572,3 +18572,24 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <plaintext>
 |       <a>
 |         "b"
+
+
+#source tests19.dat:1116
+#data
+<!DOCTYPE html><div>a<a></div>b<p>c</p>d
+#errors
+(1,30): end-tag-too-early
+(1,40): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "a"
+|       <a>
+|     <a>
+|       "b"
+|       <p>
+|         "c"
+|       "d"

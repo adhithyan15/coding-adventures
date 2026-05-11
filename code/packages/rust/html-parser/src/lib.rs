@@ -1810,6 +1810,7 @@ impl HtmlParser {
             && (self.current_element_is("b")
                 || self.current_element_is("i")
                 || self.current_element_is("u")
+                || (self.current_element_is("a") && self.current_has_non_whitespace_child())
                 || (self.current_empty_element_is("a") && self.current_has_formatting_ancestor()))
         {
             return Vec::new();
