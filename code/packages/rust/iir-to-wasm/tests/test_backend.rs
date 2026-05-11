@@ -200,7 +200,9 @@ fn validate_io_ops_rejected() {
 // Test 1.12
 #[test]
 fn validate_memory_ops_rejected() {
-    for op in &["load_mem", "store_mem", "alloc"] {
+    // load_mem and store_mem are unconditionally rejected (no linear memory).
+    // alloc with a non-ref type hint is rejected (needs ref<LispyPair>).
+    for op in &["load_mem", "store_mem"] {
         let m = module_one("f", vec![], "void", vec![
             IIRInstr::new(*op, None, vec![], "void"),
         ]);
@@ -209,6 +211,17 @@ fn validate_memory_ops_rejected() {
             errs.iter().any(|e| e.contains("UnsupportedOp")),
             "expected UnsupportedOp for {:?}",
             op
+        );
+    }
+    // alloc with i32 type is rejected.
+    {
+        let m = module_one("f", vec![], "void", vec![
+            IIRInstr::new("alloc", None, vec![], "i32"),
+        ]);
+        let errs = validate_for_wasm(&m);
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "expected UnsupportedOp for alloc with i32 type"
         );
     }
 }
@@ -1008,4 +1021,265 @@ fn emit_i32_rem_s() {
     let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
     // 0x6F = i32.rem_s
     assert!(wm.code[0].code.contains(&0x6F));
+}
+
+// ---------------------------------------------------------------------------
+// ── Group 11: WasmGC heap ops ───────────────────────────────────────────────
+// ---------------------------------------------------------------------------
+//
+// Phase 2: WasmGC struct types for LispyPair (car/cdr cons cell).
+//
+// These tests verify that the IIR GC ops (`alloc`, `field_load`,
+// `field_store`, `is_null`, `const ref<LispyPair>`) lower correctly to
+// WasmGC bytecode.
+
+// Test 11.1 — alloc ref<LispyPair> emits ref.null none (0xD0 0x0F)
+#[test]
+fn gc_alloc_emits_ref_null_none() {
+    let m = module_one("make_nil", vec![], "void", vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    // ref.null none = [0xD0, 0x0F]
+    let code = &wm.code[0].code;
+    assert!(code.windows(2).any(|w| w == [0xD0, 0x0F]),
+        "alloc should emit ref.null none (0xD0 0x0F); code: {:?}", code);
+}
+
+// Test 11.2 — field_load index 0 (car) emits struct.get prefix (0xFB 0x02)
+#[test]
+fn gc_field_load_car_emits_struct_get() {
+    let m = module_one("car", vec![("p", "ref<LispyPair>")], "void", vec![
+        IIRInstr::new(
+            "field_load",
+            Some("h".into()),
+            vec![Operand::Var("p".into()), Operand::Int(0)],
+            "ref<LispyPair>",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    let code = &wm.code[0].code;
+    // struct.get prefix = 0xFB 0x02
+    assert!(code.windows(2).any(|w| w == [0xFB, 0x02]),
+        "field_load should emit struct.get (0xFB 0x02); code: {:?}", code);
+}
+
+// Test 11.3 — field_load index 1 (cdr) emits struct.get with field=1
+#[test]
+fn gc_field_load_cdr_emits_struct_get() {
+    let m = module_one("cdr", vec![("p", "ref<LispyPair>")], "void", vec![
+        IIRInstr::new(
+            "field_load",
+            Some("t".into()),
+            vec![Operand::Var("p".into()), Operand::Int(1)],
+            "ref<LispyPair>",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    let code = &wm.code[0].code;
+    // struct.get prefix = 0xFB 0x02 then type_idx LEB then field=1
+    assert!(code.windows(2).any(|w| w == [0xFB, 0x02]),
+        "field_load (cdr) should emit struct.get (0xFB 0x02); code: {:?}", code);
+    // The field index 1 should appear somewhere after the 0xFB 0x02 prefix.
+    assert!(code.contains(&0x01), "field index 1 should be present; code: {:?}", code);
+}
+
+// Test 11.4 — field_store emits struct.set prefix (0xFB 0x04)
+#[test]
+fn gc_field_store_emits_struct_set() {
+    let m = module_one("set_car", vec![("p", "ref<LispyPair>"), ("v", "ref<LispyPair>")], "void", vec![
+        IIRInstr::new(
+            "field_store",
+            None,
+            vec![Operand::Var("p".into()), Operand::Int(0), Operand::Var("v".into())],
+            "ref<LispyPair>",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    let code = &wm.code[0].code;
+    // struct.set prefix = 0xFB 0x04
+    assert!(code.windows(2).any(|w| w == [0xFB, 0x04]),
+        "field_store should emit struct.set (0xFB 0x04); code: {:?}", code);
+}
+
+// Test 11.5 — is_null emits ref.is_null (0xD1)
+#[test]
+fn gc_is_null_emits_ref_is_null() {
+    let m = module_one("nullp", vec![("p", "ref<LispyPair>")], "i32", vec![
+        IIRInstr::new(
+            "is_null",
+            Some("b".into()),
+            vec![Operand::Var("p".into())],
+            "bool",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i32"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    let code = &wm.code[0].code;
+    // ref.is_null = 0xD1
+    assert!(code.contains(&0xD1),
+        "is_null should emit ref.is_null (0xD1); code: {:?}", code);
+}
+
+// Test 11.6 — const ref<LispyPair> (nil) emits ref.null none
+#[test]
+fn gc_const_ref_nil_emits_ref_null() {
+    let m = module_one("nil_fn", vec![], "void", vec![
+        // const with no sources and ref<LispyPair> type = nil
+        IIRInstr::new("const", Some("n".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    let code = &wm.code[0].code;
+    // ref.null none = [0xD0, 0x0F]
+    assert!(code.windows(2).any(|w| w == [0xD0, 0x0F]),
+        "const ref<LispyPair> should emit ref.null none; code: {:?}", code);
+}
+
+// Test 11.7 — module with LispyPair ops registers a struct_type
+#[test]
+fn gc_module_has_struct_type() {
+    let m = module_one("make_nil", vec![], "void", vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    assert_eq!(wm.struct_types.len(), 1,
+        "module with ref<LispyPair> should have 1 struct type");
+    // The struct type should have 2 fields.
+    assert_eq!(wm.struct_types[0].fields.len(), 2,
+        "LispyPair should have 2 fields ($head and $tail)");
+}
+
+// Test 11.8 — module without heap ops has no struct_types
+#[test]
+fn gc_module_without_heap_ops_has_no_struct_types() {
+    let m = module_one("add", vec![("a", "i32"), ("b", "i32")], "i32", vec![
+        IIRInstr::new("add", Some("v0".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.struct_types.is_empty(),
+        "pure arithmetic module should have no struct types");
+}
+
+// Test 11.9 — alloc with unsupported type ref<Other> is rejected by validator
+#[test]
+fn gc_alloc_unsupported_type_rejected() {
+    let m = module_one("f", vec![], "void", vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<Other>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let errs = validate_for_wasm(&m);
+    assert!(
+        errs.iter().any(|e| e.contains("UnsupportedType")),
+        "ref<Other> should be rejected; got: {:?}",
+        errs
+    );
+}
+
+// Test 11.10 — module with both integer arithmetic and heap ops compiles
+#[test]
+fn gc_mixed_arithmetic_and_heap_ops() {
+    let m = module_multi(vec![
+        // Pure arithmetic function.
+        ("add_i32", vec![("a", "i32"), ("b", "i32")], "i32", vec![
+            IIRInstr::new("add", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ]),
+        // GC heap function.
+        ("alloc_pair", vec![], "void", vec![
+            IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]),
+    ]);
+    let bytes = lower_and_encode(&m);
+    assert!(bytes.starts_with(b"\x00asm"), "mixed module should encode to valid WASM");
+    assert!(bytes.len() > 8);
+}
+
+// Test 11.11 — field_load and field_store round-trip in the same function
+#[test]
+fn gc_field_load_and_store_in_same_function() {
+    let m = module_one(
+        "copy_head",
+        vec![("src", "ref<LispyPair>"), ("dst", "ref<LispyPair>")],
+        "void",
+        vec![
+            // Load head from src.
+            IIRInstr::new(
+                "field_load",
+                Some("h".into()),
+                vec![Operand::Var("src".into()), Operand::Int(0)],
+                "ref<LispyPair>",
+            ),
+            // Store head into dst.
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("dst".into()), Operand::Int(0), Operand::Var("h".into())],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
+    assert!(result.is_ok(), "field_load + field_store should succeed; err: {:?}", result);
+    let wm = result.unwrap();
+    let code = &wm.code[0].code;
+    // Both struct.get (0xFB 0x02) and struct.set (0xFB 0x04) should appear.
+    assert!(code.windows(2).any(|w| w == [0xFB, 0x02]), "struct.get not found");
+    assert!(code.windows(2).any(|w| w == [0xFB, 0x04]), "struct.set not found");
+}
+
+// Test 11.12 — full GC pipeline encodes to valid WASM bytes
+#[test]
+fn gc_full_pipeline_encodes_to_valid_wasm() {
+    let m = module_one(
+        "cons",
+        vec![("head", "ref<LispyPair>"), ("tail", "ref<LispyPair>")],
+        "void",
+        vec![
+            // Allocate a new pair.
+            IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+            // Set head field.
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("p".into()), Operand::Int(0), Operand::Var("head".into())],
+                "ref<LispyPair>",
+            ),
+            // Set tail field.
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("p".into()), Operand::Int(1), Operand::Var("tail".into())],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let bytes = lower_and_encode(&m);
+    assert!(bytes.starts_with(b"\x00asm"), "GC module should start with WASM magic");
+    // Should be larger than just header + empty section.
+    assert!(bytes.len() > 16);
+}
+
+// Test 11.13 — ref<LispyPair> param produces Anyref in FuncType (not I32)
+#[test]
+fn gc_ref_param_maps_to_anyref_func_type() {
+    use wasm_types::ValueType;
+    let m = module_one("id_pair", vec![("p", "ref<LispyPair>")], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    // The function type should have Anyref as the param type.
+    assert_eq!(wm.types[0].params, vec![ValueType::Anyref],
+        "ref<LispyPair> param should map to Anyref in FuncType");
 }

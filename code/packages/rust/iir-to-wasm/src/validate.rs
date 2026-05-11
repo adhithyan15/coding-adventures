@@ -2,23 +2,38 @@
 //!
 //! # Why validate separately?
 //!
-//! WebAssembly 1.0 is a **statically typed, structured** instruction set.  Not
-//! every IIR program can be lowered:
+//! WebAssembly (both 1.0 and WasmGC) is a **statically typed, structured**
+//! instruction set.  Not every IIR program can be lowered:
 //!
 //! - WASM has no "any" type — every local and stack slot must have a concrete
-//!   numeric type (`i32`, `i64`, `f32`, `f64`).
-//! - WASM has no strings or heap-pointer indirection in this lowering.
-//! - Runtime / I/O / GC opcodes have no WASM-opcode equivalent without a host
-//!   import, which this direct lowering does not provide.
+//!   numeric type (`i32`, `i64`, `f32`, `f64`) or a known GC reference type.
+//! - WASM has no strings or raw heap-pointer indirection in this lowering.
+//! - Runtime / I/O opcodes have no WASM equivalent without a host import,
+//!   which this direct lowering does not provide.
 //!
 //! Catching these problems *before* lowering gives clear, actionable error
 //! messages rather than a panic or a silently malformed binary.
 //!
-//! # Key difference from the BEAM backend
+//! # Key differences from WASM 1.0 backend
 //!
 //! **Float constants ARE allowed here.**  WASM has native `f64.const` and
-//! `f32.const` instructions, so `Operand::Float` and type hints `"f32"`/`"f64"`
-//! are fully supported.
+//! `f32.const` instructions.
+//!
+//! **WasmGC heap ops ARE allowed here** (Phase 2).  The WasmGC proposal
+//! (standardised 2023) ships in V8/Chrome ≥ 119, Firefox ≥ 120, and
+//! wasmtime ≥ 14.0.  The following IIR ops now lower to WasmGC bytecode
+//! when the `type_hint` is `"ref<LispyPair>"`:
+//!
+//! | IIR op | Notes |
+//! |--------|-------|
+//! | `alloc` | Allocates a new `$LispyPair` struct on the GC heap |
+//! | `field_load` | `car` (field 0) or `cdr` (field 1) |
+//! | `field_store` | Mutate a field of a `$LispyPair` |
+//! | `is_null` | Test for null reference |
+//! | `const ref<LispyPair>` | Push a typed null (nil) |
+//!
+//! `"ref<Other>"` types (anything other than `"ref<LispyPair>"`) are still
+//! rejected, since we only define the `$LispyPair` struct type.
 //!
 //! # Checks performed
 //!
@@ -27,29 +42,54 @@
 //! | `EmptyModule` | Module has zero functions |
 //! | `EmptyFunction` | A function has zero instructions |
 //! | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
-//! | `UnsupportedOp` | op is any runtime / I/O / GC / NIF opcode |
+//! | `UnsupportedType` | `type_hint` is `"str"` or is an unsupported `"ref<X>"` |
+//! | `UnsupportedOp` | op is any runtime / I/O / unsupported GC opcode |
 
 use interpreter_ir::IIRModule;
+
+// ---------------------------------------------------------------------------
+// WasmGC-supported type hints
+// ---------------------------------------------------------------------------
+//
+// Reference type hints that this backend understands.  Any `ref<X>` not in
+// this set is still rejected (we don't have a struct definition for it).
+//
+// Currently we support only `ref<LispyPair>` — the 2-field GC cons cell
+// used by the Lispy runtime.  Future work can add more struct types here.
+
+const SUPPORTED_REF_TYPES: &[&str] = &["ref<LispyPair>"];
+
+/// Return `true` if `type_hint` is a reference type that this backend can
+/// lower to a WasmGC struct reference.
+pub fn is_supported_ref_type(type_hint: &str) -> bool {
+    SUPPORTED_REF_TYPES.contains(&type_hint)
+}
+
+// ---------------------------------------------------------------------------
+// WasmGC-supported opcode table
+// ---------------------------------------------------------------------------
+//
+// These opcodes are accepted when paired with an appropriate type hint.
+// They lower to WasmGC instructions (`struct.new`, `struct.get`, etc.).
+
+const GC_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
 
 // ---------------------------------------------------------------------------
 // Unsupported opcode table
 // ---------------------------------------------------------------------------
 //
-// These opcodes all require runtime support that WASM 1.0 cannot express as
-// plain numeric instructions:
+// These opcodes require runtime support that the WASM backend cannot express
+// as plain numeric or WasmGC instructions:
 //
 // - `call_builtin`  — host built-in bridge; not available without an import.
 // - `io_in/io_out`  — raw I/O; WASM does I/O only through host imports (WASI).
-// - `cast`          — type reinterpretation; WASM is strictly typed — you
-//                     cannot round-trip an i32 to a float by punning bits
-//                     without explicit conversion instructions (reinterpret
-//                     exists but we don't generate it in v1).
-// - `load_mem/store_mem` — raw linear-memory access; this lowering produces
-//                     no linear memory section (no `(memory ...)` declaration).
-// - `alloc/box/unbox/field_load/field_store/is_null` — GC heap ops; WASM 1.0
-//                     has no garbage collector.
-// - `safepoint`     — GC coordination; handled by the runtime, not by us.
+// - `cast`          — type reinterpretation without a `reinterpret` path.
+// - `load_mem/store_mem` — raw linear-memory access; no linear memory section.
+// - `box/unbox`     — boxing ops on non-LispyPair types.
+// - `safepoint`     — GC coordination; handled by the runtime.
+//
+// Note: `alloc`, `field_load`, `field_store`, `is_null` are NOT here —
+// they are accepted for `ref<LispyPair>` and handled by the GC lowering.
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
@@ -58,12 +98,8 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "cast",
     "load_mem",
     "store_mem",
-    "alloc",
     "box",
     "unbox",
-    "field_load",
-    "field_store",
-    "is_null",
     "safepoint",
 ];
 
@@ -162,12 +198,11 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — we produce no string data section and no string
-            // operations; this lowering is purely numeric.
+            // `"str"` — we produce no string data section and no string ops.
             //
-            // `"ref<…>"` — heap pointer types require GC-managed memory.
-            // WASM 1.0 has no garbage collector and no reference types (the
-            // reference-types proposal came later).
+            // `"ref<X>"` — reference types require WasmGC.  We accept
+            // `"ref<LispyPair>"` (the only struct type we define).  All
+            // other `ref<...>` types are rejected with an explanation.
             //
             // NOTE: float types (`"f32"`, `"f64"`) are NOT rejected here.
             // WASM has native float arithmetic, so they are fully supported.
@@ -177,25 +212,46 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                      string operations are not supported in this WASM backend",
                     func.name, instr.op
                 ));
-            } else if instr.type_hint.starts_with("ref<") {
+            } else if instr.type_hint.starts_with("ref<")
+                && !is_supported_ref_type(&instr.type_hint)
+            {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
-                     heap pointer types are not supported in this WASM backend",
+                     only ref<LispyPair> is supported in this WasmGC backend",
                     func.name, instr.op, instr.type_hint
                 ));
             }
 
             // ── Check 5: UnsupportedOp ───────────────────────────────────────
             //
-            // These opcodes require host imports, OS system calls, or GC
-            // infrastructure that this direct lowering does not provide.
+            // Hard-rejected ops (require host imports or unimplemented GC).
+            // GC ops (`alloc`, `field_load`, `field_store`, `is_null`) are
+            // NOT in UNSUPPORTED_OPS — they are accepted when paired with
+            // `ref<LispyPair>`.  Reject them here only when the type hint
+            // is NOT a supported reference type.
             if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the WASM backend; it requires a host import or runtime support",
                     func.name, instr.op
                 ));
+            } else if instr.op == "alloc" || instr.op == "field_load" || instr.op == "field_store" {
+                // These GC ops require the instruction's type_hint to be a
+                // supported reference type.  They allocate or access fields
+                // of a specific struct type; without the correct type hint
+                // we cannot determine which struct to use.
+                if !is_supported_ref_type(&instr.type_hint) {
+                    errors.push(format!(
+                        "UnsupportedOp: function {:?}, op {:?} (GC op) requires \
+                         type_hint \"ref<LispyPair>\" but got {:?}",
+                        func.name, instr.op, instr.type_hint
+                    ));
+                }
             }
+            // Note: `is_null` is intentionally NOT checked here because it
+            // is a generic null test that works on any nullable reference.
+            // Its result type_hint may be "bool" or "i32" (the i32 result
+            // of the ref.is_null instruction), not a ref type.
         }
 
         // ── Check 6: TooManyLabels (DoS guard) ──────────────────────────────
@@ -326,6 +382,7 @@ mod tests {
 
     #[test]
     fn unsupported_ops_rejected() {
+        // These ops are unconditionally rejected.
         for op in &[
             "call_builtin",
             "io_in",
@@ -333,12 +390,8 @@ mod tests {
             "cast",
             "load_mem",
             "store_mem",
-            "alloc",
             "box",
             "unbox",
-            "field_load",
-            "field_store",
-            "is_null",
             "safepoint",
         ] {
             let errs = validate_for_wasm(&module_with(vec![IIRInstr::new(
@@ -354,6 +407,64 @@ mod tests {
                 errs
             );
         }
+    }
+
+    // GC ops that require a ref type hint are rejected when given i32.
+    #[test]
+    fn gc_ops_with_non_ref_type_rejected() {
+        // alloc, field_load, field_store REQUIRE ref<LispyPair> type hint.
+        for op in &["alloc", "field_load", "field_store"] {
+            let errs = validate_for_wasm(&module_with(vec![IIRInstr::new(
+                *op,
+                None,
+                vec![],
+                "i32", // wrong type: should be ref<LispyPair>
+            )]));
+            assert!(
+                errs.iter().any(|e| e.contains("UnsupportedOp")),
+                "expected UnsupportedOp for GC op {:?} with i32 type; got {:?}",
+                op,
+                errs
+            );
+        }
+        // is_null works with any type hint (including bool/i32) — it's a
+        // generic null test, so we do NOT reject it for non-ref type hints.
+    }
+
+    // ref<LispyPair> type hint is accepted (WasmGC Phase 2).
+    #[test]
+    fn ref_lispy_pair_type_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "alloc",
+                Some("p".into()),
+                vec![],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        // Should have no UnsupportedType error for ref<LispyPair>.
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedType")),
+            "ref<LispyPair> should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    // ref<Other> is still rejected.
+    #[test]
+    fn ref_other_type_rejected() {
+        let errs = validate_for_wasm(&module_with(vec![IIRInstr::new(
+            "alloc",
+            Some("p".into()),
+            vec![],
+            "ref<Other>",
+        )]));
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedType")),
+            "ref<Other> should be rejected; got: {:?}",
+            errs
+        );
     }
 
     #[test]
