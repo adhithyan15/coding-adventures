@@ -14,6 +14,7 @@ import {
   EXP,
   FALSE,
   IF,
+  INTEGRATE,
   LIST,
   LOG,
   MUL,
@@ -33,7 +34,7 @@ import {
   rational,
   sym,
 } from "@coding-adventures/symbolic-ir";
-import { StrictBackend, StrictEvaluationError, SymbolicBackend, VM } from "../src/index.js";
+import { ArityError, StrictBackend, StrictEvaluationError, SymbolicBackend, VM } from "../src/index.js";
 
 describe("symbolic-vm", () => {
   it("strict backend folds numeric arithmetic exactly", () => {
@@ -196,5 +197,89 @@ describe("symbolic-vm", () => {
     const vm = new VM(new SymbolicBackend());
     const expr = app(D, [app(sym("F"), [sym("x")]), sym("x")]);
     expect(vm.eval(expr)).toEqual(expr);
+  });
+
+  it("keeps Integrate symbolic-backend-only", () => {
+    const vm = new VM(new StrictBackend());
+    expect(() => vm.eval(app(INTEGRATE, [int(1), sym("x")]))).toThrow(StrictEvaluationError);
+  });
+
+  it("integrates constants, free symbols, and variable identity", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(INTEGRATE, [int(5), sym("x")]))).toEqual(app(MUL, [int(5), sym("x")]));
+    expect(vm.eval(app(INTEGRATE, [sym("y"), sym("x")]))).toEqual(app(MUL, [sym("y"), sym("x")]));
+    expect(vm.eval(app(INTEGRATE, [sym("x"), sym("x")]))).toEqual(
+      app(MUL, [rational(1, 2), app(POW, [sym("x"), int(2)])]),
+    );
+    expect(vm.eval(app(INTEGRATE, [int(0), sym("x")]))).toEqual(int(0));
+  });
+
+  it("integrates powers and reciprocals", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(INTEGRATE, [app(POW, [sym("x"), int(2)]), sym("x")]))).toEqual(
+      app(MUL, [rational(1, 3), app(POW, [sym("x"), int(3)])]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(POW, [sym("x"), rational(1, 2)]), sym("x")]))).toEqual(
+      app(MUL, [rational(2, 3), app(POW, [sym("x"), rational(3, 2)])]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(POW, [sym("x"), int(-1)]), sym("x")]))).toEqual(
+      app(LOG, [sym("x")]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(DIV, [int(3), sym("x")]), sym("x")]))).toEqual(
+      app(MUL, [int(3), app(LOG, [sym("x")])]),
+    );
+  });
+
+  it("integrates Add, Sub, Neg, and constant factors", () => {
+    const vm = new VM(new SymbolicBackend());
+    const halfXSquared = app(MUL, [rational(1, 2), app(POW, [sym("x"), int(2)])]);
+    expect(vm.eval(app(INTEGRATE, [app(ADD, [sym("x"), int(3)]), sym("x")]))).toEqual(
+      app(ADD, [halfXSquared, app(MUL, [int(3), sym("x")])]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(SUB, [sym("x"), int(1)]), sym("x")]))).toEqual(
+      app(SUB, [halfXSquared, sym("x")]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(NEG, [sym("x")]), sym("x")]))).toEqual(app(NEG, [halfXSquared]));
+    expect(vm.eval(app(INTEGRATE, [app(MUL, [sym("y"), app(POW, [sym("x"), int(2)])]), sym("x")]))).toEqual(
+      app(MUL, [sym("y"), app(MUL, [rational(1, 3), app(POW, [sym("x"), int(3)])])]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(MUL, [sym("x"), int(7)]), sym("x")]))).toEqual(
+      app(MUL, [int(7), halfXSquared]),
+    );
+  });
+
+  it("integrates direct elementary functions at x", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(INTEGRATE, [app(SIN, [sym("x")]), sym("x")]))).toEqual(
+      app(NEG, [app(COS, [sym("x")])]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(COS, [sym("x")]), sym("x")]))).toEqual(app(SIN, [sym("x")]));
+    expect(vm.eval(app(INTEGRATE, [app(EXP, [sym("x")]), sym("x")]))).toEqual(app(EXP, [sym("x")]));
+    expect(vm.eval(app(INTEGRATE, [app(LOG, [sym("x")]), sym("x")]))).toEqual(
+      app(SUB, [app(MUL, [sym("x"), app(LOG, [sym("x")])]), sym("x")]),
+    );
+    expect(vm.eval(app(INTEGRATE, [app(SQRT, [sym("x")]), sym("x")]))).toEqual(
+      app(MUL, [rational(2, 3), app(POW, [sym("x"), rational(3, 2)])]),
+    );
+  });
+
+  it("integrates constant-base exponentials", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(INTEGRATE, [app(POW, [int(2), sym("x")]), sym("x")]))).toEqual(
+      app(DIV, [app(POW, [int(2), sym("x")]), numberNode(Math.log(2))]),
+    );
+  });
+
+  it("leaves unknown dependent integrals unevaluated", () => {
+    const vm = new VM(new SymbolicBackend());
+    const expr = app(INTEGRATE, [app(sym("F"), [sym("x")]), sym("x")]);
+    expect(vm.eval(expr)).toEqual(expr);
+  });
+
+  it("leaves non-symbol integration variables unevaluated and rejects wrong arity", () => {
+    const vm = new VM(new SymbolicBackend());
+    const expr = app(INTEGRATE, [sym("x"), int(1)]);
+    expect(vm.eval(expr)).toEqual(expr);
+    expect(() => vm.eval(app(INTEGRATE, [sym("x")]))).toThrow(ArityError);
   });
 });
