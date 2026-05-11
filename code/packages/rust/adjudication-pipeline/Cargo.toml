@@ -1,0 +1,17 @@
+[package]
+name = "adjudication-pipeline"
+version = "0.1.0"
+edition = "2021"
+description = "Orchestrator for the adjudication framework. Composes the merged ADJ02 (coverage) + ADJ03 (polarity-modality) + ADJ-connector (engine) into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. ADJ04 / ADJ05 / ADJ06 slot in as they ship."
+
+[dependencies]
+adjudication-audit-trail = { path = "../adjudication-audit-trail" }
+adjudication-connector = { path = "../adjudication-connector" }
+adjudication-coverage = { path = "../adjudication-coverage" }
+adjudication-ir = { path = "../adjudication-ir" }
+adjudication-polarity-modality = { path = "../adjudication-polarity-modality" }
+logic-engine = { path = "../logic-engine" }
+serde_json = "1"
+
+[dev-dependencies]
+logic-core = { path = "../logic-core" }
