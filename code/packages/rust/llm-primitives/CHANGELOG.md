@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+- `entail` module — first concrete primitive from LM00b. Bidirectional
+  textual entailment: takes `EntailRequest { premise, hypothesis }`,
+  returns `EntailResponse { premise_entails_hypothesis, p_to_h_score,
+  hypothesis_entails_premise, h_to_p_score, call_record }`. Synchronous,
+  matches the v0.1 `LlmClient` trait.
+- Re-exported at the crate root: `llm_primitives::entail(...)`,
+  `llm_primitives::EntailRequest`, `llm_primitives::EntailResponse`
+  (function and module share the name; Rust allows this since they're
+  in different namespaces).
+- Stable system prompt for the `Role::Nli` slot baked into the module.
+  Bumping `ENTAIL_PROMPT_VERSION` is the audited way to change it.
+- Response JSON-schema validation:
+  - Routes via `LlmClient::complete_json` so providers with native
+    JSON mode use it.
+  - Per-field check (booleans + scores) — a missing field returns
+    `PrimitiveError::ValidationExhausted` with the raw response so
+    ADJ06 can clarify.
+  - Score range-check `[0, 1]`. Out-of-range or wrong-typed values
+    surface as `ValidationExhausted`, not silent clamping.
+- `LlmCallRecord` populated automatically: `primitive = "entail"`,
+  `role = "nli"`, `prompt_version = "entail-v1"`, content-addressed
+  `prompt_hash`, plus provider identity, token usage, and latency from
+  the gateway response.
+- 10 new tests covering: missing `Nli` client returns `NoClientForRole`;
+  happy path round-trips; user message has `PREMISE:` / `HYPOTHESIS:`
+  markers; gateway transport error propagates; missing / wrong-type /
+  out-of-range fields all surface as `ValidationExhausted`; boundary
+  scores (0.0 and 1.0) accepted; `call_record.prompt_hash` matches an
+  independently-computed hash of the built request.
+
+### Notes
+
+`serde_json = "1"` is now a direct dep (used internally for JSON
+parsing). The five remaining primitives (`decompose_text`,
+`render_node`, `find_contradicting_reading`, `judge_plausibility`,
+`extract_rules`) ship in follow-up PRs that can land in parallel —
+each in its own module under `src/`.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

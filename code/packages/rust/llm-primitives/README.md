@@ -38,7 +38,9 @@ This crate defines the building blocks every primitive plugs into.
    llm-provider-anthropic / -openai / -ollama / -mock
 ```
 
-## Public API (v0.1.0)
+## Public API
+
+**Scaffolding (v0.1.0):**
 
 | Item | Role |
 |---|---|
@@ -50,6 +52,17 @@ This crate defines the building blocks every primitive plugs into.
 | `PrimitiveError` | `Gateway` / `ValidationExhausted` / `StructuralFailure` / `NoClientForRole` |
 | `DECOMPOSE_TEXT_PROMPT_VERSION` … `EXTRACT_RULES_PROMPT_VERSION` | Six version constants |
 | `fingerprint_prompt(&CompletionRequest)` | Deterministic content hash of the prompt portion |
+
+**Primitives:**
+
+| Primitive | Status | Role | Module |
+|---|---|---|---|
+| `entail(req, gateway)` | ✅ v0.2.0 | `Nli` | `entail` |
+| `decompose_text` | planned | `Extractor` | — |
+| `render_node` | planned | `Renderer` | — |
+| `find_contradicting_reading` | planned | `Adversary` | — |
+| `judge_plausibility` | planned | `Plausibility` | — |
+| `extract_rules` | planned | `RuleExtractor` | — |
 
 The crate has **no async runtime dependency**: the `LlmClient` trait
 in `llm-gateway` is synchronous in v0.1.0, and so is everything
