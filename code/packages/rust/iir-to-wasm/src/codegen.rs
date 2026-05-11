@@ -480,6 +480,242 @@ pub fn encode_br_table(targets: &[u32], default: u32) -> Vec<u8> {
 }
 
 // ---------------------------------------------------------------------------
+// IIRWasmCodeGenerator — LANG20 CodeGenerator adapter
+// ---------------------------------------------------------------------------
+//
+// This struct wires the IIR → WASM backend behind the standard
+// `name() / validate() / generate()` API used across the LANG pipeline.
+// It sits in `codegen.rs` (rather than its own file) because this module
+// already owns the WASM-specific encoding knowledge; all three methods are
+// thin delegations to `validate.rs` and `lower.rs`.
+
+use interpreter_ir::IIRModule;
+use wasm_types::WasmModule;
+
+use crate::lower::{lower_iir_to_wasm, IIRWasmConfig};
+use crate::validate::validate_for_wasm;
+
+// ===========================================================================
+// IIRWasmCodeGenerator
+// ===========================================================================
+
+/// WASM code generator for `IIRModule` inputs.
+///
+/// Implements the LANG20 `name` / `validate` / `generate` protocol that
+/// every compilation backend must expose:
+///
+/// | Method | Delegates to |
+/// |--------|-------------|
+/// | `name()` | returns `"iir-wasm"` (stable identifier) |
+/// | `validate()` | [`validate_for_wasm`] |
+/// | `generate()` | [`lower_iir_to_wasm`] (panics if validation would fail) |
+///
+/// # Why three methods instead of one?
+///
+/// Separating `validate` from `generate` lets callers accumulate all
+/// validation errors and report them together, rather than stopping at the
+/// first lowering failure.  It also makes it possible for test harnesses to
+/// confirm that *invalid* modules are rejected without causing a panic.
+///
+/// # Example
+///
+/// ```rust
+/// use interpreter_ir::{IIRModule, IIRFunction, IIRInstr, Operand};
+/// use iir_to_wasm::IIRWasmCodeGenerator;
+///
+/// let fn_ = IIRFunction::new(
+///     "add",
+///     vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+///     "i32",
+///     vec![
+///         IIRInstr::new("add", Some("v0".into()),
+///             vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+///         IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+///     ],
+/// );
+/// let module = IIRModule {
+///     name: "calc".into(),
+///     functions: vec![fn_],
+///     entry_point: Some("add".into()),
+///     language: "test".into(),
+/// };
+///
+/// let gen = IIRWasmCodeGenerator::new("calc");
+/// assert!(gen.validate(&module).is_empty());
+/// let wasm = gen.generate(&module);
+/// assert!(!wasm.functions.is_empty());
+/// ```
+#[derive(Debug, Clone)]
+pub struct IIRWasmCodeGenerator {
+    /// Lowering configuration: controls the output module name and any
+    /// backend-specific knobs.
+    config: IIRWasmConfig,
+}
+
+impl IIRWasmCodeGenerator {
+    /// Create a generator that will emit a WASM module named `module_name`.
+    ///
+    /// `module_name` is embedded in the WASM custom name section (when the
+    /// encoder supports it) and is used as the module identifier in error
+    /// messages.
+    ///
+    /// # Example
+    /// ```
+    /// use iir_to_wasm::IIRWasmCodeGenerator;
+    /// let gen = IIRWasmCodeGenerator::new("myapp");
+    /// assert_eq!(gen.name(), "iir-wasm");
+    /// ```
+    pub fn new(module_name: impl Into<String>) -> Self {
+        Self { config: IIRWasmConfig::new(module_name) }
+    }
+
+    /// Create a generator with the default module name `"iir_module"`.
+    ///
+    /// Useful in tests and in pipeline stages where the module name is
+    /// injected later via the WASM custom-name section.
+    pub fn default_name() -> Self {
+        Self { config: IIRWasmConfig::default() }
+    }
+
+    /// Stable backend identifier — always `"iir-wasm"`.
+    ///
+    /// The hyphenated prefix `iir-` distinguishes this backend from the
+    /// deprecated `compiler-ir` based `"wasm"` backend in `ir-to-wasm-compiler`.
+    pub fn name(&self) -> &str {
+        "iir-wasm"
+    }
+
+    /// Validate `ir` for WASM lowering.
+    ///
+    /// Returns a list of human-readable error strings describing every problem
+    /// found.  An empty list means `ir` is safe to pass to
+    /// [`generate`](Self::generate).
+    ///
+    /// Checks performed (see [`validate_for_wasm`] for full docs):
+    /// - `EmptyModule` / `EmptyFunction`
+    /// - `UntypedInstruction` (`"any"` / `"polymorphic"` type hints)
+    /// - `UnsupportedType` (`"str"` / `"ref<…>"` type hints)
+    /// - `UnsupportedOp` (runtime / I/O / GC opcodes)
+    /// - `TooManyLabels` (DoS guard: > 65 536 labels per function)
+    pub fn validate(&self, ir: &IIRModule) -> Vec<String> {
+        validate_for_wasm(ir)
+    }
+
+    /// Lower `ir` to a [`WasmModule`].
+    ///
+    /// # Panics
+    ///
+    /// Panics if the module would fail [`validate`](Self::validate).  Always
+    /// call `validate` first in production code, or use
+    /// [`lower_iir_to_wasm`] directly to obtain a `Result`.
+    ///
+    /// # Returns
+    ///
+    /// A [`WasmModule`] ready for binary encoding via
+    /// [`wasm_module_encoder::encode_module`].
+    pub fn generate(&self, ir: &IIRModule) -> WasmModule {
+        lower_iir_to_wasm(ir, &self.config)
+            .unwrap_or_else(|e| {
+                panic!(
+                    "IIRWasmCodeGenerator::generate called on invalid IIRModule: {}",
+                    e
+                )
+            })
+    }
+}
+
+// ===========================================================================
+// Unit tests for the code-generator adapter
+// ===========================================================================
+
+#[cfg(test)]
+mod codegen_tests {
+    use super::*;
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule};
+
+    fn minimal_module() -> IIRModule {
+        let fn_ = IIRFunction::new(
+            "main",
+            vec![],
+            "void",
+            vec![IIRInstr::new("ret_void", None, vec![], "void")],
+        );
+        IIRModule {
+            name: "test".into(),
+            functions: vec![fn_],
+            entry_point: Some("main".into()),
+            language: "test".into(),
+        }
+    }
+
+    #[test]
+    fn name_is_iir_wasm() {
+        let gen = IIRWasmCodeGenerator::new("test");
+        assert_eq!(gen.name(), "iir-wasm");
+    }
+
+    #[test]
+    fn validate_valid_module_returns_empty() {
+        let gen = IIRWasmCodeGenerator::new("test");
+        assert!(gen.validate(&minimal_module()).is_empty());
+    }
+
+    #[test]
+    fn generate_returns_non_empty_module() {
+        let gen = IIRWasmCodeGenerator::new("test");
+        let wasm = gen.generate(&minimal_module());
+        // A module with one function must have at least one type-section entry.
+        assert!(!wasm.types.is_empty());
+    }
+
+    #[test]
+    fn default_name_produces_module() {
+        let gen = IIRWasmCodeGenerator::default_name();
+        // Should not panic on a valid module.
+        let _ = gen.generate(&minimal_module());
+    }
+
+    #[test]
+    fn validate_rejects_empty_module() {
+        let gen = IIRWasmCodeGenerator::new("test");
+        let empty = IIRModule {
+            name: "empty".into(),
+            functions: vec![],
+            entry_point: None,
+            language: "test".into(),
+        };
+        let errs = gen.validate(&empty);
+        assert!(!errs.is_empty());
+        assert!(errs[0].contains("EmptyModule"));
+    }
+
+    #[test]
+    fn validate_rejects_any_type_hint() {
+        use interpreter_ir::{IIRInstr, Operand};
+        let gen = IIRWasmCodeGenerator::new("test");
+        let fn_ = IIRFunction::new(
+            "f",
+            vec![],
+            "void",
+            vec![IIRInstr::new(
+                "add",
+                Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "any",
+            )],
+        );
+        let module = IIRModule {
+            name: "t".into(),
+            functions: vec![fn_],
+            entry_point: None,
+            language: "test".into(),
+        };
+        let errs = gen.validate(&module);
+        assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 

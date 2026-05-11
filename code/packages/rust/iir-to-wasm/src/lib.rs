@@ -68,6 +68,7 @@ pub mod validate;
 
 // ── Public re-exports ─────────────────────────────────────────────────────────
 
+pub use codegen::IIRWasmCodeGenerator;
 pub use lower::{IIRWasmConfig, IIRWasmError, lower_iir_to_wasm};
 pub use validate::validate_for_wasm;
 
