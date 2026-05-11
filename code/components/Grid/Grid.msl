@@ -1,0 +1,54 @@
+// Grid.msl — Visual style definition for the Grid component.
+//
+// Follows the UI15 dark-mode token palette defined in mosstyle-compiler.
+// All token references ($color-*) resolve to hex literals at compile time;
+// no runtime CSS variable lookup is needed for the static v1 demo.
+//
+// Class naming convention produced by mosstyle-compiler:
+//   .mos-Grid-root       ← the outer Column container
+//   .mos-Grid-cell-grid  ← the <table> element
+//
+// State modifiers are appended as sub-selectors:
+//   .mos-Grid-cell-grid:hover
+//   .mos-Grid-cell-grid.disabled
+
+style Grid {
+
+  // ── root ─────────────────────────────────────────────────────────────────
+  // The outer Column that wraps the table.  We give it a surface background,
+  // a subtle border, and rounded corners consistent with UI15 §2.3 (Panel).
+
+  part root {
+    background-color: $color-surface ;
+    border-radius: 6px ;
+    overflow: hidden ;
+    width: 100% ;
+  }
+
+  // ── cell-grid ─────────────────────────────────────────────────────────────
+  // The <table> itself.  Collapsed borders and full width are set here so the
+  // table stretches to fill the root Column.
+  //
+  // Header cells (<th>) inherit the table font; <td> cells are styled via
+  // the same class in generated CSS.  Fine-grained cell styles (font size,
+  // padding) are intentionally omitted from v1 — they belong in a theme
+  // layer once the CSS cascade is wired up.
+
+  part cell-grid {
+    width: 100% ;
+    border-collapse: collapse ;
+    color: $color-text-primary ;
+    font-size: 14px ;
+  }
+
+  // ── cell-grid hover ───────────────────────────────────────────────────────
+  // Row highlight on hover.  Only meaningful once the React backend emits
+  // per-row class names; included here so mosstyle generates the selector
+  // and the CSS is ready for phase 2.
+
+  part cell-grid {
+    state hover {
+      background-color: $color-surface-hover ;
+    }
+  }
+}

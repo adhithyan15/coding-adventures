@@ -1,0 +1,67 @@
+# Token definitions for mosstyle — Component Style Language
+# @version 1
+#
+# mosstyle declares the visual appearance of a UI component's named parts.
+# A .msl file assigns style properties (color, font, spacing, …) to the parts
+# exported by the corresponding .mll layout, optionally overriding per state.
+#
+# Lattice design-token references ($token-name) are recognised as TOKEN_REF
+# tokens.  The compiler resolves them to concrete values via a token map;
+# this first implementation supports a built-in default token palette.
+
+escapes: standard
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+
+skip:
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*[\s\S]*?\*\//
+  WHITESPACE    = /[ \t\r\n]+/
+
+# ============================================================================
+# Literals
+# ============================================================================
+# Order matters: DIMENSION before NUMBER (so "4px" is not tokenized as NUMBER
+# "4" followed by NAME "px").
+
+STRING    = /"([^"\\\n]|\\.)*"/
+DIMENSION = /[0-9]+(\.[0-9]+)?(px|rem|em|pt|ms|s|deg|%)/
+NUMBER    = /[0-9]+(\.[0-9]+)?/
+HASH_COLOR = /#[0-9a-fA-F]{3,8}/
+
+# ============================================================================
+# Token references — Lattice design-token variables ($name)
+# ============================================================================
+
+TOKEN_REF = /\$[a-z][a-z0-9]*(-[a-z][a-z0-9]*)*/
+
+# ============================================================================
+# Keywords
+# ============================================================================
+
+keywords:
+  style
+  part
+  state
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+# Covers both PascalCase component names (Grid, Button) and kebab-case part
+# names (cell-grid, column-header) and keyword values (bold, underline, etc.)
+
+NAME = /[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z][a-zA-Z0-9]*)*/
+
+# ============================================================================
+# Punctuation
+# ============================================================================
+
+LBRACE    = "{"
+RBRACE    = "}"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+COLON     = ":"
+COMMA     = ","

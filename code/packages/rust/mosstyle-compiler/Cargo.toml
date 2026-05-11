@@ -1,0 +1,14 @@
+[package]
+name = "mosstyle-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compiles .msl component style files to a resolved style map and CSS"
+
+[dependencies]
+grammar-tools  = { path = "../grammar-tools" }
+lexer          = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser         = { path = "../parser" }
+state-machine  = { path = "../state-machine" }
+serde          = { version = "1", features = ["derive"] }
+serde_json     = "1"

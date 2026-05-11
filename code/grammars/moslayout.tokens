@@ -1,0 +1,68 @@
+# Token definitions for moslayout — Component Layout Language
+# @version 1
+#
+# moslayout declares the structural arrangement of a UI component.
+# A .mll file answers: how are primitives arranged, and how do they wire to
+# the mosmodel interface?
+#
+# Three keywords: `layout`, `slot`, `emit`.
+# Everything else — primitive names (Column, Row, Grid, …), property names
+# (direction, align, grow, …), and value keywords (row, true, false, …) —
+# is a NAME token validated semantically by the compiler.
+
+escapes: standard
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+
+skip:
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*[\s\S]*?\*\//
+  WHITESPACE    = /[ \t\r\n]+/
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NUMBER = /[0-9]+(\.[0-9]+)?/
+
+# ============================================================================
+# Keywords
+# ============================================================================
+# Only three structural keywords.  Primitive names (Column, Grid, …) and
+# property value keywords (row, true, false, …) are not listed here because
+# they would conflict with user-chosen component/slot names at the token level.
+# The compiler validates them semantically instead.
+
+keywords:
+  layout
+  slot
+  emit
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+# Covers PascalCase primitive names (Column, Grid, Box, Text, Image, Spacer),
+# kebab-case part names (cell-grid, header-row), property names (direction,
+# align-items), slot names (column-headers, viewport-rows), and keyword-valued
+# names (row, column, true, false, start, center, end, stretch).
+#
+# The regex allows an initial letter followed by alphanumerics, with optional
+# hyphen-separated segments.  Component names are PascalCase; slot/part names
+# are kebab-case; both match this single pattern.
+
+NAME = /[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z][a-zA-Z0-9]*)*/
+
+# ============================================================================
+# Punctuation
+# ============================================================================
+
+LBRACE   = "{"
+RBRACE   = "}"
+LPAREN   = "("
+RPAREN   = ")"
+LBRACKET = "["
+RBRACKET = "]"
+COLON    = ":"
+COMMA    = ","

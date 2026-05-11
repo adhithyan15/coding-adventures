@@ -178,6 +178,58 @@ impl ReactRenderer {
                 let combined = combine_styles(base, &style);
                 (format_div(&combined, &class, &extra_attrs), false)
             }
+            "Grid" => {
+                // The Grid primitive renders a complete, fully-static HTML <table>.
+                //
+                // It receives two slot-reference props:
+                //   - `headers` → the column-headers slot (Array<string>)
+                //   - `rows`    → the viewport-rows slot (Array<Array<string>>)
+                //
+                // The generated JSX uses .map() for both header cells and data rows,
+                // matching the approach used by begin_each() in the VM.
+                //
+                // For the static v1 demo no virtual scrolling or row selection is
+                // emitted — those belong in the interactive phase.
+                let headers = find_slot_ref_prop(props, "headers");
+                let rows    = find_slot_ref_prop(props, "rows");
+
+                let style_attr = if style.is_empty() {
+                    String::new()
+                } else {
+                    format!(" style={{{{ {style} }}}}")
+                };
+                let class_attr = if class.is_empty() {
+                    String::new()
+                } else {
+                    format!(" className=\"{class}\"")
+                };
+
+                // Build the full table JSX as a single self-closing unit (we set
+                // self_closing=true so flush_frame() emits it verbatim).
+                //
+                // v1 static model:
+                //   headers → Array<string>  (column-headers slot)
+                //   rows    → Array<string>  (viewport-rows slot; one string per row)
+                //
+                // Each row is rendered as a single <td> cell.  Nested
+                // list<list<text>> is a v2 concern and requires a grammar
+                // extension in mosmodel-compiler.
+                let table = format!(
+                    "<table{style_attr}{class_attr}>\
+                    <thead><tr>\
+                    {{{h}.map((h, _i) => (<th key={{_i}}>{{h}}</th>))}}\
+                    </tr></thead>\
+                    <tbody>\
+                    {{{r}.map((row, _i) => (<tr key={{_i}}><td>{{row}}</td></tr>))}}\
+                    </tbody>\
+                    </table>",
+                    style_attr = style_attr,
+                    class_attr = class_attr,
+                    h = headers,
+                    r = rows,
+                );
+                (table, true) // self-closing: no child nodes, full JSX inline
+            }
             "Divider" => (format!("<hr />"), true),
             "Icon" => {
                 let class_attr = if class.is_empty() {
@@ -599,8 +651,60 @@ fn close_tag_for_primitive(tag: &str) -> String {
         "Box" | "Column" | "Row" | "Stack" | "Spacer" | "Scroll" => "</div>".to_string(),
         "Text" => "</span>".to_string(),
         "Icon" => "</span>".to_string(),
-        "Image" | "Divider" => String::new(), // self-closing
+        // Grid, Image, Divider are self-closing — the full tag is stored in
+        // the frame's `tag` field and emitted verbatim by flush_frame().
+        // This branch is unreachable for them, but guard it for safety.
+        "Image" | "Divider" | "Grid" => String::new(),
         _ => "</div>".to_string(),
+    }
+}
+
+/// Extract the camelCase slot-reference variable name from a named prop.
+///
+/// Grid needs to turn `headers: slot: column-headers` into the JS variable
+/// name `columnHeaders` so it can embed it in the `.map()` expression.
+/// Returns an empty string if the prop is missing or is not a SlotRef.
+///
+/// # Safety
+///
+/// The camelCase identifier is validated against a strict JS-identifier
+/// allow-list before being embedded verbatim in the JSX template string.
+/// If the result is not a safe identifier (a bug in the grammar enforcement
+/// or an unexpected token value), we return an empty string so the generated
+/// JSX produces a harmless empty `.map()` call rather than injected code.
+fn find_slot_ref_prop(props: &[ResolvedProperty], name: &str) -> String {
+    props
+        .iter()
+        .find(|p| p.name == name)
+        .map(|p| match &p.value {
+            ResolvedValue::SlotRef { name: slot_name, .. } => {
+                let camel = to_camel_case(slot_name);
+                // Validate: a safe JS identifier starts with [a-zA-Z_$] and
+                // contains only [a-zA-Z0-9_$].  The NAME token pattern used by
+                // the grammar guarantees alphanumeric + hyphens, and to_camel_case
+                // removes hyphens, so in practice this check always passes.
+                // We guard defensively against future grammar changes or direct
+                // ResolvedValue construction that bypasses the tokeniser.
+                if is_safe_js_identifier(&camel) { camel } else { String::new() }
+            }
+            _ => String::new(),
+        })
+        .unwrap_or_default()
+}
+
+/// Return `true` if `s` is a valid JavaScript identifier.
+///
+/// A JS identifier must start with a letter, underscore, or dollar sign,
+/// and contain only those characters plus ASCII digits.  Embedding anything
+/// else verbatim in a JSX expression string would be a template-injection risk.
+fn is_safe_js_identifier(s: &str) -> bool {
+    let mut chars = s.chars();
+    match chars.next() {
+        None => false,
+        Some(c) => {
+            (c.is_alphabetic() || c == '_' || c == '$')
+                && chars.all(|c| c.is_alphanumeric() || c == '_' || c == '$')
+        }
     }
 }
 
