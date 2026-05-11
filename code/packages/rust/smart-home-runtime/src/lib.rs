@@ -521,9 +521,42 @@ pub struct RuntimeEventBusSnapshot {
     pub published_event_count: usize,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeEventBusBacklogStatus {
+    NoSubscriptions,
+    CaughtUp,
+    Backlogged,
+}
+
 impl RuntimeEventBusSnapshot {
     pub fn is_idle(&self) -> bool {
         self.pending_delivery_count == 0
+    }
+
+    pub fn has_subscriptions(&self) -> bool {
+        self.subscription_count > 0
+    }
+
+    pub fn has_backlog(&self) -> bool {
+        self.pending_delivery_count > 0
+    }
+
+    pub fn backlog_status(&self) -> RuntimeEventBusBacklogStatus {
+        if !self.has_subscriptions() {
+            RuntimeEventBusBacklogStatus::NoSubscriptions
+        } else if self.has_backlog() {
+            RuntimeEventBusBacklogStatus::Backlogged
+        } else {
+            RuntimeEventBusBacklogStatus::CaughtUp
+        }
+    }
+
+    pub fn average_pending_deliveries_per_subscription(&self) -> usize {
+        if self.subscription_count == 0 {
+            0
+        } else {
+            self.pending_delivery_count / self.subscription_count
+        }
     }
 }
 
@@ -635,6 +668,12 @@ pub struct RuntimeSubscriptionSnapshot {
     pub subscription_id: RuntimeSubscriptionId,
     pub filter: RuntimeEventFilter,
     pub queued_events: usize,
+}
+
+impl RuntimeSubscriptionSnapshot {
+    pub fn has_backlog(&self) -> bool {
+        self.queued_events > 0
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -3146,6 +3185,7 @@ mod tests {
             RuntimeSubscriptionId::trusted("bridge-1-stream")
         );
         assert_eq!(backlogs[0].queued_events, 2);
+        assert!(backlogs[0].has_backlog());
     }
 
     #[test]
@@ -3244,10 +3284,51 @@ mod tests {
         assert_eq!(idle.subscription_count, 2);
         assert_eq!(idle.pending_delivery_count, 0);
         assert!(idle.is_idle());
+        assert!(idle.has_subscriptions());
+        assert!(!idle.has_backlog());
+        assert_eq!(
+            idle.backlog_status(),
+            RuntimeEventBusBacklogStatus::CaughtUp
+        );
+        assert_eq!(idle.average_pending_deliveries_per_subscription(), 0);
         assert_eq!(active.subscription_count, 2);
         assert_eq!(active.published_event_count, 2);
         assert_eq!(active.pending_delivery_count, 3);
         assert!(!active.is_idle());
+        assert!(active.has_backlog());
+        assert_eq!(
+            active.backlog_status(),
+            RuntimeEventBusBacklogStatus::Backlogged
+        );
+        assert_eq!(active.average_pending_deliveries_per_subscription(), 1);
+    }
+
+    #[test]
+    fn event_bus_snapshot_distinguishes_absent_subscribers_from_caught_up_streams() {
+        let mut bus = RuntimeEventBus::new();
+        let no_subscribers = bus.snapshot();
+
+        bus.subscribe(
+            RuntimeSubscriptionId::trusted("all-events"),
+            RuntimeEventFilter::All,
+        )
+        .unwrap();
+        let caught_up = bus.snapshot();
+
+        assert_eq!(
+            no_subscribers.backlog_status(),
+            RuntimeEventBusBacklogStatus::NoSubscriptions
+        );
+        assert!(!no_subscribers.has_subscriptions());
+        assert_eq!(
+            no_subscribers.average_pending_deliveries_per_subscription(),
+            0
+        );
+        assert_eq!(
+            caught_up.backlog_status(),
+            RuntimeEventBusBacklogStatus::CaughtUp
+        );
+        assert!(caught_up.has_subscriptions());
     }
 
     #[test]

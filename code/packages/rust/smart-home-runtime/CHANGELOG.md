@@ -53,3 +53,5 @@ All notable changes to this package will be documented in this file.
 - Compact read-only runtime snapshots that summarize registry counts,
   event-bus backlog, supervisor restart pressure, pairing expiry, desired
   state, and stale cached state without mutating runtime state.
+- Event-bus backlog status helpers that distinguish absent subscribers,
+  caught-up streams, and backlogged streams.
