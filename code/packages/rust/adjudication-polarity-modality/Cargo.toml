@@ -1,0 +1,9 @@
+[package]
+name = "adjudication-polarity-modality"
+version = "0.1.0"
+edition = "2021"
+description = "Polarity and modality checker (ADJ03). NegEx/ConText-style scope detection over IR node source spans."
+
+[dependencies]
+adjudication-ir = { path = "../adjudication-ir" }
+logic-core = { path = "../logic-core" }
