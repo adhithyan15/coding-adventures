@@ -5,6 +5,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.2.0] — 2026-05-11
+
+### Added
+
+- **`render_png(data, options)`** — single-call convenience function that
+  encodes `data` as a PDF417 symbol and renders it directly to PNG bytes.
+  - Internally calls `encode_and_layout()` with the default 2-module quiet
+    zone, then delegates pixel rendering to `barcode_2d::render_scene_png()`.
+  - The rendering backend is selected at runtime by `barcode-2d` (Metal on
+    macOS, Cairo on Linux, Direct2D on Windows, Skia elsewhere).
+  - Returns `Result<Vec<u8>, String>` — errors from both the encoder and the
+    renderer are mapped to `String` for ergonomic `.unwrap()` / `?` usage.
+- **`pdf417_render_png_produces_valid_png`** test — encodes `b"HELLO"` with
+  default options and asserts the PNG magic bytes
+  `[0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A]` are present.
+
+---
+
 ## [0.1.0] — 2026-04-24
 
 ### Added
