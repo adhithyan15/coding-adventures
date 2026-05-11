@@ -1,6 +1,23 @@
 # Changelog
 
-## Unreleased
+## [0.2.0] — 2026-05-11
+
+### Added — Bitwise OR, XOR, NOT lowering
+
+- **`IrOp::Or`** — lowered to CIL `or` (opcode `0x60`).
+- **`IrOp::OrImm`** — register + immediate OR: `ldloc src; ldc.i4 imm; or; stloc dst`.
+- **`IrOp::Xor`** — lowered to CIL `xor` (opcode `0x61`).
+- **`IrOp::XorImm`** — register + immediate XOR: `ldloc src; ldc.i4 imm; xor; stloc dst`.
+- **`IrOp::Not`** — one's-complement NOT synthesised as `ldc.i4.m1 (0x15); xor`
+  (CIL has no native bitwise-NOT; matches the JVM `iconst_m1+ixor` and
+  WASM `i32.const -1; i32.xor` strategies).
+- All five new ops added to `CLR_SUPPORTED_OPS`; opcode support count 27 → 32.
+- 7 new unit tests covering opcode presence in emitted bytecode, all-ops lowering
+  success sweep, and `validate_for_clr` acceptance sweep.
+
+---
+
+## [0.1.0] — Unreleased
 
 - add the first Rust `ir-to-cil-bytecode` backend
 - port the Python `cil-bytecode-builder` two-pass CIL assembler to Rust

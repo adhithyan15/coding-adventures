@@ -451,6 +451,7 @@ members = [
     "ir-to-intel-4004-compiler",
     "ir-to-intel-8008-compiler",
     "ir-to-cil-bytecode",
+    "iir-to-cil-bytecode",
     "intel-4004-assembler",
     "intel-4004-packager",
     "intel-8008-packager",
@@ -548,6 +549,8 @@ members = [
     "aot-core",
     "brainfuck-iir-compiler",
     "ir-to-beam",
+    "iir-to-beam",
+    "iir-to-wasm",
     "twig-lexer",
     "twig-parser",
     "twig-formatter",
@@ -587,4 +590,5 @@ members = [
     "zigbee-zdo",
     "zwave-command-classes",
     "capability-cage",
+    "iir-to-jvm-class-file",
 ]

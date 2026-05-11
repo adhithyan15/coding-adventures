@@ -56,6 +56,8 @@ const OP_ISHL: u8 = 0x78;
 const OP_ISHR: u8 = 0x7a;
 const OP_IAND: u8 = 0x7e;
 const OP_IOR: u8 = 0x80;
+/// Bitwise XOR of two integers. `IXOR = 0x82` in the JVM spec (§6.5 ixor).
+const OP_IXOR: u8 = 0x82;
 const OP_I2B: u8 = 0x91;
 const OP_IFEQ: u8 = 0x99;
 const OP_IFNE: u8 = 0x9a;
@@ -1055,7 +1057,8 @@ impl<'a> JvmClassLowerer<'a> {
                         self.method_ref(self.helper_store_word, DESC_INT_INT_TO_VOID)?,
                     );
                 }
-                IrOp::Add | IrOp::Sub | IrOp::Mul | IrOp::Div | IrOp::And => {
+                IrOp::Add | IrOp::Sub | IrOp::Mul | IrOp::Div
+                | IrOp::And | IrOp::Or | IrOp::Xor => {
                     let dst = as_register(instruction.operands.first(), "binary dst")?;
                     let lhs = as_register(instruction.operands.get(1), "binary lhs")?;
                     let rhs = as_register(instruction.operands.get(2), "binary rhs")?;
@@ -1070,6 +1073,8 @@ impl<'a> JvmClassLowerer<'a> {
                         // JVM `idiv` truncates toward zero — matches IrOp::Div semantics.
                         IrOp::Div => builder.emit_opcode(OP_IDIV),
                         IrOp::And => builder.emit_opcode(OP_IAND),
+                        IrOp::Or  => builder.emit_opcode(OP_IOR),
+                        IrOp::Xor => builder.emit_opcode(OP_IXOR),
                         _ => unreachable!(),
                     }
                     builder.emit_u2_instruction(
@@ -1077,7 +1082,7 @@ impl<'a> JvmClassLowerer<'a> {
                         self.method_ref(self.helper_reg_set, DESC_INT_INT_TO_VOID)?,
                     );
                 }
-                IrOp::AddImm | IrOp::AndImm => {
+                IrOp::AddImm | IrOp::AndImm | IrOp::OrImm | IrOp::XorImm => {
                     let dst = as_register(instruction.operands.first(), "binary-imm dst")?;
                     let src = as_register(instruction.operands.get(1), "binary-imm src")?;
                     let imm = as_immediate(instruction.operands.get(2), "binary-imm imm")?;
@@ -1087,8 +1092,31 @@ impl<'a> JvmClassLowerer<'a> {
                     match instruction.opcode {
                         IrOp::AddImm => builder.emit_opcode(OP_IADD),
                         IrOp::AndImm => builder.emit_opcode(OP_IAND),
+                        IrOp::OrImm  => builder.emit_opcode(OP_IOR),
+                        IrOp::XorImm => builder.emit_opcode(OP_IXOR),
                         _ => unreachable!(),
                     }
+                    builder.emit_u2_instruction(
+                        OP_INVOKESTATIC,
+                        self.method_ref(self.helper_reg_set, DESC_INT_INT_TO_VOID)?,
+                    );
+                }
+                // ── Bitwise NOT ────────────────────────────────────────────
+                //
+                // JVM has no native `inot` instruction.  One's complement is
+                // synthesised as XOR with the all-ones constant (`iconst_m1`
+                // pushes -1 = 0xFFFF_FFFF on the operand stack), matching the
+                // WASM and Python backends' lowering strategy.
+                //
+                // `NOT v1, v2`:
+                //   push dst index → reg_get(src) → iconst_m1 → ixor → reg_set(dst)
+                IrOp::Not => {
+                    let dst = as_register(instruction.operands.first(), "NOT dst")?;
+                    let src = as_register(instruction.operands.get(1), "NOT src")?;
+                    self.emit_push_int(&mut builder, dst as i64)?;
+                    self.emit_reg_get(&mut builder, src)?;
+                    builder.emit_opcode(OP_ICONST_M1); // push -1 (all-ones mask)
+                    builder.emit_opcode(OP_IXOR);
                     builder.emit_u2_instruction(
                         OP_INVOKESTATIC,
                         self.method_ref(self.helper_reg_set, DESC_INT_INT_TO_VOID)?,
@@ -1290,6 +1318,39 @@ pub fn lower_ir_to_jvm_class_file(
     config: JvmBackendConfig,
 ) -> Result<JvmClassArtifact, JvmBackendError> {
     JvmClassLowerer::new(program, config).lower()
+}
+
+/// Pre-flight validation for JVM class-file lowering.
+///
+/// Returns an empty `Vec` when the program can be lowered without errors,
+/// or a list of human-readable error strings when it cannot.
+///
+/// This is a lightweight dry-run compilation that attempts the full lowering
+/// with a default `JvmBackendConfig` and maps any `JvmBackendError` to a
+/// `String`.  The interface mirrors the Python backend's `validate_for_jvm`
+/// function so callers can swap implementations without changing call sites.
+///
+/// ## Example
+///
+/// ```rust
+/// use compiler_ir::{IrInstruction, IrOp, IrOperand, IrProgram};
+/// use ir_to_jvm_class_file::validate_for_jvm;
+///
+/// let mut prog = IrProgram::new("_start");
+/// prog.add_instruction(IrInstruction::new(
+///     IrOp::Label, vec![IrOperand::Label("_start".into())], -1,
+/// ));
+/// prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 0));
+///
+/// assert!(validate_for_jvm(&prog).is_empty());
+/// ```
+pub fn validate_for_jvm(program: &IrProgram) -> Vec<String> {
+    // Use "Main" as the default class name for validation.  The exact name
+    // does not affect whether the program is valid for JVM lowering.
+    match lower_ir_to_jvm_class_file(program, JvmBackendConfig::new("Main")) {
+        Ok(_) => vec![],
+        Err(e) => vec![e.to_string()],
+    }
 }
 
 pub fn write_class_file(
@@ -1687,6 +1748,207 @@ mod tests {
         ));
         program.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 1));
         program
+    }
+
+    // ── Bitwise OR ───────────────────────────────────────────────────────────
+
+    #[test]
+    fn or_i32_lowers_to_parseable_class() {
+        // OR v2, v0, v1  (v2 = v0 | v1)
+        let prog = bitwise_binary_prog(IrOp::Or);
+        let artifact =
+            lower_ir_to_jvm_class_file(&prog, JvmBackendConfig::new("OrTest")).unwrap();
+        let parsed = parse_class_file(&artifact.class_bytes).unwrap();
+        assert!(parsed.find_method("_start", Some("()I")).is_some());
+    }
+
+    #[test]
+    fn or_imm_i32_lowers_to_parseable_class() {
+        // OR_IMM v1, v0, 5  (v1 = v0 | 5)
+        let prog = bitwise_imm_prog(IrOp::OrImm, 5);
+        let artifact =
+            lower_ir_to_jvm_class_file(&prog, JvmBackendConfig::new("OrImmTest")).unwrap();
+        let parsed = parse_class_file(&artifact.class_bytes).unwrap();
+        assert!(parsed.find_method("_start", Some("()I")).is_some());
+    }
+
+    // ── Bitwise XOR ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn xor_i32_lowers_to_parseable_class() {
+        // XOR v2, v0, v1  (v2 = v0 ^ v1)
+        let prog = bitwise_binary_prog(IrOp::Xor);
+        let artifact =
+            lower_ir_to_jvm_class_file(&prog, JvmBackendConfig::new("XorTest")).unwrap();
+        let parsed = parse_class_file(&artifact.class_bytes).unwrap();
+        assert!(parsed.find_method("_start", Some("()I")).is_some());
+    }
+
+    #[test]
+    fn xor_imm_i32_lowers_to_parseable_class() {
+        // XOR_IMM v1, v0, 0xFF  (v1 = v0 ^ 0xFF)
+        let prog = bitwise_imm_prog(IrOp::XorImm, 0xFF);
+        let artifact =
+            lower_ir_to_jvm_class_file(&prog, JvmBackendConfig::new("XorImmTest")).unwrap();
+        let parsed = parse_class_file(&artifact.class_bytes).unwrap();
+        assert!(parsed.find_method("_start", Some("()I")).is_some());
+    }
+
+    // ── Bitwise NOT ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn not_i32_lowers_to_parseable_class() {
+        // NOT v1, v0  (v1 = ~v0)
+        // Synthesised as: ICONST_M1 + IXOR, so no direct `inot` opcode.
+        let prog = bitwise_not_prog();
+        let artifact =
+            lower_ir_to_jvm_class_file(&prog, JvmBackendConfig::new("NotTest")).unwrap();
+        let parsed = parse_class_file(&artifact.class_bytes).unwrap();
+        assert!(parsed.find_method("_start", Some("()I")).is_some());
+    }
+
+    // ── validate_for_jvm ─────────────────────────────────────────────────────
+
+    #[test]
+    fn validate_for_jvm_returns_empty_for_simple_program() {
+        // A well-formed program (LABEL + LOAD_IMM + HALT) must pass validation.
+        assert_eq!(validate_for_jvm(&simple_program()), Vec::<String>::new());
+    }
+
+    #[test]
+    fn validate_for_jvm_returns_empty_for_bitwise_programs() {
+        // Validate all five new bitwise-op programs in one sweep.
+        for (name, prog) in [
+            ("Or",     bitwise_binary_prog(IrOp::Or)),
+            ("OrImm",  bitwise_imm_prog(IrOp::OrImm,  0b1010)),
+            ("Xor",    bitwise_binary_prog(IrOp::Xor)),
+            ("XorImm", bitwise_imm_prog(IrOp::XorImm, 0b1111)),
+            ("Not",    bitwise_not_prog()),
+        ] {
+            let errs = validate_for_jvm(&prog);
+            assert!(
+                errs.is_empty(),
+                "validate_for_jvm returned errors for {name}: {errs:?}",
+            );
+        }
+    }
+
+    #[test]
+    fn validate_for_jvm_returns_error_for_program_exceeding_data_limit() {
+        let mut program = simple_program();
+        program.add_data(IrDataDecl {
+            label: "huge".to_string(),
+            size: MAX_STATIC_DATA_BYTES + 1,
+            init: 0,
+        });
+        let errs = validate_for_jvm(&program);
+        assert!(!errs.is_empty(), "expected validation error for oversized data");
+        assert!(errs[0].contains("Total static data exceeds"));
+    }
+
+    // ── Program-builder helpers ───────────────────────────────────────────────
+
+    /// Build a minimal program that executes `op v2, v0, v1`
+    /// (binary register-register bitwise op).
+    ///
+    /// ```text
+    /// LABEL    _start
+    /// LOAD_IMM v0, 42        ; lhs
+    /// LOAD_IMM v1, 15        ; rhs
+    /// <op>     v2, v0, v1   ; dst = lhs op rhs
+    /// HALT
+    /// ```
+    fn bitwise_binary_prog(op: IrOp) -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(1), IrOperand::Immediate(15)],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            op,
+            vec![
+                IrOperand::Register(2),
+                IrOperand::Register(0),
+                IrOperand::Register(1),
+            ],
+            2,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 3));
+        prog
+    }
+
+    /// Build a minimal program that executes `op v1, v0, imm`
+    /// (binary register-immediate bitwise op).
+    ///
+    /// ```text
+    /// LABEL    _start
+    /// LOAD_IMM v0, 42
+    /// <op>     v1, v0, imm
+    /// HALT
+    /// ```
+    fn bitwise_imm_prog(op: IrOp, imm: i64) -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            op,
+            vec![
+                IrOperand::Register(1),
+                IrOperand::Register(0),
+                IrOperand::Immediate(imm),
+            ],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 2));
+        prog
+    }
+
+    /// Build a minimal program that executes `NOT v1, v0` (one's complement).
+    ///
+    /// ```text
+    /// LABEL    _start
+    /// LOAD_IMM v0, 42
+    /// NOT      v1, v0
+    /// HALT
+    /// ```
+    fn bitwise_not_prog() -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::Not,
+            vec![IrOperand::Register(1), IrOperand::Register(0)],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 2));
+        prog
     }
 
     fn unique_temp_dir(prefix: &str) -> PathBuf {

@@ -1,0 +1,14 @@
+[package]
+name = "iir-to-jvm-class-file"
+version = "0.1.0"
+edition = "2021"
+description = "IIR → JVM class file backend — lowers IIRModule to JvmClassFile without compiler-ir"
+
+[lib]
+name = "iir_to_jvm_class_file"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+jvm-class-file = { path = "../jvm-class-file" }
+codegen-core   = { path = "../codegen-core" }

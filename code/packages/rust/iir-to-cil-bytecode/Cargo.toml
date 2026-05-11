@@ -1,0 +1,14 @@
+[package]
+name = "iir-to-cil-bytecode"
+version = "0.1.0"
+edition = "2021"
+description = "IIR → CIL bytecode backend — lowers IIRModule to CILProgramArtifact without compiler-ir"
+
+[lib]
+name = "iir_to_cil_bytecode"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir     = { path = "../interpreter-ir" }
+ir-to-cil-bytecode = { path = "../ir-to-cil-bytecode" }
+codegen-core       = { path = "../codegen-core" }

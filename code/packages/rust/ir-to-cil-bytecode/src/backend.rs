@@ -291,6 +291,11 @@ const CLR_SUPPORTED_OPS: &[IrOp] = &[
     IrOp::Div,
     IrOp::And,
     IrOp::AndImm,
+    IrOp::Or,
+    IrOp::OrImm,
+    IrOp::Xor,
+    IrOp::XorImm,
+    IrOp::Not,
     IrOp::CmpEq,
     IrOp::CmpNe,
     IrOp::CmpLt,
@@ -309,7 +314,7 @@ const CLR_SUPPORTED_OPS: &[IrOp] = &[
 ///
 /// # Validation rules
 ///
-/// 1. **Opcode support** — only the 25 opcodes listed in `CLR_SUPPORTED_OPS`
+/// 1. **Opcode support** — only the 32 opcodes listed in `CLR_SUPPORTED_OPS`
 ///    are accepted.
 /// 2. **Immediate range** — `LOAD_IMM` and `ADD_IMM` immediates must fit in
 ///    a 32-bit signed integer (−2^31 .. 2^31−1).
@@ -755,6 +760,75 @@ fn emit_instruction(
             b.emit_raw(encode_stloc(dst as u16));
         }
 
+        // ── OR  dst, lhs, rhs ─────────────────────────────────────────────
+        // CIL: ldloc lhs; ldloc rhs; or; stloc dst
+
+        IrOp::Or => {
+            let dst = reg(0).ok_or_else(|| CILBackendError("OR: missing dst".into()))?;
+            let lhs = reg(1).ok_or_else(|| CILBackendError("OR: missing lhs".into()))?;
+            let rhs = reg(2).ok_or_else(|| CILBackendError("OR: missing rhs".into()))?;
+            b.emit_raw(encode_ldloc(lhs as u16));
+            b.emit_raw(encode_ldloc(rhs as u16));
+            b.emit_or();
+            b.emit_raw(encode_stloc(dst as u16));
+        }
+
+        // ── OR_IMM  dst, src, imm ─────────────────────────────────────────
+        // CIL: ldloc src; ldc.i4 imm; or; stloc dst
+
+        IrOp::OrImm => {
+            let dst = reg(0).ok_or_else(|| CILBackendError("OR_IMM: missing dst".into()))?;
+            let src = reg(1).ok_or_else(|| CILBackendError("OR_IMM: missing src".into()))?;
+            let val = imm(2).ok_or_else(|| CILBackendError("OR_IMM: missing imm".into()))? as i32;
+            b.emit_raw(encode_ldloc(src as u16));
+            b.emit_raw(encode_ldc_i4(val));
+            b.emit_or();
+            b.emit_raw(encode_stloc(dst as u16));
+        }
+
+        // ── XOR  dst, lhs, rhs ────────────────────────────────────────────
+        // CIL: ldloc lhs; ldloc rhs; xor; stloc dst
+
+        IrOp::Xor => {
+            let dst = reg(0).ok_or_else(|| CILBackendError("XOR: missing dst".into()))?;
+            let lhs = reg(1).ok_or_else(|| CILBackendError("XOR: missing lhs".into()))?;
+            let rhs = reg(2).ok_or_else(|| CILBackendError("XOR: missing rhs".into()))?;
+            b.emit_raw(encode_ldloc(lhs as u16));
+            b.emit_raw(encode_ldloc(rhs as u16));
+            b.emit_xor();
+            b.emit_raw(encode_stloc(dst as u16));
+        }
+
+        // ── XOR_IMM  dst, src, imm ────────────────────────────────────────
+        // CIL: ldloc src; ldc.i4 imm; xor; stloc dst
+
+        IrOp::XorImm => {
+            let dst = reg(0).ok_or_else(|| CILBackendError("XOR_IMM: missing dst".into()))?;
+            let src = reg(1).ok_or_else(|| CILBackendError("XOR_IMM: missing src".into()))?;
+            let val = imm(2).ok_or_else(|| CILBackendError("XOR_IMM: missing imm".into()))? as i32;
+            b.emit_raw(encode_ldloc(src as u16));
+            b.emit_raw(encode_ldc_i4(val));
+            b.emit_xor();
+            b.emit_raw(encode_stloc(dst as u16));
+        }
+
+        // ── NOT  dst, src ─────────────────────────────────────────────────
+        //
+        // CIL has no native bitwise-NOT instruction.  One's complement is
+        // synthesised as XOR with the all-ones constant (-1), matching the
+        // JVM (`iconst_m1 + ixor`) and WASM (`i32.const -1 + i32.xor`) strategies.
+        //
+        // CIL: ldloc src; ldc.i4 -1; xor; stloc dst
+
+        IrOp::Not => {
+            let dst = reg(0).ok_or_else(|| CILBackendError("NOT: missing dst".into()))?;
+            let src = reg(1).ok_or_else(|| CILBackendError("NOT: missing src".into()))?;
+            b.emit_raw(encode_ldloc(src as u16));
+            b.emit_raw(encode_ldc_i4(-1)); // push all-ones mask
+            b.emit_xor();
+            b.emit_raw(encode_stloc(dst as u16));
+        }
+
         // ── CMP_EQ  dst, lhs, rhs ────────────────────────────────────────
         // CIL: ldloc lhs; ldloc rhs; ceq; stloc dst
 
@@ -894,6 +968,19 @@ fn emit_instruction(
             } else {
                 b.emit_pop();
             }
+        }
+
+        // ── Forward-compatibility catch-all ────────────────────────────────
+        //
+        // When new IrOp variants are added to compiler-ir before this backend
+        // gains explicit lowering support for them, this arm prevents a
+        // compilation failure (E0004 non-exhaustive patterns).  The runtime
+        // error mirrors what validate_for_clr() would have reported.
+        #[allow(unreachable_patterns)]
+        _ => {
+            return Err(CILBackendError(
+                format!("op {} not yet supported by CLR backend", instr.opcode),
+            ));
         }
 
     }
@@ -1245,5 +1332,170 @@ mod tests {
         assert_eq!(tp.helper_token(CILHelper::MemLoadByte),  0x0A00_0001);
         assert_eq!(tp.helper_token(CILHelper::MemStoreByte), 0x0A00_0002);
         assert_eq!(tp.helper_token(CILHelper::Syscall),      0x0A00_0005);
+    }
+
+    // ------------------------------------------------------------------
+    // Bitwise OR, XOR, NOT
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn test_lower_or_emits_or_opcode() {
+        // OR v2, v0, v1  →  body must contain `or` (0x60)
+        let artifact = lower_ir_to_cil_bytecode(&bitwise_binary_prog(IrOp::Or), None, None).unwrap();
+        let body = &artifact.methods[0].body;
+        assert!(body.contains(&0x60), "expected CIL `or` (0x60) in: {body:?}");
+    }
+
+    #[test]
+    fn test_lower_or_imm_emits_or_opcode() {
+        // OR_IMM v1, v0, 5  →  body must contain `or` (0x60)
+        let artifact = lower_ir_to_cil_bytecode(&bitwise_imm_prog(IrOp::OrImm, 5), None, None).unwrap();
+        let body = &artifact.methods[0].body;
+        assert!(body.contains(&0x60), "expected CIL `or` (0x60) in: {body:?}");
+    }
+
+    #[test]
+    fn test_lower_xor_emits_xor_opcode() {
+        // XOR v2, v0, v1  →  body must contain `xor` (0x61)
+        let artifact = lower_ir_to_cil_bytecode(&bitwise_binary_prog(IrOp::Xor), None, None).unwrap();
+        let body = &artifact.methods[0].body;
+        assert!(body.contains(&0x61), "expected CIL `xor` (0x61) in: {body:?}");
+    }
+
+    #[test]
+    fn test_lower_xor_imm_emits_xor_opcode() {
+        // XOR_IMM v1, v0, 0xFF  →  body must contain `xor` (0x61)
+        let artifact = lower_ir_to_cil_bytecode(&bitwise_imm_prog(IrOp::XorImm, 0xFF), None, None).unwrap();
+        let body = &artifact.methods[0].body;
+        assert!(body.contains(&0x61), "expected CIL `xor` (0x61) in: {body:?}");
+    }
+
+    #[test]
+    fn test_lower_not_emits_ldc_m1_and_xor() {
+        // NOT v1, v0
+        // Synthesised: ldloc v0; ldc.i4.m1 (0x15); xor (0x61); stloc v1
+        let artifact = lower_ir_to_cil_bytecode(&bitwise_not_prog(), None, None).unwrap();
+        let body = &artifact.methods[0].body;
+        assert!(body.contains(&0x15), "expected ldc.i4.m1 (0x15) in NOT body: {body:?}");
+        assert!(body.contains(&0x61), "expected CIL xor (0x61) in NOT body: {body:?}");
+    }
+
+    #[test]
+    fn test_validate_accepts_all_bitwise_ops() {
+        // All five new bitwise ops must pass validate_for_clr.
+        for (name, prog) in [
+            ("Or",     bitwise_binary_prog(IrOp::Or)),
+            ("OrImm",  bitwise_imm_prog(IrOp::OrImm,  0b1010)),
+            ("Xor",    bitwise_binary_prog(IrOp::Xor)),
+            ("XorImm", bitwise_imm_prog(IrOp::XorImm, 0b1111)),
+            ("Not",    bitwise_not_prog()),
+        ] {
+            let errs = validate_for_clr(&prog);
+            assert!(errs.is_empty(), "validate_for_clr returned errors for {name}: {errs:?}");
+        }
+    }
+
+    #[test]
+    fn test_lower_bitwise_ops_succeed() {
+        // All five new bitwise ops must lower without error.
+        for (name, prog) in [
+            ("Or",     bitwise_binary_prog(IrOp::Or)),
+            ("OrImm",  bitwise_imm_prog(IrOp::OrImm,  7)),
+            ("Xor",    bitwise_binary_prog(IrOp::Xor)),
+            ("XorImm", bitwise_imm_prog(IrOp::XorImm, 0xFF)),
+            ("Not",    bitwise_not_prog()),
+        ] {
+            let result = lower_ir_to_cil_bytecode(&prog, None, None);
+            assert!(result.is_ok(), "lowering failed for {name}: {:?}", result.err());
+            assert!(
+                !result.unwrap().methods[0].body.is_empty(),
+                "{name} body should not be empty"
+            );
+        }
+    }
+
+    // ── Program-builder helpers ───────────────────────────────────────────────
+
+    /// Build a minimal program: `op v2, v0, v1` (binary register-register op).
+    ///
+    /// ```text
+    /// LOAD_IMM v0, 42
+    /// LOAD_IMM v1, 15
+    /// <op>     v2, v0, v1
+    /// HALT
+    /// ```
+    fn bitwise_binary_prog(op: IrOp) -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(1), IrOperand::Immediate(15)],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            op,
+            vec![
+                IrOperand::Register(2),
+                IrOperand::Register(0),
+                IrOperand::Register(1),
+            ],
+            2,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 3));
+        prog
+    }
+
+    /// Build a minimal program: `op v1, v0, imm` (binary register-immediate op).
+    ///
+    /// ```text
+    /// LOAD_IMM v0, 42
+    /// <op>     v1, v0, imm
+    /// HALT
+    /// ```
+    fn bitwise_imm_prog(op: IrOp, imm: i64) -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            op,
+            vec![
+                IrOperand::Register(1),
+                IrOperand::Register(0),
+                IrOperand::Immediate(imm),
+            ],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 2));
+        prog
+    }
+
+    /// Build a minimal program: `NOT v1, v0` (one's complement).
+    ///
+    /// ```text
+    /// LOAD_IMM v0, 42
+    /// NOT      v1, v0
+    /// HALT
+    /// ```
+    fn bitwise_not_prog() -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::Not,
+            vec![IrOperand::Register(1), IrOperand::Register(0)],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 2));
+        prog
     }
 }

@@ -1,5 +1,23 @@
 # Changelog — compiler-ir
 
+## [0.2.0] — 2026-05-11
+
+### Added — Bitwise OR, XOR, NOT opcodes
+
+- `IrOp::Or` — register-register bitwise OR (`OR v3, v1, v2 → v3 = v1 | v2`).
+- `IrOp::OrImm` — register-immediate bitwise OR (`OR_IMM v2, v2, 1 → v2 = v2 | 1`).
+- `IrOp::Xor` — register-register bitwise XOR (`XOR v3, v1, v2 → v3 = v1 ^ v2`).
+- `IrOp::XorImm` — register-immediate bitwise XOR (`XOR_IMM v2, v2, 1 → v2 = v2 ^ 1`).
+- `IrOp::Not` — bitwise NOT / one's complement (`NOT v1, v2 → v1 = ~v2`).
+  Equivalent to `XOR v1, v2, -1`; backends must produce a bitwise complement
+  (not a logical negation).
+
+All five ops added to `Display` and `parse_op()`.
+
+Opcode count: 27 → 32.  Regression test updated to `test_opcode_count_is_32`.
+
+---
+
 ## [0.1.1] — 2026-04-28
 
 ### Added

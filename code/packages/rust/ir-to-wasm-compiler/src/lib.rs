@@ -725,6 +725,43 @@ impl<'a> FunctionLowerer<'a> {
                 self.emit_opcode("i32.and");
                 self.emit_local_set(dst);
             }
+            // ── Bitwise OR ────────────────────────────────────────────────
+            IrOp::Or => self.emit_binary_numeric("i32.or", instruction)?,
+            IrOp::OrImm => {
+                let dst = expect_register(instruction.operands.first(), "OR_IMM dst")?;
+                let src = expect_register(instruction.operands.get(1), "OR_IMM src")?;
+                let value = expect_immediate(instruction.operands.get(2), "OR_IMM imm")?;
+                self.emit_local_get(src);
+                self.emit_i32_const(value);
+                self.emit_opcode("i32.or");
+                self.emit_local_set(dst);
+            }
+            // ── Bitwise XOR ───────────────────────────────────────────────
+            IrOp::Xor => self.emit_binary_numeric("i32.xor", instruction)?,
+            IrOp::XorImm => {
+                let dst = expect_register(instruction.operands.first(), "XOR_IMM dst")?;
+                let src = expect_register(instruction.operands.get(1), "XOR_IMM src")?;
+                let value = expect_immediate(instruction.operands.get(2), "XOR_IMM imm")?;
+                self.emit_local_get(src);
+                self.emit_i32_const(value);
+                self.emit_opcode("i32.xor");
+                self.emit_local_set(dst);
+            }
+            // ── Bitwise NOT ───────────────────────────────────────────────
+            //
+            // WASM has no native `i32.not` instruction.  One's complement is
+            // synthesised as `XOR src, -1` (all-ones mask).  This is the
+            // canonical lowering used by LLVM/GCC for `~x` on 32-bit targets.
+            //
+            // `NOT v1, v2  →  local.get v2; i32.const -1; i32.xor; local.set v1`
+            IrOp::Not => {
+                let dst = expect_register(instruction.operands.first(), "NOT dst")?;
+                let src = expect_register(instruction.operands.get(1), "NOT src")?;
+                self.emit_local_get(src);
+                self.emit_i32_const(-1); // all-ones mask: 0xFFFF_FFFF in two's complement
+                self.emit_opcode("i32.xor");
+                self.emit_local_set(dst);
+            }
             IrOp::CmpEq => self.emit_binary_numeric("i32.eq", instruction)?,
             IrOp::CmpNe => self.emit_binary_numeric("i32.ne", instruction)?,
             IrOp::CmpLt => self.emit_binary_numeric("i32.lt_s", instruction)?,
@@ -1143,5 +1180,117 @@ mod tests {
             .unwrap_err();
 
         assert!(err.message.contains("unsupported SYSCALL number"));
+    }
+
+    // ── v0.3.0: Bitwise OR / XOR / NOT ───────────────────────────────────
+
+    /// Helper: build a minimal IrProgram exercising one binary bitwise op.
+    ///
+    /// `_start: LOAD_IMM r2,a; LOAD_IMM r3,b; <op> r1,r2,r3; HALT`
+    fn bitwise_binary_prog(op: IrOp, a: i64, b: i64) -> IrProgram {
+        IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,   vec![IrOperand::Label("_start".into())], -1),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(2), IrOperand::Immediate(a)], 0),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(3), IrOperand::Immediate(b)], 1),
+                IrInstruction::new(op,             vec![IrOperand::Register(REG_SCRATCH), IrOperand::Register(2), IrOperand::Register(3)], 2),
+                IrInstruction::new(IrOp::Halt,     vec![],                                 3),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        }
+    }
+
+    /// Helper: run an IrProgram and return the integer result.
+    fn run_prog(prog: &IrProgram) -> i32 {
+        use wasm_module_encoder::encode_module;
+        use wasm_runtime::{WasiConfig, WasiEnv, WasmRuntime};
+        let module = IrToWasmCompiler::default().compile(prog, &[]).unwrap();
+        let binary = encode_module(&module).unwrap();
+        let wasi = WasiEnv::new(WasiConfig::default());
+        let runtime = WasmRuntime::with_host(Box::new(wasi));
+        let result = runtime.load_and_run(&binary, "_start", &[]).unwrap();
+        result[0] as i32
+    }
+
+    #[test]
+    fn or_produces_correct_result() {
+        // 0b1100 | 0b1010 = 0b1110 = 14
+        assert_eq!(run_prog(&bitwise_binary_prog(IrOp::Or, 0b1100, 0b1010)), 14);
+    }
+
+    #[test]
+    fn or_imm_produces_correct_result() {
+        // OR_IMM r1, r2, 1: 0b1100 | 0b0001 = 0b1101 = 13
+        let prog = IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,   vec![IrOperand::Label("_start".into())], -1),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(2), IrOperand::Immediate(0b1100)], 0),
+                IrInstruction::new(IrOp::OrImm,    vec![IrOperand::Register(REG_SCRATCH), IrOperand::Register(2), IrOperand::Immediate(0b0001)], 1),
+                IrInstruction::new(IrOp::Halt,     vec![], 2),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        };
+        assert_eq!(run_prog(&prog), 13);
+    }
+
+    #[test]
+    fn xor_produces_correct_result() {
+        // 0b1100 ^ 0b1010 = 0b0110 = 6
+        assert_eq!(run_prog(&bitwise_binary_prog(IrOp::Xor, 0b1100, 0b1010)), 6);
+    }
+
+    #[test]
+    fn xor_imm_produces_correct_result() {
+        // XOR_IMM r1, r2, 0xFF: 0b1111_0000 ^ 0xFF = 0b0000_1111 = 15
+        let prog = IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,    vec![IrOperand::Label("_start".into())], -1),
+                IrInstruction::new(IrOp::LoadImm,   vec![IrOperand::Register(2), IrOperand::Immediate(0b1111_0000)], 0),
+                IrInstruction::new(IrOp::XorImm,   vec![IrOperand::Register(REG_SCRATCH), IrOperand::Register(2), IrOperand::Immediate(0xFF)], 1),
+                IrInstruction::new(IrOp::Halt,      vec![], 2),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        };
+        assert_eq!(run_prog(&prog), 15);
+    }
+
+    #[test]
+    fn not_inverts_all_bits() {
+        // NOT 0 = 0xFFFF_FFFF = -1 in i32 two's complement
+        let prog = IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,   vec![IrOperand::Label("_start".into())], -1),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(2), IrOperand::Immediate(0)], 0),
+                IrInstruction::new(IrOp::Not,      vec![IrOperand::Register(REG_SCRATCH), IrOperand::Register(2)], 1),
+                IrInstruction::new(IrOp::Halt,     vec![], 2),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        };
+        assert_eq!(run_prog(&prog), -1i32);
+    }
+
+    #[test]
+    fn not_one_gives_minus_two() {
+        // NOT 1 = ~0x00000001 = 0xFFFFFFFE = -2 in i32
+        let prog = IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,   vec![IrOperand::Label("_start".into())], -1),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(2), IrOperand::Immediate(1)], 0),
+                IrInstruction::new(IrOp::Not,      vec![IrOperand::Register(REG_SCRATCH), IrOperand::Register(2)], 1),
+                IrInstruction::new(IrOp::Halt,     vec![], 2),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        };
+        assert_eq!(run_prog(&prog), -2i32);
     }
 }

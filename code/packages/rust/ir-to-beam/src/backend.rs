@@ -635,6 +635,18 @@ pub fn lower_ir_to_beam(
             | IrOp::CmpEq | IrOp::CmpNe | IrOp::CmpLt | IrOp::CmpGt => {
                 return Err(BEAMBackendError::UnsupportedOp(instr.opcode.to_string()));
             }
+
+            // ── Forward-compatibility catch-all ────────────────────────────
+            //
+            // When new IrOp variants are added to compiler-ir before this
+            // backend gains explicit lowering support for them, this arm
+            // prevents a compilation failure (E0004 non-exhaustive patterns).
+            // The runtime error is the same as any other unsupported op and
+            // would have been caught by validate_for_beam() anyway.
+            #[allow(unreachable_patterns)]
+            _ => {
+                return Err(BEAMBackendError::UnsupportedOp(instr.opcode.to_string()));
+            }
         }
     }
 
