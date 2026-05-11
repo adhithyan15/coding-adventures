@@ -7,7 +7,7 @@
 use coding_adventures_macsyma_compiler::{
     compile_macsyma_with_options, CompileError, CompileOptions, DISPLAY, SUPPRESS,
 };
-use symbolic_ir::{sym, IRNode};
+use symbolic_ir::{sym, IRApply, IRNode};
 use symbolic_vm::{SymbolicBackend, VM};
 
 /// One evaluated MACSYMA statement.
@@ -56,6 +56,22 @@ impl History {
         self.outputs.last()
     }
 
+    pub fn resolve_history_symbol(&self, name: &str) -> Option<&IRNode> {
+        if name == "%" {
+            return self.last_output();
+        }
+
+        if let Some(digits) = name.strip_prefix("%i") {
+            let index = parse_history_index(digits)?;
+            return self.get_input(index);
+        }
+        if let Some(digits) = name.strip_prefix("%o") {
+            let index = parse_history_index(digits)?;
+            return self.get_output(index);
+        }
+        None
+    }
+
     pub fn next_input_index(&self) -> usize {
         self.inputs.len() + 1
     }
@@ -72,6 +88,13 @@ impl History {
         self.inputs.clear();
         self.outputs.clear();
     }
+}
+
+fn parse_history_index(digits: &str) -> Option<usize> {
+    if digits.is_empty() {
+        return None;
+    }
+    digits.parse::<usize>().ok()
 }
 
 /// Stateful MACSYMA evaluator over the Rust symbolic VM.
@@ -123,7 +146,8 @@ impl MacsymaSession {
     fn eval_statement(&mut self, statement: IRNode) -> EvalResult {
         let (input, display) = unwrap_display(statement);
         let input_index = self.history.record_input(input.clone());
-        let output = self.vm.eval(input.clone());
+        let resolved_input = resolve_history_references(&self.history, input.clone());
+        let output = self.vm.eval(resolved_input);
         let output_index = self.history.record_output(output.clone());
         EvalResult {
             input_index,
@@ -138,6 +162,26 @@ impl MacsymaSession {
 impl Default for MacsymaSession {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+fn resolve_history_references(history: &History, node: IRNode) -> IRNode {
+    match node {
+        IRNode::Symbol(name) => history
+            .resolve_history_symbol(&name)
+            .cloned()
+            .unwrap_or(IRNode::Symbol(name)),
+        IRNode::Apply(apply) => {
+            let IRApply { head, args } = *apply;
+            IRNode::Apply(Box::new(IRApply {
+                head: resolve_history_references(history, head),
+                args: args
+                    .into_iter()
+                    .map(|arg| resolve_history_references(history, arg))
+                    .collect(),
+            }))
+        }
+        other => other,
     }
 }
 

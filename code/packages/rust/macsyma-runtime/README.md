@@ -5,5 +5,10 @@ and `symbolic-vm`.
 
 This first slice is intentionally small: it compiles MACSYMA source, evaluates
 statements through the Rust symbolic VM, preserves `;` versus `$` display
-metadata, and records in-memory `%i`/`%o`-style history for a future REPL/WASM
-facade.
+metadata, and records in-memory `%i`/`%o`-style history for a REPL/WASM facade.
+
+History lookup is implemented in this runtime layer with a structural pre-eval
+replacement pass. `%` resolves to the previous output, `%iN` resolves to the
+N-th recorded input expression, and `%oN` resolves to the N-th recorded output.
+The symbolic VM backend remains unchanged, so direct backend lookup of history
+names is intentionally out of scope for this Rust parity slice.
