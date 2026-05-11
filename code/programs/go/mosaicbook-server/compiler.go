@@ -26,16 +26,29 @@ import (
 	"os/exec"
 )
 
+// maxCompilerOutputBytes is the maximum number of bytes we read from the
+// compiler's combined stdout+stderr.  Bounding this prevents a misbehaving
+// compiler from filling server memory with error output.
+const maxCompilerOutputBytes = 1 << 20 // 1 MiB
+
 // compile invokes the external mosaic-compile binary to compile sourcePath to
 // the given backend, writing output to outputPath.
 //
 // Returns a descriptive error if the binary is not found or exits non-zero.
+// Compiler output captured for error messages is capped at maxCompilerOutputBytes
+// to avoid holding unbounded buffers in memory.
 func (s *Server) compile(sourcePath string, backend string, outputPath string) error {
 	cmd := exec.Command(s.compilerPath, "--backend", backend, "--output", outputPath, sourcePath)
 
 	// Capture combined stdout+stderr so we can surface compiler errors in the
 	// preview HTML page rather than just logging them server-side.
 	out, err := cmd.CombinedOutput()
+
+	// Cap the captured output to avoid reflecting large blobs into error pages.
+	if len(out) > maxCompilerOutputBytes {
+		out = append(out[:maxCompilerOutputBytes], []byte("\n...(output truncated)")...)
+	}
+
 	if err != nil {
 		// Distinguish "binary not found" from "compilation failed" — the former
 		// needs a setup hint, the latter needs the compiler error text.

@@ -107,6 +107,14 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 	compiled, compileErr := s.compileToString(found.SourcePath, backend)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// For the html backend the compiled output is a static HTML fragment with no
+	// intended script execution.  The CSP blocks scripts so that even if the
+	// compiler emits a <script> tag (e.g. for a dynamic component), it cannot run.
+	// webcomponent/react backends intentionally need script execution and use
+	// safeForScriptTag to prevent </script> injection instead.
+	if backend == "html" {
+		w.Header().Set("Content-Security-Policy", "script-src 'none'")
+	}
 
 	if compileErr != nil {
 		// Show a styled error page inside the iframe rather than a 5xx response.
@@ -119,9 +127,42 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, wrapForBackend(compiled, backend, found.ID))
 }
 
+// safeForScriptTag escapes a string so it cannot break out of a <script> block.
+//
+// If `compiled` contains the literal sequence `</script`, the browser would
+// interpret it as the end of the script block and begin parsing HTML — a form
+// of injection known as "script tag injection."  Replacing `</script` with
+// `<\/script` (the backslash-escape is valid JavaScript) neutralises the
+// sequence without altering the runtime value of any string literals in the
+// script.
+//
+// This mitigation is applied to the webcomponent and react backends, where the
+// compiled output is embedded inside <script> tags.  It is NOT applied to the
+// html backend because the output is placed in <body>, not inside a script,
+// and the html backend already adds a `script-src 'none'` CSP header.
+func safeForScriptTag(s string) string {
+	// Replace </script (case-insensitive) with <\/script.
+	// We handle both lower and upper case to be thorough.
+	s = strings.ReplaceAll(s, "</script", `<\/script`)
+	s = strings.ReplaceAll(s, "</Script", `<\/Script`)
+	s = strings.ReplaceAll(s, "</SCRIPT", `<\/SCRIPT`)
+	return s
+}
+
 // wrapForBackend wraps compiled output in a self-contained HTML page for iframe
 // display.  componentID is used to derive the component name for react/webcomponent
 // wrapper usage tags.
+//
+// # Security
+//
+// For the html backend a `Content-Security-Policy: script-src 'none'` response
+// header is set by the caller (handlePreview) to prevent any script from running
+// in the HTML preview page.  This is appropriate because the html backend emits
+// HTML fragments — static layout — with no intended script execution.
+//
+// For the webcomponent and react backends, script execution is intentional.
+// We apply safeForScriptTag to the compiled output to prevent `</script>` in
+// the compiler's output from prematurely closing the enclosing <script> block.
 func wrapForBackend(compiled string, backend string, componentID string) string {
 	// Derive a component name from the ID (last path segment, PascalCase).
 	compName := componentNameFromID(componentID)
@@ -132,6 +173,9 @@ func wrapForBackend(compiled string, backend string, componentID string) string 
 		// The compiler emits an HTML fragment; embed it verbatim in a full page.
 		// The body margin and font-family match typical browser defaults so
 		// previews look consistent without the shell's CSS bleeding through.
+		//
+		// Security: the caller sets `Content-Security-Policy: script-src 'none'`
+		// for this backend.  The HTML output is structural — no scripts expected.
 		return fmt.Sprintf(`<!DOCTYPE html>
 <html><head><meta charset="utf-8">
 <style>body{margin:8px;font-family:sans-serif}</style>
@@ -142,6 +186,9 @@ func wrapForBackend(compiled string, backend string, componentID string) string 
 		// The compiler emits a JS module that registers a Custom Element.
 		// We derive the kebab-case tag name from the PascalCase component name.
 		// e.g. "ProfileCard" → "profile-card"
+		//
+		// Security: safeForScriptTag prevents `</script>` in the compiled output
+		// from prematurely closing the enclosing <script type="module"> block.
 		kebab := toKebabCase(compName)
 		return fmt.Sprintf(`<!DOCTYPE html>
 <html><head><meta charset="utf-8"></head>
@@ -150,7 +197,7 @@ func wrapForBackend(compiled string, backend string, componentID string) string 
 %s
 </script>
 <%s></%s>
-</body></html>`, compiled, kebab, kebab)
+</body></html>`, safeForScriptTag(compiled), kebab, kebab)
 
 	case "react":
 		// The compiler emits JSX/TSX.  We use the Babel in-browser transform
@@ -159,6 +206,9 @@ func wrapForBackend(compiled string, backend string, componentID string) string 
 		//
 		// Caveat: in-browser Babel is slow (~2 s on first load) but perfectly
 		// fine for Phase 1 development previews.
+		//
+		// Security: safeForScriptTag prevents `</script>` in the compiled output
+		// from breaking out of the <script type="text/babel"> block.
 		return fmt.Sprintf(`<!DOCTYPE html>
 <html><head>
 <meta charset="utf-8">
@@ -173,7 +223,7 @@ func wrapForBackend(compiled string, backend string, componentID string) string 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(%s, null));
 </script>
-</body></html>`, compiled, compName)
+</body></html>`, safeForScriptTag(compiled), compName)
 
 	default:
 		// Should never reach here because handlePreview validates the backend.
