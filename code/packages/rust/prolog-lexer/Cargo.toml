@@ -1,0 +1,9 @@
+[package]
+name = "prolog-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "ISO/Core Prolog lexer — thin glue around the grammar-driven GrammarLexer, sourced from code/grammars/prolog/iso.tokens."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
