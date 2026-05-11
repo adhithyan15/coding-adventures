@@ -24,6 +24,8 @@ targets.
 - Opt-in stdio worker restart policies that can revive a dead worker slot while
   preserving worker-index affinity.
 - Capability and limit metadata that adapters can inspect.
+- Compact response-summary draining for supervisor/read-side tools that only
+  need terminal status, retryability, trace, and attempt facts.
 - Non-consuming executor snapshots for supervisor/read-side tools, including
   live workers, in-flight jobs, queued jobs, running jobs, and saturation.
 - Snapshot health classification for D18C supervisors to distinguish idle,
