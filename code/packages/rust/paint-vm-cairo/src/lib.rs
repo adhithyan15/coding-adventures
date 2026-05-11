@@ -1,14 +1,16 @@
 //! Cairo backend adapter for the Paint VM runtime.
 //!
-//! Linux and BSD targets render through native `cairo-rs` image surfaces.
-//! Other desktop targets keep a deterministic software smoke path so pipeline
-//! selection and compatibility fixtures can still exercise the Cairo-family
-//! backend without requiring Cairo DLLs/frameworks everywhere.
+//! macOS, Linux, and BSD targets render through native `cairo-rs` image
+//! surfaces. On macOS, Cairo is available via Homebrew (`brew install cairo`).
+//! Windows and other targets keep a deterministic software smoke path so
+//! pipeline selection and compatibility fixtures can still exercise the
+//! Cairo-family backend without requiring Cairo DLLs/frameworks everywhere.
 
 use std::collections::HashMap;
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -101,6 +103,7 @@ fn gradient_stops(stops: &[GradientStop], opacity: f64) -> Vec<(f64, Rgba)> {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -129,6 +132,7 @@ fn sample_gradient_stops(stops: &[(f64, Rgba)], t: f64) -> Rgba {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -150,6 +154,7 @@ fn mix_rgba(a: Rgba, b: Rgba, t: f64) -> Rgba {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -166,6 +171,7 @@ fn linear_gradient_t(x: f64, y: f64, x1: f64, y1: f64, x2: f64, y2: f64) -> f64 
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -209,6 +215,7 @@ fn software_paint(
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -223,6 +230,7 @@ struct ClipRect {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -253,6 +261,7 @@ impl ClipRect {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -268,6 +277,7 @@ pub struct CairoPaintBackend;
 pub fn descriptor() -> PaintBackendDescriptor {
     #[cfg(any(
         target_os = "linux",
+        target_os = "macos",
         target_os = "freebsd",
         target_os = "openbsd",
         target_os = "netbsd"
@@ -297,6 +307,7 @@ pub fn descriptor() -> PaintBackendDescriptor {
 
     #[cfg(not(any(
         target_os = "linux",
+        target_os = "macos",
         target_os = "freebsd",
         target_os = "openbsd",
         target_os = "netbsd"
@@ -352,6 +363,7 @@ impl PaintRenderer for CairoPaintBackend {
     fn render(&self, scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
         #[cfg(any(
             target_os = "linux",
+            target_os = "macos",
             target_os = "freebsd",
             target_os = "openbsd",
             target_os = "netbsd"
@@ -362,6 +374,7 @@ impl PaintRenderer for CairoPaintBackend {
 
         #[cfg(not(any(
             target_os = "linux",
+            target_os = "macos",
             target_os = "freebsd",
             target_os = "openbsd",
             target_os = "netbsd"
@@ -374,6 +387,7 @@ impl PaintRenderer for CairoPaintBackend {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -398,6 +412,7 @@ fn render_software(scene: &PaintScene) -> Result<PixelContainer, PaintRenderErro
 
 #[cfg(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -1046,6 +1061,7 @@ mod native_cairo {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -1070,6 +1086,7 @@ enum SoftwarePaint {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -1110,6 +1127,7 @@ impl SoftwarePaint {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
@@ -1120,6 +1138,7 @@ struct SoftwareSurface {
 
 #[cfg(not(any(
     target_os = "linux",
+    target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd"
