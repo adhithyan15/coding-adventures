@@ -98,7 +98,9 @@ directly.
   before they hit the trigram extractor.
 - **Read-side summaries**: `SearchIndex::summary()` reports only
   counts and byte totals, not document ids, trigrams, field names,
-  or field values.
+  or field values. `SearchableFields::summary()` reports only the
+  descriptor shape: declared fields, usable/skipped weights, and
+  max positive weight, never document contents.
 
 ## What this crate is NOT
 
