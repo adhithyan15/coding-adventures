@@ -1,5 +1,68 @@
 # Changelog — matrix-metal
 
+## 0.7.0 — 2026-05-12
+
+### Added — MX05 Phase 4.5 (MSL emitter supports more binary ops)
+
+Extends the `msl_emitter` module beyond Op::Add to cover the rest
+of the **commutative** f32 binary ops the workspace uses.  Each
+new shape follows the same `specialised_<op_name>_const_f32_0xH…H`
+entry-point convention as Phase 4.2's Add kernel.
+
+#### Newly-supported SpecKey shapes
+
+| `op_kind`  | `dtype` | `range_class`        | MSL body                  |
+|------------|---------|----------------------|---------------------------|
+| `0x09` Mul | F32     | `Constant { 4 B }`   | `a[gid] * K`              |
+| `0x0B` Max | F32     | `Constant { 4 B }`   | `max(a[gid], K)`          |
+| `0x0C` Min | F32     | `Constant { 4 B }`   | `min(a[gid], K)`          |
+
+(Op::Add 0x07 was already supported in v0.6.0.)
+
+#### Refactor: shared `emit_binary_f32_with_rhs_const` helper
+
+Replaced the dedicated `emit_add_f32_with_rhs_constant` with a
+generic helper that takes an `op_name` and an `expr_template`.
+The template substitutes `{a}` → `a[gid]` and `{k}` → the
+formatted constant literal.  Adding a new commutative binary op
+is now a one-line match-arm change in `emit_specialised_kernel`.
+
+#### What's still not supported (Phase 4.6 territory)
+
+`Op::Sub`, `Op::Div`, and `Op::Pow` are mathematically
+non-commutative:
+
+- `LHS - K`  ≠  `K - LHS`
+- `LHS / K`  ≠  `K / LHS`
+- `LHS^K`    ≠  `K^LHS`
+
+Today's `SpecKey` doesn't encode which input slot the policy
+folded — it just records the constant bytes.  Emitting one of the
+two non-commutative variants risks wrong output if the policy
+happened to pick the opposite slot from the emitter's assumption.
+
+Phase 4.6 will extend `SpecKey` with a `folded_slot: u8` field
+(or equivalent encoding) and unlock these.  Until then,
+`emit_specialised_kernel` returns `None` for these op_kinds and
+the runtime falls back to generic dispatch — `sub_div_pow_return_none_until_folded_slot_lands`
+test pins this behaviour.
+
+#### Tests
+
+5 new emitter tests (14 → 19 total):
+
+- `mul_f32_with_constant_emits_kernel`
+- `max_f32_with_constant_emits_kernel`
+- `min_f32_with_constant_emits_kernel`
+- `distinct_ops_produce_distinct_entry_point_prefixes` — proves
+  emitted entry-point names don't collide across op kinds with the
+  same handle.
+- `sub_div_pow_return_none_until_folded_slot_lands` — pins the
+  Phase 4.6 deferral.
+
+Plus the existing 14 Phase 4.2 tests still pass unchanged
+(emitter output for `Op::Add` is byte-identical).
+
 ## 0.6.1 — 2026-05-12
 
 ### Added — non-Apple stubs for the Phase 4.2 install API

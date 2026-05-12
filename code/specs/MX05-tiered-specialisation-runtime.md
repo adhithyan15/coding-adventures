@@ -242,6 +242,22 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.5 landed — MSL emitter supports more binary ops)**:
+> `matrix-metal` v0.7.0 extends `msl_emitter` to cover three more
+> commutative f32 binary ops: `Op::Mul` (0x09), `Op::Max` (0x0B),
+> `Op::Min` (0x0C).  Each follows the same `specialised_<op>_const_f32_0xH…H`
+> entry-point convention as Phase 4.2's Add.  The dedicated
+> `emit_add_f32_with_rhs_constant` is replaced by a generic
+> `emit_binary_f32_with_rhs_const` helper that takes an MSL
+> `{a} OP {k}` template, so adding a new commutative binary op
+> is now a one-line match-arm change.  Non-commutative ops (Sub,
+> Div, Pow) still return `None` — they require a `folded_slot`
+> extension on `SpecKey` so the emitter knows which side of the
+> binary operator carries the literal, which is Phase 4.6 work.
+> Test count: 14 → 19 emitter tests, including
+> `sub_div_pow_return_none_until_folded_slot_lands` which pins
+> the deferral.
+
 > **Implementation status (Phase 4.4 landed — dispatch-routing half of the loop)**:
 > `image-gpu-core` v0.8.0 closes the dispatch side of the routing
 > loop.  When a placed graph has exactly one non-Const Compute op and
