@@ -12,6 +12,7 @@ worker needs into cage manifests for:
 - sidecar process execution
 - stdout/time permissions used by supervised workers
 - D23 command/read capability hints that stay separate from OS permissions
+- payload-free worker need and cage profile summaries for host policy review
 
 Runtime hosts can inspect these profiles before constructing a sidecar, process
 sandbox, WASI host, or first-party Rust worker.
