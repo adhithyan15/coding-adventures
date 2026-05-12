@@ -12189,6 +12189,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-comment)".to_string(),
+                "append_comment(-)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -12206,6 +12207,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(unexpected-null-character)".to_string(),
+                "append_comment(-)".to_string(),
                 "append_comment_replacement".to_string(),
             ],
             consume: true,
@@ -12221,9 +12223,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "append_comment(current)".to_string(),
+                "append_comment(-)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "comment".to_string(),

@@ -5809,19 +5809,29 @@ from = "comment_start_dash"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-comment)",
+  "append_comment(-)",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "comment_start_dash"
 matcher = { literal = "\u0000" }
 to = "comment"
-actions = ["parse_error(unexpected-null-character)", "append_comment_replacement"]
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_comment(-)",
+  "append_comment_replacement",
+]
 
 [[transitions]]
 from = "comment_start_dash"
 matcher = { anything = true }
 to = "comment"
-actions = ["append_comment(current)"]
+consume = false
+actions = ["append_comment(-)"]
 
 [[transitions]]
 from = "comment"
