@@ -1755,6 +1755,64 @@ impl RuntimePairingSessionQuery {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct RuntimePairingSessionInventorySummary {
+    pub total_sessions: usize,
+    pub pending_user_presence_sessions: usize,
+    pub completed_sessions: usize,
+    pub expired_sessions: usize,
+    pub cancelled_sessions: usize,
+    pub expiring_sessions: usize,
+    pub sessions_with_vault_ref: usize,
+}
+
+impl RuntimePairingSessionInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_sessions_at<'a, I>(sessions: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a RuntimePairingSession>,
+    {
+        let mut summary = Self::empty();
+        for session in sessions {
+            summary.record_session_at(session, now_ms);
+        }
+        summary
+    }
+
+    pub fn record_session_at(&mut self, session: &RuntimePairingSession, now_ms: u64) {
+        self.total_sessions += 1;
+        match session.status {
+            PairingSessionStatus::PendingUserPresence => {
+                self.pending_user_presence_sessions += 1;
+            }
+            PairingSessionStatus::Completed => self.completed_sessions += 1,
+            PairingSessionStatus::Expired => self.expired_sessions += 1,
+            PairingSessionStatus::Cancelled => self.cancelled_sessions += 1,
+        }
+        if session.is_expired_at(now_ms) {
+            self.expiring_sessions += 1;
+        }
+        if session.vault_ref.is_some() {
+            self.sessions_with_vault_ref += 1;
+        }
+    }
+
+    pub fn has_pending_user_presence(&self) -> bool {
+        self.pending_user_presence_sessions > 0
+    }
+
+    pub fn has_expiring_sessions(&self) -> bool {
+        self.expiring_sessions > 0
+    }
+
+    pub fn has_completed_credentials(&self) -> bool {
+        self.sessions_with_vault_ref > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct RuntimeSupervisionPlan {
     pub generated_at_ms: u64,
@@ -2307,6 +2365,17 @@ impl SmartHomeRuntime {
         }
         apply_limit(&mut sessions, query.limit);
         sessions
+    }
+
+    pub fn pairing_session_inventory_summary_at(
+        &self,
+        query: &RuntimePairingSessionQuery,
+        now_ms: u64,
+    ) -> RuntimePairingSessionInventorySummary {
+        RuntimePairingSessionInventorySummary::from_sessions_at(
+            self.query_pairing_sessions(query),
+            now_ms,
+        )
     }
 
     pub fn desired_state(&self, entity_id: &EntityId) -> Option<&DesiredEntityState> {
@@ -4524,6 +4593,78 @@ mod tests {
                 .len(),
             1
         );
+    }
+
+    #[test]
+    fn pairing_session_inventory_summary_counts_statuses_and_vault_refs() {
+        let mut runtime = SmartHomeRuntime::new();
+        runtime.upsert_bridge(bridge("bridge-1")).unwrap();
+        let mut second_bridge = bridge("bridge-2");
+        second_bridge.identifiers =
+            vec![
+                ProtocolIdentifier::new(ProtocolFamily::Hue, "bridge", "bridge-native-2").unwrap(),
+            ];
+        runtime.upsert_bridge(second_bridge).unwrap();
+        let installer = AgentId::trusted("agent:installer");
+        let bridge_one = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap()
+            .clone();
+        let bridge_two = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-2"))
+            .unwrap()
+            .clone();
+        let pending_session_id = RuntimePairingSessionId::trusted("pairing-1");
+        let completed_session_id = RuntimePairingSessionId::trusted("pairing-2");
+
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                pending_session_id,
+                &bridge_one,
+                installer.clone(),
+                1_000,
+                1_200,
+                Vec::new(),
+            ))
+            .unwrap();
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                completed_session_id.clone(),
+                &bridge_two,
+                installer,
+                1_050,
+                1_500,
+                Vec::new(),
+            ))
+            .unwrap();
+        runtime
+            .complete_pairing_session(
+                &completed_session_id,
+                VaultRef::trusted("vault://hue/bridge-2"),
+                1_100,
+            )
+            .unwrap();
+
+        let summary =
+            runtime.pairing_session_inventory_summary_at(&RuntimePairingSessionQuery::new(), 1_250);
+
+        assert_eq!(
+            summary,
+            RuntimePairingSessionInventorySummary {
+                total_sessions: 2,
+                pending_user_presence_sessions: 1,
+                completed_sessions: 1,
+                expired_sessions: 0,
+                cancelled_sessions: 0,
+                expiring_sessions: 1,
+                sessions_with_vault_ref: 1,
+            }
+        );
+        assert!(summary.has_pending_user_presence());
+        assert!(summary.has_expiring_sessions());
+        assert!(summary.has_completed_credentials());
     }
 
     #[test]

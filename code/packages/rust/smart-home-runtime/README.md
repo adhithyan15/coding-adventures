@@ -48,6 +48,8 @@ Included surfaces:
 - D18D-facing pair-bridge facade with short-lived pairing sessions that complete
   only to Vault references, never raw credentials
 - read-side queries for pairing sessions and desired-state supervision targets
+- pairing-session inventory summaries for bridge-pairing status, expiry, and
+  VaultRef completion counts
 - D18D-facing command tool facade for authorized `smart_home.command` calls that
   validate tool grants, command grants, optimistic state, and audit decisions
 - accepted command results that remain separate from confirmed device state
