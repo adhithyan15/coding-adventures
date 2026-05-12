@@ -547,8 +547,14 @@ pub struct HueSceneAction {
 }
 
 impl HueSceneAction {
+    pub fn state_field_count(&self) -> usize {
+        usize::from(self.on.is_some())
+            + usize::from(self.brightness.is_some())
+            + usize::from(self.color_temperature_mirek.is_some())
+    }
+
     pub fn has_state(&self) -> bool {
-        self.on.is_some() || self.brightness.is_some() || self.color_temperature_mirek.is_some()
+        self.state_field_count() > 0
     }
 
     pub fn desired_state(&self) -> Value {
@@ -587,6 +593,25 @@ impl HueSceneResource {
         }
     }
 
+    pub fn summary(&self) -> HueSceneSummary {
+        HueSceneSummary {
+            scene: HueResourceRef::new(HueResourceType::Scene, self.id.clone()),
+            group: self.group.clone(),
+            scope: scene_scope_for_group(&self.group),
+            action_count: self.actions.len(),
+            stateful_action_count: self
+                .actions
+                .iter()
+                .filter(|action| action.has_state())
+                .count(),
+            desired_state_field_count: self
+                .actions
+                .iter()
+                .map(HueSceneAction::state_field_count)
+                .sum(),
+        }
+    }
+
     pub fn to_core(&self, bridge_id: &BridgeId) -> Scene {
         Scene {
             scene_id: SceneId::trusted(format!("hue.scene.{}.{}", bridge_id, self.id)),
@@ -611,6 +636,30 @@ impl HueSceneResource {
                 Metadata::new("hue.group_id", self.group.id.as_str()),
             ],
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueSceneSummary {
+    pub scene: HueResourceRef,
+    pub group: HueResourceRef,
+    pub scope: SceneScope,
+    pub action_count: usize,
+    pub stateful_action_count: usize,
+    pub desired_state_field_count: usize,
+}
+
+impl HueSceneSummary {
+    pub fn has_actions(&self) -> bool {
+        self.action_count > 0
+    }
+
+    pub fn projects_actions(&self) -> bool {
+        self.stateful_action_count > 0
+    }
+
+    pub fn is_room_or_zone_scoped(&self) -> bool {
+        matches!(self.scope, SceneScope::Room | SceneScope::Zone)
     }
 }
 
@@ -1336,6 +1385,20 @@ mod tests {
             scene.command_recall().to_request().path,
             "/clip/v2/resource/scene/scene-1"
         );
+        assert_eq!(scene.actions[0].state_field_count(), 3);
+        let summary = scene.summary();
+        assert_eq!(
+            summary.scene,
+            HueResourceRef::new(HueResourceType::Scene, HueResourceId::trusted("scene-1"))
+        );
+        assert_eq!(summary.group.resource_type, HueResourceType::Room);
+        assert_eq!(summary.scope, SceneScope::Room);
+        assert_eq!(summary.action_count, 1);
+        assert_eq!(summary.stateful_action_count, 1);
+        assert_eq!(summary.desired_state_field_count, 3);
+        assert!(summary.has_actions());
+        assert!(summary.projects_actions());
+        assert!(summary.is_room_or_zone_scoped());
 
         let core_scene = scene.to_core(&bridge_id);
 
@@ -1357,6 +1420,48 @@ mod tests {
                 ("light.brightness".to_string(), Value::Percentage(66)),
                 ("light.color_temperature".to_string(), Value::Integer(366)),
             ])
+        );
+    }
+
+    #[test]
+    fn hue_scene_summary_counts_empty_actions_without_projecting_them() {
+        let scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-2"),
+            group: HueResourceRef::new(HueResourceType::Zone, HueResourceId::trusted("zone-1")),
+            name: "Evening".to_string(),
+            actions: vec![
+                HueSceneAction {
+                    target: HueResourceRef::new(
+                        HueResourceType::Light,
+                        HueResourceId::trusted("light-1"),
+                    ),
+                    on: None,
+                    brightness: None,
+                    color_temperature_mirek: None,
+                },
+                HueSceneAction {
+                    target: HueResourceRef::new(
+                        HueResourceType::GroupedLight,
+                        HueResourceId::trusted("grouped-light-1"),
+                    ),
+                    on: None,
+                    brightness: Some(25),
+                    color_temperature_mirek: None,
+                },
+            ],
+        };
+
+        let summary = scene.summary();
+        assert_eq!(summary.scope, SceneScope::Zone);
+        assert_eq!(summary.action_count, 2);
+        assert_eq!(summary.stateful_action_count, 1);
+        assert_eq!(summary.desired_state_field_count, 1);
+
+        let core_scene = scene.to_core(&BridgeId::trusted("hue.bridge.001788"));
+        assert_eq!(core_scene.actions.len(), 1);
+        assert_eq!(
+            core_scene.actions[0].entity_id.as_str(),
+            "hue.grouped_light.hue.bridge.001788.grouped-light-1"
         );
     }
 
