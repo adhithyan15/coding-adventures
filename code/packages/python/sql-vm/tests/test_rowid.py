@@ -20,8 +20,6 @@ Coverage targets (vm.py + ir.py):
 
 from __future__ import annotations
 
-import pytest
-
 from sql_backend.in_memory import InMemoryBackend
 from sql_backend.schema import ColumnDef as BackendColumnDef
 from sql_codegen import compile
@@ -38,7 +36,6 @@ from sql_planner import (
     RowIdRef,
     Scan,
 )
-
 from sql_vm import execute
 
 # ---------------------------------------------------------------------------
