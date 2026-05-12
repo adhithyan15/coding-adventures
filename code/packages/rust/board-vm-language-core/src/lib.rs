@@ -789,7 +789,7 @@ fn language_bluetooth_ble_open_plan(
         status: "unavailable".to_owned(),
         stream_path: None,
         message: Some(
-            "BLE GATT backend opening has CoreBluetooth connector groundwork but no runtime adapter yet"
+            "BLE GATT CoreBluetooth runtime adapter is available in Rust but not exposed through language sessions yet"
                 .to_owned(),
         ),
     }
