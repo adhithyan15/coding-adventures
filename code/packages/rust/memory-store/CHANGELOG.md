@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   review coverage over selected memory records.
 - `MemorySourceSummary` plus `source_summary()` for compact source, tag, and
   supersession coverage over selected memory records.
+- `MemoryTagSummary` plus `tag_summary()` for compact tag distribution and
+  lifecycle coverage over selected memory records.
 - `MemoryReviewQueueSummary` plus `review_queue_summary()` for compact reason
   and lifecycle counts over deterministic review candidates.
 

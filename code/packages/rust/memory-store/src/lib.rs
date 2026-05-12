@@ -10,6 +10,7 @@
 use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use std::cmp::Ordering;
+use std::collections::BTreeMap;
 use storage_core::{now_utc_ms, StorageBackend, StorageError, StorageListOptions, StoragePutInput};
 
 const NAMESPACE: &str = "memory";
@@ -300,6 +301,66 @@ impl MemorySourceSummary {
 
     pub fn has_supersession(&self) -> bool {
         self.memories_that_supersede > 0
+    }
+}
+
+/// Compact tag distribution view over selected memory records.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct MemoryTagSummary {
+    pub total_memories: usize,
+    pub tagged_memories: usize,
+    pub untagged_memories: usize,
+    pub total_tag_refs: usize,
+    pub unique_tags: usize,
+    pub active_tag_refs: usize,
+    pub expired_tag_refs: usize,
+    pub tombstoned_tag_refs: usize,
+    pub tag_counts: BTreeMap<String, usize>,
+}
+
+impl MemoryTagSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(memories: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a MemoryRecord>,
+    {
+        let mut summary = Self::empty();
+        for memory in memories {
+            summary.total_memories += 1;
+            if memory.tags.is_empty() {
+                summary.untagged_memories += 1;
+            } else {
+                summary.tagged_memories += 1;
+            }
+
+            let status = memory.lifecycle_status_at(now_ms);
+            for tag in &memory.tags {
+                summary.total_tag_refs += 1;
+                *summary.tag_counts.entry(tag.clone()).or_insert(0) += 1;
+                match status {
+                    MemoryLifecycleStatus::Active => summary.active_tag_refs += 1,
+                    MemoryLifecycleStatus::Expired => summary.expired_tag_refs += 1,
+                    MemoryLifecycleStatus::Tombstoned => summary.tombstoned_tag_refs += 1,
+                }
+            }
+        }
+        summary.unique_tags = summary.tag_counts.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_memories == 0
+    }
+
+    pub fn has_tags(&self) -> bool {
+        self.total_tag_refs > 0
+    }
+
+    pub fn count_for(&self, tag: &str) -> usize {
+        self.tag_counts.get(tag).copied().unwrap_or(0)
     }
 }
 
@@ -719,6 +780,15 @@ impl<S: StorageBackend> MemoryStore<S> {
     ) -> Result<MemorySourceSummary, StorageError> {
         let memories = self.list_memories_with_options(options)?;
         Ok(MemorySourceSummary::from_records(&memories))
+    }
+
+    pub fn tag_summary(
+        &self,
+        options: MemoryListOptions,
+        now_ms: u64,
+    ) -> Result<MemoryTagSummary, StorageError> {
+        let memories = self.list_memories_with_options(options)?;
+        Ok(MemoryTagSummary::from_records(&memories, now_ms))
     }
 
     pub fn search_lexical(&self, query: &str) -> Result<Vec<MemoryRecord>, StorageError> {
@@ -1753,6 +1823,63 @@ mod tests {
         assert!(!empty.has_source_refs());
         assert!(!empty.has_unsourced_memories());
         assert!(!empty.has_supersession());
+    }
+
+    #[test]
+    fn tag_summary_counts_tag_distribution_and_lifecycle() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut style =
+            memory_with_created_confidence("style", "Preference", "Use compact summaries", 10, 0.9);
+        style.tags = vec!["style".to_string()];
+        let mut runbook =
+            memory_with_created_confidence("runbook", "Runbook", "Restart service", 20, 0.8);
+        runbook.class = MemoryClass::Procedure;
+        runbook.tags = vec!["ops".to_string(), "runtime".to_string()];
+        runbook.expires_at = Some(50);
+        let mut untagged =
+            memory_with_created_confidence("untagged", "Scratch", "Needs tagging", 30, 0.4);
+        untagged.tags = Vec::new();
+        let mut tombstoned =
+            memory_with_created_confidence("removed", "Removed", "Old style note", 40, 0.2);
+        tombstoned.tags = vec!["style".to_string()];
+        tombstoned.tombstoned = true;
+
+        let _ = store.remember(style).unwrap();
+        let _ = store.remember(runbook).unwrap();
+        let _ = store.remember(untagged).unwrap();
+        let _ = store.remember(tombstoned).unwrap();
+
+        let summary = store.tag_summary(MemoryListOptions::new(), 100).unwrap();
+
+        assert_eq!(summary.total_memories, 3);
+        assert_eq!(summary.tagged_memories, 2);
+        assert_eq!(summary.untagged_memories, 1);
+        assert_eq!(summary.total_tag_refs, 3);
+        assert_eq!(summary.unique_tags, 3);
+        assert_eq!(summary.active_tag_refs, 1);
+        assert_eq!(summary.expired_tag_refs, 2);
+        assert_eq!(summary.tombstoned_tag_refs, 0);
+        assert_eq!(summary.count_for("style"), 1);
+        assert_eq!(summary.count_for("ops"), 1);
+        assert_eq!(summary.count_for("runtime"), 1);
+        assert_eq!(summary.count_for("missing"), 0);
+        assert!(!summary.is_empty());
+        assert!(summary.has_tags());
+
+        let all_summary = store
+            .tag_summary(MemoryListOptions::new().include_tombstoned(true), 100)
+            .unwrap();
+        assert_eq!(all_summary.total_memories, 4);
+        assert_eq!(all_summary.total_tag_refs, 4);
+        assert_eq!(all_summary.tombstoned_tag_refs, 1);
+        assert_eq!(all_summary.count_for("style"), 2);
+
+        let empty = store
+            .tag_summary(MemoryListOptions::new().with_tag("missing"), 100)
+            .unwrap();
+        assert_eq!(empty, MemoryTagSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_tags());
     }
 
     #[test]

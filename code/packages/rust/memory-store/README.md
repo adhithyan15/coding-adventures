@@ -13,6 +13,7 @@ than a backend-specific index.
 - `MemoryRecordSummary`
 - `MemoryCatalogSummary` for read-side class, lifecycle, and review coverage
 - `MemorySourceSummary` for source, tag, and supersession coverage
+- `MemoryTagSummary` for tag distribution and lifecycle coverage
 - `MemoryReviewQueueSummary` for compact review queue reason/lifecycle counts
 - `MemoryClass`
 - `MemoryLifecycleStatus` plus shared record/summary lifecycle helpers
@@ -43,6 +44,7 @@ than a backend-specific index.
 - `list_memory_summaries()`
 - `catalog_summary()`
 - `source_summary()`
+- `tag_summary()`
 - `list_by_class()`
 - `list_by_tag()`
 - `search_lexical()`
