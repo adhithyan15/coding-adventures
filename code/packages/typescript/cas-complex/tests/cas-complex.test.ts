@@ -2,14 +2,21 @@ import { describe, expect, it } from "vitest";
 import {
   ARG_HEAD,
   ABS_HEAD,
+  ATAN2_HEAD,
+  EXP_HEAD,
   IMAGINARY_UNIT,
+  IMAGINARY_UNIT_NODE,
+  POLAR_FORM_HEAD,
+  SQRT_HEAD,
   argument,
   complexNormalize,
   complexPow,
   conjugate,
   imagPart,
   modulus,
+  polarForm,
   realPart,
+  rectForm,
   splitComplex,
 } from "../src/index";
 import { ADD, MUL, NEG, POW, SUB, app, equals, int, numberNode, sym, type IRNode } from "@coding-adventures/symbolic-ir";
@@ -63,6 +70,39 @@ describe("complexNormalize", () => {
     const result = complexNormalize(app(MUL, [z34(), oneMinusTwoI]));
     expect(equals(realPart(result), int(11))).toBe(true);
     expect(equals(imagPart(result), int(-2))).toBe(true);
+  });
+});
+
+describe("rectForm and polarForm", () => {
+  it("rectForm delegates to rectangular normalization", () => {
+    const onePlusTwoI = app(ADD, [int(1), app(MUL, [int(2), sym(IMAGINARY_UNIT)])]);
+    const result = rectForm(onePlusTwoI);
+    expect(equals(realPart(result), int(1))).toBe(true);
+    expect(equals(imagPart(result), int(2))).toBe(true);
+  });
+
+  it("builds symbolic polar form for numeric rectangular complex expressions", () => {
+    const result = polarForm(z34());
+    const expected = app(MUL, [
+      app(SQRT_HEAD, [app(ADD, [app(POW, [int(3), int(2)]), app(POW, [int(4), int(2)])])]),
+      app(EXP_HEAD, [app(MUL, [IMAGINARY_UNIT_NODE, app(ATAN2_HEAD, [int(4), int(3)])])]),
+    ]);
+    expect(equals(result, expected)).toBe(true);
+  });
+
+  it("builds symbolic polar form for symbolic rectangular complex expressions", () => {
+    const expr = app(ADD, [sym("a"), app(MUL, [sym("b"), sym(IMAGINARY_UNIT)])]);
+    const result = polarForm(expr);
+    const expected = app(MUL, [
+      app(SQRT_HEAD, [app(ADD, [app(POW, [sym("a"), int(2)]), app(POW, [sym("b"), int(2)])])]),
+      app(EXP_HEAD, [app(MUL, [IMAGINARY_UNIT_NODE, app(ATAN2_HEAD, [sym("b"), sym("a")])])]),
+    ]);
+    expect(equals(result, expected)).toBe(true);
+  });
+
+  it("leaves pure real expressions as unevaluated PolarForm", () => {
+    expect(equals(polarForm(sym("x")), app(POLAR_FORM_HEAD, [sym("x")]))).toBe(true);
+    expect(equals(polarForm(int(3)), app(POLAR_FORM_HEAD, [int(3)]))).toBe(true);
   });
 });
 
