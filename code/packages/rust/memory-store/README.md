@@ -12,6 +12,7 @@ than a backend-specific index.
 - `MemoryRecord`
 - `MemoryRecordSummary`
 - `MemoryCatalogSummary` for read-side class, lifecycle, and review coverage
+- `MemoryReviewQueueSummary` for compact review queue reason/lifecycle counts
 - `MemoryClass`
 - `MemoryLifecycleStatus` plus shared record/summary lifecycle helpers
 - confidence/review updates
@@ -25,6 +26,7 @@ than a backend-specific index.
 - compact catalog summaries over selected memory records
 - deterministic review candidates for low-confidence, stale, expiring, and
   expired memories
+- compact review queue summaries for scheduled jobs and host status surfaces
 
 ## Key layout
 
@@ -45,6 +47,7 @@ than a backend-specific index.
 - `search_lexical_with_options()`
 - `search_active_lexical_at()`
 - `review_candidates()`
+- `review_queue_summary()`
 - `mark_expired()`
 - `forget_tombstone()`
 

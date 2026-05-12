@@ -255,6 +255,100 @@ pub struct MemoryReviewCandidate {
     pub reasons: Vec<MemoryReviewReason>,
 }
 
+/// Compact read-side view over a deterministic memory review queue.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MemoryReviewQueueSummary {
+    pub total_candidates: usize,
+    pub low_confidence_candidates: usize,
+    pub never_reviewed_candidates: usize,
+    pub stale_review_candidates: usize,
+    pub expiring_soon_candidates: usize,
+    pub expired_candidates: usize,
+    pub multi_reason_candidates: usize,
+    pub active_memory_candidates: usize,
+    pub expired_memory_candidates: usize,
+    pub tombstoned_memory_candidates: usize,
+    pub oldest_created_at: Option<u64>,
+    pub earliest_expires_at: Option<u64>,
+}
+
+impl MemoryReviewQueueSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_candidates<'a, I>(candidates: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a MemoryReviewCandidate>,
+    {
+        let mut summary = Self::empty();
+        for candidate in candidates {
+            summary.total_candidates += 1;
+            if candidate.reasons.len() > 1 {
+                summary.multi_reason_candidates += 1;
+            }
+            if candidate
+                .reasons
+                .contains(&MemoryReviewReason::LowConfidence)
+            {
+                summary.low_confidence_candidates += 1;
+            }
+            if candidate
+                .reasons
+                .contains(&MemoryReviewReason::NeverReviewed)
+            {
+                summary.never_reviewed_candidates += 1;
+            }
+            if candidate.reasons.contains(&MemoryReviewReason::StaleReview) {
+                summary.stale_review_candidates += 1;
+            }
+            if candidate
+                .reasons
+                .contains(&MemoryReviewReason::ExpiringSoon)
+            {
+                summary.expiring_soon_candidates += 1;
+            }
+            if candidate.reasons.contains(&MemoryReviewReason::Expired) {
+                summary.expired_candidates += 1;
+            }
+
+            match candidate.memory.lifecycle_status_at(now_ms) {
+                MemoryLifecycleStatus::Active => summary.active_memory_candidates += 1,
+                MemoryLifecycleStatus::Expired => summary.expired_memory_candidates += 1,
+                MemoryLifecycleStatus::Tombstoned => summary.tombstoned_memory_candidates += 1,
+            }
+
+            summary.oldest_created_at = Some(
+                summary
+                    .oldest_created_at
+                    .map(|timestamp| timestamp.min(candidate.memory.created_at))
+                    .unwrap_or(candidate.memory.created_at),
+            );
+            if let Some(expires_at) = candidate.memory.expires_at {
+                summary.earliest_expires_at = Some(
+                    summary
+                        .earliest_expires_at
+                        .map(|timestamp| timestamp.min(expires_at))
+                        .unwrap_or(expires_at),
+                );
+            }
+        }
+        summary
+    }
+
+    pub fn has_candidates(&self) -> bool {
+        self.total_candidates > 0
+    }
+
+    pub fn has_expired_candidates(&self) -> bool {
+        self.expired_candidates > 0
+    }
+
+    pub fn has_multi_reason_candidates(&self) -> bool {
+        self.multi_reason_candidates > 0
+    }
+}
+
 /// Portable ordering for memory review queues.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum MemoryReviewSort {
@@ -623,6 +717,18 @@ impl<S: StorageBackend> MemoryStore<S> {
             candidates.truncate(limit);
         }
         Ok(candidates)
+    }
+
+    pub fn review_queue_summary(
+        &self,
+        options: MemoryReviewOptions,
+    ) -> Result<MemoryReviewQueueSummary, StorageError> {
+        let now_ms = options.now_ms;
+        let candidates = self.review_candidates(options)?;
+        Ok(MemoryReviewQueueSummary::from_candidates(
+            &candidates,
+            now_ms,
+        ))
     }
 
     pub fn mark_expired(
@@ -1550,6 +1656,76 @@ mod tests {
             vec![MemoryReviewReason::LowConfidence]
         );
         assert_eq!(candidates[3].reasons, vec![MemoryReviewReason::StaleReview]);
+    }
+
+    #[test]
+    fn review_queue_summary_counts_reason_and_lifecycle_shape() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut low_confidence =
+            memory_with_created_confidence("low-confidence", "Maybe", "Tentative fact", 10, 0.35);
+        low_confidence.reviewed_at = Some(90);
+        let mut never_reviewed =
+            memory_with_created_confidence("never", "Never", "Needs first review", 20, 0.9);
+        never_reviewed.expires_at = Some(150);
+        let mut stale =
+            memory_with_created_confidence("stale", "Old preference", "Needs recheck", 30, 0.45);
+        stale.reviewed_at = Some(40);
+        let mut expiring =
+            memory_with_created_confidence("expiring", "Lease", "Credential note", 40, 0.95);
+        expiring.reviewed_at = Some(95);
+        expiring.expires_at = Some(125);
+        let mut expired =
+            memory_with_created_confidence("expired", "Expired", "Past note", 50, 0.95);
+        expired.reviewed_at = Some(95);
+        expired.expires_at = Some(99);
+        let mut tombstoned =
+            memory_with_created_confidence("tombstoned", "Removed", "Old warning", 60, 0.2);
+        tombstoned.tombstoned = true;
+
+        let _ = store.remember(low_confidence).unwrap();
+        let _ = store.remember(never_reviewed).unwrap();
+        let _ = store.remember(stale).unwrap();
+        let _ = store.remember(expiring).unwrap();
+        let _ = store.remember(expired).unwrap();
+        let _ = store.remember(tombstoned).unwrap();
+
+        let summary = store
+            .review_queue_summary(
+                MemoryReviewOptions::at(100)
+                    .max_confidence(0.5)
+                    .stale_after_ms(50)
+                    .expiring_within_ms(30)
+                    .include_expired(true)
+                    .include_tombstoned(true),
+            )
+            .unwrap();
+
+        assert_eq!(
+            summary,
+            MemoryReviewQueueSummary {
+                total_candidates: 6,
+                low_confidence_candidates: 3,
+                never_reviewed_candidates: 2,
+                stale_review_candidates: 1,
+                expiring_soon_candidates: 1,
+                expired_candidates: 1,
+                multi_reason_candidates: 2,
+                active_memory_candidates: 4,
+                expired_memory_candidates: 1,
+                tombstoned_memory_candidates: 1,
+                oldest_created_at: Some(10),
+                earliest_expires_at: Some(99),
+            }
+        );
+        assert!(summary.has_candidates());
+        assert!(summary.has_expired_candidates());
+        assert!(summary.has_multi_reason_candidates());
+
+        let empty = MemoryReviewQueueSummary::from_candidates([], 100);
+        assert_eq!(empty, MemoryReviewQueueSummary::empty());
+        assert!(!empty.has_candidates());
+        assert!(!empty.has_expired_candidates());
+        assert!(!empty.has_multi_reason_candidates());
     }
 
     #[test]
