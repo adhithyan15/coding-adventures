@@ -13,6 +13,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - collection, label, retention, provenance, and bounded manifest listing
 - catalog summaries for retention and revision coverage over selected artifacts
 - provenance summaries for session/tool/job/agent attribution coverage
+- manifest summaries for collection, content-type, and label coverage
 - bounded revision-history listing without returning opaque bodies
 - revision-history summaries for lineage, metadata, and body-size coverage
 
@@ -33,6 +34,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - `list_artifacts()`
 - `catalog_summary()`
 - `provenance_summary()`
+- `manifest_summary()`
 - `list_by_collection()`
 - `attach_labels()`
 - `mark_retention()`
@@ -52,6 +54,11 @@ revision bodies.
 counts over the same selected manifests. This lets D18A/D18D status tools
 detect tool/job outputs and unattributed artifacts before fetching individual
 manifests or revision bodies.
+
+`manifest_summary()` returns compact collection, content-type, and label
+coverage over the same selected manifests. This lets status tools spot mixed
+artifact inventories, unlabeled outputs, and broad content classes before
+fetching revision bodies.
 
 `ArtifactRevisionListOptions` gives read-side tools a bounded revision history
 view with oldest-first or latest-first ordering, an optional revision cursor,
