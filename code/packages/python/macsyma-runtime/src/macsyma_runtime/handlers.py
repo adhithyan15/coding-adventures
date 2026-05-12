@@ -20,7 +20,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from symbolic_ir import IRApply, IRFloat, IRInteger, IRNode, IRRational, IRSymbol
+from symbolic_ir import (
+    LIST,
+    IRApply,
+    IRFloat,
+    IRInteger,
+    IRNode,
+    IRRational,
+    IRSymbol,
+)
 from symbolic_vm.backend import Handler
 
 if TYPE_CHECKING:
@@ -142,6 +150,45 @@ def make_kill_handler(backend: MacsymaBackend) -> Handler:
 # side effect" — there is no meaningful return value. We use the
 # IRSymbol("done") shape Maxima itself uses.
 _DONE = IRSymbol("done")
+
+
+def declare_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Declare(sym, property, ...)`` records MACSYMA symbol properties.
+
+    Properties are stored in the VM's existing assumption context so they feed
+    the same simplification and ``is(...)`` machinery as ``assume(x, prop)``.
+    Arguments are consumed as symbol/property pairs:
+    ``declare(n, integer, x, positive)``.
+    """
+    if len(expr.args) % 2 != 0:
+        return expr
+    for i in range(0, len(expr.args), 2):
+        sym, prop = expr.args[i], expr.args[i + 1]
+        vm.assumptions.assume_property(sym, prop)
+    return _DONE
+
+
+def properties_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Properties(sym)`` returns a list of properties declared for ``sym``."""
+    if len(expr.args) != 1:
+        return expr
+    target = expr.args[0]
+    if not isinstance(target, IRSymbol):
+        return IRApply(LIST, ())
+    return IRApply(
+        LIST,
+        tuple(IRSymbol(fact) for fact in vm.assumptions.facts_for(target.name)),
+    )
+
+
+def propvars_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``PropVars()`` returns symbols that currently have declared properties."""
+    if expr.args:
+        return expr
+    return IRApply(
+        LIST,
+        tuple(IRSymbol(name) for name in vm.assumptions.symbols_with_facts()),
+    )
 
 
 def make_ev_handler() -> Handler:

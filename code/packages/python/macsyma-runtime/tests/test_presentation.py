@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from macsyma_runtime import EV, has_ev_flag, output_text_for
 from symbolic_ir import ADD, DIV, IRApply, IRInteger, IRSymbol
+
+from macsyma_runtime import EV, has_ev_flag, output_text_for
 
 
 def test_has_ev_flag_detects_display2d_case_insensitively() -> None:

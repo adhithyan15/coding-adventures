@@ -25,6 +25,9 @@ BLOCK = IRSymbol("Block")  # Phase G — handled by symbolic-vm's block_ handler
 ASSUME = IRSymbol("Assume")
 FORGET = IRSymbol("Forget")
 IS = IRSymbol("Is")
+DECLARE = IRSymbol("Declare")
+PROPERTIES = IRSymbol("Properties")
+PROP_VARS = IRSymbol("PropVars")
 
 # A sentinel symbol that ``kill(all)`` matches.
 ALL_SYMBOL = IRSymbol("all")

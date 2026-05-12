@@ -30,12 +30,23 @@ from symbolic_vm.backend import Handler
 
 from macsyma_runtime.cas_handlers import build_cas_handler_table
 from macsyma_runtime.handlers import (
+    declare_handler,
     display_handler,
     make_ev_handler,
     make_kill_handler,
+    properties_handler,
+    propvars_handler,
     suppress_handler,
 )
-from macsyma_runtime.heads import DISPLAY, EV, KILL, SUPPRESS
+from macsyma_runtime.heads import (
+    DECLARE,
+    DISPLAY,
+    EV,
+    KILL,
+    PROP_VARS,
+    PROPERTIES,
+    SUPPRESS,
+)
 from macsyma_runtime.history import History
 
 
@@ -70,6 +81,9 @@ class MacsymaBackend(SymbolicBackend):
             SUPPRESS.name: suppress_handler,
             KILL.name: make_kill_handler(self),
             EV.name: make_ev_handler(),
+            DECLARE.name: declare_handler,
+            PROPERTIES.name: properties_handler,
+            PROP_VARS.name: propvars_handler,
         }
         # Merge in all CAS substrate handlers (simplify, factor, solve,
         # list ops, matrix, limit, taylor, numeric helpers, …).
@@ -104,7 +118,13 @@ class MacsymaBackend(SymbolicBackend):
         # flag *names*, which would resolve to themselves under the
         # symbolic backend but holding them costs nothing and keeps the
         # contract obvious.
-        self._held_heads = super().hold_heads() | frozenset({KILL.name, EV.name})
+        self._held_heads = super().hold_heads() | frozenset({
+            KILL.name,
+            EV.name,
+            DECLARE.name,
+            PROPERTIES.name,
+            PROP_VARS.name,
+        })
 
     def hold_heads(self) -> frozenset[str]:
         return self._held_heads

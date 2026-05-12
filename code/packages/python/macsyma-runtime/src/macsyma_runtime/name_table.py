@@ -187,10 +187,13 @@ POLAR_FORM = IRSymbol("PolarForm")
 from macsyma_runtime.heads import (  # noqa: E402
     ASSUME,
     BLOCK,
+    DECLARE,
     EV,
     FORGET,
     IS,
     KILL,
+    PROP_VARS,
+    PROPERTIES,
 )
 
 # The map MACSYMA users see → canonical IR head.
@@ -330,6 +333,9 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "assume": ASSUME,
     "forget": FORGET,
     "is": IS,
+    "declare": DECLARE,
+    "properties": PROPERTIES,
+    "propvars": PROP_VARS,
     # Pattern-matching rule system (Phase 22)
     # matchdeclare(x, pred)   — declare x as a pattern variable
     # defrule(name, lhs, rhs) — compile + store a named rewrite rule
