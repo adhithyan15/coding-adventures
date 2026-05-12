@@ -51,6 +51,9 @@
 //!   Capability-reporting is wired now so downstream callers
 //!   (`select_custodian`) can already make TPM-first / fallback
 //!   decisions.
+//! - `summarize_custodian_candidates` — a count-only read model for
+//!   planning host/vault startup UX without exposing custodian names,
+//!   labels, wrapped blobs, or key bytes.
 //! - `select_custodian` — the policy helper that, given a list of
 //!   candidates and a `force_software` flag, picks the preferred
 //!   custodian per the TPM-first rule.
@@ -191,6 +194,100 @@ pub trait KeyCustodian {
 /// custodian implementation; consumers treat it as a byte blob.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WrappedKey(pub Vec<u8>);
+
+/// Count-only summary of custodian candidate capabilities.
+///
+/// This is intentionally aggregate-only: callers can use it for
+/// startup planning, telemetry buckets, or UX affordances without
+/// surfacing custodian names, labels, wrapped blobs, or key bytes.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct CustodianCandidateSummary {
+    /// Total number of custodian candidates considered.
+    pub total_candidates: usize,
+    /// Number of candidates backed by hardware-bound key material.
+    pub hardware_bound_candidates: usize,
+    /// Number of candidates that are not hardware-bound.
+    pub non_hardware_candidates: usize,
+    /// Number of candidates whose wrapping key material can be exported.
+    pub extractable_candidates: usize,
+    /// Number of candidates whose wrapping key material cannot be exported.
+    pub non_extractable_candidates: usize,
+    /// Number of candidates that require user presence during unwrap.
+    pub user_presence_required_candidates: usize,
+    /// Number of candidates that may require a remote service round-trip.
+    pub remote_candidates: usize,
+    /// Number of candidates that run locally on the host.
+    pub local_candidates: usize,
+}
+
+impl CustodianCandidateSummary {
+    /// Return an empty candidate summary.
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    /// Return true when at least one candidate is present.
+    pub fn has_candidates(&self) -> bool {
+        self.total_candidates > 0
+    }
+
+    /// Return true when at least one hardware-bound candidate is present.
+    pub fn has_hardware_candidate(&self) -> bool {
+        self.hardware_bound_candidates > 0
+    }
+
+    /// Return true when at least one non-hardware candidate is present.
+    pub fn has_non_hardware_candidate(&self) -> bool {
+        self.non_hardware_candidates > 0
+    }
+
+    /// Return true when at least one candidate requires user presence.
+    pub fn has_user_presence_requirement(&self) -> bool {
+        self.user_presence_required_candidates > 0
+    }
+
+    /// Return true when at least one candidate may require remote access.
+    pub fn has_remote_candidate(&self) -> bool {
+        self.remote_candidates > 0
+    }
+}
+
+/// Summarize candidate custodians by capability without exposing
+/// candidate names or key-bearing material.
+pub fn summarize_custodian_candidates(
+    candidates: &[&dyn KeyCustodian],
+) -> CustodianCandidateSummary {
+    let mut summary = CustodianCandidateSummary::empty();
+
+    for candidate in candidates {
+        let caps = candidate.capabilities();
+        summary.total_candidates += 1;
+
+        if caps.hardware_bound {
+            summary.hardware_bound_candidates += 1;
+        } else {
+            summary.non_hardware_candidates += 1;
+        }
+
+        if caps.extractable {
+            summary.extractable_candidates += 1;
+        } else {
+            summary.non_extractable_candidates += 1;
+        }
+
+        if caps.requires_user_presence {
+            summary.user_presence_required_candidates += 1;
+        }
+
+        if caps.remote {
+            summary.remote_candidates += 1;
+        } else {
+            summary.local_candidates += 1;
+        }
+    }
+
+    summary
+}
 
 // ─────────────────────────────────────────────────────────────────────
 // 4. Errors
@@ -358,7 +455,9 @@ impl PassphraseCustodian {
         // early-return error paths.
         let pw: Zeroizing<Vec<u8>> = Zeroizing::new(passphrase.into());
         if pw.is_empty() {
-            return Err(CustodyError::InvalidParameter { what: "passphrase is empty" });
+            return Err(CustodyError::InvalidParameter {
+                what: "passphrase is empty",
+            });
         }
         if time_cost == 0 || memory_cost < 8 || parallelism == 0 {
             return Err(CustodyError::InvalidParameter {
@@ -385,7 +484,11 @@ impl PassphraseCustodian {
 
     /// Derive the 32-byte KEK from passphrase + salt via Argon2id.
     fn derive_kek(&self, salt: &[u8]) -> Result<Key, CustodyError> {
-        let opts = ArgonOptions { key: None, associated_data: None, version: None };
+        let opts = ArgonOptions {
+            key: None,
+            associated_data: None,
+            version: None,
+        };
         let tag = argon2id(
             &self.passphrase,
             salt,
@@ -436,7 +539,8 @@ impl KeyCustodian for PassphraseCustodian {
         }
 
         // 4. Compose blob: magic || salt || nonce || ct || tag.
-        let mut blob = Vec::with_capacity(PASSPHRASE_MAGIC.len() + SALT_LEN + NONCE_LEN + KEY_LEN + TAG_LEN);
+        let mut blob =
+            Vec::with_capacity(PASSPHRASE_MAGIC.len() + SALT_LEN + NONCE_LEN + KEY_LEN + TAG_LEN);
         blob.extend_from_slice(PASSPHRASE_MAGIC);
         blob.extend_from_slice(&salt);
         blob.extend_from_slice(&nonce);
@@ -512,7 +616,9 @@ impl TpmCustodian {
     /// device of the given label (e.g. `"tpm-2.0"`,
     /// `"secure-enclave"`).
     pub fn detected(label: impl Into<String>) -> Self {
-        TpmCustodian { detected_label: label.into() }
+        TpmCustodian {
+            detected_label: label.into(),
+        }
     }
 }
 
@@ -524,10 +630,14 @@ impl KeyCustodian for TpmCustodian {
         CustodianCaps::HARDWARE_LOCAL
     }
     fn wrap(&self, _label: &Label, _key: &Key) -> Result<WrappedKey, CustodyError> {
-        Err(CustodyError::Unimplemented { backend: "TPM 2.0 / Secure Enclave" })
+        Err(CustodyError::Unimplemented {
+            backend: "TPM 2.0 / Secure Enclave",
+        })
     }
     fn unwrap(&self, _label: &Label, _wrapped: &WrappedKey) -> Result<Key, CustodyError> {
-        Err(CustodyError::Unimplemented { backend: "TPM 2.0 / Secure Enclave" })
+        Err(CustodyError::Unimplemented {
+            backend: "TPM 2.0 / Secure Enclave",
+        })
     }
 }
 
@@ -634,6 +744,35 @@ mod tests {
 
     fn random_key() -> Key {
         fresh_random_key().unwrap()
+    }
+
+    struct RemoteUserPresenceCustodian;
+
+    impl KeyCustodian for RemoteUserPresenceCustodian {
+        fn name(&self) -> &str {
+            "remote-user-presence-test"
+        }
+
+        fn capabilities(&self) -> CustodianCaps {
+            CustodianCaps {
+                hardware_bound: false,
+                extractable: false,
+                requires_user_presence: true,
+                remote: true,
+            }
+        }
+
+        fn wrap(&self, _label: &Label, _key: &Key) -> Result<WrappedKey, CustodyError> {
+            Err(CustodyError::Unimplemented {
+                backend: "remote-user-presence-test",
+            })
+        }
+
+        fn unwrap(&self, _label: &Label, _wrapped: &WrappedKey) -> Result<Key, CustodyError> {
+            Err(CustodyError::Unimplemented {
+                backend: "remote-user-presence-test",
+            })
+        }
     }
 
     // --- PassphraseCustodian round-trip ---
@@ -793,6 +932,50 @@ mod tests {
         }
     }
 
+    // --- Candidate summaries ---
+
+    #[test]
+    fn candidate_summary_counts_capability_shape_without_names() {
+        let pw = fast_passphrase(b"pw");
+        let tpm = TpmCustodian::detected("tpm-2.0");
+        let remote = RemoteUserPresenceCustodian;
+        let candidates: Vec<&dyn KeyCustodian> = vec![&pw, &tpm, &remote];
+
+        let summary = summarize_custodian_candidates(&candidates);
+
+        assert_eq!(
+            summary,
+            CustodianCandidateSummary {
+                total_candidates: 3,
+                hardware_bound_candidates: 1,
+                non_hardware_candidates: 2,
+                extractable_candidates: 1,
+                non_extractable_candidates: 2,
+                user_presence_required_candidates: 1,
+                remote_candidates: 1,
+                local_candidates: 2,
+            }
+        );
+        assert!(summary.has_candidates());
+        assert!(summary.has_hardware_candidate());
+        assert!(summary.has_non_hardware_candidate());
+        assert!(summary.has_user_presence_requirement());
+        assert!(summary.has_remote_candidate());
+    }
+
+    #[test]
+    fn candidate_summary_handles_empty_candidate_list() {
+        let candidates: Vec<&dyn KeyCustodian> = Vec::new();
+        let summary = summarize_custodian_candidates(&candidates);
+
+        assert_eq!(summary, CustodianCandidateSummary::empty());
+        assert!(!summary.has_candidates());
+        assert!(!summary.has_hardware_candidate());
+        assert!(!summary.has_non_hardware_candidate());
+        assert!(!summary.has_user_presence_requirement());
+        assert!(!summary.has_remote_candidate());
+    }
+
     // --- TPM-first / select_custodian policy ---
 
     #[test]
@@ -853,7 +1036,10 @@ mod tests {
         let candidates: Vec<&dyn KeyCustodian> = vec![&pw];
         match assert_no_hardware_bypass(&candidates, /* host_has_hw = */ true, false) {
             Err(CustodyError::HardwareAvailableButSoftwareRequested) => {}
-            other => panic!("expected HardwareAvailableButSoftwareRequested, got {:?}", other),
+            other => panic!(
+                "expected HardwareAvailableButSoftwareRequested, got {:?}",
+                other
+            ),
         }
     }
 
