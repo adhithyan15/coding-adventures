@@ -17,6 +17,8 @@ write credentials. It gives discovery workers a shared shape for:
   metadata
 - pairing plans that rank discovered bridges and identify the next pairing
   action before any worker opens a credential flow
+- pairing-plan summaries for host/UI loops by actionability, required human
+  work, freshness, source, requirement, action, and next actionable target
 - bounded pairing-plan queries for integration, source, freshness, requirement,
   action, priority, human-action, sort, and limit selectors
 - source/address/time preference scoring for duplicate bridge candidates

@@ -638,6 +638,92 @@ pub struct DiscoveryPairingPlan {
     pub targets: Vec<DiscoveryPairingTarget>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryPairingPlanSummary {
+    pub generated_at_ms: u64,
+    pub total: usize,
+    pub actionable: usize,
+    pub ready: usize,
+    pub requires_human_action: usize,
+    pub blocked_unknown_requirement: usize,
+    pub fresh: usize,
+    pub stale: usize,
+    pub by_source: BTreeMap<DiscoverySource, usize>,
+    pub by_pairing_requirement: BTreeMap<PairingRequirement, usize>,
+    pub by_action: BTreeMap<DiscoveryPairingAction, usize>,
+    pub next_actionable_target: Option<DiscoveryPairingTarget>,
+}
+
+impl DiscoveryPairingPlanSummary {
+    pub fn from_plan(plan: &DiscoveryPairingPlan) -> Self {
+        let mut summary = Self {
+            generated_at_ms: plan.generated_at_ms,
+            total: 0,
+            actionable: 0,
+            ready: 0,
+            requires_human_action: 0,
+            blocked_unknown_requirement: 0,
+            fresh: 0,
+            stale: 0,
+            by_source: BTreeMap::new(),
+            by_pairing_requirement: BTreeMap::new(),
+            by_action: BTreeMap::new(),
+            next_actionable_target: None,
+        };
+
+        for target in &plan.targets {
+            summary.total += 1;
+            if target.is_actionable() {
+                summary.actionable += 1;
+                if summary.next_actionable_target.is_none() {
+                    summary.next_actionable_target = Some(target.clone());
+                }
+            }
+            if target.action == DiscoveryPairingAction::Ready {
+                summary.ready += 1;
+            }
+            if target.requires_human_action() {
+                summary.requires_human_action += 1;
+            }
+            if target.action == DiscoveryPairingAction::InvestigateUnknownRequirement {
+                summary.blocked_unknown_requirement += 1;
+            }
+            match target.signal_status {
+                DiscoverySignalStatus::Fresh => summary.fresh += 1,
+                DiscoverySignalStatus::Stale => summary.stale += 1,
+                DiscoverySignalStatus::Expired => {}
+            }
+            *summary.by_source.entry(target.source).or_insert(0) += 1;
+            *summary
+                .by_pairing_requirement
+                .entry(target.pairing_requirement)
+                .or_insert(0) += 1;
+            *summary.by_action.entry(target.action).or_insert(0) += 1;
+        }
+
+        summary
+    }
+
+    pub fn count_for_source(&self, source: DiscoverySource) -> usize {
+        self.by_source.get(&source).copied().unwrap_or(0)
+    }
+
+    pub fn count_for_pairing_requirement(&self, requirement: PairingRequirement) -> usize {
+        self.by_pairing_requirement
+            .get(&requirement)
+            .copied()
+            .unwrap_or(0)
+    }
+
+    pub fn count_for_action(&self, action: DiscoveryPairingAction) -> usize {
+        self.by_action.get(&action).copied().unwrap_or(0)
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total == 0
+    }
+}
+
 impl DiscoveryPairingPlan {
     pub fn is_empty(&self) -> bool {
         self.targets.is_empty()
@@ -662,6 +748,10 @@ impl DiscoveryPairingPlan {
             .iter()
             .filter(|target| &target.integration_id == integration_id)
             .collect()
+    }
+
+    pub fn summary(&self) -> DiscoveryPairingPlanSummary {
+        DiscoveryPairingPlanSummary::from_plan(self)
     }
 
     pub fn query(&self, options: &DiscoveryPairingPlanOptions) -> DiscoveryPairingPlan {
@@ -1169,6 +1259,15 @@ impl DiscoveryCatalog {
     ) -> DiscoveryPairingPlan {
         self.pairing_plan_at(catalog, now_ms, ttl_ms).query(options)
     }
+
+    pub fn pairing_plan_summary_at(
+        &self,
+        catalog: &[IntegrationCatalogEntry],
+        now_ms: u64,
+        ttl_ms: u64,
+    ) -> DiscoveryPairingPlanSummary {
+        self.pairing_plan_at(catalog, now_ms, ttl_ms).summary()
+    }
 }
 
 fn pairing_target_for_record(
@@ -1496,6 +1595,79 @@ mod tests {
                     && mqtt_target.action == DiscoveryPairingAction::ConfigureMqttCredentials
                     && mqtt_target.signal_status == DiscoverySignalStatus::Stale
         ));
+    }
+
+    #[test]
+    fn pairing_plan_summarizes_host_action_queue() {
+        let catalog = first_party_catalog();
+        let hue_hint = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("hue"))
+            .into_iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mdns)
+            .unwrap();
+        let mqtt_hint = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("mqtt"))
+            .into_iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mqtt)
+            .unwrap();
+        let hue = hue_hint
+            .to_record("001788fffeabcdef", 1_900)
+            .unwrap()
+            .with_confidence(DiscoveryConfidence::Verified);
+        let mqtt = mqtt_hint
+            .to_record("broker-1", 1_000)
+            .unwrap()
+            .with_confidence(DiscoveryConfidence::Candidate);
+        let unknown_hue = DiscoveryRecord::new(
+            IntegrationId::trusted("hue"),
+            ProtocolFamily::Hue,
+            "001788fffeunknown",
+            DiscoverySource::Manual,
+            BridgeTransport::LanHttp,
+            1_950,
+        )
+        .unwrap()
+        .with_pairing_requirement(PairingRequirement::Unknown);
+        let mut discoveries = DiscoveryCatalog::new();
+        discoveries.record(hue);
+        discoveries.record(mqtt);
+        discoveries.record(unknown_hue);
+
+        let summary = discoveries.pairing_plan_summary_at(&catalog, 2_000, 500);
+
+        assert_eq!(summary.generated_at_ms, 2_000);
+        assert_eq!(summary.total, 3);
+        assert_eq!(summary.actionable, 2);
+        assert_eq!(summary.ready, 0);
+        assert_eq!(summary.requires_human_action, 3);
+        assert_eq!(summary.blocked_unknown_requirement, 1);
+        assert_eq!(summary.fresh, 2);
+        assert_eq!(summary.stale, 1);
+        assert_eq!(summary.count_for_source(DiscoverySource::Mdns), 1);
+        assert_eq!(summary.count_for_source(DiscoverySource::Mqtt), 1);
+        assert_eq!(summary.count_for_source(DiscoverySource::Manual), 1);
+        assert_eq!(
+            summary.count_for_pairing_requirement(PairingRequirement::PhysicalPresence),
+            1
+        );
+        assert_eq!(
+            summary.count_for_action(DiscoveryPairingAction::PressPhysicalButton),
+            1
+        );
+        assert_eq!(
+            summary.count_for_action(DiscoveryPairingAction::ConfigureMqttCredentials),
+            1
+        );
+        assert_eq!(
+            summary.count_for_action(DiscoveryPairingAction::InvestigateUnknownRequirement),
+            1
+        );
+        assert_eq!(
+            summary
+                .next_actionable_target
+                .as_ref()
+                .map(|target| target.action),
+            Some(DiscoveryPairingAction::PressPhysicalButton)
+        );
+        assert!(!summary.is_empty());
     }
 
     #[test]
