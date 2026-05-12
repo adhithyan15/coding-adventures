@@ -818,10 +818,17 @@ fn parse_u32_number(value: String, option: &'static str) -> Result<u32, CliError
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmokeReport {
+    pub connection: SmokeConnectionReport,
     pub hello: HelloAckInfo,
     pub descriptor: BoardDescriptorInfo,
     pub upload: UploadReport,
     pub run: RunReportInfo,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SmokeConnectionReport {
+    pub label: String,
+    pub timeout_ms: u64,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -985,12 +992,24 @@ pub fn format_device_list(devices: &[LanguageHostDevice]) -> String {
 }
 
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
-    let transport = open_smoke_transport(options)?;
-    run_smoke_with_transport(options, transport)
+    let (connection_label, transport) = open_smoke_transport(options)?;
+    run_smoke_with_connection(options, connection_label, transport)
 }
 
+#[cfg(test)]
 fn run_smoke_with_transport<T>(
     options: &SmokeOptions,
+    transport: T,
+) -> Result<SmokeReport, CliError>
+where
+    T: RawFrameTransport,
+{
+    run_smoke_with_connection(options, smoke_connection_label(options), transport)
+}
+
+fn run_smoke_with_connection<T>(
+    options: &SmokeOptions,
+    connection_label: impl Into<String>,
     transport: T,
 ) -> Result<SmokeReport, CliError>
 where
@@ -1028,6 +1047,10 @@ where
             source,
         })?;
     Ok(SmokeReport {
+        connection: SmokeConnectionReport {
+            label: connection_label.into(),
+            timeout_ms: options.timeout_ms,
+        },
         hello,
         descriptor,
         upload,
@@ -1249,15 +1272,29 @@ where
     run_repl_loop(&mut client, &mut state, input, output)
 }
 
-fn open_smoke_transport(options: &SmokeOptions) -> Result<SessionTransport, CliError> {
+#[cfg(test)]
+fn smoke_connection_label(options: &SmokeOptions) -> String {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        return format!("endpoint={endpoint}");
+    }
+    match options.port.as_deref() {
+        Some(port) => format!("port={port} baud={}", options.baud_rate),
+        None => format!("board={} baud={}", options.board, options.baud_rate),
+    }
+}
+
+fn open_smoke_transport(options: &SmokeOptions) -> Result<(String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        return open_endpoint_transport(endpoint, &options.tcp_config(endpoint));
+        let transport = open_endpoint_transport(endpoint, &options.tcp_config(endpoint))?;
+        return Ok((format!("endpoint={endpoint}"), transport));
     }
 
     let port = resolve_session_port(options.port.as_deref(), &options.board)?;
-    Ok(SessionTransport::Serial(
-        BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?,
+    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    Ok((
+        format!("port={} baud={}", port, options.baud_rate),
+        SessionTransport::Serial(transport),
     ))
 }
 
@@ -1595,10 +1632,26 @@ where
     Ok(())
 }
 
+fn write_smoke_connection<W>(
+    output: &mut W,
+    connection: &SmokeConnectionReport,
+) -> Result<(), CliError>
+where
+    W: Write,
+{
+    writeln!(
+        output,
+        "connection {} timeout_ms={}",
+        connection.label, connection.timeout_ms
+    )?;
+    Ok(())
+}
+
 pub fn write_smoke_report<W>(output: &mut W, report: &SmokeReport) -> Result<(), CliError>
 where
     W: Write,
 {
+    write_smoke_connection(output, &report.connection)?;
     write_hello(output, &report.hello)?;
     write_descriptor_summary(output, &report.descriptor)?;
     write_upload(output, &report.upload)?;
@@ -2445,6 +2498,8 @@ mod tests {
 
         let report = run_smoke_with_transport(&options, LoopbackSmokeTransport::new()).unwrap();
 
+        assert_eq!(report.connection.label, "endpoint=tcp://127.0.0.1:4170");
+        assert_eq!(report.connection.timeout_ms, DEFAULT_TIMEOUT_MS);
         assert_eq!(report.hello.selected_version, 1);
         assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
         assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
@@ -2465,6 +2520,10 @@ mod tests {
     #[test]
     fn smoke_report_writer_includes_upload_and_full_run_summary() {
         let report = SmokeReport {
+            connection: SmokeConnectionReport {
+                label: "endpoint=ble://loopback/180f/2a19/2a1a".to_owned(),
+                timeout_ms: 750,
+            },
             hello: HelloAckInfo {
                 selected_version: 1,
                 board_name: "loopback-uno-r4".to_owned(),
@@ -2508,7 +2567,8 @@ mod tests {
 
         assert_eq!(
             String::from_utf8(out).unwrap(),
-            "hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0x1234ABCD board_nonce=0xAABBCCDD\n\
+            "connection endpoint=ble://loopback/180f/2a19/2a1a timeout_ms=750\n\
+hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0x1234ABCD board_nonce=0xAABBCCDD\n\
 caps board=loopback-uno-r4 runtime=board-vm-loopback max_program_bytes=512 stack=8 handles=4 store=true capabilities=1\n\
 upload program_id=3 bytes=42 crc32=0xCAFEBABE\n\
 blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 open_handles=0 returns=[99]\n"
@@ -2535,6 +2595,8 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
 
         let report = run_smoke_with_transport(&options, transport).unwrap();
 
+        assert_eq!(report.connection.label, format!("endpoint={endpoint}"));
+        assert_eq!(report.connection.timeout_ms, DEFAULT_TIMEOUT_MS);
         assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
         assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
         assert_eq!(report.hello.host_nonce, 0xABCD_1234);
@@ -2595,6 +2657,8 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         let report = run_smoke(&options).unwrap();
         let event_count = server.join().unwrap();
 
+        assert_eq!(report.connection.label, format!("endpoint=tcp://{address}"));
+        assert_eq!(report.connection.timeout_ms, 500);
         assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
         assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
         assert_eq!(report.hello.host_nonce, 0xBEEF_CAFE);
