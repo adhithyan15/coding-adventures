@@ -9,6 +9,7 @@ _targets = [
             "//code/packages/rust/adjudication-clarification",
             "//code/packages/rust/adjudication-ir",
             "//code/packages/rust/adjudication-pipeline",
+            "//code/packages/rust/llm-cache",
             "//code/packages/rust/llm-gateway",
             "//code/packages/rust/llm-primitives",
             "//code/packages/rust/llm-provider-ollama",

@@ -66,6 +66,7 @@ use llm_gateway::{
 use adjudication_clarification::{
     retry_decompose_on_coverage_failure, ClarificationError, CoverageClarificationRequest,
 };
+use llm_cache::CachingClient;
 use llm_primitives::{
     decompose_text, DecomposeTextRequest, GatewayConfig, PrimitiveError, Role as PrimitiveRole,
 };
@@ -123,6 +124,12 @@ pub struct DemoConfig {
     /// (Blocked verdict on first failure). Default `2` — usually
     /// enough for a small model to self-correct.
     pub max_clarification_attempts: usize,
+    /// Optional directory where the LLM cache persists responses
+    /// across runs. When set, every LLM client used by Arm B is
+    /// wrapped in a `CachingClient::with_disk_persistence` and a
+    /// second run replays from disk with zero round-trips. Off by
+    /// default to keep the no-knobs invocation deterministic in CI.
+    pub cache_dir: Option<String>,
 }
 
 impl Default for DemoConfig {
@@ -135,6 +142,7 @@ impl Default for DemoConfig {
             source_text: "1 carry-on bag, matches.".into(),
             ir_mode: IrMode::HandBuilt,
             max_clarification_attempts: 2,
+            cache_dir: None,
         }
     }
 }
@@ -280,10 +288,10 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
     // GatewayConfig needs Box<dyn LlmClient>; we register clones of
     // the primary client for Extractor/Renderer/Nli/Plausibility so
     // each call site uses its own connection.
-    let extractor = Box::new(primary.clone()) as Box<dyn LlmClient>;
-    let renderer = Box::new(primary.clone()) as Box<dyn LlmClient>;
-    let nli = Box::new(primary.clone()) as Box<dyn LlmClient>;
-    let plausibility = Box::new(primary.clone()) as Box<dyn LlmClient>;
+    let extractor = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let renderer = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let nli = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let plausibility = wrap_with_cache(Box::new(primary.clone()), cfg);
     let mut gateway = GatewayConfig::new()
         .with_client(PrimitiveRole::Extractor, extractor)
         .with_client(PrimitiveRole::Renderer, renderer)
@@ -299,7 +307,7 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
             .with_timeout(cfg.timeout);
         gateway = gateway.with_client(
             PrimitiveRole::Adversary,
-            Box::new(adv_client) as Box<dyn LlmClient>,
+            wrap_with_cache(Box::new(adv_client) as Box<dyn LlmClient>, cfg),
         );
     }
 
@@ -1012,6 +1020,19 @@ fn parse_source_spans(
         spans.push(Span::new(document_id.clone(), start, end));
     }
     spans
+}
+
+/// Wrap an inner LLM client with a `CachingClient` if the demo
+/// config requests caching. Disk persistence is enabled when
+/// `cfg.cache_dir` is `Some`; otherwise the cache is in-memory only
+/// (and so won't help a single-shot binary run — but the demo also
+/// runs in tests and from the same process as other primitives,
+/// where in-memory hits do happen via the ADJ06 retry loop).
+fn wrap_with_cache(inner: Box<dyn LlmClient>, cfg: &DemoConfig) -> Box<dyn LlmClient> {
+    match &cfg.cache_dir {
+        Some(dir) => Box::new(CachingClient::with_disk_persistence(inner, dir)),
+        None => Box::new(CachingClient::new(inner)),
+    }
 }
 
 /// Render the first ADJ02 violation as a short string suitable for

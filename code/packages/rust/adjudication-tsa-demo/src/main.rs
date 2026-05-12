@@ -38,7 +38,8 @@ fn main() {
          primary model: `{model}` (Extractor/Renderer/Nli/Plausibility)\n\
          adversary:     {adv}\n\
          IR mode:       {mode:?}\n\
-         (override via ADJ_DEMO_{{ENDPOINT,MODEL,ADVERSARY_MODEL,SOURCE,IR_MODE}})\n",
+         cache:         {cache}\n\
+         (override via ADJ_DEMO_{{ENDPOINT,MODEL,ADVERSARY_MODEL,SOURCE,IR_MODE,CACHE_DIR}})\n",
         endpoint = cfg.endpoint,
         model = cfg.model,
         adv = cfg
@@ -47,6 +48,11 @@ fn main() {
             .map(|s| format!("`{s}` (Adversary)"))
             .unwrap_or_else(|| "(none; ADJ05 will Skip)".to_string()),
         mode = cfg.ir_mode,
+        cache = cfg
+            .cache_dir
+            .as_deref()
+            .map(|s| format!("disk persistence at {s}"))
+            .unwrap_or_else(|| "in-memory only".to_string()),
     );
 
     // --- Arm A ---
@@ -123,6 +129,9 @@ fn config_from_env() -> DemoConfig {
         if let Ok(parsed) = n.parse::<usize>() {
             cfg.max_clarification_attempts = parsed;
         }
+    }
+    if let Ok(dir) = std::env::var("ADJ_DEMO_CACHE_DIR") {
+        cfg.cache_dir = if dir.is_empty() { None } else { Some(dir) };
     }
     if let Ok(mode) = std::env::var("ADJ_DEMO_IR_MODE") {
         cfg.ir_mode = match mode.to_ascii_lowercase().as_str() {
