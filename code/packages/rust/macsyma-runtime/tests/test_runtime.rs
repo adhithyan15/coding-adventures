@@ -213,6 +213,23 @@ fn ev_routes_supported_flags_and_preserves_unsupported_heads() {
 }
 
 #[test]
+fn ev_display2d_routes_output_text_through_box_pretty_printer() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("ev(1/(x + 1), display2d);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(DIV),
+            vec![int(1), apply(sym(ADD), vec![sym("x"), int(1)])]
+        )
+    );
+    assert!(results[0].output_text.contains('\n'));
+    assert!(results[0].output_text.contains('─'));
+    assert!(results[0].output_text.contains("x + 1"));
+}
+
+#[test]
 fn trigreduce_routes_through_macsyma_runtime() {
     let mut session = MacsymaSession::new();
     let results = session
