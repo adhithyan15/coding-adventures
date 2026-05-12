@@ -31,11 +31,13 @@ from sql_planner import (
     Insert,
     InsertSource,
     Literal,
+    LogicalPlan,
     Project,
     ProjectionItem,
     RowIdRef,
     Scan,
 )
+
 from sql_vm import execute
 
 # ---------------------------------------------------------------------------
@@ -64,13 +66,13 @@ def _insert(backend: InMemoryBackend, table: str, cols: tuple[str, ...], values:
     execute(compile(plan), backend)
 
 
-def _select(backend: InMemoryBackend, plan) -> list[dict]:
+def _select(backend: InMemoryBackend, plan: LogicalPlan) -> list[dict]:
     from sql_vm.result import QueryResult
 
     result: QueryResult = execute(compile(plan), backend)
     rows = []
     for row_tuple in result.rows:
-        rows.append(dict(zip(result.columns, row_tuple)))
+        rows.append(dict(zip(result.columns, row_tuple, strict=False)))
     return rows
 
 
