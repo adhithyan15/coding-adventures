@@ -1,5 +1,5 @@
 import { compileMacsyma } from "@coding-adventures/macsyma-compiler";
-import { solveLinearSystem } from "@coding-adventures/cas-solve";
+import { solveLinearSystem, trySolveInequality } from "@coding-adventures/cas-solve";
 import {
   ACOS,
   ACOSH,
@@ -13,7 +13,11 @@ import {
   EXP,
   FACTOR,
   FALSE,
+  GREATER,
+  GREATER_EQUAL,
   INTEGRATE,
+  LESS,
+  LESS_EQUAL,
   LIST,
   LOG,
   SIN,
@@ -534,6 +538,12 @@ function makeEvHandler(): Handler {
 function solveHandler(_vm: VM, expr: IRApply): IRNode {
   if (expr.args.length !== 2) return expr;
   const [equationsNode, variablesNode] = expr.args;
+
+  if (variablesNode.kind === "symbol" && isInequality(equationsNode)) {
+    const solutions = trySolveInequality(equationsNode, variablesNode);
+    return solutions === null ? expr : app(LIST, solutions);
+  }
+
   if (!isList(equationsNode) || !isList(variablesNode)) return expr;
 
   const variables: IRSymbol[] = [];
@@ -544,6 +554,14 @@ function solveHandler(_vm: VM, expr: IRApply): IRNode {
 
   const rules = solveLinearSystem(equationsNode.args, variables);
   return rules === null ? expr : app(LIST, rules);
+}
+
+function isInequality(node: IRNode): node is IRApply {
+  return node.kind === "apply"
+    && (equals(node.head, LESS)
+      || equals(node.head, GREATER)
+      || equals(node.head, LESS_EQUAL)
+      || equals(node.head, GREATER_EQUAL));
 }
 
 function evalSupportedFlag(vm: VM, result: IRNode, head: IRSymbol): IRNode {

@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   ADD,
   EQUAL,
+  GREATER,
+  GREATER_EQUAL,
+  LESS,
+  LESS_EQUAL,
   LIST,
   MUL,
   POW,
@@ -260,6 +264,58 @@ describe("macsyma-runtime", () => {
     const expr = app(SOLVE, [
       app(LIST, [app(EQUAL, [app(POW, [x, int(2)]), int(4)])]),
       app(LIST, [x]),
+    ]);
+
+    const [result] = session.evalStatements([expr]);
+    expect(result.output).toEqual(expr);
+  });
+
+  it("solves polynomial inequalities through the cas-solve handler", () => {
+    const x = sym("x");
+    const session = new MacsymaSession();
+    const [linear, quadratic, bounded, allReals] = session.evalStatements([
+      app(SOLVE, [
+        app(GREATER, [app(SUB, [x, int(1)]), int(0)]),
+        x,
+      ]),
+      app(SOLVE, [
+        app(GREATER, [app(SUB, [app(POW, [x, int(2)]), int(1)]), int(0)]),
+        x,
+      ]),
+      app(SOLVE, [
+        app(LESS_EQUAL, [app(SUB, [app(POW, [x, int(2)]), int(1)]), int(0)]),
+        x,
+      ]),
+      app(SOLVE, [
+        app(GREATER_EQUAL, [app(POW, [x, int(2)]), int(0)]),
+        x,
+      ]),
+    ]);
+
+    expect(linear.output).toEqual(app(LIST, [
+      app(GREATER, [x, int(1)]),
+    ]));
+    expect(quadratic.output).toEqual(app(LIST, [
+      app(LESS, [x, int(-1)]),
+      app(GREATER, [x, int(1)]),
+    ]));
+    expect(bounded.output).toEqual(app(LIST, [
+      app(sym("And"), [
+        app(GREATER_EQUAL, [x, int(-1)]),
+        app(LESS_EQUAL, [x, int(1)]),
+      ]),
+    ]));
+    expect(allReals.output).toEqual(app(LIST, [
+      app(GREATER_EQUAL, [int(0), int(0)]),
+    ]));
+  });
+
+  it("keeps unsupported inequality Solve calls unevaluated", () => {
+    const x = sym("x");
+    const session = new MacsymaSession();
+    const expr = app(SOLVE, [
+      app(GREATER, [app(sym("Sin"), [x]), int(0)]),
+      x,
     ]);
 
     const [result] = session.evalStatements([expr]);
