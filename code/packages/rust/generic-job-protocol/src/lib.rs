@@ -283,6 +283,142 @@ impl JobMetadataSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct JobMetadataBatchSummary {
+    pub total_jobs: usize,
+    pub deadline_bound_jobs: usize,
+    pub expired_deadline_jobs: usize,
+    pub affinity_key_jobs: usize,
+    pub sequenced_jobs: usize,
+    pub retry_jobs: usize,
+    pub traceable_jobs: usize,
+    pub tagged_jobs: usize,
+    pub total_tags: usize,
+    pub min_priority: Option<i32>,
+    pub max_priority: Option<i32>,
+    pub max_attempt: u32,
+    pub earliest_deadline_at_ms: Option<u64>,
+    pub latest_deadline_at_ms: Option<u64>,
+}
+
+impl JobMetadataBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_metadata<'a, I>(metadata: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a JobMetadata>,
+    {
+        let mut summary = Self::empty();
+        for metadata in metadata {
+            summary.total_jobs += 1;
+            summary.min_priority = Some(
+                summary
+                    .min_priority
+                    .map_or(metadata.priority, |min| min.min(metadata.priority)),
+            );
+            summary.max_priority = Some(
+                summary
+                    .max_priority
+                    .map_or(metadata.priority, |max| max.max(metadata.priority)),
+            );
+            summary.max_attempt = summary.max_attempt.max(metadata.attempt);
+            if let Some(deadline_at_ms) = metadata.deadline_at_ms {
+                summary.deadline_bound_jobs += 1;
+                if metadata.is_expired_at(now_ms) {
+                    summary.expired_deadline_jobs += 1;
+                }
+                summary.earliest_deadline_at_ms = Some(
+                    summary
+                        .earliest_deadline_at_ms
+                        .map_or(deadline_at_ms, |earliest| earliest.min(deadline_at_ms)),
+                );
+                summary.latest_deadline_at_ms = Some(
+                    summary
+                        .latest_deadline_at_ms
+                        .map_or(deadline_at_ms, |latest| latest.max(deadline_at_ms)),
+                );
+            }
+            if metadata.affinity_key.is_some() {
+                summary.affinity_key_jobs += 1;
+            }
+            if metadata.sequence.is_some() {
+                summary.sequenced_jobs += 1;
+            }
+            if metadata.attempt > 0 {
+                summary.retry_jobs += 1;
+            }
+            if metadata.trace_id.is_some() {
+                summary.traceable_jobs += 1;
+            }
+            if !metadata.tags.is_empty() {
+                summary.tagged_jobs += 1;
+                summary.total_tags += metadata.tags.len();
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_jobs == 0
+    }
+
+    pub fn has_deadlines(self) -> bool {
+        self.deadline_bound_jobs > 0
+    }
+
+    pub fn has_expired_deadlines(self) -> bool {
+        self.expired_deadline_jobs > 0
+    }
+
+    pub fn has_routing_hints(self) -> bool {
+        self.affinity_key_jobs > 0 || self.sequenced_jobs > 0
+    }
+
+    pub fn has_retries(self) -> bool {
+        self.retry_jobs > 0
+    }
+
+    pub fn has_tracing(self) -> bool {
+        self.traceable_jobs > 0
+    }
+}
+
+pub fn summarize_job_metadata<'a, I>(metadata: I, now_ms: u64) -> JobMetadataBatchSummary
+where
+    I: IntoIterator<Item = &'a JobMetadata>,
+{
+    JobMetadataBatchSummary::from_metadata(metadata, now_ms)
+}
+
+pub fn summarize_job_request_metadata<'a, T: 'a, I>(
+    requests: I,
+    now_ms: u64,
+) -> JobMetadataBatchSummary
+where
+    I: IntoIterator<Item = &'a JobRequest<T>>,
+{
+    JobMetadataBatchSummary::from_metadata(
+        requests.into_iter().map(|request| &request.metadata),
+        now_ms,
+    )
+}
+
+pub fn summarize_job_response_metadata<'a, T: 'a, I>(
+    responses: I,
+    now_ms: u64,
+) -> JobMetadataBatchSummary
+where
+    I: IntoIterator<Item = &'a JobResponse<T>>,
+{
+    JobMetadataBatchSummary::from_metadata(
+        responses.into_iter().map(|response| &response.metadata),
+        now_ms,
+    )
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct JobRequestSummary {
@@ -1000,6 +1136,101 @@ mod tests {
                 },
             }
         );
+    }
+
+    #[test]
+    fn metadata_batch_summary_counts_scheduling_shape() {
+        let mut tagged_metadata = JobMetadata::default()
+            .with_created_at_ms(100)
+            .with_deadline_at_ms(250)
+            .with_priority(10)
+            .with_affinity_key("worker-a")
+            .with_sequence(1)
+            .with_trace_id("trace-a")
+            .with_tag("queue", "interactive");
+        tagged_metadata
+            .tags
+            .insert("kind".to_string(), "eval".to_string());
+        let retry_metadata = JobMetadata::default()
+            .with_created_at_ms(120)
+            .with_deadline_at_ms(450)
+            .with_priority(-2)
+            .with_attempt(3);
+        let plain_metadata = JobMetadata::default().with_priority(4);
+        let metadata = vec![tagged_metadata, retry_metadata, plain_metadata];
+
+        let summary = summarize_job_metadata(&metadata, 300);
+
+        assert_eq!(
+            summary,
+            JobMetadataBatchSummary {
+                total_jobs: 3,
+                deadline_bound_jobs: 2,
+                expired_deadline_jobs: 1,
+                affinity_key_jobs: 1,
+                sequenced_jobs: 1,
+                retry_jobs: 1,
+                traceable_jobs: 1,
+                tagged_jobs: 1,
+                total_tags: 2,
+                min_priority: Some(-2),
+                max_priority: Some(10),
+                max_attempt: 3,
+                earliest_deadline_at_ms: Some(250),
+                latest_deadline_at_ms: Some(450),
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_deadlines());
+        assert!(summary.has_expired_deadlines());
+        assert!(summary.has_routing_hints());
+        assert!(summary.has_retries());
+        assert!(summary.has_tracing());
+
+        let requests = vec![
+            JobRequest::new(
+                "job-1",
+                EchoPayload {
+                    text: "first".to_string(),
+                },
+            )
+            .with_metadata(metadata[0].clone()),
+            JobRequest::new(
+                "job-2",
+                EchoPayload {
+                    text: "second".to_string(),
+                },
+            )
+            .with_metadata(metadata[1].clone()),
+        ];
+        let request_summary = summarize_job_request_metadata(&requests, 300);
+        assert_eq!(request_summary.total_jobs, 2);
+        assert_eq!(request_summary.expired_deadline_jobs, 1);
+        assert_eq!(request_summary.max_attempt, 3);
+
+        let responses = vec![
+            JobResponse::ok(
+                "job-1",
+                EchoPayload {
+                    text: "done".to_string(),
+                },
+            )
+            .with_metadata(metadata[0].clone()),
+            JobResponse::<EchoPayload>::error(
+                "job-2",
+                JobError::new("busy", "worker saturated", JobErrorOrigin::Executor),
+            )
+            .with_metadata(metadata[2].clone()),
+        ];
+        let response_summary = summarize_job_response_metadata(&responses, 300);
+        assert_eq!(response_summary.total_jobs, 2);
+        assert_eq!(response_summary.traceable_jobs, 1);
+        assert_eq!(response_summary.min_priority, Some(4));
+
+        let empty = summarize_job_metadata(Vec::<&JobMetadata>::new(), 300);
+        assert_eq!(empty, JobMetadataBatchSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_deadlines());
     }
 
     #[test]

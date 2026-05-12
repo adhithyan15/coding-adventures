@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   compact runtime read models.
 - Added request and metadata summaries for payload-free queue/routing read
   models.
+- Added `JobMetadataBatchSummary` plus request/response metadata summarizers for
+  deadline, priority, affinity, sequence, retry, trace, and tag rollups.
 - Added terminal status and response-summary predicates for shared read-side
   success, failure, retry, cancel, and timeout classification.
 - Added `JobBatchSummary` for compact request/response rollups across
