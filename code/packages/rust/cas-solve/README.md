@@ -88,6 +88,14 @@ polynomials of arbitrary degree. `roots_to_ir` converts nearly-real roots to
 `Float` nodes and complex roots to `Add(Float(re), Mul(Float(im), %i))`.
 `nsolve_fraction_poly` is the exact-rational coefficient convenience wrapper.
 
+## Linear systems
+
+`solve_linear_system(equations, variables)` accepts `Equal(lhs, rhs)` nodes or
+zero-form expressions, linearizes them over the provided variables, and solves
+square systems with exact Gaussian elimination. It returns `Rule(var, value)`
+IR nodes in variable order, or `None` for non-linear, singular, empty, or
+non-square systems.
+
 ## Stack position
 
 ```

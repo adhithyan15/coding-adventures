@@ -4,6 +4,11 @@
 
 ### Added
 
+- `linear_system` module: `solve_linear_system(equations, variables)` — exact
+  Gaussian elimination with `Equal(lhs, rhs)` normalization, zero-form
+  equations, and `Rule(var, value)` IR output.
+- Linear-system integration tests for integer, rational, 3x3, zero-form,
+  singular, non-linear, and wrong-size systems.
 - `numeric` module: `Complex`, `nsolve_poly`, `roots_to_ir`, and
   `nsolve_fraction_poly` — pure Rust Durand-Kerner numeric polynomial
   root-finding plus `%i`-aware symbolic IR conversion.

@@ -53,12 +53,14 @@
 pub mod cubic;
 pub mod frac;
 pub mod linear;
+pub mod linear_system;
 pub mod numeric;
 pub mod quadratic;
 pub mod quartic;
 
 pub use cubic::{solve_cubic, CBRT};
 pub use linear::solve_linear;
+pub use linear_system::solve_linear_system;
 pub use numeric::{nsolve_fraction_poly, nsolve_poly, roots_to_ir, Complex};
 pub use quadratic::{solve_quadratic, I_UNIT};
 pub use quartic::solve_quartic;
