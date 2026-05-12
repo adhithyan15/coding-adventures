@@ -1,11 +1,12 @@
 //! # cas-solve
 //!
-//! Closed-form equation solving over ℚ: linear, quadratic, cubic, and quartic.
+//! Closed-form and numeric equation solving over ℚ: linear, quadratic, cubic,
+//! quartic, and Durand-Kerner polynomial roots.
 //!
 //! ## Quick start
 //!
 //! ```rust
-//! use cas_solve::{solve_cubic, solve_linear, solve_quadratic, solve_quartic, SolveResult};
+//! use cas_solve::{nsolve_poly, solve_cubic, solve_linear, solve_quadratic, solve_quartic, Complex, SolveResult};
 //! use cas_solve::frac::Frac;
 //! use symbolic_ir::{int, rat};
 //!
@@ -31,6 +32,14 @@
 //!     Frac::from_int(0), Frac::from_int(4),
 //! );
 //! assert!(matches!(r4, SolveResult::Solutions(roots) if roots.contains(&int(-2)) && roots.contains(&int(2))));
+//!
+//! // Numeric roots for x^2 + 1 = 0.
+//! let numeric = nsolve_poly(
+//!     &[Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(1.0, 0.0)],
+//!     200,
+//!     1e-12,
+//! );
+//! assert_eq!(numeric.len(), 2);
 //! ```
 //!
 //! ## IR head names
@@ -44,11 +53,13 @@
 pub mod cubic;
 pub mod frac;
 pub mod linear;
+pub mod numeric;
 pub mod quadratic;
 pub mod quartic;
 
 pub use cubic::{solve_cubic, CBRT};
 pub use linear::solve_linear;
+pub use numeric::{nsolve_fraction_poly, nsolve_poly, roots_to_ir, Complex};
 pub use quadratic::{solve_quadratic, I_UNIT};
 pub use quartic::solve_quartic;
 
