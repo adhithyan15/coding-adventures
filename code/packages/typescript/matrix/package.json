@@ -5,6 +5,14 @@
   "main": "dist/matrix.js",
   "module": "src/matrix.ts",
   "types": "dist/matrix.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/matrix.ts",
+      "import": "./src/matrix.ts",
+      "require": "./dist/matrix.js",
+      "default": "./src/matrix.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest"

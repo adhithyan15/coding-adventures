@@ -11,9 +11,11 @@
 //!     ... ])
 //! ```
 //!
-//! where every `cell` is an arbitrary `IRNode`.  Arithmetic operations produce
-//! un-simplified IR: each entry is an `IRApply(ADD/SUB/MUL/DIV/NEG, …)`.
-//! Pass results through `cas_simplify::simplify` to reduce numeric entries.
+//! where every `cell` is an arbitrary `IRNode`.  Concrete integer/float
+//! arithmetic uses the shared matrix execution backend (`matrix-ir` →
+//! `compute-ir` → `matrix-cpu`).  Symbolic and exact-rational arithmetic stays
+//! in un-simplified IR: each entry is an `IRApply(ADD/SUB/MUL/DIV/NEG, …)`.
+//! Pass those results through `cas_simplify::simplify` to reduce them.
 //!
 //! ## Quick start
 //!
@@ -45,6 +47,7 @@
 //! ```
 
 pub mod arithmetic;
+mod backend;
 pub mod determinant;
 pub mod lu;
 pub mod matrix;

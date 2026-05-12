@@ -2,10 +2,10 @@
 //!
 //! ## Symbolic output
 //!
-//! Every arithmetic step is wrapped as unevaluated `IRApply(ADD/SUB/MUL/…)`
-//! rather than collapsed to a numeric value.  Pass the result through
-//! `cas_simplify::simplify` (or any downstream numeric-fold pass) to reduce
-//! numeric entries.
+//! Concrete integer/float matrix arithmetic is routed through the shared
+//! matrix execution backend.  Symbolic and exact-rational inputs fall back to
+//! unevaluated `IRApply(ADD/SUB/MUL/…)` nodes so downstream CAS passes can
+//! simplify them without losing exactness.
 //!
 //! ## Constructors
 //!
@@ -14,6 +14,9 @@
 
 use symbolic_ir::{apply, int, sym, IRNode, ADD, MUL, SUB};
 
+use crate::backend::{
+    try_elementwise, try_matmul, try_scalar_multiply, try_transpose, BackendBinaryOp,
+};
 use crate::matrix::{matrix, rows_of, MatrixError, MatrixResult};
 
 // ---------------------------------------------------------------------------
@@ -79,6 +82,9 @@ pub fn transpose(m: &IRNode) -> MatrixResult<IRNode> {
     if rows.is_empty() {
         return matrix(vec![vec![]]); // shouldn't happen given invariants
     }
+    if let Some(result) = try_transpose(&rows) {
+        return result;
+    }
     let nrows = rows.len();
     let ncols = rows[0].len();
     let new_rows: Vec<Vec<IRNode>> = (0..ncols)
@@ -108,6 +114,9 @@ pub fn add_matrices(a: &IRNode, b: &IRNode) -> MatrixResult<IRNode> {
     let a_rows = rows_of(a)?;
     let b_rows = rows_of(b)?;
     check_same_shape(&a_rows, &b_rows, "add")?;
+    if let Some(result) = try_elementwise(&a_rows, &b_rows, BackendBinaryOp::Add) {
+        return result;
+    }
     let new_rows = elementwise(a_rows, b_rows, |x, y| apply(sym(ADD), vec![x, y]));
     matrix(new_rows)
 }
@@ -119,6 +128,9 @@ pub fn sub_matrices(a: &IRNode, b: &IRNode) -> MatrixResult<IRNode> {
     let a_rows = rows_of(a)?;
     let b_rows = rows_of(b)?;
     check_same_shape(&a_rows, &b_rows, "sub")?;
+    if let Some(result) = try_elementwise(&a_rows, &b_rows, BackendBinaryOp::Sub) {
+        return result;
+    }
     let new_rows = elementwise(a_rows, b_rows, |x, y| apply(sym(SUB), vec![x, y]));
     matrix(new_rows)
 }
@@ -135,6 +147,9 @@ pub fn sub_matrices(a: &IRNode, b: &IRNode) -> MatrixResult<IRNode> {
 /// ```
 pub fn scalar_multiply(scalar: &IRNode, m: &IRNode) -> MatrixResult<IRNode> {
     let rows = rows_of(m)?;
+    if let Some(result) = try_scalar_multiply(scalar, &rows) {
+        return result;
+    }
     let new_rows: Vec<Vec<IRNode>> = rows
         .into_iter()
         .map(|row| {
@@ -211,6 +226,9 @@ pub fn dot(a: &IRNode, b: &IRNode) -> MatrixResult<IRNode> {
         return Err(MatrixError(format!(
             "dot: cols(A)={a_cols} != rows(B)={b_row_count}"
         )));
+    }
+    if let Some(result) = try_matmul(&a_rows, &b_rows) {
+        return result;
     }
     let b_cols = b_rows[0].len();
     let new_rows: Vec<Vec<IRNode>> = (0..a_rows.len())
