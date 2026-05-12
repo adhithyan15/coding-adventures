@@ -3470,7 +3470,7 @@ impl HtmlParser {
                     if path.len() == first_div_path.len() + 1 && path.starts_with(&first_div_path) {
                         let child_index = *path.last()?;
                         element_at_path(&self.document, path)
-                            .is_some_and(is_paragraph_boundary_element)
+                            .is_some_and(|name| name == "p" || is_paragraph_boundary_element(name))
                             .then_some(child_index)
                     } else {
                         None
@@ -4726,9 +4726,14 @@ fn seed_formatting_around_boundary_child(
             reconstructed_element.children = wrapped_children;
         }
         element.children.insert(0, reconstructed_formatting);
+    } else {
+        element.children.insert(
+            0,
+            Node::element(formatting_name.to_string(), formatting_attributes.to_vec()),
+        );
     }
 
-    let adjusted_boundary_index = usize::from(boundary_child_index > 0);
+    let adjusted_boundary_index = 1;
     let Some(Node::Element(boundary_element)) = element.children.get_mut(adjusted_boundary_index)
     else {
         return;
