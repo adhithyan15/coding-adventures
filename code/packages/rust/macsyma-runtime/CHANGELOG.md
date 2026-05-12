@@ -4,6 +4,8 @@
 
 ### Added
 
+- Wired `Subst(value, variable, expr)` to the Rust `cas-substitution`
+  structural substitution package.
 - Wired deterministic MACSYMA list heads (`Length`, `First`, `Rest`, `Last`,
   `Append`, `Join`, `Reverse`, `Range`, `Part`, `Map`, `Apply`, `Sort`, and
   `Flatten`) to the Rust `cas-list-operations` package.

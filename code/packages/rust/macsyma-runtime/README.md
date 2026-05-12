@@ -29,6 +29,11 @@ to the Rust `cas-solve` inverse-family solver. Supported `Exp`, `Log`, trig,
 and hyperbolic forms return `List(...)` symbolic inverse or periodic-family
 solutions; unsupported nested forms remain unevaluated.
 
+`Subst(value, variable, expr)` delegates to the Rust `cas-substitution`
+structural substitution package. `Subst` is held by the runtime so the
+substitution target remains symbolic even if the session has a binding for the
+same name.
+
 Deterministic list operations delegate to the Rust `cas-list-operations`
 package. `Length`, `First`, `Rest`, `Last`, `Append`, `Join`, `Reverse`,
 `Range`, `Part`, `Map`, `Apply`, `Sort`, and `Flatten` return list-operation

@@ -8,6 +8,8 @@ use symbolic_ir::{
     LESS_EQUAL, LIST, LOG, MUL, POW, RULE, SIN, SUB,
 };
 
+const SUBST: &str = "Subst";
+
 #[test]
 fn evaluates_arithmetic_program() {
     let mut session = MacsymaSession::new();
@@ -499,6 +501,53 @@ fn keeps_unsupported_transcendental_solve_calls_unevaluated() {
 
     let mut session = MacsymaSession::new();
     let results = session.eval_statements(vec![expr.clone()]);
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn evaluates_structural_substitution_through_cas_substitution() {
+    let x = sym("x");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(
+            sym(SUBST),
+            vec![int(3), x.clone(), apply(sym(POW), vec![x.clone(), int(2)])],
+        ),
+        apply(
+            sym(SUBST),
+            vec![
+                sym("z"),
+                apply(sym(ADD), vec![x.clone(), int(1)]),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![x.clone(), int(1)]),
+                        apply(sym(ADD), vec![x, int(1)]),
+                    ],
+                ),
+            ],
+        ),
+    ]);
+
+    assert_eq!(results[0].output, apply(sym(POW), vec![int(3), int(2)]));
+    assert_eq!(results[1].output, apply(sym(MUL), vec![sym("z"), sym("z")]));
+}
+
+#[test]
+fn keeps_substitution_variables_unevaluated() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("x : 5; subst(3, x, x^2);").unwrap();
+
+    assert_eq!(results[0].output, int(5));
+    assert_eq!(results[1].output, apply(sym(POW), vec![int(3), int(2)]));
+}
+
+#[test]
+fn keeps_invalid_substitution_calls_unevaluated() {
+    let expr = apply(sym(SUBST), vec![int(3), sym("x")]);
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+
     assert_eq!(results[0].output, expr);
 }
 
