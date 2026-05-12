@@ -183,6 +183,7 @@ members = [
     "adjudication-coverage",
     "adjudication-audit-trail",
     "adjudication-pipeline",
+    "adjudication-round-trip",
     "loss-functions",
     "markov-chain",
     "note-frequency",

@@ -1,0 +1,14 @@
+[package]
+name = "adjudication-round-trip"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ04 — round-trip checker. For each leaf IR node: render it via `render_node`, then run bidirectional `entail` between the rendering and the original source span. Flags drift in either direction as a violation the pipeline can clarify."
+
+[dependencies]
+adjudication-ir = { path = "../adjudication-ir" }
+llm-primitives = { path = "../llm-primitives" }
+logic-core = { path = "../logic-core" }
+
+[dev-dependencies]
+llm-gateway = { path = "../llm-gateway" }
+serde_json = "1"
