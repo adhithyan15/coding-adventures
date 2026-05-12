@@ -9,6 +9,7 @@ correlation, inclusion, or S2 security.
 Included surfaces:
 
 - command-class command parse/encode helpers
+- body-free command summaries for logs and interview diagnostics
 - binary switch, multilevel switch, and door lock get/set builders, plus
   battery and meter get builders
 - command-class interview descriptors for state-query commands and D23

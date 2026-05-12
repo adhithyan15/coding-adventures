@@ -53,6 +53,19 @@ impl ZWaveCommand {
         }
     }
 
+    pub fn summary(&self) -> ZWaveCommandSummary {
+        let class_len = encoded_command_class_len(self.command_class);
+        ZWaveCommandSummary {
+            command_class: self.command_class,
+            command_id: self.command_id,
+            command_kind: command_kind(self.command_class, self.command_id),
+            payload_len: self.payload.len(),
+            uses_extended_command_class: self.command_class.0 > u8::MAX as u16,
+            can_encode: class_len.is_some(),
+            encoded_len: class_len.map(|len| len + 1 + self.payload.len()),
+        }
+    }
+
     pub fn parse(bytes: &[u8]) -> Result<Self, CommandClassError> {
         if bytes.len() < 2 {
             return Err(CommandClassError::Truncated {
@@ -95,6 +108,42 @@ impl ZWaveCommand {
         out.extend_from_slice(&self.payload);
         Ok(out)
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZWaveCommandSummary {
+    pub command_class: CommandClassId,
+    pub command_id: u8,
+    pub command_kind: ZWaveCommandKind,
+    pub payload_len: usize,
+    pub uses_extended_command_class: bool,
+    pub can_encode: bool,
+    pub encoded_len: Option<usize>,
+}
+
+impl ZWaveCommandSummary {
+    pub fn has_payload(self) -> bool {
+        self.payload_len > 0
+    }
+
+    pub fn is_report(self) -> bool {
+        self.command_kind == ZWaveCommandKind::Report
+    }
+
+    pub fn is_request(self) -> bool {
+        matches!(
+            self.command_kind,
+            ZWaveCommandKind::Get | ZWaveCommandKind::Set
+        )
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ZWaveCommandKind {
+    Get,
+    Set,
+    Report,
+    Other,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -861,6 +910,44 @@ fn door_lock_mode(value: u8) -> DoorLockMode {
     }
 }
 
+fn encoded_command_class_len(command_class: CommandClassId) -> Option<usize> {
+    if command_class.0 <= u8::MAX as u16 {
+        Some(1)
+    } else if command_class.0 >= 0xf100 {
+        Some(2)
+    } else {
+        None
+    }
+}
+
+fn command_kind(command_class: CommandClassId, command_id: u8) -> ZWaveCommandKind {
+    match (command_class, command_id) {
+        (CommandClassId::BASIC, BASIC_GET)
+        | (CommandClassId::SWITCH_BINARY, SWITCH_BINARY_GET)
+        | (CommandClassId::SWITCH_MULTILEVEL, SWITCH_MULTILEVEL_GET)
+        | (CommandClassId::SENSOR_BINARY, SENSOR_BINARY_GET)
+        | (CommandClassId::SENSOR_MULTILEVEL, SENSOR_MULTILEVEL_GET)
+        | (CommandClassId::DOOR_LOCK, DOOR_LOCK_OPERATION_GET)
+        | (CommandClassId::BATTERY, BATTERY_GET)
+        | (COMMAND_CLASS_METER, METER_GET)
+        | (COMMAND_CLASS_NOTIFICATION, NOTIFICATION_GET) => ZWaveCommandKind::Get,
+        (CommandClassId::BASIC, BASIC_SET)
+        | (CommandClassId::SWITCH_BINARY, SWITCH_BINARY_SET)
+        | (CommandClassId::SWITCH_MULTILEVEL, SWITCH_MULTILEVEL_SET)
+        | (CommandClassId::DOOR_LOCK, DOOR_LOCK_OPERATION_SET) => ZWaveCommandKind::Set,
+        (CommandClassId::BASIC, BASIC_REPORT)
+        | (CommandClassId::SWITCH_BINARY, SWITCH_BINARY_REPORT)
+        | (CommandClassId::SWITCH_MULTILEVEL, SWITCH_MULTILEVEL_REPORT)
+        | (CommandClassId::SENSOR_BINARY, SENSOR_BINARY_REPORT)
+        | (CommandClassId::SENSOR_MULTILEVEL, SENSOR_MULTILEVEL_REPORT)
+        | (CommandClassId::DOOR_LOCK, DOOR_LOCK_OPERATION_REPORT)
+        | (CommandClassId::BATTERY, BATTERY_REPORT)
+        | (COMMAND_CLASS_METER, METER_REPORT)
+        | (COMMAND_CLASS_NOTIFICATION, NOTIFICATION_REPORT) => ZWaveCommandKind::Report,
+        _ => ZWaveCommandKind::Other,
+    }
+}
+
 fn require_len(bytes: &[u8], needed: usize) -> Result<(), CommandClassError> {
     if bytes.len() < needed {
         return Err(CommandClassError::Truncated {
@@ -882,6 +969,71 @@ mod tests {
 
         assert_eq!(encoded, vec![0x25, 0x01, 0xff]);
         assert_eq!(ZWaveCommand::parse(&encoded).unwrap(), command);
+    }
+
+    #[test]
+    fn command_summary_reports_shape_without_payload_bytes() {
+        let command = binary_switch_set(true);
+
+        let summary = command.summary();
+
+        assert_eq!(
+            summary,
+            ZWaveCommandSummary {
+                command_class: CommandClassId::SWITCH_BINARY,
+                command_id: SWITCH_BINARY_SET,
+                command_kind: ZWaveCommandKind::Set,
+                payload_len: 1,
+                uses_extended_command_class: false,
+                can_encode: true,
+                encoded_len: Some(3),
+            }
+        );
+        assert!(summary.has_payload());
+        assert!(summary.is_request());
+        assert!(!summary.is_report());
+    }
+
+    #[test]
+    fn command_summary_handles_extended_and_invalid_class_ids() {
+        let extended = ZWaveCommand::new(CommandClassId(0xf102), 0x09, vec![0xaa, 0xbb]);
+        let invalid = ZWaveCommand::new(CommandClassId(0x0101), 0x01, Vec::new());
+
+        assert_eq!(
+            extended.summary(),
+            ZWaveCommandSummary {
+                command_class: CommandClassId(0xf102),
+                command_id: 0x09,
+                command_kind: ZWaveCommandKind::Other,
+                payload_len: 2,
+                uses_extended_command_class: true,
+                can_encode: true,
+                encoded_len: Some(5),
+            }
+        );
+        assert_eq!(
+            invalid.summary(),
+            ZWaveCommandSummary {
+                command_class: CommandClassId(0x0101),
+                command_id: 0x01,
+                command_kind: ZWaveCommandKind::Other,
+                payload_len: 0,
+                uses_extended_command_class: true,
+                can_encode: false,
+                encoded_len: None,
+            }
+        );
+    }
+
+    #[test]
+    fn command_summary_classifies_known_reports() {
+        let command = ZWaveCommand::new(CommandClassId::BATTERY, BATTERY_REPORT, vec![87]);
+
+        let summary = command.summary();
+
+        assert_eq!(summary.command_kind, ZWaveCommandKind::Report);
+        assert!(summary.is_report());
+        assert!(!summary.is_request());
     }
 
     #[test]
