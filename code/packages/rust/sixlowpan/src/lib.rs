@@ -541,6 +541,22 @@ pub enum ReassemblyProgress {
     Complete(Vec<u8>),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FragmentReassemblyBufferSummary {
+    pub key: ReassemblyKey,
+    pub datagram_size: usize,
+    pub received_bytes: usize,
+    pub missing_bytes: usize,
+    pub range_count: usize,
+    pub is_complete: bool,
+}
+
+impl FragmentReassemblyBufferSummary {
+    pub fn has_missing_bytes(&self) -> bool {
+        self.missing_bytes > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FragmentReassemblyBuffer {
     key: ReassemblyKey,
@@ -565,8 +581,23 @@ impl FragmentReassemblyBuffer {
         self.ranges.iter().map(|(start, end)| end - start).sum()
     }
 
+    pub fn missing_bytes(&self) -> usize {
+        usize::from(self.key.datagram_size).saturating_sub(self.received_bytes())
+    }
+
     pub fn is_complete(&self) -> bool {
         self.ranges.len() == 1 && self.ranges[0] == (0, usize::from(self.key.datagram_size))
+    }
+
+    pub fn summary(&self) -> FragmentReassemblyBufferSummary {
+        FragmentReassemblyBufferSummary {
+            key: self.key,
+            datagram_size: usize::from(self.key.datagram_size),
+            received_bytes: self.received_bytes(),
+            missing_bytes: self.missing_bytes(),
+            range_count: self.ranges.len(),
+            is_complete: self.is_complete(),
+        }
     }
 
     pub fn reassembled(&self) -> Option<Vec<u8>> {
@@ -622,6 +653,26 @@ impl FragmentReassemblyBuffer {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ReassemblyTableSummary {
+    pub pending_datagrams: usize,
+    pub received_bytes: usize,
+    pub missing_bytes: usize,
+    pub total_datagram_bytes: usize,
+    pub largest_datagram_size: usize,
+    pub range_count: usize,
+}
+
+impl ReassemblyTableSummary {
+    pub fn is_empty(&self) -> bool {
+        self.pending_datagrams == 0
+    }
+
+    pub fn has_missing_bytes(&self) -> bool {
+        self.missing_bytes > 0
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct ReassemblyTable {
     buffers: BTreeMap<ReassemblyKey, FragmentReassemblyBuffer>,
@@ -634,6 +685,22 @@ impl ReassemblyTable {
 
     pub fn pending_count(&self) -> usize {
         self.buffers.len()
+    }
+
+    pub fn summary(&self) -> ReassemblyTableSummary {
+        let mut summary = ReassemblyTableSummary::default();
+        for buffer in self.buffers.values() {
+            let buffer_summary = buffer.summary();
+            summary.pending_datagrams += 1;
+            summary.received_bytes += buffer_summary.received_bytes;
+            summary.missing_bytes += buffer_summary.missing_bytes;
+            summary.total_datagram_bytes += buffer_summary.datagram_size;
+            summary.largest_datagram_size = summary
+                .largest_datagram_size
+                .max(buffer_summary.datagram_size);
+            summary.range_count += buffer_summary.range_count;
+        }
+        summary
     }
 
     pub fn push_fragment(
@@ -1058,6 +1125,57 @@ mod tests {
     }
 
     #[test]
+    fn reassembly_buffer_summary_tracks_missing_ranges_without_payloads() {
+        let first = FragmentHeader::first(20, 0x3344).unwrap();
+        let next = FragmentHeader::next(20, 0x3344, 2).unwrap();
+        let key = ReassemblyKey::from(first);
+        let mut buffer = FragmentReassemblyBuffer::new(key);
+
+        assert_eq!(
+            buffer.summary(),
+            FragmentReassemblyBufferSummary {
+                key,
+                datagram_size: 20,
+                received_bytes: 0,
+                missing_bytes: 20,
+                range_count: 0,
+                is_complete: false,
+            }
+        );
+        assert!(buffer.summary().has_missing_bytes());
+
+        buffer.insert_fragment(first, &[0; 16]).unwrap();
+
+        assert_eq!(
+            buffer.summary(),
+            FragmentReassemblyBufferSummary {
+                key,
+                datagram_size: 20,
+                received_bytes: 16,
+                missing_bytes: 4,
+                range_count: 1,
+                is_complete: false,
+            }
+        );
+        assert_eq!(buffer.missing_bytes(), 4);
+
+        buffer.insert_fragment(next, &[1, 2, 3, 4]).unwrap();
+
+        assert_eq!(
+            buffer.summary(),
+            FragmentReassemblyBufferSummary {
+                key,
+                datagram_size: 20,
+                received_bytes: 20,
+                missing_bytes: 0,
+                range_count: 1,
+                is_complete: true,
+            }
+        );
+        assert!(!buffer.summary().has_missing_bytes());
+    }
+
+    #[test]
     fn reassembly_table_accepts_out_of_order_fragments() {
         let first = FragmentHeader::first(12, 0x7788).unwrap();
         let next = FragmentHeader::next(12, 0x7788, 1).unwrap();
@@ -1075,6 +1193,61 @@ mod tests {
             ReassemblyProgress::Complete(vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         );
         assert_eq!(table.pending_count(), 0);
+    }
+
+    #[test]
+    fn reassembly_table_summary_counts_pending_datagrams() {
+        let first = FragmentHeader::first(20, 0x3344).unwrap();
+        let next = FragmentHeader::next(20, 0x3344, 2).unwrap();
+        let other_next = FragmentHeader::next(12, 0x7788, 1).unwrap();
+        let mut table = ReassemblyTable::new();
+
+        assert_eq!(table.summary(), ReassemblyTableSummary::default());
+        assert!(table.summary().is_empty());
+        assert!(!table.summary().has_missing_bytes());
+
+        table.push_fragment(first, &[0; 16]).unwrap();
+
+        assert_eq!(
+            table.summary(),
+            ReassemblyTableSummary {
+                pending_datagrams: 1,
+                received_bytes: 16,
+                missing_bytes: 4,
+                total_datagram_bytes: 20,
+                largest_datagram_size: 20,
+                range_count: 1,
+            }
+        );
+
+        table.push_fragment(other_next, &[8, 9, 10, 11]).unwrap();
+
+        assert_eq!(
+            table.summary(),
+            ReassemblyTableSummary {
+                pending_datagrams: 2,
+                received_bytes: 20,
+                missing_bytes: 12,
+                total_datagram_bytes: 32,
+                largest_datagram_size: 20,
+                range_count: 2,
+            }
+        );
+        assert!(table.summary().has_missing_bytes());
+
+        table.push_fragment(next, &[1, 2, 3, 4]).unwrap();
+
+        assert_eq!(
+            table.summary(),
+            ReassemblyTableSummary {
+                pending_datagrams: 1,
+                received_bytes: 4,
+                missing_bytes: 8,
+                total_datagram_bytes: 12,
+                largest_datagram_size: 12,
+                range_count: 1,
+            }
+        );
     }
 
     #[test]

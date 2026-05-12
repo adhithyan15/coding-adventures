@@ -10,6 +10,7 @@ This crate starts D27 below Thread MLE:
 - LOWPAN_NHC UDP port compression and checksum-elision parsing
 - fragment first/next header parse and encode
 - fragment payload parsing and deterministic reassembly buffers
+- payload-free reassembly buffer/table summaries for Thread diagnostics
 - low-level frame payload extraction
 
 It does not yet perform full IPv6 header decompression, MLE, commissioning, or

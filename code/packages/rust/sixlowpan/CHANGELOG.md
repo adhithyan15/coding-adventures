@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Payload-free reassembly buffer and table summaries for received/missing bytes,
+  pending datagrams, contiguous ranges, and largest pending datagram size.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added
