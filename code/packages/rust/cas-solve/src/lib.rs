@@ -1,7 +1,7 @@
 //! # cas-solve
 //!
 //! Closed-form and numeric equation solving over ℚ: linear, quadratic, cubic,
-//! quartic, and Durand-Kerner polynomial roots.
+//! quartic, Durand-Kerner polynomial roots, and direct transcendental forms.
 //!
 //! ## Quick start
 //!
@@ -58,6 +58,7 @@ pub mod linear_system;
 pub mod numeric;
 pub mod quadratic;
 pub mod quartic;
+pub mod transcendental;
 
 pub use cubic::{solve_cubic, CBRT};
 pub use inequality::try_solve_inequality;
@@ -66,6 +67,7 @@ pub use linear_system::solve_linear_system;
 pub use numeric::{nsolve_fraction_poly, nsolve_poly, roots_to_ir, Complex};
 pub use quadratic::{solve_quadratic, I_UNIT};
 pub use quartic::solve_quartic;
+pub use transcendental::{try_solve_transcendental, FREE_INTEGER};
 
 /// The result of an equation-solve operation.
 ///
