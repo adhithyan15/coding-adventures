@@ -4,6 +4,7 @@ import {
   LIST,
   MUL,
   NEG,
+  SQRT,
   SUB,
   app,
   headName,
@@ -241,6 +242,109 @@ export function rank(node: IRNode): IRInteger {
   return int(nonZeroRows);
 }
 
+export function norm(node: IRNode, kind?: string): IRNode {
+  const rows = rowsOf(node);
+  const nrows = rows.length;
+  const ncols = rows[0]?.length ?? 0;
+  if (kind !== undefined && kind !== "frobenius") {
+    throw new MatrixError(`norm: unknown norm kind ${JSON.stringify(kind)}; use 'frobenius' or undefined`);
+  }
+  if (kind === undefined && ncols !== 1 && nrows !== 1) {
+    throw new MatrixError(
+      `norm: Euclidean norm requires a column or row vector (got ${nrows}x${ncols}); use norm(M, 'frobenius') for matrices`,
+    );
+  }
+
+  const total = matrixToRationals(node)
+    .flat()
+    .reduce((acc, entry) => acc.add(entry.mul(entry)), RationalValue.zero());
+  return sqrtRationalToIr(total);
+}
+
+export function frobeniusNorm(node: IRNode): IRNode {
+  return norm(node, "frobenius");
+}
+
+export function luDecompose(node: IRNode): IRNode {
+  const n = numRows(node);
+  const ncols = numCols(node);
+  if (n !== ncols) {
+    throw new MatrixError(`luDecompose: matrix must be square, got ${n}x${ncols}`);
+  }
+
+  const u = matrixToRationals(node).map((row) => [...row]);
+  const l = identityRationals(n);
+  const p = identityRationals(n);
+
+  for (let k = 0; k < n; k += 1) {
+    let bestRow = k;
+    for (let row = k + 1; row < n; row += 1) {
+      if (compareAbsRational(u[row][k], u[bestRow][k]) > 0) {
+        bestRow = row;
+      }
+    }
+
+    if (bestRow !== k) {
+      [u[k], u[bestRow]] = [u[bestRow], u[k]];
+      [p[k], p[bestRow]] = [p[bestRow], p[k]];
+      for (let col = 0; col < k; col += 1) {
+        [l[k][col], l[bestRow][col]] = [l[bestRow][col], l[k][col]];
+      }
+    }
+
+    const pivot = u[k][k];
+    if (pivot.isZero()) {
+      throw new MatrixError(`luDecompose: singular matrix (zero pivot at column ${k})`);
+    }
+
+    for (let row = k + 1; row < n; row += 1) {
+      const factor = u[row][k].div(pivot);
+      l[row][k] = factor;
+      for (let col = k; col < n; col += 1) {
+        u[row][col] = u[row][col].sub(factor.mul(u[k][col]));
+      }
+    }
+  }
+
+  return app(LIST, [rationalsToMatrix(l), rationalsToMatrix(u), rationalsToMatrix(p)]);
+}
+
+export function nullspace(node: IRNode): IRNode {
+  const frows = matrixToRationals(node);
+  const ncols = frows[0]?.length ?? 0;
+  const { pivotCols, rref } = rrefPivotInfo(frows);
+  const pivotSet = new Set(pivotCols);
+  const basis: IRNode[] = [];
+
+  for (let freeCol = 0; freeCol < ncols; freeCol += 1) {
+    if (pivotSet.has(freeCol)) continue;
+
+    const vector = Array.from({ length: ncols }, () => RationalValue.zero());
+    vector[freeCol] = RationalValue.one();
+    pivotCols.forEach((pivotCol, pivotRow) => {
+      vector[pivotCol] = rref[pivotRow][freeCol].neg();
+    });
+    basis.push(rationalsToMatrix(vector.map((entry) => [entry])));
+  }
+
+  return app(LIST, basis);
+}
+
+export function columnspace(node: IRNode): IRNode {
+  const { pivotCols } = rrefPivotInfo(matrixToRationals(node));
+  const originalRows = rowsOf(node);
+  const basis = pivotCols.map((col) => matrix(originalRows.map((row) => [row[col]])));
+  return app(LIST, basis);
+}
+
+export function rowspace(node: IRNode): IRNode {
+  const { rref } = rrefPivotInfo(matrixToRationals(node));
+  const basis = rref
+    .filter((row) => row.some((entry) => !entry.isZero()))
+    .map((row) => rationalsToMatrix([row]));
+  return app(LIST, basis);
+}
+
 function rowArgs(row: IRNode): IRNode[] {
   if (row.kind === "apply" && headName(row.head) === LIST.name) {
     return [...row.args];
@@ -297,6 +401,93 @@ function rationalToIr(value: RationalValue): IRNode {
   return value.denom === 1n ? int(value.numer) : rational(value.numer, value.denom);
 }
 
+function rationalsToMatrix(rows: readonly (readonly RationalValue[])[]): IRNode {
+  return matrix(rows.map((row) => row.map(rationalToIr)));
+}
+
+function identityRationals(n: number): RationalValue[][] {
+  return Array.from({ length: n }, (_, row) =>
+    Array.from({ length: n }, (_, col) => (row === col ? RationalValue.one() : RationalValue.zero())));
+}
+
+function rrefPivotInfo(rows: readonly (readonly RationalValue[])[]): { pivotCols: number[]; rref: RationalValue[][] } {
+  const rref = rows.map((row) => [...row]);
+  const nrows = rref.length;
+  const ncols = rref[0]?.length ?? 0;
+  const pivotCols: number[] = [];
+  let pivotRow = 0;
+
+  for (let col = 0; col < ncols && pivotRow < nrows; col += 1) {
+    let pivotPos = -1;
+    for (let row = pivotRow; row < nrows; row += 1) {
+      if (!rref[row][col].isZero()) {
+        pivotPos = row;
+        break;
+      }
+    }
+    if (pivotPos === -1) continue;
+
+    if (pivotPos !== pivotRow) {
+      [rref[pivotRow], rref[pivotPos]] = [rref[pivotPos], rref[pivotRow]];
+    }
+
+    const pivot = rref[pivotRow][col];
+    rref[pivotRow] = rref[pivotRow].map((entry) => entry.div(pivot));
+
+    for (let row = 0; row < nrows; row += 1) {
+      if (row === pivotRow) continue;
+      const factor = rref[row][col];
+      if (factor.isZero()) continue;
+      rref[row] = rref[row].map((entry, entryCol) => entry.sub(factor.mul(rref[pivotRow][entryCol])));
+    }
+
+    pivotCols.push(col);
+    pivotRow += 1;
+  }
+
+  return { pivotCols, rref };
+}
+
+function sqrtRationalToIr(value: RationalValue): IRNode {
+  if (value.numer < 0n) return app(SQRT, [rationalToIr(value)]);
+  const numerRoot = exactIntegerSqrt(value.numer);
+  const denomRoot = exactIntegerSqrt(value.denom);
+  if (numerRoot !== null && denomRoot !== null) {
+    return rationalToIr(new RationalValue(numerRoot, denomRoot));
+  }
+  return app(SQRT, [rationalToIr(value)]);
+}
+
+function exactIntegerSqrt(value: bigint): bigint | null {
+  const root = integerSqrt(value);
+  return root * root === value ? root : null;
+}
+
+function integerSqrt(value: bigint): bigint {
+  if (value < 0n) throw new RangeError("integerSqrt requires a non-negative input");
+  if (value < 2n) return value;
+  let low = 1n;
+  let high = value;
+  while (low <= high) {
+    const mid = (low + high) / 2n;
+    const square = mid * mid;
+    if (square === value) return mid;
+    if (square < value) {
+      low = mid + 1n;
+    } else {
+      high = mid - 1n;
+    }
+  }
+  return high;
+}
+
+function compareAbsRational(a: RationalValue, b: RationalValue): number {
+  const left = abs(a.numer) * b.denom;
+  const right = abs(b.numer) * a.denom;
+  if (left === right) return 0;
+  return left > right ? 1 : -1;
+}
+
 class RationalValue {
   readonly numer: bigint;
   readonly denom: bigint;
@@ -314,12 +505,28 @@ class RationalValue {
     this.denom = d / g;
   }
 
+  static zero(): RationalValue {
+    return new RationalValue(0n, 1n);
+  }
+
+  static one(): RationalValue {
+    return new RationalValue(1n, 1n);
+  }
+
   isZero(): boolean {
     return this.numer === 0n;
   }
 
+  add(other: RationalValue): RationalValue {
+    return new RationalValue(this.numer * other.denom + other.numer * this.denom, this.denom * other.denom);
+  }
+
   sub(other: RationalValue): RationalValue {
     return new RationalValue(this.numer * other.denom - other.numer * this.denom, this.denom * other.denom);
+  }
+
+  neg(): RationalValue {
+    return new RationalValue(-this.numer, this.denom);
   }
 
   mul(other: RationalValue): RationalValue {
