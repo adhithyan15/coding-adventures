@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `ArtifactCatalogSummary` and `catalog_summary()` for retention and revision
   coverage over selected artifact manifests.
+- `ArtifactProvenanceSummary` and `provenance_summary()` for compact
+  session/tool/job/agent attribution coverage over selected artifact manifests.
 - `ArtifactRevisionHistorySummary` and `revision_history_summary()` for
   bounded lineage, metadata, and body-size aggregates over revision history.
 
