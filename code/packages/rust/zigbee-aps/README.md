@@ -13,6 +13,7 @@ boundary:
 - cluster/profile classification helpers
 - binding table records for device and group destinations
 - body-free frame and binding-table summaries for read-side supervision
+- binding summary counts for source endpoint shape and cluster coverage
 - APS counters
 - payload preservation
 
