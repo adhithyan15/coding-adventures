@@ -65,6 +65,7 @@ use llm_gateway::{
 };
 
 pub mod decompose_text;
+pub mod elicit_rules;
 pub mod entail;
 pub mod find_contradicting_reading;
 pub mod judge_plausibility;
@@ -76,6 +77,7 @@ pub mod render_node;
 // `llm_primitives::render_node(...)` / `llm_primitives::judge_plausibility(...)`
 // directly.
 pub use decompose_text::{decompose_text, DecomposeTextRequest, DecomposeTextResponse};
+pub use elicit_rules::{elicit_rules, ElicitRulesRequest, ElicitRulesResponse};
 pub use entail::{entail, EntailRequest, EntailResponse};
 pub use find_contradicting_reading::{
     find_contradicting_reading, FindContradictingReadingRequest, FindContradictingReadingResponse,
@@ -376,6 +378,7 @@ pub const ENTAIL_PROMPT_VERSION: &str = "entail-v1";
 pub const ADVERSARY_PROMPT_VERSION: &str = "adversary-v1";
 pub const PLAUSIBILITY_PROMPT_VERSION: &str = "plausibility-v1";
 pub const EXTRACT_RULES_PROMPT_VERSION: &str = "extract-rules-v1";
+pub const ELICIT_RULES_PROMPT_VERSION: &str = "elicit-rules-v1";
 
 // ---------------------------------------------------------------------------
 // Retry helpers — thinking-mode-tolerant
@@ -888,5 +891,6 @@ mod tests {
         assert_eq!(ADVERSARY_PROMPT_VERSION, "adversary-v1");
         assert_eq!(PLAUSIBILITY_PROMPT_VERSION, "plausibility-v1");
         assert_eq!(EXTRACT_RULES_PROMPT_VERSION, "extract-rules-v1");
+        assert_eq!(ELICIT_RULES_PROMPT_VERSION, "elicit-rules-v1");
     }
 }
