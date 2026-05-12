@@ -11,6 +11,8 @@ Chief of Staff runtime needs.
 - `ContextSessionCatalogSummary` projections for read-side lifecycle coverage
 - `ContextSessionSummary` projections that combine header, transcript, and
   checkpoint state for one session
+- `ContextStoreInventorySummary` projections that compose catalog, transcript,
+  checkpoint, and compaction-attention coverage
 - ordered `ContextEntry` transcripts
 - body-free `ContextEntrySummary` projections for read-side transcript indexes
 - `ContextTranscriptSummary` aggregates for entry kind and time-span coverage
@@ -42,6 +44,7 @@ Chief of Staff runtime needs.
 - `list_snapshots()`
 - `snapshot_summary()`
 - `session_summary()`
+- `inventory_summary()`
 - `fetch_latest_snapshot()`
 - `compact_before_entry()`
 - `archive_session()`
@@ -57,6 +60,10 @@ and token estimate ranges without reading transcript bodies.
 `session_summary()` composes the header, body-free transcript summary, and
 checkpoint summary for one session, including whether the head checkpoint is
 present and how many entries remain outside it.
+
+`inventory_summary()` composes selected sessions into store-level lifecycle,
+transcript, checkpoint, tool-activity, external-reference, and compaction
+attention counts for host status and scheduled maintenance checks.
 
 ## Development
 

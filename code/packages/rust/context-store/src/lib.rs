@@ -307,6 +307,30 @@ impl ContextTranscriptSummary {
         summary
     }
 
+    pub fn record_summary(&mut self, summary: &Self) {
+        self.total_entries += summary.total_entries;
+        self.user_entries += summary.user_entries;
+        self.assistant_entries += summary.assistant_entries;
+        self.tool_call_entries += summary.tool_call_entries;
+        self.tool_result_entries += summary.tool_result_entries;
+        self.summary_entries += summary.summary_entries;
+        self.note_entries += summary.note_entries;
+        self.attachment_ref_entries += summary.attachment_ref_entries;
+        self.entries_with_metadata += summary.entries_with_metadata;
+        if let Some(timestamp) = summary.first_timestamp {
+            self.first_timestamp = Some(
+                self.first_timestamp
+                    .map_or(timestamp, |current| current.min(timestamp)),
+            );
+        }
+        if let Some(timestamp) = summary.latest_timestamp {
+            self.latest_timestamp = Some(
+                self.latest_timestamp
+                    .map_or(timestamp, |current| current.max(timestamp)),
+            );
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.total_entries == 0
     }
@@ -395,6 +419,31 @@ impl ContextSnapshotSummary {
         summary
     }
 
+    pub fn record_summary(&mut self, summary: &Self) {
+        self.total_snapshots += summary.total_snapshots;
+        self.included_entry_refs += summary.included_entry_refs;
+        self.summary_refs += summary.summary_refs;
+        self.memory_refs += summary.memory_refs;
+        self.artifact_refs += summary.artifact_refs;
+        self.snapshots_with_memory_refs += summary.snapshots_with_memory_refs;
+        self.snapshots_with_artifact_refs += summary.snapshots_with_artifact_refs;
+        self.total_token_estimate = self
+            .total_token_estimate
+            .saturating_add(summary.total_token_estimate);
+        if let Some(tokens) = summary.min_token_estimate {
+            self.min_token_estimate = Some(
+                self.min_token_estimate
+                    .map_or(tokens, |current| current.min(tokens)),
+            );
+        }
+        if let Some(tokens) = summary.max_token_estimate {
+            self.max_token_estimate = Some(
+                self.max_token_estimate
+                    .map_or(tokens, |current| current.max(tokens)),
+            );
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.total_snapshots == 0
     }
@@ -468,6 +517,79 @@ impl ContextSessionSummary {
 
     pub fn has_external_refs(&self) -> bool {
         self.snapshots.has_memory_refs() || self.snapshots.has_artifact_refs()
+    }
+}
+
+/// Store-level context inventory for D18A host and compaction status checks.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ContextStoreInventorySummary {
+    pub sessions: ContextSessionCatalogSummary,
+    pub transcripts: ContextTranscriptSummary,
+    pub snapshots: ContextSnapshotSummary,
+    pub sessions_with_uncheckpointed_entries: usize,
+    pub sessions_with_missing_head_snapshots: usize,
+    pub sessions_with_tool_activity: usize,
+    pub sessions_with_external_refs: usize,
+}
+
+impl ContextStoreInventorySummary {
+    pub fn empty() -> Self {
+        Self {
+            sessions: ContextSessionCatalogSummary::empty(),
+            transcripts: ContextTranscriptSummary::empty(),
+            snapshots: ContextSnapshotSummary::empty(),
+            sessions_with_uncheckpointed_entries: 0,
+            sessions_with_missing_head_snapshots: 0,
+            sessions_with_tool_activity: 0,
+            sessions_with_external_refs: 0,
+        }
+    }
+
+    pub fn from_parts(sessions: &[ContextSession], summaries: &[ContextSessionSummary]) -> Self {
+        let mut inventory = Self {
+            sessions: ContextSessionCatalogSummary::from_sessions(sessions),
+            ..Self::empty()
+        };
+
+        for summary in summaries {
+            inventory.transcripts.record_summary(&summary.transcript);
+            inventory.snapshots.record_summary(&summary.snapshots);
+            if summary.has_uncheckpointed_entries() {
+                inventory.sessions_with_uncheckpointed_entries += 1;
+            }
+            if summary.has_missing_head_snapshot() {
+                inventory.sessions_with_missing_head_snapshots += 1;
+            }
+            if summary.has_tool_activity() {
+                inventory.sessions_with_tool_activity += 1;
+            }
+            if summary.has_external_refs() {
+                inventory.sessions_with_external_refs += 1;
+            }
+        }
+
+        inventory
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.sessions.total_sessions == 0
+    }
+
+    pub fn has_context_material(&self) -> bool {
+        self.transcripts.total_entries > 0 || self.snapshots.total_snapshots > 0
+    }
+
+    pub fn has_compaction_attention_items(&self) -> bool {
+        self.sessions_with_uncheckpointed_entries > 0
+            || self.sessions_with_missing_head_snapshots > 0
+    }
+
+    pub fn has_tool_activity(&self) -> bool {
+        self.sessions_with_tool_activity > 0
+    }
+
+    pub fn has_external_refs(&self) -> bool {
+        self.sessions_with_external_refs > 0
     }
 }
 
@@ -937,6 +1059,27 @@ impl<S: StorageBackend> ContextStore<S> {
         Ok(Some(ContextSessionSummary::from_parts(
             &session, &entries, &snapshots,
         )))
+    }
+
+    /// Summarize selected sessions across catalog, transcript, and checkpoints.
+    pub fn inventory_summary(
+        &self,
+        options: SessionListOptions,
+    ) -> Result<ContextStoreInventorySummary, StorageError> {
+        let sessions = self.list_sessions(options)?;
+        let mut summaries = Vec::with_capacity(sessions.len());
+        for session in &sessions {
+            let entries =
+                self.fetch_entry_summaries(&session.session_id, FetchEntriesOptions::default())?;
+            let snapshots =
+                self.list_snapshots(&session.session_id, SnapshotListOptions::default())?;
+            summaries.push(ContextSessionSummary::from_parts(
+                session, &entries, &snapshots,
+            ));
+        }
+        Ok(ContextStoreInventorySummary::from_parts(
+            &sessions, &summaries,
+        ))
     }
 
     /// Create a compaction snapshot that covers all entries up to and including
@@ -2292,6 +2435,154 @@ mod tests {
         assert!(broken.is_archived());
         assert!(broken.has_missing_head_snapshot());
         assert!(!broken.has_uncheckpointed_entries());
+    }
+
+    #[test]
+    fn inventory_summary_rolls_up_selected_session_material() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "alpha".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Active Planning".to_string(),
+            })
+            .unwrap();
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "beta".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Archived Notes".to_string(),
+            })
+            .unwrap();
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "gamma".to_string(),
+                owner_id: "other".to_string(),
+                title: "Other Owner".to_string(),
+            })
+            .unwrap();
+
+        for (entry_id, kind, timestamp) in [
+            ("entry-1", ContextEntryKind::User, 10),
+            ("entry-2", ContextEntryKind::ToolCall, 20),
+            ("entry-3", ContextEntryKind::ToolResult, 30),
+        ] {
+            let _ = store
+                .append_entry(
+                    "alpha",
+                    AppendEntryInput {
+                        entry_id: entry_id.to_string(),
+                        kind,
+                        timestamp: Some(timestamp),
+                        metadata: object(&[("kind", JsonValue::String(entry_id.to_string()))]),
+                        body: JsonValue::String(entry_id.to_string()),
+                    },
+                )
+                .unwrap();
+        }
+        let _ = store
+            .append_entry(
+                "beta",
+                AppendEntryInput {
+                    entry_id: "entry-4".to_string(),
+                    kind: ContextEntryKind::Note,
+                    timestamp: Some(40),
+                    metadata: object(&[]),
+                    body: JsonValue::String("note".to_string()),
+                },
+            )
+            .unwrap();
+        let _ = store
+            .append_entry(
+                "gamma",
+                AppendEntryInput {
+                    entry_id: "entry-5".to_string(),
+                    kind: ContextEntryKind::Assistant,
+                    timestamp: Some(50),
+                    metadata: object(&[]),
+                    body: JsonValue::String("other".to_string()),
+                },
+            )
+            .unwrap();
+        let _ = store
+            .create_snapshot(
+                "alpha",
+                CreateSnapshotInput {
+                    snapshot_id: "snap-1".to_string(),
+                    basis_entry_id: "entry-2".to_string(),
+                    token_estimate: 25,
+                    included_entry_ids: vec!["entry-1".to_string(), "entry-2".to_string()],
+                    summary_refs: vec!["summary-1".to_string()],
+                    memory_refs: vec!["memory-1".to_string()],
+                    artifact_refs: vec!["artifact-1".to_string()],
+                },
+            )
+            .unwrap();
+        let _ = store.archive_session("beta").unwrap();
+
+        let summary = store
+            .inventory_summary(SessionListOptions::new().for_owner("chief"))
+            .unwrap();
+
+        assert_eq!(
+            summary.sessions,
+            ContextSessionCatalogSummary {
+                total_sessions: 2,
+                active_sessions: 1,
+                paused_sessions: 0,
+                archived_sessions: 1,
+                sessions_with_snapshots: 1,
+                sessions_without_snapshots: 1,
+            }
+        );
+        assert_eq!(
+            summary.transcripts,
+            ContextTranscriptSummary {
+                total_entries: 4,
+                user_entries: 1,
+                assistant_entries: 0,
+                tool_call_entries: 1,
+                tool_result_entries: 1,
+                summary_entries: 0,
+                note_entries: 1,
+                attachment_ref_entries: 0,
+                entries_with_metadata: 3,
+                first_timestamp: Some(10),
+                latest_timestamp: Some(40),
+            }
+        );
+        assert_eq!(
+            summary.snapshots,
+            ContextSnapshotSummary {
+                total_snapshots: 1,
+                included_entry_refs: 2,
+                summary_refs: 1,
+                memory_refs: 1,
+                artifact_refs: 1,
+                snapshots_with_memory_refs: 1,
+                snapshots_with_artifact_refs: 1,
+                total_token_estimate: 25,
+                min_token_estimate: Some(25),
+                max_token_estimate: Some(25),
+            }
+        );
+        assert_eq!(summary.sessions_with_uncheckpointed_entries, 2);
+        assert_eq!(summary.sessions_with_missing_head_snapshots, 0);
+        assert_eq!(summary.sessions_with_tool_activity, 1);
+        assert_eq!(summary.sessions_with_external_refs, 1);
+        assert!(!summary.is_empty());
+        assert!(summary.has_context_material());
+        assert!(summary.has_compaction_attention_items());
+        assert!(summary.has_tool_activity());
+        assert!(summary.has_external_refs());
+
+        let empty = store
+            .inventory_summary(SessionListOptions::new().for_owner("missing"))
+            .unwrap();
+        assert_eq!(empty, ContextStoreInventorySummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_context_material());
+        assert!(!empty.has_compaction_attention_items());
     }
 
     #[test]

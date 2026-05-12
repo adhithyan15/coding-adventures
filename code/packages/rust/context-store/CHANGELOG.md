@@ -15,6 +15,9 @@ All notable changes to this package will be documented in this file.
 - `ContextSessionSummary` and `session_summary()` for one-session host status
   views that combine header, transcript, checkpoint, and uncheckpointed-entry
   state.
+- `ContextStoreInventorySummary` and `inventory_summary()` for store-level
+  lifecycle, transcript, checkpoint, and compaction-attention rollups over
+  selected sessions.
 
 ## [0.1.0] - 2026-04-18
 
