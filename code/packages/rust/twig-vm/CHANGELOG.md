@@ -1,5 +1,43 @@
 # Changelog — twig-vm
 
+## [0.10.0] — 2026-05-12
+
+### Added (LANG34 — First-Class Closure Dispatch)
+
+#### New dispatch arms: `alloc_closure` / `call_closure`
+
+The main dispatch loop now handles two new opcodes:
+
+- **`alloc_closure`** (`exec_alloc_closure`):
+  - Reads `srcs[0]` as `Operand::Str(fn_name)` (no register lookup).
+  - Interns `fn_name` to a `SymbolId`; collects captures from `srcs[1..]`.
+  - Calls `lispy_runtime::alloc_closure` — same heap representation as the
+    legacy `make_closure` builtin path.
+  - Errors with `MalformedInstruction` if `srcs[0]` is not `Operand::Str`.
+
+- **`call_closure`** (`exec_call_closure`):
+  - Reads closure handle from `srcs[0]` (shifted vs. `apply_closure`'s `srcs[1]`).
+  - Reads user args from `srcs[1..]`.
+  - Otherwise identical to `exec_apply_closure`: prepend captures, recurse
+    into `dispatch` for user fns; `resolve_builtin` for builtin closures.
+  - Errors with `NotCallable` if `srcs[0]` is not a closure handle.
+
+The legacy `call_builtin "make_closure"` / `"apply_closure"` arms in
+`exec_call_builtin` are retained for backward compatibility.
+
+#### Tests
+
+7 new tests:
+- `alloc_and_call_closure_no_captures` — zero-capture closure
+- `alloc_and_call_closure_with_one_capture` — single capture (x+y=15)
+- `alloc_and_call_closure_with_two_captures` — two captures (a+b+y=12)
+- `alloc_closure_wrong_operand_type_errors` — MalformedInstruction on non-Str srcs[0]
+- `call_closure_on_non_closure_errors` — NotCallable on non-closure
+- `e2e_lambda_with_capture_via_new_opcodes` — curried add via compiler
+- `e2e_make_adder_with_new_opcodes` — make-adder pattern via compiler
+
+---
+
 ## [0.9.0] — 2026-05-11
 
 ### Changed (LANG32 — Operand::Str exhaustiveness)

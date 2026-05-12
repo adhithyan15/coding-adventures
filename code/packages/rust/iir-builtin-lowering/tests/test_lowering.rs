@@ -1185,8 +1185,12 @@ fn test_72_pair_pred_left_unchanged() {
 }
 
 #[test]
-fn test_73_make_closure_left_unchanged() {
-    // make_closure is a BEAM02/CLR02 builtin and must survive untouched.
+fn test_73_make_closure_unresolvable_left_unchanged() {
+    // Phase 4 (LANG34) lowers make_closure only when the fn_name register
+    // can be resolved to a compile-time string literal via a preceding const
+    // instruction.  When the register (%fn here) has no such const, the
+    // instruction is left unchanged so the backend validator or twig-vm
+    // fallback can handle it.
     let instr = IIRInstr::new(
         "call_builtin",
         Some("%clos".into()),
