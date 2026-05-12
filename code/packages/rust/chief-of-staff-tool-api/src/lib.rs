@@ -645,6 +645,8 @@ impl ToolCatalogQuery {
 pub struct ToolCatalogSummary {
     pub total_tools: usize,
     pub by_family: BTreeMap<String, usize>,
+    pub by_required_capability: BTreeMap<String, usize>,
+    pub by_tag: BTreeMap<String, usize>,
     pub by_side_effects: BTreeMap<String, usize>,
     pub by_idempotency: BTreeMap<String, usize>,
     pub by_concurrency: BTreeMap<String, usize>,
@@ -665,6 +667,8 @@ impl ToolCatalogSummary {
         Self {
             total_tools: 0,
             by_family: BTreeMap::new(),
+            by_required_capability: BTreeMap::new(),
+            by_tag: BTreeMap::new(),
             by_side_effects: BTreeMap::new(),
             by_idempotency: BTreeMap::new(),
             by_concurrency: BTreeMap::new(),
@@ -730,6 +734,12 @@ impl ToolCatalogSummary {
             if definition.output_schema.is_some() {
                 summary.tools_with_output_schema += 1;
             }
+            for capability in &definition.required_capabilities {
+                increment_count(&mut summary.by_required_capability, capability.as_str());
+            }
+            for tag in &definition.tags {
+                increment_count(&mut summary.by_tag, tag.as_str());
+            }
         }
         summary
     }
@@ -748,6 +758,25 @@ impl ToolCatalogSummary {
 
     pub fn has_timeout_bound_tools(&self) -> bool {
         self.tools_with_timeout > 0
+    }
+
+    pub fn required_capability_count(&self, capability: &str) -> usize {
+        self.by_required_capability
+            .get(capability)
+            .copied()
+            .unwrap_or(0)
+    }
+
+    pub fn tag_count(&self, tag: &str) -> usize {
+        self.by_tag.get(tag).copied().unwrap_or(0)
+    }
+
+    pub fn has_required_capability(&self, capability: &str) -> bool {
+        self.required_capability_count(capability) > 0
+    }
+
+    pub fn has_tag(&self, tag: &str) -> bool {
+        self.tag_count(tag) > 0
     }
 }
 
@@ -4808,6 +4837,12 @@ mod tests {
         assert_eq!(export.summary.by_family.get("skill"), Some(&7));
         assert_eq!(export.summary.by_family.get("memory"), Some(&7));
         assert_eq!(export.summary.by_family.get("job"), Some(&6));
+        assert_eq!(export.summary.tag_count("store"), 27);
+        assert_eq!(export.summary.tag_count("scheduler"), 6);
+        assert_eq!(export.summary.required_capability_count("memory:read"), 3);
+        assert_eq!(export.summary.required_capability_count("skills:read"), 3);
+        assert!(export.summary.has_tag("store"));
+        assert!(export.summary.has_required_capability("jobs:run"));
         assert_eq!(export.summary.streaming_tools, 17);
         assert!(export.summary.has_write_or_external_tools());
         assert!(export.summary.has_serialized_tools());
@@ -4913,6 +4948,19 @@ mod tests {
         assert_eq!(
             registry.summary().tools_requiring_capabilities,
             registry.summary().total_tools
+        );
+        assert_eq!(registry.summary().tag_count("store"), 2);
+        assert_eq!(registry.summary().tag_count("memory"), 2);
+        assert_eq!(registry.summary().tag_count("storage"), 1);
+        assert_eq!(
+            registry.summary().required_capability_count("memory:read"),
+            1
+        );
+        assert_eq!(
+            registry
+                .summary()
+                .required_capability_count("artifact.write"),
+            1
         );
         assert_eq!(
             registry

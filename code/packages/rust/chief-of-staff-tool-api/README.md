@@ -10,6 +10,7 @@ The crate intentionally stops at the contract layer:
 - provider-neutral JSON-schema-shaped exports for model gateway adapters
 - catalog export snapshots with schema documents, validation state, and summary
   counts for portability and policy-shape checks
+- catalog summary coverage by required capability and tag for parity audits
 - query helpers for selecting catalog entries by family, side effects, tier,
   capability, tag, stability, and limit
 - read-side query helpers for invocation requests, call records, event streams,
