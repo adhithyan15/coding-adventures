@@ -9,6 +9,12 @@
   equations, and `Rule(var, value)` IR output.
 - Linear-system integration tests for integer, rational, 3x3, zero-form,
   singular, non-linear, and wrong-size systems.
+- `inequality` module: `try_solve_inequality(ineq, variable)` — one-variable
+  polynomial inequality solving for `Less`, `LessEqual`, `Greater`, and
+  `GreaterEqual` IR nodes up to quartic degree.
+- Inequality integration tests for exact rational boundaries, interval
+  conditions, all-real sentinels, numeric irrational boundaries, and
+  non-polynomial rejection.
 - `numeric` module: `Complex`, `nsolve_poly`, `roots_to_ir`, and
   `nsolve_fraction_poly` — pure Rust Durand-Kerner numeric polynomial
   root-finding plus `%i`-aware symbolic IR conversion.

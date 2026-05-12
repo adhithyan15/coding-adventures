@@ -96,6 +96,14 @@ square systems with exact Gaussian elimination. It returns `Rule(var, value)`
 IR nodes in variable order, or `None` for non-linear, singular, empty, or
 non-square systems.
 
+## Polynomial inequalities
+
+`try_solve_inequality(ineq, variable)` accepts `Less`, `LessEqual`, `Greater`,
+or `GreaterEqual` IR nodes, normalizes `lhs op rhs` into a univariate rational
+polynomial, and returns interval predicates for degree-four-or-lower
+polynomials. Exact rational roots are preserved where possible; irrational
+boundaries fall back to numeric `Float` nodes.
+
 ## Stack position
 
 ```
