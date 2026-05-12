@@ -4,6 +4,9 @@
 
 ### Added
 
+- Wired `Solve(inequality, variable)` to the Rust `cas-solve`
+  `try_solve_inequality` handler, returning `List(...)` interval predicates
+  for supported one-variable polynomial inequalities.
 - Wired `linsolve` / `Solve(List(...), List(...))` to the Rust `cas-solve`
   exact linear-system solver.
 - Added runtime coverage for integer systems, rational systems, and non-linear

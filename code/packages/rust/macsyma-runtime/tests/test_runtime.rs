@@ -3,7 +3,10 @@ use coding_adventures_macsyma_runtime::{
     extend_macsyma_name_table, macsyma_name_table, MacsymaSession, EV, KILL,
 };
 use std::collections::HashMap;
-use symbolic_ir::{apply, int, rat, sym, ADD, DIV, EQUAL, LIST, MUL, POW, RULE, SUB};
+use symbolic_ir::{
+    apply, int, rat, sym, ADD, AND, DIV, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, LIST,
+    MUL, POW, RULE, SUB,
+};
 
 #[test]
 fn evaluates_arithmetic_program() {
@@ -291,6 +294,123 @@ fn keeps_non_linear_solve_calls_unevaluated() {
                 )],
             ),
             apply(sym(LIST), vec![x]),
+        ],
+    );
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn solves_polynomial_inequalities_through_cas_solve() {
+    let x = sym("x");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(GREATER),
+                    vec![apply(sym(SUB), vec![x.clone(), int(1)]), int(0)],
+                ),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(GREATER),
+                    vec![
+                        apply(
+                            sym(SUB),
+                            vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+                        ),
+                        int(0),
+                    ],
+                ),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(LESS_EQUAL),
+                    vec![
+                        apply(
+                            sym(SUB),
+                            vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+                        ),
+                        int(0),
+                    ],
+                ),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(GREATER_EQUAL),
+                    vec![apply(sym(POW), vec![x.clone(), int(2)]), int(0)],
+                ),
+                x.clone(),
+            ],
+        ),
+    ]);
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(LIST),
+            vec![apply(sym(GREATER), vec![x.clone(), int(1)])]
+        )
+    );
+    assert_eq!(
+        results[1].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym(LESS), vec![x.clone(), int(-1)]),
+                apply(sym(GREATER), vec![x.clone(), int(1)]),
+            ],
+        )
+    );
+    assert_eq!(
+        results[2].output,
+        apply(
+            sym(LIST),
+            vec![apply(
+                sym(AND),
+                vec![
+                    apply(sym(GREATER_EQUAL), vec![x.clone(), int(-1)]),
+                    apply(sym(LESS_EQUAL), vec![x.clone(), int(1)]),
+                ],
+            )],
+        )
+    );
+    assert_eq!(
+        results[3].output,
+        apply(
+            sym(LIST),
+            vec![apply(sym(GREATER_EQUAL), vec![int(0), int(0)])],
+        )
+    );
+}
+
+#[test]
+fn keeps_unsupported_inequality_solve_calls_unevaluated() {
+    let x = sym("x");
+    let expr = apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(GREATER),
+                vec![apply(sym("Sin"), vec![x.clone()]), int(0)],
+            ),
+            x,
         ],
     );
 
