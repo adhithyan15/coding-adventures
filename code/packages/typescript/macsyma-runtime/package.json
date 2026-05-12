@@ -21,6 +21,7 @@
     "@coding-adventures/macsyma-parser": "file:../macsyma-parser",
     "@coding-adventures/parser": "file:../parser",
     "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/cas-list-operations": "file:../cas-list-operations",
     "@coding-adventures/cas-solve": "file:../cas-solve",
     "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
     "@coding-adventures/symbolic-vm": "file:../symbolic-vm"

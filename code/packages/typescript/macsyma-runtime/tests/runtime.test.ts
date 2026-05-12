@@ -24,15 +24,28 @@ import {
 import { VM } from "@coding-adventures/symbolic-vm";
 import {
   ALL_SYMBOL,
+  APPEND,
+  APPLY,
   DISPLAY,
   EV,
   EXPAND,
+  FIRST,
+  FLATTEN,
   History,
+  JOIN,
   KILL,
+  LAST,
+  LENGTH,
   MACSYMA_NAME_TABLE,
   MacsymaBackend,
   MacsymaSession,
+  MAP,
+  PART,
   RAT_SIMPLIFY,
+  RANGE,
+  REST,
+  REVERSE,
+  SORT,
   SUPPRESS,
   extendCompilerNameTable,
   evalSourceJson,
@@ -169,6 +182,7 @@ describe("macsyma-runtime", () => {
     expect(backend.handlers().has(KILL.name)).toBe(true);
     expect(backend.handlers().has(EV.name)).toBe(true);
     expect(backend.handlers().has(SOLVE.name)).toBe(true);
+    expect(backend.handlers().has(LENGTH.name)).toBe(true);
     expect(backend.holdHeads().has(KILL.name)).toBe(true);
     expect(backend.holdHeads().has(EV.name)).toBe(true);
     expect(backend.holdHeads().has(SOLVE.name)).toBe(true);
@@ -364,6 +378,68 @@ describe("macsyma-runtime", () => {
 
     const [result] = session.evalStatements([expr]);
     expect(result.output).toEqual(expr);
+  });
+
+  it("evaluates deterministic list operations through cas-list-operations", () => {
+    const xs = app(LIST, [int(1), int(2), int(3)]);
+    const nested = app(LIST, [int(1), app(LIST, [int(2), app(LIST, [int(3)])])]);
+    const session = new MacsymaSession();
+    const [
+      lengthResult,
+      firstResult,
+      restResult,
+      lastResult,
+      reverseResult,
+      appendResult,
+      joinResult,
+      rangeResult,
+      partResult,
+      mapResult,
+      applyResult,
+      sortResult,
+      flattenResult,
+    ] = session.evalStatements([
+      app(LENGTH, [xs]),
+      app(FIRST, [xs]),
+      app(REST, [xs]),
+      app(LAST, [xs]),
+      app(REVERSE, [xs]),
+      app(APPEND, [app(LIST, [int(1)]), app(LIST, [int(2), int(3)])]),
+      app(JOIN, [app(LIST, [int(1)]), app(LIST, [int(2)])]),
+      app(RANGE, [int(1), int(5), int(2)]),
+      app(PART, [xs, int(-1)]),
+      app(MAP, [sym("f"), app(LIST, [sym("x"), sym("y")])]),
+      app(APPLY, [ADD, app(LIST, [sym("x"), sym("y")])]),
+      app(SORT, [app(LIST, [sym("b"), sym("a")])]),
+      app(FLATTEN, [nested, int(-1)]),
+    ]);
+
+    expect(lengthResult.output).toEqual(int(3));
+    expect(firstResult.output).toEqual(int(1));
+    expect(restResult.output).toEqual(app(LIST, [int(2), int(3)]));
+    expect(lastResult.output).toEqual(int(3));
+    expect(reverseResult.output).toEqual(app(LIST, [int(3), int(2), int(1)]));
+    expect(appendResult.output).toEqual(app(LIST, [int(1), int(2), int(3)]));
+    expect(joinResult.output).toEqual(app(LIST, [int(1), int(2)]));
+    expect(rangeResult.output).toEqual(app(LIST, [int(1), int(3), int(5)]));
+    expect(partResult.output).toEqual(int(3));
+    expect(mapResult.output).toEqual(app(LIST, [
+      app(sym("f"), [sym("x")]),
+      app(sym("f"), [sym("y")]),
+    ]));
+    expect(applyResult.output).toEqual(app(ADD, [sym("x"), sym("y")]));
+    expect(sortResult.output).toEqual(app(LIST, [sym("a"), sym("b")]));
+    expect(flattenResult.output).toEqual(app(LIST, [int(1), int(2), int(3)]));
+  });
+
+  it("keeps invalid list operation calls unevaluated", () => {
+    const session = new MacsymaSession();
+    const badPart = app(PART, [app(LIST, [int(1)]), int(0)]);
+    const badLength = app(LENGTH, [sym("x")]);
+    const [partResult, lengthResult] = session.evalStatements([badPart, badLength]);
+
+    expect(partResult.output).toEqual(badPart);
+    expect(lengthResult.output).toEqual(badLength);
   });
 
   it("returns rational linsolve results", () => {
