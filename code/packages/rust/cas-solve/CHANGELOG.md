@@ -4,6 +4,11 @@
 
 ### Added
 
+- `numeric` module: `Complex`, `nsolve_poly`, `roots_to_ir`, and
+  `nsolve_fraction_poly` — pure Rust Durand-Kerner numeric polynomial
+  root-finding plus `%i`-aware symbolic IR conversion.
+- Numeric solver integration tests for linear, quadratic, cubic, quintic,
+  constant-polynomial, complex-root, and fraction-coefficient cases.
 - `quartic` module: `solve_quartic(a, b, c, d, e) -> SolveResult` — solves
   quartic equations via rational-root deflation, biquadratic solving, and a
   bounded Ferrari fallback through the cubic solver.

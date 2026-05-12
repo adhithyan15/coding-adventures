@@ -4,7 +4,10 @@
 // code/packages/python/cas-solve/tests/.
 
 use cas_solve::frac::Frac;
-use cas_solve::{solve_cubic, solve_linear, solve_quadratic, solve_quartic, SolveResult};
+use cas_solve::{
+    nsolve_fraction_poly, nsolve_poly, roots_to_ir, solve_cubic, solve_linear, solve_quadratic,
+    solve_quartic, Complex, SolveResult,
+};
 use symbolic_ir::{int, rat, IRNode};
 
 fn frac(n: i64, d: i64) -> Frac {
@@ -12,6 +15,30 @@ fn frac(n: i64, d: i64) -> Frac {
 }
 fn fi(n: i64) -> Frac {
     Frac::from_int(n)
+}
+
+fn c(re: f64, im: f64) -> Complex {
+    Complex::new(re, im)
+}
+
+fn assert_numeric_roots_close(actual: &[Complex], expected: &[Complex]) {
+    assert_eq!(actual.len(), expected.len());
+    let mut used = vec![false; actual.len()];
+    for want in expected {
+        let mut matched = false;
+        for (i, got) in actual.iter().enumerate() {
+            if used[i] {
+                continue;
+            }
+            let distance = ((*got - *want).abs()).min((*got - c(want.re, -want.im)).abs());
+            if distance < 1e-7 {
+                used[i] = true;
+                matched = true;
+                break;
+            }
+        }
+        assert!(matched, "missing root {want:?} in {actual:?}");
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -340,4 +367,86 @@ fn quartic_ferrari_complex_roots() {
 fn quartic_no_usable_resolvent_root_returns_empty() {
     let r = solve_quartic(fi(1), fi(0), fi(0), fi(1), fi(1));
     assert_eq!(r, SolveResult::Solutions(vec![]));
+}
+
+// ---------------------------------------------------------------------------
+// nsolve_poly
+// ---------------------------------------------------------------------------
+
+#[test]
+fn nsolve_linear_root() {
+    let roots = nsolve_poly(&[c(2.0, 0.0), c(-4.0, 0.0)], 200, 1e-12);
+    assert_numeric_roots_close(&roots, &[c(2.0, 0.0)]);
+}
+
+#[test]
+fn nsolve_quadratic_real_roots() {
+    let roots = nsolve_poly(&[c(1.0, 0.0), c(0.0, 0.0), c(-1.0, 0.0)], 200, 1e-12);
+    assert_numeric_roots_close(&roots, &[c(-1.0, 0.0), c(1.0, 0.0)]);
+}
+
+#[test]
+fn nsolve_quadratic_complex_roots() {
+    let roots = nsolve_poly(&[c(1.0, 0.0), c(0.0, 0.0), c(1.0, 0.0)], 200, 1e-12);
+    assert_numeric_roots_close(&roots, &[c(0.0, 1.0), c(0.0, -1.0)]);
+}
+
+#[test]
+fn nsolve_cubic_three_real_roots() {
+    let roots = nsolve_poly(
+        &[c(1.0, 0.0), c(-6.0, 0.0), c(11.0, 0.0), c(-6.0, 0.0)],
+        200,
+        1e-12,
+    );
+    assert_numeric_roots_close(&roots, &[c(1.0, 0.0), c(2.0, 0.0), c(3.0, 0.0)]);
+}
+
+#[test]
+fn nsolve_quintic_unit_roots() {
+    let roots = nsolve_poly(
+        &[
+            c(1.0, 0.0),
+            c(0.0, 0.0),
+            c(0.0, 0.0),
+            c(0.0, 0.0),
+            c(0.0, 0.0),
+            c(-1.0, 0.0),
+        ],
+        300,
+        1e-12,
+    );
+    assert_eq!(roots.len(), 5);
+    assert!(roots.iter().all(|root| (root.abs() - 1.0).abs() < 1e-8));
+}
+
+#[test]
+fn nsolve_constant_polynomial_returns_empty() {
+    assert!(nsolve_poly(&[c(5.0, 0.0)], 200, 1e-12).is_empty());
+}
+
+#[test]
+fn roots_to_ir_preserves_real_and_complex_roots() {
+    let roots = [c(2.0, 0.0), c(1.5, -0.25)];
+    let ir = roots_to_ir(&roots);
+    assert_eq!(ir.len(), 2);
+    assert_eq!(ir[0], IRNode::Float(2.0));
+    let text = format!("{:?}", ir[1]);
+    assert!(text.contains("%i"), "expected complex IR in {text}");
+}
+
+#[test]
+fn nsolve_fraction_poly_returns_float_ir_roots() {
+    let ir = nsolve_fraction_poly(&[fi(1), fi(-6), fi(11), fi(-6)]);
+    assert_eq!(ir.len(), 3);
+    let mut values: Vec<f64> = ir
+        .iter()
+        .map(|node| match node {
+            IRNode::Float(value) => *value,
+            other => panic!("expected float root, got {other:?}"),
+        })
+        .collect();
+    values.sort_by(f64::total_cmp);
+    assert!((values[0] - 1.0).abs() < 1e-7);
+    assert!((values[1] - 2.0).abs() < 1e-7);
+    assert!((values[2] - 3.0).abs() < 1e-7);
 }
