@@ -23,10 +23,14 @@
 //!   * ADJ07 audit-trail population
 //!     ([`adjudication_audit_trail::AuditTrail`]).
 //!
-//! ADJ04 (round-trip) and ADJ05 (adversarial) are recorded in the
-//! audit trail as [`PassOutcome::Skipped`] for now — when those
-//! checker crates ship, they slot in alongside the existing two
-//! without changing the pipeline's public surface.
+//! ADJ04 (round-trip) runs **when** the caller provides a
+//! [`GatewayConfig`] with `Renderer` + `Nli` clients registered. If
+//! no gateway is supplied (or those roles aren't bound), ADJ04 is
+//! recorded as [`PassOutcome::Skipped`] with `pass_version =
+//! "not-yet-wired"`, preserving the v0.1/v0.2 behaviour.
+//!
+//! ADJ05 (adversarial) still records as `Skipped` — it needs a
+//! second, family-disjoint `Adversary` client and lands in v0.4.
 //!
 //! ## What this crate deliberately does NOT do (yet)
 //!
@@ -51,6 +55,11 @@ use adjudication_ir::{IRDocument, IRNode, NodeId as IRNodeId};
 use adjudication_polarity_modality::{
     check_propagation, PropagationResult, PropagationViolation, PropagationWarning,
 };
+use adjudication_round_trip::{
+    check_round_trip, CheckError as RoundTripCheckError, CheckOptions as RoundTripOptions,
+    RoundTripResult, RoundTripViolation,
+};
+use llm_primitives::GatewayConfig;
 
 // `SearchMode` and `TrailSearchMode` collapse to the same trail-side
 // enum; alias for clarity.
@@ -115,20 +124,41 @@ pub enum Verdict {
 // Entry point
 // ---------------------------------------------------------------------------
 
-/// One-call end-to-end. Runs coverage + polarity/modality, records
-/// both into the audit trail, then runs the engine if (and only if)
-/// every gating check passed. Returns the verdict and the populated
-/// trail.
+/// One-call end-to-end. Runs coverage + polarity/modality + (optional)
+/// ADJ04 round-trip, records each into the audit trail, then runs the
+/// engine if (and only if) every gating check passed.
 ///
 /// `adjudication_id` and `now()` are caller-supplied because the
 /// pipeline is otherwise pure: the same input + the same id + the
-/// same timestamps deterministically produces the same audit trail.
-/// Deployments that want a UUID id and `chrono::Utc::now()` should
-/// generate those themselves and hand them in.
+/// same timestamps deterministically produces the same audit trail
+/// (for the LLM-free passes — ADJ04 records whatever the gateway
+/// returned, which is the model's job to make deterministic via
+/// `temperature = 0.0`).
+///
+/// `gateway` controls ADJ04. Passing `None` preserves the v0.2
+/// behaviour: ADJ04 is recorded as `Skipped`. Passing `Some(&g)`
+/// with `Renderer` + `Nli` clients registered runs the real check
+/// and surfaces violations as `Failed` in the audit trail. If a
+/// required role is missing, ADJ04 records `Failed` with a single
+/// telemetry-only violation describing the configuration gap, and
+/// the engine still runs (round-trip is advisory, not gating, at
+/// v0.3).
 pub fn run<F: Fn() -> String>(
     input: PipelineInput,
     adjudication_id: AdjudicationId,
     now: F,
+) -> PipelineOutput {
+    run_with_gateway(input, adjudication_id, now, None)
+}
+
+/// Same as [`run`] but with an explicit `GatewayConfig`. v0.3's
+/// preferred entry point; [`run`] is kept for binary-compat with v0.2
+/// callers.
+pub fn run_with_gateway<F: Fn() -> String>(
+    input: PipelineInput,
+    adjudication_id: AdjudicationId,
+    now: F,
+    gateway: Option<&GatewayConfig>,
 ) -> PipelineOutput {
     let started_at = now();
     let mut trail = AuditTrail::new(adjudication_id, started_at.clone());
@@ -177,12 +207,25 @@ pub fn run<F: Fn() -> String>(
         &pm_result,
     ));
 
-    // ---------- ADJ04 + ADJ05 are not yet wired — record Skipped ----------
+    // ---------- ADJ04 round-trip (gated on a gateway being supplied) ----------
+    // We only attempt ADJ04 when the prior gating checks passed —
+    // running the LLM on an IR that doesn't even cover its source
+    // burns tokens to discover what ADJ02/ADJ03 already told us.
+    let prior_gating_ok =
+        matches!(cov_result, CoverageResult::Pass) && pm_result.pass();
+    let adj04_started = now();
+    let adj04_result = if prior_gating_ok {
+        run_adj04(gateway, &input.document.normalized_text, &input.ir_document)
+    } else {
+        Adj04Decision::Skipped
+    };
+    let adj04_completed = now();
+    trail
+        .checker_results
+        .push(adj04_to_checker_result(adj04_started, adj04_completed, &adj04_result));
+
+    // ---------- ADJ05 still parked — record Skipped ----------
     let skipped_at = now();
-    trail.checker_results.push(skipped_checker_result(
-        PassName::Adj04RoundTrip,
-        skipped_at.clone(),
-    ));
     trail.checker_results.push(skipped_checker_result(
         PassName::Adj05Adversarial,
         skipped_at,
@@ -410,6 +453,148 @@ fn propagation_violation_to_audit(v: &PropagationViolation) -> Violation {
 
 fn propagation_warning_to_json(w: &PropagationWarning) -> serde_json::Value {
     serde_json::json!({ "debug": format!("{w:?}") })
+}
+
+// ---------------------------------------------------------------------------
+// ADJ04 wiring
+// ---------------------------------------------------------------------------
+
+/// What the pipeline learned from attempting ADJ04 on a given run.
+/// Kept separate from `RoundTripResult` so the `Skipped` and
+/// `CheckErrored` cases don't need to manufacture an empty
+/// `RoundTripResult`.
+enum Adj04Decision {
+    /// No gateway supplied OR a prior gating check failed — the
+    /// pipeline did not attempt the round-trip.
+    Skipped,
+    /// The checker ran. `result.violations.is_empty()` is the pass
+    /// signal.
+    Ran(RoundTripResult),
+    /// The checker errored before producing a verdict (missing role,
+    /// gateway error, primitive validation exhaustion, …). The
+    /// pipeline records this as a Failed pass with the error in
+    /// telemetry so the audit trail stays complete.
+    CheckErrored(String),
+}
+
+fn run_adj04(
+    gateway: Option<&GatewayConfig>,
+    document_text: &str,
+    ir_doc: &IRDocument,
+) -> Adj04Decision {
+    let Some(g) = gateway else {
+        return Adj04Decision::Skipped;
+    };
+    match check_round_trip(document_text, ir_doc, g, &RoundTripOptions::default()) {
+        Ok(result) => Adj04Decision::Ran(result),
+        Err(e) => Adj04Decision::CheckErrored(round_trip_err_summary(&e)),
+    }
+}
+
+fn round_trip_err_summary(e: &RoundTripCheckError) -> String {
+    // The checker's Display impl already produces a human-friendly
+    // message; we just relay it. The trail records this string in
+    // telemetry, not in `violations` — a checker error is operator-
+    // surface rather than reviewer-surface.
+    format!("{e}")
+}
+
+fn adj04_to_checker_result(
+    started_at: String,
+    completed_at: String,
+    decision: &Adj04Decision,
+) -> CheckerResult {
+    match decision {
+        Adj04Decision::Skipped => CheckerResult {
+            pass_name: PassName::Adj04RoundTrip,
+            pass_version: "not-yet-wired".to_string(),
+            started_at,
+            completed_at,
+            outcome: PassOutcome::Skipped,
+            violations: Vec::new(),
+            telemetry: Default::default(),
+        },
+        Adj04Decision::Ran(result) => {
+            let outcome = if result.pass() {
+                PassOutcome::Passed
+            } else {
+                PassOutcome::Failed
+            };
+            let violations: Vec<Violation> = result
+                .violations
+                .iter()
+                .map(round_trip_violation_to_audit)
+                .collect();
+            let mut telemetry = std::collections::BTreeMap::new();
+            telemetry.insert(
+                "call_count".to_string(),
+                serde_json::json!(result.call_records.len()),
+            );
+            telemetry.insert(
+                "primitive_calls".to_string(),
+                serde_json::Value::Array(
+                    result
+                        .call_records
+                        .iter()
+                        .map(|c| {
+                            serde_json::json!({
+                                "primitive": c.primitive,
+                                "role": c.role,
+                                "prompt_version": c.prompt_version,
+                                "prompt_hash": c.prompt_hash,
+                                "latency_ms": c.latency_ms,
+                                "input_tokens": c.usage.input_tokens,
+                                "output_tokens": c.usage.output_tokens,
+                            })
+                        })
+                        .collect(),
+                ),
+            );
+            CheckerResult {
+                pass_name: PassName::Adj04RoundTrip,
+                pass_version: "v1.0".to_string(),
+                started_at,
+                completed_at,
+                outcome,
+                violations,
+                telemetry,
+            }
+        }
+        Adj04Decision::CheckErrored(detail) => {
+            let mut telemetry = std::collections::BTreeMap::new();
+            telemetry.insert(
+                "check_error".to_string(),
+                serde_json::Value::String(detail.clone()),
+            );
+            CheckerResult {
+                pass_name: PassName::Adj04RoundTrip,
+                pass_version: "v1.0".to_string(),
+                started_at,
+                completed_at,
+                outcome: PassOutcome::Failed,
+                violations: Vec::new(),
+                telemetry,
+            }
+        }
+    }
+}
+
+fn round_trip_violation_to_audit(v: &RoundTripViolation) -> Violation {
+    Violation {
+        node_id: NodeId::new(v.node_id.0.clone()),
+        pass_name: PassName::Adj04RoundTrip,
+        kind: ClarificationKind::RoundTripDrift,
+        detail: serde_json::json!({
+            "kind": "RoundTripDrift",
+            "rendering": v.rendering,
+            "source_excerpt": v.source_excerpt,
+            "source_to_rendering": v.source_to_rendering,
+            "rendering_to_source": v.rendering_to_source,
+            "threshold": v.threshold,
+        }),
+        triggered_dialogue_turn: None,
+        resolved: false,
+    }
 }
 
 fn skipped_checker_result(pass_name: PassName, at: String) -> CheckerResult {
@@ -672,5 +857,240 @@ mod tests {
         let back: AuditTrail =
             serde_json::from_str(&json).expect("AuditTrail deserializes");
         assert_eq!(back, out.audit_trail);
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ04 gateway-wired tests
+    // -----------------------------------------------------------------
+    //
+    // These tests use scripted LLM clients (one for `Renderer`, one
+    // for `Nli`) so the pipeline can exercise the real `check_round_trip`
+    // path without needing a live model. The pattern mirrors the
+    // scripted clients used inside `adjudication-round-trip`; we keep
+    // the two crates' fixtures separate so a future refactor (e.g.,
+    // a shared `llm-test-utils` crate) is a local change.
+
+    use llm_gateway::{
+        Capabilities, CompletionJsonResponse, CompletionRequest, CompletionResponse,
+        FinishReason as LlmFinishReason, JsonSchema, LlmClient, LlmError, ProviderIdentity,
+        TokenUsage,
+    };
+    use llm_primitives::{GatewayConfig, Role};
+    use std::sync::Mutex;
+
+    fn renderer_id() -> ProviderIdentity {
+        ProviderIdentity {
+            vendor: "mock".into(),
+            model_family: "haiku-renderer".into(),
+            model_version: "1".into(),
+            endpoint: None,
+        }
+    }
+
+    fn nli_id() -> ProviderIdentity {
+        ProviderIdentity {
+            vendor: "mock".into(),
+            model_family: "nli-debertav3".into(),
+            model_version: "1".into(),
+            endpoint: None,
+        }
+    }
+
+    struct ScriptedRenderer {
+        texts: Mutex<Vec<String>>,
+    }
+    impl ScriptedRenderer {
+        fn new(texts: Vec<&str>) -> Self {
+            Self {
+                texts: Mutex::new(texts.into_iter().rev().map(String::from).collect()),
+            }
+        }
+    }
+    impl LlmClient for ScriptedRenderer {
+        fn identity(&self) -> ProviderIdentity {
+            renderer_id()
+        }
+        fn capabilities(&self) -> Capabilities {
+            Capabilities::modern_frontier()
+        }
+        fn complete(&self, _r: CompletionRequest) -> Result<CompletionResponse, LlmError> {
+            let text = self.texts.lock().unwrap().pop().expect("renderer drained");
+            Ok(CompletionResponse {
+                text,
+                model: "haiku-renderer".into(),
+                usage: TokenUsage::default(),
+                finish_reason: LlmFinishReason::Stop,
+                provider_id: renderer_id(),
+                latency_ms: 1,
+            })
+        }
+        fn complete_json(
+            &self,
+            _r: CompletionRequest,
+            _s: &JsonSchema,
+        ) -> Result<CompletionJsonResponse, LlmError> {
+            unreachable!("render_node uses complete")
+        }
+    }
+
+    struct ScriptedNli {
+        scripts: Mutex<Vec<(bool, f32, bool, f32)>>,
+    }
+    impl ScriptedNli {
+        fn new(s: Vec<(bool, f32, bool, f32)>) -> Self {
+            Self {
+                scripts: Mutex::new(s.into_iter().rev().collect()),
+            }
+        }
+    }
+    impl LlmClient for ScriptedNli {
+        fn identity(&self) -> ProviderIdentity {
+            nli_id()
+        }
+        fn capabilities(&self) -> Capabilities {
+            Capabilities::modern_frontier()
+        }
+        fn complete(&self, _r: CompletionRequest) -> Result<CompletionResponse, LlmError> {
+            unreachable!("entail uses complete_json")
+        }
+        fn complete_json(
+            &self,
+            _r: CompletionRequest,
+            _s: &JsonSchema,
+        ) -> Result<CompletionJsonResponse, LlmError> {
+            let (p_h, p_s, h_p, h_s) = self.scripts.lock().unwrap().pop().expect("nli drained");
+            let parsed = serde_json::json!({
+                "premise_entails_hypothesis": p_h,
+                "p_to_h_score": p_s,
+                "hypothesis_entails_premise": h_p,
+                "h_to_p_score": h_s,
+            });
+            Ok(CompletionJsonResponse {
+                raw_text: parsed.to_string(),
+                parsed,
+                schema_valid: true,
+                model: "nli-debertav3".into(),
+                usage: TokenUsage::default(),
+                provider_id: nli_id(),
+                latency_ms: 1,
+                polyfill_used: false,
+            })
+        }
+    }
+
+    fn gateway_with_scripted(
+        renderings: Vec<&str>,
+        entailments: Vec<(bool, f32, bool, f32)>,
+    ) -> GatewayConfig {
+        GatewayConfig::new()
+            .with_client(Role::Renderer, Box::new(ScriptedRenderer::new(renderings)))
+            .with_client(Role::Nli, Box::new(ScriptedNli::new(entailments)))
+    }
+
+    #[test]
+    fn adj04_runs_passed_with_high_scores_under_gateway() {
+        let n = fact_node("n1", logic_core::atom("hello"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "hello".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let g = gateway_with_scripted(vec!["passenger said hello"], vec![(true, 0.95, true, 0.92)]);
+        let out = run_with_gateway(input, AdjudicationId::new("adj-rt-pass"), make_clock(), Some(&g));
+        let adj04 = &out.audit_trail.checker_results[2];
+        assert_eq!(adj04.pass_name, PassName::Adj04RoundTrip);
+        assert_eq!(adj04.pass_version, "v1.0");
+        assert!(matches!(adj04.outcome, PassOutcome::Passed));
+        assert!(adj04.violations.is_empty());
+        // Telemetry should mention the calls (1 render + 1 entail = 2).
+        assert_eq!(adj04.telemetry["call_count"], 2);
+        // Verdict still Resolved (engine still runs; ADJ04 is advisory).
+        assert!(matches!(out.verdict, Verdict::Resolved { .. }));
+    }
+
+    #[test]
+    fn adj04_runs_failed_with_drift_under_gateway() {
+        let n = fact_node("n1", logic_core::atom("hello"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "hello".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        // Source-to-rendering score way below the 0.6 default threshold.
+        let g = gateway_with_scripted(
+            vec!["passenger admitted to smuggling contraband"],
+            vec![(false, 0.10, true, 0.90)],
+        );
+        let out = run_with_gateway(input, AdjudicationId::new("adj-rt-drift"), make_clock(), Some(&g));
+        let adj04 = &out.audit_trail.checker_results[2];
+        assert!(matches!(adj04.outcome, PassOutcome::Failed));
+        assert_eq!(adj04.violations.len(), 1);
+        assert_eq!(adj04.violations[0].pass_name, PassName::Adj04RoundTrip);
+        assert_eq!(adj04.violations[0].kind, ClarificationKind::RoundTripDrift);
+        // ADJ04 is *advisory* at v0.3 — engine still runs.
+        assert!(matches!(out.verdict, Verdict::Resolved { .. }));
+        assert!(out.audit_trail.engine_artifacts.is_some());
+    }
+
+    #[test]
+    fn adj04_records_skipped_when_no_gateway_provided() {
+        // The plain `run` entry point passes `None` for the gateway —
+        // ADJ04 must record as Skipped exactly as in v0.2.
+        let n = fact_node("n1", logic_core::atom("hello"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "hello".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run(input, AdjudicationId::new("adj-no-gw"), make_clock());
+        let adj04 = &out.audit_trail.checker_results[2];
+        assert!(matches!(adj04.outcome, PassOutcome::Skipped));
+        assert_eq!(adj04.pass_version, "not-yet-wired");
+    }
+
+    #[test]
+    fn adj04_records_failed_when_required_role_missing_from_gateway() {
+        // A gateway is supplied but the `Renderer` role isn't registered —
+        // the round-trip checker surfaces `PrimitiveError::NoClientForRole`,
+        // which the pipeline records as Failed with the error in telemetry.
+        let n = fact_node("n1", logic_core::atom("hello"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "hello".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let g = GatewayConfig::new(); // empty
+        let out = run_with_gateway(input, AdjudicationId::new("adj-rt-noclient"), make_clock(), Some(&g));
+        let adj04 = &out.audit_trail.checker_results[2];
+        assert!(matches!(adj04.outcome, PassOutcome::Failed));
+        let detail = adj04.telemetry["check_error"].as_str().unwrap();
+        assert!(detail.contains("renderer") || detail.contains("Renderer"));
+    }
+
+    #[test]
+    fn adj04_is_skipped_when_prior_gating_failed_even_if_gateway_supplied() {
+        // Coverage fails → don't waste LLM tokens on ADJ04.
+        let n = fact_node("n1", logic_core::atom("anomaly"), 100, 150);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "hello".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let g = gateway_with_scripted(vec!["unused"], vec![(true, 0.99, true, 0.99)]);
+        let out = run_with_gateway(input, AdjudicationId::new("adj-rt-skip-on-fail"), make_clock(), Some(&g));
+        let adj04 = &out.audit_trail.checker_results[2];
+        assert!(matches!(adj04.outcome, PassOutcome::Skipped));
+        // And the pipeline still Blocks due to the coverage failure.
+        assert!(matches!(out.verdict, Verdict::Blocked { .. }));
     }
 }

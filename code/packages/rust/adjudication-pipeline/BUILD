@@ -10,6 +10,8 @@ _targets = [
             "//code/packages/rust/adjudication-coverage",
             "//code/packages/rust/adjudication-ir",
             "//code/packages/rust/adjudication-polarity-modality",
+            "//code/packages/rust/adjudication-round-trip",
+            "//code/packages/rust/llm-primitives",
             "//code/packages/rust/logic-engine",
         ],
     ),

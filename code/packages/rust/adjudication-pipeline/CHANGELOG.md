@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-11
+
+### Added
+
+ADJ04 round-trip checker wired in via a new `GatewayConfig` argument.
+When a caller supplies `Renderer` + `Nli` clients, the pipeline now
+runs `adjudication-round-trip::check_round_trip` and records the
+result in the audit trail with `pass_version = "v1.0"`. When the
+gateway is omitted (or roles are missing), the v0.2 behaviour is
+preserved — ADJ04 records as `Skipped`.
+
+- New entry point `run_with_gateway(input, id, now, gateway)` —
+  the v0.3 preferred surface.
+- Existing `run(input, id, now)` is unchanged on the wire and now
+  delegates to `run_with_gateway(_, _, _, None)`, so v0.2 callers
+  recompile without source changes.
+- ADJ04 is **advisory** at v0.3 — a failing round-trip records as
+  `PassOutcome::Failed` with structured violations
+  (`ClarificationKind::RoundTripDrift`) but does NOT block the
+  engine. ADJ06 clarification (a future PR) will gate on drift.
+- Round-trip is **not run** when ADJ02 or ADJ03 already failed —
+  no point burning tokens to re-discover what the deterministic
+  checkers already proved.
+- Round-trip checker errors (missing role, validation exhaustion,
+  transport failure) surface as `Failed` with the error string in
+  `telemetry["check_error"]` rather than panicking.
+- 5 new unit tests cover: high-score pass, drift-fails-but-engine-
+  still-runs, no-gateway-records-Skipped, missing-role-records-
+  Failed-with-detail, prior-fail-skips-ADJ04.
+
+### Notes
+
+ADJ05 still records as `Skipped`. It needs a second `Adversary`
+client from a different `(vendor, model_family)` than the `Extractor`
+to satisfy the LM00b independence requirement; that arrives once a
+second model family is wired into the deployment.
+
+This is also the first piece that lets the framework be driven by a
+**local Ollama instance** end-to-end — a deployment with two locally
+served models (e.g. `gemma:7b` for `Renderer`, a separate family
+like `llama3.1:8b` for `Nli`) can now exercise ADJ04 without any
+cloud LLM access.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added

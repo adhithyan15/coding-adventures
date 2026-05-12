@@ -17,33 +17,39 @@ that produced them.
 ## Where It Fits
 
 ```text
-   pipeline::run(input, adjudication_id, now)
+   pipeline::run_with_gateway(input, adjudication_id, now, gateway?)
         │
         ├── adjudication-coverage::check_coverage()          (ADJ02 v2)
         ├── adjudication-polarity-modality::check_propagation()  (ADJ03 v2)
-        ├── [ADJ04 round-trip — recorded as Skipped until checker ships]
-        ├── [ADJ05 adversarial — recorded as Skipped until checker ships]
+        ├── adjudication-round-trip::check_round_trip()      (ADJ04 v1, advisory; needs Renderer+Nli)
+        ├── [ADJ05 adversarial — Skipped until a family-disjoint Adversary client is wired]
         ├── adjudication-connector::run_adjudication()       (engine)
         └── writes everything into adjudication-audit-trail::AuditTrail
 ```
 
-## What v0.1.0 ships
+## What v0.3.0 ships
 
-- `run(input, adjudication_id, now) → PipelineOutput` — the entry point.
+- `run(input, adjudication_id, now) → PipelineOutput` — unchanged
+  wire-compatible entry for v0.2 callers; delegates to
+  `run_with_gateway(_, _, _, None)`.
+- `run_with_gateway(input, adjudication_id, now, gateway: Option<&GatewayConfig>)` —
+  v0.3's preferred entry point. Pass `Some(&g)` to enable ADJ04.
 - `PipelineInput { document, ir_document }`.
 - `PipelineDocument` — minimal struct carrying id, name, received_at,
   normalized_text, and normalization-pipeline metadata.
 - `PipelineOutput { verdict, audit_trail }`.
 - `Verdict::Resolved { answers }` / `Blocked { violation_count }` /
   `EngineError(String)`.
-- ADJ04 and ADJ05 are recorded as `PassOutcome::Skipped` with version
-  string `"not-yet-wired"` so the trail shape is complete.
+- ADJ04 is **advisory** at v0.3: drift records as `Failed` with
+  structured `RoundTripDrift` violations but the engine still runs.
+  A future ADJ06 wiring will gate on it.
+- ADJ05 remains `Skipped` pending a family-disjoint adversary.
 
-## What v0.1.0 does NOT ship
+## What v0.3.0 does NOT ship
 
 - **Extraction** — today's pipeline accepts a pre-built `IRDocument`.
-  v0.2 will wire `llm_primitives::decompose_text` in front so the
-  input shrinks to `(String, DocumentId)`.
+  A follow-up will add a `run_from_source(source_text, gateway, …)`
+  entry point that calls `llm_primitives::decompose_text` in front.
 - **ADJ06 clarification dialogue** — a failing check produces
   `Verdict::Blocked` with the violation count; the caller handles
   the conversation loop.
