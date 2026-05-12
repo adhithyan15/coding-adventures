@@ -788,7 +788,10 @@ fn language_bluetooth_ble_open_plan(
         backend: backend.to_owned(),
         status: "unavailable".to_owned(),
         stream_path: None,
-        message: Some("BLE GATT backend opening is not wired yet".to_owned()),
+        message: Some(
+            "BLE GATT backend opening has CoreBluetooth connector groundwork but no runtime adapter yet"
+                .to_owned(),
+        ),
     }
 }
 
@@ -2726,6 +2729,7 @@ mod tests {
             LanguageHostEndpointTransport::BluetoothLeGatt
         );
         assert!(ble.stream_path.is_none());
+        assert!(ble.message.as_deref().unwrap().contains("CoreBluetooth"));
     }
 
     #[test]
