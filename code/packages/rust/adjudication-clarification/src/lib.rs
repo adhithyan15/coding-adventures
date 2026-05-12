@@ -58,7 +58,8 @@ use adjudication_audit_trail::{
     DialogueOutcome, DialogueResponse, DialogueResponseSource, DialogueRung, DialogueTurn, TurnId,
 };
 use llm_primitives::{
-    decompose_text, DecomposeTextRequest, DecomposeTextResponse, GatewayConfig, PrimitiveError,
+    decompose_text, render_node, DecomposeTextRequest, DecomposeTextResponse, GatewayConfig,
+    PrimitiveError, RenderNodeRequest, RenderNodeResponse,
 };
 
 /// Stable version of the coverage-clarification prompt template.
@@ -70,6 +71,13 @@ pub const CLARIFICATION_PROMPT_VERSION: &str = "clarification-v1";
 /// [`CLARIFICATION_PROMPT_VERSION`] so audit-trail replay can tell
 /// the two correction flavours apart.
 pub const POLARITY_CLARIFICATION_PROMPT_VERSION: &str = "polarity-clarification-v1";
+
+/// Stable version of the round-trip drift clarification-prompt
+/// template (ADJ06-for-ADJ04). The drift retry asks the renderer
+/// to produce a CORRECTED rendering for ONE specific IR node, not
+/// to re-extract the whole IR — distinct from coverage / polarity
+/// retries, hence its own version.
+pub const RENDER_CLARIFICATION_PROMPT_VERSION: &str = "render-clarification-v1";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -239,6 +247,197 @@ pub fn retry_decompose_on_polarity_failure(
 }
 
 // ---------------------------------------------------------------------------
+// Entry point: round-trip drift retry (ADJ06-for-ADJ04)
+// ---------------------------------------------------------------------------
+
+/// Which direction(s) of the bidirectional entail check failed.
+/// ADJ04 emits one `RoundTripDrift` violation per drifting node;
+/// the violation detail records both directional scores against
+/// the same threshold. This enum lets the correction prompt focus
+/// on the actual failure mode.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DriftDirection {
+    /// `source → rendering` score below threshold. The rendering
+    /// claims something the source does NOT support — the model
+    /// added or fabricated content.
+    SourceToRendering,
+    /// `rendering → source` score below threshold. The rendering
+    /// OMITS something the source says — the model dropped detail.
+    RenderingToSource,
+    /// Both directions failed.
+    Both,
+}
+
+impl DriftDirection {
+    /// Construct from the two NLI scores + threshold. Returns
+    /// `None` if neither direction is actually below threshold (the
+    /// caller shouldn't be calling drift correction in that case).
+    pub fn classify(source_to_rendering: f32, rendering_to_source: f32, threshold: f32) -> Option<Self> {
+        let p_low = source_to_rendering < threshold;
+        let h_low = rendering_to_source < threshold;
+        match (p_low, h_low) {
+            (true, true) => Some(DriftDirection::Both),
+            (true, false) => Some(DriftDirection::SourceToRendering),
+            (false, true) => Some(DriftDirection::RenderingToSource),
+            (false, false) => None,
+        }
+    }
+
+    fn description(&self) -> &'static str {
+        match self {
+            DriftDirection::SourceToRendering => {
+                "Your rendering claimed something the source does NOT support \
+                 (added or fabricated content)."
+            }
+            DriftDirection::RenderingToSource => {
+                "Your rendering OMITTED something the source DOES say \
+                 (dropped detail)."
+            }
+            DriftDirection::Both => {
+                "Your rendering both added unsupported claims AND omitted \
+                 source content (drift in both directions)."
+            }
+        }
+    }
+}
+
+/// What the caller hands ADJ06 when ADJ04 found round-trip drift
+/// on a specific IR node. Unlike the coverage / polarity retries,
+/// the corrected output is a *single rendering string* for one
+/// node — not a whole IR document.
+#[derive(Debug, Clone)]
+pub struct RenderClarificationRequest {
+    /// The original `render_node` request (carries the IR node
+    /// description, the document excerpt, and the render style).
+    pub original: RenderNodeRequest,
+    /// The previous rendering the model produced. Embedded in the
+    /// correction prompt so the model can edit rather than restart.
+    pub previous_rendering: String,
+    /// Optional structured drift direction. When `Some`, the
+    /// correction prompt focuses on the actual failure mode (e.g.,
+    /// "you added content; trim it" vs "you dropped content; add
+    /// it back"). When `None`, the prompt is generic.
+    pub failing_direction: Option<DriftDirection>,
+    /// Free-form description of the drift (e.g.,
+    /// `"NLI scores: p→h=0.10, h→p=0.10 vs threshold 0.60"`).
+    pub drift_description: String,
+}
+
+/// Outcome of a successful drift retry. Mirrors the coverage /
+/// polarity outcome shape but carries a String (the corrected
+/// rendering) instead of a JSON IR.
+#[derive(Debug, Clone)]
+pub struct RenderClarificationOutcome {
+    /// The model's corrected rendering.
+    pub corrected_rendering: String,
+    /// One `DialogueTurn` per retry attempt.
+    pub dialogue: Vec<DialogueTurn>,
+    pub used_attempts: usize,
+}
+
+/// Ask the renderer to fix a round-trip drift on a single IR node.
+/// Re-runs `render_node` up to `max_attempts` times. Same retry
+/// loop as the coverage and polarity variants, but using
+/// `render_node` instead of `decompose_text`.
+///
+/// **Caveat**: this crate does NOT re-validate the corrected
+/// rendering against the source — that's the pipeline's job. We
+/// hand the new rendering back; the caller's pipeline will re-run
+/// ADJ04 on it and either accept it or call back into this
+/// function.
+pub fn retry_render_on_drift_failure(
+    req: &RenderClarificationRequest,
+    gateway: &GatewayConfig,
+    max_attempts: usize,
+    now: impl Fn() -> String,
+) -> Result<RenderClarificationOutcome, ClarificationError> {
+    let mut dialogue: Vec<DialogueTurn> = Vec::new();
+
+    for attempt in 1..=max_attempts.max(1) {
+        let question_text = build_render_correction_prompt(
+            &req.drift_description,
+            &req.previous_rendering,
+            req.failing_direction,
+        );
+
+        // The render_node primitive uses `document_excerpt` as the
+        // user-facing content. Prepend the correction notice so the
+        // model sees it before the original instruction.
+        let revised = RenderNodeRequest {
+            node_description: req.original.node_description.clone(),
+            document_excerpt: format!(
+                "[CORRECTION FROM CHECKER PASS]:\n{q}\n\n[ORIGINAL SOURCE EXCERPT]:\n{src}",
+                q = question_text,
+                src = req.original.document_excerpt,
+            ),
+            style: req.original.style,
+        };
+
+        let at = now();
+        let resp_result: Result<RenderNodeResponse, PrimitiveError> =
+            render_node(&revised, gateway);
+
+        match resp_result {
+            Ok(resp) => {
+                dialogue.push(DialogueTurn {
+                    turn_id: TurnId(attempt as u64),
+                    at,
+                    triggering_violation: None,
+                    rung: DialogueRung::Rung1ReprompT,
+                    question_text,
+                    response: DialogueResponse {
+                        source: DialogueResponseSource::Llm,
+                        text: resp.rendering.clone(),
+                        actor_id: Some(format!(
+                            "{vendor}/{family}",
+                            vendor = resp.call_record.provider.vendor,
+                            family = resp.call_record.provider.model_family,
+                        )),
+                        model_version: Some(resp.call_record.provider.model_version.clone()),
+                        prompt_version: Some(RENDER_CLARIFICATION_PROMPT_VERSION.to_string()),
+                        prompt_hash: Some(resp.call_record.prompt_hash.clone()),
+                    },
+                    outcome: DialogueOutcome::Resolved,
+                });
+                return Ok(RenderClarificationOutcome {
+                    corrected_rendering: resp.rendering,
+                    dialogue,
+                    used_attempts: attempt,
+                });
+            }
+            Err(e) => {
+                dialogue.push(DialogueTurn {
+                    turn_id: TurnId(attempt as u64),
+                    at,
+                    triggering_violation: None,
+                    rung: DialogueRung::Rung1ReprompT,
+                    question_text,
+                    response: DialogueResponse {
+                        source: DialogueResponseSource::Llm,
+                        text: format!("(error) {e}"),
+                        actor_id: None,
+                        model_version: None,
+                        prompt_version: Some(RENDER_CLARIFICATION_PROMPT_VERSION.to_string()),
+                        prompt_hash: None,
+                    },
+                    outcome: DialogueOutcome::Abandoned,
+                });
+                if attempt >= max_attempts.max(1) {
+                    return Err(ClarificationError::Exhausted {
+                        attempts: attempt,
+                        dialogue,
+                    });
+                }
+            }
+        }
+    }
+    Err(ClarificationError::Exhausted {
+        attempts: 0,
+        dialogue,
+    })
+}
+
+// ---------------------------------------------------------------------------
 // Shared retry-loop machinery
 // ---------------------------------------------------------------------------
 
@@ -400,6 +599,34 @@ fn build_polarity_correction_prompt(
          the polarity/modality. Keep the same shape; only touch the \
          polarity/modality fields (and `part_of` if the violation is \
          `InheritChainUnresolved`).",
+    )
+}
+
+fn build_render_correction_prompt(
+    drift_description: &str,
+    previous_rendering: &str,
+    failing_direction: Option<DriftDirection>,
+) -> String {
+    let direction_block = failing_direction
+        .map(|d| format!("\nDiagnosis:\n  {d_desc}\n", d_desc = d.description()))
+        .unwrap_or_default();
+    format!(
+        "Your previous rendering of this IR node was REJECTED by the \
+         ADJ04 round-trip checker.\n\
+         \n\
+         Drift detail:\n  {drift_description}\n\
+         {direction_block}\n\
+         Your previous rendering was:\n\
+         > {previous_rendering}\n\
+         \n\
+         The round-trip rule: your rendering must say EXACTLY what the \
+         source span says — no more, no less. Do not add details the \
+         source does not contain. Do not omit details the source does \
+         contain. If the source is ambiguous, render the ambiguity \
+         (e.g., \"the document mentions matches\" rather than \"matches \
+         are prohibited\" or \"matches are allowed\").\n\
+         \n\
+         Produce a CORRECTED rendering that stays close to the source.",
     )
 }
 
@@ -774,6 +1001,221 @@ mod tests {
                 assert_eq!(
                     dialogue[0].response.prompt_version.as_deref(),
                     Some(POLARITY_CLARIFICATION_PROMPT_VERSION)
+                );
+            }
+            other => panic!("expected Exhausted, got {other:?}"),
+        }
+    }
+
+    // ---------------- ADJ06-for-ADJ04 render-drift retry ----------------
+
+    fn renderer_identity() -> ProviderIdentity {
+        ProviderIdentity {
+            vendor: "mock".into(),
+            model_family: "haiku-renderer".into(),
+            model_version: "1".into(),
+            endpoint: None,
+        }
+    }
+
+    /// Scripted renderer that returns the next text response per call.
+    struct ScriptedRenderer {
+        responses: std::sync::Mutex<Vec<String>>,
+    }
+
+    impl ScriptedRenderer {
+        fn new(responses: Vec<&str>) -> Self {
+            Self {
+                responses: std::sync::Mutex::new(
+                    responses.into_iter().rev().map(String::from).collect(),
+                ),
+            }
+        }
+    }
+
+    impl LlmClient for ScriptedRenderer {
+        fn identity(&self) -> ProviderIdentity {
+            renderer_identity()
+        }
+        fn capabilities(&self) -> Capabilities {
+            Capabilities::modern_frontier()
+        }
+        fn complete(
+            &self,
+            _r: CompletionRequest,
+        ) -> Result<CompletionResponse, LlmError> {
+            let text = self
+                .responses
+                .lock()
+                .unwrap()
+                .pop()
+                .expect("ScriptedRenderer drained");
+            Ok(CompletionResponse {
+                text,
+                model: "haiku-renderer".into(),
+                usage: TokenUsage::default(),
+                finish_reason: llm_gateway::FinishReason::Stop,
+                provider_id: renderer_identity(),
+                latency_ms: 1,
+            })
+        }
+        fn complete_json(
+            &self,
+            _r: CompletionRequest,
+            _s: &JsonSchema,
+        ) -> Result<CompletionJsonResponse, LlmError> {
+            unreachable!("render_node uses complete, not complete_json")
+        }
+    }
+
+    fn make_render_request() -> RenderNodeRequest {
+        RenderNodeRequest {
+            node_description: "id=F2 kind=Fact polarity=Affirmed term=prohibited(matches)".into(),
+            document_excerpt: "matches.".into(),
+            style: llm_primitives::RenderStyle::Plain,
+        }
+    }
+
+    fn gateway_with_renderer(renderer: ScriptedRenderer) -> GatewayConfig {
+        GatewayConfig::new().with_client(Role::Renderer, Box::new(renderer))
+    }
+
+    #[test]
+    fn render_retry_returns_corrected_text_on_first_success() {
+        let gateway = gateway_with_renderer(ScriptedRenderer::new(vec![
+            "The source mentions matches.",
+        ]));
+        let req = RenderClarificationRequest {
+            original: make_render_request(),
+            previous_rendering: "Matching is prohibited.".into(),
+            failing_direction: Some(DriftDirection::SourceToRendering),
+            drift_description: "p_to_h=0.10 vs threshold 0.60".into(),
+        };
+        let out = retry_render_on_drift_failure(&req, &gateway, 3, make_clock()).unwrap();
+        assert_eq!(out.used_attempts, 1);
+        assert_eq!(out.corrected_rendering, "The source mentions matches.");
+        assert_eq!(out.dialogue.len(), 1);
+        assert!(matches!(out.dialogue[0].outcome, DialogueOutcome::Resolved));
+        // Audit row should carry the render flavour, not coverage/polarity.
+        assert_eq!(
+            out.dialogue[0].response.prompt_version.as_deref(),
+            Some(RENDER_CLARIFICATION_PROMPT_VERSION)
+        );
+        // The correction prompt should mention round-trip drift + the
+        // direction-specific diagnosis.
+        assert!(out.dialogue[0].question_text.contains("round-trip"));
+        assert!(out.dialogue[0]
+            .question_text
+            .contains("added or fabricated content"));
+    }
+
+    #[test]
+    fn render_correction_prompt_focuses_on_direction_when_provided() {
+        let p = build_render_correction_prompt(
+            "test drift",
+            "previous rendering",
+            Some(DriftDirection::RenderingToSource),
+        );
+        assert!(p.contains("OMITTED"));
+        assert!(p.contains("dropped detail"));
+    }
+
+    #[test]
+    fn render_correction_prompt_handles_both_directions() {
+        let p = build_render_correction_prompt(
+            "test drift",
+            "previous rendering",
+            Some(DriftDirection::Both),
+        );
+        assert!(p.contains("both"));
+    }
+
+    #[test]
+    fn render_correction_prompt_omits_diagnosis_block_without_direction() {
+        let p = build_render_correction_prompt(
+            "test drift",
+            "previous rendering",
+            None,
+        );
+        assert!(!p.contains("Diagnosis:"));
+        assert!(p.contains("round-trip"));
+    }
+
+    #[test]
+    fn drift_direction_classify_resolves_each_case() {
+        // Both directions below threshold → Both.
+        assert_eq!(
+            DriftDirection::classify(0.10, 0.10, 0.60),
+            Some(DriftDirection::Both)
+        );
+        // Only source→rendering below.
+        assert_eq!(
+            DriftDirection::classify(0.10, 0.90, 0.60),
+            Some(DriftDirection::SourceToRendering)
+        );
+        // Only rendering→source below.
+        assert_eq!(
+            DriftDirection::classify(0.90, 0.10, 0.60),
+            Some(DriftDirection::RenderingToSource)
+        );
+        // Both above → None (not actually drifting).
+        assert_eq!(DriftDirection::classify(0.90, 0.90, 0.60), None);
+    }
+
+    #[test]
+    fn render_clarification_prompt_version_is_locked() {
+        assert_eq!(
+            RENDER_CLARIFICATION_PROMPT_VERSION,
+            "render-clarification-v1"
+        );
+    }
+
+    #[test]
+    fn render_retry_exhausts_gracefully_on_repeated_error() {
+        struct AlwaysErr;
+        impl LlmClient for AlwaysErr {
+            fn identity(&self) -> ProviderIdentity {
+                renderer_identity()
+            }
+            fn capabilities(&self) -> Capabilities {
+                Capabilities::modern_frontier()
+            }
+            fn complete(
+                &self,
+                _r: CompletionRequest,
+            ) -> Result<CompletionResponse, LlmError> {
+                Err(LlmError::Transport {
+                    provider: renderer_identity(),
+                    detail: "simulated".into(),
+                })
+            }
+            fn complete_json(
+                &self,
+                _r: CompletionRequest,
+                _s: &JsonSchema,
+            ) -> Result<CompletionJsonResponse, LlmError> {
+                unreachable!()
+            }
+        }
+        let gateway = GatewayConfig::new().with_client(Role::Renderer, Box::new(AlwaysErr));
+        let req = RenderClarificationRequest {
+            original: make_render_request(),
+            previous_rendering: "x".into(),
+            failing_direction: None,
+            drift_description: "test".into(),
+        };
+        let err = retry_render_on_drift_failure(&req, &gateway, 2, make_clock()).unwrap_err();
+        match err {
+            ClarificationError::Exhausted { attempts, dialogue } => {
+                assert_eq!(attempts, 2);
+                assert_eq!(dialogue.len(), 2);
+                assert!(matches!(
+                    dialogue[0].outcome,
+                    DialogueOutcome::Abandoned
+                ));
+                assert_eq!(
+                    dialogue[0].response.prompt_version.as_deref(),
+                    Some(RENDER_CLARIFICATION_PROMPT_VERSION)
                 );
             }
             other => panic!("expected Exhausted, got {other:?}"),

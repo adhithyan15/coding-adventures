@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-12
+
+### Added
+
+Self-correction loop now covers **ADJ04 round-trip drift** failures.
+When `adjudication-round-trip::check_round_trip` flags a node
+because the rendering drifts from source, the framework can
+re-prompt the renderer (a different primitive than decompose_text)
+with the drift direction and let it self-correct.
+
+- `RenderClarificationRequest { original, previous_rendering,
+  failing_direction: Option<DriftDirection>, drift_description }`
+  — the input shape.
+- `RenderClarificationOutcome { corrected_rendering, dialogue,
+  used_attempts }` — distinct from `CoverageClarificationOutcome`
+  because the corrected output is a String, not a JSON IR.
+- `retry_render_on_drift_failure(req, gateway, max_attempts, now)`
+  — the headline entry point. Same retry-loop spirit as
+  coverage/polarity, but uses `render_node` instead of
+  `decompose_text` because the unit of correction is a single
+  node's rendering, not the whole IR.
+- `DriftDirection { SourceToRendering, RenderingToSource, Both }`
+  + `DriftDirection::classify(p_to_h, h_to_p, threshold)` —
+  resolves the failure mode from the two NLI scores so the
+  correction prompt can focus.
+- `build_render_correction_prompt` — emits a focused prompt:
+  - SourceToRendering: "you added or fabricated content; trim it"
+  - RenderingToSource: "you dropped detail; add it back"
+  - Both: "drift in both directions"
+  - With explicit advice to render ambiguity as ambiguity rather
+    than guess.
+- `RENDER_CLARIFICATION_PROMPT_VERSION = "render-clarification-v1"`
+  — distinct from the coverage/polarity versions so audit-trail
+  replay can tell the three correction flavours apart.
+
+7 new tests cover the render-drift path: happy-success,
+direction-aware prompt content, both-directions handling,
+no-direction (generic prompt), `DriftDirection::classify`
+truth table, prompt-version constant lock, and graceful
+exhaustion on repeated renderer errors.
+
+### Notes
+
+ADJ05 (adversarial reading) still needs its own correction shape —
+it's about the adversary finding a plausible alternative reading,
+not about renderer drift. Follows as a separate PR.
+
 ## [0.2.0] - 2026-05-12
 
 ### Added
