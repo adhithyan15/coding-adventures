@@ -42,6 +42,14 @@ impl NodeId {
         }
         Ok(Self::LongRange(value))
     }
+
+    pub fn is_classic(self) -> bool {
+        matches!(self, Self::Classic(_))
+    }
+
+    pub fn is_long_range(self) -> bool {
+        matches!(self, Self::LongRange(_))
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -110,6 +118,91 @@ impl CommandClassId {
         } else {
             out.extend_from_slice(&self.0.to_be_bytes());
         }
+    }
+
+    pub fn is_actuator_class(self) -> bool {
+        matches!(
+            self,
+            Self::BASIC | Self::SWITCH_BINARY | Self::SWITCH_MULTILEVEL | Self::DOOR_LOCK
+        )
+    }
+
+    pub fn is_sensor_class(self) -> bool {
+        matches!(self, Self::SENSOR_BINARY | Self::SENSOR_MULTILEVEL)
+    }
+
+    pub fn is_security_class(self) -> bool {
+        matches!(self, Self::SECURITY_2)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZWaveNetworkSummary {
+    pub region: RegionProfile,
+    pub supports_long_range: bool,
+    pub classic_nodes: usize,
+    pub long_range_nodes: usize,
+    pub command_class_entries: usize,
+    pub actuator_command_classes: usize,
+    pub sensor_command_classes: usize,
+    pub security_command_classes: usize,
+}
+
+impl ZWaveNetworkSummary {
+    pub fn from_parts<N, C>(region: RegionProfile, nodes: N, command_classes: C) -> Self
+    where
+        N: IntoIterator<Item = NodeId>,
+        C: IntoIterator<Item = CommandClassId>,
+    {
+        let mut classic_nodes = 0;
+        let mut long_range_nodes = 0;
+        for node in nodes {
+            if node.is_long_range() {
+                long_range_nodes += 1;
+            } else {
+                classic_nodes += 1;
+            }
+        }
+
+        let mut command_class_entries = 0;
+        let mut actuator_command_classes = 0;
+        let mut sensor_command_classes = 0;
+        let mut security_command_classes = 0;
+        for command_class in command_classes {
+            command_class_entries += 1;
+            if command_class.is_actuator_class() {
+                actuator_command_classes += 1;
+            }
+            if command_class.is_sensor_class() {
+                sensor_command_classes += 1;
+            }
+            if command_class.is_security_class() {
+                security_command_classes += 1;
+            }
+        }
+
+        Self {
+            region,
+            supports_long_range: region.supports_long_range(),
+            classic_nodes,
+            long_range_nodes,
+            command_class_entries,
+            actuator_command_classes,
+            sensor_command_classes,
+            security_command_classes,
+        }
+    }
+
+    pub fn has_nodes(self) -> bool {
+        self.classic_nodes + self.long_range_nodes > 0
+    }
+
+    pub fn has_long_range_nodes(self) -> bool {
+        self.long_range_nodes > 0
+    }
+
+    pub fn has_security(self) -> bool {
+        self.security_command_classes > 0
     }
 }
 
@@ -387,6 +480,50 @@ mod tests {
         assert_eq!(CommandClassId::SWITCH_BINARY.0, 0x25);
         assert_eq!(CommandClassId::BATTERY.0, 0x80);
         assert_eq!(CommandClassId::SECURITY_2.0, 0x9f);
+    }
+
+    #[test]
+    fn network_summary_counts_nodes_and_command_class_families() {
+        let summary = ZWaveNetworkSummary::from_parts(
+            RegionProfile::UnitedStatesLongRange,
+            [
+                NodeId::classic(2).unwrap(),
+                NodeId::long_range(2_001).unwrap(),
+            ],
+            [
+                CommandClassId::SWITCH_BINARY,
+                CommandClassId::SENSOR_MULTILEVEL,
+                CommandClassId::SECURITY_2,
+            ],
+        );
+
+        assert_eq!(
+            summary,
+            ZWaveNetworkSummary {
+                region: RegionProfile::UnitedStatesLongRange,
+                supports_long_range: true,
+                classic_nodes: 1,
+                long_range_nodes: 1,
+                command_class_entries: 3,
+                actuator_command_classes: 1,
+                sensor_command_classes: 1,
+                security_command_classes: 1,
+            }
+        );
+        assert!(summary.has_nodes());
+        assert!(summary.has_long_range_nodes());
+        assert!(summary.has_security());
+
+        let empty = ZWaveNetworkSummary::from_parts(
+            RegionProfile::Europe,
+            std::iter::empty::<NodeId>(),
+            std::iter::empty::<CommandClassId>(),
+        );
+
+        assert!(!empty.supports_long_range);
+        assert!(!empty.has_nodes());
+        assert!(!empty.has_long_range_nodes());
+        assert!(!empty.has_security());
     }
 
     #[test]

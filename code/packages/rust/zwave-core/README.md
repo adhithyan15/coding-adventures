@@ -7,6 +7,7 @@ Current scope:
 
 - Home ID and classic/Long Range node id models
 - region profile metadata
+- network summary counts for classic/Long Range nodes and command-class coverage
 - common command-class ids
 - command-class payload frame parse/encode for short and extended class ids
 - Serial API SOF/ACK/NAK/CAN constants
