@@ -8,7 +8,7 @@ use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
 use cas_simplify::simplify;
-use cas_solve::{solve_linear_system, try_solve_inequality, SOLVE};
+use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_trig::{expand_trig, trig_simplify};
 use coding_adventures_macsyma_compiler::{
     compile_macsyma_with_options, CompileError, CompileOptions, DISPLAY as COMPILER_DISPLAY,
@@ -608,6 +608,12 @@ fn solve_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 
     if matches!(expr.args[1], IRNode::Symbol(_)) && is_inequality(&expr.args[0]) {
         return try_solve_inequality(&expr.args[0], &expr.args[1])
+            .map(|solutions| apply(sym(LIST), solutions))
+            .unwrap_or(fallback);
+    }
+
+    if matches!(expr.args[1], IRNode::Symbol(_)) {
+        return try_solve_transcendental(&expr.args[0], &expr.args[1])
             .map(|solutions| apply(sym(LIST), solutions))
             .unwrap_or(fallback);
     }
