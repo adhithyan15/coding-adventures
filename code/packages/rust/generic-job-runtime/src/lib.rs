@@ -219,6 +219,73 @@ pub enum ExecutorSupervisionAction {
     RestartWorkers,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorFleetStatus {
+    Empty,
+    Idle,
+    Busy,
+    Pressured,
+    Saturated,
+    Draining,
+    Offline,
+}
+
+impl ExecutorFleetStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Empty => "empty",
+            Self::Idle => "idle",
+            Self::Busy => "busy",
+            Self::Pressured => "pressured",
+            Self::Saturated => "saturated",
+            Self::Draining => "draining",
+            Self::Offline => "offline",
+        }
+    }
+
+    pub fn needs_attention(self) -> bool {
+        matches!(
+            self,
+            Self::Pressured | Self::Saturated | Self::Draining | Self::Offline
+        )
+    }
+}
+
+impl fmt::Display for ExecutorFleetStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ExecutorFleetStatusSummary {
+    pub status: ExecutorFleetStatus,
+    pub total_executors: usize,
+    pub accepting_executors: usize,
+    pub pending_jobs: usize,
+    pub remaining_queue_capacity: usize,
+    pub aggregate_queue_pressure_percent: u8,
+    pub supervision_recommendations: usize,
+}
+
+impl ExecutorFleetStatusSummary {
+    pub fn has_executors(&self) -> bool {
+        self.total_executors > 0
+    }
+
+    pub fn can_accept_jobs(&self) -> bool {
+        self.accepting_executors > 0 && self.remaining_queue_capacity > 0
+    }
+
+    pub fn needs_attention(&self) -> bool {
+        self.status.needs_attention() || self.supervision_recommendations > 0
+    }
+
+    pub fn is_quiescent(&self) -> bool {
+        self.status == ExecutorFleetStatus::Idle && self.pending_jobs == 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct ExecutorFleetSummary {
     pub total_executors: usize,
@@ -338,6 +405,46 @@ impl ExecutorFleetSummary {
 
     pub fn is_fully_accepting(&self) -> bool {
         self.has_executors() && self.accepting_executors == self.total_executors
+    }
+
+    pub fn supervision_recommendations(&self) -> usize {
+        self.backpressure_recommendations
+            .saturating_add(self.restart_recommendations)
+            .saturating_add(self.drain_observation_recommendations)
+    }
+
+    pub fn status(&self) -> ExecutorFleetStatus {
+        if !self.has_executors() {
+            ExecutorFleetStatus::Empty
+        } else if self.offline_executors > 0 || self.restart_recommendations > 0 {
+            ExecutorFleetStatus::Offline
+        } else if self.draining_executors > 0 || self.drain_observation_recommendations > 0 {
+            ExecutorFleetStatus::Draining
+        } else if self.saturated_executors > 0
+            || self.saturated_pressure_executors > 0
+            || self.queue_full_executors > 0
+            || self.backpressure_recommendations > 0
+        {
+            ExecutorFleetStatus::Saturated
+        } else if self.elevated_pressure_executors > 0 {
+            ExecutorFleetStatus::Pressured
+        } else if self.pending_jobs() > 0 || self.busy_executors > 0 {
+            ExecutorFleetStatus::Busy
+        } else {
+            ExecutorFleetStatus::Idle
+        }
+    }
+
+    pub fn status_summary(&self) -> ExecutorFleetStatusSummary {
+        ExecutorFleetStatusSummary {
+            status: self.status(),
+            total_executors: self.total_executors,
+            accepting_executors: self.accepting_executors,
+            pending_jobs: self.pending_jobs(),
+            remaining_queue_capacity: self.remaining_queue_capacity,
+            aggregate_queue_pressure_percent: self.aggregate_queue_pressure_percent(),
+            supervision_recommendations: self.supervision_recommendations(),
+        }
     }
 }
 
@@ -2542,17 +2649,88 @@ for line in sys.stdin:
         assert!(summary.has_offline_executors());
         assert!(summary.has_supervision_work());
         assert!(!summary.is_fully_accepting());
+        assert_eq!(summary.supervision_recommendations(), 3);
+        assert_eq!(summary.status(), ExecutorFleetStatus::Offline);
+
+        let status_summary = summary.status_summary();
+        assert_eq!(
+            status_summary,
+            ExecutorFleetStatusSummary {
+                status: ExecutorFleetStatus::Offline,
+                total_executors: 6,
+                accepting_executors: 3,
+                pending_jobs: 10,
+                remaining_queue_capacity: 18,
+                aggregate_queue_pressure_percent: 35,
+                supervision_recommendations: 3,
+            }
+        );
+        assert!(status_summary.has_executors());
+        assert!(status_summary.can_accept_jobs());
+        assert!(status_summary.needs_attention());
+        assert!(!status_summary.is_quiescent());
 
         let accepting_only = ExecutorFleetSummary::from_snapshots(&snapshots[..3]);
         assert!(accepting_only.is_fully_accepting());
         assert!(!accepting_only.has_backpressure());
         assert!(!accepting_only.has_supervision_work());
+        assert_eq!(accepting_only.status(), ExecutorFleetStatus::Pressured);
 
         let empty = ExecutorFleetSummary::empty();
         assert!(!empty.has_executors());
         assert_eq!(empty.aggregate_queue_pressure_percent(), 0);
         assert!(!empty.has_live_capacity());
         assert!(!empty.is_fully_accepting());
+        assert_eq!(empty.status(), ExecutorFleetStatus::Empty);
+        assert!(!empty.status_summary().can_accept_jobs());
+    }
+
+    #[test]
+    fn executor_fleet_status_summary_classifies_idle_busy_and_saturated_states() {
+        let idle = ExecutorFleetSummary::from_snapshots([&ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        }]);
+        assert_eq!(idle.status(), ExecutorFleetStatus::Idle);
+        assert_eq!(idle.status().as_str(), "idle");
+        assert_eq!(idle.status().to_string(), "idle");
+        assert!(idle.status_summary().is_quiescent());
+        assert!(!idle.status_summary().needs_attention());
+
+        let busy = ExecutorFleetSummary::from_snapshots([&ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 1,
+            queued_jobs: 1,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        }]);
+        assert_eq!(busy.status(), ExecutorFleetStatus::Busy);
+        assert!(busy.status_summary().can_accept_jobs());
+        assert!(!busy.status_summary().needs_attention());
+
+        let saturated = ExecutorFleetSummary::from_snapshots([&ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 4,
+            queued_jobs: 2,
+            running_jobs: 2,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        }]);
+        let saturated_summary = saturated.status_summary();
+        assert_eq!(saturated_summary.status, ExecutorFleetStatus::Saturated);
+        assert!(!saturated_summary.can_accept_jobs());
+        assert!(saturated_summary.needs_attention());
     }
 
     #[test]

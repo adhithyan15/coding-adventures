@@ -25,6 +25,8 @@ All notable changes to this package will be documented in this file.
   a runtime is or is not accepting jobs.
 - Added `ExecutorFleetSummary` for aggregate D18C supervisor views over
   executor snapshots, queue pressure, admission, and recommended actions.
+- Added `ExecutorFleetStatusSummary` and fleet status helpers for compact D18C
+  host/read-side readiness records over aggregate executor state.
 
 ## [0.1.1] - 2026-04-22
 
