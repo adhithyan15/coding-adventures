@@ -878,6 +878,11 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
     );
     dict_set(
         dict,
+        "led_matrix",
+        language_led_matrix_to_py(target.led_matrix),
+    );
+    dict_set(
+        dict,
         "digital_pin_count",
         usize_to_py(target.digital_pin_count),
     );
@@ -892,6 +897,19 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
         PyList_SetItem(capabilities, index as isize, str_to_py(capability));
     }
     dict_set(dict, "capabilities", capabilities);
+    dict
+}
+
+unsafe fn language_led_matrix_to_py(
+    matrix: Option<board_vm_language_core::LanguageLedMatrix>,
+) -> PyObjectPtr {
+    let Some(matrix) = matrix else {
+        return py_none();
+    };
+
+    let dict = PyDict_New();
+    dict_set(dict, "rows", usize_to_py(matrix.rows as usize));
+    dict_set(dict, "columns", usize_to_py(matrix.columns as usize));
     dict
 }
 

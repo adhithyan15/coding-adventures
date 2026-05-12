@@ -45,3 +45,63 @@ class FakeTransactTransport
     @responses.shift
   end
 end
+
+class FakeReadAfterTransactTransport
+  attr_reader :frames, :timeout_values, :read_timeout_values
+
+  def initialize(responses)
+    @responses = responses
+    @frames = []
+    @timeout_values = []
+    @read_timeout_values = []
+  end
+
+  def transact(frame, timeout_ms:)
+    @frames << frame
+    @timeout_values << timeout_ms
+    @responses.shift
+  end
+
+  def read(timeout_ms:)
+    @read_timeout_values << timeout_ms
+    @responses.shift
+  end
+end
+
+class FakeDecodedSession
+  def initialize(decoded_by_response)
+    @decoded_by_response = decoded_by_response
+  end
+
+  def decode_response(response)
+    @decoded_by_response.fetch(response)
+  end
+end
+
+class FakeTimeoutTransport
+  attr_reader :frames, :timeout_values
+
+  def initialize(timeout_at:)
+    @timeout_at = timeout_at
+    @frames = []
+    @timeout_values = []
+    @closed = false
+  end
+
+  def transact(frame, timeout_ms:)
+    @frames << frame
+    @timeout_values << timeout_ms
+    return nil unless @frames.length == @timeout_at
+
+    raise CodingAdventures::BoardVM::TransportError,
+      "timed out waiting for Board VM response on fake transport"
+  end
+
+  def close
+    @closed = true
+  end
+
+  def closed?
+    @closed
+  end
+end

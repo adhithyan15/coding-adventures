@@ -29,6 +29,12 @@ pub struct WirelessInterfaceInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LedMatrixInfo {
+    pub rows: u8,
+    pub columns: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BoardTargetInfo {
     pub board_id: &'static str,
     pub display_name: &'static str,
@@ -40,6 +46,7 @@ pub struct BoardTargetInfo {
     pub clock_hz: u32,
     pub operating_voltage_mv: u16,
     pub onboard_led: Option<OnboardLed>,
+    pub led_matrix: Option<LedMatrixInfo>,
     pub digital_pin_count: usize,
     pub wireless: &'static [WirelessInterfaceInfo],
     pub capabilities: &'static [&'static str],
@@ -56,7 +63,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 11] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 12] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -67,6 +74,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 11] = [
     "gpio.close",
     "time.sleep_ms",
     "time.now_ms",
+    "led_matrix.frame",
     "program.ram_exec",
 ];
 
@@ -114,6 +122,11 @@ pub const UNO_R4_WIFI_WIRELESS: [WirelessInterfaceInfo; 2] = [
         ota_update: false,
     },
 ];
+
+pub const UNO_R4_WIFI_LED_MATRIX: LedMatrixInfo = LedMatrixInfo {
+    rows: 8,
+    columns: 12,
+};
 
 pub const ESP32_WIRELESS: [WirelessInterfaceInfo; 3] = [
     WirelessInterfaceInfo {
@@ -171,6 +184,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         onboard_led: Some(OnboardLed::Gpio(
             board_vm_uno_r4::UNO_R4_MINIMA.onboard_led_pin,
         )),
+        led_matrix: None,
         digital_pin_count: board_vm_uno_r4::UNO_R4_MINIMA.digital_pins.len(),
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
@@ -188,6 +202,11 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         onboard_led: Some(OnboardLed::Gpio(
             board_vm_uno_r4::UNO_R4_WIFI.onboard_led_pin,
         )),
+        led_matrix: if board_vm_uno_r4::UNO_R4_WIFI.supports_led_matrix {
+            Some(UNO_R4_WIFI_LED_MATRIX)
+        } else {
+            None
+        },
         digital_pin_count: board_vm_uno_r4::UNO_R4_WIFI.digital_pins.len(),
         wireless: &UNO_R4_WIFI_WIRELESS,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
@@ -206,6 +225,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
             Some(pin) => Some(OnboardLed::Gpio(pin)),
             None => None,
         },
+        led_matrix: None,
         digital_pin_count: board_vm_esp32::ESP32_DEVKIT_V1.digital_pins.len(),
         wireless: &ESP32_WIRELESS,
         capabilities: &ESP32_CAPABILITIES,
@@ -227,6 +247,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
             }
             None => None,
         },
+        led_matrix: None,
         digital_pin_count: board_vm_pico::PICO.digital_pins.len(),
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
@@ -248,6 +269,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
             }
             None => None,
         },
+        led_matrix: None,
         digital_pin_count: board_vm_pico::PICO_W.digital_pins.len(),
         wireless: &PICO_W_WIRELESS,
         capabilities: &PICO_W_CAPABILITIES,
@@ -293,6 +315,22 @@ mod tests {
     }
 
     #[test]
+    fn registry_exposes_board_local_led_matrix_metadata() {
+        assert_eq!(
+            find_target("arduino-uno-r4-wifi").unwrap().led_matrix,
+            Some(LedMatrixInfo {
+                rows: 8,
+                columns: 12
+            })
+        );
+        assert_eq!(
+            find_target("arduino-uno-r4-minima").unwrap().led_matrix,
+            None
+        );
+        assert_eq!(find_target("raspberry-pi-pico-w").unwrap().led_matrix, None);
+    }
+
+    #[test]
     fn registry_exposes_common_runtime_capabilities() {
         let pico = find_target("raspberry-pi-pico").unwrap();
         assert_eq!(pico.runtime_id, "board-vm-pico");
@@ -313,6 +351,7 @@ mod tests {
         assert!(pico.wireless.is_empty());
         assert!(uno_r4_wifi.capabilities.contains(&"transport.wifi"));
         assert!(uno_r4_wifi.capabilities.contains(&"transport.bluetooth_le"));
+        assert!(uno_r4_wifi.capabilities.contains(&"led_matrix.frame"));
         assert!(!uno_r4_wifi
             .capabilities
             .contains(&"transport.bluetooth_classic"));

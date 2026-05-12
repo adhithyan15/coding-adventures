@@ -37,13 +37,14 @@ use board_vm_esp_rom::{
 use board_vm_host::{
     write_blink_module, write_gpio_handle_close_module, write_gpio_handle_read_module,
     write_gpio_handle_write_module, write_gpio_open_module, write_gpio_read_module,
-    write_gpio_write_module, write_module, write_time_now_module, write_time_sleep_ms_module,
-    BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
-    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, ModuleSpec,
-    TimeNowProgram, TimeSleepMsProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
-    DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN,
-    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
-    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
+    write_gpio_write_module, write_led_matrix_frame_module, write_module, write_time_now_module,
+    write_time_sleep_ms_module, BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram,
+    GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError,
+    HostSession, LedMatrixFrameProgram, ModuleSpec, TimeNowProgram, TimeSleepMsProgram,
+    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
+    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -377,10 +378,17 @@ pub struct LanguageTargetInfo {
     pub clock_hz: u32,
     pub operating_voltage_mv: u16,
     pub onboard_led: Option<LanguageOnboardLed>,
+    pub led_matrix: Option<LanguageLedMatrix>,
     pub digital_pin_count: usize,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LanguageLedMatrix {
+    pub rows: u8,
+    pub columns: u8,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1023,6 +1031,10 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
         clock_hz: target.clock_hz,
         operating_voltage_mv: target.operating_voltage_mv,
         onboard_led: target.onboard_led.map(language_onboard_led),
+        led_matrix: target.led_matrix.map(|matrix| LanguageLedMatrix {
+            rows: matrix.rows,
+            columns: matrix.columns,
+        }),
         digital_pin_count: target.digital_pin_count,
         wireless: target
             .wireless
@@ -1518,6 +1530,13 @@ pub fn build_time_sleep_ms_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_time_sleep_ms_module(program, out)?)
+}
+
+pub fn build_led_matrix_frame_module(
+    program: LedMatrixFrameProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_led_matrix_frame_module(program, out)?)
 }
 
 pub fn build_raw_module(
@@ -2135,6 +2154,31 @@ pub unsafe extern "C" fn board_vm_language_time_sleep_ms_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_led_matrix_frame_module(
+    word0: u32,
+    word1: u32,
+    word2: u32,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_led_matrix_frame_module(
+            LedMatrixFrameProgram {
+                words: [word0, word1, word2],
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2440,6 +2484,11 @@ pub extern "C" fn board_vm_language_time_sleep_ms_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_led_matrix_frame_module_len() -> u64 {
+    LED_MATRIX_FRAME_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_raw_module_len(code_len: u64, const_pool_len: u64) -> u64 {
     clear_error();
     match raw_module_len(code_len, const_pool_len) {
@@ -2644,6 +2693,17 @@ mod tests {
         assert_eq!(board_family_name(esp32.family), "esp32");
         assert_eq!(esp32.runtime_id, "board-vm-esp32");
         assert_eq!(esp32.onboard_led, Some(LanguageOnboardLed::Gpio(2)));
+        assert_eq!(
+            known_target("arduino-uno-r4-wifi").unwrap().led_matrix,
+            Some(LanguageLedMatrix {
+                rows: 8,
+                columns: 12
+            })
+        );
+        assert_eq!(
+            known_target("arduino-uno-r4-minima").unwrap().led_matrix,
+            None
+        );
         assert!(esp32.capabilities.contains(&"gpio.open".to_owned()));
         assert!(esp32
             .capabilities
@@ -3392,6 +3452,20 @@ mod tests {
         };
         assert_eq!(time_sleep_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(time_sleep_status.len, TIME_SLEEP_MS_MODULE_LEN as u64);
+
+        let mut led_matrix_module = [0u8; LED_MATRIX_FRAME_MODULE_LEN];
+        let led_matrix_status = unsafe {
+            board_vm_language_led_matrix_frame_module(
+                0x3184_A444,
+                0x4404_2081,
+                0x100A_0040,
+                3,
+                led_matrix_module.as_mut_ptr(),
+                led_matrix_module.len() as u64,
+            )
+        };
+        assert_eq!(led_matrix_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(led_matrix_status.len, LED_MATRIX_FRAME_MODULE_LEN as u64);
 
         let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];
         let gpio_read_status = unsafe {

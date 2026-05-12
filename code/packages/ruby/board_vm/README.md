@@ -61,6 +61,11 @@ Responses are decoded by the same Rust language core into Ruby hashes for
 `HELLO_ACK`, capability reports, upload acknowledgements, and run reports, while
 the raw wire frames and raw response bytes remain available from the returned
 session result for debugging.
+Some deployed firmware starts the background blink loop without sending a final
+run report; `board.led.blink` treats that response timeout as a successful
+background start, so the final `:run` result may have no raw or decoded
+response. Use `board.session.stop(timeout_ms: 10_000)` to stop a running loop,
+then `board.gpio.low(pin: 13)` if you want to leave the onboard LED off.
 Tests and alternate runtimes can inject any transport object that responds to
 `transact(frame, timeout_ms:)` or `write(frame)`.
 

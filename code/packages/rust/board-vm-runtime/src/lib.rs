@@ -2,7 +2,7 @@
 
 use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
-    CAP_GPIO_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -60,6 +60,10 @@ pub trait BoardHal {
 
     fn sleep_ms(&mut self, duration_ms: u16) -> Result<(), HalError>;
     fn now_ms(&self) -> u32;
+
+    fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -388,6 +392,17 @@ where
                 let now = self.hal.now_ms();
                 self.push(Value::U32(now), ip)
             }
+            CAP_LED_MATRIX_FRAME => {
+                let word2 = self.pop_u32(ip)?;
+                let word1 = self.pop_u32(ip)?;
+                let word0 = self.pop_u32(ip)?;
+                self.hal
+                    .led_matrix_frame([word0, word1, word2])
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
             _ => Err(RuntimeError {
                 ip,
                 kind: RuntimeErrorKind::UnsupportedCapability,
@@ -455,6 +470,18 @@ where
         match self.pop(ip)? {
             Value::U8(value) => Ok(value as u16),
             Value::U16(value) => Ok(value),
+            _ => Err(RuntimeError {
+                ip,
+                kind: RuntimeErrorKind::TypeMismatch,
+            }),
+        }
+    }
+
+    fn pop_u32(&mut self, ip: usize) -> Result<u32, RuntimeError> {
+        match self.pop(ip)? {
+            Value::U8(value) => Ok(value as u32),
+            Value::U16(value) => Ok(value as u32),
+            Value::U32(value) => Ok(value),
             _ => Err(RuntimeError {
                 ip,
                 kind: RuntimeErrorKind::TypeMismatch,
@@ -595,6 +622,7 @@ mod tests {
         Open(u16, GpioMode),
         Write(u32, Level),
         Sleep(u16),
+        LedMatrixFrame([u32; 3]),
     }
 
     struct FakeHal {
@@ -613,7 +641,7 @@ mod tests {
 
     impl BoardHal for FakeHal {
         fn capabilities(&self) -> CapabilitySet {
-            CapabilitySet::blink_mvp()
+            CapabilitySet::blink_mvp().with_led_matrix()
         }
 
         fn gpio_open(&mut self, pin: u16, mode: GpioMode) -> Result<u32, HalError> {
@@ -642,6 +670,11 @@ mod tests {
 
         fn now_ms(&self) -> u32 {
             self.now_ms
+        }
+
+        fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
+            self.events.push(Event::LedMatrixFrame(frame));
+            Ok(())
         }
     }
 
@@ -703,5 +736,41 @@ mod tests {
         let report = runtime.run_code(&[0x13, 0x34, 0x12, 0x50], 10).unwrap();
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_value, Value::U16(0x1234));
+    }
+
+    #[test]
+    fn led_matrix_frame_dispatches_three_words() {
+        let mut runtime: Runtime<FakeHal, 4, 1> = Runtime::new(FakeHal::new());
+        let code = [
+            0x14,
+            0x44,
+            0xA4,
+            0x84,
+            0x31,
+            0x14,
+            0x81,
+            0x20,
+            0x04,
+            0x44,
+            0x14,
+            0x40,
+            0x00,
+            0x0A,
+            0x10,
+            0x40,
+            CAP_LED_MATRIX_FRAME as u8,
+        ];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::LedMatrixFrame([
+                0x3184_A444,
+                0x4404_2081,
+                0x100A_0040,
+            ])]
+        );
     }
 }

@@ -4,10 +4,11 @@ use std::slice;
 
 use board_vm_host::{
     BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
-    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    BLINK_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
-    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
+    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, LedMatrixFrameProgram, TimeNowProgram,
+    TimeSleepMsProgram, BLINK_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN,
+    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
@@ -15,10 +16,11 @@ use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
     build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
     build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
-    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_raw_module, build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
-    build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
-    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
+    build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
+    build_program_end_wire_frame, build_raw_module, build_run_background_wire_frame,
+    build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
+    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
+    capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
     detect_target as core_detect_target,
     discover_bluetooth_devices as core_discover_bluetooth_devices,
@@ -192,6 +194,23 @@ extern "C" fn session_time_sleep_ms_module(
 
     let module = build_time_sleep_ms_module_value(duration_ms, max_stack)
         .unwrap_or_else(|error| raise_core_error("time_sleep_ms_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_led_matrix_frame_module(
+    _self_val: VALUE,
+    word0_val: VALUE,
+    word1_val: VALUE,
+    word2_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let word0 = rb_u32(word0_val, "word0");
+    let word1 = rb_u32(word1_val, "word1");
+    let word2 = rb_u32(word2_val, "word2");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_led_matrix_frame_module_value([word0, word1, word2], max_stack)
+        .unwrap_or_else(|error| raise_core_error("led_matrix_frame_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -719,6 +738,11 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
     );
     hash_set(
         hash,
+        "led_matrix",
+        language_led_matrix_to_rb(target.led_matrix),
+    );
+    hash_set(
+        hash,
         "digital_pin_count",
         rb_usize(target.digital_pin_count),
     );
@@ -733,6 +757,17 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
         ruby_bridge::array_push(capabilities, ruby_bridge::str_to_rb(capability));
     }
     hash_set(hash, "capabilities", capabilities);
+    hash
+}
+
+fn language_led_matrix_to_rb(matrix: Option<board_vm_language_core::LanguageLedMatrix>) -> VALUE {
+    let Some(matrix) = matrix else {
+        return ruby_bridge::nil_value();
+    };
+
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "rows", rb_usize(matrix.rows as usize));
+    hash_set(hash, "columns", rb_usize(matrix.columns as usize));
     hash
 }
 
@@ -1252,6 +1287,19 @@ fn build_time_sleep_ms_module_value(
     Ok(module)
 }
 
+fn build_led_matrix_frame_module_value(
+    words: [u32; 3],
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; LED_MATRIX_FRAME_MODULE_LEN];
+    let len = build_led_matrix_frame_module(
+        LedMatrixFrameProgram { words, max_stack },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_raw_module_value(
     flags: u8,
     max_stack: u8,
@@ -1542,6 +1590,12 @@ pub extern "C" fn Init_board_vm_native() {
         "time_sleep_ms_module",
         session_time_sleep_ms_module as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "led_matrix_frame_module",
+        session_led_matrix_frame_module as *const c_void,
+        4,
     );
     ruby_bridge::define_method_raw(
         session_class,
