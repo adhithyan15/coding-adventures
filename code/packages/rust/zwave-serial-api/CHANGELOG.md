@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `RequestTrackerSummary` and `RequestTracker::summary()` for compact
+  diagnostics over pending Serial API requests, including callback/response
+  waits, per-function counts, oldest sent time, and next timeout.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added
