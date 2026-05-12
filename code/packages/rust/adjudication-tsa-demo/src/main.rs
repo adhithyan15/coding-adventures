@@ -119,6 +119,11 @@ fn config_from_env() -> DemoConfig {
     if let Ok(adv) = std::env::var("ADJ_DEMO_ADVERSARY_MODEL") {
         cfg.adversary_model = if adv.is_empty() { None } else { Some(adv) };
     }
+    if let Ok(n) = std::env::var("ADJ_DEMO_MAX_CLARIFY_ATTEMPTS") {
+        if let Ok(parsed) = n.parse::<usize>() {
+            cfg.max_clarification_attempts = parsed;
+        }
+    }
     if let Ok(mode) = std::env::var("ADJ_DEMO_IR_MODE") {
         cfg.ir_mode = match mode.to_ascii_lowercase().as_str() {
             "llm" | "llm-extracted" | "llm_extracted" | "llmextracted" => IrMode::LlmExtracted,

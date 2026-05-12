@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-tsa-demo"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "A/B demo harness: compare a raw local Ollama model against the full adjudication pipeline on the TSA worked example. v0.3 enables ADJ05 adversarial — register a second model from a different family (e.g., llama3.1:8b alongside gemma4) and the pipeline runs the full ADJ02 + ADJ03 + ADJ04 + ADJ05 chain."
+description = "A/B demo harness: compare a raw local Ollama model against the full adjudication pipeline on the TSA worked example. v0.4 wires the ADJ06 clarification dialogue into LlmExtracted mode — when the model's IR fails ADJ02 coverage, the framework re-prompts with the violation and the model usually corrects on the second try."
 
 [[bin]]
 name = "adjudication-tsa-demo"
@@ -10,6 +10,7 @@ path = "src/main.rs"
 
 [dependencies]
 adjudication-audit-trail = { path = "../adjudication-audit-trail" }
+adjudication-clarification = { path = "../adjudication-clarification" }
 adjudication-ir = { path = "../adjudication-ir" }
 adjudication-pipeline = { path = "../adjudication-pipeline" }
 llm-gateway = { path = "../llm-gateway" }
