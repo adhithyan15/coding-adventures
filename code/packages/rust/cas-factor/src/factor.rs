@@ -3,9 +3,9 @@
 //! Given an integer polynomial as a coefficient list, returns:
 //!
 //! 1. The integer **content** — the GCD of every coefficient (always positive).
-//! 2. A list of `(factor_coeffs, multiplicity)` pairs.  Phase 1 only finds
-//!    *linear* factors via the rational-root test; any irreducible residual is
-//!    appended with multiplicity 1.
+//! 2. A list of `(factor_coeffs, multiplicity)` pairs. Phase 1 finds
+//!    *linear* factors via the rational-root test; Phase 2 recursively splits
+//!    residuals with Kronecker's method.
 //!
 //! # Examples
 //!
@@ -29,13 +29,14 @@
 //! assert_eq!(factors, vec![(vec![1, 0, 1], 1)]);
 //! ```
 
-use crate::polynomial::{content, normalize, primitive_part};
+use crate::kronecker::kronecker_factor;
+use crate::polynomial::{content, degree, normalize, primitive_part};
 use crate::rational_roots::extract_linear_factors;
 
 /// A factored polynomial: `Vec<(coeffs, multiplicity)>`.
 pub type FactorList = Vec<(Vec<i64>, usize)>;
 
-/// Factor a univariate integer polynomial over ℤ (linear factors only).
+/// Factor a univariate integer polynomial over ℤ.
 ///
 /// # Returns
 ///
@@ -47,6 +48,7 @@ pub type FactorList = Vec<(Vec<i64>, usize)>;
 /// - One entry `([-root, 1], mult)` per integer root found.
 /// - Optionally one entry for the irreducible residual (if it isn't `[1]` or
 ///   `[-1]`).
+/// - Residual factors found by Kronecker's method, or one irreducible residual.
 pub fn factor_integer_polynomial(p: &[i64]) -> (i64, FactorList) {
     if p.is_empty() {
         return (0, vec![]);
@@ -71,9 +73,40 @@ pub fn factor_integer_polynomial(p: &[i64]) -> (i64, FactorList) {
         // The trailing -1 is absorbed into the content sign.
         c = -c;
     } else if !residual_norm.is_empty() && residual_norm != vec![1i64] {
-        // Non-trivial irreducible residual.
-        factors.push((residual_norm, 1));
+        factors.extend(factor_residual(&residual_norm));
     }
 
     (c, factors)
+}
+
+fn factor_residual(residual: &[i64]) -> FactorList {
+    let mut factors = std::collections::BTreeMap::<Vec<i64>, usize>::new();
+    let mut queue = vec![normalize(residual)];
+
+    while let Some(piece) = queue.pop() {
+        let mut piece = normalize(&piece);
+        if piece.is_empty() || degree(&piece) <= 0 {
+            continue;
+        }
+
+        if degree(&piece) == 1 {
+            if piece.last().is_some_and(|&lead| lead < 0) {
+                piece = piece.into_iter().map(|coeff| -coeff).collect();
+            }
+            *factors.entry(piece).or_insert(0) += 1;
+            continue;
+        }
+
+        if let Some((factor, cofactor)) = kronecker_factor(&piece) {
+            queue.push(factor);
+            queue.push(cofactor);
+        } else {
+            if piece.last().is_some_and(|&lead| lead < 0) {
+                piece = piece.into_iter().map(|coeff| -coeff).collect();
+            }
+            *factors.entry(piece).or_insert(0) += 1;
+        }
+    }
+
+    factors.into_iter().collect()
 }

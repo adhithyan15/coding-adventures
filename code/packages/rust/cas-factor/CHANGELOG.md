@@ -1,5 +1,16 @@
 # Changelog — cas-factor (Rust)
 
+## Unreleased
+
+### Added
+
+- `kronecker` module with public `kronecker_factor(p)` for primitive integer
+  polynomial residual splitting.
+- Recursive residual factoring in `factor_integer_polynomial`, covering
+  Sophie Germain quartics, `x^4 + x^2 + 1`, and repeated quadratic residuals.
+- Focused Kronecker and integration tests for residual factoring parity with
+  the Python/TypeScript `cas-factor` implementations.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

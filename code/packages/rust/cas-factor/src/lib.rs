@@ -1,7 +1,7 @@
 //! # cas-factor
 //!
-//! Univariate integer polynomial factoring over ℤ (Phase 1: linear factors
-//! via the rational-root test).
+//! Univariate integer polynomial factoring over ℤ (linear factors plus
+//! Kronecker residual splitting).
 //!
 //! ## Quick start
 //!
@@ -24,11 +24,11 @@
 //! Polynomials are `Vec<i64>` coefficient lists with the constant term first:
 //! `[a_0, a_1, ..., a_n]` represents `a_0 + a_1·x + … + a_n·x^n`.
 //!
-//! ## What Phase 1 covers
+//! ## What the current Rust port covers
 //!
 //! Phase 1 uses the Rational Root Theorem to find all **integer** roots.
-//! Any irreducible residual (e.g., `x^2 + 1`) is appended with multiplicity 1.
-//! Full Kronecker factorization and factoring over ℚ is Phase 2.
+//! Phase 2 uses Kronecker's method to split primitive residuals such as
+//! `x^4 + 4` and `x^4 + x^2 + 1`. BZH is intentionally not implemented yet.
 //!
 //! ## IR head names
 //!
@@ -40,10 +40,12 @@
 //! | [`IRREDUCIBLE`] | `"Irreducible"` |
 
 pub mod factor;
+pub mod kronecker;
 pub mod polynomial;
 pub mod rational_roots;
 
 pub use factor::{factor_integer_polynomial, FactorList};
+pub use kronecker::kronecker_factor;
 pub use polynomial::{
     content, degree, divide_linear, divisors, evaluate, normalize, primitive_part, Poly,
 };
