@@ -12,9 +12,13 @@ skip:
   BLOCK_COMMENT  = /\/\*([^*]|\*[^\/])*\*\//
 
 # Multi-character structural tokens must come before symbolic atoms.
+# `NAF` is the negation-as-failure operator `\+`. It must come before
+# `ATOM_SYMBOLIC` so `\+ G` parses as a NAF operator + goal rather
+# than as a bare symbolic atom.
 DCG          = "-->"
 QUERY        = "?-"
 RULE         = ":-"
+NAF          = "\+"
 RANGE        = ".." -> ATOM
 
 # Common dedicated punctuation tokens for the first parser pass.
