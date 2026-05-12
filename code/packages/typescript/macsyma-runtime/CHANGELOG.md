@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wire direct `Solve(f(linear) = constant, var)` transcendental equations to
+  the TypeScript `cas-solve` `trySolveTranscendental` handler, returning
+  `List(...)` symbolic inverse and periodic-family solutions.
 - Wire `Solve(inequality, var)` to the TypeScript `cas-solve`
   `trySolveInequality` handler for polynomial inequalities, returning
   `List(...)` interval predicates and preserving unevaluated fallback behavior.

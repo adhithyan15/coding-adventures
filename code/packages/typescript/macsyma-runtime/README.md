@@ -14,5 +14,7 @@ This first runtime slice is intentionally small and browser-friendly:
   `cas-solve` linear-system solver
 - dispatches `Solve(inequality, var)` to the `cas-solve` polynomial
   inequality solver for interval predicates
+- dispatches direct `Solve(f(linear) = constant, var)` transcendental
+  equations to the `cas-solve` inverse-family solver
 - exposes a JSON helper whose recursive IR representation is safe for
   `JSON.stringify`

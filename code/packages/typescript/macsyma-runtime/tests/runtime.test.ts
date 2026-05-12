@@ -2,14 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   ADD,
   EQUAL,
+  EXP,
   GREATER,
   GREATER_EQUAL,
   LESS,
   LESS_EQUAL,
   LIST,
+  LOG,
   MUL,
   POW,
   RULE,
+  SIN,
   SOLVE,
   SUB,
   app,
@@ -315,6 +318,47 @@ describe("macsyma-runtime", () => {
     const session = new MacsymaSession();
     const expr = app(SOLVE, [
       app(GREATER, [app(sym("Sin"), [x]), int(0)]),
+      x,
+    ]);
+
+    const [result] = session.evalStatements([expr]);
+    expect(result.output).toEqual(expr);
+  });
+
+  it("solves direct transcendental equations through the cas-solve handler", () => {
+    const x = sym("x");
+    const session = new MacsymaSession();
+    const [expResult, sinResult] = session.evalStatements([
+      app(SOLVE, [
+        app(EQUAL, [app(EXP, [x]), int(2)]),
+        x,
+      ]),
+      app(SOLVE, [
+        app(EQUAL, [app(SIN, [x]), int(0)]),
+        x,
+      ]),
+    ]);
+
+    expect(expResult.output).toEqual(app(LIST, [
+      app(LOG, [int(2)]),
+    ]));
+    expect(sinResult.output).toEqual(app(LIST, [
+      app(sym("Add"), [
+        app(sym("Asin"), [int(0)]),
+        app(MUL, [int(2), app(MUL, [sym("%pi"), sym("FreeInteger")])]),
+      ]),
+      app(sym("Add"), [
+        app(SUB, [sym("%pi"), app(sym("Asin"), [int(0)])]),
+        app(MUL, [int(2), app(MUL, [sym("%pi"), sym("FreeInteger")])]),
+      ]),
+    ]));
+  });
+
+  it("keeps unsupported transcendental Solve calls unevaluated", () => {
+    const x = sym("x");
+    const session = new MacsymaSession();
+    const expr = app(SOLVE, [
+      app(EQUAL, [app(SIN, [app(SIN, [x])]), int(0)]),
       x,
     ]);
 
