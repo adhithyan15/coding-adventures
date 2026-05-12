@@ -11,9 +11,10 @@
 //!      ▼
 //! MosaicVM  (drives MosaicRenderer callbacks)
 //!      │
-//!      ├── --backend webcomponent  →  MyComponent.js  (Custom Element)
+//!      ├── --backend webcomponent  →  MyComponent.js   (Custom Element)
 //!      ├── --backend html          →  MyComponent.html (static snapshot)
-//!      └── --backend react         →  MyComponent.jsx (React functional component)
+//!      ├── --backend react         →  MyComponent.jsx  (React functional component)
+//!      └── --backend paint         →  MyComponent.png  (raster PNG via Paint VM)
 //! ```
 //!
 //! The CLI surface is driven by the spec at `code/specs/mosaic-compile.json`
@@ -31,6 +32,7 @@ use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
+use mosaic_emit_paint;
 use mosaic_vm::MosaicVM;
 
 // ===========================================================================
@@ -138,9 +140,9 @@ fn run(result: cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
-    if backend != "webcomponent" && backend != "html" && backend != "react" {
+    if backend != "webcomponent" && backend != "html" && backend != "react" && backend != "paint" {
         eprintln!(
-            "mosaic-compile: --backend must be 'webcomponent', 'html', or 'react', got '{backend}'"
+            "mosaic-compile: --backend must be 'webcomponent', 'html', 'react', or 'paint', got '{backend}'"
         );
         process::exit(1);
     }
@@ -242,6 +244,27 @@ fn run(result: cli_builder::types::ParseResult) {
             eprintln!("Written: {out}");
         }
 
+        "paint" => {
+            // The paint backend bypasses MosaicVM and calls mosaic-emit-paint
+            // directly: Mosaic source → PaintScene → raster PNG bytes.
+            //
+            // Unlike the text-based backends (html, react, webcomponent), this
+            // path produces binary output, so we use write_bytes_or_die instead
+            // of write_file_or_die.
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{component_name}.png"));
+
+            let png_bytes = mosaic_emit_paint::render_png_with_defaults(&source_text)
+                .unwrap_or_else(|e| {
+                    eprintln!("mosaic-compile: paint backend error: {e}");
+                    process::exit(1);
+                });
+
+            write_bytes_or_die(&out, &png_bytes);
+            eprintln!("Written: {out}");
+        }
+
         other => {
             // Should not reach here — caught above.
             eprintln!("mosaic-compile: unknown backend '{other}'");
@@ -264,6 +287,26 @@ fn read_file_or_die(path: &str) -> String {
 
 /// Write a string to a file, creating parent directories as needed.
 fn write_file_or_die(path: &str, content: &str) {
+    if let Some(parent) = Path::new(path).parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent).unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: cannot create directory {}: {e}", parent.display());
+                process::exit(1);
+            });
+        }
+    }
+    fs::write(path, content).unwrap_or_else(|e| {
+        eprintln!("mosaic-compile: cannot write {path}: {e}");
+        process::exit(1);
+    });
+}
+
+/// Write raw bytes to a file, creating parent directories as needed.
+///
+/// Used for binary backends (e.g. `--backend paint`) that produce PNG output
+/// rather than UTF-8 text.  Mirrors `write_file_or_die` but accepts `&[u8]`
+/// so the caller doesn't need to round-trip bytes through a String.
+fn write_bytes_or_die(path: &str, content: &[u8]) {
     if let Some(parent) = Path::new(path).parent() {
         if !parent.as_os_str().is_empty() {
             fs::create_dir_all(parent).unwrap_or_else(|e| {
