@@ -59,5 +59,7 @@ All notable changes to this package will be documented in this file.
   maximum pending delivery depth.
 - Event-bus lagging-subscription percentage helpers for read-side pressure
   thresholds.
+- Event-bus pressure status helpers for classifying caught-up, partially
+  backlogged, and fully backlogged subscriber fan-out.
 - Subscription backlog status helpers that identify caught-up versus
   backlogged event-stream subscribers without draining their delivery queues.
