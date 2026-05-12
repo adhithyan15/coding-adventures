@@ -179,6 +179,43 @@ module CodingAdventures
           "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e", endpoint
       end
 
+      def test_connect_can_prompt_for_bluetooth_endpoint_with_pairing_status
+        output = StringIO.new
+
+        connection = BoardVM.uno_r4_wifi(
+          via: "BLE",
+          bluetooth_devices: [
+            {
+              "id" => "uno-a",
+              "name" => "Uno A",
+              "address" => "AA:BB:CC:DD:EE:01",
+              "service_uuids" => ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]
+            },
+            {
+              "id" => "uno-b",
+              "name" => "Uno B",
+              "address" => "AA:BB:CC:DD:EE:02",
+              "paired" => true,
+              "service_uuids" => ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]
+            }
+          ],
+          pick_bluetooth_endpoint: true,
+          input: StringIO.new("2\n"),
+          output: output,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_equal "bluetooth_le", connection.connection_transport
+        assert_equal "ble://AA:BB:CC:DD:EE:02" \
+          "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e", connection.endpoint
+        assert_includes output.string, "1. Uno A [pairing required]"
+        assert_includes output.string, "2. Uno B [paired]"
+        assert_includes output.string, "Select Bluetooth endpoint [1-2]: "
+      end
+
       def test_connection_options_can_be_selected_without_exposing_ports
         default = BoardVM.select_connection_option(:uno_r4_wifi)
         wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: :wifi)
@@ -285,6 +322,39 @@ module CodingAdventures
         assert_equal "ready", transport.status
         assert_equal "/dev/cu.ESP32-BoardVM", transport.stream_path
         assert_equal "bluetooth_classic_rfcomm", transport.backend.fetch("endpoint").fetch("endpoint_transport")
+      end
+
+      def test_bluetooth_transport_delegates_native_transact_to_rust
+        endpoint = "ble://uno-r4-wifi/180f/2a19/2a1a"
+        calls = []
+        original = BoardVM.method(:bluetooth_transact)
+        verbose = $VERBOSE
+        $VERBOSE = nil
+        BoardVM.define_singleton_method(:bluetooth_transact) do |actual_endpoint, frame|
+          calls << [actual_endpoint, frame]
+          "response".b
+        end
+
+        transport = BluetoothTransport.new(
+          endpoint: endpoint,
+          timeout_ms: 500,
+          backend: {
+            "endpoint" => BoardVM.bluetooth_endpoint(endpoint),
+            "backend" => "macos_core_bluetooth",
+            "status" => "ready",
+            "stream_path" => nil,
+            "native_transport" => true,
+            "message" => nil
+          }
+        )
+
+        assert transport.native_transport?
+        assert_equal "response".b, transport.transact("request".b)
+        assert_equal [[endpoint, "request".b]], calls
+        assert_raises(TransportError) { transport.write("request".b) }
+      ensure
+        BoardVM.define_singleton_method(:bluetooth_transact, original) if original
+        $VERBOSE = verbose
       end
 
       def test_connect_builds_a_bluetooth_transport_from_rust_backend_plan

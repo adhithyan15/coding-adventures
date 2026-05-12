@@ -11,7 +11,9 @@ than a backend-specific index.
 
 - `MemoryRecord`
 - `MemoryRecordSummary`
+- `MemoryCatalogSummary` for read-side class, lifecycle, and review coverage
 - `MemoryClass`
+- `MemoryLifecycleStatus` plus shared record/summary lifecycle helpers
 - confidence/review updates
 - supersede, expiry, and tombstone transitions
 - lexical search across subject/body/tags, including active-at filtering and
@@ -20,6 +22,7 @@ than a backend-specific index.
   tombstone inclusion, sorting, and limits
 - metadata-only memory summaries for read tools that should not return memory
   body text
+- compact catalog summaries over selected memory records
 - deterministic review candidates for low-confidence, stale, expiring, and
   expired memories
 
@@ -35,6 +38,7 @@ than a backend-specific index.
 - `supersede_old_memory()`
 - `list_memories_with_options()`
 - `list_memory_summaries()`
+- `catalog_summary()`
 - `list_by_class()`
 - `list_by_tag()`
 - `search_lexical()`

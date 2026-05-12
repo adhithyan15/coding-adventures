@@ -35,6 +35,7 @@ from board_vm_native import (
     pico_uf2_mounts,
     pico_uf2_upload_options,
     pick_connection_option,
+    pick_bluetooth_endpoint,
     pick_device,
     pico,
     runtime_devices,
@@ -269,6 +270,37 @@ def test_bluetooth_transport_uses_rust_backend_open_plan():
     assert transport.backend["endpoint"]["endpoint_transport"] == "bluetooth_classic_rfcomm"
 
 
+def test_bluetooth_transport_delegates_native_transact_to_rust(monkeypatch):
+    endpoint = "ble://uno-r4-wifi/180f/2a19/2a1a"
+    calls = []
+
+    def fake_bluetooth_transact(actual_endpoint, frame):
+        calls.append((actual_endpoint, frame))
+        return b"response"
+
+    monkeypatch.setattr(board_vm_native_module, "bluetooth_transact", fake_bluetooth_transact)
+    plan = {
+        "endpoint": bluetooth_endpoint(endpoint),
+        "backend": "macos_core_bluetooth",
+        "status": "ready",
+        "stream_path": None,
+        "native_transport": True,
+        "message": None,
+    }
+
+    transport = BluetoothTransport(endpoint, backend=plan)
+
+    assert transport.native_transport is True
+    assert transport.transact(b"request") == b"response"
+    assert calls == [(endpoint, b"request")]
+    try:
+        transport.write(b"request")
+    except OSError as error:
+        assert "native Board VM Bluetooth transport" in str(error)
+    else:
+        raise AssertionError("expected native Bluetooth write to fail")
+
+
 def test_bluetooth_endpoint_candidates_default_to_host_discovery(monkeypatch):
     monkeypatch.setattr(
         board_vm_native_module._native,
@@ -317,6 +349,45 @@ def test_bluetooth_connection_endpoint_filters_to_the_selected_transport():
         "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e"
         "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e"
     )
+
+
+def test_connect_can_prompt_for_bluetooth_endpoint_with_pairing_status():
+    output = io.StringIO()
+
+    connection = connect(
+        "uno-r4-wifi",
+        via="BLE",
+        bluetooth_devices=[
+            {
+                "id": "uno-a",
+                "name": "Uno A",
+                "address": "AA:BB:CC:DD:EE:01",
+                "service_uuids": ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"],
+            },
+            {
+                "id": "uno-b",
+                "name": "Uno B",
+                "address": "AA:BB:CC:DD:EE:02",
+                "paired": True,
+                "service_uuids": ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"],
+            },
+        ],
+        pick_bluetooth_endpoint=True,
+        input_func=lambda _prompt: "2",
+        output=output,
+    )
+
+    assert connection.connection_transport == "bluetooth_le"
+    assert connection.endpoint == (
+        "ble://AA:BB:CC:DD:EE:02"
+        "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+        "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+        "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+    )
+    rendered = output.getvalue()
+    assert "1. Uno A [pairing required]" in rendered
+    assert "2. Uno B [paired]" in rendered
+    assert "Select Bluetooth endpoint [1-2]: " in rendered
 
 
 def test_connection_options_can_be_selected_without_exposing_ports():

@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `RuntimePendingWorkSummary` helpers for compact pending-work status derived
+  from runtime read snapshots.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added
@@ -55,5 +62,11 @@ All notable changes to this package will be documented in this file.
   state, and stale cached state without mutating runtime state.
 - Event-bus backlog status helpers that distinguish absent subscribers,
   caught-up streams, and backlogged streams.
+- Event-bus aggregate pressure helpers for lagging subscription counts and
+  maximum pending delivery depth.
+- Event-bus lagging-subscription percentage helpers for read-side pressure
+  thresholds.
+- Event-bus pressure status helpers for classifying caught-up, partially
+  backlogged, and fully backlogged subscriber fan-out.
 - Subscription backlog status helpers that identify caught-up versus
   backlogged event-stream subscribers without draining their delivery queues.

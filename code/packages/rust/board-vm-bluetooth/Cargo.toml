@@ -11,3 +11,4 @@ path = "src/lib.rs"
 board-vm-client = { path = "../board-vm-client" }
 board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-stream = { path = "../board-vm-stream" }
+objc-bridge = { path = "../objc-bridge" }

@@ -384,6 +384,16 @@ pub enum ProgramItem {
     Rule { head: Term, body: Vec<Term> },
     /// A top-level query: ?- body.
     Query(Vec<Term>),
+    /// A ProbLog probabilistic fact: `p :: head.`. The probability
+    /// is parsed verbatim; the loader is responsible for
+    /// range-checking (`[0, 1]`) when it lowers into a clause.
+    ProbabilisticFact { term: Term, probability: f64 },
+    /// A ProbLog probabilistic rule: `p :: head :- body.`.
+    ProbabilisticRule {
+        head: Term,
+        body: Vec<Term>,
+        probability: f64,
+    },
 }
 
 /// Walk a parsed `program` AST and return one `ProgramItem` per
@@ -452,6 +462,59 @@ fn lower_statement(stmt: &GrammarASTNode) -> ProgramItem {
                 .unwrap_or_default();
             ProgramItem::Query(body)
         }
+        "probabilistic_fact_statement" => {
+            // probability PROB_SEP callable_term DOT
+            let nodes: Vec<&GrammarASTNode> = stmt
+                .children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(n) => Some(n),
+                    _ => None,
+                })
+                .collect();
+            let probability = nodes
+                .iter()
+                .find(|n| n.rule_name == "probability")
+                .and_then(|n| extract_probability(n))
+                .unwrap_or(0.0);
+            let term = nodes
+                .iter()
+                .find(|n| n.rule_name == "callable_term")
+                .map(|n| ast_to_term(n, &mut var_map))
+                .unwrap_or_else(|| atom("?"));
+            ProgramItem::ProbabilisticFact { term, probability }
+        }
+        "probabilistic_rule_statement" => {
+            // probability PROB_SEP callable_term RULE goal DOT
+            let nodes: Vec<&GrammarASTNode> = stmt
+                .children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(n) => Some(n),
+                    _ => None,
+                })
+                .collect();
+            let probability = nodes
+                .iter()
+                .find(|n| n.rule_name == "probability")
+                .and_then(|n| extract_probability(n))
+                .unwrap_or(0.0);
+            let head = nodes
+                .iter()
+                .find(|n| n.rule_name == "callable_term")
+                .map(|n| ast_to_term(n, &mut var_map))
+                .unwrap_or_else(|| atom("?"));
+            let body = nodes
+                .iter()
+                .find(|n| n.rule_name == "goal")
+                .map(|g| goal_to_conjunction(g, &mut var_map))
+                .unwrap_or_default();
+            ProgramItem::ProbabilisticRule {
+                head,
+                body,
+                probability,
+            }
+        }
         // dcg_statement and any future top-level shapes: fall through
         // to a Fact representation for now (the head is the callable
         // and the body is the DCG transformation, which lives in a
@@ -459,6 +522,22 @@ fn lower_statement(stmt: &GrammarASTNode) -> ProgramItem {
         // their head term.
         _ => ProgramItem::Fact(first_term_child(stmt, &mut var_map)),
     }
+}
+
+/// Pull a probability literal out of a `probability` AST node.
+/// `probability = FLOAT | INTEGER`. Parses the leaf token's text via
+/// `str::parse::<f64>`. Returns `None` if the AST shape is malformed
+/// or the text doesn't parse — callers fall back to a sentinel and
+/// the loader's range-check surfaces the issue.
+fn extract_probability(node: &GrammarASTNode) -> Option<f64> {
+    for child in &node.children {
+        if let ASTNodeOrToken::Token(tok) = child {
+            if let Ok(v) = tok.value.parse::<f64>() {
+                return Some(v);
+            }
+        }
+    }
+    None
 }
 
 fn goal_to_conjunction(
@@ -638,11 +717,11 @@ mod tests {
 
     #[test]
     fn integer_and_float_lower_to_their_term_kinds() {
-        let items = parse("p(42, 3.14).");
+        let items = parse("p(42, 2.5).");
         match &items[0] {
             ProgramItem::Fact(Term::Compound { args, .. }) => {
                 assert_eq!(args[0], logic_core::int(42));
-                assert_eq!(args[1], logic_core::float(3.14));
+                assert_eq!(args[1], logic_core::float(2.5));
             }
             other => panic!("got {:?}", other),
         }

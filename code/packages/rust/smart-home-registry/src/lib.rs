@@ -123,6 +123,34 @@ pub struct RegistryCounts {
     pub authorization_decisions: usize,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RegistrySupervisionSummary {
+    pub generated_at_ms: u64,
+    pub bridges: usize,
+    pub attention_bridges: usize,
+    pub pairing_candidate_bridges: usize,
+    pub devices: usize,
+    pub online_devices: usize,
+    pub attention_devices: usize,
+    pub pairing_candidate_devices: usize,
+    pub entities: usize,
+    pub state_snapshots: usize,
+    pub missing_entity_states: usize,
+    pub stale_entity_states: usize,
+    pub refresh_targets: usize,
+    pub events: usize,
+}
+
+impl RegistrySupervisionSummary {
+    pub fn has_attention_items(&self) -> bool {
+        self.attention_bridges > 0 || self.attention_devices > 0 || self.refresh_targets > 0
+    }
+
+    pub fn has_refresh_work(&self) -> bool {
+        self.refresh_targets > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeSummary {
     pub bridge_id: BridgeId,
@@ -363,6 +391,10 @@ impl<'a> SmartHomeRegistryReadView<'a> {
 
     pub fn counts(&self) -> RegistryCounts {
         self.registry.counts()
+    }
+
+    pub fn supervision_summary_at(&self, now_ms: u64) -> RegistrySupervisionSummary {
+        self.registry.supervision_summary_at(now_ms)
     }
 
     pub fn bridge(&self, bridge_id: &BridgeId) -> Option<&'a Bridge> {
@@ -704,6 +736,62 @@ impl InMemorySmartHomeRegistry {
             protocol_identifiers: self.protocol_index.len(),
             capability_grants: self.capability_grants.len(),
             authorization_decisions: self.authorization_decisions.len(),
+        }
+    }
+
+    pub fn supervision_summary_at(&self, now_ms: u64) -> RegistrySupervisionSummary {
+        let counts = self.counts();
+        let attention_bridges = self
+            .bridges
+            .values()
+            .filter(|bridge| health_needs_attention(bridge.health))
+            .count();
+        let pairing_candidate_bridges = self
+            .bridges
+            .values()
+            .filter(|bridge| health_is_pairing_candidate(bridge.health))
+            .count();
+        let online_devices = self
+            .devices
+            .values()
+            .filter(|device| device.health == Health::Online)
+            .count();
+        let attention_devices = self
+            .devices
+            .values()
+            .filter(|device| health_needs_attention(device.health))
+            .count();
+        let pairing_candidate_devices = self
+            .devices
+            .values()
+            .filter(|device| health_is_pairing_candidate(device.health))
+            .count();
+        let mut missing_entity_states = 0usize;
+        let mut stale_entity_states = 0usize;
+        for entity in self.entities.values() {
+            match self.state(&entity.entity_id) {
+                None => missing_entity_states += 1,
+                Some(snapshot) if snapshot.is_stale_at(now_ms) => stale_entity_states += 1,
+                Some(_) => {}
+            }
+        }
+        let refresh_targets = missing_entity_states + stale_entity_states;
+
+        RegistrySupervisionSummary {
+            generated_at_ms: now_ms,
+            bridges: counts.bridges,
+            attention_bridges,
+            pairing_candidate_bridges,
+            devices: counts.devices,
+            online_devices,
+            attention_devices,
+            pairing_candidate_devices,
+            entities: counts.entities,
+            state_snapshots: counts.states,
+            missing_entity_states,
+            stale_entity_states,
+            refresh_targets,
+            events: counts.events,
         }
     }
 
@@ -1545,6 +1633,21 @@ fn event_matches_selector(event: &DeviceEvent, selector: &EventSelector) -> bool
     true
 }
 
+fn health_needs_attention(health: Health) -> bool {
+    matches!(
+        health,
+        Health::Degraded
+            | Health::Offline
+            | Health::AuthFailed
+            | Health::Unsupported
+            | Health::Removed
+    )
+}
+
+fn health_is_pairing_candidate(health: Health) -> bool {
+    matches!(health, Health::Discoverable | Health::Unpaired)
+}
+
 fn state_matches_freshness(snapshot: Option<&StateSnapshot>, freshness: StateFreshness) -> bool {
     match freshness {
         StateFreshness::Any => true,
@@ -1796,6 +1899,78 @@ mod tests {
         assert_eq!(entity_summary.state_expires_at_ms, Some(2_000));
         assert_eq!(scene_summary.action_count, 1);
         assert!(scene_summary.has_native_ref);
+    }
+
+    #[test]
+    fn supervision_summary_counts_health_and_refresh_work() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        let mut bridge_1 = bridge("bridge-1");
+        bridge_1.health = Health::Online;
+        let mut bridge_2 = bridge_with_native("bridge-2", "bridge-native-2");
+        bridge_2.health = Health::AuthFailed;
+        registry.upsert_bridge(bridge_1).unwrap();
+        registry.upsert_bridge(bridge_2).unwrap();
+
+        let mut online_device = device_with_native("device-1", "bridge-1", "device-native-1");
+        online_device.health = Health::Online;
+        let mut offline_device = device_with_native("device-2", "bridge-1", "device-native-2");
+        offline_device.health = Health::Offline;
+        let mut unpaired_device = device_with_native("device-3", "bridge-2", "device-native-3");
+        unpaired_device.health = Health::Unpaired;
+        registry.upsert_device(online_device).unwrap();
+        registry.upsert_device(offline_device).unwrap();
+        registry.upsert_device(unpaired_device).unwrap();
+
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-2", "device-2"))
+            .unwrap();
+        registry
+            .upsert_entity(sensor_entity("entity-3", "device-3"))
+            .unwrap();
+        registry
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-1"),
+                value: Value::Bool(true),
+                source: StateSource::Poll,
+                observed_at_ms: 100,
+                received_at_ms: 101,
+                expires_at_ms: Some(1_000),
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        registry
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-3"),
+                value: Value::Bool(false),
+                source: StateSource::Poll,
+                observed_at_ms: 200,
+                received_at_ms: 201,
+                expires_at_ms: Some(400),
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+
+        let summary = registry.read_view().supervision_summary_at(500);
+
+        assert_eq!(summary.generated_at_ms, 500);
+        assert_eq!(summary.bridges, 2);
+        assert_eq!(summary.attention_bridges, 1);
+        assert_eq!(summary.pairing_candidate_bridges, 0);
+        assert_eq!(summary.devices, 3);
+        assert_eq!(summary.online_devices, 1);
+        assert_eq!(summary.attention_devices, 1);
+        assert_eq!(summary.pairing_candidate_devices, 1);
+        assert_eq!(summary.entities, 3);
+        assert_eq!(summary.state_snapshots, 2);
+        assert_eq!(summary.missing_entity_states, 1);
+        assert_eq!(summary.stale_entity_states, 1);
+        assert_eq!(summary.refresh_targets, 2);
+        assert_eq!(summary.events, 0);
+        assert!(summary.has_attention_items());
+        assert!(summary.has_refresh_work());
     }
 
     #[test]

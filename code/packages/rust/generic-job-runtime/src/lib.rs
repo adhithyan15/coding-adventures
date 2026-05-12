@@ -84,6 +84,22 @@ pub enum ExecutorHealth {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorQueuePressure {
+    Idle,
+    Nominal,
+    Elevated,
+    Saturated,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorAdmissionStatus {
+    Accepting,
+    Draining,
+    Offline,
+    QueueFull,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ExecutorSupervisionAction {
     None,
     ObserveDraining,
@@ -106,6 +122,22 @@ impl ExecutorSnapshot {
 
     pub fn has_live_capacity(&self) -> bool {
         !self.shutting_down && self.live_workers > 0 && self.remaining_queue_capacity() > 0
+    }
+
+    pub fn admission_status(&self) -> ExecutorAdmissionStatus {
+        if self.shutting_down {
+            ExecutorAdmissionStatus::Draining
+        } else if self.live_workers == 0 {
+            ExecutorAdmissionStatus::Offline
+        } else if self.remaining_queue_capacity() == 0 {
+            ExecutorAdmissionStatus::QueueFull
+        } else {
+            ExecutorAdmissionStatus::Accepting
+        }
+    }
+
+    pub fn is_accepting_jobs(&self) -> bool {
+        self.admission_status() == ExecutorAdmissionStatus::Accepting
     }
 
     pub fn health(&self) -> ExecutorHealth {
@@ -137,6 +169,22 @@ impl ExecutorSnapshot {
         }
         let percent = self.in_flight_jobs.saturating_mul(100) / self.max_queue_depth;
         percent.min(100) as u8
+    }
+
+    pub fn queue_pressure(&self) -> ExecutorQueuePressure {
+        if self.in_flight_jobs == 0 {
+            ExecutorQueuePressure::Idle
+        } else if self.is_saturated() {
+            ExecutorQueuePressure::Saturated
+        } else if self.queue_pressure_percent() >= 75 {
+            ExecutorQueuePressure::Elevated
+        } else {
+            ExecutorQueuePressure::Nominal
+        }
+    }
+
+    pub fn exceeds_queue_pressure_percent(&self, threshold: u8) -> bool {
+        self.queue_pressure_percent() > threshold.min(100)
     }
 
     pub fn recommended_supervision_action(&self) -> ExecutorSupervisionAction {
@@ -272,6 +320,14 @@ pub struct JobResponseDrainSummary {
     pub retryable_error_count: usize,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobResponseDrainOutcome {
+    Empty,
+    AllSucceeded,
+    Failed,
+    RetryableFailure,
+}
+
 impl JobResponseDrainSummary {
     pub fn from_responses<I>(responses: I) -> Self
     where
@@ -316,8 +372,28 @@ impl JobResponseDrainSummary {
             .saturating_add(self.timed_out_count)
     }
 
+    pub fn has_failures(&self) -> bool {
+        self.failure_count() > 0
+    }
+
     pub fn has_retryable_errors(&self) -> bool {
         self.retryable_error_count > 0
+    }
+
+    pub fn needs_retry_supervision(&self) -> bool {
+        self.has_retryable_errors()
+    }
+
+    pub fn outcome(&self) -> JobResponseDrainOutcome {
+        if self.is_empty() {
+            JobResponseDrainOutcome::Empty
+        } else if self.has_retryable_errors() {
+            JobResponseDrainOutcome::RetryableFailure
+        } else if self.has_failures() {
+            JobResponseDrainOutcome::Failed
+        } else {
+            JobResponseDrainOutcome::AllSucceeded
+        }
     }
 }
 
@@ -1719,8 +1795,43 @@ for line in sys.stdin:
         assert_eq!(batch.timed_out_count, 0);
         assert_eq!(batch.retryable_error_count, 1);
         assert_eq!(batch.failure_count(), 2);
+        assert!(batch.has_failures());
         assert!(batch.has_retryable_errors());
+        assert!(batch.needs_retry_supervision());
+        assert_eq!(batch.outcome(), JobResponseDrainOutcome::RetryableFailure);
         assert!(!batch.is_empty());
+    }
+
+    #[test]
+    fn response_drain_summary_classifies_empty_success_and_failed_batches() {
+        let empty = JobResponseDrainSummary::from_responses(Vec::new());
+        let success = JobResponseDrainSummary::from_responses([JobResponseSummary {
+            id: "job-ok".to_string(),
+            status: JobTerminalStatus::Ok,
+            attempt: 1,
+            trace_id: None,
+            retryable_error: false,
+            error_code: None,
+            message: None,
+        }]);
+        let failed = JobResponseDrainSummary::from_responses([JobResponseSummary {
+            id: "job-cancelled".to_string(),
+            status: JobTerminalStatus::Cancelled,
+            attempt: 1,
+            trace_id: None,
+            retryable_error: false,
+            error_code: None,
+            message: Some("cancelled by supervisor".to_string()),
+        }]);
+
+        assert_eq!(empty.outcome(), JobResponseDrainOutcome::Empty);
+        assert!(!empty.has_failures());
+        assert!(!empty.needs_retry_supervision());
+        assert_eq!(success.outcome(), JobResponseDrainOutcome::AllSucceeded);
+        assert!(!success.has_failures());
+        assert_eq!(failed.outcome(), JobResponseDrainOutcome::Failed);
+        assert!(failed.has_failures());
+        assert!(!failed.needs_retry_supervision());
     }
 
     #[test]
@@ -1833,6 +1944,13 @@ for line in sys.stdin:
         assert!(snapshot.is_saturated());
         assert_eq!(snapshot.pending_jobs(), 2);
         assert_eq!(snapshot.health(), ExecutorHealth::Saturated);
+        assert_eq!(snapshot.queue_pressure(), ExecutorQueuePressure::Saturated);
+        assert!(snapshot.exceeds_queue_pressure_percent(75));
+        assert_eq!(
+            snapshot.admission_status(),
+            ExecutorAdmissionStatus::QueueFull
+        );
+        assert!(!snapshot.is_accepting_jobs());
         assert!(!snapshot.has_live_capacity());
         assert!(snapshot.needs_supervisor_attention());
         assert!(!snapshot.shutting_down);
@@ -1868,6 +1986,10 @@ for line in sys.stdin:
         assert!(shutdown_snapshot.shutting_down);
         assert_eq!(shutdown_snapshot.live_workers, 0);
         assert_eq!(shutdown_snapshot.health(), ExecutorHealth::Draining);
+        assert_eq!(
+            shutdown_snapshot.admission_status(),
+            ExecutorAdmissionStatus::Draining
+        );
         assert!(!shutdown_snapshot.needs_supervisor_attention());
     }
 
@@ -1885,6 +2007,10 @@ for line in sys.stdin:
         };
         assert_eq!(idle.health(), ExecutorHealth::Idle);
         assert_eq!(idle.queue_pressure_percent(), 0);
+        assert_eq!(idle.queue_pressure(), ExecutorQueuePressure::Idle);
+        assert!(!idle.exceeds_queue_pressure_percent(0));
+        assert_eq!(idle.admission_status(), ExecutorAdmissionStatus::Accepting);
+        assert!(idle.is_accepting_jobs());
         assert_eq!(
             idle.recommended_supervision_action(),
             ExecutorSupervisionAction::None
@@ -1900,11 +2026,30 @@ for line in sys.stdin:
         assert_eq!(busy.health(), ExecutorHealth::Busy);
         assert_eq!(busy.pending_jobs(), 1);
         assert_eq!(busy.queue_pressure_percent(), 25);
+        assert_eq!(busy.queue_pressure(), ExecutorQueuePressure::Nominal);
+        assert!(busy.exceeds_queue_pressure_percent(20));
+        assert!(!busy.exceeds_queue_pressure_percent(25));
+        assert_eq!(busy.admission_status(), ExecutorAdmissionStatus::Accepting);
         assert_eq!(
             busy.recommended_supervision_action(),
             ExecutorSupervisionAction::None
         );
         assert!(busy.has_live_capacity());
+
+        let elevated = ExecutorSnapshot {
+            in_flight_jobs: 3,
+            queued_jobs: 2,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(elevated.health(), ExecutorHealth::Busy);
+        assert_eq!(elevated.queue_pressure_percent(), 75);
+        assert_eq!(elevated.queue_pressure(), ExecutorQueuePressure::Elevated);
+        assert!(elevated.exceeds_queue_pressure_percent(74));
+        assert_eq!(
+            elevated.admission_status(),
+            ExecutorAdmissionStatus::Accepting
+        );
 
         let saturated = ExecutorSnapshot {
             in_flight_jobs: 4,
@@ -1914,6 +2059,13 @@ for line in sys.stdin:
         };
         assert_eq!(saturated.health(), ExecutorHealth::Saturated);
         assert_eq!(saturated.queue_pressure_percent(), 100);
+        assert_eq!(saturated.queue_pressure(), ExecutorQueuePressure::Saturated);
+        assert!(!saturated.exceeds_queue_pressure_percent(100));
+        assert_eq!(
+            saturated.admission_status(),
+            ExecutorAdmissionStatus::QueueFull
+        );
+        assert!(!saturated.is_accepting_jobs());
         assert_eq!(
             saturated.recommended_supervision_action(),
             ExecutorSupervisionAction::ApplyBackpressure
@@ -1924,6 +2076,7 @@ for line in sys.stdin:
             ..idle.clone()
         };
         assert_eq!(offline.health(), ExecutorHealth::Offline);
+        assert_eq!(offline.admission_status(), ExecutorAdmissionStatus::Offline);
         assert_eq!(
             offline.recommended_supervision_action(),
             ExecutorSupervisionAction::RestartWorkers
@@ -1936,6 +2089,10 @@ for line in sys.stdin:
             ..idle
         };
         assert_eq!(draining.health(), ExecutorHealth::Draining);
+        assert_eq!(
+            draining.admission_status(),
+            ExecutorAdmissionStatus::Draining
+        );
         assert_eq!(
             draining.recommended_supervision_action(),
             ExecutorSupervisionAction::ObserveDraining

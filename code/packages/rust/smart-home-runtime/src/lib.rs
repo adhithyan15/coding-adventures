@@ -506,10 +506,24 @@ impl RuntimeEventBus {
     }
 
     pub fn snapshot(&self) -> RuntimeEventBusSnapshot {
+        let pending_delivery_count = self.pending_delivery_count();
+        let backlogged_subscription_count = self
+            .deliveries
+            .values()
+            .filter(|queue| !queue.is_empty())
+            .count();
+        let max_pending_delivery_count = self
+            .deliveries
+            .values()
+            .map(VecDeque::len)
+            .max()
+            .unwrap_or(0);
         RuntimeEventBusSnapshot {
             subscription_count: self.subscription_count(),
-            pending_delivery_count: self.pending_delivery_count(),
+            pending_delivery_count,
             published_event_count: self.published.len(),
+            backlogged_subscription_count,
+            max_pending_delivery_count,
         }
     }
 }
@@ -519,6 +533,8 @@ pub struct RuntimeEventBusSnapshot {
     pub subscription_count: usize,
     pub pending_delivery_count: usize,
     pub published_event_count: usize,
+    pub backlogged_subscription_count: usize,
+    pub max_pending_delivery_count: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -526,6 +542,14 @@ pub enum RuntimeEventBusBacklogStatus {
     NoSubscriptions,
     CaughtUp,
     Backlogged,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeEventBusPressureStatus {
+    NoSubscriptions,
+    CaughtUp,
+    PartiallyBacklogged,
+    FullyBacklogged,
 }
 
 impl RuntimeEventBusSnapshot {
@@ -538,7 +562,11 @@ impl RuntimeEventBusSnapshot {
     }
 
     pub fn has_backlog(&self) -> bool {
-        self.pending_delivery_count > 0
+        self.pending_delivery_count > 0 || self.has_lagging_subscriptions()
+    }
+
+    pub fn has_lagging_subscriptions(&self) -> bool {
+        self.backlogged_subscription_count > 0
     }
 
     pub fn backlog_status(&self) -> RuntimeEventBusBacklogStatus {
@@ -551,12 +579,47 @@ impl RuntimeEventBusSnapshot {
         }
     }
 
+    pub fn pressure_status(&self) -> RuntimeEventBusPressureStatus {
+        if !self.has_subscriptions() {
+            RuntimeEventBusPressureStatus::NoSubscriptions
+        } else if !self.has_lagging_subscriptions() {
+            RuntimeEventBusPressureStatus::CaughtUp
+        } else if self.backlogged_subscription_count >= self.subscription_count {
+            RuntimeEventBusPressureStatus::FullyBacklogged
+        } else {
+            RuntimeEventBusPressureStatus::PartiallyBacklogged
+        }
+    }
+
     pub fn average_pending_deliveries_per_subscription(&self) -> usize {
         if self.subscription_count == 0 {
             0
         } else {
             self.pending_delivery_count / self.subscription_count
         }
+    }
+
+    pub fn caught_up_subscription_count(&self) -> usize {
+        self.subscription_count
+            .saturating_sub(self.backlogged_subscription_count)
+    }
+
+    pub fn backlogged_subscription_percent(&self) -> u8 {
+        if self.subscription_count == 0 {
+            return 0;
+        }
+        let backlogged = self
+            .backlogged_subscription_count
+            .min(self.subscription_count);
+        ((backlogged.saturating_mul(100) / self.subscription_count).min(100)) as u8
+    }
+
+    pub fn exceeds_backlogged_subscription_percent(&self, threshold: u8) -> bool {
+        self.backlogged_subscription_percent() > threshold.min(100)
+    }
+
+    pub fn exceeds_subscription_backlog_threshold(&self, threshold: usize) -> bool {
+        self.max_pending_delivery_count > threshold
     }
 }
 
@@ -1619,9 +1682,55 @@ pub struct RuntimeReadSnapshot {
 }
 
 impl RuntimeReadSnapshot {
+    pub fn pending_work_summary(&self) -> RuntimePendingWorkSummary {
+        RuntimePendingWorkSummary {
+            event_backlog_count: self.event_bus.pending_delivery_count,
+            backlogged_subscription_count: self.event_bus.backlogged_subscription_count,
+            restart_due_count: self.supervisor.restart_due_count,
+            unhealthy_worker_count: self.supervisor.unhealthy_count,
+            expiring_pairing_session_count: self.expiring_pairing_session_count,
+            stale_optimistic_state_count: self.stale_optimistic_state_count,
+            state_refresh_target_count: self.state_refresh_target_count,
+        }
+    }
+
     pub fn has_pending_work(&self) -> bool {
-        !self.event_bus.is_idle()
-            || self.supervisor.has_restart_pressure()
+        !self.pending_work_summary().is_idle()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimePendingWorkSummary {
+    pub event_backlog_count: usize,
+    pub backlogged_subscription_count: usize,
+    pub restart_due_count: usize,
+    pub unhealthy_worker_count: usize,
+    pub expiring_pairing_session_count: usize,
+    pub stale_optimistic_state_count: usize,
+    pub state_refresh_target_count: usize,
+}
+
+impl RuntimePendingWorkSummary {
+    pub fn is_idle(&self) -> bool {
+        !self.has_event_backlog() && !self.has_supervision_pressure()
+    }
+
+    pub fn total_pending_work_count(&self) -> usize {
+        self.event_backlog_count
+            + self.restart_due_count
+            + self.unhealthy_worker_count
+            + self.expiring_pairing_session_count
+            + self.stale_optimistic_state_count
+            + self.state_refresh_target_count
+    }
+
+    pub fn has_event_backlog(&self) -> bool {
+        self.event_backlog_count > 0 || self.backlogged_subscription_count > 0
+    }
+
+    pub fn has_supervision_pressure(&self) -> bool {
+        self.restart_due_count > 0
+            || self.unhealthy_worker_count > 0
             || self.expiring_pairing_session_count > 0
             || self.stale_optimistic_state_count > 0
             || self.state_refresh_target_count > 0
@@ -3287,13 +3396,12 @@ mod tests {
     #[test]
     fn event_bus_snapshot_counts_log_subscriptions_and_backlog() {
         let mut bus = RuntimeEventBus::new();
+        let all_events = RuntimeSubscriptionId::trusted("all-events");
+        let bridge_events = RuntimeSubscriptionId::trusted("bridge-events");
+        bus.subscribe(all_events.clone(), RuntimeEventFilter::All)
+            .unwrap();
         bus.subscribe(
-            RuntimeSubscriptionId::trusted("all-events"),
-            RuntimeEventFilter::All,
-        )
-        .unwrap();
-        bus.subscribe(
-            RuntimeSubscriptionId::trusted("bridge-events"),
+            bridge_events.clone(),
             RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
         )
         .unwrap();
@@ -3305,24 +3413,58 @@ mod tests {
 
         assert_eq!(idle.subscription_count, 2);
         assert_eq!(idle.pending_delivery_count, 0);
+        assert_eq!(idle.backlogged_subscription_count, 0);
+        assert_eq!(idle.max_pending_delivery_count, 0);
         assert!(idle.is_idle());
         assert!(idle.has_subscriptions());
         assert!(!idle.has_backlog());
+        assert!(!idle.has_lagging_subscriptions());
         assert_eq!(
             idle.backlog_status(),
             RuntimeEventBusBacklogStatus::CaughtUp
         );
+        assert_eq!(
+            idle.pressure_status(),
+            RuntimeEventBusPressureStatus::CaughtUp
+        );
         assert_eq!(idle.average_pending_deliveries_per_subscription(), 0);
+        assert_eq!(idle.caught_up_subscription_count(), 2);
+        assert_eq!(idle.backlogged_subscription_percent(), 0);
+        assert!(!idle.exceeds_backlogged_subscription_percent(0));
+        assert!(!idle.exceeds_subscription_backlog_threshold(0));
         assert_eq!(active.subscription_count, 2);
         assert_eq!(active.published_event_count, 2);
         assert_eq!(active.pending_delivery_count, 3);
+        assert_eq!(active.backlogged_subscription_count, 2);
+        assert_eq!(active.max_pending_delivery_count, 2);
         assert!(!active.is_idle());
         assert!(active.has_backlog());
+        assert!(active.has_lagging_subscriptions());
         assert_eq!(
             active.backlog_status(),
             RuntimeEventBusBacklogStatus::Backlogged
         );
+        assert_eq!(
+            active.pressure_status(),
+            RuntimeEventBusPressureStatus::FullyBacklogged
+        );
         assert_eq!(active.average_pending_deliveries_per_subscription(), 1);
+        assert_eq!(active.caught_up_subscription_count(), 0);
+        assert_eq!(active.backlogged_subscription_percent(), 100);
+        assert!(active.exceeds_backlogged_subscription_percent(50));
+        assert!(!active.exceeds_backlogged_subscription_percent(100));
+        assert!(active.exceeds_subscription_backlog_threshold(1));
+        assert!(!active.exceeds_subscription_backlog_threshold(2));
+
+        bus.drain(&bridge_events).unwrap();
+        let partial = bus.snapshot();
+        assert_eq!(partial.backlogged_subscription_count, 1);
+        assert_eq!(partial.caught_up_subscription_count(), 1);
+        assert_eq!(partial.backlogged_subscription_percent(), 50);
+        assert_eq!(
+            partial.pressure_status(),
+            RuntimeEventBusPressureStatus::PartiallyBacklogged
+        );
     }
 
     #[test]
@@ -3341,7 +3483,15 @@ mod tests {
             no_subscribers.backlog_status(),
             RuntimeEventBusBacklogStatus::NoSubscriptions
         );
+        assert_eq!(
+            no_subscribers.pressure_status(),
+            RuntimeEventBusPressureStatus::NoSubscriptions
+        );
         assert!(!no_subscribers.has_subscriptions());
+        assert!(!no_subscribers.has_lagging_subscriptions());
+        assert_eq!(no_subscribers.max_pending_delivery_count, 0);
+        assert_eq!(no_subscribers.caught_up_subscription_count(), 0);
+        assert_eq!(no_subscribers.backlogged_subscription_percent(), 0);
         assert_eq!(
             no_subscribers.average_pending_deliveries_per_subscription(),
             0
@@ -3350,7 +3500,14 @@ mod tests {
             caught_up.backlog_status(),
             RuntimeEventBusBacklogStatus::CaughtUp
         );
+        assert_eq!(
+            caught_up.pressure_status(),
+            RuntimeEventBusPressureStatus::CaughtUp
+        );
         assert!(caught_up.has_subscriptions());
+        assert!(!caught_up.has_lagging_subscriptions());
+        assert_eq!(caught_up.caught_up_subscription_count(), 1);
+        assert_eq!(caught_up.backlogged_subscription_percent(), 0);
     }
 
     #[test]
@@ -4696,6 +4853,9 @@ mod tests {
         assert_eq!(snapshot.event_bus.subscription_count, 1);
         assert_eq!(snapshot.event_bus.published_event_count, 1);
         assert_eq!(snapshot.event_bus.pending_delivery_count, 1);
+        assert_eq!(snapshot.event_bus.backlogged_subscription_count, 1);
+        assert_eq!(snapshot.event_bus.max_pending_delivery_count, 1);
+        assert!(snapshot.event_bus.has_lagging_subscriptions());
         assert_eq!(snapshot.supervisor.worker_count, 1);
         assert_eq!(snapshot.supervisor.starting_count, 1);
         assert_eq!(snapshot.supervisor.restart_due_count, 1);
@@ -4708,6 +4868,18 @@ mod tests {
         assert_eq!(snapshot.desired_capability_count, 1);
         assert_eq!(snapshot.state_refresh_target_count, 1);
         assert!(snapshot.has_pending_work());
+        let pending = snapshot.pending_work_summary();
+        assert_eq!(pending.event_backlog_count, 1);
+        assert_eq!(pending.backlogged_subscription_count, 1);
+        assert_eq!(pending.restart_due_count, 1);
+        assert_eq!(pending.unhealthy_worker_count, 0);
+        assert_eq!(pending.expiring_pairing_session_count, 1);
+        assert_eq!(pending.stale_optimistic_state_count, 1);
+        assert_eq!(pending.state_refresh_target_count, 1);
+        assert_eq!(pending.total_pending_work_count(), 5);
+        assert!(pending.has_event_backlog());
+        assert!(pending.has_supervision_pressure());
+        assert!(!pending.is_idle());
         assert_eq!(worker.status, WorkerStatus::Starting);
         assert_eq!(worker.restart_count, 0);
         assert_eq!(
@@ -4717,6 +4889,20 @@ mod tests {
                 .status,
             PairingSessionStatus::PendingUserPresence
         );
+    }
+
+    #[test]
+    fn runtime_read_snapshot_pending_summary_reports_idle_runtime() {
+        let runtime = SmartHomeRuntime::new();
+
+        let snapshot = runtime.read_snapshot_at(1_000);
+        let pending = snapshot.pending_work_summary();
+
+        assert!(!snapshot.has_pending_work());
+        assert!(pending.is_idle());
+        assert_eq!(pending.total_pending_work_count(), 0);
+        assert!(!pending.has_event_backlog());
+        assert!(!pending.has_supervision_pressure());
     }
 
     #[test]

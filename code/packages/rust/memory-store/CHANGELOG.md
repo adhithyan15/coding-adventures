@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `MemoryLifecycleStatus` plus shared lifecycle helpers for `MemoryRecord` and
+  `MemoryRecordSummary` read-side classification.
+- `MemoryCatalogSummary` plus `catalog_summary()` for class, lifecycle, and
+  review coverage over selected memory records.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

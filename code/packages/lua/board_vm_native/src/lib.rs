@@ -9,10 +9,10 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
-    bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
-    build_caps_query_wire_frame, build_hello_wire_frame, build_program_begin_wire_frame,
-    build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_wire_frame,
-    connection_options_for_target, connection_transport_name, detect_target,
+    bluetooth_endpoint_candidates_from_devices, bluetooth_transact_wire_frame, board_family_name,
+    build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
+    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
+    build_run_wire_frame, connection_options_for_target, connection_transport_name, detect_target,
     discover_bluetooth_devices as core_discover_bluetooth_devices, discover_devices,
     discover_devices_from_paths, esp_upload_options_for_target, host_endpoint_transport_name,
     known_targets, onboard_led_kind, parse_bluetooth_endpoint as core_parse_bluetooth_endpoint,
@@ -369,6 +369,7 @@ unsafe fn push_bluetooth_backend_open_plan(
     set_str(L, "backend", &plan.backend);
     set_str(L, "status", &plan.status);
     push_optional_str(L, "stream_path", plan.stream_path.as_deref());
+    set_bool(L, "native_transport", plan.native_transport);
     push_optional_str(L, "message", plan.message.as_deref());
 }
 
@@ -570,6 +571,18 @@ unsafe extern "C" fn lua_bluetooth_backend(L: *mut lua_State) -> c_int {
     1
 }
 
+unsafe extern "C" fn lua_bluetooth_transact(L: *mut lua_State) -> c_int {
+    let endpoint = get_str(L, 1).unwrap_or_else(|| raise_error(L, "endpoint must be a string"));
+    let wire = check_bytes(L, 2, "wire_frame");
+    let mut response = vec![0u8; wire.len().saturating_add(4096).max(4096)];
+    let len = core_result(
+        L,
+        bluetooth_transact_wire_frame(&endpoint, &wire, &mut response),
+    );
+    push_bytes(L, &response[..len]);
+    1
+}
+
 unsafe extern "C" fn lua_bluetooth_endpoint_candidates(L: *mut lua_State) -> c_int {
     let devices = read_bluetooth_discovered_devices(L, 1);
     let candidates = bluetooth_endpoint_candidates_from_devices(&devices);
@@ -729,7 +742,7 @@ unsafe extern "C" fn lua_defaults(L: *mut lua_State) -> c_int {
     1
 }
 
-struct FuncTable([luaL_Reg; 20]);
+struct FuncTable([luaL_Reg; 21]);
 unsafe impl Sync for FuncTable {}
 
 static FUNCS: FuncTable = FuncTable([
@@ -752,6 +765,10 @@ static FUNCS: FuncTable = FuncTable([
     luaL_Reg {
         name: b"bluetooth_backend\0".as_ptr() as *const _,
         func: Some(lua_bluetooth_backend),
+    },
+    luaL_Reg {
+        name: b"bluetooth_transact\0".as_ptr() as *const _,
+        func: Some(lua_bluetooth_transact),
     },
     luaL_Reg {
         name: b"bluetooth_endpoint_candidates\0".as_ptr() as *const _,

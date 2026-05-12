@@ -8,6 +8,7 @@ Chief of Staff runtime needs.
 ## What it owns
 
 - `ContextSession` headers
+- `ContextSessionCatalogSummary` projections for read-side lifecycle coverage
 - ordered `ContextEntry` transcripts
 - body-free `ContextEntrySummary` projections for read-side transcript indexes
 - `ContextSnapshot` checkpoints for compaction/resume
@@ -27,6 +28,7 @@ Chief of Staff runtime needs.
 - `create_session()`
 - `open_session()`
 - `list_sessions()`
+- `session_catalog_summary()`
 - `append_entry()`
 - `fetch_entries()`
 - `fetch_entry_summaries()`

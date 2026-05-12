@@ -42,6 +42,10 @@ pub enum LoaderError {
     /// grammar should make this unreachable, but the loader reports
     /// it explicitly rather than silently ignoring.
     EmptyConjunctionBody,
+    /// A ProbLog probabilistic clause `p :: ...` had a probability
+    /// outside `[0, 1]`. The grammar accepts any numeric literal so
+    /// the loader is responsible for the range check.
+    ProbabilityOutOfRange { value: f64 },
 }
 
 impl std::fmt::Display for LoaderError {
@@ -49,6 +53,9 @@ impl std::fmt::Display for LoaderError {
         match self {
             LoaderError::ParseFailed(e) => write!(f, "parse failed: {}", e.message),
             LoaderError::EmptyConjunctionBody => write!(f, "rule has an empty body"),
+            LoaderError::ProbabilityOutOfRange { value } => {
+                write!(f, "probability {value} is outside [0, 1]")
+            }
         }
     }
 }
@@ -83,6 +90,23 @@ pub fn load_program_items(items: Vec<ProgramItem>) -> Result<LoadedProgram, Load
             }
             ProgramItem::Query(goals) => {
                 queries.push(goals);
+            }
+            ProgramItem::ProbabilisticFact { term, probability } => {
+                check_probability(probability)?;
+                kb.add_fact(Fact::with_probability(term, probability));
+            }
+            ProgramItem::ProbabilisticRule {
+                head,
+                body,
+                probability,
+            } => {
+                check_probability(probability)?;
+                if body.is_empty() {
+                    return Err(LoaderError::EmptyConjunctionBody);
+                }
+                let body_literals: Vec<BodyLiteral> =
+                    body.into_iter().map(naf_or_pos).collect();
+                kb.add_rule(Rule::with_probability(head, body_literals, probability));
             }
         }
     }
@@ -212,6 +236,17 @@ pub fn execute(src: &str, mode: SearchMode) -> Result<(KnowledgeBase, Vec<QueryR
     let mut loaded = load_source(src)?;
     let runs = run_all_queries(&mut loaded, mode);
     Ok((loaded.kb, runs))
+}
+
+/// Range-check a parsed probability literal. `[0, 1]` is the
+/// inclusive Bernoulli range; NaN and out-of-range values surface as
+/// `LoaderError::ProbabilityOutOfRange` so the source pinpoints the
+/// problem rather than the engine seeing a nonsense weight later.
+fn check_probability(p: f64) -> Result<(), LoaderError> {
+    if p.is_nan() || !(0.0..=1.0).contains(&p) {
+        return Err(LoaderError::ProbabilityOutOfRange { value: p });
+    }
+    Ok(())
 }
 
 /// Translate a Prolog body goal into a `BodyLiteral`. Recognizes the

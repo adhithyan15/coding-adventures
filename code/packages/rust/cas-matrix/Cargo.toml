@@ -6,4 +6,8 @@ description = "Matrix operations over symbolic IR (construction, arithmetic, det
 license = "MIT"
 
 [dependencies]
+compute-ir = { path = "../compute-ir" }
+executor-protocol = { path = "../executor-protocol" }
+matrix-cpu = { path = "../matrix-cpu" }
+matrix-ir = { path = "../matrix-ir" }
 symbolic-ir = { path = "../symbolic-ir" }

@@ -11,7 +11,7 @@ npm install
 ## Usage
 
 ```typescript
-import { Matrix } from "./src/matrix";
+import { Matrix, getMatrixBackend, setMatrixBackend } from "./src/matrix";
 
 // Construction
 const M = new Matrix([[1, 2, 3], [4, 5, 6]]);
@@ -56,6 +56,10 @@ M.transpose();       // swap rows and columns
 // Equality
 M.equals(other);     // exact element-wise comparison
 M.close(other, 1e-9); // approximate comparison within tolerance
+
+// Backend dispatch
+getMatrixBackend().dot(M, other); // default pure-JS CPU backend
+setMatrixBackend(customBackend);  // host-installed backend for CAS/image callers
 ```
 
 ## Design Principles
@@ -73,5 +77,5 @@ npx jest --verbose
 
 ## Package Structure
 
-- `src/matrix.ts` -- Matrix class with all operations
+- `src/matrix.ts` -- Matrix class, backend contract, and pure-JS CPU backend
 - `tests/matrix.test.ts` -- Jest test suite (47 tests)

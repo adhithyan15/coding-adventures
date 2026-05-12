@@ -5,7 +5,8 @@
 //! 1. The integer **content** — the GCD of every coefficient (always positive).
 //! 2. A list of `(factor_coeffs, multiplicity)` pairs. Phase 1 finds
 //!    *linear* factors via the rational-root test; Phase 2 recursively splits
-//!    residuals with Kronecker's method.
+//!    residuals with Kronecker's method; Phase 3 uses a bounded BZH fallback
+//!    for monic higher-degree residuals.
 //!
 //! # Examples
 //!
@@ -29,6 +30,7 @@
 //! assert_eq!(factors, vec![(vec![1, 0, 1], 1)]);
 //! ```
 
+use crate::bzh::bzh_factor;
 use crate::kronecker::kronecker_factor;
 use crate::polynomial::{content, degree, normalize, primitive_part};
 use crate::rational_roots::extract_linear_factors;
@@ -100,6 +102,15 @@ fn factor_residual(residual: &[i64]) -> FactorList {
         if let Some((factor, cofactor)) = kronecker_factor(&piece) {
             queue.push(factor);
             queue.push(cofactor);
+        } else if degree(&piece) >= 4 && piece.last().copied() == Some(1) {
+            if let Some(bzh_factors) = bzh_factor(&piece) {
+                queue.extend(bzh_factors);
+            } else {
+                if piece.last().is_some_and(|&lead| lead < 0) {
+                    piece = piece.into_iter().map(|coeff| -coeff).collect();
+                }
+                *factors.entry(piece).or_insert(0) += 1;
+            }
         } else {
             if piece.last().is_some_and(|&lead| lead < 0) {
                 piece = piece.into_iter().map(|coeff| -coeff).collect();

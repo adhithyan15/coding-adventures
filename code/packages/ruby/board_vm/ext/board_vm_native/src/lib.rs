@@ -11,12 +11,12 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
-    bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
-    build_caps_query_wire_frame, build_gpio_handle_close_module, build_gpio_handle_read_module,
-    build_gpio_handle_write_module, build_gpio_open_module, build_gpio_read_module,
-    build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
-    build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
-    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    bluetooth_endpoint_candidates_from_devices, bluetooth_transact_wire_frame, board_family_name,
+    build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
+    build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
+    build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
+    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
+    build_raw_module, build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
@@ -442,6 +442,21 @@ extern "C" fn native_bluetooth_backend(_self_val: VALUE, endpoint_val: VALUE) ->
     }
 }
 
+extern "C" fn native_bluetooth_transact(
+    _self_val: VALUE,
+    endpoint_val: VALUE,
+    wire_val: VALUE,
+) -> VALUE {
+    let endpoint = ruby_bridge::str_from_rb(endpoint_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("endpoint must be a Ruby String"));
+    let wire = ruby_bridge::bytes_from_rb(wire_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("wire frame must be a binary String"));
+    let mut response = vec![0u8; wire.len().saturating_add(4096).max(4096)];
+    let len = bluetooth_transact_wire_frame(&endpoint, &wire, &mut response)
+        .unwrap_or_else(|error| raise_core_error("bluetooth_transact", error));
+    ruby_bridge::bytes_to_rb(&response[..len])
+}
+
 extern "C" fn native_bluetooth_endpoint_candidates(_self_val: VALUE, devices_val: VALUE) -> VALUE {
     let devices = bluetooth_discovered_devices_from_rb(devices_val);
     bluetooth_endpoint_candidates_to_rb(&bluetooth_endpoint_candidates_from_devices(&devices))
@@ -860,6 +875,11 @@ fn bluetooth_backend_open_plan_to_rb(plan: &LanguageBluetoothBackendOpenPlan) ->
             .as_ref()
             .map(|value| ruby_bridge::str_to_rb(value))
             .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash_set(
+        hash,
+        "native_transport",
+        ruby_bridge::bool_to_rb(plan.native_transport),
     );
     hash_set(
         hash,
@@ -1394,6 +1414,12 @@ pub extern "C" fn Init_board_vm_native() {
         "bluetooth_backend",
         native_bluetooth_backend as *const c_void,
         1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "bluetooth_transact",
+        native_bluetooth_transact as *const c_void,
+        2,
     );
     ruby_bridge::define_module_function_raw(
         native,

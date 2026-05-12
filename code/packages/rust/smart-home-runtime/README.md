@@ -19,8 +19,16 @@ Included surfaces:
   removes pending delivery state
 - compact read-only snapshots for registry counts, event-bus backlog,
   supervisor pressure, pairing expiry, desired state, and stale cached state
+- pending-work summaries derived from runtime read snapshots for D18D status
+  tools
 - event-bus backlog status helpers for distinguishing absent subscribers,
   caught-up streams, and backlogged streams
+- event-bus aggregate pressure helpers for counting lagging subscriptions and
+  maximum pending delivery depth
+- event-bus lagging-subscription percentage helpers for read-side pressure
+  thresholds
+- event-bus pressure status helpers for classifying caught-up, partial, and
+  fully backlogged subscriber fan-out
 - subscription backlog status helpers for identifying lagging event-stream
   subscribers without draining their delivery queues
 - command validation against entity capabilities and command modes

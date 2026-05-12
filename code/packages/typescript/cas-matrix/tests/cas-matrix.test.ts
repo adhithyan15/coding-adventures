@@ -28,7 +28,8 @@ import {
   transpose,
   zeroMatrix,
 } from "../src/index";
-import { ADD, LIST, MUL, SQRT, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, LIST, MUL, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { Matrix, getMatrixBackend, resetMatrixBackend, setMatrixBackend, type MatrixBackend } from "matrix";
 
 function irow(values: readonly number[]): IRNode[] {
   return values.map((value) => int(value));
@@ -98,29 +99,106 @@ describe("arithmetic", () => {
   it("adds and subtracts elementwise", () => {
     const a = matrix([irow([1, 2])]);
     const b = matrix([irow([3, 4])]);
-    expect(equals(getEntry(addMatrices(a, b), 1, 1), app(ADD, [int(1), int(3)]))).toBe(true);
-    expect(equals(getEntry(subMatrices(a, b), 1, 1), app(SUB, [int(1), int(3)]))).toBe(true);
+    expect(equals(getEntry(addMatrices(a, b), 1, 1), int(4))).toBe(true);
+    expect(equals(getEntry(subMatrices(a, b), 1, 1), int(-2))).toBe(true);
     expect(() => addMatrices(a, matrix([irow([1])]))).toThrow(MatrixError);
+  });
+
+  it("falls back to symbolic add and subtract when entries are symbolic", () => {
+    const a = matrix([[sym("x")]]);
+    const b = matrix([[int(3)]]);
+    expect(equals(getEntry(addMatrices(a, b), 1, 1), app(ADD, [sym("x"), int(3)]))).toBe(true);
+    expect(equals(getEntry(subMatrices(a, b), 1, 1), app(SUB, [sym("x"), int(3)]))).toBe(true);
   });
 
   it("scalar-multiplies entries", () => {
     const out = scalarMultiply(int(3), matrix([irow([1, 2])]));
     expect(numRows(out)).toBe(1);
     expect(numCols(out)).toBe(2);
-    expect(equals(getEntry(out, 1, 2), app(MUL, [int(3), int(2)]))).toBe(true);
+    expect(equals(getEntry(out, 1, 2), int(6))).toBe(true);
   });
 
-  it("performs symbolic dot products", () => {
+  it("falls back to symbolic scalar multiplication when entries are symbolic", () => {
+    const out = scalarMultiply(int(3), matrix([[sym("x")]]));
+    expect(numRows(out)).toBe(1);
+    expect(numCols(out)).toBe(1);
+    expect(equals(getEntry(out, 1, 1), app(MUL, [int(3), sym("x")]))).toBe(true);
+  });
+
+  it("uses backend float arithmetic for float matrices", () => {
+    const out = addMatrices(
+      matrix([[numberNode(1.5), numberNode(2)]]),
+      matrix([[numberNode(0.5), numberNode(4)]]),
+    );
+    expect(equals(getEntry(out, 1, 1), numberNode(2))).toBe(true);
+    expect(equals(getEntry(out, 1, 2), numberNode(6))).toBe(true);
+  });
+
+  it("keeps exact rationals in symbolic fallback", () => {
+    const out = scalarMultiply(rational(1, 2), matrix([irow([2])]));
+    expect(equals(getEntry(out, 1, 1), app(MUL, [rational(1, 2), int(2)]))).toBe(true);
+  });
+
+  it("performs backend dot products for integer matrices", () => {
     const a = matrix([irow([1, 2])]);
     const b = matrix([irow([3]), irow([4])]);
     const c = dot(a, b);
     expect(numRows(c)).toBe(1);
     expect(numCols(c)).toBe(1);
+    expect(equals(getEntry(c, 1, 1), int(11))).toBe(true);
+    expect(() => dot(a, matrix([irow([3, 4])]))).toThrow(MatrixError);
+  });
+
+  it("routes numeric matrix arithmetic through the shared matrix backend", () => {
+    const calls: string[] = [];
+    const base = getMatrixBackend();
+    const backend: MatrixBackend = {
+      name: "cas-test-backend",
+      add(left: Matrix, right: Matrix) {
+        calls.push("add");
+        return base.add(left, right);
+      },
+      subtract(left: Matrix, right: Matrix) {
+        calls.push("subtract");
+        return base.subtract(left, right);
+      },
+      scale(mat: Matrix, scalar: number) {
+        calls.push("scale");
+        return base.scale(mat, scalar);
+      },
+      transpose(mat: Matrix) {
+        calls.push("transpose");
+        return base.transpose(mat);
+      },
+      dot(left: Matrix, right: Matrix) {
+        calls.push("dot");
+        return base.dot(left, right);
+      },
+    };
+
+    setMatrixBackend(backend);
+    try {
+      const a = matrix([irow([1, 2])]);
+      const b = matrix([irow([3, 4])]);
+      expect(equals(getEntry(addMatrices(a, b), 1, 2), int(6))).toBe(true);
+      expect(equals(getEntry(scalarMultiply(int(2), a), 1, 1), int(2))).toBe(true);
+      expect(equals(getEntry(transpose(a), 2, 1), int(2))).toBe(true);
+      expect(equals(getEntry(dot(a, matrix([irow([5]), irow([6])])), 1, 1), int(17))).toBe(true);
+    } finally {
+      resetMatrixBackend();
+    }
+
+    expect(calls).toEqual(["add", "scale", "transpose", "dot"]);
+  });
+
+  it("falls back to symbolic dot products when entries are symbolic", () => {
+    const a = matrix([[sym("x"), int(2)]]);
+    const b = matrix([irow([3]), irow([4])]);
+    const c = dot(a, b);
     expect(equals(
       getEntry(c, 1, 1),
-      app(ADD, [app(MUL, [int(1), int(3)]), app(MUL, [int(2), int(4)])]),
+      app(ADD, [app(MUL, [sym("x"), int(3)]), app(MUL, [int(2), int(4)])]),
     )).toBe(true);
-    expect(() => dot(a, matrix([irow([3, 4])]))).toThrow(MatrixError);
   });
 
   it("computes symbolic trace", () => {

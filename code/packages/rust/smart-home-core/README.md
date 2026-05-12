@@ -36,6 +36,7 @@ Current scope:
 - compact integration catalog summaries for runtime, discovery, pairing, and
   capability coverage
 - immutable device events and command requests
+- health and command-result status helpers for supervision/read-side loops
 - command risk tier helpers
 - state freshness helpers
 - D18D-style smart-home tool descriptors

@@ -11,7 +11,11 @@ transports without moving endpoint policy into Ruby/Python/Lua.
 
 The first host adapter is `MacosBluetoothBackend`, which resolves Bluetooth
 Classic RFCOMM endpoints onto macOS `/dev/cu.*` serial devices. BLE GATT opening
-stays explicit and returns a backend error until the CoreBluetooth adapter lands.
+routes through an injectable `MacosCoreBluetoothBleConnector`; the default
+connector still reports an explicit backend error, while
+`MacosCoreBluetoothRuntimeBleConnector` wires the macOS CoreBluetooth
+delegate/run-loop adapter for service-filtered BLE GATT connections,
+characteristic writes, and notification reads.
 
 OS-specific scanners can also pass discovered device metadata into
 `board_vm_endpoint_candidates`. The Rust planner filters for Board VM BLE

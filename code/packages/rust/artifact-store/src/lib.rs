@@ -93,6 +93,52 @@ pub struct ArtifactRevisionSummary {
     pub content_hash: [u8; 32],
 }
 
+/// Compact catalog view for read-side status and lifecycle checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ArtifactCatalogSummary {
+    pub total_artifacts: usize,
+    pub temporary_artifacts: usize,
+    pub retained_artifacts: usize,
+    pub exported_artifacts: usize,
+    pub artifacts_with_revisions: usize,
+    pub artifacts_without_revisions: usize,
+}
+
+impl ArtifactCatalogSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_artifacts<'a, I>(artifacts: I) -> Self
+    where
+        I: IntoIterator<Item = &'a Artifact>,
+    {
+        let mut summary = Self::empty();
+        for artifact in artifacts {
+            summary.total_artifacts += 1;
+            match artifact.retention {
+                ArtifactRetention::Temporary => summary.temporary_artifacts += 1,
+                ArtifactRetention::Retained => summary.retained_artifacts += 1,
+                ArtifactRetention::Exported => summary.exported_artifacts += 1,
+            }
+            if artifact.latest_revision.is_some() {
+                summary.artifacts_with_revisions += 1;
+            } else {
+                summary.artifacts_without_revisions += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn durable_artifacts(&self) -> usize {
+        self.retained_artifacts + self.exported_artifacts
+    }
+
+    pub fn has_unrevisioned_artifacts(&self) -> bool {
+        self.artifacts_without_revisions > 0
+    }
+}
+
 /// Input used when first creating an artifact manifest.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CreateArtifactInput {
@@ -414,6 +460,14 @@ impl<S: StorageBackend> ArtifactStore<S> {
             }
         }
         Ok(artifacts)
+    }
+
+    pub fn catalog_summary(
+        &self,
+        options: ArtifactListOptions,
+    ) -> Result<ArtifactCatalogSummary, StorageError> {
+        let artifacts = self.list_artifacts(options)?;
+        Ok(ArtifactCatalogSummary::from_artifacts(&artifacts))
     }
 
     pub fn attach_labels(
@@ -1125,6 +1179,74 @@ mod tests {
             .list_artifacts(ArtifactListOptions::new().for_tool("bad tool"))
             .unwrap_err();
         assert!(matches!(invalid_filter, StorageError::Validation { .. }));
+    }
+
+    #[test]
+    fn catalog_summary_counts_retention_and_revision_coverage() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        for (artifact_id, collection, labels) in [
+            ("plan", "plans", vec!["roadmap"]),
+            ("report", "reports", vec!["weekly"]),
+            ("export", "exports", vec!["deliverable"]),
+        ] {
+            let _ = store
+                .create_artifact(CreateArtifactInput {
+                    artifact_id: artifact_id.to_string(),
+                    collection: collection.to_string(),
+                    name: artifact_id.to_string(),
+                    content_type: "text/plain".to_string(),
+                    labels: labels.into_iter().map(str::to_string).collect(),
+                    provenance: ArtifactProvenance {
+                        session_id: Some("session-a".to_string()),
+                        tool_id: Some("artifact.write".to_string()),
+                        job_id: None,
+                        agent_id: Some("chief".to_string()),
+                    },
+                })
+                .unwrap();
+        }
+        let _ = store
+            .mark_retention("report", ArtifactRetention::Retained)
+            .unwrap();
+        let _ = store
+            .mark_retention("export", ArtifactRetention::Exported)
+            .unwrap();
+        for artifact_id in ["report", "export"] {
+            let _ = store
+                .append_revision(
+                    artifact_id,
+                    AppendRevisionInput {
+                        revision_id: "rev-1".to_string(),
+                        metadata: JsonValue::Object(vec![]),
+                        body: artifact_id.as_bytes().to_vec(),
+                    },
+                )
+                .unwrap();
+        }
+
+        let summary = store
+            .catalog_summary(ArtifactListOptions::new().for_session("session-a"))
+            .unwrap();
+        assert_eq!(
+            summary,
+            ArtifactCatalogSummary {
+                total_artifacts: 3,
+                temporary_artifacts: 1,
+                retained_artifacts: 1,
+                exported_artifacts: 1,
+                artifacts_with_revisions: 2,
+                artifacts_without_revisions: 1,
+            }
+        );
+        assert_eq!(summary.durable_artifacts(), 2);
+        assert!(summary.has_unrevisioned_artifacts());
+
+        let deliverable_summary = store
+            .catalog_summary(ArtifactListOptions::new().with_label("deliverable"))
+            .unwrap();
+        assert_eq!(deliverable_summary.total_artifacts, 1);
+        assert_eq!(deliverable_summary.exported_artifacts, 1);
+        assert!(!deliverable_summary.has_unrevisioned_artifacts());
     }
 
     #[test]

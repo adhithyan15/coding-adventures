@@ -4,6 +4,12 @@ All notable changes to the TypeScript matrix package will be documented here.
 
 ## Unreleased
 
+### Added
+- Added a `MatrixBackend` contract plus pure-JS `CpuMatrixBackend` with
+  `getMatrixBackend`, `setMatrixBackend`, and `resetMatrixBackend`, giving
+  browser and host callers a shared dispatch point for dense numeric matrix
+  operations.
+
 ### Changed
 - Exposed `src/matrix.ts` as the package module entry so Vite/browser builds
   can bundle the Matrix implementation as ESM.

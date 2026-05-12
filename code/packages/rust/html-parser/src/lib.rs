@@ -1573,7 +1573,7 @@ impl HtmlParser {
         }
 
         if self.open_elements.is_empty()
-            && text.chars().all(char::is_whitespace)
+            && is_html_whitespace_text(&text)
             && !self.has_document_element()
             && !self.document.children.iter().any(is_body_content_node)
         {
@@ -1616,7 +1616,7 @@ impl HtmlParser {
             && !self.current_element_is("title")
             && !(self.current_element_is("noscript")
                 && self.options.scripting == HtmlScriptingMode::Enabled)
-            && !text.chars().all(char::is_whitespace)
+            && !is_html_whitespace_text(&text)
         {
             self.pop_head_descendants();
         }
@@ -1642,7 +1642,7 @@ impl HtmlParser {
         let text = if self.current_element_is("head") {
             match text
                 .char_indices()
-                .find(|(_, character)| !character.is_whitespace())
+                .find(|(_, character)| !is_html_whitespace(*character))
             {
                 Some((0, _)) => text,
                 Some((leading_end, _)) => {
@@ -1655,7 +1655,7 @@ impl HtmlParser {
             text
         };
 
-        if !text.chars().all(char::is_whitespace) && self.current_element_is("head") {
+        if !is_html_whitespace_text(&text) && self.current_element_is("head") {
             self.pop_current_if(|name| name == "head");
         }
 
@@ -2261,6 +2261,7 @@ impl HtmlParser {
         }
         if self.has_open_svg_html_integration_point()
             && name != "template"
+            && name != "p"
             && !self.current_element_is(name)
             && !is_table_context_element(name)
         {
@@ -2272,6 +2273,11 @@ impl HtmlParser {
             && (is_table_context_element(name)
                 || self.current_namespace() == Some("svg")
                 || (self.current_namespace() == Some("math") && name == "p"))
+        {
+            self.pop_foreign_elements();
+        } else if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && matches!(name, "br" | "p")
         {
             self.pop_foreign_elements();
         } else if self.current_namespace().is_some() && !self.current_element_is(name) {
@@ -2467,6 +2473,10 @@ impl HtmlParser {
             }
             if is_formatting_element(name)
                 && self.adopt_formatting_end_tag_across_nested_paragraph(index)
+            {
+                return;
+            }
+            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_mixed_div(index)
             {
                 return;
             }
@@ -2680,7 +2690,12 @@ impl HtmlParser {
                 false
             }
             "nobr" => {
+                let formatting_above_nobr = self.formatting_above_open_element("nobr");
                 self.close_open_element_silently("nobr");
+                if !formatting_above_nobr.is_empty() {
+                    self.pending_formatting_reconstruction =
+                        trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
+                }
                 false
             }
             "form" if self.form_element_pointer_set => {
@@ -2790,6 +2805,26 @@ impl HtmlParser {
         self.capture_formatting_above(index);
         self.open_elements.truncate(index);
         true
+    }
+
+    fn formatting_above_open_element(&self, name: &str) -> Vec<(String, Vec<Attribute>)> {
+        let Some(index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+        else {
+            return Vec::new();
+        };
+
+        self.open_elements
+            .iter()
+            .skip(index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                is_formatting_element(&element.name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect()
     }
 
     fn adopt_open_formatting_element_silently(&mut self, name: &str) -> bool {
@@ -3119,6 +3154,90 @@ impl HtmlParser {
             adopted_path.push(0);
         }
         self.open_elements.push(adopted_path);
+        true
+    }
+
+    fn adopt_formatting_end_tag_across_mixed_div(&mut self, formatting_index: usize) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some(first_div_path) = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "div"))
+            .cloned()
+        else {
+            return false;
+        };
+        if !first_div_path.starts_with(&formatting_path)
+            || first_div_path.len() <= formatting_path.len()
+        {
+            return false;
+        }
+
+        let mut formatting_wrappers = Vec::new();
+        let mut saw_non_formatting_wrapper = false;
+        for depth in formatting_path.len() + 1..first_div_path.len() {
+            let ancestor_path = &first_div_path[..depth];
+            let Some(element) = element_ref_at_path(&self.document, ancestor_path) else {
+                return false;
+            };
+            if is_formatting_element(&element.name) {
+                formatting_wrappers.push((element.name.clone(), element.attributes.clone()));
+            } else {
+                saw_non_formatting_wrapper = true;
+            }
+        }
+        if !saw_non_formatting_wrapper || formatting_wrappers.len() < 2 {
+            return false;
+        }
+
+        let Some(mut div) = remove_node_at_path(&mut self.document.children, &first_div_path)
+        else {
+            return false;
+        };
+        wrap_formatting_along_path(&mut div, &[], &formatting_name, &formatting_attributes);
+
+        let wrappers_to_clone = &formatting_wrappers[..formatting_wrappers.len() - 1];
+        let mut adopted_subtree = div;
+        for (wrapper_name, wrapper_attributes) in wrappers_to_clone.iter().rev() {
+            let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
+            if let Node::Element(wrapper_element) = &mut wrapper {
+                wrapper_element.children.push(adopted_subtree);
+            }
+            adopted_subtree = wrapper;
+        }
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let insertion = (formatting_parent_path.to_vec(), formatting_child_index + 1);
+
+        let Some(parent_children) = children_at_path_mut(&mut self.document.children, &insertion.0)
+        else {
+            return false;
+        };
+        if insertion.1 > parent_children.len() {
+            return false;
+        }
+        parent_children.insert(insertion.1, adopted_subtree);
+
+        self.open_elements.truncate(formatting_index);
+        let mut inserted_path = insertion.0;
+        inserted_path.push(insertion.1);
+        for _ in wrappers_to_clone {
+            self.open_elements.push(inserted_path.clone());
+            inserted_path.push(0);
+        }
+        self.open_elements.push(inserted_path);
         true
     }
 
@@ -3858,6 +3977,14 @@ fn element_node(name: String, attributes: Vec<Attribute>, namespace: Option<&str
     }
 }
 
+fn is_html_whitespace(character: char) -> bool {
+    matches!(character, '\t' | '\n' | '\u{000C}' | '\r' | ' ')
+}
+
+fn is_html_whitespace_text(text: &str) -> bool {
+    text.chars().all(is_html_whitespace)
+}
+
 fn start_tag_as_text(name: &str, attributes: &[LexerAttribute], self_closing: bool) -> String {
     let mut text = format!("<{name}");
     for attribute in attributes {
@@ -4322,7 +4449,7 @@ impl DocumentShellBuilder {
                 match text
                     .data
                     .char_indices()
-                    .find(|(_, character)| !character.is_whitespace())
+                    .find(|(_, character)| !is_html_whitespace(*character))
                 {
                     Some((0, _)) => {
                         self.seen_body_content = true;
@@ -4913,7 +5040,7 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
     matches!(
         name,
-        "a" | "b" | "code" | "marquee" | "menuitem" | "option" | "span"
+        "a" | "b" | "br" | "code" | "i" | "marquee" | "menuitem" | "nobr" | "option" | "span"
     )
 }
 
@@ -4997,6 +5124,7 @@ fn is_void_element(name: &str) -> bool {
             | "hr"
             | "img"
             | "input"
+            | "keygen"
             | "link"
             | "meta"
             | "param"

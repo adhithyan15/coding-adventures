@@ -1,8 +1,8 @@
 [package]
 name = "prolog-parser"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "ISO/Core Prolog parser — grammar-driven via parser::GrammarParser + iso.grammar; lowers AST to logic-core terms. v0.2 adds the `naf_goal` production so source-level `\\+ G` lowers to the canonical `\\+(G)` compound."
+description = "ISO/Core Prolog parser — grammar-driven via parser::GrammarParser + iso.grammar; lowers AST to logic-core terms. v0.2 adds the `naf_goal` production (`\\+ G` → `\\+(G)`). v0.3 adds ProbLog probabilistic-clause productions (`p :: head.` and `p :: head :- body.`)."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

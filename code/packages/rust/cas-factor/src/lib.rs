@@ -1,7 +1,7 @@
 //! # cas-factor
 //!
-//! Univariate integer polynomial factoring over ℤ (linear factors plus
-//! Kronecker residual splitting).
+//! Univariate integer polynomial factoring over ℤ (linear factors, Kronecker
+//! residual splitting, and bounded BZH fallback).
 //!
 //! ## Quick start
 //!
@@ -28,7 +28,8 @@
 //!
 //! Phase 1 uses the Rational Root Theorem to find all **integer** roots.
 //! Phase 2 uses Kronecker's method to split primitive residuals such as
-//! `x^4 + 4` and `x^4 + x^2 + 1`. BZH is intentionally not implemented yet.
+//! `x^4 + 4` and `x^4 + x^2 + 1`. Phase 3 adds a bounded
+//! Berlekamp-Zassenhaus-Hensel fallback for monic higher-degree residuals.
 //!
 //! ## IR head names
 //!
@@ -39,11 +40,13 @@
 //! | [`FACTOR`] | `"Factor"` |
 //! | [`IRREDUCIBLE`] | `"Irreducible"` |
 
+pub mod bzh;
 pub mod factor;
 pub mod kronecker;
 pub mod polynomial;
 pub mod rational_roots;
 
+pub use bzh::bzh_factor;
 pub use factor::{factor_integer_polynomial, FactorList};
 pub use kronecker::kronecker_factor;
 pub use polynomial::{

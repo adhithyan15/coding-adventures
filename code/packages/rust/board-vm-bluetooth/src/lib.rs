@@ -208,6 +208,64 @@ pub trait MacosRfcommDeviceResolver {
     fn rfcomm_device_paths(&mut self) -> Result<Vec<String>, BluetoothOpenError>;
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MacosCoreBluetoothBleOpenRequest {
+    pub device: String,
+    pub service_uuid: String,
+    pub write_characteristic_uuid: String,
+    pub notify_characteristic_uuid: String,
+}
+
+impl MacosCoreBluetoothBleOpenRequest {
+    pub fn from_endpoint(endpoint: &BleGattEndpoint) -> Self {
+        Self {
+            device: endpoint.device.clone(),
+            service_uuid: endpoint.service_uuid.clone(),
+            write_characteristic_uuid: endpoint.write_characteristic_uuid.clone(),
+            notify_characteristic_uuid: endpoint.notify_characteristic_uuid.clone(),
+        }
+    }
+}
+
+pub trait MacosCoreBluetoothBleConnector {
+    type BleGattLink: BleGattIo;
+
+    fn open_ble_gatt(
+        &mut self,
+        request: &MacosCoreBluetoothBleOpenRequest,
+    ) -> Result<Self::BleGattLink, BluetoothOpenError>;
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub struct UnavailableCoreBluetoothBleConnector;
+
+impl MacosCoreBluetoothBleConnector for UnavailableCoreBluetoothBleConnector {
+    type BleGattLink = UnsupportedBleGattLink;
+
+    fn open_ble_gatt(
+        &mut self,
+        request: &MacosCoreBluetoothBleOpenRequest,
+    ) -> Result<Self::BleGattLink, BluetoothOpenError> {
+        Err(BluetoothOpenError::Backend {
+            message: format!(
+                "macOS CoreBluetooth BLE GATT adapter is not wired yet for {} service {} write {} notify {}",
+                request.device,
+                request.service_uuid,
+                request.write_characteristic_uuid,
+                request.notify_characteristic_uuid
+            ),
+        })
+    }
+}
+
+#[cfg(target_os = "macos")]
+mod macos_core_bluetooth;
+
+#[cfg(target_os = "macos")]
+pub use macos_core_bluetooth::{
+    MacosCoreBluetoothBleLink, MacosCoreBluetoothRuntimeBleConnector, MacosCoreBluetoothTimeouts,
+};
+
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct MacosDevRfcommDeviceResolver;
 
@@ -231,25 +289,40 @@ impl MacosRfcommDeviceResolver for MacosDevRfcommDeviceResolver {
     }
 }
 
-pub struct MacosBluetoothBackend<R = MacosDevRfcommDeviceResolver> {
+pub struct MacosBluetoothBackend<
+    R = MacosDevRfcommDeviceResolver,
+    C = UnavailableCoreBluetoothBleConnector,
+> {
     resolver: R,
+    ble_connector: C,
 }
 
-impl MacosBluetoothBackend<MacosDevRfcommDeviceResolver> {
+impl MacosBluetoothBackend<MacosDevRfcommDeviceResolver, UnavailableCoreBluetoothBleConnector> {
     pub fn new() -> Self {
         Self::with_resolver(MacosDevRfcommDeviceResolver)
     }
 }
 
-impl Default for MacosBluetoothBackend<MacosDevRfcommDeviceResolver> {
+impl Default
+    for MacosBluetoothBackend<MacosDevRfcommDeviceResolver, UnavailableCoreBluetoothBleConnector>
+{
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<R> MacosBluetoothBackend<R> {
+impl<R> MacosBluetoothBackend<R, UnavailableCoreBluetoothBleConnector> {
     pub const fn with_resolver(resolver: R) -> Self {
-        Self { resolver }
+        Self::with_resolver_and_ble_connector(resolver, UnavailableCoreBluetoothBleConnector)
+    }
+}
+
+impl<R, C> MacosBluetoothBackend<R, C> {
+    pub const fn with_resolver_and_ble_connector(resolver: R, ble_connector: C) -> Self {
+        Self {
+            resolver,
+            ble_connector,
+        }
     }
 
     pub const fn resolver(&self) -> &R {
@@ -259,22 +332,30 @@ impl<R> MacosBluetoothBackend<R> {
     pub fn resolver_mut(&mut self) -> &mut R {
         &mut self.resolver
     }
+
+    pub const fn ble_connector(&self) -> &C {
+        &self.ble_connector
+    }
+
+    pub fn ble_connector_mut(&mut self) -> &mut C {
+        &mut self.ble_connector
+    }
 }
 
-impl<R> BluetoothBackend for MacosBluetoothBackend<R>
+impl<R, C> BluetoothBackend for MacosBluetoothBackend<R, C>
 where
     R: MacosRfcommDeviceResolver,
+    C: MacosCoreBluetoothBleConnector,
 {
-    type BleGattLink = UnsupportedBleGattLink;
+    type BleGattLink = C::BleGattLink;
     type RfcommStream = File;
 
     fn open_ble_gatt(
         &mut self,
-        _endpoint: &BleGattEndpoint,
+        endpoint: &BleGattEndpoint,
     ) -> Result<Self::BleGattLink, BluetoothOpenError> {
-        Err(BluetoothOpenError::Backend {
-            message: "macOS BLE GATT opening is not wired yet".to_owned(),
-        })
+        let request = MacosCoreBluetoothBleOpenRequest::from_endpoint(endpoint);
+        self.ble_connector.open_ble_gatt(&request)
     }
 
     fn open_rfcomm(
@@ -1182,6 +1263,27 @@ mod tests {
         }
     }
 
+    #[derive(Default)]
+    struct FakeCoreBluetoothBleConnector {
+        requests: Vec<MacosCoreBluetoothBleOpenRequest>,
+        notifications: VecDeque<Vec<u8>>,
+    }
+
+    impl MacosCoreBluetoothBleConnector for FakeCoreBluetoothBleConnector {
+        type BleGattLink = FakeBleGattLink;
+
+        fn open_ble_gatt(
+            &mut self,
+            request: &MacosCoreBluetoothBleOpenRequest,
+        ) -> Result<Self::BleGattLink, BluetoothOpenError> {
+            self.requests.push(request.clone());
+            Ok(FakeBleGattLink {
+                writes: Vec::new(),
+                notifications: std::mem::take(&mut self.notifications),
+            })
+        }
+    }
+
     #[test]
     fn parses_ble_gatt_query_endpoint() {
         let endpoint = parse_ble_gatt_endpoint(&format!(
@@ -1496,6 +1598,49 @@ Bluetooth:
         assert_eq!(transport.device(), "esp32");
         assert_eq!(&raw_out[..response_len], response);
         assert_eq!(backend.ble_opened, vec!["esp32".to_owned()]);
+    }
+
+    #[test]
+    fn macos_backend_uses_core_bluetooth_ble_connector_for_gatt_open() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let response = [0x41, 0x42];
+        let mut response_wire = [0u8; 16];
+        let response_wire_len = encode_wire_frame(&response, &mut response_wire).unwrap();
+        let mut backend = MacosBluetoothBackend::with_resolver_and_ble_connector(
+            FixedRfcommPaths::default(),
+            FakeCoreBluetoothBleConnector {
+                requests: Vec::new(),
+                notifications: VecDeque::from([response_wire[..response_wire_len].to_vec()]),
+            },
+        );
+
+        let mut transport = open_bluetooth_endpoint::<_, 32>(
+            &mut backend,
+            BluetoothEndpoint::BleGatt(endpoint.clone()),
+        )
+        .unwrap();
+        let mut raw_out = [0u8; 16];
+        let response_len = transport.exchange_raw_frame(&[0x40], &mut raw_out).unwrap();
+
+        assert_eq!(
+            backend.ble_connector().requests,
+            vec![MacosCoreBluetoothBleOpenRequest::from_endpoint(&endpoint)]
+        );
+        assert_eq!(
+            transport.endpoint_transport(),
+            BluetoothEndpointTransport::BleGatt
+        );
+        assert_eq!(transport.device(), "esp32");
+        assert_eq!(&raw_out[..response_len], response);
+        match transport {
+            BoardBluetoothTransport::BleGatt(transport) => {
+                assert_eq!(transport.link().writes[0].0, WRITE_UUID);
+            }
+            BoardBluetoothTransport::Rfcomm(_) => panic!("expected BLE GATT transport"),
+        }
     }
 
     #[test]

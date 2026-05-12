@@ -1,4 +1,7 @@
-use cas_mnewton::{ir_to_float, mnewton_solve, MNewtonError, MNewtonOptions};
+use cas_mnewton::{
+    build_mnewton_handler_table, ir_to_float, mnewton_handler, mnewton_solve, MNewtonError,
+    MNewtonOptions, MNEWTON,
+};
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, COS, MUL, POW, SIN, SUB};
 
 fn eval(node: IRNode) -> IRNode {
@@ -77,6 +80,12 @@ fn diff(node: &IRNode, var: &IRNode) -> IRNode {
 fn solve(f: IRNode, x0: IRNode) -> IRNode {
     let x = sym("x");
     mnewton_solve(&f, &x, &x0, eval, diff, MNewtonOptions::default()).unwrap()
+}
+
+fn handle(expr: &IRNode) -> IRNode {
+    let mut eval_fn = eval;
+    let mut diff_fn = diff;
+    mnewton_handler(expr, &mut eval_fn, &mut diff_fn)
 }
 
 fn assert_close(node: IRNode, expected: f64, tol: f64) {
@@ -212,4 +221,73 @@ fn solves_sin_root_near_pi() {
     let x = sym("x");
     let f = apply(sym(SIN), vec![x]);
     assert_close(solve(f, IRNode::Float(3.0)), std::f64::consts::PI, 1e-8);
+}
+
+#[test]
+fn handler_solves_mnewton_apply_nodes() {
+    let x = sym("x");
+    let f = apply(
+        sym(SUB),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(2)],
+    );
+    let expr = apply(sym(MNEWTON), vec![f, x, IRNode::Float(1.5)]);
+
+    assert_close(handle(&expr), 2.0_f64.sqrt(), 1e-8);
+}
+
+#[test]
+fn handler_accepts_optional_numeric_tolerance() {
+    let x = sym("x");
+    let f = apply(
+        sym(SUB),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(2)],
+    );
+    let expr = apply(sym(MNEWTON), vec![f, x, IRNode::Float(1.5), rat(1, 10_000)]);
+
+    assert_close(handle(&expr), 2.0_f64.sqrt(), 1e-3);
+}
+
+#[test]
+fn handler_returns_expression_for_malformed_inputs() {
+    let x = sym("x");
+    let f = apply(sym(SUB), vec![x.clone(), int(2)]);
+    let wrong_head = apply(sym("Other"), vec![f.clone(), x.clone(), int(1)]);
+    let wrong_arity = apply(sym(MNEWTON), vec![f.clone(), x.clone()]);
+    let nonsymbol_variable = apply(sym(MNEWTON), vec![f.clone(), int(1), int(1)]);
+    let symbolic_start = apply(sym(MNEWTON), vec![f.clone(), x.clone(), sym("a")]);
+    let symbolic_tol = apply(
+        sym(MNEWTON),
+        vec![f.clone(), x, IRNode::Float(1.0), sym("eps")],
+    );
+
+    assert_eq!(handle(&wrong_head), wrong_head);
+    assert_eq!(handle(&wrong_arity), wrong_arity);
+    assert_eq!(handle(&nonsymbol_variable), nonsymbol_variable);
+    assert_eq!(handle(&symbolic_start), symbolic_start);
+    assert_eq!(handle(&symbolic_tol), symbolic_tol);
+}
+
+#[test]
+fn handler_catches_newton_errors() {
+    let x = sym("x");
+    let f = apply(
+        sym(SUB),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+    );
+    let expr = apply(sym(MNEWTON), vec![f, x, IRNode::Float(0.0)]);
+
+    assert_eq!(handle(&expr), expr);
+}
+
+#[test]
+fn handler_table_is_keyed_by_mnewton() {
+    let table = build_mnewton_handler_table();
+    let handler = table.get(MNEWTON).copied().expect("MNewton handler");
+    let x = sym("x");
+    let f = apply(sym(SUB), vec![x.clone(), int(7)]);
+    let expr = apply(sym(MNEWTON), vec![f, x, IRNode::Float(0.0)]);
+    let mut eval_fn = eval;
+    let mut diff_fn = diff;
+
+    assert_close(handler(&expr, &mut eval_fn, &mut diff_fn), 7.0, 1e-9);
 }

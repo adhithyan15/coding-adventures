@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `ContextSessionCatalogSummary` and `session_catalog_summary()` for
+  body-free session lifecycle and checkpoint coverage over selected headers.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

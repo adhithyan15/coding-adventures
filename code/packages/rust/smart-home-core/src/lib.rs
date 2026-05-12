@@ -124,6 +124,23 @@ pub enum Health {
     Removed,
 }
 
+impl Health {
+    pub fn is_online(self) -> bool {
+        matches!(self, Self::Online)
+    }
+
+    pub fn is_pairing_candidate(self) -> bool {
+        matches!(self, Self::Discoverable | Self::Unpaired)
+    }
+
+    pub fn needs_attention(self) -> bool {
+        matches!(
+            self,
+            Self::Degraded | Self::Offline | Self::AuthFailed | Self::Unsupported | Self::Removed
+        )
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EntityKind {
     Light,
@@ -1087,6 +1104,42 @@ pub struct CommandResult {
     pub message: Option<String>,
 }
 
+impl CommandStatus {
+    pub fn is_accepted(self) -> bool {
+        matches!(self, Self::Accepted)
+    }
+
+    pub fn is_rejected(self) -> bool {
+        matches!(self, Self::Rejected)
+    }
+
+    pub fn is_failure(self) -> bool {
+        matches!(self, Self::Rejected | Self::TimedOut | Self::Failed)
+    }
+
+    pub fn timed_out(self) -> bool {
+        matches!(self, Self::TimedOut)
+    }
+}
+
+impl CommandResult {
+    pub fn is_accepted(&self) -> bool {
+        self.status.is_accepted()
+    }
+
+    pub fn is_rejected(&self) -> bool {
+        self.status.is_rejected()
+    }
+
+    pub fn is_failure(&self) -> bool {
+        self.status.is_failure()
+    }
+
+    pub fn timed_out(&self) -> bool {
+        self.status.timed_out()
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SceneScope {
     Room,
@@ -1921,6 +1974,55 @@ mod tests {
 
         assert!(!snapshot.is_stale_at(1_999));
         assert!(snapshot.is_stale_at(2_000));
+    }
+
+    #[test]
+    fn health_helpers_classify_pairing_online_and_attention_states() {
+        assert!(Health::Online.is_online());
+        assert!(!Health::Degraded.is_online());
+        assert!(Health::Discoverable.is_pairing_candidate());
+        assert!(Health::Unpaired.is_pairing_candidate());
+        assert!(!Health::Online.is_pairing_candidate());
+        assert!(Health::Degraded.needs_attention());
+        assert!(Health::Offline.needs_attention());
+        assert!(Health::AuthFailed.needs_attention());
+        assert!(Health::Unsupported.needs_attention());
+        assert!(Health::Removed.needs_attention());
+        assert!(!Health::Unknown.needs_attention());
+    }
+
+    #[test]
+    fn command_result_helpers_classify_acceptance_and_failures() {
+        let accepted = CommandResult {
+            command_id: CommandId::trusted("cmd-accepted"),
+            status: CommandStatus::Accepted,
+            bridge_id: BridgeId::trusted("bridge-hue"),
+            correlation_id: CorrelationId::trusted("corr-accepted"),
+            message: None,
+        };
+        let rejected = CommandResult {
+            command_id: CommandId::trusted("cmd-rejected"),
+            status: CommandStatus::Rejected,
+            bridge_id: BridgeId::trusted("bridge-hue"),
+            correlation_id: CorrelationId::trusted("corr-rejected"),
+            message: Some("missing grant".to_string()),
+        };
+        let timed_out = CommandResult {
+            command_id: CommandId::trusted("cmd-timeout"),
+            status: CommandStatus::TimedOut,
+            bridge_id: BridgeId::trusted("bridge-hue"),
+            correlation_id: CorrelationId::trusted("corr-timeout"),
+            message: None,
+        };
+
+        assert!(accepted.is_accepted());
+        assert!(!accepted.is_failure());
+        assert!(rejected.is_rejected());
+        assert!(rejected.is_failure());
+        assert!(timed_out.is_failure());
+        assert!(timed_out.timed_out());
+        assert!(CommandStatus::Failed.is_failure());
+        assert!(!CommandStatus::Failed.timed_out());
     }
 
     #[test]

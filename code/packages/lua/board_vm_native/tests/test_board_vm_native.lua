@@ -155,6 +155,51 @@ describe("coding_adventures.board_vm_native", function()
         )
     end)
 
+    it("prompts for Bluetooth endpoints with pairing status", function()
+        local rendered = {}
+        local output = {
+            write = function(_, text)
+                table.insert(rendered, text)
+            end,
+        }
+        local connection = board_vm.connect("uno-r4-wifi", {
+            via = "BLE",
+            bluetooth_devices = {
+                {
+                    id = "uno-a",
+                    name = "Uno A",
+                    address = "AA:BB:CC:DD:EE:01",
+                    service_uuids = { "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" },
+                },
+                {
+                    id = "uno-b",
+                    name = "Uno B",
+                    address = "AA:BB:CC:DD:EE:02",
+                    paired = true,
+                    service_uuids = { "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" },
+                },
+            },
+            pick_bluetooth_endpoint = true,
+            input = function()
+                return "2"
+            end,
+            output = output,
+        })
+
+        assert.are.equal("bluetooth_le", connection:connection_transport())
+        assert.are.equal(
+            "ble://AA:BB:CC:DD:EE:02" ..
+            "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+            connection.endpoint
+        )
+        local text = table.concat(rendered)
+        assert.is_true(text:find("1. Uno A [pairing required]", 1, true) ~= nil)
+        assert.is_true(text:find("2. Uno B [paired]", 1, true) ~= nil)
+        assert.is_true(text:find("Select Bluetooth endpoint [1-2]: ", 1, true) ~= nil)
+    end)
+
     it("classifies host devices through Rust-owned discovery rules", function()
         local devices = board_vm.devices({
             "/dev/cu.usbmodem1101",
@@ -266,6 +311,42 @@ describe("coding_adventures.board_vm_native", function()
         assert.are.equal("ready", transport:status())
         assert.are.equal("/dev/cu.ESP32-BoardVM", transport.stream_path)
         assert.are.equal("bluetooth_classic_rfcomm", transport.backend.endpoint.endpoint_transport)
+    end)
+
+    it("delegates native Bluetooth transactions to Rust", function()
+        local endpoint = "ble://uno-r4-wifi/180f/2a19/2a1a"
+        local calls = {}
+        local original = board_vm.bluetooth_transact
+        local ok, err = pcall(function()
+            board_vm.bluetooth_transact = function(actual_endpoint, frame)
+                table.insert(calls, { endpoint = actual_endpoint, frame = frame })
+                return "response"
+            end
+            local transport = board_vm.BluetoothTransport.new({
+                endpoint = endpoint,
+                timeout_ms = 500,
+                backend = {
+                    endpoint = board_vm.bluetooth_endpoint(endpoint),
+                    backend = "macos_core_bluetooth",
+                    status = "ready",
+                    stream_path = nil,
+                    native_transport = true,
+                    message = nil,
+                },
+            })
+
+            assert.is_true(transport.native_transport)
+            assert.are.equal("response", transport:transact("request"))
+            assert.are.equal(endpoint, calls[1].endpoint)
+            assert.are.equal("request", calls[1].frame)
+            assert.has_error(function()
+                transport:write("request")
+            end, "native Board VM Bluetooth transport requires transact(frame, options)")
+        end)
+        board_vm.bluetooth_transact = original
+        if not ok then
+            error(err)
+        end
     end)
 
     it("connects Bluetooth sessions through Rust backend plans", function()
