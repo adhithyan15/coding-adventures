@@ -2077,6 +2077,41 @@ pub struct SupervisionTickReport {
     pub worker_events: Vec<RuntimeEvent>,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SupervisionTickSummary {
+    pub ticked_at_ms: u64,
+    pub total_actions: usize,
+    pub expired_pairing_session_count: usize,
+    pub expired_entity_count: usize,
+    pub desired_state_action_count: usize,
+    pub desired_missing_state_count: usize,
+    pub desired_stale_state_count: usize,
+    pub desired_drifted_state_count: usize,
+    pub worker_restart_event_count: usize,
+}
+
+impl SupervisionTickSummary {
+    pub fn is_idle(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_pairing_expiry_work(&self) -> bool {
+        self.expired_pairing_session_count > 0
+    }
+
+    pub fn has_state_expiry_work(&self) -> bool {
+        self.expired_entity_count > 0
+    }
+
+    pub fn has_reconciliation_work(&self) -> bool {
+        self.desired_state_action_count > 0
+    }
+
+    pub fn has_worker_restart_work(&self) -> bool {
+        self.worker_restart_event_count > 0
+    }
+}
+
 impl SupervisionTickReport {
     pub fn is_idle(&self) -> bool {
         self.expired_pairing_sessions.is_empty()
@@ -2090,6 +2125,40 @@ impl SupervisionTickReport {
             + self.expired_entities.len()
             + self.desired_state_actions.len()
             + self.worker_events.len()
+    }
+
+    pub fn summary(&self) -> SupervisionTickSummary {
+        let mut summary = SupervisionTickSummary {
+            ticked_at_ms: self.ticked_at_ms,
+            total_actions: self.action_count(),
+            expired_pairing_session_count: self.expired_pairing_sessions.len(),
+            expired_entity_count: self.expired_entities.len(),
+            desired_state_action_count: self.desired_state_actions.len(),
+            worker_restart_event_count: self
+                .worker_events
+                .iter()
+                .filter(|event| matches!(event, RuntimeEvent::WorkerNeedsRestart { .. }))
+                .count(),
+            ..SupervisionTickSummary::default()
+        };
+
+        for action in &self.desired_state_actions {
+            match action {
+                DesiredStateAction::CommandIssued { reason, .. } => match reason {
+                    ReconciliationReason::MissingState => {
+                        summary.desired_missing_state_count += 1;
+                    }
+                    ReconciliationReason::StaleState => {
+                        summary.desired_stale_state_count += 1;
+                    }
+                    ReconciliationReason::Drifted => {
+                        summary.desired_drifted_state_count += 1;
+                    }
+                },
+            }
+        }
+
+        summary
     }
 }
 
@@ -6053,6 +6122,17 @@ mod tests {
                 1_000,
                 50,
             ));
+        let bridge = runtime.registry().bridge(&bridge_id).unwrap().clone();
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                RuntimePairingSessionId::trusted("pairing-1"),
+                &bridge,
+                AgentId::trusted("agent:installer"),
+                1_000,
+                1_050,
+                Vec::new(),
+            ))
+            .unwrap();
         let mut command = command(CommandType::TurnOn, Value::Null);
         command.timeout_ms = 50;
         runtime.submit_command(command, 1_000).unwrap();
@@ -6067,10 +6147,15 @@ mod tests {
             .unwrap();
 
         let report = runtime.run_supervision_tick(1_050).unwrap();
+        let summary = report.summary();
         let deliveries = runtime.event_bus_mut().drain(&subscription).unwrap();
         let worker = runtime.supervisor().worker(&bridge_id).unwrap();
 
         assert_eq!(report.ticked_at_ms, 1_050);
+        assert_eq!(
+            report.expired_pairing_sessions,
+            vec![RuntimePairingSessionId::trusted("pairing-1")]
+        );
         assert_eq!(report.expired_entities, vec![EntityId::trusted("entity-1")]);
         assert!(matches!(
             report.desired_state_actions.as_slice(),
@@ -6085,11 +6170,37 @@ mod tests {
             [RuntimeEvent::WorkerNeedsRestart { bridge_id: event_bridge_id, .. }]
                 if event_bridge_id == &bridge_id
         ));
-        assert_eq!(report.action_count(), 3);
+        assert_eq!(report.action_count(), 4);
         assert!(!report.is_idle());
+        assert_eq!(
+            summary,
+            SupervisionTickSummary {
+                ticked_at_ms: 1_050,
+                total_actions: 4,
+                expired_pairing_session_count: 1,
+                expired_entity_count: 1,
+                desired_state_action_count: 1,
+                desired_missing_state_count: 0,
+                desired_stale_state_count: 1,
+                desired_drifted_state_count: 0,
+                worker_restart_event_count: 1,
+            }
+        );
+        assert!(!summary.is_idle());
+        assert!(summary.has_pairing_expiry_work());
+        assert!(summary.has_state_expiry_work());
+        assert!(summary.has_reconciliation_work());
+        assert!(summary.has_worker_restart_work());
         assert_eq!(worker.status, WorkerStatus::Restarting);
         assert_eq!(worker.restart_count, 1);
         assert_eq!(deliveries.len(), 2);
+        assert_eq!(
+            runtime
+                .pairing_session(&RuntimePairingSessionId::trusted("pairing-1"))
+                .unwrap()
+                .status,
+            PairingSessionStatus::Expired
+        );
     }
 
     #[test]
@@ -6101,5 +6212,6 @@ mod tests {
         assert_eq!(report.ticked_at_ms, 1_000);
         assert!(report.is_idle());
         assert_eq!(report.action_count(), 0);
+        assert!(report.summary().is_idle());
     }
 }

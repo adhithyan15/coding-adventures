@@ -62,6 +62,9 @@ Included surfaces:
   and reissues corrective commands
 - deterministic supervision ticks that run optimistic expiry, desired-state
   reconciliation, and worker restart checks together
+- compact supervision tick summaries for read-side tools that need to compare
+  planned work with actual pairing expiry, state expiry, reconciliation, and
+  restart actions
 - non-mutating supervision plans that preview due refreshes, desired-state
   drift, pairing expiry, and worker restarts before a tick performs any writes
 - compact supervision plan summaries for read-side due-work counts without

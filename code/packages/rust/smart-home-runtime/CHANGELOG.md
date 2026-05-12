@@ -21,6 +21,8 @@ All notable changes to this package will be documented in this file.
   expiry, and VaultRef completion counts.
 - `RuntimeSupervisionPlanSummary` plus plan/observation helpers for compact
   due-work counts over non-mutating supervision plans.
+- `SupervisionTickSummary` plus tick-report helpers for compact actual-work
+  counts after supervision ticks mutate runtime state.
 
 ## [0.1.0] - 2026-05-06
 
