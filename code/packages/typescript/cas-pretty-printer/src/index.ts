@@ -9,11 +9,17 @@ import {
   NEG,
   NOT_EQUAL,
   POW,
+  SQRT,
   SUB,
   headName,
 } from "@coding-adventures/symbolic-ir";
 
 export type DialectName = "macsyma" | "mathematica" | "maple";
+export type PrettyStyle = "linear" | "2d";
+
+export interface PrettyOptions {
+  readonly style?: PrettyStyle;
+}
 
 export interface Dialect {
   readonly name: DialectName;
@@ -131,8 +137,86 @@ export function formatLisp(node: IRNode): string {
   }
 }
 
-export function pretty(node: IRNode, dialect: Dialect = MacsymaDialect): string {
+export class Box {
+  readonly lines: readonly string[];
+  readonly baseline: number;
+
+  constructor(lines: readonly string[], baseline: number) {
+    this.lines = Object.freeze([...lines]);
+    this.baseline = baseline;
+  }
+
+  get width(): number {
+    return this.lines.reduce((max, line) => Math.max(max, line.length), 0);
+  }
+
+  get height(): number {
+    return this.lines.length;
+  }
+
+  render(): string {
+    return this.lines.join("\n");
+  }
+
+  padWidth(target: number, align: "center" | "left" | "right" = "center"): Box {
+    if (target <= this.width) return this;
+
+    return new Box(this.lines.map((line) => {
+      const pad = target - line.length;
+      if (align === "left") return line + " ".repeat(pad);
+      if (align === "right") return " ".repeat(pad) + line;
+
+      const leftPad = Math.floor(pad / 2);
+      return " ".repeat(leftPad) + line + " ".repeat(pad - leftPad);
+    }), this.baseline);
+  }
+}
+
+export function atomBox(text: string): Box {
+  return new Box([text], 0);
+}
+
+export function hbox(boxes: readonly Box[], sep = ""): Box {
+  if (boxes.length === 0) return atomBox("");
+
+  const commonBaseline = Math.max(...boxes.map((box) => box.baseline));
+  const maxBelow = Math.max(...boxes.map((box) => box.height - box.baseline - 1));
+  const totalHeight = commonBaseline + 1 + maxBelow;
+
+  const padded = boxes.map((box) => {
+    const aboveRows = commonBaseline - box.baseline;
+    const belowRows = totalHeight - box.height - aboveRows;
+    const empty = " ".repeat(box.width);
+    return [
+      ...Array.from({ length: aboveRows }, () => empty),
+      ...box.lines,
+      ...Array.from({ length: belowRows }, () => empty),
+    ];
+  });
+
+  const lines = Array.from({ length: totalHeight }, (_, row) => padded.map((rows) => rows[row]).join(sep));
+  return new Box(lines, commonBaseline);
+}
+
+export function vbox(boxes: readonly Box[]): Box {
+  if (boxes.length === 0) return atomBox("");
+
+  const width = Math.max(...boxes.map((box) => box.width));
+  const lines = boxes.flatMap((box) => box.padWidth(width).lines);
+  return new Box(lines, Math.floor(lines.length / 2));
+}
+
+export function pretty(node: IRNode, dialect: Dialect = MacsymaDialect, options: PrettyOptions | PrettyStyle = {}): string {
+  const style = typeof options === "string" ? options : (options.style ?? "linear");
+  if (style === "2d") return pretty2D(node, dialect);
+  if (style !== "linear") {
+    throw new Error(`unsupported style: ${style}`);
+  }
   return format(node, dialect, 0);
+}
+
+export function pretty2D(node: IRNode, dialect: Dialect = MacsymaDialect): string {
+  return box(node, dialect).render();
 }
 
 function format(node: IRNode, dialect: Dialect, parentPrecedence: number): string {
@@ -220,6 +304,107 @@ function sugarApply(node: Extract<IRNode, { kind: "apply" }>): IRNode {
     }
   }
   return node;
+}
+
+function box(node: IRNode, dialect: Dialect): Box {
+  switch (node.kind) {
+    case "symbol":
+      return atomBox(dialect.formatSymbol?.(node.name) ?? node.name);
+    case "integer":
+      return atomBox(node.value.toString());
+    case "rational":
+      return atomBox(`${node.numer}/${node.denom}`);
+    case "float":
+      return atomBox(String(node.value));
+    case "string":
+      return atomBox(JSON.stringify(node.value));
+    case "apply":
+      return boxApply(node, dialect);
+  }
+}
+
+function boxApply(node: Extract<IRNode, { kind: "apply" }>, dialect: Dialect): Box {
+  const sugar = sugarApply(node);
+  if (sugar !== node) return box(sugar, dialect);
+
+  const name = headName(node.head);
+  if (name === NEG.name && node.args.length === 1) {
+    const inner = box(node.args[0], dialect);
+    return new Box(inner.lines.map((line, i) => i === inner.baseline ? `-${line}` : ` ${line}`), inner.baseline);
+  }
+
+  if (name === DIV.name && node.args.length === 2) {
+    return divBox(box(node.args[0], dialect), box(node.args[1], dialect));
+  }
+
+  if (name === POW.name && node.args.length === 2) {
+    return powBox(box(node.args[0], dialect), box(node.args[1], dialect));
+  }
+
+  if (name === SQRT.name && node.args.length === 1) {
+    return sqrtBox(box(node.args[0], dialect));
+  }
+
+  if (name === ADD.name && node.args.length >= 2) {
+    return hbox(intersperseBoxes(node.args.map((arg) => box(arg, dialect)), atomBox(" + ")));
+  }
+
+  if (name === SUB.name && node.args.length === 2) {
+    return hbox([box(node.args[0], dialect), atomBox(" - "), box(node.args[1], dialect)]);
+  }
+
+  if (name === MUL.name && node.args.length >= 2) {
+    return hbox(intersperseBoxes(node.args.map((arg) => box(arg, dialect)), atomBox("*")));
+  }
+
+  if (name === LIST.name) {
+    const [open, close] = dialect.listBrackets ?? ["[", "]"];
+    if (node.args.length === 0) return atomBox(`${open}${close}`);
+    return hbox([
+      atomBox(open),
+      hbox(intersperseBoxes(node.args.map((arg) => box(arg, dialect)), atomBox(", "))),
+      atomBox(close),
+    ]);
+  }
+
+  return atomBox(format(node, dialect, 0));
+}
+
+function divBox(numBox: Box, denBox: Box): Box {
+  const barWidth = Math.max(numBox.width, denBox.width) + 2;
+  const num = numBox.padWidth(barWidth);
+  const den = denBox.padWidth(barWidth);
+  return new Box([...num.lines, "─".repeat(barWidth), ...den.lines], num.height);
+}
+
+function powBox(baseBox: Box, expBox: Box): Box {
+  const baseBlank = " ".repeat(baseBox.width);
+  const expBlank = " ".repeat(expBox.width);
+  const expRows = expBox.lines.map((line) => baseBlank + line.padEnd(expBox.width, " "));
+  const baseRows = baseBox.lines.map((line) => line.padEnd(baseBox.width, " ") + expBlank);
+  return new Box([...expRows, ...baseRows], expBox.height + baseBox.baseline);
+}
+
+function sqrtBox(argBox: Box): Box {
+  const argWidth = argBox.width;
+  const innerWidth = argWidth + 2;
+  const lines = [
+    `  ┌${"─".repeat(innerWidth)}┐`,
+    ...argBox.lines.map((line, i) => {
+      const content = ` ${line.padEnd(argWidth, " ")} `;
+      return i === argBox.baseline ? `√ │${content}│` : `  │${content}│`;
+    }),
+  ];
+  return new Box(lines, argBox.baseline + 1);
+}
+
+function intersperseBoxes(boxes: readonly Box[], separator: Box): Box[] {
+  const parts: Box[] = [];
+  for (const [index, box] of boxes.entries()) {
+    if (index > 0) parts.push(separator);
+    parts.push(box);
+  }
+  return parts;
 }
 
 function functionName(name: string, dialect: Dialect): string {
