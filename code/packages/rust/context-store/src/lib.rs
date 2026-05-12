@@ -408,6 +408,69 @@ impl ContextSnapshotSummary {
     }
 }
 
+/// Compact one-session overview for host status and compaction planners.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ContextSessionSummary {
+    pub status: SessionStatus,
+    pub has_head_pointer: bool,
+    pub head_snapshot_found: bool,
+    pub transcript: ContextTranscriptSummary,
+    pub snapshots: ContextSnapshotSummary,
+    pub uncheckpointed_entries: usize,
+}
+
+impl ContextSessionSummary {
+    pub fn from_parts(
+        session: &ContextSession,
+        entries: &[ContextEntrySummary],
+        snapshots: &[ContextSnapshot],
+    ) -> Self {
+        let transcript = ContextTranscriptSummary::from_entry_summaries(entries);
+        let snapshot_summary = ContextSnapshotSummary::from_snapshots(snapshots);
+        let head_snapshot = session.head_pointer.as_deref().and_then(|head_pointer| {
+            snapshots
+                .iter()
+                .find(|snapshot| snapshot.snapshot_id == head_pointer)
+        });
+        let uncheckpointed_entries = match head_snapshot {
+            Some(snapshot) => entries
+                .iter()
+                .filter(|entry| !snapshot.included_entry_ids.contains(&entry.entry_id))
+                .count(),
+            None => entries.len(),
+        };
+
+        Self {
+            status: session.status,
+            has_head_pointer: session.head_pointer.is_some(),
+            head_snapshot_found: head_snapshot.is_some(),
+            transcript,
+            snapshots: snapshot_summary,
+            uncheckpointed_entries,
+        }
+    }
+
+    pub fn is_archived(&self) -> bool {
+        self.status == SessionStatus::Archived
+    }
+
+    pub fn has_missing_head_snapshot(&self) -> bool {
+        self.has_head_pointer && !self.head_snapshot_found
+    }
+
+    pub fn has_uncheckpointed_entries(&self) -> bool {
+        self.uncheckpointed_entries > 0
+    }
+
+    pub fn has_tool_activity(&self) -> bool {
+        self.transcript.tool_interaction_entries() > 0
+    }
+
+    pub fn has_external_refs(&self) -> bool {
+        self.snapshots.has_memory_refs() || self.snapshots.has_artifact_refs()
+    }
+}
+
 /// Portable ordering for bounded snapshot list/read tools.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum SnapshotListSort {
@@ -859,6 +922,21 @@ impl<S: StorageBackend> ContextStore<S> {
     ) -> Result<ContextSnapshotSummary, StorageError> {
         let snapshots = self.list_snapshots(session_id, options)?;
         Ok(ContextSnapshotSummary::from_snapshots(&snapshots))
+    }
+
+    /// Summarize one session across header, transcript, and checkpoints.
+    pub fn session_summary(
+        &self,
+        session_id: &str,
+    ) -> Result<Option<ContextSessionSummary>, StorageError> {
+        let Some(session) = self.open_session(session_id)? else {
+            return Ok(None);
+        };
+        let entries = self.fetch_entry_summaries(session_id, FetchEntriesOptions::default())?;
+        let snapshots = self.list_snapshots(session_id, SnapshotListOptions::default())?;
+        Ok(Some(ContextSessionSummary::from_parts(
+            &session, &entries, &snapshots,
+        )))
     }
 
     /// Create a compaction snapshot that covers all entries up to and including
@@ -2134,6 +2212,86 @@ mod tests {
         assert!(empty.is_empty());
         assert_eq!(empty.min_token_estimate, None);
         assert_eq!(empty.max_token_estimate, None);
+    }
+
+    #[test]
+    fn session_summary_combines_header_transcript_and_checkpoint_state() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+
+        for (entry_id, kind, timestamp) in [
+            ("entry-1", ContextEntryKind::User, 10),
+            ("entry-2", ContextEntryKind::Assistant, 20),
+            ("entry-3", ContextEntryKind::ToolResult, 30),
+        ] {
+            let _ = store
+                .append_entry(
+                    "demo",
+                    AppendEntryInput {
+                        entry_id: entry_id.to_string(),
+                        kind,
+                        timestamp: Some(timestamp),
+                        metadata: object(&[]),
+                        body: JsonValue::String(entry_id.to_string()),
+                    },
+                )
+                .unwrap();
+        }
+
+        let _ = store
+            .create_snapshot(
+                "demo",
+                CreateSnapshotInput {
+                    snapshot_id: "snap-1".to_string(),
+                    basis_entry_id: "entry-2".to_string(),
+                    token_estimate: 25,
+                    included_entry_ids: vec!["entry-1".to_string(), "entry-2".to_string()],
+                    summary_refs: vec!["summary-1".to_string()],
+                    memory_refs: vec!["memory-1".to_string()],
+                    artifact_refs: vec!["artifact-1".to_string()],
+                },
+            )
+            .unwrap();
+
+        let summary = store.session_summary("demo").unwrap().unwrap();
+        assert_eq!(summary.status, SessionStatus::Active);
+        assert!(summary.has_head_pointer);
+        assert!(summary.head_snapshot_found);
+        assert_eq!(summary.transcript.total_entries, 3);
+        assert_eq!(summary.transcript.conversational_entries(), 2);
+        assert_eq!(summary.transcript.tool_interaction_entries(), 1);
+        assert_eq!(summary.snapshots.total_snapshots, 1);
+        assert_eq!(summary.snapshots.memory_refs, 1);
+        assert_eq!(summary.snapshots.artifact_refs, 1);
+        assert_eq!(summary.uncheckpointed_entries, 1);
+        assert!(!summary.is_archived());
+        assert!(!summary.has_missing_head_snapshot());
+        assert!(summary.has_uncheckpointed_entries());
+        assert!(summary.has_tool_activity());
+        assert!(summary.has_external_refs());
+        assert_eq!(store.session_summary("missing").unwrap(), None);
+
+        let broken = ContextSessionSummary::from_parts(
+            &ContextSession {
+                session_id: "broken".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Broken".to_string(),
+                status: SessionStatus::Archived,
+                latest_revision: None,
+                head_pointer: Some("missing-snapshot".to_string()),
+            },
+            &[],
+            &[],
+        );
+        assert!(broken.is_archived());
+        assert!(broken.has_missing_head_snapshot());
+        assert!(!broken.has_uncheckpointed_entries());
     }
 
     #[test]
