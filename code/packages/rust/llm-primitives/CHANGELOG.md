@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-05-12
+
+### Changed
+
+`decompose_text` system prompt bumped to `decompose-text-v3` with an
+explicit **punctuation and delimiter awareness rule** (rule 11). The
+v2 prompt covered structural shape (flat nodes, exact field names,
+tiling spans) but said nothing about how delimiters can flip meaning.
+A single comma can invert intent — the canonical example baked into
+the prompt:
+
+* `"Let's eat, Bob."` — Bob is being invited to a meal.
+* `"Let's eat Bob."` — Bob is the meal.
+
+The bytes differ by one comma; the meaning differs by an order of
+magnitude. The ADJ02 coverage rule already forces the model to
+account for every byte, but covering a byte is not the same as
+reading it correctly. v3 explicitly directs the model to scan
+surrounding punctuation before assigning a `term`:
+
+* commas separating list items vs vocatives
+* periods ending sentences vs abbreviations
+* quotes scoping a quoted phrase vs marking emphasis
+* colons introducing definitions vs ratios
+* parentheses denoting asides vs grouping
+
+When punctuation is load-bearing or ambiguous, the model is told to
+prefer an `Uncertainty` node with `polarity: "Uncertain"` over a
+confident guess. This pairs with the v0.4 ADJ06 adversarial-retry
+flow: the adversary can now find punctuation-driven alt readings and
+hand them back for an `Uncertainty` rewrite.
+
+**Audit-trail impact**: every `LlmCallRecord.prompt_version` for
+`decompose_text` now reads `"decompose-text-v3"`. Cached responses
+keyed on `(prompt_version, prompt_hash)` from v2 will miss and
+re-run against the new prompt — intentional, since the model is
+being asked to do strictly more work.
+
 ## [0.8.0] - 2026-05-12
 
 ### Changed
