@@ -831,12 +831,79 @@ fn discover_bluetooth_devices_impl(
     ))
 }
 
-#[cfg(not(target_os = "macos"))]
+#[cfg(target_os = "linux")]
+fn discover_bluetooth_devices_impl(
+) -> Result<Vec<BluetoothDiscoveredDevice>, BluetoothDiscoveryError> {
+    let program = "bluetoothctl";
+    let output = std::process::Command::new(program)
+        .arg("devices")
+        .output()
+        .map_err(|error| BluetoothDiscoveryError::CommandUnavailable {
+            program: program.to_owned(),
+            message: error.to_string(),
+        })?;
+
+    if !output.status.success() {
+        return Err(BluetoothDiscoveryError::CommandFailed {
+            program: program.to_owned(),
+            status: output.status.code(),
+        });
+    }
+
+    let mut devices =
+        bluetooth_devices_from_bluezctl_devices(&String::from_utf8_lossy(&output.stdout));
+    for device in &mut devices {
+        let selector = device.address.as_deref().unwrap_or(&device.id).to_owned();
+        let Ok(info) = std::process::Command::new(program)
+            .arg("info")
+            .arg(&selector)
+            .output()
+        else {
+            continue;
+        };
+        if info.status.success() {
+            enrich_bluetooth_device_from_bluezctl_info(
+                device,
+                &String::from_utf8_lossy(&info.stdout),
+            );
+        }
+    }
+
+    Ok(devices)
+}
+
+#[cfg(all(not(target_os = "macos"), not(target_os = "linux")))]
 fn discover_bluetooth_devices_impl(
 ) -> Result<Vec<BluetoothDiscoveredDevice>, BluetoothDiscoveryError> {
     Err(BluetoothDiscoveryError::UnsupportedPlatform {
         platform: std::env::consts::OS,
     })
+}
+
+pub fn bluetooth_devices_from_bluezctl_reports(
+    devices_report: &str,
+    info_reports: &[&str],
+) -> Vec<BluetoothDiscoveredDevice> {
+    let mut devices = bluetooth_devices_from_bluezctl_devices(devices_report);
+    for report in info_reports {
+        let Some(info_device) = bluetooth_device_from_bluezctl_info(report) else {
+            continue;
+        };
+        let key = info_device
+            .address
+            .as_deref()
+            .unwrap_or(&info_device.id)
+            .to_owned();
+        if let Some(device) = devices
+            .iter_mut()
+            .find(|device| bluez_device_matches(device, &key))
+        {
+            merge_bluetooth_device(device, info_device);
+        } else {
+            devices.push(info_device);
+        }
+    }
+    devices
 }
 
 pub fn bluetooth_devices_from_macos_system_profiler(
@@ -1014,6 +1081,141 @@ fn normalize_macos_rfcomm_token(value: &str) -> String {
         .filter(|byte| byte.is_ascii_alphanumeric())
         .map(|byte| byte.to_ascii_lowercase() as char)
         .collect()
+}
+
+fn bluetooth_devices_from_bluezctl_devices(report: &str) -> Vec<BluetoothDiscoveredDevice> {
+    report
+        .lines()
+        .filter_map(bluetooth_device_from_bluezctl_devices_line)
+        .collect()
+}
+
+fn bluetooth_device_from_bluezctl_devices_line(line: &str) -> Option<BluetoothDiscoveredDevice> {
+    let line = line.trim();
+    let line = line.strip_prefix("[NEW] ").unwrap_or(line);
+    let body = line.strip_prefix("Device ")?;
+    let mut parts = body.split_whitespace();
+    let address = normalize_bluetooth_address(parts.next()?);
+    let name = body[address.len()..].trim();
+    let mut device = BluetoothDiscoveredDevice::new(&address).with_address(&address);
+    if !name.is_empty() {
+        device.name = Some(name.to_owned());
+    }
+    Some(device)
+}
+
+fn bluetooth_device_from_bluezctl_info(report: &str) -> Option<BluetoothDiscoveredDevice> {
+    let mut device = None;
+    for raw_line in report.lines() {
+        let line = raw_line.trim();
+        if line.is_empty() {
+            continue;
+        }
+
+        if let Some(address) = bluez_info_header_address(line) {
+            let address = normalize_bluetooth_address(address);
+            device = Some(BluetoothDiscoveredDevice::new(&address).with_address(&address));
+            continue;
+        }
+
+        let Some(device) = device.as_mut() else {
+            continue;
+        };
+
+        if let Some(name) = field_value(line, "Name") {
+            device.name = Some(name.to_owned());
+        } else if let Some(alias) = field_value(line, "Alias") {
+            if device.name.is_none() {
+                device.name = Some(alias.to_owned());
+            }
+        } else if let Some(paired) = field_value(line, "Paired") {
+            device.paired = yes_no_value(paired);
+        } else if let Some(channel) = field_value(line, "RFCOMM Channel") {
+            if let Ok(channel) = channel.trim().parse::<u8>() {
+                device.board_vm_rfcomm_channels.push(channel);
+            }
+        } else if let Some(uuid) = field_value(line, "Service UUID") {
+            push_unique_uuid(&mut device.service_uuids, uuid);
+        } else if let Some(uuid) = field_value(line, "Characteristic UUID") {
+            push_unique_uuid(&mut device.characteristic_uuids, uuid);
+        } else if let Some(uuid) = field_value(line, "UUID").and_then(bluez_uuid_value) {
+            push_unique_uuid(&mut device.service_uuids, &uuid);
+            if uuid.eq_ignore_ascii_case(BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID)
+                || uuid.eq_ignore_ascii_case(BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID)
+            {
+                push_unique_uuid(&mut device.characteristic_uuids, &uuid);
+            }
+        }
+    }
+    device
+}
+
+#[cfg(target_os = "linux")]
+fn enrich_bluetooth_device_from_bluezctl_info(
+    device: &mut BluetoothDiscoveredDevice,
+    report: &str,
+) {
+    if let Some(info_device) = bluetooth_device_from_bluezctl_info(report) {
+        merge_bluetooth_device(device, info_device);
+    }
+}
+
+fn merge_bluetooth_device(
+    device: &mut BluetoothDiscoveredDevice,
+    info_device: BluetoothDiscoveredDevice,
+) {
+    if let Some(name) = info_device.name {
+        device.name = Some(name);
+    }
+    if let Some(address) = info_device.address {
+        device.address = Some(address);
+    }
+    device.paired = info_device.paired;
+    for uuid in info_device.service_uuids {
+        push_unique_uuid(&mut device.service_uuids, &uuid);
+    }
+    for uuid in info_device.characteristic_uuids {
+        push_unique_uuid(&mut device.characteristic_uuids, &uuid);
+    }
+    for channel in info_device.board_vm_rfcomm_channels {
+        if !device.board_vm_rfcomm_channels.contains(&channel) {
+            device.board_vm_rfcomm_channels.push(channel);
+        }
+    }
+}
+
+fn bluez_device_matches(device: &BluetoothDiscoveredDevice, key: &str) -> bool {
+    let normalized_key = normalize_bluetooth_address(key);
+    device.id.eq_ignore_ascii_case(key)
+        || device.id.eq_ignore_ascii_case(&normalized_key)
+        || device
+            .address
+            .as_deref()
+            .is_some_and(|address| address.eq_ignore_ascii_case(&normalized_key))
+}
+
+fn bluez_info_header_address(line: &str) -> Option<&str> {
+    let body = line.strip_prefix("Device ")?;
+    body.split_whitespace().next()
+}
+
+fn bluez_uuid_value(value: &str) -> Option<String> {
+    let value = value.trim();
+    if is_short_uuid(value) || is_canonical_uuid(value) {
+        return Some(value.to_owned());
+    }
+
+    if let Some((_, suffix)) = value.rsplit_once('(') {
+        let candidate = suffix.trim().strip_suffix(')')?.trim();
+        if is_short_uuid(candidate) || is_canonical_uuid(candidate) {
+            return Some(candidate.to_owned());
+        }
+    }
+
+    value.split_whitespace().find_map(|token| {
+        let token = token.trim_matches(|ch| matches!(ch, '(' | ')' | ',' | ';'));
+        (is_short_uuid(token) || is_canonical_uuid(token)).then(|| token.to_owned())
+    })
 }
 
 fn endpoint_scheme(endpoint: &str) -> &str {
@@ -1516,6 +1718,71 @@ Bluetooth:
         assert!(candidates
             .iter()
             .any(|candidate| matches!(candidate.endpoint, BluetoothEndpoint::BleGatt(_))));
+    }
+
+    #[test]
+    fn parses_linux_bluezctl_bluetooth_devices() {
+        let devices_report = r#"
+Device AA:BB:CC:DD:EE:FF ESP32 Board VM
+[NEW] Device 11:22:33:44:55:66 Uno R4 Board VM
+Device 00:11:22:33:44:55 Headphones
+"#;
+        let esp32_info = r#"
+Device AA:BB:CC:DD:EE:FF (public)
+        Name: ESP32 Board VM
+        Alias: ESP32 Board VM
+        Paired: yes
+        UUID: Serial Port               (00001101-0000-1000-8000-00805f9b34fb)
+        RFCOMM Channel: 3
+"#;
+        let uno_info = r#"
+Device 11:22:33:44:55:66 (public)
+        Name: Uno R4 Board VM
+        Paired: no
+        UUID: Nordic UART Service       (6E400001-B5A3-F393-E0A9-E50E24DCCA9E)
+        UUID: Vendor specific           (6E400002-B5A3-F393-E0A9-E50E24DCCA9E)
+        UUID: Vendor specific           (6E400003-B5A3-F393-E0A9-E50E24DCCA9E)
+"#;
+
+        let devices =
+            bluetooth_devices_from_bluezctl_reports(devices_report, &[esp32_info, uno_info]);
+
+        assert_eq!(devices.len(), 3);
+        assert_eq!(devices[0].name.as_deref(), Some("ESP32 Board VM"));
+        assert_eq!(devices[0].address.as_deref(), Some("AA:BB:CC:DD:EE:FF"));
+        assert!(devices[0].paired);
+        assert_eq!(devices[0].board_vm_rfcomm_channels, vec![3]);
+        assert_eq!(devices[1].name.as_deref(), Some("Uno R4 Board VM"));
+        assert_eq!(devices[1].address.as_deref(), Some("11:22:33:44:55:66"));
+        assert!(!devices[1].paired);
+        assert_eq!(
+            devices[1].service_uuids,
+            vec![
+                BOARD_VM_BLE_SERVICE_UUID.to_owned(),
+                BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID.to_owned(),
+                BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID.to_owned(),
+            ]
+        );
+        assert_eq!(
+            devices[1].characteristic_uuids,
+            vec![
+                BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID.to_owned(),
+                BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID.to_owned(),
+            ]
+        );
+
+        let candidates = board_vm_endpoint_candidates(&devices);
+
+        assert_eq!(candidates.len(), 2);
+        assert!(candidates.iter().any(|candidate| {
+            candidate.device == "AA:BB:CC:DD:EE:FF"
+                && matches!(candidate.endpoint, BluetoothEndpoint::Rfcomm(_))
+        }));
+        assert!(candidates.iter().any(|candidate| {
+            candidate.device == "11:22:33:44:55:66"
+                && matches!(candidate.endpoint, BluetoothEndpoint::BleGatt(_))
+                && candidate.requires_pairing
+        }));
     }
 
     #[test]
