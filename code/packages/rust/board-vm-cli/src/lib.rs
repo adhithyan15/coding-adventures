@@ -1513,6 +1513,24 @@ fn write_descriptor<W>(output: &mut W, descriptor: &BoardDescriptorInfo) -> Resu
 where
     W: Write,
 {
+    write_descriptor_summary(output, descriptor)?;
+    for capability in &descriptor.capabilities {
+        writeln!(
+            output,
+            "cap id=0x{:04X} version={} flags=0x{:04X} name={}",
+            capability.id, capability.version, capability.flags, capability.name
+        )?;
+    }
+    Ok(())
+}
+
+fn write_descriptor_summary<W>(
+    output: &mut W,
+    descriptor: &BoardDescriptorInfo,
+) -> Result<(), CliError>
+where
+    W: Write,
+{
     writeln!(
         output,
         "caps board={} runtime={} max_program_bytes={} stack={} handles={} store={} capabilities={}",
@@ -1524,13 +1542,6 @@ where
         descriptor.supports_store_program,
         descriptor.capabilities.len()
     )?;
-    for capability in &descriptor.capabilities {
-        writeln!(
-            output,
-            "cap id=0x{:04X} version={} flags=0x{:04X} name={}",
-            capability.id, capability.version, capability.flags, capability.name
-        )?;
-    }
     Ok(())
 }
 
@@ -1550,10 +1561,17 @@ fn write_run<W>(output: &mut W, run: &RunReportInfo) -> Result<(), CliError>
 where
     W: Write,
 {
+    write_labeled_run(output, "run", run)
+}
+
+fn write_labeled_run<W>(output: &mut W, label: &str, run: &RunReportInfo) -> Result<(), CliError>
+where
+    W: Write,
+{
     if run.returns.is_empty() {
         writeln!(
             output,
-            "run program_id={} status={:?} instructions={} elapsed_ms={} stack_depth={} open_handles={}",
+            "{label} program_id={} status={:?} instructions={} elapsed_ms={} stack_depth={} open_handles={}",
             run.program_id,
             run.status,
             run.instructions_executed,
@@ -1564,7 +1582,7 @@ where
     } else {
         writeln!(
             output,
-            "run program_id={} status={:?} instructions={} elapsed_ms={} stack_depth={} open_handles={} returns=[{}]",
+            "{label} program_id={} status={:?} instructions={} elapsed_ms={} stack_depth={} open_handles={} returns=[{}]",
             run.program_id,
             run.status,
             run.instructions_executed,
@@ -1575,6 +1593,16 @@ where
         )?;
     }
     Ok(())
+}
+
+pub fn write_smoke_report<W>(output: &mut W, report: &SmokeReport) -> Result<(), CliError>
+where
+    W: Write,
+{
+    write_hello(output, &report.hello)?;
+    write_descriptor_summary(output, &report.descriptor)?;
+    write_upload(output, &report.upload)?;
+    write_labeled_run(output, "blink", &report.run)
 }
 
 fn format_run_values(values: &[RunValue]) -> String {
@@ -1636,7 +1664,7 @@ pub fn usage() -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use board_vm_client::TransportError;
+    use board_vm_client::{CapabilityInfo, TransportError};
     use board_vm_loopback::{LoopbackBoard, LOOPBACK_BOARD_ID, LOOPBACK_RUNTIME_ID};
     use board_vm_protocol::RunStatus;
 
@@ -2432,6 +2460,59 @@ mod tests {
         assert!(report.run.instructions_executed > 0);
         assert_eq!(report.run.open_handles, 1);
         assert!(report.run.returns.is_empty());
+    }
+
+    #[test]
+    fn smoke_report_writer_includes_upload_and_full_run_summary() {
+        let report = SmokeReport {
+            hello: HelloAckInfo {
+                selected_version: 1,
+                board_name: "loopback-uno-r4".to_owned(),
+                runtime_name: "board-vm-loopback".to_owned(),
+                host_nonce: 0x1234_ABCD,
+                board_nonce: 0xAABB_CCDD,
+                max_frame_payload: 512,
+            },
+            descriptor: BoardDescriptorInfo {
+                board_id: "loopback-uno-r4".to_owned(),
+                runtime_id: "board-vm-loopback".to_owned(),
+                max_program_bytes: 512,
+                max_stack_values: 8,
+                max_handles: 4,
+                supports_store_program: true,
+                capabilities: vec![CapabilityInfo {
+                    id: board_vm_protocol::CAP_PROGRAM_RAM_EXEC,
+                    version: 1,
+                    flags: board_vm_protocol::CAP_FLAG_PROTOCOL_FEATURE,
+                    name: "program.ram_exec".to_owned(),
+                }],
+            },
+            upload: UploadReport {
+                program_id: 3,
+                total_len: 42,
+                program_crc32: 0xCAFE_BABE,
+            },
+            run: RunReportInfo {
+                program_id: 3,
+                status: RunStatus::Halted,
+                instructions_executed: 7,
+                elapsed_ms: 250,
+                stack_depth: 1,
+                open_handles: 0,
+                returns: vec![RunValue::U32(99)],
+            },
+        };
+        let mut out = Vec::new();
+
+        write_smoke_report(&mut out, &report).unwrap();
+
+        assert_eq!(
+            String::from_utf8(out).unwrap(),
+            "hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0x1234ABCD board_nonce=0xAABBCCDD\n\
+caps board=loopback-uno-r4 runtime=board-vm-loopback max_program_bytes=512 stack=8 handles=4 store=true capabilities=1\n\
+upload program_id=3 bytes=42 crc32=0xCAFEBABE\n\
+blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 open_handles=0 returns=[99]\n"
+        );
     }
 
     #[test]
