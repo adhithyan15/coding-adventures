@@ -173,7 +173,10 @@ impl core::fmt::Display for VaultRecordError {
                 write!(f, "vault-records: top-level item was not a {{t,d}} map")
             }
             VaultRecordError::BadEnvelope => {
-                write!(f, "vault-records: envelope is missing or has wrong-typed t/d fields")
+                write!(
+                    f,
+                    "vault-records: envelope is missing or has wrong-typed t/d fields"
+                )
             }
             VaultRecordError::ContentTypeMismatch { expected, .. } => {
                 // Note: we DO show `expected` (a static literal) but not `actual`,
@@ -309,6 +312,202 @@ pub enum AnyRecord {
     },
 }
 
+/// Known high-level record kind without carrying record values.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum VaultRecordKind {
+    /// `vault/login/v1`
+    Login,
+    /// `vault/note/v1`
+    SecureNote,
+    /// `vault/card/v1`
+    Card,
+    /// `vault/totp/v1`
+    TotpSeed,
+    /// `vault/api-key/v1`
+    ApiKey,
+    /// `vault/db-credential/v1`
+    DatabaseCredential,
+    /// Unknown, app-specific, or future-version content type.
+    Opaque,
+}
+
+impl VaultRecordKind {
+    /// Static content type for first-party records.
+    pub fn content_type(self) -> Option<&'static str> {
+        match self {
+            Self::Login => Some(LOGIN_V1),
+            Self::SecureNote => Some(SECURE_NOTE_V1),
+            Self::Card => Some(CARD_V1),
+            Self::TotpSeed => Some(TOTP_SEED_V1),
+            Self::ApiKey => Some(API_KEY_V1),
+            Self::DatabaseCredential => Some(DATABASE_CREDENTIAL_V1),
+            Self::Opaque => None,
+        }
+    }
+
+    /// True for first-party records understood by this crate.
+    pub fn is_first_party(self) -> bool {
+        self.content_type().is_some()
+    }
+
+    /// True for password-manager-shaped first-party records.
+    pub fn is_password_manager_record(self) -> bool {
+        matches!(
+            self,
+            Self::Login | Self::SecureNote | Self::Card | Self::TotpSeed
+        )
+    }
+
+    /// True for machine-secret-store first-party records.
+    pub fn is_machine_secret_record(self) -> bool {
+        matches!(self, Self::ApiKey | Self::DatabaseCredential)
+    }
+}
+
+/// Value-redacted record inventory data for host/store planning.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct VaultRecordSummary {
+    /// Record kind, or [`VaultRecordKind::Opaque`] for unknown content types.
+    pub kind: VaultRecordKind,
+    /// Number of fields that this crate treats as secret-bearing.
+    pub secret_field_count: usize,
+    /// Number of present optional fields.
+    pub optional_field_count: usize,
+    /// Number of repeated string items, such as URLs or scopes.
+    pub list_item_count: usize,
+    /// Whether the record carries an expiry timestamp.
+    pub has_expiry: bool,
+    /// Whether the record carries a lease reference.
+    pub has_lease: bool,
+    /// Length of an opaque record's content type. Zero for first-party records.
+    pub opaque_content_type_len: usize,
+    /// Canonical-CBOR payload byte length for opaque records. Zero for first-party records.
+    pub opaque_payload_bytes: usize,
+}
+
+impl VaultRecordSummary {
+    /// True when the record is decoded as a first-party schema.
+    pub fn is_first_party(&self) -> bool {
+        self.kind.is_first_party()
+    }
+
+    /// True when the record belongs to the password-manager schema family.
+    pub fn is_password_manager_record(&self) -> bool {
+        self.kind.is_password_manager_record()
+    }
+
+    /// True when the record belongs to the machine-secret schema family.
+    pub fn is_machine_secret_record(&self) -> bool {
+        self.kind.is_machine_secret_record()
+    }
+
+    /// True when at least one secret-bearing field is present.
+    pub fn carries_sensitive_fields(&self) -> bool {
+        self.secret_field_count > 0
+    }
+
+    /// True when the record is opaque to this crate.
+    pub fn is_opaque(&self) -> bool {
+        self.kind == VaultRecordKind::Opaque
+    }
+}
+
+impl AnyRecord {
+    /// Return the value-redacted kind for this record.
+    pub fn kind(&self) -> VaultRecordKind {
+        match self {
+            Self::Login(_) => VaultRecordKind::Login,
+            Self::SecureNote(_) => VaultRecordKind::SecureNote,
+            Self::Card(_) => VaultRecordKind::Card,
+            Self::TotpSeed(_) => VaultRecordKind::TotpSeed,
+            Self::ApiKey(_) => VaultRecordKind::ApiKey,
+            Self::DatabaseCredential(_) => VaultRecordKind::DatabaseCredential,
+            Self::Opaque { .. } => VaultRecordKind::Opaque,
+        }
+    }
+
+    /// Return value-redacted inventory data without cloning secret values.
+    pub fn summary(&self) -> VaultRecordSummary {
+        match self {
+            Self::Login(record) => VaultRecordSummary {
+                kind: VaultRecordKind::Login,
+                secret_field_count: 1,
+                optional_field_count: usize::from(record.notes.is_some()),
+                list_item_count: record.urls.len(),
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            },
+            Self::SecureNote(_) => VaultRecordSummary {
+                kind: VaultRecordKind::SecureNote,
+                secret_field_count: 1,
+                optional_field_count: 0,
+                list_item_count: 0,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            },
+            Self::Card(record) => VaultRecordSummary {
+                kind: VaultRecordKind::Card,
+                secret_field_count: 2,
+                optional_field_count: usize::from(record.billing_zip.is_some()),
+                list_item_count: 0,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            },
+            Self::TotpSeed(record) => VaultRecordSummary {
+                kind: VaultRecordKind::TotpSeed,
+                secret_field_count: 1,
+                optional_field_count: usize::from(record.issuer.is_some()),
+                list_item_count: 0,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            },
+            Self::ApiKey(record) => VaultRecordSummary {
+                kind: VaultRecordKind::ApiKey,
+                secret_field_count: 1,
+                optional_field_count: usize::from(record.expires_at.is_some()),
+                list_item_count: record.scopes.len(),
+                has_expiry: record.expires_at.is_some(),
+                has_lease: false,
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            },
+            Self::DatabaseCredential(record) => VaultRecordSummary {
+                kind: VaultRecordKind::DatabaseCredential,
+                secret_field_count: 1,
+                optional_field_count: usize::from(record.database.is_some())
+                    + usize::from(record.lease_id.is_some())
+                    + usize::from(record.expires_at.is_some()),
+                list_item_count: 0,
+                has_expiry: record.expires_at.is_some(),
+                has_lease: record.lease_id.is_some(),
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            },
+            Self::Opaque {
+                content_type,
+                payload_bytes,
+            } => VaultRecordSummary {
+                kind: VaultRecordKind::Opaque,
+                secret_field_count: 0,
+                optional_field_count: 0,
+                list_item_count: 0,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: content_type.len(),
+                opaque_payload_bytes: payload_bytes.len(),
+            },
+        }
+    }
+}
+
 impl Zeroize for AnyRecord {
     fn zeroize(&mut self) {
         match self {
@@ -318,7 +517,10 @@ impl Zeroize for AnyRecord {
             AnyRecord::TotpSeed(r) => r.zeroize(),
             AnyRecord::ApiKey(r) => r.zeroize(),
             AnyRecord::DatabaseCredential(r) => r.zeroize(),
-            AnyRecord::Opaque { content_type, payload_bytes } => {
+            AnyRecord::Opaque {
+                content_type,
+                payload_bytes,
+            } => {
                 content_type.zeroize();
                 payload_bytes.zeroize();
             }
@@ -344,10 +546,16 @@ impl Zeroize for AnyRecord {
 /// Re-encode an [`AnyRecord::Opaque`] back to its full
 /// envelope-wrapped canonical CBOR bytes. Useful for forwarding a
 /// record of unknown type without losing it.
-pub fn encode_opaque(content_type: &str, payload_bytes: &[u8]) -> Result<Vec<u8>, VaultRecordError> {
+pub fn encode_opaque(
+    content_type: &str,
+    payload_bytes: &[u8],
+) -> Result<Vec<u8>, VaultRecordError> {
     let payload = decode(payload_bytes)?;
     let envelope = CborValue::Map(vec![
-        (CborValue::text("t"), CborValue::text(content_type.to_string())),
+        (
+            CborValue::text("t"),
+            CborValue::text(content_type.to_string()),
+        ),
         (CborValue::text("d"), payload),
     ]);
     Ok(encode(&envelope))
@@ -419,12 +627,26 @@ impl VaultRecord for Login {
 
     fn encode_payload(&self) -> CborValue {
         let mut entries = vec![
-            (CborValue::text("title"), CborValue::text(self.title.clone())),
-            (CborValue::text("username"), CborValue::text(self.username.clone())),
-            (CborValue::text("password"), CborValue::text(self.password.clone())),
+            (
+                CborValue::text("title"),
+                CborValue::text(self.title.clone()),
+            ),
+            (
+                CborValue::text("username"),
+                CborValue::text(self.username.clone()),
+            ),
+            (
+                CborValue::text("password"),
+                CborValue::text(self.password.clone()),
+            ),
             (
                 CborValue::text("urls"),
-                CborValue::Array(self.urls.iter().map(|u| CborValue::text(u.clone())).collect()),
+                CborValue::Array(
+                    self.urls
+                        .iter()
+                        .map(|u| CborValue::text(u.clone()))
+                        .collect(),
+                ),
             ),
         ];
         if let Some(n) = &self.notes {
@@ -479,7 +701,10 @@ impl VaultRecord for SecureNote {
 
     fn encode_payload(&self) -> CborValue {
         CborValue::Map(vec![
-            (CborValue::text("title"), CborValue::text(self.title.clone())),
+            (
+                CborValue::text("title"),
+                CborValue::text(self.title.clone()),
+            ),
             (CborValue::text("body"), CborValue::text(self.body.clone())),
         ])
     }
@@ -538,11 +763,26 @@ impl VaultRecord for Card {
 
     fn encode_payload(&self) -> CborValue {
         let mut entries = vec![
-            (CborValue::text("title"), CborValue::text(self.title.clone())),
-            (CborValue::text("holder"), CborValue::text(self.holder.clone())),
-            (CborValue::text("number"), CborValue::text(self.number.clone())),
-            (CborValue::text("month"), CborValue::Unsigned(self.expiry_month as u64)),
-            (CborValue::text("year"), CborValue::Unsigned(self.expiry_year as u64)),
+            (
+                CborValue::text("title"),
+                CborValue::text(self.title.clone()),
+            ),
+            (
+                CborValue::text("holder"),
+                CborValue::text(self.holder.clone()),
+            ),
+            (
+                CborValue::text("number"),
+                CborValue::text(self.number.clone()),
+            ),
+            (
+                CborValue::text("month"),
+                CborValue::Unsigned(self.expiry_month as u64),
+            ),
+            (
+                CborValue::text("year"),
+                CborValue::Unsigned(self.expiry_year as u64),
+            ),
             (CborValue::text("cvv"), CborValue::text(self.cvv.clone())),
         ];
         if let Some(z) = &self.billing_zip {
@@ -556,15 +796,18 @@ impl VaultRecord for Card {
         let month = get_unsigned(entries, "month")?;
         let year = get_unsigned(entries, "year")?;
         if !(1..=12).contains(&month) {
-            return Err(VaultRecordError::SchemaMismatch { what: "Card.month not in 1..=12" });
+            return Err(VaultRecordError::SchemaMismatch {
+                what: "Card.month not in 1..=12",
+            });
         }
         Ok(Card {
             title: get_text(entries, "title")?,
             holder: get_text(entries, "holder")?,
             number: get_text(entries, "number")?,
             expiry_month: month as u8,
-            expiry_year: u16::try_from(year)
-                .map_err(|_| VaultRecordError::SchemaMismatch { what: "Card.year out of u16" })?,
+            expiry_year: u16::try_from(year).map_err(|_| VaultRecordError::SchemaMismatch {
+                what: "Card.year out of u16",
+            })?,
             cvv: get_text(entries, "cvv")?,
             billing_zip: get_optional_text(entries, "zip")?,
         })
@@ -615,11 +858,26 @@ impl VaultRecord for TotpSeed {
 
     fn encode_payload(&self) -> CborValue {
         let mut entries = vec![
-            (CborValue::text("label"), CborValue::text(self.label.clone())),
-            (CborValue::text("secret"), CborValue::Bytes(self.secret.clone())),
-            (CborValue::text("alg"), CborValue::text(self.algorithm.clone())),
-            (CborValue::text("digits"), CborValue::Unsigned(self.digits as u64)),
-            (CborValue::text("period"), CborValue::Unsigned(self.period as u64)),
+            (
+                CborValue::text("label"),
+                CborValue::text(self.label.clone()),
+            ),
+            (
+                CborValue::text("secret"),
+                CborValue::Bytes(self.secret.clone()),
+            ),
+            (
+                CborValue::text("alg"),
+                CborValue::text(self.algorithm.clone()),
+            ),
+            (
+                CborValue::text("digits"),
+                CborValue::Unsigned(self.digits as u64),
+            ),
+            (
+                CborValue::text("period"),
+                CborValue::Unsigned(self.period as u64),
+            ),
         ];
         if let Some(i) = &self.issuer {
             entries.push((CborValue::text("issuer"), CborValue::text(i.clone())));
@@ -632,7 +890,9 @@ impl VaultRecord for TotpSeed {
         let digits = get_unsigned(entries, "digits")?;
         let period = get_unsigned(entries, "period")?;
         if !(4..=10).contains(&digits) {
-            return Err(VaultRecordError::SchemaMismatch { what: "TotpSeed.digits not in 4..=10" });
+            return Err(VaultRecordError::SchemaMismatch {
+                what: "TotpSeed.digits not in 4..=10",
+            });
         }
         Ok(TotpSeed {
             label: get_text(entries, "label")?,
@@ -640,8 +900,8 @@ impl VaultRecord for TotpSeed {
             secret: get_bytes(entries, "secret")?,
             algorithm: get_text(entries, "alg")?,
             digits: digits as u8,
-            period: u32::try_from(period).map_err(|_| {
-                VaultRecordError::SchemaMismatch { what: "TotpSeed.period out of u32" }
+            period: u32::try_from(period).map_err(|_| VaultRecordError::SchemaMismatch {
+                what: "TotpSeed.period out of u32",
             })?,
         })
     }
@@ -687,12 +947,26 @@ impl VaultRecord for ApiKey {
 
     fn encode_payload(&self) -> CborValue {
         let mut entries = vec![
-            (CborValue::text("label"), CborValue::text(self.label.clone())),
-            (CborValue::text("service"), CborValue::text(self.service.clone())),
-            (CborValue::text("token"), CborValue::text(self.token.clone())),
+            (
+                CborValue::text("label"),
+                CborValue::text(self.label.clone()),
+            ),
+            (
+                CborValue::text("service"),
+                CborValue::text(self.service.clone()),
+            ),
+            (
+                CborValue::text("token"),
+                CborValue::text(self.token.clone()),
+            ),
             (
                 CborValue::text("scopes"),
-                CborValue::Array(self.scopes.iter().map(|s| CborValue::text(s.clone())).collect()),
+                CborValue::Array(
+                    self.scopes
+                        .iter()
+                        .map(|s| CborValue::text(s.clone()))
+                        .collect(),
+                ),
             ),
         ];
         if let Some(e) = self.expires_at {
@@ -785,12 +1059,27 @@ impl VaultRecord for DatabaseCredential {
 
     fn encode_payload(&self) -> CborValue {
         let mut entries = vec![
-            (CborValue::text("label"), CborValue::text(self.label.clone())),
-            (CborValue::text("engine"), CborValue::text(self.engine.clone())),
+            (
+                CborValue::text("label"),
+                CborValue::text(self.label.clone()),
+            ),
+            (
+                CborValue::text("engine"),
+                CborValue::text(self.engine.clone()),
+            ),
             (CborValue::text("host"), CborValue::text(self.host.clone())),
-            (CborValue::text("port"), CborValue::Unsigned(self.port as u64)),
-            (CborValue::text("username"), CborValue::text(self.username.clone())),
-            (CborValue::text("password"), CborValue::text(self.password.clone())),
+            (
+                CborValue::text("port"),
+                CborValue::Unsigned(self.port as u64),
+            ),
+            (
+                CborValue::text("username"),
+                CborValue::text(self.username.clone()),
+            ),
+            (
+                CborValue::text("password"),
+                CborValue::text(self.password.clone()),
+            ),
         ];
         if let Some(d) = &self.database {
             entries.push((CborValue::text("db"), CborValue::text(d.clone())));
@@ -811,8 +1100,8 @@ impl VaultRecord for DatabaseCredential {
             label: get_text(entries, "label")?,
             engine: get_text(entries, "engine")?,
             host: get_text(entries, "host")?,
-            port: u16::try_from(port).map_err(|_| {
-                VaultRecordError::SchemaMismatch { what: "DatabaseCredential.port out of u16" }
+            port: u16::try_from(port).map_err(|_| VaultRecordError::SchemaMismatch {
+                what: "DatabaseCredential.port out of u16",
             })?,
             database: get_optional_text(entries, "db")?,
             username: get_text(entries, "username")?,
@@ -845,7 +1134,9 @@ type Entries = [(CborValue, CborValue)];
 fn expect_map(v: &CborValue) -> Result<&Entries, VaultRecordError> {
     match v {
         CborValue::Map(e) => Ok(e),
-        _ => Err(VaultRecordError::SchemaMismatch { what: "payload not a CBOR map" }),
+        _ => Err(VaultRecordError::SchemaMismatch {
+            what: "payload not a CBOR map",
+        }),
     }
 }
 
@@ -863,40 +1154,64 @@ fn find_entry<'a>(entries: &'a Entries, key: &str) -> Option<&'a CborValue> {
 fn get_text(entries: &Entries, key: &'static str) -> Result<String, VaultRecordError> {
     match find_entry(entries, key) {
         Some(CborValue::Text(s)) => Ok(s.clone()),
-        Some(_) => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
-        None => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
+        Some(_) => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
+        None => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
     }
 }
 
-fn get_optional_text(entries: &Entries, key: &'static str) -> Result<Option<String>, VaultRecordError> {
+fn get_optional_text(
+    entries: &Entries,
+    key: &'static str,
+) -> Result<Option<String>, VaultRecordError> {
     match find_entry(entries, key) {
         Some(CborValue::Text(s)) => Ok(Some(s.clone())),
-        Some(_) => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
+        Some(_) => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
         None => Ok(None),
     }
 }
 
-fn get_array<'a>(entries: &'a Entries, key: &'static str) -> Result<&'a [CborValue], VaultRecordError> {
+fn get_array<'a>(
+    entries: &'a Entries,
+    key: &'static str,
+) -> Result<&'a [CborValue], VaultRecordError> {
     match find_entry(entries, key) {
         Some(CborValue::Array(a)) => Ok(a.as_slice()),
-        Some(_) => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
-        None => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
+        Some(_) => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
+        None => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
     }
 }
 
 fn get_unsigned(entries: &Entries, key: &'static str) -> Result<u64, VaultRecordError> {
     match find_entry(entries, key) {
         Some(CborValue::Unsigned(n)) => Ok(*n),
-        Some(_) => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
-        None => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
+        Some(_) => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
+        None => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
     }
 }
 
 fn get_bytes(entries: &Entries, key: &'static str) -> Result<Vec<u8>, VaultRecordError> {
     match find_entry(entries, key) {
         Some(CborValue::Bytes(b)) => Ok(b.clone()),
-        Some(_) => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
-        None => Err(VaultRecordError::SchemaMismatch { what: missing_or_wrong(key) }),
+        Some(_) => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
+        None => Err(VaultRecordError::SchemaMismatch {
+            what: missing_or_wrong(key),
+        }),
     }
 }
 
@@ -960,7 +1275,10 @@ mod tests {
             title: "GitHub".into(),
             username: "ada".into(),
             password: "p455w0rd".into(),
-            urls: vec!["https://github.com".into(), "https://github.com/login".into()],
+            urls: vec![
+                "https://github.com".into(),
+                "https://github.com/login".into(),
+            ],
             notes: Some("personal account".into()),
         }
     }
@@ -1093,6 +1411,70 @@ mod tests {
         }
     }
 
+    #[test]
+    fn any_record_summary_counts_login_shape_without_values() {
+        let r = sample_login();
+        let bytes = encode_record(&r);
+        let any = decode_record(&bytes).unwrap();
+        let summary = any.summary();
+
+        assert_eq!(any.kind(), VaultRecordKind::Login);
+        assert_eq!(VaultRecordKind::Login.content_type(), Some(LOGIN_V1));
+        assert_eq!(
+            summary,
+            VaultRecordSummary {
+                kind: VaultRecordKind::Login,
+                secret_field_count: 1,
+                optional_field_count: 1,
+                list_item_count: 2,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            }
+        );
+        assert!(summary.is_first_party());
+        assert!(summary.is_password_manager_record());
+        assert!(!summary.is_machine_secret_record());
+        assert!(summary.carries_sensitive_fields());
+
+        let debug = format!("{summary:?}");
+        assert!(!debug.contains("p455w0rd"));
+        assert!(!debug.contains("GitHub"));
+        assert!(!debug.contains("personal account"));
+    }
+
+    #[test]
+    fn any_record_summary_marks_machine_secret_lease_and_expiry() {
+        let r = sample_db();
+        let bytes = encode_record(&r);
+        let any = decode_record(&bytes).unwrap();
+        let summary = any.summary();
+
+        assert_eq!(
+            summary,
+            VaultRecordSummary {
+                kind: VaultRecordKind::DatabaseCredential,
+                secret_field_count: 1,
+                optional_field_count: 3,
+                list_item_count: 0,
+                has_expiry: true,
+                has_lease: true,
+                opaque_content_type_len: 0,
+                opaque_payload_bytes: 0,
+            }
+        );
+        assert!(summary.is_first_party());
+        assert!(!summary.is_password_manager_record());
+        assert!(summary.is_machine_secret_record());
+        assert!(summary.carries_sensitive_fields());
+
+        let debug = format!("{summary:?}");
+        assert!(!debug.contains("ephemeral_ro_password"));
+        assert!(!debug.contains("lease/abc-123"));
+        assert!(!debug.contains("db.internal"));
+    }
+
     // --- Canonical idempotence ---
 
     #[test]
@@ -1143,16 +1525,20 @@ mod tests {
             ),
             (
                 CborValue::text("d"),
-                CborValue::Map(vec![
-                    (CborValue::text("hash"), CborValue::Bytes(vec![1, 2, 3, 4])),
-                ]),
+                CborValue::Map(vec![(
+                    CborValue::text("hash"),
+                    CborValue::Bytes(vec![1, 2, 3, 4]),
+                )]),
             ),
         ]);
         let bytes = encode(&envelope);
 
         let any = decode_record(&bytes).unwrap();
         match any {
-            AnyRecord::Opaque { content_type, payload_bytes } => {
+            AnyRecord::Opaque {
+                content_type,
+                payload_bytes,
+            } => {
                 assert_eq!(content_type, "vault/biometric-prf-blob/v1");
                 // payload_bytes is the canonical CBOR of {"hash":h'01020304'}.
                 let payload = decode(&payload_bytes).unwrap();
@@ -1164,6 +1550,50 @@ mod tests {
             }
             other => panic!("expected Opaque, got {:?}", other),
         }
+    }
+
+    #[test]
+    fn opaque_summary_preserves_only_lengths() {
+        let envelope = CborValue::Map(vec![
+            (
+                CborValue::text("t"),
+                CborValue::text("vault/custom-secret/v9".to_string()),
+            ),
+            (
+                CborValue::text("d"),
+                CborValue::Map(vec![(
+                    CborValue::text("token"),
+                    CborValue::Bytes(vec![9, 8, 7]),
+                )]),
+            ),
+        ]);
+        let any = decode_record(&encode(&envelope)).unwrap();
+        let summary = any.summary();
+
+        let payload_bytes = match any {
+            AnyRecord::Opaque { payload_bytes, .. } => payload_bytes,
+            _ => unreachable!(),
+        };
+        assert_eq!(
+            summary,
+            VaultRecordSummary {
+                kind: VaultRecordKind::Opaque,
+                secret_field_count: 0,
+                optional_field_count: 0,
+                list_item_count: 0,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: "vault/custom-secret/v9".len(),
+                opaque_payload_bytes: payload_bytes.len(),
+            }
+        );
+        assert!(!summary.is_first_party());
+        assert!(summary.is_opaque());
+        assert_eq!(VaultRecordKind::Opaque.content_type(), None);
+
+        let debug = format!("{summary:?}");
+        assert!(!debug.contains("vault/custom-secret/v9"));
+        assert!(!debug.contains("token"));
     }
 
     #[test]
@@ -1184,7 +1614,10 @@ mod tests {
         let bytes = encode(&envelope);
         let any = decode_record(&bytes).unwrap();
         let (ct, payload) = match any {
-            AnyRecord::Opaque { content_type, payload_bytes } => (content_type, payload_bytes),
+            AnyRecord::Opaque {
+                content_type,
+                payload_bytes,
+            } => (content_type, payload_bytes),
             _ => unreachable!(),
         };
         let bytes2 = encode_opaque(&ct, &payload).unwrap();
@@ -1202,7 +1635,10 @@ mod tests {
                 CborValue::text("d"),
                 CborValue::Map(vec![
                     (CborValue::text("title"), CborValue::text("x".to_string())),
-                    (CborValue::text("username"), CborValue::text("y".to_string())),
+                    (
+                        CborValue::text("username"),
+                        CborValue::text("y".to_string()),
+                    ),
                     (CborValue::text("urls"), CborValue::Array(vec![])),
                 ]),
             ),
@@ -1279,8 +1715,14 @@ mod tests {
                 CborValue::text("d"),
                 CborValue::Map(vec![
                     (CborValue::text("title"), CborValue::text("x".to_string())),
-                    (CborValue::text("username"), CborValue::text("y".to_string())),
-                    (CborValue::text("password"), CborValue::text("z".to_string())),
+                    (
+                        CborValue::text("username"),
+                        CborValue::text("y".to_string()),
+                    ),
+                    (
+                        CborValue::text("password"),
+                        CborValue::text("z".to_string()),
+                    ),
                     (CborValue::text("urls"), CborValue::Array(vec![])),
                     (
                         CborValue::text("future_field"),
