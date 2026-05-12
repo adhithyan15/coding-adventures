@@ -231,6 +231,7 @@ module CodingAdventures
         raise TransportError, "unsupported Board VM Bluetooth endpoint #{@endpoint.inspect}" unless @backend
 
         @stream_path = @backend["stream_path"]
+        @native_transport = !!@backend["native_transport"]
         @io = nil
       end
 
@@ -238,12 +239,22 @@ module CodingAdventures
         @backend["status"]
       end
 
+      def native_transport?
+        @native_transport
+      end
+
       def transact(frame, timeout_ms: @timeout_ms)
+        return BoardVM.bluetooth_transact(@endpoint, frame) if native_transport?
+
         write(frame)
         read_frame(timeout_ms: timeout_ms)
       end
 
       def write(frame)
+        if native_transport?
+          raise TransportError, "native Board VM Bluetooth transport requires #transact"
+        end
+
         io.write(frame.b)
         io.flush
       rescue SystemCallError, IOError => e

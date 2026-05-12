@@ -287,6 +287,39 @@ module CodingAdventures
         assert_equal "bluetooth_classic_rfcomm", transport.backend.fetch("endpoint").fetch("endpoint_transport")
       end
 
+      def test_bluetooth_transport_delegates_native_transact_to_rust
+        endpoint = "ble://uno-r4-wifi/180f/2a19/2a1a"
+        calls = []
+        original = BoardVM.method(:bluetooth_transact)
+        verbose = $VERBOSE
+        $VERBOSE = nil
+        BoardVM.define_singleton_method(:bluetooth_transact) do |actual_endpoint, frame|
+          calls << [actual_endpoint, frame]
+          "response".b
+        end
+
+        transport = BluetoothTransport.new(
+          endpoint: endpoint,
+          timeout_ms: 500,
+          backend: {
+            "endpoint" => BoardVM.bluetooth_endpoint(endpoint),
+            "backend" => "macos_core_bluetooth",
+            "status" => "ready",
+            "stream_path" => nil,
+            "native_transport" => true,
+            "message" => nil
+          }
+        )
+
+        assert transport.native_transport?
+        assert_equal "response".b, transport.transact("request".b)
+        assert_equal [[endpoint, "request".b]], calls
+        assert_raises(TransportError) { transport.write("request".b) }
+      ensure
+        BoardVM.define_singleton_method(:bluetooth_transact, original) if original
+        $VERBOSE = verbose
+      end
+
       def test_connect_builds_a_bluetooth_transport_from_rust_backend_plan
         connection = BoardVM.esp32(
           via: "bluetooth_classic",

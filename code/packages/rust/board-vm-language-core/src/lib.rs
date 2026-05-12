@@ -19,11 +19,16 @@ use std::str;
 use board_vm_bluetooth::{
     board_vm_endpoint_candidates as board_vm_bluetooth_endpoint_candidates,
     discover_bluetooth_devices as discover_board_vm_bluetooth_devices, macos_rfcomm_device_path,
-    parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint, BluetoothDiscoveredDevice,
-    BluetoothEndpoint, BluetoothEndpointCandidate,
+    open_bluetooth_endpoint, parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint,
+    BluetoothBackend, BluetoothDiscoveredDevice, BluetoothEndpoint, BluetoothEndpointCandidate,
+    BluetoothOpenError,
 };
 #[cfg(target_os = "macos")]
-use board_vm_bluetooth::{MacosDevRfcommDeviceResolver, MacosRfcommDeviceResolver};
+use board_vm_bluetooth::{
+    MacosBluetoothBackend, MacosCoreBluetoothRuntimeBleConnector, MacosDevRfcommDeviceResolver,
+    MacosRfcommDeviceResolver,
+};
+use board_vm_client::{RawFrameTransport, TransportError};
 use board_vm_esp_rom::{
     DEFAULT_BAUD_RATE as ESP_DEFAULT_BAUD_RATE,
     DEFAULT_FLASH_BLOCK_SIZE as ESP_DEFAULT_FLASH_BLOCK_SIZE,
@@ -76,6 +81,9 @@ pub enum BoardVmLanguageStatusCode {
     ProtocolError = 5,
     HostError = 6,
     Panic = 7,
+    BluetoothEndpointError = 8,
+    BluetoothOpenError = 9,
+    TransportError = 10,
 }
 
 #[repr(C)]
@@ -353,6 +361,7 @@ pub struct LanguageBluetoothBackendOpenPlan {
     pub backend: String,
     pub status: String,
     pub stream_path: Option<String>,
+    pub native_transport: bool,
     pub message: Option<String>,
 }
 
@@ -708,6 +717,7 @@ pub fn bluetooth_backend_open_plan(endpoint: &str) -> Option<LanguageBluetoothBa
                             backend: "macos_rfcomm".to_owned(),
                             status: "unavailable".to_owned(),
                             stream_path: None,
+                            native_transport: false,
                             message: Some(format!(
                                 "macOS RFCOMM device discovery failed: {error:?}"
                             )),
@@ -741,6 +751,54 @@ where
     }
 }
 
+pub fn bluetooth_transact_wire_frame(
+    endpoint: &str,
+    wire_frame: &[u8],
+    response_out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    let endpoint = parse_board_vm_bluetooth_endpoint(endpoint)
+        .map_err(|_| LanguageCoreError::BluetoothEndpoint)?;
+    #[cfg(target_os = "macos")]
+    {
+        let mut backend = MacosBluetoothBackend::with_resolver_and_ble_connector(
+            MacosDevRfcommDeviceResolver,
+            MacosCoreBluetoothRuntimeBleConnector::new(),
+        );
+        bluetooth_transact_wire_frame_with_backend::<_, 4096>(
+            &mut backend,
+            endpoint,
+            wire_frame,
+            response_out,
+        )
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = (endpoint, wire_frame, response_out);
+        Err(LanguageCoreError::BluetoothOpen)
+    }
+}
+
+pub fn bluetooth_transact_wire_frame_with_backend<B, const WIRE_BYTES: usize>(
+    backend: &mut B,
+    endpoint: BluetoothEndpoint,
+    wire_frame: &[u8],
+    response_out: &mut [u8],
+) -> Result<usize, LanguageCoreError>
+where
+    B: BluetoothBackend,
+{
+    let mut transport = open_bluetooth_endpoint::<_, WIRE_BYTES>(backend, endpoint)?;
+    let mut raw_request = vec![0u8; wire_frame.len().max(64)];
+    let raw_request_len = decode_wire_frame(wire_frame, &mut raw_request)?;
+    let mut raw_response = vec![0u8; response_out.len().max(64)];
+    let raw_response_len =
+        transport.exchange_raw_frame(&raw_request[..raw_request_len], &mut raw_response)?;
+    Ok(encode_wire_frame(
+        &raw_response[..raw_response_len],
+        response_out,
+    )?)
+}
+
 fn language_bluetooth_rfcomm_open_plan_from_paths<I, S>(
     endpoint: board_vm_bluetooth::RfcommEndpoint,
     paths: I,
@@ -760,6 +818,7 @@ where
             backend: "macos_rfcomm".to_owned(),
             status: "ready".to_owned(),
             stream_path: Some(stream_path),
+            native_transport: false,
             message: None,
         },
         None => LanguageBluetoothBackendOpenPlan {
@@ -767,6 +826,7 @@ where
             backend: "macos_rfcomm".to_owned(),
             status: "not_found".to_owned(),
             stream_path: None,
+            native_transport: false,
             message: Some(format!(
                 "no macOS RFCOMM serial device found for {device} channel {channel}"
             )),
@@ -780,18 +840,29 @@ fn language_bluetooth_ble_open_plan(
     let endpoint = language_bluetooth_endpoint(BluetoothEndpoint::BleGatt(endpoint))
         .expect("parsed BLE endpoint should map to language metadata");
     #[cfg(target_os = "macos")]
-    let backend = "macos_core_bluetooth";
+    {
+        LanguageBluetoothBackendOpenPlan {
+            endpoint,
+            backend: "macos_core_bluetooth".to_owned(),
+            status: "ready".to_owned(),
+            stream_path: None,
+            native_transport: true,
+            message: None,
+        }
+    }
     #[cfg(not(target_os = "macos"))]
-    let backend = "unsupported";
-    LanguageBluetoothBackendOpenPlan {
-        endpoint,
-        backend: backend.to_owned(),
-        status: "unavailable".to_owned(),
-        stream_path: None,
-        message: Some(
-            "BLE GATT CoreBluetooth runtime adapter is available in Rust but not exposed through language sessions yet"
-                .to_owned(),
-        ),
+    {
+        LanguageBluetoothBackendOpenPlan {
+            endpoint,
+            backend: "unsupported".to_owned(),
+            status: "unsupported".to_owned(),
+            stream_path: None,
+            native_transport: false,
+            message: Some(format!(
+                "Board VM Bluetooth BLE GATT opening is unsupported on {}",
+                std::env::consts::OS
+            )),
+        }
     }
 }
 
@@ -804,6 +875,7 @@ fn unsupported_bluetooth_backend_open_plan(
         backend: "unsupported".to_owned(),
         status: "unsupported".to_owned(),
         stream_path: None,
+        native_transport: false,
         message: Some(format!(
             "Board VM Bluetooth backend opening is unsupported on {}",
             std::env::consts::OS
@@ -1314,6 +1386,9 @@ pub enum LanguageCoreError {
     OutputTooSmall,
     Protocol(ProtocolError),
     Host(HostError),
+    BluetoothEndpoint,
+    BluetoothOpen,
+    Transport,
 }
 
 impl From<ProtocolError> for LanguageCoreError {
@@ -1330,6 +1405,21 @@ impl From<HostError> for LanguageCoreError {
         match value {
             HostError::OutputTooSmall => Self::OutputTooSmall,
             other => Self::Host(other),
+        }
+    }
+}
+
+impl From<BluetoothOpenError> for LanguageCoreError {
+    fn from(_value: BluetoothOpenError) -> Self {
+        Self::BluetoothOpen
+    }
+}
+
+impl From<TransportError> for LanguageCoreError {
+    fn from(value: TransportError) -> Self {
+        match value {
+            TransportError::ResponseTooLarge => Self::OutputTooSmall,
+            TransportError::Io => Self::Transport,
         }
     }
 }
@@ -2229,6 +2319,27 @@ pub unsafe extern "C" fn board_vm_language_decode_wire_frame(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_bluetooth_transact_wire_frame(
+    endpoint_ptr: *const u8,
+    endpoint_len: u64,
+    wire_frame: *const u8,
+    wire_frame_len: u64,
+    response_out: *mut u8,
+    response_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let endpoint = unsafe { utf8_from_ptr(endpoint_ptr, endpoint_len, "endpoint") }?;
+        let wire_frame = unsafe { in_slice(wire_frame, wire_frame_len, "wire_frame") }?;
+        let response_out = unsafe { out_slice(response_out, response_cap, "response_out") }?;
+        let len = bluetooth_transact_wire_frame(endpoint, wire_frame, response_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_default_program_id() -> u16 {
     DEFAULT_PROGRAM_ID
 }
@@ -2370,6 +2481,9 @@ fn status_code_for_error(error: &LanguageCoreError) -> BoardVmLanguageStatusCode
         LanguageCoreError::OutputTooSmall => BoardVmLanguageStatusCode::OutputTooSmall,
         LanguageCoreError::Protocol(_) => BoardVmLanguageStatusCode::ProtocolError,
         LanguageCoreError::Host(_) => BoardVmLanguageStatusCode::HostError,
+        LanguageCoreError::BluetoothEndpoint => BoardVmLanguageStatusCode::BluetoothEndpointError,
+        LanguageCoreError::BluetoothOpen => BoardVmLanguageStatusCode::BluetoothOpenError,
+        LanguageCoreError::Transport => BoardVmLanguageStatusCode::TransportError,
     }
 }
 
@@ -2489,6 +2603,7 @@ unsafe fn utf8_from_ptr<'a>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use board_vm_bluetooth::{BleGattEndpoint, BleGattIo, BluetoothOpenError, RfcommEndpoint};
     use board_vm_protocol::{
         decode_program_begin, decode_program_chunk, decode_program_end, decode_run_request,
         encode_caps_report, encode_frame, encode_hello_ack, encode_value, encode_wire_frame,
@@ -2496,6 +2611,7 @@ mod tests {
         RunStatus, Value, FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1,
         RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_KEEP_HANDLES_AFTER_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
+    use std::io::{Read, Write};
 
     #[test]
     fn hello_wire_frame_matches_protocol_golden_vector() {
@@ -2702,6 +2818,7 @@ mod tests {
         );
         assert_eq!(plan.endpoint.endpoint, "btspp://ESP32-BoardVM:3");
         assert_eq!(plan.stream_path.as_deref(), Some("/dev/cu.ESP32-BoardVM"));
+        assert!(!plan.native_transport);
         assert_eq!(plan.message, None);
 
         let missing = bluetooth_backend_open_plan_from_rfcomm_paths(
@@ -2712,6 +2829,7 @@ mod tests {
         assert_eq!(missing.backend, "macos_rfcomm");
         assert_eq!(missing.status, "not_found");
         assert_eq!(missing.stream_path, None);
+        assert!(!missing.native_transport);
         assert!(missing
             .message
             .as_deref()
@@ -2723,13 +2841,123 @@ mod tests {
             ["/dev/cu.ESP32-BoardVM"],
         )
         .unwrap();
-        assert_eq!(ble.status, "unavailable");
         assert_eq!(
             ble.endpoint.endpoint_transport,
             LanguageHostEndpointTransport::BluetoothLeGatt
         );
         assert!(ble.stream_path.is_none());
-        assert!(ble.message.as_deref().unwrap().contains("CoreBluetooth"));
+        #[cfg(target_os = "macos")]
+        {
+            assert_eq!(ble.backend, "macos_core_bluetooth");
+            assert_eq!(ble.status, "ready");
+            assert!(ble.native_transport);
+            assert!(ble.message.is_none());
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            assert_eq!(ble.status, "unsupported");
+            assert!(!ble.native_transport);
+            assert!(ble.message.as_deref().unwrap().contains("unsupported"));
+        }
+    }
+
+    #[test]
+    fn bluetooth_transact_wire_frame_is_owned_by_rust_language_core() {
+        struct FakeBleLink {
+            response: Vec<u8>,
+            writes: Vec<Vec<u8>>,
+        }
+
+        impl BleGattIo for FakeBleLink {
+            fn write_characteristic(
+                &mut self,
+                _characteristic_uuid: &str,
+                bytes: &[u8],
+            ) -> Result<(), board_vm_bluetooth::BluetoothTransportError> {
+                self.writes.push(bytes.to_vec());
+                Ok(())
+            }
+
+            fn read_notification(
+                &mut self,
+                _characteristic_uuid: &str,
+                out: &mut [u8],
+            ) -> Result<usize, board_vm_bluetooth::BluetoothTransportError> {
+                let len = self.response.len();
+                out[..len].copy_from_slice(&self.response);
+                Ok(len)
+            }
+        }
+
+        struct FakeRfcommStream;
+
+        impl Read for FakeRfcommStream {
+            fn read(&mut self, _buf: &mut [u8]) -> std::io::Result<usize> {
+                Ok(0)
+            }
+        }
+
+        impl Write for FakeRfcommStream {
+            fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+                Ok(buf.len())
+            }
+
+            fn flush(&mut self) -> std::io::Result<()> {
+                Ok(())
+            }
+        }
+
+        struct FakeBackend {
+            response: Vec<u8>,
+            opened_device: Option<String>,
+        }
+
+        impl BluetoothBackend for FakeBackend {
+            type BleGattLink = FakeBleLink;
+            type RfcommStream = FakeRfcommStream;
+
+            fn open_ble_gatt(
+                &mut self,
+                endpoint: &BleGattEndpoint,
+            ) -> Result<Self::BleGattLink, BluetoothOpenError> {
+                self.opened_device = Some(endpoint.device.clone());
+                Ok(FakeBleLink {
+                    response: self.response.clone(),
+                    writes: Vec::new(),
+                })
+            }
+
+            fn open_rfcomm(
+                &mut self,
+                _endpoint: &RfcommEndpoint,
+            ) -> Result<Self::RfcommStream, BluetoothOpenError> {
+                Err(BluetoothOpenError::UnsupportedPlatform { platform: "test" })
+            }
+        }
+
+        let endpoint =
+            parse_board_vm_bluetooth_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a").unwrap();
+        let mut wire_request = [0u8; 32];
+        let wire_request_len = encode_wire_frame(b"request", &mut wire_request).unwrap();
+        let mut wire_response = [0u8; 32];
+        let wire_response_len = encode_wire_frame(b"response", &mut wire_response).unwrap();
+
+        let mut backend = FakeBackend {
+            response: wire_response[..wire_response_len].to_vec(),
+            opened_device: None,
+        };
+        let mut out = [0u8; 32];
+
+        let len = bluetooth_transact_wire_frame_with_backend::<_, 32>(
+            &mut backend,
+            endpoint,
+            &wire_request[..wire_request_len],
+            &mut out,
+        )
+        .unwrap();
+
+        assert_eq!(&out[..len], &wire_response[..wire_response_len]);
+        assert_eq!(backend.opened_device.as_deref(), Some("uno-r4-wifi"));
     }
 
     #[test]
