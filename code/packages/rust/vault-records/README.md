@@ -58,6 +58,11 @@ App code can register additional types by implementing `VaultRecord`.
 crate doesn't recognise, so older clients don't crash on records
 produced by newer ones.
 
+`AnyRecord::summary()` exposes value-redacted inventory data for
+host/store planning: record family, secret-field counts, optional/list
+shape, lease/expiry flags, and opaque payload sizes without copying
+the underlying record values.
+
 ## Versioning
 
 Each content type carries a `vN` suffix. Schema evolution = new
