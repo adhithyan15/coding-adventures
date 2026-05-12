@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   ADD,
+  ASSUME,
   EQUAL,
   EXP,
+  FORGET,
   GREATER,
   GREATER_EQUAL,
+  IS,
   LESS,
   LESS_EQUAL,
   LIST,
@@ -16,6 +19,7 @@ import {
   SOLVE,
   SUB,
   SUBST,
+  TRUE,
   app,
   int,
   numberNode,
@@ -27,6 +31,7 @@ import {
   ALL_SYMBOL,
   APPEND,
   APPLY,
+  DECLARE,
   DISPLAY,
   EV,
   EXPAND,
@@ -42,6 +47,8 @@ import {
   MacsymaSession,
   MAP,
   PART,
+  PROP_VARS,
+  PROPERTIES,
   RAT_SIMPLIFY,
   RANGE,
   REST,
@@ -78,11 +85,20 @@ describe("macsyma-runtime", () => {
     expect(SUPPRESS).toEqual(sym("Suppress"));
     expect(KILL).toEqual(sym("Kill"));
     expect(EV).toEqual(sym("Ev"));
+    expect(DECLARE).toEqual(sym("Declare"));
+    expect(PROPERTIES).toEqual(sym("Properties"));
+    expect(PROP_VARS).toEqual(sym("PropVars"));
   });
 
   it("exports MACSYMA name-table routes and extends maps idempotently", () => {
     expect(MACSYMA_NAME_TABLE.get("kill")).toEqual(KILL);
     expect(MACSYMA_NAME_TABLE.get("ev")).toEqual(EV);
+    expect(MACSYMA_NAME_TABLE.get("assume")).toEqual(ASSUME);
+    expect(MACSYMA_NAME_TABLE.get("forget")).toEqual(FORGET);
+    expect(MACSYMA_NAME_TABLE.get("is")).toEqual(IS);
+    expect(MACSYMA_NAME_TABLE.get("declare")).toEqual(DECLARE);
+    expect(MACSYMA_NAME_TABLE.get("properties")).toEqual(PROPERTIES);
+    expect(MACSYMA_NAME_TABLE.get("propvars")).toEqual(PROP_VARS);
     expect(MACSYMA_NAME_TABLE.get("expand")).toEqual(EXPAND);
     expect(MACSYMA_NAME_TABLE.get("simplify")).toEqual(SIMPLIFY);
     expect(MACSYMA_NAME_TABLE.get("ratsimp")).toEqual(RAT_SIMPLIFY);
@@ -186,10 +202,16 @@ describe("macsyma-runtime", () => {
     expect(backend.lookup("not_history")).toBeUndefined();
   });
 
-  it("registers held Kill and Ev runtime handlers", () => {
+  it("registers held runtime handlers", () => {
     const backend = new MacsymaBackend(new History());
     expect(backend.handlers().has(KILL.name)).toBe(true);
     expect(backend.handlers().has(EV.name)).toBe(true);
+    expect(backend.handlers().has(ASSUME.name)).toBe(true);
+    expect(backend.handlers().has(FORGET.name)).toBe(true);
+    expect(backend.handlers().has(IS.name)).toBe(true);
+    expect(backend.handlers().has(DECLARE.name)).toBe(true);
+    expect(backend.handlers().has(PROPERTIES.name)).toBe(true);
+    expect(backend.handlers().has(PROP_VARS.name)).toBe(true);
     expect(backend.handlers().has(SOLVE.name)).toBe(true);
     expect(backend.handlers().has(SUBST.name)).toBe(true);
     expect(backend.handlers().has(SIMPLIFY.name)).toBe(true);
@@ -200,6 +222,12 @@ describe("macsyma-runtime", () => {
     expect(backend.handlers().has(LENGTH.name)).toBe(true);
     expect(backend.holdHeads().has(KILL.name)).toBe(true);
     expect(backend.holdHeads().has(EV.name)).toBe(true);
+    expect(backend.holdHeads().has(ASSUME.name)).toBe(true);
+    expect(backend.holdHeads().has(FORGET.name)).toBe(true);
+    expect(backend.holdHeads().has(IS.name)).toBe(true);
+    expect(backend.holdHeads().has(DECLARE.name)).toBe(true);
+    expect(backend.holdHeads().has(PROPERTIES.name)).toBe(true);
+    expect(backend.holdHeads().has(PROP_VARS.name)).toBe(true);
     expect(backend.holdHeads().has(SOLVE.name)).toBe(true);
     expect(backend.holdHeads().has(SUBST.name)).toBe(true);
   });
@@ -234,6 +262,48 @@ describe("macsyma-runtime", () => {
     session.evalSource("x : 5; 1; kill(all);");
     expect(session.history().nextInputIndex()).toBe(1);
     expect(session.evalSource("x;")[0].output).toEqual(sym("x"));
+  });
+
+  it("assume, is, and forget share session assumptions", () => {
+    const session = new MacsymaSession();
+    const [assumeResult, trueResult, forgetResult, unknownResult] = session.evalSource(
+      "assume(x > 0); is(x > 0); forget(); is(x > 0);",
+    );
+
+    expect(assumeResult.output).toEqual(sym("done"));
+    expect(trueResult.output).toEqual(TRUE);
+    expect(forgetResult.output).toEqual(sym("done"));
+    expect(unknownResult.output).toEqual(sym("unknown"));
+  });
+
+  it("declare feeds properties into is queries", () => {
+    const session = new MacsymaSession();
+    const [declareResult, query] = session.evalSource("declare(x, positive); is(x > 0);");
+
+    expect(declareResult.input).toEqual(app(DECLARE, [sym("x"), sym("positive")]));
+    expect(declareResult.output).toEqual(sym("done"));
+    expect(query.output).toEqual(TRUE);
+  });
+
+  it("properties lists declared properties deterministically", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("declare(n, integer, n, positive); properties(n);");
+
+    expect(result.output).toEqual(app(LIST, [sym("integer"), sym("positive")]));
+  });
+
+  it("propvars lists symbols with declared properties deterministically", () => {
+    const session = new MacsymaSession();
+    const [, , result] = session.evalSource("declare(z, integer); declare(a, positive); propvars();");
+
+    expect(result.output).toEqual(app(LIST, [sym("a"), sym("z")]));
+  });
+
+  it("properties queries raw symbols even when they are bound", () => {
+    const session = new MacsymaSession();
+    const [, , result] = session.evalSource("x : 10; declare(x, integer); properties(x);");
+
+    expect(result.output).toEqual(app(LIST, [sym("integer")]));
   });
 
   it("Ev numer and float coerce evaluated exact results to floats", () => {
