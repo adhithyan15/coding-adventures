@@ -18,6 +18,13 @@
 //!
 //! # Optional JSON dump of the full audit trail:
 //! ADJ_DEMO_AUDIT=1 cargo run -p adjudication-tsa-demo
+//!
+//! # Inject the fixture TSA rulebook into Arm A:
+//! ADJ_DEMO_RULEBOOK_MODE=fixture cargo run -p adjudication-tsa-demo
+//!
+//! # Inject a rulebook from a file (e.g., one elicited via
+//! # adjudication_rulebook::acquire_rulebook and persisted):
+//! ADJ_DEMO_RULEBOOK_MODE=path/to/rulebook.txt cargo run -p adjudication-tsa-demo
 //! ```
 //!
 //! The binary is intentionally environment-variable driven rather
@@ -27,7 +34,8 @@
 use std::time::Duration;
 
 use adjudication_tsa_demo::{
-    format_side_by_side, run_pipeline_arm, run_raw_arm, DemoConfig, IrMode, IrSourceTelemetry,
+    fixture_tsa_rulebook, format_side_by_side, run_pipeline_arm, run_raw_arm, DemoConfig, IrMode,
+    IrSourceTelemetry,
 };
 
 fn main() {
@@ -144,6 +152,32 @@ fn config_from_env() -> DemoConfig {
                 );
                 IrMode::HandBuilt
             }
+        };
+    }
+    // Rulebook-injection mode for Arm A. Three values:
+    //   - `none` (default) — Arm A receives no rulebook; the model
+    //     relies on its training data, exposing the hallucination
+    //     baseline captured in ADJ12.
+    //   - `fixture` — inject the canonical hardcoded TSA rulebook
+    //     (`fixture_tsa_rulebook()`). Deterministic, fast.
+    //   - `<path>` — read the rulebook text from that file. Useful
+    //     for testing with rulebooks produced by
+    //     `adjudication-rulebook::acquire_rulebook` and saved to
+    //     disk.
+    if let Ok(mode) = std::env::var("ADJ_DEMO_RULEBOOK_MODE") {
+        cfg.rulebook_text = match mode.as_str() {
+            "" | "none" => None,
+            "fixture" => Some(fixture_tsa_rulebook()),
+            path => match std::fs::read_to_string(path) {
+                Ok(text) => Some(text),
+                Err(e) => {
+                    eprintln!(
+                        "warning: ADJ_DEMO_RULEBOOK_MODE={path:?} did not \
+                         read as a file ({e}); running without rulebook."
+                    );
+                    None
+                }
+            },
         };
     }
     cfg
