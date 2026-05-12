@@ -14,6 +14,8 @@ bridges:
   exponential backoff using the same metadata across runtimes.
 - `JobResponseSummary` captures terminal status, retryability, trace, and attempt
   facts for runtime read models.
+- Terminal status and response-summary helpers provide shared read-side
+  success, failure, retry, cancel, and timeout classification.
 - JSON-line codec helpers provide a phase-one process/stdio wire format.
 
 It intentionally does not implement a thread pool, process pool, TCP runtime, or

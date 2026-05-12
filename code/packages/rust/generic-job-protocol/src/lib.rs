@@ -407,6 +407,24 @@ pub enum JobTerminalStatus {
     TimedOut,
 }
 
+impl JobTerminalStatus {
+    pub fn is_success(self) -> bool {
+        matches!(self, Self::Ok)
+    }
+
+    pub fn is_failure(self) -> bool {
+        !self.is_success()
+    }
+
+    pub fn is_cancelled(self) -> bool {
+        matches!(self, Self::Cancelled)
+    }
+
+    pub fn is_timed_out(self) -> bool {
+        matches!(self, Self::TimedOut)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct JobResponseSummary {
@@ -417,6 +435,28 @@ pub struct JobResponseSummary {
     pub retryable_error: bool,
     pub error_code: Option<String>,
     pub message: Option<String>,
+}
+
+impl JobResponseSummary {
+    pub fn is_success(&self) -> bool {
+        self.status.is_success()
+    }
+
+    pub fn is_failure(&self) -> bool {
+        self.status.is_failure()
+    }
+
+    pub fn is_retryable_failure(&self) -> bool {
+        self.is_failure() && self.retryable_error
+    }
+
+    pub fn was_cancelled(&self) -> bool {
+        self.status.is_cancelled()
+    }
+
+    pub fn timed_out(&self) -> bool {
+        self.status.is_timed_out()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -796,6 +836,11 @@ mod tests {
 
         assert_eq!(response.terminal_status(), JobTerminalStatus::Error);
         assert!(response.is_failure());
+        assert!(summary.is_failure());
+        assert!(summary.is_retryable_failure());
+        assert!(!summary.is_success());
+        assert!(!summary.was_cancelled());
+        assert!(!summary.timed_out());
         assert_eq!(
             summary,
             JobResponseSummary {
@@ -830,10 +875,56 @@ mod tests {
 
         assert_eq!(ok.terminal_status(), JobTerminalStatus::Ok);
         assert!(ok.is_success());
+        assert!(ok.terminal_status().is_success());
+        assert!(!ok.terminal_status().is_failure());
         assert_eq!(cancelled.terminal_status(), JobTerminalStatus::Cancelled);
         assert!(cancelled.is_failure());
+        assert!(cancelled.terminal_status().is_cancelled());
         assert_eq!(timed_out.terminal_status(), JobTerminalStatus::TimedOut);
         assert!(timed_out.is_failure());
+        assert!(timed_out.terminal_status().is_timed_out());
+    }
+
+    #[test]
+    fn response_summary_helpers_classify_terminal_states() {
+        let ok_summary = JobResponse::ok(
+            "job-1",
+            EchoPayload {
+                text: "done".to_string(),
+            },
+        )
+        .summary();
+        let cancelled_summary: JobResponse<EchoPayload> = JobResponse {
+            id: "job-2".to_string(),
+            result: JobResult::Cancelled {
+                cancellation: JobCancellation {
+                    message: "user stopped job".to_string(),
+                },
+            },
+            metadata: JobMetadata::default(),
+        };
+        let timed_out_summary: JobResponse<EchoPayload> = JobResponse {
+            id: "job-3".to_string(),
+            result: JobResult::TimedOut {
+                timeout: JobTimeout {
+                    message: "deadline exceeded".to_string(),
+                },
+            },
+            metadata: JobMetadata::default(),
+        };
+
+        assert!(ok_summary.is_success());
+        assert!(!ok_summary.is_failure());
+
+        let cancelled_summary = cancelled_summary.summary();
+        assert!(cancelled_summary.is_failure());
+        assert!(cancelled_summary.was_cancelled());
+        assert!(!cancelled_summary.is_retryable_failure());
+
+        let timed_out_summary = timed_out_summary.summary();
+        assert!(timed_out_summary.is_failure());
+        assert!(timed_out_summary.timed_out());
+        assert!(!timed_out_summary.was_cancelled());
     }
 
     #[test]
