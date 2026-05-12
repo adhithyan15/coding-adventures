@@ -34,10 +34,18 @@ fn main() {
     let cfg = config_from_env();
 
     println!(
-        "Running TSA demo against {endpoint} with model `{model}` (IR mode: {mode:?}).\n\
-         (set ADJ_DEMO_MODEL / ADJ_DEMO_ENDPOINT / ADJ_DEMO_SOURCE / ADJ_DEMO_IR_MODE to override.)\n",
+        "Running TSA demo against {endpoint}\n\
+         primary model: `{model}` (Extractor/Renderer/Nli/Plausibility)\n\
+         adversary:     {adv}\n\
+         IR mode:       {mode:?}\n\
+         (override via ADJ_DEMO_{{ENDPOINT,MODEL,ADVERSARY_MODEL,SOURCE,IR_MODE}})\n",
         endpoint = cfg.endpoint,
         model = cfg.model,
+        adv = cfg
+            .adversary_model
+            .as_deref()
+            .map(|s| format!("`{s}` (Adversary)"))
+            .unwrap_or_else(|| "(none; ADJ05 will Skip)".to_string()),
         mode = cfg.ir_mode,
     );
 
@@ -107,6 +115,9 @@ fn config_from_env() -> DemoConfig {
         if let Ok(n) = timeout_s.parse::<u64>() {
             cfg.timeout = Duration::from_secs(n);
         }
+    }
+    if let Ok(adv) = std::env::var("ADJ_DEMO_ADVERSARY_MODEL") {
+        cfg.adversary_model = if adv.is_empty() { None } else { Some(adv) };
     }
     if let Ok(mode) = std::env::var("ADJ_DEMO_IR_MODE") {
         cfg.ir_mode = match mode.to_ascii_lowercase().as_str() {

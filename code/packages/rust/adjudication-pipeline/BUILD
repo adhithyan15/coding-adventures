@@ -5,6 +5,7 @@ _targets = [
         name = "adjudication-pipeline",
         srcs = ["src/**/*.rs"],
         deps = [
+            "//code/packages/rust/adjudication-adversarial",
             "//code/packages/rust/adjudication-audit-trail",
             "//code/packages/rust/adjudication-connector",
             "//code/packages/rust/adjudication-coverage",
