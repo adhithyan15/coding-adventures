@@ -264,6 +264,23 @@ _HEAP_BUILTINS: dict[str, tuple[IrOp, int]] = {
 }
 
 
+# TW04 Phase 4f — host syscall numbers.  Same table as ``twig/compiler.py``
+# (interpreter path) and ``twig-jvm-compiler`` / ``twig-clr-compiler``
+# (compiler-IR path).  Must stay in sync with SYSCALL00 §2 and the JVM/CLR
+# ``__ca_syscall`` helper.
+#
+# When the BEAM compiler encounters a ``host/*`` call it emits
+# ``IrOp.SYSCALL IrImmediate(num) IrRegister(arg)`` instead of
+# ``IrOp.CALL IrLabel("host/write-byte")`` — the latter would lower to a
+# ``call_ext`` targeting a ``host`` BEAM module that does not exist.  The
+# ``ir-to-beam`` backend dispatches each syscall number to the appropriate
+# Erlang BIF / io function.
+_HOST_SYSCALLS: dict[str, int] = {
+    "host/write-byte": 1,   # io:put_chars([Byte])
+    "host/read-byte":  2,   # io:get_chars('', 1) → first char or 255 on eof
+    "host/exit":       10,  # erlang:halt(Code)
+}
+
 # Register convention — see module docstring.
 _REG_HALT_RESULT: Final = 1
 _REG_PARAM_BASE: Final = 2
@@ -559,6 +576,29 @@ class _Compiler:
         if isinstance(expr.fn, VarRef):
             name = expr.fn.name
 
+            # TW04 Phase 4f: host syscall dispatch.
+            # ``host/*`` exports are special: each is a platform syscall
+            # (write-byte / read-byte / exit) rather than a real BEAM
+            # module.  Emit ``IrOp.SYSCALL IrImmediate(num) IrRegister(arg)``
+            # so the BEAM backend can lower it to the right Erlang BIF or
+            # stdlib call (see ``ir-to-beam``'s ``_emit_syscall``).
+            # This must come BEFORE the generic cross-module path below so
+            # that ``host/write-byte`` etc. never reach ``call_ext``.
+            if name in _HOST_SYSCALLS:
+                syscall_num = _HOST_SYSCALLS[name]
+                # Evaluate the single argument (write-byte/exit take one arg;
+                # read-byte takes zero but we still pass a dummy reg).
+                arg_regs_host = [self._compile_expr(a, ctx) for a in expr.args]
+                if arg_regs_host:
+                    arg_src: IrRegister = arg_regs_host[0]
+                else:
+                    # read-byte with no arg: use register 0 as a dummy.
+                    arg_src = IrRegister(0)
+                self._emit(IrOp.SYSCALL, IrImmediate(syscall_num), arg_src)
+                dest = self._fresh_holding(ctx)
+                self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
+                return dest
+
             # TW04 Phase 4f: module-qualified cross-module call.
             # Any name with an interior ``/`` (not at position 0 or
             # the last character) is a cross-module reference, e.g.
@@ -568,11 +608,6 @@ class _Compiler:
             # ``IrOp.CALL IrLabel("a/math/add")``.  The BEAM backend
             # detects the ``/`` in the label name and lowers this to a
             # ``call_ext N a_math:add/N`` remote call.
-            #
-            # Note: ``host/*`` calls (``host/write-byte`` etc.) are not
-            # handled by the BEAM backend the same way as JVM/CLR — the
-            # BEAM frontend does not support host syscalls (they require
-            # a separate runtime not present in the BEAM version).
             _slash = name.find("/")
             if _slash > 0 and _slash < len(name) - 1:
                 # Cross-module call — emit args into param slots then CALL.

@@ -1,30 +1,23 @@
-"""TW04 Phase 4g — stdlib/io structural tests on BEAM.
+"""TW04 Phase 4g — stdlib/io tests on BEAM (structural + runtime).
 
 These tests verify that Twig programs importing ``stdlib/io`` from the
-bundled stdlib resolve and structurally compile for BEAM, and document
-the known limitation of the BEAM multi-module + host-call gap.
+bundled stdlib resolve, structurally compile, and execute correctly on the
+real ``erl`` runtime.
 
-Known limitation (Phase 4f gap)
+Phase 4f host-call gap — fixed
 ---------------------------------
-The BEAM multi-module compiler (Phase 4f) does not yet support
-``host/write-byte`` / ``host/read-byte`` / ``host/exit`` in multi-module
-builds.  In single-module mode (``run_source``), these map to inline
-BEAM instructions (e.g. ``io:fwrite``).  In multi-module mode, the
-cross-module IR treats every name with an interior ``/`` as a BEAM
-remote call, including ``host/write-byte``, which generates a
-``call_ext`` to a non-existent ``host`` module at runtime.
+The BEAM multi-module compiler previously emitted ``call_ext`` to a
+non-existent ``host`` module for every ``host/write-byte`` call, causing
+a runtime error.  The fix (shipped in ir-to-beam 0.6.0 and
+twig-beam-compiler 0.9.0):
 
-Resolving this requires either:
-* A BEAM shim module named ``host`` that re-exports the syscall operations
-* Per-backend detection of the synthetic ``host`` module and special-casing
-  it in the IR lowering stage
+* ``twig-beam-compiler`` emits ``IrOp.SYSCALL IrImmediate(1)`` (instead
+  of ``IrOp.CALL IrLabel("host/write-byte")``) for every ``host/*`` call.
+* ``ir-to-beam`` lowers ``IrOp.SYSCALL 1`` to
+  ``io:put_chars([Byte])`` directly in the generated BEAM code.
 
-Until that is addressed, end-to-end runtime tests for stdlib/io on BEAM
-multi-module are xfail (expected to fail) rather than skipped, so CI
-catches regressions if the fix lands.  Structural tests (resolution,
-compilation, IR inspection) run unconditionally and must always pass.
-
-Tests that require a live ``erl`` binary skip cleanly when it is not on PATH.
+Structural tests (resolution, compilation, IR inspection) run
+unconditionally.  Runtime tests skip cleanly when ``erl`` is not on PATH.
 """
 
 from __future__ import annotations
@@ -202,27 +195,19 @@ class TestStdlibIoCompileStructuralBeam:
 
 
 # ---------------------------------------------------------------------------
-# Runtime tests — xfail due to Phase 4f host-call gap
+# Runtime tests — TW04 Phase 4f host-call gap fixed
 # ---------------------------------------------------------------------------
 
 
 @requires_erl
-@pytest.mark.xfail(
-    reason=(
-        "BEAM multi-module + host/write-byte not yet supported: the Phase 4f "
-        "lowering emits call_ext to a 'host' BEAM module that does not exist. "
-        "The stdlib/io runtime tests will pass once the BEAM host-shim or "
-        "per-module host-call lowering is implemented."
-    ),
-    strict=False,  # allow unexpected passes if the fix lands
-)
 class TestStdlibIoRuntimeBeam:
     """End-to-end runtime tests for stdlib/io on BEAM.
 
-    These are xfail (expected to fail) because the Phase 4f BEAM
-    multi-module compiler does not yet support ``host/write-byte`` in
-    multi-module builds.  They are kept as xfail rather than skipped so
-    that CI catches the moment the fix lands.
+    The Phase 4f BEAM host-call gap is now fixed: ``host/write-byte`` is
+    emitted as ``IrOp.SYSCALL 1`` by the twig-beam-compiler and lowered to
+    ``io:put_chars([Byte])`` by the BEAM backend instead of a ``call_ext``
+    to a non-existent ``host`` module.  These tests are only skipped when
+    ``erl`` is not on PATH.
     """
 
     def _run(self, entry: str, search_dir: Path):

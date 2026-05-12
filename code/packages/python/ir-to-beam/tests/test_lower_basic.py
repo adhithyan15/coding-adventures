@@ -175,11 +175,14 @@ class TestErrors:
         program.add_instruction(
             IrInstruction(IrOp.LABEL, [_label("boom")], id=-1)
         )
-        # SYSCALL isn't supported in TW03 Phase 1.
+        # SYSCALL_CHECKED is not yet supported by the BEAM backend.
         program.add_instruction(
-            IrInstruction(IrOp.SYSCALL, [_imm(1), _reg(1)], id=gen.next())
+            IrInstruction(
+                IrOp.SYSCALL_CHECKED, [_imm(1), _reg(1), _reg(2), _reg(3)],
+                id=gen.next(),
+            )
         )
-        with pytest.raises(BEAMBackendError, match="unsupported IR op SYSCALL"):
+        with pytest.raises(BEAMBackendError, match="unsupported IR op SYSCALL_CHECKED"):
             lower_ir_to_beam(program, BEAMBackendConfig(module_name="boom"))
 
     def test_load_imm_negative_rejected(self) -> None:
@@ -717,4 +720,139 @@ class TestHeapOpLowering:
                 program, BEAMBackendConfig(
                     module_name="m", arity_overrides={"main": 0},
                 ),
+            )
+
+
+class TestSyscallLowering:
+    """Tests for ``IrOp.SYSCALL`` → BEAM instruction lowering.
+
+    TW04 Phase 4f: ``SYSCALL 1 arg`` (write-byte), ``SYSCALL 2 _``
+    (read-byte), and ``SYSCALL 10 arg`` (exit) must produce structurally
+    valid BEAM modules that can be encoded and decoded without error.
+    No ``erl`` binary is needed — we only verify the structural output.
+    """
+
+    def _make_syscall_program(self, syscall_num: int, arg_reg: int = 2) -> IrProgram:
+        """Build a minimal IrProgram with one SYSCALL instruction.
+
+        Layout::
+
+            LABEL   main
+            LOAD_IMM  r{arg_reg}, <some value>
+            SYSCALL   {syscall_num}, r{arg_reg}
+            MOVE      r1, r{arg_reg}   (dummy result copy so RET has something)
+            RET
+        """
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(arg_reg), _imm(65)], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.SYSCALL, [_imm(syscall_num), _reg(arg_reg)], id=gen.next(),
+            )
+        )
+        # Put a value in r1 (_REG_HALT_RESULT) so RET lowering has something to move.
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(0)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        return program
+
+    def _lower(self, syscall_num: int) -> object:
+        return lower_ir_to_beam(
+            self._make_syscall_program(syscall_num),
+            BEAMBackendConfig(module_name="syscall_test", arity_overrides={"main": 0}),
+        )
+
+    def test_syscall_1_lowers_without_error(self) -> None:
+        """SYSCALL 1 (write-byte) lowers to a valid BEAM module."""
+        module = self._lower(1)
+        assert module is not None
+
+    def test_syscall_1_encodes_without_error(self) -> None:
+        """SYSCALL 1 lowering produces bytes that encode cleanly."""
+        module = self._lower(1)
+        beam_bytes = encode_beam(module)
+        assert len(beam_bytes) > 0
+
+    def test_syscall_1_roundtrips_through_decoder(self) -> None:
+        """SYSCALL 1 lowering round-trips through the BEAM decoder."""
+        module = self._lower(1)
+        beam_bytes = encode_beam(module)
+        decoded = decode_beam_module(beam_bytes)
+        assert decoded is not None
+
+    def test_syscall_1_contains_put_list(self) -> None:
+        """SYSCALL 1 lowering emits a ``put_list`` (opcode 69) to wrap the byte."""
+        module = self._lower(1)
+        opcodes = [ins.opcode for ins in module.instructions]
+        assert 69 in opcodes, "expected put_list (69) in write-byte lowering"
+
+    def test_syscall_1_contains_test_heap(self) -> None:
+        """SYSCALL 1 lowering emits ``test_heap`` (16) before the cons cell build."""
+        module = self._lower(1)
+        opcodes = [ins.opcode for ins in module.instructions]
+        assert 16 in opcodes, "expected test_heap (16) before put_list in write-byte"
+
+    def test_syscall_2_lowers_without_error(self) -> None:
+        """SYSCALL 2 (read-byte) lowers to a valid BEAM module."""
+        module = self._lower(2)
+        assert module is not None
+
+    def test_syscall_2_encodes_without_error(self) -> None:
+        """SYSCALL 2 lowering produces bytes that encode cleanly."""
+        module = self._lower(2)
+        beam_bytes = encode_beam(module)
+        assert len(beam_bytes) > 0
+
+    def test_syscall_2_roundtrips_through_decoder(self) -> None:
+        """SYSCALL 2 lowering round-trips through the BEAM decoder."""
+        module = self._lower(2)
+        beam_bytes = encode_beam(module)
+        decoded = decode_beam_module(beam_bytes)
+        assert decoded is not None
+
+    def test_syscall_10_lowers_without_error(self) -> None:
+        """SYSCALL 10 (exit / erlang:halt) lowers to a valid BEAM module."""
+        module = self._lower(10)
+        assert module is not None
+
+    def test_syscall_10_encodes_without_error(self) -> None:
+        """SYSCALL 10 lowering produces bytes that encode cleanly."""
+        module = self._lower(10)
+        beam_bytes = encode_beam(module)
+        assert len(beam_bytes) > 0
+
+    def test_syscall_10_roundtrips_through_decoder(self) -> None:
+        """SYSCALL 10 lowering round-trips through the BEAM decoder."""
+        module = self._lower(10)
+        beam_bytes = encode_beam(module)
+        decoded = decode_beam_module(beam_bytes)
+        assert decoded is not None
+
+    def test_syscall_unknown_number_raises(self) -> None:
+        """An unknown syscall number raises ``BEAMBackendError``."""
+        program = self._make_syscall_program(99)
+        with pytest.raises(BEAMBackendError, match="SYSCALL 99 is not supported"):
+            lower_ir_to_beam(
+                program,
+                BEAMBackendConfig(module_name="m", arity_overrides={"main": 0}),
+            )
+
+    def test_syscall_wrong_operand_count_raises(self) -> None:
+        """A SYSCALL instruction with the wrong number of operands raises."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="main")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [_label("main")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.SYSCALL, [_imm(1)], id=gen.next())  # missing arg_reg
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+        with pytest.raises(BEAMBackendError, match="SYSCALL expects 2 operands"):
+            lower_ir_to_beam(
+                program,
+                BEAMBackendConfig(module_name="m", arity_overrides={"main": 0}),
             )

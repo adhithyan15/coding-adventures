@@ -1192,6 +1192,127 @@ def _emit_load_nil(builder: _Builder, instr: IrInstruction) -> None:
     builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, 0), _y(dst))
 
 
+def _emit_syscall(builder: _Builder, instr: IrInstruction) -> None:
+    """Lower ``SYSCALL num arg_reg`` — platform I/O syscall dispatch.
+
+    TW04 Phase 4f host-call bridge: instead of emitting ``call_ext``
+    to a non-existent ``host`` BEAM module, the twig-beam-compiler
+    now emits ``IrOp.SYSCALL`` for every ``host/*`` reference and
+    this handler maps each syscall number to the appropriate real
+    Erlang BIF / standard-library call.
+
+    Platform call table (SYSCALL00 / TW04)
+    ----------------------------------------
+    ``SYSCALL 1  arg_reg``  — write-byte
+        Emit ``io:put_chars([Byte])``.
+        Result: integer 0 stored into ``y{_REG_HALT_RESULT}``.
+
+        BEAM emission::
+
+            test_heap 2, 0                     ; reserve 1 cons cell
+            move {atom, 0}, x0                 ; x0 = [] (nil)
+            put_list y{arg}, x0, x0            ; x0 = [Byte]
+            call_ext 1, io:put_chars/1
+            move {integer, 0}, y{_REG_HALT_RESULT}
+
+    ``SYSCALL 2  arg_reg``  — read-byte
+        Emit ``io:get_chars('', 1)`` then extract the first character
+        as an integer; return 255 on EOF.
+        Result stored into ``y{_REG_HALT_RESULT}``.
+
+        BEAM emission::
+
+            move {atom, 0}, x0                 ; x0 = '' (nil = empty prompt)
+            move {integer, 1}, x1              ; x1 = 1 (count)
+            call_ext 2, io:get_chars/2         ; x0 = [Byte] or eof
+            is_atom LIST_LABEL, x0             ; if NOT atom → jump to LIST_LABEL
+            ; eof branch: fall through
+            move {integer, 255}, y{_REG_HALT_RESULT}
+            jump END_LABEL
+            LIST_LABEL:
+            get_hd x0, x0                      ; x0 = hd([Byte]) = Byte
+            move x0, y{_REG_HALT_RESULT}
+            END_LABEL:
+
+    ``SYSCALL 10 arg_reg``  — exit
+        Emit ``erlang:halt(Code)``.  ``halt/1`` is a BIF that never
+        returns; no result needs to be stored.
+
+        BEAM emission::
+
+            move y{arg}, x0
+            call_ext 1, erlang:halt/1
+    """
+    if len(instr.operands) != 2:
+        msg = (
+            f"SYSCALL expects 2 operands (num, arg_reg), got {len(instr.operands)}"
+        )
+        raise BEAMBackendError(msg)
+    num = _operand_immediate(instr.operands[0], role="SYSCALL num")
+    arg_reg = _operand_register(instr.operands[1], role="SYSCALL arg_reg")
+
+    if num == 1:
+        # ── SYSCALL 1: write-byte ─────────────────────────────────────────
+        # io:put_chars([Byte]) — wraps the integer byte in a one-element
+        # list so it satisfies the io_lib:deep_char_list() contract.
+        io_atom_idx = builder.atoms.add("io")
+        put_chars_atom_idx = builder.atoms.add("put_chars")
+        import_idx = builder.imports.add(io_atom_idx, put_chars_atom_idx, 1)
+
+        # Reserve heap space for the one cons cell [Byte].
+        builder.emit(_OP_TEST_HEAP, _u(2), _u(0))
+        # Build x0 = [Byte]: start from nil (atom 0) then prepend Byte.
+        builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, 0), _x(0))   # x0 = []
+        builder.emit(_OP_PUT_LIST, _y(arg_reg), _x(0), _x(0))       # x0 = [Byte]
+        builder.emit(_OP_CALL_EXT, _u(1), _u(import_idx - 1))
+        # io:put_chars returns the atom 'ok'; store integer 0 as the Twig result.
+        builder.emit(_OP_MOVE, _i(0), _y(_REG_HALT_RESULT))
+
+    elif num == 2:
+        # ── SYSCALL 2: read-byte ──────────────────────────────────────────
+        # io:get_chars('', 1) returns [CharCode] on success or eof atom.
+        io_atom_idx = builder.atoms.add("io")
+        get_chars_atom_idx = builder.atoms.add("get_chars")
+        import_idx = builder.imports.add(io_atom_idx, get_chars_atom_idx, 2)
+
+        list_label = builder.fresh_label()
+        end_label = builder.fresh_label()
+
+        # Pass '' (nil) as the prompt and 1 as the char count.
+        builder.emit(_OP_MOVE, BEAMOperand(BEAMTag.A, 0), _x(0))  # x0 = ''
+        builder.emit(_OP_MOVE, _i(1), _x(1))                       # x1 = 1
+        builder.emit(_OP_CALL_EXT, _u(2), _u(import_idx - 1))
+        # x0 is now either [Byte] (list) or eof (atom).
+        # is_atom fails if x0 is NOT an atom → jump to list_label for the
+        # success path; fall through into the eof branch.
+        builder.emit(_OP_IS_ATOM, _f(list_label), _x(0))
+        # eof branch: return 255.
+        builder.emit(_OP_MOVE, _i(255), _y(_REG_HALT_RESULT))
+        builder.emit(_OP_JUMP, _f(end_label))
+        # list branch: extract the single character code.
+        builder.emit(_OP_LABEL, _u(list_label))
+        builder.emit(_OP_GET_HD, _x(0), _x(0))                     # x0 = hd([Byte])
+        builder.emit(_OP_MOVE, _x(0), _y(_REG_HALT_RESULT))
+        builder.emit(_OP_LABEL, _u(end_label))
+
+    elif num == 10:
+        # ── SYSCALL 10: exit ──────────────────────────────────────────────
+        # erlang:halt/1 is a BIF that terminates the runtime immediately.
+        erlang_atom_idx = builder.atoms.add("erlang")
+        halt_atom_idx = builder.atoms.add("halt")
+        import_idx = builder.imports.add(erlang_atom_idx, halt_atom_idx, 1)
+
+        builder.emit(_OP_MOVE, _y(arg_reg), _x(0))
+        builder.emit(_OP_CALL_EXT, _u(1), _u(import_idx - 1))
+
+    else:
+        msg = (
+            f"SYSCALL {num} is not supported by the BEAM backend "
+            "(known syscalls: 1=write-byte, 2=read-byte, 10=exit)"
+        )
+        raise BEAMBackendError(msg)
+
+
 _HANDLERS: Final[set[IrOp]] = {
     IrOp.LOAD_IMM,
     IrOp.ADD,
@@ -1219,6 +1340,7 @@ _HANDLERS: Final[set[IrOp]] = {
     IrOp.MAKE_SYMBOL,
     IrOp.IS_SYMBOL,
     IrOp.LOAD_NIL,
+    IrOp.SYSCALL,         # TW04 Phase 4f host-call bridge (write-byte/read-byte/exit)
 }
 
 
@@ -1613,6 +1735,9 @@ def _emit_body_instruction(
         return
     if op is IrOp.LOAD_NIL:
         _emit_load_nil(builder, instr)
+        return
+    if op is IrOp.SYSCALL:
+        _emit_syscall(builder, instr)
         return
     msg = f"internal: missing handler dispatch for {op.name}"
     raise BEAMBackendError(msg)

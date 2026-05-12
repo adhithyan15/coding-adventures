@@ -1,5 +1,41 @@
 # Changelog — twig-beam-compiler
 
+## 0.9.0 — 2026-05-12 — TW04 Phase 4f host-call bridge (SYSCALL for host/* calls)
+
+Fixes the BEAM multi-module + `host/write-byte` gap that caused `xfail`
+runtime tests in `test_stdlib_beam.py`.
+
+### Fixed — `host/*` calls now emit `IrOp.SYSCALL` instead of `call_ext`
+
+Added `_HOST_SYSCALLS` mapping to `compiler.py` (mirrors `twig/compiler.py`):
+
+| Name | Syscall |
+|------|---------|
+| `host/write-byte` | 1 |
+| `host/read-byte`  | 2 |
+| `host/exit`       | 10 |
+
+In `_compile_expr`, `host/*` references are now intercepted **before** the
+generic cross-module path and lowered to `IrOp.SYSCALL IrImmediate(num)
+IrRegister(arg)`.  This replaces the previous `IrOp.CALL IrLabel("host/write-byte")`
+emission which caused `ir-to-beam` to emit `call_ext` to a non-existent
+`host` BEAM module.
+
+The result follows the Twig calling convention: syscall return value
+(integer 0 for write-byte, byte value or 255 for read-byte) lands in
+`_REG_HALT_RESULT` (register 1) and is immediately moved to the destination
+register via an existing `MOVE r1 dest` IR instruction.
+
+### Fixed — `TestStdlibIoRuntimeBeam` no longer xfail
+
+The three runtime tests (`test_println_42`, `test_println_sum_17_25`,
+`test_println_twice`) now pass on a real `erl` runtime.  The `@pytest.mark.xfail`
+decorator and its associated docstring were removed.
+
+Total tests: **116** (was 116, but 3 changed from xfail→pass). Coverage: **88%**.
+
+---
+
 ## 0.6.0 — 2026-05-04 — TW04 Phase 4g — stdlib/io structural tests on BEAM
 
 ### Added — stdlib/io structural and resolution tests (`tests/test_stdlib_beam.py`)
