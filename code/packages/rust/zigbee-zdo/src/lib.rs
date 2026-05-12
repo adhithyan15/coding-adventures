@@ -387,6 +387,27 @@ pub struct ZigbeeInterviewPlan {
     pub simple_descriptor_endpoints: Vec<Endpoint>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZigbeeInterviewPlanSummary {
+    pub network_address: NetworkAddress,
+    pub node_descriptor_complete: bool,
+    pub active_endpoints_known: bool,
+    pub active_endpoint_count: usize,
+    pub simple_descriptor_count: usize,
+    pub missing_simple_descriptor_count: usize,
+    pub next_step: ZigbeeInterviewStep,
+}
+
+impl ZigbeeInterviewPlanSummary {
+    pub fn has_pending_work(&self) -> bool {
+        self.next_step != ZigbeeInterviewStep::Complete
+    }
+
+    pub fn is_complete(&self) -> bool {
+        self.next_step == ZigbeeInterviewStep::Complete
+    }
+}
+
 impl ZigbeeInterviewPlan {
     pub fn new(network_address: NetworkAddress) -> Self {
         Self {
@@ -443,6 +464,18 @@ impl ZigbeeInterviewPlan {
 
     pub fn is_complete(&self) -> bool {
         self.next_step() == ZigbeeInterviewStep::Complete
+    }
+
+    pub fn summary(&self) -> ZigbeeInterviewPlanSummary {
+        ZigbeeInterviewPlanSummary {
+            network_address: self.network_address,
+            node_descriptor_complete: self.node_descriptor_complete,
+            active_endpoints_known: self.active_endpoints.is_some(),
+            active_endpoint_count: self.active_endpoints.as_ref().map_or(0, Vec::len),
+            simple_descriptor_count: self.simple_descriptor_endpoints.len(),
+            missing_simple_descriptor_count: self.missing_simple_descriptor_endpoints().len(),
+            next_step: self.next_step(),
+        }
     }
 
     pub fn next_request(
@@ -1067,6 +1100,45 @@ mod tests {
         assert_eq!(complete.next_step(), ZigbeeInterviewStep::Complete);
         assert!(complete.next_request(1, 2).is_none());
         assert!(complete.is_complete());
+    }
+
+    #[test]
+    fn interview_plan_summary_counts_pending_zdo_work() {
+        let node_descriptor = NodeDescriptor::parse(&node_descriptor_bytes()).unwrap();
+        let simple_descriptor = SimpleDescriptor::parse(&simple_descriptor_bytes()).unwrap();
+        let summary = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0x1234),
+            ieee_address: Some(IeeeAddress(0x0012_4b00_24c8_abcd)),
+            node_descriptor: Some(node_descriptor),
+            simple_descriptors: vec![simple_descriptor],
+        };
+        let plan = ZigbeeInterviewPlan::from_summary(
+            &summary,
+            Some(vec![Endpoint(1), Endpoint(11), Endpoint(12)]),
+        );
+
+        let plan_summary = plan.summary();
+
+        assert_eq!(
+            plan_summary,
+            ZigbeeInterviewPlanSummary {
+                network_address: NetworkAddress(0x1234),
+                node_descriptor_complete: true,
+                active_endpoints_known: true,
+                active_endpoint_count: 3,
+                simple_descriptor_count: 1,
+                missing_simple_descriptor_count: 2,
+                next_step: ZigbeeInterviewStep::RequestSimpleDescriptor {
+                    endpoint: Endpoint(11)
+                },
+            }
+        );
+        assert!(plan_summary.has_pending_work());
+        assert!(!plan_summary.is_complete());
+
+        let complete = ZigbeeInterviewPlan::from_summary(&summary, Some(vec![Endpoint(1)]));
+        assert!(complete.summary().is_complete());
+        assert!(!complete.summary().has_pending_work());
     }
 
     #[test]
