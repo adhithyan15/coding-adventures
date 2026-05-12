@@ -1,5 +1,5 @@
 import { ADD, DIV, IRNode, LOG, MUL, POW, SUB, app, headName } from "@coding-adventures/symbolic-ir";
-import { AssumptionContext } from "./assumptions";
+import { AssumptionContext } from "./assumptions.js";
 
 export function logcontract(expr: IRNode): IRNode {
   if (expr.kind !== "apply") return expr;

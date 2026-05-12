@@ -13,8 +13,10 @@ import {
   reverse,
   sortList,
 } from "@coding-adventures/cas-list-operations";
+import { simplify as simplifyCas } from "@coding-adventures/cas-simplify";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import { subst } from "@coding-adventures/cas-substitution";
+import { expandTrig, trigSimplify } from "@coding-adventures/cas-trig";
 import {
   ACOS,
   ACOSH,
@@ -61,9 +63,11 @@ export const KILL = sym("Kill");
 export const EV = sym("Ev");
 export const ALL_SYMBOL = sym("all");
 
+export const SIMPLIFY = sym("Simplify");
 export const EXPAND = sym("Expand");
 export const RAT_SIMPLIFY = sym("RatSimplify");
 export const TRIG_SIMPLIFY = sym("TrigSimplify");
+export const TRIG_EXPAND = sym("TrigExpand");
 export const FLOAT_FUNC = sym("Float");
 export const LENGTH = sym("Length");
 export const FIRST = sym("First");
@@ -103,7 +107,7 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["sum", SUM],
   ["product", sym("Product")],
   ["subst", SUBST],
-  ["simplify", sym("Simplify")],
+  ["simplify", SIMPLIFY],
   ["expand", EXPAND],
   ["factor", FACTOR],
   ["solve", SOLVE],
@@ -165,7 +169,7 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["demoivre", sym("DeMoivre")],
   ["cbrt", sym("Cbrt")],
   ["trigsimp", TRIG_SIMPLIFY],
-  ["trigexpand", sym("TrigExpand")],
+  ["trigexpand", TRIG_EXPAND],
   ["trigreduce", sym("TrigReduce")],
   ["collect", sym("Collect")],
   ["together", sym("Together")],
@@ -310,6 +314,10 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(EV.name, makeEvHandler());
     table.set(SOLVE.name, solveHandler);
     table.set(SUBST.name, substHandler);
+    table.set(SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
+    table.set(RAT_SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
+    table.set(TRIG_SIMPLIFY.name, unaryHandler((value) => simplifyCas(trigSimplify(value))));
+    table.set(TRIG_EXPAND.name, unaryHandler((value) => expandTrig(value)));
     table.set(LENGTH.name, listHandler(1, ([value]) => length(value)));
     table.set(FIRST.name, listHandler(1, ([value]) => first(value)));
     table.set(REST.name, listHandler(1, ([value]) => rest(value)));
@@ -571,6 +579,7 @@ function makeEvHandler(): Handler {
     if (flags.has("factor")) result = evalSupportedFlag(vm, result, FACTOR);
     if (flags.has("ratsimp")) result = evalSupportedFlag(vm, result, RAT_SIMPLIFY);
     if (flags.has("trigsimp")) result = evalSupportedFlag(vm, result, TRIG_SIMPLIFY);
+    if (flags.has("trigexpand")) result = evalSupportedFlag(vm, result, TRIG_EXPAND);
     if (flags.has("numer") || flags.has("float")) result = numerFold(result);
 
     return result;
@@ -607,6 +616,17 @@ function substHandler(_vm: VM, expr: IRApply): IRNode {
   if (expr.args.length !== 3) return expr;
   const [value, variable, target] = expr.args;
   return subst(value, variable, target);
+}
+
+function unaryHandler(body: (value: IRNode) => IRNode): Handler {
+  return (_vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    try {
+      return body(expr.args[0]);
+    } catch {
+      return expr;
+    }
+  };
 }
 
 function listHandler(

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Wire `Simplify`, `RatSimplify`, `TrigSimplify`, and `TrigExpand` runtime
+  heads to the TypeScript `cas-simplify` and `cas-trig` packages.
 - Wire `Subst(value, variable, expr)` to the TypeScript `cas-substitution`
   structural substitution package.
 - Wire deterministic MACSYMA list heads (`Length`, `First`, `Rest`, `Last`,
