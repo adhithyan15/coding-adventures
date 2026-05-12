@@ -32,6 +32,8 @@ targets.
   retryable-failed response batches.
 - Non-consuming executor snapshots for supervisor/read-side tools, including
   live workers, in-flight jobs, queued jobs, running jobs, and saturation.
+- Queue-pressure bands and percent-threshold checks for D18C supervisors that
+  need stable read-side backpressure signals.
 - Snapshot health classification for D18C supervisors to distinguish idle,
   busy, saturated, draining, and offline executors.
 - Snapshot supervision recommendations for backpressure, worker restart, and
