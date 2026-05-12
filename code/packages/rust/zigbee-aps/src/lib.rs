@@ -426,6 +426,7 @@ impl BindingTable {
 
     pub fn summary(&self) -> BindingTableSummary {
         let mut unique_sources = BTreeSet::new();
+        let mut unique_clusters = BTreeSet::new();
         let mut unique_groups = BTreeSet::new();
         let mut unique_device_destinations = BTreeSet::new();
         let mut summary = BindingTableSummary {
@@ -437,12 +438,17 @@ impl BindingTable {
             manufacturer_specific_cluster_bindings: 0,
             unknown_cluster_bindings: 0,
             unique_sources: 0,
+            unique_clusters: 0,
             unique_groups: 0,
             unique_device_destinations: 0,
+            zdo_source_bindings: 0,
+            application_source_bindings: 0,
+            non_application_source_bindings: 0,
         };
 
         for entry in self.entries.values() {
             unique_sources.insert(entry.source);
+            unique_clusters.insert(entry.cluster_id);
             match entry.destination {
                 BindingDestination::Group(group) => {
                     summary.group_bindings += 1;
@@ -467,9 +473,18 @@ impl BindingTable {
                 }
                 ClusterKind::Unknown => summary.unknown_cluster_bindings += 1,
             }
+
+            if entry.source.endpoint.is_zdo() {
+                summary.zdo_source_bindings += 1;
+            } else if entry.source.endpoint.is_application() {
+                summary.application_source_bindings += 1;
+            } else {
+                summary.non_application_source_bindings += 1;
+            }
         }
 
         summary.unique_sources = unique_sources.len();
+        summary.unique_clusters = unique_clusters.len();
         summary.unique_groups = unique_groups.len();
         summary.unique_device_destinations = unique_device_destinations.len();
         summary
@@ -493,7 +508,7 @@ impl From<&BindingEntry> for BindingKey {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct BindingTableSummary {
     pub total_bindings: usize,
     pub group_bindings: usize,
@@ -503,11 +518,23 @@ pub struct BindingTableSummary {
     pub manufacturer_specific_cluster_bindings: usize,
     pub unknown_cluster_bindings: usize,
     pub unique_sources: usize,
+    pub unique_clusters: usize,
     pub unique_groups: usize,
     pub unique_device_destinations: usize,
+    pub zdo_source_bindings: usize,
+    pub application_source_bindings: usize,
+    pub non_application_source_bindings: usize,
 }
 
 impl BindingTableSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_bindings == 0
+    }
+
     pub fn has_bindings(self) -> bool {
         self.total_bindings > 0
     }
@@ -522,6 +549,18 @@ impl BindingTableSummary {
 
     pub fn has_manufacturer_specific_clusters(self) -> bool {
         self.manufacturer_specific_cluster_bindings > 0
+    }
+
+    pub fn has_zdo_sources(self) -> bool {
+        self.zdo_source_bindings > 0
+    }
+
+    pub fn has_application_sources(self) -> bool {
+        self.application_source_bindings > 0
+    }
+
+    pub fn has_non_application_sources(self) -> bool {
+        self.non_application_source_bindings > 0
     }
 }
 
@@ -977,11 +1016,49 @@ mod tests {
         assert_eq!(summary.manufacturer_specific_cluster_bindings, 1);
         assert_eq!(summary.unknown_cluster_bindings, 0);
         assert_eq!(summary.unique_sources, 2);
+        assert_eq!(summary.unique_clusters, 3);
         assert_eq!(summary.unique_groups, 2);
         assert_eq!(summary.unique_device_destinations, 1);
+        assert_eq!(summary.zdo_source_bindings, 0);
+        assert_eq!(summary.application_source_bindings, 3);
+        assert_eq!(summary.non_application_source_bindings, 0);
+        assert!(!summary.is_empty());
         assert!(summary.has_bindings());
         assert!(summary.has_group_bindings());
         assert!(summary.has_device_bindings());
         assert!(summary.has_manufacturer_specific_clusters());
+        assert!(summary.has_application_sources());
+        assert!(!summary.has_zdo_sources());
+        assert!(!summary.has_non_application_sources());
+    }
+
+    #[test]
+    fn binding_table_summary_classifies_source_endpoint_shapes() {
+        let mut table = BindingTable::new();
+        let empty = table.summary();
+        assert_eq!(empty, BindingTableSummary::empty());
+        assert!(empty.is_empty());
+        table.upsert(BindingEntry::new(
+            BindingSource::new(IeeeAddress(0x0012_4b00_0000_0010), Endpoint::ZDO),
+            ClusterId::BASIC,
+            BindingDestination::group(GroupAddress(0x1000)),
+        ));
+        table.upsert(BindingEntry::new(
+            BindingSource::new(IeeeAddress(0x0012_4b00_0000_0011), Endpoint(241)),
+            ClusterId(0x1234),
+            BindingDestination::device(IeeeAddress(0x0012_4b00_0000_0012), Endpoint(3)),
+        ));
+
+        let summary = table.summary();
+
+        assert_eq!(summary.total_bindings, 2);
+        assert_eq!(summary.zdo_source_bindings, 1);
+        assert_eq!(summary.application_source_bindings, 0);
+        assert_eq!(summary.non_application_source_bindings, 1);
+        assert_eq!(summary.unique_sources, 2);
+        assert_eq!(summary.unique_clusters, 2);
+        assert!(summary.has_zdo_sources());
+        assert!(!summary.has_application_sources());
+        assert!(summary.has_non_application_sources());
     }
 }
