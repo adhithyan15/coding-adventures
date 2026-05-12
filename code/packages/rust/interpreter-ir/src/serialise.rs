@@ -176,6 +176,10 @@ fn serialise_instr(buf: &mut Vec<u8>, instr: &IIRInstr) {
                 write_u8(buf, 3);
                 write_u8(buf, *b as u8);
             }
+            Operand::Str(s) => {
+                write_u8(buf, 4);
+                write_str(buf, s);
+            }
         }
     }
 }
@@ -357,6 +361,7 @@ fn deserialise_instr(r: &mut Reader<'_>) -> Result<IIRInstr, DeserialiseError> {
             1 => Operand::Int(r.i64_le()?),
             2 => Operand::Float(r.f64_le()?),
             3 => Operand::Bool(r.u8()? != 0),
+            4 => Operand::Str(r.str_()?),
             k => {
                 return Err(DeserialiseError(format!(
                     "unknown operand kind byte: {k}"

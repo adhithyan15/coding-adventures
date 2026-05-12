@@ -248,6 +248,7 @@ fn operand_type<'a>(
         Operand::Int(_) => None,    // immediates carry no SSA type
         Operand::Float(_) => None,
         Operand::Bool(_) => None,
+        Operand::Str(_) => None,    // LANG32 compile-time string name — not a typed SSA value
     }
 }
 

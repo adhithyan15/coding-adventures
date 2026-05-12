@@ -1,5 +1,17 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.1.2] — 2026-05-11
+
+### Fixed (LANG32 — `Operand::Str` exhaustiveness)
+
+- `resolve_i64` and `resolve_value` in `vm.rs` now handle `Operand::Str`.
+  `resolve_i64` maps string literals to `0` (strings have no numeric
+  representation in Brainfuck byte-cell semantics). `resolve_value` maps them
+  to `Value::Str`, matching the `vm-core` Value type.  Brainfuck programs should
+  never produce `Operand::Str` in practice, but the arms are required because
+  the `Operand` enum is now non-exhaustive at the binary level after LANG32
+  added the `Str` variant.
+
 ## [0.1.1] — 2026-05-04
 
 ### Fixed (LANG23 PR 23-E compatibility)

@@ -3,6 +3,26 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O)
+
+#### Global variable support via BEAM process dictionary
+
+- `global_store "x", %v` → `erlang:put(x, %v)` via `gc_bif2`.
+  Each global name becomes a BEAM atom constant.
+- `global_load "x" → %r` → `erlang:get(x)` via `gc_bif1`, result
+  moved to `%r`.
+- Atom pre-registration: `erlang:put/2` and `erlang:get/1` BIF
+  imports are added to the atom and import tables during module init.
+
+#### I/O support
+
+- `io_out %v` → `erlang:display(%v)` via `gc_bif1`.
+  The `erlang:display/1` BIF prints any BEAM term to stdout.
+
+---
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

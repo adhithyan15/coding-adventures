@@ -82,7 +82,7 @@ const GC_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
 // as plain numeric or WasmGC instructions:
 //
 // - `call_builtin`  — host built-in bridge; not available without an import.
-// - `io_in/io_out`  — raw I/O; WASM does I/O only through host imports (WASI).
+// - `io_in`         — raw byte-level I/O input; WASM does I/O through host imports.
 // - `cast`          — type reinterpretation without a `reinterpret` path.
 // - `load_mem/store_mem` — raw linear-memory access; no linear memory section.
 // - `box/unbox`     — boxing ops on non-LispyPair types.
@@ -90,11 +90,18 @@ const GC_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
 //
 // Note: `alloc`, `field_load`, `field_store`, `is_null` are NOT here —
 // they are accepted for `ref<LispyPair>` and handled by the GC lowering.
+//
+// LANG32 — supported in WASM backend (Phase 3):
+// - `io_out`        — lowered to `call $__print_i64` (host import).
+// - `global_store`  — lowered to `global.set <idx>` (WASM global section).
+// - `global_load`   — lowered to `global.get <idx>` (WASM global section).
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
     "io_in",
-    "io_out",
+    // "io_out"       — LANG32: now supported (host import $__print_i64).
+    // "global_store" — LANG32: now supported (WASM global.set).
+    // "global_load"  — LANG32: now supported (WASM global.get).
     "cast",
     "load_mem",
     "store_mem",
@@ -383,10 +390,11 @@ mod tests {
     #[test]
     fn unsupported_ops_rejected() {
         // These ops are unconditionally rejected.
+        // Note: `io_out`, `global_store`, `global_load` are NOT in this list —
+        // they were promoted to supported in LANG32.
         for op in &[
             "call_builtin",
             "io_in",
-            "io_out",
             "cast",
             "load_mem",
             "store_mem",
@@ -407,6 +415,22 @@ mod tests {
                 errs
             );
         }
+    }
+
+    #[test]
+    fn io_out_passes_validation() {
+        // LANG32: io_out is now supported in the WASM backend.
+        let errs = validate_for_wasm(&module_with(vec![IIRInstr::new(
+            "io_out",
+            None,
+            vec![Operand::Var("v".into())],
+            "void",
+        )]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "io_out should be accepted by WASM validator (LANG32); got: {:?}",
+            errs
+        );
     }
 
     // GC ops that require a ref type hint are rejected when given i32.

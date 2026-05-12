@@ -62,6 +62,14 @@ use ir_to_cil_bytecode::backend::{CILMethodArtifact, CILProgramArtifact};
 use ir_to_cil_bytecode::builder::{CILBranchKind, CILBytecodeBuilder};
 use ir_to_cil_bytecode::OBJECT_ARRAY_TYPE_TOKEN;
 
+/// Sentinel token for `System.Console.WriteLine(int64)`.
+///
+/// In a real CLR PE file this is a MemberRef metadata token (table 0x0A,
+/// row 2).  For simulation, backends that parse the token emit the appropriate
+/// `call` instruction.  Row 2 is the second entry in the MemberRef table,
+/// which by convention we reserve for `Console.WriteLine(int64)`.
+const CONSOLE_WRITELINE_I64_TOKEN: u32 = 0x0A00_0002;
+
 use crate::validate::validate_iir_for_clr;
 
 // ===========================================================================
@@ -421,6 +429,11 @@ pub fn lower_iir_to_cil(
                             // A Var src in a const is unusual; treat it as a copy.
                             let src = reg_info!(v).clone();
                             emit_load(&mut builder, &src, fn_name)?;
+                        }
+                        // LANG32: Str is a compile-time string literal (global variable name).
+                        // The CLR backend doesn't yet support string-value constants; skip.
+                        Some(Operand::Str(_)) => {
+                            continue;
                         }
                         None => {
                             return Err(IIRClrError::InvalidOperand {
@@ -890,6 +903,14 @@ pub fn lower_iir_to_cil(
                                     type_hint: "float argument".into(),
                                 });
                             }
+                            // LANG32: Str is a compile-time string literal — not a passable
+                            // call argument in V1.
+                            Operand::Str(_) => {
+                                return Err(IIRClrError::UnsupportedType {
+                                    function: fn_name.clone(),
+                                    type_hint: "str argument — string args not yet supported".into(),
+                                });
+                            }
                         }
                     }
 
@@ -1124,6 +1145,53 @@ pub fn lower_iir_to_cil(
                     builder.emit_ldnull();                   // push null
                     builder.emit_ceq();                      // 1 if equal
                     emit_store(&mut builder, &dest, fn_name)?;
+                }
+
+                // ── global_load → UnsupportedOp (LANG32b) ───────────────────
+                //
+                // Full CLR static-field globals require emitting `ldsfld` with a
+                // proper FieldDef or FieldRef metadata token, which in turn
+                // requires extending `CILProgramArtifact` with a fields table.
+                // That work is scoped to LANG32b.  Return a descriptive error
+                // so the pipeline surfaces a clear message rather than a silent
+                // wrong-code failure.
+                "global_load" => {
+                    return Err(IIRClrError::UnsupportedOp {
+                        function: fn_name.clone(),
+                        op: "global_load: CLR static-field globals not yet implemented — LANG32b".to_string(),
+                    });
+                }
+
+                // ── global_store → UnsupportedOp (LANG32b) ──────────────────
+                "global_store" => {
+                    return Err(IIRClrError::UnsupportedOp {
+                        function: fn_name.clone(),
+                        op: "global_store: CLR static-field globals not yet implemented — LANG32b".to_string(),
+                    });
+                }
+
+                // ── io_out → Console.WriteLine(int64) ───────────────────────
+                //
+                // `io_out %val` prints an i64 value.  CIL steps:
+                //   1. Load the variable onto the stack (`ldloc`/`ldarg`).
+                //   2. `call void [mscorlib]System.Console::WriteLine(int64)`
+                //
+                // The `call` opcode takes a 4-byte metadata token.  We use the
+                // CONSOLE_WRITELINE_I64_TOKEN sentinel (MemberRef table row 2),
+                // which a CLR simulator or PE packager resolves at runtime.
+                "io_out" => {
+                    let val_src = match instr.srcs.first() {
+                        Some(Operand::Var(v)) => v.clone(),
+                        _ => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "io_out requires a Var operand".to_string(),
+                        }),
+                    };
+                    let val_info = reg_info!(val_src).clone();
+                    // Push the value onto the CIL evaluation stack.
+                    emit_load(&mut builder, &val_info, fn_name)?;
+                    // call void [mscorlib]System.Console::WriteLine(int64)
+                    builder.emit_call(CONSOLE_WRITELINE_I64_TOKEN);
                 }
 
                 // ── Unsupported ops ──────────────────────────────────────────

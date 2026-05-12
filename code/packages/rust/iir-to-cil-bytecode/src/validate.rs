@@ -58,7 +58,7 @@ use interpreter_ir::{IIRModule, Operand};
 // expressed as pure CIL integer arithmetic:
 //
 // - `call_builtin`  — host built-in; this lowering has no host bridge.
-// - `io_in/io_out`  — raw I/O; CIL does this via System.Console, not opcodes.
+// - `io_in`         — raw byte-level I/O input; CLR does this via System.Console.
 // - `cast`          — type reinterpretation; not needed for typed IIR.
 // - `load_mem/store_mem` — raw pointer access; CIL has unsafe but we don't
 //                    lower it here.
@@ -71,11 +71,18 @@ use interpreter_ir::{IIRModule, Operand};
 // - `field_load`    — accepted for all ref types (car/cdr on index 0/1).
 // - `field_store`   — accepted for all ref types (building cons cells).
 // - `is_null`       — accepted (ldnull; ceq).
+//
+// LANG32 — supported in CLR backend (Phase 3):
+// - `io_out`        — lowered to `call System.Console.WriteLine(int64)`.
+// - `global_store`  — UnsupportedOp in V1 (LANG32b will add static fields).
+// - `global_load`   — UnsupportedOp in V1 (LANG32b will add static fields).
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
     "io_in",
-    "io_out",
+    // "io_out"       — LANG32: now supported (Console.WriteLine).
+    // "global_store" — returns UnsupportedOp from lower.rs, not rejected by validator.
+    // "global_load"  — returns UnsupportedOp from lower.rs, not rejected by validator.
     "cast",
     "load_mem",
     "store_mem",

@@ -399,6 +399,7 @@ pub fn literal_type(op: Option<&Operand>) -> String {
         }.into(),
         Some(Operand::Float(_)) => "f64".into(),
         Some(Operand::Var(_)) => "str".into(),
+        Some(Operand::Str(_)) => "str".into(),
     }
 }
 

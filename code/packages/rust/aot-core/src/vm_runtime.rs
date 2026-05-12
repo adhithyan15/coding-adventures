@@ -154,6 +154,8 @@ fn operand_to_json(op: &Operand) -> Value {
         Operand::Int(n)    => json!(*n),
         Operand::Float(f)  => json!(*f),
         Operand::Bool(b)   => Value::Bool(*b),
+        // LANG32: Str is a compile-time string literal — serialize as a JSON string.
+        Operand::Str(s)    => Value::String(s.clone()),
     }
 }
 

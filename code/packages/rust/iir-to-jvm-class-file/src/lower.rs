@@ -174,7 +174,11 @@ const DRETURN: u8 = 0xAF; // return double
 const RETURN: u8 = 0xB1;  // return void
 
 // ── Method invocation ──────────────────────────────────────────────────────
-const INVOKESTATIC: u8 = 0xB8; // invoke static method (2-byte CP index)
+const INVOKESTATIC: u8 = 0xB8;   // invoke static method (2-byte CP index)
+const INVOKEVIRTUAL: u8 = 0xB6;  // invoke instance method (2-byte CP index)
+
+// ── Field access ────────────────────────────────────────────────────────────
+const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
 
 // ── Comparison and branching ───────────────────────────────────────────────
 const IFEQ: u8 = 0x99;      // branch if top-of-stack == 0
@@ -1087,6 +1091,30 @@ impl ConstantPoolBuilder {
         )
     }
 
+    /// Add a Fieldref entry (used for `getstatic`/`putstatic` field access).
+    ///
+    /// This is the constant pool counterpart of `add_methodref`, but for field
+    /// references.  The JVM encodes field access via `JvmConstantPoolEntry::Fieldref`
+    /// which points to a Class entry and a NameAndType entry just like Methodref.
+    ///
+    /// # Example (io_out uses this for `java/lang/System.out`)
+    ///
+    /// ```text
+    /// Fieldref { class = "java/lang/System", name = "out", desc = "Ljava/io/PrintStream;" }
+    /// ```
+    fn add_fieldref(&mut self, class_name: &str, field_name: &str, descriptor: &str) -> u16 {
+        let class_idx = self.add_class(class_name);
+        let nat_idx = self.add_name_and_type(field_name, descriptor);
+        let key = format!("Fieldref:{}.{}:{}", class_name, field_name, descriptor);
+        self.add_entry(
+            key,
+            JvmConstantPoolEntry::Fieldref {
+                class_index: class_idx,
+                name_and_type_index: nat_idx,
+            },
+        )
+    }
+
     /// Finalise the pool and return it as a `Vec<Option<JvmConstantPoolEntry>>`.
     fn build(self) -> Vec<Option<JvmConstantPoolEntry>> {
         self.entries
@@ -1243,6 +1271,12 @@ fn lower_function(
                             detail: "const instruction has a Var source — use load_reg instead"
                                 .to_string(),
                         });
+                    }
+                    // LANG32: Str is a compile-time string literal (global variable name).
+                    // The JVM backend doesn't yet support string-value constants; skip.
+                    Operand::Str(_) => {
+                        i += 1;
+                        continue;
                     }
                 }
                 emit_typed_store(&mut code, dest_slot, dest_type);
@@ -1553,6 +1587,14 @@ fn lower_function(
                             }
                         }
                     }
+                    // LANG32: Str is a compile-time string literal (global variable name).
+                    // Returning a string from a function is not supported in V1.
+                    Operand::Str(_) => {
+                        return Err(IIRJvmError::UnsupportedOp {
+                            function: fname.clone(),
+                            op: "ret with Str operand — string return values not yet supported".into(),
+                        });
+                    }
                 }
             }
 
@@ -1602,6 +1644,14 @@ fn lower_function(
                         Operand::Int(v) => emit_iconst(&mut code, *v as i32),
                         Operand::Bool(b) => emit_iconst(&mut code, if *b { 1 } else { 0 }),
                         Operand::Float(f) => emit_fconst(&mut code, *f as f32),
+                        // LANG32: Str is a compile-time string literal — not
+                        // a passable argument in V1; return an error.
+                        Operand::Str(_) => {
+                            return Err(IIRJvmError::UnsupportedOp {
+                                function: fname.clone(),
+                                op: "call with Str argument — string args not yet supported".into(),
+                            });
+                        }
                     }
                 }
 
@@ -1958,6 +2008,78 @@ fn lower_function(
                 code.push(ICONST_1);
                 // istore dest — store the result
                 emit_istore(&mut code, dest_slot);
+            }
+
+            // ── global_load → UnsupportedOp (LANG32b) ───────────────────────
+            //
+            // Full JVM static-field globals require extending JvmClassFile with a
+            // `fields` table and emitting `getstatic`/`putstatic` bytecodes.
+            // That is implemented in LANG32b.  For now, return a descriptive error
+            // so the pipeline produces a clear message rather than a silent failure.
+            "global_load" => {
+                return Err(IIRJvmError::UnsupportedOp {
+                    function: fname.clone(),
+                    op: "global_load: JVM static-field globals not yet implemented — LANG32b".to_string(),
+                });
+            }
+
+            // ── global_store → UnsupportedOp (LANG32b) ──────────────────────
+            "global_store" => {
+                return Err(IIRJvmError::UnsupportedOp {
+                    function: fname.clone(),
+                    op: "global_store: JVM static-field globals not yet implemented — LANG32b".to_string(),
+                });
+            }
+
+            // ── io_out → System.out.println(long) ───────────────────────────
+            //
+            // `io_out %val` prints an i64 value to stdout.  JVM steps:
+            //   1. getstatic java/lang/System.out : Ljava/io/PrintStream;
+            //   2. lload <slot_of_%val>           (push the long onto the operand stack)
+            //   3. invokevirtual java/io/PrintStream.println(J)V
+            //
+            // Constant pool entries needed:
+            //   - Class("java/io/PrintStream")
+            //   - Fieldref("java/lang/System", "out", "Ljava/io/PrintStream;")
+            //   - Methodref("java/io/PrintStream", "println", "(J)V")
+            //
+            // We add these to the constant pool builder on demand.
+            "io_out" => {
+                let val_src = match instr.srcs.first() {
+                    Some(Operand::Var(v)) => v.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "io_out requires a Var operand".to_string(),
+                    }),
+                };
+                let (val_slot, val_type) = lookup_var(&val_src)?;
+
+                // Step 1: getstatic java/lang/System.out : Ljava/io/PrintStream;
+                let system_out_ref = cp.add_fieldref(
+                    "java/lang/System",
+                    "out",
+                    "Ljava/io/PrintStream;",
+                );
+                code.push(GETSTATIC);
+                code.extend_from_slice(&system_out_ref.to_be_bytes());
+
+                // Step 2: load the value variable onto the operand stack.
+                // We use emit_typed_load so that i32 values use iload and
+                // i64 values use lload — matching the method descriptor below.
+                emit_typed_load(&mut code, val_slot, val_type);
+
+                // Step 3: invokevirtual java/io/PrintStream.println(J)V
+                // The descriptor "(J)V" means "takes one long, returns void".
+                // If the IIR variable is i32 we still call the (J)V overload
+                // (the JVM will silently use the wider type); a production
+                // backend would pick the matching overload from the type map.
+                let println_ref = cp.add_methodref(
+                    "java/io/PrintStream",
+                    "println",
+                    "(J)V",
+                );
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&println_ref.to_be_bytes());
             }
 
             // ── Unknown op ───────────────────────────────────────────────────

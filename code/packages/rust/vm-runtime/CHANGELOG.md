@@ -1,5 +1,15 @@
 # Changelog — vm-runtime
 
+## [0.1.1] — 2026-05-11
+
+### Fixed (LANG32 — `Operand::Str` exhaustiveness)
+
+- `encode_function_json` in `iir_table.rs` now handles `Operand::Str`:
+  emits `{"str":"..."}` using Rust's `{:?}` format, which produces a
+  double-quoted, escape-safe JSON string.  This keeps the JSON-line body
+  section of the IIRT blob well-formed when functions carry string-literal
+  operands.
+
 ## [0.1.0] — 2026-05-04
 
 ### Added

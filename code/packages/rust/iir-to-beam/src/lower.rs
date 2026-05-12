@@ -280,10 +280,17 @@ impl AtomTable {
             return idx;
         }
         // BEAM atom table limit.
+        //
+        // OTP enforces a hard limit of 1,048,576 atoms per node.  We check this
+        // in both debug AND release builds (not debug_assert) so that untrusted
+        // IIR modules with many distinct global names cannot exhaust the table
+        // silently and cause a denial-of-service via memory exhaustion.
         const BEAM_MAX_ATOMS: usize = 1_048_576;
-        debug_assert!(
+        assert!(
             self.atoms.len() < BEAM_MAX_ATOMS,
-            "atom table overflow: BEAM supports at most 1,048,576 atoms"
+            "atom table overflow: BEAM supports at most 1,048,576 atoms \
+             (current count {}); module has too many distinct global names or symbols",
+            self.atoms.len()
         );
         self.atoms.push(atom.to_string());
         // 1-based index: first atom → 1, second → 2, …
@@ -436,6 +443,24 @@ pub fn lower_iir_to_beam(
     let import_not  = imports.intern(erlang_atom, atom_bnot,  1); // erlang:bnot/1
     let import_shl  = imports.intern(erlang_atom, atom_bsl,   2); // erlang:bsl/2
     let import_shr  = imports.intern(erlang_atom, atom_bsr,   2); // erlang:bsr/2
+
+    // ── Global variable + I/O atoms and imports (LANG32) ──────────────────
+    //
+    // We use the BEAM process dictionary for module-level globals:
+    //   erlang:put(Key, Value)  — global_store (write)
+    //   erlang:get(Key)         — global_load (read)
+    //
+    // For I/O we use erlang:display/1 which prints any Erlang term followed
+    // by a newline to standard output.  It is a built-in function (BIF)
+    // available on every BEAM node without imports.
+    let atom_display = atoms.intern("display");
+    let atom_put     = atoms.intern("put");
+    let atom_get     = atoms.intern("get");
+
+    // Pre-register these imports so their indices are stable.
+    let import_display = imports.intern(erlang_atom, atom_display, 1); // erlang:display/1
+    let import_put     = imports.intern(erlang_atom, atom_put,     2); // erlang:put/2
+    let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
 
     // ── Step 4: first pass over all functions ─────────────────────────────
     //
@@ -1527,6 +1552,120 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(
                         OP_LABEL, vec![BEAMOperand::u(done_label as u64)],
                     ));
+                }
+
+                // ── global_store → erlang:put(atom_key, val) ─────────────────────────
+                //
+                // Module-level globals are stored in the BEAM process dictionary, which
+                // is a per-process key-value store (`erlang:put/2`, `erlang:get/1`).
+                // Each global name is interned as a BEAM atom so lookups are O(1).
+                //
+                // IIR:  global_store Str("name"), Var("%v")
+                // BEAM: move {a,atom("name")} {x,tmp}
+                //       gc_bif2 {f,0} {u,live} {a,import_put} {x,tmp} {x,rv} {x,dummy_dst}
+                //
+                // `tmp` and `dummy_dst` both use `meta.next_reg` (the first register
+                // beyond all SSA-variable assignments in this function).  `dummy_dst`
+                // is `next_reg + 1` — a second scratch slot we never read.
+                "global_store" => {
+                    // srcs[0] = Str("name"), srcs[1] = Var(val_reg)
+                    let global_name = match instr.srcs.first() {
+                        Some(Operand::Str(s)) => s.clone(),
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "global_store: srcs[0] must be Operand::Str(name)".into(),
+                        }),
+                    };
+                    let rv = operand_reg!(get_src!(instr, 1));
+                    let name_atom = atoms.intern(&global_name);
+                    let tmp = meta.next_reg;
+                    // `dummy_dst` must be a distinct register from `tmp`.
+                    // `saturating_add` would silently alias when next_reg == 255,
+                    // making erlang:put/2's return value overwrite the atom key.
+                    // Use checked_add and return a clear error instead.
+                    let dummy_dst = meta.next_reg.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "global_store: function uses too many registers (255); \
+                                 no scratch register available for global_store".to_string(),
+                        }
+                    })?;
+
+                    // move {a, atom("name")} {x, tmp}
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(name_atom),
+                        BEAMOperand::x(tmp),
+                    ]));
+                    // gc_bif2 {f,0} {u,live} {a,import_put} {x,tmp} {x,rv} {x,dummy_dst}
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(meta.next_reg as u64),
+                        BEAMOperand::a(import_put),
+                        BEAMOperand::x(tmp),
+                        BEAMOperand::x(rv),
+                        BEAMOperand::x(dummy_dst),
+                    ]));
+                }
+
+                // ── global_load → erlang:get(atom_key) → dest ───────────────────────
+                //
+                // IIR:  %dest = global_load Str("name")
+                // BEAM: move {a,atom("name")} {x,tmp}
+                //       gc_bif1 {f,0} {u,live} {a,import_get} {x,tmp} {x,rd}
+                "global_load" => {
+                    // srcs[0] = Str("name")
+                    let global_name = match instr.srcs.first() {
+                        Some(Operand::Str(s)) => s.clone(),
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "global_load: srcs[0] must be Operand::Str(name)".into(),
+                        }),
+                    };
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "global_load must have a dest".into(),
+                        }),
+                    };
+                    let name_atom = atoms.intern(&global_name);
+                    let tmp = meta.next_reg;
+
+                    // move {a, atom("name")} {x, tmp}
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(name_atom),
+                        BEAMOperand::x(tmp),
+                    ]));
+                    // gc_bif1 {f,0} {u,live} {a,import_get} {x,tmp} {x,rd}
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(meta.next_reg as u64),
+                        BEAMOperand::a(import_get),
+                        BEAMOperand::x(tmp),
+                        BEAMOperand::x(rd),
+                    ]));
+                }
+
+                // ── io_out → erlang:display(val) ─────────────────────────────────────
+                //
+                // `io_out %val` prints any Erlang term to stdout.
+                //
+                // IIR:  io_out Var("%val")
+                // BEAM: gc_bif1 {f,0} {u,live} {a,import_display} {x,rv} {x,dummy}
+                //
+                // We use the scratch register (meta.next_reg) as dummy_dst because
+                // erlang:display/1 returns `true` which we discard.
+                "io_out" => {
+                    let rx = operand_reg!(get_src!(instr, 0));
+                    let dummy = meta.next_reg;
+
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(meta.next_reg as u64),
+                        BEAMOperand::a(import_display),
+                        BEAMOperand::x(rx),
+                        BEAMOperand::x(dummy),
+                    ]));
                 }
 
                 // ── Unsupported ops ──────────────────────────────────────────

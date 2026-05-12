@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.2.0] — 2026-05-11
+
+### Changed (LANG32 — Operand::Str exhaustiveness)
+
+- `cir.rs`: `From<Operand>` and `From<&Operand>` now handle `Operand::Str(s)` —
+  maps it to `CIROperand::Var(s)` (treats the string literal name as an
+  identifier in the CIR representation).
+- `specialise.rs`: `literal_type` now handles `Some(Operand::Str(_))` — returns
+  `"str"` sentinel, consistent with the `Var` path.
+
 ## [0.1.0] — 2026-04-28
 
 ### Added — Initial Rust port (LANG03)

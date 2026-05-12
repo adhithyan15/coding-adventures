@@ -3,6 +3,32 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O)
+
+#### I/O support
+
+- `io_out %v` → `getstatic java/lang/System.out` (Ljava/io/PrintStream;) +
+  `lload <slot>` + `invokevirtual java/io/PrintStream.println(J)V`.
+- Added `INVOKEVIRTUAL: u8 = 0xB6` and `GETSTATIC: u8 = 0xB2` bytecode
+  constants.
+- Added `add_fieldref` to `ConstantPoolBuilder`.
+
+#### Global variables (LANG32b — deferred)
+
+- `global_load` and `global_store` return `UnsupportedOp` with a clear
+  LANG32b tracking note.  Full JVM static-field globals require extending
+  `JvmClassFile` with a `fields: Vec<JvmFieldInfo>` table and adding
+  `getstatic`/`putstatic` sequences; tracked in a follow-up PR.
+
+#### Exhaustiveness fixes
+
+- `Operand::Str` arms added to all `match` blocks in `lower.rs` (const,
+  ret, call argument loops).
+
+---
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

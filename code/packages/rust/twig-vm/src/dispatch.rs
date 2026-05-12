@@ -1149,6 +1149,17 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
             }
             LispyValue::symbol(id)
         }
+        // LANG32: Str is a compile-time string literal (global variable name).
+        // Intern it as a symbol — same treatment as Var string-literals above.
+        Operand::Str(text) => {
+            let id = intern(text);
+            if id == SymbolId::NONE {
+                return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+                    "intern table exhausted: cannot intern {text:?}"
+                ))));
+            }
+            LispyValue::symbol(id)
+        }
     };
     frame.set(dest.clone(), value)?;
     Ok(())

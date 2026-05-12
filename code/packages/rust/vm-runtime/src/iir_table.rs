@@ -370,6 +370,10 @@ fn encode_function_json(func: &IIRFunction) -> String {
             Operand::Int(n) => format!("{{\"int\":{}}}", n),
             Operand::Float(f) => format!("{{\"float\":{}}}", f),
             Operand::Bool(b) => format!("{{\"bool\":{}}}", b),
+            // String literals (LANG32): encode as JSON string value for the table.
+            // Rust's {:?} on &str emits a double-quoted, escape-safe representation,
+            // e.g. `"hello\nworld"`, which is valid JSON for the string field.
+            Operand::Str(s) => format!("{{\"str\":{:?}}}", s),
         }).collect();
         format!(
             "{{\"op\":\"{}\",\"dest\":{},\"srcs\":[{}],\"type_hint\":\"{}\"}}",

@@ -3,6 +3,31 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O)
+
+#### Global variable support via WASM global section
+
+- Pre-pass `collect_globals_and_io` scans all functions to find `global_store` /
+  `global_load` instructions and `io_out` instructions before emitting code.
+- Each named global maps to a `(global i64 (mut (i64.const 0)))` entry added to
+  `WasmModule::globals`.  Slot indices are assigned lazily (first encounter = next
+  free slot).
+- `global_store "x", %v` → `local.get <slot_of_%v>; global.set <idx_of_x>`.
+- `global_load "x" → %r` → `global.get <idx_of_x>; local.set <slot_of_%r>`.
+
+#### I/O support via host import
+
+- If any function uses `io_out`, the host import `env.__print_i64 (func (param i64))`
+  is prepended to `WasmModule::imports`.
+- `io_out %v` → `local.get <slot_of_%v>; call $__print_i64`.
+- **Function index offset**: importing `$__print_i64` assigns it function index 0,
+  shifting all defined functions up by 1.  The lowerer applies `fn_idx_base = 1`
+  when building `fn_map` and export indices so calls remain correct.
+
+---
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

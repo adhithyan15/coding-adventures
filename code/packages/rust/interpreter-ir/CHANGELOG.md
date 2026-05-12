@@ -1,5 +1,28 @@
 # Changelog — interpreter-ir
 
+## [0.4.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O at the IIR Level)
+
+#### New `Operand::Str(String)` variant
+
+- Added `Operand::Str(String)` to the `Operand` enum — a compile-time string
+  literal that is **distinct from `Var`**.  Backends that receive `Operand::Str`
+  must NOT look it up in the register file; it is a literal name (e.g. the
+  name of a module-level global variable).
+- Added `Operand::as_str_lit() -> Option<&str>` helper method.
+- Updated `Display` impl: `Str(s)` renders as `"s"` (quoted).
+- Updated `serialise.rs`: tag `4` for `Str` variant in both serialise and
+  deserialise code paths.
+
+#### New `opcodes.rs` entries
+
+- `is_global(op) -> bool` — returns `true` for `"global_load"` and `"global_store"`.
+- `is_value_producing` now includes `"global_load"`.
+- `has_side_effects` now includes `"global_store"`.
+
+---
+
 ## [0.3.0] — 2026-05-11
 
 ### Added (LANG28A — cooperative-multitasking opcode taxonomy)

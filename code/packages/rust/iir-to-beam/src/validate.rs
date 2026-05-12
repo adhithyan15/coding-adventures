@@ -61,8 +61,9 @@ use interpreter_ir::{IIRModule, Operand};
 // expressed as pure BEAM integer arithmetic or list operations:
 //
 // - `call_builtin`  — host built-in; should be fully lowered before reaching
-//                     the backend (by iir-builtin-lowering Phases 1 and 2).
-// - `io_in/io_out`  — raw I/O; BEAM does this via Erlang I/O modules, not opcodes.
+//                     the backend (by iir-builtin-lowering Phases 1–3).
+// - `io_in`         — raw byte-level I/O input; BEAM does this via Erlang I/O
+//                     modules, not opcodes.
 // - `cast`          — type reinterpretation; BEAM is dynamically typed at runtime.
 // - `load_mem/store_mem` — raw pointer access; BEAM has no unsafe memory.
 // - `box/unbox`     — explicit boxing; BEAM does not expose box/unbox as instructions.
@@ -71,11 +72,18 @@ use interpreter_ir::{IIRModule, Operand};
 // Note: `alloc`, `field_load`, `field_store`, and `is_null` are intentionally
 // NOT in this list.  They are produced by iir-builtin-lowering Phase 2 and
 // are lowered to BEAM put_list / get_list / is_nil instructions by lower.rs.
+//
+// LANG32 — supported in BEAM backend (Phase 3):
+// - `io_out`        — lowered to `erlang:display/1` via gc_bif1.
+// - `global_store`  — lowered to `erlang:put/2` (process dictionary) via gc_bif2.
+// - `global_load`   — lowered to `erlang:get/1` (process dictionary) via gc_bif1.
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
     "io_in",
-    "io_out",
+    // "io_out"      — LANG32: now supported (erlang:display/1).
+    // "global_store"— LANG32: now supported (erlang:put/2).
+    // "global_load" — LANG32: now supported (erlang:get/1).
     "cast",
     "load_mem",
     "store_mem",
@@ -346,5 +354,52 @@ mod tests {
             IIRInstr::new("ret_void", None, vec![], "void"),
         ]));
         assert!(errs.is_empty(), "unexpected errors: {:?}", errs);
+    }
+
+    // LANG32: io_out, global_store, global_load are now supported by the
+    // BEAM backend and must NOT be rejected by the validator.
+    #[test]
+    fn io_out_passes_validation() {
+        let errs = validate_for_beam(&single_fn_module(vec![IIRInstr::new(
+            "io_out",
+            None,
+            vec![Operand::Var("v".into())],
+            "void",
+        )]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "io_out should pass BEAM validation (LANG32); got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn global_store_passes_validation() {
+        let errs = validate_for_beam(&single_fn_module(vec![IIRInstr::new(
+            "global_store",
+            None,
+            vec![Operand::Str("x".into()), Operand::Var("v".into())],
+            "void",
+        )]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "global_store should pass BEAM validation (LANG32); got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn global_load_passes_validation() {
+        let errs = validate_for_beam(&single_fn_module(vec![IIRInstr::new(
+            "global_load",
+            Some("r".into()),
+            vec![Operand::Str("x".into())],
+            "i64",
+        )]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "global_load should pass BEAM validation (LANG32); got: {:?}",
+            errs
+        );
     }
 }
