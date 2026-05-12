@@ -54,6 +54,21 @@ Test organisation
 50. Noise analysis: shot noise (Diode and BJT)
 51. Noise analysis: frequency sweep and defaults
 52. Noise analysis: error cases and edge cases
+53. Controlled sources: VCCS dataclass
+54. Controlled sources: VCVS dataclass
+55. Controlled sources: CCCS dataclass
+56. Controlled sources: CCVS dataclass
+57. DC analysis: VCCS (voltage-controlled current source)
+58. DC analysis: VCVS (voltage-controlled voltage source)
+59. DC analysis: CCCS (current-controlled current source)
+60. DC analysis: CCVS (current-controlled voltage source)
+61. AC analysis: controlled sources
+62. DC sweep: VCVS
+63. Transient: controlled sources
+64. TF analysis: VCVS
+65. Sensitivity: VCVS
+66. Monte Carlo: VCVS
+67. Error cases: unknown ctrl_source
 """
 
 import cmath
@@ -64,6 +79,10 @@ import pytest
 
 from spice_engine import (
     BJT,
+    CCCS,
+    CCVS,
+    VCCS,
+    VCVS,
     AcPoint,
     AcResult,
     Capacitor,
@@ -3765,3 +3784,742 @@ def test_noise_noiseentry_is_frozen() -> None:
     entry = result.points[0].entries[0]
     with pytest.raises((AttributeError, TypeError)):
         entry.output_psd = -1.0  # type: ignore[misc]
+
+
+# ── Section 53: VCCS element dataclass ───────────────────────────────────────
+
+
+def test_vccs_frozen() -> None:
+    """VCCS is a frozen dataclass (immutable after construction)."""
+    g = VCCS("G1", "out", "0", "in", "0", gm=0.01)
+    with pytest.raises((AttributeError, TypeError)):
+        g.gm = 0.02  # type: ignore[misc]
+
+
+def test_vccs_fields() -> None:
+    """VCCS stores all six fields correctly."""
+    g = VCCS("G1", "out", "0", "in", "0", gm=0.02)
+    assert g.name == "G1"
+    assert g.n_plus == "out"
+    assert g.n_minus == "0"
+    assert g.ctrl_plus == "in"
+    assert g.ctrl_minus == "0"
+    assert g.gm == pytest.approx(0.02)
+
+
+def test_vccs_negative_gm() -> None:
+    """VCCS accepts negative gm (for sign-inverting configurations)."""
+    g = VCCS("G_inv", "out", "0", "in", "0", gm=-0.05)
+    assert g.gm == pytest.approx(-0.05)
+
+
+def test_vccs_in_element_union() -> None:
+    """VCCS is accepted as a circuit element (Element type alias includes it)."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "0", "out", "in", "0", gm=0.01),
+    ])
+    assert len(c.elements) == 3
+
+
+# ── Section 54: VCVS element dataclass ───────────────────────────────────────
+
+
+def test_vcvs_frozen() -> None:
+    """VCVS is a frozen dataclass (immutable after construction)."""
+    e = VCVS("E1", "out", "0", "vin", "0", gain=2.0)
+    with pytest.raises((AttributeError, TypeError)):
+        e.gain = 3.0  # type: ignore[misc]
+
+
+def test_vcvs_fields() -> None:
+    """VCVS stores all six fields correctly."""
+    e = VCVS("E1", "out", "0", "vin", "0", gain=-10.0)
+    assert e.name == "E1"
+    assert e.n_plus == "out"
+    assert e.n_minus == "0"
+    assert e.ctrl_plus == "vin"
+    assert e.ctrl_minus == "0"
+    assert e.gain == pytest.approx(-10.0)
+
+
+def test_vcvs_differential_ctrl() -> None:
+    """VCVS can have a non-ground ctrl_minus (differential sensing)."""
+    e = VCVS("Ediff", "out", "0", "vp", "vm", gain=5.0)
+    assert e.ctrl_plus == "vp"
+    assert e.ctrl_minus == "vm"
+    assert e.gain == pytest.approx(5.0)
+
+
+def test_vcvs_in_element_union() -> None:
+    """VCVS is accepted as a circuit element."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 5.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    assert len(c.elements) == 3
+
+
+# ── Section 55: CCCS element dataclass ───────────────────────────────────────
+
+
+def test_cccs_frozen() -> None:
+    """CCCS is a frozen dataclass (immutable after construction)."""
+    f = CCCS("F1", "out", "0", "Vsense", beta=2.0)
+    with pytest.raises((AttributeError, TypeError)):
+        f.beta = 3.0  # type: ignore[misc]
+
+
+def test_cccs_fields() -> None:
+    """CCCS stores all five fields correctly."""
+    f = CCCS("F1", "out", "0", "Vsense", beta=5.0)
+    assert f.name == "F1"
+    assert f.n_plus == "out"
+    assert f.n_minus == "0"
+    assert f.ctrl_source == "Vsense"
+    assert f.beta == pytest.approx(5.0)
+
+
+def test_cccs_negative_beta() -> None:
+    """CCCS accepts negative beta (current direction reversal)."""
+    f = CCCS("Finv", "out", "0", "Vsense", beta=-1.0)
+    assert f.beta == pytest.approx(-1.0)
+
+
+def test_cccs_in_element_union() -> None:
+    """CCCS is accepted as a circuit element."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCCS("F1", "out", "0", "Vsense", beta=2.0),
+        Resistor("Rload", "out", "0", 500.0),
+    ])
+    assert len(c.elements) == 5
+
+
+# ── Section 56: CCVS element dataclass ───────────────────────────────────────
+
+
+def test_ccvs_frozen() -> None:
+    """CCVS is a frozen dataclass (immutable after construction)."""
+    h = CCVS("H1", "out", "0", "Vsense", transresistance=1000.0)
+    with pytest.raises((AttributeError, TypeError)):
+        h.transresistance = 2000.0  # type: ignore[misc]
+
+
+def test_ccvs_fields() -> None:
+    """CCVS stores all five fields correctly."""
+    h = CCVS("H1", "out", "0", "Vsense", transresistance=500.0)
+    assert h.name == "H1"
+    assert h.n_plus == "out"
+    assert h.n_minus == "0"
+    assert h.ctrl_source == "Vsense"
+    assert h.transresistance == pytest.approx(500.0)
+
+
+def test_ccvs_in_element_union() -> None:
+    """CCVS is accepted as a circuit element."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCVS("H1", "out", "0", "Vsense", transresistance=500.0),
+    ])
+    assert len(c.elements) == 4
+
+
+# ── Section 57: DC analysis – VCCS ───────────────────────────────────────────
+
+
+def test_vccs_dc_inverting() -> None:
+    """VCCS(out, 0, in, 0, gm) inverts: V_out = -gm * R_load * V_in.
+
+    MNA analysis: VCCS stamps G[out][in] += gm.  Rload stamps G[out][out] +=
+    1/R.  KCL at ``out``: (1/R)*V_out + gm*V_in = 0 → V_out = -gm*R*V_in.
+    """
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "out", "0", "in", "0", gm=0.01),
+    ])
+    r = dc_op(c)
+    # V_out = -0.01 * 100 * 1.0 = -1.0 V
+    assert r.node_voltages["out"] == pytest.approx(-1.0, abs=1e-9)
+
+
+def test_vccs_dc_noninverting() -> None:
+    """VCCS(0, out, in, 0, gm) non-inverts: V_out = +gm * R_load * V_in.
+
+    Swapping n_plus and n_minus flips the sign of all stamp entries, so the
+    current injection at ``out`` is in the opposite direction.
+    KCL at ``out``: (1/R)*V_out - gm*V_in = 0 → V_out = +gm*R*V_in.
+    """
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "0", "out", "in", "0", gm=0.01),
+    ])
+    r = dc_op(c)
+    # V_out = +0.01 * 100 * 1.0 = +1.0 V
+    assert r.node_voltages["out"] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_vccs_dc_zero_gm() -> None:
+    """VCCS with gm=0 injects no current (equivalent to open circuit)."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 5.0),
+        Resistor("Rload", "out", "0", 1000.0),
+        VCCS("G1", "out", "0", "in", "0", gm=0.0),
+    ])
+    r = dc_op(c)
+    # No current injected → Rload has no current → V_out = 0
+    assert r.node_voltages["out"] == pytest.approx(0.0, abs=1e-9)
+
+
+def test_vccs_dc_gain_scaling() -> None:
+    """VCCS output scales linearly with gm and R_load."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 2.0),
+        Resistor("Rload", "out", "0", 50.0),
+        VCCS("G1", "0", "out", "in", "0", gm=0.02),
+    ])
+    r = dc_op(c)
+    # V_out = gm * R * V_in = 0.02 * 50 * 2.0 = 2.0 V
+    assert r.node_voltages["out"] == pytest.approx(2.0, abs=1e-9)
+
+
+def test_vccs_dc_differential_ctrl() -> None:
+    """VCCS senses V(ctrl_plus) − V(ctrl_minus) for a differential input."""
+    # V_p = 3V, V_m = 1V → V_diff = 2V → V_out = gm * R * V_diff
+    c = Circuit([
+        VoltageSource("Vp", "vp", "0", 3.0),
+        VoltageSource("Vm", "vm", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "0", "out", "vp", "vm", gm=0.01),
+    ])
+    r = dc_op(c)
+    # V_out = 0.01 * 100 * (3 - 1) = 2.0 V
+    assert r.node_voltages["out"] == pytest.approx(2.0, abs=1e-9)
+
+
+# ── Section 58: DC analysis – VCVS ───────────────────────────────────────────
+
+
+def test_vcvs_dc_unity_buffer() -> None:
+    """VCVS with gain=1 is a perfect unity-gain voltage buffer.
+
+    KVL: V_out − 1.0 × V_vin = 0 → V_out = V_vin.
+    The load has no effect because the VCVS is an ideal (zero-output-
+    impedance) voltage source.
+    """
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 5.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    r = dc_op(c)
+    assert r.node_voltages["out"] == pytest.approx(5.0, abs=1e-9)
+
+
+def test_vcvs_dc_inverting_gain() -> None:
+    """VCVS with gain=-2 inverts and amplifies: V_out = -2 × V_in."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 3.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=-2.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    r = dc_op(c)
+    assert r.node_voltages["out"] == pytest.approx(-6.0, abs=1e-9)
+
+
+def test_vcvs_dc_large_gain() -> None:
+    """VCVS with a large positive gain (open-loop op-amp macromodel)."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 0.001),  # 1 mV input
+        VCVS("E1", "out", "0", "vin", "0", gain=1000.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    r = dc_op(c)
+    # V_out = 1000 * 0.001 = 1.0 V
+    assert r.node_voltages["out"] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_vcvs_dc_differential_ctrl() -> None:
+    """VCVS senses V(ctrl_plus) − V(ctrl_minus) for a differential input."""
+    c = Circuit([
+        VoltageSource("Vp", "vp", "0", 4.0),
+        VoltageSource("Vm", "vm", "0", 1.0),
+        VCVS("E1", "out", "0", "vp", "vm", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    r = dc_op(c)
+    # V_diff = 4 - 1 = 3V → V_out = 1.0 * 3 = 3.0V
+    assert r.node_voltages["out"] == pytest.approx(3.0, abs=1e-9)
+
+
+def test_vcvs_dc_branch_current_recorded() -> None:
+    """dc_op records I(E1) in branch_currents for a VCVS element."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 5.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    r = dc_op(c)
+    assert "I(E1)" in r.branch_currents
+    # Rload current = V_out / R_load = 5.0 / 1000 = 5 mA
+    # VCVS sinks this current from its output terminal
+    assert abs(r.branch_currents["I(E1)"]) == pytest.approx(5e-3, rel=1e-6)
+
+
+def test_vcvs_dc_load_independent() -> None:
+    """VCVS output voltage is independent of load (ideal voltage source)."""
+    def _vout(rload: float) -> float:
+        c = Circuit([
+            VoltageSource("Vin", "vin", "0", 2.0),
+            VCVS("E1", "out", "0", "vin", "0", gain=3.0),
+            Resistor("Rload", "out", "0", rload),
+        ])
+        return dc_op(c).node_voltages["out"]
+
+    # V_out = 6V regardless of load
+    assert _vout(100.0) == pytest.approx(6.0, abs=1e-9)
+    assert _vout(10_000.0) == pytest.approx(6.0, abs=1e-9)
+
+
+# ── Section 59: DC analysis – CCCS ───────────────────────────────────────────
+
+
+def _cccs_circuit(beta: float = 2.0, r_load: float = 500.0) -> Circuit:
+    """Standard CCCS test circuit.
+
+    Topology: Vin(1V) → Rin(1kΩ) → Vsense(0V) → GND.
+    CCCS F1 controlled by Vsense, output into Rload.
+
+    I_ctrl = V_in / R_in = 1V / 1kΩ = 1 mA (Vsense is a 0V ammeter).
+
+    SPICE convention: ``F1 n+ n-`` means positive current flows from ``n+``
+    through the EXTERNAL circuit to ``n-``.  Here n_plus="out", n_minus="0"
+    so 2 mA flows from "out" through Rload to ground: V_out = +beta*I*R_load.
+    """
+    return Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCCS("F1", "out", "0", "Vsense", beta),
+        Resistor("Rload", "out", "0", r_load),
+    ])
+
+
+def test_cccs_dc_basic() -> None:
+    """CCCS mirrors and scales current: V_out = beta × I_ctrl × R_load."""
+    r = dc_op(_cccs_circuit(beta=2.0, r_load=500.0))
+    # V_out = 2 * 1e-3 * 500 = 1.0 V
+    assert r.node_voltages["out"] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_cccs_dc_unity_beta() -> None:
+    """CCCS with beta=1.0 replicates the controlling current exactly."""
+    r = dc_op(_cccs_circuit(beta=1.0, r_load=1000.0))
+    # V_out = 1 * 1e-3 * 1000 = 1.0 V
+    assert r.node_voltages["out"] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_cccs_dc_zero_beta() -> None:
+    """CCCS with beta=0 injects no output current (open circuit)."""
+    r = dc_op(_cccs_circuit(beta=0.0, r_load=500.0))
+    assert r.node_voltages["out"] == pytest.approx(0.0, abs=1e-9)
+
+
+def test_cccs_dc_negative_beta() -> None:
+    """CCCS with beta=-1 reverses the current direction."""
+    r = dc_op(_cccs_circuit(beta=-1.0, r_load=500.0))
+    # V_out = -1 * 1e-3 * 500 = -0.5 V
+    assert r.node_voltages["out"] == pytest.approx(-0.5, abs=1e-9)
+
+
+def test_cccs_dc_higher_gain() -> None:
+    """CCCS with larger beta amplifies proportionally."""
+    r = dc_op(_cccs_circuit(beta=5.0, r_load=200.0))
+    # V_out = 5 * 1e-3 * 200 = 1.0 V
+    assert r.node_voltages["out"] == pytest.approx(1.0, abs=1e-9)
+
+
+# ── Section 60: DC analysis – CCVS ───────────────────────────────────────────
+
+
+def _ccvs_circuit(rm: float = 500.0) -> Circuit:
+    """Standard CCVS test circuit.
+
+    Topology: Vin(1V) → Rin(1kΩ) → Vsense(0V) → GND.
+    CCVS H1 controlled by Vsense forces V_out = rm × I_ctrl.
+
+    I_ctrl = V_in / R_in = 1V / 1kΩ = 1 mA.
+    V_out  = rm × I_ctrl = rm × 1 mA.
+    """
+    return Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCVS("H1", "out", "0", "Vsense", rm),
+    ])
+
+
+def test_ccvs_dc_basic() -> None:
+    """CCVS forces V_out = rm × I_ctrl."""
+    r = dc_op(_ccvs_circuit(rm=500.0))
+    # V_out = 500 * 1e-3 = 0.5 V
+    assert r.node_voltages["out"] == pytest.approx(0.5, abs=1e-9)
+
+
+def test_ccvs_dc_unit_transresistance() -> None:
+    """CCVS with rm=1000 Ω: V_out = 1 kΩ × 1 mA = 1 V."""
+    r = dc_op(_ccvs_circuit(rm=1000.0))
+    assert r.node_voltages["out"] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_ccvs_dc_zero_transresistance() -> None:
+    """CCVS with rm=0 is a short circuit (ideal wire from output to ground)."""
+    r = dc_op(_ccvs_circuit(rm=0.0))
+    assert r.node_voltages["out"] == pytest.approx(0.0, abs=1e-9)
+
+
+def test_ccvs_dc_with_load() -> None:
+    """CCVS output voltage is independent of load (ideal voltage source)."""
+    c_no_load = _ccvs_circuit(rm=500.0)
+    c_with_load = Circuit(
+        list(c_no_load.elements)
+        + [Resistor("Rload", "out", "0", 100.0)]
+    )
+    r = dc_op(c_with_load)
+    # V_out is still 0.5V regardless of the load resistance
+    assert r.node_voltages["out"] == pytest.approx(0.5, abs=1e-9)
+
+
+def test_ccvs_dc_branch_current_recorded() -> None:
+    """dc_op records I(H1) in branch_currents for a CCVS element."""
+    r = dc_op(_ccvs_circuit(rm=500.0))
+    assert "I(H1)" in r.branch_currents
+
+
+# ── Section 61: AC analysis – controlled sources ─────────────────────────────
+
+
+def test_vcvs_ac_unity_buffer() -> None:
+    """VCVS unity buffer passes AC signal unattenuated at all frequencies."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 1.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = ac_sweep(c, f_start=1.0, f_stop=1e6, n_points=5)
+    for pt in result.points:
+        assert abs(pt.node_voltages["out"]) == pytest.approx(1.0, rel=1e-6)
+
+
+def test_vcvs_ac_gain() -> None:
+    """VCVS with gain=3 scales AC voltage by 3 at all frequencies."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 1.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=3.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = ac_sweep(c, f_start=1.0, f_stop=1e4, n_points=3)
+    for pt in result.points:
+        assert abs(pt.node_voltages["out"]) == pytest.approx(3.0, rel=1e-6)
+
+
+def test_vccs_ac_transconductance() -> None:
+    """VCCS produces frequency-independent transconductance in AC analysis."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "0", "out", "in", "0", gm=0.01),
+    ])
+    result = ac_sweep(c, f_start=1.0, f_stop=1e6, n_points=5)
+    for pt in result.points:
+        # V_out = gm * R_load * V_in = 0.01 * 100 * 1 = 1.0
+        assert abs(pt.node_voltages["out"]) == pytest.approx(1.0, rel=1e-6)
+
+
+def test_cccs_ac_current_gain() -> None:
+    """CCCS scales controlling AC current by beta at all frequencies."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCCS("F1", "out", "0", "Vsense", 2.0),
+        Resistor("Rload", "out", "0", 500.0),
+    ])
+    result = ac_sweep(c, f_start=1.0, f_stop=1e3, n_points=3)
+    for pt in result.points:
+        # V_out = beta * (V_in/R_in) * R_load = 2 * (1/1000) * 500 = 1.0
+        assert abs(pt.node_voltages["out"]) == pytest.approx(1.0, rel=1e-6)
+
+
+def test_ccvs_ac_transresistance() -> None:
+    """CCVS passes AC signal via transresistance at all frequencies."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCVS("H1", "out", "0", "Vsense", 500.0),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    result = ac_sweep(c, f_start=1.0, f_stop=1e4, n_points=3)
+    for pt in result.points:
+        # V_out = rm * (V_in/R_in) = 500 * (1/1000) = 0.5
+        assert abs(pt.node_voltages["out"]) == pytest.approx(0.5, rel=1e-6)
+
+
+# ── Section 62: DC sweep – VCVS ──────────────────────────────────────────────
+
+
+def test_vcvs_dc_sweep_linear() -> None:
+    """VCVS output tracks dc_sweep of input source linearly (gain=2)."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 0.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=2.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = dc_sweep(c, "Vin", 0.0, 3.0, 1.0)
+    v_outs = [pt.node_voltages["out"] for pt in result.points]
+    # At V_in = 0, 1, 2, 3: V_out = 0, 2, 4, 6
+    assert v_outs == pytest.approx([0.0, 2.0, 4.0, 6.0], abs=1e-9)
+
+
+def test_vccs_dc_sweep() -> None:
+    """VCCS output tracks dc_sweep — V_out = -gm * R * V_in at each point."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 0.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "out", "0", "in", "0", gm=0.01),
+    ])
+    result = dc_sweep(c, "Vin", 0.0, 2.0, 1.0)
+    v_outs = [pt.node_voltages["out"] for pt in result.points]
+    # V_out = -gm * R * V_in = -0.01 * 100 * V_in = -V_in
+    assert v_outs == pytest.approx([0.0, -1.0, -2.0], abs=1e-9)
+
+
+# ── Section 63: Transient – controlled sources ────────────────────────────────
+
+
+def test_vcvs_transient_unity() -> None:
+    """VCVS unity buffer reproduces the DC input in every transient timestep."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 3.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = transient(c, t_stop=1e-3, t_step=1e-4)
+    for pt in result.points:
+        assert pt.node_voltages["out"] == pytest.approx(3.0, abs=1e-6)
+
+
+def test_vccs_transient() -> None:
+    """VCCS works correctly during transient analysis (DC-steady circuit)."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "0", "out", "in", "0", gm=0.01),
+    ])
+    result = transient(c, t_stop=1e-3, t_step=1e-4)
+    for pt in result.points:
+        assert pt.node_voltages["out"] == pytest.approx(1.0, abs=1e-6)
+
+
+def test_cccs_transient() -> None:
+    """CCCS works correctly during transient analysis."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCCS("F1", "out", "0", "Vsense", 2.0),
+        Resistor("Rload", "out", "0", 500.0),
+    ])
+    result = transient(c, t_stop=1e-3, t_step=1e-4)
+    for pt in result.points:
+        assert pt.node_voltages["out"] == pytest.approx(1.0, abs=1e-6)
+
+
+def test_ccvs_transient() -> None:
+    """CCVS works correctly during transient analysis."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCVS("H1", "out", "0", "Vsense", 500.0),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    result = transient(c, t_stop=1e-3, t_step=1e-4)
+    for pt in result.points:
+        assert pt.node_voltages["out"] == pytest.approx(0.5, abs=1e-6)
+
+
+# ── Section 64: TF analysis – VCVS ───────────────────────────────────────────
+
+
+def test_vcvs_tf_unity() -> None:
+    """Transfer function of VCVS unity buffer is gain = 1.0."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 1.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = tf(c, output_node="out", input_source="Vin")
+    assert result.gain == pytest.approx(1.0, rel=1e-6)
+
+
+def test_vcvs_tf_gain_two() -> None:
+    """TF analysis returns the correct gain=2 for a VCVS amplifier."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 1.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=2.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = tf(c, output_node="out", input_source="Vin")
+    assert result.gain == pytest.approx(2.0, rel=1e-6)
+
+
+def test_vcvs_tf_inverting() -> None:
+    """TF analysis returns negative gain for an inverting VCVS."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 1.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=-5.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = tf(c, output_node="out", input_source="Vin")
+    assert result.gain == pytest.approx(-5.0, rel=1e-6)
+
+
+def test_cccs_tf() -> None:
+    """TF analysis works for circuits containing a CCCS."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCCS("F1", "out", "0", "Vsense", 2.0),
+        Resistor("Rload", "out", "0", 500.0),
+    ])
+    result = tf(c, output_node="out", input_source="Vin")
+    # TF = V_out / V_in = beta * R_load / R_in = 2 * 500 / 1000 = 1.0
+    assert result.gain == pytest.approx(1.0, rel=1e-6)
+
+
+def test_ccvs_tf() -> None:
+    """TF analysis works for circuits containing a CCVS."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rin", "in", "mid", 1000.0),
+        VoltageSource("Vsense", "mid", "0", 0.0),
+        CCVS("H1", "out", "0", "Vsense", 500.0),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    result = tf(c, output_node="out", input_source="Vin")
+    # TF = V_out / V_in = rm / R_in = 500 / 1000 = 0.5
+    assert result.gain == pytest.approx(0.5, rel=1e-6)
+
+
+# ── Section 65: Sensitivity – VCVS ───────────────────────────────────────────
+
+
+def test_vcvs_sens_dc_runs() -> None:
+    """sens_dc runs without error in a circuit containing a VCVS."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 5.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = sens_dc(c, "out")
+    assert isinstance(result.entries, list)
+    assert result.nominal_voltage == pytest.approx(5.0, abs=1e-9)
+
+
+def test_vccs_sens_dc_runs() -> None:
+    """sens_dc runs without error in a circuit containing a VCCS."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "0", "out", "in", "0", gm=0.01),
+    ])
+    result = sens_dc(c, "out")
+    assert isinstance(result.entries, list)
+    assert result.nominal_voltage == pytest.approx(1.0, abs=1e-9)
+
+
+# ── Section 66: Monte Carlo – VCVS ───────────────────────────────────────────
+
+
+def test_vcvs_mc_dc_runs() -> None:
+    """mc_dc runs without error in a circuit containing a VCVS."""
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 5.0),
+        VCVS("E1", "out", "0", "vin", "0", gain=1.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+    result = mc_dc(c, "out", 5, seed=42)
+    assert len(result.points) == 5
+    # All trials should converge to roughly 5V (VCVS gain not varied by MC)
+    for pt in result.points:
+        assert abs(pt.node_voltages["out"] - 5.0) < 1.0
+
+
+def test_vccs_mc_dc_runs() -> None:
+    """mc_dc runs without error in a circuit containing a VCCS."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        VCCS("G1", "0", "out", "in", "0", gm=0.01),
+    ])
+    result = mc_dc(c, "out", 5, seed=0)
+    assert len(result.points) == 5
+
+
+# ── Section 67: Error cases – unknown ctrl_source ────────────────────────────
+
+
+def test_cccs_dc_unknown_ctrl_source_raises() -> None:
+    """CCCS referencing a non-existent VoltageSource raises ValueError at
+    simulation time."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        CCCS("F1", "out", "0", "Vnonexistent", beta=2.0),
+    ])
+    with pytest.raises(ValueError, match="Vnonexistent"):
+        dc_op(c)
+
+
+def test_ccvs_dc_unknown_ctrl_source_raises() -> None:
+    """CCVS referencing a non-existent VoltageSource raises ValueError at
+    simulation time."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        CCVS("H1", "out", "0", "Vnonexistent", transresistance=100.0),
+    ])
+    with pytest.raises(ValueError, match="Vnonexistent"):
+        dc_op(c)
+
+
+def test_cccs_ac_unknown_ctrl_source_raises() -> None:
+    """CCCS with unknown ctrl_source also raises ValueError in AC analysis."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("Rload", "out", "0", 100.0),
+        CCCS("F1", "out", "0", "Vbad", beta=1.0),
+    ])
+    with pytest.raises(ValueError, match="Vbad"):
+        ac_sweep(c, f_start=1.0, f_stop=1e3, n_points=2)
+
+
+def test_ccvs_ac_unknown_ctrl_source_raises() -> None:
+    """CCVS with unknown ctrl_source also raises ValueError in AC analysis."""
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        CCVS("H1", "out", "0", "Vbad", transresistance=500.0),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    with pytest.raises(ValueError, match="Vbad"):
+        ac_sweep(c, f_start=1.0, f_stop=1e3, n_points=2)

@@ -1,5 +1,72 @@
 # Changelog
 
+## [0.10.0] — 2026-05-12
+
+### Added
+
+- **Four controlled (dependent) source elements** — the full set of SPICE
+  E/G/F/H elements is now available:
+
+  | Class | SPICE letter | Type | Controlling quantity |
+  |-------|-------------|------|----------------------|
+  | `VCVS` | E | Voltage-Controlled Voltage Source | `V(ctrl+) − V(ctrl−)` |
+  | `VCCS` | G | Voltage-Controlled Current Source | `V(ctrl+) − V(ctrl−)` |
+  | `CCCS` | F | Current-Controlled Current Source | `I(ctrl_source)` |
+  | `CCVS` | H | Current-Controlled Voltage Source | `I(ctrl_source)` |
+
+  All four sources work across every analysis type: DC operating point,
+  DC sweep, AC sweep, transient, `.TF`, `.SENS`, `.MC`, and `.NOISE`.
+
+  **VCVS** (`E` element) — voltage follower / amplifier:
+  ```
+  V(n_plus, n_minus) = gain × [V(ctrl_plus) − V(ctrl_minus)]
+  ```
+  Introduces a new MNA branch unknown (like `VoltageSource`).  Used to
+  model op-amps, buffers, and any ideal voltage amplifier.
+
+  **VCCS** (`G` element) — transconductance amplifier:
+  ```
+  I(n_plus → n_minus) = gm × [V(ctrl_plus) − V(ctrl_minus)]
+  ```
+  No branch unknown needed; stamps off-diagonal entries in the MNA G
+  matrix.  Identical primitive to the internal `gm` stamp used for
+  MOSFETs and BJTs.  Used for op-amp macromodels, FET small-signal
+  models, etc.
+
+  **CCCS** (`F` element) — current mirror / current amplifier:
+  ```
+  I(n_plus → n_minus) = beta × I(ctrl_source)
+  ```
+  The controlling current is the branch current of a named
+  `VoltageSource` (use a 0 V source as an ideal ammeter).  No new
+  branch unknown.  Node convention: positive current flows FROM
+  `n_plus` through the external circuit TO `n_minus` (SPICE standard).
+
+  **CCVS** (`H` element) — transresistance amplifier:
+  ```
+  V(n_plus, n_minus) = transresistance × I(ctrl_source)
+  ```
+  Introduces a new MNA branch unknown.  Used to model transimpedance
+  amplifiers, current-to-voltage converters, etc.
+
+- **`TfResult.gain` property** — convenient alias for
+  `TfResult.transfer_ratio` (dimensionless voltage gain when the input
+  is a `VoltageSource`).  Both names are now valid; `transfer_ratio` is
+  retained for backward compatibility.
+
+### Fixed
+
+- **CCCS MNA stamp sign** — the previous stamp had reversed polarity:
+  it injected current at `n_minus` instead of `n_plus`, contradicting
+  both the docstring (`I(n_plus → n_minus) = beta × I_ctrl`) and the
+  SPICE `F` element convention.  The corrected stamp uses `−beta` at
+  `n_plus` and `+beta` at `n_minus` so that current correctly exits
+  `n_plus` into the external circuit.  Existing circuits that worked
+  around the old sign by swapping n_plus/n_minus should be updated to
+  use the standard SPICE node order.
+
+---
+
 ## [0.9.0] — 2026-05-08
 
 ### Added
