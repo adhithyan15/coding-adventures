@@ -2,6 +2,66 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+The **full LLM-driven flow** end-to-end. Where v0.1 hand-built the
+TSA IR programmatically, v0.2 adds an `IrMode::LlmExtracted` mode
+that calls `llm_primitives::decompose_text` to ask the model to
+produce the IR, then converts the JSON output into a typed
+`IRDocument` via a tolerant parser. The pipeline then runs ADJ02 +
+ADJ03 + ADJ04 over the model-generated IR.
+
+- `IrMode { HandBuilt, LlmExtracted }` — selected by
+  `ADJ_DEMO_IR_MODE=hand|llm`. Defaults to `HandBuilt` for the
+  clean-baseline experience; `llm` drives the full flow.
+- `IrSourceTelemetry` recorded on `PipelineArmReport` so the printed
+  report shows the IR's provenance (hand-built, LLM-extracted with
+  the raw JSON + converter warnings, or LLM-extraction-failed with
+  the fallback path).
+- `json_to_ir_document` — the tolerant converter. Accepts both
+  `kind` and `node_type`, both `term` and `text` field names, walks
+  nested `children` arrays (Gemma 4 emits a tree, not the flat list
+  the prompt asks for), defaults missing kind/polarity/modality to
+  safe neutrals, clamps out-of-bound spans to source length, skips
+  degenerate spans, synthesizes a `compliant(passenger_a)?` Query
+  node if the LLM omits queries. Every fallback is logged in a
+  `warnings` vector and surfaced in the report.
+- Side-by-side report now surfaces:
+  - The IR's source (hand-built vs LLM-extracted vs LLM-failed) +
+    converter warning count.
+  - **ADJ02 coverage violations** when the pipeline blocks (e.g.,
+    `RootsDoNotTileDocument { missing_ranges: [(2, 3)] }` when the
+    model's IR has a 1-byte gap at the space between "1" and
+    "carry-on").
+  - **ADJ04 round-trip drift findings** with quantified NLI scores
+    in both directions (e.g., `source→rendering = 0.95`,
+    `rendering→source = 0.10` when the model adds claims not in the
+    source).
+- `ADJ_DEMO_IR_MODE` env var documented in `main.rs`.
+- `ADJ_DEMO_AUDIT=1` now also dumps the LLM-extracted IR (raw JSON
+  from `decompose_text`) and the converter warnings before the
+  audit-trail JSON.
+
+13 new unit tests cover the converter (well-formed shape, clamping,
+default kind, atom term, root-not-object rejection, nodes-array
+required, degenerate-span skip, missing-spans fallback,
+empty-spans-OK-for-Query, nested-children flattening, node_type
+alias, text-as-term fallback, query synthesis).
+
+### Verified end-to-end against `gemma4:latest`
+
+- **Hand-built mode**: ADJ02 + ADJ03 pass; ADJ04 catches the model's
+  renderer drifting from source on both Facts (`"1 carry-on bag, "`
+  → `"The carry-on bag is available."`, NLI scores 0.10/0.10). Engine
+  runs.
+- **LLM-extracted mode**: decompose_text produces a nested-tree IR
+  with spans 0..2 and 3..24. The converter flattens it. ADJ02 catches
+  the 1-byte gap at byte 2 (the space between "1" and "carry-on")
+  as `RootsDoNotTileDocument { missing_ranges: [(2, 3)] }`. Pipeline
+  Blocks before the engine runs — token-burn avoided.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

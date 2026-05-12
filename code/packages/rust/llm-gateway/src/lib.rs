@@ -227,6 +227,19 @@ pub enum LlmError {
         provider: ProviderIdentity,
         reason: Option<String>,
     },
+    /// The provider stopped generating because the `max_tokens` budget
+    /// was exhausted before the model produced a usable output. For
+    /// thinking-mode models (Gemma, Claude with extended thinking,
+    /// DeepSeek-R1, …) this commonly happens when the budget is small
+    /// enough to fit the chain-of-thought but not the final answer,
+    /// leaving `content` empty. Primitives translate this to a
+    /// retry-with-bigger-cap loop rather than failing on an
+    /// uninterpretable empty response.
+    OutputTruncated {
+        provider: ProviderIdentity,
+        output_tokens: usize,
+        max_tokens: Option<usize>,
+    },
     Other {
         provider: ProviderIdentity,
         message: String,
@@ -243,6 +256,7 @@ impl LlmError {
             | LlmError::Auth { provider, .. }
             | LlmError::SchemaInvalid { provider, .. }
             | LlmError::Refused { provider, .. }
+            | LlmError::OutputTruncated { provider, .. }
             | LlmError::Other { provider, .. } => provider,
         }
     }
@@ -264,6 +278,19 @@ impl std::fmt::Display for LlmError {
             LlmError::Refused { reason, .. } => match reason {
                 Some(r) => write!(f, "refused: {r}"),
                 None => write!(f, "refused"),
+            },
+            LlmError::OutputTruncated {
+                output_tokens, max_tokens, ..
+            } => match max_tokens {
+                Some(max) => write!(
+                    f,
+                    "output truncated: model emitted {output_tokens} tokens \
+                     and stopped at the max_tokens cap ({max}); raise the cap and retry",
+                ),
+                None => write!(
+                    f,
+                    "output truncated at {output_tokens} tokens (no cap reported)",
+                ),
             },
             LlmError::Other { message, .. } => write!(f, "{message}"),
         }

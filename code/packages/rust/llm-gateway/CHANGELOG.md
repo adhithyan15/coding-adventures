@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+`LlmError::OutputTruncated { provider, output_tokens, max_tokens }` —
+a new error variant for the case where the provider stopped at the
+`max_tokens` budget *before* emitting usable content. Thinking-mode
+models (Gemma, DeepSeek-R1, Claude with extended thinking) routinely
+burn the entire budget on chain-of-thought and emit nothing visible
+afterwards; previously this surfaced as a confusing `SchemaInvalid`
+or `ProtocolError`. The new variant lets caller-level retry loops
+key on truncation specifically and try again with a larger budget.
+
+- `LlmError::provider()` updated to include the new variant.
+- `Display` impl renders a helpful hint about raising the cap.
+
+### Compatibility
+
+This is a non-breaking addition to the public enum from a consumer
+standpoint — no existing `match` was exhaustive over `LlmError` in
+the workspace, only `matches!` patterns. Downstream crates that DO
+exhaustively match `LlmError` will need an extra arm.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

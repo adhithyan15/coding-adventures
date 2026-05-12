@@ -115,7 +115,11 @@ fn build_completion_request(client: &dyn LlmClient, req: &EntailRequest) -> Comp
         // Deterministic by default; the deployment can override at
         // the gateway layer if they want sampling.
         temperature: 0.0,
-        max_tokens: Some(256),
+        // 2048 leaves headroom for thinking-mode chains-of-thought
+        // before the model emits the ~80-byte JSON body. The retry
+        // helper above doubles this up to MAX_TOKENS_CEILING if the
+        // model truncates on a particularly verbose reasoning pass.
+        max_tokens: Some(2048),
         stop_sequences: Vec::new(),
         seed: None,
         metadata: Default::default(),
@@ -144,9 +148,9 @@ pub fn entail(req: &EntailRequest, gateway: &GatewayConfig) -> Result<EntailResp
         schema_json: RESPONSE_SCHEMA.to_string(),
     };
 
-    let json_resp = client
-        .complete_json(completion_req, &schema)
-        .map_err(PrimitiveError::Gateway)?;
+    let json_resp =
+        crate::complete_json_with_truncation_retry(client, completion_req, &schema)
+            .map_err(PrimitiveError::Gateway)?;
 
     let v = &json_resp.parsed;
 

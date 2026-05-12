@@ -1,8 +1,8 @@
 [package]
 name = "llm-gateway"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "LM00 — provider-agnostic LLM gateway. LlmClient trait + neutral request/response shapes + MockLlmClient for tests."
+description = "LM00 — provider-agnostic LLM gateway. LlmClient trait + neutral request/response shapes + MockLlmClient for tests. v0.2 adds LlmError::OutputTruncated for thinking-mode models that burn the entire max_tokens budget on chain-of-thought before emitting content."
 
 [dependencies]
 serde_json = "1"

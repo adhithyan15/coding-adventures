@@ -27,17 +27,18 @@
 use std::time::Duration;
 
 use adjudication_tsa_demo::{
-    format_side_by_side, run_pipeline_arm, run_raw_arm, DemoConfig,
+    format_side_by_side, run_pipeline_arm, run_raw_arm, DemoConfig, IrMode, IrSourceTelemetry,
 };
 
 fn main() {
     let cfg = config_from_env();
 
     println!(
-        "Running TSA demo against {endpoint} with model `{model}`.\n\
-         (set ADJ_DEMO_MODEL / ADJ_DEMO_ENDPOINT / ADJ_DEMO_SOURCE to override.)\n",
+        "Running TSA demo against {endpoint} with model `{model}` (IR mode: {mode:?}).\n\
+         (set ADJ_DEMO_MODEL / ADJ_DEMO_ENDPOINT / ADJ_DEMO_SOURCE / ADJ_DEMO_IR_MODE to override.)\n",
         endpoint = cfg.endpoint,
         model = cfg.model,
+        mode = cfg.ir_mode,
     );
 
     // --- Arm A ---
@@ -62,8 +63,24 @@ fn main() {
     // --- side-by-side ---
     println!("\n{}", format_side_by_side(&raw, &pipe));
 
-    // --- optional audit-trail dump ---
+    // --- optional audit-trail + LLM-IR dump ---
     if std::env::var("ADJ_DEMO_AUDIT").is_ok() {
+        if let IrSourceTelemetry::LlmExtracted {
+            raw_ir_json,
+            converter_warnings,
+            ..
+        } = &pipe.ir_source
+        {
+            println!("--- LLM-extracted IR (raw decompose_text output) ---");
+            println!("{raw_ir_json}");
+            if !converter_warnings.is_empty() {
+                println!("\n--- JSON-to-IR converter warnings ---");
+                for w in converter_warnings {
+                    println!("  - {w}");
+                }
+            }
+            println!();
+        }
         match serde_json::to_string_pretty(&pipe.pipeline_output.audit_trail) {
             Ok(json) => {
                 println!("--- full audit trail (ADJ07-v1) ---\n{json}");
@@ -90,6 +107,19 @@ fn config_from_env() -> DemoConfig {
         if let Ok(n) = timeout_s.parse::<u64>() {
             cfg.timeout = Duration::from_secs(n);
         }
+    }
+    if let Ok(mode) = std::env::var("ADJ_DEMO_IR_MODE") {
+        cfg.ir_mode = match mode.to_ascii_lowercase().as_str() {
+            "llm" | "llm-extracted" | "llm_extracted" | "llmextracted" => IrMode::LlmExtracted,
+            "hand" | "hand-built" | "hand_built" | "handbuilt" | "fixture" => IrMode::HandBuilt,
+            other => {
+                eprintln!(
+                    "warning: ADJ_DEMO_IR_MODE={other:?} not recognized; \
+                     using HandBuilt. Accepted values: 'hand', 'llm'."
+                );
+                IrMode::HandBuilt
+            }
+        };
     }
     cfg
 }

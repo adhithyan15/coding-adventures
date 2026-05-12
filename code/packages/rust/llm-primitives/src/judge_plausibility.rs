@@ -119,7 +119,8 @@ fn build_completion_request(
             content: MessageContent::Text(build_user_text(req)),
         }],
         temperature: 0.0,
-        max_tokens: Some(512),
+        // 2048 leaves headroom for thinking-mode chains-of-thought.
+        max_tokens: Some(2048),
         stop_sequences: Vec::new(),
         seed: None,
         metadata: Default::default(),
@@ -150,9 +151,9 @@ pub fn judge_plausibility(
         schema_json: RESPONSE_SCHEMA.to_string(),
     };
 
-    let json_resp = client
-        .complete_json(completion_req, &schema)
-        .map_err(PrimitiveError::Gateway)?;
+    let json_resp =
+        crate::complete_json_with_truncation_retry(client, completion_req, &schema)
+            .map_err(PrimitiveError::Gateway)?;
 
     let v = &json_resp.parsed;
     let plausible = v.get("plausible").and_then(|x| x.as_bool());

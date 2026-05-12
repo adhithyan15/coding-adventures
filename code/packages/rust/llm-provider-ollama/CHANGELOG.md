@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+Two protocol-level fixes uncovered by exercising the provider against a
+local `gemma4:latest` Ollama instance with thinking-mode chain-of-thought.
+
+- **`Transfer-Encoding: chunked` support** in `parse_http_response`.
+  Ollama switches to chunked once the response body exceeds roughly
+  1.5 KB, even with `stream: false`. The previous Content-Length-only
+  path saw the chunk preamble (`8cb\r\n{...}\r\n0\r\n\r\n`) as
+  garbage, with `serde_json::from_str` failing at line 1 column 2
+  ("8c" is not valid JSON). The new `dechunk` helper implements
+  RFC 7230 §4.1 (hex size + CRLF + bytes + CRLF, terminated by
+  `0\r\n`), ignores chunk-extensions, and is case-insensitive on the
+  header name. **Hardened against malicious chunk sizes**: rejects
+  any chunk above 64 MiB (`MAX_CHUNK_BYTES`), uses `checked_add` to
+  avoid `usize` overflow on near-`usize::MAX` chunk sizes, and caps
+  cumulative dechunked body size at 64 MiB. Five new tests cover the
+  happy path, chunk-extensions, case-insensitive header,
+  pathological `usize::MAX`-sized chunk, and oversized 128 MiB chunk.
+- **`OutputTruncated` rescue** in both `complete` and `complete_json`.
+  When `done_reason == "length"` AND the assistant `content` is
+  empty, return the new `LlmError::OutputTruncated` variant instead
+  of a successful `Stop` with empty text or a `SchemaInvalid` "EOF
+  at line 1 column 0". This is the wire signature of a thinking-mode
+  model that consumed every token on `<think>` and emitted nothing
+  user-facing — callers can now retry with a larger cap. Two new
+  tests reproduce this with a scripted server.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

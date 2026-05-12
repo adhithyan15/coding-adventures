@@ -175,6 +175,19 @@ pub fn check_round_trip(
             // Discarded nodes are accounted for in ADJ02 already.
             continue;
         }
+        if matches!(node.kind, NodeKind::Query) && node.source_spans.is_empty() {
+            // Synthesized Query nodes (framework-added, no
+            // corresponding source span) can't be round-tripped —
+            // there's nothing in the source to compare a rendering
+            // to. Skip them. ADJ02 already permits zero-span queries;
+            // ADJ04's job is round-trip *fidelity*, not coverage.
+            //
+            // Note: only Query is special-cased. A Fact with no
+            // source span is still a typed error
+            // (`LeafMissingSpans`) because Facts MUST come from the
+            // source per ADJ01 v2 well-formedness.
+            continue;
+        }
 
         let excerpt = excerpt_for_node(document_text, node)?;
         let node_description = describe_node(node);
@@ -668,6 +681,21 @@ mod tests {
         assert_eq!(r.call_records[1].primitive, "entail");
         assert_eq!(r.call_records[2].primitive, "render_node");
         assert_eq!(r.call_records[3].primitive, "entail");
+    }
+
+    #[test]
+    fn nodes_without_source_spans_are_skipped() {
+        // A synthesized Query node (no source spans) is treated as
+        // out-of-scope for the round-trip check: there's nothing in
+        // the source to round-trip against. ADJ02 already allows
+        // these; ADJ04 must not crash on them.
+        let mut q = fact("q1", Term::Atom("compliant(p)".into()), 0, 5);
+        q.kind = NodeKind::Query;
+        q.source_spans.clear();
+        let g = GatewayConfig::new(); // no roles registered
+        let r = check_round_trip(make_doc(), &ir(vec![q]), &g, &CheckOptions::default()).unwrap();
+        assert!(r.pass());
+        assert!(r.call_records.is_empty());
     }
 
     #[test]

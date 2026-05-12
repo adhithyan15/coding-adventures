@@ -378,6 +378,96 @@ pub const PLAUSIBILITY_PROMPT_VERSION: &str = "plausibility-v1";
 pub const EXTRACT_RULES_PROMPT_VERSION: &str = "extract-rules-v1";
 
 // ---------------------------------------------------------------------------
+// Retry helpers — thinking-mode-tolerant
+// ---------------------------------------------------------------------------
+
+/// Default ceiling for the retry-with-bigger-cap loop. Primitives
+/// double their `max_tokens` budget on each [`LlmError::OutputTruncated`]
+/// attempt and stop once the cap reaches this number. Frontier
+/// thinking-mode models that need more than 32k tokens to answer a
+/// single primitive question are misconfigured at a higher level —
+/// the primitive does not paper over that with an unbounded loop.
+pub const MAX_TOKENS_CEILING: usize = 32_768;
+
+/// How many attempts a primitive makes before giving up on a
+/// truncation loop. With `MAX_TOKENS_CEILING = 32_768` and a starting
+/// cap of `1024`, doubling lands us at 32_768 on attempt 5 (1024 →
+/// 2048 → 4096 → 8192 → 16384 → 32768).
+pub const TRUNCATION_MAX_ATTEMPTS: usize = 6;
+
+/// Run a `complete_json` call against `client`, doubling the
+/// `max_tokens` budget on every [`LlmError::OutputTruncated`] up to
+/// [`MAX_TOKENS_CEILING`] / [`TRUNCATION_MAX_ATTEMPTS`].
+///
+/// This is the helper every JSON-emitting primitive uses to survive
+/// thinking-mode models. The model's chain-of-thought eats tokens
+/// before it ever emits structured content; a fixed cap means
+/// "sometimes works, sometimes returns empty content + `done_reason:
+/// length`". The retry loop turns that into "always works as long as
+/// the model can produce *some* JSON within the ceiling."
+///
+/// On any other [`LlmError`] (transport, schema-invalid with non-empty
+/// content, refused, …) the helper returns immediately — those are
+/// not retryable here. The primitive's own validation layer above is
+/// responsible for retry-with-correction on schema mismatches.
+pub fn complete_json_with_truncation_retry(
+    client: &dyn llm_gateway::LlmClient,
+    base: CompletionRequest,
+    schema: &llm_gateway::JsonSchema,
+) -> Result<llm_gateway::CompletionJsonResponse, LlmError> {
+    let mut cap = base.max_tokens.unwrap_or(1024).max(1024);
+    for attempt in 1..=TRUNCATION_MAX_ATTEMPTS {
+        let mut req = base.clone();
+        req.max_tokens = Some(cap);
+        match client.complete_json(req, schema) {
+            Ok(resp) => return Ok(resp),
+            Err(LlmError::OutputTruncated { .. }) if attempt < TRUNCATION_MAX_ATTEMPTS => {
+                let next = cap.saturating_mul(2);
+                if next > MAX_TOKENS_CEILING {
+                    cap = MAX_TOKENS_CEILING;
+                } else {
+                    cap = next;
+                }
+                continue;
+            }
+            Err(e) => return Err(e),
+        }
+    }
+    // Unreachable: the loop either returns Ok, returns Err on
+    // attempt < MAX_ATTEMPTS, or returns Err on the final attempt
+    // via the `Err(e) => return Err(e)` arm.
+    unreachable!()
+}
+
+/// Same retry loop, but for `complete` (free-form text). Same
+/// semantics: double the cap on `OutputTruncated`, return immediately
+/// on any other error.
+pub fn complete_with_truncation_retry(
+    client: &dyn llm_gateway::LlmClient,
+    base: CompletionRequest,
+) -> Result<llm_gateway::CompletionResponse, LlmError> {
+    let mut cap = base.max_tokens.unwrap_or(1024).max(1024);
+    for attempt in 1..=TRUNCATION_MAX_ATTEMPTS {
+        let mut req = base.clone();
+        req.max_tokens = Some(cap);
+        match client.complete(req) {
+            Ok(resp) => return Ok(resp),
+            Err(LlmError::OutputTruncated { .. }) if attempt < TRUNCATION_MAX_ATTEMPTS => {
+                let next = cap.saturating_mul(2);
+                if next > MAX_TOKENS_CEILING {
+                    cap = MAX_TOKENS_CEILING;
+                } else {
+                    cap = next;
+                }
+                continue;
+            }
+            Err(e) => return Err(e),
+        }
+    }
+    unreachable!()
+}
+
+// ---------------------------------------------------------------------------
 // Prompt fingerprinting (deterministic, no external crate)
 // ---------------------------------------------------------------------------
 
@@ -583,6 +673,209 @@ mod tests {
         let llm_err = LlmError::Transport { provider, detail: "boom".into() };
         let prim_err: PrimitiveError = llm_err.into();
         assert!(matches!(prim_err, PrimitiveError::Gateway(_)));
+    }
+
+    // ----- truncation retry helper -----
+
+    use llm_gateway::{
+        Capabilities, CompletionJsonResponse, CompletionResponse, FinishReason, JsonSchema,
+        LlmError, TokenUsage,
+    };
+    use std::sync::Mutex;
+
+    /// A client that returns `OutputTruncated` N times and then a
+    /// successful response. Lets us assert the retry loop's cap-doubling
+    /// behavior without round-tripping a real model.
+    struct FlakyJsonClient {
+        identity: ProviderIdentity,
+        truncate_attempts_remaining: Mutex<usize>,
+        observed_caps: Mutex<Vec<Option<usize>>>,
+        success_value: serde_json::Value,
+    }
+
+    impl FlakyJsonClient {
+        fn new(truncate_attempts: usize, value: serde_json::Value) -> Self {
+            Self {
+                identity: ProviderIdentity {
+                    vendor: "mock".into(),
+                    model_family: "flaky".into(),
+                    model_version: "1".into(),
+                    endpoint: None,
+                },
+                truncate_attempts_remaining: Mutex::new(truncate_attempts),
+                observed_caps: Mutex::new(Vec::new()),
+                success_value: value,
+            }
+        }
+    }
+
+    impl LlmClient for FlakyJsonClient {
+        fn identity(&self) -> ProviderIdentity {
+            self.identity.clone()
+        }
+        fn capabilities(&self) -> Capabilities {
+            Capabilities::modern_frontier()
+        }
+        fn complete(&self, req: CompletionRequest) -> Result<CompletionResponse, LlmError> {
+            self.observed_caps.lock().unwrap().push(req.max_tokens);
+            let mut left = self.truncate_attempts_remaining.lock().unwrap();
+            if *left > 0 {
+                *left -= 1;
+                return Err(LlmError::OutputTruncated {
+                    provider: self.identity.clone(),
+                    output_tokens: req.max_tokens.unwrap_or(0),
+                    max_tokens: req.max_tokens,
+                });
+            }
+            Ok(CompletionResponse {
+                text: self.success_value.to_string(),
+                model: "flaky".into(),
+                usage: TokenUsage::default(),
+                finish_reason: FinishReason::Stop,
+                provider_id: self.identity.clone(),
+                latency_ms: 1,
+            })
+        }
+        fn complete_json(
+            &self,
+            req: CompletionRequest,
+            _s: &JsonSchema,
+        ) -> Result<CompletionJsonResponse, LlmError> {
+            self.observed_caps.lock().unwrap().push(req.max_tokens);
+            let mut left = self.truncate_attempts_remaining.lock().unwrap();
+            if *left > 0 {
+                *left -= 1;
+                return Err(LlmError::OutputTruncated {
+                    provider: self.identity.clone(),
+                    output_tokens: req.max_tokens.unwrap_or(0),
+                    max_tokens: req.max_tokens,
+                });
+            }
+            Ok(CompletionJsonResponse {
+                raw_text: self.success_value.to_string(),
+                parsed: self.success_value.clone(),
+                schema_valid: true,
+                model: "flaky".into(),
+                usage: TokenUsage::default(),
+                provider_id: self.identity.clone(),
+                latency_ms: 1,
+                polyfill_used: false,
+            })
+        }
+    }
+
+    #[test]
+    fn complete_json_retry_doubles_max_tokens_until_success() {
+        // Truncates twice, then succeeds. Initial cap is 1024 →
+        // attempts use 1024, 2048, 4096.
+        let client = FlakyJsonClient::new(2, serde_json::json!({"ok": true}));
+        let mut req = req_with_text("x");
+        req.max_tokens = Some(1024);
+        let schema = JsonSchema {
+            name: "x".into(),
+            schema_json: "{}".into(),
+        };
+        let resp = complete_json_with_truncation_retry(&client, req, &schema).unwrap();
+        assert_eq!(resp.parsed, serde_json::json!({"ok": true}));
+        let caps = client.observed_caps.lock().unwrap().clone();
+        assert_eq!(caps, vec![Some(1024), Some(2048), Some(4096)]);
+    }
+
+    #[test]
+    fn complete_json_retry_caps_at_ceiling() {
+        // Five truncations would walk 1024 → 2048 → 4096 → 8192 → 16384 → 32768,
+        // which is exactly MAX_TOKENS_CEILING. Verify the ceiling is honoured.
+        let client = FlakyJsonClient::new(5, serde_json::json!({"ok": true}));
+        let mut req = req_with_text("x");
+        req.max_tokens = Some(1024);
+        let schema = JsonSchema {
+            name: "x".into(),
+            schema_json: "{}".into(),
+        };
+        let _ = complete_json_with_truncation_retry(&client, req, &schema).unwrap();
+        let caps = client.observed_caps.lock().unwrap().clone();
+        assert_eq!(
+            caps,
+            vec![
+                Some(1024),
+                Some(2048),
+                Some(4096),
+                Some(8192),
+                Some(16384),
+                Some(MAX_TOKENS_CEILING)
+            ]
+        );
+    }
+
+    #[test]
+    fn complete_json_retry_gives_up_after_max_attempts() {
+        // More truncations than the loop tolerates → propagate the last
+        // OutputTruncated.
+        let client = FlakyJsonClient::new(100, serde_json::json!({}));
+        let mut req = req_with_text("x");
+        req.max_tokens = Some(1024);
+        let schema = JsonSchema {
+            name: "x".into(),
+            schema_json: "{}".into(),
+        };
+        let err = complete_json_with_truncation_retry(&client, req, &schema).unwrap_err();
+        assert!(matches!(err, LlmError::OutputTruncated { .. }));
+    }
+
+    #[test]
+    fn complete_json_retry_does_not_retry_on_non_truncation_errors() {
+        // A schema-invalid (or any non-truncation) error must return
+        // immediately — only the OutputTruncated arm retries.
+        struct AlwaysSchemaInvalid;
+        impl LlmClient for AlwaysSchemaInvalid {
+            fn identity(&self) -> ProviderIdentity {
+                ProviderIdentity {
+                    vendor: "mock".into(),
+                    model_family: "always-invalid".into(),
+                    model_version: "1".into(),
+                    endpoint: None,
+                }
+            }
+            fn capabilities(&self) -> Capabilities {
+                Capabilities::modern_frontier()
+            }
+            fn complete(&self, _r: CompletionRequest) -> Result<CompletionResponse, LlmError> {
+                unreachable!()
+            }
+            fn complete_json(
+                &self,
+                _r: CompletionRequest,
+                _s: &JsonSchema,
+            ) -> Result<CompletionJsonResponse, LlmError> {
+                Err(LlmError::SchemaInvalid {
+                    provider: self.identity(),
+                    schema_name: "x".into(),
+                    raw_text: "garbage".into(),
+                    validator_error: "not parseable".into(),
+                })
+            }
+        }
+        let req = req_with_text("x");
+        let schema = JsonSchema {
+            name: "x".into(),
+            schema_json: "{}".into(),
+        };
+        let err =
+            complete_json_with_truncation_retry(&AlwaysSchemaInvalid, req, &schema).unwrap_err();
+        assert!(matches!(err, LlmError::SchemaInvalid { .. }));
+    }
+
+    #[test]
+    fn complete_retry_doubles_until_success() {
+        // Same behavior as complete_json_with_truncation_retry, but for
+        // the text-emitting path.
+        let client = FlakyJsonClient::new(1, serde_json::json!("hello"));
+        let mut req = req_with_text("x");
+        req.max_tokens = Some(1024);
+        let resp = complete_with_truncation_retry(&client, req).unwrap();
+        assert!(resp.text.contains("hello"));
+        let caps = client.observed_caps.lock().unwrap().clone();
+        assert_eq!(caps, vec![Some(1024), Some(2048)]);
     }
 
     #[test]

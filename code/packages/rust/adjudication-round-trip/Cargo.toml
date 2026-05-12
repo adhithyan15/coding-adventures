@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-round-trip"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-description = "ADJ04 — round-trip checker. For each leaf IR node: render it via `render_node`, then run bidirectional `entail` between the rendering and the original source span. Flags drift in either direction as a violation the pipeline can clarify."
+description = "ADJ04 — round-trip checker. For each leaf IR node: render it via `render_node`, then run bidirectional `entail` between the rendering and the original source span. Flags drift in either direction as a violation the pipeline can clarify. v0.1.1 skips synthesized Query nodes (empty source_spans) instead of crashing on LeafMissingSpans."
 
 [dependencies]
 adjudication-ir = { path = "../adjudication-ir" }

@@ -117,7 +117,10 @@ fn build_completion_request(client: &dyn LlmClient, req: &RenderNodeRequest) -> 
         // Deterministic by default — renderings should be reproducible
         // in tests and replays.
         temperature: 0.0,
-        max_tokens: Some(256),
+        // 2048 leaves headroom for thinking-mode chains-of-thought.
+        // The retry helper doubles this up to MAX_TOKENS_CEILING if
+        // the model truncates.
+        max_tokens: Some(2048),
         stop_sequences: Vec::new(),
         seed: None,
         metadata: Default::default(),
@@ -145,8 +148,7 @@ pub fn render_node(
     let completion_req = build_completion_request(client, req);
     let prompt_hash = fingerprint_prompt(&completion_req);
 
-    let resp = client
-        .complete(completion_req)
+    let resp = crate::complete_with_truncation_retry(client, completion_req)
         .map_err(PrimitiveError::Gateway)?;
 
     let rendering = resp.text.trim().to_string();
