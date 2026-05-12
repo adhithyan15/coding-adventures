@@ -950,6 +950,16 @@ pub fn format_device_list(devices: &[LanguageHostDevice]) -> String {
 
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
     let transport = open_smoke_transport(options)?;
+    run_smoke_with_transport(options, transport)
+}
+
+fn run_smoke_with_transport<T>(
+    options: &SmokeOptions,
+    transport: T,
+) -> Result<SmokeReport, CliError>
+where
+    T: RawFrameTransport,
+{
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
     let hello = client
         .hello_with_name(DEFAULT_HOST_NAME, options.host_nonce)
@@ -1589,6 +1599,35 @@ pub fn usage() -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use board_vm_client::TransportError;
+    use board_vm_loopback::{LoopbackBoard, LOOPBACK_BOARD_ID, LOOPBACK_RUNTIME_ID};
+    use board_vm_protocol::RunStatus;
+
+    struct LoopbackSmokeTransport {
+        board: LoopbackBoard<512, 8, 8>,
+        board_payload: [u8; 512],
+    }
+
+    impl LoopbackSmokeTransport {
+        fn new() -> Self {
+            Self {
+                board: LoopbackBoard::new(),
+                board_payload: [0; 512],
+            }
+        }
+    }
+
+    impl RawFrameTransport for LoopbackSmokeTransport {
+        fn exchange_raw_frame(
+            &mut self,
+            request: &[u8],
+            response_out: &mut [u8],
+        ) -> Result<usize, TransportError> {
+            self.board
+                .handle_raw_frame(request, &mut self.board_payload, response_out)
+                .map_err(|_| TransportError::Io)
+        }
+    }
 
     fn unique_temp_dir(name: &str) -> PathBuf {
         let nonce = std::time::SystemTime::now()
@@ -2284,6 +2323,35 @@ mod tests {
         assert_eq!(parse_repl_line("stop").unwrap(), ReplCommand::Stop);
         assert_eq!(parse_repl_line("quit").unwrap(), ReplCommand::Quit);
         assert_eq!(parse_repl_line("exit").unwrap(), ReplCommand::Quit);
+    }
+
+    #[test]
+    fn smoke_sequence_runs_over_loopback_transport() {
+        let options = SmokeOptions {
+            port: None,
+            endpoint: Some("tcp://127.0.0.1:4170".to_owned()),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: DEFAULT_TIMEOUT_MS,
+            program_id: 7,
+            instruction_budget: 200,
+            host_nonce: 0x1234_5678,
+        };
+
+        let report = run_smoke_with_transport(&options, LoopbackSmokeTransport::new()).unwrap();
+
+        assert_eq!(report.hello.selected_version, 1);
+        assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
+        assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
+        assert_eq!(report.hello.host_nonce, 0x1234_5678);
+        assert_eq!(report.descriptor.board_id, LOOPBACK_BOARD_ID);
+        assert_eq!(report.descriptor.runtime_id, LOOPBACK_RUNTIME_ID);
+        assert_eq!(report.descriptor.max_program_bytes, 512);
+        assert_eq!(report.run.program_id, 7);
+        assert_eq!(report.run.status, RunStatus::Running);
+        assert!(report.run.instructions_executed > 0);
+        assert_eq!(report.run.open_handles, 1);
+        assert!(report.run.returns.is_empty());
     }
 
     #[test]
