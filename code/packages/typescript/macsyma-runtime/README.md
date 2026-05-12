@@ -16,6 +16,8 @@ This first runtime slice is intentionally small and browser-friendly:
   inequality solver for interval predicates
 - dispatches direct `Solve(f(linear) = constant, var)` transcendental
   equations to the `cas-solve` inverse-family solver
+- dispatches `Subst(value, variable, expr)` to `cas-substitution`
+  structural substitution
 - dispatches deterministic list operations such as `Length`, `First`, `Rest`,
   `Last`, `Append`, `Reverse`, `Range`, `Map`, `Apply`, `Sort`, `Part`,
   `Flatten`, and `Join` to `cas-list-operations`
