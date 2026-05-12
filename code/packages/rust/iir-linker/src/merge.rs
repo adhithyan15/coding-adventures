@@ -82,7 +82,34 @@ pub fn merge_modules<'a>(
             }
             let name = if global_names.contains(&fn_.name) {
                 // Collision — prefix with module name.
-                format!("{}::{}", module.name, fn_.name)
+                //
+                // Security note: if a *different* module already has a function
+                // whose name happens to equal `"<module>::<fn_name>"` (e.g.
+                // module "a" exports "b::c" and module "b" has private "c"), the
+                // prefixed name would collide a second time.  To guarantee
+                // uniqueness we detect this case and append a monotonically
+                // increasing counter until we find a free slot.  This prevents
+                // the second `merged_name_map.insert` from silently overwriting
+                // the first entry and thereby redirecting call-rewrites to the
+                // wrong function.
+                let base = format!("{}::{}", module.name, fn_.name);
+                if !global_names.contains(&base) {
+                    base
+                } else {
+                    // Double-collision: append a counter to guarantee uniqueness.
+                    // We start at 0 and increment until we find a free slot.
+                    // In practice this loop runs at most once — it fires only
+                    // when an adversarial (or pathological) module name was chosen
+                    // specifically to trigger the base collision.
+                    let mut counter: usize = 0;
+                    loop {
+                        let candidate = format!("{base}${counter}");
+                        if !global_names.contains(&candidate) {
+                            break candidate;
+                        }
+                        counter += 1;
+                    }
+                }
             } else {
                 fn_.name.clone()
             };

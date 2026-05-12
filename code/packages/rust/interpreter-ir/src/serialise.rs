@@ -118,7 +118,15 @@ fn write_str(buf: &mut Vec<u8>, s: &str) {
     let encoded = s.as_bytes();
     // Use a 4-byte (u32) length prefix so strings longer than 65 535 bytes
     // cannot silently corrupt the stream (a u16 prefix would truncate).
-    write_u32_le(buf, encoded.len() as u32);
+    //
+    // Security: use `try_into().expect()` rather than `as u32` to turn a
+    // silent truncation (stream corruption on strings > 4 GiB) into a loud,
+    // early panic.  IIR string fields are compiler-generated and should never
+    // approach this limit; if they somehow do, we want a clear failure rather
+    // than a quietly malformed binary.
+    let len: u32 = encoded.len().try_into()
+        .expect("IIR string field exceeds 4 GiB — cannot serialise");
+    write_u32_le(buf, len);
     buf.extend_from_slice(encoded);
 }
 
