@@ -337,6 +337,77 @@ pub struct ContextSnapshot {
     pub artifact_refs: Vec<String>,
 }
 
+/// Compact aggregate over compaction snapshots for read-side inspectors.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ContextSnapshotSummary {
+    pub total_snapshots: usize,
+    pub included_entry_refs: usize,
+    pub summary_refs: usize,
+    pub memory_refs: usize,
+    pub artifact_refs: usize,
+    pub snapshots_with_memory_refs: usize,
+    pub snapshots_with_artifact_refs: usize,
+    pub total_token_estimate: u64,
+    pub min_token_estimate: Option<u64>,
+    pub max_token_estimate: Option<u64>,
+}
+
+impl ContextSnapshotSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_snapshots<'a, I>(snapshots: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ContextSnapshot>,
+    {
+        let mut summary = Self::empty();
+        for snapshot in snapshots {
+            summary.total_snapshots += 1;
+            summary.included_entry_refs += snapshot.included_entry_ids.len();
+            summary.summary_refs += snapshot.summary_refs.len();
+            summary.memory_refs += snapshot.memory_refs.len();
+            summary.artifact_refs += snapshot.artifact_refs.len();
+            summary.total_token_estimate = summary
+                .total_token_estimate
+                .saturating_add(snapshot.token_estimate);
+            summary.min_token_estimate = Some(
+                summary
+                    .min_token_estimate
+                    .map_or(snapshot.token_estimate, |tokens| {
+                        tokens.min(snapshot.token_estimate)
+                    }),
+            );
+            summary.max_token_estimate = Some(
+                summary
+                    .max_token_estimate
+                    .map_or(snapshot.token_estimate, |tokens| {
+                        tokens.max(snapshot.token_estimate)
+                    }),
+            );
+            if !snapshot.memory_refs.is_empty() {
+                summary.snapshots_with_memory_refs += 1;
+            }
+            if !snapshot.artifact_refs.is_empty() {
+                summary.snapshots_with_artifact_refs += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_snapshots == 0
+    }
+
+    pub fn has_memory_refs(&self) -> bool {
+        self.memory_refs > 0
+    }
+
+    pub fn has_artifact_refs(&self) -> bool {
+        self.artifact_refs > 0
+    }
+}
+
 /// Portable ordering for bounded snapshot list/read tools.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum SnapshotListSort {
@@ -778,6 +849,16 @@ impl<S: StorageBackend> ContextStore<S> {
             snapshots.truncate(limit);
         }
         Ok(snapshots)
+    }
+
+    /// Summarize selected compaction snapshots without reading transcript bodies.
+    pub fn snapshot_summary(
+        &self,
+        session_id: &str,
+        options: SnapshotListOptions,
+    ) -> Result<ContextSnapshotSummary, StorageError> {
+        let snapshots = self.list_snapshots(session_id, options)?;
+        Ok(ContextSnapshotSummary::from_snapshots(&snapshots))
     }
 
     /// Create a compaction snapshot that covers all entries up to and including
@@ -2021,6 +2102,38 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec!["entry-3"]
         );
+
+        let summary = store
+            .snapshot_summary(
+                "demo",
+                SnapshotListOptions::new()
+                    .with_memory_ref("memory-shared")
+                    .sorted_by(SnapshotListSort::TokenEstimateAsc),
+            )
+            .unwrap();
+        assert_eq!(
+            summary,
+            ContextSnapshotSummary {
+                total_snapshots: 2,
+                included_entry_refs: 4,
+                summary_refs: 2,
+                memory_refs: 3,
+                artifact_refs: 1,
+                snapshots_with_memory_refs: 2,
+                snapshots_with_artifact_refs: 1,
+                total_token_estimate: 40,
+                min_token_estimate: Some(10),
+                max_token_estimate: Some(30),
+            }
+        );
+        assert!(summary.has_memory_refs());
+        assert!(summary.has_artifact_refs());
+        assert!(!summary.is_empty());
+
+        let empty = ContextSnapshotSummary::from_snapshots([]);
+        assert!(empty.is_empty());
+        assert_eq!(empty.min_token_estimate, None);
+        assert_eq!(empty.max_token_estimate, None);
     }
 
     #[test]
