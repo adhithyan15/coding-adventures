@@ -41,7 +41,7 @@ use adjudication_ir::{
 use adjudication_pipeline::{
     run_with_gateway, PipelineDocument, PipelineInput, PipelineOutput, Verdict,
 };
-use llm_cache::CachingClient;
+use llm_cache::{CacheStats, CacheStatsHandle, CachingClient};
 use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, LlmError, Message, MessageContent, Role as MsgRole,
 };
@@ -146,16 +146,18 @@ pub struct PipelineArmReport {
     pub adj04_outcome: PassOutcome,
     pub adj05_outcome: PassOutcome,
     pub engine_ran: bool,
+    pub cache_stats: CacheStats,
 }
 
 pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
     let primary = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
         .with_timeout(cfg.timeout);
-    let extractor = wrap_with_cache(Box::new(primary.clone()), cfg);
-    let renderer = wrap_with_cache(Box::new(primary.clone()), cfg);
-    let nli = wrap_with_cache(Box::new(primary.clone()), cfg);
-    let plausibility = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (extractor, h_extractor) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (renderer, h_renderer) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (nli, h_nli) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (plausibility, h_plausibility) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let mut cache_handles = vec![h_extractor, h_renderer, h_nli, h_plausibility];
     let mut gateway = GatewayConfig::new()
         .with_client(PrimitiveRole::Extractor, extractor)
         .with_client(PrimitiveRole::Renderer, renderer)
@@ -165,10 +167,10 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         let adv_client = OllamaClient::new(adv.clone())
             .with_endpoint(cfg.endpoint.clone())
             .with_timeout(cfg.timeout);
-        gateway = gateway.with_client(
-            PrimitiveRole::Adversary,
-            wrap_with_cache(Box::new(adv_client) as Box<dyn LlmClient>, cfg),
-        );
+        let (adv_boxed, h_adv) =
+            wrap_with_cache(Box::new(adv_client) as Box<dyn LlmClient>, cfg);
+        cache_handles.push(h_adv);
+        gateway = gateway.with_client(PrimitiveRole::Adversary, adv_boxed);
     }
 
     let input = PipelineInput {
@@ -206,6 +208,8 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         Verdict::EngineError(detail) => format!("EngineError: {detail}"),
     };
 
+    let aggregate_cache_stats = aggregate_stats(&cache_handles);
+
     PipelineArmReport {
         verdict_summary: summary,
         adj02_outcome: trail.checker_results[0].outcome,
@@ -213,17 +217,33 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         adj04_outcome: trail.checker_results[2].outcome,
         adj05_outcome: trail.checker_results[3].outcome,
         engine_ran: trail.engine_artifacts.is_some(),
+        cache_stats: aggregate_cache_stats,
         pipeline_output: output,
     }
 }
 
-/// Cache-wrap an LlmClient if configured. Same helper as the TSA
-/// demo, copied here so this crate is self-contained.
-fn wrap_with_cache(inner: Box<dyn LlmClient>, cfg: &DemoConfig) -> Box<dyn LlmClient> {
-    match &cfg.cache_dir {
-        Some(dir) => Box::new(CachingClient::with_disk_persistence(inner, dir)),
-        None => Box::new(CachingClient::new(inner)),
+/// Cache-wrap an LlmClient and return its stats handle alongside.
+fn wrap_with_cache(
+    inner: Box<dyn LlmClient>,
+    cfg: &DemoConfig,
+) -> (Box<dyn LlmClient>, CacheStatsHandle) {
+    let cached = match &cfg.cache_dir {
+        Some(dir) => CachingClient::with_disk_persistence(inner, dir),
+        None => CachingClient::new(inner),
+    };
+    let handle = cached.stats_handle();
+    (Box::new(cached) as Box<dyn LlmClient>, handle)
+}
+
+fn aggregate_stats(handles: &[CacheStatsHandle]) -> CacheStats {
+    let mut total = CacheStats::default();
+    for h in handles {
+        let s = h.stats();
+        total.hits = total.hits.saturating_add(s.hits);
+        total.misses = total.misses.saturating_add(s.misses);
+        total.entries = total.entries.saturating_add(s.entries);
     }
+    total
 }
 
 // ---------------------------------------------------------------------------
@@ -368,6 +388,16 @@ pub fn format_side_by_side(raw: &RawArmReport, pipe: &PipelineArmReport) -> Stri
         format_outcome(&pipe.adj05_outcome)
     ));
     out.push_str(&format!("engine ran:               {}\n", pipe.engine_ran));
+    let cs = &pipe.cache_stats;
+    if cs.hits + cs.misses > 0 {
+        out.push_str(&format!(
+            "cache:                    {hits} hits / {misses} misses ({rate:.0}% hit rate), {entries} entries\n",
+            hits = cs.hits,
+            misses = cs.misses,
+            rate = cs.hit_rate() * 100.0,
+            entries = cs.entries,
+        ));
+    }
     out
 }
 

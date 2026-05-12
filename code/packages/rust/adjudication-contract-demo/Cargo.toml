@@ -1,6 +1,6 @@
 [package]
 name = "adjudication-contract-demo"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "A/B demo harness for contract clauses: run a short obligation clause through both a raw local model and the structured adjudication pipeline. Third domain alongside adjudication-tsa-demo and adjudication-clinical-demo; reuses the same checkers + engine to demonstrate generality."
 
