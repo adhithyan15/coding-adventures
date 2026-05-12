@@ -1,7 +1,7 @@
 import { subst } from "@coding-adventures/cas-substitution";
-import { numberNode, type IRNode } from "@coding-adventures/symbolic-ir";
+import { equals, numberNode, sym, type IRApply, type IRNode } from "@coding-adventures/symbolic-ir";
 
-export const MNEWTON = "MNewton";
+export const MNEWTON = sym("MNewton");
 
 export interface MNewtonOptions {
   readonly tol?: number;
@@ -10,6 +10,7 @@ export interface MNewtonOptions {
 
 export type EvalFn = (node: IRNode) => IRNode;
 export type DiffFn = (node: IRNode, variable: IRNode) => IRNode;
+export type MNewtonHandler = (expr: IRNode, evalFn: EvalFn, diffFn: DiffFn) => IRNode;
 
 export class MNewtonError extends Error {
   constructor(readonly x: number) {
@@ -65,4 +66,38 @@ export function mnewtonSolve(
   }
 
   return numberNode(xN);
+}
+
+export function mnewtonHandler(expr: IRNode, evalFn: EvalFn, diffFn: DiffFn): IRNode {
+  const args = applyArgs(expr, MNEWTON);
+  if (args === undefined || (args.length !== 3 && args.length !== 4)) return expr;
+
+  const [fIr, xSym, x0Ir, tolIr] = args;
+  if (xSym.kind !== "symbol" || irToFloat(x0Ir) === undefined) return expr;
+
+  let options: MNewtonOptions = {};
+  if (tolIr !== undefined) {
+    const tol = irToFloat(tolIr);
+    if (tol === undefined) return expr;
+    options = { tol };
+  }
+
+  try {
+    return mnewtonSolve(fIr, xSym, x0Ir, evalFn, diffFn, options);
+  } catch (error) {
+    if (error instanceof MNewtonError) return expr;
+    throw error;
+  }
+}
+
+export function buildMNewtonHandlerTable(): ReadonlyMap<string, MNewtonHandler> {
+  return new Map([[MNEWTON.name, mnewtonHandler]]);
+}
+
+function applyArgs(node: IRNode, head: IRNode): readonly IRNode[] | undefined {
+  return isApplyOf(node, head) ? node.args : undefined;
+}
+
+function isApplyOf(node: IRNode, head: IRNode): node is IRApply {
+  return node.kind === "apply" && equals(node.head, head);
 }

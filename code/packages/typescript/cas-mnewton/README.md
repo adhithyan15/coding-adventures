@@ -10,3 +10,8 @@ callers provide an evaluator callback and a symbolic derivative callback.
 convergence, returns the original function expression when numeric evaluation
 cannot proceed, and throws `MNewtonError` when the derivative is zero before a
 Newton step.
+
+For VM integration, `mnewtonHandler(expr, evalFn, diffFn)` handles
+`MNewton(f, x, x0)` and `MNewton(f, x, x0, tol)` without depending on a
+specific VM implementation. `buildMNewtonHandlerTable()` returns the dispatch
+map keyed by the `MNewton` head name.
