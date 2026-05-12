@@ -421,11 +421,27 @@ mod tests {
     }
 
     #[test]
-    fn anonymous_lambda_emits_make_closure() {
+    fn anonymous_lambda_emits_alloc_closure() {
+        // LANG34: compiler now emits alloc_closure instead of call_builtin "make_closure".
+        // srcs[0] must be Operand::Str(fn_name) and type_hint must be "closure".
         let i = fn_instrs("(define (adder n) (lambda (x) (+ x n)))", "adder");
-        let mc = i.iter().find(|x| x.op == "call_builtin"
-            && matches!(&x.srcs[0], Operand::Var(s) if s == "make_closure"));
-        assert!(mc.is_some(), "expected make_closure call_builtin in adder");
+        let ac = i.iter().find(|x| x.op == "alloc_closure");
+        assert!(ac.is_some(), "expected alloc_closure instruction in adder");
+        let ac = ac.unwrap();
+        // srcs[0] must be an Operand::Str carrying the synthesised lambda name.
+        assert!(
+            matches!(&ac.srcs[0], Operand::Str(s) if s.starts_with("__lambda_")),
+            "alloc_closure srcs[0] must be Operand::Str(__lambda_N), got {:?}", &ac.srcs[0]
+        );
+        assert_eq!(ac.type_hint, "closure", "alloc_closure type_hint must be 'closure'");
+        // No preceding const instruction should materialise the fn_name.
+        let const_before = i.iter().rev().skip_while(|x| x.op != "alloc_closure").skip(1).next();
+        if let Some(prev) = const_before {
+            assert_ne!(
+                prev.op, "const",
+                "alloc_closure must NOT be preceded by a const instruction for fn_name"
+            );
+        }
     }
 
     #[test]
@@ -438,17 +454,24 @@ mod tests {
     }
 
     #[test]
-    fn closure_call_uses_apply_closure() {
-        // ((adder 5) 3) — the inner (adder 5) returns a closure
-        // handle; the outer call goes through apply_closure.
+    fn closure_call_uses_call_closure() {
+        // LANG34: indirect call now emits `call_closure` instead of
+        // `call_builtin "apply_closure"`.
+        // ((adder 5) 3) — the inner (adder 5) returns a closure handle;
+        // the outer call goes through call_closure.
         let m = module(
             "(define (adder n) (lambda (x) (+ x n)))\n\
              ((adder 5) 3)",
         );
         let main = m.functions.iter().find(|f| f.name == "main").unwrap();
-        let ac = main.instructions.iter().find(|x| x.op == "call_builtin"
-            && matches!(&x.srcs[0], Operand::Var(s) if s == "apply_closure"));
-        assert!(ac.is_some(), "expected apply_closure call_builtin in main");
+        let cc = main.instructions.iter().find(|x| x.op == "call_closure");
+        assert!(cc.is_some(), "expected call_closure instruction in main");
+        let cc = cc.unwrap();
+        // srcs[0] must be a Var (the closure handle register), not a Str or name-string.
+        assert!(
+            matches!(&cc.srcs[0], Operand::Var(_)),
+            "call_closure srcs[0] must be Operand::Var(handle), got {:?}", &cc.srcs[0]
+        );
     }
 
     #[test]
@@ -467,13 +490,14 @@ mod tests {
 
     #[test]
     fn fn_globals_can_be_passed_as_values() {
-        // Reference to top-level fn name in non-call position
-        // produces a `make_closure` (0 captures).
+        // LANG34: Reference to top-level fn name in non-call position
+        // produces an `alloc_closure` (0 captures) instead of
+        // `call_builtin "make_closure"`.
         let m = module("(define (id x) x) id");
         let main = m.functions.iter().find(|f| f.name == "main").unwrap();
-        let mc = main.instructions.iter().find(|x| x.op == "call_builtin"
-            && matches!(&x.srcs[0], Operand::Var(s) if s == "make_closure"));
-        assert!(mc.is_some(), "fn-as-value should wrap in make_closure");
+        let ac = main.instructions.iter().find(|x| x.op == "alloc_closure"
+            && matches!(&x.srcs[0], Operand::Str(s) if s == "id"));
+        assert!(ac.is_some(), "fn-as-value should emit alloc_closure(Str('id'))");
     }
 
     #[test]
