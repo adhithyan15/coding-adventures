@@ -1,6 +1,6 @@
 [package]
 name = "iir-builtin-lowering"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 description = "IIR builtin lowering pass — converts call_builtin instructions into typed IIR arithmetic/comparison ops"
 

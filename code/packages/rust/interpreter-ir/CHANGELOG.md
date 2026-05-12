@@ -1,5 +1,35 @@
 # Changelog — interpreter-ir
 
+## [0.6.0] — 2026-05-12
+
+### Added (LANG34 — First-Class Closure Opcodes)
+
+#### `CLOSURE_TYPE` constant
+
+- `pub const CLOSURE_TYPE: &str = "closure"` — the type hint produced by
+  `alloc_closure` instructions.  Not a scalar (not in `CONCRETE_TYPES`);
+  `iir-to-*` numeric backends correctly reject it.
+
+#### `is_closure_op` predicate
+
+- `pub fn is_closure_op(op: &str) -> bool` — returns `true` for
+  `"alloc_closure"` and `"call_closure"`.
+
+#### Predicate updates
+
+- `is_value_producing` now includes `"alloc_closure"` and `"call_closure"`.
+- `is_allocating` now includes `"alloc_closure"` (`may_alloc = true`).
+- `is_known_op` now includes `is_global` (`global_load`/`global_store` were
+  previously missing) and `is_closure_op`.
+
+#### Tests
+
+5 new unit tests in `opcodes.rs`:
+`closure_type_constant`, `is_closure_op_recognised`, `closure_ops_are_known`,
+`alloc_closure_is_allocating`, `closure_ops_are_value_producing`.
+
+---
+
 ## [0.5.0] — 2026-05-11
 
 ### Added (LANG33 — Module System at the IIR Level)

@@ -1,5 +1,58 @@
 # Changelog — twig-ir-compiler
 
+## [0.3.0] — 2026-05-12
+
+### Changed (LANG34 — Emit alloc_closure / call_closure)
+
+Three emission sites updated to use the LANG34 first-class closure opcodes:
+
+#### Lambda allocation (`compile_anonymous_lambda`)
+
+```
+BEFORE:
+  %s0 = const("__lambda_N")          ← string_arg indirection
+  %c0 = call_builtin("make_closure", %s0, caps...) : "any"
+
+AFTER:
+  %c0 = alloc_closure(Str("__lambda_N"), caps...) : "closure"
+```
+
+No preceding `const` instruction is emitted; `fn_name` is now an inline
+`Operand::Str` in `srcs[0]`.
+
+#### Top-level function as value (`compile_var_ref` / fn_globals)
+
+```
+BEFORE:
+  %s0 = const("fn_name")
+  %fnref = call_builtin("make_closure", %s0) : "any"
+
+AFTER:
+  %fnref = alloc_closure(Str("fn_name")) : "closure"
+```
+
+#### Indirect call (`compile_apply`, indirect path)
+
+```
+BEFORE:
+  %r = call_builtin("apply_closure", %handle, args...) : "any"
+
+AFTER:
+  %r = call_closure(%handle, args...) : "any"
+```
+
+The `string_arg` helper is retained for `global_set`/`global_get`/`make_symbol`
+which still use the const-via-Var register convention.
+
+#### Tests updated
+
+Three tests renamed/updated to assert the new opcode forms:
+- `anonymous_lambda_emits_make_closure` → `anonymous_lambda_emits_alloc_closure`
+- `closure_call_uses_apply_closure` → `closure_call_uses_call_closure`
+- `fn_globals_can_be_passed_as_values` (assertion updated)
+
+---
+
 ## [0.2.1] — 2026-05-11
 
 ### Fixed (LANG33 — Module System)

@@ -59,8 +59,8 @@
 //! ## What this pass does NOT touch (Phase 1)
 //!
 //! - `call_builtin "cons"`, `"car"`, `"cdr"`, `"null?"` — Phase 2 (LANG31).
-//! - `call_builtin "make_closure"`, `"apply_closure"` — BEAM02 / CLR02.
-//! - `call_builtin "global_set"`, `"global_get"`, `"print"` — LANG27.
+//! - `call_builtin "make_closure"`, `"apply_closure"` — Phase 4 (LANG34).
+//! - `call_builtin "global_set"`, `"global_get"`, `"print"` — Phase 3 (LANG32).
 //! - Any other unrecognised builtin name — left entirely unchanged.
 //!
 //! ## Error handling
@@ -115,6 +115,7 @@ pub mod error;
 pub mod numeric;
 pub mod heap;
 pub mod global_io;
+pub mod closure;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -128,6 +129,8 @@ pub use error::BuiltinLoweringError;
 pub use heap::lower_heap_builtins;
 // Re-export the global/IO lowering entry point (LANG32).
 pub use global_io::lower_global_io;
+// Re-export the closure lowering entry point (LANG34).
+pub use closure::lower_closure_builtins;
 
 use interpreter_ir::IIRModule;
 
@@ -181,6 +184,17 @@ pub fn lower_builtins(module: &mut IIRModule) -> Vec<BuiltinLoweringError> {
     // instructions (the twig-ir-compiler's string-literal convention).
     // Infallible: unresolvable instructions are left unchanged.
     global_io::lower_global_io(module);
+
+    // ── Phase 4: closure builtins (LANG34) ────────────────────────────────
+    //
+    // Rewrites legacy call_builtin forms to first-class closure opcodes:
+    //   call_builtin "make_closure" fn_name_reg cap0…  →  alloc_closure(Str(fn_name), cap0…)
+    //   call_builtin "apply_closure" handle arg0…      →  call_closure(handle, arg0…)
+    //
+    // Must run last (after global/IO lowering) so the const-string look-back
+    // sees a stable instruction list.  Infallible: unresolvable instructions
+    // are left unchanged for the backend validator or twig-vm fallback.
+    closure::lower_closure_builtins(module);
 
     all_errors
 }

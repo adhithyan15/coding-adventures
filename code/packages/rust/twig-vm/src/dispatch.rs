@@ -30,6 +30,8 @@
 //! | `send`             | (PR 6) dispatch a method via `LangBinding::send_message` |
 //! | `load_property`    | (PR 6) read a property via `LangBinding::load_property` |
 //! | `store_property`   | (PR 6) write a property via `LangBinding::store_property` |
+//! | `alloc_closure`    | (LANG34) allocate closure: `srcs[0] = Str(fn_name)`, `srcs[1..] = captures` |
+//! | `call_closure`     | (LANG34) invoke closure: `srcs[0] = handle`, `srcs[1..] = user args` |
 //!
 //! ### Special-cased `call_builtin` names (PR 5)
 //!
@@ -1053,6 +1055,24 @@ fn dispatch(
             "ret" => {
                 return exec_ret(instr, &frame);
             }
+            // ── LANG34: first-class closure opcodes ──────────────────────────
+            //
+            // `alloc_closure` and `call_closure` are the successor forms of
+            // the older `call_builtin "make_closure"` / `"apply_closure"` that
+            // required a preceding `const` instruction to materialise the
+            // function name as a register value.  The new opcodes carry the
+            // fn_name inline as `Operand::Str` (no register lookup).
+            //
+            // The old `call_builtin` forms remain in `exec_call_builtin` for
+            // backward compatibility with existing compiled modules.
+            "alloc_closure" => {
+                exec_alloc_closure(instr, &mut frame)?;
+                pc += 1;
+            }
+            "call_closure" => {
+                exec_call_closure(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
+                pc += 1;
+            }
             other => {
                 return Err(RunError::UnsupportedOpcode(other.to_string()));
             }
@@ -1225,6 +1245,17 @@ fn exec_call_builtin(
     let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(name)
         .ok_or_else(|| RunError::UnknownBuiltin(name.to_string()))?;
 
+    // DoS guard: cap the args allocation.  Matches exec_send, exec_apply_closure,
+    // exec_alloc_closure, exec_call_closure.  A malicious IIR module calling
+    // a valid builtin with millions of srcs would OOM on Vec::with_capacity
+    // before the budget check fires (budget counts instructions, not operands).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call_builtin({name}): srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
     let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
     for src in &instr.srcs[1..] {
         // Read-only borrow of frame for the lookup callback —
@@ -1268,6 +1299,17 @@ fn exec_call(
         .iter()
         .find(|f| f.name == callee_name)
         .ok_or_else(|| RunError::UnknownFunction(callee_name.to_string()))?;
+
+    // DoS guard — mirrors exec_call_builtin, exec_apply_closure, exec_send, etc.
+    // A hand-crafted IIR `call` instruction with millions of srcs would OOM via
+    // Vec::with_capacity before the budget check fires (one tick per instruction,
+    // not per operand).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
 
     let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
     for src in &instr.srcs[1..] {
@@ -1383,14 +1425,24 @@ fn exec_apply_closure(
         )));
     }
 
+    // DoS guard — mirrors the cap in exec_call_closure, exec_alloc_closure, exec_send.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "apply_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
     // Resolve the handle to a LispyValue and confirm it's a closure.
     let frame_ref = &*frame;
     let handle = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
         .map_err(RunError::OperandConversion)?;
-    // SAFETY: closure values come from `make_closure` /
-    // `make_builtin_closure` which go through alloc_*_closure;
-    // those return properly-tagged heap pointers that live forever
-    // (PR 2 leak).  `as_closure` walks the header; safe to call.
+    // SAFETY: see the detailed comment in exec_call_closure for the full
+    // invariant analysis.  Summary: only values with TAG_HEAP set (from
+    // alloc_closure / alloc_cons / etc.) are dereferenced; integers, booleans,
+    // and symbols all have non-HEAP tags and cause as_heap_ptr() to return None
+    // before any pointer dereference occurs.  Heap-tagged values come
+    // exclusively from lispy_runtime allocators that Box::leak aligned objects.
     let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
         RunError::NotCallable(format!("apply_closure: {handle} is not a closure"))
     })?;
@@ -1407,16 +1459,20 @@ fn exec_apply_closure(
     }
 
     let result = if is_builtin {
-        // Defense-in-depth: a well-formed `make_builtin_closure`
-        // produces no captures, but we explicitly assert this so a
-        // malformed Closure (`flags = CLOSURE_FLAG_BUILTIN` AND
-        // non-empty captures via `Closure` field-level access) can't
-        // silently drop captures.  Found by PR 5 security review (#2).
-        debug_assert!(
-            captures.is_empty(),
-            "builtin closure must have no captures (got {})",
-            captures.len(),
-        );
+        // Hard runtime guard: a well-formed builtin closure must have zero
+        // captures.  `make_builtin_closure` / `alloc_builtin_closure` never
+        // attach captures.  A malformed closure with CLOSURE_FLAG_BUILTIN AND
+        // non-empty captures would silently drop those captures if we only used
+        // debug_assert! (which is a no-op in --release).  Replacing it with a
+        // hard error means release builds are equally protected, matching the
+        // same guard in exec_call_closure.  Originally found by PR 5 review;
+        // upgraded to hard error in LANG34 security review.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "apply_closure: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
         // Builtin closure: dispatch via resolve_builtin.
         let name_str = name_of(fn_name_id).ok_or_else(|| {
             RunError::MalformedInstruction(format!(
@@ -1435,6 +1491,258 @@ fn exec_apply_closure(
         let name_str = name_of(fn_name_id).ok_or_else(|| {
             RunError::MalformedInstruction(format!(
                 "apply_closure: closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let callee = module
+            .functions
+            .iter()
+            .find(|f| f.name == name_str)
+            .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile, debug)?
+    };
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG34: first-class closure opcodes
+// ---------------------------------------------------------------------------
+//
+// `alloc_closure` and `call_closure` are the successor forms of the older
+// `call_builtin "make_closure"` / `"apply_closure"` pattern.  The key
+// improvement: the function name is now an inline `Operand::Str` in
+// `srcs[0]`, eliminating the preceding `const` instruction that the
+// twig-ir-compiler previously had to emit via the `string_arg` helper.
+
+/// Handle `alloc_closure(Str(fn_name), cap0, cap1, …) : "closure"`.
+///
+/// Allocates a closure pairing `fn_name` with captured values, using the
+/// same `lispy_runtime::heap::alloc_closure` path that the old
+/// `call_builtin "make_closure"` form used — the representation is
+/// identical so `exec_call_closure` / `exec_apply_closure` can both read
+/// the resulting heap object.
+///
+/// # Operand layout
+///
+/// | Index | Expected | Meaning |
+/// |-------|----------|---------|
+/// | `srcs[0]` | `Operand::Str(name)` | Name of the IIR function to close over |
+/// | `srcs[1..]` | `Operand::Var(name)` | Captured variables in order |
+///
+/// The dest is required — closures always produce a value.
+fn exec_alloc_closure(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("alloc_closure requires dest".into())
+    })?;
+
+    // srcs[0] must be Operand::Str carrying the compile-time function name.
+    let fn_name = match instr.srcs.first() {
+        Some(Operand::Str(s)) => s.as_str(),
+        Some(other) => return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: srcs[0] must be Operand::Str(fn_name), got {other}"
+        ))),
+        None => return Err(RunError::MalformedInstruction(
+            "alloc_closure requires at least one src (fn_name as Operand::Str)".into()
+        )),
+    };
+
+    // Guard against absurdly long fn_name strings.
+    //
+    // `intern()` adds every unique string to a global table that is never
+    // freed (the leak-forever invariant that `as_closure` relies on).
+    // Without a length cap, a malicious IIR module could carry a very long
+    // or high-entropy fn_name and consume unbounded memory on every
+    // `alloc_closure` execution.  The cap is generous enough to accommodate
+    // any reasonable compiler-generated name (the twig-ir-compiler emits
+    // names like `__lambda_0`, `adder`, etc.) while excluding payloads.
+    const MAX_FN_NAME_LEN: usize = 512;
+    if fn_name.len() > MAX_FN_NAME_LEN {
+        return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: fn_name exceeds maximum length ({} > {MAX_FN_NAME_LEN})",
+            fn_name.len()
+        )));
+    }
+
+    // Intern the function name to a SymbolId — the closure heap record stores
+    // names as interned symbol ids for O(1) equality checks.
+    let sym_id = intern(fn_name);
+    if sym_id == SymbolId::NONE {
+        // Use RuntimeError::Custom, not TypeError — this is a resource-
+        // exhaustion condition (the symbol intern table is full), not a
+        // type mismatch.  Callers that need to distinguish resource errors
+        // from type errors should match on Custom("intern table exhausted").
+        return Err(RunError::Runtime(RuntimeError::Custom(format!(
+            "alloc_closure: intern table exhausted for fn_name {fn_name:?}"
+        ))));
+    }
+
+    // DoS guard — mirrors the cap added for exec_send.
+    //
+    // `instr.srcs.len()` is controlled by the IIR module, which could be
+    // hand-crafted with millions of operands.  Without a cap the
+    // Vec::with_capacity call below would attempt a huge heap allocation
+    // before the budget or depth check fires.  Well-formed Twig programs
+    // never come close to MAX_REGISTERS_PER_FRAME captures.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
+    // Collect captured values from srcs[1..].
+    let frame_ref = &*frame;
+    let mut captures: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
+    for src in &instr.srcs[1..] {
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        captures.push(v);
+    }
+
+    // Allocate the closure via lispy-runtime's canonical path.
+    // `lispy_runtime::alloc_closure` is re-exported from `lispy_runtime::heap::alloc_closure`.
+    let closure_val = lispy_runtime::alloc_closure(sym_id, captures);
+    frame.set(dest.clone(), closure_val)?;
+    Ok(())
+}
+
+/// Handle `call_closure(Var(handle), arg0, arg1, …) : "any"`.
+///
+/// Invokes a closure previously created by `alloc_closure` (or by the older
+/// `call_builtin "make_closure"` path — the representation is identical).
+/// Prepends captured values to the user args before calling the underlying
+/// function, matching the ABI that `compile_anonymous_lambda` relies on.
+///
+/// This is equivalent to `exec_apply_closure` but with the operand layout
+/// shifted by one:
+///
+/// | Opcode | srcs[0] | srcs[1] | srcs[2..] |
+/// |--------|---------|---------|-----------|
+/// | `apply_closure` (legacy) | Var("apply_closure") | closure handle | user args |
+/// | `call_closure` (LANG34)  | closure handle       | user args[0]  | user args[1..] |
+fn exec_call_closure(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    if instr.srcs.is_empty() {
+        return Err(RunError::MalformedInstruction(
+            "call_closure requires at least 1 src (closure handle)".into()
+        ));
+    }
+
+    // DoS guard — mirrors the cap added for exec_send.
+    //
+    // A hand-crafted IIR module can embed a call_closure instruction with
+    // millions of srcs; Vec::with_capacity below would OOM before the budget
+    // or depth guard fires.  One budget tick per instruction means a single
+    // malformed call_closure consumes only 1 tick, not proportional to srcs.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
+    // srcs[0] is the closure handle variable.
+    let frame_ref = &*frame;
+    let handle = operand_to_value(&instr.srcs[0], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+
+    // SAFETY: `lispy_runtime::as_closure` is an `unsafe fn` that:
+    //
+    //   1. Calls `handle.as_heap_ptr()` which first checks the tag bits.
+    //      LispyValue's tag encoding uses TAG_INT = 0b000, TAG_HEAP = 0b111,
+    //      TAG_TRUE = 0b011, TAG_FALSE = 0b001, TAG_SYMBOL = 0b101, TAG_NIL = 0b010.
+    //      Only values produced by `alloc_closure`, `alloc_cons`, etc. have
+    //      TAG_HEAP set.  Integers, booleans, and symbols will cause
+    //      `as_heap_ptr()` to return `None` → `as_closure` immediately returns
+    //      `None` — no pointer dereference occurs.
+    //
+    //   2. For values that DO have TAG_HEAP, the pointer was produced by
+    //      `lispy_runtime::heap::alloc_closure` / `alloc_cons` / etc. which
+    //      Box::leak a properly-aligned heap allocation with a valid
+    //      `ObjectHeader` at offset 0.  Dereferencing that pointer to read
+    //      `class_or_kind` is safe given the leak-forever invariant.
+    //
+    //   3. An adversarially crafted IIR integer that happens to have the
+    //      low 3 bits set (TAG_HEAP) CANNOT be produced by `exec_const`
+    //      for `Operand::Int(n)`, because `LispyValue::int(n)` shifts
+    //      left by 3 bits making the low 3 bits always 0 (TAG_INT = 0b000).
+    //      The only way to introduce an invalid heap-tagged value would be
+    //      through a foreign `unsafe` block — which does not exist in the
+    //      normal IIR execution path.
+    //
+    // Together, these guarantees make the call safe in the twig-vm context.
+    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+        RunError::NotCallable(format!("call_closure: {handle} is not a closure"))
+    })?;
+    let fn_name_id = closure.fn_name;
+    let captures = closure.captures.clone();
+    let is_builtin = closure.is_builtin();
+
+    // Collect user-visible args from srcs[1..].
+    let mut user_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
+    for src in &instr.srcs[1..] {
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        user_args.push(v);
+    }
+
+    let result = if is_builtin {
+        // Builtin closure: dispatch via resolve_builtin.
+        //
+        // Hard runtime guard: a well-formed builtin closure must have zero
+        // captures.  `make_builtin_closure` / `alloc_builtin_closure` never
+        // attach captures; LANG34's `alloc_closure` is for user functions only.
+        // Reject malformed IR that somehow produces a builtin closure with
+        // non-empty captures — this is not a style check, it is a correctness
+        // boundary: passing captures to `builtin(&user_args)` would silently
+        // drop them and produce wrong results.  We enforce it unconditionally
+        // (not just in debug builds) so release builds are equally protected.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "call_closure: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "call_closure: builtin closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
+            .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
+        builtin(&user_args).map_err(RunError::Runtime)?
+    } else {
+        // User-fn closure: prepend captures to args then recurse.
+        //
+        // Depth / stack-overflow protection: `dispatch` itself checks
+        // `depth > MAX_DISPATCH_DEPTH` at entry and returns `RunError::DepthExceeded`
+        // before any allocation or further recursion.  Passing `depth + 1`
+        // here means the guard fires on the *next* call, bounding the
+        // total native call-stack depth to MAX_DISPATCH_DEPTH + 1 (256 + 1 = 257
+        // by default).  This is consistent with `exec_apply_closure` and
+        // `exec_call` which use the same `depth + 1` pattern.
+        let mut all_args = captures;
+        all_args.extend(user_args);
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "call_closure: closure has unknown fn_name id {}",
                 fn_name_id.0
             ))
         })?;
@@ -3605,5 +3913,429 @@ mod tests {
             }
             other => panic!("expected UnknownBuiltin, got {other:?}"),
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // LANG34: first-class closure opcodes
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // These tests drive `alloc_closure` and `call_closure` directly
+    // through hand-built IIRModules so we can verify the new dispatch
+    // arms independently of the twig-ir-compiler.
+
+    /// Helper: build a minimal two-function module where `main` allocates a
+    /// closure over `inner`, stores it in a register, then calls it.
+    ///
+    /// `inner` takes `captures ++ [arg]` as parameters (captures first, then
+    /// the single user-visible arg).
+    ///
+    /// The module structure mirrors what the twig-ir-compiler emits for:
+    ///   (define (make-adder x) (lambda (y) (+ x y)))
+    ///   ((make-adder 10) 5)
+    fn make_alloc_call_closure_module(
+        inner_name: &str,
+        capture_param: &str,   // name of the captured param in inner
+        user_param: &str,      // name of the user-visible param in inner
+        inner_body: Vec<IIRInstr>,
+        main_instructions: Vec<IIRInstr>,
+    ) -> IIRModule {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let inner = IIRFunction {
+            name: inner_name.into(),
+            params: vec![
+                (capture_param.into(), "any".into()),
+                (user_param.into(), "any".into()),
+            ],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: inner_body,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 8,
+            instructions: main_instructions,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        IIRModule {
+            name: "test".into(),
+            functions: vec![inner, main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        }
+    }
+
+    /// `alloc_closure` with zero captures, then `call_closure` with one arg.
+    ///
+    /// Builds a module equivalent to:
+    ///   inner(_, y) = y + 1   (capture slot unused — allocated as placeholder)
+    ///   main: c = alloc_closure("inner"); r = call_closure(c, 41); ret r
+    ///
+    /// Expects r = 42.
+    #[test]
+    fn alloc_and_call_closure_no_captures() {
+        // inner: just returns user_arg + 1  (ignore capture)
+        let inner_body = vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("res".into()),
+                vec![
+                    Operand::Var("+".into()),
+                    Operand::Var("y".into()),
+                    Operand::Int(1),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+        ];
+        // main: alloc_closure("inner"), call_closure(c, 41)
+        //
+        // Note: inner expects (capture_param, user_param) so we must supply
+        // a dummy capture.  alloc_closure with zero captures still works —
+        // the inner function just has an unused first param.
+        // Simplest: use an inner that takes only ONE param (no capture).
+        // Build a simpler inner that takes just y.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let inner_fn = IIRFunction {
+            name: "add_one".into(),
+            params: vec![("y".into(), "any".into())],
+            return_type: "any".into(),
+            register_count: 2,
+            instructions: vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("res".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("y".into()),
+                        Operand::Int(1),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                // c = alloc_closure(Str("add_one"))   — no captures
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![Operand::Str("add_one".into())],
+                    "closure",
+                ),
+                // r = call_closure(c, 41)
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("c".into()),
+                        Operand::Int(41),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![inner_fn, main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let result = run(&module).unwrap();
+        assert_eq!(result.as_int(), Some(42), "expected 42, got {result}");
+    }
+
+    /// `alloc_closure` with one captured variable, then `call_closure`.
+    ///
+    /// Equivalent to:
+    ///   inner(x, y) = x + y   where x is captured
+    ///   main: c = alloc_closure("inner", 10); r = call_closure(c, 5); ret r
+    ///
+    /// Expects r = 15.
+    #[test]
+    fn alloc_and_call_closure_with_one_capture() {
+        let module = make_alloc_call_closure_module(
+            "add_capture",
+            "x",   // capture param
+            "y",   // user param
+            // inner body: x + y
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("res".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("x".into()),
+                        Operand::Var("y".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+            ],
+            // main: capture = const 10, alloc_closure, call_closure(c, 5)
+            vec![
+                // cap = 10
+                IIRInstr::new("const", Some("cap".into()), vec![Operand::Int(10)], "any"),
+                // c = alloc_closure(Str("add_capture"), cap)
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![
+                        Operand::Str("add_capture".into()),
+                        Operand::Var("cap".into()),
+                    ],
+                    "closure",
+                ),
+                // r = call_closure(c, 5)
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("c".into()),
+                        Operand::Int(5),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+        );
+        let result = run(&module).unwrap();
+        assert_eq!(result.as_int(), Some(15), "expected 15, got {result}");
+    }
+
+    /// `alloc_closure` with two captured variables.
+    ///
+    /// Equivalent to: inner(a, b, y) = a + b + y  where a,b are captures.
+    /// main: c = alloc_closure("sum3", 3, 4); r = call_closure(c, 5); ret r
+    /// Expects r = 12.
+    #[test]
+    fn alloc_and_call_closure_with_two_captures() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let inner_fn = IIRFunction {
+            name: "sum3".into(),
+            params: vec![
+                ("a".into(), "any".into()),
+                ("b".into(), "any".into()),
+                ("y".into(), "any".into()),
+            ],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("ab".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("a".into()),
+                        Operand::Var("b".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("res".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("ab".into()),
+                        Operand::Var("y".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 6,
+            instructions: vec![
+                IIRInstr::new("const", Some("ca".into()), vec![Operand::Int(3)], "any"),
+                IIRInstr::new("const", Some("cb".into()), vec![Operand::Int(4)], "any"),
+                // c = alloc_closure(Str("sum3"), ca, cb)
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![
+                        Operand::Str("sum3".into()),
+                        Operand::Var("ca".into()),
+                        Operand::Var("cb".into()),
+                    ],
+                    "closure",
+                ),
+                // r = call_closure(c, 5)
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("c".into()),
+                        Operand::Int(5),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![inner_fn, main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let result = run(&module).unwrap();
+        assert_eq!(result.as_int(), Some(12), "expected 12, got {result}");
+    }
+
+    /// `alloc_closure` with a non-Str srcs[0] must return MalformedInstruction.
+    #[test]
+    fn alloc_closure_wrong_operand_type_errors() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 2,
+            instructions: vec![
+                // Deliberately pass Var instead of Str for fn_name.
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![Operand::Int(99)],  // wrong: must be Str
+                    "closure",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(
+            matches!(err, RunError::MalformedInstruction(_)),
+            "expected MalformedInstruction, got {err:?}"
+        );
+    }
+
+    /// `call_closure` on a non-closure value must return NotCallable.
+    #[test]
+    fn call_closure_on_non_closure_errors() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 3,
+            instructions: vec![
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Int(7)], "any"),
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![Operand::Var("x".into())],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::NotCallable(_)));
+    }
+
+    /// End-to-end: Twig source that produces lambdas now emits `alloc_closure`
+    /// / `call_closure` (not `call_builtin`) and executes correctly.
+    ///
+    /// This test verifies that the twig-ir-compiler changes in Commit 4 are
+    /// correct: after LANG34, `run_source` on a lambda program still returns
+    /// the right value.  The opcodes used internally have changed but the
+    /// semantics must be identical.
+    #[test]
+    fn e2e_lambda_with_capture_via_new_opcodes() {
+        // Curried adder: (((lambda (x) (lambda (y) (+ x y))) 3) 4) → 7
+        let src = "(((lambda (x) (lambda (y) (+ x y))) 3) 4)";
+        let result = run_source(src).unwrap();
+        assert_eq!(result.as_int(), Some(7), "expected 7, got {result}");
+    }
+
+    #[test]
+    fn e2e_make_adder_with_new_opcodes() {
+        // Classic make-adder: ((make-adder 10) 5) → 15
+        let src = "
+            (define (make-adder x) (lambda (y) (+ x y)))
+            ((make-adder 10) 5)
+        ";
+        let result = run_source(src).unwrap();
+        assert_eq!(result.as_int(), Some(15), "expected 15, got {result}");
     }
 }

@@ -4,6 +4,49 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.3.0] — 2026-05-12
+
+### Added (LANG34 — Phase 4 Closure Builtin Lowering)
+
+#### New `src/closure.rs` module
+
+Phase 4 of the builtin-lowering pipeline.  Rewrites legacy
+`call_builtin "make_closure"` / `"apply_closure"` instructions — emitted by
+pre-LANG34 compilers and hand-built tests — to first-class LANG34 opcodes:
+
+| Legacy form | LANG34 form |
+|-------------|-------------|
+| `call_builtin "make_closure" fn_name_reg cap0…` | `alloc_closure(Str(fn_name), cap0…) : "closure"` |
+| `call_builtin "apply_closure" handle arg0…` | `call_closure(handle, arg0…) : "any"` |
+
+**Algorithm:** two-pass per function.  Pass 1 builds a
+`HashMap<register, literal_text>` from `const` instructions.  Pass 2 rewrites
+`make_closure`/`apply_closure` and drops `const` instructions that become
+dead (single-use, only consumed by the rewritten `make_closure`).
+
+**Infallible:** `make_closure` with an unresolvable fn_name register is left
+unchanged for the twig-vm fallback / backend validator.
+
+Public API: `pub fn lower_closure_builtins(module: &mut IIRModule)` +
+re-exported at crate root as `lower_closure_builtins`.
+
+10 unit tests covering: zero-capture rewrite, two-capture rewrite, multi-use
+const preservation, unresolvable case, apply_closure rewrite, mixed forms,
+idempotency, already-lowered no-op.
+
+#### `lower_builtins` Phase 4 call
+
+`lower_builtins` in `lib.rs` now calls `closure::lower_closure_builtins`
+after Phase 3 (global/IO lowering).
+
+#### Updated test_73 comment
+
+`test_73_make_closure_left_unchanged` renamed to
+`test_73_make_closure_unresolvable_left_unchanged` with updated comment
+explaining the LANG34 Phase 4 behavior for unresolvable cases.
+
+---
+
 ## [0.2.0] — 2026-05-11
 
 ### Added (LANG32 — Global Variables and I/O Phase 3 lowering)

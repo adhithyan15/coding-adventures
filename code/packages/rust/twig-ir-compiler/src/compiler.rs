@@ -39,24 +39,30 @@
 //! |-----------------------------|---------------------------------------------|
 //! | Top-level user fn name      | `call <name>, ...args`                      |
 //! | Builtin name (`+`, `cons`)  | `call_builtin <name>, ...args`              |
-//! | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
+//! | Anything else (locals etc.) | `call_closure h, ...args` (LANG34)          |
 //!
 //! Top-level recursion stays on the fast `call` path; only locals
 //! holding closures pay the indirect cost.
 //!
-//! ## Encoding string operands
+//! ## LANG34 closure opcodes
 //!
-//! `interpreter_ir::Operand` doesn't have a dedicated `String` variant —
-//! the four variants are `Var`, `Int`, `Float`, `Bool`.  Where the IR
-//! semantically needs a string literal (e.g. the function name passed
-//! to `make_closure`, or the global key passed to `global_set`), we
-//! materialise it via a `const` instruction whose source operand is a
-//! `Operand::Var(literal_text)`.  The `vm-core` `const` handler stores
-//! the literal verbatim — Python's `IIRInstr("const", v, ["text"])`
-//! and Rust's `IIRInstr("const", Some(v), [Operand::Var("text")])`
-//! round-trip identically through the runtime.  The *destination*
-//! variable then carries the string, and downstream `call_builtin`
-//! ops resolve it through the frame in the normal way.
+//! Since LANG34 the compiler emits first-class closure opcodes instead of
+//! routing through `call_builtin`:
+//!
+//! - Lambda allocation: `alloc_closure(Str(fn_name), cap0, cap1, …) : "closure"`
+//!   The function name is an inline `Operand::Str` — no preceding `const`
+//!   instruction is needed.  The old `string_arg` helper is retained for
+//!   `global_set`/`global_get` / `make_symbol` uses.
+//! - Indirect calls: `call_closure(handle, arg0, arg1, …) : "any"`
+//!   Replaces the former `call_builtin "apply_closure" handle args…` form.
+//!
+//! ## Encoding string operands (for globals and symbols)
+//!
+//! `Operand::Str(literal)` is now the canonical way to embed a compile-time
+//! string in an instruction.  The `string_arg` helper (which emits a `const`
+//! with `Operand::Var(literal)`) is retained for operations that still need
+//! the old convention: `global_set`, `global_get`, `make_symbol`.  See the
+//! LANG32 spec for details on the `global_load`/`global_store` lowering pass.
 
 use std::collections::HashSet;
 
@@ -492,21 +498,20 @@ impl Compiler {
             return_refinement: None,
         });
 
-        // 3. Emit `make_closure` at the call site.
-        // The fn_name is itself a string literal — we materialise it
-        // via `const` so it survives the runtime's frame resolution
-        // (see the module-level "Encoding string operands" comment).
-        let fn_name_reg = self.string_arg(outer, &fn_name, lam_loc);
+        // 3. Emit `alloc_closure` at the call site (LANG34).
+        //
+        // The function name is now an inline `Operand::Str` — no preceding
+        // `const` instruction is needed.  This is cleaner than the old
+        // `string_arg` / `call_builtin "make_closure"` convention and
+        // makes the callee name statically visible in the IR for analysis
+        // passes and the iir-to-* backends.
         let dest = outer.fresh_var("clos");
-        let mut srcs: Vec<Operand> = vec![
-            Operand::Var("make_closure".into()),
-            Operand::Var(fn_name_reg),
-        ];
+        let mut srcs: Vec<Operand> = vec![Operand::Str(fn_name.clone())];
         for c in &captures {
             srcs.push(Operand::Var(c.clone()));
         }
         outer.emit(
-            IIRInstr::new("call_builtin", Some(dest.clone()), srcs, "any"),
+            IIRInstr::new("alloc_closure", Some(dest.clone()), srcs, "closure"),
             lam_loc,
         );
         Ok(dest)
@@ -618,14 +623,17 @@ impl Compiler {
 
         // Top-level function — wrap in a 0-capture closure handle so
         // the value can be passed around or applied later.
+        //
+        // LANG34: emit `alloc_closure(Str(fn_name))` instead of the old
+        // `string_arg + call_builtin "make_closure"` form.  A 0-capture
+        // closure is perfectly valid; exec_alloc_closure handles it.
         if self.fn_globals.contains(&v.name) {
-            let name_reg = self.string_arg(ctx, &v.name, loc);
             let dest = ctx.fresh_var("fnref");
             ctx.emit(IIRInstr::new(
-                "call_builtin",
+                "alloc_closure",
                 Some(dest.clone()),
-                vec![Operand::Var("make_closure".into()), Operand::Var(name_reg)],
-                "any",
+                vec![Operand::Str(v.name.clone())],
+                "closure",
             ), loc);
             return Ok(dest);
         }
@@ -804,19 +812,19 @@ impl Compiler {
         }
 
         // Indirect: compile the fn expression to a closure handle, then
-        // route through the `apply_closure` builtin.
+        // invoke via `call_closure` (LANG34).
+        //
+        // Before LANG34 this emitted `call_builtin "apply_closure" handle args…`.
+        // Now: the handle is srcs[0] directly — no leading name-string operand.
         let fn_handle = self.compile_expr(&expr.fn_expr, ctx)?;
-        let mut srcs: Vec<Operand> = vec![
-            Operand::Var("apply_closure".into()),
-            Operand::Var(fn_handle),
-        ];
+        let mut srcs: Vec<Operand> = vec![Operand::Var(fn_handle)];
         for a in &expr.args {
             let r = self.compile_expr(a, ctx)?;
             srcs.push(Operand::Var(r));
         }
         let dest = ctx.fresh_var("r");
         ctx.emit(IIRInstr::new(
-            "call_builtin",
+            "call_closure",
             Some(dest.clone()),
             srcs,
             "any",
@@ -832,12 +840,15 @@ impl Compiler {
     /// the register's name.
     ///
     /// Used when a `call_builtin` needs a literal string as one of its
-    /// runtime arguments — e.g. the `name` argument to `make_closure`,
-    /// `make_symbol`, `global_set`, `global_get`.  See the module-
-    /// level "Encoding string operands" comment for why we pass the
-    /// string through `Operand::Var` rather than via a dedicated
-    /// `Operand::Str` variant (which would require modifying the
-    /// shared `interpreter-ir` crate).
+    /// runtime arguments — e.g. the `name` argument to `make_symbol`,
+    /// `global_set`, `global_get`.  The string is emitted as a `const`
+    /// instruction whose source is `Operand::Var(literal_text)`, which the
+    /// twig-vm `const` handler interns as a symbol.
+    ///
+    /// **Note:** `alloc_closure` (LANG34) no longer uses `string_arg` — the
+    /// function name is embedded inline as `Operand::Str` in the instruction
+    /// itself.  `string_arg` is retained only for the operations above that
+    /// still require the register-materialised convention.
     fn string_arg(&mut self, ctx: &mut FnCtx, literal: &str, loc: SourceLoc) -> String {
         let v = ctx.fresh_var("s");
         ctx.emit(IIRInstr::new(
