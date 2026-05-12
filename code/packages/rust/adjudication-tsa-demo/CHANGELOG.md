@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-05-12
+
+### Added
+
+ADJ06 clarification loop now also covers ADJ03 polarity/modality
+failures, not just ADJ02 coverage failures.
+
+- Each iteration of the loop picks the FIRST failing gating check
+  and dispatches to the matching retry primitive:
+  - ADJ02 coverage   → `retry_decompose_on_coverage_failure`
+  - ADJ03 polarity   → `retry_decompose_on_polarity_failure`
+- The framework auto-synthesizes a polarity hint when the source
+  text contains a common negation token (e.g., "no", "not",
+  "never", "without", "denies", "denied", "absent", "ruled out").
+  Helps the model recognise that nodes covering negated text should
+  be `Denied`, not `Affirmed`.
+- The summary line in the side-by-side report now reports WHICH
+  checker the loop ended on:
+  - `"N rounds — resolved (ADJ02 + ADJ03 both pass)"`
+  - `"N rounds — exhausted (ADJ02 fixed, ADJ03 still failing)"`
+  - `"N rounds — exhausted (ADJ02 still failing)"`
+- New `format_first_adj03_violation` + `build_polarity_hint`
+  helpers next to the existing ADJ02 ones.
+
+### Why
+
+The ADJ12 small-model benchmark showed qwen2.5:1.5b recovering
+from ADJ02 via clarification, then getting stuck on ADJ03 (likely
+on the polarity of "matches"). With v0.7 of the demo + v0.2 of
+the clarification crate, the same 1.5B model can now self-correct
+on both gating checks within the same `max_clarification_attempts`
+budget.
+
 ## [0.6.0] - 2026-05-12
 
 ### Added
