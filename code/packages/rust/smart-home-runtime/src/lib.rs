@@ -584,6 +584,20 @@ impl RuntimeEventBusSnapshot {
             .saturating_sub(self.backlogged_subscription_count)
     }
 
+    pub fn backlogged_subscription_percent(&self) -> u8 {
+        if self.subscription_count == 0 {
+            return 0;
+        }
+        let backlogged = self
+            .backlogged_subscription_count
+            .min(self.subscription_count);
+        ((backlogged.saturating_mul(100) / self.subscription_count).min(100)) as u8
+    }
+
+    pub fn exceeds_backlogged_subscription_percent(&self, threshold: u8) -> bool {
+        self.backlogged_subscription_percent() > threshold.min(100)
+    }
+
     pub fn exceeds_subscription_backlog_threshold(&self, threshold: usize) -> bool {
         self.max_pending_delivery_count > threshold
     }
@@ -3316,13 +3330,12 @@ mod tests {
     #[test]
     fn event_bus_snapshot_counts_log_subscriptions_and_backlog() {
         let mut bus = RuntimeEventBus::new();
+        let all_events = RuntimeSubscriptionId::trusted("all-events");
+        let bridge_events = RuntimeSubscriptionId::trusted("bridge-events");
+        bus.subscribe(all_events.clone(), RuntimeEventFilter::All)
+            .unwrap();
         bus.subscribe(
-            RuntimeSubscriptionId::trusted("all-events"),
-            RuntimeEventFilter::All,
-        )
-        .unwrap();
-        bus.subscribe(
-            RuntimeSubscriptionId::trusted("bridge-events"),
+            bridge_events.clone(),
             RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
         )
         .unwrap();
@@ -3346,6 +3359,8 @@ mod tests {
         );
         assert_eq!(idle.average_pending_deliveries_per_subscription(), 0);
         assert_eq!(idle.caught_up_subscription_count(), 2);
+        assert_eq!(idle.backlogged_subscription_percent(), 0);
+        assert!(!idle.exceeds_backlogged_subscription_percent(0));
         assert!(!idle.exceeds_subscription_backlog_threshold(0));
         assert_eq!(active.subscription_count, 2);
         assert_eq!(active.published_event_count, 2);
@@ -3361,8 +3376,17 @@ mod tests {
         );
         assert_eq!(active.average_pending_deliveries_per_subscription(), 1);
         assert_eq!(active.caught_up_subscription_count(), 0);
+        assert_eq!(active.backlogged_subscription_percent(), 100);
+        assert!(active.exceeds_backlogged_subscription_percent(50));
+        assert!(!active.exceeds_backlogged_subscription_percent(100));
         assert!(active.exceeds_subscription_backlog_threshold(1));
         assert!(!active.exceeds_subscription_backlog_threshold(2));
+
+        bus.drain(&bridge_events).unwrap();
+        let partial = bus.snapshot();
+        assert_eq!(partial.backlogged_subscription_count, 1);
+        assert_eq!(partial.caught_up_subscription_count(), 1);
+        assert_eq!(partial.backlogged_subscription_percent(), 50);
     }
 
     #[test]
@@ -3385,6 +3409,7 @@ mod tests {
         assert!(!no_subscribers.has_lagging_subscriptions());
         assert_eq!(no_subscribers.max_pending_delivery_count, 0);
         assert_eq!(no_subscribers.caught_up_subscription_count(), 0);
+        assert_eq!(no_subscribers.backlogged_subscription_percent(), 0);
         assert_eq!(
             no_subscribers.average_pending_deliveries_per_subscription(),
             0
@@ -3396,6 +3421,7 @@ mod tests {
         assert!(caught_up.has_subscriptions());
         assert!(!caught_up.has_lagging_subscriptions());
         assert_eq!(caught_up.caught_up_subscription_count(), 1);
+        assert_eq!(caught_up.backlogged_subscription_percent(), 0);
     }
 
     #[test]

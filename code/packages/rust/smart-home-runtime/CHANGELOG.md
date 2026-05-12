@@ -57,5 +57,7 @@ All notable changes to this package will be documented in this file.
   caught-up streams, and backlogged streams.
 - Event-bus aggregate pressure helpers for lagging subscription counts and
   maximum pending delivery depth.
+- Event-bus lagging-subscription percentage helpers for read-side pressure
+  thresholds.
 - Subscription backlog status helpers that identify caught-up versus
   backlogged event-stream subscribers without draining their delivery queues.
