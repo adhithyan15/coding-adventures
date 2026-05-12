@@ -139,7 +139,7 @@ impl JsonEvalResult {
             output_index: result.output_index,
             display: result.display,
             input_macsyma: pretty(&result.input, &MacsymaDialect),
-            output_macsyma: pretty(&result.output, &MacsymaDialect),
+            output_macsyma: result.output_text,
             input_lisp: format_lisp(&result.input),
             output_lisp: format_lisp(&result.output),
             input_ir: JsonIrNode::from_ir(&result.input),
@@ -302,6 +302,19 @@ mod tests {
         assert_eq!(output["head"]["name"], "Mul");
         assert_eq!(output["args"][0]["name"], "x");
         assert_eq!(payload["results"][0]["output_lisp"], "(Mul x (Pow y 2))");
+    }
+
+    #[test]
+    fn uses_runtime_display_text_for_display2d() {
+        let payload = json(&eval_source_json("ev(1/(x + 1), display2d);"));
+        let output = payload["results"][0]["output_macsyma"]
+            .as_str()
+            .expect("output_macsyma should be string");
+
+        assert!(output.contains('\n'));
+        assert!(output.contains('─'));
+        assert!(output.contains("x + 1"));
+        assert_eq!(payload["visible_outputs"][0], output);
     }
 
     #[test]

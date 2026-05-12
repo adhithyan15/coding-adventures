@@ -4,6 +4,9 @@
 
 ### Added
 
+- Routed `ev(expr, display2d)` result presentation through the Rust
+  `cas-pretty-printer` 2D MACSYMA box renderer while preserving the symbolic IR
+  result for history and downstream evaluation.
 - Wired `TrigReduce(expr)` and `ev(expr, trigreduce)` to the Rust `cas-trig`
   power-reduction walker.
 - Wired `Subst(value, variable, expr)` to the Rust `cas-substitution`

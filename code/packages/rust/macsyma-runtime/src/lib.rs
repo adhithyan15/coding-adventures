@@ -11,6 +11,7 @@ use cas_list_operations::{
     append, apply_ as list_apply, first, flatten, join, last, length, map_ as list_map, part,
     range_ as list_range, rest, reverse, sort_, ListOperationError, ListResult,
 };
+use cas_pretty_printer::{pretty, pretty_2d, MacsymaDialect};
 use cas_simplify::simplify;
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_substitution::subst;
@@ -223,6 +224,8 @@ pub struct EvalResult {
     pub input: IRNode,
     /// The evaluated output expression.
     pub output: IRNode,
+    /// Presentation text selected by MACSYMA display flags.
+    pub output_text: String,
     /// Whether this statement should be shown by a REPL. `;` displays, `$`
     /// suppresses.
     pub display: bool,
@@ -503,6 +506,7 @@ impl MacsymaSession {
         let kill_all = is_kill_all(&input);
         let output = self.vm.eval(resolved_input);
         let output_index = self.history.record_output(output.clone());
+        let output_text = display_text_for(&input, &output);
         if kill_all {
             self.history.reset();
         }
@@ -511,6 +515,7 @@ impl MacsymaSession {
             output_index,
             input,
             output,
+            output_text,
             display,
         }
     }
@@ -791,6 +796,26 @@ fn numer_fold(node: IRNode) -> IRNode {
             apply_node(head, args.into_iter().map(numer_fold).collect())
         }
         other => other,
+    }
+}
+
+fn display_text_for(input: &IRNode, output: &IRNode) -> String {
+    if has_ev_flag(input, "display2d") {
+        pretty_2d(output, &MacsymaDialect)
+    } else {
+        pretty(output, &MacsymaDialect)
+    }
+}
+
+fn has_ev_flag(input: &IRNode, flag: &str) -> bool {
+    match input {
+        IRNode::Apply(apply) if is_head_name(&apply.head, EV) => apply
+            .args
+            .iter()
+            .skip(1)
+            .filter_map(symbol_name)
+            .any(|name| name.eq_ignore_ascii_case(flag)),
+        _ => false,
     }
 }
 
