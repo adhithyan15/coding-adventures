@@ -40,5 +40,7 @@ All notable changes to this package will be documented in this file.
   gates, lock scopes, timeouts, and output-schema coverage.
 - Schema-light `ToolDefinitionSummary` rows plus built-in and registry summary
   query helpers for read-side catalog listings.
+- Payload-free `ToolExecutionTraceSummary` rows for per-invocation runtime
+  health, reference, terminal-event, and follow-up checks.
 - Append-only `ToolExecutionJournal` with count-only summaries and query helpers
   for recorded invocation requests, call records, events, and terminal results.
