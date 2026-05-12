@@ -15,6 +15,7 @@ This crate starts the D25 device-interview layer above APS. It provides:
 - interview-summary projection into a normalized D23 `Device` skeleton
 - compact node/simple descriptor and interview read summaries for discovery
   tools that need endpoint and cluster coverage without carrying full payloads
+- unique cluster and profile-family counts for descriptor read-side coverage
 
 ## Dependencies
 
