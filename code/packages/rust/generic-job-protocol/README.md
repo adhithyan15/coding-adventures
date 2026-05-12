@@ -16,6 +16,8 @@ bridges:
   facts for runtime read models.
 - `JobRequestSummary` and `JobMetadataSummary` expose queue/routing facts without
   requiring runtimes to inspect payload types.
+- `JobBatchSummary` rolls up request and response summaries for compact
+  queue/runtime status views.
 - Terminal status and response-summary helpers provide shared read-side
   success, failure, retry, cancel, and timeout classification.
 - JSON-line codec helpers provide a phase-one process/stdio wire format.
