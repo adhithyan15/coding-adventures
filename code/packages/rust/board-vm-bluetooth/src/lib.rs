@@ -1589,6 +1589,8 @@ mod tests {
     struct FakeBleGattLink {
         writes: Vec<(String, Vec<u8>)>,
         notifications: VecDeque<Vec<u8>>,
+        fail_writes: bool,
+        fail_reads: bool,
     }
 
     impl BleGattIo for FakeBleGattLink {
@@ -1597,6 +1599,9 @@ mod tests {
             characteristic_uuid: &str,
             bytes: &[u8],
         ) -> Result<(), BluetoothTransportError> {
+            if self.fail_writes {
+                return Err(BluetoothTransportError::Link);
+            }
             self.writes
                 .push((characteristic_uuid.to_owned(), bytes.to_vec()));
             Ok(())
@@ -1608,6 +1613,9 @@ mod tests {
             out: &mut [u8],
         ) -> Result<usize, BluetoothTransportError> {
             assert_eq!(characteristic_uuid, NOTIFY_UUID);
+            if self.fail_reads {
+                return Err(BluetoothTransportError::Link);
+            }
             let notification = self
                 .notifications
                 .pop_front()
@@ -1621,6 +1629,8 @@ mod tests {
     struct FakeRfcommStream {
         read: Cursor<Vec<u8>>,
         written: Vec<u8>,
+        fail_reads: bool,
+        fail_writes: bool,
     }
 
     impl FakeRfcommStream {
@@ -1628,18 +1638,36 @@ mod tests {
             Self {
                 read: Cursor::new(read),
                 written: Vec::new(),
+                fail_reads: false,
+                fail_writes: false,
             }
+        }
+
+        fn with_read_failure(mut self) -> Self {
+            self.fail_reads = true;
+            self
+        }
+
+        fn with_write_failure(mut self) -> Self {
+            self.fail_writes = true;
+            self
         }
     }
 
     impl Read for FakeRfcommStream {
         fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+            if self.fail_reads {
+                return Err(io::Error::from(io::ErrorKind::BrokenPipe));
+            }
             self.read.read(buf)
         }
     }
 
     impl Write for FakeRfcommStream {
         fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+            if self.fail_writes {
+                return Err(io::Error::from(io::ErrorKind::BrokenPipe));
+            }
             self.written.extend_from_slice(buf);
             Ok(buf.len())
         }
@@ -1669,6 +1697,7 @@ mod tests {
             Ok(FakeBleGattLink {
                 writes: Vec::new(),
                 notifications: std::mem::take(&mut self.ble_notifications),
+                ..FakeBleGattLink::default()
             })
         }
 
@@ -1710,6 +1739,7 @@ mod tests {
             Ok(FakeBleGattLink {
                 writes: Vec::new(),
                 notifications: std::mem::take(&mut self.notifications),
+                ..FakeBleGattLink::default()
             })
         }
     }
@@ -2197,6 +2227,44 @@ Device 11:22:33:44:55:66 (public)
     }
 
     #[test]
+    fn ble_gatt_raw_transport_maps_write_failures_to_io() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let link = FakeBleGattLink {
+            fail_writes: true,
+            ..FakeBleGattLink::default()
+        };
+        let mut transport = BoardBleGattTransport::<_, 32>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA], &mut raw_out),
+            Err(TransportError::Io)
+        );
+    }
+
+    #[test]
+    fn ble_gatt_raw_transport_maps_notification_failures_to_io() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let link = FakeBleGattLink {
+            fail_reads: true,
+            ..FakeBleGattLink::default()
+        };
+        let mut transport = BoardBleGattTransport::<_, 32>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA], &mut raw_out),
+            Err(TransportError::Io)
+        );
+    }
+
+    #[test]
     fn rfcomm_transport_exchanges_board_vm_wire_frames() {
         let endpoint = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
         let request = [0x10, 0x11];
@@ -2229,6 +2297,32 @@ Device 11:22:33:44:55:66 (public)
         assert_eq!(
             RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA], &mut raw_out),
             Err(TransportError::ResponseTooLarge)
+        );
+    }
+
+    #[test]
+    fn rfcomm_raw_transport_maps_stream_write_failures_to_io() {
+        let endpoint = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let stream = FakeRfcommStream::new(Vec::new()).with_write_failure();
+        let mut transport = BoardRfcommTransport::<_, 32>::from_stream(endpoint, stream);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA], &mut raw_out),
+            Err(TransportError::Io)
+        );
+    }
+
+    #[test]
+    fn rfcomm_raw_transport_maps_stream_read_failures_to_io() {
+        let endpoint = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let stream = FakeRfcommStream::new(Vec::new()).with_read_failure();
+        let mut transport = BoardRfcommTransport::<_, 32>::from_stream(endpoint, stream);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA], &mut raw_out),
+            Err(TransportError::Io)
         );
     }
 
