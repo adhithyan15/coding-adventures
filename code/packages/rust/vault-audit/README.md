@@ -77,7 +77,8 @@ without breaking the wire format:
   parameter so the crate stays deterministic and capability-free.
 - Not an indexed query engine, but it does provide payload-free
   `AuditEntrySummary` and `AuditChainSummary` read models for
-  supervisor dashboards and higher-tier indexes.
+  supervisor dashboards and higher-tier indexes, including resource
+  and detail coverage counters.
 
 ## Where it fits
 
