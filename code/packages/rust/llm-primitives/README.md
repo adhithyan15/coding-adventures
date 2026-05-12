@@ -60,8 +60,8 @@ This crate defines the building blocks every primitive plugs into.
 | `entail(req, gateway)` | ✅ v0.2.0 | `Nli` | `entail` |
 | `render_node(req, gateway)` | ✅ v0.3.0 | `Renderer` | `render_node` |
 | `judge_plausibility(req, gateway)` | ✅ v0.4.0 | `Plausibility` | `judge_plausibility` |
+| `find_contradicting_reading(req, gateway)` | ✅ v0.5.0 | `Adversary` | `find_contradicting_reading` |
 | `decompose_text` | planned | `Extractor` | — |
-| `find_contradicting_reading` | planned | `Adversary` | — |
 | `extract_rules` | planned | `RuleExtractor` | — |
 
 The crate has **no async runtime dependency**: the `LlmClient` trait

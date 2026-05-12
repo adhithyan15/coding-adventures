@@ -42,8 +42,8 @@
 //!   * [`render_node`] — faithful natural-language rendering of an
 //!     IR node (v0.3.0)
 //!   * [`judge_plausibility`] — ADJ05 binary plausibility judge (v0.4.0)
+//!   * [`find_contradicting_reading`] — ADJ05 adversary (v0.5.0)
 //!   * `decompose_text` — extractor; not yet here
-//!   * `find_contradicting_reading` — adversary; not yet here
 //!   * `extract_rules` — rule extractor; not yet here
 //!
 //! Until a primitive lands, its `PROMPT_VERSION_*` constant is the
@@ -65,6 +65,7 @@ use llm_gateway::{
 };
 
 pub mod entail;
+pub mod find_contradicting_reading;
 pub mod judge_plausibility;
 pub mod render_node;
 
@@ -74,6 +75,9 @@ pub mod render_node;
 // `llm_primitives::render_node(...)` / `llm_primitives::judge_plausibility(...)`
 // directly.
 pub use entail::{entail, EntailRequest, EntailResponse};
+pub use find_contradicting_reading::{
+    find_contradicting_reading, FindContradictingReadingRequest, FindContradictingReadingResponse,
+};
 pub use judge_plausibility::{
     judge_plausibility, JudgePlausibilityRequest, JudgePlausibilityResponse,
 };
