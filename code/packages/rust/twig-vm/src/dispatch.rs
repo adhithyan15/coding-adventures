@@ -1407,10 +1407,12 @@ fn exec_apply_closure(
     let frame_ref = &*frame;
     let handle = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
         .map_err(RunError::OperandConversion)?;
-    // SAFETY: closure values come from `make_closure` /
-    // `make_builtin_closure` which go through alloc_*_closure;
-    // those return properly-tagged heap pointers that live forever
-    // (PR 2 leak).  `as_closure` walks the header; safe to call.
+    // SAFETY: see the detailed comment in exec_call_closure for the full
+    // invariant analysis.  Summary: only values with TAG_HEAP set (from
+    // alloc_closure / alloc_cons / etc.) are dereferenced; integers, booleans,
+    // and symbols all have non-HEAP tags and cause as_heap_ptr() to return None
+    // before any pointer dereference occurs.  Heap-tagged values come
+    // exclusively from lispy_runtime allocators that Box::leak aligned objects.
     let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
         RunError::NotCallable(format!("apply_closure: {handle} is not a closure"))
     })?;
@@ -1521,7 +1523,11 @@ fn exec_alloc_closure(
     // names as interned symbol ids for O(1) equality checks.
     let sym_id = intern(fn_name);
     if sym_id == SymbolId::NONE {
-        return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+        // Use RuntimeError::Custom, not TypeError — this is a resource-
+        // exhaustion condition (the symbol intern table is full), not a
+        // type mismatch.  Callers that need to distinguish resource errors
+        // from type errors should match on Custom("intern table exhausted").
+        return Err(RunError::Runtime(RuntimeError::Custom(format!(
             "alloc_closure: intern table exhausted for fn_name {fn_name:?}"
         ))));
     }
@@ -1578,11 +1584,31 @@ fn exec_call_closure(
     let handle = operand_to_value(&instr.srcs[0], &|n| frame_ref.get(n))
         .map_err(RunError::OperandConversion)?;
 
-    // SAFETY: closure values come from alloc_closure / exec_alloc_closure or
-    // the legacy make_closure builtin — all of which go through
-    // lispy_runtime::heap::alloc_closure which returns a properly-tagged heap
-    // pointer.  `as_closure` walks the 16-byte header tag; safe to call on
-    // any value, returns None for non-closures.
+    // SAFETY: `lispy_runtime::as_closure` is an `unsafe fn` that:
+    //
+    //   1. Calls `handle.as_heap_ptr()` which first checks the tag bits.
+    //      LispyValue's tag encoding uses TAG_INT = 0b000, TAG_HEAP = 0b111,
+    //      TAG_TRUE = 0b011, TAG_FALSE = 0b001, TAG_SYMBOL = 0b101, TAG_NIL = 0b010.
+    //      Only values produced by `alloc_closure`, `alloc_cons`, etc. have
+    //      TAG_HEAP set.  Integers, booleans, and symbols will cause
+    //      `as_heap_ptr()` to return `None` → `as_closure` immediately returns
+    //      `None` — no pointer dereference occurs.
+    //
+    //   2. For values that DO have TAG_HEAP, the pointer was produced by
+    //      `lispy_runtime::heap::alloc_closure` / `alloc_cons` / etc. which
+    //      Box::leak a properly-aligned heap allocation with a valid
+    //      `ObjectHeader` at offset 0.  Dereferencing that pointer to read
+    //      `class_or_kind` is safe given the leak-forever invariant.
+    //
+    //   3. An adversarially crafted IIR integer that happens to have the
+    //      low 3 bits set (TAG_HEAP) CANNOT be produced by `exec_const`
+    //      for `Operand::Int(n)`, because `LispyValue::int(n)` shifts
+    //      left by 3 bits making the low 3 bits always 0 (TAG_INT = 0b000).
+    //      The only way to introduce an invalid heap-tagged value would be
+    //      through a foreign `unsafe` block — which does not exist in the
+    //      normal IIR execution path.
+    //
+    // Together, these guarantees make the call safe in the twig-vm context.
     let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
         RunError::NotCallable(format!("call_closure: {handle} is not a closure"))
     })?;
@@ -1600,14 +1626,21 @@ fn exec_call_closure(
 
     let result = if is_builtin {
         // Builtin closure: dispatch via resolve_builtin.
-        // Defence-in-depth: assert no captures (a well-formed builtin closure
-        // has none; LANG34's alloc_closure would never produce captures for a
-        // builtin, but malformed IR could).
-        debug_assert!(
-            captures.is_empty(),
-            "builtin closure must have no captures (got {})",
-            captures.len(),
-        );
+        //
+        // Hard runtime guard: a well-formed builtin closure must have zero
+        // captures.  `make_builtin_closure` / `alloc_builtin_closure` never
+        // attach captures; LANG34's `alloc_closure` is for user functions only.
+        // Reject malformed IR that somehow produces a builtin closure with
+        // non-empty captures — this is not a style check, it is a correctness
+        // boundary: passing captures to `builtin(&user_args)` would silently
+        // drop them and produce wrong results.  We enforce it unconditionally
+        // (not just in debug builds) so release builds are equally protected.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "call_closure: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
         let name_str = name_of(fn_name_id).ok_or_else(|| {
             RunError::MalformedInstruction(format!(
                 "call_closure: builtin closure has unknown fn_name id {}",
