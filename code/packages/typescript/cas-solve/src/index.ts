@@ -169,6 +169,81 @@ export function solveCubic(a: Frac, b: Frac, c: Frac, d: Frac): SolveResult {
   return solutions([]);
 }
 
+export function solveQuartic(a: Frac, b: Frac, c: Frac, d: Frac, e: Frac): SolveResult {
+  if (a.isZero()) return solveCubic(b, c, d, e);
+
+  const rationalRoot = findRationalRootQuartic(a, b, c, d, e);
+  if (rationalRoot !== null) {
+    const b2 = b.add(a.mul(rationalRoot));
+    const c2 = c.add(b2.mul(rationalRoot));
+    const d2 = d.add(c2.mul(rationalRoot));
+    const remainder = e.add(d2.mul(rationalRoot));
+    if (remainder.isZero()) {
+      const remaining = solveCubic(a, b2, c2, d2);
+      if (remaining.kind === "all") return solutions([rationalRoot.toIrNode()]);
+      return solutions(dedupRoots([rationalRoot.toIrNode(), ...remaining.roots]));
+    }
+  }
+
+  const two = Frac.fromInt(2);
+  const four = Frac.fromInt(4);
+  const eight = Frac.fromInt(8);
+  const sixteen = Frac.fromInt(16);
+  const twoFiftySix = Frac.fromInt(256);
+  const a2 = a.mul(a);
+  const a3 = a2.mul(a);
+  const a4 = a3.mul(a);
+  const b2 = b.mul(b);
+  const b3 = b2.mul(b);
+  const b4 = b2.mul(b2);
+
+  const p = c.div(a).sub(Frac.fromInt(3).mul(b2).div(eight.mul(a2)));
+  const q = b3.div(eight.mul(a3)).sub(b.mul(c).div(two.mul(a2))).add(d.div(a));
+  const rCoef = Frac.fromInt(-3).mul(b4).div(twoFiftySix.mul(a4))
+    .add(b2.mul(c).div(sixteen.mul(a3)))
+    .sub(b.mul(d).div(four.mul(a2)))
+    .add(e.div(a));
+  const shift = b.neg().div(four.mul(a));
+
+  if (q.isZero()) {
+    const uRoots = solveQuadratic(Frac.one(), p, rCoef);
+    if (uRoots.kind === "all") return solutions([]);
+    return solutions(dedupRoots(uRoots.roots.flatMap((root) => {
+      const t = app(SQRT, [root]);
+      return [addShift(t, shift), addShift(app(NEG, [t]), shift)];
+    })));
+  }
+
+  const ra = Frac.fromInt(8);
+  const rb = Frac.fromInt(8).mul(p);
+  const rc = two.mul(p).mul(p).sub(Frac.fromInt(8).mul(rCoef));
+  const rd = q.mul(q).neg();
+  const resolventRoots = solveCubic(ra, rb, rc, rd);
+  if (resolventRoots.kind === "all" || resolventRoots.roots.length === 0) return solutions([]);
+
+  let m: Frac | null = null;
+  for (const root of resolventRoots.roots) {
+    if (root.kind === "integer") {
+      m = new Frac(root.value);
+      break;
+    }
+    if (root.kind === "rational") {
+      m = new Frac(root.numer, root.denom);
+      break;
+    }
+  }
+  if (m === null || m.isZero()) return solutions([]);
+
+  const alpha = p.div(two).add(m.mul(m).div(two)).sub(q.div(two.mul(m)));
+  const beta = p.div(two).add(m.mul(m).div(two)).add(q.div(two.mul(m)));
+  const roots1 = solveQuadratic(Frac.one(), m, alpha);
+  const roots2 = solveQuadratic(Frac.one(), m.neg(), beta);
+  const shifted: IRNode[] = [];
+  if (roots1.kind === "solutions") shifted.push(...roots1.roots.map((root) => addShift(root, shift)));
+  if (roots2.kind === "solutions") shifted.push(...roots2.roots.map((root) => addShift(root, shift)));
+  return solutions(dedupRoots(shifted));
+}
+
 type SqrtResult =
   | { readonly kind: "rational"; readonly value: Frac }
   | { readonly kind: "irrational"; readonly value: IRNode };
@@ -282,8 +357,35 @@ function findRationalRoot(a: Frac, b: Frac, c: Frac, d: Frac): Frac | null {
   return null;
 }
 
+function findRationalRootQuartic(a: Frac, b: Frac, c: Frac, d: Frac, e: Frac): Frac | null {
+  const scale = fractionDenominatorLcm(a, b, c, d, e);
+  const scaledA = scaleFractionToInteger(a, scale);
+  const scaledE = scaleFractionToInteger(e, scale);
+
+  if (scaledE === 0n) return Frac.zero();
+
+  const pDivs = divisors(abs(scaledE));
+  const qDivs = divisors(abs(scaledA));
+  for (const pValue of pDivs) {
+    for (const qValue of qDivs) {
+      for (const sign of [1n, -1n]) {
+        const candidate = new Frac(sign * pValue, qValue);
+        if (evalQuartic(a, b, c, d, e, candidate).isZero()) return candidate;
+      }
+    }
+  }
+  return null;
+}
+
 function evalCubic(a: Frac, b: Frac, c: Frac, d: Frac, x: Frac): Frac {
   return a.mul(x).mul(x).mul(x).add(b.mul(x).mul(x)).add(c.mul(x)).add(d);
+}
+
+function evalQuartic(a: Frac, b: Frac, c: Frac, d: Frac, e: Frac, x: Frac): Frac {
+  const x2 = x.mul(x);
+  const x3 = x2.mul(x);
+  const x4 = x3.mul(x);
+  return a.mul(x4).add(b.mul(x3)).add(c.mul(x2)).add(d.mul(x)).add(e);
 }
 
 function fractionDenominatorLcm(...values: readonly Frac[]): bigint {

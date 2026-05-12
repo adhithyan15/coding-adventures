@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { ADD, DIV, MUL, SQRT, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
-import { ALL_SOLUTIONS, CBRT, Frac, I_UNIT, solveCubic, solveLinear, solveQuadratic, type SolveResult } from "../src/index";
+import {
+  ALL_SOLUTIONS,
+  CBRT,
+  Frac,
+  I_UNIT,
+  solveCubic,
+  solveLinear,
+  solveQuadratic,
+  solveQuartic,
+  type SolveResult,
+} from "../src/index";
 
 function frac(n: number, d: number): Frac {
   return new Frac(n, d);
@@ -139,5 +149,44 @@ describe("solveCubic", () => {
 
   it("leaves casus irreducibilis unevaluated as an empty solution list", () => {
     expectSolutions(solveCubic(fi(1), fi(0), fi(-3), fi(1)), []);
+  });
+});
+
+describe("solveQuartic", () => {
+  it("delegates to cubic when quartic coefficient is zero", () => {
+    expectContainsSolutions(solveQuartic(fi(0), fi(1), fi(-6), fi(11), fi(-6)), [int(1), int(2), int(3)]);
+  });
+
+  it("finds four rational roots through rational-root deflation", () => {
+    expectContainsSolutions(solveQuartic(fi(1), fi(0), fi(-10), fi(0), fi(9)), [int(-3), int(-1), int(1), int(3)]);
+    expectContainsSolutions(solveQuartic(fi(1), fi(-10), fi(35), fi(-50), fi(24)), [int(1), int(2), int(3), int(4)]);
+  });
+
+  it("handles zero roots and deduplicates repeated roots", () => {
+    expectContainsSolutions(solveQuartic(fi(1), fi(-1), fi(0), fi(0), fi(0)), [int(0), int(1)]);
+    expectContainsSolutions(solveQuartic(fi(1), fi(1), fi(0), fi(0), fi(0)), [int(-1), int(0)]);
+  });
+
+  it("uses the biquadratic path for no-rational-root even quartics", () => {
+    const result = solveQuartic(fi(1), fi(0), fi(4), fi(0), fi(3));
+    expect(result.kind).toBe("solutions");
+    if (result.kind === "solutions") {
+      expect(result.roots.length).toBe(4);
+      expect(result.roots.every((root) => containsHead(root, "Sqrt") || containsHead(root, "Neg"))).toBe(true);
+    }
+  });
+
+  it("uses Ferrari factorization when the resolvent has a rational root", () => {
+    const result = solveQuartic(fi(1), fi(0), fi(1), fi(2), fi(6));
+    expect(result.kind).toBe("solutions");
+    if (result.kind === "solutions") {
+      expect(result.roots.length).toBe(4);
+      expect(result.roots.every((root) => root.kind === "apply")).toBe(true);
+      expect(result.roots.some((root) => containsSymbol(root, I_UNIT))).toBe(true);
+    }
+  });
+
+  it("leaves quartics without a usable rational resolvent root unevaluated", () => {
+    expectSolutions(solveQuartic(fi(1), fi(0), fi(0), fi(1), fi(1)), []);
   });
 });
