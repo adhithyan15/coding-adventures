@@ -114,9 +114,32 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `store_reg` | `move {x,src} {x,v}` |
 | `type_assert` | nop (erased at lowering time) |
 
+| `global_store` | `gc_bif2 erlang:put/2` (process dictionary) |
+| `global_load` | `gc_bif1 erlang:get/1` |
+| `io_out` | `gc_bif1 erlang:display/1` |
+| `alloc_closure` | `put_list` chain: `[fn_atom \| cap0, cap1, …]` |
+| `call_closure` | `get_list` + `erlang:'++'`/2 + `erlang:apply/3` |
+
+## Closure encoding (LANG35)
+
+Closures are represented as BEAM cons-cell lists:
+
+```
+Handle = [FnAtom | [Cap0, Cap1, …]]
+```
+
+- **`alloc_closure(Str("__lambda_0"), cap0, cap1)`** → builds the list via
+  right-fold `put_list` instructions.  Zero captures → `[fn_atom | []]`.
+- **`call_closure(handle, arg0, arg1)`** →
+  1. `get_list` splits handle into `fn_atom` and `caps`.
+  2. `erlang:'++'(caps, [arg0, arg1])` builds the full argument list.
+  3. `erlang:apply(Module, fn_atom, combined_args)` performs the dynamic call.
+
+Both `erlang:'++'`/2 and `erlang:apply/3` are registered as BIF imports.
+
 ## Unsupported (validation rejects)
 
-`call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`, `alloc`,
+`call_builtin`, `io_in`, `cast`, `load_mem`, `store_mem`, `alloc`,
 `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`, and any
 instruction with `type_hint` of `"any"`, `"polymorphic"`, `"str"`, or `"ref<…>"`.
 Float constant operands are also rejected — BEAM integer arithmetic cannot hold

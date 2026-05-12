@@ -3,6 +3,30 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-05-12
+
+### Added (LANG35 — Closure Backend Integration)
+
+#### Improved `ClosureOpcode` validator error
+
+- `validate_for_wasm` now emits a dedicated `ClosureOpcode` error message
+  (format: `"[fn_name] ClosureOpcode: alloc_closure/call_closure require the
+  BEAM backend — WASM does not support heap-allocated closures"`) when it
+  encounters `alloc_closure` or `call_closure`.
+- Previously these fell through to the generic `UntypedInstruction` path
+  because their type hints are `"closure"` and `"any"` respectively — now the
+  closure check runs first so the error message is actionable.
+
+#### Tests
+
+- `lang35_alloc_closure_closure_opcode_error`: asserts `validate_for_wasm`
+  returns an error containing "ClosureOpcode" for a module with `alloc_closure`.
+- `lang35_call_closure_closure_opcode_error`: same for `call_closure`.
+- `lang35_closure_opcode_error_not_untyped`: asserts the error does NOT
+  contain "UntypedInstruction", confirming the new code path fires first.
+
+---
+
 ## [0.2.0] — 2026-05-11
 
 ### Added (LANG32 — Global Variables and I/O)

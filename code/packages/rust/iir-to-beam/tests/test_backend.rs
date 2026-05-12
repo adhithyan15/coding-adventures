@@ -78,6 +78,16 @@ fn has_opcode(beam: &iir_to_beam::BEAMModule, opcode: u8) -> bool {
     beam.instructions.iter().any(|i| i.opcode == opcode)
 }
 
+// ===========================================================================
+// Helper: count how many instructions in the stream have the given opcode.
+//
+// Used by the LANG35 closure tests to assert exact emission counts rather
+// than just presence.
+// ===========================================================================
+fn count_opcode(beam: &iir_to_beam::BEAMModule, opcode: u8) -> usize {
+    beam.instructions.iter().filter(|i| i.opcode == opcode).count()
+}
+
 // BEAM opcodes referenced in assertions
 const OP_GC_BIF2: u8 = 125;
 const OP_GC_BIF1: u8 = 124;
@@ -1314,6 +1324,10 @@ const OP_PUT_LIST: u8 = 69;
 const OP_GET_LIST: u8 = 65;
 const OP_IS_NIL:   u8 = 52;
 
+// BEAM opcodes for the closure tests (LANG35)
+/// `{call_ext, {u,Arity}, {u,ImportIdx}}` — call imported function.
+const OP_CALL_EXT: u8 = 6;
+
 // ===========================================================================
 // 46. alloc ref<LispyPair> accepted by validator
 // ===========================================================================
@@ -1754,4 +1768,528 @@ fn test_57_mini_length_fragment_compiles() {
     // Must have is_nil (from null?) and is_eq_exact (from jmp_if_true synthesis).
     assert!(has_opcode(&beam, OP_IS_NIL), "must have is_nil for null?");
     assert!(!beam.instructions.is_empty());
+}
+
+// ===========================================================================
+// LANG35 — Closure opcode tests
+// ===========================================================================
+//
+// Test indices:
+//   59: alloc_closure no captures  — validator accepts
+//   60: alloc_closure with 2 caps  — validator accepts
+//   61: call_closure "any" type    — validator accepts
+//   62: alloc_closure no caps      — lowering emits exactly 1 OP_PUT_LIST
+//   63: alloc_closure 2 caps       — lowering emits exactly 3 OP_PUT_LIST
+//   64: call_closure               — lowering emits OP_GET_LIST + 2× OP_CALL_EXT
+//   65: real-erl arithmetic        — encode + run erl (gated)
+//   66: real-erl closure adder     — alloc_closure + call_closure end-to-end (gated)
+//
+// Closure lowering strategy (cons-cell approach, BEAM02 / LANG35):
+//
+//   A closure is encoded as a BEAM cons cell: [fn_atom | [cap0, cap1, …]]
+//
+//   alloc_closure emits:
+//     move  {a, nil}      {x, scratch}              % caps = []
+//     put_list  {x, capN}  {x, scratch}  {x, scratch}   % prepend from right
+//     …
+//     put_list  {a, fn}    {x, scratch}  {x, dest}      % [fn | caps]
+//
+//   call_closure emits:
+//     get_list  {x, handle}  {x, r0}  {x, r1}   % r0=fn_atom, r1=caps
+//     move  {a, nil}  {x, r2}                   % args = []
+//     put_list  {x, argN}  {x, r2}  {x, r2}     % build args from right
+//     …
+//     move {x, r1}  {x, 0}; move {x, r2}  {x, 1}
+//     call_ext 2  {u, import_append}             % erlang:'++'/2 → caps++args
+//     move {x, 0}  {x, r3}
+//     move {a, mod}  {x, 0}; move {x, r0}  {x, 1}; move {x, r3}  {x, 2}
+//     call_ext 3  {u, import_apply}              % erlang:apply/3 → result
+//     move {x, 0}  {x, dest}
+
+// ---------------------------------------------------------------------------
+// Helper: returns true if the `erl` binary is on PATH and executes cleanly.
+//
+// Real-VM tests (65, 66) call this at their start and return immediately when
+// the result is false, so the tests are silently skipped on machines without
+// an Erlang/OTP installation.  This mirrors the pattern used by the other
+// iir-to-* backends for wasmtime / java / dotnet.
+// ---------------------------------------------------------------------------
+fn erl_available() -> bool {
+    // `erl -noshell -eval 'halt(0).'` exits 0 on any OTP version.
+    std::process::Command::new("erl")
+        .args(["-noshell", "-eval", "halt(0)."])
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false)
+}
+
+// ===========================================================================
+// 59. alloc_closure no captures — validator accepts
+// ===========================================================================
+
+/// `alloc_closure(Str("__lambda_0")) : "closure"` must pass BEAM validation.
+///
+/// The LANG35 early-accept block in `validate_for_beam` must recognise
+/// `alloc_closure` before the generic `UnsupportedOp` and `UntypedInstruction`
+/// checks fire.  The `"closure"` type_hint is not `"any"` or `"str"`, so it
+/// must also pass the type-hint checks for the surrounding `ret` instruction.
+#[test]
+fn test_59_alloc_closure_no_captures_accepted() {
+    let m = make_module_fn(
+        "main",
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errs = validate_for_beam(&m);
+    assert!(
+        errs.is_empty(),
+        "alloc_closure (no captures) must be accepted by validator, got: {errs:?}"
+    );
+}
+
+// ===========================================================================
+// 60. alloc_closure with 2 captures — validator accepts
+// ===========================================================================
+
+/// `alloc_closure(Str("__add_fn"), Var("x"), Var("y")) : "closure"` must pass.
+///
+/// Verifies that the early-accept path handles capture operands correctly
+/// — the validator must not iterate captures and mistakenly flag them.
+#[test]
+fn test_60_alloc_closure_with_captures_accepted() {
+    let m = make_module_fn(
+        "make_adder",
+        vec![("x", "i64"), ("y", "i64")],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![
+                    Operand::Str("__add_fn".into()),
+                    Operand::Var("x".into()),
+                    Operand::Var("y".into()),
+                ],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errs = validate_for_beam(&m);
+    assert!(
+        errs.is_empty(),
+        "alloc_closure (2 captures) must be accepted by validator, got: {errs:?}"
+    );
+}
+
+// ===========================================================================
+// 61. call_closure — validator accepts "any" type_hint
+// ===========================================================================
+
+/// `call_closure(Var("h"), Var("a")) : "any"` must pass BEAM validation.
+///
+/// `call_closure` is the only opcode permitted with type_hint `"any"` in this
+/// backend.  The early-accept block (Check 2.5) must fire before the generic
+/// `UntypedInstruction` check (Check 3) can reject it.
+///
+/// Note: the `ret` instruction deliberately uses `"i64"` (not `"any"`) so
+/// that only the `call_closure` instruction exercises the `"any"` exception.
+#[test]
+fn test_61_call_closure_accepted() {
+    let m = make_module_fn(
+        "apply_it",
+        vec![("h", "i64"), ("a", "i64")],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("h".into()), Operand::Var("a".into())],
+                "any",
+            ),
+            // The validator checks each instruction's type_hint in isolation;
+            // "i64" here is concrete and passes all checks.
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let errs = validate_for_beam(&m);
+    assert!(
+        errs.is_empty(),
+        "call_closure must be accepted by validator (\"any\" type_hint), got: {errs:?}"
+    );
+}
+
+// ===========================================================================
+// 62. alloc_closure no captures — lowering emits exactly 1 OP_PUT_LIST
+// ===========================================================================
+
+/// `alloc_closure(Str("__lambda_0"))` with no captures must lower to exactly
+/// one `put_list` instruction.
+///
+/// The lowering sequence for zero captures is:
+/// ```text
+/// move  {a,nil}     {x,r_scratch}         % list = []
+/// put_list {a,fn}   {x,r_scratch} {x,rd}  % [fn | []] = closure cell
+/// ```
+///
+/// One `put_list` for the fn-atom cons, zero capture `put_list`s.
+#[test]
+fn test_62_alloc_closure_no_captures_lowering() {
+    let m = make_module_fn(
+        "main",
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    let n = count_opcode(&beam, OP_PUT_LIST);
+    assert_eq!(
+        n, 1,
+        "alloc_closure (no caps) must emit exactly 1 put_list, got {n}; \
+         opcodes: {:?}",
+        beam.instructions.iter().map(|i| i.opcode).collect::<Vec<_>>()
+    );
+    // The fn-name atom must be interned in the atom table.
+    assert!(
+        beam.atoms.contains(&"__lambda_0".to_string()),
+        "atom table must contain \"__lambda_0\""
+    );
+}
+
+// ===========================================================================
+// 63. alloc_closure with 2 captures — lowering emits exactly 3 OP_PUT_LIST
+// ===========================================================================
+
+/// `alloc_closure(fn, x, y)` must emit 3 `put_list` instructions.
+///
+/// Lowering sequence:
+/// ```text
+/// move     {a,nil}     {x,r_s}             % list = []
+/// put_list {x,y_reg}   {x,r_s}  {x,r_s}   % [y]          ← cap 1 (rightmost first)
+/// put_list {x,x_reg}   {x,r_s}  {x,r_s}   % [x, y]       ← cap 0
+/// put_list {a,fn_atom} {x,r_s}  {x,r_d}   % [fn | [x,y]] ← closure cell
+/// ```
+///
+/// Captures are prepended right-to-left so the cons cell preserves the IIR
+/// left-to-right order for the underlying function's parameter list.
+#[test]
+fn test_63_alloc_closure_with_two_captures_lowering() {
+    let m = make_module_fn(
+        "make_adder",
+        vec![("x", "i64"), ("y", "i64")],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![
+                    Operand::Str("__add_fn".into()),
+                    Operand::Var("x".into()),
+                    Operand::Var("y".into()),
+                ],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    let n = count_opcode(&beam, OP_PUT_LIST);
+    assert_eq!(
+        n, 3,
+        "alloc_closure (2 caps) must emit exactly 3 put_list, got {n}; \
+         opcodes: {:?}",
+        beam.instructions.iter().map(|i| i.opcode).collect::<Vec<_>>()
+    );
+    assert!(
+        beam.atoms.contains(&"__add_fn".to_string()),
+        "atom table must contain \"__add_fn\""
+    );
+}
+
+// ===========================================================================
+// 64. call_closure — lowering emits OP_GET_LIST + 2× OP_CALL_EXT
+// ===========================================================================
+
+/// `call_closure(handle, arg)` must lower to the BEAM dispatch sequence.
+///
+/// Required instruction kinds (in addition to surrounding move/label ops):
+/// - 1× `get_list`  — unpack fn_atom and caps from the closure cons cell
+/// - ≥1× `put_list` — build the user-args list `[arg]`
+/// - 2× `call_ext`  — erlang:'++'/2 (caps ++ args) then erlang:apply/3
+///
+/// The `erlang:apply` and `erlang:++` atoms must also be in the atom table
+/// (they are unconditionally interned during module initialisation).
+#[test]
+fn test_64_call_closure_lowering() {
+    let m = make_module_fn(
+        "apply_it",
+        vec![("h", "i64"), ("a", "i64")],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("h".into()), Operand::Var("a".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    let opcodes: Vec<u8> = beam.instructions.iter().map(|i| i.opcode).collect();
+
+    // Must have get_list to destructure the closure cons cell.
+    assert!(
+        has_opcode(&beam, OP_GET_LIST),
+        "call_closure must emit get_list; opcodes: {opcodes:?}"
+    );
+
+    // Must have at least one put_list to build the args list.
+    assert!(
+        has_opcode(&beam, OP_PUT_LIST),
+        "call_closure must emit put_list for args list; opcodes: {opcodes:?}"
+    );
+
+    // Exactly 2 call_ext: erlang:'++'/2 first, erlang:apply/3 second.
+    let n_call_ext = count_opcode(&beam, OP_CALL_EXT);
+    assert_eq!(
+        n_call_ext, 2,
+        "call_closure must emit exactly 2 call_ext, got {n_call_ext}; opcodes: {opcodes:?}"
+    );
+
+    // Both dispatch atoms must be interned unconditionally during init.
+    assert!(
+        beam.atoms.contains(&"++".to_string()),
+        "atom table must contain \"++\" (erlang:'++'/2 append)"
+    );
+    assert!(
+        beam.atoms.contains(&"apply".to_string()),
+        "atom table must contain \"apply\" (erlang:apply/3)"
+    );
+}
+
+// ===========================================================================
+// 65. Real-erl: arithmetic round-trip (gated on erl availability)
+// ===========================================================================
+
+/// End-to-end test: lower `main() -> 5 + 3` to BEAM bytes, write a `.beam`
+/// file, invoke `erl -noshell`, and assert the return value is `8`.
+///
+/// # OTP 28 compatibility note
+///
+/// `encode_beam` (from `ir-to-beam`) currently produces BEAM files in the
+/// pre-OTP-25 format: the `AtU8` chunk uses the old 1-byte length encoding
+/// (positive count) and the required `Meta` chunk (OTP 25+) is not emitted.
+/// OTP 28 rejects such files with "compiled for an old version of the runtime
+/// system."  This test is therefore `#[ignore]`d until the `ir-to-beam` crate
+/// is updated to emit OTP-25-compatible output.
+///
+/// Track progress at: `ir-to-beam` crate — OTP 28 compatibility (`Meta` chunk
+/// + new `AtU8` negative-count encoding).
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+#[ignore = "ir-to-beam encoder produces pre-OTP-25 BEAM format; OTP 28 rejects it with \
+            'compiled for an old version' — fix ir-to-beam first"]
+fn test_65_real_erl_arithmetic() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    // Build: main() : i64  →  a=5; b=3; r=a+b; ret r
+    let m = make_module_fn(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(5)], "i64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new(
+                "add",
+                Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "arithmetic module must pass validation: {errs:?}");
+
+    // Use a module name that is a valid Erlang atom (lowercase, no specials).
+    let beam_cfg = IIRBeamConfig::new("iir_arith_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    // Write to a stable temp path (no tempfile crate dependency).
+    let tmp = std::env::temp_dir().join("iir_to_beam_tests");
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_arith_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_arith_test.beam");
+
+    // Run: erl -noshell -pa <tmp> -eval 'io:format("~w~n",[iir_arith_test:main()]),halt(0).'
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_arith_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        stdout.trim(), "8",
+        "expected erl output \"8\", got {:?}", stdout.trim()
+    );
+}
+
+// ===========================================================================
+// 66. Real-erl: closure adder round-trip (gated on erl availability)
+// ===========================================================================
+
+/// End-to-end: build a two-function module with `alloc_closure` + `call_closure`,
+/// encode to BEAM bytes, write to disk, run with `erl`, and verify the closure
+/// dispatch returns the expected value.
+///
+/// Module layout:
+/// ```text
+/// __add_fn(n: i64) : i64       — inner function referenced by closure
+///   const zero 0 : i64
+///   r = add(n, zero) : i64     — identity (n + 0 = n)
+///   ret r : i64
+///
+/// main() : i64
+///   arg  = const 7 : i64
+///   cl   = alloc_closure(Str("__add_fn")) : closure   — no captures
+///   r    = call_closure(cl, arg) : any                — apply(M, '__add_fn', [7])
+///   ret  r : i64
+/// ```
+///
+/// Expected: `erl` prints `7` (the argument passes through the identity).
+///
+/// Skipped silently when `erl` is not on PATH.
+#[test]
+#[ignore = "ir-to-beam encoder produces pre-OTP-25 BEAM format; OTP 28 rejects it with \
+            'compiled for an old version' — fix ir-to-beam first"]
+fn test_66_real_erl_closure_adder() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    // ── Inner function: __add_fn(n) = n + 0 (identity) ──────────────────────
+    //
+    // We use n+0 rather than just `ret n` to exercise the add path and to
+    // confirm that the argument arrives at the correct register after
+    // erlang:apply dispatches via the cons-cell closure.
+    let helper = IIRFunction::new(
+        "__add_fn",
+        vec![("n".to_string(), "i64".to_string())],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "add",
+                Some("r".into()),
+                vec![Operand::Var("n".into()), Operand::Var("zero".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+
+    // ── main(): alloc closure over __add_fn, call it with 7 ─────────────────
+    //
+    // call_closure lowering:
+    //   1. get_list cl → fn_atom='__add_fn', caps=[]
+    //   2. build args = [7]
+    //   3. call_ext erlang:'++'([], [7]) → [7]
+    //   4. call_ext erlang:apply(iir_clos_test, '__add_fn', [7]) → 7
+    let main_fn = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("arg".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__add_fn".into())],
+                "closure",
+            ),
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("cl".into()), Operand::Var("arg".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+
+    let module = IIRModule {
+        name: "iir_clos_test".into(),
+        functions: vec![helper, main_fn],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+
+    let errs = validate_for_beam(&module);
+    assert!(errs.is_empty(), "closure module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_clos_test");
+    let beam_mod = lower_iir_to_beam(&module, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir().join("iir_to_beam_tests");
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_clos_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_clos_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_clos_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        stdout.trim(), "7",
+        "expected closure dispatch result \"7\", got {:?}", stdout.trim()
+    );
 }

@@ -187,6 +187,28 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
         }
 
         for instr in &func.instructions {
+            // ── Check 2.5: ClosureOpcode (LANG35) ────────────────────────────
+            //
+            // `alloc_closure` and `call_closure` are valid IIR opcodes (LANG34)
+            // but the WASM backend does not yet implement closure lowering.
+            // WasmGC closure support requires a `$Closure` struct type and
+            // `call_indirect` dispatch, which are planned for a future LANG spec.
+            //
+            // We emit a specific `ClosureOpcode` error (not `UntypedInstruction`)
+            // so callers understand the precise remediation: either run the
+            // `iir-builtin-lowering` Phase 4 pass to downgrade these opcodes to
+            // `call_builtin "make_closure"` / `"apply_closure"` before lowering,
+            // or wait for the WASM closure backend spec.
+            if matches!(instr.op.as_str(), "alloc_closure" | "call_closure") {
+                errors.push(format!(
+                    "ClosureOpcode: function {:?}, op {:?} — closure opcodes are not \
+                     yet supported by the WASM backend; apply iir-builtin-lowering \
+                     Phase 4 to downgrade to call_builtin form before lowering to WASM",
+                    func.name, instr.op
+                ));
+                continue;
+            }
+
             // ── Check 3: UntypedInstruction ──────────────────────────────────
             //
             // WASM is typed: every value pushed onto the operand stack must

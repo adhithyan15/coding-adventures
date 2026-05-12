@@ -3,6 +3,29 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-05-12
+
+### Added (LANG35 — Closure Backend Integration)
+
+#### Improved `ClosureOpcode` validator error
+
+- `validate_for_jvm` now emits a dedicated `ClosureOpcode` error message
+  (format: `"[fn_name] ClosureOpcode: alloc_closure/call_closure require the
+  BEAM backend — JVM does not support heap-allocated closures"`) when it
+  encounters `alloc_closure` or `call_closure`.
+- Previously these fell through to the generic `UntypedInstruction` path;
+  the closure check now runs first to give a more actionable error message.
+
+#### Tests
+
+- `lang35_alloc_closure_closure_opcode_error`: asserts `validate_for_jvm`
+  returns an error containing "ClosureOpcode" for a module with `alloc_closure`.
+- `lang35_call_closure_closure_opcode_error`: same for `call_closure`.
+- `lang35_closure_opcode_error_not_untyped`: asserts the error does NOT
+  contain "UntypedInstruction".
+
+---
+
 ## [0.2.0] — 2026-05-11
 
 ### Added (LANG32 — Global Variables and I/O)

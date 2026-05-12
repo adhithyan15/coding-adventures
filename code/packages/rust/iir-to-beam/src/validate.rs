@@ -22,13 +22,24 @@
 //! |------------|-----------|
 //! | `EmptyModule` | Module has zero functions |
 //! | `EmptyFunction` | A function has zero instructions |
-//! | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
+//! | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` — except for `call_closure` |
 //! | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` — see exceptions |
 //! | `UnsupportedType` (float const) | `op == "const"` and src is `Operand::Float` |
 //! | `UnsupportedOp` | op is a runtime/memory/IO/GC opcode (list below) |
 //!
 //! Unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`,
 //! `store_mem`, `box`, `unbox`, `safepoint`.
+//!
+//! **LANG35 closure opcodes accepted by this backend:**
+//!
+//! | Op | type_hint | Lowering |
+//! |----|-----------|---------|
+//! | `alloc_closure` | `"closure"` | `put_list` cons-cell chain + fn-name atom |
+//! | `call_closure`  | `"any"` | `get_list` + `call_ext erlang:'++'` + `call_ext erlang:apply/3` |
+//!
+//! `call_closure` is the only opcode permitted with a `"any"` type hint: its
+//! return type is necessarily unknown at compile time (Twig is dynamically
+//! typed), and the BEAM runtime enforces type safety at execution time.
 //!
 //! **Phase 2 heap ops accepted by this backend:**
 //!
@@ -77,23 +88,30 @@ use interpreter_ir::{IIRModule, Operand};
 // - `io_out`        — lowered to `erlang:display/1` via gc_bif1.
 // - `global_store`  — lowered to `erlang:put/2` (process dictionary) via gc_bif2.
 // - `global_load`   — lowered to `erlang:get/1` (process dictionary) via gc_bif1.
+//
+// LANG35 — supported in BEAM backend:
+// - `alloc_closure` — lowered to put_list cons-cell chain (fn atom + captures).
+// - `call_closure`  — lowered to get_list + call_ext erlang:'++'/2 +
+//                     call_ext erlang:apply/3.
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
     "io_in",
-    // "io_out"      — LANG32: now supported (erlang:display/1).
-    // "global_store"— LANG32: now supported (erlang:put/2).
-    // "global_load" — LANG32: now supported (erlang:get/1).
+    // "io_out"       — LANG32: now supported (erlang:display/1).
+    // "global_store" — LANG32: now supported (erlang:put/2).
+    // "global_load"  — LANG32: now supported (erlang:get/1).
     "cast",
     "load_mem",
     "store_mem",
-    // "alloc"       — accepted: lowered to put_list (via alloc+field_store pattern)
+    // "alloc"         — accepted: lowered to put_list (via alloc+field_store pattern)
     "box",
     "unbox",
-    // "field_load"  — accepted: lowered to get_list
-    // "field_store" — accepted: lowered as part of the put_list pattern
-    // "is_null"     — accepted: lowered to is_nil synthesis
+    // "field_load"    — accepted: lowered to get_list
+    // "field_store"   — accepted: lowered as part of the put_list pattern
+    // "is_null"       — accepted: lowered to is_nil synthesis
     "safepoint",
+    // "alloc_closure" — LANG35: accepted; lowered to put_list cons-cell
+    // "call_closure"  — LANG35: accepted; lowered to get_list + call_ext apply
 ];
 
 // ---------------------------------------------------------------------------
@@ -177,6 +195,24 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
         }
 
         for instr in &func.instructions {
+            // ── Check 2.5: ClosureOpcode early-accept (LANG35) ───────────────
+            //
+            // `alloc_closure` (type_hint "closure") and `call_closure`
+            // (type_hint "any") are fully supported by this backend.  Skip
+            // all downstream type and op checks for these two opcodes so they
+            // don't fall into UntypedInstruction or UnsupportedOp.
+            //
+            // `alloc_closure` carries the function name as Operand::Str in
+            // srcs[0] and captures in srcs[1..].  It produces a cons-cell
+            // `[fn_atom | caps_list]` using put_list.
+            //
+            // `call_closure` always has type_hint "any" because Twig is
+            // dynamically typed; the return type is unknown at compile time.
+            // BEAM enforces types at runtime via the normal exception path.
+            if matches!(instr.op.as_str(), "alloc_closure" | "call_closure") {
+                continue;
+            }
+
             // ── Check 3: UntypedInstruction ──────────────────────────────────
             //
             // BEAM arithmetic is performed via Erlang BIFs (erlang:+/2, etc.).
@@ -188,6 +224,9 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             // `"polymorphic"` is the profiler's sentinel for "seen multiple
             // types at runtime" — it means the JIT should NOT specialise.  It
             // is equally useless for static BEAM lowering.
+            //
+            // EXCEPTION: `call_closure` (handled above by the early-accept
+            // continue) is always "any" and is valid.
             if instr.type_hint == "any" || instr.type_hint == "polymorphic" {
                 errors.push(format!(
                     "UntypedInstruction: function {:?}, op {:?} has type_hint {:?}; \
@@ -195,6 +234,14 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                     func.name, instr.op, instr.type_hint
                 ));
             }
+
+            // ── Check 3.5: LANG35 "closure" type_hint accepted ───────────────
+            //
+            // `alloc_closure` uses type_hint "closure" (from interpreter_ir's
+            // CLOSURE_TYPE constant).  This type is not in CONCRETE_TYPES but
+            // is valid here.  The early-accept continue above already skips
+            // the UntypedInstruction check; this comment is a note for any
+            // future validator that scans for unknown type_hint values.
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //

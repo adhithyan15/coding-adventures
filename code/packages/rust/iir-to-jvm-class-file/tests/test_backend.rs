@@ -1658,3 +1658,102 @@ fn heap_alloc_validates_ok() {
         errors
     );
 }
+
+// ===========================================================================
+// LANG35 — ClosureOpcode validator tests
+// ===========================================================================
+//
+// The JVM backend does not yet support `alloc_closure` / `call_closure`.
+// Full JVM closure lowering (dispatch-table / invokedynamic approach) is
+// planned for a future LANG spec (LANG36).
+//
+// The validator returns a specific `ClosureOpcode` error with an actionable
+// message, instead of a confusing `UntypedInstruction` error.  The three
+// tests below verify this behaviour for both closure opcodes.
+
+/// `alloc_closure` must produce a `ClosureOpcode` validation error in the
+/// JVM backend, not an `UntypedInstruction` error.
+#[test]
+fn lang35_alloc_closure_closure_opcode_error() {
+    let func = IIRFunction::new(
+        "make_closure",
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errors = validate_for_jvm(&module_with(func));
+    assert!(
+        !errors.is_empty(),
+        "alloc_closure must produce a validation error in the JVM backend"
+    );
+    assert!(
+        errors.iter().any(|e| e.contains("ClosureOpcode")),
+        "error must contain \"ClosureOpcode\"; got: {errors:?}"
+    );
+}
+
+/// `call_closure` must produce a `ClosureOpcode` validation error in the
+/// JVM backend.
+#[test]
+fn lang35_call_closure_closure_opcode_error() {
+    let func = IIRFunction::new(
+        "apply_it",
+        vec![("h".into(), "i64".into()), ("a".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("h".into()), Operand::Var("a".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_jvm(&module_with(func));
+    assert!(
+        !errors.is_empty(),
+        "call_closure must produce a validation error in the JVM backend"
+    );
+    assert!(
+        errors.iter().any(|e| e.contains("ClosureOpcode")),
+        "error must contain \"ClosureOpcode\"; got: {errors:?}"
+    );
+}
+
+/// The `ClosureOpcode` error must not be the confusing `UntypedInstruction`
+/// message — the LANG35 improvement ensures callers get an actionable reason.
+#[test]
+fn lang35_closure_opcode_error_not_untyped() {
+    let func = IIRFunction::new(
+        "make_closure",
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errors = validate_for_jvm(&module_with(func));
+    assert!(
+        errors.iter().any(|e| e.contains("ClosureOpcode")),
+        "expected ClosureOpcode error; got: {errors:?}"
+    );
+    assert!(
+        !errors.iter().any(|e| e.contains("UntypedInstruction")),
+        "error must not say UntypedInstruction for closure ops; got: {errors:?}"
+    );
+}

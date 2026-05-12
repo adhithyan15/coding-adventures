@@ -193,6 +193,28 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
         }
 
         for instr in &func.instructions {
+            // ── Check 2.5: ClosureOpcode (LANG35) ────────────────────────────
+            //
+            // `alloc_closure` and `call_closure` are valid IIR opcodes (LANG34)
+            // but the CLR backend does not yet implement closure lowering.
+            // Full CLR closure support (dispatch-table approach using `object[]`
+            // cons cells and `MethodInfo.Invoke` reflection) is planned for LANG37.
+            //
+            // We emit a specific `ClosureOpcode` error rather than
+            // `UntypedInstruction` so callers understand the precise remediation:
+            // apply `iir-builtin-lowering` Phase 4 to downgrade to `call_builtin`
+            // form, or wait for LANG37.
+            if matches!(instr.op.as_str(), "alloc_closure" | "call_closure") {
+                errors.push(format!(
+                    "ClosureOpcode: function {:?}, op {:?} — closure opcodes are not \
+                     yet supported by the CLR backend; apply iir-builtin-lowering \
+                     Phase 4 to downgrade to call_builtin form before lowering to CIL \
+                     (full CLR closure support is planned for LANG37)",
+                    func.name, instr.op
+                ));
+                continue;
+            }
+
             // ── Check 3: UntypedInstruction ──────────────────────────────────
             //
             // CIL is a typed stack machine.  The JIT verifier needs to know the
