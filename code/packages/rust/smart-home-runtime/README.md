@@ -23,6 +23,8 @@ Included surfaces:
   caught-up streams, and backlogged streams
 - event-bus aggregate pressure helpers for counting lagging subscriptions and
   maximum pending delivery depth
+- event-bus lagging-subscription percentage helpers for read-side pressure
+  thresholds
 - subscription backlog status helpers for identifying lagging event-stream
   subscribers without draining their delivery queues
 - command validation against entity capabilities and command modes
