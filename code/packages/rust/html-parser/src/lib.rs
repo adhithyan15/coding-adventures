@@ -5093,6 +5093,7 @@ fn is_void_element(name: &str) -> bool {
             | "hr"
             | "img"
             | "input"
+            | "keygen"
             | "link"
             | "meta"
             | "param"
