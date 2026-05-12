@@ -5,9 +5,25 @@ import {
   POW,
   app,
   int,
+  numberNode,
   sym,
 } from "@coding-adventures/symbolic-ir";
-import { History, MacsymaBackend, MacsymaSession, evalSourceJson } from "../src/index.js";
+import { VM } from "@coding-adventures/symbolic-vm";
+import {
+  ALL_SYMBOL,
+  DISPLAY,
+  EV,
+  EXPAND,
+  History,
+  KILL,
+  MACSYMA_NAME_TABLE,
+  MacsymaBackend,
+  MacsymaSession,
+  RAT_SIMPLIFY,
+  SUPPRESS,
+  extendCompilerNameTable,
+  evalSourceJson,
+} from "../src/index.js";
 
 describe("macsyma-runtime", () => {
   it("evaluates arithmetic programs", () => {
@@ -24,6 +40,45 @@ describe("macsyma-runtime", () => {
     expect(results[0].display).toBe(false);
     expect(results[1].display).toBe(true);
     expect(results[1].output).toEqual(int(6));
+  });
+
+  it("exports runtime-owned heads", () => {
+    expect(DISPLAY).toEqual(sym("Display"));
+    expect(SUPPRESS).toEqual(sym("Suppress"));
+    expect(KILL).toEqual(sym("Kill"));
+    expect(EV).toEqual(sym("Ev"));
+  });
+
+  it("exports MACSYMA name-table routes and extends maps idempotently", () => {
+    expect(MACSYMA_NAME_TABLE.get("kill")).toEqual(KILL);
+    expect(MACSYMA_NAME_TABLE.get("ev")).toEqual(EV);
+    expect(MACSYMA_NAME_TABLE.get("expand")).toEqual(EXPAND);
+    expect(MACSYMA_NAME_TABLE.get("ratsimp")).toEqual(RAT_SIMPLIFY);
+
+    const target = new Map<string, typeof KILL>();
+    extendCompilerNameTable(target);
+    const snapshot = [...target.entries()];
+    extendCompilerNameTable(target);
+    expect([...target.entries()]).toEqual(snapshot);
+  });
+
+  it("extends object name tables idempotently", () => {
+    const target: Record<string, typeof KILL | undefined> = {};
+    extendCompilerNameTable(target);
+    const snapshot = { ...target };
+    extendCompilerNameTable(target);
+    expect(target).toEqual(snapshot);
+    expect(target.kill).toEqual(KILL);
+  });
+
+  it("canonicalizes runtime name-table calls after grammar compilation", () => {
+    const session = new MacsymaSession();
+    const [killResult] = session.evalSource("kill(x);");
+    const [evResult] = session.evalSource("ev(1 + 2, numer);");
+
+    expect(killResult.input).toEqual(app(KILL, [sym("x")]));
+    expect(evResult.input).toEqual(app(EV, [app(ADD, [int(1), int(2)]), sym("numer")]));
+    expect(evResult.output).toEqual(numberNode(3));
   });
 
   it("records and resolves history references", () => {
@@ -94,6 +149,61 @@ describe("macsyma-runtime", () => {
     expect(backend.lookup("%o1")).toEqual(int(99));
     expect(backend.lookup("%")).toEqual(int(42));
     expect(backend.lookup("not_history")).toBeUndefined();
+  });
+
+  it("registers held Kill and Ev runtime handlers", () => {
+    const backend = new MacsymaBackend(new History());
+    expect(backend.handlers().has(KILL.name)).toBe(true);
+    expect(backend.handlers().has(EV.name)).toBe(true);
+    expect(backend.holdHeads().has(KILL.name)).toBe(true);
+    expect(backend.holdHeads().has(EV.name)).toBe(true);
+  });
+
+  it("kills single and multiple bindings without evaluating names first", () => {
+    const session = new MacsymaSession();
+    const results = session.evalSource("x : 5; y : 6; kill(x, y); x; y;");
+
+    expect(results[2].output).toEqual(sym("done"));
+    expect(results[3].output).toEqual(sym("x"));
+    expect(results[4].output).toEqual(sym("y"));
+  });
+
+  it("kill(all) clears bindings and history", () => {
+    const history = new History();
+    history.recordInput(sym("old"));
+    history.recordOutput(int(42));
+    const backend = new MacsymaBackend(history);
+    backend.bind("x", int(5));
+    const vm = new VM(backend);
+
+    vm.eval(app(KILL, [ALL_SYMBOL]));
+
+    expect(backend.lookup("x")).toBeUndefined();
+    expect(backend.lookup("%pi")).toEqual(numberNode(Math.PI));
+    expect(history.nextInputIndex()).toBe(1);
+    expect(history.lastOutput()).toBeUndefined();
+  });
+
+  it("session kill(all) leaves the next input index reset", () => {
+    const session = new MacsymaSession();
+    session.evalSource("x : 5; 1; kill(all);");
+    expect(session.history().nextInputIndex()).toBe(1);
+    expect(session.evalSource("x;")[0].output).toEqual(sym("x"));
+  });
+
+  it("Ev numer and float coerce evaluated exact results to floats", () => {
+    const session = new MacsymaSession();
+    const results = session.evalSource("ev(1 + 2, numer); ev(42, float);");
+
+    expect(results[0].output).toEqual(numberNode(3));
+    expect(results[1].output).toEqual(numberNode(42));
+  });
+
+  it("Ev transform flags keep the evaluated expression when no handler is available", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("ev(x + 0, expand);");
+
+    expect(result.output).toEqual(sym("x"));
   });
 
   it("evaluates function definitions across statements", () => {
