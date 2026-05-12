@@ -15,6 +15,8 @@ All notable changes to this package will be documented in this file.
   asset metadata.
 - `SkillSourceSummary` plus `SkillStore::source_summary()` for compact
   manifest `source.kind` provenance rollups across filtered skill versions.
+- `SkillInventorySummary` plus `SkillStore::inventory_summary()` for composed
+  catalog, requirement, asset, and source coverage over filtered skill versions.
 
 ## [0.1.0] - 2026-04-18
 
