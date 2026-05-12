@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-05-12
+
+### Changed
+
+`decompose_text` system prompt rewritten as `decompose-text-v2`.
+The v1 prompt described an abstract "hierarchical IR per ADJ01 v2"
+without showing the model what the JSON should look like. Smaller
+models (Gemma 4 in particular) invented their own field names —
+`node_type` instead of `kind`, `text` instead of `term`, nested
+`children` arrays instead of a flat node list. v2 ships a concrete
+worked example showing the exact desired JSON shape, plus 10 numbered
+mandatory rules including explicit "Do NOT nest nodes inside a
+`children` field" and "Use `kind` (not `node_type`), `term` (not
+`text`)".
+
+**Result**: against `gemma4:latest`, the IR now passes ADJ02 coverage
+on the first try with zero converter warnings. The full source-text
+→ decompose_text → typed IR → ADJ02 + ADJ03 + ADJ04 + ADJ05 + engine
+chain runs cleanly. Where v1 produced a nested tree with a 1-byte
+coverage gap, v2 produces a flat 3-node IR that tiles the source.
+
+- `DECOMPOSE_TEXT_PROMPT_VERSION` bumped to `"decompose-text-v2"`.
+  Prompt-version constant test updated.
+- All audit-trail records produced after this change carry
+  `prompt_version = "decompose-text-v2"`. Old records keyed to
+  `v1` are still replayable against the v1 prompt by checking out
+  prior commits — the framework's `(prompt_version, prompt_hash)`
+  scheme means version bumps are non-destructive.
+
+### Notes
+
+The system prompt for v2 grew from ~600 bytes to ~2700 bytes. With
+the `complete_json_with_truncation_retry` helper added in v0.7
+(initial cap 1024, doubles to 32_768), this stays well within budget
+for any production model. Smaller models on commodity hardware paid
+~120-200ms additional latency per decompose_text call for the
+larger system context, which is recovered many times over by not
+having to fall back to the tolerant JSON-to-IR converter or retry.
+
 ## [0.7.0] - 2026-05-11
 
 ### Added
