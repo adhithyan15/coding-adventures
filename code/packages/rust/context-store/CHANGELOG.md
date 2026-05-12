@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   body-free session lifecycle and checkpoint coverage over selected headers.
 - `ContextTranscriptSummary` and `transcript_summary()` for bounded body-free
   transcript counts by entry kind, metadata coverage, and time span.
+- `ContextSnapshotSummary` and `snapshot_summary()` for bounded compaction
+  checkpoint counts, reference counts, and token estimate ranges.
 
 ## [0.1.0] - 2026-04-18
 
