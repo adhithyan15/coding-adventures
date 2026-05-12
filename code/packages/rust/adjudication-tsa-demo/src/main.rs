@@ -35,6 +35,13 @@
 //! # to stdout so you can inspect what the model produced:
 //! ADJ_DEMO_RULEBOOK_MODE=elicit ADJ_DEMO_DUMP_RULEBOOK=1 \
 //!     cargo run -p adjudication-tsa-demo
+//!
+//! # Adversarial multi-model elicitation: elicit rulebooks from N
+//! # independent models, concatenate with provenance tags, inject
+//! # the merged text into Arm A. A rule cited at answer time can
+//! # be traced back to the specific model that produced it.
+//! ADJ_DEMO_RULEBOOK_MODE=adversarial:gemma4:latest,llama3.1:8b \
+//!     cargo run -p adjudication-tsa-demo
 //! ```
 //!
 //! The binary is intentionally environment-variable driven rather
@@ -43,18 +50,37 @@
 
 use std::time::Duration;
 
+use adjudication_rulebook::{
+    acquire_rulebook_adversarial, AcquireRulebookAdversarialRequest, PerModelOutcome,
+};
 use adjudication_tsa_demo::{
     acquire_demo_rulebook, fixture_tsa_rulebook, format_side_by_side, run_pipeline_arm,
     run_raw_arm, DemoConfig, IrMode, IrSourceTelemetry,
 };
+use llm_gateway::LlmClient;
 use llm_primitives::{GatewayConfig, Role as PrimitiveRole};
 use llm_provider_ollama::OllamaClient;
 
 fn main() {
     let mut cfg = config_from_env();
-    let elicit_requested = std::env::var("ADJ_DEMO_RULEBOOK_MODE")
-        .map(|s| s == "elicit")
-        .unwrap_or(false);
+    let rb_mode = std::env::var("ADJ_DEMO_RULEBOOK_MODE").unwrap_or_default();
+    let elicit_requested = rb_mode == "elicit";
+    let adversarial_models: Option<Vec<String>> = if let Some(rest) =
+        rb_mode.strip_prefix("adversarial:")
+    {
+        let models: Vec<String> = rest
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect();
+        if models.is_empty() {
+            None
+        } else {
+            Some(models)
+        }
+    } else {
+        None
+    };
 
     // If the user asked for ADJ_DEMO_RULEBOOK_MODE=elicit, run the
     // rulebook-acquisition phase before Arm A. The acquired rulebook
@@ -118,6 +144,95 @@ fn main() {
                 println!("{msg}");
                 eprintln!("{msg}");
             }
+        }
+    }
+
+    // Adversarial multi-model elicitation. For each model in the
+    // comma-separated list, build an OllamaClient + GatewayConfig
+    // and call adjudication_rulebook::acquire_rulebook_adversarial.
+    // The merged provenance-tagged rulebook text becomes Arm A's
+    // injected prompt — a rule cited at answer time can be traced
+    // back to which model produced it.
+    if let Some(models) = adversarial_models.as_ref() {
+        println!(
+            "[stage 0] adversarial elicitation across {n} models: {list}",
+            n = models.len(),
+            list = models.join(", "),
+        );
+        let mut gateways: Vec<(String, GatewayConfig)> = Vec::with_capacity(models.len());
+        for m in models {
+            let ollama: Box<dyn LlmClient> = Box::new(
+                OllamaClient::new(m.clone())
+                    .with_endpoint(cfg.endpoint.clone())
+                    .with_timeout(cfg.timeout),
+            );
+            // Second client for Extractor role (decompose_text). We
+            // can't .clone() Box<dyn LlmClient>, so construct a
+            // sibling OllamaClient with the same config.
+            let extractor: Box<dyn LlmClient> = Box::new(
+                OllamaClient::new(m.clone())
+                    .with_endpoint(cfg.endpoint.clone())
+                    .with_timeout(cfg.timeout),
+            );
+            let gw = GatewayConfig::new()
+                .with_client(PrimitiveRole::RuleExtractor, ollama)
+                .with_client(PrimitiveRole::Extractor, extractor);
+            gateways.push((m.clone(), gw));
+        }
+        let req = AcquireRulebookAdversarialRequest {
+            document_id_prefix: "rulebook-tsa-adversarial".to_string(),
+            domain: "tsa-declaration".to_string(),
+            scope: Some("carry-on baggage".to_string()),
+            as_of: "2026-05-12".to_string(),
+            language_hint: None,
+        };
+        let adv = acquire_rulebook_adversarial(&req, gateways);
+        println!(
+            "[stage 0] adversarial elicit: {ok}/{total} models succeeded ({fail} failed)",
+            ok = adv.successful_count,
+            total = adv.per_model.len(),
+            fail = adv.failed_count,
+        );
+        for outcome in &adv.per_model {
+            match outcome {
+                PerModelOutcome::Acquired { model_label, rulebook } => {
+                    let validation_summary = if rulebook.validation_passed {
+                        "OK".to_string()
+                    } else {
+                        format!(
+                            "FAILED ({})",
+                            rulebook.validation_error.as_deref().unwrap_or("(no diagnostic)")
+                        )
+                    };
+                    println!(
+                        "[stage 0]   ✓ `{model_label}`: {bytes} bytes (validation={validation})",
+                        bytes = rulebook.source_text.len(),
+                        validation = validation_summary,
+                    );
+                }
+                PerModelOutcome::Failed { model_label, error_summary } => {
+                    let msg = format!("[stage 0]   ✗ `{model_label}` FAILED: {error_summary}");
+                    println!("{msg}");
+                    eprintln!("{msg}");
+                }
+            }
+        }
+        if std::env::var("ADJ_DEMO_DUMP_RULEBOOK").is_ok() && !adv.merged_source_text.is_empty() {
+            println!(
+                "[stage 0] merged adversarial rulebook (provenance-tagged):\n\
+                 ----- BEGIN RULEBOOK -----\n\
+                 {text}\n\
+                 ----- END RULEBOOK -----",
+                text = adv.merged_source_text,
+            );
+        }
+        if !adv.merged_source_text.is_empty() {
+            cfg.rulebook_text = Some(adv.merged_source_text);
+        } else {
+            let msg = "[stage 0] adversarial elicit: ALL models failed; \
+                       continuing without rulebook.";
+            println!("{msg}");
+            eprintln!("{msg}");
         }
     }
 
@@ -248,11 +363,13 @@ fn config_from_env() -> DemoConfig {
         cfg.rulebook_text = match mode.as_str() {
             "" | "none" => None,
             "fixture" => Some(fixture_tsa_rulebook()),
-            // `elicit` is handled later in `main()` — it needs a
-            // gateway, which isn't available at config-load time.
-            // Leave rulebook_text = None here; main() fills it in
-            // after acquire_demo_rulebook runs.
+            // `elicit` and `adversarial:...` are handled later in
+            // `main()` — they need a gateway, which isn't available
+            // at config-load time. Leave rulebook_text = None here;
+            // main() fills it in after the corresponding orchestrator
+            // runs.
             "elicit" => None,
+            mode if mode.starts_with("adversarial:") => None,
             path => match std::fs::read_to_string(path) {
                 Ok(text) => Some(text),
                 Err(e) => {
