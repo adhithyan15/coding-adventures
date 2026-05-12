@@ -456,6 +456,83 @@ impl LocalHttpEndpointQuery {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct LocalHttpEndpointSummary {
+    pub total_endpoints: usize,
+    pub http_endpoints: usize,
+    pub https_endpoints: usize,
+    pub endpoints_with_custom_port: usize,
+    pub endpoints_with_base_path: usize,
+    pub endpoints_with_tls_name: usize,
+    pub endpoints_accepting_invalid_certs: usize,
+    pub metadata_bearing_endpoints: usize,
+    pub unique_integrations: usize,
+    pub unique_bridges: usize,
+    pub unique_hosts: usize,
+}
+
+impl LocalHttpEndpointSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_endpoints<'a, I>(endpoints: I) -> Self
+    where
+        I: IntoIterator<Item = &'a LocalHttpEndpoint>,
+    {
+        let mut summary = Self::empty();
+        let mut integrations = Vec::new();
+        let mut bridges = Vec::new();
+        let mut hosts = Vec::new();
+
+        for endpoint in endpoints {
+            summary.total_endpoints += 1;
+            match endpoint.scheme {
+                LocalHttpScheme::Http => summary.http_endpoints += 1,
+                LocalHttpScheme::Https => summary.https_endpoints += 1,
+            }
+            if endpoint
+                .port
+                .is_some_and(|port| port != endpoint.scheme.default_port())
+            {
+                summary.endpoints_with_custom_port += 1;
+            }
+            if !endpoint.base_path.is_empty() {
+                summary.endpoints_with_base_path += 1;
+            }
+            if endpoint.tls_name.is_some() {
+                summary.endpoints_with_tls_name += 1;
+            }
+            if endpoint.accept_invalid_certs {
+                summary.endpoints_accepting_invalid_certs += 1;
+            }
+            if !endpoint.metadata.is_empty() {
+                summary.metadata_bearing_endpoints += 1;
+            }
+            push_unique(&mut integrations, endpoint.integration_id.clone());
+            push_unique(&mut bridges, endpoint.bridge_id.clone());
+            push_unique(&mut hosts, endpoint.host.clone());
+        }
+
+        summary.unique_integrations = integrations.len();
+        summary.unique_bridges = bridges.len();
+        summary.unique_hosts = hosts.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_endpoints == 0
+    }
+
+    pub fn has_tls_exceptions(&self) -> bool {
+        self.endpoints_accepting_invalid_certs > 0
+    }
+
+    pub fn has_custom_ports(&self) -> bool {
+        self.endpoints_with_custom_port > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LocalHttpRequestTemplate {
     pub method: LocalHttpMethod,
@@ -905,6 +982,13 @@ where
     results
 }
 
+pub fn summarize_local_http_endpoints<'a, I>(endpoints: I) -> LocalHttpEndpointSummary
+where
+    I: IntoIterator<Item = &'a LocalHttpEndpoint>,
+{
+    LocalHttpEndpointSummary::from_endpoints(endpoints)
+}
+
 pub fn summarize_local_http_request_plans<'a, I>(plans: I) -> LocalHttpRequestPlanSummary
 where
     I: IntoIterator<Item = &'a LocalHttpRequestPlan>,
@@ -974,6 +1058,12 @@ fn sort_local_http_request_plan_results(
 
 fn matches_any<T: PartialEq>(needles: &[T], value: &T) -> bool {
     needles.is_empty() || needles.iter().any(|needle| needle == value)
+}
+
+fn push_unique<T: PartialEq>(values: &mut Vec<T>, value: T) {
+    if !values.contains(&value) {
+        values.push(value);
+    }
 }
 
 fn scheme_rank(scheme: LocalHttpScheme) -> u8 {
@@ -1298,6 +1388,54 @@ mod tests {
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].bridge_id, BridgeId::trusted("camera-1"));
         assert!(query.matches_endpoint(results[0]));
+    }
+
+    #[test]
+    fn endpoint_summary_counts_inventory_shape() {
+        let hue = LocalHttpEndpoint::hue_bridge(bridge_id(), "hue.local")
+            .unwrap()
+            .with_tls_name("hue.local")
+            .with_base_path("/clip/v2");
+        let camera = LocalHttpEndpoint::new(
+            IntegrationId::trusted("camera"),
+            BridgeId::trusted("camera-1"),
+            LocalHttpScheme::Https,
+            "192.168.1.40",
+        )
+        .unwrap()
+        .with_port(8443)
+        .accept_invalid_certs(true);
+        let wled = LocalHttpEndpoint::new(
+            IntegrationId::trusted("wled"),
+            BridgeId::trusted("wled-1"),
+            LocalHttpScheme::Http,
+            "wled.local",
+        )
+        .unwrap()
+        .with_port(8080);
+
+        let summary = summarize_local_http_endpoints([&hue, &camera, &wled]);
+
+        assert_eq!(
+            summary,
+            LocalHttpEndpointSummary {
+                total_endpoints: 3,
+                http_endpoints: 1,
+                https_endpoints: 2,
+                endpoints_with_custom_port: 2,
+                endpoints_with_base_path: 1,
+                endpoints_with_tls_name: 1,
+                endpoints_accepting_invalid_certs: 1,
+                metadata_bearing_endpoints: 1,
+                unique_integrations: 3,
+                unique_bridges: 3,
+                unique_hosts: 3,
+            }
+        );
+        assert!(summary.has_custom_ports());
+        assert!(summary.has_tls_exceptions());
+        assert!(!summary.is_empty());
+        assert!(LocalHttpEndpointSummary::empty().is_empty());
     }
 
     #[test]
