@@ -60,6 +60,9 @@ use adjudication_ir::{
 use adjudication_pipeline::{
     run_with_gateway, PipelineDocument, PipelineInput, PipelineOutput, Verdict,
 };
+use adjudication_rulebook::{
+    acquire_rulebook, AcquireRulebookError, AcquireRulebookRequest, Rulebook,
+};
 use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, LlmError, Message, MessageContent, Role as MsgRole,
 };
@@ -132,6 +135,19 @@ pub struct DemoConfig {
     /// second run replays from disk with zero round-trips. Off by
     /// default to keep the no-knobs invocation deterministic in CI.
     pub cache_dir: Option<String>,
+    /// Optional rulebook text to inject into Arm A's system prompt.
+    /// When `None`, the raw arm runs as before — the model relies on
+    /// whatever rules its training data contains, which produces
+    /// the rule-hallucination pattern captured in
+    /// [ADJ12](../../specs/ADJ12-small-model-benchmarks.md)
+    /// ("matches allowed if unlit", "30-pound weight limit", etc.).
+    /// When `Some(text)`, the system prompt names the carry-on rules
+    /// explicitly and tells the model to cite a rule number for each
+    /// finding. Pair with [`fixture_tsa_rulebook`] for a
+    /// deterministic baseline, or with `acquire_rulebook` (from the
+    /// `adjudication-rulebook` crate) for an LLM-elicited rulebook
+    /// that itself runs through the standard audit discipline.
+    pub rulebook_text: Option<String>,
 }
 
 impl Default for DemoConfig {
@@ -145,8 +161,45 @@ impl Default for DemoConfig {
             ir_mode: IrMode::HandBuilt,
             max_clarification_attempts: 2,
             cache_dir: None,
+            rulebook_text: None,
         }
     }
+}
+
+/// The canonical fixture TSA rulebook. A short, numbered, English
+/// list of the rules the carry-on demos exercise. Deterministic by
+/// construction — useful as the "rulebook injected" baseline for
+/// comparing raw-arm hallucination rates against an LLM-acquired
+/// rulebook (which carries its own audit trail).
+///
+/// Source: paraphrased from publicly-known TSA carry-on guidance.
+/// Not an authoritative regulatory document; this fixture is for
+/// demo use only.
+pub fn fixture_tsa_rulebook() -> String {
+    "TSA CARRY-ON RULEBOOK (FIXTURE — for demo use, not authoritative):\n\
+     \n\
+     1. A passenger may carry one (1) carry-on bag plus one (1) \
+     personal item.\n\
+     2. Liquids, aerosols, and gels in carry-on baggage are \
+     limited to 3.4 oz (100 ml) per container; containers must fit \
+     in a single quart-sized clear bag. Exception: prescription \
+     medications and baby formula are exempt from the 3.4 oz limit \
+     and may be declared at the checkpoint.\n\
+     3. Strike-anywhere matches are prohibited in carry-on baggage. \
+     Other matchbooks are permitted (one book per passenger).\n\
+     4. Common lighters are permitted in carry-on (one per passenger). \
+     Torch lighters and lighter fluid are prohibited.\n\
+     5. Lithium batteries: spare lithium-ion batteries over 100 Wh \
+     are prohibited in carry-on; under 100 Wh are permitted. Lithium \
+     metal batteries are limited to 2 g of lithium content per \
+     battery.\n\
+     6. Knives: blades over 2.36 in (60 mm) are prohibited; pocket \
+     knives under that length are permitted.\n\
+     7. Pyrotechnics, fireworks, and signal flares are prohibited.\n\
+     8. Wine, beer, and other alcoholic beverages over 70% ABV are \
+     prohibited. Under 70% ABV is permitted in unopened retail \
+     packaging up to 5 L per passenger.\n"
+        .to_string()
 }
 
 // ---------------------------------------------------------------------------
@@ -167,24 +220,50 @@ pub struct RawArmReport {
     pub finish_reason: FinishReason,
 }
 
-/// Ask the model directly. The prompt is intentionally minimal so
-/// the model's unaided judgement is what shows up in the answer.
+/// Acquire a TSA rulebook from the LLM's own weights via
+/// `adjudication_rulebook::acquire_rulebook`. Returns the typed
+/// [`Rulebook`] (the same `Tentative`-tier shape from ADJ14 Stage
+/// 0); the caller pulls `.source_text` out and feeds it to
+/// [`DemoConfig::rulebook_text`] to inject into Arm A.
+///
+/// This is the **recursive use of the framework on itself**: the
+/// rulebook the model is about to be judged against comes from the
+/// model's own weights, audited through the same decompose +
+/// validate pipeline that the framework uses for facts. The audit
+/// trail records every call.
+///
+/// Returns `AcquireRulebookError` on elicit / decompose failure.
+pub fn acquire_demo_rulebook(
+    cfg: &DemoConfig,
+    gateway: &GatewayConfig,
+) -> Result<Rulebook, AcquireRulebookError> {
+    let document_id = format!("rulebook-tsa-{model}", model = cfg.model);
+    let req = AcquireRulebookRequest {
+        document_id,
+        domain: "tsa-declaration".to_string(),
+        scope: Some("carry-on baggage".to_string()),
+        as_of: "2026-05-12".to_string(),
+        language_hint: None,
+    };
+    acquire_rulebook(&req, gateway)
+}
+
+/// Ask the model directly. When `cfg.rulebook_text` is `None`, the
+/// prompt is intentionally minimal so the model's unaided judgement
+/// is what shows up in the answer (the hallucination baseline).
+/// When `cfg.rulebook_text` is `Some(text)`, the system prompt names
+/// the rules explicitly and tells the model to cite a rule number
+/// per finding — the model can no longer invent constraints.
 pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let client = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
         .with_timeout(cfg.timeout);
 
     let prompt = build_raw_prompt(&cfg.source_text);
+    let system = build_raw_system_prompt(cfg.rulebook_text.as_deref());
     let req = CompletionRequest {
         model: cfg.model.clone(),
-        system: Some(
-            "You are a TSA compliance officer. Given a passenger \
-             declaration, decide whether the passenger is compliant \
-             with TSA carry-on rules. Explain your reasoning in 2-3 \
-             sentences, then end with a final line: `VERDICT: \
-             COMPLIANT` or `VERDICT: NON-COMPLIANT`."
-                .into(),
-        ),
+        system: Some(system),
         messages: vec![Message {
             role: MsgRole::User,
             content: MessageContent::Text(prompt.clone()),
@@ -213,6 +292,37 @@ fn build_raw_prompt(source_text: &str) -> String {
         "DECLARATION: {source_text}\n\nIs the passenger TSA-compliant?",
         source_text = source_text,
     )
+}
+
+/// Build Arm A's system prompt. When a rulebook is supplied, the
+/// prompt names the rules and forbids the model from inventing
+/// constraints not on the list — the prompt-level version of the
+/// audit discipline that the structured arm enforces with checkers.
+fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
+    match rulebook_text {
+        None => "You are a TSA compliance officer. Given a passenger \
+                 declaration, decide whether the passenger is compliant \
+                 with TSA carry-on rules. Explain your reasoning in 2-3 \
+                 sentences, then end with a final line: `VERDICT: \
+                 COMPLIANT` or `VERDICT: NON-COMPLIANT`."
+            .to_string(),
+        Some(text) => format!(
+            "You are a TSA compliance officer. The carry-on rules \
+             you MUST apply are listed below. Do not invent any \
+             additional rules; if a finding is not justified by a \
+             specific numbered rule below, do not include it.\n\
+             \n\
+             {text}\n\
+             \n\
+             Given a passenger declaration, decide whether the \
+             passenger is compliant with the rules above. Explain \
+             your reasoning in 2-3 sentences, citing the specific \
+             rule numbers for each finding (e.g., \"per rule 3, \
+             strike-anywhere matches are prohibited\"). End with a \
+             final line: `VERDICT: COMPLIANT` or `VERDICT: \
+             NON-COMPLIANT`."
+        ),
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1853,5 +1963,65 @@ mod tests {
         assert!(ir.nodes[0].source_spans.is_empty());
         // No warning for missing spans on Query.
         assert!(!warnings.iter().any(|w| w.contains("missing source_spans")));
+    }
+
+    // --- v0.8 rulebook-injection tests ---
+
+    #[test]
+    fn fixture_rulebook_contains_numbered_rules() {
+        let text = fixture_tsa_rulebook();
+        assert!(text.contains("1."));
+        assert!(text.contains("2."));
+        assert!(text.contains("3."));
+        // The fixture must mention strike-anywhere matches — the
+        // single most-hallucinated rule in ADJ12's small-model
+        // baseline.
+        assert!(text.contains("Strike-anywhere matches"));
+        // And the LAG (3.4 oz) rule.
+        assert!(text.contains("3.4 oz"));
+        // And the lithium-battery rule (the second-most-hallucinated).
+        assert!(text.to_lowercase().contains("lithium"));
+    }
+
+    #[test]
+    fn raw_system_prompt_without_rulebook_is_minimal() {
+        let s = build_raw_system_prompt(None);
+        assert!(s.contains("TSA compliance officer"));
+        assert!(s.contains("VERDICT"));
+        // No reference to "rules above" — that's only in the
+        // with-rulebook variant.
+        assert!(!s.contains("rules above"));
+        assert!(!s.contains("RULEBOOK"));
+    }
+
+    #[test]
+    fn raw_system_prompt_with_rulebook_embeds_text_and_forbids_invention() {
+        let rb = "RULES:\n1. carry-on bag = OK\n2. matches = NOT OK\n";
+        let s = build_raw_system_prompt(Some(rb));
+        assert!(s.contains("carry-on bag = OK"));
+        assert!(s.contains("matches = NOT OK"));
+        // The rule-against-invention is the load-bearing piece.
+        assert!(s.contains("Do not invent"));
+        // Cite-specific-rule instruction.
+        assert!(s.contains("citing the specific rule numbers"));
+    }
+
+    #[test]
+    fn default_config_has_no_rulebook() {
+        let cfg = DemoConfig::default();
+        assert!(cfg.rulebook_text.is_none());
+    }
+
+    #[test]
+    fn config_with_fixture_rulebook_injects_into_system_prompt() {
+        // End-to-end at the build-prompt level (no LLM call). Verify
+        // that wiring `rulebook_text: Some(fixture)` into DemoConfig
+        // produces a system prompt that contains the fixture rules.
+        let mut cfg = DemoConfig::default();
+        cfg.rulebook_text = Some(fixture_tsa_rulebook());
+        let s = build_raw_system_prompt(cfg.rulebook_text.as_deref());
+        assert!(s.contains("Strike-anywhere matches"));
+        assert!(s.contains("3.4 oz"));
+        assert!(s.contains("Do not invent"));
     }
 }
