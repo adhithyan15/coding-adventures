@@ -452,6 +452,8 @@ pub struct BoardBleGattTransport<L, const WIRE_BYTES: usize = 1024> {
     endpoint: BleGattEndpoint,
     link: L,
     wire: [u8; WIRE_BYTES],
+    pending: [u8; WIRE_BYTES],
+    pending_len: usize,
 }
 
 impl<L, const WIRE_BYTES: usize> BoardBleGattTransport<L, WIRE_BYTES> {
@@ -460,6 +462,8 @@ impl<L, const WIRE_BYTES: usize> BoardBleGattTransport<L, WIRE_BYTES> {
             endpoint,
             link,
             wire: [0; WIRE_BYTES],
+            pending: [0; WIRE_BYTES],
+            pending_len: 0,
         }
     }
 
@@ -520,6 +524,26 @@ impl<L, const WIRE_BYTES: usize> BoardBleGattTransport<L, WIRE_BYTES> {
     {
         let mut len = 0;
         loop {
+            if self.pending_len > 0 {
+                let available = self.wire.len() - len;
+                let count = self.pending_len.min(available);
+                self.wire[len..len + count].copy_from_slice(&self.pending[..count]);
+                if let Some(terminator_offset) =
+                    self.pending[..count].iter().position(|byte| *byte == 0)
+                {
+                    let consumed = terminator_offset + 1;
+                    let remaining = self.pending_len - consumed;
+                    self.pending.copy_within(consumed..self.pending_len, 0);
+                    self.pending_len = remaining;
+                    return Ok(len + consumed);
+                }
+                if count < self.pending_len {
+                    return Err(BluetoothTransportError::FrameTooLarge);
+                }
+                self.pending_len = 0;
+                len += count;
+            }
+
             if len >= self.wire.len() {
                 return Err(BluetoothTransportError::FrameTooLarge);
             }
@@ -540,8 +564,12 @@ impl<L, const WIRE_BYTES: usize> BoardBleGattTransport<L, WIRE_BYTES> {
             let chunk = &self.wire[chunk_start..chunk_end];
             len = chunk_end;
             if let Some(terminator_offset) = chunk.iter().position(|byte| *byte == 0) {
-                len = chunk_start + terminator_offset + 1;
-                return Ok(len);
+                let frame_len = chunk_start + terminator_offset + 1;
+                let extra_start = frame_len;
+                self.pending_len = chunk_end - extra_start;
+                self.pending[..self.pending_len]
+                    .copy_from_slice(&self.wire[extra_start..chunk_end]);
+                return Ok(frame_len);
             }
         }
     }
@@ -2067,6 +2095,35 @@ Device 11:22:33:44:55:66 (public)
         assert_eq!(&raw_out[..response_len], response);
         assert_eq!(written_uuid, WRITE_UUID);
         assert_eq!(&decoded_request[..request_len], request);
+    }
+
+    #[test]
+    fn ble_gatt_transport_preserves_extra_notification_bytes() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let first_response = [0x31, 0x32];
+        let second_response = [0x33, 0x34, 0x35];
+        let mut first_wire = [0u8; 16];
+        let first_wire_len = encode_wire_frame(&first_response, &mut first_wire).unwrap();
+        let mut second_wire = [0u8; 16];
+        let second_wire_len = encode_wire_frame(&second_response, &mut second_wire).unwrap();
+        let split = second_wire_len - 1;
+        let mut notification = first_wire[..first_wire_len].to_vec();
+        notification.extend_from_slice(&second_wire[..split]);
+        let mut link = FakeBleGattLink::default();
+        link.notifications.push_back(notification);
+        link.notifications
+            .push_back(second_wire[split..second_wire_len].to_vec());
+        let mut transport = BoardBleGattTransport::<_, 32>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+
+        let first_len = transport.receive_raw_frame(&mut raw_out).unwrap();
+        assert_eq!(&raw_out[..first_len], first_response);
+        let second_len = transport.receive_raw_frame(&mut raw_out).unwrap();
+        assert_eq!(&raw_out[..second_len], second_response);
+        assert!(transport.link().notifications.is_empty());
     }
 
     #[test]
