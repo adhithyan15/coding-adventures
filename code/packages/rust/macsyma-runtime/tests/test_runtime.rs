@@ -1,6 +1,7 @@
 use cas_solve::SOLVE;
 use coding_adventures_macsyma_runtime::{
-    extend_macsyma_name_table, macsyma_name_table, MacsymaSession, EV, KILL,
+    extend_macsyma_name_table, macsyma_name_table, MacsymaSession, DECLARE, EV, KILL, PROPERTIES,
+    PROP_VARS,
 };
 use std::collections::HashMap;
 use symbolic_ir::{
@@ -135,6 +136,15 @@ fn exports_and_extends_runtime_name_table_idempotently() {
         table.get("trigsimp").map(String::as_str),
         Some("TrigSimplify")
     );
+    assert_eq!(table.get("assume").map(String::as_str), Some("Assume"));
+    assert_eq!(table.get("forget").map(String::as_str), Some("Forget"));
+    assert_eq!(table.get("is").map(String::as_str), Some("Is"));
+    assert_eq!(table.get("declare").map(String::as_str), Some(DECLARE));
+    assert_eq!(
+        table.get("properties").map(String::as_str),
+        Some(PROPERTIES)
+    );
+    assert_eq!(table.get("propvars").map(String::as_str), Some(PROP_VARS));
 
     let mut target = HashMap::from([("custom".to_string(), "CustomHead".to_string())]);
     extend_macsyma_name_table(&mut target);
@@ -169,6 +179,70 @@ fn kill_all_clears_bindings_and_history() {
     let results = session.eval_source("x; %;").unwrap();
     assert_eq!(results[0].output, sym("x"));
     assert_eq!(results[1].output, sym("x"));
+}
+
+#[test]
+fn assume_is_and_forget_share_session_assumptions() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x > 0); is(x > 0); forget(); is(x > 0);")
+        .unwrap();
+
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, sym("True"));
+    assert_eq!(results[2].output, sym("done"));
+    assert_eq!(results[3].output, sym("unknown"));
+}
+
+#[test]
+fn declare_feeds_properties_into_is_queries() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(x, positive); is(x > 0);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].input,
+        apply(sym(DECLARE), vec![sym("x"), sym("positive")])
+    );
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, sym("True"));
+}
+
+#[test]
+fn properties_lists_declared_properties_deterministically() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(n, integer, n, positive); properties(n);")
+        .unwrap();
+
+    assert_eq!(
+        results[1].output,
+        apply(sym(LIST), vec![sym("integer"), sym("positive")])
+    );
+}
+
+#[test]
+fn propvars_lists_symbols_with_declared_properties_deterministically() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(z, integer); declare(a, positive); propvars();")
+        .unwrap();
+
+    assert_eq!(
+        results[2].output,
+        apply(sym(LIST), vec![sym("a"), sym("z")])
+    );
+}
+
+#[test]
+fn properties_queries_raw_symbols_even_when_bound() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("x : 10; declare(x, integer); properties(x);")
+        .unwrap();
+
+    assert_eq!(results[2].output, apply(sym(LIST), vec![sym("integer")]));
 }
 
 #[test]

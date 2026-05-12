@@ -75,7 +75,7 @@ impl AssumptionContext {
     }
 
     pub fn is_positive(&self, sym_name: &str) -> Option<bool> {
-        let facts = self.facts_for(sym_name);
+        let facts = self.fact_set(sym_name);
         if facts.contains(POSITIVE) {
             Some(true)
         } else if facts.contains(NEGATIVE) || facts.contains(ZERO) {
@@ -86,7 +86,7 @@ impl AssumptionContext {
     }
 
     pub fn is_negative(&self, sym_name: &str) -> Option<bool> {
-        let facts = self.facts_for(sym_name);
+        let facts = self.fact_set(sym_name);
         if facts.contains(NEGATIVE) {
             Some(true)
         } else if facts.contains(POSITIVE) || facts.contains(ZERO) || facts.contains(NONNEG) {
@@ -97,7 +97,7 @@ impl AssumptionContext {
     }
 
     pub fn is_nonneg(&self, sym_name: &str) -> Option<bool> {
-        let facts = self.facts_for(sym_name);
+        let facts = self.fact_set(sym_name);
         if facts.contains(NONNEG) || facts.contains(POSITIVE) || facts.contains(ZERO) {
             Some(true)
         } else if facts.contains(NEGATIVE) {
@@ -108,11 +108,11 @@ impl AssumptionContext {
     }
 
     pub fn is_integer(&self, sym_name: &str) -> bool {
-        self.facts_for(sym_name).contains(INTEGER)
+        self.fact_set(sym_name).contains(INTEGER)
     }
 
     pub fn sign_of(&self, sym_name: &str) -> Option<i8> {
-        let facts = self.facts_for(sym_name);
+        let facts = self.fact_set(sym_name);
         if facts.contains(POSITIVE) {
             Some(1)
         } else if facts.contains(NEGATIVE) {
@@ -126,7 +126,7 @@ impl AssumptionContext {
 
     pub fn is_true_relation(&self, expr: &IRNode) -> Option<bool> {
         let (sym_name, head) = relation_against_zero(expr)?;
-        let facts = self.facts_for(sym_name);
+        let facts = self.fact_set(sym_name);
         match head {
             GREATER => self.is_positive(sym_name),
             LESS => self.is_negative(sym_name),
@@ -179,6 +179,27 @@ impl AssumptionContext {
             .is_some_and(|facts| !facts.is_empty())
     }
 
+    pub fn facts_for(&self, sym_name: &str) -> Vec<&'static str> {
+        let mut facts: Vec<_> = self
+            .facts
+            .get(sym_name)
+            .map(|facts| facts.iter().copied().collect())
+            .unwrap_or_default();
+        facts.sort_unstable();
+        facts
+    }
+
+    pub fn symbols_with_facts(&self) -> Vec<String> {
+        let mut names: Vec<_> = self
+            .facts
+            .iter()
+            .filter(|(_, facts)| !facts.is_empty())
+            .map(|(name, _)| name.clone())
+            .collect();
+        names.sort();
+        names
+    }
+
     fn add(&mut self, sym_name: &str, fact: &'static str) {
         self.facts
             .entry(sym_name.to_string())
@@ -195,7 +216,7 @@ impl AssumptionContext {
         }
     }
 
-    fn facts_for(&self, sym_name: &str) -> HashSet<&'static str> {
+    fn fact_set(&self, sym_name: &str) -> HashSet<&'static str> {
         self.facts.get(sym_name).cloned().unwrap_or_default()
     }
 }

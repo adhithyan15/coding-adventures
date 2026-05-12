@@ -12,7 +12,7 @@ use cas_list_operations::{
     range_ as list_range, rest, reverse, sort_, ListOperationError, ListResult,
 };
 use cas_pretty_printer::{pretty, pretty_2d, MacsymaDialect};
-use cas_simplify::simplify;
+use cas_simplify::{simplify, AssumptionContext};
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_substitution::subst;
 use cas_trig::{expand_trig, trig_reduce, trig_simplify};
@@ -42,11 +42,20 @@ pub const KILL: &str = "Kill";
 pub const EV: &str = "Ev";
 /// Sentinel symbol matched by `Kill(all)`.
 pub const ALL: &str = "all";
+/// Runtime-owned head for declaring MACSYMA symbol properties.
+pub const DECLARE: &str = "Declare";
+/// Runtime-owned head for querying properties declared on a symbol.
+pub const PROPERTIES: &str = "Properties";
+/// Runtime-owned head for querying symbols with declared properties.
+pub const PROP_VARS: &str = "PropVars";
 
+const ASSUME: &str = "Assume";
 const DONE: &str = "done";
 const EXPAND: &str = "Expand";
 const FACTOR: &str = "Factor";
 const FLOAT_FUNC: &str = "Float";
+const FORGET: &str = "Forget";
+const IS: &str = "Is";
 const RAT_SIMPLIFY: &str = "RatSimplify";
 const SIMPLIFY: &str = "Simplify";
 const SUBST: &str = "Subst";
@@ -193,6 +202,9 @@ const MACSYMA_NAME_TABLE: &[(&str, &str)] = &[
     ("assume", "Assume"),
     ("forget", "Forget"),
     ("is", "Is"),
+    ("declare", DECLARE),
+    ("properties", PROPERTIES),
+    ("propvars", PROP_VARS),
     ("matchdeclare", "MatchDeclare"),
     ("defrule", "Defrule"),
     ("apply1", "Apply1"),
@@ -305,11 +317,15 @@ fn parse_history_index(digits: &str) -> Option<usize> {
 #[derive(Debug, Clone)]
 struct MacsymaBackendState {
     env: HashMap<String, IRNode>,
+    assumptions: AssumptionContext,
 }
 
 impl MacsymaBackendState {
     fn new() -> Self {
-        Self { env: initial_env() }
+        Self {
+            env: initial_env(),
+            assumptions: AssumptionContext::new(),
+        }
     }
 
     fn unbind(&mut self, name: &str) {
@@ -357,6 +373,37 @@ impl MacsymaBackend {
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
         handlers.insert(TRIG_EXPAND.to_string(), handler_fn(trig_expand_handler));
         handlers.insert(TRIG_REDUCE.to_string(), handler_fn(trig_reduce_handler));
+
+        let assume_state = state.clone();
+        handlers.insert(
+            ASSUME.to_string(),
+            Arc::new(move |_vm, expr| assume_handler(&assume_state, expr)),
+        );
+        let forget_state = state.clone();
+        handlers.insert(
+            FORGET.to_string(),
+            Arc::new(move |_vm, expr| forget_handler(&forget_state, expr)),
+        );
+        let is_state = state.clone();
+        handlers.insert(
+            IS.to_string(),
+            Arc::new(move |_vm, expr| is_handler(&is_state, expr)),
+        );
+        let declare_state = state.clone();
+        handlers.insert(
+            DECLARE.to_string(),
+            Arc::new(move |_vm, expr| declare_handler(&declare_state, expr)),
+        );
+        let properties_state = state.clone();
+        handlers.insert(
+            PROPERTIES.to_string(),
+            Arc::new(move |_vm, expr| properties_handler(&properties_state, expr)),
+        );
+        let propvars_state = state.clone();
+        handlers.insert(
+            PROP_VARS.to_string(),
+            Arc::new(move |_vm, expr| propvars_handler(&propvars_state, expr)),
+        );
         handlers.insert(
             LENGTH.to_string(),
             list_handler(Some(1), |args| length(&args[0])),
@@ -407,10 +454,13 @@ impl MacsymaBackend {
             }),
         );
 
-        let held = [ASSIGN, DEFINE, IF, KILL, EV, SOLVE, SUBST]
-            .into_iter()
-            .map(str::to_string)
-            .collect();
+        let held = [
+            ASSIGN, DEFINE, IF, KILL, EV, ASSUME, FORGET, IS, DECLARE, PROPERTIES, PROP_VARS,
+            SOLVE, SUBST,
+        ]
+        .into_iter()
+        .map(str::to_string)
+        .collect();
 
         Self {
             state,
@@ -605,6 +655,84 @@ fn display_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 
 fn suppress_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     display_handler(_vm, expr)
+}
+
+fn assume_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    let mut state = state.lock().expect("macsyma backend state poisoned");
+    match expr.args.as_slice() {
+        [relation] => state.assumptions.assume_relation(relation),
+        [symbol, property] => state.assumptions.assume_property(symbol, property),
+        _ => {}
+    }
+    sym(DONE)
+}
+
+fn forget_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    let mut state = state.lock().expect("macsyma backend state poisoned");
+    if expr.args.is_empty() {
+        state.assumptions.forget_all();
+    } else {
+        state.assumptions.forget_relation(&expr.args[0]);
+    }
+    sym(DONE)
+}
+
+fn is_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let state = state.lock().expect("macsyma backend state poisoned");
+    match state.assumptions.is_true_relation(&expr.args[0]) {
+        Some(true) => sym("True"),
+        Some(false) => sym("False"),
+        None => sym("unknown"),
+    }
+}
+
+fn declare_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if expr.args.len() % 2 != 0 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let mut state = state.lock().expect("macsyma backend state poisoned");
+    for pair in expr.args.chunks_exact(2) {
+        state.assumptions.assume_property(&pair[0], &pair[1]);
+    }
+    sym(DONE)
+}
+
+fn properties_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let Some(name) = symbol_name(&expr.args[0]) else {
+        return apply(sym(LIST), vec![]);
+    };
+    let state = state.lock().expect("macsyma backend state poisoned");
+    apply(
+        sym(LIST),
+        state
+            .assumptions
+            .facts_for(name)
+            .into_iter()
+            .map(sym)
+            .collect(),
+    )
+}
+
+fn propvars_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if !expr.args.is_empty() {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let state = state.lock().expect("macsyma backend state poisoned");
+    apply(
+        sym(LIST),
+        state
+            .assumptions
+            .symbols_with_facts()
+            .into_iter()
+            .map(|name| sym(&name))
+            .collect(),
+    )
 }
 
 fn ev_handler(vm: &mut VM, expr: IRApply) -> IRNode {

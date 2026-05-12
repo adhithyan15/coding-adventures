@@ -467,11 +467,38 @@ fn assumptions_track_relation_and_property_facts() {
     assert_eq!(ctx.is_nonneg("b"), Some(true));
     ctx.assume_property(&sym("n"), &sym("integer"));
     assert!(ctx.is_integer("n"));
+    assert_eq!(ctx.facts_for("n"), vec!["integer"]);
+    assert_eq!(
+        ctx.symbols_with_facts(),
+        vec![
+            "a".to_string(),
+            "b".to_string(),
+            "n".to_string(),
+            "x".to_string(),
+            "y".to_string(),
+            "z".to_string(),
+        ]
+    );
 
     ctx.forget_relation(&apply(sym(GREATER), vec![x(), int(0)]));
     assert_eq!(ctx.is_positive("x"), None);
     ctx.forget_all();
     assert!(!ctx.has_any_facts("n"));
+}
+
+#[test]
+fn assumptions_return_deterministic_fact_metadata() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_property(&sym("n"), &sym("positive"));
+    ctx.assume_property(&sym("n"), &sym("integer"));
+    ctx.assume_relation(&apply(sym(GREATER), vec![x(), int(0)]));
+
+    assert_eq!(ctx.facts_for("n"), vec!["integer", "positive"]);
+    assert_eq!(ctx.facts_for("missing"), Vec::<&'static str>::new());
+    assert_eq!(
+        ctx.symbols_with_facts(),
+        vec!["n".to_string(), "x".to_string()]
+    );
 }
 
 #[test]
