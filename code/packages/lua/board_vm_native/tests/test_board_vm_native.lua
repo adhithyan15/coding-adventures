@@ -155,6 +155,51 @@ describe("coding_adventures.board_vm_native", function()
         )
     end)
 
+    it("prompts for Bluetooth endpoints with pairing status", function()
+        local rendered = {}
+        local output = {
+            write = function(_, text)
+                table.insert(rendered, text)
+            end,
+        }
+        local connection = board_vm.connect("uno-r4-wifi", {
+            via = "BLE",
+            bluetooth_devices = {
+                {
+                    id = "uno-a",
+                    name = "Uno A",
+                    address = "AA:BB:CC:DD:EE:01",
+                    service_uuids = { "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" },
+                },
+                {
+                    id = "uno-b",
+                    name = "Uno B",
+                    address = "AA:BB:CC:DD:EE:02",
+                    paired = true,
+                    service_uuids = { "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" },
+                },
+            },
+            pick_bluetooth_endpoint = true,
+            input = function()
+                return "2"
+            end,
+            output = output,
+        })
+
+        assert.are.equal("bluetooth_le", connection:connection_transport())
+        assert.are.equal(
+            "ble://AA:BB:CC:DD:EE:02" ..
+            "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" ..
+            "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+            connection.endpoint
+        )
+        local text = table.concat(rendered)
+        assert.is_true(text:find("1. Uno A [pairing required]", 1, true) ~= nil)
+        assert.is_true(text:find("2. Uno B [paired]", 1, true) ~= nil)
+        assert.is_true(text:find("Select Bluetooth endpoint [1-2]: ", 1, true) ~= nil)
+    end)
+
     it("classifies host devices through Rust-owned discovery rules", function()
         local devices = board_vm.devices({
             "/dev/cu.usbmodem1101",

@@ -1612,15 +1612,21 @@ def bluetooth_connection_endpoint(
     connection_option: dict[str, Any],
     *,
     devices: Iterable[dict[str, Any]] | None = None,
+    pick: bool = False,
+    input_func: Any = input,
+    output: Any = None,
 ) -> str:
     option = dict(connection_option)
-    matches = [
-        candidate
-        for candidate in bluetooth_endpoint_candidates(devices)
-        if _bluetooth_candidate_matches_connection(candidate, option)
-    ]
+    matches = _bluetooth_endpoint_matches(option, devices)
     if len(matches) == 1:
         return str(matches[0]["endpoint"]["endpoint"])
+    if pick:
+        return pick_bluetooth_endpoint(
+            option,
+            candidates=matches,
+            input_func=input_func,
+            output=output,
+        )
 
     display_name = option.get("display_name") or option.get("transport") or "Bluetooth"
     if not matches:
@@ -1633,6 +1639,40 @@ def bluetooth_connection_endpoint(
         f"Multiple Board VM Bluetooth endpoints match {display_name}; pass endpoint=...\n"
         f"{_bluetooth_endpoint_choice_list(matches)}"
     )
+
+
+def pick_bluetooth_endpoint(
+    connection_option: dict[str, Any],
+    *,
+    devices: Iterable[dict[str, Any]] | None = None,
+    candidates: Iterable[dict[str, Any]] | None = None,
+    input_func: Any = input,
+    output: Any = None,
+) -> str:
+    option = dict(connection_option)
+    matches = list(candidates) if candidates is not None else _bluetooth_endpoint_matches(option, devices)
+    if len(matches) == 1:
+        return str(matches[0]["endpoint"]["endpoint"])
+
+    display_name = option.get("display_name") or option.get("transport") or "Bluetooth"
+    if not matches:
+        raise ValueError(
+            f"{display_name} found no Board VM Bluetooth endpoints; "
+            "pair or power on the board, pass endpoint=..., or choose via='serial'"
+        )
+
+    output = sys.stdout if output is None else output
+    output.write(_bluetooth_endpoint_choice_list(matches))
+    output.write("\n")
+    output.write(f"Select Bluetooth endpoint [1-{len(matches)}]: ")
+    choice = input_func("")
+    try:
+        index = int(str(choice).strip())
+    except ValueError as error:
+        raise ValueError(f"Invalid Board VM Bluetooth endpoint selection: {choice!r}") from error
+    if not 1 <= index <= len(matches):
+        raise ValueError(f"Invalid Board VM Bluetooth endpoint selection: {choice!r}")
+    return str(matches[index - 1]["endpoint"]["endpoint"])
 
 
 def _bluetooth_device_field(device: Any, key: str) -> Any:
@@ -1673,6 +1713,17 @@ def _bluetooth_candidate_matches_connection(
     )
 
 
+def _bluetooth_endpoint_matches(
+    connection_option: dict[str, Any],
+    devices: Iterable[dict[str, Any]] | None,
+) -> list[dict[str, Any]]:
+    return [
+        candidate
+        for candidate in bluetooth_endpoint_candidates(devices)
+        if _bluetooth_candidate_matches_connection(candidate, connection_option)
+    ]
+
+
 def _bluetooth_endpoint_choice_list(candidates: Iterable[dict[str, Any]]) -> str:
     lines = []
     for index, candidate in enumerate(candidates, start=1):
@@ -1682,8 +1733,18 @@ def _bluetooth_endpoint_choice_list(candidates: Iterable[dict[str, Any]]) -> str
             or candidate.get("device")
             or endpoint["endpoint"]
         )
-        lines.append(f"{index}. {display_name} - {endpoint['endpoint']}")
+        lines.append(
+            f"{index}. {display_name}{_bluetooth_candidate_pairing_status(candidate)} - {endpoint['endpoint']}"
+        )
     return "\n".join(lines)
+
+
+def _bluetooth_candidate_pairing_status(candidate: dict[str, Any]) -> str:
+    if candidate.get("requires_pairing"):
+        return " [pairing required]"
+    if candidate.get("paired"):
+        return " [paired]"
+    return ""
 
 
 def connection_options(selector: str) -> list[dict[str, Any]]:
@@ -2085,6 +2146,7 @@ def connect(
     endpoint: str | None = None,
     bluetooth_devices: Iterable[dict[str, Any]] | None = None,
     bluetooth_backend_plan: dict[str, Any] | None = None,
+    pick_bluetooth_endpoint: bool = False,
     timeout_ms: int = DEFAULT_TIMEOUT_MS,
     runner: Any = None,
     cargo_workspace: str | pathlib.Path | None = None,
@@ -2153,6 +2215,9 @@ def connect(
         selected_endpoint = bluetooth_connection_endpoint(
             selected_connection_option,
             devices=bluetooth_devices,
+            pick=pick or pick_bluetooth_endpoint,
+            input_func=input_func,
+            output=output,
         )
     connection = Connection(
         target=target,
@@ -2342,6 +2407,7 @@ __all__ = [
     "known_targets",
     "pico",
     "pico_w",
+    "pick_bluetooth_endpoint",
     "pick_connection_option",
     "pico_uf2_mount",
     "pico_uf2_upload_command",

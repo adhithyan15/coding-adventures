@@ -156,21 +156,67 @@ local function bluetooth_endpoint_choice_list(candidates)
     for index, candidate in ipairs(candidates) do
         local endpoint = candidate.endpoint or {}
         local display_name = candidate.display_name or candidate.device or endpoint.endpoint
-        table.insert(lines, tostring(index) .. ". " .. tostring(display_name) .. " - " .. tostring(endpoint.endpoint))
+        local pairing = ""
+        if candidate.requires_pairing then
+            pairing = " [pairing required]"
+        elseif candidate.paired then
+            pairing = " [paired]"
+        end
+        table.insert(lines, tostring(index) .. ". " .. tostring(display_name) .. pairing .. " - " .. tostring(endpoint.endpoint))
     end
     return table.concat(lines, "\n")
 end
 
-function M.bluetooth_connection_endpoint(connection_option, devices)
+local function bluetooth_endpoint_matches(connection_option, devices)
     local matches = {}
     for _, candidate in ipairs(M.bluetooth_endpoint_candidates(devices)) do
         if bluetooth_candidate_matches_connection(candidate, connection_option) then
             table.insert(matches, candidate)
         end
     end
+    return matches
+end
+
+function M.pick_bluetooth_endpoint(connection_option, devices, options)
+    options = options or {}
+    local matches = options.candidates or bluetooth_endpoint_matches(connection_option, devices)
 
     if #matches == 1 then
         return tostring(matches[1].endpoint.endpoint)
+    end
+
+    local display_name = connection_option.display_name or connection_option.transport or "Bluetooth"
+    if #matches == 0 then
+        error(display_name ..
+            " found no Board VM Bluetooth endpoints; pair or power on the board, pass endpoint = ..., or choose via = \"serial\"")
+    end
+
+    local output = options.output or io.stdout
+    output:write(bluetooth_endpoint_choice_list(matches) .. "\n")
+    output:write("Select Bluetooth endpoint [1-" .. tostring(#matches) .. "]: ")
+    local choice = options.input and options.input() or io.read("*l")
+    local index = tonumber(choice)
+    if index == nil or index < 1 or index > #matches then
+        error("Invalid Board VM Bluetooth endpoint selection: " .. string.format("%q", tostring(choice)))
+    end
+
+    return tostring(matches[index].endpoint.endpoint)
+end
+
+function M.bluetooth_connection_endpoint(connection_option, devices, options)
+    options = options or {}
+    local matches = bluetooth_endpoint_matches(connection_option, devices)
+
+    if #matches == 1 then
+        return tostring(matches[1].endpoint.endpoint)
+    end
+
+    if options.pick then
+        return M.pick_bluetooth_endpoint(connection_option, devices, {
+            candidates = matches,
+            input = options.input,
+            output = options.output,
+        })
     end
 
     local display_name = connection_option.display_name or connection_option.transport or "Bluetooth"
@@ -790,7 +836,11 @@ function M.connect(selector, options)
 
     local endpoint = options.endpoint
     if endpoint == nil and connection_uses_bluetooth_endpoint(connection_option) then
-        endpoint = M.bluetooth_connection_endpoint(connection_option, options.bluetooth_devices)
+        endpoint = M.bluetooth_connection_endpoint(connection_option, options.bluetooth_devices, {
+            pick = options.pick or options.pick_bluetooth_endpoint,
+            input = options.input,
+            output = options.output,
+        })
     end
 
     return Connection.new({
