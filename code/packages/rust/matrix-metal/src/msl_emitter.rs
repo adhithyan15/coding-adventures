@@ -144,62 +144,113 @@ pub struct EmittedKernel {
 ///
 /// # Currently supported shapes
 ///
-/// | `op_kind` | `dtype` | `shape_class` | `range_class`              |
-/// |-----------|---------|---------------|----------------------------|
-/// | `0x07` Add | `F32`  | any           | `Constant { bytes: 4 B }`  |
+/// | `op_kind`  | `dtype` | `shape_class` | `range_class`              | Notes                          |
+/// |------------|---------|---------------|----------------------------|--------------------------------|
+/// | `0x07` Add | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
+/// | `0x09` Mul | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
+/// | `0x0B` Max | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
+/// | `0x0C` Min | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
 ///
 /// All other combinations return `None` for now.  Adding a shape is
 /// a small change — add a match arm and a unit test.
+///
+/// ## Why only commutative binary ops in V0.7.0
+///
+/// `Op::Sub` and `Op::Div` are mathematically non-commutative:
+/// `LHS - K` differs from `K - LHS`, and `LHS / K` differs from
+/// `K / LHS`.  Today's `SpecKey` doesn't encode which input slot
+/// the policy folded — it just records the constant bytes — so the
+/// emitter can't safely generate one of the two non-commutative
+/// variants without risking wrong output if the policy happened to
+/// pick the slot opposite the emitter's assumption.
+///
+/// Phase 4.6 will extend `SpecKey` with a `folded_slot: u8` field
+/// (or equivalent) and unlock Sub / Div / Pow.  Until then, the
+/// runtime falls back to the generic dispatch for these ops.
 pub fn emit_specialised_kernel(key: &SpecKey, handle: u64) -> Option<EmittedKernel> {
-    // op_kind 0x07 = Op::Add wire tag.
-    if key.op_kind == 0x07 && key.dtype == DType::F32 {
-        if let RangeClass::Constant { bytes } = &key.range_class {
-            if bytes.len() == 4 {
-                let arr: [u8; 4] = bytes.as_slice().try_into().ok()?;
-                let constant = f32::from_le_bytes(arr);
-                return Some(emit_add_f32_with_rhs_constant(handle, constant));
-            }
-        }
+    if key.dtype != DType::F32 {
+        return None;
     }
-    None
+    let RangeClass::Constant { bytes } = &key.range_class else {
+        return None;
+    };
+    if bytes.len() != 4 {
+        return None;
+    }
+    let arr: [u8; 4] = bytes.as_slice().try_into().ok()?;
+    let constant = f32::from_le_bytes(arr);
+
+    // Map op_kind to (kernel-name fragment, MSL expression template).
+    // The MSL expression is what goes after `out[gid] = ` in the
+    // emitted body; `{a}` substitutes the variable input, `{k}`
+    // substitutes the constant.
+    let (op_name, expr_template): (&str, &str) = match key.op_kind {
+        0x07 => ("add", "{a} + {k}"),        // Op::Add (commutative)
+        0x09 => ("mul", "{a} * {k}"),        // Op::Mul (commutative)
+        0x0B => ("max", "max({a}, {k})"),    // Op::Max (commutative)
+        0x0C => ("min", "min({a}, {k})"),    // Op::Min (commutative)
+        // Sub (0x08), Div (0x0A), Pow (0x0D), reductions, shape ops,
+        // unary, matmul — Phase 4.6+ work.  Each needs either
+        // `folded_slot` in SpecKey or a separate emitter design.
+        _ => return None,
+    };
+    Some(emit_binary_f32_with_rhs_const(
+        handle,
+        op_name,
+        expr_template,
+        constant,
+    ))
 }
 
-// ────────────────────── add_f32 with folded constant ──────────────────────
+// ────────────────────── binary f32 with folded constant ──────────────────────
 
-/// Emit the f32-add-with-folded-RHS-constant kernel.  Pure helper —
-/// no I/O, no globals, deterministic on `(handle, constant)`.
+/// Emit a commutative-binary-f32-with-folded-constant kernel.  Pure
+/// helper — no I/O, no globals, deterministic on
+/// `(handle, op_name, expr_template, constant)`.
 ///
 /// The emitted entry-point name follows the pattern:
 ///
 /// ```text
-/// specialised_add_const_f32_0xHHHHHHHHHHHHHHHH
+/// specialised_<op_name>_const_f32_0xHHHHHHHHHHHHHHHH
 /// ```
 ///
 /// where the 16 hex digits are `handle` in big-endian zero-padded
 /// hex.  This naming is documented and stable: tests assert on the
-/// exact entry name, and Phase 4.3's other specialisation arms will
-/// follow the same `specialised_<op>_<variant>_<dtype>_0xH...H`
-/// scheme.
-fn emit_add_f32_with_rhs_constant(handle: u64, constant: f32) -> EmittedKernel {
-    let entry = format!("specialised_add_const_f32_0x{:016X}", handle);
+/// exact entry name.
+///
+/// `expr_template` is the MSL fragment that goes after `out[gid] = ` in
+/// the body.  `{a}` substitutes the per-element load from input 0
+/// (i.e. `a[gid]`); `{k}` substitutes the formatted constant literal.
+/// For example:
+///   - Add: `"{a} + {k}"`        →  `a[gid] + 7.000000000f`
+///   - Mul: `"{a} * {k}"`        →  `a[gid] * 2.500000000f`
+///   - Max: `"max({a}, {k})"`    →  `max(a[gid], 1.000000000f)`
+///   - Min: `"min({a}, {k})"`    →  `min(a[gid], 1.000000000f)`
+fn emit_binary_f32_with_rhs_const(
+    handle: u64,
+    op_name: &str,
+    expr_template: &str,
+    constant: f32,
+) -> EmittedKernel {
+    let entry = format!("specialised_{op_name}_const_f32_0x{handle:016X}");
 
-    // Format the constant as a float literal with `f` suffix.  We use
-    // a generous precision (9 significant digits) so f32 round-trips
-    // through the MSL compiler losslessly — 9 is the IEEE-754 round-trip
-    // requirement for f32.
-    //
-    // Why not `{:e}`?  Both work in MSL, but `9 significant digits in
-    // decimal` is the readable choice and `f` suffix is what MSL
-    // expects for float (default is double).
+    // Format the constant as a float literal with `f` suffix.  9
+    // significant decimal digits is the f32 round-trip minimum per
+    // IEEE-754.
     let literal = format_f32_literal(constant);
+
+    // Build the body expression by substituting `{a}` / `{k}` in the
+    // template.
+    let body_expr = expr_template
+        .replace("{a}", "a[gid]")
+        .replace("{k}", &literal);
 
     let source = format!(
         "#include <metal_stdlib>\n\
          using namespace metal;\n\
          \n\
-         // MX05 Phase 4.2 — specialised add_f32 with RHS constant folded in.\n\
+         // MX05 — specialised {op_name}_f32 with folded constant {literal}.\n\
          // handle = 0x{handle:016X}\n\
-         // constant = {literal}\n\
          kernel void {entry}(\n\
          \x20   device const float* a   [[buffer(0)]],\n\
          \x20   device float*       out [[buffer(1)]],\n\
@@ -207,11 +258,13 @@ fn emit_add_f32_with_rhs_constant(handle: u64, constant: f32) -> EmittedKernel {
          \x20   uint gid [[thread_position_in_grid]]\n\
          ) {{\n\
          \x20   if (gid >= n) return;\n\
-         \x20   out[gid] = a[gid] + {literal};\n\
+         \x20   out[gid] = {body_expr};\n\
          }}\n",
         handle = handle,
         entry = entry,
+        op_name = op_name,
         literal = literal,
+        body_expr = body_expr,
     );
 
     EmittedKernel {
@@ -314,6 +367,115 @@ mod tests {
             !k.source.contains("device const float* b"),
             "specialised add_const must drop the second input buffer"
         );
+    }
+
+    /// Build a SpecKey for any of the commutative binary f32 ops.
+    /// Convenience wrapper for the Phase 4.5 tests below.
+    fn binary_const_key(op_kind: u8, constant: f32) -> SpecKey {
+        SpecKey {
+            op_kind,
+            dtype: DType::F32,
+            shape_class: ShapeClass::Dynamic,
+            range_class: RangeClass::Constant {
+                bytes: constant.to_le_bytes().to_vec(),
+            },
+            backend_id: 1,
+        }
+    }
+
+    /// **MX05 Phase 4.5.**  Op::Mul (wire tag 0x09) with folded RHS
+    /// constant must emit a kernel whose body multiplies the input
+    /// by the literal.
+    #[test]
+    fn mul_f32_with_constant_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key(0x09, 2.5), 0xAA).unwrap();
+        assert_eq!(k.entry_point, "specialised_mul_const_f32_0x00000000000000AA");
+        assert_eq!(k.input_buffer_count, 1);
+        assert_eq!(k.output_buffer_count, 1);
+        assert!(k.source.contains("a[gid] * "));
+        assert!(k.source.contains("2.5f"), "expected '2.5f' in:\n{}", k.source);
+        assert!(!k.source.contains("device const float* b"));
+    }
+
+    /// **MX05 Phase 4.5.**  Op::Max (wire tag 0x0B) with folded RHS
+    /// constant must emit `max(a[gid], K)` — MSL's `max` is the
+    /// element-wise maximum on `float`.
+    #[test]
+    fn max_f32_with_constant_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key(0x0B, -1.0), 0xBB).unwrap();
+        assert_eq!(k.entry_point, "specialised_max_const_f32_0x00000000000000BB");
+        assert_eq!(k.input_buffer_count, 1);
+        assert!(k.source.contains("max(a[gid], "));
+        // `-1.0` formats via Ryu as `-1` → emitter appends `.0` and
+        // suffix `f`, giving `-1.0f`.
+        assert!(k.source.contains("-1.0f"));
+        assert!(!k.source.contains("device const float* b"));
+    }
+
+    /// **MX05 Phase 4.5.**  Op::Min (wire tag 0x0C) with folded RHS
+    /// constant must emit `min(a[gid], K)`.  Common use case: clamp
+    /// an unbounded value to a known ceiling.
+    #[test]
+    fn min_f32_with_constant_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key(0x0C, 255.0), 0xCC).unwrap();
+        assert_eq!(k.entry_point, "specialised_min_const_f32_0x00000000000000CC");
+        assert_eq!(k.input_buffer_count, 1);
+        assert!(k.source.contains("min(a[gid], "));
+        assert!(k.source.contains("255.0f"));
+    }
+
+    /// **MX05 Phase 4.5.**  Distinct op kinds must produce distinct
+    /// entry-point names so multiple specialised kernels can coexist
+    /// in their own compiled libraries without collision.  The
+    /// "op-name fragment" in the entry name is the differentiator.
+    #[test]
+    fn distinct_ops_produce_distinct_entry_point_prefixes() {
+        let same_handle = 0xDEAD_BEEFu64;
+        let add = emit_specialised_kernel(&binary_const_key(0x07, 1.0), same_handle).unwrap();
+        let mul = emit_specialised_kernel(&binary_const_key(0x09, 1.0), same_handle).unwrap();
+        let max = emit_specialised_kernel(&binary_const_key(0x0B, 1.0), same_handle).unwrap();
+        let min = emit_specialised_kernel(&binary_const_key(0x0C, 1.0), same_handle).unwrap();
+        // Entry points start with `specialised_<op_name>_`, so they
+        // must all differ in the op_name slot even with identical
+        // handle.
+        let names = [
+            &add.entry_point,
+            &mul.entry_point,
+            &max.entry_point,
+            &min.entry_point,
+        ];
+        for i in 0..names.len() {
+            for j in (i + 1)..names.len() {
+                assert_ne!(
+                    names[i], names[j],
+                    "entry-point collision between op_kind kernels"
+                );
+            }
+        }
+        // And the bodies must reflect the different MSL operators.
+        assert!(add.source.contains("a[gid] + "));
+        assert!(mul.source.contains("a[gid] * "));
+        assert!(max.source.contains("max(a[gid], "));
+        assert!(min.source.contains("min(a[gid], "));
+    }
+
+    /// **MX05 Phase 4.5.**  Op::Sub (0x08), Op::Div (0x0A), and
+    /// Op::Pow (0x0D) are NOT yet supported.  The reason — see the
+    /// rustdoc on `emit_specialised_kernel` — is that they're
+    /// non-commutative and SpecKey doesn't yet encode which slot the
+    /// policy folded.  Phase 4.6+ will add a `folded_slot` field and
+    /// unlock these.
+    #[test]
+    fn sub_div_pow_return_none_until_folded_slot_lands() {
+        for op_kind in [0x08u8, 0x0A, 0x0D] {
+            let key = binary_const_key(op_kind, 7.0);
+            assert!(
+                emit_specialised_kernel(&key, 0).is_none(),
+                "expected None for non-commutative op_kind 0x{:02X} \
+                 (Sub/Div/Pow await SpecKey::folded_slot)",
+                op_kind
+            );
+        }
     }
 
     #[test]
