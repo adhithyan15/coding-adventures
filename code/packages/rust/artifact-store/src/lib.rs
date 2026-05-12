@@ -187,6 +187,69 @@ impl ArtifactCatalogSummary {
     }
 }
 
+/// Compact provenance view for read-side source attribution checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ArtifactProvenanceSummary {
+    pub total_artifacts: usize,
+    pub session_scoped_artifacts: usize,
+    pub tool_scoped_artifacts: usize,
+    pub job_scoped_artifacts: usize,
+    pub agent_scoped_artifacts: usize,
+    pub artifacts_without_provenance: usize,
+}
+
+impl ArtifactProvenanceSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_artifacts<'a, I>(artifacts: I) -> Self
+    where
+        I: IntoIterator<Item = &'a Artifact>,
+    {
+        let mut summary = Self::empty();
+        for artifact in artifacts {
+            summary.total_artifacts += 1;
+            if artifact.provenance.session_id.is_some() {
+                summary.session_scoped_artifacts += 1;
+            }
+            if artifact.provenance.tool_id.is_some() {
+                summary.tool_scoped_artifacts += 1;
+            }
+            if artifact.provenance.job_id.is_some() {
+                summary.job_scoped_artifacts += 1;
+            }
+            if artifact.provenance.agent_id.is_some() {
+                summary.agent_scoped_artifacts += 1;
+            }
+            if artifact.provenance.session_id.is_none()
+                && artifact.provenance.tool_id.is_none()
+                && artifact.provenance.job_id.is_none()
+                && artifact.provenance.agent_id.is_none()
+            {
+                summary.artifacts_without_provenance += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_artifacts == 0
+    }
+
+    pub fn has_tool_outputs(&self) -> bool {
+        self.tool_scoped_artifacts > 0
+    }
+
+    pub fn has_job_outputs(&self) -> bool {
+        self.job_scoped_artifacts > 0
+    }
+
+    pub fn has_unattributed_artifacts(&self) -> bool {
+        self.artifacts_without_provenance > 0
+    }
+}
+
 /// Input used when first creating an artifact manifest.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CreateArtifactInput {
@@ -525,6 +588,14 @@ impl<S: StorageBackend> ArtifactStore<S> {
     ) -> Result<ArtifactCatalogSummary, StorageError> {
         let artifacts = self.list_artifacts(options)?;
         Ok(ArtifactCatalogSummary::from_artifacts(&artifacts))
+    }
+
+    pub fn provenance_summary(
+        &self,
+        options: ArtifactListOptions,
+    ) -> Result<ArtifactProvenanceSummary, StorageError> {
+        let artifacts = self.list_artifacts(options)?;
+        Ok(ArtifactProvenanceSummary::from_artifacts(&artifacts))
     }
 
     pub fn attach_labels(
@@ -1308,6 +1379,88 @@ mod tests {
         assert_eq!(deliverable_summary.total_artifacts, 1);
         assert_eq!(deliverable_summary.exported_artifacts, 1);
         assert!(!deliverable_summary.has_unrevisioned_artifacts());
+    }
+
+    #[test]
+    fn provenance_summary_counts_source_attribution_over_selected_manifests() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        for (artifact_id, session_id, tool_id, job_id, agent_id) in [
+            ("plan", Some("session-a"), None, None, None),
+            (
+                "tool-output",
+                Some("session-a"),
+                Some("report.export"),
+                None,
+                None,
+            ),
+            ("job-output", None, None, Some("job-a"), Some("worker-a")),
+            ("scratch", None, None, None, None),
+        ] {
+            let _ = store
+                .create_artifact(CreateArtifactInput {
+                    artifact_id: artifact_id.to_string(),
+                    collection: "outputs".to_string(),
+                    name: artifact_id.to_string(),
+                    content_type: "text/plain".to_string(),
+                    labels: Vec::new(),
+                    provenance: ArtifactProvenance {
+                        session_id: session_id.map(str::to_string),
+                        tool_id: tool_id.map(str::to_string),
+                        job_id: job_id.map(str::to_string),
+                        agent_id: agent_id.map(str::to_string),
+                    },
+                })
+                .unwrap();
+        }
+
+        let summary = store
+            .provenance_summary(ArtifactListOptions::new())
+            .unwrap();
+        assert_eq!(
+            summary,
+            ArtifactProvenanceSummary {
+                total_artifacts: 4,
+                session_scoped_artifacts: 2,
+                tool_scoped_artifacts: 1,
+                job_scoped_artifacts: 1,
+                agent_scoped_artifacts: 1,
+                artifacts_without_provenance: 1,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_tool_outputs());
+        assert!(summary.has_job_outputs());
+        assert!(summary.has_unattributed_artifacts());
+
+        let session_summary = store
+            .provenance_summary(ArtifactListOptions::new().for_session("session-a"))
+            .unwrap();
+        assert_eq!(
+            session_summary,
+            ArtifactProvenanceSummary {
+                total_artifacts: 2,
+                session_scoped_artifacts: 2,
+                tool_scoped_artifacts: 1,
+                job_scoped_artifacts: 0,
+                agent_scoped_artifacts: 0,
+                artifacts_without_provenance: 0,
+            }
+        );
+
+        let tool_summary = store
+            .provenance_summary(ArtifactListOptions::new().for_tool("report.export"))
+            .unwrap();
+        assert_eq!(tool_summary.total_artifacts, 1);
+        assert!(tool_summary.has_tool_outputs());
+        assert!(!tool_summary.has_unattributed_artifacts());
+
+        let empty = store
+            .provenance_summary(ArtifactListOptions::new().for_agent("missing-agent"))
+            .unwrap();
+        assert_eq!(empty, ArtifactProvenanceSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_tool_outputs());
+        assert!(!empty.has_job_outputs());
     }
 
     #[test]
