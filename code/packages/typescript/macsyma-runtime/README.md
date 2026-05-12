@@ -19,7 +19,7 @@ This first runtime slice is intentionally small and browser-friendly:
 - dispatches `Subst(value, variable, expr)` to `cas-substitution`
   structural substitution
 - dispatches `Simplify` / `RatSimplify` to `cas-simplify`
-- dispatches `TrigSimplify` / `TrigExpand` to `cas-trig`
+- dispatches `TrigSimplify`, `TrigExpand`, and `TrigReduce` to `cas-trig`
 - dispatches deterministic list operations such as `Length`, `First`, `Rest`,
   `Last`, `Append`, `Reverse`, `Range`, `Map`, `Apply`, `Sort`, `Part`,
   `Flatten`, and `Join` to `cas-list-operations`

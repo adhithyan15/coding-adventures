@@ -50,6 +50,7 @@ import {
   SIMPLIFY,
   SUPPRESS,
   TRIG_EXPAND,
+  TRIG_REDUCE,
   TRIG_SIMPLIFY,
   extendCompilerNameTable,
   evalSourceJson,
@@ -87,6 +88,7 @@ describe("macsyma-runtime", () => {
     expect(MACSYMA_NAME_TABLE.get("ratsimp")).toEqual(RAT_SIMPLIFY);
     expect(MACSYMA_NAME_TABLE.get("trigsimp")).toEqual(TRIG_SIMPLIFY);
     expect(MACSYMA_NAME_TABLE.get("trigexpand")).toEqual(TRIG_EXPAND);
+    expect(MACSYMA_NAME_TABLE.get("trigreduce")).toEqual(TRIG_REDUCE);
 
     const target = new Map<string, typeof KILL>();
     extendCompilerNameTable(target);
@@ -194,6 +196,7 @@ describe("macsyma-runtime", () => {
     expect(backend.handlers().has(RAT_SIMPLIFY.name)).toBe(true);
     expect(backend.handlers().has(TRIG_SIMPLIFY.name)).toBe(true);
     expect(backend.handlers().has(TRIG_EXPAND.name)).toBe(true);
+    expect(backend.handlers().has(TRIG_REDUCE.name)).toBe(true);
     expect(backend.handlers().has(LENGTH.name)).toBe(true);
     expect(backend.holdHeads().has(KILL.name)).toBe(true);
     expect(backend.holdHeads().has(EV.name)).toBe(true);
@@ -288,6 +291,24 @@ describe("macsyma-runtime", () => {
 
     expect(ratsimpResult.output).toEqual(sym("x"));
     expect(trigsimpResult.output).toEqual(int(1));
+  });
+
+  it("evaluates trigreduce through cas-trig", () => {
+    const x = sym("x");
+    const session = new MacsymaSession();
+    const [direct, viaEv] = session.evalStatements([
+      app(TRIG_REDUCE, [app(POW, [app(SIN, [x]), int(2)])]),
+      app(EV, [app(POW, [app(sym("Cos"), [x]), int(2)]), sym("trigreduce")]),
+    ]);
+
+    expect(direct.output).toEqual(app(MUL, [
+      rational(1, 2),
+      app(SUB, [int(1), app(sym("Cos"), [app(MUL, [int(2), x])])]),
+    ]));
+    expect(viaEv.output).toEqual(app(MUL, [
+      rational(1, 2),
+      app(ADD, [int(1), app(sym("Cos"), [app(MUL, [int(2), x])])]),
+    ]));
   });
 
   it("evaluates function definitions across statements", () => {
