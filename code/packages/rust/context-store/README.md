@@ -9,6 +9,8 @@ Chief of Staff runtime needs.
 
 - `ContextSession` headers
 - `ContextSessionCatalogSummary` projections for read-side lifecycle coverage
+- `ContextSessionSummary` projections that combine header, transcript, and
+  checkpoint state for one session
 - ordered `ContextEntry` transcripts
 - body-free `ContextEntrySummary` projections for read-side transcript indexes
 - `ContextTranscriptSummary` aggregates for entry kind and time-span coverage
@@ -39,6 +41,7 @@ Chief of Staff runtime needs.
 - `create_snapshot()`
 - `list_snapshots()`
 - `snapshot_summary()`
+- `session_summary()`
 - `fetch_latest_snapshot()`
 - `compact_before_entry()`
 - `archive_session()`
@@ -50,6 +53,10 @@ and first/latest timestamps without reading opaque entry bodies.
 `snapshot_summary()` uses the same bounded snapshot filters as
 `list_snapshots()` and returns compaction checkpoint counts, reference counts,
 and token estimate ranges without reading transcript bodies.
+
+`session_summary()` composes the header, body-free transcript summary, and
+checkpoint summary for one session, including whether the head checkpoint is
+present and how many entries remain outside it.
 
 ## Development
 

@@ -12,6 +12,9 @@ All notable changes to this package will be documented in this file.
   transcript counts by entry kind, metadata coverage, and time span.
 - `ContextSnapshotSummary` and `snapshot_summary()` for bounded compaction
   checkpoint counts, reference counts, and token estimate ranges.
+- `ContextSessionSummary` and `session_summary()` for one-session host status
+  views that combine header, transcript, checkpoint, and uncheckpointed-entry
+  state.
 
 ## [0.1.0] - 2026-04-18
 
