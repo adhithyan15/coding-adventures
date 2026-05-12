@@ -662,11 +662,11 @@ pub fn parse_html_with_diagnostics_and_options(
     for ch in source.chars() {
         let mut buffer = [0; 4];
         lexer.push(ch.encode_utf8(&mut buffer))?;
-        drain_parser_tokens(&mut lexer, &mut parser)?;
+        drain_parser_tokens(&mut lexer, &mut parser, false)?;
     }
 
     lexer.finish()?;
-    drain_parser_tokens(&mut lexer, &mut parser)?;
+    drain_parser_tokens(&mut lexer, &mut parser, true)?;
     parser.process_token(Token::Eof);
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
@@ -691,11 +691,11 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
     for ch in source.chars() {
         let mut buffer = [0; 4];
         lexer.push(ch.encode_utf8(&mut buffer))?;
-        drain_parser_tokens(&mut lexer, &mut parser)?;
+        drain_parser_tokens(&mut lexer, &mut parser, false)?;
     }
 
     lexer.finish()?;
-    drain_parser_tokens(&mut lexer, &mut parser)?;
+    drain_parser_tokens(&mut lexer, &mut parser, true)?;
     parser.process_token(Token::Eof);
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
@@ -725,6 +725,7 @@ pub struct HtmlParser {
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
+    foreign_cdata_text: Option<String>,
 }
 
 impl Default for HtmlParser {
@@ -744,6 +745,7 @@ impl Default for HtmlParser {
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
+            foreign_cdata_text: None,
         }
     }
 }
@@ -790,6 +792,7 @@ impl HtmlParser {
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
+            foreign_cdata_text: None,
         }
     }
 
@@ -809,6 +812,9 @@ impl HtmlParser {
     }
 
     fn process_token(&mut self, token: Token) {
+        if matches!(token, Token::Eof) {
+            self.flush_foreign_cdata_text();
+        }
         match token {
             Token::Text(text) => self.append_text(text),
             token => {
@@ -855,6 +861,95 @@ impl HtmlParser {
                     Token::Eof => self.open_elements.clear(),
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
                 }
+            }
+        }
+    }
+
+    fn process_lexer_token(&mut self, token: Token, final_drain: bool) {
+        if self.foreign_cdata_text.is_some() {
+            self.consume_foreign_cdata_token(token);
+            return;
+        }
+
+        match token {
+            Token::Comment(comment) if self.current_namespace().is_some() => {
+                if let Some(cdata) = comment.strip_prefix("[CDATA[") {
+                    self.start_foreign_cdata_text(cdata, final_drain);
+                } else {
+                    self.process_token(Token::Comment(comment));
+                }
+            }
+            token => self.process_token(token),
+        }
+    }
+
+    fn start_foreign_cdata_text(&mut self, cdata: &str, final_drain: bool) {
+        if final_drain {
+            if !cdata.is_empty() {
+                self.append_text(cdata.to_string());
+            }
+            return;
+        }
+
+        if let Some(cdata) = cdata.strip_suffix("]]") {
+            if !cdata.is_empty() {
+                self.append_text(cdata.to_string());
+            }
+            return;
+        }
+
+        let mut text = cdata.to_string();
+        text.push('>');
+        self.consume_foreign_cdata_text(text);
+    }
+
+    fn consume_foreign_cdata_token(&mut self, token: Token) {
+        match token {
+            Token::Text(text) => self.consume_foreign_cdata_text(text),
+            Token::StartTag {
+                name,
+                attributes,
+                self_closing,
+            } => {
+                self.consume_foreign_cdata_text(start_tag_as_text(
+                    &name,
+                    &attributes,
+                    self_closing,
+                ));
+            }
+            Token::EndTag { name } => self.consume_foreign_cdata_text(format!("</{name}>")),
+            Token::Comment(comment) => {
+                self.consume_foreign_cdata_text(format!("<!--{comment}-->"));
+            }
+            Token::Doctype { name, .. } => {
+                self.consume_foreign_cdata_text(format!("<!DOCTYPE {}>", name.unwrap_or_default()));
+            }
+            Token::Eof => self.flush_foreign_cdata_text(),
+        }
+    }
+
+    fn consume_foreign_cdata_text(&mut self, text: String) {
+        let mut cdata = self.foreign_cdata_text.take().unwrap_or_default();
+        cdata.push_str(&text);
+
+        if let Some(end) = cdata.find("]]>") {
+            let trailing = cdata[end + 3..].to_string();
+            cdata.truncate(end);
+            if !cdata.is_empty() {
+                self.append_text(cdata);
+            }
+            if !trailing.is_empty() {
+                self.process_token(Token::Text(trailing));
+            }
+        } else {
+            self.foreign_cdata_text = Some(cdata);
+        }
+    }
+
+    fn flush_foreign_cdata_text(&mut self) {
+        if let Some(cdata) = self.foreign_cdata_text.take() {
+            if !cdata.is_empty() {
+                self.append_text(cdata);
             }
         }
     }
@@ -1677,7 +1772,9 @@ impl HtmlParser {
                 .strip_prefix("[CDATA[")
                 .and_then(|data| data.strip_suffix("]]"))
             {
-                self.append_text_to_current(cdata.to_string());
+                if !cdata.is_empty() {
+                    self.append_text_to_current(cdata.to_string());
+                }
                 return;
             }
         }
@@ -3714,7 +3811,11 @@ impl HtmlParser {
     }
 }
 
-fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result<(), ParseError> {
+fn drain_parser_tokens(
+    lexer: &mut HtmlLexer,
+    parser: &mut HtmlParser,
+    final_drain: bool,
+) -> Result<(), ParseError> {
     for token in lexer.drain_tokens() {
         if matches!(token, Token::Eof) {
             continue;
@@ -3724,7 +3825,7 @@ fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result
             Token::StartTag { name, .. } if !is_void_element(name) => Some(name.clone()),
             _ => None,
         };
-        parser.process_token(token);
+        parser.process_lexer_token(token, final_drain);
 
         let next_context = if let Some(name) = start_tag_name {
             (parser.current_namespace().is_none())
@@ -3755,6 +3856,22 @@ fn element_node(name: String, attributes: Vec<Attribute>, namespace: Option<&str
         Some(namespace) => Node::namespaced_element(namespace.to_string(), name, attributes),
         None => Node::element(name, attributes),
     }
+}
+
+fn start_tag_as_text(name: &str, attributes: &[LexerAttribute], self_closing: bool) -> String {
+    let mut text = format!("<{name}");
+    for attribute in attributes {
+        text.push(' ');
+        text.push_str(&attribute.name);
+        text.push_str("=\"");
+        text.push_str(&attribute.value);
+        text.push('"');
+    }
+    if self_closing {
+        text.push('/');
+    }
+    text.push('>');
+    text
 }
 
 fn trim_formatting_reconstruction_noah_ark(
