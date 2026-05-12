@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { ADD, MUL, POW, SQRT, SUB, app, int, sym } from "@coding-adventures/symbolic-ir";
+import { ADD, MUL, POW, SQRT, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 import {
+  ALG_FACTOR,
   algFactorIr,
+  algFactorHandler,
+  buildAlgFactorHandlerTable,
   extractRadicalD,
   factorOverExtension,
   rationalSquareRoot,
@@ -11,6 +14,10 @@ import {
 
 function sqrtD(d: bigint | number) {
   return app(SQRT, [int(d)]);
+}
+
+function algFactor(poly: IRNode, radical: IRNode) {
+  return app(ALG_FACTOR, [poly, radical]);
 }
 
 describe("rationalSquareRoot", () => {
@@ -85,5 +92,66 @@ describe("IR adapter", () => {
   it("returns null for non-polynomials", () => {
     const x = sym("x");
     expect(algFactorIr(app(sym("Sin"), [x]), sqrtD(2), x)).toBeNull();
+  });
+});
+
+describe("AlgFactor handler", () => {
+  it("registers a table entry under AlgFactor", () => {
+    const table = buildAlgFactorHandlerTable();
+    expect([...table.keys()]).toEqual(["AlgFactor"]);
+    expect(table.get("AlgFactor")).toBe(algFactorHandler);
+  });
+
+  it("falls through unchanged for wrong arity", () => {
+    const expr = app(ALG_FACTOR, [int(1), sqrtD(2), int(3)]);
+    expect(algFactorHandler(expr)).toBe(expr);
+  });
+
+  it("falls through unchanged for non-Sqrt extensions", () => {
+    const x = sym("x");
+    const expr = algFactor(app(SUB, [app(POW, [x, int(2)]), int(2)]), int(2));
+    expect(algFactorHandler(expr)).toBe(expr);
+  });
+
+  it("falls through unchanged for non-polynomial inputs", () => {
+    const x = sym("x");
+    const expr = algFactor(app(sym("Sin"), [x]), sqrtD(2));
+    expect(algFactorHandler(expr)).toBe(expr);
+  });
+
+  it("falls through unchanged for irreducible polynomials", () => {
+    const x = sym("x");
+    const expr = algFactor(app(ADD, [app(POW, [x, int(2)]), int(1)]), sqrtD(2));
+    expect(algFactorHandler(expr)).toBe(expr);
+  });
+
+  it("factors AlgFactor(x^2 - 2, Sqrt(2)) to product IR", () => {
+    const x = sym("x");
+    const expr = algFactor(app(SUB, [app(POW, [x, int(2)]), int(2)]), sqrtD(2));
+    const result = algFactorHandler(expr);
+    expect(result.kind).toBe("apply");
+    expect(result.kind === "apply" && equals(result.head, MUL)).toBe(true);
+  });
+
+  it("clears rational polynomial denominators in the handler path", () => {
+    const x = sym("x");
+    const expr = algFactor(app(SUB, [app(MUL, [rational(1, 2), app(POW, [x, int(2)])]), int(1)]), sqrtD(2));
+    const result = algFactorHandler(expr);
+    expect(result.kind).toBe("apply");
+    expect(result.kind === "apply" && equals(result.head, MUL)).toBe(true);
+  });
+
+  it("uses an evaluator callback before polynomial conversion", () => {
+    const x = sym("x");
+    const y = sym("y");
+    const normalized = app(SUB, [app(POW, [x, int(2)]), int(2)]);
+    const expr = algFactor(y, sqrtD(2));
+    const result = algFactorHandler(expr, {
+      eval(node) {
+        return equals(node, y) ? normalized : node;
+      },
+    });
+    expect(result.kind).toBe("apply");
+    expect(result.kind === "apply" && equals(result.head, MUL)).toBe(true);
   });
 });
