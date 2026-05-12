@@ -19,7 +19,8 @@ characteristic writes, and notification reads. The BLE raw-frame transport
 buffers split notifications, preserves extra bytes for the next response, and
 rejects empty or unterminated notification streams. BLE GATT and RFCOMM raw-frame
 adapters report oversized or unterminated responses as `ResponseTooLarge` through
-the shared client transport trait.
+the shared client transport trait, while link and stream failures are exposed as
+`Io`.
 
 OS-specific scanners can also pass discovered device metadata into
 `board_vm_endpoint_candidates`. The macOS scanner reads `system_profiler`, the
