@@ -54,6 +54,21 @@ pub const DYNAMIC_TYPE: &str = "any";
 /// — the value is too variable to fix at compile time.
 pub const POLYMORPHIC_TYPE: &str = "polymorphic";
 
+/// The type hint produced by `alloc_closure` instructions (LANG34).
+///
+/// A closure value is a heap-allocated record pairing a function name with
+/// a vector of captured variable values.  The `"closure"` type is NOT in
+/// `CONCRETE_TYPES` — it is not a scalar and the numeric `iir-to-*` backends
+/// reject it (closures are not JVM primitives or WASM scalars).
+///
+/// ```
+/// use interpreter_ir::opcodes::{CLOSURE_TYPE, is_closure_op};
+/// assert_eq!(CLOSURE_TYPE, "closure");
+/// assert!(is_closure_op("alloc_closure"));
+/// assert!(is_closure_op("call_closure"));
+/// ```
+pub const CLOSURE_TYPE: &str = "closure";
+
 /// The concrete types recognised by every LANG-pipeline backend.
 ///
 /// Language frontends may use additional type strings; these are the ones
@@ -176,6 +191,27 @@ pub fn is_io(op: &str) -> bool {
     matches!(op, "io_in" | "io_out")
 }
 
+/// Closure allocation and application opcodes (LANG34).
+///
+/// | Opcode | Meaning |
+/// |--------|---------|
+/// | `alloc_closure` | Allocate a closure: `srcs[0] = Operand::Str(fn_name)`, `srcs[1..] = captures` |
+/// | `call_closure`  | Invoke a closure: `srcs[0] = handle`, `srcs[1..] = user args` |
+///
+/// Both opcodes are value-producing (`dest` is always `Some`).
+/// `alloc_closure` is also allocating (`may_alloc = true`).
+///
+/// ```
+/// use interpreter_ir::opcodes::is_closure_op;
+/// assert!(is_closure_op("alloc_closure"));
+/// assert!(is_closure_op("call_closure"));
+/// assert!(!is_closure_op("call_builtin"));
+/// assert!(!is_closure_op("call"));
+/// ```
+pub fn is_closure_op(op: &str) -> bool {
+    matches!(op, "alloc_closure" | "call_closure")
+}
+
 /// Type coercions and assertions.
 pub fn is_coercion(op: &str) -> bool {
     matches!(op, "cast" | "type_assert")
@@ -243,6 +279,9 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "is_null"
                 // Global variable read (LANG32)
                 | "global_load"
+                // Closure allocation and application (LANG34)
+                | "alloc_closure"
+                | "call_closure"
                 // Concurrency ops that produce a dest value (LANG28)
                 | "task_spawn"
                 | "task_current"
@@ -329,6 +368,8 @@ pub fn is_allocating(op: &str) -> bool {
     matches!(
         op,
         "alloc" | "box" | "safepoint"
+            // Closure allocation (LANG34)
+            | "alloc_closure"
             // Concurrency allocators (LANG28)
             | "task_spawn"
             | "group_new"
@@ -687,6 +728,8 @@ pub fn is_known_op(op: &str) -> bool {
         || is_io(op)
         || is_coercion(op)
         || is_heap(op)
+        || is_global(op)
+        || is_closure_op(op)
         || is_concurrency(op)
 }
 
@@ -743,10 +786,55 @@ mod tests {
         for op in &[
             "const", "add", "sub", "and", "cmp_eq", "jmp", "label", "ret",
             "load_reg", "call", "io_in", "cast", "alloc",
+            // LANG32 global ops
+            "global_load", "global_store",
+            // LANG34 closure ops
+            "alloc_closure", "call_closure",
         ] {
             assert!(is_known_op(op), "{op}");
         }
         assert!(!is_known_op("tetrad.move"));
+    }
+
+    // ── LANG34 closure opcode tests ───────────────────────────────────────────
+
+    #[test]
+    fn closure_type_constant() {
+        assert_eq!(CLOSURE_TYPE, "closure");
+        // "closure" is NOT a concrete scalar type — backends should reject it.
+        assert!(!is_concrete_type(CLOSURE_TYPE));
+        // "closure" is NOT in the polymorphic/dynamic sentinel set.
+        assert_ne!(CLOSURE_TYPE, DYNAMIC_TYPE);
+        assert_ne!(CLOSURE_TYPE, POLYMORPHIC_TYPE);
+    }
+
+    #[test]
+    fn is_closure_op_recognised() {
+        assert!(is_closure_op("alloc_closure"), "alloc_closure must be a closure op");
+        assert!(is_closure_op("call_closure"), "call_closure must be a closure op");
+        // Older call_builtin forms are NOT closure ops (they stay as call ops).
+        assert!(!is_closure_op("call_builtin"));
+        assert!(!is_closure_op("call"));
+        assert!(!is_closure_op("const"));
+    }
+
+    #[test]
+    fn closure_ops_are_known() {
+        assert!(is_known_op("alloc_closure"));
+        assert!(is_known_op("call_closure"));
+    }
+
+    #[test]
+    fn alloc_closure_is_allocating() {
+        assert!(is_allocating("alloc_closure"));
+        // call_closure does not allocate — it invokes an already-allocated closure.
+        assert!(!is_allocating("call_closure"));
+    }
+
+    #[test]
+    fn closure_ops_are_value_producing() {
+        assert!(is_value_producing("alloc_closure"));
+        assert!(is_value_producing("call_closure"));
     }
 
     // ── LANG28 concurrency predicate tests ────────────────────────────────────
