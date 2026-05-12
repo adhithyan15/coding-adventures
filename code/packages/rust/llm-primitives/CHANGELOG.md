@@ -2,6 +2,94 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-05-12
+
+### Changed (breaking on-the-wire shape)
+
+`decompose_text` system prompt bumped to **`decompose-text-v4`** to
+teach the LLM the multi-directed acyclic graph IR shape introduced
+in [ADJ01 v3](../../specs/ADJ01-adjudication-ir-grammar.md). The
+JSON response now has **two top-level arrays**:
+
+```jsonc
+{
+  "document_id": "...",
+  "nodes": [ /* IRNode objects */ ],
+  "edges": [ /* IREdge objects, REQUIRED, at minimum [] */ ]
+}
+```
+
+#### What changed about nodes
+
+- `NodeKind` drops `TextRun`; adds `Section` (a structural unit
+  whose `term` names the unit type — `paragraph(_)`, `sentence(_)`,
+  `table(_)`, `row(_)`, `cell(_)`, `heading(_)`, …) and `Entity` (a
+  deduplicated reference target with possibly-empty `source_spans`).
+- `IRNode` drops the `part_of` and `lowered_from` fields; structural
+  parents now live in `Contains` edges and clarification lineage in
+  `Clarifies` edges.
+- A Section's `source_spans` cover only the meta-text (heading,
+  numbering, delimiters), **not** the content; the content lives in
+  other nodes reached via `Contains` edges.
+- `Inherit` polarity / modality is valid **only** on nodes that have
+  at least one incoming `Contains` edge.
+
+#### What's new about edges
+
+- Closed-set `relation` taxonomy with 30+ variants in eleven
+  groups, listed verbatim in the prompt: Structural, Identity, Rule
+  modification, Application, Provenance, Tabular, Temporal,
+  Cross-source, Discourse, Refinement, plus an inherent escape via
+  `Refers` + metadata when nothing fits (the prompt asks the model
+  not to invent new relation names).
+- Edges carry `source`, `target`, `relation`, `polarity`, `modality`,
+  `source_spans`, and `confidence`. Their `source_spans` cover the
+  *textual marker* that signals the relation (`except`, `see §5`,
+  the comma between list items), not the spans of the related
+  nodes themselves. Synthesized edges carry empty `source_spans`.
+
+#### Coverage rule
+
+- The flat tile now covers `(nodes ∪ edges).source_spans` rather
+  than only nodes. Every byte from 0 to `len(SOURCE_bytes)` must
+  appear in exactly one `source_span` across both arrays —
+  synthesized objects (Query / Entity / spanless edges) are exempt.
+- The model can choose, byte by byte, whether a connective belongs
+  to a node or to an edge.
+
+#### Worked example
+
+The prompt includes a complete v4 worked example for the canonical
+`\"1 carry-on bag, matches.\"` source (24 bytes):
+
+- N1 Fact `carry_on(1)` spans `[0, 14)`
+- N2 Fact `prohibited(matches)` spans `[16, 23)`
+- S1 Section `sentence` spans `[14, 16) ∪ [23, 24)` (the comma and
+  the trailing period)
+- Q1 Query synthesized
+- E1, E2 `Contains` edges from S1 to N1 and N2 (empty spans)
+
+Coverage: `[0,14) + [14,16) + [16,23) + [23,24) = [0, 24)`. ✓
+
+#### Other rules
+
+- Exception nodes MUST be the source of at least one `Excepts`
+  edge — re-states what the validator already enforces, but having
+  it in the prompt cuts down on ADJ06 round-trips.
+- Acyclicity: the graph (nodes, edges) MUST be a DAG across ALL
+  relations. The prompt forbids self-loops and transitive cycles
+  uniformly; the validator catches anything the model misses.
+- The Banff-magnet punctuation rule (rule 18 in v4, was rule 11 in
+  v3) is preserved verbatim.
+
+### Audit-trail impact
+
+Every `LlmCallRecord.prompt_version` for `decompose_text` now reads
+`\"decompose-text-v4\"`. Cached responses keyed on
+`(prompt_version, prompt_hash)` from v3 will miss and re-run — the
+model is being asked to produce a fundamentally different shape so
+the misses are intentional.
+
 ## [0.9.0] - 2026-05-12
 
 ### Changed
