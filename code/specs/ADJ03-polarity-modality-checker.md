@@ -1,13 +1,70 @@
-# ADJ03 — Polarity and Modality Checker: Propagation Consistency
+# ADJ03 — Polarity and Modality Checker: Propagation Along `Contains` Edges
 
-> **Pending revision to v3 (2026-05-12)** to match
-> [`ADJ01 v3`](ADJ01-adjudication-ir-grammar.md): propagation runs
-> along `Contains` edges rather than the `part_of` field, and a
-> `PropagationConflict` check is added for nodes with multiple
-> `Contains` parents whose effective values disagree. The v2 content
-> below describes propagation through the v2 tree and is preserved
-> until the v3 revision lands alongside the
-> `adjudication-polarity-modality` crate's v3 update.
+> **Revision v3 (2026-05-12): edge-driven propagation.** v2's
+> propagation walked the `part_of` tree from leaf to root,
+> resolving `Inherit` against the structural parent. v3 walks
+> `Contains` edges instead (the graph-IR equivalent), and adds a
+> **multi-parent agreement check** since a v3 node can have more
+> than one `Contains` parent.
+>
+> The propagation algorithm:
+>
+> 1. **Concrete value wins.** If a node carries a non-`Inherit`
+>    polarity (or modality), that value is its effective value.
+> 2. **Inherit walks parents.** For an `Inherit` node, follow each
+>    incoming `Contains` edge to its parent and recursively resolve
+>    the parent's effective value.
+> 3. **Multi-parent must agree.** If a node has multiple `Contains`
+>    parents and `polarity = Inherit`, every parent's effective
+>    polarity must be the same. Disagreement is a
+>    `PropagationConflict` validation error that lists the
+>    conflicting candidates so ADJ06 can ask the model to pick.
+> 4. **No-parent Inherit is invalid.** A node with `polarity =
+>    Inherit` and no incoming `Contains` edge is an
+>    `InheritWithoutParent` error — the inheritance chain dead-ends
+>    with no value to inherit.
+>
+> Beyond v3-IR-specific propagation, this checker also enforces:
+>
+> - **RuledOut requires Affirmed.** A node with `modality = RuledOut`
+>   MUST have `polarity = Affirmed`. ADJ01 hard rule; clinical
+>   adjudications treat `RuledOut` as a domain answer, not a
+>   polarity flip.
+> - **Leaf-override warnings.** A node with a concrete (non-`Inherit`)
+>   polarity that disagrees with its `Contains` parent's effective
+>   value is recorded as a warning, not a violation. Legitimate
+>   overrides ("denies X, Y; admits Z") are common; the default
+>   policy is *warn, do not block*. Deployments can promote warnings
+>   to errors via configuration.
+>
+> Stack safety: both `validate()` in `adjudication-ir` and the
+> override-warning walk in `adjudication-polarity-modality` use
+> iterative `Contains`-chain traversal with a heap-allocated
+> `visited` Vec. Long linear chains (or pathological adversarial
+> input) cannot blow the thread stack.
+>
+> Implementation lives in [`adjudication-polarity-modality`](../packages/rust/adjudication-polarity-modality),
+> which is now a thin façade over `adjudication_ir::validate` plus
+> the `RuledOut` rule and the override-warning machinery.
+>
+> The v2 prose below describes the equivalent walk over `part_of`
+> trees; the algorithm is the same, the graph shape changed.
+
+## v3 ADJ06 Clarification Mapping
+
+A propagation failure produces one of:
+
+| Violation | Clarification question |
+|---|---|
+| `InheritWithoutParent { node_id, field }` | "Node `<id>` declares `<field> = Inherit` but has no `Contains` parent to inherit from. Either declare a concrete value or add a `Contains` edge from a parent that has one." |
+| `MultiParentConflict { node_id, field, candidates }` | "Node `<id>`'s `Contains` parents disagree on effective `<field>`: `[(parent₁, value₁), (parent₂, value₂), …]`. Either set a concrete value on the node, or fix one of the parents so they agree." |
+| `RuledOutMustBeAffirmed { node_id, actual_polarity }` | "Node `<id>` has `modality = RuledOut` but `polarity = <actual>`. `RuledOut` is a domain answer, not a polarity flip — set `polarity = Affirmed`." |
+
+`LeafOverridesAncestor*` warnings do not produce clarification
+questions by default; they're recorded in the audit trail and can
+be promoted to clarifications via deployment config.
+
+---
 
 > **Revision v2 (2026-05-11): propagation consistency.** v1 of this
 > spec described a NegEx/ConText-style trigger-detection check that
