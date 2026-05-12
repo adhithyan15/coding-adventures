@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `LeaseTableSummary` and `InMemoryLeaseManager::table_summary_at`
-  for metadata-only lease-table status and pending-sweep checks.
+- `LeaseTableSummary`, `InMemoryLeaseManager::summary_at`, and
+  `InMemoryLeaseManager::table_summary_at` for metadata-only
+  lease-table status, read coverage, consumed-row, payload-retention,
+  expiry-range, and pending-sweep checks.
 
 ## [0.1.0] — 2026-05-04
 

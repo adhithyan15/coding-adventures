@@ -46,9 +46,11 @@ process(payload.as_bytes());
 | `consume`     | one-shot: returns payload **and** revokes atomically     |
 | `expire_due`  | sweep entries whose expiry is `<= now_ms` or are revoked |
 
-`InMemoryLeaseManager::table_summary_at(now_ms)` gives status loops a
-metadata-only count of active, expired, revoked, readable, and
-pending-sweep rows without exposing lease IDs or payload bytes.
+`InMemoryLeaseManager::summary_at(now_ms)` gives status loops a
+metadata-only count of active, expired, revoked, readable,
+payload-bearing, read, consumed, and pending-sweep rows without
+exposing lease IDs or payload bytes. `table_summary_at` is retained as
+an explicit table-oriented alias for the same snapshot.
 
 `LeaseInfo` also exposes read-side helpers for status and remaining TTL at a
 caller-supplied timestamp, so supervisors and D18 tools can inspect leases

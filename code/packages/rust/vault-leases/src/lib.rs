@@ -321,13 +321,80 @@ pub struct LeaseTableSummary {
     pub revoked_entries: usize,
     /// Active rows that still have payload material attached.
     pub readable_entries: usize,
+    /// Rows that still have payload material attached, regardless
+    /// of whether they are currently readable at `now_ms`.
+    pub payload_present_entries: usize,
     /// Rows that `expire_due(now_ms)` would remove.
     pub pending_sweep_entries: usize,
+    /// Revoked rows that were consumed at least once before being
+    /// retained for a later sweep.
+    pub consumed_entries: usize,
+    /// Rows that have never been read.
+    pub unread_entries: usize,
+    /// Rows that have been read at least once.
+    pub read_entries: usize,
     /// Saturating sum of `read_count` across retained rows.
     pub total_reads: u64,
+    /// Earliest retained expiry timestamp, if any rows are retained.
+    pub earliest_expiry_ms: Option<u64>,
+    /// Latest retained expiry timestamp, if any rows are retained.
+    pub latest_expiry_ms: Option<u64>,
 }
 
 impl LeaseTableSummary {
+    fn from_entries<'a>(entries: impl IntoIterator<Item = &'a LeaseEntry>, now_ms: u64) -> Self {
+        let mut summary = Self::default();
+        for entry in entries {
+            summary.total_entries += 1;
+            summary.total_reads = summary.total_reads.saturating_add(entry.read_count as u64);
+
+            if entry.payload.is_some() {
+                summary.payload_present_entries += 1;
+            }
+            if entry.read_count == 0 {
+                summary.unread_entries += 1;
+            } else {
+                summary.read_entries += 1;
+            }
+            summary.earliest_expiry_ms = Some(
+                summary
+                    .earliest_expiry_ms
+                    .map_or(entry.expires_at_ms, |current| {
+                        current.min(entry.expires_at_ms)
+                    }),
+            );
+            summary.latest_expiry_ms = Some(
+                summary
+                    .latest_expiry_ms
+                    .map_or(entry.expires_at_ms, |current| {
+                        current.max(entry.expires_at_ms)
+                    }),
+            );
+
+            if entry.revoked {
+                summary.revoked_entries += 1;
+                summary.pending_sweep_entries += 1;
+                if entry.read_count > 0 {
+                    summary.consumed_entries += 1;
+                }
+            } else if entry.expires_at_ms <= now_ms {
+                summary.expired_entries += 1;
+                summary.pending_sweep_entries += 1;
+            } else {
+                summary.active_entries += 1;
+                if entry.payload.is_some() {
+                    summary.readable_entries += 1;
+                }
+            }
+        }
+        summary
+    }
+
+    /// True when no lease rows are retained.
+    pub fn is_empty(&self) -> bool {
+        self.total_entries == 0
+    }
+
     /// True when at least one lease can still be read or renewed.
     pub fn has_active_leases(&self) -> bool {
         self.active_entries > 0
@@ -336,6 +403,11 @@ impl LeaseTableSummary {
     /// True when `expire_due(now_ms)` has cleanup work to do.
     pub fn has_pending_sweep(&self) -> bool {
         self.pending_sweep_entries > 0
+    }
+
+    /// True when `expire_due(now_ms)` would remove at least one row.
+    pub fn has_reapable_leases(&self) -> bool {
+        self.has_pending_sweep()
     }
 }
 
@@ -525,31 +597,23 @@ impl InMemoryLeaseManager {
         }
     }
 
+    /// Summarize the retained lease table without exposing IDs or payloads.
+    ///
+    /// The caller supplies `now_ms` so tests, schedulers, and sweeper
+    /// loops can use the same time boundary that would be passed to
+    /// [`LeaseManager::expire_due`].
+    pub fn summary_at(&self, now_ms: u64) -> LeaseTableSummary {
+        let g = self.inner.lock().expect("lease mutex poisoned");
+        LeaseTableSummary::from_entries(g.values(), now_ms)
+    }
+
     /// Return a compact status summary of the retained lease table.
     ///
     /// The caller supplies `now_ms` so tests, schedulers, and sweeper
     /// loops can use the same time boundary that would be passed to
     /// [`LeaseManager::expire_due`].
     pub fn table_summary_at(&self, now_ms: u64) -> LeaseTableSummary {
-        let g = self.inner.lock().expect("lease mutex poisoned");
-        let mut summary = LeaseTableSummary::default();
-        for entry in g.values() {
-            summary.total_entries += 1;
-            summary.total_reads = summary.total_reads.saturating_add(entry.read_count as u64);
-            if entry.revoked {
-                summary.revoked_entries += 1;
-                summary.pending_sweep_entries += 1;
-            } else if entry.expires_at_ms <= now_ms {
-                summary.expired_entries += 1;
-                summary.pending_sweep_entries += 1;
-            } else {
-                summary.active_entries += 1;
-                if entry.payload.is_some() {
-                    summary.readable_entries += 1;
-                }
-            }
-        }
-        summary
+        self.summary_at(now_ms)
     }
 
     /// Current wall-clock millis. Pulled into a method so tests can
@@ -932,38 +996,49 @@ mod tests {
         let mgr = InMemoryLeaseManager::new();
         let active = mgr.issue(mk_payload("active"), 60_000).unwrap();
         let read_once = mgr.issue(mk_payload("read-once"), 60_000).unwrap();
+        let consumed = mgr.issue(mk_payload("consumed"), 60_000).unwrap();
         let revoked = mgr.issue(mk_payload("revoked"), 60_000).unwrap();
         let _ = mgr.read(&read_once).unwrap();
+        let _ = mgr.consume(&consumed).unwrap();
         mgr.revoke(&revoked).unwrap();
 
-        let before_expiry = mgr.table_summary_at(0);
+        let before_expiry = mgr.summary_at(0);
+        assert_eq!(mgr.table_summary_at(0), before_expiry);
 
-        assert_eq!(
-            before_expiry,
-            LeaseTableSummary {
-                total_entries: 3,
-                active_entries: 2,
-                expired_entries: 0,
-                revoked_entries: 1,
-                readable_entries: 2,
-                pending_sweep_entries: 1,
-                total_reads: 1,
-            }
-        );
+        assert_eq!(before_expiry.total_entries, 4);
+        assert_eq!(before_expiry.active_entries, 2);
+        assert_eq!(before_expiry.expired_entries, 0);
+        assert_eq!(before_expiry.revoked_entries, 2);
+        assert_eq!(before_expiry.readable_entries, 2);
+        assert_eq!(before_expiry.payload_present_entries, 2);
+        assert_eq!(before_expiry.pending_sweep_entries, 2);
+        assert_eq!(before_expiry.consumed_entries, 1);
+        assert_eq!(before_expiry.unread_entries, 2);
+        assert_eq!(before_expiry.read_entries, 2);
+        assert_eq!(before_expiry.total_reads, 2);
+        assert!(before_expiry.earliest_expiry_ms.is_some());
+        assert!(before_expiry.latest_expiry_ms.is_some());
+        assert!(before_expiry.earliest_expiry_ms <= before_expiry.latest_expiry_ms);
+        assert!(!before_expiry.is_empty());
         assert!(before_expiry.has_active_leases());
         assert!(before_expiry.has_pending_sweep());
+        assert!(before_expiry.has_reapable_leases());
 
-        let after_expiry = mgr.table_summary_at(u64::MAX);
-        assert_eq!(after_expiry.total_entries, 3);
+        let after_expiry = mgr.summary_at(u64::MAX);
+        assert_eq!(after_expiry.total_entries, 4);
         assert_eq!(after_expiry.active_entries, 0);
         assert_eq!(after_expiry.expired_entries, 2);
-        assert_eq!(after_expiry.revoked_entries, 1);
+        assert_eq!(after_expiry.revoked_entries, 2);
         assert_eq!(after_expiry.readable_entries, 0);
-        assert_eq!(after_expiry.pending_sweep_entries, 3);
+        assert_eq!(after_expiry.payload_present_entries, 2);
+        assert_eq!(after_expiry.pending_sweep_entries, 4);
         assert!(!after_expiry.has_active_leases());
 
-        assert_eq!(mgr.expire_due(u64::MAX).unwrap(), 3);
-        assert_eq!(mgr.table_summary_at(u64::MAX), LeaseTableSummary::default());
+        assert_eq!(mgr.expire_due(u64::MAX).unwrap(), 4);
+        let empty = mgr.summary_at(u64::MAX);
+        assert_eq!(empty, LeaseTableSummary::default());
+        assert!(empty.is_empty());
+        assert!(!empty.has_reapable_leases());
         assert!(matches!(mgr.lookup(&active), Err(LeaseError::NotFound)));
     }
 
