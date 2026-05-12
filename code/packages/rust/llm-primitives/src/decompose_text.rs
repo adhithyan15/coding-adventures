@@ -84,7 +84,9 @@ pub struct DecomposeTextResponse {
 
 const SYSTEM_PROMPT: &str = "\
 You are a precise document-to-IR extractor. Given a SOURCE document \
-and a DOMAIN hint, produce a FLAT JSON document with this exact shape:\n\
+and a DOMAIN hint, produce a JSON document with TWO top-level \
+collections — `nodes` (typed claims) and `edges` (typed relationships) \
+— in this exact shape:\n\
 \n\
 {\n\
   \"document_id\": \"<copy DOCUMENT_ID verbatim>\",\n\
@@ -96,6 +98,18 @@ and a DOMAIN hint, produce a FLAT JSON document with this exact shape:\n\
       \"polarity\":     \"Affirmed\",\n\
       \"modality\":     \"Present\",\n\
       \"source_spans\": [ { \"start\": 0, \"end\": 16 } ]\n\
+    },\n\
+    ...\n\
+  ],\n\
+  \"edges\": [\n\
+    {\n\
+      \"id\":           \"E1\",\n\
+      \"source\":       \"<source NodeId>\",\n\
+      \"target\":       \"<target NodeId>\",\n\
+      \"relation\":     \"<relation name>\",\n\
+      \"polarity\":     \"Affirmed\",\n\
+      \"modality\":     \"Present\",\n\
+      \"source_spans\": [ { \"start\": 14, \"end\": 16 } ]\n\
     },\n\
     ...\n\
   ]\n\
@@ -110,48 +124,127 @@ Correct output:\n\
     { \"id\": \"N1\", \"kind\": \"Fact\",\n\
       \"term\": { \"functor\": \"carry_on\", \"args\": [ { \"atom\": \"1\" } ] },\n\
       \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-      \"source_spans\": [ { \"start\": 0, \"end\": 16 } ] },\n\
+      \"source_spans\": [ { \"start\": 0, \"end\": 14 } ] },\n\
     { \"id\": \"N2\", \"kind\": \"Fact\",\n\
       \"term\": { \"functor\": \"prohibited\", \"args\": [ { \"atom\": \"matches\" } ] },\n\
       \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-      \"source_spans\": [ { \"start\": 16, \"end\": 24 } ] },\n\
+      \"source_spans\": [ { \"start\": 16, \"end\": 23 } ] },\n\
+    { \"id\": \"S1\", \"kind\": \"Section\",\n\
+      \"term\": { \"functor\": \"sentence\", \"args\": [] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [ { \"start\": 14, \"end\": 16 }, { \"start\": 23, \"end\": 24 } ] },\n\
     { \"id\": \"Q1\", \"kind\": \"Query\",\n\
       \"term\": { \"functor\": \"compliant\", \"args\": [ { \"atom\": \"passenger\" } ] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [] }\n\
+  ],\n\
+  \"edges\": [\n\
+    { \"id\": \"E1\", \"source\": \"S1\", \"target\": \"N1\",\n\
+      \"relation\": \"Contains\",\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [] },\n\
+    { \"id\": \"E2\", \"source\": \"S1\", \"target\": \"N2\",\n\
+      \"relation\": \"Contains\",\n\
       \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
       \"source_spans\": [] }\n\
   ]\n\
 }\n\
 \n\
+The Section node owns the connective bytes (the `, ` between N1 and \
+N2, and the trailing `.`). N1 owns the `1 carry-on bag` substring; \
+N2 owns the `matches` substring. The two `Contains` edges record \
+that the Section groups N1 and N2 — semantic structure that the \
+checker passes use. Coverage adds up: N1[0,14] + S1[14,16] + \
+N2[16,23] + S1[23,24] = [0,24).\n\
+\n\
 RULES (every rule is mandatory, no exceptions):\n\
 \n\
-1. **Flat `nodes` array.** Do NOT nest nodes inside a `children` field. \
-Every node is a top-level entry in the `nodes` array.\n\
+## NODE rules\n\
+\n\
+1. **Flat `nodes` array.** Do NOT nest nodes inside a `children` \
+field. Every node is a top-level entry.\n\
 2. **Field names are exact.** Use `kind` (not `node_type`), `term` \
 (not `text`), `source_spans` (not `spans`). Stick to the example.\n\
 3. **`kind` is one of**: `Fact`, `Query`, `Uncertainty`, `Rule`, \
-`Exception`, `Discarded`.\n\
-4. **Spans TILE the source.** The union of all `source_spans` across \
-non-Query nodes must cover every byte from 0 to `len(SOURCE_bytes)` \
-exactly once. No gaps. No overlaps. INCLUDING whitespace and \
-punctuation — assign these to the adjacent Fact's span.\n\
-5. **Spans are byte offsets**, not character indices. `start` and \
-`end` are integers; `0 <= start < end <= len(SOURCE_bytes)`. \
-For ASCII text byte offsets equal character indices.\n\
-6. **Query nodes have empty `source_spans: []`** — they're \
-synthesized questions, not extracted from source. Every IR document \
-should include at least one Query node so the engine has something \
-to answer.\n\
-7. **`polarity` is one of**: `Affirmed`, `Denied`, `Uncertain`, \
-`Inherit`. Default to `Affirmed`.\n\
-8. **`modality` is one of**: `Present`, `Past`, `Future`, `Hypothetical`, \
-`FamilyHistory`, `RuledOut`, `Conditional`, `Inherit`. Default to `Present`.\n\
-9. **`term`** is either `{\"atom\": \"name\"}` for atomic claims or \
+`Exception`, `Discarded`, `Section`, `Entity`.\n\
+   * `Section` is a structural unit (paragraph, sentence, table, \
+row, cell, heading). Its `source_spans` cover ONLY the meta-text \
+of the unit (heading, numbering, delimiters), NOT the content. \
+The content lives in other nodes connected by `Contains` edges.\n\
+   * `Entity` is a deduplicated reference target. When the same \
+atom is mentioned multiple times, emit ONE Entity node (with \
+empty `source_spans` is acceptable since it's synthesized) and \
+emit `Mentions` edges from each mention site to it.\n\
+4. **`polarity` is one of**: `Affirmed`, `Denied`, `Uncertain`, \
+`Inherit`. Default to `Affirmed`. `Inherit` is valid ONLY on nodes \
+that have at least one incoming `Contains` edge (the polarity is \
+inherited from the parent Section).\n\
+5. **`modality` is one of**: `Present`, `Past`, `Future`, \
+`Hypothetical`, `FamilyHistory`, `RuledOut`, `Conditional`, \
+`Inherit`. Default to `Present`.\n\
+6. **`term`** is either `{\"atom\": \"name\"}` for atomic claims or \
 `{\"functor\": \"pred\", \"args\": [...]}` for compound claims. Args \
 recursively use the same term shape.\n\
-10. **`document_id` is the DOCUMENT_ID from the user message, verbatim.**\n\
-11. **Punctuation and delimiters can flip meaning — read them carefully.** \
-A single comma, period, colon, or quote mark can invert the intent \
-of an otherwise-identical string. Two famous examples:\n\
+7. **Query nodes have empty `source_spans: []`** — they're \
+synthesized questions. Entity nodes MAY have empty `source_spans` \
+when synthesized. Every other kind MUST have non-empty \
+`source_spans`.\n\
+\n\
+## EDGE rules\n\
+\n\
+8. **`edges` is required**, at minimum an empty array `[]` for \
+trivial documents. Every relationship between nodes MUST be \
+expressed as an explicit edge; do not encode relationships through \
+node order, term-argument nesting, or metadata strings.\n\
+9. **`relation` is one of** (closed set):\n\
+   * Structural: `Contains`, `Precedes`, `Heading`\n\
+   * Identity: `Mentions`, `SameAs`, `Refers`\n\
+   * Rule modification: `Excepts`, `Refines`, `Generalizes`, \
+`Supersedes`, `Restricts`\n\
+   * Application: `AppliesTo`, `AppliesWhen`, `Concludes`\n\
+   * Provenance: `DerivedFrom`, `JustifiedBy`, `ElicitedFrom`\n\
+   * Tabular: `RowOf`, `ColumnOf`, `HeaderOf`, `CellOf`\n\
+   * Temporal: `Before`, `After`, `During`, `EffectiveAt`, \
+`SupersededAt`\n\
+   * Cross-source: `ConflictsWith`, `Confirms`, `DependsOn`\n\
+   * Discourse: `Defines`, `Restates`, `Cites`\n\
+   * Refinement: `Clarifies`\n\
+   If none of these fit, do not invent a name — use `Refers` and \
+attach metadata.\n\
+10. **Edge `source_spans` cover the TEXTUAL MARKER that signals \
+the relation** — the word `except`, the phrase `see §5`, the \
+comma between list items — NOT the spans of the related nodes. A \
+synthesized edge with no textual marker has `source_spans: []`.\n\
+11. **`Excepts` edges connect Exception nodes to Rule nodes.** \
+Every Exception MUST be the source of at least one `Excepts` edge.\n\
+12. **No cycles.** The graph (nodes, edges) MUST be acyclic across \
+ALL relations. Specifically: an edge cannot point a node back to \
+itself directly or transitively through any other edges.\n\
+\n\
+## COVERAGE rules\n\
+\n\
+13. **Spans TILE the source.** The union of all `source_spans` \
+across nodes and edges must cover every byte from 0 to \
+`len(SOURCE_bytes)` exactly once. No gaps. No overlaps. INCLUDING \
+whitespace and punctuation. Choose how to assign each byte: to a \
+node (the content) or to an edge (the connective marker).\n\
+14. **Spans are byte offsets**, not character indices. `start` and \
+`end` are integers; `0 <= start < end <= len(SOURCE_bytes)`. For \
+ASCII text byte offsets equal character indices.\n\
+15. **Synthesized objects are exempt from tiling**: Query nodes \
+with empty spans, Entity nodes with empty spans, and edges with \
+empty spans (those without a textual marker) do not contribute to \
+the tiling. Use them freely; the validator skips them.\n\
+\n\
+## Other\n\
+\n\
+16. **`document_id` is the DOCUMENT_ID from the user message, \
+verbatim.**\n\
+17. **Every IR document should include at least one Query node** so \
+the engine has something to answer.\n\
+18. **Punctuation and delimiters can flip meaning — read them \
+carefully.** A single comma, period, colon, or quote mark can \
+invert the intent of an otherwise-identical string:\n\
    * `\"Let's eat, Bob.\"` — Bob is being invited to a meal.\n\
    * `\"Let's eat Bob.\"` — Bob is the meal.\n\
 The bytes differ by one comma; the meaning differs by an order \
@@ -168,10 +261,11 @@ backticks.";
 
 const RESPONSE_SCHEMA: &str = r#"{
     "type": "object",
-    "required": ["document_id", "nodes"],
+    "required": ["document_id", "nodes", "edges"],
     "properties": {
         "document_id": { "type": "string", "minLength": 1 },
-        "nodes":       { "type": "array",  "minItems": 0 }
+        "nodes":       { "type": "array",  "minItems": 0 },
+        "edges":       { "type": "array",  "minItems": 0 }
     },
     "additionalProperties": true
 }"#;
@@ -415,7 +509,7 @@ mod tests {
 
         assert_eq!(resp.call_record.primitive, "decompose_text");
         assert_eq!(resp.call_record.role, "extractor");
-        assert_eq!(resp.call_record.prompt_version, "decompose-text-v3");
+        assert_eq!(resp.call_record.prompt_version, "decompose-text-v4");
         assert!(!resp.call_record.prompt_hash.is_empty());
         assert_eq!(resp.call_record.usage.input_tokens, 700);
         assert_eq!(resp.call_record.usage.output_tokens, 320);
