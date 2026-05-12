@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add pure TypeScript Durand-Kerner numeric polynomial solving plus IR
+  conversion helpers for numeric roots.
 - Add pure TypeScript quartic solving parity with rational-root deflation,
   biquadratic solving, and Ferrari factorization through the cubic solver.
 - Add pure TypeScript cubic closed-form solving parity for rational roots,

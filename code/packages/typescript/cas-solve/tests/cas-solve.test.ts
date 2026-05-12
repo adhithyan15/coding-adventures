@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { ADD, DIV, MUL, SQRT, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, DIV, MUL, SQRT, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 import {
   ALL_SOLUTIONS,
   CBRT,
   Frac,
   I_UNIT,
+  nsolveFractionPoly,
+  nsolvePoly,
+  rootsToIr,
   solveCubic,
   solveLinear,
   solveQuadratic,
@@ -44,6 +47,21 @@ function containsSymbol(node: IRNode, name: string): boolean {
 function containsHead(node: IRNode, name: string): boolean {
   return node.kind === "apply"
     && ((node.head.kind === "symbol" && node.head.name === name) || node.args.some((arg) => containsHead(arg, name)));
+}
+
+function expectNumericRootsClose(
+  computed: readonly { readonly re: number; readonly im: number }[],
+  expected: readonly { readonly re: number; readonly im: number }[],
+  tol = 1e-8,
+): void {
+  expect(computed.length).toBe(expected.length);
+  const used = new Array(expected.length).fill(false);
+  for (const root of computed) {
+    const match = expected.findIndex((candidate, index) =>
+      !used[index] && Math.hypot(root.re - candidate.re, root.im - candidate.im) < tol);
+    expect(match).not.toBe(-1);
+    used[match] = true;
+  }
 }
 
 describe("Frac", () => {
@@ -188,5 +206,47 @@ describe("solveQuartic", () => {
 
   it("leaves quartics without a usable rational resolvent root unevaluated", () => {
     expectSolutions(solveQuartic(fi(1), fi(0), fi(0), fi(1), fi(1)), []);
+  });
+});
+
+describe("nsolvePoly", () => {
+  it("solves linear, quadratic, and cubic polynomials numerically", () => {
+    expectNumericRootsClose(nsolvePoly([1, -2]), [{ re: 2, im: 0 }], 1e-10);
+    expectNumericRootsClose(nsolvePoly([1, 0, -1]), [{ re: 1, im: 0 }, { re: -1, im: 0 }]);
+    expectNumericRootsClose(nsolvePoly([1, 0, 1]), [{ re: 0, im: 1 }, { re: 0, im: -1 }]);
+    expectNumericRootsClose(nsolvePoly([1, -6, 11, -6]), [
+      { re: 1, im: 0 },
+      { re: 2, im: 0 },
+      { re: 3, im: 0 },
+    ]);
+  });
+
+  it("solves quintics and returns no roots for constants", () => {
+    const roots = nsolvePoly([1, 0, 0, 0, 0, -1]);
+    expect(roots.length).toBe(5);
+    roots.forEach((root) => expect(Math.abs(Math.hypot(root.re, root.im) - 1)).toBeLessThan(1e-8));
+    expect(nsolvePoly([5])).toEqual([]);
+  });
+
+  it("converts numeric roots to symbolic IR", () => {
+    expect(rootsToIr([{ re: 2, im: 1e-15 }, { re: -3, im: -1e-14 }])).toEqual([
+      numberNode(2),
+      numberNode(-3),
+    ]);
+    const complexRoot = rootsToIr([{ re: 1, im: 2 }])[0];
+    expect(complexRoot.kind).toBe("apply");
+    expect(containsSymbol(complexRoot, I_UNIT)).toBe(true);
+  });
+
+  it("wraps fraction coefficients and returns IR roots", () => {
+    const roots = nsolveFractionPoly([fi(1), fi(-6), fi(11), fi(-6)]);
+    expect(roots.length).toBe(3);
+    const values = roots
+      .filter((root) => root.kind === "float")
+      .map((root) => root.kind === "float" ? root.value : 0)
+      .sort((a, b) => a - b);
+    expect(values[0]).toBeCloseTo(1, 8);
+    expect(values[1]).toBeCloseTo(2, 8);
+    expect(values[2]).toBeCloseTo(3, 8);
   });
 });
