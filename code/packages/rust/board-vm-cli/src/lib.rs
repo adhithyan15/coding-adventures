@@ -2691,6 +2691,44 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
     }
 
     #[test]
+    fn smoke_sequence_runs_over_rfcomm_wire_transport() {
+        let endpoint = "btspp://uno-r4-wifi:1";
+        let options = SmokeOptions {
+            port: None,
+            endpoint: Some(endpoint.to_owned()),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: DEFAULT_TIMEOUT_MS,
+            program_id: 10,
+            instruction_budget: 200,
+            host_nonce: 0xCAFE_BABE,
+        };
+        let transport = LanguageBluetoothTransport::<_, 2048>::with_transactor(
+            endpoint,
+            LoopbackBluetoothWireTransactor::new(),
+        );
+
+        let report = run_smoke_with_transport(&options, transport).unwrap();
+
+        assert_eq!(
+            report.connection.transport,
+            SmokeConnectionTransport::BluetoothClassicRfcomm
+        );
+        assert_eq!(report.connection.label, format!("endpoint={endpoint}"));
+        assert_eq!(report.connection.timeout_ms, DEFAULT_TIMEOUT_MS);
+        assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
+        assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
+        assert_eq!(report.hello.host_nonce, 0xCAFE_BABE);
+        assert_eq!(report.descriptor.board_id, LOOPBACK_BOARD_ID);
+        assert_eq!(report.upload.program_id, 10);
+        assert_eq!(report.upload.total_len as usize, BLINK_MODULE_LEN);
+        assert_ne!(report.upload.program_crc32, 0);
+        assert_eq!(report.run.program_id, 10);
+        assert_eq!(report.run.status, RunStatus::Running);
+        assert_eq!(report.run.open_handles, 1);
+    }
+
+    #[test]
     fn smoke_endpoint_runs_over_tcp_loopback_transport() {
         let listener = std::net::TcpListener::bind(("127.0.0.1", 0)).unwrap();
         let address = listener.local_addr().unwrap();
