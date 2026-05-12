@@ -8,6 +8,9 @@
   differentiation of arithmetic, elementary, hyperbolic, and inverse
   hyperbolic expressions; `StrictBackend` continues to reject `D` as an
   unknown head.
+- Numeric and symbolic handlers for reciprocal hyperbolic heads `Coth`,
+  `Sech`, and `Csch`, including `sech(0) = 1` and undefined-at-zero checks for
+  `coth`/`csch`.
 
 ## [0.1.0] — 2026-04-27
 

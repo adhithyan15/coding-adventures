@@ -4,8 +4,9 @@
 //! directly and evaluating them under each backend.
 
 use symbolic_ir::{
-    apply, flt, int, rat, sym, ACOSH, ADD, AND, ASINH, ASSIGN, ATANH, COS, COSH, D, DEFINE, DIV,
-    EXP, IF, INTEGRATE, LIST, LOG, MUL, NEG, NOT, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
+    apply, flt, int, rat, sym, ACOSH, ADD, AND, ASINH, ASSIGN, ATANH, COS, COSH, COTH, CSCH, D,
+    DEFINE, DIV, EXP, IF, INTEGRATE, LIST, LOG, MUL, NEG, NOT, OR, POW, SECH, SIN, SINH, SQRT, SUB,
+    TAN, TANH,
 };
 use symbolic_vm::{StrictBackend, SymbolicBackend, VM};
 
@@ -27,6 +28,16 @@ fn d(f: symbolic_ir::IRNode) -> symbolic_ir::IRNode {
 
 fn integrate(f: symbolic_ir::IRNode) -> symbolic_ir::IRNode {
     symbolic().eval(apply(sym(INTEGRATE), vec![f, sym("x")]))
+}
+
+fn assert_float_close(node: symbolic_ir::IRNode, expected: f64) {
+    let symbolic_ir::IRNode::Float(actual) = node else {
+        panic!("expected Float({expected:?}), got {node}");
+    };
+    assert!(
+        (actual - expected).abs() < 1e-12,
+        "expected {expected:?}, got {actual:?}"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -266,6 +277,46 @@ fn sin_symbolic_stays() {
     assert_eq!(symbolic().eval(expr.clone()), expr);
 }
 
+#[test]
+fn reciprocal_hyperbolic_numeric_identities() {
+    let x = 1.25_f64;
+    assert_float_close(
+        symbolic().eval(apply(sym(COTH), vec![flt(x)])),
+        x.cosh() / x.sinh(),
+    );
+    assert_float_close(
+        symbolic().eval(apply(sym(SECH), vec![flt(x)])),
+        1.0 / x.cosh(),
+    );
+    assert_float_close(
+        symbolic().eval(apply(sym(CSCH), vec![flt(x)])),
+        1.0 / x.sinh(),
+    );
+    assert_eq!(symbolic().eval(apply(sym(SECH), vec![int(0)])), int(1));
+}
+
+#[test]
+fn reciprocal_hyperbolic_symbolic_stays_held() {
+    let coth = apply(sym(COTH), vec![sym("x")]);
+    let sech = apply(sym(SECH), vec![sym("x")]);
+    let csch = apply(sym(CSCH), vec![sym("x")]);
+    assert_eq!(symbolic().eval(coth.clone()), coth);
+    assert_eq!(symbolic().eval(sech.clone()), sech);
+    assert_eq!(symbolic().eval(csch.clone()), csch);
+}
+
+#[test]
+#[should_panic(expected = "Coth undefined at zero")]
+fn coth_zero_panics() {
+    symbolic().eval(apply(sym(COTH), vec![int(0)]));
+}
+
+#[test]
+#[should_panic(expected = "Csch undefined at zero")]
+fn csch_zero_panics() {
+    symbolic().eval(apply(sym(CSCH), vec![int(0)]));
+}
+
 // ---------------------------------------------------------------------------
 // Symbolic derivative handler
 // ---------------------------------------------------------------------------
@@ -474,7 +525,7 @@ fn derivative_hyperbolic_chain_rules() {
 #[test]
 fn derivative_reciprocal_hyperbolic_chain_rules() {
     assert_eq!(
-        d(apply(sym("Coth"), vec![sym("x")])),
+        d(apply(sym(COTH), vec![sym("x")])),
         apply(
             sym(NEG),
             vec![apply(
@@ -487,7 +538,7 @@ fn derivative_reciprocal_hyperbolic_chain_rules() {
         )
     );
     assert_eq!(
-        d(apply(sym("Sech"), vec![sym("x")])),
+        d(apply(sym(SECH), vec![sym("x")])),
         apply(
             sym(NEG),
             vec![apply(
@@ -500,7 +551,7 @@ fn derivative_reciprocal_hyperbolic_chain_rules() {
         )
     );
     assert_eq!(
-        d(apply(sym("Csch"), vec![sym("x")])),
+        d(apply(sym(CSCH), vec![sym("x")])),
         apply(
             sym(NEG),
             vec![apply(
@@ -508,6 +559,60 @@ fn derivative_reciprocal_hyperbolic_chain_rules() {
                 vec![
                     apply(sym(COSH), vec![sym("x")]),
                     apply(sym(POW), vec![apply(sym(SINH), vec![sym("x")]), int(2)]),
+                ],
+            )],
+        )
+    );
+
+    let inner = apply(
+        sym(ADD),
+        vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)],
+    );
+    assert_eq!(
+        d(apply(sym(COTH), vec![inner.clone()])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    int(2),
+                    apply(sym(POW), vec![apply(sym(SINH), vec![inner]), int(2)]),
+                ],
+            )],
+        )
+    );
+
+    let triple_x = apply(sym(MUL), vec![int(3), sym("x")]);
+    assert_eq!(
+        d(apply(sym(SECH), vec![triple_x.clone()])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    apply(
+                        sym(MUL),
+                        vec![int(3), apply(sym(SINH), vec![triple_x.clone()])]
+                    ),
+                    apply(sym(POW), vec![apply(sym(COSH), vec![triple_x]), int(2)]),
+                ],
+            )],
+        )
+    );
+
+    let half_x = apply(sym(DIV), vec![sym("x"), int(2)]);
+    assert_eq!(
+        d(apply(sym(CSCH), vec![half_x.clone()])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    apply(
+                        sym(MUL),
+                        vec![rat(1, 2), apply(sym(COSH), vec![half_x.clone()])],
+                    ),
+                    apply(sym(POW), vec![apply(sym(SINH), vec![half_x]), int(2)]),
                 ],
             )],
         )

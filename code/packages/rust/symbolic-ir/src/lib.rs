@@ -354,6 +354,9 @@ pub const TANH: &str = "Tanh";
 pub const ASINH: &str = "Asinh";
 pub const ACOSH: &str = "Acosh";
 pub const ATANH: &str = "Atanh";
+pub const COTH: &str = "Coth";
+pub const SECH: &str = "Sech";
+pub const CSCH: &str = "Csch";
 
 // Calculus
 pub const D: &str = "D";
@@ -427,6 +430,13 @@ mod tests {
     fn rational_keeps_numerator_zero() {
         // 0/anything == 0 (integer zero)
         assert_eq!(IRNode::rational(0, 5), IRNode::Integer(0));
+    }
+
+    #[test]
+    fn reciprocal_hyperbolic_heads_are_first_class_constants() {
+        assert_eq!(sym(COTH), IRNode::Symbol("Coth".to_string()));
+        assert_eq!(sym(SECH), IRNode::Symbol("Sech".to_string()));
+        assert_eq!(sym(CSCH), IRNode::Symbol("Csch".to_string()));
     }
 
     #[test]
