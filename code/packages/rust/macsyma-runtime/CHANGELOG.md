@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Wired `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a
+  Rust MACSYMA session assumption context so declared properties feed property
+  queries and assumption-backed relation checks.
+
 ## [0.1.1] - 2026-05-12
 
 ### Added
