@@ -1,7 +1,7 @@
 # cas-trig (Rust)
 
 Symbolic trigonometry operations over the shared CAS IR: exact special
-values, numeric evaluation, angle-addition expansion, and power reduction.
+values, numeric evaluation, angle-addition expansion, and trig reduction.
 
 ## Operations
 
@@ -15,7 +15,8 @@ values, numeric evaluation, angle-addition expansion, and power reduction.
 | `acos_eval(arg)` | Evaluate `acos(arg)` — numeric, unevaluated out-of-domain |
 | `trig_simplify(expr)` | Walk a tree and evaluate all trig nodes |
 | `expand_trig(expr)` | Expand `sin/cos(a±b)` via angle-addition formulas |
-| `power_reduce(expr)` | Reduce `sin²/cos²` to half-angle forms |
+| `trig_reduce(expr)` | Reduce `sinⁿ/cosⁿ` for n ≤ 6 and `sin(x)cos(x)` to multiple-angle forms |
+| `power_reduce(expr)` | Compatibility wrapper for `trig_reduce(expr)` |
 
 ## Special-value table
 
@@ -47,7 +48,7 @@ Each `*_eval` function applies three tiers in order:
 ## Usage
 
 ```rust
-use cas_trig::{sin_eval, cos_eval, tan_eval, expand_trig, power_reduce, PI};
+use cas_trig::{sin_eval, cos_eval, tan_eval, expand_trig, trig_reduce, PI};
 use symbolic_ir::{apply, int, rat, sym, SIN, POW, MUL};
 
 // sin(π/6) = 1/2  (exact)
@@ -63,7 +64,7 @@ let _expanded = expand_trig(&expr);
 
 // sin²(x) → half-angle form
 let sin_sq = apply(sym(POW), vec![apply(sym(SIN), vec![sym("x")]), int(2)]);
-let _reduced = power_reduce(&sin_sq);
+let _reduced = trig_reduce(&sin_sq);
 ```
 
 ## Stack position

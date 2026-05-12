@@ -1,5 +1,17 @@
 # Changelog — cas-trig (Rust)
 
+## Unreleased
+
+### Added
+
+- `trig_reduce(expr)` — recursively rewrites `Pow(Sin(x), n)` and
+  `Pow(Cos(x), n)` for `2 <= n <= 6`, plus matching `Sin(x) * Cos(x)`
+  products, to deterministic multiple-angle IR forms.
+
+### Changed
+
+- `power_reduce(expr)` is now a compatibility wrapper around `trig_reduce(expr)`.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added
