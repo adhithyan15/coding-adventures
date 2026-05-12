@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   exponential backoff, and exhausted-attempt decisions.
 - Added terminal job response status helpers and `JobResponseSummary` for
   compact runtime read models.
+- Added request and metadata summaries for payload-free queue/routing read
+  models.
 - Added terminal status and response-summary predicates for shared read-side
   success, failure, retry, cancel, and timeout classification.
 
