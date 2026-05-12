@@ -7,6 +7,7 @@ and verifies the recorded transcript.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -44,6 +45,10 @@ def _run(inputs: list[str]) -> list[str]:
         mode="sync",
     )
     return outputs
+
+
+def _output_lines(outputs: list[str]) -> list[str]:
+    return [line for output in outputs for line in output.splitlines()]
 
 
 # ---------------------------------------------------------------------------
@@ -142,6 +147,30 @@ def test_auto_terminator_appended() -> None:
     """Input without a trailing ``;`` or ``$`` is treated as ``;``."""
     out = _run(["2 + 3", ":quit"])
     assert any(line == "(%o1) 5" for line in out)
+
+
+def test_showtime_appends_timing_after_displayed_statement() -> None:
+    out = _output_lines(_run(["showtime:true$", "2 + 3;", ":quit"]))
+
+    assert any(line == "(%o2) 5" for line in out)
+    assert any(
+        re.fullmatch(r"Evaluation took \d+\.\d{6} seconds\.", line)
+        for line in out
+    )
+
+
+def test_showtime_false_disables_timing() -> None:
+    out = _output_lines(_run(["showtime:true$", "showtime:false$", "2 + 3;", ":quit"]))
+
+    assert any(line == "(%o3) 5" for line in out)
+    assert not any(line.startswith("Evaluation took ") for line in out)
+
+
+def test_showtime_reports_suppressed_statement_timing() -> None:
+    out = _output_lines(_run(["showtime:true$", "2 + 3$", ":quit"]))
+
+    assert not any(line.startswith("(%o2) ") for line in out)
+    assert any(line.startswith("Evaluation took ") for line in out)
 
 
 def test_eval_file_uses_same_session_semantics(tmp_path: Path) -> None:

@@ -242,7 +242,7 @@ The Risch integration suite is ~85% complete. Known remaining gaps:
 |---|---|
 | **Friendly error messages** | Syntax errors from the parser surface as raw Python exceptions. Should produce MACSYMA-style messages: `Incorrect syntax: …` with the offending token highlighted. |
 | **`?` help system** | No documentation lookup. A thin wrapper over docstrings would cover most cases. |
-| **`showtime`** | MACSYMA's wall-clock / GC timing per expression. Useful for performance work. |
+| **`showtime`** | Python REPL supports `showtime:true` / `showtime:false` wall-clock timing per expression. TypeScript and Rust runtime parity still pending. |
 
 ---
 
