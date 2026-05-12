@@ -36,6 +36,8 @@ Included surfaces:
   subscribers without draining their delivery queues
 - subscription inventory summaries for read-side event-stream filter coverage
   and queue pressure checks
+- composed event-bus health summaries for replay history, stream coverage, and
+  current queue pressure checks
 - command validation against entity capabilities and command modes
 - grant-backed command authorization for Chief of Staff agents and sandboxed
   tools

@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   counts over selected runtime replay windows.
 - `RuntimeSubscriptionInventorySummary` plus `subscription_inventory_summary()`
   for compact event-stream filter coverage and backlog pressure checks.
+- `RuntimeEventBusHealthSummary` plus event-bus/runtime helpers for composed
+  replay history, stream coverage, and queue pressure checks.
 - `RuntimePairingSessionInventorySummary` plus
   `pairing_session_inventory_summary_at()` for compact bridge-pairing status,
   expiry, and VaultRef completion counts.
