@@ -50,8 +50,9 @@ mod kernel_cache;
 
 pub use frame::{MessageFrame, MessageKind};
 pub use messages::{
-    BackendProfile, ErrorCode, ExecutorEvent, ExecutorRequest, ExecutorResponse,
-    KernelSource, OpTiming,
+    BackendProfile, ErrorCode, ExecutorEvent, ExecutorRequest, ExecutorResponse, KernelSource,
+    OpTiming, EXECUTOR_EVENT_VARIANTS, EXECUTOR_REQUEST_VARIANTS, EXECUTOR_RESPONSE_VARIANTS,
+    KERNEL_SOURCE_VARIANTS,
 };
 pub use transport::{Transport, TransportError};
 pub use local::LocalTransport;
@@ -73,3 +74,72 @@ pub use wire::WireError;
 ///   Forward-compatible with v1 senders: every existing variant
 ///   still encodes/decodes byte-identically.
 pub const PROTOCOL_VERSION: u32 = 2;
+
+/// Compact, payload-free description of the current protocol surface.
+///
+/// Hosts and catalogs can persist or compare this value without
+/// constructing sample [`ExecutorRequest`] payloads or exposing kernel
+/// source bytes in diagnostics.
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+pub struct ProtocolSurfaceSummary {
+    /// Payload protocol version expected inside [`MessageFrame`] payloads.
+    pub protocol_version: u32,
+    /// Top-level frame layout version.
+    pub frame_version: u8,
+    /// Number of [`MessageKind`] variants accepted by this crate.
+    pub message_kinds: usize,
+    /// Number of [`ExecutorRequest`] variants.
+    pub request_variants: usize,
+    /// Number of [`ExecutorResponse`] variants.
+    pub response_variants: usize,
+    /// Number of [`ExecutorEvent`] variants.
+    pub event_variants: usize,
+    /// Number of [`KernelSource`] variants.
+    pub kernel_source_variants: usize,
+    /// Whether `DispatchSpecialised` is part of this protocol surface.
+    pub supports_dispatch_specialised: bool,
+    /// Soft-refusal code used when a known request shape is not wired up.
+    pub not_implemented_code: ErrorCode,
+}
+
+impl ProtocolSurfaceSummary {
+    /// Summary for the protocol surface compiled into this crate.
+    pub const fn current() -> Self {
+        Self {
+            protocol_version: PROTOCOL_VERSION,
+            frame_version: frame::FRAME_VERSION,
+            message_kinds: 3,
+            request_variants: EXECUTOR_REQUEST_VARIANTS,
+            response_variants: EXECUTOR_RESPONSE_VARIANTS,
+            event_variants: EXECUTOR_EVENT_VARIANTS,
+            kernel_source_variants: KERNEL_SOURCE_VARIANTS,
+            supports_dispatch_specialised: true,
+            not_implemented_code: ErrorCode::NOT_IMPLEMENTED,
+        }
+    }
+}
+
+/// Return a compact, payload-free summary of the current executor
+/// protocol surface.
+pub const fn protocol_surface_summary() -> ProtocolSurfaceSummary {
+    ProtocolSurfaceSummary::current()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn protocol_surface_summary_reports_current_contract() {
+        let summary = protocol_surface_summary();
+        assert_eq!(summary.protocol_version, PROTOCOL_VERSION);
+        assert_eq!(summary.frame_version, frame::FRAME_VERSION);
+        assert_eq!(summary.message_kinds, 3);
+        assert_eq!(summary.request_variants, EXECUTOR_REQUEST_VARIANTS);
+        assert_eq!(summary.response_variants, EXECUTOR_RESPONSE_VARIANTS);
+        assert_eq!(summary.event_variants, EXECUTOR_EVENT_VARIANTS);
+        assert_eq!(summary.kernel_source_variants, KERNEL_SOURCE_VARIANTS);
+        assert!(summary.supports_dispatch_specialised);
+        assert_eq!(summary.not_implemented_code, ErrorCode::NOT_IMPLEMENTED);
+    }
+}

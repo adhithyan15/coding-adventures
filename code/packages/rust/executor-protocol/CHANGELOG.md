@@ -3,6 +3,18 @@
 All notable changes to `executor-protocol` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- `ProtocolSurfaceSummary` plus `protocol_surface_summary()` for
+  payload-free host/tool/catalog introspection of protocol version,
+  frame version, message counts, kernel-source counts, and specialised
+  dispatch support.
+- Public message-surface count constants:
+  `EXECUTOR_REQUEST_VARIANTS`, `EXECUTOR_RESPONSE_VARIANTS`,
+  `EXECUTOR_EVENT_VARIANTS`, and `KERNEL_SOURCE_VARIANTS`.
+
 ## [0.2.0] — 2026-05-05
 
 ### Added — MX05 Phase 4.1 protocol surface

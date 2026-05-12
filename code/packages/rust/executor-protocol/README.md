@@ -25,6 +25,8 @@ This crate defines:
 - **Local transport** — `LocalTransport` for in-process executors
 - **Async runner** — `block_on` (hand-rolled minimal poll loop, ~50 lines)
 - **Kernel cache** — `KernelCacheKey` (SipHash-based content key)
+- **Surface summary** — `ProtocolSurfaceSummary` for host/catalog
+  introspection without constructing protocol payloads
 
 V1 ships only `LocalTransport`.  Future transports (TCP, Unix sockets,
 ZeroMQ, NATS, WebSocket) are designed for, not shipped.
@@ -98,6 +100,26 @@ format on every `request()` call in **debug builds**.  This catches
 "I accidentally put a non-serializable type in the protocol" bugs at
 PR-test time.  Release builds skip the round-trip.
 
+## Protocol surface summary
+
+`protocol_surface_summary()` returns a compact, payload-free snapshot of
+the crate's executor boundary:
+
+```rust
+use executor_protocol::{
+    protocol_surface_summary, ErrorCode, PROTOCOL_VERSION,
+};
+
+let summary = protocol_surface_summary();
+assert_eq!(summary.protocol_version, PROTOCOL_VERSION);
+assert!(summary.supports_dispatch_specialised);
+assert_eq!(summary.not_implemented_code, ErrorCode::NOT_IMPLEMENTED);
+```
+
+Chief-of-Staff host/tool/catalog code can persist this summary in
+capability catalogs without logging kernel source text, buffers, or
+sample message payloads.
+
 ## Security
 
 The wire decoder accepts untrusted input (a remote executor could be
@@ -111,7 +133,7 @@ and `compute-ir`:
 - Varint capped at 10 bytes
 - UTF-8 validated for string fields
 - Truncation-at-every-position and 1024-iteration random-byte fuzz tests
-- All 12 message variants exhaustively round-tripped
+- Top-level message variants exhaustively round-tripped
 
 ## Testing
 
@@ -135,7 +157,7 @@ Test methodology (per spec MX03 §"Test methodology"):
 
 ```
 $ cargo tree -p executor-protocol
-executor-protocol v0.1.0
+executor-protocol v0.2.0
 ├── compute-ir v0.1.0
 │   └── matrix-ir v0.1.0
 └── matrix-ir v0.1.0

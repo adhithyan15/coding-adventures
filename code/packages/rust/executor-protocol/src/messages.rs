@@ -12,6 +12,18 @@
 
 use compute_ir::{BufferId, ComputeGraph, ExecutorId, KernelId};
 
+/// Number of [`KernelSource`] variants in the current protocol surface.
+pub const KERNEL_SOURCE_VARIANTS: usize = 7;
+
+/// Number of [`ExecutorRequest`] variants in the current protocol surface.
+pub const EXECUTOR_REQUEST_VARIANTS: usize = 11;
+
+/// Number of [`ExecutorResponse`] variants in the current protocol surface.
+pub const EXECUTOR_RESPONSE_VARIANTS: usize = 11;
+
+/// Number of [`ExecutorEvent`] variants in the current protocol surface.
+pub const EXECUTOR_EVENT_VARIANTS: usize = 3;
+
 /// Kernel source code in the per-backend language.  V1 ships with a
 /// fixed set of variants matching the GPU APIs we have in scope; the
 /// `Native` variant is an escape hatch for backends whose source
@@ -390,10 +402,109 @@ mod tests {
             },
         ];
         let mut tags: Vec<u8> = reqs.iter().map(|r| r.wire_tag()).collect();
+        assert_eq!(tags.len(), EXECUTOR_REQUEST_VARIANTS);
         tags.sort();
         let len = tags.len();
         tags.dedup();
         assert_eq!(tags.len(), len);
+    }
+
+    #[test]
+    fn response_tags_unique() {
+        let responses = [
+            ExecutorResponse::Registered {
+                executor_id: ExecutorId(0),
+            },
+            ExecutorResponse::KernelReady {
+                kernel_id: KernelId(0),
+            },
+            ExecutorResponse::BufferAllocated {
+                buffer: BufferId(0),
+            },
+            ExecutorResponse::BufferUploaded {
+                buffer: BufferId(0),
+            },
+            ExecutorResponse::DispatchDone {
+                job_id: 0,
+                timings: Vec::new(),
+            },
+            ExecutorResponse::BufferData {
+                buffer: BufferId(0),
+                data: Vec::new(),
+            },
+            ExecutorResponse::BufferFreed,
+            ExecutorResponse::Cancelled { job_id: 0 },
+            ExecutorResponse::Alive {
+                profile: stub_profile(),
+            },
+            ExecutorResponse::ShuttingDown,
+            ExecutorResponse::Error {
+                code: ErrorCode::NOT_IMPLEMENTED,
+                message: String::new(),
+                job_id: None,
+            },
+        ];
+        let mut tags: Vec<u8> = responses.iter().map(|r| r.wire_tag()).collect();
+        assert_eq!(tags.len(), EXECUTOR_RESPONSE_VARIANTS);
+        tags.sort();
+        let len = tags.len();
+        tags.dedup();
+        assert_eq!(tags.len(), len);
+    }
+
+    #[test]
+    fn event_tags_unique() {
+        let events = [
+            ExecutorEvent::BufferLost {
+                buffer: BufferId(0),
+                reason: String::new(),
+            },
+            ExecutorEvent::ProfileUpdated {
+                profile: stub_profile(),
+            },
+            ExecutorEvent::ShuttingDown,
+        ];
+        let mut tags: Vec<u8> = events.iter().map(|e| e.wire_tag()).collect();
+        assert_eq!(tags.len(), EXECUTOR_EVENT_VARIANTS);
+        tags.sort();
+        let len = tags.len();
+        tags.dedup();
+        assert_eq!(tags.len(), len);
+    }
+
+    #[test]
+    fn kernel_source_variant_count_is_documented() {
+        let sources = [
+            KernelSource::Msl {
+                code: String::new(),
+                entry: String::new(),
+            },
+            KernelSource::CudaC {
+                code: String::new(),
+                entry: String::new(),
+            },
+            KernelSource::Glsl {
+                code: String::new(),
+                entry: String::new(),
+            },
+            KernelSource::SpirV {
+                bytes: Vec::new(),
+                entry: String::new(),
+            },
+            KernelSource::Wgsl {
+                code: String::new(),
+                entry: String::new(),
+            },
+            KernelSource::OpenClC {
+                code: String::new(),
+                entry: String::new(),
+            },
+            KernelSource::Native {
+                backend: String::new(),
+                blob: Vec::new(),
+            },
+        ];
+        assert_eq!(sources.len(), KERNEL_SOURCE_VARIANTS);
     }
 
     #[test]
