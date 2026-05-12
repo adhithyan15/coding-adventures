@@ -8,6 +8,12 @@
   forward-elimination `rank(m)` for integer/rational matrices.
 - Row-reduction tests covering identity, zero, full-rank, singular, rational
   dependent rows, wide/tall rank, and symbolic-entry errors.
+- Exact rational `norm(m)` and `frobenius_norm(m)` APIs, returning exact
+  integer/rational results or `Sqrt(...)` IR when needed.
+- Exact rational `lu_decompose(m)` with partial pivoting, returning
+  `List(L, U, P)`.
+- Exact rational `nullspace(m)`, `columnspace(m)`, and `rowspace(m)` APIs,
+  each returning basis matrices inside `List(...)` IR nodes.
 
 ## [0.1.0] — 2026-04-27
 

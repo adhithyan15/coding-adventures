@@ -93,14 +93,14 @@ pub fn rank(m: &IRNode) -> MatrixResult<IRNode> {
     Ok(int(rank as i64))
 }
 
-fn matrix_to_fracs(m: &IRNode) -> MatrixResult<Vec<Vec<Frac>>> {
+pub(crate) fn matrix_to_fracs(m: &IRNode) -> MatrixResult<Vec<Vec<Frac>>> {
     rows_of(m)?
         .into_iter()
         .map(|row| row.into_iter().map(entry_to_frac).collect())
         .collect()
 }
 
-fn entry_to_frac(entry: IRNode) -> MatrixResult<Frac> {
+pub(crate) fn entry_to_frac(entry: IRNode) -> MatrixResult<Frac> {
     match entry {
         IRNode::Integer(value) => Ok(Frac::from_i64(value)),
         IRNode::Rational(numer, denom) => Ok(Frac::new(numer as i128, denom as i128)),
@@ -110,7 +110,7 @@ fn entry_to_frac(entry: IRNode) -> MatrixResult<Frac> {
     }
 }
 
-fn fracs_to_matrix(rows: Vec<Vec<Frac>>) -> MatrixResult<IRNode> {
+pub(crate) fn fracs_to_matrix(rows: Vec<Vec<Frac>>) -> MatrixResult<IRNode> {
     rows.into_iter()
         .map(|row| row.into_iter().map(Frac::to_irnode).collect())
         .collect::<MatrixResult<Vec<Vec<IRNode>>>>()
@@ -121,17 +121,17 @@ fn fracs_to_matrix(rows: Vec<Vec<Frac>>) -> MatrixResult<IRNode> {
 ///
 /// `denom > 0`; the sign is always carried by `numer`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct Frac {
-    numer: i128,
-    denom: i128,
+pub(crate) struct Frac {
+    pub(crate) numer: i128,
+    pub(crate) denom: i128,
 }
 
 impl Frac {
-    fn zero() -> Self {
+    pub(crate) fn zero() -> Self {
         Self { numer: 0, denom: 1 }
     }
 
-    fn new(numer: i128, denom: i128) -> Self {
+    pub(crate) fn new(numer: i128, denom: i128) -> Self {
         assert!(denom != 0, "Frac denominator must not be zero");
         if numer == 0 {
             return Self::zero();
@@ -148,18 +148,25 @@ impl Frac {
         }
     }
 
-    fn from_i64(value: i64) -> Self {
+    pub(crate) fn from_i64(value: i64) -> Self {
         Self {
             numer: value as i128,
             denom: 1,
         }
     }
 
-    fn is_zero(self) -> bool {
+    pub(crate) fn is_zero(self) -> bool {
         self.numer == 0
     }
 
-    fn to_irnode(self) -> MatrixResult<IRNode> {
+    pub(crate) fn abs(self) -> Self {
+        Self {
+            numer: self.numer.abs(),
+            denom: self.denom,
+        }
+    }
+
+    pub(crate) fn to_irnode(self) -> MatrixResult<IRNode> {
         let numer = i64::try_from(self.numer).map_err(|_| {
             MatrixError(format!(
                 "row_reduce/rank: numerator overflow: {}",

@@ -46,16 +46,22 @@
 
 pub mod arithmetic;
 pub mod determinant;
+pub mod lu;
 pub mod matrix;
+pub mod norms;
 pub mod rowreduce;
+pub mod subspaces;
 
 pub use arithmetic::{
     add_matrices, dot, identity_matrix, scalar_multiply, sub_matrices, trace, transpose,
     zero_matrix,
 };
 pub use determinant::{determinant, inverse};
+pub use lu::lu_decompose;
 pub use matrix::{
     dimensions, get_entry, is_matrix, matrix, num_cols, num_rows, rows_of, MatrixError,
     MatrixResult, MATRIX,
 };
+pub use norms::{frobenius_norm, norm};
 pub use rowreduce::{rank, row_reduce};
+pub use subspaces::{columnspace, nullspace, rowspace};
