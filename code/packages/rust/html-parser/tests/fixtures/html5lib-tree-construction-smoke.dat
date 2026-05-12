@@ -20843,6 +20843,37 @@ eof
 |           "3"
 |         <table>
 
+#source tests26.dat:1251
+#data
+<!DOCTYPE html><body><b><nobr>1<table><tr><td><nobr></b><i><nobr>2<nobr></i>3
+#errors
+(1,56): unexpected-end-tag
+(1,65): unexpected-start-tag-implies-end-tag
+(1,65): adoption-agency-1.3
+(1,72): unexpected-start-tag-implies-end-tag
+(1,76): adoption-agency-1.3
+(1,77): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       <nobr>
+|         "1"
+|         <table>
+|           <tbody>
+|             <tr>
+|               <td>
+|                 <nobr>
+|                   <i>
+|                 <i>
+|                   <nobr>
+|                     "2"
+|                   <nobr>
+|                 <nobr>
+|                   "3"
+
 #source tests26.dat:1257
 #data
 <p><code x</code></p>
