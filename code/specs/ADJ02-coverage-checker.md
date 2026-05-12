@@ -1,12 +1,93 @@
-# ADJ02 — Coverage Checker: Structural Tree Check Over the Hierarchical IR
+# ADJ02 — Coverage Checker: Flat Tiling and DAG Acyclicity Over the Graph IR
 
-> **Pending revision to v3 (2026-05-12)** to match
-> [`ADJ01 v3`](ADJ01-adjudication-ir-grammar.md): coverage becomes a
-> *flat tiling* check over the union of node and edge `source_spans`
-> (no recursive tree descent), and a separate **DAG acyclicity**
-> invariant is added. The v2 content below describes the previous
-> structural-tree check and is preserved until the v3 revision lands
-> alongside the `adjudication-coverage` crate's v3 update.
+> **Revision v3 (2026-05-12): flat tiling + DAG acyclicity.** v2's
+> recursive tree-tiling check (children tile parent's spans,
+> recursively) is replaced by a **flat tile** of the union of every
+> node and edge `source_spans` against `[0, len(document))`, with a
+> companion **DAG acyclicity** invariant added across the typed
+> edge graph. Both flow from the [ADJ01 v3](ADJ01-adjudication-ir-grammar.md)
+> shift from a hierarchical decomposition tree to a multi-directed
+> acyclic graph IR.
+>
+> Two coverage rules in one check:
+>
+> 1. **Flat tile.** The union of `source_spans` across all nodes and
+>    all edges must cover `[0, len(document))` exactly once. No gaps.
+>    No overlaps. Synthesized objects (Query nodes with empty spans,
+>    Entity nodes with empty spans, engine-emitted edges with empty
+>    spans) are exempt from tiling.
+> 2. **Acyclicity.** The directed graph `(Nodes, Edges)` formed by
+>    treating every edge as `source → target` must be acyclic. The
+>    check applies uniformly across all `EdgeRelation`s — `Excepts`,
+>    `Refers`, `Contains`, …, even `Refines` and `Supersedes` that
+>    could otherwise loop on amendment chains.
+>
+> Implementation lives in [`adjudication-coverage`](../packages/rust/adjudication-coverage),
+> which is now a thin façade over `adjudication_ir::validate` plus
+> the document-length-aware end-gap check and the
+> `Discarded(Unparseable)` hard rule. Cycle detection is in
+> `adjudication_ir::validate` (`check_acyclicity` — iterative
+> three-colour DFS, `O(|V| + |E|)`, stack-safe by construction).
+>
+> The v2 prose below is preserved as the historical record of why
+> the framework moved from a tagger-based check to a structural
+> check; the v3 algorithm is a generalisation of that move.
+
+## v3 Coverage Invariant (formal)
+
+```text
+Let N = set of IRNodes, E = set of IREdges,
+    spans(x) = x.source_spans for any node or edge x.
+
+Let exempt(x) = (x.kind == Query AND spans(x) is empty)
+            OR (x.kind == Entity AND spans(x) is empty)
+            OR (x is an IREdge AND spans(x) is empty).
+
+Coverage holds iff:
+
+    ⋃ { spans(x) : x ∈ N ∪ E, NOT exempt(x) }
+       = [0, len(document))
+
+    AND no byte appears in more than one source_span across N ∪ E.
+```
+
+The check is `O((|N| + |E|) · S)` time where `S` is the maximum
+span count per object, sortable to `O(K log K)` where `K` is the
+total span count — well under a millisecond for any reasonable
+document.
+
+## v3 Acyclicity Invariant (formal)
+
+```text
+Let G = (N, →) where n₁ → n₂ iff ∃ e ∈ E with
+    e.source = n₁ AND e.target = n₂.
+
+Acyclicity holds iff G has no directed cycle:
+    ∀ n ∈ N, ¬∃ path n → n₁ → n₂ → … → n
+```
+
+Detection: iterative three-colour DFS (`White / Gray / Black`).
+When a `Gray → Gray` edge is followed, the cycle's participants
+(from the second Gray to the end of the current path) are returned
+as the violation. The algorithm is iterative for stack safety —
+adversarial inputs with long linear chains cannot blow the OS
+thread stack.
+
+## v3 ADJ06 Clarification Mapping
+
+A coverage failure produces one of:
+
+| Violation | Clarification question |
+|---|---|
+| `CoverageGap { missing_ranges }` | "Bytes `[s, e)` aren't accounted for. Either emit a node/edge that covers them, or emit a `Discarded` with a reason." |
+| `CoverageOverlap { ranges, participants }` | "Bytes `[s, e)` are claimed by both `<participant₁>` and `<participant₂>`. Decide which owns them." |
+| `GraphCycle { participants }` | "Edges form a cycle through `[participant ids]`. Break it: drop one edge or re-target a node." |
+| `UnparseableDiscarded { node_id }` | "Node `<id>` was discarded as Unparseable. Re-extract: every span must produce a typed claim." |
+
+The v2 `ChildrenDoNotTileParent` and `NonTextRunHasChildren`
+violations are gone — the graph IR has no tree shape to violate.
+
+---
 
 > **Revision v2 (2026-05-11): structural coverage.** v1 of this spec
 > defined coverage as a token-level check driven by a language-
