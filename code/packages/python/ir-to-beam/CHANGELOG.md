@@ -1,5 +1,38 @@
 # Changelog — ir-to-beam
 
+## 0.6.0 — 2026-05-12 — TW04 Phase 4f host-call bridge (IrOp.SYSCALL support)
+
+Adds `IrOp.SYSCALL` lowering to the BEAM backend, completing the host-call
+bridge that was left open in Phase 4f (multi-module lowering).  Previously,
+any `host/write-byte` / `host/read-byte` / `host/exit` reference in a
+multi-module Twig program was emitted as `call_ext` to a non-existent
+`host` BEAM module, causing a runtime `undef` error.
+
+### Added — `_emit_syscall` handler + `IrOp.SYSCALL` in `_HANDLERS`
+
+`IrOp.SYSCALL num arg_reg` now lowers to real Erlang BIF / stdlib calls:
+
+| Syscall | Erlang target | BEAM emission |
+|---------|---------------|---------------|
+| `1` (write-byte) | `io:put_chars/1` | `test_heap 2,0` + `put_list y{arg}, nil, x0` + `call_ext 1 io:put_chars/1`; stores integer 0 into `y{1}` |
+| `2` (read-byte)  | `io:get_chars/2` | `call_ext 2 io:get_chars/2` with `''` and `1`; branches on atom (eof→255) vs list (extracts `hd`); result in `y{1}` |
+| `10` (exit)      | `erlang:halt/1`  | `move y{arg}, x0` + `call_ext 1 erlang:halt/1` |
+
+All other syscall numbers raise `BEAMBackendError`.
+
+### Tests — `TestSyscallLowering` (14 new tests in `test_lower_basic.py`)
+
+- Structural lowering tests for SYSCALL 1, 2, and 10 (encode + decode roundtrip)
+- Opcode presence assertions (`put_list` for write-byte, `test_heap` for cons allocation)
+- Error path tests (unknown syscall number, wrong operand count)
+- Updated `test_unsupported_opcode_rejected_with_clear_message` to use
+  `IrOp.SYSCALL_CHECKED` (which is still unsupported) instead of the now-supported
+  `IrOp.SYSCALL`
+
+Total tests: **54** (was 40). Coverage: **87%** (was 87%).
+
+---
+
 ## 0.5.0 — 2026-05-04 — TW04 Phase 4f (multi-module BEAM lowering)
 
 Extends the BEAM backend to support cross-module calls and correct

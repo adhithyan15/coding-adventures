@@ -357,15 +357,30 @@ cleanly to anything.
    - **Acceptance criterion** (from spec): `(a/math/add 17 25)` → exit 0,
      stdout `b'\x2a'` (42) on real `java`.  ✓
 
-5. **Phase 4e — CLR module lowering.**  Each module → one
-   `TypeDef` in a multi-type assembly.
+5. **Phase 4e — CLR module lowering.**  **Status: shipped —
+   `ir-to-cil-bytecode` v0.12.0, `twig-clr-compiler` v0.7.0/0.8.0.**
+   Each module → one `TypeDef` in a multi-type assembly.  Cross-module
+   CALL → `call`/`callvirt` into the correct TypeDef.  Host syscalls
+   inline `System.Console.Write(char)` / `System.Console.Read()` /
+   `System.Environment.Exit(int)`.  `BEAMBackendConfig.inline_host_syscalls=True`
+   activates inlining; `local_count` floored at `call_register_count` to
+   fix `InvalidProgramException`.
 
-6. **Phase 4f — BEAM module lowering.**  Each Twig module →
-   one `.beam` file.  Almost free given existing BEAM plumbing.
+6. **Phase 4f — BEAM module lowering.**  **Status: shipped —
+   `ir-to-beam` v0.5.0/0.6.0, `twig-beam-compiler` v0.5.0/0.9.0.**
+   Each Twig module compiles to one `.beam` file.  All `.beam` files
+   are loaded in the same `erl` session so cross-module calls resolve at
+   runtime.  Host syscall bridge shipped in v0.6.0 / v0.9.0: `host/*`
+   calls emit `IrOp.SYSCALL` instead of `call_ext`, lowered to real
+   Erlang BIFs (`io:put_chars/1`, `io:get_chars/2`, `erlang:halt/1`).
 
-7. **Phase 4g — Stdlib in Twig.**  Write `stdlib/io.tw`,
-   `stdlib/list.tw`, `stdlib/print.tw` etc. as real Twig
-   source.  Driver ships them alongside the compiler.
+7. **Phase 4g — Stdlib in Twig.**  **Status: shipped —
+   `twig` v0.5.0, `twig-jvm-compiler` v0.8.0, `twig-clr-compiler` v0.8.0,
+   `twig-beam-compiler` v0.6.0/0.9.0.**
+   Bundled stdlib modules `stdlib/io`, `stdlib/list`, `stdlib/print`
+   shipped in `twig` package.  `resolve_modules(include_stdlib=True)`
+   (default) auto-appends the stdlib search path.  End-to-end runtime
+   tests pass on JVM, CLR, and BEAM (erl).
 
 After 4g you can write `(module hello (import io))
 (io/println 42)` and it compiles + runs on three real
