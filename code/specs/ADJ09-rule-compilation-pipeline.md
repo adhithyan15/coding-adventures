@@ -65,6 +65,17 @@ publication date).
 
 ## Pipeline Stages
 
+> **Note on Stage 0.** ADJ09 assumes the rulebook text already exists.
+> When it doesn't — i.e., no published regulation is available, or
+> the demo wants to bootstrap a rulebook from the LLM's own training
+> data — [ADJ14](ADJ14-rule-elicitation.md) defines a Stage 0
+> *Rule Elicitation* phase whose output (`Rulebook.source_text`) is
+> the input to Stage 1 below. A Stage-0-sourced rulebook is marked
+> `Tentative` until an expert review (per §"Expert Review Workflow")
+> promotes it to `Reviewed`. The Stages 1–6 in this document are
+> source-agnostic: an external regulatory document and a Stage 0
+> elicitation both feed Stage 1 identically.
+
 ### Stage 1 — Segmentation
 
 The rulebook is segmented into adjudicable units. A unit is the
