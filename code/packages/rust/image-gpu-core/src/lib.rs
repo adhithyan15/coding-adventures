@@ -66,7 +66,10 @@ pub use pipeline::last_executor;
 /// invocation.  The two converge under normal operation; they diverge
 /// briefly while installs are in flight or when the emitter doesn't
 /// support a given `SpecKey` shape.
-pub use pipeline::{profiler_observations, spec_cache_len, specialised_install_count};
+pub use pipeline::{
+    profiler_observations, spec_cache_len, specialised_dispatch_count,
+    specialised_install_count,
+};
 
 use matrix_ir::{DType, GraphBuilder, Shape};
 

@@ -242,6 +242,29 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.4 landed — dispatch-routing half of the loop)**:
+> `image-gpu-core` v0.8.0 closes the dispatch side of the routing
+> loop.  When a placed graph has exactly one non-Const Compute op and
+> that op's specialised kernel is installed on the metal executor,
+> image-gpu-core routes the dispatch through
+> `ExecutorRequest::DispatchSpecialised` instead of the generic
+> `Dispatch { graph }` request.  Strategy: strip the single Compute
+> op from `placed.ops`, fire a prep `Dispatch` so matrix-metal's
+> existing handler allocates buffers and uploads constants under
+> planner-assigned BufferIds (sidestepping the
+> protocol-`AllocBuffer`-uses-server-IDs mismatch), then fire one
+> `DispatchSpecialised { handle, inputs, outputs }` where `inputs` is
+> `ir_op.inputs()` trimmed to the installed kernel's
+> `input_buffer_count` (so an Add-with-folded-RHS kernel only sees
+> the LHS buffer).  New public `specialised_dispatch_count()` counter
+> tracks how many invocations went through `DispatchSpecialised`.
+> Test `dispatch_specialised_via_produces_correct_output` builds an
+> `Op::Add(A=[1,2,3,4], B=[7,7,7,7])` graph manually pinned to metal,
+> installs the Add+7.0 specialised kernel directly, and verifies the
+> downloaded output is `[8, 9, 10, 11]` — the specialised kernel
+> matches the generic Add bit-for-bit.  Limited to single-Compute-op
+> graphs in V0.8.0; multi-op routing is later phase work.
+
 > **Implementation status (Phase 4.3 landed — runtime auto-installer, install half of the loop)**:
 > `image-gpu-core` v0.7.0 closes the install side of the specialised-
 > kernel loop.  `drive_specialisation` now consumes the
