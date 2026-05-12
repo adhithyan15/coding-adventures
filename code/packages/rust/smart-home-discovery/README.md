@@ -21,6 +21,8 @@ write credentials. It gives discovery workers a shared shape for:
   action, priority, human-action, sort, and limit selectors
 - source/address/time preference scoring for duplicate bridge candidates
 - catalog-level fresh/stale/expired signal summaries with next transition time
+- catalog-level discovery record summaries by source, confidence, pairing
+  requirement, address coverage, and freshness
 - freshness filtering for supervisor/discovery loops
 - projection into unpaired `smart-home-core::Bridge` records
 
