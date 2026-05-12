@@ -15,8 +15,8 @@ It is deliberately more structured than the existing CAS `BlobStore` trait:
 ## What this crate owns
 
 - `StorageRecord`, `StorageRecordSummary`, `StoragePutInput`, `StorageStat`,
-  `StoragePage`, `StorageSummaryPage`, `StorageSummaryPageOverview`, and
-  `StorageLease`
+  `StoragePage`, `StorageSummaryPage`, `StorageSummaryPageOverview`,
+  `StorageRecordInventorySummary`, and `StorageLease`
 - `StorageLeaseSummary` and `StorageLeaseInventorySummary` for read-side
   advisory lease telemetry without exposing lease tokens
 - `StorageBackend`, the backend trait implemented by local-folder, SQLite, and
@@ -114,6 +114,9 @@ bodies, while simple implementations can rely on the default projection from
 `stat()` and `list()`.
 `StorageSummaryPage::overview()` provides aggregate counts and page-boundary
 keys for cheap runtime telemetry over those body-free listings.
+`StorageRecordInventorySummary` rolls record summaries into namespace, body,
+metadata, content-family, timestamp, and key-boundary facts for store health
+views that do not need bodies.
 `StorageLease::summary_at()` and `StorageLeaseInventorySummary` provide the same
 compact read-side shape for advisory lease status and expiry windows.
 
