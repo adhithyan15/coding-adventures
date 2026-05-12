@@ -103,6 +103,19 @@ pub fn ir_to_integer_poly(node: &IRNode, variable: &IRNode) -> Option<Vec<i64>> 
     trim_trailing_zeros(out)
 }
 
+pub fn ir_to_cleared_integer_poly(node: &IRNode, variable: &IRNode) -> Option<Vec<i64>> {
+    let coeffs = ir_to_rational_poly(node, variable)?;
+    let lcm = coeffs
+        .iter()
+        .try_fold(1_i64, |acc, coeff| checked_lcm(acc, coeff.denom))?;
+
+    let mut out = Vec::with_capacity(coeffs.len());
+    for coeff in coeffs {
+        out.push(coeff.numer.checked_mul(lcm / coeff.denom)?);
+    }
+    trim_trailing_zeros(out)
+}
+
 fn ir_to_rational_poly(node: &IRNode, variable: &IRNode) -> Option<Vec<Rational>> {
     if node == variable {
         return Some(vec![Rational::ZERO, Rational::ONE]);
@@ -175,6 +188,20 @@ fn trim_trailing_zeros(mut poly: Vec<i64>) -> Option<Vec<i64>> {
         poly.pop();
     }
     Some(poly)
+}
+
+fn checked_lcm(lhs: i64, rhs: i64) -> Option<i64> {
+    let gcd = integer_gcd(lhs.unsigned_abs(), rhs.unsigned_abs()) as i64;
+    (lhs / gcd).checked_mul(rhs)
+}
+
+fn integer_gcd(mut a: u64, mut b: u64) -> u64 {
+    while b != 0 {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    a
 }
 
 fn poly_add(lhs: &[Rational], rhs: &[Rational]) -> Vec<Rational> {

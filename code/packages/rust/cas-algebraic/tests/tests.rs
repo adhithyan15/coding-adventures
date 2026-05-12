@@ -1,11 +1,19 @@
 use cas_algebraic::{
-    alg_factor_ir, extract_radical_d, factor_over_extension, rational_square_root,
-    try_split_depressed_quartic, try_split_quadratic, Rational,
+    alg_factor_handler, alg_factor_handler_with_eval, alg_factor_ir,
+    build_alg_factor_handler_table, extract_radical_d, factor_over_extension, rational_square_root,
+    try_split_depressed_quartic, try_split_quadratic, Rational, ALG_FACTOR,
 };
-use symbolic_ir::{apply, int, sym, ADD, MUL, POW, SQRT, SUB};
+use symbolic_ir::{apply, int, rat, sym, IRApply, IRNode, ADD, MUL, POW, SQRT, SUB};
 
 fn sqrt_d(d: i64) -> symbolic_ir::IRNode {
     apply(sym(SQRT), vec![int(d)])
+}
+
+fn alg_factor_apply(args: Vec<IRNode>) -> IRApply {
+    IRApply {
+        head: sym(ALG_FACTOR),
+        args,
+    }
 }
 
 #[test]
@@ -105,4 +113,109 @@ fn ir_adapter_returns_none_for_non_polynomial() {
     let x = sym("x");
     let sin_x = apply(sym("Sin"), vec![x.clone()]);
     assert!(alg_factor_ir(&sin_x, &sqrt_d(2), &x).is_none());
+}
+
+#[test]
+fn handler_table_registers_alg_factor() {
+    let table = build_alg_factor_handler_table();
+    assert!(table.contains_key(ALG_FACTOR));
+}
+
+#[test]
+fn handler_returns_original_for_wrong_arity() {
+    let expr = alg_factor_apply(vec![int(1)]);
+    let original = IRNode::Apply(Box::new(expr.clone()));
+
+    assert_eq!(alg_factor_handler(&expr), original);
+}
+
+#[test]
+fn handler_returns_original_for_non_sqrt_extension() {
+    let x = sym("x");
+    let poly = apply(
+        sym(SUB),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(2)],
+    );
+    let expr = alg_factor_apply(vec![poly, int(2)]);
+    let original = IRNode::Apply(Box::new(expr.clone()));
+
+    assert_eq!(alg_factor_handler(&expr), original);
+}
+
+#[test]
+fn handler_returns_original_for_non_polynomial() {
+    let x = sym("x");
+    let sin_x = apply(sym("Sin"), vec![x.clone()]);
+    let expr = alg_factor_apply(vec![sin_x, sqrt_d(2)]);
+    let original = IRNode::Apply(Box::new(expr.clone()));
+
+    assert_eq!(alg_factor_handler(&expr), original);
+}
+
+#[test]
+fn handler_returns_original_for_irreducible_polynomial() {
+    let x = sym("x");
+    let x2_plus_1 = apply(
+        sym(ADD),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+    );
+    let expr = alg_factor_apply(vec![x2_plus_1, sqrt_d(2)]);
+    let original = IRNode::Apply(Box::new(expr.clone()));
+
+    assert_eq!(alg_factor_handler(&expr), original);
+}
+
+#[test]
+fn handler_factors_x2_minus_2_over_sqrt_two() {
+    let x = sym("x");
+    let x2_minus_2 = apply(
+        sym(SUB),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(2)],
+    );
+    let expr = alg_factor_apply(vec![x2_minus_2, sqrt_d(2)]);
+
+    let result = alg_factor_handler(&expr);
+
+    match result {
+        IRNode::Apply(apply) => assert_eq!(apply.head, sym(MUL)),
+        other => panic!("expected product IR, got {other:?}"),
+    }
+}
+
+#[test]
+fn handler_clears_rational_coefficients_before_factoring() {
+    let x = sym("x");
+    let half_x2 = apply(
+        sym(MUL),
+        vec![rat(1, 2), apply(sym(POW), vec![x.clone(), int(2)])],
+    );
+    let poly = apply(sym(SUB), vec![half_x2, int(1)]);
+    let expr = alg_factor_apply(vec![poly, sqrt_d(2)]);
+
+    let result = alg_factor_handler(&expr);
+
+    match result {
+        IRNode::Apply(apply) => assert_eq!(apply.head, sym(MUL)),
+        other => panic!("expected product IR after clearing denominators, got {other:?}"),
+    }
+}
+
+#[test]
+fn handler_evaluates_polynomial_before_conversion() {
+    let x = sym("x");
+    let normalized = apply(
+        sym(SUB),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(2)],
+    );
+    let expr = alg_factor_apply(vec![apply(sym("NormalizeMe"), vec![x]), sqrt_d(2)]);
+    let original = IRNode::Apply(Box::new(expr.clone()));
+
+    assert_eq!(alg_factor_handler(&expr), original);
+
+    let result = alg_factor_handler_with_eval(&expr, |_| normalized);
+
+    match result {
+        IRNode::Apply(apply) => assert_eq!(apply.head, sym(MUL)),
+        other => panic!("expected product IR after eval callback, got {other:?}"),
+    }
 }
