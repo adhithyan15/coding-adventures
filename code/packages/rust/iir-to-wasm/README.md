@@ -102,9 +102,14 @@ tests/
 |-------|-----------|
 | `EmptyModule` | Module has no functions |
 | `EmptyFunction` | A function has no instructions |
+| `ClosureOpcode` | op is `alloc_closure` or `call_closure` — closures require the BEAM backend |
 | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
 | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
 | `UnsupportedOp` | op is `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`, `alloc`, `box`, `unbox`, `field_load`, `field_store`, `is_null`, or `safepoint` |
+
+> **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
+> closure opcodes) are BEAM-only.  Using them in a WASM module returns a clear
+> `ClosureOpcode` error rather than the generic `UntypedInstruction` message.
 
 ## Relationship to other crates
 

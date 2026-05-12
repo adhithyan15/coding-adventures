@@ -2,6 +2,29 @@
 
 All notable changes to this crate are documented here.
 
+## [0.3.0] — 2026-05-12
+
+### Added (LANG35 — Closure Backend Integration)
+
+#### Improved `ClosureOpcode` validator error
+
+- `validate_iir_for_clr` now emits a dedicated `ClosureOpcode` error message
+  (format: `"[fn_name] ClosureOpcode: alloc_closure/call_closure require the
+  BEAM backend — CLR does not support heap-allocated closures"`) when it
+  encounters `alloc_closure` or `call_closure`.
+- Previously these fell through to the generic `UntypedInstruction` path;
+  the closure check now runs first to give a more actionable error message.
+
+#### Tests
+
+- `lang35_alloc_closure_closure_opcode_error`: asserts `validate_iir_for_clr`
+  returns an error containing "ClosureOpcode" for a module with `alloc_closure`.
+- `lang35_call_closure_closure_opcode_error`: same for `call_closure`.
+- `lang35_closure_opcode_error_not_untyped`: asserts the error does NOT
+  contain "UntypedInstruction".
+
+---
+
 ## [0.2.0] — 2026-05-11
 
 ### Added (LANG32 — Global Variables and I/O)

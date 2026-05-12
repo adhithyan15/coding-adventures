@@ -59,6 +59,21 @@ assert!(!artifact.methods[0].body.is_empty());
 assert!(artifact.methods[0].body.contains(&0x2A)); // ret
 ```
 
+## Validation errors
+
+| Error | Condition |
+|-------|-----------|
+| `EmptyModule` | Module has no functions |
+| `EmptyFunction` | A function has no instructions |
+| `ClosureOpcode` | op is `alloc_closure` or `call_closure` — closures require the BEAM backend |
+| `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
+| `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
+| `UnsupportedOp` | Any unsupported opcode (see below) |
+
+> **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
+> closure opcodes) are BEAM-only and return a `ClosureOpcode` validation error
+> rather than the generic `UntypedInstruction` message.
+
 ## Supported IIR opcodes
 
 | Category | Opcodes |

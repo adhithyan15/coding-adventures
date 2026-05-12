@@ -1208,3 +1208,100 @@ fn codegen_custom_assembly_name() {
     let artifact = gen.generate(&module);
     assert!(!artifact.methods[0].body.is_empty());
 }
+
+// ===========================================================================
+// LANG35 — ClosureOpcode validator tests
+// ===========================================================================
+//
+// The CLR backend does not yet support `alloc_closure` / `call_closure`.
+// Full CLR closure lowering (delegates / closures-as-methods approach) is
+// planned for a future LANG spec (LANG37).
+//
+// The validator returns a specific `ClosureOpcode` error with an actionable
+// message, instead of the confusing `UntypedInstruction` error that would
+// otherwise fire because `"closure"` and `"any"` are not concrete CIL types.
+
+/// `alloc_closure` must produce a `ClosureOpcode` validation error in the
+/// CLR backend, not an `UntypedInstruction` error.
+#[test]
+fn lang35_alloc_closure_closure_opcode_error() {
+    let module = fn_with_params(
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errs = validate_iir_for_clr(&module);
+    assert!(
+        !errs.is_empty(),
+        "alloc_closure must produce a validation error in the CLR backend"
+    );
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "error must contain \"ClosureOpcode\"; got: {errs:?}"
+    );
+}
+
+/// `call_closure` must produce a `ClosureOpcode` validation error in the
+/// CLR backend.
+#[test]
+fn lang35_call_closure_closure_opcode_error() {
+    let module = fn_with_params(
+        vec![("h", "i64"), ("a", "i64")],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("h".into()), Operand::Var("a".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let errs = validate_iir_for_clr(&module);
+    assert!(
+        !errs.is_empty(),
+        "call_closure must produce a validation error in the CLR backend"
+    );
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "error must contain \"ClosureOpcode\"; got: {errs:?}"
+    );
+}
+
+/// The `ClosureOpcode` error must not mention `UntypedInstruction` —
+/// the LANG35 improvement ensures callers get an actionable diagnostic
+/// rather than a misleading type-check failure.
+#[test]
+fn lang35_closure_opcode_error_not_untyped() {
+    let module = fn_with_params(
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errs = validate_iir_for_clr(&module);
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "expected ClosureOpcode error; got: {errs:?}"
+    );
+    assert!(
+        !errs.iter().any(|e| e.contains("UntypedInstruction")),
+        "error must not say UntypedInstruction for closure ops; got: {errs:?}"
+    );
+}

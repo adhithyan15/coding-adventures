@@ -134,6 +134,14 @@ const OP_GC_BIF1: u8 = 124;
 /// `{gc_bif2, {f,Fail}, {u,Live}, Bif, Arg1, Arg2, Dst}` — two-argument BIF call.
 const OP_GC_BIF2: u8 = 125;
 
+/// `{call_ext, {u,Arity}, {u,ImportIdx}}` — external function call (LANG35).
+///
+/// Calls an imported function (from ImpT chunk) by 0-based import table index.
+/// Before the call, arguments must be in `x0 .. x(Arity-1)`.  The return value
+/// is placed in `x0` after the call.  Used for `erlang:'++'` / 2 and
+/// `erlang:apply/3` in the closure lowering path.
+const OP_CALL_EXT: u8 = 6;
+
 // ===========================================================================
 // BEAM heap/list opcodes (Phase 2 heap ops, LANG31)
 // ===========================================================================
@@ -461,6 +469,24 @@ pub fn lower_iir_to_beam(
     let import_display = imports.intern(erlang_atom, atom_display, 1); // erlang:display/1
     let import_put     = imports.intern(erlang_atom, atom_put,     2); // erlang:put/2
     let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
+
+    // ── Closure dispatch atoms and imports (LANG35) ───────────────────────
+    //
+    // `alloc_closure` / `call_closure` lower to two call_ext calls:
+    //
+    //   1. erlang:'++'(Captures, Args)  →  Combined argument list
+    //   2. erlang:apply(Module, FnAtom, Combined) → call function by name
+    //
+    // Both are imported so their import-table indices are fixed before any
+    // instruction is emitted.  The atom names follow Erlang conventions:
+    //   "++"    — the list-concatenation operator (not a BIF in the gc_bif
+    //             sense, but callable via call_ext)
+    //   "apply" — erlang:apply/3
+    let atom_append = atoms.intern("++");       // erlang:'++'
+    let atom_apply  = atoms.intern("apply");    // erlang:apply
+
+    let import_append = imports.intern(erlang_atom, atom_append, 2); // erlang:'++'/2
+    let import_apply  = imports.intern(erlang_atom, atom_apply,  3); // erlang:apply/3
 
     // ── Step 4: first pass over all functions ─────────────────────────────
     //
@@ -1666,6 +1692,207 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(rx),
                         BEAMOperand::x(dummy),
                     ]));
+                }
+
+                // ── alloc_closure → BEAM cons-cell (LANG35) ──────────────────
+                //
+                // Encodes a closure as a BEAM cons cell:
+                //   [fn_atom | [cap0, cap1, …, capN]]
+                //
+                // IIR layout:
+                //   dest = alloc_closure(Str(fn_name), Var(cap0), …)  : "closure"
+                //
+                // BEAM emission:
+                //   move {a, nil}              {x, r_scratch}      % start with []
+                //   put_list {x, capN}   {x, r_scratch}  {x, r_scratch}  % [capN]
+                //   put_list {x, cap{N-1}} {x, r_scratch} {x, r_scratch} % …
+                //   …
+                //   put_list {x, cap0}   {x, r_scratch}  {x, r_scratch}  % [cap0..capN]
+                //   put_list {a, fn_atom} {x, r_scratch}  {x, r_dest}    % [fn | caps]
+                //
+                // Uses exactly one scratch register beyond the SSA variable set.
+                "alloc_closure" => {
+                    // srcs[0] must be Operand::Str(fn_name); rest are captures.
+                    let fn_name_str = match instr.srcs.first() {
+                        Some(Operand::Str(s)) => s.clone(),
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "alloc_closure: srcs[0] must be Operand::Str(fn_name)".into(),
+                        }),
+                    };
+                    let cap_srcs = &instr.srcs[1..];
+
+                    // DoS guard: check scratch register budget.
+                    // alloc_closure needs 1 scratch register (meta.next_reg).
+                    if meta.next_reg >= 255 {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "alloc_closure: too many registers; no scratch available".into(),
+                        });
+                    }
+
+                    let fn_atom_idx = atoms.intern(&fn_name_str);
+                    let r_dest = match &instr.dest {
+                        Some(d) => var_reg!(d),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "alloc_closure must have a dest".into(),
+                        }),
+                    };
+                    let r_scratch = meta.next_reg;
+
+                    // Initialise the list to nil ([]).
+                    // BEAM atom index 0 is nil in Erlang's internal representation;
+                    // `atoms.intern("[]")` gives the atom-table index for the nil atom.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_nil),
+                        BEAMOperand::x(r_scratch),
+                    ]));
+
+                    // Prepend captures from right to left so the final list is
+                    // [cap0, cap1, …, capN] (same order as the IIR operands).
+                    for cap_src in cap_srcs.iter().rev() {
+                        let r_cap = operand_reg!(cap_src);
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::x(r_cap),
+                            BEAMOperand::x(r_scratch),
+                            BEAMOperand::x(r_scratch),
+                        ]));
+                    }
+
+                    // Prepend the function-name atom to form [fn_atom | caps_list].
+                    instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                        BEAMOperand::a(fn_atom_idx),
+                        BEAMOperand::x(r_scratch),
+                        BEAMOperand::x(r_dest),
+                    ]));
+                }
+
+                // ── call_closure → BEAM erlang:apply/3 (LANG35) ──────────────
+                //
+                // Extracts fn_atom and captures from the closure cons cell, builds
+                // the user-args list, concatenates caps ++ args via erlang:'++'/2,
+                // then dispatches via erlang:apply/3.
+                //
+                // IIR layout:
+                //   dest = call_closure(Var(handle), Var(arg0), …) : "any"
+                //
+                // BEAM emission (r0..r3 = meta.next_reg + 0..3):
+                //   get_list  {x, handle}  {x, r0}  {x, r1}   % r0=fn_atom, r1=caps
+                //   move      {a, nil}     {x, r2}             % r2 = nil
+                //   put_list  {x, argN}    {x, r2}  {x, r2}   % build args from right
+                //   …
+                //   move      {x, r1}      {x, 0}              % x0 = caps
+                //   move      {x, r2}      {x, 1}              % x1 = args
+                //   call_ext  2  {u, import_append}            % x0 = caps ++ args
+                //   move      {x, 0}       {x, r3}             % r3 = combined
+                //   move      {a, mod_atom} {x, 0}             % x0 = module atom
+                //   move      {x, r0}      {x, 1}              % x1 = fn_atom
+                //   move      {x, r3}      {x, 2}              % x2 = combined
+                //   call_ext  3  {u, import_apply}             % x0 = result
+                //   move      {x, 0}       {x, r_dest}         % save result
+                //
+                // Uses 4 scratch registers (meta.next_reg + 0..3).
+                "call_closure" => {
+                    // srcs[0] = Var(handle); srcs[1..] = user args
+                    let r_handle = operand_reg!(get_src!(instr, 0));
+                    // srcs has at least element 0 (the handle); 1.. gives the args
+                    // (empty slice when arity == 0, which is fine — caps are all args).
+                    let arg_srcs: &[Operand] = &instr.srcs[1..];
+
+                    // Need 4 scratch registers: r0 (fn_atom), r1 (caps), r2 (args), r3 (combined).
+                    let scratch_base = meta.next_reg;
+                    let (r0, r1, r2, r3) = match (
+                        scratch_base.checked_add(0),
+                        scratch_base.checked_add(1),
+                        scratch_base.checked_add(2),
+                        scratch_base.checked_add(3),
+                    ) {
+                        (Some(a), Some(b), Some(c), Some(d)) if d < 255 => (a, b, c, d),
+                        _ => return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "call_closure: function uses too many registers; \
+                                 need 4 scratch registers beyond SSA set".into(),
+                        }),
+                    };
+
+                    let r_dest = match &instr.dest {
+                        Some(d) => var_reg!(d),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "call_closure must have a dest".into(),
+                        }),
+                    };
+
+                    // Step 1: extract fn_atom (r0) and caps list (r1) from closure.
+                    instrs.push(BEAMInstruction::new(OP_GET_LIST, vec![
+                        BEAMOperand::x(r_handle),
+                        BEAMOperand::x(r0),
+                        BEAMOperand::x(r1),
+                    ]));
+
+                    // Step 2: build args list in r2, from right to left.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_nil),
+                        BEAMOperand::x(r2),
+                    ]));
+                    for arg_src in arg_srcs.iter().rev() {
+                        let r_arg = operand_reg!(arg_src);
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::x(r_arg),
+                            BEAMOperand::x(r2),
+                            BEAMOperand::x(r2),
+                        ]));
+                    }
+
+                    // Step 3: call erlang:'++'/2 to compute caps ++ args.
+                    // Move caps (r1) → x0, args (r2) → x1; result lands in x0.
+                    // Note: r0 (fn_atom) is untouched by this call since r0 >=
+                    // meta.next_reg which is always > 2 for any real function.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r1),
+                        BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r2),
+                        BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2),
+                        BEAMOperand::u(import_append as u64),
+                    ]));
+                    // Save combined list from x0 into r3.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(0),
+                        BEAMOperand::x(r3),
+                    ]));
+
+                    // Step 4: call erlang:apply/3(Module, FnAtom, Combined).
+                    // x0 = module atom, x1 = fn_atom (from r0), x2 = combined (from r3).
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(mod_atom),
+                        BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r0),
+                        BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r3),
+                        BEAMOperand::x(2),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(3),
+                        BEAMOperand::u(import_apply as u64),
+                    ]));
+
+                    // Move result from x0 into dest register.
+                    if r_dest != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0),
+                            BEAMOperand::x(r_dest),
+                        ]));
+                    }
                 }
 
                 // ── Unsupported ops ──────────────────────────────────────────

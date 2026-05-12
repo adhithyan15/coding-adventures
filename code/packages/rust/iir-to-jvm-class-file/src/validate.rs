@@ -154,6 +154,28 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
         }
 
         for instr in &func.instructions {
+            // ── Check 2.5: ClosureOpcode (LANG35) ────────────────────────────
+            //
+            // `alloc_closure` and `call_closure` are valid IIR opcodes (LANG34)
+            // but the JVM backend does not yet implement closure lowering.
+            // Full JVM closure support (dispatch-table approach using `Object[]`
+            // cons cells and `lookupswitch` by method name) is planned for LANG36.
+            //
+            // We emit a specific `ClosureOpcode` error rather than
+            // `UntypedInstruction` so callers understand the precise remediation:
+            // apply `iir-builtin-lowering` Phase 4 to downgrade to `call_builtin`
+            // form, or wait for LANG36.
+            if matches!(instr.op.as_str(), "alloc_closure" | "call_closure") {
+                errors.push(format!(
+                    "ClosureOpcode: function {:?}, op {:?} — closure opcodes are not \
+                     yet supported by the JVM backend; apply iir-builtin-lowering \
+                     Phase 4 to downgrade to call_builtin form before lowering to JVM \
+                     (full JVM closure support is planned for LANG36)",
+                    func.name, instr.op
+                ));
+                continue;
+            }
+
             // ── Check 3: UntypedInstruction ──────────────────────────────────
             //
             // JVM arithmetic and load/store opcodes are typed — `iadd` works

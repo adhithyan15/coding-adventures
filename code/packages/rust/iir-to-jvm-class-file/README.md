@@ -124,6 +124,10 @@ assert_eq!(class_file.this_class_name, "MyClass");
 `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`, and any
 instruction with `type_hint` of `"any"`, `"polymorphic"`, `"str"`, or `"ref<…>"`.
 
+> **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
+> closure opcodes) are BEAM-only and return a `ClosureOpcode` validation error
+> rather than the generic `UntypedInstruction` message.
+
 Note: float type hints (`f32`, `f64`) and float constant operands **are supported**
 (unlike the BEAM backend).
 

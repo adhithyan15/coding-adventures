@@ -1308,3 +1308,108 @@ fn gc_ref_param_maps_to_anyref_func_type() {
     assert_eq!(wm.types[0].params, vec![ValueType::Anyref],
         "ref<LispyPair> param should map to Anyref in FuncType");
 }
+
+// ===========================================================================
+// LANG35 — ClosureOpcode validator tests
+// ===========================================================================
+//
+// The WASM backend does not yet support `alloc_closure` / `call_closure`.
+// Full WASM closure lowering (WasmGC function references + call_indirect) is
+// deferred to a future LANG spec.
+//
+// Instead of silently emitting a confusing `UntypedInstruction` error (which
+// fires because `"closure"` and `"any"` are not concrete WASM value types),
+// the validator now returns a specific `ClosureOpcode` error with an
+// actionable message: apply iir-builtin-lowering Phase 4 to downgrade to the
+// `call_builtin` form before lowering to WASM.
+//
+// Tests 12.1–12.3 verify this behaviour.
+
+// Test 12.1 — alloc_closure returns ClosureOpcode error, not UntypedInstruction
+#[test]
+fn lang35_alloc_closure_closure_opcode_error() {
+    let m = module_one(
+        "make_closure",
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errs = validate_for_wasm(&m);
+    assert!(
+        !errs.is_empty(),
+        "alloc_closure must produce a validation error in the WASM backend"
+    );
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "error must contain \"ClosureOpcode\"; got: {errs:?}"
+    );
+}
+
+// Test 12.2 — call_closure returns ClosureOpcode error, not UntypedInstruction
+#[test]
+fn lang35_call_closure_closure_opcode_error() {
+    let m = module_one(
+        "apply_it",
+        vec![("h", "i64"), ("a", "i64")],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("h".into()), Operand::Var("a".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let errs = validate_for_wasm(&m);
+    assert!(
+        !errs.is_empty(),
+        "call_closure must produce a validation error in the WASM backend"
+    );
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "error must contain \"ClosureOpcode\"; got: {errs:?}"
+    );
+}
+
+// Test 12.3 — ClosureOpcode error text does not mention UntypedInstruction
+//
+// This confirms the LANG35 diagnostic improvement: the message is specific to
+// closure opcodes, not a confusing false-positive from the type-hint check.
+#[test]
+fn lang35_closure_opcode_error_not_untyped() {
+    let m = module_one(
+        "make_closure",
+        vec![],
+        "closure",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    let errs = validate_for_wasm(&m);
+    // The error must be the actionable ClosureOpcode message.
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "expected ClosureOpcode error; got: {errs:?}"
+    );
+    // It must NOT be the confusing generic UntypedInstruction error.
+    assert!(
+        !errs.iter().any(|e| e.contains("UntypedInstruction")),
+        "error must not say UntypedInstruction for closure ops; got: {errs:?}"
+    );
+}
