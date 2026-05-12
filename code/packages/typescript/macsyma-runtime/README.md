@@ -10,5 +10,7 @@ This first runtime slice is intentionally small and browser-friendly:
 - preserves `;` display versus `$` suppress metadata
 - tracks `%`, `%iN`, and `%oN` history
 - pre-binds `%pi`, `%e`, and `%i`
+- dispatches `linsolve` / `Solve(List(...), List(...))` to the exact
+  `cas-solve` linear-system solver
 - exposes a JSON helper whose recursive IR representation is safe for
   `JSON.stringify`
