@@ -4,6 +4,7 @@
 //! bases, and small ideal solving via lex order back-substitution.
 
 pub mod groebner;
+pub mod handlers;
 pub mod monomial;
 pub mod polynomial;
 pub mod rational;
@@ -11,6 +12,11 @@ pub mod reduce;
 pub mod solve;
 
 pub use groebner::{buchberger, GrobnerError};
+pub use handlers::{
+    build_multivariate_handler_table, extract_poly_list, extract_var_list, groebner_handler,
+    ideal_solve_handler, ir_to_mpoly, mpoly_to_ir, poly_reduce_handler, ConversionError,
+    MultivariateHandler,
+};
 pub use monomial::{
     cmp_monomials, div_monomial, divides, lcm_monomial, total_degree, Monomial, MonomialOrder,
     MonomialOrderError,

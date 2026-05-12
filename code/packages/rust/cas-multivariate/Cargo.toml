@@ -6,3 +6,4 @@ description = "Multivariate rational polynomials, Groebner bases, reduction, and
 license = "MIT"
 
 [dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
