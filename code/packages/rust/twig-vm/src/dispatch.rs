@@ -1519,6 +1519,23 @@ fn exec_alloc_closure(
         )),
     };
 
+    // Guard against absurdly long fn_name strings.
+    //
+    // `intern()` adds every unique string to a global table that is never
+    // freed (the leak-forever invariant that `as_closure` relies on).
+    // Without a length cap, a malicious IIR module could carry a very long
+    // or high-entropy fn_name and consume unbounded memory on every
+    // `alloc_closure` execution.  The cap is generous enough to accommodate
+    // any reasonable compiler-generated name (the twig-ir-compiler emits
+    // names like `__lambda_0`, `adder`, etc.) while excluding payloads.
+    const MAX_FN_NAME_LEN: usize = 512;
+    if fn_name.len() > MAX_FN_NAME_LEN {
+        return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: fn_name exceeds maximum length ({} > {MAX_FN_NAME_LEN})",
+            fn_name.len()
+        )));
+    }
+
     // Intern the function name to a SymbolId — the closure heap record stores
     // names as interned symbol ids for O(1) equality checks.
     let sym_id = intern(fn_name);
@@ -1652,6 +1669,14 @@ fn exec_call_closure(
         builtin(&user_args).map_err(RunError::Runtime)?
     } else {
         // User-fn closure: prepend captures to args then recurse.
+        //
+        // Depth / stack-overflow protection: `dispatch` itself checks
+        // `depth > MAX_DISPATCH_DEPTH` at entry and returns `RunError::DepthExceeded`
+        // before any allocation or further recursion.  Passing `depth + 1`
+        // here means the guard fires on the *next* call, bounding the
+        // total native call-stack depth to MAX_DISPATCH_DEPTH + 1 (256 + 1 = 257
+        // by default).  This is consistent with `exec_apply_closure` and
+        // `exec_call` which use the same `depth + 1` pattern.
         let mut all_args = captures;
         all_args.extend(user_args);
         let name_str = name_of(fn_name_id).ok_or_else(|| {

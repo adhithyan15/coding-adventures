@@ -180,9 +180,18 @@ fn lower_closure_builtins_function(fn_: &mut IIRFunction) {
             continue;
         }
         for src in &instr.srcs {
-            if let Operand::Var(name) = src {
+            // Count both Var and Str operands that reference a const-string
+            // register.  A register named "foo" could in theory appear as
+            // Operand::Str("foo") if a later pass re-encodes it; counting both
+            // forms prevents false-positive const removal in that edge case.
+            let referenced_name: Option<&str> = match src {
+                Operand::Var(name) => Some(name.as_str()),
+                Operand::Str(name) => Some(name.as_str()),
+                _ => None,
+            };
+            if let Some(name) = referenced_name {
                 if const_str_map.contains_key(name) {
-                    *use_count.entry(name.clone()).or_insert(0) += 1;
+                    *use_count.entry(name.to_string()).or_insert(0) += 1;
                 }
             }
         }
