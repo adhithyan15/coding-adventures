@@ -2848,6 +2848,41 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
     }
 
     #[test]
+    fn repl_sequence_runs_over_ble_gatt_wire_transport() {
+        let endpoint = "ble://uno-r4-wifi/180f/2a19/2a1a";
+        let options = ReplOptions {
+            port: None,
+            endpoint: Some(endpoint.to_owned()),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: DEFAULT_TIMEOUT_MS,
+            program_id: 13,
+            instruction_budget: 200,
+            host_nonce: 0xABCD_EF01,
+        };
+        let transport = LanguageBluetoothTransport::<_, 2048>::with_transactor(
+            endpoint,
+            LoopbackBluetoothWireTransactor::new(),
+        );
+        let input = std::io::Cursor::new(b"caps\nblink 24\nquit\n".to_vec());
+        let mut out = Vec::new();
+
+        run_repl_with_transport(&options, transport, input, &mut out).unwrap();
+
+        let output = String::from_utf8(out).unwrap();
+        assert!(output.contains(&format!(
+            "connected endpoint={endpoint} timeout_ms={DEFAULT_TIMEOUT_MS}\n"
+        )));
+        assert!(output.contains(
+            "hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0xABCDEF01"
+        ));
+        assert!(output.contains("caps board=loopback-uno-r4 runtime=board-vm-loopback"));
+        assert!(output.contains("upload program_id=13 bytes="));
+        assert!(output.contains("run program_id=13 status=Running"));
+        assert!(output.contains("open_handles=1"));
+    }
+
+    #[test]
     fn repl_sequence_runs_over_rfcomm_wire_transport() {
         let endpoint = "rfcomm://uno-r4-wifi:1";
         let options = ReplOptions {

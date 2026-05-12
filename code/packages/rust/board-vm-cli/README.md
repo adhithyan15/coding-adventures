@@ -63,7 +63,7 @@ through the shared client library, while future frontend packages can put
 richer syntax on top of the same transport calls. `gpio-read` and `time-now`
 print Rust-decoded run-report return values from the board. The endpoint path
 uses the same TCP socket and Bluetooth wire transports as `smoke`, with loopback
-coverage for interactive upload/run flows over both transport families.
+coverage for interactive upload/run flows over TCP, BLE GATT, and RFCOMM.
 
 `eject blink` writes the current blink MVP as embeddable Rust constants with a
 program id, slot, boot policy, bytecode CRC, and BVM module bytes. That output
