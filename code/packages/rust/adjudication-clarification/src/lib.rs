@@ -61,9 +61,15 @@ use llm_primitives::{
     decompose_text, DecomposeTextRequest, DecomposeTextResponse, GatewayConfig, PrimitiveError,
 };
 
-/// Stable version of the clarification-prompt template. Bumping this
-/// is an audit-trail-affecting change.
+/// Stable version of the coverage-clarification prompt template.
+/// Bumping this is an audit-trail-affecting change.
 pub const CLARIFICATION_PROMPT_VERSION: &str = "clarification-v1";
+
+/// Stable version of the polarity/modality clarification-prompt
+/// template (ADJ06-for-ADJ03). Distinct from
+/// [`CLARIFICATION_PROMPT_VERSION`] so audit-trail replay can tell
+/// the two correction flavours apart.
+pub const POLARITY_CLARIFICATION_PROMPT_VERSION: &str = "polarity-clarification-v1";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -164,26 +170,102 @@ pub fn retry_decompose_on_coverage_failure(
     max_attempts: usize,
     now: impl Fn() -> String,
 ) -> Result<CoverageClarificationOutcome, ClarificationError> {
+    retry_with_correction_prompt(
+        &req.original,
+        gateway,
+        max_attempts,
+        now,
+        || build_correction_prompt(&req.violation_description, &req.previous_ir),
+        CLARIFICATION_PROMPT_VERSION,
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Entry point: polarity/modality retry (ADJ06-for-ADJ03)
+// ---------------------------------------------------------------------------
+
+/// What the caller hands ADJ06 when ADJ03 found polarity/modality
+/// problems. Same shape as [`CoverageClarificationRequest`] plus a
+/// hint about which node(s) the polarity is wrong on.
+#[derive(Debug, Clone)]
+pub struct PolarityClarificationRequest {
+    /// The original `decompose_text` request that produced the bad IR.
+    pub original: DecomposeTextRequest,
+    /// Description of the violation surfaced by ADJ03 (e.g.,
+    /// `"RuledOutMustBeAffirmed { node_id: F3, actual_polarity: Denied }"`).
+    pub violation_description: String,
+    /// The previous IR JSON for the model to edit.
+    pub previous_ir: serde_json::Value,
+    /// Optional human-readable hint about which node has the wrong
+    /// polarity and why. The framework synthesizes this when it can
+    /// — e.g., when the source contains an obvious negation like
+    /// `"no known drug allergy"`, the hint can say `"node F3
+    /// covers a negation; its polarity should be Denied, not Affirmed"`.
+    pub polarity_hint: Option<String>,
+}
+
+/// Ask the model to fix a polarity/modality violation. Same retry
+/// loop as the coverage version, different correction prompt.
+///
+/// Notable failure modes this catches:
+/// - The model recorded `"no known drug allergy"` as Affirmed
+///   (wrong) instead of Denied (right). Small models often miss
+///   the negation.
+/// - The model recorded a hypothetical clause as Present instead of
+///   Hypothetical. Modality polarity, distinct from logical polarity.
+/// - The model recorded a query node with Inherit polarity but no
+///   ancestor to inherit from — ADJ03 catches this as
+///   `InheritChainUnresolved`.
+pub fn retry_decompose_on_polarity_failure(
+    req: &PolarityClarificationRequest,
+    gateway: &GatewayConfig,
+    max_attempts: usize,
+    now: impl Fn() -> String,
+) -> Result<CoverageClarificationOutcome, ClarificationError> {
+    retry_with_correction_prompt(
+        &req.original,
+        gateway,
+        max_attempts,
+        now,
+        || {
+            build_polarity_correction_prompt(
+                &req.violation_description,
+                &req.previous_ir,
+                req.polarity_hint.as_deref(),
+            )
+        },
+        POLARITY_CLARIFICATION_PROMPT_VERSION,
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Shared retry-loop machinery
+// ---------------------------------------------------------------------------
+
+/// Inner retry loop, parameterised on (a) the correction-prompt
+/// builder and (b) the prompt-version tag for the audit trail.
+/// Both the coverage and polarity entry points delegate here.
+fn retry_with_correction_prompt(
+    original: &DecomposeTextRequest,
+    gateway: &GatewayConfig,
+    max_attempts: usize,
+    now: impl Fn() -> String,
+    build_prompt: impl Fn() -> String,
+    prompt_version: &'static str,
+) -> Result<CoverageClarificationOutcome, ClarificationError> {
     let mut dialogue: Vec<DialogueTurn> = Vec::new();
 
     for attempt in 1..=max_attempts.max(1) {
-        let question_text = build_correction_prompt(
-            &req.violation_description,
-            &req.previous_ir,
-        );
+        let question_text = build_prompt();
         let revised = DecomposeTextRequest {
-            document_id: req.original.document_id.clone(),
-            source_text: req.original.source_text.clone(),
-            // Tack the correction prompt onto the domain_hint so the
-            // model sees it as context. A future revision can pass a
-            // first-class `prior_attempts` field into the primitive;
-            // for v0.1 we keep `decompose_text`'s signature stable.
+            document_id: original.document_id.clone(),
+            source_text: original.source_text.clone(),
             domain_hint: format!(
                 "{original_hint}\n\n[CORRECTION FROM CHECKER PASS]:\n{q}",
-                original_hint = req.original.domain_hint,
+                original_hint = original.domain_hint,
                 q = question_text,
             ),
-            language_hint: req.original.language_hint.clone(),
+            language_hint: original.language_hint.clone(),
         };
 
         let at = now();
@@ -207,7 +289,7 @@ pub fn retry_decompose_on_coverage_failure(
                             family = resp.call_record.provider.model_family,
                         )),
                         model_version: Some(resp.call_record.provider.model_version.clone()),
-                        prompt_version: Some(CLARIFICATION_PROMPT_VERSION.to_string()),
+                        prompt_version: Some(prompt_version.to_string()),
                         prompt_hash: Some(resp.call_record.prompt_hash.clone()),
                     },
                     outcome: DialogueOutcome::Resolved,
@@ -219,7 +301,6 @@ pub fn retry_decompose_on_coverage_failure(
                 });
             }
             Err(e) => {
-                // Record the failed attempt and either retry or give up.
                 dialogue.push(DialogueTurn {
                     turn_id: TurnId(attempt as u64),
                     at,
@@ -231,7 +312,7 @@ pub fn retry_decompose_on_coverage_failure(
                         text: format!("(error) {e}"),
                         actor_id: None,
                         model_version: None,
-                        prompt_version: Some(CLARIFICATION_PROMPT_VERSION.to_string()),
+                        prompt_version: Some(prompt_version.to_string()),
                         prompt_hash: None,
                     },
                     outcome: DialogueOutcome::Abandoned,
@@ -242,17 +323,10 @@ pub fn retry_decompose_on_coverage_failure(
                         dialogue,
                     });
                 }
-                // Otherwise loop and retry. The error path is rare —
-                // most "bad output" failures come back as Ok(...) with
-                // an IR that fails ADJ02 again on the caller's side.
             }
         }
     }
 
-    // Unreachable: the loop either returns Ok on success, returns
-    // Err on the final attempt's error path, or continues. The
-    // `for attempt in 1..=max_attempts.max(1)` guarantees at least
-    // one iteration.
     Err(ClarificationError::Exhausted {
         attempts: 0,
         dialogue,
@@ -260,7 +334,7 @@ pub fn retry_decompose_on_coverage_failure(
 }
 
 // ---------------------------------------------------------------------------
-// Correction-prompt builder
+// Correction-prompt builders
 // ---------------------------------------------------------------------------
 
 fn build_correction_prompt(
@@ -286,6 +360,46 @@ fn build_correction_prompt(
          Produce a CORRECTED IR with the same `document_id`, fixing \
          the coverage gap. Same flat-array shape, same field names, \
          same rules as before.",
+    )
+}
+
+fn build_polarity_correction_prompt(
+    violation: &str,
+    previous_ir: &serde_json::Value,
+    polarity_hint: Option<&str>,
+) -> String {
+    let previous_pretty = serde_json::to_string_pretty(previous_ir)
+        .unwrap_or_else(|_| previous_ir.to_string());
+    let hint_block = polarity_hint
+        .map(|h| format!("\nFramework hint:\n  {h}\n"))
+        .unwrap_or_default();
+    format!(
+        "Your previous IR was REJECTED by the ADJ03 polarity/modality \
+         checker.\n\
+         \n\
+         Violation:\n  {violation}\n\
+         {hint_block}\n\
+         The polarity / modality rules:\n\
+         - `polarity` is one of `Affirmed` / `Denied` / `Uncertain` / `Inherit`.\n\
+         - **Negations like \"no\", \"not\", \"never\", \"denied\", \"absent\"** \
+         change the polarity. \"No known drug allergy\" → `Denied`, not \
+         `Affirmed`.\n\
+         - `modality` is one of `Present` / `Past` / `Future` / `Hypothetical` \
+         / `FamilyHistory` / `RuledOut` / `Conditional` / `Inherit`.\n\
+         - `Hypothetical` is for clauses like \"if X happens\" or \
+         \"would have done Y\". `RuledOut` is for explicitly excluded \
+         possibilities.\n\
+         - `Inherit` defers to the parent node's effective value. If you \
+         use `Inherit`, the node MUST have a `part_of` ancestor whose \
+         effective polarity/modality resolves.\n\
+         \n\
+         Your previous output was:\n\
+         {previous_pretty}\n\
+         \n\
+         Produce a CORRECTED IR with the same `document_id`, fixing \
+         the polarity/modality. Keep the same shape; only touch the \
+         polarity/modality fields (and `part_of` if the violation is \
+         `InheritChainUnresolved`).",
     )
 }
 
@@ -546,5 +660,123 @@ mod tests {
         let out =
             retry_decompose_on_coverage_failure(&req, &gateway, 0, make_clock()).unwrap();
         assert_eq!(out.used_attempts, 1);
+    }
+
+    // ---------------- ADJ06-for-ADJ03 polarity retry ----------------
+
+    #[test]
+    fn polarity_retry_returns_corrected_ir_on_first_success() {
+        let gateway = gateway_with(ScriptedExtractor::new(vec![happy_ir()]));
+        let req = PolarityClarificationRequest {
+            original: make_request(),
+            violation_description:
+                "RuledOutMustBeAffirmed { node_id: F3, actual_polarity: Denied }".into(),
+            previous_ir: serde_json::json!({ "document_id": "doc1", "nodes": [] }),
+            polarity_hint: Some(
+                "node F3 covers a negation; should be Denied, not Affirmed".into(),
+            ),
+        };
+        let out =
+            retry_decompose_on_polarity_failure(&req, &gateway, 3, make_clock()).unwrap();
+        assert_eq!(out.used_attempts, 1);
+        assert_eq!(out.dialogue.len(), 1);
+        assert!(matches!(out.dialogue[0].outcome, DialogueOutcome::Resolved));
+        assert!(out.dialogue[0].question_text.contains("polarity"));
+        assert!(out.dialogue[0]
+            .question_text
+            .contains("RuledOutMustBeAffirmed"));
+        // The hint should be embedded in the question.
+        assert!(out.dialogue[0]
+            .question_text
+            .contains("covers a negation"));
+        // And the prompt-version on the audit row should be the
+        // polarity flavour, not the coverage one.
+        assert_eq!(
+            out.dialogue[0].response.prompt_version.as_deref(),
+            Some(POLARITY_CLARIFICATION_PROMPT_VERSION)
+        );
+    }
+
+    #[test]
+    fn polarity_correction_prompt_works_without_hint() {
+        let p = build_polarity_correction_prompt(
+            "AmbiguousPolarity { node_id: N1 }",
+            &serde_json::json!({}),
+            None,
+        );
+        assert!(p.contains("polarity"));
+        assert!(p.contains("Denied"));
+        // No hint should be appended when caller passes None.
+        assert!(!p.contains("Framework hint"));
+    }
+
+    #[test]
+    fn polarity_correction_prompt_includes_hint_when_provided() {
+        let p = build_polarity_correction_prompt(
+            "AmbiguousPolarity { node_id: N1 }",
+            &serde_json::json!({}),
+            Some("node N1 looks negated"),
+        );
+        assert!(p.contains("Framework hint"));
+        assert!(p.contains("looks negated"));
+    }
+
+    #[test]
+    fn polarity_clarification_prompt_version_is_locked() {
+        assert_eq!(
+            POLARITY_CLARIFICATION_PROMPT_VERSION,
+            "polarity-clarification-v1"
+        );
+    }
+
+    #[test]
+    fn polarity_retry_exhausts_gracefully_on_repeated_error() {
+        struct AlwaysErr;
+        impl LlmClient for AlwaysErr {
+            fn identity(&self) -> ProviderIdentity {
+                extractor_identity()
+            }
+            fn capabilities(&self) -> Capabilities {
+                Capabilities::modern_frontier()
+            }
+            fn complete(&self, _r: CompletionRequest) -> Result<CompletionResponse, LlmError> {
+                unreachable!()
+            }
+            fn complete_json(
+                &self,
+                _r: CompletionRequest,
+                _s: &JsonSchema,
+            ) -> Result<CompletionJsonResponse, LlmError> {
+                Err(LlmError::Transport {
+                    provider: extractor_identity(),
+                    detail: "simulated".into(),
+                })
+            }
+        }
+        let gateway = GatewayConfig::new().with_client(Role::Extractor, Box::new(AlwaysErr));
+        let req = PolarityClarificationRequest {
+            original: make_request(),
+            violation_description: "test".into(),
+            previous_ir: serde_json::json!({}),
+            polarity_hint: None,
+        };
+        let err =
+            retry_decompose_on_polarity_failure(&req, &gateway, 2, make_clock()).unwrap_err();
+        match err {
+            ClarificationError::Exhausted { attempts, dialogue } => {
+                assert_eq!(attempts, 2);
+                assert_eq!(dialogue.len(), 2);
+                assert!(matches!(
+                    dialogue[0].outcome,
+                    DialogueOutcome::Abandoned
+                ));
+                // Audit version should still be the polarity flavour.
+                assert_eq!(
+                    dialogue[0].response.prompt_version.as_deref(),
+                    Some(POLARITY_CLARIFICATION_PROMPT_VERSION)
+                );
+            }
+            other => panic!("expected Exhausted, got {other:?}"),
+        }
     }
 }

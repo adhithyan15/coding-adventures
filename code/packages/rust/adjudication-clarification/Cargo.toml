@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-clarification"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "ADJ06 — clarification dialogue. When a checker pass surfaces a violation, re-prompt the LLM with the structured diagnostic and try again. The mechanism that lets small local models reach high quality: every checker failure becomes a self-correction opportunity instead of a terminal block."
+description = "ADJ06 — clarification dialogue. v0.2 extends self-correction beyond ADJ02 coverage to ADJ03 polarity/modality. Small models that miss negation (e.g. \"no known drug allergy\" → Affirmed instead of Denied) can now self-correct on a re-prompt."
 
 [dependencies]
 adjudication-audit-trail = { path = "../adjudication-audit-trail" }
