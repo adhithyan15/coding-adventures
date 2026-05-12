@@ -1,5 +1,14 @@
 # ADJ03 — Polarity and Modality Checker: Propagation Consistency
 
+> **Pending revision to v3 (2026-05-12)** to match
+> [`ADJ01 v3`](ADJ01-adjudication-ir-grammar.md): propagation runs
+> along `Contains` edges rather than the `part_of` field, and a
+> `PropagationConflict` check is added for nodes with multiple
+> `Contains` parents whose effective values disagree. The v2 content
+> below describes propagation through the v2 tree and is preserved
+> until the v3 revision lands alongside the
+> `adjudication-polarity-modality` crate's v3 update.
+
 > **Revision v2 (2026-05-11): propagation consistency.** v1 of this
 > spec described a NegEx/ConText-style trigger-detection check that
 > baked English clinical idiom into the framework core. This revision
