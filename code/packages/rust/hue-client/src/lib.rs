@@ -176,6 +176,76 @@ pub struct HueEventStreamBatch {
     pub events: Vec<HueEventRecord>,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct HueEventStreamSummary {
+    pub total_batches: usize,
+    pub batches_with_sse_id: usize,
+    pub batches_with_sse_event_type: usize,
+    pub batches_with_retry_hint: usize,
+    pub total_event_records: usize,
+    pub records_with_creation_time: usize,
+    pub records_with_data: usize,
+    pub empty_records: usize,
+    pub total_resource_items: usize,
+    pub max_records_per_batch: usize,
+}
+
+impl HueEventStreamSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_batches<'a, I>(batches: I) -> Self
+    where
+        I: IntoIterator<Item = &'a HueEventStreamBatch>,
+    {
+        let mut summary = Self::empty();
+        for batch in batches {
+            summary.total_batches += 1;
+            if batch.sse_id.is_some() {
+                summary.batches_with_sse_id += 1;
+            }
+            if batch.sse_event_type.is_some() {
+                summary.batches_with_sse_event_type += 1;
+            }
+            if batch.retry_ms.is_some() {
+                summary.batches_with_retry_hint += 1;
+            }
+            summary.max_records_per_batch = summary.max_records_per_batch.max(batch.events.len());
+
+            for event in &batch.events {
+                summary.total_event_records += 1;
+                if event.creation_time.is_some() {
+                    summary.records_with_creation_time += 1;
+                }
+                if event.data.is_empty() {
+                    summary.empty_records += 1;
+                } else {
+                    summary.records_with_data += 1;
+                    summary.total_resource_items += event.data.len();
+                }
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_batches == 0
+    }
+
+    pub fn has_retry_hints(&self) -> bool {
+        self.batches_with_retry_hint > 0
+    }
+
+    pub fn has_resource_items(&self) -> bool {
+        self.total_resource_items > 0
+    }
+
+    pub fn has_empty_records(&self) -> bool {
+        self.empty_records > 0
+    }
+}
+
 #[derive(Debug, Default)]
 pub struct HueEventStreamDecoder {
     current: PartialSseEvent,
@@ -1590,6 +1660,42 @@ mod tests {
             object_string_field(&batches[0].events[0].data[0], "id"),
             Some("light-1")
         );
+    }
+
+    #[test]
+    fn event_stream_summary_counts_batches_records_and_resource_items() {
+        let batches = parse_event_stream(
+            b"id: stream-1\nevent: update\nretry: 5000\ndata: [{\"creationtime\":\"2026-05-07T01:00:00Z\",\"data\":[{\"id\":\"light-1\",\"type\":\"light\"},{\"id\":\"button-1\",\"type\":\"button\"}],\"id\":\"event-1\",\"type\":\"update\"}]\n\ndata: [{\"id\":\"event-2\",\"type\":\"heartbeat\",\"data\":[]}]\n\n",
+        )
+        .unwrap();
+
+        let summary = HueEventStreamSummary::from_batches(&batches);
+
+        assert_eq!(
+            summary,
+            HueEventStreamSummary {
+                total_batches: 2,
+                batches_with_sse_id: 1,
+                batches_with_sse_event_type: 1,
+                batches_with_retry_hint: 1,
+                total_event_records: 2,
+                records_with_creation_time: 1,
+                records_with_data: 1,
+                empty_records: 1,
+                total_resource_items: 2,
+                max_records_per_batch: 1,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_retry_hints());
+        assert!(summary.has_resource_items());
+        assert!(summary.has_empty_records());
+
+        let empty = HueEventStreamSummary::empty();
+        assert!(empty.is_empty());
+        assert!(!empty.has_retry_hints());
+        assert!(!empty.has_resource_items());
+        assert!(!empty.has_empty_records());
     }
 
     #[test]

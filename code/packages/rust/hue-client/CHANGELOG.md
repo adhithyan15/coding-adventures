@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Hue event-stream summaries for compact retry-hint, record, and resource-item
+  coverage over parsed Server-Sent Events batches.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added
