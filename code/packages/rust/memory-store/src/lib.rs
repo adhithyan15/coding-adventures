@@ -176,6 +176,68 @@ impl MemoryRecordSummary {
     }
 }
 
+/// Compact catalog view for read-side memory health and lifecycle checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MemoryCatalogSummary {
+    pub total_memories: usize,
+    pub profile_memories: usize,
+    pub fact_memories: usize,
+    pub episodic_memories: usize,
+    pub procedure_memories: usize,
+    pub warning_memories: usize,
+    pub active_memories: usize,
+    pub expired_memories: usize,
+    pub tombstoned_memories: usize,
+    pub reviewed_memories: usize,
+    pub unreviewed_memories: usize,
+}
+
+impl MemoryCatalogSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(memories: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a MemoryRecord>,
+    {
+        let mut summary = Self::empty();
+        for memory in memories {
+            summary.total_memories += 1;
+            match memory.class {
+                MemoryClass::Profile => summary.profile_memories += 1,
+                MemoryClass::Fact => summary.fact_memories += 1,
+                MemoryClass::Episodic => summary.episodic_memories += 1,
+                MemoryClass::Procedure => summary.procedure_memories += 1,
+                MemoryClass::Warning => summary.warning_memories += 1,
+            }
+            match memory.lifecycle_status_at(now_ms) {
+                MemoryLifecycleStatus::Active => summary.active_memories += 1,
+                MemoryLifecycleStatus::Expired => summary.expired_memories += 1,
+                MemoryLifecycleStatus::Tombstoned => summary.tombstoned_memories += 1,
+            }
+            if memory.reviewed_at.is_some() {
+                summary.reviewed_memories += 1;
+            } else {
+                summary.unreviewed_memories += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn non_tombstoned_memories(&self) -> usize {
+        self.active_memories + self.expired_memories
+    }
+
+    pub fn has_expired_memories(&self) -> bool {
+        self.expired_memories > 0
+    }
+
+    pub fn has_unreviewed_memories(&self) -> bool {
+        self.unreviewed_memories > 0
+    }
+}
+
 /// Why a memory should be surfaced for human, agent, or scheduled review.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MemoryReviewReason {
@@ -481,6 +543,15 @@ impl<S: StorageBackend> MemoryStore<S> {
             .iter()
             .map(MemoryRecordSummary::from_record)
             .collect())
+    }
+
+    pub fn catalog_summary(
+        &self,
+        options: MemoryListOptions,
+        now_ms: u64,
+    ) -> Result<MemoryCatalogSummary, StorageError> {
+        let memories = self.list_memories_with_options(options)?;
+        Ok(MemoryCatalogSummary::from_records(&memories, now_ms))
     }
 
     pub fn search_lexical(&self, query: &str) -> Result<Vec<MemoryRecord>, StorageError> {
@@ -1370,6 +1441,63 @@ mod tests {
         assert_eq!(summaries[1].supersedes, vec!["old-pref-tone"]);
         assert_eq!(summaries[1].reviewed_at, Some(25));
         assert!(summaries[1].is_active_at(100));
+    }
+
+    #[test]
+    fn catalog_summary_counts_class_lifecycle_and_review_coverage() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let profile =
+            memory_with_created_confidence("pref-tone", "Tone", "Prefer concise recaps", 10, 0.8);
+        let mut fact =
+            memory_with_created_confidence("fact-home", "Home", "Bridge is paired", 20, 0.9);
+        fact.class = MemoryClass::Fact;
+        fact.reviewed_at = Some(30);
+        let mut procedure =
+            memory_with_created_confidence("runbook", "Runbook", "Restart runtime", 40, 0.95);
+        procedure.class = MemoryClass::Procedure;
+        procedure.reviewed_at = Some(60);
+        procedure.expires_at = Some(75);
+        let mut warning =
+            memory_with_created_confidence("warn-token", "Token", "Old token invalid", 50, 0.5);
+        warning.class = MemoryClass::Warning;
+        warning.tombstoned = true;
+
+        let _ = store.remember(profile).unwrap();
+        let _ = store.remember(fact).unwrap();
+        let _ = store.remember(procedure).unwrap();
+        let _ = store.remember(warning).unwrap();
+
+        let summary = store
+            .catalog_summary(MemoryListOptions::new().include_tombstoned(true), 100)
+            .unwrap();
+
+        assert_eq!(
+            summary,
+            MemoryCatalogSummary {
+                total_memories: 4,
+                profile_memories: 1,
+                fact_memories: 1,
+                episodic_memories: 0,
+                procedure_memories: 1,
+                warning_memories: 1,
+                active_memories: 2,
+                expired_memories: 1,
+                tombstoned_memories: 1,
+                reviewed_memories: 2,
+                unreviewed_memories: 2,
+            }
+        );
+        assert_eq!(summary.non_tombstoned_memories(), 3);
+        assert!(summary.has_expired_memories());
+        assert!(summary.has_unreviewed_memories());
+
+        let fact_summary = store
+            .catalog_summary(MemoryListOptions::new().with_class(MemoryClass::Fact), 100)
+            .unwrap();
+        assert_eq!(fact_summary.total_memories, 1);
+        assert_eq!(fact_summary.fact_memories, 1);
+        assert_eq!(fact_summary.active_memories, 1);
+        assert_eq!(fact_summary.reviewed_memories, 1);
     }
 
     #[test]
