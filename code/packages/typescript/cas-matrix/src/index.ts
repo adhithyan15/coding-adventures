@@ -9,11 +9,13 @@ import {
   app,
   headName,
   int,
+  numberNode,
   rational,
   sym,
   type IRInteger,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
+import { Matrix } from "matrix";
 
 export const MATRIX = "Matrix";
 export const MATRIX_HEAD = sym(MATRIX);
@@ -93,6 +95,10 @@ export function zeroMatrix(nrows: number, ncols: number): IRNode {
 
 export function transpose(node: IRNode): IRNode {
   const rows = rowsOf(node);
+  const backend = tryBackendRows(rows);
+  if (backend !== undefined) {
+    return matrixFromBackend(backend.matrix.transpose(), backend.integerOutput);
+  }
   const nrows = rows.length;
   const ncols = rows[0]?.length ?? 0;
   return matrix(Array.from({ length: ncols }, (_, j) =>
@@ -103,6 +109,10 @@ export function addMatrices(a: IRNode, b: IRNode): IRNode {
   const aRows = rowsOf(a);
   const bRows = rowsOf(b);
   checkSameShape(aRows, bRows, "add");
+  const backend = tryBackendBinary(aRows, bRows);
+  if (backend !== undefined) {
+    return matrixFromBackend(backend.left.add(backend.right), backend.integerOutput);
+  }
   return matrix(elementwise(aRows, bRows, (x, y) => app(ADD, [x, y])));
 }
 
@@ -110,11 +120,20 @@ export function subMatrices(a: IRNode, b: IRNode): IRNode {
   const aRows = rowsOf(a);
   const bRows = rowsOf(b);
   checkSameShape(aRows, bRows, "sub");
+  const backend = tryBackendBinary(aRows, bRows);
+  if (backend !== undefined) {
+    return matrixFromBackend(backend.left.subtract(backend.right), backend.integerOutput);
+  }
   return matrix(elementwise(aRows, bRows, (x, y) => app(SUB, [x, y])));
 }
 
 export function scalarMultiply(scalar: IRNode, node: IRNode): IRNode {
-  return matrix(rowsOf(node).map((row) => row.map((cell) => app(MUL, [scalar, cell]))));
+  const rows = rowsOf(node);
+  const backend = tryBackendScalar(scalar, rows);
+  if (backend !== undefined) {
+    return matrixFromBackend(backend.matrix.scale(backend.scalar), backend.integerOutput);
+  }
+  return matrix(rows.map((row) => row.map((cell) => app(MUL, [scalar, cell]))));
 }
 
 export function trace(node: IRNode): IRNode {
@@ -137,6 +156,10 @@ export function dot(a: IRNode, b: IRNode): IRNode {
   const bRowCount = bRows.length;
   if (aCols !== bRowCount) {
     throw new MatrixError(`dot: cols(A)=${aCols} != rows(B)=${bRowCount}`);
+  }
+  const backend = tryBackendBinary(aRows, bRows);
+  if (backend !== undefined) {
+    return matrixFromBackend(backend.left.dot(backend.right), backend.integerOutput);
   }
   const bCols = bRows[0]?.length ?? 0;
   return matrix(aRows.map((row) =>
@@ -364,6 +387,85 @@ function checkSameShape(a: MatrixRows, b: MatrixRows, op: string): void {
 
 function elementwise(a: MatrixRows, b: MatrixRows, f: (x: IRNode, y: IRNode) => IRNode): MatrixRows {
   return a.map((row, i) => row.map((cell, j) => f(cell, b[i][j])));
+}
+
+interface BackendRows {
+  readonly matrix: Matrix;
+  readonly integerOutput: boolean;
+}
+
+interface BackendBinary {
+  readonly left: Matrix;
+  readonly right: Matrix;
+  readonly integerOutput: boolean;
+}
+
+interface BackendScalar {
+  readonly matrix: Matrix;
+  readonly scalar: number;
+  readonly integerOutput: boolean;
+}
+
+function tryBackendRows(rows: MatrixRows): BackendRows | undefined {
+  let integerOutput = true;
+  const values: number[][] = [];
+  for (const row of rows) {
+    const outRow: number[] = [];
+    for (const cell of row) {
+      const value = nodeToBackendNumber(cell);
+      if (value === undefined) return undefined;
+      if (cell.kind !== "integer") integerOutput = false;
+      outRow.push(value);
+    }
+    values.push(outRow);
+  }
+  return { matrix: new Matrix(values), integerOutput };
+}
+
+function tryBackendBinary(left: MatrixRows, right: MatrixRows): BackendBinary | undefined {
+  const leftBackend = tryBackendRows(left);
+  const rightBackend = tryBackendRows(right);
+  if (leftBackend === undefined || rightBackend === undefined) return undefined;
+  return {
+    left: leftBackend.matrix,
+    right: rightBackend.matrix,
+    integerOutput: leftBackend.integerOutput && rightBackend.integerOutput,
+  };
+}
+
+function tryBackendScalar(scalar: IRNode, rows: MatrixRows): BackendScalar | undefined {
+  const matrixBackend = tryBackendRows(rows);
+  const scalarValue = nodeToBackendNumber(scalar);
+  if (matrixBackend === undefined || scalarValue === undefined) return undefined;
+  return {
+    matrix: matrixBackend.matrix,
+    scalar: scalarValue,
+    integerOutput: matrixBackend.integerOutput && scalar.kind === "integer",
+  };
+}
+
+function nodeToBackendNumber(node: IRNode): number | undefined {
+  switch (node.kind) {
+    case "integer": {
+      const value = Number(node.value);
+      return Number.isSafeInteger(value) && BigInt(value) === node.value ? value : undefined;
+    }
+    case "float":
+      return Number.isFinite(node.value) ? node.value : undefined;
+    default:
+      return undefined;
+  }
+}
+
+function matrixFromBackend(out: Matrix, integerOutput: boolean): IRNode {
+  return matrix(out.data.map((row) => row.map((value) => backendNumberToNode(value, integerOutput))));
+}
+
+function backendNumberToNode(value: number, integerOutput: boolean): IRNode {
+  if (integerOutput && Number.isSafeInteger(value)) {
+    return int(value);
+  }
+  return numberNode(value);
 }
 
 function det(rows: MatrixRows): IRNode {

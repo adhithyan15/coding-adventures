@@ -9,7 +9,7 @@ use cas_matrix::{
     rank, row_reduce, rowspace, scalar_multiply, sub_matrices, trace, transpose, zero_matrix,
     MatrixError, MATRIX,
 };
-use symbolic_ir::{apply, int, rat, sym, ADD, LIST, SQRT, SUB};
+use symbolic_ir::{apply, flt, int, rat, sym, ADD, LIST, MUL, SQRT, SUB};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -30,6 +30,21 @@ fn matrix_entries(m: &symbolic_ir::IRNode) -> Vec<Vec<(i64, i64)>> {
                     symbolic_ir::IRNode::Integer(value) => (value, 1),
                     symbolic_ir::IRNode::Rational(numer, denom) => (numer, denom),
                     other => panic!("expected numeric entry, got {other:?}"),
+                })
+                .collect()
+        })
+        .collect()
+}
+
+fn integer_entries(m: &symbolic_ir::IRNode) -> Vec<Vec<i64>> {
+    cas_matrix::rows_of(m)
+        .unwrap()
+        .into_iter()
+        .map(|row| {
+            row.into_iter()
+                .map(|entry| match entry {
+                    symbolic_ir::IRNode::Integer(value) => value,
+                    other => panic!("expected integer entry, got {other:?}"),
                 })
                 .collect()
         })
@@ -182,13 +197,22 @@ fn add_matrices_shape() {
 }
 
 #[test]
-fn add_matrices_entry_is_add_node() {
+fn add_matrices_integer_entries_use_matrix_backend() {
     let a = matrix(vec![irow(&[1, 2])]).unwrap();
     let b = matrix(vec![irow(&[3, 4])]).unwrap();
     let c = add_matrices(&a, &b).unwrap();
-    // Entry (1,1) should be Add(1, 3)
-    let e = get_entry(&c, 1, 1).unwrap();
-    assert_eq!(e, apply(sym(ADD), vec![int(1), int(3)]));
+    assert_eq!(integer_entries(&c), vec![vec![4, 6]]);
+}
+
+#[test]
+fn add_matrices_symbolic_entries_fall_back_to_add_node() {
+    let a = matrix(vec![vec![sym("x")]]).unwrap();
+    let b = matrix(vec![vec![int(3)]]).unwrap();
+    let c = add_matrices(&a, &b).unwrap();
+    assert_eq!(
+        get_entry(&c, 1, 1).unwrap(),
+        apply(sym(ADD), vec![sym("x"), int(3)])
+    );
 }
 
 #[test]
@@ -208,12 +232,22 @@ fn sub_matrices_shape() {
 }
 
 #[test]
-fn sub_matrices_entry_is_sub_node() {
+fn sub_matrices_integer_entries_use_matrix_backend() {
     let a = matrix(vec![irow(&[1, 2])]).unwrap();
     let b = matrix(vec![irow(&[3, 4])]).unwrap();
     let c = sub_matrices(&a, &b).unwrap();
-    let e = get_entry(&c, 1, 1).unwrap();
-    assert_eq!(e, apply(sym(SUB), vec![int(1), int(3)]));
+    assert_eq!(integer_entries(&c), vec![vec![-2, -2]]);
+}
+
+#[test]
+fn sub_matrices_symbolic_entries_fall_back_to_sub_node() {
+    let a = matrix(vec![vec![sym("x")]]).unwrap();
+    let b = matrix(vec![vec![int(3)]]).unwrap();
+    let c = sub_matrices(&a, &b).unwrap();
+    assert_eq!(
+        get_entry(&c, 1, 1).unwrap(),
+        apply(sym(SUB), vec![sym("x"), int(3)])
+    );
 }
 
 #[test]
@@ -222,6 +256,23 @@ fn scalar_multiply_shape() {
     let out = scalar_multiply(&int(3), &m).unwrap();
     assert_eq!(num_rows(&out).unwrap(), 1);
     assert_eq!(num_cols(&out).unwrap(), 2);
+}
+
+#[test]
+fn scalar_multiply_integer_entries_use_matrix_backend() {
+    let m = matrix(vec![irow(&[1, 2])]).unwrap();
+    let out = scalar_multiply(&int(3), &m).unwrap();
+    assert_eq!(integer_entries(&out), vec![vec![3, 6]]);
+}
+
+#[test]
+fn scalar_multiply_symbolic_entries_fall_back_to_mul_node() {
+    let m = matrix(vec![vec![sym("x")]]).unwrap();
+    let out = scalar_multiply(&int(3), &m).unwrap();
+    assert_eq!(
+        get_entry(&out, 1, 1).unwrap(),
+        apply(sym(MUL), vec![int(3), sym("x")])
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -251,6 +302,40 @@ fn dot_3x3_with_identity_shape() {
     let c = dot(&a, &eye).unwrap();
     assert_eq!(num_rows(&c).unwrap(), 3);
     assert_eq!(num_cols(&c).unwrap(), 3);
+}
+
+#[test]
+fn dot_integer_entries_use_matrix_backend() {
+    let a = matrix(vec![irow(&[1, 2]), irow(&[3, 4])]).unwrap();
+    let b = matrix(vec![irow(&[5, 6]), irow(&[7, 8])]).unwrap();
+    let c = dot(&a, &b).unwrap();
+    assert_eq!(integer_entries(&c), vec![vec![19, 22], vec![43, 50]]);
+}
+
+#[test]
+fn dot_symbolic_entries_fall_back_to_add_mul_nodes() {
+    let a = matrix(vec![vec![sym("x"), int(2)]]).unwrap();
+    let b = matrix(vec![vec![int(3)], vec![int(4)]]).unwrap();
+    let c = dot(&a, &b).unwrap();
+    assert_eq!(
+        get_entry(&c, 1, 1).unwrap(),
+        apply(
+            sym(ADD),
+            vec![
+                apply(sym(MUL), vec![sym("x"), int(3)]),
+                apply(sym(MUL), vec![int(2), int(4)])
+            ]
+        )
+    );
+}
+
+#[test]
+fn float_entries_use_matrix_backend_f32_path() {
+    let a = matrix(vec![vec![flt(1.5), flt(2.0)]]).unwrap();
+    let b = matrix(vec![vec![flt(0.5), flt(4.0)]]).unwrap();
+    let c = add_matrices(&a, &b).unwrap();
+    assert_eq!(get_entry(&c, 1, 1).unwrap(), flt(2.0));
+    assert_eq!(get_entry(&c, 1, 2).unwrap(), flt(6.0));
 }
 
 // ---------------------------------------------------------------------------
