@@ -34,6 +34,8 @@ The crate intentionally stops at the contract layer:
 - an append-only execution journal that keeps invocation requests, call records,
   events, and terminal results queryable through the storage-neutral read-side
   helpers
+- payload-free execution journal health summaries for active calls, approvals,
+  terminal-event gaps, emitted references, and follow-up checks
 - handler output validation against advertised tool output schemas before a
   completed result is emitted
 
