@@ -395,6 +395,51 @@ impl StorageSummaryPage {
     pub fn len(&self) -> usize {
         self.records.len()
     }
+
+    /// Return aggregate read-side facts for this summary page.
+    pub fn overview(&self) -> StorageSummaryPageOverview {
+        StorageSummaryPageOverview {
+            record_count: self.records.len(),
+            total_body_len: self.records.iter().map(|record| record.body_len).sum(),
+            total_metadata_keys: self
+                .records
+                .iter()
+                .map(|record| record.metadata_key_count)
+                .sum(),
+            first_key: self.records.first().map(|record| record.key.clone()),
+            last_key: self.records.last().map(|record| record.key.clone()),
+            next_cursor: self.next_cursor.clone(),
+        }
+    }
+}
+
+/// Aggregate read-side facts for one compact summary page.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageSummaryPageOverview {
+    pub record_count: usize,
+    pub total_body_len: usize,
+    pub total_metadata_keys: usize,
+    pub first_key: Option<String>,
+    pub last_key: Option<String>,
+    pub next_cursor: Option<String>,
+}
+
+impl StorageSummaryPageOverview {
+    pub fn is_empty(&self) -> bool {
+        self.record_count == 0
+    }
+
+    pub fn has_more(&self) -> bool {
+        self.next_cursor.is_some()
+    }
+
+    pub fn spans_multiple_records(&self) -> bool {
+        self.record_count > 1
+    }
+
+    pub fn has_metadata(&self) -> bool {
+        self.total_metadata_keys > 0
+    }
 }
 
 /// An advisory lease for background operations such as index rebuilds or
@@ -1209,30 +1254,61 @@ mod tests {
     #[test]
     fn storage_page_projects_summary_page() {
         let page = StoragePage {
-            records: vec![StorageRecord::new(
-                "context",
-                "entries/demo.json",
-                Revision::new("r1").unwrap(),
-                "application/json",
-                metadata(),
-                b"demo".to_vec(),
-                20,
-                30,
-            )
-            .unwrap()],
+            records: vec![
+                StorageRecord::new(
+                    "context",
+                    "entries/alpha.json",
+                    Revision::new("r1").unwrap(),
+                    "application/json",
+                    metadata(),
+                    b"alpha".to_vec(),
+                    20,
+                    30,
+                )
+                .unwrap(),
+                StorageRecord::new(
+                    "context",
+                    "entries/beta.json",
+                    Revision::new("r2").unwrap(),
+                    "application/json",
+                    metadata(),
+                    b"beta".to_vec(),
+                    21,
+                    31,
+                )
+                .unwrap(),
+            ],
             next_cursor: Some("entries/demo.json".to_string()),
         };
 
         let summary_page = page.summary_page();
-        assert_eq!(page.len(), 1);
+        assert_eq!(page.len(), 2);
         assert!(!page.is_empty());
-        assert_eq!(summary_page.len(), 1);
+        assert_eq!(summary_page.len(), 2);
         assert!(!summary_page.is_empty());
         assert_eq!(
             summary_page.next_cursor.as_deref(),
             Some("entries/demo.json")
         );
-        assert_eq!(summary_page.records[0].body_len, 4);
+        assert_eq!(summary_page.records[0].body_len, 5);
+
+        let overview = summary_page.overview();
+        assert_eq!(
+            overview,
+            StorageSummaryPageOverview {
+                record_count: 2,
+                total_body_len: 9,
+                total_metadata_keys: 2,
+                first_key: Some("entries/alpha.json".to_string()),
+                last_key: Some("entries/beta.json".to_string()),
+                next_cursor: Some("entries/demo.json".to_string()),
+            }
+        );
+        assert!(!overview.is_empty());
+        assert!(overview.has_more());
+        assert!(overview.spans_multiple_records());
+        assert!(overview.has_metadata());
+        assert!(StorageSummaryPage::empty().overview().is_empty());
     }
 
     #[test]
