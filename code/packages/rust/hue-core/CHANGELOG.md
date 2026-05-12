@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Hue application registration request and discovered-bridge pairing plan
   helpers for local physical-presence pairing flows.
+- Hue command summaries and command-plan rollups for payload-free write-surface
+  telemetry.
 - Hue scene summaries for recall planning and read-model telemetry, including
   room/zone scope and projected action coverage.
 - Hue state update summaries for read models and event-stream telemetry across

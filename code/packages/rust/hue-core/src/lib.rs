@@ -191,6 +191,27 @@ pub enum HueRequestBody {
     RecallScene,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HueRequestBodyKind {
+    RegisterApplication,
+    SetOn,
+    SetBrightness,
+    SetColorTemperature,
+    RecallScene,
+}
+
+impl HueRequestBody {
+    pub fn kind(&self) -> HueRequestBodyKind {
+        match self {
+            Self::RegisterApplication { .. } => HueRequestBodyKind::RegisterApplication,
+            Self::SetOn { .. } => HueRequestBodyKind::SetOn,
+            Self::SetBrightness { .. } => HueRequestBodyKind::SetBrightness,
+            Self::SetColorTemperature { .. } => HueRequestBodyKind::SetColorTemperature,
+            Self::RecallScene => HueRequestBodyKind::RecallScene,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct HueRequest {
     pub method: HueMethod,
@@ -256,6 +277,156 @@ impl HueCommand {
                 body: Some(HueRequestBody::RecallScene),
             },
         }
+    }
+
+    pub fn summary(&self) -> HueCommandSummary {
+        HueCommandSummary::from_command(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HueCommandTarget {
+    Light,
+    GroupedLight,
+    Scene,
+}
+
+impl HueCommandTarget {
+    pub fn resource_type(self) -> HueResourceType {
+        match self {
+            Self::Light => HueResourceType::Light,
+            Self::GroupedLight => HueResourceType::GroupedLight,
+            Self::Scene => HueResourceType::Scene,
+        }
+    }
+
+    pub fn is_light_surface(self) -> bool {
+        matches!(self, Self::Light | Self::GroupedLight)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueCommandSummary {
+    pub target: HueCommandTarget,
+    pub method: HueMethod,
+    pub body_kind: HueRequestBodyKind,
+}
+
+impl HueCommandSummary {
+    pub fn from_command(command: &HueCommand) -> Self {
+        match command {
+            HueCommand::SetLightOn { .. } => Self {
+                target: HueCommandTarget::Light,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::SetOn,
+            },
+            HueCommand::SetGroupedLightOn { .. } => Self {
+                target: HueCommandTarget::GroupedLight,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::SetOn,
+            },
+            HueCommand::SetLightBrightness { .. } => Self {
+                target: HueCommandTarget::Light,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::SetBrightness,
+            },
+            HueCommand::SetGroupedLightBrightness { .. } => Self {
+                target: HueCommandTarget::GroupedLight,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::SetBrightness,
+            },
+            HueCommand::SetLightColorTemperature { .. } => Self {
+                target: HueCommandTarget::Light,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::SetColorTemperature,
+            },
+            HueCommand::RecallScene { .. } => Self {
+                target: HueCommandTarget::Scene,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::RecallScene,
+            },
+        }
+    }
+
+    pub fn writes_light_state(&self) -> bool {
+        self.target.is_light_surface()
+    }
+
+    pub fn recalls_scene(&self) -> bool {
+        self.body_kind == HueRequestBodyKind::RecallScene
+    }
+
+    pub fn targets_direct_light(&self) -> bool {
+        self.target == HueCommandTarget::Light
+    }
+
+    pub fn targets_grouped_light(&self) -> bool {
+        self.target == HueCommandTarget::GroupedLight
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct HueCommandPlanSummary {
+    pub total_commands: usize,
+    pub light_commands: usize,
+    pub grouped_light_commands: usize,
+    pub scene_commands: usize,
+    pub on_off_commands: usize,
+    pub brightness_commands: usize,
+    pub color_temperature_commands: usize,
+    pub scene_recall_commands: usize,
+}
+
+impl HueCommandPlanSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_commands<'a>(commands: impl IntoIterator<Item = &'a HueCommand>) -> Self {
+        let mut summary = Self::empty();
+        for command in commands {
+            summary.record_summary(&command.summary());
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: &HueCommandSummary) {
+        self.total_commands += 1;
+        match summary.target {
+            HueCommandTarget::Light => self.light_commands += 1,
+            HueCommandTarget::GroupedLight => self.grouped_light_commands += 1,
+            HueCommandTarget::Scene => self.scene_commands += 1,
+        }
+        match summary.body_kind {
+            HueRequestBodyKind::SetOn => self.on_off_commands += 1,
+            HueRequestBodyKind::SetBrightness => self.brightness_commands += 1,
+            HueRequestBodyKind::SetColorTemperature => self.color_temperature_commands += 1,
+            HueRequestBodyKind::RecallScene => self.scene_recall_commands += 1,
+            HueRequestBodyKind::RegisterApplication => {}
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_commands == 0
+    }
+
+    pub fn has_lighting_writes(&self) -> bool {
+        self.light_commands > 0 || self.grouped_light_commands > 0
+    }
+
+    pub fn has_group_commands(&self) -> bool {
+        self.grouped_light_commands > 0
+    }
+
+    pub fn has_scene_recalls(&self) -> bool {
+        self.scene_recall_commands > 0
+    }
+
+    pub fn touches_multiple_surfaces(&self) -> bool {
+        usize::from(self.light_commands > 0)
+            + usize::from(self.grouped_light_commands > 0)
+            + usize::from(self.scene_commands > 0)
+            > 1
     }
 }
 
@@ -1147,6 +1318,88 @@ mod tests {
                 body: Some(HueRequestBody::SetBrightness { brightness: 70 }),
             }
         );
+    }
+
+    #[test]
+    fn hue_command_summaries_are_payload_free() {
+        let command = HueCommand::SetLightOn {
+            light_id: HueResourceId::trusted("light-1"),
+            on: true,
+        };
+
+        let summary = command.summary();
+
+        assert_eq!(
+            summary,
+            HueCommandSummary {
+                target: HueCommandTarget::Light,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::SetOn,
+            }
+        );
+        assert_eq!(summary.target.resource_type(), HueResourceType::Light);
+        assert!(summary.writes_light_state());
+        assert!(summary.targets_direct_light());
+        assert!(!summary.targets_grouped_light());
+        assert!(!summary.recalls_scene());
+        assert_eq!(
+            HueRequestBody::SetBrightness { brightness: 42 }.kind(),
+            HueRequestBodyKind::SetBrightness
+        );
+    }
+
+    #[test]
+    fn hue_command_plan_summaries_roll_up_write_surfaces() {
+        let commands = vec![
+            HueCommand::SetLightOn {
+                light_id: HueResourceId::trusted("light-1"),
+                on: true,
+            },
+            HueCommand::SetGroupedLightOn {
+                grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+                on: false,
+            },
+            HueCommand::SetLightBrightness {
+                light_id: HueResourceId::trusted("light-1"),
+                brightness: 70,
+            },
+            HueCommand::SetGroupedLightBrightness {
+                grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+                brightness: 35,
+            },
+            HueCommand::SetLightColorTemperature {
+                light_id: HueResourceId::trusted("light-1"),
+                mirek: 366,
+            },
+            HueCommand::RecallScene {
+                scene_id: HueResourceId::trusted("scene-1"),
+            },
+        ];
+
+        let summary = HueCommandPlanSummary::from_commands(&commands);
+
+        assert_eq!(
+            summary,
+            HueCommandPlanSummary {
+                total_commands: 6,
+                light_commands: 3,
+                grouped_light_commands: 2,
+                scene_commands: 1,
+                on_off_commands: 2,
+                brightness_commands: 2,
+                color_temperature_commands: 1,
+                scene_recall_commands: 1,
+            }
+        );
+        assert!(summary.has_lighting_writes());
+        assert!(summary.has_group_commands());
+        assert!(summary.has_scene_recalls());
+        assert!(summary.touches_multiple_surfaces());
+
+        let empty = HueCommandPlanSummary::empty();
+        assert!(empty.is_empty());
+        assert!(!empty.has_lighting_writes());
+        assert!(!empty.touches_multiple_surfaces());
     }
 
     #[test]
