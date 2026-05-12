@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Wire `Subst(value, variable, expr)` to the TypeScript `cas-substitution`
+  structural substitution package.
 - Wire deterministic MACSYMA list heads (`Length`, `First`, `Rest`, `Last`,
   `Append`, `Reverse`, `Range`, `Map`, `Apply`, `Sort`, `Part`, `Flatten`,
   and `Join`) to the TypeScript `cas-list-operations` package.

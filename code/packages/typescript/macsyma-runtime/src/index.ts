@@ -14,6 +14,7 @@ import {
   sortList,
 } from "@coding-adventures/cas-list-operations";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
+import { subst } from "@coding-adventures/cas-substitution";
 import {
   ACOS,
   ACOSH,
@@ -308,6 +309,7 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(KILL.name, makeKillHandler(this));
     table.set(EV.name, makeEvHandler());
     table.set(SOLVE.name, solveHandler);
+    table.set(SUBST.name, substHandler);
     table.set(LENGTH.name, listHandler(1, ([value]) => length(value)));
     table.set(FIRST.name, listHandler(1, ([value]) => first(value)));
     table.set(REST.name, listHandler(1, ([value]) => rest(value)));
@@ -322,7 +324,7 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(PART.name, listHandler(2, ([value, index]) => part(value, integerArgument(index))));
     table.set(FLATTEN.name, listHandler(null, flattenHandler));
     this.runtimeTable = table;
-    this.runtimeHeld = new Set([...super.holdHeads(), KILL.name, EV.name, SOLVE.name]);
+    this.runtimeHeld = new Set([...super.holdHeads(), KILL.name, EV.name, SOLVE.name, SUBST.name]);
   }
 
   override lookup(name: string): IRNode | undefined {
@@ -599,6 +601,12 @@ function solveHandler(_vm: VM, expr: IRApply): IRNode {
 
   const rules = solveLinearSystem(equationsNode.args, variables);
   return rules === null ? expr : app(LIST, rules);
+}
+
+function substHandler(_vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 3) return expr;
+  const [value, variable, target] = expr.args;
+  return subst(value, variable, target);
 }
 
 function listHandler(

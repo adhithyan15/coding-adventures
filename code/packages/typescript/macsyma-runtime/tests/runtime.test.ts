@@ -15,6 +15,7 @@ import {
   SIN,
   SOLVE,
   SUB,
+  SUBST,
   app,
   int,
   numberNode,
@@ -182,10 +183,12 @@ describe("macsyma-runtime", () => {
     expect(backend.handlers().has(KILL.name)).toBe(true);
     expect(backend.handlers().has(EV.name)).toBe(true);
     expect(backend.handlers().has(SOLVE.name)).toBe(true);
+    expect(backend.handlers().has(SUBST.name)).toBe(true);
     expect(backend.handlers().has(LENGTH.name)).toBe(true);
     expect(backend.holdHeads().has(KILL.name)).toBe(true);
     expect(backend.holdHeads().has(EV.name)).toBe(true);
     expect(backend.holdHeads().has(SOLVE.name)).toBe(true);
+    expect(backend.holdHeads().has(SUBST.name)).toBe(true);
   });
 
   it("kills single and multiple bindings without evaluating names first", () => {
@@ -377,6 +380,38 @@ describe("macsyma-runtime", () => {
     ]);
 
     const [result] = session.evalStatements([expr]);
+    expect(result.output).toEqual(expr);
+  });
+
+  it("evaluates structural substitution through cas-substitution", () => {
+    const x = sym("x");
+    const session = new MacsymaSession();
+    const [simple, compound] = session.evalStatements([
+      app(SUBST, [int(3), x, app(POW, [x, int(2)])]),
+      app(SUBST, [
+        sym("z"),
+        app(ADD, [x, int(1)]),
+        app(MUL, [app(ADD, [x, int(1)]), app(ADD, [x, int(1)])]),
+      ]),
+    ]);
+
+    expect(simple.output).toEqual(app(POW, [int(3), int(2)]));
+    expect(compound.output).toEqual(app(MUL, [sym("z"), sym("z")]));
+  });
+
+  it("keeps substitution variables unevaluated", () => {
+    const session = new MacsymaSession();
+    const [bindResult, substResult] = session.evalSource("x : 5; subst(3, x, x^2);");
+
+    expect(bindResult.output).toEqual(int(5));
+    expect(substResult.output).toEqual(app(POW, [int(3), int(2)]));
+  });
+
+  it("keeps invalid substitution calls unevaluated", () => {
+    const session = new MacsymaSession();
+    const expr = app(SUBST, [int(3), sym("x")]);
+    const [result] = session.evalStatements([expr]);
+
     expect(result.output).toEqual(expr);
   });
 

@@ -11,5 +11,6 @@ cd ../macsyma-parser && npm ci --quiet
 cd ../macsyma-compiler && npm ci --quiet
 cd ../cas-list-operations && npm ci --quiet
 cd ../cas-solve && npm ci --quiet
+cd ../cas-substitution && npm ci --quiet
 npm ci --quiet
 npx vitest run --coverage
