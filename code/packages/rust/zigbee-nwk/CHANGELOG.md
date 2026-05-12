@@ -9,6 +9,8 @@ All notable changes to this package will be documented in this file.
 - `NeighborTableSummary`, `RouteTableSummary`, and `NwkTopologySummary` read
   models for supervising neighbor roles, relationships, identity coverage,
   link metrics, freshness, router candidates, and route health.
+- `NeighborTableSummary` freshness/detail fields for fresh neighbor count,
+  maximum depth, best LQI, and worst outgoing cost.
 
 ## [0.1.0] - 2026-05-06
 
