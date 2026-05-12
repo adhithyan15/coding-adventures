@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
 - Added a `build_runtime_mailbox` path that can consume either stdio-backed or
   thread-pool-backed mailbox submitters.
 - Added integration coverage for the in-process thread-pool mailbox path.
+- Added an ignored in-process mailbox stress test for configurable concurrent
+  real TCP clients without requiring a Python worker.
 
 ## [0.1.1] - 2026-04-22
 

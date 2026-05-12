@@ -450,6 +450,15 @@ fn resolve_first_socket_addr<A: ToSocketAddrs>(addr: A) -> Result<SocketAddr, Pl
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::{self, Read, Write};
+    use std::net::{Shutdown, TcpStream};
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::{Arc, Barrier};
+    use std::thread;
+    use std::time::Duration;
+
+    const DEFAULT_STRESS_CLIENTS: usize = 128;
+    const DEFAULT_STRESS_REQUESTS_PER_CLIENT: usize = 4;
 
     fn connection() -> TcpConnectionInfo {
         TcpConnectionInfo {
@@ -534,5 +543,171 @@ mod tests {
         let text = String::from_utf8(result.write).expect("response utf8");
         assert!(text.starts_with("HTTP/1.1 501 Not Implemented\r\n"));
         assert!(result.close);
+    }
+
+    #[test]
+    #[ignore]
+    fn native_http_server_handles_pipelined_requests_under_concurrent_load() {
+        let client_count = stress_count("EMBEDDABLE_HTTP_STRESS_CLIENTS", DEFAULT_STRESS_CLIENTS);
+        let requests_per_client = stress_count(
+            "EMBEDDABLE_HTTP_STRESS_REQUESTS_PER_CLIENT",
+            DEFAULT_STRESS_REQUESTS_PER_CLIENT,
+        );
+        let expected_requests = client_count.saturating_mul(requests_per_client);
+        let seen_requests = Arc::new(AtomicUsize::new(0));
+        let handler_seen = Arc::clone(&seen_requests);
+        let options = HttpServerOptions {
+            tcp: TcpRuntimeOptions {
+                max_connections: client_count.saturating_add(64),
+                read_buffer_size: 2048,
+                poll_timeout: Duration::from_millis(1),
+                ..TcpRuntimeOptions::default()
+            },
+            ..HttpServerOptions::default()
+        };
+        let mut server = bind_native_http_server(("127.0.0.1", 0), options, move |request| {
+            handler_seen.fetch_add(1, Ordering::SeqCst);
+            HttpResponse::ok(format!("ok:{}:{}", request.method(), request.target()))
+                .with_header("Content-Type", "text/plain")
+        })
+        .expect("bind native HTTP server");
+        let addr = server.local_addr();
+        let stop = server.stop_handle();
+        let server_thread = thread::spawn(move || server.serve());
+        let barrier = Arc::new(Barrier::new(client_count));
+
+        let clients = (0..client_count)
+            .map(|client_index| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait();
+                    exercise_http_client(addr, client_index, requests_per_client)
+                })
+            })
+            .collect::<Vec<_>>();
+
+        for client in clients {
+            client
+                .join()
+                .expect("HTTP stress client thread")
+                .expect("HTTP stress client");
+        }
+
+        stop.stop();
+        server_thread
+            .join()
+            .expect("HTTP server thread")
+            .expect("HTTP server result");
+        assert_eq!(seen_requests.load(Ordering::SeqCst), expected_requests);
+    }
+
+    fn stress_count(var: &str, default: usize) -> usize {
+        std::env::var(var)
+            .ok()
+            .and_then(|value| value.parse::<usize>().ok())
+            .filter(|value| *value > 0)
+            .unwrap_or(default)
+    }
+
+    fn exercise_http_client(
+        addr: SocketAddr,
+        client_index: usize,
+        requests_per_client: usize,
+    ) -> io::Result<()> {
+        let mut stream = TcpStream::connect(addr)?;
+        stream.set_nodelay(true)?;
+        stream.set_read_timeout(Some(Duration::from_secs(10)))?;
+        stream.set_write_timeout(Some(Duration::from_secs(10)))?;
+
+        let mut request_bytes = Vec::new();
+        let mut expected_bodies = Vec::with_capacity(requests_per_client);
+        for request_index in 0..requests_per_client {
+            let target = format!("/stress/{client_index}/{request_index}");
+            expected_bodies.push(format!("ok:GET:{target}"));
+            request_bytes.extend_from_slice(
+                format!(
+                    "GET {target} HTTP/1.1\r\nHost: localhost\r\n{}\r\n",
+                    if request_index + 1 == requests_per_client {
+                        "Connection: close\r\n"
+                    } else {
+                        ""
+                    }
+                )
+                .as_bytes(),
+            );
+        }
+
+        stream.write_all(&request_bytes)?;
+        stream.shutdown(Shutdown::Write)?;
+
+        let mut response = Vec::new();
+        stream.read_to_end(&mut response)?;
+        let text = String::from_utf8(response).map_err(|error| {
+            io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("HTTP response was not UTF-8: {error}"),
+            )
+        })?;
+        let response_count = text.matches("HTTP/1.1 200 OK\r\n").count();
+        if response_count != requests_per_client {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("expected {requests_per_client} responses, got {response_count}: {text}"),
+            ));
+        }
+        for body in expected_bodies {
+            if !text.contains(&body) {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    format!("missing response body {body}: {text}"),
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    ))]
+    fn bind_native_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        handler: F,
+    ) -> Result<HttpServer<transport_platform::bsd::KqueueTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        HttpServer::bind_kqueue(addr, options, handler)
+    }
+
+    #[cfg(target_os = "linux")]
+    fn bind_native_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        handler: F,
+    ) -> Result<HttpServer<transport_platform::linux::EpollTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        HttpServer::bind_epoll(addr, options, handler)
+    }
+
+    #[cfg(target_os = "windows")]
+    fn bind_native_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        handler: F,
+    ) -> Result<HttpServer<transport_platform::windows::WindowsTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        HttpServer::bind_windows(addr, options, handler)
     }
 }

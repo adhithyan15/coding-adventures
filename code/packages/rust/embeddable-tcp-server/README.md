@@ -90,3 +90,13 @@ The integration tests launch a real Rust TCP listener, start the Python Mini
 Redis worker process, send RESP commands through a socket, and assert that the
 Python-produced RESP replies come back through the generic embeddable server
 seam.
+
+Ignored stress coverage can drive the in-process mailbox path through many real
+TCP clients without requiring Python:
+
+```bash
+EMBEDDABLE_TCP_SERVER_STRESS_CLIENTS=512 \
+  cargo test -p embeddable-tcp-server \
+  inprocess_mailbox_server_sustains_configured_concurrent_clients \
+  -- --ignored --nocapture
+```
