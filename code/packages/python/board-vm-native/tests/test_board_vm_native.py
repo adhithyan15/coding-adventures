@@ -9,6 +9,7 @@ from board_vm_native import (
     BoardDevice,
     BoardDescriptor,
     BoardTarget,
+    BluetoothTransport,
     Connection,
     EspUploadOptions,
     PicoUf2UploadOptions,
@@ -251,6 +252,23 @@ def test_bluetooth_endpoint_candidates_are_planned_by_rust_language_core():
     assert ble["requires_pairing"] is True
 
 
+def test_bluetooth_transport_uses_rust_backend_open_plan():
+    plan = {
+        "endpoint": bluetooth_endpoint("btspp://ESP32-BoardVM:3"),
+        "backend": "macos_rfcomm",
+        "status": "ready",
+        "stream_path": "/dev/cu.ESP32-BoardVM",
+        "message": None,
+    }
+
+    transport = BluetoothTransport("btspp://ESP32-BoardVM:3", backend=plan)
+
+    assert transport.endpoint == "btspp://ESP32-BoardVM:3"
+    assert transport.status == "ready"
+    assert transport.stream_path == "/dev/cu.ESP32-BoardVM"
+    assert transport.backend["endpoint"]["endpoint_transport"] == "bluetooth_classic_rfcomm"
+
+
 def test_bluetooth_endpoint_candidates_default_to_host_discovery(monkeypatch):
     monkeypatch.setattr(
         board_vm_native_module._native,
@@ -390,6 +408,37 @@ def test_connect_auto_selects_bluetooth_endpoint_candidates():
         "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e"
         "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e"
     )
+
+
+def test_connect_builds_a_bluetooth_transport_from_rust_backend_plan():
+    connection = connect(
+        "esp32",
+        via="bluetooth_classic",
+        bluetooth_devices=[
+            {
+                "id": "esp32-board-vm",
+                "name": "ESP32 Board VM",
+                "paired": True,
+                "board_vm_rfcomm_channels": [3],
+            }
+        ],
+        bluetooth_backend_plan={
+            "endpoint": bluetooth_endpoint("btspp://esp32-board-vm:3"),
+            "backend": "macos_rfcomm",
+            "status": "ready",
+            "stream_path": "/dev/cu.ESP32-BoardVM",
+            "message": None,
+        },
+    )
+
+    transport = connection.session().transport
+
+    assert connection.port is None
+    assert connection.connection_transport == "bluetooth_classic"
+    assert connection.endpoint == "btspp://esp32-board-vm:3"
+    assert isinstance(transport, BluetoothTransport)
+    assert transport.backend["backend"] == "macos_rfcomm"
+    assert transport.stream_path == "/dev/cu.ESP32-BoardVM"
 
 
 def test_connect_builds_a_tcp_transport_for_wifi_endpoints():

@@ -8,6 +8,7 @@ use board_vm_host::{
     DEFAULT_RUN_FLAGS,
 };
 use board_vm_language_core::{
+    bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
     bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
     build_caps_query_wire_frame, build_hello_wire_frame, build_program_begin_wire_frame,
     build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_wire_frame,
@@ -16,10 +17,10 @@ use board_vm_language_core::{
     discover_devices_from_paths, esp_upload_options_for_target, host_endpoint_transport_name,
     known_targets, onboard_led_kind, parse_bluetooth_endpoint as core_parse_bluetooth_endpoint,
     pico_uf2_upload_options_for_target, wireless_transport_name, BoardVmLanguageSession,
-    BuiltWireFrame, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
-    LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
-    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
-    LanguageTargetInfo, LanguageWirelessInterface,
+    BuiltWireFrame, LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice,
+    LanguageBluetoothEndpoint, LanguageBluetoothEndpointCandidate, LanguageConnectionOption,
+    LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed,
+    LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageWirelessInterface,
 };
 use lua_bridge::{
     get_str, luaL_Reg, luaL_checkinteger, lua_Integer, lua_State, lua_createtable, lua_getfield,
@@ -357,6 +358,20 @@ unsafe fn push_bluetooth_endpoint(L: *mut lua_State, endpoint: &LanguageBluetoot
     push_optional_int(L, "channel", endpoint.channel);
 }
 
+unsafe fn push_bluetooth_backend_open_plan(
+    L: *mut lua_State,
+    plan: &LanguageBluetoothBackendOpenPlan,
+) {
+    lua_bridge::lua_newtable(L);
+    let key = CString::new("endpoint").unwrap();
+    push_bluetooth_endpoint(L, &plan.endpoint);
+    lua_setfield(L, -2, key.as_ptr());
+    set_str(L, "backend", &plan.backend);
+    set_str(L, "status", &plan.status);
+    push_optional_str(L, "stream_path", plan.stream_path.as_deref());
+    push_optional_str(L, "message", plan.message.as_deref());
+}
+
 unsafe fn push_bluetooth_endpoint_candidate(
     L: *mut lua_State,
     candidate: &LanguageBluetoothEndpointCandidate,
@@ -546,6 +561,15 @@ unsafe extern "C" fn lua_bluetooth_endpoint(L: *mut lua_State) -> c_int {
     1
 }
 
+unsafe extern "C" fn lua_bluetooth_backend(L: *mut lua_State) -> c_int {
+    let endpoint = get_str(L, 1).unwrap_or_else(|| raise_error(L, "endpoint must be a string"));
+    match core_bluetooth_backend_open_plan(&endpoint) {
+        Some(plan) => push_bluetooth_backend_open_plan(L, &plan),
+        None => lua_pushnil(L),
+    }
+    1
+}
+
 unsafe extern "C" fn lua_bluetooth_endpoint_candidates(L: *mut lua_State) -> c_int {
     let devices = read_bluetooth_discovered_devices(L, 1);
     let candidates = bluetooth_endpoint_candidates_from_devices(&devices);
@@ -705,7 +729,7 @@ unsafe extern "C" fn lua_defaults(L: *mut lua_State) -> c_int {
     1
 }
 
-struct FuncTable([luaL_Reg; 19]);
+struct FuncTable([luaL_Reg; 20]);
 unsafe impl Sync for FuncTable {}
 
 static FUNCS: FuncTable = FuncTable([
@@ -724,6 +748,10 @@ static FUNCS: FuncTable = FuncTable([
     luaL_Reg {
         name: b"bluetooth_endpoint\0".as_ptr() as *const _,
         func: Some(lua_bluetooth_endpoint),
+    },
+    luaL_Reg {
+        name: b"bluetooth_backend\0".as_ptr() as *const _,
+        func: Some(lua_bluetooth_backend),
     },
     luaL_Reg {
         name: b"bluetooth_endpoint_candidates\0".as_ptr() as *const _,

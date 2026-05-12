@@ -9,6 +9,7 @@ use board_vm_host::{
     GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
+    bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
     bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
     build_caps_query_wire_frame, build_gpio_handle_close_module, build_gpio_handle_read_module,
     build_gpio_handle_write_module, build_gpio_open_module, build_gpio_read_module,
@@ -27,7 +28,7 @@ use board_vm_language_core::{
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
     program_format_name, raw_module_len, run_status_name, wireless_transport_name,
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
+    LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
     LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
@@ -494,6 +495,24 @@ unsafe extern "C" fn py_bluetooth_endpoint(_module: PyObjectPtr, args: PyObjectP
     }
 }
 
+unsafe extern "C" fn py_bluetooth_backend(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let endpoint = match parse_arg_str(args, 0) {
+        Some(value) => value,
+        None => {
+            set_error(
+                type_error_class(),
+                "bluetooth_backend() requires endpoint as str",
+            );
+            return ptr::null_mut();
+        }
+    };
+
+    match core_bluetooth_backend_open_plan(&endpoint) {
+        Some(plan) => language_bluetooth_backend_open_plan_to_py(&plan),
+        None => py_none(),
+    }
+}
+
 unsafe extern "C" fn py_bluetooth_endpoint_candidates(
     _module: PyObjectPtr,
     args: PyObjectPtr,
@@ -956,6 +975,36 @@ unsafe fn language_bluetooth_endpoint_to_py(endpoint: &LanguageBluetoothEndpoint
         endpoint
             .channel
             .map(|value| usize_to_py(value as usize))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict
+}
+
+unsafe fn language_bluetooth_backend_open_plan_to_py(
+    plan: &LanguageBluetoothBackendOpenPlan,
+) -> PyObjectPtr {
+    let dict = PyDict_New();
+    dict_set(
+        dict,
+        "endpoint",
+        language_bluetooth_endpoint_to_py(&plan.endpoint),
+    );
+    dict_set(dict, "backend", str_to_py(&plan.backend));
+    dict_set(dict, "status", str_to_py(&plan.status));
+    dict_set(
+        dict,
+        "stream_path",
+        plan.stream_path
+            .as_ref()
+            .map(|value| str_to_py(value))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict_set(
+        dict,
+        "message",
+        plan.message
+            .as_ref()
+            .map(|value| str_to_py(value))
             .unwrap_or_else(|| py_none()),
     );
     dict
@@ -1515,7 +1564,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 31] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 32] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1665,6 +1714,12 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_bluetooth_endpoint),
             ml_flags: METH_VARARGS,
             ml_doc: b"Parse a Board VM Bluetooth endpoint in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"bluetooth_backend\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_bluetooth_backend),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Plan Board VM Bluetooth backend opening in Rust.\0".as_ptr() as *const c_char,
         },
         PyMethodDef {
             ml_name: b"bluetooth_endpoint_candidates\0".as_ptr() as *const c_char,
