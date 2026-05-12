@@ -66,7 +66,7 @@ use llm_gateway::{
 use adjudication_clarification::{
     retry_decompose_on_coverage_failure, ClarificationError, CoverageClarificationRequest,
 };
-use llm_cache::CachingClient;
+use llm_cache::{CacheStats, CacheStatsHandle, CachingClient};
 use llm_primitives::{
     decompose_text, DecomposeTextRequest, GatewayConfig, PrimitiveError, Role as PrimitiveRole,
 };
@@ -242,6 +242,12 @@ pub struct PipelineArmReport {
     /// includes the model's raw JSON so the report shows exactly
     /// what the model produced.
     pub ir_source: IrSourceTelemetry,
+    /// Aggregate cache stats across every role's `CachingClient`.
+    /// Populated regardless of whether disk persistence is enabled;
+    /// hit rate is 0% on first run, climbs as the same prompts are
+    /// re-issued (most often via the ADJ06 retry loop within a
+    /// single run, or across runs when `cache_dir` is set).
+    pub cache_stats: CacheStats,
 }
 
 /// One ADJ04 drift finding pulled out of the audit trail. Mirrors
@@ -288,10 +294,11 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
     // GatewayConfig needs Box<dyn LlmClient>; we register clones of
     // the primary client for Extractor/Renderer/Nli/Plausibility so
     // each call site uses its own connection.
-    let extractor = wrap_with_cache(Box::new(primary.clone()), cfg);
-    let renderer = wrap_with_cache(Box::new(primary.clone()), cfg);
-    let nli = wrap_with_cache(Box::new(primary.clone()), cfg);
-    let plausibility = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (extractor, h_extractor) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (renderer, h_renderer) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (nli, h_nli) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (plausibility, h_plausibility) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let mut cache_handles = vec![h_extractor, h_renderer, h_nli, h_plausibility];
     let mut gateway = GatewayConfig::new()
         .with_client(PrimitiveRole::Extractor, extractor)
         .with_client(PrimitiveRole::Renderer, renderer)
@@ -305,10 +312,9 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         let adv_client = OllamaClient::new(adv_model.clone())
             .with_endpoint(cfg.endpoint.clone())
             .with_timeout(cfg.timeout);
-        gateway = gateway.with_client(
-            PrimitiveRole::Adversary,
-            wrap_with_cache(Box::new(adv_client) as Box<dyn LlmClient>, cfg),
-        );
+        let (adv_boxed, h_adv) = wrap_with_cache(Box::new(adv_client) as Box<dyn LlmClient>, cfg);
+        cache_handles.push(h_adv);
+        gateway = gateway.with_client(PrimitiveRole::Adversary, adv_boxed);
     }
 
     // Build the IR according to the configured mode. The
@@ -483,6 +489,9 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         Verdict::EngineError(detail) => format!("EngineError: {detail}"),
     };
 
+    // Aggregate cache stats across every role's CachingClient.
+    let aggregate_cache_stats = aggregate_stats(&cache_handles);
+
     PipelineArmReport {
         verdict_summary: summary,
         adj02_outcome: trail.checker_results[0].outcome,
@@ -493,8 +502,21 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         adj04_drift_findings,
         adj05_adversarial_findings,
         ir_source: ir_source_telemetry,
+        cache_stats: aggregate_cache_stats,
         pipeline_output: output,
     }
+}
+
+/// Sum hits/misses/entries across a fleet of `CacheStatsHandle`s.
+fn aggregate_stats(handles: &[CacheStatsHandle]) -> CacheStats {
+    let mut total = CacheStats::default();
+    for h in handles {
+        let s = h.stats();
+        total.hits = total.hits.saturating_add(s.hits);
+        total.misses = total.misses.saturating_add(s.misses);
+        total.entries = total.entries.saturating_add(s.entries);
+    }
+    total
 }
 
 /// How Arm B's IR was built — recorded so the report can show the
@@ -1022,17 +1044,19 @@ fn parse_source_spans(
     spans
 }
 
-/// Wrap an inner LLM client with a `CachingClient` if the demo
-/// config requests caching. Disk persistence is enabled when
-/// `cfg.cache_dir` is `Some`; otherwise the cache is in-memory only
-/// (and so won't help a single-shot binary run — but the demo also
-/// runs in tests and from the same process as other primitives,
-/// where in-memory hits do happen via the ADJ06 retry loop).
-fn wrap_with_cache(inner: Box<dyn LlmClient>, cfg: &DemoConfig) -> Box<dyn LlmClient> {
-    match &cfg.cache_dir {
-        Some(dir) => Box::new(CachingClient::with_disk_persistence(inner, dir)),
-        None => Box::new(CachingClient::new(inner)),
-    }
+/// Wrap an inner LLM client with a `CachingClient`. Returns both
+/// the boxed client (for the gateway) and a stats handle (for the
+/// demo to read hit rates after the run completes).
+fn wrap_with_cache(
+    inner: Box<dyn LlmClient>,
+    cfg: &DemoConfig,
+) -> (Box<dyn LlmClient>, CacheStatsHandle) {
+    let cached = match &cfg.cache_dir {
+        Some(dir) => CachingClient::with_disk_persistence(inner, dir),
+        None => CachingClient::new(inner),
+    };
+    let handle = cached.stats_handle();
+    (Box::new(cached) as Box<dyn LlmClient>, handle)
 }
 
 /// Render the first ADJ02 violation as a short string suitable for
@@ -1314,6 +1338,16 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
     out.push_str(&format!("engine ran:               {}\n", pipeline.engine_ran));
     if let Some(art) = &pipeline.pipeline_output.audit_trail.engine_artifacts {
         out.push_str(&format!("engine version:           {}\n", art.engine_version));
+    }
+    let cs = &pipeline.cache_stats;
+    if cs.hits + cs.misses > 0 {
+        out.push_str(&format!(
+            "cache:                    {hits} hits / {misses} misses ({rate:.0}% hit rate), {entries} entries\n",
+            hits = cs.hits,
+            misses = cs.misses,
+            rate = cs.hit_rate() * 100.0,
+            entries = cs.entries,
+        ));
     }
     // ADJ02 coverage violations — surface so the user sees WHY the
     // pipeline blocked when it did.

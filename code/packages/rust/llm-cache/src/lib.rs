@@ -46,7 +46,7 @@
 //!   version may add TTL for adversarial use cases.
 
 use std::path::{Path, PathBuf};
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 use llm_gateway::{
     Capabilities, CompletionJsonResponse, CompletionRequest, CompletionResponse, FinishReason,
@@ -277,9 +277,29 @@ fn try_save_disk(dir: &Path, key: &str, entry: &CacheEntry) {
 /// let stats = cached.stats();
 /// println!("hit rate: {:.0}%", stats.hit_rate() * 100.0);
 /// ```
+/// Shareable handle to a `CachingClient`'s stats. Callers can clone
+/// this and inspect stats after the typed client has been wrapped
+/// in a `Box<dyn LlmClient>` and surrendered to a `GatewayConfig`.
+#[derive(Clone)]
+pub struct CacheStatsHandle {
+    state: Arc<Mutex<CacheState>>,
+}
+
+impl CacheStatsHandle {
+    /// Snapshot of cache telemetry at the time of the call.
+    pub fn stats(&self) -> CacheStats {
+        let s = self.state.lock().unwrap();
+        CacheStats {
+            hits: s.hits,
+            misses: s.misses,
+            entries: s.entries.len(),
+        }
+    }
+}
+
 pub struct CachingClient {
     inner: Box<dyn LlmClient>,
-    state: Mutex<CacheState>,
+    state: Arc<Mutex<CacheState>>,
     /// Maximum number of entries before FIFO eviction. `None` =
     /// unlimited.
     capacity: Option<usize>,
@@ -293,7 +313,7 @@ impl CachingClient {
     pub fn new(inner: Box<dyn LlmClient>) -> Self {
         Self {
             inner,
-            state: Mutex::new(CacheState::default()),
+            state: Arc::new(Mutex::new(CacheState::default())),
             capacity: None,
             disk_dir: None,
         }
@@ -303,7 +323,7 @@ impl CachingClient {
     pub fn with_capacity(inner: Box<dyn LlmClient>, capacity: usize) -> Self {
         Self {
             inner,
-            state: Mutex::new(CacheState::default()),
+            state: Arc::new(Mutex::new(CacheState::default())),
             capacity: Some(capacity),
             disk_dir: None,
         }
@@ -321,7 +341,7 @@ impl CachingClient {
     ) -> Self {
         Self {
             inner,
-            state: Mutex::new(CacheState::default()),
+            state: Arc::new(Mutex::new(CacheState::default())),
             capacity: None,
             disk_dir: Some(dir.into()),
         }
@@ -335,7 +355,7 @@ impl CachingClient {
     ) -> Self {
         Self {
             inner,
-            state: Mutex::new(CacheState::default()),
+            state: Arc::new(Mutex::new(CacheState::default())),
             capacity: Some(capacity),
             disk_dir: Some(dir.into()),
         }
@@ -348,6 +368,16 @@ impl CachingClient {
             hits: s.hits,
             misses: s.misses,
             entries: s.entries.len(),
+        }
+    }
+
+    /// Cloneable handle on this cache's stats. Useful after the
+    /// typed `CachingClient` has been wrapped in
+    /// `Box<dyn LlmClient>` and surrendered to a `GatewayConfig` —
+    /// callers stash the handle and read stats at any later point.
+    pub fn stats_handle(&self) -> CacheStatsHandle {
+        CacheStatsHandle {
+            state: Arc::clone(&self.state),
         }
     }
 

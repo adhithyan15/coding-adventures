@@ -1,8 +1,8 @@
 [package]
 name = "llm-cache"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "LM00c — content-addressed prompt cache. Wraps any LlmClient with a (model, prompt_hash[, schema_name])-keyed cache. v0.1 was in-memory only; v0.2 adds optional disk persistence (one JSON file per entry keyed on prompt hash) so the cache survives process restarts."
+description = "LM00c — content-addressed prompt cache. v0.3 adds CacheStatsHandle, a cloneable handle on a CachingClient's stats so callers can read hit/miss rates after the typed client has been wrapped in Box<dyn LlmClient>."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }

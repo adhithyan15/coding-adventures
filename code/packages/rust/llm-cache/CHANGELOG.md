@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-12
+
+### Added
+
+`CacheStatsHandle` — a cloneable handle on a `CachingClient`'s
+stats. Callers can hold the handle even after the typed
+`CachingClient` is moved into a `Box<dyn LlmClient>` and registered
+in a `GatewayConfig`, then read stats after the run completes.
+
+- `CachingClient::stats_handle()` returns a `CacheStatsHandle`
+  backed by an `Arc<Mutex<CacheState>>` (the internal state is
+  now Arc-wrapped, which is a non-breaking change to existing
+  callers).
+- `CacheStatsHandle::stats()` snapshots the live state.
+
+### Why
+
+The TSA / clinical / contract demos all wrap their LLM clients in
+`CachingClient` then surrender them to a `GatewayConfig`. With v0.2
+the demo couldn't read hit rates afterwards; v0.3 lets each demo
+print a clean `cache: N hits / M misses (X% hit rate)` line in the
+side-by-side report — which makes the cache's economic value
+visible to the reader.
+
 ## [0.2.0] - 2026-05-12
 
 ### Added
