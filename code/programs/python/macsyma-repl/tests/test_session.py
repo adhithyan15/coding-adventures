@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from coding_adventures_repl import Repl  # noqa: E402
 
 from language import MacsymaLanguage  # noqa: E402
+from main import main as macsyma_main  # noqa: E402
 from prompt import MacsymaPrompt  # noqa: E402
 
 
@@ -141,6 +142,36 @@ def test_auto_terminator_appended() -> None:
     """Input without a trailing ``;`` or ``$`` is treated as ``;``."""
     out = _run(["2 + 3", ":quit"])
     assert any(line == "(%o1) 5" for line in out)
+
+
+def test_eval_file_uses_same_session_semantics(tmp_path: Path) -> None:
+    program = tmp_path / "batch.mac"
+    program.write_text("x: 5$\nx + 1;\n2 + 3;\n", encoding="utf-8")
+
+    language = MacsymaLanguage()
+    result = language.eval_file(program)
+
+    assert result == ("ok", "(%o2) 6\n(%o3) 5")
+
+
+def test_cli_file_mode_prints_outputs_without_prompt(tmp_path: Path, capsys) -> None:
+    program = tmp_path / "batch.mac"
+    program.write_text("a: 2$\na + 3;\n", encoding="utf-8")
+
+    assert macsyma_main(["--file", str(program)]) == 0
+    captured = capsys.readouterr()
+    assert captured.out == "(%o2) 5\n"
+    assert captured.err == ""
+
+
+def test_cli_file_mode_reports_errors_to_stderr(tmp_path: Path, capsys) -> None:
+    program = tmp_path / "bad.mac"
+    program.write_text("1 +;\n", encoding="utf-8")
+
+    assert macsyma_main(["--file", str(program)]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "parse error:" in captured.err
 
 
 # ---------------------------------------------------------------------------
