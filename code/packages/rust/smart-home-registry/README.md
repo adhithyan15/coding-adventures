@@ -23,6 +23,8 @@ Current scope:
 - compact authorization summaries for grant status and decision outcomes
 - compact protocol-source summaries for bridge/device/scene native identifier
   coverage across integration families
+- compact topology summaries for bridge transports, device/entity coverage,
+  room coverage, entity kinds, cached-state coverage, and scene scopes
 - state snapshot cache
 - immutable event log in arrival order
 - selector-based event-log queries for bounded replay windows
