@@ -1,5 +1,11 @@
 # Changelog — symbolic-ir (Rust)
 
+## Unreleased
+
+### Added
+
+- First-class reciprocal hyperbolic head constants: `COTH`, `SECH`, and `CSCH`.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

@@ -24,9 +24,9 @@
 use std::collections::HashMap;
 
 use symbolic_ir::{
-    IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, D, DEFINE,
-    DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, INV, LESS, LESS_EQUAL, LOG, MUL, NEG,
-    NOT, NOT_EQUAL, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
+    IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, COTH,
+    CSCH, D, DEFINE, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, INV, LESS, LESS_EQUAL,
+    LOG, MUL, NEG, NOT, NOT_EQUAL, OR, POW, SECH, SIN, SINH, SQRT, SUB, TAN, TANH,
 };
 
 use crate::backend::Handler;
@@ -676,6 +676,31 @@ fn tanh_handler(simplify: bool) -> Handler {
     })
 }
 
+fn coth_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
+        single_recip_hyp(&expr, COTH, |x| x.cosh() / x.sinh(), true, &[], simplify)
+    })
+}
+
+fn sech_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
+        single_recip_hyp(
+            &expr,
+            SECH,
+            |x| 1.0 / x.cosh(),
+            false,
+            &[(Numeric::Int(0), IRNode::Integer(1))],
+            simplify,
+        )
+    })
+}
+
+fn csch_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
+        single_recip_hyp(&expr, CSCH, |x| 1.0 / x.sinh(), true, &[], simplify)
+    })
+}
+
 fn asinh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
         single_trig(
@@ -725,6 +750,35 @@ fn single_trig(
     }
     let a = &expr.args[0];
     if let Some(va) = to_numeric(a) {
+        for (input, output) in exact_cases {
+            if va == *input {
+                return output.clone();
+            }
+        }
+        return IRNode::Float(f(va.to_f64()));
+    }
+    if !simplify {
+        panic!("{name} requires a numeric argument: {expr}");
+    }
+    IRNode::Apply(Box::new(expr.clone()))
+}
+
+fn single_recip_hyp(
+    expr: &IRApply,
+    name: &str,
+    f: fn(f64) -> f64,
+    undefined_at_zero: bool,
+    exact_cases: &[(Numeric, IRNode)],
+    simplify: bool,
+) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr.clone()));
+    }
+    let a = &expr.args[0];
+    if let Some(va) = to_numeric(a) {
+        if undefined_at_zero && va.is_zero() {
+            panic!("{name} undefined at zero: {expr}");
+        }
         for (input, output) in exact_cases {
             if va == *input {
                 return output.clone();
@@ -1188,14 +1242,14 @@ fn diff(f: &IRNode, x: &str) -> IRNode {
             );
             apply_node(DIV, vec![diff(inner, x), denom])
         }
-        ("Coth", [inner]) => {
+        (COTH, [inner]) => {
             let denom = apply_node(
                 POW,
                 vec![apply_node(SINH, vec![inner.clone()]), IRNode::Integer(2)],
             );
             apply_node(NEG, vec![apply_node(DIV, vec![diff(inner, x), denom])])
         }
-        ("Sech", [inner]) => {
+        (SECH, [inner]) => {
             let numer = apply_node(
                 MUL,
                 vec![diff(inner, x), apply_node(SINH, vec![inner.clone()])],
@@ -1206,7 +1260,7 @@ fn diff(f: &IRNode, x: &str) -> IRNode {
             );
             apply_node(NEG, vec![apply_node(DIV, vec![numer, denom])])
         }
-        ("Csch", [inner]) => {
+        (CSCH, [inner]) => {
             let numer = apply_node(
                 MUL,
                 vec![diff(inner, x), apply_node(COSH, vec![inner.clone()])],
@@ -1322,6 +1376,9 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
     m.insert(SINH.to_string(), sinh_handler(simplify));
     m.insert(COSH.to_string(), cosh_handler(simplify));
     m.insert(TANH.to_string(), tanh_handler(simplify));
+    m.insert(COTH.to_string(), coth_handler(simplify));
+    m.insert(SECH.to_string(), sech_handler(simplify));
+    m.insert(CSCH.to_string(), csch_handler(simplify));
     m.insert(ASINH.to_string(), asinh_handler(simplify));
     m.insert(ACOSH.to_string(), acosh_handler(simplify));
     m.insert(ATANH.to_string(), atanh_handler(simplify));
