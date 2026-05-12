@@ -67,9 +67,8 @@ use crate::dialect::{Dialect, PREC_ATOM};
 ///     format!("matrix({})", rows.join(", "))
 /// });
 /// ```
-pub type HeadFormatterFn = dyn Fn(&IRApply, &dyn Dialect, &dyn Fn(&IRNode) -> String) -> String
-    + Send
-    + Sync;
+pub type HeadFormatterFn =
+    dyn Fn(&IRApply, &dyn Dialect, &dyn Fn(&IRNode) -> String) -> String + Send + Sync;
 
 // The registry stores Arc<HeadFormatterFn> so we can clone the Arc out of
 // the map before calling the formatter, avoiding a deadlock when the
@@ -94,10 +93,7 @@ fn head_formatters() -> &'static Mutex<HashMap<String, Arc<HeadFormatterFn>>> {
 /// `Send + Sync + 'static`.
 pub fn register_head_formatter<F>(head_name: &str, formatter: F)
 where
-    F: Fn(&IRApply, &dyn Dialect, &dyn Fn(&IRNode) -> String) -> String
-        + Send
-        + Sync
-        + 'static,
+    F: Fn(&IRApply, &dyn Dialect, &dyn Fn(&IRNode) -> String) -> String + Send + Sync + 'static,
 {
     head_formatters()
         .lock()
@@ -227,11 +223,8 @@ fn format_apply(node: &IRApply, dialect: &dyn Dialect, min_prec: u32) -> String 
     // the Mutex across the user's callback (which may call pretty() itself,
     // causing a deadlock if we held the lock).
     if let Some(name) = head_name {
-        let maybe_fmt: Option<Arc<HeadFormatterFn>> = head_formatters()
-            .lock()
-            .unwrap()
-            .get(name)
-            .cloned();
+        let maybe_fmt: Option<Arc<HeadFormatterFn>> =
+            head_formatters().lock().unwrap().get(name).cloned();
         if let Some(formatter) = maybe_fmt {
             return formatter(node, dialect, &|child| format_node(child, dialect, 0));
         }
@@ -281,12 +274,11 @@ fn format_apply(node: &IRApply, dialect: &dyn Dialect, min_prec: u32) -> String 
                     .iter()
                     .enumerate()
                     .map(|(i, arg)| {
-                        let child_prec =
-                            if (right_assoc && i < n - 1) || (!right_assoc && i > 0) {
-                                prec + 1
-                            } else {
-                                prec
-                            };
+                        let child_prec = if (right_assoc && i < n - 1) || (!right_assoc && i > 0) {
+                            prec + 1
+                        } else {
+                            prec
+                        };
                         format_node(arg, dialect, child_prec)
                     })
                     .collect();

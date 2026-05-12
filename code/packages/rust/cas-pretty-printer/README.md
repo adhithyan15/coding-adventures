@@ -8,8 +8,15 @@ Rust port of the Python `cas-pretty-printer` package.
 
 ### `pretty(node, dialect) -> String`
 
-Format `node` as source text in the given dialect.  Currently produces
-single-line (linear) output.
+Format `node` as source text in the given dialect. Produces single-line
+(linear) output.
+
+### `pretty_2d(node, dialect) -> String`
+
+Format `node` with the 2D box layout engine. The layout supports atoms,
+negation, fractions, powers, square roots, addition, subtraction,
+multiplication, and lists; unsupported heads fall back to the linear
+function-call form.
 
 ### `format_lisp(node) -> String`
 
@@ -34,7 +41,7 @@ All four dialects share the same arithmetic sugar:
 
 ```rust
 use cas_pretty_printer::{pretty, format_lisp, MacsymaDialect, MathematicaDialect};
-use symbolic_ir::{apply, int, sym, ADD, POW, SIN};
+use symbolic_ir::{apply, int, sym, ADD, DIV, POW, SIN};
 
 let x = sym("x");
 
@@ -48,6 +55,9 @@ assert_eq!(pretty(&call, &MathematicaDialect), "Sin[x]");
 
 // Lisp debug form
 assert_eq!(format_lisp(&expr), "(Add (Pow x 2) 1)");
+
+let fraction = apply(sym(DIV), vec![int(1), int(2)]);
+assert_eq!(cas_pretty_printer::pretty_2d(&fraction, &MacsymaDialect), " 1 \n───\n 2 ");
 ```
 
 ## Extensibility

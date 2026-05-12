@@ -143,12 +143,7 @@ pub fn format_lisp(node: &IRNode) -> String {
             if a.args.is_empty() {
                 format!("({})", head_text)
             } else {
-                let args_text = a
-                    .args
-                    .iter()
-                    .map(format_lisp)
-                    .collect::<Vec<_>>()
-                    .join(" ");
+                let args_text = a.args.iter().map(format_lisp).collect::<Vec<_>>().join(" ");
                 format!("({} {})", head_text, args_text)
             }
         }

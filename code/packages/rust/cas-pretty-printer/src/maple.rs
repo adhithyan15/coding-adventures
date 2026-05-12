@@ -9,8 +9,9 @@
 
 use symbolic_ir::{IRApply, IRNode};
 
-use crate::dialect::{default_binary_op, default_function_name, default_precedence,
-    default_unary_op, Dialect};
+use crate::dialect::{
+    default_binary_op, default_function_name, default_precedence, default_unary_op, Dialect,
+};
 use crate::macsyma::macsyma_sugar;
 
 // ---------------------------------------------------------------------------
