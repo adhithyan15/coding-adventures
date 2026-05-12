@@ -180,7 +180,7 @@ impl ReplOptions {
 enum SessionTransport {
     Serial(BoardSerialTransport<Box<dyn SerialPort>, 1024>),
     Tcp(BoardTcpTransport<TcpStream, 1024>),
-    Bluetooth(LanguageBluetoothTransport<4096>),
+    Bluetooth(LanguageBluetoothTransport<LanguageCoreBluetoothWireTransactor, 4096>),
 }
 
 impl RawFrameTransport for SessionTransport {
@@ -197,23 +197,59 @@ impl RawFrameTransport for SessionTransport {
     }
 }
 
-struct LanguageBluetoothTransport<const WIRE_BYTES: usize> {
+trait BluetoothWireTransactor {
+    fn transact_wire_frame(
+        &mut self,
+        endpoint: &str,
+        wire_frame: &[u8],
+        response_out: &mut [u8],
+    ) -> Result<usize, board_vm_client::TransportError>;
+}
+
+struct LanguageCoreBluetoothWireTransactor;
+
+impl BluetoothWireTransactor for LanguageCoreBluetoothWireTransactor {
+    fn transact_wire_frame(
+        &mut self,
+        endpoint: &str,
+        wire_frame: &[u8],
+        response_out: &mut [u8],
+    ) -> Result<usize, board_vm_client::TransportError> {
+        bluetooth_transact_wire_frame(endpoint, wire_frame, response_out)
+            .map_err(|_| board_vm_client::TransportError::Io)
+    }
+}
+
+struct LanguageBluetoothTransport<T, const WIRE_BYTES: usize> {
     endpoint: String,
+    transactor: T,
     wire_request: [u8; WIRE_BYTES],
     wire_response: [u8; WIRE_BYTES],
 }
 
-impl<const WIRE_BYTES: usize> LanguageBluetoothTransport<WIRE_BYTES> {
+impl<const WIRE_BYTES: usize>
+    LanguageBluetoothTransport<LanguageCoreBluetoothWireTransactor, WIRE_BYTES>
+{
     fn new(endpoint: impl Into<String>) -> Self {
+        Self::with_transactor(endpoint, LanguageCoreBluetoothWireTransactor)
+    }
+}
+
+impl<T, const WIRE_BYTES: usize> LanguageBluetoothTransport<T, WIRE_BYTES> {
+    fn with_transactor(endpoint: impl Into<String>, transactor: T) -> Self {
         Self {
             endpoint: endpoint.into(),
+            transactor,
             wire_request: [0; WIRE_BYTES],
             wire_response: [0; WIRE_BYTES],
         }
     }
 }
 
-impl<const WIRE_BYTES: usize> RawFrameTransport for LanguageBluetoothTransport<WIRE_BYTES> {
+impl<T, const WIRE_BYTES: usize> RawFrameTransport for LanguageBluetoothTransport<T, WIRE_BYTES>
+where
+    T: BluetoothWireTransactor,
+{
     fn exchange_raw_frame(
         &mut self,
         request: &[u8],
@@ -221,12 +257,11 @@ impl<const WIRE_BYTES: usize> RawFrameTransport for LanguageBluetoothTransport<W
     ) -> Result<usize, board_vm_client::TransportError> {
         let wire_request_len = encode_wire_frame(request, &mut self.wire_request)
             .map_err(map_protocol_transport_error)?;
-        let wire_response_len = bluetooth_transact_wire_frame(
+        let wire_response_len = self.transactor.transact_wire_frame(
             &self.endpoint,
             &self.wire_request[..wire_request_len],
             &mut self.wire_response,
-        )
-        .map_err(|_| board_vm_client::TransportError::Io)?;
+        )?;
         decode_wire_frame(&self.wire_response[..wire_response_len], response_out)
             .map_err(map_protocol_transport_error)
     }
@@ -1629,6 +1664,46 @@ mod tests {
         }
     }
 
+    struct LoopbackBluetoothWireTransactor {
+        board: LoopbackBoard<512, 8, 8>,
+        board_payload: [u8; 512],
+        raw_request: [u8; 768],
+        raw_response: [u8; 768],
+    }
+
+    impl LoopbackBluetoothWireTransactor {
+        fn new() -> Self {
+            Self {
+                board: LoopbackBoard::new(),
+                board_payload: [0; 512],
+                raw_request: [0; 768],
+                raw_response: [0; 768],
+            }
+        }
+    }
+
+    impl BluetoothWireTransactor for LoopbackBluetoothWireTransactor {
+        fn transact_wire_frame(
+            &mut self,
+            _endpoint: &str,
+            wire_frame: &[u8],
+            response_out: &mut [u8],
+        ) -> Result<usize, TransportError> {
+            let request_len = decode_wire_frame(wire_frame, &mut self.raw_request)
+                .map_err(map_protocol_transport_error)?;
+            let response_len = self
+                .board
+                .handle_raw_frame(
+                    &self.raw_request[..request_len],
+                    &mut self.board_payload,
+                    &mut self.raw_response,
+                )
+                .map_err(|_| TransportError::Io)?;
+            encode_wire_frame(&self.raw_response[..response_len], response_out)
+                .map_err(map_protocol_transport_error)
+        }
+    }
+
     fn unique_temp_dir(name: &str) -> PathBuf {
         let nonce = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -2352,6 +2427,35 @@ mod tests {
         assert!(report.run.instructions_executed > 0);
         assert_eq!(report.run.open_handles, 1);
         assert!(report.run.returns.is_empty());
+    }
+
+    #[test]
+    fn smoke_sequence_runs_over_bluetooth_wire_transport() {
+        let endpoint = "ble://uno-r4-wifi/180f/2a19/2a1a";
+        let options = SmokeOptions {
+            port: None,
+            endpoint: Some(endpoint.to_owned()),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: DEFAULT_TIMEOUT_MS,
+            program_id: 8,
+            instruction_budget: 200,
+            host_nonce: 0xABCD_1234,
+        };
+        let transport = LanguageBluetoothTransport::<_, 2048>::with_transactor(
+            endpoint,
+            LoopbackBluetoothWireTransactor::new(),
+        );
+
+        let report = run_smoke_with_transport(&options, transport).unwrap();
+
+        assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
+        assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
+        assert_eq!(report.hello.host_nonce, 0xABCD_1234);
+        assert_eq!(report.descriptor.board_id, LOOPBACK_BOARD_ID);
+        assert_eq!(report.run.program_id, 8);
+        assert_eq!(report.run.status, RunStatus::Running);
+        assert_eq!(report.run.open_handles, 1);
     }
 
     #[test]
