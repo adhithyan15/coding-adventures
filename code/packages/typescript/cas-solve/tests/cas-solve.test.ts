@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ADD, DIV, EQUAL, MUL, POW, RULE, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode, type IRSymbol } from "@coding-adventures/symbolic-ir";
+import { ADD, AND, DIV, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, MUL, POW, RULE, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode, type IRSymbol } from "@coding-adventures/symbolic-ir";
 import {
   ALL_SOLUTIONS,
   CBRT,
@@ -13,6 +13,7 @@ import {
   solveLinearSystem,
   solveQuadratic,
   solveQuartic,
+  trySolveInequality,
   type SolveResult,
 } from "../src/index";
 
@@ -83,6 +84,12 @@ function mul(...args: readonly IRNode[]): IRNode {
 
 function pow(base: IRNode, exponent: IRNode): IRNode {
   return app(POW, [base, exponent]);
+}
+
+function expectNodes(actual: readonly IRNode[] | null, expected: readonly IRNode[]): void {
+  expect(actual).not.toBeNull();
+  expect(actual?.length).toBe(expected.length);
+  expected.forEach((node, index) => expect(equals(actual?.[index] ?? sym("missing"), node)).toBe(true));
 }
 
 function ruleValue(rules: readonly IRNode[], variable: IRSymbol): IRNode {
@@ -344,5 +351,56 @@ describe("solveLinearSystem", () => {
     expect(result?.length).toBe(2);
     expect(result?.[0]).toEqual(app(RULE, [x, int(2)]));
     expect(result?.[1]).toEqual(app(RULE, [y, int(1)]));
+  });
+});
+
+describe("trySolveInequality", () => {
+  const x = sym("x");
+
+  it("solves linear inequalities with exact rational boundaries", () => {
+    expectNodes(
+      trySolveInequality(app(LESS, [add(mul(int(2), x), int(3)), int(0)]), x),
+      [app(LESS, [x, rational(-3, 2)])],
+    );
+    expectNodes(
+      trySolveInequality(app(GREATER_EQUAL, [sub(x, int(1)), int(0)]), x),
+      [app(GREATER_EQUAL, [x, int(1)])],
+    );
+  });
+
+  it("solves quadratic inequalities into interval conditions", () => {
+    expectNodes(
+      trySolveInequality(app(GREATER, [sub(pow(x, int(2)), int(1)), int(0)]), x),
+      [app(LESS, [x, int(-1)]), app(GREATER, [x, int(1)])],
+    );
+    expectNodes(
+      trySolveInequality(app(LESS_EQUAL, [sub(pow(x, int(2)), int(1)), int(0)]), x),
+      [app(AND, [app(GREATER_EQUAL, [x, int(-1)]), app(LESS_EQUAL, [x, int(1)])])],
+    );
+  });
+
+  it("handles shifted quadratic intervals and all-real sentinels", () => {
+    expectNodes(
+      trySolveInequality(app(LESS, [add(sub(pow(x, int(2)), mul(int(3), x)), int(2)), int(0)]), x),
+      [app(AND, [app(GREATER, [x, int(1)]), app(LESS, [x, int(2)])])],
+    );
+    expectNodes(
+      trySolveInequality(app(GREATER_EQUAL, [pow(x, int(2)), int(0)]), x),
+      [app(GREATER_EQUAL, [int(0), int(0)])],
+    );
+  });
+
+  it("uses numeric boundaries for irrational roots and rejects non-polynomials", () => {
+    const result = trySolveInequality(app(GREATER, [sub(pow(x, int(2)), int(2)), int(0)]), x);
+    expect(result?.length).toBe(2);
+    expect(result?.[0].kind).toBe("apply");
+    if (result?.[0].kind === "apply" && result[1].kind === "apply") {
+      expect(equals(result[0].head, LESS)).toBe(true);
+      expect(equals(result[1].head, GREATER)).toBe(true);
+      expect(result[0].args[1].kind).toBe("float");
+      expect(result[1].args[1].kind).toBe("float");
+    }
+    expect(trySolveInequality(app(GREATER, [app(sym("Sin"), [x]), int(0)]), x)).toBeNull();
+    expect(trySolveInequality(eq(x, int(0)), x)).toBeNull();
   });
 });

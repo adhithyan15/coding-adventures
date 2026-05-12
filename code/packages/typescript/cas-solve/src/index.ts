@@ -1,7 +1,12 @@
 import {
   ADD,
+  AND,
   DIV,
   EQUAL,
+  GREATER,
+  GREATER_EQUAL,
+  LESS,
+  LESS_EQUAL,
   MUL,
   NEG,
   POW,
@@ -23,6 +28,8 @@ export const NSOLVE = "NSolve";
 export const ROOTS = "Roots";
 export const I_UNIT = "%i";
 export const CBRT = "Cbrt";
+const MAX_INEQUALITY_DEGREE = 4;
+const REAL_ROOT_TOL = 1e-8;
 
 export type IntegerLike = bigint | number | string;
 
@@ -313,6 +320,20 @@ export function solveLinearSystem(
   }
 
   return variables.map((variable, index) => app(RULE, [variable, solution[index].toIrNode()]));
+}
+
+export function trySolveInequality(ineq: IRNode, variable: IRSymbol): readonly IRNode[] | null {
+  if (ineq.kind !== "apply" || ineq.args.length !== 2 || ineq.head.kind !== "symbol") return null;
+  const head = ineq.head.name;
+  if (![LESS.name, GREATER.name, LESS_EQUAL.name, GREATER_EQUAL.name].includes(head)) return null;
+
+  const normalized = app(SUB, [ineq.args[0], ineq.args[1]]);
+  const coeffs = extractPolynomial(normalized, variable.name, MAX_INEQUALITY_DEGREE);
+  if (coeffs === null) return null;
+
+  const wantPositive = head === GREATER.name || head === GREATER_EQUAL.name;
+  const strict = head === LESS.name || head === GREATER.name;
+  return solvePolynomialSign(coeffs, variable, wantPositive, strict);
 }
 
 export function nsolvePoly(
@@ -680,6 +701,236 @@ function subVectors(lhs: readonly Frac[], rhs: readonly Frac[]): Frac[] {
 
 function isZeroVector(values: readonly Frac[]): boolean {
   return values.every((value) => value.isZero());
+}
+
+function solvePolynomialSign(
+  coeffsInput: readonly Frac[],
+  variable: IRSymbol,
+  wantPositive: boolean,
+  strict: boolean,
+): readonly IRNode[] {
+  const coeffs = trimPolynomial(coeffsInput);
+  const degree = coeffs.length - 1;
+  if (degree === 0) return signMatches(coeffs[0], wantPositive, strict) ? [allRealsSentinel()] : [];
+
+  const roots = realBoundaryRoots(coeffs);
+  if (roots.length === 0) {
+    return signMatches(evaluatePolynomial(coeffs, 0), wantPositive, strict) ? [allRealsSentinel()] : [];
+  }
+
+  const intervals: IRNode[] = [];
+  const samples = intervalSamples(roots.map((root) => root.value));
+  for (let index = 0; index < samples.length; index += 1) {
+    if (!signMatches(evaluatePolynomial(coeffs, samples[index]), wantPositive, true)) continue;
+    const lower = index === 0 ? null : roots[index - 1].node;
+    const upper = index === roots.length ? null : roots[index].node;
+    intervals.push(makeInterval(variable, lower, upper, strict, strict));
+  }
+
+  if (!strict && intervals.length === roots.length + 1) return [allRealsSentinel()];
+  return intervals;
+}
+
+interface BoundaryRoot {
+  readonly value: number;
+  readonly node: IRNode;
+}
+
+function realBoundaryRoots(coeffsAscending: readonly Frac[]): readonly BoundaryRoot[] {
+  const exact = exactPolynomialRoots(coeffsAscending);
+  const exactRoots = exact
+    .map((node) => ({ value: numericValue(node), node }))
+    .filter((root): root is BoundaryRoot => root.value !== null);
+
+  const numericRoots = nsolvePoly([...coeffsAscending].reverse().map(fracToNumber));
+  const roots: BoundaryRoot[] = [];
+  for (const root of numericRoots) {
+    if (Math.abs(root.im) > REAL_ROOT_TOL) continue;
+    if (roots.some((candidate) => Math.abs(candidate.value - root.re) < 1e-7)) continue;
+    const exactNode = exactRoots.find((candidate) => Math.abs(candidate.value - root.re) < 1e-7)?.node;
+    roots.push({ value: root.re, node: exactNode ?? numberNode(root.re) });
+  }
+
+  if (roots.length === 0 && coeffsAscending.length === 2) {
+    const root = coeffsAscending[0].neg().div(coeffsAscending[1]);
+    roots.push({ value: fracToNumber(root), node: root.toIrNode() });
+  }
+
+  return roots.sort((lhs, rhs) => lhs.value - rhs.value);
+}
+
+function exactPolynomialRoots(coeffsAscending: readonly Frac[]): readonly IRNode[] {
+  const coeffs = trimPolynomial(coeffsAscending);
+  switch (coeffs.length - 1) {
+    case 1: {
+      const result = solveLinear(coeffs[1], coeffs[0]);
+      return result.kind === "solutions" ? result.roots : [];
+    }
+    case 2: {
+      const result = solveQuadratic(coeffs[2], coeffs[1], coeffs[0]);
+      return result.kind === "solutions" ? result.roots : [];
+    }
+    case 3: {
+      const result = solveCubic(coeffs[3], coeffs[2], coeffs[1], coeffs[0]);
+      return result.kind === "solutions" ? result.roots : [];
+    }
+    case 4: {
+      const result = solveQuartic(coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0]);
+      return result.kind === "solutions" ? result.roots : [];
+    }
+    default:
+      return [];
+  }
+}
+
+function intervalSamples(roots: readonly number[]): readonly number[] {
+  if (roots.length === 0) return [0];
+  const samples: number[] = [roots[0] - Math.max(1, Math.abs(roots[0]) * 0.5)];
+  for (let i = 0; i < roots.length - 1; i += 1) {
+    samples.push((roots[i] + roots[i + 1]) / 2);
+  }
+  samples.push(roots[roots.length - 1] + Math.max(1, Math.abs(roots[roots.length - 1]) * 0.5));
+  return samples;
+}
+
+function makeInterval(
+  variable: IRSymbol,
+  lower: IRNode | null,
+  upper: IRNode | null,
+  lowerStrict: boolean,
+  upperStrict: boolean,
+): IRNode {
+  if (lower === null && upper === null) return allRealsSentinel();
+  if (lower === null) return app(upperStrict ? LESS : LESS_EQUAL, [variable, upper as IRNode]);
+  if (upper === null) return app(lowerStrict ? GREATER : GREATER_EQUAL, [variable, lower]);
+  return app(AND, [
+    app(lowerStrict ? GREATER : GREATER_EQUAL, [variable, lower]),
+    app(upperStrict ? LESS : LESS_EQUAL, [variable, upper]),
+  ]);
+}
+
+function allRealsSentinel(): IRNode {
+  return app(GREATER_EQUAL, [int(0), int(0)]);
+}
+
+function signMatches(value: Frac | number, wantPositive: boolean, strict: boolean): boolean {
+  const cmp = typeof value === "number"
+    ? (Math.abs(value) < 1e-9 ? 0 : value < 0 ? -1 : 1)
+    : value.compare(Frac.zero());
+  if (wantPositive) return strict ? cmp > 0 : cmp >= 0;
+  return strict ? cmp < 0 : cmp <= 0;
+}
+
+function evaluatePolynomial(coeffs: readonly Frac[], x: number): number {
+  let result = 0;
+  for (let i = coeffs.length - 1; i >= 0; i -= 1) {
+    result = result * x + fracToNumber(coeffs[i]);
+  }
+  return result;
+}
+
+function extractPolynomial(node: IRNode, variable: string, maxDegree: number): readonly Frac[] | null {
+  const constant = nodeToFrac(node);
+  if (constant !== null) return [constant];
+
+  if (node.kind === "symbol") {
+    if (node.name !== variable) return null;
+    return [Frac.zero(), Frac.one()];
+  }
+
+  if (node.kind !== "apply" || node.head.kind !== "symbol") return null;
+  const head = node.head.name;
+
+  if (head === ADD.name) {
+    let result: readonly Frac[] = [Frac.zero()];
+    for (const arg of node.args) {
+      const poly = extractPolynomial(arg, variable, maxDegree);
+      if (poly === null) return null;
+      result = addPolynomials(result, poly);
+      if (result.length - 1 > maxDegree) return null;
+    }
+    return trimPolynomial(result);
+  }
+
+  if (head === SUB.name && node.args.length === 2) {
+    const lhs = extractPolynomial(node.args[0], variable, maxDegree);
+    const rhs = extractPolynomial(node.args[1], variable, maxDegree);
+    if (lhs === null || rhs === null) return null;
+    return trimPolynomial(addPolynomials(lhs, scalePolynomial(rhs, Frac.fromInt(-1))));
+  }
+
+  if (head === NEG.name && node.args.length === 1) {
+    const poly = extractPolynomial(node.args[0], variable, maxDegree);
+    return poly === null ? null : scalePolynomial(poly, Frac.fromInt(-1));
+  }
+
+  if (head === MUL.name) {
+    let result: readonly Frac[] = [Frac.one()];
+    for (const arg of node.args) {
+      const poly = extractPolynomial(arg, variable, maxDegree);
+      if (poly === null) return null;
+      result = multiplyPolynomials(result, poly, maxDegree);
+      if (result.length - 1 > maxDegree) return null;
+    }
+    return trimPolynomial(result);
+  }
+
+  if (head === POW.name && node.args.length === 2 && node.args[1].kind === "integer") {
+    const exponent = node.args[1].value;
+    if (exponent < 0n || exponent > BigInt(maxDegree)) return null;
+    const base = extractPolynomial(node.args[0], variable, maxDegree);
+    if (base === null) return null;
+    let result: readonly Frac[] = [Frac.one()];
+    for (let i = 0n; i < exponent; i += 1n) {
+      result = multiplyPolynomials(result, base, maxDegree);
+      if (result.length - 1 > maxDegree) return null;
+    }
+    return trimPolynomial(result);
+  }
+
+  return null;
+}
+
+function addPolynomials(lhs: readonly Frac[], rhs: readonly Frac[]): readonly Frac[] {
+  const length = Math.max(lhs.length, rhs.length);
+  return trimPolynomial(Array.from({ length }, (_, index) =>
+    (lhs[index] ?? Frac.zero()).add(rhs[index] ?? Frac.zero())));
+}
+
+function scalePolynomial(poly: readonly Frac[], scalar: Frac): readonly Frac[] {
+  return trimPolynomial(poly.map((coef) => coef.mul(scalar)));
+}
+
+function multiplyPolynomials(lhs: readonly Frac[], rhs: readonly Frac[], maxDegree: number): readonly Frac[] {
+  const result = Array.from({ length: Math.min(lhs.length + rhs.length - 1, maxDegree + 2) }, () => Frac.zero());
+  for (let i = 0; i < lhs.length; i += 1) {
+    for (let j = 0; j < rhs.length; j += 1) {
+      if (i + j > maxDegree) return Array.from({ length: maxDegree + 2 }, () => Frac.one());
+      result[i + j] = result[i + j].add(lhs[i].mul(rhs[j]));
+    }
+  }
+  return trimPolynomial(result);
+}
+
+function trimPolynomial(poly: readonly Frac[]): readonly Frac[] {
+  let end = poly.length - 1;
+  while (end > 0 && poly[end].isZero()) end -= 1;
+  return poly.slice(0, end + 1);
+}
+
+function numericValue(node: IRNode): number | null {
+  if (node.kind === "integer") return Number(node.value);
+  if (node.kind === "rational") return Number(node.numer) / Number(node.denom);
+  if (node.kind === "float") return node.value;
+  if (isApplyHead(node, NEG.name) && node.args.length === 1) {
+    const value = numericValue(node.args[0]);
+    return value === null ? null : -value;
+  }
+  return null;
+}
+
+function fracToNumber(value: Frac): number {
+  return Number(value.numer) / Number(value.denom);
 }
 
 function fracAbsCompare(lhs: Frac, rhs: Frac): number {
