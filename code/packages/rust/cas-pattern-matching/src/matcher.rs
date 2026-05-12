@@ -39,11 +39,7 @@ use crate::nodes::{blank_head_constraint, is_blank, is_pattern, pattern_inner, p
 /// assert_eq!(b.get("a"), Some(&int(1)));
 /// assert_eq!(b.get("b"), Some(&int(2)));
 /// ```
-pub fn match_pattern(
-    pattern: &IRNode,
-    target: &IRNode,
-    bindings: Bindings,
-) -> Option<Bindings> {
+pub fn match_pattern(pattern: &IRNode, target: &IRNode, bindings: Bindings) -> Option<Bindings> {
     // Case 1 & 2: Blank(?) wildcards
     if is_blank(pattern) {
         if let IRNode::Apply(apply) = pattern {
@@ -92,11 +88,7 @@ pub fn match_pattern(
 }
 
 /// Match two `IRApply` nodes: head must match, then args zip pairwise.
-fn match_apply(
-    pattern: &IRApply,
-    target: &IRApply,
-    bindings: Bindings,
-) -> Option<Bindings> {
+fn match_apply(pattern: &IRApply, target: &IRApply, bindings: Bindings) -> Option<Bindings> {
     // Head must match.
     let after_head = match_pattern(&pattern.head, &target.head, bindings)?;
 

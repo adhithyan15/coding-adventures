@@ -2,9 +2,18 @@
 
 use cas_pattern_matching::{
     apply_rule, blank, blank_typed, match_pattern, named, rewrite, rule, rule_delayed, Bindings,
-    RewriteCycleError,
+    MatchDeclareContext, RewriteCycleError, RuleStore,
 };
-use symbolic_ir::{apply, flt, int, rat, sym, ADD, MUL, POW};
+use symbolic_ir::{
+    apply, flt, int, rat, str_node, sym, IRApply, IRNode, ADD, COS, LIST, MUL, POW, SIN,
+};
+
+fn as_apply(node: &IRNode) -> &IRApply {
+    match node {
+        IRNode::Apply(apply) => apply,
+        other => panic!("expected Apply, got {other:?}"),
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Blank — unconstrained wildcard
@@ -174,20 +183,14 @@ fn apply_rejects_different_arg_count() {
 #[test]
 fn rule_fires_and_substitutes() {
     // Pow(x_, 0) → 1
-    let r = rule(
-        apply(sym(POW), vec![named("x", blank()), int(0)]),
-        int(1),
-    );
+    let r = rule(apply(sym(POW), vec![named("x", blank()), int(0)]), int(1));
     let target = apply(sym(POW), vec![sym("z"), int(0)]);
     assert_eq!(apply_rule(&r, &target), Some(int(1)));
 }
 
 #[test]
 fn rule_returns_none_on_no_match() {
-    let r = rule(
-        apply(sym(POW), vec![named("x", blank()), int(0)]),
-        int(1),
-    );
+    let r = rule(apply(sym(POW), vec![named("x", blank()), int(0)]), int(1));
     assert_eq!(apply_rule(&r, &sym("y")), None);
 }
 
@@ -207,10 +210,7 @@ fn rule_substitutes_captured_pattern_in_rhs() {
 #[test]
 fn rule_delayed_behaves_same_as_rule() {
     let x = named("x", blank());
-    let r = rule_delayed(
-        apply(sym(ADD), vec![x.clone(), int(0)]),
-        x.clone(),
-    );
+    let r = rule_delayed(apply(sym(ADD), vec![x.clone(), int(0)]), x.clone());
     let target = apply(sym(ADD), vec![int(7), int(0)]);
     assert_eq!(apply_rule(&r, &target), Some(int(7)));
 }
@@ -291,7 +291,10 @@ fn rewrite_returns_error_on_non_converging() {
     );
     let expr = apply(sym("f"), vec![int(1)]);
     let result = rewrite(expr, &[r1, r2], 10);
-    assert!(matches!(result, Err(RewriteCycleError { max_iterations: 10 })));
+    assert!(matches!(
+        result,
+        Err(RewriteCycleError { max_iterations: 10 })
+    ));
 }
 
 // ---------------------------------------------------------------------------
@@ -326,4 +329,205 @@ fn bindings_iter() {
     pairs.sort_by_key(|(k, _)| *k);
     assert_eq!(pairs[0], ("a", &int(1)));
     assert_eq!(pairs[1], ("b", &int(2)));
+}
+
+// ---------------------------------------------------------------------------
+// MatchDeclareContext — mutation, queries, and predicate constraints
+// ---------------------------------------------------------------------------
+
+#[test]
+fn matchdeclare_mutation_and_queries() {
+    let mut ctx = MatchDeclareContext::new();
+
+    assert!(!ctx.is_declared("x"));
+    assert_eq!(ctx.get_predicate("x"), None);
+
+    ctx.declare("x", "IntegerP");
+    assert!(ctx.is_declared("x"));
+    assert_eq!(ctx.get_predicate("x"), Some("integerp"));
+
+    ctx.declare("x", "floatp");
+    assert_eq!(ctx.get_predicate("x"), Some("floatp"));
+
+    ctx.declare("y", "any");
+    ctx.forget("x");
+    assert!(!ctx.is_declared("x"));
+    assert!(ctx.is_declared("y"));
+
+    ctx.forget("missing");
+    ctx.forget_all();
+    assert!(!ctx.is_declared("y"));
+}
+
+#[test]
+fn matchdeclare_predicate_constraints_match_python_mapping() {
+    let cases = [
+        ("true", None),
+        ("all", None),
+        ("any", None),
+        ("numberp", None),
+        ("integerp", Some("Integer")),
+        ("symbolp", Some("Symbol")),
+        ("floatp", Some("Float")),
+        ("rationalp", Some("Rational")),
+        ("listp", Some("List")),
+        ("stringp", Some("String")),
+        ("unknownp", None),
+    ];
+
+    for (pred_tag, expected_head) in cases {
+        let mut ctx = MatchDeclareContext::new();
+        ctx.declare("x", pred_tag);
+        let compiled = ctx.compile_pattern(&sym("x"));
+        let pattern = match compiled {
+            IRNode::Apply(pattern) => pattern,
+            other => panic!("expected Pattern apply, got {other:?}"),
+        };
+        assert_eq!(pattern.args[0], sym("x"));
+
+        let blank = match &pattern.args[1] {
+            IRNode::Apply(blank) => blank,
+            other => panic!("expected Blank apply, got {other:?}"),
+        };
+        match expected_head {
+            Some(head) => assert_eq!(blank.args, vec![sym(head)]),
+            None => assert!(blank.args.is_empty()),
+        }
+    }
+}
+
+#[test]
+fn matchdeclare_typed_constraints_work_with_matcher() {
+    let mut ctx = MatchDeclareContext::new();
+    ctx.declare("n", "integerp");
+    ctx.declare("s", "stringp");
+    ctx.declare("xs", "listp");
+
+    assert!(match_pattern(&ctx.compile_pattern(&sym("n")), &int(3), Bindings::empty()).is_some());
+    assert!(match_pattern(
+        &ctx.compile_pattern(&sym("n")),
+        &sym("not_an_int"),
+        Bindings::empty()
+    )
+    .is_none());
+    assert!(match_pattern(
+        &ctx.compile_pattern(&sym("s")),
+        &str_node("hello"),
+        Bindings::empty()
+    )
+    .is_some());
+    assert!(match_pattern(
+        &ctx.compile_pattern(&sym("xs")),
+        &apply(sym(LIST), vec![int(1), int(2)]),
+        Bindings::empty()
+    )
+    .is_some());
+}
+
+#[test]
+fn matchdeclare_compile_pattern_walks_nested_heads_and_args() {
+    let mut ctx = MatchDeclareContext::new();
+    ctx.declare("f", "symbolp");
+    ctx.declare("x", "any");
+    ctx.declare("n", "integerp");
+
+    let raw = apply(
+        sym("f"),
+        vec![
+            apply(sym(SIN), vec![sym("x")]),
+            apply(sym(POW), vec![sym("x"), sym("n")]),
+            sym("y"),
+        ],
+    );
+    let compiled = ctx.compile_pattern(&raw);
+
+    let outer = match compiled {
+        IRNode::Apply(apply) => apply,
+        other => panic!("expected Apply, got {other:?}"),
+    };
+    assert!(cas_pattern_matching::nodes::is_pattern(&outer.head));
+    assert!(cas_pattern_matching::nodes::is_pattern(
+        &as_apply(&outer.args[0]).args[0]
+    ));
+    assert!(cas_pattern_matching::nodes::is_pattern(
+        &as_apply(&outer.args[1]).args[0]
+    ));
+    assert!(cas_pattern_matching::nodes::is_pattern(
+        &as_apply(&outer.args[1]).args[1]
+    ));
+    assert_eq!(outer.args[2], sym("y"));
+}
+
+#[test]
+fn matchdeclare_end_to_end_apply_rule_and_rewrite() {
+    let mut ctx = MatchDeclareContext::new();
+    ctx.declare("x", "any");
+
+    let x = sym("x");
+    let lhs = apply(
+        sym(ADD),
+        vec![
+            apply(sym(POW), vec![apply(sym(SIN), vec![x.clone()]), int(2)]),
+            apply(sym(POW), vec![apply(sym(COS), vec![x.clone()]), int(2)]),
+        ],
+    );
+    let trig_rule = rule(ctx.compile_pattern(&lhs), int(1));
+
+    let t = sym("t");
+    let target = apply(
+        sym(ADD),
+        vec![
+            apply(sym(POW), vec![apply(sym(SIN), vec![t.clone()]), int(2)]),
+            apply(sym(POW), vec![apply(sym(COS), vec![t]), int(2)]),
+        ],
+    );
+    assert_eq!(apply_rule(&trig_rule, &target), Some(int(1)));
+
+    let pow_lhs = apply(sym(POW), vec![x.clone(), int(1)]);
+    let pow_rule = rule(ctx.compile_pattern(&pow_lhs), ctx.compile_pattern(&x));
+    let expr = apply(
+        sym(ADD),
+        vec![
+            apply(sym(POW), vec![sym("a"), int(1)]),
+            apply(sym(POW), vec![sym("b"), int(1)]),
+        ],
+    );
+    assert_eq!(
+        rewrite(expr, &[pow_rule], 100).unwrap(),
+        apply(sym(ADD), vec![sym("a"), sym("b")])
+    );
+}
+
+#[test]
+fn rulestore_operations() {
+    let mut store = RuleStore::new();
+    assert!(store.is_empty());
+    assert_eq!(store.len(), 0);
+    assert_eq!(store.names(), Vec::<String>::new());
+    assert_eq!(store.get("missing"), None);
+
+    let r1 = rule(sym("x"), int(1));
+    let r2 = rule(sym("y"), int(2));
+    let r3 = rule(sym("z"), int(3));
+
+    store.store("middle", r2.clone());
+    store.store("alpha", r1.clone());
+    store.store("zebra", r3.clone());
+
+    assert_eq!(store.len(), 3);
+    assert!(store.contains("alpha"));
+    assert!(!store.contains("ghost"));
+    assert_eq!(store.get("alpha"), Some(&r1));
+    assert_eq!(store.names(), vec!["alpha", "middle", "zebra"]);
+
+    store.store("alpha", r2.clone());
+    assert_eq!(store.len(), 3);
+    assert_eq!(store.get("alpha"), Some(&r2));
+
+    store.remove("alpha");
+    store.remove("ghost");
+    assert!(!store.contains("alpha"));
+
+    store.clear();
+    assert!(store.is_empty());
 }
