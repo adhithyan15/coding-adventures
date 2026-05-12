@@ -449,8 +449,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![Span::new(DocumentId::new("doc1"), start, end)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         }
@@ -460,6 +458,7 @@ mod tests {
         IRDocument {
             document_id: DocumentId::new("doc1"),
             nodes,
+            edges: Vec::new(),
         }
     }
 
@@ -473,7 +472,7 @@ mod tests {
         // ignores them. A document with only TextRuns yields zero
         // violations and zero LLM calls.
         let mut n = fact("g", Term::Atom("group".into()), 0, 5);
-        n.kind = NodeKind::TextRun;
+        n.kind = NodeKind::Section;
         let g = GatewayConfig::new();
         let r = check_round_trip(make_doc(), &ir(vec![n]), &g, &CheckOptions::default()).unwrap();
         assert!(r.violations.is_empty());

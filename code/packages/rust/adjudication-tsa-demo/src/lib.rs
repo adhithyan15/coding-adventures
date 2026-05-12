@@ -751,6 +751,7 @@ fn json_to_ir_document(
         IRDocument {
             document_id,
             nodes,
+            edges: Vec::new(),
         },
         warnings,
     ))
@@ -820,18 +821,13 @@ fn flatten_nodes(
         }
     };
     *idx_counter += 1;
-    if node.part_of.is_none() {
-        node.part_of = parent.cloned();
-    }
-    // Clear any stale part_of pointer; the LLM may have produced one
-    // referencing a parent we dropped during flattening. ADJ01 v2
-    // requires part_of to point to an existing node — better to
-    // drop a stale pointer than leave a dangling reference.
-    if let Some(p) = &node.part_of {
-        if !out.iter().any(|n| n.id == *p) {
-            node.part_of = None;
-        }
-    }
+    // ADJ01 v3: structural parents are now expressed via `Contains`
+    // edges, not a `part_of` field. The decompose_text v4 prompt
+    // (follow-up PR) will teach the LLM to emit those edges directly.
+    // Until then, this flattening path drops the v2 parent-pointer
+    // logic and lets the resulting IR be a flat list of leaves —
+    // coverage will tile if the leaves collectively span the source.
+    let _ = parent; // suppress unused-var warning
     out.push(node);
 }
 
@@ -844,8 +840,6 @@ fn synth_query_node(document_id: &DocumentId) -> IRNode {
         modality: Modality::Present,
         source_spans: Vec::new(),
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: {
             let mut m = std::collections::HashMap::new();
@@ -957,14 +951,6 @@ fn json_to_ir_node(
             .get("confidence")
             .and_then(|x| x.as_f64())
             .unwrap_or(1.0),
-        part_of: obj
-            .get("part_of")
-            .and_then(|x| x.as_str())
-            .map(|s| NodeId::new(s.to_string())),
-        lowered_from: obj
-            .get("lowered_from")
-            .and_then(|x| x.as_str())
-            .map(|s| NodeId::new(s.to_string())),
         discard_reason: None,
         metadata: Default::default(),
     })
@@ -972,13 +958,17 @@ fn json_to_ir_node(
 
 fn parse_node_kind(s: &str) -> Option<NodeKind> {
     match s.to_ascii_lowercase().as_str() {
-        "textrun" | "text_run" => Some(NodeKind::TextRun),
+        // ADJ01 v3: "textrun" inputs (legacy LLM responses) map to
+        // Section. The decompose_text v4 prompt will teach the LLM to
+        // emit "section" directly with a proper structural term.
+        "textrun" | "text_run" | "section" => Some(NodeKind::Section),
         "fact" => Some(NodeKind::Fact),
         "query" => Some(NodeKind::Query),
         "uncertainty" => Some(NodeKind::Uncertainty),
         "rule" => Some(NodeKind::Rule),
         "exception" => Some(NodeKind::Exception),
         "discarded" => Some(NodeKind::Discarded),
+        "entity" => Some(NodeKind::Entity),
         _ => None,
     }
 }
@@ -1324,8 +1314,6 @@ pub fn tsa_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 0, 16)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -1337,8 +1325,6 @@ pub fn tsa_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 16, 24)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -1351,8 +1337,6 @@ pub fn tsa_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 0, len)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -1366,8 +1350,6 @@ pub fn tsa_ir_document(source_text: &str) -> IRDocument {
         modality: Modality::Present,
         source_spans: vec![],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: Default::default(),
     });
@@ -1375,6 +1357,7 @@ pub fn tsa_ir_document(source_text: &str) -> IRDocument {
     IRDocument {
         document_id: doc_id,
         nodes,
+        edges: Vec::new(),
     }
 }
 

@@ -506,8 +506,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![Span::new(DocumentId::new("doc1"), start, end)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         }
@@ -517,6 +515,7 @@ mod tests {
         IRDocument {
             document_id: DocumentId::new("doc1"),
             nodes,
+            edges: Vec::new(),
         }
     }
 
@@ -591,7 +590,7 @@ mod tests {
     #[test]
     fn no_attackable_nodes_means_no_calls_no_violations() {
         let mut n = fact("g", Term::Atom("group".into()), 0, 5);
-        n.kind = NodeKind::TextRun;
+        n.kind = NodeKind::Section;
         let g = GatewayConfig::new(); // no clients required
         let r = check_adversarial(make_doc(), &ir(vec![n]), &g, &CheckOptions::default()).unwrap();
         assert!(r.pass());

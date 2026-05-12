@@ -282,8 +282,6 @@ pub fn clinical_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 0, 30)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -295,8 +293,6 @@ pub fn clinical_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 30, 42)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -308,8 +304,6 @@ pub fn clinical_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 42, 64)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -322,8 +316,6 @@ pub fn clinical_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 0, len)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -337,8 +329,6 @@ pub fn clinical_ir_document(source_text: &str) -> IRDocument {
         modality: Modality::Present,
         source_spans: vec![],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: Default::default(),
     });
@@ -346,6 +336,7 @@ pub fn clinical_ir_document(source_text: &str) -> IRDocument {
     IRDocument {
         document_id: doc_id,
         nodes,
+        edges: Vec::new(),
     }
 }
 

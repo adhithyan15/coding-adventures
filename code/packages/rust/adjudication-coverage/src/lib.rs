@@ -1,36 +1,38 @@
-//! # adjudication-coverage — ADJ02 v2 structural tree-coverage check.
+//! # adjudication-coverage — ADJ02 v3 flat-tile coverage check.
 //!
 //! Reference implementation of
-//! [`ADJ02` v2](../../../specs/ADJ02-coverage-checker.md). The check
-//! is a **structural tree-tiling check** over the hierarchical IR
-//! from ADJ01 v2 — language-agnostic by construction, deterministic,
-//! linear in IR node count, no tagger, no stopword list, no NegEx
-//! triggers.
+//! [`ADJ02` v3](../../../specs/ADJ02-coverage-checker.md), built on
+//! top of the v3 graph IR ([`adjudication_ir`]).
 //!
-//! ## The invariant
+//! ## What v3 changes
 //!
-//! > Every byte of the document's normalized text is in the source
-//! > spans of some leaf in the IR's decomposition tree.
+//! v2's structural-tree-tiling check (children's spans tile the
+//! TextRun parent's spans, recursively) is replaced by a **flat
+//! tiling** of the union of every node and edge `source_spans`
+//! against the document's byte range. The discipline is the same —
+//! every byte must be accounted for, no overlaps, no gaps — but the
+//! check is no longer tied to the now-removed `TextRun` /
+//! `part_of` tree shape.
 //!
-//! Equivalent to five structural conditions:
+//! ## What this crate adds on top of `adjudication_ir::validate`
 //!
-//! 1. **Span validity** — every span has `start < end`, both within
-//!    the document's bounds.
-//! 2. **Root coverage** — the union of root nodes' source_spans
-//!    equals the document's full byte range.
-//! 3. **Parent-child containment** — child spans inside parent's.
-//! 4. **TextRun tiling** — each TextRun's children's spans union to
-//!    the parent's spans.
-//! 5. **No `Unparseable`** — any `Discarded` node with reason
-//!    `Unparseable` is a hard coverage failure.
+//! `adjudication_ir::validate` reports coverage gaps and overlaps
+//! relative to the IR's *self-determined* span range
+//! `[min_start, max_end)` — it doesn't know the document's actual
+//! length. This crate carries the [`Document`]'s normalized text
+//! length and verifies the IR tiles all the way to the end of the
+//! document.
 //!
-//! Conditions 1, 3, 4 are already enforced by
-//! `adjudication_ir::validate`. This crate adds conditions 2 and 5
-//! and packages all five violations into a `CoverageResult` shape
-//! suitable for ADJ06 clarification.
+//! Plus, it surfaces the framework-level invariants ADJ02 owns:
+//!
+//! - `UnparseableDiscarded` — any `Discarded` node with
+//!   `discard_reason = Unparseable` is a hard coverage failure (ADJ01
+//!   rule). The extractor must produce a meaningful node, never an
+//!   admission of incompetence.
 
 use adjudication_ir::{
-    validate, DiscardReason, DocumentId, IRDocument, NodeId, NodeKind, ValidationError,
+    validate, DiscardReason, DocumentId, IRDocument, NodeOrEdgeId, NodeKind, SpanLocation,
+    ValidationError,
 };
 
 // ---------------------------------------------------------------------------
@@ -38,7 +40,7 @@ use adjudication_ir::{
 // ---------------------------------------------------------------------------
 
 /// The document under coverage analysis. The check reads only
-/// `normalized_text.len()` — it never inspects the bytes.
+/// `normalized_text.len()` — it never inspects the bytes themselves.
 #[derive(Debug, Clone)]
 pub struct Document {
     pub id: DocumentId,
@@ -52,21 +54,21 @@ pub enum CoverageResult {
     Fail { violations: Vec<CoverageViolation> },
 }
 
-/// One coverage violation. Maps to an ADJ06 clarification question
-/// shape.
+/// One coverage violation. Each variant maps to a clarification-
+/// question shape consumed by ADJ06.
 #[derive(Debug, Clone, PartialEq)]
 pub enum CoverageViolation {
-    /// A span cites a different document than the one under check.
+    /// A node's or edge's span cites a different document.
     SpanWrongDocument {
-        node_id: NodeId,
+        location: SpanLocation,
         expected: DocumentId,
         found: DocumentId,
     },
 
-    /// A span's `start >= end` or extends beyond the document's
+    /// A span's `start >= end`, or extends beyond the document's
     /// byte length.
     InvalidSpan {
-        node_id: NodeId,
+        location: SpanLocation,
         start: usize,
         end: usize,
         document_len: usize,
@@ -74,85 +76,104 @@ pub enum CoverageViolation {
 
     /// A `Discarded` node has reason `Unparseable`. Always a hard
     /// coverage failure per ADJ01.
-    UnparseableDiscarded { node_id: NodeId },
+    UnparseableDiscarded { node_id: adjudication_ir::NodeId },
 
-    /// The union of root nodes' source_spans does not equal the
-    /// document's full byte range. `missing_ranges` enumerates the
-    /// uncovered byte ranges.
-    RootsDoNotTileDocument { missing_ranges: Vec<(usize, usize)> },
+    /// Some byte range of the document is not in any node's or
+    /// edge's source_spans.
+    CoverageGap { missing_ranges: Vec<(usize, usize)> },
 
-    /// A node's `part_of` references an id that doesn't exist.
-    DanglingPartOf { node_id: NodeId, missing_parent: NodeId },
-
-    /// A child's source spans extend beyond its structural parent's.
-    ChildSpansExceedParent { child_id: NodeId, parent_id: NodeId },
-
-    /// A `TextRun`'s children's spans, taken together, do not tile
-    /// its own spans. `missing_ranges` enumerates the gaps inside
-    /// the parent.
-    ChildrenDoNotTileParent {
-        parent_id: NodeId,
-        missing_ranges: Vec<(usize, usize)>,
+    /// Some byte range appears in more than one source_span (across
+    /// nodes and edges, after synthesized-object exemption).
+    CoverageOverlap {
+        ranges: Vec<(usize, usize)>,
+        participants: Vec<NodeOrEdgeId>,
     },
 
-    /// A non-TextRun node has children. Only TextRun may be a
-    /// structural parent.
-    NonTextRunHasChildren {
-        parent_id: NodeId,
-        parent_kind: NodeKind,
-        children: Vec<NodeId>,
-    },
-
-    /// A `part_of` cycle in the decomposition.
-    PartOfCycle { participants: Vec<NodeId> },
+    /// `adjudication_ir::validate` returned an error that isn't a
+    /// coverage concern. The propagation / acyclicity / kind-rule
+    /// errors live on other checkers; reported here so callers can
+    /// dispatch.
+    UpstreamValidationError { kind: String },
 }
 
 // ---------------------------------------------------------------------------
 // Main entry point
 // ---------------------------------------------------------------------------
 
-/// Run the structural coverage check. Returns `Pass` or
-/// `Fail { violations }`.
+/// Run the flat-tile coverage check.
 ///
-/// The check does not call an LLM; it does not consult a tagger;
-/// it does not classify tokens. The LLM-produced decomposition tree
-/// already encoded what counts as content; this check verifies the
-/// tree's structural completeness.
+/// 1. Delegates the bulk of the tiling check to
+///    [`adjudication_ir::validate`] and translates coverage-related
+///    errors into [`CoverageViolation`]s.
+/// 2. Checks that the IR's coverage reaches the document's
+///    `normalized_text.len()`. If the IR tiles `[0, max_end)` but
+///    `max_end < doc_len`, the gap is reported.
+/// 3. Checks for `Discarded(Unparseable)` nodes — always a hard
+///    failure per ADJ01.
 pub fn check_coverage(doc: &Document, ir_doc: &IRDocument) -> CoverageResult {
-    let mut violations = Vec::new();
+    let mut violations: Vec<CoverageViolation> = Vec::new();
+    let doc_len = doc.normalized_text.len();
 
-    // 1, 3, 4 — delegated to adjudication_ir::validate, which
-    // enforces ADJ01's well-formedness rules including all the
-    // tree-shape invariants.
     if let Err(e) = validate(ir_doc) {
-        violations.extend(translate_validation_error(e, doc));
+        match e {
+            ValidationError::InvalidSpan { location, start, end } => {
+                violations.push(CoverageViolation::InvalidSpan {
+                    location,
+                    start,
+                    end,
+                    document_len: doc_len,
+                });
+            }
+            ValidationError::SpanDocumentMismatch { location, expected, found } => {
+                violations.push(CoverageViolation::SpanWrongDocument {
+                    location,
+                    expected,
+                    found,
+                });
+            }
+            ValidationError::CoverageGap { missing_ranges } => {
+                violations.push(CoverageViolation::CoverageGap { missing_ranges });
+            }
+            ValidationError::CoverageOverlap { ranges, participants } => {
+                violations.push(CoverageViolation::CoverageOverlap { ranges, participants });
+            }
+            other => {
+                violations.push(CoverageViolation::UpstreamValidationError {
+                    kind: format!("{other:?}"),
+                });
+            }
+        }
     }
 
-    // 2. Root coverage: roots union to (0, doc_len).
-    let doc_len = doc.normalized_text.len();
-    let mut root_spans: Vec<(usize, usize)> = ir_doc
+    // Document-end gap: validate() doesn't know doc_len, so we check
+    // that the IR's max source-span end reaches it.
+    let max_end: usize = ir_doc
         .nodes
         .iter()
-        .filter(|n| n.part_of.is_none())
         .flat_map(|n| n.source_spans.iter())
         .filter(|s| s.document_id == doc.id)
-        .map(|s| (s.start, s.end))
-        .collect();
-    root_spans.sort_by_key(|(s, _)| *s);
-    let root_merged = merge_ranges(root_spans);
-    let document_range = if doc_len > 0 {
-        vec![(0, doc_len)]
-    } else {
-        vec![]
-    };
-    let missing = subtract_intervals(document_range.clone(), root_merged.clone());
-    if !missing.is_empty() && !document_range.is_empty() {
-        violations.push(CoverageViolation::RootsDoNotTileDocument {
-            missing_ranges: missing,
-        });
+        .map(|s| s.end)
+        .chain(
+            ir_doc
+                .edges
+                .iter()
+                .flat_map(|e| e.source_spans.iter())
+                .filter(|s| s.document_id == doc.id)
+                .map(|s| s.end),
+        )
+        .max()
+        .unwrap_or(0);
+    if doc_len > 0 && max_end < doc_len {
+        // Don't double-report if validate already reported a gap.
+        let already = violations.iter().any(|v| matches!(v, CoverageViolation::CoverageGap { .. }));
+        if !already {
+            violations.push(CoverageViolation::CoverageGap {
+                missing_ranges: vec![(max_end, doc_len)],
+            });
+        }
     }
 
-    // 5. Hard rule: Unparseable Discarded is a coverage failure.
+    // Unparseable Discarded is always a hard failure.
     for node in &ir_doc.nodes {
         if node.kind == NodeKind::Discarded
             && node.discard_reason == Some(DiscardReason::Unparseable)
@@ -170,110 +191,7 @@ pub fn check_coverage(doc: &Document, ir_doc: &IRDocument) -> CoverageResult {
     }
 }
 
-fn translate_validation_error(e: ValidationError, doc: &Document) -> Vec<CoverageViolation> {
-    let mut out = Vec::new();
-    match e {
-        ValidationError::InvalidSpan {
-            node_id, start, end,
-        } => out.push(CoverageViolation::InvalidSpan {
-            node_id,
-            start,
-            end,
-            document_len: doc.normalized_text.len(),
-        }),
-        ValidationError::SpanDocumentMismatch {
-            node_id, expected, found,
-        } => out.push(CoverageViolation::SpanWrongDocument {
-            node_id,
-            expected,
-            found,
-        }),
-        ValidationError::DanglingPartOf {
-            node_id, missing_parent,
-        } => out.push(CoverageViolation::DanglingPartOf {
-            node_id,
-            missing_parent,
-        }),
-        ValidationError::ChildSpansExceedParent {
-            child_id, parent_id,
-        } => out.push(CoverageViolation::ChildSpansExceedParent {
-            child_id,
-            parent_id,
-        }),
-        ValidationError::ChildrenDoNotTileParent {
-            parent_id, missing_ranges,
-        } => out.push(CoverageViolation::ChildrenDoNotTileParent {
-            parent_id,
-            missing_ranges,
-        }),
-        ValidationError::NonTextRunHasChildren {
-            parent_id, parent_kind, children,
-        } => out.push(CoverageViolation::NonTextRunHasChildren {
-            parent_id,
-            parent_kind,
-            children,
-        }),
-        ValidationError::PartOfCycle { participants } => {
-            out.push(CoverageViolation::PartOfCycle { participants })
-        }
-        // Other adjudication-ir validation errors (DuplicateNodeId,
-        // FactWithUncertainPolarity, etc.) are not coverage concerns
-        // per ADJ02; they belong to ADJ01 well-formedness.
-        _ => {}
-    }
-    out
-}
-
-/// Merge overlapping / adjacent byte-range intervals.
-fn merge_ranges(mut rs: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
-    if rs.is_empty() {
-        return rs;
-    }
-    rs.sort_by_key(|(s, _)| *s);
-    let mut out = Vec::with_capacity(rs.len());
-    let mut cur = rs[0];
-    for (s, e) in rs.into_iter().skip(1) {
-        if s <= cur.1 {
-            cur.1 = cur.1.max(e);
-        } else {
-            out.push(cur);
-            cur = (s, e);
-        }
-    }
-    out.push(cur);
-    out
-}
-
-/// Bytes in `parent` not covered by any range in `children`.
-fn subtract_intervals(
-    parent: Vec<(usize, usize)>,
-    children: Vec<(usize, usize)>,
-) -> Vec<(usize, usize)> {
-    let parent_merged = merge_ranges(parent);
-    let child_merged = merge_ranges(children);
-    let mut out = Vec::new();
-    for (p_start, p_end) in parent_merged {
-        let mut cursor = p_start;
-        for &(c_start, c_end) in &child_merged {
-            if c_end <= cursor || c_start >= p_end {
-                continue;
-            }
-            if c_start > cursor {
-                out.push((cursor, c_start.min(p_end)));
-            }
-            cursor = cursor.max(c_end);
-            if cursor >= p_end {
-                break;
-            }
-        }
-        if cursor < p_end {
-            out.push((cursor, p_end));
-        }
-    }
-    out
-}
-
-// Re-export Span and NodeId for caller convenience.
+// Re-export common types for caller convenience.
 pub use adjudication_ir::{NodeId as IrNodeId, Span as IrSpan};
 
 // ---------------------------------------------------------------------------
@@ -283,7 +201,7 @@ pub use adjudication_ir::{NodeId as IrNodeId, Span as IrSpan};
 #[cfg(test)]
 mod tests {
     use super::*;
-    use adjudication_ir::{IRNode, Modality, Polarity, Span};
+    use adjudication_ir::{IRNode, Modality, NodeId, Polarity, Span};
     use logic_core::{atom, compound};
     use std::collections::HashMap;
 
@@ -302,23 +220,7 @@ mod tests {
         Span::new(doc_id(), start, end)
     }
 
-    fn text_run(id: &str, start: usize, end: usize, part_of: Option<&str>) -> IRNode {
-        IRNode {
-            id: NodeId::new(id),
-            kind: NodeKind::TextRun,
-            term: compound("text_run", vec![]),
-            polarity: Polarity::Inherit,
-            modality: Modality::Inherit,
-            source_spans: vec![span_of(start, end)],
-            confidence: 1.0,
-            part_of: part_of.map(NodeId::new),
-            lowered_from: None,
-            discard_reason: None,
-            metadata: HashMap::new(),
-        }
-    }
-
-    fn fact_leaf(id: &str, start: usize, end: usize, part_of: Option<&str>) -> IRNode {
+    fn fact_leaf(id: &str, start: usize, end: usize) -> IRNode {
         IRNode {
             id: NodeId::new(id),
             kind: NodeKind::Fact,
@@ -327,8 +229,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span_of(start, end)],
             confidence: 0.9,
-            part_of: part_of.map(NodeId::new),
-            lowered_from: None,
             discard_reason: None,
             metadata: HashMap::new(),
         }
@@ -340,6 +240,7 @@ mod tests {
         let ir = IRDocument {
             document_id: doc_id(),
             nodes: vec![],
+            edges: vec![],
         };
         assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
     }
@@ -350,74 +251,73 @@ mod tests {
         let ir = IRDocument {
             document_id: doc_id(),
             nodes: vec![],
-        };
-        match check_coverage(&doc, &ir) {
-            CoverageResult::Fail { violations } => {
-                let has_root_miss = violations.iter().any(|v| matches!(
-                    v,
-                    CoverageViolation::RootsDoNotTileDocument { missing_ranges }
-                        if missing_ranges == &vec![(0, 11)]
-                ));
-                assert!(has_root_miss, "expected RootsDoNotTileDocument: {:?}", violations);
-            }
-            other => panic!("expected Fail, got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn single_root_textrun_with_one_child_tiling_full_doc_passes() {
-        let doc = mk_doc("hello world");
-        let parent = text_run("T0", 0, 11, None);
-        let leaf = fact_leaf("F1", 0, 11, Some("T0"));
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![parent, leaf],
-        };
-        assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
-    }
-
-    #[test]
-    fn root_tile_gap_reported_with_missing_range() {
-        // doc 0..50 but only one root TextRun at 0..30
-        let doc = mk_doc(&"x".repeat(50));
-        let parent = text_run("T0", 0, 30, None);
-        let leaf = fact_leaf("F1", 0, 30, Some("T0"));
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![parent, leaf],
-        };
-        match check_coverage(&doc, &ir) {
-            CoverageResult::Fail { violations } => {
-                let has_missing = violations.iter().any(|v| matches!(
-                    v,
-                    CoverageViolation::RootsDoNotTileDocument { missing_ranges }
-                        if missing_ranges == &vec![(30, 50)]
-                ));
-                assert!(has_missing, "expected (30, 50) missing: {:?}", violations);
-            }
-            other => panic!("expected Fail, got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn child_gap_within_textrun_reported_with_missing_range() {
-        // Root TextRun 0..50, two children 0..20 and 30..50 — gap 20..30.
-        let doc = mk_doc(&"x".repeat(50));
-        let parent = text_run("T0", 0, 50, None);
-        let leaf1 = fact_leaf("F1", 0, 20, Some("T0"));
-        let leaf2 = fact_leaf("F2", 30, 50, Some("T0"));
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![parent, leaf1, leaf2],
+            edges: vec![],
         };
         match check_coverage(&doc, &ir) {
             CoverageResult::Fail { violations } => {
                 let has_gap = violations.iter().any(|v| matches!(
                     v,
-                    CoverageViolation::ChildrenDoNotTileParent { missing_ranges, .. }
-                        if missing_ranges == &vec![(20, 30)]
+                    CoverageViolation::CoverageGap { missing_ranges }
+                        if missing_ranges == &vec![(0, 11)]
                 ));
-                assert!(has_gap, "expected ChildrenDoNotTileParent(20..30): {:?}", violations);
+                assert!(has_gap, "expected (0,11) CoverageGap: {:?}", violations);
+            }
+            other => panic!("expected Fail, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn single_fact_tiling_full_doc_passes() {
+        let doc = mk_doc("hello world");
+        let leaf = fact_leaf("F1", 0, 11);
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![leaf],
+            edges: vec![],
+        };
+        assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
+    }
+
+    #[test]
+    fn doc_end_gap_detected() {
+        // Doc 0..50; only F1 covers 0..30. Gap 30..50 should report.
+        let doc = mk_doc(&"x".repeat(50));
+        let leaf = fact_leaf("F1", 0, 30);
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![leaf],
+            edges: vec![],
+        };
+        match check_coverage(&doc, &ir) {
+            CoverageResult::Fail { violations } => {
+                let has_gap = violations.iter().any(|v| matches!(
+                    v,
+                    CoverageViolation::CoverageGap { missing_ranges }
+                        if missing_ranges == &vec![(30, 50)]
+                ));
+                assert!(has_gap, "expected (30,50) gap: {:?}", violations);
+            }
+            other => panic!("expected Fail, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn mid_doc_gap_detected() {
+        // Two facts at 0..20 and 30..50 leave 20..30 uncovered.
+        let doc = mk_doc(&"x".repeat(50));
+        let f1 = fact_leaf("F1", 0, 20);
+        let f2 = fact_leaf("F2", 30, 50);
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![f1, f2],
+            edges: vec![],
+        };
+        match check_coverage(&doc, &ir) {
+            CoverageResult::Fail { violations } => {
+                let has_gap = violations
+                    .iter()
+                    .any(|v| matches!(v, CoverageViolation::CoverageGap { .. }));
+                assert!(has_gap, "expected gap: {:?}", violations);
             }
             other => panic!("expected Fail, got {:?}", other),
         }
@@ -426,7 +326,6 @@ mod tests {
     #[test]
     fn unparseable_discarded_always_fails() {
         let doc = mk_doc(&"x".repeat(20));
-        let parent = text_run("T0", 0, 20, None);
         let discard = IRNode {
             id: NodeId::new("D1"),
             kind: NodeKind::Discarded,
@@ -435,14 +334,13 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span_of(0, 20)],
             confidence: 1.0,
-            part_of: Some(NodeId::new("T0")),
-            lowered_from: None,
             discard_reason: Some(DiscardReason::Unparseable),
             metadata: HashMap::new(),
         };
         let ir = IRDocument {
             document_id: doc_id(),
-            nodes: vec![parent, discard],
+            nodes: vec![discard],
+            edges: vec![],
         };
         match check_coverage(&doc, &ir) {
             CoverageResult::Fail { violations } => {
@@ -456,9 +354,8 @@ mod tests {
     }
 
     #[test]
-    fn discarded_with_pleasantry_reason_is_ok() {
+    fn discarded_with_pleasantry_is_ok() {
         let doc = mk_doc(&"x".repeat(20));
-        let parent = text_run("T0", 0, 20, None);
         let discard = IRNode {
             id: NodeId::new("D1"),
             kind: NodeKind::Discarded,
@@ -467,62 +364,14 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span_of(0, 20)],
             confidence: 1.0,
-            part_of: Some(NodeId::new("T0")),
-            lowered_from: None,
             discard_reason: Some(DiscardReason::Pleasantry),
             metadata: HashMap::new(),
         };
         let ir = IRDocument {
             document_id: doc_id(),
-            nodes: vec![parent, discard],
+            nodes: vec![discard],
+            edges: vec![],
         };
         assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
-    }
-
-    #[test]
-    fn nested_textruns_tile_correctly_passes() {
-        let doc = mk_doc(&"x".repeat(50));
-        let outer = text_run("T0", 0, 50, None);
-        let inner = text_run("T1", 0, 50, Some("T0"));
-        let leaf = fact_leaf("F1", 0, 50, Some("T1"));
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![outer, inner, leaf],
-        };
-        assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
-    }
-
-    #[test]
-    fn merge_ranges_combines_adjacent_intervals() {
-        assert_eq!(
-            merge_ranges(vec![(0, 5), (5, 10), (15, 20)]),
-            vec![(0, 10), (15, 20)]
-        );
-    }
-
-    #[test]
-    fn subtract_intervals_finds_gaps() {
-        assert_eq!(
-            subtract_intervals(vec![(0, 50)], vec![(10, 20), (30, 40)]),
-            vec![(0, 10), (20, 30), (40, 50)]
-        );
-    }
-
-    #[test]
-    fn dangling_part_of_surfaces_as_coverage_violation() {
-        let doc = mk_doc(&"x".repeat(20));
-        let leaf = fact_leaf("F1", 0, 20, Some("DOES_NOT_EXIST"));
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![leaf],
-        };
-        match check_coverage(&doc, &ir) {
-            CoverageResult::Fail { violations } => {
-                assert!(violations
-                    .iter()
-                    .any(|v| matches!(v, CoverageViolation::DanglingPartOf { .. })));
-            }
-            other => panic!("expected Fail, got {:?}", other),
-        }
     }
 }
