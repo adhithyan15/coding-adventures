@@ -767,6 +767,37 @@ impl OrSet {
 // and for single-process tools (a local-only password manager
 // that still wants the ordered conflict semantics).
 
+/// Redacted aggregate view of an [`InMemorySyncServer`].
+///
+/// The summary intentionally exposes only routing and ordering
+/// metadata. It never includes ciphertext bytes, wrap-set bytes,
+/// keys, or decrypted record contents, so operators can inspect
+/// sync shape without widening the server's plaintext surface.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct SyncStateSummary {
+    /// Total canonical records currently stored.
+    pub record_count: usize,
+    /// Number of distinct namespaces represented by records.
+    pub namespace_count: usize,
+    /// Per-namespace record counts, sorted by namespace.
+    pub namespace_record_counts: BTreeMap<String, usize>,
+    /// Number of distinct devices that are the last writer of
+    /// at least one record.
+    pub writer_count: usize,
+    /// Number of distinct devices mentioned by any stored
+    /// record's version vector.
+    pub version_vector_device_count: usize,
+    /// Number of records that carry an opaque VLT04 wrap-set.
+    pub wrapped_record_count: usize,
+    /// Total ciphertext byte length across all records.
+    pub ciphertext_bytes: usize,
+    /// Total wrap-set byte length across wrapped records.
+    pub wrap_set_bytes: usize,
+    /// Largest observed `last_writer_ms`, if the server holds
+    /// at least one record.
+    pub latest_writer_ms: Option<u64>,
+}
+
 /// Threadsafe in-memory `SyncServer`. Production deployments
 /// implement the trait against Postgres / SQLite / S3 with the
 /// same protocol.
@@ -785,6 +816,50 @@ impl InMemorySyncServer {
     pub fn new() -> Self {
         Self {
             inner: Mutex::new(HashMap::new()),
+        }
+    }
+
+    /// Return a redacted aggregate summary of the currently
+    /// stored canonical sync state.
+    pub fn state_summary(&self) -> SyncStateSummary {
+        let g = lock_recover(&self.inner);
+        let mut namespace_record_counts = BTreeMap::new();
+        let mut writers = BTreeSet::new();
+        let mut version_devices = BTreeSet::new();
+        let mut wrapped_record_count = 0;
+        let mut ciphertext_bytes = 0;
+        let mut wrap_set_bytes = 0;
+        let mut latest_writer_ms: Option<u64> = None;
+
+        for record in g.values() {
+            *namespace_record_counts
+                .entry(record.namespace.clone())
+                .or_insert(0) += 1;
+            writers.insert(record.last_writer.clone());
+            for device in record.version_vector.counters.keys() {
+                version_devices.insert(device.clone());
+            }
+            if let Some(wrap_set) = &record.wrap_set {
+                wrapped_record_count += 1;
+                wrap_set_bytes += wrap_set.len();
+            }
+            ciphertext_bytes += record.ciphertext.len();
+            latest_writer_ms = Some(match latest_writer_ms {
+                Some(current) => current.max(record.last_writer_ms),
+                None => record.last_writer_ms,
+            });
+        }
+
+        SyncStateSummary {
+            record_count: g.len(),
+            namespace_count: namespace_record_counts.len(),
+            namespace_record_counts,
+            writer_count: writers.len(),
+            version_vector_device_count: version_devices.len(),
+            wrapped_record_count,
+            ciphertext_bytes,
+            wrap_set_bytes,
+            latest_writer_ms,
         }
     }
 }
@@ -1396,6 +1471,53 @@ mod tests {
     fn get_unknown_returns_not_found() {
         let s = InMemorySyncServer::new();
         assert!(matches!(s.get("ns", "k"), Err(SyncError::NotFound)));
+    }
+
+    #[test]
+    fn state_summary_reports_redacted_aggregates() {
+        let s = InMemorySyncServer::new();
+        let a = dev("A");
+        let b = dev("B");
+        s.push(SyncRecord {
+            namespace: "n1".into(),
+            key: "alpha".into(),
+            version_vector: VersionVector::new().bump(&a).bump(&b),
+            last_writer: a.clone(),
+            last_writer_ms: 10,
+            ciphertext: b"secret-one".to_vec(),
+            wrap_set: Some(b"wrapped".to_vec()),
+        })
+        .unwrap();
+        s.push(rec(
+            "n1",
+            "beta",
+            VersionVector::new().bump(&b),
+            b.clone(),
+            20,
+            b"secret-two",
+        ))
+        .unwrap();
+        s.push(rec(
+            "n2",
+            "gamma",
+            VersionVector::new().bump(&a),
+            a,
+            15,
+            b"x",
+        ))
+        .unwrap();
+
+        let summary = s.state_summary();
+        assert_eq!(summary.record_count, 3);
+        assert_eq!(summary.namespace_count, 2);
+        assert_eq!(summary.namespace_record_counts.get("n1"), Some(&2));
+        assert_eq!(summary.namespace_record_counts.get("n2"), Some(&1));
+        assert_eq!(summary.writer_count, 2);
+        assert_eq!(summary.version_vector_device_count, 2);
+        assert_eq!(summary.wrapped_record_count, 1);
+        assert_eq!(summary.ciphertext_bytes, 21);
+        assert_eq!(summary.wrap_set_bytes, 7);
+        assert_eq!(summary.latest_writer_ms, Some(20));
     }
 
     #[test]

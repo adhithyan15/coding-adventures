@@ -57,6 +57,22 @@ SyncRecord {
 The server **never** sees plaintext, never knows the record's
 type, and cannot tell what's encoded inside the ciphertext.
 
+## Redacted state summary
+
+`InMemorySyncServer::state_summary()` returns aggregate routing
+and ordering metadata without exposing ciphertext, wrap-set
+bytes, record keys, or decrypted contents:
+
+```rust
+let summary = server.state_summary();
+assert_eq!(summary.record_count, 1);
+assert_eq!(summary.namespace_record_counts["vault/login"], 1);
+```
+
+This is intended for local tooling and diagnostics that need to
+observe sync shape while preserving the crate's opaque-by-design
+server contract.
+
 ## Conflict policy
 
 | Vector relationship                  | Outcome             |
