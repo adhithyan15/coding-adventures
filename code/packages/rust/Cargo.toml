@@ -190,6 +190,7 @@ members = [
     "adjudication-clinical-demo",
     "adjudication-contract-demo",
     "adjudication-tsa-demo",
+    "adjudication-rulebook",
     "loss-functions",
     "markov-chain",
     "note-frequency",

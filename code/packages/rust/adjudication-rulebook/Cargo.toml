@@ -1,0 +1,12 @@
+[package]
+name = "adjudication-rulebook"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ14 implementation: bootstrap a typed Rulebook from the LLM's own weights. Composes the elicit_rules primitive with decompose_text to produce an audited rulebook IR plus a full audit trail; the same checker discipline that protects extracted facts now protects the rules under which those facts will be judged. Trust tiers (Tentative / Reviewed / Authoritative) record provenance so deployments can decide which rulebooks to use."
+
+[dependencies]
+adjudication-ir = { path = "../adjudication-ir" }
+llm-gateway = { path = "../llm-gateway" }
+llm-primitives = { path = "../llm-primitives" }
+logic-core = { path = "../logic-core" }
+serde_json = "1"
