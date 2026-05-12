@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Typed DNS-SD/mDNS `PTR` and `SRV` record data for service-discovery
+  fixtures, including compressed PTR record-data parsing and helper accessors
+  for PTR answers and service records.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
