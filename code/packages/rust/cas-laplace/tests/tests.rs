@@ -117,9 +117,19 @@ fn special_heads_and_handlers() {
         unit_step_handler(&apply(sym(UNIT_STEP), vec![int(4)])),
         int(1)
     );
+    let id = |node| node;
+    let table = build_laplace_handler_table();
+    assert!(table.contains_key(LAPLACE));
+    assert!(table.contains_key(ILT));
+    assert!(table.contains_key(DIRAC_DELTA));
+    assert!(table.contains_key(UNIT_STEP));
     assert_eq!(
-        build_laplace_handler_table(),
-        vec![LAPLACE, ILT, DIRAC_DELTA, UNIT_STEP]
+        table[DIRAC_DELTA](&apply(sym(DIRAC_DELTA), vec![int(0)]), &id),
+        int(1)
+    );
+    assert_eq!(
+        table[UNIT_STEP](&apply(sym(UNIT_STEP), vec![int(0)]), &id),
+        rat(1, 2)
     );
 }
 

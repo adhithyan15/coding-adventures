@@ -134,7 +134,19 @@ fn handlers() {
         ifourier_handler(&apply(sym(IFOURIER), vec![int(1), w(), t()]), &id),
         apply(sym(DIRAC_DELTA), vec![t()])
     );
-    assert_eq!(build_fourier_handler_table(), vec![FOURIER, IFOURIER]);
+    let table = build_fourier_handler_table();
+    assert!(table.contains_key(FOURIER));
+    assert!(table.contains_key(IFOURIER));
+    assert_eq!(
+        table[FOURIER](
+            &apply(
+                sym(FOURIER),
+                vec![apply(sym(DIRAC_DELTA), vec![t()]), t(), w()]
+            ),
+            &id
+        ),
+        int(1)
+    );
 }
 
 fn contains_head(node: &symbolic_ir::IRNode, head: &str) -> bool {

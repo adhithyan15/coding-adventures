@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use symbolic_ir::{apply, int, sym, IRNode, ADD, COS, DIV, EXP, MUL, NEG, POW, SIN, SQRT, SUB};
 
 pub const FOURIER: &str = "Fourier";
@@ -8,6 +10,7 @@ pub const IMAGINARY_UNIT: &str = "ImaginaryUnit";
 pub const PI: &str = "%pi";
 
 pub type EvalFn = dyn Fn(IRNode) -> IRNode;
+pub type Handler = fn(&IRNode, &EvalFn) -> IRNode;
 
 pub fn fourier_transform(f: IRNode, t: IRNode, omega: IRNode) -> IRNode {
     if let Some((a, b)) = binary_args(&f, ADD) {
@@ -63,8 +66,11 @@ pub fn ifourier_handler(expr: &IRNode, eval: &EvalFn) -> IRNode {
     ))
 }
 
-pub fn build_fourier_handler_table() -> Vec<&'static str> {
-    vec![FOURIER, IFOURIER]
+pub fn build_fourier_handler_table() -> BTreeMap<&'static str, Handler> {
+    BTreeMap::from([
+        (FOURIER, fourier_handler as Handler),
+        (IFOURIER, ifourier_handler as Handler),
+    ])
 }
 
 fn forward_lookup(f: &IRNode, t: &IRNode, omega: &IRNode) -> Option<IRNode> {
