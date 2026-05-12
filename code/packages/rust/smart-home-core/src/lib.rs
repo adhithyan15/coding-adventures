@@ -371,6 +371,80 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
     ]
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct CapabilitySurfaceSummary {
+    pub total_capabilities: usize,
+    pub observe_only_capabilities: usize,
+    pub command_only_capabilities: usize,
+    pub observe_and_command_capabilities: usize,
+    pub null_values: usize,
+    pub boolean_values: usize,
+    pub integer_values: usize,
+    pub number_values: usize,
+    pub percentage_values: usize,
+    pub text_values: usize,
+    pub object_values: usize,
+    pub array_values: usize,
+    pub ranged_capabilities: usize,
+}
+
+impl CapabilitySurfaceSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_capabilities<'a, I>(capabilities: I) -> Self
+    where
+        I: IntoIterator<Item = &'a Capability>,
+    {
+        let mut summary = Self::empty();
+        for capability in capabilities {
+            summary.total_capabilities += 1;
+            match capability.mode {
+                CapabilityMode::Observe => summary.observe_only_capabilities += 1,
+                CapabilityMode::Command => summary.command_only_capabilities += 1,
+                CapabilityMode::ObserveAndCommand => {
+                    summary.observe_and_command_capabilities += 1;
+                }
+            }
+            match capability.value_kind {
+                ValueKind::Null => summary.null_values += 1,
+                ValueKind::Boolean => summary.boolean_values += 1,
+                ValueKind::Integer => summary.integer_values += 1,
+                ValueKind::Number => summary.number_values += 1,
+                ValueKind::Percentage => summary.percentage_values += 1,
+                ValueKind::Text => summary.text_values += 1,
+                ValueKind::Object => summary.object_values += 1,
+                ValueKind::Array => summary.array_values += 1,
+            }
+            if capability.min.is_some() && capability.max.is_some() {
+                summary.ranged_capabilities += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_capabilities == 0
+    }
+
+    pub fn observable_capabilities(&self) -> usize {
+        self.observe_only_capabilities + self.observe_and_command_capabilities
+    }
+
+    pub fn commandable_capabilities(&self) -> usize {
+        self.command_only_capabilities + self.observe_and_command_capabilities
+    }
+
+    pub fn has_observe_surface(&self) -> bool {
+        self.observable_capabilities() > 0
+    }
+
+    pub fn has_command_surface(&self) -> bool {
+        self.commandable_capabilities() > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProtocolFamily {
     Hue,
@@ -932,6 +1006,12 @@ pub struct Entity {
     pub capabilities: Vec<Capability>,
     pub state: Option<StateSnapshot>,
     pub metadata: Vec<Metadata>,
+}
+
+impl Entity {
+    pub fn capability_summary(&self) -> CapabilitySurfaceSummary {
+        CapabilitySurfaceSummary::from_capabilities(&self.capabilities)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1974,6 +2054,64 @@ mod tests {
 
         assert!(!snapshot.is_stale_at(1_999));
         assert!(snapshot.is_stale_at(2_000));
+    }
+
+    #[test]
+    fn capability_surface_summary_counts_modes_and_value_shapes() {
+        let entity = Entity {
+            entity_id: EntityId::trusted("entity.light.kitchen"),
+            device_id: DeviceId::trusted("device.bridge.light-1"),
+            kind: EntityKind::Light,
+            name: "Kitchen".to_string(),
+            capabilities: vec![
+                Capability::light_on_off(),
+                Capability::light_brightness(),
+                Capability::sensor_occupancy(),
+                Capability::new(
+                    CapabilityId::trusted("diagnostic.payload"),
+                    CapabilityMode::Observe,
+                    ValueKind::Object,
+                ),
+                Capability::new(
+                    CapabilityId::trusted("input.mode"),
+                    CapabilityMode::Command,
+                    ValueKind::Text,
+                ),
+            ],
+            state: None,
+            metadata: Vec::new(),
+        };
+
+        let summary = entity.capability_summary();
+
+        assert_eq!(
+            summary,
+            CapabilitySurfaceSummary {
+                total_capabilities: 5,
+                observe_only_capabilities: 2,
+                command_only_capabilities: 1,
+                observe_and_command_capabilities: 2,
+                null_values: 0,
+                boolean_values: 2,
+                integer_values: 0,
+                number_values: 0,
+                percentage_values: 1,
+                text_values: 1,
+                object_values: 1,
+                array_values: 0,
+                ranged_capabilities: 1,
+            }
+        );
+        assert_eq!(summary.observable_capabilities(), 4);
+        assert_eq!(summary.commandable_capabilities(), 3);
+        assert!(summary.has_observe_surface());
+        assert!(summary.has_command_surface());
+        assert!(!summary.is_empty());
+
+        let empty = CapabilitySurfaceSummary::from_capabilities([]);
+        assert!(empty.is_empty());
+        assert!(!empty.has_observe_surface());
+        assert!(!empty.has_command_surface());
     }
 
     #[test]
