@@ -204,6 +204,30 @@ impl MacFrame {
         Self::parse(bytes, true)
     }
 
+    /// Return a body-free read model of the frame shape.
+    pub fn summary(&self) -> MacFrameSummary {
+        MacFrameSummary {
+            frame_type: self.frame_control.frame_type,
+            frame_version: self.frame_control.frame_version,
+            destination_address_mode: self.frame_control.destination_address_mode,
+            source_address_mode: self.frame_control.source_address_mode,
+            security_enabled: self.frame_control.security_enabled,
+            has_auxiliary_security_header: self.auxiliary_security_header.is_some(),
+            ack_request: self.frame_control.ack_request,
+            frame_pending: self.frame_control.frame_pending,
+            pan_id_compression: self.frame_control.pan_id_compression,
+            sequence_number_suppressed: self.frame_control.sequence_number_suppression,
+            information_elements_present: self.frame_control.information_elements_present,
+            has_sequence_number: self.sequence_number.is_some(),
+            has_destination_pan_id: self.destination_pan_id.is_some(),
+            has_source_pan_id: self.source_pan_id.is_some(),
+            has_destination: self.destination.is_some(),
+            has_source: self.source.is_some(),
+            payload_len: self.payload.len(),
+            has_fcs: self.fcs.is_some(),
+        }
+    }
+
     pub fn encode(&self) -> Result<Vec<u8>, MacFrameError> {
         validate_modes(self)?;
 
@@ -319,6 +343,62 @@ impl MacFrame {
             payload,
             fcs,
         })
+    }
+}
+
+/// Body-free summary of an IEEE 802.15.4 MAC frame.
+///
+/// This reports header shape and byte counts for diagnostics without copying
+/// payload bytes, PAN ids, or device addresses.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MacFrameSummary {
+    /// MAC frame type from the frame control field.
+    pub frame_type: FrameType,
+    /// IEEE 802.15.4 frame version from the frame control field.
+    pub frame_version: FrameVersion,
+    /// Destination address mode declared by the frame control field.
+    pub destination_address_mode: AddressMode,
+    /// Source address mode declared by the frame control field.
+    pub source_address_mode: AddressMode,
+    /// Whether the frame declares an auxiliary security header.
+    pub security_enabled: bool,
+    /// Whether an auxiliary security header was parsed or attached.
+    pub has_auxiliary_security_header: bool,
+    /// Whether the frame requests an acknowledgment.
+    pub ack_request: bool,
+    /// Whether the frame-pending bit is set.
+    pub frame_pending: bool,
+    /// Whether PAN id compression is set.
+    pub pan_id_compression: bool,
+    /// Whether the sequence number is suppressed.
+    pub sequence_number_suppressed: bool,
+    /// Whether the information-elements-present bit is set.
+    pub information_elements_present: bool,
+    /// Whether the frame carries a sequence number value.
+    pub has_sequence_number: bool,
+    /// Whether a destination PAN id is present.
+    pub has_destination_pan_id: bool,
+    /// Whether a source PAN id is present.
+    pub has_source_pan_id: bool,
+    /// Whether a destination address is present.
+    pub has_destination: bool,
+    /// Whether a source address is present.
+    pub has_source: bool,
+    /// Payload length in bytes.
+    pub payload_len: usize,
+    /// Whether an FCS value is present.
+    pub has_fcs: bool,
+}
+
+impl MacFrameSummary {
+    /// `true` when the frame has at least one payload byte.
+    pub fn has_payload(self) -> bool {
+        self.payload_len > 0
+    }
+
+    /// `true` when the frame has a source or destination address.
+    pub fn has_addressing(self) -> bool {
+        self.has_destination || self.has_source
     }
 }
 
@@ -1159,6 +1239,60 @@ mod tests {
         assert_eq!(frame.sequence_number, Some(0x2a));
         assert_eq!(frame.fcs, Some(0xbeef));
         assert!(frame.payload.is_empty());
+    }
+
+    #[test]
+    fn summarizes_mac_frame_without_payload_or_addresses() {
+        let frame = MacFrame {
+            frame_control: FrameControl {
+                ack_request: true,
+                frame_pending: true,
+                ..data_frame_control()
+            },
+            sequence_number: Some(7),
+            destination_pan_id: Some(0x1234),
+            destination: Some(Address::Short(0x5678)),
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Short(0x9abc)),
+            auxiliary_security_header: None,
+            payload: vec![0xaa, 0xbb, 0xcc],
+            fcs: Some(0xbeef),
+        };
+
+        let summary = frame.summary();
+
+        assert_eq!(summary.frame_type, FrameType::Data);
+        assert_eq!(summary.frame_version, FrameVersion::Ieee8021542006);
+        assert_eq!(summary.destination_address_mode, AddressMode::Short);
+        assert_eq!(summary.source_address_mode, AddressMode::Short);
+        assert!(summary.ack_request);
+        assert!(summary.frame_pending);
+        assert!(summary.pan_id_compression);
+        assert!(!summary.sequence_number_suppressed);
+        assert!(summary.has_sequence_number);
+        assert!(summary.has_destination_pan_id);
+        assert!(summary.has_source_pan_id);
+        assert!(summary.has_destination);
+        assert!(summary.has_source);
+        assert!(summary.has_addressing());
+        assert_eq!(summary.payload_len, 3);
+        assert!(summary.has_payload());
+        assert!(summary.has_fcs);
+    }
+
+    #[test]
+    fn summarizes_ack_frame_without_addressing() {
+        let frame = MacFrame::parse_without_fcs(&[0x02, 0x00, 0x2a]).unwrap();
+
+        let summary = frame.summary();
+
+        assert_eq!(summary.frame_type, FrameType::Acknowledgment);
+        assert!(!summary.has_addressing());
+        assert!(!summary.has_payload());
+        assert!(!summary.security_enabled);
+        assert!(!summary.has_auxiliary_security_header);
+        assert!(summary.has_sequence_number);
+        assert!(!summary.has_fcs);
     }
 
     #[test]

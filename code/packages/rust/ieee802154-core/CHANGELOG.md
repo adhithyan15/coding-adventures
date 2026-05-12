@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Added body-free MAC frame summaries for Zigbee/Thread diagnostics, exposing
+  frame shape, addressing/security flags, sequence/FCS presence, and payload
+  length without copying payload bytes or address values.
+
 ## 0.1.0
 
 - Initial MAC frame-control, addressing, payload, and optional FCS parsing.
