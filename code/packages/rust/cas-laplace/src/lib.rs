@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use symbolic_ir::{
     apply, int, rat, sym, IRNode, ADD, COS, COSH, DIV, EXP, MUL, NEG, POW, SIN, SINH, SUB,
 };
@@ -8,6 +10,7 @@ pub const DIRAC_DELTA: &str = "DiracDelta";
 pub const UNIT_STEP: &str = "UnitStep";
 
 pub type EvalFn = dyn Fn(IRNode) -> IRNode;
+pub type Handler = fn(&IRNode, &EvalFn) -> IRNode;
 
 pub fn laplace_transform(f: IRNode, t: IRNode, s: IRNode) -> IRNode {
     if let Some((a, b)) = binary_args(&f, ADD) {
@@ -91,8 +94,21 @@ pub fn unit_step_handler(expr: &IRNode) -> IRNode {
     }
 }
 
-pub fn build_laplace_handler_table() -> Vec<&'static str> {
-    vec![LAPLACE, ILT, DIRAC_DELTA, UNIT_STEP]
+pub fn build_laplace_handler_table() -> BTreeMap<&'static str, Handler> {
+    BTreeMap::from([
+        (LAPLACE, laplace_handler as Handler),
+        (ILT, ilt_handler as Handler),
+        (DIRAC_DELTA, dirac_delta_eval_handler as Handler),
+        (UNIT_STEP, unit_step_eval_handler as Handler),
+    ])
+}
+
+fn dirac_delta_eval_handler(expr: &IRNode, _eval: &EvalFn) -> IRNode {
+    dirac_delta_handler(expr)
+}
+
+fn unit_step_eval_handler(expr: &IRNode, _eval: &EvalFn) -> IRNode {
+    unit_step_handler(expr)
 }
 
 fn table_lookup(f: &IRNode, t: &IRNode, s: &IRNode) -> Option<IRNode> {
