@@ -320,6 +320,10 @@ impl ThreadNetworkData {
             .map(ThreadPrefixData::parse)
             .collect()
     }
+
+    pub fn summary(&self) -> Result<ThreadNetworkDataSummary, MleError> {
+        ThreadNetworkDataSummary::from_network_data(self)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -361,6 +365,102 @@ impl NetworkDataTlvType {
             Self::Server => 6,
             Self::Context => 7,
             Self::Unknown(value) => value & NETWORK_DATA_TYPE_MASK,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ThreadNetworkDataSummary {
+    pub byte_len: usize,
+    pub top_level_tlvs: usize,
+    pub stable_top_level_tlvs: usize,
+    pub prefix_tlvs: usize,
+    pub stable_prefix_tlvs: usize,
+    pub prefix_sub_tlvs: usize,
+    pub stable_prefix_sub_tlvs: usize,
+    pub has_route_tlvs: usize,
+    pub border_router_tlvs: usize,
+    pub lowpan_id_tlvs: usize,
+    pub commissioning_data_tlvs: usize,
+    pub service_tlvs: usize,
+    pub server_tlvs: usize,
+    pub context_tlvs: usize,
+    pub unknown_tlvs: usize,
+}
+
+impl ThreadNetworkDataSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_network_data(network_data: &ThreadNetworkData) -> Result<Self, MleError> {
+        let tlvs = network_data.tlvs()?;
+        let mut summary = Self {
+            byte_len: network_data.len(),
+            ..Self::empty()
+        };
+
+        for tlv in &tlvs {
+            summary.top_level_tlvs += 1;
+            if tlv.stable {
+                summary.stable_top_level_tlvs += 1;
+            }
+            summary.add_tlv_type(tlv.tlv_type);
+
+            if tlv.tlv_type == NetworkDataTlvType::Prefix {
+                let prefix = ThreadPrefixData::parse(tlv)?;
+                summary.prefix_tlvs += 1;
+                if prefix.stable {
+                    summary.stable_prefix_tlvs += 1;
+                }
+                summary.prefix_sub_tlvs += prefix.sub_tlvs.len();
+                for sub_tlv in &prefix.sub_tlvs {
+                    if sub_tlv.stable {
+                        summary.stable_prefix_sub_tlvs += 1;
+                    }
+                    summary.add_tlv_type(sub_tlv.tlv_type);
+                }
+            }
+        }
+
+        Ok(summary)
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.top_level_tlvs == 0
+    }
+
+    pub fn has_prefixes(self) -> bool {
+        self.prefix_tlvs > 0
+    }
+
+    pub fn has_stable_data(self) -> bool {
+        self.stable_top_level_tlvs > 0 || self.stable_prefix_sub_tlvs > 0
+    }
+
+    pub fn has_routing_data(self) -> bool {
+        self.prefix_tlvs > 0 || self.has_route_tlvs > 0 || self.border_router_tlvs > 0
+    }
+
+    pub fn has_services(self) -> bool {
+        self.service_tlvs > 0 || self.server_tlvs > 0
+    }
+
+    pub fn has_unknown_tlvs(self) -> bool {
+        self.unknown_tlvs > 0
+    }
+
+    fn add_tlv_type(&mut self, tlv_type: NetworkDataTlvType) {
+        match tlv_type {
+            NetworkDataTlvType::HasRoute => self.has_route_tlvs += 1,
+            NetworkDataTlvType::BorderRouter => self.border_router_tlvs += 1,
+            NetworkDataTlvType::LowpanId => self.lowpan_id_tlvs += 1,
+            NetworkDataTlvType::CommissioningData => self.commissioning_data_tlvs += 1,
+            NetworkDataTlvType::Service => self.service_tlvs += 1,
+            NetworkDataTlvType::Server => self.server_tlvs += 1,
+            NetworkDataTlvType::Context => self.context_tlvs += 1,
+            NetworkDataTlvType::Unknown(_) => self.unknown_tlvs += 1,
+            NetworkDataTlvType::Prefix => {}
         }
     }
 }
@@ -507,6 +607,13 @@ impl NetworkDataAdvertisement {
             .as_ref()
             .map(ThreadNetworkData::prefixes)
             .unwrap_or_else(|| Ok(Vec::new()))
+    }
+
+    pub fn network_data_summary(&self) -> Result<ThreadNetworkDataSummary, MleError> {
+        self.network_data
+            .as_ref()
+            .map(ThreadNetworkData::summary)
+            .unwrap_or_else(|| Ok(ThreadNetworkDataSummary::empty()))
     }
 }
 
@@ -1454,6 +1561,70 @@ mod tests {
         assert_eq!(tlvs[1], unknown);
         assert_eq!(prefixes, vec![prefix]);
         assert_eq!(prefixes[0].sub_tlvs, vec![border_router]);
+    }
+
+    #[test]
+    fn network_data_summary_counts_prefix_stability_and_nested_tlvs() {
+        let border_router =
+            NetworkDataTlv::new(NetworkDataTlvType::BorderRouter, true, vec![0xaa]).unwrap();
+        let lowpan_id =
+            NetworkDataTlv::new(NetworkDataTlvType::LowpanId, false, vec![0x0f]).unwrap();
+        let prefix = ThreadPrefixData::new(
+            true,
+            3,
+            64,
+            vec![0xfd, 0x00, 0xab, 0xcd, 0, 0, 0, 0],
+            vec![border_router, lowpan_id],
+        )
+        .unwrap();
+        let service = NetworkDataTlv::new(NetworkDataTlvType::Service, false, vec![1]).unwrap();
+        let server = NetworkDataTlv::new(NetworkDataTlvType::Server, true, vec![2]).unwrap();
+        let unknown = NetworkDataTlv::new(NetworkDataTlvType::Unknown(42), false, vec![3]).unwrap();
+        let network_data =
+            ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap(), service, server, unknown])
+                .unwrap();
+
+        let summary = network_data.summary().unwrap();
+
+        assert_eq!(
+            summary,
+            ThreadNetworkDataSummary {
+                byte_len: network_data.len(),
+                top_level_tlvs: 4,
+                stable_top_level_tlvs: 2,
+                prefix_tlvs: 1,
+                stable_prefix_tlvs: 1,
+                prefix_sub_tlvs: 2,
+                stable_prefix_sub_tlvs: 1,
+                has_route_tlvs: 0,
+                border_router_tlvs: 1,
+                lowpan_id_tlvs: 1,
+                commissioning_data_tlvs: 0,
+                service_tlvs: 1,
+                server_tlvs: 1,
+                context_tlvs: 0,
+                unknown_tlvs: 1,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_prefixes());
+        assert!(summary.has_stable_data());
+        assert!(summary.has_routing_data());
+        assert!(summary.has_services());
+        assert!(summary.has_unknown_tlvs());
+
+        let advertisement = NetworkDataAdvertisement {
+            leader_data: None,
+            network_data: Some(network_data),
+        };
+        assert_eq!(advertisement.network_data_summary().unwrap(), summary);
+        assert!(NetworkDataAdvertisement {
+            leader_data: None,
+            network_data: None,
+        }
+        .network_data_summary()
+        .unwrap()
+        .is_empty());
     }
 
     #[test]

@@ -13,6 +13,8 @@ All notable changes to this package will be documented in this file.
   messages for diagnostics and simulator fixtures.
 - Thread Network Data TLV parsing/encoding with stable-bit preservation and
   typed Prefix TLV projection for prefix diagnostics.
+- Compact Thread Network Data summaries for top-level TLV, prefix, stability,
+  routing, service, and unknown-TLV coverage.
 - Typed Connectivity TLV helpers for route-cost, link-quality, active-router,
   and sleepy-end-device diagnostic fields.
 - Thread diagnostic snapshots that combine neighbor, leader, connectivity,
