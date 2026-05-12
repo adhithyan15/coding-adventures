@@ -98,11 +98,17 @@ impl Frac {
         }
         let (n, d) = if d < 0 { (-n, -d) } else { (n, d) };
         let g = gcd(n.unsigned_abs(), d.unsigned_abs()) as i128;
-        Self { numer: n / g, denom: d / g }
+        Self {
+            numer: n / g,
+            denom: d / g,
+        }
     }
 
     fn from_i64(v: i64) -> Self {
-        Self { numer: v as i128, denom: 1 }
+        Self {
+            numer: v as i128,
+            denom: 1,
+        }
     }
 
     fn is_zero(&self) -> bool {
@@ -135,14 +141,20 @@ impl Frac {
 impl std::ops::Add for Frac {
     type Output = Self;
     fn add(self, rhs: Self) -> Self {
-        Frac::new(self.numer * rhs.denom + rhs.numer * self.denom, self.denom * rhs.denom)
+        Frac::new(
+            self.numer * rhs.denom + rhs.numer * self.denom,
+            self.denom * rhs.denom,
+        )
     }
 }
 
 impl std::ops::Sub for Frac {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self {
-        self + Frac { numer: -rhs.numer, denom: rhs.denom }
+        self + Frac {
+            numer: -rhs.numer,
+            denom: rhs.denom,
+        }
     }
 }
 

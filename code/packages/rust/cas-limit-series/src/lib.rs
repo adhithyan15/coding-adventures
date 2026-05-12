@@ -1,6 +1,7 @@
 //! # cas-limit-series
 //!
-//! Limit (direct substitution) and polynomial Taylor series over symbolic IR.
+//! Limit (direct substitution and focused advanced forms) plus polynomial
+//! Taylor series over symbolic IR.
 //!
 //! Rust port of the Python `cas-limit-series` package.
 //!
@@ -54,9 +55,11 @@
 //! ```
 
 pub mod limit;
+pub mod limit_advanced;
 pub mod taylor;
 
 pub use limit::limit_direct;
+pub use limit_advanced::{limit_advanced, LimitAdvancedOptions, LimitDirection};
 pub use taylor::{taylor_polynomial, PolynomialError};
 
 // ---------------------------------------------------------------------------
