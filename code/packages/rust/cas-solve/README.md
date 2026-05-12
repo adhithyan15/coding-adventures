@@ -1,12 +1,12 @@
 # cas-solve (Rust)
 
-Closed-form equation solving over ℚ (Phase 1: linear, quadratic, and cubic).
+Closed-form equation solving over ℚ: linear, quadratic, cubic, and quartic.
 Rust port of the Python `cas-solve` package.
 
 ## Usage
 
 ```rust
-use cas_solve::{solve_cubic, solve_linear, solve_quadratic, SolveResult};
+use cas_solve::{solve_cubic, solve_linear, solve_quadratic, solve_quartic, SolveResult};
 use cas_solve::frac::Frac;
 use symbolic_ir::{int, rat};
 
@@ -25,6 +25,13 @@ let r3 = solve_cubic(
     Frac::from_int(1), Frac::from_int(-6), Frac::from_int(11), Frac::from_int(-6),
 );
 assert_eq!(r3, SolveResult::Solutions(vec![int(1), int(2), int(3)]));
+
+// x^4 - 5x^2 + 4 = 0  →  {-2, -1, 1, 2}
+let r4 = solve_quartic(
+    Frac::from_int(1), Frac::from_int(0), Frac::from_int(-5),
+    Frac::from_int(0), Frac::from_int(4),
+);
+assert!(matches!(r4, SolveResult::Solutions(roots) if roots.contains(&int(-2)) && roots.contains(&int(2))));
 ```
 
 ## SolveResult
@@ -53,6 +60,15 @@ deduplicates repeated roots. If no rational root exists, it uses Cardano's
 formula with symbolic `Cbrt`, `Sqrt`, and `%i` IR nodes for the one-real /
 two-complex branch. The casus irreducibilis branch returns an empty solution
 list, matching the Python reference's unevaluated fallback behavior.
+
+## Quartic behavior
+
+`solve_quartic(a, b, c, d, e)` first delegates to `solve_cubic` when `a = 0`,
+then applies rational-root deflation. If no rational root exists, it solves
+biquadratic quartics through the quadratic solver and uses Ferrari
+factorization for general quartics whose resolvent cubic has a usable rational
+root. Other resolvent cases return an empty solution list, matching the Python
+reference's unevaluated fallback behavior.
 
 ## Stack position
 

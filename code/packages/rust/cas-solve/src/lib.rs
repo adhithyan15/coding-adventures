@@ -1,11 +1,11 @@
 //! # cas-solve
 //!
-//! Closed-form equation solving over ℚ (Phase 1: linear, quadratic, and cubic).
+//! Closed-form equation solving over ℚ: linear, quadratic, cubic, and quartic.
 //!
 //! ## Quick start
 //!
 //! ```rust
-//! use cas_solve::{solve_cubic, solve_linear, solve_quadratic, SolveResult};
+//! use cas_solve::{solve_cubic, solve_linear, solve_quadratic, solve_quartic, SolveResult};
 //! use cas_solve::frac::Frac;
 //! use symbolic_ir::{int, rat};
 //!
@@ -24,6 +24,13 @@
 //!     Frac::from_int(1), Frac::from_int(-6), Frac::from_int(11), Frac::from_int(-6),
 //! );
 //! assert_eq!(r3, SolveResult::Solutions(vec![int(1), int(2), int(3)]));
+//!
+//! // x^4 - 5x^2 + 4 = 0  →  {-2, -1, 1, 2}
+//! let r4 = solve_quartic(
+//!     Frac::from_int(1), Frac::from_int(0), Frac::from_int(-5),
+//!     Frac::from_int(0), Frac::from_int(4),
+//! );
+//! assert!(matches!(r4, SolveResult::Solutions(roots) if roots.contains(&int(-2)) && roots.contains(&int(2))));
 //! ```
 //!
 //! ## IR head names
@@ -38,10 +45,12 @@ pub mod cubic;
 pub mod frac;
 pub mod linear;
 pub mod quadratic;
+pub mod quartic;
 
 pub use cubic::{solve_cubic, CBRT};
 pub use linear::solve_linear;
 pub use quadratic::{solve_quadratic, I_UNIT};
+pub use quartic::solve_quartic;
 
 /// The result of an equation-solve operation.
 ///

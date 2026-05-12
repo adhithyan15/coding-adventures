@@ -2,7 +2,7 @@
 name = "cas-solve"
 version = "0.1.0"
 edition = "2021"
-description = "Closed-form equation solving over Q: linear, quadratic, and cubic (Phase 1)"
+description = "Closed-form equation solving over Q: linear, quadratic, cubic, and quartic"
 license = "MIT"
 
 [dependencies]
