@@ -23,6 +23,61 @@ pub struct ParsedResponseHead {
     pub body_kind: BodyKind,
 }
 
+/// Redacted summary of a parsed HTTP/1 request head.
+///
+/// The request target may contain credentials or pairing tokens in local API
+/// traffic, so the summary keeps only its byte length.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Http1RequestHeadSummary {
+    pub method: String,
+    pub target_len: usize,
+    pub version: HttpVersion,
+    pub header_count: usize,
+    pub body_offset: usize,
+    pub body_kind: BodyKind,
+}
+
+/// Redacted summary of a parsed HTTP/1 response head.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Http1ResponseHeadSummary {
+    pub version: HttpVersion,
+    pub status: u16,
+    pub reason_len: usize,
+    pub header_count: usize,
+    pub body_offset: usize,
+    pub body_kind: BodyKind,
+}
+
+impl ParsedRequestHead {
+    /// Summarize the parsed request without copying headers, target text, or
+    /// body bytes into logs.
+    pub fn summary(&self) -> Http1RequestHeadSummary {
+        Http1RequestHeadSummary {
+            method: self.head.method.clone(),
+            target_len: self.head.target.len(),
+            version: self.head.version,
+            header_count: self.head.headers.len(),
+            body_offset: self.body_offset,
+            body_kind: self.body_kind.clone(),
+        }
+    }
+}
+
+impl ParsedResponseHead {
+    /// Summarize the parsed response without copying headers, reason text, or
+    /// body bytes into logs.
+    pub fn summary(&self) -> Http1ResponseHeadSummary {
+        Http1ResponseHeadSummary {
+            version: self.head.version,
+            status: self.head.status,
+            reason_len: self.head.reason.len(),
+            header_count: self.head.headers.len(),
+            body_offset: self.body_offset,
+            body_kind: self.body_kind.clone(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Http1ParseError {
     IncompleteHead,
@@ -301,5 +356,56 @@ mod tests {
         let error =
             parse_response_head(b"HTTP/1.1 200 OK\r\nContent-Length: nope\r\n\r\n").unwrap_err();
         assert!(matches!(error, Http1ParseError::InvalidContentLength(_)));
+    }
+
+    #[test]
+    fn request_summary_omits_target_text_and_headers() {
+        let parsed = parse_request_head(
+            b"POST /pair?token=secret-token HTTP/1.1\r\nHost: bridge.local\r\nContent-Length: 4\r\n\r\nbody",
+        )
+        .unwrap();
+
+        let summary = parsed.summary();
+        assert_eq!(
+            summary,
+            Http1RequestHeadSummary {
+                method: "POST".into(),
+                target_len: "/pair?token=secret-token".len(),
+                version: HttpVersion { major: 1, minor: 1 },
+                header_count: 2,
+                body_offset: parsed.body_offset,
+                body_kind: BodyKind::ContentLength(4),
+            }
+        );
+
+        let debug = format!("{summary:?}");
+        assert!(!debug.contains("secret-token"));
+        assert!(!debug.contains("bridge.local"));
+    }
+
+    #[test]
+    fn response_summary_omits_reason_headers_and_body() {
+        let parsed = parse_response_head(
+            b"HTTP/1.1 503 Secret Backend Down\r\nRetry-After: 10\r\nContent-Length: 11\r\n\r\nhidden-body",
+        )
+        .unwrap();
+
+        let summary = parsed.summary();
+        assert_eq!(
+            summary,
+            Http1ResponseHeadSummary {
+                version: HttpVersion { major: 1, minor: 1 },
+                status: 503,
+                reason_len: "Secret Backend Down".len(),
+                header_count: 2,
+                body_offset: parsed.body_offset,
+                body_kind: BodyKind::ContentLength(11),
+            }
+        );
+
+        let debug = format!("{summary:?}");
+        assert!(!debug.contains("Secret Backend Down"));
+        assert!(!debug.contains("Retry-After"));
+        assert!(!debug.contains("hidden-body"));
     }
 }
