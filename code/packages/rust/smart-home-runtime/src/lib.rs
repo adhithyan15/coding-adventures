@@ -444,6 +444,14 @@ impl RuntimeEventBus {
         snapshots
     }
 
+    pub fn subscription_inventory_summary(
+        &self,
+        query: &RuntimeSubscriptionQuery,
+    ) -> RuntimeSubscriptionInventorySummary {
+        let snapshots = self.query_subscriptions(query);
+        RuntimeSubscriptionInventorySummary::from_snapshots(&snapshots)
+    }
+
     pub fn queued_events(
         &self,
         subscription_id: &RuntimeSubscriptionId,
@@ -851,6 +859,92 @@ impl RuntimeSubscriptionSnapshot {
 
     pub fn exceeds_backlog_threshold(&self, threshold: usize) -> bool {
         self.queued_events > threshold
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct RuntimeSubscriptionInventorySummary {
+    pub total_subscriptions: usize,
+    pub all_event_subscriptions: usize,
+    pub bridge_subscriptions: usize,
+    pub entity_subscriptions: usize,
+    pub command_subscriptions: usize,
+    pub supervision_subscriptions: usize,
+    pub backlogged_subscriptions: usize,
+    pub caught_up_subscriptions: usize,
+    pub total_queued_events: usize,
+    pub max_queued_events: usize,
+}
+
+impl RuntimeSubscriptionInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_snapshots<'a, I>(snapshots: I) -> Self
+    where
+        I: IntoIterator<Item = &'a RuntimeSubscriptionSnapshot>,
+    {
+        let mut summary = Self::empty();
+        for snapshot in snapshots {
+            summary.record_snapshot(snapshot);
+        }
+        summary
+    }
+
+    pub fn record_snapshot(&mut self, snapshot: &RuntimeSubscriptionSnapshot) {
+        self.total_subscriptions += 1;
+        self.total_queued_events += snapshot.queued_events;
+        self.max_queued_events = self.max_queued_events.max(snapshot.queued_events);
+
+        match snapshot.filter {
+            RuntimeEventFilter::All => self.all_event_subscriptions += 1,
+            RuntimeEventFilter::Bridge(_) => self.bridge_subscriptions += 1,
+            RuntimeEventFilter::Entity(_) => self.entity_subscriptions += 1,
+            RuntimeEventFilter::Commands => self.command_subscriptions += 1,
+            RuntimeEventFilter::Supervision => self.supervision_subscriptions += 1,
+        }
+        if snapshot.has_backlog() {
+            self.backlogged_subscriptions += 1;
+        } else {
+            self.caught_up_subscriptions += 1;
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_subscriptions == 0
+    }
+
+    pub fn has_backlog(&self) -> bool {
+        self.total_queued_events > 0 || self.backlogged_subscriptions > 0
+    }
+
+    pub fn has_command_subscribers(&self) -> bool {
+        self.command_subscriptions > 0
+    }
+
+    pub fn has_supervision_subscribers(&self) -> bool {
+        self.supervision_subscriptions > 0
+    }
+
+    pub fn average_queued_events_per_subscription(&self) -> usize {
+        if self.total_subscriptions == 0 {
+            0
+        } else {
+            self.total_queued_events / self.total_subscriptions
+        }
+    }
+
+    pub fn backlogged_subscription_percent(&self) -> u8 {
+        if self.total_subscriptions == 0 {
+            return 0;
+        }
+        let backlogged = self.backlogged_subscriptions.min(self.total_subscriptions);
+        ((backlogged.saturating_mul(100) / self.total_subscriptions).min(100)) as u8
+    }
+
+    pub fn exceeds_subscription_backlog_threshold(&self, threshold: usize) -> bool {
+        self.max_queued_events > threshold
     }
 }
 
@@ -3808,6 +3902,85 @@ mod tests {
         assert!(!snapshots[1].has_backlog());
         assert!(snapshots[1].is_caught_up());
         assert!(!snapshots[1].exceeds_backlog_threshold(0));
+    }
+
+    #[test]
+    fn subscription_inventory_summary_counts_filters_and_backlog_pressure() {
+        let mut bus = RuntimeEventBus::new();
+        let all_events = RuntimeSubscriptionId::trusted("all-events");
+        let bridge_events = RuntimeSubscriptionId::trusted("bridge-events");
+        let command_events = RuntimeSubscriptionId::trusted("command-events");
+        let supervision_events = RuntimeSubscriptionId::trusted("supervision-events");
+        bus.subscribe(all_events.clone(), RuntimeEventFilter::All)
+            .unwrap();
+        bus.subscribe(
+            bridge_events.clone(),
+            RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
+        )
+        .unwrap();
+        bus.subscribe(command_events.clone(), RuntimeEventFilter::Commands)
+            .unwrap();
+        bus.subscribe(supervision_events.clone(), RuntimeEventFilter::Supervision)
+            .unwrap();
+
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        bus.publish(command_result_runtime_event("cmd-1"));
+        bus.publish(RuntimeEvent::DesiredStateDrift {
+            bridge_id: BridgeId::trusted("bridge-1"),
+            entity_id: EntityId::trusted("entity-1"),
+            capability_id: CapabilityId::trusted("light.on_off"),
+            reason: ReconciliationReason::Drifted,
+            detected_at_ms: 1_004,
+        });
+        bus.drain(&bridge_events).unwrap();
+
+        let summary = bus.subscription_inventory_summary(
+            &RuntimeSubscriptionQuery::new().sorted_by(RuntimeSubscriptionSort::SubscriptionId),
+        );
+
+        assert_eq!(
+            summary,
+            RuntimeSubscriptionInventorySummary {
+                total_subscriptions: 4,
+                all_event_subscriptions: 1,
+                bridge_subscriptions: 1,
+                entity_subscriptions: 0,
+                command_subscriptions: 1,
+                supervision_subscriptions: 1,
+                backlogged_subscriptions: 3,
+                caught_up_subscriptions: 1,
+                total_queued_events: 5,
+                max_queued_events: 3,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_backlog());
+        assert!(summary.has_command_subscribers());
+        assert!(summary.has_supervision_subscribers());
+        assert_eq!(summary.average_queued_events_per_subscription(), 1);
+        assert_eq!(summary.backlogged_subscription_percent(), 75);
+        assert!(summary.exceeds_subscription_backlog_threshold(2));
+        assert!(!summary.exceeds_subscription_backlog_threshold(3));
+
+        let backlogged = bus.subscription_inventory_summary(
+            &RuntimeSubscriptionQuery::new().with_min_queued_events(1),
+        );
+        assert_eq!(backlogged.total_subscriptions, 3);
+        assert_eq!(backlogged.caught_up_subscriptions, 0);
+        assert_eq!(backlogged.total_queued_events, 5);
+
+        let commands = bus.subscription_inventory_summary(
+            &RuntimeSubscriptionQuery::new().matching(RuntimeEventFilter::Commands),
+        );
+        assert_eq!(commands.total_subscriptions, 1);
+        assert_eq!(commands.command_subscriptions, 1);
+        assert_eq!(commands.total_queued_events, 1);
+
+        let empty =
+            bus.subscription_inventory_summary(&RuntimeSubscriptionQuery::new().with_limit(0));
+        assert_eq!(empty, RuntimeSubscriptionInventorySummary::empty());
+        assert!(!empty.has_backlog());
+        assert_eq!(empty.backlogged_subscription_percent(), 0);
     }
 
     #[test]
