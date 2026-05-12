@@ -2261,6 +2261,7 @@ impl HtmlParser {
         }
         if self.has_open_svg_html_integration_point()
             && name != "template"
+            && name != "p"
             && !self.current_element_is(name)
             && !is_table_context_element(name)
         {
@@ -2272,6 +2273,11 @@ impl HtmlParser {
             && (is_table_context_element(name)
                 || self.current_namespace() == Some("svg")
                 || (self.current_namespace() == Some("math") && name == "p"))
+        {
+            self.pop_foreign_elements();
+        } else if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && matches!(name, "br" | "p")
         {
             self.pop_foreign_elements();
         } else if self.current_namespace().is_some() && !self.current_element_is(name) {
@@ -2684,7 +2690,12 @@ impl HtmlParser {
                 false
             }
             "nobr" => {
+                let formatting_above_nobr = self.formatting_above_open_element("nobr");
                 self.close_open_element_silently("nobr");
+                if !formatting_above_nobr.is_empty() {
+                    self.pending_formatting_reconstruction =
+                        trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
+                }
                 false
             }
             "form" if self.form_element_pointer_set => {
@@ -2794,6 +2805,26 @@ impl HtmlParser {
         self.capture_formatting_above(index);
         self.open_elements.truncate(index);
         true
+    }
+
+    fn formatting_above_open_element(&self, name: &str) -> Vec<(String, Vec<Attribute>)> {
+        let Some(index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+        else {
+            return Vec::new();
+        };
+
+        self.open_elements
+            .iter()
+            .skip(index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                is_formatting_element(&element.name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect()
     }
 
     fn adopt_open_formatting_element_silently(&mut self, name: &str) -> bool {
@@ -5009,7 +5040,7 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
     matches!(
         name,
-        "a" | "b" | "code" | "marquee" | "menuitem" | "option" | "span"
+        "a" | "b" | "br" | "code" | "i" | "marquee" | "menuitem" | "nobr" | "option" | "span"
     )
 }
 
