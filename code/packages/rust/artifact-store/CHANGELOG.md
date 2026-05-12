@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   session/tool/job/agent attribution coverage over selected artifact manifests.
 - `ArtifactManifestSummary` and `manifest_summary()` for compact collection,
   content-type, and label coverage over selected artifact manifests.
+- `ArtifactInventorySummary` and `inventory_summary()` to compose catalog,
+  provenance, and manifest status into one bounded read-side inventory view.
 - `ArtifactRevisionHistorySummary` and `revision_history_summary()` for
   bounded lineage, metadata, and body-size aggregates over revision history.
 
