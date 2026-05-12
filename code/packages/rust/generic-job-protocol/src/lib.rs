@@ -44,6 +44,13 @@ impl<T> JobRequest<T> {
         validate_required_token("id", &self.id)?;
         self.metadata.validate()
     }
+
+    pub fn summary(&self) -> JobRequestSummary {
+        JobRequestSummary {
+            id: self.id.clone(),
+            metadata: self.metadata.summary(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -234,6 +241,53 @@ impl JobMetadata {
         }
         Ok(())
     }
+
+    pub fn summary(&self) -> JobMetadataSummary {
+        JobMetadataSummary {
+            has_deadline: self.deadline_at_ms.is_some(),
+            priority: self.priority,
+            has_affinity_key: self.affinity_key.is_some(),
+            has_sequence: self.sequence.is_some(),
+            attempt: self.attempt,
+            is_retry: self.attempt > 0,
+            has_trace_id: self.trace_id.is_some(),
+            tag_count: self.tags.len(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct JobMetadataSummary {
+    pub has_deadline: bool,
+    pub priority: i32,
+    pub has_affinity_key: bool,
+    pub has_sequence: bool,
+    pub attempt: u32,
+    pub is_retry: bool,
+    pub has_trace_id: bool,
+    pub tag_count: usize,
+}
+
+impl JobMetadataSummary {
+    pub fn is_routable(self) -> bool {
+        self.has_affinity_key
+    }
+
+    pub fn is_ordered(self) -> bool {
+        self.has_sequence
+    }
+
+    pub fn is_traceable(self) -> bool {
+        self.has_trace_id
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct JobRequestSummary {
+    pub id: String,
+    pub metadata: JobMetadataSummary,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -761,6 +815,60 @@ mod tests {
         assert_eq!(metadata.remaining_deadline_ms_at(260), Some(0));
         assert_eq!(metadata.next_attempt().attempt, 3);
         metadata.validate().unwrap();
+
+        let summary = metadata.summary();
+        assert_eq!(
+            summary,
+            JobMetadataSummary {
+                has_deadline: true,
+                priority: 10,
+                has_affinity_key: true,
+                has_sequence: true,
+                attempt: 2,
+                is_retry: true,
+                has_trace_id: true,
+                tag_count: 1,
+            }
+        );
+        assert!(summary.is_routable());
+        assert!(summary.is_ordered());
+        assert!(summary.is_traceable());
+    }
+
+    #[test]
+    fn request_summary_captures_metadata_without_payload() {
+        let request = JobRequest::new(
+            "job-7",
+            EchoPayload {
+                text: "payload should stay opaque".to_string(),
+            },
+        )
+        .with_metadata(
+            JobMetadata::default()
+                .with_created_at_ms(10)
+                .with_deadline_at_ms(20)
+                .with_affinity_key("worker-a")
+                .with_sequence(3)
+                .with_trace_id("trace-7")
+                .with_tag("queue", "interactive"),
+        );
+
+        assert_eq!(
+            request.summary(),
+            JobRequestSummary {
+                id: "job-7".to_string(),
+                metadata: JobMetadataSummary {
+                    has_deadline: true,
+                    priority: 0,
+                    has_affinity_key: true,
+                    has_sequence: true,
+                    attempt: 0,
+                    is_retry: false,
+                    has_trace_id: true,
+                    tag_count: 1,
+                },
+            }
+        );
     }
 
     #[test]
