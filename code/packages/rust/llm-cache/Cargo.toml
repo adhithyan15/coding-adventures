@@ -1,0 +1,10 @@
+[package]
+name = "llm-cache"
+version = "0.1.0"
+edition = "2021"
+description = "LM00c — content-addressed prompt cache. Wraps any LlmClient with a (prompt_version, prompt_hash)-keyed in-memory cache. Pure in-memory; zero third-party deps. Turns deterministic-prompt workloads into cache-amortised cost."
+
+[dependencies]
+llm-gateway = { path = "../llm-gateway" }
+llm-primitives = { path = "../llm-primitives" }
+serde_json = "1"
