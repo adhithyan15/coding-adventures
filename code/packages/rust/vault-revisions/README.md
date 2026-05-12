@@ -42,6 +42,11 @@ Per-namespace, two complementary caps:
 Defaults (`RetentionPolicy::default_password_manager()`): 32
 revisions per key, 90 days max age.
 
+`InMemoryRevisionStore::summary()` returns a payload-free health snapshot with
+history, namespace, policy, revision, ciphertext-byte, and archive-time counts.
+It intentionally omits namespace names, keys, ids, and ciphertext bytes so hosts
+can report revision pressure without expanding their read surface.
+
 ## Threat model
 
 - **Storage-agnostic.** Server sees ciphertext bytes only.

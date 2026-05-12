@@ -101,7 +101,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::sync::{Mutex, MutexGuard, PoisonError};
 
 /// Best-effort lock that recovers from a poisoned mutex rather
@@ -168,6 +168,88 @@ pub struct RevisionMeta {
     pub archived_at_ms: u64,
     /// Length in bytes of the underlying ciphertext.
     pub ciphertext_len: usize,
+}
+
+/// Payload-free summary of an in-memory revision store.
+///
+/// This snapshot intentionally carries counts and byte totals only.
+/// It does not expose namespaces, keys, revision ids, or ciphertext
+/// bytes, so hosts can report storage pressure and retention health
+/// without expanding their read surface.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct RevisionStoreSummary {
+    /// Number of `(namespace, key)` history rows retained.
+    pub history_count: usize,
+    /// Number of retained history rows with at least one revision.
+    pub non_empty_history_count: usize,
+    /// Number of retained history rows with no remaining revisions.
+    pub empty_history_count: usize,
+    /// Number of namespaces that currently have retained histories.
+    pub namespace_count: usize,
+    /// Number of namespaces with an explicitly configured policy.
+    pub configured_policy_count: usize,
+    /// Total revision rows retained across all histories.
+    pub revision_count: usize,
+    /// Sum of ciphertext byte lengths across all retained revisions.
+    pub total_ciphertext_bytes: u64,
+    /// Largest retained revision count for any one history row.
+    pub largest_history_len: usize,
+    /// Earliest retained archive timestamp, if any revisions remain.
+    pub oldest_archived_at_ms: Option<u64>,
+    /// Latest retained archive timestamp, if any revisions remain.
+    pub newest_archived_at_ms: Option<u64>,
+}
+
+impl RevisionStoreSummary {
+    fn from_inner(inner: &InMemoryInner) -> Self {
+        let mut summary = Self {
+            history_count: inner.histories.len(),
+            configured_policy_count: inner.policies.len(),
+            ..Self::default()
+        };
+        let mut namespaces = BTreeSet::new();
+        for ((namespace, _), history) in &inner.histories {
+            namespaces.insert(namespace);
+            if history.revisions.is_empty() {
+                summary.empty_history_count += 1;
+            } else {
+                summary.non_empty_history_count += 1;
+            }
+            summary.largest_history_len = summary.largest_history_len.max(history.revisions.len());
+            for revision in &history.revisions {
+                summary.revision_count += 1;
+                summary.total_ciphertext_bytes = summary
+                    .total_ciphertext_bytes
+                    .saturating_add(revision.ciphertext.len() as u64);
+                summary.oldest_archived_at_ms = Some(
+                    summary
+                        .oldest_archived_at_ms
+                        .map_or(revision.archived_at_ms, |current| {
+                            current.min(revision.archived_at_ms)
+                        }),
+                );
+                summary.newest_archived_at_ms = Some(
+                    summary
+                        .newest_archived_at_ms
+                        .map_or(revision.archived_at_ms, |current| {
+                            current.max(revision.archived_at_ms)
+                        }),
+                );
+            }
+        }
+        summary.namespace_count = namespaces.len();
+        summary
+    }
+
+    /// Returns `true` when no revision rows are retained.
+    pub fn is_empty(&self) -> bool {
+        self.revision_count == 0
+    }
+
+    /// Returns `true` when retention has left empty history rows behind.
+    pub fn has_empty_histories(&self) -> bool {
+        self.empty_history_count > 0
+    }
 }
 
 /// Per-namespace retention policy.
@@ -245,7 +327,9 @@ impl std::error::Error for RevisionError {}
 
 fn validate_namespace(ns: &str) -> Result<(), RevisionError> {
     if ns.is_empty() {
-        return Err(RevisionError::InvalidParameter("namespace must not be empty"));
+        return Err(RevisionError::InvalidParameter(
+            "namespace must not be empty",
+        ));
     }
     if ns.len() > MAX_NAMESPACE_LEN {
         return Err(RevisionError::InvalidParameter(
@@ -308,8 +392,7 @@ fn is_safe_id_string(s: &str) -> bool {
             return false;
         }
         let cp = c as u32;
-        if matches!(cp, 0x202A..=0x202E | 0x2066..=0x2069)
-            || matches!(cp, 0x200B..=0x200D | 0xFEFF)
+        if matches!(cp, 0x202A..=0x202E | 0x2066..=0x2069) || matches!(cp, 0x200B..=0x200D | 0xFEFF)
         {
             return false;
         }
@@ -338,19 +421,10 @@ pub trait RevisionStore: Send + Sync {
     /// sorted by id ascending. Empty list ⇒ no revisions.
     /// Does *not* return ciphertext bytes — callers opt in via
     /// [`Self::get_revision`].
-    fn list(
-        &self,
-        namespace: &str,
-        key: &str,
-    ) -> Result<Vec<RevisionMeta>, RevisionError>;
+    fn list(&self, namespace: &str, key: &str) -> Result<Vec<RevisionMeta>, RevisionError>;
 
     /// Fetch one revision by id, with its ciphertext.
-    fn get_revision(
-        &self,
-        namespace: &str,
-        key: &str,
-        id: u64,
-    ) -> Result<Revision, RevisionError>;
+    fn get_revision(&self, namespace: &str, key: &str, id: u64) -> Result<Revision, RevisionError>;
 
     /// "Restore" — fetch revision `id`, then archive its
     /// ciphertext as a *new* revision. Returns the new revision
@@ -389,11 +463,7 @@ pub trait RevisionStore: Send + Sync {
     /// that the policy is sane (in particular,
     /// `max_revisions_per_key = Some(0)` is rejected — use
     /// `None` to disable that bound).
-    fn set_policy(
-        &self,
-        namespace: &str,
-        policy: RetentionPolicy,
-    ) -> Result<(), RevisionError>;
+    fn set_policy(&self, namespace: &str, policy: RetentionPolicy) -> Result<(), RevisionError>;
 }
 
 // === Section 5. In-memory reference =======================================
@@ -444,6 +514,12 @@ impl InMemoryRevisionStore {
         }
     }
 
+    /// Summarize retained history rows without exposing keys or ciphertext.
+    pub fn summary(&self) -> RevisionStoreSummary {
+        let g = lock_recover(&self.inner);
+        RevisionStoreSummary::from_inner(&g)
+    }
+
     /// Apply `max_revisions_per_key` to a freshly-mutated
     /// history vector. Eviction is oldest-first.
     fn enforce_max(history: &mut History, retention: &RetentionPolicy) {
@@ -466,19 +542,13 @@ impl RevisionStore for InMemoryRevisionStore {
         validate_namespace_key(namespace, key)?;
         validate_ciphertext(&ciphertext)?;
         let mut g = lock_recover(&self.inner);
-        let policy = g
-            .policies
-            .get(namespace)
-            .copied()
-            .unwrap_or_default();
+        let policy = g.policies.get(namespace).copied().unwrap_or_default();
         let history = g
             .histories
             .entry((namespace.to_string(), key.to_string()))
             .or_insert_with(History::new);
         let id = history.next_id;
-        history.next_id = id
-            .checked_add(1)
-            .ok_or(RevisionError::Overflow)?;
+        history.next_id = id.checked_add(1).ok_or(RevisionError::Overflow)?;
         let rev = Revision {
             id,
             archived_at_ms,
@@ -489,16 +559,10 @@ impl RevisionStore for InMemoryRevisionStore {
         Ok(rev)
     }
 
-    fn list(
-        &self,
-        namespace: &str,
-        key: &str,
-    ) -> Result<Vec<RevisionMeta>, RevisionError> {
+    fn list(&self, namespace: &str, key: &str) -> Result<Vec<RevisionMeta>, RevisionError> {
         validate_namespace_key(namespace, key)?;
         let g = lock_recover(&self.inner);
-        let history = g
-            .histories
-            .get(&(namespace.to_string(), key.to_string()));
+        let history = g.histories.get(&(namespace.to_string(), key.to_string()));
         let metas: Vec<RevisionMeta> = match history {
             None => Vec::new(),
             Some(h) => h
@@ -514,12 +578,7 @@ impl RevisionStore for InMemoryRevisionStore {
         Ok(metas)
     }
 
-    fn get_revision(
-        &self,
-        namespace: &str,
-        key: &str,
-        id: u64,
-    ) -> Result<Revision, RevisionError> {
+    fn get_revision(&self, namespace: &str, key: &str, id: u64) -> Result<Revision, RevisionError> {
         validate_namespace_key(namespace, key)?;
         let g = lock_recover(&self.inner);
         let history = g
@@ -574,9 +633,7 @@ impl RevisionStore for InMemoryRevisionStore {
                 continue;
             }
             let before = history.revisions.len();
-            history
-                .revisions
-                .retain(|r| r.archived_at_ms >= cutoff);
+            history.revisions.retain(|r| r.archived_at_ms >= cutoff);
             total_evicted += before - history.revisions.len();
         }
         Ok(total_evicted)
@@ -591,11 +648,7 @@ impl RevisionStore for InMemoryRevisionStore {
         g.policies.get(namespace).copied().unwrap_or_default()
     }
 
-    fn set_policy(
-        &self,
-        namespace: &str,
-        policy: RetentionPolicy,
-    ) -> Result<(), RevisionError> {
+    fn set_policy(&self, namespace: &str, policy: RetentionPolicy) -> Result<(), RevisionError> {
         validate_namespace(namespace)?;
         validate_retention(&policy)?;
         let mut g = lock_recover(&self.inner);
@@ -650,6 +703,38 @@ mod tests {
     fn list_unknown_path_returns_empty() {
         let s = store();
         assert!(s.list("kv", "missing").unwrap().is_empty());
+        let summary = s.summary();
+        assert!(summary.is_empty());
+        assert_eq!(summary.history_count, 0);
+        assert_eq!(summary.namespace_count, 0);
+        assert!(!summary.has_empty_histories());
+    }
+
+    #[test]
+    fn summary_counts_histories_without_exposing_keys_or_ciphertext() {
+        let s = store();
+        s.set_policy("kv", RetentionPolicy::unbounded()).unwrap();
+        s.archive("kv", "login/github", b"v1".to_vec(), 100)
+            .unwrap();
+        s.archive("kv", "login/github", b"v2-longer".to_vec(), 200)
+            .unwrap();
+        s.archive("machine", "db/prod", b"wrapped".to_vec(), 300)
+            .unwrap();
+
+        let summary = s.summary();
+
+        assert_eq!(summary.history_count, 2);
+        assert_eq!(summary.non_empty_history_count, 2);
+        assert_eq!(summary.empty_history_count, 0);
+        assert_eq!(summary.namespace_count, 2);
+        assert_eq!(summary.configured_policy_count, 1);
+        assert_eq!(summary.revision_count, 3);
+        assert_eq!(summary.total_ciphertext_bytes, 2 + 9 + 7);
+        assert_eq!(summary.largest_history_len, 2);
+        assert_eq!(summary.oldest_archived_at_ms, Some(100));
+        assert_eq!(summary.newest_archived_at_ms, Some(300));
+        assert!(!summary.is_empty());
+        assert!(!summary.has_empty_histories());
     }
 
     // --- get_revision ---
@@ -712,7 +797,8 @@ mod tests {
                 max_revisions_per_key: Some(3),
                 max_age_ms: None,
             },
-        ).unwrap();
+        )
+        .unwrap();
         for i in 0..5u32 {
             s.archive("kv", "k", format!("v{}", i).into_bytes(), 100 + i as u64)
                 .unwrap();
@@ -774,6 +860,31 @@ mod tests {
         assert_eq!(n, 1);
         // kv2 untouched.
         assert_eq!(s.list("kv2", "k").unwrap().len(), 1);
+    }
+
+    #[test]
+    fn summary_marks_histories_emptied_by_retention() {
+        let s = store();
+        s.archive("kv", "k", b"old".to_vec(), 100).unwrap();
+        s.archive("machine", "db", b"live".to_vec(), 10_000)
+            .unwrap();
+        let policy = RetentionPolicy {
+            max_revisions_per_key: None,
+            max_age_ms: Some(5_000),
+        };
+
+        assert_eq!(s.purge_due("kv", &policy, 10_000).unwrap(), 1);
+        let summary = s.summary();
+
+        assert_eq!(summary.history_count, 2);
+        assert_eq!(summary.non_empty_history_count, 1);
+        assert_eq!(summary.empty_history_count, 1);
+        assert_eq!(summary.namespace_count, 2);
+        assert_eq!(summary.revision_count, 1);
+        assert_eq!(summary.total_ciphertext_bytes, 4);
+        assert_eq!(summary.oldest_archived_at_ms, Some(10_000));
+        assert_eq!(summary.newest_archived_at_ms, Some(10_000));
+        assert!(summary.has_empty_histories());
     }
 
     #[test]
@@ -943,14 +1054,26 @@ mod tests {
         let s = store();
         let p = RetentionPolicy::default();
         // Empty namespace.
-        assert!(matches!(s.set_policy("", p), Err(RevisionError::InvalidParameter(_))));
+        assert!(matches!(
+            s.set_policy("", p),
+            Err(RevisionError::InvalidParameter(_))
+        ));
         // Control characters.
-        assert!(matches!(s.set_policy("kv\nadmin", p), Err(RevisionError::InvalidParameter(_))));
+        assert!(matches!(
+            s.set_policy("kv\nadmin", p),
+            Err(RevisionError::InvalidParameter(_))
+        ));
         // Bidi-override.
-        assert!(matches!(s.set_policy("kv\u{202e}", p), Err(RevisionError::InvalidParameter(_))));
+        assert!(matches!(
+            s.set_policy("kv\u{202e}", p),
+            Err(RevisionError::InvalidParameter(_))
+        ));
         // Oversize.
         let big = "x".repeat(MAX_NAMESPACE_LEN + 1);
-        assert!(matches!(s.set_policy(&big, p), Err(RevisionError::InvalidParameter(_))));
+        assert!(matches!(
+            s.set_policy(&big, p),
+            Err(RevisionError::InvalidParameter(_))
+        ));
     }
 
     #[test]
