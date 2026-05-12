@@ -19,6 +19,8 @@ MQTT, and future adapters project into these same records:
 - `SmartHomeTool` / `ToolDescriptor`
 - `CapabilityGrant`
 - `AuthorizationDecision`
+- `AuthorizationDecisionSummary`
+- `AuthorizationDecisionLogSummary`
 
 Protocol-private identifiers stay in `ProtocolIdentifier` records rather than
 becoming repository-owned entity ids.
@@ -47,6 +49,8 @@ Current scope:
   loops
 - agent capability grants for checking tool access before dispatch
 - authorization decisions that can be logged by runtimes and agents
+- authorization-decision summaries for allow/deny, grant, and
+  missing-capability inspection
 - MQTT topic names, topic filters, QoS levels, topic roles, and topic bindings
   for MQTT-backed integrations
 

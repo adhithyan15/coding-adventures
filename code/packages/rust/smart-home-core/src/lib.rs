@@ -1754,6 +1754,141 @@ impl AuthorizationDecision {
     pub fn is_allowed(&self) -> bool {
         self.outcome == AuthorizationOutcome::Allowed
     }
+
+    pub fn summary(&self) -> AuthorizationDecisionSummary {
+        AuthorizationDecisionSummary::from_decision(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AuthorizationSubjectKind {
+    Tool,
+    Command,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AuthorizationDecisionSummary {
+    pub subject_kind: AuthorizationSubjectKind,
+    pub outcome: AuthorizationOutcome,
+    pub required_tier: PrivilegeTier,
+    pub required_capability_count: usize,
+    pub matched_grant_count: usize,
+    pub missing_capability_count: usize,
+}
+
+impl AuthorizationDecisionSummary {
+    pub fn from_decision(decision: &AuthorizationDecision) -> Self {
+        let subject_kind = match &decision.subject {
+            AuthorizationSubject::Tool(_) => AuthorizationSubjectKind::Tool,
+            AuthorizationSubject::Command { .. } => AuthorizationSubjectKind::Command,
+        };
+        Self {
+            subject_kind,
+            outcome: decision.outcome,
+            required_tier: decision.required_tier,
+            required_capability_count: decision.required_capabilities.len(),
+            matched_grant_count: decision.matched_grants.len(),
+            missing_capability_count: decision.missing_capabilities.len(),
+        }
+    }
+
+    pub fn is_allowed(&self) -> bool {
+        self.outcome == AuthorizationOutcome::Allowed
+    }
+
+    pub fn is_denied(&self) -> bool {
+        self.outcome == AuthorizationOutcome::Denied
+    }
+
+    pub fn has_missing_capabilities(&self) -> bool {
+        self.missing_capability_count > 0
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct AuthorizationDecisionLogSummary {
+    pub total_decisions: usize,
+    pub allowed_decisions: usize,
+    pub denied_decisions: usize,
+    pub tool_decisions: usize,
+    pub command_decisions: usize,
+    pub read_only_tier_decisions: usize,
+    pub low_risk_tier_decisions: usize,
+    pub human_approval_tier_decisions: usize,
+    pub high_risk_tier_decisions: usize,
+    pub decisions_with_missing_capabilities: usize,
+    pub total_required_capabilities: usize,
+    pub total_matched_grants: usize,
+    pub total_missing_capabilities: usize,
+}
+
+impl AuthorizationDecisionLogSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_decisions<'a, I>(decisions: I) -> Self
+    where
+        I: IntoIterator<Item = &'a AuthorizationDecision>,
+    {
+        let mut summary = Self::empty();
+        for decision in decisions {
+            summary.record_summary(&decision.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a, I>(summaries: I) -> Self
+    where
+        I: IntoIterator<Item = &'a AuthorizationDecisionSummary>,
+    {
+        let mut summary = Self::empty();
+        for decision_summary in summaries {
+            summary.record_summary(decision_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, decision_summary: &AuthorizationDecisionSummary) {
+        self.total_decisions += 1;
+        self.total_required_capabilities += decision_summary.required_capability_count;
+        self.total_matched_grants += decision_summary.matched_grant_count;
+        self.total_missing_capabilities += decision_summary.missing_capability_count;
+
+        match decision_summary.subject_kind {
+            AuthorizationSubjectKind::Tool => self.tool_decisions += 1,
+            AuthorizationSubjectKind::Command => self.command_decisions += 1,
+        }
+        match decision_summary.outcome {
+            AuthorizationOutcome::Allowed => self.allowed_decisions += 1,
+            AuthorizationOutcome::Denied => self.denied_decisions += 1,
+        }
+        match decision_summary.required_tier {
+            PrivilegeTier::ReadOnly => self.read_only_tier_decisions += 1,
+            PrivilegeTier::LowRisk => self.low_risk_tier_decisions += 1,
+            PrivilegeTier::HumanApproval => self.human_approval_tier_decisions += 1,
+            PrivilegeTier::HighRisk => self.high_risk_tier_decisions += 1,
+        }
+        if decision_summary.has_missing_capabilities() {
+            self.decisions_with_missing_capabilities += 1;
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_decisions == 0
+    }
+
+    pub fn has_denials(&self) -> bool {
+        self.denied_decisions > 0
+    }
+
+    pub fn has_missing_capabilities(&self) -> bool {
+        self.total_missing_capabilities > 0
+    }
+
+    pub fn approval_gated_decisions(&self) -> usize {
+        self.human_approval_tier_decisions + self.high_risk_tier_decisions
+    }
 }
 
 pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
@@ -2685,5 +2820,137 @@ mod tests {
             decision.missing_capabilities,
             vec![CapabilityId::trusted("lock.state")]
         );
+    }
+
+    #[test]
+    fn authorization_decision_summary_projects_allow_and_deny_shape() {
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let grant = CapabilityGrant::for_tool(
+            CapabilityGrantId::trusted("grant-command"),
+            principal.clone(),
+            SmartHomeTool::Command,
+            "chief-of-staff",
+            1_000,
+        );
+        let allowed =
+            AuthorizationDecision::for_tool(principal, SmartHomeTool::Command, [&grant], 1_500);
+        let allowed_summary = allowed.summary();
+
+        assert_eq!(allowed_summary.subject_kind, AuthorizationSubjectKind::Tool);
+        assert!(allowed_summary.is_allowed());
+        assert!(!allowed_summary.is_denied());
+        assert_eq!(allowed_summary.required_tier, PrivilegeTier::LowRisk);
+        assert_eq!(allowed_summary.required_capability_count, 1);
+        assert_eq!(allowed_summary.matched_grant_count, 1);
+        assert_eq!(allowed_summary.missing_capability_count, 0);
+        assert!(!allowed_summary.has_missing_capabilities());
+
+        let denied_principal = AgentId::trusted("agent:security-agent");
+        let low_risk_lock_grant = CapabilityGrant::for_entity_capability(
+            CapabilityGrantId::trusted("grant-lock-low"),
+            denied_principal.clone(),
+            EntityId::trusted("entity.lock.front-door"),
+            CapabilityId::trusted("lock.state"),
+            PrivilegeTier::LowRisk,
+            "chief-of-staff",
+            1_000,
+        );
+        let command = DeviceCommand::new(
+            CommandId::trusted("cmd-lock"),
+            EntityId::trusted("entity.lock.front-door"),
+            CommandType::SetLock,
+            Value::Text("locked".to_string()),
+            "agent:security-agent",
+            CorrelationId::trusted("corr-lock"),
+        )
+        .unwrap();
+        let denied = AuthorizationDecision::for_command(
+            denied_principal,
+            &command,
+            [&low_risk_lock_grant],
+            1_500,
+        );
+        let denied_summary = AuthorizationDecisionSummary::from_decision(&denied);
+
+        assert_eq!(
+            denied_summary.subject_kind,
+            AuthorizationSubjectKind::Command
+        );
+        assert!(denied_summary.is_denied());
+        assert_eq!(denied_summary.required_tier, PrivilegeTier::HighRisk);
+        assert_eq!(denied_summary.required_capability_count, 1);
+        assert_eq!(denied_summary.matched_grant_count, 0);
+        assert_eq!(denied_summary.missing_capability_count, 1);
+        assert!(denied_summary.has_missing_capabilities());
+    }
+
+    #[test]
+    fn authorization_decision_log_summary_counts_outcomes_subjects_and_missing_capabilities() {
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let grant = CapabilityGrant::for_tool(
+            CapabilityGrantId::trusted("grant-command"),
+            principal.clone(),
+            SmartHomeTool::Command,
+            "chief-of-staff",
+            1_000,
+        );
+        let allowed =
+            AuthorizationDecision::for_tool(principal, SmartHomeTool::Command, [&grant], 1_500);
+
+        let denied_principal = AgentId::trusted("agent:security-agent");
+        let low_risk_lock_grant = CapabilityGrant::for_entity_capability(
+            CapabilityGrantId::trusted("grant-lock-low"),
+            denied_principal.clone(),
+            EntityId::trusted("entity.lock.front-door"),
+            CapabilityId::trusted("lock.state"),
+            PrivilegeTier::LowRisk,
+            "chief-of-staff",
+            1_000,
+        );
+        let command = DeviceCommand::new(
+            CommandId::trusted("cmd-lock"),
+            EntityId::trusted("entity.lock.front-door"),
+            CommandType::SetLock,
+            Value::Text("locked".to_string()),
+            "agent:security-agent",
+            CorrelationId::trusted("corr-lock"),
+        )
+        .unwrap();
+        let denied = AuthorizationDecision::for_command(
+            denied_principal,
+            &command,
+            [&low_risk_lock_grant],
+            1_500,
+        );
+        let decisions = vec![allowed, denied];
+        let summary = AuthorizationDecisionLogSummary::from_decisions(&decisions);
+
+        assert_eq!(summary.total_decisions, 2);
+        assert_eq!(summary.allowed_decisions, 1);
+        assert_eq!(summary.denied_decisions, 1);
+        assert_eq!(summary.tool_decisions, 1);
+        assert_eq!(summary.command_decisions, 1);
+        assert_eq!(summary.read_only_tier_decisions, 0);
+        assert_eq!(summary.low_risk_tier_decisions, 1);
+        assert_eq!(summary.human_approval_tier_decisions, 0);
+        assert_eq!(summary.high_risk_tier_decisions, 1);
+        assert_eq!(summary.decisions_with_missing_capabilities, 1);
+        assert_eq!(summary.total_required_capabilities, 2);
+        assert_eq!(summary.total_matched_grants, 1);
+        assert_eq!(summary.total_missing_capabilities, 1);
+        assert!(!summary.is_empty());
+        assert!(summary.has_denials());
+        assert!(summary.has_missing_capabilities());
+        assert_eq!(summary.approval_gated_decisions(), 1);
+
+        let projected = decisions
+            .iter()
+            .map(AuthorizationDecision::summary)
+            .collect::<Vec<_>>();
+        assert_eq!(
+            AuthorizationDecisionLogSummary::from_summaries(&projected),
+            summary
+        );
+        assert!(AuthorizationDecisionLogSummary::empty().is_empty());
     }
 }
