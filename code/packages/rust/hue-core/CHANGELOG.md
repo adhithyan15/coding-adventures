@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Hue application registration request and discovered-bridge pairing plan
+  helpers for local physical-presence pairing flows.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added

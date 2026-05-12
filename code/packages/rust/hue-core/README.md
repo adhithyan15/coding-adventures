@@ -9,6 +9,7 @@ packages a typed surface for:
 - CLIP v2 resource paths
 - event stream path constants
 - structured Hue command intents
+- Hue application registration requests and discovered-bridge pairing plans
 - typed Hue bridge resources for paired bridge identity/health refresh
 - typed Hue device resources and service references
 - typed Hue grouped-light resources for room/zone aggregate lights

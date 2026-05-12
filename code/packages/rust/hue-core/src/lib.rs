@@ -19,6 +19,7 @@ pub const HUE_INTEGRATION_ID: &str = "hue";
 pub const CLIP_V2_RESOURCE_ROOT: &str = "/clip/v2/resource";
 pub const CLIP_V2_EVENT_STREAM_PATH: &str = "/eventstream/clip/v2";
 pub const HUE_APPLICATION_KEY_HEADER: &str = "hue-application-key";
+pub const HUE_APPLICATION_REGISTRATION_PATH: &str = "/api";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HueError {
@@ -286,6 +287,21 @@ pub struct DiscoveredHueBridge {
     pub firmware_version: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct HueBridgePairingPlan {
+    pub bridge: Bridge,
+    pub registration_request: HueRequest,
+    pub application_key_header: String,
+    pub event_stream_path: String,
+    pub requires_user_presence: bool,
+}
+
+impl HueBridgePairingPlan {
+    pub fn bridge_id(&self) -> &BridgeId {
+        &self.bridge.bridge_id
+    }
+}
+
 pub fn hue_integration_descriptor() -> IntegrationDescriptor {
     IntegrationDescriptor {
         integration_id: IntegrationId::trusted(HUE_INTEGRATION_ID),
@@ -299,6 +315,34 @@ pub fn hue_integration_descriptor() -> IntegrationDescriptor {
         ],
         discovery_roles: vec!["hue-bridge".to_string()],
         pairing_roles: vec!["hue-bridge".to_string()],
+    }
+}
+
+pub fn hue_registration_request(
+    app_name: impl Into<String>,
+    instance_name: impl Into<String>,
+) -> HueRequest {
+    HueRequest {
+        method: HueMethod::Post,
+        path: HUE_APPLICATION_REGISTRATION_PATH.to_string(),
+        body: Some(HueRequestBody::RegisterApplication {
+            app_name: app_name.into(),
+            instance_name: instance_name.into(),
+        }),
+    }
+}
+
+pub fn hue_pairing_plan_for_discovered_bridge(
+    discovered: DiscoveredHueBridge,
+    app_name: impl Into<String>,
+    instance_name: impl Into<String>,
+) -> HueBridgePairingPlan {
+    HueBridgePairingPlan {
+        bridge: discovered_bridge_to_core(discovered),
+        registration_request: hue_registration_request(app_name, instance_name),
+        application_key_header: HUE_APPLICATION_KEY_HEADER.to_string(),
+        event_stream_path: CLIP_V2_EVENT_STREAM_PATH.to_string(),
+        requires_user_presence: true,
     }
 }
 
@@ -986,6 +1030,38 @@ mod tests {
         assert_eq!(bridge.health, Health::Unpaired);
         assert_eq!(bridge.transport, BridgeTransport::LanHttp);
         assert_eq!(bridge.identifiers[0].kind, "bridge");
+    }
+
+    #[test]
+    fn discovered_bridge_builds_pairing_plan_without_application_key() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        assert_eq!(plan.bridge_id().as_str(), "hue.bridge.001788fffeabcdef");
+        assert_eq!(plan.bridge.health, Health::Unpaired);
+        assert_eq!(plan.bridge.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(plan.application_key_header, HUE_APPLICATION_KEY_HEADER);
+        assert_eq!(plan.event_stream_path, CLIP_V2_EVENT_STREAM_PATH);
+        assert!(plan.requires_user_presence);
+        assert_eq!(
+            plan.registration_request,
+            HueRequest {
+                method: HueMethod::Post,
+                path: HUE_APPLICATION_REGISTRATION_PATH.to_string(),
+                body: Some(HueRequestBody::RegisterApplication {
+                    app_name: "chief-of-staff".to_string(),
+                    instance_name: "desk".to_string(),
+                }),
+            }
+        );
     }
 
     #[test]
