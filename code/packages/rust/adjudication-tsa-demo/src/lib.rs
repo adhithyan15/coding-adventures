@@ -917,7 +917,7 @@ fn flatten_nodes(
     }
 
     // Leaf node — convert it.
-    let mut node = match json_to_ir_node(
+    let node = match json_to_ir_node(
         v,
         *idx_counter,
         document_id,

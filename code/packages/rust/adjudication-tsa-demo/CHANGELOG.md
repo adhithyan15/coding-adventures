@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-05-12 — elicit-mode wiring + visibility fixes
+
+### Added
+
+- **`ADJ_DEMO_RULEBOOK_MODE=elicit`** — the binary's main loop now
+  calls `adjudication_rulebook::acquire_rulebook` against the
+  configured model BEFORE Arm A runs, then injects the elicited
+  rulebook text into Arm A's system prompt. This is the recursive
+  use of the framework: the model is judged against rules it just
+  produced from its own weights, audited by the same checker
+  discipline that protects extracted facts.
+
+  Flow when `ADJ_DEMO_RULEBOOK_MODE=elicit`:
+  ```text
+  [stage 0] elicit_rules + decompose_text + validate
+            → Tentative Rulebook + audit_trail
+  [arm A]   run_raw_arm(cfg with rulebook_text=Some(rb.source_text))
+  [arm B]   run_pipeline_arm — unchanged
+  ```
+
+- **`ADJ_DEMO_DUMP_RULEBOOK=1`** — companion to elicit-mode. When
+  set, prints the elicited rulebook text to stdout between
+  `----- BEGIN RULEBOOK -----` and `----- END RULEBOOK -----`
+  markers. Useful for reviewers who want to see what each model
+  produced.
+
+### Fixed
+
+- **Stage 0 failures now print to stdout too**. Previously the
+  elicitation failure message went only to stderr, which benchmark
+  scripts that capture only stdout treated as silent success. Now
+  the failure log line shows up in both streams; benchmark scripts
+  can grep stdout for `"[stage 0] rulebook elicitation FAILED:"`.
+- The success-path log line now reports the **validation
+  diagnostic** when `validation_passed = false`, not just the
+  boolean — so reviewers see *why* the rulebook IR failed
+  `adjudication_ir::validate` (most commonly a coverage gap or a
+  schema-invalid response from the model).
+
+### Note on the qwen2.5:1.5b "silent" failure observed in ADJ15
+
+The first ADJ15 benchmark run flagged a "silent failure" on
+qwen2.5:1.5b — the demo binary's stage-0 success log line was
+missing but no error was visible. After re-running with the
+visibility fix, the failure mode is now clear: the model **collapses
+into degenerate repetition** during the rulebook decompose phase,
+producing 90+ identical IR nodes (`{"functor": "authority", "args":
+[{"atom": "tsoa"}]}`) until it exhausts the output-token budget
+mid-string. `complete_json_with_truncation_retry` correctly
+surfaces `Gateway(SchemaInvalid { ... EOF while parsing ... })`;
+the demo prints the typed error and falls back to no-rulebook
+mode. The framework's behaviour is correct (graceful degradation,
+clear diagnostic); the failure itself is an upstream small-model
+coherence issue, not a framework bug. Recorded for follow-up:
+investigating prompt-level anti-repetition mitigations and / or
+explicit `max_nodes` caps in `decompose_text`.
+
+### Unused-mut warning fixed
+
+`json_to_ir_flat`'s `node` binding doesn't need `mut` after the
+v3 cascade dropped the `part_of` re-write logic. Cleanup.
+
 ## [0.7.0] - 2026-05-12
 
 ### Added
