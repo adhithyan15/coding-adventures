@@ -16,6 +16,9 @@ All notable changes to this package will be documented in this file.
   rollups across stream workers.
 - Transport-family counts and helpers on `EventStreamFleetSummary` for
   supervisor coverage views.
+- `EventStreamHeartbeatScheduleSummary` and
+  `EventStreamRestartScheduleSummary` for compact supervisor schedule status
+  over due heartbeats, retry readiness, and restart reasons.
 
 ## [0.1.0] - 2026-05-08
 
