@@ -253,6 +253,77 @@ impl ContextEntrySummary {
     }
 }
 
+/// Compact aggregate over body-free transcript entry summaries.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ContextTranscriptSummary {
+    pub total_entries: usize,
+    pub user_entries: usize,
+    pub assistant_entries: usize,
+    pub tool_call_entries: usize,
+    pub tool_result_entries: usize,
+    pub summary_entries: usize,
+    pub note_entries: usize,
+    pub attachment_ref_entries: usize,
+    pub entries_with_metadata: usize,
+    pub first_timestamp: Option<TimestampMs>,
+    pub latest_timestamp: Option<TimestampMs>,
+}
+
+impl ContextTranscriptSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_entry_summaries<'a, I>(entries: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ContextEntrySummary>,
+    {
+        let mut summary = Self::empty();
+        for entry in entries {
+            summary.total_entries += 1;
+            match entry.kind {
+                ContextEntryKind::User => summary.user_entries += 1,
+                ContextEntryKind::Assistant => summary.assistant_entries += 1,
+                ContextEntryKind::ToolCall => summary.tool_call_entries += 1,
+                ContextEntryKind::ToolResult => summary.tool_result_entries += 1,
+                ContextEntryKind::Summary => summary.summary_entries += 1,
+                ContextEntryKind::Note => summary.note_entries += 1,
+                ContextEntryKind::AttachmentRef => summary.attachment_ref_entries += 1,
+            }
+            if metadata_has_fields(&entry.metadata) {
+                summary.entries_with_metadata += 1;
+            }
+            summary.first_timestamp = Some(
+                summary
+                    .first_timestamp
+                    .map_or(entry.timestamp, |timestamp| timestamp.min(entry.timestamp)),
+            );
+            summary.latest_timestamp = Some(
+                summary
+                    .latest_timestamp
+                    .map_or(entry.timestamp, |timestamp| timestamp.max(entry.timestamp)),
+            );
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_entries == 0
+    }
+
+    pub fn conversational_entries(&self) -> usize {
+        self.user_entries + self.assistant_entries
+    }
+
+    pub fn tool_interaction_entries(&self) -> usize {
+        self.tool_call_entries + self.tool_result_entries
+    }
+
+    pub fn has_compaction_material(&self) -> bool {
+        self.summary_entries > 0 || self.note_entries > 0 || self.attachment_ref_entries > 0
+    }
+}
+
 /// One compaction/checkpoint snapshot.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ContextSnapshot {
@@ -592,6 +663,16 @@ impl<S: StorageBackend> ContextStore<S> {
             .iter()
             .map(ContextEntrySummary::from_entry)
             .collect())
+    }
+
+    /// Summarize a body-free ordered entry window for read-side tooling.
+    pub fn transcript_summary(
+        &self,
+        session_id: &str,
+        options: FetchEntriesOptions,
+    ) -> Result<ContextTranscriptSummary, StorageError> {
+        let entries = self.fetch_entry_summaries(session_id, options)?;
+        Ok(ContextTranscriptSummary::from_entry_summaries(&entries))
     }
 
     /// Create a new snapshot and advance the session head pointer to it.
@@ -1304,6 +1385,10 @@ fn entry_matches_fetch_options(entry: &ContextEntry, options: &FetchEntriesOptio
     true
 }
 
+fn metadata_has_fields(value: &JsonValue) -> bool {
+    matches!(value, JsonValue::Object(fields) if !fields.is_empty())
+}
+
 fn validation(field: &str, message: impl Into<String>) -> StorageError {
     StorageError::Validation {
         field: field.to_string(),
@@ -1671,6 +1756,93 @@ mod tests {
                 metadata: object(&[("tool", JsonValue::String("smart_home".to_string()))]),
             }]
         );
+    }
+
+    #[test]
+    fn transcript_summary_counts_entry_kinds_and_time_span() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+
+        for (entry_id, kind, timestamp, metadata) in [
+            (
+                "entry-1",
+                ContextEntryKind::User,
+                30,
+                object(&[("source", JsonValue::String("ui".to_string()))]),
+            ),
+            ("entry-2", ContextEntryKind::Assistant, 10, object(&[])),
+            ("entry-3", ContextEntryKind::ToolCall, 20, object(&[])),
+            (
+                "entry-4",
+                ContextEntryKind::ToolResult,
+                40,
+                object(&[("tool", JsonValue::String("search".to_string()))]),
+            ),
+            ("entry-5", ContextEntryKind::Summary, 50, object(&[])),
+            ("entry-6", ContextEntryKind::Note, 60, object(&[])),
+            ("entry-7", ContextEntryKind::AttachmentRef, 70, object(&[])),
+        ] {
+            let _ = store
+                .append_entry(
+                    "demo",
+                    AppendEntryInput {
+                        entry_id: entry_id.to_string(),
+                        kind,
+                        timestamp: Some(timestamp),
+                        metadata,
+                        body: JsonValue::String(entry_id.to_string()),
+                    },
+                )
+                .unwrap();
+        }
+
+        let summary = store
+            .transcript_summary("demo", FetchEntriesOptions::new())
+            .unwrap();
+        assert_eq!(
+            summary,
+            ContextTranscriptSummary {
+                total_entries: 7,
+                user_entries: 1,
+                assistant_entries: 1,
+                tool_call_entries: 1,
+                tool_result_entries: 1,
+                summary_entries: 1,
+                note_entries: 1,
+                attachment_ref_entries: 1,
+                entries_with_metadata: 2,
+                first_timestamp: Some(10),
+                latest_timestamp: Some(70),
+            }
+        );
+        assert_eq!(summary.conversational_entries(), 2);
+        assert_eq!(summary.tool_interaction_entries(), 2);
+        assert!(summary.has_compaction_material());
+        assert!(!summary.is_empty());
+
+        let tool_window = store
+            .transcript_summary(
+                "demo",
+                FetchEntriesOptions::new()
+                    .with_kind(ContextEntryKind::ToolCall)
+                    .with_kind(ContextEntryKind::ToolResult),
+            )
+            .unwrap();
+        assert_eq!(tool_window.total_entries, 2);
+        assert_eq!(tool_window.tool_interaction_entries(), 2);
+        assert_eq!(tool_window.first_timestamp, Some(20));
+        assert_eq!(tool_window.latest_timestamp, Some(40));
+
+        let empty = ContextTranscriptSummary::from_entry_summaries([]);
+        assert!(empty.is_empty());
+        assert_eq!(empty.first_timestamp, None);
+        assert_eq!(empty.latest_timestamp, None);
     }
 
     #[test]

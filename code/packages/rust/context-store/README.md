@@ -11,6 +11,7 @@ Chief of Staff runtime needs.
 - `ContextSessionCatalogSummary` projections for read-side lifecycle coverage
 - ordered `ContextEntry` transcripts
 - body-free `ContextEntrySummary` projections for read-side transcript indexes
+- `ContextTranscriptSummary` aggregates for entry kind and time-span coverage
 - `ContextSnapshot` checkpoints for compaction/resume
 - compare-and-swap session updates on top of `storage-core`
 - bounded transcript reads by cursor, entry kind, timestamp range, and limit
@@ -32,12 +33,17 @@ Chief of Staff runtime needs.
 - `append_entry()`
 - `fetch_entries()`
 - `fetch_entry_summaries()`
+- `transcript_summary()`
 - `fetch_ordered_entries()`
 - `create_snapshot()`
 - `list_snapshots()`
 - `fetch_latest_snapshot()`
 - `compact_before_entry()`
 - `archive_session()`
+
+`transcript_summary()` uses the same bounded transcript window options as
+`fetch_entry_summaries()` and returns counts by entry kind, metadata coverage,
+and first/latest timestamps without reading opaque entry bodies.
 
 ## Development
 
