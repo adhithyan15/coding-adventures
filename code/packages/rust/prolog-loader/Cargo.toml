@@ -1,8 +1,8 @@
 [package]
 name = "prolog-loader"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "Load Prolog source text into a logic-engine KnowledgeBase. Closes the text → engine pipeline. v0.2 adds `execute` / `run_all_queries` end-to-end runner and a 14-test integration suite."
+description = "Load Prolog source text into a logic-engine KnowledgeBase. v0.2 adds `execute` / `run_all_queries` end-to-end runner. v0.3 adds the `ProblogProgram` builder for probabilistic programs (WMC-backed)."
 
 [dependencies]
 prolog-parser = { path = "../prolog-parser" }

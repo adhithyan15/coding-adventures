@@ -154,6 +154,18 @@ impl Rule {
             probability: Probability::Certain,
         }
     }
+
+    /// Construct a `Rule` with explicit probability `p`. Mirrors
+    /// [`Fact::with_probability`]: the `id` is a sentinel
+    /// `RuleId(u64::MAX)` that the KB overwrites on insert.
+    pub fn with_probability(head: Term, body: Vec<BodyLiteral>, p: f64) -> Self {
+        Self {
+            id: RuleId(u64::MAX),
+            head,
+            body,
+            probability: Probability::Value(p),
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
