@@ -182,9 +182,9 @@ pub fn decompose_text(
         schema_json: RESPONSE_SCHEMA.to_string(),
     };
 
-    let json_resp = client
-        .complete_json(completion_req, &schema)
-        .map_err(PrimitiveError::Gateway)?;
+    let json_resp =
+        crate::complete_json_with_truncation_retry(client, completion_req, &schema)
+            .map_err(PrimitiveError::Gateway)?;
 
     if !json_resp.parsed.is_object() {
         return Err(PrimitiveError::ValidationExhausted {

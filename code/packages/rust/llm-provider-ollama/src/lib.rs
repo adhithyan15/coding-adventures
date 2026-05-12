@@ -307,8 +307,15 @@ fn parse_endpoint(endpoint: &str) -> Option<(String, u16)> {
 }
 
 /// Parse a minimal HTTP/1.1 response: skip status line + headers,
-/// return the body. Honours Content-Length; chunked encoding is not
-/// supported (Ollama returns Content-Length on non-streaming calls).
+/// return the body. Honours both `Content-Length` and
+/// `Transfer-Encoding: chunked` framing.
+///
+/// We discovered the chunked path the hard way: Ollama on the
+/// `/api/chat` endpoint *does* return chunked responses once the body
+/// gets long enough (~1.5 KB), even with `stream: false`. The chunk
+/// preamble `8cb\r\n{...}\r\n0\r\n\r\n` parses as garbage if the
+/// caller assumes Content-Length framing — the first JSON parse fails
+/// at column 2 ("8c" is not valid JSON) and the whole reply is lost.
 fn parse_http_response(raw: &[u8]) -> Result<String, String> {
     let sep = b"\r\n\r\n";
     let split = raw
@@ -330,14 +337,123 @@ fn parse_http_response(raw: &[u8]) -> Result<String, String> {
         .next()
         .and_then(|s| s.parse().ok())
         .ok_or_else(|| format!("could not parse status line: {status_line}"))?;
+
+    // Look for `Transfer-Encoding: chunked` (case-insensitive). If
+    // present, the body is a series of hex-sized chunks rather than a
+    // single Content-Length-bounded blob. Per RFC 7230 §3.3.1 chunked
+    // takes precedence over Content-Length when both are present.
+    let is_chunked = header_block.lines().any(|line| {
+        let mut it = line.splitn(2, ':');
+        match (it.next(), it.next()) {
+            (Some(k), Some(v)) => {
+                k.trim().eq_ignore_ascii_case("transfer-encoding")
+                    && v.split(',')
+                        .any(|tok| tok.trim().eq_ignore_ascii_case("chunked"))
+            }
+            _ => false,
+        }
+    });
+
+    let body_string = if is_chunked {
+        dechunk(body_bytes).map_err(|e| format!("malformed chunked body: {e}"))?
+    } else {
+        std::str::from_utf8(body_bytes)
+            .map(|s| s.to_string())
+            .map_err(|e| format!("non-UTF-8 body: {e}"))?
+    };
+
     if !(200..300).contains(&code) {
-        let body = String::from_utf8_lossy(body_bytes).into_owned();
-        return Err(format!("HTTP {code}: {body}"));
+        return Err(format!("HTTP {code}: {body_string}"));
     }
 
-    std::str::from_utf8(body_bytes)
-        .map(|s| s.to_string())
-        .map_err(|e| format!("non-UTF-8 body: {e}"))
+    Ok(body_string)
+}
+
+/// Decode HTTP/1.1 chunked transfer encoding (RFC 7230 §4.1).
+///
+/// Wire format: each chunk is `<hex-size>\r\n<bytes-of-that-size>\r\n`,
+/// terminated by a zero-sized chunk `0\r\n` followed by optional
+/// trailers and a final `\r\n`. Chunk-extensions (e.g.,
+/// `8cb;name=val\r\n`) are allowed by the RFC and silently ignored
+/// here — Ollama doesn't use them in practice, but rejecting them
+/// would be brittle if a future version did.
+///
+/// **Safety bounds.** A malicious or compromised endpoint can put
+/// any hex number it likes on the wire. Without bounds we have two
+/// DoS surfaces:
+///
+/// 1. **Integer overflow.** `size + 2` would wrap to a small number
+///    if `size == usize::MAX - 1`; the wrapped value would pass the
+///    `buf.len() < size + 2` check and then `&buf[..size]` would
+///    panic. We use `checked_add` and `MAX_CHUNK_BYTES` to refuse
+///    pathological sizes up front.
+/// 2. **Unbounded body growth.** A legitimate-looking sequence of
+///    large chunks could push `out` past available memory. The
+///    `MAX_DECHUNKED_BYTES` cap rejects responses that would grow
+///    `out` past the same limit as the raw socket reader.
+fn dechunk(mut buf: &[u8]) -> Result<String, String> {
+    // Per-chunk cap: chunked encoding can theoretically use up to
+    // 2^64-1, but no real server emits chunks above a few MiB.
+    // Capping at the same ceiling we apply to whole responses keeps
+    // a single misbehaving chunk from triggering an OOM. The 64 MiB
+    // number matches MAX_RESPONSE_BYTES so a single chunk can never
+    // exceed the full response cap.
+    const MAX_CHUNK_BYTES: usize = MAX_RESPONSE_BYTES as usize;
+    const MAX_DECHUNKED_BYTES: usize = MAX_RESPONSE_BYTES as usize;
+
+    let mut out: Vec<u8> = Vec::new();
+    loop {
+        // Find the end of the size line.
+        let line_end = buf
+            .windows(2)
+            .position(|w| w == b"\r\n")
+            .ok_or_else(|| "chunk size line missing CRLF".to_string())?;
+        let size_line = std::str::from_utf8(&buf[..line_end])
+            .map_err(|e| format!("non-UTF-8 chunk size: {e}"))?;
+        // Strip chunk-extensions: anything after a `;` is metadata.
+        let hex = size_line.split(';').next().unwrap_or("").trim();
+        let size = usize::from_str_radix(hex, 16)
+            .map_err(|e| format!("invalid chunk size {hex:?}: {e}"))?;
+        if size > MAX_CHUNK_BYTES {
+            return Err(format!(
+                "chunk size {size} exceeds MAX_CHUNK_BYTES ({MAX_CHUNK_BYTES})"
+            ));
+        }
+        buf = &buf[line_end + 2..];
+        if size == 0 {
+            // Zero-sized chunk: end of body. Skip optional trailers
+            // up to the final `\r\n`. We don't surface trailers to
+            // callers; Ollama doesn't emit any in practice.
+            break;
+        }
+        // `size + 2` is now guaranteed safe because size <= 64 MiB,
+        // but use checked_add anyway as belt-and-braces: if anyone
+        // ever raises MAX_CHUNK_BYTES toward usize::MAX, this stays
+        // correct.
+        let needed = size
+            .checked_add(2)
+            .ok_or_else(|| format!("chunk size {size} overflows usize when adding terminator"))?;
+        if buf.len() < needed {
+            return Err(format!(
+                "truncated chunk: declared {size} bytes but only {avail} bytes remain",
+                avail = buf.len()
+            ));
+        }
+        // Refuse cumulative growth past MAX_DECHUNKED_BYTES — the
+        // same cap we apply to non-chunked responses.
+        if out.len().saturating_add(size) > MAX_DECHUNKED_BYTES {
+            return Err(format!(
+                "dechunked body exceeds MAX_DECHUNKED_BYTES ({MAX_DECHUNKED_BYTES})"
+            ));
+        }
+        out.extend_from_slice(&buf[..size]);
+        // Each chunk ends with its own \r\n terminator.
+        if &buf[size..size + 2] != b"\r\n" {
+            return Err("missing CRLF after chunk data".to_string());
+        }
+        buf = &buf[needed..];
+    }
+    String::from_utf8(out).map_err(|e| format!("non-UTF-8 chunked body: {e}"))
 }
 
 /// Parse Ollama's chat response. We need: assistant text,
@@ -405,6 +521,7 @@ impl LlmClient for OllamaClient {
         } else {
             req.model.clone()
         };
+        let max_tokens = req.max_tokens;
         let start = Instant::now();
         let body = self.build_body(&req, /* format_json = */ false);
         let raw = self.post(CHAT_PATH, &body, &model_used)?;
@@ -413,6 +530,20 @@ impl LlmClient for OllamaClient {
                 provider: self.provider_identity(&model_used),
                 detail: d,
             })?;
+        // Thinking-mode models (Gemma, DeepSeek-R1, Claude with
+        // extended thinking) sometimes burn the entire `max_tokens`
+        // budget on chain-of-thought and emit no final content. The
+        // wire response then shows `done_reason: "length"` and
+        // `content: ""`. Surfacing this as `Stop` with empty `text`
+        // hides a recoverable failure from the caller; surface it as
+        // `OutputTruncated` so primitives can retry with a bigger cap.
+        if finish_reason == FinishReason::MaxTokens && text.is_empty() {
+            return Err(LlmError::OutputTruncated {
+                provider: self.provider_identity(&model_used),
+                output_tokens: usage.output_tokens,
+                max_tokens,
+            });
+        }
         Ok(CompletionResponse {
             text,
             model: model_used.clone(),
@@ -452,14 +583,28 @@ impl LlmClient for OllamaClient {
         } else {
             prefixed.model.clone()
         };
+        let max_tokens = prefixed.max_tokens;
         let start = Instant::now();
         let body = self.build_body(&prefixed, /* format_json = */ true);
         let raw = self.post(CHAT_PATH, &body, &model_used)?;
-        let (text, usage, _finish_reason) =
+        let (text, usage, finish_reason) =
             parse_ollama_response(&raw).map_err(|d| LlmError::ProtocolError {
                 provider: self.provider_identity(&model_used),
                 detail: d,
             })?;
+
+        // Same MaxTokens-on-empty rescue as `complete`. Without this,
+        // the empty `text` flows into `serde_json::from_str` and
+        // produces "EOF while parsing a value at line 1 column 0" —
+        // technically a SchemaInvalid, but the underlying cause is
+        // truncation, not a bad model output.
+        if finish_reason == FinishReason::MaxTokens && text.is_empty() {
+            return Err(LlmError::OutputTruncated {
+                provider: self.provider_identity(&model_used),
+                output_tokens: usage.output_tokens,
+                max_tokens,
+            });
+        }
 
         let parsed: serde_json::Value =
             serde_json::from_str(&text).map_err(|e| LlmError::SchemaInvalid {
@@ -754,6 +899,80 @@ mod tests {
     }
 
     #[test]
+    fn parse_http_response_handles_chunked_encoding() {
+        // Ollama emits Transfer-Encoding: chunked once the response
+        // exceeds ~1.5 KB. We must decode it (was the root cause of
+        // the "trailing characters at line 1 column 2" failure in
+        // the TSA demo's ADJ04 round-trip).
+        let chunked = "HTTP/1.1 200 OK\r\n\
+                       Content-Type: application/json\r\n\
+                       Transfer-Encoding: chunked\r\n\
+                       \r\n\
+                       5\r\nhello\r\n\
+                       7\r\n, world\r\n\
+                       0\r\n\r\n";
+        let body = parse_http_response(chunked.as_bytes()).unwrap();
+        assert_eq!(body, "hello, world");
+    }
+
+    #[test]
+    fn parse_http_response_handles_chunked_encoding_with_extensions() {
+        // Chunk-extensions (e.g., `5;foo=bar`) are allowed by RFC 7230
+        // and must be silently ignored.
+        let chunked = "HTTP/1.1 200 OK\r\n\
+                       Transfer-Encoding: chunked\r\n\
+                       \r\n\
+                       5;name=hello\r\nhello\r\n\
+                       0\r\n\r\n";
+        let body = parse_http_response(chunked.as_bytes()).unwrap();
+        assert_eq!(body, "hello");
+    }
+
+    #[test]
+    fn parse_http_response_rejects_pathological_chunk_size() {
+        // A malicious endpoint emits a chunk-size near usize::MAX.
+        // We must refuse this up-front rather than indexing into a
+        // buffer with the resulting value.
+        let chunked = format!(
+            "HTTP/1.1 200 OK\r\n\
+             Transfer-Encoding: chunked\r\n\
+             \r\n\
+             {hex}\r\nx\r\n0\r\n\r\n",
+            hex = "ffffffffffffffff" // usize::MAX in hex on 64-bit
+        );
+        let err = parse_http_response(chunked.as_bytes()).unwrap_err();
+        assert!(
+            err.contains("exceeds MAX_CHUNK_BYTES") || err.contains("invalid chunk size"),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn parse_http_response_rejects_oversized_chunk() {
+        // Chunk header says 128 MiB — above our 64 MiB cap. Should
+        // be rejected without allocating the buffer.
+        let chunked = "HTTP/1.1 200 OK\r\n\
+                       Transfer-Encoding: chunked\r\n\
+                       \r\n\
+                       8000000\r\n" // 128 MiB
+            .to_string();
+        let err = parse_http_response(chunked.as_bytes()).unwrap_err();
+        assert!(err.contains("MAX_CHUNK_BYTES"), "unexpected error: {err}");
+    }
+
+    #[test]
+    fn parse_http_response_handles_chunked_encoding_case_insensitive_header() {
+        // `transfer-encoding: chunked` (lowercase) should match.
+        let chunked = "HTTP/1.1 200 OK\r\n\
+                       transfer-encoding: Chunked\r\n\
+                       \r\n\
+                       3\r\nfoo\r\n\
+                       0\r\n\r\n";
+        let body = parse_http_response(chunked.as_bytes()).unwrap();
+        assert_eq!(body, "foo");
+    }
+
+    #[test]
     fn parse_http_response_surfaces_non_200() {
         let raw = b"HTTP/1.1 500 Internal Server Error\r\n\r\nboom";
         let err = parse_http_response(raw).unwrap_err();
@@ -781,6 +1000,66 @@ mod tests {
         .to_string();
         let (_t, _u, finish) = parse_ollama_response(&body).unwrap();
         assert_eq!(finish, FinishReason::MaxTokens);
+    }
+
+    #[test]
+    fn complete_surfaces_empty_content_at_length_as_output_truncated() {
+        // The "thinking-mode" failure mode: model burns max_tokens on
+        // chain-of-thought and emits no final content. done_reason is
+        // "length", content is empty. We must NOT swallow this as a
+        // successful Stop with empty text — it's a recoverable truncation.
+        let server = ScriptedServer::spawn(
+            200,
+            &serde_json::json!({
+                "model": "gemma4:latest",
+                "message": { "role": "assistant", "content": "" },
+                "done": true,
+                "done_reason": "length",
+                "prompt_eval_count": 50,
+                "eval_count": 256,
+            })
+            .to_string(),
+        );
+        let client = OllamaClient::new("gemma4:latest").with_endpoint(server.endpoint.clone());
+        let mut req = req_user("think hard then answer");
+        req.max_tokens = Some(256);
+        let err = client.complete(req).unwrap_err();
+        match err {
+            LlmError::OutputTruncated {
+                output_tokens, max_tokens, ..
+            } => {
+                assert_eq!(output_tokens, 256);
+                assert_eq!(max_tokens, Some(256));
+            }
+            other => panic!("expected OutputTruncated, got {other:?}"),
+        }
+        let _ = server.finish();
+    }
+
+    #[test]
+    fn complete_json_surfaces_empty_content_at_length_as_output_truncated() {
+        let server = ScriptedServer::spawn(
+            200,
+            &serde_json::json!({
+                "model": "gemma4:latest",
+                "message": { "role": "assistant", "content": "" },
+                "done": true,
+                "done_reason": "length",
+                "prompt_eval_count": 100,
+                "eval_count": 512,
+            })
+            .to_string(),
+        );
+        let client = OllamaClient::new("gemma4:latest").with_endpoint(server.endpoint.clone());
+        let schema = JsonSchema {
+            name: "X".into(),
+            schema_json: "{}".into(),
+        };
+        let mut req = req_user("answer");
+        req.max_tokens = Some(512);
+        let err = client.complete_json(req, &schema).unwrap_err();
+        assert!(matches!(err, LlmError::OutputTruncated { .. }));
+        let _ = server.finish();
     }
 
     #[test]

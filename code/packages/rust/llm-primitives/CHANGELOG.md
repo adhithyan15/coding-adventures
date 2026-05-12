@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-05-11
+
+### Added
+
+Thinking-mode tolerance for every primitive. The previous defaults
+(`max_tokens: Some(256)` on `entail`, `Some(512)` on
+`judge_plausibility` / `find_contradicting_reading`, `Some(256)` on
+`render_node`) were calibrated for non-thinking models. With models
+like Gemma 4 — which routinely burn 500-1000+ tokens on chain-of-
+thought before emitting structured output — those caps produced
+empty `content` and `done_reason: "length"`, which the gateway now
+surfaces as `LlmError::OutputTruncated`.
+
+- `complete_json_with_truncation_retry(client, request, schema)` — a
+  helper that retries on `OutputTruncated` by doubling
+  `max_tokens` up to `MAX_TOKENS_CEILING = 32_768`, with a hard
+  cap of `TRUNCATION_MAX_ATTEMPTS = 6` retries. Any other error
+  returns immediately.
+- `complete_with_truncation_retry(client, request)` — same loop for
+  the free-form text path.
+- Initial `max_tokens` defaults bumped: `entail` 256 → 2048,
+  `render_node` 256 → 2048, `judge_plausibility` 512 → 2048,
+  `find_contradicting_reading` 512 → 4096. `decompose_text` already
+  used `Some(8192)`.
+- Every JSON-emitting primitive (`entail`, `decompose_text`,
+  `judge_plausibility`, `find_contradicting_reading`) now goes
+  through the retry helper. `render_node` uses the text-path
+  helper.
+- 6 new unit tests cover the helper: doubling-until-success,
+  cap-at-ceiling, give-up-after-max-attempts, no-retry on non-
+  truncation errors, plus the text-path equivalent.
+
 ## [0.6.0] - 2026-05-11
 
 ### Added

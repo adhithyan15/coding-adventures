@@ -1,8 +1,8 @@
 [package]
 name = "llm-primitives"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
-description = "LM00b — typed LLM primitives layer. v0.1 scaffolding. v0.2 entail. v0.3 render_node. v0.4 judge_plausibility. v0.5 find_contradicting_reading (ADJ05 adversary). v0.6 decompose_text (headline extractor). extract_rules follows."
+description = "LM00b — typed LLM primitives layer. v0.1 scaffolding through v0.6 decompose_text. v0.7 adds a thinking-mode-tolerant truncation-retry helper (`complete_json_with_truncation_retry`) used by every JSON-emitting primitive, plus bumped max_tokens defaults for thinking-mode models."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }

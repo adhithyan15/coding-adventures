@@ -132,7 +132,9 @@ fn build_completion_request(
         // Default deterministic; deployments override at the gateway
         // layer if they want sampling.
         temperature: 0.0,
-        max_tokens: Some(512),
+        // 4096 leaves headroom for thinking-mode chains-of-thought
+        // plus a multi-sentence contradictory reading.
+        max_tokens: Some(4096),
         stop_sequences: Vec::new(),
         seed: None,
         metadata: Default::default(),
@@ -165,9 +167,9 @@ pub fn find_contradicting_reading(
         schema_json: RESPONSE_SCHEMA.to_string(),
     };
 
-    let json_resp = client
-        .complete_json(completion_req, &schema)
-        .map_err(PrimitiveError::Gateway)?;
+    let json_resp =
+        crate::complete_json_with_truncation_retry(client, completion_req, &schema)
+            .map_err(PrimitiveError::Gateway)?;
 
     let v = &json_resp.parsed;
     let concurs = v.get("concurs").and_then(|x| x.as_bool());

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2026-05-11
+
+### Fixed
+
+Skip synthesized `Query` nodes (kind=Query AND
+`source_spans.is_empty()`) instead of raising
+`CheckError::LeafMissingSpans`. The previous behaviour broke any
+pipeline that uses a programmatically-added Query node — common for
+"what's the verdict?" style runs and for the ADJ10 TSA fixture. Facts
+with missing spans still surface as `LeafMissingSpans` because Facts
+must come from the source per ADJ01 v2 well-formedness.
+
+One new test covers the Query-with-no-spans skip behaviour.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

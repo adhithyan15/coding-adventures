@@ -1,8 +1,8 @@
 [package]
 name = "llm-provider-ollama"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "LM00a Ollama provider — local-only LLM client over std::net (zero third-party HTTP dep). Implements LlmClient for any Ollama-served model."
+description = "LM00a Ollama provider — local-only LLM client over std::net (zero third-party HTTP dep). Implements LlmClient for any Ollama-served model. v0.2 adds HTTP/1.1 chunked transfer-encoding support + an OutputTruncated rescue for thinking-mode models that burn the max_tokens budget on chain-of-thought."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }
