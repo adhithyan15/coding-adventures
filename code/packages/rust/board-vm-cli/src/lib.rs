@@ -1280,12 +1280,48 @@ pub fn render_blink_eject(options: &EjectBlinkOptions) -> Result<(String, EjectR
     Ok((source, report))
 }
 
-pub fn run_repl<R, W>(options: &ReplOptions, input: R, mut output: W) -> Result<(), CliError>
+pub fn run_repl<R, W>(options: &ReplOptions, input: R, output: W) -> Result<(), CliError>
 where
     R: BufRead,
     W: Write,
 {
     let (connection_label, transport) = open_repl_transport(options)?;
+    run_repl_with_connection(options, connection_label, transport, input, output)
+}
+
+#[cfg(test)]
+fn run_repl_with_transport<T, R, W>(
+    options: &ReplOptions,
+    transport: T,
+    input: R,
+    output: W,
+) -> Result<(), CliError>
+where
+    T: RawFrameTransport,
+    R: BufRead,
+    W: Write,
+{
+    run_repl_with_connection(
+        options,
+        repl_connection_label(options),
+        transport,
+        input,
+        output,
+    )
+}
+
+fn run_repl_with_connection<T, R, W>(
+    options: &ReplOptions,
+    connection_label: impl Into<String>,
+    transport: T,
+    input: R,
+    mut output: W,
+) -> Result<(), CliError>
+where
+    T: RawFrameTransport,
+    R: BufRead,
+    W: Write,
+{
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
     let mut state = ReplState {
         program_id: options.program_id,
@@ -1296,13 +1332,25 @@ where
     writeln!(
         output,
         "connected {} timeout_ms={}",
-        connection_label, options.timeout_ms
+        connection_label.into(),
+        options.timeout_ms
     )?;
     let hello = client.hello_with_name(DEFAULT_HOST_NAME, state.host_nonce)?;
     write_hello(&mut output, &hello)?;
     write_repl_help(&mut output)?;
 
     run_repl_loop(&mut client, &mut state, input, output)
+}
+
+#[cfg(test)]
+fn repl_connection_label(options: &ReplOptions) -> String {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        return format!("endpoint={endpoint}");
+    }
+    match options.port.as_deref() {
+        Some(port) => format!("port={port} baud={}", options.baud_rate),
+        None => format!("board={} baud={}", options.board, options.baud_rate),
+    }
 }
 
 #[cfg(test)]
@@ -1857,6 +1905,42 @@ mod tests {
             encode_wire_frame(&self.raw_response[..response_len], response_out)
                 .map_err(map_protocol_transport_error)
         }
+    }
+
+    fn spawn_loopback_tcp_board(frames: usize) -> (String, std::thread::JoinHandle<usize>) {
+        let listener = std::net::TcpListener::bind(("127.0.0.1", 0)).unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = std::thread::spawn(move || {
+            let (stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(Duration::from_millis(500)))
+                .unwrap();
+            stream
+                .set_write_timeout(Some(Duration::from_millis(500)))
+                .unwrap();
+            let mut transport = BoardTcpTransport::<_, 1024>::from_stream(stream);
+            let mut board = LoopbackBoard::<512, 8, 8>::new();
+            let mut request_raw = [0u8; 768];
+            let mut response_payload = [0u8; 512];
+            let mut response_raw = [0u8; 768];
+
+            for _ in 0..frames {
+                let request_len = transport.receive_raw_frame(&mut request_raw).unwrap();
+                let response_len = board
+                    .handle_raw_frame(
+                        &request_raw[..request_len],
+                        &mut response_payload,
+                        &mut response_raw,
+                    )
+                    .unwrap();
+                transport
+                    .send_raw_frame(&response_raw[..response_len])
+                    .unwrap();
+            }
+
+            board.fake_hal().events().len()
+        });
+        (format!("tcp://{address}"), server)
     }
 
     fn unique_temp_dir(name: &str) -> PathBuf {
@@ -2730,41 +2814,10 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
 
     #[test]
     fn smoke_endpoint_runs_over_tcp_loopback_transport() {
-        let listener = std::net::TcpListener::bind(("127.0.0.1", 0)).unwrap();
-        let address = listener.local_addr().unwrap();
-        let server = std::thread::spawn(move || {
-            let (stream, _) = listener.accept().unwrap();
-            stream
-                .set_read_timeout(Some(Duration::from_millis(500)))
-                .unwrap();
-            stream
-                .set_write_timeout(Some(Duration::from_millis(500)))
-                .unwrap();
-            let mut transport = BoardTcpTransport::<_, 1024>::from_stream(stream);
-            let mut board = LoopbackBoard::<512, 8, 8>::new();
-            let mut request_raw = [0u8; 768];
-            let mut response_payload = [0u8; 512];
-            let mut response_raw = [0u8; 768];
-
-            for _ in 0..6 {
-                let request_len = transport.receive_raw_frame(&mut request_raw).unwrap();
-                let response_len = board
-                    .handle_raw_frame(
-                        &request_raw[..request_len],
-                        &mut response_payload,
-                        &mut response_raw,
-                    )
-                    .unwrap();
-                transport
-                    .send_raw_frame(&response_raw[..response_len])
-                    .unwrap();
-            }
-
-            board.fake_hal().events().len()
-        });
+        let (endpoint, server) = spawn_loopback_tcp_board(6);
         let options = SmokeOptions {
             port: None,
-            endpoint: Some(format!("tcp://{address}")),
+            endpoint: Some(endpoint.clone()),
             board: "auto".to_owned(),
             baud_rate: DEFAULT_BAUD_RATE,
             timeout_ms: 500,
@@ -2780,7 +2833,7 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
             report.connection.transport,
             SmokeConnectionTransport::TcpSocket
         );
-        assert_eq!(report.connection.label, format!("endpoint=tcp://{address}"));
+        assert_eq!(report.connection.label, format!("endpoint={endpoint}"));
         assert_eq!(report.connection.timeout_ms, 500);
         assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
         assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
@@ -2791,6 +2844,71 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert_ne!(report.upload.program_crc32, 0);
         assert_eq!(report.run.program_id, 9);
         assert_eq!(report.run.status, RunStatus::Running);
+        assert!(event_count > 0);
+    }
+
+    #[test]
+    fn repl_sequence_runs_over_rfcomm_wire_transport() {
+        let endpoint = "rfcomm://uno-r4-wifi:1";
+        let options = ReplOptions {
+            port: None,
+            endpoint: Some(endpoint.to_owned()),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: DEFAULT_TIMEOUT_MS,
+            program_id: 11,
+            instruction_budget: 200,
+            host_nonce: 0x0BAD_F00D,
+        };
+        let transport = LanguageBluetoothTransport::<_, 2048>::with_transactor(
+            endpoint,
+            LoopbackBluetoothWireTransactor::new(),
+        );
+        let input = std::io::Cursor::new(b"caps\nblink 24\nquit\n".to_vec());
+        let mut out = Vec::new();
+
+        run_repl_with_transport(&options, transport, input, &mut out).unwrap();
+
+        let output = String::from_utf8(out).unwrap();
+        assert!(output.contains(&format!(
+            "connected endpoint={endpoint} timeout_ms={DEFAULT_TIMEOUT_MS}\n"
+        )));
+        assert!(output.contains(
+            "hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0x0BADF00D"
+        ));
+        assert!(output.contains("caps board=loopback-uno-r4 runtime=board-vm-loopback"));
+        assert!(output.contains("upload program_id=11 bytes="));
+        assert!(output.contains("run program_id=11 status=Running"));
+        assert!(output.contains("open_handles=1"));
+    }
+
+    #[test]
+    fn repl_endpoint_runs_over_tcp_loopback_transport() {
+        let (endpoint, server) = spawn_loopback_tcp_board(6);
+        let options = ReplOptions {
+            port: None,
+            endpoint: Some(endpoint.clone()),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: 500,
+            program_id: 12,
+            instruction_budget: 200,
+            host_nonce: 0xFACE_FEED,
+        };
+        let input = std::io::Cursor::new(b"caps\nblink 24\nquit\n".to_vec());
+        let mut out = Vec::new();
+
+        run_repl(&options, input, &mut out).unwrap();
+        let event_count = server.join().unwrap();
+
+        let output = String::from_utf8(out).unwrap();
+        assert!(output.contains(&format!("connected endpoint={endpoint} timeout_ms=500\n")));
+        assert!(output.contains(
+            "hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0xFACEFEED"
+        ));
+        assert!(output.contains("caps board=loopback-uno-r4 runtime=board-vm-loopback"));
+        assert!(output.contains("upload program_id=12 bytes="));
+        assert!(output.contains("run program_id=12 status=Running"));
         assert!(event_count > 0);
     }
 
