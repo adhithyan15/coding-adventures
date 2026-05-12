@@ -48,7 +48,10 @@ asserts DTR on open, waits briefly, and clears the serial buffers before the
 first request so USB CDC boards start each run from a clean host session. The
 endpoint path supports TCP sockets and Board VM Bluetooth endpoints (`ble://`,
 `btspp://`, or `rfcomm://`) through the Rust-owned transport adapters. The
-default run budget is intentionally small because the current firmware executes
+smoke report starts with a stable `connection transport=...` field so hardware
+logs can distinguish serial, TCP socket, BLE GATT, and RFCOMM runs without
+parsing endpoint strings. The default run budget is intentionally small because
+the current firmware executes
 blink bytecode synchronously while it prepares the run report.
 
 `repl` opens the same serial transport, sends `HELLO`, and then accepts a small
