@@ -32,6 +32,8 @@ Included surfaces:
   fully backlogged subscriber fan-out
 - subscription backlog status helpers for identifying lagging event-stream
   subscribers without draining their delivery queues
+- subscription inventory summaries for read-side event-stream filter coverage
+  and queue pressure checks
 - command validation against entity capabilities and command modes
 - grant-backed command authorization for Chief of Staff agents and sandboxed
   tools
