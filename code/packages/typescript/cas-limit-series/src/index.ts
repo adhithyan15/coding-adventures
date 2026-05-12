@@ -1,15 +1,26 @@
 import { subst } from "@coding-adventures/cas-substitution";
 import {
   ADD,
+  ATAN,
+  COS,
+  COSH,
   DIV,
+  EXP,
+  LOG,
   MUL,
   NEG,
   POW,
+  SIN,
+  SINH,
+  SQRT,
   SUB,
+  TAN,
+  TANH,
   app,
   equals,
   headName,
   int,
+  numberNode,
   rational,
   sym,
   type IRNode,
@@ -21,6 +32,17 @@ export const SERIES = "Series";
 export const BIG_O = "BigO";
 
 export type IntegerLike = bigint | number | string;
+export type LimitDirection = "plus" | "minus";
+export type LimitCallback = (node: IRNode) => IRNode | null | undefined;
+export type LimitDerivativeCallback = (node: IRNode, variable: IRNode) => IRNode | null | undefined;
+
+export interface LimitAdvancedOptions {
+  readonly direction?: LimitDirection;
+  readonly differentiate?: LimitDerivativeCallback;
+  readonly simplify?: LimitCallback;
+  readonly evaluate?: LimitCallback;
+  readonly maxDepth?: number;
+}
 
 export class PolynomialError extends Error {
   constructor(message: string) {
@@ -113,6 +135,15 @@ export function limitDirect(expr: IRNode, variable: IRNode, point: IRNode): IRNo
   return out;
 }
 
+export function limitAdvanced(
+  expr: IRNode,
+  variable: IRNode,
+  point: IRNode,
+  options: LimitAdvancedOptions = {},
+): IRNode {
+  return limitAdvancedInner(expr, variable, point, options, 0);
+}
+
 export function taylorPolynomial(expr: IRNode, variable: IRNode, point: IRNode, order: number): IRNode {
   if (!Number.isInteger(order) || order < 0) {
     throw new RangeError("taylorPolynomial order must be a non-negative integer");
@@ -129,6 +160,285 @@ function looksIndeterminate(node: IRNode): boolean {
     && node.args.length === 2
     && isIntegerValue(node.args[0], 0n)
     && isIntegerValue(node.args[1], 0n);
+}
+
+const INF_THRESHOLD = 1e100;
+const EPSILON = 1e-300;
+const DEFAULT_MAX_DEPTH = 8;
+const INF = sym("inf");
+const MINF = sym("minf");
+
+function limitAdvancedInner(
+  expr: IRNode,
+  variable: IRNode,
+  point: IRNode,
+  options: LimitAdvancedOptions,
+  depth: number,
+): IRNode {
+  if (depth > (options.maxDepth ?? DEFAULT_MAX_DEPTH)) {
+    return buildUnevaluatedLimit(expr, variable, point, options.direction);
+  }
+
+  const pointValue = pointToNumber(point);
+  if (Number.isNaN(pointValue)) {
+    return buildUnevaluatedLimit(expr, variable, point, options.direction);
+  }
+
+  const epsilon = options.direction === "minus" ? -EPSILON : EPSILON;
+  const testPoint = Number.isFinite(pointValue) ? pointValue + epsilon : pointValue;
+  const testValue = evalAtNumber(expr, variable, testPoint);
+  if (isInfiniteLike(testValue)) {
+    return testValue > 0 ? INF : MINF;
+  }
+  if (Number.isNaN(testValue)) {
+    return handleIndeterminateForm(expr, variable, point, options, depth);
+  }
+
+  let substituted = subst(point, variable, expr);
+  substituted = applyLimitCallbacks(substituted, options);
+  const exactValue = numericEval(substituted);
+  if (!Number.isNaN(exactValue)) {
+    if (isInfiniteLike(exactValue)) {
+      return exactValue > 0 ? INF : MINF;
+    }
+    return substituted;
+  }
+
+  return handleIndeterminateForm(expr, variable, point, options, depth);
+}
+
+function handleIndeterminateForm(
+  expr: IRNode,
+  variable: IRNode,
+  point: IRNode,
+  options: LimitAdvancedOptions,
+  depth: number,
+): IRNode {
+  const exactPoint = pointToNumber(point);
+  if (Number.isNaN(exactPoint)) {
+    return buildUnevaluatedLimit(expr, variable, point, options.direction);
+  }
+
+  if (expr.kind === "apply" && headName(expr.head) === DIV.name && expr.args.length === 2) {
+    const [numer, denom] = expr.args;
+    const numerValue = evalAtNumber(numer, variable, exactPoint);
+    const denomValue = evalAtNumber(denom, variable, exactPoint);
+    const zeroZero = numerValue === 0 && denomValue === 0;
+    const infInf = isInfiniteLike(numerValue) && isInfiniteLike(denomValue);
+    if ((zeroZero || infInf) && options.differentiate !== undefined) {
+      return lhopital(numer, denom, variable, point, options, depth);
+    }
+  }
+
+  if (expr.kind === "apply" && headName(expr.head) === MUL.name && expr.args.length === 2) {
+    const rewritten = rewriteZeroInfinityProduct(expr.args[0], expr.args[1], variable, point, exactPoint, options, depth);
+    if (rewritten !== null) return rewritten;
+  }
+
+  if (expr.kind === "apply" && headName(expr.head) === POW.name && expr.args.length === 2) {
+    const rewritten = rewriteIndeterminatePower(expr.args[0], expr.args[1], variable, point, exactPoint, options, depth);
+    if (rewritten !== null) return rewritten;
+  }
+
+  return buildUnevaluatedLimit(expr, variable, point, options.direction);
+}
+
+function lhopital(
+  numer: IRNode,
+  denom: IRNode,
+  variable: IRNode,
+  point: IRNode,
+  options: LimitAdvancedOptions,
+  depth: number,
+): IRNode {
+  const dNumer = options.differentiate?.(numer, variable);
+  const dDenom = options.differentiate?.(denom, variable);
+  if (dNumer === null || dNumer === undefined || dDenom === null || dDenom === undefined) {
+    return buildUnevaluatedLimit(app(DIV, [numer, denom]), variable, point, options.direction);
+  }
+  const ratio = applyLimitCallbacks(app(DIV, [
+    applyLimitCallbacks(dNumer, options),
+    applyLimitCallbacks(dDenom, options),
+  ]), options);
+  return limitAdvancedInner(ratio, variable, point, options, depth + 1);
+}
+
+function rewriteZeroInfinityProduct(
+  a: IRNode,
+  b: IRNode,
+  variable: IRNode,
+  point: IRNode,
+  exactPoint: number,
+  options: LimitAdvancedOptions,
+  depth: number,
+): IRNode | null {
+  if (options.differentiate === undefined) return null;
+  const aValue = evalAtNumber(a, variable, exactPoint);
+  const bValue = evalAtNumber(b, variable, exactPoint);
+  if (aValue === 0 && isInfiniteLike(bValue)) {
+    return limitAdvancedInner(app(DIV, [b, app(DIV, [int(1), a])]), variable, point, {
+      ...options,
+      direction: undefined,
+    }, depth + 1);
+  }
+  if (bValue === 0 && isInfiniteLike(aValue)) {
+    return limitAdvancedInner(app(DIV, [a, app(DIV, [int(1), b])]), variable, point, {
+      ...options,
+      direction: undefined,
+    }, depth + 1);
+  }
+  return null;
+}
+
+function rewriteIndeterminatePower(
+  base: IRNode,
+  exponent: IRNode,
+  variable: IRNode,
+  point: IRNode,
+  exactPoint: number,
+  options: LimitAdvancedOptions,
+  depth: number,
+): IRNode | null {
+  const baseValue = evalAtNumber(base, variable, exactPoint);
+  const exponentValue = evalAtNumber(exponent, variable, exactPoint);
+  const oneToInfinity = Math.abs(baseValue - 1) < 1e-10 && isInfiniteLike(exponentValue);
+  const zeroToZero = baseValue === 0 && exponentValue === 0;
+  const infinityToZero = isInfiniteLike(baseValue) && exponentValue === 0;
+  if (!(oneToInfinity || zeroToZero || infinityToZero)) return null;
+
+  if (options.differentiate === undefined) {
+    return buildUnevaluatedLimit(app(POW, [base, exponent]), variable, point, options.direction);
+  }
+
+  const exponentLimit = limitAdvancedInner(app(MUL, [exponent, app(LOG, [base])]), variable, point, {
+    ...options,
+    direction: undefined,
+  }, depth + 1);
+  if (isLimitNode(exponentLimit)) {
+    return buildUnevaluatedLimit(app(POW, [base, exponent]), variable, point, options.direction);
+  }
+  return applyLimitCallbacks(app(EXP, [exponentLimit]), options);
+}
+
+function applyLimitCallbacks(node: IRNode, options: LimitAdvancedOptions): IRNode {
+  let out = node;
+  const simplified = options.simplify?.(out);
+  if (simplified !== null && simplified !== undefined) out = simplified;
+  const evaluated = options.evaluate?.(out);
+  if (evaluated !== null && evaluated !== undefined) out = evaluated;
+  return out;
+}
+
+function buildUnevaluatedLimit(expr: IRNode, variable: IRNode, point: IRNode, direction?: LimitDirection): IRNode {
+  const args = direction === undefined ? [expr, variable, point] : [expr, variable, point, sym(direction)];
+  return app(sym(LIMIT), args);
+}
+
+function isLimitNode(node: IRNode): boolean {
+  return node.kind === "apply" && headName(node.head) === LIMIT;
+}
+
+function evalAtNumber(expr: IRNode, variable: IRNode, point: number): number {
+  const pointNode = Number.isFinite(point) ? numberNode(point) : point > 0 ? INF : MINF;
+  return numericEval(subst(pointNode, variable, expr));
+}
+
+function pointToNumber(point: IRNode): number {
+  return numericEval(point);
+}
+
+function numericEval(node: IRNode): number {
+  try {
+    return numericEvalUnsafe(node);
+  } catch {
+    return Number.NaN;
+  }
+}
+
+function numericEvalUnsafe(node: IRNode): number {
+  switch (node.kind) {
+    case "integer":
+      return Number(node.value);
+    case "rational":
+      return Number(node.numer) / Number(node.denom);
+    case "float":
+      return node.value;
+    case "symbol":
+      if (node.name === "inf") return Number.POSITIVE_INFINITY;
+      if (node.name === "minf") return Number.NEGATIVE_INFINITY;
+      if (node.name === "%pi") return Math.PI;
+      if (node.name === "%e") return Math.E;
+      return Number.NaN;
+    case "string":
+      return Number.NaN;
+    case "apply":
+      return numericEvalApply(node);
+  }
+}
+
+function numericEvalApply(node: Extract<IRNode, { readonly kind: "apply" }>): number {
+  const name = headName(node.head);
+  const args = node.args;
+  if (name === ADD.name) return args.reduce((sum, arg) => sum + numericEvalUnsafe(arg), 0);
+  if (name === SUB.name && args.length === 2) return numericEvalUnsafe(args[0]) - numericEvalUnsafe(args[1]);
+  if (name === MUL.name) return args.reduce((product, arg) => product * numericEvalUnsafe(arg), 1);
+  if (name === DIV.name && args.length === 2) {
+    const numer = numericEvalUnsafe(args[0]);
+    const denom = numericEvalUnsafe(args[1]);
+    if (denom === 0) {
+      if (numer === 0) return Number.NaN;
+      return Math.sign(numer) >= 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+    }
+    return numer / denom;
+  }
+  if (name === NEG.name && args.length === 1) return -numericEvalUnsafe(args[0]);
+  if (name === POW.name && args.length === 2) {
+    const base = numericEvalUnsafe(args[0]);
+    const exponent = numericEvalUnsafe(args[1]);
+    if (Math.abs(base - 1) < 1e-10 && isInfiniteLike(exponent)) return Number.NaN;
+    if (base === 0 && exponent === 0) return Number.NaN;
+    if (isInfiniteLike(base) && exponent === 0) return Number.NaN;
+    if (base < 0 && !Number.isInteger(exponent)) return Number.NaN;
+    return base ** exponent;
+  }
+  if (name === SQRT.name && args.length === 1) {
+    const value = numericEvalUnsafe(args[0]);
+    return value < 0 ? Number.NaN : Math.sqrt(value);
+  }
+  if (name === EXP.name && args.length === 1) return safeExp(numericEvalUnsafe(args[0]));
+  if (name === LOG.name && args.length === 1) {
+    const value = numericEvalUnsafe(args[0]);
+    if (value === 0) return Number.NEGATIVE_INFINITY;
+    if (value < 0) return Number.NaN;
+    return Math.log(value);
+  }
+  if (name === SIN.name && args.length === 1) {
+    const value = numericEvalUnsafe(args[0]);
+    return Number.isFinite(value) ? Math.sin(value) : Number.NaN;
+  }
+  if (name === COS.name && args.length === 1) {
+    const value = numericEvalUnsafe(args[0]);
+    return Number.isFinite(value) ? Math.cos(value) : Number.NaN;
+  }
+  if (name === TAN.name && args.length === 1) {
+    const value = numericEvalUnsafe(args[0]);
+    return Number.isFinite(value) ? Math.tan(value) : Number.NaN;
+  }
+  if (name === ATAN.name && args.length === 1) return Math.atan(numericEvalUnsafe(args[0]));
+  if (name === SINH.name && args.length === 1) return Math.sinh(numericEvalUnsafe(args[0]));
+  if (name === COSH.name && args.length === 1) return Math.cosh(numericEvalUnsafe(args[0]));
+  if (name === TANH.name && args.length === 1) return Math.tanh(numericEvalUnsafe(args[0]));
+  return Number.NaN;
+}
+
+function safeExp(value: number): number {
+  if (value === Number.POSITIVE_INFINITY) return Number.POSITIVE_INFINITY;
+  if (value === Number.NEGATIVE_INFINITY) return 0;
+  return Math.exp(value);
+}
+
+function isInfiniteLike(value: number): boolean {
+  return Number.isFinite(value) ? Math.abs(value) > INF_THRESHOLD : !Number.isNaN(value);
 }
 
 function toCoefficients(expr: IRNode, variable: IRNode): Frac[] {
