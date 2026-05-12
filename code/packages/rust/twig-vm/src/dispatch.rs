@@ -1300,6 +1300,17 @@ fn exec_call(
         .find(|f| f.name == callee_name)
         .ok_or_else(|| RunError::UnknownFunction(callee_name.to_string()))?;
 
+    // DoS guard — mirrors exec_call_builtin, exec_apply_closure, exec_send, etc.
+    // A hand-crafted IIR `call` instruction with millions of srcs would OOM via
+    // Vec::with_capacity before the budget check fires (one tick per instruction,
+    // not per operand).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
     let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
     for src in &instr.srcs[1..] {
         let frame_ref = &*frame;
