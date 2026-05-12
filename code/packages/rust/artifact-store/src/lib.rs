@@ -14,6 +14,7 @@
 
 use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
+use std::collections::BTreeSet;
 use storage_core::{now_utc_ms, StorageBackend, StorageError, StorageListOptions, StoragePutInput};
 
 const NAMESPACE: &str = "artifacts";
@@ -247,6 +248,81 @@ impl ArtifactProvenanceSummary {
 
     pub fn has_unattributed_artifacts(&self) -> bool {
         self.artifacts_without_provenance > 0
+    }
+}
+
+/// Compact manifest-shape view for read-side artifact inventory checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ArtifactManifestSummary {
+    pub total_artifacts: usize,
+    pub unique_collections: usize,
+    pub unique_content_types: usize,
+    pub artifacts_with_labels: usize,
+    pub artifacts_without_labels: usize,
+    pub total_labels: usize,
+    pub text_artifacts: usize,
+    pub json_artifacts: usize,
+    pub image_artifacts: usize,
+    pub binary_artifacts: usize,
+    pub other_content_type_artifacts: usize,
+}
+
+impl ArtifactManifestSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_artifacts<'a, I>(artifacts: I) -> Self
+    where
+        I: IntoIterator<Item = &'a Artifact>,
+    {
+        let mut summary = Self::empty();
+        let mut collections = BTreeSet::new();
+        let mut content_types = BTreeSet::new();
+
+        for artifact in artifacts {
+            summary.total_artifacts += 1;
+            collections.insert(artifact.collection.as_str());
+            content_types.insert(artifact.content_type.as_str());
+            summary.total_labels += artifact.labels.len();
+            if artifact.labels.is_empty() {
+                summary.artifacts_without_labels += 1;
+            } else {
+                summary.artifacts_with_labels += 1;
+            }
+
+            if artifact.content_type.starts_with("text/") {
+                summary.text_artifacts += 1;
+            } else if is_json_content_type(&artifact.content_type) {
+                summary.json_artifacts += 1;
+            } else if artifact.content_type.starts_with("image/") {
+                summary.image_artifacts += 1;
+            } else if artifact.content_type == "application/octet-stream" {
+                summary.binary_artifacts += 1;
+            } else {
+                summary.other_content_type_artifacts += 1;
+            }
+        }
+
+        summary.unique_collections = collections.len();
+        summary.unique_content_types = content_types.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_artifacts == 0
+    }
+
+    pub fn has_labels(&self) -> bool {
+        self.artifacts_with_labels > 0
+    }
+
+    pub fn has_unlabeled_artifacts(&self) -> bool {
+        self.artifacts_without_labels > 0
+    }
+
+    pub fn has_multiple_collections(&self) -> bool {
+        self.unique_collections > 1
     }
 }
 
@@ -598,6 +674,14 @@ impl<S: StorageBackend> ArtifactStore<S> {
         Ok(ArtifactProvenanceSummary::from_artifacts(&artifacts))
     }
 
+    pub fn manifest_summary(
+        &self,
+        options: ArtifactListOptions,
+    ) -> Result<ArtifactManifestSummary, StorageError> {
+        let artifacts = self.list_artifacts(options)?;
+        Ok(ArtifactManifestSummary::from_artifacts(&artifacts))
+    }
+
     pub fn attach_labels(
         &self,
         artifact_id: &str,
@@ -736,6 +820,10 @@ fn provenance_filter_matches(expected: Option<&str>, actual: Option<&str>) -> bo
 
 fn metadata_has_fields(value: &JsonValue) -> bool {
     matches!(value, JsonValue::Object(fields) if !fields.is_empty())
+}
+
+fn is_json_content_type(value: &str) -> bool {
+    value == "application/json" || value.ends_with("+json")
 }
 
 fn validate_revision_list_options(
@@ -1461,6 +1549,72 @@ mod tests {
         assert!(empty.is_empty());
         assert!(!empty.has_tool_outputs());
         assert!(!empty.has_job_outputs());
+    }
+
+    #[test]
+    fn manifest_summary_counts_collection_content_type_and_label_coverage() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        for (artifact_id, collection, content_type, labels) in [
+            ("plan", "plans", "text/plain", vec!["draft", "review"]),
+            ("report", "reports", "application/json", Vec::new()),
+            ("screenshot", "reports", "image/png", vec!["visual"]),
+            ("blob", "archives", "application/octet-stream", Vec::new()),
+        ] {
+            let _ = store
+                .create_artifact(CreateArtifactInput {
+                    artifact_id: artifact_id.to_string(),
+                    collection: collection.to_string(),
+                    name: artifact_id.to_string(),
+                    content_type: content_type.to_string(),
+                    labels: labels.into_iter().map(str::to_string).collect(),
+                    provenance: ArtifactProvenance {
+                        session_id: Some("session-a".to_string()),
+                        tool_id: Some("artifact.write".to_string()),
+                        job_id: None,
+                        agent_id: Some("chief".to_string()),
+                    },
+                })
+                .unwrap();
+        }
+
+        let summary = store
+            .manifest_summary(ArtifactListOptions::new().for_session("session-a"))
+            .unwrap();
+        assert_eq!(
+            summary,
+            ArtifactManifestSummary {
+                total_artifacts: 4,
+                unique_collections: 3,
+                unique_content_types: 4,
+                artifacts_with_labels: 2,
+                artifacts_without_labels: 2,
+                total_labels: 3,
+                text_artifacts: 1,
+                json_artifacts: 1,
+                image_artifacts: 1,
+                binary_artifacts: 1,
+                other_content_type_artifacts: 0,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_labels());
+        assert!(summary.has_unlabeled_artifacts());
+        assert!(summary.has_multiple_collections());
+
+        let visual_summary = store
+            .manifest_summary(ArtifactListOptions::new().with_label("visual"))
+            .unwrap();
+        assert_eq!(visual_summary.total_artifacts, 1);
+        assert_eq!(visual_summary.image_artifacts, 1);
+        assert_eq!(visual_summary.total_labels, 1);
+        assert!(!visual_summary.has_unlabeled_artifacts());
+
+        let empty = store
+            .manifest_summary(ArtifactListOptions::new().for_collection("missing"))
+            .unwrap();
+        assert_eq!(empty, ArtifactManifestSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_labels());
     }
 
     #[test]

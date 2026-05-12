@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   coverage over selected artifact manifests.
 - `ArtifactProvenanceSummary` and `provenance_summary()` for compact
   session/tool/job/agent attribution coverage over selected artifact manifests.
+- `ArtifactManifestSummary` and `manifest_summary()` for compact collection,
+  content-type, and label coverage over selected artifact manifests.
 - `ArtifactRevisionHistorySummary` and `revision_history_summary()` for
   bounded lineage, metadata, and body-size aggregates over revision history.
 
