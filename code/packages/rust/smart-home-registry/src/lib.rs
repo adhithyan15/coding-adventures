@@ -151,6 +151,36 @@ impl RegistrySupervisionSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RegistryAuthorizationSummary {
+    pub generated_at_ms: u64,
+    pub capability_grants: usize,
+    pub active_capability_grants: usize,
+    pub pending_capability_grants: usize,
+    pub revoked_capability_grants: usize,
+    pub expired_capability_grants: usize,
+    pub authorization_decisions: usize,
+    pub allowed_decisions: usize,
+    pub denied_decisions: usize,
+}
+
+impl RegistryAuthorizationSummary {
+    pub fn has_active_grants(&self) -> bool {
+        self.active_capability_grants > 0
+    }
+
+    pub fn has_denials(&self) -> bool {
+        self.denied_decisions > 0
+    }
+
+    pub fn needs_grant_review(&self) -> bool {
+        self.pending_capability_grants > 0
+            || self.revoked_capability_grants > 0
+            || self.expired_capability_grants > 0
+            || self.denied_decisions > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeSummary {
     pub bridge_id: BridgeId,
@@ -395,6 +425,10 @@ impl<'a> SmartHomeRegistryReadView<'a> {
 
     pub fn supervision_summary_at(&self, now_ms: u64) -> RegistrySupervisionSummary {
         self.registry.supervision_summary_at(now_ms)
+    }
+
+    pub fn authorization_summary_at(&self, now_ms: u64) -> RegistryAuthorizationSummary {
+        self.registry.authorization_summary_at(now_ms)
     }
 
     pub fn bridge(&self, bridge_id: &BridgeId) -> Option<&'a Bridge> {
@@ -792,6 +826,43 @@ impl InMemorySmartHomeRegistry {
             stale_entity_states,
             refresh_targets,
             events: counts.events,
+        }
+    }
+
+    pub fn authorization_summary_at(&self, now_ms: u64) -> RegistryAuthorizationSummary {
+        let counts = self.counts();
+        let mut active_capability_grants = 0usize;
+        let mut pending_capability_grants = 0usize;
+        let mut revoked_capability_grants = 0usize;
+        let mut expired_capability_grants = 0usize;
+        for grant in self.capability_grants.values() {
+            match grant.status_at(now_ms) {
+                CapabilityGrantStatus::Active => active_capability_grants += 1,
+                CapabilityGrantStatus::Pending => pending_capability_grants += 1,
+                CapabilityGrantStatus::Revoked => revoked_capability_grants += 1,
+                CapabilityGrantStatus::Expired => expired_capability_grants += 1,
+            }
+        }
+
+        let mut allowed_decisions = 0usize;
+        let mut denied_decisions = 0usize;
+        for decision in &self.authorization_decisions {
+            match decision.outcome {
+                AuthorizationOutcome::Allowed => allowed_decisions += 1,
+                AuthorizationOutcome::Denied => denied_decisions += 1,
+            }
+        }
+
+        RegistryAuthorizationSummary {
+            generated_at_ms: now_ms,
+            capability_grants: counts.capability_grants,
+            active_capability_grants,
+            pending_capability_grants,
+            revoked_capability_grants,
+            expired_capability_grants,
+            authorization_decisions: counts.authorization_decisions,
+            allowed_decisions,
+            denied_decisions,
         }
     }
 
@@ -2308,6 +2379,89 @@ mod tests {
         assert_eq!(
             denied_for_other[0].missing_capabilities,
             vec![CapabilityId::trusted("smart_home.command.light")]
+        );
+    }
+
+    #[test]
+    fn authorization_summary_tracks_grant_statuses_and_decision_outcomes() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let other_principal = AgentId::trusted("agent:energy-saver");
+        let read_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-read"),
+            principal.clone(),
+            CapabilityId::trusted("smart_home.read"),
+            PrivilegeTier::ReadOnly,
+            "chief-of-staff",
+            1_000,
+        );
+        let expiring_command_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-command"),
+            principal.clone(),
+            CapabilityId::trusted("smart_home.command.light"),
+            PrivilegeTier::LowRisk,
+            "chief-of-staff",
+            1_000,
+        )
+        .with_expiry(2_000);
+        let pending_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-pending"),
+            other_principal.clone(),
+            CapabilityId::trusted("smart_home.read"),
+            PrivilegeTier::ReadOnly,
+            "chief-of-staff",
+            1_000,
+        )
+        .with_status(CapabilityGrantStatus::Pending);
+        let revoked_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-revoked"),
+            other_principal.clone(),
+            CapabilityId::trusted("smart_home.command.light"),
+            PrivilegeTier::LowRisk,
+            "chief-of-staff",
+            1_000,
+        )
+        .with_status(CapabilityGrantStatus::Revoked);
+
+        registry.upsert_capability_grant(read_grant.clone());
+        registry.upsert_capability_grant(expiring_command_grant.clone());
+        registry.upsert_capability_grant(pending_grant);
+        registry.upsert_capability_grant(revoked_grant);
+        registry.record_authorization_decision(AuthorizationDecision::for_tool(
+            principal.clone(),
+            SmartHomeTool::GetState,
+            [&read_grant],
+            1_500,
+        ));
+        registry.record_authorization_decision(AuthorizationDecision::for_tool(
+            other_principal,
+            SmartHomeTool::Command,
+            std::iter::empty::<&CapabilityGrant>(),
+            1_501,
+        ));
+
+        let summary = registry.authorization_summary_at(2_000);
+
+        assert_eq!(
+            summary,
+            RegistryAuthorizationSummary {
+                generated_at_ms: 2_000,
+                capability_grants: 4,
+                active_capability_grants: 1,
+                pending_capability_grants: 1,
+                revoked_capability_grants: 1,
+                expired_capability_grants: 1,
+                authorization_decisions: 2,
+                allowed_decisions: 1,
+                denied_decisions: 1,
+            }
+        );
+        assert!(summary.has_active_grants());
+        assert!(summary.has_denials());
+        assert!(summary.needs_grant_review());
+        assert_eq!(
+            registry.read_view().authorization_summary_at(2_000),
+            summary
         );
     }
 
