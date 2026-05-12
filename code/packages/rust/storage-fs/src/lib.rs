@@ -92,6 +92,59 @@ const MAGIC: &[u8; 4] = b"STRF";
 const VERSION: u8 = 1;
 const HEADER_FIXED: usize = 4 + 1 + 4; // magic + version + meta_len
 
+/// Payload-free description of the filesystem storage backend surface.
+///
+/// This is intended for D18A/D18D host/catalog diagnostics where the
+/// caller needs to know what storage guarantees a backend provides
+/// without logging the backend root path, namespaces, keys, metadata,
+/// or record bodies.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FsStorageBackendSummary {
+    /// Record magic bytes as an ASCII label.
+    pub record_magic: &'static str,
+    /// Version byte in each on-disk record.
+    pub record_format_version: u8,
+    /// Whether each logical record maps to one committed file.
+    pub one_file_per_record: bool,
+    /// Whether namespaces and keys are hex encoded for path safety.
+    pub hex_encoded_names: bool,
+    /// Whether writes use write-tmp, fsync, atomic rename.
+    pub atomic_write_rename: bool,
+    /// Whether `initialize` removes stranded `.tmp` files.
+    pub tmp_files_cleaned_on_initialize: bool,
+    /// Whether the parent directory fsync is best-effort.
+    pub parent_directory_fsync_best_effort: bool,
+    /// Whether record bodies are opaque bytes to this backend.
+    pub content_opaque_to_backend: bool,
+    /// Whether leases survive process restart.
+    pub leases_persisted: bool,
+    /// Whether cross-process writer locking is provided.
+    pub cross_process_locking: bool,
+}
+
+impl FsStorageBackendSummary {
+    /// Summary for the STR-FILE surface implemented by this crate.
+    pub const fn current() -> Self {
+        Self {
+            record_magic: "STRF",
+            record_format_version: VERSION,
+            one_file_per_record: true,
+            hex_encoded_names: true,
+            atomic_write_rename: true,
+            tmp_files_cleaned_on_initialize: true,
+            parent_directory_fsync_best_effort: true,
+            content_opaque_to_backend: true,
+            leases_persisted: false,
+            cross_process_locking: false,
+        }
+    }
+}
+
+/// Return a payload-free description of the filesystem storage backend surface.
+pub const fn fs_storage_backend_summary() -> FsStorageBackendSummary {
+    FsStorageBackendSummary::current()
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // 2. Backend struct
 // ─────────────────────────────────────────────────────────────────────
@@ -120,6 +173,11 @@ impl FsStorageBackend {
             leases: Mutex::new(HashMap::new()),
             lease_counter: AtomicU64::new(0),
         }
+    }
+
+    /// Describe the storage guarantees without exposing this backend's root.
+    pub fn surface_summary(&self) -> FsStorageBackendSummary {
+        fs_storage_backend_summary()
     }
 
     fn next_revision(&self) -> Result<Revision, StorageError> {
@@ -287,9 +345,12 @@ fn write_record_atomic(
         message: format!("fs storage: serialize meta: {}", e),
     })?;
     let meta_bytes = meta_str.into_bytes();
-    let meta_len: u32 = meta_bytes.len().try_into().map_err(|_| StorageError::Backend {
-        message: "fs storage: metadata too large for 4-byte length".into(),
-    })?;
+    let meta_len: u32 = meta_bytes
+        .len()
+        .try_into()
+        .map_err(|_| StorageError::Backend {
+            message: "fs storage: metadata too large for 4-byte length".into(),
+        })?;
 
     // 1. Ensure parent dir exists.
     if let Some(parent) = final_path.parent() {
@@ -306,7 +367,8 @@ fn write_record_atomic(
             .map_err(io_to_storage)?;
         f.write_all(MAGIC).map_err(io_to_storage)?;
         f.write_all(&[VERSION]).map_err(io_to_storage)?;
-        f.write_all(&meta_len.to_be_bytes()).map_err(io_to_storage)?;
+        f.write_all(&meta_len.to_be_bytes())
+            .map_err(io_to_storage)?;
         f.write_all(&meta_bytes).map_err(io_to_storage)?;
         f.write_all(body).map_err(io_to_storage)?;
         f.sync_all().map_err(io_to_storage)?;
@@ -347,8 +409,7 @@ fn read_record_full(path: &Path) -> Result<Option<(StoredMeta, Vec<u8>)>, Storag
             message: "fs storage: unsupported record-file version".into(),
         });
     }
-    let meta_len =
-        u32::from_be_bytes([all[5], all[6], all[7], all[8]]) as usize;
+    let meta_len = u32::from_be_bytes([all[5], all[6], all[7], all[8]]) as usize;
     let meta_start = HEADER_FIXED;
     let meta_end = meta_start
         .checked_add(meta_len)
@@ -360,8 +421,10 @@ fn read_record_full(path: &Path) -> Result<Option<(StoredMeta, Vec<u8>)>, Storag
             message: "fs storage: meta extends past EOF".into(),
         });
     }
-    let meta_str = std::str::from_utf8(&all[meta_start..meta_end])
-        .map_err(|_| StorageError::Backend { message: "fs storage: meta not UTF-8".into() })?;
+    let meta_str =
+        std::str::from_utf8(&all[meta_start..meta_end]).map_err(|_| StorageError::Backend {
+            message: "fs storage: meta not UTF-8".into(),
+        })?;
     let meta_json = json_parse(meta_str).map_err(|e| StorageError::Backend {
         message: format!("fs storage: parse meta JSON: {}", e),
     })?;
@@ -434,10 +497,9 @@ impl StorageBackend for FsStorageBackend {
     }
 
     fn put(&self, input: StoragePutInput) -> Result<StorageRecord, StorageError> {
-        let _guard = self
-            .write_lock
-            .lock()
-            .map_err(|_| StorageError::Backend { message: "write lock poisoned".into() })?;
+        let _guard = self.write_lock.lock().map_err(|_| StorageError::Backend {
+            message: "write lock poisoned".into(),
+        })?;
 
         let path = self.key_path(&input.namespace, &input.key);
         let tmp = self.key_tmp_path(&input.namespace, &input.key);
@@ -497,10 +559,9 @@ impl StorageBackend for FsStorageBackend {
         key: &str,
         if_revision: Option<&Revision>,
     ) -> Result<(), StorageError> {
-        let _guard = self
-            .write_lock
-            .lock()
-            .map_err(|_| StorageError::Backend { message: "write lock poisoned".into() })?;
+        let _guard = self.write_lock.lock().map_err(|_| StorageError::Backend {
+            message: "write lock poisoned".into(),
+        })?;
         let path = self.key_path(namespace, key);
         let existing = read_record_full(&path)?;
         match (if_revision, &existing) {
@@ -585,7 +646,10 @@ impl StorageBackend for FsStorageBackend {
                 records.push(rec);
             }
         }
-        Ok(StoragePage { records, next_cursor })
+        Ok(StoragePage {
+            records,
+            next_cursor,
+        })
     }
 
     fn stat(&self, namespace: &str, key: &str) -> Result<Option<StorageStat>, StorageError> {
@@ -597,16 +661,11 @@ impl StorageBackend for FsStorageBackend {
         }
     }
 
-    fn acquire_lease(
-        &self,
-        name: &str,
-        ttl_ms: u64,
-    ) -> Result<Option<StorageLease>, StorageError> {
+    fn acquire_lease(&self, name: &str, ttl_ms: u64) -> Result<Option<StorageLease>, StorageError> {
         let now = now_ms();
-        let mut leases = self
-            .leases
-            .lock()
-            .map_err(|_| StorageError::Backend { message: "lease lock poisoned".into() })?;
+        let mut leases = self.leases.lock().map_err(|_| StorageError::Backend {
+            message: "lease lock poisoned".into(),
+        })?;
         if let Some(lease) = leases.get(name) {
             if lease.expires_at > now {
                 return Ok(None);
@@ -665,6 +724,26 @@ mod tests {
         let output = test(&be);
         let _ = fs::remove_dir_all(&root);
         output
+    }
+
+    #[test]
+    fn surface_summary_reports_storage_contract_without_root_path() {
+        let root = temp_root().join("secret-vault-root");
+        let be = FsStorageBackend::new(&root);
+        let summary = be.surface_summary();
+
+        assert_eq!(summary, fs_storage_backend_summary());
+        assert_eq!(summary.record_magic, "STRF");
+        assert_eq!(summary.record_format_version, VERSION);
+        assert!(summary.one_file_per_record);
+        assert!(summary.hex_encoded_names);
+        assert!(summary.atomic_write_rename);
+        assert!(summary.tmp_files_cleaned_on_initialize);
+        assert!(summary.parent_directory_fsync_best_effort);
+        assert!(summary.content_opaque_to_backend);
+        assert!(!summary.leases_persisted);
+        assert!(!summary.cross_process_locking);
+        assert!(!format!("{summary:?}").contains("secret-vault-root"));
     }
 
     // --- Shared storage-core conformance ---
@@ -765,7 +844,11 @@ mod tests {
             Err(StorageError::Conflict { .. }) => {}
             other => panic!(
                 "expected Conflict, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if matches!(other, Ok(_)) {
+                    "Ok"
+                } else {
+                    "different Err"
+                }
             ),
         }
         let _ = fs::remove_dir_all(&root);
@@ -915,7 +998,12 @@ mod tests {
         // Revisions are monotonic across restart.
         let n1 = revision_to_u64(&r1.revision).unwrap();
         let n2 = revision_to_u64(&r2.revision).unwrap();
-        assert!(n2 > n1, "revision must advance across restart: {} <= {}", n2, n1);
+        assert!(
+            n2 > n1,
+            "revision must advance across restart: {} <= {}",
+            n2,
+            n1
+        );
         let _ = fs::remove_dir_all(&root);
     }
 

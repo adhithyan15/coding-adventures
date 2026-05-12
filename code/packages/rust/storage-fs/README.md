@@ -63,6 +63,19 @@ so its point reads, conditional writes, stable prefix listing,
 idempotent deletes, and advisory leases are checked against the same
 contract as the in-memory backend.
 
+## Surface summary
+
+`fs_storage_backend_summary()` and `FsStorageBackend::surface_summary()`
+return a payload-free description of the STR-FILE backend contract:
+record format version, path-safe hex names, atomic write+rename,
+startup `.tmp` cleanup, best-effort parent directory fsync, opaque
+record bodies, process-local leases, and no cross-process writer
+locking.
+
+The summary intentionally omits the backend root path plus all
+namespaces, keys, metadata, and record bodies so host/catalog logs can
+inspect the storage guarantees without leaking vault storage details.
+
 ## Where it fits
 
 ```text
