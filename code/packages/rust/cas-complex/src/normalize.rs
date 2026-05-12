@@ -65,9 +65,7 @@ pub fn complex_normalize(expr: &IRNode) -> IRNode {
 pub(crate) fn split_complex(expr: &IRNode) -> (IRNode, IRNode) {
     match expr {
         // Numeric literals are purely real.
-        IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) => {
-            (expr.clone(), int(0))
-        }
+        IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) => (expr.clone(), int(0)),
 
         // The imaginary unit symbol I: re=0, im=1
         IRNode::Symbol(name) if name == IMAGINARY_UNIT => (int(0), int(1)),
@@ -116,7 +114,10 @@ pub(crate) fn split_complex(expr: &IRNode) -> (IRNode, IRNode) {
                         let (ar, ai) = split_complex(arg);
                         // new_re = re*ar − im*ai
                         // new_im = re*ai + im*ar
-                        let new_re = sub_ir(mul_ir(re.clone(), ar.clone()), mul_ir(im.clone(), ai.clone()));
+                        let new_re = sub_ir(
+                            mul_ir(re.clone(), ar.clone()),
+                            mul_ir(im.clone(), ai.clone()),
+                        );
                         let new_im = add_ir(mul_ir(re, ai), mul_ir(im, ar));
                         re = new_re;
                         im = new_im;
@@ -160,10 +161,10 @@ fn i_power(n: i64) -> (IRNode, IRNode) {
     // Normalise n to [0, 4) using Euclidean remainder.
     let r = n.rem_euclid(4);
     match r {
-        0 => (int(1), int(0)),   // 1
-        1 => (int(0), int(1)),   // i
-        2 => (int(-1), int(0)),  // -1
-        3 => (int(0), int(-1)),  // -i
+        0 => (int(1), int(0)),  // 1
+        1 => (int(0), int(1)),  // i
+        2 => (int(-1), int(0)), // -1
+        3 => (int(0), int(-1)), // -i
         _ => unreachable!(),
     }
 }

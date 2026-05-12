@@ -12,7 +12,7 @@
 //! | [`constants`] | Symbol name constants (`IMAGINARY_UNIT`, `RE`, `IM`, …) |
 //! | [`normalize`] | [`complex_normalize`] — rewrite to canonical `a + b·I` form |
 //! | [`parts`] | [`real_part`], [`imag_part`], [`conjugate`] |
-//! | [`polar`] | [`modulus`], [`argument`] |
+//! | [`polar`] | [`modulus`], [`argument`], [`rect_form`], [`polar_form`] |
 //! | [`power`] | [`complex_pow`] — integer powers via De Moivre's theorem |
 //!
 //! ## Quick start
@@ -55,8 +55,8 @@ pub mod power;
 
 // Re-export the public API.
 
-pub use constants::{ABS, ARG, CONJUGATE, IMAGINARY_UNIT, IM, RE};
+pub use constants::{ABS, ARG, ATAN2, CONJUGATE, IM, IMAGINARY_UNIT, POLAR_FORM, RE, RECT_FORM};
 pub use normalize::complex_normalize;
 pub use parts::{conjugate, imag_part, real_part};
-pub use polar::{argument, modulus};
+pub use polar::{argument, modulus, polar_form, rect_form};
 pub use power::complex_pow;

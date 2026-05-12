@@ -35,6 +35,8 @@
 //! | [`CONJUGATE`] | `"Conjugate"` | Complex conjugate head |
 //! | [`ABS`] | `"Abs"` | Complex modulus head |
 //! | [`ARG`] | `"Arg"` | Complex argument (angle) head |
+//! | [`RECT_FORM`] | `"RectForm"` | Rectangular-form wrapper head |
+//! | [`POLAR_FORM`] | `"PolarForm"` | Polar-form wrapper head |
 
 /// Symbol name for the imaginary unit `i` (√−1).
 pub const IMAGINARY_UNIT: &str = "I";
@@ -53,3 +55,12 @@ pub const ABS: &str = "Abs";
 
 /// Head for the complex argument (phase angle): `Arg(z)`.
 pub const ARG: &str = "Arg";
+
+/// Head for rectangular form: `RectForm(z)`.
+pub const RECT_FORM: &str = "RectForm";
+
+/// Head for polar form: `PolarForm(z)`.
+pub const POLAR_FORM: &str = "PolarForm";
+
+/// Head for the two-argument arctangent: `Atan2(y, x)`.
+pub const ATAN2: &str = "Atan2";
