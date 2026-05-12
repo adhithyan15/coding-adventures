@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added deterministic assumption metadata query helpers:
+  `AssumptionContext.facts_for(...)` and
+  `AssumptionContext.symbols_with_facts()`, for MACSYMA `properties` /
+  `propvars` runtime support.
+
 ## 0.3.0 — 2026-05-04
 
 **Phase 21 — assumption framework, radcan, logcontract/logexpand, exponentialize/demoivre.**

@@ -1787,6 +1787,40 @@ def test_pipeline_assume_is_negative_true() -> None:
     )
 
 
+def test_pipeline_declare_positive_feeds_is() -> None:
+    """declare(x, positive); is(x > 0) → IRSymbol("true")."""
+    result = _eval_seq("declare(x, positive)", "is(x > 0)")
+    assert result == IRSymbol("true")
+
+
+def test_pipeline_properties_lists_declared_properties() -> None:
+    """properties(n) lists properties recorded by declare(...)."""
+    result = _eval_seq(
+        "declare(n, integer, n, positive)",
+        "properties(n)",
+    )
+    assert result == IRApply(
+        IRSymbol("List"),
+        (IRSymbol("integer"), IRSymbol("positive")),
+    )
+
+
+def test_pipeline_propvars_lists_symbols_with_properties() -> None:
+    """propvars() lists the symbols that have declared properties."""
+    result = _eval_seq(
+        "declare(z, integer)",
+        "declare(a, positive)",
+        "propvars()",
+    )
+    assert result == IRApply(IRSymbol("List"), (IRSymbol("a"), IRSymbol("z")))
+
+
+def test_pipeline_properties_uses_raw_symbol_not_binding() -> None:
+    """properties(x) queries x even if x has a runtime value binding."""
+    result = _eval_seq("x: 10", "declare(x, integer)", "properties(x)")
+    assert result == IRApply(IRSymbol("List"), (IRSymbol("integer"),))
+
+
 # ===========================================================================
 # Section JJ — Extended Number Theory (Phase B3 pipeline)
 # ===========================================================================
@@ -1868,4 +1902,3 @@ def test_pipeline_numdigits_one() -> None:
     """numdigits(1) → 1  (a single digit)."""
     result = _eval("numdigits(1)")
     assert result == IRInteger(1), f"Expected 1, got {result!r}"
-

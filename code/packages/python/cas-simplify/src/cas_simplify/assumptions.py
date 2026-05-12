@@ -320,6 +320,14 @@ class AssumptionContext:
         """True if any facts are recorded for this symbol."""
         return bool(self._facts.get(sym_name))
 
+    def facts_for(self, sym_name: str) -> tuple[str, ...]:
+        """Return the recorded facts for ``sym_name`` in deterministic order."""
+        return tuple(sorted(self._facts.get(sym_name, ())))
+
+    def symbols_with_facts(self) -> tuple[str, ...]:
+        """Return every symbol that currently has at least one recorded fact."""
+        return tuple(sorted(name for name, facts in self._facts.items() if facts))
+
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------

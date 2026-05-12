@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added MACSYMA session-property operations: `declare(sym, property, ...)`,
+  `properties(sym)`, and `propvars()`, backed by the VM assumption context so
+  declared properties feed `is(...)` and simplification.
 - Added runtime presentation helpers so `ev(expr, display2d)` renders visible
   output through the MACSYMA 2D box pretty-printer while preserving the
   evaluated symbolic IR result.

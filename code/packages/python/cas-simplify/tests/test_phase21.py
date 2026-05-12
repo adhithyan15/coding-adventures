@@ -149,6 +149,20 @@ class TestAssumptionContext:
         ctx.assume_property(n, IRSymbol("integer"))
         assert ctx.is_integer("n") is True
 
+    def test_facts_for_returns_sorted_properties(self) -> None:
+        """facts_for exposes recorded properties without mutable internals."""
+        ctx = _fresh_ctx()
+        ctx.assume_property(x, IRSymbol("integer"))
+        ctx.assume_property(x, IRSymbol("positive"))
+        assert ctx.facts_for("x") == ("integer", "positive")
+
+    def test_symbols_with_facts_returns_sorted_symbols(self) -> None:
+        """symbols_with_facts exposes symbols with declared properties."""
+        ctx = _fresh_ctx()
+        ctx.assume_property(IRSymbol("z"), IRSymbol("integer"))
+        ctx.assume_property(IRSymbol("a"), IRSymbol("positive"))
+        assert ctx.symbols_with_facts() == ("a", "z")
+
     def test_forget_relation(self) -> None:
         """forget(x > 0) removes the positive fact."""
         ctx = _fresh_ctx()
