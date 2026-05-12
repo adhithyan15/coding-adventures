@@ -2,6 +2,102 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.4.0] — 2026-05-12
+
+### Added — MX05 Phase 4.1 (specialised dispatch lands on CPU)
+
+- New `SpecialisedTable` (internal module `specialised_table`) — a
+  per-`CpuExecutor` table of installed specialised kernel closures,
+  keyed by the opaque `u64` handle that `CpuSpecialiser` emits.
+  Wraps a `HashMap<u64, Box<SpecialisedKernelFn>>` with installation
+  semantics (re-install replaces, ready for Phase 5 deoptimisation).
+- New `SpecialisedKernelFn` type alias —
+  `dyn Fn(&mut BufferStore, &[BufferId], &[BufferId]) -> Result<Vec<OpTiming>, String> + Send + Sync`.
+  Bounded by `Fn` (not `FnMut`) so a specialised kernel is statically
+  pure with respect to its captured environment; all per-call mutation
+  goes through the `&mut BufferStore` argument.
+- New `CpuExecutor::install_specialised(handle, kernel)` API.  Locks
+  the executor's internal `Mutex<State>` and inserts the closure
+  under `handle`.  Re-installing a previously-installed handle
+  replaces the closure.
+- New `CpuExecutor::specialised_count()` accessor — number of
+  installed specialised kernels.  Test/metric only; matches the
+  shape of `BufferStore::len`.
+- **`ExecutorRequest::DispatchSpecialised` handler is now live.**  On
+  handle hit: invokes the installed closure with the request's
+  `inputs`/`outputs` buffer ids and `&mut BufferStore`, returns
+  `DispatchDone { job_id, timings }` on success, or
+  `Error { code: RUNTIME_ERROR, .. }` if the closure errs.  On handle
+  miss: returns `Error { code: NOT_IMPLEMENTED, .. }` so the runtime
+  can fall back to the generic `Dispatch` path with the original
+  `ComputeGraph`.
+
+### Security hardening
+
+- **Panic-safe specialised dispatch.**  The closure invocation is
+  wrapped in `std::panic::catch_unwind(AssertUnwindSafe(...))` so a
+  panicking kernel (e.g. one that indexes attacker-supplied empty
+  `inputs[0]` and triggers an out-of-bounds panic) becomes a clean
+  `Error { code: RUNTIME_ERROR, message: "specialised kernel 0x…
+  panicked: …", .. }` response instead of unwinding through the
+  mutex guard and out of `handle()`.  This honours the existing
+  contract documented on `CpuExecutor::handle()`: "a single bad
+  request cannot DoS the executor for all subsequent clients".
+  Caught during the pre-push security review.
+
+### What this unlocks
+
+Up to v0.3.0, the Phase 4 pipeline emitted handles and populated
+`SpecCache` but no executor *did* anything with them — every
+dispatch still walked the generic `ComputeGraph` op-by-op.  Phase 4.1
+closes that loop on the CPU side: `DispatchSpecialised` now returns
+`DispatchDone` for installed handles.  matrix-metal's MSL emitter
+(Phase 4.2) will follow the same plumbing pattern but compile to
+`MetalComputePipelineState` cached by handle.
+
+### Tests (12 new, all passing)
+
+In `specialised_table::tests`:
+
+- `install_then_lookup_finds_kernel`
+- `lookup_of_missing_handle_returns_none`
+- `install_overwrites_prior_kernel`
+- `kernel_can_read_inputs_and_write_outputs`
+- `kernel_error_propagates`
+- `specialised_table_is_send_sync`
+- `debug_impl_shows_handles_not_pointers`
+
+In `tests/integration.rs` (§6 MX05 Phase 4.1):
+
+- `dispatch_specialised_returns_not_implemented_when_handle_unknown`
+- `dispatch_specialised_returns_dispatch_done_after_install`
+- `dispatch_specialised_kernel_error_becomes_runtime_error`
+- `install_specialised_overwrites_prior_kernel`
+- `dispatch_specialised_kernel_can_call_real_eval` — installs a
+  real f32 add closure, fires DispatchSpecialised, downloads the
+  result, asserts numerical correctness.  This is the test that
+  proves the full round-trip works.
+- `dispatch_specialised_kernel_panic_becomes_runtime_error_not_unwind`
+  — security regression for the `catch_unwind` hardening above.
+  Asserts that a panicking kernel surfaces as `RUNTIME_ERROR` and
+  that the executor still answers Heartbeat normally afterwards.
+
+Total test count: 33 unit + 23 integration (was 26 + 17).
+
+### Notes
+
+- The Phase 4.1 spec comment in `specialiser.rs` ("matrix-cpu can
+  store these in a per-handle `Vec<Box<dyn Fn>>`") is now realised —
+  except as a `HashMap<u64, ...>` since handles are sparse FNV-1a
+  hashes, not contiguous indices.
+- This release does **not** yet wire `SpecRouter` cache hits to
+  `install_specialised` automatically — that's a matrix-runtime
+  concern (next phase: runtime observes a cache hit, looks up the
+  `SpecialisedKernel`, installs a closure into the target executor,
+  routes the next invocation to `DispatchSpecialised`).  The
+  plumbing on the *executor* side, which is the harder of the two,
+  lands here.
+
 ## [0.3.0] — 2026-05-05
 
 ### Added — MX05 Phase 4 (first real backend Specialiser)

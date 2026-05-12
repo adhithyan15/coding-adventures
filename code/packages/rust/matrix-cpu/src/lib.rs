@@ -33,9 +33,11 @@ mod buffers;
 mod calibrate;
 mod dispatch;
 mod eval;
+mod specialised_table;
 mod specialiser;
 
 pub use calibrate::calibrate;
+pub use specialised_table::{SpecialisedKernelFn, SpecialisedTable};
 pub use specialiser::{specialiser, CpuSpecialiser};
 
 use compute_ir::{BufferId, KernelId};
@@ -99,6 +101,12 @@ struct State {
     /// (KernelId → ()).  Tracking it lets us answer `KernelReady` for
     /// the same kernel id repeatedly without complaint.
     kernels: std::collections::HashMap<KernelId, ()>,
+    /// **MX05 Phase 4.1.**  Per-handle table of installed specialised
+    /// kernel closures.  Looked up by `DispatchSpecialised { handle, .. }`
+    /// to find the closure to invoke instead of replaying a full
+    /// `ComputeGraph` op-by-op.  Empty on a fresh executor; populated
+    /// via [`CpuExecutor::install_specialised`].
+    specialised: SpecialisedTable,
     /// Next buffer id to assign.  Monotonic.
     next_buffer: u64,
 }
@@ -110,9 +118,50 @@ impl CpuExecutor {
             state: Mutex::new(State {
                 buffers: BufferStore::new(),
                 kernels: std::collections::HashMap::new(),
+                specialised: SpecialisedTable::new(),
                 next_buffer: 1,
             }),
         }
+    }
+
+    /// **MX05 Phase 4.1.**  Install a specialised kernel closure under
+    /// the given handle.  Subsequent `ExecutorRequest::DispatchSpecialised
+    /// { handle, .. }` requests carrying this handle invoke the closure
+    /// instead of returning `NOT_IMPLEMENTED`.
+    ///
+    /// The handle is opaque to this executor — its meaning is owned by
+    /// the [`CpuSpecialiser`] that emitted it (an FNV-1a hash of a
+    /// `SpecKey`).  Installation is the in-process equivalent of the
+    /// future "upload-specialised-kernel" protocol message; remote
+    /// transports will land that wire format in a later phase.
+    ///
+    /// Re-installing a previously-installed handle replaces the
+    /// closure — the path Phase 5 deoptimisation will use to swap in
+    /// a fresh kernel when an observed assumption fails.
+    ///
+    /// ## Mutex semantics
+    ///
+    /// Installation goes through the same `Mutex<State>` as every
+    /// other request, so a thread installing a kernel cannot race
+    /// with a thread dispatching one.  Acquiring this lock is the
+    /// price we pay for a `Send + Sync` executor.
+    pub fn install_specialised(&self, handle: u64, kernel: Box<SpecialisedKernelFn>) {
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        s.specialised.install(handle, kernel);
+    }
+
+    /// Number of specialised kernels currently installed.  Test-only
+    /// in spirit, but exposed publicly because integration tests in
+    /// downstream crates (matrix-runtime, image-gpu-core) will want it.
+    pub fn specialised_count(&self) -> usize {
+        let s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        s.specialised.len()
     }
 
     /// Process one request and produce a response.  Pure (modulo
@@ -211,18 +260,93 @@ impl CpuExecutor {
 
             ExecutorRequest::Shutdown => ExecutorResponse::ShuttingDown,
 
-            // V1 of `DispatchSpecialised` is the protocol surface only.
-            // matrix-cpu doesn't yet maintain a per-handle kernel
-            // table — that's MX05 Phase 4.1 work.  Reply with
-            // NOT_IMPLEMENTED so the runtime falls back to the
-            // generic `Dispatch` path.
-            ExecutorRequest::DispatchSpecialised { job_id, .. } => ExecutorResponse::Error {
-                code: ErrorCode::NOT_IMPLEMENTED,
-                message: "matrix-cpu doesn't yet execute specialised kernels; \
-                          MX05 Phase 4.1 will install the per-handle table"
-                    .to_string(),
-                job_id: Some(job_id),
-            },
+            // ──── MX05 Phase 4.1 — specialised dispatch ────
+            //
+            // Look the handle up in the per-executor specialised
+            // table.  Hit: invoke the closure with the supplied
+            // input/output buffer ids and return `DispatchDone`.
+            // Miss: return `NOT_IMPLEMENTED` so the runtime falls
+            // back to the generic `Dispatch` path with the original
+            // `ComputeGraph`.
+            //
+            // We split the borrow so the closure can take `&mut
+            // BufferStore` while the rest of `state` is otherwise
+            // untouched.  The `specialised` table is borrowed
+            // immutably (only the `Box<dyn Fn>` is invoked, never
+            // mutated by dispatch itself).
+            ExecutorRequest::DispatchSpecialised {
+                job_id,
+                handle,
+                inputs,
+                outputs,
+            } => {
+                // Re-borrow the two fields independently so the
+                // closure call doesn't conflict with the table lookup.
+                let State {
+                    ref mut buffers,
+                    ref specialised,
+                    ..
+                } = *s;
+                match specialised.get(handle) {
+                    Some(kernel) => {
+                        // Wrap the closure call in `catch_unwind` so a
+                        // panicking kernel (e.g. an out-of-bounds index
+                        // on attacker-supplied empty `inputs`) becomes
+                        // a clean `RUNTIME_ERROR` instead of unwinding
+                        // through the mutex guard and out of `handle()`.
+                        // This honours the contract documented on
+                        // `handle()` itself: "a single bad request
+                        // cannot DoS the executor for all subsequent
+                        // clients".  We use `AssertUnwindSafe` because
+                        // the &mut BufferStore reference may carry
+                        // partial writes across the unwind, which is
+                        // semantically fine — the next request sees
+                        // the partial state and bounds-checks anew on
+                        // every buffer access.
+                        let result = std::panic::catch_unwind(
+                            std::panic::AssertUnwindSafe(|| kernel(buffers, &inputs, &outputs)),
+                        );
+                        match result {
+                            Ok(Ok(timings)) => ExecutorResponse::DispatchDone { job_id, timings },
+                            Ok(Err(e)) => ExecutorResponse::Error {
+                                code: ErrorCode::RUNTIME_ERROR,
+                                message: format!("specialised kernel {}: {}", handle, e),
+                                job_id: Some(job_id),
+                            },
+                            Err(panic) => {
+                                // Extract a panic message if it was a
+                                // String or &'static str — the two
+                                // common payloads.  Anything else
+                                // becomes "unknown panic payload".
+                                let msg = if let Some(s) = panic.downcast_ref::<String>() {
+                                    s.clone()
+                                } else if let Some(s) = panic.downcast_ref::<&'static str>() {
+                                    (*s).to_string()
+                                } else {
+                                    "unknown panic payload".to_string()
+                                };
+                                ExecutorResponse::Error {
+                                    code: ErrorCode::RUNTIME_ERROR,
+                                    message: format!(
+                                        "specialised kernel 0x{:016X} panicked: {}",
+                                        handle, msg
+                                    ),
+                                    job_id: Some(job_id),
+                                }
+                            }
+                        }
+                    }
+                    None => ExecutorResponse::Error {
+                        code: ErrorCode::NOT_IMPLEMENTED,
+                        message: format!(
+                            "no specialised kernel installed for handle 0x{:016X}; \
+                             install one via CpuExecutor::install_specialised",
+                            handle
+                        ),
+                        job_id: Some(job_id),
+                    },
+                }
+            }
         }
     }
 }
