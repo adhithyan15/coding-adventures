@@ -11,6 +11,11 @@ Every cell is an arbitrary `IRNode`. Arithmetic returns symbolic expressions
 such as `Add`, `Sub`, `Mul`, `Div`, and `Neg`; downstream simplification can
 fold numeric entries.
 
+When all relevant entries are concrete integers/floats, transpose,
+addition/subtraction, scalar multiplication, and matrix multiplication route
+through the shared TypeScript `matrix` backend. Symbolic and exact-rational
+inputs keep the CAS fallback paths.
+
 ## Operations
 
 | Function | Description |

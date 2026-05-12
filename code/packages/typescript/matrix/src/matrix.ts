@@ -31,6 +31,62 @@ function assertMatrixIndex(index: number, limit: number, axis: "row" | "col"): v
   }
 }
 
+/**
+ * Backend contract for dense numeric matrix operations.
+ *
+ * The default implementation is pure JavaScript and delegates to Matrix
+ * methods. Hosts can install a different backend, such as a browser/WebGPU
+ * executor or a native bridge, without changing CAS or image-domain callers.
+ */
+export interface MatrixBackend {
+  readonly name: string;
+
+  add(left: Matrix, right: Matrix): Matrix;
+  subtract(left: Matrix, right: Matrix): Matrix;
+  scale(matrix: Matrix, scalar: number): Matrix;
+  transpose(matrix: Matrix): Matrix;
+  dot(left: Matrix, right: Matrix): Matrix;
+}
+
+export class CpuMatrixBackend implements MatrixBackend {
+  readonly name = "cpu";
+
+  add(left: Matrix, right: Matrix): Matrix {
+    return left.add(right);
+  }
+
+  subtract(left: Matrix, right: Matrix): Matrix {
+    return left.subtract(right);
+  }
+
+  scale(matrix: Matrix, scalar: number): Matrix {
+    return matrix.scale(scalar);
+  }
+
+  transpose(matrix: Matrix): Matrix {
+    return matrix.transpose();
+  }
+
+  dot(left: Matrix, right: Matrix): Matrix {
+    return left.dot(right);
+  }
+}
+
+const CPU_MATRIX_BACKEND = new CpuMatrixBackend();
+let activeMatrixBackend: MatrixBackend = CPU_MATRIX_BACKEND;
+
+export function getMatrixBackend(): MatrixBackend {
+  return activeMatrixBackend;
+}
+
+export function setMatrixBackend(backend: MatrixBackend): void {
+  activeMatrixBackend = backend;
+}
+
+export function resetMatrixBackend(): void {
+  activeMatrixBackend = CPU_MATRIX_BACKEND;
+}
+
 export class Matrix {
   data: number[][];
   rows: number;
