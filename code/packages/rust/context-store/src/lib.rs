@@ -114,6 +114,56 @@ pub struct ContextSession {
     pub head_pointer: Option<String>,
 }
 
+/// Compact read-side view of a selected set of session headers.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ContextSessionCatalogSummary {
+    pub total_sessions: usize,
+    pub active_sessions: usize,
+    pub paused_sessions: usize,
+    pub archived_sessions: usize,
+    pub sessions_with_snapshots: usize,
+    pub sessions_without_snapshots: usize,
+}
+
+impl ContextSessionCatalogSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_sessions<'a, I>(sessions: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ContextSession>,
+    {
+        let mut summary = Self::empty();
+        for session in sessions {
+            summary.total_sessions += 1;
+            match session.status {
+                SessionStatus::Active => summary.active_sessions += 1,
+                SessionStatus::Paused => summary.paused_sessions += 1,
+                SessionStatus::Archived => summary.archived_sessions += 1,
+            }
+            if session.head_pointer.is_some() {
+                summary.sessions_with_snapshots += 1;
+            } else {
+                summary.sessions_without_snapshots += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn open_sessions(&self) -> usize {
+        self.active_sessions + self.paused_sessions
+    }
+
+    pub fn has_open_sessions(&self) -> bool {
+        self.open_sessions() > 0
+    }
+
+    pub fn has_uncheckpointed_sessions(&self) -> bool {
+        self.sessions_without_snapshots > 0
+    }
+}
+
 /// Portable ordering for bounded session list/read tools.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum SessionListSort {
@@ -437,6 +487,15 @@ impl<S: StorageBackend> ContextStore<S> {
             sessions.truncate(limit);
         }
         Ok(sessions)
+    }
+
+    /// Summarize selected session headers without reading transcript bodies.
+    pub fn session_catalog_summary(
+        &self,
+        options: SessionListOptions,
+    ) -> Result<ContextSessionCatalogSummary, StorageError> {
+        let sessions = self.list_sessions(options)?;
+        Ok(ContextSessionCatalogSummary::from_sessions(&sessions))
     }
 
     /// Append one entry to a session transcript.
@@ -1353,6 +1412,81 @@ mod tests {
                 ("beta", SessionStatus::Archived)
             ]
         );
+    }
+
+    #[test]
+    fn session_catalog_summary_counts_status_and_checkpoint_coverage() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        for (session_id, owner_id, title) in [
+            ("alpha", "chief", "Alpha planning"),
+            ("beta", "chief", "Beta archive"),
+            ("gamma", "chief", "Gamma notes"),
+            ("guest", "guest", "Guest notes"),
+        ] {
+            let _ = store
+                .create_session(CreateSessionInput {
+                    session_id: session_id.to_string(),
+                    owner_id: owner_id.to_string(),
+                    title: title.to_string(),
+                })
+                .unwrap();
+        }
+        let _ = store.archive_session("beta").unwrap();
+        let _ = store
+            .append_entry(
+                "alpha",
+                AppendEntryInput {
+                    entry_id: "summary-1".to_string(),
+                    kind: ContextEntryKind::Summary,
+                    timestamp: Some(10),
+                    metadata: object(&[]),
+                    body: JsonValue::String("summary".to_string()),
+                },
+            )
+            .unwrap();
+        let _ = store
+            .create_snapshot(
+                "alpha",
+                CreateSnapshotInput {
+                    snapshot_id: "snap-1".to_string(),
+                    basis_entry_id: "summary-1".to_string(),
+                    token_estimate: 12,
+                    included_entry_ids: vec!["summary-1".to_string()],
+                    summary_refs: vec!["summary-1".to_string()],
+                    memory_refs: vec![],
+                    artifact_refs: vec![],
+                },
+            )
+            .unwrap();
+
+        let summary = store
+            .session_catalog_summary(SessionListOptions::new().for_owner("chief"))
+            .unwrap();
+        assert_eq!(
+            summary,
+            ContextSessionCatalogSummary {
+                total_sessions: 3,
+                active_sessions: 2,
+                paused_sessions: 0,
+                archived_sessions: 1,
+                sessions_with_snapshots: 1,
+                sessions_without_snapshots: 2,
+            }
+        );
+        assert_eq!(summary.open_sessions(), 2);
+        assert!(summary.has_open_sessions());
+        assert!(summary.has_uncheckpointed_sessions());
+
+        let archived = store
+            .session_catalog_summary(
+                SessionListOptions::new()
+                    .for_owner("chief")
+                    .with_status(SessionStatus::Archived),
+            )
+            .unwrap();
+        assert_eq!(archived.total_sessions, 1);
+        assert_eq!(archived.archived_sessions, 1);
+        assert!(!archived.has_open_sessions());
     }
 
     #[test]
