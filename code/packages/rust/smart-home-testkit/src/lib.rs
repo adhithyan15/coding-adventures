@@ -94,6 +94,62 @@ pub enum ScriptedEvent {
     Gap { missing_events: u32, at_ms: u64 },
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct FakeEventStreamSummary {
+    pub total_steps: usize,
+    pub device_events: usize,
+    pub disconnects: usize,
+    pub gaps: usize,
+    pub missing_events: u64,
+    pub first_observed_at_ms: Option<u64>,
+    pub last_observed_at_ms: Option<u64>,
+}
+
+impl FakeEventStreamSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_steps<'a, I>(steps: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ScriptedEvent>,
+    {
+        let mut summary = Self::empty();
+
+        for step in steps {
+            let observed_at_ms = scripted_event_observed_at_ms(step);
+            summary.total_steps += 1;
+            summary.first_observed_at_ms = summary.first_observed_at_ms.or(Some(observed_at_ms));
+            summary.last_observed_at_ms = Some(observed_at_ms);
+
+            match step {
+                ScriptedEvent::Event(_) => summary.device_events += 1,
+                ScriptedEvent::Disconnect { .. } => summary.disconnects += 1,
+                ScriptedEvent::Gap { missing_events, .. } => {
+                    summary.gaps += 1;
+                    summary.missing_events = summary
+                        .missing_events
+                        .saturating_add(u64::from(*missing_events));
+                }
+            }
+        }
+
+        summary
+    }
+
+    pub fn has_disconnects(self) -> bool {
+        self.disconnects > 0
+    }
+
+    pub fn has_gaps(self) -> bool {
+        self.gaps > 0
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_steps == 0
+    }
+}
+
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct FakeEventStream {
     events: VecDeque<ScriptedEvent>,
@@ -136,6 +192,10 @@ impl FakeEventStream {
     pub fn len(&self) -> usize {
         self.events.len()
     }
+
+    pub fn summary(&self) -> FakeEventStreamSummary {
+        FakeEventStreamSummary::from_steps(&self.events)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -173,6 +233,10 @@ impl FakeEventStreamDriver {
 
     pub fn stream_len(&self) -> usize {
         self.stream.len()
+    }
+
+    pub fn stream_summary(&self) -> FakeEventStreamSummary {
+        self.stream.summary()
     }
 
     pub fn is_empty(&self) -> bool {
@@ -1215,6 +1279,58 @@ mod tests {
     }
 
     #[test]
+    fn fake_event_stream_summary_counts_pending_steps_without_consuming() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let event = light_on_event(
+            "event-1",
+            &fixture.bridge.bridge_id,
+            &fixture.device.device_id,
+            &fixture.light.entity_id,
+            1_000,
+        );
+        let mut stream = FakeEventStream::new()
+            .push_event(event.clone())
+            .push_gap(2, 1_100)
+            .push_gap(3, 1_150)
+            .push_disconnect("test disconnect", 1_200);
+
+        assert_eq!(
+            stream.summary(),
+            FakeEventStreamSummary {
+                total_steps: 4,
+                device_events: 1,
+                disconnects: 1,
+                gaps: 2,
+                missing_events: 5,
+                first_observed_at_ms: Some(1_000),
+                last_observed_at_ms: Some(1_200),
+            }
+        );
+        assert_eq!(stream.len(), 4);
+        assert!(stream.summary().has_gaps());
+        assert!(stream.summary().has_disconnects());
+        assert!(!stream.summary().is_empty());
+
+        assert_eq!(
+            stream.next_step(),
+            Some(ScriptedEvent::Event(Box::new(event)))
+        );
+
+        assert_eq!(
+            stream.summary(),
+            FakeEventStreamSummary {
+                total_steps: 3,
+                device_events: 0,
+                disconnects: 1,
+                gaps: 2,
+                missing_events: 5,
+                first_observed_at_ms: Some(1_100),
+                last_observed_at_ms: Some(1_200),
+            }
+        );
+    }
+
+    #[test]
     fn hue_sse_stream_fixture_builds_connected_state() {
         let fixture = SmartHomeFixture::hue_lighting();
         let state = hue_sse_stream_state(&fixture, 1_000);
@@ -1246,6 +1362,8 @@ mod tests {
             .push_disconnect("bridge closed stream", 1_300);
         let mut driver = FakeEventStreamDriver::hue_sse(&fixture, stream, 1_000);
         let mut runtime = runtime_with_fixture(&fixture).unwrap();
+
+        assert_eq!(driver.stream_summary().total_steps, 3);
 
         let first = driver.next_runtime_step(&mut runtime).unwrap().unwrap();
 

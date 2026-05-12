@@ -13,6 +13,7 @@ a shared way to build:
 - confirmed, stale, and optimistic state snapshots
 - deterministic device events
 - scripted fake event streams with disconnect and gap markers
+- non-consuming scripted fake event stream summaries for supervision assertions
 - Hue SSE event-stream specs, connected stream states, and drivers that apply
   scripts to both event-stream supervision state and `smart-home-runtime`
 - fake command buses with queued command/result pairs

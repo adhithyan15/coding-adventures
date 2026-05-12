@@ -13,6 +13,7 @@ All notable changes to this package will be documented in this file.
 - Helpers for confirmed, stale, and optimistic state snapshots.
 - Helpers for update, unavailable, and error device events.
 - Scripted fake event stream with event, disconnect, and gap markers.
+- Non-consuming scripted fake event stream summaries for supervision tests.
 - Hue SSE event-stream spec/state helpers and a driver that advances both
   event-stream supervision state and seeded `smart-home-runtime` instances.
 - Fake command bus helpers for deterministic command/result assertions.
