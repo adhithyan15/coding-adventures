@@ -727,6 +727,35 @@ impl IntegrationDescriptor {
     pub fn capability_count(&self) -> usize {
         self.capabilities.len()
     }
+
+    pub fn surface_summary(&self) -> IntegrationSurfaceSummary {
+        IntegrationSurfaceSummary {
+            integration_id: self.integration_id.clone(),
+            display_name: self.display_name.clone(),
+            version: self.version.clone(),
+            runtime_kind: self.runtime_kind,
+            capability_count: self.capabilities.len(),
+            discovery_role_count: self.discovery_roles.len(),
+            pairing_role_count: self.pairing_roles.len(),
+            exposes_capabilities: !self.capabilities.is_empty(),
+            supports_discovery: self.is_discoverable(),
+            supports_pairing: self.is_pairable(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationSurfaceSummary {
+    pub integration_id: IntegrationId,
+    pub display_name: String,
+    pub version: String,
+    pub runtime_kind: RuntimeKind,
+    pub capability_count: usize,
+    pub discovery_role_count: usize,
+    pub pairing_role_count: usize,
+    pub exposes_capabilities: bool,
+    pub supports_discovery: bool,
+    pub supports_pairing: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2650,6 +2679,23 @@ mod tests {
 
         assert_eq!(lock_integrations, vec!["zigbee", "zwave", "matter", "mqtt"]);
         assert_eq!(scene_integrations, vec!["hue", "mqtt"]);
+    }
+
+    #[test]
+    fn integration_descriptor_surface_summary_is_payload_free() {
+        let hue = canonical_integration_descriptor(&IntegrationId::trusted("hue")).unwrap();
+        let summary = hue.surface_summary();
+
+        assert_eq!(summary.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(summary.display_name, "Philips Hue Bridge");
+        assert_eq!(summary.version, "0.1.0");
+        assert_eq!(summary.runtime_kind, RuntimeKind::RustWorkerProcess);
+        assert_eq!(summary.capability_count, hue.capabilities.len());
+        assert_eq!(summary.discovery_role_count, hue.discovery_roles.len());
+        assert_eq!(summary.pairing_role_count, hue.pairing_roles.len());
+        assert!(summary.exposes_capabilities);
+        assert!(summary.supports_discovery);
+        assert!(summary.supports_pairing);
     }
 
     #[test]

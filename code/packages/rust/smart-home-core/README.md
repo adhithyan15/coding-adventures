@@ -39,6 +39,8 @@ Current scope:
   and MQTT bootstrap families
 - compact integration catalog summaries for runtime, discovery, pairing, and
   capability coverage
+- per-integration surface summaries for adapter capability, discovery, and
+  pairing introspection
 - immutable device events and command requests
 - health and command-result status helpers for supervision/read-side loops
 - command risk tier helpers
