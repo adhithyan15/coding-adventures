@@ -203,6 +203,11 @@ class BoardTarget:
         return int(led["pin"])
 
     @property
+    def led_matrix(self) -> dict[str, Any] | None:
+        matrix = self.raw.get("led_matrix")
+        return None if matrix is None else dict(matrix)
+
+    @property
     def digital_pin_count(self) -> int:
         return int(self.raw["digital_pin_count"])
 

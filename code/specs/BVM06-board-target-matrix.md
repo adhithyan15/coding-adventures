@@ -245,6 +245,7 @@ descriptor and fake-backend target, but it is not complete for standalone use.
 | `adc.input` | early | early | later |
 | `i2c.master` | early | later | unlikely first |
 | `spi.master` | early | later | unlikely first |
+| `led_matrix.frame` | board-specific | board-specific | unlikely first |
 | events/interrupts | later | later | profile-specific |
 
 The host must always use the actual board descriptor, not a hardcoded profile

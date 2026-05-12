@@ -34,13 +34,16 @@ module CodingAdventures
         assert targets.any? { |target| target["board_id"] == "arduino-uno-r4-wifi" }
         assert_includes uno_r4_wifi["capabilities"], "transport.wifi"
         assert_includes uno_r4_wifi["capabilities"], "transport.bluetooth_le"
+        assert_includes uno_r4_wifi["capabilities"], "led_matrix.frame"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
         assert_equal ["wifi"], uno_r4_wifi["connection_options"].select { |item| item["ota_update"] }.map { |item| item["transport"] }
+        assert_equal({ "rows" => 8, "columns" => 12 }, uno_r4_wifi["led_matrix"])
         assert_equal "esp32", esp32["family"]
         assert_equal "board-vm-esp32", esp32["runtime_id"]
         assert_equal({ "kind" => "gpio", "pin" => 2 }, esp32["onboard_led"])
+        assert_nil esp32["led_matrix"]
         assert_includes esp32["capabilities"], "gpio.open"
         assert_includes esp32["capabilities"], "transport.bluetooth_classic"
         assert esp32["wireless"].all? { |item| item["command_transport"] }
@@ -961,6 +964,128 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_led_blink_tolerates_missing_background_run_response
+        runner = FakeRunner.new
+        transport = FakeTimeoutTransport.new(timeout_at: 6)
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 5_000
+        ) do |board|
+          result = board.led.blink(high_ms: 100, low_ms: 125, budget: 40)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+        assert_equal 725, transport.timeout_values.last
+        assert_nil result.results.last.response
+        assert_nil result.results.last.decoded_response
+        assert transport.closed?
+      end
+
+      def test_direct_session_run_still_raises_transport_timeout
+        runner = FakeRunner.new
+        transport = FakeTimeoutTransport.new(timeout_at: 1)
+
+        error = assert_raises(TransportError) do
+          BoardVM.uno_r4_wifi(
+            port: "/dev/cu.usbmodem2201",
+            cargo_workspace: "/repo/code/packages/rust",
+            runner: runner,
+            transport: transport,
+            timeout_ms: 250
+          ) do |board|
+            board.session { |vm| vm.run(budget: 24) }
+          end
+        end
+
+        assert_match(/timed out waiting for Board VM response/, error.message)
+        refute transport.closed?
+      end
+
+      def test_session_stop_accepts_per_call_timeout
+        runner = FakeRunner.new
+        transport = FakeTransactTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 250
+        ) do |board|
+          board.session.stop(timeout_ms: 10_000)
+        end
+
+        assert_equal [10_000], transport.timeout_values
+      end
+
+      def test_dispatch_protocol_frame_skips_stale_responses_until_request_and_kind_match
+        runner = FakeRunner.new
+        transport = FakeReadAfterTransactTransport.new(["stale-id", "stale-kind", "matched"])
+        native_session = FakeDecodedSession.new(
+          "stale-id" => {"request_id" => 6, "kind" => "run_report"},
+          "stale-kind" => {"request_id" => 1, "kind" => "run_report"},
+          "matched" => {"request_id" => 1, "kind" => "hello_ack"}
+        )
+
+        connection = BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 250
+        )
+
+        response, decoded_response = connection.dispatch_protocol_frame(
+          "hello-frame",
+          native_session: native_session,
+          expected_request_id: 1,
+          expected_response_kind: "hello_ack"
+        )
+
+        assert_equal "matched", response
+        assert_equal({"request_id" => 1, "kind" => "hello_ack"}, decoded_response)
+        assert_equal ["hello-frame"], transport.frames
+        assert_equal [250], transport.timeout_values
+        assert_equal [250, 250], transport.read_timeout_values
+      end
+
+      def test_dispatch_protocol_frame_returns_matching_error_response_without_waiting
+        runner = FakeRunner.new
+        transport = FakeReadAfterTransactTransport.new(["error-response"])
+        native_session = FakeDecodedSession.new(
+          "error-response" => {"request_id" => 1, "kind" => "error", "error" => true}
+        )
+
+        connection = BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 250
+        )
+
+        response, decoded_response = connection.dispatch_protocol_frame(
+          "run-frame",
+          native_session: native_session,
+          expected_request_id: 1,
+          expected_response_kind: "run_report"
+        )
+
+        assert_equal "error-response", response
+        assert_equal({"request_id" => 1, "kind" => "error", "error" => true}, decoded_response)
+        assert_equal ["run-frame"], transport.frames
+        assert_equal [250], transport.timeout_values
+        assert_empty transport.read_timeout_values
+      end
+
       def test_time_now_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -995,6 +1120,28 @@ module CodingAdventures
           transport: transport
         ) do |board|
           result = board.time.sleep_ms(250, program_id: 10, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+      end
+
+      def test_led_matrix_frame_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.led_matrix.heart(program_id: 10, budget: 24)
         end
 
         assert_empty runner.calls
@@ -1092,6 +1239,7 @@ module CodingAdventures
             gpio_handle_read_upload = session.upload_gpio_handle_read(program_id: 11)
             gpio_handle_write_upload = session.upload_gpio_handle_write(program_id: 12, value: true)
             gpio_handle_close_upload = session.upload_gpio_handle_close(program_id: 13)
+            led_matrix_upload = session.upload_led_matrix_frame(program_id: 14, preset: :heart)
             store = session.store_program(program_id: 4, slot: 2, boot_policy: :run_at_boot)
             raw_module = session.raw_module(code: "\x00".b, max_stack: 1, const_pool: "\xAA\x55".b)
             raw_upload = session.upload_raw_module(
@@ -1129,6 +1277,8 @@ module CodingAdventures
               gpio_handle_write_upload.results.map(&:command)
             assert_equal [:program_begin, :program_chunk, :program_end],
               gpio_handle_close_upload.results.map(&:command)
+            assert_equal [:program_begin, :program_chunk, :program_end],
+              led_matrix_upload.results.map(&:command)
             assert_equal :store_program, store.command
             assert raw_module.start_with?("BVM1")
             assert raw_module.end_with?("\xAA\x55".b)
@@ -1141,7 +1291,7 @@ module CodingAdventures
         end
 
         assert_empty runner.calls
-        assert_equal 36, transport.frames.length
+        assert_equal 39, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
       end
 
@@ -1313,6 +1463,29 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_led_matrix_frame
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("matrix-frame heart 24", program_id: 9)
+          upload = board.session.run_command(
+            "upload-matrix-frame 0x3184a444 0x44042081 0x100a0040",
+            program_id: 10
+          )
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            result.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload.results.map(&:command)
+          assert_equal result.frames + upload.frames, transport.frames
+        end
+      end
+
       def test_board_descriptor_wraps_rust_decoded_capability_report
         decoded = {
           "kind" => "caps_report",
@@ -1362,6 +1535,33 @@ module CodingAdventures
         assert_equal ["program.ram_exec"], descriptor.program.map(&:name)
       end
 
+      def test_session_result_delegates_kind_and_payload_to_last_result
+        result = SessionResult.new(results: [
+          ProtocolResult.new(decoded_response: {"kind" => "hello_ack", "payload" => {"runtime_name" => "board-vm"}}),
+          ProtocolResult.new(decoded_response: {"kind" => "run_report", "payload" => {"status" => "halted"}})
+        ])
+
+        assert_equal "run_report", result.kind
+        assert_equal({"status" => "halted"}, result.payload)
+      end
+
+      def test_led_matrix_pattern_packs_to_uno_r4_frame_words
+        pattern = <<~PATTERN
+          ..##....##..
+          ..##....##..
+          ............
+          #..........#
+          .#........#.
+          ..#......#..
+          ...######...
+          ............
+        PATTERN
+
+        words = Session.led_matrix_words(pattern: pattern)
+
+        assert_equal [0x30C3_0C00, 0x0801_4022, 0x041F_8000], words
+      end
+
       def test_native_session_builds_protocol_bytes_in_rust
         session = BoardVM::Native::Session.new
 
@@ -1385,6 +1585,15 @@ module CodingAdventures
         sleep_module_bytes = session.time_sleep_ms_module(250, 1)
         assert_instance_of String, sleep_module_bytes
         assert_operator sleep_module_bytes.bytesize, :>, 0
+
+        led_matrix_module_bytes = session.led_matrix_frame_module(
+          0x3184_A444,
+          0x4404_2081,
+          0x100A_0040,
+          3
+        )
+        assert_instance_of String, led_matrix_module_bytes
+        assert_operator led_matrix_module_bytes.bytesize, :>, 0
 
         gpio_module_bytes = session.gpio_read_module(13, 2, 2)
         assert_instance_of String, gpio_module_bytes

@@ -17,6 +17,8 @@ pub mod serial_usb_server;
 pub mod uno_r4_wifi_backend;
 #[cfg(target_arch = "arm")]
 pub mod uno_r4_wifi_led;
+#[cfg(target_arch = "arm")]
+pub mod uno_r4_wifi_led_matrix;
 
 pub const EMBEDDED_BLINK_MODULE: [u8; 36] = [
     0x42, 0x56, 0x4D, 0x31, 0x01, 0x01, 0x04, 0x00, 0x1A, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01, 0x20,

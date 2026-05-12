@@ -1,7 +1,8 @@
 #![no_std]
 
 use board_vm_device::{
-    BoardVmDevice, DeviceDescriptor, BLINK_MVP_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
+    BoardVmDevice, DeviceDescriptor, BLINK_MVP_CAPABILITIES,
+    BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
 };
 use board_vm_ir::CapabilitySet;
 use board_vm_runtime::{BoardHal, GpioMode, HalError, Level};
@@ -197,7 +198,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     onboard_led_pin: UNO_R4_ONBOARD_LED_PIN,
     supports_wifi_module: true,
     supports_led_matrix: true,
-    capabilities: CapabilitySet::blink_mvp(),
+    capabilities: CapabilitySet::blink_mvp().with_led_matrix(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
 };
 
@@ -207,6 +208,10 @@ pub trait UnoR4Backend {
     fn read_gpio(&mut self, pin: u8) -> Result<Level, HalError>;
     fn sleep_ms(&mut self, duration_ms: u16) -> Result<(), HalError>;
     fn now_ms(&self) -> u32;
+
+    fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
 }
 
 pub struct UnoR4Board<B>
@@ -286,6 +291,13 @@ where
     fn now_ms(&self) -> u32 {
         self.backend.now_ms()
     }
+
+    fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
+        if !self.target.supports_led_matrix {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.led_matrix_frame(frame)
+    }
 }
 
 pub fn digital_pin(pin: u8) -> Option<&'static DigitalPinDescriptor> {
@@ -308,7 +320,11 @@ pub fn uno_r4_device_descriptor(
         board_nonce,
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: false,
-        capabilities: &BLINK_MVP_CAPABILITIES,
+        capabilities: if target.supports_led_matrix {
+            &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else {
+            &BLINK_MVP_CAPABILITIES
+        },
     }
 }
 
@@ -359,6 +375,7 @@ mod tests {
         Configure(u8, GpioMode),
         Write(u8, Level),
         Sleep(u16),
+        LedMatrixFrame([u32; 3]),
     }
 
     struct FakeBackend {
@@ -398,6 +415,11 @@ mod tests {
 
         fn now_ms(&self) -> u32 {
             self.now_ms
+        }
+
+        fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
+            self.events.push(Event::LedMatrixFrame(frame));
+            Ok(())
         }
     }
 
@@ -454,7 +476,42 @@ mod tests {
         assert_eq!(descriptor.runtime_id, UNO_R4_VM_RUNTIME_ID);
         assert_eq!(descriptor.board_nonce, 0xA11C_E001);
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
-        assert_eq!(descriptor.capabilities.len(), BLINK_MVP_CAPABILITIES.len());
+        assert_eq!(
+            descriptor.capabilities.len(),
+            BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES.len()
+        );
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
+    }
+
+    #[test]
+    fn led_matrix_frame_runs_through_wifi_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+        board
+            .led_matrix_frame([0x3184_A444, 0x4404_2081, 0x100A_0040])
+            .unwrap();
+
+        assert_eq!(
+            board.backend().events,
+            vec![Event::LedMatrixFrame([
+                0x3184_A444,
+                0x4404_2081,
+                0x100A_0040,
+            ])]
+        );
+    }
+
+    #[test]
+    fn led_matrix_frame_rejects_minima() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+        assert_eq!(
+            board.led_matrix_frame([0, 0, 0]),
+            Err(HalError::UnsupportedMode)
+        );
     }
 
     #[test]

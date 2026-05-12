@@ -453,6 +453,10 @@ unsafe fn push_target(L: *mut lua_State, target: &LanguageTargetInfo) {
     push_onboard_led(L, target.onboard_led);
     lua_setfield(L, -2, key.as_ptr());
 
+    let key = CString::new("led_matrix").unwrap();
+    push_led_matrix(L, target.led_matrix);
+    lua_setfield(L, -2, key.as_ptr());
+
     let key = CString::new("wireless").unwrap();
     push_wireless_interfaces(L, &target.wireless);
     lua_setfield(L, -2, key.as_ptr());
@@ -464,6 +468,20 @@ unsafe fn push_target(L: *mut lua_State, target: &LanguageTargetInfo) {
     let key = CString::new("capabilities").unwrap();
     push_string_array(L, &target.capabilities);
     lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn push_led_matrix(
+    L: *mut lua_State,
+    matrix: Option<board_vm_language_core::LanguageLedMatrix>,
+) {
+    let Some(matrix) = matrix else {
+        lua_pushnil(L);
+        return;
+    };
+
+    lua_bridge::lua_newtable(L);
+    set_int(L, "rows", matrix.rows as u64);
+    set_int(L, "columns", matrix.columns as u64);
 }
 
 unsafe fn push_targets(L: *mut lua_State, targets: &[LanguageTargetInfo]) {

@@ -27,6 +27,7 @@ mod firmware {
         let mut endpoint = serial_usb_endpoint(usb);
 
         loop {
+            device.hal_mut().backend_mut().refresh_led_matrix_once();
             match serve_serial_usb_available(&mut endpoint, &mut device) {
                 Ok(DeviceStreamPoll::Served(_)) => {}
                 Ok(DeviceStreamPoll::Idle) => {

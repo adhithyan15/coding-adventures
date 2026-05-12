@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
     "rubygems_mfa_required" => "true"
   }
 
+  spec.add_development_dependency "irb", "~> 1.0"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rake", "~> 13.0"
 end

@@ -1,8 +1,8 @@
 use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_GPIO_CLOSE,
-    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MODULE_MAGIC,
-    MODULE_VERSION,
+    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+    MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -34,16 +34,20 @@ pub const TIME_NOW_CODE_LEN: usize = 3;
 pub const TIME_NOW_MODULE_LEN: usize = 13;
 pub const TIME_SLEEP_MS_CODE_LEN: usize = 5;
 pub const TIME_SLEEP_MS_MODULE_LEN: usize = 15;
+pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
+pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
 pub const GPIO_MODE_INPUT: u8 = 0;
 pub const GPIO_MODE_OUTPUT: u8 = 1;
 pub const GPIO_MODE_INPUT_PULLUP: u8 = 2;
 pub const GPIO_MODE_INPUT_PULLDOWN: u8 = 3;
 
+const OP_HALT: u8 = 0x00;
 const OP_PUSH_FALSE: u8 = 0x10;
 const OP_PUSH_TRUE: u8 = 0x11;
 const OP_PUSH_U8: u8 = 0x12;
 const OP_PUSH_U16: u8 = 0x13;
+const OP_PUSH_U32: u8 = 0x14;
 const OP_DUP: u8 = 0x20;
 const OP_SWAP: u8 = 0x22;
 const OP_JUMP_S8: u8 = 0x30;
@@ -281,6 +285,21 @@ impl TimeSleepMsProgram {
         Self {
             duration_ms,
             max_stack: 1,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LedMatrixFrameProgram {
+    pub words: [u32; 3],
+    pub max_stack: u8,
+}
+
+impl LedMatrixFrameProgram {
+    pub const fn new(words: [u32; 3]) -> Self {
+        Self {
+            words,
+            max_stack: 3,
         }
     }
 }
@@ -935,6 +954,46 @@ pub fn write_time_sleep_ms_module(
     Ok(offset)
 }
 
+pub fn write_led_matrix_frame_code(
+    program: LedMatrixFrameProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < LED_MATRIX_FRAME_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u32(out, &mut offset, program.words[0])?;
+    write_push_u32(out, &mut offset, program.words[1])?;
+    write_push_u32(out, &mut offset, program.words[2])?;
+    write_call_u8(out, &mut offset, CAP_LED_MATRIX_FRAME)?;
+    write_u8(out, &mut offset, OP_HALT)?;
+    Ok(offset)
+}
+
+pub fn write_led_matrix_frame_module(
+    program: LedMatrixFrameProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < LED_MATRIX_FRAME_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; LED_MATRIX_FRAME_CODE_LEN];
+    let code_len = write_led_matrix_frame_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_led_matrix(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_module(spec: ModuleSpec<'_>, out: &mut [u8]) -> Result<usize, HostError> {
     if spec.code.len() > u32::MAX as usize || spec.const_pool.len() > u32::MAX as usize {
         return Err(HostError::ProgramTooLarge);
@@ -1004,6 +1063,11 @@ fn write_push_u16(out: &mut [u8], offset: &mut usize, value: u16) -> Result<(), 
     write_slice(out, offset, &value.to_le_bytes())
 }
 
+fn write_push_u32(out: &mut [u8], offset: &mut usize, value: u32) -> Result<(), HostError> {
+    write_u8(out, offset, OP_PUSH_U32)?;
+    write_slice(out, offset, &value.to_le_bytes())
+}
+
 fn write_uleb128(out: &mut [u8], offset: &mut usize, mut value: u32) -> Result<(), HostError> {
     loop {
         let mut byte = (value & 0x7F) as u8;
@@ -1039,6 +1103,7 @@ mod tests {
     use super::*;
     use board_vm_ir::{
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
+        CAP_LED_MATRIX_FRAME,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -1077,6 +1142,10 @@ mod tests {
     ];
     const TIME_SLEEP_MS_MODULE_HEX: [u8; TIME_SLEEP_MS_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x13, 0xFA, 0x00, 0x40, 0x10, 0x00,
+    ];
+    const LED_MATRIX_HEART_MODULE_HEX: [u8; LED_MATRIX_FRAME_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x12, 0x14, 0x44, 0xA4, 0x84, 0x31, 0x14,
+        0x81, 0x20, 0x04, 0x44, 0x14, 0x40, 0x00, 0x0A, 0x10, 0x40, 0x30, 0x00, 0x00,
     ];
 
     #[test]
@@ -1200,6 +1269,24 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_TIME_SLEEP_MS]);
+    }
+
+    #[test]
+    fn builds_led_matrix_frame_module() {
+        let mut module = [0u8; LED_MATRIX_FRAME_MODULE_LEN];
+        let len = write_led_matrix_frame_module(
+            LedMatrixFrameProgram::new([0x3184_A444, 0x4404_2081, 0x100A_0040]),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(len, LED_MATRIX_FRAME_MODULE_LEN);
+        assert_eq!(module, LED_MATRIX_HEART_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_led_matrix(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_LED_MATRIX_FRAME]);
     }
 
     #[test]

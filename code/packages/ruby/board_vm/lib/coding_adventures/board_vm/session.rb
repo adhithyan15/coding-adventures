@@ -39,6 +39,84 @@ module CodingAdventures
         background_run: RUN_FLAG_BACKGROUND_RUN,
         background: RUN_FLAG_BACKGROUND_RUN
       }.freeze
+      LED_MATRIX_ROWS = 8
+      LED_MATRIX_COLUMNS = 12
+      LED_MATRIX_PRESETS = {
+        clear: [0x0000_0000, 0x0000_0000, 0x0000_0000],
+        heart: [0x3184_A444, 0x4404_2081, 0x100A_0040],
+        happy: [0x0198_0019, 0x8000_0001, 0x081F_8000],
+        danger: [0x0400_A015, 0x1502_0820, 0x4840_47FC]
+      }.freeze
+
+      def self.led_matrix_words(words: nil, pattern: nil, preset: nil)
+        return normalize_led_matrix_words(words) unless words.nil?
+        return led_matrix_preset_words(preset) unless preset.nil?
+        return pack_led_matrix_pattern(pattern) unless pattern.nil?
+
+        raise ArgumentError, "led_matrix_frame requires words:, pattern:, or preset:"
+      end
+
+      def self.normalize_led_matrix_words(words)
+        values = Array(words)
+        raise ArgumentError, "led_matrix words must contain exactly 3 integers" unless values.length == 3
+
+        values.map.with_index do |word, index|
+          value = word.is_a?(Integer) ? word : Integer(word, 0)
+          if value.negative? || value > 0xFFFF_FFFF
+            raise ArgumentError, "led_matrix word#{index} must fit in u32"
+          end
+          value
+        end
+      end
+      private_class_method :normalize_led_matrix_words
+
+      def self.led_matrix_preset_words(preset)
+        LED_MATRIX_PRESETS.fetch(preset.to_s.tr("-", "_").to_sym) do
+          raise ArgumentError, "unknown LED matrix preset: #{preset.inspect}"
+        end
+      end
+      private_class_method :led_matrix_preset_words
+
+      def self.pack_led_matrix_pattern(pattern)
+        rows = if pattern.is_a?(String)
+          pattern.lines.map(&:chomp).reject { |row| row.strip.empty? }
+        else
+          Array(pattern)
+        end
+        unless rows.length == LED_MATRIX_ROWS
+          raise ArgumentError, "led_matrix pattern must have #{LED_MATRIX_ROWS} rows"
+        end
+
+        words = [0, 0, 0]
+        rows.each_with_index do |row, y|
+          pixels = row.is_a?(String) ? row.gsub(/\s+/, "").chars : Array(row)
+          unless pixels.length == LED_MATRIX_COLUMNS
+            raise ArgumentError, "led_matrix pattern row #{y} must have #{LED_MATRIX_COLUMNS} columns"
+          end
+
+          pixels.each_with_index do |pixel, x|
+            next unless led_matrix_pixel_on?(pixel)
+
+            index = y * LED_MATRIX_COLUMNS + x
+            words[index / 32] |= 1 << (31 - (index % 32))
+          end
+        end
+        words
+      end
+      private_class_method :pack_led_matrix_pattern
+
+      def self.led_matrix_pixel_on?(pixel)
+        return pixel if pixel == true || pixel == false
+        return !pixel.zero? if pixel.is_a?(Integer)
+
+        case pixel.to_s
+        when "", ".", "0", "_", "-"
+          false
+        else
+          true
+        end
+      end
+      private_class_method :led_matrix_pixel_on?
 
       attr_reader :connection, :native_session, :host_name, :host_nonce, :program_id,
         :instruction_budget
@@ -196,6 +274,11 @@ module CodingAdventures
         native_session.time_sleep_ms_module(duration_ms, max_stack)
       end
 
+      def led_matrix_frame_module(words: nil, pattern: nil, preset: nil, max_stack: 3)
+        frame_words = self.class.led_matrix_words(words: words, pattern: pattern, preset: preset)
+        native_session.led_matrix_frame_module(frame_words[0], frame_words[1], frame_words[2], max_stack)
+      end
+
       def raw_module(code:, max_stack:, flags: 0, const_pool: +"")
         native_session.raw_module(flags, max_stack, code.b, const_pool.b)
       end
@@ -212,6 +295,24 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: time_sleep_ms_module(duration_ms: duration_ms, max_stack: max_stack)
+        )
+      end
+
+      def upload_led_matrix_frame(
+        program_id: @program_id,
+        words: nil,
+        pattern: nil,
+        preset: nil,
+        max_stack: 3
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: led_matrix_frame_module(
+            words: words,
+            pattern: pattern,
+            preset: preset,
+            max_stack: max_stack
+          )
         )
       end
 
@@ -235,7 +336,9 @@ module CodingAdventures
         reset_vm: true,
         keep_handles: false,
         background: true,
-        time_budget_ms: 0
+        time_budget_ms: 0,
+        timeout_ms: nil,
+        allow_timeout: false
       )
         dispatch(
           :run,
@@ -249,12 +352,14 @@ module CodingAdventures
             ),
             instruction_budget || budget,
             time_budget_ms
-          )
+          ),
+          timeout_ms: timeout_ms,
+          allow_timeout: allow_timeout
         )
       end
 
-      def stop
-        dispatch(:stop, native_session.stop_wire)
+      def stop(timeout_ms: nil, allow_timeout: false)
+        dispatch(:stop, native_session.stop_wire, timeout_ms: timeout_ms, allow_timeout: allow_timeout)
       end
 
       def blink(
@@ -268,7 +373,9 @@ module CodingAdventures
         handshake: false,
         query_caps: false,
         host_name: @host_name,
-        host_nonce: @host_nonce
+        host_nonce: @host_nonce,
+        run_response_timeout_ms: nil,
+        allow_run_timeout: true
       )
         results = []
         results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
@@ -284,7 +391,9 @@ module CodingAdventures
         )
         results << run(
           program_id: program_id,
-          instruction_budget: instruction_budget || budget
+          instruction_budget: instruction_budget || budget,
+          timeout_ms: run_response_timeout_ms || blink_run_response_timeout_ms(high_ms, low_ms),
+          allow_timeout: allow_run_timeout
         )
         SessionResult.new(results: results)
       end
@@ -494,6 +603,40 @@ module CodingAdventures
       end
       alias sleep_ms time_sleep_ms
 
+      def led_matrix_frame(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        words: nil,
+        pattern: nil,
+        preset: nil,
+        max_stack: 3,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_led_matrix_frame(
+            program_id: program_id,
+            words: words,
+            pattern: pattern,
+            preset: preset,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+      alias matrix_frame led_matrix_frame
+
       def run_command(line, **options)
         words = line.to_s.split
         command = words.shift
@@ -531,6 +674,8 @@ module CodingAdventures
           upload_time_now(**options)
         when "upload-time-sleep-ms", "upload-time.sleep_ms", "upload-sleep-ms"
           upload_time_sleep_ms(**time_sleep_ms_command_options(words, command, options, require_budget: false))
+        when "upload-led-matrix-frame", "upload-led-matrix.frame", "upload-matrix-frame"
+          upload_led_matrix_frame(**led_matrix_command_options(words, command, options, require_budget: false))
         when "store-program", "store.program"
           SessionResult.new(results: [store_program(**store_program_command_options(words, command, options))])
         when "run"
@@ -560,6 +705,8 @@ module CodingAdventures
           time_now(**options.merge(optional_budget(words, command)))
         when "time-sleep-ms", "time.sleep_ms", "sleep-ms"
           time_sleep_ms(**time_sleep_ms_command_options(words, command, options))
+        when "led-matrix-frame", "led-matrix.frame", "matrix-frame"
+          led_matrix_frame(**led_matrix_command_options(words, command, options))
         else
           raise UnknownSessionCommandError, "unknown Board VM session command: #{command}"
         end
@@ -567,10 +714,14 @@ module CodingAdventures
 
       private
 
-      def dispatch(command, frame)
+      def dispatch(command, frame, timeout_ms: nil, allow_timeout: false)
         response, decoded_response = connection.dispatch_protocol_frame(
           frame,
-          native_session: native_session
+          native_session: native_session,
+          timeout_ms: timeout_ms,
+          allow_timeout: allow_timeout,
+          expected_request_id: current_request_id,
+          expected_response_kind: expected_response_kind(command)
         )
         ProtocolResult.new(
           command: command,
@@ -578,6 +729,27 @@ module CodingAdventures
           response: response,
           decoded_response: decoded_response
         )
+      end
+
+      def blink_run_response_timeout_ms(high_ms, low_ms)
+        [Integer(high_ms) + Integer(low_ms) + 500, 250].max
+      end
+
+      def current_request_id
+        native_session.next_request_id - 1
+      end
+
+      def expected_response_kind(command)
+        case command
+        when :hello
+          "hello_ack"
+        when :capabilities
+          "caps_report"
+        when :run, :stop
+          "run_report"
+        else
+          command.to_s
+        end
       end
 
       def optional_budget(words, command)
@@ -636,6 +808,28 @@ module CodingAdventures
         ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires duration_ms" unless merged.key?(:duration_ms)
 
+        merged
+      end
+
+      def led_matrix_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        if words.length >= 3 && words.first(3).all? { |word| integer_literal?(word) || hex_literal?(word) }
+          merged[:words] = [
+            numeric_argument(words.shift, "#{command} word0"),
+            numeric_argument(words.shift, "#{command} word1"),
+            numeric_argument(words.shift, "#{command} word2")
+          ]
+        elsif !words.empty?
+          merged[:preset] = words.shift
+        else
+          merged[:preset] ||= :heart
+        end
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
         merged
       end
 
@@ -775,8 +969,18 @@ module CodingAdventures
         raise ArgumentError, "#{name} must be an integer: #{value}"
       end
 
+      def numeric_argument(value, name)
+        Integer(value, 0)
+      rescue ArgumentError
+        raise ArgumentError, "#{name} must be an integer: #{value}"
+      end
+
       def integer_literal?(value)
         /\A\d+\z/.match?(value.to_s)
+      end
+
+      def hex_literal?(value)
+        /\A0x[[:xdigit:]]+\z/i.match?(value.to_s)
       end
 
       def ensure_no_extra_arguments!(words, command)

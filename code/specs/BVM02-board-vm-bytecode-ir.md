@@ -174,6 +174,23 @@ SDKs can grow without renumbering.
 | `0x21` | `pwm.set_duty_u16` | `handle`, `duty: u16` | `unit` |
 | `0x22` | `pwm.close` | `handle` | `unit` |
 
+### LED Matrix
+
+`led_matrix.*` capabilities model board-owned pixel displays such as the
+Arduino UNO R4 WiFi 12x8 LED matrix. They are portable VM operations, but a
+board only advertises them when the display is physically present and the HAL
+can refresh it without conflicting with user GPIO handles.
+
+| ID | Name | Args | Returns |
+|---:|---|---|---|
+| `0x30` | `led_matrix.frame` | `word0: u32`, `word1: u32`, `word2: u32` | `unit` |
+
+The three frame words pack 96 row-major pixels. Pixel index `0` is the first
+bit of `word0`, index `31` is the last bit of `word0`, index `32` starts
+`word1`, and index `64` starts `word2`. Board adapters may remap this logical
+frame into the physical row/column or charlieplex wiring required by the
+target.
+
 ### Program
 
 | ID | Name | Args | Returns |

@@ -4,9 +4,11 @@ use board_vm_uno_r4::UnoR4Backend;
 use embedded_hal::delay::DelayNs;
 
 use crate::uno_r4_wifi_led::{UnoR4WifiLed, UNO_R4_WIFI_LED_PIN};
+use crate::uno_r4_wifi_led_matrix::UnoR4WifiLedMatrix;
 
 pub struct UnoR4WifiLedBackend {
     led: Option<UnoR4WifiLed>,
+    matrix: UnoR4WifiLedMatrix,
     delay: Delay,
     now_ms: u32,
 }
@@ -15,6 +17,7 @@ impl UnoR4WifiLedBackend {
     pub fn new() -> Self {
         Self {
             led: None,
+            matrix: UnoR4WifiLedMatrix::new(),
             delay: Delay::new(),
             now_ms: 0,
         }
@@ -40,6 +43,10 @@ impl UnoR4WifiLedBackend {
             self.set_led(Level::Low);
             self.pause_ms(off_ms);
         }
+    }
+
+    pub fn refresh_led_matrix_once(&mut self) {
+        self.matrix.refresh_once();
     }
 }
 
@@ -81,5 +88,10 @@ impl UnoR4Backend for UnoR4WifiLedBackend {
 
     fn now_ms(&self) -> u32 {
         self.now_ms
+    }
+
+    fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
+        self.matrix.set_frame(frame);
+        Ok(())
     }
 }

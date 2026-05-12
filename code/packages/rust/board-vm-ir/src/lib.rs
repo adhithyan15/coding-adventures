@@ -16,6 +16,7 @@ pub const CAP_GPIO_READ: u16 = 0x03;
 pub const CAP_GPIO_CLOSE: u16 = 0x04;
 pub const CAP_TIME_SLEEP_MS: u16 = 0x10;
 pub const CAP_TIME_NOW_MS: u16 = 0x11;
+pub const CAP_LED_MATRIX_FRAME: u16 = 0x30;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -23,6 +24,7 @@ const CAP_GPIO_READ_U8: u8 = CAP_GPIO_READ as u8;
 const CAP_GPIO_CLOSE_U8: u8 = CAP_GPIO_CLOSE as u8;
 const CAP_TIME_SLEEP_MS_U8: u8 = CAP_TIME_SLEEP_MS as u8;
 const CAP_TIME_NOW_MS_U8: u8 = CAP_TIME_NOW_MS as u8;
+const CAP_LED_MATRIX_FRAME_U8: u8 = CAP_LED_MATRIX_FRAME as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -94,6 +96,7 @@ pub struct Module<'a> {
 pub struct CapabilitySet {
     pub gpio_digital: bool,
     pub time: bool,
+    pub led_matrix: bool,
 }
 
 impl CapabilitySet {
@@ -101,6 +104,7 @@ impl CapabilitySet {
         Self {
             gpio_digital: false,
             time: false,
+            led_matrix: false,
         }
     }
 
@@ -108,6 +112,14 @@ impl CapabilitySet {
         Self {
             gpio_digital: true,
             time: true,
+            led_matrix: false,
+        }
+    }
+
+    pub const fn with_led_matrix(self) -> Self {
+        Self {
+            led_matrix: true,
+            ..self
         }
     }
 
@@ -115,6 +127,7 @@ impl CapabilitySet {
         match capability_id {
             CAP_GPIO_OPEN | CAP_GPIO_WRITE | CAP_GPIO_READ | CAP_GPIO_CLOSE => self.gpio_digital,
             CAP_TIME_SLEEP_MS | CAP_TIME_NOW_MS => self.time,
+            CAP_LED_MATRIX_FRAME => self.led_matrix,
             _ => false,
         }
     }
@@ -346,6 +359,7 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_GPIO_CLOSE_U8) | Op::CallU16(CAP_GPIO_CLOSE) => (1, 0),
         Op::CallU8(CAP_TIME_SLEEP_MS_U8) | Op::CallU16(CAP_TIME_SLEEP_MS) => (1, 0),
         Op::CallU8(CAP_TIME_NOW_MS_U8) | Op::CallU16(CAP_TIME_NOW_MS) => (0, 1),
+        Op::CallU8(CAP_LED_MATRIX_FRAME_U8) | Op::CallU16(CAP_LED_MATRIX_FRAME) => (3, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
     }
@@ -464,6 +478,72 @@ mod tests {
 
         assert_eq!(count, 1);
         assert_eq!(capabilities[0], 0x1234);
+    }
+
+    #[test]
+    fn validates_led_matrix_frame_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x14,
+                0x44,
+                0xA4,
+                0x84,
+                0x31,
+                0x14,
+                0x81,
+                0x20,
+                0x04,
+                0x44,
+                0x14,
+                0x40,
+                0x00,
+                0x0A,
+                0x10,
+                0x40,
+                CAP_LED_MATRIX_FRAME as u8,
+            ],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_led_matrix(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_LED_MATRIX_FRAME]);
+    }
+
+    #[test]
+    fn rejects_led_matrix_frame_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x14,
+                0,
+                0,
+                0,
+                0,
+                0x14,
+                0,
+                0,
+                0,
+                0,
+                0x14,
+                0,
+                0,
+                0,
+                0,
+                0x40,
+                CAP_LED_MATRIX_FRAME as u8,
+            ],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 3),
+            Err(ValidateError::UnsupportedCapability(CAP_LED_MATRIX_FRAME))
+        );
     }
 
     #[test]

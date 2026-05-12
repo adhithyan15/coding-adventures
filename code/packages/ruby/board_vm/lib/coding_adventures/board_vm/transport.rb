@@ -55,6 +55,18 @@ module CodingAdventures
         results.any?(&:error?)
       end
 
+      def last_result
+        results.last
+      end
+
+      def kind
+        last_result && last_result.kind
+      end
+
+      def payload
+        last_result && last_result.payload
+      end
+
       def board_descriptor
         results.each do |result|
           descriptor = result.board_descriptor
@@ -78,6 +90,10 @@ module CodingAdventures
 
       def transact(frame, timeout_ms: @timeout_ms)
         write(frame)
+        read_frame(timeout_ms: timeout_ms)
+      end
+
+      def read(timeout_ms: @timeout_ms)
         read_frame(timeout_ms: timeout_ms)
       end
 
@@ -153,6 +169,10 @@ module CodingAdventures
 
       def transact(frame, timeout_ms: @timeout_ms)
         write(frame)
+        read_frame(timeout_ms: timeout_ms)
+      end
+
+      def read(timeout_ms: @timeout_ms)
         read_frame(timeout_ms: timeout_ms)
       end
 
@@ -247,6 +267,14 @@ module CodingAdventures
         return BoardVM.bluetooth_transact(@endpoint, frame) if native_transport?
 
         write(frame)
+        read_frame(timeout_ms: timeout_ms)
+      end
+
+      def read(timeout_ms: @timeout_ms)
+        if native_transport?
+          raise TransportError, "native Board VM Bluetooth transport requires #transact"
+        end
+
         read_frame(timeout_ms: timeout_ms)
       end
 

@@ -86,6 +86,10 @@ module CodingAdventures
         Led.new(self)
       end
 
+      def led_matrix
+        LedMatrix.new(self)
+      end
+
       def time
         TimeApi.new(self)
       end
@@ -320,6 +324,30 @@ module CodingAdventures
         )
       end
 
+      def led_matrix_frame!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        words: nil,
+        pattern: nil,
+        preset: nil,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.led_matrix_frame(
+          program_id: program_id,
+          budget: budget,
+          words: words,
+          pattern: pattern,
+          preset: preset,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
       def store_program!(
         program_id: DEFAULT_PROGRAM_ID,
         slot: DEFAULT_EJECT_SLOT,
@@ -365,9 +393,28 @@ module CodingAdventures
         port
       end
 
-      def dispatch_protocol_frame(frame, native_session:)
-        response = dispatch_frame(frame)
-        [response, decode_response(native_session, response)]
+      def dispatch_protocol_frame(
+        frame,
+        native_session:,
+        timeout_ms: nil,
+        allow_timeout: false,
+        expected_request_id: nil,
+        expected_response_kind: nil
+      )
+        response = dispatch_frame(frame, timeout_ms: timeout_ms)
+        decoded_response = decode_response(native_session, response)
+
+        while stale_response?(decoded_response, expected_request_id, expected_response_kind)
+          response = read_response_frame(timeout_ms: timeout_ms)
+          decoded_response = decode_response(native_session, response)
+        end
+
+        [response, decoded_response]
+      rescue TransportError => error
+        raise unless allow_timeout && response_timeout?(error)
+
+        reset_active_transport_after_timeout
+        [nil, nil]
       end
 
       private
@@ -501,15 +548,23 @@ module CodingAdventures
         overrides
       end
 
-      def dispatch_frame(frame)
+      def dispatch_frame(frame, timeout_ms: nil)
         if active_transport.respond_to?(:transact)
-          active_transport.transact(frame, timeout_ms: timeout_ms)
+          active_transport.transact(frame, timeout_ms: timeout_ms || self.timeout_ms)
         elsif active_transport.respond_to?(:write)
           active_transport.write(frame)
           nil
         else
           raise TransportError, "Board VM transport must respond to #transact or #write"
         end
+      end
+
+      def read_response_frame(timeout_ms: nil)
+        unless active_transport.respond_to?(:read)
+          raise TransportError, "Board VM transport cannot discard stale responses without #read"
+        end
+
+        active_transport.read(timeout_ms: timeout_ms || self.timeout_ms)
       end
 
       def active_transport
@@ -577,6 +632,23 @@ module CodingAdventures
         session.decode_response(response)
       end
 
+      def stale_response?(decoded_response, expected_request_id, expected_response_kind)
+        return false if decoded_response.nil?
+
+        return true if expected_request_id && decoded_response["request_id"] != expected_request_id
+        return false if decoded_response["error"] || decoded_response["kind"] == "error"
+
+        expected_response_kind && decoded_response["kind"] != expected_response_kind
+      end
+
+      def response_timeout?(error)
+        error.message.include?("timed out waiting for Board VM response")
+      end
+
+      def reset_active_transport_after_timeout
+        @transport.close if @transport.respond_to?(:close)
+      end
+
       def cargo_command(*args)
         ["cargo"] + args
       end
@@ -620,6 +692,44 @@ module CodingAdventures
           low_ms: low_ms,
           max_stack: max_stack
         )
+      end
+    end
+
+    class LedMatrix
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def frame(
+        words: nil,
+        pattern: nil,
+        preset: nil,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 3
+      )
+        @connection.led_matrix_frame!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          words: words,
+          pattern: pattern,
+          preset: preset,
+          max_stack: max_stack
+        )
+      end
+
+      def heart(**options)
+        frame(preset: :heart, **options)
+      end
+
+      def happy(**options)
+        frame(preset: :happy, **options)
+      end
+
+      def clear(**options)
+        frame(preset: :clear, **options)
       end
     end
 
