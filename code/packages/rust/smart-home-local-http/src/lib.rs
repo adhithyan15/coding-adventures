@@ -613,6 +613,99 @@ impl LocalHttpRequestPlan {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct LocalHttpRequestPlanSummary {
+    pub total_plans: usize,
+    pub get_plans: usize,
+    pub post_plans: usize,
+    pub put_plans: usize,
+    pub patch_plans: usize,
+    pub delete_plans: usize,
+    pub idempotent_plans: usize,
+    pub non_idempotent_plans: usize,
+    pub body_bearing_plans: usize,
+    pub bodyless_plans: usize,
+    pub total_body_bytes: usize,
+    pub retrying_plans: usize,
+    pub plans_requiring_vault_refs: usize,
+    pub unauthenticated_plans: usize,
+    pub bearer_auth_plans: usize,
+    pub basic_auth_plans: usize,
+    pub header_token_auth_plans: usize,
+    pub client_certificate_auth_plans: usize,
+    pub max_timeout_ms: u64,
+}
+
+impl LocalHttpRequestPlanSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_plans<'a, I>(plans: I) -> Self
+    where
+        I: IntoIterator<Item = &'a LocalHttpRequestPlan>,
+    {
+        let mut summary = Self::empty();
+
+        for plan in plans {
+            summary.total_plans += 1;
+            match plan.method {
+                LocalHttpMethod::Get => summary.get_plans += 1,
+                LocalHttpMethod::Post => summary.post_plans += 1,
+                LocalHttpMethod::Put => summary.put_plans += 1,
+                LocalHttpMethod::Patch => summary.patch_plans += 1,
+                LocalHttpMethod::Delete => summary.delete_plans += 1,
+            }
+
+            if plan.idempotent {
+                summary.idempotent_plans += 1;
+            } else {
+                summary.non_idempotent_plans += 1;
+            }
+
+            if plan.has_body() {
+                summary.body_bearing_plans += 1;
+                summary.total_body_bytes += plan.body.len();
+            } else {
+                summary.bodyless_plans += 1;
+            }
+
+            if plan.retries_enabled() {
+                summary.retrying_plans += 1;
+            }
+            if plan.required_vault_ref().is_some() {
+                summary.plans_requiring_vault_refs += 1;
+            }
+            match plan.auth.kind() {
+                LocalHttpAuthKind::None => summary.unauthenticated_plans += 1,
+                LocalHttpAuthKind::BearerToken => summary.bearer_auth_plans += 1,
+                LocalHttpAuthKind::Basic => summary.basic_auth_plans += 1,
+                LocalHttpAuthKind::HeaderToken => summary.header_token_auth_plans += 1,
+                LocalHttpAuthKind::ClientCertificate => summary.client_certificate_auth_plans += 1,
+            }
+            summary.max_timeout_ms = summary.max_timeout_ms.max(plan.timeout_ms);
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_plans == 0
+    }
+
+    pub fn has_mutations(&self) -> bool {
+        self.post_plans + self.put_plans + self.patch_plans + self.delete_plans > 0
+    }
+
+    pub fn has_secret_backed_auth(&self) -> bool {
+        self.plans_requiring_vault_refs > 0
+    }
+
+    pub fn has_retries(&self) -> bool {
+        self.retrying_plans > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LocalHttpRequestPlanSort {
     IntegrationThenBridge,
@@ -810,6 +903,13 @@ where
     }
 
     results
+}
+
+pub fn summarize_local_http_request_plans<'a, I>(plans: I) -> LocalHttpRequestPlanSummary
+where
+    I: IntoIterator<Item = &'a LocalHttpRequestPlan>,
+{
+    LocalHttpRequestPlanSummary::from_plans(plans)
 }
 
 fn sort_local_http_endpoint_results(
@@ -1263,5 +1363,70 @@ mod tests {
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].url, "https://hue.local/clip/v2/resource/bridge");
         assert!(query.matches_plan(results[0]));
+    }
+
+    #[test]
+    fn request_plan_summary_counts_route_shape_before_execution() {
+        let endpoint = LocalHttpEndpoint::hue_bridge(bridge_id(), "hue.local").unwrap();
+        let get = LocalHttpRequestTemplate::new(LocalHttpMethod::Get, "/clip/v2/resource/light")
+            .unwrap()
+            .with_timeout_ms(1_000)
+            .plan(&endpoint, Vec::new())
+            .unwrap();
+        let put = LocalHttpRequestTemplate::new(LocalHttpMethod::Put, "/clip/v2/resource/light/1")
+            .unwrap()
+            .with_content_type("application/json")
+            .with_auth(LocalHttpAuth::HeaderToken {
+                header_name: "hue-application-key".into(),
+                vault_ref: VaultRef::trusted("vault://hue/app-key"),
+            })
+            .with_retry_policy(LocalHttpRetryPolicy::transient_errors(2))
+            .with_timeout_ms(2_500)
+            .plan(&endpoint, br#"{"on":{"on":true}}"#.to_vec())
+            .unwrap();
+        let post = LocalHttpRequestTemplate::new(LocalHttpMethod::Post, "/clip/v2/resource/scene")
+            .unwrap()
+            .with_content_type("application/json")
+            .with_idempotent(false)
+            .with_timeout_ms(8_000)
+            .plan(&endpoint, br#"{"recall":{"action":"active"}}"#.to_vec())
+            .unwrap();
+
+        let summary = summarize_local_http_request_plans([&get, &put, &post]);
+
+        assert_eq!(
+            summary,
+            LocalHttpRequestPlanSummary {
+                total_plans: 3,
+                get_plans: 1,
+                post_plans: 1,
+                put_plans: 1,
+                patch_plans: 0,
+                delete_plans: 0,
+                idempotent_plans: 2,
+                non_idempotent_plans: 1,
+                body_bearing_plans: 2,
+                bodyless_plans: 1,
+                total_body_bytes: put.body.len() + post.body.len(),
+                retrying_plans: 1,
+                plans_requiring_vault_refs: 1,
+                unauthenticated_plans: 2,
+                bearer_auth_plans: 0,
+                basic_auth_plans: 0,
+                header_token_auth_plans: 1,
+                client_certificate_auth_plans: 0,
+                max_timeout_ms: 8_000,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_mutations());
+        assert!(summary.has_secret_backed_auth());
+        assert!(summary.has_retries());
+
+        let empty_plans: Vec<&LocalHttpRequestPlan> = Vec::new();
+        let empty = summarize_local_http_request_plans(empty_plans);
+        assert_eq!(empty, LocalHttpRequestPlanSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_mutations());
     }
 }
