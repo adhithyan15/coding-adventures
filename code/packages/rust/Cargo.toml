@@ -439,6 +439,7 @@ members = [
     "brainfuck-ir-compiler",
     "brainfuck-wasm-compiler",
     "tcp-client",
+    "tls-platform",
     "dns-message",
     "intel8008-simulator",
     "intel8008-gatelevel",
