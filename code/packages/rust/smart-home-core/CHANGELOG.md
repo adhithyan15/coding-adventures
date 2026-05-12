@@ -13,6 +13,9 @@ All notable changes to this package will be documented in this file.
   compact read-side inspection of integration coverage.
 - `SmartHomeToolCatalogSummary` and `smart_home_tool_catalog_summary()` for
   compact read-side inspection of the smart-home tool surface.
+- Health and command-result status helpers for shared supervision/read-side
+  classification of pairing, attention, acceptance, rejection, and timeout
+  states.
 
 ## [0.1.0] - 2026-05-06
 
