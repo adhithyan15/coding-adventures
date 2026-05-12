@@ -22,6 +22,7 @@ radio workers a shared deterministic shape for:
 - restart plans that a runtime supervisor can inspect before spawning workers
 - deterministic state queries for dashboards, supervisors, and read-only tools
 - compact fleet summaries for supervisor health and restart-readiness checks
+- transport-family counts in fleet summaries for supervisor coverage views
 
 Protocol-specific transport clients, payload parsers, and adapter actors live in
 integration crates. This crate owns the boring rules that should stay the same

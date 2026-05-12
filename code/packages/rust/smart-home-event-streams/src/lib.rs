@@ -931,6 +931,12 @@ pub struct EventStreamFleetSummary {
     pub total_pending_gaps: u32,
     pub restart_plans: usize,
     pub reconnect_ready_streams: usize,
+    pub server_sent_event_streams: usize,
+    pub websocket_streams: usize,
+    pub mqtt_subscription_streams: usize,
+    pub cloud_webhook_streams: usize,
+    pub serial_frame_streams: usize,
+    pub radio_report_streams: usize,
 }
 
 impl EventStreamFleetSummary {
@@ -960,6 +966,18 @@ impl EventStreamFleetSummary {
                 summary.local_streams += 1;
             } else {
                 summary.cloud_streams += 1;
+            }
+            match state.spec.transport {
+                EventStreamTransport::ServerSentEvents => {
+                    summary.server_sent_event_streams += 1;
+                }
+                EventStreamTransport::WebSocket => summary.websocket_streams += 1,
+                EventStreamTransport::MqttSubscription => {
+                    summary.mqtt_subscription_streams += 1;
+                }
+                EventStreamTransport::CloudWebhook => summary.cloud_webhook_streams += 1,
+                EventStreamTransport::SerialFrames => summary.serial_frame_streams += 1,
+                EventStreamTransport::RadioReports => summary.radio_report_streams += 1,
             }
             if state.spec.transport.needs_cursor() {
                 summary.cursor_required_streams += 1;
@@ -996,6 +1014,21 @@ impl EventStreamFleetSummary {
 
     pub fn unhealthy_streams(&self) -> usize {
         self.degraded_streams + self.disconnected_streams + self.backing_off_streams
+    }
+
+    pub fn transport_count(&self, transport: EventStreamTransport) -> usize {
+        match transport {
+            EventStreamTransport::ServerSentEvents => self.server_sent_event_streams,
+            EventStreamTransport::WebSocket => self.websocket_streams,
+            EventStreamTransport::MqttSubscription => self.mqtt_subscription_streams,
+            EventStreamTransport::CloudWebhook => self.cloud_webhook_streams,
+            EventStreamTransport::SerialFrames => self.serial_frame_streams,
+            EventStreamTransport::RadioReports => self.radio_report_streams,
+        }
+    }
+
+    pub fn has_transport(&self, transport: EventStreamTransport) -> bool {
+        self.transport_count(transport) > 0
     }
 }
 
@@ -2106,10 +2139,22 @@ mod tests {
                 total_pending_gaps: 2,
                 restart_plans: 3,
                 reconnect_ready_streams: 1,
+                server_sent_event_streams: 1,
+                websocket_streams: 1,
+                mqtt_subscription_streams: 1,
+                cloud_webhook_streams: 1,
+                serial_frame_streams: 0,
+                radio_report_streams: 0,
             }
         );
         assert_eq!(summary.unhealthy_streams(), 2);
         assert!(summary.has_supervision_work());
+        assert_eq!(
+            summary.transport_count(EventStreamTransport::MqttSubscription),
+            1
+        );
+        assert!(summary.has_transport(EventStreamTransport::CloudWebhook));
+        assert!(!summary.has_transport(EventStreamTransport::RadioReports));
         assert!(!summary.is_empty());
 
         let empty = event_stream_fleet_summary_at([], 1_700);
