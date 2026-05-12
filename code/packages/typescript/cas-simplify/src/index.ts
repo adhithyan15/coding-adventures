@@ -17,12 +17,15 @@ import {
   rational,
   structuralKey,
 } from "@coding-adventures/symbolic-ir";
+import { isRewriteCycleError, rewrite } from "@coding-adventures/cas-pattern-matching";
+import { IDENTITY_RULES } from "./rules";
 
 export { AssumptionContext } from "./assumptions";
 export { IMAGINARY_UNIT, demoivre, exponentialize } from "./exponentialize";
 export * from "./heads";
 export { logcontract, logexpand } from "./logcontract";
 export { radcan } from "./radcan";
+export { IDENTITY_RULES, buildIdentityRules } from "./rules";
 
 export function canonical(node: IRNode): IRNode {
   if (node.kind !== "apply") return node;
@@ -88,7 +91,10 @@ function simplifyOnce(node: IRNode): IRNode {
     if (arg.kind === "apply" && headName(arg.head) === NEG.name && arg.args.length === 1) return arg.args[0];
   }
   if (name === EXP.name && args.length === 1 && isZero(args[0])) return int(1);
-  return app(head, args);
+
+  const simplified = app(head, args);
+  const rewritten = rewrite(simplified, IDENTITY_RULES);
+  return isRewriteCycleError(rewritten) ? simplified : rewritten;
 }
 
 function simplifyAdd(args: readonly IRNode[]): IRNode {

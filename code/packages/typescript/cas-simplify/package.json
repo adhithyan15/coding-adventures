@@ -13,6 +13,7 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
+    "@coding-adventures/cas-pattern-matching": "file:../cas-pattern-matching",
     "@coding-adventures/symbolic-ir": "file:../symbolic-ir"
   },
   "devDependencies": {

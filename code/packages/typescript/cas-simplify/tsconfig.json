@@ -7,6 +7,7 @@
     "declaration": true,
     "outDir": "dist",
     "rootDir": ".",
+    "preserveSymlinks": true,
     "skipLibCheck": true,
     "types": ["vitest/globals"]
   },
