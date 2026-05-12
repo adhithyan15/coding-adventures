@@ -501,6 +501,7 @@ members = [
     "artifact-store",
     "skill-store",
     "memory-store",
+    "weather-agent-e2e",
     "read-write-separation",
     "mini-sqlite",
     "window-core",
