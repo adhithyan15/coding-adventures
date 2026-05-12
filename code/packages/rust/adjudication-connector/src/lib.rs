@@ -26,8 +26,8 @@
 //! Any other compound functor used at a Rule node yields
 //! [`LoweringError::UnknownRuleSubtype`].
 
-use adjudication_ir::{IRDocument, IRNode, NodeId, NodeKind, Polarity};
-use logic_core::{Number, Term};
+use adjudication_ir::{EdgeRelation, IRDocument, IRNode, NodeId, NodeKind, Polarity};
+use logic_core::{atom, compound, Number, Term};
 use logic_engine::{
     search, BodyLiteral, Fact, KnowledgeBase, Probability, Rule, SearchMode, SearchResult,
 };
@@ -90,15 +90,60 @@ pub fn lower_to_kb(ir_doc: &IRDocument) -> Result<KnowledgeBase, LoweringError> 
             | NodeKind::Uncertainty
             | NodeKind::Exception
             | NodeKind::Discarded
-            | NodeKind::TextRun => {
-                // v2: TextRun nodes carry only structural decomposition
-                // and do not produce engine clauses. Query nodes are
-                // returned by extract_queries; Uncertainty / Exception /
-                // Discarded participate in clarification, audit, and
-                // rule priority but do not lower to clauses.
+            | NodeKind::Section
+            | NodeKind::Entity => {
+                // Query nodes are returned by extract_queries;
+                // Uncertainty / Exception / Discarded participate in
+                // clarification, audit, and rule priority. Section is
+                // structural metadata only. Entity is a deduplicated
+                // atom reference target; its content is lowered when
+                // a mentioning Fact or Rule is lowered. None produce
+                // independent engine clauses in v3.
             }
         }
     }
+
+    // Edge lowering: emit one Prolog clause per typed edge so the
+    // engine can reason about the relationship structure. The clauses
+    // use the EdgeRelation's `as_str()` name as the functor:
+    //
+    //     excepts(<source_id>, <target_id>).
+    //     applies_to(<source_id>, <target_id>).
+    //     cites(<source_id>, <target_id>).
+    //     ...
+    //
+    // For now we lower every edge uniformly. Domain-specific
+    // optimizations (e.g., compiling `Excepts` into per-rule exception
+    // bodies, compiling `Contains` into a structural-only relation
+    // that the engine ignores) follow as the engine grows.
+    for edge in &ir_doc.edges {
+        // Skip Contains: it's structural metadata. The engine doesn't
+        // need to know about document hierarchy.
+        if edge.relation == EdgeRelation::Contains {
+            continue;
+        }
+        let functor = edge.relation.as_str().replace('-', "_");
+        let head = compound(
+            &functor,
+            vec![atom(&edge.source.0), atom(&edge.target.0)],
+        );
+        // Edge polarity / modality semantics: an Affirmed/Present edge
+        // emits the clause as-is. Denied edges are recorded but not
+        // emitted as positive clauses (the engine would have to use a
+        // separate negative-knowledge mechanism). For now we skip
+        // Denied edges and emit a deny_ functor; the engine treats it
+        // as a witness for audit-trail replay.
+        if edge.polarity == Polarity::Denied {
+            let deny_head = compound(
+                &format!("not_{functor}"),
+                vec![atom(&edge.source.0), atom(&edge.target.0)],
+            );
+            kb.add_fact(Fact::certain(deny_head));
+        } else {
+            kb.add_fact(Fact::certain(head));
+        }
+    }
+
     Ok(kb)
 }
 
@@ -378,8 +423,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
         }
@@ -394,8 +437,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
         }
@@ -410,8 +451,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
         }
@@ -426,8 +465,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span()],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: empty_meta(),
         }
@@ -442,6 +479,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![],
+            edges: vec![],
         };
         let kb = lower_to_kb(&doc).unwrap();
         assert!(kb.is_all_certain()); // vacuously
@@ -452,6 +490,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![affirmed_fact_node("F1", atom("ok"))],
+            edges: vec![],
         };
         let kb = lower_to_kb(&doc).unwrap();
         // We can't directly observe internals; instead, run a search.
@@ -477,6 +516,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![denied_fact_node("F1", atom("absent"))],
+            edges: vec![],
         };
         let kb = lower_to_kb(&doc).unwrap();
         // Sanity: the KB has at least one rule (the NAF rule).
@@ -498,6 +538,7 @@ mod tests {
                 affirmed_fact_node("F2", atom("present")),
                 query_node("Q1", atom("present")),
             ],
+            edges: vec![],
         };
         let results = run_adjudication(&doc).unwrap();
         match &results[0].result {
@@ -535,6 +576,7 @@ mod tests {
                     compound("parent", vec![atom("homer"), atom("bart")]),
                 ),
             ],
+            edges: vec![],
         };
 
         let results = run_adjudication(&doc).unwrap();
@@ -566,6 +608,7 @@ mod tests {
                 rule_node("R1", rule_term),
                 query_node("Q1", atom("alarm")),
             ],
+            edges: vec![],
         };
 
         let results = run_adjudication(&doc).unwrap();
@@ -591,6 +634,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
         };
 
         let kb = lower_to_kb(&doc).unwrap();
@@ -632,6 +676,7 @@ mod tests {
                 rule_node("R1", rule_term.clone()),
                 query_node("Q1", atom("p")),
             ],
+            edges: vec![],
         };
         let r1 = run_adjudication(&doc1).unwrap();
         match &r1[0].result {
@@ -648,6 +693,7 @@ mod tests {
                 rule_node("R1", rule_term),
                 query_node("Q1", atom("p")),
             ],
+            edges: vec![],
         };
         let r2 = run_adjudication(&doc2).unwrap();
         match &r2[0].result {
@@ -664,6 +710,7 @@ mod tests {
                 "R1",
                 compound("unknownify", vec![atom("x")]),
             )],
+            edges: vec![],
         };
         match lower_to_kb(&doc) {
             Err(LoweringError::UnknownRuleSubtype { functor, .. }) => {
@@ -682,6 +729,7 @@ mod tests {
                 "R1",
                 compound("definitional", vec![atom("h")]),
             )],
+            edges: vec![],
         };
         match lower_to_kb(&doc) {
             Err(LoweringError::InvalidRuleArity {
@@ -704,6 +752,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
         };
         match lower_to_kb(&doc) {
             Err(LoweringError::InvalidProbability { .. }) => {}
@@ -720,6 +769,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
         };
         match lower_to_kb(&doc) {
             Err(LoweringError::ProbabilityOutOfRange { value, .. }) => {
@@ -738,6 +788,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
         };
         match lower_to_kb(&doc) {
             Err(LoweringError::InvalidRuleBodyList { .. }) => {}
@@ -754,6 +805,7 @@ mod tests {
                 affirmed_fact_node("F1", atom("a")),
                 query_node("Q2", atom("b")),
             ],
+            edges: vec![],
         };
         let queries = extract_queries(&doc);
         assert_eq!(queries, vec![atom("a"), atom("b")]);
@@ -769,6 +821,7 @@ mod tests {
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![rule_node("R1", rule_term), query_node("Q1", atom("h"))],
+            edges: vec![],
         };
         let results = run_adjudication(&doc).unwrap();
         match &results[0].result {

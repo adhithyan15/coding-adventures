@@ -292,8 +292,6 @@ pub fn contract_ir_document(source_text: &str) -> IRDocument {
             // even though the Exception lives inside it as a child.
             source_spans: vec![Span::new(doc_id.clone(), 0, len)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -308,8 +306,6 @@ pub fn contract_ir_document(source_text: &str) -> IRDocument {
             // validator requires).
             source_spans: vec![Span::new(doc_id.clone(), p1, len)],
             confidence: 1.0,
-            part_of: Some(NodeId::new("R1")),
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -322,8 +318,6 @@ pub fn contract_ir_document(source_text: &str) -> IRDocument {
             modality: Modality::Conditional,
             source_spans: vec![Span::new(doc_id.clone(), 0, len)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         });
@@ -337,8 +331,6 @@ pub fn contract_ir_document(source_text: &str) -> IRDocument {
         modality: Modality::Present,
         source_spans: vec![],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: Default::default(),
     });
@@ -346,6 +338,7 @@ pub fn contract_ir_document(source_text: &str) -> IRDocument {
     IRDocument {
         document_id: doc_id,
         nodes,
+        edges: Vec::new(),
     }
 }
 
@@ -428,29 +421,12 @@ mod tests {
         assert_eq!(ir.nodes[0].modality, Modality::Conditional);
     }
 
-    #[test]
-    fn exception_references_rule_via_part_of() {
-        let ir = contract_ir_document(CANONICAL_SOURCE);
-        let exception = &ir.nodes[1];
-        assert_eq!(
-            exception.part_of.as_ref().map(|n| n.0.as_str()),
-            Some("R1")
-        );
-    }
-
-    #[test]
-    fn root_node_tiles_the_document() {
-        // ADJ02 v2 requires root nodes (part_of=None) to tile the
-        // document. R1 is the only root in this fixture; E1 is a
-        // child of R1. R1 must cover [0, len) exactly.
-        let ir = contract_ir_document(CANONICAL_SOURCE);
-        let r1 = &ir.nodes[0];
-        assert_eq!(r1.id.0, "R1");
-        assert!(r1.part_of.is_none(), "R1 must be a root");
-        assert_eq!(r1.source_spans.len(), 1);
-        assert_eq!(r1.source_spans[0].start, 0);
-        assert_eq!(r1.source_spans[0].end, CANONICAL_SOURCE.len());
-    }
+    // The v2 `exception_references_rule_via_part_of` and
+    // `root_node_tiles_the_document` tests asserted on the obsolete
+    // `part_of` field; ADJ01 v3 expresses Exception→Rule attachment
+    // via `Excepts` edges instead. Equivalent tests will be added
+    // when the contract demo emits the v3 graph IR directly (the
+    // current path is HandBuilt and predates v3).
 
     #[test]
     fn exception_span_is_contained_within_rule_span() {

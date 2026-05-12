@@ -32,8 +32,6 @@ fn fact(id: &str, term: Term, polarity: Polarity, start: usize, end: usize) -> I
         modality: Modality::Present,
         source_spans: vec![span(start, end)],
         confidence: 0.95,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: HashMap::new(),
     }
@@ -48,8 +46,6 @@ fn rule(id: &str, term: Term, start: usize, end: usize) -> IRNode {
         modality: Modality::Present,
         source_spans: vec![span(start, end)],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: HashMap::new(),
     }
@@ -64,8 +60,6 @@ fn query(id: &str, term: Term, start: usize, end: usize) -> IRNode {
         modality: Modality::Present,
         source_spans: vec![span(start, end)],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: HashMap::new(),
     }
@@ -132,6 +126,7 @@ fn deterministic_grandparent_adjudication() {
                 160,
             ),
         ],
+        edges: vec![],
     };
 
     let results = run_adjudication(&doc).unwrap();
@@ -192,6 +187,7 @@ fn probabilistic_alarm_adjudication() {
             ),
             query("Q1", atom("alarm"), 71, 100),
         ],
+        edges: vec![],
     };
 
     let results = run_adjudication(&doc).unwrap();
@@ -249,6 +245,7 @@ fn mixed_deterministic_and_probabilistic_adjudication() {
             ),
             query("Q1", atom("pneumonia"), 81, 100),
         ],
+        edges: vec![],
     };
 
     let results = run_adjudication(&doc).unwrap();
@@ -277,6 +274,7 @@ fn multiple_queries_each_get_their_own_result() {
             query("Q2", atom("b"), 31, 40),
             query("Q3", atom("c"), 41, 50), // not in KB
         ],
+        edges: vec![],
     };
 
     let results = run_adjudication(&doc).unwrap();

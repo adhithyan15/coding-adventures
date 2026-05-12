@@ -67,8 +67,6 @@ fn tsa_ir_document() -> IRDocument {
         modality: Modality::Present,
         source_spans: vec![Span::new(doc_id.clone(), 0, 16)],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: Default::default(),
     };
@@ -81,8 +79,6 @@ fn tsa_ir_document() -> IRDocument {
         modality: Modality::Present,
         source_spans: vec![Span::new(doc_id.clone(), 16, 24)],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: Default::default(),
     };
@@ -97,8 +93,6 @@ fn tsa_ir_document() -> IRDocument {
         // from source). Coverage check allows zero-span queries.
         source_spans: vec![],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: Default::default(),
     };
@@ -106,6 +100,7 @@ fn tsa_ir_document() -> IRDocument {
     IRDocument {
         document_id: doc_id,
         nodes: vec![f1, f2, q1],
+        edges: vec![],
     }
 }
 
@@ -234,8 +229,6 @@ fn tsa_pipeline_blocks_on_out_of_bounds_span() {
         // Span 100..200 — way past the 24-byte document.
         source_spans: vec![Span::new(doc_id.clone(), 100, 200)],
         confidence: 1.0,
-        part_of: None,
-        lowered_from: None,
         discard_reason: None,
         metadata: Default::default(),
     };
@@ -244,7 +237,8 @@ fn tsa_pipeline_blocks_on_out_of_bounds_span() {
         ir_document: IRDocument {
             document_id: doc_id,
             nodes: vec![bad_fact],
-        },
+        edges: vec![],
+    },
     };
     let out = run(
         input,

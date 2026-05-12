@@ -355,19 +355,26 @@ fn coverage_to_checker_result(
 }
 
 fn coverage_violation_to_audit(v: &CoverageViolation) -> Violation {
+    use adjudication_ir::SpanLocation;
+    let span_loc_node_id = |loc: &SpanLocation| -> NodeId {
+        match loc {
+            SpanLocation::Node(id) => ir_node_id_to_audit(id),
+            SpanLocation::Edge(eid) => NodeId::new(format!("edge:{}", eid.0)),
+        }
+    };
     let (node_id, detail) = match v {
         CoverageViolation::SpanWrongDocument {
-            node_id, expected, found,
+            location, expected, found,
         } => (
-            ir_node_id_to_audit(node_id),
+            span_loc_node_id(location),
             serde_json::json!({
                 "kind": "SpanWrongDocument",
                 "expected": &expected.0,
                 "found": &found.0,
             }),
         ),
-        CoverageViolation::InvalidSpan { node_id, .. } => (
-            ir_node_id_to_audit(node_id),
+        CoverageViolation::InvalidSpan { location, .. } => (
+            span_loc_node_id(location),
             serde_json::json!({ "kind": "InvalidSpan" }),
         ),
         // Catch-all: every other variant gets its Debug rendering. The
@@ -440,10 +447,29 @@ fn propagation_to_checker_result(
 
 fn propagation_violation_to_audit(v: &PropagationViolation) -> Violation {
     let (node_id, kind, detail) = match v {
-        PropagationViolation::InheritChainUnresolved { node_id } => (
+        PropagationViolation::InheritWithoutParent { node_id, field } => (
             ir_node_id_to_audit(node_id),
             ClarificationKind::InheritChainUnresolved,
-            serde_json::json!({ "kind": "InheritChainUnresolved" }),
+            serde_json::json!({
+                "kind": "InheritWithoutParent",
+                "field": format!("{field:?}"),
+            }),
+        ),
+        PropagationViolation::MultiParentConflict {
+            node_id,
+            field,
+            candidates,
+        } => (
+            ir_node_id_to_audit(node_id),
+            ClarificationKind::AmbiguousPolarity,
+            serde_json::json!({
+                "kind": "MultiParentConflict",
+                "field": format!("{field:?}"),
+                "candidates": candidates
+                    .iter()
+                    .map(|(id, v)| serde_json::json!({ "parent": &id.0, "value": v }))
+                    .collect::<Vec<_>>(),
+            }),
         ),
         PropagationViolation::RuledOutMustBeAffirmed {
             node_id,
@@ -454,6 +480,14 @@ fn propagation_violation_to_audit(v: &PropagationViolation) -> Violation {
             serde_json::json!({
                 "kind": "RuledOutMustBeAffirmed",
                 "actual_polarity": format!("{actual_polarity:?}"),
+            }),
+        ),
+        PropagationViolation::UpstreamValidationError { kind } => (
+            NodeId::new(String::new()),
+            ClarificationKind::InheritChainUnresolved,
+            serde_json::json!({
+                "kind": "UpstreamValidationError",
+                "detail": kind,
             }),
         ),
     };
@@ -824,6 +858,7 @@ mod tests {
         IRDocument {
             document_id: IRDocumentId::new("doc1"),
             nodes,
+            edges: Vec::new(),
         }
     }
 
@@ -836,8 +871,6 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![Span::new(IRDocumentId::new("doc1"), start, end)],
             confidence: 1.0,
-            part_of: None,
-            lowered_from: None,
             discard_reason: None,
             metadata: Default::default(),
         }
