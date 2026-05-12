@@ -93,6 +93,54 @@ pub struct ArtifactRevisionSummary {
     pub content_hash: [u8; 32],
 }
 
+/// Compact aggregate over revision summaries for read-side history checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ArtifactRevisionHistorySummary {
+    pub total_revisions: usize,
+    pub root_revisions: usize,
+    pub child_revisions: usize,
+    pub total_body_len: usize,
+    pub revisions_with_metadata: usize,
+}
+
+impl ArtifactRevisionHistorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_revisions<'a, I>(revisions: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ArtifactRevisionSummary>,
+    {
+        let mut summary = Self::empty();
+        for revision in revisions {
+            summary.total_revisions += 1;
+            summary.total_body_len += revision.body_len;
+            if revision.parent_revision_id.is_some() {
+                summary.child_revisions += 1;
+            } else {
+                summary.root_revisions += 1;
+            }
+            if metadata_has_fields(&revision.metadata) {
+                summary.revisions_with_metadata += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_revisions == 0
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.child_revisions > 0
+    }
+
+    pub fn has_metadata(&self) -> bool {
+        self.revisions_with_metadata > 0
+    }
+}
+
 /// Compact catalog view for read-side status and lifecycle checks.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct ArtifactCatalogSummary {
@@ -415,6 +463,15 @@ impl<S: StorageBackend> ArtifactStore<S> {
         Ok(revisions)
     }
 
+    pub fn revision_history_summary(
+        &self,
+        artifact_id: &str,
+        options: ArtifactRevisionListOptions,
+    ) -> Result<ArtifactRevisionHistorySummary, StorageError> {
+        let revisions = self.list_revisions(artifact_id, options)?;
+        Ok(ArtifactRevisionHistorySummary::from_revisions(&revisions))
+    }
+
     pub fn list_by_collection(&self, collection: &str) -> Result<Vec<Artifact>, StorageError> {
         self.list_artifacts(ArtifactListOptions::new().for_collection(collection))
     }
@@ -604,6 +661,10 @@ fn provenance_filter_matches(expected: Option<&str>, actual: Option<&str>) -> bo
         Some(expected) => actual == Some(expected),
         None => true,
     }
+}
+
+fn metadata_has_fields(value: &JsonValue) -> bool {
+    matches!(value, JsonValue::Object(fields) if !fields.is_empty())
 }
 
 fn validate_revision_list_options(
@@ -1305,6 +1366,34 @@ mod tests {
         );
         assert_ne!(all[0].content_hash, all[1].content_hash);
 
+        let history_summary = ArtifactRevisionHistorySummary::from_revisions(&all);
+        assert_eq!(
+            history_summary,
+            ArtifactRevisionHistorySummary {
+                total_revisions: 3,
+                root_revisions: 1,
+                child_revisions: 2,
+                total_body_len: 15,
+                revisions_with_metadata: 3,
+            }
+        );
+        assert!(history_summary.has_lineage());
+        assert!(history_summary.has_metadata());
+        assert!(!history_summary.is_empty());
+
+        let limited_history_summary = store
+            .revision_history_summary(
+                "plan",
+                ArtifactRevisionListOptions::new()
+                    .oldest_first()
+                    .with_limit(2),
+            )
+            .unwrap();
+        assert_eq!(limited_history_summary.total_revisions, 2);
+        assert_eq!(limited_history_summary.root_revisions, 1);
+        assert_eq!(limited_history_summary.child_revisions, 1);
+        assert_eq!(limited_history_summary.total_body_len, 10);
+
         let latest_window = store
             .list_revisions(
                 "plan",
@@ -1366,6 +1455,10 @@ mod tests {
         assert!(matches!(missing_cursor, StorageError::Validation { .. }));
         assert!(store
             .list_revisions("plan", ArtifactRevisionListOptions::new().with_limit(0))
+            .unwrap()
+            .is_empty());
+        assert!(store
+            .revision_history_summary("plan", ArtifactRevisionListOptions::new().with_limit(0))
             .unwrap()
             .is_empty());
     }
