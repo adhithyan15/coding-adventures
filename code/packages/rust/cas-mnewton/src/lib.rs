@@ -9,6 +9,11 @@
 //! This shape avoids an import cycle with `symbolic-vm` and keeps the core
 //! suitable for standalone Rust and WASM use.
 
+mod handlers;
 mod newton;
 
+pub use handlers::{
+    build_mnewton_handler_table, mnewton_handler, DiffFn, EvalFn, MNewtonHandler,
+    MNewtonHandlerTable,
+};
 pub use newton::{ir_to_float, mnewton_solve, MNewtonError, MNewtonOptions, MNEWTON};
