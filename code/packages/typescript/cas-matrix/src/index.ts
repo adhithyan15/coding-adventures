@@ -15,7 +15,7 @@ import {
   type IRInteger,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
-import { Matrix } from "matrix";
+import { Matrix, getMatrixBackend } from "matrix";
 
 export const MATRIX = "Matrix";
 export const MATRIX_HEAD = sym(MATRIX);
@@ -97,7 +97,7 @@ export function transpose(node: IRNode): IRNode {
   const rows = rowsOf(node);
   const backend = tryBackendRows(rows);
   if (backend !== undefined) {
-    return matrixFromBackend(backend.matrix.transpose(), backend.integerOutput);
+    return matrixFromBackend(getMatrixBackend().transpose(backend.matrix), backend.integerOutput);
   }
   const nrows = rows.length;
   const ncols = rows[0]?.length ?? 0;
@@ -111,7 +111,7 @@ export function addMatrices(a: IRNode, b: IRNode): IRNode {
   checkSameShape(aRows, bRows, "add");
   const backend = tryBackendBinary(aRows, bRows);
   if (backend !== undefined) {
-    return matrixFromBackend(backend.left.add(backend.right), backend.integerOutput);
+    return matrixFromBackend(getMatrixBackend().add(backend.left, backend.right), backend.integerOutput);
   }
   return matrix(elementwise(aRows, bRows, (x, y) => app(ADD, [x, y])));
 }
@@ -122,7 +122,7 @@ export function subMatrices(a: IRNode, b: IRNode): IRNode {
   checkSameShape(aRows, bRows, "sub");
   const backend = tryBackendBinary(aRows, bRows);
   if (backend !== undefined) {
-    return matrixFromBackend(backend.left.subtract(backend.right), backend.integerOutput);
+    return matrixFromBackend(getMatrixBackend().subtract(backend.left, backend.right), backend.integerOutput);
   }
   return matrix(elementwise(aRows, bRows, (x, y) => app(SUB, [x, y])));
 }
@@ -131,7 +131,7 @@ export function scalarMultiply(scalar: IRNode, node: IRNode): IRNode {
   const rows = rowsOf(node);
   const backend = tryBackendScalar(scalar, rows);
   if (backend !== undefined) {
-    return matrixFromBackend(backend.matrix.scale(backend.scalar), backend.integerOutput);
+    return matrixFromBackend(getMatrixBackend().scale(backend.matrix, backend.scalar), backend.integerOutput);
   }
   return matrix(rows.map((row) => row.map((cell) => app(MUL, [scalar, cell]))));
 }
@@ -159,7 +159,7 @@ export function dot(a: IRNode, b: IRNode): IRNode {
   }
   const backend = tryBackendBinary(aRows, bRows);
   if (backend !== undefined) {
-    return matrixFromBackend(backend.left.dot(backend.right), backend.integerOutput);
+    return matrixFromBackend(getMatrixBackend().dot(backend.left, backend.right), backend.integerOutput);
   }
   const bCols = bRows[0]?.length ?? 0;
   return matrix(aRows.map((row) =>

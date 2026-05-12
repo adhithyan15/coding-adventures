@@ -29,6 +29,7 @@ import {
   zeroMatrix,
 } from "../src/index";
 import { ADD, LIST, MUL, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { Matrix, getMatrixBackend, resetMatrixBackend, setMatrixBackend, type MatrixBackend } from "matrix";
 
 function irow(values: readonly number[]): IRNode[] {
   return values.map((value) => int(value));
@@ -146,6 +147,48 @@ describe("arithmetic", () => {
     expect(numCols(c)).toBe(1);
     expect(equals(getEntry(c, 1, 1), int(11))).toBe(true);
     expect(() => dot(a, matrix([irow([3, 4])]))).toThrow(MatrixError);
+  });
+
+  it("routes numeric matrix arithmetic through the shared matrix backend", () => {
+    const calls: string[] = [];
+    const base = getMatrixBackend();
+    const backend: MatrixBackend = {
+      name: "cas-test-backend",
+      add(left: Matrix, right: Matrix) {
+        calls.push("add");
+        return base.add(left, right);
+      },
+      subtract(left: Matrix, right: Matrix) {
+        calls.push("subtract");
+        return base.subtract(left, right);
+      },
+      scale(mat: Matrix, scalar: number) {
+        calls.push("scale");
+        return base.scale(mat, scalar);
+      },
+      transpose(mat: Matrix) {
+        calls.push("transpose");
+        return base.transpose(mat);
+      },
+      dot(left: Matrix, right: Matrix) {
+        calls.push("dot");
+        return base.dot(left, right);
+      },
+    };
+
+    setMatrixBackend(backend);
+    try {
+      const a = matrix([irow([1, 2])]);
+      const b = matrix([irow([3, 4])]);
+      expect(equals(getEntry(addMatrices(a, b), 1, 2), int(6))).toBe(true);
+      expect(equals(getEntry(scalarMultiply(int(2), a), 1, 1), int(2))).toBe(true);
+      expect(equals(getEntry(transpose(a), 2, 1), int(2))).toBe(true);
+      expect(equals(getEntry(dot(a, matrix([irow([5]), irow([6])])), 1, 1), int(17))).toBe(true);
+    } finally {
+      resetMatrixBackend();
+    }
+
+    expect(calls).toEqual(["add", "scale", "transpose", "dot"]);
   });
 
   it("falls back to symbolic dot products when entries are symbolic", () => {
