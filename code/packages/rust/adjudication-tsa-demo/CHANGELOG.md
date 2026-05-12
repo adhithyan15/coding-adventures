@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-05-12
+
+### Added
+
+Optional disk-persisted prompt cache. When `ADJ_DEMO_CACHE_DIR=<path>`
+is set, every LLM client used by Arm B is wrapped in
+`CachingClient::with_disk_persistence`. A first run populates the
+cache directory; a second run replays every prompt from disk with
+zero round-trips to Ollama.
+
+Verified on the local TSA demo:
+
+- Cold run (gemma4:latest extractor + renderer + nli, llama3.1:8b
+  adversary, 9 LLM calls total): ~60 s wall-clock.
+- Warm run with the same cache dir: ~0.5 s of actual demo work
+  (rest is Rust binary launch).
+
+- `DemoConfig::cache_dir: Option<String>` — opt-in. Defaults to
+  `None` (in-memory cache only, which is essentially a no-op for a
+  one-shot binary).
+- `ADJ_DEMO_CACHE_DIR=<path>` env var to enable disk persistence
+  from the binary.
+- Side-by-side report header surfaces the cache configuration.
+
+### Notes
+
+ADJ06 retry rounds also benefit: when the model self-corrects an
+ADJ02 failure, the corrected prompt is cached so a re-run replays
+both the original failed attempt AND the correction at disk speed.
+
 ## [0.4.0] - 2026-05-12
 
 ### Added
