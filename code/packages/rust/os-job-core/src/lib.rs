@@ -511,6 +511,225 @@ impl InstalledJob {
         }
         result
     }
+
+    /// Return a body-free read-side projection for inventory and status tools.
+    pub fn summary(&self) -> InstalledJobSummary {
+        InstalledJobSummary::from_installed_job(self)
+    }
+}
+
+/// Body-free projection of an installed job for D18C/D18D read-side tools.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstalledJobSummary {
+    pub job_id: String,
+    pub backend: BackendKind,
+    pub name: String,
+    pub action_kind: JobActionKind,
+    pub trigger_kind: JobTriggerKind,
+    pub enabled: bool,
+    pub installed_at: TimestampMs,
+    pub has_native_identifier: bool,
+    pub has_input: bool,
+    pub env_count: usize,
+    pub has_working_directory: bool,
+    pub timeout_seconds: Option<u32>,
+    pub retry_max_attempts: u32,
+    pub captures_stdout: bool,
+    pub captures_stderr: bool,
+    pub appends_output: bool,
+}
+
+impl InstalledJobSummary {
+    pub fn from_installed_job(job: &InstalledJob) -> Self {
+        Self {
+            job_id: job.job_id.clone(),
+            backend: job.backend,
+            name: job.spec.name.clone(),
+            action_kind: job.spec.action.kind(),
+            trigger_kind: job.spec.trigger.kind(),
+            enabled: job.enabled,
+            installed_at: job.installed_at,
+            has_native_identifier: job.native_identifier.is_some(),
+            has_input: job.spec.action.has_input(),
+            env_count: job.spec.env.len(),
+            has_working_directory: job.spec.working_directory.is_some(),
+            timeout_seconds: job.spec.timeout_seconds,
+            retry_max_attempts: job.spec.retry_policy.max_attempts,
+            captures_stdout: job.spec.output_policy.stdout_path.is_some(),
+            captures_stderr: job.spec.output_policy.stderr_path.is_some(),
+            appends_output: job.spec.output_policy.append,
+        }
+    }
+
+    pub fn has_timeout(&self) -> bool {
+        self.timeout_seconds.is_some()
+    }
+
+    pub fn has_retry_policy(&self) -> bool {
+        self.retry_max_attempts > 0
+    }
+
+    pub fn captures_output(&self) -> bool {
+        self.captures_stdout || self.captures_stderr
+    }
+}
+
+/// Aggregate counts over a bounded installed-job inventory read.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct InstalledJobCatalogSummary {
+    pub total_jobs: usize,
+    pub launchd_jobs: usize,
+    pub systemd_user_jobs: usize,
+    pub windows_task_jobs: usize,
+    pub in_process_jobs: usize,
+    pub command_actions: usize,
+    pub agent_run_actions: usize,
+    pub function_actions: usize,
+    pub once_triggers: usize,
+    pub interval_triggers: usize,
+    pub daily_triggers: usize,
+    pub weekly_triggers: usize,
+    pub monthly_triggers: usize,
+    pub at_login_triggers: usize,
+    pub at_boot_triggers: usize,
+    pub enabled_jobs: usize,
+    pub disabled_jobs: usize,
+    pub jobs_with_native_identifier: usize,
+    pub jobs_with_input: usize,
+    pub jobs_with_env: usize,
+    pub total_env_entries: usize,
+    pub jobs_with_working_directory: usize,
+    pub jobs_with_timeout: usize,
+    pub jobs_with_retry_policy: usize,
+    pub jobs_capturing_output: usize,
+    pub jobs_appending_output: usize,
+    pub earliest_installed_at: Option<TimestampMs>,
+    pub latest_installed_at: Option<TimestampMs>,
+}
+
+impl InstalledJobCatalogSummary {
+    pub fn record(&mut self, job: &InstalledJob) {
+        self.record_summary(&job.summary());
+    }
+
+    pub fn record_summary(&mut self, job: &InstalledJobSummary) {
+        self.total_jobs += 1;
+        match job.backend {
+            BackendKind::Launchd => self.launchd_jobs += 1,
+            BackendKind::SystemdUser => self.systemd_user_jobs += 1,
+            BackendKind::WindowsTaskScheduler => self.windows_task_jobs += 1,
+            BackendKind::InProcess => self.in_process_jobs += 1,
+        }
+        match job.action_kind {
+            JobActionKind::Command => self.command_actions += 1,
+            JobActionKind::AgentRun => self.agent_run_actions += 1,
+            JobActionKind::Function => self.function_actions += 1,
+        }
+        match job.trigger_kind {
+            JobTriggerKind::Once => self.once_triggers += 1,
+            JobTriggerKind::Interval => self.interval_triggers += 1,
+            JobTriggerKind::Daily => self.daily_triggers += 1,
+            JobTriggerKind::Weekly => self.weekly_triggers += 1,
+            JobTriggerKind::Monthly => self.monthly_triggers += 1,
+            JobTriggerKind::AtLogin => self.at_login_triggers += 1,
+            JobTriggerKind::AtBoot => self.at_boot_triggers += 1,
+        }
+
+        if job.enabled {
+            self.enabled_jobs += 1;
+        } else {
+            self.disabled_jobs += 1;
+        }
+        if job.has_native_identifier {
+            self.jobs_with_native_identifier += 1;
+        }
+        if job.has_input {
+            self.jobs_with_input += 1;
+        }
+        if job.env_count > 0 {
+            self.jobs_with_env += 1;
+            self.total_env_entries += job.env_count;
+        }
+        if job.has_working_directory {
+            self.jobs_with_working_directory += 1;
+        }
+        if job.has_timeout() {
+            self.jobs_with_timeout += 1;
+        }
+        if job.has_retry_policy() {
+            self.jobs_with_retry_policy += 1;
+        }
+        if job.captures_output() {
+            self.jobs_capturing_output += 1;
+        }
+        if job.appends_output {
+            self.jobs_appending_output += 1;
+        }
+
+        self.earliest_installed_at = Some(
+            self.earliest_installed_at
+                .map_or(job.installed_at, |timestamp| {
+                    timestamp.min(job.installed_at)
+                }),
+        );
+        self.latest_installed_at = Some(
+            self.latest_installed_at
+                .map_or(job.installed_at, |timestamp| {
+                    timestamp.max(job.installed_at)
+                }),
+        );
+    }
+
+    pub fn from_jobs<'a, I>(jobs: I) -> Self
+    where
+        I: IntoIterator<Item = &'a InstalledJob>,
+    {
+        let mut summary = Self::default();
+        for job in jobs {
+            summary.record(job);
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a, I>(jobs: I) -> Self
+    where
+        I: IntoIterator<Item = &'a InstalledJobSummary>,
+    {
+        let mut summary = Self::default();
+        for job in jobs {
+            summary.record_summary(job);
+        }
+        summary
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_jobs == 0
+    }
+
+    pub fn has_disabled_jobs(self) -> bool {
+        self.disabled_jobs > 0
+    }
+
+    pub fn has_mixed_backends(self) -> bool {
+        [
+            self.launchd_jobs,
+            self.systemd_user_jobs,
+            self.windows_task_jobs,
+            self.in_process_jobs,
+        ]
+        .into_iter()
+        .filter(|count| *count > 0)
+        .count()
+            > 1
+    }
+
+    pub fn has_retrying_jobs(self) -> bool {
+        self.jobs_with_retry_policy > 0
+    }
+
+    pub fn has_output_capture(self) -> bool {
+        self.jobs_capturing_output > 0
+    }
 }
 
 /// High-level status returned by a job runtime.
@@ -882,6 +1101,13 @@ where
     }
 
     results
+}
+
+pub fn summarize_installed_jobs<'a, I>(jobs: I) -> InstalledJobCatalogSummary
+where
+    I: IntoIterator<Item = &'a InstalledJob>,
+{
+    InstalledJobCatalogSummary::from_jobs(jobs)
 }
 
 pub fn query_job_statuses<'a, I>(statuses: I, query: &JobStatusQuery) -> Vec<&'a JobStatus>
@@ -1919,6 +2145,159 @@ mod tests {
         assert!(query.matches_job(results[0]));
         assert_eq!(JobActionKind::AgentRun.to_string(), "agent_run");
         assert_eq!(JobTriggerKind::Daily.to_string(), "daily");
+    }
+
+    #[test]
+    fn installed_job_summary_projects_inventory_facts_without_action_details() {
+        let mut spec = example_job(JobTrigger::Weekly {
+            days: vec![Weekday::Monday],
+            hour: 9,
+            minute: 0,
+        });
+        spec.action = JobAction::Function {
+            function_id: "refresh-digest".to_string(),
+            args: vec!["--brief".to_string()],
+            input: Some("{\"scope\":\"weekly\"}".to_string()),
+        };
+        spec.retry_policy.max_attempts = 3;
+        let installed = InstalledJob::new(
+            BackendKind::Launchd,
+            spec,
+            500,
+            Some("com.example.refresh-digest".to_string()),
+        );
+
+        let summary = installed.summary();
+
+        assert_eq!(summary.job_id, "memory-extract");
+        assert_eq!(summary.backend, BackendKind::Launchd);
+        assert_eq!(summary.name, "Memory Extract");
+        assert_eq!(summary.action_kind, JobActionKind::Function);
+        assert_eq!(summary.trigger_kind, JobTriggerKind::Weekly);
+        assert!(summary.enabled);
+        assert_eq!(summary.installed_at, 500);
+        assert!(summary.has_native_identifier);
+        assert!(summary.has_input);
+        assert_eq!(summary.env_count, 1);
+        assert!(summary.has_working_directory);
+        assert_eq!(summary.timeout_seconds, Some(600));
+        assert_eq!(summary.retry_max_attempts, 3);
+        assert!(summary.captures_stdout);
+        assert!(summary.captures_stderr);
+        assert!(summary.appends_output);
+        assert!(summary.has_timeout());
+        assert!(summary.has_retry_policy());
+        assert!(summary.captures_output());
+    }
+
+    #[test]
+    fn installed_job_catalog_summary_counts_backends_shapes_and_install_window() {
+        let mut memory = example_job(JobTrigger::Daily {
+            hour: 3,
+            minute: 15,
+        });
+        memory.job_id = "memory-extract".to_string();
+        memory.name = "Memory Extract".to_string();
+        memory.retry_policy.max_attempts = 2;
+
+        let mut digest = example_job(JobTrigger::Interval {
+            every_seconds: 3_600,
+            anchor: None,
+        });
+        digest.job_id = "digest-email".to_string();
+        digest.name = "Digest Email".to_string();
+        digest.action = JobAction::Command {
+            program: "chief-of-staff".to_string(),
+            args: vec!["digest-email".to_string()],
+            input: Some("run now".to_string()),
+        };
+        digest.env = Vec::new();
+        digest.working_directory = None;
+        digest.timeout_seconds = None;
+        digest.output_policy = OutputPolicy::default();
+
+        let mut cleanup = example_job(JobTrigger::AtBoot);
+        cleanup.job_id = "artifact-gc".to_string();
+        cleanup.name = "Artifact GC".to_string();
+        cleanup.action = JobAction::Function {
+            function_id: "artifact.gc".to_string(),
+            args: Vec::new(),
+            input: None,
+        };
+        cleanup.enabled = false;
+        cleanup.env = Vec::new();
+        cleanup.working_directory = None;
+        cleanup.retry_policy.max_attempts = 1;
+        cleanup.timeout_seconds = Some(120);
+        cleanup.output_policy = OutputPolicy {
+            stdout_path: None,
+            stderr_path: Some("/tmp/artifact-gc.err".to_string()),
+            append: false,
+        };
+
+        let jobs = vec![
+            InstalledJob::new(BackendKind::SystemdUser, memory, 200, None),
+            InstalledJob::new(
+                BackendKind::Launchd,
+                digest,
+                300,
+                Some("com.example.digest-email".to_string()),
+            ),
+            InstalledJob::new(
+                BackendKind::WindowsTaskScheduler,
+                cleanup,
+                100,
+                Some("ChiefOfStaffArtifactGc".to_string()),
+            ),
+        ];
+
+        let summary = summarize_installed_jobs(&jobs);
+
+        assert_eq!(
+            summary,
+            InstalledJobCatalogSummary {
+                total_jobs: 3,
+                launchd_jobs: 1,
+                systemd_user_jobs: 1,
+                windows_task_jobs: 1,
+                in_process_jobs: 0,
+                command_actions: 1,
+                agent_run_actions: 1,
+                function_actions: 1,
+                once_triggers: 0,
+                interval_triggers: 1,
+                daily_triggers: 1,
+                weekly_triggers: 0,
+                monthly_triggers: 0,
+                at_login_triggers: 0,
+                at_boot_triggers: 1,
+                enabled_jobs: 2,
+                disabled_jobs: 1,
+                jobs_with_native_identifier: 2,
+                jobs_with_input: 1,
+                jobs_with_env: 1,
+                total_env_entries: 1,
+                jobs_with_working_directory: 1,
+                jobs_with_timeout: 2,
+                jobs_with_retry_policy: 2,
+                jobs_capturing_output: 2,
+                jobs_appending_output: 1,
+                earliest_installed_at: Some(100),
+                latest_installed_at: Some(300),
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_disabled_jobs());
+        assert!(summary.has_mixed_backends());
+        assert!(summary.has_retrying_jobs());
+        assert!(summary.has_output_capture());
+
+        let summaries = jobs.iter().map(InstalledJob::summary).collect::<Vec<_>>();
+        assert_eq!(
+            InstalledJobCatalogSummary::from_summaries(&summaries),
+            summary
+        );
+        assert!(InstalledJobCatalogSummary::default().is_empty());
     }
 
     #[test]

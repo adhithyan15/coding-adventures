@@ -20,6 +20,8 @@ call site, this crate gives the repository one shared vocabulary:
 - Portable job data types
 - Installed-job, status, and run-receipt records for runtime APIs
 - Bounded read-side queries for installed jobs and runtime status records
+- Body-free installed-job summaries and aggregate inventory counts for D18C/D18D
+  list tools
 - Aggregate status summaries for D18C/D18D tools that need stable runtime
   health counts
 - Validation for identifiers, triggers, retry policy, and environment entries

@@ -12,6 +12,9 @@ All notable changes to this package will be documented in this file.
 - Installed-job and job-status query options for filtering read-side runtime
   views by backend, enabled state, action/trigger kind, status, run outcome,
   next-run deadline, sort order, and bounded result count
+- Body-free installed-job summaries and aggregate inventory counts for D18C/D18D
+  read tools that need backend/action/trigger, retry, timeout, env, and output
+  capture facts without inspecting full specs
 - Job-status summary counts for D18C/D18D read tools that need a compact
   runtime health rollup
 - Repository-owned `InstallPlan`, `InstallFile`, and `InstallCommand` contracts
