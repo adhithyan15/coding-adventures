@@ -644,6 +644,16 @@ pub struct PendingRequest {
     pub timeout_at_ms: u64,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RequestTrackerSummary {
+    pub pending_count: usize,
+    pub callback_pending_count: usize,
+    pub response_pending_count: usize,
+    pub function_counts: BTreeMap<FunctionId, usize>,
+    pub oldest_sent_at_ms: Option<u64>,
+    pub next_timeout_at_ms: Option<u64>,
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct RequestTracker {
     pending: BTreeMap<RequestKey, PendingRequest>,
@@ -714,6 +724,40 @@ impl RequestTracker {
 
     pub fn pending_len(&self) -> usize {
         self.pending.len()
+    }
+
+    pub fn summary(&self) -> RequestTrackerSummary {
+        let mut callback_pending_count = 0;
+        let mut response_pending_count = 0;
+        let mut function_counts = BTreeMap::new();
+        let mut oldest_sent_at_ms: Option<u64> = None;
+        let mut next_timeout_at_ms: Option<u64> = None;
+
+        for pending in self.pending.values() {
+            if pending.key.callback_id.is_some() {
+                callback_pending_count += 1;
+            } else {
+                response_pending_count += 1;
+            }
+            *function_counts.entry(pending.key.function_id).or_insert(0) += 1;
+            oldest_sent_at_ms = Some(match oldest_sent_at_ms {
+                Some(current) => current.min(pending.sent_at_ms),
+                None => pending.sent_at_ms,
+            });
+            next_timeout_at_ms = Some(match next_timeout_at_ms {
+                Some(current) => current.min(pending.timeout_at_ms),
+                None => pending.timeout_at_ms,
+            });
+        }
+
+        RequestTrackerSummary {
+            pending_count: self.pending.len(),
+            callback_pending_count,
+            response_pending_count,
+            function_counts,
+            oldest_sent_at_ms,
+            next_timeout_at_ms,
+        }
     }
 }
 
@@ -1260,5 +1304,43 @@ mod tests {
         assert!(tracker.expire(149).is_empty());
         assert_eq!(tracker.expire(150).len(), 1);
         assert_eq!(tracker.pending_len(), 0);
+    }
+
+    #[test]
+    fn request_tracker_summary_reports_pending_distribution() {
+        let version = SerialMessage::request(FunctionId::GET_VERSION, Vec::new());
+        let send_data = SendDataRequest::new(
+            NodeId::Classic(2),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x44,
+        )
+        .to_message()
+        .unwrap();
+        let node_info = SerialMessage::request(FunctionId::REQUEST_NODE_INFO, vec![2, 0x77]);
+        let mut tracker = RequestTracker::new();
+
+        tracker.track(&version, 100, 500).unwrap();
+        tracker.track(&send_data, 120, 200).unwrap();
+        tracker.track(&node_info, 110, 300).unwrap();
+
+        let summary = tracker.summary();
+        assert_eq!(summary.pending_count, 3);
+        assert_eq!(summary.response_pending_count, 1);
+        assert_eq!(summary.callback_pending_count, 2);
+        assert_eq!(
+            summary.function_counts.get(&FunctionId::GET_VERSION),
+            Some(&1)
+        );
+        assert_eq!(
+            summary.function_counts.get(&FunctionId::SEND_DATA),
+            Some(&1)
+        );
+        assert_eq!(
+            summary.function_counts.get(&FunctionId::REQUEST_NODE_INFO),
+            Some(&1)
+        );
+        assert_eq!(summary.oldest_sent_at_ms, Some(100));
+        assert_eq!(summary.next_timeout_at_ms, Some(320));
     }
 }
