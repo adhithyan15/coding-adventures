@@ -540,6 +540,14 @@ impl RuntimeEventBus {
             max_pending_delivery_count,
         }
     }
+
+    pub fn health_summary(&self) -> RuntimeEventBusHealthSummary {
+        RuntimeEventBusHealthSummary {
+            snapshot: self.snapshot(),
+            subscriptions: self.subscription_inventory_summary(&RuntimeSubscriptionQuery::new()),
+            event_log: self.event_log_summary(&RuntimeEventQuery::new()),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1008,6 +1016,44 @@ impl RuntimeSubscriptionInventorySummary {
 
     pub fn exceeds_subscription_backlog_threshold(&self, threshold: usize) -> bool {
         self.max_queued_events > threshold
+    }
+}
+
+/// Payload-free event-bus health view for replay and subscriber pressure checks.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeEventBusHealthSummary {
+    pub snapshot: RuntimeEventBusSnapshot,
+    pub subscriptions: RuntimeSubscriptionInventorySummary,
+    pub event_log: RuntimeEventLogSummary,
+}
+
+impl RuntimeEventBusHealthSummary {
+    pub fn has_stream_coverage(&self) -> bool {
+        self.snapshot.has_subscriptions()
+    }
+
+    pub fn has_replay_history(&self) -> bool {
+        self.event_log.has_events()
+    }
+
+    pub fn has_event_pressure(&self) -> bool {
+        self.snapshot.has_backlog() || self.subscriptions.has_backlog()
+    }
+
+    pub fn is_caught_up(&self) -> bool {
+        !self.has_event_pressure()
+    }
+
+    pub fn needs_attention(&self) -> bool {
+        self.has_event_pressure()
+    }
+
+    pub fn has_command_streams(&self) -> bool {
+        self.subscriptions.has_command_subscribers()
+    }
+
+    pub fn has_supervision_streams(&self) -> bool {
+        self.subscriptions.has_supervision_subscribers()
     }
 }
 
@@ -2381,6 +2427,10 @@ impl SmartHomeRuntime {
                 .sum(),
             state_refresh_target_count: self.registry.state_refresh_plan_at(now_ms).len(),
         }
+    }
+
+    pub fn event_bus_health_summary(&self) -> RuntimeEventBusHealthSummary {
+        self.event_bus.health_summary()
     }
 
     pub fn pairing_session(
@@ -4133,6 +4183,99 @@ mod tests {
         assert_eq!(empty, RuntimeSubscriptionInventorySummary::empty());
         assert!(!empty.has_backlog());
         assert_eq!(empty.backlogged_subscription_percent(), 0);
+    }
+
+    #[test]
+    fn event_bus_health_summary_composes_replay_streams_and_pressure() {
+        let mut bus = RuntimeEventBus::new();
+        let all_events = RuntimeSubscriptionId::trusted("all-events");
+        let command_events = RuntimeSubscriptionId::trusted("command-events");
+        let supervision_events = RuntimeSubscriptionId::trusted("supervision-events");
+        bus.subscribe(all_events, RuntimeEventFilter::All).unwrap();
+        bus.subscribe(command_events, RuntimeEventFilter::Commands)
+            .unwrap();
+        bus.subscribe(supervision_events.clone(), RuntimeEventFilter::Supervision)
+            .unwrap();
+
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        bus.publish(command_result_runtime_event("cmd-1"));
+        bus.publish(RuntimeEvent::DesiredStateDrift {
+            bridge_id: BridgeId::trusted("bridge-1"),
+            entity_id: EntityId::trusted("entity-1"),
+            capability_id: CapabilityId::trusted("light.on_off"),
+            reason: ReconciliationReason::Drifted,
+            detected_at_ms: 1_004,
+        });
+        bus.drain(&supervision_events).unwrap();
+
+        let summary = bus.health_summary();
+
+        assert_eq!(
+            summary.snapshot,
+            RuntimeEventBusSnapshot {
+                subscription_count: 3,
+                pending_delivery_count: 4,
+                published_event_count: 3,
+                backlogged_subscription_count: 2,
+                max_pending_delivery_count: 3,
+            }
+        );
+        assert_eq!(
+            summary.subscriptions,
+            RuntimeSubscriptionInventorySummary {
+                total_subscriptions: 3,
+                all_event_subscriptions: 1,
+                bridge_subscriptions: 0,
+                entity_subscriptions: 0,
+                command_subscriptions: 1,
+                supervision_subscriptions: 1,
+                backlogged_subscriptions: 2,
+                caught_up_subscriptions: 1,
+                total_queued_events: 4,
+                max_queued_events: 3,
+            }
+        );
+        assert_eq!(
+            summary.event_log,
+            RuntimeEventLogSummary {
+                total_events: 3,
+                device_events: 0,
+                command_results: 1,
+                bridge_health_events: 1,
+                state_expired_events: 0,
+                desired_state_drift_events: 1,
+                worker_restart_events: 0,
+                first_sequence: Some(0),
+                latest_sequence: Some(2),
+                next_checkpoint: RuntimeEventCheckpoint::from_next_sequence(3),
+            }
+        );
+        assert!(summary.has_stream_coverage());
+        assert!(summary.has_replay_history());
+        assert!(summary.has_event_pressure());
+        assert!(!summary.is_caught_up());
+        assert!(summary.needs_attention());
+        assert!(summary.has_command_streams());
+        assert!(summary.has_supervision_streams());
+
+        let mut runtime = SmartHomeRuntime::new();
+        runtime
+            .event_bus_mut()
+            .subscribe(
+                RuntimeSubscriptionId::trusted("runtime-all"),
+                RuntimeEventFilter::All,
+            )
+            .unwrap();
+        runtime
+            .event_bus_mut()
+            .publish(bridge_health_runtime_event("health-2", "bridge-1", 2_000));
+
+        let runtime_summary = runtime.event_bus_health_summary();
+
+        assert_eq!(runtime_summary.snapshot.subscription_count, 1);
+        assert_eq!(runtime_summary.snapshot.pending_delivery_count, 1);
+        assert_eq!(runtime_summary.event_log.total_events, 1);
+        assert!(runtime_summary.has_event_pressure());
     }
 
     #[test]
