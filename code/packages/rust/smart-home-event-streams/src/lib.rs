@@ -912,6 +912,93 @@ impl EventStreamStateQuery {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct EventStreamFleetSummary {
+    pub generated_at_ms: u64,
+    pub total_streams: usize,
+    pub idle_streams: usize,
+    pub connecting_streams: usize,
+    pub healthy_streams: usize,
+    pub degraded_streams: usize,
+    pub disconnected_streams: usize,
+    pub backing_off_streams: usize,
+    pub local_streams: usize,
+    pub cloud_streams: usize,
+    pub cursor_required_streams: usize,
+    pub heartbeat_deadlines: usize,
+    pub overdue_heartbeats: usize,
+    pub pending_gap_streams: usize,
+    pub total_pending_gaps: u32,
+    pub restart_plans: usize,
+    pub reconnect_ready_streams: usize,
+}
+
+impl EventStreamFleetSummary {
+    pub fn empty(generated_at_ms: u64) -> Self {
+        Self {
+            generated_at_ms,
+            ..Self::default()
+        }
+    }
+
+    pub fn from_states<'a, I>(states: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a EventStreamState>,
+    {
+        let mut summary = Self::empty(now_ms);
+        for state in states {
+            summary.total_streams += 1;
+            match state.status {
+                EventStreamStatus::Idle => summary.idle_streams += 1,
+                EventStreamStatus::Connecting => summary.connecting_streams += 1,
+                EventStreamStatus::Healthy => summary.healthy_streams += 1,
+                EventStreamStatus::Degraded => summary.degraded_streams += 1,
+                EventStreamStatus::Disconnected => summary.disconnected_streams += 1,
+                EventStreamStatus::BackingOff => summary.backing_off_streams += 1,
+            }
+            if state.spec.transport.is_local() {
+                summary.local_streams += 1;
+            } else {
+                summary.cloud_streams += 1;
+            }
+            if state.spec.transport.needs_cursor() {
+                summary.cursor_required_streams += 1;
+            }
+            if let Some(deadline) = EventStreamHeartbeatDeadline::from_state(state) {
+                summary.heartbeat_deadlines += 1;
+                if deadline.is_due_at(now_ms) {
+                    summary.overdue_heartbeats += 1;
+                }
+            }
+            if state.pending_gap_count > 0 {
+                summary.pending_gap_streams += 1;
+                summary.total_pending_gaps = summary
+                    .total_pending_gaps
+                    .saturating_add(state.pending_gap_count);
+            }
+            if state.restart_plan_at(now_ms).is_some() {
+                summary.restart_plans += 1;
+            }
+            if state.ready_to_reconnect_at(now_ms) {
+                summary.reconnect_ready_streams += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_streams == 0
+    }
+
+    pub fn has_supervision_work(&self) -> bool {
+        self.overdue_heartbeats > 0 || self.pending_gap_streams > 0 || self.restart_plans > 0
+    }
+
+    pub fn unhealthy_streams(&self) -> usize {
+        self.degraded_streams + self.disconnected_streams + self.backing_off_streams
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EventStreamRestartReason {
     HeartbeatOverdue,
@@ -1444,6 +1531,13 @@ where
     results
 }
 
+pub fn event_stream_fleet_summary_at<'a, I>(states: I, now_ms: u64) -> EventStreamFleetSummary
+where
+    I: IntoIterator<Item = &'a EventStreamState>,
+{
+    EventStreamFleetSummary::from_states(states, now_ms)
+}
+
 fn restart_reason_rank(reason: EventStreamRestartReason) -> u8 {
     match reason {
         EventStreamRestartReason::EventGap => 0,
@@ -1948,6 +2042,79 @@ mod tests {
             reconnect_results[0].spec.bridge_id,
             BridgeId::trusted("esp-1")
         );
+    }
+
+    #[test]
+    fn fleet_summary_counts_status_transport_and_supervision_work() {
+        let mut hue = EventStreamState::new(
+            EventStreamSpec::hue_sse(bridge_id(), "https://bridge/eventstream")
+                .with_heartbeat_timeout(500),
+            1_000,
+        );
+        hue.mark_connected(1_000);
+        hue.record_event(EventId::trusted("event-1"), None, 1_100);
+        let mut mqtt = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("mqtt"),
+                BridgeId::trusted("broker-1"),
+                EventStreamTransport::MqttSubscription,
+            ),
+            1_000,
+        );
+        mqtt.mark_connected(1_000);
+        mqtt.record_gap(2, 1_050);
+        let mut esphome = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("esphome"),
+                BridgeId::trusted("esp-1"),
+                EventStreamTransport::WebSocket,
+            )
+            .with_reconnect_policy(ReconnectPolicy::new(500, 5_000, 2)),
+            1_000,
+        );
+        esphome.mark_connected(1_000);
+        esphome.mark_disconnected(1_200);
+        let mut cloud = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("cloud-hub"),
+                BridgeId::trusted("account-1"),
+                EventStreamTransport::CloudWebhook,
+            ),
+            1_000,
+        );
+        cloud.mark_connected(1_000);
+
+        let summary = event_stream_fleet_summary_at([&hue, &mqtt, &esphome, &cloud], 1_700);
+
+        assert_eq!(
+            summary,
+            EventStreamFleetSummary {
+                generated_at_ms: 1_700,
+                total_streams: 4,
+                idle_streams: 0,
+                connecting_streams: 0,
+                healthy_streams: 2,
+                degraded_streams: 1,
+                disconnected_streams: 1,
+                backing_off_streams: 0,
+                local_streams: 3,
+                cloud_streams: 1,
+                cursor_required_streams: 3,
+                heartbeat_deadlines: 3,
+                overdue_heartbeats: 1,
+                pending_gap_streams: 1,
+                total_pending_gaps: 2,
+                restart_plans: 3,
+                reconnect_ready_streams: 1,
+            }
+        );
+        assert_eq!(summary.unhealthy_streams(), 2);
+        assert!(summary.has_supervision_work());
+        assert!(!summary.is_empty());
+
+        let empty = event_stream_fleet_summary_at([], 1_700);
+        assert!(empty.is_empty());
+        assert_eq!(empty.generated_at_ms, 1_700);
     }
 
     #[test]
