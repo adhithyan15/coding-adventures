@@ -1,5 +1,5 @@
 import { compileMacsyma } from "@coding-adventures/macsyma-compiler";
-import { solveLinearSystem, trySolveInequality } from "@coding-adventures/cas-solve";
+import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import {
   ACOS,
   ACOSH,
@@ -541,6 +541,11 @@ function solveHandler(_vm: VM, expr: IRApply): IRNode {
 
   if (variablesNode.kind === "symbol" && isInequality(equationsNode)) {
     const solutions = trySolveInequality(equationsNode, variablesNode);
+    return solutions === null ? expr : app(LIST, solutions);
+  }
+
+  if (variablesNode.kind === "symbol") {
+    const solutions = trySolveTranscendental(equationsNode, variablesNode);
     return solutions === null ? expr : app(LIST, solutions);
   }
 
