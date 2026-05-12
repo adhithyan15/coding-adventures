@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `solveLinearSystem` with exact Gaussian elimination, `Equal(lhs, rhs)`
+  normalization, zero-form equations, and `Rule(var, value)` IR output.
 - Add pure TypeScript Durand-Kerner numeric polynomial solving plus IR
   conversion helpers for numeric roots.
 - Add pure TypeScript quartic solving parity with rational-root deflation,

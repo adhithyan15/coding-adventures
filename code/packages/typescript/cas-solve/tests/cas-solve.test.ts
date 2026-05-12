@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ADD, DIV, MUL, SQRT, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, DIV, EQUAL, MUL, POW, RULE, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode, type IRSymbol } from "@coding-adventures/symbolic-ir";
 import {
   ALL_SOLUTIONS,
   CBRT,
@@ -10,6 +10,7 @@ import {
   rootsToIr,
   solveCubic,
   solveLinear,
+  solveLinearSystem,
   solveQuadratic,
   solveQuartic,
   type SolveResult,
@@ -62,6 +63,35 @@ function expectNumericRootsClose(
     expect(match).not.toBe(-1);
     used[match] = true;
   }
+}
+
+function eq(lhs: IRNode, rhs: IRNode): IRNode {
+  return app(EQUAL, [lhs, rhs]);
+}
+
+function add(...args: readonly IRNode[]): IRNode {
+  return app(ADD, args);
+}
+
+function sub(lhs: IRNode, rhs: IRNode): IRNode {
+  return app(SUB, [lhs, rhs]);
+}
+
+function mul(...args: readonly IRNode[]): IRNode {
+  return app(MUL, args);
+}
+
+function pow(base: IRNode, exponent: IRNode): IRNode {
+  return app(POW, [base, exponent]);
+}
+
+function ruleValue(rules: readonly IRNode[], variable: IRSymbol): IRNode {
+  for (const rule of rules) {
+    if (rule.kind === "apply" && equals(rule.head, RULE) && equals(rule.args[0], variable)) {
+      return rule.args[1];
+    }
+  }
+  throw new Error(`missing rule for ${variable.name}`);
 }
 
 describe("Frac", () => {
@@ -248,5 +278,71 @@ describe("nsolvePoly", () => {
     expect(values[0]).toBeCloseTo(1, 8);
     expect(values[1]).toBeCloseTo(2, 8);
     expect(values[2]).toBeCloseTo(3, 8);
+  });
+});
+
+describe("solveLinearSystem", () => {
+  const x = sym("x");
+  const y = sym("y");
+  const z = sym("z");
+
+  it("solves simple exact 2x2 systems", () => {
+    const result = solveLinearSystem([
+      eq(add(x, y), int(3)),
+      eq(sub(x, y), int(1)),
+    ], [x, y]);
+
+    expect(result).not.toBeNull();
+    expect(ruleValue(result ?? [], x)).toEqual(int(2));
+    expect(ruleValue(result ?? [], y)).toEqual(int(1));
+  });
+
+  it("solves systems with rational results", () => {
+    const result = solveLinearSystem([
+      eq(add(mul(int(2), x), mul(int(3), y)), int(7)),
+      eq(sub(mul(int(4), x), y), int(1)),
+    ], [x, y]);
+
+    expect(result).not.toBeNull();
+    expect(ruleValue(result ?? [], x)).toEqual(rational(5, 7));
+    expect(ruleValue(result ?? [], y)).toEqual(rational(13, 7));
+  });
+
+  it("solves 3x3 systems and zero-form equations", () => {
+    const result = solveLinearSystem([
+      eq(add(x, y, z), int(6)),
+      eq(add(mul(int(2), x), y), int(5)),
+      eq(z, int(3)),
+    ], [x, y, z]);
+
+    expect(result).not.toBeNull();
+    expect(ruleValue(result ?? [], x)).toEqual(int(2));
+    expect(ruleValue(result ?? [], y)).toEqual(int(1));
+    expect(ruleValue(result ?? [], z)).toEqual(int(3));
+
+    const zeroForm = solveLinearSystem([add(x, y), sub(x, y)], [x, y]);
+    expect(ruleValue(zeroForm ?? [], x)).toEqual(int(0));
+    expect(ruleValue(zeroForm ?? [], y)).toEqual(int(0));
+  });
+
+  it("returns null for wrong-size, empty, singular, and non-linear systems", () => {
+    expect(solveLinearSystem([eq(add(x, y), int(3))], [x, y])).toBeNull();
+    expect(solveLinearSystem([], [])).toBeNull();
+    expect(solveLinearSystem([
+      eq(add(x, y), int(1)),
+      eq(add(mul(int(2), x), mul(int(2), y)), int(2)),
+    ], [x, y])).toBeNull();
+    expect(solveLinearSystem([eq(pow(x, int(2)), int(4))], [x])).toBeNull();
+  });
+
+  it("returns Rule nodes in variable order", () => {
+    const result = solveLinearSystem([
+      eq(add(x, y), int(3)),
+      eq(sub(x, y), int(1)),
+    ], [x, y]);
+
+    expect(result?.length).toBe(2);
+    expect(result?.[0]).toEqual(app(RULE, [x, int(2)]));
+    expect(result?.[1]).toEqual(app(RULE, [y, int(1)]));
   });
 });

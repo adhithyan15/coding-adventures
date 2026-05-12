@@ -13,6 +13,7 @@ bindings.
 | `solveQuadratic(a, b, c)` | Solve `a*x^2 + b*x + c = 0` |
 | `solveCubic(a, b, c, d)` | Solve `a*x^3 + b*x^2 + c*x + d = 0` |
 | `solveQuartic(a, b, c, d, e)` | Solve `a*x^4 + b*x^3 + c*x^2 + d*x + e = 0` |
+| `solveLinearSystem(equations, variables)` | Solve exact square linear systems and return `Rule(var, value)` nodes |
 | `nsolvePoly(coeffs)` | Numerically solve a polynomial via Durand-Kerner |
 | `rootsToIr(roots)` / `nsolveFractionPoly(coeffs)` | Convert numeric roots to symbolic IR |
 
@@ -29,6 +30,11 @@ solution list for casus irreducibilis.
 `solveQuartic` follows the Python package's quartic path: rational-root
 deflation first, biquadratic solving for even quartics, and Ferrari
 factorization when the resolvent cubic has a usable rational root.
+
+`solveLinearSystem` accepts `Equal(lhs, rhs)` nodes or zero-form expressions,
+linearizes them over the provided variables, and solves square systems with
+exact Gaussian elimination. It returns `null` for non-linear, singular, empty,
+or non-square systems.
 
 `nsolvePoly` accepts real or complex coefficients in descending degree order,
 normalizes by the leading coefficient, and returns all roots as `{ re, im }`

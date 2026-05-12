@@ -1,4 +1,22 @@
-import { ADD, DIV, MUL, NEG, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import {
+  ADD,
+  DIV,
+  EQUAL,
+  MUL,
+  NEG,
+  POW,
+  RULE,
+  SQRT,
+  SUB,
+  app,
+  equals,
+  int,
+  numberNode,
+  rational,
+  sym,
+  type IRNode,
+  type IRSymbol,
+} from "@coding-adventures/symbolic-ir";
 
 export const SOLVE = "Solve";
 export const NSOLVE = "NSolve";
@@ -249,6 +267,54 @@ export function solveQuartic(a: Frac, b: Frac, c: Frac, d: Frac, e: Frac): Solve
   return solutions(dedupRoots(shifted));
 }
 
+export function solveLinearSystem(
+  equations: readonly IRNode[],
+  variables: readonly IRSymbol[],
+): readonly IRNode[] | null {
+  const dimension = variables.length;
+  if (equations.length !== dimension || dimension === 0) return null;
+
+  const variableColumns = new Map<string, number>();
+  variables.forEach((variable, index) => variableColumns.set(variable.name, index));
+
+  const matrix: Frac[][] = [];
+  for (const equation of equations) {
+    const row = equationToRow(equation, variableColumns, dimension);
+    if (row === null) return null;
+    matrix.push([...row]);
+  }
+
+  for (let col = 0; col < dimension; col += 1) {
+    let pivotRow = col;
+    for (let row = col + 1; row < dimension; row += 1) {
+      if (fracAbsCompare(matrix[row][col], matrix[pivotRow][col]) > 0) pivotRow = row;
+    }
+    if (matrix[pivotRow][col].isZero()) return null;
+    [matrix[col], matrix[pivotRow]] = [matrix[pivotRow], matrix[col]];
+
+    const pivot = matrix[col][col];
+    for (let row = col + 1; row < dimension; row += 1) {
+      if (matrix[row][col].isZero()) continue;
+      const factor = matrix[row][col].div(pivot);
+      for (let j = col; j <= dimension; j += 1) {
+        matrix[row][j] = matrix[row][j].sub(factor.mul(matrix[col][j]));
+      }
+    }
+  }
+
+  const solution = Array.from({ length: dimension }, () => Frac.zero());
+  for (let row = dimension - 1; row >= 0; row -= 1) {
+    if (matrix[row][row].isZero()) return null;
+    let rhs = matrix[row][dimension];
+    for (let col = row + 1; col < dimension; col += 1) {
+      rhs = rhs.sub(matrix[row][col].mul(solution[col]));
+    }
+    solution[row] = rhs.div(matrix[row][row]);
+  }
+
+  return variables.map((variable, index) => app(RULE, [variable, solution[index].toIrNode()]));
+}
+
 export function nsolvePoly(
   coeffs: readonly (number | Complex)[],
   maxIter = 200,
@@ -492,6 +558,138 @@ function initialRadius(poly: readonly Complex[]): number {
   const constant = complexAbs(poly[degree]);
   const lagrange = constant > 1e-300 ? constant ** (1 / degree) : 1;
   return Math.max(Math.min(cauchy, 10), lagrange, 0.5);
+}
+
+function equationToRow(
+  equation: IRNode,
+  variableColumns: ReadonlyMap<string, number>,
+  dimension: number,
+): readonly Frac[] | null {
+  const expr = isApplyHead(equation, EQUAL.name) && equation.args.length === 2
+    ? app(SUB, [equation.args[0], equation.args[1]])
+    : equation;
+  const linear = linearEval(expr, variableColumns, dimension);
+  if (linear === null) return null;
+  return [...linear.coeffs, linear.constant.neg()];
+}
+
+function nodeToFrac(node: IRNode): Frac | null {
+  if (node.kind === "integer") return Frac.fromInt(node.value);
+  if (node.kind === "rational") return new Frac(node.numer, node.denom);
+  return null;
+}
+
+interface LinearForm {
+  readonly coeffs: readonly Frac[];
+  readonly constant: Frac;
+}
+
+function linearEval(
+  node: IRNode,
+  variableColumns: ReadonlyMap<string, number>,
+  dimension: number,
+): LinearForm | null {
+  const constant = nodeToFrac(node);
+  if (constant !== null) return { coeffs: zeroVector(dimension), constant };
+
+  if (node.kind === "symbol") {
+    const column = variableColumns.get(node.name);
+    if (column === undefined) return null;
+    const coeffs = zeroVector(dimension);
+    coeffs[column] = Frac.one();
+    return { coeffs, constant: Frac.zero() };
+  }
+
+  if (node.kind !== "apply" || node.head.kind !== "symbol") return null;
+  const head = node.head.name;
+
+  if (head === ADD.name) {
+    let coeffs = zeroVector(dimension);
+    let value = Frac.zero();
+    for (const arg of node.args) {
+      const form = linearEval(arg, variableColumns, dimension);
+      if (form === null) return null;
+      coeffs = addVectors(coeffs, form.coeffs);
+      value = value.add(form.constant);
+    }
+    return { coeffs, constant: value };
+  }
+
+  if (head === SUB.name && node.args.length === 2) {
+    const lhs = linearEval(node.args[0], variableColumns, dimension);
+    const rhs = linearEval(node.args[1], variableColumns, dimension);
+    if (lhs === null || rhs === null) return null;
+    return { coeffs: subVectors(lhs.coeffs, rhs.coeffs), constant: lhs.constant.sub(rhs.constant) };
+  }
+
+  if (head === NEG.name && node.args.length === 1) {
+    const form = linearEval(node.args[0], variableColumns, dimension);
+    if (form === null) return null;
+    return {
+      coeffs: form.coeffs.map((coef) => coef.neg()),
+      constant: form.constant.neg(),
+    };
+  }
+
+  if (head === MUL.name) {
+    let scalar = Frac.one();
+    let linearPart: LinearForm | null = null;
+    for (const arg of node.args) {
+      const scalarFactor = nodeToFrac(arg);
+      if (scalarFactor !== null) {
+        scalar = scalar.mul(scalarFactor);
+        continue;
+      }
+
+      const form = linearEval(arg, variableColumns, dimension);
+      if (form === null) return null;
+      if (isZeroVector(form.coeffs)) {
+        scalar = scalar.mul(form.constant);
+      } else {
+        if (linearPart !== null) return null;
+        linearPart = form;
+      }
+    }
+    if (linearPart === null) return { coeffs: zeroVector(dimension), constant: scalar };
+    return {
+      coeffs: linearPart.coeffs.map((coef) => coef.mul(scalar)),
+      constant: linearPart.constant.mul(scalar),
+    };
+  }
+
+  if (head === POW.name && node.args.length === 2 && node.args[1].kind === "integer") {
+    if (node.args[1].value === 0n) return { coeffs: zeroVector(dimension), constant: Frac.one() };
+    if (node.args[1].value === 1n) return linearEval(node.args[0], variableColumns, dimension);
+    return null;
+  }
+
+  return null;
+}
+
+function zeroVector(length: number): Frac[] {
+  return Array.from({ length }, () => Frac.zero());
+}
+
+function addVectors(lhs: readonly Frac[], rhs: readonly Frac[]): Frac[] {
+  return lhs.map((coef, index) => coef.add(rhs[index]));
+}
+
+function subVectors(lhs: readonly Frac[], rhs: readonly Frac[]): Frac[] {
+  return lhs.map((coef, index) => coef.sub(rhs[index]));
+}
+
+function isZeroVector(values: readonly Frac[]): boolean {
+  return values.every((value) => value.isZero());
+}
+
+function fracAbsCompare(lhs: Frac, rhs: Frac): number {
+  const l = abs(lhs.numer) * rhs.denom;
+  const r = abs(rhs.numer) * lhs.denom;
+  return l < r ? -1 : l > r ? 1 : 0;
+}
+
+function isApplyHead(node: IRNode, head: string): node is Extract<IRNode, { readonly kind: "apply" }> {
+  return node.kind === "apply" && node.head.kind === "symbol" && node.head.name === head;
 }
 
 function fractionDenominatorLcm(...values: readonly Frac[]): bigint {
