@@ -64,7 +64,9 @@ use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, LlmError, Message, MessageContent, Role as MsgRole,
 };
 use adjudication_clarification::{
-    retry_decompose_on_coverage_failure, ClarificationError, CoverageClarificationRequest,
+    retry_decompose_on_coverage_failure, retry_decompose_on_polarity_failure,
+    ClarificationError, CoverageClarificationOutcome, CoverageClarificationRequest,
+    PolarityClarificationRequest,
 };
 use llm_cache::{CacheStats, CacheStatsHandle, CachingClient};
 use llm_primitives::{
@@ -348,36 +350,81 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         run_with_gateway(input, AdjudicationId::new("adj-tsa-demo"), make_now(), Some(&gateway));
 
     // ADJ06 clarification loop: only fires in LlmExtracted mode when
-    // ADJ02 failed AND we have budget left. After each round we
-    // re-run the entire pipeline so ADJ02 + ADJ03 + ADJ04 + ADJ05 +
-    // engine all see the corrected IR.
+    // a gating check failed AND we have budget left. Each iteration
+    // picks the FIRST failing gating check and dispatches to the
+    // matching retry primitive:
+    //   - ADJ02 coverage    → retry_decompose_on_coverage_failure
+    //   - ADJ03 polarity    → retry_decompose_on_polarity_failure
+    // After the retry we re-run the entire pipeline so every
+    // checker sees the corrected IR.
     if matches!(cfg.ir_mode, IrMode::LlmExtracted) && cfg.max_clarification_attempts > 0 {
         let mut clarification_turns: Vec<adjudication_audit_trail::DialogueTurn> = Vec::new();
         for attempt in 1..=cfg.max_clarification_attempts {
-            if matches!(
+            let adj02_passed = matches!(
                 output.audit_trail.checker_results[0].outcome,
                 PassOutcome::Passed
-            ) {
+            );
+            let adj03_passed = matches!(
+                output.audit_trail.checker_results[1].outcome,
+                PassOutcome::Passed
+            );
+            if adj02_passed && adj03_passed {
+                // Both gating checks pass — no more clarification
+                // needed at this layer. ADJ04 and ADJ05 are advisory
+                // and don't trigger ADJ06 in v0.4 of the demo.
                 break;
             }
-            let violation_description = format_first_adj02_violation(
-                &output.audit_trail.checker_results[0],
-            );
-            // Use the previous IR JSON we have on hand from
-            // `ir_source_telemetry` if available; otherwise serialize
-            // a best-effort placeholder.
+            // Build the previous-IR JSON once (used by either retry).
             let previous_ir_json = previous_ir_for_clarification(&ir_source_telemetry);
-            let clar_req = CoverageClarificationRequest {
-                original: DecomposeTextRequest {
-                    document_id: "tsa-demo-001".into(),
-                    source_text: cfg.source_text.clone(),
-                    domain_hint: "tsa-declaration".into(),
-                    language_hint: Some("en".into()),
-                },
-                violation_description,
-                previous_ir: previous_ir_json,
+            let original = DecomposeTextRequest {
+                document_id: "tsa-demo-001".into(),
+                source_text: cfg.source_text.clone(),
+                domain_hint: "tsa-declaration".into(),
+                language_hint: Some("en".into()),
             };
-            match retry_decompose_on_coverage_failure(&clar_req, &gateway, 1, make_now()) {
+
+            // Priority: fix coverage first (downstream checks are
+            // meaningless on an IR that doesn't even tile the source),
+            // then polarity.
+            let retry_result: Result<CoverageClarificationOutcome, ClarificationError> =
+                if !adj02_passed {
+                    let v = format_first_adj02_violation(
+                        &output.audit_trail.checker_results[0],
+                    );
+                    retry_decompose_on_coverage_failure(
+                        &CoverageClarificationRequest {
+                            original: original.clone(),
+                            violation_description: v,
+                            previous_ir: previous_ir_json.clone(),
+                        },
+                        &gateway,
+                        1,
+                        make_now(),
+                    )
+                } else {
+                    // ADJ03 failed; build a polarity hint from the
+                    // violation detail when we can.
+                    let v = format_first_adj03_violation(
+                        &output.audit_trail.checker_results[1],
+                    );
+                    let hint = build_polarity_hint(
+                        &output.audit_trail.checker_results[1],
+                        &cfg.source_text,
+                    );
+                    retry_decompose_on_polarity_failure(
+                        &PolarityClarificationRequest {
+                            original: original.clone(),
+                            violation_description: v,
+                            previous_ir: previous_ir_json.clone(),
+                            polarity_hint: hint,
+                        },
+                        &gateway,
+                        1,
+                        make_now(),
+                    )
+                };
+
+            match retry_result {
                 Ok(out) => {
                     clarification_turns.extend(out.dialogue);
                     match json_to_ir_document(
@@ -443,14 +490,25 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         // Stitch dialogue into the audit trail + the report telemetry.
         if !clarification_turns.is_empty() {
             let attempts = clarification_turns.len();
-            let resolved = matches!(
+            let adj02_resolved = matches!(
                 output.audit_trail.checker_results[0].outcome,
                 PassOutcome::Passed
             );
-            let summary = format!(
-                "{attempts} clarification round(s) ({})",
-                if resolved { "resolved" } else { "exhausted" }
+            let adj03_resolved = matches!(
+                output.audit_trail.checker_results[1].outcome,
+                PassOutcome::Passed
             );
+            let resolved = adj02_resolved && adj03_resolved;
+            // Surface WHICH checker the clarification ended on so a
+            // reviewer can see whether the loop ran out of budget
+            // mid-ADJ03 or fully cleared ADJ02 + ADJ03.
+            let status = match (adj02_resolved, adj03_resolved) {
+                (true, true) => "resolved (ADJ02 + ADJ03 both pass)",
+                (true, false) => "exhausted (ADJ02 fixed, ADJ03 still failing)",
+                (false, _) => "exhausted (ADJ02 still failing)",
+            };
+            let _ = resolved;
+            let summary = format!("{attempts} clarification round(s) — {status}");
             if let IrSourceTelemetry::LlmExtracted {
                 clarification_summary: ref mut cs,
                 clarification_turns: ref mut tgt,
@@ -1098,6 +1156,75 @@ fn previous_ir_for_clarification(t: &IrSourceTelemetry) -> serde_json::Value {
             .unwrap_or_else(|_| serde_json::json!({ "note": "previous IR JSON unparseable" })),
         _ => serde_json::json!({ "note": "no previous IR JSON available" }),
     }
+}
+
+/// Render the first ADJ03 violation as a short string. Same shape
+/// as `format_first_adj02_violation` — the pipeline records
+/// polarity/modality violations as `{"kind": ..., "debug": ...}`
+/// for unspecialised variants.
+fn format_first_adj03_violation(adj03: &adjudication_audit_trail::CheckerResult) -> String {
+    match adj03.violations.first() {
+        Some(v) => {
+            let kind = v
+                .detail
+                .get("kind")
+                .and_then(|x| x.as_str())
+                .unwrap_or("PolarityOrModalityViolation");
+            // The polarity-specific violation variants the pipeline
+            // emits include `actual_polarity` and the node id in
+            // their JSON detail; surface both when present.
+            let actual = v
+                .detail
+                .get("actual_polarity")
+                .and_then(|x| x.as_str())
+                .map(|s| format!(" actual_polarity={s}"))
+                .unwrap_or_default();
+            let node = v
+                .node_id
+                .0
+                .as_str();
+            if node.is_empty() {
+                format!("{kind}{actual}")
+            } else {
+                format!("{kind} (node {node}){actual}")
+            }
+        }
+        None => "ADJ03 reported Failed with no violation entries".to_string(),
+    }
+}
+
+/// Synthesize a polarity hint for the ADJ06 correction prompt by
+/// looking at the source text covered by the failing node. The
+/// heuristic is intentionally narrow: if the source span contains
+/// a common negation word ("no", "not", "never", "without",
+/// "denies", "denied", "absent"), tell the model the polarity
+/// should be `Denied`. Otherwise return `None` and let the prompt
+/// stand on its rules alone.
+fn build_polarity_hint(
+    adj03: &adjudication_audit_trail::CheckerResult,
+    source_text: &str,
+) -> Option<String> {
+    let v = adj03.violations.first()?;
+    let node_id = v.node_id.0.as_str();
+    if node_id.is_empty() {
+        return None;
+    }
+    // The audit trail doesn't include the failing node's source-span
+    // text directly, so we approximate: scan the source for any of
+    // the common negation tokens. If the source has one, we offer
+    // it as a candidate explanation.
+    let lower = source_text.to_lowercase();
+    const NEGATIONS: &[&str] = &[
+        " no ", " not ", " never ", " without ", " denies ", " denied ",
+        " absent ", " ruled out ",
+    ];
+    let hit = NEGATIONS.iter().find(|n| lower.contains(*n))?;
+    Some(format!(
+        "node {node_id} likely covers a negation. Saw \"{trim}\" in the source — \
+         negations usually flip the polarity to `Denied`. Double-check before \
+         re-emitting.",
+        trim = hit.trim(),
+    ))
 }
 
 /// Pull `RoundTripDrift` violations out of the ADJ04 checker result
