@@ -3,6 +3,7 @@
 use std::error::Error;
 use std::fmt;
 use std::fs;
+use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -34,6 +35,7 @@ use generic_job_runtime::{
     ExecutorFleetStatusSummary, ExecutorFleetSummary, ExecutorLimits, RustThreadPool,
     RustThreadPoolOptions,
 };
+use http_core::BodyKind;
 use memory_store::{
     MemoryClass, MemoryInventorySummary, MemoryListOptions, MemoryRecord, MemoryStore,
 };
@@ -50,6 +52,7 @@ use skill_store::{
     InstallSkillAssetInput, SkillInventorySummary, SkillListOptions, SkillManifest, SkillStore,
 };
 use storage_core::{InMemoryStorageBackend, StorageError};
+use tls_platform::TlsConfig;
 
 const AGENT_ID: &str = "umbrella_today_agent";
 const SESSION_ID: &str = "umbrella_today_session";
@@ -150,6 +153,7 @@ pub struct UmbrellaAgentConfig {
     pub fetched_at_ms: u64,
     pub fetched_at_iso: String,
     pub weather_source: WeatherSource,
+    pub supervisor_probe: UmbrellaSupervisorProbe,
 }
 
 impl UmbrellaAgentConfig {
@@ -161,13 +165,89 @@ impl UmbrellaAgentConfig {
             fetched_at_ms: 1_778_624_400_000,
             fetched_at_iso: "2026-05-12T12:00:00.000Z".to_string(),
             weather_source: WeatherSource::Fixture(WeatherSnapshot::rainy_seattle_fixture()),
+            supervisor_probe: UmbrellaSupervisorProbe::default(),
         }
+    }
+
+    pub fn live_seattle_with_timestamp(
+        output_path: impl Into<PathBuf>,
+        fetched_at_ms: u64,
+        fetched_at_iso: impl Into<String>,
+    ) -> Self {
+        Self {
+            location: "Seattle".to_string(),
+            output_path: output_path.into(),
+            tick_id: "8a7b0000000000000000000000000001".to_string(),
+            fetched_at_ms,
+            fetched_at_iso: fetched_at_iso.into(),
+            weather_source: WeatherSource::LiveNws {
+                user_agent: "coding-adventures-weather-agent-e2e/0.1 (adhithyan15)".to_string(),
+            },
+            supervisor_probe: UmbrellaSupervisorProbe::default(),
+        }
+    }
+
+    pub fn with_killed_child_before_tick(mut self, actor_id: impl Into<String>) -> Self {
+        self.supervisor_probe.kill_child_before_tick = Some(actor_id.into());
+        self
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum WeatherSource {
     Fixture(WeatherSnapshot),
+    LiveNws { user_agent: String },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct UmbrellaSupervisorProbe {
+    pub kill_child_before_tick: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum WeatherFetchSourceKind {
+    Fixture,
+    LiveHttps,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WeatherFetchSummary {
+    pub source_kind: WeatherFetchSourceKind,
+    pub https_requests: usize,
+    pub tls_handshakes: usize,
+    pub http_statuses: Vec<u16>,
+    pub endpoint_count: usize,
+    pub forecast_endpoint: String,
+}
+
+impl WeatherFetchSummary {
+    fn fixture(snapshot: &WeatherSnapshot) -> Self {
+        Self {
+            source_kind: WeatherFetchSourceKind::Fixture,
+            https_requests: 0,
+            tls_handshakes: 0,
+            http_statuses: vec![snapshot.http_status],
+            endpoint_count: 1,
+            forecast_endpoint: snapshot.endpoint_url.clone(),
+        }
+    }
+
+    fn live(points_status: u16, forecast: &WeatherSnapshot) -> Self {
+        Self {
+            source_kind: WeatherFetchSourceKind::LiveHttps,
+            https_requests: 2,
+            tls_handshakes: 2,
+            http_statuses: vec![points_status, forecast.http_status],
+            endpoint_count: 2,
+            forecast_endpoint: forecast.endpoint_url.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct WeatherFetchPayload {
+    snapshot: WeatherSnapshot,
+    summary: WeatherFetchSummary,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -359,6 +439,9 @@ pub struct UmbrellaSupervisorSummary {
     pub failed_children: usize,
     pub messages_processed: u64,
     pub dead_letters: usize,
+    pub killed_children: Vec<String>,
+    pub restarted_children: Vec<String>,
+    pub restart_count: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -366,6 +449,7 @@ pub struct UmbrellaAgentRun {
     pub recommendation: UmbrellaRecommendation,
     pub output_path: PathBuf,
     pub output_text: String,
+    pub weather_fetch: WeatherFetchSummary,
     pub supervisor: UmbrellaSupervisorSummary,
     pub tool_journal_health: ToolExecutionJournalHealthSummary,
     pub context_inventory: ContextStoreInventorySummary,
@@ -387,17 +471,13 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
     let job_executor_status = run_executor_tick(&config)?;
 
     let mut system = ActorSystem::new();
-    system.create_actor(
-        "weather-fetcher",
-        Box::new(pipeline.clone()),
-        fetcher_behavior(),
-    )?;
-    system.create_actor(
-        "weather-classifier",
-        Box::new(pipeline.clone()),
-        classifier_behavior(),
-    )?;
-    system.create_actor("file-writer", Box::new(pipeline.clone()), writer_behavior())?;
+    let mut supervisor_events = SupervisorEvents::default();
+    spawn_weather_children(&mut system, &pipeline)?;
+    if let Some(actor_id) = &config.supervisor_probe.kill_child_before_tick {
+        system.stop_actor(actor_id)?;
+        supervisor_events.killed_children.push(actor_id.clone());
+    }
+    restart_stopped_weather_children(&mut system, &pipeline, &mut supervisor_events)?;
     system.send(
         "weather-fetcher",
         Message::text("umbrella-supervisor", "tick"),
@@ -408,6 +488,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
 
     let recommendation = pipeline.recommendation()?;
     let output_text = fs::read_to_string(&config.output_path)?;
+    let weather_fetch = pipeline.weather_fetch_summary()?;
     let tool_journal_health = pipeline
         .journal
         .lock()
@@ -436,7 +517,8 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         recommendation,
         output_path: config.output_path,
         output_text,
-        supervisor: supervisor_summary(&system, &actor_stats),
+        weather_fetch,
+        supervisor: supervisor_summary(&system, &actor_stats, supervisor_events),
         tool_journal_health,
         context_inventory,
         artifact_inventory,
@@ -460,6 +542,7 @@ struct UmbrellaPipeline {
     memory_store: MemoryStore<InMemoryStorageBackend>,
     skill_store: SkillStore<InMemoryStorageBackend>,
     snapshot: Mutex<Option<WeatherSnapshot>>,
+    weather_fetch_summary: Mutex<Option<WeatherFetchSummary>>,
     recommendation: Mutex<Option<UmbrellaRecommendation>>,
     actor_errors: Mutex<Vec<String>>,
 }
@@ -467,7 +550,12 @@ struct UmbrellaPipeline {
 impl UmbrellaPipeline {
     fn new(config: UmbrellaAgentConfig) -> UmbrellaResult<Self> {
         let mut tool_runtime = InMemoryToolRuntime::new();
-        register_weather_fetch_tool(&mut tool_runtime, config.weather_source.clone())?;
+        register_weather_fetch_tool(
+            &mut tool_runtime,
+            config.weather_source.clone(),
+            config.fetched_at_ms,
+            config.fetched_at_iso.clone(),
+        )?;
         register_weather_classifier_tool(&mut tool_runtime)?;
         register_file_writer_tool(&mut tool_runtime, writer_manifest(&config.output_path)?)?;
 
@@ -484,6 +572,7 @@ impl UmbrellaPipeline {
             memory_store: MemoryStore::new(InMemoryStorageBackend::new()),
             skill_store: SkillStore::new(InMemoryStorageBackend::new()),
             snapshot: Mutex::new(None),
+            weather_fetch_summary: Mutex::new(None),
             recommendation: Mutex::new(None),
             actor_errors: Mutex::new(Vec::new()),
         })
@@ -585,7 +674,15 @@ impl UmbrellaPipeline {
             object(vec![("location", string(&self.config.location))]),
         )?;
         let snapshot = WeatherSnapshot::from_json(&output).map_err(tool_error_to_agent)?;
+        let fetch_summary = match &self.config.weather_source {
+            WeatherSource::Fixture(_) => WeatherFetchSummary::fixture(&snapshot),
+            WeatherSource::LiveNws { .. } => WeatherFetchSummary::live(200, &snapshot),
+        };
         *self.snapshot.lock().expect("snapshot mutex poisoned") = Some(snapshot.clone());
+        *self
+            .weather_fetch_summary
+            .lock()
+            .expect("weather fetch summary mutex poisoned") = Some(fetch_summary);
         self.append_context("fetch_tool_result", ContextEntryKind::ToolResult, output)?;
         self.append_channel(
             "weather-fetcher",
@@ -820,6 +917,14 @@ impl UmbrellaPipeline {
             .clone()
             .ok_or_else(|| UmbrellaAgentError::new("umbrella recommendation was not produced"))
     }
+
+    fn weather_fetch_summary(&self) -> UmbrellaResult<WeatherFetchSummary> {
+        self.weather_fetch_summary
+            .lock()
+            .expect("weather fetch summary mutex poisoned")
+            .clone()
+            .ok_or_else(|| UmbrellaAgentError::new("weather fetch summary was not produced"))
+    }
 }
 
 fn fetcher_behavior() -> Behavior {
@@ -879,6 +984,61 @@ fn writer_behavior() -> Behavior {
     })
 }
 
+#[derive(Debug, Default)]
+struct SupervisorEvents {
+    killed_children: Vec<String>,
+    restarted_children: Vec<String>,
+}
+
+fn spawn_weather_children(
+    system: &mut ActorSystem,
+    pipeline: &Arc<UmbrellaPipeline>,
+) -> UmbrellaResult<()> {
+    create_weather_child(system, "weather-fetcher", pipeline)?;
+    create_weather_child(system, "weather-classifier", pipeline)?;
+    create_weather_child(system, "file-writer", pipeline)?;
+    Ok(())
+}
+
+fn restart_stopped_weather_children(
+    system: &mut ActorSystem,
+    pipeline: &Arc<UmbrellaPipeline>,
+    events: &mut SupervisorEvents,
+) -> UmbrellaResult<()> {
+    for actor_id in ["weather-fetcher", "weather-classifier", "file-writer"] {
+        let needs_restart = system
+            .actors
+            .get(actor_id)
+            .map(|actor| actor.status == ActorStatus::Stopped)
+            .unwrap_or(true);
+        if needs_restart {
+            system.actors.remove(actor_id);
+            create_weather_child(system, actor_id, pipeline)?;
+            events.restarted_children.push(actor_id.to_string());
+        }
+    }
+    Ok(())
+}
+
+fn create_weather_child(
+    system: &mut ActorSystem,
+    actor_id: &str,
+    pipeline: &Arc<UmbrellaPipeline>,
+) -> UmbrellaResult<()> {
+    let behavior = match actor_id {
+        "weather-fetcher" => fetcher_behavior(),
+        "weather-classifier" => classifier_behavior(),
+        "file-writer" => writer_behavior(),
+        other => {
+            return Err(UmbrellaAgentError::new(format!(
+                "unknown weather child '{other}'"
+            )))
+        }
+    };
+    system.create_actor(actor_id, Box::new(pipeline.clone()), behavior)?;
+    Ok(())
+}
+
 fn unwrap_pipeline_state(state: Box<dyn std::any::Any>) -> Arc<UmbrellaPipeline> {
     *state
         .downcast::<Arc<UmbrellaPipeline>>()
@@ -888,6 +1048,8 @@ fn unwrap_pipeline_state(state: Box<dyn std::any::Any>) -> Arc<UmbrellaPipeline>
 fn register_weather_fetch_tool(
     runtime: &mut InMemoryToolRuntime,
     source: WeatherSource,
+    fetched_at_ms: u64,
+    fetched_at_iso: String,
 ) -> Result<(), ToolApiError> {
     runtime.register_handler(
         tool_definition(
@@ -909,24 +1071,251 @@ fn register_weather_fetch_tool(
         ),
         move |arguments, _context| {
             let location = field_string(&arguments, "location")?;
-            let snapshot = match &source {
-                WeatherSource::Fixture(snapshot) if snapshot.location == location => {
-                    snapshot.clone()
-                }
-                WeatherSource::Fixture(snapshot) => WeatherSnapshot {
-                    location,
-                    ..snapshot.clone()
-                },
+            let payload =
+                fetch_weather_from_source(&source, location, fetched_at_ms, &fetched_at_iso)
+                    .map_err(|error| {
+                        ToolCallError::new(
+                            ToolErrorKind::ToolExecutionError,
+                            format!("failed to fetch weather snapshot: {error}"),
+                        )
+                    })?;
+            let snapshot = payload.snapshot;
+            let source_name = match payload.summary.source_kind {
+                WeatherFetchSourceKind::Fixture => "fixture",
+                WeatherFetchSourceKind::LiveHttps => "live_https",
             };
             Ok(ToolHandlerOutput::new(snapshot.to_json()).with_event(
                 ToolEventKind::Progress,
                 object(vec![
-                    ("source", string("fixture")),
+                    ("source", string(source_name)),
                     ("endpoint_url", string(&snapshot.endpoint_url)),
+                    ("https_requests", int(payload.summary.https_requests as i64)),
+                    ("tls_handshakes", int(payload.summary.tls_handshakes as i64)),
                 ]),
             ))
         },
     )
+}
+
+fn fetch_weather_from_source(
+    source: &WeatherSource,
+    location: String,
+    fetched_at_ms: u64,
+    fetched_at_iso: &str,
+) -> UmbrellaResult<WeatherFetchPayload> {
+    match source {
+        WeatherSource::Fixture(snapshot) if snapshot.location == location => {
+            Ok(WeatherFetchPayload {
+                snapshot: snapshot.clone(),
+                summary: WeatherFetchSummary::fixture(snapshot),
+            })
+        }
+        WeatherSource::Fixture(snapshot) => {
+            let snapshot = WeatherSnapshot {
+                location,
+                ..snapshot.clone()
+            };
+            Ok(WeatherFetchPayload {
+                summary: WeatherFetchSummary::fixture(&snapshot),
+                snapshot,
+            })
+        }
+        WeatherSource::LiveNws { user_agent } => {
+            fetch_live_nws_weather(location, fetched_at_ms, fetched_at_iso, user_agent)
+        }
+    }
+}
+
+fn fetch_live_nws_weather(
+    location: String,
+    fetched_at_ms: u64,
+    fetched_at_iso: &str,
+    user_agent: &str,
+) -> UmbrellaResult<WeatherFetchPayload> {
+    let points_path = "/points/47.6062,-122.3321";
+    let points = https_get_api_weather(points_path, user_agent)?;
+    if points.status != 200 {
+        return Err(UmbrellaAgentError::new(format!(
+            "Weather.gov points request returned HTTP {}",
+            points.status
+        )));
+    }
+
+    let points_json = coding_adventures_json_value::parse(&points.body)
+        .map_err(|error| UmbrellaAgentError::new(format!("points JSON parse failed: {error}")))?;
+    let forecast_url = extract_forecast_url(&points_json)?;
+    let forecast_path = api_weather_path_from_url(&forecast_url)?;
+    let forecast = https_get_api_weather(&forecast_path, user_agent)?;
+    if forecast.status != 200 {
+        return Err(UmbrellaAgentError::new(format!(
+            "Weather.gov forecast request returned HTTP {}",
+            forecast.status
+        )));
+    }
+
+    let forecast_json = coding_adventures_json_value::parse(&forecast.body)
+        .map_err(|error| UmbrellaAgentError::new(format!("forecast JSON parse failed: {error}")))?;
+    let snapshot = snapshot_from_nws_forecast(
+        location,
+        forecast_url,
+        forecast.status,
+        fetched_at_ms,
+        fetched_at_iso,
+        &forecast.body,
+        &forecast_json,
+    )?;
+    let summary = WeatherFetchSummary::live(points.status, &snapshot);
+    Ok(WeatherFetchPayload { snapshot, summary })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct HttpFetchResponse {
+    status: u16,
+    body: String,
+}
+
+fn https_get_api_weather(path: &str, user_agent: &str) -> UmbrellaResult<HttpFetchResponse> {
+    let mut tls_config = TlsConfig::https_default();
+    tls_config.connect_timeout = Duration::from_secs(10);
+    tls_config.handshake_timeout = Duration::from_secs(10);
+    tls_config.read_timeout = Some(Duration::from_secs(15));
+    tls_config.write_timeout = Some(Duration::from_secs(10));
+
+    let connector = tls_platform::default_connector();
+    let mut stream = connector
+        .connect("api.weather.gov", 443, &tls_config)
+        .map_err(|error| UmbrellaAgentError::new(format!("TLS connect failed: {error}")))?;
+    let request = format!(
+        "GET {path} HTTP/1.1\r\nHost: api.weather.gov\r\nUser-Agent: {user_agent}\r\nAccept: application/geo+json, application/json\r\nAccept-Encoding: identity\r\nConnection: close\r\n\r\n"
+    );
+    stream.write_all(request.as_bytes())?;
+    stream.flush()?;
+
+    let mut response_bytes = Vec::new();
+    stream.read_to_end(&mut response_bytes)?;
+    let parsed = http1::parse_response_head(&response_bytes)
+        .map_err(|error| UmbrellaAgentError::new(format!("HTTP/1 parse failed: {error}")))?;
+    let body = decode_http_body(&response_bytes, parsed.body_offset, &parsed.body_kind)?;
+    let body = String::from_utf8(body)
+        .map_err(|error| UmbrellaAgentError::new(format!("HTTP body was not UTF-8: {error}")))?;
+    Ok(HttpFetchResponse {
+        status: parsed.head.status,
+        body,
+    })
+}
+
+fn decode_http_body(
+    response: &[u8],
+    body_offset: usize,
+    body_kind: &BodyKind,
+) -> UmbrellaResult<Vec<u8>> {
+    let body = response
+        .get(body_offset..)
+        .ok_or_else(|| UmbrellaAgentError::new("HTTP body offset exceeded response length"))?;
+    match body_kind {
+        BodyKind::None => Ok(Vec::new()),
+        BodyKind::ContentLength(length) => body
+            .get(..*length)
+            .map(|slice| slice.to_vec())
+            .ok_or_else(|| UmbrellaAgentError::new("HTTP body shorter than Content-Length")),
+        BodyKind::UntilEof => Ok(body.to_vec()),
+        BodyKind::Chunked => decode_chunked_body(body),
+    }
+}
+
+fn decode_chunked_body(mut body: &[u8]) -> UmbrellaResult<Vec<u8>> {
+    let mut decoded = Vec::new();
+    loop {
+        let line_end = body
+            .windows(2)
+            .position(|pair| pair == b"\r\n")
+            .ok_or_else(|| UmbrellaAgentError::new("chunked body missing chunk-size line"))?;
+        let size_line = std::str::from_utf8(&body[..line_end]).map_err(|error| {
+            UmbrellaAgentError::new(format!("invalid chunk size UTF-8: {error}"))
+        })?;
+        let size_hex = size_line.split(';').next().unwrap_or("").trim();
+        let size = usize::from_str_radix(size_hex, 16)
+            .map_err(|error| UmbrellaAgentError::new(format!("invalid chunk size: {error}")))?;
+        body = &body[line_end + 2..];
+        if size == 0 {
+            return Ok(decoded);
+        }
+        if body.len() < size + 2 {
+            return Err(UmbrellaAgentError::new("chunked body ended mid-chunk"));
+        }
+        decoded.extend_from_slice(&body[..size]);
+        if &body[size..size + 2] != b"\r\n" {
+            return Err(UmbrellaAgentError::new("chunk missing trailing CRLF"));
+        }
+        body = &body[size + 2..];
+    }
+}
+
+fn extract_forecast_url(points_json: &JsonValue) -> UmbrellaResult<String> {
+    json_string(json_field(
+        json_field(points_json, "properties")?,
+        "forecast",
+    )?)
+    .map(str::to_string)
+}
+
+fn api_weather_path_from_url(url: &str) -> UmbrellaResult<String> {
+    let prefix = "https://api.weather.gov";
+    let path = url.strip_prefix(prefix).ok_or_else(|| {
+        UmbrellaAgentError::new(format!(
+            "forecast URL must stay on api.weather.gov, got {url}"
+        ))
+    })?;
+    if !path.starts_with('/') {
+        return Err(UmbrellaAgentError::new(format!(
+            "forecast URL did not include an absolute path: {url}"
+        )));
+    }
+    Ok(path.to_string())
+}
+
+fn snapshot_from_nws_forecast(
+    location: String,
+    endpoint_url: String,
+    http_status: u16,
+    fetched_at_ms: u64,
+    fetched_at_iso: &str,
+    raw_body: &str,
+    forecast_json: &JsonValue,
+) -> UmbrellaResult<WeatherSnapshot> {
+    let periods = json_array(json_field(
+        json_field(forecast_json, "properties")?,
+        "periods",
+    )?)?;
+    let period = periods
+        .iter()
+        .find(|period| {
+            json_field(period, "name")
+                .and_then(json_string)
+                .map(|name| name.eq_ignore_ascii_case("today"))
+                .unwrap_or(false)
+        })
+        .or_else(|| periods.first())
+        .ok_or_else(|| UmbrellaAgentError::new("forecast JSON had no periods"))?;
+
+    let high_temp_f = json_i64(json_field(period, "temperature")?)?.clamp(-100, 150);
+    let precip_value = json_field(period, "probabilityOfPrecipitation")
+        .ok()
+        .and_then(|precip| json_field(precip, "value").ok())
+        .and_then(json_optional_i64)
+        .unwrap_or(0)
+        .clamp(0, 100) as u8;
+
+    Ok(WeatherSnapshot {
+        location,
+        endpoint_url,
+        http_status,
+        fetched_at_ms,
+        fetched_at_iso: fetched_at_iso.to_string(),
+        high_temp_f,
+        precip_pct: precip_value,
+        raw_body: raw_body.to_string(),
+    })
 }
 
 fn register_weather_classifier_tool(runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
@@ -1256,6 +1645,7 @@ fn writer_manifest(output_path: &Path) -> UmbrellaResult<Manifest> {
 fn supervisor_summary(
     system: &ActorSystem,
     actor_stats: &std::collections::HashMap<String, u64>,
+    events: SupervisorEvents,
 ) -> UmbrellaSupervisorSummary {
     let child_count = system.actors.len();
     let stopped_children = system
@@ -1273,6 +1663,9 @@ fn supervisor_summary(
         failed_children: child_count.saturating_sub(stopped_children),
         messages_processed,
         dead_letters: system.dead_letters.len(),
+        restart_count: events.restarted_children.len(),
+        killed_children: events.killed_children,
+        restarted_children: events.restarted_children,
     }
 }
 
@@ -1328,6 +1721,47 @@ fn field_i64(value: &JsonValue, key: &str) -> Result<i64, ToolCallError> {
             ToolErrorKind::ToolValidationError,
             format!("field '{key}' must be an integer"),
         )),
+    }
+}
+
+fn json_field<'a>(value: &'a JsonValue, key: &str) -> UmbrellaResult<&'a JsonValue> {
+    match value {
+        JsonValue::Object(entries) => entries
+            .iter()
+            .find_map(|(candidate, value)| (candidate == key).then_some(value))
+            .ok_or_else(|| UmbrellaAgentError::new(format!("missing JSON field '{key}'"))),
+        _ => Err(UmbrellaAgentError::new("expected JSON object")),
+    }
+}
+
+fn json_string(value: &JsonValue) -> UmbrellaResult<&str> {
+    match value {
+        JsonValue::String(value) => Ok(value),
+        _ => Err(UmbrellaAgentError::new("expected JSON string")),
+    }
+}
+
+fn json_array(value: &JsonValue) -> UmbrellaResult<&[JsonValue]> {
+    match value {
+        JsonValue::Array(values) => Ok(values),
+        _ => Err(UmbrellaAgentError::new("expected JSON array")),
+    }
+}
+
+fn json_i64(value: &JsonValue) -> UmbrellaResult<i64> {
+    match value {
+        JsonValue::Number(JsonNumber::Integer(value)) => Ok(*value),
+        JsonValue::Number(JsonNumber::Float(value)) if value.is_finite() => Ok(*value as i64),
+        _ => Err(UmbrellaAgentError::new("expected JSON number")),
+    }
+}
+
+fn json_optional_i64(value: &JsonValue) -> Option<i64> {
+    match value {
+        JsonValue::Null => None,
+        JsonValue::Number(JsonNumber::Integer(value)) => Some(*value),
+        JsonValue::Number(JsonNumber::Float(value)) if value.is_finite() => Some(*value as i64),
+        _ => None,
     }
 }
 
