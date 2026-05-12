@@ -16,6 +16,18 @@ cargo run -p board-vm-cli --bin board-vm -- smoke \
 ```
 
 ```sh
+cargo run -p board-vm-cli --bin board-vm -- smoke \
+  --endpoint tcp://board-vm.local:4170 \
+  --timeout-ms 1000
+```
+
+```sh
+cargo run -p board-vm-cli --bin board-vm -- smoke \
+  --endpoint 'ble://AA:BB:CC:DD:EE:FF?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e' \
+  --timeout-ms 1000
+```
+
+```sh
 cargo run -p board-vm-cli --bin board-vm -- repl \
   --port /dev/cu.usbmodem... \
   --baud 115200 \
@@ -28,14 +40,16 @@ cargo run -p board-vm-cli --bin board-vm -- eject blink \
   --boot-policy run-if-no-host
 ```
 
-`smoke` opens the selected serial device, sends `HELLO`, queries capabilities,
-uploads the standard onboard LED blink module, and starts it with a bounded
-instruction budget. It is transport-hosting glue only; the board firmware still
-owns the protocol dispatcher and HAL behavior. The smoke path asserts DTR on
-open, waits briefly, and clears the serial buffers before the first request so
-USB CDC boards start each run from a clean host session. Its default run budget
-is intentionally small because the current firmware executes blink bytecode
-synchronously while it prepares the run report.
+`smoke` opens the selected serial device or endpoint, sends `HELLO`, queries
+capabilities, uploads the standard onboard LED blink module, and starts it with
+a bounded instruction budget. It is transport-hosting glue only; the board
+firmware still owns the protocol dispatcher and HAL behavior. The serial path
+asserts DTR on open, waits briefly, and clears the serial buffers before the
+first request so USB CDC boards start each run from a clean host session. The
+endpoint path supports TCP sockets and Board VM Bluetooth endpoints (`ble://`,
+`btspp://`, or `rfcomm://`) through the Rust-owned transport adapters. The
+default run budget is intentionally small because the current firmware executes
+blink bytecode synchronously while it prepares the run report.
 
 `repl` opens the same serial transport, sends `HELLO`, and then accepts a small
 interactive command set: `caps`, `upload-blink`, `upload-gpio-read <pin>

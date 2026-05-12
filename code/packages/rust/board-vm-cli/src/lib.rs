@@ -21,8 +21,14 @@ use board_vm_host::{
     write_blink_module, write_gpio_read_module, write_time_now_module, BlinkProgram,
     GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
 };
+use board_vm_language_core::{
+    bluetooth_transact_wire_frame, parse_bluetooth_endpoint as parse_language_bluetooth_endpoint,
+};
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
-use board_vm_protocol::{BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
+use board_vm_protocol::{
+    decode_wire_frame, encode_wire_frame, ProtocolError, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST,
+    BOOT_STORE_ONLY,
+};
 use board_vm_serial::{
     available_ports, BoardSerialTransport, SerialConfig, SerialPort, SerialPortInfo,
     SerialTransportError, DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
@@ -174,6 +180,7 @@ impl ReplOptions {
 enum SessionTransport {
     Serial(BoardSerialTransport<Box<dyn SerialPort>, 1024>),
     Tcp(BoardTcpTransport<TcpStream, 1024>),
+    Bluetooth(LanguageBluetoothTransport<4096>),
 }
 
 impl RawFrameTransport for SessionTransport {
@@ -185,7 +192,43 @@ impl RawFrameTransport for SessionTransport {
         match self {
             Self::Serial(transport) => transport.exchange_raw_frame(request, response_out),
             Self::Tcp(transport) => transport.exchange_raw_frame(request, response_out),
+            Self::Bluetooth(transport) => transport.exchange_raw_frame(request, response_out),
         }
+    }
+}
+
+struct LanguageBluetoothTransport<const WIRE_BYTES: usize> {
+    endpoint: String,
+    wire_request: [u8; WIRE_BYTES],
+    wire_response: [u8; WIRE_BYTES],
+}
+
+impl<const WIRE_BYTES: usize> LanguageBluetoothTransport<WIRE_BYTES> {
+    fn new(endpoint: impl Into<String>) -> Self {
+        Self {
+            endpoint: endpoint.into(),
+            wire_request: [0; WIRE_BYTES],
+            wire_response: [0; WIRE_BYTES],
+        }
+    }
+}
+
+impl<const WIRE_BYTES: usize> RawFrameTransport for LanguageBluetoothTransport<WIRE_BYTES> {
+    fn exchange_raw_frame(
+        &mut self,
+        request: &[u8],
+        response_out: &mut [u8],
+    ) -> Result<usize, board_vm_client::TransportError> {
+        let wire_request_len = encode_wire_frame(request, &mut self.wire_request)
+            .map_err(map_protocol_transport_error)?;
+        let wire_response_len = bluetooth_transact_wire_frame(
+            &self.endpoint,
+            &self.wire_request[..wire_request_len],
+            &mut self.wire_response,
+        )
+        .map_err(|_| board_vm_client::TransportError::Io)?;
+        decode_wire_frame(&self.wire_response[..wire_response_len], response_out)
+            .map_err(map_protocol_transport_error)
     }
 }
 
@@ -1162,9 +1205,7 @@ where
 fn open_smoke_transport(options: &SmokeOptions) -> Result<SessionTransport, CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        return Ok(SessionTransport::Tcp(
-            BoardTcpTransport::<_, 1024>::connect(&options.tcp_config(endpoint))?,
-        ));
+        return open_endpoint_transport(endpoint, &options.tcp_config(endpoint));
     }
 
     let port = resolve_session_port(options.port.as_deref(), &options.board)?;
@@ -1176,11 +1217,8 @@ fn open_smoke_transport(options: &SmokeOptions) -> Result<SessionTransport, CliE
 fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let transport = BoardTcpTransport::<_, 1024>::connect(&options.tcp_config(endpoint))?;
-        return Ok((
-            format!("endpoint={endpoint}"),
-            SessionTransport::Tcp(transport),
-        ));
+        let transport = open_endpoint_transport(endpoint, &options.tcp_config(endpoint))?;
+        return Ok((format!("endpoint={endpoint}"), transport));
     }
 
     let port = resolve_session_port(options.port.as_deref(), &options.board)?;
@@ -1198,6 +1236,53 @@ fn ensure_endpoint_not_mixed_with_port(port: Option<&str>) -> Result<(), CliErro
         ));
     }
     Ok(())
+}
+
+fn open_endpoint_transport(
+    endpoint: &str,
+    tcp_config: &TcpConfig,
+) -> Result<SessionTransport, CliError> {
+    match endpoint_transport(endpoint)? {
+        SessionEndpointTransport::Tcp => Ok(SessionTransport::Tcp(
+            BoardTcpTransport::<_, 1024>::connect(tcp_config)?,
+        )),
+        SessionEndpointTransport::Bluetooth => Ok(SessionTransport::Bluetooth(
+            LanguageBluetoothTransport::new(endpoint),
+        )),
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum SessionEndpointTransport {
+    Tcp,
+    Bluetooth,
+}
+
+fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
+    match endpoint.split_once("://").map(|(scheme, _)| scheme) {
+        None | Some("tcp") => Ok(SessionEndpointTransport::Tcp),
+        Some("ble") | Some("btspp") | Some("rfcomm") => {
+            if parse_language_bluetooth_endpoint(endpoint).is_some() {
+                Ok(SessionEndpointTransport::Bluetooth)
+            } else {
+                Err(CliError::DeviceSelection(format!(
+                    "invalid Board VM Bluetooth endpoint: {endpoint}"
+                )))
+            }
+        }
+        Some(scheme) => Err(CliError::DeviceSelection(format!(
+            "unsupported --endpoint scheme: {scheme}"
+        ))),
+    }
+}
+
+fn map_protocol_transport_error(error: ProtocolError) -> board_vm_client::TransportError {
+    match error {
+        ProtocolError::OutputTooSmall | ProtocolError::PayloadTooLarge => {
+            board_vm_client::TransportError::ResponseTooLarge
+        }
+        _ => board_vm_client::TransportError::Io,
+    }
 }
 
 fn run_repl_loop<T, R, W>(
@@ -1498,7 +1583,7 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>|--endpoint tcp://host:port] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>|--endpoint tcp://host:port] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -1930,6 +2015,75 @@ mod tests {
                 instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
                 host_nonce: DEFAULT_HOST_NONCE,
             })
+        );
+    }
+
+    #[test]
+    fn parses_smoke_ble_endpoint() {
+        let endpoint = "ble://AA:BB:CC:DD:EE:FF?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+        let command = parse_args(["smoke", "--endpoint", endpoint]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::Smoke(SmokeOptions {
+                port: None,
+                endpoint: Some(endpoint.to_owned()),
+                board: "auto".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                program_id: DEFAULT_PROGRAM_ID,
+                instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
+        );
+        assert_eq!(
+            endpoint_transport(endpoint).unwrap(),
+            SessionEndpointTransport::Bluetooth
+        );
+    }
+
+    #[test]
+    fn parses_repl_rfcomm_endpoint() {
+        let command = parse_args(["repl", "--endpoint", "btspp://uno-r4-wifi:1"]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::Repl(ReplOptions {
+                port: None,
+                endpoint: Some("btspp://uno-r4-wifi:1".to_owned()),
+                board: "auto".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                program_id: DEFAULT_PROGRAM_ID,
+                instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
+        );
+        assert_eq!(
+            endpoint_transport("btspp://uno-r4-wifi:1").unwrap(),
+            SessionEndpointTransport::Bluetooth
+        );
+    }
+
+    #[test]
+    fn rejects_malformed_bluetooth_endpoint() {
+        let error = endpoint_transport("ble://AA:BB:CC:DD:EE:FF").unwrap_err();
+
+        assert_eq!(
+            error,
+            CliError::DeviceSelection(
+                "invalid Board VM Bluetooth endpoint: ble://AA:BB:CC:DD:EE:FF".to_owned()
+            )
+        );
+    }
+
+    #[test]
+    fn rejects_unknown_endpoint_scheme() {
+        let error = endpoint_transport("ws://board-vm.local:4170").unwrap_err();
+
+        assert_eq!(
+            error,
+            CliError::DeviceSelection("unsupported --endpoint scheme: ws".to_owned())
         );
     }
 
