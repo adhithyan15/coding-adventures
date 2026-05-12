@@ -172,6 +172,7 @@ members = [
     "logic-core",
     "logic-engine",
     "adjudication-ir",
+    "llm-cache",
     "llm-gateway",
     "llm-primitives",
     "llm-provider-ollama",
