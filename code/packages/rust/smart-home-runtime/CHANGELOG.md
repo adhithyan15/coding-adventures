@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `RuntimePendingWorkSummary` helpers for compact pending-work status derived
   from runtime read snapshots.
+- `RuntimeEventLogSummary` plus `event_log_summary()` for compact event-kind
+  counts over selected runtime replay windows.
 
 ## [0.1.0] - 2026-05-06
 
