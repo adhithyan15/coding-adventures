@@ -213,6 +213,74 @@ impl SearchableFields {
         self.weights.insert(field.into(), weight);
         self
     }
+
+    /// Return a compact descriptor summary for read tools and
+    /// host diagnostics.
+    pub fn summary(&self) -> SearchableFieldsSummary {
+        SearchableFieldsSummary::from_fields(self)
+    }
+}
+
+/// Compact view over a [`SearchableFields`] descriptor.
+///
+/// This summarizes the field declaration itself, not any
+/// plaintext document. It is safe to surface in diagnostics
+/// where the caller wants to confirm that the typed-record
+/// schema exposes only intended fields to the local search
+/// indexer.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct SearchableFieldsSummary {
+    /// Number of declared field names.
+    pub declared_fields: usize,
+    /// Number of declared fields with finite positive weights.
+    pub usable_fields: usize,
+    /// Number of declared fields that the indexer will skip
+    /// because their weight is zero, negative, NaN, or infinite.
+    pub skipped_fields: usize,
+    /// Sum of all finite positive weights.
+    pub total_positive_weight: f32,
+    /// Highest finite positive weight, if any.
+    pub max_weight: Option<f32>,
+    /// Field name associated with [`Self::max_weight`].
+    pub max_weight_field: Option<String>,
+}
+
+impl SearchableFieldsSummary {
+    /// Build a summary from a descriptor.
+    pub fn from_fields(fields: &SearchableFields) -> Self {
+        let mut summary = Self {
+            declared_fields: fields.weights.len(),
+            ..Self::default()
+        };
+        for (field, weight) in &fields.weights {
+            if *weight > 0.0 && weight.is_finite() {
+                summary.usable_fields += 1;
+                summary.total_positive_weight += *weight;
+                let is_new_max = summary
+                    .max_weight
+                    .map(|current| *weight > current)
+                    .unwrap_or(true);
+                if is_new_max {
+                    summary.max_weight = Some(*weight);
+                    summary.max_weight_field = Some(field.clone());
+                }
+            } else {
+                summary.skipped_fields += 1;
+            }
+        }
+        summary
+    }
+
+    /// `true` when at least one declared field contributes to
+    /// the index.
+    pub fn has_usable_fields(&self) -> bool {
+        self.usable_fields > 0
+    }
+
+    /// `true` when no fields are declared.
+    pub fn is_empty(&self) -> bool {
+        self.declared_fields == 0
+    }
 }
 
 /// All errors produced by this crate.
@@ -910,6 +978,36 @@ mod tests {
         assert_eq!(*m.get(b"abc").unwrap(), 2);
         assert_eq!(*m.get(b"bca").unwrap(), 1);
         assert_eq!(*m.get(b"cab").unwrap(), 1);
+    }
+
+    #[test]
+    fn searchable_fields_summary_counts_usable_weights() {
+        let fields = SearchableFields::new()
+            .with("title", 2.0)
+            .with("url", 1.0)
+            .with("notes", 0.0)
+            .with("body", f32::NAN)
+            .with("secret", -1.0);
+
+        let summary = fields.summary();
+
+        assert_eq!(summary.declared_fields, 5);
+        assert_eq!(summary.usable_fields, 2);
+        assert_eq!(summary.skipped_fields, 3);
+        assert_eq!(summary.total_positive_weight, 3.0);
+        assert_eq!(summary.max_weight, Some(2.0));
+        assert_eq!(summary.max_weight_field.as_deref(), Some("title"));
+        assert!(summary.has_usable_fields());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn searchable_fields_summary_handles_empty_descriptor() {
+        let summary = SearchableFields::new().summary();
+
+        assert_eq!(summary, SearchableFieldsSummary::default());
+        assert!(summary.is_empty());
+        assert!(!summary.has_usable_fields());
     }
 
     // --- Indexing + search ---
