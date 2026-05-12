@@ -12,5 +12,7 @@ This first runtime slice is intentionally small and browser-friendly:
 - pre-binds `%pi`, `%e`, and `%i`
 - dispatches `linsolve` / `Solve(List(...), List(...))` to the exact
   `cas-solve` linear-system solver
+- dispatches `Solve(inequality, var)` to the `cas-solve` polynomial
+  inequality solver for interval predicates
 - exposes a JSON helper whose recursive IR representation is safe for
   `JSON.stringify`
