@@ -38,3 +38,7 @@ Deterministic list operations delegate to the Rust `cas-list-operations`
 package. `Length`, `First`, `Rest`, `Last`, `Append`, `Join`, `Reverse`,
 `Range`, `Part`, `Map`, `Apply`, `Sort`, and `Flatten` return list-operation
 results while invalid calls remain unevaluated.
+
+`TrigReduce(expr)` and `ev(expr, trigreduce)` delegate to the Rust `cas-trig`
+power-reduction walker, so MACSYMA sessions can rewrite supported sine/cosine
+powers and `sin(x)cos(x)` products to multiple-angle forms.

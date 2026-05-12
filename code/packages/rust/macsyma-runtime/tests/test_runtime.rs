@@ -4,7 +4,7 @@ use coding_adventures_macsyma_runtime::{
 };
 use std::collections::HashMap;
 use symbolic_ir::{
-    apply, int, rat, sym, ADD, AND, ASIN, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS,
+    apply, int, rat, sym, ADD, AND, ASIN, COS, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS,
     LESS_EQUAL, LIST, LOG, MUL, POW, RULE, SIN, SUB,
 };
 
@@ -209,6 +209,30 @@ fn ev_routes_supported_flags_and_preserves_unsupported_heads() {
     assert_eq!(
         results[2].output,
         apply(sym("Expand"), vec![apply(sym(ADD), vec![sym("x"), int(1)])])
+    );
+}
+
+#[test]
+fn trigreduce_routes_through_macsyma_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("trigreduce(sin(x)^2); ev(cos(x)^2, trigreduce);")
+        .unwrap();
+    let cos_2x = apply(sym(COS), vec![apply(sym(MUL), vec![int(2), sym("x")])]);
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![rat(1, 2), apply(sym(SUB), vec![int(1), cos_2x.clone()])]
+        )
+    );
+    assert_eq!(
+        results[1].output,
+        apply(
+            sym(MUL),
+            vec![rat(1, 2), apply(sym(ADD), vec![int(1), cos_2x])]
+        )
     );
 }
 
