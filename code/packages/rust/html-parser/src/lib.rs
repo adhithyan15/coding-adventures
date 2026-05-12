@@ -1054,6 +1054,18 @@ impl HtmlParser {
             return;
         }
         if !in_foreign_content
+            && matches!(name.as_str(), "param" | "source" | "track")
+            && !self.current_element_is("object")
+            && !self.has_open_element("body")
+            && !self.document_has_body_element()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-pre-body-void-start-tag",
+                format!("start tag `<{name}>` before body was ignored"),
+            ));
+            return;
+        }
+        if !in_foreign_content
             && self.open_elements.is_empty()
             && self.has_document_element()
             && !self.document_has_body_element()
@@ -1296,6 +1308,10 @@ impl HtmlParser {
             self.close_open_element_if(|name| name == "select");
         }
 
+        if !in_foreign_content && name == "table" && self.current_element_is_table_structure() {
+            self.close_element("table");
+        }
+
         if !in_foreign_content
             && name == "form"
             && self.current_element_is_table_structure()
@@ -1316,6 +1332,28 @@ impl HtmlParser {
 
         if !in_foreign_content && name == "meta" && self.current_element_is_table_structure() {
             self.insert_node_before_open_table(Node::element(name, attributes));
+            return;
+        }
+
+        if !in_foreign_content && name == "title" && self.current_element_is_table_structure() {
+            if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
+            {
+                self.open_elements.push(path);
+            }
+            return;
+        }
+
+        if !in_foreign_content
+            && name == "li"
+            && self.has_open_table_context()
+            && (self.current_element_is_table_structure()
+                || self.current_parent_is_fostered_before_open_table())
+        {
+            self.close_open_element_if(|name| name == "li");
+            if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
+            {
+                self.open_elements.push(path);
+            }
             return;
         }
 
@@ -1722,13 +1760,13 @@ impl HtmlParser {
             return;
         }
 
+        let pending_formatting_is_before_open_table = self
+            .previous_pending_formatting_path_before_open_table()
+            .is_some();
         if (!text.chars().all(char::is_whitespace)
             || !self.pending_formatting_reconstruction.is_empty())
             && (!self.current_parent_has_table_ancestor()
-                || !self
-                    .pending_formatting_reconstruction
-                    .iter()
-                    .any(|(name, _)| name == "a")
+                || !pending_formatting_is_before_open_table
                 || self.current_parent_is_fostered_before_open_table())
             && !self.current_parent_is_inside_previous_pending_formatting_before_open_table()
         {
@@ -1993,6 +2031,14 @@ impl HtmlParser {
             return;
         }
         if self.has_open_table_context()
+            && !self.current_parent_is_fostered_before_open_table()
+            && self
+                .previous_pending_formatting_path_before_open_table()
+                .is_some()
+        {
+            return;
+        }
+        if self.has_open_table_context()
             && self
                 .pending_formatting_reconstruction
                 .iter()
@@ -2187,6 +2233,9 @@ impl HtmlParser {
         else {
             return;
         };
+        if !matches!(pending_name.as_str(), "a" | "nobr") {
+            return;
+        }
         let Some(table_path) = self
             .open_elements
             .iter()
@@ -2267,6 +2316,7 @@ impl HtmlParser {
             return;
         };
 
+        let mut pending_formatting = Vec::new();
         while self.open_elements.len() > table_stack_index + 1 {
             let Some(path) = self.open_elements.last() else {
                 break;
@@ -2277,7 +2327,15 @@ impl HtmlParser {
             if !is_fostered_formatting {
                 break;
             }
+            if let Some(element) = element_ref_at_path(&self.document, path) {
+                pending_formatting.push((element.name.clone(), element.attributes.clone()));
+            }
             self.open_elements.pop();
+        }
+        if !pending_formatting.is_empty() {
+            pending_formatting.reverse();
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(pending_formatting);
         }
     }
 
@@ -2579,6 +2637,9 @@ impl HtmlParser {
             }
             if name == "form" {
                 self.form_element_pointer_set = false;
+                self.generate_implied_end_tags_above(index);
+                self.open_elements.remove(index);
+                return;
             }
             if matches!(name, "div" | "p" | "select") {
                 self.capture_formatting_above(index);
@@ -2598,6 +2659,16 @@ impl HtmlParser {
             "unexpected-end-tag",
             format!("end tag `</{name}>` did not match an open element"),
         ));
+    }
+
+    fn generate_implied_end_tags_above(&mut self, lower_bound: usize) {
+        while self.open_elements.len() > lower_bound + 1
+            && self
+                .current_element_name()
+                .is_some_and(is_implied_end_tag_element)
+        {
+            self.open_elements.pop();
+        }
     }
 
     fn close_pending_formatting_in_table_context(&mut self, name: &str) -> bool {
@@ -2693,7 +2764,7 @@ impl HtmlParser {
 
     fn apply_simple_implied_end_tags(&mut self, incoming_name: &str) {
         if incoming_name == "p" {
-            if !self.current_parent_has_element_ancestor("button") {
+            if self.current_parent_has_open_element_in_button_scope("p") {
                 self.close_open_element_if(|name| name == "p");
             }
         } else if incoming_name == "li" {
@@ -2790,13 +2861,13 @@ impl HtmlParser {
     }
 
     fn apply_select_implied_contexts(&mut self, incoming_name: &str) -> bool {
-        if incoming_name != "select" || !self.has_open_element("select") {
+        if !matches!(incoming_name, "input" | "select") || !self.has_open_element("select") {
             return false;
         }
 
         self.close_open_element_if(|name| name == "option");
         self.close_open_element_if(|name| name == "select");
-        true
+        incoming_name == "select"
     }
 
     fn close_open_element_silently(&mut self, name: &str) -> bool {
@@ -3688,6 +3759,25 @@ impl HtmlParser {
                 current_parent_path.starts_with(path)
                     && element_at_path(&self.document, path).is_some_and(|name| name == target_name)
             })
+    }
+
+    fn current_parent_has_open_element_in_button_scope(&self, target_name: &str) -> bool {
+        let current_parent_path = self.current_parent_path();
+        for path in self.open_elements.iter().rev() {
+            if !current_parent_path.starts_with(path) {
+                continue;
+            }
+            let Some(name) = element_at_path(&self.document, path) else {
+                continue;
+            };
+            if name == target_name {
+                return true;
+            }
+            if is_button_scope_boundary(name) {
+                return false;
+            }
+        }
+        false
     }
 
     fn current_parent_has_element_in_table_scope(&self, target_name: &str) -> bool {
@@ -5422,6 +5512,29 @@ fn special_scope_blocks_end_tag(name: &str) -> bool {
     !matches!(name, "form") && !is_special_element(name)
 }
 
+fn is_button_scope_boundary(name: &str) -> bool {
+    matches!(
+        name,
+        "applet"
+            | "caption"
+            | "html"
+            | "table"
+            | "td"
+            | "th"
+            | "marquee"
+            | "object"
+            | "template"
+            | "button"
+    )
+}
+
+fn is_implied_end_tag_element(name: &str) -> bool {
+    matches!(
+        name,
+        "dd" | "dt" | "li" | "optgroup" | "option" | "p" | "rb" | "rp" | "rt" | "rtc"
+    )
+}
+
 fn is_heading_element(name: &str) -> bool {
     matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
 }
@@ -6077,7 +6190,7 @@ mod tests {
         );
 
         let body = body(&output.document);
-        assert_eq!(body.children.len(), 2);
+        assert_eq!(body.children.len(), 1);
 
         let form = element(&body.children[0]);
         assert_eq!(form.name, "form");
@@ -6091,7 +6204,7 @@ mod tests {
         assert_eq!(input.name, "input");
         assert_eq!(input.attribute("name"), Some("x"));
 
-        let paragraph = element(&body.children[1]);
+        let paragraph = element(&div.children[2]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("After")]);
     }

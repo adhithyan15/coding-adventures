@@ -1922,6 +1922,23 @@ fn default_html_lexer_reports_recoverable_comment_eof_diagnostic() {
 }
 
 #[test]
+fn default_html_lexer_preserves_comment_start_dash_before_text() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<!---x").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Comment("-x".to_string()), Token::Eof]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-comment"));
+}
+
+#[test]
 fn default_html_lexer_does_not_include_comment_end_dashes_at_eof() {
     let tokens = lex_html("<!--x--").unwrap();
 
