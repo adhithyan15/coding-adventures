@@ -7,6 +7,8 @@ import {
   ATANH,
   COS,
   COSH,
+  COTH,
+  CSCH,
   D,
   DEFINE,
   DIV,
@@ -20,6 +22,7 @@ import {
   MUL,
   NEG,
   POW,
+  SECH,
   SIN,
   SINH,
   SQRT,
@@ -89,6 +92,21 @@ describe("symbolic-vm", () => {
   it("evaluates elementary numeric functions and exact identities", () => {
     const vm = new VM(new SymbolicBackend());
     expect(vm.eval(app(SIN, [int(0)]))).toEqual(int(0));
+  });
+
+  it("evaluates reciprocal hyperbolic numeric functions and exact identities", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(COTH, [numberNode(1.2)]))).toEqual(numberNode(Math.cosh(1.2) / Math.sinh(1.2)));
+    expect(vm.eval(app(SECH, [numberNode(0.7)]))).toEqual(numberNode(1 / Math.cosh(0.7)));
+    expect(vm.eval(app(CSCH, [numberNode(0.5)]))).toEqual(numberNode(1 / Math.sinh(0.5)));
+    expect(vm.eval(app(SECH, [int(0)]))).toEqual(int(1));
+  });
+
+  it("leaves reciprocal hyperbolic symbolic applications held", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(COTH, [sym("x")]))).toEqual(app(COTH, [sym("x")]));
+    expect(vm.eval(app(SECH, [sym("x")]))).toEqual(app(SECH, [sym("x")]));
+    expect(vm.eval(app(CSCH, [sym("x")]))).toEqual(app(CSCH, [sym("x")]));
   });
 
   it("evaluates comparisons and held if branches", () => {
@@ -190,6 +208,24 @@ describe("symbolic-vm", () => {
     );
     expect(vm.eval(app(D, [app(ATANH, [sym("x")]), sym("x")]))).toEqual(
       app(DIV, [int(1), app(SUB, [int(1), app(POW, [sym("x"), int(2)])])]),
+    );
+  });
+
+  it("applies reciprocal hyperbolic chain rules through Sinh and Cosh", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const square = app(POW, [x, int(2)]);
+    expect(vm.eval(app(D, [app(COTH, [x]), x]))).toEqual(
+      app(NEG, [app(DIV, [int(1), app(POW, [app(SINH, [x]), int(2)])])]),
+    );
+    expect(vm.eval(app(D, [app(SECH, [x]), x]))).toEqual(
+      app(NEG, [app(DIV, [app(SINH, [x]), app(POW, [app(COSH, [x]), int(2)])])]),
+    );
+    expect(vm.eval(app(D, [app(CSCH, [x]), x]))).toEqual(
+      app(NEG, [app(DIV, [app(COSH, [x]), app(POW, [app(SINH, [x]), int(2)])])]),
+    );
+    expect(vm.eval(app(D, [app(COTH, [square]), x]))).toEqual(
+      app(NEG, [app(DIV, [app(MUL, [int(2), x]), app(POW, [app(SINH, [square]), int(2)])])]),
     );
   });
 
