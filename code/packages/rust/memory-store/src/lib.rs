@@ -364,6 +364,51 @@ impl MemoryTagSummary {
     }
 }
 
+/// Composite memory inventory for host, tool, and scheduled review surfaces.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct MemoryInventorySummary {
+    pub catalog: MemoryCatalogSummary,
+    pub source: MemorySourceSummary,
+    pub tags: MemoryTagSummary,
+}
+
+impl MemoryInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(memories: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a MemoryRecord>,
+    {
+        let memories = memories.into_iter().collect::<Vec<_>>();
+        Self {
+            catalog: MemoryCatalogSummary::from_records(memories.iter().copied(), now_ms),
+            source: MemorySourceSummary::from_records(memories.iter().copied()),
+            tags: MemoryTagSummary::from_records(memories, now_ms),
+        }
+    }
+
+    pub fn total_memories(&self) -> usize {
+        self.catalog.total_memories
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_memories() == 0
+    }
+
+    pub fn has_provenance_gaps(&self) -> bool {
+        self.source.has_unsourced_memories()
+    }
+
+    pub fn needs_inventory_attention(&self) -> bool {
+        self.catalog.has_expired_memories()
+            || self.catalog.has_unreviewed_memories()
+            || self.has_provenance_gaps()
+            || self.tags.untagged_memories > 0
+    }
+}
+
 /// Why a memory should be surfaced for human, agent, or scheduled review.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MemoryReviewReason {
@@ -789,6 +834,15 @@ impl<S: StorageBackend> MemoryStore<S> {
     ) -> Result<MemoryTagSummary, StorageError> {
         let memories = self.list_memories_with_options(options)?;
         Ok(MemoryTagSummary::from_records(&memories, now_ms))
+    }
+
+    pub fn inventory_summary(
+        &self,
+        options: MemoryListOptions,
+        now_ms: u64,
+    ) -> Result<MemoryInventorySummary, StorageError> {
+        let memories = self.list_memories_with_options(options)?;
+        Ok(MemoryInventorySummary::from_records(&memories, now_ms))
     }
 
     pub fn search_lexical(&self, query: &str) -> Result<Vec<MemoryRecord>, StorageError> {
@@ -1880,6 +1934,88 @@ mod tests {
         assert_eq!(empty, MemoryTagSummary::empty());
         assert!(empty.is_empty());
         assert!(!empty.has_tags());
+    }
+
+    #[test]
+    fn inventory_summary_composes_catalog_source_and_tag_coverage() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut sourced = memory_with_created_confidence(
+            "sourced",
+            "Preference",
+            "Use compact summaries",
+            10,
+            0.9,
+        );
+        sourced.source_refs = vec!["session-1".to_string()];
+        sourced.tags = vec!["style".to_string()];
+        sourced.reviewed_at = Some(20);
+
+        let mut procedure =
+            memory_with_created_confidence("procedure", "Runbook", "Restart service", 30, 0.8);
+        procedure.class = MemoryClass::Procedure;
+        procedure.source_refs = vec!["session-1".to_string(), "spec-d18".to_string()];
+        procedure.tags = vec!["ops".to_string(), "runtime".to_string()];
+        procedure.expires_at = Some(50);
+
+        let mut unsourced =
+            memory_with_created_confidence("unsourced", "Scratch", "Needs provenance", 40, 0.4);
+        unsourced.source_refs = Vec::new();
+        unsourced.tags = Vec::new();
+
+        let mut tombstoned =
+            memory_with_created_confidence("removed", "Removed", "Old warning", 60, 0.2);
+        tombstoned.class = MemoryClass::Warning;
+        tombstoned.source_refs = vec!["session-2".to_string()];
+        tombstoned.tags = vec!["style".to_string()];
+        tombstoned.tombstoned = true;
+
+        let _ = store.remember(sourced).unwrap();
+        let _ = store.remember(procedure).unwrap();
+        let _ = store.remember(unsourced).unwrap();
+        let _ = store.remember(tombstoned).unwrap();
+
+        let summary = store
+            .inventory_summary(MemoryListOptions::new().include_tombstoned(true), 100)
+            .unwrap();
+
+        assert_eq!(summary.total_memories(), 4);
+        assert_eq!(summary.catalog.profile_memories, 2);
+        assert_eq!(summary.catalog.procedure_memories, 1);
+        assert_eq!(summary.catalog.warning_memories, 1);
+        assert_eq!(summary.catalog.active_memories, 2);
+        assert_eq!(summary.catalog.expired_memories, 1);
+        assert_eq!(summary.catalog.tombstoned_memories, 1);
+        assert_eq!(summary.source.memories_without_source_refs, 1);
+        assert_eq!(summary.source.memories_with_multiple_source_refs, 1);
+        assert_eq!(summary.tags.unique_tags, 3);
+        assert_eq!(summary.tags.total_tag_refs, 4);
+        assert_eq!(summary.tags.count_for("style"), 2);
+        assert!(summary.has_provenance_gaps());
+        assert!(summary.needs_inventory_attention());
+        assert!(!summary.is_empty());
+
+        let active_sourced = store
+            .inventory_summary(
+                MemoryListOptions::new()
+                    .active_at(100)
+                    .with_source_ref("session-1"),
+                100,
+            )
+            .unwrap();
+
+        assert_eq!(active_sourced.total_memories(), 1);
+        assert_eq!(active_sourced.catalog.active_memories, 1);
+        assert_eq!(active_sourced.source.memories_without_source_refs, 0);
+        assert_eq!(active_sourced.tags.count_for("style"), 1);
+        assert!(!active_sourced.has_provenance_gaps());
+        assert!(!active_sourced.needs_inventory_attention());
+
+        let empty = store
+            .inventory_summary(MemoryListOptions::new().with_tag("missing"), 100)
+            .unwrap();
+        assert_eq!(empty, MemoryInventorySummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.needs_inventory_attention());
     }
 
     #[test]
