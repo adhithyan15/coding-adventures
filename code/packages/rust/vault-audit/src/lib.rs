@@ -343,6 +343,12 @@ pub struct AuditChainSummary {
     pub sealed_record_event_count: usize,
     /// Number of caller-defined `Other` events.
     pub other_event_count: usize,
+    /// Number of entries with a resource reference.
+    pub entries_with_resource: usize,
+    /// Total resource string length across all entries.
+    pub total_resource_len: usize,
+    /// Number of entries carrying detail bytes.
+    pub entries_with_detail: usize,
     /// Total detail byte length across all entries.
     pub total_detail_len: usize,
 }
@@ -361,6 +367,16 @@ impl AuditChainSummary {
     /// Return whether the chain contains entries from multiple signers.
     pub fn signer_changed(&self) -> bool {
         self.unique_signer_count > 1
+    }
+
+    /// Return whether any entry carries optional resource or detail metadata.
+    pub fn has_context_metadata(&self) -> bool {
+        self.entries_with_resource > 0 || self.entries_with_detail > 0
+    }
+
+    /// Return whether every entry carries a resource reference.
+    pub fn all_entries_have_resource(&self) -> bool {
+        self.entry_count > 0 && self.entries_with_resource == self.entry_count
     }
 }
 
@@ -1025,13 +1041,23 @@ pub fn summarize_entries(entries: &[SignedAuditEntry]) -> AuditChainSummary {
         lease_event_count: 0,
         sealed_record_event_count: 0,
         other_event_count: 0,
+        entries_with_resource: 0,
+        total_resource_len: 0,
+        entries_with_detail: 0,
         total_detail_len: 0,
     };
 
     for signed in entries {
         principals.insert(signed.entry.event.principal.as_str());
         signers.insert(signed.signer_pub);
-        summary.total_detail_len += signed.entry.event.detail.as_ref().map_or(0, Vec::len);
+        if let Some(resource) = &signed.entry.event.resource {
+            summary.entries_with_resource += 1;
+            summary.total_resource_len += resource.len();
+        }
+        if let Some(detail) = &signed.entry.event.detail {
+            summary.entries_with_detail += 1;
+            summary.total_detail_len += detail.len();
+        }
         match &signed.entry.event.action {
             AuditAction::AuthSucceed | AuditAction::AuthFail => summary.auth_event_count += 1,
             AuditAction::PolicyAllow | AuditAction::PolicyDeny => {
@@ -1560,8 +1586,16 @@ mod tests {
         assert_eq!(summary.auth_event_count, 1);
         assert_eq!(summary.engine_event_count, 1);
         assert_eq!(summary.other_event_count, 1);
+        assert_eq!(summary.entries_with_resource, 2);
+        assert_eq!(
+            summary.total_resource_len,
+            "database/creds".len() + "custom/resource".len()
+        );
+        assert_eq!(summary.entries_with_detail, 1);
         assert_eq!(summary.total_detail_len, 4);
         assert!(summary.has_entries());
+        assert!(summary.has_context_metadata());
+        assert!(!summary.all_entries_have_resource());
         assert!(summary.is_single_signer());
         assert!(!summary.signer_changed());
     }
@@ -1584,5 +1618,7 @@ mod tests {
         let summary = chain.sink().chain_summary().unwrap();
         assert_eq!(summary.sealed_record_event_count, 1);
         assert_eq!(summary.lease_event_count, 1);
+        assert_eq!(summary.entries_with_resource, 2);
+        assert!(summary.all_entries_have_resource());
     }
 }
