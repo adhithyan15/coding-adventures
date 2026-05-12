@@ -21,6 +21,7 @@ export function App(): JSX.Element {
   const [source, setSource] = useState(examples[0].source);
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loadedFileName, setLoadedFileName] = useState<string | null>(null);
 
   const visibleCount = transcript.filter((entry) => entry.display).length;
 
@@ -38,6 +39,18 @@ export function App(): JSX.Element {
     session.resetHistory();
     setTranscript([]);
     setError(null);
+  }
+
+  async function loadFile(fileList: FileList | null): Promise<void> {
+    const file = fileList?.[0];
+    if (file === undefined || file === null) return;
+    try {
+      setSource(await readFileText(file));
+      setLoadedFileName(file.name);
+      setError(null);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : String(caught));
+    }
   }
 
   return (
@@ -74,6 +87,16 @@ export function App(): JSX.Element {
                 </button>
               ))}
             </div>
+            <label className="filePicker">
+              <span>Load .mac</span>
+              <input
+                aria-label="Load MACSYMA file"
+                accept=".mac,.macsyma,text/plain"
+                type="file"
+                onChange={(event) => void loadFile(event.target.files)}
+              />
+              <span className="fileName">{loadedFileName ?? "No file selected"}</span>
+            </label>
             <textarea
               aria-label="MACSYMA source"
               spellCheck={false}
@@ -125,4 +148,16 @@ function toEntry(result: EvalResult): TranscriptEntry {
     output: toDisplayString(result.output),
     display: result.display,
   };
+}
+
+function readFileText(file: File): Promise<string> {
+  if ("text" in file && typeof file.text === "function") {
+    return file.text();
+  }
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error ?? new Error("Unable to read file"));
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.readAsText(file);
+  });
 }
