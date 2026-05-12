@@ -43,7 +43,7 @@
 //!     IR node (v0.3.0)
 //!   * [`judge_plausibility`] — ADJ05 binary plausibility judge (v0.4.0)
 //!   * [`find_contradicting_reading`] — ADJ05 adversary (v0.5.0)
-//!   * `decompose_text` — extractor; not yet here
+//!   * [`decompose_text`] — headline extractor (v0.6.0)
 //!   * `extract_rules` — rule extractor; not yet here
 //!
 //! Until a primitive lands, its `PROMPT_VERSION_*` constant is the
@@ -64,6 +64,7 @@ use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, LlmError, ProviderIdentity, TokenUsage,
 };
 
+pub mod decompose_text;
 pub mod entail;
 pub mod find_contradicting_reading;
 pub mod judge_plausibility;
@@ -74,6 +75,7 @@ pub mod render_node;
 // namespaces, so callers can write `llm_primitives::entail(...)` /
 // `llm_primitives::render_node(...)` / `llm_primitives::judge_plausibility(...)`
 // directly.
+pub use decompose_text::{decompose_text, DecomposeTextRequest, DecomposeTextResponse};
 pub use entail::{entail, EntailRequest, EntailResponse};
 pub use find_contradicting_reading::{
     find_contradicting_reading, FindContradictingReadingRequest, FindContradictingReadingResponse,
