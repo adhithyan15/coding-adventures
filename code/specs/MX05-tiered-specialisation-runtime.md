@@ -267,6 +267,29 @@ into the cache.
 > bytes are unchanged from V0.4.0; only the cache-size signal is
 > new.
 
+> **Implementation status (Phase 4.1 landed — specialised dispatch executes on CPU)**:
+> `matrix-cpu` v0.4.0 installs a per-handle closure table
+> (`SpecialisedTable`) on `CpuExecutor`.  New API
+> `CpuExecutor::install_specialised(handle, Box<dyn Fn>)` registers a
+> closure with signature
+> `fn(&mut BufferStore, &[BufferId], &[BufferId]) -> Result<Vec<OpTiming>, String>`
+> under the opaque `u64` handle emitted by `CpuSpecialiser`.
+> `ExecutorRequest::DispatchSpecialised { handle, inputs, outputs, .. }`
+> now does a real lookup: hit → invoke the closure, return
+> `DispatchDone { job_id, timings }`; miss → return
+> `Error { code: NOT_IMPLEMENTED, .. }` so the runtime falls back
+> to the generic `Dispatch` path.  This is the moment the spec MX05
+> promise that "the dispatch path actually invokes specialised
+> kernels" is realised — 12 new tests (7 unit + 5 integration) cover
+> install/lookup/overwrite/error/round-trip including a real f32
+> add closure that fires through DispatchSpecialised and produces
+> correct output bytes.  What's still pending: the runtime-side
+> piece that observes a `SpecRouter` cache hit and *automatically*
+> calls `install_specialised` on the target executor — a
+> matrix-runtime concern landing in the next phase.  Phase 4.2 will
+> mirror this plumbing in matrix-metal with an MSL emitter cached
+> by handle.
+
 > **Implementation status (Phase 4 minimum-viable landed — first real backend Specialiser)**:
 > `matrix_cpu::CpuSpecialiser` ships as the workspace's first real
 > `Specialiser` impl (previously every test and demo used

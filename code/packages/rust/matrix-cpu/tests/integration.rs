@@ -750,3 +750,312 @@ fn local_transport_full_pipeline() {
     };
     assert_eq!(result, vec![4.0, 10.0, 18.0]);
 }
+
+// ─────────────── 6. MX05 Phase 4.1 — specialised dispatch ───────────────
+//
+// These tests exercise the full DispatchSpecialised path end-to-end:
+// install a closure via CpuExecutor::install_specialised, fire a
+// DispatchSpecialised request, observe DispatchDone (or a NOT_IMPLEMENTED
+// fall-through when the handle is unknown).
+
+use matrix_cpu::SpecialisedKernelFn;
+use std::sync::Arc;
+
+/// Helper: get a `CpuExecutor` wrapped in `Arc` so we can both install
+/// kernels and pass a clone into a `LocalTransport` for request routing.
+fn arc_executor() -> Arc<CpuExecutor> {
+    Arc::new(CpuExecutor::new())
+}
+
+fn transport_for(exec: Arc<CpuExecutor>) -> LocalTransport {
+    LocalTransport::new(move |req| exec.handle(req))
+}
+
+#[test]
+fn dispatch_specialised_returns_not_implemented_when_handle_unknown() {
+    // The fall-through path: no closure installed, DispatchSpecialised
+    // must still answer with a recognisable NOT_IMPLEMENTED so the
+    // runtime can fall back to the generic Dispatch route.
+    let exec = arc_executor();
+    let t = transport_for(exec);
+    let resp = block_on(t.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 7,
+        handle: 0xDEAD_BEEF_DEAD_BEEF,
+        inputs: vec![],
+        outputs: vec![],
+    }))
+    .unwrap();
+    match resp {
+        ExecutorResponse::Error { code, job_id, .. } => {
+            assert_eq!(code, executor_protocol::ErrorCode::NOT_IMPLEMENTED);
+            assert_eq!(job_id, Some(7));
+        }
+        other => panic!("expected NOT_IMPLEMENTED error, got {:?}", other),
+    }
+}
+
+#[test]
+fn dispatch_specialised_returns_dispatch_done_after_install() {
+    // The happy path: install a closure under handle H, fire
+    // DispatchSpecialised with handle H, get DispatchDone back.
+    let exec = arc_executor();
+
+    // Identity-copy kernel: read input[0], write input[0]'s bytes to
+    // output[0].  Proves the dispatch path can actually read and
+    // write tensor bytes through the BufferStore.
+    let kernel: Box<SpecialisedKernelFn> = Box::new(|bufs, inputs, outputs| {
+        let src = bufs.read(inputs[0], 0, 4)?;
+        bufs.write(outputs[0], 0, &src)?;
+        Ok(vec![executor_protocol::OpTiming { op_index: 0, ns: 0 }])
+    });
+    exec.install_specialised(0xC0FF_EE00_C0FF_EE00, kernel);
+    assert_eq!(exec.specialised_count(), 1);
+
+    let t = transport_for(exec.clone());
+
+    // Allocate two buffers and seed the input.
+    let buf_in = match block_on(t.request(ExecutorRequest::AllocBuffer { bytes: 4 })).unwrap() {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!(),
+    };
+    let buf_out = match block_on(t.request(ExecutorRequest::AllocBuffer { bytes: 4 })).unwrap() {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!(),
+    };
+    block_on(t.request(ExecutorRequest::UploadBuffer {
+        buffer: buf_in,
+        offset: 0,
+        data: vec![0xAA, 0xBB, 0xCC, 0xDD],
+    }))
+    .unwrap();
+
+    let resp = block_on(t.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 42,
+        handle: 0xC0FF_EE00_C0FF_EE00,
+        inputs: vec![buf_in],
+        outputs: vec![buf_out],
+    }))
+    .unwrap();
+
+    match resp {
+        ExecutorResponse::DispatchDone { job_id, timings } => {
+            assert_eq!(job_id, 42);
+            assert_eq!(timings.len(), 1);
+        }
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+
+    // Verify the bytes actually landed in the output buffer.
+    let down = block_on(t.request(ExecutorRequest::DownloadBuffer {
+        buffer: buf_out,
+        offset: 0,
+        len: 4,
+    }))
+    .unwrap();
+    match down {
+        ExecutorResponse::BufferData { data, .. } => {
+            assert_eq!(data, vec![0xAA, 0xBB, 0xCC, 0xDD]);
+        }
+        _ => panic!(),
+    }
+}
+
+#[test]
+fn dispatch_specialised_kernel_error_becomes_runtime_error() {
+    // A kernel that returns Err must surface as ErrorCode::RUNTIME_ERROR
+    // with the kernel's message embedded.  Same shape as generic
+    // Dispatch failures.
+    let exec = arc_executor();
+    let kernel: Box<SpecialisedKernelFn> = Box::new(|_, _, _| {
+        Err("intentional kernel failure".to_string())
+    });
+    exec.install_specialised(0x1234, kernel);
+    let t = transport_for(exec);
+
+    let resp = block_on(t.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 99,
+        handle: 0x1234,
+        inputs: vec![],
+        outputs: vec![],
+    }))
+    .unwrap();
+    match resp {
+        ExecutorResponse::Error { code, message, job_id } => {
+            assert_eq!(code, executor_protocol::ErrorCode::RUNTIME_ERROR);
+            assert_eq!(job_id, Some(99));
+            assert!(message.contains("intentional kernel failure"));
+        }
+        other => panic!("expected Error, got {:?}", other),
+    }
+}
+
+#[test]
+fn install_specialised_overwrites_prior_kernel() {
+    // Re-installing the same handle replaces the closure — the path
+    // Phase 5 deoptimisation will use when an observed assumption fails.
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    let exec = arc_executor();
+    let v1_calls = Arc::new(AtomicUsize::new(0));
+    let v2_calls = Arc::new(AtomicUsize::new(0));
+
+    {
+        let c = v1_calls.clone();
+        exec.install_specialised(
+            7,
+            Box::new(move |_, _, _| {
+                c.fetch_add(1, Ordering::SeqCst);
+                Ok(vec![])
+            }),
+        );
+    }
+
+    let t = transport_for(exec.clone());
+    block_on(t.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 1,
+        handle: 7,
+        inputs: vec![],
+        outputs: vec![],
+    }))
+    .unwrap();
+    assert_eq!(v1_calls.load(Ordering::SeqCst), 1);
+    assert_eq!(v2_calls.load(Ordering::SeqCst), 0);
+
+    // Overwrite.
+    {
+        let c = v2_calls.clone();
+        exec.install_specialised(
+            7,
+            Box::new(move |_, _, _| {
+                c.fetch_add(1, Ordering::SeqCst);
+                Ok(vec![])
+            }),
+        );
+    }
+    // specialised_count stays at 1 — install replaces, doesn't accumulate.
+    assert_eq!(exec.specialised_count(), 1);
+
+    block_on(t.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 2,
+        handle: 7,
+        inputs: vec![],
+        outputs: vec![],
+    }))
+    .unwrap();
+    assert_eq!(v1_calls.load(Ordering::SeqCst), 1);
+    assert_eq!(v2_calls.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn dispatch_specialised_kernel_can_call_real_eval() {
+    // A specialised kernel can wrap any logic, including replaying a
+    // real matrix-ir op.  Here we install a closure that adds two
+    // length-3 f32 vectors via raw byte arithmetic — the same effect
+    // as Op::Add, but routed through the specialised path.  This is
+    // the shape Phase 4.2's metal emitter will take, just in MSL.
+    let exec = arc_executor();
+    let kernel: Box<SpecialisedKernelFn> = Box::new(|bufs, inputs, outputs| {
+        let a_bytes = bufs.read(inputs[0], 0, 12)?;
+        let b_bytes = bufs.read(inputs[1], 0, 12)?;
+        let mut out_bytes = vec![0u8; 12];
+        for i in 0..3 {
+            let a = f32::from_le_bytes(a_bytes[i*4..i*4+4].try_into().unwrap());
+            let b = f32::from_le_bytes(b_bytes[i*4..i*4+4].try_into().unwrap());
+            let c = a + b;
+            out_bytes[i*4..i*4+4].copy_from_slice(&c.to_le_bytes());
+        }
+        bufs.write(outputs[0], 0, &out_bytes)?;
+        Ok(vec![executor_protocol::OpTiming { op_index: 0, ns: 0 }])
+    });
+    exec.install_specialised(0xADD3F32, kernel);
+
+    let t = transport_for(exec);
+    let buf_a = match block_on(t.request(ExecutorRequest::AllocBuffer { bytes: 12 })).unwrap() {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!(),
+    };
+    let buf_b = match block_on(t.request(ExecutorRequest::AllocBuffer { bytes: 12 })).unwrap() {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!(),
+    };
+    let buf_out = match block_on(t.request(ExecutorRequest::AllocBuffer { bytes: 12 })).unwrap() {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!(),
+    };
+    block_on(t.request(ExecutorRequest::UploadBuffer {
+        buffer: buf_a,
+        offset: 0,
+        data: f32_bytes(&[1.0, 2.0, 3.0]),
+    }))
+    .unwrap();
+    block_on(t.request(ExecutorRequest::UploadBuffer {
+        buffer: buf_b,
+        offset: 0,
+        data: f32_bytes(&[10.0, 20.0, 30.0]),
+    }))
+    .unwrap();
+
+    block_on(t.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 0,
+        handle: 0xADD3F32,
+        inputs: vec![buf_a, buf_b],
+        outputs: vec![buf_out],
+    }))
+    .unwrap();
+
+    let down = block_on(t.request(ExecutorRequest::DownloadBuffer {
+        buffer: buf_out,
+        offset: 0,
+        len: 12,
+    }))
+    .unwrap();
+    match down {
+        ExecutorResponse::BufferData { data, .. } => {
+            assert_eq!(from_f32_bytes(&data), vec![11.0, 22.0, 33.0]);
+        }
+        _ => panic!(),
+    }
+}
+
+#[test]
+fn dispatch_specialised_kernel_panic_becomes_runtime_error_not_unwind() {
+    // **Security-hardening regression test.**  The doc comment on
+    // `CpuExecutor::handle()` promises "a single bad request cannot
+    // DoS the executor for all subsequent clients".  An installed
+    // kernel that panics (e.g. due to attacker-supplied empty inputs
+    // triggering an out-of-bounds index) must surface as a clean
+    // `RUNTIME_ERROR` rather than unwinding through the mutex guard
+    // and out of `handle()`.
+    let exec = arc_executor();
+    let kernel: Box<SpecialisedKernelFn> = Box::new(|_bufs, inputs, _outputs| {
+        // Deliberately out-of-bounds — panics if `inputs` is empty.
+        let _ = inputs[0];
+        Ok(vec![])
+    });
+    exec.install_specialised(0x5BAD, kernel);
+
+    let t = transport_for(exec.clone());
+    let resp = block_on(t.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 13,
+        handle: 0x5BAD,
+        inputs: vec![], // ← causes the panic
+        outputs: vec![],
+    }))
+    .unwrap();
+
+    match resp {
+        ExecutorResponse::Error { code, job_id, message } => {
+            assert_eq!(code, executor_protocol::ErrorCode::RUNTIME_ERROR);
+            assert_eq!(job_id, Some(13));
+            assert!(message.contains("panicked"), "message should mention panic: {}", message);
+        }
+        other => panic!("expected Error, got {:?}", other),
+    }
+
+    // **Crucial second assertion**: the executor still serves the
+    // *next* request normally.  If the panic had unwound through
+    // the mutex, the lock would be permanently poisoned (or worse,
+    // the process aborted) and this Heartbeat would fail.
+    let resp = block_on(t.request(ExecutorRequest::Heartbeat)).unwrap();
+    assert!(matches!(resp, ExecutorResponse::Alive { .. }));
+}
