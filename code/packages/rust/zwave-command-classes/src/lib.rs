@@ -255,6 +255,82 @@ pub enum NotificationState {
     },
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CommandClassProjectionSummary {
+    pub command_class_entries: usize,
+    pub unique_command_classes: usize,
+    pub projected_command_classes: usize,
+    pub commandable_command_classes: usize,
+    pub sensor_command_classes: usize,
+    pub projected_capabilities: usize,
+    pub observe_only_capabilities: usize,
+    pub commandable_capabilities: usize,
+}
+
+impl CommandClassProjectionSummary {
+    pub fn from_command_classes<I>(command_classes: I) -> Self
+    where
+        I: IntoIterator<Item = CommandClassId>,
+    {
+        let mut summary = Self {
+            command_class_entries: 0,
+            unique_command_classes: 0,
+            projected_command_classes: 0,
+            commandable_command_classes: 0,
+            sensor_command_classes: 0,
+            projected_capabilities: 0,
+            observe_only_capabilities: 0,
+            commandable_capabilities: 0,
+        };
+
+        let mut unique_command_classes = BTreeSet::new();
+        for command_class in command_classes {
+            summary.command_class_entries += 1;
+            unique_command_classes.insert(command_class);
+        }
+        summary.unique_command_classes = unique_command_classes.len();
+
+        for command_class in unique_command_classes {
+            let capabilities = capabilities_for_command_class(command_class);
+            if capabilities.is_empty() {
+                continue;
+            }
+
+            summary.projected_command_classes += 1;
+            if capabilities.iter().any(is_commandable_capability) {
+                summary.commandable_command_classes += 1;
+            }
+            if capabilities.iter().any(is_sensor_capability) {
+                summary.sensor_command_classes += 1;
+            }
+
+            for capability in capabilities {
+                summary.projected_capabilities += 1;
+                match capability.mode {
+                    CapabilityMode::Observe => summary.observe_only_capabilities += 1,
+                    CapabilityMode::Command | CapabilityMode::ObserveAndCommand => {
+                        summary.commandable_capabilities += 1;
+                    }
+                }
+            }
+        }
+
+        summary
+    }
+
+    pub fn has_projected_capabilities(self) -> bool {
+        self.projected_capabilities > 0
+    }
+
+    pub fn has_command_surface(self) -> bool {
+        self.commandable_capabilities > 0
+    }
+
+    pub fn has_sensor_surface(self) -> bool {
+        self.sensor_command_classes > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CommandClassError {
     Truncated {
@@ -698,6 +774,17 @@ pub fn state_delta_for_notification(report: &NotificationReport) -> StateDelta {
     }
 }
 
+fn is_commandable_capability(capability: &Capability) -> bool {
+    matches!(
+        capability.mode,
+        CapabilityMode::Command | CapabilityMode::ObserveAndCommand
+    )
+}
+
+fn is_sensor_capability(capability: &Capability) -> bool {
+    capability.capability_id.as_str().starts_with("sensor.")
+}
+
 fn parse_notification_report(payload: &[u8]) -> Result<NotificationReport, CommandClassError> {
     require_len(payload, 6)?;
     let event_parameters = if let Some(parameter_len) = payload.get(6).copied() {
@@ -1120,6 +1207,42 @@ mod tests {
             .iter()
             .any(|capability| capability.capability_id == CapabilityId::trusted("sensor.alarm")));
         assert!(capabilities_for_command_class(CommandClassId::BASIC).is_empty());
+    }
+
+    #[test]
+    fn command_class_projection_summary_counts_d23_surfaces() {
+        let summary = CommandClassProjectionSummary::from_command_classes([
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::SWITCH_MULTILEVEL,
+            CommandClassId::SENSOR_BINARY,
+            COMMAND_CLASS_NOTIFICATION,
+            CommandClassId::BASIC,
+        ]);
+
+        assert_eq!(
+            summary,
+            CommandClassProjectionSummary {
+                command_class_entries: 6,
+                unique_command_classes: 5,
+                projected_command_classes: 4,
+                commandable_command_classes: 2,
+                sensor_command_classes: 2,
+                projected_capabilities: 7,
+                observe_only_capabilities: 4,
+                commandable_capabilities: 3,
+            }
+        );
+        assert!(summary.has_projected_capabilities());
+        assert!(summary.has_command_surface());
+        assert!(summary.has_sensor_surface());
+
+        let empty = CommandClassProjectionSummary::from_command_classes([CommandClassId::BASIC]);
+        assert_eq!(empty.command_class_entries, 1);
+        assert_eq!(empty.unique_command_classes, 1);
+        assert!(!empty.has_projected_capabilities());
+        assert!(!empty.has_command_surface());
+        assert!(!empty.has_sensor_surface());
     }
 
     #[test]
