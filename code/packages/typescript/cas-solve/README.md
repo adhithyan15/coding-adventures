@@ -15,6 +15,7 @@ bindings.
 | `solveQuartic(a, b, c, d, e)` | Solve `a*x^4 + b*x^3 + c*x^2 + d*x + e = 0` |
 | `solveLinearSystem(equations, variables)` | Solve exact square linear systems and return `Rule(var, value)` nodes |
 | `trySolveInequality(ineq, variable)` | Solve polynomial inequalities up to degree 4 and return interval conditions |
+| `trySolveTranscendental(eq, variable)` | Solve direct `f(linear) = constant` transcendental equations |
 | `nsolvePoly(coeffs)` | Numerically solve a polynomial via Durand-Kerner |
 | `rootsToIr(roots)` / `nsolveFractionPoly(coeffs)` | Convert numeric roots to symbolic IR |
 
@@ -42,6 +43,12 @@ IR nodes, normalizes `lhs op rhs` to a univariate rational polynomial in the
 requested variable, and returns interval predicates such as `Less(x, a)`,
 `GreaterEqual(x, a)`, or bounded `And(...)` ranges. Unsupported non-polynomial
 inputs return `null`.
+
+`trySolveTranscendental` accepts `Equal(lhs, rhs)` or a bare expression treated
+as equal to zero. It handles direct equations where one side is a supported
+transcendental function of a linear expression in the requested variable and
+the other side is constant with respect to that variable. The first slice covers
+`Sin`, `Cos`, `Tan`, `Exp`, `Log`, `Sinh`, `Cosh`, and `Tanh`.
 
 `nsolvePoly` accepts real or complex coefficients in descending degree order,
 normalizes by the leading coefficient, and returns all roots as `{ re, im }`

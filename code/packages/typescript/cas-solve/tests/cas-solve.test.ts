@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { ADD, AND, DIV, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, MUL, POW, RULE, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode, type IRSymbol } from "@coding-adventures/symbolic-ir";
+import { ACOSH, ADD, AND, ASIN, ASINH, ATAN, ATANH, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, LOG, MUL, NEG, POW, RULE, SIN, SINH, SQRT, SUB, TAN, TANH, app, equals, int, numberNode, rational, sym, type IRNode, type IRSymbol } from "@coding-adventures/symbolic-ir";
 import {
   ALL_SOLUTIONS,
   CBRT,
+  FREE_INTEGER,
   Frac,
   I_UNIT,
   nsolveFractionPoly,
@@ -14,6 +15,7 @@ import {
   solveQuadratic,
   solveQuartic,
   trySolveInequality,
+  trySolveTranscendental,
   type SolveResult,
 } from "../src/index";
 
@@ -402,5 +404,57 @@ describe("trySolveInequality", () => {
     }
     expect(trySolveInequality(app(GREATER, [app(sym("Sin"), [x]), int(0)]), x)).toBeNull();
     expect(trySolveInequality(eq(x, int(0)), x)).toBeNull();
+  });
+});
+
+describe("trySolveTranscendental", () => {
+  const x = sym("x");
+
+  it("solves direct exponential and logarithmic equations", () => {
+    expectNodes(
+      trySolveTranscendental(eq(app(EXP, [x]), int(2)), x),
+      [app(LOG, [int(2)])],
+    );
+    expectNodes(
+      trySolveTranscendental(eq(app(LOG, [add(mul(int(2), x), int(3))]), int(5)), x),
+      [app(DIV, [app(SUB, [app(EXP, [int(5)]), int(3)]), int(2)])],
+    );
+  });
+
+  it("solves direct trig equations with periodic families", () => {
+    const twoPiK = app(MUL, [int(2), app(MUL, [sym("%pi"), sym(FREE_INTEGER)])]);
+    expectNodes(
+      trySolveTranscendental(eq(app(SIN, [x]), int(0)), x),
+      [
+        app(ADD, [app(ASIN, [int(0)]), twoPiK]),
+        app(ADD, [app(SUB, [sym("%pi"), app(ASIN, [int(0)])]), twoPiK]),
+      ],
+    );
+    expectNodes(
+      trySolveTranscendental(eq(app(TAN, [add(mul(int(2), x), int(1))]), int(3)), x),
+      [app(DIV, [app(SUB, [app(ADD, [app(ATAN, [int(3)]), app(MUL, [sym("%pi"), sym(FREE_INTEGER)])]), int(1)]), int(2)])],
+    );
+  });
+
+  it("solves direct hyperbolic equations", () => {
+    expectNodes(
+      trySolveTranscendental(eq(app(SINH, [x]), int(2)), x),
+      [app(ASINH, [int(2)])],
+    );
+    expectNodes(
+      trySolveTranscendental(eq(app(TANH, [add(x, int(4))]), rational(1, 2)), x),
+      [app(SUB, [app(ATANH, [rational(1, 2)]), int(4)])],
+    );
+    expectNodes(
+      trySolveTranscendental(eq(app(sym("Cosh"), [x]), int(3)), x),
+      [app(ACOSH, [int(3)]), app(NEG, [app(ACOSH, [int(3)])])],
+    );
+  });
+
+  it("handles bare and reversed equations and rejects unsupported patterns", () => {
+    expect(trySolveTranscendental(app(EXP, [x]), x)?.length).toBe(1);
+    expect(trySolveTranscendental(eq(int(2), app(EXP, [x])), x)?.length).toBe(1);
+    expect(trySolveTranscendental(eq(app(SIN, [sym("y")]), int(0)), x)).toBeNull();
+    expect(trySolveTranscendental(eq(app(SIN, [app(SIN, [x])]), int(0)), x)).toBeNull();
   });
 });
