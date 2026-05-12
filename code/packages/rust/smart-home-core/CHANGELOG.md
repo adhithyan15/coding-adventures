@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
 - Health and command-result status helpers for shared supervision/read-side
   classification of pairing, attention, acceptance, rejection, and timeout
   states.
+- `CapabilitySurfaceSummary` and `Entity::capability_summary()` for compact
+  describe-capabilities views over entity capability surfaces.
 
 ## [0.1.0] - 2026-05-06
 
