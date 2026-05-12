@@ -544,6 +544,14 @@ pub enum RuntimeEventBusBacklogStatus {
     Backlogged,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeEventBusPressureStatus {
+    NoSubscriptions,
+    CaughtUp,
+    PartiallyBacklogged,
+    FullyBacklogged,
+}
+
 impl RuntimeEventBusSnapshot {
     pub fn is_idle(&self) -> bool {
         self.pending_delivery_count == 0
@@ -568,6 +576,18 @@ impl RuntimeEventBusSnapshot {
             RuntimeEventBusBacklogStatus::Backlogged
         } else {
             RuntimeEventBusBacklogStatus::CaughtUp
+        }
+    }
+
+    pub fn pressure_status(&self) -> RuntimeEventBusPressureStatus {
+        if !self.has_subscriptions() {
+            RuntimeEventBusPressureStatus::NoSubscriptions
+        } else if !self.has_lagging_subscriptions() {
+            RuntimeEventBusPressureStatus::CaughtUp
+        } else if self.backlogged_subscription_count >= self.subscription_count {
+            RuntimeEventBusPressureStatus::FullyBacklogged
+        } else {
+            RuntimeEventBusPressureStatus::PartiallyBacklogged
         }
     }
 
@@ -3357,6 +3377,10 @@ mod tests {
             idle.backlog_status(),
             RuntimeEventBusBacklogStatus::CaughtUp
         );
+        assert_eq!(
+            idle.pressure_status(),
+            RuntimeEventBusPressureStatus::CaughtUp
+        );
         assert_eq!(idle.average_pending_deliveries_per_subscription(), 0);
         assert_eq!(idle.caught_up_subscription_count(), 2);
         assert_eq!(idle.backlogged_subscription_percent(), 0);
@@ -3374,6 +3398,10 @@ mod tests {
             active.backlog_status(),
             RuntimeEventBusBacklogStatus::Backlogged
         );
+        assert_eq!(
+            active.pressure_status(),
+            RuntimeEventBusPressureStatus::FullyBacklogged
+        );
         assert_eq!(active.average_pending_deliveries_per_subscription(), 1);
         assert_eq!(active.caught_up_subscription_count(), 0);
         assert_eq!(active.backlogged_subscription_percent(), 100);
@@ -3387,6 +3415,10 @@ mod tests {
         assert_eq!(partial.backlogged_subscription_count, 1);
         assert_eq!(partial.caught_up_subscription_count(), 1);
         assert_eq!(partial.backlogged_subscription_percent(), 50);
+        assert_eq!(
+            partial.pressure_status(),
+            RuntimeEventBusPressureStatus::PartiallyBacklogged
+        );
     }
 
     #[test]
@@ -3405,6 +3437,10 @@ mod tests {
             no_subscribers.backlog_status(),
             RuntimeEventBusBacklogStatus::NoSubscriptions
         );
+        assert_eq!(
+            no_subscribers.pressure_status(),
+            RuntimeEventBusPressureStatus::NoSubscriptions
+        );
         assert!(!no_subscribers.has_subscriptions());
         assert!(!no_subscribers.has_lagging_subscriptions());
         assert_eq!(no_subscribers.max_pending_delivery_count, 0);
@@ -3417,6 +3453,10 @@ mod tests {
         assert_eq!(
             caught_up.backlog_status(),
             RuntimeEventBusBacklogStatus::CaughtUp
+        );
+        assert_eq!(
+            caught_up.pressure_status(),
+            RuntimeEventBusPressureStatus::CaughtUp
         );
         assert!(caught_up.has_subscriptions());
         assert!(!caught_up.has_lagging_subscriptions());

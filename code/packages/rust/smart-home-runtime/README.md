@@ -25,6 +25,8 @@ Included surfaces:
   maximum pending delivery depth
 - event-bus lagging-subscription percentage helpers for read-side pressure
   thresholds
+- event-bus pressure status helpers for classifying caught-up, partial, and
+  fully backlogged subscriber fan-out
 - subscription backlog status helpers for identifying lagging event-stream
   subscribers without draining their delivery queues
 - command validation against entity capabilities and command modes
