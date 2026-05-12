@@ -94,6 +94,15 @@ impl NativeJobRuntime {
         self.portability_target
     }
 
+    /// Summarize the selected backend and runtime-wide backend catalog shape
+    /// without compiling an install plan.
+    pub fn backend_summary(&self) -> Result<RuntimeBackendSummary, JobError> {
+        Ok(RuntimeBackendSummary::new(
+            resolve_backend_kind(self.selection)?,
+            self.portability_target,
+        ))
+    }
+
     /// Validate whether a job fits the repository's current portability
     /// contract before backend-specific planning.
     pub fn validate_portability(&self, spec: &JobSpec) -> PortabilityReport {
@@ -249,6 +258,39 @@ pub struct PortabilityBackendStatus {
     pub is_supported: bool,
     pub issue_count: usize,
     pub blocked_fields: Vec<String>,
+}
+
+/// Read-side summary of runtime backend selection and catalog shape.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeBackendSummary {
+    pub selected_backend: BackendKind,
+    pub portability_target: PortabilityTarget,
+    pub supported_backend_count: usize,
+    pub native_backend_count: usize,
+    pub fallback_backend_count: usize,
+    pub selected_backend_is_native: bool,
+    pub selected_backend_is_fallback: bool,
+}
+
+impl RuntimeBackendSummary {
+    pub fn new(selected_backend: BackendKind, portability_target: PortabilityTarget) -> Self {
+        let native_backend_count = native_backends().len();
+        let supported_backend_count = supported_backends().len();
+        let selected_backend_is_native = native_backends().contains(&selected_backend);
+        Self {
+            selected_backend,
+            portability_target,
+            supported_backend_count,
+            native_backend_count,
+            fallback_backend_count: supported_backend_count.saturating_sub(native_backend_count),
+            selected_backend_is_native,
+            selected_backend_is_fallback: !selected_backend_is_native,
+        }
+    }
+
+    pub fn enforces_all_native_portability(self) -> bool {
+        self.portability_target == PortabilityTarget::AllNativeOses
+    }
 }
 
 /// Return portability issues matching a bounded read selector.
@@ -759,6 +801,35 @@ mod tests {
                 BackendKind::WindowsTaskScheduler
             ]
         );
+    }
+
+    #[test]
+    fn runtime_backend_summary_describes_selection_and_portability_target() {
+        let launchd = NativeJobRuntime::for_backend(BackendSelection::Launchd)
+            .backend_summary()
+            .unwrap();
+
+        assert_eq!(launchd.selected_backend, BackendKind::Launchd);
+        assert_eq!(launchd.portability_target, PortabilityTarget::AllNativeOses);
+        assert_eq!(launchd.supported_backend_count, 4);
+        assert_eq!(launchd.native_backend_count, 3);
+        assert_eq!(launchd.fallback_backend_count, 1);
+        assert!(launchd.selected_backend_is_native);
+        assert!(!launchd.selected_backend_is_fallback);
+        assert!(launchd.enforces_all_native_portability());
+
+        let fallback = NativeJobRuntime::for_in_process()
+            .backend_summary()
+            .unwrap();
+
+        assert_eq!(fallback.selected_backend, BackendKind::InProcess);
+        assert_eq!(
+            fallback.portability_target,
+            PortabilityTarget::SelectedBackendOnly
+        );
+        assert!(!fallback.selected_backend_is_native);
+        assert!(fallback.selected_backend_is_fallback);
+        assert!(!fallback.enforces_all_native_portability());
     }
 
     #[test]
