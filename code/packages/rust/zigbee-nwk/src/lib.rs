@@ -229,8 +229,12 @@ impl NeighborTable {
             previous_child_neighbors: 0,
             unknown_relationship_neighbors: 0,
             stale_neighbors: 0,
+            fresh_neighbors: 0,
             ieee_address_neighbors: 0,
             link_metric_neighbors: 0,
+            max_depth: None,
+            best_lqi: None,
+            worst_outgoing_cost: None,
             best_router_candidate: self
                 .best_router_candidate()
                 .map(|entry| entry.network_address),
@@ -255,6 +259,8 @@ impl NeighborTable {
             }
             if entry.is_stale_at(now_ms) {
                 summary.stale_neighbors += 1;
+            } else {
+                summary.fresh_neighbors += 1;
             }
             if entry.ieee_address.is_some() {
                 summary.ieee_address_neighbors += 1;
@@ -262,13 +268,26 @@ impl NeighborTable {
             if entry.lqi.is_some() || entry.outgoing_cost.is_some() {
                 summary.link_metric_neighbors += 1;
             }
+            if let Some(depth) = entry.depth {
+                summary.max_depth = Some(summary.max_depth.map_or(depth, |max| max.max(depth)));
+            }
+            if let Some(lqi) = entry.lqi {
+                summary.best_lqi = Some(summary.best_lqi.map_or(lqi, |best| best.max(lqi)));
+            }
+            if let Some(outgoing_cost) = entry.outgoing_cost {
+                summary.worst_outgoing_cost = Some(
+                    summary
+                        .worst_outgoing_cost
+                        .map_or(outgoing_cost, |worst| worst.max(outgoing_cost)),
+                );
+            }
         }
 
         summary
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct NeighborTableSummary {
     pub total_neighbors: usize,
     pub coordinator_neighbors: usize,
@@ -282,12 +301,32 @@ pub struct NeighborTableSummary {
     pub previous_child_neighbors: usize,
     pub unknown_relationship_neighbors: usize,
     pub stale_neighbors: usize,
+    pub fresh_neighbors: usize,
     pub ieee_address_neighbors: usize,
     pub link_metric_neighbors: usize,
+    pub max_depth: Option<u8>,
+    pub best_lqi: Option<u8>,
+    pub worst_outgoing_cost: Option<u8>,
     pub best_router_candidate: Option<NetworkAddress>,
 }
 
 impl NeighborTableSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_neighbors == 0
+    }
+
+    pub fn has_route_capable_neighbors(self) -> bool {
+        self.route_capable_neighbors > 0
+    }
+
+    pub fn has_children(self) -> bool {
+        self.child_neighbors > 0
+    }
+
     pub fn has_stale_neighbors(self) -> bool {
         self.stale_neighbors > 0
     }
@@ -1595,6 +1634,89 @@ mod tests {
             table.best_router_candidate().unwrap().network_address,
             NetworkAddress(0x1002)
         );
+    }
+
+    #[test]
+    fn neighbor_table_summary_counts_topology_shape() {
+        let mut table = NeighborTable::new();
+        let mut coordinator = NeighborEntry::new(
+            NetworkAddress::COORDINATOR,
+            NwkDeviceRole::Coordinator,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        )
+        .with_ieee_address(IeeeAddress(0x0012_4b00_0000_0001))
+        .with_link_metrics(210, 1);
+        coordinator.depth = Some(0);
+        table.upsert(coordinator);
+
+        let mut router = NeighborEntry::new(
+            NetworkAddress(0x1002),
+            NwkDeviceRole::Router,
+            NeighborRelationship::Sibling,
+            1_200,
+            1_000,
+        )
+        .with_link_metrics(180, 3);
+        router.depth = Some(1);
+        table.upsert(router);
+
+        let mut child = NeighborEntry::new(
+            NetworkAddress(0x1003),
+            NwkDeviceRole::EndDevice,
+            NeighborRelationship::Child,
+            1_250,
+            1_000,
+        )
+        .with_ieee_address(IeeeAddress(0x0012_4b00_0000_0003));
+        child.depth = Some(2);
+        table.upsert(child);
+
+        table.upsert(NeighborEntry::new(
+            NetworkAddress(0x1004),
+            NwkDeviceRole::Unknown,
+            NeighborRelationship::Unknown,
+            1_300,
+            1_000,
+        ));
+
+        let summary = table.summary_at(1_500);
+
+        assert_eq!(
+            summary,
+            NeighborTableSummary {
+                total_neighbors: 4,
+                coordinator_neighbors: 1,
+                router_neighbors: 1,
+                end_device_neighbors: 1,
+                unknown_role_neighbors: 1,
+                parent_neighbors: 1,
+                child_neighbors: 1,
+                sibling_neighbors: 1,
+                previous_child_neighbors: 0,
+                unknown_relationship_neighbors: 1,
+                route_capable_neighbors: 2,
+                stale_neighbors: 1,
+                fresh_neighbors: 3,
+                ieee_address_neighbors: 2,
+                link_metric_neighbors: 2,
+                max_depth: Some(2),
+                best_lqi: Some(210),
+                worst_outgoing_cost: Some(3),
+                best_router_candidate: Some(NetworkAddress::COORDINATOR),
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_route_capable_neighbors());
+        assert!(summary.has_children());
+        assert!(summary.has_stale_neighbors());
+        assert!(summary.has_link_metrics());
+
+        let empty = NeighborTable::new().summary_at(1_500);
+        assert_eq!(empty, NeighborTableSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_route_capable_neighbors());
     }
 
     #[test]

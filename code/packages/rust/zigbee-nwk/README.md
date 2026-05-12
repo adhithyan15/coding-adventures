@@ -14,7 +14,8 @@ This crate starts D25 at the NWK byte boundary:
 - neighbor table primitives for router/end-device relationships and freshness
 - route table primitives for destination-to-next-hop lookups
 - topology summaries for neighbor roles, relationships, identity coverage,
-  link metrics, freshness, router candidates, and route health supervision
+  link metric extrema, freshness, depth, router candidates, and route health
+  supervision
 - typed NWK route-discovery command payloads:
   - route request
   - route reply
