@@ -147,12 +147,37 @@ pub struct AuthAssertionSetSummary {
     pub key_contribution_count: usize,
     /// Total key-contribution byte length across bind-mode factors.
     pub total_key_contribution_len: usize,
+    /// Number of assertions from the built-in password factor.
+    pub password_count: usize,
+    /// Number of assertions from the built-in TOTP factor.
+    pub totp_count: usize,
+    /// Number of assertions from extension factors.
+    pub extension_count: usize,
+    /// Bind-mode factors that did not carry key contribution bytes.
+    pub missing_bind_contribution_count: usize,
+    /// Gate-mode factors that unexpectedly carried key contribution bytes.
+    pub unexpected_gate_contribution_count: usize,
 }
 
 impl AuthAssertionSetSummary {
     /// Return true if the assertion set has at least one bind-mode contribution.
     pub fn can_derive_unlock_key(&self) -> bool {
         self.key_contribution_count > 0 && self.total_key_contribution_len > 0
+    }
+
+    /// Return true if the assertion set contains both bind and gate factors.
+    pub fn is_multi_factor(&self) -> bool {
+        self.bind_count > 0 && self.gate_count > 0
+    }
+
+    /// Return true if extension factors beyond password/TOTP participated.
+    pub fn has_extension_factors(&self) -> bool {
+        self.extension_count > 0
+    }
+
+    /// Return true if factors obey gate/bind contribution invariants.
+    pub fn is_contribution_consistent(&self) -> bool {
+        self.missing_bind_contribution_count == 0 && self.unexpected_gate_contribution_count == 0
     }
 }
 
@@ -266,8 +291,23 @@ pub fn summarize_auth_assertions(factors: &[&AuthAssertion]) -> AuthAssertionSet
     for assertion in factors {
         let assertion_summary = assertion.summary();
         match assertion_summary.mode {
-            Mode::Gate => summary.gate_count += 1,
-            Mode::Bind => summary.bind_count += 1,
+            Mode::Gate => {
+                summary.gate_count += 1;
+                if assertion_summary.has_key_contribution {
+                    summary.unexpected_gate_contribution_count += 1;
+                }
+            }
+            Mode::Bind => {
+                summary.bind_count += 1;
+                if !assertion_summary.has_key_contribution {
+                    summary.missing_bind_contribution_count += 1;
+                }
+            }
+        }
+        match assertion_summary.kind {
+            "password" => summary.password_count += 1,
+            "totp" => summary.totp_count += 1,
+            _ => summary.extension_count += 1,
         }
         if assertion_summary.contributes_key_material() {
             summary.key_contribution_count += 1;
@@ -807,7 +847,15 @@ mod tests {
         assert_eq!(summary.gate_count, 1);
         assert_eq!(summary.key_contribution_count, 1);
         assert_eq!(summary.total_key_contribution_len, 32);
+        assert_eq!(summary.password_count, 1);
+        assert_eq!(summary.totp_count, 1);
+        assert_eq!(summary.extension_count, 0);
+        assert_eq!(summary.missing_bind_contribution_count, 0);
+        assert_eq!(summary.unexpected_gate_contribution_count, 0);
         assert!(summary.can_derive_unlock_key());
+        assert!(summary.is_multi_factor());
+        assert!(!summary.has_extension_factors());
+        assert!(summary.is_contribution_consistent());
     }
 
     #[test]
@@ -825,7 +873,43 @@ mod tests {
         assert_eq!(summary.gate_count, 1);
         assert_eq!(summary.key_contribution_count, 0);
         assert_eq!(summary.total_key_contribution_len, 0);
+        assert_eq!(summary.password_count, 0);
+        assert_eq!(summary.totp_count, 1);
+        assert_eq!(summary.extension_count, 0);
         assert!(!summary.can_derive_unlock_key());
+        assert!(!summary.is_multi_factor());
+        assert!(summary.is_contribution_consistent());
+    }
+
+    #[test]
+    fn assertion_set_summary_flags_extension_and_contribution_shape() {
+        let bind_without_key = AuthAssertion {
+            kind: "webauthn-prf",
+            mode: Mode::Bind,
+            key_contribution: None,
+        };
+        let gate_with_key = AuthAssertion {
+            kind: "push",
+            mode: Mode::Gate,
+            key_contribution: Some(Zeroizing::new(vec![1, 2, 3])),
+        };
+
+        let summary = summarize_auth_assertions(&[&bind_without_key, &gate_with_key]);
+
+        assert_eq!(summary.assertion_count, 2);
+        assert_eq!(summary.bind_count, 1);
+        assert_eq!(summary.gate_count, 1);
+        assert_eq!(summary.password_count, 0);
+        assert_eq!(summary.totp_count, 0);
+        assert_eq!(summary.extension_count, 2);
+        assert_eq!(summary.key_contribution_count, 0);
+        assert_eq!(summary.total_key_contribution_len, 0);
+        assert_eq!(summary.missing_bind_contribution_count, 1);
+        assert_eq!(summary.unexpected_gate_contribution_count, 1);
+        assert!(summary.is_multi_factor());
+        assert!(summary.has_extension_factors());
+        assert!(!summary.can_derive_unlock_key());
+        assert!(!summary.is_contribution_consistent());
     }
 
     #[test]

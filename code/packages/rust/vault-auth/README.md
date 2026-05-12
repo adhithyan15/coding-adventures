@@ -9,7 +9,9 @@ This v0.1 ships **PasswordAuthenticator** and **TotpAuthenticator**.
 Successful assertions can also be projected into credential-safe
 `AuthAssertionSummary` / `AuthAssertionSetSummary` read models so
 policy and audit layers can inspect factor coverage without touching
-key-contribution bytes.
+key-contribution bytes. Set summaries include built-in versus
+extension factor counts and gate/bind contribution consistency flags
+for host-side policy checks.
 
 ## Two operating modes
 
