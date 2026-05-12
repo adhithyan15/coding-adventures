@@ -24,7 +24,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use generic_job_protocol::{
     decode_response_json_line_with_limit, encode_request_json_line, JobCancellation, JobCodecError,
     JobError, JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResponseSummary, JobResult,
-    JobTimeout,
+    JobTerminalStatus, JobTimeout,
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -262,6 +262,65 @@ impl fmt::Display for RuntimeError {
 
 impl std::error::Error for RuntimeError {}
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JobResponseDrainSummary {
+    pub responses: Vec<JobResponseSummary>,
+    pub ok_count: usize,
+    pub error_count: usize,
+    pub cancelled_count: usize,
+    pub timed_out_count: usize,
+    pub retryable_error_count: usize,
+}
+
+impl JobResponseDrainSummary {
+    pub fn from_responses<I>(responses: I) -> Self
+    where
+        I: IntoIterator<Item = JobResponseSummary>,
+    {
+        let responses = responses.into_iter().collect::<Vec<_>>();
+        let mut summary = Self {
+            responses,
+            ok_count: 0,
+            error_count: 0,
+            cancelled_count: 0,
+            timed_out_count: 0,
+            retryable_error_count: 0,
+        };
+
+        for response in &summary.responses {
+            match response.status {
+                JobTerminalStatus::Ok => summary.ok_count += 1,
+                JobTerminalStatus::Error => summary.error_count += 1,
+                JobTerminalStatus::Cancelled => summary.cancelled_count += 1,
+                JobTerminalStatus::TimedOut => summary.timed_out_count += 1,
+            }
+            if response.retryable_error {
+                summary.retryable_error_count += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn len(&self) -> usize {
+        self.responses.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.responses.is_empty()
+    }
+
+    pub fn failure_count(&self) -> usize {
+        self.error_count
+            .saturating_add(self.cancelled_count)
+            .saturating_add(self.timed_out_count)
+    }
+
+    pub fn has_retryable_errors(&self) -> bool {
+        self.retryable_error_count > 0
+    }
+}
+
 pub trait JobExecutor<Request, Response> {
     fn capabilities(&self) -> ExecutorCapabilities;
     fn try_submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError>;
@@ -272,6 +331,9 @@ pub trait JobExecutor<Request, Response> {
             .into_iter()
             .map(|response| response.summary())
             .collect()
+    }
+    fn drain_response_summary_batch(&self, max: usize) -> JobResponseDrainSummary {
+        JobResponseDrainSummary::from_responses(self.drain_response_summaries(max))
     }
     fn shutdown(&self);
 }
@@ -1584,6 +1646,81 @@ for line in sys.stdin:
         assert_eq!(summaries[1].status, JobTerminalStatus::Ok);
         assert_eq!(summaries[1].trace_id.as_deref(), Some("trace-ok"));
         assert!(!summaries[1].retryable_error);
+    }
+
+    #[test]
+    fn executor_drains_response_summary_batches_with_terminal_counts() {
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 2,
+                limits: ExecutorLimits {
+                    max_queue_depth: 4,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            |request: JobRequest<EchoJob>| match request.payload.text.as_str() {
+                "retry" => JobResult::Error {
+                    error: JobError::new(
+                        "worker_busy",
+                        "worker queue saturated",
+                        JobErrorOrigin::Executor,
+                    )
+                    .with_retryable(true),
+                },
+                "fail" => JobResult::Error {
+                    error: JobError::new(
+                        "bad_request",
+                        "payload rejected",
+                        JobErrorOrigin::Producer,
+                    ),
+                },
+                _ => JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                },
+            },
+        );
+
+        for (id, text) in [
+            ("job-ok", "ok"),
+            ("job-retryable-error", "retry"),
+            ("job-permanent-error", "fail"),
+        ] {
+            pool.try_submit(JobRequest::new(
+                id,
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: text.to_string(),
+                },
+            ))
+            .expect("submit job");
+        }
+
+        let mut responses = Vec::new();
+        for _ in 0..100 {
+            let mut batch = pool.drain_response_summary_batch(8);
+            responses.append(&mut batch.responses);
+            if responses.len() == 3 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+
+        let batch = JobResponseDrainSummary::from_responses(responses);
+
+        assert_eq!(batch.len(), 3);
+        assert_eq!(batch.ok_count, 1);
+        assert_eq!(batch.error_count, 2);
+        assert_eq!(batch.cancelled_count, 0);
+        assert_eq!(batch.timed_out_count, 0);
+        assert_eq!(batch.retryable_error_count, 1);
+        assert_eq!(batch.failure_count(), 2);
+        assert!(batch.has_retryable_errors());
+        assert!(!batch.is_empty());
     }
 
     #[test]
