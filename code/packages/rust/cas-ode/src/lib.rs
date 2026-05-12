@@ -6,6 +6,7 @@
 //! `Integrate(...)` node unless a small structural primitive is needed for
 //! recognition, such as exact ODE potentials.
 
+use std::collections::BTreeMap;
 use std::ops::{Add as AddOp, Div as DivOp, Mul as MulOp, Neg as NegOp, Sub as SubOp};
 
 use symbolic_ir::{
@@ -14,6 +15,7 @@ use symbolic_ir::{
 };
 
 pub const ODE2: &str = "ODE2";
+pub type Handler = fn(&IRNode) -> IRNode;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 struct Frac {
@@ -1374,8 +1376,8 @@ pub fn ode2_handler(expr: &IRNode) -> IRNode {
     solve_ode(zero_form, y, x).unwrap_or_else(|| expr.clone())
 }
 
-pub fn build_ode_handler_table() -> Vec<&'static str> {
-    vec![ODE2]
+pub fn build_ode_handler_table() -> BTreeMap<&'static str, Handler> {
+    BTreeMap::from([(ODE2, ode2_handler as Handler)])
 }
 
 #[cfg(test)]
@@ -1413,7 +1415,11 @@ mod tests {
 
     #[test]
     fn handler_table_names_ode2() {
-        assert_eq!(build_ode_handler_table(), vec![ODE2]);
+        let table = build_ode_handler_table();
+        assert!(table.contains_key(ODE2));
+
+        let ode = apply(sym(ODE2), vec![yp(), y(), x()]);
+        assert!(head_is(&table[ODE2](&ode), EQUAL));
     }
 
     #[test]
