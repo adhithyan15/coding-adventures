@@ -7,6 +7,10 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
+use cas_list_operations::{
+    append, apply_ as list_apply, first, flatten, join, last, length, map_ as list_map, part,
+    range_ as list_range, rest, reverse, sort_, ListOperationError, ListResult,
+};
 use cas_simplify::simplify;
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_trig::{expand_trig, trig_simplify};
@@ -45,6 +49,19 @@ const RAT_SIMPLIFY: &str = "RatSimplify";
 const SIMPLIFY: &str = "Simplify";
 const TRIG_EXPAND: &str = "TrigExpand";
 const TRIG_SIMPLIFY: &str = "TrigSimplify";
+const LENGTH: &str = "Length";
+const FIRST: &str = "First";
+const REST: &str = "Rest";
+const LAST: &str = "Last";
+const APPEND: &str = "Append";
+const REVERSE: &str = "Reverse";
+const RANGE: &str = "Range";
+const MAP: &str = "Map";
+const APPLY_HEAD: &str = "Apply";
+const SORT: &str = "Sort";
+const PART: &str = "Part";
+const FLATTEN: &str = "Flatten";
+const JOIN: &str = "Join";
 
 /// Return the runtime extension table for MACSYMA surface function names.
 ///
@@ -77,20 +94,20 @@ const MACSYMA_NAME_TABLE: &[(&str, &str)] = &[
     ("linsolve", "Solve"),
     ("taylor", "Taylor"),
     ("limit", "Limit"),
-    ("length", "Length"),
-    ("first", "First"),
-    ("rest", "Rest"),
-    ("last", "Last"),
-    ("append", "Append"),
-    ("reverse", "Reverse"),
+    ("length", LENGTH),
+    ("first", FIRST),
+    ("rest", REST),
+    ("last", LAST),
+    ("append", APPEND),
+    ("reverse", REVERSE),
     ("makelist", "MakeList"),
-    ("map", "Map"),
-    ("apply", "Apply"),
+    ("map", MAP),
+    ("apply", APPLY_HEAD),
     ("sublist", "Select"),
-    ("sort", "Sort"),
-    ("part", "Part"),
-    ("flatten", "Flatten"),
-    ("join", "Join"),
+    ("sort", SORT),
+    ("part", PART),
+    ("flatten", FLATTEN),
+    ("join", JOIN),
     ("matrix", "Matrix"),
     ("transpose", "Transpose"),
     ("determinant", "Determinant"),
@@ -332,6 +349,46 @@ impl MacsymaBackend {
         handlers.insert(RAT_SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
         handlers.insert(TRIG_EXPAND.to_string(), handler_fn(trig_expand_handler));
+        handlers.insert(
+            LENGTH.to_string(),
+            list_handler(Some(1), |args| length(&args[0])),
+        );
+        handlers.insert(
+            FIRST.to_string(),
+            list_handler(Some(1), |args| first(&args[0])),
+        );
+        handlers.insert(
+            REST.to_string(),
+            list_handler(Some(1), |args| rest(&args[0])),
+        );
+        handlers.insert(
+            LAST.to_string(),
+            list_handler(Some(1), |args| last(&args[0])),
+        );
+        handlers.insert(
+            REVERSE.to_string(),
+            list_handler(Some(1), |args| reverse(&args[0])),
+        );
+        handlers.insert(APPEND.to_string(), list_handler(None, append));
+        handlers.insert(JOIN.to_string(), list_handler(None, join));
+        handlers.insert(RANGE.to_string(), list_handler(None, range_handler));
+        handlers.insert(
+            MAP.to_string(),
+            list_handler(Some(2), |args| list_map(args[0].clone(), &args[1])),
+        );
+        handlers.insert(
+            APPLY_HEAD.to_string(),
+            list_handler(Some(2), |args| list_apply(args[0].clone(), &args[1])),
+        );
+        handlers.insert(
+            SORT.to_string(),
+            list_handler(Some(1), |args| sort_(&args[0])),
+        );
+        handlers.insert(
+            PART.to_string(),
+            list_handler(Some(2), |args| part(&args[0], integer_argument(&args[1])?)),
+        );
+        handlers.insert(FLATTEN.to_string(), list_handler(None, flatten_handler));
 
         let kill_state = state.clone();
         handlers.insert(
@@ -635,6 +692,56 @@ fn solve_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     solve_linear_system(&equations.args, &variables.args)
         .map(|rules| apply(sym(LIST), rules))
         .unwrap_or(fallback)
+}
+
+fn list_handler<F>(arity: Option<usize>, body: F) -> Handler
+where
+    F: Fn(&[IRNode]) -> ListResult<IRNode> + Send + Sync + 'static,
+{
+    Arc::new(move |_vm, expr| {
+        let fallback = IRNode::Apply(Box::new(expr.clone()));
+        if arity.is_some_and(|expected| expr.args.len() != expected) {
+            return fallback;
+        }
+        body(&expr.args).unwrap_or(fallback)
+    })
+}
+
+fn range_handler(args: &[IRNode]) -> ListResult<IRNode> {
+    if !(1..=3).contains(&args.len()) {
+        return Err(ListOperationError("Range takes 1 to 3 arguments".into()));
+    }
+    let start = integer_argument(&args[0])?;
+    let stop = if args.len() >= 2 {
+        Some(integer_argument(&args[1])?)
+    } else {
+        None
+    };
+    let step = if args.len() >= 3 {
+        integer_argument(&args[2])?
+    } else {
+        1
+    };
+    list_range(start, stop, step)
+}
+
+fn flatten_handler(args: &[IRNode]) -> ListResult<IRNode> {
+    if !(1..=2).contains(&args.len()) {
+        return Err(ListOperationError("Flatten takes 1 or 2 arguments".into()));
+    }
+    let depth = if args.len() == 2 {
+        integer_argument(&args[1])?
+    } else {
+        1
+    };
+    flatten(&args[0], depth)
+}
+
+fn integer_argument(node: &IRNode) -> ListResult<i64> {
+    match node {
+        IRNode::Integer(value) => Ok(*value),
+        _ => Err(ListOperationError("expected integer argument".into())),
+    }
 }
 
 fn is_inequality(node: &IRNode) -> bool {

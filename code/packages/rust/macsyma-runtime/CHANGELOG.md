@@ -4,6 +4,9 @@
 
 ### Added
 
+- Wired deterministic MACSYMA list heads (`Length`, `First`, `Rest`, `Last`,
+  `Append`, `Join`, `Reverse`, `Range`, `Part`, `Map`, `Apply`, `Sort`, and
+  `Flatten`) to the Rust `cas-list-operations` package.
 - Wired direct `Solve(f(linear) = constant, variable)` transcendental equations
   to the Rust `cas-solve` `try_solve_transcendental` handler, returning
   `List(...)` symbolic inverse and periodic-family solutions.
