@@ -3,12 +3,16 @@
 // Mirrors the Python reference tests in
 // code/packages/python/cas-solve/tests/.
 
-use cas_solve::{solve_linear, solve_quadratic, SolveResult};
 use cas_solve::frac::Frac;
+use cas_solve::{solve_cubic, solve_linear, solve_quadratic, SolveResult};
 use symbolic_ir::{int, rat, IRNode};
 
-fn frac(n: i64, d: i64) -> Frac { Frac::new(n, d) }
-fn fi(n: i64) -> Frac { Frac::from_int(n) }
+fn frac(n: i64, d: i64) -> Frac {
+    Frac::new(n, d)
+}
+fn fi(n: i64) -> Frac {
+    Frac::from_int(n)
+}
 
 // ---------------------------------------------------------------------------
 // solve_linear
@@ -177,4 +181,81 @@ fn quadratic_irrational_sqrt_node_shape() {
         }
         SolveResult::All => panic!("expected Solutions"),
     }
+}
+
+// ---------------------------------------------------------------------------
+// solve_cubic
+// ---------------------------------------------------------------------------
+
+#[test]
+fn cubic_zero_leading_falls_back_to_quadratic() {
+    // 0x^3 + x^2 - 5x + 6 = 0 -> {2, 3}
+    let r = solve_cubic(fi(0), fi(1), fi(-5), fi(6));
+    assert_eq!(r, SolveResult::Solutions(vec![int(2), int(3)]));
+}
+
+#[test]
+fn cubic_three_rational_roots() {
+    // x^3 - 6x^2 + 11x - 6 = 0 -> {1, 2, 3}
+    let r = solve_cubic(fi(1), fi(-6), fi(11), fi(-6));
+    assert_eq!(r, SolveResult::Solutions(vec![int(1), int(2), int(3)]));
+}
+
+#[test]
+fn cubic_repeated_roots_are_deduplicated() {
+    // x^3 - 3x - 2 = (x + 1)^2(x - 2) -> {-1, 2}
+    let r = solve_cubic(fi(1), fi(0), fi(-3), fi(-2));
+    assert_eq!(r, SolveResult::Solutions(vec![int(-1), int(2)]));
+}
+
+#[test]
+fn cubic_rational_fraction_root() {
+    // 2x^3 - 3x^2 - 11x + 6 = (x + 2)(2x - 1)(x - 3)
+    let r = solve_cubic(fi(2), fi(-3), fi(-11), fi(6));
+    match r {
+        SolveResult::Solutions(roots) => {
+            assert_eq!(roots.len(), 3);
+            assert!(roots.contains(&int(-2)));
+            assert!(roots.contains(&rat(1, 2)));
+            assert!(roots.contains(&int(3)));
+        }
+        SolveResult::All => panic!("expected Solutions"),
+    }
+}
+
+#[test]
+fn cubic_rational_root_with_complex_pair() {
+    // x^3 + 1 = 0 -> -1 and a complex conjugate pair.
+    let r = solve_cubic(fi(1), fi(0), fi(0), fi(1));
+    match r {
+        SolveResult::Solutions(roots) => {
+            assert_eq!(roots.len(), 3);
+            assert!(roots.contains(&int(-1)));
+            let text = format!("{roots:?}");
+            assert!(text.contains("%i"), "expected complex roots in {text}");
+        }
+        SolveResult::All => panic!("expected Solutions"),
+    }
+}
+
+#[test]
+fn cubic_cardano_symbolic_one_real_two_complex() {
+    // x^3 + x + 1 has no rational root and D_cardano > 0.
+    let r = solve_cubic(fi(1), fi(0), fi(1), fi(1));
+    match r {
+        SolveResult::Solutions(roots) => {
+            assert_eq!(roots.len(), 3);
+            let text = format!("{roots:?}");
+            assert!(text.contains("Cbrt"), "expected Cbrt in {text}");
+            assert!(text.contains("%i"), "expected complex roots in {text}");
+        }
+        SolveResult::All => panic!("expected Solutions"),
+    }
+}
+
+#[test]
+fn cubic_casus_irreducibilis_returns_empty() {
+    // x^3 - 3x + 1 has three real irrational roots in the Python reference.
+    let r = solve_cubic(fi(1), fi(0), fi(-3), fi(1));
+    assert_eq!(r, SolveResult::Solutions(vec![]));
 }

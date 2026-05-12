@@ -1,5 +1,17 @@
 # Changelog — cas-solve (Rust)
 
+## Unreleased
+
+### Added
+
+- `cubic` module: `solve_cubic(a, b, c, d) -> SolveResult` — solves cubic
+  equations via rational-root deflation plus a focused Cardano symbolic
+  fallback matching the Python reference's tested behavior.
+- `CBRT = "Cbrt"` head name constant for cubic Cardano expressions.
+- Cubic integration tests for quadratic delegation, exact rational roots,
+  repeated roots, rational fraction roots, symbolic Cardano, and casus
+  irreducibilis fallback.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added
