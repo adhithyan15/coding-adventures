@@ -21208,3 +21208,1716 @@ Line 1 Col 19 Expected closing tag. Unexpected end of file.
 |     <math math>
 |     <br>
 |     <foo>
+#source tests2.dat:1
+#data
+<!DOCTYPE html>Test
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "Test"
+
+#source tests2.dat:2
+#data
+<textarea>test</div>test
+#errors
+(1,10): expected-doctype-but-got-start-tag
+(1,24): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "test</div>test"
+
+#source tests2.dat:3
+#data
+<table><td>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,11): unexpected-cell-in-table-body
+(1,11): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+
+#source tests2.dat:4
+#data
+<table><td>test</tbody></table>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,11): unexpected-cell-in-table-body
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             "test"
+
+#source tests2.dat:5
+#data
+<frame>test
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,7): unexpected-start-tag-ignored
+#document
+| <html>
+|   <head>
+|   <body>
+|     "test"
+
+#source tests2.dat:6
+#data
+<!DOCTYPE html><frameset>test
+#errors
+(1,29): unexpected-char-in-frameset
+(1,29): unexpected-char-in-frameset
+(1,29): unexpected-char-in-frameset
+(1,29): unexpected-char-in-frameset
+(1,29): eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+#source tests2.dat:7
+#data
+<!DOCTYPE html><frameset> te st
+#errors
+(1,29): unexpected-char-in-frameset
+(1,29): unexpected-char-in-frameset
+(1,29): unexpected-char-in-frameset
+(1,29): unexpected-char-in-frameset
+(1,29): eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|     "  "
+
+#source tests2.dat:8
+#data
+<!DOCTYPE html><frameset></frameset> te st
+#errors
+(1,29): unexpected-char-after-frameset
+(1,29): unexpected-char-after-frameset
+(1,29): unexpected-char-after-frameset
+(1,29): unexpected-char-after-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|   "  "
+
+#source tests2.dat:9
+#data
+<!DOCTYPE html><frameset><!DOCTYPE html>
+#errors
+(1,40): unexpected-doctype
+(1,40): eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+#source tests2.dat:10
+#data
+<!DOCTYPE html><font><p><b>test</font>
+#errors
+(1,38): adoption-agency-1.3
+(1,38): adoption-agency-1.3
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <font>
+|     <p>
+|       <font>
+|         <b>
+|           "test"
+
+#source tests2.dat:11
+#data
+<!DOCTYPE html><dt><div><dd>
+#errors
+(1,28): end-tag-too-early
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <dt>
+|       <div>
+|     <dd>
+
+#source tests2.dat:12
+#data
+<script></x
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,11): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</x"
+|   <body>
+
+#source tests2.dat:13
+#data
+<table><plaintext><td>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,18): unexpected-start-tag-implies-table-voodoo
+(1,22): foster-parenting-character-in-table
+(1,22): foster-parenting-character-in-table
+(1,22): foster-parenting-character-in-table
+(1,22): foster-parenting-character-in-table
+(1,22): eof-in-table
+#document
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "<td>"
+|     <table>
+
+#source tests2.dat:14
+#data
+<plaintext></plaintext>
+#errors
+(1,11): expected-doctype-but-got-start-tag
+(1,23): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+#source tests2.dat:15
+#data
+<!DOCTYPE html><table><tr>TEST
+#errors
+(1,30): foster-parenting-character-in-table
+(1,30): foster-parenting-character-in-table
+(1,30): foster-parenting-character-in-table
+(1,30): foster-parenting-character-in-table
+(1,30): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "TEST"
+|     <table>
+|       <tbody>
+|         <tr>
+
+#source tests2.dat:16
+#data
+<!DOCTYPE html><body t1=1><body t2=2><body t3=3 t4=4>
+#errors
+(1,37): unexpected-start-tag
+(1,53): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     t1="1"
+|     t2="2"
+|     t3="3"
+|     t4="4"
+
+#source tests2.dat:17
+#data
+</b test
+#errors
+(1,8): eof-in-attribute-name
+(1,8): expected-doctype-but-got-eof
+#new-errors
+(1:9) eof-in-tag
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:18
+#data
+<!DOCTYPE html></b test<b &=&amp>X
+#errors
+(1,24): invalid-character-in-attribute-name
+(1,32): named-entity-without-semicolon
+(1,33): attributes-in-end-tag
+(1,33): unexpected-end-tag-before-html
+#new-errors
+(1:24) unexpected-character-in-attribute-name
+(1:33) missing-semicolon-after-character-reference
+(1:33) end-tag-with-attributes
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "X"
+
+#source tests2.dat:19
+#data
+<!doctypehtml><scrIPt type=text/x-foobar;baz>X</SCRipt
+#errors
+(1,9): need-space-after-doctype
+(1,54): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:10) missing-whitespace-before-doctype-name
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       type="text/x-foobar;baz"
+|       "X</SCRipt"
+|   <body>
+
+#source tests2.dat:20
+#data
+&
+#errors
+(1,1): expected-doctype-but-got-chars
+#document
+| <html>
+|   <head>
+|   <body>
+|     "&"
+
+#source tests2.dat:21
+#data
+&#
+#errors
+(1,2): expected-numeric-entity
+(1,2): expected-doctype-but-got-chars
+#new-errors
+(1:3) absence-of-digits-in-numeric-character-reference
+#document
+| <html>
+|   <head>
+|   <body>
+|     "&#"
+
+#source tests2.dat:22
+#data
+&#X
+#errors
+(1,3): expected-numeric-entity
+(1,3): expected-doctype-but-got-chars
+#new-errors
+(1:4) absence-of-digits-in-numeric-character-reference
+#document
+| <html>
+|   <head>
+|   <body>
+|     "&#X"
+
+#source tests2.dat:23
+#data
+&#x
+#errors
+(1,3): expected-numeric-entity
+(1,3): expected-doctype-but-got-chars
+#new-errors
+(1:4) absence-of-digits-in-numeric-character-reference
+#document
+| <html>
+|   <head>
+|   <body>
+|     "&#x"
+
+#source tests2.dat:24
+#data
+&#45
+#errors
+(1,4): numeric-entity-without-semicolon
+(1,4): expected-doctype-but-got-chars
+#new-errors
+(1:5) missing-semicolon-after-character-reference
+#document
+| <html>
+|   <head>
+|   <body>
+|     "-"
+
+#source tests2.dat:25
+#data
+&x-test
+#errors
+(1,2): expected-doctype-but-got-chars
+#document
+| <html>
+|   <head>
+|   <body>
+|     "&x-test"
+
+#source tests2.dat:26
+#data
+<!doctypehtml><p><li>
+#errors
+(1,9): need-space-after-doctype
+#new-errors
+(1:10) missing-whitespace-before-doctype-name
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <li>
+
+#source tests2.dat:27
+#data
+<!doctypehtml><p><dt>
+#errors
+(1,9): need-space-after-doctype
+#new-errors
+(1:10) missing-whitespace-before-doctype-name
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <dt>
+
+#source tests2.dat:28
+#data
+<!doctypehtml><p><dd>
+#errors
+(1,9): need-space-after-doctype
+#new-errors
+(1:10) missing-whitespace-before-doctype-name
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <dd>
+
+#source tests2.dat:29
+#data
+<!doctypehtml><p><form>
+#errors
+(1,9): need-space-after-doctype
+(1,23): expected-closing-tag-but-got-eof
+#new-errors
+(1:10) missing-whitespace-before-doctype-name
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <form>
+
+#source tests2.dat:30
+#data
+<!DOCTYPE html><p></P>X
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     "X"
+
+#source tests2.dat:31
+#data
+&AMP
+#errors
+(1,4): named-entity-without-semicolon
+(1,4): expected-doctype-but-got-chars
+#new-errors
+(1:5) missing-semicolon-after-character-reference
+#document
+| <html>
+|   <head>
+|   <body>
+|     "&"
+
+#source tests2.dat:32
+#data
+&AMp;
+#errors
+(1,3): expected-named-entity
+(1,3): expected-doctype-but-got-chars
+#new-errors
+(1:5) unknown-named-character-reference
+#document
+| <html>
+|   <head>
+|   <body>
+|     "&AMp;"
+
+#source tests2.dat:33
+#data
+<!DOCTYPE html><html><head></head><body><thisISasillyTESTelementNameToMakeSureCrazyTagNamesArePARSEDcorrectLY>
+#errors
+(1,110): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <thisisasillytestelementnametomakesurecrazytagnamesareparsedcorrectly>
+
+#source tests2.dat:34
+#data
+<!DOCTYPE html>X</body>X
+#errors
+(1,24): unexpected-char-after-body
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "XX"
+
+#source tests2.dat:35
+#data
+<!DOCTYPE html><!-- X
+#errors
+(1,21): eof-in-comment
+#new-errors
+(1:22) eof-in-comment
+#document
+| <!DOCTYPE html>
+| <!--  X -->
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:36
+#data
+<!DOCTYPE html><table><caption>test TEST</caption><td>test
+#errors
+(1,54): unexpected-cell-in-table-body
+(1,58): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         "test TEST"
+|       <tbody>
+|         <tr>
+|           <td>
+|             "test"
+
+#source tests2.dat:37
+#data
+<!DOCTYPE html><select><option><optgroup>
+#errors
+(1,41): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+|       <optgroup>
+
+#source tests2.dat:38
+#data
+<!DOCTYPE html><select><optgroup><option></optgroup><option><select><option>
+#errors
+1:61: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, select, option.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <optgroup>
+|         <option>
+|       <option>
+|     <option>
+
+#source tests2.dat:39
+#data
+<!DOCTYPE html><select><optgroup><option><optgroup>
+#errors
+(1,51): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <optgroup>
+|         <option>
+|       <optgroup>
+
+#source tests2.dat:40
+#data
+<!DOCTYPE html><datalist><option>foo</datalist>bar
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <datalist>
+|       <option>
+|         "foo"
+|     "bar"
+
+#source tests2.dat:41
+#data
+<!DOCTYPE html><font><input><input></font>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <font>
+|       <input>
+|       <input>
+
+#source tests2.dat:42
+#data
+<!DOCTYPE html><!-- XXX - XXX -->
+#errors
+#document
+| <!DOCTYPE html>
+| <!--  XXX - XXX  -->
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:43
+#data
+<!DOCTYPE html><!-- XXX - XXX
+#errors
+(1,29): eof-in-comment
+#new-errors
+(1:30) eof-in-comment
+#document
+| <!DOCTYPE html>
+| <!--  XXX - XXX -->
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:44
+#data
+<!DOCTYPE html><!-- XXX - XXX - XXX -->
+#errors
+#document
+| <!DOCTYPE html>
+| <!--  XXX - XXX - XXX  -->
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:45
+#data
+<!DOCTYPE html> <!DOCTYPE html>
+#errors
+Line: 1 Col: 31 Unexpected DOCTYPE. Ignored.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:46
+#data
+test
+test
+#errors
+(2,4): expected-doctype-but-got-chars
+#document
+| <html>
+|   <head>
+|   <body>
+|     "test
+test"
+
+#source tests2.dat:47
+#data
+<!DOCTYPE html><body><title>test</body></title>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <title>
+|       "test</body>"
+
+#source tests2.dat:48
+#data
+<!DOCTYPE html><body><title>X</title><meta name=z><link rel=foo><style>
+x { content:"</style" } </style>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <title>
+|       "X"
+|     <meta>
+|       name="z"
+|     <link>
+|       rel="foo"
+|     <style>
+|       "
+x { content:"</style" } "
+
+#source tests2.dat:49
+#data
+<!DOCTYPE html><select><optgroup></optgroup></select>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <optgroup>
+
+#source tests2.dat:50
+#data
+ 
+ 
+#errors
+(2,1): expected-doctype-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:51
+#data
+<!DOCTYPE html>  <html>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+
+#source tests2.dat:52
+#data
+<!DOCTYPE html><script>
+</script>  <title>x</title>  </head>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "
+"
+|     "  "
+|     <title>
+|       "x"
+|     "  "
+|   <body>
+
+#source tests2.dat:53
+#data
+<!DOCTYPE html><html><body><html id=x>
+#errors
+(1,38): non-html-root
+#document
+| <!DOCTYPE html>
+| <html>
+|   id="x"
+|   <head>
+|   <body>
+
+#source tests2.dat:54
+#data
+<!DOCTYPE html>X</body><html id="x">
+#errors
+(1,36): non-html-root
+#document
+| <!DOCTYPE html>
+| <html>
+|   id="x"
+|   <head>
+|   <body>
+|     "X"
+
+#source tests2.dat:55
+#data
+<!DOCTYPE html><head><html id=x>
+#errors
+(1,32): non-html-root
+#document
+| <!DOCTYPE html>
+| <html>
+|   id="x"
+|   <head>
+|   <body>
+
+#source tests2.dat:56
+#data
+<!DOCTYPE html>X</html>X
+#errors
+(1,24): expected-eof-but-got-char
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "XX"
+
+#source tests2.dat:57
+#data
+<!DOCTYPE html>X</html> 
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "X "
+
+#source tests2.dat:58
+#data
+<!DOCTYPE html>X</html><p>X
+#errors
+(1,26): expected-eof-but-got-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "X"
+|     <p>
+|       "X"
+
+#source tests2.dat:59
+#data
+<!DOCTYPE html>X<p/x/y/z>
+#errors
+(1,19): unexpected-character-after-solidus-in-tag
+(1,21): unexpected-character-after-solidus-in-tag
+(1,23): unexpected-character-after-solidus-in-tag
+#new-errors
+(1:20) unexpected-solidus-in-tag
+(1:22) unexpected-solidus-in-tag
+(1:24) unexpected-solidus-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "X"
+|     <p>
+|       x=""
+|       y=""
+|       z=""
+
+#source tests2.dat:60
+#data
+<!DOCTYPE html><!--x--
+#errors
+(1,22): eof-in-comment-double-dash
+#new-errors
+(1:23) eof-in-comment
+#document
+| <!DOCTYPE html>
+| <!-- x -->
+| <html>
+|   <head>
+|   <body>
+
+#source tests3.dat:1
+#data
+<head></head><style></style>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,20): unexpected-start-tag-out-of-my-head
+#document
+| <html>
+|   <head>
+|     <style>
+|   <body>
+
+#source tests3.dat:2
+#data
+<head></head><script></script>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,21): unexpected-start-tag-out-of-my-head
+#document
+| <html>
+|   <head>
+|     <script>
+|   <body>
+
+#source tests5.dat:1
+#data
+<style> <!-- </style>x
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       " <!-- "
+|   <body>
+|     "x"
+
+#source tests5.dat:2
+#data
+<style> <!-- </style> --> </style>x
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,34): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       " <!-- "
+|     " "
+|   <body>
+|     "--> x"
+
+#source tests5.dat:3
+#data
+<style> <!--> </style>x
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       " <!--> "
+|   <body>
+|     "x"
+
+#source tests5.dat:4
+#data
+<style> <!---> </style>x
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       " <!---> "
+|   <body>
+|     "x"
+
+#source tests5.dat:5
+#data
+<iframe> <!---> </iframe>x
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       " <!---> "
+|     "x"
+
+#source tests5.dat:6
+#data
+<iframe> <!--- </iframe>->x</iframe> --> </iframe>x
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,36): unexpected-end-tag
+(1,50): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       " <!--- "
+|     "->x --> x"
+
+#source tests5.dat:7
+#data
+<script> <!-- </script> --> </script>x
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,37): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       " <!-- "
+|     " "
+|   <body>
+|     "--> x"
+
+#source tests5.dat:8
+#data
+<title> <!-- </title> --> </title>x
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,34): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <title>
+|       " <!-- "
+|     " "
+|   <body>
+|     "--> x"
+
+#source tests5.dat:9
+#data
+<textarea> <!--- </textarea>->x</textarea> --> </textarea>x
+#errors
+(1,10): expected-doctype-but-got-start-tag
+(1,42): unexpected-end-tag
+(1,58): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       " <!--- "
+|     "->x --> x"
+
+#source tests5.dat:10
+#data
+<style> <!</-- </style>x
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       " <!</-- "
+|   <body>
+|     "x"
+
+#source tests5.dat:11
+#data
+<p><xmp></xmp>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <xmp>
+
+#source tests5.dat:12
+#data
+<xmp> <!-- > --> </xmp>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <xmp>
+|       " <!-- > --> "
+
+#source tests5.dat:13
+#data
+<title>&amp;</title>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <title>
+|       "&"
+|   <body>
+
+#source tests5.dat:14
+#data
+<title><!--&amp;--></title>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <title>
+|       "<!--&-->"
+|   <body>
+
+#source tests5.dat:15
+#data
+<title><!--</title>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <title>
+|       "<!--"
+|   <body>
+
+#source tests5.dat:16
+#data
+<noscript><!--</noscript>--></noscript>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+(1,39): unexpected-end-tag
+#script-on
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       "<!--"
+|   <body>
+|     "-->"
+
+#source tests5.dat:17
+#data
+<noscript><!--</noscript>--></noscript>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#script-off
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       <!-- </noscript> -->
+|   <body>
+#source tests7.dat:1
+#data
+<!doctype html><body><title>X</title>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <title>
+|       "X"
+
+#source tests8.dat:1
+#data
+<div>
+<div></div>
+</span>x
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(3,7): unexpected-end-tag
+(3,8): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "
+"
+|       <div>
+|       "
+x"
+
+#source tests8.dat:2
+#data
+<div>x<div></div>
+</span>x
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(2,7): unexpected-end-tag
+(2,8): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "x"
+|       <div>
+|       "
+x"
+
+#source tests8.dat:3
+#data
+<div>x<div></div>x</span>x
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,25): unexpected-end-tag
+(1,26): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "x"
+|       <div>
+|       "xx"
+
+#source tests8.dat:4
+#data
+<div>x<div></div>y</span>z
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,25): unexpected-end-tag
+(1,26): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "x"
+|       <div>
+|       "yz"
+
+#source tests8.dat:5
+#data
+<table><div>x<div></div>x</span>x
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,12): foster-parenting-start-tag
+(1,13): foster-parenting-character
+(1,18): foster-parenting-start-tag
+(1,24): foster-parenting-end-tag
+(1,25): foster-parenting-start-tag
+(1,32): foster-parenting-end-tag
+(1,32): unexpected-end-tag
+(1,33): foster-parenting-character
+(1,33): eof-in-table
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "x"
+|       <div>
+|       "xx"
+|     <table>
+
+#source tests9.dat:1
+#data
+<!DOCTYPE html><math></math>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+
+#source tests9.dat:2
+#data
+<!DOCTYPE html><body><math></math>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+
+#source tests9.dat:3
+#data
+<!DOCTYPE html><math><mi>
+#errors
+(1,25) expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+
+#source tests9.dat:4
+#data
+<!DOCTYPE html><math><annotation-xml><svg><u>
+#errors
+(1,45) unexpected-html-element-in-foreign-content
+(1,45) expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         <svg svg>
+|     <u>
+
+#source tests9.dat:5
+#data
+<!DOCTYPE html><body><select><math></math></select>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <math math>
+
+#source tests9.dat:6
+#data
+<!DOCTYPE html><body><select><option><math></math></option></select>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+|         <math math>
+
+#source tests9.dat:7
+#data
+<!DOCTYPE html><body><table><math></math></table>
+#errors
+(1,34) unexpected-start-tag-implies-table-voodoo
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|     <table>
+
+#source tests9.dat:8
+#data
+<!DOCTYPE html><body><table><math><mi>foo</mi></math></table>
+#errors
+(1,34) foster-parenting-start-token
+(1,39) foster-parenting-character
+(1,40) foster-parenting-character
+(1,41) foster-parenting-character
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         "foo"
+|     <table>
+
+#source tests9.dat:9
+#data
+<!DOCTYPE html><body><table><math><mi>foo</mi><mi>bar</mi></math></table>
+#errors
+(1,34) foster-parenting-start-tag
+(1,39) foster-parenting-character
+(1,40) foster-parenting-character
+(1,41) foster-parenting-character
+(1,51) foster-parenting-character
+(1,52) foster-parenting-character
+(1,53) foster-parenting-character
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         "foo"
+|       <math mi>
+|         "bar"
+|     <table>
+
+#source tests9.dat:10
+#data
+<!DOCTYPE html><body><table><tbody><math><mi>foo</mi><mi>bar</mi></math></tbody></table>
+#errors
+(1,41) foster-parenting-start-tag
+(1,46) foster-parenting-character
+(1,47) foster-parenting-character
+(1,48) foster-parenting-character
+(1,58) foster-parenting-character
+(1,59) foster-parenting-character
+(1,60) foster-parenting-character
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         "foo"
+|       <math mi>
+|         "bar"
+|     <table>
+|       <tbody>
+
+#source tests9.dat:11
+#data
+<!DOCTYPE html><body><table><tbody><tr><math><mi>foo</mi><mi>bar</mi></math></tr></tbody></table>
+#errors
+(1,45) foster-parenting-start-tag
+(1,50) foster-parenting-character
+(1,51) foster-parenting-character
+(1,52) foster-parenting-character
+(1,62) foster-parenting-character
+(1,63) foster-parenting-character
+(1,64) foster-parenting-character
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         "foo"
+|       <math mi>
+|         "bar"
+|     <table>
+|       <tbody>
+|         <tr>
+
+#source tests9.dat:12
+#data
+<!DOCTYPE html><body><table><tbody><tr><td><math><mi>foo</mi><mi>bar</mi></math></td></tr></tbody></table>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <math math>
+|               <math mi>
+|                 "foo"
+|               <math mi>
+|                 "bar"
+
+#source tests9.dat:13
+#data
+<!DOCTYPE html><body><table><tbody><tr><td><math><mi>foo</mi><mi>bar</mi></math><p>baz</td></tr></tbody></table>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <math math>
+|               <math mi>
+|                 "foo"
+|               <math mi>
+|                 "bar"
+|             <p>
+|               "baz"
+
+#source tests9.dat:14
+#data
+<!DOCTYPE html><body><table><caption><math><mi>foo</mi><mi>bar</mi></math><p>baz</caption></table>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <math math>
+|           <math mi>
+|             "foo"
+|           <math mi>
+|             "bar"
+|         <p>
+|           "baz"
+
+#source tests9.dat:15
+#data
+<!DOCTYPE html><body><table><caption><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux
+#errors
+(1,70) unexpected-html-element-in-foreign-content
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <math math>
+|           <math mi>
+|             "foo"
+|           <math mi>
+|             "bar"
+|         <p>
+|           "baz"
+|     <p>
+|       "quux"
+
+#source tests9.dat:16
+#data
+<!DOCTYPE html><body><table><caption><math><mi>foo</mi><mi>bar</mi>baz</table><p>quux
+#errors
+(1,78) unexpected-end-tag
+(1,78) expected-one-end-tag-but-got-another
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <math math>
+|           <math mi>
+|             "foo"
+|           <math mi>
+|             "bar"
+|           "baz"
+|     <p>
+|       "quux"
+
+#source tests9.dat:17
+#data
+<!DOCTYPE html><body><table><colgroup><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux
+#errors
+(1,44) foster-parenting-start-tag
+(1,49) foster-parenting-character
+(1,50) foster-parenting-character
+(1,51) foster-parenting-character
+(1,61) foster-parenting-character
+(1,62) foster-parenting-character
+(1,63) foster-parenting-character
+(1,71) unexpected-html-element-in-foreign-content
+(1,71) foster-parenting-start-tag
+(1,63) foster-parenting-character
+(1,63) foster-parenting-character
+(1,63) foster-parenting-character
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         "foo"
+|       <math mi>
+|         "bar"
+|     <p>
+|       "baz"
+|     <table>
+|       <colgroup>
+|     <p>
+|       "quux"
+
+#source tests9.dat:18
+#data
+<!DOCTYPE html><body><table><tr><td><select><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux
+#errors
+1:75: ERROR: Start tag 'p' isn't allowed here. Currently open tags: html, body, table, tbody, tr, td, select, math.
+1:81: ERROR: End tag 'table' isn't allowed here. Currently open tags: html, body, table, tbody, tr, td, select.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <select>
+|               <math math>
+|                 <math mi>
+|                   "foo"
+|                 <math mi>
+|                   "bar"
+|               <p>
+|                 "baz"
+|     <p>
+|       "quux"
+
+#source tests9.dat:19
+#data
+<!DOCTYPE html><body><table><select><math><mi>foo</mi><mi>bar</mi><p>baz</table><p>quux
+#errors
+1:29: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, table.
+1:37: ERROR: Start tag 'math' isn't allowed here. Currently open tags: html, body, table, select.
+1:47: ERROR: Character tokens aren't legal here
+1:48: ERROR: Character tokens aren't legal here
+1:49: ERROR: Character tokens aren't legal here
+1:59: ERROR: Character tokens aren't legal here
+1:60: ERROR: Character tokens aren't legal here
+1:61: ERROR: Character tokens aren't legal here
+1:67: ERROR: Start tag 'p' isn't allowed here. Currently open tags: html, body, table, select, math.
+1:67: ERROR: Start tag 'p' isn't allowed here. Currently open tags: html, body, table, select.
+1:70: ERROR: Character tokens aren't legal here
+1:71: ERROR: Character tokens aren't legal here
+1:72: ERROR: Character tokens aren't legal here
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <math math>
+|         <math mi>
+|           "foo"
+|         <math mi>
+|           "bar"
+|       <p>
+|         "baz"
+|     <table>
+|     <p>
+|       "quux"
+
+#source tests9.dat:20
+#data
+<!DOCTYPE html><body></body></html><math><mi>foo</mi><mi>bar</mi><p>baz
+#errors
+(1,41) expected-eof-but-got-start-tag
+(1,68) unexpected-html-element-in-foreign-content
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         "foo"
+|       <math mi>
+|         "bar"
+|     <p>
+|       "baz"
+
+#source tests9.dat:21
+#data
+<!DOCTYPE html><body></body><math><mi>foo</mi><mi>bar</mi><p>baz
+#errors
+(1,34) unexpected-start-tag-after-body
+(1,61) unexpected-html-element-in-foreign-content
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         "foo"
+|       <math mi>
+|         "bar"
+|     <p>
+|       "baz"
+
+#source tests9.dat:22
+#data
+<!DOCTYPE html><frameset><math><mi></mi><mi></mi><p><span>
+#errors
+(1,31) unexpected-start-tag-in-frameset
+(1,35) unexpected-start-tag-in-frameset
+(1,40) unexpected-end-tag-in-frameset
+(1,44) unexpected-start-tag-in-frameset
+(1,49) unexpected-end-tag-in-frameset
+(1,52) unexpected-start-tag-in-frameset
+(1,58) unexpected-start-tag-in-frameset
+(1,58) eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+#source tests9.dat:23
+#data
+<!DOCTYPE html><frameset></frameset><math><mi></mi><mi></mi><p><span>
+#errors
+(1,42) unexpected-start-tag-after-frameset
+(1,46) unexpected-start-tag-after-frameset
+(1,51) unexpected-end-tag-after-frameset
+(1,55) unexpected-start-tag-after-frameset
+(1,60) unexpected-end-tag-after-frameset
+(1,63) unexpected-start-tag-after-frameset
+(1,69) unexpected-start-tag-after-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+#source tests9.dat:24
+#data
+<!DOCTYPE html><body xlink:href=foo><math xlink:href=foo></math>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     xlink:href="foo"
+|     <math math>
+|       xlink href="foo"
+
+#source tests9.dat:25
+#data
+<!DOCTYPE html><body xlink:href=foo xml:lang=en><math><mi xml:lang=en xlink:href=foo></mi></math>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     xlink:href="foo"
+|     xml:lang="en"
+|     <math math>
+|       <math mi>
+|         xlink href="foo"
+|         xml lang="en"
+
+#source tests9.dat:26
+#data
+<!DOCTYPE html><body xlink:href=foo xml:lang=en><math><mi xml:lang=en xlink:href=foo /></math>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     xlink:href="foo"
+|     xml:lang="en"
+|     <math math>
+|       <math mi>
+|         xlink href="foo"
+|         xml lang="en"
+
+#source tests9.dat:27
+#data
+<!DOCTYPE html><body xlink:href=foo xml:lang=en><math><mi xml:lang=en xlink:href=foo />bar</math>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     xlink:href="foo"
+|     xml:lang="en"
+|     <math math>
+|       <math mi>
+|         xlink href="foo"
+|         xml lang="en"
+|       "bar"
