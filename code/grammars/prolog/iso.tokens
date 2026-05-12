@@ -26,13 +26,14 @@ skip:
   BLOCK_COMMENT  = /\/\*[\s\S]*?\*\//
 
 # Multi-character structural tokens must come before symbolic atoms.
-# `NAF` is the negation-as-failure operator `\+`. It must come *before*
-# the catch-all `ATOM_SYMBOLIC` rule so that `\+ G` parses as a NAF
-# operator + goal rather than as a bare symbolic atom.
+# `NAF` (`\+`) is the negation-as-failure operator and `PROB_SEP`
+# (`::`) is the ProbLog probability separator. Both must come before
+# the catch-all `ATOM_SYMBOLIC` rule so they win for structural use.
 DCG          = "-->"
 QUERY        = "?-"
 RULE         = ":-"
 NAF          = "\+"
+PROB_SEP     = "::"
 
 # Common dedicated punctuation tokens for the first parser pass.
 LPAREN       = "("

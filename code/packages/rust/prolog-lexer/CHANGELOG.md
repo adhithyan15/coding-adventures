@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-11
+
+### Added
+
+- New `PROB_SEP` token = `"::"` in iso.tokens for the ProbLog
+  probability separator (`0.7 :: edge(a, b).`). Placed before
+  `ATOM_SYMBOLIC` so it wins over the catch-all symbolic-atom rule.
+
+(SWI dialect gets the same addition in a follow-up; the tokens file
+will land alongside the ProbLog-aware swi-prolog-parser crate.)
+
 ## [0.2.0] - 2026-05-11
 
 ### Added

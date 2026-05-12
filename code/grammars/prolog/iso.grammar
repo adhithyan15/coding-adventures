@@ -15,11 +15,22 @@
 
 program = { statement } ;
 
-statement       = query_statement | dcg_statement | rule_statement | fact_statement ;
+statement       = query_statement | dcg_statement
+                | probabilistic_rule_statement | probabilistic_fact_statement
+                | rule_statement | fact_statement ;
 query_statement = QUERY goal DOT ;
 dcg_statement   = callable_term DCG dcg_body DOT ;
 rule_statement  = callable_term RULE goal DOT ;
 fact_statement  = callable_term DOT ;
+
+# ProbLog probabilistic clauses: `0.7 :: head.` and
+# `0.7 :: head :- body.`. The probability must come first; the
+# alternatives above must be tried before the bare-callable rule and
+# fact productions so `0.7` is not parsed as a number-term in a
+# different context.
+probabilistic_fact_statement = probability PROB_SEP callable_term DOT ;
+probabilistic_rule_statement = probability PROB_SEP callable_term RULE goal DOT ;
+probability                  = FLOAT | INTEGER ;
 
 goal          = disjunction ;
 disjunction   = conjunction { SEMICOLON conjunction } ;
