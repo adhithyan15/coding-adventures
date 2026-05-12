@@ -15,6 +15,7 @@ other backends without changing the skill API.
 - `SkillCatalogSummary`
 - `SkillRequirementSummary`
 - `SkillAssetInventorySummary`
+- `SkillSourceSummary`
 - installation of manifests plus asset bundles
 - bounded manifest listing by active status, entrypoint, required tool, and
   required capability
@@ -25,6 +26,7 @@ other backends without changing the skill API.
 - compact requirement summaries for entrypoint, tool, and capability coverage
 - compact asset inventory summaries for content-type, path-depth, and byte
   coverage over one skill version
+- compact source summaries for manifest `source.kind` provenance coverage
 - active-version switching and uninstall semantics
 
 ## Key layout
@@ -42,6 +44,7 @@ other backends without changing the skill API.
 - `catalog_summary()`
 - `requirement_summary()`
 - `asset_inventory_summary()`
+- `source_summary()`
 - `list_asset_summaries()`
 - `list_installed_skills()`
 - `read_asset()`
@@ -76,6 +79,11 @@ asset bodies.
 `SkillAssetInventorySummary` gives catalog and preload planners a compact
 rollup over one skill version's asset metadata, including content-type classes,
 root versus nested paths, and total bytes without returning asset bodies.
+
+`SkillSourceSummary` gives D18/D18D hosts a compact provenance rollup across
+filtered skill versions, including specified versus unspecified `source.kind`
+coverage and active/inactive counts per source kind without returning raw
+manifest source payloads.
 
 ## Development
 
