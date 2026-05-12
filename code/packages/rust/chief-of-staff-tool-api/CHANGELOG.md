@@ -35,6 +35,8 @@ All notable changes to this package will be documented in this file.
   and `ToolSchemaDocument` exports for future model-gateway adapters.
 - Catalog export snapshots with schema documents, validation state, and summary
   counts for model gateway adapters and portability checks.
+- Expanded catalog summary counts for idempotency, concurrency, capability
+  gates, lock scopes, timeouts, and output-schema coverage.
 - Schema-light `ToolDefinitionSummary` rows plus built-in and registry summary
   query helpers for read-side catalog listings.
 - Append-only `ToolExecutionJournal` with count-only summaries and query helpers

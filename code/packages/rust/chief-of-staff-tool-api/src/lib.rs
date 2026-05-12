@@ -646,10 +646,18 @@ pub struct ToolCatalogSummary {
     pub total_tools: usize,
     pub by_family: BTreeMap<String, usize>,
     pub by_side_effects: BTreeMap<String, usize>,
+    pub by_idempotency: BTreeMap<String, usize>,
+    pub by_concurrency: BTreeMap<String, usize>,
     pub by_required_tier: BTreeMap<String, usize>,
     pub by_stability: BTreeMap<String, usize>,
     pub streaming_tools: usize,
     pub write_or_external_tools: usize,
+    pub serialized_tools: usize,
+    pub non_idempotent_tools: usize,
+    pub tools_requiring_capabilities: usize,
+    pub tools_with_lock_scope: usize,
+    pub tools_with_timeout: usize,
+    pub tools_with_output_schema: usize,
 }
 
 impl ToolCatalogSummary {
@@ -658,10 +666,18 @@ impl ToolCatalogSummary {
             total_tools: 0,
             by_family: BTreeMap::new(),
             by_side_effects: BTreeMap::new(),
+            by_idempotency: BTreeMap::new(),
+            by_concurrency: BTreeMap::new(),
             by_required_tier: BTreeMap::new(),
             by_stability: BTreeMap::new(),
             streaming_tools: 0,
             write_or_external_tools: 0,
+            serialized_tools: 0,
+            non_idempotent_tools: 0,
+            tools_requiring_capabilities: 0,
+            tools_with_lock_scope: 0,
+            tools_with_timeout: 0,
+            tools_with_output_schema: 0,
         }
     }
 
@@ -680,6 +696,8 @@ impl ToolCatalogSummary {
                 &mut summary.by_side_effects,
                 definition.side_effects.as_str(),
             );
+            increment_count(&mut summary.by_idempotency, definition.idempotency.as_str());
+            increment_count(&mut summary.by_concurrency, definition.concurrency.as_str());
             increment_count(
                 &mut summary.by_required_tier,
                 definition.required_tier.as_str(),
@@ -694,8 +712,42 @@ impl ToolCatalogSummary {
             ) {
                 summary.write_or_external_tools += 1;
             }
+            if definition.concurrency == ToolConcurrency::Serialized {
+                summary.serialized_tools += 1;
+            }
+            if definition.idempotency == ToolIdempotency::Never {
+                summary.non_idempotent_tools += 1;
+            }
+            if !definition.required_capabilities.is_empty() {
+                summary.tools_requiring_capabilities += 1;
+            }
+            if definition.preferred_lock_scope.is_some() {
+                summary.tools_with_lock_scope += 1;
+            }
+            if definition.timeout_seconds.is_some() {
+                summary.tools_with_timeout += 1;
+            }
+            if definition.output_schema.is_some() {
+                summary.tools_with_output_schema += 1;
+            }
         }
         summary
+    }
+
+    pub fn has_write_or_external_tools(&self) -> bool {
+        self.write_or_external_tools > 0
+    }
+
+    pub fn has_serialized_tools(&self) -> bool {
+        self.serialized_tools > 0
+    }
+
+    pub fn has_capability_gates(&self) -> bool {
+        self.tools_requiring_capabilities > 0
+    }
+
+    pub fn has_timeout_bound_tools(&self) -> bool {
+        self.tools_with_timeout > 0
     }
 }
 
@@ -4757,7 +4809,22 @@ mod tests {
         assert_eq!(export.summary.by_family.get("memory"), Some(&7));
         assert_eq!(export.summary.by_family.get("job"), Some(&6));
         assert_eq!(export.summary.streaming_tools, 17);
-        assert!(export.summary.write_or_external_tools > 0);
+        assert!(export.summary.has_write_or_external_tools());
+        assert!(export.summary.has_serialized_tools());
+        assert!(export.summary.has_capability_gates());
+        assert!(export.summary.has_timeout_bound_tools());
+        assert_eq!(
+            export.summary.by_concurrency.get("serialized"),
+            Some(&export.summary.serialized_tools)
+        );
+        assert_eq!(
+            export.summary.tools_with_output_schema,
+            export
+                .schema_documents
+                .iter()
+                .filter(|document| document.output_schema.is_some())
+                .count()
+        );
         assert_eq!(
             export.tool_ids().first().copied(),
             Some("context.open_session")
@@ -4779,6 +4846,7 @@ mod tests {
             .by_side_effects
             .get("read")
             .is_some_and(|count| *count > 0));
+        assert_eq!(read_export.summary.write_or_external_tools, 0);
     }
 
     #[test]
@@ -4842,6 +4910,10 @@ mod tests {
         assert_eq!(export.summary.total_tools, 1);
         assert_eq!(export.summary.by_family.get("memory"), Some(&1));
         assert_eq!(registry.summary().total_tools, 3);
+        assert_eq!(
+            registry.summary().tools_requiring_capabilities,
+            registry.summary().total_tools
+        );
         assert_eq!(
             registry
                 .schema_documents(&ToolCatalogQuery::new().for_family(BuiltinToolFamily::Artifact))
