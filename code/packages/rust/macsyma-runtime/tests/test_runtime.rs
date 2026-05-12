@@ -4,8 +4,8 @@ use coding_adventures_macsyma_runtime::{
 };
 use std::collections::HashMap;
 use symbolic_ir::{
-    apply, int, rat, sym, ADD, AND, DIV, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, LIST,
-    MUL, POW, RULE, SUB,
+    apply, int, rat, sym, ADD, AND, ASIN, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS,
+    LESS_EQUAL, LIST, LOG, MUL, POW, RULE, SIN, SUB,
 };
 
 #[test]
@@ -409,6 +409,89 @@ fn keeps_unsupported_inequality_solve_calls_unevaluated() {
             apply(
                 sym(GREATER),
                 vec![apply(sym("Sin"), vec![x.clone()]), int(0)],
+            ),
+            x,
+        ],
+    );
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn solves_direct_transcendental_equations_through_cas_solve() {
+    let x = sym("x");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(sym(EQUAL), vec![apply(sym(EXP), vec![x.clone()]), int(2)]),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(sym(EQUAL), vec![apply(sym(SIN), vec![x.clone()]), int(0)]),
+                x,
+            ],
+        ),
+    ]);
+
+    assert_eq!(
+        results[0].output,
+        apply(sym(LIST), vec![apply(sym(LOG), vec![int(2)])])
+    );
+    assert_eq!(
+        results[1].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(ASIN), vec![int(0)]),
+                        apply(
+                            sym(MUL),
+                            vec![
+                                int(2),
+                                apply(sym(MUL), vec![sym("%pi"), sym("FreeInteger")])
+                            ],
+                        ),
+                    ],
+                ),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(SUB), vec![sym("%pi"), apply(sym(ASIN), vec![int(0)])]),
+                        apply(
+                            sym(MUL),
+                            vec![
+                                int(2),
+                                apply(sym(MUL), vec![sym("%pi"), sym("FreeInteger")])
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn keeps_unsupported_transcendental_solve_calls_unevaluated() {
+    let x = sym("x");
+    let expr = apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(EQUAL),
+                vec![
+                    apply(sym(SIN), vec![apply(sym(SIN), vec![x.clone()])]),
+                    int(0),
+                ],
             ),
             x,
         ],

@@ -23,3 +23,8 @@ inequality solver. Supported one-variable polynomial inequalities return
 `List(...)` interval predicates such as `Greater(x, 1)` or
 `And(GreaterEqual(x, -1), LessEqual(x, 1))`; unsupported inequalities remain
 unevaluated.
+
+Direct `Solve(f(linear) = constant, variable)` transcendental equations delegate
+to the Rust `cas-solve` inverse-family solver. Supported `Exp`, `Log`, trig,
+and hyperbolic forms return `List(...)` symbolic inverse or periodic-family
+solutions; unsupported nested forms remain unevaluated.

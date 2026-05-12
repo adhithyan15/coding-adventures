@@ -4,6 +4,9 @@
 
 ### Added
 
+- Wired direct `Solve(f(linear) = constant, variable)` transcendental equations
+  to the Rust `cas-solve` `try_solve_transcendental` handler, returning
+  `List(...)` symbolic inverse and periodic-family solutions.
 - Wired `Solve(inequality, variable)` to the Rust `cas-solve`
   `try_solve_inequality` handler, returning `List(...)` interval predicates
   for supported one-variable polynomial inequalities.
