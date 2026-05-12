@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `trySolveInequality` for Phase 27-style polynomial inequality solving
+  over rational univariate polynomials up to degree 4.
 - Add `solveLinearSystem` with exact Gaussian elimination, `Equal(lhs, rhs)`
   normalization, zero-form equations, and `Rule(var, value)` IR output.
 - Add pure TypeScript Durand-Kerner numeric polynomial solving plus IR
