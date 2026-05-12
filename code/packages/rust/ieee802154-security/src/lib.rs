@@ -270,6 +270,45 @@ impl InMemoryKeyStore {
             .copied()
             .ok_or(SecurityError::UnknownKeyIdentifier)
     }
+
+    pub fn summary(&self) -> KeyStoreSummary {
+        KeyStoreSummary::from_identifiers(self.keys.keys())
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct KeyStoreSummary {
+    pub key_count: usize,
+    pub implicit_keys: usize,
+    pub key_index_keys: usize,
+    pub key_source4_keys: usize,
+    pub key_source8_keys: usize,
+}
+
+impl KeyStoreSummary {
+    pub fn from_identifiers<'a>(
+        identifiers: impl IntoIterator<Item = &'a NormalizedKeyIdentifier>,
+    ) -> Self {
+        let mut summary = Self::default();
+        for identifier in identifiers {
+            summary.key_count += 1;
+            match identifier {
+                NormalizedKeyIdentifier::Implicit => summary.implicit_keys += 1,
+                NormalizedKeyIdentifier::KeyIndex(_) => summary.key_index_keys += 1,
+                NormalizedKeyIdentifier::KeySource4 { .. } => summary.key_source4_keys += 1,
+                NormalizedKeyIdentifier::KeySource8 { .. } => summary.key_source8_keys += 1,
+            }
+        }
+        summary
+    }
+
+    pub fn has_explicit_keys(&self) -> bool {
+        self.key_index_keys > 0 || self.key_source4_keys > 0 || self.key_source8_keys > 0
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.key_count == 0
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -350,6 +389,67 @@ impl OutgoingFrameCounterStore {
             key_identifier: key.key_identifier,
             frame_counter,
         })
+    }
+
+    pub fn summary(&self) -> OutgoingFrameCounterStoreSummary {
+        OutgoingFrameCounterStoreSummary::from_entries(
+            self.next_by_key
+                .iter()
+                .map(|(key, next_counter)| (key, *next_counter)),
+        )
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct OutgoingFrameCounterStoreSummary {
+    pub tracked_keys: usize,
+    pub implicit_keys: usize,
+    pub key_index_keys: usize,
+    pub key_source4_keys: usize,
+    pub key_source8_keys: usize,
+    pub exhausted_keys: usize,
+    pub min_next_counter: Option<u32>,
+    pub max_next_counter: Option<u32>,
+}
+
+impl OutgoingFrameCounterStoreSummary {
+    pub fn from_entries<'a>(
+        entries: impl IntoIterator<Item = (&'a OutgoingFrameCounterKey, u64)>,
+    ) -> Self {
+        let mut summary = Self::default();
+        for (key, next_counter) in entries {
+            summary.tracked_keys += 1;
+            match &key.key_identifier {
+                NormalizedKeyIdentifier::Implicit => summary.implicit_keys += 1,
+                NormalizedKeyIdentifier::KeyIndex(_) => summary.key_index_keys += 1,
+                NormalizedKeyIdentifier::KeySource4 { .. } => summary.key_source4_keys += 1,
+                NormalizedKeyIdentifier::KeySource8 { .. } => summary.key_source8_keys += 1,
+            }
+            match u32::try_from(next_counter) {
+                Ok(next) => {
+                    summary.min_next_counter = Some(
+                        summary
+                            .min_next_counter
+                            .map_or(next, |current| current.min(next)),
+                    );
+                    summary.max_next_counter = Some(
+                        summary
+                            .max_next_counter
+                            .map_or(next, |current| current.max(next)),
+                    );
+                }
+                Err(_) => summary.exhausted_keys += 1,
+            }
+        }
+        summary
+    }
+
+    pub fn has_exhausted_keys(&self) -> bool {
+        self.exhausted_keys > 0
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.tracked_keys == 0
     }
 }
 
@@ -754,6 +854,41 @@ mod tests {
     }
 
     #[test]
+    fn key_store_summary_counts_identifier_families_without_exposing_keys() {
+        let mut store = InMemoryKeyStore::new();
+        store.insert(
+            NormalizedKeyIdentifier::Implicit,
+            Aes128Key::new([0x11; 16]),
+        );
+        store.insert(
+            NormalizedKeyIdentifier::KeyIndex(3),
+            Aes128Key::new([0x22; 16]),
+        );
+        store.insert(
+            NormalizedKeyIdentifier::KeySource8 {
+                source: [1, 2, 3, 4, 5, 6, 7, 8],
+                index: 9,
+            },
+            Aes128Key::new([0x33; 16]),
+        );
+
+        let summary = store.summary();
+
+        assert_eq!(
+            summary,
+            KeyStoreSummary {
+                key_count: 3,
+                implicit_keys: 1,
+                key_index_keys: 1,
+                key_source4_keys: 0,
+                key_source8_keys: 1,
+            }
+        );
+        assert!(summary.has_explicit_keys());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
     fn outgoing_frame_counter_store_reserves_monotonic_leases_per_key() {
         let mut store = OutgoingFrameCounterStore::new();
         let source_address = 0x8877_6655_4433_2211;
@@ -807,6 +942,47 @@ mod tests {
     }
 
     #[test]
+    fn outgoing_frame_counter_summary_counts_key_families_and_bounds() {
+        let mut store = OutgoingFrameCounterStore::new();
+        store.restore_next_counter(
+            OutgoingFrameCounterKey::new(1, NormalizedKeyIdentifier::Implicit),
+            7,
+        );
+        store.restore_next_counter(
+            OutgoingFrameCounterKey::new(2, NormalizedKeyIdentifier::KeyIndex(2)),
+            41,
+        );
+        store.restore_next_counter(
+            OutgoingFrameCounterKey::new(
+                3,
+                NormalizedKeyIdentifier::KeySource4 {
+                    source: [1, 2, 3, 4],
+                    index: 5,
+                },
+            ),
+            11,
+        );
+
+        let summary = store.summary();
+
+        assert_eq!(
+            summary,
+            OutgoingFrameCounterStoreSummary {
+                tracked_keys: 3,
+                implicit_keys: 1,
+                key_index_keys: 1,
+                key_source4_keys: 1,
+                key_source8_keys: 0,
+                exhausted_keys: 0,
+                min_next_counter: Some(7),
+                max_next_counter: Some(41),
+            }
+        );
+        assert!(!summary.has_exhausted_keys());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
     fn outgoing_frame_counter_store_rejects_after_counter_space_is_exhausted() {
         let mut store = OutgoingFrameCounterStore::new();
         let key = OutgoingFrameCounterKey::new(1, NormalizedKeyIdentifier::Implicit);
@@ -820,6 +996,7 @@ mod tests {
             store.reserve_next_for_key(key),
             Err(SecurityError::OutgoingFrameCounterExhausted)
         );
+        assert!(store.summary().has_exhausted_keys());
     }
 
     #[test]

@@ -20,6 +20,7 @@ encryption/decryption, replay checks, and key lookup.
 - replay-window acceptance for monotonic incoming frame counters
 - key identifier normalization
 - small in-memory key store for tests and simulators
+- key-store and outgoing-counter summaries for supervisor coverage views
 
 ## Not Yet Implemented
 

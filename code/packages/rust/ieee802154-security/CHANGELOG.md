@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added key-store and outgoing-frame-counter store summaries for supervisor
+  coverage views.
+
 ## 0.1.0
 
 - Initial IEEE 802.15.4 nonce construction primitives.
