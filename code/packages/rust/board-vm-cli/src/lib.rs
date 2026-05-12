@@ -2355,6 +2355,63 @@ mod tests {
     }
 
     #[test]
+    fn smoke_endpoint_runs_over_tcp_loopback_transport() {
+        let listener = std::net::TcpListener::bind(("127.0.0.1", 0)).unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = std::thread::spawn(move || {
+            let (stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(Duration::from_millis(500)))
+                .unwrap();
+            stream
+                .set_write_timeout(Some(Duration::from_millis(500)))
+                .unwrap();
+            let mut transport = BoardTcpTransport::<_, 1024>::from_stream(stream);
+            let mut board = LoopbackBoard::<512, 8, 8>::new();
+            let mut request_raw = [0u8; 768];
+            let mut response_payload = [0u8; 512];
+            let mut response_raw = [0u8; 768];
+
+            for _ in 0..6 {
+                let request_len = transport.receive_raw_frame(&mut request_raw).unwrap();
+                let response_len = board
+                    .handle_raw_frame(
+                        &request_raw[..request_len],
+                        &mut response_payload,
+                        &mut response_raw,
+                    )
+                    .unwrap();
+                transport
+                    .send_raw_frame(&response_raw[..response_len])
+                    .unwrap();
+            }
+
+            board.fake_hal().events().len()
+        });
+        let options = SmokeOptions {
+            port: None,
+            endpoint: Some(format!("tcp://{address}")),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: 500,
+            program_id: 9,
+            instruction_budget: 200,
+            host_nonce: 0xBEEF_CAFE,
+        };
+
+        let report = run_smoke(&options).unwrap();
+        let event_count = server.join().unwrap();
+
+        assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
+        assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
+        assert_eq!(report.hello.host_nonce, 0xBEEF_CAFE);
+        assert_eq!(report.descriptor.board_id, LOOPBACK_BOARD_ID);
+        assert_eq!(report.run.program_id, 9);
+        assert_eq!(report.run.status, RunStatus::Running);
+        assert!(event_count > 0);
+    }
+
+    #[test]
     fn smoke_serial_config_asserts_dtr_and_clears_stale_bytes() {
         let options = SmokeOptions {
             port: Some("/dev/cu.usbmodem-test".to_owned()),
