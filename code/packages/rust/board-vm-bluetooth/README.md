@@ -7,7 +7,9 @@ The crate keeps Bluetooth connection endpoint shapes in Rust so language
 frontends can stay thin. It validates and normalizes endpoint strings for the
 BLE GATT and Bluetooth Classic RFCOMM transports, and it exposes a backend
 opening trait so OS-specific adapters can return concrete Board VM raw-frame
-transports without moving endpoint policy into Ruby/Python/Lua.
+transports without moving endpoint policy into Ruby/Python/Lua. Backend open
+failures remain `BluetoothOpenError`s so callers can report platform or adapter
+setup problems before raw-frame exchange starts.
 
 The first host adapter is `MacosBluetoothBackend`, which resolves Bluetooth
 Classic RFCOMM endpoints onto macOS `/dev/cu.*` serial devices. BLE GATT opening

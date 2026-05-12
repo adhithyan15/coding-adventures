@@ -1683,6 +1683,8 @@ mod tests {
         rfcomm_read: Vec<u8>,
         ble_opened: Vec<String>,
         rfcomm_opened: Vec<(String, u8)>,
+        ble_open_error: Option<BluetoothOpenError>,
+        rfcomm_open_error: Option<BluetoothOpenError>,
     }
 
     impl BluetoothBackend for FakeBluetoothBackend {
@@ -1694,6 +1696,9 @@ mod tests {
             endpoint: &BleGattEndpoint,
         ) -> Result<Self::BleGattLink, BluetoothOpenError> {
             self.ble_opened.push(endpoint.device.clone());
+            if let Some(error) = self.ble_open_error.take() {
+                return Err(error);
+            }
             Ok(FakeBleGattLink {
                 writes: Vec::new(),
                 notifications: std::mem::take(&mut self.ble_notifications),
@@ -1707,6 +1712,9 @@ mod tests {
         ) -> Result<Self::RfcommStream, BluetoothOpenError> {
             self.rfcomm_opened
                 .push((endpoint.device.clone(), endpoint.channel));
+            if let Some(error) = self.rfcomm_open_error.take() {
+                return Err(error);
+            }
             Ok(FakeRfcommStream::new(std::mem::take(&mut self.rfcomm_read)))
         }
     }
@@ -2448,6 +2456,53 @@ Device 11:22:33:44:55:66 (public)
         );
         assert_eq!(transport.device(), "ESP32-BoardVM");
         assert_eq!(&raw_out[..response_len], response);
+        assert_eq!(backend.rfcomm_opened, vec![("ESP32-BoardVM".to_owned(), 3)]);
+    }
+
+    #[test]
+    fn backend_opener_propagates_ble_gatt_open_errors() {
+        let endpoint = parse_bluetooth_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let mut backend = FakeBluetoothBackend {
+            ble_open_error: Some(BluetoothOpenError::Backend {
+                message: "BLE adapter unavailable".to_owned(),
+            }),
+            ..FakeBluetoothBackend::default()
+        };
+
+        let result = open_bluetooth_endpoint::<_, 32>(&mut backend, endpoint);
+
+        assert_eq!(
+            result.err(),
+            Some(BluetoothOpenError::Backend {
+                message: "BLE adapter unavailable".to_owned(),
+            })
+        );
+        assert_eq!(backend.ble_opened, vec!["esp32".to_owned()]);
+        assert!(backend.rfcomm_opened.is_empty());
+    }
+
+    #[test]
+    fn backend_opener_propagates_rfcomm_open_errors() {
+        let endpoint = parse_bluetooth_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let mut backend = FakeBluetoothBackend {
+            rfcomm_open_error: Some(BluetoothOpenError::Backend {
+                message: "RFCOMM device missing".to_owned(),
+            }),
+            ..FakeBluetoothBackend::default()
+        };
+
+        let result = open_bluetooth_endpoint::<_, 32>(&mut backend, endpoint);
+
+        assert_eq!(
+            result.err(),
+            Some(BluetoothOpenError::Backend {
+                message: "RFCOMM device missing".to_owned(),
+            })
+        );
+        assert!(backend.ble_opened.is_empty());
         assert_eq!(backend.rfcomm_opened, vec![("ESP32-BoardVM".to_owned(), 3)]);
     }
 
