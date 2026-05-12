@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wire deterministic MACSYMA list heads (`Length`, `First`, `Rest`, `Last`,
+  `Append`, `Reverse`, `Range`, `Map`, `Apply`, `Sort`, `Part`, `Flatten`,
+  and `Join`) to the TypeScript `cas-list-operations` package.
 - Wire direct `Solve(f(linear) = constant, var)` transcendental equations to
   the TypeScript `cas-solve` `trySolveTranscendental` handler, returning
   `List(...)` symbolic inverse and periodic-family solutions.

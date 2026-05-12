@@ -1,4 +1,18 @@
 import { compileMacsyma } from "@coding-adventures/macsyma-compiler";
+import {
+  append,
+  applyList,
+  first,
+  flatten,
+  last,
+  length,
+  mapList,
+  part,
+  range as rangeList,
+  rest,
+  reverse,
+  sortList,
+} from "@coding-adventures/cas-list-operations";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import {
   ACOS,
@@ -50,6 +64,19 @@ export const EXPAND = sym("Expand");
 export const RAT_SIMPLIFY = sym("RatSimplify");
 export const TRIG_SIMPLIFY = sym("TrigSimplify");
 export const FLOAT_FUNC = sym("Float");
+export const LENGTH = sym("Length");
+export const FIRST = sym("First");
+export const REST = sym("Rest");
+export const LAST = sym("Last");
+export const APPEND = sym("Append");
+export const REVERSE = sym("Reverse");
+export const RANGE = sym("Range");
+export const MAP = sym("Map");
+export const APPLY = sym("Apply");
+export const SORT = sym("Sort");
+export const PART = sym("Part");
+export const FLATTEN = sym("Flatten");
+export const JOIN = sym("Join");
 
 export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string, IRSymbol>([
   ["diff", D],
@@ -84,20 +111,20 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["taylor", sym("Taylor")],
   ["limit", sym("Limit")],
   ["float", FLOAT_FUNC],
-  ["length", sym("Length")],
-  ["first", sym("First")],
-  ["rest", sym("Rest")],
-  ["last", sym("Last")],
-  ["append", sym("Append")],
-  ["reverse", sym("Reverse")],
+  ["length", LENGTH],
+  ["first", FIRST],
+  ["rest", REST],
+  ["last", LAST],
+  ["append", APPEND],
+  ["reverse", REVERSE],
   ["makelist", sym("MakeList")],
-  ["map", sym("Map")],
-  ["apply", sym("Apply")],
+  ["map", MAP],
+  ["apply", APPLY],
   ["sublist", sym("Select")],
-  ["sort", sym("Sort")],
-  ["part", sym("Part")],
-  ["flatten", sym("Flatten")],
-  ["join", sym("Join")],
+  ["sort", SORT],
+  ["part", PART],
+  ["flatten", FLATTEN],
+  ["join", JOIN],
   ["matrix", sym("Matrix")],
   ["transpose", sym("Transpose")],
   ["determinant", sym("Determinant")],
@@ -281,6 +308,19 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(KILL.name, makeKillHandler(this));
     table.set(EV.name, makeEvHandler());
     table.set(SOLVE.name, solveHandler);
+    table.set(LENGTH.name, listHandler(1, ([value]) => length(value)));
+    table.set(FIRST.name, listHandler(1, ([value]) => first(value)));
+    table.set(REST.name, listHandler(1, ([value]) => rest(value)));
+    table.set(LAST.name, listHandler(1, ([value]) => last(value)));
+    table.set(REVERSE.name, listHandler(1, ([value]) => reverse(value)));
+    table.set(APPEND.name, listHandler(null, (args) => append(...args)));
+    table.set(JOIN.name, listHandler(null, (args) => append(...args)));
+    table.set(RANGE.name, listHandler(null, rangeHandler));
+    table.set(MAP.name, listHandler(2, ([head, value]) => mapList(head, value)));
+    table.set(APPLY.name, listHandler(2, ([head, value]) => applyList(head, value)));
+    table.set(SORT.name, listHandler(1, ([value]) => sortList(value)));
+    table.set(PART.name, listHandler(2, ([value, index]) => part(value, integerArgument(index))));
+    table.set(FLATTEN.name, listHandler(null, flattenHandler));
     this.runtimeTable = table;
     this.runtimeHeld = new Set([...super.holdHeads(), KILL.name, EV.name, SOLVE.name]);
   }
@@ -559,6 +599,43 @@ function solveHandler(_vm: VM, expr: IRApply): IRNode {
 
   const rules = solveLinearSystem(equationsNode.args, variables);
   return rules === null ? expr : app(LIST, rules);
+}
+
+function listHandler(
+  arity: number | null,
+  body: (args: readonly IRNode[]) => IRNode,
+): Handler {
+  return (_vm, expr) => {
+    if (arity !== null && expr.args.length !== arity) return expr;
+    try {
+      return body(expr.args);
+    } catch {
+      return expr;
+    }
+  };
+}
+
+function rangeHandler(args: readonly IRNode[]): IRNode {
+  if (args.length < 1 || args.length > 3) throw new Error("Range takes 1 to 3 arguments");
+  const start = integerArgument(args[0]);
+  const stop = args.length >= 2 ? integerArgument(args[1]) : undefined;
+  const step = args.length >= 3 ? integerArgument(args[2]) : 1;
+  return rangeList(start, stop, step);
+}
+
+function flattenHandler(args: readonly IRNode[]): IRNode {
+  if (args.length < 1 || args.length > 2) throw new Error("Flatten takes 1 or 2 arguments");
+  const depth = args.length === 2 ? integerArgument(args[1]) : 1;
+  return flatten(args[0], depth);
+}
+
+function integerArgument(node: IRNode): number {
+  if (node.kind !== "integer") throw new Error("expected integer argument");
+  const value = Number(node.value);
+  if (!Number.isSafeInteger(value) || BigInt(value) !== node.value) {
+    throw new Error("integer argument is outside the safe integer range");
+  }
+  return value;
 }
 
 function isInequality(node: IRNode): node is IRApply {
