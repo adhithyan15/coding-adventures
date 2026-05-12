@@ -14,7 +14,14 @@ import {
   sym,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
-import { MNewtonError, irToFloat, mnewtonSolve } from "../src/index";
+import {
+  MNEWTON,
+  MNewtonError,
+  buildMNewtonHandlerTable,
+  irToFloat,
+  mnewtonHandler,
+  mnewtonSolve,
+} from "../src/index";
 
 function evalNode(node: IRNode): IRNode {
   if (node.kind !== "apply") return node;
@@ -173,5 +180,45 @@ describe("mnewtonSolve", () => {
   it("solves a sine root near pi", () => {
     const x = sym("x");
     expectClose(solve(app(SIN, [x]), numberNode(3)), Math.PI, 1e-8);
+  });
+});
+
+describe("mnewtonHandler", () => {
+  it("exports a handler table keyed by MNEWTON", () => {
+    const table = buildMNewtonHandlerTable();
+    expect(table.get(MNEWTON.name)).toBe(mnewtonHandler);
+    expect([...table.keys()]).toEqual([MNEWTON.name]);
+  });
+
+  it("solves MNewton(f, x, x0) expressions", () => {
+    const x = sym("x");
+    const expr = app(MNEWTON, [app(SUB, [app(POW, [x, int(2)]), int(2)]), x, numberNode(1.5)]);
+    expectClose(mnewtonHandler(expr, evalNode, diff), Math.sqrt(2), 1e-8);
+  });
+
+  it("accepts an optional numeric tolerance", () => {
+    const x = sym("x");
+    const expr = app(MNEWTON, [app(SUB, [app(POW, [x, int(2)]), int(2)]), x, numberNode(1.5), rational(1, 1000)]);
+    expectClose(mnewtonHandler(expr, evalNode, diff), Math.sqrt(2), 1e-3);
+  });
+
+  it("returns the expression unchanged for malformed calls", () => {
+    const x = sym("x");
+    const f = app(SUB, [x, int(2)]);
+    const wrongHead = app(SUB, [f, x, int(0)]);
+    const wrongArity = app(MNEWTON, [f, x]);
+    const nonSymbolVariable = app(MNEWTON, [f, app(ADD, [x, int(1)]), int(0)]);
+    const symbolicX0 = app(MNEWTON, [f, x, sym("a")]);
+    const symbolicTol = app(MNEWTON, [f, x, int(0), sym("tol")]);
+
+    for (const expr of [wrongHead, wrongArity, nonSymbolVariable, symbolicX0, symbolicTol]) {
+      expect(equals(mnewtonHandler(expr, evalNode, diff), expr)).toBe(true);
+    }
+  });
+
+  it("returns the expression unchanged when Newton hits a zero derivative", () => {
+    const x = sym("x");
+    const expr = app(MNEWTON, [app(SUB, [app(POW, [x, int(2)]), int(1)]), x, int(0)]);
+    expect(equals(mnewtonHandler(expr, evalNode, diff), expr)).toBe(true);
   });
 });
