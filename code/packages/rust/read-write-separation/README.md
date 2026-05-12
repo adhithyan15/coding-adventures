@@ -8,6 +8,8 @@ RWS rule:
 The crate keeps the first implementation intentionally small:
 
 - classify manifest capabilities by `flavor` and `trust`;
+- summarize manifest capability shape by flavor, trust, input/actuation,
+  read/write side, overlap, and justification coverage;
 - apply conservative defaults from `code/specs/read-write-separation.md`;
 - reject manifests that mix untrusted input with actuation; and
 - reject v1 same-resource read/write overlaps for files, vault secrets, and
