@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   `MemoryRecordSummary` read-side classification.
 - `MemoryCatalogSummary` plus `catalog_summary()` for class, lifecycle, and
   review coverage over selected memory records.
+- `MemoryReviewQueueSummary` plus `review_queue_summary()` for compact reason
+  and lifecycle counts over deterministic review candidates.
 
 ## [0.1.0] - 2026-04-18
 
