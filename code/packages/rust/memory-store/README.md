@@ -12,6 +12,7 @@ than a backend-specific index.
 - `MemoryRecord`
 - `MemoryRecordSummary`
 - `MemoryClass`
+- `MemoryLifecycleStatus` plus shared record/summary lifecycle helpers
 - confidence/review updates
 - supersede, expiry, and tombstone transitions
 - lexical search across subject/body/tags, including active-at filtering and
