@@ -10,6 +10,8 @@
   actuation, plus same-resource read/write overlap.
 - Added audit envelope primitives: `Operation<T>`, `OperationRecord`,
   `OperationDecision`, `AuditSink`, `NoopAuditSink`, and `VecAuditSink`.
+- Added `secure_env::read_var` / `write_var` plus backend hooks and test
+  scripting for manifest-checked environment variable access.
 
 ## 0.1.0 — 2026-05-08
 
