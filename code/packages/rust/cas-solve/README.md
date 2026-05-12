@@ -104,6 +104,14 @@ polynomial, and returns interval predicates for degree-four-or-lower
 polynomials. Exact rational roots are preserved where possible; irrational
 boundaries fall back to numeric `Float` nodes.
 
+## Direct transcendental equations
+
+`try_solve_transcendental(eq, variable)` accepts `Equal(lhs, rhs)` nodes or a
+bare expression treated as `expr = 0`. It solves direct `f(linear) = constant`
+forms for `Sin`, `Cos`, `Tan`, `Exp`, `Log`, `Sinh`, `Cosh`, and `Tanh`,
+returning symbolic inverse expressions and periodic families using
+`FreeInteger`.
+
 ## Stack position
 
 ```

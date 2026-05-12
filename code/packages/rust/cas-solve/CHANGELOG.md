@@ -4,6 +4,12 @@
 
 ### Added
 
+- `transcendental` module: `try_solve_transcendental(eq, variable)` — direct
+  `f(linear) = constant` solving for trig, exponential/logarithmic, and
+  hyperbolic functions with symbolic inverse and periodic-family output.
+- Transcendental integration tests for exp/log, trig periodic families,
+  hyperbolic inverses, reversed equations, bare zero-form expressions, and
+  unsupported nested/non-variable cases.
 - `linear_system` module: `solve_linear_system(equations, variables)` — exact
   Gaussian elimination with `Equal(lhs, rhs)` normalization, zero-form
   equations, and `Rule(var, value)` IR output.

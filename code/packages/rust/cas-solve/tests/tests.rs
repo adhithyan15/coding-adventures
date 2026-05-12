@@ -6,11 +6,13 @@
 use cas_solve::frac::Frac;
 use cas_solve::{
     nsolve_fraction_poly, nsolve_poly, roots_to_ir, solve_cubic, solve_linear, solve_linear_system,
-    solve_quadratic, solve_quartic, try_solve_inequality, Complex, SolveResult,
+    solve_quadratic, solve_quartic, try_solve_inequality, try_solve_transcendental, Complex,
+    SolveResult, FREE_INTEGER,
 };
 use symbolic_ir::{
-    apply, int, rat, sym, IRNode, ADD, AND, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, MUL,
-    POW, RULE, SUB,
+    apply, int, rat, sym, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ATAN, ATANH, COS, COSH, DIV,
+    EQUAL, EXP, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, LOG, MUL, NEG, POW, RULE, SIN, SINH, SUB,
+    TAN, TANH,
 };
 
 fn frac(n: i64, d: i64) -> Frac {
@@ -733,4 +735,138 @@ fn inequality_numeric_boundaries_and_rejects_non_polynomials() {
     )
     .is_none());
     assert!(try_solve_inequality(&eq(x.clone(), int(0)), &x).is_none());
+}
+
+// ---------------------------------------------------------------------------
+// try_solve_transcendental
+// ---------------------------------------------------------------------------
+
+#[test]
+fn transcendental_solves_exp_and_log_linear_forms() {
+    let x = sym("x");
+    expect_nodes(
+        try_solve_transcendental(&eq(apply(sym(EXP), vec![x.clone()]), int(2)), &x),
+        vec![apply(sym(LOG), vec![int(2)])],
+    );
+    expect_nodes(
+        try_solve_transcendental(
+            &eq(
+                apply(
+                    sym(LOG),
+                    vec![add(vec![mul(vec![int(2), x.clone()]), int(3)])],
+                ),
+                int(5),
+            ),
+            &x,
+        ),
+        vec![apply(
+            sym(DIV),
+            vec![sub(apply(sym(EXP), vec![int(5)]), int(3)), int(2)],
+        )],
+    );
+}
+
+#[test]
+fn transcendental_solves_trig_periodic_families() {
+    let x = sym("x");
+    let two_pi_k = apply(
+        sym(MUL),
+        vec![int(2), apply(sym(MUL), vec![sym("%pi"), sym(FREE_INTEGER)])],
+    );
+
+    expect_nodes(
+        try_solve_transcendental(&eq(apply(sym(SIN), vec![x.clone()]), int(0)), &x),
+        vec![
+            add(vec![apply(sym(ASIN), vec![int(0)]), two_pi_k.clone()]),
+            add(vec![
+                sub(sym("%pi"), apply(sym(ASIN), vec![int(0)])),
+                two_pi_k.clone(),
+            ]),
+        ],
+    );
+
+    expect_nodes(
+        try_solve_transcendental(&eq(apply(sym(COS), vec![x.clone()]), int(1)), &x),
+        vec![
+            add(vec![apply(sym(ACOS), vec![int(1)]), two_pi_k.clone()]),
+            add(vec![
+                apply(sym(NEG), vec![apply(sym(ACOS), vec![int(1)])]),
+                two_pi_k,
+            ]),
+        ],
+    );
+
+    expect_nodes(
+        try_solve_transcendental(
+            &eq(
+                apply(
+                    sym(TAN),
+                    vec![add(vec![mul(vec![int(2), x.clone()]), int(1)])],
+                ),
+                int(3),
+            ),
+            &x,
+        ),
+        vec![apply(
+            sym(DIV),
+            vec![
+                sub(
+                    add(vec![
+                        apply(sym(ATAN), vec![int(3)]),
+                        apply(sym(MUL), vec![sym("%pi"), sym(FREE_INTEGER)]),
+                    ]),
+                    int(1),
+                ),
+                int(2),
+            ],
+        )],
+    );
+}
+
+#[test]
+fn transcendental_solves_hyperbolic_forms() {
+    let x = sym("x");
+    expect_nodes(
+        try_solve_transcendental(&eq(apply(sym(SINH), vec![x.clone()]), int(2)), &x),
+        vec![apply(sym(ASINH), vec![int(2)])],
+    );
+    expect_nodes(
+        try_solve_transcendental(
+            &eq(
+                apply(sym(TANH), vec![add(vec![x.clone(), int(4)])]),
+                rat(1, 2),
+            ),
+            &x,
+        ),
+        vec![sub(apply(sym(ATANH), vec![rat(1, 2)]), int(4))],
+    );
+    expect_nodes(
+        try_solve_transcendental(&eq(apply(sym(COSH), vec![x.clone()]), int(3)), &x),
+        vec![
+            apply(sym(ACOSH), vec![int(3)]),
+            apply(sym(NEG), vec![apply(sym(ACOSH), vec![int(3)])]),
+        ],
+    );
+}
+
+#[test]
+fn transcendental_accepts_reversed_and_bare_expressions_and_rejects_non_direct_forms() {
+    let x = sym("x");
+    assert_eq!(
+        try_solve_transcendental(&apply(sym(EXP), vec![x.clone()]), &x),
+        Some(vec![apply(sym(LOG), vec![int(0)])])
+    );
+    assert_eq!(
+        try_solve_transcendental(&eq(int(2), apply(sym(EXP), vec![x.clone()])), &x),
+        Some(vec![apply(sym(LOG), vec![int(2)])])
+    );
+    assert!(try_solve_transcendental(&eq(apply(sym(SIN), vec![sym("y")]), int(0)), &x).is_none());
+    assert!(try_solve_transcendental(
+        &eq(
+            apply(sym(SIN), vec![apply(sym(SIN), vec![x.clone()])]),
+            int(0)
+        ),
+        &x
+    )
+    .is_none());
 }
