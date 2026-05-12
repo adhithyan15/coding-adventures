@@ -381,6 +381,11 @@ impl RuntimeEventBus {
         entries
     }
 
+    pub fn event_log_summary(&self, query: &RuntimeEventQuery) -> RuntimeEventLogSummary {
+        let entries = self.query_events(query);
+        RuntimeEventLogSummary::from_entries(entries.iter().copied())
+    }
+
     pub fn subscription_snapshots(&self) -> Vec<RuntimeSubscriptionSnapshot> {
         self.query_subscriptions(&RuntimeSubscriptionQuery::new())
     }
@@ -678,6 +683,93 @@ pub struct RuntimeEventLogEntry<'a> {
     pub sequence: u64,
     pub next_checkpoint: RuntimeEventCheckpoint,
     pub event: &'a RuntimeEvent,
+}
+
+/// Compact count view over a selected runtime event-log window.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeEventLogSummary {
+    pub total_events: usize,
+    pub device_events: usize,
+    pub command_results: usize,
+    pub bridge_health_events: usize,
+    pub state_expired_events: usize,
+    pub desired_state_drift_events: usize,
+    pub worker_restart_events: usize,
+    pub first_sequence: Option<u64>,
+    pub latest_sequence: Option<u64>,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+}
+
+impl Default for RuntimeEventLogSummary {
+    fn default() -> Self {
+        Self {
+            total_events: 0,
+            device_events: 0,
+            command_results: 0,
+            bridge_health_events: 0,
+            state_expired_events: 0,
+            desired_state_drift_events: 0,
+            worker_restart_events: 0,
+            first_sequence: None,
+            latest_sequence: None,
+            next_checkpoint: RuntimeEventCheckpoint::start(),
+        }
+    }
+}
+
+impl RuntimeEventLogSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_entries<'a, I>(entries: I) -> Self
+    where
+        I: IntoIterator<Item = RuntimeEventLogEntry<'a>>,
+    {
+        let mut summary = Self::empty();
+        for entry in entries {
+            summary.total_events += 1;
+            summary.first_sequence = Some(
+                summary
+                    .first_sequence
+                    .map(|sequence| sequence.min(entry.sequence))
+                    .unwrap_or(entry.sequence),
+            );
+            summary.latest_sequence = Some(
+                summary
+                    .latest_sequence
+                    .map(|sequence| sequence.max(entry.sequence))
+                    .unwrap_or(entry.sequence),
+            );
+            summary.next_checkpoint = RuntimeEventCheckpoint::from_next_sequence(
+                summary
+                    .latest_sequence
+                    .map(|sequence| sequence.saturating_add(1))
+                    .unwrap_or(0),
+            );
+            match entry.event {
+                RuntimeEvent::Device(_) => summary.device_events += 1,
+                RuntimeEvent::CommandResult(_) => summary.command_results += 1,
+                RuntimeEvent::BridgeHealth { .. } => summary.bridge_health_events += 1,
+                RuntimeEvent::StateExpired { .. } => summary.state_expired_events += 1,
+                RuntimeEvent::DesiredStateDrift { .. } => summary.desired_state_drift_events += 1,
+                RuntimeEvent::WorkerNeedsRestart { .. } => summary.worker_restart_events += 1,
+            }
+        }
+        summary
+    }
+
+    pub fn has_events(&self) -> bool {
+        self.total_events > 0
+    }
+
+    pub fn has_command_results(&self) -> bool {
+        self.command_results > 0
+    }
+
+    pub fn has_supervision_events(&self) -> bool {
+        self.desired_state_drift_events > 0 || self.worker_restart_events > 0
+    }
 }
 
 /// Read-side query for the runtime event log.
@@ -3226,6 +3318,35 @@ mod tests {
         }
     }
 
+    fn device_runtime_event(event_id: &str, at_ms: u64) -> RuntimeEvent {
+        RuntimeEvent::Device(DeviceEvent {
+            event_id: EventId::trusted(event_id),
+            bridge_id: BridgeId::trusted("bridge-1"),
+            device_id: Some(DeviceId::trusted("device-1")),
+            entity_id: Some(EntityId::trusted("entity-1")),
+            observed_at_ms: at_ms,
+            received_at_ms: at_ms,
+            event_type: DeviceEventType::Updated,
+            state_delta: Some(StateDelta {
+                capability_id: CapabilityId::trusted("light.on_off"),
+                value: Value::Bool(true),
+            }),
+            raw_ref: None,
+            correlation_id: None,
+            metadata: Vec::new(),
+        })
+    }
+
+    fn command_result_runtime_event(command_id: &str) -> RuntimeEvent {
+        RuntimeEvent::CommandResult(CommandResult {
+            command_id: CommandId::trusted(command_id),
+            status: CommandStatus::Accepted,
+            bridge_id: BridgeId::trusted("bridge-1"),
+            correlation_id: CorrelationId::trusted("corr-1"),
+            message: None,
+        })
+    }
+
     #[test]
     fn event_bus_replays_from_checkpoint_and_continues_delivery() {
         let mut bus = RuntimeEventBus::new();
@@ -3317,6 +3438,72 @@ mod tests {
         );
         assert_eq!(backlogs[0].queued_events, 2);
         assert!(backlogs[0].has_backlog());
+    }
+
+    #[test]
+    fn event_log_summary_counts_selected_event_kinds() {
+        let mut bus = RuntimeEventBus::new();
+        bus.publish(device_runtime_event("device-event-1", 1_000));
+        bus.publish(command_result_runtime_event("cmd-1"));
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_002));
+        bus.publish(RuntimeEvent::StateExpired {
+            entity_id: EntityId::trusted("entity-1"),
+            expired_at_ms: 1_003,
+        });
+        bus.publish(RuntimeEvent::DesiredStateDrift {
+            bridge_id: BridgeId::trusted("bridge-1"),
+            entity_id: EntityId::trusted("entity-1"),
+            capability_id: CapabilityId::trusted("light.on_off"),
+            reason: ReconciliationReason::Drifted,
+            detected_at_ms: 1_004,
+        });
+        bus.publish(RuntimeEvent::WorkerNeedsRestart {
+            bridge_id: BridgeId::trusted("bridge-1"),
+            integration_id: IntegrationId::trusted("hue"),
+            overdue_at_ms: 1_005,
+        });
+
+        let summary = bus.event_log_summary(&RuntimeEventQuery::new());
+
+        assert_eq!(
+            summary,
+            RuntimeEventLogSummary {
+                total_events: 6,
+                device_events: 1,
+                command_results: 1,
+                bridge_health_events: 1,
+                state_expired_events: 1,
+                desired_state_drift_events: 1,
+                worker_restart_events: 1,
+                first_sequence: Some(0),
+                latest_sequence: Some(5),
+                next_checkpoint: RuntimeEventCheckpoint::from_next_sequence(6),
+            }
+        );
+        assert!(summary.has_events());
+        assert!(summary.has_command_results());
+        assert!(summary.has_supervision_events());
+
+        let newest_supervision = bus.event_log_summary(
+            &RuntimeEventQuery::new()
+                .matching(RuntimeEventFilter::Supervision)
+                .sorted_by(RuntimeEventSort::SequenceDesc)
+                .with_limit(1),
+        );
+        assert_eq!(newest_supervision.total_events, 1);
+        assert_eq!(newest_supervision.worker_restart_events, 1);
+        assert_eq!(newest_supervision.first_sequence, Some(5));
+        assert_eq!(newest_supervision.latest_sequence, Some(5));
+        assert_eq!(
+            newest_supervision.next_checkpoint,
+            RuntimeEventCheckpoint::from_next_sequence(6)
+        );
+
+        let empty = bus.event_log_summary(&RuntimeEventQuery::new().with_limit(0));
+        assert_eq!(empty, RuntimeEventLogSummary::empty());
+        assert!(!empty.has_events());
+        assert!(!empty.has_command_results());
+        assert!(!empty.has_supervision_events());
     }
 
     #[test]

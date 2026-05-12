@@ -14,6 +14,7 @@ Included surfaces:
   position before receiving live updates
 - read-side event-log and subscription backlog queries for dashboards, tools,
   and tests that need bounded runtime inspection
+- compact event-log summaries for selected replay windows and event kinds
 - bounded event-bus delivery peeking and draining for subscription polling
 - explicit event-bus unsubscribe lifecycle that returns undelivered events and
   removes pending delivery state
