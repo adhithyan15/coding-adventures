@@ -368,6 +368,11 @@ impl StoragePage {
             next_cursor: self.next_cursor.clone(),
         }
     }
+
+    /// Return aggregate inventory facts for the records in this page.
+    pub fn inventory_summary(&self) -> StorageRecordInventorySummary {
+        StorageRecordInventorySummary::from_records(&self.records)
+    }
 }
 
 /// One page of compact storage record summaries.
@@ -411,6 +416,11 @@ impl StorageSummaryPage {
             next_cursor: self.next_cursor.clone(),
         }
     }
+
+    /// Return aggregate inventory facts for this summary page.
+    pub fn inventory_summary(&self) -> StorageRecordInventorySummary {
+        StorageRecordInventorySummary::from_summary_page(self)
+    }
 }
 
 /// Aggregate read-side facts for one compact summary page.
@@ -439,6 +449,122 @@ impl StorageSummaryPageOverview {
 
     pub fn has_metadata(&self) -> bool {
         self.total_metadata_keys > 0
+    }
+}
+
+/// Aggregate read-side inventory facts over observed storage records.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct StorageRecordInventorySummary {
+    pub total_records: usize,
+    pub total_body_len: usize,
+    pub total_metadata_keys: usize,
+    pub records_with_metadata: usize,
+    pub empty_body_records: usize,
+    pub json_records: usize,
+    pub text_records: usize,
+    pub opaque_content_type_records: usize,
+    pub earliest_created_at: Option<TimestampMs>,
+    pub latest_updated_at: Option<TimestampMs>,
+    pub lowest_key: Option<String>,
+    pub highest_key: Option<String>,
+    pub namespace_counts: BTreeMap<String, usize>,
+}
+
+impl StorageRecordInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(records: I) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageRecord>,
+    {
+        let mut summary = Self::empty();
+        for record in records {
+            summary.record_summary(&record.summary());
+        }
+        summary
+    }
+
+    pub fn from_summary_page(page: &StorageSummaryPage) -> Self {
+        Self::from_summaries(&page.records)
+    }
+
+    pub fn from_summaries<'a, I>(summaries: I) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageRecordSummary>,
+    {
+        let mut summary = Self::empty();
+        for record_summary in summaries {
+            summary.record_summary(record_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, record_summary: &StorageRecordSummary) {
+        self.total_records += 1;
+        self.total_body_len += record_summary.body_len;
+        self.total_metadata_keys += record_summary.metadata_key_count;
+
+        if record_summary.metadata_key_count > 0 {
+            self.records_with_metadata += 1;
+        }
+        if record_summary.body_len == 0 {
+            self.empty_body_records += 1;
+        }
+
+        if is_json_content_type(&record_summary.content_type) {
+            self.json_records += 1;
+        } else if is_text_content_type(&record_summary.content_type) {
+            self.text_records += 1;
+        } else {
+            self.opaque_content_type_records += 1;
+        }
+
+        self.earliest_created_at = Some(
+            self.earliest_created_at
+                .map_or(record_summary.created_at, |current| {
+                    current.min(record_summary.created_at)
+                }),
+        );
+        self.latest_updated_at = Some(
+            self.latest_updated_at
+                .map_or(record_summary.updated_at, |current| {
+                    current.max(record_summary.updated_at)
+                }),
+        );
+        self.lowest_key = Some(self.lowest_key.as_ref().map_or_else(
+            || record_summary.key.clone(),
+            |current| current.min(&record_summary.key).clone(),
+        ));
+        self.highest_key = Some(self.highest_key.as_ref().map_or_else(
+            || record_summary.key.clone(),
+            |current| current.max(&record_summary.key).clone(),
+        ));
+        *self
+            .namespace_counts
+            .entry(record_summary.namespace.clone())
+            .or_insert(0) += 1;
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_records == 0
+    }
+
+    pub fn has_metadata(&self) -> bool {
+        self.records_with_metadata > 0
+    }
+
+    pub fn has_empty_bodies(&self) -> bool {
+        self.empty_body_records > 0
+    }
+
+    pub fn namespace_count(&self) -> usize {
+        self.namespace_counts.len()
+    }
+
+    pub fn spans_multiple_namespaces(&self) -> bool {
+        self.namespace_count() > 1
     }
 }
 
@@ -1265,6 +1391,20 @@ fn metadata_object_len(metadata: &StorageMetadata) -> usize {
     }
 }
 
+fn is_json_content_type(value: &str) -> bool {
+    let media_type = media_type(value);
+    media_type.eq_ignore_ascii_case("application/json")
+        || media_type.to_ascii_lowercase().ends_with("+json")
+}
+
+fn is_text_content_type(value: &str) -> bool {
+    media_type(value).to_ascii_lowercase().starts_with("text/")
+}
+
+fn media_type(value: &str) -> &str {
+    value.split(';').next().unwrap_or(value).trim()
+}
+
 fn validate_lease_name(value: &str) -> Result<(), StorageError> {
     validate_path_like("lease_name", value)
 }
@@ -1435,6 +1575,70 @@ mod tests {
         assert!(overview.spans_multiple_records());
         assert!(overview.has_metadata());
         assert!(StorageSummaryPage::empty().overview().is_empty());
+    }
+
+    #[test]
+    fn storage_record_inventory_summary_rolls_up_body_free_records() {
+        let page = StoragePage {
+            records: vec![
+                StorageRecord::new(
+                    "context",
+                    "entries/beta.json",
+                    Revision::new("r1").unwrap(),
+                    "application/vnd.demo+json",
+                    metadata(),
+                    b"beta".to_vec(),
+                    20,
+                    30,
+                )
+                .unwrap(),
+                StorageRecord::new(
+                    "context",
+                    "entries/alpha.txt",
+                    Revision::new("r2").unwrap(),
+                    "text/plain; charset=utf-8",
+                    JsonValue::Object(vec![]),
+                    Vec::new(),
+                    10,
+                    40,
+                )
+                .unwrap(),
+                StorageRecord::new(
+                    "artifacts",
+                    "blobs/data.bin",
+                    Revision::new("r3").unwrap(),
+                    "application/octet-stream",
+                    JsonValue::Object(vec![]),
+                    vec![0, 1],
+                    15,
+                    25,
+                )
+                .unwrap(),
+            ],
+            next_cursor: None,
+        };
+
+        let inventory = page.inventory_summary();
+        assert_eq!(inventory, page.summary_page().inventory_summary());
+        assert_eq!(inventory.total_records, 3);
+        assert_eq!(inventory.total_body_len, 6);
+        assert_eq!(inventory.total_metadata_keys, 1);
+        assert_eq!(inventory.records_with_metadata, 1);
+        assert_eq!(inventory.empty_body_records, 1);
+        assert_eq!(inventory.json_records, 1);
+        assert_eq!(inventory.text_records, 1);
+        assert_eq!(inventory.opaque_content_type_records, 1);
+        assert_eq!(inventory.earliest_created_at, Some(10));
+        assert_eq!(inventory.latest_updated_at, Some(40));
+        assert_eq!(inventory.lowest_key.as_deref(), Some("blobs/data.bin"));
+        assert_eq!(inventory.highest_key.as_deref(), Some("entries/beta.json"));
+        assert_eq!(inventory.namespace_counts.get("context"), Some(&2));
+        assert_eq!(inventory.namespace_counts.get("artifacts"), Some(&1));
+        assert_eq!(inventory.namespace_count(), 2);
+        assert!(inventory.spans_multiple_namespaces());
+        assert!(inventory.has_metadata());
+        assert!(inventory.has_empty_bodies());
+        assert!(StorageRecordInventorySummary::empty().is_empty());
     }
 
     #[test]

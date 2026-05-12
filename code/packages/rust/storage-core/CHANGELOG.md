@@ -13,6 +13,9 @@ All notable changes to this package will be documented in this file.
   on full record bodies.
 - `StorageSummaryPageOverview` for aggregate read-side counts, page-boundary
   keys, and pagination state over body-free summary pages.
+- `StorageRecordInventorySummary` for aggregate namespace, body, metadata,
+  content-family, timestamp, and key-boundary facts over body-free record
+  summaries.
 - `StorageLeaseSummary` and `StorageLeaseInventorySummary` for read-side
   advisory lease telemetry and expiry-window checks without exposing lease
   tokens.
