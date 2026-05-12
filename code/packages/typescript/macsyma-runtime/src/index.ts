@@ -1,13 +1,201 @@
-import { DISPLAY, SUPPRESS, compileMacsyma } from "@coding-adventures/macsyma-compiler";
+import { compileMacsyma } from "@coding-adventures/macsyma-compiler";
 import {
+  ACOS,
+  ACOSH,
+  ASIN,
+  ASINH,
+  ATAN,
+  ATANH,
+  COS,
+  COSH,
+  D,
+  EXP,
+  FACTOR,
+  FALSE,
+  INTEGRATE,
+  LOG,
+  SIN,
+  SINH,
+  SOLVE,
+  SQRT,
+  SUBST,
+  SUM,
+  TAN,
+  TANH,
+  TRUE,
   app,
   equals,
+  numberNode,
   sym,
   toDisplayString,
   type IRApply,
   type IRNode,
+  type IRSymbol,
 } from "@coding-adventures/symbolic-ir";
-import { SymbolicBackend, VM } from "@coding-adventures/symbolic-vm";
+import { SymbolicBackend, VM, type Handler } from "@coding-adventures/symbolic-vm";
+
+export const DISPLAY = sym("Display");
+export const SUPPRESS = sym("Suppress");
+export const KILL = sym("Kill");
+export const EV = sym("Ev");
+export const ALL_SYMBOL = sym("all");
+
+export const EXPAND = sym("Expand");
+export const RAT_SIMPLIFY = sym("RatSimplify");
+export const TRIG_SIMPLIFY = sym("TrigSimplify");
+export const FLOAT_FUNC = sym("Float");
+
+export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string, IRSymbol>([
+  ["diff", D],
+  ["integrate", INTEGRATE],
+  ["sin", SIN],
+  ["cos", COS],
+  ["tan", TAN],
+  ["asin", ASIN],
+  ["acos", ACOS],
+  ["atan", ATAN],
+  ["sinh", SINH],
+  ["cosh", COSH],
+  ["tanh", TANH],
+  ["asinh", ASINH],
+  ["acosh", ACOSH],
+  ["atanh", ATANH],
+  ["coth", sym("Coth")],
+  ["sech", sym("Sech")],
+  ["csch", sym("Csch")],
+  ["log", LOG],
+  ["exp", EXP],
+  ["sqrt", SQRT],
+  ["sum", SUM],
+  ["product", sym("Product")],
+  ["subst", SUBST],
+  ["simplify", sym("Simplify")],
+  ["expand", EXPAND],
+  ["factor", FACTOR],
+  ["solve", SOLVE],
+  ["nsolve", sym("NSolve")],
+  ["linsolve", SOLVE],
+  ["taylor", sym("Taylor")],
+  ["limit", sym("Limit")],
+  ["float", FLOAT_FUNC],
+  ["length", sym("Length")],
+  ["first", sym("First")],
+  ["rest", sym("Rest")],
+  ["last", sym("Last")],
+  ["append", sym("Append")],
+  ["reverse", sym("Reverse")],
+  ["makelist", sym("MakeList")],
+  ["map", sym("Map")],
+  ["apply", sym("Apply")],
+  ["sublist", sym("Select")],
+  ["sort", sym("Sort")],
+  ["part", sym("Part")],
+  ["flatten", sym("Flatten")],
+  ["join", sym("Join")],
+  ["matrix", sym("Matrix")],
+  ["transpose", sym("Transpose")],
+  ["determinant", sym("Determinant")],
+  ["invert", sym("Inverse")],
+  ["dot", sym("Dot")],
+  ["mattrace", sym("Trace")],
+  ["matrix_size", sym("Dimensions")],
+  ["ident", sym("IdentityMatrix")],
+  ["zeromatrix", sym("ZeroMatrix")],
+  ["rank", sym("Rank")],
+  ["rowreduce", sym("RowReduce")],
+  ["gcd", sym("Gcd")],
+  ["lcm", sym("Lcm")],
+  ["mod", sym("Mod")],
+  ["floor", sym("Floor")],
+  ["ceiling", sym("Ceiling")],
+  ["abs", sym("Abs")],
+  ["sign", sym("Sign")],
+  ["lhs", sym("Lhs")],
+  ["rhs", sym("Rhs")],
+  ["at", sym("At")],
+  ["primep", sym("IsPrime")],
+  ["is_prime", sym("IsPrime")],
+  ["next_prime", sym("NextPrime")],
+  ["prev_prime", sym("PrevPrime")],
+  ["ifactor", sym("FactorInteger")],
+  ["divisors", sym("Divisors")],
+  ["totient", sym("Totient")],
+  ["moebius", sym("MoebiusMu")],
+  ["jacobi", sym("JacobiSymbol")],
+  ["chinese", sym("ChineseRemainder")],
+  ["numdigits", sym("IntegerLength")],
+  ["radcan", sym("Radcan")],
+  ["logcontract", sym("LogContract")],
+  ["logexpand", sym("LogExpand")],
+  ["exponentialize", sym("Exponentialize")],
+  ["demoivre", sym("DeMoivre")],
+  ["cbrt", sym("Cbrt")],
+  ["trigsimp", TRIG_SIMPLIFY],
+  ["trigexpand", sym("TrigExpand")],
+  ["trigreduce", sym("TrigReduce")],
+  ["collect", sym("Collect")],
+  ["together", sym("Together")],
+  ["ratsimp", RAT_SIMPLIFY],
+  ["partfrac", sym("Apart")],
+  ["%i", sym("ImaginaryUnit")],
+  ["realpart", sym("Re")],
+  ["imagpart", sym("Im")],
+  ["conjugate", sym("Conjugate")],
+  ["cabs", sym("Abs")],
+  ["carg", sym("Arg")],
+  ["rectform", sym("RectForm")],
+  ["polarform", sym("PolarForm")],
+  ["laplace", sym("Laplace")],
+  ["ilt", sym("ILT")],
+  ["delta", sym("DiracDelta")],
+  ["hstep", sym("UnitStep")],
+  ["unit_step", sym("UnitStep")],
+  ["fourier", sym("Fourier")],
+  ["ifourier", sym("IFourier")],
+  ["ode2", sym("Ode2")],
+  ["algfactor", sym("AlgFactor")],
+  ["groebner", sym("Groebner")],
+  ["poly_reduce", sym("PolyReduce")],
+  ["ideal_solve", sym("IdealSolve")],
+  ["kill", KILL],
+  ["ev", EV],
+  ["block", sym("Block")],
+  ["assume", sym("Assume")],
+  ["forget", sym("Forget")],
+  ["is", sym("Is")],
+  ["matchdeclare", sym("MatchDeclare")],
+  ["defrule", sym("DefRule")],
+  ["apply1", sym("Apply1")],
+  ["apply2", sym("Apply2")],
+  ["tellsimp", sym("TellSimp")],
+  ["erf", sym("Erf")],
+  ["erfc", sym("Erfc")],
+  ["erfi", sym("Erfi")],
+  ["si", sym("Si")],
+  ["ci", sym("Ci")],
+  ["shi", sym("Shi")],
+  ["chi", sym("Chi")],
+  ["li2", sym("Li2")],
+  ["gamma", sym("Gamma")],
+  ["beta", sym("Beta")],
+  ["fresnel_s", sym("FresnelS")],
+  ["fresnel_c", sym("FresnelC")],
+  ["lambert_w", sym("LambertW")],
+]);
+
+export type CompilerNameTableTarget =
+  | Map<string, IRSymbol>
+  | { [name: string]: IRSymbol | undefined };
+
+export function extendCompilerNameTable(target: CompilerNameTableTarget): void {
+  for (const [name, head] of MACSYMA_NAME_TABLE) {
+    if (target instanceof Map) {
+      target.set(name, head);
+    } else {
+      target[name] = head;
+    }
+  }
+}
 
 export interface EvalResult {
   readonly inputIndex: number;
@@ -73,17 +261,59 @@ export class History {
 }
 
 export class MacsymaBackend extends SymbolicBackend {
+  numer = false;
+  private readonly runtimeTable: ReadonlyMap<string, Handler>;
+  private readonly runtimeHeld: ReadonlySet<string>;
+
   constructor(private readonly history: History) {
     super();
-    this.bind("%pi", { kind: "float", value: Math.PI });
-    this.bind("%e", { kind: "float", value: Math.E });
-    this.bind("%i", sym("ImaginaryUnit"));
+    this.bindMacsymaConstants();
+
+    const table = new Map(super.handlers());
+    table.set(DISPLAY.name, displayHandler);
+    table.set(SUPPRESS.name, suppressHandler);
+    table.set(KILL.name, makeKillHandler(this));
+    table.set(EV.name, makeEvHandler());
+    this.runtimeTable = table;
+    this.runtimeHeld = new Set([...super.holdHeads(), KILL.name, EV.name]);
   }
 
   override lookup(name: string): IRNode | undefined {
     const envValue = super.lookup(name);
     if (envValue !== undefined) return envValue;
     return this.history.resolveHistorySymbol(name);
+  }
+
+  override handlers(): ReadonlyMap<string, Handler> {
+    return this.runtimeTable;
+  }
+
+  override holdHeads(): ReadonlySet<string> {
+    return this.runtimeHeld;
+  }
+
+  resetEnvironment(): void {
+    this.env.clear();
+    this.env.set(TRUE.name, TRUE);
+    this.env.set(FALSE.name, FALSE);
+    this.bindMacsymaConstants();
+    this.history.reset();
+  }
+
+  withNumer<T>(body: () => T): T {
+    const previous = this.numer;
+    this.numer = true;
+    try {
+      return body();
+    } finally {
+      this.numer = previous;
+    }
+  }
+
+  private bindMacsymaConstants(): void {
+    this.bind("%pi", numberNode(Math.PI));
+    this.bind("%e", numberNode(Math.E));
+    this.bind("%i", sym("ImaginaryUnit"));
   }
 }
 
@@ -101,7 +331,7 @@ export class MacsymaSession {
   }
 
   evalStatements(statements: readonly IRNode[]): EvalResult[] {
-    return statements.map((statement) => this.evalStatement(statement));
+    return statements.map((statement) => this.evalStatement(canonicalizeRuntimeNames(statement)));
   }
 
   evalJson(source: string): string {
@@ -121,6 +351,9 @@ export class MacsymaSession {
     const inputIndex = this.sessionHistory.recordInput(input);
     const output = this.vm.eval(input);
     const outputIndex = this.sessionHistory.recordOutput(output);
+    if (isKillAll(input)) {
+      this.sessionHistory.reset();
+    }
     return { inputIndex, outputIndex, input, output, display };
   }
 }
@@ -233,6 +466,99 @@ function unwrapDisplay(statement: IRNode): readonly [IRNode, boolean] {
   if (equals(statement.head, DISPLAY)) return [statement.args[0], true];
   if (equals(statement.head, SUPPRESS)) return [statement.args[0], false];
   return [statement, true];
+}
+
+function canonicalizeRuntimeNames(node: IRNode): IRNode {
+  if (node.kind !== "apply") return node;
+  const head = canonicalCallHead(node.head);
+  return app(head, node.args.map(canonicalizeRuntimeNames));
+}
+
+function canonicalCallHead(head: IRNode): IRNode {
+  if (head.kind !== "symbol") return canonicalizeRuntimeNames(head);
+  return MACSYMA_NAME_TABLE.get(head.name) ?? head;
+}
+
+function displayHandler(_vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 1) throw new Error(`Display takes 1 arg, got ${expr.args.length}`);
+  return expr.args[0];
+}
+
+function suppressHandler(_vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 1) throw new Error(`Suppress takes 1 arg, got ${expr.args.length}`);
+  return expr.args[0];
+}
+
+function makeKillHandler(backend: MacsymaBackend): Handler {
+  return (_vm, expr) => {
+    for (const arg of expr.args) {
+      if (arg.kind !== "symbol") continue;
+      if (arg.name === ALL_SYMBOL.name) {
+        backend.resetEnvironment();
+      } else {
+        backend.unbind(arg.name);
+      }
+    }
+    return sym("done");
+  };
+}
+
+function makeEvHandler(): Handler {
+  return (vm, expr) => {
+    if (expr.args.length === 0) return expr;
+
+    const flags = new Set(
+      expr.args
+        .slice(1)
+        .filter((arg): arg is IRSymbol => arg.kind === "symbol")
+        .map((arg) => arg.name),
+    );
+    const backend = vm.backend;
+    let result = backend instanceof MacsymaBackend
+      ? backend.withNumer(() => vm.eval(expr.args[0]))
+      : vm.eval(expr.args[0]);
+
+    if (flags.has("expand")) result = evalSupportedFlag(vm, result, EXPAND);
+    if (flags.has("factor")) result = evalSupportedFlag(vm, result, FACTOR);
+    if (flags.has("ratsimp")) result = evalSupportedFlag(vm, result, RAT_SIMPLIFY);
+    if (flags.has("trigsimp")) result = evalSupportedFlag(vm, result, TRIG_SIMPLIFY);
+    if (flags.has("numer") || flags.has("float")) result = numerFold(result);
+
+    return result;
+  };
+}
+
+function evalSupportedFlag(vm: VM, result: IRNode, head: IRSymbol): IRNode {
+  if (!vm.backend.handlers().has(head.name)) return result;
+  try {
+    return vm.eval(app(head, [result]));
+  } catch {
+    return result;
+  }
+}
+
+function numerFold(node: IRNode): IRNode {
+  switch (node.kind) {
+    case "integer":
+      return numberNode(Number(node.value));
+    case "rational":
+      return numberNode(Number(node.numer) / Number(node.denom));
+    case "apply": {
+      const args = node.args.map((arg, index) => {
+        if (equals(node.head, sym("Pow")) && index === 1) return arg;
+        return numerFold(arg);
+      });
+      return app(node.head, args);
+    }
+    default:
+      return node;
+  }
+}
+
+function isKillAll(input: IRNode): boolean {
+  return input.kind === "apply"
+    && equals(input.head, KILL)
+    && input.args.some((arg) => arg.kind === "symbol" && arg.name === ALL_SYMBOL.name);
 }
 
 function integerIndex(value: number): boolean {
