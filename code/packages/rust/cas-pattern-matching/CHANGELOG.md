@@ -1,5 +1,16 @@
 # Changelog — cas-pattern-matching (Rust)
 
+## Unreleased
+
+### Added
+
+- `MatchDeclareContext` with declare / forget / query APIs and Python-compatible
+  predicate-to-`Blank` constraint compilation.
+- `RuleStore` for named compiled rules used by `defrule` / `apply1` / `apply2`
+  style flows.
+- Focused tests for match declarations, predicate constraints, nested pattern
+  compilation, end-to-end rewrite behavior, and rule-store operations.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

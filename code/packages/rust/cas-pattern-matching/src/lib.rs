@@ -31,11 +31,15 @@
 //! ```
 
 pub mod bindings;
+pub mod defrule_engine;
+pub mod matchdeclare;
 pub mod matcher;
 pub mod nodes;
 pub mod rewriter;
 
 pub use bindings::Bindings;
+pub use defrule_engine::RuleStore;
+pub use matchdeclare::MatchDeclareContext;
 pub use matcher::match_pattern;
 pub use nodes::{blank, blank_typed, named, rule, rule_delayed};
 pub use rewriter::{apply_rule, rewrite, RewriteCycleError};

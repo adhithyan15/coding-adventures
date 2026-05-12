@@ -44,6 +44,29 @@ let expr = apply(sym(ADD), vec![apply(sym(ADD), vec![sym("z"), int(0)]), int(0)]
 assert_eq!(rewrite(expr, &[r], 100).unwrap(), sym("z"));
 ```
 
+## Match declarations and named rules
+
+`MatchDeclareContext` ports the MACSYMA `matchdeclare` layer.  It records
+which symbols are pattern variables, maps predicate tags such as `integerp`
+and `stringp` to `Blank(T)` constraints, and compiles raw rule patterns into
+matcher-ready `Pattern(name, Blank(...))` nodes.
+
+```rust
+use cas_pattern_matching::{rule, MatchDeclareContext, RuleStore};
+use symbolic_ir::{apply, int, sym, ADD};
+
+let mut ctx = MatchDeclareContext::new();
+ctx.declare("n", "integerp");
+
+let lhs = ctx.compile_pattern(&apply(sym(ADD), vec![sym("n"), sym("n")]));
+let rhs = apply(sym("Mul"), vec![int(2), ctx.compile_pattern(&sym("n"))]);
+let r = rule(lhs, rhs);
+
+let mut rules = RuleStore::new();
+rules.store("double", r);
+assert!(rules.contains("double"));
+```
+
 ## Note on RHS patterns
 
 RHS expressions reference captured variables via `Pattern(name, inner)` nodes
