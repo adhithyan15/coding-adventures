@@ -237,5 +237,10 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
 - [ADJ14](ADJ14-rule-elicitation.md) — Stage 0 of the rule
   compilation pipeline: bootstrapping a Tentative rulebook from the
   LLM's own weights when no authoritative rulebook is on hand.
+- [ADJ15](ADJ15-recursive-rulebook-empirical-results.md) — first
+  empirical measurement of the ADJ14 recursive pattern: 5 models ×
+  2 modes (no rulebook vs self-elicited rulebook) on the canonical
+  ADJ10 source. The recursion flips verdicts at ≥ 3B parameters and
+  breaks at ≤ 1.5B in two distinct failure modes.
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.
