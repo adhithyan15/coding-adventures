@@ -16,9 +16,11 @@ radio workers a shared deterministic shape for:
 - checkpoint-based state resume after supervised worker restarts
 - heartbeat freshness and stale-event deadlines
 - heartbeat deadline schedules for supervisor wakeups across many streams
+- compact heartbeat schedule summaries for due-count and overdue-window checks
 - disconnect tracking without losing the last cursor
 - reconnect attempts with bounded exponential backoff
 - restart schedules that group due reconnect plans across stream workers
+- compact restart schedule summaries for retry readiness and restart reasons
 - restart plans that a runtime supervisor can inspect before spawning workers
 - deterministic state queries for dashboards, supervisors, and read-only tools
 - compact fleet summaries for supervisor health and restart-readiness checks

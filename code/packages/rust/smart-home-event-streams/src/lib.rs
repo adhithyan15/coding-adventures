@@ -1442,6 +1442,70 @@ impl EventStreamHeartbeatSchedule {
             .filter(|deadline| &deadline.bridge_id == bridge_id)
             .collect()
     }
+
+    pub fn summary_at(&self, now_ms: u64) -> EventStreamHeartbeatScheduleSummary {
+        EventStreamHeartbeatScheduleSummary::from_schedule_at(self, now_ms)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EventStreamHeartbeatScheduleSummary {
+    pub generated_at_ms: u64,
+    pub evaluated_at_ms: u64,
+    pub total_deadlines: usize,
+    pub due_deadlines: usize,
+    pub connecting_deadlines: usize,
+    pub healthy_deadlines: usize,
+    pub degraded_deadlines: usize,
+    pub next_due_at_ms: Option<u64>,
+    pub max_overdue_ms: u64,
+}
+
+impl EventStreamHeartbeatScheduleSummary {
+    pub fn from_schedule_at(schedule: &EventStreamHeartbeatSchedule, now_ms: u64) -> Self {
+        let mut summary = Self {
+            generated_at_ms: schedule.generated_at_ms,
+            evaluated_at_ms: now_ms,
+            total_deadlines: schedule.deadlines.len(),
+            due_deadlines: 0,
+            connecting_deadlines: 0,
+            healthy_deadlines: 0,
+            degraded_deadlines: 0,
+            next_due_at_ms: schedule.next_due_at_ms(),
+            max_overdue_ms: 0,
+        };
+
+        for deadline in &schedule.deadlines {
+            match deadline.status {
+                EventStreamStatus::Connecting => summary.connecting_deadlines += 1,
+                EventStreamStatus::Healthy => summary.healthy_deadlines += 1,
+                EventStreamStatus::Degraded => summary.degraded_deadlines += 1,
+                EventStreamStatus::Idle
+                | EventStreamStatus::Disconnected
+                | EventStreamStatus::BackingOff => {}
+            }
+            if deadline.is_due_at(now_ms) {
+                summary.due_deadlines += 1;
+                summary.max_overdue_ms = summary
+                    .max_overdue_ms
+                    .max(deadline.overdue_by_ms_at(now_ms));
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_deadlines == 0
+    }
+
+    pub fn has_due_deadlines(&self) -> bool {
+        self.due_deadlines > 0
+    }
+
+    pub fn has_degraded_deadlines(&self) -> bool {
+        self.degraded_deadlines > 0
+    }
 }
 
 pub fn event_stream_heartbeat_schedule_at<'a, I>(
@@ -1521,6 +1585,79 @@ impl EventStreamRestartSchedule {
             .iter()
             .filter(|plan| &plan.bridge_id == bridge_id)
             .collect()
+    }
+
+    pub fn summary_at(&self, now_ms: u64) -> EventStreamRestartScheduleSummary {
+        EventStreamRestartScheduleSummary::from_schedule_at(self, now_ms)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EventStreamRestartScheduleSummary {
+    pub generated_at_ms: u64,
+    pub evaluated_at_ms: u64,
+    pub total_plans: usize,
+    pub ready_plans: usize,
+    pub heartbeat_overdue_plans: usize,
+    pub explicit_disconnect_plans: usize,
+    pub event_gap_plans: usize,
+    pub stale_event_plans: usize,
+    pub next_retry_at_ms: Option<u64>,
+    pub max_wait_ms: u64,
+    pub total_backoff_ms: u64,
+}
+
+impl EventStreamRestartScheduleSummary {
+    pub fn from_schedule_at(schedule: &EventStreamRestartSchedule, now_ms: u64) -> Self {
+        let mut summary = Self {
+            generated_at_ms: schedule.generated_at_ms,
+            evaluated_at_ms: now_ms,
+            total_plans: schedule.plans.len(),
+            ready_plans: 0,
+            heartbeat_overdue_plans: 0,
+            explicit_disconnect_plans: 0,
+            event_gap_plans: 0,
+            stale_event_plans: 0,
+            next_retry_at_ms: schedule.next_retry_at_ms(),
+            max_wait_ms: 0,
+            total_backoff_ms: 0,
+        };
+
+        for plan in &schedule.plans {
+            if plan.retry_due_at(now_ms) {
+                summary.ready_plans += 1;
+            }
+            match plan.reason {
+                EventStreamRestartReason::HeartbeatOverdue => {
+                    summary.heartbeat_overdue_plans += 1;
+                }
+                EventStreamRestartReason::ExplicitDisconnect => {
+                    summary.explicit_disconnect_plans += 1;
+                }
+                EventStreamRestartReason::EventGap => summary.event_gap_plans += 1,
+                EventStreamRestartReason::StaleEvents => summary.stale_event_plans += 1,
+            }
+            summary.max_wait_ms = summary.max_wait_ms.max(plan.wait_ms_at(now_ms));
+            summary.total_backoff_ms = summary.total_backoff_ms.saturating_add(plan.backoff_ms);
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_plans == 0
+    }
+
+    pub fn has_ready_plans(&self) -> bool {
+        self.ready_plans > 0
+    }
+
+    pub fn has_heartbeat_overdue_plans(&self) -> bool {
+        self.heartbeat_overdue_plans > 0
+    }
+
+    pub fn has_event_gap_plans(&self) -> bool {
+        self.event_gap_plans > 0
     }
 }
 
@@ -1905,6 +2042,22 @@ mod tests {
         assert_eq!(schedule.next_due_at_ms(), Some(1_000));
         assert_eq!(schedule.due_at(1_200).len(), 1);
         assert_eq!(
+            schedule.summary_at(1_200),
+            EventStreamHeartbeatScheduleSummary {
+                generated_at_ms: 1_200,
+                evaluated_at_ms: 1_200,
+                total_deadlines: 2,
+                due_deadlines: 1,
+                connecting_deadlines: 1,
+                healthy_deadlines: 1,
+                degraded_deadlines: 0,
+                next_due_at_ms: Some(1_000),
+                max_overdue_ms: 200,
+            }
+        );
+        assert!(schedule.summary_at(1_200).has_due_deadlines());
+        assert!(!schedule.summary_at(1_200).has_degraded_deadlines());
+        assert_eq!(
             schedule.due_at(1_200)[0].stream_id,
             EventStreamId::for_bridge(
                 &IntegrationId::trusted("mqtt"),
@@ -1960,6 +2113,25 @@ mod tests {
                     && second.bridge_id == bridge_id()
         ));
         assert_eq!(schedule.plans_ready_at(1_200).len(), 1);
+        assert_eq!(
+            schedule.summary_at(1_200),
+            EventStreamRestartScheduleSummary {
+                generated_at_ms: 1_150,
+                evaluated_at_ms: 1_200,
+                total_plans: 2,
+                ready_plans: 1,
+                heartbeat_overdue_plans: 1,
+                explicit_disconnect_plans: 0,
+                event_gap_plans: 1,
+                stale_event_plans: 0,
+                next_retry_at_ms: Some(1_200),
+                max_wait_ms: 50,
+                total_backoff_ms: 150,
+            }
+        );
+        assert!(schedule.summary_at(1_200).has_ready_plans());
+        assert!(schedule.summary_at(1_200).has_heartbeat_overdue_plans());
+        assert!(schedule.summary_at(1_200).has_event_gap_plans());
         assert_eq!(
             schedule
                 .plans_for_bridge(&BridgeId::trusted("broker-1"))
