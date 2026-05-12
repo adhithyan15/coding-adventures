@@ -749,6 +749,44 @@ pub struct NeighborTable {
     parent: Option<ThreadNeighborId>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NeighborTableSummary {
+    pub local_role: DeviceRole,
+    pub neighbor_count: usize,
+    pub parent: Option<ThreadNeighborId>,
+    pub child_count: usize,
+    pub router_count: usize,
+    pub stale_neighbor_count: usize,
+    pub best_parent_candidate: Option<ThreadNeighborId>,
+}
+
+impl NeighborTableSummary {
+    pub fn is_empty(self) -> bool {
+        self.neighbor_count == 0
+    }
+
+    pub fn has_parent(self) -> bool {
+        self.parent.is_some()
+    }
+
+    pub fn has_stale_neighbors(self) -> bool {
+        self.stale_neighbor_count > 0
+    }
+
+    pub fn has_parent_candidate(self) -> bool {
+        self.best_parent_candidate.is_some()
+    }
+
+    pub fn needs_attach(self) -> bool {
+        self.local_role == DeviceRole::Detached
+            || (self.local_role == DeviceRole::Child && self.parent.is_none())
+    }
+
+    pub fn has_routing_surface(self) -> bool {
+        self.local_role.can_route() || self.router_count > 0
+    }
+}
+
 impl NeighborTable {
     pub fn new(local_role: DeviceRole) -> Self {
         Self {
@@ -833,6 +871,20 @@ impl NeighborTable {
                 neighbor.last_heard_at_ms,
             )
         })
+    }
+
+    pub fn summary_at(&self, now_ms: u64) -> NeighborTableSummary {
+        NeighborTableSummary {
+            local_role: self.local_role,
+            neighbor_count: self.len(),
+            parent: self.parent().map(|neighbor| neighbor.neighbor_id),
+            child_count: self.children().count(),
+            router_count: self.routers().count(),
+            stale_neighbor_count: self.stale_neighbors_at(now_ms).len(),
+            best_parent_candidate: self
+                .best_parent_candidate()
+                .map(|neighbor| neighbor.neighbor_id),
+        }
     }
 
     pub fn diagnostic_snapshot(
@@ -1631,6 +1683,26 @@ mod tests {
             table.best_parent_candidate().unwrap().neighbor_id,
             ThreadNeighborId(0x3000)
         );
+
+        let summary = table.summary_at(1_250);
+        assert_eq!(
+            summary,
+            NeighborTableSummary {
+                local_role: DeviceRole::Child,
+                neighbor_count: 3,
+                parent: Some(ThreadNeighborId(0x1000)),
+                child_count: 1,
+                router_count: 2,
+                stale_neighbor_count: 0,
+                best_parent_candidate: Some(ThreadNeighborId(0x3000)),
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_parent());
+        assert!(!summary.has_stale_neighbors());
+        assert!(summary.has_parent_candidate());
+        assert!(!summary.needs_attach());
+        assert!(summary.has_routing_surface());
     }
 
     #[test]
@@ -1840,9 +1912,12 @@ mod tests {
         ));
 
         assert!(table.stale_neighbors_at(1_499).is_empty());
+        assert_eq!(table.summary_at(1_500).stale_neighbor_count, 1);
+        assert!(table.summary_at(1_500).has_stale_neighbors());
         assert_eq!(table.expire_stale(1_500), vec![ThreadNeighborId(0x1000)]);
         assert!(table.parent().is_none());
         assert!(table.is_empty());
+        assert!(table.summary_at(1_500).is_empty());
     }
 
     #[test]

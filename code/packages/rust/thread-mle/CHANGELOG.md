@@ -19,5 +19,7 @@ All notable changes to this package will be documented in this file.
   partition, and prefix state for D23-facing health reads.
 - Thread supervisor action projections that classify diagnostic drift into
   stable repair intents for runtime supervisors.
+- Neighbor table summaries for cheap runtime/read-model projections of parent,
+  child, router, stale-neighbor, and parent-candidate state.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
