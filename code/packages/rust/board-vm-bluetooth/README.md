@@ -15,7 +15,9 @@ routes through an injectable `MacosCoreBluetoothBleConnector`; the default
 connector still reports an explicit backend error, while
 `MacosCoreBluetoothRuntimeBleConnector` wires the macOS CoreBluetooth
 delegate/run-loop adapter for service-filtered BLE GATT connections,
-characteristic writes, and notification reads.
+characteristic writes, and notification reads. The BLE raw-frame transport
+buffers split notifications, preserves extra bytes for the next response, and
+rejects empty or unterminated notification streams.
 
 OS-specific scanners can also pass discovered device metadata into
 `board_vm_endpoint_candidates`. The macOS scanner reads `system_profiler`, the

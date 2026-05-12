@@ -2127,6 +2127,59 @@ Device 11:22:33:44:55:66 (public)
     }
 
     #[test]
+    fn ble_gatt_transport_rejects_empty_notifications() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let mut link = FakeBleGattLink::default();
+        link.notifications.push_back(Vec::new());
+        let mut transport = BoardBleGattTransport::<_, 16>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            transport.receive_raw_frame(&mut raw_out),
+            Err(BluetoothTransportError::Link)
+        );
+    }
+
+    #[test]
+    fn ble_gatt_transport_rejects_unterminated_wire_frames() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let mut link = FakeBleGattLink::default();
+        link.notifications.push_back(vec![0x11, 0x22, 0x33, 0x44]);
+        let mut transport = BoardBleGattTransport::<_, 4>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            transport.receive_raw_frame(&mut raw_out),
+            Err(BluetoothTransportError::FrameTooLarge)
+        );
+    }
+
+    #[test]
+    fn ble_gatt_transport_rejects_unterminated_pending_bytes() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let mut link = FakeBleGattLink::default();
+        link.notifications.push_back(vec![0, 0x31, 0x32, 0x33]);
+        link.notifications.push_back(vec![0x34]);
+        let mut transport = BoardBleGattTransport::<_, 4>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(transport.receive_raw_frame(&mut raw_out), Ok(0));
+        assert_eq!(
+            transport.receive_raw_frame(&mut raw_out),
+            Err(BluetoothTransportError::FrameTooLarge)
+        );
+    }
+
+    #[test]
     fn rfcomm_transport_exchanges_board_vm_wire_frames() {
         let endpoint = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
         let request = [0x10, 0x11];
