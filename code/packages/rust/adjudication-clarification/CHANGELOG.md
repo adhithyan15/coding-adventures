@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-12
+
+### Added
+
+Self-correction loop now covers **ADJ03 polarity/modality**
+failures in addition to ADJ02 coverage. The qwen2.5:1.5b benchmark
+in [ADJ12](../../specs/ADJ12-small-model-benchmarks.md) showed the
+framework recovering from ADJ02 via clarification but then getting
+stuck on ADJ03; v0.2 closes that gap.
+
+- `PolarityClarificationRequest { original, violation_description,
+  previous_ir, polarity_hint: Option<String> }` — the input shape.
+- `retry_decompose_on_polarity_failure(req, gateway, max_attempts,
+  now)` — headline entry point. Same retry-loop machinery as the
+  coverage variant; the difference is the correction prompt.
+- `POLARITY_CLARIFICATION_PROMPT_VERSION = "polarity-clarification-v1"`
+  — separate from `CLARIFICATION_PROMPT_VERSION` so audit-trail
+  replay can distinguish the two correction flavours.
+- `build_polarity_correction_prompt` — emits a prompt that lists
+  the legal polarity/modality values, calls out negations as the
+  most common failure mode, and optionally embeds a framework hint
+  about which node is wrong and why.
+- Internal `retry_with_correction_prompt` helper shared between
+  the coverage and polarity entry points; the retry loop is now
+  defined once, not duplicated.
+
+5 new tests cover the polarity path: happy-success, prompt with
+hint, prompt without hint, prompt-version constant lock, and
+graceful exhaustion on repeated errors.
+
+### Notes
+
+ADJ04 (round-trip drift) and ADJ05 (adversarial reading) still
+need their own correction shapes — they're about renderer drift,
+not IR extraction, so the fix is "re-render this node" not
+"re-extract the IR." Those land in follow-ups.
+
 ## [0.1.0] - 2026-05-12
 
 ### Added
