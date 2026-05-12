@@ -272,6 +272,14 @@ pub struct JobResponseDrainSummary {
     pub retryable_error_count: usize,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobResponseDrainOutcome {
+    Empty,
+    AllSucceeded,
+    Failed,
+    RetryableFailure,
+}
+
 impl JobResponseDrainSummary {
     pub fn from_responses<I>(responses: I) -> Self
     where
@@ -316,8 +324,28 @@ impl JobResponseDrainSummary {
             .saturating_add(self.timed_out_count)
     }
 
+    pub fn has_failures(&self) -> bool {
+        self.failure_count() > 0
+    }
+
     pub fn has_retryable_errors(&self) -> bool {
         self.retryable_error_count > 0
+    }
+
+    pub fn needs_retry_supervision(&self) -> bool {
+        self.has_retryable_errors()
+    }
+
+    pub fn outcome(&self) -> JobResponseDrainOutcome {
+        if self.is_empty() {
+            JobResponseDrainOutcome::Empty
+        } else if self.has_retryable_errors() {
+            JobResponseDrainOutcome::RetryableFailure
+        } else if self.has_failures() {
+            JobResponseDrainOutcome::Failed
+        } else {
+            JobResponseDrainOutcome::AllSucceeded
+        }
     }
 }
 
@@ -1719,8 +1747,43 @@ for line in sys.stdin:
         assert_eq!(batch.timed_out_count, 0);
         assert_eq!(batch.retryable_error_count, 1);
         assert_eq!(batch.failure_count(), 2);
+        assert!(batch.has_failures());
         assert!(batch.has_retryable_errors());
+        assert!(batch.needs_retry_supervision());
+        assert_eq!(batch.outcome(), JobResponseDrainOutcome::RetryableFailure);
         assert!(!batch.is_empty());
+    }
+
+    #[test]
+    fn response_drain_summary_classifies_empty_success_and_failed_batches() {
+        let empty = JobResponseDrainSummary::from_responses(Vec::new());
+        let success = JobResponseDrainSummary::from_responses([JobResponseSummary {
+            id: "job-ok".to_string(),
+            status: JobTerminalStatus::Ok,
+            attempt: 1,
+            trace_id: None,
+            retryable_error: false,
+            error_code: None,
+            message: None,
+        }]);
+        let failed = JobResponseDrainSummary::from_responses([JobResponseSummary {
+            id: "job-cancelled".to_string(),
+            status: JobTerminalStatus::Cancelled,
+            attempt: 1,
+            trace_id: None,
+            retryable_error: false,
+            error_code: None,
+            message: Some("cancelled by supervisor".to_string()),
+        }]);
+
+        assert_eq!(empty.outcome(), JobResponseDrainOutcome::Empty);
+        assert!(!empty.has_failures());
+        assert!(!empty.needs_retry_supervision());
+        assert_eq!(success.outcome(), JobResponseDrainOutcome::AllSucceeded);
+        assert!(!success.has_failures());
+        assert_eq!(failed.outcome(), JobResponseDrainOutcome::Failed);
+        assert!(failed.has_failures());
+        assert!(!failed.needs_retry_supervision());
     }
 
     #[test]
