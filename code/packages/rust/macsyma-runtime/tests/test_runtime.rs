@@ -503,6 +503,107 @@ fn keeps_unsupported_transcendental_solve_calls_unevaluated() {
 }
 
 #[test]
+fn evaluates_deterministic_list_operations_through_cas_list_operations() {
+    let xs = apply(sym(LIST), vec![int(1), int(2), int(3)]);
+    let nested = apply(
+        sym(LIST),
+        vec![
+            int(1),
+            apply(sym(LIST), vec![int(2), apply(sym(LIST), vec![int(3)])]),
+        ],
+    );
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(sym("Length"), vec![xs.clone()]),
+        apply(sym("First"), vec![xs.clone()]),
+        apply(sym("Rest"), vec![xs.clone()]),
+        apply(sym("Last"), vec![xs.clone()]),
+        apply(sym("Reverse"), vec![xs.clone()]),
+        apply(
+            sym("Append"),
+            vec![
+                apply(sym(LIST), vec![int(1)]),
+                apply(sym(LIST), vec![int(2), int(3)]),
+            ],
+        ),
+        apply(
+            sym("Join"),
+            vec![
+                apply(sym(LIST), vec![int(1)]),
+                apply(sym(LIST), vec![int(2)]),
+            ],
+        ),
+        apply(sym("Range"), vec![int(1), int(5), int(2)]),
+        apply(sym("Part"), vec![xs.clone(), int(-1)]),
+        apply(
+            sym("Map"),
+            vec![sym("f"), apply(sym(LIST), vec![sym("x"), sym("y")])],
+        ),
+        apply(
+            sym("Apply"),
+            vec![sym(ADD), apply(sym(LIST), vec![sym("x"), sym("y")])],
+        ),
+        apply(
+            sym("Sort"),
+            vec![apply(sym(LIST), vec![sym("b"), sym("a")])],
+        ),
+        apply(sym("Flatten"), vec![nested, int(-1)]),
+    ]);
+
+    assert_eq!(results[0].output, int(3));
+    assert_eq!(results[1].output, int(1));
+    assert_eq!(results[2].output, apply(sym(LIST), vec![int(2), int(3)]));
+    assert_eq!(results[3].output, int(3));
+    assert_eq!(
+        results[4].output,
+        apply(sym(LIST), vec![int(3), int(2), int(1)])
+    );
+    assert_eq!(
+        results[5].output,
+        apply(sym(LIST), vec![int(1), int(2), int(3)])
+    );
+    assert_eq!(results[6].output, apply(sym(LIST), vec![int(1), int(2)]));
+    assert_eq!(
+        results[7].output,
+        apply(sym(LIST), vec![int(1), int(3), int(5)])
+    );
+    assert_eq!(results[8].output, int(3));
+    assert_eq!(
+        results[9].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym("f"), vec![sym("x")]),
+                apply(sym("f"), vec![sym("y")])
+            ]
+        )
+    );
+    assert_eq!(
+        results[10].output,
+        apply(sym(ADD), vec![sym("x"), sym("y")])
+    );
+    assert_eq!(
+        results[11].output,
+        apply(sym(LIST), vec![sym("a"), sym("b")])
+    );
+    assert_eq!(
+        results[12].output,
+        apply(sym(LIST), vec![int(1), int(2), int(3)])
+    );
+}
+
+#[test]
+fn keeps_invalid_list_operation_calls_unevaluated() {
+    let bad_part = apply(sym("Part"), vec![apply(sym(LIST), vec![int(1)]), int(0)]);
+    let bad_length = apply(sym("Length"), vec![sym("x")]);
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![bad_part.clone(), bad_length.clone()]);
+
+    assert_eq!(results[0].output, bad_part);
+    assert_eq!(results[1].output, bad_length);
+}
+
+#[test]
 fn returns_rational_linsolve_results() {
     let x = sym("x");
     let y = sym("y");

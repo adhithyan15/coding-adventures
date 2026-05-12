@@ -28,3 +28,8 @@ Direct `Solve(f(linear) = constant, variable)` transcendental equations delegate
 to the Rust `cas-solve` inverse-family solver. Supported `Exp`, `Log`, trig,
 and hyperbolic forms return `List(...)` symbolic inverse or periodic-family
 solutions; unsupported nested forms remain unevaluated.
+
+Deterministic list operations delegate to the Rust `cas-list-operations`
+package. `Length`, `First`, `Rest`, `Last`, `Append`, `Join`, `Reverse`,
+`Range`, `Part`, `Map`, `Apply`, `Sort`, and `Flatten` return list-operation
+results while invalid calls remain unevaluated.
