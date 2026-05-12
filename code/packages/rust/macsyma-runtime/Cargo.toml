@@ -6,6 +6,7 @@ description = "MACSYMA runtime session facade over the Rust symbolic VM"
 license = "MIT"
 
 [dependencies]
+cas-solve = { path = "../cas-solve" }
 cas-simplify = { path = "../cas-simplify" }
 cas-trig = { path = "../cas-trig" }
 coding-adventures-macsyma-compiler = { path = "../macsyma-compiler" }
