@@ -45,6 +45,8 @@ targets.
 - Fleet-level executor snapshot summaries for supervisor/read-side tools that
   need aggregate capacity, queue pressure, and supervision decisions across
   multiple executors.
+- Fleet status summaries for D18C host/read-side tools that need one compact
+  status, acceptance, queue-pressure, and supervision-readiness record.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters
 submit typed job payloads and decide how to apply responses.
