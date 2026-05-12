@@ -820,6 +820,7 @@ fn parse_u32_number(value: String, option: &'static str) -> Result<u32, CliError
 pub struct SmokeReport {
     pub hello: HelloAckInfo,
     pub descriptor: BoardDescriptorInfo,
+    pub upload: UploadReport,
     pub run: RunReportInfo,
 }
 
@@ -1014,7 +1015,7 @@ where
                 source: source.into(),
             }
         })?;
-    client
+    let upload = client
         .upload_program(options.program_id, &module[..module_len])
         .map_err(|source| CliError::Smoke {
             stage: SmokeStage::UploadBlink,
@@ -1029,6 +1030,7 @@ where
     Ok(SmokeReport {
         hello,
         descriptor,
+        upload,
         run,
     })
 }
@@ -2422,6 +2424,9 @@ mod tests {
         assert_eq!(report.descriptor.board_id, LOOPBACK_BOARD_ID);
         assert_eq!(report.descriptor.runtime_id, LOOPBACK_RUNTIME_ID);
         assert_eq!(report.descriptor.max_program_bytes, 512);
+        assert_eq!(report.upload.program_id, 7);
+        assert_eq!(report.upload.total_len as usize, BLINK_MODULE_LEN);
+        assert_ne!(report.upload.program_crc32, 0);
         assert_eq!(report.run.program_id, 7);
         assert_eq!(report.run.status, RunStatus::Running);
         assert!(report.run.instructions_executed > 0);
@@ -2453,6 +2458,9 @@ mod tests {
         assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
         assert_eq!(report.hello.host_nonce, 0xABCD_1234);
         assert_eq!(report.descriptor.board_id, LOOPBACK_BOARD_ID);
+        assert_eq!(report.upload.program_id, 8);
+        assert_eq!(report.upload.total_len as usize, BLINK_MODULE_LEN);
+        assert_ne!(report.upload.program_crc32, 0);
         assert_eq!(report.run.program_id, 8);
         assert_eq!(report.run.status, RunStatus::Running);
         assert_eq!(report.run.open_handles, 1);
@@ -2510,6 +2518,9 @@ mod tests {
         assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
         assert_eq!(report.hello.host_nonce, 0xBEEF_CAFE);
         assert_eq!(report.descriptor.board_id, LOOPBACK_BOARD_ID);
+        assert_eq!(report.upload.program_id, 9);
+        assert_eq!(report.upload.total_len as usize, BLINK_MODULE_LEN);
+        assert_ne!(report.upload.program_crc32, 0);
         assert_eq!(report.run.program_id, 9);
         assert_eq!(report.run.status, RunStatus::Running);
         assert!(event_count > 0);
