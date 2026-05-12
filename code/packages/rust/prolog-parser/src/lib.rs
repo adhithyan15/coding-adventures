@@ -130,6 +130,8 @@ pub fn ast_to_term(node: &GrammarASTNode, var_map: &mut HashMap<String, LogicVar
             inner_goal(node, var_map)
         }
 
+        "naf_goal" => lower_naf(node, var_map),
+
         "equality_goal" => lower_equality(node, var_map),
 
         "variable_term" => {
@@ -174,6 +176,16 @@ fn first_term_child(
 fn inner_goal(node: &GrammarASTNode, var_map: &mut HashMap<String, LogicVar>) -> Term {
     // Skip LPAREN / RPAREN tokens; lower the first node child.
     first_term_child(node, var_map)
+}
+
+/// Lower `naf_goal = NAF goal_primary` into the canonical Prolog
+/// negation-as-failure compound term `'\+'(G)`. Downstream consumers
+/// (notably `prolog_loader::naf_or_pos`) pattern-match on this shape
+/// to turn the compound into a `BodyLiteral::Neg`.
+fn lower_naf(node: &GrammarASTNode, var_map: &mut HashMap<String, LogicVar>) -> Term {
+    // Skip the NAF token; lower the inner goal_primary child.
+    let inner = first_term_child(node, var_map);
+    compound("\\+", vec![inner])
 }
 
 fn lower_equality(

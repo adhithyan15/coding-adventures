@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+Source-level negation-as-failure now parses end-to-end:
+
+- New `naf_goal = NAF goal_primary` production in the ISO Prolog
+  parser grammar. `goal_primary` gains a `naf_goal` alternative ahead
+  of `equality_goal` / `callable_goal`.
+- `ast_to_term` lowers `naf_goal` into the canonical
+  `compound("\\+", vec![inner])` shape that
+  `prolog_loader::naf_or_pos` already pattern-matches on, so the
+  loader→engine pipeline turns it into `BodyLiteral::Neg` without
+  further changes.
+- Same `naf_goal` production added to the SWI-Prolog dialect grammar
+  (`code/grammars/prolog/swi.grammar`).
+
+`code/grammars/prolog/iso.grammar` is canonical; the embed is
+regenerated via
+`cargo run -p prolog-parser --example regenerate_grammar`.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

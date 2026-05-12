@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+Two long-standing gaps in the ISO Prolog lexer, exposed by the
+Prolog end-to-end integration tests, are now closed:
+
+- **`NAF` token** — recognises `\+` (negation-as-failure) as a
+  dedicated structural token, placed before the catch-all
+  `ATOM_SYMBOLIC` rule so `\+ G` and `\+G` both tokenise as
+  `NAF`+goal rather than as a bare symbolic atom. The same change
+  is applied to the SWI-Prolog dialect.
+- **`BLOCK_COMMENT` skip rule** — `/* ... */` (multi-line) is now
+  skipped by the lexer. Uses a non-greedy regex so the FIRST `*/`
+  closes the comment (`/* a */ x /* b */` lexes to `x` plus two
+  skipped comments, not one long swallowed one).
+
+### Notes
+
+`code/grammars/prolog/iso.tokens` is the canonical source; the
+embedded `_grammar.rs` is regenerated via
+`cargo run -p prolog-lexer --example regenerate_grammar`.
+
+`code/grammars/prolog/swi.tokens` got the same `NAF` addition;
+block comments were already in the SWI dialect.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added
