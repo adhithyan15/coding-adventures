@@ -670,9 +670,31 @@ pub struct RuntimeSubscriptionSnapshot {
     pub queued_events: usize,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeSubscriptionBacklogStatus {
+    CaughtUp,
+    Backlogged,
+}
+
 impl RuntimeSubscriptionSnapshot {
     pub fn has_backlog(&self) -> bool {
         self.queued_events > 0
+    }
+
+    pub fn is_caught_up(&self) -> bool {
+        !self.has_backlog()
+    }
+
+    pub fn backlog_status(&self) -> RuntimeSubscriptionBacklogStatus {
+        if self.has_backlog() {
+            RuntimeSubscriptionBacklogStatus::Backlogged
+        } else {
+            RuntimeSubscriptionBacklogStatus::CaughtUp
+        }
+    }
+
+    pub fn exceeds_backlog_threshold(&self, threshold: usize) -> bool {
+        self.queued_events > threshold
     }
 }
 
@@ -3329,6 +3351,45 @@ mod tests {
             RuntimeEventBusBacklogStatus::CaughtUp
         );
         assert!(caught_up.has_subscriptions());
+    }
+
+    #[test]
+    fn subscription_snapshots_classify_backlog_status() {
+        let mut bus = RuntimeEventBus::new();
+        let all_events = RuntimeSubscriptionId::trusted("all-events");
+        let bridge_events = RuntimeSubscriptionId::trusted("bridge-events");
+        bus.subscribe(all_events.clone(), RuntimeEventFilter::All)
+            .unwrap();
+        bus.subscribe(
+            bridge_events.clone(),
+            RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
+        )
+        .unwrap();
+
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        bus.drain(&bridge_events).unwrap();
+
+        let snapshots = bus.query_subscriptions(
+            &RuntimeSubscriptionQuery::new().sorted_by(RuntimeSubscriptionSort::SubscriptionId),
+        );
+
+        assert_eq!(snapshots.len(), 2);
+        assert_eq!(snapshots[0].subscription_id, all_events);
+        assert_eq!(
+            snapshots[0].backlog_status(),
+            RuntimeSubscriptionBacklogStatus::Backlogged
+        );
+        assert!(snapshots[0].has_backlog());
+        assert!(!snapshots[0].is_caught_up());
+        assert!(snapshots[0].exceeds_backlog_threshold(0));
+        assert_eq!(snapshots[1].subscription_id, bridge_events);
+        assert_eq!(
+            snapshots[1].backlog_status(),
+            RuntimeSubscriptionBacklogStatus::CaughtUp
+        );
+        assert!(!snapshots[1].has_backlog());
+        assert!(snapshots[1].is_caught_up());
+        assert!(!snapshots[1].exceeds_backlog_threshold(0));
     }
 
     #[test]
