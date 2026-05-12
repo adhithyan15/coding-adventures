@@ -480,6 +480,132 @@ impl StorageLease {
     pub fn is_active_at(&self, now_ms: TimestampMs) -> bool {
         now_ms < self.expires_at
     }
+
+    /// Return a compact read-side view of the lease at the supplied timestamp.
+    pub fn summary_at(&self, now_ms: TimestampMs) -> StorageLeaseSummary {
+        StorageLeaseSummary::from_lease_at(self, now_ms)
+    }
+}
+
+/// Compact read-side view of one advisory lease.
+///
+/// The summary intentionally omits the lease token so status views can report
+/// active/expired lease windows without exposing the token used by a holder.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageLeaseSummary {
+    pub name: String,
+    pub issued_at: TimestampMs,
+    pub expires_at: TimestampMs,
+    pub duration_ms: u64,
+    pub remaining_ms: u64,
+    pub active: bool,
+}
+
+impl StorageLeaseSummary {
+    pub fn from_lease_at(lease: &StorageLease, now_ms: TimestampMs) -> Self {
+        let duration_ms = lease.expires_at - lease.issued_at;
+        let remaining_ms = if now_ms <= lease.issued_at {
+            duration_ms
+        } else {
+            lease.expires_at.saturating_sub(now_ms)
+        };
+        Self {
+            name: lease.name.clone(),
+            issued_at: lease.issued_at,
+            expires_at: lease.expires_at,
+            duration_ms,
+            remaining_ms,
+            active: lease.is_active_at(now_ms),
+        }
+    }
+
+    pub fn is_active(&self) -> bool {
+        self.active
+    }
+
+    pub fn is_expired(&self) -> bool {
+        !self.active
+    }
+}
+
+/// Aggregate read-side facts over observed advisory leases.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct StorageLeaseInventorySummary {
+    pub total_leases: usize,
+    pub active_leases: usize,
+    pub expired_leases: usize,
+    pub total_duration_ms: u64,
+    pub total_remaining_ms: u64,
+    pub earliest_active_expiry: Option<TimestampMs>,
+    pub latest_active_expiry: Option<TimestampMs>,
+}
+
+impl StorageLeaseInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_leases_at<'a, I>(leases: I, now_ms: TimestampMs) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageLease>,
+    {
+        let mut summary = Self::empty();
+        for lease in leases {
+            summary.record_summary(&lease.summary_at(now_ms));
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a, I>(summaries: I) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageLeaseSummary>,
+    {
+        let mut summary = Self::empty();
+        for lease_summary in summaries {
+            summary.record_summary(lease_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, lease_summary: &StorageLeaseSummary) {
+        self.total_leases += 1;
+        self.total_duration_ms += lease_summary.duration_ms;
+        self.total_remaining_ms += lease_summary.remaining_ms;
+
+        if lease_summary.active {
+            self.active_leases += 1;
+            self.earliest_active_expiry = Some(
+                self.earliest_active_expiry
+                    .map_or(lease_summary.expires_at, |current| {
+                        current.min(lease_summary.expires_at)
+                    }),
+            );
+            self.latest_active_expiry = Some(
+                self.latest_active_expiry
+                    .map_or(lease_summary.expires_at, |current| {
+                        current.max(lease_summary.expires_at)
+                    }),
+            );
+        } else {
+            self.expired_leases += 1;
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_leases == 0
+    }
+
+    pub fn has_active_leases(&self) -> bool {
+        self.active_leases > 0
+    }
+
+    pub fn has_expired_leases(&self) -> bool {
+        self.expired_leases > 0
+    }
+
+    pub fn next_active_expiry(&self) -> Option<TimestampMs> {
+        self.earliest_active_expiry
+    }
 }
 
 /// Repository-owned storage errors. Backends should translate their own failure
@@ -1338,6 +1464,75 @@ mod tests {
         assert!(lease.is_active_at(100));
         assert!(lease.is_active_at(149));
         assert!(!lease.is_active_at(150));
+
+        let active_summary = lease.summary_at(125);
+        assert_eq!(active_summary.name, "memory-rebuild");
+        assert_eq!(active_summary.issued_at, 100);
+        assert_eq!(active_summary.expires_at, 150);
+        assert_eq!(active_summary.duration_ms, 50);
+        assert_eq!(active_summary.remaining_ms, 25);
+        assert!(active_summary.is_active());
+        assert!(!active_summary.is_expired());
+
+        let expired_summary = StorageLeaseSummary::from_lease_at(&lease, 150);
+        assert_eq!(expired_summary.remaining_ms, 0);
+        assert!(!expired_summary.is_active());
+        assert!(expired_summary.is_expired());
+    }
+
+    #[test]
+    fn lease_inventory_summary_counts_active_and_expired_windows() {
+        let active = StorageLease::new(
+            "context-compaction",
+            LeaseToken::new("lease-1").unwrap(),
+            100,
+            200,
+        )
+        .expect("active lease should be valid");
+        let longer_active = StorageLease::new(
+            "artifact-index",
+            LeaseToken::new("lease-2").unwrap(),
+            120,
+            240,
+        )
+        .expect("active lease should be valid");
+        let expired = StorageLease::new(
+            "memory-rebuild",
+            LeaseToken::new("lease-3").unwrap(),
+            10,
+            20,
+        )
+        .expect("expired lease should be valid");
+        let leases = vec![active, longer_active, expired];
+
+        let summary = StorageLeaseInventorySummary::from_leases_at(&leases, 150);
+
+        assert_eq!(
+            summary,
+            StorageLeaseInventorySummary {
+                total_leases: 3,
+                active_leases: 2,
+                expired_leases: 1,
+                total_duration_ms: 230,
+                total_remaining_ms: 140,
+                earliest_active_expiry: Some(200),
+                latest_active_expiry: Some(240),
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_active_leases());
+        assert!(summary.has_expired_leases());
+        assert_eq!(summary.next_active_expiry(), Some(200));
+
+        let projected = leases
+            .iter()
+            .map(|lease| lease.summary_at(150))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            StorageLeaseInventorySummary::from_summaries(&projected),
+            summary
+        );
+        assert!(StorageLeaseInventorySummary::empty().is_empty());
     }
 
     #[test]
