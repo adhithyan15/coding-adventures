@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `RuntimeEventDeliverySummary` plus delivery-batch `summary()` helpers for
+  compact delivered-event and remaining-backlog counts after subscription polls.
 - `RuntimePendingWorkSummary` helpers for compact pending-work status derived
   from runtime read snapshots.
 - `RuntimeEventLogSummary` plus `event_log_summary()` for compact event-kind
