@@ -8,13 +8,16 @@ use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
 use cas_simplify::simplify;
-use cas_solve::{solve_linear_system, SOLVE};
+use cas_solve::{solve_linear_system, try_solve_inequality, SOLVE};
 use cas_trig::{expand_trig, trig_simplify};
 use coding_adventures_macsyma_compiler::{
     compile_macsyma_with_options, CompileError, CompileOptions, DISPLAY as COMPILER_DISPLAY,
     SUPPRESS as COMPILER_SUPPRESS,
 };
-use symbolic_ir::{apply, sym, IRApply, IRNode, ASSIGN, DEFINE, IF, LIST, POW};
+use symbolic_ir::{
+    apply, sym, IRApply, IRNode, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS, LESS_EQUAL,
+    LIST, POW,
+};
 use symbolic_vm::backend::{handler_fn, Backend, Handler};
 use symbolic_vm::handlers::build_handler_table;
 use symbolic_vm::VM;
@@ -603,6 +606,12 @@ fn solve_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
         return fallback;
     }
 
+    if matches!(expr.args[1], IRNode::Symbol(_)) && is_inequality(&expr.args[0]) {
+        return try_solve_inequality(&expr.args[0], &expr.args[1])
+            .map(|solutions| apply(sym(LIST), solutions))
+            .unwrap_or(fallback);
+    }
+
     let Some(equations) = apply_with_head(&expr.args[0], LIST) else {
         return fallback;
     };
@@ -620,6 +629,18 @@ fn solve_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     solve_linear_system(&equations.args, &variables.args)
         .map(|rules| apply(sym(LIST), rules))
         .unwrap_or(fallback)
+}
+
+fn is_inequality(node: &IRNode) -> bool {
+    match node {
+        IRNode::Apply(apply) => {
+            is_head_name(&apply.head, LESS)
+                || is_head_name(&apply.head, GREATER)
+                || is_head_name(&apply.head, LESS_EQUAL)
+                || is_head_name(&apply.head, GREATER_EQUAL)
+        }
+        _ => false,
+    }
 }
 
 fn numer_fold(node: IRNode) -> IRNode {

@@ -17,3 +17,9 @@ The runtime also wires MACSYMA `linsolve`/`Solve(List(...), List(...))` calls to
 the Rust `cas-solve` exact linear-system solver. Supported systems return
 `List(Rule(variable, value), ...)`; unsupported or non-linear systems remain as
 unevaluated `Solve(...)` IR nodes.
+
+`Solve(inequality, variable)` also delegates to the Rust `cas-solve` polynomial
+inequality solver. Supported one-variable polynomial inequalities return
+`List(...)` interval predicates such as `Greater(x, 1)` or
+`And(GreaterEqual(x, -1), LessEqual(x, 1))`; unsupported inequalities remain
+unevaluated.
