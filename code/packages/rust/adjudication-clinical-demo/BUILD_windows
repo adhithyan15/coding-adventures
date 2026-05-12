@@ -1,0 +1,1 @@
+cargo test -p adjudication-clinical-demo -- --nocapture
