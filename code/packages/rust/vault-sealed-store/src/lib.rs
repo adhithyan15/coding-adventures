@@ -38,9 +38,7 @@ use coding_adventures_csprng::{random_array, random_bytes};
 use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_zeroize::Zeroizing;
-use storage_core::{
-    Revision, StorageBackend, StorageError, StorageListOptions, StoragePutInput,
-};
+use storage_core::{Revision, StorageBackend, StorageError, StorageListOptions, StoragePutInput};
 
 // ---------------------------------------------------------------------------
 // Constants — on-disk format markers.
@@ -155,6 +153,31 @@ pub struct SealedStat {
     pub kek_id: String,
 }
 
+/// Redacted envelope metadata for one sealed record.
+///
+/// This carries only stable identifiers, timestamps, algorithms, and byte
+/// counts. It deliberately omits ciphertext, wrapped DEKs, nonces, tags, and
+/// AAD bytes so audit and host-read paths can inspect shape without copying
+/// sealed material into logs.
+#[derive(Debug, Clone)]
+pub struct SealedEnvelopeSummary {
+    pub namespace: String,
+    pub key: String,
+    pub revision: Revision,
+    pub created_at_ms: u64,
+    pub updated_at_ms: u64,
+    pub schema_version: u64,
+    pub aead: String,
+    pub ciphertext_len: usize,
+    pub body_nonce_len: usize,
+    pub body_tag_len: usize,
+    pub body_aad_len: usize,
+    pub wrapped_dek_len: usize,
+    pub wrap_nonce_len: usize,
+    pub wrap_tag_len: usize,
+    pub kek_id: String,
+}
+
 /// Result of a completed `rotate_kek` call. Useful for tests and telemetry.
 #[derive(Debug, Clone)]
 pub struct KekRotationReport {
@@ -207,12 +230,18 @@ impl std::fmt::Display for SealedStoreError {
             Self::Sealed => write!(f, "vault-sealed-store is sealed"),
             Self::BadPassword => write!(f, "vault-sealed-store unseal: bad password"),
             Self::Tamper { namespace, key } => {
-                write!(f, "vault-sealed-store tamper detected for {namespace}/{key}")
+                write!(
+                    f,
+                    "vault-sealed-store tamper detected for {namespace}/{key}"
+                )
             }
             Self::Storage(e) => write!(f, "vault-sealed-store storage error: {e}"),
             Self::Crypto(m) => write!(f, "vault-sealed-store crypto error: {m}"),
             Self::Validation { field, message } => {
-                write!(f, "vault-sealed-store validation failed for {field}: {message}")
+                write!(
+                    f,
+                    "vault-sealed-store validation failed for {field}: {message}"
+                )
             }
         }
     }
@@ -382,8 +411,8 @@ impl SealedStore {
         )?;
 
         // 5. Produce the verifier (known-plaintext AEAD under the KEK).
-        let verifier_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+        let verifier_nonce: [u8; NONCE_LEN] =
+            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
             &VERIFIER_PLAINTEXT,
             &*kek,
@@ -528,15 +557,15 @@ impl SealedStore {
             random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?,
         );
 
-        let body_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+        let body_nonce: [u8; NONCE_LEN] =
+            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let aad = record_aad(namespace, key);
         let (ciphertext, body_tag) =
             xchacha20_poly1305_aead_encrypt(plaintext, &*dek, &body_nonce, &aad);
 
         // Wrap the DEK under the KEK.
-        let wrap_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+        let wrap_nonce: [u8; NONCE_LEN] =
+            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let wrap_aad = wrap_aad(namespace, key, &unsealed.id);
         let (wrapped_dek, wrap_tag) =
             xchacha20_poly1305_aead_encrypt(&*dek, &*unsealed.key, &wrap_nonce, &wrap_aad);
@@ -656,8 +685,7 @@ impl SealedStore {
                 return Err(SealedStoreError::Sealed);
             }
         }
-        self.backend
-            .delete(namespace, key, if_revision.as_ref())?;
+        self.backend.delete(namespace, key, if_revision.as_ref())?;
         Ok(())
     }
 
@@ -690,6 +718,48 @@ impl SealedStore {
             });
         }
         Ok(out)
+    }
+
+    /// Return a redacted envelope summary for one sealed record.
+    ///
+    /// Like `list()`, this is a read-only metadata path that does not unwrap
+    /// a DEK or decrypt the body. It still requires the store to be unsealed
+    /// so a sealed vault cannot be used as an unauthenticated existence oracle.
+    pub fn summarize(
+        &self,
+        namespace: &str,
+        key: &str,
+    ) -> Result<Option<SealedEnvelopeSummary>, SealedStoreError> {
+        check_external_namespace(namespace)?;
+        {
+            let guard = self.state.lock().expect("vault state mutex poisoned");
+            if guard.unsealed.is_none() {
+                return Err(SealedStoreError::Sealed);
+            }
+        }
+
+        let record = match self.backend.get(namespace, key)? {
+            Some(r) => r,
+            None => return Ok(None),
+        };
+        let meta = SealedRecordMeta::parse(&record.metadata)?;
+        Ok(Some(SealedEnvelopeSummary {
+            namespace: record.namespace,
+            key: record.key,
+            revision: record.revision,
+            created_at_ms: record.created_at,
+            updated_at_ms: record.updated_at,
+            schema_version: meta.version,
+            aead: meta.aead,
+            ciphertext_len: record.body.len(),
+            body_nonce_len: meta.body_nonce.len(),
+            body_tag_len: meta.body_tag.len(),
+            body_aad_len: meta.body_aad.len(),
+            wrapped_dek_len: meta.wrapped_dek.len(),
+            wrap_nonce_len: meta.wrap_nonce.len(),
+            wrap_tag_len: meta.wrap_tag.len(),
+            kek_id: meta.kek_id,
+        }))
     }
 
     // ---- rotation ----------------------------------------------------------
@@ -758,8 +828,8 @@ impl SealedStore {
 
         // Step 5: build the new verifier and manifest entry.
         let new_kek_id = next_kek_id(&manifest.keks)?;
-        let verifier_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+        let verifier_nonce: [u8; NONCE_LEN] =
+            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
             &VERIFIER_PLAINTEXT,
             &*new_kek,
@@ -1051,17 +1121,11 @@ fn unwrap_dek(
     namespace: &str,
     key: &str,
 ) -> Result<Zeroizing<[u8; KEY_LEN]>, SealedStoreError> {
-    let dek_vec = xchacha20_poly1305_aead_decrypt(
-        wrapped_dek,
-        kek,
-        wrap_nonce,
-        wrap_aad,
-        wrap_tag,
-    )
-    .ok_or_else(|| SealedStoreError::Tamper {
-        namespace: namespace.to_string(),
-        key: key.to_string(),
-    })?;
+    let dek_vec = xchacha20_poly1305_aead_decrypt(wrapped_dek, kek, wrap_nonce, wrap_aad, wrap_tag)
+        .ok_or_else(|| SealedStoreError::Tamper {
+            namespace: namespace.to_string(),
+            key: key.to_string(),
+        })?;
 
     // Wrap the Vec in Zeroizing *before* inspecting it so any error path
     // below wipes the bytes.
@@ -1175,6 +1239,8 @@ struct Manifest {
 }
 
 struct SealedRecordMeta {
+    version: u64,
+    aead: String,
     body_nonce: [u8; NONCE_LEN],
     body_tag: [u8; TAG_LEN],
     body_aad: Vec<u8>,
@@ -1197,7 +1263,10 @@ fn build_manifest_json(
         .map(|e| {
             JsonValue::Object(vec![
                 ("id".to_string(), JsonValue::String(e.id.clone())),
-                ("status".to_string(), JsonValue::String(e.status.to_string())),
+                (
+                    "status".to_string(),
+                    JsonValue::String(e.status.to_string()),
+                ),
                 ("salt".to_string(), JsonValue::String(hex_encode(&e.salt))),
                 (
                     "verifier_nonce".to_string(),
@@ -1302,12 +1371,7 @@ fn build_namespaces_json(names: &[String]) -> JsonValue {
         ),
         (
             "names".to_string(),
-            JsonValue::Array(
-                names
-                    .iter()
-                    .map(|s| JsonValue::String(s.clone()))
-                    .collect(),
-            ),
+            JsonValue::Array(names.iter().map(|s| JsonValue::String(s.clone())).collect()),
         ),
     ])
 }
@@ -1370,22 +1434,19 @@ impl Manifest {
                     })
                 }
             };
-            let salt = hex_decode(get_string(eo, "salt")?).map_err(|_| {
-                SealedStoreError::Validation {
+            let salt =
+                hex_decode(get_string(eo, "salt")?).map_err(|_| SealedStoreError::Validation {
                     field: "salt".to_string(),
                     message: "invalid hex".to_string(),
-                }
-            })?;
+                })?;
             if salt.len() < ARGON2_SALT_MIN_LEN || salt.len() > ARGON2_SALT_MAX_LEN {
                 return Err(SealedStoreError::Validation {
                     field: "salt".to_string(),
                     message: "length out of range".to_string(),
                 });
             }
-            let verifier_nonce = hex_decode_fixed::<NONCE_LEN>(
-                get_string(eo, "verifier_nonce")?,
-                "verifier_nonce",
-            )?;
+            let verifier_nonce =
+                hex_decode_fixed::<NONCE_LEN>(get_string(eo, "verifier_nonce")?, "verifier_nonce")?;
             let verifier_tag =
                 hex_decode_fixed::<TAG_LEN>(get_string(eo, "verifier_tag")?, "verifier_tag")?;
             let verifier_ct = hex_decode(get_string(eo, "verifier_ct")?).map_err(|_| {
@@ -1436,15 +1497,28 @@ impl Manifest {
 impl SealedRecordMeta {
     fn parse(meta: &JsonValue) -> Result<Self, SealedStoreError> {
         let obj = expect_object(meta, "sealed_record")?;
+        let version = get_u64(obj, "vault_sealed_version")?;
+        if version != SEALED_RECORD_VERSION {
+            return Err(SealedStoreError::Validation {
+                field: "vault_sealed_version".to_string(),
+                message: "unsupported".to_string(),
+            });
+        }
+        let aead = get_string(obj, "aead")?.to_string();
+        if aead != "xchacha20poly1305" {
+            return Err(SealedStoreError::Validation {
+                field: "aead".to_string(),
+                message: "unsupported".to_string(),
+            });
+        }
         let body_nonce =
             hex_decode_fixed::<NONCE_LEN>(get_string(obj, "body_nonce")?, "body_nonce")?;
         let body_tag = hex_decode_fixed::<TAG_LEN>(get_string(obj, "body_tag")?, "body_tag")?;
-        let body_aad = hex_decode(get_string(obj, "body_aad")?).map_err(|_| {
-            SealedStoreError::Validation {
+        let body_aad =
+            hex_decode(get_string(obj, "body_aad")?).map_err(|_| SealedStoreError::Validation {
                 field: "body_aad".to_string(),
                 message: "invalid hex".to_string(),
-            }
-        })?;
+            })?;
         let wrapped_dek = hex_decode(get_string(obj, "wrapped_dek")?).map_err(|_| {
             SealedStoreError::Validation {
                 field: "wrapped_dek".to_string(),
@@ -1459,6 +1533,8 @@ impl SealedRecordMeta {
             hex_decode_fixed::<TAG_LEN>(get_string(obj, "wrapped_dek_tag")?, "wrapped_dek_tag")?;
         let kek_id = get_string(obj, "kek_id")?.to_string();
         Ok(Self {
+            version,
+            aead,
             body_nonce,
             body_tag,
             body_aad,
@@ -1516,6 +1592,17 @@ fn get_u32(obj: &[(String, JsonValue)], name: &str) -> Result<u32, SealedStoreEr
         _ => Err(SealedStoreError::Validation {
             field: name.to_string(),
             message: "not a non-negative 32-bit integer".to_string(),
+        }),
+    }
+}
+
+fn get_u64(obj: &[(String, JsonValue)], name: &str) -> Result<u64, SealedStoreError> {
+    let v = get_field(obj, name)?;
+    match v {
+        JsonValue::Number(JsonNumber::Integer(n)) if *n >= 0 => Ok(*n as u64),
+        _ => Err(SealedStoreError::Validation {
+            field: name.to_string(),
+            message: "not a non-negative integer".to_string(),
         }),
     }
 }
@@ -1884,6 +1971,82 @@ mod tests {
     }
 
     #[test]
+    fn summarize_returns_redacted_envelope_metadata() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        let secret = b"super-secret-value-that-must-not-appear-in-debug";
+        let rev = store.put("ns", "k", secret, None).unwrap();
+
+        let summary = store.summarize("ns", "k").unwrap().unwrap();
+        assert_eq!(summary.namespace, "ns");
+        assert_eq!(summary.key, "k");
+        assert_eq!(summary.revision, rev);
+        assert_eq!(summary.schema_version, SEALED_RECORD_VERSION);
+        assert_eq!(summary.aead, "xchacha20poly1305");
+        assert_eq!(summary.ciphertext_len, secret.len());
+        assert_eq!(summary.body_nonce_len, NONCE_LEN);
+        assert_eq!(summary.body_tag_len, TAG_LEN);
+        assert_eq!(summary.body_aad_len, record_aad("ns", "k").len());
+        assert_eq!(summary.wrapped_dek_len, KEY_LEN);
+        assert_eq!(summary.wrap_nonce_len, NONCE_LEN);
+        assert_eq!(summary.wrap_tag_len, TAG_LEN);
+        assert_eq!(summary.kek_id, "kek-1");
+
+        let record = backend.get("ns", "k").unwrap().unwrap();
+        let debug = format!("{summary:?}");
+        assert!(!debug.contains("super-secret-value"));
+        assert!(!debug.contains(&hex_encode(&record.body)));
+    }
+
+    #[test]
+    fn summarize_requires_unseal_and_handles_missing_records() {
+        let (store, _) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.seal();
+        assert!(matches!(
+            store.summarize("ns", "missing"),
+            Err(SealedStoreError::Sealed)
+        ));
+
+        store.unseal(b"pw").unwrap();
+        assert!(store.summarize("ns", "missing").unwrap().is_none());
+    }
+
+    #[test]
+    fn sealed_record_metadata_rejects_unknown_envelope_format() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"value", None).unwrap();
+
+        let record = backend.get("ns", "k").unwrap().unwrap();
+        let mut obj = match record.metadata.clone() {
+            JsonValue::Object(o) => o,
+            _ => panic!("bad metadata"),
+        };
+        for (k, v) in obj.iter_mut() {
+            if k == "aead" {
+                *v = JsonValue::String("unknown-aead".to_string());
+            }
+        }
+        let tampered = JsonValue::Object(obj);
+        let put = StoragePutInput::new(
+            "ns".to_string(),
+            "k".to_string(),
+            SEALED_CONTENT_TYPE.to_string(),
+            tampered,
+            record.body,
+        )
+        .unwrap()
+        .with_if_revision(Some(record.revision));
+        backend.put(put).unwrap();
+
+        assert!(matches!(
+            store.summarize("ns", "k"),
+            Err(SealedStoreError::Validation { .. })
+        ));
+    }
+
+    #[test]
     fn new_store_instance_can_unseal_same_backend() {
         let (store, backend) = new_store();
         store.init(b"pw", &fast_opts()).unwrap();
@@ -1901,7 +2064,10 @@ mod tests {
     #[test]
     fn hex_roundtrip() {
         assert_eq!(hex_encode(&[0x00, 0xff, 0xde, 0xad]), "00ffdead");
-        assert_eq!(hex_decode("00ffDEAD").unwrap(), vec![0x00, 0xff, 0xde, 0xad]);
+        assert_eq!(
+            hex_decode("00ffDEAD").unwrap(),
+            vec![0x00, 0xff, 0xde, 0xad]
+        );
         assert!(hex_decode("abc").is_err());
         assert!(hex_decode("xz").is_err());
     }
@@ -1982,7 +2148,10 @@ mod tests {
         // time. parse() must reject it before we call Argon2.
         let (store, backend) = new_store();
         store.init(b"pw", &fast_opts()).unwrap();
-        let mf = backend.get(RESERVED_NAMESPACE, MANIFEST_KEY).unwrap().unwrap();
+        let mf = backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)
+            .unwrap()
+            .unwrap();
         let mut obj = match mf.metadata.clone() {
             JsonValue::Object(o) => o,
             _ => panic!("bad manifest"),
@@ -2056,10 +2225,7 @@ mod tests {
 
         // Even if an attacker injects the reserved namespace into the list,
         // list_registered_namespaces must filter it out.
-        let tampered = build_namespaces_json(&[
-            "real".to_string(),
-            RESERVED_NAMESPACE.to_string(),
-        ]);
+        let tampered = build_namespaces_json(&["real".to_string(), RESERVED_NAMESPACE.to_string()]);
         let put = StoragePutInput::new(
             RESERVED_NAMESPACE.to_string(),
             NAMESPACES_KEY.to_string(),
@@ -2096,7 +2262,10 @@ mod tests {
     fn manifest_with_duplicate_kek_ids_is_rejected() {
         let (store, backend) = new_store();
         store.init(b"pw", &fast_opts()).unwrap();
-        let mf = backend.get(RESERVED_NAMESPACE, MANIFEST_KEY).unwrap().unwrap();
+        let mf = backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)
+            .unwrap()
+            .unwrap();
         let mut obj = match mf.metadata.clone() {
             JsonValue::Object(o) => o,
             _ => panic!("bad manifest"),
