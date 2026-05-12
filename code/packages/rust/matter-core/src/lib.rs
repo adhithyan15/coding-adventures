@@ -11,7 +11,7 @@
 use smart_home_core::{
     Capability, CapabilityId, CommandType, DeviceCommand, EntityKind, StateDelta, Value,
 };
-use std::fmt;
+use std::{collections::BTreeSet, fmt};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MatterError {
@@ -265,7 +265,28 @@ pub enum MatterValue {
     Text(String),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MatterValueKind {
+    Null,
+    Bool,
+    I64,
+    U64,
+    F64,
+    Text,
+}
+
 impl MatterValue {
+    pub fn kind(&self) -> MatterValueKind {
+        match self {
+            Self::Null => MatterValueKind::Null,
+            Self::Bool(_) => MatterValueKind::Bool,
+            Self::I64(_) => MatterValueKind::I64,
+            Self::U64(_) => MatterValueKind::U64,
+            Self::F64(_) => MatterValueKind::F64,
+            Self::Text(_) => MatterValueKind::Text,
+        }
+    }
+
     fn as_bool(&self) -> Option<bool> {
         match self {
             Self::Bool(value) => Some(*value),
@@ -287,6 +308,93 @@ impl MatterValue {
             Self::U64(value) if *value <= i64::MAX as u64 => Some(*value as i64),
             _ => None,
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MatterAttributeReportBatchSummary {
+    pub total_reports: usize,
+    pub unique_nodes: usize,
+    pub unique_endpoints: usize,
+    pub unique_clusters: usize,
+    pub d23_state_delta_reports: usize,
+    pub unsupported_or_invalid_reports: usize,
+    pub null_reports: usize,
+    pub bool_reports: usize,
+    pub signed_numeric_reports: usize,
+    pub unsigned_numeric_reports: usize,
+    pub float_numeric_reports: usize,
+    pub text_reports: usize,
+    pub light_reports: usize,
+    pub sensor_reports: usize,
+    pub lock_reports: usize,
+    pub thermostat_reports: usize,
+}
+
+impl MatterAttributeReportBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_reports<'a, I>(reports: I) -> Self
+    where
+        I: IntoIterator<Item = &'a MatterAttributeReport>,
+    {
+        let mut summary = Self::empty();
+        let mut nodes = BTreeSet::new();
+        let mut endpoints = BTreeSet::new();
+        let mut clusters = BTreeSet::new();
+
+        for report in reports {
+            summary.total_reports += 1;
+            nodes.insert(report.node_id);
+            endpoints.insert(report.endpoint_id);
+            clusters.insert(report.cluster_id);
+
+            match report.value.kind() {
+                MatterValueKind::Null => summary.null_reports += 1,
+                MatterValueKind::Bool => summary.bool_reports += 1,
+                MatterValueKind::I64 => summary.signed_numeric_reports += 1,
+                MatterValueKind::U64 => summary.unsigned_numeric_reports += 1,
+                MatterValueKind::F64 => summary.float_numeric_reports += 1,
+                MatterValueKind::Text => summary.text_reports += 1,
+            }
+
+            match MatterCluster::from_id(report.cluster_id).entity_kind() {
+                Some(EntityKind::Light) => summary.light_reports += 1,
+                Some(EntityKind::Sensor) => summary.sensor_reports += 1,
+                Some(EntityKind::Lock) => summary.lock_reports += 1,
+                Some(EntityKind::Thermostat) => summary.thermostat_reports += 1,
+                Some(_) | None => {}
+            }
+
+            if state_delta_for_attribute_report(report).is_ok() {
+                summary.d23_state_delta_reports += 1;
+            } else {
+                summary.unsupported_or_invalid_reports += 1;
+            }
+        }
+
+        summary.unique_nodes = nodes.len();
+        summary.unique_endpoints = endpoints.len();
+        summary.unique_clusters = clusters.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_reports == 0
+    }
+
+    pub fn has_state_delta_reports(&self) -> bool {
+        self.d23_state_delta_reports > 0
+    }
+
+    pub fn has_unsupported_or_invalid_reports(&self) -> bool {
+        self.unsupported_or_invalid_reports > 0
+    }
+
+    pub fn has_multiple_clusters(&self) -> bool {
+        self.unique_clusters > 1
     }
 }
 
@@ -315,6 +423,13 @@ impl MatterAttributeReport {
             value,
         }
     }
+}
+
+pub fn summarize_attribute_reports<'a, I>(reports: I) -> MatterAttributeReportBatchSummary
+where
+    I: IntoIterator<Item = &'a MatterAttributeReport>,
+{
+    MatterAttributeReportBatchSummary::from_reports(reports)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -395,6 +510,119 @@ impl MatterCommandInvocation {
             .find(|(candidate, _)| candidate == name)
             .map(|(_, value)| value)
     }
+
+    pub fn summary(&self) -> MatterCommandInvocationSummary {
+        MatterCommandInvocationSummary::from_invocation(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MatterCommandInvocationSummary {
+    pub cluster_id: MatterClusterId,
+    pub command_id: MatterCommandId,
+    pub argument_count: usize,
+}
+
+impl MatterCommandInvocationSummary {
+    pub fn from_invocation(invocation: &MatterCommandInvocation) -> Self {
+        Self {
+            cluster_id: invocation.cluster_id,
+            command_id: invocation.command_id,
+            argument_count: invocation.arguments.len(),
+        }
+    }
+
+    pub fn has_arguments(&self) -> bool {
+        self.argument_count > 0
+    }
+
+    pub fn targets_lighting(&self) -> bool {
+        matches!(
+            MatterCluster::from_id(self.cluster_id),
+            MatterCluster::OnOff | MatterCluster::LevelControl | MatterCluster::ColorControl
+        )
+    }
+
+    pub fn targets_lock(&self) -> bool {
+        MatterCluster::from_id(self.cluster_id) == MatterCluster::DoorLock
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MatterCommandPlanSummary {
+    pub total_commands: usize,
+    pub unique_nodes: usize,
+    pub unique_endpoints: usize,
+    pub unique_clusters: usize,
+    pub on_off_commands: usize,
+    pub level_control_commands: usize,
+    pub color_control_commands: usize,
+    pub door_lock_commands: usize,
+    pub commands_with_arguments: usize,
+    pub total_arguments: usize,
+}
+
+impl MatterCommandPlanSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_invocations<'a, I>(invocations: I) -> Self
+    where
+        I: IntoIterator<Item = &'a MatterCommandInvocation>,
+    {
+        let mut summary = Self::empty();
+        let mut nodes = BTreeSet::new();
+        let mut endpoints = BTreeSet::new();
+        let mut clusters = BTreeSet::new();
+
+        for invocation in invocations {
+            summary.total_commands += 1;
+            nodes.insert(invocation.node_id);
+            endpoints.insert(invocation.endpoint_id);
+            clusters.insert(invocation.cluster_id);
+            summary.total_arguments += invocation.arguments.len();
+            if !invocation.arguments.is_empty() {
+                summary.commands_with_arguments += 1;
+            }
+
+            match MatterCluster::from_id(invocation.cluster_id) {
+                MatterCluster::OnOff => summary.on_off_commands += 1,
+                MatterCluster::LevelControl => summary.level_control_commands += 1,
+                MatterCluster::ColorControl => summary.color_control_commands += 1,
+                MatterCluster::DoorLock => summary.door_lock_commands += 1,
+                _ => {}
+            }
+        }
+
+        summary.unique_nodes = nodes.len();
+        summary.unique_endpoints = endpoints.len();
+        summary.unique_clusters = clusters.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_commands == 0
+    }
+
+    pub fn has_lighting_commands(&self) -> bool {
+        self.on_off_commands + self.level_control_commands + self.color_control_commands > 0
+    }
+
+    pub fn has_lock_commands(&self) -> bool {
+        self.door_lock_commands > 0
+    }
+
+    pub fn has_multiple_clusters(&self) -> bool {
+        self.unique_clusters > 1
+    }
+}
+
+pub fn summarize_command_invocations<'a, I>(invocations: I) -> MatterCommandPlanSummary
+where
+    I: IntoIterator<Item = &'a MatterCommandInvocation>,
+{
+    MatterCommandPlanSummary::from_invocations(invocations)
 }
 
 pub fn matter_command_for_device_command(
@@ -840,6 +1068,72 @@ mod tests {
     }
 
     #[test]
+    fn matter_command_plan_summary_counts_command_surfaces_without_arguments() {
+        let node_id = MatterNodeId::new(0x1234);
+        let endpoint_id = MatterEndpointId::new(1).unwrap();
+        let invocations = vec![
+            matter_command_for_device_command(
+                node_id,
+                endpoint_id,
+                &device_command(CommandType::TurnOn, Value::Null),
+            )
+            .unwrap(),
+            matter_command_for_device_command(
+                node_id,
+                endpoint_id,
+                &device_command(CommandType::SetBrightness, Value::Percentage(50)),
+            )
+            .unwrap(),
+            matter_command_for_device_command(
+                node_id,
+                endpoint_id,
+                &device_command(CommandType::SetColorTemperature, Value::Integer(250)),
+            )
+            .unwrap(),
+            matter_command_for_device_command(
+                node_id,
+                endpoint_id,
+                &device_command(CommandType::SetLock, Value::Bool(true)),
+            )
+            .unwrap(),
+        ];
+
+        let first = invocations[0].summary();
+        assert_eq!(
+            first,
+            MatterCommandInvocationSummary {
+                cluster_id: MatterCluster::ON_OFF,
+                command_id: MatterCommand::ON,
+                argument_count: 0,
+            }
+        );
+        assert!(first.targets_lighting());
+        assert!(!first.has_arguments());
+        assert!(!first.targets_lock());
+
+        let summary = summarize_command_invocations(&invocations);
+        assert_eq!(
+            summary,
+            MatterCommandPlanSummary {
+                total_commands: 4,
+                unique_nodes: 1,
+                unique_endpoints: 1,
+                unique_clusters: 4,
+                on_off_commands: 1,
+                level_control_commands: 1,
+                color_control_commands: 1,
+                door_lock_commands: 1,
+                commands_with_arguments: 2,
+                total_arguments: 4,
+            }
+        );
+        assert!(summary.has_lighting_commands());
+        assert!(summary.has_lock_commands());
+        assert!(summary.has_multiple_clusters());
+        assert!(MatterCommandPlanSummary::empty().is_empty());
+    }
+
+    #[test]
     fn device_command_projection_rejects_unsupported_or_malformed_commands() {
         let node_id = MatterNodeId::new(0x1234);
         let endpoint_id = MatterEndpointId::new(1).unwrap();
@@ -912,6 +1206,61 @@ mod tests {
         assert_eq!(locked.value, Value::Text("locked".to_string()));
         assert_eq!(lock_state_label(2), "unlocked");
         assert_eq!(lock_state_label(99), "unknown");
+    }
+
+    #[test]
+    fn attribute_report_batch_summary_counts_payload_free_shapes() {
+        let reports = vec![
+            report(
+                MatterCluster::ON_OFF,
+                MatterAttribute::ON_OFF,
+                MatterValue::Bool(true),
+            ),
+            report(
+                MatterCluster::TEMPERATURE_MEASUREMENT,
+                MatterAttribute::MEASURED_VALUE,
+                MatterValue::I64(2_135),
+            ),
+            report(
+                MatterCluster::DOOR_LOCK,
+                MatterAttribute::LOCK_STATE,
+                MatterValue::U64(1),
+            ),
+            report(
+                MatterCluster::ON_OFF,
+                MatterAttribute::ON_OFF,
+                MatterValue::Text("true".to_string()),
+            ),
+        ];
+
+        let summary = summarize_attribute_reports(&reports);
+
+        assert_eq!(
+            summary,
+            MatterAttributeReportBatchSummary {
+                total_reports: 4,
+                unique_nodes: 1,
+                unique_endpoints: 1,
+                unique_clusters: 3,
+                d23_state_delta_reports: 3,
+                unsupported_or_invalid_reports: 1,
+                null_reports: 0,
+                bool_reports: 1,
+                signed_numeric_reports: 1,
+                unsigned_numeric_reports: 1,
+                float_numeric_reports: 0,
+                text_reports: 1,
+                light_reports: 2,
+                sensor_reports: 1,
+                lock_reports: 1,
+                thermostat_reports: 0,
+            }
+        );
+        assert!(summary.has_state_delta_reports());
+        assert!(summary.has_unsupported_or_invalid_reports());
+        assert!(summary.has_multiple_clusters());
+        assert_eq!(reports[0].value.kind(), MatterValueKind::Bool);
+        assert!(MatterAttributeReportBatchSummary::empty().is_empty());
     }
 
     #[test]

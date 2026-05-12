@@ -13,6 +13,8 @@ before they can project Matter nodes into `smart-home-core` records.
 - cluster-to-D23 capability projection
 - canonical `DeviceCommand` projection into Matter command invocations
 - selected Matter attribute reports mapped into `StateDelta`
+- payload-free Matter command and attribute-report summaries for runtime
+  planning and read-model telemetry
 - deterministic helpers for level, humidity, temperature, occupancy, lock, and
   thermostat values
 
