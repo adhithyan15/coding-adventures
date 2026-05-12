@@ -188,6 +188,7 @@ members = [
     "adjudication-round-trip",
     "adjudication-clarification",
     "adjudication-clinical-demo",
+    "adjudication-contract-demo",
     "adjudication-tsa-demo",
     "loss-functions",
     "markov-chain",
