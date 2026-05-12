@@ -283,6 +283,17 @@ pub struct DialogueResponse {
     pub actor_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub model_version: Option<String>,
+    /// The clarification-prompt template version that produced this
+    /// turn, e.g. `"clarification-v1"`. Same purpose as
+    /// `LlmCallRecord::prompt_version` — replay matches on
+    /// (`prompt_version`, `prompt_hash`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub prompt_version: Option<String>,
+    /// Content-addressed hash of the prompt the LLM saw for this
+    /// turn. Same FNV-1a-rendered-hex format as
+    /// `LlmCallRecord::prompt_hash`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub prompt_hash: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -573,6 +584,8 @@ mod tests {
                 text: "No.".into(),
                 actor_id: Some("anthropic/claude-haiku".into()),
                 model_version: Some("4-5-20251001".into()),
+                prompt_version: None,
+                prompt_hash: None,
             },
             outcome: DialogueOutcome::Resolved,
         };

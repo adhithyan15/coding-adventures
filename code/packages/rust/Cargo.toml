@@ -185,6 +185,7 @@ members = [
     "adjudication-adversarial",
     "adjudication-pipeline",
     "adjudication-round-trip",
+    "adjudication-clarification",
     "adjudication-tsa-demo",
     "loss-functions",
     "markov-chain",
