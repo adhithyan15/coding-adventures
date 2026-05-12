@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-12 — Adversarial multi-model elicitation
+
+### Added
+
+- `acquire_rulebook_adversarial(req, model_gateways)` — orchestrate
+  rulebook elicitation across multiple LLMs. The recursive use of
+  the framework, made **adversarial**: a rule cited at answer time
+  comes from one of several independent model elicitations, so
+  reviewers can spot rules that only appear in a single model's
+  training and treat them as lower-trust than rules multiple models
+  agree on.
+- `AcquireRulebookAdversarialRequest { document_id_prefix, domain,
+  scope, as_of, language_hint }` — input shape.
+- `AdversarialRulebook { per_model, merged_source_text,
+  successful_count, failed_count }` — output. `merged_source_text`
+  is provenance-tagged (one section per model with `=== RULEBOOK
+  FROM <model> ===` header), suitable for direct injection into an
+  answer-time system prompt. Reviewers reading the eventual
+  audit trail trace cited rules back to their model.
+- `PerModelOutcome { Acquired { model_label, rulebook } | Failed {
+  model_label, error_summary } }` plus `model_label()` /
+  `is_acquired()` helpers. A single failing model does NOT fail
+  the whole call — the remaining successful rulebooks are still
+  returned.
+- Document ids generated as `{prefix}-{sanitised_label}` so model
+  names containing `:` (like `qwen2.5:1.5b`) become filesystem-safe
+  ids.
+
+### Tests
+
+6 new unit tests, total 10 pass (was 4).
+
+### Not yet shipping
+
+- Semantic-equivalence comparison across rulebooks (`Confirms` /
+  `ConflictsWith` edges per ADJ09).
+- Parallel elicitation (v0.2 runs the per-model `acquire_rulebook`
+  calls serially).
+
 ## [0.1.0] - 2026-05-12 — ADJ14 Stage 0 implementation
 
 ### Added
