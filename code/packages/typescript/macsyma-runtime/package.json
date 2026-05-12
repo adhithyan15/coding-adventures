@@ -23,6 +23,7 @@
     "@coding-adventures/state-machine": "file:../state-machine",
     "@coding-adventures/cas-list-operations": "file:../cas-list-operations",
     "@coding-adventures/cas-pattern-matching": "file:../cas-pattern-matching",
+    "@coding-adventures/cas-pretty-printer": "file:../cas-pretty-printer",
     "@coding-adventures/cas-simplify": "file:../cas-simplify",
     "@coding-adventures/cas-solve": "file:../cas-solve",
     "@coding-adventures/cas-substitution": "file:../cas-substitution",

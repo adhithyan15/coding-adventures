@@ -14,6 +14,7 @@ import {
   sortList,
 } from "@coding-adventures/cas-list-operations";
 import { simplify as simplifyCas } from "@coding-adventures/cas-simplify";
+import { MacsymaDialect, pretty } from "@coding-adventures/cas-pretty-printer";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import { subst } from "@coding-adventures/cas-substitution";
 import { expandTrig, trigReduce, trigSimplify } from "@coding-adventures/cas-trig";
@@ -241,6 +242,7 @@ export interface EvalResult {
   readonly outputIndex: number;
   readonly input: IRNode;
   readonly output: IRNode;
+  readonly outputText: string;
   readonly display: boolean;
 }
 
@@ -410,10 +412,11 @@ export class MacsymaSession {
     const inputIndex = this.sessionHistory.recordInput(input);
     const output = this.vm.eval(input);
     const outputIndex = this.sessionHistory.recordOutput(output);
+    const outputText = displayTextFor(input, output);
     if (isKillAll(input)) {
       this.sessionHistory.reset();
     }
-    return { inputIndex, outputIndex, input, output, display };
+    return { inputIndex, outputIndex, input, output, outputText, display };
   }
 }
 
@@ -500,7 +503,7 @@ function resultToJson(result: EvalResult): JsonEvalResult {
     outputIndex: result.outputIndex,
     display: result.display,
     inputText: toDisplayString(result.input),
-    outputText: toDisplayString(result.output),
+    outputText: result.outputText,
     inputIr: irToJson(result.input),
     outputIr: irToJson(result.output),
   };
@@ -706,6 +709,19 @@ function numerFold(node: IRNode): IRNode {
     default:
       return node;
   }
+}
+
+function displayTextFor(input: IRNode, output: IRNode): string {
+  if (hasEvFlag(input, "display2d")) {
+    return pretty(output, MacsymaDialect, "2d");
+  }
+  return toDisplayString(output);
+}
+
+function hasEvFlag(input: IRNode, flag: string): boolean {
+  return input.kind === "apply"
+    && equals(input.head, EV)
+    && input.args.slice(1).some((arg) => arg.kind === "symbol" && arg.name === flag);
 }
 
 function isKillAll(input: IRNode): boolean {

@@ -47,4 +47,17 @@ describe("Macsyma browser REPL", () => {
     expect(await transcript.findByText("6")).toBeInTheDocument();
     expect(transcript.getByText("%i2")).toBeInTheDocument();
   });
+
+  it("renders display2d outputs from the runtime transcript text", async () => {
+    render(<App />);
+
+    fireEvent.change(screen.getByLabelText("MACSYMA source"), {
+      target: { value: "ev(1/(x + 1), display2d);" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Run" }));
+
+    const transcript = within(screen.getByLabelText("Transcript"));
+    expect(await transcript.findByText((content) => content.includes("─") && content.includes("x + 1")))
+      .toBeInTheDocument();
+  });
 });
