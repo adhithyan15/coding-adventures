@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-12
+
+### Added
+
+**The self-correction story is complete.** v0.4 adds ADJ06-for-ADJ05:
+when the adversary finds a plausible alternative reading, the
+framework re-prompts the extractor with the reading attached and
+asks for a more precise IR (or an explicit `Uncertainty` node).
+With v0.4, all four LLM-touched checker passes have their own
+self-correction shape:
+
+| Checker | Failure | Retry primitive | Outcome |
+|---------|---------|-----------------|---------|
+| ADJ02 coverage | byte not covered | `decompose_text` | corrected JSON IR |
+| ADJ03 polarity | wrong polarity/modality | `decompose_text` | corrected JSON IR |
+| ADJ04 round-trip | rendering drifts | `render_node` | corrected rendering string |
+| ADJ05 adversarial | plausible alt reading | `decompose_text` | corrected JSON IR |
+
+- `AdversarialClarificationRequest { original, previous_ir,
+  adversary_reading, adversary_explanation, judge_reason }` —
+  the input shape, carrying the adversary's reading + the judge's
+  ruling.
+- `retry_decompose_on_adversarial_failure(req, gateway, max_attempts, now)`
+  — headline entry point. Reuses the shared retry-loop machinery.
+- `ADVERSARIAL_CLARIFICATION_PROMPT_VERSION = "adversarial-clarification-v1"`
+  for audit-trail replay.
+- `build_adversarial_correction_prompt` offers the model **two
+  fix paths**:
+  1. **Be more specific** — refine the relevant Fact's term so the
+     alternative becomes clearly wrong.
+  2. **Mark the ambiguity** — add an `Uncertainty` node or flip a
+     polarity to `Uncertain`.
+- 4 new tests cover the adversarial path. Total 24 tests in the
+  crate (8 coverage + 5 polarity + 7 render + 4 adversarial).
+
+### Notes
+
+This completes the self-correction matrix for the four fallible
+LLM-touched checker passes. The framework can now respond to ANY
+of the five gating/advisory failures with a structured retry
+prompt that points the model at the specific defect.
+
+Wiring these new retries (ADJ04 + ADJ05) into the demos' clarification
+loops is a follow-up — v0.4 ships the primitive surface only.
+
 ## [0.3.0] - 2026-05-12
 
 ### Added

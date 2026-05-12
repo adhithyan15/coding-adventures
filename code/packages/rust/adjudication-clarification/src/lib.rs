@@ -79,6 +79,15 @@ pub const POLARITY_CLARIFICATION_PROMPT_VERSION: &str = "polarity-clarification-
 /// retries, hence its own version.
 pub const RENDER_CLARIFICATION_PROMPT_VERSION: &str = "render-clarification-v1";
 
+/// Stable version of the adversarial-clarification prompt template
+/// (ADJ06-for-ADJ05). When ADJ05's adversary finds a plausible
+/// alternative reading, the framework re-prompts the EXTRACTOR
+/// with that reading attached, asking for a more precise IR that
+/// either rules the reading out or marks the ambiguity. Returns a
+/// corrected IR (like coverage/polarity retries, unlike the drift
+/// retry which returns a corrected rendering string).
+pub const ADVERSARIAL_CLARIFICATION_PROMPT_VERSION: &str = "adversarial-clarification-v1";
+
 // ---------------------------------------------------------------------------
 // Public types
 // ---------------------------------------------------------------------------
@@ -438,6 +447,63 @@ pub fn retry_render_on_drift_failure(
 }
 
 // ---------------------------------------------------------------------------
+// Entry point: adversarial-reading retry (ADJ06-for-ADJ05)
+// ---------------------------------------------------------------------------
+
+/// What the caller hands ADJ06 when ADJ05's adversary found a
+/// plausible contradicting reading. The fix is *not* to re-render
+/// (that's ADJ04's job) — it's to re-prompt the EXTRACTOR with
+/// the alternative reading attached, asking for an IR that either:
+///
+/// 1. Rules the alternative reading out by being more specific
+///    (e.g., add the disambiguating word into a Fact's term), OR
+/// 2. Marks the ambiguity explicitly via an `Uncertainty` node so
+///    downstream consumers know the source is genuinely ambiguous.
+#[derive(Debug, Clone)]
+pub struct AdversarialClarificationRequest {
+    /// The original `decompose_text` request.
+    pub original: DecomposeTextRequest,
+    /// The previous IR for the model to revise.
+    pub previous_ir: serde_json::Value,
+    /// The adversary's contradicting reading (verbatim).
+    pub adversary_reading: String,
+    /// The adversary's explanation of how the reading differs from
+    /// the IR's rendering.
+    pub adversary_explanation: String,
+    /// The plausibility judge's reason for ruling the alternative
+    /// reading plausible. Embedded in the prompt so the model sees
+    /// the cross-check.
+    pub judge_reason: String,
+}
+
+/// Ask the extractor to refine the IR in light of an adversarial
+/// reading. Returns a corrected IR (same shape as the coverage /
+/// polarity retries — `CoverageClarificationOutcome` is reused as
+/// the "corrected JSON IR + dialogue trail" outcome).
+pub fn retry_decompose_on_adversarial_failure(
+    req: &AdversarialClarificationRequest,
+    gateway: &GatewayConfig,
+    max_attempts: usize,
+    now: impl Fn() -> String,
+) -> Result<CoverageClarificationOutcome, ClarificationError> {
+    retry_with_correction_prompt(
+        &req.original,
+        gateway,
+        max_attempts,
+        now,
+        || {
+            build_adversarial_correction_prompt(
+                &req.previous_ir,
+                &req.adversary_reading,
+                &req.adversary_explanation,
+                &req.judge_reason,
+            )
+        },
+        ADVERSARIAL_CLARIFICATION_PROMPT_VERSION,
+    )
+}
+
+// ---------------------------------------------------------------------------
 // Shared retry-loop machinery
 // ---------------------------------------------------------------------------
 
@@ -627,6 +693,50 @@ fn build_render_correction_prompt(
          are prohibited\" or \"matches are allowed\").\n\
          \n\
          Produce a CORRECTED rendering that stays close to the source.",
+    )
+}
+
+fn build_adversarial_correction_prompt(
+    previous_ir: &serde_json::Value,
+    adversary_reading: &str,
+    adversary_explanation: &str,
+    judge_reason: &str,
+) -> String {
+    let previous_pretty = serde_json::to_string_pretty(previous_ir)
+        .unwrap_or_else(|_| previous_ir.to_string());
+    format!(
+        "An ADVERSARY model from a DIFFERENT family looked at your IR \
+         and proposed a DIFFERENT reading of the source. A separate \
+         judge ruled that reading plausible. This means your IR is not \
+         the only defensible interpretation of the source — it's \
+         ambiguous, or your IR is missing something.\n\
+         \n\
+         The adversary's reading:\n  {adversary_reading}\n\
+         \n\
+         The adversary's explanation:\n  {adversary_explanation}\n\
+         \n\
+         Why the judge ruled it plausible:\n  {judge_reason}\n\
+         \n\
+         Your previous IR was:\n\
+         {previous_pretty}\n\
+         \n\
+         You have TWO good ways to fix this:\n\
+         \n\
+         1. **Be more specific.** If the source genuinely supports your \
+         original reading and the alternative is a misreading, refine \
+         the relevant Fact node's term so the alternative becomes \
+         clearly wrong. (e.g., if the original is `prohibited(matches)` \
+         and the adversary read \"matches\" as the verb, change the \
+         term to `prohibited(matches_lighter)` or split into two facts.)\n\
+         \n\
+         2. **Mark the ambiguity.** If the source IS genuinely \
+         ambiguous, add an `Uncertainty` node that captures both \
+         readings, OR change the Fact's polarity to `Uncertain`. \
+         Downstream consumers will then know the source admits \
+         multiple readings.\n\
+         \n\
+         Produce a CORRECTED IR with the same `document_id`. Same \
+         flat-array shape, same field names.",
     )
 }
 
@@ -1216,6 +1326,111 @@ mod tests {
                 assert_eq!(
                     dialogue[0].response.prompt_version.as_deref(),
                     Some(RENDER_CLARIFICATION_PROMPT_VERSION)
+                );
+            }
+            other => panic!("expected Exhausted, got {other:?}"),
+        }
+    }
+
+    // ---------------- ADJ06-for-ADJ05 adversarial retry ----------------
+
+    #[test]
+    fn adversarial_retry_returns_corrected_ir_on_first_success() {
+        let gateway = gateway_with(ScriptedExtractor::new(vec![happy_ir()]));
+        let req = AdversarialClarificationRequest {
+            original: make_request(),
+            previous_ir: serde_json::json!({ "document_id": "doc1", "nodes": [] }),
+            adversary_reading: "matches as a verb, not the noun".into(),
+            adversary_explanation:
+                "the word 'matches' could be the 3rd-person verb form".into(),
+            judge_reason: "in TSA context, both readings are common".into(),
+        };
+        let out =
+            retry_decompose_on_adversarial_failure(&req, &gateway, 3, make_clock()).unwrap();
+        assert_eq!(out.used_attempts, 1);
+        assert_eq!(out.dialogue.len(), 1);
+        assert!(matches!(out.dialogue[0].outcome, DialogueOutcome::Resolved));
+        // Audit row carries the adversarial flavour.
+        assert_eq!(
+            out.dialogue[0].response.prompt_version.as_deref(),
+            Some(ADVERSARIAL_CLARIFICATION_PROMPT_VERSION)
+        );
+        // Prompt mentions the adversary's reading and the judge.
+        assert!(out.dialogue[0].question_text.contains("ADVERSARY"));
+        assert!(out.dialogue[0]
+            .question_text
+            .contains("matches as a verb"));
+        assert!(out.dialogue[0].question_text.contains("plausible"));
+    }
+
+    #[test]
+    fn adversarial_correction_prompt_offers_two_fix_paths() {
+        // The framework's prompt should hint that the model can
+        // either (1) be more specific or (2) mark the ambiguity.
+        let p = build_adversarial_correction_prompt(
+            &serde_json::json!({}),
+            "alt reading",
+            "alt explanation",
+            "judge reason",
+        );
+        assert!(p.contains("Be more specific"));
+        assert!(p.contains("Mark the ambiguity"));
+        assert!(p.contains("Uncertainty"));
+    }
+
+    #[test]
+    fn adversarial_clarification_prompt_version_is_locked() {
+        assert_eq!(
+            ADVERSARIAL_CLARIFICATION_PROMPT_VERSION,
+            "adversarial-clarification-v1"
+        );
+    }
+
+    #[test]
+    fn adversarial_retry_exhausts_gracefully_on_repeated_error() {
+        struct AlwaysErr;
+        impl LlmClient for AlwaysErr {
+            fn identity(&self) -> ProviderIdentity {
+                extractor_identity()
+            }
+            fn capabilities(&self) -> Capabilities {
+                Capabilities::modern_frontier()
+            }
+            fn complete(&self, _r: CompletionRequest) -> Result<CompletionResponse, LlmError> {
+                unreachable!()
+            }
+            fn complete_json(
+                &self,
+                _r: CompletionRequest,
+                _s: &JsonSchema,
+            ) -> Result<CompletionJsonResponse, LlmError> {
+                Err(LlmError::Transport {
+                    provider: extractor_identity(),
+                    detail: "simulated".into(),
+                })
+            }
+        }
+        let gateway = GatewayConfig::new().with_client(Role::Extractor, Box::new(AlwaysErr));
+        let req = AdversarialClarificationRequest {
+            original: make_request(),
+            previous_ir: serde_json::json!({}),
+            adversary_reading: "alt".into(),
+            adversary_explanation: "alt".into(),
+            judge_reason: "alt".into(),
+        };
+        let err = retry_decompose_on_adversarial_failure(&req, &gateway, 2, make_clock())
+            .unwrap_err();
+        match err {
+            ClarificationError::Exhausted { attempts, dialogue } => {
+                assert_eq!(attempts, 2);
+                assert_eq!(dialogue.len(), 2);
+                assert!(matches!(
+                    dialogue[0].outcome,
+                    DialogueOutcome::Abandoned
+                ));
+                assert_eq!(
+                    dialogue[0].response.prompt_version.as_deref(),
+                    Some(ADVERSARIAL_CLARIFICATION_PROMPT_VERSION)
                 );
             }
             other => panic!("expected Exhausted, got {other:?}"),

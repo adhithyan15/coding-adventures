@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-clarification"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "ADJ06 — clarification dialogue. v0.3 adds ADJ06-for-ADJ04 (round-trip drift retry) — when the model's rendering drifts from source, re-prompt the renderer with the drift direction and let it self-correct. Now covers ADJ02 coverage, ADJ03 polarity/modality, AND ADJ04 round-trip drift in one crate."
+description = "ADJ06 — clarification dialogue. v0.4 closes the self-correction story: when ADJ05's adversary finds a plausible alternative reading, re-prompt the extractor with the reading attached and ask for a more precise IR (or an Uncertainty node). Now covers ALL four LLM-touched checker passes: ADJ02 coverage, ADJ03 polarity/modality, ADJ04 round-trip drift, ADJ05 adversarial reading."
 
 [dependencies]
 adjudication-audit-trail = { path = "../adjudication-audit-trail" }
