@@ -45,6 +45,118 @@ pub struct ExecutorCapabilities {
     pub max_payload_bytes: usize,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ExecutorCapabilityFleetSummary {
+    pub total_executors: usize,
+    pub parallel_execution_executors: usize,
+    pub parallel_callback_executors: usize,
+    pub vm_lock_required_executors: usize,
+    pub process_isolated_executors: usize,
+    pub cancellation_capable_executors: usize,
+    pub timeout_capable_executors: usize,
+    pub affinity_capable_executors: usize,
+    pub ordered_response_executors: usize,
+    pub serializable_payload_required_executors: usize,
+    pub total_max_workers: usize,
+    pub total_max_queue_depth: usize,
+    pub smallest_max_payload_bytes: Option<usize>,
+    pub largest_max_payload_bytes: Option<usize>,
+}
+
+impl ExecutorCapabilityFleetSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_capabilities<'a, I>(capabilities: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ExecutorCapabilities>,
+    {
+        let mut summary = Self::empty();
+        for capabilities in capabilities {
+            summary.total_executors += 1;
+            summary.total_max_workers += capabilities.max_workers;
+            summary.total_max_queue_depth += capabilities.max_queue_depth;
+
+            if capabilities.supports_parallel_execution {
+                summary.parallel_execution_executors += 1;
+            }
+            if capabilities.supports_parallel_callbacks {
+                summary.parallel_callback_executors += 1;
+            }
+            if capabilities.requires_vm_lock {
+                summary.vm_lock_required_executors += 1;
+            }
+            if capabilities.supports_process_isolation {
+                summary.process_isolated_executors += 1;
+            }
+            if capabilities.supports_cancellation {
+                summary.cancellation_capable_executors += 1;
+            }
+            if capabilities.supports_timeouts {
+                summary.timeout_capable_executors += 1;
+            }
+            if capabilities.supports_affinity {
+                summary.affinity_capable_executors += 1;
+            }
+            if capabilities.supports_ordered_responses {
+                summary.ordered_response_executors += 1;
+            }
+            if capabilities.requires_serializable_payloads {
+                summary.serializable_payload_required_executors += 1;
+            }
+
+            summary.smallest_max_payload_bytes = Some(
+                summary
+                    .smallest_max_payload_bytes
+                    .map_or(capabilities.max_payload_bytes, |value| {
+                        value.min(capabilities.max_payload_bytes)
+                    }),
+            );
+            summary.largest_max_payload_bytes = Some(
+                summary
+                    .largest_max_payload_bytes
+                    .map_or(capabilities.max_payload_bytes, |value| {
+                        value.max(capabilities.max_payload_bytes)
+                    }),
+            );
+        }
+        summary
+    }
+
+    pub fn has_executors(&self) -> bool {
+        self.total_executors > 0
+    }
+
+    pub fn has_process_isolation(&self) -> bool {
+        self.process_isolated_executors > 0
+    }
+
+    pub fn supports_all_timeouts(&self) -> bool {
+        self.has_executors() && self.timeout_capable_executors == self.total_executors
+    }
+
+    pub fn supports_all_affinity(&self) -> bool {
+        self.has_executors() && self.affinity_capable_executors == self.total_executors
+    }
+
+    pub fn requires_any_vm_lock(&self) -> bool {
+        self.vm_lock_required_executors > 0
+    }
+
+    pub fn requires_only_serializable_payloads(&self) -> bool {
+        self.has_executors() && self.serializable_payload_required_executors == self.total_executors
+    }
+
+    pub fn has_cancellation_support(&self) -> bool {
+        self.cancellation_capable_executors > 0
+    }
+
+    pub fn has_ordered_response_support(&self) -> bool {
+        self.ordered_response_executors > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExecutorLimits {
     pub max_queue_depth: usize,
@@ -521,6 +633,10 @@ impl JobResponseDrainSummary {
 
 pub trait JobExecutor<Request, Response> {
     fn capabilities(&self) -> ExecutorCapabilities;
+    fn capability_fleet_summary(&self) -> ExecutorCapabilityFleetSummary {
+        let capabilities = self.capabilities();
+        ExecutorCapabilityFleetSummary::from_capabilities([&capabilities])
+    }
     fn try_submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError>;
     fn cancel(&self, id: &str) -> CancelResult;
     fn drain_responses(&self, max: usize) -> Vec<JobResponse<Response>>;
@@ -1712,6 +1828,110 @@ for line in sys.stdin:
     print(json.dumps({{"version": 1, "kind": "response", "body": {{"id": body["id"], "result": {{"status": "ok", "payload": out}}, "metadata": body["metadata"]}}}}), flush=True)
 "#
         )
+    }
+
+    #[test]
+    fn capability_fleet_summary_rolls_up_executor_placement_facts() {
+        let thread_capabilities = ExecutorCapabilities {
+            supports_parallel_execution: true,
+            supports_parallel_callbacks: false,
+            requires_vm_lock: false,
+            supports_process_isolation: false,
+            supports_cancellation: true,
+            supports_timeouts: true,
+            supports_affinity: false,
+            supports_ordered_responses: true,
+            requires_serializable_payloads: false,
+            max_workers: 4,
+            max_queue_depth: 16,
+            max_payload_bytes: 1024,
+        };
+        let process_capabilities = ExecutorCapabilities {
+            supports_parallel_execution: true,
+            supports_parallel_callbacks: true,
+            requires_vm_lock: true,
+            supports_process_isolation: true,
+            supports_cancellation: false,
+            supports_timeouts: true,
+            supports_affinity: true,
+            supports_ordered_responses: false,
+            requires_serializable_payloads: true,
+            max_workers: 2,
+            max_queue_depth: 8,
+            max_payload_bytes: 4096,
+        };
+
+        let summary = ExecutorCapabilityFleetSummary::from_capabilities([
+            &thread_capabilities,
+            &process_capabilities,
+        ]);
+
+        assert_eq!(
+            summary,
+            ExecutorCapabilityFleetSummary {
+                total_executors: 2,
+                parallel_execution_executors: 2,
+                parallel_callback_executors: 1,
+                vm_lock_required_executors: 1,
+                process_isolated_executors: 1,
+                cancellation_capable_executors: 1,
+                timeout_capable_executors: 2,
+                affinity_capable_executors: 1,
+                ordered_response_executors: 1,
+                serializable_payload_required_executors: 1,
+                total_max_workers: 6,
+                total_max_queue_depth: 24,
+                smallest_max_payload_bytes: Some(1024),
+                largest_max_payload_bytes: Some(4096),
+            }
+        );
+        assert!(summary.has_executors());
+        assert!(summary.has_process_isolation());
+        assert!(summary.supports_all_timeouts());
+        assert!(!summary.supports_all_affinity());
+        assert!(summary.requires_any_vm_lock());
+        assert!(!summary.requires_only_serializable_payloads());
+        assert!(summary.has_cancellation_support());
+        assert!(summary.has_ordered_response_support());
+
+        let empty = ExecutorCapabilityFleetSummary::empty();
+        assert!(!empty.has_executors());
+        assert!(!empty.supports_all_timeouts());
+        assert_eq!(empty.smallest_max_payload_bytes, None);
+    }
+
+    #[test]
+    fn executor_exposes_single_capability_summary() {
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 2,
+                limits: ExecutorLimits {
+                    max_queue_depth: 4,
+                    max_payload_bytes: 2048,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            |_request: JobRequest<EchoJob>| JobResult::Ok {
+                payload: EchoResponse {
+                    stream_id: "stream".to_string(),
+                    counter: 1,
+                    text: "ok".to_string(),
+                },
+            },
+        );
+
+        let summary = pool.capability_fleet_summary();
+
+        assert_eq!(summary.total_executors, 1);
+        assert_eq!(summary.parallel_execution_executors, 1);
+        assert_eq!(summary.cancellation_capable_executors, 1);
+        assert_eq!(summary.total_max_workers, 2);
+        assert_eq!(summary.total_max_queue_depth, 4);
+        assert_eq!(summary.smallest_max_payload_bytes, Some(2048));
+        assert_eq!(summary.largest_max_payload_bytes, Some(2048));
+        assert!(!summary.has_process_isolation());
+        assert!(!summary.requires_any_vm_lock());
     }
 
     #[test]

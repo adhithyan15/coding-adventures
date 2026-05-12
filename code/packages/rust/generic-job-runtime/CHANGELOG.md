@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Added `ExecutorCapabilityFleetSummary` and
+  `JobExecutor::capability_fleet_summary()` for D18C placement and portability
+  checks over executor capability and limit metadata.
 - Added `JobExecutor::drain_response_summaries()` for consuming completed
   responses as compact protocol summaries for D18C supervisor/read-side tools.
 - Added `JobResponseDrainSummary` and

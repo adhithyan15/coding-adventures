@@ -24,6 +24,8 @@ targets.
 - Opt-in stdio worker restart policies that can revive a dead worker slot while
   preserving worker-index affinity.
 - Capability and limit metadata that adapters can inspect.
+- Fleet-level capability summaries for D18C placement and portability checks
+  over executor isolation, timeout, affinity, cancellation, and queue limits.
 - Compact response-summary draining for supervisor/read-side tools that only
   need terminal status, retryability, trace, and attempt facts.
 - Aggregated response-summary drain batches for supervisor/read-side tools that
