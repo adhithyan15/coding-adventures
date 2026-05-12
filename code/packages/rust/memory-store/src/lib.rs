@@ -238,6 +238,71 @@ impl MemoryCatalogSummary {
     }
 }
 
+/// Compact source/reference coverage view over selected memory records.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MemorySourceSummary {
+    pub total_memories: usize,
+    pub memories_with_source_refs: usize,
+    pub memories_without_source_refs: usize,
+    pub memories_with_multiple_source_refs: usize,
+    pub total_source_refs: usize,
+    pub memories_with_tags: usize,
+    pub total_tags: usize,
+    pub memories_that_supersede: usize,
+    pub total_superseded_refs: usize,
+}
+
+impl MemorySourceSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(memories: I) -> Self
+    where
+        I: IntoIterator<Item = &'a MemoryRecord>,
+    {
+        let mut summary = Self::empty();
+        for memory in memories {
+            summary.total_memories += 1;
+            summary.total_source_refs += memory.source_refs.len();
+            summary.total_tags += memory.tags.len();
+            summary.total_superseded_refs += memory.supersedes.len();
+
+            if memory.source_refs.is_empty() {
+                summary.memories_without_source_refs += 1;
+            } else {
+                summary.memories_with_source_refs += 1;
+            }
+            if memory.source_refs.len() > 1 {
+                summary.memories_with_multiple_source_refs += 1;
+            }
+            if !memory.tags.is_empty() {
+                summary.memories_with_tags += 1;
+            }
+            if !memory.supersedes.is_empty() {
+                summary.memories_that_supersede += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_memories == 0
+    }
+
+    pub fn has_source_refs(&self) -> bool {
+        self.memories_with_source_refs > 0
+    }
+
+    pub fn has_unsourced_memories(&self) -> bool {
+        self.memories_without_source_refs > 0
+    }
+
+    pub fn has_supersession(&self) -> bool {
+        self.memories_that_supersede > 0
+    }
+}
+
 /// Why a memory should be surfaced for human, agent, or scheduled review.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MemoryReviewReason {
@@ -646,6 +711,14 @@ impl<S: StorageBackend> MemoryStore<S> {
     ) -> Result<MemoryCatalogSummary, StorageError> {
         let memories = self.list_memories_with_options(options)?;
         Ok(MemoryCatalogSummary::from_records(&memories, now_ms))
+    }
+
+    pub fn source_summary(
+        &self,
+        options: MemoryListOptions,
+    ) -> Result<MemorySourceSummary, StorageError> {
+        let memories = self.list_memories_with_options(options)?;
+        Ok(MemorySourceSummary::from_records(&memories))
     }
 
     pub fn search_lexical(&self, query: &str) -> Result<Vec<MemoryRecord>, StorageError> {
@@ -1604,6 +1677,82 @@ mod tests {
         assert_eq!(fact_summary.fact_memories, 1);
         assert_eq!(fact_summary.active_memories, 1);
         assert_eq!(fact_summary.reviewed_memories, 1);
+    }
+
+    #[test]
+    fn source_summary_counts_reference_tag_and_supersession_coverage() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut sourced = memory_with_created_confidence(
+            "sourced",
+            "Preference",
+            "Use compact summaries",
+            10,
+            0.9,
+        );
+        sourced.source_refs = vec!["session-1".to_string()];
+        sourced.tags = vec!["style".to_string()];
+        let mut multi_source =
+            memory_with_created_confidence("multi", "Runbook", "Restart service", 20, 0.8);
+        multi_source.class = MemoryClass::Procedure;
+        multi_source.source_refs = vec!["session-1".to_string(), "spec-d18".to_string()];
+        multi_source.tags = vec!["ops".to_string(), "runtime".to_string()];
+        multi_source.supersedes = vec!["old-runbook".to_string()];
+        let mut unsourced =
+            memory_with_created_confidence("unsourced", "Scratch", "Needs provenance", 30, 0.4);
+        unsourced.source_refs = Vec::new();
+        unsourced.tags = Vec::new();
+        let mut tombstoned =
+            memory_with_created_confidence("removed", "Removed", "Old warning", 40, 0.2);
+        tombstoned.source_refs = vec!["session-2".to_string()];
+        tombstoned.tombstoned = true;
+
+        let _ = store.remember(sourced).unwrap();
+        let _ = store.remember(multi_source).unwrap();
+        let _ = store.remember(unsourced).unwrap();
+        let _ = store.remember(tombstoned).unwrap();
+
+        let summary = store.source_summary(MemoryListOptions::new()).unwrap();
+
+        assert_eq!(
+            summary,
+            MemorySourceSummary {
+                total_memories: 3,
+                memories_with_source_refs: 2,
+                memories_without_source_refs: 1,
+                memories_with_multiple_source_refs: 1,
+                total_source_refs: 3,
+                memories_with_tags: 2,
+                total_tags: 3,
+                memories_that_supersede: 1,
+                total_superseded_refs: 1,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_source_refs());
+        assert!(summary.has_unsourced_memories());
+        assert!(summary.has_supersession());
+
+        let procedure_summary = store
+            .source_summary(MemoryListOptions::new().with_class(MemoryClass::Procedure))
+            .unwrap();
+        assert_eq!(procedure_summary.total_memories, 1);
+        assert_eq!(procedure_summary.memories_with_multiple_source_refs, 1);
+        assert!(!procedure_summary.has_unsourced_memories());
+
+        let all_summary = store
+            .source_summary(MemoryListOptions::new().include_tombstoned(true))
+            .unwrap();
+        assert_eq!(all_summary.total_memories, 4);
+        assert_eq!(all_summary.total_source_refs, 4);
+
+        let empty = store
+            .source_summary(MemoryListOptions::new().with_tag("missing"))
+            .unwrap();
+        assert_eq!(empty, MemorySourceSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_source_refs());
+        assert!(!empty.has_unsourced_memories());
+        assert!(!empty.has_supersession());
     }
 
     #[test]
