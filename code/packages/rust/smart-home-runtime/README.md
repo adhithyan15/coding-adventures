@@ -21,6 +21,8 @@ Included surfaces:
   supervisor pressure, pairing expiry, desired state, and stale cached state
 - event-bus backlog status helpers for distinguishing absent subscribers,
   caught-up streams, and backlogged streams
+- event-bus aggregate pressure helpers for counting lagging subscriptions and
+  maximum pending delivery depth
 - subscription backlog status helpers for identifying lagging event-stream
   subscribers without draining their delivery queues
 - command validation against entity capabilities and command modes
