@@ -16,7 +16,7 @@ import {
 import { simplify as simplifyCas } from "@coding-adventures/cas-simplify";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import { subst } from "@coding-adventures/cas-substitution";
-import { expandTrig, trigSimplify } from "@coding-adventures/cas-trig";
+import { expandTrig, trigReduce, trigSimplify } from "@coding-adventures/cas-trig";
 import {
   ACOS,
   ACOSH,
@@ -68,6 +68,7 @@ export const EXPAND = sym("Expand");
 export const RAT_SIMPLIFY = sym("RatSimplify");
 export const TRIG_SIMPLIFY = sym("TrigSimplify");
 export const TRIG_EXPAND = sym("TrigExpand");
+export const TRIG_REDUCE = sym("TrigReduce");
 export const FLOAT_FUNC = sym("Float");
 export const LENGTH = sym("Length");
 export const FIRST = sym("First");
@@ -170,7 +171,7 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["cbrt", sym("Cbrt")],
   ["trigsimp", TRIG_SIMPLIFY],
   ["trigexpand", TRIG_EXPAND],
-  ["trigreduce", sym("TrigReduce")],
+  ["trigreduce", TRIG_REDUCE],
   ["collect", sym("Collect")],
   ["together", sym("Together")],
   ["ratsimp", RAT_SIMPLIFY],
@@ -318,6 +319,7 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(RAT_SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
     table.set(TRIG_SIMPLIFY.name, unaryHandler((value) => simplifyCas(trigSimplify(value))));
     table.set(TRIG_EXPAND.name, unaryHandler((value) => expandTrig(value)));
+    table.set(TRIG_REDUCE.name, unaryHandler((value) => trigReduce(value)));
     table.set(LENGTH.name, listHandler(1, ([value]) => length(value)));
     table.set(FIRST.name, listHandler(1, ([value]) => first(value)));
     table.set(REST.name, listHandler(1, ([value]) => rest(value)));
@@ -580,6 +582,7 @@ function makeEvHandler(): Handler {
     if (flags.has("ratsimp")) result = evalSupportedFlag(vm, result, RAT_SIMPLIFY);
     if (flags.has("trigsimp")) result = evalSupportedFlag(vm, result, TRIG_SIMPLIFY);
     if (flags.has("trigexpand")) result = evalSupportedFlag(vm, result, TRIG_EXPAND);
+    if (flags.has("trigreduce")) result = evalSupportedFlag(vm, result, TRIG_REDUCE);
     if (flags.has("numer") || flags.has("float")) result = numerFold(result);
 
     return result;

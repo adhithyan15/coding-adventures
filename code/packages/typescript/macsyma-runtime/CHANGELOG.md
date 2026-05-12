@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Wire `TrigReduce` runtime dispatch to the TypeScript `cas-trig` package.
 - Wire `Simplify`, `RatSimplify`, `TrigSimplify`, and `TrigExpand` runtime
   heads to the TypeScript `cas-simplify` and `cas-trig` packages.
 - Wire `Subst(value, variable, expr)` to the TypeScript `cas-substitution`
