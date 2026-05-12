@@ -65,7 +65,15 @@ use std::cell::Cell;
 use std::collections::HashMap;
 #[cfg(feature = "metal-backend")]
 use std::collections::HashSet;
+#[cfg(feature = "metal-backend")]
+use std::sync::{Arc, Mutex, OnceLock};
+#[cfg(not(feature = "metal-backend"))]
 use std::sync::OnceLock;
+// matrix_profile re-exports SpecialisedKernel via matrix_runtime; we
+// take it directly so the auto-installer can pattern-match on its
+// `key` field.
+#[cfg(feature = "metal-backend")]
+use matrix_runtime::SpecialisedKernel;
 
 // ─────────────────────────── Last-executor reporting ───────────────────────────
 
@@ -108,6 +116,13 @@ fn set_last_executor(name: Option<&'static str>) {
 
 #[cfg(feature = "metal-backend")]
 struct MetalBackend {
+    /// **MX05 Phase 4.3.**  Direct reference to the metal executor so
+    /// the auto-installer ([`try_auto_install_specialised`]) can call
+    /// [`MetalExecutor::install_specialised_from_emitted`] when the
+    /// `SpecRouter` produces a kernel.  Previously this module only
+    /// kept the `LocalTransport`, which hides the executor behind a
+    /// boxed `Fn` and offers no direct install API.
+    executor: Arc<matrix_metal::MetalExecutor>,
     transport: LocalTransport,
     profile: executor_protocol::BackendProfile,
 }
@@ -115,11 +130,20 @@ struct MetalBackend {
 #[cfg(feature = "metal-backend")]
 fn metal_backend() -> Option<&'static MetalBackend> {
     static SLOT: OnceLock<Option<MetalBackend>> = OnceLock::new();
-    SLOT.get_or_init(|| match matrix_metal::local_transport() {
-        Ok(transport) => Some(MetalBackend {
-            transport,
-            profile: matrix_metal::profile(),
-        }),
+    SLOT.get_or_init(|| match matrix_metal::MetalExecutor::new() {
+        Ok(exec) => {
+            // Pattern mirrors `matrix_metal::local_transport`, but we
+            // keep the `Arc<MetalExecutor>` alongside the transport so
+            // image-gpu-core can call install methods on it directly.
+            let exec = Arc::new(exec);
+            let exec2 = exec.clone();
+            let transport = LocalTransport::new(move |req| exec2.handle(req));
+            Some(MetalBackend {
+                executor: exec,
+                transport,
+                profile: matrix_metal::profile(),
+            })
+        }
         Err(_) => None,
     })
     .as_ref()
@@ -184,6 +208,138 @@ pub fn profiler_observations() -> Vec<matrix_runtime::ProfileObservation> {
 /// distinct `SpecKey`.
 pub fn spec_cache_len() -> usize {
     spec_router().cache_len()
+}
+
+/// **MX05 Phase 4.3.**  Number of specialised kernels that have been
+/// auto-installed onto a backing executor via the runtime auto-installer.
+///
+/// Distinct from [`spec_cache_len`] — the cache tracks emitted handles,
+/// while this counter tracks how many of those handles have actually
+/// been turned into compiled pipelines and registered with an executor.
+/// The two converge under normal operation but diverge briefly while
+/// installs are in flight or when an install fails (e.g. compilation
+/// rejects the emitted MSL).
+///
+/// On non-Apple targets this always returns `0` — there's no Metal
+/// executor to install onto, and the matrix-cpu auto-install path
+/// (which would need a closure source, not just a handle) is later
+/// MX05 phase work.
+#[cfg(feature = "metal-backend")]
+pub fn specialised_install_count() -> usize {
+    match metal_backend() {
+        Some(b) => b.executor.specialised_count(),
+        None => 0,
+    }
+}
+
+/// **MX05 Phase 4.3.**  No-op stub for non-Apple targets.  Always `0`.
+#[cfg(not(feature = "metal-backend"))]
+pub fn specialised_install_count() -> usize {
+    0
+}
+
+// ─────────────────────── MX05 Phase 4.3 — auto-installer ───────────────────────
+//
+// When `SpecRouter::route` returns `Some(SpecialisedKernel)`, this
+// module attempts to *install* the kernel onto the backing executor
+// so that future invocations can dispatch through the protocol-level
+// `DispatchSpecialised` path.
+//
+// V0.3.0 ships the **install side only**:
+//
+//   * Auto-install on metal: cache hit → `msl_emitter::emit_specialised_kernel`
+//     → `MetalExecutor::install_specialised_from_emitted`.  Backed by an
+//     `INSTALLED_HANDLES: HashSet<u64>` so re-installs are skipped.
+//
+//   * matrix-cpu auto-install: deferred to a later phase.  `CpuSpecialiser`
+//     only emits opaque handles today — it doesn't carry a closure
+//     source, so there's no auto-install translation available yet.
+//     The matrix-cpu Phase 4.1 install API works (and tests cover it
+//     in matrix-cpu's integration suite), it just isn't invoked
+//     automatically from here yet.
+//
+//   * **Dispatch-routing side:** the next dispatch still goes through
+//     generic `Dispatch { graph }`.  Phase 4.4 will land
+//     `dispatch_specialised_via` that walks the placed graph,
+//     fires per-op `DispatchSpecialised` requests, and proves the
+//     end-to-end DispatchDone → speedup loop.  Splitting that work
+//     into its own PR keeps Phase 4.3 reviewable.
+
+/// Process-wide set of handles we've already attempted to install
+/// onto a metal executor.  Initialisation is lazy so non-metal builds
+/// never allocate.
+#[cfg(feature = "metal-backend")]
+fn installed_handles() -> &'static Mutex<HashSet<u64>> {
+    static SLOT: OnceLock<Mutex<HashSet<u64>>> = OnceLock::new();
+    SLOT.get_or_init(|| Mutex::new(HashSet::new()))
+}
+
+/// **MX05 Phase 4.3.**  Try to auto-install a `SpecialisedKernel` onto
+/// the metal executor, returning `true` if a fresh install happened.
+///
+/// Idempotent across calls with the same handle — `INSTALLED_HANDLES`
+/// tracks which handles we've already installed so repeat hits in the
+/// `SpecRouter` cache don't pay MSL compilation cost more than once.
+///
+/// Returns `false` when:
+/// - metal isn't available (non-Apple build, or `MetalExecutor::new`
+///   failed at startup);
+/// - `msl_emitter::emit_specialised_kernel` returns `None`
+///   (Phase 4.2's emitter only supports a small set of SpecKey shapes);
+/// - the handle was already installed in a prior call;
+/// - compilation failed (rare — MSL emitter is bug-free for the
+///   shapes it claims to support, but the install API returns Err
+///   here just in case).  In the compile-fail case we **don't** mark
+///   the handle as installed so a future emitter fix can retry.
+///
+/// Hot-path cost: one mutex acquire on `INSTALLED_HANDLES`, plus
+/// (on miss) one MSL compile (~few ms on Apple Silicon) and one
+/// mutex acquire inside `MetalExecutor::install_specialised_from_emitted`.
+/// Subsequent calls with the same handle are a single mutex acquire
+/// and a `HashSet::contains` — sub-microsecond.
+#[cfg(feature = "metal-backend")]
+fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
+    let Some(backend) = metal_backend() else {
+        return false;
+    };
+    // Fast path: skip if already installed.
+    {
+        let installed = match installed_handles().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        if installed.contains(&specialised.handle) {
+            return false;
+        }
+    }
+    // Slow path: emit MSL, compile, install.
+    let Some(emitted) = matrix_metal::emit_specialised_kernel(&specialised.key, specialised.handle)
+    else {
+        return false;
+    };
+    match backend
+        .executor
+        .install_specialised_from_emitted(specialised.handle, emitted)
+    {
+        Ok(()) => {
+            let mut installed = match installed_handles().lock() {
+                Ok(g) => g,
+                Err(poisoned) => poisoned.into_inner(),
+            };
+            installed.insert(specialised.handle);
+            true
+        }
+        Err(_) => {
+            // Don't mark as installed — a future emitter/compiler fix
+            // may want to retry this handle.
+            false
+        }
+    }
+}
+
+#[cfg(not(feature = "metal-backend"))]
+fn try_auto_install_specialised(_specialised: &matrix_runtime::SpecialisedKernel) -> bool {
+    false
 }
 
 /// Drive the MX05 specialisation pipeline for one placed graph:
@@ -282,7 +438,16 @@ fn drive_specialisation(placed: &ComputeGraph) {
                 Some(t) => t.dtype,
                 None => continue,
             };
-            let _ = r.route(observation, ir_op.wire_tag(), out_dtype, executor.0);
+            // **MX05 Phase 4.3.**  When the router returns a fresh
+            // (or cached) specialised kernel, ask the auto-installer
+            // to register it with the metal executor.  Idempotent;
+            // see `try_auto_install_specialised` for the install
+            // semantics.  Returning `None` from `route` (the policy
+            // declined, or no specialiser matched) is the common
+            // fast path and incurs zero cost here.
+            if let Some(spec) = r.route(observation, ir_op.wire_tag(), out_dtype, executor.0) {
+                let _ = try_auto_install_specialised(&spec);
+            }
         }
     }
 }
@@ -663,6 +828,90 @@ mod tests {
         assert!(
             total_tensor_observations > 0,
             "expected at least one TensorObservation populated after gpu_invert; got 0"
+        );
+    }
+
+    /// **MX05 Phase 4.3 end-to-end auto-installer test.**  Builds a
+    /// hot graph whose Add op has a stable f32 constant on at least one
+    /// input, drives it past the `DefaultPolicy` 1000-invocation
+    /// threshold, and asserts that `specialised_install_count` rises
+    /// above zero — proving the chain:
+    ///
+    /// ```text
+    ///   route() returns Some(SpecialisedKernel)
+    ///     → try_auto_install_specialised()
+    ///       → msl_emitter::emit_specialised_kernel(...)
+    ///         → MetalExecutor::install_specialised_from_emitted(...)
+    ///           → SpecialisedTable grows
+    /// ```
+    ///
+    /// Apple-only — no metal executor on Linux / Windows CI, so
+    /// `specialised_install_count` stays at 0 there by definition.
+    /// The non-metal CI runners still exercise the
+    /// `#[cfg(not(feature = "metal-backend"))]` stub through normal
+    /// compilation; the runtime-behaviour assertion only runs on macOS.
+    ///
+    /// Test scope intentionally limited:
+    /// - We only assert that the **install** side fires.  Phase 4.4
+    ///   will land the dispatch-routing side (replacing the generic
+    ///   `Dispatch { graph }` request with per-op `DispatchSpecialised`
+    ///   requests) and add its own end-to-end speedup test.
+    /// - We use raw `matrix_ir::GraphBuilder` rather than a public
+    ///   filter because v0.6.0's `msl_emitter` only knows
+    ///   `Op::Add + F32 + Constant`, and none of the existing public
+    ///   filters happen to hit that exact shape.  Future emitter
+    ///   extensions (Sub/Mul/Div) will broaden the surface so that
+    ///   real filters drive the install path automatically.
+    #[cfg(feature = "metal-backend")]
+    #[test]
+    fn auto_installer_registers_kernel_after_threshold() {
+        use crate::specialised_install_count;
+        use matrix_ir::{DType, GraphBuilder, Shape};
+
+        // Snapshot the install count *before* this test runs — other
+        // tests in this process may have already populated the table,
+        // so we look for a delta rather than an absolute value.
+        let before = specialised_install_count();
+
+        // Run the same Add-of-constants graph 1100 times.  Both
+        // operands are stable f32 constants, so the DefaultPolicy's
+        // constant-input check will fire once `tensor_observations`
+        // accumulates enough samples (~1000 invocations).
+        for _ in 0..1100 {
+            let mut g = GraphBuilder::new();
+            // Use 4-element f32 vectors so the emitter's
+            // `add_f32 + folded constant` kernel has a meaningful
+            // workload (4 elements × 1 thread per element).
+            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let b_bytes: Vec<u8> = [7.0_f32, 7.0, 7.0, 7.0]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let a = g.constant(DType::F32, Shape::from(&[4u32]), a_bytes);
+            let b = g.constant(DType::F32, Shape::from(&[4u32]), b_bytes);
+            let c = g.add(&a, &b);
+            g.output(&c);
+            let graph = g.build().expect("graph builds");
+            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 16);
+        }
+
+        let after = specialised_install_count();
+        // The install count must rise — under DefaultPolicy + the
+        // matrix-cpu specialiser + the metal-side msl_emitter
+        // auto-install, at least one Add-with-constant kernel must
+        // have been emitted, compiled, and registered with the metal
+        // executor.  If this assertion fails it means *some* link in
+        // the chain (sampling, policy, router, emitter, compile,
+        // install) regressed.
+        assert!(
+            after > before,
+            "expected auto-installer to fire after 1100 invocations of an \
+             Add-with-constant graph; before = {}, after = {}",
+            before,
+            after
         );
     }
 }

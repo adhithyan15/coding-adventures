@@ -1,5 +1,92 @@
 # Changelog — image-gpu-core
 
+## 0.7.0 — 2026-05-12
+
+### Added — MX05 Phase 4.3 (runtime-side auto-installer; **install** half of the loop)
+
+Closes the install half of the spec-routing loop opened by matrix-metal
+Phase 4.2.  When `SpecRouter::route` returns a `SpecialisedKernel`,
+image-gpu-core now auto-compiles the kernel and installs it onto the
+metal executor — proving the chain:
+
+```
+sampler → policy → router → cache → msl_emitter → MetalExecutor::install_specialised_from_emitted
+```
+
+Phase 4.4 will land the **dispatch** half: replacing the generic
+`Dispatch { graph }` request with per-op `DispatchSpecialised` requests
+that actually invoke the installed kernels.  Split into a separate PR
+to keep this one reviewable.
+
+#### What's new
+
+- **`MetalBackend`** now holds an `Arc<matrix_metal::MetalExecutor>`
+  alongside the `LocalTransport`.  Previous code only kept the
+  transport (boxed `Fn`); the executor reference is needed so
+  image-gpu-core can call `install_specialised_from_emitted` directly.
+- **`try_auto_install_specialised(&SpecialisedKernel)`** — new
+  internal function.  When the router emits a specialised kernel,
+  this:
+    1. Checks a process-wide `INSTALLED_HANDLES: Mutex<HashSet<u64>>`
+       for idempotency.
+    2. Calls `matrix_metal::emit_specialised_kernel` to convert the
+       `SpecKey` + handle into an `EmittedKernel`.
+    3. Calls `MetalExecutor::install_specialised_from_emitted` to
+       compile the MSL and register the dispatching closure under
+       the handle.
+    4. Records the handle as installed (so repeat hits in the
+       `SpecRouter` cache don't pay MSL compilation cost more than
+       once).
+  Returns `false` on any short-circuit (already installed, emitter
+  doesn't support the SpecKey shape, compile failure, no metal
+  backend).  Compile failures don't mark the handle as installed so
+  a future emitter fix can retry.
+- **`drive_specialisation`** now consumes the router's return value
+  and feeds it to `try_auto_install_specialised`.  Previously
+  `r.route(...)` was called for its side effect on the cache and the
+  return discarded.
+- **`pub fn specialised_install_count() -> usize`** — new public
+  hook.  Distinct from `spec_cache_len`: the cache tracks emitted
+  handles; this counter tracks how many of those handles have
+  actually been compiled and registered with an executor.  Always
+  `0` on non-Apple builds (the matrix-cpu auto-install path will
+  land in a later phase — `CpuSpecialiser` emits opaque handles
+  today, not closure sources).
+
+#### Integration test
+
+`auto_installer_registers_kernel_after_threshold` (Apple-only):
+
+- Builds a 4-element f32 Add-with-constant graph using
+  `matrix_ir::GraphBuilder` directly.
+- Runs it 1100 times — enough for `DefaultPolicy`'s 1000-invocation
+  threshold to fire on the constant input.
+- Asserts that `specialised_install_count()` rises above zero.
+
+This is the first test in image-gpu-core where a kernel actually
+gets compiled and installed onto an executor through the entire
+specialisation pipeline.  Test count: 28 → 29.
+
+#### What this still doesn't do (Phase 4.4 territory)
+
+- The next dispatch of the same graph still goes through generic
+  `Dispatch { graph }` — the installed specialised kernel is
+  registered but not yet invoked.
+- matrix-cpu auto-install — `CpuSpecialiser` produces handles
+  without closure sources, so there's nothing to install.  Phase
+  4.5 will either extend `CpuSpecialiser` to emit closure-producing
+  metadata or land a separate cpu-emit pipeline.
+
+#### Stub additions in matrix-metal
+
+So image-gpu-core compiles cleanly on non-Apple CI:
+
+- `MetalExecutor::install_specialised(handle, kernel)` — no-op
+  stub on non-Apple.
+- `MetalExecutor::install_specialised_from_emitted(handle, emitted)`
+  — returns `Err("unavailable on non-Apple targets")` on non-Apple.
+- `MetalExecutor::specialised_count()` — always `0` on non-Apple.
+
 ## 0.6.0 — 2026-05-05
 
 ### Added — MX05 Phase 4.2 (tensor-byte sampling)

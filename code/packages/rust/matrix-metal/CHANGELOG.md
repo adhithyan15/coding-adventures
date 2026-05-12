@@ -1,5 +1,21 @@
 # Changelog — matrix-metal
 
+## 0.6.1 — 2026-05-12
+
+### Added — non-Apple stubs for the Phase 4.2 install API
+
+So downstream crates (image-gpu-core, matrix-runtime) can call
+`install_specialised_from_emitted` and friends without `#[cfg]`-gating
+every call site:
+
+- `MetalExecutor::install_specialised(handle, kernel)` — no-op on
+  non-Apple.
+- `MetalExecutor::install_specialised_from_emitted(handle, emitted)`
+  — returns `Err("unavailable on non-Apple targets")` on non-Apple.
+- `MetalExecutor::specialised_count()` — returns `0` on non-Apple.
+
+No behaviour change on Apple targets.
+
 ## 0.6.0 — 2026-05-12
 
 ### Added — MX05 Phase 4.2 (MSL emitter + specialised dispatch lands on Metal)

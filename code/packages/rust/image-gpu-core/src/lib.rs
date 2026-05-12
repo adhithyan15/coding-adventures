@@ -58,7 +58,15 @@ pub use pipeline::last_executor;
 /// Phase 4 lands a real specialiser).  [`spec_cache_len`] reports
 /// how many specialised kernels are cached process-wide; always 0
 /// while the no-op specialiser is installed in V1.
-pub use pipeline::{profiler_observations, spec_cache_len};
+///
+/// **MX05 Phase 4.3** adds [`specialised_install_count`] —
+/// distinct from [`spec_cache_len`], this counter tracks how many
+/// cached handles have actually been auto-installed onto a backing
+/// executor (today: metal) so they're ready for `DispatchSpecialised`
+/// invocation.  The two converge under normal operation; they diverge
+/// briefly while installs are in flight or when the emitter doesn't
+/// support a given `SpecKey` shape.
+pub use pipeline::{profiler_observations, spec_cache_len, specialised_install_count};
 
 use matrix_ir::{DType, GraphBuilder, Shape};
 

@@ -242,6 +242,29 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.3 landed — runtime auto-installer, install half of the loop)**:
+> `image-gpu-core` v0.7.0 closes the install side of the specialised-
+> kernel loop.  `drive_specialisation` now consumes the
+> `SpecRouter::route` return value (previously discarded) and feeds
+> each `SpecialisedKernel` to a new `try_auto_install_specialised`
+> helper.  On metal targets the helper emits MSL via the Phase 4.2
+> `msl_emitter`, compiles it through `MetalExecutor::install_specialised_from_emitted`,
+> and records the handle in a process-wide `INSTALLED_HANDLES` set
+> for idempotency.  New public `image_gpu_core::specialised_install_count()`
+> counter exposes the result distinct from `spec_cache_len()` — the
+> first counts kernels actually compiled and registered, the second
+> counts emitted handles in the cache.  End-to-end test
+> `auto_installer_registers_kernel_after_threshold` drives a hot
+> Add-with-constant graph 1100 times and asserts the install counter
+> rises above zero — the first test in the workspace where a kernel
+> traverses the *entire* sampler → policy → router → cache → emitter
+> → compile → install pipeline.  Phase 4.4 will close the **dispatch**
+> half (replacing generic `Dispatch { graph }` with per-op
+> `DispatchSpecialised` requests that actually invoke the installed
+> kernels).  matrix-cpu auto-install is also Phase 4.4+ work —
+> `CpuSpecialiser` emits opaque handles today, not closure sources,
+> so there's nothing to translate yet.
+
 > **Implementation status (Phase 4.2 landed — matrix-metal MSL emitter + specialised dispatch)**:
 > `matrix-metal` v0.6.0 grows the GPU side of what matrix-cpu got in
 > Phase 4.1.  Three pieces land together:

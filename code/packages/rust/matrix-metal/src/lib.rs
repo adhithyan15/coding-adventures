@@ -646,7 +646,36 @@ impl MetalExecutor {
     }
 
     pub fn set_our_id(&self, _id: ExecutorId) {}
+
+    /// **MX05 Phase 4.2 stub (non-Apple)**.  No-op — there's no
+    /// specialised-kernel table without a Metal device.  Image-gpu-core
+    /// and the matrix-runtime auto-installer call this on every
+    /// platform; on non-Apple builds it's a contract-preserving no-op.
+    pub fn install_specialised(
+        &self,
+        _handle: u64,
+        _kernel: Box<dyn for<'a> Fn(&'a (), &[compute_ir::BufferId], &[compute_ir::BufferId]) -> Result<Vec<OpTiming>, String> + Send>,
+    ) {
+    }
+
+    /// **MX05 Phase 4.2 stub (non-Apple)**.  Always returns an error —
+    /// we have nothing to compile against.
+    pub fn install_specialised_from_emitted(
+        &self,
+        _handle: u64,
+        _emitted: EmittedKernel,
+    ) -> Result<(), String> {
+        Err("matrix-metal: install_specialised_from_emitted unavailable on non-Apple targets".to_string())
+    }
+
+    /// **MX05 Phase 4.2 stub (non-Apple)**.  Always `0`.
+    pub fn specialised_count(&self) -> usize {
+        0
+    }
 }
+
+#[cfg(not(target_vendor = "apple"))]
+use executor_protocol::OpTiming;
 
 #[cfg(not(target_vendor = "apple"))]
 pub fn local_transport() -> Result<LocalTransport, String> {
