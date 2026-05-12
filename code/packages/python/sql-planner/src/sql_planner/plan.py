@@ -166,6 +166,14 @@ class AggregateItem:
 
     ``separator`` is only meaningful for ``GROUP_CONCAT``.  When ``None``
     the VM uses the SQLite default of ``","`` .
+
+    ``output`` controls whether this aggregate appears as a column in the
+    query result.  When ``True`` (the default), the aggregate value is
+    emitted as an output column.  When ``False``, the slot is computed
+    during the aggregate pass (so HAVING / ORDER BY can reference it), but
+    the value is *not* included in the rows returned to the caller.  This
+    lets the planner represent aggregates used only in HAVING or ORDER BY
+    without leaking extra columns into the result.
     """
 
     func: AggFunc
@@ -173,6 +181,7 @@ class AggregateItem:
     alias: str
     distinct: bool = False
     separator: str | None = None  # GROUP_CONCAT only
+    output: bool = True  # False → compute but do not emit as a result column
 
 
 @dataclass(frozen=True, slots=True)

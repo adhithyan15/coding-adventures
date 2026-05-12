@@ -155,3 +155,77 @@ class TestAggregateDistinct:
         assert isinstance(p, Project)
         assert isinstance(p.input, Aggregate)
         assert p.input.aggregates[0].distinct is True
+
+
+class TestHavingDeduplication:
+    """Regression tests for the aggregate-slot deduplication bug.
+
+    When the same aggregate expression (e.g. SUM(amount)) appears in both the
+    SELECT list and the HAVING clause, ``_collect_aggregates`` must create only
+    ONE aggregate slot — not two.  Before the fix the implementation used a list
+    so each occurrence got a distinct ``_agg_N`` alias, causing an extra spurious
+    column in query results.
+    """
+
+    def test_same_agg_in_select_and_having_creates_one_slot(self) -> None:
+        """SUM(amount) shared by SELECT and HAVING → exactly one aggregate slot."""
+        agg = AggregateExpr(
+            func=AggFunc.SUM, arg=FuncArg(value=Column(None, "amount"))
+        )
+        ast = SelectStmt(
+            from_=TableRef(table="sales"),
+            items=(
+                SelectItem(expr=Column(None, "region")),
+                SelectItem(expr=agg),
+            ),
+            group_by=(Column(None, "region"),),
+            having=BinaryExpr(op=BinaryOp.GT, left=agg, right=Literal(value=100)),
+        )
+        p = plan(ast, schema())
+        assert isinstance(p, Project)
+        assert isinstance(p.input, Having)
+        assert isinstance(p.input.input, Aggregate)
+        # KEY assertion: only ONE slot for SUM(amount), not two.
+        assert len(p.input.input.aggregates) == 1
+        assert p.input.input.aggregates[0].func == AggFunc.SUM
+
+    def test_two_distinct_aggs_each_get_own_slot(self) -> None:
+        """SUM and COUNT are different aggregates — they get separate slots."""
+        sum_agg = AggregateExpr(
+            func=AggFunc.SUM, arg=FuncArg(value=Column(None, "amount"))
+        )
+        cnt_agg = AggregateExpr(func=AggFunc.COUNT, arg=FuncArg(star=True))
+        ast = SelectStmt(
+            from_=TableRef(table="sales"),
+            items=(
+                SelectItem(expr=Column(None, "region")),
+                SelectItem(expr=sum_agg),
+                SelectItem(expr=cnt_agg),
+            ),
+            group_by=(Column(None, "region"),),
+            having=BinaryExpr(
+                op=BinaryOp.GT, left=cnt_agg, right=Literal(value=0)
+            ),
+        )
+        p = plan(ast, schema())
+        assert isinstance(p.input, Having)
+        assert isinstance(p.input.input, Aggregate)
+        # SUM(amount) and COUNT(*) are different → two slots.
+        assert len(p.input.input.aggregates) == 2
+
+    def test_same_agg_in_having_only_creates_one_slot(self) -> None:
+        """COUNT(*) only in HAVING (not in SELECT) still creates exactly one slot."""
+        cnt_agg = AggregateExpr(func=AggFunc.COUNT, arg=FuncArg(star=True))
+        ast = SelectStmt(
+            from_=TableRef(table="sales"),
+            items=(SelectItem(expr=Column(None, "region")),),
+            group_by=(Column(None, "region"),),
+            having=BinaryExpr(
+                op=BinaryOp.GT, left=cnt_agg, right=Literal(value=5)
+            ),
+        )
+        p = plan(ast, schema())
+        assert isinstance(p.input, Having)
+        assert isinstance(p.input.input, Aggregate)
+        assert len(p.input.input.aggregates) == 1
+        assert p.input.input.aggregates[0].func == AggFunc.COUNT

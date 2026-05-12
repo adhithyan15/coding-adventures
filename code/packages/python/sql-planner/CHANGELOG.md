@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.24.0] - 2026-05-12
+
+### Fixed
+
+- **`_collect_aggregates` deduplication** (`planner.py`) — when the same
+  aggregate expression (e.g. `SUM(val)`) appeared in *both* the SELECT list and
+  the HAVING predicate, the function previously created two separate
+  `AggregateItem` entries (each with a distinct `_agg_N` alias).  The codegen
+  layer then emitted *two* `EmitColumn` calls for the same value, producing an
+  extra spurious column in every grouped query that shared an aggregate between
+  SELECT and HAVING.
+
+  The fix changes `seen` from a `list` to a `dict` keyed by
+  `(func, arg, distinct, separator)`.  Duplicate occurrences of the same
+  aggregate expression reuse the existing entry rather than creating a new one.
+  The slot alias assigned at first encounter is preserved, so all downstream
+  references (HAVING predicate, ORDER BY) automatically resolve to the same
+  slot.
+
+### Tests
+
+- Added `TestHavingDeduplication` class in
+  `tests/test_planner_aggregate.py` with three regression cases:
+  - Same aggregate in SELECT + HAVING → exactly one aggregate slot
+  - Two *different* aggregates → each gets its own slot (no over-dedup)
+  - Aggregate only in HAVING → still creates exactly one slot
+
 ## [0.23.0] - 2026-05-12
 
 ### Added

@@ -88,7 +88,6 @@ from .ast import (
     SortKey as AstSortKey,
 )
 from .ast import (
-    UpsertAssignment as AstUpsertAssignment,
     UpsertClause as AstUpsertClause,
 )
 from .errors import (
@@ -119,7 +118,7 @@ from .expr import (
     NotIn,
     NotInSubquery,
     NotLike,
-    RowIdRef,
+    RowIdRef,  # noqa: I001 — alphabetical after NotLike; ruff wants this here
     ScalarSubquery,
     UnaryExpr,
     Wildcard,
@@ -946,60 +945,94 @@ def _collect_aggregates(
 
     We don't rewrite the source expressions to reference the aggregated
     result by alias — codegen can navigate the tree and emit the right
-    opcodes. This keeps the planner simple; the optimizer can de-duplicate
-    later.
+    opcodes.  This keeps the planner simple; the optimizer handles further
+    simplification.
+
+    De-duplication: the same aggregate expression (same func + arg + distinct +
+    separator) appearing in multiple clauses (e.g. ``SUM(val)`` in both the
+    SELECT list and the HAVING predicate) must map to a **single** slot.
+    Without de-dup, two identical AggregateItems would be created, causing the
+    emit loop in ``_compile_aggregate`` to write the aggregate value twice —
+    producing an extra, spurious output column.
+
+    We use an insertion-order dict keyed by ``(func, arg, distinct, separator)``
+    so each unique aggregate receives exactly one slot regardless of how many
+    clauses reference it.
+
+    ``output`` flag: aggregates first seen in the SELECT list are marked
+    ``output=True`` (they appear as result columns).  Aggregates first seen
+    *only* in HAVING or ORDER BY are marked ``output=False`` — they are
+    computed during the aggregate pass so the predicate / sort can reference
+    them, but they are not emitted as visible output columns.  If an aggregate
+    later appears in the SELECT list as well (i.e. an ``output=False`` entry is
+    revisited with ``is_output=True``), it is upgraded to ``output=True``.
     """
-    seen: list[tuple[P.AggregateItem, str]] = []  # (item, alias) for de-dup
+    # Keyed by (func, arg, distinct, separator) so identical calls share a slot.
+    seen: dict[tuple, P.AggregateItem] = {}
     counter = 0
 
-    def collect_in(expr: Expr) -> None:
+    def collect_in(expr: Expr, is_output: bool) -> None:
         nonlocal counter
         match expr:
             case AggregateExpr(func, arg, distinct, separator):
-                alias = f"_agg_{counter}"
-                counter += 1
-                seen.append((
-                    P.AggregateItem(func=func, arg=arg, alias=alias, distinct=distinct,
-                                    separator=separator),
-                    alias,
-                ))
+                key = (func, arg, distinct, separator)
+                if key not in seen:
+                    alias = f"_agg_{counter}"
+                    counter += 1
+                    seen[key] = P.AggregateItem(
+                        func=func, arg=arg, alias=alias,
+                        distinct=distinct, separator=separator,
+                        output=is_output,
+                    )
+                elif is_output and not seen[key].output:
+                    # Upgrade: this aggregate also appears in the SELECT list,
+                    # so promote it from hidden (False) to visible (True).
+                    old = seen[key]
+                    seen[key] = P.AggregateItem(
+                        func=old.func, arg=old.arg, alias=old.alias,
+                        distinct=old.distinct, separator=old.separator,
+                        output=True,
+                    )
             case BinaryExpr(_, left, right):
-                collect_in(left)
-                collect_in(right)
+                collect_in(left, is_output)
+                collect_in(right, is_output)
             case UnaryExpr(_, operand):
-                collect_in(operand)
+                collect_in(operand, is_output)
             case FunctionCall(_, args):
                 for a in args:
                     if a.value is not None:
-                        collect_in(a.value)
+                        collect_in(a.value, is_output)
             case IsNull(operand) | IsNotNull(operand):
-                collect_in(operand)
+                collect_in(operand, is_output)
             case Between(operand, low, high):
-                collect_in(operand)
-                collect_in(low)
-                collect_in(high)
+                collect_in(operand, is_output)
+                collect_in(low, is_output)
+                collect_in(high, is_output)
             case In(operand, values) | NotIn(operand, values):
-                collect_in(operand)
+                collect_in(operand, is_output)
                 for v in values:
-                    collect_in(v)
+                    collect_in(v, is_output)
             case Like(operand, _) | NotLike(operand, _):
-                collect_in(operand)
+                collect_in(operand, is_output)
             case CaseExpr(whens, else_):
                 for cond, result in whens:
-                    collect_in(cond)
-                    collect_in(result)
+                    collect_in(cond, is_output)
+                    collect_in(result, is_output)
                 if else_ is not None:
-                    collect_in(else_)
+                    collect_in(else_, is_output)
             case _:
                 pass
 
+    # SELECT items first: these are visible output columns (output=True).
     for it in items:
-        collect_in(it.expr)
+        collect_in(it.expr, is_output=True)
+    # HAVING and ORDER BY: aggregates here are hidden unless already seen
+    # from SELECT (output=True already set above).
     if having is not None:
-        collect_in(having)
+        collect_in(having, is_output=False)
     for k in order_by:
-        collect_in(k.expr)
-    return tuple(item for item, _ in seen)
+        collect_in(k.expr, is_output=False)
+    return tuple(seen.values())
 
 
 # --------------------------------------------------------------------------
@@ -1062,7 +1095,8 @@ def _resolve_upsert(
     # The scope deliberately does NOT include "EXCLUDED" because the adapter
     # has already rewritten ``Column(table="EXCLUDED", col=c)`` to
     # ``ExcludedColumn(col=c)`` — there is nothing left to resolve.
-    target_scope: Scope = {}  # no table scope needed; ExcludedColumn is a leaf
+    # No table scope needed — ExcludedColumn is a leaf node that the resolver
+    # passes through unchanged without consulting any scope.
 
     resolved_assignments = tuple(
         P.UpsertAssignment(

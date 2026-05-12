@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.26.0] - 2026-05-12
+
+### Fixed
+
+- **GROUP BY + HAVING duplicate aggregate column bug** — queries of the form
+  `SELECT cat, SUM(val) FROM t GROUP BY cat HAVING SUM(val) > N` previously
+  returned an extra spurious column (e.g. `('A', 3, 3)` instead of `('A', 3)`).
+
+  Root cause: `_collect_aggregates` in `sql_planner` created a separate
+  `AggregateItem` slot for each textual occurrence of an aggregate expression,
+  so `SUM(val)` in the SELECT list and `SUM(val)` in the HAVING predicate each
+  got their own `_agg_N` alias.  Codegen then emitted two `EmitColumn`
+  instructions for the row — one per slot — doubling the value.
+
+  Fix: deduplicate aggregate expressions by a `(func, arg, distinct, separator)`
+  key inside `_collect_aggregates`.  Duplicate occurrences reuse the slot created
+  at first encounter.  The fix is in `sql-planner 0.24.0`.
+
+### Tests
+
+- Added `tests/test_tier12_aggregate_convergence.py` — oracle-grade integration
+  tests that compare mini-sqlite results against real `sqlite3` for all affected
+  query patterns:
+  - `SUM`, `COUNT(*)`, `MAX`, `AVG` shared between SELECT and HAVING
+  - Aggregate only in HAVING (not in SELECT)
+  - Two different aggregates with one referenced by HAVING
+  - HAVING that matches no groups (empty result)
+  - HAVING + ORDER BY on the same aggregate
+
 ## [1.25.0] - 2026-05-12
 
 ### Added — ROWID pseudo-column (`rowid` / `_rowid_` / `oid`)

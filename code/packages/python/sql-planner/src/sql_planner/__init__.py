@@ -36,8 +36,10 @@ from .ast import (
     TableRef,
     UnionStmt,
     UpdateStmt,
-    UpsertAssignment as AstUpsertAssignment,
     UpsertClause,
+)
+from .ast import (
+    UpsertAssignment as AstUpsertAssignment,
 )
 from .errors import (
     AmbiguousColumn,
@@ -63,7 +65,6 @@ from .expr import (
     FuncArg,
     FunctionCall,
     In,
-    RowIdRef,
     InSubquery,
     IsNotNull,
     IsNull,
@@ -72,6 +73,7 @@ from .expr import (
     NotIn,
     NotInSubquery,
     NotLike,
+    RowIdRef,
     ScalarSubquery,
     UnaryExpr,
     UnaryOp,
