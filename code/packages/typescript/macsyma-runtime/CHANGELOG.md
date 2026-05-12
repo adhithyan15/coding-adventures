@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wire `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a
+  TypeScript MACSYMA session assumption context so declared properties feed
+  property queries and assumption-backed relation checks.
 - Route `ev(expr, display2d)` JSON and browser display text through the
   TypeScript `cas-pretty-printer` 2D MACSYMA box renderer while preserving the
   symbolic IR result for history and downstream evaluation.

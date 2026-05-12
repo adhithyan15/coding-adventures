@@ -68,6 +68,8 @@ describe("AssumptionContext", () => {
     expect(ctx.isTrueRelation(app(EQUAL, [y, int(0)]))).toBe(false);
     expect(ctx.isInteger("n")).toBe(true);
     expect(ctx.hasAnyFacts("x")).toBe(true);
+    expect(ctx.factsFor("n")).toEqual(["integer"]);
+    expect(ctx.symbolsWithFacts()).toEqual(["n", "x", "y"]);
 
     ctx.forgetRelation(greaterZero(x));
     expect(ctx.isPositive("x")).toBeUndefined();
@@ -84,6 +86,17 @@ describe("AssumptionContext", () => {
     expect(ctx.signOf("x")).toBe(-1);
     expect(ctx.isNonneg("y")).toBe(true);
     expect(ctx.isNegative("y")).toBe(false);
+  });
+
+  it("returns deterministic fact and symbol metadata", () => {
+    const ctx = new AssumptionContext();
+    ctx.assumeProperty(n, sym("positive"));
+    ctx.assumeProperty(n, sym("integer"));
+    ctx.assumeRelation(greaterZero(x));
+
+    expect(ctx.factsFor("n")).toEqual(["integer", "positive"]);
+    expect(ctx.factsFor("missing")).toEqual([]);
+    expect(ctx.symbolsWithFacts()).toEqual(["n", "x"]);
   });
 });
 
