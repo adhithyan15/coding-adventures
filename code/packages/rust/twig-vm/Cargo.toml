@@ -1,6 +1,6 @@
 [package]
 name = "twig-vm"
-version = "0.8.0"
+version = "0.10.0"
 edition = "2021"
 description = "LANG26 — host/ I/O builtins (write_byte, read_byte, exit, flush_stdout) via Rust stdlib dispatch"
 
