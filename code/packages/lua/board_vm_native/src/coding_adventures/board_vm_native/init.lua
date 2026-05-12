@@ -74,6 +74,10 @@ function M.bluetooth_backend(endpoint)
     return native().bluetooth_backend(endpoint)
 end
 
+function M.bluetooth_transact(endpoint, frame)
+    return native().bluetooth_transact(endpoint, frame)
+end
+
 function M.bluetooth_devices()
     return native().bluetooth_devices()
 end
@@ -275,6 +279,7 @@ function BluetoothTransport.new(options)
         timeout_ms = options.timeout_ms or 1000,
         backend = backend,
         stream_path = backend.stream_path,
+        native_transport = not not backend.native_transport,
         file = nil,
     }, BluetoothTransport)
 end
@@ -300,11 +305,19 @@ function BluetoothTransport:_io()
 end
 
 function BluetoothTransport:write(frame)
+    if self.native_transport then
+        error("native Board VM Bluetooth transport requires transact(frame, options)")
+    end
+
     assert(self:_io():write(frame))
     assert(self:_io():flush())
 end
 
 function BluetoothTransport:transact(frame, options)
+    if self.native_transport then
+        return M.bluetooth_transact(self.endpoint, frame)
+    end
+
     options = options or {}
     self:write(frame)
     local chunks = {}

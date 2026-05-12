@@ -268,6 +268,42 @@ describe("coding_adventures.board_vm_native", function()
         assert.are.equal("bluetooth_classic_rfcomm", transport.backend.endpoint.endpoint_transport)
     end)
 
+    it("delegates native Bluetooth transactions to Rust", function()
+        local endpoint = "ble://uno-r4-wifi/180f/2a19/2a1a"
+        local calls = {}
+        local original = board_vm.bluetooth_transact
+        local ok, err = pcall(function()
+            board_vm.bluetooth_transact = function(actual_endpoint, frame)
+                table.insert(calls, { endpoint = actual_endpoint, frame = frame })
+                return "response"
+            end
+            local transport = board_vm.BluetoothTransport.new({
+                endpoint = endpoint,
+                timeout_ms = 500,
+                backend = {
+                    endpoint = board_vm.bluetooth_endpoint(endpoint),
+                    backend = "macos_core_bluetooth",
+                    status = "ready",
+                    stream_path = nil,
+                    native_transport = true,
+                    message = nil,
+                },
+            })
+
+            assert.is_true(transport.native_transport)
+            assert.are.equal("response", transport:transact("request"))
+            assert.are.equal(endpoint, calls[1].endpoint)
+            assert.are.equal("request", calls[1].frame)
+            assert.has_error(function()
+                transport:write("request")
+            end, "native Board VM Bluetooth transport requires transact(frame, options)")
+        end)
+        board_vm.bluetooth_transact = original
+        if not ok then
+            error(err)
+        end
+    end)
+
     it("connects Bluetooth sessions through Rust backend plans", function()
         local connection = board_vm.connect("esp32", {
             via = "bluetooth_classic",

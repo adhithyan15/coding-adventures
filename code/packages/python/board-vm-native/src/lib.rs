@@ -10,12 +10,12 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
-    bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
-    build_caps_query_wire_frame, build_gpio_handle_close_module, build_gpio_handle_read_module,
-    build_gpio_handle_write_module, build_gpio_open_module, build_gpio_read_module,
-    build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
-    build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
-    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    bluetooth_endpoint_candidates_from_devices, bluetooth_transact_wire_frame, board_family_name,
+    build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
+    build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
+    build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
+    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
+    build_raw_module, build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
@@ -513,6 +513,28 @@ unsafe extern "C" fn py_bluetooth_backend(_module: PyObjectPtr, args: PyObjectPt
     }
 }
 
+unsafe extern "C" fn py_bluetooth_transact(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let endpoint = match parse_arg_str(args, 0) {
+        Some(value) => value,
+        None => {
+            set_error(
+                type_error_class(),
+                "bluetooth_transact() requires endpoint as str",
+            );
+            return ptr::null_mut();
+        }
+    };
+    let wire = match parse_arg_bytes(args, 1, "wire_frame") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let mut response = vec![0u8; wire.len().saturating_add(4096).max(4096)];
+    match bluetooth_transact_wire_frame(&endpoint, &wire, &mut response) {
+        Ok(len) => bytes_to_py(&response[..len]),
+        Err(error) => raise_core_error("bluetooth_transact", error),
+    }
+}
+
 unsafe extern "C" fn py_bluetooth_endpoint_candidates(
     _module: PyObjectPtr,
     args: PyObjectPtr,
@@ -999,6 +1021,7 @@ unsafe fn language_bluetooth_backend_open_plan_to_py(
             .map(|value| str_to_py(value))
             .unwrap_or_else(|| py_none()),
     );
+    dict_set(dict, "native_transport", bool_to_py(plan.native_transport));
     dict_set(
         dict,
         "message",
@@ -1564,7 +1587,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 32] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 33] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1720,6 +1743,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_bluetooth_backend),
             ml_flags: METH_VARARGS,
             ml_doc: b"Plan Board VM Bluetooth backend opening in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"bluetooth_transact\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_bluetooth_transact),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Exchange one Board VM Bluetooth wire frame through Rust-owned transport.\0"
+                .as_ptr() as *const c_char,
         },
         PyMethodDef {
             ml_name: b"bluetooth_endpoint_candidates\0".as_ptr() as *const c_char,

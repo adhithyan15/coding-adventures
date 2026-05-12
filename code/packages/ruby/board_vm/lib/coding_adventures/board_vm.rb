@@ -154,6 +154,10 @@ module CodingAdventures
       Native.bluetooth_backend(endpoint.to_s)
     end
 
+    def bluetooth_transact(endpoint, frame)
+      Native.bluetooth_transact(endpoint.to_s, frame.b)
+    end
+
     def bluetooth_devices
       Native.bluetooth_devices
     end

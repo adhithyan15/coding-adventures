@@ -487,6 +487,7 @@ class BluetoothTransport:
         if not self.backend:
             raise ValueError(f"unsupported Board VM Bluetooth endpoint: {self.endpoint}")
         self.stream_path = self.backend.get("stream_path")
+        self.native_transport = bool(self.backend.get("native_transport"))
         self._stream: Any = None
 
     @property
@@ -494,10 +495,16 @@ class BluetoothTransport:
         return str(self.backend.get("status"))
 
     def transact(self, frame: bytes, timeout_ms: int | None = None) -> bytes:
+        if self.native_transport:
+            return bluetooth_transact(self.endpoint, bytes(frame))
+
         self.write(frame)
         return self._read_frame(timeout_ms=self.timeout_ms if timeout_ms is None else int(timeout_ms))
 
     def write(self, frame: bytes) -> None:
+        if self.native_transport:
+            raise OSError("native Board VM Bluetooth transport requires transact(frame, timeout_ms=...)")
+
         try:
             self._io().write(bytes(frame))
             self._io().flush()
@@ -1552,6 +1559,10 @@ def bluetooth_backend(endpoint: str) -> dict[str, Any] | None:
     return value
 
 
+def bluetooth_transact(endpoint: str, frame: bytes | bytearray) -> bytes:
+    return bytes(_native.bluetooth_transact(str(endpoint), bytes(frame)))
+
+
 def bluetooth_devices() -> list[dict[str, Any]]:
     return [dict(device) for device in _native.bluetooth_devices()]
 
@@ -2316,6 +2327,7 @@ __all__ = [
     "bluetooth_devices",
     "bluetooth_endpoint",
     "bluetooth_endpoint_candidates",
+    "bluetooth_transact",
     "connection_option_list",
     "connect",
     "connection_options",
