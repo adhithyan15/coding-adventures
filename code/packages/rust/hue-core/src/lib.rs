@@ -491,6 +491,17 @@ impl HueGroupedLightStateUpdate {
     pub fn state_deltas(&self) -> Vec<StateDelta> {
         hue_grouped_light_state_deltas(self)
     }
+
+    pub fn summary(&self) -> HueStateUpdateSummary {
+        HueStateUpdateSummary {
+            resource: HueResourceRef::new(HueResourceType::GroupedLight, self.id.clone()),
+            owner: self.owner.clone(),
+            name: self.name.clone(),
+            state_field_count: usize::from(self.on.is_some())
+                + usize::from(self.brightness.is_some()),
+            delta_count: self.state_deltas().len(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -647,6 +658,20 @@ impl HueMotionStateUpdate {
     pub fn state_deltas(&self) -> Vec<StateDelta> {
         hue_motion_state_deltas(self)
     }
+
+    pub fn summary(&self) -> HueStateUpdateSummary {
+        HueStateUpdateSummary {
+            resource: HueResourceRef::new(HueResourceType::Motion, self.id.clone()),
+            owner: self
+                .owner_device_id
+                .as_ref()
+                .map(|id| HueResourceRef::new(HueResourceType::Device, id.clone())),
+            name: self.name.clone(),
+            state_field_count: usize::from(self.motion.is_some())
+                + usize::from(self.motion_valid.is_some()),
+            delta_count: self.state_deltas().len(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -673,6 +698,49 @@ impl HueButtonStateUpdate {
 
     pub fn state_deltas(&self) -> Vec<StateDelta> {
         hue_button_state_deltas(self)
+    }
+
+    pub fn summary(&self) -> HueStateUpdateSummary {
+        HueStateUpdateSummary {
+            resource: HueResourceRef::new(HueResourceType::Button, self.id.clone()),
+            owner: self
+                .owner_device_id
+                .as_ref()
+                .map(|id| HueResourceRef::new(HueResourceType::Device, id.clone())),
+            name: self.name.clone(),
+            state_field_count: usize::from(self.last_event.is_some()),
+            delta_count: self.state_deltas().len(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueStateUpdateSummary {
+    pub resource: HueResourceRef,
+    pub owner: Option<HueResourceRef>,
+    pub name: Option<String>,
+    pub state_field_count: usize,
+    pub delta_count: usize,
+}
+
+impl HueStateUpdateSummary {
+    pub fn has_state(&self) -> bool {
+        self.state_field_count > 0
+    }
+
+    pub fn projects_deltas(&self) -> bool {
+        self.delta_count > 0
+    }
+
+    pub fn has_owner(&self) -> bool {
+        self.owner.is_some()
+    }
+
+    pub fn is_light_surface(&self) -> bool {
+        matches!(
+            &self.resource.resource_type,
+            HueResourceType::Light | HueResourceType::GroupedLight
+        )
     }
 }
 
@@ -749,6 +817,21 @@ impl HueLightStateUpdate {
 
     pub fn state_deltas(&self) -> Vec<StateDelta> {
         hue_light_state_deltas(self)
+    }
+
+    pub fn summary(&self) -> HueStateUpdateSummary {
+        HueStateUpdateSummary {
+            resource: HueResourceRef::new(HueResourceType::Light, self.id.clone()),
+            owner: self
+                .owner_device_id
+                .as_ref()
+                .map(|id| HueResourceRef::new(HueResourceType::Device, id.clone())),
+            name: self.name.clone(),
+            state_field_count: usize::from(self.on.is_some())
+                + usize::from(self.brightness.is_some())
+                + usize::from(self.color_temperature_mirek.is_some()),
+            delta_count: self.state_deltas().len(),
+        }
     }
 }
 
@@ -1178,6 +1261,17 @@ mod tests {
             update.owner.as_ref().unwrap().resource_type,
             HueResourceType::Room
         );
+        let summary = update.summary();
+        assert_eq!(
+            summary.resource.resource_type,
+            HueResourceType::GroupedLight
+        );
+        assert_eq!(summary.state_field_count, 2);
+        assert_eq!(summary.delta_count, 2);
+        assert!(summary.has_owner());
+        assert!(summary.has_state());
+        assert!(summary.projects_deltas());
+        assert!(summary.is_light_surface());
         let deltas = update.state_deltas();
         assert_eq!(deltas.len(), 2);
         assert_eq!(deltas[0].capability_id.as_str(), "light.on_off");
@@ -1388,6 +1482,15 @@ mod tests {
         };
 
         assert!(update.has_state());
+        let summary = update.summary();
+        assert_eq!(
+            summary.resource,
+            HueResourceRef::new(HueResourceType::Light, HueResourceId::trusted("light-1"))
+        );
+        assert_eq!(summary.state_field_count, 3);
+        assert_eq!(summary.delta_count, 3);
+        assert!(!summary.has_owner());
+        assert!(summary.is_light_surface());
         assert_eq!(
             update.state_deltas(),
             vec![
@@ -1423,6 +1526,13 @@ mod tests {
             update.owner_device_id.as_ref().unwrap().as_str(),
             "device-1"
         );
+        let summary = update.summary();
+        assert_eq!(summary.resource.resource_type, HueResourceType::Motion);
+        assert_eq!(summary.owner.as_ref().unwrap().id.as_str(), "device-1");
+        assert_eq!(summary.state_field_count, 2);
+        assert_eq!(summary.delta_count, 1);
+        assert!(summary.has_owner());
+        assert!(!summary.is_light_surface());
         assert_eq!(
             update.state_deltas(),
             vec![StateDelta {
@@ -1444,6 +1554,11 @@ mod tests {
 
         assert!(update.has_state());
         assert_eq!(update.name.as_deref(), Some("Dimmer button"));
+        let summary = update.summary();
+        assert_eq!(summary.resource.resource_type, HueResourceType::Button);
+        assert_eq!(summary.state_field_count, 1);
+        assert_eq!(summary.delta_count, 1);
+        assert!(summary.projects_deltas());
         assert_eq!(
             update.state_deltas(),
             vec![StateDelta {

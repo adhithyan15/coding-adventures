@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Hue application registration request and discovered-bridge pairing plan
   helpers for local physical-presence pairing flows.
+- Hue state update summaries for read models and event-stream telemetry across
+  light, grouped-light, motion, and button updates.
 
 ## [0.1.0] - 2026-05-06
 
