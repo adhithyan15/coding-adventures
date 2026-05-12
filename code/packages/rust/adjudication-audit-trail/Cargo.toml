@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-audit-trail"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "ADJ07 v0.1 — JSON-serializable audit-trail schema for the adjudication framework. Pure data types: AuditTrail / Document / CheckerResult / Violation / EngineArtifacts / Configuration / AdjudicationOutcome / VersionedComponent. Stores IR-node payloads opaquely (serde_json::Value) at v0.1; v0.2 will type them once adjudication-ir is Serialize."
+description = "ADJ07 — JSON-serializable audit-trail schema for the adjudication framework. v0.2 adds prompt_version + prompt_hash fields to DialogueResponse so ADJ06 clarification turns are replayable through the same (prompt_version, prompt_hash) mechanism as primitive LLM calls."
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
