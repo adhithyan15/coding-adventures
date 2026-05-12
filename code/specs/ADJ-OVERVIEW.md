@@ -242,5 +242,10 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   2 modes (no rulebook vs self-elicited rulebook) on the canonical
   ADJ10 source. The recursion flips verdicts at ≥ 3B parameters and
   breaks at ≤ 1.5B in two distinct failure modes.
+- [ADJ16](ADJ16-engine-programmatic-adjudication.md) — design for
+  replacing the LLM-answer-time call with a deterministic engine
+  that runs a compiled Prolog (or ProbLog) program over the
+  rulebook + facts. Same input + same rulebook + same query =
+  same verdict, reproducibly, with a full proof DAG.
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.
