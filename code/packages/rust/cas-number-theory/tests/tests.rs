@@ -1,9 +1,11 @@
 // Integration tests for cas-number-theory.
 
 use cas_number_theory::{
-    crt, divisors, extended_gcd, factor_integer, factorize_ir, gcd, integer_length, is_prime,
-    jacobi_symbol, lcm, mod_inverse, mod_pow, moebius_mu, next_prime, nth_prime, prev_prime,
-    primes_up_to, totient,
+    build_number_theory_handler_table, chinese_remainder_handler, crt, divisors, extended_gcd,
+    factor_integer, factor_integer_handler, factorize_ir, gcd, integer_length,
+    integer_length_handler, is_prime, is_prime_handler, jacobi_symbol, jacobi_symbol_handler, lcm,
+    mod_inverse, mod_pow, moebius_mu, next_prime, nth_prime, prev_prime, primes_up_to, totient,
+    totient_handler,
 };
 use symbolic_ir::{apply, int, sym, IRNode, MUL, POW};
 
@@ -479,4 +481,111 @@ fn crt_large_moduli() {
     let result = crt(&[1, 2], &[101, 103]).unwrap();
     assert_eq!(result % 101, 1);
     assert_eq!(result % 103, 2);
+}
+
+// ---------------------------------------------------------------------------
+// handlers
+// ---------------------------------------------------------------------------
+
+fn call(head: &str, args: Vec<IRNode>) -> symbolic_ir::IRApply {
+    symbolic_ir::IRApply {
+        head: sym(head),
+        args,
+    }
+}
+
+#[test]
+fn number_theory_handler_table_exposes_python_heads() {
+    let table = build_number_theory_handler_table();
+    assert!(table.contains_key("IsPrime"));
+    assert!(table.contains_key("NextPrime"));
+    assert!(table.contains_key("PrevPrime"));
+    assert!(table.contains_key("FactorInteger"));
+    assert!(table.contains_key("Divisors"));
+    assert!(table.contains_key("Totient"));
+    assert!(table.contains_key("MoebiusMu"));
+    assert!(table.contains_key("JacobiSymbol"));
+    assert!(table.contains_key("ChineseRemainder"));
+    assert!(table.contains_key("IntegerLength"));
+}
+
+#[test]
+fn primality_and_totient_handlers_fold_integer_calls() {
+    assert_eq!(
+        is_prime_handler(&call("IsPrime", vec![int(97)])),
+        sym("True")
+    );
+    assert_eq!(
+        is_prime_handler(&call("IsPrime", vec![int(100)])),
+        sym("False")
+    );
+    assert_eq!(totient_handler(&call("Totient", vec![int(36)])), int(12));
+}
+
+#[test]
+fn factor_integer_handler_returns_list_of_prime_exponent_pairs() {
+    assert_eq!(
+        factor_integer_handler(&call("FactorInteger", vec![int(360)])),
+        apply(
+            sym("List"),
+            vec![
+                apply(sym("List"), vec![int(2), int(3)]),
+                apply(sym("List"), vec![int(3), int(2)]),
+                apply(sym("List"), vec![int(5), int(1)]),
+            ]
+        )
+    );
+}
+
+#[test]
+fn chinese_remainder_handler_accepts_integer_lists() {
+    let remainders = apply(sym("List"), vec![int(2), int(3), int(2)]);
+    let moduli = apply(sym("List"), vec![int(3), int(5), int(7)]);
+    assert_eq!(
+        chinese_remainder_handler(&call("ChineseRemainder", vec![remainders, moduli])),
+        int(23)
+    );
+}
+
+#[test]
+fn jacobi_and_integer_length_handlers_fold_valid_calls() {
+    assert_eq!(
+        jacobi_symbol_handler(&call("JacobiSymbol", vec![int(1001), int(9907)])),
+        int(-1)
+    );
+    assert_eq!(
+        integer_length_handler(&call("IntegerLength", vec![int(100)])),
+        int(3)
+    );
+    assert_eq!(
+        integer_length_handler(&call("IntegerLength", vec![int(8), int(2)])),
+        int(4)
+    );
+}
+
+#[test]
+fn handlers_leave_symbolic_or_invalid_calls_unevaluated() {
+    let symbolic = call("IsPrime", vec![sym("n")]);
+    assert_eq!(
+        is_prime_handler(&symbolic),
+        IRNode::Apply(Box::new(symbolic.clone()))
+    );
+
+    let invalid_factor = call("FactorInteger", vec![int(0)]);
+    assert_eq!(
+        factor_integer_handler(&invalid_factor),
+        IRNode::Apply(Box::new(invalid_factor))
+    );
+
+    let invalid_jacobi = call("JacobiSymbol", vec![int(2), int(4)]);
+    assert_eq!(
+        jacobi_symbol_handler(&invalid_jacobi),
+        IRNode::Apply(Box::new(invalid_jacobi))
+    );
+
+    let invalid_base = call("IntegerLength", vec![int(8), int(1)]);
+    assert_eq!(
+        integer_length_handler(&invalid_base),
+        IRNode::Apply(Box::new(invalid_base))
+    );
 }

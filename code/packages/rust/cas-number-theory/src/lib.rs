@@ -33,6 +33,7 @@
 pub mod arithmetic;
 pub mod crt;
 pub mod factorize;
+pub mod handlers;
 pub mod primality;
 
 // Re-export the full public API.
@@ -48,6 +49,13 @@ pub use primality::{is_prime, next_prime, nth_prime, prev_prime, primes_up_to};
 
 // factorize
 pub use factorize::{factor_integer, factorize_ir};
+
+// handlers
+pub use handlers::{
+    build_number_theory_handler_table, chinese_remainder_handler, divisors_handler,
+    factor_integer_handler, integer_length_handler, is_prime_handler, jacobi_symbol_handler,
+    moebius_mu_handler, next_prime_handler, prev_prime_handler, totient_handler, Handler,
+};
 
 // crt
 pub use crt::crt;
