@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `DiscoveryRecordSummary` and `DiscoveryCatalog::record_summary_at` for
+  aggregate discovery planning by source, confidence, pairing requirement,
+  address coverage, and freshness status.
+
 ## [0.1.0] - 2026-05-08
 
 ### Added

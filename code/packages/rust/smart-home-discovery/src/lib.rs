@@ -261,6 +261,76 @@ impl DiscoverySignalSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryRecordSummary {
+    pub total: usize,
+    pub with_address: usize,
+    pub fresh: usize,
+    pub stale: usize,
+    pub expired: usize,
+    pub by_source: BTreeMap<DiscoverySource, usize>,
+    pub by_confidence: BTreeMap<DiscoveryConfidence, usize>,
+    pub by_pairing_requirement: BTreeMap<PairingRequirement, usize>,
+}
+
+impl DiscoveryRecordSummary {
+    pub fn from_records<'a>(
+        records: impl IntoIterator<Item = &'a DiscoveryRecord>,
+        now_ms: u64,
+        ttl_ms: u64,
+    ) -> Self {
+        let mut summary = Self {
+            total: 0,
+            with_address: 0,
+            fresh: 0,
+            stale: 0,
+            expired: 0,
+            by_source: BTreeMap::new(),
+            by_confidence: BTreeMap::new(),
+            by_pairing_requirement: BTreeMap::new(),
+        };
+
+        for record in records {
+            summary.total += 1;
+            if record.has_address() {
+                summary.with_address += 1;
+            }
+            match record.signal(ttl_ms).status_at(now_ms) {
+                DiscoverySignalStatus::Fresh => summary.fresh += 1,
+                DiscoverySignalStatus::Stale => summary.stale += 1,
+                DiscoverySignalStatus::Expired => summary.expired += 1,
+            }
+            *summary.by_source.entry(record.source).or_insert(0) += 1;
+            *summary.by_confidence.entry(record.confidence).or_insert(0) += 1;
+            *summary
+                .by_pairing_requirement
+                .entry(record.pairing_requirement)
+                .or_insert(0) += 1;
+        }
+
+        summary
+    }
+
+    pub fn count_for_source(&self, source: DiscoverySource) -> usize {
+        self.by_source.get(&source).copied().unwrap_or(0)
+    }
+
+    pub fn count_for_confidence(&self, confidence: DiscoveryConfidence) -> usize {
+        self.by_confidence.get(&confidence).copied().unwrap_or(0)
+    }
+
+    pub fn count_for_pairing_requirement(&self, requirement: PairingRequirement) -> usize {
+        self.by_pairing_requirement
+            .get(&requirement)
+            .copied()
+            .unwrap_or(0)
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total == 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum PairingRequirement {
     Unknown,
@@ -1063,6 +1133,10 @@ impl DiscoveryCatalog {
         DiscoverySignalSummary::from_signals(&self.signals(ttl_ms), now_ms)
     }
 
+    pub fn record_summary_at(&self, now_ms: u64, ttl_ms: u64) -> DiscoveryRecordSummary {
+        DiscoveryRecordSummary::from_records(self.records(), now_ms, ttl_ms)
+    }
+
     pub fn bridge_candidates(&self) -> Vec<Bridge> {
         self.records()
             .map(DiscoveryRecord::to_bridge_candidate)
@@ -1801,6 +1875,87 @@ mod tests {
             }
         );
         assert_eq!(catalog.signals(500).len(), 3);
+    }
+
+    #[test]
+    fn discovery_catalog_summarizes_record_shape_for_planning() {
+        let mut catalog = DiscoveryCatalog::new();
+        let hue = DiscoveryRecord::new(
+            IntegrationId::trusted("hue"),
+            ProtocolFamily::Hue,
+            "bridge-1",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            1_800,
+        )
+        .unwrap()
+        .with_address("https://192.0.2.10")
+        .with_confidence(DiscoveryConfidence::Verified)
+        .with_pairing_requirement(PairingRequirement::PhysicalPresence);
+        let mqtt = DiscoveryRecord::new(
+            IntegrationId::trusted("mqtt"),
+            ProtocolFamily::Mqtt,
+            "broker-1",
+            DiscoverySource::Mqtt,
+            BridgeTransport::LocalProcess,
+            1_000,
+        )
+        .unwrap()
+        .with_confidence(DiscoveryConfidence::Candidate)
+        .with_pairing_requirement(PairingRequirement::MqttCredentials);
+        let matter = DiscoveryRecord::new(
+            IntegrationId::trusted("matter"),
+            ProtocolFamily::Matter,
+            "fabric-expired",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            1_700,
+        )
+        .unwrap()
+        .with_confidence(DiscoveryConfidence::Hint)
+        .with_pairing_requirement(PairingRequirement::Certificate)
+        .with_expires_at_ms(1_900);
+
+        catalog.record(hue);
+        catalog.record(mqtt);
+        catalog.record(matter);
+
+        let summary = catalog.record_summary_at(2_000, 500);
+
+        assert_eq!(summary.total, 3);
+        assert_eq!(summary.with_address, 1);
+        assert_eq!(summary.fresh, 1);
+        assert_eq!(summary.stale, 1);
+        assert_eq!(summary.expired, 1);
+        assert_eq!(summary.count_for_source(DiscoverySource::Mdns), 2);
+        assert_eq!(summary.count_for_source(DiscoverySource::Mqtt), 1);
+        assert_eq!(
+            summary.count_for_confidence(DiscoveryConfidence::Verified),
+            1
+        );
+        assert_eq!(
+            summary.count_for_pairing_requirement(PairingRequirement::PhysicalPresence),
+            1
+        );
+        assert_eq!(
+            summary.count_for_pairing_requirement(PairingRequirement::MqttCredentials),
+            1
+        );
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn discovery_record_summary_handles_empty_inputs() {
+        let records: Vec<DiscoveryRecord> = Vec::new();
+        let summary = DiscoveryRecordSummary::from_records(records.iter(), 2_000, 500);
+
+        assert!(summary.is_empty());
+        assert_eq!(summary.total, 0);
+        assert_eq!(summary.count_for_source(DiscoverySource::Mdns), 0);
+        assert_eq!(
+            summary.count_for_pairing_requirement(PairingRequirement::PhysicalPresence),
+            0
+        );
     }
 
     #[test]
