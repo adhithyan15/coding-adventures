@@ -8,6 +8,8 @@ Pluggable **policy engine** for the Vault stack. Authentication
 - **`PolicyEngine`** trait + `PolicyContext` + `Decision`.
 - **`SimpleRbacEngine`** — role × `(action, resource_pattern)`
   table with `*` wildcard. Fits a Bitwarden-class app.
+- **`SimpleRbacSummary`** — count-only RBAC table diagnostics
+  that do not expose principals, roles, actions, or resources.
 - Composition decorators: **`AllOf`**, **`AnyOf`**,
   **`RequireFactor`**, **`TimeBound`**.
 - **`PolicyDecisionRecord`** + `decide_with_record` for compact,
@@ -55,6 +57,11 @@ principal/action/resource/time, factor and metadata counts, and
 the inert decision. Chief of Staff callers can persist or audit
 that record without giving the audit path direct access to the
 original request metadata.
+
+`SimpleRbacEngine::summary()` reports only table shape: principal
+binding counts, role/grant counts, wildcard vs exact-resource
+grant counts, and dangling-role gaps. It is suitable for read-side
+diagnostics without dumping the RBAC table itself.
 
 ## Where it fits
 
