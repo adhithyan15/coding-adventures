@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Added runtime presentation helpers so `ev(expr, display2d)` renders visible
+  output through the MACSYMA 2D box pretty-printer while preserving the
+  evaluated symbolic IR result.
+
 ## 1.25.0 — 2026-05-08
 
 **Phase 34 — End-to-end pipeline tests for special functions (Phase 23),

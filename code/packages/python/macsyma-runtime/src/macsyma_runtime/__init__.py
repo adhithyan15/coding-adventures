@@ -34,6 +34,7 @@ from macsyma_runtime.name_table import (
     MACSYMA_NAME_TABLE,
     extend_compiler_name_table,
 )
+from macsyma_runtime.presentation import has_ev_flag, output_text_for
 
 __all__ = [
     "ALL_SYMBOL",
@@ -49,4 +50,6 @@ __all__ = [
     "MacsymaBackend",
     "SUPPRESS",
     "extend_compiler_name_table",
+    "has_ev_flag",
+    "output_text_for",
 ]
