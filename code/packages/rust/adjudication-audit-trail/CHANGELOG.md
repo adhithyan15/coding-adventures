@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-12
+
+### Added
+
+`DialogueResponse` gains two optional fields:
+
+- `prompt_version: Option<String>` — the clarification-prompt
+  template version that produced this turn, mirroring
+  `LlmCallRecord::prompt_version`.
+- `prompt_hash: Option<String>` — content-addressed hash of the
+  prompt the LLM saw, same FNV-1a-rendered-hex format as
+  `LlmCallRecord::prompt_hash`.
+
+Together these make ADJ06 clarification turns replayable through the
+same `(prompt_version, prompt_hash)` mechanism as primitive LLM
+calls. The new fields are optional with serde-skip-if-none semantics,
+so v0.1 audit trails round-trip unchanged.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added
