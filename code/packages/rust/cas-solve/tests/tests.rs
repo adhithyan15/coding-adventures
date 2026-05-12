@@ -6,9 +6,12 @@
 use cas_solve::frac::Frac;
 use cas_solve::{
     nsolve_fraction_poly, nsolve_poly, roots_to_ir, solve_cubic, solve_linear, solve_linear_system,
-    solve_quadratic, solve_quartic, Complex, SolveResult,
+    solve_quadratic, solve_quartic, try_solve_inequality, Complex, SolveResult,
 };
-use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, POW, RULE, SUB};
+use symbolic_ir::{
+    apply, int, rat, sym, IRNode, ADD, AND, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, MUL,
+    POW, RULE, SUB,
+};
 
 fn frac(n: i64, d: i64) -> Frac {
     Frac::new(n, d)
@@ -59,6 +62,10 @@ fn mul(args: Vec<IRNode>) -> IRNode {
 
 fn pow(base: IRNode, exponent: IRNode) -> IRNode {
     apply(sym(POW), vec![base, exponent])
+}
+
+fn expect_nodes(actual: Option<Vec<IRNode>>, expected: Vec<IRNode>) {
+    assert_eq!(actual, Some(expected));
 }
 
 fn rule_value(rules: &[IRNode], variable: &IRNode) -> IRNode {
@@ -599,4 +606,131 @@ fn linear_system_returns_rule_nodes_in_variable_order() {
 
     assert_eq!(result[0], apply(sym(RULE), vec![x, int(2)]));
     assert_eq!(result[1], apply(sym(RULE), vec![y, int(1)]));
+}
+
+// ---------------------------------------------------------------------------
+// try_solve_inequality
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inequality_linear_exact_boundaries() {
+    let x = sym("x");
+    expect_nodes(
+        try_solve_inequality(
+            &apply(
+                sym(LESS),
+                vec![add(vec![mul(vec![int(2), x.clone()]), int(3)]), int(0)],
+            ),
+            &x,
+        ),
+        vec![apply(sym(LESS), vec![x.clone(), rat(-3, 2)])],
+    );
+    expect_nodes(
+        try_solve_inequality(
+            &apply(sym(GREATER_EQUAL), vec![sub(x.clone(), int(1)), int(0)]),
+            &x,
+        ),
+        vec![apply(sym(GREATER_EQUAL), vec![x, int(1)])],
+    );
+}
+
+#[test]
+fn inequality_quadratic_intervals() {
+    let x = sym("x");
+    expect_nodes(
+        try_solve_inequality(
+            &apply(
+                sym(GREATER),
+                vec![sub(pow(x.clone(), int(2)), int(1)), int(0)],
+            ),
+            &x,
+        ),
+        vec![
+            apply(sym(LESS), vec![x.clone(), int(-1)]),
+            apply(sym(GREATER), vec![x.clone(), int(1)]),
+        ],
+    );
+    expect_nodes(
+        try_solve_inequality(
+            &apply(
+                sym(LESS_EQUAL),
+                vec![sub(pow(x.clone(), int(2)), int(1)), int(0)],
+            ),
+            &x,
+        ),
+        vec![apply(
+            sym(AND),
+            vec![
+                apply(sym(GREATER_EQUAL), vec![x.clone(), int(-1)]),
+                apply(sym(LESS_EQUAL), vec![x, int(1)]),
+            ],
+        )],
+    );
+}
+
+#[test]
+fn inequality_shifted_and_all_reals() {
+    let x = sym("x");
+    expect_nodes(
+        try_solve_inequality(
+            &apply(
+                sym(LESS),
+                vec![
+                    add(vec![
+                        sub(pow(x.clone(), int(2)), mul(vec![int(3), x.clone()])),
+                        int(2),
+                    ]),
+                    int(0),
+                ],
+            ),
+            &x,
+        ),
+        vec![apply(
+            sym(AND),
+            vec![
+                apply(sym(GREATER), vec![x.clone(), int(1)]),
+                apply(sym(LESS), vec![x.clone(), int(2)]),
+            ],
+        )],
+    );
+    expect_nodes(
+        try_solve_inequality(
+            &apply(sym(GREATER_EQUAL), vec![pow(x, int(2)), int(0)]),
+            &sym("x"),
+        ),
+        vec![apply(sym(GREATER_EQUAL), vec![int(0), int(0)])],
+    );
+}
+
+#[test]
+fn inequality_numeric_boundaries_and_rejects_non_polynomials() {
+    let x = sym("x");
+    let result = try_solve_inequality(
+        &apply(
+            sym(GREATER),
+            vec![sub(pow(x.clone(), int(2)), int(2)), int(0)],
+        ),
+        &x,
+    )
+    .expect("expected numeric inequality result");
+    assert_eq!(result.len(), 2);
+    match (&result[0], &result[1]) {
+        (IRNode::Apply(left), IRNode::Apply(right)) => {
+            assert_eq!(left.head, sym(LESS));
+            assert_eq!(right.head, sym(GREATER));
+            assert!(matches!(left.args[1], IRNode::Float(_)));
+            assert!(matches!(right.args[1], IRNode::Float(_)));
+        }
+        other => panic!("expected two apply inequality nodes, got {other:?}"),
+    }
+
+    assert!(try_solve_inequality(
+        &apply(
+            sym(GREATER),
+            vec![apply(sym("Sin"), vec![x.clone()]), int(0)]
+        ),
+        &x,
+    )
+    .is_none());
+    assert!(try_solve_inequality(&eq(x.clone(), int(0)), &x).is_none());
 }
