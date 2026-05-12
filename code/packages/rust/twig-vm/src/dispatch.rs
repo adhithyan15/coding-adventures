@@ -1245,6 +1245,17 @@ fn exec_call_builtin(
     let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(name)
         .ok_or_else(|| RunError::UnknownBuiltin(name.to_string()))?;
 
+    // DoS guard: cap the args allocation.  Matches exec_send, exec_apply_closure,
+    // exec_alloc_closure, exec_call_closure.  A malicious IIR module calling
+    // a valid builtin with millions of srcs would OOM on Vec::with_capacity
+    // before the budget check fires (budget counts instructions, not operands).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call_builtin({name}): srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
     let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
     for src in &instr.srcs[1..] {
         // Read-only borrow of frame for the lookup callback —
@@ -1399,6 +1410,14 @@ fn exec_apply_closure(
     if instr.srcs.len() < 2 {
         return Err(RunError::MalformedInstruction(format!(
             "apply_closure expects at least 2 srcs (\"apply_closure\", handle), got {}",
+            instr.srcs.len()
+        )));
+    }
+
+    // DoS guard — mirrors the cap in exec_call_closure, exec_alloc_closure, exec_send.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "apply_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
             instr.srcs.len()
         )));
     }
