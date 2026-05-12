@@ -84,21 +84,74 @@ pub struct DecomposeTextResponse {
 
 const SYSTEM_PROMPT: &str = "\
 You are a precise document-to-IR extractor. Given a SOURCE document \
-and a DOMAIN hint, produce a hierarchical IR document per ADJ01 v2.\n\
+and a DOMAIN hint, produce a FLAT JSON document with this exact shape:\n\
 \n\
-Rules:\n\
-- Every leaf node's `source_spans[].{start,end}` must be byte offsets \
-into SOURCE.\n\
-- Every span must satisfy `0 <= start < end <= len(SOURCE_bytes)`.\n\
-- The tree of nodes must TILE the input: every byte of SOURCE is \
-covered by exactly one leaf (Fact / Query / Uncertainty / Rule / \
-Discarded).\n\
-- Use TextRun nodes to group; use the leaf kinds above for content.\n\
-- For polarity / modality, use `Inherit` unless a leaf needs to \
-override its ancestor.\n\
-- Copy DOCUMENT_ID verbatim into `document_id`.\n\
+{\n\
+  \"document_id\": \"<copy DOCUMENT_ID verbatim>\",\n\
+  \"nodes\": [\n\
+    {\n\
+      \"id\":           \"N1\",\n\
+      \"kind\":         \"Fact\",\n\
+      \"term\":         { \"functor\": \"<predicate>\", \"args\": [ { \"atom\": \"<value>\" } ] },\n\
+      \"polarity\":     \"Affirmed\",\n\
+      \"modality\":     \"Present\",\n\
+      \"source_spans\": [ { \"start\": 0, \"end\": 16 } ]\n\
+    },\n\
+    ...\n\
+  ]\n\
+}\n\
 \n\
-Respond with a single JSON object matching the IR schema.";
+Worked example. SOURCE: `\"1 carry-on bag, matches.\"` (24 bytes).\n\
+Correct output:\n\
+\n\
+{\n\
+  \"document_id\": \"<doc-id>\",\n\
+  \"nodes\": [\n\
+    { \"id\": \"N1\", \"kind\": \"Fact\",\n\
+      \"term\": { \"functor\": \"carry_on\", \"args\": [ { \"atom\": \"1\" } ] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [ { \"start\": 0, \"end\": 16 } ] },\n\
+    { \"id\": \"N2\", \"kind\": \"Fact\",\n\
+      \"term\": { \"functor\": \"prohibited\", \"args\": [ { \"atom\": \"matches\" } ] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [ { \"start\": 16, \"end\": 24 } ] },\n\
+    { \"id\": \"Q1\", \"kind\": \"Query\",\n\
+      \"term\": { \"functor\": \"compliant\", \"args\": [ { \"atom\": \"passenger\" } ] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [] }\n\
+  ]\n\
+}\n\
+\n\
+RULES (every rule is mandatory, no exceptions):\n\
+\n\
+1. **Flat `nodes` array.** Do NOT nest nodes inside a `children` field. \
+Every node is a top-level entry in the `nodes` array.\n\
+2. **Field names are exact.** Use `kind` (not `node_type`), `term` \
+(not `text`), `source_spans` (not `spans`). Stick to the example.\n\
+3. **`kind` is one of**: `Fact`, `Query`, `Uncertainty`, `Rule`, \
+`Exception`, `Discarded`.\n\
+4. **Spans TILE the source.** The union of all `source_spans` across \
+non-Query nodes must cover every byte from 0 to `len(SOURCE_bytes)` \
+exactly once. No gaps. No overlaps. INCLUDING whitespace and \
+punctuation — assign these to the adjacent Fact's span.\n\
+5. **Spans are byte offsets**, not character indices. `start` and \
+`end` are integers; `0 <= start < end <= len(SOURCE_bytes)`. \
+For ASCII text byte offsets equal character indices.\n\
+6. **Query nodes have empty `source_spans: []`** — they're \
+synthesized questions, not extracted from source. Every IR document \
+should include at least one Query node so the engine has something \
+to answer.\n\
+7. **`polarity` is one of**: `Affirmed`, `Denied`, `Uncertain`, \
+`Inherit`. Default to `Affirmed`.\n\
+8. **`modality` is one of**: `Present`, `Past`, `Future`, `Hypothetical`, \
+`FamilyHistory`, `RuledOut`, `Conditional`, `Inherit`. Default to `Present`.\n\
+9. **`term`** is either `{\"atom\": \"name\"}` for atomic claims or \
+`{\"functor\": \"pred\", \"args\": [...]}` for compound claims. Args \
+recursively use the same term shape.\n\
+10. **`document_id` is the DOCUMENT_ID from the user message, verbatim.**\n\
+\n\
+Respond with the JSON object only. No prose, no markdown, no \
+backticks.";
 
 const RESPONSE_SCHEMA: &str = r#"{
     "type": "object",
@@ -349,7 +402,7 @@ mod tests {
 
         assert_eq!(resp.call_record.primitive, "decompose_text");
         assert_eq!(resp.call_record.role, "extractor");
-        assert_eq!(resp.call_record.prompt_version, "decompose-text-v1");
+        assert_eq!(resp.call_record.prompt_version, "decompose-text-v2");
         assert!(!resp.call_record.prompt_hash.is_empty());
         assert_eq!(resp.call_record.usage.input_tokens, 700);
         assert_eq!(resp.call_record.usage.output_tokens, 320);

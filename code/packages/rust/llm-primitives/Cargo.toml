@@ -1,8 +1,8 @@
 [package]
 name = "llm-primitives"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
-description = "LM00b — typed LLM primitives layer. v0.1 scaffolding through v0.6 decompose_text. v0.7 adds a thinking-mode-tolerant truncation-retry helper (`complete_json_with_truncation_retry`) used by every JSON-emitting primitive, plus bumped max_tokens defaults for thinking-mode models."
+description = "LM00b — typed LLM primitives layer. v0.8 ships a much-improved decompose_text prompt (v2) with a concrete worked example, prevents nested-children output, and produces clean flat IRs from small models like Gemma 4."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }
