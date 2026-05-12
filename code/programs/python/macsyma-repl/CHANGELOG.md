@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-05-12
+
+### Added
+
+- Added non-interactive `--file` / `-f` execution for `.mac` source files.
+- Added `MacsymaLanguage.eval_file(path)`, which reads UTF-8 MACSYMA source and
+  evaluates it through the same session pipeline as interactive input.
+- Added regression coverage for suppressed statements, displayed outputs, and
+  parse-error exit status in file mode.
+
 ## 0.2.0 — 2026-04-27
 
 **Add Phase G control-flow and Phase 13 hyperbolic-function end-to-end REPL tests.**

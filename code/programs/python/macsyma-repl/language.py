@@ -17,6 +17,7 @@ returns one combined string (one line per displayed result, or
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
 from cas_pretty_printer import MacsymaDialect, pretty
 from coding_adventures_repl import Language
@@ -112,6 +113,16 @@ class MacsymaLanguage(Language):
         if not outputs:
             return ("ok", None)
         return ("ok", "\n".join(outputs))
+
+    def eval_file(self, path: str | Path) -> tuple[str, str | None] | str:
+        """Evaluate a MACSYMA source file through this session.
+
+        The file is read as UTF-8 and then passed through :meth:`eval`, so
+        statement terminators, history, assignments, and output suppression
+        match the interactive REPL path.
+        """
+        source = Path(path).read_text(encoding="utf-8")
+        return self.eval(source)
 
 
 def _split_wrapper(stmt: IRNode) -> tuple[bool, IRNode]:
