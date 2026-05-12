@@ -6,6 +6,9 @@ export const FACTOR = "Factor";
 export const IRREDUCIBLE = "Irreducible";
 
 const MAX_COMBOS = 10_000;
+const MAX_BZH_DEGREE = 20;
+const MAX_BZH_PRIME = 200;
+const SMALL_PRIMES = smallPrimes(MAX_BZH_PRIME);
 
 export function normalize(poly: readonly IntegerLike[]): bigint[] {
   const out = poly.map(toBigInt);
@@ -159,6 +162,46 @@ export function kroneckerFactor(poly: readonly IntegerLike[]): [bigint[], bigint
   return null;
 }
 
+export function bzhFactor(poly: readonly IntegerLike[]): bigint[][] | null {
+  const f = normalize(poly);
+  if (f.length === 0) return null;
+
+  const d = f.length - 1;
+  if (d < 2 || d > MAX_BZH_DEGREE) return null;
+  if (f[f.length - 1] !== 1n) return null;
+
+  let goodPrime: number | null = null;
+  for (const p of SMALL_PRIMES) {
+    if (isSquarefreeModP(f, p)) {
+      goodPrime = p;
+      break;
+    }
+  }
+  if (goodPrime === null) return null;
+
+  const p = goodPrime;
+  const modFactors = berlekampFactorModP(pmodBigint(f, p), p);
+  if (modFactors.length < 2) return null;
+
+  const target = 2 * zassenhausBound(f) + 1;
+  if (!Number.isFinite(target)) return null;
+
+  const lifted = multiHenselLift(f, modFactors, p, target);
+  if (lifted === null) return null;
+
+  let modulus = BigInt(p);
+  while (Number(modulus) <= target) {
+    modulus *= BigInt(p);
+  }
+
+  const combined = combineBzhFactors(f, lifted, modulus);
+  if (combined === null || combined.length < 2) return null;
+  if (combined.length === 1 && normalizePositiveLeading(combined[0]).join(",") === f.join(",")) {
+    return null;
+  }
+  return combined;
+}
+
 export function factorIntegerPolynomial(poly: readonly IntegerLike[]): [bigint, FactorList] {
   const normalized = normalize(poly);
   if (normalized.length === 0) return [0n, []];
@@ -197,6 +240,13 @@ function factorResidual(poly: bigint[]): FactorList {
 
     const split = kroneckerFactor(piece);
     if (split === null) {
+      if (piece.length >= 5 && piece[piece.length - 1] === 1n) {
+        const bzh = bzhFactor(piece);
+        if (bzh !== null && bzh.length >= 2) {
+          queue.push(...bzh);
+          continue;
+        }
+      }
       addFactor(counts, normalizePositiveLeading(piece));
     } else {
       queue.push(split[0], split[1]);
@@ -214,6 +264,524 @@ function addFactor(counts: Map<string, { poly: bigint[]; count: number }>, poly:
   } else {
     counts.set(key, { poly, count: 1 });
   }
+}
+
+function pmodBigint(coeffs: readonly bigint[], p: number): number[] {
+  const modulus = BigInt(p);
+  const out = coeffs.map((coeff) => Number(((coeff % modulus) + modulus) % modulus));
+  while (out.length > 0 && out[out.length - 1] === 0) out.pop();
+  return out;
+}
+
+function pmodNumber(coeffs: readonly number[], p: number): number[] {
+  const out = coeffs.map((coeff) => modNumber(coeff, p));
+  while (out.length > 0 && out[out.length - 1] === 0) out.pop();
+  return out;
+}
+
+function pdeg(poly: readonly number[]): number {
+  return poly.length - 1;
+}
+
+function padd(a: readonly number[], b: readonly number[], p: number): number[] {
+  const n = Math.max(a.length, b.length);
+  const result = Array<number>(n).fill(0);
+  for (let i = 0; i < a.length; i += 1) result[i] = modNumber(result[i] + a[i], p);
+  for (let i = 0; i < b.length; i += 1) result[i] = modNumber(result[i] + b[i], p);
+  while (result.length > 0 && result[result.length - 1] === 0) result.pop();
+  return result;
+}
+
+function psub(a: readonly number[], b: readonly number[], p: number): number[] {
+  const n = Math.max(a.length, b.length);
+  const result = Array<number>(n).fill(0);
+  for (let i = 0; i < a.length; i += 1) result[i] = modNumber(result[i] + a[i], p);
+  for (let i = 0; i < b.length; i += 1) result[i] = modNumber(result[i] - b[i], p);
+  while (result.length > 0 && result[result.length - 1] === 0) result.pop();
+  return result;
+}
+
+function pmul(a: readonly number[], b: readonly number[], p: number): number[] {
+  if (a.length === 0 || b.length === 0) return [];
+  const result = Array<number>(a.length + b.length - 1).fill(0);
+  for (let i = 0; i < a.length; i += 1) {
+    for (let j = 0; j < b.length; j += 1) {
+      result[i + j] = modNumber(result[i + j] + a[i] * b[j], p);
+    }
+  }
+  while (result.length > 0 && result[result.length - 1] === 0) result.pop();
+  return result;
+}
+
+function pscale(poly: readonly number[], scalar: number, p: number): number[] {
+  const result = poly.map((coeff) => modNumber(coeff * scalar, p));
+  while (result.length > 0 && result[result.length - 1] === 0) result.pop();
+  return result;
+}
+
+function pmodPoly(aInput: readonly number[], b: readonly number[], p: number): number[] {
+  const a = [...aInput];
+  const db = pdeg(b);
+  if (db < 0) throw new RangeError("division by zero polynomial");
+  const leadInv = modInverse(b[b.length - 1], p);
+  while (pdeg(a) >= db) {
+    const shift = pdeg(a) - db;
+    const factor = modNumber(a[a.length - 1] * leadInv, p);
+    for (let k = 0; k < b.length; k += 1) {
+      a[shift + k] = modNumber(a[shift + k] - factor * b[k], p);
+    }
+    while (a.length > 0 && a[a.length - 1] === 0) a.pop();
+  }
+  return a;
+}
+
+function pdivQuotient(aInput: readonly number[], b: readonly number[], p: number): number[] {
+  const a = [...aInput];
+  const db = pdeg(b);
+  if (db < 0) throw new RangeError("division by zero polynomial");
+  const leadInv = modInverse(b[b.length - 1], p);
+  const quotient: number[] = [];
+  while (pdeg(a) >= db) {
+    const shift = pdeg(a) - db;
+    const factor = modNumber(a[a.length - 1] * leadInv, p);
+    while (quotient.length <= shift) quotient.push(0);
+    quotient[shift] = modNumber(quotient[shift] + factor, p);
+    for (let k = 0; k < b.length; k += 1) {
+      a[shift + k] = modNumber(a[shift + k] - factor * b[k], p);
+    }
+    while (a.length > 0 && a[a.length - 1] === 0) a.pop();
+  }
+  while (quotient.length > 0 && quotient[quotient.length - 1] === 0) quotient.pop();
+  return quotient;
+}
+
+function pgcd(aInput: readonly number[], bInput: readonly number[], p: number): number[] {
+  let a = pmodNumber(aInput, p);
+  let b = pmodNumber(bInput, p);
+  while (b.length > 0) {
+    [a, b] = [b, pmodPoly(a, b, p)];
+  }
+  if (a.length > 0 && a[a.length - 1] !== 1) {
+    a = pscale(a, modInverse(a[a.length - 1], p), p);
+  }
+  return a;
+}
+
+function pgcdExtended(
+  a: readonly number[],
+  b: readonly number[],
+  p: number,
+): [number[], number[], number[]] {
+  let oldR = [...a];
+  let r = [...b];
+  let oldS = [1];
+  let s: number[] = [];
+  let oldT: number[] = [];
+  let t = [1];
+
+  while (r.length > 0) {
+    const q = pdivQuotient(oldR, r, p);
+    [oldR, r] = [r, psub(oldR, pmul(q, r, p), p)];
+    [oldS, s] = [s, psub(oldS, pmul(q, s, p), p)];
+    [oldT, t] = [t, psub(oldT, pmul(q, t, p), p)];
+  }
+
+  if (oldR.length > 0 && oldR[oldR.length - 1] !== 1) {
+    const inv = modInverse(oldR[oldR.length - 1], p);
+    oldR = pscale(oldR, inv, p);
+    oldS = pscale(oldS, inv, p);
+    oldT = pscale(oldT, inv, p);
+  }
+  return [oldR, oldS, oldT];
+}
+
+function pderiv(poly: readonly number[], p: number): number[] {
+  if (poly.length <= 1) return [];
+  const result = Array.from({ length: poly.length - 1 }, (_, i) => modNumber((i + 1) * poly[i + 1], p));
+  while (result.length > 0 && result[result.length - 1] === 0) result.pop();
+  return result;
+}
+
+function isSquarefreeModP(poly: readonly bigint[], p: number): boolean {
+  const f = pmodBigint(poly, p);
+  if (f.length === 0) return false;
+  const df = pderiv(f, p);
+  if (df.length === 0) return false;
+  return pdeg(pgcd(f, df, p)) === 0;
+}
+
+function polyPowmod(exp: number, modPoly: readonly number[], p: number): number[] {
+  let result = [1];
+  let current = pmodPoly([0, 1], modPoly, p);
+  while (exp > 0) {
+    if ((exp & 1) === 1) result = pmodPoly(pmul(result, current, p), modPoly, p);
+    current = pmodPoly(pmul(current, current, p), modPoly, p);
+    exp = Math.floor(exp / 2);
+  }
+  return result;
+}
+
+function nullSpaceModP(matrix: readonly number[][], n: number, p: number): number[][] {
+  const a = matrix.map((row) => [...row]);
+  const pivotCols: number[] = [];
+  let row = 0;
+
+  for (let col = 0; col < n; col += 1) {
+    let pivot = -1;
+    for (let r = row; r < n; r += 1) {
+      if (a[r][col] !== 0) {
+        pivot = r;
+        break;
+      }
+    }
+    if (pivot === -1) continue;
+
+    [a[row], a[pivot]] = [a[pivot], a[row]];
+    const inv = modInverse(a[row][col], p);
+    a[row] = a[row].map((value) => modNumber(value * inv, p));
+    for (let r = 0; r < n; r += 1) {
+      if (r === row || a[r][col] === 0) continue;
+      const factor = a[r][col];
+      a[r] = a[r].map((value, j) => modNumber(value - factor * a[row][j], p));
+    }
+    pivotCols.push(col);
+    row += 1;
+  }
+
+  const pivotSet = new Set(pivotCols);
+  const pivotRow = new Map<number, number>();
+  pivotCols.forEach((col, index) => pivotRow.set(col, index));
+  const basis: number[][] = [];
+
+  for (let freeCol = 0; freeCol < n; freeCol += 1) {
+    if (pivotSet.has(freeCol)) continue;
+    const vector = Array<number>(n).fill(0);
+    vector[freeCol] = 1;
+    for (const pivotCol of pivotCols) {
+      const r = pivotRow.get(pivotCol) ?? 0;
+      vector[pivotCol] = modNumber(-a[r][freeCol], p);
+    }
+    basis.push(vector);
+  }
+
+  return basis.length > 0 ? basis : [[1, ...Array<number>(Math.max(0, n - 1)).fill(0)]];
+}
+
+function berlekampFactorModP(f: readonly number[], p: number): number[][] {
+  const n = pdeg(f);
+  if (n <= 0) return f.length > 0 ? [[...f]] : [];
+  if (n === 1) return [[...f]];
+
+  const xpModF = polyPowmod(p, f, p);
+  const qMatrix: number[][] = [];
+  let current = [1];
+  for (let j = 0; j < n; j += 1) {
+    qMatrix.push([...current, ...Array<number>(n - current.length).fill(0)]);
+    current = pmodPoly(pmul(current, xpModF, p), f, p);
+  }
+
+  const matrix = Array.from({ length: n }, () => Array<number>(n).fill(0));
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j < n; j += 1) {
+      matrix[i][j] = modNumber(qMatrix[j][i] - (i === j ? 1 : 0), p);
+    }
+  }
+
+  const basis = nullSpaceModP(matrix, n, p);
+  const targetFactorCount = basis.length;
+  if (targetFactorCount === 1) return [[...f]];
+
+  let factors: number[][] = [[...f]];
+  for (const vector of basis.slice(1)) {
+    if (factors.length === targetFactorCount) break;
+    const nextFactors: number[][] = [];
+    for (const factor of factors) {
+      if (pdeg(factor) <= 0) {
+        nextFactors.push(factor);
+        continue;
+      }
+
+      let splitFound = false;
+      for (let s = 0; s < p; s += 1) {
+        const shifted = [...vector];
+        shifted[0] = modNumber((shifted[0] ?? 0) - s, p);
+        while (shifted.length > 0 && shifted[shifted.length - 1] === 0) shifted.pop();
+        const h = pgcd(factor, shifted.length > 0 ? shifted : [0], p);
+        if (pdeg(h) > 0 && pdeg(h) < pdeg(factor)) {
+          nextFactors.push(h, pdivQuotient(factor, h, p));
+          splitFound = true;
+          break;
+        }
+      }
+
+      if (!splitFound) nextFactors.push(factor);
+    }
+    factors = nextFactors;
+  }
+
+  return factors
+    .filter((factor) => factor.length > 0)
+    .map((factor) => (factor[factor.length - 1] === 1 ? factor : pscale(factor, modInverse(factor[factor.length - 1], p), p)));
+}
+
+function zassenhausBound(poly: readonly bigint[]): number {
+  const d = poly.length - 1;
+  if (d < 0) return 0;
+  let sumSquares = 0;
+  for (const coeff of poly) {
+    const n = Number(coeff);
+    if (!Number.isFinite(n)) return Number.POSITIVE_INFINITY;
+    sumSquares += n * n;
+  }
+  return 2 ** d * Math.sqrt(d + 1) * Math.sqrt(sumSquares);
+}
+
+function izMul(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  if (a.length === 0 || b.length === 0) return [];
+  const result = Array<bigint>(a.length + b.length - 1).fill(0n);
+  for (let i = 0; i < a.length; i += 1) {
+    for (let j = 0; j < b.length; j += 1) {
+      result[i + j] += a[i] * b[j];
+    }
+  }
+  return normalize(result);
+}
+
+function izSub(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  const n = Math.max(a.length, b.length);
+  const result = Array<bigint>(n).fill(0n);
+  for (let i = 0; i < a.length; i += 1) result[i] += a[i];
+  for (let i = 0; i < b.length; i += 1) result[i] -= b[i];
+  return normalize(result);
+}
+
+function centerModBigint(coeffs: readonly bigint[], modulus: bigint): bigint[] {
+  const half = modulus / 2n;
+  const result = coeffs.map((coeff) => {
+    let r = ((coeff % modulus) + modulus) % modulus;
+    if (r > half) r -= modulus;
+    return r;
+  });
+  return normalize(result);
+}
+
+function toZCentered(poly: readonly number[], p: number): bigint[] {
+  const half = Math.floor(p / 2);
+  const result = poly.map((coeff) => BigInt(coeff <= half ? coeff : coeff - p));
+  return normalize(result);
+}
+
+function diophantineModP(
+  a: readonly number[],
+  b: readonly number[],
+  c: readonly number[],
+  p: number,
+): [number[], number[]] {
+  const [, s, t] = pgcdExtended(a, b, p);
+  const sc = pmul(s, c, p);
+  const u = pmodPoly(sc, b, p);
+  const q = pdivQuotient(sc, b, p);
+  const v = pmodPoly(padd(pmul(t, c, p), pmul(q, a, p), p), a, p);
+  return [u, v];
+}
+
+function linearHenselLift(
+  f: readonly bigint[],
+  gInit: readonly number[],
+  hInit: readonly number[],
+  p: number,
+  targetMod: bigint,
+): [bigint[], bigint[]] | null {
+  const gMod = pmodNumber(gInit, p);
+  const hMod = pmodNumber(hInit, p);
+  if (pdeg(pgcd(gMod, hMod, p)) !== 0) return null;
+
+  let g = toZCentered(gMod, p);
+  let h = toZCentered(hMod, p);
+  let pk = BigInt(p);
+  let modulus = BigInt(p);
+
+  while (modulus < targetMod) {
+    const diff = izSub(f, izMul(g, h));
+    if (diff.length === 0) break;
+    if (diff.some((coeff) => coeff % pk !== 0n)) return null;
+    const error = normalize(diff.map((coeff) => coeff / pk));
+    const errorMod = pmodBigint(error, p);
+    const [uMod, vMod] = diophantineModP(gMod, hMod, errorMod, p);
+    const u = toZCentered(uMod, p);
+    const v = toZCentered(vMod, p);
+
+    const nextG = [...g];
+    for (let i = 0; i < v.length; i += 1) {
+      while (nextG.length <= i) nextG.push(0n);
+      nextG[i] += pk * v[i];
+    }
+    const nextH = [...h];
+    for (let i = 0; i < u.length; i += 1) {
+      while (nextH.length <= i) nextH.push(0n);
+      nextH[i] += pk * u[i];
+    }
+
+    g = normalize(nextG);
+    h = normalize(nextH);
+    pk *= BigInt(p);
+    modulus *= BigInt(p);
+  }
+
+  return [centerModBigint(g, targetMod), centerModBigint(h, targetMod)];
+}
+
+function multiHenselLift(
+  f: readonly bigint[],
+  factorsModP: readonly number[][],
+  p: number,
+  target: number,
+): bigint[][] | null {
+  if (factorsModP.length === 0) return [];
+  if (factorsModP.length === 1) return [[...f]];
+
+  let modulus = BigInt(p);
+  while (Number(modulus) <= target) {
+    modulus *= BigInt(p);
+  }
+
+  if (factorsModP.length === 2) {
+    const lifted = linearHenselLift(f, factorsModP[0], factorsModP[1], p, modulus);
+    return lifted === null ? null : [lifted[0], lifted[1]];
+  }
+
+  const mid = Math.floor(factorsModP.length / 2);
+  const leftFactors = factorsModP.slice(0, mid);
+  const rightFactors = factorsModP.slice(mid);
+  let leftProduct = leftFactors.reduce((acc, factor) => pmul(acc, factor, p), [1]);
+  let rightProduct = rightFactors.reduce((acc, factor) => pmul(acc, factor, p), [1]);
+
+  if (leftProduct.length > 0 && leftProduct[leftProduct.length - 1] !== 1) {
+    leftProduct = pscale(leftProduct, modInverse(leftProduct[leftProduct.length - 1], p), p);
+  }
+  if (rightProduct.length > 0 && rightProduct[rightProduct.length - 1] !== 1) {
+    rightProduct = pscale(rightProduct, modInverse(rightProduct[rightProduct.length - 1], p), p);
+  }
+
+  const pair = linearHenselLift(f, leftProduct, rightProduct, p, modulus);
+  if (pair === null) return null;
+
+  const leftLifted = multiHenselLift(pair[0], leftFactors, p, target);
+  const rightLifted = multiHenselLift(pair[1], rightFactors, p, target);
+  if (leftLifted === null || rightLifted === null) return null;
+  return [...leftLifted, ...rightLifted];
+}
+
+function exactPolynomialDivides(poly: readonly bigint[], divisor: readonly bigint[]): bigint[] | null {
+  const f = normalize(poly);
+  const g = normalize(divisor);
+  if (g.length === 0 || g.length > f.length) return null;
+  if (g.length === 1) {
+    if (g[0] === 0n || f.some((coeff) => coeff % g[0] !== 0n)) return null;
+    return normalize(f.map((coeff) => coeff / g[0]));
+  }
+
+  const remainder = [...f];
+  const quotient = Array<bigint>(f.length - g.length + 1).fill(0n);
+  while (remainder.length >= g.length) {
+    const shift = remainder.length - g.length;
+    const lead = remainder[remainder.length - 1];
+    const divisorLead = g[g.length - 1];
+    if (lead % divisorLead !== 0n) return null;
+    const q = lead / divisorLead;
+    quotient[shift] = q;
+    for (let i = 0; i < g.length; i += 1) {
+      remainder[shift + i] -= q * g[i];
+    }
+    while (remainder.length > 0 && remainder[remainder.length - 1] === 0n) remainder.pop();
+  }
+  return remainder.length === 0 ? normalize(quotient) : null;
+}
+
+function combineBzhFactors(
+  f: readonly bigint[],
+  lifted: readonly bigint[][],
+  modulus: bigint,
+): bigint[][] | null {
+  let remainingF = [...f];
+  let remainingLifted = lifted.map((factor) => [...factor]);
+  const factors: bigint[][] = [];
+
+  while (remainingLifted.length > 1) {
+    let found = false;
+    const maxSize = Math.floor(remainingLifted.length / 2);
+    for (let size = 1; size <= maxSize; size += 1) {
+      for (const subset of combinations(remainingLifted.length, size)) {
+        let productPoly = [1n];
+        for (const index of subset) {
+          productPoly = izMul(productPoly, remainingLifted[index]);
+        }
+        const primitive = normalizePositiveLeading(primitivePart(centerModBigint(productPoly, modulus)));
+        if (primitive.length === 0) continue;
+        const quotient = exactPolynomialDivides(remainingF, primitive);
+        if (quotient !== null) {
+          factors.push(primitive);
+          remainingF = normalizePositiveLeading(primitivePart(quotient));
+          const selected = new Set(subset);
+          remainingLifted = remainingLifted.filter((_, index) => !selected.has(index));
+          found = true;
+          break;
+        }
+      }
+      if (found) break;
+    }
+    if (!found) break;
+  }
+
+  remainingF = normalize(remainingF);
+  if (remainingF.length > 1 && !(remainingF.length === 1 && abs(remainingF[0]) === 1n)) {
+    factors.push(normalizePositiveLeading(remainingF));
+  }
+
+  return factors.length > 0 ? factors : null;
+}
+
+function* combinations(n: number, size: number, start = 0, prefix: number[] = []): Generator<number[]> {
+  if (prefix.length === size) {
+    yield [...prefix];
+    return;
+  }
+  for (let i = start; i <= n - (size - prefix.length); i += 1) {
+    prefix.push(i);
+    yield* combinations(n, size, i + 1, prefix);
+    prefix.pop();
+  }
+}
+
+function smallPrimes(limit: number): number[] {
+  const sieve = Array<boolean>(limit + 1).fill(true);
+  sieve[0] = false;
+  sieve[1] = false;
+  const primes: number[] = [];
+  for (let i = 2; i <= limit; i += 1) {
+    if (!sieve[i]) continue;
+    primes.push(i);
+    for (let j = i * i; j <= limit; j += i) sieve[j] = false;
+  }
+  return primes;
+}
+
+function modNumber(value: number, p: number): number {
+  return ((value % p) + p) % p;
+}
+
+function modInverse(value: number, p: number): number {
+  let t = 0;
+  let nextT = 1;
+  let r = p;
+  let nextR = modNumber(value, p);
+  while (nextR !== 0) {
+    const q = Math.floor(r / nextR);
+    [t, nextT] = [nextT, t - q * nextT];
+    [r, nextR] = [nextR, r - q * nextR];
+  }
+  if (r > 1) throw new RangeError("value is not invertible modulo p");
+  return modNumber(t, p);
 }
 
 function dividesExactly(poly: bigint[], candidate: bigint[]): bigint[] | null {
