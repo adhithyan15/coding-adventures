@@ -31,6 +31,9 @@ Manifest loading also runs the Chief-of-Staff read/write separation
 validator. Optional `flavor` (`ingestion`, `actuation`, `internal`)
 and `trust` (`trusted`, `untrusted`) fields let a manifest override
 the default classifier when a capability crosses an agent boundary.
+`CapabilitySurfaceSummary` gives host and catalog code a payload-free
+read-side view of category, action, target-count, and boundary annotation
+coverage without exposing raw target strings.
 
 ## Quick example
 
@@ -65,7 +68,7 @@ assert_eq!(err.kind(), std::io::ErrorKind::PermissionDenied);
 | `capability`    | `Capability` struct (immutable, validated)              |
 | `errors`        | `CapabilityViolationError`, `ManifestError`, `InvalidCombination` |
 | `glob`          | `match_target(pattern, candidate)` for fs / net targets |
-| `manifest`      | `Manifest` with `has`/`check`/`try_new`/`load_from_str`/`load_from_file` |
+| `manifest`      | `Manifest` with `has`/`check`/`try_new`/`load_from_str`/`load_from_file` and payload-free surface summaries |
 | `audit`         | `Operation<T>`, `OperationRecord`, and `AuditSink` envelope types |
 | `backend`       | `Backend` trait + `OpenBackend` / `TestBackend` / `DenyAllBackend`, `with_backend(...)` guard |
 | `secure_file`   | `read_file` / `write_file` / `create_file` / `delete_file` / `list_dir` |

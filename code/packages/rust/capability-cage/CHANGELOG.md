@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added `CapabilitySurfaceSummary` and `Manifest::capability_surface_summary()`
+  for payload-free Chief-of-Staff host/catalog review of manifest category,
+  action, target-count, and boundary annotation coverage.
 - Added optional `flavor` and `trust` capability annotations for
   Chief-of-Staff read/write separation.
 - Added `Manifest::try_new` and read/write separation validation for
