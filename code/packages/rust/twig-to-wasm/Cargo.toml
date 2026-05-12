@@ -1,0 +1,22 @@
+[package]
+name = "twig-to-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Twig → WASM pipeline: source → IIR → type check → builtin lowering → WASM binary (stub, Phase 1 placeholder)"
+
+[lib]
+name = "twig_to_wasm"
+path = "src/lib.rs"
+
+[dependencies]
+twig-ir-compiler     = { path = "../twig-ir-compiler" }
+iir-type-checker     = { path = "../iir-type-checker" }
+iir-builtin-lowering = { path = "../iir-builtin-lowering" }
+iir-to-wasm          = { path = "../iir-to-wasm" }
+interpreter-ir       = { path = "../interpreter-ir" }
+
+[[test]]
+name = "test_pipeline"
+path = "tests/test_pipeline.rs"
+
+[dev-dependencies]

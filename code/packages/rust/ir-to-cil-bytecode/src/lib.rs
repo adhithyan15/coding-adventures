@@ -81,6 +81,7 @@ pub use builder::{
     CILBranchKind,
     CILBytecodeBuilder,
     CILOpcode,
+    OBJECT_ARRAY_TYPE_TOKEN,
     encode_i4,
     encode_ldc_i4,
     encode_ldarg,

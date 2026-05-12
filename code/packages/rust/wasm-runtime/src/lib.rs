@@ -1299,6 +1299,11 @@ impl WasmRuntime {
                 ValueType::I64 => WasmValue::I64(arg),
                 ValueType::F32 => WasmValue::F32(arg as f32),
                 ValueType::F64 => WasmValue::F64(arg as f64),
+                // GC reference types: pass the raw i64 as a null-pointer
+                // sentinel until the runtime grows native GC support.
+                ValueType::Anyref | ValueType::I31ref | ValueType::StructRef(_) => {
+                    WasmValue::I32(arg as i32)
+                }
             })
             .collect();
 

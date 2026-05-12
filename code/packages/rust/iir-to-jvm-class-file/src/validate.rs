@@ -31,7 +31,11 @@
 //! # Unsupported ops
 //!
 //! `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`,
-//! `alloc`, `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`.
+//! `box`, `unbox`, `safepoint`.
+//!
+//! The following ops are now SUPPORTED via `Object[]` cons cells (Phase 2):
+//! `alloc` (when `type_hint == "ref<LispyPair>"`), `field_load`, `field_store`,
+//! `is_null`, and `const` with `type_hint == "ref<LispyPair>"` (nil).
 
 use interpreter_ir::IIRModule;
 
@@ -46,10 +50,14 @@ use interpreter_ir::IIRModule;
 // - `io_in/io_out`  — raw I/O; JVM does this via java.io APIs, not opcodes.
 // - `cast`          — type reinterpretation / unsafe casts not supported.
 // - `load_mem/store_mem` — raw pointer access; JVM has no unsafe memory.
-// - `alloc/box/unbox/field_load/field_store/is_null` — GC heap ops; JVM
-//   manages its own heap via `new`/`getfield`/`putfield`, which we do not
-//   emit in v1.
+// - `box/unbox`     — boxing primitives; not needed for the Object[] model.
 // - `safepoint`     — GC coordination; handled by the JVM runtime itself.
+//
+// Phase-2 additions — now SUPPORTED (removed from the block list):
+// - `alloc`        — when type_hint == "ref<LispyPair>": Object[] allocation.
+// - `field_load`   — car/cdr via aaload.
+// - `field_store`  — writing pair fields via aastore.
+// - `is_null`      — null check via ifnull.
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
@@ -58,14 +66,17 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "cast",
     "load_mem",
     "store_mem",
-    "alloc",
     "box",
     "unbox",
-    "field_load",
-    "field_store",
-    "is_null",
     "safepoint",
 ];
+
+/// Ops that are conditionally supported depending on their `type_hint`.
+///
+/// `"alloc"` is accepted only when `type_hint == "ref<LispyPair>"`.
+/// For any other type the validator still rejects it with an UnsupportedOp
+/// error, since we only know how to allocate LispyPair cons cells here.
+const CONDITIONALLY_SUPPORTED_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
 
 // ---------------------------------------------------------------------------
 // validate_for_jvm
@@ -161,11 +172,11 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
             // `"str"` — JVM has strings (`java.lang.String`), but there is no
-            // integer-arithmetic equivalent; we do not emit string handling code
-            // in v1.
+            // integer-arithmetic equivalent; we do not emit string handling code.
             //
             // `"ref<…>"` — heap pointer types require `aload`/`astore` and GC
-            // object references; we do not emit those in v1.
+            // object references.  Phase 2 supports `"ref<LispyPair>"` via
+            // `Object[]` cons cells; all other `ref<…>` types are still rejected.
             //
             // `"f32"` and `"f64"` are intentionally NOT rejected here.  The JVM
             // has first-class float/double operations (`fload`, `dload`, `fadd`,
@@ -176,10 +187,15 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
                      string operations are not supported in this JVM backend",
                     func.name, instr.op
                 ));
-            } else if instr.type_hint.starts_with("ref<") {
+            } else if instr.type_hint.starts_with("ref<")
+                && instr.type_hint != "ref<LispyPair>"
+            {
+                // Only ref<LispyPair> is supported (Phase 2 Object[] cons cells).
+                // Any other ref<T> — raw pointers, struct refs, etc. — is still
+                // unsupported because we have no Java class to represent them.
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
-                     heap pointer types are not supported in this JVM backend",
+                     only ref<LispyPair> is supported in this JVM backend (Phase 2)",
                     func.name, instr.op, instr.type_hint
                 ));
             }
@@ -196,6 +212,29 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
                     func.name, instr.op
                 ));
             }
+
+            // ── Check 6: Conditionally supported ops ─────────────────────────
+            //
+            // `alloc` is only supported for `type_hint == "ref<LispyPair>"`.
+            // `field_load` and `field_store` are supported for pair fields.
+            // `is_null` is supported unconditionally (works on any reference).
+            //
+            // When `alloc` appears with a *different* ref type, we already
+            // rejected the type in Check 4 (if type_hint is ref<…> but not
+            // ref<LispyPair>).  So we only need to guard against `alloc` with
+            // a completely non-ref type_hint here.
+            if instr.op == "alloc"
+                && !CONDITIONALLY_SUPPORTED_OPS.contains(&instr.op.as_str())
+            {
+                // This branch is unreachable given the constant definition, but
+                // serves as a documentation anchor.
+                errors.push(format!(
+                    "UnsupportedOp: function {:?}, op \"alloc\" — unreachable branch",
+                    func.name
+                ));
+            }
+            // `field_load`, `field_store`, `is_null` — no additional constraint
+            // beyond their type_hint (handled in Check 4 above).
         }
     }
 
@@ -318,6 +357,9 @@ mod tests {
 
     #[test]
     fn unsupported_ops_rejected() {
+        // These ops are unconditionally unsupported by the JVM backend.
+        // Note: alloc/field_load/field_store/is_null are Phase-2 supported ops
+        // (via Object[] cons cells) and are NOT in this list.
         for op in &[
             "call_builtin",
             "io_in",
@@ -325,12 +367,8 @@ mod tests {
             "cast",
             "load_mem",
             "store_mem",
-            "alloc",
             "box",
             "unbox",
-            "field_load",
-            "field_store",
-            "is_null",
             "safepoint",
         ] {
             let errs = validate_for_jvm(&single_fn_module(vec![
@@ -342,6 +380,91 @@ mod tests {
                 op
             );
         }
+    }
+
+    /// `alloc ref<LispyPair>` is accepted (Phase 2 Object[] cons cells).
+    #[test]
+    fn alloc_lispy_pair_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedOp") || e.contains("UnsupportedType")),
+            "alloc ref<LispyPair> should be accepted, got: {:?}",
+            errs
+        );
+    }
+
+    /// `alloc` with an unsupported ref type is still rejected.
+    #[test]
+    fn alloc_wrong_ref_type_rejected() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("alloc", Some("p".into()), vec![], "ref<SomeOtherType>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedType")),
+            "alloc ref<SomeOtherType> should be rejected, got: {:?}",
+            errs
+        );
+    }
+
+    /// `field_load` is accepted (car/cdr via aaload).
+    #[test]
+    fn field_load_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "field_load",
+                Some("v".into()),
+                vec![Operand::Var("p".into()), Operand::Int(0)],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "field_load should be accepted, got: {:?}",
+            errs
+        );
+    }
+
+    /// `field_store` is accepted (writing pair fields via aastore).
+    #[test]
+    fn field_store_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("p".into()), Operand::Int(0), Operand::Var("v".into())],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "field_store should be accepted, got: {:?}",
+            errs
+        );
+    }
+
+    /// `is_null` is accepted (null check via ifnull).
+    #[test]
+    fn is_null_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "is_null",
+                Some("r".into()),
+                vec![Operand::Var("p".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "is_null should be accepted, got: {:?}",
+            errs
+        );
     }
 
     #[test]

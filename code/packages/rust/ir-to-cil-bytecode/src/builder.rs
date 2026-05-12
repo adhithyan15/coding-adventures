@@ -39,6 +39,30 @@ const INT8_MIN: i32 = -128;
 const INT8_MAX: i32 = 127;
 
 // ---------------------------------------------------------------------------
+// Heap / GC type tokens
+// ---------------------------------------------------------------------------
+
+/// Sentinel type token for `System.Object[]` used in simulation.
+///
+/// CIL's `newarr` instruction takes a 4-byte metadata token that identifies
+/// the element type.  In a real PE/COFF file this token is a TypeRef or
+/// TypeDef row index embedded in the `#~` metadata stream.
+///
+/// For simulation and testing purposes, we use a well-known sentinel:
+///
+/// ```text
+/// token format: 0xTT_RRRRRR
+///   TT     = table id (0x01 = TypeRef in ECMA-335 §II.22)
+///   RRRRRR = 1-based row index (we use 1 for System.Object[])
+/// ```
+///
+/// Any conforming CLR simulator that parses the CIL byte stream should treat
+/// this token as "allocate a `System.Object[]` of the requested length".
+/// Cons cells in this backend are `object[]` arrays with exactly two slots:
+/// index 0 = head value, index 1 = tail (next pair or null).
+pub const OBJECT_ARRAY_TYPE_TOKEN: u32 = 0x0100_0001;
+
+// ---------------------------------------------------------------------------
 // CILBuilderError
 // ---------------------------------------------------------------------------
 
@@ -69,6 +93,15 @@ impl std::fmt::Display for CILBuilderError {
 /// 0xFE 0x02 → cgt   (compare greater-than signed)
 /// 0xFE 0x04 → clt   (compare less-than signed)
 /// ```
+///
+/// # Heap / reference opcodes (Phase 2)
+///
+/// ```text
+/// 0x14      → ldnull      push a null managed reference
+/// 0x8D tt tt tt tt → newarr  allocate a 1-D managed array
+/// 0xA2      → ldelem.ref  load an object[] element onto the stack
+/// 0xA4      → stelem.ref  store the stack top into an object[] element
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 pub enum CILOpcode {
@@ -89,6 +122,12 @@ pub enum CILOpcode {
     StArgS    = 0x10,
     LdLocS    = 0x11,
     StLocS    = 0x13,
+    /// `ldnull` — push a null managed reference onto the stack.
+    ///
+    /// CIL specification (ECMA-335 §III.4.12): "Push a null reference on the
+    /// stack."  This is the canonical way to represent nil/NULL in managed
+    /// code — it works for any reference type, including `object[]`.
+    LdNull    = 0x14,
     LdcI4M1   = 0x15,
     LdcI40    = 0x16,
     LdcI41    = 0x17,
@@ -138,8 +177,25 @@ pub enum CILOpcode {
     NewArr    = 0x8D,
     LdElemU1  = 0x91,
     LdElemI4  = 0x94,
+    /// `ldelem.ref` (0xA2) — load a reference-typed array element.
+    ///
+    /// Stack transition: `..., array, index → ..., value`
+    ///
+    /// Pops `index` (int32) and `array` (object[]), pushes the element at
+    /// `array[index]` as a managed reference.  Used to implement `car`/`cdr`
+    /// on `object[]` cons cells: `ldloc pair; ldc.i4.0; ldelem.ref` reads the
+    /// head field.
+    LdElemRef = 0xA2,
     StElemI1  = 0x9C,
     StElemI4  = 0x9E,
+    /// `stelem.ref` (0xA4) — store a reference into a reference-typed array.
+    ///
+    /// Stack transition: `..., array, index, value → ...`
+    ///
+    /// Pops `value`, `index`, and `array`, storing `value` into
+    /// `array[index]`.  Used with `dup` to build cons cells in-place without
+    /// a separate helper method.
+    StElemRef = 0xA4,
     PrefixFe  = 0xFE,
 }
 
@@ -509,6 +565,119 @@ impl CILBytecodeBuilder {
     /// Emit `ret`.
     pub fn emit_ret(&mut self) { self.emit_opcode(CILOpcode::Ret); }
 
+    // ── Heap / GC reference opcodes (Phase 2) ─────────────────────────────
+
+    /// Emit `ldnull` (0x14): push a null managed reference onto the evaluation stack.
+    ///
+    /// # CIL semantics
+    ///
+    /// `ldnull` pushes the distinguished "null" reference — the CLR's equivalent
+    /// of `nullptr` / `nil`.  It is typed as an uninitialized object reference
+    /// whose runtime type is resolved lazily by the JIT verifier.
+    ///
+    /// In this backend, `ldnull` is the canonical representation for `nil`:
+    ///
+    /// ```text
+    /// IIR: const nil ref<LispyPair>  →  CIL: ldnull; stloc <dest>
+    /// IIR: is_null x                 →  CIL: ldloc x; ldnull; ceq; stloc <dest>
+    /// ```
+    pub fn emit_ldnull(&mut self) {
+        self.emit_opcode(CILOpcode::LdNull);
+    }
+
+    /// Emit `ldelem.ref` (0xA2): load a reference-typed array element.
+    ///
+    /// # CIL semantics
+    ///
+    /// ```text
+    /// Stack before:  ..., array (System.Object[]), index (int32)
+    /// Stack after:   ..., value (System.Object)
+    /// ```
+    ///
+    /// Used to implement `car` (field 0) and `cdr` (field 1) on cons cells:
+    ///
+    /// ```text
+    /// car pair  →  ldloc <pair>; ldc.i4.0; ldelem.ref; stloc <dest>
+    /// cdr pair  →  ldloc <pair>; ldc.i4.1; ldelem.ref; stloc <dest>
+    /// ```
+    pub fn emit_ldelem_ref(&mut self) {
+        self.emit_opcode(CILOpcode::LdElemRef);
+    }
+
+    /// Emit `stelem.ref` (0xA4): store a reference into a reference-typed array.
+    ///
+    /// # CIL semantics
+    ///
+    /// ```text
+    /// Stack before:  ..., array (System.Object[]), index (int32), value (System.Object)
+    /// Stack after:   ...
+    /// ```
+    ///
+    /// Used with `dup` to build cons cells in-place.  The pattern is:
+    ///
+    /// ```text
+    /// ; Allocate a 2-element object[]
+    /// ldc.i4.2
+    /// newarr   OBJECT_ARRAY_TYPE_TOKEN
+    /// dup                      ; keep a copy of the array ref
+    /// ldc.i4.0
+    /// ldloc    <head>
+    /// stelem.ref               ; array[0] = head
+    /// dup                      ; another copy of the array ref
+    /// ldc.i4.1
+    /// ldloc    <tail>
+    /// stelem.ref               ; array[1] = tail
+    /// stloc    <dest>          ; dest = the newly built pair
+    /// ```
+    pub fn emit_stelem_ref(&mut self) {
+        self.emit_opcode(CILOpcode::StElemRef);
+    }
+
+    /// Emit `brfalse.s <offset>` (0x2C + i8): short branch if top-of-stack is
+    /// false / zero / null.
+    ///
+    /// # When to use
+    ///
+    /// Use this when you already know the target offset fits in a signed byte
+    /// (−128..127).  For branches to named labels, use
+    /// [`emit_branch`][Self::emit_branch] with [`CILBranchKind::False`] and
+    /// let the two-pass assembler pick the shortest form automatically.
+    ///
+    /// # CIL semantics
+    ///
+    /// ```text
+    /// Stack before:  ..., value
+    /// Stack after:   ...
+    /// ```
+    ///
+    /// Pops `value`.  If `value` is 0 (int), false (bool), or null
+    /// (reference), branches to `PC + 2 + offset`; otherwise falls through.
+    pub fn emit_brfalse_s(&mut self, offset: i8) {
+        self.emit_raw(vec![CILOpcode::BrFalseS as u8, offset as u8]);
+    }
+
+    /// Emit `brtrue.s <offset>` (0x2D + i8): short branch if top-of-stack is
+    /// true / non-zero / non-null.
+    ///
+    /// # When to use
+    ///
+    /// Use this when you already know the target offset fits in a signed byte
+    /// (−128..127).  For branches to named labels, prefer
+    /// [`emit_branch`][Self::emit_branch] with [`CILBranchKind::True`].
+    ///
+    /// # CIL semantics
+    ///
+    /// ```text
+    /// Stack before:  ..., value
+    /// Stack after:   ...
+    /// ```
+    ///
+    /// Pops `value`.  If `value` is non-zero (int), true (bool), or non-null
+    /// (reference), branches to `PC + 2 + offset`; otherwise falls through.
+    pub fn emit_brtrue_s(&mut self, offset: i8) {
+        self.emit_raw(vec![CILOpcode::BrTrueS as u8, offset as u8]);
+    }
+
     // ── Branches ──────────────────────────────────────────────────────────
 
     /// Emit a branch to `target` (short or long, resolved at assembly time).
@@ -782,5 +951,143 @@ mod tests {
         b.emit_ret();
         let bytes = b.assemble().unwrap();
         assert_eq!(bytes[0], 0x2D); // brtrue.s
+    }
+
+    // ── Heap / GC opcode tests (Phase 2) ──────────────────────────────────
+
+    /// `ldnull` must emit exactly one byte: 0x14.
+    ///
+    /// ECMA-335 §III.4.12: "Format: ldnull   0x14"
+    #[test]
+    fn test_emit_ldnull_produces_0x14() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_ldnull();
+        let bytes = b.assemble().unwrap();
+        assert_eq!(bytes, vec![0x14], "ldnull must be exactly 0x14");
+    }
+
+    /// `newarr` must emit 0x8D followed by the 4-byte token in little-endian.
+    ///
+    /// ECMA-335 §III.4.20: "Format: newarr <T>   0x8D <tok>"
+    #[test]
+    fn test_emit_newarr_produces_correct_bytes() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_newarr(OBJECT_ARRAY_TYPE_TOKEN);
+        let bytes = b.assemble().unwrap();
+        assert_eq!(bytes.len(), 5, "newarr is 1 opcode + 4-byte token = 5 bytes");
+        assert_eq!(bytes[0], 0x8D, "newarr opcode must be 0x8D");
+        let token = u32::from_le_bytes(bytes[1..5].try_into().unwrap());
+        assert_eq!(token, OBJECT_ARRAY_TYPE_TOKEN,
+            "token must match OBJECT_ARRAY_TYPE_TOKEN in LE encoding");
+    }
+
+    /// `ldelem.ref` must emit exactly one byte: 0xA2.
+    ///
+    /// ECMA-335 §III.4.8: "Format: ldelem.ref   0xA2"
+    #[test]
+    fn test_emit_ldelem_ref_produces_0xa2() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_ldelem_ref();
+        let bytes = b.assemble().unwrap();
+        assert_eq!(bytes, vec![0xA2], "ldelem.ref must be exactly 0xA2");
+    }
+
+    /// `stelem.ref` must emit exactly one byte: 0xA4.
+    ///
+    /// ECMA-335 §III.4.27: "Format: stelem.ref   0xA4"
+    #[test]
+    fn test_emit_stelem_ref_produces_0xa4() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_stelem_ref();
+        let bytes = b.assemble().unwrap();
+        assert_eq!(bytes, vec![0xA4], "stelem.ref must be exactly 0xA4");
+    }
+
+    /// `brfalse.s` must emit 0x2C + the offset byte.
+    ///
+    /// ECMA-335 §III.3.13: "Format: brfalse.s <int8>   0x2C"
+    #[test]
+    fn test_emit_brfalse_s_produces_correct_bytes() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_brfalse_s(5i8);
+        let bytes = b.assemble().unwrap();
+        assert_eq!(bytes.len(), 2, "brfalse.s is opcode + 1-byte offset");
+        assert_eq!(bytes[0], 0x2C, "brfalse.s opcode must be 0x2C");
+        assert_eq!(bytes[1] as i8, 5i8, "offset must round-trip through i8");
+    }
+
+    /// Verify a negative offset in `brfalse.s` is stored as two's complement.
+    #[test]
+    fn test_emit_brfalse_s_negative_offset() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_brfalse_s(-10i8);
+        let bytes = b.assemble().unwrap();
+        assert_eq!(bytes[0], 0x2C);
+        assert_eq!(bytes[1] as i8, -10i8);
+    }
+
+    /// `brtrue.s` must emit 0x2D + the offset byte.
+    ///
+    /// ECMA-335 §III.3.14: "Format: brtrue.s <int8>   0x2D"
+    #[test]
+    fn test_emit_brtrue_s_produces_correct_bytes() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_brtrue_s(3i8);
+        let bytes = b.assemble().unwrap();
+        assert_eq!(bytes.len(), 2, "brtrue.s is opcode + 1-byte offset");
+        assert_eq!(bytes[0], 0x2D, "brtrue.s opcode must be 0x2D");
+        assert_eq!(bytes[1] as i8, 3i8, "offset must round-trip through i8");
+    }
+
+    /// Verify that `OBJECT_ARRAY_TYPE_TOKEN` constant has the expected sentinel.
+    ///
+    /// This matters for CLR simulator integration — any simulator that parses
+    /// the CIL byte stream must map this token to `System.Object[]`.
+    #[test]
+    fn test_object_array_type_token_value() {
+        assert_eq!(OBJECT_ARRAY_TYPE_TOKEN, 0x0100_0001,
+            "sentinel token must be TypeRef table (0x01), row 1");
+    }
+
+    /// Full cons-cell construction sequence produces the expected byte order.
+    ///
+    /// The sequence implements `cons head tail → pair`:
+    /// ```text
+    /// ldc.i4.2          ; 2 elements
+    /// newarr TOKEN      ; allocate object[2]
+    /// dup               ; keep array ref
+    /// ldc.i4.0          ; index 0 (head)
+    /// ldloc.0           ; push head (local 0)
+    /// stelem.ref        ; array[0] = head
+    /// dup               ; keep array ref
+    /// ldc.i4.1          ; index 1 (tail)
+    /// ldloc.1           ; push tail (local 1)
+    /// stelem.ref        ; array[1] = tail
+    /// stloc.2           ; pair = array
+    /// ```
+    #[test]
+    fn test_cons_cell_construction_sequence() {
+        let mut b = CILBytecodeBuilder::new();
+        b.emit_ldc_i4(2);                                // 2-element array
+        b.emit_newarr(OBJECT_ARRAY_TYPE_TOKEN);          // newarr System.Object[]
+        b.emit_dup();                                    // dup array ref
+        b.emit_ldc_i4(0);                                // index 0
+        b.emit_ldloc(0);                                 // head
+        b.emit_stelem_ref();                             // array[0] = head
+        b.emit_dup();                                    // dup array ref again
+        b.emit_ldc_i4(1);                                // index 1
+        b.emit_ldloc(1);                                 // tail
+        b.emit_stelem_ref();                             // array[1] = tail
+        b.emit_stloc(2);                                 // dest = array
+
+        let bytes = b.assemble().unwrap();
+        // Check that newarr (0x8D) appears
+        assert!(bytes.contains(&0x8D), "expected newarr (0x8D): {bytes:?}");
+        // Check that two stelem.ref (0xA4) instructions appear
+        let stelem_count = bytes.iter().filter(|&&b| b == 0xA4).count();
+        assert_eq!(stelem_count, 2, "expected exactly 2 stelem.ref: {bytes:?}");
+        // Check dup (0x25) appears at least twice
+        let dup_count = bytes.iter().filter(|&&b| b == 0x25).count();
+        assert!(dup_count >= 2, "expected at least 2 dup: {bytes:?}");
     }
 }

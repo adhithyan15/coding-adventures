@@ -14,6 +14,24 @@
 //! Catching these problems *before* lowering gives clear, actionable errors
 //! instead of a panic deep inside the code-generation pass.
 //!
+//! # Phase 2: heap ops are now supported
+//!
+//! The following ops were previously unsupported and have been promoted in
+//! Phase 2 by lowering them to `object[]` cons cells managed entirely by the
+//! CLR garbage collector:
+//!
+//! | IIR op           | Condition for acceptance |
+//! |------------------|--------------------------|
+//! | `alloc`          | `type_hint == "ref<LispyPair>"` only |
+//! | `field_load`     | Always (field index 0 = car, 1 = cdr) |
+//! | `field_store`    | Always |
+//! | `is_null`        | Always |
+//! | `const`          | Also `type_hint == "ref<LispyPair>"` (nil literal) |
+//!
+//! Allocating a `ref<LispyPair>` allocates a 2-element `System.Object[]`:
+//! - Index 0 → head (car)
+//! - Index 1 → tail (cdr)
+//!
 //! # Checks performed
 //!
 //! | Error kind              | Condition |
@@ -21,13 +39,14 @@
 //! | `EmptyModule`           | Module has zero functions |
 //! | `EmptyFunction`         | A function has zero instructions |
 //! | `UntypedInstruction`    | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType`       | `type_hint` is `"str"` or starts with `"ref<"` |
+//! | `UnsupportedType`       | `type_hint` is `"str"` or starts with `"ref<"` but is not `"ref<LispyPair>"` |
 //! | `UnsupportedType` (float const) | `op == "const"` and src is `Operand::Float` |
-//! | `UnsupportedOp`         | op is a runtime/memory/IO/GC opcode (list below) |
+//! | `UnsupportedOp`         | op is a runtime/memory/IO/GC opcode that hasn't been promoted (list below) |
 //!
-//! Unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`,
-//! `store_mem`, `alloc`, `box`, `unbox`, `field_load`, `field_store`,
-//! `is_null`, `safepoint`.
+//! Remaining unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`,
+//! `load_mem`, `store_mem`, `box`, `unbox`, `safepoint`.
+//! Previously unsupported but now accepted: `alloc` (LispyPair only),
+//! `field_load`, `field_store`, `is_null`.
 
 use interpreter_ir::{IIRModule, Operand};
 
@@ -43,9 +62,15 @@ use interpreter_ir::{IIRModule, Operand};
 // - `cast`          — type reinterpretation; not needed for typed IIR.
 // - `load_mem/store_mem` — raw pointer access; CIL has unsafe but we don't
 //                    lower it here.
-// - `alloc/box/unbox/field_load/field_store/is_null` — GC heap ops; the CLR
-//   manages its own heap; these are lowered separately.
+// - `box/unbox`     — value-type boxing; not used for LispyPair cons cells.
 // - `safepoint`     — GC coordination; handled by the CLR runtime.
+//
+// PROMOTED to supported in Phase 2:
+// - `alloc`         — accepted when `type_hint == "ref<LispyPair>"`.
+//                    Lowered to `newarr System.Object[]`.
+// - `field_load`    — accepted for all ref types (car/cdr on index 0/1).
+// - `field_store`   — accepted for all ref types (building cons cells).
+// - `is_null`       — accepted (ldnull; ceq).
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
@@ -54,14 +79,32 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "cast",
     "load_mem",
     "store_mem",
-    "alloc",
+    // "alloc"      — promoted in Phase 2 (ref<LispyPair> only)
     "box",
     "unbox",
-    "field_load",
-    "field_store",
-    "is_null",
+    // "field_load" — promoted in Phase 2
+    // "field_store" — promoted in Phase 2
+    // "is_null"    — promoted in Phase 2
     "safepoint",
 ];
+
+// ---------------------------------------------------------------------------
+// Heap ops that need special validation (type-restricted)
+// ---------------------------------------------------------------------------
+//
+// `alloc` is only accepted with `type_hint == "ref<LispyPair>"`.
+// Any other allocated type would require a different object layout strategy
+// and must be rejected with a clear error message rather than generating
+// silently wrong code.
+//
+// `field_load` and `field_store` are unrestricted — they operate on any
+// reference-typed local variable, and the field index selects array slot 0
+// (head) or 1 (tail).
+//
+// `is_null` is unrestricted — it compiles to `ldnull; ceq` for any variable.
+
+/// The one `alloc` type hint we accept in Phase 2.
+const LISTY_PAIR_TYPE: &str = "ref<LispyPair>";
 
 // ---------------------------------------------------------------------------
 // validate_iir_for_clr
@@ -162,8 +205,22 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             // `"str"` — String operations require System.String method calls;
             // we do not emit them in v1.
             //
-            // `"ref<…>"` — Heap pointer types require GC-managed references;
-            // we do not map IIR heap ops to CLR object model here.
+            // `"ref<…>"` — Heap pointer types require GC-managed references.
+            // In Phase 2 we lower `ref<LispyPair>` to `object[]` cons cells.
+            // Any other `ref<…>` type is still unsupported and rejected here.
+            //
+            // The allowed ops for `ref<LispyPair>` are:
+            //   - `alloc`       → newarr System.Object[2]
+            //   - `field_load`  → ldelem.ref (car/cdr)
+            //   - `field_store` → stelem.ref
+            //   - `is_null`     → ldnull; ceq
+            //   - `const`       → ldnull (nil literal)
+            //   - `ret`         → ret (returning a pair reference)
+            //   - `load_reg`    → copy (ldloc/stloc)
+            //   - `store_reg`   → copy (ldloc/stloc)
+            //   - `jmp_if_true` / `jmp_if_false` — used for pattern-match dispatch
+            //
+            // All other ops remain rejected for `ref<LispyPair>`.
             if instr.type_hint == "str" {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
@@ -171,10 +228,37 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
+                // Phase 2: `ref<LispyPair>` is supported for specific ops.
+                let is_pair = instr.type_hint == LISTY_PAIR_TYPE;
+                let is_heap_op = matches!(
+                    instr.op.as_str(),
+                    "alloc" | "field_load" | "field_store" | "is_null"
+                    | "const" | "ret" | "load_reg" | "store_reg"
+                    | "jmp_if_true" | "jmp_if_false"
+                );
+                if !(is_pair && is_heap_op) {
+                    errors.push(format!(
+                        "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
+                         heap pointer types require ref<LispyPair> and a supported heap op \
+                         (alloc, field_load, field_store, is_null, const, ret, load_reg, \
+                         store_reg, jmp_if_true, jmp_if_false)",
+                        func.name, instr.op, instr.type_hint
+                    ));
+                }
+            }
+
+            // ── Check 4b: alloc with unsupported type hint ────────────────────
+            //
+            // Even though `alloc` is in the "promoted" list, we only accept it
+            // for `ref<LispyPair>`.  Any other `alloc` type still triggers an
+            // UnsupportedOp (handled below because it stays in UNSUPPORTED_OPS
+            // for non-LispyPair allocs — BUT alloc is removed from UNSUPPORTED_OPS,
+            // so we add an explicit check here for unsupported alloc types).
+            if instr.op == "alloc" && instr.type_hint != LISTY_PAIR_TYPE {
                 errors.push(format!(
-                    "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
-                     heap pointer types are not supported in this CLR backend",
-                    func.name, instr.op, instr.type_hint
+                    "UnsupportedType: function {:?}, alloc with type_hint {:?} is not \
+                     supported; only ref<LispyPair> cons cells are supported in Phase 2",
+                    func.name, instr.type_hint
                 ));
             }
 
@@ -199,8 +283,13 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             // ── Check 6: UnsupportedOp ───────────────────────────────────────
             //
             // The CLR backend implements a focused subset of IIR.
-            // Runtime, I/O, heap, and FFI operations have no direct
-            // CIL-opcode equivalent here.
+            // Runtime, I/O, and FFI operations have no direct CIL-opcode
+            // equivalent in this backend.
+            //
+            // `field_load`, `field_store`, `is_null` are NOT in UNSUPPORTED_OPS
+            // (they were removed in Phase 2); they are handled by the lowerer.
+            // `alloc` is also removed — it is accepted for ref<LispyPair> and
+            // the type-check above handles unsupported alloc types.
             if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
@@ -319,5 +408,69 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
         ]));
         assert!(errs.is_empty(), "unexpected errors: {:?}", errs);
+    }
+
+    // ── Phase 2 heap-op validation tests ─────────────────────────────────
+
+    #[test]
+    fn alloc_listy_pair_is_valid() {
+        // Phase 2: alloc ref<LispyPair> is accepted.
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "ref<LispyPair> alloc should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn alloc_other_ref_type_rejected() {
+        // alloc with any type other than ref<LispyPair> must be rejected.
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("alloc", Some("p".into()), vec![], "ref<i32>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("UnsupportedType") || e.contains("UnsupportedOp")),
+            "alloc ref<i32> must be rejected: {:?}", errs);
+    }
+
+    #[test]
+    fn field_load_is_valid() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("field_load", Some("h".into()),
+                vec![Operand::Var("p".into()), Operand::Int(0)], "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "field_load should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn field_store_is_valid() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("p".into()), Operand::Int(0), Operand::Var("v".into())],
+                "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "field_store should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn is_null_is_valid() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("is_null", Some("b".into()),
+                vec![Operand::Var("p".into())], "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "is_null should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn const_nil_listy_pair_is_valid() {
+        // const with type ref<LispyPair> represents nil.
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("const", Some("nil".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "const nil ref<LispyPair> should pass: {:?}", errs);
     }
 }

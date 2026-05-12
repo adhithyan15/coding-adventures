@@ -1100,3 +1100,537 @@ fn lower_const_bool_ok() {
     let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::default());
     assert!(result.is_ok(), "bool const should lower ok: {:?}", result.err());
 }
+
+// ===========================================================================
+// 11. Heap ops — Object[] cons cells (Phase 2)
+// ===========================================================================
+//
+// The JVM backend in Phase 2 supports Lispy cons cells via `Object[]` arrays.
+// No Java class definitions are needed — the JVM GC manages them.
+//
+// Cons cell layout:
+//   Object[] pair = new Object[2];
+//   pair[0] = head;   // car
+//   pair[1] = tail;   // cdr
+//
+// nil  ↔  null
+// cons ↔  alloc ref<LispyPair> + field_store[0] + field_store[1]
+// car  ↔  field_load index 0
+// cdr  ↔  field_load index 1
+// null? ↔ is_null
+
+/// `alloc ref<LispyPair>` + two `field_store` instructions (the cons pattern)
+/// must produce valid class bytes without panic.
+#[test]
+fn heap_cons_cell_alloc_and_field_stores_ok() {
+    // Build: fn cons(head: ref<LispyPair>, tail: ref<LispyPair>) -> ref<LispyPair>
+    //   %pair = alloc ref<LispyPair>
+    //   field_store %pair, 0, %head
+    //   field_store %pair, 1, %tail
+    //   ret %pair
+    let func = IIRFunction::new(
+        "mk_pair",
+        vec![
+            ("head".into(), "ref<LispyPair>".into()),
+            ("tail".into(), "ref<LispyPair>".into()),
+        ],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new("alloc", Some("pair".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("pair".into()),
+                    Operand::Int(0),
+                    Operand::Var("head".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("pair".into()),
+                    Operand::Int(1),
+                    Operand::Var("tail".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("pair".into())], "ref<LispyPair>"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("PairClass"));
+    assert!(result.is_ok(), "cons pattern should lower ok: {:?}", result.err());
+    // The bytecode must be non-empty and the method must exist.
+    let class = result.unwrap();
+    let method = class.methods.iter().find(|m| m.name == "mk_pair").unwrap();
+    assert!(!method.code_attribute().unwrap().code.is_empty());
+}
+
+/// `field_load` at index 0 (car) compiles without error.
+#[test]
+fn heap_field_load_car_ok() {
+    // fn car(pair: ref<LispyPair>) -> ref<LispyPair>
+    //   %h = field_load %pair, 0
+    //   ret %h
+    let func = IIRFunction::new(
+        "car",
+        vec![("pair".into(), "ref<LispyPair>".into())],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new(
+                "field_load",
+                Some("h".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(0)],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "ref<LispyPair>"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("CarTest"));
+    assert!(result.is_ok(), "car (field_load 0) should lower ok: {:?}", result.err());
+}
+
+/// `field_load` at index 1 (cdr) compiles without error.
+#[test]
+fn heap_field_load_cdr_ok() {
+    // fn cdr(pair: ref<LispyPair>) -> ref<LispyPair>
+    //   %t = field_load %pair, 1
+    //   ret %t
+    let func = IIRFunction::new(
+        "cdr",
+        vec![("pair".into(), "ref<LispyPair>".into())],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new(
+                "field_load",
+                Some("t".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(1)],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("t".into())], "ref<LispyPair>"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("CdrTest"));
+    assert!(result.is_ok(), "cdr (field_load 1) should lower ok: {:?}", result.err());
+}
+
+/// `is_null` compiles and produces non-empty bytecode.
+#[test]
+fn heap_is_null_ok() {
+    // fn null_check(pair: ref<LispyPair>) -> bool
+    //   %r = is_null %pair
+    //   ret %r
+    let func = IIRFunction::new(
+        "null_check",
+        vec![("pair".into(), "ref<LispyPair>".into())],
+        "bool",
+        vec![
+            IIRInstr::new(
+                "is_null",
+                Some("r".into()),
+                vec![Operand::Var("pair".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "bool"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("NullTest"));
+    assert!(result.is_ok(), "is_null should lower ok: {:?}", result.err());
+    let class = result.unwrap();
+    let method = class.methods.iter().find(|m| m.name == "null_check").unwrap();
+    assert!(!method.code_attribute().unwrap().code.is_empty());
+}
+
+/// `const ref<LispyPair>` (nil) compiles to aconst_null + astore.
+#[test]
+fn heap_const_nil_ok() {
+    // fn make_nil() -> ref<LispyPair>
+    //   %n = const ref<LispyPair>   ; nil
+    //   ret %n
+    let func = IIRFunction::new(
+        "make_nil",
+        vec![],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new(
+                "const",
+                Some("n".into()),
+                vec![Operand::Int(0)], // Int(0) signals nil — value ignored
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "ref<LispyPair>"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("NilTest"));
+    assert!(result.is_ok(), "const nil should lower ok: {:?}", result.err());
+    // Verify the bytecode contains ACONST_NULL (0x01).
+    let class = result.unwrap();
+    let code = class.methods[0].code_attribute().unwrap().code.clone();
+    assert!(
+        code.contains(&0x01u8),
+        "bytecode should contain ACONST_NULL (0x01), got: {:?}",
+        code
+    );
+}
+
+/// `alloc` with a non-LispyPair `ref<…>` type is rejected by the validator,
+/// so `lower_iir_to_jvm` should return a `ValidationFailed` error.
+#[test]
+fn heap_alloc_wrong_ref_type_rejected() {
+    let func = IIRFunction::new(
+        "bad_alloc",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("alloc", Some("x".into()), vec![], "ref<SomeOtherType>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("BadAlloc"));
+    assert!(
+        matches!(result, Err(IIRJvmError::ValidationFailed(_))),
+        "alloc ref<SomeOtherType> should produce ValidationFailed, got: {:?}",
+        result
+    );
+}
+
+/// Hand-crafted `length` function: alloc pair, car, cdr, is_null, conditional branch.
+///
+/// This is a realistic Lispy-style recursive length skeleton (not fully
+/// recursive — just one level to exercise all four heap ops in a single
+/// function body without needing recursion in IIR).
+#[test]
+fn heap_length_like_function_ok() {
+    // Simulates:
+    //   fn length_step(pair: ref<LispyPair>) -> i32
+    //     %is_end = is_null %pair         ; is this nil?
+    //     jmp_if_true %is_end, done       ; yes: return 0
+    //     %head = field_load %pair, 0     ; car
+    //     %tail = field_load %pair, 1     ; cdr
+    //     %is_tail_nil = is_null %tail
+    //     %one = const 1 : i32
+    //     jmp done
+    //     label done
+    //     ret %one
+    let func = IIRFunction::new(
+        "length_step",
+        vec![("pair".into(), "ref<LispyPair>".into())],
+        "i32",
+        vec![
+            IIRInstr::new(
+                "is_null",
+                Some("is_end".into()),
+                vec![Operand::Var("pair".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "jmp_if_true",
+                None,
+                vec![Operand::Var("is_end".into()), Operand::Var("done".into())],
+                "void",
+            ),
+            IIRInstr::new(
+                "field_load",
+                Some("head".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(0)],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new(
+                "field_load",
+                Some("tail".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(1)],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new(
+                "is_null",
+                Some("is_tail_nil".into()),
+                vec![Operand::Var("tail".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "const",
+                Some("one".into()),
+                vec![Operand::Int(1)],
+                "i32",
+            ),
+            IIRInstr::new("jmp", None, vec![Operand::Var("done".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("done".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("one".into())], "i32"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("LengthTest"));
+    assert!(result.is_ok(), "length-like function should lower ok: {:?}", result.err());
+    let class = result.unwrap();
+    let method = class.methods.iter().find(|m| m.name == "length_step").unwrap();
+    assert!(!method.code_attribute().unwrap().code.is_empty());
+}
+
+/// A bare `field_store` (not immediately preceded by `alloc`) compiles on its own.
+///
+/// This covers the case where a pair was allocated earlier and we update a
+/// field in a later instruction.
+#[test]
+fn heap_bare_field_store_ok() {
+    // fn update_head(pair: ref<LispyPair>, new_head: ref<LispyPair>) -> void
+    //   field_store %pair, 0, %new_head
+    //   ret_void
+    let func = IIRFunction::new(
+        "update_head",
+        vec![
+            ("pair".into(), "ref<LispyPair>".into()),
+            ("new_head".into(), "ref<LispyPair>".into()),
+        ],
+        "void",
+        vec![
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("pair".into()),
+                    Operand::Int(0),
+                    Operand::Var("new_head".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("UpdateTest"));
+    assert!(result.is_ok(), "bare field_store should lower ok: {:?}", result.err());
+}
+
+/// Multiple alloc+field_store sequences in one function.
+///
+/// Each sequence must produce independent Object[] arrays.  Both pairs are
+/// fully initialised in the same function body.
+#[test]
+fn heap_two_cons_sequences_in_one_function_ok() {
+    // fn two_pairs(a: ref<LispyPair>, b: ref<LispyPair>, nil: ref<LispyPair>)
+    //     -> ref<LispyPair>
+    //   %p1 = alloc ref<LispyPair>
+    //   field_store %p1, 0, %a
+    //   field_store %p1, 1, %nil
+    //   %p2 = alloc ref<LispyPair>
+    //   field_store %p2, 0, %b
+    //   field_store %p2, 1, %p1
+    //   ret %p2
+    let func = IIRFunction::new(
+        "two_pairs",
+        vec![
+            ("a".into(), "ref<LispyPair>".into()),
+            ("b".into(), "ref<LispyPair>".into()),
+            ("nil_ref".into(), "ref<LispyPair>".into()),
+        ],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new("alloc", Some("p1".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("p1".into()),
+                    Operand::Int(0),
+                    Operand::Var("a".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("p1".into()),
+                    Operand::Int(1),
+                    Operand::Var("nil_ref".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("alloc", Some("p2".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("p2".into()),
+                    Operand::Int(0),
+                    Operand::Var("b".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("p2".into()),
+                    Operand::Int(1),
+                    Operand::Var("p1".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("p2".into())], "ref<LispyPair>"),
+        ],
+    );
+    let result = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("TwoPairsTest"));
+    assert!(result.is_ok(), "two cons sequences should lower ok: {:?}", result.err());
+    let class = result.unwrap();
+    let method = class.methods.iter().find(|m| m.name == "two_pairs").unwrap();
+    // Each cons sequence emits ~12 bytes (iconst_2 + anewarray + dup + iconst_0
+    // + aload + aastore + dup + iconst_1 + aload + aastore + astore), so the
+    // combined bytecode should be well over 20 bytes.
+    assert!(
+        method.code_attribute().unwrap().code.len() > 20,
+        "two cons sequences should produce > 20 bytes of bytecode"
+    );
+}
+
+/// Validates that the generated class file bytes parse back correctly
+/// (round-trip: lower → serialize → parse).
+#[test]
+fn heap_alloc_roundtrip_parse() {
+    use jvm_class_file::{build_minimal_class_file, parse_class_file, BuildMinimalClassFileParams};
+
+    // First lower to get a JvmClassFile, then re-encode it as bytes and parse.
+    let func = IIRFunction::new(
+        "cons_test",
+        vec![
+            ("head".into(), "ref<LispyPair>".into()),
+            ("tail".into(), "ref<LispyPair>".into()),
+        ],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new("alloc", Some("pair".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("pair".into()),
+                    Operand::Int(0),
+                    Operand::Var("head".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("pair".into()),
+                    Operand::Int(1),
+                    Operand::Var("tail".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("pair".into())], "ref<LispyPair>"),
+        ],
+    );
+    let class = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("RoundTripClass"))
+        .expect("lowering should succeed");
+
+    // Extract the code bytes from the generated method and build a minimal
+    // class file around them so we can use the existing parser.
+    let method = &class.methods[0];
+    let code_attr = method.code_attribute().unwrap();
+    let bytes = build_minimal_class_file(BuildMinimalClassFileParams {
+        class_name: "RoundTripClass".into(),
+        method_name: "cons_test".into(),
+        descriptor: "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;".into(),
+        code: code_attr.code.clone(),
+        max_stack: code_attr.max_stack,
+        max_locals: code_attr.max_locals,
+        ..Default::default()
+    })
+    .expect("build_minimal_class_file should succeed");
+
+    // Parse back — should not produce any error.
+    let parsed = parse_class_file(&bytes).expect("parsed class should be valid");
+    assert_eq!(parsed.this_class_name, "RoundTripClass");
+    assert_eq!(parsed.methods.len(), 1);
+    assert!(!parsed.methods[0].code_attribute().unwrap().code.is_empty());
+}
+
+/// Validates that `is_null` bytecode has the expected opcode structure.
+///
+/// The canonical sequence is:
+///   aload N    (0x19 N)                   2 bytes
+///   ifnull +7  (0xC6 0x00 0x07)           3 bytes
+///   iconst_0   (0x03)                     1 byte
+///   goto +4    (0xA7 0x00 0x04)           3 bytes
+///   iconst_1   (0x04)                     1 byte
+///   istore N   (0x36 N)                   2 bytes
+///                                total = 12 bytes (for single-byte slot)
+#[test]
+fn heap_is_null_bytecode_structure() {
+    let func = IIRFunction::new(
+        "is_nil",
+        vec![("x".into(), "ref<LispyPair>".into())],
+        "bool",
+        vec![
+            IIRInstr::new(
+                "is_null",
+                Some("r".into()),
+                vec![Operand::Var("x".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "bool"),
+        ],
+    );
+    let class = lower_iir_to_jvm(&module_with(func), &IIRJvmConfig::new("IsNilTest"))
+        .expect("is_null should lower ok");
+    let code = &class.methods[0].code_attribute().unwrap().code;
+
+    // The sequence must contain IFNULL (0xC6) and GOTO (0xA7).
+    assert!(
+        code.contains(&0xC6u8),
+        "bytecode should contain IFNULL (0xC6), got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0xA7u8),
+        "bytecode should contain GOTO (0xA7), got: {:?}",
+        code
+    );
+}
+
+/// Verifies that `const ref<LispyPair>` validates successfully (Phase 2).
+#[test]
+fn heap_nil_const_validates_ok() {
+    let func = IIRFunction::new(
+        "nil_fn",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new(
+                "const",
+                Some("n".into()),
+                vec![Operand::Int(0)],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let errors = validate_for_jvm(&module_with(func));
+    assert!(
+        errors.is_empty(),
+        "const ref<LispyPair> should validate ok, got: {:?}",
+        errors
+    );
+}
+
+/// Verifies that `alloc ref<LispyPair>` validates successfully (Phase 2).
+#[test]
+fn heap_alloc_validates_ok() {
+    let func = IIRFunction::new(
+        "alloc_fn",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let errors = validate_for_jvm(&module_with(func));
+    assert!(
+        errors.is_empty(),
+        "alloc ref<LispyPair> should validate ok, got: {:?}",
+        errors
+    );
+}

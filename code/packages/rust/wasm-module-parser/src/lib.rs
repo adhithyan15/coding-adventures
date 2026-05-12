@@ -702,7 +702,9 @@ fn parse_code_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Was
             let vt_byte = body.read_u8()?;
             let vt = decode_value_type(vt_byte, body.offset() - 1)?;
             for _ in 0..n {
-                locals.push(vt);
+                // ValueType is no longer Copy (WasmGC added StructRef(u32));
+                // clone for each local in the run.
+                locals.push(vt.clone());
             }
         }
 

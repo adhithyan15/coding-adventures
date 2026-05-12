@@ -60,6 +60,7 @@ use std::collections::HashMap;
 use interpreter_ir::{IIRModule, Operand};
 use ir_to_cil_bytecode::backend::{CILMethodArtifact, CILProgramArtifact};
 use ir_to_cil_bytecode::builder::{CILBranchKind, CILBytecodeBuilder};
+use ir_to_cil_bytecode::OBJECT_ARRAY_TYPE_TOKEN;
 
 use crate::validate::validate_iir_for_clr;
 
@@ -384,6 +385,20 @@ pub fn lower_iir_to_cil(
                         }
                     })?;
                     let dest = reg_info!(dest_name).clone();
+
+                    // Phase 2: `const` with type_hint `"ref<LispyPair>"` and no
+                    // source operand represents the nil value.
+                    //
+                    // CIL: `ldnull; stloc <dest>`
+                    //
+                    // `ldnull` (0x14) pushes the null managed reference, which is
+                    // the canonical representation of nil in this backend.  An
+                    // empty list is just a null `object[]` reference.
+                    if instr.type_hint == "ref<LispyPair>" && instr.srcs.is_empty() {
+                        builder.emit_ldnull();
+                        emit_store(&mut builder, &dest, fn_name)?;
+                        continue;  // skip the srcs dispatch below
+                    }
 
                     match instr.srcs.first() {
                         Some(Operand::Int(n)) => {
@@ -931,6 +946,186 @@ pub fn lower_iir_to_cil(
                     builder.emit_nop();
                 }
 
+                // ── alloc ref<LispyPair> → dest ──────────────────────────────
+                //
+                // Allocate a new cons cell as a 2-element `System.Object[]`.
+                //
+                // In Lisp, every cons cell has two fields:
+                //   index 0 → `car` (the head / first element)
+                //   index 1 → `cdr` (the tail / rest of the list)
+                //
+                // The CLR garbage collector manages the object[]'s lifetime
+                // automatically — no reference counting, no explicit free.
+                //
+                // CIL expansion:
+                // ```text
+                // ldc.i4.2                    ; array length = 2
+                // newarr OBJECT_ARRAY_TYPE_TOKEN  ; allocate System.Object[2]
+                // stloc  <dest>               ; store the ref in dest
+                // ```
+                //
+                // The fields are written by subsequent `field_store` instructions.
+                // We do NOT pre-initialize the slots; the CLR zero-initialises
+                // all array elements to null on allocation.  This means an
+                // uninitialized `car`/`cdr` is already null (= nil), which is
+                // the correct default for a fresh cons cell.
+                "alloc" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "alloc instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+
+                    // ldc.i4.2: the array will have exactly 2 slots.
+                    builder.emit_ldc_i4(2);
+                    // newarr allocates a 1-D array of the given element type.
+                    // We use the sentinel token for System.Object[].
+                    builder.emit_newarr(OBJECT_ARRAY_TYPE_TOKEN);
+                    // Store the fresh array reference in the destination slot.
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+
+                // ── field_load dest pair idx → dest ──────────────────────────
+                //
+                // Load field `idx` from a cons-cell pair into `dest`.
+                // This implements both `car` (idx=0) and `cdr` (idx=1).
+                //
+                // IIR layout: op="field_load", dest=Some(dest), srcs=[Var(pair), Int(idx)]
+                //
+                // CIL expansion:
+                // ```text
+                // ldloc  <pair>               ; push the pair (object[]) ref
+                // ldc.i4 <idx>                ; push field index (0 or 1)
+                // ldelem.ref                  ; pop array+idx, push array[idx]
+                // stloc  <dest>               ; pop and store result
+                // ```
+                //
+                // `ldelem.ref` (0xA2) is the typed variant for reference arrays.
+                // It performs a bounds check at runtime and throws
+                // `IndexOutOfRangeException` if idx >= array.Length, which
+                // gives a safe fail rather than a memory corruption.
+                "field_load" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "field_load instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+
+                    // srcs[0] = the pair (object[] reference)
+                    let pair = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    // srcs[1] = field index (must be Int 0 or 1)
+                    let field_idx = match instr.srcs.get(1) {
+                        Some(Operand::Int(n)) => *n as i32,
+                        Some(other) => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!(
+                                "field_load: srcs[1] must be Int field index, got {:?}", other
+                            ),
+                        }),
+                        None => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "field_load: missing field index at srcs[1]".into(),
+                        }),
+                    };
+
+                    emit_load(&mut builder, &pair, fn_name)?;   // push pair ref
+                    builder.emit_ldc_i4(field_idx);             // push index
+                    builder.emit_ldelem_ref();                   // array[idx]
+                    emit_store(&mut builder, &dest, fn_name)?;  // pop to dest
+                }
+
+                // ── field_store pair idx value ────────────────────────────────
+                //
+                // Store `value` into field `idx` of cons-cell `pair`.
+                // This implements writing `car` (idx=0) and `cdr` (idx=1).
+                //
+                // IIR layout: op="field_store", dest=None,
+                //             srcs=[Var(pair), Int(idx), Var(value)]
+                //
+                // CIL expansion:
+                // ```text
+                // ldloc  <pair>               ; push the pair (object[]) ref
+                // ldc.i4 <idx>                ; push field index
+                // ldloc  <value>              ; push value to store
+                // stelem.ref                  ; array[idx] = value; pops all three
+                // ```
+                //
+                // `stelem.ref` (0xA4) takes three operands from the stack:
+                //   1. array ref  (bottom)
+                //   2. index      (middle)
+                //   3. value ref  (top)
+                // and stores value into array[index], performing a runtime
+                // assignability check (similar to Java's aastore).
+                "field_store" => {
+                    // srcs[0] = pair (the target array)
+                    let pair = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    // srcs[1] = field index
+                    let field_idx = match instr.srcs.get(1) {
+                        Some(Operand::Int(n)) => *n as i32,
+                        Some(other) => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!(
+                                "field_store: srcs[1] must be Int field index, got {:?}", other
+                            ),
+                        }),
+                        None => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "field_store: missing field index at srcs[1]".into(),
+                        }),
+                    };
+                    // srcs[2] = value to write
+                    let value = get_operand_reg(&instr.srcs, 2, &reg_map, fn_name)?;
+
+                    emit_load(&mut builder, &pair, fn_name)?;   // push pair ref
+                    builder.emit_ldc_i4(field_idx);             // push index
+                    emit_load(&mut builder, &value, fn_name)?;  // push value
+                    builder.emit_stelem_ref();                   // array[idx] = value
+                }
+
+                // ── is_null dest x ────────────────────────────────────────────
+                //
+                // Test whether `x` is a null reference (the IIR nil value).
+                // Produces 1 (true) if `x == null`, 0 (false) otherwise.
+                //
+                // IIR layout: op="is_null", dest=Some(dest), srcs=[Var(x)]
+                //
+                // CIL expansion:
+                // ```text
+                // ldloc  <x>                  ; push the value to test
+                // ldnull                      ; push null reference
+                // ceq                         ; 1 if equal (both null), 0 otherwise
+                // stloc  <dest>               ; store boolean result
+                // ```
+                //
+                // `ceq` (0xFE 0x01) compares the top two stack values for
+                // equality.  When both are null references, the CLR considers
+                // them equal: `ceq(ldloc x, ldnull)` ≡ `x == null`.
+                //
+                // This is the standard C# pattern for `obj == null`:
+                // ```csharp
+                // // C#: obj == null
+                // // IL: ldarg.0; ldnull; ceq
+                // ```
+                "is_null" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "is_null instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let x = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+
+                    emit_load(&mut builder, &x, fn_name)?;  // push value
+                    builder.emit_ldnull();                   // push null
+                    builder.emit_ceq();                      // 1 if equal
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+
                 // ── Unsupported ops ──────────────────────────────────────────
                 //
                 // Caught by the validator, but we guard here for defence-in-
@@ -966,6 +1161,11 @@ pub fn lower_iir_to_cil(
         //   load time; an overshoot wastes a few bytes in the header but
         //   never causes a failure.
         // - `local_types`: one "int32" entry per local variable slot.
+        //   NOTE (Phase 2): in a full CLR PE/COFF packager, `ref<LispyPair>`
+        //   locals would be declared as `object` (System.Object).  We leave
+        //   them as "int32" here because `CILMethodArtifact` uses this field
+        //   for human-readable annotations only — the actual CIL bytecode
+        //   carries all the type information the JIT needs.
         // - `return_type`: "int32" for all methods in v1.
         // - `parameter_types`: one "int32" per parameter.
 

@@ -1,0 +1,15 @@
+[package]
+name = "iir-builtin-lowering"
+version = "0.1.0"
+edition = "2021"
+description = "IIR builtin lowering pass — converts call_builtin instructions into typed IIR arithmetic/comparison ops"
+
+[lib]
+name = "iir_builtin_lowering"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+
+[dev-dependencies]
+# none needed — all helpers are in this crate's own test utilities
