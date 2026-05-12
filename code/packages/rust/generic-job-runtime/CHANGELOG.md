@@ -18,6 +18,8 @@ All notable changes to this package will be documented in this file.
   restart, or graceful-drain behavior without reinterpreting raw counters.
 - Added queue-pressure bands and percent-threshold helpers for stable D18C
   backpressure read models.
+- Added executor admission-status helpers so D18C supervisors can explain why
+  a runtime is or is not accepting jobs.
 
 ## [0.1.1] - 2026-04-22
 
