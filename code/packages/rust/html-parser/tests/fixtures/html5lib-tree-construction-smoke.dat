@@ -20908,6 +20908,36 @@ eof
 |       <nobr>
 |         "3"
 
+#source tests26.dat:1253
+#data
+<!DOCTYPE html><body><b><nobr>1<nobr></b><div><i><nobr>2<nobr></i>3
+#errors
+(1,37): unexpected-start-tag-implies-end-tag
+(1,41): adoption-agency-1.3
+(1,55): unexpected-start-tag-implies-end-tag
+(1,55): adoption-agency-1.3
+(1,62): unexpected-start-tag-implies-end-tag
+(1,66): adoption-agency-1.3
+(1,67): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       <nobr>
+|         "1"
+|       <nobr>
+|     <div>
+|       <nobr>
+|         <i>
+|       <i>
+|         <nobr>
+|           "2"
+|         <nobr>
+|       <nobr>
+|         "3"
+
 #source tests26.dat:1257
 #data
 <p><code x</code></p>

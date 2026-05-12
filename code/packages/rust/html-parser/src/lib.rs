@@ -811,6 +811,7 @@ impl HtmlParser {
         repair_fostered_nobr_adoption_wrappers(&mut self.document);
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
         repair_div_fostered_nobr_adoption(&mut self.document);
+        repair_split_div_nobr_adoption(&mut self.document);
         normalize_document_shell(std::mem::take(&mut self.document))
     }
 
@@ -4065,6 +4066,59 @@ fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
 
 fn repair_div_fostered_nobr_adoption(document: &mut Document) {
     repair_div_fostered_nobr_adoption_in(&mut document.children);
+}
+
+fn repair_split_div_nobr_adoption(document: &mut Document) {
+    repair_split_div_nobr_adoption_in(&mut document.children);
+}
+
+fn repair_split_div_nobr_adoption_in(nodes: &mut Vec<Node>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        repair_split_div_nobr_adoption_in(&mut element.children);
+        if element.name != "div"
+            || element.children.is_empty()
+            || element
+                .children
+                .first()
+                .is_some_and(|child| is_empty_formatting_marker(child, "nobr", "i"))
+            || !matches!(
+                element.children.first(),
+                Some(Node::Element(child)) if child.name == "i"
+            )
+        {
+            continue;
+        }
+        if !element
+            .children
+            .iter()
+            .skip(1)
+            .any(|child| matches!(child, Node::Element(child) if child.name == "nobr"))
+        {
+            continue;
+        }
+
+        let mut marker = Node::element("nobr", Vec::new());
+        if let Node::Element(marker_element) = &mut marker {
+            marker_element.children.push(Node::element("i", Vec::new()));
+        }
+        element.children.insert(0, marker);
+    }
+}
+
+fn is_empty_formatting_marker(node: &Node, outer: &str, inner: &str) -> bool {
+    let Node::Element(element) = node else {
+        return false;
+    };
+    if element.name != outer || element.children.len() != 1 {
+        return false;
+    }
+    matches!(
+        element.children.first(),
+        Some(Node::Element(child)) if child.name == inner && child.children.is_empty()
+    )
 }
 
 fn repair_div_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
