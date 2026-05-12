@@ -179,17 +179,20 @@ members = [
     "prolog-lexer",
     "prolog-parser",
     "prolog-loader",
-    "adjudication-connector",
-    "adjudication-polarity-modality",
-    "adjudication-coverage",
-    "adjudication-audit-trail",
-    "adjudication-adversarial",
-    "adjudication-pipeline",
-    "adjudication-round-trip",
-    "adjudication-clarification",
-    "adjudication-clinical-demo",
-    "adjudication-contract-demo",
-    "adjudication-tsa-demo",
+    # Temporarily excluded while ADJ01 v3 graph-IR migration lands.
+    # See ADJ01-adjudication-ir-grammar.md §"Status" for the sequence
+    # of follow-up PRs that re-add each consumer after migrating it.
+    # "adjudication-connector",            # ADJ01 v3: edge lowering to Prolog
+    # "adjudication-polarity-modality",    # ADJ03 v3: propagation along Contains
+    # "adjudication-coverage",             # ADJ02 v3: flat tile + DAG check
+    "adjudication-audit-trail",            # references IR only in doc strings
+    # "adjudication-adversarial",          # uses IR types
+    # "adjudication-pipeline",             # orchestrates the above
+    # "adjudication-round-trip",           # ADJ04 v3 needs edge rendering
+    "adjudication-clarification",          # references IR via primitives only
+    # "adjudication-clinical-demo",        # HandBuilt IR; v3 migration follows
+    # "adjudication-contract-demo",        # HandBuilt IR; v3 migration follows
+    # "adjudication-tsa-demo",             # canonical demo; v3 migration last
     "loss-functions",
     "markov-chain",
     "note-frequency",
