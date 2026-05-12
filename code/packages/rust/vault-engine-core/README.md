@@ -27,6 +27,7 @@ Vocabulary:
 |-----------------|--------------------------------------------------------------|
 | `Role`          | role name + optional default/max TTL                         |
 | `MintContext`   | principal + caller-supplied `now_ms` + requested TTL         |
+| `MintContextSummary` | value-redacted shape summary for planning/audit logs    |
 | `MintedSecret`  | zeroizing body + `SecretRef` + granted TTL                   |
 | `SecretRef`     | non-exhaustive enum: KvV2 / DbUsername / PkiSerial / AwsSession / Other |
 | `EngineError`   | `UnknownRole` / `InvalidParameter` / `Backend` / `Crypto` / `PrincipalDenied` / `UnknownSecret` / `Conflict` |
@@ -63,6 +64,8 @@ top-level orchestration is engine-agnostic.
   *may* additionally `defence-in-depth` check it (e.g. AWS
   engine enforcing a per-principal allow-list inside `mint`),
   surfacing `EngineError::PrincipalDenied`.
+- **`MintContext::summary()`** reports only shape and byte counts,
+  not principal/path values, CAS tokens, or plaintext input bytes.
 - **`SecretRef::Other`** lets a future engine return a handle
   without the trait crate growing every release.
 
