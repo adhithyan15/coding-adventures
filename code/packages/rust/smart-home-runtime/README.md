@@ -16,6 +16,8 @@ Included surfaces:
   and tests that need bounded runtime inspection
 - compact event-log summaries for selected replay windows and event kinds
 - bounded event-bus delivery peeking and draining for subscription polling
+- compact delivery-batch summaries for subscription polling results without
+  exposing event payloads
 - explicit event-bus unsubscribe lifecycle that returns undelivered events and
   removes pending delivery state
 - compact read-only snapshots for registry counts, event-bus backlog,

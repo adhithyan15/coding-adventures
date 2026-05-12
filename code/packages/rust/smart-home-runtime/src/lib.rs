@@ -672,6 +672,69 @@ impl RuntimeEventDeliveryBatch {
     pub fn has_more(&self) -> bool {
         self.remaining_events > 0
     }
+
+    pub fn summary(&self) -> RuntimeEventDeliverySummary {
+        RuntimeEventDeliverySummary::from_batch(self)
+    }
+}
+
+/// Compact count view over one subscription delivery batch.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeEventDeliverySummary {
+    pub subscription_id: RuntimeSubscriptionId,
+    pub delivered_events: usize,
+    pub remaining_events: usize,
+    pub device_events: usize,
+    pub command_results: usize,
+    pub bridge_health_events: usize,
+    pub state_expired_events: usize,
+    pub desired_state_drift_events: usize,
+    pub worker_restart_events: usize,
+}
+
+impl RuntimeEventDeliverySummary {
+    pub fn from_batch(batch: &RuntimeEventDeliveryBatch) -> Self {
+        let mut summary = Self {
+            subscription_id: batch.subscription_id.clone(),
+            delivered_events: batch.events.len(),
+            remaining_events: batch.remaining_events,
+            device_events: 0,
+            command_results: 0,
+            bridge_health_events: 0,
+            state_expired_events: 0,
+            desired_state_drift_events: 0,
+            worker_restart_events: 0,
+        };
+
+        for event in &batch.events {
+            match event {
+                RuntimeEvent::Device(_) => summary.device_events += 1,
+                RuntimeEvent::CommandResult(_) => summary.command_results += 1,
+                RuntimeEvent::BridgeHealth { .. } => summary.bridge_health_events += 1,
+                RuntimeEvent::StateExpired { .. } => summary.state_expired_events += 1,
+                RuntimeEvent::DesiredStateDrift { .. } => summary.desired_state_drift_events += 1,
+                RuntimeEvent::WorkerNeedsRestart { .. } => summary.worker_restart_events += 1,
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.delivered_events == 0
+    }
+
+    pub fn has_more(&self) -> bool {
+        self.remaining_events > 0
+    }
+
+    pub fn has_command_results(&self) -> bool {
+        self.command_results > 0
+    }
+
+    pub fn has_supervision_events(&self) -> bool {
+        self.desired_state_drift_events > 0 || self.worker_restart_events > 0
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -3764,6 +3827,24 @@ mod tests {
         assert_eq!(peeked.len(), 2);
         assert_eq!(peeked.remaining_events, 1);
         assert!(peeked.has_more());
+        assert_eq!(
+            peeked.summary(),
+            RuntimeEventDeliverySummary {
+                subscription_id: subscription.clone(),
+                delivered_events: 2,
+                remaining_events: 1,
+                device_events: 0,
+                command_results: 0,
+                bridge_health_events: 2,
+                state_expired_events: 0,
+                desired_state_drift_events: 0,
+                worker_restart_events: 0,
+            }
+        );
+        assert!(peeked.summary().has_more());
+        assert!(!peeked.summary().is_empty());
+        assert!(!peeked.summary().has_command_results());
+        assert!(!peeked.summary().has_supervision_events());
         assert_eq!(bus.queued_events(&subscription).unwrap(), 3);
 
         let drained = bus
@@ -3774,6 +3855,8 @@ mod tests {
             .unwrap();
         assert_eq!(drained.len(), 2);
         assert_eq!(drained.remaining_events, 1);
+        assert_eq!(drained.summary().bridge_health_events, 2);
+        assert!(drained.summary().has_more());
         assert_eq!(bus.queued_events(&subscription).unwrap(), 1);
 
         let tail = bus.drain(&subscription).unwrap();
