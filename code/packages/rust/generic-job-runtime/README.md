@@ -40,6 +40,9 @@ targets.
   busy, saturated, draining, and offline executors.
 - Snapshot supervision recommendations for backpressure, worker restart, and
   graceful draining decisions.
+- Fleet-level executor snapshot summaries for supervisor/read-side tools that
+  need aggregate capacity, queue pressure, and supervision decisions across
+  multiple executors.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters
 submit typed job payloads and decide how to apply responses.
