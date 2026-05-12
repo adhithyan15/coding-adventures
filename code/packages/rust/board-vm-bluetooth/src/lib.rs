@@ -258,6 +258,14 @@ impl MacosCoreBluetoothBleConnector for UnavailableCoreBluetoothBleConnector {
     }
 }
 
+#[cfg(target_os = "macos")]
+mod macos_core_bluetooth;
+
+#[cfg(target_os = "macos")]
+pub use macos_core_bluetooth::{
+    MacosCoreBluetoothBleLink, MacosCoreBluetoothRuntimeBleConnector, MacosCoreBluetoothTimeouts,
+};
+
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct MacosDevRfcommDeviceResolver;
 
