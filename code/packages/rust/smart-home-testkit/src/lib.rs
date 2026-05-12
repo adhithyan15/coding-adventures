@@ -454,6 +454,73 @@ impl ScriptedMqttDelivery<'_> {
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct FakeMqttBrokerSummary {
+    pub total_publications: usize,
+    pub retained_publications: usize,
+    pub live_publications: usize,
+    pub total_payload_bytes: usize,
+    pub metadata_entries: usize,
+    pub earliest_observed_at_ms: Option<u64>,
+    pub latest_observed_at_ms: Option<u64>,
+}
+
+impl FakeMqttBrokerSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_publications<'a, I>(publications: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ScriptedMqttPublication>,
+    {
+        let mut summary = Self::empty();
+
+        for publication in publications {
+            summary.total_publications += 1;
+            summary.total_payload_bytes = summary
+                .total_payload_bytes
+                .saturating_add(publication.payload.len());
+            summary.metadata_entries = summary
+                .metadata_entries
+                .saturating_add(publication.metadata.len());
+            if publication.retained {
+                summary.retained_publications += 1;
+            } else {
+                summary.live_publications += 1;
+            }
+            summary.earliest_observed_at_ms = Some(
+                summary
+                    .earliest_observed_at_ms
+                    .map_or(publication.observed_at_ms, |observed_at_ms| {
+                        observed_at_ms.min(publication.observed_at_ms)
+                    }),
+            );
+            summary.latest_observed_at_ms = Some(
+                summary
+                    .latest_observed_at_ms
+                    .map_or(publication.observed_at_ms, |observed_at_ms| {
+                        observed_at_ms.max(publication.observed_at_ms)
+                    }),
+            );
+        }
+
+        summary
+    }
+
+    pub fn has_retained(self) -> bool {
+        self.retained_publications > 0
+    }
+
+    pub fn has_payloads(self) -> bool {
+        self.total_payload_bytes > 0
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_publications == 0
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum MqttPublicationSort {
     #[default]
     OriginalOrder,
@@ -581,6 +648,10 @@ impl FakeMqttBroker {
             }
         }
         Ok(deliveries)
+    }
+
+    pub fn summary(&self) -> FakeMqttBrokerSummary {
+        FakeMqttBrokerSummary::from_publications(&self.publications)
     }
 
     pub fn len(&self) -> usize {
@@ -734,6 +805,102 @@ impl LocalHttpResponseQuery {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct FakeLocalHttpServerSummary {
+    pub total_responses: usize,
+    pub get_responses: usize,
+    pub post_responses: usize,
+    pub put_responses: usize,
+    pub patch_responses: usize,
+    pub delete_responses: usize,
+    pub informational_responses: usize,
+    pub success_responses: usize,
+    pub redirect_responses: usize,
+    pub client_error_responses: usize,
+    pub server_error_responses: usize,
+    pub other_status_responses: usize,
+    pub body_bearing_responses: usize,
+    pub bodyless_responses: usize,
+    pub total_body_bytes: usize,
+    pub metadata_entries: usize,
+    pub earliest_observed_at_ms: Option<u64>,
+    pub latest_observed_at_ms: Option<u64>,
+}
+
+impl FakeLocalHttpServerSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_responses<'a, I>(responses: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ScriptedLocalHttpResponse>,
+    {
+        let mut summary = Self::empty();
+
+        for response in responses {
+            summary.total_responses += 1;
+            match response.method {
+                LocalHttpMethod::Get => summary.get_responses += 1,
+                LocalHttpMethod::Post => summary.post_responses += 1,
+                LocalHttpMethod::Put => summary.put_responses += 1,
+                LocalHttpMethod::Patch => summary.patch_responses += 1,
+                LocalHttpMethod::Delete => summary.delete_responses += 1,
+            }
+            match response.status / 100 {
+                1 => summary.informational_responses += 1,
+                2 => summary.success_responses += 1,
+                3 => summary.redirect_responses += 1,
+                4 => summary.client_error_responses += 1,
+                5 => summary.server_error_responses += 1,
+                _ => summary.other_status_responses += 1,
+            }
+            if response.body.is_empty() {
+                summary.bodyless_responses += 1;
+            } else {
+                summary.body_bearing_responses += 1;
+            }
+            summary.total_body_bytes = summary.total_body_bytes.saturating_add(response.body.len());
+            summary.metadata_entries = summary
+                .metadata_entries
+                .saturating_add(response.metadata.len());
+            summary.earliest_observed_at_ms = Some(
+                summary
+                    .earliest_observed_at_ms
+                    .map_or(response.observed_at_ms, |observed_at_ms| {
+                        observed_at_ms.min(response.observed_at_ms)
+                    }),
+            );
+            summary.latest_observed_at_ms = Some(
+                summary
+                    .latest_observed_at_ms
+                    .map_or(response.observed_at_ms, |observed_at_ms| {
+                        observed_at_ms.max(response.observed_at_ms)
+                    }),
+            );
+        }
+
+        summary
+    }
+
+    pub fn has_errors(self) -> bool {
+        self.client_error_responses > 0
+            || self.server_error_responses > 0
+            || self.other_status_responses > 0
+    }
+
+    pub fn has_mutations(self) -> bool {
+        self.post_responses > 0
+            || self.put_responses > 0
+            || self.patch_responses > 0
+            || self.delete_responses > 0
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_responses == 0
+    }
+}
+
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct FakeLocalHttpServer {
     responses: VecDeque<ScriptedLocalHttpResponse>,
@@ -782,6 +949,10 @@ impl FakeLocalHttpServer {
             responses.truncate(limit);
         }
         responses
+    }
+
+    pub fn summary(&self) -> FakeLocalHttpServerSummary {
+        FakeLocalHttpServerSummary::from_responses(&self.responses)
     }
 
     pub fn len(&self) -> usize {
@@ -1518,6 +1689,60 @@ mod tests {
     }
 
     #[test]
+    fn fake_mqtt_broker_summary_counts_pending_publications_without_payloads() {
+        let retained_state = ScriptedMqttPublication::new(
+            "home/kitchen/light/state",
+            br#"{"state":"ON"}"#.to_vec(),
+            1_000,
+        )
+        .retained()
+        .with_metadata("fixture", "mqtt")
+        .with_metadata("entity", "kitchen");
+        let availability =
+            ScriptedMqttPublication::new("home/kitchen/light/availability", Vec::new(), 950);
+        let live_state = ScriptedMqttPublication::new(
+            "home/office/light/state",
+            br#"{"state":"OFF"}"#.to_vec(),
+            1_200,
+        )
+        .with_metadata("fixture", "mqtt");
+        let expected_payload_bytes =
+            retained_state.payload.len() + availability.payload.len() + live_state.payload.len();
+        let expected_metadata_entries =
+            retained_state.metadata.len() + availability.metadata.len() + live_state.metadata.len();
+        let mut broker = FakeMqttBroker::new()
+            .publish(retained_state.clone())
+            .publish(availability.clone())
+            .publish(live_state.clone());
+
+        assert_eq!(
+            broker.summary(),
+            FakeMqttBrokerSummary {
+                total_publications: 3,
+                retained_publications: 1,
+                live_publications: 2,
+                total_payload_bytes: expected_payload_bytes,
+                metadata_entries: expected_metadata_entries,
+                earliest_observed_at_ms: Some(950),
+                latest_observed_at_ms: Some(1_200),
+            }
+        );
+        assert!(broker.summary().has_retained());
+        assert!(broker.summary().has_payloads());
+        assert!(!broker.summary().is_empty());
+        assert_eq!(broker.len(), 3);
+        assert_eq!(broker.next_publication(), Some(retained_state));
+        assert_eq!(broker.next_publication(), Some(availability));
+        assert_eq!(broker.next_publication(), Some(live_state));
+
+        let empty = FakeMqttBroker::new().summary();
+
+        assert!(empty.is_empty());
+        assert!(!empty.has_retained());
+        assert!(!empty.has_payloads());
+    }
+
+    #[test]
     fn fake_mqtt_broker_queries_publications_without_consuming_queue() {
         let retained_state = ScriptedMqttPublication::new(
             "home/kitchen/light/state",
@@ -1671,6 +1896,92 @@ mod tests {
         assert_eq!(matched, response);
         assert_eq!(matched.body_utf8(), Some(r#"{"data":[]}"#));
         assert!(server.is_empty());
+    }
+
+    #[test]
+    fn fake_local_http_server_summary_counts_pending_responses_without_bodies() {
+        let light_state = ScriptedLocalHttpResponse::ok_json(
+            LocalHttpMethod::Get,
+            "https://192.0.2.10/clip/v2/resource/light",
+            br#"{"data":[{"id":"light-1"}]}"#.to_vec(),
+            1_000,
+        )
+        .with_metadata("fixture", "hue_clip");
+        let command_accept = ScriptedLocalHttpResponse::new(
+            LocalHttpMethod::Put,
+            "https://192.0.2.10/clip/v2/resource/light/light-1",
+            202,
+            br#"{"errors":[]}"#.to_vec(),
+            1_100,
+        )
+        .with_metadata("fixture", "hue_clip");
+        let bridge_busy = ScriptedLocalHttpResponse::new(
+            LocalHttpMethod::Get,
+            "https://192.0.2.10/clip/v2/resource/bridge",
+            503,
+            br#"{"errors":[{"description":"busy"}]}"#.to_vec(),
+            1_200,
+        )
+        .with_metadata("fixture", "hue_clip")
+        .with_metadata("failure", "bridge_busy");
+        let delete_ack = ScriptedLocalHttpResponse::new(
+            LocalHttpMethod::Delete,
+            "https://192.0.2.10/clip/v2/resource/scene/scene-1",
+            204,
+            Vec::new(),
+            1_150,
+        );
+        let expected_body_bytes = light_state.body.len()
+            + command_accept.body.len()
+            + bridge_busy.body.len()
+            + delete_ack.body.len();
+        let expected_metadata_entries = light_state.metadata.len()
+            + command_accept.metadata.len()
+            + bridge_busy.metadata.len()
+            + delete_ack.metadata.len();
+        let mut server = FakeLocalHttpServer::new()
+            .push_response(light_state.clone())
+            .push_response(command_accept.clone())
+            .push_response(bridge_busy.clone())
+            .push_response(delete_ack.clone());
+
+        assert_eq!(
+            server.summary(),
+            FakeLocalHttpServerSummary {
+                total_responses: 4,
+                get_responses: 2,
+                post_responses: 0,
+                put_responses: 1,
+                patch_responses: 0,
+                delete_responses: 1,
+                informational_responses: 0,
+                success_responses: 3,
+                redirect_responses: 0,
+                client_error_responses: 0,
+                server_error_responses: 1,
+                other_status_responses: 0,
+                body_bearing_responses: 3,
+                bodyless_responses: 1,
+                total_body_bytes: expected_body_bytes,
+                metadata_entries: expected_metadata_entries,
+                earliest_observed_at_ms: Some(1_000),
+                latest_observed_at_ms: Some(1_200),
+            }
+        );
+        assert!(server.summary().has_errors());
+        assert!(server.summary().has_mutations());
+        assert!(!server.summary().is_empty());
+        assert_eq!(server.len(), 4);
+        assert_eq!(server.next_response(), Some(light_state));
+        assert_eq!(server.next_response(), Some(command_accept));
+        assert_eq!(server.next_response(), Some(bridge_busy));
+        assert_eq!(server.next_response(), Some(delete_ack));
+
+        let empty = FakeLocalHttpServer::new().summary();
+
+        assert!(empty.is_empty());
+        assert!(!empty.has_errors());
+        assert!(!empty.has_mutations());
     }
 
     #[test]

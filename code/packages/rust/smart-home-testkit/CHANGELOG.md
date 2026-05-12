@@ -19,7 +19,11 @@ All notable changes to this package will be documented in this file.
 - Fake command bus helpers for deterministic command/result assertions.
 - Fake local HTTP response helpers for request-plan matching and read-only
   response queries.
+- Non-consuming fake local HTTP server summaries for response status, method,
+  body-size, metadata, and observation-window assertions.
 - Fake MQTT broker publication helpers for retained-message and payload tests.
+- Non-consuming fake MQTT broker summaries for retained/live publication,
+  payload-size, metadata, and observation-window assertions.
 - Scripted MQTT subscription helpers for deterministic topic-filter delivery
   matching and QoS assertions.
 - Read-only fake MQTT broker publication queries by topic, prefix, retained flag,
