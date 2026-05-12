@@ -16,7 +16,8 @@ correspondingly reduced.
 
 ```rust
 use coding_adventures_vault_key_custody::{
-    PassphraseCustodian, TpmCustodian, KeyCustodian, select_custodian, fresh_random_key,
+    PassphraseCustodian, TpmCustodian, KeyCustodian, select_custodian,
+    summarize_custodian_candidates, fresh_random_key,
 };
 
 // 1. Build candidate custodians the host supports.
@@ -24,16 +25,20 @@ let pw = PassphraseCustodian::with_default_params(b"correct horse battery staple
 let tpm = TpmCustodian::detected("tpm-2.0");
 let candidates: Vec<&dyn KeyCustodian> = vec![&pw, &tpm];
 
-// 2. The selector picks the hardware-bound one if present.
+// 2. Summarize the candidate shape for startup UX / planning.
+let summary = summarize_custodian_candidates(&candidates);
+assert!(summary.has_hardware_candidate());
+
+// 3. The selector picks the hardware-bound one if present.
 let chosen = select_custodian(&candidates, /* force_software = */ false)?;
 
-// 3. Wrap the vault's master KEK and persist the wrapped blob.
+// 4. Wrap the vault's master KEK and persist the wrapped blob.
 let label = b"vault/master".to_vec();
 let master_kek = fresh_random_key()?;
 let wrapped = chosen.wrap(&label, &master_kek)?;
 // wrapped.0 is opaque bytes you can store anywhere.
 
-// 4. Later, on unseal:
+// 5. Later, on unseal:
 let unwrapped = chosen.unwrap(&label, &wrapped)?;
 // Use unwrapped (Zeroizing<[u8; 32]>) as the KEK input to VLT01.
 ```
@@ -47,6 +52,10 @@ let unwrapped = chosen.unwrap(&label, &wrapped)?;
   `select_custodian` prefers it; `wrap`/`unwrap` return
   `Unimplemented` until the platform-specific TPM 2.0 backend
   lands in a follow-up PR.
+- `summarize_custodian_candidates` +
+  `CustodianCandidateSummary` — count-only candidate capability
+  summaries for host startup planning without exposing names,
+  labels, wrapped blobs, or key bytes.
 - `select_custodian` + `assert_no_hardware_bypass` — TPM-first
   policy helpers.
 
