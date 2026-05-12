@@ -35,6 +35,7 @@ from board_vm_native import (
     pico_uf2_mounts,
     pico_uf2_upload_options,
     pick_connection_option,
+    pick_bluetooth_endpoint,
     pick_device,
     pico,
     runtime_devices,
@@ -348,6 +349,45 @@ def test_bluetooth_connection_endpoint_filters_to_the_selected_transport():
         "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e"
         "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e"
     )
+
+
+def test_connect_can_prompt_for_bluetooth_endpoint_with_pairing_status():
+    output = io.StringIO()
+
+    connection = connect(
+        "uno-r4-wifi",
+        via="BLE",
+        bluetooth_devices=[
+            {
+                "id": "uno-a",
+                "name": "Uno A",
+                "address": "AA:BB:CC:DD:EE:01",
+                "service_uuids": ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"],
+            },
+            {
+                "id": "uno-b",
+                "name": "Uno B",
+                "address": "AA:BB:CC:DD:EE:02",
+                "paired": True,
+                "service_uuids": ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"],
+            },
+        ],
+        pick_bluetooth_endpoint=True,
+        input_func=lambda _prompt: "2",
+        output=output,
+    )
+
+    assert connection.connection_transport == "bluetooth_le"
+    assert connection.endpoint == (
+        "ble://AA:BB:CC:DD:EE:02"
+        "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+        "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+        "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+    )
+    rendered = output.getvalue()
+    assert "1. Uno A [pairing required]" in rendered
+    assert "2. Uno B [paired]" in rendered
+    assert "Select Bluetooth endpoint [1-2]: " in rendered
 
 
 def test_connection_options_can_be_selected_without_exposing_ports():

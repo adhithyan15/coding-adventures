@@ -179,6 +179,43 @@ module CodingAdventures
           "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e", endpoint
       end
 
+      def test_connect_can_prompt_for_bluetooth_endpoint_with_pairing_status
+        output = StringIO.new
+
+        connection = BoardVM.uno_r4_wifi(
+          via: "BLE",
+          bluetooth_devices: [
+            {
+              "id" => "uno-a",
+              "name" => "Uno A",
+              "address" => "AA:BB:CC:DD:EE:01",
+              "service_uuids" => ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]
+            },
+            {
+              "id" => "uno-b",
+              "name" => "Uno B",
+              "address" => "AA:BB:CC:DD:EE:02",
+              "paired" => true,
+              "service_uuids" => ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]
+            }
+          ],
+          pick_bluetooth_endpoint: true,
+          input: StringIO.new("2\n"),
+          output: output,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_equal "bluetooth_le", connection.connection_transport
+        assert_equal "ble://AA:BB:CC:DD:EE:02" \
+          "?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e" \
+          "&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e", connection.endpoint
+        assert_includes output.string, "1. Uno A [pairing required]"
+        assert_includes output.string, "2. Uno B [paired]"
+        assert_includes output.string, "Select Bluetooth endpoint [1-2]: "
+      end
+
       def test_connection_options_can_be_selected_without_exposing_ports
         default = BoardVM.select_connection_option(:uno_r4_wifi)
         wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: :wifi)

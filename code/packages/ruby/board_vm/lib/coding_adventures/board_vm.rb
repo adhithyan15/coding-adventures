@@ -182,13 +182,12 @@ module CodingAdventures
       Native.bluetooth_endpoint_candidates(normalized)
     end
 
-    def bluetooth_connection_endpoint(connection_option, devices: nil)
+    def bluetooth_connection_endpoint(connection_option, devices: nil, pick: false, input: $stdin, output: $stdout)
       option = normalize_connection_option_hash(connection_option)
-      matches = bluetooth_endpoint_candidates(devices).select do |candidate|
-        bluetooth_candidate_matches_connection?(candidate, option)
-      end
+      matches = bluetooth_endpoint_matches(option, devices)
 
       return matches.first.fetch("endpoint").fetch("endpoint").to_s if matches.length == 1
+      return pick_bluetooth_endpoint(option, candidates: matches, input: input, output: output) if pick
 
       display_name = option["display_name"] || option["transport"] || "Bluetooth"
       if matches.empty?
@@ -200,6 +199,29 @@ module CodingAdventures
       raise DeviceSelectionError,
         "Multiple Board VM Bluetooth endpoints match #{display_name}; pass endpoint: ...\n" \
         "#{bluetooth_endpoint_choice_list(matches)}"
+    end
+
+    def pick_bluetooth_endpoint(connection_option, devices: nil, candidates: nil, input: $stdin, output: $stdout)
+      option = normalize_connection_option_hash(connection_option)
+      matches = candidates || bluetooth_endpoint_matches(option, devices)
+      return matches.first.fetch("endpoint").fetch("endpoint").to_s if matches.length == 1
+
+      display_name = option["display_name"] || option["transport"] || "Bluetooth"
+      if matches.empty?
+        raise DeviceSelectionError,
+          "#{display_name} found no Board VM Bluetooth endpoints; " \
+          "pair or power on the board, pass endpoint: ..., or choose via: :serial"
+      end
+
+      output.puts bluetooth_endpoint_choice_list(matches)
+      output.print "Select Bluetooth endpoint [1-#{matches.length}]: "
+      choice = input.gets
+      index = Integer(choice.to_s.strip, exception: false)
+      unless index && index.between?(1, matches.length)
+        raise DeviceSelectionError, "Invalid Board VM Bluetooth endpoint selection: #{choice.inspect}"
+      end
+
+      matches.fetch(index - 1).fetch("endpoint").fetch("endpoint").to_s
     end
 
     def connection_options(board)
@@ -373,6 +395,7 @@ module CodingAdventures
       via: nil,
       connection_option: nil,
       pick_connection: false,
+      pick_bluetooth_endpoint: false,
       **options
     )
       selection = connection_selection(
@@ -392,7 +415,10 @@ module CodingAdventures
       if resolved_endpoint.nil? && connection_uses_bluetooth_endpoint?(selection.fetch(:connection_option))
         resolved_endpoint = bluetooth_connection_endpoint(
           selection.fetch(:connection_option),
-          devices: bluetooth_devices
+          devices: bluetooth_devices,
+          pick: pick || pick_bluetooth_endpoint,
+          input: input,
+          output: output
         )
       end
       connection = Connection.new(
@@ -545,12 +571,27 @@ module CodingAdventures
         (endpoint_scheme && endpoint["endpoint_scheme"] == endpoint_scheme)
     end
 
+    def bluetooth_endpoint_matches(connection_option, devices)
+      option = normalize_connection_option_hash(connection_option)
+      bluetooth_endpoint_candidates(devices).select do |candidate|
+        bluetooth_candidate_matches_connection?(candidate, option)
+      end
+    end
+
     def bluetooth_endpoint_choice_list(candidates)
       candidates.each_with_index.map do |candidate, index|
         endpoint = candidate.fetch("endpoint")
         display_name = candidate["display_name"] || candidate["device"] || endpoint.fetch("endpoint")
-        "#{index + 1}. #{display_name} - #{endpoint.fetch("endpoint")}"
+        pairing = bluetooth_candidate_pairing_status(candidate)
+        "#{index + 1}. #{display_name}#{pairing} - #{endpoint.fetch("endpoint")}"
       end.join("\n")
+    end
+
+    def bluetooth_candidate_pairing_status(candidate)
+      return " [pairing required]" if candidate["requires_pairing"]
+      return " [paired]" if candidate["paired"]
+
+      ""
     end
 
     def flash_without_port?(board, flash)
