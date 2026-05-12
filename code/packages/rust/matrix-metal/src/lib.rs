@@ -37,17 +37,28 @@
 
 mod buffers;
 #[cfg(target_vendor = "apple")]
-mod dispatch;
+pub mod dispatch;
 #[cfg(target_vendor = "apple")]
 mod kernels;
+/// **MX05 Phase 4.2.**  Pure code-generator for specialised MSL
+/// kernels.  Lives on every platform (including non-Apple CI runners)
+/// because emitting a string requires no Metal device.
+pub mod msl_emitter;
+#[cfg(target_vendor = "apple")]
+mod specialised_table;
 
 pub use buffers::BufferStore;
+pub use msl_emitter::{emit_specialised_kernel, EmittedKernel};
+#[cfg(target_vendor = "apple")]
+pub use specialised_table::{MetalSpecialisedKernelFn, SpecialisedTable};
 
 use compute_ir::ExecutorId;
 use executor_protocol::{
     BackendProfile, ErrorCode, ExecutorRequest, ExecutorResponse, LocalTransport,
 };
 use matrix_runtime::Runtime;
+#[cfg(target_vendor = "apple")]
+use executor_protocol::OpTiming;
 
 #[cfg(target_vendor = "apple")]
 use std::collections::HashMap;
@@ -158,6 +169,13 @@ struct State {
     queue: MetalCommandQueue,
     buffers: BufferStore,
     pipelines: HashMap<String, MetalComputePipeline>,
+    /// **MX05 Phase 4.2.**  Per-handle table of installed specialised
+    /// kernel closures.  Looked up by `DispatchSpecialised { handle, .. }`
+    /// to find the closure to invoke instead of the generic MSL
+    /// dispatch path.  Empty on a fresh executor; populated via
+    /// [`MetalExecutor::install_specialised`] /
+    /// [`MetalExecutor::install_specialised_from_emitted`].
+    specialised: SpecialisedTable,
     next_buffer: u64,
     /// ExecutorId assigned by the runtime when we registered.  Tracked
     /// so dispatch can detect graphs erroneously routed to us.  Set
@@ -202,10 +220,194 @@ impl MetalExecutor {
                 queue,
                 buffers: BufferStore::new(),
                 pipelines,
+                specialised: SpecialisedTable::new(),
                 next_buffer: 1,
                 our_id: ExecutorId(u32::MAX),
             }),
         })
+    }
+
+    /// **MX05 Phase 4.2.**  Install a specialised kernel closure under
+    /// the given handle.  Subsequent `ExecutorRequest::DispatchSpecialised
+    /// { handle, .. }` requests carrying this handle invoke the closure
+    /// instead of returning `NOT_IMPLEMENTED`.
+    ///
+    /// The handle is opaque to this executor — its meaning is owned by
+    /// whatever [`Specialiser`] emitted it.  Installation is the
+    /// in-process equivalent of the future "upload-specialised-kernel"
+    /// protocol message; remote transports will land that wire format
+    /// in a later phase.
+    ///
+    /// Re-installing a previously-installed handle replaces the
+    /// closure — the path Phase 5 deoptimisation will use to swap in
+    /// a fresh kernel when an observed assumption fails.
+    ///
+    /// Goes through the same `Mutex<State>` as every other request so
+    /// install can't race with dispatch.
+    ///
+    /// [`Specialiser`]: matrix_profile::Specialiser
+    pub fn install_specialised(&self, handle: u64, kernel: Box<MetalSpecialisedKernelFn>) {
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        s.specialised.install(handle, kernel);
+    }
+
+    /// **MX05 Phase 4.2.**  Compile an emitted MSL kernel and install
+    /// the dispatching closure under the given handle.
+    ///
+    /// This is the convenience layer over [`install_specialised`] that
+    /// closes the loop with the [`msl_emitter`] module: caller emits a
+    /// kernel string with [`emit_specialised_kernel`], hands it to this
+    /// method, and the executor:
+    ///
+    /// 1. Compiles the MSL into a `MetalComputeLibrary`.
+    /// 2. Looks up the named entry point to build a
+    ///    `MetalComputePipeline`.
+    /// 3. Wraps the pipeline in a closure that the dispatch handler can
+    ///    invoke with `(ctx, inputs, outputs)`.
+    /// 4. Installs the closure under `handle`.
+    ///
+    /// The emitter's [`EmittedKernel::input_buffer_count`] /
+    /// [`output_buffer_count`] are captured so the dispatch closure
+    /// can validate the runtime's `inputs`/`outputs` lengths cheaply.
+    ///
+    /// Returns `Err` if MSL compilation fails (returns the
+    /// driver's error verbatim — useful for diagnosing emitter bugs).
+    ///
+    /// [`emit_specialised_kernel`]: msl_emitter::emit_specialised_kernel
+    /// [`EmittedKernel::input_buffer_count`]: msl_emitter::EmittedKernel::input_buffer_count
+    /// [`output_buffer_count`]: msl_emitter::EmittedKernel::output_buffer_count
+    pub fn install_specialised_from_emitted(
+        &self,
+        handle: u64,
+        emitted: EmittedKernel,
+    ) -> Result<(), String> {
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        // Compile the emitted MSL into a one-function library.
+        let library = s
+            .device
+            .compile(&emitted.source)
+            .map_err(|e| format!("compile specialised MSL: {:?}", e))?;
+        let func = library
+            .function(&emitted.entry_point)
+            .map_err(|e| format!("function {}: {:?}", emitted.entry_point, e))?;
+        let pipeline = s
+            .device
+            .pipeline(&func)
+            .map_err(|e| format!("pipeline {}: {:?}", emitted.entry_point, e))?;
+
+        // Move the pipeline into the closure by value.  The closure
+        // only ever runs while the executor mutex is held, so single
+        // ownership is sufficient — no `Arc` needed.
+        // `MetalComputePipeline: Send`, which matches the
+        // `MetalSpecialisedKernelFn` trait bound exactly.
+        let n_in = emitted.input_buffer_count;
+        let n_out = emitted.output_buffer_count;
+        let entry = emitted.entry_point.clone();
+
+        let kernel: Box<MetalSpecialisedKernelFn> = Box::new(move |ctx, inputs, outputs| {
+            // Length-check the runtime-supplied buffer lists before
+            // we touch raw pointers.  Wrong lengths are a misuse, not
+            // a kernel error — surface a clear message.
+            if inputs.len() != n_in {
+                return Err(format!(
+                    "specialised kernel {} expected {} input buffers, got {}",
+                    entry,
+                    n_in,
+                    inputs.len()
+                ));
+            }
+            if outputs.len() != n_out {
+                return Err(format!(
+                    "specialised kernel {} expected {} output buffers, got {}",
+                    entry,
+                    n_out,
+                    outputs.len()
+                ));
+            }
+
+            // Read element count from output[0]: the runtime allocated
+            // it to its final size, so its byte length / 4 (f32) is
+            // the elementwise `n` the kernel expects.
+            //
+            // Note: this is fine for the Phase 4.2 add_const_f32
+            // pattern (single output, dtype = f32).  When the emitter
+            // grows other dtypes/op shapes this `n` derivation will
+            // need to come from the kernel descriptor.
+            let out_bytes = ctx
+                .buffers
+                .get(outputs[0])
+                .map_err(|e| format!("output buffer not found: {}", e))?
+                .len();
+            let n_elems = out_bytes / 4; // f32 = 4 bytes
+            // The MSL `n` parameter is a `uint` (u32); reject buffers
+            // whose element count exceeds u32::MAX before truncating.
+            // Under-execution from a silent truncation would leave
+            // stale bytes in the output tail — defence-in-depth even
+            // though the existing `dispatch_rejects_oversized_tensor`
+            // guard already caps the upstream tensor size.
+            if n_elems > u32::MAX as usize {
+                return Err(format!(
+                    "output buffer has {} f32 elements, exceeds u32::MAX",
+                    n_elems
+                ));
+            }
+            let n = n_elems as u32;
+            if n == 0 {
+                return Ok(vec![]);
+            }
+            let n_bytes = n.to_le_bytes();
+            let tg = pipeline.preferred_threads_1d();
+
+            // Resolve buffer references *before* the dispatch
+            // closure so we can borrow them immutably during the
+            // command encoding.
+            //
+            // SAFETY: matches the existing dispatch path's pattern
+            // (see binary_dispatch in dispatch.rs).  The buffers
+            // outlive the dispatch call because the BufferStore
+            // owns them and we hold the executor mutex.
+            let a_ptr = ctx
+                .buffers
+                .get(inputs[0])
+                .map_err(|e| format!("input[0] buffer not found: {}", e))? as *const _;
+            let out_ptr = ctx
+                .buffers
+                .get(outputs[0])
+                .map_err(|e| format!("output[0] buffer not found: {}", e))? as *const _;
+            let a_buf = unsafe { &*a_ptr };
+            let out_buf = unsafe { &*out_ptr };
+
+            ctx.queue.dispatch(|enc| {
+                enc.set_pipeline(&pipeline);
+                enc.set_buffer(a_buf, 0);
+                enc.set_buffer(out_buf, 1);
+                enc.set_bytes(&n_bytes, 2);
+                enc.dispatch_threads_1d(n, tg);
+            });
+
+            Ok(vec![OpTiming { op_index: 0, ns: 0 }])
+        });
+
+        s.specialised.install(handle, kernel);
+        Ok(())
+    }
+
+    /// **MX05 Phase 4.2.**  Number of specialised kernels currently
+    /// installed.  Test-only in spirit but exposed publicly because
+    /// downstream integration tests (matrix-runtime, image-gpu-core)
+    /// will want it.
+    pub fn specialised_count(&self) -> usize {
+        let s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        s.specialised.len()
     }
 
     /// Process one request.  Same contract as matrix-cpu's `handle`.
@@ -315,18 +517,88 @@ impl MetalExecutor {
 
             ExecutorRequest::Shutdown => ExecutorResponse::ShuttingDown,
 
-            // V1 protocol surface only.  matrix-metal doesn't yet
-            // maintain a per-handle MTLComputePipelineState table
-            // for specialised kernels — Phase 4.2 work that needs
-            // an MSL emitter.  Reply with NOT_IMPLEMENTED so the
-            // runtime falls back to the generic `Dispatch` path.
-            ExecutorRequest::DispatchSpecialised { job_id, .. } => ExecutorResponse::Error {
-                code: ErrorCode::NOT_IMPLEMENTED,
-                message: "matrix-metal doesn't yet execute specialised kernels; \
-                          MX05 Phase 4.2 will add an MSL emitter and per-handle table"
-                    .to_string(),
-                job_id: Some(job_id),
-            },
+            // ──── MX05 Phase 4.2 — specialised dispatch on Metal ────
+            //
+            // Look the handle up in the per-executor specialised
+            // table.  Hit: build a fresh DispatchCtx (so the closure
+            // can encode through the same queue/buffers/pipelines as
+            // the generic dispatcher) and invoke the closure.  Miss:
+            // return NOT_IMPLEMENTED so the runtime falls back to
+            // the generic `Dispatch` path.
+            //
+            // We mirror the matrix-cpu Phase 4.1 security hardening:
+            // the closure call is wrapped in
+            // `catch_unwind(AssertUnwindSafe(...))` so a panicking
+            // kernel surfaces as a clean RUNTIME_ERROR instead of
+            // unwinding through the mutex guard and breaking the
+            // "one bad request cannot DoS the executor" contract.
+            ExecutorRequest::DispatchSpecialised {
+                job_id,
+                handle,
+                inputs,
+                outputs,
+            } => {
+                let State {
+                    ref device,
+                    ref queue,
+                    ref mut buffers,
+                    ref pipelines,
+                    ref specialised,
+                    ref our_id,
+                    ..
+                } = *s;
+                match specialised.get(handle) {
+                    Some(kernel) => {
+                        let mut ctx = dispatch::DispatchCtx {
+                            device,
+                            queue,
+                            buffers,
+                            pipelines,
+                            our_id: *our_id,
+                        };
+                        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(
+                            || kernel(&mut ctx, &inputs, &outputs),
+                        ));
+                        match result {
+                            Ok(Ok(timings)) => {
+                                ExecutorResponse::DispatchDone { job_id, timings }
+                            }
+                            Ok(Err(e)) => ExecutorResponse::Error {
+                                code: ErrorCode::RUNTIME_ERROR,
+                                message: format!("specialised kernel {}: {}", handle, e),
+                                job_id: Some(job_id),
+                            },
+                            Err(panic) => {
+                                let msg = if let Some(s) = panic.downcast_ref::<String>() {
+                                    s.clone()
+                                } else if let Some(s) = panic.downcast_ref::<&'static str>() {
+                                    (*s).to_string()
+                                } else {
+                                    "unknown panic payload".to_string()
+                                };
+                                ExecutorResponse::Error {
+                                    code: ErrorCode::RUNTIME_ERROR,
+                                    message: format!(
+                                        "specialised kernel 0x{:016X} panicked: {}",
+                                        handle, msg
+                                    ),
+                                    job_id: Some(job_id),
+                                }
+                            }
+                        }
+                    }
+                    None => ExecutorResponse::Error {
+                        code: ErrorCode::NOT_IMPLEMENTED,
+                        message: format!(
+                            "no specialised kernel installed for handle 0x{:016X}; \
+                             install one via MetalExecutor::install_specialised \
+                             or install_specialised_from_emitted",
+                            handle
+                        ),
+                        job_id: Some(job_id),
+                    },
+                }
+            }
         }
     }
 
