@@ -9,5 +9,6 @@ cd ../symbolic-vm && npm ci --quiet
 cd ../macsyma-lexer && npm ci --quiet
 cd ../macsyma-parser && npm ci --quiet
 cd ../macsyma-compiler && npm ci --quiet
+cd ../cas-solve && npm ci --quiet
 npm ci --quiet
 npx vitest run --coverage
