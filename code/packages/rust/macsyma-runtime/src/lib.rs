@@ -8,12 +8,13 @@ use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
 use cas_simplify::simplify;
+use cas_solve::{solve_linear_system, SOLVE};
 use cas_trig::{expand_trig, trig_simplify};
 use coding_adventures_macsyma_compiler::{
     compile_macsyma_with_options, CompileError, CompileOptions, DISPLAY as COMPILER_DISPLAY,
     SUPPRESS as COMPILER_SUPPRESS,
 };
-use symbolic_ir::{apply, sym, IRApply, IRNode, ASSIGN, DEFINE, IF, POW};
+use symbolic_ir::{apply, sym, IRApply, IRNode, ASSIGN, DEFINE, IF, LIST, POW};
 use symbolic_vm::backend::{handler_fn, Backend, Handler};
 use symbolic_vm::handlers::build_handler_table;
 use symbolic_vm::VM;
@@ -323,6 +324,7 @@ impl MacsymaBackend {
         handlers.insert(SUPPRESS_HEAD.to_string(), handler_fn(suppress_handler));
         handlers.insert(EV.to_string(), handler_fn(ev_handler));
         handlers.insert(FLOAT_FUNC.to_string(), handler_fn(float_handler));
+        handlers.insert(SOLVE.to_string(), handler_fn(solve_handler));
         handlers.insert(SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(RAT_SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
@@ -337,7 +339,7 @@ impl MacsymaBackend {
             }),
         );
 
-        let held = [ASSIGN, DEFINE, IF, KILL, EV]
+        let held = [ASSIGN, DEFINE, IF, KILL, EV, SOLVE]
             .into_iter()
             .map(str::to_string)
             .collect();
@@ -595,6 +597,31 @@ fn trig_expand_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     expand_trig(&expr.args[0])
 }
 
+fn solve_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    let fallback = IRNode::Apply(Box::new(expr.clone()));
+    if expr.args.len() != 2 {
+        return fallback;
+    }
+
+    let Some(equations) = apply_with_head(&expr.args[0], LIST) else {
+        return fallback;
+    };
+    let Some(variables) = apply_with_head(&expr.args[1], LIST) else {
+        return fallback;
+    };
+    if !variables
+        .args
+        .iter()
+        .all(|variable| matches!(variable, IRNode::Symbol(_)))
+    {
+        return fallback;
+    }
+
+    solve_linear_system(&equations.args, &variables.args)
+        .map(|rules| apply(sym(LIST), rules))
+        .unwrap_or(fallback)
+}
+
 fn numer_fold(node: IRNode) -> IRNode {
     match node {
         IRNode::Integer(n) => IRNode::Float(n as f64),
@@ -640,6 +667,13 @@ fn is_head_name(head: &IRNode, expected: &str) -> bool {
 fn symbol_name(node: &IRNode) -> Option<&str> {
     match node {
         IRNode::Symbol(name) => Some(name),
+        _ => None,
+    }
+}
+
+fn apply_with_head<'a>(node: &'a IRNode, expected: &str) -> Option<&'a IRApply> {
+    match node {
+        IRNode::Apply(apply) if is_head_name(&apply.head, expected) => Some(apply),
         _ => None,
     }
 }

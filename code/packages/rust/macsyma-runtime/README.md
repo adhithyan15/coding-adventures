@@ -12,3 +12,8 @@ replacement pass. `%` resolves to the previous output, `%iN` resolves to the
 N-th recorded input expression, and `%oN` resolves to the N-th recorded output.
 The symbolic VM backend remains unchanged, so direct backend lookup of history
 names is intentionally out of scope for this Rust parity slice.
+
+The runtime also wires MACSYMA `linsolve`/`Solve(List(...), List(...))` calls to
+the Rust `cas-solve` exact linear-system solver. Supported systems return
+`List(Rule(variable, value), ...)`; unsupported or non-linear systems remain as
+unevaluated `Solve(...)` IR nodes.

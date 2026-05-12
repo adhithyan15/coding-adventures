@@ -1,8 +1,9 @@
+use cas_solve::SOLVE;
 use coding_adventures_macsyma_runtime::{
     extend_macsyma_name_table, macsyma_name_table, MacsymaSession, EV, KILL,
 };
 use std::collections::HashMap;
-use symbolic_ir::{apply, int, rat, sym, ADD, DIV, MUL, POW};
+use symbolic_ir::{apply, int, rat, sym, ADD, DIV, EQUAL, LIST, MUL, POW, RULE, SUB};
 
 #[test]
 fn evaluates_arithmetic_program() {
@@ -215,4 +216,137 @@ fn manual_kill_and_ev_heads_are_first_class() {
     ]);
     assert_eq!(results[0].output, sym("done"));
     assert_eq!(results[1].output, symbolic_ir::flt(1.5));
+}
+
+#[test]
+fn evaluates_linsolve_linear_systems_through_cas_solve() {
+    let x = sym("x");
+    let y = sym("y");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![apply(
+        sym("linsolve"),
+        vec![
+            apply(
+                sym(LIST),
+                vec![
+                    apply(
+                        sym(EQUAL),
+                        vec![apply(sym(ADD), vec![x.clone(), y.clone()]), int(3)],
+                    ),
+                    apply(
+                        sym(EQUAL),
+                        vec![apply(sym(SUB), vec![x.clone(), y.clone()]), int(1)],
+                    ),
+                ],
+            ),
+            apply(sym(LIST), vec![x.clone(), y.clone()]),
+        ],
+    )]);
+
+    assert_eq!(
+        results[0].input,
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(LIST),
+                    vec![
+                        apply(
+                            sym(EQUAL),
+                            vec![apply(sym(ADD), vec![x.clone(), y.clone()]), int(3)]
+                        ),
+                        apply(
+                            sym(EQUAL),
+                            vec![apply(sym(SUB), vec![x.clone(), y.clone()]), int(1)]
+                        ),
+                    ],
+                ),
+                apply(sym(LIST), vec![x.clone(), y.clone()]),
+            ],
+        )
+    );
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym(RULE), vec![x.clone(), int(2)]),
+                apply(sym(RULE), vec![y.clone(), int(1)]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn keeps_non_linear_solve_calls_unevaluated() {
+    let x = sym("x");
+    let expr = apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(LIST),
+                vec![apply(
+                    sym(EQUAL),
+                    vec![apply(sym(POW), vec![x.clone(), int(2)]), int(4)],
+                )],
+            ),
+            apply(sym(LIST), vec![x]),
+        ],
+    );
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn returns_rational_linsolve_results() {
+    let x = sym("x");
+    let y = sym("y");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(LIST),
+                vec![
+                    apply(
+                        sym(EQUAL),
+                        vec![
+                            apply(
+                                sym(ADD),
+                                vec![
+                                    apply(sym(MUL), vec![int(2), x.clone()]),
+                                    apply(sym(MUL), vec![int(3), y.clone()]),
+                                ],
+                            ),
+                            int(7),
+                        ],
+                    ),
+                    apply(
+                        sym(EQUAL),
+                        vec![
+                            apply(
+                                sym(SUB),
+                                vec![apply(sym(MUL), vec![int(4), x.clone()]), y.clone()],
+                            ),
+                            int(1),
+                        ],
+                    ),
+                ],
+            ),
+            apply(sym(LIST), vec![x.clone(), y.clone()]),
+        ],
+    )]);
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym(RULE), vec![x.clone(), rat(5, 7)]),
+                apply(sym(RULE), vec![y.clone(), rat(13, 7)]),
+            ],
+        )
+    );
 }
