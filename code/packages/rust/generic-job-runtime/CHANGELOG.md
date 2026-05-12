@@ -11,6 +11,8 @@ All notable changes to this package will be documented in this file.
 - Added `JobResponseDrainSummary` and
   `JobExecutor::drain_response_summary_batch()` for aggregated D18C supervisor
   response-drain read models.
+- Added `JobResponseDrainOutcome` and helper predicates for classifying drained
+  response-summary batches without reinterpreting raw terminal counters.
 - Added queue-pressure percentages and recommended supervision actions for
   executor snapshots so D18C supervisors can choose backpressure, worker
   restart, or graceful-drain behavior without reinterpreting raw counters.

@@ -28,6 +28,8 @@ targets.
   need terminal status, retryability, trace, and attempt facts.
 - Aggregated response-summary drain batches for supervisor/read-side tools that
   need terminal counts without retaining response payloads.
+- Drain outcome helpers for classifying empty, successful, failed, and
+  retryable-failed response batches.
 - Non-consuming executor snapshots for supervisor/read-side tools, including
   live workers, in-flight jobs, queued jobs, running jobs, and saturation.
 - Snapshot health classification for D18C supervisors to distinguish idle,
