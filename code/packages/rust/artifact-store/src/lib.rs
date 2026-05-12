@@ -326,6 +326,50 @@ impl ArtifactManifestSummary {
     }
 }
 
+/// Composite manifest inventory for read-side D18A/D18D status tools.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ArtifactInventorySummary {
+    pub catalog: ArtifactCatalogSummary,
+    pub provenance: ArtifactProvenanceSummary,
+    pub manifest: ArtifactManifestSummary,
+}
+
+impl ArtifactInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_artifacts<'a, I>(artifacts: I) -> Self
+    where
+        I: IntoIterator<Item = &'a Artifact>,
+    {
+        let artifacts = artifacts.into_iter().collect::<Vec<_>>();
+        Self {
+            catalog: ArtifactCatalogSummary::from_artifacts(artifacts.iter().copied()),
+            provenance: ArtifactProvenanceSummary::from_artifacts(artifacts.iter().copied()),
+            manifest: ArtifactManifestSummary::from_artifacts(artifacts),
+        }
+    }
+
+    pub fn total_artifacts(&self) -> usize {
+        self.catalog.total_artifacts
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_artifacts() == 0
+    }
+
+    pub fn durable_artifacts(&self) -> usize {
+        self.catalog.durable_artifacts()
+    }
+
+    pub fn needs_inventory_attention(&self) -> bool {
+        self.catalog.has_unrevisioned_artifacts()
+            || self.provenance.has_unattributed_artifacts()
+            || self.manifest.has_unlabeled_artifacts()
+    }
+}
+
 /// Input used when first creating an artifact manifest.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CreateArtifactInput {
@@ -680,6 +724,14 @@ impl<S: StorageBackend> ArtifactStore<S> {
     ) -> Result<ArtifactManifestSummary, StorageError> {
         let artifacts = self.list_artifacts(options)?;
         Ok(ArtifactManifestSummary::from_artifacts(&artifacts))
+    }
+
+    pub fn inventory_summary(
+        &self,
+        options: ArtifactListOptions,
+    ) -> Result<ArtifactInventorySummary, StorageError> {
+        let artifacts = self.list_artifacts(options)?;
+        Ok(ArtifactInventorySummary::from_artifacts(&artifacts))
     }
 
     pub fn attach_labels(
@@ -1615,6 +1667,87 @@ mod tests {
         assert_eq!(empty, ArtifactManifestSummary::empty());
         assert!(empty.is_empty());
         assert!(!empty.has_labels());
+    }
+
+    #[test]
+    fn inventory_summary_composes_manifest_level_status() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        for (artifact_id, collection, content_type, labels, session_id, tool_id) in [
+            (
+                "plan",
+                "plans",
+                "text/plain",
+                vec!["draft"],
+                Some("session-a"),
+                Some("artifact.write"),
+            ),
+            (
+                "export",
+                "exports",
+                "application/json",
+                vec!["deliverable"],
+                Some("session-a"),
+                Some("artifact.export"),
+            ),
+            ("scratch", "scratch", "image/png", Vec::new(), None, None),
+        ] {
+            let _ = store
+                .create_artifact(CreateArtifactInput {
+                    artifact_id: artifact_id.to_string(),
+                    collection: collection.to_string(),
+                    name: artifact_id.to_string(),
+                    content_type: content_type.to_string(),
+                    labels: labels.into_iter().map(str::to_string).collect(),
+                    provenance: ArtifactProvenance {
+                        session_id: session_id.map(str::to_string),
+                        tool_id: tool_id.map(str::to_string),
+                        job_id: None,
+                        agent_id: None,
+                    },
+                })
+                .unwrap();
+        }
+        let _ = store
+            .mark_retention("export", ArtifactRetention::Exported)
+            .unwrap();
+        let _ = store
+            .append_revision(
+                "export",
+                AppendRevisionInput {
+                    revision_id: "rev-1".to_string(),
+                    metadata: JsonValue::Object(vec![]),
+                    body: b"{}".to_vec(),
+                },
+            )
+            .unwrap();
+
+        let summary = store.inventory_summary(ArtifactListOptions::new()).unwrap();
+
+        assert_eq!(summary.total_artifacts(), 3);
+        assert_eq!(summary.durable_artifacts(), 1);
+        assert_eq!(summary.catalog.exported_artifacts, 1);
+        assert_eq!(summary.catalog.artifacts_with_revisions, 1);
+        assert_eq!(summary.catalog.artifacts_without_revisions, 2);
+        assert_eq!(summary.provenance.session_scoped_artifacts, 2);
+        assert_eq!(summary.provenance.artifacts_without_provenance, 1);
+        assert_eq!(summary.manifest.unique_collections, 3);
+        assert_eq!(summary.manifest.json_artifacts, 1);
+        assert_eq!(summary.manifest.image_artifacts, 1);
+        assert!(summary.needs_inventory_attention());
+        assert!(!summary.is_empty());
+
+        let session_summary = store
+            .inventory_summary(ArtifactListOptions::new().for_session("session-a"))
+            .unwrap();
+        assert_eq!(session_summary.total_artifacts(), 2);
+        assert_eq!(session_summary.provenance.artifacts_without_provenance, 0);
+        assert!(!session_summary.manifest.has_unlabeled_artifacts());
+
+        let empty = store
+            .inventory_summary(ArtifactListOptions::new().for_collection("missing"))
+            .unwrap();
+        assert_eq!(empty, ArtifactInventorySummary::empty());
+        assert!(empty.is_empty());
     }
 
     #[test]
