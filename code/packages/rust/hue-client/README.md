@@ -12,6 +12,8 @@ Included surfaces:
 - bridge registration request/response parsing
 - resource snapshot and collection requests
 - typed aggregate resource snapshots from a single CLIP v2 snapshot envelope
+- resource snapshot summaries for resource-family, owner ref, scene action, and
+  state projection coverage
 - resource-specific reads
 - structured command request bodies from `hue-core`
 - event-stream request shape
