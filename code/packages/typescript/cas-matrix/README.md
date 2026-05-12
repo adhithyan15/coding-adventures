@@ -30,3 +30,8 @@ fold numeric entries.
 | `inverse(m)` | Symbolic adjugate inverse |
 | `rowReduce(m)` | Exact rational reduced row echelon form for integer/rational matrices |
 | `rank(m)` | Exact rational matrix rank for integer/rational matrices |
+| `norm(m)` / `frobeniusNorm(m)` | Exact Euclidean vector norm or Frobenius matrix norm |
+| `luDecompose(m)` | Exact LU decomposition with partial pivoting, returned as `List(L, U, P)` |
+| `nullspace(m)` | Exact rational nullspace basis as `List(columnVector, ...)` |
+| `columnspace(m)` | Exact rational columnspace basis from original pivot columns |
+| `rowspace(m)` | Exact rational rowspace basis from non-zero RREF rows |

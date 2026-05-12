@@ -3,26 +3,32 @@ import {
   MATRIX,
   MatrixError,
   addMatrices,
+  columnspace,
   determinant,
   dimensions,
   dot,
+  frobeniusNorm,
   getEntry,
   identityMatrix,
   inverse,
   isMatrix,
+  luDecompose,
   matrix,
+  norm,
   numCols,
   numRows,
+  nullspace,
   rank,
   rowsOf,
   rowReduce,
+  rowspace,
   scalarMultiply,
   subMatrices,
   trace,
   transpose,
   zeroMatrix,
 } from "../src/index";
-import { ADD, LIST, MUL, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, LIST, MUL, SQRT, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 
 function irow(values: readonly number[]): IRNode[] {
   return values.map((value) => int(value));
@@ -197,5 +203,77 @@ describe("rowReduce and rank", () => {
     const m = matrix([[sym("a"), int(1)], [int(0), int(1)]]);
     expect(() => rowReduce(m)).toThrow(MatrixError);
     expect(() => rank(m)).toThrow(MatrixError);
+  });
+});
+
+describe("norms", () => {
+  it("computes exact Euclidean vector norms", () => {
+    const column = matrix([irow([3]), irow([4])]);
+    const row = matrix([irow([3, 4])]);
+    const rationalVector = matrix([[rational(3, 5)], [rational(4, 5)]]);
+    expect(norm(column)).toEqual(int(5));
+    expect(norm(row)).toEqual(int(5));
+    expect(norm(rationalVector)).toEqual(int(1));
+  });
+
+  it("returns Sqrt for non-perfect-square norms", () => {
+    expect(norm(matrix([irow([1]), irow([1])]))).toEqual(app(SQRT, [int(2)]));
+  });
+
+  it("computes Frobenius norms and rejects matrix Euclidean norms", () => {
+    expect(frobeniusNorm(matrix([irow([1, 1]), irow([1, 1])]))).toEqual(int(2));
+    expect(norm(identityMatrix(3), "frobenius")).toEqual(app(SQRT, [int(3)]));
+    expect(() => norm(matrix([irow([1, 2]), irow([3, 4])]))).toThrow(MatrixError);
+    expect(() => norm(matrix([irow([1, 2])]), "spectral")).toThrow(MatrixError);
+  });
+});
+
+describe("LU decomposition", () => {
+  it("returns List(L, U, P) for matrices that require pivoting", () => {
+    const result = luDecompose(matrix([irow([0, 1]), irow([1, 0])]));
+    expect(result).toEqual(app(LIST, [
+      identityMatrix(2),
+      identityMatrix(2),
+      matrix([irow([0, 1]), irow([1, 0])]),
+    ]));
+  });
+
+  it("keeps exact rational multipliers", () => {
+    const result = luDecompose(matrix([irow([2, 1]), irow([1, 3])]));
+    expect(result.kind).toBe("apply");
+    if (result.kind !== "apply") return;
+    const [l, u, p] = result.args;
+    expect(l).toEqual(matrix([[int(1), int(0)], [rational(1, 2), int(1)]]));
+    expect(u).toEqual(matrix([[int(2), int(1)], [int(0), rational(5, 2)]]));
+    expect(p).toEqual(identityMatrix(2));
+  });
+
+  it("rejects singular and non-square matrices", () => {
+    expect(() => luDecompose(zeroMatrix(2, 2))).toThrow(MatrixError);
+    expect(() => luDecompose(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
+  });
+});
+
+describe("subspaces", () => {
+  it("computes nullspace bases as a List of column-vector matrices", () => {
+    const basis = nullspace(matrix([irow([1, 2, 3]), irow([4, 5, 6])]));
+    expect(basis).toEqual(app(LIST, [
+      matrix([irow([1]), irow([-2]), irow([1])]),
+    ]));
+    expect(nullspace(identityMatrix(2))).toEqual(app(LIST, []));
+  });
+
+  it("computes columnspace from original pivot columns", () => {
+    const basis = columnspace(matrix([irow([1, 2]), irow([2, 4])]));
+    expect(basis).toEqual(app(LIST, [
+      matrix([irow([1]), irow([2])]),
+    ]));
+  });
+
+  it("computes rowspace from non-zero RREF rows", () => {
+    const basis = rowspace(matrix([irow([1, 2, 3]), irow([2, 4, 6])]));
+    expect(basis).toEqual(app(LIST, [
+      matrix([irow([1, 2, 3])]),
+    ]));
   });
 });
