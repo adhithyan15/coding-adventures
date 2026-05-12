@@ -16,6 +16,7 @@ body {
 }
 
 button,
+input,
 textarea {
   font: inherit;
 }
@@ -103,7 +104,7 @@ dd {
 
 .editorPane {
   display: grid;
-  grid-template-rows: auto minmax(320px, 1fr) auto auto;
+  grid-template-rows: auto auto minmax(320px, 1fr) auto auto;
 }
 
 .exampleBar {
@@ -130,6 +131,33 @@ button:focus-visible {
   background: #e8f0ec;
   outline: 2px solid #4d7f70;
   outline-offset: -2px;
+}
+
+.filePicker {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #d8d0c1;
+  color: #214940;
+  background: #fbf8f0;
+}
+
+.filePicker input {
+  width: 100%;
+  min-width: 0;
+}
+
+.fileName {
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow: hidden;
+  color: #776b5c;
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 textarea {

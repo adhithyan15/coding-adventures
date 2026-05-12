@@ -29,4 +29,22 @@ describe("Macsyma browser REPL", () => {
 
     expect(screen.getByText("(%i1)")).toBeInTheDocument();
   });
+
+  it("loads a .mac file into the editor and runs it", async () => {
+    render(<App />);
+
+    const file = new File(["x : 5$\nx + 1;"], "batch.mac", { type: "text/plain" });
+    fireEvent.change(screen.getByLabelText("Load MACSYMA file"), {
+      target: { files: [file] },
+    });
+
+    expect(await screen.findByText("batch.mac")).toBeInTheDocument();
+    expect(screen.getByLabelText("MACSYMA source")).toHaveValue("x : 5$\nx + 1;");
+
+    fireEvent.click(screen.getByRole("button", { name: "Run" }));
+
+    const transcript = within(screen.getByLabelText("Transcript"));
+    expect(await transcript.findByText("6")).toBeInTheDocument();
+    expect(transcript.getByText("%i2")).toBeInTheDocument();
+  });
 });
