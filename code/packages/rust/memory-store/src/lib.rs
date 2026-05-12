@@ -50,6 +50,28 @@ impl MemoryClass {
     }
 }
 
+/// Read-side lifecycle status for a memory at one evaluation time.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MemoryLifecycleStatus {
+    Active,
+    Expired,
+    Tombstoned,
+}
+
+impl MemoryLifecycleStatus {
+    pub fn is_active(self) -> bool {
+        matches!(self, Self::Active)
+    }
+
+    pub fn is_expired(self) -> bool {
+        matches!(self, Self::Expired)
+    }
+
+    pub fn is_tombstoned(self) -> bool {
+        matches!(self, Self::Tombstoned)
+    }
+}
+
 /// Durable memory record.
 #[derive(Debug, Clone, PartialEq)]
 pub struct MemoryRecord {
@@ -68,8 +90,29 @@ pub struct MemoryRecord {
 }
 
 impl MemoryRecord {
+    pub fn lifecycle_status_at(&self, now_ms: u64) -> MemoryLifecycleStatus {
+        if self.tombstoned {
+            MemoryLifecycleStatus::Tombstoned
+        } else if self
+            .expires_at
+            .is_some_and(|expires_at| now_ms >= expires_at)
+        {
+            MemoryLifecycleStatus::Expired
+        } else {
+            MemoryLifecycleStatus::Active
+        }
+    }
+
     pub fn is_active_at(&self, now_ms: u64) -> bool {
-        !self.tombstoned && self.expires_at.is_none_or(|expires_at| now_ms < expires_at)
+        self.lifecycle_status_at(now_ms).is_active()
+    }
+
+    pub fn is_expired_at(&self, now_ms: u64) -> bool {
+        self.lifecycle_status_at(now_ms).is_expired()
+    }
+
+    pub fn is_tombstoned(&self) -> bool {
+        self.tombstoned
     }
 }
 
@@ -107,8 +150,29 @@ impl MemoryRecordSummary {
         }
     }
 
+    pub fn lifecycle_status_at(&self, now_ms: u64) -> MemoryLifecycleStatus {
+        if self.tombstoned {
+            MemoryLifecycleStatus::Tombstoned
+        } else if self
+            .expires_at
+            .is_some_and(|expires_at| now_ms >= expires_at)
+        {
+            MemoryLifecycleStatus::Expired
+        } else {
+            MemoryLifecycleStatus::Active
+        }
+    }
+
     pub fn is_active_at(&self, now_ms: u64) -> bool {
-        !self.tombstoned && self.expires_at.is_none_or(|expires_at| now_ms < expires_at)
+        self.lifecycle_status_at(now_ms).is_active()
+    }
+
+    pub fn is_expired_at(&self, now_ms: u64) -> bool {
+        self.lifecycle_status_at(now_ms).is_expired()
+    }
+
+    pub fn is_tombstoned(&self) -> bool {
+        self.tombstoned
     }
 }
 
@@ -1120,6 +1184,48 @@ mod tests {
             .unwrap();
         assert_eq!(limited.len(), 1);
         assert_eq!(limited[0].memory_id, "pref-format");
+    }
+
+    #[test]
+    fn lifecycle_helpers_classify_records_and_summaries() {
+        let active = memory_with_id("pref-tone", "Tone", "Prefer concise recaps");
+        let mut expired = memory_with_id("old-tone", "Old tone", "Prefer long summaries");
+        expired.expires_at = Some(100);
+        let mut tombstoned = memory_with_id("tombstoned-tone", "Old tone", "Obsolete note");
+        tombstoned.expires_at = Some(100);
+        tombstoned.tombstoned = true;
+
+        assert_eq!(
+            active.lifecycle_status_at(100),
+            MemoryLifecycleStatus::Active
+        );
+        assert!(active.is_active_at(100));
+        assert!(!active.is_expired_at(100));
+        assert!(!active.is_tombstoned());
+        assert_eq!(
+            expired.lifecycle_status_at(100),
+            MemoryLifecycleStatus::Expired
+        );
+        assert!(expired.is_expired_at(100));
+        assert!(!expired.is_active_at(100));
+        assert_eq!(
+            tombstoned.lifecycle_status_at(100),
+            MemoryLifecycleStatus::Tombstoned
+        );
+        assert!(tombstoned.is_tombstoned());
+        assert!(!tombstoned.is_expired_at(100));
+        assert!(MemoryLifecycleStatus::Active.is_active());
+        assert!(MemoryLifecycleStatus::Expired.is_expired());
+        assert!(MemoryLifecycleStatus::Tombstoned.is_tombstoned());
+
+        let summary = MemoryRecordSummary::from_record(&expired);
+        assert_eq!(
+            summary.lifecycle_status_at(100),
+            MemoryLifecycleStatus::Expired
+        );
+        assert!(summary.is_expired_at(100));
+        assert!(!summary.is_active_at(100));
+        assert!(!summary.is_tombstoned());
     }
 
     #[test]
