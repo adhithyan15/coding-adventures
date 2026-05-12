@@ -1,5 +1,13 @@
 # ADJ02 — Coverage Checker: Structural Tree Check Over the Hierarchical IR
 
+> **Pending revision to v3 (2026-05-12)** to match
+> [`ADJ01 v3`](ADJ01-adjudication-ir-grammar.md): coverage becomes a
+> *flat tiling* check over the union of node and edge `source_spans`
+> (no recursive tree descent), and a separate **DAG acyclicity**
+> invariant is added. The v2 content below describes the previous
+> structural-tree check and is preserved until the v3 revision lands
+> alongside the `adjudication-coverage` crate's v3 update.
+
 > **Revision v2 (2026-05-11): structural coverage.** v1 of this spec
 > defined coverage as a token-level check driven by a language-
 > specific tagger. That approach baked English-language assumptions

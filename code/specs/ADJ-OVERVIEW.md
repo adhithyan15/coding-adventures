@@ -84,8 +84,9 @@ hallucinates. Empirically verified — see
    pattern-match on the parts it understands and silently ignore
    the rest. The IR grammar forces the model to commit, for every
    byte of source, to one of `Fact / Query / Rule / Uncertainty /
-   Exception / TextRun-grouping / Discarded(reason)`. No fourth
-   option. The model can't hand-wave anymore.
+   Exception / Section / Entity / Discarded(reason)` (per ADJ01 v3),
+   plus a typed edge from a closed taxonomy for every relationship
+   between nodes. No fourth option. The model can't hand-wave anymore.
 
 ## Crate map
 
@@ -98,13 +99,16 @@ hallucinates. Empirically verified — see
   facts and rules.
 
 ### IR + checkers (pure Rust)
-- [`adjudication-ir`](../packages/rust/adjudication-ir) — ADJ01 v2
-  IR grammar: `IRDocument`, `IRNode`, `Polarity`, `Modality`,
-  `NodeKind`, `Span`, `validate`.
+- [`adjudication-ir`](../packages/rust/adjudication-ir) — ADJ01 v3
+  IR grammar (graph form): `IRDocument`, `IRNode`, `IREdge`,
+  `EdgeRelation`, `Polarity`, `Modality`, `NodeKind`, `Span`,
+  `validate`. **The crate is currently at v2; v3 migration follows
+  this overview's revision in a sequence of follow-up PRs.**
 - [`adjudication-coverage`](../packages/rust/adjudication-coverage)
-  — ADJ02 v2: every byte covered exactly once.
+  — ADJ02 v3: flat-tile coverage (nodes + edges) plus DAG acyclicity.
 - [`adjudication-polarity-modality`](../packages/rust/adjudication-polarity-modality)
-  — ADJ03 v2: polarity/modality propagation.
+  — ADJ03 v3: propagation along `Contains` edges, multi-parent
+  consistency check.
 
 ### LLM layer
 - [`llm-gateway`](../packages/rust/llm-gateway) — `LlmClient` trait,
@@ -184,9 +188,11 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
 
 ## Key invariants the framework guarantees
 
-1. **Total coverage.** ADJ02 v2 says every byte of normalized
-   source belongs to some IR node — typed claim, structural
-   grouping, or explicit `Discarded(reason)`. No silent skipping.
+1. **Total coverage.** ADJ02 v3 says every byte of normalized
+   source belongs to some IR node *or some IR edge* — typed claim,
+   structural section, deduplicated entity, explicit `Discarded(reason)`,
+   or the source_spans of a typed edge (connectives, cross-references,
+   citations). No silent skipping.
 2. **Independence.** ADJ05 requires `(vendor, model_family)` for
    the Adversary client to differ from the Extractor client.
    Enforced by `GatewayConfig::check_independence`; the pipeline
