@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2026-05-12
+
+### Fixed
+
+Skip synthesized `Query` nodes (kind=Query AND empty
+`source_spans`) instead of raising `CheckError::LeafMissingSpans`.
+Mirrors the same fix in `adjudication-round-trip` v0.1.1 — Query
+nodes can be programmatically added (e.g., a synthetic
+`compliant(passenger_a)?` query) and have no source span to attack.
+Facts with missing spans still surface as `LeafMissingSpans` because
+they MUST come from the source per ADJ01 v2.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

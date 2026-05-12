@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-12
+
+### Added
+
+ADJ05 adversarial check now actually runs when a second model is
+registered. v0.2 had ADJ05 hard-Skipped; v0.3 plumbs a real Adversary
+client through the pipeline. With `gemma4:latest` as Extractor/
+Renderer/Nli and `llama3.1:8b` as Adversary, the pipeline runs the
+full chain ADJ02 + ADJ03 + ADJ04 + ADJ05.
+
+- `DemoConfig::adversary_model: Option<String>` — opt-in. Defaults to
+  `None`, which preserves the v0.2 "ADJ05 records Skipped" behaviour.
+- `ADJ_DEMO_ADVERSARY_MODEL=llama3.1:8b` — env var to flip it on at
+  the binary level.
+- The pipeline now registers four roles: Extractor, Renderer, Nli,
+  Plausibility (all served by the primary model) plus Adversary
+  (served by the second model).
+- ADJ05 findings (`Adj05AdversarialFinding`) are surfaced in the
+  side-by-side report alongside ADJ04 drift findings. Each entry
+  prints the IR's rendering, the adversary's contradicting reading,
+  the adversary's explanation of how they differ, and the judge's
+  reason for ruling the alternative reading plausible.
+- ADJ05 skipped/errored telemetry (e.g., independence violation,
+  missing role) surfaced in the report instead of disappearing.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added

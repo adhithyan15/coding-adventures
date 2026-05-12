@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-adversarial"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-description = "ADJ05 — adversarial verifier. For each sampled leaf IR node: render via `render_node`, find a contradicting reading via `find_contradicting_reading`, then check whether a competent practitioner would adopt the reading via `judge_plausibility`. Plausible contradictions become AdversarialReading violations."
+description = "ADJ05 — adversarial verifier. For each sampled leaf IR node: render via `render_node`, find a contradicting reading via `find_contradicting_reading`, then check whether a competent practitioner would adopt the reading via `judge_plausibility`. Plausible contradictions become AdversarialReading violations. v0.1.1 skips synthesized Query nodes (empty source_spans) instead of crashing on LeafMissingSpans."
 
 [dependencies]
 adjudication-ir = { path = "../adjudication-ir" }

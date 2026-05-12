@@ -59,7 +59,11 @@ use adjudication_round_trip::{
     check_round_trip, CheckError as RoundTripCheckError, CheckOptions as RoundTripOptions,
     RoundTripResult, RoundTripViolation,
 };
-use llm_primitives::GatewayConfig;
+use adjudication_adversarial::{
+    check_adversarial, AdversarialResult, AdversarialViolation, CheckError as AdversarialCheckError,
+    CheckOptions as AdversarialOptions,
+};
+use llm_primitives::{GatewayConfig, Role as PrimitiveRole};
 
 // `SearchMode` and `TrailSearchMode` collapse to the same trail-side
 // enum; alias for clarity.
@@ -224,12 +228,24 @@ pub fn run_with_gateway<F: Fn() -> String>(
         .checker_results
         .push(adj04_to_checker_result(adj04_started, adj04_completed, &adj04_result));
 
-    // ---------- ADJ05 still parked — record Skipped ----------
-    let skipped_at = now();
-    trail.checker_results.push(skipped_checker_result(
-        PassName::Adj05Adversarial,
-        skipped_at,
-    ));
+    // ---------- ADJ05 adversarial (also gated on prior checks) ----------
+    // ADJ05 fires when the gateway has the `Adversary` role
+    // registered AND that role's identity differs in `(vendor,
+    // model_family)` from `Extractor` (per LM00b independence). Like
+    // ADJ04 it's advisory at v0.4 — failures record as Failed but
+    // don't block the engine.
+    let adj05_started = now();
+    let adj05_result = if prior_gating_ok {
+        run_adj05(gateway, &input.document.normalized_text, &input.ir_document)
+    } else {
+        Adj05Decision::Skipped {
+            reason: "ADJ02 or ADJ03 failed — adversarial check skipped",
+        }
+    };
+    let adj05_completed = now();
+    trail
+        .checker_results
+        .push(adj05_to_checker_result(adj05_started, adj05_completed, &adj05_result));
 
     // ---------- gate the engine on coverage + propagation ----------
     let coverage_ok = matches!(cov_result, CoverageResult::Pass);
@@ -597,15 +613,163 @@ fn round_trip_violation_to_audit(v: &RoundTripViolation) -> Violation {
     }
 }
 
-fn skipped_checker_result(pass_name: PassName, at: String) -> CheckerResult {
-    CheckerResult {
-        pass_name,
-        pass_version: "not-yet-wired".to_string(),
-        started_at: at.clone(),
-        completed_at: at,
-        outcome: PassOutcome::Skipped,
-        violations: Vec::new(),
-        telemetry: Default::default(),
+// ---------------------------------------------------------------------------
+// ADJ05 wiring
+// ---------------------------------------------------------------------------
+
+/// ADJ05 verdict shape — same structure as `Adj04Decision`.
+enum Adj05Decision {
+    /// No gateway OR Adversary role missing OR independence violated
+    /// — the pipeline did not attempt the adversarial check.
+    Skipped { reason: &'static str },
+    Ran(AdversarialResult),
+    CheckErrored(String),
+}
+
+fn run_adj05(
+    gateway: Option<&GatewayConfig>,
+    document_text: &str,
+    ir_doc: &IRDocument,
+) -> Adj05Decision {
+    let Some(g) = gateway else {
+        return Adj05Decision::Skipped {
+            reason: "no GatewayConfig supplied",
+        };
+    };
+    // ADJ05 requires Adversary registered AND
+    // (Extractor, Adversary) coming from different model families.
+    if g.client(PrimitiveRole::Adversary).is_none() {
+        return Adj05Decision::Skipped {
+            reason: "no client registered for Role::Adversary",
+        };
+    }
+    if let Err(violation) = g.check_independence() {
+        // Same model family for both roles — the adversary would
+        // just rubber-stamp the extractor. Record skipped with a
+        // diagnostic reason rather than running a misconfigured
+        // check.
+        // We can't bake the dynamic string into a `'static` reason
+        // because the diagnostic depends on the runtime identities;
+        // surface it as a CheckErrored telemetry entry instead.
+        return Adj05Decision::CheckErrored(format!(
+            "ADJ05 independence violated: {violation}"
+        ));
+    }
+    let opts = AdversarialOptions {
+        style: llm_primitives::RenderStyle::Plain,
+        domain_hint: String::new(),
+    };
+    match check_adversarial(document_text, ir_doc, g, &opts) {
+        Ok(result) => Adj05Decision::Ran(result),
+        Err(e) => Adj05Decision::CheckErrored(adversarial_err_summary(&e)),
+    }
+}
+
+fn adversarial_err_summary(e: &AdversarialCheckError) -> String {
+    format!("{e}")
+}
+
+fn adj05_to_checker_result(
+    started_at: String,
+    completed_at: String,
+    decision: &Adj05Decision,
+) -> CheckerResult {
+    match decision {
+        Adj05Decision::Skipped { reason } => {
+            let mut telemetry = std::collections::BTreeMap::new();
+            telemetry.insert(
+                "skipped_reason".to_string(),
+                serde_json::Value::String((*reason).to_string()),
+            );
+            CheckerResult {
+                pass_name: PassName::Adj05Adversarial,
+                pass_version: "not-yet-wired".to_string(),
+                started_at,
+                completed_at,
+                outcome: PassOutcome::Skipped,
+                violations: Vec::new(),
+                telemetry,
+            }
+        }
+        Adj05Decision::Ran(result) => {
+            let outcome = if result.pass() {
+                PassOutcome::Passed
+            } else {
+                PassOutcome::Failed
+            };
+            let violations: Vec<Violation> = result
+                .violations
+                .iter()
+                .map(adversarial_violation_to_audit)
+                .collect();
+            let mut telemetry = std::collections::BTreeMap::new();
+            telemetry.insert(
+                "call_count".to_string(),
+                serde_json::json!(result.call_records.len()),
+            );
+            telemetry.insert(
+                "primitive_calls".to_string(),
+                serde_json::Value::Array(
+                    result
+                        .call_records
+                        .iter()
+                        .map(|c| {
+                            serde_json::json!({
+                                "primitive": c.primitive,
+                                "role": c.role,
+                                "prompt_version": c.prompt_version,
+                                "prompt_hash": c.prompt_hash,
+                                "latency_ms": c.latency_ms,
+                                "input_tokens": c.usage.input_tokens,
+                                "output_tokens": c.usage.output_tokens,
+                            })
+                        })
+                        .collect(),
+                ),
+            );
+            CheckerResult {
+                pass_name: PassName::Adj05Adversarial,
+                pass_version: "v1.0".to_string(),
+                started_at,
+                completed_at,
+                outcome,
+                violations,
+                telemetry,
+            }
+        }
+        Adj05Decision::CheckErrored(detail) => {
+            let mut telemetry = std::collections::BTreeMap::new();
+            telemetry.insert(
+                "check_error".to_string(),
+                serde_json::Value::String(detail.clone()),
+            );
+            CheckerResult {
+                pass_name: PassName::Adj05Adversarial,
+                pass_version: "v1.0".to_string(),
+                started_at,
+                completed_at,
+                outcome: PassOutcome::Failed,
+                violations: Vec::new(),
+                telemetry,
+            }
+        }
+    }
+}
+
+fn adversarial_violation_to_audit(v: &AdversarialViolation) -> Violation {
+    Violation {
+        node_id: NodeId::new(v.node_id.0.clone()),
+        pass_name: PassName::Adj05Adversarial,
+        kind: ClarificationKind::AdversarialReading,
+        detail: serde_json::json!({
+            "kind": "AdversarialReading",
+            "ir_rendered": v.ir_rendered,
+            "adversary_reading": v.adversary_reading,
+            "adversary_explanation": v.adversary_explanation,
+            "judge_reason": v.judge_reason,
+        }),
+        triggered_dialogue_turn: None,
+        resolved: false,
     }
 }
 
@@ -1092,5 +1256,43 @@ mod tests {
         assert!(matches!(adj04.outcome, PassOutcome::Skipped));
         // And the pipeline still Blocks due to the coverage failure.
         assert!(matches!(out.verdict, Verdict::Blocked { .. }));
+    }
+
+    // ----- ADJ05 adversarial wiring tests -----
+
+    #[test]
+    fn adj05_records_skipped_when_no_gateway_provided() {
+        // Plain run() path → no gateway → ADJ05 must Skip.
+        let n = fact_node("n1", logic_core::atom("hello"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "hello".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run(input, AdjudicationId::new("adj-adv-no-gw"), make_clock());
+        let adj05 = &out.audit_trail.checker_results[3];
+        assert_eq!(adj05.pass_name, PassName::Adj05Adversarial);
+        assert!(matches!(adj05.outcome, PassOutcome::Skipped));
+    }
+
+    #[test]
+    fn adj05_records_skipped_with_reason_when_adversary_role_missing() {
+        // Gateway exists but no Adversary role registered.
+        let n = fact_node("n1", logic_core::atom("hello"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "hello".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let g = gateway_with_scripted(vec!["x"], vec![(true, 0.95, true, 0.92)]);
+        let out = run_with_gateway(input, AdjudicationId::new("adj-adv-no-role"), make_clock(), Some(&g));
+        let adj05 = &out.audit_trail.checker_results[3];
+        assert!(matches!(adj05.outcome, PassOutcome::Skipped));
+        let reason = adj05.telemetry["skipped_reason"].as_str().unwrap();
+        assert!(reason.contains("Adversary") || reason.contains("adversary"));
     }
 }

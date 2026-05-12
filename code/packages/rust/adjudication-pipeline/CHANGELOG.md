@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-12
+
+### Added
+
+ADJ05 adversarial checker wired in. The pipeline now runs
+`adjudication-adversarial::check_adversarial` when:
+
+1. A `GatewayConfig` is supplied, AND
+2. `Role::Adversary` is registered, AND
+3. The Extractor and Adversary clients come from different
+   `(vendor, model_family)` pairs (LM00b independence requirement,
+   enforced by `GatewayConfig::check_independence`).
+
+If any of these conditions fails, ADJ05 records as `Skipped` with a
+human-readable `skipped_reason` in `telemetry`. If the checker itself
+errors (gateway transport failure, primitive validation exhausted,
+…), the pipeline records `Failed` with the error string in
+`telemetry.check_error` — same pattern ADJ04 uses.
+
+- `Adj05Decision` enum with `Skipped { reason }` / `Ran(result)` /
+  `CheckErrored(detail)` variants.
+- `run_adj05` / `adj05_to_checker_result` / `adversarial_violation_to_audit`
+  helpers next to the ADJ04 equivalents.
+- ADJ05 violations carry `ClarificationKind::AdversarialReading`
+  with `ir_rendered`, `adversary_reading`, `adversary_explanation`,
+  and `judge_reason` in the detail JSON.
+- ADJ05 is **advisory** at v0.4 — drift records as Failed but the
+  engine still runs. A future ADJ06 wiring can gate on it.
+- Two new tests cover ADJ05: skip-when-no-gateway and
+  skip-with-reason-when-Adversary-role-missing. The Ran/CheckErrored
+  paths are exercised end-to-end by the demo's live integration
+  against Ollama.
+
 ## [0.3.0] - 2026-05-11
 
 ### Added

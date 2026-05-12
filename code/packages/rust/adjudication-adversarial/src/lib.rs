@@ -156,6 +156,15 @@ pub fn check_adversarial(
         if !is_attackable(node.kind) {
             continue;
         }
+        if matches!(node.kind, NodeKind::Query) && node.source_spans.is_empty() {
+            // Synthesized Query nodes (framework-added, no
+            // corresponding source span) have nothing in the source
+            // to attack. Skip them. Same special case as
+            // adjudication-round-trip; Facts with missing spans
+            // still surface as LeafMissingSpans because Facts MUST
+            // come from the source per ADJ01 v2.
+            continue;
+        }
 
         let source_excerpt = excerpt_for_node(document_text, node)?;
         let node_description = describe_node(node);
