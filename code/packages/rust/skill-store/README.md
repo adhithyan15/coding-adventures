@@ -13,6 +13,7 @@ other backends without changing the skill API.
 - `SkillAssetRecord`
 - `SkillAssetSummary`
 - `SkillCatalogSummary`
+- `SkillRequirementSummary`
 - installation of manifests plus asset bundles
 - bounded manifest listing by active status, entrypoint, required tool, and
   required capability
@@ -20,6 +21,7 @@ other backends without changing the skill API.
 - metadata-only asset summary reads for catalog and preload planning surfaces
 - compact catalog summaries for installed versions, active state, and stored
   asset material
+- compact requirement summaries for entrypoint, tool, and capability coverage
 - active-version switching and uninstall semantics
 
 ## Key layout
@@ -35,6 +37,7 @@ other backends without changing the skill API.
 - `list_skills()`
 - `list_skill_summaries()`
 - `catalog_summary()`
+- `requirement_summary()`
 - `list_asset_summaries()`
 - `list_installed_skills()`
 - `read_asset()`
@@ -60,6 +63,11 @@ without materializing asset bodies.
 `SkillCatalogSummary` gives hosts and catalog tools a compact rollup across
 filtered skill versions, active state, manifest asset references, and stored
 asset material without returning raw manifests or asset bodies.
+
+`SkillRequirementSummary` gives D18D tool catalogs and capability cages a
+compact rollup across filtered skill versions, entrypoints, required tools,
+required capabilities, and requirement gaps without returning raw manifests or
+asset bodies.
 
 ## Development
 

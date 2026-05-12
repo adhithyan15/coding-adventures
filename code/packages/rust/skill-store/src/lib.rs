@@ -136,6 +136,71 @@ impl SkillCatalogSummary {
     }
 }
 
+/// Compact requirement view for tool-catalog and capability-cage checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SkillRequirementSummary {
+    pub total_skill_versions: usize,
+    pub unique_entrypoints: usize,
+    pub unique_required_tools: usize,
+    pub unique_required_capabilities: usize,
+    pub entrypoint_refs: usize,
+    pub required_tool_refs: usize,
+    pub required_capability_refs: usize,
+    pub versions_without_required_tools: usize,
+    pub versions_without_required_capabilities: usize,
+}
+
+impl SkillRequirementSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_manifests<'a, I>(manifests: I) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillManifest>,
+    {
+        let mut summary = Self::empty();
+        let mut entrypoints = BTreeSet::new();
+        let mut required_tools = BTreeSet::new();
+        let mut required_capabilities = BTreeSet::new();
+
+        for manifest in manifests {
+            summary.total_skill_versions += 1;
+            summary.entrypoint_refs += manifest.entrypoints.len();
+            summary.required_tool_refs += manifest.required_tools.len();
+            summary.required_capability_refs += manifest.required_capabilities.len();
+
+            if manifest.required_tools.is_empty() {
+                summary.versions_without_required_tools += 1;
+            }
+            if manifest.required_capabilities.is_empty() {
+                summary.versions_without_required_capabilities += 1;
+            }
+
+            entrypoints.extend(manifest.entrypoints.iter().map(String::as_str));
+            required_tools.extend(manifest.required_tools.iter().map(String::as_str));
+            required_capabilities.extend(manifest.required_capabilities.iter().map(String::as_str));
+        }
+
+        summary.unique_entrypoints = entrypoints.len();
+        summary.unique_required_tools = required_tools.len();
+        summary.unique_required_capabilities = required_capabilities.len();
+        summary
+    }
+
+    pub fn has_tool_requirements(&self) -> bool {
+        self.required_tool_refs > 0
+    }
+
+    pub fn has_capability_requirements(&self) -> bool {
+        self.required_capability_refs > 0
+    }
+
+    pub fn has_requirement_gaps(&self) -> bool {
+        self.versions_without_required_tools > 0 || self.versions_without_required_capabilities > 0
+    }
+}
+
 /// Query options for listing installed skill manifests.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct SkillListOptions {
@@ -346,6 +411,14 @@ impl<S: StorageBackend> SkillStore<S> {
         Ok(SkillCatalogSummary::from_manifests_and_assets(
             &manifests, &assets,
         ))
+    }
+
+    pub fn requirement_summary(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<SkillRequirementSummary, StorageError> {
+        let manifests = self.list_skills(options)?;
+        Ok(SkillRequirementSummary::from_manifests(&manifests))
     }
 
     fn filtered_manifests(
@@ -1286,6 +1359,87 @@ mod tests {
         assert_eq!(active_summary.total_skill_versions, 2);
         assert_eq!(active_summary.active_skill_versions, 2);
         assert_eq!(active_summary.inactive_skill_versions, 0);
+    }
+
+    #[test]
+    fn requirement_summary_counts_entrypoint_tool_and_capability_rollups() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        for manifest in [
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v1".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string(), "review".to_string()],
+                required_tools: vec!["shell".to_string(), "artifact.read".to_string()],
+                required_capabilities: vec!["write".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v2".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: vec!["shell".to_string()],
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: false,
+            },
+            SkillManifest {
+                skill_id: "observer".to_string(),
+                version: "v1".to_string(),
+                name: "Observer".to_string(),
+                description: "Reads state".to_string(),
+                entrypoints: vec!["observe".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: vec!["artifact.read".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+        ] {
+            let _ = store.install_skill(manifest, Vec::new()).unwrap();
+        }
+
+        let summary = store.requirement_summary(SkillListOptions::new()).unwrap();
+
+        assert_eq!(
+            summary,
+            SkillRequirementSummary {
+                total_skill_versions: 3,
+                unique_entrypoints: 3,
+                unique_required_tools: 2,
+                unique_required_capabilities: 2,
+                entrypoint_refs: 4,
+                required_tool_refs: 3,
+                required_capability_refs: 2,
+                versions_without_required_tools: 1,
+                versions_without_required_capabilities: 1,
+            }
+        );
+        assert!(summary.has_tool_requirements());
+        assert!(summary.has_capability_requirements());
+        assert!(summary.has_requirement_gaps());
+
+        let active_summary = store
+            .requirement_summary(SkillListOptions::new().active_only())
+            .unwrap();
+        assert_eq!(active_summary.total_skill_versions, 2);
+        assert_eq!(active_summary.required_tool_refs, 2);
+        assert_eq!(active_summary.required_capability_refs, 2);
+        assert_eq!(active_summary.versions_without_required_tools, 1);
+        assert_eq!(active_summary.versions_without_required_capabilities, 0);
+
+        assert_eq!(
+            store
+                .requirement_summary(SkillListOptions::new().with_limit(0))
+                .unwrap(),
+            SkillRequirementSummary::empty()
+        );
     }
 
     #[test]

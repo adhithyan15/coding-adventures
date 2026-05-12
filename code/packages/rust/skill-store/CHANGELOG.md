@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `SkillCatalogSummary` plus `SkillStore::catalog_summary()` for compact
   installed-version, active-state, and asset-material rollups.
+- `SkillRequirementSummary` plus `SkillStore::requirement_summary()` for
+  compact entrypoint, tool, capability, and requirement-gap rollups.
 
 ## [0.1.0] - 2026-04-18
 
