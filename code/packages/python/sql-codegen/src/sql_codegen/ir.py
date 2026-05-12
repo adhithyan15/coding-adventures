@@ -1181,7 +1181,8 @@ class ComputeWindowFunctions:
 # --------------------------------------------------------------------------
 
 Instruction = (
-    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | LoadExcludedColumn | LoadRowId | Pop
+    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | LoadExcludedColumn
+    | LoadRowId | Pop
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
