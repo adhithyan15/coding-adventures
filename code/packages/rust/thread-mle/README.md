@@ -17,6 +17,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   connectivity, partition, and prefix data from MLE messages
 - supervisor action projections that turn diagnostic drift into stable repair
   intents for runtime supervisors
+- neighbor table summaries for cheap runtime/read-model projections of parent,
+  child, router, stale-neighbor, and parent-candidate state
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection
