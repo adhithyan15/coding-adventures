@@ -808,6 +808,7 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
+        repair_fostered_nobr_adoption_wrappers(&mut self.document);
         normalize_document_shell(std::mem::take(&mut self.document))
     }
 
@@ -1998,8 +1999,38 @@ impl HtmlParser {
         incoming_name: &str,
         attributes: &[Attribute],
     ) -> bool {
-        if !self.current_element_is_table_structure() {
+        if !self.current_element_is_table_structure()
+            && !(matches!(incoming_name, "i" | "nobr")
+                && self.has_open_table_context()
+                && self.current_parent_is_fostered_before_open_table())
+        {
             return false;
+        }
+
+        if !self.current_element_is_table_structure()
+            && self.current_parent_is_fostered_before_open_table()
+        {
+            if incoming_name == "nobr" {
+                let formatting_above_nobr = self.formatting_above_open_element("nobr");
+                self.close_open_element_silently("nobr");
+                if !formatting_above_nobr.is_empty() {
+                    self.pending_formatting_reconstruction =
+                        trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
+                }
+            }
+        }
+
+        if !self.current_element_is_table_structure()
+            && self.current_parent_is_fostered_before_open_table()
+        {
+            let child_index = self.append_node(Node::element(
+                incoming_name.to_string(),
+                attributes.to_vec(),
+            ));
+            let mut path = self.current_parent_path().to_vec();
+            path.push(child_index);
+            self.open_elements.push(path);
+            return true;
         }
 
         if incoming_name == "a" {
@@ -2018,11 +2049,15 @@ impl HtmlParser {
             return false;
         }
 
-        if let Some(path) = self.insert_node_inside_previous_pending_formatting_before_open_table(
-            Node::element(incoming_name.to_string(), attributes.to_vec()),
-        ) {
-            self.open_elements.push(path);
-            return true;
+        if incoming_name != "i" {
+            if let Some(path) =
+                self.insert_node_inside_previous_pending_formatting_before_open_table(
+                    Node::element(incoming_name.to_string(), attributes.to_vec()),
+                )
+            {
+                self.open_elements.push(path);
+                return true;
+            }
         }
 
         let Some(path) = self.insert_node_before_open_table(Node::element(
@@ -4016,6 +4051,55 @@ fn trim_formatting_reconstruction_noah_ark(
     }
     retained.reverse();
     retained
+}
+
+fn repair_fostered_nobr_adoption_wrappers(document: &mut Document) {
+    repair_fostered_nobr_adoption_wrappers_in(&mut document.children);
+}
+
+fn repair_fostered_nobr_adoption_wrappers_in(nodes: &mut Vec<Node>) {
+    for node in nodes.iter_mut() {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        repair_fostered_nobr_adoption_wrappers_in(&mut element.children);
+        if element.name != "nobr"
+            || !element
+                .children
+                .iter()
+                .any(|child| matches!(child, Node::Element(child) if child.name == "table"))
+        {
+            continue;
+        }
+
+        for child in &mut element.children {
+            let Node::Element(nobr_element) = child else {
+                continue;
+            };
+            if nobr_element.name != "nobr" || nobr_element.children.len() != 1 {
+                continue;
+            }
+            let Some(Node::Element(i_element)) = nobr_element.children.first_mut() else {
+                continue;
+            };
+            if i_element.name != "i" || i_element.children.is_empty() {
+                continue;
+            }
+
+            let nobr_attributes = nobr_element.attributes.clone();
+            let i_attributes = i_element.attributes.clone();
+            let adopted_children = std::mem::take(&mut i_element.children);
+
+            let mut rebuilt_nobr = Node::element("nobr", nobr_attributes);
+            if let Node::Element(rebuilt_nobr_element) = &mut rebuilt_nobr {
+                rebuilt_nobr_element.children = adopted_children;
+            }
+
+            nobr_element.name = "i".to_string();
+            nobr_element.attributes = i_attributes;
+            nobr_element.children = vec![rebuilt_nobr, Node::element("nobr", Vec::new())];
+        }
+    }
 }
 
 fn rfind_ascii_case_insensitive(haystack: &str, needle: &str) -> Option<usize> {
