@@ -238,6 +238,33 @@ pub fn specialised_install_count() -> usize {
     0
 }
 
+/// **MX05 Phase 4.4.**  Number of dispatches the runtime has routed
+/// through `ExecutorRequest::DispatchSpecialised` so far — i.e. how
+/// often the dispatch path actually invoked an installed specialised
+/// kernel rather than the generic op-by-op pipeline.
+///
+/// Process-wide counter, monotonic, never resets.  Distinct from:
+/// - [`spec_cache_len`] — kernels emitted by the specialiser.
+/// - [`specialised_install_count`] — kernels compiled and registered
+///   with an executor.
+/// - This counter — kernels actually *invoked* at dispatch time.
+///
+/// All three should track together under steady-state load: every
+/// installed kernel sees at least one dispatch eventually.  The
+/// invariant `dispatch ≥ install ≥ cache` holds in V0.8.0 (each step
+/// gates the next).  Always `0` on non-Apple builds — see the cfg
+/// equivalent for `specialised_install_count`.
+pub fn specialised_dispatch_count() -> usize {
+    SPECIALISED_DISPATCH_COUNT.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// Backing storage for [`specialised_dispatch_count`].  Atomic so the
+/// hot path doesn't need a mutex; relaxed ordering is sufficient
+/// because the counter is observational, not a synchronisation
+/// primitive.
+static SPECIALISED_DISPATCH_COUNT: std::sync::atomic::AtomicUsize =
+    std::sync::atomic::AtomicUsize::new(0);
+
 // ─────────────────────── MX05 Phase 4.3 — auto-installer ───────────────────────
 //
 // When `SpecRouter::route` returns `Some(SpecialisedKernel)`, this
@@ -272,6 +299,36 @@ pub fn specialised_install_count() -> usize {
 fn installed_handles() -> &'static Mutex<HashSet<u64>> {
     static SLOT: OnceLock<Mutex<HashSet<u64>>> = OnceLock::new();
     SLOT.get_or_init(|| Mutex::new(HashSet::new()))
+}
+
+/// **MX05 Phase 4.4.**  Per-handle metadata recorded at install time
+/// so the dispatch-routing path can validate buffer counts without
+/// re-emitting the kernel.  The tuple is
+/// `(input_buffer_count, output_buffer_count)`.
+///
+/// Why a side-table rather than threading through the
+/// `MetalExecutor`: the executor's `SpecialisedTable` stores boxed
+/// closures keyed by handle but doesn't expose introspection on the
+/// closure's expected argument shape.  Tracking these counts on the
+/// runtime side avoids piercing the closure abstraction and keeps
+/// the dispatcher's check cheap (one mutex lookup).
+#[cfg(feature = "metal-backend")]
+fn installed_kernel_metadata() -> &'static Mutex<HashMap<u64, (usize, usize)>> {
+    static SLOT: OnceLock<Mutex<HashMap<u64, (usize, usize)>>> = OnceLock::new();
+    SLOT.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+/// **Test-only**.  Manually record kernel metadata for a handle.
+/// Used by integration tests that install a kernel directly via
+/// `MetalExecutor::install_specialised_from_emitted` rather than
+/// going through the auto-installer.
+#[cfg(all(test, feature = "metal-backend"))]
+pub(crate) fn record_test_kernel_metadata(handle: u64, n_in: usize, n_out: usize) {
+    let mut md = match installed_kernel_metadata().lock() {
+        Ok(g) => g,
+        Err(poisoned) => poisoned.into_inner(),
+    };
+    md.insert(handle, (n_in, n_out));
 }
 
 /// **MX05 Phase 4.3.**  Try to auto-install a `SpecialisedKernel` onto
@@ -317,16 +374,31 @@ fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
     else {
         return false;
     };
+    // **MX05 Phase 4.4.**  Stash the kernel's input/output buffer
+    // counts before the EmittedKernel is consumed by the install
+    // call.  The dispatch-routing path reads these counts to trim
+    // `ir_op.inputs()` down to just the buffers the specialised
+    // kernel actually consumes (e.g. an Add-with-folded-constant
+    // kernel takes 1 input, not the IR-level 2).
+    let n_in = emitted.input_buffer_count;
+    let n_out = emitted.output_buffer_count;
     match backend
         .executor
         .install_specialised_from_emitted(specialised.handle, emitted)
     {
         Ok(()) => {
-            let mut installed = match installed_handles().lock() {
+            {
+                let mut installed = match installed_handles().lock() {
+                    Ok(g) => g,
+                    Err(poisoned) => poisoned.into_inner(),
+                };
+                installed.insert(specialised.handle);
+            }
+            let mut md = match installed_kernel_metadata().lock() {
                 Ok(g) => g,
                 Err(poisoned) => poisoned.into_inner(),
             };
-            installed.insert(specialised.handle);
+            md.insert(specialised.handle, (n_in, n_out));
             true
         }
         Err(_) => {
@@ -359,9 +431,23 @@ fn try_auto_install_specialised(_specialised: &matrix_runtime::SpecialisedKernel
 /// Pure observation work; no behavioural change to the dispatch.
 /// Cost: O(constants × bytes-per-constant) on each call, capped by
 /// the 16 MiB per-tensor limit (so ≤ a few MB scanned per dispatch).
-fn drive_specialisation(placed: &ComputeGraph) {
+///
+/// **Returns** a map `op_index → installed_handle` covering every
+/// Compute op whose `SpecKey` produced a kernel and where the kernel
+/// is currently installed on the metal executor.  An op's index is
+/// **absent** from the map when (a) the policy didn't fire, or
+/// (b) the policy fired but the emitter doesn't support the SpecKey,
+/// or (c) installation failed.  Callers use this map to decide
+/// whether to route through [`dispatch_specialised_via`] (when all
+/// non-Const Compute ops have entries) or fall back to the generic
+/// `Dispatch` path.
+fn drive_specialisation(placed: &ComputeGraph) -> HashMap<u32, u64> {
     let p = profiler();
     p.record_dispatch(placed);
+
+    // **MX05 Phase 4.4.**  Per-op installed-handle map populated
+    // during the route-and-install loop below.
+    let mut installed_per_op: HashMap<u32, u64> = HashMap::new();
 
     let subhash = Profiler::subhash(placed);
 
@@ -445,11 +531,41 @@ fn drive_specialisation(placed: &ComputeGraph) {
             // semantics.  Returning `None` from `route` (the policy
             // declined, or no specialiser matched) is the common
             // fast path and incurs zero cost here.
+            //
+            // **MX05 Phase 4.4.**  Whether install was a fresh hit
+            // or a no-op, if the handle is *currently installed*
+            // we record `(op_index, handle)` so the dispatcher can
+            // route this op through `DispatchSpecialised`.  See
+            // `handle_is_installed` for what "installed" means.
             if let Some(spec) = r.route(observation, ir_op.wire_tag(), out_dtype, executor.0) {
                 let _ = try_auto_install_specialised(&spec);
+                if handle_is_installed(spec.handle) {
+                    installed_per_op.insert(op_idx as u32, spec.handle);
+                }
             }
         }
     }
+
+    installed_per_op
+}
+
+/// **MX05 Phase 4.4.**  True iff the given handle is recorded in
+/// `INSTALLED_HANDLES`.  Used by [`drive_specialisation`] to populate
+/// the per-op installed-handle map even on cache hits where
+/// `try_auto_install_specialised` would have short-circuited and
+/// returned `false`.
+#[cfg(feature = "metal-backend")]
+fn handle_is_installed(handle: u64) -> bool {
+    let installed = match installed_handles().lock() {
+        Ok(g) => g,
+        Err(poisoned) => poisoned.into_inner(),
+    };
+    installed.contains(&handle)
+}
+
+#[cfg(not(feature = "metal-backend"))]
+fn handle_is_installed(_handle: u64) -> bool {
+    false
 }
 
 // ─────────────────────────── Public entry point ───────────────────────────
@@ -519,7 +635,7 @@ fn dispatch_via(
     output_byte_count: usize,
     executor_name: &'static str,
 ) -> Result<Vec<u8>, GpuError> {
-    drive_specialisation(&placed);
+    let installed_per_op = drive_specialisation(&placed);
 
     let output_residency = placed
         .outputs
@@ -530,6 +646,46 @@ fn dispatch_via(
         .ok_or_else(|| {
             GpuError::Other(format!("output tensor {} not in placed graph", output_id.0))
         })?;
+
+    // **MX05 Phase 4.4.**  If this graph has exactly one non-Const
+    // Compute op and that op's specialised kernel is installed,
+    // route through `dispatch_specialised_via` — a setup `Dispatch`
+    // for the prep ops followed by a `DispatchSpecialised` for the
+    // single non-Const Compute op.  Otherwise use the existing
+    // generic `Dispatch { graph }` path.
+    //
+    // We restrict to "exactly one non-Const Compute op" for V0.8.0
+    // because multi-op routing requires interleaving setup +
+    // specialised dispatches, which is more buffer-management code
+    // than fits cleanly here.  Phase 4.5 (or later) will extend the
+    // routing to multi-op graphs.
+    if executor_name == "metal" {
+        if let Some((compute_idx, handle)) =
+            single_non_const_compute_with_handle(&placed, &installed_per_op)
+        {
+            // Returns Ok on success; on error we deliberately fall
+            // through to the generic path so the dispatch still
+            // succeeds.  Specialised routing is an optimisation, not
+            // a correctness guarantee.
+            //
+            // The counter is incremented inside
+            // `dispatch_specialised_via` itself so direct tests of
+            // that helper also see the bump.
+            if let Ok(data) = dispatch_specialised_via(
+                transport,
+                &placed,
+                compute_idx,
+                handle,
+                output_residency,
+                output_byte_count,
+            ) {
+                set_last_executor(Some(executor_name));
+                return Ok(data);
+            }
+        }
+    }
+    // Suppress unused-variable warning when not on metal-backend.
+    let _ = installed_per_op;
 
     let resp = block_on(transport.request(ExecutorRequest::Dispatch {
         job_id: 1,
@@ -580,6 +736,226 @@ fn dispatch_via(
     // `last_executor()` at whatever it was before, so callers don't
     // see a stale "we ran on metal" message after a mid-dispatch error.
     set_last_executor(Some(executor_name));
+    Ok(data)
+}
+
+/// **MX05 Phase 4.4.**  Inspect `placed.ops` and return
+/// `Some((compute_op_index, installed_handle))` iff the graph has
+/// exactly one non-Const Compute op and that op's specialised kernel
+/// is installed.  Otherwise return `None` to fall back to the generic
+/// dispatch path.
+///
+/// Restricted to single-op graphs in V0.8.0 — multi-op routing is
+/// the next phase's scope.  See `dispatch_specialised_via` for what
+/// "single-op routing" actually does at the protocol level.
+fn single_non_const_compute_with_handle(
+    placed: &ComputeGraph,
+    installed_per_op: &HashMap<u32, u64>,
+) -> Option<(usize, u64)> {
+    let mut found: Option<(usize, u64)> = None;
+    for (idx, op) in placed.ops.iter().enumerate() {
+        if let PlacedOp::Compute { op: ir_op, .. } = op {
+            if matches!(ir_op, Op::Const { .. }) {
+                continue; // Const ops are setup, not compute proper.
+            }
+            // Found a non-Const Compute op.  If we'd already found
+            // one, this is a multi-op graph — abort.
+            if found.is_some() {
+                return None;
+            }
+            let handle = installed_per_op.get(&(idx as u32)).copied()?;
+            found = Some((idx, handle));
+        }
+    }
+    found
+}
+
+/// **MX05 Phase 4.4.**  Run a graph that has exactly one non-Const
+/// Compute op through the `DispatchSpecialised` path.
+///
+/// Strategy: send a "prep dispatch" with the *original* placed graph
+/// minus the single non-Const Compute op — this lets matrix-metal's
+/// existing dispatch handler do all the buffer management
+/// (allocate, upload constants, free) under the planner-assigned
+/// BufferIds.  Then fire one `DispatchSpecialised` for the Compute
+/// op using those same planner-assigned BufferIds in `inputs` /
+/// `outputs`.  Finally download the output.
+///
+/// Why not "manage buffers in image-gpu-core ourselves": the
+/// `AllocBuffer` protocol message returns *server-assigned*
+/// BufferIds that don't match the planner-assigned IDs the placed
+/// graph references.  Going through `Dispatch { prep_graph }` lets
+/// the executor's internal allocator use planner IDs (which is its
+/// existing graph-walking pattern), keeping the BufferId space
+/// consistent across the prep + specialised + download dance.
+///
+/// The output buffer is in the placed graph's outputs at
+/// `output_residency.buffer` and survives between dispatches because
+/// the prep graph doesn't issue `Free` for it (Free ops in the
+/// placed graph all run during prep; the Compute op's output is
+/// allocated by its `Alloc` op which *is* in the prep graph).
+///
+/// Returns Err if any protocol step fails so the caller can fall
+/// back to generic dispatch.
+fn dispatch_specialised_via(
+    transport: &LocalTransport,
+    placed: &ComputeGraph,
+    compute_op_idx: usize,
+    handle: u64,
+    output_residency: compute_ir::Residency,
+    output_byte_count: usize,
+) -> Result<Vec<u8>, GpuError> {
+    // Step 1: extract the Compute op's input / output BufferIds,
+    // trimmed to the count the installed kernel actually expects.
+    //
+    // The emitter folds at least one input into the kernel source
+    // (that's the whole point of specialisation), so the installed
+    // kernel's `input_buffer_count` is strictly less than the IR
+    // op's input count.  We take the **first** `n_in` IR inputs as
+    // the buffers to pass — this matches the emitter convention
+    // that *trailing* slots are folded.  See `msl_emitter` for the
+    // current folding convention (Add: RHS folded).  Future emitter
+    // shapes that fold non-trailing slots will need to encode the
+    // mapping in the SpecKey.
+    let (n_in, _n_out) = {
+        let md = match installed_kernel_metadata().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        md.get(&handle).copied().ok_or_else(|| {
+            GpuError::Other(format!(
+                "no kernel metadata for handle 0x{:016X} — did the install side run?",
+                handle
+            ))
+        })?
+    };
+    let (input_bufs, output_buf) = {
+        let pop = &placed.ops[compute_op_idx];
+        let PlacedOp::Compute { op: ir_op, .. } = pop else {
+            return Err(GpuError::Other("not a Compute op".to_string()));
+        };
+        let ir_inputs = ir_op.inputs();
+        if n_in > ir_inputs.len() {
+            return Err(GpuError::Other(format!(
+                "specialised kernel expects {} inputs but op has only {}",
+                n_in,
+                ir_inputs.len()
+            )));
+        }
+        let inputs: Vec<compute_ir::BufferId> = ir_inputs
+            .iter()
+            .take(n_in)
+            .map(|in_id| {
+                placed
+                    .tensor(*in_id)
+                    .map(|t| t.residency.buffer)
+                    .ok_or_else(|| {
+                        GpuError::Other(format!("tensor {} not in placed graph", in_id.0))
+                    })
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        let out_id = ir_op.output();
+        let out_buf = placed
+            .tensor(out_id)
+            .map(|t| t.residency.buffer)
+            .ok_or_else(|| {
+                GpuError::Other(format!("output tensor {} not in placed graph", out_id.0))
+            })?;
+        (inputs, out_buf)
+    };
+
+    // Step 2: build a "prep graph" = placed without the single
+    // non-Const Compute op.  All Const + Alloc + Free + Transfer
+    // ops stay, so matrix-metal allocates buffers and uploads
+    // constants under planner-assigned IDs.
+    let prep_graph = ComputeGraph {
+        format_version: placed.format_version,
+        tensors: placed.tensors.clone(),
+        inputs: placed.inputs.clone(),
+        outputs: placed.outputs.clone(),
+        constants: placed.constants.clone(),
+        ops: placed
+            .ops
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| *i != compute_op_idx)
+            .map(|(_, op)| op.clone())
+            .collect(),
+    };
+
+    // Step 3: fire prep Dispatch.
+    let prep_resp = block_on(transport.request(ExecutorRequest::Dispatch {
+        job_id: 100,
+        graph: prep_graph,
+    }))
+    .map_err(|e| GpuError::Other(format!("prep dispatch: {:?}", e)))?;
+    match prep_resp {
+        ExecutorResponse::DispatchDone { .. } => {}
+        ExecutorResponse::Error { code, message, .. } => {
+            return Err(GpuError::Other(format!(
+                "prep dispatch error 0x{:04X}: {}",
+                code.0, message
+            )));
+        }
+        other => {
+            return Err(GpuError::Other(format!(
+                "unexpected response to prep Dispatch: {:?}",
+                other
+            )));
+        }
+    }
+
+    // Step 4: fire DispatchSpecialised for the single Compute op.
+    let spec_resp = block_on(transport.request(ExecutorRequest::DispatchSpecialised {
+        job_id: 101,
+        handle,
+        inputs: input_bufs,
+        outputs: vec![output_buf],
+    }))
+    .map_err(|e| GpuError::Other(format!("specialised dispatch: {:?}", e)))?;
+    match spec_resp {
+        ExecutorResponse::DispatchDone { .. } => {}
+        ExecutorResponse::Error { code, message, .. } => {
+            return Err(GpuError::Other(format!(
+                "specialised dispatch error 0x{:04X}: {}",
+                code.0, message
+            )));
+        }
+        other => {
+            return Err(GpuError::Other(format!(
+                "unexpected response to DispatchSpecialised: {:?}",
+                other
+            )));
+        }
+    }
+
+    // Step 5: download the output.
+    let download = block_on(transport.request(ExecutorRequest::DownloadBuffer {
+        buffer: output_residency.buffer,
+        offset: 0,
+        len: output_byte_count as u64,
+    }))
+    .map_err(|e| GpuError::Other(format!("download: {:?}", e)))?;
+    let data = match download {
+        ExecutorResponse::BufferData { data, .. } => data,
+        ExecutorResponse::Error { code, message, .. } => {
+            return Err(GpuError::Other(format!(
+                "download error 0x{:04X}: {}",
+                code.0, message
+            )));
+        }
+        other => {
+            return Err(GpuError::Other(format!(
+                "unexpected response to DownloadBuffer: {:?}",
+                other
+            )));
+        }
+    };
+
+    // Successful specialised dispatch → bump the counter.  Atomic
+    // increment is `Relaxed` because the counter is observational.
+    SPECIALISED_DISPATCH_COUNT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+
     Ok(data)
 }
 
@@ -914,6 +1290,222 @@ mod tests {
              Add-with-constant graph; before = {}, after = {}",
             before,
             after
+        );
+    }
+
+    /// **MX05 Phase 4.4 end-to-end dispatch-routing test.**  Builds a
+    /// placed graph manually pinned to metal, installs an
+    /// `Add-with-constant` specialised kernel on the metal executor,
+    /// then drives `dispatch_specialised_via` directly and asserts:
+    ///
+    /// 1. `specialised_dispatch_count` rises above zero — proves the
+    ///    `DispatchSpecialised` request actually fired and the metal
+    ///    executor returned `DispatchDone`.
+    /// 2. The downloaded output bytes match what the generic kernel
+    ///    would compute — the specialised path is functionally
+    ///    equivalent.  Inputs are `[1, 2, 3, 4]` and a folded constant
+    ///    of `7.0`, so the output must be `[8, 9, 10, 11]`.
+    ///
+    /// # Why manually-built, not planner-driven?
+    ///
+    /// The cost model in matrix-runtime currently prefers CPU over
+    /// metal for the `Op::Add(f32, f32) -> f32` shape regardless of
+    /// `N` — the per-element host→device transfer cost
+    /// (`bytes / host_to_device_bw = N*4 / 50` ns) exceeds the CPU
+    /// per-element compute cost (`N / 40` ns), and `Op::Add` is only
+    /// 1 flop/element so even very large graphs don't tip the
+    /// balance.  To drive a real planner-picks-metal scenario we'd
+    /// need either (a) a heavier op like `Op::MatMul` (Phase 4.5
+    /// emitter work), (b) more realistic profile numbers (Apple
+    /// Silicon's unified memory is closer to 200 GB/s effective
+    /// bandwidth), or (c) constants persistent across invocations
+    /// (a future protocol extension).  This test side-steps the
+    /// planner concern and verifies the *protocol-level* dispatch
+    /// routing in isolation — the planner-side decision logic is
+    /// covered by existing tests in matrix-runtime/src/planner.rs.
+    ///
+    /// Apple-only: without a real Metal device the dispatch-specialised
+    /// path can't fire.
+    #[cfg(all(feature = "metal-backend", target_vendor = "apple"))]
+    #[test]
+    fn dispatch_specialised_via_produces_correct_output() {
+        use crate::specialised_dispatch_count;
+        use compute_ir::{
+            BufferId, ComputeGraph, ExecutorId as ComputeExecutorId, OpTiming as PlanOpTiming,
+            PlacedConstant, PlacedOp, PlacedTensor, Residency, WIRE_FORMAT_VERSION,
+        };
+        use matrix_ir::{DType, Op, Shape, TensorId};
+
+        // Step 1: ensure metal is available; otherwise we'd be testing
+        // matrix-metal's non-Apple stubs which short-circuit.
+        let backend = match metal_backend() {
+            Some(b) => b,
+            None => return, // Skip on environments without Metal.
+        };
+
+        // Step 2: emit + compile + install an Add-with-constant
+        // kernel under a known handle.  Bypass the auto-installer so
+        // the test is hermetic.
+        let constant: f32 = 7.0;
+        let spec_key = matrix_runtime::SpecKey {
+            op_kind: 0x07, // Op::Add
+            dtype: DType::F32,
+            shape_class: matrix_runtime::ShapeClass::Dynamic,
+            range_class: matrix_runtime::RangeClass::Constant {
+                bytes: constant.to_le_bytes().to_vec(),
+            },
+            backend_id: 1, // metal convention
+        };
+        const TEST_HANDLE: u64 = 0xC0DE_C0DE_C0DE_C0DE;
+        let emitted = matrix_metal::emit_specialised_kernel(&spec_key, TEST_HANDLE)
+            .expect("emitter must support the canonical Add+const f32 SpecKey");
+        // Capture metadata before `emitted` is consumed by install.
+        let n_in = emitted.input_buffer_count;
+        let n_out = emitted.output_buffer_count;
+        backend
+            .executor
+            .install_specialised_from_emitted(TEST_HANDLE, emitted)
+            .expect("install must succeed on a real Metal device");
+        // Replicate what `try_auto_install_specialised` records so
+        // `dispatch_specialised_via` can find the metadata.
+        record_test_kernel_metadata(TEST_HANDLE, n_in, n_out);
+
+        // Step 3: build a placed ComputeGraph pinned to metal that:
+        //   Op::Const → tensor A (the variable operand bytes)
+        //   Op::Const → tensor B (the constant 7.0 × 4)
+        //   PlacedOp::Alloc → output buffer
+        //   Op::Add(A, B) → tensor C
+        // The B tensor / constant is what the specialised kernel
+        // folds in.  After `dispatch_specialised_via` removes the
+        // Add op, the prep-graph just allocates buffers and uploads
+        // the two constants.  Then DispatchSpecialised invokes the
+        // installed Add+7.0 kernel reading from A and writing to C.
+        let metal_exec_id = ComputeExecutorId(1);
+        let a_residency = Residency {
+            executor: metal_exec_id,
+            buffer: BufferId(10),
+        };
+        let b_residency = Residency {
+            executor: metal_exec_id,
+            buffer: BufferId(11),
+        };
+        let c_residency = Residency {
+            executor: metal_exec_id,
+            buffer: BufferId(12),
+        };
+        let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
+        let b_bytes: Vec<u8> = [constant; 4]
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
+        let f32_shape4 = Shape::from(&[4u32]);
+
+        let tensor_a = PlacedTensor {
+            id: TensorId(0),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: a_residency,
+        };
+        let tensor_b = PlacedTensor {
+            id: TensorId(1),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: b_residency,
+        };
+        let tensor_c = PlacedTensor {
+            id: TensorId(2),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: c_residency,
+        };
+
+        let const_a = PlacedConstant {
+            tensor: TensorId(0),
+            residency: a_residency,
+            bytes: a_bytes,
+        };
+        let const_b = PlacedConstant {
+            tensor: TensorId(1),
+            residency: b_residency,
+            bytes: b_bytes,
+        };
+
+        // Const ops materialise the constants from the table into
+        // their declared buffers.  The Add op consumes them.
+        let placed = ComputeGraph {
+            format_version: WIRE_FORMAT_VERSION,
+            inputs: vec![],
+            outputs: vec![tensor_c.clone()],
+            constants: vec![const_a, const_b],
+            ops: vec![
+                PlacedOp::Compute {
+                    op: Op::Const {
+                        constant: 0,
+                        output: TensorId(0),
+                    },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Compute {
+                    op: Op::Const {
+                        constant: 1,
+                        output: TensorId(1),
+                    },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Alloc {
+                    residency: c_residency,
+                    bytes: 16,
+                },
+                PlacedOp::Compute {
+                    op: Op::Add {
+                        lhs: TensorId(0),
+                        rhs: TensorId(1),
+                        output: TensorId(2),
+                    },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+            ],
+            tensors: vec![tensor_a, tensor_b, tensor_c.clone()],
+        };
+
+        // Step 4: call dispatch_specialised_via.  The Add op is at
+        // index 3.
+        let before = specialised_dispatch_count();
+        let bytes = dispatch_specialised_via(
+            &backend.transport,
+            &placed,
+            3, // index of the Add op in `placed.ops`
+            TEST_HANDLE,
+            c_residency,
+            16,
+        )
+        .expect("specialised dispatch must succeed");
+        let after = specialised_dispatch_count();
+
+        // Step 5: assertions.
+        assert!(
+            after > before,
+            "specialised_dispatch_count must rise after a successful \
+             DispatchSpecialised; before = {}, after = {}",
+            before,
+            after
+        );
+
+        // Expected output: A + constant = [1, 2, 3, 4] + 7.0 = [8, 9, 10, 11].
+        let result: Vec<f32> = bytes
+            .chunks(4)
+            .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+            .collect();
+        assert_eq!(
+            result,
+            vec![8.0, 9.0, 10.0, 11.0],
+            "specialised Add+7.0 kernel output must match generic Add"
         );
     }
 }

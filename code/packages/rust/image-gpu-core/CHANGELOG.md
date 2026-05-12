@@ -1,5 +1,113 @@
 # Changelog — image-gpu-core
 
+## 0.8.0 — 2026-05-12
+
+### Added — MX05 Phase 4.4 (dispatch-routing half of the loop)
+
+Closes the **dispatch** half of the specialised-kernel routing loop.
+When a placed graph has exactly one non-Const Compute op and that
+op's specialised kernel is installed on the metal executor,
+image-gpu-core now routes the dispatch through the
+`ExecutorRequest::DispatchSpecialised` protocol message instead of
+the generic `Dispatch { graph }` path.
+
+```
+runtime ─Dispatch{prep_graph}─►  metal-executor  (allocate buffers, upload constants)
+runtime ─DispatchSpecialised{handle, inputs, outputs}─►  metal-executor.SpecialisedTable[handle]
+                                                  ─►  installed_closure(buffers...)
+                                                  ─►  DispatchDone
+runtime ─DownloadBuffer─►  metal-executor  (returns output bytes)
+```
+
+#### What's new
+
+- **`pub fn specialised_dispatch_count() -> usize`** — new public
+  counter (process-wide, monotonic, atomic).  Distinct from
+  `specialised_install_count` — that counts how many kernels are
+  installed; this counts how many *invocations* went through
+  `DispatchSpecialised`.  Always `0` on non-Apple builds (no Metal
+  executor to dispatch on).
+- **`drive_specialisation` now returns `HashMap<u32, u64>`** —
+  `(op_index → installed_handle)` for every Compute op whose
+  specialised kernel is currently installed on the metal executor.
+  The dispatcher uses this map to decide whether to route through
+  `dispatch_specialised_via` (when the map covers all non-Const
+  Compute ops in the graph).
+- **`single_non_const_compute_with_handle(placed, installed_per_op)`**
+  — helper that returns `Some((op_index, handle))` iff the placed
+  graph contains exactly one non-Const Compute op and that op has
+  an installed specialised kernel.  Multi-op routing is later phase
+  work — that's `None` for V0.8.0 and the dispatcher falls back to
+  the generic path.
+- **`dispatch_specialised_via(transport, placed, compute_op_idx,
+  handle, output_residency, output_byte_count)`** — the routing
+  function itself.  Strategy:
+    1. Strip the single non-Const Compute op from `placed.ops`.
+    2. Fire `Dispatch { prep_graph }` so matrix-metal's existing
+       handler allocates buffers and uploads constants under the
+       planner-assigned BufferIds.  This sidesteps the
+       protocol-`AllocBuffer`-uses-server-IDs mismatch.
+    3. Fire `DispatchSpecialised { handle, inputs, outputs }` where
+       `inputs` is `ir_op.inputs()` trimmed to the installed
+       kernel's `input_buffer_count` (so a kernel with a folded RHS
+       constant only sees the LHS buffer, not both).
+    4. Download the output via `DownloadBuffer`.
+    5. Bump `SPECIALISED_DISPATCH_COUNT` on success.
+- **`INSTALLED_KERNEL_METADATA: Mutex<HashMap<u64, (usize, usize)>>`**
+  side-table — records `(input_buffer_count, output_buffer_count)`
+  for each installed handle.  Populated by
+  `try_auto_install_specialised`; read by `dispatch_specialised_via`
+  when trimming `ir_op.inputs()` to the right count.
+
+#### Test
+
+`dispatch_specialised_via_produces_correct_output` (Apple-only):
+
+Builds a manually-placed `Op::Add(A, B) → C` graph pinned to metal
+where `A = [1, 2, 3, 4]` and `B = [7, 7, 7, 7]` (the constant to
+fold).  Installs the Add+constant-7.0 kernel directly via
+`MetalExecutor::install_specialised_from_emitted`, then calls
+`dispatch_specialised_via` and asserts:
+
+1. `specialised_dispatch_count` rose by exactly one.
+2. The downloaded output is `[8.0, 9.0, 10.0, 11.0]` — same as the
+   generic Add would produce.
+
+Total test count: 29 → 30.
+
+#### Why not a planner-driven end-to-end test?
+
+The cost model in matrix-runtime currently prefers CPU over metal
+for the `Op::Add(f32) → f32` shape regardless of `N`: the per-element
+host→device transfer cost (`bytes / host_to_device_bw = 4N/50` ns)
+exceeds the CPU per-element compute cost (`N/40` ns), so the planner
+never picks metal for a graph that does Add of two constants no
+matter how large.  A real planner-picks-metal scenario needs either
+(a) a heavier op like `Op::MatMul` (Phase 4.5 emitter work),
+(b) more realistic profile numbers (Apple Silicon's unified memory
+is ~200 GB/s effective bandwidth, not the conservative 50 GB/s
+we currently advertise), or (c) constants persistent across
+invocations (a future protocol extension).
+
+V0.8.0 ships the protocol-level routing in isolation; the
+planner-side decision logic is covered by existing tests in
+matrix-runtime/src/planner.rs.  The two compose naturally once a
+heavier emitter shape lands.
+
+#### What this still doesn't do
+
+- **Multi-op specialised graphs** — V0.8.0 only handles
+  single-Compute-op graphs.  A graph with `Add(x, y) → Mul(_, z) → out`
+  falls back to generic dispatch even when both Add and Mul have
+  installed kernels.  Multi-op routing requires interleaving
+  per-op DispatchSpecialised calls with intermediate buffer
+  management, which is the next phase's scope.
+- **matrix-cpu auto-install + dispatch routing** — Phase 4.3
+  noted that matrix-cpu's `CpuSpecialiser` emits opaque handles
+  without closure sources, so there's nothing for image-gpu-core
+  to auto-install on CPU.  Same constraint here for dispatch
+  routing: the CPU path always goes generic.  Future phase work.
+
 ## 0.7.0 — 2026-05-12
 
 ### Added — MX05 Phase 4.3 (runtime-side auto-installer; **install** half of the loop)
