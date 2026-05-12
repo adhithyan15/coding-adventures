@@ -107,6 +107,128 @@ pub enum ExecutorSupervisionAction {
     RestartWorkers,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ExecutorFleetSummary {
+    pub total_executors: usize,
+    pub worker_count: usize,
+    pub live_workers: usize,
+    pub in_flight_jobs: usize,
+    pub queued_jobs: usize,
+    pub running_jobs: usize,
+    pub remaining_queue_capacity: usize,
+    pub max_queue_depth: usize,
+    pub idle_executors: usize,
+    pub busy_executors: usize,
+    pub saturated_executors: usize,
+    pub draining_executors: usize,
+    pub offline_executors: usize,
+    pub accepting_executors: usize,
+    pub queue_full_executors: usize,
+    pub elevated_pressure_executors: usize,
+    pub saturated_pressure_executors: usize,
+    pub backpressure_recommendations: usize,
+    pub restart_recommendations: usize,
+    pub drain_observation_recommendations: usize,
+}
+
+impl ExecutorFleetSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_snapshots<'a, I>(snapshots: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ExecutorSnapshot>,
+    {
+        let mut summary = Self::empty();
+        for snapshot in snapshots {
+            summary.total_executors += 1;
+            summary.worker_count += snapshot.worker_count;
+            summary.live_workers += snapshot.live_workers;
+            summary.in_flight_jobs += snapshot.in_flight_jobs;
+            summary.queued_jobs += snapshot.queued_jobs;
+            summary.running_jobs += snapshot.running_jobs;
+            summary.remaining_queue_capacity += snapshot.remaining_queue_capacity();
+            summary.max_queue_depth += snapshot.max_queue_depth;
+
+            match snapshot.health() {
+                ExecutorHealth::Idle => summary.idle_executors += 1,
+                ExecutorHealth::Busy => summary.busy_executors += 1,
+                ExecutorHealth::Saturated => summary.saturated_executors += 1,
+                ExecutorHealth::Draining => summary.draining_executors += 1,
+                ExecutorHealth::Offline => summary.offline_executors += 1,
+            }
+
+            match snapshot.admission_status() {
+                ExecutorAdmissionStatus::Accepting => summary.accepting_executors += 1,
+                ExecutorAdmissionStatus::QueueFull => summary.queue_full_executors += 1,
+                ExecutorAdmissionStatus::Draining | ExecutorAdmissionStatus::Offline => {}
+            }
+
+            match snapshot.queue_pressure() {
+                ExecutorQueuePressure::Elevated => summary.elevated_pressure_executors += 1,
+                ExecutorQueuePressure::Saturated => summary.saturated_pressure_executors += 1,
+                ExecutorQueuePressure::Idle | ExecutorQueuePressure::Nominal => {}
+            }
+
+            match snapshot.recommended_supervision_action() {
+                ExecutorSupervisionAction::ApplyBackpressure => {
+                    summary.backpressure_recommendations += 1;
+                }
+                ExecutorSupervisionAction::RestartWorkers => {
+                    summary.restart_recommendations += 1;
+                }
+                ExecutorSupervisionAction::ObserveDraining => {
+                    summary.drain_observation_recommendations += 1;
+                }
+                ExecutorSupervisionAction::None => {}
+            }
+        }
+        summary
+    }
+
+    pub fn has_executors(&self) -> bool {
+        self.total_executors > 0
+    }
+
+    pub fn pending_jobs(&self) -> usize {
+        self.queued_jobs.saturating_add(self.running_jobs)
+    }
+
+    pub fn aggregate_queue_pressure_percent(&self) -> u8 {
+        if !self.has_executors() {
+            return 0;
+        }
+        if self.max_queue_depth == 0 {
+            return 100;
+        }
+        let percent = self.in_flight_jobs.saturating_mul(100) / self.max_queue_depth;
+        percent.min(100) as u8
+    }
+
+    pub fn has_live_capacity(&self) -> bool {
+        self.live_workers > 0 && self.remaining_queue_capacity > 0
+    }
+
+    pub fn has_backpressure(&self) -> bool {
+        self.queue_full_executors > 0 || self.backpressure_recommendations > 0
+    }
+
+    pub fn has_offline_executors(&self) -> bool {
+        self.offline_executors > 0
+    }
+
+    pub fn has_supervision_work(&self) -> bool {
+        self.backpressure_recommendations > 0
+            || self.restart_recommendations > 0
+            || self.drain_observation_recommendations > 0
+    }
+
+    pub fn is_fully_accepting(&self) -> bool {
+        self.has_executors() && self.accepting_executors == self.total_executors
+    }
+}
+
 impl ExecutorSnapshot {
     pub fn remaining_queue_capacity(&self) -> usize {
         self.max_queue_depth.saturating_sub(self.in_flight_jobs)
@@ -2099,6 +2221,118 @@ for line in sys.stdin:
         );
         assert!(!draining.has_live_capacity());
         assert!(!draining.needs_supervisor_attention());
+    }
+
+    #[test]
+    fn executor_fleet_summary_rolls_up_capacity_and_supervision_state() {
+        let idle = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let busy = ExecutorSnapshot {
+            worker_count: 3,
+            live_workers: 3,
+            in_flight_jobs: 2,
+            queued_jobs: 1,
+            running_jobs: 1,
+            shutting_down: false,
+            max_queue_depth: 8,
+            max_payload_bytes: 1024,
+        };
+        let elevated = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 3,
+            queued_jobs: 2,
+            running_jobs: 1,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let saturated = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 4,
+            queued_jobs: 3,
+            running_jobs: 1,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let offline = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 0,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let draining = ExecutorSnapshot {
+            worker_count: 1,
+            live_workers: 0,
+            in_flight_jobs: 1,
+            queued_jobs: 1,
+            running_jobs: 0,
+            shutting_down: true,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+
+        let snapshots = vec![idle, busy, elevated, saturated, offline, draining];
+        let summary = ExecutorFleetSummary::from_snapshots(&snapshots);
+
+        assert_eq!(
+            summary,
+            ExecutorFleetSummary {
+                total_executors: 6,
+                worker_count: 12,
+                live_workers: 9,
+                in_flight_jobs: 10,
+                queued_jobs: 7,
+                running_jobs: 3,
+                remaining_queue_capacity: 18,
+                max_queue_depth: 28,
+                idle_executors: 1,
+                busy_executors: 2,
+                saturated_executors: 1,
+                draining_executors: 1,
+                offline_executors: 1,
+                accepting_executors: 3,
+                queue_full_executors: 1,
+                elevated_pressure_executors: 1,
+                saturated_pressure_executors: 1,
+                backpressure_recommendations: 1,
+                restart_recommendations: 1,
+                drain_observation_recommendations: 1,
+            }
+        );
+        assert!(summary.has_executors());
+        assert_eq!(summary.pending_jobs(), 10);
+        assert_eq!(summary.aggregate_queue_pressure_percent(), 35);
+        assert!(summary.has_live_capacity());
+        assert!(summary.has_backpressure());
+        assert!(summary.has_offline_executors());
+        assert!(summary.has_supervision_work());
+        assert!(!summary.is_fully_accepting());
+
+        let accepting_only = ExecutorFleetSummary::from_snapshots(&snapshots[..3]);
+        assert!(accepting_only.is_fully_accepting());
+        assert!(!accepting_only.has_backpressure());
+        assert!(!accepting_only.has_supervision_work());
+
+        let empty = ExecutorFleetSummary::empty();
+        assert!(!empty.has_executors());
+        assert_eq!(empty.aggregate_queue_pressure_percent(), 0);
+        assert!(!empty.has_live_capacity());
+        assert!(!empty.is_fully_accepting());
     }
 
     #[test]

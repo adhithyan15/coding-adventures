@@ -20,6 +20,8 @@ All notable changes to this package will be documented in this file.
   backpressure read models.
 - Added executor admission-status helpers so D18C supervisors can explain why
   a runtime is or is not accepting jobs.
+- Added `ExecutorFleetSummary` for aggregate D18C supervisor views over
+  executor snapshots, queue pressure, admission, and recommended actions.
 
 ## [0.1.1] - 2026-04-22
 
