@@ -4,11 +4,12 @@
 // code/packages/python/cas-matrix/tests/.
 
 use cas_matrix::{
-    add_matrices, determinant, dimensions, dot, get_entry, identity_matrix, inverse, is_matrix,
-    matrix, num_cols, num_rows, rank, row_reduce, scalar_multiply, sub_matrices, trace, transpose,
-    zero_matrix, MatrixError, MATRIX,
+    add_matrices, columnspace, determinant, dimensions, dot, frobenius_norm, get_entry,
+    identity_matrix, inverse, is_matrix, lu_decompose, matrix, norm, nullspace, num_cols, num_rows,
+    rank, row_reduce, rowspace, scalar_multiply, sub_matrices, trace, transpose, zero_matrix,
+    MatrixError, MATRIX,
 };
-use symbolic_ir::{apply, int, rat, sym, ADD, LIST, SUB};
+use symbolic_ir::{apply, int, rat, sym, ADD, LIST, SQRT, SUB};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -33,6 +34,13 @@ fn matrix_entries(m: &symbolic_ir::IRNode) -> Vec<Vec<(i64, i64)>> {
                 .collect()
         })
         .collect()
+}
+
+fn list_args(list: &symbolic_ir::IRNode) -> Vec<symbolic_ir::IRNode> {
+    match list {
+        symbolic_ir::IRNode::Apply(apply) if apply.head == sym(LIST) => apply.args.clone(),
+        other => panic!("expected List(...), got {other:?}"),
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -432,4 +440,104 @@ fn row_reduce_and_rank_reject_symbolic_entries() {
     let m = matrix(vec![vec![sym("a"), int(1)], vec![int(0), int(1)]]).unwrap();
     assert!(row_reduce(&m).is_err());
     assert!(rank(&m).is_err());
+}
+
+// ---------------------------------------------------------------------------
+// Norms
+// ---------------------------------------------------------------------------
+
+#[test]
+fn norm_exact_rational_vector() {
+    let v = matrix(vec![vec![rat(3, 5)], vec![rat(4, 5)]]).unwrap();
+    assert_eq!(norm(&v).unwrap(), int(1));
+}
+
+#[test]
+fn norm_non_square_sum_returns_sqrt() {
+    let v = matrix(vec![irow(&[1]), irow(&[1])]).unwrap();
+    assert_eq!(norm(&v).unwrap(), apply(sym(SQRT), vec![int(2)]));
+}
+
+#[test]
+fn frobenius_norm_exact_matrix() {
+    let m = matrix(vec![irow(&[1, 1]), irow(&[1, 1])]).unwrap();
+    assert_eq!(frobenius_norm(&m).unwrap(), int(2));
+}
+
+#[test]
+fn norm_rejects_non_vector() {
+    let m = matrix(vec![irow(&[1, 0]), irow(&[0, 1])]).unwrap();
+    assert!(norm(&m).is_err());
+}
+
+// ---------------------------------------------------------------------------
+// LU decomposition
+// ---------------------------------------------------------------------------
+
+#[test]
+fn lu_decompose_requires_pivoting() {
+    let m = matrix(vec![irow(&[0, 1]), irow(&[1, 0])]).unwrap();
+    let parts = list_args(&lu_decompose(&m).unwrap());
+    assert_eq!(parts.len(), 3);
+
+    let l = &parts[0];
+    let u = &parts[1];
+    let p = &parts[2];
+
+    assert_eq!(
+        matrix_entries(l),
+        vec![vec![(1, 1), (0, 1)], vec![(0, 1), (1, 1)]]
+    );
+    assert_eq!(
+        matrix_entries(u),
+        vec![vec![(1, 1), (0, 1)], vec![(0, 1), (1, 1)]]
+    );
+    assert_eq!(
+        matrix_entries(p),
+        vec![vec![(0, 1), (1, 1)], vec![(1, 1), (0, 1)]]
+    );
+}
+
+#[test]
+fn lu_decompose_rejects_singular_matrix() {
+    let m = matrix(vec![irow(&[1, 2]), irow(&[2, 4])]).unwrap();
+    assert!(lu_decompose(&m).is_err());
+}
+
+// ---------------------------------------------------------------------------
+// Subspaces
+// ---------------------------------------------------------------------------
+
+#[test]
+fn nullspace_returns_column_vector_basis() {
+    let m = matrix(vec![irow(&[1, 2, 3]), irow(&[4, 5, 6])]).unwrap();
+    let basis = list_args(&nullspace(&m).unwrap());
+    assert_eq!(basis.len(), 1);
+    assert_eq!(
+        matrix_entries(&basis[0]),
+        vec![vec![(1, 1)], vec![(-2, 1)], vec![(1, 1)]]
+    );
+}
+
+#[test]
+fn columnspace_uses_original_pivot_columns() {
+    let m = matrix(vec![irow(&[1, 2]), irow(&[2, 4])]).unwrap();
+    let basis = list_args(&columnspace(&m).unwrap());
+    assert_eq!(basis.len(), 1);
+    assert_eq!(matrix_entries(&basis[0]), vec![vec![(1, 1)], vec![(2, 1)]]);
+}
+
+#[test]
+fn rowspace_uses_nonzero_rref_rows() {
+    let m = matrix(vec![irow(&[1, 2, 3]), irow(&[4, 5, 6])]).unwrap();
+    let basis = list_args(&rowspace(&m).unwrap());
+    assert_eq!(basis.len(), 2);
+    assert_eq!(
+        matrix_entries(&basis[0]),
+        vec![vec![(1, 1), (0, 1), (-1, 1)]]
+    );
+    assert_eq!(
+        matrix_entries(&basis[1]),
+        vec![vec![(0, 1), (1, 1), (2, 1)]]
+    );
 }

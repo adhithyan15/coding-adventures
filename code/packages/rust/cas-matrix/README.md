@@ -26,6 +26,12 @@ All arithmetic produces unevaluated IR; pass through `cas_simplify::simplify` to
 | `inverse(m)` | Adjugate/determinant (symbolic) |
 | `row_reduce(m)` | Exact rational Gauss-Jordan RREF for integer/rational entries |
 | `rank(m)` | Exact rational row rank for integer/rational entries |
+| `norm(m)` | Exact Euclidean norm for row/column vectors |
+| `frobenius_norm(m)` | Exact Frobenius norm for numeric matrices |
+| `lu_decompose(m)` | Exact LU decomposition with partial pivoting; returns `List(L, U, P)` |
+| `nullspace(m)` | Exact null-space basis as `List(...)` of column-vector matrices |
+| `columnspace(m)` | Exact column-space basis from original pivot columns |
+| `rowspace(m)` | Exact row-space basis from non-zero RREF rows |
 
 ## Usage
 
@@ -49,8 +55,9 @@ let d = determinant(&m).unwrap();
 
 All fallible operations return `MatrixResult<IRNode>` (= `Result<IRNode, MatrixError>`).
 
-`row_reduce` and `rank` are numeric-only: integer and rational entries are
-accepted, while symbolic entries return `MatrixError`.
+`row_reduce`, `rank`, norms, LU decomposition, and subspace operations are
+numeric-only: integer and rational entries are accepted, while symbolic entries
+return `MatrixError`.
 
 ## Stack position
 
