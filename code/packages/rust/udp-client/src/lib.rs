@@ -15,6 +15,8 @@ use std::time::Duration;
 
 pub const VERSION: &str = "0.1.0";
 pub const DEFAULT_MAX_DATAGRAM_SIZE: usize = 65_535;
+pub const MDNS_PORT: u16 = 5353;
+pub const SSDP_PORT: u16 = 1900;
 
 /// Configuration for a UDP socket.
 ///
@@ -52,6 +54,89 @@ pub struct UdpDatagram {
     pub source: SocketAddr,
     pub destination: SocketAddr,
     pub payload: Vec<u8>,
+}
+
+/// UDP multicast protocols commonly used for local device discovery.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UdpDiscoveryProtocol {
+    /// Multicast DNS / DNS-SD (`224.0.0.251:5353`, `[ff02::fb]:5353`).
+    Mdns,
+    /// Simple Service Discovery Protocol (`239.255.255.250:1900`).
+    Ssdp,
+}
+
+/// Address family for a UDP discovery endpoint.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UdpAddressFamily {
+    /// IPv4 multicast.
+    Ipv4,
+    /// IPv6 multicast.
+    Ipv6,
+}
+
+/// A well-known UDP multicast endpoint for local discovery flows.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UdpDiscoveryEndpoint {
+    pub protocol: UdpDiscoveryProtocol,
+    pub family: UdpAddressFamily,
+    pub destination: SocketAddr,
+}
+
+impl UdpDiscoveryEndpoint {
+    /// mDNS/DNS-SD over IPv4 (`224.0.0.251:5353`).
+    pub fn mdns_ipv4() -> Self {
+        Self {
+            protocol: UdpDiscoveryProtocol::Mdns,
+            family: UdpAddressFamily::Ipv4,
+            destination: SocketAddr::new(IpAddr::V4(Ipv4Addr::new(224, 0, 0, 251)), MDNS_PORT),
+        }
+    }
+
+    /// mDNS/DNS-SD over IPv6 (`[ff02::fb]:5353`).
+    pub fn mdns_ipv6() -> Self {
+        Self {
+            protocol: UdpDiscoveryProtocol::Mdns,
+            family: UdpAddressFamily::Ipv6,
+            destination: SocketAddr::new(
+                IpAddr::V6(Ipv6Addr::new(0xff02, 0, 0, 0, 0, 0, 0, 0x00fb)),
+                MDNS_PORT,
+            ),
+        }
+    }
+
+    /// SSDP over IPv4 (`239.255.255.250:1900`).
+    pub fn ssdp_ipv4() -> Self {
+        Self {
+            protocol: UdpDiscoveryProtocol::Ssdp,
+            family: UdpAddressFamily::Ipv4,
+            destination: SocketAddr::new(IpAddr::V4(Ipv4Addr::new(239, 255, 255, 250)), SSDP_PORT),
+        }
+    }
+
+    /// Return the unspecified local bind address that matches this endpoint.
+    pub fn bind_addr(self) -> SocketAddr {
+        unspecified_addr_for(self.destination)
+    }
+
+    /// Build [`UdpOptions`] suitable for sending discovery probes.
+    pub fn options(
+        self,
+        max_datagram_size: usize,
+        read_timeout: Option<Duration>,
+        write_timeout: Option<Duration>,
+    ) -> UdpOptions {
+        UdpOptions {
+            bind_addr: Some(self.bind_addr()),
+            max_datagram_size,
+            read_timeout,
+            write_timeout,
+        }
+    }
+
+    /// True when the destination address is multicast.
+    pub fn is_multicast(self) -> bool {
+        self.destination.ip().is_multicast()
+    }
 }
 
 /// Errors from binding, sending, and receiving UDP datagrams.
@@ -270,6 +355,50 @@ mod tests {
         assert_eq!(options.max_datagram_size, DEFAULT_MAX_DATAGRAM_SIZE);
         assert_eq!(options.read_timeout, None);
         assert_eq!(options.write_timeout, None);
+    }
+
+    #[test]
+    fn discovery_endpoints_capture_common_multicast_targets() {
+        let mdns_v4 = UdpDiscoveryEndpoint::mdns_ipv4();
+        let mdns_v6 = UdpDiscoveryEndpoint::mdns_ipv6();
+        let ssdp_v4 = UdpDiscoveryEndpoint::ssdp_ipv4();
+
+        assert_eq!(mdns_v4.protocol, UdpDiscoveryProtocol::Mdns);
+        assert_eq!(mdns_v4.family, UdpAddressFamily::Ipv4);
+        assert_eq!(mdns_v4.destination, "224.0.0.251:5353".parse().unwrap());
+        assert!(mdns_v4.is_multicast());
+
+        assert_eq!(mdns_v6.protocol, UdpDiscoveryProtocol::Mdns);
+        assert_eq!(mdns_v6.family, UdpAddressFamily::Ipv6);
+        assert_eq!(mdns_v6.destination, "[ff02::fb]:5353".parse().unwrap());
+        assert!(mdns_v6.is_multicast());
+
+        assert_eq!(ssdp_v4.protocol, UdpDiscoveryProtocol::Ssdp);
+        assert_eq!(ssdp_v4.family, UdpAddressFamily::Ipv4);
+        assert_eq!(ssdp_v4.destination, "239.255.255.250:1900".parse().unwrap());
+        assert!(ssdp_v4.is_multicast());
+    }
+
+    #[test]
+    fn discovery_endpoint_options_bind_to_matching_unspecified_address() {
+        let timeout = Some(Duration::from_millis(250));
+
+        let mdns_options = UdpDiscoveryEndpoint::mdns_ipv4().options(1500, timeout, timeout);
+        assert_eq!(
+            mdns_options.bind_addr,
+            Some(SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 0))
+        );
+        assert_eq!(mdns_options.max_datagram_size, 1500);
+        assert_eq!(mdns_options.read_timeout, timeout);
+        assert_eq!(mdns_options.write_timeout, timeout);
+
+        let mdns_v6_options = UdpDiscoveryEndpoint::mdns_ipv6().options(1500, None, timeout);
+        assert_eq!(
+            mdns_v6_options.bind_addr,
+            Some(SocketAddr::new(IpAddr::V6(Ipv6Addr::UNSPECIFIED), 0))
+        );
+        assert_eq!(mdns_v6_options.read_timeout, None);
+        assert_eq!(mdns_v6_options.write_timeout, timeout);
     }
 
     #[test]
