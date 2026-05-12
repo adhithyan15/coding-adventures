@@ -21,3 +21,6 @@ path = "src/lib.rs"
 [[bin]]
 name = "board-vm"
 path = "src/main.rs"
+
+[dev-dependencies]
+board-vm-loopback = { path = "../board-vm-loopback" }
