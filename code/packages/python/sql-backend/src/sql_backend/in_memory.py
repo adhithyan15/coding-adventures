@@ -119,12 +119,29 @@ def _sql_sort_key(v: SqlValue) -> tuple[int, object]:
     )
 
 
+# Hidden row-identity key stored inside every Row dict.  The null-byte
+# prefix guarantees that no SQL identifier (which must be printable UTF-8)
+# can collide with this name, so user columns named "rowid" are stored
+# separately under their real name and take precedence in column resolution.
+#
+# The rowid convention follows real SQLite:
+# - Assigned starting at 1 and strictly monotonically increasing.
+# - Never reused within a table's lifetime (even after DELETE).
+# - Stable: deleting other rows does not change a surviving row's rowid.
+#
+# ``ScanAllColumns`` in the VM skips this key when expanding SELECT *.
+_ROWID_KEY: Final[str] = "\x00rowid"
+
+
 class _Table:
     """Storage for one table — schema plus rows, in insertion order."""
 
     def __init__(self, columns: list[ColumnDef]) -> None:
         self.columns: list[ColumnDef] = list(columns)
         self.rows: list[Row] = []
+        # Monotonically increasing rowid counter.  Starts at 1 to match
+        # real SQLite; never decremented even after DELETE.
+        self._next_rowid: int = 1
 
     def column_def(self, name: str) -> ColumnDef | None:
         """Return the ColumnDef for ``name``, or None if no such column."""
@@ -192,7 +209,15 @@ class InMemoryBackend(Backend):
         backend = cls()
         for name, (cols, rows) in tables.items():
             t = _Table(cols)
-            t.rows = [dict(r) for r in rows]
+            # Assign stable rowids to pre-loaded rows — same 1-based
+            # convention as live inserts.  from_tables is a fixture helper
+            # used in tests; assigning rowids here ensures SELECT rowid
+            # works correctly on pre-loaded data.
+            for row in rows:
+                stamped = dict(row)
+                stamped[_ROWID_KEY] = t._next_rowid
+                t._next_rowid += 1
+                t.rows.append(stamped)
             backend._tables[name] = t
         return backend
 
@@ -256,6 +281,13 @@ class InMemoryBackend(Backend):
         self._check_unknown_columns(table, t, full_row)
         self._check_not_null(table, t, full_row)
         self._check_unique(table, t, full_row, ignore_index=None)
+        # Stamp the row with its stable integer rowid AFTER constraint
+        # checks pass.  The key ``_ROWID_KEY`` (null-prefixed, not a valid
+        # SQL identifier) is invisible to normal column resolution and is
+        # skipped by ScanAllColumns.  The counter starts at 1 and is never
+        # reused, matching real-SQLite behaviour.
+        full_row[_ROWID_KEY] = t._next_rowid
+        t._next_rowid += 1
         t.rows.append(full_row)
 
     def update(
@@ -647,6 +679,12 @@ class InMemoryBackend(Backend):
         """Reject inserts that mention columns not in the schema."""
         known = {col.name for col in t.columns}
         for key in row:
+            if key == _ROWID_KEY:
+                # The hidden rowid key is stamped by insert() after this
+                # check runs — but _apply_defaults may return a dict that
+                # already carries _ROWID_KEY if the caller pre-stamped it.
+                # Either way, it is always valid to ignore it here.
+                continue
             if key not in known:
                 raise ColumnNotFound(table=table, column=key)
 

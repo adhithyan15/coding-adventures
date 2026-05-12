@@ -82,7 +82,37 @@ class ListRowIterator:
             return None
         row = self._rows[self._idx]
         self._idx += 1
-        return dict(row)  # Shallow copy — protects backend state from caller mutation.
+        # Shallow copy — protects backend state from caller mutation.
+        # Filter out internal implementation keys (those starting with ``\x00``,
+        # e.g. the ``"\x00rowid"`` stamp) so that hidden metadata never leaks
+        # into query results.  Callers that need rowid access should use the
+        # ``rowid()`` method instead of reading the row dict directly.
+        return {k: v for k, v in row.items() if not k.startswith("\x00")}
+
+    def rowid(self) -> int | None:
+        """Return the stable integer rowid of the last row yielded by :meth:`next`.
+
+        Each row in the backing list carries a hidden ``"\\x00rowid"`` field
+        stamped at insert time — a monotonically increasing integer starting
+        at 1 (matching real-SQLite convention).  Stable rowids do not change
+        when other rows are deleted.
+
+        Returns ``None`` before the first :meth:`next` call (no row has been
+        yielded yet), after the iterator is exhausted, or if the backing rows
+        were created without rowid stamps (e.g. raw test fixtures).
+
+        Calling convention::
+
+            it = ListRowIterator(rows)   # rows stamped with _ROWID_KEY
+            row = it.next()    # yields rows[0] whose rowid stamp is 1
+            it.rowid()         # → 1
+            row = it.next()    # yields rows[1] whose rowid stamp is 2
+            it.rowid()         # → 2
+        """
+        if self._closed or self._idx == 0:
+            return None
+        # _idx was already incremented — the last yielded row is at _idx-1.
+        return self._rows[self._idx - 1].get("\x00rowid")
 
     def close(self) -> None:
         self._closed = True
@@ -110,12 +140,34 @@ class ListCursor:
             self._current = None
             return None
         self._current = self._rows[self._idx]
-        return dict(self._current)  # Shallow copy.
+        # Shallow copy with hidden keys filtered out — mirrors ListRowIterator.next().
+        return {k: v for k, v in self._current.items() if not k.startswith("\x00")}
 
     def current_row(self) -> Row | None:
         if self._current is None:
             return None
-        return dict(self._current)  # Shallow copy.
+        # Filter hidden keys so positioned DML handlers receive clean rows.
+        return {k: v for k, v in self._current.items() if not k.startswith("\x00")}
+
+    def rowid(self) -> int | None:
+        """Return the stable integer rowid of the current row.
+
+        Reads the hidden ``"\\x00rowid"`` field stamped at insert time —
+        matches the convention of :meth:`ListRowIterator.rowid`.  Stable
+        rowids do not change when other rows are deleted.
+
+        Returns ``None`` before the first :meth:`next` call, after the cursor
+        is exhausted, or if the backing row has no rowid stamp::
+
+            cur = ListCursor(rows)   # rows stamped with _ROWID_KEY
+            cur.next()       # advances to rows[0] with stamp 1
+            cur.rowid()      # → 1
+            cur.next()       # advances to rows[1] with stamp 2
+            cur.rowid()      # → 2
+        """
+        if self._current is None:
+            return None
+        return self._current.get("\x00rowid")
 
     def current_index(self) -> int:
         """Index of the current row in the backing list.

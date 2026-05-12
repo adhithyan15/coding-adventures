@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.17.0 — 2026-05-12
+
+### Added
+
+- **`LoadRowId` instruction dispatch** (`vm.py`) — the VM now handles
+  `LoadRowId(cursor_id)` by looking up the cursor in `st.cursors`, calling
+  `cursor.rowid()` via duck-typing (`getattr(cursor, "rowid", None)`), and
+  pushing the result onto the operand stack.  Cursors that don't implement
+  `rowid()` (subquery iterators, file-backed backends) push `None` without
+  raising an exception.
+
+- **Hidden-key filtering in `_do_scan_all_columns`** (`vm.py`) — when `SELECT *`
+  scans all columns from a row dict, keys starting with `"\x00"` are excluded
+  from both the value buffer and the result-column schema.  This ensures that
+  the hidden `"\x00rowid"` stamp stamped by `InMemoryBackend` never appears in
+  `SELECT *` output.
+
 ## 1.16.0 — 2026-05-05
 
 ### Added

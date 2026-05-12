@@ -5,6 +5,45 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-05-12
+
+### Added
+
+- **Stable rowid support in `InMemoryBackend`** — every inserted row is now
+  stamped with a monotonically-increasing, 1-based integer rowid stored under
+  the hidden `"\x00rowid"` key inside the row dict.  The counter (`_next_rowid`
+  on `_Table`) is never decremented on DELETE, matching SQLite's stability
+  guarantee: surviving rows always keep their original rowid.
+
+- **`_ROWID_KEY` constant** (`in_memory.py`) — `"\x00rowid"` exported as a
+  module-level constant so that other layers can reference the hidden-key
+  convention without hard-coding strings.
+
+- **`ListRowIterator.rowid()` method** (`row.py`) — returns the stable integer
+  rowid of the last row yielded by `next()`.  Reads the hidden `"\x00rowid"`
+  field from the backing list entry at `_idx - 1`.  Returns `None` before the
+  first `next()` call or after the iterator is exhausted.
+
+- **`ListCursor.rowid()` method** (`row.py`) — same semantics as
+  `ListRowIterator.rowid()`, but reads from `_current` (the most recent row
+  advanced to by `next()`) so that positioned DML can query row identity.
+
+### Changed
+
+- **Hidden-key filtering in `ListRowIterator.next()` and `ListCursor.next()` /
+  `current_row()`** — returned row dicts now exclude every key whose name starts
+  with `"\x00"`.  This ensures internal metadata (the `"\x00rowid"` stamp and
+  any future hidden fields) never leaks into user-visible query results.
+
+- **`InMemoryBackend.insert()` stamps the rowid** immediately after constraint
+  checks pass and before appending the row to `_Table.rows`.
+
+- **`InMemoryBackend.from_tables()` assigns rowids** to rows provided in the
+  constructor, assigning rowid 1, 2, 3 … in order.
+
+- **`_check_unknown_columns` skips `_ROWID_KEY`** so the hidden stamp field is
+  never mistaken for a user-declared column.
+
 ## [0.11.0] - 2026-04-28
 
 ### Added

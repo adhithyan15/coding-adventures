@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.23.0] - 2026-05-12
+
+### Added
+
+- **`RowIdRef` expression node** (`expr.py`) — a new `Expr` variant that
+  represents a reference to the implicit rowid pseudo-column.  `RowIdRef(table=t)`
+  is resolved at planning time and carries the resolved table alias so that the
+  codegen layer knows which cursor to call `.rowid()` on.  Like `ExcludedColumn`,
+  it is intentionally distinct from `Column` so the type system ensures rowid refs
+  never appear where only real schema columns are valid.
+
+- **Rowid alias resolution in `_resolve_column`** (`planner.py`) — when the
+  column name (after case folding) is `"rowid"`, `"_rowid_"`, or `"oid"` and
+  no real schema column of that name exists in the current scope, the planner
+  emits a `RowIdRef` pointing at the unambiguous (or explicitly qualified) table
+  alias.  Ambiguous bare refs across multiple tables raise `AmbiguousColumn`,
+  matching SQLite's error for truly ambiguous identifiers.
+
+- **`_ROWID_ALIASES` frozenset constant** (`planner.py`) — `{"rowid", "_rowid_",
+  "oid"}` centralises the set of recognised rowid pseudo-column names.
+
+- **`RowIdRef` exported from `sql_planner.__init__`** — importable directly as
+  `from sql_planner import RowIdRef`.
+
 ## [0.22.0] - 2026-05-05
 
 ### Added

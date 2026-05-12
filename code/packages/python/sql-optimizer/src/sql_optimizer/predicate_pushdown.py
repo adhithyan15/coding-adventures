@@ -84,6 +84,7 @@ from sql_planner import (
     NotLike,
     Project,
     Rollback,
+    RowIdRef,
     Scan,
     Sort,
     UnaryExpr,
@@ -320,6 +321,10 @@ def _walk_column_aliases(expr: Expr, out: set[str], unknown: list[bool]) -> None
                 unknown[0] = True
             else:
                 out.add(t)
+        case RowIdRef(table=t):
+            # Rowid pseudo-column: treat it like a Column belonging to its table.
+            # This allows ``WHERE rowid = 5`` to be pushed to the correct scan.
+            out.add(t)
         case BinaryExpr(_, left, right):
             _walk_column_aliases(left, out, unknown)
             _walk_column_aliases(right, out, unknown)

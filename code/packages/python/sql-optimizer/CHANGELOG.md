@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.0] - 2026-05-12
+
+### Added
+
+- **`RowIdRef` support in predicate pushdown** (`predicate_pushdown.py`) — the
+  `_walk_column_aliases` helper now handles `RowIdRef(table=t)` nodes by adding
+  `t` to the set of referenced table aliases.  Without this, `WHERE rowid = N`
+  predicates on a single-table scan would not be pushed through the filter,
+  causing full table scans where a rowid seek could suffice.
+
 ## [0.8.0] - 2026-05-05
 
 ### Fixed

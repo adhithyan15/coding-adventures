@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.18.0] - 2026-05-12
+
+### Added
+
+- **`LoadRowId` IR instruction** (`ir.py`) — a new frozen dataclass
+  `LoadRowId(cursor_id: int)` that pushes the stable integer rowid of the
+  currently-positioned cursor onto the operand stack.  The VM resolves it via
+  duck-typed `getattr(cursor, "rowid", None)()` so that non-supporting cursors
+  (subquery cursors, file-backed backends) silently push `None` without crashing.
+
+- **`RowIdRef` → `LoadRowId` compilation** (`compiler.py`) — `_compile_expr` now
+  handles `RowIdRef(table=tbl)` by looking up the cursor ID for `tbl` in
+  `ctx.alias_to_cursor` and emitting `[LoadRowId(cursor_id=cid)]`.
+
+- **`RowIdRef` in `_column_display_name`** (`compiler.py`) — the helper that maps
+  expressions to their ORDER BY sort-key names now returns `"rowid"` for
+  `RowIdRef`, so that `ORDER BY rowid` and `SELECT rowid … ORDER BY rowid`
+  correctly resolves the sort column from the result schema.
+
+- **`LoadRowId` exported from `sql_codegen.__init__`** — importable directly as
+  `from sql_codegen import LoadRowId`.
+
 ## [1.17.0] - 2026-05-05
 
 ### Added

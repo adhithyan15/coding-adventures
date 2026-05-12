@@ -499,6 +499,50 @@ class ExcludedColumn:
     col: str  # column name in the EXCLUDED pseudo-table
 
 
+@dataclass(frozen=True, slots=True)
+class RowIdRef:
+    """Reference to the implicit integer rowid of a table row.
+
+    SQLite assigns every table row an implicit integer row identifier
+    accessible via three pseudo-column aliases: ``rowid``, ``_rowid_``, and
+    ``oid``.  This node is produced by the planner's column-resolution pass
+    when it encounters one of those names and the table has no real column
+    with that spelling.
+
+    Semantics
+    ---------
+    The rowid is a monotonically assigned integer that is unique within a
+    table.  For the in-memory backend it corresponds to the 0-based position
+    of the row in the table's backing list.  For file-backed backends that
+    wrap real SQLite it is the real SQLite rowid.
+
+    Usage examples::
+
+        SELECT rowid, name FROM users
+        DELETE FROM t WHERE rowid = 5
+        SELECT * FROM log WHERE rowid > 100 LIMIT 20   -- efficient pagination
+        SELECT rowid, * FROM t WHERE oid BETWEEN 10 AND 20
+
+    ``table`` holds the resolved alias (or table name as a fallback) of the
+    scan that owns this rowid reference — the same string used for
+    ``Column.table``.  It is always set after planning; bare ``rowid``
+    references in a single-table query are qualified to that table's alias
+    by the planner.
+
+    Limitations
+    -----------
+    - ``RowIdRef`` is read-only: it cannot appear on the left-hand side of
+      an assignment.  ``UPDATE t SET rowid = 99`` is not supported.
+    - ``SELECT *`` does **not** include the rowid; the implicit column is
+      only visible when explicitly named, matching real-SQLite behaviour.
+    - Tables declared ``WITHOUT ROWID`` do not have this pseudo-column; the
+      current backend does not support ``WITHOUT ROWID``, so every table has
+      a valid rowid.
+    """
+
+    table: str  # resolved alias / table name — set by the planner, never None
+
+
 # The type union every non-specialized consumer should match on. Order
 # doesn't matter for correctness, but we keep the union sorted to help
 # anyone eyeballing pattern matches.
@@ -507,6 +551,7 @@ Expr = (
     | Column
     | CorrelatedRef
     | ExcludedColumn
+    | RowIdRef
     | BinaryExpr
     | UnaryExpr
     | FunctionCall
