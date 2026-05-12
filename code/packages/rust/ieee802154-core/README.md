@@ -13,6 +13,7 @@ Current scope:
 - frame control field parsing
 - frame type decoding
 - address mode decoding
+- body-free MAC frame summaries for radio diagnostics
 - optional sequence-number suppression
 - PAN id compression for common intra-PAN frames
 - short and extended address parsing
