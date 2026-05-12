@@ -56,6 +56,100 @@ export class Bindings {
   }
 }
 
+const PREDICATE_TO_BLANK_HEAD = new Map<string, string | null>([
+  ["true", null],
+  ["all", null],
+  ["any", null],
+  ["integerp", "Integer"],
+  ["symbolp", "Symbol"],
+  ["floatp", "Float"],
+  ["rationalp", "Rational"],
+  ["numberp", null],
+  ["listp", "List"],
+  ["stringp", "String"],
+]);
+
+export class MatchDeclareContext {
+  private readonly declarations = new Map<string, string>();
+
+  declare(symbolName: string, predicateTag: string): void {
+    this.declarations.set(symbolName, predicateTag.toLowerCase());
+  }
+
+  forget(symbolName: string): void {
+    this.declarations.delete(symbolName);
+  }
+
+  forgetAll(): void {
+    this.declarations.clear();
+  }
+
+  isDeclared(symbolName: string): boolean {
+    return this.declarations.has(symbolName);
+  }
+
+  getPredicate(symbolName: string): string | undefined {
+    return this.declarations.get(symbolName);
+  }
+
+  compilePattern(pattern: IRNode): IRNode {
+    return this.walk(pattern);
+  }
+
+  private walk(node: IRNode): IRNode {
+    if (node.kind === "symbol") {
+      const predicate = this.declarations.get(node.name);
+      if (predicate === undefined) return node;
+
+      const blankHead = PREDICATE_TO_BLANK_HEAD.get(predicate);
+      return named(node.name, blankHead === undefined || blankHead === null ? blank() : blankTyped(blankHead));
+    }
+
+    if (node.kind === "apply") {
+      const nextHead = this.walk(node.head);
+      const nextArgs = node.args.map((arg) => this.walk(arg));
+      if (nextHead === node.head && nextArgs.every((arg, index) => arg === node.args[index])) {
+        return node;
+      }
+      return app(nextHead, nextArgs);
+    }
+
+    return node;
+  }
+}
+
+export class RuleStore {
+  private readonly rules = new Map<string, IRNode>();
+
+  store(name: string, rewriteRule: IRNode): void {
+    this.rules.set(name, rewriteRule);
+  }
+
+  get(name: string): IRNode | undefined {
+    return this.rules.get(name);
+  }
+
+  remove(name: string): void {
+    this.rules.delete(name);
+  }
+
+  clear(): void {
+    this.rules.clear();
+  }
+
+  names(): string[] {
+    return [...this.rules.keys()].sort();
+  }
+
+  contains(name: string): boolean {
+    return this.rules.has(name);
+  }
+
+  get size(): number {
+    return this.rules.size;
+  }
+}
+
 export interface RewriteCycleError {
   readonly kind: "rewrite-cycle";
   readonly maxIterations: number;

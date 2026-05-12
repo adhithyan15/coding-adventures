@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { ADD, MUL, POW, app, int, numberNode, rational, sym } from "@coding-adventures/symbolic-ir";
+import { ADD, COS, LIST, MUL, POW, SIN, app, int, numberNode, rational, stringNode, sym } from "@coding-adventures/symbolic-ir";
 import {
   Bindings,
+  MatchDeclareContext,
+  RuleStore,
   applyRule,
   blank,
   blankTyped,
+  isPattern,
   isRewriteCycleError,
   matchPattern,
   named,
@@ -110,6 +113,148 @@ describe("rewrite", () => {
     if (isRewriteCycleError(result)) {
       expect(result.maxIterations).toBe(10);
     }
+  });
+});
+
+describe("matchdeclare context", () => {
+  it("mutates and queries declarations", () => {
+    const ctx = new MatchDeclareContext();
+    expect(ctx.isDeclared("x")).toBe(false);
+    expect(ctx.getPredicate("x")).toBeUndefined();
+
+    ctx.declare("x", "IntegerP");
+    expect(ctx.isDeclared("x")).toBe(true);
+    expect(ctx.getPredicate("x")).toBe("integerp");
+
+    ctx.declare("x", "floatp");
+    expect(ctx.getPredicate("x")).toBe("floatp");
+
+    ctx.forget("x");
+    expect(ctx.isDeclared("x")).toBe(false);
+
+    ctx.declare("a", "any");
+    ctx.declare("b", "symbolp");
+    ctx.forgetAll();
+    expect(ctx.isDeclared("a")).toBe(false);
+    expect(ctx.isDeclared("b")).toBe(false);
+  });
+
+  it("maps predicates to matcher blank constraints", () => {
+    const integerCtx = new MatchDeclareContext();
+    integerCtx.declare("n", "integerp");
+    const integerPattern = integerCtx.compilePattern(sym("n"));
+    expect(isPattern(integerPattern)).toBe(true);
+    expect(matchPattern(integerPattern, int(3))).not.toBeNull();
+    expect(matchPattern(integerPattern, sym("x"))).toBeNull();
+
+    const symbolCtx = new MatchDeclareContext();
+    symbolCtx.declare("s", "symbolp");
+    expect(matchPattern(symbolCtx.compilePattern(sym("s")), sym("x"))).not.toBeNull();
+    expect(matchPattern(symbolCtx.compilePattern(sym("s")), int(1))).toBeNull();
+
+    const floatCtx = new MatchDeclareContext();
+    floatCtx.declare("f", "floatp");
+    expect(matchPattern(floatCtx.compilePattern(sym("f")), numberNode(1.5))).not.toBeNull();
+    expect(matchPattern(floatCtx.compilePattern(sym("f")), rational(3, 2))).toBeNull();
+
+    const rationalCtx = new MatchDeclareContext();
+    rationalCtx.declare("r", "rationalp");
+    expect(matchPattern(rationalCtx.compilePattern(sym("r")), rational(1, 4))).not.toBeNull();
+    expect(matchPattern(rationalCtx.compilePattern(sym("r")), numberNode(0.25))).toBeNull();
+
+    const listCtx = new MatchDeclareContext();
+    listCtx.declare("xs", "listp");
+    expect(matchPattern(listCtx.compilePattern(sym("xs")), app(LIST, [int(1), int(2)]))).not.toBeNull();
+    expect(matchPattern(listCtx.compilePattern(sym("xs")), sym("xs"))).toBeNull();
+
+    const stringCtx = new MatchDeclareContext();
+    stringCtx.declare("text", "stringp");
+    expect(matchPattern(stringCtx.compilePattern(sym("text")), stringNode("hello"))).not.toBeNull();
+    expect(matchPattern(stringCtx.compilePattern(sym("text")), sym("hello"))).toBeNull();
+  });
+
+  it("keeps unconstrained and unknown predicates safe", () => {
+    for (const tag of ["true", "all", "any", "numberp", "mysteryp"]) {
+      const ctx = new MatchDeclareContext();
+      ctx.declare("x", tag);
+      const compiled = ctx.compilePattern(sym("x"));
+      expect(matchPattern(compiled, int(1))).not.toBeNull();
+      expect(matchPattern(compiled, sym("anything"))).not.toBeNull();
+    }
+  });
+
+  it("recursively compiles apply heads and arguments", () => {
+    const ctx = new MatchDeclareContext();
+    ctx.declare("f", "symbolp");
+    ctx.declare("x", "any");
+    ctx.declare("n", "integerp");
+
+    const raw = app(sym("f"), [app(ADD, [sym("x"), sym("n")])]);
+    const compiled = ctx.compilePattern(raw);
+    expect(compiled.kind).toBe("apply");
+    if (compiled.kind !== "apply") return;
+    expect(isPattern(compiled.head)).toBe(true);
+    expect(isPattern(compiled.args[0].kind === "apply" ? compiled.args[0].args[0] : sym("bad"))).toBe(true);
+
+    const target = app(SIN, [app(ADD, [sym("theta"), int(2)])]);
+    const bindings = matchPattern(compiled, target);
+    expect(bindings?.get("f")).toEqual(SIN);
+    expect(bindings?.get("x")).toEqual(sym("theta"));
+    expect(bindings?.get("n")).toEqual(int(2));
+
+    expect(matchPattern(compiled, app(SIN, [app(ADD, [sym("theta"), sym("two")])]))).toBeNull();
+  });
+
+  it("supports end-to-end applyRule and rewrite flows", () => {
+    const ctx = new MatchDeclareContext();
+    ctx.declare("x", "any");
+    const x = sym("x");
+    const lhs = app(ADD, [
+      app(POW, [app(SIN, [x]), int(2)]),
+      app(POW, [app(COS, [x]), int(2)]),
+    ]);
+    const pythagorean = rule(ctx.compilePattern(lhs), int(1));
+    const theta = sym("theta");
+    const target = app(ADD, [
+      app(POW, [app(SIN, [theta]), int(2)]),
+      app(POW, [app(COS, [theta]), int(2)]),
+    ]);
+    expect(applyRule(pythagorean, target)).toEqual(int(1));
+
+    const removePowerOne = rule(ctx.compilePattern(app(POW, [x, int(1)])), ctx.compilePattern(x));
+    expect(rewrite(app(ADD, [app(POW, [sym("a"), int(1)]), app(POW, [sym("b"), int(1)])]), [removePowerOne]))
+      .toEqual(app(ADD, [sym("a"), sym("b")]));
+  });
+});
+
+describe("rule store", () => {
+  it("stores, queries, removes, and clears named rules", () => {
+    const store = new RuleStore();
+    expect(store.size).toBe(0);
+    expect(store.names()).toEqual([]);
+    expect(store.contains("r1")).toBe(false);
+    expect(store.get("r1")).toBeUndefined();
+
+    const first = rule(sym("x"), int(1));
+    const second = rule(sym("y"), int(2));
+    store.store("r2", second);
+    store.store("r1", first);
+    expect(store.size).toBe(2);
+    expect(store.contains("r1")).toBe(true);
+    expect(store.get("r1")).toBe(first);
+    expect(store.names()).toEqual(["r1", "r2"]);
+
+    store.store("r1", second);
+    expect(store.size).toBe(2);
+    expect(store.get("r1")).toBe(second);
+
+    store.remove("r2");
+    store.remove("missing");
+    expect(store.names()).toEqual(["r1"]);
+
+    store.clear();
+    expect(store.size).toBe(0);
+    expect(store.names()).toEqual([]);
   });
 });
 
