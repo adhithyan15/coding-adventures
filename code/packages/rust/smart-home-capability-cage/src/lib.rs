@@ -240,6 +240,70 @@ impl SmartHomeWorkerNeed {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SmartHomeWorkerNeedSummary {
+    pub total_needs: usize,
+    pub dns_lookup_needs: usize,
+    pub net_connect_needs: usize,
+    pub net_listen_needs: usize,
+    pub file_read_needs: usize,
+    pub file_write_needs: usize,
+    pub process_exec_needs: usize,
+    pub stdout_write_needs: usize,
+    pub time_read_needs: usize,
+    pub time_sleep_needs: usize,
+}
+
+impl SmartHomeWorkerNeedSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_needs<'a, I>(needs: I) -> Self
+    where
+        I: IntoIterator<Item = &'a SmartHomeWorkerNeed>,
+    {
+        let mut summary = Self::empty();
+
+        for need in needs {
+            summary.total_needs += 1;
+            match need {
+                SmartHomeWorkerNeed::DnsLookup { .. } => summary.dns_lookup_needs += 1,
+                SmartHomeWorkerNeed::NetConnect { .. } => summary.net_connect_needs += 1,
+                SmartHomeWorkerNeed::NetListen { .. } => summary.net_listen_needs += 1,
+                SmartHomeWorkerNeed::FileRead { .. } => summary.file_read_needs += 1,
+                SmartHomeWorkerNeed::FileWrite { .. } => summary.file_write_needs += 1,
+                SmartHomeWorkerNeed::ProcessExec { .. } => summary.process_exec_needs += 1,
+                SmartHomeWorkerNeed::StdoutWrite { .. } => summary.stdout_write_needs += 1,
+                SmartHomeWorkerNeed::TimeRead { .. } => summary.time_read_needs += 1,
+                SmartHomeWorkerNeed::TimeSleep { .. } => summary.time_sleep_needs += 1,
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_needs == 0
+    }
+
+    pub fn has_network_access(self) -> bool {
+        self.dns_lookup_needs + self.net_connect_needs + self.net_listen_needs > 0
+    }
+
+    pub fn has_filesystem_access(self) -> bool {
+        self.file_read_needs + self.file_write_needs > 0
+    }
+
+    pub fn has_process_exec(self) -> bool {
+        self.process_exec_needs > 0
+    }
+
+    pub fn has_time_access(self) -> bool {
+        self.time_read_needs + self.time_sleep_needs > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmartHomeCageProfile {
     pub integration_id: IntegrationId,
@@ -249,6 +313,26 @@ pub struct SmartHomeCageProfile {
     pub needs: Vec<SmartHomeWorkerNeed>,
     pub smart_home_capabilities: Vec<CapabilityId>,
     pub metadata: Vec<Metadata>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SmartHomeCageProfileSummary {
+    pub mode: SmartHomeWorkerMode,
+    pub has_bridge: bool,
+    pub need_summary: SmartHomeWorkerNeedSummary,
+    pub smart_home_capability_count: usize,
+    pub metadata_count: usize,
+    pub requires_process_cage: bool,
+}
+
+impl SmartHomeCageProfileSummary {
+    pub fn has_smart_home_capabilities(self) -> bool {
+        self.smart_home_capability_count > 0
+    }
+
+    pub fn has_metadata(self) -> bool {
+        self.metadata_count > 0
+    }
 }
 
 impl SmartHomeCageProfile {
@@ -441,6 +525,17 @@ impl SmartHomeCageProfile {
     pub fn requires_process_cage(&self) -> bool {
         self.mode.requires_process_cage() || !self.needs.is_empty()
     }
+
+    pub fn summary(&self) -> SmartHomeCageProfileSummary {
+        SmartHomeCageProfileSummary {
+            mode: self.mode,
+            has_bridge: self.bridge_id.is_some(),
+            need_summary: SmartHomeWorkerNeedSummary::from_needs(&self.needs),
+            smart_home_capability_count: self.smart_home_capabilities.len(),
+            metadata_count: self.metadata.len(),
+            requires_process_cage: self.requires_process_cage(),
+        }
+    }
 }
 
 fn endpoint(host: &str, port: u16) -> String {
@@ -559,6 +654,92 @@ mod tests {
             "/opt/smart-home/homey-adapter"
         ));
         assert!(manifest.has(Category::Stdout, Action::Write, "sidecar-log"));
+    }
+
+    #[test]
+    fn profile_summary_counts_cage_shape_without_targets() {
+        let profile = SmartHomeCageProfile::local_http(
+            IntegrationId::trusted("hue"),
+            bridge_id(),
+            "hue.local",
+            443,
+        )
+        .unwrap()
+        .with_metadata(Metadata::new("transport", "local-http"));
+
+        let summary = profile.summary();
+
+        assert_eq!(
+            summary,
+            SmartHomeCageProfileSummary {
+                mode: SmartHomeWorkerMode::RustProcess,
+                has_bridge: true,
+                need_summary: SmartHomeWorkerNeedSummary {
+                    total_needs: 4,
+                    dns_lookup_needs: 1,
+                    net_connect_needs: 1,
+                    net_listen_needs: 0,
+                    file_read_needs: 0,
+                    file_write_needs: 0,
+                    process_exec_needs: 0,
+                    stdout_write_needs: 1,
+                    time_read_needs: 1,
+                    time_sleep_needs: 0,
+                },
+                smart_home_capability_count: 1,
+                metadata_count: 1,
+                requires_process_cage: true,
+            }
+        );
+        assert!(summary.need_summary.has_network_access());
+        assert!(!summary.need_summary.has_filesystem_access());
+        assert!(!summary.need_summary.has_process_exec());
+        assert!(summary.need_summary.has_time_access());
+        assert!(summary.has_smart_home_capabilities());
+        assert!(summary.has_metadata());
+    }
+
+    #[test]
+    fn worker_need_summary_counts_radio_and_sidecar_shapes() {
+        let radio = SmartHomeCageProfile::serial_adapter(
+            IntegrationId::trusted("zwave"),
+            bridge_id(),
+            "/dev/tty.usbmodem1",
+        )
+        .unwrap();
+        let sidecar = SmartHomeCageProfile::sidecar_process(
+            IntegrationId::trusted("homey-pro"),
+            SmartHomeWorkerId::trusted("homey-pro:sidecar"),
+            "/opt/smart-home/homey-adapter",
+        )
+        .unwrap();
+
+        let radio_summary = radio.summary();
+        let sidecar_summary = sidecar.summary();
+
+        assert_eq!(radio_summary.need_summary.total_needs, 3);
+        assert_eq!(radio_summary.need_summary.file_read_needs, 1);
+        assert_eq!(radio_summary.need_summary.file_write_needs, 1);
+        assert!(radio_summary.need_summary.has_filesystem_access());
+        assert_eq!(radio_summary.smart_home_capability_count, 2);
+        assert!(radio_summary.has_smart_home_capabilities());
+
+        assert_eq!(sidecar_summary.mode, SmartHomeWorkerMode::SidecarProcess);
+        assert!(!sidecar_summary.has_bridge);
+        assert_eq!(sidecar_summary.need_summary.process_exec_needs, 1);
+        assert_eq!(sidecar_summary.smart_home_capability_count, 0);
+        assert!(sidecar_summary.need_summary.has_process_exec());
+        assert!(!sidecar_summary.has_smart_home_capabilities());
+        assert!(sidecar_summary.requires_process_cage);
+
+        let empty =
+            SmartHomeWorkerNeedSummary::from_needs(std::iter::empty::<&SmartHomeWorkerNeed>());
+        assert_eq!(empty, SmartHomeWorkerNeedSummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_network_access());
+        assert!(!empty.has_filesystem_access());
+        assert!(!empty.has_process_exec());
+        assert!(!empty.has_time_access());
     }
 
     #[test]
