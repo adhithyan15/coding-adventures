@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   owned audit/telemetry handoff that preserves the inert decision
   and copies only identifiers plus factor/metadata counts from the
   request context.
+- `SimpleRbacSummary` and `SimpleRbacEngine::summary()` for
+  count-only RBAC table diagnostics without exposing principals,
+  roles, actions, or resource patterns.
 
 ## [0.1.0] — 2026-05-04
 

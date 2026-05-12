@@ -265,6 +265,91 @@ impl SimpleRbacEngine {
         let entry = self.role_perms.entry(role.into()).or_default();
         entry.insert((action.into(), resource_pattern.into()));
     }
+
+    /// Return a count-only view of the RBAC table shape.
+    pub fn summary(&self) -> SimpleRbacSummary {
+        let assigned_roles: HashSet<&str> = self.principals.values().map(String::as_str).collect();
+        let permission_roles: HashSet<&str> = self.role_perms.keys().map(String::as_str).collect();
+        let mut summary = SimpleRbacSummary {
+            principal_bindings: self.principals.len(),
+            assigned_roles: assigned_roles.len(),
+            roles_with_permissions: permission_roles.len(),
+            unique_roles: assigned_roles.union(&permission_roles).count(),
+            permission_roles_without_principals: permission_roles
+                .difference(&assigned_roles)
+                .count(),
+            assigned_roles_without_permissions: assigned_roles
+                .difference(&permission_roles)
+                .count(),
+            ..SimpleRbacSummary::empty()
+        };
+
+        for permissions in self.role_perms.values() {
+            summary.permission_grants += permissions.len();
+            for (_, resource_pattern) in permissions {
+                if resource_pattern == "*" {
+                    summary.wildcard_resource_grants += 1;
+                } else {
+                    summary.exact_resource_grants += 1;
+                }
+            }
+        }
+
+        summary
+    }
+}
+
+/// Count-only read model for a [`SimpleRbacEngine`] table.
+///
+/// This intentionally reports only table shape and grant counts. It does not
+/// expose principal ids, role names, actions, or resource patterns.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SimpleRbacSummary {
+    /// Number of principal-to-role bindings.
+    pub principal_bindings: usize,
+    /// Number of distinct roles referenced by principal bindings or grants.
+    pub unique_roles: usize,
+    /// Number of distinct roles assigned to at least one principal.
+    pub assigned_roles: usize,
+    /// Number of distinct roles with at least one permission grant.
+    pub roles_with_permissions: usize,
+    /// Total number of role permission grants.
+    pub permission_grants: usize,
+    /// Number of grants whose resource pattern is the wildcard `"*"`.
+    pub wildcard_resource_grants: usize,
+    /// Number of grants whose resource pattern is an exact resource string.
+    pub exact_resource_grants: usize,
+    /// Number of roles with permissions but no assigned principal.
+    pub permission_roles_without_principals: usize,
+    /// Number of assigned roles with no permission grants.
+    pub assigned_roles_without_permissions: usize,
+}
+
+impl SimpleRbacSummary {
+    /// Return an empty summary.
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    /// Returns true when at least one principal is bound to a role.
+    pub fn has_principal_bindings(&self) -> bool {
+        self.principal_bindings > 0
+    }
+
+    /// Returns true when at least one permission is granted.
+    pub fn has_permission_grants(&self) -> bool {
+        self.permission_grants > 0
+    }
+
+    /// Returns true when a granted role is not assigned to any principal.
+    pub fn has_permission_roles_without_principals(&self) -> bool {
+        self.permission_roles_without_principals > 0
+    }
+
+    /// Returns true when an assigned role has no permission grants.
+    pub fn has_assigned_roles_without_permissions(&self) -> bool {
+        self.assigned_roles_without_permissions > 0
+    }
 }
 
 impl PolicyEngine for SimpleRbacEngine {
@@ -506,6 +591,64 @@ mod tests {
             Decision::Deny(r) => assert_eq!(r, Reason::ROLE_LACKS_PERMISSION),
             _ => panic!("expected deny"),
         }
+    }
+
+    #[test]
+    fn rbac_summary_counts_table_shape_without_values() {
+        let e = rbac_alice_admin_bob_member();
+
+        let summary = e.summary();
+
+        assert_eq!(
+            summary,
+            SimpleRbacSummary {
+                principal_bindings: 2,
+                unique_roles: 2,
+                assigned_roles: 2,
+                roles_with_permissions: 2,
+                permission_grants: 4,
+                wildcard_resource_grants: 4,
+                exact_resource_grants: 0,
+                permission_roles_without_principals: 0,
+                assigned_roles_without_permissions: 0,
+            }
+        );
+        assert!(summary.has_principal_bindings());
+        assert!(summary.has_permission_grants());
+        assert!(!summary.has_permission_roles_without_principals());
+        assert!(!summary.has_assigned_roles_without_permissions());
+    }
+
+    #[test]
+    fn rbac_summary_counts_orphaned_and_empty_roles() {
+        let mut e = SimpleRbacEngine::new();
+        e.assign_role("alice", "admin");
+        e.assign_role("carol", "empty");
+        e.grant("admin", "read", "vault/login/specific");
+        e.grant("orphan", "read", "*");
+
+        let summary = e.summary();
+
+        assert_eq!(summary.principal_bindings, 2);
+        assert_eq!(summary.unique_roles, 3);
+        assert_eq!(summary.assigned_roles, 2);
+        assert_eq!(summary.roles_with_permissions, 2);
+        assert_eq!(summary.permission_grants, 2);
+        assert_eq!(summary.wildcard_resource_grants, 1);
+        assert_eq!(summary.exact_resource_grants, 1);
+        assert_eq!(summary.permission_roles_without_principals, 1);
+        assert_eq!(summary.assigned_roles_without_permissions, 1);
+        assert!(summary.has_permission_roles_without_principals());
+        assert!(summary.has_assigned_roles_without_permissions());
+    }
+
+    #[test]
+    fn rbac_empty_summary_is_default() {
+        let summary = SimpleRbacEngine::new().summary();
+
+        assert_eq!(summary, SimpleRbacSummary::empty());
+        assert!(!summary.has_principal_bindings());
+        assert!(!summary.has_permission_grants());
     }
 
     #[test]
