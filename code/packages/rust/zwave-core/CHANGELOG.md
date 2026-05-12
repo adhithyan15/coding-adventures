@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Command-class and Serial API frame batch summaries for supervisor coverage
+  views.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added

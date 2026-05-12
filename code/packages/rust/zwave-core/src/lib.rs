@@ -256,6 +256,54 @@ impl CommandClassFrame {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct CommandClassFrameSummary {
+    pub frame_count: usize,
+    pub short_command_class_frames: usize,
+    pub extended_command_class_frames: usize,
+    pub security_2_frames: usize,
+    pub total_payload_bytes: usize,
+    pub max_payload_bytes: usize,
+}
+
+impl CommandClassFrameSummary {
+    pub fn from_frames<'a>(frames: impl IntoIterator<Item = &'a CommandClassFrame>) -> Self {
+        let mut summary = Self::default();
+        for frame in frames {
+            summary.frame_count += 1;
+            if frame.command_class_id.encoded_len() == 1 {
+                summary.short_command_class_frames += 1;
+            } else {
+                summary.extended_command_class_frames += 1;
+            }
+            if frame.command_class_id == CommandClassId::SECURITY_2 {
+                summary.security_2_frames += 1;
+            }
+            summary.total_payload_bytes += frame.payload.len();
+            summary.max_payload_bytes = summary.max_payload_bytes.max(frame.payload.len());
+        }
+        summary
+    }
+
+    pub fn has_extended_command_classes(&self) -> bool {
+        self.extended_command_class_frames > 0
+    }
+
+    pub fn has_security_2_frames(&self) -> bool {
+        self.security_2_frames > 0
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.frame_count == 0
+    }
+}
+
+pub fn summarize_command_class_frames<'a>(
+    frames: impl IntoIterator<Item = &'a CommandClassFrame>,
+) -> CommandClassFrameSummary {
+    CommandClassFrameSummary::from_frames(frames)
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SerialFrameType {
     Request,
@@ -361,6 +409,49 @@ impl SerialFrame {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SerialFrameBatchSummary {
+    pub frame_count: usize,
+    pub request_frames: usize,
+    pub response_frames: usize,
+    pub total_payload_bytes: usize,
+    pub max_payload_bytes: usize,
+}
+
+impl SerialFrameBatchSummary {
+    pub fn from_frames<'a>(frames: impl IntoIterator<Item = &'a SerialFrame>) -> Self {
+        let mut summary = Self::default();
+        for frame in frames {
+            summary.frame_count += 1;
+            match frame.frame_type {
+                SerialFrameType::Request => summary.request_frames += 1,
+                SerialFrameType::Response => summary.response_frames += 1,
+            }
+            summary.total_payload_bytes += frame.payload.len();
+            summary.max_payload_bytes = summary.max_payload_bytes.max(frame.payload.len());
+        }
+        summary
+    }
+
+    pub fn has_requests(&self) -> bool {
+        self.request_frames > 0
+    }
+
+    pub fn has_responses(&self) -> bool {
+        self.response_frames > 0
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.frame_count == 0
+    }
+}
+
+pub fn summarize_serial_frames<'a>(
+    frames: impl IntoIterator<Item = &'a SerialFrame>,
+) -> SerialFrameBatchSummary {
+    SerialFrameBatchSummary::from_frames(frames)
+}
+
 pub fn serial_checksum(bytes_after_sof_before_checksum: &[u8]) -> u8 {
     bytes_after_sof_before_checksum
         .iter()
@@ -450,6 +541,28 @@ mod tests {
 
         assert_eq!(encoded[0], SOF);
         assert_eq!(SerialFrame::parse(&encoded).unwrap(), frame);
+    }
+
+    #[test]
+    fn serial_frame_batch_summary_counts_direction_and_payload_bytes() {
+        let request = SerialFrame::new(SerialFrameType::Request, 0x13, vec![0x02, 0x25, 0x01]);
+        let response = SerialFrame::new(SerialFrameType::Response, 0x02, vec![0x01]);
+
+        let summary = summarize_serial_frames([&request, &response]);
+
+        assert_eq!(
+            summary,
+            SerialFrameBatchSummary {
+                frame_count: 2,
+                request_frames: 1,
+                response_frames: 1,
+                total_payload_bytes: 4,
+                max_payload_bytes: 3,
+            }
+        );
+        assert!(summary.has_requests());
+        assert!(summary.has_responses());
+        assert!(!summary.is_empty());
     }
 
     #[test]
@@ -543,6 +656,30 @@ mod tests {
         assert_eq!(CommandClassId(0xf100).encoded_len(), 2);
         assert_eq!(encoded, vec![0xf1, 0x00, 0x02, 0x01, 0x02]);
         assert_eq!(CommandClassFrame::parse(&encoded).unwrap(), frame);
+    }
+
+    #[test]
+    fn command_class_frame_summary_counts_extended_and_security2_frames() {
+        let basic = CommandClassFrame::new(CommandClassId::BASIC, 0x01, vec![0xff]);
+        let security2 = CommandClassFrame::new(CommandClassId::SECURITY_2, 0x02, vec![0x01, 0x02]);
+        let extended = CommandClassFrame::new(CommandClassId(0xf100), 0x03, vec![0x55]);
+
+        let summary = summarize_command_class_frames([&basic, &security2, &extended]);
+
+        assert_eq!(
+            summary,
+            CommandClassFrameSummary {
+                frame_count: 3,
+                short_command_class_frames: 2,
+                extended_command_class_frames: 1,
+                security_2_frames: 1,
+                total_payload_bytes: 4,
+                max_payload_bytes: 2,
+            }
+        );
+        assert!(summary.has_extended_command_classes());
+        assert!(summary.has_security_2_frames());
+        assert!(!summary.is_empty());
     }
 
     #[test]
