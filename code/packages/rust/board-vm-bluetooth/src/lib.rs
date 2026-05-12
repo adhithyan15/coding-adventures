@@ -872,7 +872,38 @@ fn discover_bluetooth_devices_impl(
     Ok(devices)
 }
 
-#[cfg(all(not(target_os = "macos"), not(target_os = "linux")))]
+#[cfg(target_os = "windows")]
+fn discover_bluetooth_devices_impl(
+) -> Result<Vec<BluetoothDiscoveredDevice>, BluetoothDiscoveryError> {
+    let program = "powershell";
+    let output = std::process::Command::new(program)
+        .arg("-NoProfile")
+        .arg("-NonInteractive")
+        .arg("-Command")
+        .arg(windows_pnp_discovery_script())
+        .output()
+        .map_err(|error| BluetoothDiscoveryError::CommandUnavailable {
+            program: program.to_owned(),
+            message: error.to_string(),
+        })?;
+
+    if !output.status.success() {
+        return Err(BluetoothDiscoveryError::CommandFailed {
+            program: program.to_owned(),
+            status: output.status.code(),
+        });
+    }
+
+    Ok(bluetooth_devices_from_windows_pnp_report(
+        &String::from_utf8_lossy(&output.stdout),
+    ))
+}
+
+#[cfg(all(
+    not(target_os = "macos"),
+    not(target_os = "linux"),
+    not(target_os = "windows")
+))]
 fn discover_bluetooth_devices_impl(
 ) -> Result<Vec<BluetoothDiscoveredDevice>, BluetoothDiscoveryError> {
     Err(BluetoothDiscoveryError::UnsupportedPlatform {
@@ -901,6 +932,25 @@ pub fn bluetooth_devices_from_bluezctl_reports(
             merge_bluetooth_device(device, info_device);
         } else {
             devices.push(info_device);
+        }
+    }
+    devices
+}
+
+pub fn bluetooth_devices_from_windows_pnp_report(report: &str) -> Vec<BluetoothDiscoveredDevice> {
+    let mut devices = Vec::new();
+    for line in report.lines() {
+        let Some(device) = bluetooth_device_from_windows_pnp_line(line) else {
+            continue;
+        };
+        let key = device.address.as_deref().unwrap_or(&device.id).to_owned();
+        if let Some(existing) = devices
+            .iter_mut()
+            .find(|existing| windows_device_matches(existing, &key))
+        {
+            merge_windows_bluetooth_device(existing, device);
+        } else {
+            devices.push(device);
         }
     }
     devices
@@ -1216,6 +1266,156 @@ fn bluez_uuid_value(value: &str) -> Option<String> {
         let token = token.trim_matches(|ch| matches!(ch, '(' | ')' | ',' | ';'));
         (is_short_uuid(token) || is_canonical_uuid(token)).then(|| token.to_owned())
     })
+}
+
+#[cfg(target_os = "windows")]
+fn windows_pnp_discovery_script() -> &'static str {
+    r#"$items = Get-CimInstance Win32_PnPEntity | Where-Object {
+  $_.PNPClass -eq 'Bluetooth' -or ($_.PNPClass -eq 'Ports' -and $_.Name -like '*Bluetooth*')
+}
+foreach ($item in $items) {
+  $name = (($item.Name -as [string]) -replace "`t", " " -replace "`r|`n", " ").Trim()
+  $id = (($item.PNPDeviceID -as [string]) -replace "`t", " " -replace "`r|`n", " ").Trim()
+  $status = (($item.Status -as [string]) -replace "`t", " " -replace "`r|`n", " ").Trim()
+  if ($id.Length -gt 0) {
+    "$name`t$id`t$status"
+  }
+}"#
+}
+
+fn bluetooth_device_from_windows_pnp_line(line: &str) -> Option<BluetoothDiscoveredDevice> {
+    let (name, instance_id, status) = windows_pnp_row(line)?;
+    let address = windows_instance_address(instance_id);
+    let id = address
+        .clone()
+        .unwrap_or_else(|| instance_id.trim().to_owned());
+    if id.trim().is_empty() {
+        return None;
+    }
+
+    let mut device = BluetoothDiscoveredDevice::new(&id);
+    if let Some(address) = address {
+        device.address = Some(address);
+    }
+    if !name.trim().is_empty() {
+        device.name = Some(name.trim().to_owned());
+    }
+    device.paired = windows_pnp_status_is_available(status);
+
+    for uuid in windows_instance_uuids(instance_id) {
+        push_unique_uuid(&mut device.service_uuids, &uuid);
+        if uuid.eq_ignore_ascii_case(BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID)
+            || uuid.eq_ignore_ascii_case(BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID)
+        {
+            push_unique_uuid(&mut device.characteristic_uuids, &uuid);
+        }
+    }
+
+    if let Some(channel) =
+        windows_rfcomm_channel_value(instance_id).or_else(|| windows_rfcomm_channel_value(name))
+    {
+        device.board_vm_rfcomm_channels.push(channel);
+    }
+
+    Some(device)
+}
+
+fn windows_pnp_row(line: &str) -> Option<(&str, &str, &str)> {
+    let mut parts = line.trim().splitn(3, '\t');
+    let name = parts.next()?.trim();
+    let instance_id = parts.next()?.trim();
+    let status = parts.next().unwrap_or("").trim();
+    (!instance_id.is_empty()).then_some((name, instance_id, status))
+}
+
+fn windows_device_matches(device: &BluetoothDiscoveredDevice, key: &str) -> bool {
+    let normalized_key = normalize_bluetooth_address(key);
+    device.id.eq_ignore_ascii_case(key)
+        || device.id.eq_ignore_ascii_case(&normalized_key)
+        || device
+            .address
+            .as_deref()
+            .is_some_and(|address| address.eq_ignore_ascii_case(&normalized_key))
+}
+
+fn merge_windows_bluetooth_device(
+    device: &mut BluetoothDiscoveredDevice,
+    info_device: BluetoothDiscoveredDevice,
+) {
+    let name = device.name.clone();
+    let paired = device.paired || info_device.paired;
+    merge_bluetooth_device(device, info_device);
+    if name.is_some() {
+        device.name = name;
+    }
+    device.paired = paired;
+}
+
+fn windows_instance_address(instance_id: &str) -> Option<String> {
+    let upper = instance_id.to_ascii_uppercase();
+    for (index, _) in upper.match_indices("DEV_") {
+        let mut hex = String::new();
+        for ch in upper[index + 4..].chars() {
+            if ch.is_ascii_hexdigit() {
+                hex.push(ch);
+                if hex.len() == 12 {
+                    return Some(format_bluetooth_hex_address(&hex));
+                }
+            } else if matches!(ch, ':' | '-') {
+                continue;
+            } else {
+                break;
+            }
+        }
+    }
+    None
+}
+
+fn format_bluetooth_hex_address(hex: &str) -> String {
+    let mut address = String::with_capacity(17);
+    for (index, ch) in hex.chars().take(12).enumerate() {
+        if index > 0 && index % 2 == 0 {
+            address.push(':');
+        }
+        address.push(ch.to_ascii_uppercase());
+    }
+    address
+}
+
+fn windows_instance_uuids(instance_id: &str) -> Vec<String> {
+    let mut uuids = Vec::new();
+    let mut rest = instance_id;
+    while let Some(start) = rest.find('{') {
+        let after_start = &rest[start + 1..];
+        let Some(end) = after_start.find('}') else {
+            break;
+        };
+        push_unique_uuid(&mut uuids, &after_start[..end]);
+        rest = &after_start[end + 1..];
+    }
+    uuids
+}
+
+fn windows_rfcomm_channel_value(value: &str) -> Option<u8> {
+    ["RFCOMMCHANNEL_", "RFCOMM_CHANNEL_", "CHANNEL_"]
+        .into_iter()
+        .find_map(|marker| {
+            let upper = value.to_ascii_uppercase();
+            let (_, suffix) = upper.split_once(marker)?;
+            let digits: String = suffix
+                .chars()
+                .take_while(|ch| ch.is_ascii_digit())
+                .collect();
+            let channel = digits.parse::<u8>().ok()?;
+            (1..=30).contains(&channel).then_some(channel)
+        })
+}
+
+fn windows_pnp_status_is_available(status: &str) -> bool {
+    matches!(
+        status.trim().to_ascii_lowercase().as_str(),
+        "ok" | "started" | "running"
+    )
 }
 
 fn endpoint_scheme(endpoint: &str) -> &str {
@@ -1782,6 +1982,58 @@ Device 11:22:33:44:55:66 (public)
             candidate.device == "11:22:33:44:55:66"
                 && matches!(candidate.endpoint, BluetoothEndpoint::BleGatt(_))
                 && candidate.requires_pairing
+        }));
+    }
+
+    #[test]
+    fn parses_windows_pnp_bluetooth_devices() {
+        let report = concat!(
+            "Uno R4 Board VM\tBTHLEDEVICE\\DEV_112233445566\\8&ABC&0&BLUETOOTHDEVICE_112233445566\tOK\n",
+            "Uno R4 Board VM UART\tBTHLEENUM\\{6E400001-B5A3-F393-E0A9-E50E24DCCA9E}_DEV_112233445566\\8&ABC&0&BLUETOOTHDEVICE_112233445566\tOK\n",
+            "Uno R4 Board VM TX\tBTHLEENUM\\{6E400002-B5A3-F393-E0A9-E50E24DCCA9E}_DEV_112233445566\\8&ABC&0&BLUETOOTHDEVICE_112233445566\tOK\n",
+            "Uno R4 Board VM RX\tBTHLEENUM\\{6E400003-B5A3-F393-E0A9-E50E24DCCA9E}_DEV_112233445566\\8&ABC&0&BLUETOOTHDEVICE_112233445566\tOK\n",
+            "ESP32 Board VM\tBTHENUM\\DEV_AABBCCDDEEFF\\7&DEF&0&BLUETOOTHDEVICE_AABBCCDDEEFF\tOK\n",
+            "ESP32 Board VM Serial\tBTHENUM\\{00001101-0000-1000-8000-00805F9B34FB}_DEV_AABBCCDDEEFF&RFCOMMCHANNEL_3\\7&DEF&0&BLUETOOTHDEVICE_AABBCCDDEEFF\tOK\n",
+            "Headphones\tBTHENUM\\DEV_001122334455\\9&GHI&0&BLUETOOTHDEVICE_001122334455\tError\n",
+        );
+
+        let devices = bluetooth_devices_from_windows_pnp_report(report);
+
+        assert_eq!(devices.len(), 3);
+        assert_eq!(devices[0].name.as_deref(), Some("Uno R4 Board VM"));
+        assert_eq!(devices[0].address.as_deref(), Some("11:22:33:44:55:66"));
+        assert!(devices[0].paired);
+        assert_eq!(
+            devices[0].service_uuids,
+            vec![
+                BOARD_VM_BLE_SERVICE_UUID.to_owned(),
+                BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID.to_owned(),
+                BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID.to_owned(),
+            ]
+        );
+        assert_eq!(
+            devices[0].characteristic_uuids,
+            vec![
+                BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID.to_owned(),
+                BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID.to_owned(),
+            ]
+        );
+        assert_eq!(devices[1].name.as_deref(), Some("ESP32 Board VM"));
+        assert_eq!(devices[1].address.as_deref(), Some("AA:BB:CC:DD:EE:FF"));
+        assert_eq!(devices[1].board_vm_rfcomm_channels, vec![3]);
+        assert!(!devices[2].paired);
+
+        let candidates = board_vm_endpoint_candidates(&devices);
+
+        assert_eq!(candidates.len(), 2);
+        assert!(candidates.iter().any(|candidate| {
+            candidate.device == "11:22:33:44:55:66"
+                && matches!(candidate.endpoint, BluetoothEndpoint::BleGatt(_))
+                && !candidate.requires_pairing
+        }));
+        assert!(candidates.iter().any(|candidate| {
+            candidate.device == "AA:BB:CC:DD:EE:FF"
+                && matches!(candidate.endpoint, BluetoothEndpoint::Rfcomm(_))
         }));
     }
 
