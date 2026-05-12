@@ -14,6 +14,7 @@ than a backend-specific index.
 - `MemoryCatalogSummary` for read-side class, lifecycle, and review coverage
 - `MemorySourceSummary` for source, tag, and supersession coverage
 - `MemoryTagSummary` for tag distribution and lifecycle coverage
+- `MemoryInventorySummary` for composed lifecycle, source, and tag coverage
 - `MemoryReviewQueueSummary` for compact review queue reason/lifecycle counts
 - `MemoryClass`
 - `MemoryLifecycleStatus` plus shared record/summary lifecycle helpers
@@ -26,6 +27,8 @@ than a backend-specific index.
 - metadata-only memory summaries for read tools that should not return memory
   body text
 - compact catalog summaries over selected memory records
+- compact inventory summaries that compose lifecycle, provenance, and tag
+  coverage for host and scheduled-job status surfaces
 - deterministic review candidates for low-confidence, stale, expiring, and
   expired memories
 - compact review queue summaries for scheduled jobs and host status surfaces
@@ -45,6 +48,7 @@ than a backend-specific index.
 - `catalog_summary()`
 - `source_summary()`
 - `tag_summary()`
+- `inventory_summary()`
 - `list_by_class()`
 - `list_by_tag()`
 - `search_lexical()`
