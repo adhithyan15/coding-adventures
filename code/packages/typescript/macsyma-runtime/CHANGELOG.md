@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route `ev(expr, display2d)` JSON and browser display text through the
+  TypeScript `cas-pretty-printer` 2D MACSYMA box renderer while preserving the
+  symbolic IR result for history and downstream evaluation.
 - Wire `TrigReduce` runtime dispatch to the TypeScript `cas-trig` package.
 - Wire `Simplify`, `RatSimplify`, `TrigSimplify`, and `TrigExpand` runtime
   heads to the TypeScript `cas-simplify` and `cas-trig` packages.

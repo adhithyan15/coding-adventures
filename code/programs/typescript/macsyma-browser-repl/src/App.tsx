@@ -145,7 +145,7 @@ function toEntry(result: EvalResult): TranscriptEntry {
     inputIndex: result.inputIndex,
     outputIndex: result.outputIndex,
     input: toDisplayString(result.input),
-    output: toDisplayString(result.output),
+    output: result.outputText,
     display: result.display,
   };
 }

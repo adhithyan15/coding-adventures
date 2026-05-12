@@ -293,6 +293,16 @@ describe("macsyma-runtime", () => {
     expect(trigsimpResult.output).toEqual(int(1));
   });
 
+  it("routes Ev display2d through the MACSYMA box pretty-printer", () => {
+    const payload = JSON.parse(evalSourceJson("ev(1/(x + 1), display2d);"));
+    const [result] = payload.results;
+
+    expect(payload.visibleOutputs).toEqual([result.outputText]);
+    expect(result.outputText).toContain("\n");
+    expect(result.outputText).toContain("─");
+    expect(result.outputText).toContain("x + 1");
+  });
+
   it("evaluates trigreduce through cas-trig", () => {
     const x = sym("x");
     const session = new MacsymaSession();
