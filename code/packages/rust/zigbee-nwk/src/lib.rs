@@ -218,23 +218,49 @@ impl NeighborTable {
     pub fn summary_at(&self, now_ms: u64) -> NeighborTableSummary {
         let mut summary = NeighborTableSummary {
             total_neighbors: self.neighbors.len(),
+            coordinator_neighbors: 0,
+            router_neighbors: 0,
+            end_device_neighbors: 0,
+            unknown_role_neighbors: 0,
             route_capable_neighbors: 0,
+            parent_neighbors: 0,
             child_neighbors: 0,
+            sibling_neighbors: 0,
+            previous_child_neighbors: 0,
+            unknown_relationship_neighbors: 0,
             stale_neighbors: 0,
+            ieee_address_neighbors: 0,
+            link_metric_neighbors: 0,
             best_router_candidate: self
                 .best_router_candidate()
                 .map(|entry| entry.network_address),
         };
 
         for entry in self.neighbors.values() {
+            match entry.role {
+                NwkDeviceRole::Coordinator => summary.coordinator_neighbors += 1,
+                NwkDeviceRole::Router => summary.router_neighbors += 1,
+                NwkDeviceRole::EndDevice => summary.end_device_neighbors += 1,
+                NwkDeviceRole::Unknown => summary.unknown_role_neighbors += 1,
+            }
             if entry.can_route() {
                 summary.route_capable_neighbors += 1;
             }
-            if entry.relationship == NeighborRelationship::Child {
-                summary.child_neighbors += 1;
+            match entry.relationship {
+                NeighborRelationship::Parent => summary.parent_neighbors += 1,
+                NeighborRelationship::Child => summary.child_neighbors += 1,
+                NeighborRelationship::Sibling => summary.sibling_neighbors += 1,
+                NeighborRelationship::PreviousChild => summary.previous_child_neighbors += 1,
+                NeighborRelationship::Unknown => summary.unknown_relationship_neighbors += 1,
             }
             if entry.is_stale_at(now_ms) {
                 summary.stale_neighbors += 1;
+            }
+            if entry.ieee_address.is_some() {
+                summary.ieee_address_neighbors += 1;
+            }
+            if entry.lqi.is_some() || entry.outgoing_cost.is_some() {
+                summary.link_metric_neighbors += 1;
             }
         }
 
@@ -245,9 +271,19 @@ impl NeighborTable {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NeighborTableSummary {
     pub total_neighbors: usize,
+    pub coordinator_neighbors: usize,
+    pub router_neighbors: usize,
+    pub end_device_neighbors: usize,
+    pub unknown_role_neighbors: usize,
     pub route_capable_neighbors: usize,
+    pub parent_neighbors: usize,
     pub child_neighbors: usize,
+    pub sibling_neighbors: usize,
+    pub previous_child_neighbors: usize,
+    pub unknown_relationship_neighbors: usize,
     pub stale_neighbors: usize,
+    pub ieee_address_neighbors: usize,
+    pub link_metric_neighbors: usize,
     pub best_router_candidate: Option<NetworkAddress>,
 }
 
@@ -258,6 +294,14 @@ impl NeighborTableSummary {
 
     pub fn has_router_candidate(self) -> bool {
         self.best_router_candidate.is_some()
+    }
+
+    pub fn has_missing_ieee_addresses(self) -> bool {
+        self.ieee_address_neighbors < self.total_neighbors
+    }
+
+    pub fn has_link_metrics(self) -> bool {
+        self.link_metric_neighbors > 0
     }
 }
 
@@ -1610,9 +1654,20 @@ mod tests {
         let mut table = NeighborTable::new();
         table.upsert(
             NeighborEntry::new(
+                NetworkAddress(0x1000),
+                NwkDeviceRole::Coordinator,
+                NeighborRelationship::Parent,
+                1_100,
+                10_000,
+            )
+            .with_ieee_address(IeeeAddress(0x0012_4b00_0000_1000))
+            .with_link_metrics(160, 2),
+        );
+        table.upsert(
+            NeighborEntry::new(
                 NetworkAddress(0x1001),
                 NwkDeviceRole::Router,
-                NeighborRelationship::Parent,
+                NeighborRelationship::Sibling,
                 1_000,
                 500,
             )
@@ -1622,7 +1677,7 @@ mod tests {
             NeighborEntry::new(
                 NetworkAddress(0x1002),
                 NwkDeviceRole::Router,
-                NeighborRelationship::Sibling,
+                NeighborRelationship::PreviousChild,
                 1_200,
                 10_000,
             )
@@ -1635,16 +1690,38 @@ mod tests {
             1_300,
             10_000,
         ));
+        table.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1004),
+                NwkDeviceRole::Unknown,
+                NeighborRelationship::Unknown,
+                1_400,
+                10_000,
+            )
+            .with_ieee_address(IeeeAddress(0x0012_4b00_0000_1004)),
+        );
 
         let summary = table.summary_at(1_500);
 
-        assert_eq!(summary.total_neighbors, 3);
-        assert_eq!(summary.route_capable_neighbors, 2);
+        assert_eq!(summary.total_neighbors, 5);
+        assert_eq!(summary.coordinator_neighbors, 1);
+        assert_eq!(summary.router_neighbors, 2);
+        assert_eq!(summary.end_device_neighbors, 1);
+        assert_eq!(summary.unknown_role_neighbors, 1);
+        assert_eq!(summary.route_capable_neighbors, 3);
+        assert_eq!(summary.parent_neighbors, 1);
         assert_eq!(summary.child_neighbors, 1);
+        assert_eq!(summary.sibling_neighbors, 1);
+        assert_eq!(summary.previous_child_neighbors, 1);
+        assert_eq!(summary.unknown_relationship_neighbors, 1);
         assert_eq!(summary.stale_neighbors, 1);
+        assert_eq!(summary.ieee_address_neighbors, 2);
+        assert_eq!(summary.link_metric_neighbors, 3);
         assert_eq!(summary.best_router_candidate, Some(NetworkAddress(0x1002)));
         assert!(summary.has_stale_neighbors());
         assert!(summary.has_router_candidate());
+        assert!(summary.has_missing_ieee_addresses());
+        assert!(summary.has_link_metrics());
     }
 
     #[test]
