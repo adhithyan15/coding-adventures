@@ -103,6 +103,20 @@ pub fn operand_to_value(
                 RuntimeError::Custom(format!("undefined variable: {name}"))
             })
         }
+        // LANG32: Str is a compile-time string literal (e.g. global variable name).
+        // In Twig-VM, intern it as a symbol — the same convention used for
+        // `Operand::Var` string-shaped names in exec_const.
+        Operand::Str(text) => {
+            use lang_runtime_core::SymbolId;
+            use lispy_runtime::intern;
+            let id = intern(text);
+            if id == SymbolId::NONE {
+                return Err(RuntimeError::Custom(format!(
+                    "intern table exhausted: cannot intern {text:?}"
+                )));
+            }
+            Ok(LispyValue::symbol(id))
+        }
     }
 }
 

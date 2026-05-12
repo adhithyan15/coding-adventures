@@ -1,5 +1,15 @@
 # Changelog — iir-type-checker
 
+## [0.2.0] — 2026-05-11
+
+### Changed (LANG32 — Operand::Str exhaustiveness)
+
+- `infer.rs`: `infer_single` (const arm) and `resolve_operand_type` now handle
+  `Operand::Str` — returns `None` in both cases, since a compile-time string
+  literal (global variable name) is not a typed SSA value.
+- `check.rs`: `operand_type` now handles `Operand::Str` — returns `None`
+  (consistent with other immediate variants).
+
 ## [0.1.0] — 2026-05-04
 
 ### Added

@@ -1,5 +1,17 @@
 # Changelog — aot-core
 
+## 0.2.0 — 2026-05-11
+
+### Changed (LANG32 — Operand::Str exhaustiveness)
+
+- `infer.rs`: `resolve_operand` and `literal_type` now handle `Operand::Str`
+  (compile-time string literal, LANG32 global variable names).  Both return
+  `"str"` — the same sentinel already used for `Operand::Var` string-shapes.
+- `specialise.rs`: `operand_concrete_ty` returns `None` for `Operand::Str`
+  (not a concrete numeric type).
+- `vm_runtime.rs`: `operand_to_json` serialises `Operand::Str(s)` as a JSON
+  string, matching the `Var` convention.
+
 ## 0.1.0 — 2026-04-28
 
 ### Added

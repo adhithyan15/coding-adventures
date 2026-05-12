@@ -2,6 +2,30 @@
 
 All notable changes to this crate are documented here.
 
+## [0.2.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O)
+
+#### I/O support
+
+- `io_out %v` → `ldloc <slot>; call System.Console.WriteLine(int64)`.
+  Uses token `CONSOLE_WRITELINE_I64_TOKEN = 0x0A00_0002` (pre-defined
+  member reference to `Console.WriteLine(long)`).
+
+#### Global variables (LANG32b — deferred)
+
+- `global_load` and `global_store` return `UnsupportedOp` with a clear
+  LANG32b tracking note.  Full CLR static-field globals require extending
+  `CILProgramArtifact` with a fields table and adding `ldsfld`/`stsfld`
+  sequences; tracked in a follow-up PR.
+
+#### Exhaustiveness fixes
+
+- `Operand::Str` arms added to all `match` blocks in `lower.rs` (const,
+  call argument loop).
+
+---
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

@@ -485,6 +485,8 @@ fn operand_concrete_ty(op: &Operand, env: &HashMap<String, String>) -> Option<St
         Operand::Int(_)   => Some("u8".to_string()), // small int default
         Operand::Bool(_)  => Some("bool".to_string()),
         Operand::Float(_) => Some("f64".to_string()),
+        // LANG32: Str is a compile-time string literal (global name) — not a concrete numeric type.
+        Operand::Str(_)   => None,
     }
 }
 

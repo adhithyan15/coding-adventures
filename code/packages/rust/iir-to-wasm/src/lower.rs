@@ -138,7 +138,8 @@ use std::collections::HashMap;
 use interpreter_ir::{IIRFunction, IIRModule, Operand};
 use wasm_module_encoder::{GcInstruction, encode_gc_instruction};
 use wasm_types::{
-    ExternalKind, Export, FieldType, FuncType, FunctionBody, StructType, ValueType, WasmModule,
+    ExternalKind, Export, FieldType, FuncType, FunctionBody, Global, GlobalType, Import,
+    ImportTypeInfo, StructType, ValueType, WasmModule,
 };
 
 use crate::codegen::{
@@ -154,6 +155,38 @@ use crate::codegen::{
     LOOP, RETURN,
 };
 use crate::validate::validate_for_wasm;
+
+// ---------------------------------------------------------------------------
+// Global opcode helpers (LANG32)
+// ---------------------------------------------------------------------------
+
+/// Encode a WASM `global.get N` opcode.
+///
+/// Binary layout: `[0x23, leb128(N)]`
+///
+/// `global.get` pushes the current value of module-level global variable at
+/// index `idx` onto the WASM value stack.  The global must already exist in
+/// the module's global section (or be imported).
+fn encode_global_get(idx: u32) -> Vec<u8> {
+    use wasm_leb128::encode_unsigned;
+    let mut bytes = vec![0x23u8]; // global.get opcode
+    bytes.extend(encode_unsigned(idx as u64));
+    bytes
+}
+
+/// Encode a WASM `global.set N` opcode.
+///
+/// Binary layout: `[0x24, leb128(N)]`
+///
+/// `global.set` pops the top of the WASM value stack and stores it into the
+/// module-level global variable at index `idx`.  The global must be declared
+/// mutable (`(mut ...)`) in the global type.
+fn encode_global_set(idx: u32) -> Vec<u8> {
+    use wasm_leb128::encode_unsigned;
+    let mut bytes = vec![0x24u8]; // global.set opcode
+    bytes.extend(encode_unsigned(idx as u64));
+    bytes
+}
 
 // ---------------------------------------------------------------------------
 // Error type
@@ -589,6 +622,10 @@ fn has_control_flow(fn_: &IIRFunction) -> bool {
 /// - `lispy_pair_type_idx` — if `Some(idx)`, this function contains at least
 ///   one `ref<LispyPair>` instruction and the `$LispyPair` struct type is at
 ///   type-section index `idx`.  Used by `alloc`, `field_load`, `field_store`.
+/// - `global_map` — global variable name → WASM global index.  Built by the
+///   pre-pass in `lower_iir_to_wasm`.  Used by `global_load`/`global_store`.
+/// - `print_fn_idx` — if `Some(idx)`, the `$__print_i64` import is at WASM
+///   function index `idx` (always 0 when present).  Used by `io_out`.
 #[allow(clippy::too_many_arguments)]
 fn emit_instr(
     code: &mut Vec<u8>,
@@ -601,6 +638,8 @@ fn emit_instr(
     _n_blocks: usize,
     is_dispatch_loop: bool,
     lispy_pair_type_idx: Option<u32>,
+    global_map: &HashMap<String, u32>,
+    print_fn_idx: Option<u32>,
 ) -> Result<(), IIRWasmError> {
     // Helper closures to resolve variable names.
     let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
@@ -679,6 +718,13 @@ fn emit_instr(
                     // emit a local.get (copy).
                     let src_reg = get_reg(name)?;
                     code.extend(encode_local_get(src_reg));
+                }
+                Operand::Str(s) => {
+                    // String literals are not representable as WASM value types.
+                    return Err(IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: format!("const: Operand::Str({:?}) is not a WASM value type", s),
+                    });
                 }
             }
             code.extend(encode_local_set(rd));
@@ -944,6 +990,13 @@ fn emit_instr(
                     Operand::Bool(b) => {
                         code.extend(encode_i32_const(if *b { 1 } else { 0 }));
                     }
+                    Operand::Str(s) => {
+                        // String literals cannot be passed as WASM call arguments.
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: format!("call: Operand::Str({:?}) cannot be a call argument", s),
+                        });
+                    }
                 }
             }
 
@@ -985,6 +1038,13 @@ fn emit_instr(
                     }
                     Operand::Bool(b) => {
                         code.extend(encode_i32_const(if *b { 1 } else { 0 }));
+                    }
+                    Operand::Str(s) => {
+                        // String literals cannot be returned as WASM values.
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: format!("ret: Operand::Str({:?}) is not a WASM return value", s),
+                        });
                     }
                 }
             }
@@ -1286,6 +1346,113 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
+        // ── global_store → global.set N ──────────────────────────────────────
+        //
+        // `global_store Str("name"), Var("%v")`
+        //
+        // Stores a value from a local variable into a named module-level global.
+        //
+        // WASM binary sequence:
+        // ```
+        // local.get  slot_v   ;; push the value to store
+        // global.set idx      ;; pop and write into global[idx]
+        // ```
+        //
+        // srcs[0] = Operand::Str(name) — the compile-time global name
+        // srcs[1] = Operand::Var(val_reg) — the value to store
+        "global_store" => {
+            let global_name = match instr.srcs.first() {
+                Some(Operand::Str(s)) => s.as_str(),
+                _ => return Err(IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "global_store: srcs[0] must be Operand::Str(name)".to_string(),
+                }),
+            };
+            let val_var = match instr.srcs.get(1) {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "global_store: srcs[1] must be Operand::Var(reg)".to_string(),
+                }),
+            };
+            let global_idx = *global_map.get(global_name).ok_or_else(|| IIRWasmError::UnsupportedOp {
+                function: fn_name.to_string(),
+                op: format!("global_store: unknown global {:?}", global_name),
+            })?;
+            let val_slot = get_reg(val_var)?;
+            code.extend(encode_local_get(val_slot));
+            code.extend(encode_global_set(global_idx));
+        }
+
+        // ── global_load → global.get N ───────────────────────────────────────
+        //
+        // `%dest = global_load Str("name")`
+        //
+        // Loads the value of a named module-level global into a local variable.
+        //
+        // WASM binary sequence:
+        // ```
+        // global.get idx      ;; push global[idx] onto the stack
+        // local.set  slot_dest ;; pop and store into the destination local
+        // ```
+        //
+        // srcs[0] = Operand::Str(name) — the compile-time global name
+        // dest = Some(reg) — the register to store the loaded value
+        "global_load" => {
+            let global_name = match instr.srcs.first() {
+                Some(Operand::Str(s)) => s.as_str(),
+                _ => return Err(IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "global_load: srcs[0] must be Operand::Str(name)".to_string(),
+                }),
+            };
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "global_load must have a dest".to_string(),
+            })?;
+            let global_idx = *global_map.get(global_name).ok_or_else(|| IIRWasmError::UnsupportedOp {
+                function: fn_name.to_string(),
+                op: format!("global_load: unknown global {:?}", global_name),
+            })?;
+            let dest_slot = get_reg(dest)?;
+            code.extend(encode_global_get(global_idx));
+            code.extend(encode_local_set(dest_slot));
+        }
+
+        // ── io_out → call $__print_i64 ────────────────────────────────────────
+        //
+        // `io_out Var("%val")`
+        //
+        // Emits a call to the host-provided `env.__print_i64(i64)` import.
+        // The host is expected to print the i64 value to stdout.
+        //
+        // WASM binary sequence:
+        // ```
+        // local.get  slot_val ;; push the value to print
+        // call       fn_idx   ;; call env.__print_i64
+        // ```
+        //
+        // `print_fn_idx` is always 0 when present because imports occupy the
+        // first N slots in the WASM function index space (before defined fns).
+        //
+        // srcs[0] = Operand::Var(val_reg) — the value to print
+        "io_out" => {
+            let fn_idx = print_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                function: fn_name.to_string(),
+                op: "io_out: no $__print_i64 import registered (internal error)".to_string(),
+            })?;
+            let val_var = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "io_out requires Operand::Var(reg)".to_string(),
+                }),
+            };
+            let val_slot = get_reg(val_var)?;
+            code.extend(encode_local_get(val_slot));
+            code.extend(encode_call(fn_idx));
+        }
+
         // ── Unknown op ────────────────────────────────────────────────────────
         _ => {
             return Err(IIRWasmError::UnsupportedOp {
@@ -1346,10 +1513,18 @@ fn get_src_reg(
 /// The `lispy_pair_type_idx` parameter is `Some(n)` when the module has a
 /// `$LispyPair` struct type at type-section index `n`.  Pass `None` for
 /// functions that contain no GC heap ops.
+///
+/// `global_map` maps global variable names to their WASM global section
+/// indices.  Used by `global_load`/`global_store` instructions.
+///
+/// `print_fn_idx` is `Some(0)` when the module imports `env.__print_i64`.
+/// Used by `io_out` instructions.
 fn lower_function(
     fn_: &IIRFunction,
     fn_map: &HashMap<String, u32>,
     lispy_pair_type_idx: Option<u32>,
+    global_map: &HashMap<String, u32>,
+    print_fn_idx: Option<u32>,
 ) -> Result<FunctionBody, IIRWasmError> {
     let param_count = fn_.params.len() as u32;
     let reg_map = build_register_map(fn_);
@@ -1425,6 +1600,8 @@ fn lower_function(
                     n_blocks,
                     true, // inside dispatch-loop
                     lispy_pair_type_idx,
+                    global_map,
+                    print_fn_idx,
                 )?;
             }
 
@@ -1464,6 +1641,8 @@ fn lower_function(
                 n_blocks,
                 false, // no dispatch loop
                 lispy_pair_type_idx,
+                global_map,
+                print_fn_idx,
             )?;
         }
     }
@@ -1518,6 +1697,38 @@ fn make_lispy_pair_struct_type() -> StructType {
     }
 }
 
+/// Scan `module` for global variable names and `io_out` usage.
+///
+/// Returns `(global_names, uses_io_out)`:
+///
+/// - `global_names` — deduplicated list of all global names referenced by
+///   `global_load`/`global_store` instructions, in first-seen order.  Their
+///   position in the vec determines their WASM global section index.
+/// - `uses_io_out` — `true` if any instruction in any function has the
+///   `"io_out"` opcode.  Triggers injection of the `env.__print_i64` import.
+fn collect_globals_and_io(module: &IIRModule) -> (Vec<String>, bool) {
+    let mut global_names: Vec<String> = Vec::new();
+    let mut uses_io_out = false;
+    for fn_ in &module.functions {
+        for instr in &fn_.instructions {
+            match instr.op.as_str() {
+                "global_load" | "global_store" => {
+                    if let Some(Operand::Str(name)) = instr.srcs.first() {
+                        if !global_names.contains(name) {
+                            global_names.push(name.clone());
+                        }
+                    }
+                }
+                "io_out" => {
+                    uses_io_out = true;
+                }
+                _ => {}
+            }
+        }
+    }
+    (global_names, uses_io_out)
+}
+
 /// Lower an `IIRModule` to a `WasmModule`, with WasmGC struct types.
 ///
 /// # Algorithm
@@ -1564,16 +1775,38 @@ pub fn lower_iir_to_wasm(
     // collected.
     let uses_lispy_pair = module_uses_lispy_pair(module);
 
+    // ── Step 2b: Collect global variable names and io_out usage ──────────────
+    //
+    // `global_names` is a deduplicated list of all global variable names
+    // referenced by `global_load`/`global_store` instructions, in first-seen
+    // order.  Position in the vec = WASM global section index.
+    //
+    // `uses_io_out` triggers injection of the `env.__print_i64(i64)` host
+    // import, which occupies function index 0 in the WASM function index
+    // space (imports come before defined functions).
+    let (global_names, uses_io_out) = collect_globals_and_io(module);
+
+    // Map each global name to its WASM global section index.
+    let global_map: HashMap<String, u32> = global_names
+        .iter()
+        .enumerate()
+        .map(|(i, name)| (name.clone(), i as u32))
+        .collect();
+
     // ── Step 3: Build function index map ─────────────────────────────────────
     //
-    // WASM function indices are contiguous starting from 0.  We build this map
-    // before lowering so that `call` instructions can look up the callee's
-    // index.
+    // WASM function indices are contiguous starting from 0.  When a
+    // `$__print_i64` import is present it occupies index 0, so all defined
+    // functions are shifted up by 1.
+    //
+    // `fn_idx_base` is 1 when the print import is injected, 0 otherwise.
+    let fn_idx_base: u32 = if uses_io_out { 1 } else { 0 };
+
     let fn_map: HashMap<String, u32> = module
         .functions
         .iter()
         .enumerate()
-        .map(|(i, f)| (f.name.clone(), i as u32))
+        .map(|(i, f)| (f.name.clone(), i as u32 + fn_idx_base))
         .collect();
 
     // ── Step 4: Lower each function ──────────────────────────────────────────
@@ -1630,19 +1863,69 @@ pub fn lower_iir_to_wasm(
         None
     };
 
+    // Add the $__print_i64 import type and import entry if io_out is used.
+    //
+    // The print import type is pushed AFTER all defined-function FuncTypes and
+    // after the optional LispyPair struct type, so its type index is
+    // `types.len() + struct_types_count`.  Since struct_types are encoded in
+    // the same WASM type section after func types, the print type index is
+    // `types.len() + (1 if uses_lispy_pair else 0)`.
+    //
+    // `print_fn_idx` is always 0 (the import occupies the first function slot).
+    let print_fn_idx: Option<u32>;
+    let print_imports: Vec<Import>;
+    if uses_io_out {
+        // The print type goes after function types and the optional struct type.
+        let print_type_idx =
+            types.len() as u32 + if uses_lispy_pair { 1 } else { 0 };
+        types.push(FuncType {
+            params: vec![ValueType::I64],
+            results: vec![],
+        });
+        print_fn_idx = Some(0u32);
+        print_imports = vec![Import {
+            module_name: "env".to_string(),
+            name: "__print_i64".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(print_type_idx),
+        }];
+    } else {
+        print_fn_idx = None;
+        print_imports = vec![];
+    }
+
+    // Build WASM Global entries — one mutable i64 per named global,
+    // initialised to 0.
+    //
+    // Binary init_expr for `i64.const 0; end`: `[0x42, 0x00, 0x0B]`
+    //   0x42 = i64.const opcode
+    //   0x00 = LEB128 encoding of 0
+    //   0x0B = end opcode (terminates the constant expression)
+    let wasm_globals: Vec<Global> = global_names
+        .iter()
+        .map(|_| Global {
+            global_type: GlobalType {
+                value_type: ValueType::I64,
+                mutable: true,
+            },
+            init_expr: vec![0x42u8, 0x00u8, 0x0Bu8], // i64.const 0; end
+        })
+        .collect();
+
     // Sub-pass B: lower function bodies.
     for (fn_idx, fn_) in module.functions.iter().enumerate() {
         functions.push(func_type_indices[fn_idx]);
 
-        // Export the function by name.
+        // Export the function by name, with index offset for any imports.
         exports.push(Export {
             name: fn_.name.clone(),
             kind: ExternalKind::Function,
-            index: fn_idx as u32,
+            index: fn_idx as u32 + fn_idx_base,
         });
 
-        // Lower the function body, passing the GC type index if needed.
-        let body = lower_function(fn_, &fn_map, lispy_pair_type_idx)?;
+        // Lower the function body, passing GC type index, global map, and
+        // the print import index if io_out is used.
+        let body = lower_function(fn_, &fn_map, lispy_pair_type_idx, &global_map, print_fn_idx)?;
         code.push(body);
     }
 
@@ -1659,6 +1942,8 @@ pub fn lower_iir_to_wasm(
         types,
         struct_types,
         functions,
+        imports: print_imports,
+        globals: wasm_globals,
         exports,
         code,
         ..Default::default()

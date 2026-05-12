@@ -1,5 +1,12 @@
 # Changelog — vm-core
 
+## [0.2.0] — 2026-05-11
+
+### Changed (LANG32 — Operand::Str exhaustiveness)
+
+- `dispatch.rs`: `resolve_operand` now handles `Operand::Str(s)` — converts
+  the compile-time string literal to `Value::Str(s.clone())`.
+
 ## [0.1.0] — 2026-04-27
 
 Initial Rust port of the Python `vm-core` package (LANG02).

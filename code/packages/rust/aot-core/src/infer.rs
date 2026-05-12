@@ -259,6 +259,9 @@ fn resolve_operand(src: &Operand, env: &HashMap<String, String>) -> String {
         }.into(),
         Operand::Float(_) => "f64".into(),
         Operand::Var(name) => env.get(name).cloned().unwrap_or_else(|| "any".into()),
+        // LANG32: Str is a compile-time string literal (global variable name).
+        // It is not a typed value operand; treat as "str" sentinel.
+        Operand::Str(_) => "str".into(),
     }
 }
 
@@ -294,6 +297,8 @@ pub fn literal_type(src: Option<&Operand>) -> String {
         }.into(),
         Some(Operand::Float(_)) => "f64".into(),
         Some(Operand::Var(_)) => "str".into(),
+        // LANG32: Str is a compile-time string literal (e.g. a global variable name).
+        Some(Operand::Str(_)) => "str".into(),
     }
 }
 

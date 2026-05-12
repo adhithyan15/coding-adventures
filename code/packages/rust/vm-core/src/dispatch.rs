@@ -114,6 +114,7 @@ fn resolve_operand(frame: &VMFrame, operand: &Operand) -> Result<Value, VMError>
         Operand::Int(n)   => Ok(Value::Int(*n)),
         Operand::Float(f) => Ok(Value::Float(*f)),
         Operand::Bool(b)  => Ok(Value::Bool(*b)),
+        Operand::Str(s)   => Ok(Value::Str(s.clone())),
     }
 }
 

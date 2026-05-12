@@ -1,5 +1,15 @@
 # Changelog — twig-vm
 
+## [0.9.0] — 2026-05-11
+
+### Changed (LANG32 — Operand::Str exhaustiveness)
+
+- `operand.rs`: `operand_to_value` now handles `Operand::Str(text)` — interns
+  `text` as a Lispy symbol (same convention as `Operand::Var` string-shaped
+  names used by the twig-ir-compiler for global names).
+- `dispatch.rs`: `exec_const` now handles `Operand::Str(text)` — interns the
+  text as a Lispy symbol, matching the `Operand::Var` path.
+
 ## [0.8.0] — 2026-05-11
 
 **LANG26 — `host/` I/O builtins via Rust stdlib.**

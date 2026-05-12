@@ -67,6 +67,14 @@ pub enum Operand {
     Float(f64),
     /// A boolean immediate.
     Bool(bool),
+    /// A compile-time string literal (LANG32).
+    ///
+    /// Distinct from `Var` — backends must NOT look this up in the register
+    /// file.  Used by `global_load`/`global_store` to carry the global
+    /// variable name and by any future string-value opcode.
+    ///
+    /// Example: `global_store("x", %v)` has `srcs[0] = Operand::Str("x".into())`.
+    Str(String),
 }
 
 impl Operand {
@@ -74,6 +82,17 @@ impl Operand {
     pub fn as_var(&self) -> Option<&str> {
         match self {
             Operand::Var(s) => Some(s.as_str()),
+            _ => None,
+        }
+    }
+
+    /// Return the string literal if this is a `Str` operand, else `None`.
+    ///
+    /// Used by backends to extract compile-time string names from
+    /// `global_load`/`global_store` instructions.
+    pub fn as_str_lit(&self) -> Option<&str> {
+        match self {
+            Operand::Str(s) => Some(s.as_str()),
             _ => None,
         }
     }
@@ -86,6 +105,7 @@ impl std::fmt::Display for Operand {
             Operand::Int(n)   => write!(f, "{n}"),
             Operand::Float(v) => write!(f, "{v}"),
             Operand::Bool(b)  => write!(f, "{b}"),
+            Operand::Str(s)   => write!(f, "\"{s}\""),
         }
     }
 }

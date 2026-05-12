@@ -112,6 +112,7 @@
 pub mod error;
 pub mod numeric;
 pub mod heap;
+pub mod global_io;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -123,6 +124,8 @@ pub use error::BuiltinLoweringError;
 // Re-export the heap lowering entry point for callers that want to invoke
 // Phase 2 directly (e.g. the LANG31 pipeline driver).
 pub use heap::lower_heap_builtins;
+// Re-export the global/IO lowering entry point (LANG32).
+pub use global_io::lower_global_io;
 
 use interpreter_ir::IIRModule;
 
@@ -164,6 +167,18 @@ pub fn lower_builtins(module: &mut IIRModule) -> Vec<BuiltinLoweringError> {
     // This pass is infallible: malformed heap instructions are left unchanged
     // for the backend's validator to surface with clearer error messages.
     heap::lower_heap_builtins(module);
+
+    // ── Phase 3: global variables and I/O (LANG32) ────────────────────────
+    //
+    // Rewrites:
+    //   call_builtin "global_set" name_reg, val_reg  →  global_store Str(name), val_reg
+    //   call_builtin "global_get" name_reg           →  global_load Str(name)
+    //   call_builtin "print" val_reg                 →  io_out val_reg
+    //
+    // Uses a look-back pass to resolve global names from preceding `const`
+    // instructions (the twig-ir-compiler's string-literal convention).
+    // Infallible: unresolvable instructions are left unchanged.
+    global_io::lower_global_io(module);
 
     all_errors
 }

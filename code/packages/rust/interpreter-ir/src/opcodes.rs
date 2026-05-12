@@ -150,6 +150,22 @@ pub fn is_memory(op: &str) -> bool {
     matches!(op, "load_reg" | "store_reg" | "load_mem" | "store_mem")
 }
 
+/// Module-level global variable operations (LANG32).
+///
+/// `global_load` reads a named global; `global_store` writes one.
+/// The global name is always `srcs[0] = Operand::Str("name")` — a
+/// compile-time string literal, NOT a register reference.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_global;
+/// assert!(is_global("global_load"));
+/// assert!(is_global("global_store"));
+/// assert!(!is_global("load_reg"));
+/// ```
+pub fn is_global(op: &str) -> bool {
+    matches!(op, "global_load" | "global_store")
+}
+
 /// Function calls.
 pub fn is_call(op: &str) -> bool {
     matches!(op, "call" | "call_builtin")
@@ -225,6 +241,8 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "unbox"
                 | "field_load"
                 | "is_null"
+                // Global variable read (LANG32)
+                | "global_load"
                 // Concurrency ops that produce a dest value (LANG28)
                 | "task_spawn"
                 | "task_current"
@@ -276,6 +294,8 @@ pub fn has_side_effects(op: &str) -> bool {
                 | "type_assert"
                 | "field_store"
                 | "safepoint"
+                // Global variable write (LANG32)
+                | "global_store"
                 // Concurrency ops with side effects but no dest (LANG28)
                 | "task_yield"
                 | "task_sleep"

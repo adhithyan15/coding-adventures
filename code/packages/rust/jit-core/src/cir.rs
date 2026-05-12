@@ -123,6 +123,7 @@ impl From<interpreter_ir::instr::Operand> for CIROperand {
             interpreter_ir::instr::Operand::Int(n)   => CIROperand::Int(n),
             interpreter_ir::instr::Operand::Float(v) => CIROperand::Float(v),
             interpreter_ir::instr::Operand::Bool(b)  => CIROperand::Bool(b),
+            interpreter_ir::instr::Operand::Str(s)   => CIROperand::Var(s),
         }
     }
 }
@@ -134,6 +135,7 @@ impl From<&interpreter_ir::instr::Operand> for CIROperand {
             interpreter_ir::instr::Operand::Int(n)   => CIROperand::Int(*n),
             interpreter_ir::instr::Operand::Float(v) => CIROperand::Float(*v),
             interpreter_ir::instr::Operand::Bool(b)  => CIROperand::Bool(*b),
+            interpreter_ir::instr::Operand::Str(s)   => CIROperand::Var(s.clone()),
         }
     }
 }
