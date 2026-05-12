@@ -1,5 +1,52 @@
 # Changelog — interpreter-ir
 
+## [0.5.0] — 2026-05-11
+
+### Added (LANG33 — Module System at the IIR Level)
+
+#### New `module_exports` module
+
+- Added `src/module_exports.rs` with two new public types:
+  - `IIRExport { function_name, alias }` — declares a function this module
+    makes visible to other modules.  `public_name()` returns alias if set,
+    otherwise `function_name`.  Builder: `new(fn_name).with_alias(alias)`.
+  - `IIRImport { module_name, function_name, local_alias, param_types, return_type }` —
+    declares a function this module requires from another module.
+    `local_name()` returns local_alias if set, otherwise `function_name`.
+    Builders: `new(mod, fn, ret)`, `.with_local_alias(alias)`, `.with_params(types)`.
+- Both types derive `Debug + Clone + PartialEq`; 11 unit tests + 5 doc-tests.
+
+#### `IIRModule` changes
+
+- Added two new fields (LANG33): `pub exports: Vec<IIRExport>` and
+  `pub imports: Vec<IIRImport>`.
+- `IIRModule::new()` initialises both to `Vec::new()` (backward compatible).
+- `IIRModule::validate()` extended with two new checks:
+  - `ExportNotFound`: exported `function_name` not in `self.functions`.
+  - `DuplicateExport`: two exports have the same `public_name()`.
+- Imports are intentionally NOT validated here (linker's responsibility).
+
+#### `serialise.rs` changes
+
+- Version bumped from `1.0` to `1.1` to mark the LANG33 extension.
+- Deserialiser accepts both `1.0` (legacy, no exports/imports) and `1.1`
+  (current).  Old binaries round-trip correctly.
+- LANG33 extension appended after functions:
+  - Tag `0x10` + u32 count + exports (`function_name` + `alias`).
+  - Tag `0x11` + u32 count + imports (all fields).
+- Added `Operand::Str` round-trip (kind byte `4`) to serialise/deserialise.
+  (This was written in the serialiser in LANG32 but the deserialise path was
+  not present.)
+- 10 new tests (serialise section): export/import round-trips, backward-compat
+  1.0 version, `Operand::Str` round-trip, unsupported version error.
+
+#### `lib.rs`
+
+- `pub mod module_exports` registered.
+- `pub use module_exports::{IIRExport, IIRImport}` re-exported from crate root.
+
+---
+
 ## [0.4.0] — 2026-05-11
 
 ### Added (LANG32 — Global Variables and I/O at the IIR Level)

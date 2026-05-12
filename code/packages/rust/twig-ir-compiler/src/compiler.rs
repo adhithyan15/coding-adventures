@@ -348,6 +348,8 @@ impl Compiler {
             functions: self.functions,
             entry_point: Some("main".to_string()),
             language: "twig".to_string(),
+            exports: Vec::new(),
+            imports: Vec::new(),
         })
     }
 

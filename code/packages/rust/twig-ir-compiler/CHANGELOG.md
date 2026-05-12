@@ -1,5 +1,15 @@
 # Changelog — twig-ir-compiler
 
+## [0.2.1] — 2026-05-11
+
+### Fixed (LANG33 — Module System)
+
+- Added `exports: Vec::new(), imports: Vec::new()` to the `IIRModule { ... }`
+  struct literal in `compiler.rs` (`compile_module`).  Required by the new
+  LANG33 fields on `IIRModule`; the workspace `cargo build` enforces this.
+
+---
+
 ## [0.2.0] — 2026-05-04
 
 ### Added (LANG23 PR 23-E — emit RefinedType annotations into IIR)
