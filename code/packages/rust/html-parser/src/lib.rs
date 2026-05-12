@@ -719,6 +719,7 @@ pub struct HtmlParser {
     options: HtmlParseOptions,
     quirks_mode: bool,
     strip_next_leading_lf: bool,
+    explicit_head_end_seen: bool,
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
@@ -739,6 +740,7 @@ impl Default for HtmlParser {
             options: HtmlParseOptions::default(),
             quirks_mode: true,
             strip_next_leading_lf: false,
+            explicit_head_end_seen: false,
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
@@ -786,6 +788,7 @@ impl HtmlParser {
             options,
             quirks_mode: true,
             strip_next_leading_lf: false,
+            explicit_head_end_seen: false,
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
@@ -1581,6 +1584,17 @@ impl HtmlParser {
             && !self.has_document_element()
             && !self.document.children.iter().any(is_body_content_node)
         {
+            if self.explicit_head_end_seen {
+                let mut html = Node::element("html".to_string(), Vec::new());
+                if let Node::Element(html_element) = &mut html {
+                    html_element
+                        .children
+                        .push(Node::element("head".to_string(), Vec::new()));
+                    html_element.children.push(Node::text(text));
+                }
+                self.document.push_child(html);
+                return;
+            }
             return;
         }
 
@@ -1783,6 +1797,22 @@ impl HtmlParser {
             }
         }
         let node = Node::comment(comment);
+        if self.explicit_head_end_seen
+            && self.current_element_is("head")
+            && self.has_document_element()
+            && !self.document_has_body_element()
+            && !self.body_has_non_whitespace_child()
+        {
+            if let Some(Node::Element(html)) = self
+                .document
+                .children
+                .iter_mut()
+                .find(|node| matches!(node, Node::Element(element) if element.name == "html"))
+            {
+                html.children.push(node);
+                return;
+            }
+        }
         if self.open_elements.is_empty()
             && self.has_document_element()
             && !self.explicit_html_end_seen
@@ -2327,6 +2357,9 @@ impl HtmlParser {
         if name == "body" {
             self.explicit_body_end_seen = true;
         }
+        if name == "head" {
+            self.explicit_head_end_seen = true;
+        }
         if name == "html" {
             self.explicit_html_end_seen = true;
         }
@@ -2375,6 +2408,15 @@ impl HtmlParser {
                 && !self.body_has_non_whitespace_child() => {}
             "p" if self.current_parent_has_element_ancestor("button")
                 && !self.current_parent_has_element_in_button_scope("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_node(Node::element("p".to_string(), Vec::new()));
+            }
+            "p" if self.current_parent_has_table_cell_ancestor()
+                && !self.current_parent_has_element_in_table_scope("p") =>
             {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -3614,6 +3656,15 @@ impl HtmlParser {
         })
     }
 
+    fn current_parent_has_table_cell_ancestor(&self) -> bool {
+        let current_parent_path = self.current_parent_path();
+        self.open_elements.iter().any(|path| {
+            current_parent_path.starts_with(path)
+                && element_at_path(&self.document, path)
+                    .is_some_and(|name| matches!(name, "td" | "th"))
+        })
+    }
+
     fn current_parent_has_element_ancestor(&self, ancestor_name: &str) -> bool {
         let current_parent_path = self.current_parent_path();
         self.open_elements.iter().any(|path| {
@@ -4779,6 +4830,8 @@ impl DocumentShellBuilder {
                     None => {
                         if !self.head_children.is_empty() {
                             self.push_head_text(text.data);
+                        } else if self.seen_head_element {
+                            self.pre_body_html_children.push(Node::Text(text));
                         }
                     }
                 }
@@ -7002,11 +7055,11 @@ mod tests {
         let html = html(&document);
         assert_eq!(element(&html.children[0]).name, "head");
         assert!(matches!(html.children[1], Node::Comment(_)));
+        assert!(matches!(html.children[2], Node::Comment(_)));
         let head = element(&html.children[0]);
         assert_eq!(element(&head.children[0]).name, "style");
-        assert!(matches!(head.children[1], Node::Comment(_)));
-        assert_eq!(element(&head.children[2]).name, "script");
-        assert_eq!(element(&html.children[2]).name, "body");
+        assert_eq!(element(&head.children[1]).name, "script");
+        assert_eq!(element(&html.children[3]).name, "body");
     }
 
     #[test]
