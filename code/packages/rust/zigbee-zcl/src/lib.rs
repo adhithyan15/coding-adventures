@@ -310,6 +310,63 @@ pub struct ZclAttributeReport {
     pub value: ZclValue,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclAttributeReportSummary {
+    pub cluster_id: ZclClusterId,
+    pub report_count: usize,
+    pub state_delta_count: usize,
+    pub bool_reports: usize,
+    pub numeric_reports: usize,
+    pub text_reports: usize,
+    pub raw_reports: usize,
+    pub unknown_type_reports: usize,
+}
+
+impl ZclAttributeReportSummary {
+    pub fn from_reports<'a, I>(cluster_id: ZclClusterId, reports: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ZclAttributeReport>,
+    {
+        let mut summary = Self {
+            cluster_id,
+            report_count: 0,
+            state_delta_count: 0,
+            bool_reports: 0,
+            numeric_reports: 0,
+            text_reports: 0,
+            raw_reports: 0,
+            unknown_type_reports: 0,
+        };
+        for report in reports {
+            summary.report_count += 1;
+            if state_delta_for_report(report).is_some() {
+                summary.state_delta_count += 1;
+            }
+            match &report.value {
+                ZclValue::Bool(_) | ZclValue::Bitmap8(_) => summary.bool_reports += 1,
+                ZclValue::U8(_) | ZclValue::U16(_) | ZclValue::U32(_) | ZclValue::I16(_) => {
+                    summary.numeric_reports += 1;
+                }
+                ZclValue::Enum8(_) => summary.numeric_reports += 1,
+                ZclValue::CharacterString(_) => summary.text_reports += 1,
+                ZclValue::Raw(_) => summary.raw_reports += 1,
+            }
+            if matches!(report.data_type, ZclDataType::Unknown(_)) {
+                summary.unknown_type_reports += 1;
+            }
+        }
+        summary
+    }
+
+    pub fn has_state_deltas(&self) -> bool {
+        self.state_delta_count > 0
+    }
+
+    pub fn has_raw_reports(&self) -> bool {
+        self.raw_reports > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ZclError {
     Truncated { needed: usize, remaining: usize },
@@ -405,6 +462,16 @@ pub fn parse_attribute_reports(
         });
     }
     Ok(reports)
+}
+
+pub fn attribute_report_summary(
+    cluster_id: ZclClusterId,
+    payload: &[u8],
+) -> Result<ZclAttributeReportSummary, ZclError> {
+    let reports = parse_attribute_reports(cluster_id, payload)?;
+    Ok(ZclAttributeReportSummary::from_reports(
+        cluster_id, &reports,
+    ))
 }
 
 pub fn capabilities_for_cluster(cluster_id: ZclClusterId) -> Vec<Capability> {
@@ -539,7 +606,7 @@ fn read_zcl_value(cursor: &mut Cursor<'_>, data_type: ZclDataType) -> Result<Zcl
             let value = std::str::from_utf8(bytes).map_err(|_| ZclError::InvalidString)?;
             Ok(ZclValue::CharacterString(value.to_string()))
         }
-        ZclDataType::Unknown(_) => Ok(ZclValue::Raw(cursor.remaining_bytes().to_vec())),
+        ZclDataType::Unknown(_) => Ok(ZclValue::Raw(cursor.read_remaining_bytes().to_vec())),
     }
 }
 
@@ -559,6 +626,12 @@ impl<'a> Cursor<'a> {
 
     fn remaining_bytes(&self) -> &'a [u8] {
         &self.bytes[self.pos..]
+    }
+
+    fn read_remaining_bytes(&mut self) -> &'a [u8] {
+        let start = self.pos;
+        self.pos = self.bytes.len();
+        &self.bytes[start..]
     }
 
     fn read_u8(&mut self) -> Result<u8, ZclError> {
@@ -715,6 +788,57 @@ mod tests {
                 value: ZclValue::CharacterString("Signify".to_string()),
             }
         );
+    }
+
+    #[test]
+    fn attribute_report_summary_counts_report_shape() {
+        let payload = [
+            0x00,
+            0x00,
+            ZclDataType::Bool.encode(),
+            0x01,
+            0x07,
+            0x00,
+            ZclDataType::U16.encode(),
+            0x2c,
+            0x01,
+            0x04,
+            0x00,
+            ZclDataType::CharacterString.encode(),
+            0x04,
+            b'T',
+            b'e',
+            b's',
+            b't',
+        ];
+
+        let summary = attribute_report_summary(ZclClusterId::ON_OFF, &payload).unwrap();
+
+        assert_eq!(summary.cluster_id, ZclClusterId::ON_OFF);
+        assert_eq!(summary.report_count, 3);
+        assert_eq!(summary.state_delta_count, 1);
+        assert_eq!(summary.bool_reports, 1);
+        assert_eq!(summary.numeric_reports, 1);
+        assert_eq!(summary.text_reports, 1);
+        assert_eq!(summary.raw_reports, 0);
+        assert_eq!(summary.unknown_type_reports, 0);
+        assert!(summary.has_state_deltas());
+        assert!(!summary.has_raw_reports());
+    }
+
+    #[test]
+    fn attribute_report_summary_counts_unknown_raw_reports() {
+        let reports =
+            parse_attribute_reports(ZclClusterId::BASIC, &[0x99, 0x00, 0xff, 0xde, 0xad]).unwrap();
+
+        let summary = ZclAttributeReportSummary::from_reports(ZclClusterId::BASIC, &reports);
+
+        assert_eq!(summary.report_count, 1);
+        assert_eq!(summary.state_delta_count, 0);
+        assert_eq!(summary.raw_reports, 1);
+        assert_eq!(summary.unknown_type_reports, 1);
+        assert!(!summary.has_state_deltas());
+        assert!(summary.has_raw_reports());
     }
 
     #[test]

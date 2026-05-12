@@ -9,6 +9,8 @@ coordinator policy. It provides:
 - foundation and cluster-specific frame control parsing/encoding
 - read-attributes, on/off, level, and color-temperature command frame builders
 - typed attribute report parsing
+- compact attribute report summaries for parsed report shape and D23 delta
+  coverage
 - D23 capability projection for common clusters
 - D23 `StateDelta` projection for on/off, level, color-temperature, occupancy,
   lock-state, temperature, humidity, and illuminance reports
