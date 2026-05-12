@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `RegistrySupervisionSummary` plus read-view and registry helpers for compact
+  health, pairing, and refresh-work status loops.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added
