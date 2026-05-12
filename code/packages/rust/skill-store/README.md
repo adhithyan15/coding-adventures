@@ -12,11 +12,14 @@ other backends without changing the skill API.
 - `SkillManifestSummary`
 - `SkillAssetRecord`
 - `SkillAssetSummary`
+- `SkillCatalogSummary`
 - installation of manifests plus asset bundles
 - bounded manifest listing by active status, entrypoint, required tool, and
   required capability
 - metadata-only summary reads for catalog and `skill.list` surfaces
 - metadata-only asset summary reads for catalog and preload planning surfaces
+- compact catalog summaries for installed versions, active state, and stored
+  asset material
 - active-version switching and uninstall semantics
 
 ## Key layout
@@ -31,6 +34,7 @@ other backends without changing the skill API.
 - `load_manifest_summary()`
 - `list_skills()`
 - `list_skill_summaries()`
+- `catalog_summary()`
 - `list_asset_summaries()`
 - `list_installed_skills()`
 - `read_asset()`
@@ -52,6 +56,10 @@ manifest `source` and asset bytes behind the explicit manifest/asset reads.
 read model. Callers can list asset metadata for one skill version, narrow by
 logical path prefix or content type, and cap the number of returned summaries
 without materializing asset bodies.
+
+`SkillCatalogSummary` gives hosts and catalog tools a compact rollup across
+filtered skill versions, active state, manifest asset references, and stored
+asset material without returning raw manifests or asset bodies.
 
 ## Development
 

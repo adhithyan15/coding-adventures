@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `SkillCatalogSummary` plus `SkillStore::catalog_summary()` for compact
+  installed-version, active-state, and asset-material rollups.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
