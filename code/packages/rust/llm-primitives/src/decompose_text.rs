@@ -149,6 +149,19 @@ to answer.\n\
 `{\"functor\": \"pred\", \"args\": [...]}` for compound claims. Args \
 recursively use the same term shape.\n\
 10. **`document_id` is the DOCUMENT_ID from the user message, verbatim.**\n\
+11. **Punctuation and delimiters can flip meaning — read them carefully.** \
+A single comma, period, colon, or quote mark can invert the intent \
+of an otherwise-identical string. Two famous examples:\n\
+   * `\"Let's eat, Bob.\"` — Bob is being invited to a meal.\n\
+   * `\"Let's eat Bob.\"` — Bob is the meal.\n\
+The bytes differ by one comma; the meaning differs by an order \
+of magnitude. Before assigning a `term`, scan the surrounding \
+punctuation: commas separating list items vs vocatives; periods \
+ending sentences vs abbreviations; quotes scoping a quoted phrase \
+vs marking emphasis; colons introducing definitions vs ratios; \
+parentheses denoting asides vs grouping. If the punctuation is \
+ambiguous or load-bearing, prefer an `Uncertainty` node with \
+`polarity: \"Uncertain\"` over a confident guess.\n\
 \n\
 Respond with the JSON object only. No prose, no markdown, no \
 backticks.";
@@ -402,7 +415,7 @@ mod tests {
 
         assert_eq!(resp.call_record.primitive, "decompose_text");
         assert_eq!(resp.call_record.role, "extractor");
-        assert_eq!(resp.call_record.prompt_version, "decompose-text-v2");
+        assert_eq!(resp.call_record.prompt_version, "decompose-text-v3");
         assert!(!resp.call_record.prompt_hash.is_empty());
         assert_eq!(resp.call_record.usage.input_tokens, 700);
         assert_eq!(resp.call_record.usage.output_tokens, 320);

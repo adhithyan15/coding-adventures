@@ -1,8 +1,8 @@
 [package]
 name = "llm-primitives"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
-description = "LM00b — typed LLM primitives layer. v0.8 ships a much-improved decompose_text prompt (v2) with a concrete worked example, prevents nested-children output, and produces clean flat IRs from small models like Gemma 4."
+description = "LM00b — typed LLM primitives layer. v0.9 bumps the decompose_text prompt to v3 with an explicit punctuation/delimiter awareness rule (the `Let's eat, Bob` rule): commas, periods, quotes, and colons can flip meaning, so the model is told to scan them before assigning a term, and to prefer an Uncertainty node when punctuation is load-bearing or ambiguous."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }
