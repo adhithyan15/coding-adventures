@@ -18,7 +18,9 @@ delegate/run-loop adapter for service-filtered BLE GATT connections,
 characteristic writes, and notification reads.
 
 OS-specific scanners can also pass discovered device metadata into
-`board_vm_endpoint_candidates`. The Rust planner filters for Board VM BLE
+`board_vm_endpoint_candidates`. The macOS scanner reads `system_profiler`, while
+the Linux scanner reads BlueZ metadata through `bluetoothctl devices` and
+`bluetoothctl info`. The Rust planner filters for Board VM BLE
 service/characteristic UUIDs and RFCOMM channels, then returns concrete endpoint
 candidates so language frontends can present boards instead of asking users for
 UUIDs or Bluetooth channels.
