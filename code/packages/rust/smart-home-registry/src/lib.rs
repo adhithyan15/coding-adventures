@@ -181,6 +181,72 @@ impl RegistryAuthorizationSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct RegistryProtocolSourceSummary {
+    pub bridges: usize,
+    pub devices: usize,
+    pub scenes: usize,
+    pub bridges_with_protocol_ids: usize,
+    pub bridges_without_protocol_ids: usize,
+    pub devices_with_protocol_ids: usize,
+    pub devices_without_protocol_ids: usize,
+    pub scenes_with_native_refs: usize,
+    pub scenes_without_native_refs: usize,
+    pub protocol_identifiers: usize,
+    pub hue_identifiers: usize,
+    pub zigbee_identifiers: usize,
+    pub zwave_identifiers: usize,
+    pub thread_identifiers: usize,
+    pub matter_identifiers: usize,
+    pub mqtt_identifiers: usize,
+    pub vendor_identifiers: usize,
+}
+
+impl RegistryProtocolSourceSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn has_protocol_identifiers(&self) -> bool {
+        self.protocol_identifiers > 0
+    }
+
+    pub fn has_missing_protocol_sources(&self) -> bool {
+        self.bridges_without_protocol_ids > 0
+            || self.devices_without_protocol_ids > 0
+            || self.scenes_without_native_refs > 0
+    }
+
+    pub fn has_multi_family_sources(&self) -> bool {
+        [
+            self.hue_identifiers,
+            self.zigbee_identifiers,
+            self.zwave_identifiers,
+            self.thread_identifiers,
+            self.matter_identifiers,
+            self.mqtt_identifiers,
+            self.vendor_identifiers,
+        ]
+        .into_iter()
+        .filter(|count| *count > 0)
+        .count()
+            > 1
+    }
+
+    fn add_identifier(&mut self, family: &ProtocolFamily) {
+        self.protocol_identifiers += 1;
+        match family {
+            ProtocolFamily::Hue => self.hue_identifiers += 1,
+            ProtocolFamily::Zigbee => self.zigbee_identifiers += 1,
+            ProtocolFamily::ZWave => self.zwave_identifiers += 1,
+            ProtocolFamily::Thread => self.thread_identifiers += 1,
+            ProtocolFamily::Matter => self.matter_identifiers += 1,
+            ProtocolFamily::Mqtt => self.mqtt_identifiers += 1,
+            ProtocolFamily::Vendor(_) => self.vendor_identifiers += 1,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeSummary {
     pub bridge_id: BridgeId,
@@ -521,6 +587,10 @@ impl<'a> SmartHomeRegistryReadView<'a> {
 
     pub fn authorization_summary_at(&self, now_ms: u64) -> RegistryAuthorizationSummary {
         self.registry.authorization_summary_at(now_ms)
+    }
+
+    pub fn protocol_source_summary(&self) -> RegistryProtocolSourceSummary {
+        self.registry.protocol_source_summary()
     }
 
     pub fn bridge(&self, bridge_id: &BridgeId) -> Option<&'a Bridge> {
@@ -964,6 +1034,48 @@ impl InMemorySmartHomeRegistry {
             allowed_decisions,
             denied_decisions,
         }
+    }
+
+    pub fn protocol_source_summary(&self) -> RegistryProtocolSourceSummary {
+        let mut summary = RegistryProtocolSourceSummary {
+            bridges: self.bridges.len(),
+            devices: self.devices.len(),
+            scenes: self.scenes.len(),
+            ..RegistryProtocolSourceSummary::empty()
+        };
+
+        for bridge in self.bridges.values() {
+            if bridge.identifiers.is_empty() {
+                summary.bridges_without_protocol_ids += 1;
+            } else {
+                summary.bridges_with_protocol_ids += 1;
+            }
+            for identifier in &bridge.identifiers {
+                summary.add_identifier(&identifier.family);
+            }
+        }
+
+        for device in self.devices.values() {
+            if device.identifiers.is_empty() {
+                summary.devices_without_protocol_ids += 1;
+            } else {
+                summary.devices_with_protocol_ids += 1;
+            }
+            for identifier in &device.identifiers {
+                summary.add_identifier(&identifier.family);
+            }
+        }
+
+        for scene in self.scenes.values() {
+            if let Some(identifier) = &scene.native_ref {
+                summary.scenes_with_native_refs += 1;
+                summary.add_identifier(&identifier.family);
+            } else {
+                summary.scenes_without_native_refs += 1;
+            }
+        }
+
+        summary
     }
 
     pub fn upsert_bridge(&mut self, bridge: Bridge) -> Result<Option<Bridge>, RegistryError> {
@@ -2147,6 +2259,87 @@ mod tests {
         assert_eq!(summary.events, 0);
         assert!(summary.has_attention_items());
         assert!(summary.has_refresh_work());
+    }
+
+    #[test]
+    fn protocol_source_summary_counts_native_identifier_coverage() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        let hue_bridge = bridge_with_native("bridge-1", "bridge-native-1");
+        let mut unsourced_bridge = bridge_with_native("bridge-2", "bridge-native-2");
+        unsourced_bridge.identifiers.clear();
+        registry.upsert_bridge(hue_bridge).unwrap();
+        registry.upsert_bridge(unsourced_bridge).unwrap();
+
+        let hue_device = device_with_native("device-1", "bridge-1", "device-native-1");
+        let mut zigbee_device = device_with_native("device-2", "bridge-1", "device-native-2");
+        zigbee_device.identifiers = vec![ProtocolIdentifier::new(
+            ProtocolFamily::Zigbee,
+            "ieee",
+            "00:11:22:33:44:55:66:77",
+        )
+        .unwrap()];
+        let mut unsourced_device = device_with_native("device-3", "bridge-2", "device-native-3");
+        unsourced_device.identifiers.clear();
+        registry.upsert_device(hue_device).unwrap();
+        registry.upsert_device(zigbee_device).unwrap();
+        registry.upsert_device(unsourced_device).unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+
+        registry
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-1"),
+                scope: SceneScope::Room,
+                native_ref: Some(
+                    ProtocolIdentifier::new(ProtocolFamily::Matter, "scene", "matter-scene-1")
+                        .unwrap(),
+                ),
+                actions: vec![SceneAction {
+                    entity_id: EntityId::trusted("entity-1"),
+                    desired_state: Value::Bool(true),
+                }],
+                metadata: Vec::new(),
+            })
+            .unwrap();
+        registry
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-2"),
+                scope: SceneScope::Home,
+                native_ref: None,
+                actions: Vec::new(),
+                metadata: Vec::new(),
+            })
+            .unwrap();
+
+        let summary = registry.protocol_source_summary();
+
+        assert_eq!(
+            summary,
+            RegistryProtocolSourceSummary {
+                bridges: 2,
+                devices: 3,
+                scenes: 2,
+                bridges_with_protocol_ids: 1,
+                bridges_without_protocol_ids: 1,
+                devices_with_protocol_ids: 2,
+                devices_without_protocol_ids: 1,
+                scenes_with_native_refs: 1,
+                scenes_without_native_refs: 1,
+                protocol_identifiers: 4,
+                hue_identifiers: 2,
+                zigbee_identifiers: 1,
+                zwave_identifiers: 0,
+                thread_identifiers: 0,
+                matter_identifiers: 1,
+                mqtt_identifiers: 0,
+                vendor_identifiers: 0,
+            }
+        );
+        assert!(summary.has_protocol_identifiers());
+        assert!(summary.has_missing_protocol_sources());
+        assert!(summary.has_multi_family_sources());
+        assert_eq!(registry.read_view().protocol_source_summary(), summary);
     }
 
     #[test]

@@ -21,6 +21,8 @@ Current scope:
 - refresh-result application with refreshed/missing entity reports
 - compact supervision summaries for health, pairing, and refresh-work status
 - compact authorization summaries for grant status and decision outcomes
+- compact protocol-source summaries for bridge/device/scene native identifier
+  coverage across integration families
 - state snapshot cache
 - immutable event log in arrival order
 - selector-based event-log queries for bounded replay windows
