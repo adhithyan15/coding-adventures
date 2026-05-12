@@ -25,6 +25,16 @@
 //! # Inject a rulebook from a file (e.g., one elicited via
 //! # adjudication_rulebook::acquire_rulebook and persisted):
 //! ADJ_DEMO_RULEBOOK_MODE=path/to/rulebook.txt cargo run -p adjudication-tsa-demo
+//!
+//! # Elicit a rulebook from the model's own weights, then inject it
+//! # into Arm A's system prompt. This is the recursive use of the
+//! # framework on itself.
+//! ADJ_DEMO_RULEBOOK_MODE=elicit cargo run -p adjudication-tsa-demo
+//!
+//! # When using elicit-mode, also dump the elicited rulebook text
+//! # to stdout so you can inspect what the model produced:
+//! ADJ_DEMO_RULEBOOK_MODE=elicit ADJ_DEMO_DUMP_RULEBOOK=1 \
+//!     cargo run -p adjudication-tsa-demo
 //! ```
 //!
 //! The binary is intentionally environment-variable driven rather
@@ -34,12 +44,82 @@
 use std::time::Duration;
 
 use adjudication_tsa_demo::{
-    fixture_tsa_rulebook, format_side_by_side, run_pipeline_arm, run_raw_arm, DemoConfig, IrMode,
-    IrSourceTelemetry,
+    acquire_demo_rulebook, fixture_tsa_rulebook, format_side_by_side, run_pipeline_arm,
+    run_raw_arm, DemoConfig, IrMode, IrSourceTelemetry,
 };
+use llm_primitives::{GatewayConfig, Role as PrimitiveRole};
+use llm_provider_ollama::OllamaClient;
 
 fn main() {
-    let cfg = config_from_env();
+    let mut cfg = config_from_env();
+    let elicit_requested = std::env::var("ADJ_DEMO_RULEBOOK_MODE")
+        .map(|s| s == "elicit")
+        .unwrap_or(false);
+
+    // If the user asked for ADJ_DEMO_RULEBOOK_MODE=elicit, run the
+    // rulebook-acquisition phase before Arm A. The acquired rulebook
+    // text gets stashed in `cfg.rulebook_text` so `run_raw_arm`
+    // injects it as the system prompt. This is the recursive use of
+    // the framework on itself.
+    if elicit_requested {
+        println!(
+            "[stage 0] eliciting TSA rulebook from `{model}` via \
+             adjudication_rulebook::acquire_rulebook ...",
+            model = cfg.model,
+        );
+        let ollama = OllamaClient::new(cfg.model.clone())
+            .with_endpoint(cfg.endpoint.clone())
+            .with_timeout(cfg.timeout);
+        let gw = GatewayConfig::new()
+            .with_client(PrimitiveRole::RuleExtractor, Box::new(ollama.clone()))
+            .with_client(PrimitiveRole::Extractor, Box::new(ollama));
+        match acquire_demo_rulebook(&cfg, &gw) {
+            Ok(rb) => {
+                let validation_summary = if rb.validation_passed {
+                    "OK".to_string()
+                } else {
+                    format!(
+                        "FAILED ({})",
+                        rb.validation_error
+                            .as_deref()
+                            .unwrap_or("(no diagnostic)")
+                    )
+                };
+                println!(
+                    "[stage 0] elicited {bytes} bytes of rulebook text from \
+                     `{model}` (trust={trust}, validation={validation})",
+                    bytes = rb.source_text.len(),
+                    model = cfg.model,
+                    trust = rb.trust.as_str(),
+                    validation = validation_summary,
+                );
+                if std::env::var("ADJ_DEMO_DUMP_RULEBOOK").is_ok() {
+                    println!(
+                        "[stage 0] elicited rulebook source_text:\n\
+                         ----- BEGIN RULEBOOK -----\n\
+                         {text}\n\
+                         ----- END RULEBOOK -----",
+                        text = rb.source_text,
+                    );
+                }
+                cfg.rulebook_text = Some(rb.source_text);
+            }
+            Err(e) => {
+                // Print to BOTH stdout and stderr. Benchmark tooling
+                // often captures only stdout; the failure must not be
+                // silent. Surfacing the typed error to stdout matches
+                // the success-path log line so log-grepping benchmark
+                // scripts can detect either outcome.
+                let msg = format!(
+                    "[stage 0] rulebook elicitation FAILED: {e}\n\
+                     [stage 0] continuing without rulebook (Arm A will \
+                     run the v0.7 baseline behaviour)."
+                );
+                println!("{msg}");
+                eprintln!("{msg}");
+            }
+        }
+    }
 
     println!(
         "Running TSA demo against {endpoint}\n\
@@ -168,6 +248,11 @@ fn config_from_env() -> DemoConfig {
         cfg.rulebook_text = match mode.as_str() {
             "" | "none" => None,
             "fixture" => Some(fixture_tsa_rulebook()),
+            // `elicit` is handled later in `main()` — it needs a
+            // gateway, which isn't available at config-load time.
+            // Leave rulebook_text = None here; main() fills it in
+            // after acquire_demo_rulebook runs.
+            "elicit" => None,
             path => match std::fs::read_to_string(path) {
                 Ok(text) => Some(text),
                 Err(e) => {

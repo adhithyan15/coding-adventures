@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-tsa-demo"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
-description = "A/B demo harness: compare a raw local Ollama model against the full adjudication pipeline on the TSA worked example. v0.8 adds Arm A rulebook injection — the raw arm can now be run with or without an explicit rulebook in its system prompt, exposing the difference between unaided hallucination and rule-grounded reasoning. Pair with adjudication-rulebook to elicit a Tentative rulebook from the LLM's own weights and use that as the injected text."
+description = "A/B demo harness: compare a raw local Ollama model against the full adjudication pipeline on the TSA worked example. v0.9 wires ADJ_DEMO_RULEBOOK_MODE=elicit into the binary's main loop (Stage 0 calls acquire_rulebook from adjudication-rulebook, the resulting Tentative rulebook is injected into Arm A's system prompt — the recursive use of the framework on itself), adds ADJ_DEMO_DUMP_RULEBOOK=1 for reviewer visibility, and surfaces stage-0 failures on stdout (not just stderr) so benchmark scripts that capture only stdout no longer treat them as silent."
 
 [[bin]]
 name = "adjudication-tsa-demo"
