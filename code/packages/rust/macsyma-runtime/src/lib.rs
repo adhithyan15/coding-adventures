@@ -13,6 +13,7 @@ use cas_list_operations::{
 };
 use cas_simplify::simplify;
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
+use cas_substitution::subst;
 use cas_trig::{expand_trig, trig_simplify};
 use coding_adventures_macsyma_compiler::{
     compile_macsyma_with_options, CompileError, CompileOptions, DISPLAY as COMPILER_DISPLAY,
@@ -47,6 +48,7 @@ const FACTOR: &str = "Factor";
 const FLOAT_FUNC: &str = "Float";
 const RAT_SIMPLIFY: &str = "RatSimplify";
 const SIMPLIFY: &str = "Simplify";
+const SUBST: &str = "Subst";
 const TRIG_EXPAND: &str = "TrigExpand";
 const TRIG_SIMPLIFY: &str = "TrigSimplify";
 const LENGTH: &str = "Length";
@@ -85,7 +87,7 @@ pub fn extend_macsyma_name_table(target: &mut HashMap<String, String>) {
 }
 
 const MACSYMA_NAME_TABLE: &[(&str, &str)] = &[
-    ("subst", "Subst"),
+    ("subst", SUBST),
     ("simplify", SIMPLIFY),
     ("expand", EXPAND),
     ("factor", FACTOR),
@@ -346,6 +348,7 @@ impl MacsymaBackend {
         handlers.insert(FLOAT_FUNC.to_string(), handler_fn(float_handler));
         handlers.insert(SOLVE.to_string(), handler_fn(solve_handler));
         handlers.insert(SIMPLIFY.to_string(), handler_fn(simplify_handler));
+        handlers.insert(SUBST.to_string(), handler_fn(subst_handler));
         handlers.insert(RAT_SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
         handlers.insert(TRIG_EXPAND.to_string(), handler_fn(trig_expand_handler));
@@ -399,7 +402,7 @@ impl MacsymaBackend {
             }),
         );
 
-        let held = [ASSIGN, DEFINE, IF, KILL, EV, SOLVE]
+        let held = [ASSIGN, DEFINE, IF, KILL, EV, SOLVE, SUBST]
             .into_iter()
             .map(str::to_string)
             .collect();
@@ -692,6 +695,14 @@ fn solve_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     solve_linear_system(&equations.args, &variables.args)
         .map(|rules| apply(sym(LIST), rules))
         .unwrap_or(fallback)
+}
+
+fn subst_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    let fallback = IRNode::Apply(Box::new(expr.clone()));
+    if expr.args.len() != 3 {
+        return fallback;
+    }
+    subst(expr.args[0].clone(), &expr.args[1], expr.args[2].clone())
 }
 
 fn list_handler<F>(arity: Option<usize>, body: F) -> Handler

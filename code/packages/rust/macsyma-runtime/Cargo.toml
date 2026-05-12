@@ -9,6 +9,7 @@ license = "MIT"
 cas-list-operations = { path = "../cas-list-operations" }
 cas-solve = { path = "../cas-solve" }
 cas-simplify = { path = "../cas-simplify" }
+cas-substitution = { path = "../cas-substitution" }
 cas-trig = { path = "../cas-trig" }
 coding-adventures-macsyma-compiler = { path = "../macsyma-compiler" }
 symbolic-ir = { path = "../symbolic-ir" }
