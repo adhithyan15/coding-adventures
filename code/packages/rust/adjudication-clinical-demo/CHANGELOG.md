@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-12
+
+### Added
+
+`PipelineArmReport::cache_stats` parity with the TSA demo. Every
+LLM client is wrapped in a `CachingClient`, each role's stats
+handle is collected, and the side-by-side report prints
+`cache: N hits / M misses (X% hit rate), K entries` when any cache
+activity happened.
+
 ## [0.1.0] - 2026-05-12
 
 ### Added

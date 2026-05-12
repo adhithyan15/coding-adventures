@@ -1,6 +1,6 @@
 [package]
 name = "adjudication-clinical-demo"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "A/B demo harness for clinical notes: run a short patient assessment through both a raw local model and the structured adjudication pipeline, surface where the structured pipeline catches what the raw model glossed over. Mirrors adjudication-tsa-demo's shape for a different domain (clinical reasoning instead of TSA compliance)."
 
