@@ -2227,6 +2227,23 @@ Device 11:22:33:44:55:66 (public)
     }
 
     #[test]
+    fn ble_gatt_raw_transport_maps_oversized_requests_to_response_too_large() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let link = FakeBleGattLink::default();
+        let mut transport = BoardBleGattTransport::<_, 4>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA; 8], &mut raw_out),
+            Err(TransportError::ResponseTooLarge)
+        );
+        assert!(transport.link().writes.is_empty());
+    }
+
+    #[test]
     fn ble_gatt_raw_transport_maps_write_failures_to_io() {
         let endpoint = parse_ble_gatt_endpoint(&format!(
             "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
@@ -2298,6 +2315,20 @@ Device 11:22:33:44:55:66 (public)
             RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA], &mut raw_out),
             Err(TransportError::ResponseTooLarge)
         );
+    }
+
+    #[test]
+    fn rfcomm_raw_transport_maps_oversized_requests_to_response_too_large() {
+        let endpoint = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let stream = FakeRfcommStream::new(Vec::new());
+        let mut transport = BoardRfcommTransport::<_, 4>::from_stream(endpoint, stream);
+        let mut raw_out = [0u8; 16];
+
+        assert_eq!(
+            RawFrameTransport::exchange_raw_frame(&mut transport, &[0xAA; 8], &mut raw_out),
+            Err(TransportError::ResponseTooLarge)
+        );
+        assert!(transport.into_inner().written.is_empty());
     }
 
     #[test]
