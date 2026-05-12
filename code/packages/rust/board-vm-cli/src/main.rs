@@ -3,7 +3,7 @@ use std::env;
 use board_vm_cli::{
     format_onboard_led, list_pico_bootsel_mounts, list_ports, list_targets, parse_args,
     run_eject_blink, run_esp_detect, run_esp_upload, run_pico_uf2_upload, run_repl, run_smoke,
-    usage, CliCommand,
+    usage, write_smoke_report, CliCommand,
 };
 
 fn main() {
@@ -82,36 +82,8 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
         }
         CliCommand::Smoke(options) => {
             let report = run_smoke(&options)?;
-            println!(
-                "hello board={} runtime={} protocol={} host_nonce=0x{:08X} board_nonce=0x{:08X}",
-                report.hello.board_name,
-                report.hello.runtime_name,
-                report.hello.selected_version,
-                report.hello.host_nonce,
-                report.hello.board_nonce
-            );
-            println!(
-                "caps board={} runtime={} max_program_bytes={} stack={} handles={} capabilities={}",
-                report.descriptor.board_id,
-                report.descriptor.runtime_id,
-                report.descriptor.max_program_bytes,
-                report.descriptor.max_stack_values,
-                report.descriptor.max_handles,
-                report.descriptor.capabilities.len()
-            );
-            println!(
-                "upload program_id={} bytes={} crc32=0x{:08X}",
-                report.upload.program_id, report.upload.total_len, report.upload.program_crc32
-            );
-            println!(
-                "blink program_id={} status={:?} instructions={} elapsed_ms={} open_handles={}",
-                report.run.program_id,
-                report.run.status,
-                report.run.instructions_executed,
-                report.run.elapsed_ms,
-                report.run.open_handles
-            );
-            Ok(())
+            let mut stdout = std::io::stdout();
+            write_smoke_report(&mut stdout, &report)
         }
         CliCommand::Repl(options) => {
             let stdin = std::io::stdin();
