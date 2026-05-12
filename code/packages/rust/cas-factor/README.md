@@ -3,7 +3,7 @@
 Univariate integer polynomial factoring over ℤ.
 Rust port of the Python `cas-factor` package.
 
-## Phase 1/2: linear factors and Kronecker residual splitting
+## Phase 1/2/3: linear factors, Kronecker residual splitting, and BZH
 
 Phase 1 uses the **Rational Root Theorem**: any integer root `r` of
 `a_0 + a_1·x + … + a_n·x^n` must divide `a_0`.  We enumerate all
@@ -11,7 +11,8 @@ Phase 1 uses the **Rational Root Theorem**: any integer root `r` of
 
 Phase 2 uses Kronecker's method to split primitive integer residuals. This
 covers examples such as `x^4 + 4`, `x^4 + x^2 + 1`, and repeated irreducible
-quadratics. BZH is intentionally left for a later Rust phase.
+quadratics. A bounded Berlekamp-Zassenhaus-Hensel fallback handles monic
+higher-degree residuals such as the cyclotomic residual in `x^5 - 1`.
 
 ```rust
 use cas_factor::factor_integer_polynomial;
