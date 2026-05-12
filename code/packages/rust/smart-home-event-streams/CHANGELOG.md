@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
 - `EventStreamFleetSummary` and `event_stream_fleet_summary_at()` for compact
   supervisor health, cursor coverage, gap, heartbeat, and restart-readiness
   rollups across stream workers.
+- Transport-family counts and helpers on `EventStreamFleetSummary` for
+  supervisor coverage views.
 
 ## [0.1.0] - 2026-05-08
 
