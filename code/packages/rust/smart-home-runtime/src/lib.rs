@@ -506,10 +506,24 @@ impl RuntimeEventBus {
     }
 
     pub fn snapshot(&self) -> RuntimeEventBusSnapshot {
+        let pending_delivery_count = self.pending_delivery_count();
+        let backlogged_subscription_count = self
+            .deliveries
+            .values()
+            .filter(|queue| !queue.is_empty())
+            .count();
+        let max_pending_delivery_count = self
+            .deliveries
+            .values()
+            .map(VecDeque::len)
+            .max()
+            .unwrap_or(0);
         RuntimeEventBusSnapshot {
             subscription_count: self.subscription_count(),
-            pending_delivery_count: self.pending_delivery_count(),
+            pending_delivery_count,
             published_event_count: self.published.len(),
+            backlogged_subscription_count,
+            max_pending_delivery_count,
         }
     }
 }
@@ -519,6 +533,8 @@ pub struct RuntimeEventBusSnapshot {
     pub subscription_count: usize,
     pub pending_delivery_count: usize,
     pub published_event_count: usize,
+    pub backlogged_subscription_count: usize,
+    pub max_pending_delivery_count: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -538,7 +554,11 @@ impl RuntimeEventBusSnapshot {
     }
 
     pub fn has_backlog(&self) -> bool {
-        self.pending_delivery_count > 0
+        self.pending_delivery_count > 0 || self.has_lagging_subscriptions()
+    }
+
+    pub fn has_lagging_subscriptions(&self) -> bool {
+        self.backlogged_subscription_count > 0
     }
 
     pub fn backlog_status(&self) -> RuntimeEventBusBacklogStatus {
@@ -557,6 +577,15 @@ impl RuntimeEventBusSnapshot {
         } else {
             self.pending_delivery_count / self.subscription_count
         }
+    }
+
+    pub fn caught_up_subscription_count(&self) -> usize {
+        self.subscription_count
+            .saturating_sub(self.backlogged_subscription_count)
+    }
+
+    pub fn exceeds_subscription_backlog_threshold(&self, threshold: usize) -> bool {
+        self.max_pending_delivery_count > threshold
     }
 }
 
@@ -3305,24 +3334,35 @@ mod tests {
 
         assert_eq!(idle.subscription_count, 2);
         assert_eq!(idle.pending_delivery_count, 0);
+        assert_eq!(idle.backlogged_subscription_count, 0);
+        assert_eq!(idle.max_pending_delivery_count, 0);
         assert!(idle.is_idle());
         assert!(idle.has_subscriptions());
         assert!(!idle.has_backlog());
+        assert!(!idle.has_lagging_subscriptions());
         assert_eq!(
             idle.backlog_status(),
             RuntimeEventBusBacklogStatus::CaughtUp
         );
         assert_eq!(idle.average_pending_deliveries_per_subscription(), 0);
+        assert_eq!(idle.caught_up_subscription_count(), 2);
+        assert!(!idle.exceeds_subscription_backlog_threshold(0));
         assert_eq!(active.subscription_count, 2);
         assert_eq!(active.published_event_count, 2);
         assert_eq!(active.pending_delivery_count, 3);
+        assert_eq!(active.backlogged_subscription_count, 2);
+        assert_eq!(active.max_pending_delivery_count, 2);
         assert!(!active.is_idle());
         assert!(active.has_backlog());
+        assert!(active.has_lagging_subscriptions());
         assert_eq!(
             active.backlog_status(),
             RuntimeEventBusBacklogStatus::Backlogged
         );
         assert_eq!(active.average_pending_deliveries_per_subscription(), 1);
+        assert_eq!(active.caught_up_subscription_count(), 0);
+        assert!(active.exceeds_subscription_backlog_threshold(1));
+        assert!(!active.exceeds_subscription_backlog_threshold(2));
     }
 
     #[test]
@@ -3342,6 +3382,9 @@ mod tests {
             RuntimeEventBusBacklogStatus::NoSubscriptions
         );
         assert!(!no_subscribers.has_subscriptions());
+        assert!(!no_subscribers.has_lagging_subscriptions());
+        assert_eq!(no_subscribers.max_pending_delivery_count, 0);
+        assert_eq!(no_subscribers.caught_up_subscription_count(), 0);
         assert_eq!(
             no_subscribers.average_pending_deliveries_per_subscription(),
             0
@@ -3351,6 +3394,8 @@ mod tests {
             RuntimeEventBusBacklogStatus::CaughtUp
         );
         assert!(caught_up.has_subscriptions());
+        assert!(!caught_up.has_lagging_subscriptions());
+        assert_eq!(caught_up.caught_up_subscription_count(), 1);
     }
 
     #[test]
@@ -4696,6 +4741,9 @@ mod tests {
         assert_eq!(snapshot.event_bus.subscription_count, 1);
         assert_eq!(snapshot.event_bus.published_event_count, 1);
         assert_eq!(snapshot.event_bus.pending_delivery_count, 1);
+        assert_eq!(snapshot.event_bus.backlogged_subscription_count, 1);
+        assert_eq!(snapshot.event_bus.max_pending_delivery_count, 1);
+        assert!(snapshot.event_bus.has_lagging_subscriptions());
         assert_eq!(snapshot.supervisor.worker_count, 1);
         assert_eq!(snapshot.supervisor.starting_count, 1);
         assert_eq!(snapshot.supervisor.restart_due_count, 1);
