@@ -37,6 +37,8 @@
 //!     functions: vec![fn_],
 //!     entry_point: Some("main".into()),
 //!     language: "test".into(),
+//!     exports: vec![],
+//!     imports: vec![],
 //! };
 //!
 //! let errors = validate_for_jvm(&module);

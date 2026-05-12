@@ -151,6 +151,8 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///     functions: vec![fn_],
 ///     entry_point: Some("main".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 /// assert!(validate_for_wasm(&module).is_empty());
 /// ```

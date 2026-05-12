@@ -2306,6 +2306,8 @@ fn cond_and_label<'a>(
 ///     functions: vec![fn_],
 ///     entry_point: Some("add".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 /// let cfg = IIRJvmConfig::new("MyClass");
 /// let class_file = lower_iir_to_jvm(&module, &cfg).unwrap();

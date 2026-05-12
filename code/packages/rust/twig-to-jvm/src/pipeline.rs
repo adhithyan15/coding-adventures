@@ -189,6 +189,8 @@ pub fn run_pipeline(
 ///     functions: vec![fn_],
 ///     entry_point: Some("main".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 ///
 /// let class_file = run_pipeline_from_iir(module, IIRJvmConfig::new("Test")).unwrap();

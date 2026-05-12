@@ -17,6 +17,7 @@
 //! let module = IIRModule {
 //!     name: "demo".into(), functions: vec![fn_],
 //!     entry_point: Some("main".into()), language: "test".into(),
+//!     exports: vec![], imports: vec![],
 //! };
 //!
 //! let artifact = compile_iir(&module, "iir-wasm").unwrap();
@@ -98,7 +99,7 @@ impl IIRBackendArtifact {
     /// # use interpreter_ir::{IIRModule, IIRFunction, IIRInstr};
     /// # let fn_ = IIRFunction::new("main", vec![], "void",
     /// #     vec![IIRInstr::new("ret_void", None, vec![], "void")]);
-    /// # let module = IIRModule { name: "d".into(), functions: vec![fn_], entry_point: Some("main".into()), language: "t".into() };
+    /// # let module = IIRModule { name: "d".into(), functions: vec![fn_], entry_point: Some("main".into()), language: "t".into(), exports: vec![], imports: vec![] };
     /// let art = compile_iir(&module, "iir-beam").unwrap();
     /// assert!(art.as_beam().is_some());
     /// assert!(art.as_wasm().is_none());

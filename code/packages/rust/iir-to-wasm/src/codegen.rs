@@ -538,6 +538,8 @@ use crate::validate::validate_for_wasm;
 ///     functions: vec![fn_],
 ///     entry_point: Some("add".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 ///
 /// let gen = IIRWasmCodeGenerator::new("calc");

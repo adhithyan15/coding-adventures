@@ -32,6 +32,8 @@
 //!     functions: vec![fn_],
 //!     entry_point: Some("main".into()),
 //!     language: "test".into(),
+//!     exports: vec![],
+//!     imports: vec![],
 //! };
 //!
 //! // Create a generator with a custom class name.

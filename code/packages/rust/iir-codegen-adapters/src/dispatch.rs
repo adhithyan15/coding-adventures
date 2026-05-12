@@ -20,6 +20,7 @@
 //! let module = IIRModule {
 //!     name: "demo".into(), functions: vec![fn_],
 //!     entry_point: Some("main".into()), language: "test".into(),
+//!     exports: vec![], imports: vec![],
 //! };
 //!
 //! // Show available backends.
@@ -81,7 +82,8 @@ const KNOWN_BACKENDS: &[&str] = &["iir-beam", "iir-clr", "iir-jvm", "iir-wasm"];
 /// let fn_ = IIRFunction::new("main", vec![], "void",
 ///     vec![IIRInstr::new("ret_void", None, vec![], "void")]);
 /// let module = IIRModule { name: "d".into(), functions: vec![fn_],
-///     entry_point: Some("main".into()), language: "t".into() };
+///     entry_point: Some("main".into()), language: "t".into(),
+///     exports: vec![], imports: vec![] };
 ///
 /// // All four backends accept a minimal void function.
 /// for backend in ["iir-beam", "iir-wasm", "iir-jvm", "iir-clr"] {

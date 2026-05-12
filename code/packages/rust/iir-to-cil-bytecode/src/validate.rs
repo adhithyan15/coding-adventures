@@ -161,6 +161,8 @@ const LISTY_PAIR_TYPE: &str = "ref<LispyPair>";
 ///     functions: vec![fn_],
 ///     entry_point: Some("main".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 /// assert!(validate_iir_for_clr(&module).is_empty());
 /// ```

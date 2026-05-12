@@ -121,6 +121,8 @@ const CONDITIONALLY_SUPPORTED_OPS: &[&str] = &["alloc", "field_load", "field_sto
 ///     functions: vec![fn_],
 ///     entry_point: Some("main".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 /// assert!(validate_for_jvm(&module).is_empty());
 /// ```
