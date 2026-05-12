@@ -809,6 +809,7 @@ impl HtmlParser {
 
     fn finish_document(&mut self) -> Document {
         repair_fostered_nobr_adoption_wrappers(&mut self.document);
+        repair_table_cell_fostered_nobr_adoption(&mut self.document);
         normalize_document_shell(std::mem::take(&mut self.document))
     }
 
@@ -4055,6 +4056,106 @@ fn trim_formatting_reconstruction_noah_ark(
 
 fn repair_fostered_nobr_adoption_wrappers(document: &mut Document) {
     repair_fostered_nobr_adoption_wrappers_in(&mut document.children);
+}
+
+fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
+    repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
+}
+
+fn repair_table_cell_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
+    let mut index = 0;
+    while index < nodes.len() {
+        if let Node::Element(element) = &mut nodes[index] {
+            repair_table_cell_fostered_nobr_adoption_in(&mut element.children);
+        }
+
+        let has_table_cell_fostered_nobr =
+            node_has_table_cell_fostered_nobr_continuation_site(&mut nodes[index]);
+        let mut continuation = take_table_cell_fostered_nobr_continuation(&mut nodes[index]);
+        if has_table_cell_fostered_nobr {
+            while nodes
+                .get(index + 1)
+                .is_some_and(is_fostered_nobr_continuation_node)
+            {
+                continuation.push(nodes.remove(index + 1));
+            }
+            if let Node::Element(element) = &mut nodes[index] {
+                if let Some(cell_children) =
+                    first_table_cell_children_in_fostered_nobr(&mut element.children)
+                {
+                    cell_children.extend(continuation);
+                }
+            }
+        }
+
+        index += 1;
+    }
+}
+
+fn node_has_table_cell_fostered_nobr_continuation_site(node: &mut Node) -> bool {
+    let Node::Element(element) = node else {
+        return false;
+    };
+    element.name == "b"
+        && first_table_cell_children_in_fostered_nobr(&mut element.children).is_some()
+}
+
+fn take_table_cell_fostered_nobr_continuation(node: &mut Node) -> Vec<Node> {
+    let Node::Element(element) = node else {
+        return Vec::new();
+    };
+    if element.name != "b" || element.children.len() < 2 {
+        return Vec::new();
+    }
+    if first_table_cell_children_in_fostered_nobr(&mut element.children).is_none() {
+        return Vec::new();
+    }
+
+    element
+        .children
+        .drain(1..)
+        .filter(|node| !is_empty_element_named(node, "nobr"))
+        .collect()
+}
+
+fn first_table_cell_children_in_fostered_nobr(nodes: &mut [Node]) -> Option<&mut Vec<Node>> {
+    let first = nodes.first_mut()?;
+    let Node::Element(nobr) = first else {
+        return None;
+    };
+    if nobr.name != "nobr" {
+        return None;
+    }
+    first_table_cell_children(&mut nobr.children)
+}
+
+fn first_table_cell_children(nodes: &mut [Node]) -> Option<&mut Vec<Node>> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if matches!(element.name.as_str(), "td" | "th") {
+            return Some(&mut element.children);
+        }
+        if let Some(children) = first_table_cell_children(&mut element.children) {
+            return Some(children);
+        }
+    }
+    None
+}
+
+fn is_fostered_nobr_continuation_node(node: &Node) -> bool {
+    matches!(
+        node,
+        Node::Element(element) if matches!(element.name.as_str(), "i" | "nobr")
+    )
+}
+
+fn is_empty_element_named(node: &Node, name: &str) -> bool {
+    matches!(
+        node,
+        Node::Element(element) if element.name == name && element.children.is_empty()
+    )
 }
 
 fn repair_fostered_nobr_adoption_wrappers_in(nodes: &mut Vec<Node>) {
