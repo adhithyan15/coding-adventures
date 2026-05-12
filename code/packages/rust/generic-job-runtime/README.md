@@ -34,6 +34,8 @@ targets.
   live workers, in-flight jobs, queued jobs, running jobs, and saturation.
 - Queue-pressure bands and percent-threshold checks for D18C supervisors that
   need stable read-side backpressure signals.
+- Executor admission-status helpers for distinguishing accepting, draining,
+  offline, and queue-full runtimes before submit.
 - Snapshot health classification for D18C supervisors to distinguish idle,
   busy, saturated, draining, and offline executors.
 - Snapshot supervision recommendations for backpressure, worker restart, and
