@@ -91,6 +91,7 @@ from sql_codegen import (
     LoadGroupKey,
     LoadLastInsertedColumn,
     LoadOuterColumn,
+    LoadRowId,
     NullsOrder,
     OpenIndexScan,
     OpenScan,
@@ -464,6 +465,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         # before the loop runs.
         st.push(st.excluded_row.get(ins.col))
         return
+    if isinstance(ins, LoadRowId):
+        _do_load_rowid(ins, st)
+        return
     if isinstance(ins, Pop):
         st.pop()
         return
@@ -745,6 +749,41 @@ def _load_outer_column(ins: LoadOuterColumn, st: _VmState) -> None:
         st.push(None)
         return
     st.push(row.get(ins.col))
+
+
+def _do_load_rowid(ins: LoadRowId, st: _VmState) -> None:
+    """Push the integer rowid of the cursor's current row onto the stack.
+
+    The rowid is the implicit per-row integer identifier that SQLite exposes
+    as the pseudo-column ``rowid`` / ``_rowid_`` / ``oid``.  For the
+    in-memory backend the rowid is the 0-based position of the row in the
+    table's backing list.
+
+    We retrieve the value by calling ``cursor.rowid()`` via duck typing:
+
+    - :class:`~sql_backend.row.ListRowIterator` — returns ``_idx - 1`` (the
+      index of the last row yielded by ``next()``).
+    - :class:`~sql_backend.row.ListCursor` — returns ``_idx`` (the current
+      row's position in the backing list).
+    - Any cursor that does not expose a ``rowid`` method (e.g. subquery
+      cursors, file-backed cursors) — we push ``None``.
+
+    Pushing ``None`` for unsupported cursors is the safe fallback: it means
+    ``WHERE rowid = 5`` will never match and ``SELECT rowid`` returns NULL
+    rather than crashing.  Backends that support rowid queries should add a
+    ``rowid()`` method to their cursor types.
+    """
+    cursor = st.cursors.get(ins.cursor_id)
+    if cursor is None:
+        # No cursor open for this id — push NULL.
+        st.push(None)
+        return
+    rowid_fn = getattr(cursor, "rowid", None)
+    if rowid_fn is None:
+        # Cursor type does not expose a rowid — push NULL gracefully.
+        st.push(None)
+        return
+    st.push(rowid_fn())
 
 
 def _do_between(st: _VmState) -> None:
@@ -1117,16 +1156,23 @@ def _do_scan_all_columns(ins: ScanAllColumns, st: _VmState) -> None:
     same order as ``row.items()`` — which is insertion order (Python ≥ 3.7).
     The schema (``result.columns``) is derived from ``row.keys()`` in the
     same iteration order, so column positions are guaranteed to match.
+
+    Hidden internal fields are excluded from the output so that internal
+    bookkeeping (e.g. the ``"\\x00rowid"`` stamp used for stable rowids)
+    never leaks into query results.  ``SELECT *`` does not include implicit
+    rowid columns — this matches real SQLite behaviour; ``SELECT rowid, *``
+    adds it explicitly via a ``RowIdRef`` in the projection.
     """
     row = st.current_row.get(ins.cursor_id)
     if row is None:
         return
-    for value in row.values():
+    visible = [(k, v) for k, v in row.items() if not k.startswith("\x00")]
+    for _col, value in visible:
         st.row_buffer.append(value)
     # Ensure the schema covers every column we just dumped — if the outer
-    # query had no explicit schema, derive one from the row's keys in order.
+    # query had no explicit schema, derive one from the visible keys in order.
     if not st.result.columns:
-        st.result.columns = tuple(row.keys())
+        st.result.columns = tuple(k for k, _ in visible)
 
 
 # --------------------------------------------------------------------------

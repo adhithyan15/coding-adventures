@@ -1,5 +1,55 @@
 # Changelog
 
+## [1.25.0] - 2026-05-12
+
+### Added — ROWID pseudo-column (`rowid` / `_rowid_` / `oid`)
+
+Full end-to-end rowid support matching SQLite's behaviour.
+
+**SQL supported:**
+
+```sql
+SELECT rowid FROM t                    -- basic pseudo-column in SELECT list
+SELECT _rowid_ FROM t                  -- alias synonym
+SELECT oid FROM t                      -- alias synonym
+SELECT t.rowid FROM t                  -- table-qualified reference
+SELECT rowid, name FROM items          -- rowid alongside real columns
+SELECT * FROM t                        -- rowid NOT included (implicit only)
+SELECT rowid, val FROM t WHERE rowid = 2     -- filter by rowid
+SELECT rowid, msg FROM log WHERE rowid > 2   -- range filter / pagination
+SELECT rowid, val FROM t WHERE rowid BETWEEN 2 AND 4
+SELECT val FROM t WHERE oid = 1        -- oid alias in WHERE
+DELETE FROM t WHERE rowid = 2          -- delete by rowid
+DELETE FROM t WHERE rowid > 2          -- range delete
+SELECT rowid, val FROM t ORDER BY rowid ASC
+SELECT rowid, val FROM t ORDER BY rowid DESC
+```
+
+**Semantics:**
+
+- Rowids are 1-based, stable integers assigned at insert time and never reused
+  (surviving rows keep their original rowid after DELETE — matches SQLite).
+- `SELECT *` does not include the implicit rowid; `SELECT rowid, *` requires
+  an explicit `rowid` reference (parser limitation noted; test skipped).
+- `WHERE rowid = N` with no matching row returns an empty result set, not an
+  error.
+
+**Implementation layers touched:**
+
+| Layer | Change |
+|-------|--------|
+| `sql-backend` 0.12.0 | Stable `"\x00rowid"` hidden field stamped at insert; `ListRowIterator.rowid()` / `ListCursor.rowid()` |
+| `sql-planner` 0.23.0 | `RowIdRef` expr node; rowid alias resolution in `_resolve_column` |
+| `sql-optimizer` 0.9.0 | Predicate pushdown recognises `RowIdRef` |
+| `sql-codegen` 1.18.0 | `LoadRowId` IR instruction; `RowIdRef` → `LoadRowId` compilation |
+| `sql-vm` 1.17.0 | `LoadRowId` dispatch; hidden-key filtering in `SELECT *` |
+
+**Tests added:**
+
+- `tests/test_tier11_rowid.py` — 19 oracle-grade integration tests (1 skipped)
+  comparing mini-sqlite output against real `sqlite3` module for every rowid
+  pattern listed above.
+
 ## [1.24.0] - 2026-05-05
 
 ### Added — UPSERT (`ON CONFLICT DO UPDATE / DO NOTHING`)

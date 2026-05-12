@@ -521,6 +521,46 @@ class LoadExcludedColumn:
 
 
 @dataclass(frozen=True, slots=True)
+class LoadRowId:
+    """Push the integer rowid of the cursor's current row onto the stack.
+
+    The rowid is the implicit per-row integer identifier that SQLite exposes
+    via the pseudo-column names ``rowid``, ``_rowid_``, and ``oid``.  For the
+    in-memory backend it is the 0-based position of the row in the table's
+    backing list — the same integer that :meth:`~sql_backend.InMemoryBackend
+    .scan_index` yields and :meth:`~sql_backend.InMemoryBackend.scan_by_rowids`
+    accepts.
+
+    The VM retrieves the value by calling
+    ``getattr(cursor, "rowid", None)()``.  Cursor objects that do not expose
+    a ``rowid`` method (e.g. subquery cursors) push ``None`` instead, so the
+    instruction degrades gracefully on unsupported backends rather than
+    crashing.
+
+    Usage in the instruction stream
+    --------------------------------
+    The codegen emits ``LoadRowId`` whenever a :class:`~sql_planner.RowIdRef`
+    expression is compiled::
+
+        -- SELECT rowid, name FROM users
+        OpenScan(cursor_id=0, table="users")
+        loop:
+          AdvanceCursor(cursor_id=0, on_exhausted="done")
+          BeginRow()
+          LoadRowId(cursor_id=0)   ← rowid pseudo-column
+          EmitColumn(name="rowid")
+          LoadColumn(cursor_id=0, column="name")
+          EmitColumn(name="name")
+          EmitRow()
+          Jump("loop")
+        done:
+          CloseScan(cursor_id=0)
+    """
+
+    cursor_id: int  # which open cursor to read the rowid from
+
+
+@dataclass(frozen=True, slots=True)
 class InsertRow:
     """Pop one value per column (last first); backend inserts the row.
 
@@ -1141,7 +1181,8 @@ class ComputeWindowFunctions:
 # --------------------------------------------------------------------------
 
 Instruction = (
-    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | LoadExcludedColumn | Pop
+    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | LoadExcludedColumn
+    | LoadRowId | Pop
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns

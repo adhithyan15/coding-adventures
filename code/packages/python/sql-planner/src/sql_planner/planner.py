@@ -119,6 +119,7 @@ from .expr import (
     NotIn,
     NotInSubquery,
     NotLike,
+    RowIdRef,
     ScalarSubquery,
     UnaryExpr,
     Wildcard,
@@ -742,6 +743,9 @@ def _resolve(
         case CorrelatedRef():
             # Already resolved by a prior _resolve pass — pass through.
             return expr
+        case RowIdRef():
+            # Already resolved by a prior _resolve pass — pass through.
+            return expr
         case Column(table, col):
             return _resolve_column(table, col, scope, outer_scope)
         case BinaryExpr(op, left, right):
@@ -845,22 +849,38 @@ def _resolve(
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 
 
+# Rowid pseudo-column aliases supported by SQLite.  Any column reference
+# whose name (case-insensitive) matches one of these strings and which does
+# NOT match a real schema column is resolved to a :class:`RowIdRef` node.
+# Real columns named "rowid" (rare but valid in SQLite) take precedence
+# because the scope lookup happens before this fallback.
+_ROWID_ALIASES: frozenset[str] = frozenset(("rowid", "_rowid_", "oid"))
+
+
 def _resolve_column(
     table: str | None,
     col: str,
     scope: Scope,
     outer_scope: Scope | None = None,
-) -> Column | CorrelatedRef:
+) -> Column | CorrelatedRef | RowIdRef:
     """Resolve a column reference against the inner scope, falling back to
-    the outer scope for correlated subquery references.
+    the outer scope for correlated subquery references, and finally to
+    rowid pseudo-column handling.
 
-    Inner scope resolution returns a :class:`Column`.
-    Outer scope resolution returns a :class:`CorrelatedRef`.
+    Return types
+    ------------
+    - :class:`Column` — resolved to a real schema column in the inner scope.
+    - :class:`CorrelatedRef` — resolved to a real column in the outer scope.
+    - :class:`RowIdRef` — the name is ``rowid``, ``_rowid_``, or ``oid``
+      and no real column with that spelling exists in the inner scope.
 
     Resolution order:
     1. Try the inner scope first (``scope``).
     2. If not found AND ``outer_scope`` is provided, try ``outer_scope``.
-    3. Raise :class:`UnknownColumn` if neither scope has the column.
+    3. If the column name is a rowid alias, emit a ``RowIdRef`` for the
+       table that owns the scan (or raise ``AmbiguousColumn`` if multiple
+       tables are in scope and no qualifier was given).
+    4. Raise :class:`UnknownColumn` if none of the above match.
 
     Qualified references (``table.col``) check the named alias in order; bare
     references walk all aliases in the active scope looking for a unique owner.
@@ -870,6 +890,11 @@ def _resolve_column(
         if table in scope and col in scope[table]:
             # Found in inner scope — a regular column reference.
             return Column(table=table, col=col)
+        # Rowid pseudo-column: e.g. t.rowid when "rowid" is not a real column.
+        # We require the table alias to be in scope so we don't silently accept
+        # typos like "nonexistent_table.rowid".
+        if col.lower() in _ROWID_ALIASES and table in scope:
+            return RowIdRef(table=table)
         # Not in inner scope. Try the outer scope before raising.
         if outer_scope is not None and table in outer_scope and col in outer_scope[table]:
             # Found in the enclosing query's scope — correlated reference.
@@ -891,6 +916,18 @@ def _resolve_column(
             return CorrelatedRef(outer_alias=outer_owners[0], col=col)
         if len(outer_owners) > 1:
             raise AmbiguousColumn(column=col, tables=outer_owners)
+
+    # Rowid pseudo-column (bare, no table qualifier).
+    # Resolve against the current inner scope: exactly one table → qualify it;
+    # multiple tables → ambiguous (user should write t.rowid explicitly).
+    if col.lower() in _ROWID_ALIASES:
+        all_aliases = list(scope.keys())
+        if len(all_aliases) == 1:
+            return RowIdRef(table=all_aliases[0])
+        if len(all_aliases) > 1:
+            raise AmbiguousColumn(column=col, tables=all_aliases)
+        # Zero tables in scope (e.g. SELECT rowid with no FROM) — fall through
+        # to UnknownColumn below.
 
     raise UnknownColumn(table=None, column=col)
 

@@ -68,6 +68,7 @@ from sql_planner import (
     NotInSubquery,
     Project,
     Rollback,
+    RowIdRef,
     ScalarSubquery,
     Scan,
     SingleRow,
@@ -185,6 +186,7 @@ from .ir import (
     LoadGroupKey,
     LoadLastInsertedColumn,
     LoadOuterColumn,
+    LoadRowId,
     NullsOrder,
     OpenIndexScan,
     OpenScan,
@@ -447,6 +449,12 @@ def _projection_name(item: object) -> str:
 def _column_display_name(expr: Expr) -> str | None:
     if isinstance(expr, Column):
         return expr.col
+    if isinstance(expr, RowIdRef):
+        # The implicit rowid pseudo-column always surfaces under the name
+        # "rowid" in sort keys, GROUP BY, and other places that need a
+        # display name.  This makes ``ORDER BY rowid`` find the column
+        # emitted by ``SELECT rowid, ...`` via its alias.
+        return "rowid"
     return None
 
 
@@ -1131,6 +1139,12 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
             # clause.  The VM resolves this against _VmState.excluded_row at
             # runtime rather than reading from a cursor.
             return [LoadExcludedColumn(col=c)]
+        case RowIdRef(table=tbl):
+            # The implicit integer rowid pseudo-column (rowid / _rowid_ / oid).
+            # Map the table alias back to its cursor_id via the alias map;
+            # fall back to cursor 0 for robustness (same convention as Column).
+            cid = ctx.alias_to_cursor.get(tbl, 0)
+            return [LoadRowId(cursor_id=cid)]
         case Column(table=t, col=c):
             cid = ctx.alias_to_cursor.get(t or "", 0)
             return [LoadColumn(cursor_id=cid, column=c)]
