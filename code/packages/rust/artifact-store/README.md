@@ -13,6 +13,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - collection, label, retention, provenance, and bounded manifest listing
 - catalog summaries for retention and revision coverage over selected artifacts
 - bounded revision-history listing without returning opaque bodies
+- revision-history summaries for lineage, metadata, and body-size coverage
 
 ## Key layout
 
@@ -27,6 +28,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - `fetch_latest_revision()`
 - `fetch_revision_by_id()`
 - `list_revisions()`
+- `revision_history_summary()`
 - `list_artifacts()`
 - `catalog_summary()`
 - `list_by_collection()`
@@ -48,6 +50,11 @@ revision bodies.
 view with oldest-first or latest-first ordering, an optional revision cursor,
 and an optional limit. It returns revision metadata, body length, and content
 hashes without returning the opaque revision bodies.
+
+`revision_history_summary()` uses the same bounded revision read model to count
+root revisions, child revisions, metadata-bearing revisions, and total body
+bytes over the selected window. This gives host/status tools a cheap aggregate
+before deciding whether to fetch full revision bodies.
 
 ## Development
 

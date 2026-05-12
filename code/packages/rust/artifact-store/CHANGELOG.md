@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `ArtifactCatalogSummary` and `catalog_summary()` for retention and revision
   coverage over selected artifact manifests.
+- `ArtifactRevisionHistorySummary` and `revision_history_summary()` for
+  bounded lineage, metadata, and body-size aggregates over revision history.
 
 ## [0.1.0] - 2026-04-18
 
