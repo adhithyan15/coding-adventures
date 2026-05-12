@@ -1,8 +1,8 @@
 [package]
 name = "prolog-lexer"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "ISO/Core Prolog lexer — thin glue around the grammar-driven GrammarLexer, sourced from code/grammars/prolog/iso.tokens. v0.2 adds the NAF (`\\+`) token and BLOCK_COMMENT (`/* ... */`) skip rule."
+description = "ISO/Core Prolog lexer — thin glue around the grammar-driven GrammarLexer, sourced from code/grammars/prolog/iso.tokens. v0.2 adds NAF (`\\+`) + BLOCK_COMMENT. v0.3 adds the PROB_SEP (`::`) token for ProbLog source syntax."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

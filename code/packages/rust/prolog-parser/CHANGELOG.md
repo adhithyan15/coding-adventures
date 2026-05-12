@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-11
+
+### Added
+
+ProbLog source-level probabilistic clauses now parse:
+
+- New ISO Prolog grammar productions:
+  - `probabilistic_fact_statement = probability PROB_SEP callable_term DOT`
+  - `probabilistic_rule_statement = probability PROB_SEP callable_term RULE goal DOT`
+  - `probability = FLOAT | INTEGER`
+- New `ProgramItem` variants:
+  - `ProbabilisticFact { term: Term, probability: f64 }`
+  - `ProbabilisticRule { head: Term, body: Vec<Term>, probability: f64 }`
+- `collect_clauses_and_queries` recognises both new statement shapes
+  and emits the new `ProgramItem` variants.
+- `extract_probability` helper parses the probability literal via
+  `str::parse::<f64>`; out-of-range values flow downstream to the
+  loader's range check (`LoaderError::ProbabilityOutOfRange`).
+
+The probability literal accepts the lexer's `FLOAT` and `INTEGER`
+tokens. A leading sign on the literal itself (e.g. `-0.1 :: x.`) is
+not part of the grammar — Prolog `-` is an operator, not part of a
+number token — so negative probabilities only flow through the
+explicit numeric grammar path and the loader's range check catches
+them.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added

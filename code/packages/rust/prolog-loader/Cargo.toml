@@ -1,8 +1,8 @@
 [package]
 name = "prolog-loader"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "Load Prolog source text into a logic-engine KnowledgeBase. v0.2 adds `execute` / `run_all_queries` end-to-end runner. v0.3 adds the `ProblogProgram` builder for probabilistic programs (WMC-backed)."
+description = "Load Prolog source text into a logic-engine KnowledgeBase. v0.2 `execute` / `run_all_queries` runner (#2752). v0.3 ProblogProgram builder (#2756). v0.4 adds source-syntax `0.7 :: clause.` support: parses through prolog-parser, lowers into probabilistic Fact/Rule shapes with `[0, 1]` range checking."
 
 [dependencies]
 prolog-parser = { path = "../prolog-parser" }

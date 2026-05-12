@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-11
+
+### Added
+
+ProbLog source syntax — `0.7 :: clause.` now parses and loads end-to-end.
+
+- New `ProgramItem::ProbabilisticFact { term, probability }` and
+  `ProgramItem::ProbabilisticRule { head, body, probability }` variants
+  (added in `prolog-parser` v0.2 — see that crate's changelog).
+- `load_program_items` translates the new variants into
+  `Fact::with_probability` and `Rule::with_probability` (the latter
+  added in `logic-engine` alongside the ProblogProgram builder in
+  v0.3). The result lands in the same `KnowledgeBase` shape the WMC
+  backend already understands, so a single `load_source` + `search`
+  round-trip computes the right probability.
+- New `LoaderError::ProbabilityOutOfRange { value: f64 }` —
+  surfaced when a parsed probability is NaN or outside `[0, 1]`.
+  Range-checked at load time so the engine never sees a nonsense
+  weight.
+
+### Tests
+
+10 new integration tests in
+`prolog-loader/tests/integration_problog_source.rs`:
+- single probabilistic fact returns its probability
+- conjunctive rule over independent probabilistic facts multiplies
+- probabilistic rule gating a certain premise
+- boundary probabilities `0.0` and `1.0` behave correctly
+- unprovable query returns `0.0`
+- out-of-range probability (`1.5 :: …` and `2 :: …`) surfaces as
+  `ProbabilityOutOfRange`
+- mixed deterministic and probabilistic clauses in one program
+- interleaved order works
+
 ## [0.3.0] - 2026-05-11
 
 ### Added
