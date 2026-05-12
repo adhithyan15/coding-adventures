@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   health, pairing, and refresh-work status loops.
 - `RegistryAuthorizationSummary` plus read-view and registry helpers for compact
   capability-grant status and authorization-decision outcome loops.
+- `EventLogSummary` plus read-view and registry helpers for compact filtered
+  event-log replay/status windows.
 
 ## [0.1.0] - 2026-05-06
 
