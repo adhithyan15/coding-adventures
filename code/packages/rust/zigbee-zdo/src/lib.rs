@@ -306,6 +306,8 @@ pub struct ZigbeeInterviewSummary {
 
 impl ZigbeeInterviewSummary {
     pub fn read_summary(&self) -> ZigbeeInterviewReadSummary {
+        let mut unique_input_clusters = BTreeSet::new();
+        let mut unique_output_clusters = BTreeSet::new();
         let input_cluster_count = self
             .simple_descriptors
             .iter()
@@ -316,6 +318,15 @@ impl ZigbeeInterviewSummary {
             .iter()
             .map(|descriptor| descriptor.output_clusters.len())
             .sum();
+        for descriptor in &self.simple_descriptors {
+            unique_input_clusters.extend(descriptor.input_clusters.iter().copied());
+            unique_output_clusters.extend(descriptor.output_clusters.iter().copied());
+        }
+        let home_automation_endpoint_count = self
+            .simple_descriptors
+            .iter()
+            .filter(|descriptor| descriptor.profile_id == ProfileId::HOME_AUTOMATION)
+            .count();
         ZigbeeInterviewReadSummary {
             network_address: self.network_address,
             has_ieee_address: self.ieee_address.is_some(),
@@ -328,8 +339,15 @@ impl ZigbeeInterviewSummary {
                 .as_ref()
                 .map(|descriptor| descriptor.manufacturer_code),
             endpoint_count: self.simple_descriptors.len(),
+            home_automation_endpoint_count,
+            non_home_automation_endpoint_count: self
+                .simple_descriptors
+                .len()
+                .saturating_sub(home_automation_endpoint_count),
             input_cluster_count,
             output_cluster_count,
+            unique_input_cluster_count: unique_input_clusters.len(),
+            unique_output_cluster_count: unique_output_clusters.len(),
             has_basic_cluster: self
                 .simple_descriptors
                 .iter()
@@ -354,8 +372,12 @@ pub struct ZigbeeInterviewReadSummary {
     pub logical_type: Option<LogicalType>,
     pub manufacturer_code: Option<u16>,
     pub endpoint_count: usize,
+    pub home_automation_endpoint_count: usize,
+    pub non_home_automation_endpoint_count: usize,
     pub input_cluster_count: usize,
     pub output_cluster_count: usize,
+    pub unique_input_cluster_count: usize,
+    pub unique_output_cluster_count: usize,
     pub has_basic_cluster: bool,
     pub has_on_off_cluster: bool,
     pub has_level_control_cluster: bool,
@@ -368,6 +390,14 @@ impl ZigbeeInterviewReadSummary {
 
     pub fn can_project_device_identity(&self) -> bool {
         self.logical_type.is_some() || self.has_ieee_address
+    }
+
+    pub fn has_home_automation_profile(&self) -> bool {
+        self.home_automation_endpoint_count > 0
+    }
+
+    pub fn has_cluster_coverage(&self) -> bool {
+        self.unique_input_cluster_count > 0 || self.unique_output_cluster_count > 0
     }
 }
 
@@ -1169,11 +1199,17 @@ mod tests {
         simple_descriptor
             .input_clusters
             .push(ClusterId::LEVEL_CONTROL);
+        let mut manufacturer_descriptor = simple_descriptor.clone();
+        manufacturer_descriptor.endpoint = Endpoint(2);
+        manufacturer_descriptor.profile_id = ProfileId(0xc001);
+        manufacturer_descriptor
+            .output_clusters
+            .push(ClusterId::ON_OFF);
         let summary = ZigbeeInterviewSummary {
             network_address: NetworkAddress(0x1234),
             ieee_address: Some(IeeeAddress(0x0012_4b00_24c8_abcd)),
             node_descriptor: Some(node_descriptor),
-            simple_descriptors: vec![simple_descriptor],
+            simple_descriptors: vec![simple_descriptor, manufacturer_descriptor],
         }
         .read_summary();
 
@@ -1181,14 +1217,20 @@ mod tests {
         assert!(summary.has_ieee_address);
         assert_eq!(summary.logical_type, Some(LogicalType::Router));
         assert_eq!(summary.manufacturer_code, Some(0x1234));
-        assert_eq!(summary.endpoint_count, 1);
-        assert_eq!(summary.input_cluster_count, 3);
-        assert_eq!(summary.output_cluster_count, 1);
+        assert_eq!(summary.endpoint_count, 2);
+        assert_eq!(summary.home_automation_endpoint_count, 1);
+        assert_eq!(summary.non_home_automation_endpoint_count, 1);
+        assert_eq!(summary.input_cluster_count, 6);
+        assert_eq!(summary.output_cluster_count, 3);
+        assert_eq!(summary.unique_input_cluster_count, 3);
+        assert_eq!(summary.unique_output_cluster_count, 2);
         assert!(summary.has_basic_cluster);
         assert!(summary.has_on_off_cluster);
         assert!(summary.has_level_control_cluster);
         assert!(summary.has_descriptors());
         assert!(summary.can_project_device_identity());
+        assert!(summary.has_home_automation_profile());
+        assert!(summary.has_cluster_coverage());
     }
 
     #[test]
@@ -1203,8 +1245,12 @@ mod tests {
 
         assert_eq!(summary.endpoint_count, 0);
         assert_eq!(summary.input_cluster_count, 0);
+        assert_eq!(summary.unique_input_cluster_count, 0);
+        assert_eq!(summary.home_automation_endpoint_count, 0);
         assert!(!summary.has_descriptors());
         assert!(!summary.can_project_device_identity());
+        assert!(!summary.has_home_automation_profile());
+        assert!(!summary.has_cluster_coverage());
     }
 
     #[test]
