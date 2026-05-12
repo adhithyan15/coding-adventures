@@ -9,6 +9,10 @@ All notable changes to this package will be documented in this file.
 - `DiscoveryRecordSummary` and `DiscoveryCatalog::record_summary_at` for
   aggregate discovery planning by source, confidence, pairing requirement,
   address coverage, and freshness status.
+- `DiscoveryPairingPlanSummary`, `DiscoveryPairingPlan::summary`, and
+  `DiscoveryCatalog::pairing_plan_summary_at` for host-facing pairing queue
+  rollups by actionability, human action, freshness, source, requirement,
+  action, and next actionable target.
 
 ## [0.1.0] - 2026-05-08
 
