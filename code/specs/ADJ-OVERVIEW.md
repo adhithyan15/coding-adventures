@@ -228,5 +228,8 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   derived.
 - [ADJ12](ADJ12-small-model-benchmarks.md) — benchmark data on
   qwen2.5:0.5b through gemma4:8b.
+- [ADJ14](ADJ14-rule-elicitation.md) — Stage 0 of the rule
+  compilation pipeline: bootstrapping a Tentative rulebook from the
+  LLM's own weights when no authoritative rulebook is on hand.
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.
