@@ -102,7 +102,9 @@ struct PathHistory {
 
 impl PathHistory {
     fn new() -> Self {
-        Self { versions: Vec::new() }
+        Self {
+            versions: Vec::new(),
+        }
     }
 
     /// Latest live version, or `None` if every version is
@@ -182,6 +184,52 @@ struct Inner {
     root_generation: u32,
 }
 
+/// Redacted inventory for one KV-v2 path.
+///
+/// This intentionally contains only version numbers and counts. It never
+/// clones or reports secret bytes.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct KvV2PathSummary {
+    /// Secret path inside this KV-v2 mount.
+    pub path: String,
+    /// Highest version number ever issued for this path.
+    pub high_water_version: u32,
+    /// Latest readable version, if any version is still live.
+    pub latest_live_version: Option<u32>,
+    /// Number of retained live versions.
+    pub live_versions: usize,
+    /// Number of retained destroyed tombstones.
+    pub destroyed_versions: usize,
+    /// Total retained versions and tombstones for this path.
+    pub retained_versions: usize,
+}
+
+/// Redacted inventory for a KV-v2 engine mount.
+///
+/// Hosts can use this for health checks, audits, and routing diagnostics
+/// without touching the stored secret bodies.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct KvV2EngineSummary {
+    /// Mount path for this engine.
+    pub mount_path: String,
+    /// Configured live-version cap per path.
+    pub max_versions: usize,
+    /// Configured engine maximum TTL in milliseconds.
+    pub max_ttl_ms: u64,
+    /// Configured default TTL in milliseconds.
+    pub default_ttl_ms: u64,
+    /// Current engine root generation.
+    pub root_generation: u32,
+    /// Number of paths with retained history.
+    pub path_count: usize,
+    /// Number of retained live versions across all paths.
+    pub live_versions: usize,
+    /// Number of retained destroyed tombstones across all paths.
+    pub destroyed_versions: usize,
+    /// Total retained versions and tombstones across all paths.
+    pub retained_versions: usize,
+}
+
 /// KV-v2 engine. Instantiate one per mount path.
 ///
 /// Threadsafe via an internal mutex. The intended pattern is
@@ -245,6 +293,52 @@ impl KvV2Engine {
         Ok(Zeroizing::new(v.body.to_vec()))
     }
 
+    /// Return a redacted inventory summary for the whole engine.
+    pub fn summary(&self) -> KvV2EngineSummary {
+        let g = self.inner.lock().expect("kv2 mutex poisoned");
+        let mut live_versions = 0usize;
+        let mut destroyed_versions = 0usize;
+        for history in g.table.values() {
+            let counts = count_history_versions(history);
+            live_versions += counts.0;
+            destroyed_versions += counts.1;
+        }
+
+        KvV2EngineSummary {
+            mount_path: self.cfg.mount_path.clone(),
+            max_versions: self.cfg.max_versions,
+            max_ttl_ms: self.cfg.max_ttl_ms,
+            default_ttl_ms: self.cfg.default_ttl_ms,
+            root_generation: g.root_generation,
+            path_count: g.table.len(),
+            live_versions,
+            destroyed_versions,
+            retained_versions: live_versions + destroyed_versions,
+        }
+    }
+
+    /// Return a redacted inventory summary for one path, if retained.
+    pub fn path_summary(&self, path: &str) -> Option<KvV2PathSummary> {
+        let g = self.inner.lock().expect("kv2 mutex poisoned");
+        let history = g.table.get(path)?;
+        Some(build_path_summary(path, history))
+    }
+
+    /// Return redacted per-path summaries sorted lexicographically by path.
+    pub fn list_path_summaries(&self) -> Vec<KvV2PathSummary> {
+        let g = self.inner.lock().expect("kv2 mutex poisoned");
+        let mut paths: Vec<&String> = g.table.keys().collect();
+        paths.sort();
+        paths
+            .into_iter()
+            .filter_map(|path| {
+                g.table
+                    .get(path)
+                    .map(|history| build_path_summary(path, history))
+            })
+            .collect()
+    }
+
     /// Effective TTL for this call, clamped:
     ///
     /// `granted = min(requested_or_default, role.max_ttl_ms, engine.max_ttl_ms)`
@@ -263,6 +357,24 @@ impl KvV2Engine {
             return Err(EngineError::InvalidParameter("clamped TTL is zero"));
         }
         Ok(t)
+    }
+}
+
+fn count_history_versions(history: &PathHistory) -> (usize, usize) {
+    let live = history.versions.iter().filter(|v| !v.destroyed).count();
+    let destroyed = history.versions.len() - live;
+    (live, destroyed)
+}
+
+fn build_path_summary(path: &str, history: &PathHistory) -> KvV2PathSummary {
+    let (live_versions, destroyed_versions) = count_history_versions(history);
+    KvV2PathSummary {
+        path: path.to_string(),
+        high_water_version: history.high_water_mark(),
+        latest_live_version: history.latest_live().map(|v| v.version),
+        live_versions,
+        destroyed_versions,
+        retained_versions: history.versions.len(),
     }
 }
 
@@ -291,27 +403,23 @@ impl SecretEngine for KvV2Engine {
             .as_ref()
             .ok_or(EngineError::InvalidParameter("ctx.input is required"))?;
         if input.is_empty() {
-            return Err(EngineError::InvalidParameter(
-                "ctx.input must not be empty",
-            ));
+            return Err(EngineError::InvalidParameter("ctx.input must not be empty"));
         }
         // KV-v2's CAS token is the expected version (u32-shaped;
         // we accept u64 from the trait and validate on the way
         // in).
         let expected_version: Option<u32> = match ctx.cas_token {
             None => None,
-            Some(n) => Some(u32::try_from(n).map_err(|_| {
-                EngineError::InvalidParameter("cas_token does not fit in u32")
-            })?),
+            Some(n) => Some(
+                u32::try_from(n)
+                    .map_err(|_| EngineError::InvalidParameter("cas_token does not fit in u32"))?,
+            ),
         };
         let granted_ttl_ms = self.clamp_ttl(role, ctx.requested_ttl_ms)?;
 
         // === Atomic mutation under a single lock ===
         let mut g = self.inner.lock().expect("kv2 mutex poisoned");
-        let history = g
-            .table
-            .entry(path.clone())
-            .or_insert_with(PathHistory::new);
+        let history = g.table.entry(path.clone()).or_insert_with(PathHistory::new);
         // CAS check.
         let live = history.latest_live().map(|v| v.version);
         match expected_version {
@@ -670,9 +778,7 @@ mod tests {
             default_ttl_ms: None,
             max_ttl_ms: Some(500),
         };
-        let m = e
-            .mint(&role, &kv_ctx("p", b"v", None, 60_000))
-            .unwrap();
+        let m = e.mint(&role, &kv_ctx("p", b"v", None, 60_000)).unwrap();
         assert_eq!(m.granted_ttl_ms, 500);
     }
 
@@ -737,6 +843,102 @@ mod tests {
             e.read_version("p", 3),
             Err(EngineError::UnknownSecret)
         ));
+    }
+
+    #[test]
+    fn summary_reports_redacted_mount_inventory() {
+        let e = fresh();
+        assert_eq!(
+            e.summary(),
+            KvV2EngineSummary {
+                mount_path: "kv/".into(),
+                max_versions: 16,
+                max_ttl_ms: 24 * 60 * 60 * 1_000,
+                default_ttl_ms: 60 * 60 * 1_000,
+                root_generation: 0,
+                path_count: 0,
+                live_versions: 0,
+                destroyed_versions: 0,
+                retained_versions: 0,
+            }
+        );
+
+        let first = e
+            .mint(
+                &Role::new("r"),
+                &kv_ctx("alpha", b"secret-alpha", None, 60_000),
+            )
+            .unwrap();
+        e.mint(
+            &Role::new("r"),
+            &kv_ctx("alpha", b"secret-alpha-2", None, 60_000),
+        )
+        .unwrap();
+        e.mint(
+            &Role::new("r"),
+            &kv_ctx("beta", b"secret-beta", None, 60_000),
+        )
+        .unwrap();
+        e.revoke(&first.secret_ref).unwrap();
+        e.rotate_root().unwrap();
+
+        assert_eq!(
+            e.summary(),
+            KvV2EngineSummary {
+                mount_path: "kv/".into(),
+                max_versions: 16,
+                max_ttl_ms: 24 * 60 * 60 * 1_000,
+                default_ttl_ms: 60 * 60 * 1_000,
+                root_generation: 1,
+                path_count: 2,
+                live_versions: 2,
+                destroyed_versions: 1,
+                retained_versions: 3,
+            }
+        );
+    }
+
+    #[test]
+    fn path_summaries_report_counts_without_secret_bytes() {
+        let e = fresh();
+        let first = e
+            .mint(
+                &Role::new("r"),
+                &kv_ctx("alpha", b"top-secret-alpha", None, 60_000),
+            )
+            .unwrap();
+        e.mint(
+            &Role::new("r"),
+            &kv_ctx("alpha", b"top-secret-alpha-2", None, 60_000),
+        )
+        .unwrap();
+        e.mint(
+            &Role::new("r"),
+            &kv_ctx("beta", b"top-secret-beta", None, 60_000),
+        )
+        .unwrap();
+        e.revoke(&first.secret_ref).unwrap();
+
+        assert_eq!(
+            e.path_summary("alpha"),
+            Some(KvV2PathSummary {
+                path: "alpha".into(),
+                high_water_version: 2,
+                latest_live_version: Some(2),
+                live_versions: 1,
+                destroyed_versions: 1,
+                retained_versions: 2,
+            })
+        );
+        assert_eq!(e.path_summary("missing"), None);
+
+        let summaries = e.list_path_summaries();
+        assert_eq!(summaries.len(), 2);
+        assert_eq!(summaries[0].path, "alpha");
+        assert_eq!(summaries[1].path, "beta");
+
+        let debug = format!("{summaries:?}");
+        assert!(!debug.contains("top-secret"));
     }
 
     #[test]

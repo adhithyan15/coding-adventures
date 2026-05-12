@@ -51,6 +51,7 @@ assert_eq!(&*bytes, b"hunter2");
 | `revoke(SecretRef::KvV2)`| soft delete: marks version destroyed, scrubs the bytes      |
 | `read_latest`            | returns latest live version                                 |
 | `read_version(N)`        | returns specific version (404 if destroyed)                 |
+| `summary` / `path_summary` | redacted version-count inventories, no secret bytes       |
 | `rotate_root`            | bumps engine generation counter                             |
 
 `revoke` is **idempotent** — re-revoking a destroyed version is
@@ -83,6 +84,9 @@ rejected as `EngineError::InvalidParameter`.
 - **Caller-supplied `now_ms`**: the engine never reads the
   system clock, keeping it deterministic for testing and
   capability-light.
+- **Redacted summaries**: inventory helpers report only mount
+  configuration, root generation, path counts, and version counts;
+  they never clone stored secret bodies.
 
 ## What this crate is not
 
