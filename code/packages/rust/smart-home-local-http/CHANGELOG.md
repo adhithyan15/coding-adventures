@@ -8,6 +8,9 @@ All notable changes to this package will be documented in this file.
 
 - Deterministic retry policies with bounded backoff, transient status matching,
   request-plan propagation, and query filters for supervised local HTTP calls.
+- `LocalHttpEndpointSummary` and `summarize_local_http_endpoints()` for compact
+  endpoint inventory shape across scheme, TLS, base path, metadata, and unique
+  host/bridge/integration coverage.
 - `LocalHttpRequestPlanSummary` and `summarize_local_http_request_plans()` for
   aggregate method, auth, retry, body, vault, and timeout shape before a runtime
   executes local HTTP requests.
