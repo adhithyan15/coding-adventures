@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11
+
+### Added
+
+ADJ10 TSA worked-example integration test (the third E2E goal of
+the session: Prolog ✅, ProbLog ✅, semantic source map ✅).
+
+- New integration test crate `tests/integration_adj10_tsa.rs`. Builds
+  a TSA-style IR document programmatically (two `Fact` nodes that
+  tile a `"1 carry-on bag, matches."` 24-byte document plus one
+  `Query` node) and feeds it through `pipeline::run`.
+- 4 tests cover: the happy path (Resolved verdict with one engine
+  answer, all four checker results recorded — ADJ02/ADJ03 Passed,
+  ADJ04/ADJ05 Skipped); audit trail round-trips through
+  `serde_json`; the trail mirrors the input document and every IR
+  node id; the Blocked path (out-of-bounds span surfaces as a
+  coverage violation, engine never runs, outcome is
+  `ClarificationExhausted`).
+
+### Notes
+
+This is the **third of three E2E test goals** the user asked for at
+the start of the session, alongside [#2752 Prolog](https://github.com/adhithyan15/coding-adventures/pull/2752)
+and [#2756 ProbLog](https://github.com/adhithyan15/coding-adventures/pull/2756).
+The fixture is programmatic at v0.2 because `adjudication-ir` does
+not yet derive `serde::Deserialize`; a future version will load the
+ADJ10 fixture from a JSON file under
+`code/specs/fixtures/adj10-tsa/`.
+
+A follow-up will pass an LLM `GatewayConfig` into `run` so ADJ04
+(round-trip) and ADJ05 (adversarial) can flip from Skipped to
+Passed/Failed using the merged `adjudication-round-trip` and
+`adjudication-adversarial` checker crates.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added

@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-pipeline"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Orchestrator for the adjudication framework. Composes the merged ADJ02 (coverage) + ADJ03 (polarity-modality) + ADJ-connector (engine) into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. ADJ04 / ADJ05 / ADJ06 slot in as they ship."
+description = "Orchestrator for the adjudication framework. Composes ADJ02 + ADJ03 + engine into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. ADJ04 + ADJ05 are recorded as Skipped pending an LLM-gateway wiring follow-up. v0.2 ships the ADJ10 TSA worked-example integration test."
 
 [dependencies]
 adjudication-audit-trail = { path = "../adjudication-audit-trail" }
