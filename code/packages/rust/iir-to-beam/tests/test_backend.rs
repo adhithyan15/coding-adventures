@@ -88,18 +88,19 @@ fn count_opcode(beam: &iir_to_beam::BEAMModule, opcode: u8) -> usize {
     beam.instructions.iter().filter(|i| i.opcode == opcode).count()
 }
 
-// BEAM opcodes referenced in assertions
-const OP_GC_BIF2: u8 = 125;
-const OP_GC_BIF1: u8 = 124;
-const OP_IS_EQ_EXACT: u8 = 43;
-const OP_IS_NE_EXACT: u8 = 44;
-const OP_IS_LT: u8 = 47;
-const OP_IS_GE: u8 = 48;
-const OP_MOVE: u8 = 64;
-const OP_RETURN: u8 = 19;
-const OP_JUMP: u8 = 36;
-const OP_LABEL: u8 = 1;
-const OP_CALL: u8 = 4;
+// BEAM opcodes referenced in assertions — all verified against OTP 28
+// beam_opcodes.erl: opcode(Name, Arity) -> N.
+const OP_GC_BIF2: u8 = 125;       // gc_bif2/6
+const OP_GC_BIF1: u8 = 124;       // gc_bif1/5
+const OP_IS_EQ_EXACT: u8 = 43;    // is_eq_exact/3
+const OP_IS_NE_EXACT: u8 = 44;    // is_ne_exact/3
+const OP_IS_LT: u8 = 39;          // is_lt/3  (was wrong: 47 = is_number)
+const OP_IS_GE: u8 = 40;          // is_ge/3  (was wrong: 48 = is_atom)
+const OP_MOVE: u8 = 64;           // move/2
+const OP_RETURN: u8 = 19;         // return/0
+const OP_JUMP: u8 = 61;           // jump/1  (was wrong: 36 = int_bsl)
+const OP_LABEL: u8 = 1;           // label/1
+const OP_CALL: u8 = 4;            // call/2
 
 // ===========================================================================
 // 1. test_empty_module_rejected
@@ -1326,7 +1327,7 @@ const OP_IS_NIL:   u8 = 52;
 
 // BEAM opcodes for the closure tests (LANG35)
 /// `{call_ext, {u,Arity}, {u,ImportIdx}}` — call imported function.
-const OP_CALL_EXT: u8 = 6;
+const OP_CALL_EXT: u8 = 7;  // call_ext/2 (was wrong: 6 = call_only)
 
 // ===========================================================================
 // 46. alloc ref<LispyPair> accepted by validator
@@ -2092,22 +2093,15 @@ fn test_64_call_closure_lowering() {
 /// End-to-end test: lower `main() -> 5 + 3` to BEAM bytes, write a `.beam`
 /// file, invoke `erl -noshell`, and assert the return value is `8`.
 ///
-/// # OTP 28 compatibility note
+/// # OTP 28 compatibility
 ///
-/// `encode_beam` (from `ir-to-beam`) currently produces BEAM files in the
-/// pre-OTP-25 format: the `AtU8` chunk uses the old 1-byte length encoding
-/// (positive count) and the required `Meta` chunk (OTP 25+) is not emitted.
-/// OTP 28 rejects such files with "compiled for an old version of the runtime
-/// system."  This test is therefore `#[ignore]`d until the `ir-to-beam` crate
-/// is updated to emit OTP-25-compatible output.
-///
-/// Track progress at: `ir-to-beam` crate — OTP 28 compatibility (`Meta` chunk
-/// + new `AtU8` negative-count encoding).
+/// `encode_beam` now emits the `Attr`, `CInf`, and `Meta` chunks required by
+/// OTP 25+.  On machines with Erlang/OTP installed this test runs the full
+/// round-trip; on CI (no `erl` binary) it is silently skipped via the
+/// `erl_available()` guard.
 ///
 /// Silently skipped when `erl` is not on PATH.
 #[test]
-#[ignore = "ir-to-beam encoder produces pre-OTP-25 BEAM format; OTP 28 rejects it with \
-            'compiled for an old version' — fix ir-to-beam first"]
 fn test_65_real_erl_arithmetic() {
     use iir_to_beam::encode_beam;
 
@@ -2141,8 +2135,10 @@ fn test_65_real_erl_arithmetic() {
     let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
     let bytes = encode_beam(&beam_mod);
 
-    // Write to a stable temp path (no tempfile crate dependency).
-    let tmp = std::env::temp_dir().join("iir_to_beam_tests");
+    // Write to a process-unique temp path to avoid collisions and symlink
+    // attacks in multi-user / parallel CI environments.
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
     std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
     let beam_path = tmp.join("iir_arith_test.beam");
     std::fs::write(&beam_path, &bytes).expect("write iir_arith_test.beam");
@@ -2194,8 +2190,6 @@ fn test_65_real_erl_arithmetic() {
 ///
 /// Skipped silently when `erl` is not on PATH.
 #[test]
-#[ignore = "ir-to-beam encoder produces pre-OTP-25 BEAM format; OTP 28 rejects it with \
-            'compiled for an old version' — fix ir-to-beam first"]
 fn test_66_real_erl_closure_adder() {
     use iir_to_beam::encode_beam;
 
@@ -2269,7 +2263,9 @@ fn test_66_real_erl_closure_adder() {
     let beam_mod = lower_iir_to_beam(&module, &beam_cfg).unwrap();
     let bytes = encode_beam(&beam_mod);
 
-    let tmp = std::env::temp_dir().join("iir_to_beam_tests");
+    // Process-unique temp dir avoids symlink attacks and parallel-test collisions.
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
     std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
     let beam_path = tmp.join("iir_clos_test.beam");
     std::fs::write(&beam_path, &bytes).expect("write iir_clos_test.beam");

@@ -145,6 +145,22 @@ instruction with `type_hint` of `"any"`, `"polymorphic"`, `"str"`, or `"ref<…>
 Float constant operands are also rejected — BEAM integer arithmetic cannot hold
 IEEE-754 doubles without boxing.
 
+## OTP compatibility
+
+Generated `.beam` files are compatible with **OTP 25+** (including OTP 28).
+Compatibility requires several constraints that are enforced automatically:
+
+- **Opcode numbers**: all opcodes match OTP 28 `beam_opcodes:opcode/2`
+  (`jump`=61, `is_lt`=39, `is_ge`=40, `call_ext`=7, etc.).
+- **Import-index operand type**: `gc_bif2` / `gc_bif1` import indices are
+  U-type compact terms (tag=0), not A-type atom references.
+- **BEAM nil**: empty-list `[]` is encoded as `{a,0}` (the reserved index),
+  not as `{a, atom_table_index_for_'[]'}`.
+- **`max_opcode`**: the Code chunk header declares `max_opcode = 177`; OTP 28
+  requires ≥ 169.
+- The `ir-to-beam` encoder produces the OTP 25+ `AtU8` format (negative-count
+  atom table) and mandatory `Attr`, `CInf`, and `Meta` chunks.
+
 ## Module structure
 
 ```

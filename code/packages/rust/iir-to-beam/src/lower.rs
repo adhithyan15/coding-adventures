@@ -114,18 +114,23 @@ const OP_CALL: u8 = 4;
 /// The return value must already be in x0.
 const OP_RETURN: u8 = 19;
 /// `{jump, {f,Label}}` — unconditional branch to Label.
-const OP_JUMP: u8 = 36;
+/// OTP 28: opcode 61 (beam_opcodes:opcode(jump,1) -> 61).
+const OP_JUMP: u8 = 61;
 /// `{is_eq_exact, {f,Fail}, A, B}` — fall through if A == B; branch to Fail if not.
 /// Note: the branch is taken on *failure* (when not equal), not on success.
+/// OTP 28: opcode 43 (beam_opcodes:opcode(is_eq_exact,3) -> 43).
 const OP_IS_EQ_EXACT: u8 = 43;
 /// `{is_ne_exact, {f,Fail}, A, B}` — fall through if A != B; branch to Fail if not.
+/// OTP 28: opcode 44 (beam_opcodes:opcode(is_ne_exact,3) -> 44).
 const OP_IS_NE_EXACT: u8 = 44;
 /// `{is_lt, {f,Fail}, A, B}` — fall through if A < B; branch to Fail if not.
 /// That is: branch to Fail when A >= B.
-const OP_IS_LT: u8 = 47;
+/// OTP 28: opcode 39 (beam_opcodes:opcode(is_lt,3) -> 39).
+const OP_IS_LT: u8 = 39;
 /// `{is_ge, {f,Fail}, A, B}` — fall through if A >= B; branch to Fail if not.
 /// That is: branch to Fail when A < B.
-const OP_IS_GE: u8 = 48;
+/// OTP 28: opcode 40 (beam_opcodes:opcode(is_ge,3) -> 40).
+const OP_IS_GE: u8 = 40;
 /// `{move, Src, Dst}` — copy one register or immediate into another.
 const OP_MOVE: u8 = 64;
 /// `{gc_bif1, {f,Fail}, {u,Live}, Bif, Arg, Dst}` — one-argument BIF call.
@@ -140,7 +145,10 @@ const OP_GC_BIF2: u8 = 125;
 /// Before the call, arguments must be in `x0 .. x(Arity-1)`.  The return value
 /// is placed in `x0` after the call.  Used for `erlang:'++'` / 2 and
 /// `erlang:apply/3` in the closure lowering path.
-const OP_CALL_EXT: u8 = 6;
+///
+/// OTP 28: opcode 7 (beam_opcodes:opcode(call_ext,2) -> 7).
+/// **Not** 6, which is `call_only` (tail-call within the same module).
+const OP_CALL_EXT: u8 = 7;
 
 // ===========================================================================
 // BEAM heap/list opcodes (Phase 2 heap ops, LANG31)
@@ -773,12 +781,15 @@ pub fn lower_iir_to_beam(
 
                     // Special case: nil sentinel (make_nil → `const 0 : ref<LispyPair>`).
                     // The integer 0 is the cross-backend nil sentinel; we map it
-                    // to the BEAM `[]` atom rather than the integer 0 so that
-                    // BEAM's list operations (hd, tl, is_nil, pattern matching)
-                    // work correctly.
+                    // to BEAM's nil term `{a,0}` (NOT to the atom '[]').
+                    //
+                    // In BEAM's compact-term encoding, `{a,0}` is the special nil
+                    // (empty list) value.  Atom indices start at 1; index 0 is
+                    // reserved for nil.  Using atom_nil (e.g. index 14 = '[]')
+                    // would put the ATOM '[]' in the register, which is not a list.
                     if instr.type_hint == "ref<LispyPair>" {
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::a(atom_nil),  // {a,nil_idx} = [] atom
+                            BEAMOperand::a(0), // BEAM nil = {a,0} = empty-list []
                             BEAMOperand::x(rd),
                         ]));
                         continue;
@@ -881,7 +892,7 @@ pub fn lower_iir_to_beam(
                         // (we use the nil atom so that downstream code sees a valid
                         // BEAM term rather than an uninitialized register).
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::a(atom_nil),
+                            BEAMOperand::a(0), // BEAM nil: index 0 = empty-list [], NOT the atom '[]'
                             BEAMOperand::x(cell_reg),
                         ]));
                     }
@@ -889,11 +900,13 @@ pub fn lower_iir_to_beam(
 
                 // ── Binary arithmetic: add, sub, mul, div, mod ──────────────
                 //
-                // Pattern: gc_bif2 {f,0} {u,live} {a,import_idx} {x,r1} {x,r2} {x,rd}
+                // Pattern: gc_bif2 {f,0} {u,live} {u,import_idx} {x,r1} {x,r2} {x,rd}
                 //
                 // {f,0}         = no explicit failure label; let BEAM raise badarith.
                 // {u,live}      = number of live registers (for GC root scanning).
-                // {a,import_idx}= index into the import table (0-based).
+                // {u,import_idx}= index into the import table (0-based), U-type not A-type.
+                //                 OTP 25+ C-loader requires U tag for the BIF operand.
+                //                 (The old A-tag encoding produces "bad tag" on load.)
                 // {x,r1},{x,r2} = source registers.
                 // {x,rd}        = destination register.
                 "add" | "sub" | "mul" | "div" | "mod" => {
@@ -919,7 +932,7 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
-                        BEAMOperand::a(import_idx),
+                        BEAMOperand::u(import_idx as u64), // U-type, not A-type (OTP 25+ requirement)
                         BEAMOperand::x(r1),
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
@@ -928,7 +941,7 @@ pub fn lower_iir_to_beam(
 
                 // ── Unary arithmetic: neg, not ──────────────────────────────
                 //
-                // Pattern: gc_bif1 {f,0} {u,live} {a,import_idx} {x,r} {x,rd}
+                // Pattern: gc_bif1 {f,0} {u,live} {u,import_idx} {x,r} {x,rd}
                 //
                 // gc_bif1 is the same as gc_bif2 but with only one source
                 // register.  `erlang:-/1` is unary minus; `erlang:bnot/1` is
@@ -950,7 +963,7 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
-                        BEAMOperand::a(import_idx),
+                        BEAMOperand::u(import_idx as u64), // U-type (OTP 25+)
                         BEAMOperand::x(r),
                         BEAMOperand::x(rd),
                     ]));
@@ -978,7 +991,7 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
-                        BEAMOperand::a(import_idx),
+                        BEAMOperand::u(import_idx as u64), // U-type (OTP 25+)
                         BEAMOperand::x(r1),
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
@@ -1622,11 +1635,11 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::a(name_atom),
                         BEAMOperand::x(tmp),
                     ]));
-                    // gc_bif2 {f,0} {u,live} {a,import_put} {x,tmp} {x,rv} {x,dummy_dst}
+                    // gc_bif2 {f,0} {u,live} {u,import_put} {x,tmp} {x,rv} {x,dummy_dst}
                     instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(meta.next_reg as u64),
-                        BEAMOperand::a(import_put),
+                        BEAMOperand::u(import_put as u64), // U-type (OTP 25+)
                         BEAMOperand::x(tmp),
                         BEAMOperand::x(rv),
                         BEAMOperand::x(dummy_dst),
@@ -1662,11 +1675,11 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::a(name_atom),
                         BEAMOperand::x(tmp),
                     ]));
-                    // gc_bif1 {f,0} {u,live} {a,import_get} {x,tmp} {x,rd}
+                    // gc_bif1 {f,0} {u,live} {u,import_get} {x,tmp} {x,rd}
                     instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(meta.next_reg as u64),
-                        BEAMOperand::a(import_get),
+                        BEAMOperand::u(import_get as u64), // U-type (OTP 25+)
                         BEAMOperand::x(tmp),
                         BEAMOperand::x(rd),
                     ]));
@@ -1688,7 +1701,7 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(meta.next_reg as u64),
-                        BEAMOperand::a(import_display),
+                        BEAMOperand::u(import_display as u64), // U-type (OTP 25+)
                         BEAMOperand::x(rx),
                         BEAMOperand::x(dummy),
                     ]));
@@ -1745,7 +1758,7 @@ pub fn lower_iir_to_beam(
                     // BEAM atom index 0 is nil in Erlang's internal representation;
                     // `atoms.intern("[]")` gives the atom-table index for the nil atom.
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::a(atom_nil),
+                        BEAMOperand::a(0), // BEAM nil: index 0 = empty-list [], NOT the atom '[]'
                         BEAMOperand::x(r_scratch),
                     ]));
 
@@ -1833,7 +1846,7 @@ pub fn lower_iir_to_beam(
 
                     // Step 2: build args list in r2, from right to left.
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::a(atom_nil),
+                        BEAMOperand::a(0), // BEAM nil: index 0 = empty-list [], NOT the atom '[]'
                         BEAMOperand::x(r2),
                     ]));
                     for arg_src in arg_srcs.iter().rev() {
@@ -1930,7 +1943,11 @@ pub fn lower_iir_to_beam(
         exports,
         locals: vec![],
         label_count,
-        max_opcode: 0, // let encode_beam derive from the instruction stream
+        // OTP 25+ C-loader rejects modules whose max_opcode is lower than the
+        // runtime's minimum threshold (first opcode introduced in OTP 25 ≈ 169).
+        // erlc 28.4.1 emits 177 (bs_create_bin) for all modules regardless of
+        // which opcodes are actually used — we match that behaviour.
+        max_opcode: 177,
         instruction_set_version: 0,
         extra_chunks: vec![],
     })

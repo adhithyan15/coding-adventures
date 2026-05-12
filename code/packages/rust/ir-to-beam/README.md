@@ -53,15 +53,29 @@ Each `.beam` binary is an IFF container with these chunks in order:
 
 ```
 FOR1 <size> BEAM
-  AtU8  — atom table (module name is always index 1)
+  AtU8  — atom table (OTP 25+ format: negative i32 count, nibble-shifted lengths)
   Code  — instruction stream with compact-term encoded operands
   StrT  — string table (empty in v1)
   ImpT  — import table (erlang:+/2, erlang:-/2, erlang:band/2, …)
   ExpT  — export table (run/0 at BEAM label 2)
   LocT  — local function table (empty in v1)
-  Attr  — module attributes (BERT nil list)
-  CInf  — compiler info   (BERT nil list)
+  Attr  — module attributes (ETF nil list, required by OTP 25+)
+  CInf  — compiler info   (ETF nil list, required by OTP 25+)
+  Meta  — [{enabled_features,[]}] (required by OTP 25+)
 ```
+
+### AtU8 format (OTP 25+)
+
+OTP 25 changed the atom-table encoding.  The old format used a positive `u32`
+count; the new format uses a **negative `i32`** count to signal the version,
+and each atom's length byte is left-shifted by 4 (`len << 4` for len 0–15,
+or `[0x08, len]` for len 16–255).  This encoder produces the new format only.
+
+### Mandatory OTP 25+ chunks
+
+`Attr`, `CInf`, and `Meta` are required by the OTP 25+ C-loader even for
+minimal modules.  Omitting them causes "compiled for an old version of the
+runtime system" at load time on OTP 28.
 
 ## Quick start
 

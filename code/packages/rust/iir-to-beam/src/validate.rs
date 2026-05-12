@@ -180,6 +180,43 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
         return errors;
     }
 
+    // ── Check 1.5: Atom length (trust-boundary guard) ────────────────────────
+    //
+    // BEAM atoms are limited to 255 bytes (UTF-8).  The module name, all
+    // function names, and all `Operand::Str` string literals become BEAM
+    // atoms during lowering.  Catch oversized names here so the encoder
+    // never reaches the `assert!` guard (which would panic in debug builds).
+    //
+    // This is the sole input-validation point for atom length; it runs on
+    // all user-supplied IIR before any encoding takes place.
+    const BEAM_ATOM_MAX: usize = 255;
+
+    if module.name.len() > BEAM_ATOM_MAX {
+        errors.push(format!(
+            "AtomTooLong: module name is {} bytes (max {})",
+            module.name.len(), BEAM_ATOM_MAX
+        ));
+    }
+
+    for func in &module.functions {
+        if func.name.len() > BEAM_ATOM_MAX {
+            errors.push(format!(
+                "AtomTooLong: function name {:?} is {} bytes (max {})",
+                func.name, func.name.len(), BEAM_ATOM_MAX
+            ));
+        }
+        for instr in &func.instructions {
+            if let Some(Operand::Str(s)) = instr.srcs.first() {
+                if s.len() > BEAM_ATOM_MAX {
+                    errors.push(format!(
+                        "AtomTooLong: Operand::Str in function {:?}, op {:?} is {} bytes (max {})",
+                        func.name, instr.op, s.len(), BEAM_ATOM_MAX
+                    ));
+                }
+            }
+        }
+    }
+
     for func in &module.functions {
         // ── Check 2: EmptyFunction ───────────────────────────────────────────
         //
