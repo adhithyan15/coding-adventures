@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Hue snapshot summaries for compact resource-family, relationship-ref, scene
+  action, and state-projection coverage over typed CLIP v2 snapshots.
 - Hue event-stream summaries for compact retry-hint, record, resource-item, and
   resource-type coverage over parsed Server-Sent Events batches.
 

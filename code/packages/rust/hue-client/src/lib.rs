@@ -158,6 +158,155 @@ impl HueSnapshot {
     pub fn is_empty(&self) -> bool {
         self.resource_count() == 0
     }
+
+    pub fn summary(&self) -> HueSnapshotSummary {
+        HueSnapshotSummary::from_snapshot(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct HueSnapshotSummary {
+    pub total_resources: usize,
+    pub bridge_resources: usize,
+    pub device_resources: usize,
+    pub light_resources: usize,
+    pub grouped_light_resources: usize,
+    pub room_resources: usize,
+    pub zone_resources: usize,
+    pub scene_resources: usize,
+    pub motion_resources: usize,
+    pub button_resources: usize,
+    pub device_service_refs: usize,
+    pub area_child_refs: usize,
+    pub area_service_refs: usize,
+    pub scene_actions: usize,
+    pub stateful_scene_actions: usize,
+    pub desired_scene_state_fields: usize,
+    pub stateful_light_resources: usize,
+    pub stateful_grouped_light_resources: usize,
+    pub motion_resources_with_state: usize,
+    pub button_resources_with_state: usize,
+}
+
+impl HueSnapshotSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_snapshot(snapshot: &HueSnapshot) -> Self {
+        let mut summary = Self {
+            total_resources: snapshot.resource_count(),
+            bridge_resources: snapshot.bridges.len(),
+            device_resources: snapshot.devices.len(),
+            light_resources: snapshot.lights.len(),
+            grouped_light_resources: snapshot.grouped_lights.len(),
+            room_resources: snapshot.rooms.len(),
+            zone_resources: snapshot.zones.len(),
+            scene_resources: snapshot.scenes.len(),
+            motion_resources: snapshot.motions.len(),
+            button_resources: snapshot.buttons.len(),
+            ..Self::empty()
+        };
+
+        summary.device_service_refs = snapshot
+            .devices
+            .iter()
+            .map(|device| device.services.len())
+            .sum();
+        summary.area_child_refs = snapshot
+            .rooms
+            .iter()
+            .map(|room| room.children.len())
+            .sum::<usize>()
+            + snapshot
+                .zones
+                .iter()
+                .map(|zone| zone.children.len())
+                .sum::<usize>();
+        summary.area_service_refs = snapshot
+            .rooms
+            .iter()
+            .map(|room| room.services.len())
+            .sum::<usize>()
+            + snapshot
+                .zones
+                .iter()
+                .map(|zone| zone.services.len())
+                .sum::<usize>();
+        summary.scene_actions = snapshot
+            .scenes
+            .iter()
+            .map(|scene| scene.actions.len())
+            .sum();
+        summary.stateful_scene_actions = snapshot
+            .scenes
+            .iter()
+            .flat_map(|scene| scene.actions.iter())
+            .filter(|action| action.has_state())
+            .count();
+        summary.desired_scene_state_fields = snapshot
+            .scenes
+            .iter()
+            .flat_map(|scene| scene.actions.iter())
+            .map(HueSceneAction::state_field_count)
+            .sum();
+        summary.stateful_light_resources = snapshot
+            .lights
+            .iter()
+            .filter(|light| {
+                light.on.is_some()
+                    || light.brightness.is_some()
+                    || light.color_temperature_mirek.is_some()
+            })
+            .count();
+        summary.stateful_grouped_light_resources = snapshot
+            .grouped_lights
+            .iter()
+            .filter(|grouped_light| {
+                grouped_light.on.is_some() || grouped_light.brightness.is_some()
+            })
+            .count();
+        summary.motion_resources_with_state = snapshot
+            .motions
+            .iter()
+            .filter(|motion| motion.motion.is_some() || motion.motion_valid.is_some())
+            .count();
+        summary.button_resources_with_state = snapshot
+            .buttons
+            .iter()
+            .filter(|button| button.last_event.is_some())
+            .count();
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_resources == 0
+    }
+
+    pub fn has_lighting_resources(&self) -> bool {
+        self.light_resources > 0 || self.grouped_light_resources > 0
+    }
+
+    pub fn has_area_resources(&self) -> bool {
+        self.room_resources > 0 || self.zone_resources > 0
+    }
+
+    pub fn has_scene_actions(&self) -> bool {
+        self.scene_actions > 0
+    }
+
+    pub fn has_sensor_or_input_resources(&self) -> bool {
+        self.motion_resources > 0 || self.button_resources > 0
+    }
+
+    pub fn has_state_projection(&self) -> bool {
+        self.stateful_light_resources > 0
+            || self.stateful_grouped_light_resources > 0
+            || self.motion_resources_with_state > 0
+            || self.button_resources_with_state > 0
+            || self.stateful_scene_actions > 0
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -2105,6 +2254,47 @@ mod tests {
         assert_eq!(snapshot.scenes[0].id.as_str(), "scene-1");
         assert_eq!(snapshot.motions[0].id.as_str(), "motion-1");
         assert_eq!(snapshot.buttons[0].id.as_str(), "button-1");
+
+        let summary = snapshot.summary();
+        assert_eq!(
+            summary,
+            HueSnapshotSummary {
+                total_resources: 9,
+                bridge_resources: 1,
+                device_resources: 1,
+                light_resources: 1,
+                grouped_light_resources: 1,
+                room_resources: 1,
+                zone_resources: 1,
+                scene_resources: 1,
+                motion_resources: 1,
+                button_resources: 1,
+                device_service_refs: 2,
+                area_child_refs: 2,
+                area_service_refs: 2,
+                scene_actions: 1,
+                stateful_scene_actions: 1,
+                desired_scene_state_fields: 3,
+                stateful_light_resources: 1,
+                stateful_grouped_light_resources: 1,
+                motion_resources_with_state: 1,
+                button_resources_with_state: 1,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_lighting_resources());
+        assert!(summary.has_area_resources());
+        assert!(summary.has_scene_actions());
+        assert!(summary.has_sensor_or_input_resources());
+        assert!(summary.has_state_projection());
+
+        let empty = HueSnapshotSummary::empty();
+        assert!(empty.is_empty());
+        assert!(!empty.has_lighting_resources());
+        assert!(!empty.has_area_resources());
+        assert!(!empty.has_scene_actions());
+        assert!(!empty.has_sensor_or_input_resources());
+        assert!(!empty.has_state_projection());
     }
 
     #[test]
