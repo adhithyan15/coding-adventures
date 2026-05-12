@@ -100,6 +100,10 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
                 report.descriptor.capabilities.len()
             );
             println!(
+                "upload program_id={} bytes={} crc32=0x{:08X}",
+                report.upload.program_id, report.upload.total_len, report.upload.program_crc32
+            );
+            println!(
                 "blink program_id={} status={:?} instructions={} elapsed_ms={} open_handles={}",
                 report.run.program_id,
                 report.run.status,
