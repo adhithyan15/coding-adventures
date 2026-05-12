@@ -11,6 +11,9 @@ All notable changes to this package will be documented in this file.
   and audit metadata projection.
 - Home Assistant MQTT discovery specs for deterministic config topics, state
   and availability subscriptions, command publications, and discovery metadata.
+- `EventStreamFleetSummary` and `event_stream_fleet_summary_at()` for compact
+  supervisor health, cursor coverage, gap, heartbeat, and restart-readiness
+  rollups across stream workers.
 
 ## [0.1.0] - 2026-05-08
 
