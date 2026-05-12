@@ -409,6 +409,11 @@ fn resolve_i64(
         Operand::Int(n) => *n,
         Operand::Bool(b) => *b as i64,
         Operand::Float(f) => *f as i64,
+        // String literals have no numeric representation in Brainfuck; treat as 0.
+        // Brainfuck operates on raw byte cells — string operands should never appear
+        // in a well-formed BF IIR program, but we handle the variant defensively to
+        // keep the match exhaustive as the Operand enum evolves.
+        Operand::Str(_) => 0,
         Operand::Var(name) => {
             match ctx.frames.last().and_then(|f| f.resolve(name)) {
                 Some(Value::Int(n)) => *n,
@@ -430,6 +435,9 @@ fn resolve_value(
         Operand::Int(n) => Value::Int(*n),
         Operand::Bool(b) => Value::Bool(*b),
         Operand::Float(f) => Value::Float(*f),
+        // String literals pass through as Value::Str; Brainfuck programs should
+        // not produce these, but we keep the match exhaustive for forward compat.
+        Operand::Str(s) => Value::Str(s.clone()),
         Operand::Var(name) => {
             ctx.frames
                 .last()
