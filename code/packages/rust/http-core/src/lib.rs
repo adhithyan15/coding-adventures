@@ -55,6 +55,14 @@ impl RoutePattern {
 
         Some(params)
     }
+
+    /// Match against a full request target such as `/clip/v2/resource?limit=10`.
+    ///
+    /// Route matching uses only the path portion so query strings cannot make
+    /// an otherwise-valid local API route miss.
+    pub fn match_target(&self, target: &str) -> Option<Vec<(String, String)>> {
+        self.match_path(parse_request_target(target).path)
+    }
 }
 
 /// One HTTP header line, preserved in arrival order.
@@ -62,6 +70,60 @@ impl RoutePattern {
 pub struct Header {
     pub name: String,
     pub value: String,
+}
+
+/// Borrowed view of an origin-form request target.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RequestTarget<'a> {
+    pub path: &'a str,
+    pub query: Option<&'a str>,
+    pub fragment: Option<&'a str>,
+}
+
+impl<'a> RequestTarget<'a> {
+    pub fn query_pairs(&self) -> QueryPairs<'a> {
+        QueryPairs {
+            rest: self.query.unwrap_or(""),
+        }
+    }
+
+    pub fn query_value(&self, name: &str) -> Option<&'a str> {
+        self.query_pairs()
+            .find(|(candidate, _)| candidate == &name)
+            .map(|(_, value)| value)
+    }
+}
+
+/// Iterator over raw `name=value` pairs in a query string.
+///
+/// Values are intentionally not percent-decoded here. That keeps this crate a
+/// syntax-level core that can feed callers with different decoding policies.
+#[derive(Debug, Clone)]
+pub struct QueryPairs<'a> {
+    rest: &'a str,
+}
+
+impl<'a> Iterator for QueryPairs<'a> {
+    type Item = (&'a str, &'a str);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while !self.rest.is_empty() {
+            let (piece, next_rest) = match self.rest.split_once('&') {
+                Some((piece, rest)) => (piece, rest),
+                None => (self.rest, ""),
+            };
+            self.rest = next_rest;
+            if piece.is_empty() {
+                continue;
+            }
+
+            return Some(match piece.split_once('=') {
+                Some((name, value)) => (name, value),
+                None => (piece, ""),
+            });
+        }
+        None
+    }
 }
 
 /// A semantic HTTP version.
@@ -118,6 +180,18 @@ pub struct RequestHead {
 impl RequestHead {
     pub fn header(&self, name: &str) -> Option<&str> {
         find_header(&self.headers, name)
+    }
+
+    pub fn target_parts(&self) -> RequestTarget<'_> {
+        parse_request_target(&self.target)
+    }
+
+    pub fn path(&self) -> &str {
+        self.target_parts().path
+    }
+
+    pub fn query_value(&self, name: &str) -> Option<&str> {
+        self.target_parts().query_value(name)
     }
 
     pub fn content_length(&self) -> Option<usize> {
@@ -187,13 +261,33 @@ pub fn parse_content_type(headers: &[Header]) -> Option<(String, Option<String>)
     Some((media_type, charset))
 }
 
+/// Split an origin-form HTTP request target into path, query, and fragment.
+pub fn parse_request_target(target: &str) -> RequestTarget<'_> {
+    let (before_fragment, fragment) = match target.split_once('#') {
+        Some((head, fragment)) => (head, Some(fragment)),
+        None => (target, None),
+    };
+    let (path, query) = match before_fragment.split_once('?') {
+        Some((path, query)) => (path, Some(query)),
+        None => (before_fragment, None),
+    };
+
+    RequestTarget {
+        path: if path.is_empty() { "/" } else { path },
+        query,
+        fragment,
+    }
+}
+
 /// Split an HTTP path or route pattern into slash-delimited segments.
 pub fn split_path_segments(path: &str) -> Vec<&str> {
     if path == "/" {
         return Vec::new();
     }
 
-    path.split('/').filter(|segment| !segment.is_empty()).collect()
+    path.split('/')
+        .filter(|segment| !segment.is_empty())
+        .collect()
 }
 
 #[cfg(test)]
@@ -234,6 +328,47 @@ mod tests {
             parse_content_type(&headers),
             Some(("text/html".into(), Some("utf-8".into())))
         );
+    }
+
+    #[test]
+    fn parses_request_targets_without_decoding_query_values() {
+        let target = parse_request_target("/clip/v2/resource/light?id=abc%20123&limit=10#ignored");
+        assert_eq!(target.path, "/clip/v2/resource/light");
+        assert_eq!(target.query, Some("id=abc%20123&limit=10"));
+        assert_eq!(target.fragment, Some("ignored"));
+        assert_eq!(
+            target.query_pairs().collect::<Vec<_>>(),
+            vec![("id", "abc%20123"), ("limit", "10")]
+        );
+        assert_eq!(target.query_value("limit"), Some("10"));
+        assert_eq!(target.query_value("missing"), None);
+    }
+
+    #[test]
+    fn request_heads_expose_path_and_query_helpers() {
+        let request = RequestHead {
+            method: "GET".into(),
+            target: "/api/devices?room=kitchen&verbose".into(),
+            version: HttpVersion { major: 1, minor: 1 },
+            headers: Vec::new(),
+        };
+
+        assert_eq!(request.path(), "/api/devices");
+        assert_eq!(request.query_value("room"), Some("kitchen"));
+        assert_eq!(request.query_value("verbose"), Some(""));
+    }
+
+    #[test]
+    fn route_patterns_match_request_targets_by_path_only() {
+        let pattern = RoutePattern::parse("/clip/v2/resource/:kind/:id");
+        assert_eq!(
+            pattern.match_target("/clip/v2/resource/light/abc?limit=10"),
+            Some(vec![
+                ("kind".to_string(), "light".to_string()),
+                ("id".to_string(), "abc".to_string()),
+            ])
+        );
+        assert_eq!(pattern.match_target("/clip/v2/resource/light"), None);
     }
 
     #[test]
