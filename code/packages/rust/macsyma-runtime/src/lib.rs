@@ -14,7 +14,7 @@ use cas_list_operations::{
 use cas_simplify::simplify;
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_substitution::subst;
-use cas_trig::{expand_trig, trig_simplify};
+use cas_trig::{expand_trig, trig_reduce, trig_simplify};
 use coding_adventures_macsyma_compiler::{
     compile_macsyma_with_options, CompileError, CompileOptions, DISPLAY as COMPILER_DISPLAY,
     SUPPRESS as COMPILER_SUPPRESS,
@@ -50,6 +50,7 @@ const RAT_SIMPLIFY: &str = "RatSimplify";
 const SIMPLIFY: &str = "Simplify";
 const SUBST: &str = "Subst";
 const TRIG_EXPAND: &str = "TrigExpand";
+const TRIG_REDUCE: &str = "TrigReduce";
 const TRIG_SIMPLIFY: &str = "TrigSimplify";
 const LENGTH: &str = "Length";
 const FIRST: &str = "First";
@@ -160,7 +161,7 @@ const MACSYMA_NAME_TABLE: &[(&str, &str)] = &[
     ("cbrt", "Cbrt"),
     ("trigsimp", TRIG_SIMPLIFY),
     ("trigexpand", TRIG_EXPAND),
-    ("trigreduce", "TrigReduce"),
+    ("trigreduce", TRIG_REDUCE),
     ("collect", "Collect"),
     ("together", "Together"),
     ("ratsimp", RAT_SIMPLIFY),
@@ -352,6 +353,7 @@ impl MacsymaBackend {
         handlers.insert(RAT_SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
         handlers.insert(TRIG_EXPAND.to_string(), handler_fn(trig_expand_handler));
+        handlers.insert(TRIG_REDUCE.to_string(), handler_fn(trig_reduce_handler));
         handlers.insert(
             LENGTH.to_string(),
             list_handler(Some(1), |args| length(&args[0])),
@@ -628,6 +630,9 @@ fn ev_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     if flags.contains("trigsimp") {
         result = vm.eval(apply(sym(TRIG_SIMPLIFY), vec![result]));
     }
+    if flags.contains("trigreduce") {
+        result = vm.eval(apply(sym(TRIG_REDUCE), vec![result]));
+    }
 
     result
 }
@@ -658,6 +663,13 @@ fn trig_expand_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
         return IRNode::Apply(Box::new(expr));
     }
     expand_trig(&expr.args[0])
+}
+
+fn trig_reduce_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    trig_reduce(&expr.args[0])
 }
 
 fn solve_handler(_vm: &mut VM, expr: IRApply) -> IRNode {

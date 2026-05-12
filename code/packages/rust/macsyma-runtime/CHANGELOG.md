@@ -4,6 +4,8 @@
 
 ### Added
 
+- Wired `TrigReduce(expr)` and `ev(expr, trigreduce)` to the Rust `cas-trig`
+  power-reduction walker.
 - Wired `Subst(value, variable, expr)` to the Rust `cas-substitution`
   structural substitution package.
 - Wired deterministic MACSYMA list heads (`Length`, `First`, `Rest`, `Last`,
