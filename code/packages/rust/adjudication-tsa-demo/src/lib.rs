@@ -87,16 +87,25 @@ pub enum IrMode {
 }
 
 /// Inputs to the demo. The defaults match what most local Ollama
-/// installs look like (`http://localhost:11434`, a single Gemma
-/// model), so callers usually only need to override the model name.
+/// installs look like (`http://localhost:11434`, with two pulled
+/// models for Extractor/Renderer/Nli vs Adversary), so callers
+/// usually only need to override one of them.
 #[derive(Debug, Clone)]
 pub struct DemoConfig {
     pub endpoint: String,
-    /// Model to use for every role — Arm A's raw call AND Arm B's
-    /// `Extractor` (LlmExtracted mode only) + `Renderer` + `Nli`.
-    /// ADJ05 is intentionally skipped so the single-model setup
-    /// doesn't trip the independence check.
+    /// Primary model — Arm A's raw call AND Arm B's `Extractor` /
+    /// `Renderer` / `Nli` roles.
     pub model: String,
+    /// Adversary model — used as Arm B's `Role::Adversary`. MUST be
+    /// from a different `(vendor, model_family)` than `model` for
+    /// ADJ05 independence; the framework's
+    /// `GatewayConfig::check_independence` enforces this and the
+    /// pipeline skips ADJ05 with a structured reason if it fails.
+    ///
+    /// When `None`, ADJ05 records as Skipped — which is fine for the
+    /// quick demo. To turn it on, set `Some("llama3.1:8b")` (assumes
+    /// `ollama pull llama3.1:8b`).
+    pub adversary_model: Option<String>,
     /// Wall-clock cap per HTTP call. Ollama responses on commodity
     /// hardware can take 10–60s; 120s is the default in the provider.
     pub timeout: Duration,
@@ -113,6 +122,7 @@ impl Default for DemoConfig {
         Self {
             endpoint: "http://localhost:11434".into(),
             model: "gemma4:latest".into(),
+            adversary_model: None,
             timeout: Duration::from_secs(120),
             source_text: "1 carry-on bag, matches.".into(),
             ir_mode: IrMode::HandBuilt,
@@ -206,6 +216,11 @@ pub struct PipelineArmReport {
     /// rendering didn't match the source. Empty when ADJ04
     /// passed or was skipped.
     pub adj04_drift_findings: Vec<Adj04DriftFinding>,
+    /// Human-readable description of every ADJ05 adversarial
+    /// violation — one entry per IR leaf where a *different model*
+    /// produced a plausible contradicting reading. Empty when ADJ05
+    /// passed or was skipped.
+    pub adj05_adversarial_findings: Vec<Adj05AdversarialFinding>,
     /// Records how Arm B's IR was built. For LlmExtracted mode this
     /// includes the model's raw JSON so the report shows exactly
     /// what the model produced.
@@ -225,6 +240,18 @@ pub struct Adj04DriftFinding {
     pub threshold: f32,
 }
 
+/// One ADJ05 adversarial finding. The adversary model produced a
+/// plausible *alternative* reading of the same source span — meaning
+/// the IR's interpretation isn't the only defensible one.
+#[derive(Debug, Clone)]
+pub struct Adj05AdversarialFinding {
+    pub node_id: String,
+    pub ir_rendered: String,
+    pub adversary_reading: String,
+    pub adversary_explanation: String,
+    pub judge_reason: String,
+}
+
 /// Run the pipeline arm. The same source text Arm A saw is mapped
 /// onto a hand-built TSA IR (see [`tsa_ir_document`]) and fed through
 /// [`adjudication_pipeline::run_with_gateway`] with the Ollama
@@ -238,19 +265,34 @@ pub struct Adj04DriftFinding {
 /// trail records both roles' provider identity so a reviewer sees
 /// the configuration.
 pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
-    let client = OllamaClient::new(cfg.model.clone())
+    let primary = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
         .with_timeout(cfg.timeout);
     // GatewayConfig needs Box<dyn LlmClient>; we register clones of
-    // the same client per role so each call site uses its own
-    // connection.
-    let extractor = Box::new(client.clone()) as Box<dyn LlmClient>;
-    let renderer = Box::new(client.clone()) as Box<dyn LlmClient>;
-    let nli = Box::new(client.clone()) as Box<dyn LlmClient>;
-    let gateway = GatewayConfig::new()
+    // the primary client for Extractor/Renderer/Nli/Plausibility so
+    // each call site uses its own connection.
+    let extractor = Box::new(primary.clone()) as Box<dyn LlmClient>;
+    let renderer = Box::new(primary.clone()) as Box<dyn LlmClient>;
+    let nli = Box::new(primary.clone()) as Box<dyn LlmClient>;
+    let plausibility = Box::new(primary.clone()) as Box<dyn LlmClient>;
+    let mut gateway = GatewayConfig::new()
         .with_client(PrimitiveRole::Extractor, extractor)
         .with_client(PrimitiveRole::Renderer, renderer)
-        .with_client(PrimitiveRole::Nli, nli);
+        .with_client(PrimitiveRole::Nli, nli)
+        .with_client(PrimitiveRole::Plausibility, plausibility);
+
+    // ADJ05 adversary: a SECOND model from a different family. The
+    // framework's `check_independence` enforces this and skips the
+    // check with a typed reason if it sees the same family.
+    if let Some(adv_model) = &cfg.adversary_model {
+        let adv_client = OllamaClient::new(adv_model.clone())
+            .with_endpoint(cfg.endpoint.clone())
+            .with_timeout(cfg.timeout);
+        gateway = gateway.with_client(
+            PrimitiveRole::Adversary,
+            Box::new(adv_client) as Box<dyn LlmClient>,
+        );
+    }
 
     // Build the IR according to the configured mode. The
     // `IrSourceTelemetry` captures what the model produced (if any)
@@ -281,6 +323,7 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
 
     let trail = &output.audit_trail;
     let adj04_drift_findings = collect_adj04_drift(&trail.checker_results);
+    let adj05_adversarial_findings = collect_adj05_findings(&trail.checker_results);
     let adj04_passed = matches!(trail.checker_results[2].outcome, PassOutcome::Passed);
 
     let summary = match &output.verdict {
@@ -311,6 +354,7 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
         adj05_outcome: trail.checker_results[3].outcome,
         engine_ran: trail.engine_artifacts.is_some(),
         adj04_drift_findings,
+        adj05_adversarial_findings,
         ir_source: ir_source_telemetry,
         pipeline_output: output,
     }
@@ -860,6 +904,39 @@ fn collect_adj04_drift(
         .collect()
 }
 
+/// Pull `AdversarialReading` violations out of the ADJ05 checker
+/// result and convert them into plain-string findings for the demo
+/// report.
+fn collect_adj05_findings(
+    results: &[adjudication_audit_trail::CheckerResult],
+) -> Vec<Adj05AdversarialFinding> {
+    let Some(adj05) = results.iter().find(|cr| {
+        matches!(cr.pass_name, adjudication_audit_trail::PassName::Adj05Adversarial)
+    }) else {
+        return Vec::new();
+    };
+    adj05
+        .violations
+        .iter()
+        .filter_map(|v| {
+            let d = &v.detail;
+            Some(Adj05AdversarialFinding {
+                node_id: v.node_id.0.clone(),
+                ir_rendered: d.get("ir_rendered").and_then(|x| x.as_str())?.to_string(),
+                adversary_reading: d
+                    .get("adversary_reading")
+                    .and_then(|x| x.as_str())?
+                    .to_string(),
+                adversary_explanation: d
+                    .get("adversary_explanation")
+                    .and_then(|x| x.as_str())?
+                    .to_string(),
+                judge_reason: d.get("judge_reason").and_then(|x| x.as_str())?.to_string(),
+            })
+        })
+        .collect()
+}
+
 // ---------------------------------------------------------------------------
 // TSA fixture — same shape as the ADJ10 integration test
 // ---------------------------------------------------------------------------
@@ -1073,12 +1150,46 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
             ));
         }
     }
+    if !pipeline.adj05_adversarial_findings.is_empty() {
+        out.push_str("\n");
+        out.push_str(&format!(
+            "--- ADJ05 adversarial findings ({n}) ---\n",
+            n = pipeline.adj05_adversarial_findings.len()
+        ));
+        out.push_str(
+            "(a *different model family* found a plausible alternative reading)\n",
+        );
+        for f in &pipeline.adj05_adversarial_findings {
+            out.push_str(&format!(
+                "\n  node {id}:\n    IR rendering:        {ir:?}\n    adversary reading:   {adv:?}\n    adversary's reason:  {exp}\n    judge ruled plausible because: {jr}\n",
+                id = f.node_id,
+                ir = f.ir_rendered,
+                adv = f.adversary_reading,
+                exp = f.adversary_explanation,
+                jr = f.judge_reason,
+            ));
+        }
+    }
+    // ADJ05 skipped/check-error diagnostics from the audit trail.
+    let adj05 = &pipeline.pipeline_output.audit_trail.checker_results[3];
+    if matches!(adj05.outcome, PassOutcome::Skipped) {
+        if let Some(reason) = adj05.telemetry.get("skipped_reason").and_then(|x| x.as_str()) {
+            out.push_str(&format!("\nADJ05 skipped: {reason}\n"));
+        }
+    } else if matches!(adj05.outcome, PassOutcome::Failed)
+        && pipeline.adj05_adversarial_findings.is_empty()
+    {
+        if let Some(err) = adj05.telemetry.get("check_error").and_then(|x| x.as_str()) {
+            out.push_str(&format!("\nADJ05 errored: {err}\n"));
+        }
+    }
     out.push_str("\n");
     out.push_str(
-        "Note: ADJ05 is Skipped because the demo uses one model family \
-         for both Renderer and Nli; installing a second model (e.g., \
-         `ollama pull llama3.1:8b`) and registering it as Role::Adversary \
-         flips ADJ05 from Skipped to Passed/Failed.\n",
+        "Note: to enable ADJ05, install a second model from a different \
+         family (e.g., `ollama pull llama3.1:8b`) and set \
+         ADJ_DEMO_ADVERSARY_MODEL=llama3.1:8b. The framework enforces \
+         (vendor, model_family) independence between Extractor and \
+         Adversary so the adversary can't rubber-stamp the extractor.\n",
     );
     out
 }
