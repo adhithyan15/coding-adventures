@@ -16,6 +16,8 @@ bridges:
   facts for runtime read models.
 - `JobRequestSummary` and `JobMetadataSummary` expose queue/routing facts without
   requiring runtimes to inspect payload types.
+- `JobMetadataBatchSummary` rolls up raw metadata for deadline, priority,
+  affinity, sequence, retry, trace, and tag supervision.
 - `JobBatchSummary` rolls up request and response summaries for compact
   queue/runtime status views.
 - Terminal status and response-summary helpers provide shared read-side
