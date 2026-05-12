@@ -182,6 +182,7 @@ members = [
     "adjudication-polarity-modality",
     "adjudication-coverage",
     "adjudication-audit-trail",
+    "adjudication-pipeline",
     "loss-functions",
     "markov-chain",
     "note-frequency",
