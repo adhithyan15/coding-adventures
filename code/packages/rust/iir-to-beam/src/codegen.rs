@@ -127,6 +127,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 

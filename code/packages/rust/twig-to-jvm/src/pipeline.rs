@@ -258,6 +258,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("add".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let config = IIRJvmConfig::new("AddTest");
         let cf = run_pipeline_from_iir(module, config).unwrap();
@@ -280,6 +282,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let config = IIRJvmConfig::new("MyApp");
         let cf = run_pipeline_from_iir(module, config).unwrap();

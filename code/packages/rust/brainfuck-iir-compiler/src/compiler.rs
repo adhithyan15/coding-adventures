@@ -137,6 +137,8 @@ pub fn compile_to_iir(ast: &GrammarASTNode, module_name: &str) -> IIRModule {
         functions: vec![fn_],
         entry_point: Some("main".to_string()),
         language: "brainfuck".to_string(),
+        exports: vec![],
+        imports: vec![],
     }
 }
 

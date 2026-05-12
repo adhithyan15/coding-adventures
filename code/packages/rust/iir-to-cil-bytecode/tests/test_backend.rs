@@ -78,6 +78,8 @@ fn validate_empty_module_is_rejected() {
         functions: vec![],
         entry_point: None,
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errs = validate_iir_for_clr(&module);
     assert!(!errs.is_empty());
@@ -734,6 +736,8 @@ fn lower_validation_failure_returns_err() {
         functions: vec![],
         entry_point: None,
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let result = lower_iir_to_cil(&module, &default_cfg());
     assert!(matches!(result, Err(IIRClrError::ValidationFailed(_))));
@@ -1169,6 +1173,8 @@ fn codegen_validate_bad_module_returns_errors() {
         functions: vec![],
         entry_point: None,
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = IIRClrCodeGenerator::default_name().validate(&module);
     assert!(!errors.is_empty());

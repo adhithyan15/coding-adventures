@@ -2374,6 +2374,8 @@ mod tests {
             functions: vec![func],
             entry_point: Some(name),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -2454,6 +2456,8 @@ mod tests {
             functions: vec![],
             entry_point: None,
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let result = lower_iir_to_jvm(&module, &make_cfg());
         assert!(matches!(result, Err(IIRJvmError::ValidationFailed(_))));

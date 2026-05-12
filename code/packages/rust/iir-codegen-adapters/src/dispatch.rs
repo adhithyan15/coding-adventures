@@ -217,6 +217,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -241,6 +243,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("add".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -301,6 +305,8 @@ mod tests {
             functions: vec![],
             entry_point: None,
             language: "t".into(),
+            exports: vec![],
+            imports: vec![],
         };
         for backend in list_iir_backends() {
             let result = compile_iir(&empty, backend);

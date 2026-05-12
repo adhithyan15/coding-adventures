@@ -326,6 +326,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -336,6 +338,8 @@ mod tests {
             functions: vec![],
             entry_point: None,
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let errs = validate_iir_for_clr(&module);
         assert!(!errs.is_empty(), "should reject empty module");

@@ -341,6 +341,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
