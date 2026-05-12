@@ -44,3 +44,5 @@ All notable changes to this package will be documented in this file.
   health, reference, terminal-event, and follow-up checks.
 - Append-only `ToolExecutionJournal` with count-only summaries and query helpers
   for recorded invocation requests, call records, events, and terminal results.
+- Payload-free `ToolExecutionJournalHealthSummary` rows for active-call,
+  approval, terminal-event, reference, and follow-up coverage across a journal.

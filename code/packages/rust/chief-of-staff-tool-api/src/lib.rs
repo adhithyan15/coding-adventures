@@ -3820,6 +3820,11 @@ impl ToolExecutionJournal {
         query_tool_results(self.results.iter(), query)
     }
 
+    /// Produce payload-free runtime health coverage for the journal.
+    pub fn health_summary(&self) -> ToolExecutionJournalHealthSummary {
+        ToolExecutionJournalHealthSummary::from_journal(self)
+    }
+
     /// Produce count-only read-side coverage for the journal.
     pub fn summary(&self) -> ToolExecutionJournalSummary {
         ToolExecutionJournalSummary::from_journal(self)
@@ -3865,6 +3870,143 @@ impl ToolExecutionJournalSummary {
         }
 
         summary
+    }
+}
+
+/// Payload-free health summary for a [`ToolExecutionJournal`].
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolExecutionJournalHealthSummary {
+    pub invocation_count: usize,
+    pub call_record_count: usize,
+    pub event_count: usize,
+    pub terminal_result_count: usize,
+    pub active_call_count: usize,
+    pub terminal_call_count: usize,
+    pub completed_count: usize,
+    pub failed_count: usize,
+    pub awaiting_approval_count: usize,
+    pub approval_not_required_count: usize,
+    pub approval_pending_count: usize,
+    pub approval_granted_count: usize,
+    pub approval_denied_count: usize,
+    pub approval_expired_count: usize,
+    pub terminal_event_count: usize,
+    pub terminal_event_mismatch_count: usize,
+    pub results_without_terminal_event_count: usize,
+    pub results_with_output_count: usize,
+    pub results_with_error_count: usize,
+    pub results_with_artifact_refs_count: usize,
+    pub results_with_memory_refs_count: usize,
+}
+
+impl ToolExecutionJournalHealthSummary {
+    /// Summarize journal health without exposing invocation arguments, event
+    /// payloads, result output, or error details.
+    pub fn from_journal(journal: &ToolExecutionJournal) -> Self {
+        let mut summary = Self {
+            invocation_count: journal.requests.len(),
+            call_record_count: journal.records.len(),
+            event_count: journal.events.len(),
+            terminal_result_count: journal.results.len(),
+            ..Self::default()
+        };
+
+        for record in &journal.records {
+            if record.status.is_active() {
+                summary.active_call_count += 1;
+            } else {
+                summary.terminal_call_count += 1;
+            }
+            match record.status {
+                ToolCallStatus::Completed => summary.completed_count += 1,
+                ToolCallStatus::Failed => summary.failed_count += 1,
+                ToolCallStatus::AwaitingApproval => summary.awaiting_approval_count += 1,
+                ToolCallStatus::Cancelled => {}
+                ToolCallStatus::Queued | ToolCallStatus::Validating | ToolCallStatus::Running => {}
+            }
+            match record.approval_state {
+                ApprovalState::NotRequired => summary.approval_not_required_count += 1,
+                ApprovalState::Pending => summary.approval_pending_count += 1,
+                ApprovalState::Granted => summary.approval_granted_count += 1,
+                ApprovalState::Denied => summary.approval_denied_count += 1,
+                ApprovalState::Expired => summary.approval_expired_count += 1,
+            }
+        }
+
+        for event in &journal.events {
+            if event.kind.is_terminal() {
+                summary.terminal_event_count += 1;
+                let terminal_matches_result = journal
+                    .results
+                    .iter()
+                    .find(|result| result.call_id == event.call_id)
+                    .is_some_and(|result| event.terminal_matches_result(result));
+                if !terminal_matches_result {
+                    summary.terminal_event_mismatch_count += 1;
+                }
+            }
+        }
+
+        for result in &journal.results {
+            if result.output.is_some() {
+                summary.results_with_output_count += 1;
+            }
+            if result.error.is_some() {
+                summary.results_with_error_count += 1;
+            }
+            if !result.artifact_refs.is_empty() {
+                summary.results_with_artifact_refs_count += 1;
+            }
+            if !result.memory_refs.is_empty() {
+                summary.results_with_memory_refs_count += 1;
+            }
+            let has_matching_terminal_event = journal.events.iter().any(|event| {
+                event.kind.is_terminal()
+                    && event.call_id == result.call_id
+                    && event.terminal_matches_result(result)
+            });
+            if !has_matching_terminal_event {
+                summary.results_without_terminal_event_count += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.invocation_count == 0
+            && self.call_record_count == 0
+            && self.event_count == 0
+            && self.terminal_result_count == 0
+    }
+
+    pub fn has_active_calls(&self) -> bool {
+        self.active_call_count > 0
+    }
+
+    pub fn has_failures(&self) -> bool {
+        self.failed_count > 0 || self.results_with_error_count > 0
+    }
+
+    pub fn has_approval_work(&self) -> bool {
+        self.awaiting_approval_count > 0 || self.approval_pending_count > 0
+    }
+
+    pub fn has_terminal_event_gaps(&self) -> bool {
+        self.terminal_event_mismatch_count > 0 || self.results_without_terminal_event_count > 0
+    }
+
+    pub fn emitted_references(&self) -> bool {
+        self.results_with_artifact_refs_count > 0 || self.results_with_memory_refs_count > 0
+    }
+
+    pub fn requires_follow_up(&self) -> bool {
+        self.has_active_calls()
+            || self.has_failures()
+            || self.has_approval_work()
+            || self.approval_denied_count > 0
+            || self.approval_expired_count > 0
+            || self.has_terminal_event_gaps()
     }
 }
 
@@ -5598,6 +5740,41 @@ mod tests {
         assert!(trace_summary.succeeded());
         assert!(trace_summary.emitted_references());
         assert!(!trace_summary.requires_follow_up());
+
+        let health = journal.health_summary();
+        assert_eq!(
+            health,
+            ToolExecutionJournalHealthSummary {
+                invocation_count: 1,
+                call_record_count: 1,
+                event_count: 3,
+                terminal_result_count: 1,
+                active_call_count: 0,
+                terminal_call_count: 1,
+                completed_count: 1,
+                failed_count: 0,
+                awaiting_approval_count: 0,
+                approval_not_required_count: 1,
+                approval_pending_count: 0,
+                approval_granted_count: 0,
+                approval_denied_count: 0,
+                approval_expired_count: 0,
+                terminal_event_count: 1,
+                terminal_event_mismatch_count: 0,
+                results_without_terminal_event_count: 0,
+                results_with_output_count: 1,
+                results_with_error_count: 0,
+                results_with_artifact_refs_count: 1,
+                results_with_memory_refs_count: 0,
+            }
+        );
+        assert!(!health.is_empty());
+        assert!(!health.has_active_calls());
+        assert!(!health.has_failures());
+        assert!(!health.has_approval_work());
+        assert!(!health.has_terminal_event_gaps());
+        assert!(health.emitted_references());
+        assert!(!health.requires_follow_up());
 
         let summary = journal.summary();
         assert_eq!(summary.invocation_count, 1);
