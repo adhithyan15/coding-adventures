@@ -827,8 +827,34 @@ pub struct SmokeReport {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmokeConnectionReport {
+    pub transport: SmokeConnectionTransport,
     pub label: String,
     pub timeout_ms: u64,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SmokeConnectionTransport {
+    SerialPort,
+    TcpSocket,
+    BluetoothLeGatt,
+    BluetoothClassicRfcomm,
+}
+
+impl SmokeConnectionTransport {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::SerialPort => "serial_port",
+            Self::TcpSocket => "tcp_socket",
+            Self::BluetoothLeGatt => "bluetooth_le_gatt",
+            Self::BluetoothClassicRfcomm => "bluetooth_classic_rfcomm",
+        }
+    }
+}
+
+impl fmt::Display for SmokeConnectionTransport {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -992,8 +1018,8 @@ pub fn format_device_list(devices: &[LanguageHostDevice]) -> String {
 }
 
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
-    let (connection_label, transport) = open_smoke_transport(options)?;
-    run_smoke_with_connection(options, connection_label, transport)
+    let (connection_transport, connection_label, transport) = open_smoke_transport(options)?;
+    run_smoke_with_connection(options, connection_transport, connection_label, transport)
 }
 
 #[cfg(test)]
@@ -1004,11 +1030,17 @@ fn run_smoke_with_transport<T>(
 where
     T: RawFrameTransport,
 {
-    run_smoke_with_connection(options, smoke_connection_label(options), transport)
+    run_smoke_with_connection(
+        options,
+        smoke_connection_transport(options),
+        smoke_connection_label(options),
+        transport,
+    )
 }
 
 fn run_smoke_with_connection<T>(
     options: &SmokeOptions,
+    connection_transport: SmokeConnectionTransport,
     connection_label: impl Into<String>,
     transport: T,
 ) -> Result<SmokeReport, CliError>
@@ -1048,6 +1080,7 @@ where
         })?;
     Ok(SmokeReport {
         connection: SmokeConnectionReport {
+            transport: connection_transport,
             label: connection_label.into(),
             timeout_ms: options.timeout_ms,
         },
@@ -1273,6 +1306,16 @@ where
 }
 
 #[cfg(test)]
+fn smoke_connection_transport(options: &SmokeOptions) -> SmokeConnectionTransport {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        return SmokeConnectionTransport::from(
+            endpoint_transport(endpoint).expect("test smoke endpoint should be valid"),
+        );
+    }
+    SmokeConnectionTransport::SerialPort
+}
+
+#[cfg(test)]
 fn smoke_connection_label(options: &SmokeOptions) -> String {
     if let Some(endpoint) = options.endpoint.as_deref() {
         return format!("endpoint={endpoint}");
@@ -1283,16 +1326,24 @@ fn smoke_connection_label(options: &SmokeOptions) -> String {
     }
 }
 
-fn open_smoke_transport(options: &SmokeOptions) -> Result<(String, SessionTransport), CliError> {
+fn open_smoke_transport(
+    options: &SmokeOptions,
+) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
+        let connection_transport = SmokeConnectionTransport::from(endpoint_transport(endpoint)?);
         let transport = open_endpoint_transport(endpoint, &options.tcp_config(endpoint))?;
-        return Ok((format!("endpoint={endpoint}"), transport));
+        return Ok((
+            connection_transport,
+            format!("endpoint={endpoint}"),
+            transport,
+        ));
     }
 
     let port = resolve_session_port(options.port.as_deref(), &options.board)?;
     let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
     Ok((
+        SmokeConnectionTransport::SerialPort,
         format!("port={} baud={}", port, options.baud_rate),
         SessionTransport::Serial(transport),
     ))
@@ -1330,7 +1381,8 @@ fn open_endpoint_transport(
         SessionEndpointTransport::Tcp => Ok(SessionTransport::Tcp(
             BoardTcpTransport::<_, 1024>::connect(tcp_config)?,
         )),
-        SessionEndpointTransport::Bluetooth => Ok(SessionTransport::Bluetooth(
+        SessionEndpointTransport::BluetoothLeGatt
+        | SessionEndpointTransport::BluetoothClassicRfcomm => Ok(SessionTransport::Bluetooth(
             LanguageBluetoothTransport::new(endpoint),
         )),
     }
@@ -1339,15 +1391,35 @@ fn open_endpoint_transport(
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SessionEndpointTransport {
     Tcp,
-    Bluetooth,
+    BluetoothLeGatt,
+    BluetoothClassicRfcomm,
+}
+
+impl From<SessionEndpointTransport> for SmokeConnectionTransport {
+    fn from(value: SessionEndpointTransport) -> Self {
+        match value {
+            SessionEndpointTransport::Tcp => Self::TcpSocket,
+            SessionEndpointTransport::BluetoothLeGatt => Self::BluetoothLeGatt,
+            SessionEndpointTransport::BluetoothClassicRfcomm => Self::BluetoothClassicRfcomm,
+        }
+    }
 }
 
 fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
     match endpoint.split_once("://").map(|(scheme, _)| scheme) {
         None | Some("tcp") => Ok(SessionEndpointTransport::Tcp),
-        Some("ble") | Some("btspp") | Some("rfcomm") => {
+        Some("ble") => {
             if parse_language_bluetooth_endpoint(endpoint).is_some() {
-                Ok(SessionEndpointTransport::Bluetooth)
+                Ok(SessionEndpointTransport::BluetoothLeGatt)
+            } else {
+                Err(CliError::DeviceSelection(format!(
+                    "invalid Board VM Bluetooth endpoint: {endpoint}"
+                )))
+            }
+        }
+        Some("btspp") | Some("rfcomm") => {
+            if parse_language_bluetooth_endpoint(endpoint).is_some() {
+                Ok(SessionEndpointTransport::BluetoothClassicRfcomm)
             } else {
                 Err(CliError::DeviceSelection(format!(
                     "invalid Board VM Bluetooth endpoint: {endpoint}"
@@ -1641,8 +1713,8 @@ where
 {
     writeln!(
         output,
-        "connection {} timeout_ms={}",
-        connection.label, connection.timeout_ms
+        "connection transport={} {} timeout_ms={}",
+        connection.transport, connection.label, connection.timeout_ms
     )?;
     Ok(())
 }
@@ -2235,7 +2307,7 @@ mod tests {
         );
         assert_eq!(
             endpoint_transport(endpoint).unwrap(),
-            SessionEndpointTransport::Bluetooth
+            SessionEndpointTransport::BluetoothLeGatt
         );
     }
 
@@ -2258,7 +2330,7 @@ mod tests {
         );
         assert_eq!(
             endpoint_transport("btspp://uno-r4-wifi:1").unwrap(),
-            SessionEndpointTransport::Bluetooth
+            SessionEndpointTransport::BluetoothClassicRfcomm
         );
     }
 
@@ -2498,6 +2570,10 @@ mod tests {
 
         let report = run_smoke_with_transport(&options, LoopbackSmokeTransport::new()).unwrap();
 
+        assert_eq!(
+            report.connection.transport,
+            SmokeConnectionTransport::TcpSocket
+        );
         assert_eq!(report.connection.label, "endpoint=tcp://127.0.0.1:4170");
         assert_eq!(report.connection.timeout_ms, DEFAULT_TIMEOUT_MS);
         assert_eq!(report.hello.selected_version, 1);
@@ -2521,6 +2597,7 @@ mod tests {
     fn smoke_report_writer_includes_upload_and_full_run_summary() {
         let report = SmokeReport {
             connection: SmokeConnectionReport {
+                transport: SmokeConnectionTransport::BluetoothLeGatt,
                 label: "endpoint=ble://loopback/180f/2a19/2a1a".to_owned(),
                 timeout_ms: 750,
             },
@@ -2567,7 +2644,7 @@ mod tests {
 
         assert_eq!(
             String::from_utf8(out).unwrap(),
-            "connection endpoint=ble://loopback/180f/2a19/2a1a timeout_ms=750\n\
+            "connection transport=bluetooth_le_gatt endpoint=ble://loopback/180f/2a19/2a1a timeout_ms=750\n\
 hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0x1234ABCD board_nonce=0xAABBCCDD\n\
 caps board=loopback-uno-r4 runtime=board-vm-loopback max_program_bytes=512 stack=8 handles=4 store=true capabilities=1\n\
 upload program_id=3 bytes=42 crc32=0xCAFEBABE\n\
@@ -2595,6 +2672,10 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
 
         let report = run_smoke_with_transport(&options, transport).unwrap();
 
+        assert_eq!(
+            report.connection.transport,
+            SmokeConnectionTransport::BluetoothLeGatt
+        );
         assert_eq!(report.connection.label, format!("endpoint={endpoint}"));
         assert_eq!(report.connection.timeout_ms, DEFAULT_TIMEOUT_MS);
         assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
@@ -2657,6 +2738,10 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         let report = run_smoke(&options).unwrap();
         let event_count = server.join().unwrap();
 
+        assert_eq!(
+            report.connection.transport,
+            SmokeConnectionTransport::TcpSocket
+        );
         assert_eq!(report.connection.label, format!("endpoint=tcp://{address}"));
         assert_eq!(report.connection.timeout_ms, 500);
         assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
@@ -2686,6 +2771,14 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
 
         let config = options.serial_config("/dev/cu.usbmodem-test");
 
+        assert_eq!(
+            smoke_connection_transport(&options),
+            SmokeConnectionTransport::SerialPort
+        );
+        assert_eq!(
+            smoke_connection_label(&options),
+            "port=/dev/cu.usbmodem-test baud=57600"
+        );
         assert_eq!(config.path, "/dev/cu.usbmodem-test");
         assert_eq!(config.baud_rate, 57_600);
         assert_eq!(config.timeout, Duration::from_millis(250));
