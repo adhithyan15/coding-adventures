@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/cas-solve",
   "version": "0.1.0",
-  "description": "Pure TypeScript closed-form linear, quadratic, cubic, and quartic equation solving over symbolic IR",
+  "description": "Pure TypeScript closed-form and numeric polynomial equation solving over symbolic IR",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

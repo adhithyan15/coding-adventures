@@ -1,4 +1,4 @@
-import { ADD, DIV, MUL, NEG, SQRT, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, DIV, MUL, NEG, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 
 export const SOLVE = "Solve";
 export const NSOLVE = "NSolve";
@@ -7,6 +7,11 @@ export const I_UNIT = "%i";
 export const CBRT = "Cbrt";
 
 export type IntegerLike = bigint | number | string;
+
+export interface Complex {
+  readonly re: number;
+  readonly im: number;
+}
 
 export type SolveResult =
   | { readonly kind: "solutions"; readonly roots: readonly IRNode[] }
@@ -244,6 +249,60 @@ export function solveQuartic(a: Frac, b: Frac, c: Frac, d: Frac, e: Frac): Solve
   return solutions(dedupRoots(shifted));
 }
 
+export function nsolvePoly(
+  coeffs: readonly (number | Complex)[],
+  maxIter = 200,
+  tol = 1e-12,
+): readonly Complex[] {
+  const degree = coeffs.length - 1;
+  if (degree <= 0) return [];
+
+  const lead = toComplex(coeffs[0]);
+  if (complexAbs(lead) === 0) throw new RangeError("nsolvePoly: leading coefficient must not be zero");
+  const poly = coeffs.map((coef) => complexDiv(toComplex(coef), lead));
+
+  if (degree === 1) {
+    return [complexNeg(poly[1])];
+  }
+
+  const radius = initialRadius(poly);
+  let roots = Array.from({ length: degree }, (_, k) => {
+    const theta = (2 * Math.PI * k) / degree + 0.1;
+    return complex(radius * Math.cos(theta), radius * Math.sin(theta));
+  });
+
+  for (let iter = 0; iter < maxIter; iter += 1) {
+    let maxDelta = 0;
+    const next = [...roots];
+    for (let i = 0; i < degree; i += 1) {
+      const z = roots[i];
+      let denom = complex(1, 0);
+      for (let j = 0; j < degree; j += 1) {
+        if (i === j) continue;
+        const diff = complexSub(z, roots[j]);
+        denom = complexMul(denom, complexAbs(diff) < 1e-300 ? complex(1e-300, 0) : diff);
+      }
+      const delta = complexDiv(evalPoly(poly, z), denom);
+      next[i] = complexSub(z, delta);
+      maxDelta = Math.max(maxDelta, complexAbs(delta));
+    }
+    roots = next;
+    if (maxDelta < tol) break;
+  }
+  return roots;
+}
+
+export function rootsToIr(roots: readonly Complex[]): readonly IRNode[] {
+  return roots.map((root) => {
+    if (Math.abs(root.im) < 1e-10) return numberNode(root.re);
+    return app(ADD, [numberNode(root.re), app(MUL, [numberNode(root.im), sym(I_UNIT)])]);
+  });
+}
+
+export function nsolveFractionPoly(coeffs: readonly Frac[]): readonly IRNode[] {
+  return rootsToIr(nsolvePoly(coeffs.map((coef) => Number(coef.numer) / Number(coef.denom))));
+}
+
 type SqrtResult =
   | { readonly kind: "rational"; readonly value: Frac }
   | { readonly kind: "irrational"; readonly value: IRNode };
@@ -386,6 +445,53 @@ function evalQuartic(a: Frac, b: Frac, c: Frac, d: Frac, e: Frac, x: Frac): Frac
   const x3 = x2.mul(x);
   const x4 = x3.mul(x);
   return a.mul(x4).add(b.mul(x3)).add(c.mul(x2)).add(d.mul(x)).add(e);
+}
+
+function complex(re: number, im: number): Complex {
+  return Object.freeze({ re, im });
+}
+
+function toComplex(value: number | Complex): Complex {
+  return typeof value === "number" ? complex(value, 0) : value;
+}
+
+function complexAdd(lhs: Complex, rhs: Complex): Complex {
+  return complex(lhs.re + rhs.re, lhs.im + rhs.im);
+}
+
+function complexSub(lhs: Complex, rhs: Complex): Complex {
+  return complex(lhs.re - rhs.re, lhs.im - rhs.im);
+}
+
+function complexNeg(value: Complex): Complex {
+  return complex(-value.re, -value.im);
+}
+
+function complexMul(lhs: Complex, rhs: Complex): Complex {
+  return complex(lhs.re * rhs.re - lhs.im * rhs.im, lhs.re * rhs.im + lhs.im * rhs.re);
+}
+
+function complexDiv(lhs: Complex, rhs: Complex): Complex {
+  const denom = rhs.re * rhs.re + rhs.im * rhs.im;
+  if (denom === 0) throw new RangeError("complex division by zero");
+  return complex((lhs.re * rhs.re + lhs.im * rhs.im) / denom, (lhs.im * rhs.re - lhs.re * rhs.im) / denom);
+}
+
+function complexAbs(value: Complex): number {
+  return Math.hypot(value.re, value.im);
+}
+
+function evalPoly(poly: readonly Complex[], z: Complex): Complex {
+  return poly.reduce((acc, coef) => complexAdd(complexMul(acc, z), coef), complex(0, 0));
+}
+
+function initialRadius(poly: readonly Complex[]): number {
+  const degree = poly.length - 1;
+  if (degree <= 0) return 1;
+  const cauchy = 1 + Math.max(...poly.slice(1).map(complexAbs));
+  const constant = complexAbs(poly[degree]);
+  const lagrange = constant > 1e-300 ? constant ** (1 / degree) : 1;
+  return Math.max(Math.min(cauchy, 10), lagrange, 0.5);
 }
 
 function fractionDenominatorLcm(...values: readonly Frac[]): bigint {
