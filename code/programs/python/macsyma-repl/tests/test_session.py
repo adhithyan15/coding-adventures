@@ -154,6 +154,15 @@ def test_eval_file_uses_same_session_semantics(tmp_path: Path) -> None:
     assert result == ("ok", "(%o2) 6\n(%o3) 5")
 
 
+def test_display2d_uses_runtime_box_presentation() -> None:
+    out = _run(["ev(1/(x + 1), display2d);", ":quit"])
+    result = next(line for line in out if line.startswith("(%o1)"))
+
+    assert "\n" in result
+    assert "─" in result
+    assert "x + 1" in result
+
+
 def test_cli_file_mode_prints_outputs_without_prompt(tmp_path: Path, capsys) -> None:
     program = tmp_path / "batch.mac"
     program.write_text("a: 2$\na + 3;\n", encoding="utf-8")

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Route visible REPL output through `macsyma_runtime.output_text_for(...)`, so
+  `ev(expr, display2d)` displays the 2D MACSYMA box layout in interactive and
+  `--file` execution.
+
 ## 0.3.0 — 2026-05-12
 
 ### Added

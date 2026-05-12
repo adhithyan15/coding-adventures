@@ -6,11 +6,11 @@ Wires together::
                 →  macsyma_parser.parse
                 →  macsyma_compiler.compile_macsyma(wrap_terminators=True)
                 →  symbolic_vm.VM(macsyma_runtime.MacsymaBackend).eval
-                →  cas_pretty_printer.pretty(.., MacsymaDialect())
+                →  macsyma_runtime.output_text_for(...)
 
 For each top-level statement in the input, the language records the
 input IR in :class:`History`, evaluates it, records the output, and
-returns one combined string (one line per displayed result, or
+returns one combined string (one display block per displayed result, or
 ``None`` if every statement was suppressed).
 """
 
@@ -19,12 +19,16 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from cas_pretty_printer import MacsymaDialect, pretty
 from coding_adventures_repl import Language
 from macsyma_compiler import compile_macsyma
 from macsyma_compiler.compiler import _STANDARD_FUNCTIONS
 from macsyma_parser import parse_macsyma
-from macsyma_runtime import History, MacsymaBackend, extend_compiler_name_table
+from macsyma_runtime import (
+    History,
+    MacsymaBackend,
+    extend_compiler_name_table,
+    output_text_for,
+)
 from symbolic_ir import IRApply, IRNode, IRSymbol
 from symbolic_vm import VM
 
@@ -35,7 +39,6 @@ from symbolic_vm import VM
 # call to compile_macsyma() already knows all MACSYMA function names.
 extend_compiler_name_table(_STANDARD_FUNCTIONS)
 
-_DIALECT = MacsymaDialect()
 _QUIT_COMMANDS = frozenset({":quit", ":q", "quit", "quit()", "quit();", "quit;"})
 
 # The macsyma lexer's NAME regex requires `%` to be followed by an
@@ -108,7 +111,7 @@ class MacsymaLanguage(Language):
             self.history.record_output(result)
             if displayed:
                 idx = len(self.history.outputs)
-                outputs.append(f"(%o{idx}) {pretty(result, _DIALECT)}")
+                outputs.append(f"(%o{idx}) {output_text_for(inner, result)}")
 
         if not outputs:
             return ("ok", None)

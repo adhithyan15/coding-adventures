@@ -24,6 +24,7 @@ dependencies = [
     "coding-adventures-cas-limit-series>=0.1.0",
     "coding-adventures-cas-ode>=0.2.0",
     "coding-adventures-cas-laplace>=0.1.0",
+    "coding-adventures-cas-pretty-printer>=0.4.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
