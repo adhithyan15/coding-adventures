@@ -16,7 +16,8 @@ Included surfaces:
 - structured command request bodies from `hue-core`
 - event-stream request shape
 - event-stream batch parsing from Server-Sent Events data frames
-- event-stream summaries for retry hints, record coverage, and resource items
+- event-stream summaries for retry hints, record coverage, resource items, and
+  resource-type coverage
 - incremental event-stream decoding for split Server-Sent Events chunks
 - Hue v2 envelope/error parsing
 - Hue bridge resource decoding for paired bridge identity and time zone data
