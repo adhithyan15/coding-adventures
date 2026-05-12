@@ -280,10 +280,17 @@ impl AtomTable {
             return idx;
         }
         // BEAM atom table limit.
+        //
+        // OTP enforces a hard limit of 1,048,576 atoms per node.  We check this
+        // in both debug AND release builds (not debug_assert) so that untrusted
+        // IIR modules with many distinct global names cannot exhaust the table
+        // silently and cause a denial-of-service via memory exhaustion.
         const BEAM_MAX_ATOMS: usize = 1_048_576;
-        debug_assert!(
+        assert!(
             self.atoms.len() < BEAM_MAX_ATOMS,
-            "atom table overflow: BEAM supports at most 1,048,576 atoms"
+            "atom table overflow: BEAM supports at most 1,048,576 atoms \
+             (current count {}); module has too many distinct global names or symbols",
+            self.atoms.len()
         );
         self.atoms.push(atom.to_string());
         // 1-based index: first atom → 1, second → 2, …
@@ -1572,7 +1579,17 @@ pub fn lower_iir_to_beam(
                     let rv = operand_reg!(get_src!(instr, 1));
                     let name_atom = atoms.intern(&global_name);
                     let tmp = meta.next_reg;
-                    let dummy_dst = meta.next_reg.saturating_add(1);
+                    // `dummy_dst` must be a distinct register from `tmp`.
+                    // `saturating_add` would silently alias when next_reg == 255,
+                    // making erlang:put/2's return value overwrite the atom key.
+                    // Use checked_add and return a clear error instead.
+                    let dummy_dst = meta.next_reg.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "global_store: function uses too many registers (255); \
+                                 no scratch register available for global_store".to_string(),
+                        }
+                    })?;
 
                     // move {a, atom("name")} {x, tmp}
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![

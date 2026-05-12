@@ -184,7 +184,9 @@ fn validate_safepoint_rejected() {
 // Test 1.11
 #[test]
 fn validate_io_ops_rejected() {
-    for op in &["io_in", "io_out"] {
+    // io_in is still unsupported (raw byte-level input is not wired to WASM).
+    // io_out is now SUPPORTED (LANG32) — it maps to call $__print_i64.
+    for op in &["io_in"] {
         let m = module_one("f", vec![], "void", vec![
             IIRInstr::new(*op, None, vec![], "void"),
         ]);
@@ -195,6 +197,21 @@ fn validate_io_ops_rejected() {
             op
         );
     }
+}
+
+// Test 1.11b (LANG32)
+#[test]
+fn validate_io_out_accepted() {
+    // io_out is accepted by the WASM validator since LANG32.
+    let m = module_one("f", vec![], "void", vec![
+        IIRInstr::new("io_out", None, vec![Operand::Var("v".into())], "void"),
+    ]);
+    let errs = validate_for_wasm(&m);
+    assert!(
+        errs.iter().all(|e| !e.contains("UnsupportedOp")),
+        "io_out should be accepted (LANG32); got: {:?}",
+        errs
+    );
 }
 
 // Test 1.12

@@ -247,19 +247,24 @@ fn test_call_builtin_rejected() {
 }
 
 // ===========================================================================
-// 9. test_io_out_rejected
+// 9. test_io_out_accepted (LANG32)
 // ===========================================================================
 
-/// `io_out` must be rejected — raw I/O has no BEAM instruction equivalent.
+/// `io_out` is now SUPPORTED by the BEAM backend (LANG32) via erlang:display/1.
+/// The validator must NOT reject it.
 #[test]
-fn test_io_out_rejected() {
+fn test_io_out_accepted() {
     let errs = validate_for_beam(&make_module_single(vec![IIRInstr::new(
         "io_out",
         None,
         vec![Operand::Var("x".into())],
         "void",
     )]));
-    assert!(errs.iter().any(|e| e.contains("UnsupportedOp")));
+    assert!(
+        errs.iter().all(|e| !e.contains("UnsupportedOp")),
+        "io_out should be accepted by BEAM validator (LANG32); got: {:?}",
+        errs
+    );
 }
 
 // ===========================================================================

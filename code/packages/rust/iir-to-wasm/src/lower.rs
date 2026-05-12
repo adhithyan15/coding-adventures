@@ -133,7 +133,7 @@
 //! local.set $dest_local
 //! ```
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use interpreter_ir::{IIRFunction, IIRModule, Operand};
 use wasm_module_encoder::{GcInstruction, encode_gc_instruction};
@@ -1707,14 +1707,19 @@ fn make_lispy_pair_struct_type() -> StructType {
 /// - `uses_io_out` — `true` if any instruction in any function has the
 ///   `"io_out"` opcode.  Triggers injection of the `env.__print_i64` import.
 fn collect_globals_and_io(module: &IIRModule) -> (Vec<String>, bool) {
+    // Use a HashSet for O(1) deduplication checks, preserving first-seen order
+    // in the Vec.  Without the set, deduplication would be O(M × N) where M is
+    // the number of global accesses and N the number of distinct names —
+    // quadratic for adversarially crafted modules with many globals.
     let mut global_names: Vec<String> = Vec::new();
+    let mut global_names_seen: HashSet<String> = HashSet::new();
     let mut uses_io_out = false;
     for fn_ in &module.functions {
         for instr in &fn_.instructions {
             match instr.op.as_str() {
                 "global_load" | "global_store" => {
                     if let Some(Operand::Str(name)) = instr.srcs.first() {
-                        if !global_names.contains(name) {
+                        if global_names_seen.insert(name.clone()) {
                             global_names.push(name.clone());
                         }
                     }
