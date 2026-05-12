@@ -10,6 +10,9 @@ All notable changes to this package will be documented in this file.
   installed-version, active-state, and asset-material rollups.
 - `SkillRequirementSummary` plus `SkillStore::requirement_summary()` for
   compact entrypoint, tool, capability, and requirement-gap rollups.
+- `SkillAssetInventorySummary` plus `SkillStore::asset_inventory_summary()` for
+  compact content-type, path-depth, and byte rollups over one skill version's
+  asset metadata.
 
 ## [0.1.0] - 2026-04-18
 

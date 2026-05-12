@@ -201,6 +201,75 @@ impl SkillRequirementSummary {
     }
 }
 
+/// Compact asset inventory view for catalog and preload planning checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SkillAssetInventorySummary {
+    pub total_assets: usize,
+    pub unique_content_types: usize,
+    pub total_body_bytes: usize,
+    pub markdown_assets: usize,
+    pub json_assets: usize,
+    pub text_assets: usize,
+    pub binary_assets: usize,
+    pub root_path_assets: usize,
+    pub nested_path_assets: usize,
+}
+
+impl SkillAssetInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_assets<'a, I>(assets: I) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillAssetSummary>,
+    {
+        let mut summary = Self::empty();
+        let mut content_types = BTreeSet::new();
+
+        for asset in assets {
+            summary.total_assets += 1;
+            summary.total_body_bytes += asset.body_len;
+            content_types.insert(asset.content_type.as_str());
+
+            if is_markdown_content_type(&asset.content_type) {
+                summary.markdown_assets += 1;
+            } else if is_json_content_type(&asset.content_type) {
+                summary.json_assets += 1;
+            } else if asset.content_type.starts_with("text/") {
+                summary.text_assets += 1;
+            } else {
+                summary.binary_assets += 1;
+            }
+
+            if asset.asset_path.contains('/') {
+                summary.nested_path_assets += 1;
+            } else {
+                summary.root_path_assets += 1;
+            }
+        }
+
+        summary.unique_content_types = content_types.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_assets == 0
+    }
+
+    pub fn has_nested_assets(&self) -> bool {
+        self.nested_path_assets > 0
+    }
+
+    pub fn has_binary_assets(&self) -> bool {
+        self.binary_assets > 0
+    }
+
+    pub fn has_multiple_content_types(&self) -> bool {
+        self.unique_content_types > 1
+    }
+}
+
 /// Query options for listing installed skill manifests.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct SkillListOptions {
@@ -419,6 +488,16 @@ impl<S: StorageBackend> SkillStore<S> {
     ) -> Result<SkillRequirementSummary, StorageError> {
         let manifests = self.list_skills(options)?;
         Ok(SkillRequirementSummary::from_manifests(&manifests))
+    }
+
+    pub fn asset_inventory_summary(
+        &self,
+        skill_id: &str,
+        version: &str,
+        options: SkillAssetListOptions,
+    ) -> Result<SkillAssetInventorySummary, StorageError> {
+        let assets = self.list_asset_summaries(skill_id, version, options)?;
+        Ok(SkillAssetInventorySummary::from_assets(&assets))
     }
 
     fn filtered_manifests(
@@ -701,6 +780,14 @@ fn asset_path_matches_prefix(asset_path: &str, path_prefix: &str) -> bool {
         || asset_path
             .strip_prefix(path_prefix)
             .is_some_and(|rest| rest.starts_with('/'))
+}
+
+fn is_markdown_content_type(value: &str) -> bool {
+    matches!(value, "text/markdown" | "text/x-markdown")
+}
+
+fn is_json_content_type(value: &str) -> bool {
+    value == "application/json" || value.ends_with("+json")
 }
 
 fn manifest_record_metadata(manifest: &SkillManifest) -> JsonValue {
@@ -1098,6 +1185,97 @@ mod tests {
             )
             .unwrap_err();
         assert!(matches!(invalid_prefix, StorageError::Validation { .. }));
+    }
+
+    #[test]
+    fn asset_inventory_summary_counts_content_type_path_and_byte_coverage() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let mut manifest = manifest(true);
+        manifest.assets = vec![
+            "SKILL.md".to_string(),
+            "data/config.json".to_string(),
+            "examples/prompt.txt".to_string(),
+            "assets/model.bin".to_string(),
+        ];
+        let _ = store
+            .install_skill(
+                manifest,
+                vec![
+                    InstallSkillAssetInput {
+                        asset_path: "SKILL.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"# planner".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "data/config.json".to_string(),
+                        content_type: "application/json".to_string(),
+                        body: br#"{"enabled":true}"#.to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "examples/prompt.txt".to_string(),
+                        content_type: "text/plain".to_string(),
+                        body: b"prompt".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "assets/model.bin".to_string(),
+                        content_type: "application/octet-stream".to_string(),
+                        body: vec![1, 2, 3, 4],
+                    },
+                ],
+            )
+            .unwrap();
+
+        let summary = store
+            .asset_inventory_summary("planner", "v1", SkillAssetListOptions::new())
+            .unwrap();
+
+        assert_eq!(
+            summary,
+            SkillAssetInventorySummary {
+                total_assets: 4,
+                unique_content_types: 4,
+                total_body_bytes: b"# planner".len()
+                    + br#"{"enabled":true}"#.len()
+                    + b"prompt".len()
+                    + 4,
+                markdown_assets: 1,
+                json_assets: 1,
+                text_assets: 1,
+                binary_assets: 1,
+                root_path_assets: 1,
+                nested_path_assets: 3,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_nested_assets());
+        assert!(summary.has_binary_assets());
+        assert!(summary.has_multiple_content_types());
+
+        let nested_text = store
+            .asset_inventory_summary(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new()
+                    .with_path_prefix("examples")
+                    .with_content_type("text/plain"),
+            )
+            .unwrap();
+        assert_eq!(nested_text.total_assets, 1);
+        assert_eq!(nested_text.text_assets, 1);
+        assert_eq!(nested_text.nested_path_assets, 1);
+        assert!(!nested_text.has_binary_assets());
+        assert!(!nested_text.has_multiple_content_types());
+
+        let empty = store
+            .asset_inventory_summary(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new().with_path_prefix("missing"),
+            )
+            .unwrap();
+        assert_eq!(empty, SkillAssetInventorySummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_nested_assets());
     }
 
     #[test]

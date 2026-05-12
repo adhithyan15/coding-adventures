@@ -14,6 +14,7 @@ other backends without changing the skill API.
 - `SkillAssetSummary`
 - `SkillCatalogSummary`
 - `SkillRequirementSummary`
+- `SkillAssetInventorySummary`
 - installation of manifests plus asset bundles
 - bounded manifest listing by active status, entrypoint, required tool, and
   required capability
@@ -22,6 +23,8 @@ other backends without changing the skill API.
 - compact catalog summaries for installed versions, active state, and stored
   asset material
 - compact requirement summaries for entrypoint, tool, and capability coverage
+- compact asset inventory summaries for content-type, path-depth, and byte
+  coverage over one skill version
 - active-version switching and uninstall semantics
 
 ## Key layout
@@ -38,6 +41,7 @@ other backends without changing the skill API.
 - `list_skill_summaries()`
 - `catalog_summary()`
 - `requirement_summary()`
+- `asset_inventory_summary()`
 - `list_asset_summaries()`
 - `list_installed_skills()`
 - `read_asset()`
@@ -68,6 +72,10 @@ asset material without returning raw manifests or asset bodies.
 compact rollup across filtered skill versions, entrypoints, required tools,
 required capabilities, and requirement gaps without returning raw manifests or
 asset bodies.
+
+`SkillAssetInventorySummary` gives catalog and preload planners a compact
+rollup over one skill version's asset metadata, including content-type classes,
+root versus nested paths, and total bytes without returning asset bodies.
 
 ## Development
 
