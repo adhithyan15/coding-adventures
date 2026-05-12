@@ -63,6 +63,9 @@ use adjudication_pipeline::{
 use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, LlmError, Message, MessageContent, Role as MsgRole,
 };
+use adjudication_clarification::{
+    retry_decompose_on_coverage_failure, ClarificationError, CoverageClarificationRequest,
+};
 use llm_primitives::{
     decompose_text, DecomposeTextRequest, GatewayConfig, PrimitiveError, Role as PrimitiveRole,
 };
@@ -115,6 +118,11 @@ pub struct DemoConfig {
     /// the clean baseline; set to [`IrMode::LlmExtracted`] to drive
     /// the full LLM-from-source flow.
     pub ir_mode: IrMode,
+    /// Maximum number of ADJ06 clarification rounds when the model's
+    /// first IR fails ADJ02 coverage. `0` disables clarification
+    /// (Blocked verdict on first failure). Default `2` — usually
+    /// enough for a small model to self-correct.
+    pub max_clarification_attempts: usize,
 }
 
 impl Default for DemoConfig {
@@ -126,6 +134,7 @@ impl Default for DemoConfig {
             timeout: Duration::from_secs(120),
             source_text: "1 carry-on bag, matches.".into(),
             ir_mode: IrMode::HandBuilt,
+            max_clarification_attempts: 2,
         }
     }
 }
@@ -297,9 +306,19 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
     // Build the IR according to the configured mode. The
     // `IrSourceTelemetry` captures what the model produced (if any)
     // so the report can surface it.
-    let (ir_document, ir_source_telemetry) =
+    let (mut ir_document, mut ir_source_telemetry) =
         build_ir(cfg, &gateway);
 
+    let make_now = || {
+        let tick = std::cell::Cell::new(0u32);
+        move || {
+            let t = tick.get();
+            tick.set(t + 1);
+            format!("2026-05-11T00:00:{:02}Z", t.min(59))
+        }
+    };
+
+    // Initial pipeline run.
     let input = PipelineInput {
         document: PipelineDocument {
             id: "tsa-demo-001".into(),
@@ -309,17 +328,127 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
             normalization_pipeline: "plain-text-v1".into(),
             normalization_version: "1.0.0".into(),
         },
-        ir_document,
+        ir_document: ir_document.clone(),
     };
+    let mut output =
+        run_with_gateway(input, AdjudicationId::new("adj-tsa-demo"), make_now(), Some(&gateway));
 
-    let tick = std::cell::Cell::new(0u32);
-    let now = move || {
-        let t = tick.get();
-        tick.set(t + 1);
-        format!("2026-05-11T00:00:{:02}Z", t.min(59))
-    };
-
-    let output = run_with_gateway(input, AdjudicationId::new("adj-tsa-demo"), now, Some(&gateway));
+    // ADJ06 clarification loop: only fires in LlmExtracted mode when
+    // ADJ02 failed AND we have budget left. After each round we
+    // re-run the entire pipeline so ADJ02 + ADJ03 + ADJ04 + ADJ05 +
+    // engine all see the corrected IR.
+    if matches!(cfg.ir_mode, IrMode::LlmExtracted) && cfg.max_clarification_attempts > 0 {
+        let mut clarification_turns: Vec<adjudication_audit_trail::DialogueTurn> = Vec::new();
+        for attempt in 1..=cfg.max_clarification_attempts {
+            if matches!(
+                output.audit_trail.checker_results[0].outcome,
+                PassOutcome::Passed
+            ) {
+                break;
+            }
+            let violation_description = format_first_adj02_violation(
+                &output.audit_trail.checker_results[0],
+            );
+            // Use the previous IR JSON we have on hand from
+            // `ir_source_telemetry` if available; otherwise serialize
+            // a best-effort placeholder.
+            let previous_ir_json = previous_ir_for_clarification(&ir_source_telemetry);
+            let clar_req = CoverageClarificationRequest {
+                original: DecomposeTextRequest {
+                    document_id: "tsa-demo-001".into(),
+                    source_text: cfg.source_text.clone(),
+                    domain_hint: "tsa-declaration".into(),
+                    language_hint: Some("en".into()),
+                },
+                violation_description,
+                previous_ir: previous_ir_json,
+            };
+            match retry_decompose_on_coverage_failure(&clar_req, &gateway, 1, make_now()) {
+                Ok(out) => {
+                    clarification_turns.extend(out.dialogue);
+                    match json_to_ir_document(
+                        &out.corrected_ir,
+                        "tsa-demo-001",
+                        &cfg.source_text,
+                    ) {
+                        Ok((new_ir, mut new_warnings)) => {
+                            // Update the telemetry so the report
+                            // surfaces the corrected IR + the
+                            // accumulated warnings.
+                            if let IrSourceTelemetry::LlmExtracted {
+                                ref mut node_count,
+                                ref mut raw_ir_json,
+                                ref mut converter_warnings,
+                                ..
+                            } = ir_source_telemetry
+                            {
+                                *node_count = new_ir.nodes.len();
+                                *raw_ir_json = serde_json::to_string_pretty(&out.corrected_ir)
+                                    .unwrap_or_else(|_| out.corrected_ir.to_string());
+                                converter_warnings.append(&mut new_warnings);
+                            }
+                            ir_document = new_ir.clone();
+                            let retry_input = PipelineInput {
+                                document: PipelineDocument {
+                                    id: "tsa-demo-001".into(),
+                                    name: "tsa_declaration".into(),
+                                    received_at: "2026-05-11T00:00:00Z".into(),
+                                    normalized_text: cfg.source_text.clone(),
+                                    normalization_pipeline: "plain-text-v1".into(),
+                                    normalization_version: "1.0.0".into(),
+                                },
+                                ir_document: ir_document.clone(),
+                            };
+                            output = run_with_gateway(
+                                retry_input,
+                                AdjudicationId::new(format!("adj-tsa-demo-r{attempt}")),
+                                make_now(),
+                                Some(&gateway),
+                            );
+                        }
+                        Err(e) => {
+                            // Corrected IR was unparseable; give up and
+                            // keep the previous pipeline output.
+                            clarification_turns
+                                .last_mut()
+                                .map(|t| t.outcome = adjudication_audit_trail::DialogueOutcome::Abandoned);
+                            let _ = e;
+                            break;
+                        }
+                    }
+                }
+                Err(ClarificationError::Exhausted { dialogue, .. }) => {
+                    clarification_turns.extend(dialogue);
+                    break;
+                }
+                Err(ClarificationError::Primitive(_)) => {
+                    break;
+                }
+            }
+        }
+        // Stitch dialogue into the audit trail + the report telemetry.
+        if !clarification_turns.is_empty() {
+            let attempts = clarification_turns.len();
+            let resolved = matches!(
+                output.audit_trail.checker_results[0].outcome,
+                PassOutcome::Passed
+            );
+            let summary = format!(
+                "{attempts} clarification round(s) ({})",
+                if resolved { "resolved" } else { "exhausted" }
+            );
+            if let IrSourceTelemetry::LlmExtracted {
+                clarification_summary: ref mut cs,
+                clarification_turns: ref mut tgt,
+                ..
+            } = ir_source_telemetry
+            {
+                *cs = Some(summary);
+                *tgt = clarification_turns.clone();
+            }
+            output.audit_trail.dialogue.extend(clarification_turns);
+        }
+    }
 
     let trail = &output.audit_trail;
     let adj04_drift_findings = collect_adj04_drift(&trail.checker_results);
@@ -376,6 +505,16 @@ pub enum IrSourceTelemetry {
         /// LLM output (e.g., "node F1 had non-string `kind`; defaulted
         /// to Fact"). Empty when the model produced clean output.
         converter_warnings: Vec<String>,
+        /// One-line summary of any ADJ06 clarification dialogue that
+        /// happened during IR construction. Empty when the model got
+        /// it right on the first try; "1 retry (resolved)" when a
+        /// single ADJ06 round-trip corrected an ADJ02 failure;
+        /// "2 retries (exhausted)" when the loop gave up.
+        clarification_summary: Option<String>,
+        /// Detailed clarification turns (audit-trail rows) — surfaced
+        /// in the report so reviewers can see what the model was
+        /// told and how it responded.
+        clarification_turns: Vec<adjudication_audit_trail::DialogueTurn>,
     },
     /// The model's extractor call failed (transport, validation, etc.).
     /// We fall back to the hand-built IR so the pipeline still has
@@ -398,6 +537,8 @@ fn build_ir(cfg: &DemoConfig, gateway: &GatewayConfig) -> (IRDocument, IrSourceT
                         node_count,
                         raw_ir_json: raw_json,
                         converter_warnings: warnings,
+                        clarification_summary: None,
+                        clarification_turns: Vec::new(),
                     },
                 )
             }
@@ -873,6 +1014,47 @@ fn parse_source_spans(
     spans
 }
 
+/// Render the first ADJ02 violation as a short string suitable for
+/// the ADJ06 correction prompt. ADJ02 violations are stringly typed
+/// in the audit trail (the pipeline stores a `debug` field for
+/// unspecialised variants), so the simplest reliable thing is to
+/// pull that text out and prepend the violation `kind`.
+fn format_first_adj02_violation(adj02: &adjudication_audit_trail::CheckerResult) -> String {
+    match adj02.violations.first() {
+        Some(v) => {
+            let kind = v
+                .detail
+                .get("kind")
+                .and_then(|x| x.as_str())
+                .unwrap_or("UncoveredSpan");
+            let debug = v
+                .detail
+                .get("debug")
+                .and_then(|x| x.as_str())
+                .map(str::to_string)
+                .unwrap_or_default();
+            if debug.is_empty() {
+                kind.to_string()
+            } else {
+                format!("{kind}: {debug}")
+            }
+        }
+        None => "ADJ02 reported Failed with no violation entries".to_string(),
+    }
+}
+
+/// Best-effort retrieval of the previous LLM IR JSON for the
+/// correction prompt. When `IrSourceTelemetry::LlmExtracted` is in
+/// hand we have the raw JSON verbatim; otherwise we fall back to an
+/// empty placeholder so the correction prompt still flows.
+fn previous_ir_for_clarification(t: &IrSourceTelemetry) -> serde_json::Value {
+    match t {
+        IrSourceTelemetry::LlmExtracted { raw_ir_json, .. } => serde_json::from_str(raw_ir_json)
+            .unwrap_or_else(|_| serde_json::json!({ "note": "previous IR JSON unparseable" })),
+        _ => serde_json::json!({ "note": "no previous IR JSON available" }),
+    }
+}
+
 /// Pull `RoundTripDrift` violations out of the ADJ04 checker result
 /// and convert them into plain-string findings for the demo report.
 fn collect_adj04_drift(
@@ -1057,6 +1239,7 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
         IrSourceTelemetry::LlmExtracted {
             node_count,
             converter_warnings,
+            clarification_summary,
             ..
         } => {
             out.push_str(&format!(
@@ -1068,6 +1251,11 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
                 out.push_str(&format!(
                     "                 ({w} converter warning(s) — see audit dump)\n",
                     w = converter_warnings.len()
+                ));
+            }
+            if let Some(s) = clarification_summary {
+                out.push_str(&format!(
+                    "                 ADJ06 clarification: {s}\n",
                 ));
             }
         }

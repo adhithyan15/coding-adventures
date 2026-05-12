@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-12
+
+### Added
+
+ADJ06 clarification dialogue wired into the LlmExtracted flow. When
+the model's first IR fails ADJ02 coverage, the demo re-prompts the
+model with the structured violation and the model's previous output,
+then re-runs the entire pipeline. This is the **self-correction
+loop** that turns small local models into reliable extractors.
+
+- `DemoConfig::max_clarification_attempts: usize` (default 2). Set
+  via `ADJ_DEMO_MAX_CLARIFY_ATTEMPTS=N`. `0` disables clarification
+  entirely (the v0.3 behaviour).
+- `IrSourceTelemetry::LlmExtracted` gains `clarification_summary:
+  Option<String>` and `clarification_turns: Vec<DialogueTurn>`. The
+  side-by-side report shows the summary (`"1 round (resolved)"` /
+  `"2 rounds (exhausted)"`); the audit-trail dump includes the full
+  dialogue.
+- The pipeline output's `audit_trail.dialogue` is populated with the
+  retry turns, so ADJ07 captures the conversation end-to-end.
+
+### What the loop does
+
+1. Initial decompose_text → IR → pipeline.
+2. If ADJ02 passed: done.
+3. Otherwise: extract the first ADJ02 violation, call
+   `retry_decompose_on_coverage_failure` with the prior IR JSON +
+   violation description, get a corrected IR back, re-run the full
+   pipeline.
+4. Repeat up to `max_clarification_attempts` times.
+
+The loop is dormant in the v2-prompt happy path — gemma4 produces a
+clean IR on the canonical fixture and ADJ02 passes on the first try.
+ADJ06 stands by for the harder cases (longer documents, more
+ambiguous spans, smaller models).
+
 ## [0.3.0] - 2026-05-12
 
 ### Added
