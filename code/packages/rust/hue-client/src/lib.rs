@@ -187,6 +187,17 @@ pub struct HueEventStreamSummary {
     pub records_with_data: usize,
     pub empty_records: usize,
     pub total_resource_items: usize,
+    pub bridge_resource_items: usize,
+    pub device_resource_items: usize,
+    pub light_resource_items: usize,
+    pub grouped_light_resource_items: usize,
+    pub room_resource_items: usize,
+    pub zone_resource_items: usize,
+    pub scene_resource_items: usize,
+    pub motion_resource_items: usize,
+    pub button_resource_items: usize,
+    pub smart_scene_resource_items: usize,
+    pub unknown_resource_items: usize,
     pub max_records_per_batch: usize,
 }
 
@@ -223,6 +234,9 @@ impl HueEventStreamSummary {
                 } else {
                     summary.records_with_data += 1;
                     summary.total_resource_items += event.data.len();
+                    for resource in &event.data {
+                        summary.record_resource_item(resource);
+                    }
                 }
             }
         }
@@ -243,6 +257,26 @@ impl HueEventStreamSummary {
 
     pub fn has_empty_records(&self) -> bool {
         self.empty_records > 0
+    }
+
+    pub fn has_unknown_resource_items(&self) -> bool {
+        self.unknown_resource_items > 0
+    }
+
+    fn record_resource_item(&mut self, resource: &JsonValue) {
+        match object_string_field(resource, "type").map(HueResourceType::from_hue_type) {
+            Some(HueResourceType::Bridge) => self.bridge_resource_items += 1,
+            Some(HueResourceType::Device) => self.device_resource_items += 1,
+            Some(HueResourceType::Light) => self.light_resource_items += 1,
+            Some(HueResourceType::GroupedLight) => self.grouped_light_resource_items += 1,
+            Some(HueResourceType::Room) => self.room_resource_items += 1,
+            Some(HueResourceType::Zone) => self.zone_resource_items += 1,
+            Some(HueResourceType::Scene) => self.scene_resource_items += 1,
+            Some(HueResourceType::Motion) => self.motion_resource_items += 1,
+            Some(HueResourceType::Button) => self.button_resource_items += 1,
+            Some(HueResourceType::SmartScene) => self.smart_scene_resource_items += 1,
+            Some(HueResourceType::Unknown(_)) | None => self.unknown_resource_items += 1,
+        }
     }
 }
 
@@ -1665,7 +1699,7 @@ mod tests {
     #[test]
     fn event_stream_summary_counts_batches_records_and_resource_items() {
         let batches = parse_event_stream(
-            b"id: stream-1\nevent: update\nretry: 5000\ndata: [{\"creationtime\":\"2026-05-07T01:00:00Z\",\"data\":[{\"id\":\"light-1\",\"type\":\"light\"},{\"id\":\"button-1\",\"type\":\"button\"}],\"id\":\"event-1\",\"type\":\"update\"}]\n\ndata: [{\"id\":\"event-2\",\"type\":\"heartbeat\",\"data\":[]}]\n\n",
+            b"id: stream-1\nevent: update\nretry: 5000\ndata: [{\"creationtime\":\"2026-05-07T01:00:00Z\",\"data\":[{\"id\":\"light-1\",\"type\":\"light\"},{\"id\":\"button-1\",\"type\":\"button\"},{\"id\":\"future-1\",\"type\":\"future_resource\"}],\"id\":\"event-1\",\"type\":\"update\"}]\n\ndata: [{\"id\":\"event-2\",\"type\":\"heartbeat\",\"data\":[]}]\n\n",
         )
         .unwrap();
 
@@ -1682,7 +1716,18 @@ mod tests {
                 records_with_creation_time: 1,
                 records_with_data: 1,
                 empty_records: 1,
-                total_resource_items: 2,
+                total_resource_items: 3,
+                bridge_resource_items: 0,
+                device_resource_items: 0,
+                light_resource_items: 1,
+                grouped_light_resource_items: 0,
+                room_resource_items: 0,
+                zone_resource_items: 0,
+                scene_resource_items: 0,
+                motion_resource_items: 0,
+                button_resource_items: 1,
+                smart_scene_resource_items: 0,
+                unknown_resource_items: 1,
                 max_records_per_batch: 1,
             }
         );
@@ -1690,12 +1735,14 @@ mod tests {
         assert!(summary.has_retry_hints());
         assert!(summary.has_resource_items());
         assert!(summary.has_empty_records());
+        assert!(summary.has_unknown_resource_items());
 
         let empty = HueEventStreamSummary::empty();
         assert!(empty.is_empty());
         assert!(!empty.has_retry_hints());
         assert!(!empty.has_resource_items());
         assert!(!empty.has_empty_records());
+        assert!(!empty.has_unknown_resource_items());
     }
 
     #[test]
