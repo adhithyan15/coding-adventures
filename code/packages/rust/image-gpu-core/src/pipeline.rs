@@ -845,11 +845,13 @@ mod tests {
     ///           → SpecialisedTable grows
     /// ```
     ///
-    /// Apple-only — no metal executor on Linux / Windows CI, so
-    /// `specialised_install_count` stays at 0 there by definition.
-    /// The non-metal CI runners still exercise the
-    /// `#[cfg(not(feature = "metal-backend"))]` stub through normal
-    /// compilation; the runtime-behaviour assertion only runs on macOS.
+    /// Apple-only — `metal-backend` is feature-gated *at compile
+    /// time* and is enabled by default on every platform, but the
+    /// actual Metal device is only available at runtime on Apple
+    /// targets (`MetalExecutor::new` returns `Err` elsewhere).  So
+    /// we gate on `target_vendor = "apple"` rather than the feature
+    /// flag — on Linux/Windows CI, `specialised_install_count`
+    /// stays at 0 by definition and there's nothing to assert.
     ///
     /// Test scope intentionally limited:
     /// - We only assert that the **install** side fires.  Phase 4.4
@@ -862,7 +864,7 @@ mod tests {
     ///   filters happen to hit that exact shape.  Future emitter
     ///   extensions (Sub/Mul/Div) will broaden the surface so that
     ///   real filters drive the install path automatically.
-    #[cfg(feature = "metal-backend")]
+    #[cfg(all(feature = "metal-backend", target_vendor = "apple"))]
     #[test]
     fn auto_installer_registers_kernel_after_threshold() {
         use crate::specialised_install_count;
