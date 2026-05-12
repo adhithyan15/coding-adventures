@@ -1,4 +1,5 @@
 import { compileMacsyma } from "@coding-adventures/macsyma-compiler";
+import { solveLinearSystem } from "@coding-adventures/cas-solve";
 import {
   ACOS,
   ACOSH,
@@ -13,6 +14,7 @@ import {
   FACTOR,
   FALSE,
   INTEGRATE,
+  LIST,
   LOG,
   SIN,
   SINH,
@@ -274,8 +276,9 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(SUPPRESS.name, suppressHandler);
     table.set(KILL.name, makeKillHandler(this));
     table.set(EV.name, makeEvHandler());
+    table.set(SOLVE.name, solveHandler);
     this.runtimeTable = table;
-    this.runtimeHeld = new Set([...super.holdHeads(), KILL.name, EV.name]);
+    this.runtimeHeld = new Set([...super.holdHeads(), KILL.name, EV.name, SOLVE.name]);
   }
 
   override lookup(name: string): IRNode | undefined {
@@ -528,6 +531,21 @@ function makeEvHandler(): Handler {
   };
 }
 
+function solveHandler(_vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 2) return expr;
+  const [equationsNode, variablesNode] = expr.args;
+  if (!isList(equationsNode) || !isList(variablesNode)) return expr;
+
+  const variables: IRSymbol[] = [];
+  for (const variable of variablesNode.args) {
+    if (variable.kind !== "symbol") return expr;
+    variables.push(variable);
+  }
+
+  const rules = solveLinearSystem(equationsNode.args, variables);
+  return rules === null ? expr : app(LIST, rules);
+}
+
 function evalSupportedFlag(vm: VM, result: IRNode, head: IRSymbol): IRNode {
   if (!vm.backend.handlers().has(head.name)) return result;
   try {
@@ -535,6 +553,10 @@ function evalSupportedFlag(vm: VM, result: IRNode, head: IRSymbol): IRNode {
   } catch {
     return result;
   }
+}
+
+function isList(node: IRNode): node is IRApply {
+  return node.kind === "apply" && equals(node.head, LIST);
 }
 
 function numerFold(node: IRNode): IRNode {

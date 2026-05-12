@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
   ADD,
+  EQUAL,
+  LIST,
   MUL,
   POW,
+  RULE,
+  SOLVE,
+  SUB,
   app,
   int,
   numberNode,
+  rational,
   sym,
 } from "@coding-adventures/symbolic-ir";
 import { VM } from "@coding-adventures/symbolic-vm";
@@ -155,8 +161,10 @@ describe("macsyma-runtime", () => {
     const backend = new MacsymaBackend(new History());
     expect(backend.handlers().has(KILL.name)).toBe(true);
     expect(backend.handlers().has(EV.name)).toBe(true);
+    expect(backend.handlers().has(SOLVE.name)).toBe(true);
     expect(backend.holdHeads().has(KILL.name)).toBe(true);
     expect(backend.holdHeads().has(EV.name)).toBe(true);
+    expect(backend.holdHeads().has(SOLVE.name)).toBe(true);
   });
 
   it("kills single and multiple bindings without evaluating names first", () => {
@@ -217,6 +225,65 @@ describe("macsyma-runtime", () => {
     const session = new MacsymaSession();
     const [result] = session.evalSource("(x + 0) * (y^2);");
     expect(result.output).toEqual(app(MUL, [sym("x"), app(POW, [sym("y"), int(2)])]));
+  });
+
+  it("evaluates linsolve linear systems through the cas-solve handler", () => {
+    const x = sym("x");
+    const y = sym("y");
+    const session = new MacsymaSession();
+    const [result] = session.evalStatements([
+      app(sym("linsolve"), [
+        app(LIST, [
+          app(EQUAL, [app(ADD, [x, y]), int(3)]),
+          app(EQUAL, [app(SUB, [x, y]), int(1)]),
+        ]),
+        app(LIST, [x, y]),
+      ]),
+    ]);
+
+    expect(result.input).toEqual(app(SOLVE, [
+      app(LIST, [
+        app(EQUAL, [app(ADD, [x, y]), int(3)]),
+        app(EQUAL, [app(SUB, [x, y]), int(1)]),
+      ]),
+      app(LIST, [x, y]),
+    ]));
+    expect(result.output).toEqual(app(LIST, [
+      app(RULE, [x, int(2)]),
+      app(RULE, [y, int(1)]),
+    ]));
+  });
+
+  it("keeps unsolved or non-linear Solve calls unevaluated", () => {
+    const x = sym("x");
+    const session = new MacsymaSession();
+    const expr = app(SOLVE, [
+      app(LIST, [app(EQUAL, [app(POW, [x, int(2)]), int(4)])]),
+      app(LIST, [x]),
+    ]);
+
+    const [result] = session.evalStatements([expr]);
+    expect(result.output).toEqual(expr);
+  });
+
+  it("returns rational linsolve results", () => {
+    const x = sym("x");
+    const y = sym("y");
+    const session = new MacsymaSession();
+    const [result] = session.evalStatements([
+      app(SOLVE, [
+        app(LIST, [
+          app(EQUAL, [app(ADD, [app(MUL, [int(2), x]), app(MUL, [int(3), y])]), int(7)]),
+          app(EQUAL, [app(SUB, [app(MUL, [int(4), x]), y]), int(1)]),
+        ]),
+        app(LIST, [x, y]),
+      ]),
+    ]);
+
+    expect(result.output).toEqual(app(LIST, [
+      app(RULE, [x, rational(5, 7)]),
+      app(RULE, [y, rational(13, 7)]),
+    ]));
   });
 
   it("pre-binds MACSYMA constants", () => {

@@ -9,6 +9,7 @@ cd ../../../packages/typescript/symbolic-vm && npm ci --quiet
 cd ../../../packages/typescript/macsyma-lexer && npm ci --quiet
 cd ../../../packages/typescript/macsyma-parser && npm ci --quiet
 cd ../../../packages/typescript/macsyma-compiler && npm ci --quiet
+cd ../../../packages/typescript/cas-solve && npm ci --quiet
 cd ../../../packages/typescript/macsyma-runtime && npm ci --quiet
 npm ci --quiet
 npm run build
