@@ -513,6 +513,137 @@ impl JobResponseSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct JobBatchSummary {
+    pub total_requests: usize,
+    pub deadline_bound_requests: usize,
+    pub routable_requests: usize,
+    pub ordered_requests: usize,
+    pub retry_requests: usize,
+    pub traceable_requests: usize,
+    pub total_responses: usize,
+    pub successful_responses: usize,
+    pub failed_responses: usize,
+    pub retryable_failures: usize,
+    pub cancelled_responses: usize,
+    pub timed_out_responses: usize,
+    pub traceable_responses: usize,
+    pub max_attempt_observed: u32,
+}
+
+impl JobBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_summaries<'a, 'b, RI, SI>(requests: RI, responses: SI) -> Self
+    where
+        RI: IntoIterator<Item = &'a JobRequestSummary>,
+        SI: IntoIterator<Item = &'b JobResponseSummary>,
+    {
+        let mut summary = Self::empty();
+        summary.include_requests(requests);
+        summary.include_responses(responses);
+        summary
+    }
+
+    pub fn from_request_summaries<'a, I>(requests: I) -> Self
+    where
+        I: IntoIterator<Item = &'a JobRequestSummary>,
+    {
+        let mut summary = Self::empty();
+        summary.include_requests(requests);
+        summary
+    }
+
+    pub fn from_response_summaries<'a, I>(responses: I) -> Self
+    where
+        I: IntoIterator<Item = &'a JobResponseSummary>,
+    {
+        let mut summary = Self::empty();
+        summary.include_responses(responses);
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_requests == 0 && self.total_responses == 0
+    }
+
+    pub fn total_jobs_seen(&self) -> usize {
+        self.total_requests + self.total_responses
+    }
+
+    pub fn has_failures(&self) -> bool {
+        self.failed_responses > 0
+    }
+
+    pub fn has_retryable_failures(&self) -> bool {
+        self.retryable_failures > 0
+    }
+
+    pub fn has_timeouts(&self) -> bool {
+        self.timed_out_responses > 0
+    }
+
+    pub fn has_routing_facts(&self) -> bool {
+        self.routable_requests > 0 || self.ordered_requests > 0
+    }
+
+    fn include_requests<'a, I>(&mut self, requests: I)
+    where
+        I: IntoIterator<Item = &'a JobRequestSummary>,
+    {
+        for request in requests {
+            self.total_requests += 1;
+            if request.metadata.has_deadline {
+                self.deadline_bound_requests += 1;
+            }
+            if request.metadata.is_routable() {
+                self.routable_requests += 1;
+            }
+            if request.metadata.is_ordered() {
+                self.ordered_requests += 1;
+            }
+            if request.metadata.is_retry {
+                self.retry_requests += 1;
+            }
+            if request.metadata.is_traceable() {
+                self.traceable_requests += 1;
+            }
+            self.max_attempt_observed = self.max_attempt_observed.max(request.metadata.attempt);
+        }
+    }
+
+    fn include_responses<'a, I>(&mut self, responses: I)
+    where
+        I: IntoIterator<Item = &'a JobResponseSummary>,
+    {
+        for response in responses {
+            self.total_responses += 1;
+            if response.is_success() {
+                self.successful_responses += 1;
+            }
+            if response.is_failure() {
+                self.failed_responses += 1;
+            }
+            if response.is_retryable_failure() {
+                self.retryable_failures += 1;
+            }
+            if response.was_cancelled() {
+                self.cancelled_responses += 1;
+            }
+            if response.timed_out() {
+                self.timed_out_responses += 1;
+            }
+            if response.trace_id.is_some() {
+                self.traceable_responses += 1;
+            }
+            self.max_attempt_observed = self.max_attempt_observed.max(response.attempt);
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct JobError {
@@ -1033,6 +1164,119 @@ mod tests {
         assert!(timed_out_summary.is_failure());
         assert!(timed_out_summary.timed_out());
         assert!(!timed_out_summary.was_cancelled());
+    }
+
+    #[test]
+    fn batch_summary_rolls_up_request_and_response_read_models() {
+        let requests = vec![
+            JobRequest::new(
+                "job-1",
+                EchoPayload {
+                    text: "first".to_string(),
+                },
+            )
+            .with_metadata(
+                JobMetadata::default()
+                    .with_created_at_ms(10)
+                    .with_deadline_at_ms(40)
+                    .with_affinity_key("worker-a")
+                    .with_sequence(1)
+                    .with_trace_id("trace-a"),
+            )
+            .summary(),
+            JobRequest::new(
+                "job-2",
+                EchoPayload {
+                    text: "retry".to_string(),
+                },
+            )
+            .with_metadata(JobMetadata::default().with_attempt(1))
+            .summary(),
+        ];
+        let responses = vec![
+            JobResponse::ok(
+                "job-1",
+                EchoPayload {
+                    text: "done".to_string(),
+                },
+            )
+            .with_metadata(JobMetadata::default().with_trace_id("trace-a"))
+            .summary(),
+            JobResponse::<EchoPayload>::error(
+                "job-2",
+                JobError::new("busy", "worker saturated", JobErrorOrigin::Executor)
+                    .with_retryable(true),
+            )
+            .with_metadata(
+                JobMetadata::default()
+                    .with_attempt(2)
+                    .with_trace_id("trace-b"),
+            )
+            .summary(),
+            JobResponse::<EchoPayload> {
+                id: "job-3".to_string(),
+                result: JobResult::TimedOut {
+                    timeout: JobTimeout {
+                        message: "deadline exceeded".to_string(),
+                    },
+                },
+                metadata: JobMetadata::default().with_attempt(3),
+            }
+            .summary(),
+            JobResponse::<EchoPayload> {
+                id: "job-4".to_string(),
+                result: JobResult::Cancelled {
+                    cancellation: JobCancellation {
+                        message: "user stopped job".to_string(),
+                    },
+                },
+                metadata: JobMetadata::default().with_attempt(1),
+            }
+            .summary(),
+        ];
+
+        let summary = JobBatchSummary::from_summaries(&requests, &responses);
+
+        assert_eq!(
+            summary,
+            JobBatchSummary {
+                total_requests: 2,
+                deadline_bound_requests: 1,
+                routable_requests: 1,
+                ordered_requests: 1,
+                retry_requests: 1,
+                traceable_requests: 1,
+                total_responses: 4,
+                successful_responses: 1,
+                failed_responses: 3,
+                retryable_failures: 1,
+                cancelled_responses: 1,
+                timed_out_responses: 1,
+                traceable_responses: 2,
+                max_attempt_observed: 3,
+            }
+        );
+        assert_eq!(summary.total_jobs_seen(), 6);
+        assert!(summary.has_routing_facts());
+        assert!(summary.has_failures());
+        assert!(summary.has_retryable_failures());
+        assert!(summary.has_timeouts());
+
+        let request_only = JobBatchSummary::from_request_summaries(&requests);
+        assert_eq!(request_only.total_requests, 2);
+        assert_eq!(request_only.total_responses, 0);
+        assert_eq!(request_only.max_attempt_observed, 1);
+
+        let response_only = JobBatchSummary::from_response_summaries(&responses);
+        assert_eq!(response_only.total_requests, 0);
+        assert_eq!(response_only.total_responses, 4);
+        assert_eq!(response_only.max_attempt_observed, 3);
+
+        let empty = JobBatchSummary::empty();
+        assert!(empty.is_empty());
+        assert_eq!(empty.total_jobs_seen(), 0);
+        assert!(!empty.has_routing_facts());
+        assert!(!empty.has_failures());
     }
 
     #[test]

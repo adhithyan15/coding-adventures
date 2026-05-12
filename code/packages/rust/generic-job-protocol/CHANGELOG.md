@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
   models.
 - Added terminal status and response-summary predicates for shared read-side
   success, failure, retry, cancel, and timeout classification.
+- Added `JobBatchSummary` for compact request/response rollups across
+  queue/runtime status views.
 
 ## [0.1.0] - 2026-04-20
 
