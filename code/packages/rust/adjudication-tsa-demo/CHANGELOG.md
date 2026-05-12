@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-05-12
+
+### Added
+
+`PipelineArmReport::cache_stats` — aggregate `CacheStats` across
+every role's `CachingClient`. Side-by-side report prints a
+`cache: N hits / M misses (X% hit rate), K entries` line whenever
+any cache activity happened, making the cache's economic value
+visible.
+
+Measured against the canonical TSA fixture (gemma4 + llama3.1):
+
+- Cold run: `2 hits / 9 misses (18%)` — the two hits come from
+  `render_node` being called by both ADJ04 and ADJ05 with the same
+  prompts, so the second checker hits the in-memory cache.
+- Warm run with persisted cache: `11 hits / 0 misses (100%)`.
+
 ## [0.5.0] - 2026-05-12
 
 ### Added
