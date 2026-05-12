@@ -24,6 +24,7 @@ Current scope:
 - state snapshot cache
 - immutable event log in arrival order
 - selector-based event-log queries for bounded replay windows
+- compact event-log summaries for filtered replay/status windows
 - state updates from normalized event deltas
 - conflict detection for duplicate protocol identifiers
 - capability-grant storage and active-grant lookup by Chief of Staff agent

@@ -235,6 +235,98 @@ pub struct SceneSummary {
     pub metadata_count: usize,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct EventLogSummary {
+    pub total_events: usize,
+    pub discovered_events: usize,
+    pub updated_events: usize,
+    pub removed_events: usize,
+    pub unavailable_events: usize,
+    pub error_events: usize,
+    pub health_events: usize,
+    pub events_with_state_delta: usize,
+    pub events_with_raw_ref: usize,
+    pub correlated_events: usize,
+    pub first_observed_at_ms: Option<u64>,
+    pub latest_observed_at_ms: Option<u64>,
+    pub first_received_at_ms: Option<u64>,
+    pub latest_received_at_ms: Option<u64>,
+}
+
+impl EventLogSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_events<'a, I>(events: I) -> Self
+    where
+        I: IntoIterator<Item = &'a DeviceEvent>,
+    {
+        let mut summary = Self::empty();
+        for event in events {
+            summary.total_events += 1;
+            match event.event_type {
+                DeviceEventType::Discovered => summary.discovered_events += 1,
+                DeviceEventType::Updated => summary.updated_events += 1,
+                DeviceEventType::Removed => summary.removed_events += 1,
+                DeviceEventType::Unavailable => summary.unavailable_events += 1,
+                DeviceEventType::Error => summary.error_events += 1,
+                DeviceEventType::Health => summary.health_events += 1,
+            }
+            if event.state_delta.is_some() {
+                summary.events_with_state_delta += 1;
+            }
+            if event.raw_ref.is_some() {
+                summary.events_with_raw_ref += 1;
+            }
+            if event.correlation_id.is_some() {
+                summary.correlated_events += 1;
+            }
+            summary.first_observed_at_ms = Some(
+                summary
+                    .first_observed_at_ms
+                    .map_or(event.observed_at_ms, |timestamp| {
+                        timestamp.min(event.observed_at_ms)
+                    }),
+            );
+            summary.latest_observed_at_ms = Some(
+                summary
+                    .latest_observed_at_ms
+                    .map_or(event.observed_at_ms, |timestamp| {
+                        timestamp.max(event.observed_at_ms)
+                    }),
+            );
+            summary.first_received_at_ms = Some(
+                summary
+                    .first_received_at_ms
+                    .map_or(event.received_at_ms, |timestamp| {
+                        timestamp.min(event.received_at_ms)
+                    }),
+            );
+            summary.latest_received_at_ms = Some(
+                summary
+                    .latest_received_at_ms
+                    .map_or(event.received_at_ms, |timestamp| {
+                        timestamp.max(event.received_at_ms)
+                    }),
+            );
+        }
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_events == 0
+    }
+
+    pub fn has_state_updates(&self) -> bool {
+        self.events_with_state_delta > 0
+    }
+
+    pub fn has_error_events(&self) -> bool {
+        self.error_events > 0 || self.unavailable_events > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum StateFreshness {
     #[default]
@@ -517,6 +609,14 @@ impl<'a> SmartHomeRegistryReadView<'a> {
 
     pub fn events(&self) -> impl Iterator<Item = &'a DeviceEvent> {
         self.registry.events()
+    }
+
+    pub fn query_events(&self, selector: &EventSelector) -> Vec<&'a DeviceEvent> {
+        self.registry.query_events(selector)
+    }
+
+    pub fn event_log_summary(&self, selector: &EventSelector) -> EventLogSummary {
+        self.registry.event_log_summary(selector)
     }
 
     pub fn capability_grant(&self, grant_id: &CapabilityGrantId) -> Option<&'a CapabilityGrant> {
@@ -1149,6 +1249,11 @@ impl InMemorySmartHomeRegistry {
         events
     }
 
+    pub fn event_log_summary(&self, selector: &EventSelector) -> EventLogSummary {
+        let events = self.query_events(selector);
+        EventLogSummary::from_events(events)
+    }
+
     pub fn upsert_capability_grant(&mut self, grant: CapabilityGrant) -> Option<CapabilityGrant> {
         let old = self
             .capability_grants
@@ -1741,8 +1846,8 @@ mod tests {
     use super::*;
     use smart_home_core::{
         AgentId, BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId,
-        EntityKind, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily, SceneAction,
-        SceneScope, SmartHomeTool, StateDelta,
+        CorrelationId, EntityKind, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily,
+        SceneAction, SceneScope, SmartHomeTool, StateDelta,
     };
 
     fn bridge(id: &str) -> Bridge {
@@ -2248,6 +2353,90 @@ mod tests {
         assert!(registry
             .query_events(&EventSelector::new().with_limit(0))
             .is_empty());
+    }
+
+    #[test]
+    fn event_log_summary_counts_filtered_event_windows() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry.upsert_bridge(bridge("bridge-1")).unwrap();
+        registry
+            .upsert_device(device("device-1", "bridge-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-2", "device-1"))
+            .unwrap();
+
+        registry
+            .record_event(DeviceEvent {
+                event_id: EventId::trusted("event-1"),
+                event_type: DeviceEventType::Discovered,
+                raw_ref: Some("raw/event-1".to_string()),
+                ..update_event("event-1", "entity-1", 100)
+            })
+            .unwrap();
+        registry
+            .record_event(update_event("event-2", "entity-1", 120))
+            .unwrap();
+        registry
+            .record_event(DeviceEvent {
+                event_id: EventId::trusted("event-3"),
+                entity_id: Some(EntityId::trusted("entity-2")),
+                event_type: DeviceEventType::Health,
+                state_delta: None,
+                correlation_id: Some(CorrelationId::trusted("corr-1")),
+                ..update_event("event-3", "entity-2", 140)
+            })
+            .unwrap();
+        registry
+            .record_event(DeviceEvent {
+                event_id: EventId::trusted("event-4"),
+                event_type: DeviceEventType::Error,
+                state_delta: None,
+                ..update_event("event-4", "entity-1", 160)
+            })
+            .unwrap();
+
+        let summary = registry.event_log_summary(&EventSelector::new());
+        assert_eq!(
+            summary,
+            EventLogSummary {
+                total_events: 4,
+                discovered_events: 1,
+                updated_events: 1,
+                removed_events: 0,
+                unavailable_events: 0,
+                error_events: 1,
+                health_events: 1,
+                events_with_state_delta: 2,
+                events_with_raw_ref: 1,
+                correlated_events: 1,
+                first_observed_at_ms: Some(100),
+                latest_observed_at_ms: Some(160),
+                first_received_at_ms: Some(101),
+                latest_received_at_ms: Some(161),
+            }
+        );
+        assert!(summary.has_state_updates());
+        assert!(summary.has_error_events());
+        assert!(!summary.is_empty());
+
+        let entity_summary = registry.read_view().event_log_summary(
+            &EventSelector::new()
+                .for_entity(EntityId::trusted("entity-1"))
+                .observed_at_or_after(110),
+        );
+        assert_eq!(entity_summary.total_events, 2);
+        assert_eq!(entity_summary.updated_events, 1);
+        assert_eq!(entity_summary.error_events, 1);
+        assert_eq!(entity_summary.first_observed_at_ms, Some(120));
+
+        let empty = EventLogSummary::from_events([]);
+        assert!(empty.is_empty());
+        assert!(!empty.has_state_updates());
+        assert!(!empty.has_error_events());
     }
 
     #[test]
