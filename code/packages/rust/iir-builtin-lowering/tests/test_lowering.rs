@@ -38,6 +38,8 @@ fn make_module(instrs: Vec<IIRInstr>) -> IIRModule {
         functions: vec![fn_],
         entry_point: Some("main".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     }
 }
 
@@ -516,6 +518,8 @@ fn test_35_two_functions_both_lowered() {
         functions: vec![fn1, fn2],
         entry_point: Some("add".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -542,6 +546,8 @@ fn test_36_three_functions_independent() {
         functions: fns,
         entry_point: Some("f1".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -565,6 +571,8 @@ fn test_37_error_in_one_function_reports_function_name() {
         functions: vec![fn_],
         entry_point: Some("my_broken_function".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = lower_builtins(&mut m);
     assert_eq!(errors.len(), 1);
@@ -587,6 +595,8 @@ fn test_38_empty_module_no_panic() {
         functions: vec![],
         entry_point: None,
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -660,6 +670,8 @@ fn test_41_cloned_lowers_correctly() {
         functions: vec![fn_],
         entry_point: None,
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let (lowered, errors) = lower_builtins_cloned(&original);
     assert!(errors.is_empty());
@@ -680,6 +692,8 @@ fn test_42_cloned_leaves_original_unchanged() {
         functions: vec![fn_],
         entry_point: None,
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let (_lowered, _errors) = lower_builtins_cloned(&original);
     // Original still shows call_builtin.
@@ -762,6 +776,8 @@ fn test_47_function_with_no_instructions() {
         functions: vec![fn_],
         entry_point: Some("f".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -780,6 +796,8 @@ fn test_48_multiple_empty_functions() {
         functions: fns,
         entry_point: Some("f".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -843,6 +861,8 @@ fn test_50_mixed_errors_across_functions() {
         functions: vec![fn1, fn2],
         entry_point: Some("fn1".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errors = lower_builtins(&mut m);
     assert_eq!(errors.len(), 2);
@@ -1269,6 +1289,8 @@ fn test_77_lower_heap_builtins_direct_call() {
         functions: vec![fn_],
         entry_point: Some("f".into()),
         language: "twig".into(),
+        exports: vec![],
+        imports: vec![],
     };
     lower_heap_builtins(&mut m);
     assert_eq!(m.functions[0].instructions[0].op, "field_load");

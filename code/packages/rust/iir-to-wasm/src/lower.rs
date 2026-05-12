@@ -1981,6 +1981,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some(name.into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -2043,6 +2045,8 @@ mod tests {
             functions: vec![],
             entry_point: None,
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
         assert!(matches!(result, Err(IIRWasmError::ValidationFailed(_))));

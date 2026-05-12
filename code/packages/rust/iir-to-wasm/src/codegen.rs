@@ -538,6 +538,8 @@ use crate::validate::validate_for_wasm;
 ///     functions: vec![fn_],
 ///     entry_point: Some("add".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 ///
 /// let gen = IIRWasmCodeGenerator::new("calc");
@@ -645,6 +647,8 @@ mod codegen_tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -683,6 +687,8 @@ mod codegen_tests {
             functions: vec![],
             entry_point: None,
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let errs = gen.validate(&empty);
         assert!(!errs.is_empty());
@@ -709,6 +715,8 @@ mod codegen_tests {
             functions: vec![fn_],
             entry_point: None,
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let errs = gen.validate(&module);
         assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));

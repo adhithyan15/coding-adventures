@@ -22,6 +22,8 @@
 //!     functions: vec![fn_],
 //!     entry_point: Some("main".into()),
 //!     language: "test".into(),
+//!     exports: vec![],
+//!     imports: vec![],
 //! };
 //!
 //! let gen = IIRBeamCodeGenerator::new("demo");
@@ -127,6 +129,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 

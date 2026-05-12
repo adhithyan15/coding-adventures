@@ -41,6 +41,8 @@ fn module_one(
         functions: vec![fn_],
         entry_point: Some(name.into()),
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     }
 }
 
@@ -62,6 +64,8 @@ fn module_multi(fns: Vec<(&str, Vec<(&str, &str)>, &str, Vec<IIRInstr>)>) -> IIR
         functions,
         entry_point: Some("main".into()),
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     }
 }
 
@@ -84,6 +88,8 @@ fn validate_empty_module_produces_error() {
         functions: vec![],
         entry_point: None,
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errs = validate_for_wasm(&m);
     assert!(!errs.is_empty(), "empty module must produce errors");
@@ -836,6 +842,8 @@ fn validation_failure_propagated() {
         functions: vec![],
         entry_point: None,
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
     assert!(

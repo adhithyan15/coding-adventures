@@ -143,6 +143,8 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///     functions: vec![fn_],
 ///     entry_point: Some("main".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 /// assert!(validate_for_beam(&module).is_empty());
 /// ```
@@ -308,6 +310,8 @@ mod tests {
             functions: vec![fn_],
             entry_point: Some("main".into()),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -318,6 +322,8 @@ mod tests {
             functions: vec![],
             entry_point: None,
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let errs = validate_for_beam(&module);
         assert!(!errs.is_empty(), "should reject empty module");

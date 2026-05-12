@@ -2070,6 +2070,8 @@ mod tests {
             functions: vec![main],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::UnsupportedOpcode(s) if s == "not_a_real_opcode"));
@@ -2097,6 +2099,8 @@ mod tests {
             functions: vec![main],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::FellOffEnd(s) if s == "main"));
@@ -2135,6 +2139,8 @@ mod tests {
             functions: vec![main],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::UnknownFunction(s) if s == "ghost"));
@@ -2463,6 +2469,8 @@ mod tests {
             functions: vec![main],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::NotCallable(_)));
@@ -2510,6 +2518,8 @@ mod tests {
             functions: vec![main],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let err = run(&module).unwrap_err();
         match err {
@@ -2602,6 +2612,8 @@ mod tests {
             functions: vec![main],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -3133,6 +3145,8 @@ mod tests {
             functions: vec![do_it, main],
             entry_point: Some("main".into()),
             language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
         };
 
         // First call.  load_property errors with NoSuchProperty

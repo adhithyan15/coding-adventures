@@ -41,6 +41,8 @@
 //!     functions: vec![fn_],
 //!     entry_point: Some("add".into()),
 //!     language: "test".into(),
+//!     exports: vec![],
+//!     imports: vec![],
 //! };
 //!
 //! // Show available backends.

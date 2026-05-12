@@ -22,6 +22,7 @@
 //! ```
 
 use crate::function::IIRFunction;
+use crate::module_exports::{IIRExport, IIRImport};
 
 /// Top-level container for an InterpreterIR program.
 #[derive(Debug, Clone)]
@@ -41,16 +42,32 @@ pub struct IIRModule {
     ///
     /// Used by tooling for display only; not interpreted by `vm-core`.
     pub language: String,
+
+    /// Functions this module makes visible to other modules (LANG33).
+    ///
+    /// Empty list = export nothing (a pure program, not a library).
+    /// Backends use this list to populate their export sections.
+    /// Backward compatible: existing modules with no exports work identically.
+    pub exports: Vec<IIRExport>,
+
+    /// Functions this module requires from other modules (LANG33).
+    ///
+    /// Resolved by `iir-linker::link` during static linking or by the backend
+    /// at module-load time for dynamic linking.
+    /// Backward compatible: existing modules with no imports work identically.
+    pub imports: Vec<IIRImport>,
 }
 
 impl IIRModule {
     /// Create a new, empty module.
     pub fn new(name: impl Into<String>, language: impl Into<String>) -> Self {
         IIRModule {
-            name: name.into(),
-            functions: Vec::new(),
+            name:        name.into(),
+            functions:   Vec::new(),
             entry_point: Some("main".to_string()),
-            language: language.into(),
+            language:    language.into(),
+            exports:     Vec::new(),
+            imports:     Vec::new(),
         }
     }
 
@@ -103,6 +120,11 @@ impl IIRModule {
     /// - No duplicate function names
     /// - Entry point function exists (if `entry_point` is set)
     /// - No instruction branches to an undefined label within its function
+    /// - Every export refers to a function that exists in this module (LANG33)
+    /// - No two exports have the same `public_name()` (LANG33)
+    ///
+    /// **Imports are not validated here** — import resolution requires peer
+    /// modules and is the linker's job (`iir-linker::verify_imports`).
     pub fn validate(&self) -> Vec<String> {
         let mut errors = Vec::new();
         let mut seen = std::collections::HashSet::new();
@@ -141,6 +163,29 @@ impl IIRModule {
                         }
                     }
                 }
+            }
+        }
+
+        // ── LANG33: export checks ────────────────────────────────────────────
+        let fn_names: std::collections::HashSet<&str> =
+            self.functions.iter().map(|f| f.name.as_str()).collect();
+
+        let mut public_names: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+
+        for export in &self.exports {
+            if !fn_names.contains(export.function_name.as_str()) {
+                errors.push(format!(
+                    "ExportNotFound: exported function {:?} not found in module {:?}",
+                    export.function_name, self.name
+                ));
+            }
+            let pn = export.public_name().to_string();
+            if !public_names.insert(pn.clone()) {
+                errors.push(format!(
+                    "DuplicateExport: public name {:?} is exported more than once in module {:?}",
+                    pn, self.name
+                ));
             }
         }
 

@@ -1,6 +1,6 @@
 [package]
 name = "interpreter-ir"
-version = "0.3.0"
+version = "0.5.0"
 edition = "2021"
 description = "InterpreterIR (IIR) — the bytecode for the LANG JIT/AOT pipeline"
 

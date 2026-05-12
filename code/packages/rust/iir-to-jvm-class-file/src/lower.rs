@@ -2306,6 +2306,8 @@ fn cond_and_label<'a>(
 ///     functions: vec![fn_],
 ///     entry_point: Some("add".into()),
 ///     language: "test".into(),
+///     exports: vec![],
+///     imports: vec![],
 /// };
 /// let cfg = IIRJvmConfig::new("MyClass");
 /// let class_file = lower_iir_to_jvm(&module, &cfg).unwrap();
@@ -2374,6 +2376,8 @@ mod tests {
             functions: vec![func],
             entry_point: Some(name),
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         }
     }
 
@@ -2454,6 +2458,8 @@ mod tests {
             functions: vec![],
             entry_point: None,
             language: "test".into(),
+            exports: vec![],
+            imports: vec![],
         };
         let result = lower_iir_to_jvm(&module, &make_cfg());
         assert!(matches!(result, Err(IIRJvmError::ValidationFailed(_))));

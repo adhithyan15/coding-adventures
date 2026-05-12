@@ -37,6 +37,8 @@ fn make_module_single(instrs: Vec<IIRInstr>) -> IIRModule {
         functions: vec![fn_],
         entry_point: Some("main".into()),
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     }
 }
 
@@ -58,6 +60,8 @@ fn make_module_fn(
         functions: vec![fn_],
         entry_point: Some(fn_name.into()),
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     }
 }
 
@@ -102,6 +106,8 @@ fn test_empty_module_rejected() {
         functions: vec![],
         entry_point: None,
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errs = validate_for_beam(&module);
     assert!(!errs.is_empty(), "should reject empty module");
@@ -1109,6 +1115,8 @@ fn test_call_function() {
         functions: vec![add_two, main_fn],
         entry_point: Some("main".into()),
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new("multi")).unwrap();
     assert!(has_opcode(&beam, OP_CALL), "expected call instruction");
@@ -1138,6 +1146,8 @@ fn test_multi_function_exports() {
         functions: vec![fn1, fn2],
         entry_point: Some("foo".into()),
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new("two_fn")).unwrap();
     assert_eq!(beam.exports.len(), 2, "expected 2 exports for 2 functions");
@@ -1353,6 +1363,8 @@ fn test_46_alloc_lispy_pair_accepted_by_validator() {
         functions: vec![fn_],
         entry_point: Some("main".into()),
         language: "test".into(),
+        exports: vec![],
+        imports: vec![],
     };
     let errs = validate_for_beam(&module);
     assert!(

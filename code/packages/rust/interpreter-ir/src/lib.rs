@@ -82,6 +82,7 @@
 pub mod function;
 pub mod instr;
 pub mod module;
+pub mod module_exports;
 pub mod opcodes;
 pub mod serialise;
 pub mod slot_state;
@@ -91,5 +92,6 @@ pub mod source_loc;
 pub use function::{FunctionTypeStatus, IIRFunction};
 pub use instr::{IIRInstr, Operand};
 pub use module::IIRModule;
+pub use module_exports::{IIRExport, IIRImport};
 pub use slot_state::{SlotKind, SlotState, MAX_POLYMORPHIC_OBSERVATIONS};
 pub use source_loc::SourceLoc;
