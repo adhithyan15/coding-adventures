@@ -41,6 +41,8 @@ job runtime:
   backend for tool status surfaces
 - `NativeJobRuntime::portability_backend_statuses` applies the runtime's active
   portability target to those backend rows
+- `NativeJobRuntime::backend_summary` reports selected backend, native/fallback
+  shape, and portability target without compiling an install plan
 
 ## Example
 

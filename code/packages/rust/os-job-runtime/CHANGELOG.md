@@ -18,5 +18,7 @@ All notable changes to this package will be documented in this file.
   D18E inspection tools
 - Backend-level portability status rows for D18E/tool surfaces that need one
   supported-or-blocked result per scheduler family
+- Runtime backend summaries for selected backend, native/fallback catalog shape,
+  and active portability target
 - Renamed the package to `os-job-runtime` to make the OS scheduling layer easier
   to discover
