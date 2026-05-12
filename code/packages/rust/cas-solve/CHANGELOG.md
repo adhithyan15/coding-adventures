@@ -4,6 +4,12 @@
 
 ### Added
 
+- `quartic` module: `solve_quartic(a, b, c, d, e) -> SolveResult` — solves
+  quartic equations via rational-root deflation, biquadratic solving, and a
+  bounded Ferrari fallback through the cubic solver.
+- Quartic integration tests for cubic delegation, exact rational roots, zero
+  root deduplication, biquadratic complex roots, Ferrari complex roots, and
+  unevaluated resolvent fallback.
 - `cubic` module: `solve_cubic(a, b, c, d) -> SolveResult` — solves cubic
   equations via rational-root deflation plus a focused Cardano symbolic
   fallback matching the Python reference's tested behavior.

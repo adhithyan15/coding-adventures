@@ -4,7 +4,7 @@
 // code/packages/python/cas-solve/tests/.
 
 use cas_solve::frac::Frac;
-use cas_solve::{solve_cubic, solve_linear, solve_quadratic, SolveResult};
+use cas_solve::{solve_cubic, solve_linear, solve_quadratic, solve_quartic, SolveResult};
 use symbolic_ir::{int, rat, IRNode};
 
 fn frac(n: i64, d: i64) -> Frac {
@@ -257,5 +257,87 @@ fn cubic_cardano_symbolic_one_real_two_complex() {
 fn cubic_casus_irreducibilis_returns_empty() {
     // x^3 - 3x + 1 has three real irrational roots in the Python reference.
     let r = solve_cubic(fi(1), fi(0), fi(-3), fi(1));
+    assert_eq!(r, SolveResult::Solutions(vec![]));
+}
+
+// ---------------------------------------------------------------------------
+// solve_quartic
+// ---------------------------------------------------------------------------
+
+#[test]
+fn quartic_zero_leading_falls_back_to_cubic() {
+    let r = solve_quartic(fi(0), fi(1), fi(-6), fi(11), fi(-6));
+    assert_eq!(r, SolveResult::Solutions(vec![int(1), int(2), int(3)]));
+}
+
+#[test]
+fn quartic_four_rational_roots() {
+    // x^4 - 10x^2 + 9 = (x^2 - 1)(x^2 - 9)
+    let r = solve_quartic(fi(1), fi(0), fi(-10), fi(0), fi(9));
+    match r {
+        SolveResult::Solutions(roots) => {
+            assert_eq!(roots.len(), 4);
+            assert!(roots.contains(&int(-3)));
+            assert!(roots.contains(&int(-1)));
+            assert!(roots.contains(&int(1)));
+            assert!(roots.contains(&int(3)));
+        }
+        SolveResult::All => panic!("expected Solutions"),
+    }
+}
+
+#[test]
+fn quartic_all_integer_roots_positive() {
+    // (x-1)(x-2)(x-3)(x-4)
+    let r = solve_quartic(fi(1), fi(-10), fi(35), fi(-50), fi(24));
+    match r {
+        SolveResult::Solutions(roots) => {
+            assert_eq!(roots.len(), 4);
+            assert!(roots.contains(&int(1)));
+            assert!(roots.contains(&int(2)));
+            assert!(roots.contains(&int(3)));
+            assert!(roots.contains(&int(4)));
+        }
+        SolveResult::All => panic!("expected Solutions"),
+    }
+}
+
+#[test]
+fn quartic_zero_root_is_deduplicated() {
+    let r = solve_quartic(fi(1), fi(-1), fi(0), fi(0), fi(0));
+    assert_eq!(r, SolveResult::Solutions(vec![int(0), int(1)]));
+}
+
+#[test]
+fn quartic_biquadratic_complex_roots() {
+    // x^4 + 4x^2 + 3 = (x^2 + 1)(x^2 + 3)
+    let r = solve_quartic(fi(1), fi(0), fi(4), fi(0), fi(3));
+    match r {
+        SolveResult::Solutions(roots) => {
+            assert_eq!(roots.len(), 4);
+            let text = format!("{roots:?}");
+            assert!(text.contains("Sqrt"), "expected Sqrt in {text}");
+        }
+        SolveResult::All => panic!("expected Solutions"),
+    }
+}
+
+#[test]
+fn quartic_ferrari_complex_roots() {
+    // Full Ferrari path with rational resolvent root m=2.
+    let r = solve_quartic(fi(1), fi(0), fi(1), fi(2), fi(6));
+    match r {
+        SolveResult::Solutions(roots) => {
+            assert_eq!(roots.len(), 4);
+            let text = format!("{roots:?}");
+            assert!(text.contains("%i"), "expected complex roots in {text}");
+        }
+        SolveResult::All => panic!("expected Solutions"),
+    }
+}
+
+#[test]
+fn quartic_no_usable_resolvent_root_returns_empty() {
+    let r = solve_quartic(fi(1), fi(0), fi(0), fi(1), fi(1));
     assert_eq!(r, SolveResult::Solutions(vec![]));
 }
