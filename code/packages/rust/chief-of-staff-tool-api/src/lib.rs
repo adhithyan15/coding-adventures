@@ -3632,6 +3632,109 @@ pub struct ToolExecutionTrace {
     pub result: ToolResult,
 }
 
+impl ToolExecutionTrace {
+    /// Produce a payload-free summary for read-side trace views.
+    pub fn summary(&self) -> ToolExecutionTraceSummary {
+        ToolExecutionTraceSummary::from_trace(self)
+    }
+}
+
+/// Payload-free summary for one [`ToolExecutionTrace`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolExecutionTraceSummary {
+    pub call_id: String,
+    pub tool_id: ToolId,
+    pub status: ToolCallStatus,
+    pub approval_state: ApprovalState,
+    pub event_count: usize,
+    pub terminal_event_count: usize,
+    pub progress_event_count: usize,
+    pub warning_event_count: usize,
+    pub artifact_event_count: usize,
+    pub memory_event_count: usize,
+    pub result_ok: bool,
+    pub result_has_output: bool,
+    pub result_has_error: bool,
+    pub artifact_ref_count: usize,
+    pub memory_ref_count: usize,
+    pub has_lock_scope: bool,
+    pub queued_ms: u64,
+    pub run_ms: u64,
+    pub validation_ms: u64,
+    pub approval_ms: Option<u64>,
+    pub terminal_event_matches_result: bool,
+}
+
+impl ToolExecutionTraceSummary {
+    /// Summarize one trace without exposing arguments, outputs, errors, or event
+    /// payloads.
+    pub fn from_trace(trace: &ToolExecutionTrace) -> Self {
+        let mut summary = Self {
+            call_id: trace.record.call_id.clone(),
+            tool_id: trace.record.tool_id.clone(),
+            status: trace.record.status,
+            approval_state: trace.record.approval_state,
+            event_count: trace.events.len(),
+            terminal_event_count: 0,
+            progress_event_count: 0,
+            warning_event_count: 0,
+            artifact_event_count: 0,
+            memory_event_count: 0,
+            result_ok: trace.result.ok,
+            result_has_output: trace.result.output.is_some(),
+            result_has_error: trace.result.error.is_some(),
+            artifact_ref_count: trace.result.artifact_refs.len(),
+            memory_ref_count: trace.result.memory_refs.len(),
+            has_lock_scope: trace.record.lock_scope.is_some(),
+            queued_ms: trace.record.metrics.queued_ms,
+            run_ms: trace.record.metrics.run_ms,
+            validation_ms: trace.record.metrics.validation_ms,
+            approval_ms: trace.record.metrics.approval_ms,
+            terminal_event_matches_result: trace
+                .events
+                .iter()
+                .rev()
+                .find(|event| event.kind.is_terminal())
+                .is_some_and(|event| event.terminal_matches_result(&trace.result)),
+        };
+
+        for event in &trace.events {
+            if event.kind.is_terminal() {
+                summary.terminal_event_count += 1;
+            }
+            match event.kind {
+                ToolEventKind::Progress => summary.progress_event_count += 1,
+                ToolEventKind::Warning => summary.warning_event_count += 1,
+                ToolEventKind::Artifact => summary.artifact_event_count += 1,
+                ToolEventKind::Memory => summary.memory_event_count += 1,
+                ToolEventKind::Started
+                | ToolEventKind::Output
+                | ToolEventKind::Completed
+                | ToolEventKind::Failed
+                | ToolEventKind::Cancelled => {}
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_terminal(&self) -> bool {
+        !self.status.is_active()
+    }
+
+    pub fn succeeded(&self) -> bool {
+        self.status == ToolCallStatus::Completed && self.result_ok
+    }
+
+    pub fn emitted_references(&self) -> bool {
+        self.artifact_ref_count > 0 || self.memory_ref_count > 0
+    }
+
+    pub fn requires_follow_up(&self) -> bool {
+        self.status.is_active() || self.result_has_error || !self.terminal_event_matches_result
+    }
+}
+
 /// Append-only read model for D18D tool execution history.
 ///
 /// The in-process runtime returns a [`ToolExecutionTrace`] for each invocation.
@@ -5459,10 +5562,42 @@ mod tests {
 
         let request = artifact_create_request();
         let trace = runtime.invoke_with_events(&request);
+        let trace_summary = trace.summary();
         let mut journal = ToolExecutionJournal::new();
 
         assert!(journal.is_empty());
         journal.record_trace(request.clone(), trace);
+
+        assert_eq!(
+            trace_summary,
+            ToolExecutionTraceSummary {
+                call_id: "call_1".to_string(),
+                tool_id: "artifact.create".to_string(),
+                status: ToolCallStatus::Completed,
+                approval_state: ApprovalState::NotRequired,
+                event_count: 3,
+                terminal_event_count: 1,
+                progress_event_count: 1,
+                warning_event_count: 0,
+                artifact_event_count: 0,
+                memory_event_count: 0,
+                result_ok: true,
+                result_has_output: true,
+                result_has_error: false,
+                artifact_ref_count: 1,
+                memory_ref_count: 0,
+                has_lock_scope: true,
+                queued_ms: 0,
+                run_ms: 0,
+                validation_ms: 0,
+                approval_ms: None,
+                terminal_event_matches_result: true,
+            }
+        );
+        assert!(trace_summary.is_terminal());
+        assert!(trace_summary.succeeded());
+        assert!(trace_summary.emitted_references());
+        assert!(!trace_summary.requires_follow_up());
 
         let summary = journal.summary();
         assert_eq!(summary.invocation_count, 1);

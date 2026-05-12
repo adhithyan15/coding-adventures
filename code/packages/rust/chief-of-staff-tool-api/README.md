@@ -29,6 +29,8 @@ The crate intentionally stops at the contract layer:
 - a deterministic in-memory runtime that validates, invokes handlers, emits
   ordered events, applies policy before handler execution, and returns canonical
   `ToolResult` records
+- payload-free execution trace summaries for read-side runtime health and
+  follow-up checks
 - an append-only execution journal that keeps invocation requests, call records,
   events, and terminal results queryable through the storage-neutral read-side
   helpers
