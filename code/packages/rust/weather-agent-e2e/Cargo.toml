@@ -1,0 +1,22 @@
+[package]
+name = "weather-agent-e2e"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end umbrella-today agent harness for Chief of Staff substrate"
+license = "MIT"
+
+[dependencies]
+actor = { path = "../actor" }
+artifact-store = { path = "../artifact-store" }
+capability-cage = { path = "../capability-cage" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+coding-adventures-json-value = { path = "../json-value" }
+context-store = { path = "../context-store" }
+generic-job-protocol = { path = "../generic-job-protocol" }
+generic-job-runtime = { path = "../generic-job-runtime" }
+memory-store = { path = "../memory-store" }
+os-job-core = { path = "../os-job-core" }
+os-job-runtime = { path = "../os-job-runtime" }
+read-write-separation = { path = "../read-write-separation" }
+skill-store = { path = "../skill-store" }
+storage-core = { path = "../storage-core" }
