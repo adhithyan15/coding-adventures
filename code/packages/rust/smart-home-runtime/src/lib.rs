@@ -17,6 +17,7 @@ use smart_home_core::{
 };
 use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
+    StateRefreshReason,
 };
 use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
@@ -1669,6 +1670,46 @@ pub struct RuntimeSupervisionPlan {
     pub worker_restart_plan: WorkerRestartPlan,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct RuntimeSupervisionPlanSummary {
+    pub generated_at_ms: u64,
+    pub total_actions: usize,
+    pub pairing_expiry_count: usize,
+    pub state_refresh_count: usize,
+    pub missing_state_refresh_count: usize,
+    pub stale_state_refresh_count: usize,
+    pub desired_state_drift_count: usize,
+    pub desired_missing_state_count: usize,
+    pub desired_stale_state_count: usize,
+    pub desired_drifted_state_count: usize,
+    pub worker_restart_count: usize,
+}
+
+impl RuntimeSupervisionPlanSummary {
+    pub fn empty_at(generated_at_ms: u64) -> Self {
+        Self {
+            generated_at_ms,
+            ..Self::default()
+        }
+    }
+
+    pub fn is_idle(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_state_refresh_work(&self) -> bool {
+        self.state_refresh_count > 0
+    }
+
+    pub fn has_reconciliation_work(&self) -> bool {
+        self.desired_state_drift_count > 0
+    }
+
+    pub fn has_worker_restart_work(&self) -> bool {
+        self.worker_restart_count > 0
+    }
+}
+
 impl RuntimeSupervisionPlan {
     pub fn is_empty(&self) -> bool {
         self.pairing_sessions_expiring.is_empty()
@@ -1682,6 +1723,35 @@ impl RuntimeSupervisionPlan {
             + self.state_refresh_plan.len()
             + self.desired_state_drifts.len()
             + self.worker_restart_plan.len()
+    }
+
+    pub fn summary(&self) -> RuntimeSupervisionPlanSummary {
+        let mut summary = RuntimeSupervisionPlanSummary {
+            generated_at_ms: self.generated_at_ms,
+            total_actions: self.action_count(),
+            pairing_expiry_count: self.pairing_sessions_expiring.len(),
+            state_refresh_count: self.state_refresh_plan.len(),
+            desired_state_drift_count: self.desired_state_drifts.len(),
+            worker_restart_count: self.worker_restart_plan.len(),
+            ..RuntimeSupervisionPlanSummary::default()
+        };
+
+        for target in &self.state_refresh_plan.targets {
+            match target.reason {
+                StateRefreshReason::Missing => summary.missing_state_refresh_count += 1,
+                StateRefreshReason::Stale => summary.stale_state_refresh_count += 1,
+            }
+        }
+
+        for drift in &self.desired_state_drifts {
+            match drift.reason {
+                ReconciliationReason::MissingState => summary.desired_missing_state_count += 1,
+                ReconciliationReason::StaleState => summary.desired_stale_state_count += 1,
+                ReconciliationReason::Drifted => summary.desired_drifted_state_count += 1,
+            }
+        }
+
+        summary
     }
 
     pub fn drifts_for_entity(&self, entity_id: &EntityId) -> Vec<&DesiredStateDriftPlan> {
@@ -1730,6 +1800,10 @@ impl RuntimeSupervisionObservation {
 
     pub fn next_worker_heartbeat_due_at_ms(&self) -> Option<u64> {
         self.heartbeat_schedule.next_due_at_ms()
+    }
+
+    pub fn plan_summary(&self) -> RuntimeSupervisionPlanSummary {
+        self.plan.summary()
     }
 }
 
@@ -4909,12 +4983,33 @@ mod tests {
             .unwrap();
 
         let plan = runtime.supervision_plan_at(1_125).unwrap();
+        let summary = plan.summary();
         let worker = runtime.supervisor().worker(&bridge_id).unwrap();
         let snapshot = runtime.registry().state(&entity_id).unwrap();
 
         assert_eq!(plan.generated_at_ms, 1_125);
         assert_eq!(plan.action_count(), 3);
         assert!(!plan.is_empty());
+        assert_eq!(
+            summary,
+            RuntimeSupervisionPlanSummary {
+                generated_at_ms: 1_125,
+                total_actions: 3,
+                pairing_expiry_count: 0,
+                state_refresh_count: 1,
+                missing_state_refresh_count: 0,
+                stale_state_refresh_count: 1,
+                desired_state_drift_count: 1,
+                desired_missing_state_count: 0,
+                desired_stale_state_count: 1,
+                desired_drifted_state_count: 0,
+                worker_restart_count: 1,
+            }
+        );
+        assert!(!summary.is_idle());
+        assert!(summary.has_state_refresh_work());
+        assert!(summary.has_reconciliation_work());
+        assert!(summary.has_worker_restart_work());
         assert!(matches!(
             plan.state_refresh_plan.targets.as_slice(),
             [target] if target.entity_id == entity_id
@@ -4975,6 +5070,22 @@ mod tests {
         assert_eq!(observation.worker_restart_count(), 1);
         assert_eq!(observation.due_worker_deadline_count(), 1);
         assert_eq!(observation.next_worker_heartbeat_due_at_ms(), Some(1_100));
+        assert_eq!(
+            observation.plan_summary(),
+            RuntimeSupervisionPlanSummary {
+                generated_at_ms: 1_125,
+                total_actions: 1,
+                pairing_expiry_count: 0,
+                state_refresh_count: 0,
+                missing_state_refresh_count: 0,
+                stale_state_refresh_count: 0,
+                desired_state_drift_count: 0,
+                desired_missing_state_count: 0,
+                desired_stale_state_count: 0,
+                desired_drifted_state_count: 0,
+                worker_restart_count: 1,
+            }
+        );
         assert_eq!(observation.heartbeat_schedule.len(), 2);
         assert!(!observation.is_idle());
         assert_eq!(worker.status, WorkerStatus::Starting);

@@ -56,6 +56,8 @@ Included surfaces:
   reconciliation, and worker restart checks together
 - non-mutating supervision plans that preview due refreshes, desired-state
   drift, pairing expiry, and worker restarts before a tick performs any writes
+- compact supervision plan summaries for read-side due-work counts without
+  walking every planned target
 - read-only supervision observations that combine due action counts with worker
   heartbeat schedules for Chief of Staff status tools
 - replay of device events into the registry-backed state cache
