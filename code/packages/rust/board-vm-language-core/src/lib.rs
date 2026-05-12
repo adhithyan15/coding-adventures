@@ -2603,7 +2603,10 @@ unsafe fn utf8_from_ptr<'a>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use board_vm_bluetooth::{BleGattEndpoint, BleGattIo, BluetoothOpenError, RfcommEndpoint};
+    use board_vm_bluetooth::{
+        BleGattEndpoint, BleGattIo, BluetoothOpenError, BluetoothTransportError, RfcommEndpoint,
+    };
+    use board_vm_loopback::{LoopbackBoard, LOOPBACK_BOARD_ID, LOOPBACK_RUNTIME_ID};
     use board_vm_protocol::{
         decode_program_begin, decode_program_chunk, decode_program_end, decode_run_request,
         encode_caps_report, encode_frame, encode_hello_ack, encode_value, encode_wire_frame,
@@ -2611,7 +2614,9 @@ mod tests {
         RunStatus, Value, FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1,
         RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_KEEP_HANDLES_AFTER_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
+    use std::cell::RefCell;
     use std::io::{Read, Write};
+    use std::rc::Rc;
 
     #[test]
     fn hello_wire_frame_matches_protocol_golden_vector() {
@@ -2958,6 +2963,270 @@ mod tests {
 
         assert_eq!(&out[..len], &wire_response[..wire_response_len]);
         assert_eq!(backend.opened_device.as_deref(), Some("uno-r4-wifi"));
+    }
+
+    #[test]
+    fn bluetooth_wire_smoke_sequence_runs_through_language_core_backend() {
+        type SharedLoopbackBoard = Rc<RefCell<LoopbackBoard<512, 8, 8>>>;
+
+        struct LoopbackBleLink {
+            board: SharedLoopbackBoard,
+            response: Vec<u8>,
+            raw_request: [u8; 1024],
+            board_payload: [u8; 1024],
+            board_frame: [u8; 1024],
+        }
+
+        impl LoopbackBleLink {
+            fn new(board: SharedLoopbackBoard) -> Self {
+                Self {
+                    board,
+                    response: Vec::new(),
+                    raw_request: [0; 1024],
+                    board_payload: [0; 1024],
+                    board_frame: [0; 1024],
+                }
+            }
+        }
+
+        impl BleGattIo for LoopbackBleLink {
+            fn write_characteristic(
+                &mut self,
+                _characteristic_uuid: &str,
+                bytes: &[u8],
+            ) -> Result<(), BluetoothTransportError> {
+                let raw_len = board_vm_protocol::decode_wire_frame(bytes, &mut self.raw_request)
+                    .map_err(BluetoothTransportError::Protocol)?;
+                let frame_len = self
+                    .board
+                    .borrow_mut()
+                    .handle_raw_frame(
+                        &self.raw_request[..raw_len],
+                        &mut self.board_payload,
+                        &mut self.board_frame,
+                    )
+                    .map_err(|_| BluetoothTransportError::Link)?;
+                self.response.resize(1024, 0);
+                let response_len =
+                    encode_wire_frame(&self.board_frame[..frame_len], &mut self.response)
+                        .map_err(BluetoothTransportError::Protocol)?;
+                self.response.truncate(response_len);
+                Ok(())
+            }
+
+            fn read_notification(
+                &mut self,
+                _characteristic_uuid: &str,
+                out: &mut [u8],
+            ) -> Result<usize, BluetoothTransportError> {
+                if out.len() < self.response.len() {
+                    return Err(BluetoothTransportError::FrameTooLarge);
+                }
+                let len = self.response.len();
+                out[..len].copy_from_slice(&self.response);
+                Ok(len)
+            }
+        }
+
+        struct LoopbackRfcommStream;
+
+        impl Read for LoopbackRfcommStream {
+            fn read(&mut self, _buf: &mut [u8]) -> std::io::Result<usize> {
+                Ok(0)
+            }
+        }
+
+        impl Write for LoopbackRfcommStream {
+            fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+                Ok(buf.len())
+            }
+
+            fn flush(&mut self) -> std::io::Result<()> {
+                Ok(())
+            }
+        }
+
+        struct LoopbackBackend {
+            board: SharedLoopbackBoard,
+            opened_devices: Vec<String>,
+        }
+
+        impl BluetoothBackend for LoopbackBackend {
+            type BleGattLink = LoopbackBleLink;
+            type RfcommStream = LoopbackRfcommStream;
+
+            fn open_ble_gatt(
+                &mut self,
+                endpoint: &BleGattEndpoint,
+            ) -> Result<Self::BleGattLink, BluetoothOpenError> {
+                self.opened_devices.push(endpoint.device.clone());
+                Ok(LoopbackBleLink::new(Rc::clone(&self.board)))
+            }
+
+            fn open_rfcomm(
+                &mut self,
+                _endpoint: &RfcommEndpoint,
+            ) -> Result<Self::RfcommStream, BluetoothOpenError> {
+                Err(BluetoothOpenError::UnsupportedPlatform { platform: "test" })
+            }
+        }
+
+        let endpoint =
+            parse_board_vm_bluetooth_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a").unwrap();
+        let mut backend = LoopbackBackend {
+            board: Rc::new(RefCell::new(LoopbackBoard::new())),
+            opened_devices: Vec::new(),
+        };
+        let mut session = BoardVmLanguageSession::new();
+        let mut wire = [0u8; 1024];
+        let mut response_wire = [0u8; 1024];
+        let mut decoded_raw = [0u8; 1024];
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let module_len = build_blink_module(
+            BlinkProgram {
+                pin: 13,
+                high_ms: 250,
+                low_ms: 250,
+                max_stack: 4,
+            },
+            &mut module,
+        )
+        .unwrap();
+
+        let mut exchange = |backend: &mut LoopbackBackend,
+                            frame_wire: &[u8],
+                            request_id: u16,
+                            expected: MessageType|
+         -> DecodedLanguageResponse {
+            let len = bluetooth_transact_wire_frame_with_backend::<_, 1024>(
+                backend,
+                endpoint.clone(),
+                frame_wire,
+                &mut response_wire,
+            )
+            .unwrap();
+            let decoded = decode_wire_response(&response_wire[..len], &mut decoded_raw).unwrap();
+            assert_eq!(decoded.request_id, request_id);
+            assert_eq!(decoded.message_type, expected);
+            assert!(decoded.is_response());
+            decoded
+        };
+
+        let hello =
+            build_hello_wire_frame(&mut session, "language-smoke", 0xABCD_1234, &mut wire).unwrap();
+        match exchange(
+            &mut backend,
+            &wire[..hello.len],
+            hello.request_id,
+            MessageType::HELLO_ACK,
+        )
+        .body
+        {
+            DecodedLanguageResponseBody::HelloAck(ack) => {
+                assert_eq!(ack.board_name, LOOPBACK_BOARD_ID);
+                assert_eq!(ack.runtime_name, LOOPBACK_RUNTIME_ID);
+                assert_eq!(ack.host_nonce, 0xABCD_1234);
+            }
+            other => panic!("unexpected hello response body: {other:?}"),
+        }
+
+        let caps = build_caps_query_wire_frame(&mut session, &mut wire).unwrap();
+        match exchange(
+            &mut backend,
+            &wire[..caps.len],
+            caps.request_id,
+            MessageType::CAPS_REPORT,
+        )
+        .body
+        {
+            DecodedLanguageResponseBody::CapsReport(report) => {
+                assert_eq!(report.board_id, LOOPBACK_BOARD_ID);
+                assert_eq!(report.runtime_id, LOOPBACK_RUNTIME_ID);
+                assert_eq!(report.max_program_bytes, 512);
+                assert!(report
+                    .capabilities
+                    .iter()
+                    .any(|capability| capability.name == "program.ram_exec"));
+            }
+            other => panic!("unexpected caps response body: {other:?}"),
+        }
+
+        let begin =
+            build_program_begin_wire_frame(&mut session, 9, &module[..module_len], &mut wire)
+                .unwrap();
+        match exchange(
+            &mut backend,
+            &wire[..begin.len],
+            begin.request_id,
+            MessageType::PROGRAM_BEGIN,
+        )
+        .body
+        {
+            DecodedLanguageResponseBody::ProgramBegin(begin) => {
+                assert_eq!(begin.program_id, 9);
+                assert_eq!(begin.total_len, module_len as u32);
+            }
+            other => panic!("unexpected program begin response body: {other:?}"),
+        }
+
+        let chunk =
+            build_program_chunk_wire_frame(&mut session, 9, 0, &module[..module_len], &mut wire)
+                .unwrap();
+        match exchange(
+            &mut backend,
+            &wire[..chunk.len],
+            chunk.request_id,
+            MessageType::PROGRAM_CHUNK,
+        )
+        .body
+        {
+            DecodedLanguageResponseBody::ProgramChunk(chunk) => {
+                assert_eq!(chunk.program_id, 9);
+                assert_eq!(chunk.offset, 0);
+                assert_eq!(chunk.len, module_len);
+            }
+            other => panic!("unexpected program chunk response body: {other:?}"),
+        }
+
+        let end = build_program_end_wire_frame(&mut session, 9, &mut wire).unwrap();
+        match exchange(
+            &mut backend,
+            &wire[..end.len],
+            end.request_id,
+            MessageType::PROGRAM_END,
+        )
+        .body
+        {
+            DecodedLanguageResponseBody::ProgramEnd(end) => {
+                assert_eq!(end.program_id, 9);
+            }
+            other => panic!("unexpected program end response body: {other:?}"),
+        }
+
+        let run = build_run_background_wire_frame(&mut session, 9, 200, &mut wire).unwrap();
+        match exchange(
+            &mut backend,
+            &wire[..run.len],
+            run.request_id,
+            MessageType::RUN_REPORT,
+        )
+        .body
+        {
+            DecodedLanguageResponseBody::RunReport(report) => {
+                assert_eq!(report.program_id, 9);
+                assert_eq!(report.status, RunStatus::Running);
+                assert!(report.instructions_executed > 0);
+                assert_eq!(report.open_handles, 1);
+                assert!(report.returns.is_empty());
+            }
+            other => panic!("unexpected run response body: {other:?}"),
+        }
+
+        assert_eq!(backend.opened_devices.len(), 6);
+        assert!(backend
+            .opened_devices
+            .iter()
+            .all(|device| device == "uno-r4-wifi"));
     }
 
     #[test]

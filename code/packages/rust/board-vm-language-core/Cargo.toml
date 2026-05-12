@@ -16,3 +16,6 @@ board-vm-esp-rom = { path = "../board-vm-esp-rom" }
 board-vm-host = { path = "../board-vm-host" }
 board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-targets = { path = "../board-vm-targets" }
+
+[dev-dependencies]
+board-vm-loopback = { path = "../board-vm-loopback" }
