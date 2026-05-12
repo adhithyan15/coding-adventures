@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `trySolveTranscendental` for direct Phase 26-style transcendental
+  equations `f(linear) = constant` across trig, exp/log, and hyperbolic heads.
 - Add `trySolveInequality` for Phase 27-style polynomial inequality solving
   over rational univariate polynomials up to degree 4.
 - Add `solveLinearSystem` with exact Gaussian elimination, `Equal(lhs, rhs)`

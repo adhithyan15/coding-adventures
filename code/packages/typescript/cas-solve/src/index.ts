@@ -1,18 +1,32 @@
 import {
   ADD,
   AND,
+  ACOS,
+  ACOSH,
+  ASIN,
+  ASINH,
+  ATAN,
+  ATANH,
+  COS,
+  COSH,
   DIV,
   EQUAL,
+  EXP,
   GREATER,
   GREATER_EQUAL,
   LESS,
   LESS_EQUAL,
+  LOG,
   MUL,
   NEG,
   POW,
   RULE,
+  SIN,
+  SINH,
   SQRT,
   SUB,
+  TAN,
+  TANH,
   app,
   equals,
   int,
@@ -28,6 +42,7 @@ export const NSOLVE = "NSolve";
 export const ROOTS = "Roots";
 export const I_UNIT = "%i";
 export const CBRT = "Cbrt";
+export const FREE_INTEGER = "FreeInteger";
 const MAX_INEQUALITY_DEGREE = 4;
 const REAL_ROOT_TOL = 1e-8;
 
@@ -336,6 +351,13 @@ export function trySolveInequality(ineq: IRNode, variable: IRSymbol): readonly I
   return solvePolynomialSign(coeffs, variable, wantPositive, strict);
 }
 
+export function trySolveTranscendental(eq: IRNode, variable: IRSymbol): readonly IRNode[] | null {
+  const split = splitEqual(eq);
+  if (split === null) return tryFuncEqConst(eq, int(0), variable);
+  return tryFuncEqConst(split[0], split[1], variable)
+    ?? tryFuncEqConst(split[1], split[0], variable);
+}
+
 export function nsolvePoly(
   coeffs: readonly (number | Complex)[],
   maxIter = 200,
@@ -579,6 +601,74 @@ function initialRadius(poly: readonly Complex[]): number {
   const constant = complexAbs(poly[degree]);
   const lagrange = constant > 1e-300 ? constant ** (1 / degree) : 1;
   return Math.max(Math.min(cauchy, 10), lagrange, 0.5);
+}
+
+function tryFuncEqConst(funcSide: IRNode, constSide: IRNode, variable: IRSymbol): readonly IRNode[] | null {
+  if (!isConstWrt(constSide, variable)) return null;
+  if (funcSide.kind !== "apply" || funcSide.head.kind !== "symbol" || funcSide.args.length !== 1) {
+    return null;
+  }
+
+  const linear = extractLinear(funcSide.args[0], variable);
+  if (linear === null) return null;
+  const [a, b] = linear;
+  const twoPiK = app(MUL, [int(2), app(MUL, [sym("%pi"), sym(FREE_INTEGER)])]);
+  const head = funcSide.head.name;
+
+  if (head === SIN.name) {
+    const asinC = app(ASIN, [constSide]);
+    return [
+      solveLinearForValue(a, b, app(ADD, [asinC, twoPiK])),
+      solveLinearForValue(a, b, app(ADD, [app(SUB, [sym("%pi"), asinC]), twoPiK])),
+    ];
+  }
+
+  if (head === COS.name) {
+    const acosC = app(ACOS, [constSide]);
+    return [
+      solveLinearForValue(a, b, app(ADD, [acosC, twoPiK])),
+      solveLinearForValue(a, b, app(ADD, [app(NEG, [acosC]), twoPiK])),
+    ];
+  }
+
+  if (head === TAN.name) {
+    return [solveLinearForValue(a, b, app(ADD, [app(ATAN, [constSide]), app(MUL, [sym("%pi"), sym(FREE_INTEGER)])]))];
+  }
+
+  if (head === EXP.name) return [solveLinearForValue(a, b, app(LOG, [constSide]))];
+  if (head === LOG.name) return [solveLinearForValue(a, b, app(EXP, [constSide]))];
+  if (head === SINH.name) return [solveLinearForValue(a, b, app(ASINH, [constSide]))];
+  if (head === COSH.name) {
+    const acoshC = app(ACOSH, [constSide]);
+    return [
+      solveLinearForValue(a, b, acoshC),
+      solveLinearForValue(a, b, app(NEG, [acoshC])),
+    ];
+  }
+  if (head === TANH.name) return [solveLinearForValue(a, b, app(ATANH, [constSide]))];
+
+  return null;
+}
+
+function splitEqual(node: IRNode): readonly [IRNode, IRNode] | null {
+  return isApplyHead(node, EQUAL.name) && node.args.length === 2 ? [node.args[0], node.args[1]] : null;
+}
+
+function extractLinear(node: IRNode, variable: IRSymbol): readonly [Frac, Frac] | null {
+  const coeffs = extractPolynomial(node, variable.name, 1);
+  if (coeffs === null || coeffs.length !== 2 || coeffs[1].isZero()) return null;
+  return [coeffs[1], coeffs[0]];
+}
+
+function solveLinearForValue(a: Frac, b: Frac, value: IRNode): IRNode {
+  const shifted = b.isZero() ? value : app(SUB, [value, b.toIrNode()]);
+  return a.equals(Frac.one()) ? shifted : app(DIV, [shifted, a.toIrNode()]);
+}
+
+function isConstWrt(node: IRNode, variable: IRSymbol): boolean {
+  if (node.kind === "symbol") return node.name !== variable.name;
+  return node.kind !== "apply"
+    || (isConstWrt(node.head, variable) && node.args.every((arg) => isConstWrt(arg, variable)));
 }
 
 function equationToRow(
