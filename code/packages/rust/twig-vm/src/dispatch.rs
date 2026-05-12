@@ -1429,16 +1429,20 @@ fn exec_apply_closure(
     }
 
     let result = if is_builtin {
-        // Defense-in-depth: a well-formed `make_builtin_closure`
-        // produces no captures, but we explicitly assert this so a
-        // malformed Closure (`flags = CLOSURE_FLAG_BUILTIN` AND
-        // non-empty captures via `Closure` field-level access) can't
-        // silently drop captures.  Found by PR 5 security review (#2).
-        debug_assert!(
-            captures.is_empty(),
-            "builtin closure must have no captures (got {})",
-            captures.len(),
-        );
+        // Hard runtime guard: a well-formed builtin closure must have zero
+        // captures.  `make_builtin_closure` / `alloc_builtin_closure` never
+        // attach captures.  A malformed closure with CLOSURE_FLAG_BUILTIN AND
+        // non-empty captures would silently drop those captures if we only used
+        // debug_assert! (which is a no-op in --release).  Replacing it with a
+        // hard error means release builds are equally protected, matching the
+        // same guard in exec_call_closure.  Originally found by PR 5 review;
+        // upgraded to hard error in LANG34 security review.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "apply_closure: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
         // Builtin closure: dispatch via resolve_builtin.
         let name_str = name_of(fn_name_id).ok_or_else(|| {
             RunError::MalformedInstruction(format!(
@@ -1549,6 +1553,20 @@ fn exec_alloc_closure(
         ))));
     }
 
+    // DoS guard — mirrors the cap added for exec_send.
+    //
+    // `instr.srcs.len()` is controlled by the IIR module, which could be
+    // hand-crafted with millions of operands.  Without a cap the
+    // Vec::with_capacity call below would attempt a huge heap allocation
+    // before the budget or depth check fires.  Well-formed Twig programs
+    // never come close to MAX_REGISTERS_PER_FRAME captures.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
     // Collect captured values from srcs[1..].
     let frame_ref = &*frame;
     let mut captures: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
@@ -1594,6 +1612,19 @@ fn exec_call_closure(
         return Err(RunError::MalformedInstruction(
             "call_closure requires at least 1 src (closure handle)".into()
         ));
+    }
+
+    // DoS guard — mirrors the cap added for exec_send.
+    //
+    // A hand-crafted IIR module can embed a call_closure instruction with
+    // millions of srcs; Vec::with_capacity below would OOM before the budget
+    // or depth guard fires.  One budget tick per instruction means a single
+    // malformed call_closure consumes only 1 tick, not proportional to srcs.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
     }
 
     // srcs[0] is the closure handle variable.
