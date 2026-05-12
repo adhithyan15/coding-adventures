@@ -1,5 +1,15 @@
 # Changelog — cas-pretty-printer (Rust)
 
+## Unreleased
+
+### Added
+
+- `pretty_2d(node, dialect) -> String` with a Rust port of the Python 2D box
+  layout engine for atoms, negation, fractions, powers, square roots, infix
+  arithmetic, lists, and linear fallback.
+- Public box-layout primitives: `LayoutBox`, `atom`, `hbox`, `vbox`, and
+  `Align`.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

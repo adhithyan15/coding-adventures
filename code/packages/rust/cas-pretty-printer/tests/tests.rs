@@ -4,12 +4,12 @@
 // code/packages/python/cas-pretty-printer/tests/.
 
 use cas_pretty_printer::{
-    format_lisp, pretty, register_head_formatter, unregister_head_formatter, MacsymaDialect,
-    MapleDialect, MathematicaDialect,
+    atom, format_lisp, hbox, pretty, pretty_2d, register_head_formatter, unregister_head_formatter,
+    vbox, Align, LayoutBox, MacsymaDialect, MapleDialect, MathematicaDialect,
 };
 use symbolic_ir::{
     apply, flt, int, rat, str_node, sym, IRNode, ADD, AND, COS, D, DIV, EQUAL, GREATER, INV, LESS,
-    LIST, MUL, NEG, NOT_EQUAL, OR, POW, SIN, SUB,
+    LIST, MUL, NEG, NOT_EQUAL, OR, POW, SIN, SQRT, SUB,
 };
 
 // Shorthand helpers used throughout.
@@ -625,4 +625,108 @@ fn custom_dialect_by_overriding_binary_ops() {
 
     let expr = apply(sym(ADD), vec![sym("a"), sym("b")]);
     assert_eq!(pretty(&expr, &VerboseDialect), "a plus b");
+}
+
+// ---------------------------------------------------------------------------
+// 2D box layout
+// ---------------------------------------------------------------------------
+
+#[test]
+fn box_atom_geometry() {
+    let b = atom("xy");
+    assert_eq!(b.width(), 2);
+    assert_eq!(b.height(), 1);
+    assert_eq!(b.baseline, 0);
+    assert_eq!(b.render(), "xy");
+}
+
+#[test]
+fn box_pad_width_alignment() {
+    assert_eq!(atom("x").pad_width(5, Align::Center).lines[0], "  x  ");
+    assert_eq!(atom("x").pad_width(4, Align::Left).lines[0], "x   ");
+    assert_eq!(atom("x").pad_width(4, Align::Right).lines[0], "   x");
+}
+
+#[test]
+fn hbox_aligns_baselines() {
+    let tall = LayoutBox::new(
+        vec![" n ".to_string(), "───".to_string(), " d ".to_string()],
+        1,
+    );
+    let b = hbox(&[atom("x"), atom(" + "), tall], "");
+    assert_eq!(b.baseline, 1);
+    assert_eq!(b.render(), "     n \nx + ───\n     d ");
+}
+
+#[test]
+fn vbox_centers_rows() {
+    let b = vbox(&[atom("wide"), atom("x")]);
+    assert_eq!(b.width(), 4);
+    assert_eq!(b.height(), 2);
+    assert_eq!(b.lines[1], " x  ");
+}
+
+#[test]
+fn pretty_2d_division_fraction_rows_and_bar() {
+    let expr = apply(sym(DIV), vec![int(1), int(2)]);
+    assert_eq!(pretty_2d(&expr, &MacsymaDialect), " 1 \n───\n 2 ");
+}
+
+#[test]
+fn pretty_2d_power_places_exponent_above_base() {
+    let expr = apply(sym(POW), vec![sym("x"), int(2)]);
+    assert_eq!(pretty_2d(&expr, &MacsymaDialect), " 2\nx ");
+}
+
+#[test]
+fn pretty_2d_sqrt_has_radical_and_overline() {
+    let expr = apply(sym(SQRT), vec![sym("x")]);
+    assert_eq!(pretty_2d(&expr, &MacsymaDialect), "  ┌───┐\n√ │ x │");
+}
+
+#[test]
+fn pretty_2d_nested_fraction_expands_height() {
+    let inner = apply(sym(DIV), vec![sym("y"), int(2)]);
+    let expr = apply(sym(DIV), vec![sym("x"), inner]);
+    assert_eq!(
+        pretty_2d(&expr, &MacsymaDialect),
+        "  x  \n─────\n  y  \n ─── \n  2  "
+    );
+}
+
+#[test]
+fn pretty_2d_infix_and_lists_use_box_layout() {
+    let frac = apply(sym(DIV), vec![int(1), int(2)]);
+    let expr = apply(
+        sym(LIST),
+        vec![
+            apply(sym(ADD), vec![sym("x"), frac]),
+            apply(sym(MUL), vec![sym("y"), int(3)]),
+        ],
+    );
+    assert_eq!(
+        pretty_2d(&expr, &MacsymaDialect),
+        "      1       \n[x + ───, y*3]\n      2       "
+    );
+}
+
+#[test]
+fn pretty_2d_neg_and_sub_match_rust_sugar() {
+    let expr = apply(sym(ADD), vec![sym("x"), apply(sym(NEG), vec![sym("y")])]);
+    assert_eq!(pretty_2d(&expr, &MacsymaDialect), "x - y");
+}
+
+#[test]
+fn pretty_2d_falls_back_to_linear_call() {
+    let expr = apply(
+        sym("MNewton"),
+        vec![apply(sym(SUB), vec![sym("x"), int(2)]), sym("x")],
+    );
+    assert_eq!(pretty_2d(&expr, &MacsymaDialect), "MNewton(x - 2, x)");
+}
+
+#[test]
+fn pretty_2d_leaves_linear_pretty_unchanged() {
+    let expr = apply(sym(DIV), vec![int(1), int(2)]);
+    assert_eq!(pretty(&expr, &MacsymaDialect), "1/2");
 }

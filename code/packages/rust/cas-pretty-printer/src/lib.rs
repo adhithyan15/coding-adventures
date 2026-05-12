@@ -17,6 +17,16 @@
 //! assert_eq!(pretty(&expr, &MacsymaDialect), "x^2 + 1");
 //! ```
 //!
+//! Use [`pretty_2d`] for multi-line box layout:
+//!
+//! ```rust
+//! use cas_pretty_printer::{pretty_2d, MacsymaDialect};
+//! use symbolic_ir::{apply, int, sym, DIV};
+//!
+//! let expr = apply(sym(DIV), vec![int(1), int(2)]);
+//! assert_eq!(pretty_2d(&expr, &MacsymaDialect), " 1 \n───\n 2 ");
+//! ```
+//!
 //! For the always-prefix Lisp form, use [`format_lisp`] (which bypasses the
 //! walker entirely and ignores any registered head formatters):
 //!
@@ -65,6 +75,7 @@
 //! symbolic-ir  ←  cas-pretty-printer
 //! ```
 
+pub mod box_layout;
 pub mod dialect;
 pub mod lisp;
 pub mod macsyma;
@@ -73,6 +84,7 @@ pub mod mathematica;
 pub mod walker;
 
 // Re-export the public surface API.
+pub use box_layout::{atom, hbox, pretty_2d, vbox, Align, Box as LayoutBox};
 pub use dialect::{
     Dialect, PREC_ADD, PREC_AND, PREC_ATOM, PREC_CALL, PREC_CMP, PREC_MUL, PREC_NEG, PREC_NOT,
     PREC_OR, PREC_POW,
