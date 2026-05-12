@@ -247,6 +247,175 @@ impl RegistryProtocolSourceSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct RegistryTopologySummary {
+    pub bridges: usize,
+    pub devices: usize,
+    pub entities: usize,
+    pub scenes: usize,
+    pub lan_http_bridges: usize,
+    pub mdns_bridges: usize,
+    pub serial_bridges: usize,
+    pub ble_bridges: usize,
+    pub cloud_bridges: usize,
+    pub local_process_bridges: usize,
+    pub online_bridges: usize,
+    pub pairing_candidate_bridges: usize,
+    pub attention_bridges: usize,
+    pub online_devices: usize,
+    pub pairing_candidate_devices: usize,
+    pub attention_devices: usize,
+    pub devices_with_entities: usize,
+    pub devices_without_entities: usize,
+    pub devices_with_room: usize,
+    pub devices_without_room: usize,
+    pub unique_rooms: usize,
+    pub light_entities: usize,
+    pub light_group_entities: usize,
+    pub switch_entities: usize,
+    pub sensor_entities: usize,
+    pub lock_entities: usize,
+    pub thermostat_entities: usize,
+    pub scene_entities: usize,
+    pub input_entities: usize,
+    pub bridge_health_entities: usize,
+    pub network_diagnostic_entities: usize,
+    pub unknown_entities: usize,
+    pub entities_with_state: usize,
+    pub entities_without_state: usize,
+    pub total_capabilities: usize,
+    pub room_scenes: usize,
+    pub zone_scenes: usize,
+    pub home_scenes: usize,
+    pub bridge_scenes: usize,
+    pub custom_scenes: usize,
+    pub scene_actions: usize,
+}
+
+impl RegistryTopologySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn has_topology(&self) -> bool {
+        self.bridges > 0 || self.devices > 0 || self.entities > 0 || self.scenes > 0
+    }
+
+    pub fn has_pairing_candidates(&self) -> bool {
+        self.pairing_candidate_bridges > 0 || self.pairing_candidate_devices > 0
+    }
+
+    pub fn has_attention_items(&self) -> bool {
+        self.attention_bridges > 0 || self.attention_devices > 0
+    }
+
+    pub fn has_devices_without_entities(&self) -> bool {
+        self.devices_without_entities > 0
+    }
+
+    pub fn has_state_gaps(&self) -> bool {
+        self.entities_without_state > 0
+    }
+
+    pub fn has_scene_actions(&self) -> bool {
+        self.scene_actions > 0
+    }
+
+    pub fn has_multi_transport_bridges(&self) -> bool {
+        [
+            self.lan_http_bridges,
+            self.mdns_bridges,
+            self.serial_bridges,
+            self.ble_bridges,
+            self.cloud_bridges,
+            self.local_process_bridges,
+        ]
+        .into_iter()
+        .filter(|count| *count > 0)
+        .count()
+            > 1
+    }
+
+    fn add_bridge(&mut self, bridge: &Bridge) {
+        self.bridges += 1;
+        match bridge.transport {
+            BridgeTransport::LanHttp => self.lan_http_bridges += 1,
+            BridgeTransport::Mdns => self.mdns_bridges += 1,
+            BridgeTransport::Serial => self.serial_bridges += 1,
+            BridgeTransport::Ble => self.ble_bridges += 1,
+            BridgeTransport::Cloud => self.cloud_bridges += 1,
+            BridgeTransport::LocalProcess => self.local_process_bridges += 1,
+        }
+        if bridge.health == Health::Online {
+            self.online_bridges += 1;
+        }
+        if health_is_pairing_candidate(bridge.health) {
+            self.pairing_candidate_bridges += 1;
+        }
+        if health_needs_attention(bridge.health) {
+            self.attention_bridges += 1;
+        }
+    }
+
+    fn add_device(&mut self, device: &Device) {
+        self.devices += 1;
+        if device.health == Health::Online {
+            self.online_devices += 1;
+        }
+        if health_is_pairing_candidate(device.health) {
+            self.pairing_candidate_devices += 1;
+        }
+        if health_needs_attention(device.health) {
+            self.attention_devices += 1;
+        }
+        if device.entity_ids.is_empty() {
+            self.devices_without_entities += 1;
+        } else {
+            self.devices_with_entities += 1;
+        }
+        if device.room_id.is_some() {
+            self.devices_with_room += 1;
+        } else {
+            self.devices_without_room += 1;
+        }
+    }
+
+    fn add_entity(&mut self, entity: &Entity, state: Option<&StateSnapshot>) {
+        self.entities += 1;
+        match entity.kind {
+            EntityKind::Light => self.light_entities += 1,
+            EntityKind::LightGroup => self.light_group_entities += 1,
+            EntityKind::Switch => self.switch_entities += 1,
+            EntityKind::Sensor => self.sensor_entities += 1,
+            EntityKind::Lock => self.lock_entities += 1,
+            EntityKind::Thermostat => self.thermostat_entities += 1,
+            EntityKind::Scene => self.scene_entities += 1,
+            EntityKind::Input => self.input_entities += 1,
+            EntityKind::BridgeHealth => self.bridge_health_entities += 1,
+            EntityKind::NetworkDiagnostic => self.network_diagnostic_entities += 1,
+            EntityKind::Unknown => self.unknown_entities += 1,
+        }
+        if state.is_some() {
+            self.entities_with_state += 1;
+        } else {
+            self.entities_without_state += 1;
+        }
+        self.total_capabilities += entity.capabilities.len();
+    }
+
+    fn add_scene(&mut self, scene: &Scene) {
+        self.scenes += 1;
+        match scene.scope {
+            SceneScope::Room => self.room_scenes += 1,
+            SceneScope::Zone => self.zone_scenes += 1,
+            SceneScope::Home => self.home_scenes += 1,
+            SceneScope::Bridge => self.bridge_scenes += 1,
+            SceneScope::Custom => self.custom_scenes += 1,
+        }
+        self.scene_actions += scene.actions.len();
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeSummary {
     pub bridge_id: BridgeId,
@@ -591,6 +760,10 @@ impl<'a> SmartHomeRegistryReadView<'a> {
 
     pub fn protocol_source_summary(&self) -> RegistryProtocolSourceSummary {
         self.registry.protocol_source_summary()
+    }
+
+    pub fn topology_summary(&self) -> RegistryTopologySummary {
+        self.registry.topology_summary()
     }
 
     pub fn bridge(&self, bridge_id: &BridgeId) -> Option<&'a Bridge> {
@@ -1075,6 +1248,33 @@ impl InMemorySmartHomeRegistry {
             }
         }
 
+        summary
+    }
+
+    pub fn topology_summary(&self) -> RegistryTopologySummary {
+        let mut summary = RegistryTopologySummary::empty();
+        let mut rooms = BTreeSet::new();
+
+        for bridge in self.bridges.values() {
+            summary.add_bridge(bridge);
+        }
+
+        for device in self.devices.values() {
+            summary.add_device(device);
+            if let Some(room_id) = device.room_id.as_deref() {
+                rooms.insert(room_id);
+            }
+        }
+
+        for entity in self.entities.values() {
+            summary.add_entity(entity, self.state(&entity.entity_id));
+        }
+
+        for scene in self.scenes.values() {
+            summary.add_scene(scene);
+        }
+
+        summary.unique_rooms = rooms.len();
         summary
     }
 
@@ -2340,6 +2540,162 @@ mod tests {
         assert!(summary.has_missing_protocol_sources());
         assert!(summary.has_multi_family_sources());
         assert_eq!(registry.read_view().protocol_source_summary(), summary);
+    }
+
+    #[test]
+    fn topology_summary_counts_transports_entities_rooms_and_scenes() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        let mut lan_bridge = bridge_with_native("bridge-1", "bridge-native-1");
+        lan_bridge.transport = BridgeTransport::LanHttp;
+        lan_bridge.health = Health::Online;
+        let mut mdns_bridge = bridge_with_native("bridge-2", "bridge-native-2");
+        mdns_bridge.transport = BridgeTransport::Mdns;
+        mdns_bridge.health = Health::Discoverable;
+        let mut cloud_bridge = bridge_with_native("bridge-3", "bridge-native-3");
+        cloud_bridge.transport = BridgeTransport::Cloud;
+        cloud_bridge.health = Health::AuthFailed;
+        registry.upsert_bridge(lan_bridge).unwrap();
+        registry.upsert_bridge(mdns_bridge).unwrap();
+        registry.upsert_bridge(cloud_bridge).unwrap();
+
+        let mut kitchen_light = device_with_native("device-1", "bridge-1", "device-native-1");
+        kitchen_light.room_id = Some("kitchen".to_string());
+        kitchen_light.health = Health::Online;
+        let mut kitchen_sensor = device_with_native("device-2", "bridge-1", "device-native-2");
+        kitchen_sensor.room_id = Some("kitchen".to_string());
+        kitchen_sensor.health = Health::Offline;
+        let mut hallway_pairing = device_with_native("device-3", "bridge-2", "device-native-3");
+        hallway_pairing.room_id = Some("hallway".to_string());
+        hallway_pairing.health = Health::Unpaired;
+        let mut front_lock = device_with_native("device-4", "bridge-3", "device-native-4");
+        front_lock.health = Health::Online;
+        registry.upsert_device(kitchen_light).unwrap();
+        registry.upsert_device(kitchen_sensor).unwrap();
+        registry.upsert_device(hallway_pairing).unwrap();
+        registry.upsert_device(front_lock).unwrap();
+
+        let mut light = entity("entity-1", "device-1");
+        light.capabilities.push(Capability::light_brightness());
+        light.state = Some(StateSnapshot {
+            entity_id: EntityId::trusted("entity-1"),
+            value: Value::Percentage(80),
+            source: StateSource::Poll,
+            observed_at_ms: 100,
+            received_at_ms: 101,
+            expires_at_ms: Some(1_000),
+            confidence: StateConfidence::Confirmed,
+        });
+        let sensor = sensor_entity("entity-2", "device-2");
+        let mut lock = entity("entity-3", "device-4");
+        lock.kind = EntityKind::Lock;
+        lock.name = "Front Door".to_string();
+        lock.capabilities = vec![Capability::lock_state()];
+        lock.state = Some(StateSnapshot {
+            entity_id: EntityId::trusted("entity-3"),
+            value: Value::Text("locked".to_string()),
+            source: StateSource::EventStream,
+            observed_at_ms: 110,
+            received_at_ms: 111,
+            expires_at_ms: None,
+            confidence: StateConfidence::Confirmed,
+        });
+        registry.upsert_entity(light).unwrap();
+        registry.upsert_entity(sensor).unwrap();
+        registry.upsert_entity(lock).unwrap();
+
+        registry
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-1"),
+                scope: SceneScope::Room,
+                native_ref: None,
+                actions: vec![
+                    SceneAction {
+                        entity_id: EntityId::trusted("entity-1"),
+                        desired_state: Value::Bool(true),
+                    },
+                    SceneAction {
+                        entity_id: EntityId::trusted("entity-3"),
+                        desired_state: Value::Text("locked".to_string()),
+                    },
+                ],
+                metadata: Vec::new(),
+            })
+            .unwrap();
+        registry
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-2"),
+                scope: SceneScope::Home,
+                native_ref: None,
+                actions: Vec::new(),
+                metadata: Vec::new(),
+            })
+            .unwrap();
+
+        let summary = registry.topology_summary();
+
+        assert_eq!(
+            summary,
+            RegistryTopologySummary {
+                bridges: 3,
+                devices: 4,
+                entities: 3,
+                scenes: 2,
+                lan_http_bridges: 1,
+                mdns_bridges: 1,
+                serial_bridges: 0,
+                ble_bridges: 0,
+                cloud_bridges: 1,
+                local_process_bridges: 0,
+                online_bridges: 1,
+                pairing_candidate_bridges: 1,
+                attention_bridges: 1,
+                online_devices: 2,
+                pairing_candidate_devices: 1,
+                attention_devices: 1,
+                devices_with_entities: 3,
+                devices_without_entities: 1,
+                devices_with_room: 3,
+                devices_without_room: 1,
+                unique_rooms: 2,
+                light_entities: 1,
+                light_group_entities: 0,
+                switch_entities: 0,
+                sensor_entities: 1,
+                lock_entities: 1,
+                thermostat_entities: 0,
+                scene_entities: 0,
+                input_entities: 0,
+                bridge_health_entities: 0,
+                network_diagnostic_entities: 0,
+                unknown_entities: 0,
+                entities_with_state: 2,
+                entities_without_state: 1,
+                total_capabilities: 4,
+                room_scenes: 1,
+                zone_scenes: 0,
+                home_scenes: 1,
+                bridge_scenes: 0,
+                custom_scenes: 0,
+                scene_actions: 2,
+            }
+        );
+        assert!(summary.has_topology());
+        assert!(summary.has_pairing_candidates());
+        assert!(summary.has_attention_items());
+        assert!(summary.has_devices_without_entities());
+        assert!(summary.has_state_gaps());
+        assert!(summary.has_scene_actions());
+        assert!(summary.has_multi_transport_bridges());
+        assert_eq!(registry.read_view().topology_summary(), summary);
+
+        let empty = RegistryTopologySummary::empty();
+        assert!(!empty.has_topology());
+        assert!(!empty.has_pairing_candidates());
+        assert!(!empty.has_attention_items());
+        assert!(!empty.has_devices_without_entities());
+        assert!(!empty.has_state_gaps());
+        assert!(!empty.has_scene_actions());
+        assert!(!empty.has_multi_transport_bridges());
     }
 
     #[test]

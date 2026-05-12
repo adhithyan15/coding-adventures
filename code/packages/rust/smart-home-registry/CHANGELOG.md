@@ -14,6 +14,9 @@ All notable changes to this package will be documented in this file.
   bridge/device/scene protocol identifier coverage across integration families.
 - `EventLogSummary` plus read-view and registry helpers for compact filtered
   event-log replay/status windows.
+- `RegistryTopologySummary` plus read-view and registry helpers for compact
+  bridge transport, device/entity coverage, room, entity-kind, state, and scene
+  topology rollups.
 
 ## [0.1.0] - 2026-05-06
 
