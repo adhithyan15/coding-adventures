@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- mDNS and SSDP [`UdpDiscoveryEndpoint`] presets with matching unspecified
+  bind-address helpers and option construction for local device-discovery
+  probes.
+
 ## [0.1.0] - 2026-04-19
 
 ### Added
