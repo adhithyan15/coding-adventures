@@ -5,8 +5,9 @@
 //! V1 scope: foundational types, manifest loading and validation, glob
 //! matcher, the [`Backend`] trait with [`OpenBackend`] / [`TestBackend`]
 //! / [`DenyAllBackend`] implementations, audit envelope types, and the
-//! [`secure_file`] family of secure-wrapper functions. Other secure-wrapper
-//! categories (`net`, `proc`, `env`, `time`, `stdio`) land in subsequent PRs.
+//! [`secure_file`] / [`secure_env`] secure-wrapper families. Other
+//! secure-wrapper categories (`net`, `proc`, `time`, `stdio`) land in
+//! subsequent PRs.
 
 mod audit;
 mod backend;
@@ -15,6 +16,7 @@ mod category;
 mod errors;
 mod glob;
 mod manifest;
+pub mod secure_env;
 pub mod secure_file;
 
 pub use audit::{

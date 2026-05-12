@@ -6,8 +6,9 @@
 //! `host-runtime-rust` crate (future) installs its own backend that
 //! routes secure calls over the host channel.
 //!
-//! V1 scope: file-system methods only. Network, process, env, time,
-//! and stdio methods land in subsequent PRs.
+//! V1 scope started with file-system methods. Environment access now has the
+//! same backend seam. Network, process, time, and stdio methods land in
+//! subsequent PRs.
 
 use std::io;
 use std::path::{Path, PathBuf};
@@ -24,6 +25,8 @@ pub trait Backend: Send + Sync {
     fn create_file(&self, path: &Path) -> io::Result<()>;
     fn delete_file(&self, path: &Path) -> io::Result<()>;
     fn list_dir(&self, path: &Path) -> io::Result<Vec<String>>;
+    fn read_env(&self, name: &str) -> io::Result<Option<String>>;
+    fn write_env(&self, name: &str, value: &str) -> io::Result<()>;
 }
 
 /// The default backend. Delegates straight to [`std::fs`].
@@ -59,6 +62,22 @@ impl Backend for OpenBackend {
             }
         }
         Ok(names)
+    }
+
+    fn read_env(&self, name: &str) -> io::Result<Option<String>> {
+        match std::env::var(name) {
+            Ok(value) => Ok(Some(value)),
+            Err(std::env::VarError::NotPresent) => Ok(None),
+            Err(std::env::VarError::NotUnicode(_)) => Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("environment variable {name} is not valid Unicode"),
+            )),
+        }
+    }
+
+    fn write_env(&self, name: &str, value: &str) -> io::Result<()> {
+        std::env::set_var(name, value);
+        Ok(())
     }
 }
 
@@ -103,6 +122,20 @@ impl Backend for DenyAllBackend {
             "DenyAllBackend refused fs.list",
         ))
     }
+
+    fn read_env(&self, _name: &str) -> io::Result<Option<String>> {
+        Err(io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "DenyAllBackend refused env.read",
+        ))
+    }
+
+    fn write_env(&self, _name: &str, _value: &str) -> io::Result<()> {
+        Err(io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "DenyAllBackend refused env.write",
+        ))
+    }
 }
 
 /// A backend that records every call into an internal log. Useful in
@@ -116,6 +149,7 @@ pub struct TestBackend {
     log: Mutex<Vec<TestBackendCall>>,
     file_responses: Mutex<Vec<(PathBuf, Vec<u8>)>>,
     dir_responses: Mutex<Vec<(PathBuf, Vec<String>)>>,
+    env_responses: Mutex<Vec<(String, String)>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -125,6 +159,8 @@ pub enum TestBackendCall {
     CreateFile(PathBuf),
     DeleteFile(PathBuf),
     ListDir(PathBuf),
+    ReadEnv(String),
+    WriteEnv(String, String),
 }
 
 impl TestBackend {
@@ -133,6 +169,7 @@ impl TestBackend {
             log: Mutex::new(Vec::new()),
             file_responses: Mutex::new(Vec::new()),
             dir_responses: Mutex::new(Vec::new()),
+            env_responses: Mutex::new(Vec::new()),
         }
     }
 
@@ -152,6 +189,15 @@ impl TestBackend {
             .lock()
             .unwrap()
             .push((path.into(), entries));
+        self
+    }
+
+    /// Script a response for an environment variable read.
+    pub fn with_env_response(self, name: impl Into<String>, value: impl Into<String>) -> Self {
+        self.env_responses
+            .lock()
+            .unwrap()
+            .push((name.into(), value.into()));
         self
     }
 
@@ -222,6 +268,29 @@ impl Backend for TestBackend {
             .map(|(_, e)| e.clone())
             .unwrap_or_default();
         Ok(entries)
+    }
+
+    fn read_env(&self, name: &str) -> io::Result<Option<String>> {
+        self.log
+            .lock()
+            .unwrap()
+            .push(TestBackendCall::ReadEnv(name.to_string()));
+        let value = self
+            .env_responses
+            .lock()
+            .unwrap()
+            .iter()
+            .find(|(candidate, _)| candidate == name)
+            .map(|(_, value)| value.clone());
+        Ok(value)
+    }
+
+    fn write_env(&self, name: &str, value: &str) -> io::Result<()> {
+        self.log.lock().unwrap().push(TestBackendCall::WriteEnv(
+            name.to_string(),
+            value.to_string(),
+        ));
+        Ok(())
     }
 }
 
@@ -335,6 +404,14 @@ mod tests {
             b.list_dir(Path::new("./x")).unwrap_err().kind(),
             io::ErrorKind::PermissionDenied
         );
+        assert_eq!(
+            b.read_env("TOKEN").unwrap_err().kind(),
+            io::ErrorKind::PermissionDenied
+        );
+        assert_eq!(
+            b.write_env("TOKEN", "secret").unwrap_err().kind(),
+            io::ErrorKind::PermissionDenied
+        );
     }
 
     #[test]
@@ -374,5 +451,19 @@ mod tests {
         let b = TestBackend::new().with_dir_response("./dir", vec!["a.txt".into(), "b.txt".into()]);
         let entries = b.list_dir(Path::new("./dir")).unwrap();
         assert_eq!(entries, vec!["a.txt".to_string(), "b.txt".to_string()]);
+    }
+
+    #[test]
+    fn test_backend_records_env_access() {
+        let b = TestBackend::new().with_env_response("TOKEN", "secret");
+        assert_eq!(b.read_env("TOKEN").unwrap(), Some("secret".to_string()));
+        b.write_env("MODE", "test").unwrap();
+
+        let calls = b.calls();
+        assert_eq!(calls.len(), 2);
+        assert!(matches!(&calls[0], TestBackendCall::ReadEnv(name) if name == "TOKEN"));
+        assert!(
+            matches!(&calls[1], TestBackendCall::WriteEnv(name, value) if name == "MODE" && value == "test")
+        );
     }
 }

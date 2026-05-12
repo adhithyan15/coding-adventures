@@ -69,6 +69,7 @@ assert_eq!(err.kind(), std::io::ErrorKind::PermissionDenied);
 | `audit`         | `Operation<T>`, `OperationRecord`, and `AuditSink` envelope types |
 | `backend`       | `Backend` trait + `OpenBackend` / `TestBackend` / `DenyAllBackend`, `with_backend(...)` guard |
 | `secure_file`   | `read_file` / `write_file` / `create_file` / `delete_file` / `list_dir` |
+| `secure_env`    | `read_var` / `write_var` for manifest-checked environment access |
 
 ## Backend swap
 
@@ -92,8 +93,7 @@ default parallel test scheduler.
 
 Spec-defined but landing in subsequent PRs:
 
-- `secure_net` / `secure_proc` / `secure_env` / `secure_time` /
-  `secure_stdio` modules
+- `secure_net` / `secure_proc` / `secure_time` / `secure_stdio` modules
 - `build.rs` codegen for `package_manifest()`
 - Cross-language conformance suite shared with the Go cage
 - The CI lint that rejects raw stdlib usage
