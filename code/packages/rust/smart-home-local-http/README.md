@@ -12,6 +12,8 @@ energy-gateway workers a shared deterministic shape for:
 - bounded retry and backoff policy metadata for supervised local calls
 - vault-backed auth placeholders without exposing secret values
 - header conflict checks before a runtime worker receives the plan
+- aggregate request-plan summaries for method, auth, retry, body, and timeout
+  shape before execution
 - bounded read-side queries for endpoint inventories and planned requests
 
 Protocol-specific clients and runtime executors live in integration crates. This
