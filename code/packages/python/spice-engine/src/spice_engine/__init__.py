@@ -1,7 +1,11 @@
-"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC + DC sweep + .SENS + .MC + .NOISE)."""
+"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC + DC sweep + .SENS + .MC + .NOISE + controlled sources)."""
 
 from spice_engine.elements import (
     BJT,
+    CCCS,
+    CCVS,
+    VCCS,
+    VCVS,
     Capacitor,
     CurrentSource,
     Diode,
@@ -38,12 +42,14 @@ from spice_engine.engine import (
     transient,
 )
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 __all__ = [
     "AcPoint",
     "AcResult",
     "BJT",
+    "CCCS",
+    "CCVS",
     "Capacitor",
     "Circuit",
     "CurrentSource",
@@ -65,6 +71,8 @@ __all__ = [
     "TfResult",
     "TransientPoint",
     "TransientResult",
+    "VCCS",
+    "VCVS",
     "VoltageSource",
     "__version__",
     "ac_sweep",

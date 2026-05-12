@@ -55,6 +55,10 @@ from dataclasses import dataclass, field
 
 from spice_engine.elements import (
     BJT,
+    CCCS,
+    CCVS,
+    VCCS,
+    VCVS,
     Capacitor,
     CurrentSource,
     Diode,
@@ -194,6 +198,11 @@ class TfResult:
     output_impedance: float
     converged: bool = True
 
+    @property
+    def gain(self) -> float:
+        """Alias for :attr:`transfer_ratio` — convenient shorthand for voltage gain."""
+        return self.transfer_ratio
+
 
 @dataclass(frozen=True)
 class DcSweepPoint:
@@ -299,11 +308,52 @@ def _element_nodes(el: Element) -> list[str]:
         return [el.drain, el.gate, el.source, el.body]
     if isinstance(el, BJT):
         return [el.collector, el.base, el.emitter]
+    if isinstance(el, (VCVS, VCCS)):
+        # Both output nodes and controlling nodes become part of the circuit
+        return [el.n_plus, el.n_minus, el.ctrl_plus, el.ctrl_minus]
+    if isinstance(el, (CCCS, CCVS)):
+        # Output nodes only (controlling branch is referenced by name, not nodes)
+        return [el.n_plus, el.n_minus]
     return []
 
 
 def _voltage_sources(circuit: Circuit) -> list[VoltageSource]:
+    """Return all independent VoltageSource elements (for sens/mc perturbation)."""
     return [el for el in circuit.elements if isinstance(el, VoltageSource)]
+
+
+def _branch_sources(
+    circuit: Circuit,
+) -> list[VoltageSource | VCVS | CCVS]:
+    """Elements that require a branch unknown (current variable) in MNA.
+
+    All three element types introduce a KVL constraint row and a corresponding
+    branch-current column in the MNA matrix.  The ordering is stable:
+
+        1. All ``VoltageSource`` elements (preserves existing branch indices)
+        2. All ``VCVS`` elements
+        3. All ``CCVS`` elements
+
+    The branch index for an element ``el`` is::
+
+        branch_idx = n_nodes + _branch_sources(circuit).index(el)
+
+    where ``n_nodes = len(_node_index(circuit)[0])``.
+
+    Note: ``CCCS`` (F element) does **not** appear here because it only adds
+    off-diagonal conductance entries and needs no branch unknown of its own.
+    ``VCCS`` (G element) likewise needs no branch unknown.
+    """
+    vsrcs: list[VoltageSource | VCVS | CCVS] = [
+        el for el in circuit.elements if isinstance(el, VoltageSource)
+    ]
+    vcvs_list: list[VoltageSource | VCVS | CCVS] = [
+        el for el in circuit.elements if isinstance(el, VCVS)
+    ]
+    ccvs_list: list[VoltageSource | VCVS | CCVS] = [
+        el for el in circuit.elements if isinstance(el, CCVS)
+    ]
+    return vsrcs + vcvs_list + ccvs_list
 
 
 def _is_ground(name: str) -> bool:
@@ -323,9 +373,9 @@ def dc_op(
 ) -> DcResult:
     """Solve DC operating point via Newton-Raphson on a linearized MNA."""
     node_to_idx, nodes = _node_index(circuit)
-    vsrcs = _voltage_sources(circuit)
+    branch_srcs = _branch_sources(circuit)
     n = len(nodes)
-    m = len(vsrcs)
+    m = len(branch_srcs)
     size = n + m
 
     # Initial guess: all zeros
@@ -337,13 +387,13 @@ def dc_op(
         b = [0.0] * size
 
         for el in circuit.elements:
-            _stamp_dc(el, G, b, x, node_to_idx, vsrcs)
+            _stamp_dc(el, G, b, x, node_to_idx, branch_srcs)
 
         # Solve G x_new = b via Gaussian elimination.
         try:
             x_new = _solve(G, b)
         except ZeroDivisionError:
-            return DcResult({n: x[i] for n, i in node_to_idx.items()},
+            return DcResult({nd: x[i] for nd, i in node_to_idx.items()},
                             {}, iterations=it, converged=False)
 
         # Check convergence
@@ -352,8 +402,8 @@ def dc_op(
         if max_delta < tol:
             break
 
-    node_v = {n: x[i] for n, i in node_to_idx.items()}
-    branch_i = {f"I({vs.name})": x[n + i] for i, vs in enumerate(vsrcs)}
+    node_v = {nd: x[i] for nd, i in node_to_idx.items()}
+    branch_i = {f"I({el.name})": x[n + i] for i, el in enumerate(branch_srcs)}
     return DcResult(node_v, branch_i, iterations=it + 1, converged=max_delta < tol)
 
 
@@ -363,14 +413,15 @@ def _stamp_dc(
     b: list[float],
     x: list[float],
     node_to_idx: dict[str, int],
-    vsrcs: list[VoltageSource],
+    branch_srcs: list[VoltageSource | VCVS | CCVS],
 ) -> None:
     """Stamp one element's MNA contribution at the current operating point."""
+    n_nodes = len(node_to_idx)
     if isinstance(el, Resistor):
         _stamp_g(G, node_to_idx, el.n_plus, el.n_minus, 1.0 / el.resistance)
     elif isinstance(el, VoltageSource):
-        i = vsrcs.index(el)
-        _stamp_vsrc(G, b, node_to_idx, el, len(node_to_idx) + i)
+        i = branch_srcs.index(el)
+        _stamp_vsrc(G, b, node_to_idx, el, n_nodes + i)
     elif isinstance(el, CurrentSource):
         if not _is_ground(el.n_plus):
             b[node_to_idx[el.n_plus]] -= el.current
@@ -382,6 +433,31 @@ def _stamp_dc(
         _stamp_mosfet(G, b, x, node_to_idx, el)
     elif isinstance(el, BJT):
         _stamp_bjt(G, b, x, node_to_idx, el)
+    elif isinstance(el, VCCS):
+        _stamp_vccs(G, node_to_idx, el.n_plus, el.n_minus,
+                    el.ctrl_plus, el.ctrl_minus, el.gm)
+    elif isinstance(el, VCVS):
+        i = branch_srcs.index(el)
+        _stamp_vcvs(G, b, node_to_idx, el, n_nodes + i)
+    elif isinstance(el, CCCS):
+        ctrl_el = _find_branch_source(branch_srcs, el.ctrl_source)
+        if ctrl_el is None:
+            raise ValueError(
+                f"CCCS '{el.name}' references controlling source "
+                f"'{el.ctrl_source}' which does not exist in the circuit."
+            )
+        ctrl_idx = n_nodes + branch_srcs.index(ctrl_el)
+        _stamp_cccs(G, node_to_idx, el, ctrl_idx)
+    elif isinstance(el, CCVS):
+        i = branch_srcs.index(el)
+        ctrl_el = _find_branch_source(branch_srcs, el.ctrl_source)
+        if ctrl_el is None:
+            raise ValueError(
+                f"CCVS '{el.name}' references controlling source "
+                f"'{el.ctrl_source}' which does not exist in the circuit."
+            )
+        ctrl_idx = n_nodes + branch_srcs.index(ctrl_el)
+        _stamp_ccvs(G, b, node_to_idx, el, n_nodes + i, ctrl_idx)
     elif isinstance(el, Capacitor):
         # In DC, capacitors are open circuits — no conductance contribution
         pass
@@ -423,6 +499,155 @@ def _stamp_vsrc(
         G[j][branch_idx] = -1.0
         G[branch_idx][j] = -1.0
     b[branch_idx] = el.voltage
+
+
+# ---------------------------------------------------------------------------
+# Controlled-source MNA stamps
+# ---------------------------------------------------------------------------
+
+
+def _find_branch_source(
+    branch_srcs: list[VoltageSource | VCVS | CCVS],
+    name: str,
+) -> VoltageSource | VCVS | CCVS | None:
+    """Return the branch-source element with the given name, or None."""
+    for el in branch_srcs:
+        if el.name == name:
+            return el
+    return None
+
+
+def _stamp_vccs(
+    G: list[list[float]],
+    node_to_idx: dict[str, int],
+    n_plus: str,
+    n_minus: str,
+    ctrl_plus: str,
+    ctrl_minus: str,
+    gm: float,
+) -> None:
+    """Stamp a VCCS: I(n_plus→n_minus) = gm × [V(ctrl_plus) − V(ctrl_minus)].
+
+    MNA off-diagonal entries (no branch unknown needed):
+
+        G[n_plus][ctrl_plus]   +=  gm
+        G[n_plus][ctrl_minus]  -=  gm
+        G[n_minus][ctrl_plus]  -=  gm
+        G[n_minus][ctrl_minus] +=  gm
+
+    This is the same stamp used internally for MOSFET/BJT transconductance.
+    """
+    if not _is_ground(n_plus):
+        rp = node_to_idx[n_plus]
+        if not _is_ground(ctrl_plus):
+            G[rp][node_to_idx[ctrl_plus]] += gm
+        if not _is_ground(ctrl_minus):
+            G[rp][node_to_idx[ctrl_minus]] -= gm
+    if not _is_ground(n_minus):
+        rm = node_to_idx[n_minus]
+        if not _is_ground(ctrl_plus):
+            G[rm][node_to_idx[ctrl_plus]] -= gm
+        if not _is_ground(ctrl_minus):
+            G[rm][node_to_idx[ctrl_minus]] += gm
+
+
+def _stamp_vcvs(
+    G: list[list[float]],
+    b: list[float],
+    node_to_idx: dict[str, int],
+    el: VCVS,
+    branch_idx: int,
+) -> None:
+    """Stamp a VCVS: V(n_plus,n_minus) = gain × [V(ctrl_plus) − V(ctrl_minus)].
+
+    KCL rows for the output port (identical to VoltageSource structure):
+
+        G[n_plus][k]   += 1    G[k][n_plus]   += 1
+        G[n_minus][k]  -= 1    G[k][n_minus]  -= 1
+
+    KVL row contribution from the controlling nodes:
+
+        G[k][ctrl_plus]  -= gain    (from +V_ctrl_plus term moved to LHS)
+        G[k][ctrl_minus] += gain    (from −V_ctrl_minus term moved to LHS)
+
+    b[k] = 0 (ideal source, no DC offset).
+    """
+    if not _is_ground(el.n_plus):
+        p = node_to_idx[el.n_plus]
+        G[p][branch_idx] += 1.0
+        G[branch_idx][p] += 1.0
+    if not _is_ground(el.n_minus):
+        q = node_to_idx[el.n_minus]
+        G[q][branch_idx] -= 1.0
+        G[branch_idx][q] -= 1.0
+    if not _is_ground(el.ctrl_plus):
+        G[branch_idx][node_to_idx[el.ctrl_plus]] -= el.gain
+    if not _is_ground(el.ctrl_minus):
+        G[branch_idx][node_to_idx[el.ctrl_minus]] += el.gain
+    b[branch_idx] = 0.0
+
+
+def _stamp_cccs(
+    G: list[list[float]],
+    node_to_idx: dict[str, int],
+    el: CCCS,
+    ctrl_branch_idx: int,
+) -> None:
+    """Stamp a CCCS: I(n_plus→n_minus) = beta × I(ctrl_source).
+
+    In the MNA G·x = b framework, a positive branch current ``I_ctrl``
+    (which represents current leaving ``ctrl.n_plus`` through the source) is
+    used as the controlling quantity.  The CCCS output must inject current
+    INTO ``n_plus`` (so that it exits ``n_plus`` into the external circuit
+    toward ``n_minus``).  An injected current appears as a NEGATIVE term in
+    the "leaving-current" KCL sum, so the stamp is:
+
+        G[n_plus][ctrl_branch_idx]  -= beta   (injection at n_plus)
+        G[n_minus][ctrl_branch_idx] += beta   (removal at n_minus)
+
+    This matches the SPICE ``F`` element convention: positive current flows
+    from ``n_plus`` through the external circuit to ``n_minus``.
+
+    No new branch unknown is needed; this is a pure off-diagonal entry in
+    the branch-current column of the controlling source.
+    """
+    if not _is_ground(el.n_plus):
+        G[node_to_idx[el.n_plus]][ctrl_branch_idx] -= el.beta
+    if not _is_ground(el.n_minus):
+        G[node_to_idx[el.n_minus]][ctrl_branch_idx] += el.beta
+
+
+def _stamp_ccvs(
+    G: list[list[float]],
+    b: list[float],
+    node_to_idx: dict[str, int],
+    el: CCVS,
+    branch_idx: int,
+    ctrl_branch_idx: int,
+) -> None:
+    """Stamp a CCVS: V(n_plus,n_minus) = transresistance × I(ctrl_source).
+
+    KCL rows for the output port (like VoltageSource / VCVS):
+
+        G[n_plus][k]   += 1    G[k][n_plus]   += 1
+        G[n_minus][k]  -= 1    G[k][n_minus]  -= 1
+
+    KVL row: V_out_p − V_out_m − rm × x[ctrl_branch_idx] = 0
+
+        G[k][ctrl_branch_idx] -= transresistance
+
+    b[k] = 0.
+    """
+    if not _is_ground(el.n_plus):
+        p = node_to_idx[el.n_plus]
+        G[p][branch_idx] += 1.0
+        G[branch_idx][p] += 1.0
+    if not _is_ground(el.n_minus):
+        q = node_to_idx[el.n_minus]
+        G[q][branch_idx] -= 1.0
+        G[branch_idx][q] -= 1.0
+    G[branch_idx][ctrl_branch_idx] -= el.transresistance
+    b[branch_idx] = 0.0
 
 
 def _stamp_diode(
@@ -1240,7 +1465,7 @@ def _stamp_ac(
     b: list[complex],
     omega: float,
     node_to_idx: dict[str, int],
-    vsrcs: list[VoltageSource],
+    branch_srcs: list[VoltageSource | VCVS | CCVS],
     dc_x: list[float],
 ) -> None:
     """Stamp one element's AC small-signal contribution at angular frequency ω.
@@ -1248,6 +1473,8 @@ def _stamp_ac(
     Linear elements (R, C, L, V, I) use their exact complex admittances.
     Nonlinear elements (Diode, MOSFET, BJT) are linearised at the DC operating
     point provided in ``dc_x``.
+    Controlled sources (VCVS, VCCS, CCVS, CCCS) are linear and are stamped
+    using their real-valued gains (frequency-independent).
 
     VoltageSource AC handling
     -------------------------
@@ -1268,13 +1495,14 @@ def _stamp_ac(
         Angular frequency ω = 2πf (rad/s).
     node_to_idx : dict[str, int]
         Node-to-row-index map (ground excluded).
-    vsrcs : list[VoltageSource]
-        All voltage sources in the circuit (determines branch-variable index).
+    branch_srcs : list[VoltageSource | VCVS | CCVS]
+        All branch-unknown sources in the circuit (determines column indices).
     dc_x : list[float]
         DC operating-point vector (node voltages then branch currents), indexed
         by ``node_to_idx``.  Used to compute small-signal parameters for
         nonlinear devices.
     """
+    n_nodes = len(node_to_idx)
     if isinstance(el, Resistor):
         # Purely real admittance: Y = 1/R
         _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, (1.0 + 0j) / el.resistance)
@@ -1295,8 +1523,8 @@ def _stamp_ac(
     elif isinstance(el, VoltageSource):
         # Ideal voltage source stamp: adds branch current as an unknown.
         # Uses += so multiple elements don't overwrite each other's entries.
-        i = vsrcs.index(el)
-        branch = len(node_to_idx) + i
+        i = branch_srcs.index(el)
+        branch = n_nodes + i
         if not _is_ground(el.n_plus):
             p = node_to_idx[el.n_plus]
             G[p][branch] += 1.0 + 0j
@@ -1313,6 +1541,63 @@ def _stamp_ac(
             b[node_to_idx[el.n_plus]] -= el.current + 0j
         if not _is_ground(el.n_minus):
             b[node_to_idx[el.n_minus]] += el.current + 0j
+
+    elif isinstance(el, VCCS):
+        # Frequency-independent transconductance: same stamp as DC.
+        _stamp_vccs(G, node_to_idx, el.n_plus, el.n_minus,
+                    el.ctrl_plus, el.ctrl_minus, el.gm)  # type: ignore[arg-type]
+
+    elif isinstance(el, VCVS):
+        # Voltage-controlled voltage source — same stamp as DC.
+        i = branch_srcs.index(el)
+        branch = n_nodes + i
+        if not _is_ground(el.n_plus):
+            p = node_to_idx[el.n_plus]
+            G[p][branch] += 1.0 + 0j
+            G[branch][p] += 1.0 + 0j
+        if not _is_ground(el.n_minus):
+            q = node_to_idx[el.n_minus]
+            G[q][branch] -= 1.0 + 0j
+            G[branch][q] -= 1.0 + 0j
+        if not _is_ground(el.ctrl_plus):
+            G[branch][node_to_idx[el.ctrl_plus]] -= el.gain + 0j
+        if not _is_ground(el.ctrl_minus):
+            G[branch][node_to_idx[el.ctrl_minus]] += el.gain + 0j
+        b[branch] += 0j
+
+    elif isinstance(el, CCCS):
+        ctrl_bsrc = _find_branch_source(branch_srcs, el.ctrl_source)
+        if ctrl_bsrc is None:
+            raise ValueError(
+                f"CCCS '{el.name}' references controlling source "
+                f"'{el.ctrl_source}' which does not exist in the circuit."
+            )
+        ctrl_branch = n_nodes + branch_srcs.index(ctrl_bsrc)
+        if not _is_ground(el.n_plus):
+            G[node_to_idx[el.n_plus]][ctrl_branch] -= el.beta + 0j
+        if not _is_ground(el.n_minus):
+            G[node_to_idx[el.n_minus]][ctrl_branch] += el.beta + 0j
+
+    elif isinstance(el, CCVS):
+        i = branch_srcs.index(el)
+        branch = n_nodes + i
+        if not _is_ground(el.n_plus):
+            p = node_to_idx[el.n_plus]
+            G[p][branch] += 1.0 + 0j
+            G[branch][p] += 1.0 + 0j
+        if not _is_ground(el.n_minus):
+            q = node_to_idx[el.n_minus]
+            G[q][branch] -= 1.0 + 0j
+            G[branch][q] -= 1.0 + 0j
+        ctrl_bsrc = _find_branch_source(branch_srcs, el.ctrl_source)
+        if ctrl_bsrc is None:
+            raise ValueError(
+                f"CCVS '{el.name}' references controlling source "
+                f"'{el.ctrl_source}' which does not exist in the circuit."
+            )
+        ctrl_branch = n_nodes + branch_srcs.index(ctrl_bsrc)
+        G[branch][ctrl_branch] -= el.transresistance + 0j
+        b[branch] += 0j
 
     elif isinstance(el, Diode):
         # Small-signal model: linearised conductance gd = (Is/Vt)·exp(Vd/Vt).
@@ -1475,17 +1760,17 @@ def ac_sweep(
     # ---- DC operating point --------------------------------------------------
     dc = dc_op(circuit)
     node_to_idx, _nodes = _node_index(circuit)
-    vsrcs = _voltage_sources(circuit)
+    branch_srcs = _branch_sources(circuit)
     n_nodes = len(node_to_idx)
-    n_vsrcs = len(vsrcs)
-    size = n_nodes + n_vsrcs
+    n_branch = len(branch_srcs)
+    size = n_nodes + n_branch
 
     # Reconstruct the indexed dc_x vector from the DcResult dict.
     dc_x: list[float] = [0.0] * size
     for name, idx in node_to_idx.items():
         dc_x[idx] = dc.node_voltages.get(name, 0.0)
-    for i, vs in enumerate(vsrcs):
-        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({vs.name})", 0.0)
+    for i, bs in enumerate(branch_srcs):
+        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({bs.name})", 0.0)
 
     # ---- Frequency grid -------------------------------------------------------
     if n_points < 1:
@@ -1513,7 +1798,7 @@ def ac_sweep(
         b_c: list[complex] = [0j] * size
 
         for el in circuit.elements:
-            _stamp_ac(el, G_c, b_c, omega, node_to_idx, vsrcs, dc_x)
+            _stamp_ac(el, G_c, b_c, omega, node_to_idx, branch_srcs, dc_x)
 
         try:
             x_c = _solve_complex(G_c, b_c)
@@ -1596,14 +1881,16 @@ _ = cmath  # noqa: F841
 def _build_ss_matrix(
     circuit: Circuit,
     node_to_idx: dict[str, int],
-    vsrcs: list[VoltageSource],
+    branch_srcs: list[VoltageSource | VCVS | CCVS],
     dc_x: list[float],
 ) -> list[list[float]]:
     """Build the real DC small-signal MNA conductance matrix (ω = 0).
 
     This is the real-valued analogue of the complex :func:`_stamp_ac` loop.
     Independent sources are excluded (zeroed), leaving only conductance and
-    structural KVL/KCL entries.
+    structural KVL/KCL entries.  Controlled sources (VCVS, VCCS, CCCS, CCVS)
+    are included with their full gains — they are not "zeroed" because they
+    are dependent sources, not independent excitations.
 
     Stamping rules
     --------------
@@ -1620,6 +1907,14 @@ def _build_ss_matrix(
     +-------------------+-----------------------------------------------+
     | CurrentSource     | skipped (independent source → zero in ss)     |
     +-------------------+-----------------------------------------------+
+    | VCCS              | off-diagonal gm entries                       |
+    +-------------------+-----------------------------------------------+
+    | VCVS              | KVL/KCL entries + gain row (b NOT set)        |
+    +-------------------+-----------------------------------------------+
+    | CCCS              | off-diagonal beta entries                     |
+    +-------------------+-----------------------------------------------+
+    | CCVS              | KVL/KCL entries + transresistance (b NOT set) |
+    +-------------------+-----------------------------------------------+
     | Diode             | gd = (Is/Vt) · exp(Vd/Vt) at DC OP           |
     +-------------------+-----------------------------------------------+
     | MOSFET            | gds + gm VCCS at DC OP                        |
@@ -1633,18 +1928,18 @@ def _build_ss_matrix(
         The circuit being analysed.
     node_to_idx : dict[str, int]
         Node-to-row-index mapping (ground excluded).
-    vsrcs : list[VoltageSource]
-        Ordered list of voltage sources (determines branch column indices).
+    branch_srcs : list[VoltageSource | VCVS | CCVS]
+        Ordered list of branch-unknown sources (determines column indices).
     dc_x : list[float]
         DC operating-point vector (node voltages then branch currents).
 
     Returns
     -------
     list[list[float]]
-        Square real MNA matrix of size ``(n_nodes + n_vsrcs)^2``.
+        Square real MNA matrix of size ``(n_nodes + n_branch_srcs)^2``.
     """
     n_nodes = len(node_to_idx)
-    size = n_nodes + len(vsrcs)
+    size = n_nodes + len(branch_srcs)
     G: list[list[float]] = [[0.0] * size for _ in range(size)]
 
     for el in circuit.elements:
@@ -1664,7 +1959,7 @@ def _build_ss_matrix(
         elif isinstance(el, VoltageSource):
             # Stamp structural KVL/KCL entries exactly as in _stamp_vsrc, but
             # intentionally leave b alone (independent source zeroed).
-            i = vsrcs.index(el)
+            i = branch_srcs.index(el)
             branch_idx = n_nodes + i
             if not _is_ground(el.n_plus):
                 p = node_to_idx[el.n_plus]
@@ -1678,6 +1973,39 @@ def _build_ss_matrix(
         elif isinstance(el, CurrentSource):
             # Independent current source → zero in small-signal analysis.
             pass
+
+        elif isinstance(el, VCCS):
+            # Frequency-independent; stamp real transconductance.
+            _stamp_vccs(G, node_to_idx, el.n_plus, el.n_minus,
+                        el.ctrl_plus, el.ctrl_minus, el.gm)
+
+        elif isinstance(el, VCVS):
+            # Dependent source — stamp full KVL/KCL + gain (not zeroed).
+            b_dummy: list[float] = [0.0] * size
+            _stamp_vcvs(G, b_dummy, node_to_idx, el,
+                        n_nodes + branch_srcs.index(el))
+
+        elif isinstance(el, CCCS):
+            ctrl_el = _find_branch_source(branch_srcs, el.ctrl_source)
+            if ctrl_el is None:
+                raise ValueError(
+                    f"CCCS '{el.name}' references controlling source "
+                    f"'{el.ctrl_source}' which does not exist in the circuit."
+                )
+            ctrl_idx = n_nodes + branch_srcs.index(ctrl_el)
+            _stamp_cccs(G, node_to_idx, el, ctrl_idx)
+
+        elif isinstance(el, CCVS):
+            ctrl_el = _find_branch_source(branch_srcs, el.ctrl_source)
+            if ctrl_el is None:
+                raise ValueError(
+                    f"CCVS '{el.name}' references controlling source "
+                    f"'{el.ctrl_source}' which does not exist in the circuit."
+                )
+            ctrl_idx = n_nodes + branch_srcs.index(ctrl_el)
+            b_dummy2: list[float] = [0.0] * size
+            _stamp_ccvs(G, b_dummy2, node_to_idx, el,
+                        n_nodes + branch_srcs.index(el), ctrl_idx)
 
         elif isinstance(el, Diode):
             # Small-signal conductance: gd = dI/dVd = (Is/Vt)·exp(Vd/Vt).
@@ -1822,19 +2150,19 @@ def tf(
     # ---- Step 1: DC operating point ------------------------------------------
     dc = dc_op(circuit, max_iterations=max_iterations, tol=tol)
     node_to_idx, _nodes = _node_index(circuit)
-    vsrcs = _voltage_sources(circuit)
+    branch_srcs_tf = _branch_sources(circuit)
     n_nodes = len(node_to_idx)
-    size = n_nodes + len(vsrcs)
+    size = n_nodes + len(branch_srcs_tf)
 
     # Reconstruct the indexed dc_x vector from the DcResult dicts.
     dc_x: list[float] = [0.0] * size
     for name, idx in node_to_idx.items():
         dc_x[idx] = dc.node_voltages.get(name, 0.0)
-    for i, vs in enumerate(vsrcs):
-        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({vs.name})", 0.0)
+    for i, bs in enumerate(branch_srcs_tf):
+        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({bs.name})", 0.0)
 
     # ---- Step 2: Small-signal conductance matrix -----------------------------
-    G_ss = _build_ss_matrix(circuit, node_to_idx, vsrcs, dc_x)
+    G_ss = _build_ss_matrix(circuit, node_to_idx, branch_srcs_tf, dc_x)
 
     # ---- Locate the input source element ------------------------------------
     input_el: Element | None = None
@@ -1869,7 +2197,7 @@ def tf(
 
     if isinstance(input_el, VoltageSource):
         # 1 V across the source: set the KVL constraint row b[branch] = 1.0.
-        vsrc_idx = vsrcs.index(input_el)
+        vsrc_idx = branch_srcs_tf.index(input_el)
         b_fwd[n_nodes + vsrc_idx] = 1.0
     else:
         # CurrentSource: inject 1 A following the same sign convention as the
@@ -1895,7 +2223,7 @@ def tf(
 
     # Input impedance
     if isinstance(input_el, VoltageSource):
-        vsrc_idx = vsrcs.index(input_el)
+        vsrc_idx = branch_srcs_tf.index(input_el)
         i_branch = x_fwd[n_nodes + vsrc_idx]
         # MNA convention: x[branch] < 0 when the source delivers current
         # (the branch current enters n_plus FROM the circuit, not from the
@@ -3137,17 +3465,17 @@ def noise_ac(
 
     # ---- Matrix bookkeeping --------------------------------------------------
     node_to_idx, _nodes = _node_index(circuit)
-    vsrcs = _voltage_sources(circuit)
+    branch_srcs_noise = _branch_sources(circuit)
     n_nodes = len(node_to_idx)
-    n_vsrcs = len(vsrcs)
-    size = n_nodes + n_vsrcs
+    n_branch_noise = len(branch_srcs_noise)
+    size = n_nodes + n_branch_noise
 
     # Reconstruct dc_x solution vector for linearisation of nonlinear devices.
     dc_x: list[float] = [0.0] * size
     for name, idx in node_to_idx.items():
         dc_x[idx] = dc.node_voltages.get(name, 0.0)
-    for i, vs in enumerate(vsrcs):
-        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({vs.name})", 0.0)
+    for i, bs in enumerate(branch_srcs_noise):
+        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({bs.name})", 0.0)
 
     # ---- Validate output node -----------------------------------------------
     if _is_ground(output_node):
@@ -3199,7 +3527,7 @@ def noise_ac(
         G_c: list[list[complex]] = [[0j] * size for _ in range(size)]
         b_c: list[complex] = [0j] * size  # dummy RHS for stamping (unused)
         for el in circuit.elements:
-            _stamp_ac(el, G_c, b_c, omega, node_to_idx, vsrcs, dc_x)
+            _stamp_ac(el, G_c, b_c, omega, node_to_idx, branch_srcs_noise, dc_x)
 
         # Transpose G_c → G_T for the adjoint solve.
         # G_T[i][j] = G_c[j][i]
@@ -3263,7 +3591,7 @@ def noise_ac(
         input_referred_psd = 0.0
         if input_el is not None:
             if isinstance(input_el, VoltageSource):
-                vs_idx = vsrcs.index(input_el)
+                vs_idx = branch_srcs_noise.index(input_el)
                 H_sig = v_adj[n_nodes + vs_idx]
             else:  # CurrentSource
                 h_n_plus: complex = (
