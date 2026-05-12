@@ -140,7 +140,8 @@ pub fn serialise(module: &IIRModule) -> Vec<u8> {
     buf.extend_from_slice(MAGIC);
     write_u8(&mut buf, VERSION_MAJOR);
     write_u8(&mut buf, VERSION_MINOR);
-    write_u32_le(&mut buf, module.functions.len() as u32);
+    write_u32_le(&mut buf, module.functions.len().try_into()
+        .expect("function count exceeds u32::MAX — cannot serialise"));
     write_str(&mut buf, &module.name);
     write_str(&mut buf, &module.language);
     write_str(&mut buf, module.entry_point.as_deref().unwrap_or(""));
@@ -154,14 +155,16 @@ pub fn serialise(module: &IIRModule) -> Vec<u8> {
     // Always written (count = 0 for modules with no exports) so the format is
     // symmetric with the imports section and simpler to parse.
     write_u8(&mut buf, TAG_EXPORTS);
-    write_u32_le(&mut buf, module.exports.len() as u32);
+    write_u32_le(&mut buf, module.exports.len().try_into()
+        .expect("exports count exceeds u32::MAX — cannot serialise"));
     for export in &module.exports {
         serialise_export(&mut buf, export);
     }
 
     // ── LANG33: imports section ──────────────────────────────────────────────
     write_u8(&mut buf, TAG_IMPORTS);
-    write_u32_le(&mut buf, module.imports.len() as u32);
+    write_u32_le(&mut buf, module.imports.len().try_into()
+        .expect("imports count exceeds u32::MAX — cannot serialise"));
     for import in &module.imports {
         serialise_import(&mut buf, import);
     }
@@ -180,7 +183,8 @@ fn serialise_import(buf: &mut Vec<u8>, import: &IIRImport) {
     write_str(buf, &import.function_name);
     // Empty string encodes `local_alias = None`.
     write_str(buf, import.local_alias.as_deref().unwrap_or(""));
-    write_u32_le(buf, import.param_types.len() as u32);
+    write_u32_le(buf, import.param_types.len().try_into()
+        .expect("param_types count exceeds u32::MAX — cannot serialise"));
     for pt in &import.param_types {
         write_str(buf, pt);
     }
@@ -192,14 +196,18 @@ fn serialise_function(buf: &mut Vec<u8>, fn_: &IIRFunction) {
     write_str(buf, &fn_.return_type);
     // Use u32 (not u8) for all counts — u8 silently truncates above 255,
     // causing stream desync when the deserialiser reads too few/many records.
-    write_u32_le(buf, fn_.params.len() as u32);
+    write_u32_le(buf, fn_.params.len().try_into()
+        .expect("param count exceeds u32::MAX — cannot serialise"));
     for (param_name, param_type) in &fn_.params {
         write_str(buf, param_name);
         write_str(buf, param_type);
     }
-    write_u32_le(buf, fn_.instructions.len() as u32);
-    // register_count as u32 to avoid truncation for large register files.
-    write_u32_le(buf, fn_.register_count as u32);
+    write_u32_le(buf, fn_.instructions.len().try_into()
+        .expect("instruction count exceeds u32::MAX — cannot serialise"));
+    // register_count: use try_into for the same reason — large register files
+    // should fail loudly rather than silently truncate.
+    write_u32_le(buf, fn_.register_count.try_into()
+        .expect("register_count exceeds u32::MAX — cannot serialise"));
     write_u8(buf, type_status_to_byte(&fn_.type_status));
     for instr in &fn_.instructions {
         serialise_instr(buf, instr);
@@ -216,8 +224,9 @@ fn serialise_instr(buf: &mut Vec<u8>, instr: &IIRInstr) {
         None => write_u8(buf, 0),
     }
     write_str(buf, &instr.type_hint);
-    // Use u32 for src_count to avoid truncation above 255.
-    write_u32_le(buf, instr.srcs.len() as u32);
+    // Use u32 for src_count with try_into to catch truncation on overflow.
+    write_u32_le(buf, instr.srcs.len().try_into()
+        .expect("src count exceeds u32::MAX — cannot serialise"));
     for src in &instr.srcs {
         match src {
             Operand::Var(s) => {

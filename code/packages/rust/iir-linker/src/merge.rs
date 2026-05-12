@@ -101,8 +101,19 @@ pub fn merge_modules<'a>(
                     // In practice this loop runs at most once — it fires only
                     // when an adversarial (or pathological) module name was chosen
                     // specifically to trigger the base collision.
+                    // Safety cap: the number of distinct names we could ever
+                    // need is bounded by the total number of functions in all
+                    // modules.  If we exceed that count, every possible name
+                    // slot is occupied by adversarially-crafted input — panic
+                    // rather than spin indefinitely (DoS guard).
+                    let max_iterations = modules.iter().map(|m| m.functions.len()).sum::<usize>() + 1;
                     let mut counter: usize = 0;
                     loop {
+                        assert!(
+                            counter <= max_iterations,
+                            "name-collision counter exceeded safe bound ({max_iterations}): \
+                             adversarial module names suspected"
+                        );
                         let candidate = format!("{base}${counter}");
                         if !global_names.contains(&candidate) {
                             break candidate;
