@@ -421,7 +421,9 @@ def _schema_of(p: LogicalPlan) -> tuple[str, ...]:
             names: list[str] = []
             for i, e in enumerate(gb):
                 names.append(_column_display_name(e) or f"group_{i}")
-            names.extend(a.alias for a in aggs)
+            # Only include output aggregates in the schema — hidden aggregates
+            # (output=False) are computed for HAVING/ORDER BY but not emitted.
+            names.extend(a.alias for a in aggs if a.output)
             return tuple(names)
         case Having(input=inner):
             return _schema_of(inner)
@@ -469,6 +471,11 @@ def _column_display_name(expr: Expr) -> str | None:
 def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     # Peel outer post-processing operators off the top. Order per spec:
     # Project → Distinct → Sort → Limit — so Limit is the outermost.
+    #
+    # Build an aggregate alias map before peeling so that Sort keys that
+    # reference an AggregateExpr (e.g. ``ORDER BY SUM(val)``) can be
+    # resolved to the output column name emitted by _compile_aggregate.
+    agg_alias_map = _build_agg_alias_map(p)
     post: list[Instruction] = []
     cur = p
     while True:
@@ -477,7 +484,7 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
                 post.append(LimitResult(count=c, offset=o))
                 cur = inner
             case Sort(input=inner, keys=keys):
-                post.append(SortResult(keys=tuple(_to_sort_key(k) for k in keys)))
+                post.append(SortResult(keys=tuple(_to_sort_key(k, agg_alias_map) for k in keys)))
                 cur = inner
             case Distinct(input=inner):
                 post.append(DistinctResult())
@@ -1053,12 +1060,21 @@ def _compile_aggregate(
         post.append(JumpIfFalse(label=emit_next))
 
     # Build the output row: group keys first, then finalized aggregates.
+    # Hidden aggregates (output=False) are skipped here — they were already
+    # computed by _compile_having for the HAVING predicate, so we don't need
+    # to finalize them again, and they must not appear as output columns.
     post.append(BeginRow())
     for i, e in enumerate(group_by):
         post.append(LoadGroupKey(i=i))
         name = _column_display_name(e) or f"group_{i}"
         post.append(EmitColumn(name=name))
     for s, a in zip(slots, aggregates, strict=True):
+        if not a.output:
+            # Hidden aggregate: skip output emission entirely.
+            # The slot was used by HAVING/ORDER BY via _compile_having; we
+            # must NOT push its value onto the stack here or the eval-stack
+            # would have a dangling value that corrupts subsequent operations.
+            continue
         ir_func_fin = _plan_agg_to_ir(a.func)
         sep_fin = a.separator if a.separator is not None else ","
         post.append(FinalizeAgg(slot=s, func=ir_func_fin, separator=sep_fin))
@@ -1590,11 +1606,50 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
     )
 
 
-def _to_sort_key(k: object) -> SortKey:
+def _build_agg_alias_map(p: LogicalPlan) -> dict[tuple, str]:
+    """Return a ``{(func, arg, distinct) → alias}`` map from the Aggregate node
+    reachable by peeling Sort / Distinct / Limit / Having / Project wrappers.
+
+    Used by ``_to_sort_key`` to resolve ``AggregateExpr`` sort keys to the
+    column name that ``_compile_aggregate`` will emit — without this mapping,
+    ``ORDER BY SUM(val)`` would produce a sort key of ``"?"`` (the fallback
+    for unknown expressions) and the VM's ``SortResult`` handler would fail
+    with a ``ValueError`` when it tried to find the column in the result schema.
+    """
+    cur = p
+    while True:
+        match cur:
+            case PlanLimit(input=inner) | Sort(input=inner) | Distinct(input=inner):
+                cur = inner
+            case Having(input=inner) | Project(input=inner):
+                cur = inner
+            case Aggregate(aggregates=aggs):
+                return {(a.func, a.arg, a.distinct): a.alias for a in aggs}
+            case _:
+                return {}
+
+
+def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> SortKey:
+    """Convert a planner ``SortKey`` to the IR ``SortKey`` used by ``SortResult``.
+
+    ``agg_alias_map`` maps ``(func, arg, distinct)`` tuples to the output column
+    alias that ``_compile_aggregate`` will emit for that aggregate.  When an
+    ``ORDER BY`` clause references an aggregate expression (e.g. ``ORDER BY
+    SUM(val)``), this map lets us resolve the sort column name correctly instead
+    of falling back to ``"?"`` and causing a ``ValueError`` in the VM.
+    """
+    from sql_planner.expr import AggregateExpr as PlanAggExpr
     from sql_planner.plan import SortKey as PlanSortKey
 
     assert isinstance(k, PlanSortKey)
-    col = _column_display_name(k.expr) or "?"
+    col: str
+    if isinstance(k.expr, PlanAggExpr) and agg_alias_map is not None:
+        # Resolve the aggregate expression to the column name that the
+        # _compile_aggregate emit loop will use for that slot.
+        agg_key = (k.expr.func, k.expr.arg, k.expr.distinct)
+        col = agg_alias_map.get(agg_key) or k.expr.func.value.lower()
+    else:
+        col = _column_display_name(k.expr) or "?"
     direction = Direction.DESC if k.descending else Direction.ASC
     nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
     return SortKey(column=col, direction=direction, nulls=nulls)
