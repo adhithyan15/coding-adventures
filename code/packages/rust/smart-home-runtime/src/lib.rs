@@ -1682,9 +1682,55 @@ pub struct RuntimeReadSnapshot {
 }
 
 impl RuntimeReadSnapshot {
+    pub fn pending_work_summary(&self) -> RuntimePendingWorkSummary {
+        RuntimePendingWorkSummary {
+            event_backlog_count: self.event_bus.pending_delivery_count,
+            backlogged_subscription_count: self.event_bus.backlogged_subscription_count,
+            restart_due_count: self.supervisor.restart_due_count,
+            unhealthy_worker_count: self.supervisor.unhealthy_count,
+            expiring_pairing_session_count: self.expiring_pairing_session_count,
+            stale_optimistic_state_count: self.stale_optimistic_state_count,
+            state_refresh_target_count: self.state_refresh_target_count,
+        }
+    }
+
     pub fn has_pending_work(&self) -> bool {
-        !self.event_bus.is_idle()
-            || self.supervisor.has_restart_pressure()
+        !self.pending_work_summary().is_idle()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimePendingWorkSummary {
+    pub event_backlog_count: usize,
+    pub backlogged_subscription_count: usize,
+    pub restart_due_count: usize,
+    pub unhealthy_worker_count: usize,
+    pub expiring_pairing_session_count: usize,
+    pub stale_optimistic_state_count: usize,
+    pub state_refresh_target_count: usize,
+}
+
+impl RuntimePendingWorkSummary {
+    pub fn is_idle(&self) -> bool {
+        !self.has_event_backlog() && !self.has_supervision_pressure()
+    }
+
+    pub fn total_pending_work_count(&self) -> usize {
+        self.event_backlog_count
+            + self.restart_due_count
+            + self.unhealthy_worker_count
+            + self.expiring_pairing_session_count
+            + self.stale_optimistic_state_count
+            + self.state_refresh_target_count
+    }
+
+    pub fn has_event_backlog(&self) -> bool {
+        self.event_backlog_count > 0 || self.backlogged_subscription_count > 0
+    }
+
+    pub fn has_supervision_pressure(&self) -> bool {
+        self.restart_due_count > 0
+            || self.unhealthy_worker_count > 0
             || self.expiring_pairing_session_count > 0
             || self.stale_optimistic_state_count > 0
             || self.state_refresh_target_count > 0
@@ -4822,6 +4868,18 @@ mod tests {
         assert_eq!(snapshot.desired_capability_count, 1);
         assert_eq!(snapshot.state_refresh_target_count, 1);
         assert!(snapshot.has_pending_work());
+        let pending = snapshot.pending_work_summary();
+        assert_eq!(pending.event_backlog_count, 1);
+        assert_eq!(pending.backlogged_subscription_count, 1);
+        assert_eq!(pending.restart_due_count, 1);
+        assert_eq!(pending.unhealthy_worker_count, 0);
+        assert_eq!(pending.expiring_pairing_session_count, 1);
+        assert_eq!(pending.stale_optimistic_state_count, 1);
+        assert_eq!(pending.state_refresh_target_count, 1);
+        assert_eq!(pending.total_pending_work_count(), 5);
+        assert!(pending.has_event_backlog());
+        assert!(pending.has_supervision_pressure());
+        assert!(!pending.is_idle());
         assert_eq!(worker.status, WorkerStatus::Starting);
         assert_eq!(worker.restart_count, 0);
         assert_eq!(
@@ -4831,6 +4889,20 @@ mod tests {
                 .status,
             PairingSessionStatus::PendingUserPresence
         );
+    }
+
+    #[test]
+    fn runtime_read_snapshot_pending_summary_reports_idle_runtime() {
+        let runtime = SmartHomeRuntime::new();
+
+        let snapshot = runtime.read_snapshot_at(1_000);
+        let pending = snapshot.pending_work_summary();
+
+        assert!(!snapshot.has_pending_work());
+        assert!(pending.is_idle());
+        assert_eq!(pending.total_pending_work_count(), 0);
+        assert!(!pending.has_event_backlog());
+        assert!(!pending.has_supervision_pressure());
     }
 
     #[test]
