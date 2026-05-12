@@ -1,5 +1,137 @@
 # Changelog — matrix-metal
 
+## 0.6.0 — 2026-05-12
+
+### Added — MX05 Phase 4.2 (MSL emitter + specialised dispatch lands on Metal)
+
+- **New `msl_emitter` module** (all platforms, including non-Apple CI).
+  Pure code generator: given a [`SpecKey`] + handle, returns an
+  [`EmittedKernel`] containing a self-contained MSL string with
+  observed constants folded in as literal values, the entry-point
+  name (`specialised_<op>_<variant>_<dtype>_0xHHHH…`), and the
+  expected input/output buffer counts.  v0.6.0 minimum-viable scope:
+  **F32 binary Add with a 4-byte RHS constant** (`op_kind=0x07`,
+  `dtype=F32`, `range_class=Constant`).  All other `SpecKey` shapes
+  return `None`.  The emitter is the centrepiece of Phase 4.2 and is
+  the only piece that runs everywhere — compile and dispatch require
+  a real Metal device.
+
+- **New `specialised_table` module** (Apple-only).
+  `HashMap<u64, Box<MetalSpecialisedKernelFn>>` keyed by handle, with
+  `install` / `get` / `contains` / `len`.  Mirrors
+  `matrix_cpu::SpecialisedTable` from Phase 4.1; differences:
+  - Closure signature takes `&mut DispatchCtx` (not `&mut BufferStore`)
+    so closures can encode through the same queue/buffers/pipelines
+    as the generic dispatcher.
+  - Closure trait bound is `Send` (not `Send + Sync`), because
+    `MetalComputePipeline` wraps a raw Obj-C pointer and isn't
+    `Sync`.  The `Mutex<State>` upstream still makes the executor
+    `Sync` (since `Mutex<T>: Sync where T: Send`), so this is
+    sound — see the rustdoc on `MetalSpecialisedKernelFn` for the
+    full reasoning.
+
+- **New APIs on `MetalExecutor`** (Apple-only):
+  - `install_specialised(handle, kernel: Box<MetalSpecialisedKernelFn>)`
+    — install a pre-built closure.
+  - `install_specialised_from_emitted(handle, EmittedKernel) -> Result<(), String>`
+    — compile MSL → look up entry → build pipeline → wrap in a
+    dispatching closure → install.  The convenience layer over the
+    emitter; this is the path the runtime will use once it
+    auto-installs specialised kernels on cache hits.
+  - `specialised_count() -> usize` — accessor for tests/metrics.
+
+- **`ExecutorRequest::DispatchSpecialised` handler is now live** on
+  Apple targets.  Handle hit → constructs a fresh `DispatchCtx`,
+  invokes the closure, returns `DispatchDone { job_id, timings }`.
+  Handle miss → `NOT_IMPLEMENTED`.  Closure error → `RUNTIME_ERROR`.
+  Closure panic → `catch_unwind(AssertUnwindSafe(...))` → clean
+  `RUNTIME_ERROR` (security hardening — same shape as the
+  matrix-cpu Phase 4.1 fix).
+
+### What this unlocks
+
+Phase 4.1 closed the loop on the CPU side.  Phase 4.2 does the same
+on Metal: specialised kernels emitted from a `SpecKey` get compiled
+to a `MetalComputePipeline` keyed by handle, and `DispatchSpecialised`
+routes invocations to them.  This is the moment GPU specialisation
+goes from "the SpecCache tracks handles" to "the GPU actually runs
+specialised kernels with folded constants".
+
+Next phase: matrix-runtime auto-installation — observing a
+`SpecRouter` cache hit and calling `install_specialised_from_emitted`
+on the target executor without any user intervention.
+
+### Security hardening
+
+- **Panic-safe specialised dispatch.**  The closure invocation in
+  the `DispatchSpecialised` handler is wrapped in
+  `std::panic::catch_unwind(AssertUnwindSafe(...))`.  A kernel that
+  panics (e.g. one that indexes attacker-supplied empty `inputs[0]`)
+  surfaces as a clean `Error { code: RUNTIME_ERROR, message:
+  "specialised kernel 0x… panicked: …", .. }` instead of unwinding
+  through the mutex guard.  Same shape as the matrix-cpu Phase 4.1
+  fix.  Regression test
+  `dispatch_specialised_kernel_panic_becomes_runtime_error_not_unwind`
+  installs a panicking kernel, fires a panic-inducing request,
+  asserts the error response, AND fires a follow-up Heartbeat to
+  prove the mutex isn't permanently poisoned.
+
+- **Buffer-count validation in `install_specialised_from_emitted`**.
+  The dispatching closure asserts `inputs.len() == n_in` and
+  `outputs.len() == n_out` (captured from the `EmittedKernel`) before
+  touching any raw pointers, so a wire request that arrives with the
+  wrong number of buffers gets a clear `RUNTIME_ERROR` instead of
+  reading past the end of a slice.
+
+### New dependency
+
+- **`matrix-profile`** (path-only, zero external deps) — needed
+  because `emit_specialised_kernel` takes a `SpecKey`.
+
+### Tests (16 new, all passing)
+
+In `msl_emitter::tests` (14 — every test runs on every platform,
+including non-Apple CI):
+
+- `add_f32_with_constant_emits_kernel`
+- `returns_none_for_unsupported_op_kind`
+- `returns_none_for_unsupported_dtype`
+- `returns_none_when_range_class_not_constant`
+- `returns_none_when_constant_byte_length_wrong`
+- `returns_none_when_constant_bytes_empty`
+- `handle_appears_zero_padded_in_entry_point`
+- `distinct_handles_produce_distinct_entry_points`
+- `distinct_constants_produce_distinct_sources_same_handle`
+- `emission_is_deterministic`
+- `format_f32_literal_round_trips_normal_values`
+- `format_f32_literal_handles_non_finite`
+- `format_f32_literal_always_has_f_suffix_or_macro`
+- `emitted_source_passes_structural_sanity`
+
+In `specialised_table::tests` (5 — Apple-only):
+
+- `install_then_lookup_finds_kernel`
+- `lookup_of_missing_handle_returns_none`
+- `install_overwrites_prior_kernel`
+- `specialised_table_is_send`
+- `debug_impl_shows_handles_not_pointers`
+
+In `tests/integration.rs §7` (8 — Apple-only, run on macOS CI):
+
+- `dispatch_specialised_returns_not_implemented_when_handle_unknown`
+- `dispatch_specialised_runs_emitted_add_const_kernel` — the
+  full end-to-end test: emit MSL with `7.5` folded in, install,
+  upload `[1,2,3,4]`, dispatch, download, assert `[8.5, 9.5, 10.5, 11.5]`.
+- `install_specialised_with_raw_closure`
+- `dispatch_specialised_kernel_error_becomes_runtime_error`
+- `dispatch_specialised_kernel_panic_becomes_runtime_error_not_unwind` (security)
+- `install_specialised_overwrites_prior_kernel`
+- `install_specialised_from_emitted_rejects_malformed_msl`
+- `dispatch_specialised_wrong_buffer_count_errors_cleanly`
+
+Total test count (Apple): 19 unit + 25 integration (was 17 + 17).
+Non-Apple targets exercise the 14 emitter unit tests.
+
 ## 0.5.0 — 2026-05-05
 
 ### Added

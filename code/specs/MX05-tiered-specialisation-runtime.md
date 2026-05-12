@@ -242,9 +242,58 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
-> **Implementation status (Phase 4.2 landed — tensor-byte sampling, DefaultPolicy fires)**:
-> `image_gpu_core::pipeline::drive_specialisation` now samples bytes
-> from every constant input the graph carries via
+> **Implementation status (Phase 4.2 landed — matrix-metal MSL emitter + specialised dispatch)**:
+> `matrix-metal` v0.6.0 grows the GPU side of what matrix-cpu got in
+> Phase 4.1.  Three pieces land together:
+>
+> 1. **`matrix_metal::msl_emitter`** (cross-platform, runs on every
+>    CI runner) — pure code generator that takes a `SpecKey` + handle
+>    and returns an `EmittedKernel { source, entry_point,
+>    input_buffer_count, output_buffer_count }`.  v0.6.0 minimum-viable
+>    scope: F32 binary Add with a 4-byte RHS constant baked in as a
+>    Ryu-shortest float literal in the kernel source.  The entry-point
+>    name `specialised_add_const_f32_0xH...H` embeds the handle so
+>    distinct specialisations of the same op coexist.  Returns `None`
+>    for unsupported `SpecKey` shapes so the runtime falls back to
+>    generic dispatch.  Phase 4.3 extends to Sub/Mul/Div and beyond.
+>
+> 2. **`matrix_metal::SpecialisedTable`** (Apple-only) — the metal
+>    analog of the matrix-cpu table.  Closure signature takes
+>    `&mut DispatchCtx` (not `&mut BufferStore`) so closures can
+>    encode through the same command queue / pipelines as the
+>    generic dispatcher.  Send-only (not `Send + Sync`) because
+>    `MetalComputePipeline` wraps a raw Obj-C pointer; safe because
+>    the outer `Mutex<State>` already provides `Sync`.
+>
+> 3. **`MetalExecutor::install_specialised_from_emitted(handle,
+>    EmittedKernel)`** — convenience layer that compiles the emitted
+>    MSL to a `MetalComputePipeline`, wraps it in a dispatching
+>    closure with buffer-count validation, and installs the closure
+>    under `handle`.  Plus the lower-level
+>    `install_specialised(handle, Box<MetalSpecialisedKernelFn>)` for
+>    pre-built closures.
+>
+> `ExecutorRequest::DispatchSpecialised` on Apple now returns
+> `DispatchDone` for installed handles, `NOT_IMPLEMENTED` for
+> unknown ones, and `RUNTIME_ERROR` for kernel errors or
+> `catch_unwind`-caught panics (same security shape as Phase 4.1).
+>
+> Tests: 14 emitter unit tests run on every platform; 5
+> `SpecialisedTable` unit tests + 8 integration tests run on
+> Apple — including a real end-to-end test that emits MSL for
+> "add 7.5", compiles, installs, dispatches `[1,2,3,4]`, downloads,
+> and asserts `[8.5, 9.5, 10.5, 11.5]`.  Total: 19 unit + 25
+> integration on macOS CI.
+>
+> Phase 4.3 will land the runtime-side auto-installer: matrix-runtime
+> observes a `SpecRouter` cache hit and calls
+> `install_specialised_from_emitted` on the target executor
+> automatically.
+
+> **Implementation status (Phase 4.2 historical — tensor-byte sampling, DefaultPolicy fires)**:
+> This block predates the matrix-metal MSL emitter work and is kept
+> for historical context.  `image_gpu_core::pipeline::drive_specialisation`
+> samples bytes from every constant input the graph carries via
 > `Profiler::sample_tensor`, walking `placed.ops` once to build a
 > `TensorId → &PlacedConstant` map, then attributing each consuming
 > op's input slot.  This populates `ProfileObservation::tensor_observations`
