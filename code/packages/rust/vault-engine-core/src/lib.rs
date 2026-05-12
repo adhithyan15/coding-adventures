@@ -199,6 +199,61 @@ impl MintContext {
             cas_token: None,
         }
     }
+
+    /// Return a copy-free, value-redacted shape summary suitable for
+    /// audit preflights, capability cage planning, and host routing logs.
+    pub fn summary(&self) -> MintContextSummary {
+        MintContextSummary {
+            principal_len: self.principal.len(),
+            requested_ttl_ms: self.requested_ttl_ms,
+            has_path: self.path.is_some(),
+            path_len: self.path.as_ref().map_or(0, String::len),
+            has_input: self.input.is_some(),
+            input_len: self.input.as_ref().map_or(0, |input| input.len()),
+            has_cas_token: self.cas_token.is_some(),
+        }
+    }
+}
+
+/// Copy-free, value-redacted summary of a [`MintContext`].
+///
+/// The summary deliberately records only shape and byte counts: no principal
+/// value, path value, CAS token, or plaintext input bytes are cloned into the
+/// result. That makes it safe to feed into audit planning and orchestration
+/// logs that need to distinguish read-like requests from write-like requests.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct MintContextSummary {
+    /// Byte length of the audit principal identifier.
+    pub principal_len: usize,
+    /// Caller-requested TTL in milliseconds.
+    pub requested_ttl_ms: u64,
+    /// Whether the request carries an engine-specific path.
+    pub has_path: bool,
+    /// Byte length of the engine-specific path, or zero when absent.
+    pub path_len: usize,
+    /// Whether the request carries engine-specific plaintext input.
+    pub has_input: bool,
+    /// Byte length of the engine-specific input, or zero when absent.
+    pub input_len: usize,
+    /// Whether the request carries a compare-and-swap token.
+    pub has_cas_token: bool,
+}
+
+impl MintContextSummary {
+    /// True when the request is scoped to an engine-local path.
+    pub fn is_path_scoped(&self) -> bool {
+        self.has_path
+    }
+
+    /// True when the request carries plaintext engine input.
+    pub fn carries_plaintext_input(&self) -> bool {
+        self.has_input
+    }
+
+    /// True when the request carries a compare-and-swap guard.
+    pub fn has_write_guard(&self) -> bool {
+        self.has_cas_token
+    }
 }
 
 /// What `mint` returns: the bytes that should be wrapped in a
@@ -223,7 +278,10 @@ pub struct MintedSecret {
 impl core::fmt::Debug for MintedSecret {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("MintedSecret")
-            .field("body", &format_args!("<{} bytes redacted>", self.body.len()))
+            .field(
+                "body",
+                &format_args!("<{} bytes redacted>", self.body.len()),
+            )
             .field("secret_ref", &self.secret_ref)
             .field("granted_ttl_ms", &self.granted_ttl_ms)
             .finish()
@@ -387,6 +445,59 @@ mod tests {
         assert_eq!(r.name, "admin");
         assert_eq!(r.default_ttl_ms, None);
         assert_eq!(r.max_ttl_ms, None);
+    }
+
+    #[test]
+    fn mint_context_summary_reports_shape_without_values() {
+        let mut ctx = MintContext::simple("service-account", 1_000, 60_000);
+        ctx.path = Some("kv/team/api-key".into());
+        ctx.input = Some(Zeroizing::new(b"super-secret".to_vec()));
+        ctx.cas_token = Some(42);
+
+        let summary = ctx.summary();
+
+        assert_eq!(
+            summary,
+            MintContextSummary {
+                principal_len: "service-account".len(),
+                requested_ttl_ms: 60_000,
+                has_path: true,
+                path_len: "kv/team/api-key".len(),
+                has_input: true,
+                input_len: b"super-secret".len(),
+                has_cas_token: true,
+            }
+        );
+        assert!(summary.is_path_scoped());
+        assert!(summary.carries_plaintext_input());
+        assert!(summary.has_write_guard());
+
+        let debug = format!("{summary:?}");
+        assert!(!debug.contains("service-account"));
+        assert!(!debug.contains("kv/team/api-key"));
+        assert!(!debug.contains("super-secret"));
+        assert!(!debug.contains("42"));
+    }
+
+    #[test]
+    fn simple_mint_context_summary_defaults_to_no_engine_shape() {
+        let ctx = MintContext::simple("principal", 1_000, 30_000);
+
+        assert_eq!(
+            ctx.summary(),
+            MintContextSummary {
+                principal_len: "principal".len(),
+                requested_ttl_ms: 30_000,
+                has_path: false,
+                path_len: 0,
+                has_input: false,
+                input_len: 0,
+                has_cas_token: false,
+            }
+        );
+        assert!(!ctx.summary().is_path_scoped());
+        assert!(!ctx.summary().carries_plaintext_input());
+        assert!(!ctx.summary().has_write_guard());
     }
 
     #[test]
