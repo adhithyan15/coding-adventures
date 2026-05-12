@@ -16,6 +16,16 @@ import {
 
 export const ALG_FACTOR = sym("AlgFactor");
 
+export type AlgFactorEvalFn = (node: IRNode) => IRNode;
+
+export interface AlgFactorEvaluator {
+  eval(node: IRNode): IRNode;
+}
+
+export type AlgFactorHandlerEvaluator = AlgFactorEvalFn | AlgFactorEvaluator;
+
+export type AlgFactorHandler = (expr: IRNode, evaluator?: AlgFactorHandlerEvaluator) => IRNode;
+
 export interface RationalValue {
   readonly numer: bigint;
   readonly denom: bigint;
@@ -139,6 +149,33 @@ export function algFactorIr(poly: IRNode, sqrtD: IRNode, variable: IRNode): IRNo
   return factors === null ? null : factorsToIr(factors, variable, sqrtD);
 }
 
+function algFactorNormalizedIr(poly: IRNode, sqrtD: IRNode, variable: IRNode): IRNode | null {
+  const d = extractRadicalD(sqrtD);
+  if (d === null) return null;
+  const rationalCoeffs = irToRationalPoly(poly, variable);
+  if (rationalCoeffs === null) return null;
+  const commonDenom = rationalCoeffs.reduce((acc, coeff) => lcm(acc, coeff.denom), 1n);
+  const coeffs = rationalCoeffs.map((coeff) => coeff.numer * (commonDenom / coeff.denom));
+  const factors = factorOverExtension(trimBigint(coeffs), d);
+  return factors === null ? null : factorsToIr(factors, variable, sqrtD);
+}
+
+export function algFactorHandler(expr: IRNode, evaluator?: AlgFactorHandlerEvaluator): IRNode {
+  if (expr.kind !== "apply" || !equals(expr.head, ALG_FACTOR) || expr.args.length !== 2) return expr;
+  const [poly, sqrtD] = expr.args;
+  const evaluatedPoly = evaluatePolynomial(poly, evaluator);
+  const variable = findPolynomialVariable(evaluatedPoly);
+  if (variable === null) return expr;
+  return algFactorNormalizedIr(evaluatedPoly, sqrtD, variable) ?? expr;
+}
+
+export function buildAlgFactorHandlerTable(): ReadonlyMap<string, AlgFactorHandler> {
+  return new Map([[ALG_FACTOR.name, algFactorHandler]]);
+}
+
+export const alg_factor_handler = algFactorHandler;
+export const build_alg_factor_handler_table = buildAlgFactorHandlerTable;
+
 export function factorsToIr(factors: readonly AlgPoly[], variable: IRNode, sqrtD: IRNode): IRNode {
   if (factors.length === 0) return int(1);
   return factors.map((factor) => algPolyToIr(factor, variable, sqrtD))
@@ -232,6 +269,23 @@ function irToRationalPoly(node: IRNode, variable: IRNode): RationalValue[] | nul
 
 function integerPolyToAlgPoly(poly: readonly bigint[]): AlgPoly {
   return poly.map((coeff) => algCoeff(ratValue(coeff), ZERO));
+}
+
+const CONSTANT_SYMBOL_NAMES = new Set(["True", "False", "%pi", "%e", "%i"]);
+
+function evaluatePolynomial(poly: IRNode, evaluator: AlgFactorHandlerEvaluator | undefined): IRNode {
+  if (evaluator === undefined) return poly;
+  return typeof evaluator === "function" ? evaluator(poly) : evaluator.eval(poly);
+}
+
+function findPolynomialVariable(node: IRNode): IRNode | null {
+  if (node.kind === "symbol") return CONSTANT_SYMBOL_NAMES.has(node.name) ? null : node;
+  if (node.kind !== "apply") return null;
+  for (const arg of node.args) {
+    const found = findPolynomialVariable(arg);
+    if (found !== null) return found;
+  }
+  return null;
 }
 
 function algCoeff(rationalPart: RationalValue, radicalPart: RationalValue): AlgCoeff {
@@ -355,6 +409,10 @@ function gcd(mutA: bigint, mutB: bigint): bigint {
     a = t;
   }
   return a;
+}
+
+function lcm(a: bigint, b: bigint): bigint {
+  return a === 0n || b === 0n ? 0n : (a / gcd(a, b)) * b;
 }
 
 function abs(value: bigint): bigint {
