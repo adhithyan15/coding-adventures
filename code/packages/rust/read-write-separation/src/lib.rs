@@ -102,6 +102,79 @@ pub struct CapabilityClassification {
     pub is_external_actuation: bool,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct CapabilityManifestSummary {
+    pub total_capabilities: usize,
+    pub ingestion_capabilities: usize,
+    pub actuation_capabilities: usize,
+    pub internal_capabilities: usize,
+    pub trusted_capabilities: usize,
+    pub untrusted_capabilities: usize,
+    pub input_capabilities: usize,
+    pub untrusted_inputs: usize,
+    pub external_actuations: usize,
+    pub read_side_capabilities: usize,
+    pub write_side_capabilities: usize,
+    pub overlapping_read_write_pairs: usize,
+    pub justified_capabilities: usize,
+}
+
+impl CapabilityManifestSummary {
+    pub fn from_capabilities(capabilities: &[Capability]) -> Self {
+        let mut summary = Self {
+            overlapping_read_write_pairs: count_overlap_pairs(capabilities),
+            ..Self::default()
+        };
+
+        for capability in capabilities {
+            let classification = classify_capability(capability);
+
+            summary.total_capabilities += 1;
+            match classification.flavor {
+                CapabilityFlavor::Ingestion => summary.ingestion_capabilities += 1,
+                CapabilityFlavor::Actuation => summary.actuation_capabilities += 1,
+                CapabilityFlavor::Internal => summary.internal_capabilities += 1,
+            }
+            match classification.trust {
+                CapabilityTrust::Trusted => summary.trusted_capabilities += 1,
+                CapabilityTrust::Untrusted => summary.untrusted_capabilities += 1,
+            }
+            if classification.is_input {
+                summary.input_capabilities += 1;
+            }
+            if classification.is_untrusted_input {
+                summary.untrusted_inputs += 1;
+            }
+            if classification.is_external_actuation {
+                summary.external_actuations += 1;
+            }
+            if is_read_side(capability) {
+                summary.read_side_capabilities += 1;
+            }
+            if is_write_side(capability) {
+                summary.write_side_capabilities += 1;
+            }
+            if capability.justification.is_some() {
+                summary.justified_capabilities += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_capabilities == 0
+    }
+
+    pub fn has_rws_risk(&self) -> bool {
+        self.untrusted_inputs > 0 && self.external_actuations > 0
+    }
+
+    pub fn has_same_resource_overlap(&self) -> bool {
+        self.overlapping_read_write_pairs > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RwsViolation {
     pub untrusted_inputs: Vec<Capability>,
@@ -135,6 +208,10 @@ pub fn classify_capability(capability: &Capability) -> CapabilityClassification 
         is_untrusted_input,
         is_external_actuation,
     }
+}
+
+pub fn summarize_manifest(capabilities: &[Capability]) -> CapabilityManifestSummary {
+    CapabilityManifestSummary::from_capabilities(capabilities)
 }
 
 pub fn validate_manifest(capabilities: &[Capability]) -> Result<(), RwsViolation> {
@@ -256,6 +333,28 @@ fn collect_overlap_violations(
     }
 
     found
+}
+
+fn count_overlap_pairs(capabilities: &[Capability]) -> usize {
+    let mut count = 0;
+
+    for read in capabilities {
+        if !is_read_side(read) {
+            continue;
+        }
+
+        for write in capabilities {
+            if !is_write_side(write) || read.category != write.category {
+                continue;
+            }
+
+            if resources_overlap(&read.target, &write.target) {
+                count += 1;
+            }
+        }
+    }
+
+    count
 }
 
 fn is_read_side(capability: &Capability) -> bool {
@@ -422,6 +521,46 @@ mod tests {
             violation.actuations[0].identifier(),
             "channel:write:weather-snapshots"
         );
+    }
+
+    #[test]
+    fn manifest_summary_counts_capability_shape_and_risk() {
+        let capabilities = vec![
+            cap("net", "connect", "api.weather.gov:443")
+                .with_flavor(CapabilityFlavor::Ingestion)
+                .with_justification("fetch weather alerts"),
+            cap("channel", "write", "weather-snapshots"),
+            cap("fs", "read", "package:/state/*"),
+            cap("fs", "write", "package:/state/cache.json"),
+        ];
+
+        let summary = summarize_manifest(&capabilities);
+
+        assert_eq!(summary.total_capabilities, 4);
+        assert_eq!(summary.ingestion_capabilities, 1);
+        assert_eq!(summary.actuation_capabilities, 1);
+        assert_eq!(summary.internal_capabilities, 2);
+        assert_eq!(summary.trusted_capabilities, 3);
+        assert_eq!(summary.untrusted_capabilities, 1);
+        assert_eq!(summary.input_capabilities, 2);
+        assert_eq!(summary.untrusted_inputs, 1);
+        assert_eq!(summary.external_actuations, 1);
+        assert_eq!(summary.read_side_capabilities, 1);
+        assert_eq!(summary.write_side_capabilities, 2);
+        assert_eq!(summary.overlapping_read_write_pairs, 1);
+        assert_eq!(summary.justified_capabilities, 1);
+        assert!(summary.has_rws_risk());
+        assert!(summary.has_same_resource_overlap());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn empty_manifest_summary_is_empty() {
+        let summary = summarize_manifest(&[]);
+
+        assert!(summary.is_empty());
+        assert!(!summary.has_rws_risk());
+        assert!(!summary.has_same_resource_overlap());
     }
 
     #[test]
