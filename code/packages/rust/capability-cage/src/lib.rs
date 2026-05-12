@@ -27,5 +27,5 @@ pub use capability::Capability;
 pub use category::{Action, Category};
 pub use errors::{CapabilityViolationError, InvalidCombination, ManifestError};
 pub use glob::match_target;
-pub use manifest::Manifest;
+pub use manifest::{CapabilitySurfaceSummary, Manifest};
 pub use read_write_separation::{CapabilityFlavor, CapabilityTrust};

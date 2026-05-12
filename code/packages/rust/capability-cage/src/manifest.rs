@@ -9,6 +9,7 @@
 //! The default — an empty manifest — grants no OS access. This is
 //! the expected state for the majority of pure-computation packages.
 
+use std::collections::HashSet;
 use std::path::Path;
 
 use coding_adventures_json_value::{parse, JsonNumber, JsonValue};
@@ -25,6 +26,116 @@ use crate::glob::match_target;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Manifest {
     capabilities: Vec<Capability>,
+}
+
+/// Payload-free read-side view of one capability manifest.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct CapabilitySurfaceSummary {
+    pub total_capabilities: usize,
+    pub unique_categories: usize,
+    pub unique_actions: usize,
+    pub unique_targets: usize,
+    pub filesystem_capabilities: usize,
+    pub network_capabilities: usize,
+    pub process_capabilities: usize,
+    pub environment_capabilities: usize,
+    pub ffi_capabilities: usize,
+    pub time_capabilities: usize,
+    pub stdio_capabilities: usize,
+    pub read_like_capabilities: usize,
+    pub write_like_capabilities: usize,
+    pub external_effect_capabilities: usize,
+    pub ingestion_capabilities: usize,
+    pub actuation_capabilities: usize,
+    pub internal_capabilities: usize,
+    pub trusted_capabilities: usize,
+    pub untrusted_capabilities: usize,
+    pub unannotated_capabilities: usize,
+}
+
+impl CapabilitySurfaceSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_capabilities<'a, I>(capabilities: I) -> Self
+    where
+        I: IntoIterator<Item = &'a Capability>,
+    {
+        let mut summary = Self::empty();
+        let mut categories = HashSet::new();
+        let mut actions = HashSet::new();
+        let mut targets = HashSet::new();
+
+        for capability in capabilities {
+            summary.total_capabilities += 1;
+            categories.insert(capability.category);
+            actions.insert(capability.action);
+            targets.insert(capability.target.as_str());
+
+            match capability.category {
+                Category::Fs => summary.filesystem_capabilities += 1,
+                Category::Net => summary.network_capabilities += 1,
+                Category::Proc => summary.process_capabilities += 1,
+                Category::Env => summary.environment_capabilities += 1,
+                Category::Ffi => summary.ffi_capabilities += 1,
+                Category::Time => summary.time_capabilities += 1,
+                Category::Stdin | Category::Stdout => summary.stdio_capabilities += 1,
+            }
+            if is_read_like_action(capability.action) {
+                summary.read_like_capabilities += 1;
+            }
+            if is_write_like_action(capability.action) {
+                summary.write_like_capabilities += 1;
+            }
+            if is_external_effect_capability(capability) {
+                summary.external_effect_capabilities += 1;
+            }
+            match capability.flavor {
+                Some(CapabilityFlavor::Ingestion) => summary.ingestion_capabilities += 1,
+                Some(CapabilityFlavor::Actuation) => summary.actuation_capabilities += 1,
+                Some(CapabilityFlavor::Internal) => summary.internal_capabilities += 1,
+                None => {}
+            }
+            match capability.trust {
+                Some(CapabilityTrust::Trusted) => summary.trusted_capabilities += 1,
+                Some(CapabilityTrust::Untrusted) => summary.untrusted_capabilities += 1,
+                None => {}
+            }
+            if capability.flavor.is_none() && capability.trust.is_none() {
+                summary.unannotated_capabilities += 1;
+            }
+        }
+
+        summary.unique_categories = categories.len();
+        summary.unique_actions = actions.len();
+        summary.unique_targets = targets.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_capabilities == 0
+    }
+
+    pub fn has_network_access(&self) -> bool {
+        self.network_capabilities > 0
+    }
+
+    pub fn has_process_access(&self) -> bool {
+        self.process_capabilities > 0
+    }
+
+    pub fn has_write_or_actuation(&self) -> bool {
+        self.write_like_capabilities > 0 || self.actuation_capabilities > 0
+    }
+
+    pub fn crosses_untrusted_boundary(&self) -> bool {
+        self.untrusted_capabilities > 0
+    }
+
+    pub fn fully_annotated(&self) -> bool {
+        self.is_empty() || self.unannotated_capabilities == 0
+    }
 }
 
 impl Manifest {
@@ -193,6 +304,11 @@ impl Manifest {
         &self.capabilities
     }
 
+    /// Return a payload-free summary of the manifest's capability surface.
+    pub fn capability_surface_summary(&self) -> CapabilitySurfaceSummary {
+        CapabilitySurfaceSummary::from_capabilities(&self.capabilities)
+    }
+
     /// Re-run read/write separation validation for this manifest.
     pub fn validate_read_write_separation(&self) -> Result<(), ManifestError> {
         validate_read_write_separation(&self.capabilities)
@@ -275,6 +391,34 @@ fn validate_read_write_separation(capabilities: &[Capability]) -> Result<(), Man
     read_write_separation::validate_manifest(&rws_capabilities).map_err(ManifestError::from)
 }
 
+fn is_read_like_action(action: Action) -> bool {
+    matches!(action, Action::Read | Action::List | Action::Dns)
+}
+
+fn is_write_like_action(action: Action) -> bool {
+    matches!(
+        action,
+        Action::Write
+            | Action::Create
+            | Action::Delete
+            | Action::Connect
+            | Action::Listen
+            | Action::Exec
+            | Action::Fork
+            | Action::Signal
+            | Action::Call
+            | Action::Load
+            | Action::Sleep
+    )
+}
+
+fn is_external_effect_capability(capability: &Capability) -> bool {
+    matches!(
+        capability.category,
+        Category::Net | Category::Proc | Category::Ffi | Category::Stdout
+    ) || is_write_like_action(capability.action)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -351,6 +495,71 @@ mod tests {
         let m = Manifest::load_from_str(json).unwrap();
         assert_eq!(m.capabilities().len(), 1);
         assert!(m.has(Category::Fs, Action::Read, "./grammars/json.tokens"));
+    }
+
+    #[test]
+    fn capability_surface_summary_counts_manifest_shape_without_targets() {
+        let manifest = Manifest::new(vec![
+            Capability::new(Category::Fs, Action::Read, "./input/*.json", "read inputs")
+                .unwrap()
+                .with_flavor(CapabilityFlavor::Ingestion)
+                .with_trust(CapabilityTrust::Untrusted),
+            Capability::new(
+                Category::Fs,
+                Action::Write,
+                "./out/report.json",
+                "write report",
+            )
+            .unwrap()
+            .with_flavor(CapabilityFlavor::Actuation)
+            .with_trust(CapabilityTrust::Trusted),
+            Capability::new(Category::Env, Action::Read, "APP_MODE", "read mode").unwrap(),
+            Capability::new(Category::Stdout, Action::Write, "stdout", "emit progress").unwrap(),
+        ]);
+
+        let summary = manifest.capability_surface_summary();
+
+        assert_eq!(
+            summary,
+            CapabilitySurfaceSummary {
+                total_capabilities: 4,
+                unique_categories: 3,
+                unique_actions: 2,
+                unique_targets: 4,
+                filesystem_capabilities: 2,
+                network_capabilities: 0,
+                process_capabilities: 0,
+                environment_capabilities: 1,
+                ffi_capabilities: 0,
+                time_capabilities: 0,
+                stdio_capabilities: 1,
+                read_like_capabilities: 2,
+                write_like_capabilities: 2,
+                external_effect_capabilities: 2,
+                ingestion_capabilities: 1,
+                actuation_capabilities: 1,
+                internal_capabilities: 0,
+                trusted_capabilities: 1,
+                untrusted_capabilities: 1,
+                unannotated_capabilities: 2,
+            }
+        );
+        assert!(summary.has_write_or_actuation());
+        assert!(summary.crosses_untrusted_boundary());
+        assert!(!summary.has_network_access());
+        assert!(!summary.has_process_access());
+        assert!(!summary.fully_annotated());
+    }
+
+    #[test]
+    fn empty_capability_surface_summary_is_safe_default() {
+        let summary = Manifest::empty().capability_surface_summary();
+
+        assert_eq!(summary, CapabilitySurfaceSummary::empty());
+        assert!(summary.is_empty());
+        assert!(summary.fully_annotated());
+        assert!(!summary.has_write_or_actuation());
+        assert!(!summary.crosses_untrusted_boundary());
     }
 
     #[test]
