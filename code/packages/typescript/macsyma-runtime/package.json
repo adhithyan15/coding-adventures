@@ -22,8 +22,11 @@
     "@coding-adventures/parser": "file:../parser",
     "@coding-adventures/state-machine": "file:../state-machine",
     "@coding-adventures/cas-list-operations": "file:../cas-list-operations",
+    "@coding-adventures/cas-pattern-matching": "file:../cas-pattern-matching",
+    "@coding-adventures/cas-simplify": "file:../cas-simplify",
     "@coding-adventures/cas-solve": "file:../cas-solve",
     "@coding-adventures/cas-substitution": "file:../cas-substitution",
+    "@coding-adventures/cas-trig": "file:../cas-trig",
     "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
     "@coding-adventures/symbolic-vm": "file:../symbolic-vm"
   },

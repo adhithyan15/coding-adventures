@@ -47,7 +47,10 @@ import {
   REST,
   REVERSE,
   SORT,
+  SIMPLIFY,
   SUPPRESS,
+  TRIG_EXPAND,
+  TRIG_SIMPLIFY,
   extendCompilerNameTable,
   evalSourceJson,
 } from "../src/index.js";
@@ -80,7 +83,10 @@ describe("macsyma-runtime", () => {
     expect(MACSYMA_NAME_TABLE.get("kill")).toEqual(KILL);
     expect(MACSYMA_NAME_TABLE.get("ev")).toEqual(EV);
     expect(MACSYMA_NAME_TABLE.get("expand")).toEqual(EXPAND);
+    expect(MACSYMA_NAME_TABLE.get("simplify")).toEqual(SIMPLIFY);
     expect(MACSYMA_NAME_TABLE.get("ratsimp")).toEqual(RAT_SIMPLIFY);
+    expect(MACSYMA_NAME_TABLE.get("trigsimp")).toEqual(TRIG_SIMPLIFY);
+    expect(MACSYMA_NAME_TABLE.get("trigexpand")).toEqual(TRIG_EXPAND);
 
     const target = new Map<string, typeof KILL>();
     extendCompilerNameTable(target);
@@ -184,6 +190,10 @@ describe("macsyma-runtime", () => {
     expect(backend.handlers().has(EV.name)).toBe(true);
     expect(backend.handlers().has(SOLVE.name)).toBe(true);
     expect(backend.handlers().has(SUBST.name)).toBe(true);
+    expect(backend.handlers().has(SIMPLIFY.name)).toBe(true);
+    expect(backend.handlers().has(RAT_SIMPLIFY.name)).toBe(true);
+    expect(backend.handlers().has(TRIG_SIMPLIFY.name)).toBe(true);
+    expect(backend.handlers().has(TRIG_EXPAND.name)).toBe(true);
     expect(backend.handlers().has(LENGTH.name)).toBe(true);
     expect(backend.holdHeads().has(KILL.name)).toBe(true);
     expect(backend.holdHeads().has(EV.name)).toBe(true);
@@ -236,6 +246,48 @@ describe("macsyma-runtime", () => {
     const [result] = session.evalSource("ev(x + 0, expand);");
 
     expect(result.output).toEqual(sym("x"));
+  });
+
+  it("evaluates simplify and ratsimp through cas-simplify", () => {
+    const x = sym("x");
+    const expr = app(MUL, [app(ADD, [x, int(0)]), int(1)]);
+    const session = new MacsymaSession();
+    const [simplifyResult, ratsimpResult, badArity] = session.evalStatements([
+      app(sym("simplify"), [expr]),
+      app(RAT_SIMPLIFY, [expr]),
+      app(SIMPLIFY, [expr, int(1)]),
+    ]);
+
+    expect(simplifyResult.input).toEqual(app(SIMPLIFY, [expr]));
+    expect(simplifyResult.output).toEqual(x);
+    expect(ratsimpResult.output).toEqual(x);
+    expect(badArity.output).toEqual(app(SIMPLIFY, [x, int(1)]));
+  });
+
+  it("evaluates trigsimp and trigexpand through cas-trig", () => {
+    const x = sym("x");
+    const y = sym("y");
+    const session = new MacsymaSession();
+    const [simplifyResult, expandResult] = session.evalStatements([
+      app(TRIG_SIMPLIFY, [app(ADD, [app(SIN, [int(0)]), app(sym("Cos"), [int(0)])])]),
+      app(TRIG_EXPAND, [app(SIN, [app(ADD, [x, y])])]),
+    ]);
+
+    expect(simplifyResult.output).toEqual(int(1));
+    expect(expandResult.output).toEqual(app(ADD, [
+      app(MUL, [app(SIN, [x]), app(sym("Cos"), [y])]),
+      app(MUL, [app(sym("Cos"), [x]), app(SIN, [y])]),
+    ]));
+  });
+
+  it("routes Ev simplify flags through runtime handlers", () => {
+    const session = new MacsymaSession();
+    const [ratsimpResult, trigsimpResult] = session.evalSource(
+      "ev((x + 0) * 1, ratsimp); ev(sin(0) + cos(0), trigsimp);",
+    );
+
+    expect(ratsimpResult.output).toEqual(sym("x"));
+    expect(trigsimpResult.output).toEqual(int(1));
   });
 
   it("evaluates function definitions across statements", () => {

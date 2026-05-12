@@ -10,8 +10,11 @@ cd ../../../packages/typescript/macsyma-lexer && npm ci --quiet
 cd ../../../packages/typescript/macsyma-parser && npm ci --quiet
 cd ../../../packages/typescript/macsyma-compiler && npm ci --quiet
 cd ../../../packages/typescript/cas-list-operations && npm ci --quiet
+cd ../../../packages/typescript/cas-pattern-matching && npm ci --quiet
+cd ../../../packages/typescript/cas-simplify && npm ci --quiet
 cd ../../../packages/typescript/cas-solve && npm ci --quiet
 cd ../../../packages/typescript/cas-substitution && npm ci --quiet
+cd ../../../packages/typescript/cas-trig && npm ci --quiet
 cd ../../../packages/typescript/macsyma-runtime && npm ci --quiet
 npm ci --quiet
 npm run build

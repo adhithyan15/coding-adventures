@@ -18,14 +18,14 @@ import {
   structuralKey,
 } from "@coding-adventures/symbolic-ir";
 import { isRewriteCycleError, rewrite } from "@coding-adventures/cas-pattern-matching";
-import { IDENTITY_RULES } from "./rules";
+import { IDENTITY_RULES } from "./rules.js";
 
-export { AssumptionContext } from "./assumptions";
-export { IMAGINARY_UNIT, demoivre, exponentialize } from "./exponentialize";
-export * from "./heads";
-export { logcontract, logexpand } from "./logcontract";
-export { radcan } from "./radcan";
-export { IDENTITY_RULES, buildIdentityRules } from "./rules";
+export { AssumptionContext } from "./assumptions.js";
+export { IMAGINARY_UNIT, demoivre, exponentialize } from "./exponentialize.js";
+export * from "./heads.js";
+export { logcontract, logexpand } from "./logcontract.js";
+export { radcan } from "./radcan.js";
+export { IDENTITY_RULES, buildIdentityRules } from "./rules.js";
 
 export function canonical(node: IRNode): IRNode {
   if (node.kind !== "apply") return node;

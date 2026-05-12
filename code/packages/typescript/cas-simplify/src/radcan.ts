@@ -11,7 +11,7 @@ import {
   int,
   rational,
 } from "@coding-adventures/symbolic-ir";
-import { AssumptionContext } from "./assumptions";
+import { AssumptionContext } from "./assumptions.js";
 
 interface Fraction {
   readonly numer: bigint;
