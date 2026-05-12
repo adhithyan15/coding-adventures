@@ -5,7 +5,9 @@ Rust implementation of **VLT01** (`code/specs/VLT01-vault-sealed-store.md`)
 
 This crate turns any `storage_core::StorageBackend` into an
 **encrypted-secrets store** whose plaintext is only readable while a
-correct operator password is loaded in memory.
+correct operator password is loaded in memory. Hosts can also read a
+sealed-safe status summary for initialization, KEK history, and namespace
+registry health without decrypting record bodies.
 
 ## What this layer does
 

@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Wrapped-DEK AEAD AAD also binds to the KEK id, so swaps across
     KEKs are detected.
 - `put` / `get` / `delete` / `list` data-plane operations.
+- Sealed-safe status summaries for initialization state, active/retired
+  KEK counts, and registered namespace count.
 - `rotate_kek` support: re-wraps DEKs under a new master KEK without
   re-encrypting bodies; restartable, crash-safe, and back-compat with
   the retired KEK's password (the retired entry keeps its own salt

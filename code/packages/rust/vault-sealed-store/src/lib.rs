@@ -163,6 +163,17 @@ pub struct KekRotationReport {
     pub records_already_new: usize,
 }
 
+/// Read-side vault status that does not require decrypting any record body.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SealedStoreStatus {
+    pub initialized: bool,
+    pub sealed: bool,
+    pub active_kek_id: Option<String>,
+    pub kek_entries: usize,
+    pub retired_keks: usize,
+    pub registered_namespaces: usize,
+}
+
 /// Error variants surfaced by the sealed store. We deliberately collapse
 /// low-level crypto failures into a single `Crypto` variant so the error
 /// string can stay attacker-invisible.
@@ -263,6 +274,45 @@ impl SealedStore {
             .expect("vault state mutex poisoned")
             .unsealed
             .is_none()
+    }
+
+    /// Return a sealed-safe status summary for host health checks.
+    ///
+    /// The summary reads only the manifest and namespace registry metadata:
+    /// it never unwraps a DEK, derives a KEK, or decrypts a record body.
+    pub fn status(&self) -> Result<SealedStoreStatus, SealedStoreError> {
+        let sealed = self.is_sealed();
+        let Some(manifest_record) = self.backend.get(RESERVED_NAMESPACE, MANIFEST_KEY)? else {
+            return Ok(SealedStoreStatus {
+                initialized: false,
+                sealed,
+                active_kek_id: None,
+                kek_entries: 0,
+                retired_keks: 0,
+                registered_namespaces: 0,
+            });
+        };
+
+        let manifest = Manifest::parse(&manifest_record.metadata)?;
+        let active_kek_id = manifest
+            .keks
+            .iter()
+            .find(|entry| entry.status == "active")
+            .map(|entry| entry.id.clone());
+        let retired_keks = manifest
+            .keks
+            .iter()
+            .filter(|entry| entry.status == "retired")
+            .count();
+
+        Ok(SealedStoreStatus {
+            initialized: true,
+            sealed,
+            active_kek_id,
+            kek_entries: manifest.keks.len(),
+            retired_keks,
+            registered_namespaces: self.list_registered_namespaces()?.len(),
+        })
     }
 
     /// Wipe the KEK from memory. Idempotent — calling on an already-sealed
@@ -1573,6 +1623,63 @@ mod tests {
         assert!(matches!(store.get("a", "b"), Err(SealedStoreError::Sealed)));
         store.unseal(b"pw").unwrap();
         assert_eq!(&*store.get("a", "b").unwrap().unwrap().plaintext, b"x");
+    }
+
+    #[test]
+    fn status_tracks_manifest_namespaces_and_kek_history() {
+        let (store, _) = new_store();
+        assert_eq!(
+            store.status().unwrap(),
+            SealedStoreStatus {
+                initialized: false,
+                sealed: true,
+                active_kek_id: None,
+                kek_entries: 0,
+                retired_keks: 0,
+                registered_namespaces: 0,
+            }
+        );
+
+        store.init(b"pw", &fast_opts()).unwrap();
+        assert_eq!(
+            store.status().unwrap(),
+            SealedStoreStatus {
+                initialized: true,
+                sealed: false,
+                active_kek_id: Some("kek-1".to_string()),
+                kek_entries: 1,
+                retired_keks: 0,
+                registered_namespaces: 0,
+            }
+        );
+
+        store.put("alpha", "k1", b"one", None).unwrap();
+        store.put("beta", "k2", b"two", None).unwrap();
+        store.seal();
+        assert_eq!(
+            store.status().unwrap(),
+            SealedStoreStatus {
+                initialized: true,
+                sealed: true,
+                active_kek_id: Some("kek-1".to_string()),
+                kek_entries: 1,
+                retired_keks: 0,
+                registered_namespaces: 2,
+            }
+        );
+
+        let rotation = store.rotate_kek(b"pw", b"new-pw").unwrap();
+        assert_eq!(
+            store.status().unwrap(),
+            SealedStoreStatus {
+                initialized: true,
+                sealed: false,
+                active_kek_id: Some(rotation.new_kek_id),
+                kek_entries: 2,
+                retired_keks: 1,
+                registered_namespaces: 2,
+            }
+        );
     }
 
     #[test]
