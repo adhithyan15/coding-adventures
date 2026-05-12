@@ -20393,3 +20393,344 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 |     "𝔾A"
+
+
+#source tests25.dat:1222
+#data
+<!DOCTYPE html><body><foo>A
+#errors
+(1,27): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <foo>
+|       "A"
+
+
+#source tests25.dat:1223
+#data
+<!DOCTYPE html><body><area>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <area>
+|     "A"
+
+
+#source tests25.dat:1224
+#data
+<!DOCTYPE html><body><base>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <base>
+|     "A"
+
+
+#source tests25.dat:1225
+#data
+<!DOCTYPE html><body><basefont>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <basefont>
+|     "A"
+
+
+#source tests25.dat:1226
+#data
+<!DOCTYPE html><body><bgsound>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <bgsound>
+|     "A"
+
+
+#source tests25.dat:1227
+#data
+<!DOCTYPE html><body><br>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <br>
+|     "A"
+
+
+#source tests25.dat:1228
+#data
+<!DOCTYPE html><body><col>A
+#errors
+(1,26): unexpected-start-tag-ignored
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "A"
+
+
+#source tests25.dat:1229
+#data
+<!DOCTYPE html><body><command>A
+#errors
+eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <command>
+|       "A"
+
+
+#source tests25.dat:1230
+#data
+<!DOCTYPE html><body><embed>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <embed>
+|     "A"
+
+
+#source tests25.dat:1231
+#data
+<!DOCTYPE html><body><frame>A
+#errors
+(1,28): unexpected-start-tag-ignored
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "A"
+
+
+#source tests25.dat:1232
+#data
+<!DOCTYPE html><body><hr>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <hr>
+|     "A"
+
+
+#source tests25.dat:1233
+#data
+<!DOCTYPE html><body><img>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <img>
+|     "A"
+
+
+#source tests25.dat:1234
+#data
+<!DOCTYPE html><body><input>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <input>
+|     "A"
+
+
+#source tests25.dat:1235
+#data
+<!DOCTYPE html><body><keygen>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <keygen>
+|     "A"
+
+
+#source tests25.dat:1236
+#data
+<!DOCTYPE html><keygen>A</keygen>B
+#errors
+33: Stray end tag “keygen”.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <keygen>
+|     "AB"
+
+
+#source tests25.dat:1237
+#data
+</keygen>A
+#errors
+9: End tag seen without seeing a doctype first. Expected “<!DOCTYPE html>”.
+9: Stray end tag “keygen”.
+#document
+| <html>
+|   <head>
+|   <body>
+|     "A"
+
+
+#source tests25.dat:1238
+#data
+<!DOCTYPE html></keygen>A
+#errors
+24: Stray end tag “keygen”.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "A"
+
+
+#source tests25.dat:1239
+#data
+<!DOCTYPE html><head></keygen>A
+#errors
+30: Stray end tag “keygen”.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "A"
+
+
+#source tests25.dat:1240
+#data
+<!DOCTYPE html><head></head></keygen>A
+#errors
+30: Stray end tag “keygen”.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "A"
+
+
+#source tests25.dat:1241
+#data
+<!DOCTYPE html><body></keygen>A
+#errors
+30: Stray end tag “keygen”.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "A"
+
+
+#source tests25.dat:1242
+#data
+<!DOCTYPE html><body><link>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <link>
+|     "A"
+
+
+#source tests25.dat:1243
+#data
+<!DOCTYPE html><body><meta>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <meta>
+|     "A"
+
+
+#source tests25.dat:1244
+#data
+<!DOCTYPE html><body><param>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <param>
+|     "A"
+
+
+#source tests25.dat:1245
+#data
+<!DOCTYPE html><body><source>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <source>
+|     "A"
+
+
+#source tests25.dat:1246
+#data
+<!DOCTYPE html><body><track>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <track>
+|     "A"
+
+
+#source tests25.dat:1247
+#data
+<!DOCTYPE html><body><wbr>A
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <wbr>
+|     "A"
