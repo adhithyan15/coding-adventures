@@ -1048,6 +1048,99 @@ impl StateSnapshot {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SmartHomeInventorySummary {
+    pub total_bridges: usize,
+    pub online_bridges: usize,
+    pub pairing_candidate_bridges: usize,
+    pub bridges_needing_attention: usize,
+    pub total_devices: usize,
+    pub online_devices: usize,
+    pub pairing_candidate_devices: usize,
+    pub devices_needing_attention: usize,
+    pub total_entities: usize,
+    pub entities_with_state: usize,
+    pub stale_entities: usize,
+    pub commandable_entities: usize,
+}
+
+impl SmartHomeInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_inventory<'a, BI, DI, EI>(
+        bridges: BI,
+        devices: DI,
+        entities: EI,
+        now_ms: u64,
+    ) -> Self
+    where
+        BI: IntoIterator<Item = &'a Bridge>,
+        DI: IntoIterator<Item = &'a Device>,
+        EI: IntoIterator<Item = &'a Entity>,
+    {
+        let mut summary = Self::empty();
+
+        for bridge in bridges {
+            summary.total_bridges += 1;
+            if bridge.health.is_online() {
+                summary.online_bridges += 1;
+            }
+            if bridge.health.is_pairing_candidate() {
+                summary.pairing_candidate_bridges += 1;
+            }
+            if bridge.health.needs_attention() {
+                summary.bridges_needing_attention += 1;
+            }
+        }
+
+        for device in devices {
+            summary.total_devices += 1;
+            if device.health.is_online() {
+                summary.online_devices += 1;
+            }
+            if device.health.is_pairing_candidate() {
+                summary.pairing_candidate_devices += 1;
+            }
+            if device.health.needs_attention() {
+                summary.devices_needing_attention += 1;
+            }
+        }
+
+        for entity in entities {
+            summary.total_entities += 1;
+            if let Some(state) = entity.state.as_ref() {
+                summary.entities_with_state += 1;
+                if state.is_stale_at(now_ms) {
+                    summary.stale_entities += 1;
+                }
+            }
+            if entity.capability_summary().has_command_surface() {
+                summary.commandable_entities += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_bridges == 0 && self.total_devices == 0 && self.total_entities == 0
+    }
+
+    pub fn has_pairing_candidates(&self) -> bool {
+        self.pairing_candidate_bridges > 0 || self.pairing_candidate_devices > 0
+    }
+
+    pub fn needs_attention(&self) -> bool {
+        self.bridges_needing_attention > 0 || self.devices_needing_attention > 0
+    }
+
+    pub fn has_stale_state(&self) -> bool {
+        self.stale_entities > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DeviceEventType {
     Discovered,
@@ -2161,6 +2254,156 @@ mod tests {
         assert!(timed_out.timed_out());
         assert!(CommandStatus::Failed.is_failure());
         assert!(!CommandStatus::Failed.timed_out());
+    }
+
+    #[test]
+    fn inventory_summary_counts_health_state_and_command_surfaces() {
+        let mut hue_bridge = Bridge::new(
+            BridgeId::trusted("bridge-hue"),
+            IntegrationId::trusted("hue"),
+            BridgeTransport::LanHttp,
+        );
+        hue_bridge.health = Health::Online;
+        let mut pairing_bridge = Bridge::new(
+            BridgeId::trusted("bridge-zigbee"),
+            IntegrationId::trusted("zigbee"),
+            BridgeTransport::Serial,
+        );
+        pairing_bridge.health = Health::Unpaired;
+        let mut failed_bridge = Bridge::new(
+            BridgeId::trusted("bridge-zwave"),
+            IntegrationId::trusted("zwave"),
+            BridgeTransport::Serial,
+        );
+        failed_bridge.health = Health::AuthFailed;
+        let bridges = vec![hue_bridge, pairing_bridge, failed_bridge];
+
+        let devices = vec![
+            Device {
+                device_id: DeviceId::trusted("device-light"),
+                bridge_id: BridgeId::trusted("bridge-hue"),
+                manufacturer: "Acme".to_string(),
+                model: "Light".to_string(),
+                name: "Kitchen".to_string(),
+                serial: None,
+                firmware_version: None,
+                room_id: Some("kitchen".to_string()),
+                entity_ids: vec![EntityId::trusted("entity-light")],
+                identifiers: Vec::new(),
+                health: Health::Online,
+                metadata: Vec::new(),
+            },
+            Device {
+                device_id: DeviceId::trusted("device-sensor"),
+                bridge_id: BridgeId::trusted("bridge-zigbee"),
+                manufacturer: "Acme".to_string(),
+                model: "Sensor".to_string(),
+                name: "Hall".to_string(),
+                serial: None,
+                firmware_version: None,
+                room_id: None,
+                entity_ids: vec![EntityId::trusted("entity-sensor")],
+                identifiers: Vec::new(),
+                health: Health::Discoverable,
+                metadata: Vec::new(),
+            },
+            Device {
+                device_id: DeviceId::trusted("device-lock"),
+                bridge_id: BridgeId::trusted("bridge-zwave"),
+                manufacturer: "Acme".to_string(),
+                model: "Lock".to_string(),
+                name: "Front door".to_string(),
+                serial: None,
+                firmware_version: None,
+                room_id: None,
+                entity_ids: vec![EntityId::trusted("entity-lock")],
+                identifiers: Vec::new(),
+                health: Health::Offline,
+                metadata: Vec::new(),
+            },
+        ];
+
+        let entities = vec![
+            Entity {
+                entity_id: EntityId::trusted("entity-light"),
+                device_id: DeviceId::trusted("device-light"),
+                kind: EntityKind::Light,
+                name: "Kitchen light".to_string(),
+                capabilities: vec![Capability::light_on_off()],
+                state: Some(StateSnapshot {
+                    entity_id: EntityId::trusted("entity-light"),
+                    value: Value::Bool(true),
+                    source: StateSource::EventStream,
+                    observed_at_ms: 1_000,
+                    received_at_ms: 1_000,
+                    expires_at_ms: Some(3_000),
+                    confidence: StateConfidence::Confirmed,
+                }),
+                metadata: Vec::new(),
+            },
+            Entity {
+                entity_id: EntityId::trusted("entity-sensor"),
+                device_id: DeviceId::trusted("device-sensor"),
+                kind: EntityKind::Sensor,
+                name: "Hall sensor".to_string(),
+                capabilities: vec![Capability::sensor_temperature()],
+                state: Some(StateSnapshot {
+                    entity_id: EntityId::trusted("entity-sensor"),
+                    value: Value::Number(21.5),
+                    source: StateSource::Poll,
+                    observed_at_ms: 500,
+                    received_at_ms: 600,
+                    expires_at_ms: Some(1_500),
+                    confidence: StateConfidence::Confirmed,
+                }),
+                metadata: Vec::new(),
+            },
+            Entity {
+                entity_id: EntityId::trusted("entity-scene"),
+                device_id: DeviceId::trusted("device-light"),
+                kind: EntityKind::Scene,
+                name: "Dinner".to_string(),
+                capabilities: vec![Capability::scene_recall()],
+                state: None,
+                metadata: Vec::new(),
+            },
+        ];
+
+        let summary =
+            SmartHomeInventorySummary::from_inventory(&bridges, &devices, &entities, 2_000);
+
+        assert_eq!(
+            summary,
+            SmartHomeInventorySummary {
+                total_bridges: 3,
+                online_bridges: 1,
+                pairing_candidate_bridges: 1,
+                bridges_needing_attention: 1,
+                total_devices: 3,
+                online_devices: 1,
+                pairing_candidate_devices: 1,
+                devices_needing_attention: 1,
+                total_entities: 3,
+                entities_with_state: 2,
+                stale_entities: 1,
+                commandable_entities: 2,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_pairing_candidates());
+        assert!(summary.needs_attention());
+        assert!(summary.has_stale_state());
+
+        let empty = SmartHomeInventorySummary::from_inventory(
+            Vec::<Bridge>::new().iter(),
+            Vec::<Device>::new().iter(),
+            Vec::<Entity>::new().iter(),
+            2_000,
+        );
+        assert!(empty.is_empty());
+        assert!(!empty.has_pairing_candidates());
+        assert!(!empty.needs_attention());
+        assert!(!empty.has_stale_state());
     }
 
     #[test]
