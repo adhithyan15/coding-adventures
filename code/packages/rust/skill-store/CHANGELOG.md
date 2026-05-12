@@ -13,6 +13,8 @@ All notable changes to this package will be documented in this file.
 - `SkillAssetInventorySummary` plus `SkillStore::asset_inventory_summary()` for
   compact content-type, path-depth, and byte rollups over one skill version's
   asset metadata.
+- `SkillSourceSummary` plus `SkillStore::source_summary()` for compact
+  manifest `source.kind` provenance rollups across filtered skill versions.
 
 ## [0.1.0] - 2026-04-18
 

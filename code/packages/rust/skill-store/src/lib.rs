@@ -9,7 +9,7 @@
 use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_sha256::sha256;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use storage_core::{StorageBackend, StorageError, StorageListOptions, StoragePutInput};
 
 const NAMESPACE: &str = "skills";
@@ -270,6 +270,94 @@ impl SkillAssetInventorySummary {
     }
 }
 
+/// Count of installed skill versions for one manifest `source.kind`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SkillSourceKindSummary {
+    pub kind: String,
+    pub versions: usize,
+    pub active_versions: usize,
+    pub inactive_versions: usize,
+}
+
+/// Compact source-kind inventory for provenance and portability checks.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SkillSourceSummary {
+    pub total_skill_versions: usize,
+    pub active_skill_versions: usize,
+    pub inactive_skill_versions: usize,
+    pub specified_source_versions: usize,
+    pub unspecified_source_versions: usize,
+    pub unique_source_kinds: usize,
+    pub source_kinds: Vec<SkillSourceKindSummary>,
+}
+
+impl SkillSourceSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_manifests<'a, I>(manifests: I) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillManifest>,
+    {
+        let mut summary = Self::empty();
+        let mut source_kinds: BTreeMap<String, SkillSourceKindSummary> = BTreeMap::new();
+
+        for manifest in manifests {
+            summary.total_skill_versions += 1;
+            if manifest.active {
+                summary.active_skill_versions += 1;
+            } else {
+                summary.inactive_skill_versions += 1;
+            }
+
+            let Some(kind) = manifest_source_kind(&manifest.source) else {
+                summary.unspecified_source_versions += 1;
+                continue;
+            };
+            summary.specified_source_versions += 1;
+            let source_kind =
+                source_kinds
+                    .entry(kind.to_string())
+                    .or_insert_with(|| SkillSourceKindSummary {
+                        kind: kind.to_string(),
+                        versions: 0,
+                        active_versions: 0,
+                        inactive_versions: 0,
+                    });
+            source_kind.versions += 1;
+            if manifest.active {
+                source_kind.active_versions += 1;
+            } else {
+                source_kind.inactive_versions += 1;
+            }
+        }
+
+        summary.unique_source_kinds = source_kinds.len();
+        summary.source_kinds = source_kinds
+            .into_iter()
+            .map(|(_, source_kind)| source_kind)
+            .collect();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_skill_versions == 0
+    }
+
+    pub fn has_specified_sources(&self) -> bool {
+        self.specified_source_versions > 0
+    }
+
+    pub fn has_unspecified_sources(&self) -> bool {
+        self.unspecified_source_versions > 0
+    }
+
+    pub fn has_multiple_source_kinds(&self) -> bool {
+        self.unique_source_kinds > 1
+    }
+}
+
 /// Query options for listing installed skill manifests.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct SkillListOptions {
@@ -498,6 +586,14 @@ impl<S: StorageBackend> SkillStore<S> {
     ) -> Result<SkillAssetInventorySummary, StorageError> {
         let assets = self.list_asset_summaries(skill_id, version, options)?;
         Ok(SkillAssetInventorySummary::from_assets(&assets))
+    }
+
+    pub fn source_summary(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<SkillSourceSummary, StorageError> {
+        let manifests = self.list_skills(options)?;
+        Ok(SkillSourceSummary::from_manifests(&manifests))
     }
 
     fn filtered_manifests(
@@ -788,6 +884,19 @@ fn is_markdown_content_type(value: &str) -> bool {
 
 fn is_json_content_type(value: &str) -> bool {
     value == "application/json" || value.ends_with("+json")
+}
+
+fn manifest_source_kind(source: &JsonValue) -> Option<&str> {
+    let JsonValue::Object(object) = source else {
+        return None;
+    };
+    object
+        .iter()
+        .find(|(name, _)| name == "kind")
+        .and_then(|(_, value)| match value {
+            JsonValue::String(kind) if !kind.trim().is_empty() => Some(kind.as_str()),
+            _ => None,
+        })
 }
 
 fn manifest_record_metadata(manifest: &SkillManifest) -> JsonValue {
@@ -1617,6 +1726,118 @@ mod tests {
                 .requirement_summary(SkillListOptions::new().with_limit(0))
                 .unwrap(),
             SkillRequirementSummary::empty()
+        );
+    }
+
+    #[test]
+    fn source_summary_counts_manifest_source_kinds() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        for manifest in [
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v1".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![(
+                    "kind".to_string(),
+                    JsonValue::String("local".to_string()),
+                )]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v2".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![(
+                    "kind".to_string(),
+                    JsonValue::String("local".to_string()),
+                )]),
+                active: false,
+            },
+            SkillManifest {
+                skill_id: "observer".to_string(),
+                version: "v1".to_string(),
+                name: "Observer".to_string(),
+                description: "Reads state".to_string(),
+                entrypoints: vec!["observe".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![(
+                    "kind".to_string(),
+                    JsonValue::String("registry".to_string()),
+                )]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "scratch".to_string(),
+                version: "v1".to_string(),
+                name: "Scratch".to_string(),
+                description: "Has no source kind".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: false,
+            },
+        ] {
+            let _ = store.install_skill(manifest, Vec::new()).unwrap();
+        }
+
+        let summary = store.source_summary(SkillListOptions::new()).unwrap();
+
+        assert_eq!(
+            summary,
+            SkillSourceSummary {
+                total_skill_versions: 4,
+                active_skill_versions: 2,
+                inactive_skill_versions: 2,
+                specified_source_versions: 3,
+                unspecified_source_versions: 1,
+                unique_source_kinds: 2,
+                source_kinds: vec![
+                    SkillSourceKindSummary {
+                        kind: "local".to_string(),
+                        versions: 2,
+                        active_versions: 1,
+                        inactive_versions: 1,
+                    },
+                    SkillSourceKindSummary {
+                        kind: "registry".to_string(),
+                        versions: 1,
+                        active_versions: 1,
+                        inactive_versions: 0,
+                    },
+                ],
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_specified_sources());
+        assert!(summary.has_unspecified_sources());
+        assert!(summary.has_multiple_source_kinds());
+
+        let active_summary = store
+            .source_summary(SkillListOptions::new().active_only())
+            .unwrap();
+        assert_eq!(active_summary.total_skill_versions, 2);
+        assert_eq!(active_summary.active_skill_versions, 2);
+        assert_eq!(active_summary.unspecified_source_versions, 0);
+
+        assert_eq!(
+            store
+                .source_summary(SkillListOptions::new().with_limit(0))
+                .unwrap(),
+            SkillSourceSummary::empty()
         );
     }
 
