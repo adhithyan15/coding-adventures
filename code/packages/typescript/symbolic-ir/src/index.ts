@@ -220,6 +220,9 @@ export const TANH = sym("Tanh");
 export const ASINH = sym("Asinh");
 export const ACOSH = sym("Acosh");
 export const ATANH = sym("Atanh");
+export const COTH = sym("Coth");
+export const SECH = sym("Sech");
+export const CSCH = sym("Csch");
 
 // Calculus and CAS heads
 export const D = sym("D");

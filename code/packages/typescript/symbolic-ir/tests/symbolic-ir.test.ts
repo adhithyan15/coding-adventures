@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   ADD,
+  COTH,
+  CSCH,
   MUL,
   POW,
+  SECH,
   app,
   equals,
   int,
@@ -48,5 +51,12 @@ describe("symbolic-ir", () => {
     const x = sym("x");
     const expr = app(ADD, [app(POW, [x, int(2)]), int(1)]);
     expect(toDisplayString(expr)).toBe("Add(Pow(x, 2), 1)");
+  });
+
+  it("exports reciprocal hyperbolic heads as first-class symbols", () => {
+    const x = sym("x");
+    expect(app(COTH, [x])).toEqual(app(sym("Coth"), [x]));
+    expect(toDisplayString(app(SECH, [x]))).toBe("Sech(x)");
+    expect(structuralKey(app(CSCH, [x]))).toBe('A:S:"Csch"(S:"x")');
   });
 });

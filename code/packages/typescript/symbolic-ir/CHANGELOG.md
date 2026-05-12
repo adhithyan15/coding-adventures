@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Added first-class reciprocal hyperbolic head symbols `COTH`, `SECH`, and
+  `CSCH` for `Coth`, `Sech`, and `Csch`.
+
 ## [0.1.0] - 2026-05-08
 
 ### Added

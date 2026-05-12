@@ -10,6 +10,8 @@ import {
   ATANH,
   COS,
   COSH,
+  COTH,
+  CSCH,
   D,
   DEFINE,
   DIV,
@@ -33,6 +35,7 @@ import {
   NOT_EQUAL,
   OR,
   POW,
+  SECH,
   SIN,
   SINH,
   SQRT,
@@ -283,6 +286,9 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   table.set(ASINH.name, elementary("Asinh", Math.asinh, new Map([["0", int(0)]]), simplify));
   table.set(ACOSH.name, elementary("Acosh", Math.acosh, new Map(), simplify));
   table.set(ATANH.name, elementary("Atanh", Math.atanh, new Map([["0", int(0)]]), simplify));
+  table.set(COTH.name, elementary("Coth", (x) => Math.cosh(x) / Math.sinh(x), new Map(), simplify));
+  table.set(SECH.name, elementary("Sech", (x) => 1 / Math.cosh(x), new Map([["0", int(1)]]), simplify));
+  table.set(CSCH.name, elementary("Csch", (x) => 1 / Math.sinh(x), new Map(), simplify));
 
   table.set(EQUAL.name, (_vm, expr) => boolNode(equals(binaryArgs(expr)[0], binaryArgs(expr)[1])));
   table.set(NOT_EQUAL.name, (_vm, expr) => boolNode(!equals(binaryArgs(expr)[0], binaryArgs(expr)[1])));
@@ -561,6 +567,30 @@ function diff(f: IRNode, x: IRNode): IRNode {
     }
     if (equals(f.head, ATANH)) {
       return app(DIV, [innerDiff, app(SUB, [int(1), app(POW, [inner, int(2)])])]);
+    }
+    if (equals(f.head, COTH)) {
+      return app(NEG, [
+        app(DIV, [
+          innerDiff,
+          app(POW, [app(SINH, [inner]), int(2)]),
+        ]),
+      ]);
+    }
+    if (equals(f.head, SECH)) {
+      return app(NEG, [
+        app(DIV, [
+          app(MUL, [innerDiff, app(SINH, [inner])]),
+          app(POW, [app(COSH, [inner]), int(2)]),
+        ]),
+      ]);
+    }
+    if (equals(f.head, CSCH)) {
+      return app(NEG, [
+        app(DIV, [
+          app(MUL, [innerDiff, app(COSH, [inner])]),
+          app(POW, [app(SINH, [inner]), int(2)]),
+        ]),
+      ]);
     }
   }
 

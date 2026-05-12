@@ -7,6 +7,8 @@
 - Added a symbolic-backend-only `D` handler for pure IR differentiation,
   including arithmetic, power, elementary, hyperbolic, and inverse hyperbolic
   chain rules.
+- Added reciprocal hyperbolic `Coth`, `Sech`, and `Csch` numeric handlers and
+  derivative chain rules expressed via `Sinh`/`Cosh`.
 
 ## [0.1.0] - 2026-05-08
 
