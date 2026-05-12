@@ -5,10 +5,10 @@
 
 use cas_solve::frac::Frac;
 use cas_solve::{
-    nsolve_fraction_poly, nsolve_poly, roots_to_ir, solve_cubic, solve_linear, solve_quadratic,
-    solve_quartic, Complex, SolveResult,
+    nsolve_fraction_poly, nsolve_poly, roots_to_ir, solve_cubic, solve_linear, solve_linear_system,
+    solve_quadratic, solve_quartic, Complex, SolveResult,
 };
-use symbolic_ir::{int, rat, IRNode};
+use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, POW, RULE, SUB};
 
 fn frac(n: i64, d: i64) -> Frac {
     Frac::new(n, d)
@@ -39,6 +39,40 @@ fn assert_numeric_roots_close(actual: &[Complex], expected: &[Complex]) {
         }
         assert!(matched, "missing root {want:?} in {actual:?}");
     }
+}
+
+fn eq(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym(EQUAL), vec![lhs, rhs])
+}
+
+fn add(args: Vec<IRNode>) -> IRNode {
+    apply(sym(ADD), args)
+}
+
+fn sub(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym(SUB), vec![lhs, rhs])
+}
+
+fn mul(args: Vec<IRNode>) -> IRNode {
+    apply(sym(MUL), args)
+}
+
+fn pow(base: IRNode, exponent: IRNode) -> IRNode {
+    apply(sym(POW), vec![base, exponent])
+}
+
+fn rule_value(rules: &[IRNode], variable: &IRNode) -> IRNode {
+    rules
+        .iter()
+        .find_map(|rule| match rule {
+            IRNode::Apply(apply_node)
+                if apply_node.head == sym(RULE) && apply_node.args.first() == Some(variable) =>
+            {
+                Some(apply_node.args[1].clone())
+            }
+            _ => None,
+        })
+        .unwrap_or_else(|| panic!("missing rule for {variable:?}"))
 }
 
 // ---------------------------------------------------------------------------
@@ -449,4 +483,120 @@ fn nsolve_fraction_poly_returns_float_ir_roots() {
     assert!((values[0] - 1.0).abs() < 1e-7);
     assert!((values[1] - 2.0).abs() < 1e-7);
     assert!((values[2] - 3.0).abs() < 1e-7);
+}
+
+// ---------------------------------------------------------------------------
+// solve_linear_system
+// ---------------------------------------------------------------------------
+
+#[test]
+fn linear_system_2x2_simple() {
+    let x = sym("x");
+    let y = sym("y");
+    let result = solve_linear_system(
+        &[
+            eq(add(vec![x.clone(), y.clone()]), int(3)),
+            eq(sub(x.clone(), y.clone()), int(1)),
+        ],
+        &[x.clone(), y.clone()],
+    )
+    .expect("expected unique solution");
+
+    assert_eq!(rule_value(&result, &x), int(2));
+    assert_eq!(rule_value(&result, &y), int(1));
+}
+
+#[test]
+fn linear_system_rational_solution() {
+    let x = sym("x");
+    let y = sym("y");
+    let result = solve_linear_system(
+        &[
+            eq(
+                add(vec![
+                    mul(vec![int(2), x.clone()]),
+                    mul(vec![int(3), y.clone()]),
+                ]),
+                int(7),
+            ),
+            eq(sub(mul(vec![int(4), x.clone()]), y.clone()), int(1)),
+        ],
+        &[x.clone(), y.clone()],
+    )
+    .expect("expected unique solution");
+
+    assert_eq!(rule_value(&result, &x), rat(5, 7));
+    assert_eq!(rule_value(&result, &y), rat(13, 7));
+}
+
+#[test]
+fn linear_system_3x3_and_zero_form() {
+    let x = sym("x");
+    let y = sym("y");
+    let z = sym("z");
+    let result = solve_linear_system(
+        &[
+            eq(add(vec![x.clone(), y.clone(), z.clone()]), int(6)),
+            eq(add(vec![mul(vec![int(2), x.clone()]), y.clone()]), int(5)),
+            eq(z.clone(), int(3)),
+        ],
+        &[x.clone(), y.clone(), z.clone()],
+    )
+    .expect("expected unique solution");
+
+    assert_eq!(rule_value(&result, &x), int(2));
+    assert_eq!(rule_value(&result, &y), int(1));
+    assert_eq!(rule_value(&result, &z), int(3));
+
+    let zero_form = solve_linear_system(
+        &[add(vec![x.clone(), y.clone()]), sub(x.clone(), y.clone())],
+        &[x.clone(), y.clone()],
+    )
+    .expect("expected unique zero-form solution");
+    assert_eq!(rule_value(&zero_form, &x), int(0));
+    assert_eq!(rule_value(&zero_form, &y), int(0));
+}
+
+#[test]
+fn linear_system_rejects_bad_systems() {
+    let x = sym("x");
+    let y = sym("y");
+    assert!(solve_linear_system(
+        &[eq(add(vec![x.clone(), y.clone()]), int(3))],
+        &[x.clone(), y.clone()]
+    )
+    .is_none());
+    assert!(solve_linear_system(&[], &[]).is_none());
+    assert!(solve_linear_system(
+        &[
+            eq(add(vec![x.clone(), y.clone()]), int(1)),
+            eq(
+                add(vec![
+                    mul(vec![int(2), x.clone()]),
+                    mul(vec![int(2), y.clone()])
+                ]),
+                int(2)
+            ),
+        ],
+        &[x.clone(), y.clone()],
+    )
+    .is_none());
+    assert!(solve_linear_system(&[eq(pow(x.clone(), int(2)), int(4))], &[x]).is_none());
+}
+
+#[test]
+fn linear_system_returns_rule_nodes_in_variable_order() {
+    let x = sym("x");
+    let y = sym("y");
+    let result = solve_linear_system(
+        &[
+            eq(add(vec![x.clone(), y.clone()]), int(3)),
+            eq(sub(x.clone(), y.clone()), int(1)),
+        ],
+        &[x.clone(), y.clone()],
+    )
+    .expect("expected unique solution");
+
+    assert_eq!(result[0], apply(sym(RULE), vec![x, int(2)]));
+    assert_eq!(result[1], apply(sym(RULE), vec![y, int(1)]));
 }
