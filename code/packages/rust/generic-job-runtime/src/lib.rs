@@ -84,6 +84,14 @@ pub enum ExecutorHealth {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorQueuePressure {
+    Idle,
+    Nominal,
+    Elevated,
+    Saturated,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ExecutorSupervisionAction {
     None,
     ObserveDraining,
@@ -137,6 +145,22 @@ impl ExecutorSnapshot {
         }
         let percent = self.in_flight_jobs.saturating_mul(100) / self.max_queue_depth;
         percent.min(100) as u8
+    }
+
+    pub fn queue_pressure(&self) -> ExecutorQueuePressure {
+        if self.in_flight_jobs == 0 {
+            ExecutorQueuePressure::Idle
+        } else if self.is_saturated() {
+            ExecutorQueuePressure::Saturated
+        } else if self.queue_pressure_percent() >= 75 {
+            ExecutorQueuePressure::Elevated
+        } else {
+            ExecutorQueuePressure::Nominal
+        }
+    }
+
+    pub fn exceeds_queue_pressure_percent(&self, threshold: u8) -> bool {
+        self.queue_pressure_percent() > threshold.min(100)
     }
 
     pub fn recommended_supervision_action(&self) -> ExecutorSupervisionAction {
@@ -1896,6 +1920,8 @@ for line in sys.stdin:
         assert!(snapshot.is_saturated());
         assert_eq!(snapshot.pending_jobs(), 2);
         assert_eq!(snapshot.health(), ExecutorHealth::Saturated);
+        assert_eq!(snapshot.queue_pressure(), ExecutorQueuePressure::Saturated);
+        assert!(snapshot.exceeds_queue_pressure_percent(75));
         assert!(!snapshot.has_live_capacity());
         assert!(snapshot.needs_supervisor_attention());
         assert!(!snapshot.shutting_down);
@@ -1948,6 +1974,8 @@ for line in sys.stdin:
         };
         assert_eq!(idle.health(), ExecutorHealth::Idle);
         assert_eq!(idle.queue_pressure_percent(), 0);
+        assert_eq!(idle.queue_pressure(), ExecutorQueuePressure::Idle);
+        assert!(!idle.exceeds_queue_pressure_percent(0));
         assert_eq!(
             idle.recommended_supervision_action(),
             ExecutorSupervisionAction::None
@@ -1963,11 +1991,25 @@ for line in sys.stdin:
         assert_eq!(busy.health(), ExecutorHealth::Busy);
         assert_eq!(busy.pending_jobs(), 1);
         assert_eq!(busy.queue_pressure_percent(), 25);
+        assert_eq!(busy.queue_pressure(), ExecutorQueuePressure::Nominal);
+        assert!(busy.exceeds_queue_pressure_percent(20));
+        assert!(!busy.exceeds_queue_pressure_percent(25));
         assert_eq!(
             busy.recommended_supervision_action(),
             ExecutorSupervisionAction::None
         );
         assert!(busy.has_live_capacity());
+
+        let elevated = ExecutorSnapshot {
+            in_flight_jobs: 3,
+            queued_jobs: 2,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(elevated.health(), ExecutorHealth::Busy);
+        assert_eq!(elevated.queue_pressure_percent(), 75);
+        assert_eq!(elevated.queue_pressure(), ExecutorQueuePressure::Elevated);
+        assert!(elevated.exceeds_queue_pressure_percent(74));
 
         let saturated = ExecutorSnapshot {
             in_flight_jobs: 4,
@@ -1977,6 +2019,8 @@ for line in sys.stdin:
         };
         assert_eq!(saturated.health(), ExecutorHealth::Saturated);
         assert_eq!(saturated.queue_pressure_percent(), 100);
+        assert_eq!(saturated.queue_pressure(), ExecutorQueuePressure::Saturated);
+        assert!(!saturated.exceeds_queue_pressure_percent(100));
         assert_eq!(
             saturated.recommended_supervision_action(),
             ExecutorSupervisionAction::ApplyBackpressure
