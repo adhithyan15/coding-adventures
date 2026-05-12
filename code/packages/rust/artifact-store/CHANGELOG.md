@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `ArtifactCatalogSummary` and `catalog_summary()` for retention and revision
+  coverage over selected artifact manifests.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
