@@ -4,7 +4,7 @@
 // code/packages/python/cas-factor/tests/.
 
 use cas_factor::{
-    content, degree, divide_linear, divisors, evaluate, extract_linear_factors,
+    bzh_factor, content, degree, divide_linear, divisors, evaluate, extract_linear_factors,
     factor_integer_polynomial, find_integer_roots, kronecker_factor, normalize, primitive_part,
 };
 
@@ -195,6 +195,22 @@ fn kronecker_leaves_irreducible_quadratic() {
 }
 
 // ---------------------------------------------------------------------------
+// Berlekamp-Zassenhaus-Hensel
+// ---------------------------------------------------------------------------
+
+#[test]
+fn bzh_splits_x5_minus_one() {
+    let mut factors = bzh_factor(&[-1, 0, 0, 0, 0, 1]).expect("x^5 - 1 should split");
+    factors.sort();
+    assert_eq!(factors, vec![vec![-1, 1], vec![1, 1, 1, 1, 1]]);
+}
+
+#[test]
+fn bzh_returns_none_for_irreducible_x4_plus_one() {
+    assert_eq!(bzh_factor(&[1, 0, 0, 0, 1]), None);
+}
+
+// ---------------------------------------------------------------------------
 // factor_integer_polynomial
 // ---------------------------------------------------------------------------
 
@@ -238,6 +254,22 @@ fn factor_x4_plus_x2_plus_one_with_kronecker_residual() {
     assert_eq!(c, 1);
     factors.sort_by_key(|(f, _)| f.clone());
     assert_eq!(factors, vec![(vec![1, -1, 1], 1), (vec![1, 1, 1], 1)]);
+}
+
+#[test]
+fn factor_x5_minus_one_with_bzh_residual() {
+    let (c, mut factors) = factor_integer_polynomial(&[-1, 0, 0, 0, 0, 1]);
+    assert_eq!(c, 1);
+    factors.sort_by_key(|(f, _)| f.clone());
+    assert_eq!(factors, vec![(vec![-1, 1], 1), (vec![1, 1, 1, 1, 1], 1)]);
+}
+
+#[test]
+fn factor_content_before_bzh_residual() {
+    let (c, mut factors) = factor_integer_polynomial(&[-2, 0, 0, 0, 0, 2]);
+    assert_eq!(c, 2);
+    factors.sort_by_key(|(f, _)| f.clone());
+    assert_eq!(factors, vec![(vec![-1, 1], 1), (vec![1, 1, 1, 1, 1], 1)]);
 }
 
 #[test]
