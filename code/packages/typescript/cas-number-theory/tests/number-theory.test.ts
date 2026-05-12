@@ -2,16 +2,21 @@ import { describe, expect, it } from "vitest";
 import { MUL, POW, app, int, sym } from "@coding-adventures/symbolic-ir";
 import {
   crt,
+  divisors,
   extendedGcd,
   factorInteger,
   factorizeIr,
   gcd,
+  integerLength,
   isPrime,
+  jacobiSymbol,
   lcm,
   modInverse,
   modPow,
+  moebiusMu,
   nextPrime,
   nthPrime,
+  prevPrime,
   primesUpTo,
   totient,
 } from "../src/index";
@@ -47,6 +52,46 @@ describe("arithmetic", () => {
     expect(modPow(3, 0, 7)).toBe(1n);
     expect(modPow(100, 100, 1)).toBe(0n);
   });
+
+  it("enumerates positive divisors of absolute values", () => {
+    expect(divisors(1)).toEqual([1n]);
+    expect(divisors(12)).toEqual([1n, 2n, 3n, 4n, 6n, 12n]);
+    expect(divisors(-12)).toEqual([1n, 2n, 3n, 4n, 6n, 12n]);
+    expect(divisors(30)).toEqual([1n, 2n, 3n, 5n, 6n, 10n, 15n, 30n]);
+    expect(divisors(0)).toEqual([]);
+  });
+
+  it("computes the Moebius function from factor multiplicities", () => {
+    expect(moebiusMu(1)).toBe(1);
+    expect(moebiusMu(2)).toBe(-1);
+    expect(moebiusMu(3)).toBe(-1);
+    expect(moebiusMu(4)).toBe(0);
+    expect(moebiusMu(9)).toBe(0);
+    expect(moebiusMu(6)).toBe(1);
+    expect(moebiusMu(30)).toBe(-1);
+    expect(() => moebiusMu(0)).toThrow(RangeError);
+  });
+
+  it("computes Jacobi symbols for positive odd moduli", () => {
+    expect(jacobiSymbol(2, 3)).toBe(-1);
+    expect(jacobiSymbol(1, 5)).toBe(1);
+    expect(jacobiSymbol(0, 5)).toBe(0);
+    expect(jacobiSymbol(-1, 7)).toBe(-1);
+    expect(jacobiSymbol(1001, 9907)).toBe(-1);
+    expect(() => jacobiSymbol(2, 4)).toThrow(RangeError);
+    expect(() => jacobiSymbol(2, 0)).toThrow(RangeError);
+  });
+
+  it("counts integer digits in a base", () => {
+    expect(integerLength(0)).toBe(1);
+    expect(integerLength(9)).toBe(1);
+    expect(integerLength(10)).toBe(2);
+    expect(integerLength(100)).toBe(3);
+    expect(integerLength(8, 2)).toBe(4);
+    expect(integerLength(-100)).toBe(3);
+    expect(integerLength(255, 16)).toBe(2);
+    expect(() => integerLength(10, 1)).toThrow(RangeError);
+  });
 });
 
 describe("primality", () => {
@@ -67,6 +112,11 @@ describe("primality", () => {
     expect(primesUpTo(100)).toHaveLength(25);
     expect(nextPrime(0)).toBe(2n);
     expect(nextPrime(13)).toBe(17n);
+    expect(prevPrime(10)).toBe(7n);
+    expect(prevPrime(3)).toBe(2n);
+    expect(prevPrime(2)).toBeNull();
+    expect(prevPrime(1)).toBeNull();
+    expect(prevPrime(-10)).toBeNull();
     expect(nthPrime(1)).toBe(2n);
     expect(nthPrime(10)).toBe(29n);
   });
