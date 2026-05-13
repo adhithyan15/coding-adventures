@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-tsa-demo"
-version = "0.10.0"
+version = "0.10.1"
 edition = "2021"
-description = "A/B demo harness: compare a raw local Ollama model against the full adjudication pipeline on the TSA worked example. v0.10 adds ADJ_DEMO_RULEBOOK_MODE=adversarial:m1,m2,... — elicit rulebooks from N independent models and inject the provenance-tagged merged text into Arm A's system prompt. Rules cited at answer time can now be traced back to which model produced them, and rules appearing in only one model's training surface as lower-trust than rules multiple models agree on. The recursive use of the framework, made adversarial."
+description = "A/B demo harness: compare a raw local Ollama model against the full adjudication pipeline on the TSA worked example. v0.10 adds ADJ_DEMO_RULEBOOK_MODE=adversarial:m1,m2,... — elicit rulebooks from N independent models and inject the provenance-tagged merged text into Arm A's system prompt. Rules cited at answer time can now be traced back to which model produced them, and rules appearing in only one model's training surface as lower-trust than rules multiple models agree on. v0.10.1 fixes a cache-bypass bug: the elicit and adversarial-elicit Stage 0 paths now respect ADJ_DEMO_CACHE_DIR (previously every adversarial bench run re-elicited every rulebook from scratch even with a cache directory configured)."
 
 [[bin]]
 name = "adjudication-tsa-demo"
