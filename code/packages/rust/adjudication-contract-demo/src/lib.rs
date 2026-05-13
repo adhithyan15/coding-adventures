@@ -52,6 +52,23 @@ pub struct DemoConfig {
     pub timeout: Duration,
     pub source_text: String,
     pub cache_dir: Option<String>,
+    /// Optional rulebook injected into Arm A's system prompt
+    /// (v0.3 parity with adjudication-tsa-demo v0.12).
+    pub rulebook_text: Option<String>,
+    /// Output-token cap for Arm A (v0.3 parity).
+    pub max_answer_tokens: usize,
+    /// Arm A dispatch mode (v0.3 parity).
+    pub arm_a_mode: ArmAMode,
+}
+
+/// Arm A dispatch strategies. Duplicated from
+/// `adjudication-tsa-demo` and `adjudication-clinical-demo`;
+/// extracting to a shared crate becomes natural if a fourth demo
+/// wants the same field.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArmAMode {
+    SingleTurn,
+    Priming,
 }
 
 const CANONICAL_SOURCE: &str =
@@ -66,8 +83,57 @@ impl Default for DemoConfig {
             timeout: Duration::from_secs(120),
             source_text: CANONICAL_SOURCE.into(),
             cache_dir: None,
+            rulebook_text: None,
+            max_answer_tokens: 2048,
+            arm_a_mode: ArmAMode::SingleTurn,
         }
     }
+}
+
+/// The canonical fixture contract rulebook. Covers the demo's
+/// existing "delivery within window + force majeure exception"
+/// shape plus enough breadth for ADJ19's declaration set
+/// (force-majeure cycle, plain breach, ordinary delay, war event,
+/// non-enumerated act-of-god → DISPUTED, etc.).
+///
+/// Same shape as `fixture_tsa_rulebook` and
+/// `fixture_clinical_rulebook` so the cross-domain bench harness
+/// can treat the three domains uniformly.
+pub fn fixture_contract_rulebook() -> String {
+    "CONTRACT-CLAUSE RULEBOOK (v0.1, as of 2026-05-13):\n\
+     1. Vendor must deliver within the contractually-specified \
+        window; failure to deliver on time constitutes BREACH \
+        absent an applicable exception.\n\
+     2. Force majeure events (acts of God, war, civil unrest, \
+        natural disasters such as hurricanes, earthquakes, and \
+        floods) extend the deadline by the contract's force-majeure \
+        extension (default 14 days) per Restatement (Second) of \
+        Contracts §261.\n\
+     3. Supplier delays, market conditions, currency fluctuations, \
+        and pricing disputes are NOT force-majeure events absent \
+        specific contract language to the contrary.\n\
+     4. Hurricanes, earthquakes, and floods are explicit acts of \
+        God in most U.S. jurisdictions per Restatement §261.\n\
+     5. If a force-majeure event occurs during the delivery window \
+        and the vendor delivers within the extended deadline \
+        (original window + force-majeure extension), the vendor is \
+        NOT in breach.\n\
+     6. If a force-majeure event occurs but the vendor delivers \
+        BEYOND the extended deadline, the vendor IS in breach \
+        despite the force-majeure event.\n\
+     7. If a stock-related exception is enumerated in the contract \
+        (e.g., 'unless the goods are out of stock'), the vendor is \
+        NOT in breach when the exception's predicate holds.\n\
+     8. Disputed cases (where an event's classification as \
+        force-majeure is uncertain — e.g., a non-enumerated event \
+        with ambiguous jurisdictional support) should be flagged \
+        as DISPUTED rather than resolved unilaterally.\n\
+     9. On-time delivery is always NOT-IN-BREACH regardless of \
+        circumstances.\n\
+     10. The framework's job is to apply these rules to a given \
+         contract scenario; if a scenario doesn't match any of the \
+         above, default to flagging as DISPUTED for human review."
+        .to_string()
 }
 
 // ---------------------------------------------------------------------------
@@ -86,28 +152,27 @@ pub struct RawArmReport {
 }
 
 pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    match cfg.arm_a_mode {
+        ArmAMode::SingleTurn => run_raw_arm_single_turn(cfg),
+        ArmAMode::Priming => run_raw_arm_priming(cfg),
+    }
+}
+
+fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let client = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
         .with_timeout(cfg.timeout);
-    let prompt = format!(
-        "CONTRACT CLAUSE: {src}\n\nDoes the seller have to deliver the goods?",
-        src = cfg.source_text,
-    );
+    let prompt = build_raw_user_prompt(&cfg.source_text);
+    let system = build_raw_system_prompt(cfg.rulebook_text.as_deref());
     let req = CompletionRequest {
         model: cfg.model.clone(),
-        system: Some(
-            "You are a contract-review assistant. Given a contract clause, decide \
-             whether the obligation it describes is currently in force. Explain \
-             in 2-3 sentences, then end with a final line: `VERDICT: OBLIGATION_HOLDS` \
-             or `VERDICT: OBLIGATION_EXCUSED`."
-                .into(),
-        ),
+        system: Some(system),
         messages: vec![Message {
             role: MsgRole::User,
             content: MessageContent::Text(prompt.clone()),
         }],
         temperature: 0.0,
-        max_tokens: Some(512),
+        max_tokens: Some(cfg.max_answer_tokens),
         stop_sequences: Vec::new(),
         seed: Some(42),
         metadata: Default::default(),
@@ -122,6 +187,181 @@ pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
         latency_ms: resp.latency_ms,
         finish_reason: resp.finish_reason,
     })
+}
+
+/// Two-turn priming dispatch. Mirrors tsa-demo and clinical-demo:
+/// turn 1 hands the model the rulebook with an ACK-only
+/// instruction; turn 2 sends the contract clause and asks for a
+/// verdict-first answer. Falls back to single-turn when no
+/// rulebook is configured.
+fn run_raw_arm_priming(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    let rulebook = match cfg.rulebook_text.as_deref() {
+        Some(t) if !t.is_empty() => t,
+        _ => return run_raw_arm_single_turn(cfg),
+    };
+
+    let client = OllamaClient::new(cfg.model.clone())
+        .with_endpoint(cfg.endpoint.clone())
+        .with_timeout(cfg.timeout);
+
+    let priming_system = build_priming_system_prompt();
+    let priming_user = build_priming_turn1_user_prompt(rulebook);
+    let priming_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system.clone()),
+        messages: vec![Message {
+            role: MsgRole::User,
+            content: MessageContent::Text(priming_user.clone()),
+        }],
+        temperature: 0.0,
+        max_tokens: Some(64),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn1 = client.complete(priming_req)?;
+
+    let turn2_user = build_priming_turn2_user_prompt(&cfg.source_text);
+    let turn2_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system),
+        messages: vec![
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(priming_user),
+            },
+            Message {
+                role: MsgRole::Assistant,
+                content: MessageContent::Text(turn1.text.clone()),
+            },
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(turn2_user.clone()),
+            },
+        ],
+        temperature: 0.0,
+        max_tokens: Some(cfg.max_answer_tokens),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn2 = client.complete(turn2_req)?;
+
+    Ok(RawArmReport {
+        prompt: turn2_user,
+        answer: turn2.text,
+        model: turn2.model,
+        input_tokens: turn1.usage.input_tokens + turn2.usage.input_tokens,
+        output_tokens: turn1.usage.output_tokens + turn2.usage.output_tokens,
+        latency_ms: turn1.latency_ms + turn2.latency_ms,
+        finish_reason: turn2.finish_reason,
+    })
+}
+
+fn build_raw_user_prompt(source_text: &str) -> String {
+    format!(
+        "CONTRACT CLAUSE: {src}\n\nDoes the seller have to deliver the goods?",
+        src = source_text,
+    )
+}
+
+/// Build Arm A's single-turn system prompt. v0.3 changes the
+/// format to put the VERDICT line FIRST so it survives truncation.
+/// With a rulebook, also forbids invented rules.
+pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
+    match rulebook_text {
+        None => "You are a contract-review assistant. Given a contract clause, \
+                 decide whether the obligation it describes is currently in force.\n\
+                 \n\
+                 Your response MUST begin with the verdict line as the very \
+                 first line of output:\n\
+                 \n\
+                 VERDICT: OBLIGATION_HOLDS\n\
+                 (or)\n\
+                 VERDICT: OBLIGATION_EXCUSED\n\
+                 \n\
+                 After the verdict line, give 2-3 sentences of reasoning. The \
+                 verdict-first format ensures the verdict is captured even if \
+                 your reasoning is truncated."
+            .to_string(),
+        Some(text) => format!(
+            "You are a contract-review assistant. The contract-clause rules \
+             you MUST apply are listed below. Do not invent any additional \
+             rules; if a finding is not justified by a specific numbered rule \
+             below, do not include it.\n\
+             \n\
+             {text}\n\
+             \n\
+             Given a contract clause, decide whether the obligation it \
+             describes is currently in force.\n\
+             \n\
+             Your response MUST begin with the verdict line as the very \
+             first line of output:\n\
+             \n\
+             VERDICT: OBLIGATION_HOLDS\n\
+             (or)\n\
+             VERDICT: OBLIGATION_EXCUSED\n\
+             \n\
+             After the verdict line, give 2-3 sentences of reasoning citing \
+             specific rule numbers for each finding. The verdict-first format \
+             ensures the verdict is captured even if your reasoning is \
+             truncated."
+        ),
+    }
+}
+
+/// Build the system prompt for the priming dispatch path. Same
+/// role (contract-review assistant) but with explicit ground
+/// rules about the two-turn protocol.
+pub fn build_priming_system_prompt() -> String {
+    "You are a contract-review assistant. You will receive \
+     information in two turns:\n\
+     \n\
+     Turn 1: I will give you a contract-clause rulebook. Read it \
+     carefully and store the rules in your working memory. Respond \
+     with exactly the single word `ACK` and nothing else. Do NOT \
+     summarise the rules, comment on them, or analyse them until I \
+     ask my question in turn 2.\n\
+     \n\
+     Turn 2: I will give you a contract clause. Apply the rulebook \
+     from turn 1 and respond. Your response MUST begin with the \
+     verdict line as the very first line of output:\n\
+     \n\
+     VERDICT: OBLIGATION_HOLDS\n\
+     (or)\n\
+     VERDICT: OBLIGATION_EXCUSED\n\
+     \n\
+     After the verdict line, give 2-3 sentences of reasoning citing \
+     specific rule numbers from the turn 1 rulebook. The \
+     verdict-first format ensures the verdict is captured even if \
+     your reasoning is truncated. Do not invent rules that were not \
+     in the turn 1 rulebook."
+        .to_string()
+}
+
+/// Build the turn 1 user message for the priming path.
+pub fn build_priming_turn1_user_prompt(rulebook_text: &str) -> String {
+    format!(
+        "TURN 1: RULEBOOK INTAKE.\n\
+         \n\
+         The following contract-clause rulebook applies to my next \
+         question. Read it. Respond with `ACK` only.\n\
+         \n\
+         {rulebook_text}"
+    )
+}
+
+/// Build the turn 2 user message for the priming path.
+pub fn build_priming_turn2_user_prompt(source_text: &str) -> String {
+    format!(
+        "TURN 2: QUESTION.\n\
+         \n\
+         Apply the rulebook from turn 1. Contract clause: {source_text}\n\
+         \n\
+         Does the seller have to deliver the goods? Remember: first \
+         line MUST be `VERDICT: OBLIGATION_HOLDS` or \
+         `VERDICT: OBLIGATION_EXCUSED`."
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -459,5 +699,91 @@ mod tests {
         let cfg = DemoConfig::default();
         assert!(cfg.source_text.contains("buyer pays"));
         assert!(cfg.source_text.contains("unless"));
+    }
+
+    // -----------------------------------------------------------------
+    // v0.3 — rulebook injection + max_answer_tokens + priming tests
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn default_config_uses_single_turn_and_2048_token_cap() {
+        let cfg = DemoConfig::default();
+        assert_eq!(cfg.arm_a_mode, ArmAMode::SingleTurn);
+        assert_eq!(cfg.max_answer_tokens, 2048);
+        assert!(cfg.rulebook_text.is_none());
+    }
+
+    #[test]
+    fn fixture_rulebook_covers_canonical_clauses() {
+        let rb = fixture_contract_rulebook();
+        assert!(rb.contains("Force majeure"));
+        assert!(rb.contains("Restatement"));
+        assert!(rb.contains("DISPUTED"));
+        // Stock-related exception rule for the canonical demo source.
+        assert!(rb.contains("stock-related exception"));
+    }
+
+    #[test]
+    fn raw_system_prompt_demands_verdict_first() {
+        let no_rb = build_raw_system_prompt(None);
+        assert!(no_rb.contains("first line"));
+        assert!(no_rb.contains("truncated"));
+        assert!(no_rb.contains("OBLIGATION_HOLDS"));
+        assert!(no_rb.contains("OBLIGATION_EXCUSED"));
+
+        let with_rb = build_raw_system_prompt(Some("rule x"));
+        assert!(with_rb.contains("first line"));
+        assert!(with_rb.contains("Do not invent"));
+        assert!(with_rb.contains("citing specific rule numbers"));
+    }
+
+    #[test]
+    fn priming_system_prompt_describes_two_turn_protocol() {
+        let s = build_priming_system_prompt();
+        assert!(s.contains("Turn 1"));
+        assert!(s.contains("Turn 2"));
+        assert!(s.contains("ACK"));
+        assert!(s.contains("OBLIGATION_HOLDS"));
+        assert!(s.contains("OBLIGATION_EXCUSED"));
+        assert!(s.contains("Do NOT"));
+    }
+
+    #[test]
+    fn priming_turn1_user_prompt_embeds_rulebook_and_demands_ack() {
+        let rb = "1. force-majeure clause.\n2. stock exception.";
+        let s = build_priming_turn1_user_prompt(rb);
+        assert!(s.contains("RULEBOOK INTAKE"));
+        assert!(s.contains("ACK"));
+        assert!(s.contains("force-majeure"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_embeds_clause_and_restates_verdict_format() {
+        let s = build_priming_turn2_user_prompt(
+            "If the buyer pays within 30 days, the seller delivers the goods.",
+        );
+        assert!(s.contains("TURN 2"));
+        assert!(s.contains("buyer pays"));
+        assert!(s.contains("rulebook from turn 1"));
+        assert!(s.contains("OBLIGATION_HOLDS"));
+        assert!(s.contains("OBLIGATION_EXCUSED"));
+    }
+
+    #[test]
+    fn config_with_priming_mode_is_addressable_via_struct_field() {
+        let mut cfg = DemoConfig::default();
+        cfg.arm_a_mode = ArmAMode::Priming;
+        cfg.rulebook_text = Some(fixture_contract_rulebook());
+        assert_eq!(cfg.arm_a_mode, ArmAMode::Priming);
+        assert!(cfg.rulebook_text.is_some());
+    }
+
+    #[test]
+    fn arm_a_mode_round_trips_through_debug_clone_eq() {
+        let a = ArmAMode::SingleTurn;
+        let b = a;
+        assert_eq!(a, b);
+        let c = ArmAMode::Priming;
+        assert_ne!(a, c);
     }
 }
