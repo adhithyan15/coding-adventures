@@ -241,7 +241,7 @@ The Risch integration suite is ~85% complete. Known remaining gaps:
 | Feature | Notes |
 |---|---|
 | **Friendly error messages** | Python, TypeScript, and Rust MACSYMA syntax failures now surface as `Incorrect syntax ...` diagnostics with line/column and a caret where parser token metadata is available. |
-| **`?` help system** | No documentation lookup. A thin wrapper over docstrings would cover most cases. |
+| **`?` help system** | Python, TypeScript, and Rust sessions support `?` and `? topic` with a small curated help catalog for core runtime/CAS topics. |
 | **`showtime`** | Python, TypeScript, and Rust sessions support `showtime:true` / `showtime:false` wall-clock timing per expression, including suppressed statements. |
 
 ---

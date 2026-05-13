@@ -149,6 +149,20 @@ def test_auto_terminator_appended() -> None:
     assert any(line == "(%o1) 5" for line in out)
 
 
+def test_question_mark_help_lists_topics() -> None:
+    out = _output_lines(_run(["?", ":quit"]))
+
+    assert any("MACSYMA help topics:" in line for line in out)
+    assert any("solve" in line for line in out)
+
+
+def test_question_mark_help_topic() -> None:
+    out = _output_lines(_run(["? solve", ":quit"]))
+
+    assert any("solve(expr, var)" in line for line in out)
+    assert not any(line.startswith("(%o1)") for line in out)
+
+
 def test_showtime_appends_timing_after_displayed_statement() -> None:
     out = _output_lines(_run(["showtime:true$", "2 + 3;", ":quit"]))
 

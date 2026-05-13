@@ -53,6 +53,7 @@ import {
   app,
   equals,
   numberNode,
+  stringNode,
   sym,
   toDisplayString,
   type IRApply,
@@ -231,6 +232,58 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["fresnel_c", sym("FresnelC")],
   ["lambert_w", sym("LambertW")],
 ]);
+
+const MACSYMA_HELP_TOPICS: Readonly<Record<string, string>> = Object.freeze({
+  arithmetic: "Arithmetic: use +, -, *, /, and ^. Example: expand((x + 1)^2);",
+  calculus: "Calculus: diff(expr, var), integrate(expr, var), limit(expr, var, point), and taylor(expr, var, point, order).",
+  diff: "diff(expr, var) differentiates expr with respect to var. Example: diff(x^3, x);",
+  integrate: "integrate(expr, var) computes an antiderivative when supported. Example: integrate(x^2, x);",
+  solve: "solve(expr, var) solves equations or supported inequalities. Use linsolve([...], [...]) for linear systems and nsolve(poly, var) for numeric polynomial roots.",
+  matrix: "Matrix tools: matrix([...], ...), transpose, determinant, invert, dot, rank, rowreduce, ident, zeromatrix, and matrix_size.",
+  lists: "List tools: length, first, rest, last, append, reverse, range, map, apply, sublist, sort, part, flatten, join, and makelist.",
+  assumptions: "Assumptions: assume(x > 0), declare(x, positive), is(x > 0), forget(), properties(x), and propvars().",
+  properties: "properties(symbol) lists declared properties. propvars() lists symbols with declared properties.",
+  display: "Display: terminate with ; to show output and $ to suppress it. ev(expr, display2d) renders 2D output.",
+  history: "History: % is the last output; %iN and %oN refer to input and output number N.",
+  showtime: "showtime:true enables per-expression timing; showtime:false disables it.",
+  repl: "REPL commands: :quit exits. Use --file path.mac for batch execution.",
+});
+
+const MACSYMA_HELP_ALIASES: Readonly<Record<string, string>> = Object.freeze({
+  d: "diff",
+  derivative: "diff",
+  integral: "integrate",
+  matrices: "matrix",
+  list: "lists",
+  assume: "assumptions",
+  declare: "assumptions",
+  propvars: "properties",
+  display2d: "display",
+  "%": "history",
+  timing: "showtime",
+  quit: "repl",
+});
+
+export function parseMacsymaHelpQuery(source: string): string | undefined {
+  const stripped = source.trim();
+  if (!stripped.startsWith("?")) return undefined;
+  let topic = stripped.replace(/^\?+/, "").trim();
+  if (topic.endsWith(";") || topic.endsWith("$")) {
+    topic = topic.slice(0, -1).trim();
+  }
+  return topic;
+}
+
+export function macsymaHelpText(topic = ""): string {
+  const rawKey = topic.trim().toLowerCase();
+  if (rawKey === "") {
+    return `MACSYMA help topics: ${Object.keys(MACSYMA_HELP_TOPICS).sort().join(", ")}. Use ? topic for details.`;
+  }
+  const key = MACSYMA_HELP_ALIASES[rawKey] ?? rawKey;
+  const text = MACSYMA_HELP_TOPICS[key];
+  if (text !== undefined) return text;
+  return `No MACSYMA help topic named ${JSON.stringify(topic)}. Available topics: ${Object.keys(MACSYMA_HELP_TOPICS).sort().join(", ")}.`;
+}
 
 export type CompilerNameTableTarget =
   | Map<string, IRSymbol>
@@ -436,6 +489,10 @@ export class MacsymaSession {
   }
 
   evalSource(source: string): EvalResult[] {
+    const helpTopic = parseMacsymaHelpQuery(source);
+    if (helpTopic !== undefined) {
+      return [this.evalHelpQuery(helpTopic)];
+    }
     return this.evalStatements(compileMacsyma(source, { wrapTerminators: true }));
   }
 
@@ -475,6 +532,23 @@ export class MacsymaSession {
       outputText,
       display,
       ...(showTiming ? { timingText: formatTiming(elapsedSeconds) } : {}),
+    };
+  }
+
+  private evalHelpQuery(topic: string): EvalResult {
+    const query = topic === "" ? "?" : `? ${topic}`;
+    const text = macsymaHelpText(topic);
+    const input = stringNode(query);
+    const output = stringNode(text);
+    const inputIndex = this.sessionHistory.recordInput(input);
+    const outputIndex = this.sessionHistory.recordOutput(output);
+    return {
+      inputIndex,
+      outputIndex,
+      input,
+      output,
+      outputText: text,
+      display: true,
     };
   }
 }

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added a small MACSYMA help catalog plus `?` query parsing helpers for REPL
+  and session frontends.
 - Added MACSYMA session-property operations: `declare(sym, property, ...)`,
   `properties(sym)`, and `propvars()`, backed by the VM assumption context so
   declared properties feed `is(...)` and simplification.

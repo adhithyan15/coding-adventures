@@ -62,6 +62,8 @@ import {
   TRIG_SIMPLIFY,
   extendCompilerNameTable,
   evalSourceJson,
+  macsymaHelpText,
+  parseMacsymaHelpQuery,
 } from "../src/index.js";
 
 describe("macsyma-runtime", () => {
@@ -174,6 +176,28 @@ describe("macsyma-runtime", () => {
     expect(result.display).toBe(false);
     expect(result.timingText).toMatch(/^Evaluation took \d+\.\d{6} seconds\.$/);
     expect(payload.visibleOutputs).toEqual([result.timingText]);
+  });
+
+  it("parses and renders MACSYMA question-mark help", () => {
+    expect(parseMacsymaHelpQuery("? solve;")).toBe("solve");
+    expect(parseMacsymaHelpQuery("solve(x, x);")).toBeUndefined();
+    expect(macsymaHelpText("solve")).toContain("solve(expr, var)");
+
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("? solve");
+
+    expect(result.display).toBe(true);
+    expect(result.outputText).toContain("solve(expr, var)");
+    expect(result.input.kind).toBe("string");
+    expect(result.output.kind).toBe("string");
+  });
+
+  it("includes question-mark help in JSON visible outputs", () => {
+    const payload = JSON.parse(evalSourceJson("?"));
+
+    expect(payload.ok).toBe(true);
+    expect(payload.visibleOutputs[0]).toContain("MACSYMA help topics:");
+    expect(payload.results[0].outputText).toContain("MACSYMA help topics:");
   });
 
   it("records and resolves history references", () => {

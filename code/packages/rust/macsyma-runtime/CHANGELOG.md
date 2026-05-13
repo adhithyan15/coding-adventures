@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added `?` / `? topic` help-query handling for Rust MACSYMA sessions.
 - Wired `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a
   Rust MACSYMA session assumption context so declared properties feed property
   queries and assumption-backed relation checks.
