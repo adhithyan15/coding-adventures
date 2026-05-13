@@ -1197,14 +1197,14 @@ fn exec_method(
 // AOT deep-dive: phase breakdown + type correctness demo (macOS/ARM64 only)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// Abs-value Twig program: `(abs-val -5)` should return 5 for signed types.
+/// Abs-value Twig program: `(abs-val -5)` should return 5.
 ///
-/// With *unsigned* u64 comparison, the condition `(< x 0)` is always false
-/// because -5 is stored as a very large u64 — the branch is never taken and
-/// the result is -5 (wrong).
+/// Both the untyped (default i64) and explicitly-typed (i64) AOT paths produce
+/// the correct result 5, because the AOT backend defaults all unresolved params
+/// to `"i64"` — Twig integers are semantically signed 64-bit values.
 ///
 /// With *signed* i64 comparison, -5 < 0 is true, so `(- 0 x)` = `(- 0 -5)`
-/// = 5 is returned (correct).
+/// = 5 is returned.
 const ABS_PROGRAM: &str =
     "(define (abs-val x) (if (< x 0) (- 0 x) x)) (abs-val -5)";
 
@@ -1311,10 +1311,12 @@ fn invoke_xcrun_sdk_lib() -> std::path::PathBuf {
 /// call the function directly — no ld, no subprocess, no dyld overhead.
 ///
 /// Two variants:
-/// - **Untyped (u64 ops)**: uses `compile_module_to_arm64_bytes` — standard
-///   u64 pipeline; correct for non-negative integers like fib(10).
-/// - **Typed (i64 ops)**: uses `iir-type-checker` to produce i64-annotated
-///   IIR, then `compile_typed_module_to_arm64_bytes` — correct for all integers.
+/// - **Untyped (default i64)**: uses `compile_module_to_arm64_bytes` — the
+///   standard pipeline that defaults all untyped params to `"i64"`.  Correct
+///   for all integers including negative values.
+/// - **Typed (explicit i64)**: uses `iir-type-checker` to produce i64-annotated
+///   IIR, then `compile_typed_module_to_arm64_bytes`.  Same result — shown for
+///   comparison.
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 fn aot_in_process_demo() {
     println!("{}", "═".repeat(62));
@@ -1328,32 +1330,30 @@ fn aot_in_process_demo() {
         Err(e) => { println!("  compile_source failed: {e}"); return; }
     };
 
-    // ── Untyped (u64) ──
+    // ── Untyped (default i64) ──
     let t = Instant::now();
     let untyped_result = twig_aot::compile_module_to_arm64_bytes(&module)
         .and_then(|(bytes, offsets)| {
             twig_aot::call_arm64_function_in_process(&bytes, &offsets, "fib", 10)
         });
-    let ms_u64 = t.elapsed().as_millis();
+    let ms_i64_default = t.elapsed().as_millis();
 
     match &untyped_result {
-        Ok(v)  => println!("  {:<28} {:>8}  {:>8}  {}", "Untyped (u64 ops)", ms_u64, v,
+        Ok(v)  => println!("  {:<28} {:>8}  {:>8}  {}", "Untyped (default i64)", ms_i64_default, v,
                            if *v == EXPECTED { "correct" } else { "WRONG" }),
-        Err(e) => println!("  {:<28} {:>8}  {:>8}", "Untyped (u64 ops)", ms_u64, format!("ERR: {e:?}")),
+        Err(e) => println!("  {:<28} {:>8}  {:>8}", "Untyped (default i64)", ms_i64_default, format!("ERR: {e:?}")),
     }
 
-    // ── Typed (i64) — run iir-type-checker first ──
+    // ── Typed (explicit i64) — run iir-type-checker first ──
     let t = Instant::now();
     let typed_result = {
         let mut typed_module = module.clone();
         // Step 1: pre-lower builtins so named ops (`add`, `cmp_lt`, etc.) are
         // visible to the AOT type-propagation pass.
         twig_aot::pre_lower_aot_builtins_on_module(&mut typed_module);
-        // Step 2: set params to "i64".  The twig IR compiler marks all params
-        // "any"; by changing them to "i64" we tell the propagation pass (inside
-        // compile_typed_module_to_arm64_bytes) to seed the SSA env with i64,
-        // so comparison instructions get `cmp_lt_i64` (signed) instead of
-        // `cmp_lt_u64` (unsigned).
+        // Step 2: explicitly set params to "i64".  The twig IR compiler marks
+        // all params "any"; by changing them to "i64" we confirm the signed
+        // type to the propagation pass inside compile_typed_module_to_arm64_bytes.
         for func in &mut typed_module.functions {
             for (_, ty) in &mut func.params {
                 if ty == "any" { *ty = "i64".to_string(); }
@@ -1364,12 +1364,12 @@ fn aot_in_process_demo() {
                 twig_aot::call_arm64_function_in_process(&bytes, &offsets, "fib", 10)
             })
     };
-    let ms_i64 = t.elapsed().as_millis();
+    let ms_i64_explicit = t.elapsed().as_millis();
 
     match &typed_result {
-        Ok(v)  => println!("  {:<28} {:>8}  {:>8}  {}", "Typed (i64 ops)", ms_i64, v,
+        Ok(v)  => println!("  {:<28} {:>8}  {:>8}  {}", "Typed (explicit i64)", ms_i64_explicit, v,
                            if *v == EXPECTED { "correct" } else { "WRONG" }),
-        Err(e) => println!("  {:<28} {:>8}  {:>8}", "Typed (i64 ops)", ms_i64, format!("ERR: {e:?}")),
+        Err(e) => println!("  {:<28} {:>8}  {:>8}", "Typed (explicit i64)", ms_i64_explicit, format!("ERR: {e:?}")),
     }
 
     println!();
@@ -1377,23 +1377,26 @@ fn aot_in_process_demo() {
 
 // ── Section 3: Type correctness: abs(-5) ──────────────────────────────────────
 
-/// Demonstrate the signed/unsigned comparison correctness gap.
+/// Demonstrate that both the untyped and typed AOT paths produce correct
+/// results now that the AOT backend defaults unresolved params to `"i64"`.
 ///
-/// `(abs-val -5)` should return 5.
+/// `(abs-val -5)` should return 5.  Both the standard (no annotations) path
+/// via `compile_module_to_arm64_bytes` and the explicit typed path via
+/// `compile_typed_module_to_arm64_bytes` emit signed ARM64 comparisons and
+/// return 5.
 ///
-/// With the untyped u64 pipeline, `-5` is stored as `0xFFFF_FFFF_FFFF_FFFB`
-/// — a very large unsigned integer — so `(< x 0)` compares as unsigned and
-/// is always false.  The else branch returns -5 unchanged.
+/// ## Why the default is i64
 ///
-/// With the typed i64 pipeline, -5 is a proper signed 64-bit integer.
-/// `(< x 0)` uses a signed `CMP`, which correctly identifies -5 < 0, and
-/// `(- 0 x)` = `(- 0 -5)` = 5 is returned.
+/// Twig integers are semantically signed 64-bit values.  Using `"i64"` as the
+/// default ensures `(< x 0)` emits a signed `CMP` (`B.LT` ARM64 mnemonic)
+/// regardless of whether the source was annotated.  The untyped path and the
+/// explicitly-typed path are semantically identical for integer-only programs.
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 fn aot_type_correctness_demo() {
     println!("{}", "═".repeat(62));
-    println!("  Type correctness: abs(-5) — unsigned vs signed comparison");
+    println!("  Type correctness: abs(-5) — both paths use i64 (signed)");
     println!("{}", "═".repeat(62));
-    println!("  {:<22} {:>8}  {}", "Backend", "Result", "Correct?");
+    println!("  {:<26} {:>8}  {}", "Path", "Result", "Correct?");
     println!("  {}", "─".repeat(45));
 
     let module = match compile_source(ABS_PROGRAM, "abs_demo") {
@@ -1401,7 +1404,9 @@ fn aot_type_correctness_demo() {
         Err(e) => { println!("  compile_source failed: {e}"); return; }
     };
 
-    // Untyped (u64): wrong — unsigned comparison makes `< 0` always false.
+    // Untyped path: `compile_module_to_arm64_bytes` runs the full preparation
+    // pipeline (normalize_params_to_i64 + propagate + default_any_to_i64).
+    // All params default to i64, so `(< x 0)` emits a signed CMP.
     let untyped_result = twig_aot::compile_module_to_arm64_bytes(&module)
         .and_then(|(bytes, offsets)| {
             // The function is named "abs-val" (hyphens preserved by the IR compiler).
@@ -1411,22 +1416,16 @@ fn aot_type_correctness_demo() {
     match untyped_result {
         Ok(v)  => {
             let correct = v == 5;
-            println!("  {:<22} {:>8}  {}",
-                "Untyped (u64)", v,
-                if correct { "CORRECT" } else { "WRONG  (-5 stored as large u64, < 0 is false)" });
+            println!("  {:<26} {:>8}  {}",
+                "Untyped (default i64)", v,
+                if correct { "✅ CORRECT" } else { "❌ WRONG" });
         }
-        Err(e) => println!("  {:<22} {:>8}", "Untyped (u64)", format!("ERR: {e:?}")),
+        Err(e) => println!("  {:<26} {:>8}", "Untyped (default i64)", format!("ERR: {e:?}")),
     }
 
-    // Typed (i64): correct — signed comparison identifies -5 < 0.
-    //
-    // The key steps:
-    //   1. pre_lower_aot_builtins — converts `call_builtin "<"` → `cmp_lt`
-    //   2. Set params to "i64" — seeds propagation with signed type
-    //   3. compile_typed_module_to_arm64_bytes — propagates i64 to cmp_lt,
-    //      emitting `cmp_lt_i64` (signed ARM64 condition) instead of
-    //      `cmp_lt_u64` (unsigned).  With -5 as input, the signed path
-    //      correctly sees -5 < 0 and returns (0 - (-5)) = 5.
+    // Typed path: explicitly set params to "i64" before calling
+    // compile_typed_module_to_arm64_bytes.  The result is the same — both
+    // paths produce signed comparisons when the default is i64.
     let typed_result = {
         let mut typed_module = module.clone();
         twig_aot::pre_lower_aot_builtins_on_module(&mut typed_module);
@@ -1444,11 +1443,11 @@ fn aot_type_correctness_demo() {
     match typed_result {
         Ok(v)  => {
             let correct = v == 5;
-            println!("  {:<22} {:>8}  {}",
-                "Typed (i64)", v,
-                if correct { "CORRECT (signed comparison works)" } else { "WRONG" });
+            println!("  {:<26} {:>8}  {}",
+                "Typed (explicit i64)", v,
+                if correct { "✅ CORRECT" } else { "❌ WRONG" });
         }
-        Err(e) => println!("  {:<22} {:>8}", "Typed (i64)", format!("ERR: {e:?}")),
+        Err(e) => println!("  {:<26} {:>8}", "Typed (explicit i64)", format!("ERR: {e:?}")),
     }
 
     println!();
@@ -1465,11 +1464,11 @@ const TYPING_EXPECTED: i64 = 0;
 
 /// Untyped version — no annotations anywhere.
 ///
-/// Twig accepts this without complaint; every backend that uses a type-inference
-/// pass (interpreter, BEAM, WASM, JVM, CLR) produces the correct answer.
-/// The AOT backend must fall back to **unsigned (u64)** comparisons because
-/// it has no type information, so `(< −5 0)` reads as `large_u64 < 0` = false
-/// and `clamp_low` skips the branch — returning −5 instead of 0.
+/// Twig accepts this without complaint.  All six backends produce the correct
+/// answer: the interpreter, BEAM, WASM, JVM, and CLR backends use their own
+/// type-inference passes; the AOT backend defaults untyped params to `"i64"`
+/// (signed 64-bit), so `(< −5 0)` emits a signed ARM64 `CMP` and correctly
+/// takes the true branch — returning 0.
 const TYPING_UNTYPED: &str = "\
 (define (add-offset x offset) (+ x offset))
 (define (clamp-low x) (if (< x 0) 0 x))
@@ -1478,12 +1477,11 @@ const TYPING_UNTYPED: &str = "\
 
 /// Partially typed — only `clamp-low` carries type annotations.
 ///
-/// The annotation `(x : int)` tells the AOT pipeline that `x` is a signed
-/// 64-bit integer, so the compiler emits a signed `CMP` for `(< x 0)`.
-/// That is the only comparison in the hot path, so this is enough to fix
-/// the wrong result.  `add-offset` and `process` remain untyped (u64), which
-/// is fine for addition (two's-complement addition is the same for signed
-/// and unsigned).
+/// The annotation `(x : int)` explicitly tells the AOT pipeline that `x` is
+/// a signed 64-bit integer.  `add-offset` and `process` remain unannotated
+/// and use the `"i64"` default, which is also correct — two's-complement
+/// addition is the same for signed and unsigned, and the only comparison
+/// lives in `clamp-low` where it is now explicitly typed.
 const TYPING_PARTIAL: &str = "\
 (define (add-offset x offset) (+ x offset))
 (define (clamp-low (x : int) -> int) (if (< x 0) 0 x))
@@ -1493,7 +1491,9 @@ const TYPING_PARTIAL: &str = "\
 /// Fully typed — every parameter and return type is annotated.
 ///
 /// The AOT backend emits signed instructions for every arithmetic operation
-/// and comparison in the module.  No u64 fall-back is needed.
+/// and comparison in the module.  The result is identical to the untyped and
+/// partially-typed paths because the `"i64"` default already handles all
+/// unannotated params correctly.
 const TYPING_FULL: &str = "\
 (define (add-offset (x : int) (offset : int) -> int) (+ x offset))
 (define (clamp-low (x : int) -> int) (if (< x 0) 0 x))
@@ -1505,23 +1505,22 @@ const TYPING_FULL: &str = "\
 /// AOT path for the typing demo: reads `param_refinements` from the compiled
 /// `IIRModule` and seeds the ARM64 type-propagation pass from them.
 ///
-/// ## Why this matters
+/// ## How type annotations feed into AOT
 ///
 /// `twig_ir_compiler::compile_source` stores Twig type annotations in
 /// `func.param_refinements: Vec<Option<RefinedType>>`, but leaves
-/// `func.params` typed as `"any"` for all parameters.  The standard AOT
-/// preparation pipeline (`prepare_module_for_aot`) overwrites every param
-/// with `"u64"` — so annotations would otherwise be silently ignored.
+/// `func.params` typed as `"any"` for all parameters.  This function bridges
+/// the gap between source-level annotations and the AOT preparation pipeline:
 ///
-/// This function bridges the gap:
 /// 1. Pre-lower builtins (`call_builtin "+"` → `add`, etc.)
 /// 2. Walk `param_refinements` and, wherever a `Some(rt)` exists, set
 ///    `func.params[i].1 = rt.kind.as_type_hint()` (e.g. `"i64"` for `int`).
 /// 3. Hand the annotated module to `compile_typed_module_to_arm64_bytes`,
-///    which propagates those types and defaults anything still `"any"` to u64.
+///    which propagates those types and defaults anything still `"any"` to i64.
 ///
-/// Result: annotated params use signed i64 semantics; unannotated params
-/// use unsigned u64 semantics — exactly what "optional typing" promises.
+/// Because the AOT default is now `"i64"`, unannotated params are already
+/// signed — so all three typing variants (untyped / partial / full) produce
+/// the same correct results.
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 fn run_aot_annotated(source: &str) -> (u128, u128, Result<i64, String>) {
     let t_compile = Instant::now();
@@ -1546,7 +1545,7 @@ fn run_aot_annotated(source: &str) -> (u128, u128, Result<i64, String>) {
     //   Kind::Any  → "any"   (no-op — keeps the default)
     //   … etc.
     //
-    // Unannotated params remain "any" and are defaulted to "u64" downstream.
+    // Unannotated params remain "any" and are defaulted to "i64" downstream.
     for func in &mut module.functions {
         for (i, (_, param_ty)) in func.params.iter_mut().enumerate() {
             if let Some(Some(rt)) = func.param_refinements.get(i) {
@@ -1559,7 +1558,7 @@ fn run_aot_annotated(source: &str) -> (u128, u128, Result<i64, String>) {
     }
 
     // Step 4: propagate types seeded from annotated params, default remaining
-    // "any" to u64, and compile to flat ARM64 code bytes.
+    // "any" to i64, and compile to flat ARM64 code bytes.
     let (bytes, offsets) = match twig_aot::compile_typed_module_to_arm64_bytes(&module) {
         Ok(r)  => r,
         Err(e) => return (t_compile.elapsed().as_micros(), 0,
@@ -1595,14 +1594,17 @@ fn run_aot_annotated(_source: &str) -> (u128, u128, Result<i64, String>) {
 /// | Partial  | no ann.     | `(x:int) -> int`  | no ann.     |
 /// | Full     | `(x:int)(offset:int)->int` | `(x:int)->int` | `(val:int)->int` |
 ///
-/// The critical operation is `(< x 0)` inside `clamp-low`.
-/// - Without a type annotation, the AOT backend defaults `x` to **u64**
-///   and emits an unsigned `CMP` — so `(< −5 0)` is **false** (wrong).
-/// - With `(x : int)` on `clamp-low`, the AOT backend seeds `x` as **i64**
-///   and emits a signed `CMP` — so `(< −5 0)` is **true** (correct).
+/// All three type states produce the correct result (0) across all six
+/// backends:
+/// - The interpreter, BEAM, WASM, JVM, and CLR backends run their own
+///   type-inference passes and are always correct.
+/// - The AOT backend defaults untyped params to `"i64"` (signed 64-bit), so
+///   `(< −5 0)` emits a signed ARM64 `CMP` and takes the true branch in all
+///   three states — returning 0 correctly.
 ///
-/// The interpreter, BEAM, WASM, JVM, and CLR backends are correct in all
-/// three states because they run their own type-inference pass.
+/// Type annotations are now purely additive: they document intent, can expose
+/// type errors at compile time, and may enable future optimisations — but they
+/// are never required for correctness.
 fn run_typing_demo() {
     let sep = "═".repeat(74);
     println!("\n{sep}");
@@ -1611,16 +1613,15 @@ fn run_typing_demo() {
     println!("  Expected: {TYPING_EXPECTED}   (add-offset returns −5; clamp-low must see it as signed)");
     println!("{sep}");
     println!();
-    println!("  The signed/unsigned split lives in `(< x 0)` inside clamp-low:");
-    println!("    −5 as u64 = 0xFFFF_FFFF_FFFF_FFFB  →  u64 < 0  = false  →  returns −5 ❌");
-    println!("    −5 as i64 = −5                      →  i64 < 0  = true   →  returns  0 ✅");
+    println!("  The comparison `(< x 0)` inside clamp-low uses signed i64 semantics:");
+    println!("    −5 as i64 = −5  →  i64 < 0  = true  →  returns 0 ✅  (all three type states)");
     println!();
 
     let variants: &[(&str, &str, &str)] = &[
         (
             "UNTYPED",
             TYPING_UNTYPED,
-            "no annotations — AOT uses u64 throughout",
+            "no annotations — AOT uses i64 default (signed, correct)",
         ),
         (
             "PARTIALLY TYPED",
@@ -1644,8 +1645,8 @@ fn run_typing_demo() {
         results.push(BackendResult::new("Interpreter (twig-vm)", c, r, res));
 
         // AOT: annotation-aware in-process path.
-        // Unannotated params default to u64 (may give wrong answer);
-        // annotated params use their declared type (signed i64 for `int`).
+        // Unannotated params default to i64 (signed, correct for all cases);
+        // annotated params use their declared type (also i64 for `int`).
         let (c, r, res) = run_aot_annotated(source);
         results.push(BackendResult::new("AOT (in-process)", c, r, res));
 

@@ -1,5 +1,35 @@
 # Changelog — `twig-aot`
 
+## 0.1.5 — 2026-05-13
+
+**Default integer type changed from `u64` to `i64` — all typing states now correct.**
+
+Twig integers are semantically signed 64-bit values.  The previous default of
+`"u64"` for untyped params caused `(< x 0)` to emit an unsigned ARM64 `CMP`,
+which treated `-5` as a very large positive number and returned wrong results
+for programs that compared against negative numbers.
+
+### Changes
+
+- **`normalize_params_to_i64`** (was `normalize_params_to_u64`): promotes
+  `"any"` / `"polymorphic"` params to `"i64"` instead of `"u64"`.
+- **`default_any_to_i64`** (was `default_any_to_u64`): defaults remaining
+  `"any"` arithmetic/mov hints to `"i64"` instead of `"u64"`.
+- **`infer_aot_type`**: integer literal constants (`Operand::Int(_)`) now infer
+  `"i64"` instead of `"u64"`, so constant expressions propagate signed types.
+- **`compile_typed_module_to_arm64_bytes`**: now calls `normalize_params_to_i64`
+  before `propagate_aot_types`, ensuring that unannotated params (still `"any"`
+  after the caller has set annotation-derived types) also get `"i64"` semantics.
+  Previously this function relied entirely on the caller to set all param types,
+  which left unannotated functions with unsigned comparisons.
+
+### Effect
+
+All three optional-typing states (untyped / partially typed / fully typed) now
+produce correct results for programs that compare against negative numbers.
+Type annotations are purely additive: they document intent and may enable future
+optimisations, but are never required for correctness.
+
 ## 0.1.4 — 2026-05-13
 
 **In-process ARM64 execution + typed i64 pipeline.**
@@ -9,18 +39,18 @@
 #### `compile_module_to_arm64_bytes(module) → Result<(Vec<u8>, HashMap<String, usize>), AotError>`
 
 Returns raw ARM64 machine code bytes and a function-name→byte-offset map.
-Uses the standard untyped prep pipeline (builtin pre-lowering + u64
-normalization + type propagation + default-any-to-u64).  Suitable for
+Uses the full preparation pipeline (builtin pre-lowering + i64 param
+normalisation + type propagation + default-any-to-i64).  Suitable for
 in-process execution via `call_arm64_function_in_process`.
 
 #### `compile_typed_module_to_arm64_bytes(module) → Result<(Vec<u8>, HashMap<String, usize>), AotError>`
 
 Like `compile_module_to_arm64_bytes` but uses caller-supplied type
-annotations.  The caller pre-lowers builtins and sets params to `"i64"`;
-this function propagates types from those params (without running
-`normalize_params_to_u64`), so comparison instructions emit
-`cmp_lt_i64` (signed ARM64 condition code) rather than `cmp_lt_u64`
-(unsigned).  Correct for negative numbers.
+annotations.  The caller pre-lowers builtins and may set params to `"i64"`;
+this function first normalises any remaining `"any"` params to `"i64"`, then
+propagates types.  Comparison instructions emit `cmp_lt_i64` (signed ARM64
+condition code).  Correct for negative numbers whether or not the caller
+pre-annotated params.
 
 #### `pre_lower_aot_builtins_on_module(module: &mut IIRModule)`
 

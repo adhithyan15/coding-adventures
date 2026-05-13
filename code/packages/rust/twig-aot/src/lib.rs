@@ -187,13 +187,21 @@ pub fn compile_typed_module_to_arm64_bytes(
     let mut module = module.clone();
     for func in &mut module.functions {
         pre_lower_aot_builtins(func);
-        // Propagate types seeded from the (already-set) params.
+        // Promote any params still marked "any" or "polymorphic" to "i64".
+        //
+        // The caller may have already set some params to "i64" from source-level
+        // annotations (e.g. `(x : int)`).  `normalize_params_to_i64` only touches
+        // params that are STILL "any" — so caller-set types are never overwritten.
+        // This ensures that unannotated functions (no param_refinements) also get
+        // signed-integer semantics, matching Twig's semantic model.
+        normalize_params_to_i64(func);
+        // Propagate types seeded from the (now-concrete) params.
         // This fills in instructions like `sub dest, param, const` that
         // iir-type-checker missed because it doesn't seed from func.params.
         propagate_aot_types(func);
-        // Default any still-unresolvable arithmetic/mov hints to u64.
+        // Default any still-unresolvable arithmetic/mov hints to i64.
         // (Should be rare after propagation with typed params.)
-        default_any_to_u64(func);
+        default_any_to_i64(func);
     }
     compile_module_to_text_raw(&module)
 }
@@ -477,16 +485,18 @@ fn sdk_lib_path() -> PathBuf {
 //
 //  Step 2 — Normalise param types.
 //    The Twig IR compiler declares every param as `"any"`.  We promote them to
-//    `"u64"` — Twig's tagged-integer representation fits in a 64-bit register
-//    and all arithmetic on function arguments is 64-bit.  `infer_types` (from
-//    `aot-core`) seeds its environment from `func.params`, so this is the
-//    right place to override the "any" sentinel.
+//    `"i64"` — Twig integers are semantically signed 64-bit values, so using
+//    the signed default ensures that comparisons (e.g. `cmp_lt`) emit signed
+//    ARM64 condition codes (`B.LT`) rather than unsigned ones (`B.CC`), which
+//    matters for programs that test against negative numbers.  `infer_types`
+//    (from `aot-core`) seeds its environment from `func.params`, so this is
+//    the right place to override the "any" sentinel.
 //
 //  Step 3 — Propagate and default types.
 //    A lightweight fixed-point pass populates `type_hint` on every instruction
 //    whose type can be determined from its operands and the seeded param types.
 //    Any remaining `"any"` hints on arithmetic and `mov` instructions are
-//    then defaulted to `"u64"` so that `aot_specialise` never sees an
+//    then defaulted to `"i64"` so that `aot_specialise` never sees an
 //    untyped instruction and never emits `type_assert` guards (which the ARM64
 //    backend lowers to `udf` hard-traps).
 
@@ -515,11 +525,18 @@ fn pre_lower_aot_builtins(func: &mut IIRFunction) {
     }).collect();
 }
 
-/// Step 2: promote `"any"` / `"polymorphic"` param types to `"u64"`.
-fn normalize_params_to_u64(func: &mut IIRFunction) {
+/// Step 2: promote `"any"` / `"polymorphic"` param types to `"i64"`.
+///
+/// Twig integers are semantically signed 64-bit values.  Using `i64` as the
+/// default ensures that comparison instructions like `cmp_lt` emit signed ARM64
+/// condition codes (`B.LT` / `B.GE`) rather than unsigned ones (`B.CC` / `B.CS`).
+/// This matters for any program that compares against negative numbers — e.g.
+/// `(if (< x 0) …)` — where unsigned semantics would treat `-5` as a huge
+/// positive number and take the wrong branch.
+fn normalize_params_to_i64(func: &mut IIRFunction) {
     for (_, ty) in &mut func.params {
         if ty == "any" || ty == "polymorphic" {
-            *ty = "u64".to_string();
+            *ty = "i64".to_string();
         }
     }
 }
@@ -527,7 +544,7 @@ fn normalize_params_to_u64(func: &mut IIRFunction) {
 /// Step 3a: fixed-point type propagation seeded from params.
 ///
 /// Applies inference rules:
-/// - `const` with `Int` → `"u64"`, `Bool` → `"bool"`
+/// - `const` with `Int` → `"i64"`, `Bool` → `"bool"`
 /// - `cmp_*` → **operand type** (not `"bool"`)
 /// - `add`, `sub`, `mul`, `div`, `mov`, `neg`, `not` → type of first operand
 ///
@@ -543,7 +560,7 @@ fn normalize_params_to_u64(func: &mut IIRFunction) {
 /// selecting the right condition code in each case.  The boolean result value
 /// (0 or 1 stored to the dest register) is the same either way.
 ///
-/// Runs in a loop until stable.  Function params (already "u64" or "i64")
+/// Runs in a loop until stable.  Function params (already "i64" or a typed hint)
 /// seed the environment together with already-typed instructions.
 fn propagate_aot_types(func: &mut IIRFunction) {
     // Build initial env from params + any already-typed instructions.
@@ -589,7 +606,7 @@ fn propagate_aot_types(func: &mut IIRFunction) {
 fn infer_aot_type(instr: &IIRInstr, env: &HashMap<String, String>) -> Option<String> {
     match instr.op.as_str() {
         "const" => match instr.srcs.first() {
-            Some(Operand::Int(_))  => Some("u64".into()),
+            Some(Operand::Int(_))  => Some("i64".into()),
             Some(Operand::Bool(_)) => Some("bool".into()),
             _                       => None,
         },
@@ -621,27 +638,29 @@ fn resolve_src_aot_type(src: Option<&Operand>, env: &HashMap<String, String>) ->
                 None
             }
         }
-        Operand::Int(_)  => Some("u64".into()),
+        Operand::Int(_)  => Some("i64".into()),
         Operand::Bool(_) => Some("bool".into()),
         _                => None,
     }
 }
 
 /// Step 3b: default any remaining `"any"` hints on arithmetic / move
-/// instructions to `"u64"`.
+/// instructions to `"i64"`.
 ///
 /// This handles instructions whose sources are still `"any"` after the
 /// propagation pass — most commonly the results of `call` instructions whose
-/// return type is not tracked.  Defaulting to `"u64"` is safe for Twig:
-/// integer values fit in 64 bits and all arithmetic operates on them uniformly.
-/// The ARM64 backend generates correct code regardless of signed/unsigned
-/// flavour for the non-negative values produced by programs like fibonacci.
-fn default_any_to_u64(func: &mut IIRFunction) {
+/// return type is not tracked.  Defaulting to `"i64"` is correct for Twig:
+/// all Twig integer literals and arithmetic results are semantically signed
+/// 64-bit values.  Using `i64` here ensures that comparisons downstream
+/// (e.g. `cmp_lt`) emit signed ARM64 condition codes and produce correct
+/// results for negative numbers, regardless of whether the source was
+/// annotated or not.
+fn default_any_to_i64(func: &mut IIRFunction) {
     for instr in &mut func.instructions {
         if instr.type_hint != "any" { continue; }
         match instr.op.as_str() {
             "add" | "sub" | "mul" | "div" | "mod" | "mov" | "neg" | "not" => {
-                instr.type_hint = "u64".to_string();
+                instr.type_hint = "i64".to_string();
             }
             _ => {}
         }
@@ -652,9 +671,9 @@ fn default_any_to_u64(func: &mut IIRFunction) {
 fn prepare_module_for_aot(module: &mut IIRModule) {
     for func in &mut module.functions {
         pre_lower_aot_builtins(func);
-        normalize_params_to_u64(func);
+        normalize_params_to_i64(func);
         propagate_aot_types(func);
-        default_any_to_u64(func);
+        default_any_to_i64(func);
     }
 }
 
@@ -677,9 +696,9 @@ fn compile_module_to_text(
     // We work on a clone so the caller's `IIRModule` is never mutated.
     // `prepare_module_for_aot` runs three passes:
     //   1. `call_builtin "+"` → `add`, etc.   (see `pre_lower_aot_builtins`)
-    //   2. param types "any" → "u64"           (see `normalize_params_to_u64`)
+    //   2. param types "any" → "i64"           (see `normalize_params_to_i64`)
     //   3. propagate + default remaining "any" (see `propagate_aot_types` /
-    //                                            `default_any_to_u64`)
+    //                                            `default_any_to_i64`)
     let mut module = module.clone();
     prepare_module_for_aot(&mut module);
     compile_module_to_text_raw(&module)
@@ -860,12 +879,12 @@ mod tests {
         use interpreter_ir::instr::{IIRInstr, Operand};
 
         let main = IIRFunction::new(
-            "main", vec![], "u64",
+            "main", vec![], "i64",
             vec![
                 IIRInstr::new("const", Some("v0".into()),
-                              vec![Operand::Int(0)], "u64"),
+                              vec![Operand::Int(0)], "i64"),
                 IIRInstr::new("ret", None,
-                              vec![Operand::Var("v0".into())], "u64"),
+                              vec![Operand::Var("v0".into())], "i64"),
             ],
         );
         let mut m = IIRModule::new("hello", "twig");
