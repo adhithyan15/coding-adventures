@@ -1374,6 +1374,10 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         }
     }
 
+    if let Some(rewritten) = factor_multivariate_perfect_square(input) {
+        return rewritten;
+    }
+
     if let Some(rewritten) = factor_common_symbolic_term(input) {
         return vm.eval(rewritten);
     }
@@ -1413,6 +1417,53 @@ fn factor_common_symbolic_term(node: &IRNode) -> Option<IRNode> {
         MUL,
         vec![common_factor, apply_node(FACTOR, vec![residual])],
     ))
+}
+
+fn factor_multivariate_perfect_square(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 3 {
+        return None;
+    }
+
+    let mut squares = Vec::new();
+    let mut cross = None;
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if coefficient == 1 && powers.len() == 1 {
+            let (base, exponent) = powers.iter().next()?;
+            if *exponent == 2 {
+                squares.push(base.clone());
+                continue;
+            }
+        }
+        if (coefficient == 2 || coefficient == -2) && powers.len() == 2 {
+            let mut items = powers.iter();
+            let (first, first_exponent) = items.next()?;
+            let (second, second_exponent) = items.next()?;
+            if *first_exponent == 1 && *second_exponent == 1 {
+                cross = Some((coefficient, first.clone(), second.clone()));
+                continue;
+            }
+        }
+        return None;
+    }
+
+    if squares.len() != 2 {
+        return None;
+    }
+    let (coefficient, cross_first, cross_second) = cross?;
+    let square_keys: HashSet<IRNode> = squares.iter().cloned().collect();
+    let cross_keys: HashSet<IRNode> = [cross_first, cross_second].into_iter().collect();
+    if square_keys != cross_keys {
+        return None;
+    }
+
+    let base = if coefficient > 0 {
+        apply_node(ADD, vec![squares[0].clone(), squares[1].clone()])
+    } else {
+        apply_node(SUB, vec![squares[0].clone(), squares[1].clone()])
+    };
+    Some(apply_node(POW, vec![base, IRNode::Integer(2)]))
 }
 
 fn additive_terms(node: &IRNode) -> Option<Vec<IRNode>> {
@@ -1470,6 +1521,20 @@ fn term_factor_powers(term: &IRNode) -> HashMap<IRNode, usize> {
         }
     }
     powers
+}
+
+fn term_integer_coefficient_and_powers(term: &IRNode) -> Option<(i64, HashMap<IRNode, usize>)> {
+    let mut coefficient: i64 = 1;
+    let mut powers = HashMap::new();
+    for factor in multiplicative_factors(term) {
+        if let IRNode::Integer(value) = factor {
+            coefficient *= value;
+            continue;
+        }
+        let (base, exponent) = factor_base_power(factor)?;
+        *powers.entry(base).or_insert(0) += exponent;
+    }
+    Some((coefficient, powers))
 }
 
 fn multiplicative_factors(node: &IRNode) -> Vec<IRNode> {

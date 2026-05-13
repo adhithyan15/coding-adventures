@@ -128,6 +128,20 @@ fn factors_common_multivariate_terms_through_runtime() {
 }
 
 #[test]
+fn factors_multivariate_perfect_squares_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 + 2*x*y + y^2);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(2)]
+        )
+    );
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();

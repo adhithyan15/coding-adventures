@@ -259,6 +259,37 @@ fn symbolic_factor_extracts_common_multivariate_term() {
     );
 }
 
+#[test]
+fn symbolic_factor_extracts_multivariate_perfect_square() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(POW), vec![sym("x"), int(2)]),
+                        apply(
+                            sym(MUL),
+                            vec![int(2), apply(sym(MUL), vec![sym("x"), sym("y")])],
+                        ),
+                    ],
+                ),
+                apply(sym(POW), vec![sym("y"), int(2)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(2)]
+        )
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Symbol resolution
 // ---------------------------------------------------------------------------
