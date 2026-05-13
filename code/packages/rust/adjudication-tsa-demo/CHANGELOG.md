@@ -80,6 +80,31 @@ ESCALATE verdicts as a third value rather than parse-fails.
 - `priming_turn2_user_prompt_lists_escalate_as_an_option` —
   verifies the turn 2 reminder.
 
+### Framework instructions are domain-neutral
+
+The behavioural instructions (about ESCALATE, verdict-first,
+"silence is not permission") are written in domain-neutral
+language. Earlier drafts used TSA-flavored metaphors like
+"A real TSA officer asks a supervisor when the manual doesn't
+cover a case rather than waving the passenger through" — those
+were removed before this PR shipped. The example for rule
+citation was changed from "per rule 3, strike-anywhere matches
+are prohibited" (TSA-specific) to "per rule N, ..." (generic).
+
+Role descriptors and rulebook content remain domain-specific
+(each demo crate owns those, by design). What changed is that
+the **framework-level rules about verdict shape and escalation**
+are now portable across domains. When clinical-demo and
+contract-demo mirror this change, the framework instructions
+should be identical — only the role descriptor changes.
+
+A test (`framework_instructions_do_not_leak_domain_specific_metaphors`)
+explicitly asserts no TSA-officer phrasings, no "waving the
+passenger through" metaphors, and no TSA examples in the
+framework instructions. The test will need to be moved/renamed
+when the prompt-building logic eventually extracts to a shared
+module, but for now it pins the discipline.
+
 ### What's NOT in this PR
 
 - **Bench re-run.** A follow-up PR will re-bench ADJ18 against

@@ -476,19 +476,18 @@ pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
              \n\
              Important: silence is not permission. If no rule \
              above either explicitly prohibits or explicitly permits \
-             the items declared, the correct verdict is ESCALATE — \
-             not COMPLIANT. A real TSA officer asks a supervisor \
-             when the manual doesn't cover a case rather than \
-             waving the passenger through. Use ESCALATE whenever \
-             you would otherwise need to reason beyond the rules \
-             above.\n\
+             the case described, the correct verdict is ESCALATE — \
+             not COMPLIANT. Use ESCALATE whenever you would \
+             otherwise need to reason beyond the rules above, \
+             fabricate a rule that isn't listed, or default to one \
+             of the binary verdicts because the rulebook doesn't \
+             resolve the case.\n\
              \n\
              After the verdict line, give 2-3 sentences of \
-             reasoning citing specific rule numbers for each \
-             finding (e.g., \"per rule 3, strike-anywhere matches \
-             are prohibited\"). The verdict-first format ensures \
-             the verdict is captured even if your reasoning is \
-             truncated."
+             reasoning citing the specific rule number(s) that \
+             produced your verdict (e.g., \"per rule N, ...\"). The \
+             verdict-first format ensures the verdict is captured \
+             even if your reasoning is truncated."
         ),
     }
 }
@@ -521,10 +520,12 @@ pub fn build_priming_system_prompt() -> String {
      declaration, or when the declaration is ambiguous.\n\
      \n\
      Important: silence is not permission. If no rule from turn 1 \
-     either explicitly prohibits or explicitly permits the items \
-     declared, the correct verdict is ESCALATE — not COMPLIANT. A \
-     real TSA officer asks a supervisor when the manual doesn't \
-     cover a case rather than waving the passenger through.\n\
+     either explicitly prohibits or explicitly permits the case \
+     described, the correct verdict is ESCALATE — not COMPLIANT. \
+     Use ESCALATE whenever you would otherwise need to reason \
+     beyond the rules from turn 1, fabricate a rule, or default \
+     to one of the binary verdicts because the rulebook doesn't \
+     resolve the case.\n\
      \n\
      After the verdict line, give 2-3 sentences of reasoning \
      citing specific rule numbers from the turn 1 rulebook. The \
@@ -2464,7 +2465,7 @@ mod tests {
         // The rule-against-invention is the load-bearing piece.
         assert!(s.contains("Do not invent"));
         // Cite-specific-rule instruction.
-        assert!(s.contains("citing specific rule numbers"));
+        assert!(s.contains("citing the specific rule number"));
     }
 
     #[test]
@@ -2629,6 +2630,47 @@ mod tests {
         let s = build_priming_turn2_user_prompt("test declaration");
         assert!(s.contains("VERDICT: ESCALATE"));
         assert!(s.contains("ESCALATE if no rule covers the case"));
+    }
+
+    #[test]
+    fn framework_instructions_do_not_leak_domain_specific_metaphors() {
+        // The behavioural instructions (about ESCALATE, verdict-first,
+        // "silence is not permission") should be framed in
+        // domain-neutral language. Prior drafts of the with-rulebook
+        // prompt used phrasings like "A real TSA officer asks a
+        // supervisor when the manual doesn't cover a case rather than
+        // waving the passenger through" — domain-biased and the wrong
+        // shape for a framework that aspires to be cross-domain.
+        //
+        // Role descriptors and rulebook content can be domain-specific
+        // (each demo crate owns those). Framework-level rules about
+        // verdict shape and escalation cannot.
+        let with_rb = build_raw_system_prompt(Some("RULES: 1."));
+        let priming = build_priming_system_prompt();
+
+        // No appeals to TSA-officer behaviour in the ESCALATE
+        // instruction.
+        assert!(
+            !with_rb.contains("real TSA officer"),
+            "with-rulebook prompt's ESCALATE explanation should not invoke 'real TSA officer'"
+        );
+        assert!(
+            !priming.contains("real TSA officer"),
+            "priming prompt's ESCALATE explanation should not invoke 'real TSA officer'"
+        );
+
+        // No TSA-flavoured metaphors (waving the passenger through,
+        // supervisor lookup) in the framework instructions.
+        assert!(!with_rb.contains("waving the passenger through"));
+        assert!(!priming.contains("waving the passenger through"));
+
+        // The example for rule citation should be domain-neutral.
+        // Earlier drafts used "per rule 3, strike-anywhere matches
+        // are prohibited" — a TSA example.
+        assert!(
+            !with_rb.contains("strike-anywhere matches are prohibited"),
+            "rule-citation example should be domain-neutral, not TSA-specific"
+        );
     }
 
     // -----------------------------------------------------------------
