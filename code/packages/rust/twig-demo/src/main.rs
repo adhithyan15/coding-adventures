@@ -93,6 +93,10 @@ fn main() {
     results.push(BackendResult::new("CLR (.NET 9)", t.elapsed().as_millis(), r));
 
     print_results(&results);
+
+    // ── AOT deep-dive: phase breakdown + type correctness demo ────────────────
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    run_aot_demos();
 }
 
 // ── Result types ──────────────────────────────────────────────────────────────
@@ -1019,6 +1023,267 @@ fn exec_method(
             }
         }
     }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AOT deep-dive: phase breakdown + type correctness demo (macOS/ARM64 only)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Abs-value Twig program: `(abs-val -5)` should return 5 for signed types.
+///
+/// With *unsigned* u64 comparison, the condition `(< x 0)` is always false
+/// because -5 is stored as a very large u64 — the branch is never taken and
+/// the result is -5 (wrong).
+///
+/// With *signed* i64 comparison, -5 < 0 is true, so `(- 0 x)` = `(- 0 -5)`
+/// = 5 is returned (correct).
+const ABS_PROGRAM: &str =
+    "(define (abs-val x) (if (< x 0) (- 0 x) x)) (abs-val -5)";
+
+/// Top-level AOT demo: phase breakdown + in-process + type correctness.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn run_aot_demos() {
+    aot_phase_breakdown();
+    aot_in_process_demo();
+    aot_type_correctness_demo();
+}
+
+// ── Section 1: AOT phase breakdown ───────────────────────────────────────────
+
+/// Show how the ~238ms AOT time breaks down: compile, link, exec.
+///
+/// The three phases are timed separately:
+/// 1. `compile_macos_arm64_object` — IIR → ARM64 object bytes (fast, ~5ms)
+/// 2. `ld` subprocess          — object → native Mach-O executable (~200ms)
+/// 3. Run the native binary    — exec + dyld + fib(10) (~33ms)
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn aot_phase_breakdown() {
+    println!();
+    println!("{}", "═".repeat(62));
+    println!("  AOT deep-dive: where does the time go?");
+    println!("{}", "═".repeat(62));
+    println!("  Phase                     Time(ms)");
+    println!("  {}", "─".repeat(35));
+
+    // Phase 1: compile (IIR → ARM64 Mach-O object bytes)
+    let t_compile = Instant::now();
+    let obj_bytes = match twig_aot::compile_macos_arm64_object(FIB_PROGRAM, "fib") {
+        Ok(b)  => b,
+        Err(e) => { println!("  compile failed: {e:?}"); return; }
+    };
+    let ms_compile = t_compile.elapsed().as_millis();
+
+    // Phase 2: write .o and run ld
+    let dir = match tempfile::tempdir() {
+        Ok(d)  => d,
+        Err(e) => { println!("  tempdir failed: {e}"); return; }
+    };
+    let obj_path = dir.path().join("fib.o");
+    let bin_path = dir.path().join("fib");
+
+    if let Err(e) = std::fs::write(&obj_path, &obj_bytes) {
+        println!("  write .o failed: {e}"); return;
+    }
+
+    let t_link = Instant::now();
+    let sdk_lib = invoke_xcrun_sdk_lib();
+    let ld_status = std::process::Command::new("ld")
+        .arg("-arch").arg("arm64")
+        .arg("-platform_version").arg("macos").arg("15.0").arg("15.0")
+        .arg("-e").arg("_main")
+        .arg("-L").arg(&sdk_lib)
+        .arg("-lSystem")
+        .arg("-o").arg(&bin_path)
+        .arg(&obj_path)
+        .status();
+    let ms_link = t_link.elapsed().as_millis();
+
+    match ld_status {
+        Err(e) => { println!("  ld failed: {e}"); return; }
+        Ok(s) if !s.success() => { println!("  ld exit: {s}"); return; }
+        _ => {}
+    }
+
+    // Phase 3: execute the native binary
+    let t_exec = Instant::now();
+    let _status = std::process::Command::new(&bin_path).status().ok();
+    let ms_exec = t_exec.elapsed().as_millis();
+
+    let total = ms_compile + ms_link + ms_exec;
+
+    println!("  Compile (IIR→ARM64)     {:>6}", ms_compile);
+    println!("  Link    (ld linker)     {:>6}   <- the real bottleneck", ms_link);
+    println!("  Exec    (subprocess)    {:>6}", ms_exec);
+    println!("  {}", "─".repeat(35));
+    println!("  Total                   {:>6}", total);
+    println!();
+}
+
+/// Run `xcrun --sdk macosx --show-sdk-path` to find the SDK lib path.
+/// Falls back to `/usr/lib` if xcrun is unavailable.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn invoke_xcrun_sdk_lib() -> std::path::PathBuf {
+    if let Ok(o) = std::process::Command::new("xcrun")
+        .args(["--sdk", "macosx", "--show-sdk-path"])
+        .output()
+    {
+        if o.status.success() {
+            let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
+            if !s.is_empty() {
+                return std::path::PathBuf::from(s).join("usr").join("lib");
+            }
+        }
+    }
+    std::path::PathBuf::from("/usr/lib")
+}
+
+// ── Section 2: In-process AOT (no ld, no subprocess) ─────────────────────────
+
+/// Demonstrate in-process execution: compile to ARM64 bytes, mmap PROT_EXEC,
+/// call the function directly — no ld, no subprocess, no dyld overhead.
+///
+/// Two variants:
+/// - **Untyped (u64 ops)**: uses `compile_module_to_arm64_bytes` — standard
+///   u64 pipeline; correct for non-negative integers like fib(10).
+/// - **Typed (i64 ops)**: uses `iir-type-checker` to produce i64-annotated
+///   IIR, then `compile_typed_module_to_arm64_bytes` — correct for all integers.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn aot_in_process_demo() {
+    println!("{}", "═".repeat(62));
+    println!("  In-process AOT (no ld, no subprocess)");
+    println!("{}", "═".repeat(62));
+    println!("  {:<28} {:>8}  {:>8}", "Variant", "Time(ms)", "Result");
+    println!("  {}", "─".repeat(45));
+
+    let module = match compile_source(FIB_PROGRAM, "fib") {
+        Ok(m)  => m,
+        Err(e) => { println!("  compile_source failed: {e}"); return; }
+    };
+
+    // ── Untyped (u64) ──
+    let t = Instant::now();
+    let untyped_result = twig_aot::compile_module_to_arm64_bytes(&module)
+        .and_then(|(bytes, offsets)| {
+            twig_aot::call_arm64_function_in_process(&bytes, &offsets, "fib", 10)
+        });
+    let ms_u64 = t.elapsed().as_millis();
+
+    match &untyped_result {
+        Ok(v)  => println!("  {:<28} {:>8}  {:>8}  {}", "Untyped (u64 ops)", ms_u64, v,
+                           if *v == EXPECTED { "correct" } else { "WRONG" }),
+        Err(e) => println!("  {:<28} {:>8}  {:>8}", "Untyped (u64 ops)", ms_u64, format!("ERR: {e:?}")),
+    }
+
+    // ── Typed (i64) — run iir-type-checker first ──
+    let t = Instant::now();
+    let typed_result = {
+        let mut typed_module = module.clone();
+        // Step 1: pre-lower builtins so named ops (`add`, `cmp_lt`, etc.) are
+        // visible to the AOT type-propagation pass.
+        twig_aot::pre_lower_aot_builtins_on_module(&mut typed_module);
+        // Step 2: set params to "i64".  The twig IR compiler marks all params
+        // "any"; by changing them to "i64" we tell the propagation pass (inside
+        // compile_typed_module_to_arm64_bytes) to seed the SSA env with i64,
+        // so comparison instructions get `cmp_lt_i64` (signed) instead of
+        // `cmp_lt_u64` (unsigned).
+        for func in &mut typed_module.functions {
+            for (_, ty) in &mut func.params {
+                if ty == "any" { *ty = "i64".to_string(); }
+            }
+        }
+        twig_aot::compile_typed_module_to_arm64_bytes(&typed_module)
+            .and_then(|(bytes, offsets)| {
+                twig_aot::call_arm64_function_in_process(&bytes, &offsets, "fib", 10)
+            })
+    };
+    let ms_i64 = t.elapsed().as_millis();
+
+    match &typed_result {
+        Ok(v)  => println!("  {:<28} {:>8}  {:>8}  {}", "Typed (i64 ops)", ms_i64, v,
+                           if *v == EXPECTED { "correct" } else { "WRONG" }),
+        Err(e) => println!("  {:<28} {:>8}  {:>8}", "Typed (i64 ops)", ms_i64, format!("ERR: {e:?}")),
+    }
+
+    println!();
+}
+
+// ── Section 3: Type correctness: abs(-5) ──────────────────────────────────────
+
+/// Demonstrate the signed/unsigned comparison correctness gap.
+///
+/// `(abs-val -5)` should return 5.
+///
+/// With the untyped u64 pipeline, `-5` is stored as `0xFFFF_FFFF_FFFF_FFFB`
+/// — a very large unsigned integer — so `(< x 0)` compares as unsigned and
+/// is always false.  The else branch returns -5 unchanged.
+///
+/// With the typed i64 pipeline, -5 is a proper signed 64-bit integer.
+/// `(< x 0)` uses a signed `CMP`, which correctly identifies -5 < 0, and
+/// `(- 0 x)` = `(- 0 -5)` = 5 is returned.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn aot_type_correctness_demo() {
+    println!("{}", "═".repeat(62));
+    println!("  Type correctness: abs(-5) — unsigned vs signed comparison");
+    println!("{}", "═".repeat(62));
+    println!("  {:<22} {:>8}  {}", "Backend", "Result", "Correct?");
+    println!("  {}", "─".repeat(45));
+
+    let module = match compile_source(ABS_PROGRAM, "abs_demo") {
+        Ok(m)  => m,
+        Err(e) => { println!("  compile_source failed: {e}"); return; }
+    };
+
+    // Untyped (u64): wrong — unsigned comparison makes `< 0` always false.
+    let untyped_result = twig_aot::compile_module_to_arm64_bytes(&module)
+        .and_then(|(bytes, offsets)| {
+            // The function is named "abs-val" (hyphens preserved by the IR compiler).
+            twig_aot::call_arm64_function_in_process(&bytes, &offsets, "abs-val", -5)
+        });
+
+    match untyped_result {
+        Ok(v)  => {
+            let correct = v == 5;
+            println!("  {:<22} {:>8}  {}",
+                "Untyped (u64)", v,
+                if correct { "CORRECT" } else { "WRONG  (-5 stored as large u64, < 0 is false)" });
+        }
+        Err(e) => println!("  {:<22} {:>8}", "Untyped (u64)", format!("ERR: {e:?}")),
+    }
+
+    // Typed (i64): correct — signed comparison identifies -5 < 0.
+    //
+    // The key steps:
+    //   1. pre_lower_aot_builtins — converts `call_builtin "<"` → `cmp_lt`
+    //   2. Set params to "i64" — seeds propagation with signed type
+    //   3. compile_typed_module_to_arm64_bytes — propagates i64 to cmp_lt,
+    //      emitting `cmp_lt_i64` (signed ARM64 condition) instead of
+    //      `cmp_lt_u64` (unsigned).  With -5 as input, the signed path
+    //      correctly sees -5 < 0 and returns (0 - (-5)) = 5.
+    let typed_result = {
+        let mut typed_module = module.clone();
+        twig_aot::pre_lower_aot_builtins_on_module(&mut typed_module);
+        for func in &mut typed_module.functions {
+            for (_, ty) in &mut func.params {
+                if ty == "any" { *ty = "i64".to_string(); }
+            }
+        }
+        twig_aot::compile_typed_module_to_arm64_bytes(&typed_module)
+            .and_then(|(bytes, offsets)| {
+                twig_aot::call_arm64_function_in_process(&bytes, &offsets, "abs-val", -5)
+            })
+    };
+
+    match typed_result {
+        Ok(v)  => {
+            let correct = v == 5;
+            println!("  {:<22} {:>8}  {}",
+                "Typed (i64)", v,
+                if correct { "CORRECT (signed comparison works)" } else { "WRONG" });
+        }
+        Err(e) => println!("  {:<22} {:>8}", "Typed (i64)", format!("ERR: {e:?}")),
+    }
+
+    println!();
 }
 
 /// Scan bytecode to estimate how many local variable slots are needed.
