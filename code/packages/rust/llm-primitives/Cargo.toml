@@ -1,8 +1,8 @@
 [package]
 name = "llm-primitives"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
-description = "LM00b — typed LLM primitives layer. v0.10 bumps the decompose_text prompt to v4 to teach the LLM the multi-directed acyclic graph IR shape from ADJ01 v3: the response now has top-level `nodes` and `edges` arrays, edges carry a typed `relation` from a closed taxonomy (Contains, Mentions, Excepts, Cites, RowOf, etc.), nodes drop `part_of`/`lowered_from` (replaced by Contains/Clarifies edges), and node kinds add Section (structural unit) and Entity (deduplicated reference target) while dropping TextRun. Includes a worked example showing both arrays end-to-end."
+description = "LM00b — typed LLM primitives layer. v0.11 bumps the decompose_text prompt to v5 (per ADJ21): the prompt now explicitly teaches typed-quantity extraction (every numerical value-with-unit in the source becomes a `quantity(value, unit)` compound term, never flattened into the predicate name). Includes a second worked example demonstrating the typed-quantity shape end-to-end so the engine can evaluate threshold comparisons deterministically rather than asking the LLM to do arithmetic inside its forward pass."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }

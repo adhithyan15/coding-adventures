@@ -2,6 +2,83 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-05-13 — decompose-text-v5 (typed quantities)
+
+### Changed
+
+`DECOMPOSE_TEXT_PROMPT_VERSION: "decompose-text-v4" → "decompose-text-v5"`.
+
+The prompt now teaches typed-quantity extraction. See
+[ADJ21](../../../specs/ADJ21-typed-quantity-decomposition.md)
+for the full motivation.
+
+#### What the prompt now says
+
+A new "QUANTITY rules" section between the existing NODE and
+EDGE rule sections:
+
+- **7a**: Every numerical quantity in the source MUST appear as a
+  `quantity(<value>, <unit>)` compound term. Values are atoms
+  with literal numbers preserved (no rounding, no conversion).
+  Units are snake_case atoms (`oz`, `ml`, `inches`, `wh`,
+  `celsius`, `percent_abv`, etc.). The quantity is embedded
+  inside the surrounding fact's args — never flattened into the
+  predicate name.
+
+    > **Wrong**: `blade_4_inches(knife)`
+    > **Right**: `blade_length(knife, quantity(4, inches))`
+
+- **7b**: Bare numbers without units use `count` or
+  domain-appropriate predicates.
+  `"1 carry-on bag"` → `carry_on_bag(quantity(1, count))`.
+
+- **7c**: The rationale — downstream rules compare quantities
+  against thresholds; the engine evaluates these
+  deterministically only if the source IR preserves the typed
+  value.
+
+#### Second worked example
+
+A new worked example for `"4 inch pocket knife."` was added after
+the existing matches example, demonstrating the typed-quantity
+shape end-to-end including the rationale paragraph that
+references the engine evaluating `4 > 2.36`.
+
+### Why now
+
+The ADJ18 v0.13 bench surfaced empirical evidence: every model
+mishandled numerical thresholds (the pocket-knife regression).
+The LLM cannot reliably do arithmetic inside its forward pass.
+The structural fix is to lower comparisons to the engine —
+which requires the source IR to preserve typed values. This PR
+is the prompt side of that fix; ADJ22 (queued) adds the
+validator that catches the LLM dropping units.
+
+### Tests
+
+3 new offline unit tests (81 lib total):
+
+- `system_prompt_documents_typed_quantity_extraction`
+- `system_prompt_includes_pocket_knife_worked_example`
+- `system_prompt_uses_domain_neutral_quantity_rules`
+
+Updated `prompt_version_constants_are_stable` to expect
+`decompose-text-v5`.
+
+### Compatibility
+
+- Audit-trail compatible: old v4 records remain replayable.
+- Wire format unchanged: ADJ01 v3 IR already supports
+  `quantity(value, unit)` compounds.
+- Caller API unchanged: `decompose_text(req, gateway)` signature
+  the same.
+- Other primitives untouched.
+
+### Follow-ups
+
+- **ADJ22**: typed-quantity coverage checker.
+- **ADJ23**: end-to-end re-bench against v5 + fact sheets.
+
 ## [0.10.0] - 2026-05-12
 
 ### Changed (breaking on-the-wire shape)

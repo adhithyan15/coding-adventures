@@ -265,5 +265,13 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   case and whether the v0.12 priming dispatch reduces gemma4
   truncation in practice. Harness at
   [`scripts/adj18_bench.py`](../../scripts/adj18_bench.py).
+- [ADJ21](ADJ21-typed-quantity-decomposition.md) — `decompose_text`
+  prompt update (v4 → v5) that explicitly teaches typed-quantity
+  extraction. Every numerical value-with-unit in the source
+  becomes a `quantity(value, unit)` compound term, preserved in
+  the IR so the engine can evaluate threshold comparisons
+  deterministically (instead of asking the LLM to do arithmetic
+  inside its forward pass — the failure mode the ADJ18 v0.13
+  bench surfaced empirically).
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.
