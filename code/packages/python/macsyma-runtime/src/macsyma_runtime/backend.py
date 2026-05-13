@@ -27,6 +27,7 @@ from contextlib import contextmanager
 from symbolic_ir import IRFloat, IRNode, IRSymbol
 from symbolic_vm import SymbolicBackend
 from symbolic_vm.backend import Handler
+from symbolic_vm.handlers import FALSE, TRUE
 
 from macsyma_runtime.cas_handlers import build_cas_handler_table
 from macsyma_runtime.handlers import (
@@ -63,6 +64,9 @@ class MacsymaBackend(SymbolicBackend):
     #: flag. Phase A defaults true; not consulted yet.
     simp: bool
 
+    #: Whether the REPL should report per-statement wall-clock timing.
+    showtime: bool
+
     #: The session's I/O history, owned by the REPL but referenced by
     #: the backend so VM lookups can resolve `%`, `%iN`, `%oN`.
     history: History
@@ -72,6 +76,7 @@ class MacsymaBackend(SymbolicBackend):
         self.history = history if history is not None else History()
         self.numer = False
         self.simp = True
+        self.showtime = False
 
         # Patch the inherited handler table with the runtime's heads.
         # ``SymbolicBackend.__init__`` filled ``self._handlers`` already
@@ -97,6 +102,7 @@ class MacsymaBackend(SymbolicBackend):
         # containing ``%pi`` or ``%e`` is evaluated.
         self._env["%pi"] = IRFloat(math.pi)
         self._env["%e"] = IRFloat(math.e)
+        self._env["showtime"] = FALSE
 
         # Pre-bind the standard MACSYMA constants so users can write
         # ``%pi`` and ``%e`` without defining them first.  These are
@@ -137,6 +143,15 @@ class MacsymaBackend(SymbolicBackend):
         No-op if the name was never bound. Used by the ``Kill`` handler.
         """
         self._env.pop(name, None)
+        if name == "showtime":
+            self.showtime = False
+            self._env["showtime"] = FALSE
+
+    def bind(self, name: str, value: IRNode) -> None:
+        """Bind ``name`` and keep MACSYMA option flags in sync."""
+        super().bind(name, value)
+        if name == "showtime":
+            self.showtime = value == TRUE
 
     def reset_environment(self) -> None:
         """Clear every user-introduced binding.
@@ -148,11 +163,11 @@ class MacsymaBackend(SymbolicBackend):
         # Cheapest correct approach: re-run the parent ``__init__``
         # state setup. We don't want to re-install handlers (that would
         # drop our runtime overrides), so we touch only ``_env``.
-        from symbolic_vm.handlers import FALSE, TRUE
-
         self._env.clear()
         self._env["True"] = TRUE
         self._env["False"] = FALSE
+        self._env["showtime"] = FALSE
+        self.showtime = False
         self.history.reset()
 
     # ---- name lookup with history fallback ----------------------------
