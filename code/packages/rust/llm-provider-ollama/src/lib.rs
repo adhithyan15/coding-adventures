@@ -593,11 +593,9 @@ impl LlmClient for OllamaClient {
                 detail: d,
             })?;
 
-        // Same MaxTokens-on-empty rescue as `complete`. Without this,
-        // the empty `text` flows into `serde_json::from_str` and
-        // produces "EOF while parsing a value at line 1 column 0" —
-        // technically a SchemaInvalid, but the underlying cause is
-        // truncation, not a bad model output.
+        // MaxTokens-on-empty rescue: the empty `text` would flow
+        // into `serde_json::from_str` and produce
+        // "EOF while parsing a value at line 1 column 0".
         if finish_reason == FinishReason::MaxTokens && text.is_empty() {
             return Err(LlmError::OutputTruncated {
                 provider: self.provider_identity(&model_used),
@@ -606,13 +604,34 @@ impl LlmClient for OllamaClient {
             });
         }
 
-        let parsed: serde_json::Value =
-            serde_json::from_str(&text).map_err(|e| LlmError::SchemaInvalid {
-                provider: self.provider_identity(&model_used),
-                schema_name: schema.name.clone(),
-                raw_text: text.clone(),
-                validator_error: format!("response was not parseable JSON: {e}"),
-            })?;
+        // MaxTokens-on-mid-string rescue: when the model emits N KB
+        // of partial JSON and *then* truncates (`done_reason: length`
+        // with a non-empty `text`), serde_json reports
+        // "EOF while parsing a string at line .. column N" — also
+        // truncation, not a bad model output. Without this branch the
+        // error gets classified as `SchemaInvalid` and the
+        // `complete_json_with_truncation_retry` helper never doubles
+        // the cap. Empirically (ADJ23 bench, 2026-05-13) this is
+        // exactly the failure mode of gemma4:latest on the
+        // pocket-knife / lighter-disposable cells.
+        let parsed: serde_json::Value = match serde_json::from_str(&text) {
+            Ok(v) => v,
+            Err(_e) if finish_reason == FinishReason::MaxTokens => {
+                return Err(LlmError::OutputTruncated {
+                    provider: self.provider_identity(&model_used),
+                    output_tokens: usage.output_tokens,
+                    max_tokens,
+                });
+            }
+            Err(e) => {
+                return Err(LlmError::SchemaInvalid {
+                    provider: self.provider_identity(&model_used),
+                    schema_name: schema.name.clone(),
+                    raw_text: text.clone(),
+                    validator_error: format!("response was not parseable JSON: {e}"),
+                });
+            }
+        };
 
         // Minimal structural sanity: top-level should not be `null`.
         let schema_valid = !parsed.is_null();
@@ -1059,6 +1078,93 @@ mod tests {
         req.max_tokens = Some(512);
         let err = client.complete_json(req, &schema).unwrap_err();
         assert!(matches!(err, LlmError::OutputTruncated { .. }));
+        let _ = server.finish();
+    }
+
+    #[test]
+    fn complete_json_surfaces_mid_string_truncation_as_output_truncated() {
+        // ADJ23 bench surfaced this failure mode: gemma4:latest
+        // emits 14-20 KB of structured-output JSON and *then*
+        // hits the token cap mid-string. The ollama wire response
+        // shows `done_reason: "length"` with non-empty content
+        // that doesn't parse as JSON. Before the fix this got
+        // classified as `SchemaInvalid` (because parse failed)
+        // and the upstream `complete_json_with_truncation_retry`
+        // never doubled the cap. The fix in this PR routes
+        // MaxTokens+parse-fail to `OutputTruncated` so the
+        // retry helper can cap-double up to MAX_TOKENS_CEILING.
+        let truncated_json =
+            r#"{"document_id":"x","nodes":[{"id":"N1","term":{"functor":"foo","args":["unterminated stri"#;
+        let server = ScriptedServer::spawn(
+            200,
+            &serde_json::json!({
+                "model": "gemma4:latest",
+                "message": { "role": "assistant", "content": truncated_json },
+                "done": true,
+                "done_reason": "length",
+                "prompt_eval_count": 200,
+                "eval_count": 8192,
+            })
+            .to_string(),
+        );
+        let client = OllamaClient::new("gemma4:latest").with_endpoint(server.endpoint.clone());
+        let schema = JsonSchema {
+            name: "IRDocument".into(),
+            schema_json: "{}".into(),
+        };
+        let mut req = req_user("decompose this");
+        req.max_tokens = Some(8192);
+        let err = client.complete_json(req, &schema).unwrap_err();
+        match err {
+            LlmError::OutputTruncated {
+                output_tokens,
+                max_tokens,
+                ..
+            } => {
+                assert_eq!(output_tokens, 8192);
+                assert_eq!(max_tokens, Some(8192));
+            }
+            other => panic!(
+                "expected OutputTruncated for mid-string truncation \
+                 (done_reason=length + non-empty unparseable content), \
+                 got {other:?}"
+            ),
+        }
+        let _ = server.finish();
+    }
+
+    #[test]
+    fn complete_json_keeps_schema_invalid_when_finish_is_stop() {
+        // Defensive guard: when `done_reason` is NOT `length`
+        // (model finished naturally), bad JSON should still be
+        // surfaced as `SchemaInvalid`, not silently retried as if
+        // it were truncation. Otherwise we'd double the cap
+        // forever on a model that just emits ill-formed JSON.
+        let server = ScriptedServer::spawn(
+            200,
+            &serde_json::json!({
+                "model": "qwen2.5:0.5b",
+                "message": { "role": "assistant", "content": "not json at all" },
+                "done": true,
+                "done_reason": "stop",
+                "prompt_eval_count": 10,
+                "eval_count": 5,
+            })
+            .to_string(),
+        );
+        let client = OllamaClient::new("qwen2.5:0.5b").with_endpoint(server.endpoint.clone());
+        let schema = JsonSchema {
+            name: "X".into(),
+            schema_json: "{}".into(),
+        };
+        let mut req = req_user("answer");
+        req.max_tokens = Some(1024);
+        let err = client.complete_json(req, &schema).unwrap_err();
+        assert!(
+            matches!(err, LlmError::SchemaInvalid { .. }),
+            "non-truncation parse failure must stay as SchemaInvalid, \
+             got {err:?}"
+        );
         let _ = server.finish();
     }
 

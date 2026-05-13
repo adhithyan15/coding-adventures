@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-13 — mid-string truncation surfaces as OutputTruncated
+
+### Fixed
+
+`complete_json`'s OutputTruncated rescue now also fires when the
+wire response shows `done_reason: "length"` AND the (non-empty)
+content fails to parse as JSON. Previously the rescue only fired
+when the content was *empty* (the thinking-mode failure mode);
+gemma4's mid-string-truncation failure mode (model emits 14–20 KB
+of partial JSON and then hits the token cap mid-string) was
+slipping through as `SchemaInvalid`.
+
+That mattered because the upstream
+`llm_primitives::complete_json_with_truncation_retry` only
+auto-doubles `max_tokens` on `OutputTruncated`. Bare
+`SchemaInvalid` returned immediately, so the retry helper never
+got a chance — the demo silently fell back to a hand-built IR
+with no typed quantities. The ADJ23 bench recorded this on 4/8
+gemma4:latest cells with truncation columns 14056 and 20702.
+
+After this fix, those cells route through `OutputTruncated`,
+`complete_json_with_truncation_retry` doubles the cap (8192 →
+16384 → 32768) and gemma4 produces a complete IR.
+
+### Tests
+
+Two new tests:
+
+- `complete_json_surfaces_mid_string_truncation_as_output_truncated`
+  — wire response has `done_reason: "length"` and a deliberately
+  unterminated JSON payload; asserts the error is
+  `OutputTruncated`, not `SchemaInvalid`.
+- `complete_json_keeps_schema_invalid_when_finish_is_stop` —
+  defensive guard. When `done_reason: "stop"` (model finished
+  naturally) and content is still not parseable JSON, the error
+  must stay `SchemaInvalid` so the retry helper doesn't spin
+  forever on a model that just emits ill-formed output.
+
+Total tests: 29 (+2 from v0.2's 27).
+
+### Compatibility
+
+- No public API changes. New behaviour is strictly additive: a
+  subset of errors that previously returned `SchemaInvalid` now
+  return `OutputTruncated`. Callers that pattern-match on
+  `SchemaInvalid` for retry decisions may see fewer of them
+  (the truncation cases now route to `OutputTruncated`); this is
+  the desired behaviour.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added
