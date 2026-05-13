@@ -2,6 +2,137 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-05-13 — VERDICT: ESCALATE (with-rulebook only)
+
+### Motivation
+
+The ADJ18 bench surfaced a regression: rulebook injection
+*decreased* mean verdict accuracy across the 8-declaration set
+(57.5% → 50.0% → 40.0%). The pocket-knife case was the clearest
+single failure — every model got it correct without a rulebook
+and incorrect WITH the fixture rulebook, because the model was
+forced to commit to a binary verdict in cases where it could not
+reliably evaluate a rule's threshold.
+
+The right answer to "rule says blades over 2.36 in are
+prohibited; declaration says 4 in" when the model can't do the
+arithmetic isn't COMPLIANT or NON-COMPLIANT — it's *"ask a
+supervisor."* That's what a real TSA officer does when they're
+unsure.
+
+### Added
+
+A third verdict option `VERDICT: ESCALATE` in the with-rulebook
+Arm A prompts (both single-turn and priming dispatch).
+
+The conservative semantic: **silence in the rulebook is not
+permission.** The model must have an explicit rule that either
+permits or prohibits to return a confident verdict. Otherwise
+ESCALATE.
+
+ESCALATE is the correct verdict when:
+- No rule in the rulebook either explicitly prohibits or
+  explicitly permits the items declared.
+- A rule applies but the model cannot evaluate its condition
+  from the declaration (ambiguous, missing measurement, or
+  unable to reliably perform the comparison).
+- The declaration is ambiguous and the answer depends on details
+  not provided.
+
+This is consistent with how a real TSA officer behaves: if the
+manual doesn't cover the case, ask a supervisor — don't wave the
+passenger through and don't fabricate a rule.
+
+### Where ESCALATE applies
+
+- `build_raw_system_prompt(Some(rulebook))` — yes, three-verdict.
+- `build_priming_system_prompt()` — yes, three-verdict.
+- `build_priming_turn2_user_prompt()` — reminded.
+- `build_raw_system_prompt(None)` — NO, binary verdict preserved.
+  In the no-rulebook case the model is allowed to use
+  training-data knowledge; ESCALATE doesn't apply there.
+
+### Changed
+
+Removed wording about "do not invent additional rules". Replaced
+with "Use only the rules above. Do not invent or infer
+additional rules." This is structurally cleaner and pairs with
+the explicit ESCALATE option.
+
+### Harness changes
+
+`scripts/adj18_bench.py`'s `VERDICT_RE` extended to recognise
+`ESCALATE` as a third matched verdict (was binary
+COMPLIANT/NON-COMPLIANT). Existing bench data continues to parse
+correctly; future bench runs against v0.13 prompts will record
+ESCALATE verdicts as a third value rather than parse-fails.
+
+### Tests
+
+4 new tests added (42 lib total, all passing):
+- `raw_system_prompt_no_rulebook_keeps_binary_verdict` — verifies
+  the no-rulebook prompt is unchanged.
+- `raw_system_prompt_with_rulebook_offers_escalate_verdict` —
+  verifies the three-verdict set + the "silence is not permission"
+  semantic.
+- `priming_system_prompt_offers_escalate_verdict` — same for
+  priming dispatch.
+- `priming_turn2_user_prompt_lists_escalate_as_an_option` —
+  verifies the turn 2 reminder.
+
+### Framework instructions are domain-neutral
+
+The behavioural instructions (about ESCALATE, verdict-first,
+"silence is not permission") are written in domain-neutral
+language. Earlier drafts used TSA-flavored metaphors like
+"A real TSA officer asks a supervisor when the manual doesn't
+cover a case rather than waving the passenger through" — those
+were removed before this PR shipped. The example for rule
+citation was changed from "per rule 3, strike-anywhere matches
+are prohibited" (TSA-specific) to "per rule N, ..." (generic).
+
+Role descriptors and rulebook content remain domain-specific
+(each demo crate owns those, by design). What changed is that
+the **framework-level rules about verdict shape and escalation**
+are now portable across domains. When clinical-demo and
+contract-demo mirror this change, the framework instructions
+should be identical — only the role descriptor changes.
+
+A test (`framework_instructions_do_not_leak_domain_specific_metaphors`)
+explicitly asserts no TSA-officer phrasings, no "waving the
+passenger through" metaphors, and no TSA examples in the
+framework instructions. The test will need to be moved/renamed
+when the prompt-building logic eventually extracts to a shared
+module, but for now it pins the discipline.
+
+### What's NOT in this PR
+
+- **Bench re-run.** A follow-up PR will re-bench ADJ18 against
+  v0.13 prompts and document whether ESCALATE rates correlate
+  with the cases ADJ18 identified as regressions.
+- **Source decomposition.** Independent gap: Arm A doesn't
+  decompose the source text (e.g., "4 inch pocket knife" doesn't
+  become `blade_length(quantity(4, inches))`). The current bench
+  doesn't exercise the structured extraction path; that's a
+  separate spec.
+- **clinical-demo and contract-demo prompts.** Same change
+  should apply for consistency but is staged separately to keep
+  the review surface focused.
+- **Expected-verdict refinement.** Some bench declarations are
+  arguably ambiguous (e.g., "matches" — strike-anywhere or
+  safety?). The expected-verdict column currently assumes
+  worst-case interpretation; an ESCALATE on these is defensible
+  but currently scored as wrong. Refinement queued for the
+  bench re-run PR.
+
+### Compatibility
+
+- `build_raw_system_prompt(None)` unchanged (binary verdict).
+- Existing tests still pass (the prior assertions don't depend
+  on the new wording specifics).
+- Bench harness change is backward compatible — the regex still
+  matches the two existing verdicts.
+
 ## [0.12.0] - 2026-05-12 — Arm A truncation hardening
 
 ### Motivation

@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-tsa-demo"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
-description = "A/B/C demo harness: compare a raw local Ollama model (Arm A) and the full adjudication pipeline (Arm B) against a third deterministic engine arm (Arm C). v0.11 added Arm C. v0.12 hardens Arm A against output truncation: (1) configurable output cap via ADJ_DEMO_MAX_ANSWER_TOKENS (default 2048, was 512), (2) verdict-first prompt format so the VERDICT line survives truncation, and (3) opt-in two-turn priming via ADJ_DEMO_ARM_A_MODE=priming where turn 1 hands the model the rulebook with an ACK-only instruction and turn 2 asks the question."
+description = "A/B/C demo harness comparing raw local LLM (Arm A), full structured pipeline (Arm B), and deterministic engine arm (Arm C). v0.12 hardened Arm A against truncation; v0.13 adds VERDICT: ESCALATE as a third option in with-rulebook Arm A prompts (single-turn and priming). The conservative semantic: silence in the rulebook is not permission. If no rule explicitly prohibits OR explicitly permits the items declared, ESCALATE rather than wave the case through. Surfaced by the ADJ18 bench's pocket-knife regression where rulebook injection actively reduced verdict accuracy on cases the rulebook didn't fully resolve."
 
 [[bin]]
 name = "adjudication-tsa-demo"
