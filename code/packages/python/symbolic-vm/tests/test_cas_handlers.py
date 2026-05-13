@@ -230,6 +230,27 @@ def test_factor_multivariate_perfect_square() -> None:
     assert result == IRApply(POW, (IRApply(ADD, (x, y)), IRInteger(2)))
 
 
+def test_factor_multivariate_difference_of_squares() -> None:
+    """Factor(x^2 - y^2) recognises a bivariate difference of squares."""
+    vm, _ = make_vm()
+    target = IRApply(
+        SUB,
+        (
+            IRApply(POW, (x, IRInteger(2))),
+            IRApply(POW, (y, IRInteger(2))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(SUB, (x, y)),
+            IRApply(ADD, (x, y)),
+        ),
+    )
+
+
 def test_factor_linear() -> None:
     """Factor(x - 3) → x - 3 (already irreducible linear, content 1)."""
     vm, _ = make_vm()

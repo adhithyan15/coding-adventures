@@ -738,6 +738,17 @@ def test_pipeline_factor_multivariate_perfect_square() -> None:
     assert set(base.args) == {IRSymbol("x"), IRSymbol("y")}
 
 
+def test_pipeline_factor_multivariate_difference_of_squares() -> None:
+    """factor(x^2 - y^2) recognises (x-y)*(x+y)."""
+    result = _eval("factor(x^2 - y^2)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert result.args == (
+        IRApply(IRSymbol("Sub"), (IRSymbol("x"), IRSymbol("y"))),
+        IRApply(IRSymbol("Add"), (IRSymbol("x"), IRSymbol("y"))),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section S — Calculus: diff and integrate (already wired, no pipeline tests)
 # ---------------------------------------------------------------------------

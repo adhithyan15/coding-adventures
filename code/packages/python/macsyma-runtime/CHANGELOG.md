@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added MACSYMA `factor` parity for the bivariate difference-of-squares
+  factoring foothold, so `factor(x^2 - y^2)` now returns `(x-y)*(x+y)`
+  through the canonical symbolic VM handler.
 - Added MACSYMA `factor` parity for the bivariate perfect-square factoring
   foothold, so `factor(x^2 + 2*x*y + y^2)` now returns `(x+y)^2` through the
   canonical symbolic VM handler.

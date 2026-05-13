@@ -1153,6 +1153,45 @@ def _extract_multivariate_perfect_square(inner: IRNode) -> IRNode | None:
     return IRApply(POW, (base, IRInteger(2)))
 
 
+def _extract_multivariate_difference_of_squares(inner: IRNode) -> IRNode | None:
+    """Recognise the small ``a^2 - b^2`` multivariate factor case."""
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 2:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    positive_square: IRNode | None = None
+    negative_square: IRNode | None = None
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if len(powers) != 1:
+            return None
+        base, exponent = next(iter(powers.items()))
+        if exponent != 2:
+            return None
+        if coefficient == 1:
+            positive_square = base
+        elif coefficient == -1:
+            negative_square = base
+        else:
+            return None
+
+    if positive_square is None or negative_square is None:
+        return None
+
+    return IRApply(
+        MUL,
+        (
+            IRApply(SUB, (positive_square, negative_square)),
+            IRApply(ADD, (positive_square, negative_square)),
+        ),
+    )
+
+
 def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
@@ -1182,6 +1221,9 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     # Try to lift to rational function.
     rational = to_rational(inner, x)
     if rational is None:
+        difference = _extract_multivariate_difference_of_squares(inner)
+        if difference is not None:
+            return difference
         perfect_square = _extract_multivariate_perfect_square(inner)
         if perfect_square is not None:
             return perfect_square
