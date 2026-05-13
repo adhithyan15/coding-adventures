@@ -4,6 +4,8 @@
 
 ### Added
 
+- Delegated Rust MACSYMA `factor` evaluation to the shared `symbolic-vm`
+  canonical handler, including coverage for common multivariate factors.
 - Added `?` / `? topic` help-query handling for Rust MACSYMA sessions.
 - Wired `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a
   Rust MACSYMA session assumption context so declared properties feed property

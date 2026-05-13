@@ -6,4 +6,5 @@ description = "Generic symbolic expression evaluator over the symbolic-ir tree r
 license = "MIT"
 
 [dependencies]
+cas-factor = { path = "../cas-factor" }
 symbolic-ir = { path = "../symbolic-ir" }
