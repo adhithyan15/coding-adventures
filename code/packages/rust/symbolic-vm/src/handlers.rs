@@ -1374,6 +1374,10 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         }
     }
 
+    if let Some(rewritten) = factor_multivariate_cubic_identity(input) {
+        return rewritten;
+    }
+
     if let Some(rewritten) = factor_multivariate_difference_of_squares(input) {
         return rewritten;
     }
@@ -1468,6 +1472,101 @@ fn factor_multivariate_perfect_square(node: &IRNode) -> Option<IRNode> {
         apply_node(SUB, vec![squares[0].clone(), squares[1].clone()])
     };
     Some(apply_node(POW, vec![base, IRNode::Integer(2)]))
+}
+
+fn factor_multivariate_cubic_identity(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 2 {
+        return None;
+    }
+
+    let mut positive_cube = None;
+    let mut negative_cube = None;
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if powers.len() != 1 {
+            return None;
+        }
+
+        let (base, exponent) = powers.iter().next()?;
+        if *exponent != 3 {
+            return None;
+        }
+
+        match coefficient {
+            1 => positive_cube = Some(base.clone()),
+            -1 => negative_cube = Some(base.clone()),
+            _ => return None,
+        }
+    }
+
+    if let Some(negative_cube) = negative_cube {
+        let positive_cube = positive_cube?;
+        return Some(apply_node(
+            MUL,
+            vec![
+                apply_node(SUB, vec![positive_cube.clone(), negative_cube.clone()]),
+                apply_node(
+                    ADD,
+                    vec![
+                        apply_node(
+                            ADD,
+                            vec![
+                                apply_node(POW, vec![positive_cube.clone(), IRNode::Integer(2)]),
+                                apply_node(MUL, vec![positive_cube, negative_cube.clone()]),
+                            ],
+                        ),
+                        apply_node(POW, vec![negative_cube, IRNode::Integer(2)]),
+                    ],
+                ),
+            ],
+        ));
+    }
+
+    let terms = additive_terms(node)?;
+    let mut cubes = Vec::new();
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if coefficient != 1 || powers.len() != 1 {
+            return None;
+        }
+        let (base, exponent) = powers.iter().next()?;
+        if *exponent != 3 {
+            return None;
+        }
+        cubes.push(base.clone());
+    }
+
+    if cubes.len() != 2 {
+        return None;
+    }
+    let first = cubes[0].clone();
+    let second = cubes[1].clone();
+    Some(apply_node(
+        MUL,
+        vec![
+            apply_node(ADD, vec![first.clone(), second.clone()]),
+            apply_node(
+                ADD,
+                vec![
+                    apply_node(
+                        ADD,
+                        vec![
+                            apply_node(POW, vec![first.clone(), IRNode::Integer(2)]),
+                            apply_node(
+                                MUL,
+                                vec![
+                                    IRNode::Integer(-1),
+                                    apply_node(MUL, vec![first, second.clone()]),
+                                ],
+                            ),
+                        ],
+                    ),
+                    apply_node(POW, vec![second, IRNode::Integer(2)]),
+                ],
+            ),
+        ],
+    ))
 }
 
 fn factor_multivariate_difference_of_squares(node: &IRNode) -> Option<IRNode> {

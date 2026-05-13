@@ -159,6 +159,67 @@ fn factors_multivariate_difference_of_squares_through_runtime() {
 }
 
 #[test]
+fn factors_multivariate_difference_of_cubes_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^3 - y^3);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(sym(MUL), vec![sym("x"), sym("y")]),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_sum_of_cubes_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^3 + y^3);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(
+                                    sym(MUL),
+                                    vec![int(-1), apply(sym(MUL), vec![sym("x"), sym("y")]),],
+                                ),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();
