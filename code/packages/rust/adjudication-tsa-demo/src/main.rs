@@ -51,6 +51,19 @@
 //! # ADJ16 step 3 dispute-detection path.
 //! ADJ_DEMO_ENGINE_ARM=strict cargo run -p adjudication-tsa-demo
 //! ADJ_DEMO_ENGINE_ARM=both   cargo run -p adjudication-tsa-demo
+//!
+//! # v0.12 — Arm A two-turn priming. Avoids gemma4 burning its
+//! # output budget narrating the rulebook by splitting the call
+//! # into (turn 1: rulebook + ACK, turn 2: question + verdict).
+//! # Combined with verdict-first prompting, the verdict survives
+//! # even when the reasoning portion truncates.
+//! ADJ_DEMO_RULEBOOK_MODE=fixture \
+//!     ADJ_DEMO_ARM_A_MODE=priming \
+//!     cargo run -p adjudication-tsa-demo
+//!
+//! # v0.12 — raise the output cap. Default is 2048; lower this to
+//! # provoke truncation, or raise it for very verbose models.
+//! ADJ_DEMO_MAX_ANSWER_TOKENS=4096 cargo run -p adjudication-tsa-demo
 //! ```
 //!
 //! The binary is intentionally environment-variable driven rather
@@ -65,8 +78,8 @@ use adjudication_rulebook::{
 use adjudication_pipeline::{RulebookProvenance, RulebookTrustTier, Verdict};
 use adjudication_tsa_demo::{
     acquire_demo_rulebook, fixture_tsa_rulebook, format_side_by_side, run_engine_arm,
-    run_pipeline_arm, run_raw_arm, tsa_rulebook_lenient_ir, tsa_rulebook_strict_ir, DemoConfig,
-    IrMode, IrSourceTelemetry,
+    run_pipeline_arm, run_raw_arm, tsa_rulebook_lenient_ir, tsa_rulebook_strict_ir, ArmAMode,
+    DemoConfig, IrMode, IrSourceTelemetry,
 };
 use llm_cache::CachingClient;
 use llm_gateway::LlmClient;
@@ -290,8 +303,9 @@ fn main() {
          primary model: `{model}` (Extractor/Renderer/Nli/Plausibility)\n\
          adversary:     {adv}\n\
          IR mode:       {mode:?}\n\
+         Arm A mode:    {arm_a:?} (max {max_tok} output tokens)\n\
          cache:         {cache}\n\
-         (override via ADJ_DEMO_{{ENDPOINT,MODEL,ADVERSARY_MODEL,SOURCE,IR_MODE,CACHE_DIR}})\n",
+         (override via ADJ_DEMO_{{ENDPOINT,MODEL,ADVERSARY_MODEL,SOURCE,IR_MODE,CACHE_DIR,ARM_A_MODE,MAX_ANSWER_TOKENS}})\n",
         endpoint = cfg.endpoint,
         model = cfg.model,
         adv = cfg
@@ -300,6 +314,8 @@ fn main() {
             .map(|s| format!("`{s}` (Adversary)"))
             .unwrap_or_else(|| "(none; ADJ05 will Skip)".to_string()),
         mode = cfg.ir_mode,
+        arm_a = cfg.arm_a_mode,
+        max_tok = cfg.max_answer_tokens,
         cache = cfg
             .cache_dir
             .as_deref()
@@ -308,7 +324,13 @@ fn main() {
     );
 
     // --- Arm A ---
-    println!("[arm A] asking the raw model directly...");
+    let arm_a_label = match cfg.arm_a_mode {
+        ArmAMode::SingleTurn => "asking the raw model directly...",
+        ArmAMode::Priming => {
+            "asking the raw model in priming mode (turn 1: rulebook + ACK, turn 2: question)..."
+        }
+    };
+    println!("[arm A] {arm_a_label}");
     let raw = match run_raw_arm(&cfg) {
         Ok(r) => r,
         Err(e) => {
@@ -531,6 +553,42 @@ fn config_from_env() -> DemoConfig {
                     None
                 }
             },
+        };
+    }
+    // v0.12: output-token cap for Arm A. Default is 2048 (set by
+    // DemoConfig::default()); the env var overrides for tests that
+    // intentionally provoke truncation or for deployments running
+    // very verbose models.
+    if let Ok(n) = std::env::var("ADJ_DEMO_MAX_ANSWER_TOKENS") {
+        if let Ok(parsed) = n.parse::<usize>() {
+            cfg.max_answer_tokens = parsed;
+        } else {
+            eprintln!(
+                "warning: ADJ_DEMO_MAX_ANSWER_TOKENS={n:?} did not \
+                 parse as a usize; keeping default {}.",
+                cfg.max_answer_tokens
+            );
+        }
+    }
+    // v0.12: Arm A dispatch mode. `single-turn` (default) preserves
+    // the v0.7 → v0.11 behaviour. `priming` engages the two-turn
+    // protocol that lets verbose 8B-class models digest a large
+    // adversarial rulebook in turn 1 (ACK only) and produce a
+    // verdict-first answer in turn 2.
+    if let Ok(mode) = std::env::var("ADJ_DEMO_ARM_A_MODE") {
+        cfg.arm_a_mode = match mode.to_ascii_lowercase().as_str() {
+            "single" | "single-turn" | "single_turn" | "singleturn" | "" => {
+                ArmAMode::SingleTurn
+            }
+            "priming" | "two-turn" | "two_turn" | "twoturn" => ArmAMode::Priming,
+            other => {
+                eprintln!(
+                    "warning: ADJ_DEMO_ARM_A_MODE={other:?} not recognised; \
+                     accepted: 'single-turn' or 'priming'. Falling back to \
+                     single-turn."
+                );
+                ArmAMode::SingleTurn
+            }
         };
     }
     cfg

@@ -149,6 +149,42 @@ pub struct DemoConfig {
     /// `adjudication-rulebook` crate) for an LLM-elicited rulebook
     /// that itself runs through the standard audit discipline.
     pub rulebook_text: Option<String>,
+    /// Maximum number of output tokens Arm A may emit before the
+    /// model's reply is truncated. The Ollama provider surfaces a
+    /// `Stop(MaxTokens)` finish reason that the demo currently
+    /// reports as `OutputTruncated`. Default 2048 — large enough
+    /// that verbose 8B models (gemma4 in particular) can finish a
+    /// rule-by-rule narration before hitting the cap, especially
+    /// when an adversarial rulebook is in the system prompt.
+    ///
+    /// Configurable via `ADJ_DEMO_MAX_ANSWER_TOKENS=<n>`. Lower the
+    /// value to test the truncation path; raise it if a deployment
+    /// uses a model that needs more room.
+    pub max_answer_tokens: usize,
+    /// How Arm A dispatches the LLM call.
+    pub arm_a_mode: ArmAMode,
+}
+
+/// Arm A dispatch strategies. See
+/// [ADJ16 §"gemma4 truncation" follow-up] and the ADJ17 caveats
+/// section for the motivation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArmAMode {
+    /// Single-turn: one user message carrying the declaration; the
+    /// system prompt holds the rulebook. The v0.7 → v0.11 behaviour;
+    /// kept as the default for backwards-compat.
+    SingleTurn,
+    /// Two-turn priming: turn 1 hands the model the rulebook with an
+    /// explicit instruction to respond only with `ACK` (no rule
+    /// narration, no comments); turn 2 sends the declaration and
+    /// asks for the verdict. Combined with the verdict-first prompt
+    /// rewrite, this drastically reduces the chance of output
+    /// truncation on verbose models — the model digests the
+    /// rulebook silently in turn 1 and produces a tight verdict in
+    /// turn 2.
+    ///
+    /// Triggered by `ADJ_DEMO_ARM_A_MODE=priming`.
+    Priming,
 }
 
 impl Default for DemoConfig {
@@ -163,6 +199,8 @@ impl Default for DemoConfig {
             max_clarification_attempts: 2,
             cache_dir: None,
             rulebook_text: None,
+            max_answer_tokens: 2048,
+            arm_a_mode: ArmAMode::SingleTurn,
         }
     }
 }
@@ -256,6 +294,13 @@ pub fn acquire_demo_rulebook(
 /// the rules explicitly and tells the model to cite a rule number
 /// per finding — the model can no longer invent constraints.
 pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    match cfg.arm_a_mode {
+        ArmAMode::SingleTurn => run_raw_arm_single_turn(cfg),
+        ArmAMode::Priming => run_raw_arm_priming(cfg),
+    }
+}
+
+fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let client = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
         .with_timeout(cfg.timeout);
@@ -270,7 +315,7 @@ pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
             content: MessageContent::Text(prompt.clone()),
         }],
         temperature: 0.0,
-        max_tokens: Some(512),
+        max_tokens: Some(cfg.max_answer_tokens),
         stop_sequences: Vec::new(),
         seed: Some(42),
         metadata: Default::default(),
@@ -288,6 +333,95 @@ pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     })
 }
 
+/// Two-turn priming dispatch (ArmAMode::Priming).
+///
+/// Turn 1 hands the model the rulebook with explicit instructions
+/// to respond only with `ACK`. The model digests the rulebook into
+/// its hidden state without burning output tokens on narration.
+/// Turn 2 sends the declaration and asks for a verdict-first
+/// response. Combined with the raised `max_answer_tokens` cap, this
+/// drastically reduces truncation on verbose 8B-class models.
+///
+/// If the rulebook is `None`, the priming turn is skipped and the
+/// behaviour falls back to single-turn (priming with no rulebook
+/// to digest would be a wasted round-trip).
+fn run_raw_arm_priming(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    let rulebook = match cfg.rulebook_text.as_deref() {
+        Some(t) if !t.is_empty() => t,
+        _ => return run_raw_arm_single_turn(cfg),
+    };
+
+    let client = OllamaClient::new(cfg.model.clone())
+        .with_endpoint(cfg.endpoint.clone())
+        .with_timeout(cfg.timeout);
+
+    // Turn 1: silent rulebook ingestion.
+    let priming_system = build_priming_system_prompt();
+    let priming_user = build_priming_turn1_user_prompt(rulebook);
+    let priming_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system.clone()),
+        messages: vec![Message {
+            role: MsgRole::User,
+            content: MessageContent::Text(priming_user.clone()),
+        }],
+        temperature: 0.0,
+        // The model is supposed to emit "ACK" — keep the budget
+        // tight so a runaway model can't burn the full cap here.
+        max_tokens: Some(64),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn1 = client.complete(priming_req)?;
+
+    // Turn 2: actual question with full turn-1 conversation as
+    // context. We rebuild the conversation rather than relying on
+    // server-side state since OllamaClient doesn't carry session
+    // affinity across calls.
+    let turn2_user = build_priming_turn2_user_prompt(&cfg.source_text);
+    let turn2_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system),
+        messages: vec![
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(priming_user),
+            },
+            Message {
+                role: MsgRole::Assistant,
+                content: MessageContent::Text(turn1.text.clone()),
+            },
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(turn2_user.clone()),
+            },
+        ],
+        temperature: 0.0,
+        max_tokens: Some(cfg.max_answer_tokens),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn2 = client.complete(turn2_req)?;
+
+    // RawArmReport's `prompt` field surfaces the user-visible
+    // question; for priming we surface turn 2's user message so the
+    // report is comparable to single-turn output. The full prompt
+    // history is reconstructable from the audit trail.
+    Ok(RawArmReport {
+        prompt: turn2_user,
+        answer: turn2.text,
+        model: turn2.model,
+        // Token usage: sum across both turns so the cost accounting
+        // reflects the real round-trips.
+        input_tokens: turn1.usage.input_tokens + turn2.usage.input_tokens,
+        output_tokens: turn1.usage.output_tokens + turn2.usage.output_tokens,
+        latency_ms: turn1.latency_ms + turn2.latency_ms,
+        finish_reason: turn2.finish_reason,
+    })
+}
+
 fn build_raw_prompt(source_text: &str) -> String {
     format!(
         "DECLARATION: {source_text}\n\nIs the passenger TSA-compliant?",
@@ -295,17 +429,28 @@ fn build_raw_prompt(source_text: &str) -> String {
     )
 }
 
-/// Build Arm A's system prompt. When a rulebook is supplied, the
-/// prompt names the rules and forbids the model from inventing
-/// constraints not on the list — the prompt-level version of the
-/// audit discipline that the structured arm enforces with checkers.
-fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
+/// Build Arm A's single-turn system prompt. When a rulebook is
+/// supplied, the prompt names the rules and forbids the model from
+/// inventing constraints not on the list. The instruction puts the
+/// `VERDICT:` line **first** so the answer survives even if
+/// downstream reasoning truncates against `max_answer_tokens`.
+pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
     match rulebook_text {
         None => "You are a TSA compliance officer. Given a passenger \
                  declaration, decide whether the passenger is compliant \
-                 with TSA carry-on rules. Explain your reasoning in 2-3 \
-                 sentences, then end with a final line: `VERDICT: \
-                 COMPLIANT` or `VERDICT: NON-COMPLIANT`."
+                 with TSA carry-on rules.\n\
+                 \n\
+                 Your response MUST begin with the verdict line as the \
+                 very first line of output:\n\
+                 \n\
+                 VERDICT: COMPLIANT\n\
+                 (or)\n\
+                 VERDICT: NON-COMPLIANT\n\
+                 \n\
+                 After the verdict line, give 2-3 sentences of \
+                 reasoning. The verdict-first format ensures the \
+                 verdict is captured even if your reasoning is \
+                 truncated."
             .to_string(),
         Some(text) => format!(
             "You are a TSA compliance officer. The carry-on rules \
@@ -316,14 +461,78 @@ fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
              {text}\n\
              \n\
              Given a passenger declaration, decide whether the \
-             passenger is compliant with the rules above. Explain \
-             your reasoning in 2-3 sentences, citing the specific \
-             rule numbers for each finding (e.g., \"per rule 3, \
-             strike-anywhere matches are prohibited\"). End with a \
-             final line: `VERDICT: COMPLIANT` or `VERDICT: \
-             NON-COMPLIANT`."
+             passenger is compliant with the rules above.\n\
+             \n\
+             Your response MUST begin with the verdict line as the \
+             very first line of output:\n\
+             \n\
+             VERDICT: COMPLIANT\n\
+             (or)\n\
+             VERDICT: NON-COMPLIANT\n\
+             \n\
+             After the verdict line, give 2-3 sentences of \
+             reasoning citing specific rule numbers for each \
+             finding (e.g., \"per rule 3, strike-anywhere matches \
+             are prohibited\"). The verdict-first format ensures \
+             the verdict is captured even if your reasoning is \
+             truncated."
         ),
     }
+}
+
+/// Build the system prompt for the priming dispatch path. Same role
+/// (TSA compliance officer) but with explicit ground rules about
+/// the two-turn protocol: read silently on turn 1, answer on turn 2.
+pub fn build_priming_system_prompt() -> String {
+    "You are a TSA compliance officer. You will receive information \
+     in two turns:\n\
+     \n\
+     Turn 1: I will give you a TSA carry-on rulebook to apply. \
+     Read it carefully and store the rules in your working memory. \
+     Respond with exactly the single word `ACK` and nothing else. \
+     Do NOT summarise the rules, comment on them, or analyse them \
+     until I ask my question in turn 2.\n\
+     \n\
+     Turn 2: I will give you a passenger declaration. Apply the \
+     rulebook from turn 1 and respond. Your response MUST begin \
+     with the verdict line as the very first line of output:\n\
+     \n\
+     VERDICT: COMPLIANT\n\
+     (or)\n\
+     VERDICT: NON-COMPLIANT\n\
+     \n\
+     After the verdict line, give 2-3 sentences of reasoning \
+     citing specific rule numbers from the turn 1 rulebook. The \
+     verdict-first format ensures the verdict is captured even if \
+     your reasoning is truncated. Do not invent rules that were \
+     not in the turn 1 rulebook."
+        .to_string()
+}
+
+/// Build the turn 1 user message for the priming path: the
+/// rulebook, framed as "intake this and acknowledge".
+pub fn build_priming_turn1_user_prompt(rulebook_text: &str) -> String {
+    format!(
+        "TURN 1: RULEBOOK INTAKE.\n\
+         \n\
+         The following TSA carry-on rulebook applies to my next \
+         question. Read it. Respond with `ACK` only.\n\
+         \n\
+         {rulebook_text}"
+    )
+}
+
+/// Build the turn 2 user message for the priming path: the
+/// declaration, framed as "now apply turn 1's rulebook and answer".
+pub fn build_priming_turn2_user_prompt(source_text: &str) -> String {
+    format!(
+        "TURN 2: QUESTION.\n\
+         \n\
+         Apply the rulebook from turn 1. Declaration: {source_text}\n\
+         \n\
+         Is the passenger TSA-compliant? Remember: first line MUST \
+         be `VERDICT: COMPLIANT` or `VERDICT: NON-COMPLIANT`."
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -2229,7 +2438,7 @@ mod tests {
         // The rule-against-invention is the load-bearing piece.
         assert!(s.contains("Do not invent"));
         // Cite-specific-rule instruction.
-        assert!(s.contains("citing the specific rule numbers"));
+        assert!(s.contains("citing specific rule numbers"));
     }
 
     #[test]
@@ -2249,6 +2458,96 @@ mod tests {
         assert!(s.contains("Strike-anywhere matches"));
         assert!(s.contains("3.4 oz"));
         assert!(s.contains("Do not invent"));
+    }
+
+    // -----------------------------------------------------------------
+    // v0.12 — verdict-first + max_answer_tokens + priming tests
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn default_config_uses_single_turn_and_2048_token_cap() {
+        let cfg = DemoConfig::default();
+        assert_eq!(cfg.arm_a_mode, ArmAMode::SingleTurn);
+        assert_eq!(cfg.max_answer_tokens, 2048);
+    }
+
+    #[test]
+    fn raw_system_prompt_demands_verdict_first_line() {
+        // Verdict-first is the load-bearing guarantee: even when
+        // truncation hits, the verdict line should be present.
+        // Both no-rulebook and with-rulebook variants must say so.
+        let no_rb = build_raw_system_prompt(None);
+        assert!(
+            no_rb.contains("first line"),
+            "no-rulebook prompt must specify verdict as first line, got: {no_rb}"
+        );
+        assert!(no_rb.contains("truncated"), "no-rulebook prompt must mention truncation");
+
+        let with_rb = build_raw_system_prompt(Some("rule x"));
+        assert!(
+            with_rb.contains("first line"),
+            "with-rulebook prompt must specify verdict as first line"
+        );
+        assert!(with_rb.contains("truncated"));
+    }
+
+    #[test]
+    fn priming_system_prompt_describes_two_turn_protocol() {
+        let s = build_priming_system_prompt();
+        assert!(s.contains("Turn 1"));
+        assert!(s.contains("Turn 2"));
+        assert!(s.contains("ACK"));
+        // Verdict-first still required in turn 2.
+        assert!(s.contains("VERDICT: COMPLIANT"));
+        assert!(s.contains("VERDICT: NON-COMPLIANT"));
+        // The model must NOT analyse the rulebook in turn 1.
+        assert!(s.contains("Do NOT"));
+    }
+
+    #[test]
+    fn priming_turn1_user_prompt_embeds_rulebook_and_demands_ack() {
+        let rb = "RULES:\n1. carry-on bag = OK\n2. matches = NOT OK";
+        let s = build_priming_turn1_user_prompt(rb);
+        assert!(s.contains("RULEBOOK INTAKE"));
+        assert!(s.contains("ACK"));
+        assert!(s.contains("carry-on bag = OK"));
+        assert!(s.contains("matches = NOT OK"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_embeds_declaration_and_repeats_verdict_format() {
+        let s = build_priming_turn2_user_prompt("1 carry-on bag, matches.");
+        assert!(s.contains("TURN 2"));
+        assert!(s.contains("1 carry-on bag, matches."));
+        assert!(s.contains("rulebook from turn 1"));
+        // Re-state the verdict format so the model can't forget it
+        // between turns.
+        assert!(s.contains("VERDICT: COMPLIANT"));
+        assert!(s.contains("VERDICT: NON-COMPLIANT"));
+    }
+
+    #[test]
+    fn config_with_priming_mode_is_addressable_via_struct_field() {
+        let mut cfg = DemoConfig::default();
+        cfg.arm_a_mode = ArmAMode::Priming;
+        cfg.rulebook_text = Some(fixture_tsa_rulebook());
+        assert_eq!(cfg.arm_a_mode, ArmAMode::Priming);
+        // The library doesn't actually call the LLM here (that would
+        // require Ollama running); this test just verifies the
+        // config plumbing.
+        assert!(cfg.rulebook_text.is_some());
+    }
+
+    #[test]
+    fn arm_a_mode_round_trips_through_debug_clone_eq() {
+        let a = ArmAMode::SingleTurn;
+        let b = a;
+        assert_eq!(a, b);
+        let c = ArmAMode::Priming;
+        assert_ne!(a, c);
+        // Debug emits something readable for telemetry.
+        let s = format!("{a:?}");
+        assert!(s.contains("SingleTurn"));
     }
 
     // -----------------------------------------------------------------
