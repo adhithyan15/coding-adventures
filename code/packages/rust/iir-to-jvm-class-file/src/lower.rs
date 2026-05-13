@@ -214,6 +214,60 @@ const DUP: u8 = 0x59;          // dup              — duplicate TOS (any cat-1)
 #[allow(dead_code)]
 const SWAP: u8 = 0x5F;         // swap             — swap top two cat-1 values (future use)
 
+// ===========================================================================
+// LANG36 closure opcodes — long[] dispatch table
+// ===========================================================================
+//
+// Closures are represented as `long[]` arrays:
+//   closure[0] = function dispatch index (u32 as long)
+//   closure[1..] = captured values (all cast to long)
+//
+// `alloc_closure` builds the array; `call_closure` passes it + an args
+// `long[]` to a generated `__callClosure(long[], long[]) → long` method.
+
+/// `newarray` (0xBC) — allocate a primitive-typed array.
+///
+/// Operand: one-byte type code.  For `long[]`, use T_LONG = 0x0B.
+///
+/// Stack: `count (int)` → `arrayref`
+const NEWARRAY: u8 = 0xBC;
+
+/// Type code for `newarray T_LONG` — produces a `long[]`.
+const T_LONG: u8 = 0x0B;
+
+/// `laload` (0x2F) — load a `long` element from a `long[]`.
+///
+/// Stack: `arrayref, index (int)` → `long`
+const LALOAD: u8 = 0x2F;
+
+/// `lastore` (0x50) — store a `long` element into a `long[]`.
+///
+/// Stack: `arrayref, index (int), value (long)` → (empty)
+const LASTORE: u8 = 0x50;
+
+/// `lcmp` (0x94) — compare two longs.
+///
+/// Stack: `long1, long2` → `int` (-1, 0, or 1)
+///
+/// Used in `__callClosure` to dispatch on the function index:
+///   `lload fn_idx_slot; ldc2_w target_idx; lcmp; ifeq case_N`
+const LCMP: u8 = 0x94;
+
+/// `l2i` (0x88) — narrow long to int (truncates to low 32 bits).
+///
+/// Stack: `long` → `int`
+///
+/// Used to convert a long-typed closure result back to i32 when the
+/// `call_closure` destination has an i32/bool type hint.
+const L2I: u8 = 0x88;
+
+/// `i2l` (0x85) — widen int to long.
+///
+/// Stack: `int` → `long`
+///
+/// Used to box i32/bool captured values into the `long[]` closure array.
+const I2L: u8 = 0x85;
+
 // ---------------------------------------------------------------------------
 // IIRJvmError
 // ---------------------------------------------------------------------------
@@ -506,6 +560,9 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         // Any variable holding a pair (or nil) gets a Ref slot, which uses
         // aload/astore rather than iload/istore.
         "ref<LispyPair>" => Some(JvmType::Ref),
+        // LANG36: A closure is a `long[]` array reference.
+        // Variables holding closures use aload/astore (Ref = reference type).
+        "closure" => Some(JvmType::Ref),
         // Catch-all: return None, let caller decide
         _ => None,
     }
@@ -549,6 +606,8 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         // The JVM method descriptor for a reference parameter/return is
         // "Ljava/lang/Object;" (the erasure of the actual Object[] type).
         "ref<LispyPair>" => "Ljava/lang/Object;",
+        // LANG36: A closure is a `long[]` — descriptor is "[J".
+        "closure" => "[J",
         _ => "I", // default for unknown — validator should have caught this
     }
 }
@@ -979,6 +1038,16 @@ fn allocate_slots(
 ///
 /// Scans parameters and instruction dest fields to build a `name → JvmType`
 /// lookup used by [`allocate_slots`].
+///
+/// # LANG36 special cases
+///
+/// `alloc_closure` destinations are always `JvmType::Ref` (they hold a
+/// `long[]` reference, regardless of the `"closure"` type_hint string).
+///
+/// `call_closure` destinations are always `JvmType::Long` — the generated
+/// `__callClosure(long[], long[])` dispatch method always returns `long`,
+/// so the receiving slot must be two-slot-wide even when the type_hint is
+/// the generic `"any"` string.
 fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
     let mut map: HashMap<String, JvmType> = HashMap::new();
 
@@ -989,9 +1058,18 @@ fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
     }
     for instr in &func.instructions {
         if let Some(dest) = &instr.dest {
-            if let Some(t) = iir_type_to_jvm(&instr.type_hint) {
-                map.entry(dest.clone()).or_insert(t);
-            }
+            // LANG36: Override type for closure opcodes so slot allocation is
+            // always correct, regardless of the type_hint string.
+            let t = if instr.op == "alloc_closure" {
+                // Closure handle = long[] reference
+                JvmType::Ref
+            } else if instr.op == "call_closure" {
+                // __callClosure always returns long
+                JvmType::Long
+            } else {
+                iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int)
+            };
+            map.entry(dest.clone()).or_insert(t);
         }
     }
     map
@@ -1115,10 +1193,122 @@ impl ConstantPoolBuilder {
         )
     }
 
+    /// Add a Long constant entry.
+    ///
+    /// Per the JVM spec §4.4.5, Long constants occupy **two** consecutive constant
+    /// pool slots: the Long entry at index N, and an unusable "phantom" `None` at
+    /// index N+1.  The phantom is never referenced; it is only here to keep the
+    /// indices consistent with what the serialiser writes into the file.
+    ///
+    /// Returns the 1-based index of the Long entry (not the phantom).
+    fn add_long(&mut self, value: i64) -> u16 {
+        let key = format!("Long:{}", value);
+        if let Some(&idx) = self.index_map.get(&key) {
+            return idx;
+        }
+        // We need two free slots.
+        assert!(
+            self.entries.len() + 1 < u16::MAX as usize,
+            "JVM constant pool overflow: too many entries (limit 65535)"
+        );
+        self.entries.push(Some(JvmConstantPoolEntry::Long(value)));
+        let idx = (self.entries.len() - 1) as u16;
+        self.index_map.insert(key, idx);
+        // Push the phantom slot (index N+1 is unusable per JVM spec §4.4.5).
+        self.entries.push(None);
+        idx
+    }
+
     /// Finalise the pool and return it as a `Vec<Option<JvmConstantPoolEntry>>`.
     fn build(self) -> Vec<Option<JvmConstantPoolEntry>> {
         self.entries
     }
+}
+
+// ---------------------------------------------------------------------------
+// LANG36 — Closure dispatch table
+// ---------------------------------------------------------------------------
+//
+// A JVM closure is a `long[]` array where:
+//   [0] = dispatch index (which function to call)
+//   [1..n] = captured values (as longs)
+//
+// A generated `__callClosure(long[] closure, long[] args) -> long` method
+// acts as the dynamic dispatch point.  It reads closure[0] and branches
+// using lcmp + ifne chains to the appropriate static function call.
+
+/// One entry in the closure dispatch table.
+///
+/// Each entry corresponds to one function that can be allocated as a closure
+/// (i.e. appears as `srcs[0]` in any `alloc_closure` instruction).
+#[derive(Debug, Clone)]
+struct ClosureDispatchEntry {
+    /// The IIR function name (e.g. `"__lambda_0"`).
+    fn_name: String,
+    /// Stable integer index assigned to this function (0-based, alphabetical).
+    dispatch_idx: usize,
+    /// Number of captured values for this closure (= `srcs[1..]` length in
+    /// the `alloc_closure` instruction).
+    n_captures: usize,
+    /// Full parameter list of the target function (name + type_hint pairs).
+    ///
+    /// Used to reconstruct the call signature inside `__callClosure`.
+    fn_params: Vec<(String, String)>,
+    /// Return type of the target function.
+    fn_return_type: String,
+}
+
+/// Pre-pass: collect all closure-eligible functions from the module.
+///
+/// Scans every function's instructions for `alloc_closure` opcodes and
+/// collects the target function names (`srcs[0]` = `Operand::Str(fn_name)`).
+///
+/// Returns a `HashMap<fn_name → ClosureDispatchEntry>` sorted by index.
+/// Indices are assigned alphabetically (deterministic ordering → byte-identical
+/// class files from identical modules).
+fn collect_closure_dispatch(module: &IIRModule) -> HashMap<String, ClosureDispatchEntry> {
+    // Step 1: gather (fn_name, n_captures) from every alloc_closure instruction.
+    //
+    // If the same function is allocated with different capture counts in different
+    // places, we record the FIRST occurrence.  A later lowering-time check
+    // (captures + args ≠ func.params.len()) will catch inconsistencies.
+    let mut name_to_captures: std::collections::BTreeMap<String, usize> =
+        std::collections::BTreeMap::new();
+
+    for func in &module.functions {
+        for instr in &func.instructions {
+            if instr.op == "alloc_closure" {
+                if let Some(Operand::Str(fn_name)) = instr.srcs.first() {
+                    let n_caps = instr.srcs.len().saturating_sub(1); // skip Str(fn_name)
+                    name_to_captures
+                        .entry(fn_name.clone())
+                        .or_insert(n_caps);
+                }
+            }
+        }
+    }
+
+    // Step 2: assign indices (BTreeMap guarantees alphabetical order).
+    let mut dispatch: HashMap<String, ClosureDispatchEntry> = HashMap::new();
+    for (idx, (fn_name, n_captures)) in name_to_captures.into_iter().enumerate() {
+        // Look up the function's parameter list and return type.
+        let (fn_params, fn_return_type) = module
+            .get_function(&fn_name)
+            .map(|f| (f.params.clone(), f.return_type.clone()))
+            .unwrap_or_else(|| (vec![], "i64".to_string()));
+
+        dispatch.insert(
+            fn_name.clone(),
+            ClosureDispatchEntry {
+                fn_name,
+                dispatch_idx: idx,
+                n_captures,
+                fn_params,
+                fn_return_type,
+            },
+        );
+    }
+    dispatch
 }
 
 // ---------------------------------------------------------------------------
@@ -1140,6 +1330,7 @@ fn lower_function(
     class_name: &str,
     module: &IIRModule,
     cp: &mut ConstantPoolBuilder,
+    closure_dispatch: &HashMap<String, ClosureDispatchEntry>,
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let fname = &func.name;
 
@@ -1668,6 +1859,249 @@ fn lower_function(
                         emit_typed_store(&mut code, dest_slot, ret_type);
                     }
                 }
+            }
+
+            // ── alloc_closure (LANG36) ───────────────────────────────────────
+            //
+            // Build a `long[]` array representing a closure:
+            //   closure[0] = dispatch index (which function to call)
+            //   closure[1..n] = captured values cast to long
+            //
+            // srcs[0] = Operand::Str(fn_name)  — callee name (not a variable)
+            // srcs[1..] = Var(cap_i)           — captured variables
+            //
+            // JVM sequence emitted (n = n_captures):
+            //
+            //   iconst_{n+1}              ← array length = 1 (idx slot) + n (caps)
+            //   newarray T_LONG           ← long[] closure_arr = new long[n+1]
+            //   dup
+            //   iconst_0                  ← index 0
+            //   <push dispatch_idx as long>
+            //   lastore                   ← closure_arr[0] = dispatch_idx
+            //   dup
+            //   iconst_1                  ← index 1
+            //   <load cap0, widen to long if i32>
+            //   lastore                   ← closure_arr[1] = cap0
+            //   …
+            //   astore dest_slot          ← dest = closure_arr
+            "alloc_closure" => {
+                let dest_name = instr
+                    .dest
+                    .as_deref()
+                    .ok_or_else(|| IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "alloc_closure has no dest".to_string(),
+                    })?;
+                let fn_name = match instr.srcs.first() {
+                    Some(Operand::Str(n)) => n.clone(),
+                    _ => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: "alloc_closure srcs[0] must be Operand::Str(fn_name)"
+                                .to_string(),
+                        })
+                    }
+                };
+
+                // Look up the dispatch index for this function.
+                let entry = closure_dispatch.get(&fn_name).ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!(
+                            "alloc_closure: function {:?} not in closure dispatch table \
+                             (this is an internal error — the pre-pass should have collected it)",
+                            fn_name
+                        ),
+                    }
+                })?;
+                let dispatch_idx = entry.dispatch_idx;
+
+                // Collect captured variable names (srcs[1..]).
+                let captures: Vec<&str> = instr
+                    .srcs
+                    .iter()
+                    .skip(1)
+                    .map(|s| match s {
+                        Operand::Var(n) => n.as_str(),
+                        _ => "",
+                    })
+                    .collect();
+                let n_captures = captures.len();
+
+                // Validate: captures + call_args == func.params.len().
+                let total_params = entry.fn_params.len();
+                let n_call_args = total_params.saturating_sub(n_captures);
+                if n_captures + n_call_args != total_params {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!(
+                            "alloc_closure {:?}: capture count ({}) + expected call args ({}) \
+                             ≠ function arity ({})",
+                            fn_name, n_captures, n_call_args, total_params
+                        ),
+                    });
+                }
+
+                let (dest_slot, _) = lookup_var(dest_name)?;
+
+                // ── Emit array allocation ────────────────────────────────────
+                // iconst_{n+1} — array length
+                emit_iconst(&mut code, (n_captures + 1) as i32);
+                // newarray T_LONG — allocate long[]
+                code.push(NEWARRAY);
+                code.push(T_LONG);
+
+                // ── Store dispatch index at closure[0] ───────────────────────
+                code.push(DUP);
+                code.push(ICONST_0); // index 0
+                // Push dispatch_idx as a long constant.
+                match dispatch_idx {
+                    0 => code.push(LCONST_0),
+                    1 => code.push(LCONST_1),
+                    n => {
+                        // Large dispatch index: use ldc2_w with a real Long CP entry.
+                        let cp_idx = cp.add_long(n as i64);
+                        code.push(LDC2_W);
+                        code.extend_from_slice(&cp_idx.to_be_bytes());
+                    }
+                }
+                code.push(LASTORE); // closure_arr[0] = dispatch_idx
+
+                // ── Store each capture at closure[1..n] ──────────────────────
+                for (cap_i, cap_name) in captures.iter().enumerate() {
+                    code.push(DUP);
+                    emit_iconst(&mut code, (cap_i + 1) as i32); // slot index
+                    let (cap_slot, cap_type) = lookup_var(cap_name)?;
+                    match cap_type {
+                        JvmType::Int => {
+                            // i32 → widen to long via i2l.
+                            emit_iload(&mut code, cap_slot);
+                            code.push(I2L);
+                        }
+                        JvmType::Long => {
+                            emit_lload(&mut code, cap_slot);
+                        }
+                        other => {
+                            // f32/f64/Ref captures are not supported in v1.
+                            // Float captures should have been caught by the validator
+                            // (Check 2.5); we guard here as a belt-and-braces measure.
+                            return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!(
+                                    "alloc_closure {:?}: capture {:?} has unsupported \
+                                     JVM type {:?}; only i32/i64 captures are supported in v1",
+                                    fn_name, cap_name, other
+                                ),
+                            });
+                        }
+                    }
+                    code.push(LASTORE); // closure_arr[cap_i + 1] = cap_value
+                }
+
+                // ── Store the completed closure array ────────────────────────
+                emit_astore(&mut code, dest_slot);
+            }
+
+            // ── call_closure (LANG36) ────────────────────────────────────────
+            //
+            // Build a `long[]` args array and call `__callClosure(long[], long[])`.
+            //
+            // srcs[0] = Var(handle)   — the closure (long[]) reference
+            // srcs[1..] = Var(arg_i)  — call-time arguments
+            //
+            // JVM sequence:
+            //
+            //   aload handle_slot        ← push closure handle (long[])
+            //   iconst_{n_args}          ← args array size
+            //   newarray T_LONG          ← long[] args_arr = new long[n_args]
+            //   dup
+            //   iconst_0
+            //   <load arg0, widen if i32>
+            //   lastore                  ← args_arr[0] = arg0
+            //   …
+            //   invokestatic ClassName.__callClosure([J[J)J
+            //   lstore dest_slot         ← dest = result (always a long)
+            "call_closure" => {
+                let dest_name = instr
+                    .dest
+                    .as_deref()
+                    .ok_or_else(|| IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "call_closure has no dest".to_string(),
+                    })?;
+                let handle_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: "call_closure srcs[0] must be Var(handle)".to_string(),
+                        })
+                    }
+                };
+
+                let (handle_slot, _) = lookup_var(&handle_name)?;
+                let (dest_slot, _) = lookup_var(dest_name)?;
+
+                // Collect call-time argument variables (srcs[1..]).
+                let args: Vec<&str> = instr
+                    .srcs
+                    .iter()
+                    .skip(1)
+                    .map(|s| match s {
+                        Operand::Var(n) => n.as_str(),
+                        _ => "",
+                    })
+                    .collect();
+                let n_args = args.len();
+
+                // ── Push closure handle ──────────────────────────────────────
+                emit_aload(&mut code, handle_slot);
+
+                // ── Build args array ─────────────────────────────────────────
+                emit_iconst(&mut code, n_args as i32);
+                code.push(NEWARRAY);
+                code.push(T_LONG);
+
+                for (arg_i, arg_name) in args.iter().enumerate() {
+                    code.push(DUP);
+                    emit_iconst(&mut code, arg_i as i32);
+                    let (arg_slot, arg_type) = lookup_var(arg_name)?;
+                    match arg_type {
+                        JvmType::Int => {
+                            emit_iload(&mut code, arg_slot);
+                            code.push(I2L);
+                        }
+                        JvmType::Long => {
+                            emit_lload(&mut code, arg_slot);
+                        }
+                        other => {
+                            return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!(
+                                    "call_closure: arg {:?} has unsupported type {:?}; \
+                                     only i32/i64 args are supported in v1",
+                                    arg_name, other
+                                ),
+                            });
+                        }
+                    }
+                    code.push(LASTORE); // args_arr[arg_i] = arg_value
+                }
+
+                // ── invokestatic ClassName.__callClosure([J[J)J ──────────────
+                //
+                // The dispatch method takes (long[], long[]) and returns long.
+                // Descriptor: "([J[J)J".
+                let dispatch_ref =
+                    cp.add_methodref(class_name, "__callClosure", "([J[J)J");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&dispatch_ref.to_be_bytes());
+
+                // ── Store the long result ────────────────────────────────────
+                //
+                // __callClosure always returns long.  The dest slot was
+                // allocated as Long (JvmType::Long) by build_type_map.
+                emit_lstore(&mut code, dest_slot);
             }
 
             // ── alloc ref<LispyPair> — Object[] cons cell allocation ─────────
@@ -2264,6 +2698,420 @@ fn cond_and_label<'a>(
 }
 
 // ---------------------------------------------------------------------------
+// generate_call_closure_dispatch — synthesize the __callClosure method
+// ---------------------------------------------------------------------------
+
+/// Generate the `__callClosure(long[], long[]) → long` dispatch method.
+///
+/// The method is a static function that:
+/// 1. Reads `closure[0]` (the dispatch index).
+/// 2. Compares it with each expected index using `lcmp` + `ifne`.
+/// 3. On a match, loads the captures from `closure[1..]` and the call-time
+///    args from `args[0..]`, narrows them to the target parameter types if
+///    needed, calls the static function, widens the result to `long` if
+///    needed, and returns.
+/// 4. After all cases: returns `0L` (unreachable default).
+///
+/// # Method signature
+///
+/// `static long __callClosure(long[] closure, long[] args)`
+/// Descriptor: `([J[J)J`
+///
+/// # Parameters
+/// - slot 0 = `closure` (`long[]` — one reference slot)
+/// - slot 1 = `args`    (`long[]` — one reference slot)
+fn generate_call_closure_dispatch(
+    class_name: &str,
+    dispatch_table: &[&ClosureDispatchEntry], // sorted by dispatch_idx
+    cp: &mut ConstantPoolBuilder,
+) -> JvmMethodInfo {
+    let mut code: Vec<u8> = Vec::new();
+
+    // The CLOSURE parameter is in slot 0, ARGS parameter is in slot 1.
+    // Both are reference types (long[] → one slot each), so max_locals = 2.
+    let max_locals: u16 = 2;
+
+    for entry in dispatch_table {
+        // ── Emit dispatch check ──────────────────────────────────────────────
+        //
+        // Pattern:
+        //   aload 0           ← push closure array
+        //   iconst_0          ← index 0 (dispatch slot)
+        //   laload            ← push closure[0] as long
+        //   <push expected dispatch_idx as long>
+        //   lcmp              ← → int: 0 if equal, ±1 otherwise
+        //   ifne +<body_size> ← if NOT equal, skip the body
+        //
+        // We emit the `ifne` with a placeholder offset, then emit the body,
+        // then fix the offset to point just past `lreturn`.
+
+        // Load closure[0]
+        code.push(ALOAD);
+        code.push(0u8); // aload 0 = closure array
+        code.push(ICONST_0); // index 0
+        code.push(LALOAD); // push closure[0] as long
+
+        // Push expected dispatch index as long.
+        match entry.dispatch_idx {
+            0 => code.push(LCONST_0),
+            1 => code.push(LCONST_1),
+            n => {
+                let cp_idx = cp.add_long(n as i64);
+                code.push(LDC2_W);
+                code.extend_from_slice(&cp_idx.to_be_bytes());
+            }
+        }
+
+        // lcmp: compare the two longs.
+        code.push(LCMP);
+
+        // ifne <skip_body>: if LCMP result != 0 (not equal), skip this body.
+        // We patch the offset after emitting the body.
+        let ifne_pos = code.len();
+        code.push(IFNE);
+        code.extend_from_slice(&0i16.to_be_bytes()); // placeholder
+
+        // ── Emit call body ───────────────────────────────────────────────────
+        //
+        // Push captures: closure[1..n_captures], narrowing long → int if needed.
+        for cap_i in 0..entry.n_captures {
+            let (_cap_name, cap_type_str) = entry.fn_params.get(cap_i)
+                .map(|(n, t)| (n.as_str(), t.as_str()))
+                .unwrap_or(("", "i64"));
+            let cap_jtype = iir_type_to_jvm(cap_type_str).unwrap_or(JvmType::Long);
+
+            code.push(ALOAD);
+            code.push(0u8); // closure array
+            emit_iconst(&mut code, (cap_i + 1) as i32); // closure[cap_i + 1]
+            code.push(LALOAD); // push as long
+
+            if cap_jtype == JvmType::Int {
+                // Parameter expects int — narrow the long.
+                code.push(L2I);
+            }
+            // Otherwise it's already a long — leave on stack.
+        }
+
+        // Push call-time args: args[0..n_args], narrowing if needed.
+        let n_call_args = entry.fn_params.len().saturating_sub(entry.n_captures);
+        for arg_i in 0..n_call_args {
+            let param_idx = entry.n_captures + arg_i;
+            let (_arg_name, arg_type_str) = entry.fn_params.get(param_idx)
+                .map(|(n, t)| (n.as_str(), t.as_str()))
+                .unwrap_or(("", "i64"));
+            let arg_jtype = iir_type_to_jvm(arg_type_str).unwrap_or(JvmType::Long);
+
+            code.push(ALOAD);
+            code.push(1u8); // args array
+            emit_iconst(&mut code, arg_i as i32); // args[arg_i]
+            code.push(LALOAD); // push as long
+
+            if arg_jtype == JvmType::Int {
+                code.push(L2I);
+            }
+        }
+
+        // Invoke the target function.
+        let fn_desc = make_descriptor(&entry.fn_params, &entry.fn_return_type);
+        let fn_ref = cp.add_methodref(class_name, &entry.fn_name, &fn_desc);
+        code.push(INVOKESTATIC);
+        code.extend_from_slice(&fn_ref.to_be_bytes());
+
+        // Widen the result to long if the function returns int.
+        let ret_jtype =
+            iir_type_to_jvm(&entry.fn_return_type).unwrap_or(JvmType::Long);
+        if ret_jtype == JvmType::Int {
+            code.push(I2L);
+        }
+
+        code.push(LRETURN);
+
+        // ── Patch the ifne offset ────────────────────────────────────────────
+        //
+        // The offset in `ifne` is measured from the opcode's own position.
+        // We want it to jump to the instruction AFTER `lreturn`.
+        //
+        // JVM branch offsets are signed 16-bit, so a dispatch body must be
+        // < 32,767 bytes.  For any reasonable number of closure targets this
+        // is never an issue; we guard explicitly so a malformed or adversarially
+        // crafted module produces a clear error rather than silent truncation.
+        let body_end = code.len();
+        let raw_offset = (body_end as i64) - (ifne_pos as i64);
+        if raw_offset < i16::MIN as i64 || raw_offset > i16::MAX as i64 {
+            // This is an internal limit of the JVM's 16-bit branch offsets.
+            // In practice it would require tens of thousands of closure entries
+            // to trigger, but we guard it explicitly for correctness.
+            panic!(
+                "__callClosure dispatch body too large for JVM i16 branch offset \
+                 ({} bytes, max {}); split the closure dispatch table or reduce \
+                 the number of closure-eligible functions",
+                raw_offset, i16::MAX
+            );
+        }
+        let offset = raw_offset as i16;
+        let ob = offset.to_be_bytes();
+        code[ifne_pos + 1] = ob[0];
+        code[ifne_pos + 2] = ob[1];
+    }
+
+    // ── Default (unreachable): return 0L ─────────────────────────────────────
+    code.push(LCONST_0);
+    code.push(LRETURN);
+
+    // Descriptor: ([J[J)J — takes two long[], returns long.
+    let descriptor = "([J[J)J".to_string();
+    cp.add_utf8(&descriptor);
+    cp.add_utf8("__callClosure");
+
+    // Generous max_stack — the worst case is:
+    //   closure[0] comparison: 2 longs = 4 stack words
+    //   body: long[] ref + int index + long value per arg = 3 per arg
+    // We set 16 to be safe for any reasonable function arity.
+    let max_stack: u16 = 16;
+
+    let code_attribute = JvmCodeAttribute {
+        name: "Code".to_string(),
+        max_stack,
+        max_locals,
+        code,
+        nested_attributes: vec![],
+    };
+
+    JvmMethodInfo {
+        access_flags: ACC_PUBLIC | ACC_STATIC,
+        name: "__callClosure".to_string(),
+        descriptor,
+        attributes: vec![JvmMethodAttribute::Code(code_attribute)],
+    }
+}
+
+// ---------------------------------------------------------------------------
+// serialize_jvm_class_file — convert JvmClassFile to bytes
+// ---------------------------------------------------------------------------
+//
+// The JVM class file format (JVMS §4.1):
+//
+//   magic                 (u32 = 0xCAFEBABE)
+//   minor_version, major_version (u16 each)
+//   constant_pool_count   (u16 = len of constant_pool vec, including index 0)
+//   constant_pool[1..count-1] (variable-length entries)
+//   access_flags          (u16)
+//   this_class            (u16 CP index of Class entry)
+//   super_class           (u16 CP index of Class entry)
+//   interfaces_count      (u16 = 0)
+//   fields_count          (u16 = 0)
+//   methods_count         (u16)
+//   methods[0..count-1]   (method_info records)
+//   attributes_count      (u16 = 0)
+
+/// Serialise a `JvmClassFile` to a raw `.class` file byte vector.
+///
+/// Used by the real-JVM integration test (see `test_backend.rs`).  The
+/// output should be accepted by any Java 8+ JVM.
+pub fn serialize_jvm_class_file(class: &JvmClassFile) -> Vec<u8> {
+    let mut out = Vec::new();
+
+    // Magic, version.
+    out.extend_from_slice(&0xCAFE_BABEu32.to_be_bytes());
+    out.extend_from_slice(&class.version.minor.to_be_bytes());
+    out.extend_from_slice(&class.version.major.to_be_bytes());
+
+    // Constant pool count (the vec includes the phantom at index 0, so
+    // cp.len() == the JVM constant_pool_count field).
+    let cp_count = class.constant_pool.len() as u16;
+    out.extend_from_slice(&cp_count.to_be_bytes());
+
+    // Emit CP entries; skip the phantom at index 0 and any None placeholders
+    // (which appear after Long/Double entries — those don't emit any bytes).
+    for entry in class.constant_pool.iter().skip(1) {
+        match entry {
+            None => {} // phantom slot — no bytes
+            Some(e) => serialize_cp_entry(&mut out, e),
+        }
+    }
+
+    // Access flags, this_class, super_class.
+    out.extend_from_slice(&class.access_flags.to_be_bytes());
+    let this_idx = find_class_cp_index(&class.constant_pool, &class.this_class_name)
+        .unwrap_or(0);
+    let super_idx = find_class_cp_index(&class.constant_pool, &class.super_class_name)
+        .unwrap_or(0);
+    out.extend_from_slice(&this_idx.to_be_bytes());
+    out.extend_from_slice(&super_idx.to_be_bytes());
+
+    // Interfaces and fields: both empty.
+    out.extend_from_slice(&0u16.to_be_bytes()); // interfaces_count
+    out.extend_from_slice(&0u16.to_be_bytes()); // fields_count
+
+    // Methods.
+    out.extend_from_slice(&(class.methods.len() as u16).to_be_bytes());
+    for method in &class.methods {
+        serialize_method(&mut out, method, &class.constant_pool);
+    }
+
+    // Class-level attributes: none.
+    out.extend_from_slice(&0u16.to_be_bytes());
+
+    out
+}
+
+/// Find the CP index of the Class entry whose name matches `class_name`.
+///
+/// We first find the Utf8 entry for the name, then find the Class entry that
+/// references it.  Returns `None` if not found (should never happen for
+/// class files produced by this lowering pass).
+fn find_class_cp_index(
+    cp: &[Option<JvmConstantPoolEntry>],
+    class_name: &str,
+) -> Option<u16> {
+    // Step 1: find Utf8 entry index.
+    let utf8_idx = cp.iter().enumerate().find_map(|(i, e)| {
+        if let Some(JvmConstantPoolEntry::Utf8(s)) = e {
+            if s == class_name {
+                Some(i as u16)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })?;
+
+    // Step 2: find Class entry that references it.
+    cp.iter().enumerate().find_map(|(i, e)| {
+        if let Some(JvmConstantPoolEntry::Class { name_index }) = e {
+            if *name_index == utf8_idx {
+                Some(i as u16)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })
+}
+
+/// Find the CP index of a Utf8 entry that matches `s`.
+fn find_utf8_cp_index(cp: &[Option<JvmConstantPoolEntry>], s: &str) -> u16 {
+    cp.iter().enumerate().find_map(|(i, e)| {
+        if let Some(JvmConstantPoolEntry::Utf8(v)) = e {
+            if v == s {
+                Some(i as u16)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })
+    .unwrap_or(0)
+}
+
+/// Serialize one `JvmConstantPoolEntry` to bytes.
+fn serialize_cp_entry(out: &mut Vec<u8>, entry: &JvmConstantPoolEntry) {
+    match entry {
+        JvmConstantPoolEntry::Utf8(s) => {
+            out.push(1); // CONSTANT_Utf8
+            let b = s.as_bytes();
+            // JVMS §4.4.7: the length field is u16 — guard against truncation.
+            // In practice JVM class-name and method-name strings are always
+            // well under 65,535 bytes; the check catches adversarially long
+            // strings passed through an untrusted IIRModule.
+            assert!(
+                b.len() <= u16::MAX as usize,
+                "JVM Utf8 constant pool entry exceeds 65535 bytes (actual {} bytes): {:?}",
+                b.len(), s
+            );
+            out.extend_from_slice(&(b.len() as u16).to_be_bytes());
+            out.extend_from_slice(b);
+        }
+        JvmConstantPoolEntry::Integer(v) => {
+            out.push(3); // CONSTANT_Integer
+            out.extend_from_slice(&v.to_be_bytes());
+        }
+        JvmConstantPoolEntry::Long(v) => {
+            out.push(5); // CONSTANT_Long
+            out.extend_from_slice(&v.to_be_bytes());
+            // Note: the phantom None at N+1 is handled by the caller skipping None.
+        }
+        JvmConstantPoolEntry::Double(v) => {
+            out.push(6); // CONSTANT_Double
+            out.extend_from_slice(&v.to_bits().to_be_bytes());
+        }
+        JvmConstantPoolEntry::Class { name_index } => {
+            out.push(7); // CONSTANT_Class
+            out.extend_from_slice(&name_index.to_be_bytes());
+        }
+        JvmConstantPoolEntry::String { string_index } => {
+            out.push(8); // CONSTANT_String
+            out.extend_from_slice(&string_index.to_be_bytes());
+        }
+        JvmConstantPoolEntry::Fieldref { class_index, name_and_type_index } => {
+            out.push(9); // CONSTANT_Fieldref
+            out.extend_from_slice(&class_index.to_be_bytes());
+            out.extend_from_slice(&name_and_type_index.to_be_bytes());
+        }
+        JvmConstantPoolEntry::Methodref { class_index, name_and_type_index } => {
+            out.push(10); // CONSTANT_Methodref
+            out.extend_from_slice(&class_index.to_be_bytes());
+            out.extend_from_slice(&name_and_type_index.to_be_bytes());
+        }
+        JvmConstantPoolEntry::NameAndType { name_index, descriptor_index } => {
+            out.push(12); // CONSTANT_NameAndType
+            out.extend_from_slice(&name_index.to_be_bytes());
+            out.extend_from_slice(&descriptor_index.to_be_bytes());
+        }
+    }
+}
+
+/// Serialize one `JvmMethodInfo` to bytes.
+fn serialize_method(
+    out: &mut Vec<u8>,
+    method: &JvmMethodInfo,
+    cp: &[Option<JvmConstantPoolEntry>],
+) {
+    out.extend_from_slice(&method.access_flags.to_be_bytes());
+    out.extend_from_slice(&find_utf8_cp_index(cp, &method.name).to_be_bytes());
+    out.extend_from_slice(&find_utf8_cp_index(cp, &method.descriptor).to_be_bytes());
+    out.extend_from_slice(&(method.attributes.len() as u16).to_be_bytes());
+    for attr in &method.attributes {
+        serialize_method_attribute(out, attr, cp);
+    }
+}
+
+/// Serialize one `JvmMethodAttribute` to bytes.
+fn serialize_method_attribute(
+    out: &mut Vec<u8>,
+    attr: &JvmMethodAttribute,
+    cp: &[Option<JvmConstantPoolEntry>],
+) {
+    match attr {
+        JvmMethodAttribute::Code(code_attr) => {
+            let name_idx = find_utf8_cp_index(cp, "Code");
+            out.extend_from_slice(&name_idx.to_be_bytes());
+
+            // Build the Code attribute body.
+            let mut body = Vec::new();
+            body.extend_from_slice(&code_attr.max_stack.to_be_bytes());
+            body.extend_from_slice(&code_attr.max_locals.to_be_bytes());
+            body.extend_from_slice(&(code_attr.code.len() as u32).to_be_bytes());
+            body.extend_from_slice(&code_attr.code);
+            body.extend_from_slice(&0u16.to_be_bytes()); // exception_table_length
+            body.extend_from_slice(&0u16.to_be_bytes()); // nested_attributes_count
+
+            out.extend_from_slice(&(body.len() as u32).to_be_bytes());
+            out.extend_from_slice(&body);
+        }
+        JvmMethodAttribute::Raw(raw) => {
+            let name_idx = find_utf8_cp_index(cp, &raw.name);
+            out.extend_from_slice(&name_idx.to_be_bytes());
+            out.extend_from_slice(&(raw.info.len() as u32).to_be_bytes());
+            out.extend_from_slice(&raw.info);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // lower_iir_to_jvm — public entry point
 // ---------------------------------------------------------------------------
 
@@ -2324,6 +3172,15 @@ pub fn lower_iir_to_jvm(
         return Err(IIRJvmError::ValidationFailed(errors));
     }
 
+    // ── Step 1b: closure pre-pass ─────────────────────────────────────────────
+    //
+    // Collect every function referenced as a closure target (`alloc_closure`
+    // srcs[0] = Str(fn_name)) and build a dispatch table sorted alphabetically
+    // for deterministic index assignment.  The resulting map is threaded
+    // through the rest of lowering so that `alloc_closure` and `call_closure`
+    // instructions can emit the right bytecode without re-scanning the module.
+    let closure_dispatch = collect_closure_dispatch(module);
+
     // ── Step 2: build constant pool ───────────────────────────────────────────
     let mut cp = ConstantPoolBuilder::new();
 
@@ -2338,11 +3195,34 @@ pub fn lower_iir_to_jvm(
         cp.add_methodref(&config.class_name, &func.name, &descriptor);
     }
 
+    // If the module uses closures, pre-register the `__callClosure` Methodref
+    // so that `call_closure` instructions can reference it by CP index.
+    // The descriptor is `([J[J)J` — two long[] args, returns long.
+    if !closure_dispatch.is_empty() {
+        cp.add_methodref(&config.class_name, "__callClosure", "([J[J)J");
+    }
+
     // ── Step 3: lower each function ───────────────────────────────────────────
     let mut methods: Vec<JvmMethodInfo> = Vec::new();
     for func in &module.functions {
-        let method = lower_function(func, &config.class_name, module, &mut cp)?;
+        let method = lower_function(func, &config.class_name, module, &mut cp, &closure_dispatch)?;
         methods.push(method);
+    }
+
+    // ── Step 3b: generate __callClosure dispatch method (if needed) ───────────
+    //
+    // We generate this AFTER lowering the user functions so that all CP entries
+    // for those functions (names, descriptors, Methodrefs) are already present.
+    // The dispatch method just calls into those already-registered entries.
+    if !closure_dispatch.is_empty() {
+        // Sort by dispatch index for deterministic bytecode.
+        let mut sorted: Vec<&ClosureDispatchEntry> =
+            closure_dispatch.values().collect();
+        sorted.sort_by_key(|e| e.dispatch_idx);
+
+        let dispatch_method =
+            generate_call_closure_dispatch(&config.class_name, &sorted, &mut cp);
+        methods.push(dispatch_method);
     }
 
     // ── Step 4: assemble JvmClassFile ─────────────────────────────────────────

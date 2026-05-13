@@ -114,9 +114,55 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `ret`          | `iload/lload/fload/dload result; ireturn/lreturn/…`       |
 | `ret_void`     | `return`                                                  |
 | `call`         | `iload args…; invokestatic CP#; istore dest`              |
-| `load_reg`     | `iload/lload/fload/dload src; istore/lstore/… dest`       |
-| `store_reg`    | same as `load_reg`                                        |
-| `type_assert`  | nop (erased at lowering time)                             |
+| `load_reg`       | `iload/lload/fload/dload src; istore/lstore/… dest`         |
+| `store_reg`      | same as `load_reg`                                          |
+| `type_assert`    | nop (erased at lowering time)                               |
+| `alloc_closure`  | `newarray T_LONG; lastore (×N); astore dest` — LANG36       |
+| `call_closure`   | `newarray T_LONG; lastore (×M); invokestatic __callClosure` — LANG36 |
+
+## Closures (LANG36)
+
+The JVM backend supports **first-class closures** via a `long[]`-based
+dispatch-table approach.
+
+### Closure representation
+
+A JVM closure is a `long[]` array:
+
+```
+closure[0]  = function dispatch index (u32 as long)
+closure[1]  = first captured value (as long)
+closure[2]  = second captured value (as long)
+…
+```
+
+Integer captures (`i32`/`u32`/`bool`) are sign-extended to `long` via `i2l`.
+`i64`/`u64` captures are stored directly.  Float captures (`f32`, `f64`) are
+deferred — they still produce a `ClosureOpcode` validation error.
+
+### `__callClosure` dispatch method
+
+When a module contains any `alloc_closure` instruction, the lowering pass
+automatically generates a synthetic static method:
+
+```
+static long __callClosure(long[] closure, long[] args)
+```
+
+This method reads `closure[0]` and dispatches to the correct underlying static
+method via a chain of `lcmp`/`ifeq` branches — one per closure-eligible function.
+Dispatch indices are alphabetically assigned for deterministic output.
+
+### Quick example
+
+```rust
+// IIR:
+//   __adder(x: i64, cap: i64) -> i64: ret x + cap
+//   main():
+//     c = alloc_closure(Str("__adder"), Var("cap"))   ; closure over cap=3
+//     r = call_closure(Var("c"), Var("arg"))           ; call with arg=4
+//     ret r                                            ; → 7
+```
 
 ## Unsupported (validation rejects)
 
@@ -124,12 +170,10 @@ assert_eq!(class_file.this_class_name, "MyClass");
 `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`, and any
 instruction with `type_hint` of `"any"`, `"polymorphic"`, `"str"`, or `"ref<…>"`.
 
-> **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
-> closure opcodes) are BEAM-only and return a `ClosureOpcode` validation error
-> rather than the generic `UntypedInstruction` message.
+`alloc_closure` with `f32`/`f64` captures — deferred to LANG38.
 
 Note: float type hints (`f32`, `f64`) and float constant operands **are supported**
-(unlike the BEAM backend).
+for non-closure paths (unlike the BEAM backend).
 
 ## Type mapping
 

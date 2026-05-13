@@ -1,6 +1,6 @@
 [package]
 name = "iir-to-jvm-class-file"
-version = "0.1.0"
+version = "0.4.0"
 edition = "2021"
 description = "IIR → JVM class file backend — lowers IIRModule to JvmClassFile without compiler-ir"
 
