@@ -530,3 +530,148 @@ multi-domain fact-sheet-rich contexts) where it might pay off.
   rulebook (denser, more citations) but it should still show
   the pocket-knife-style regression where the rule isn't
   enumerated.
+
+## v0.13 re-run (2026-05-13)
+
+After [PR #3066](https://github.com/adhithyan15/coding-adventures/pull/3066)
+landed `VERDICT: ESCALATE` as a third option in with-rulebook
+Arm A prompts, we re-ran the 120-cell matrix against v0.13
+prompts. Raw data:
+[`data/adj18-tsa-bench-v0.13-2026-05-13.json`](data/adj18-tsa-bench-v0.13-2026-05-13.json).
+
+### Aggregate
+
+| Mode | v0.12 | v0.13 | Δ |
+|---|---|---|---|
+| `none` | 23/40 (57.5%) | 23/40 (57.5%) | — *(prompt unchanged)* |
+| `fixture-single` | 20/40 (50.0%) | 17/40 (42.5%) | **−3** |
+| `fixture-priming` | 16/40 (40.0%) | 23/40 (57.5%) | **+7** |
+| **Total** | 59/120 (49.2%) | 63/120 (52.5%) | **+4** |
+
+### The big priming-mode improvement
+
+v0.12 priming produced 10 parse-failure cells across the 0.5B
+and 1.5B models. v0.13 priming produced **0 parse failures**.
+The more carefully structured prompt (with explicit ESCALATE
+option and clearer turn-2 framing) reliably elicits a VERDICT
+line from every model on every declaration. This alone accounts
+for the entire net +4 accuracy improvement.
+
+### ESCALATE was barely used
+
+**ESCALATE used in 1 of 120 cells.** Gemma4 on the wine-bottle
+declaration in `fixture-single` produced:
+
+> *"VERDICT: ESCALATE — A supervisor needs to clarify the
+> alcohol by volume (ABV) of the wine to determine if it is
+> permitted under rule 8. ... Rule 8 prohibits beverages over
+> 70% ABV, but the declaration does not specify the ABV, making
+> compliance impossible to determine."*
+
+A defensible escalation: rule 8 does constrain alcohol by ABV,
+and the declaration doesn't specify it. The model spotted a real
+ambiguity. (Caveat: it missed rule 2's 100 ml liquid limit,
+which 750 ml vastly exceeds — a NON-COMPLIANT citing rule 2
+would have been the stronger answer. But the ESCALATE under
+rule 8 is correct application of the conservative semantic.)
+
+Every other model on every other declaration produced one of
+the two binary verdicts. Models told they could escalate did
+not — even on cases where they were demonstrably wrong.
+
+### The pocket-knife regression: still there
+
+```
+pocket-knife (expected NON-COMPLIANT, 4-inch blade > 2.36 in limit):
+
+  Model              v0.12 fixture-single   v0.13 fixture-single
+  gemma4:latest      ✗ COMPLIANT            ✗ COMPLIANT
+  llama3.1:8b        ✗ COMPLIANT            ✗ COMPLIANT
+  qwen2.5:3b         ✗ COMPLIANT            ✗ COMPLIANT
+  qwen2.5:1.5b       ✗ COMPLIANT            ✗ COMPLIANT
+  qwen2.5:0.5b       ✗ COMPLIANT            ✗ COMPLIANT
+```
+
+ESCALATE was supposed to catch this — every model fails the
+numerical comparison `4 > 2.36`, and the right answer under the
+conservative semantic is ESCALATE because the rule's condition
+cannot be evaluated reliably. **None of the models escalated.**
+They all confidently asserted the 4-inch blade was under the
+2.36 in limit, just like in v0.12.
+
+This is the cleanest evidence that **prompt-level ESCALATE is
+not sufficient** for safety-critical adjudication. The model
+cannot tell that it cannot do the arithmetic. The fix has to
+happen outside the LLM:
+
+- **ADJ20 fact sheets**: the engine handles the arithmetic.
+- **Source decomposition** (next spec): the engine receives
+  `blade_length(quantity(4, inches))` as a structured fact, not
+  as a parsed-by-LLM number.
+
+The v0.13 re-run is the empirical confirmation that the
+framework needs both — prompt engineering alone can't get the
+model to escalate on cases where it should.
+
+### Why models don't escalate
+
+Well-known in the LLM literature: models are trained to produce
+confident answers. Instruction-tuning rewards giving an answer
+over saying "I don't know." Adding `VERDICT: ESCALATE` as a
+third label doesn't reweight the model's preferences enough to
+overcome that prior.
+
+Three follow-up experiments suggest themselves (not in this PR):
+
+1. **Constrained decoding** on the verdict line. Restrict the
+   first token after `VERDICT:` to one of three labels with
+   equal logit mass to start. Today's Ollama path doesn't
+   expose constrained decoding; would need a custom client.
+2. **Few-shot anchoring.** One or two worked examples of cases
+   that ESCALATE. Anchored examples are known to dramatically
+   improve small-model behaviour on novel verdict options.
+   Cheapest next experiment.
+3. **Confidence-as-second-signal.** Ask the model to rate
+   confidence separately; treat low confidence as ESCALATE
+   regardless of the emitted label. Works around the model's
+   reluctance to use ESCALATE directly.
+
+### Conservative bias under priming
+
+Four v0.12 parse-fails turned into wrong-NON-COMPLIANT under
+v0.13 priming (small models defaulting to refuse-when-unsure):
+
+- small-lithium/qwen2.5:0.5b
+- small-perfume/qwen2.5:1.5b
+- lighter-disposable/qwen2.5:1.5b
+- lighter-disposable/qwen2.5:0.5b
+
+For TSA that's defensible — refuse-when-unsure is the right
+side to fail on for safety-critical screening. For clinical or
+contract domains it may not be. ADJ19's cross-domain bench
+will quantify the bias differently across domains.
+
+### Summary
+
+- **+4 cells correct overall** (49.2% → 52.5%), driven entirely
+  by priming-mode parse-failure recovery on small models.
+- **1 ESCALATE out of 120**, a sophisticated ABV ambiguity
+  recognition by gemma4.
+- **Pocket-knife regression persists** — every model still
+  misapplies the numerical threshold, none escalates.
+- Small models under priming default to NON-COMPLIANT rather
+  than parse-fail; net wash on accuracy but a meaningful
+  reduction in "completely broken" output shape.
+
+**Structural conclusion**: prompt-level ESCALATE is necessary
+but not sufficient. The framework needs the engine to evaluate
+threshold conditions (ADJ20 fact sheets + source decomposition)
+rather than relying on the LLM to escalate when it can't.
+
+**Next experiments** (separate PRs):
+
+- Few-shot anchored ESCALATE in the prompt.
+- ADJ20-impl-1: `FactSheet` types and `elicit_subject_facts`
+  primitive.
+- Source decomposition spec: typed quantity extraction from
+  declarations.
