@@ -1362,6 +1362,7 @@ fn dispatch_specialised_runs_emitted_add_const_kernel() {
             bytes: 7.5_f32.to_le_bytes().to_vec(),
         },
         backend_id: 1,
+        folded_slot: Some(1),
     };
     let handle: u64 = 0xCAFEBABE;
     let emitted = emit_specialised_kernel(&key, handle).expect("emitter must support this key");
@@ -1601,6 +1602,7 @@ fn dispatch_specialised_wrong_buffer_count_errors_cleanly() {
             bytes: 1.0_f32.to_le_bytes().to_vec(),
         },
         backend_id: 1,
+        folded_slot: Some(1),
     };
     let emitted = emit_specialised_kernel(&key, 0x100).unwrap();
     exec.install_specialised_from_emitted(0x100, emitted).unwrap();

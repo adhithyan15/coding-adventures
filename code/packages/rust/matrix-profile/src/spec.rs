@@ -67,6 +67,34 @@ pub struct SpecKey {
     /// backend would use 2; etc.) — `ExecutorId` would be ambiguous
     /// since registry assignment depends on registration order.
     pub backend_id: u32,
+    /// **MX05 Phase 4.6.**  Which input slot the policy folded into
+    /// the kernel as a literal constant, when [`range_class`] is
+    /// [`RangeClass::Constant`].  `None` for all other range classes.
+    ///
+    /// Matters for **non-commutative** binary ops: `Sub`, `Div`,
+    /// and `Pow`.  For `Op::Sub`, `folded_slot = Some(0)` means the
+    /// LHS was the constant and the kernel computes `K - rhs[gid]`,
+    /// while `Some(1)` means the RHS was the constant and the kernel
+    /// computes `lhs[gid] - K`.  Without this discriminator the
+    /// emitter (and the dispatcher) cannot pick the correct
+    /// variant — Phase 4.5 deferred `Sub`/`Div`/`Pow` for exactly
+    /// this reason, and Phase 4.6 lights them up.
+    ///
+    /// For commutative binary ops (`Add`, `Mul`, `Max`, `Min`) the
+    /// value is set but is informational only — the emitted kernel
+    /// is the same either way.  Equality/hash still consider this
+    /// field, so a commutative key with `folded_slot = Some(0)` is
+    /// a *different* key from one with `Some(1)`; the cache may
+    /// hold two entries for what is mathematically the same kernel.
+    /// That's wasted cache slots but never wrong output, and a
+    /// future optimisation can collapse them.
+    ///
+    /// `Option` rather than a sentinel `u8::MAX` because most
+    /// `RangeClass` variants don't carry a folded slot at all
+    /// (`Unknown`, `FloatBits`, `Integer`).  The compiler enforces
+    /// the "no folded slot for non-Constant" invariant at the type
+    /// level.
+    pub folded_slot: Option<u8>,
 }
 
 /// Shape information available at specialisation time.
@@ -334,6 +362,7 @@ mod tests {
             shape_class: ShapeClass::Dynamic,
             range_class: RangeClass::Unknown,
             backend_id: 0,
+            folded_slot: None,
         }
     }
 
