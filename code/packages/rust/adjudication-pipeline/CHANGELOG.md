@@ -2,6 +2,89 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-05-13 — ADJ25 PR-4: hierarchical decomposition orchestrator
+
+### Added
+
+New `pub mod hierarchical` containing `decompose_hierarchical`, the
+orchestrator that drives the ADJ25 level-by-level decomposition flow
+end-to-end. Per the
+[ADJ25 spec](../../specs/ADJ25-hierarchical-decomposition.md), the
+orchestrator:
+
+1. Builds the synthetic `Document` root node spanning the full source.
+2. For each level transition in order
+   (`Document → Sentence`, `Sentence → Phrase`, `Phrase → Claim`,
+   `Fact → TypedComponent`), iterates every parent at that level and
+   dispatches one `adjudication_clarification::retry_decompose_level`
+   call. Parses the response, splices children into the IR, connects
+   parent → child via `Contains` edges, and translates LLM-reported
+   parent-relative spans to document-absolute byte offsets.
+3. Runs `adjudication_coverage::check_hierarchical_coverage` against
+   the assembled IR. For every reported gap, dispatches a retry
+   targeting the specific failing parent (with the gap description
+   in the retry prompt body).
+4. Loops up to `max_retries_per_parent` per parent.
+
+### New public surface
+
+- `HierarchicalDecomposeRequest` — `{ document_id, source_text,
+  max_retries_per_parent }`.
+- `HierarchicalDecomposeOutcome` — `{ ir_document, total_llm_calls,
+  retry_calls }`.
+- `HierarchicalDecomposeError::{ Primitive, UnparseableResponse,
+  CoverageUnresolved }`.
+- `decompose_hierarchical(req, gateway, now)`.
+- `DEFAULT_MAX_RETRIES_PER_PARENT = 3`, `PER_LEVEL_DISPATCH_CAP = 1024`.
+
+### Crate-placement deviation from the ADJ25 spec
+
+ADJ25's PR-4 entry suggested the orchestrator live in
+`llm-primitives`. That cannot work without a dependency cycle: the
+orchestrator needs `retry_decompose_level` (in
+`adjudication-clarification`) and `check_hierarchical_coverage` (in
+`adjudication-coverage`), and both crates depend transitively on
+`llm-primitives`. Placing the orchestrator in `adjudication-pipeline`
+(which already depends on both) lets it use both without inverting
+the dependency graph. The intent of the spec — a single orchestrator
+that drives the level-by-level flow — is unchanged.
+
+### Dependency change
+
+- `adjudication-clarification` is now a direct dependency of
+  `adjudication-pipeline`. No version change required (path dep).
+
+### Scope and what PR-4 deliberately does not do
+
+- **Correlation vector propagation** — PR-5 territory. The
+  orchestrator assigns deterministic `NodeId`s; PR-5 adds a parallel
+  `CorrelationId` space that flows through engine clauses and the
+  audit trail.
+- **New `decompose-text-vN` prompt** that teaches the LLM the
+  hierarchy. The orchestrator currently relies on whatever prompt
+  `decompose_text` is shipping with (`v5`, which teaches the flat
+  IR shape). Real-LLM behaviour against a hierarchy-aware prompt is
+  measured in PR-6 (the foundation bench). The orchestrator is
+  designed to work end-to-end with scripted clients today and benefit
+  from a richer prompt later without changing its surface.
+
+### Tests
+
+7 new test cases covering: clean-hierarchy assembly for a single-word
+source, span translation (parent-relative → document-absolute),
+span clamping past parent end, unparseable response rejection,
+wrong-kind filtering at level, retry-budget exhaustion, and a
+`parse_kind` round-trip locking the v3 + ADJ25 enum surface. Pipeline
+test count: 38 → 45, all passing.
+
+### Notes
+
+- Adding variants to a non-`#[non_exhaustive]` enum is a SemVer
+  breaking change. None of the existing pipeline enums got new
+  variants here (the new orchestrator types are entirely new); this
+  is a pure-additive minor bump.
+- Version: 0.8.0 → 0.9.0.
+
 ## [0.8.0] - 2026-05-13 — ADJ24 typed-quantity wiring
 
 ### Added
