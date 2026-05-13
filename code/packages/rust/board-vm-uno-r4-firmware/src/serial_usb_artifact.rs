@@ -164,6 +164,13 @@ impl SerialUsbArtifactOptions {
                 .as_deref()
                 .and_then(arduino_arm_compat_root_from_core);
         }
+
+        if self.bossac_path.is_none() {
+            self.bossac_path = self
+                .arduino_core
+                .as_deref()
+                .and_then(arduino_bossac_root_from_core);
+        }
     }
 
     pub fn profile_dir(&self) -> &'static str {
@@ -265,6 +272,7 @@ impl SerialUsbArtifactOptions {
             .arg_path(&self.bin_path());
 
         if let Some(path) = &self.bossac_path {
+            let path = bossac_upload_property_path(path);
             command = command.arg("--upload-property").arg(format!(
                 "runtime.tools.bossac-1.9.1-arduino5.path={}",
                 path.display()
@@ -580,6 +588,21 @@ pub fn arduino_arm_compat_root_from_core(core_dir: &Path) -> Option<PathBuf> {
     root.exists().then_some(root)
 }
 
+pub fn arduino_bossac_root_from_core(core_dir: &Path) -> Option<PathBuf> {
+    let packages_dir = core_dir.ancestors().nth(4)?;
+    let root = packages_dir
+        .join("arduino/tools/bossac")
+        .join("1.9.1-arduino5");
+    root.exists().then_some(root)
+}
+
+pub fn bossac_upload_property_path(path: &Path) -> PathBuf {
+    match path.file_name().and_then(OsStr::to_str) {
+        Some("bossac") | Some("bossac.exe") => path.parent().unwrap_or(path).to_path_buf(),
+        _ => path.to_path_buf(),
+    }
+}
+
 pub fn detect_host_triple(rustc_verbose_version: &str) -> Option<String> {
     rustc_verbose_version
         .lines()
@@ -638,6 +661,8 @@ fn shell_escape(value: &OsStr) -> String {
 mod tests {
     use super::*;
     use std::ffi::OsString;
+    use std::fs;
+    use std::time::{SystemTime, UNIX_EPOCH};
     use std::vec;
 
     fn options() -> SerialUsbArtifactOptions {
@@ -671,6 +696,19 @@ mod tests {
             .iter()
             .map(|arg| arg.to_string_lossy().to_string())
             .collect()
+    }
+
+    fn unique_temp_dir(name: &str) -> PathBuf {
+        let nanos = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let dir = env::temp_dir().join(format!(
+            "board-vm-uno-r4-firmware-{name}-{}-{nanos}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+        dir
     }
 
     #[test]
@@ -781,6 +819,48 @@ mod tests {
                 "115200",
                 "--timeout-ms",
                 "1000",
+            ]
+        );
+    }
+
+    #[test]
+    fn fill_host_defaults_discovers_arduino_packaged_bossac_from_core() {
+        let root = unique_temp_dir("bossac");
+        let core = root.join("packages/arduino/hardware/renesas_uno/1.5.3");
+        let bossac = root.join("packages/arduino/tools/bossac/1.9.1-arduino5");
+        fs::create_dir_all(&core).unwrap();
+        fs::create_dir_all(&bossac).unwrap();
+
+        let mut options = options();
+        options.arduino_core = Some(core);
+        options.bossac_path = None;
+        options.fill_host_defaults();
+
+        assert_eq!(options.bossac_path, Some(bossac));
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn upload_command_accepts_a_bossac_binary_path() {
+        let mut options = options();
+        options.bossac_path = Some(PathBuf::from(
+            "/Arduino15/packages/arduino/tools/bossac/1.9.1-arduino5/bossac",
+        ));
+
+        let command = options.upload_command_for_port("/dev/cu.usbmodem-test");
+
+        assert_eq!(
+            args(&command),
+            [
+                "upload",
+                "-p",
+                "/dev/cu.usbmodem-test",
+                "-b",
+                UNO_R4_WIFI_FQBN,
+                "-i",
+                "target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server.bin",
+                "--upload-property",
+                "runtime.tools.bossac-1.9.1-arduino5.path=/Arduino15/packages/arduino/tools/bossac/1.9.1-arduino5",
             ]
         );
     }
