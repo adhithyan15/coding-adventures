@@ -1,5 +1,33 @@
 # Changelog — `aarch64-encoder`
 
+## 0.2.0 — 2026-05-13 (LANG38)
+
+**Integer division, bitwise logic, variable shifts, unary negate/NOT.**
+
+Added 11 new instruction-emission methods needed by the AOT arithmetic
+completeness sprint (LANG38).  All use 64-bit register-register forms.
+
+### New methods
+
+| Method | ARM64 mnemonic | Encoding family |
+|--------|---------------|-----------------|
+| `sdiv(rd, rn, rm)` | `SDIV Xd, Xn, Xm` | Data-processing 2-source |
+| `udiv(rd, rn, rm)` | `UDIV Xd, Xn, Xm` | Data-processing 2-source |
+| `msub(rd, rn, rm, ra)` | `MSUB Xd, Xn, Xm, Xa` | Data-processing 3-source |
+| `and_(rd, rn, rm)` | `AND Xd, Xn, Xm` | Logical shifted-register |
+| `orr(rd, rn, rm)` | `ORR Xd, Xn, Xm` | Logical shifted-register |
+| `eor(rd, rn, rm)` | `EOR Xd, Xn, Xm` | Logical shifted-register |
+| `mvn(rd, rm)` | `MVN Xd, Xm` | Logical shifted-register (ORN XZR alias) |
+| `lsl_reg(rd, rn, rm)` | `LSLV Xd, Xn, Xm` | Data-processing 2-source |
+| `lsr_reg(rd, rn, rm)` | `LSRV Xd, Xn, Xm` | Data-processing 2-source |
+| `asr_reg(rd, rn, rm)` | `ASRV Xd, Xn, Xm` | Data-processing 2-source |
+| `neg_(rd, rm)` | `NEG Xd, Xm` | Arithmetic shifted-register (SUB XZR alias) |
+
+`msub` is the building block for integer modulo: after `sdiv X2, X0, X1`
+the remainder is `msub X0, X2, X1, X0` (`X0 = X0 − X2×X1`).
+
+11 new unit tests verify each encoding against known-good bit patterns.
+
 ## 0.1.1 — 2026-05-13
 
 ### Added
