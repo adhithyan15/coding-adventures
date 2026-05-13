@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-13 — ADJ22 enum variants
+
+### Added
+
+Two additive enum variants so ADJ22 typed-quantity coverage
+(per [ADJ22](../../../specs/ADJ22-typed-quantity-coverage.md))
+can be expressed in the audit trail like every other checker pass:
+
+- `PassName::Adj22TypedQuantity` — serializes as
+  `"adj22_typed_quantity"`. Slots alongside the existing
+  `Adj02Coverage` / `Adj03PolarityModality` / `Adj04RoundTrip` /
+  `Adj05Adversarial` variants.
+- `ClarificationKind::MissingQuantity` — serializes as
+  `"missing_quantity"`. Used in `Violation::kind` for the per-
+  missing-literal records the pipeline emits when ADJ22 fails.
+
+Both are purely additive — existing consumers that match on
+`_ => …` still compile. v0.2 audit-trail JSON round-trips
+unchanged.
+
+### Why
+
+Wiring ADJ22 into the pipeline (per
+[ADJ24](../../../specs/ADJ24-typed-quantity-pipeline-wiring.md))
+needs both variants. Putting them in the schema crate first means
+no downstream crate is forced to invent its own enum or stuff the
+pass-name into `telemetry`.
+
+### Tests
+
+`adj22_typed_quantity_pass_name_round_trips` round-trips a
+`CheckerResult { pass_name: Adj22TypedQuantity, .. violations: [
+Violation { kind: MissingQuantity, detail: { literal, location,
+nearby_nodes } } ] }` through JSON and back, asserting the
+snake_case serialization matches the schema.
+
 ## [0.2.0] - 2026-05-12
 
 ### Added

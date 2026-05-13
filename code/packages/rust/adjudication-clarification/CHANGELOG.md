@@ -2,6 +2,83 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-05-13 — ADJ06-for-ADJ22 typed-quantity retry
+
+### Added
+
+`retry_decompose_on_typed_quantity_failure(req, gateway, max_attempts, now)`
+— the typed-quantity retry primitive (ADJ06-for-ADJ22).
+
+When [ADJ22](../../../specs/ADJ22-typed-quantity-coverage.md)
+finds a numerical literal in the source that the model failed to
+wrap in a `quantity(value, unit)` compound, this function
+re-prompts the same extractor with **pinpoint feedback** — the
+specific literal value, its byte range, and which existing IR
+nodes it overlaps. Empirically (per
+[ADJ23](../../../specs/ADJ23-decomposition-bench.md))
+this is meaningfully better than re-running the v5 system prompt
+unchanged, because the model gets one targeted hint rather than
+a generic "add typed quantities" reminder it already saw.
+
+The function reuses `retry_with_correction_prompt` (the shared
+inner loop already used by the coverage and polarity retries) so
+the retry budget semantics, dialogue-turn shape, and exhaustion
+behaviour stay aligned with the existing retries.
+
+### New public types
+
+- `MissingLiteralHint { literal, source_byte_range, nearby_node_ids }`
+  — one per source literal the IR dropped. Constructed by the
+  pipeline from `TypedQuantityViolation::MissingQuantity` records.
+- `TypedQuantityClarificationRequest { original, violation_description,
+  previous_ir, missing_literals }` — mirrors
+  `CoverageClarificationRequest` shape plus the missing-literal list.
+
+### New version constant
+
+`TYPED_QUANTITY_CLARIFICATION_PROMPT_VERSION = "typed-quantity-clarification-v1"`
+— distinct from the coverage / polarity / drift / adversarial
+versions so audit-trail replay can tell the typed-quantity
+correction from the other flavours.
+
+### Domain neutrality
+
+`build_typed_quantity_correction_prompt` deliberately uses
+domain-neutral examples (count, length, volume, mass, electrical,
+temperature, clinical, fractions). A regression-guard test
+(`typed_quantity_prompt_is_domain_neutral`) asserts the prompt
+contains none of `tsa`, `screening officer`, `passenger`,
+`doctor`, `patient`, `clinician`, `lawyer`, `contract attorney`
+— so future edits don't drift back toward domain bias.
+
+### Defense in depth: prompt-input sanitization
+
+`build_typed_quantity_correction_prompt` sanitizes both `literal`
+and `nearby_node_ids` before embedding them into the retry
+prompt: control characters are stripped, backticks are removed
+(can't escape a surrounding markdown code-fence), and overlong
+strings are truncated (literals → 32 chars, node IDs → 64 chars).
+These values originate from LLM-emitted IR (node IDs) and source
+text (literals); the sanitization prevents a malicious or
+buggy extractor from injecting newline-prefixed pseudo-system
+instructions into the prompt that's sent back to the same model
+on the retry.
+
+### Tests added (8)
+
+- `typed_quantity_retry_returns_corrected_ir_on_first_success`
+- `typed_quantity_correction_prompt_handles_empty_missing_list`
+- `typed_quantity_correction_prompt_attaches_new_node_when_no_overlap`
+- `typed_quantity_clarification_prompt_version_is_locked`
+- `typed_quantity_prompt_is_domain_neutral`
+- `typed_quantity_prompt_sanitizes_control_characters_in_literal_and_node_ids`
+- `typed_quantity_prompt_truncates_overlong_literal_and_node_ids`
+- `typed_quantity_retry_exhausts_gracefully_on_repeated_error`
+
+Self-correction story now covers ALL five LLM-touched checker
+passes: ADJ02 coverage, ADJ03 polarity/modality, ADJ04 round-trip
+drift, ADJ05 adversarial reading, ADJ22 typed-quantity coverage.
+
 ## [0.4.0] - 2026-05-12
 
 ### Added

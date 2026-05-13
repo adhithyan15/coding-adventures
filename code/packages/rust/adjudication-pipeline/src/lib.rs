@@ -52,7 +52,10 @@ use adjudication_audit_trail::{
 use adjudication_connector::{
     lower_to_kb_with_provenance, AdjudicationResult, ClauseProvenance, LoweredKb, TrustTier,
 };
-use adjudication_coverage::{check_coverage, CoverageResult, CoverageViolation, Document as CovDocument};
+use adjudication_coverage::{
+    check_coverage, check_typed_quantity_coverage, CoverageResult, CoverageViolation,
+    Document as CovDocument, TypedQuantityResult, TypedQuantityViolation,
+};
 use adjudication_ir::{IRDocument, IRNode, NodeId as IRNodeId};
 use adjudication_polarity_modality::{
     check_propagation, PropagationResult, PropagationViolation, PropagationWarning,
@@ -565,6 +568,20 @@ pub fn run_with_gateway<F: Fn() -> String>(
         &cov_result,
     ));
 
+    // ---------- ADJ22 typed-quantity coverage ----------
+    // Per ADJ24, this runs AFTER ADJ02 (spans must be reliable
+    // before `nearby_nodes` makes sense) and BEFORE ADJ03 (typed
+    // quantities are a structural property of the IR shape, like
+    // coverage; ADJ03 polarity/modality is layered on top).
+    let tq_started = now();
+    let tq_result = check_typed_quantity_coverage(&cov_doc, &input.ir_document);
+    let tq_completed = now();
+    trail.checker_results.push(typed_quantity_to_checker_result(
+        tq_started,
+        tq_completed,
+        &tq_result,
+    ));
+
     // ---------- ADJ03 polarity/modality ----------
     let pm_started = now();
     let pm_result = check_propagation(&input.ir_document);
@@ -578,9 +595,11 @@ pub fn run_with_gateway<F: Fn() -> String>(
     // ---------- ADJ04 round-trip (gated on a gateway being supplied) ----------
     // We only attempt ADJ04 when the prior gating checks passed —
     // running the LLM on an IR that doesn't even cover its source
-    // burns tokens to discover what ADJ02/ADJ03 already told us.
-    let prior_gating_ok =
-        matches!(cov_result, CoverageResult::Pass) && pm_result.pass();
+    // (or that drops typed quantities, or has bad polarity) burns
+    // tokens to discover what ADJ02/ADJ22/ADJ03 already told us.
+    let prior_gating_ok = matches!(cov_result, CoverageResult::Pass)
+        && matches!(tq_result, TypedQuantityResult::Pass)
+        && pm_result.pass();
     let adj04_started = now();
     let adj04_result = if prior_gating_ok {
         run_adj04(gateway, &input.document.normalized_text, &input.ir_document)
@@ -611,11 +630,19 @@ pub fn run_with_gateway<F: Fn() -> String>(
         .checker_results
         .push(adj05_to_checker_result(adj05_started, adj05_completed, &adj05_result));
 
-    // ---------- gate the engine on coverage + propagation ----------
+    // ---------- gate the engine on coverage + typed-quantity + propagation ----------
+    // Per ADJ24, ADJ22 joins the engine-gating set. The engine
+    // assumes numerical literals were preserved as
+    // `quantity(value, unit)` compounds so it can do arithmetic
+    // (per ADJ21's motivating example: blade_length(...) >
+    // quantity(2.36, inches)). Running the engine on an IR that
+    // dropped its typed quantities just means the LLM evaluates
+    // the threshold itself — which ADJ18 showed it does badly.
     let coverage_ok = matches!(cov_result, CoverageResult::Pass);
+    let typed_quantity_ok = matches!(tq_result, TypedQuantityResult::Pass);
     let propagation_ok = pm_result.pass();
 
-    if !(coverage_ok && propagation_ok) {
+    if !(coverage_ok && typed_quantity_ok && propagation_ok) {
         let violation_count = trail
             .checker_results
             .iter()
@@ -753,6 +780,18 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
         &cov_result,
     ));
 
+    // ---------- ADJ22 typed-quantity coverage ----------
+    // Same ordering decision as `run_with_gateway`: after ADJ02
+    // (so spans are reliable), before ADJ03.
+    let tq_started = now();
+    let tq_result = check_typed_quantity_coverage(&cov_doc, &input.ir_document);
+    let tq_completed = now();
+    trail.checker_results.push(typed_quantity_to_checker_result(
+        tq_started,
+        tq_completed,
+        &tq_result,
+    ));
+
     let pm_started = now();
     let pm_result = check_propagation(&input.ir_document);
     let pm_completed = now();
@@ -762,8 +801,9 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
         &pm_result,
     ));
 
-    let prior_gating_ok =
-        matches!(cov_result, CoverageResult::Pass) && pm_result.pass();
+    let prior_gating_ok = matches!(cov_result, CoverageResult::Pass)
+        && matches!(tq_result, TypedQuantityResult::Pass)
+        && pm_result.pass();
     let adj04_started = now();
     let adj04_result = if prior_gating_ok {
         run_adj04(gateway, &input.document.normalized_text, &input.ir_document)
@@ -780,7 +820,7 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
         run_adj05(gateway, &input.document.normalized_text, &input.ir_document)
     } else {
         Adj05Decision::Skipped {
-            reason: "ADJ02 or ADJ03 failed — adversarial check skipped",
+            reason: "ADJ02 / ADJ22 / ADJ03 failed — adversarial check skipped",
         }
     };
     let adj05_completed = now();
@@ -789,9 +829,10 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
         .push(adj05_to_checker_result(adj05_started, adj05_completed, &adj05_result));
 
     let coverage_ok = matches!(cov_result, CoverageResult::Pass);
+    let typed_quantity_ok = matches!(tq_result, TypedQuantityResult::Pass);
     let propagation_ok = pm_result.pass();
 
-    if !(coverage_ok && propagation_ok) {
+    if !(coverage_ok && typed_quantity_ok && propagation_ok) {
         let violation_count = trail
             .checker_results
             .iter()
@@ -999,6 +1040,74 @@ fn coverage_violation_to_audit(v: &CoverageViolation) -> Violation {
         detail,
         triggered_dialogue_turn: None,
         resolved: false,
+    }
+}
+
+/// Map an [`adjudication_coverage::TypedQuantityResult`] into the
+/// audit-trail [`CheckerResult`] shape. Per ADJ24, the helper emits
+/// one [`Violation`] per missing literal with
+/// `pass_name = Adj22TypedQuantity` and
+/// `kind = MissingQuantity`; the `detail` JSON carries the literal
+/// value, byte range, and the IDs of overlapping nodes so a
+/// downstream consumer (the demo's clarification loop, ADJ06)
+/// can build a `MissingLiteralHint` per record.
+fn typed_quantity_to_checker_result(
+    started_at: String,
+    completed_at: String,
+    result: &TypedQuantityResult,
+) -> CheckerResult {
+    let (outcome, violations) = match result {
+        TypedQuantityResult::Pass => (PassOutcome::Passed, Vec::new()),
+        TypedQuantityResult::Fail { violations } => (
+            PassOutcome::Failed,
+            violations.iter().map(typed_quantity_violation_to_audit).collect(),
+        ),
+    };
+    CheckerResult {
+        pass_name: PassName::Adj22TypedQuantity,
+        // ADJ22's coverage check is at v0.1 in adjudication-coverage
+        // v0.3.0. Bumping this is an audit-trail-affecting change,
+        // so we record it explicitly.
+        pass_version: "v0.1".to_string(),
+        started_at,
+        completed_at,
+        outcome,
+        violations,
+        telemetry: Default::default(),
+    }
+}
+
+fn typed_quantity_violation_to_audit(v: &TypedQuantityViolation) -> Violation {
+    match v {
+        TypedQuantityViolation::MissingQuantity {
+            literal,
+            location,
+            nearby_nodes,
+        } => Violation {
+            // Pick the first nearby node as the violation's
+            // `node_id` so the audit trail can join the violation
+            // to a node. If there's no overlap (rare — a literal
+            // outside any node's spans) record the empty NodeId so
+            // the downstream consumer can detect the
+            // "add a new node" case.
+            node_id: nearby_nodes
+                .first()
+                .map(|nid| NodeId::new(nid.0.clone()))
+                .unwrap_or_else(|| NodeId::new(String::new())),
+            pass_name: PassName::Adj22TypedQuantity,
+            kind: ClarificationKind::MissingQuantity,
+            detail: serde_json::json!({
+                "kind": "MissingQuantity",
+                "literal": literal,
+                "location": [location.0, location.1],
+                "nearby_nodes": nearby_nodes
+                    .iter()
+                    .map(|nid| nid.0.clone())
+                    .collect::<Vec<_>>(),
+            }),
+            triggered_dialogue_turn: None,
+            resolved: false,
+        },
     }
 }
 
@@ -1504,8 +1613,26 @@ mod tests {
             other => panic!("expected Resolved, got {other:?}"),
         }
         assert_eq!(out.audit_trail.adjudication_id.0, "adj-empty");
-        assert_eq!(out.audit_trail.checker_results.len(), 4);
-        // ADJ02 + ADJ03 passed; ADJ04 + ADJ05 are recorded as Skipped.
+        assert_eq!(out.audit_trail.checker_results.len(), 5);
+        // ADJ02 + ADJ22 + ADJ03 passed; ADJ04 + ADJ05 are Skipped.
+        // (ADJ22 trivially passes on empty source text — no
+        // literals to extract.)
+        let names: Vec<_> = out
+            .audit_trail
+            .checker_results
+            .iter()
+            .map(|cr| cr.pass_name.clone())
+            .collect();
+        assert_eq!(
+            names,
+            vec![
+                PassName::Adj02Coverage,
+                PassName::Adj22TypedQuantity,
+                PassName::Adj03PolarityModality,
+                PassName::Adj04RoundTrip,
+                PassName::Adj05Adversarial,
+            ]
+        );
         assert!(matches!(
             out.audit_trail.checker_results[0].outcome,
             PassOutcome::Passed
@@ -1516,10 +1643,14 @@ mod tests {
         ));
         assert!(matches!(
             out.audit_trail.checker_results[2].outcome,
-            PassOutcome::Skipped
+            PassOutcome::Passed
         ));
         assert!(matches!(
             out.audit_trail.checker_results[3].outcome,
+            PassOutcome::Skipped
+        ));
+        assert!(matches!(
+            out.audit_trail.checker_results[4].outcome,
             PassOutcome::Skipped
         ));
         assert!(out.audit_trail.completed_at.is_some());
@@ -1567,6 +1698,113 @@ mod tests {
         ));
         // Engine artifacts must NOT be populated.
         assert!(out.audit_trail.engine_artifacts.is_none());
+    }
+
+    #[test]
+    fn adj22_passes_when_every_literal_carries_a_quantity_compound() {
+        // Source: "blade 4". The "4" literal is wrapped in
+        // `quantity(4, inches)` inside the fact node, so ADJ22
+        // should pass.
+        let n = fact_node(
+            "n1",
+            logic_core::compound(
+                "blade",
+                vec![logic_core::compound(
+                    "quantity",
+                    vec![logic_core::atom("4"), logic_core::atom("inches")],
+                )],
+            ),
+            0,
+            7,
+        );
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "blade 4".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run(input, AdjudicationId::new("adj-tq-pass"), make_clock());
+        let tq = &out.audit_trail.checker_results[1];
+        assert_eq!(tq.pass_name, PassName::Adj22TypedQuantity);
+        assert!(matches!(tq.outcome, PassOutcome::Passed));
+        assert!(tq.violations.is_empty());
+        // Engine still runs (verdict resolved) because every gate passes.
+        assert!(matches!(out.verdict, Verdict::Resolved { .. }));
+    }
+
+    #[test]
+    fn adj22_fails_when_a_literal_is_dropped_and_blocks_the_engine() {
+        // Source: "blade 4". The fact node only covers "blade"
+        // (bytes 0..5), and its term is a bare atom — no
+        // `quantity(...)`. Note that the literal "4" is at
+        // bytes 6..7 but no node covers it OR carries it as a
+        // typed quantity. ADJ02 will *also* fail (uncovered
+        // bytes); ADJ22 fails independently and contributes its
+        // own violation. The test asserts the ADJ22 violation
+        // shape end-to-end through the audit trail.
+        let n = fact_node("n1", logic_core::atom("blade"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "blade 4".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run(input, AdjudicationId::new("adj-tq-fail"), make_clock());
+        // The ADJ22 checker result must be present at index 1
+        // and must be Failed with one MissingQuantity violation
+        // for literal "4".
+        let tq = &out.audit_trail.checker_results[1];
+        assert_eq!(tq.pass_name, PassName::Adj22TypedQuantity);
+        assert!(matches!(tq.outcome, PassOutcome::Failed));
+        assert_eq!(tq.violations.len(), 1);
+        let v = &tq.violations[0];
+        assert_eq!(v.pass_name, PassName::Adj22TypedQuantity);
+        assert_eq!(v.kind, ClarificationKind::MissingQuantity);
+        assert_eq!(v.detail["literal"], "4");
+        assert_eq!(v.detail["location"][0], 6);
+        assert_eq!(v.detail["location"][1], 7);
+        // Engine gated off — Blocked verdict.
+        assert!(matches!(out.verdict, Verdict::Blocked { .. }));
+    }
+
+    #[test]
+    fn adj22_in_run_with_rulebooks_is_recorded_in_audit_trail() {
+        // Same passing case as above, but through
+        // `run_with_rulebooks` (with an empty rulebook slice) so
+        // the parallel wiring path is exercised.
+        let n = fact_node(
+            "n1",
+            logic_core::compound(
+                "weight",
+                vec![logic_core::compound(
+                    "quantity",
+                    vec![logic_core::atom("3"), logic_core::atom("oz")],
+                )],
+            ),
+            0,
+            10,
+        );
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "weight: 3oz".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-tq-rulebooks"),
+            make_clock(),
+            None,
+            &[],
+        );
+        // The trail should have ADJ22 at index 1, like in
+        // run_with_gateway. Both code paths share the same
+        // ordering.
+        let tq = &out.audit_trail.checker_results[1];
+        assert_eq!(tq.pass_name, PassName::Adj22TypedQuantity);
     }
 
     #[test]
@@ -1796,7 +2034,7 @@ mod tests {
         };
         let g = gateway_with_scripted(vec!["passenger said hello"], vec![(true, 0.95, true, 0.92)]);
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-pass"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert_eq!(adj04.pass_name, PassName::Adj04RoundTrip);
         assert_eq!(adj04.pass_version, "v1.0");
         assert!(matches!(adj04.outcome, PassOutcome::Passed));
@@ -1823,7 +2061,7 @@ mod tests {
             vec![(false, 0.10, true, 0.90)],
         );
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-drift"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Failed));
         assert_eq!(adj04.violations.len(), 1);
         assert_eq!(adj04.violations[0].pass_name, PassName::Adj04RoundTrip);
@@ -1846,7 +2084,7 @@ mod tests {
             ir_document: make_ir(vec![n]),
         };
         let out = run(input, AdjudicationId::new("adj-no-gw"), make_clock());
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Skipped));
         assert_eq!(adj04.pass_version, "not-yet-wired");
     }
@@ -1866,7 +2104,7 @@ mod tests {
         };
         let g = GatewayConfig::new(); // empty
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-noclient"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Failed));
         let detail = adj04.telemetry["check_error"].as_str().unwrap();
         assert!(detail.contains("renderer") || detail.contains("Renderer"));
@@ -1885,7 +2123,7 @@ mod tests {
         };
         let g = gateway_with_scripted(vec!["unused"], vec![(true, 0.99, true, 0.99)]);
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-skip-on-fail"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Skipped));
         // And the pipeline still Blocks due to the coverage failure.
         assert!(matches!(out.verdict, Verdict::Blocked { .. }));
@@ -1905,7 +2143,7 @@ mod tests {
             ir_document: make_ir(vec![n]),
         };
         let out = run(input, AdjudicationId::new("adj-adv-no-gw"), make_clock());
-        let adj05 = &out.audit_trail.checker_results[3];
+        let adj05 = &out.audit_trail.checker_results[4];
         assert_eq!(adj05.pass_name, PassName::Adj05Adversarial);
         assert!(matches!(adj05.outcome, PassOutcome::Skipped));
     }
@@ -1923,7 +2161,7 @@ mod tests {
         };
         let g = gateway_with_scripted(vec!["x"], vec![(true, 0.95, true, 0.92)]);
         let out = run_with_gateway(input, AdjudicationId::new("adj-adv-no-role"), make_clock(), Some(&g));
-        let adj05 = &out.audit_trail.checker_results[3];
+        let adj05 = &out.audit_trail.checker_results[4];
         assert!(matches!(adj05.outcome, PassOutcome::Skipped));
         let reason = adj05.telemetry["skipped_reason"].as_str().unwrap();
         assert!(reason.contains("Adversary") || reason.contains("adversary"));

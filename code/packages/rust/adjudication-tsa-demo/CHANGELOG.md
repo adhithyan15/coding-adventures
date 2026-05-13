@@ -2,6 +2,73 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-05-13 — ADJ24 typed-quantity retry wiring
+
+### Added
+
+A third branch in the demo's clarification loop. Per
+[ADJ24](../../../specs/ADJ24-typed-quantity-pipeline-wiring.md),
+priority order is now:
+
+1. **ADJ02 (coverage)** — structural. Without it spans are
+   unreliable, so subsequent retries reason on bad input.
+2. **ADJ22 (typed-quantity)** — typing. Enables engine arithmetic
+   (per ADJ21's motivating example `blade_length > quantity(2.36,
+   inches)`).
+3. **ADJ03 (polarity/modality)** — semantic refinement on a
+   structurally-valid IR.
+
+When the pipeline reports ADJ02 pass + ADJ22 fail, the demo
+collects per-missing-literal hints from the audit-trail
+violations (literal value, source byte range, nearby node IDs)
+and calls `retry_decompose_on_typed_quantity_failure` (new
+clarification primitive in `adjudication-clarification` v0.5).
+The retry's correction prompt names each missing literal
+individually rather than re-running the v5 system prompt
+unchanged — empirically (per
+[ADJ23](../../../specs/ADJ23-decomposition-bench.md)) this is the
+right call for the dominant failure mode (count-quantity dropped
+on the bag, 37/40 cells).
+
+### Audit-trail index changes
+
+The pipeline now emits 5 checker results per run (was 4):
+
+| Index | Pass                       |
+|------:|----------------------------|
+| 0     | ADJ02 coverage             |
+| 1     | ADJ22 typed-quantity (NEW) |
+| 2     | ADJ03 polarity/modality    |
+| 3     | ADJ04 round-trip           |
+| 4     | ADJ05 adversarial          |
+
+Any downstream consumer that indexed by position needs to shift
+ADJ03/04/05 down by one slot. The demo's clarification loop is
+updated accordingly.
+
+### Fixture update
+
+The hand-built fixtures used as deterministic IR (when
+`ADJ_DEMO_IR_MODE=hand-built` or when LLM extraction fails)
+now use the typed-quantity shape:
+
+- `tsa_ir_document("1 carry-on bag, matches.")` — F1 emits
+  `carry_on(quantity(1, count))` instead of `carry_on(1)`.
+- `tsa_rulebook_lenient_ir()` — rule body uses
+  `carry_on(quantity(1, count))` so it can unify with the
+  source's typed fact.
+
+This keeps the hand-built path passing ADJ22 end-to-end. The
+strict rulebook (`tsa_rulebook_strict_ir`) doesn't reference
+counts and stays unchanged.
+
+### Test impact
+
+All 43 existing tsa-demo tests stay green. No new tests added in
+this crate — the new primitive and pipeline wiring are tested in
+their own crates (`adjudication-clarification` adds 5 tests,
+`adjudication-pipeline` adds 3 tests).
+
 ## [0.13.0] - 2026-05-13 — VERDICT: ESCALATE (with-rulebook only)
 
 ### Motivation

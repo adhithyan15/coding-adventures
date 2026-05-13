@@ -214,6 +214,11 @@ pub enum PassName {
     Adj03PolarityModality,
     Adj04RoundTrip,
     Adj05Adversarial,
+    /// ADJ22 typed-quantity coverage — for every numerical literal
+    /// in the source, an overlapping IR node must carry a
+    /// `quantity(value, unit)` compound. See
+    /// [ADJ22](../../../specs/ADJ22-typed-quantity-coverage.md).
+    Adj22TypedQuantity,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -253,6 +258,10 @@ pub enum ClarificationKind {
     RoundTripDrift,
     AdversarialReading,
     InheritChainUnresolved,
+    /// A numerical literal in the source did not surface as a
+    /// `quantity(value, unit)` compound in any IR node — emitted
+    /// by ADJ22.
+    MissingQuantity,
     Other,
 }
 
@@ -555,6 +564,36 @@ mod tests {
         assert!(s.contains("\"pass_name\":\"adj04_round_trip\""));
         let back: CheckerResult = serde_json::from_str(&s).unwrap();
         assert_eq!(back.pass_name, PassName::Adj04RoundTrip);
+    }
+
+    #[test]
+    fn adj22_typed_quantity_pass_name_round_trips() {
+        let cr = CheckerResult {
+            pass_name: PassName::Adj22TypedQuantity,
+            pass_version: "v0.1".into(),
+            started_at: "2026-05-13T08:00:01Z".into(),
+            completed_at: "2026-05-13T08:00:02Z".into(),
+            outcome: PassOutcome::Failed,
+            violations: vec![Violation {
+                node_id: NodeId::new("N2"),
+                pass_name: PassName::Adj22TypedQuantity,
+                kind: ClarificationKind::MissingQuantity,
+                detail: serde_json::json!({
+                    "literal": "4",
+                    "location": [15, 16],
+                    "nearby_nodes": ["N2"],
+                }),
+                triggered_dialogue_turn: None,
+                resolved: false,
+            }],
+            telemetry: BTreeMap::new(),
+        };
+        let s = serde_json::to_string(&cr).unwrap();
+        assert!(s.contains("\"pass_name\":\"adj22_typed_quantity\""));
+        assert!(s.contains("\"kind\":\"missing_quantity\""));
+        let back: CheckerResult = serde_json::from_str(&s).unwrap();
+        assert_eq!(back.pass_name, PassName::Adj22TypedQuantity);
+        assert_eq!(back.violations[0].kind, ClarificationKind::MissingQuantity);
     }
 
     #[test]

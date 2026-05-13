@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-tsa-demo"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2021"
-description = "A/B/C demo harness comparing raw local LLM (Arm A), full structured pipeline (Arm B), and deterministic engine arm (Arm C). v0.12 hardened Arm A against truncation; v0.13 adds VERDICT: ESCALATE as a third option in with-rulebook Arm A prompts (single-turn and priming). The conservative semantic: silence in the rulebook is not permission. If no rule explicitly prohibits OR explicitly permits the items declared, ESCALATE rather than wave the case through. Surfaced by the ADJ18 bench's pocket-knife regression where rulebook injection actively reduced verdict accuracy on cases the rulebook didn't fully resolve."
+description = "A/B/C demo harness comparing raw local LLM (Arm A), full structured pipeline (Arm B), and deterministic engine arm (Arm C). v0.14 wires the ADJ24 typed-quantity retry: the clarification loop now has a third branch — when ADJ22 (typed-quantity coverage) fails, the demo calls `retry_decompose_on_typed_quantity_failure` with per-missing-literal hints (literal value, source byte range, nearby node IDs) so the model gets pinpoint feedback for each dropped literal rather than re-running the v5 system prompt unchanged. Priority order is now ADJ02 (coverage) → ADJ22 (typed-quantity) → ADJ03 (polarity). Hand-built fixtures (tsa_ir_document, tsa_rulebook_lenient_ir) updated to use the typed `quantity(1, count)` shape so they pass the new ADJ22 gate. v0.13 added VERDICT: ESCALATE in with-rulebook Arm A prompts."
 
 [[bin]]
 name = "adjudication-tsa-demo"
