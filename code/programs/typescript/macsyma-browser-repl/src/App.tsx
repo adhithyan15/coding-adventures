@@ -14,6 +14,7 @@ interface TranscriptEntry {
   readonly input: string;
   readonly output: string;
   readonly display: boolean;
+  readonly timingText?: string;
 }
 
 export function App(): JSX.Element {
@@ -129,6 +130,9 @@ export function App(): JSX.Element {
                     <pre>{entry.input}</pre>
                     <div className="prompt">%o{entry.outputIndex}</div>
                     <pre>{entry.display ? entry.output : "$"}</pre>
+                    {entry.timingText === undefined ? null : (
+                      <div className="timing">{entry.timingText}</div>
+                    )}
                   </li>
                 ))}
               </ol>
@@ -147,6 +151,7 @@ function toEntry(result: EvalResult): TranscriptEntry {
     input: toDisplayString(result.input),
     output: result.outputText,
     display: result.display,
+    ...(result.timingText === undefined ? {} : { timingText: result.timingText }),
   };
 }
 
