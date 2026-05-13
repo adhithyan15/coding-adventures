@@ -1,5 +1,29 @@
 # Changelog — `twig-demo`
 
+## [0.1.4] — 2026-05-13
+
+**All typing states produce correct results; demo and commentary updated.**
+
+Following `twig-aot 0.1.5`'s change of the default integer type from `u64` to
+`i64`, all three type states (UNTYPED / PARTIAL / FULL) in `run_typing_demo()`
+now produce the correct result `0` for every backend including AOT.
+
+### Updated demos
+
+- **`run_typing_demo()`**: UNTYPED variant note changed from "AOT uses u64
+  throughout" to "AOT uses i64 default (signed, correct)".  Introductory text
+  updated to reflect that all three states are correct.  The "signed/unsigned
+  split" explanation was simplified.
+- **`aot_type_correctness_demo()`**: Retitled to "both paths use i64 (signed)".
+  Both the untyped (default i64) and typed (explicit i64) paths produce
+  `abs(-5) = 5 ✅ CORRECT`.
+- **`aot_in_process_demo()`**: Labels changed from "Untyped (u64 ops)" /
+  "Typed (i64 ops)" to "Untyped (default i64)" / "Typed (explicit i64)".
+- **`run_aot_annotated()`**: Docstring and inline comments updated to describe
+  the i64 default rather than the old u64 fallback.
+- All constant docstrings (`TYPING_UNTYPED`, `TYPING_PARTIAL`, `TYPING_FULL`,
+  `ABS_PROGRAM`) updated to describe the i64-default behaviour.
+
 ## [0.1.3] — 2026-05-13
 
 **Optional-typing demo: untyped / partially typed / fully typed.**
