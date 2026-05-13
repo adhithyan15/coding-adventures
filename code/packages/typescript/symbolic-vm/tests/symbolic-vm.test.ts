@@ -102,6 +102,26 @@ describe("symbolic-vm", () => {
     ]));
   });
 
+  it("factors bivariate perfect squares", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(ADD, [
+          app(POW, [x, int(2)]),
+          app(MUL, [int(2), app(MUL, [x, y])]),
+        ]),
+        app(POW, [y, int(2)]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(POW, [
+      app(ADD, [x, y]),
+      int(2),
+    ]));
+  });
+
   it("supports assignment and later lookup", () => {
     const vm = new VM(new SymbolicBackend());
     expect(vm.eval(app(ASSIGN, [sym("x"), app(ADD, [int(2), int(3)])]))).toEqual(int(5));

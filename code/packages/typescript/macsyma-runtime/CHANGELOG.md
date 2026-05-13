@@ -5,6 +5,8 @@
 - Delegate `factor` to the canonical TypeScript symbolic VM handler so common
   multivariate terms such as `factor(x^2*y - y)` reduce through the shared CAS
   substrate.
+- Add TypeScript MACSYMA parity for the bivariate perfect-square factoring
+  foothold, so `factor(x^2 + 2*x*y + y^2)` returns `(x+y)^2`.
 - Add `?` / `? topic` help-query handling for TypeScript MACSYMA sessions and
   JSON responses.
 - Wire `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a

@@ -373,6 +373,8 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
 
   const coeffs = irToIntegerPoly(inner, variable);
   if (coeffs === undefined) {
+    const perfectSquare = extractMultivariatePerfectSquare(inner);
+    if (perfectSquare !== undefined) return perfectSquare;
     const commonFactored = extractCommonSymbolicFactor(inner);
     return commonFactored === undefined ? expr : vm.eval(commonFactored);
   }
@@ -507,6 +509,11 @@ function multiplyNodes(nodes: readonly IRNode[]): IRNode {
 
 type FactorPower = { readonly base: IRNode; exponent: number };
 
+type CoefficientPowers = {
+  readonly coefficient: bigint;
+  readonly powers: Map<string, FactorPower>;
+};
+
 function splitCommonFactorTerm(node: IRNode): Map<string, FactorPower> {
   const powers = new Map<string, FactorPower>();
   for (const factor of flattenFactorTerms(node)) {
@@ -523,6 +530,28 @@ function splitCommonFactorTerm(node: IRNode): Map<string, FactorPower> {
     addPower(powers, factor, 1);
   }
   return powers;
+}
+
+function splitIntegerCoefficientAndPowers(node: IRNode): CoefficientPowers | undefined {
+  let coefficient = 1n;
+  const powers = new Map<string, FactorPower>();
+  for (const factor of flattenFactorTerms(node)) {
+    if (factor.kind === "integer") {
+      coefficient *= factor.value;
+      continue;
+    }
+    if (factor.kind === "symbol" && factor.name.startsWith("%")) return undefined;
+
+    if (factor.kind === "apply" && equals(factor.head, POW) && factor.args.length === 2) {
+      const [base, exponent] = factor.args;
+      if (exponent.kind === "integer" && exponent.value > 0n) {
+        addPower(powers, base, Number(exponent.value));
+        continue;
+      }
+    }
+    addPower(powers, factor, 1);
+  }
+  return { coefficient, powers };
 }
 
 function addPower(powers: Map<string, FactorPower>, base: IRNode, exponent: number): void {
@@ -584,6 +613,53 @@ function extractCommonSymbolicFactor(inner: IRNode): IRNode | undefined {
     .map((power) => powNode(power.base, power.exponent));
   const residualTerms = terms.map((term) => removeCommonFactor(term, common));
   return app(MUL, [multiplyNodes(commonTerms), app(FACTOR, [addNodes(residualTerms)])]);
+}
+
+function extractMultivariatePerfectSquare(inner: IRNode): IRNode | undefined {
+  const terms = flattenAddTerms(inner);
+  if (terms.length !== 3) return undefined;
+
+  const parsed = terms.map((term) => splitIntegerCoefficientAndPowers(term));
+  if (parsed.some((term) => term === undefined)) return undefined;
+
+  const squares: FactorPower[] = [];
+  let cross: { readonly coefficient: bigint; readonly factors: readonly [FactorPower, FactorPower] } | undefined;
+  for (const parsedTerm of parsed) {
+    if (parsedTerm === undefined) return undefined;
+    const { coefficient, powers } = parsedTerm;
+    if (coefficient === 1n && powers.size === 1) {
+      const [power] = [...powers.values()];
+      if (power.exponent === 2) {
+        squares.push(power);
+        continue;
+      }
+    }
+    if ((coefficient === 2n || coefficient === -2n) && powers.size === 2) {
+      const factors = [...powers.values()];
+      if (factors[0].exponent === 1 && factors[1].exponent === 1) {
+        cross = { coefficient, factors: [factors[0], factors[1]] };
+        continue;
+      }
+    }
+    return undefined;
+  }
+
+  if (squares.length !== 2 || cross === undefined) return undefined;
+  const squareKeys = new Set(squares.map((power) => nodeKey(power.base)));
+  const crossKeys = new Set(cross.factors.map((power) => nodeKey(power.base)));
+  if (
+    squareKeys.size !== 2
+    || crossKeys.size !== 2
+    || [...squareKeys].some((key) => !crossKeys.has(key))
+  ) {
+    return undefined;
+  }
+
+  const [first, second] = squares;
+  const base = cross.coefficient > 0n
+    ? app(ADD, [first.base, second.base])
+    : app(SUB, [first.base, second.base]);
+  return app(POW, [base, int(2)]);
 }
 
 function polyAdd(a: readonly bigint[], b: readonly bigint[]): bigint[] {
