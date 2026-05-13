@@ -251,6 +251,69 @@ def test_factor_multivariate_difference_of_squares() -> None:
     )
 
 
+def test_factor_multivariate_difference_of_cubes() -> None:
+    """Factor(x^3 - y^3) recognises the cubic identity."""
+    vm, _ = make_vm()
+    target = IRApply(
+        SUB,
+        (
+            IRApply(POW, (x, IRInteger(3))),
+            IRApply(POW, (y, IRInteger(3))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(SUB, (x, y)),
+            IRApply(
+                ADD,
+                (
+                    IRApply(
+                        ADD,
+                        (IRApply(POW, (x, IRInteger(2))), IRApply(MUL, (x, y))),
+                    ),
+                    IRApply(POW, (y, IRInteger(2))),
+                ),
+            ),
+        ),
+    )
+
+
+def test_factor_multivariate_sum_of_cubes() -> None:
+    """Factor(x^3 + y^3) recognises the cubic identity."""
+    vm, _ = make_vm()
+    target = IRApply(
+        ADD,
+        (
+            IRApply(POW, (x, IRInteger(3))),
+            IRApply(POW, (y, IRInteger(3))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(ADD, (x, y)),
+            IRApply(
+                ADD,
+                (
+                    IRApply(
+                        ADD,
+                        (
+                            IRApply(POW, (x, IRInteger(2))),
+                            IRApply(MUL, (IRInteger(-1), IRApply(MUL, (x, y)))),
+                        ),
+                    ),
+                    IRApply(POW, (y, IRInteger(2))),
+                ),
+            ),
+        ),
+    )
+
+
 def test_factor_linear() -> None:
     """Factor(x - 3) → x - 3 (already irreducible linear, content 1)."""
     vm, _ = make_vm()

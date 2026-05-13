@@ -3,6 +3,9 @@
 ## Unreleased
 
 - Added another small multivariate factoring foothold to `Factor`: bivariate
+  cubic identities such as `x^3 - y^3` and `x^3 + y^3` now factor to their
+  textbook two-factor decompositions.
+- Added another small multivariate factoring foothold to `Factor`: bivariate
   differences of squares such as `x^2 - y^2` now factor to `(x-y)*(x+y)`.
 - Added a second small multivariate factoring foothold to `Factor`:
   bivariate perfect-square quadratics such as `x^2 + 2*x*y + y^2` now factor
