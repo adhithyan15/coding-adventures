@@ -242,6 +242,15 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   2 modes (no rulebook vs self-elicited rulebook) on the canonical
   ADJ10 source. The recursion flips verdicts at ≥ 3B parameters and
   breaks at ≤ 1.5B in two distinct failure modes.
+- [ADJ17](ADJ17-adversarial-rulebook-empirical-results.md) — follow-up
+  to ADJ15 measuring **adversarial multi-model rulebook elicitation**:
+  two 8B-class models (gemma4 + llama3.1) elicit independently, the
+  merged provenance-tagged rulebook is injected into Arm A across
+  the same 5 answerer models. Headline finding: the 0.5B and 1.5B
+  scales that broke in ADJ15 now produce defensible NON-COMPLIANT
+  verdicts with rule citations — elicitation and answer are
+  separable capabilities, big models pay the elicit cost once,
+  small models reuse the rulebook indefinitely.
 - [ADJ16](ADJ16-engine-programmatic-adjudication.md) — design for
   replacing the LLM-answer-time call with a deterministic engine
   that runs a compiled Prolog (or ProbLog) program over the
