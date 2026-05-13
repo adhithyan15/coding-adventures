@@ -372,7 +372,7 @@ impl From<LlmError> for PrimitiveError {
 // prompt: every `LlmCallRecord` carries the version, so replay
 // matches `(prompt_version, prompt_hash)`.
 
-pub const DECOMPOSE_TEXT_PROMPT_VERSION: &str = "decompose-text-v4";
+pub const DECOMPOSE_TEXT_PROMPT_VERSION: &str = "decompose-text-v5";
 pub const RENDER_NODE_PROMPT_VERSION: &str = "render-node-v1";
 pub const ENTAIL_PROMPT_VERSION: &str = "entail-v1";
 pub const ADVERSARY_PROMPT_VERSION: &str = "adversary-v1";
@@ -885,7 +885,7 @@ mod tests {
     fn prompt_version_constants_are_stable() {
         // Locking the constants down — bumping any of these is an
         // audit-trail-affecting change and should be a separate PR.
-        assert_eq!(DECOMPOSE_TEXT_PROMPT_VERSION, "decompose-text-v4");
+        assert_eq!(DECOMPOSE_TEXT_PROMPT_VERSION, "decompose-text-v5");
         assert_eq!(RENDER_NODE_PROMPT_VERSION, "render-node-v1");
         assert_eq!(ENTAIL_PROMPT_VERSION, "entail-v1");
         assert_eq!(ADVERSARY_PROMPT_VERSION, "adversary-v1");
