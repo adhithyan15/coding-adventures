@@ -157,6 +157,20 @@ fn handle_for_key(key: &SpecKey) -> u64 {
         }
     }
 
+    // **MX05 Phase 4.6.**  `folded_slot` is part of the key
+    // identity (an LHS-folded Sub kernel is mathematically distinct
+    // from an RHS-folded one), so it has to feed into the handle.
+    // `None` and `Some(0)`/`Some(1)`/... are all distinguishable
+    // — we encode `None` as discriminator byte 0xFF, then for
+    // `Some(s)` we emit `0x00` followed by `s`.
+    match key.folded_slot {
+        None => feed_byte(0xFF, &mut h),
+        Some(s) => {
+            feed_byte(0x00, &mut h);
+            feed_byte(s, &mut h);
+        }
+    }
+
     h
 }
 
@@ -178,6 +192,7 @@ mod tests {
             shape_class: ShapeClass::Dynamic,
             range_class: RangeClass::Unknown,
             backend_id: 0,
+            folded_slot: None,
         }
     }
 

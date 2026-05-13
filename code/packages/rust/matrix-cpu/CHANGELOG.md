@@ -2,6 +2,22 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.4.1] — 2026-05-13
+
+### Changed — MX05 Phase 4.6 (handle hash includes `folded_slot`)
+
+`CpuSpecialiser`'s FNV-1a handle hash now feeds the new
+`SpecKey::folded_slot` field that matrix-profile v0.2 introduced.
+Two `SpecKey`s differing only in `folded_slot` (e.g. LHS-folded
+vs RHS-folded `Op::Sub`) now produce **distinct** 64-bit handles,
+preventing kernel collisions in the executor's `SpecialisedTable`.
+
+Encoding: `None` → discriminator byte `0xFF`; `Some(s)` →
+discriminator byte `0x00` followed by `s`.
+
+Test helper `key()` updated to set `folded_slot: None`.  All 33
+existing tests still pass.
+
 ## [0.4.0] — 2026-05-12
 
 ### Added — MX05 Phase 4.1 (specialised dispatch lands on CPU)

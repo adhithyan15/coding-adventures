@@ -383,6 +383,7 @@ mod tests {
             shape_class: ShapeClass::Dynamic,
             range_class: RangeClass::Unknown,
             backend_id: 1,
+            folded_slot: None,
         };
         let kernel = SpecialisedKernel {
             key: key.clone(),

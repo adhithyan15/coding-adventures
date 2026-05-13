@@ -242,6 +242,31 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.6 landed — `folded_slot` unlocks non-commutative ops)**:
+> `SpecKey` gains a `folded_slot: Option<u8>` field
+> (matrix-profile v0.2.0) recording which input slot the policy
+> folded into a `RangeClass::Constant`.  `DefaultPolicy` sets it
+> when picking a constant input; the field is `None` otherwise.
+> matrix-metal v0.8.0 lights up `Op::Sub`, `Op::Div`, and `Op::Pow`
+> with **two variants per op** — LHS-folded (`K op a[gid]`) and
+> RHS-folded (`a[gid] op K`) — selected by `folded_slot`.  Entry
+> point names embed the variant (`specialised_sub_lhs_const_f32_…`
+> vs `specialised_sub_rhs_const_f32_…`) so they coexist in the
+> executor's `SpecialisedTable`.  matrix-cpu's `CpuSpecialiser`
+> handle hash also feeds on `folded_slot` so two SpecKeys
+> differing only in slot produce distinct handles.
+> image-gpu-core v0.9.0's `dispatch_specialised_via` now consults
+> `folded_slot` to pick which IR input to pass through
+> `DispatchSpecialised`: for `folded_slot = Some(s)` on a 2-input
+> binary op, the unfolded slot `1 - s` is the one passed to the
+> kernel.  End-to-end test
+> `dispatch_specialised_via_routes_lhs_folded_correctly` builds
+> `Op::Sub([10,10,10,10] - [1,2,3,4])` with LHS folded as `K=10`,
+> and asserts the output is `[9, 8, 7, 6]` — proving the
+> dispatcher passes the variable RHS, not the constant LHS.
+> Test counts: matrix-profile 57, matrix-cpu 33, matrix-metal 31
+> emitter + 25 integration, image-gpu-core 31.
+
 > **Implementation status (Phase 4.5 landed — MSL emitter supports more binary ops)**:
 > `matrix-metal` v0.7.0 extends `msl_emitter` to cover three more
 > commutative f32 binary ops: `Op::Mul` (0x09), `Op::Max` (0x0B),

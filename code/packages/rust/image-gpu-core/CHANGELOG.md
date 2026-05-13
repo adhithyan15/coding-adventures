@@ -1,5 +1,46 @@
 # Changelog — image-gpu-core
 
+## 0.9.0 — 2026-05-13
+
+### Added — MX05 Phase 4.6 (dispatch routes the unfolded slot)
+
+Phase 4.4 routed `Op::Add` through `DispatchSpecialised` by trimming
+`ir_op.inputs()` to the first `n_in` IR inputs.  That worked for
+commutative ops where slot doesn't matter, but would have produced
+wrong output on `Op::Sub` if the policy folded the LHS (the
+dispatcher would pass the LHS buffer — the constant! — and skip
+the RHS variable input).
+
+Phase 4.6 fixes this by consulting `SpecKey::folded_slot`:
+
+- For a binary op with `folded_slot = Some(s)`, the dispatcher
+  passes `ir_op.inputs()[1 - s]` — the **unfolded** slot.
+- For commutative ops or `folded_slot = None`, falls back to the
+  Phase 4.4 behaviour (first `n_in` inputs in declared order).
+
+#### Internal changes
+
+- `INSTALLED_KERNEL_METADATA` value changed from
+  `(usize, usize)` to a named `KernelMetadata { n_in, n_out, folded_slot }`
+  struct.  `try_auto_install_specialised` records
+  `specialised.key.folded_slot` alongside the buffer counts.
+- `dispatch_specialised_via` consults the slot when building the
+  `inputs` list for the `DispatchSpecialised` request.
+- `record_test_kernel_metadata(handle, n_in, n_out, folded_slot)`
+  signature extended; existing call sites updated.
+
+#### Test (31 → 32)
+
+`dispatch_specialised_via_routes_lhs_folded_correctly` (Apple-only):
+
+Builds an `Op::Sub(A = [10, 10, 10, 10], B = [1, 2, 3, 4]) → C`
+graph, installs the `sub_lhs_const_f32` kernel (`folded_slot =
+Some(0)`, constant `K = 10.0`), and asserts the output is
+`[9, 8, 7, 6]` — i.e. `K - B = 10 - [1,2,3,4]`.  If the
+dispatcher had passed A (the LHS, the constant) instead of B
+(the RHS, the variable), the output would be `[0, 0, 0, 0]` and
+the test would catch the regression.
+
 ## 0.8.0 — 2026-05-12
 
 ### Added — MX05 Phase 4.4 (dispatch-routing half of the loop)
