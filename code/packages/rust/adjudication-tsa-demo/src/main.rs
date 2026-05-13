@@ -57,9 +57,30 @@ use adjudication_tsa_demo::{
     acquire_demo_rulebook, fixture_tsa_rulebook, format_side_by_side, run_pipeline_arm,
     run_raw_arm, DemoConfig, IrMode, IrSourceTelemetry,
 };
+use llm_cache::CachingClient;
 use llm_gateway::LlmClient;
 use llm_primitives::{GatewayConfig, Role as PrimitiveRole};
 use llm_provider_ollama::OllamaClient;
+
+/// Wrap an inner LLM client with a `CachingClient`, using disk
+/// persistence when the demo config supplies a `cache_dir`. Mirrors
+/// `adjudication_tsa_demo::wrap_with_cache` (which is private to the
+/// library crate) so the elicit and adversarial-elicit paths can
+/// reuse the same caching discipline as Arm B's full pipeline.
+///
+/// Without this wrap, the elicit and adversarial paths bypass
+/// `cfg.cache_dir` entirely: every run re-elicits every rulebook
+/// from scratch, even when the prompt/model are byte-identical to a
+/// previous run. The behaviour is correct but wastes ~250 s per
+/// benchmark iteration. v0.10.1 plugs the gap.
+fn cached_client(inner: OllamaClient, cache_dir: Option<&String>) -> Box<dyn LlmClient> {
+    let boxed: Box<dyn LlmClient> = Box::new(inner);
+    let cached = match cache_dir {
+        Some(dir) => CachingClient::with_disk_persistence(boxed, dir),
+        None => CachingClient::new(boxed),
+    };
+    Box::new(cached)
+}
 
 fn main() {
     let mut cfg = config_from_env();
@@ -93,12 +114,21 @@ fn main() {
              adjudication_rulebook::acquire_rulebook ...",
             model = cfg.model,
         );
-        let ollama = OllamaClient::new(cfg.model.clone())
+        let ollama_extractor = OllamaClient::new(cfg.model.clone())
+            .with_endpoint(cfg.endpoint.clone())
+            .with_timeout(cfg.timeout);
+        let ollama_ruleextractor = OllamaClient::new(cfg.model.clone())
             .with_endpoint(cfg.endpoint.clone())
             .with_timeout(cfg.timeout);
         let gw = GatewayConfig::new()
-            .with_client(PrimitiveRole::RuleExtractor, Box::new(ollama.clone()))
-            .with_client(PrimitiveRole::Extractor, Box::new(ollama));
+            .with_client(
+                PrimitiveRole::RuleExtractor,
+                cached_client(ollama_ruleextractor, cfg.cache_dir.as_ref()),
+            )
+            .with_client(
+                PrimitiveRole::Extractor,
+                cached_client(ollama_extractor, cfg.cache_dir.as_ref()),
+            );
         match acquire_demo_rulebook(&cfg, &gw) {
             Ok(rb) => {
                 let validation_summary = if rb.validation_passed {
@@ -161,22 +191,30 @@ fn main() {
         );
         let mut gateways: Vec<(String, GatewayConfig)> = Vec::with_capacity(models.len());
         for m in models {
-            let ollama: Box<dyn LlmClient> = Box::new(
-                OllamaClient::new(m.clone())
-                    .with_endpoint(cfg.endpoint.clone())
-                    .with_timeout(cfg.timeout),
-            );
+            // Wrap each per-model client in a CachingClient so a
+            // repeat adversarial run replays the elicitation from
+            // disk instead of paying ~250 s × 2 models on every
+            // answerer iteration. Without this wrap, `cfg.cache_dir`
+            // was honoured for Arm B but ignored for Stage 0 — every
+            // bench run re-elicited every rulebook from scratch.
+            let ollama_ruleextractor = OllamaClient::new(m.clone())
+                .with_endpoint(cfg.endpoint.clone())
+                .with_timeout(cfg.timeout);
             // Second client for Extractor role (decompose_text). We
             // can't .clone() Box<dyn LlmClient>, so construct a
             // sibling OllamaClient with the same config.
-            let extractor: Box<dyn LlmClient> = Box::new(
-                OllamaClient::new(m.clone())
-                    .with_endpoint(cfg.endpoint.clone())
-                    .with_timeout(cfg.timeout),
-            );
+            let ollama_extractor = OllamaClient::new(m.clone())
+                .with_endpoint(cfg.endpoint.clone())
+                .with_timeout(cfg.timeout);
             let gw = GatewayConfig::new()
-                .with_client(PrimitiveRole::RuleExtractor, ollama)
-                .with_client(PrimitiveRole::Extractor, extractor);
+                .with_client(
+                    PrimitiveRole::RuleExtractor,
+                    cached_client(ollama_ruleextractor, cfg.cache_dir.as_ref()),
+                )
+                .with_client(
+                    PrimitiveRole::Extractor,
+                    cached_client(ollama_extractor, cfg.cache_dir.as_ref()),
+                );
             gateways.push((m.clone(), gw));
         }
         let req = AcquireRulebookAdversarialRequest {

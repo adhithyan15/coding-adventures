@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.1] - 2026-05-12 — Wire `ADJ_DEMO_CACHE_DIR` through Stage 0
+
+### Fixed
+
+The `ADJ_DEMO_RULEBOOK_MODE=elicit` and
+`ADJ_DEMO_RULEBOOK_MODE=adversarial:...` paths now respect
+`ADJ_DEMO_CACHE_DIR`. Previously both paths constructed raw
+`OllamaClient`s without wrapping them in
+`llm_cache::CachingClient`, so the cache directory was honoured for
+Arm B's full pipeline but bypassed for the rulebook-elicitation
+Stage 0. A repeated adversarial bench paid the full ~250 s × N
+elicitation cost on every answerer iteration instead of replaying
+from disk.
+
+Surfaced by [ADJ17 §Caveats(5)](../../../specs/ADJ17-adversarial-rulebook-empirical-results.md).
+The cost mattered most for the 5-answerer adversarial bench, which
+was paying 4× the elicitation cost it should have.
+
+### Implementation
+
+A new `cached_client(inner, cache_dir)` helper in `main.rs` mirrors
+the private `wrap_with_cache` in `lib.rs`, wrapping each
+`OllamaClient` in a `CachingClient::with_disk_persistence` (when a
+cache_dir is set) or a memory-only `CachingClient::new` (when it
+isn't). Both Stage 0 paths now route their per-model clients
+through this helper before composing them into a `GatewayConfig`.
+
+The fix is observable as a shorter Stage 0 log timing on the second
+run of any adversarial bench against the same cache directory: the
+cache hit replays elicitation responses without an HTTP round-trip.
+
 ## [0.10.0] - 2026-05-12 — Adversarial multi-model elicit-mode wiring
 
 ### Added
