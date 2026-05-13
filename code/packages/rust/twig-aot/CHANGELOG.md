@@ -1,5 +1,74 @@
 # Changelog — `twig-aot`
 
+## 0.1.4 — 2026-05-13
+
+**In-process ARM64 execution + typed i64 pipeline.**
+
+### New public APIs
+
+#### `compile_module_to_arm64_bytes(module) → Result<(Vec<u8>, HashMap<String, usize>), AotError>`
+
+Returns raw ARM64 machine code bytes and a function-name→byte-offset map.
+Uses the standard untyped prep pipeline (builtin pre-lowering + u64
+normalization + type propagation + default-any-to-u64).  Suitable for
+in-process execution via `call_arm64_function_in_process`.
+
+#### `compile_typed_module_to_arm64_bytes(module) → Result<(Vec<u8>, HashMap<String, usize>), AotError>`
+
+Like `compile_module_to_arm64_bytes` but uses caller-supplied type
+annotations.  The caller pre-lowers builtins and sets params to `"i64"`;
+this function propagates types from those params (without running
+`normalize_params_to_u64`), so comparison instructions emit
+`cmp_lt_i64` (signed ARM64 condition code) rather than `cmp_lt_u64`
+(unsigned).  Correct for negative numbers.
+
+#### `pre_lower_aot_builtins_on_module(module: &mut IIRModule)`
+
+Exposes the `pre_lower_aot_builtins` pass at the module level so callers
+can pre-lower before running their own type-inference pass.
+
+#### `call_arm64_function_in_process(code, offsets, fn_name, arg) → Result<i64, AotError>`
+
+*macOS/ARM64 only.*  Execute compiled ARM64 code in-process:
+1. Allocates an anonymous `PROT_READ | PROT_WRITE` mapping.
+2. Copies code bytes into it.
+3. `mprotect`s to `PROT_READ | PROT_EXEC` (no `MAP_JIT` entitlement required).
+4. Calls `fn_name(arg)` via AAPCS64 (`x0` in/out) and returns the result.
+
+This avoids the full `ld` + subprocess path (~200ms ld + ~30ms exec),
+bringing per-call overhead to <1ms.
+
+### Bug fix: comparison type inference (`infer_aot_type`)
+
+Previously `infer_aot_type` always returned `"bool"` for `cmp_*`
+instructions.  This produced `cmp_lt_bool` in the CIR, which the ARM64
+backend lowered with an **unsigned** condition code.  For non-negative
+values this is harmless, but `cmp_lt_u64(-5, 0)` evaluates false because
+`-5` is stored as `0xFFFFFFFFFFFFFFFF` — a large unsigned number.
+
+The fix: `infer_aot_type` for `cmp_*` now returns the **operand type**
+(resolved from the first source via `resolve_src_aot_type`), falling
+back to `"bool"` only when operands are still unresolved.
+
+- Untyped path (u64 params): `cmp_lt` → `cmp_lt_u64` (unsigned, same as before).
+- Typed path (i64 params): `cmp_lt` → `cmp_lt_i64` (signed, correct for negatives).
+
+### Internal: `compile_module_to_text_raw`
+
+The existing `compile_module_to_text` (clone + prepare + compile) was
+split into two functions: `compile_module_to_text` (prep delegates to
+`compile_module_to_text_raw`) and `compile_module_to_text_raw` (raw
+two-pass compile + link, no prep).  The typed API uses `_raw` directly.
+
+### Why `compile_typed_module_to_arm64_bytes` still runs propagation
+
+`iir-type-checker::infer_function` seeds its SSA environment only from
+instruction dests — **not** from `func.params`.  Instructions of the
+form `sub dest, param_var, const` therefore stay `"any"` after the type
+checker.  `propagate_aot_types` (seeded from `func.params`) fills these
+in.  The propagation pass deliberately does NOT call
+`normalize_params_to_u64`, so typed i64 params propagate as `i64`.
+
 ## 0.1.3 — 2026-05-13
 
 **AOT preparation pipeline — cross-function fib compiles and runs.**

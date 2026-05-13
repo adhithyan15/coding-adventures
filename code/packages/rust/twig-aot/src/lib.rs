@@ -147,6 +147,185 @@ pub fn compile_module_macos_arm64_object(module: &IIRModule) -> Result<Vec<u8>, 
     pack_object(&artifact).map_err(|e| AotError::Packager(format!("{e}")))
 }
 
+/// Returns raw ARM64 machine code bytes and a function-name→byte-offset map.
+///
+/// Uses the standard untyped prep pipeline (pre-lower + u64 normalization +
+/// type propagation + default-any-to-u64).  The resulting bytes are a flat
+/// code section with no Mach-O wrapping — suitable for in-process execution
+/// via [`call_arm64_function_in_process`].
+pub fn compile_module_to_arm64_bytes(
+    module: &IIRModule,
+) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
+    compile_module_to_text(module)
+}
+
+/// Like [`compile_module_to_arm64_bytes`] but uses the caller-supplied type
+/// annotations instead of forcing everything to `u64`.
+///
+/// The caller is responsible for having:
+/// 1. Run `pre_lower_aot_builtins_on_module` (or equivalent).
+/// 2. Run a type-inference pass (e.g. `iir-type-checker::infer_and_check`).
+/// 3. Set any remaining `"any"` params to a concrete type (e.g. `"i64"`).
+///
+/// This function then runs `propagate_aot_types` (seeded from the caller's
+/// type annotations) and `default_any_to_u64` to fill in any gaps, without
+/// ever running `normalize_params_to_u64`.  Because params stay at whatever
+/// type the caller gave them (e.g. `i64`), arithmetic and comparisons are
+/// emitted with signed `i64` semantics — correct for negative numbers.
+///
+/// ## Why propagation is still needed
+///
+/// `iir-type-checker::infer_function` seeds its SSA environment only from
+/// instruction dests with existing type hints — it does **not** seed from
+/// `func.params`.  As a result, instructions of the form
+/// `sub dest, param_var, const_var` stay `"any"` because `param_var` is not
+/// found in the environment.  `propagate_aot_types` seeds from `func.params`
+/// and picks up these remaining `"any"` instructions.
+pub fn compile_typed_module_to_arm64_bytes(
+    module: &IIRModule,
+) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
+    let mut module = module.clone();
+    for func in &mut module.functions {
+        pre_lower_aot_builtins(func);
+        // Propagate types seeded from the (already-set) params.
+        // This fills in instructions like `sub dest, param, const` that
+        // iir-type-checker missed because it doesn't seed from func.params.
+        propagate_aot_types(func);
+        // Default any still-unresolvable arithmetic/mov hints to u64.
+        // (Should be rare after propagation with typed params.)
+        default_any_to_u64(func);
+    }
+    compile_module_to_text_raw(&module)
+}
+
+/// Apply the AOT builtin pre-lowering pass to every function in `module`.
+///
+/// This converts `call_builtin "+" a b` → `add a b`, `call_builtin "<" a b`
+/// → `cmp_lt a b`, etc.  It is exposed so callers can pre-lower an IIR
+/// module before running their own type-inference pass.
+pub fn pre_lower_aot_builtins_on_module(module: &mut IIRModule) {
+    for func in &mut module.functions {
+        pre_lower_aot_builtins(func);
+    }
+}
+
+/// Execute compiled ARM64 code in-process by mapping it into executable memory,
+/// calling `fn_name(arg)`, and returning the result.
+///
+/// ## How it works
+///
+/// macOS does not allow `mmap` of file-backed pages with `PROT_EXEC` from
+/// user code — that path requires the `com.apple.security.cs.allow-jit`
+/// entitlement and fails with `EPERM` otherwise.  The simpler approach:
+///
+/// 1. Allocate an anonymous `PROT_READ | PROT_WRITE` page via `mmap`.
+/// 2. `memcpy` the ARM64 bytes into the mapping.
+/// 3. Call `mprotect` to change protection to `PROT_READ | PROT_EXEC`.
+///    This is permitted on macOS without any special entitlement.
+/// 4. Cast the byte at `fn_name`'s offset to `extern "C" fn(i64) -> i64`
+///    and call it.
+/// 5. `munmap` the region.
+///
+/// The two-step write-then-protect pattern is the standard JIT technique
+/// on hardened macOS without `MAP_JIT`.
+///
+/// ## Calling convention
+///
+/// The compiled function must follow AAPCS64: argument in `x0`, result in `x0`.
+/// This matches how the twig AOT backend generates function prologues.
+///
+/// ## Platform
+///
+/// macOS/ARM64 only.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+pub fn call_arm64_function_in_process(
+    code: &[u8],
+    offsets: &HashMap<String, usize>,
+    fn_name: &str,
+    arg: i64,
+) -> Result<i64, AotError> {
+    extern "C" {
+        fn mmap(
+            addr: *mut std::ffi::c_void,
+            len: usize,
+            prot: i32,
+            flags: i32,
+            fd: i32,
+            offset: i64,
+        ) -> *mut std::ffi::c_void;
+        fn munmap(addr: *mut std::ffi::c_void, len: usize) -> i32;
+        fn mprotect(addr: *mut std::ffi::c_void, len: usize, prot: i32) -> i32;
+    }
+    const PROT_READ:  i32 = 0x01;
+    const PROT_WRITE: i32 = 0x02;
+    const PROT_EXEC:  i32 = 0x04;
+    const MAP_PRIVATE: i32 = 0x0002;
+    const MAP_ANON:    i32 = 0x1000; // macOS anonymous mapping flag
+
+    let fn_offset = offsets.get(fn_name).copied().ok_or_else(|| AotError::BackendRefused {
+        function: fn_name.to_string(),
+    })?;
+
+    // Round length up to a multiple of the page size (4096 on ARM64).
+    let len = (code.len() + 4095) & !4095;
+
+    // Step 1: allocate a writable anonymous mapping.
+    let ptr = unsafe {
+        mmap(
+            std::ptr::null_mut(),
+            len,
+            PROT_READ | PROT_WRITE,
+            MAP_PRIVATE | MAP_ANON,
+            -1,
+            0,
+        )
+    };
+    // mmap returns MAP_FAILED = (void*)-1 = usize::MAX on failure.
+    if ptr as usize == usize::MAX {
+        return Err(AotError::Linker {
+            status: None,
+            stderr: "mmap(PROT_WRITE) failed for in-process ARM64 execution".into(),
+        });
+    }
+
+    // Step 2: copy code bytes into the mapping.
+    unsafe {
+        std::ptr::copy_nonoverlapping(code.as_ptr(), ptr as *mut u8, code.len());
+    }
+
+    // Step 3: make the mapping executable (read + exec, no write).
+    // This is permitted on macOS without MAP_JIT or any entitlement.
+    let rc = unsafe { mprotect(ptr, len, PROT_READ | PROT_EXEC) };
+    if rc != 0 {
+        unsafe { munmap(ptr, len) };
+        return Err(AotError::Linker {
+            status: None,
+            stderr: "mprotect(PROT_EXEC) failed for in-process ARM64 execution".into(),
+        });
+    }
+
+    // Step 4: validate fn_offset is within the code buffer before pointer
+    // arithmetic, then jump to it and call the function.
+    // AAPCS64: argument in x0, result in x0.
+    if fn_offset >= code.len() {
+        // Offset out of range — compiler bug or mismatched (code, offsets) pair.
+        // munmap before returning to avoid leaking the executable mapping.
+        unsafe { munmap(ptr, len) };
+        return Err(AotError::BackendRefused {
+            function: format!(
+                "{fn_name}: offset {fn_offset} >= code length {}",
+                code.len()
+            ),
+        });
+    }
+    let fn_ptr = (ptr as *const u8).wrapping_add(fn_offset);
+    let f: extern "C" fn(i64) -> i64 = unsafe { std::mem::transmute(fn_ptr) };
+    let result = f(arg);
+
+    unsafe { munmap(ptr, len) };
+    Ok(result)
+}
+
 /// Compile a Twig source file to a runnable ARM64 Mach-O executable on
 /// disk by:
 ///
@@ -349,11 +528,23 @@ fn normalize_params_to_u64(func: &mut IIRFunction) {
 ///
 /// Applies inference rules:
 /// - `const` with `Int` → `"u64"`, `Bool` → `"bool"`
-/// - `cmp_*` → `"bool"` (comparisons always produce a boolean)
+/// - `cmp_*` → **operand type** (not `"bool"`)
 /// - `add`, `sub`, `mul`, `div`, `mov`, `neg`, `not` → type of first operand
 ///
-/// Runs in a loop until stable.  Function params (already "u64") seed the
-/// environment together with already-typed instructions.
+/// ## Why `cmp_*` uses operand type, not `"bool"`
+///
+/// The ARM64 backend's `emit_cmp` uses the CIR mnemonic suffix to choose
+/// between signed (`i64`, `i32`, …) and unsigned (`u64`, `u32`, …) condition
+/// codes.  `cmp_lt_bool` produces an unsigned comparison — correct when all
+/// values are non-negative, but wrong for negative numbers.
+///
+/// Returning the operand type lets the specialiser emit `cmp_lt_u64` for the
+/// untyped path (u64 params) and `cmp_lt_i64` for the typed path (i64 params),
+/// selecting the right condition code in each case.  The boolean result value
+/// (0 or 1 stored to the dest register) is the same either way.
+///
+/// Runs in a loop until stable.  Function params (already "u64" or "i64")
+/// seed the environment together with already-typed instructions.
 fn propagate_aot_types(func: &mut IIRFunction) {
     // Build initial env from params + any already-typed instructions.
     let mut env: HashMap<String, String> = HashMap::new();
@@ -402,8 +593,15 @@ fn infer_aot_type(instr: &IIRInstr, env: &HashMap<String, String>) -> Option<Str
             Some(Operand::Bool(_)) => Some("bool".into()),
             _                       => None,
         },
-        // Comparisons always yield bool, regardless of operand types.
-        "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => Some("bool".into()),
+        // Comparisons: use the operand type so the ARM64 backend can choose
+        // signed vs unsigned condition codes.  `cmp_lt_u64` → unsigned CMP,
+        // `cmp_lt_i64` → signed CMP.  Both store a bool 0/1 result.
+        // Fall back to "bool" only when operand types are still unresolved —
+        // that way the untyped path (which resolves to u64) still works.
+        "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
+            resolve_src_aot_type(instr.srcs.first(), env)
+                .or_else(|| Some("bool".into()))
+        }
         // Arithmetic + move: use the type of the first source operand.
         "add" | "sub" | "mul" | "div" | "mov" | "neg" | "not" => {
             resolve_src_aot_type(instr.srcs.first(), env)
@@ -466,6 +664,34 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
 
 /// Run the per-function AOT pipeline and link into a single text section.
 ///
+/// Clones `module`, runs the full AOT preparation pipeline (builtin
+/// pre-lowering + u64 type normalisation + type propagation + default-any),
+/// and then delegates to [`compile_module_to_text_raw`] for the actual
+/// two-pass compile + link.
+///
+/// This is the "untyped u64" path: all params and arithmetic are treated as
+/// `u64`.  For signed `i64` semantics use [`compile_typed_module_to_arm64_bytes`].
+fn compile_module_to_text(
+    module: &IIRModule,
+) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
+    // We work on a clone so the caller's `IIRModule` is never mutated.
+    // `prepare_module_for_aot` runs three passes:
+    //   1. `call_builtin "+"` → `add`, etc.   (see `pre_lower_aot_builtins`)
+    //   2. param types "any" → "u64"           (see `normalize_params_to_u64`)
+    //   3. propagate + default remaining "any" (see `propagate_aot_types` /
+    //                                            `default_any_to_u64`)
+    let mut module = module.clone();
+    prepare_module_for_aot(&mut module);
+    compile_module_to_text_raw(&module)
+}
+
+/// Inner two-pass compile + link, operating on an already-prepared `IIRModule`.
+///
+/// Unlike [`compile_module_to_text`] this function **does not** clone or
+/// prepare the module — it trusts that the caller has already run the
+/// appropriate preparation (either [`prepare_module_for_aot`] for the untyped
+/// u64 path, or just [`pre_lower_aot_builtins`] for the typed i64 path).
+///
 /// Two-pass strategy for cross-function calls:
 ///
 /// Pass 1 — compile each function independently.  Cross-function `call`
@@ -480,20 +706,9 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
 ///
 /// ARM64 `BL` encoding: opcode `0x94000000`, 26-bit signed PC-relative
 /// offset in units of 4 bytes (instruction words).
-fn compile_module_to_text(
+fn compile_module_to_text_raw(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
-    // ── Preparation: lower builtins, normalise types, default "any" → u64 ──
-    //
-    // We work on a clone so the caller's `IIRModule` is never mutated.
-    // `prepare_module_for_aot` runs three passes:
-    //   1. `call_builtin "+"` → `add`, etc.   (see `pre_lower_aot_builtins`)
-    //   2. param types "any" → "u64"           (see `normalize_params_to_u64`)
-    //   3. propagate + default remaining "any" (see `propagate_aot_types` /
-    //                                            `default_any_to_u64`)
-    let mut module = module.clone();
-    prepare_module_for_aot(&mut module);
-
     // ── Pass 1: compile all functions, collecting cross-function relocations ──
     // Each entry: (fn_name, per-function bytes, list of ExternalReloc for that fn)
     let mut fn_results: Vec<(String, Vec<u8>, Vec<Reloc>)> =
