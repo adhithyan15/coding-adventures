@@ -33,8 +33,8 @@ use board_vm_language_core::{
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
-    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
-    LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
+    LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed,
+    LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
 use ruby_bridge::VALUE;
 
@@ -746,6 +746,11 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
         "digital_pin_count",
         rb_usize(target.digital_pin_count),
     );
+    hash_set(
+        hash,
+        "digital_pins",
+        language_digital_pins_to_rb(&target.digital_pins),
+    );
     hash_set(hash, "wireless", language_wireless_to_rb(&target.wireless));
     hash_set(
         hash,
@@ -758,6 +763,51 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
     }
     hash_set(hash, "capabilities", capabilities);
     hash
+}
+
+fn language_digital_pins_to_rb(pins: &[LanguageDigitalPin]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for pin in pins {
+        let hash = ruby_bridge::hash_new();
+        hash_set(hash, "pin", rb_usize(pin.pin));
+        hash_set(hash, "label", ruby_bridge::str_to_rb(&pin.label));
+        hash_set(
+            hash,
+            "supports_input",
+            ruby_bridge::bool_to_rb(pin.supports_input),
+        );
+        hash_set(
+            hash,
+            "supports_output",
+            ruby_bridge::bool_to_rb(pin.supports_output),
+        );
+        hash_set(
+            hash,
+            "supports_pullup",
+            ruby_bridge::bool_to_rb(pin.supports_pullup),
+        );
+        hash_set(
+            hash,
+            "supports_pulldown",
+            ruby_bridge::bool_to_rb(pin.supports_pulldown),
+        );
+        hash_set(hash, "supports_adc", ruby_bridge::bool_to_rb(pin.supports_adc));
+        hash_set(hash, "supports_pwm", ruby_bridge::bool_to_rb(pin.supports_pwm));
+        hash_set(
+            hash,
+            "supports_touch",
+            ruby_bridge::bool_to_rb(pin.supports_touch),
+        );
+        hash_set(
+            hash,
+            "supports_interrupt",
+            ruby_bridge::bool_to_rb(pin.supports_interrupt),
+        );
+        hash_set(hash, "boot_strap", ruby_bridge::bool_to_rb(pin.boot_strap));
+        hash_set(hash, "notes", ruby_bridge::str_to_rb(&pin.notes));
+        ruby_bridge::array_push(array, hash);
+    }
+    array
 }
 
 fn language_led_matrix_to_rb(matrix: Option<board_vm_language_core::LanguageLedMatrix>) -> VALUE {

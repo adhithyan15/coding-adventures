@@ -140,6 +140,17 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert uno_r4_wifi.ota_transports == ["wifi"]
     assert uno_r4_wifi.supports_command_transport("serial") is True
     assert uno_r4_wifi.led_matrix == {"rows": 8, "columns": 12}
+    assert uno_r4_wifi.digital_pin_count == len(uno_r4_wifi.digital_pins)
+    d3 = uno_r4_wifi.digital_pin(3)
+    assert d3 is not None
+    assert d3["label"] == "D3"
+    assert d3["supports_input"] is True
+    assert d3["supports_output"] is True
+    assert d3["supports_pullup"] is True
+    assert d3["supports_pulldown"] is False
+    assert d3["supports_pwm"] is True
+    assert d3["supports_interrupt"] is True
+    assert d3["supports_adc"] is False
     assert esp32 is not None
     assert esp32.family == "esp32"
     assert esp32.runtime_id == "board-vm-esp32"
