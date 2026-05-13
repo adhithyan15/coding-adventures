@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-05-13 — ADJ25 PR-5: orchestrator emits correlation IDs
+
+### Added
+
+The hierarchical orchestrator (`decompose_hierarchical`, introduced
+in PR-4) now assigns a `CorrelationId` to every IR node and every
+`Contains` edge it produces. IDs are deterministic from the
+`NodeId` / `EdgeId` so re-runs against the same source produce the
+same correlation tree (which is exactly the property the audit-trail
+replay discipline depends on).
+
+Specifically:
+
+- Every node emitted by the orchestrator carries
+  `adj.correlation_id = "corr.<node_id>"` in its metadata.
+- Every Contains-edge emitted by the orchestrator carries
+  `adj.correlation_id = "corr.e.<edge_id>"` in its metadata.
+
+The output of `decompose_hierarchical` satisfies
+`adjudication_ir::check_correlation_completeness` by construction.
+
+### Tests
+
+2 new test cases: `adj25_orchestrator_output_is_correlation_complete`
+(end-to-end completeness check on the orchestrator's output, with
+spot checks on the Document root and an LLM-supplied id) and
+`adj25_orchestrator_emits_correlation_ids_on_contains_edges`
+(every Contains edge has a non-empty `corr.e.*` id). Total tests:
+45 → 47, all passing.
+
+### Notes
+
+- Version: 0.9.0 → 0.10.0 (additive behaviour — the orchestrator's
+  surface is unchanged; only the metadata it embeds is richer).
+- Connector + audit-trail integration in this same release cycle
+  (adjudication-connector v0.3.0 — see its changelog).
+
 ## [0.9.0] - 2026-05-13 — ADJ25 PR-4: hierarchical decomposition orchestrator
 
 ### Added

@@ -55,8 +55,8 @@ use adjudication_coverage::{
     HierarchicalGap, HierarchicalGapKind,
 };
 use adjudication_ir::{
-    DocumentId, EdgeId, EdgeRelation, IRDocument, IREdge, IRNode, Modality, NodeId, NodeKind,
-    Polarity, Span,
+    set_edge_correlation_id, set_node_correlation_id, CorrelationId, DocumentId, EdgeId,
+    EdgeRelation, IRDocument, IREdge, IRNode, Modality, NodeId, NodeKind, Polarity, Span,
 };
 use llm_primitives::GatewayConfig;
 use logic_core::{atom, Term};
@@ -453,7 +453,7 @@ impl IdState {
 }
 
 fn build_document_node(doc_id: &DocumentId, source_len: usize) -> IRNode {
-    IRNode {
+    let mut n = IRNode {
         id: NodeId::new("Doc"),
         kind: NodeKind::Document,
         term: atom("doc"),
@@ -463,7 +463,31 @@ fn build_document_node(doc_id: &DocumentId, source_len: usize) -> IRNode {
         confidence: 1.0,
         discard_reason: None,
         metadata: HashMap::new(),
-    }
+    };
+    // ADJ25 PR-5: every node produced by the hierarchical orchestrator
+    // carries a CorrelationId. The Document root's ID is derived from
+    // its NodeId for stability across runs; downstream nodes use the
+    // same NodeId-derived scheme so the correlation tree mirrors the
+    // Contains-edge hierarchy 1:1.
+    let corr = correlation_id_for_node(&n.id);
+    set_node_correlation_id(&mut n, corr);
+    n
+}
+
+/// Derive a `CorrelationId` from a `NodeId`. The orchestrator uses
+/// deterministic IDs so a re-run with the same source produces the
+/// same correlation tree, which lets the audit-trail replay match
+/// IDs byte-for-byte.
+fn correlation_id_for_node(node_id: &NodeId) -> CorrelationId {
+    CorrelationId::new(format!("corr.{}", node_id.0))
+}
+
+/// Derive a `CorrelationId` from an `EdgeId`. Edges carry their own
+/// IDs so a downstream consumer can trace a Contains-edge back to
+/// the source-decomposition stage that produced it (alongside the
+/// node IDs at either endpoint).
+fn correlation_id_for_edge(edge_id: &EdgeId) -> CorrelationId {
+    CorrelationId::new(format!("corr.e.{}", edge_id.0))
 }
 
 fn parent_text_for(parent: &IRNode, full_source: &str) -> String {
@@ -562,8 +586,9 @@ fn splice_children(
         ir.nodes.push(node);
     }
     for (child_id, _kind) in accepted_children {
-        ir.edges.push(IREdge {
-            id: id_state.next_edge_id(),
+        let edge_id = id_state.next_edge_id();
+        let mut edge = IREdge {
+            id: edge_id.clone(),
             source: parent.id.clone(),
             target: child_id,
             relation: EdgeRelation::Contains,
@@ -572,7 +597,12 @@ fn splice_children(
             source_spans: vec![],
             confidence: 1.0,
             metadata: HashMap::new(),
-        });
+        };
+        // ADJ25 PR-5: Contains edges also carry correlation IDs so
+        // the audit trail can trace which decomposition stage
+        // emitted which structural link.
+        set_edge_correlation_id(&mut edge, correlation_id_for_edge(&edge_id));
+        ir.edges.push(edge);
     }
     Ok(())
 }
@@ -701,7 +731,7 @@ fn parse_child_node(
     } else {
         None
     };
-    Some(IRNode {
+    let mut node = IRNode {
         id,
         kind,
         term,
@@ -711,7 +741,13 @@ fn parse_child_node(
         confidence: 1.0,
         discard_reason,
         metadata: HashMap::new(),
-    })
+    };
+    // ADJ25 PR-5: assign a CorrelationId to every parsed child. The
+    // ID derives from the (assigned) NodeId so the correlation tree
+    // mirrors the Contains-edge hierarchy.
+    let corr = correlation_id_for_node(&node.id);
+    set_node_correlation_id(&mut node, corr);
+    Some(node)
 }
 
 fn parse_term(v: &serde_json::Value, depth: usize) -> Option<Term> {
@@ -1160,5 +1196,80 @@ mod tests {
             assert_eq!(parse_kind(s), Some(k), "kind round-trip failed for {}", s);
         }
         assert_eq!(parse_kind("Nonexistent"), None);
+    }
+
+    #[test]
+    fn adj25_orchestrator_output_is_correlation_complete() {
+        // The hierarchical orchestrator must assign a CorrelationId
+        // to every node it produces. Run the orchestrator end-to-end
+        // and assert `check_correlation_completeness` passes on the
+        // result.
+        let gateway = gateway_with(vec![
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "matches".into(),
+            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+        };
+        let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
+        let completeness =
+            adjudication_ir::check_correlation_completeness(&out.ir_document);
+        assert!(
+            completeness.is_ok(),
+            "orchestrator output missed a correlation id: {:?}",
+            completeness
+        );
+        // Spot-check: the Document root should derive its
+        // CorrelationId from its NodeId.
+        let doc = out
+            .ir_document
+            .nodes
+            .iter()
+            .find(|n| n.kind == NodeKind::Document)
+            .expect("Document node present");
+        let corr = adjudication_ir::node_correlation_id(doc).unwrap();
+        assert_eq!(corr.0, "corr.Doc");
+        // Spot-check: an LLM-supplied id "Sx" → correlation
+        // "corr.Sx".
+        let sent = out
+            .ir_document
+            .nodes
+            .iter()
+            .find(|n| n.kind == NodeKind::Sentence)
+            .expect("Sentence node present");
+        let sent_corr = adjudication_ir::node_correlation_id(sent).unwrap();
+        assert_eq!(sent_corr.0, "corr.Sx");
+    }
+
+    #[test]
+    fn adj25_orchestrator_emits_correlation_ids_on_contains_edges() {
+        let gateway = gateway_with(vec![
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "matches".into(),
+            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+        };
+        let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
+        for edge in &out.ir_document.edges {
+            if edge.relation != EdgeRelation::Contains {
+                continue;
+            }
+            let corr = adjudication_ir::edge_correlation_id(edge);
+            assert!(
+                corr.is_some() && !corr.as_ref().unwrap().is_empty(),
+                "Contains edge {} missing correlation id",
+                edge.id.0
+            );
+            assert!(corr.unwrap().0.starts_with("corr.e."));
+        }
     }
 }

@@ -519,6 +519,167 @@ pub struct IREdge {
 }
 
 // ===========================================================================
+// ADJ25 — Correlation IDs (PR-5)
+// ===========================================================================
+//
+// ADJ25 requires every IR object to carry a `CorrelationId` that flows
+// source byte → IR node → engine clause → verdict citation. PR-5 lands
+// the type, the metadata-key contract, and the helpers; downstream
+// crates (audit trail, connector) read the helpers to propagate IDs
+// into engine clauses and audit-trail records.
+//
+// Why metadata-keyed rather than a first-class field on `IRNode`:
+// adding a required field to `IRNode` is a SemVer-breaking change
+// that ripples through 400+ struct-literal construction sites in the
+// workspace, most of them tests. The `metadata: HashMap<String,
+// String>` field was designed for exactly this kind of additive
+// attribute. Future PRs (PR-7 cutover, or beyond) may promote to a
+// dedicated struct field once the workspace is ready for the sweep.
+//
+// The framework's `metadata.adj.*` namespace is reserved; PR-5
+// reserves the key [`CORRELATION_ID_METADATA_KEY`] within that space.
+
+/// A correlation identifier — a stable, document-scoped string that
+/// ties every IR object and every downstream artifact derived from
+/// it back to a single source-span anchor.
+///
+/// Per the [ADJ25 spec](../../../specs/ADJ25-hierarchical-decomposition.md)
+/// §"Correlation vector", granularity is **per source span**, not
+/// per byte: every node (and every downstream artifact) carries one
+/// `CorrelationId`. Byte-level provenance is derivable from the
+/// `(correlation_id, span)` pair by recursion through `Contains`
+/// edges.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct CorrelationId(pub String);
+
+impl CorrelationId {
+    /// Construct a [`CorrelationId`] from any string-convertible
+    /// value. The framework treats the inner string as opaque; the
+    /// orchestrator that assigns IDs picks whatever scheme it likes
+    /// (deterministic from `NodeId`, UUIDv4, hash of the span,
+    /// etc.).
+    pub fn new(s: impl Into<String>) -> Self {
+        Self(s.into())
+    }
+
+    /// True iff the identifier is empty. Empty correlation IDs are
+    /// rejected by [`check_correlation_completeness`] — every node
+    /// MUST carry a non-empty ID.
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
+    /// Borrow the inner string.
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl std::fmt::Display for CorrelationId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+/// The metadata key under which a [`CorrelationId`] is stored on
+/// `IRNode::metadata` and `IREdge::metadata`. Reserved by the
+/// framework under the `adj.*` namespace per the IRNode metadata
+/// contract.
+pub const CORRELATION_ID_METADATA_KEY: &str = "adj.correlation_id";
+
+/// Read a node's `CorrelationId` from its metadata. Returns `None`
+/// when the metadata key is absent (the orchestrator has not yet
+/// assigned an ID, or this is an un-correlated legacy node).
+pub fn node_correlation_id(node: &IRNode) -> Option<CorrelationId> {
+    node.metadata
+        .get(CORRELATION_ID_METADATA_KEY)
+        .map(|s| CorrelationId(s.clone()))
+}
+
+/// Read an edge's `CorrelationId`. Same metadata contract as
+/// [`node_correlation_id`].
+pub fn edge_correlation_id(edge: &IREdge) -> Option<CorrelationId> {
+    edge.metadata
+        .get(CORRELATION_ID_METADATA_KEY)
+        .map(|s| CorrelationId(s.clone()))
+}
+
+/// Write a `CorrelationId` onto a node's metadata. Idempotent —
+/// overwrites any prior value at the same key.
+pub fn set_node_correlation_id(node: &mut IRNode, id: CorrelationId) {
+    node.metadata
+        .insert(CORRELATION_ID_METADATA_KEY.to_string(), id.0);
+}
+
+/// Write a `CorrelationId` onto an edge's metadata.
+pub fn set_edge_correlation_id(edge: &mut IREdge, id: CorrelationId) {
+    edge.metadata
+        .insert(CORRELATION_ID_METADATA_KEY.to_string(), id.0);
+}
+
+/// Errors returned by [`check_correlation_completeness`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CorrelationCompletenessError {
+    /// A node lacks the `adj.correlation_id` metadata entry. PR-5
+    /// makes correlation a hard requirement on the hierarchical
+    /// orchestrator's output; pre-hierarchical IRs are exempt and
+    /// callers can choose whether to invoke this check.
+    NodeMissingCorrelation { node_id: NodeId },
+    /// A node has the metadata entry but its value is empty.
+    NodeEmptyCorrelation { node_id: NodeId },
+}
+
+impl std::fmt::Display for CorrelationCompletenessError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NodeMissingCorrelation { node_id } => {
+                write!(
+                    f,
+                    "node {} is missing the `{}` metadata key",
+                    node_id.0, CORRELATION_ID_METADATA_KEY
+                )
+            }
+            Self::NodeEmptyCorrelation { node_id } => write!(
+                f,
+                "node {} has an empty correlation id at `{}`",
+                node_id.0, CORRELATION_ID_METADATA_KEY
+            ),
+        }
+    }
+}
+
+impl std::error::Error for CorrelationCompletenessError {}
+
+/// Verify that every node in the IR carries a non-empty
+/// `CorrelationId`. Returns the first violation encountered (or
+/// `Ok(())` when the IR is fully correlated).
+///
+/// Per the ADJ25 spec, this check is intended for the output of the
+/// hierarchical orchestrator (every node produced by
+/// `decompose_hierarchical` MUST be correlated). Callers handling
+/// legacy / pre-hierarchical IR can skip the check.
+pub fn check_correlation_completeness(
+    doc: &IRDocument,
+) -> Result<(), CorrelationCompletenessError> {
+    for node in &doc.nodes {
+        match node_correlation_id(node) {
+            None => {
+                return Err(CorrelationCompletenessError::NodeMissingCorrelation {
+                    node_id: node.id.clone(),
+                });
+            }
+            Some(id) if id.is_empty() => {
+                return Err(CorrelationCompletenessError::NodeEmptyCorrelation {
+                    node_id: node.id.clone(),
+                });
+            }
+            Some(_) => {}
+        }
+    }
+    Ok(())
+}
+
+// ===========================================================================
 // IRDocument
 // ===========================================================================
 
@@ -2334,5 +2495,79 @@ mod tests {
             };
             assert_eq!(validate(&doc), Ok(()), "kind {:?} failed validation", kind);
         }
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ25 PR-5 — CorrelationId helpers + completeness check
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn adj25_correlation_id_round_trip_through_metadata() {
+        let did = DocumentId::new("d");
+        let mut n = typed_node("X", NodeKind::Fact, &did, 0, 5);
+        // No id before set.
+        assert!(node_correlation_id(&n).is_none());
+        let id = CorrelationId::new("corr.test-1");
+        set_node_correlation_id(&mut n, id.clone());
+        assert_eq!(node_correlation_id(&n), Some(id));
+        // Idempotent overwrite.
+        set_node_correlation_id(&mut n, CorrelationId::new("corr.test-2"));
+        assert_eq!(
+            node_correlation_id(&n).map(|c| c.0),
+            Some("corr.test-2".to_string())
+        );
+    }
+
+    #[test]
+    fn adj25_correlation_completeness_passes_when_every_node_has_an_id() {
+        let did = DocumentId::new("d");
+        let mut n = typed_node("F1", NodeKind::Fact, &did, 0, 5);
+        set_node_correlation_id(&mut n, CorrelationId::new("corr.F1"));
+        let doc = IRDocument {
+            document_id: did,
+            nodes: vec![n],
+            edges: vec![],
+        };
+        assert_eq!(check_correlation_completeness(&doc), Ok(()));
+    }
+
+    #[test]
+    fn adj25_correlation_completeness_rejects_missing_id() {
+        let did = DocumentId::new("d");
+        let n = typed_node("F1", NodeKind::Fact, &did, 0, 5);
+        let doc = IRDocument {
+            document_id: did,
+            nodes: vec![n],
+            edges: vec![],
+        };
+        match check_correlation_completeness(&doc) {
+            Err(CorrelationCompletenessError::NodeMissingCorrelation { node_id }) => {
+                assert_eq!(node_id.0, "F1");
+            }
+            other => panic!("expected NodeMissingCorrelation; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn adj25_correlation_completeness_rejects_empty_id() {
+        let did = DocumentId::new("d");
+        let mut n = typed_node("F1", NodeKind::Fact, &did, 0, 5);
+        set_node_correlation_id(&mut n, CorrelationId::new(""));
+        let doc = IRDocument {
+            document_id: did,
+            nodes: vec![n],
+            edges: vec![],
+        };
+        match check_correlation_completeness(&doc) {
+            Err(CorrelationCompletenessError::NodeEmptyCorrelation { node_id }) => {
+                assert_eq!(node_id.0, "F1");
+            }
+            other => panic!("expected NodeEmptyCorrelation; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn adj25_correlation_metadata_key_is_stable() {
+        assert_eq!(CORRELATION_ID_METADATA_KEY, "adj.correlation_id");
     }
 }

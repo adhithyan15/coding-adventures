@@ -1,6 +1,6 @@
 [package]
 name = "adjudication-ir"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "The typed intermediate representation for rule-based adjudication (ADJ01 v3): multi-directed acyclic graph IR with typed edges, replacing v2's hierarchical decomposition tree. Adds IREdge alongside IRNode with a closed eleven-group edge-relation taxonomy (structural, identity, rule-modification, application, provenance, tabular, temporal, cross-source, discourse, refinement, and a DomainSpecific escape hatch), drops TextRun + part_of + lowered_from, adds Section and Entity node kinds, and switches coverage to a flat tile of (nodes ∪ edges).source_spans with a uniform DAG acyclicity check."
 

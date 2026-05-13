@@ -1,6 +1,6 @@
 [package]
 name = "adjudication-connector"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Lowers adjudication IR (ADJ01) to logic-engine clauses per ADJ11; runs end-to-end adjudications. v0.2 adds ADJ16 step 1: per-clause provenance attribution (source_rulebook_id + trust_tier) via lower_to_kb_with_provenance and LoweredKb."
 
