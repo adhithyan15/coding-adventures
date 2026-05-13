@@ -232,20 +232,119 @@ Each crate adds tests local to its change:
 
 ## Validation
 
-After ADJ24 lands, re-run the ADJ23 bench with the demo's
-clarification loop enabled (`ADJ_DEMO_MAX_CLARIFY_ATTEMPTS=3` —
-the existing knob). The expected delta:
+> Bench run: 2026-05-13. ADJ24 wiring + `ADJ_DEMO_MAX_CLARIFY_ATTEMPTS=3`
+> against the same 8 declarations × 5 models matrix as
+> [ADJ23](ADJ23-decomposition-bench.md). Raw data:
+> [`code/specs/data/adj23-decomposition-bench-2026-05-13-with-adj24-retries.json`](data/adj23-decomposition-bench-2026-05-13-with-adj24-retries.json).
 
-- llama3.1:8b: recall 40% → ~80% (the count branch gets a
-  second pass with explicit feedback).
-- qwen2.5 sizes: smaller absolute improvement but recall should
-  climb non-trivially as the prompt targets one specific missing
-  literal rather than the whole v5 contract.
-- gemma4:latest: unaffected by ADJ22 retries — gemma4's failures
-  are gateway-level JSON truncation, not missing quantities.
-  Workstream B (separate PR) addresses gemma4.
+### Headline delta
 
-Results recorded as ADJ23 v2 bench data in a follow-up commit.
+|                          | ADJ23 baseline | ADJ24 retries |    Δ     |
+|--------------------------|---------------:|--------------:|---------:|
+| ADJ22 first-attempt pass |       4/40 (10%)|     8/40 (20%)|   +10 pp |
+| Typed-quantity recall    |      21/75 (28%)|    27/75 (36%)|    +8 pp |
+
+ADJ22 pass *doubles*; recall climbs +8 pp. The breakdown by
+model is sharply bimodal and tells a clean story.
+
+### Per-model delta
+
+| Model            | Baseline ADJ22 | With retries | Δ ADJ22 | Baseline recall | With retries recall | Δ recall |
+|------------------|---------------:|-------------:|--------:|----------------:|--------------------:|---------:|
+| gemma4:latest    |       4/8 (50%)|    **7/8 (88%)**| **+38 pp** |   9/15 (60%) |        **14/15 (93%)**|**+33 pp** |
+| llama3.1:8b      |        0/8 (0%) |    1/8 (12%)|  +12 pp |        6/15 (40%) |        7/15 (47%) |   +7 pp |
+| qwen2.5:3b       |        0/8 (0%) |     0/8 (0%)|    0 pp |        2/15 (13%) |        2/15 (13%) |    0 pp |
+| qwen2.5:1.5b     |        0/8 (0%) |     0/8 (0%)|    0 pp |        2/15 (13%) |        2/15 (13%) |    0 pp |
+| qwen2.5:0.5b     |        0/8 (0%) |     0/8 (0%)|    0 pp |        2/15 (13%) |        2/15 (13%) |    0 pp |
+
+### Takeaways
+
+**1. The retry primitive disproportionately helps gemma4
+(+38 pp ADJ22, +33 pp recall).** ADJ23 reported gemma4 was
+*bimodal* — it either nailed the v5 contract perfectly or
+emitted unterminated JSON and silently fell back to a hand-built
+fixture. ADJ24's retry loop recovers 3 of the 4 gemma4 cells
+that originally JSON-truncated: the second-pass prompt is
+shorter / more focused than the v5 system prompt, so it
+clears whatever output-budget edge gemma4 was hitting. Two
+ADJ24 hand-built-fallback cells (`small-perfume` and
+`lighter-disposable`) still produced valid ADJ22-passing IR via
+retry — even when decompose's first call dies, the retry
+overrides the hand-built result.
+
+**2. llama3.1:8b's improvement is modest (+12 pp ADJ22, +7 pp
+recall) — well below the hypothesised 80%.** The pre-PR
+hypothesis was that a retry naming the missing count would
+flip llama3.1:8b from 0% to ~80% ADJ22. Empirically, llama3.1
+still skips the bag count even with explicit feedback like
+*"literal '1' at bytes 0..1 (covered by N1) → wrap as
+quantity(1, count)"*. The count is treated as schema
+decoration the model considers cosmetic; a measurement
+(`quantity(50, wh)`) it nails, a count it ignores.
+
+The one cell that did flip was `pocket-knife` (the original
+motivating regression) — llama3.1 emitted both
+`blade_length(pocket_knife, quantity(4, inches))` AND
+`carry_on(quantity(1, count))` on the retry, where the
+baseline only produced the former. So the wiring works; the
+model's prior toward "counts are not measurements" is just
+strong.
+
+**3. qwen2.5 sizes are unaffected.** This was expected (per
+ADJ12 / ADJ18 model-calibration findings) but worth recording:
+the smaller qwen sizes don't follow the structured-output rule
+better when given a second pass with explicit feedback.
+Targeted intervention (grammar-constrained decoding, fine-
+tuning, or just not asking them to do typed extraction) is
+workstream C territory.
+
+**4. The "1 carry-on bag" count is still the dominant residual
+failure.** Across the 32 cells that still fail ADJ22 after
+ADJ24 retries, **30/32 are missing the bag count literal "1"**.
+This very strongly motivates **workstream C — ADJ20 fact-sheet
+handling for declaration cardinality** — counts of items don't
+belong in the LLM-extraction loop at all; they should be a
+deterministic field on the declaration record. Clarification
+doesn't move this needle because the model has a learned prior
+against typing bag counts.
+
+### What this validates
+
+- The ADJ22 → ADJ06 wiring works end-to-end. The audit trail
+  records `pass_name: adj22_typed_quantity` checker results.
+  ADJ22 failures route through the new
+  `retry_decompose_on_typed_quantity_failure` primitive
+  alongside the existing ADJ02 / ADJ03 retries.
+- Bigger models (gemma4) benefit disproportionately from
+  pinpoint retries. Even on cells where decompose_text errors
+  outright (JSON truncation), the retry produces a clean IR.
+- The wiring is correctly *additive* — it never makes results
+  worse. No cell flipped from passing → failing across the
+  delta.
+
+### What this does NOT solve
+
+- **Counts of items.** llama3.1:8b's residual failures and
+  qwen2.5's zero improvement both trace back to the
+  "model doesn't want to wrap counts" prior. The retry primitive
+  is the right shape for *novel* failures (model forgot to add
+  a quantity) but doesn't override learned priors. ADJ20 is the
+  right home for counts.
+- **qwen2.5 family.** Structurally, the retry loop is
+  noise-equivalent for these models — they don't internalise
+  the v5 prompt well enough that pointing at one missing
+  literal makes them generalise to "wrap *all* literals". Future
+  work: grammar-constrained decoding for `quantity(...)`.
+
+### Wallclock cost
+
+The bench took ~12 minutes wallclock with retries enabled (vs
+~5 minutes for ADJ23 baseline). The extra LLM call per
+ADJ22-failing cell is the dominant cost: median wallclock for
+gemma4 doubled (from ~75s to ~200s). For interactive use this
+is acceptable — the retry budget is bounded by
+`max_clarification_attempts` and the cache covers repeated
+runs.
 
 ## See also
 
