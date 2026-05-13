@@ -253,7 +253,22 @@ pub fn lower_to_kb_with_provenance(
             | NodeKind::Exception
             | NodeKind::Discarded
             | NodeKind::Section
-            | NodeKind::Entity => {}
+            | NodeKind::Entity
+            // ADJ25 PR-1: hierarchical-decomposition kinds are
+            // source-structural. They do not produce engine clauses
+            // directly; their contents are reached by walking
+            // Contains edges to descendant Facts/Rules (which lower
+            // here) and via Mentions edges to Entities.
+            | NodeKind::Document
+            | NodeKind::Sentence
+            | NodeKind::Phrase
+            | NodeKind::Question
+            | NodeKind::Quantity
+            | NodeKind::Polarity
+            | NodeKind::Predicate
+            | NodeKind::Comparator
+            | NodeKind::TimeRef
+            | NodeKind::Modifier => {}
         }
     }
     for edge in &ir_doc.edges {
@@ -305,7 +320,22 @@ pub fn lower_to_kb(ir_doc: &IRDocument) -> Result<KnowledgeBase, LoweringError> 
             | NodeKind::Exception
             | NodeKind::Discarded
             | NodeKind::Section
-            | NodeKind::Entity => {
+            | NodeKind::Entity
+            // ADJ25 PR-1: hierarchical-decomposition kinds are
+            // source-structural. Same rationale as the
+            // provenance-tracked branch above — none produce
+            // independent engine clauses; their content reaches the
+            // engine via descendant Fact/Rule lowering.
+            | NodeKind::Document
+            | NodeKind::Sentence
+            | NodeKind::Phrase
+            | NodeKind::Question
+            | NodeKind::Quantity
+            | NodeKind::Polarity
+            | NodeKind::Predicate
+            | NodeKind::Comparator
+            | NodeKind::TimeRef
+            | NodeKind::Modifier => {
                 // Query nodes are returned by extract_queries;
                 // Uncertainty / Exception / Discarded participate in
                 // clarification, audit, and rule priority. Section is
