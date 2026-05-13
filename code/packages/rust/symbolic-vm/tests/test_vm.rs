@@ -315,6 +315,83 @@ fn symbolic_factor_extracts_multivariate_difference_of_squares() {
     );
 }
 
+#[test]
+fn symbolic_factor_extracts_multivariate_difference_of_cubes() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(SUB),
+            vec![
+                apply(sym(POW), vec![sym("x"), int(3)]),
+                apply(sym(POW), vec![sym("y"), int(3)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(sym(MUL), vec![sym("x"), sym("y")]),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_sum_of_cubes() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(sym(POW), vec![sym("x"), int(3)]),
+                apply(sym(POW), vec![sym("y"), int(3)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(
+                                    sym(MUL),
+                                    vec![int(-1), apply(sym(MUL), vec![sym("x"), sym("y")]),],
+                                ),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Symbol resolution
 // ---------------------------------------------------------------------------
