@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added a small multivariate factoring foothold to `Factor`: additive
+  expressions with a common symbolic factor, such as `x^2*y - y`, now extract
+  that common factor and then reuse the existing univariate integer factorizer
+  on the residual.
+
 ## 0.53.0 — 2026-05-05
 
 **Phase 33 — Trig special values at rational multiples of π.**

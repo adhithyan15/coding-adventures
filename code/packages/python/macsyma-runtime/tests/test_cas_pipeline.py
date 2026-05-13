@@ -717,6 +717,15 @@ def test_pipeline_factor_irreducible_x2_plus_1_unchanged() -> None:
     assert result.head.name == "Factor"
 
 
+def test_pipeline_factor_common_multivariate_factor() -> None:
+    """factor(x^2*y - y) extracts the common y factor."""
+    result = _eval("factor(x^2*y - y)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert "Factor" not in str(result)
+    assert "y" in str(result)
+
+
 # ---------------------------------------------------------------------------
 # Section S — Calculus: diff and integrate (already wired, no pipeline tests)
 # ---------------------------------------------------------------------------

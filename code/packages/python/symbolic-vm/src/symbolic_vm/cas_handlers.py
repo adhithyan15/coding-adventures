@@ -965,6 +965,133 @@ def _factor_result_to_ir(
     return acc
 
 
+def _flatten_factor_terms(node: IRNode) -> list[IRNode]:
+    if isinstance(node, IRApply) and node.head == MUL:
+        terms: list[IRNode] = []
+        for arg in node.args:
+            terms.extend(_flatten_factor_terms(arg))
+        return terms
+    return [node]
+
+
+def _flatten_add_terms(node: IRNode) -> list[IRNode]:
+    if isinstance(node, IRApply) and node.head == ADD:
+        terms: list[IRNode] = []
+        for arg in node.args:
+            terms.extend(_flatten_add_terms(arg))
+        return terms
+    if isinstance(node, IRApply) and node.head == SUB and len(node.args) == 2:
+        return [*_flatten_add_terms(node.args[0]), _negate_ir(node.args[1])]
+    return [node]
+
+
+def _negate_ir(node: IRNode) -> IRNode:
+    if isinstance(node, IRInteger):
+        return IRInteger(-node.value)
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        return node.args[0]
+    return IRApply(MUL, (IRInteger(-1), node))
+
+
+def _pow_node(base: IRNode, exponent: int) -> IRNode:
+    if exponent == 1:
+        return base
+    return IRApply(POW, (base, IRInteger(exponent)))
+
+
+def _mul_nodes(terms: list[IRNode]) -> IRNode:
+    if not terms:
+        return IRInteger(1)
+    acc = terms[0]
+    for term in terms[1:]:
+        acc = IRApply(MUL, (acc, term))
+    return acc
+
+
+def _add_nodes(terms: list[IRNode]) -> IRNode:
+    if not terms:
+        return IRInteger(0)
+    acc = terms[0]
+    for term in terms[1:]:
+        acc = IRApply(ADD, (acc, term))
+    return acc
+
+
+def _split_common_factor_term(node: IRNode) -> dict[IRNode, int] | None:
+    powers: dict[IRNode, int] = {}
+    for factor in _flatten_factor_terms(node):
+        if isinstance(factor, IRInteger):
+            continue
+        if isinstance(factor, IRApply) and factor.head == POW and len(factor.args) == 2:
+            base, exponent = factor.args
+            if isinstance(exponent, IRInteger) and exponent.value > 0:
+                powers[base] = powers.get(base, 0) + exponent.value
+                continue
+        if isinstance(factor, IRSymbol) and factor.name in _CONSTANT_NAMES:
+            continue
+        powers[factor] = powers.get(factor, 0) + 1
+    return powers
+
+
+def _remove_common_factor(node: IRNode, common: dict[IRNode, int]) -> IRNode:
+    remaining = dict(common)
+    rebuilt: list[IRNode] = []
+    for factor in _flatten_factor_terms(node):
+        if isinstance(factor, IRApply) and factor.head == POW and len(factor.args) == 2:
+            base, exponent = factor.args
+            if isinstance(exponent, IRInteger) and exponent.value > 0:
+                take = min(exponent.value, remaining.get(base, 0))
+                if take:
+                    remaining[base] -= take
+                    leftover_exp = exponent.value - take
+                    if leftover_exp:
+                        rebuilt.append(_pow_node(base, leftover_exp))
+                    continue
+        take = remaining.get(factor, 0)
+        if take:
+            remaining[factor] = take - 1
+        else:
+            rebuilt.append(factor)
+    return _mul_nodes(rebuilt)
+
+
+def _extract_common_symbolic_factor(inner: IRNode) -> IRNode | None:
+    """Pull a common symbolic factor from an additive expression.
+
+    This is a deliberately small multivariate factoring foothold. It handles
+    cases like ``x^2*y - y`` by extracting ``y`` and leaving ``x^2 - 1`` for
+    the existing univariate integer factorizer.
+    """
+    terms = _flatten_add_terms(inner)
+    if len(terms) < 2:
+        return None
+
+    per_term = [_split_common_factor_term(term) for term in terms]
+    if any(powers is None for powers in per_term):
+        return None
+    common = dict(per_term[0] or {})
+    for powers in per_term[1:]:
+        assert powers is not None
+        for base in list(common):
+            shared = min(common[base], powers.get(base, 0))
+            if shared:
+                common[base] = shared
+            else:
+                del common[base]
+
+    if not common:
+        return None
+
+    common_terms = [
+        _pow_node(base, exponent)
+        for base, exponent in sorted(common.items(), key=lambda item: str(item[0]))
+    ]
+    common_ir = _mul_nodes(common_terms)
+    residual_terms = [_remove_common_factor(term, common) for term in terms]
+    residual = _add_nodes(residual_terms)
+    return IRApply(MUL, (common_ir, IRApply(IRSymbol("Factor"), (residual,))))
+
+
 def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
@@ -994,7 +1121,10 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     # Try to lift to rational function.
     rational = to_rational(inner, x)
     if rational is None:
-        return expr  # transcendental or multi-variable
+        common_factored = _extract_common_symbolic_factor(inner)
+        if common_factored is not None:
+            return _vm.eval(common_factored)
+        return expr  # transcendental or unsupported multi-variable
     num_frac, den_frac = rational
 
     # We only factor pure polynomials, not rational functions.
@@ -1008,6 +1138,11 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
         return expr
 
     content, factors = factor_integer_polynomial(int_coeffs)
+
+    # Linear polynomials are already factored by definition; return them in
+    # normalized linear form rather than wrapping bare ``x`` as unevaluated.
+    if len(int_coeffs) <= 2:
+        return _factor_result_to_ir(content, factors, x)
 
     # If factoring was a no-op — content 1, single factor, same
     # coefficients as the input — the polynomial is irreducible over Z.
