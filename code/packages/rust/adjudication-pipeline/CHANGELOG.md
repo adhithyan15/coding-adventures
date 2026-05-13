@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-05-12
+
+### Added
+
+ADJ16 step 4: agreement-weighted rulebook merging.
+
+- `compute_agreement_weighted_rulebook(rulebooks, output_document_id)` —
+  takes a slice of `&IRDocument` (one per source rulebook) and
+  returns a single merged `IRDocument` where each rule's weight
+  reflects multi-model agreement. The output is a probabilistic
+  rulebook IR suitable to feed back into [`run_with_rulebooks`].
+
+### Algorithm
+
+1. For each input rulebook, walk every Rule node.
+2. For `definitional(head, [body...])` rules, group by exact Term
+   equality of `(head, body)` across all rulebooks. The weight for
+   each group is `count / total_rulebooks`. The output emits one
+   `probabilistic(weight, head, [body...])` rule per group.
+3. `probabilistic(p, ...)` rules pass through unchanged (their
+   existing probability is preserved).
+4. `constraint(...)` and `default(...)` rules pass through
+   unchanged. The agreement-weight idiom is naturally expressed
+   over `definitional` rules; extending to `default` is a future
+   iteration.
+
+### Edge cases
+
+- Empty `rulebooks` slice returns an empty IRDocument.
+- One rulebook: every rule gets weight 1.0 (1/1).
+- Within-rulebook duplicates are deduplicated: a single rulebook
+  listing the same rule twice contributes at most 1 to the count.
+
+### Rationale (ADJ16 step 4)
+
+[ADJ17](../../../specs/ADJ17-adversarial-rulebook-empirical-results.md)
+showed that adversarial multi-model elicitation produces rulebooks
+where rules vary in quality. Some rules appear in every model's
+output (high confidence); others are model-specific (low
+confidence). Step 4 quantifies that signal: feeding the merged
+rulebook into the engine via `SearchMode::EnumerateAll` produces
+weighted-model-counting probabilities that propagate rule-level
+uncertainty into the verdict's marginal probability.
+
+### Tests
+
+8 new tests added (35 lib + 4 integration total, all passing):
+- empty rulebook slice returns empty doc
+- single rulebook assigns weight 1.0 (1/1)
+- two rulebooks in full agreement collapse to one rule with weight 1.0
+- partial overlap yields proportional weights (1.0 and 0.5)
+- three rulebooks with no overlap yields three rules each at 1/3
+- within-rulebook duplicates don't inflate the count
+- non-definitional rules pass through unchanged
+- end-to-end smoke: merged rulebook feeds into `run_with_rulebooks`
+  cleanly and produces the expected verdict + provenance
+
+### Compatibility
+
+- All existing API is unchanged.
+- The new function is purely additive.
+
 ## [0.6.0] - 2026-05-12
 
 ### Added
