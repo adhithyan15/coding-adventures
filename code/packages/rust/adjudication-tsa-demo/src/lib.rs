@@ -69,8 +69,9 @@ use llm_gateway::{
 };
 use adjudication_clarification::{
     retry_decompose_on_coverage_failure, retry_decompose_on_polarity_failure,
-    ClarificationError, CoverageClarificationOutcome, CoverageClarificationRequest,
-    PolarityClarificationRequest,
+    retry_decompose_on_typed_quantity_failure, ClarificationError,
+    CoverageClarificationOutcome, CoverageClarificationRequest, MissingLiteralHint,
+    PolarityClarificationRequest, TypedQuantityClarificationRequest,
 };
 use llm_cache::{CacheStats, CacheStatsHandle, CachingClient};
 use llm_primitives::{
@@ -707,21 +708,33 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
     if matches!(cfg.ir_mode, IrMode::LlmExtracted) && cfg.max_clarification_attempts > 0 {
         let mut clarification_turns: Vec<adjudication_audit_trail::DialogueTurn> = Vec::new();
         for attempt in 1..=cfg.max_clarification_attempts {
+            // Audit-trail index layout after ADJ24 wiring (per
+            // `adjudication_pipeline::run_with_gateway`):
+            //   [0] = ADJ02 coverage
+            //   [1] = ADJ22 typed-quantity
+            //   [2] = ADJ03 polarity/modality
+            //   [3] = ADJ04 round-trip       (advisory, not in retry loop)
+            //   [4] = ADJ05 adversarial      (advisory, not in retry loop)
             let adj02_passed = matches!(
                 output.audit_trail.checker_results[0].outcome,
                 PassOutcome::Passed
             );
-            let adj03_passed = matches!(
+            let adj22_passed = matches!(
                 output.audit_trail.checker_results[1].outcome,
                 PassOutcome::Passed
             );
-            if adj02_passed && adj03_passed {
-                // Both gating checks pass — no more clarification
-                // needed at this layer. ADJ04 and ADJ05 are advisory
-                // and don't trigger ADJ06 in v0.4 of the demo.
+            let adj03_passed = matches!(
+                output.audit_trail.checker_results[2].outcome,
+                PassOutcome::Passed
+            );
+            if adj02_passed && adj22_passed && adj03_passed {
+                // All three gating checks pass — no more
+                // clarification needed at this layer. ADJ04 and
+                // ADJ05 are advisory and don't trigger ADJ06 in
+                // v0.5 of the demo.
                 break;
             }
-            // Build the previous-IR JSON once (used by either retry).
+            // Build the previous-IR JSON once (used by every retry).
             let previous_ir_json = previous_ir_for_clarification(&ir_source_telemetry);
             let original = DecomposeTextRequest {
                 document_id: "tsa-demo-001".into(),
@@ -730,9 +743,10 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
                 language_hint: Some("en".into()),
             };
 
-            // Priority: fix coverage first (downstream checks are
-            // meaningless on an IR that doesn't even tile the source),
-            // then polarity.
+            // Priority: ADJ02 coverage first (structural — without
+            // it spans are unreliable), ADJ22 typed-quantity second
+            // (typing — enables engine arithmetic), ADJ03 polarity
+            // third (semantic refinement on a structurally-valid IR).
             let retry_result: Result<CoverageClarificationOutcome, ClarificationError> =
                 if !adj02_passed {
                     let v = format_first_adj02_violation(
@@ -748,14 +762,41 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
                         1,
                         make_now(),
                     )
+                } else if !adj22_passed {
+                    // ADJ22 failed; build per-missing-literal hints
+                    // from the violation details so the prompt names
+                    // each dropped literal individually.
+                    let hints = collect_typed_quantity_hints(
+                        &output.audit_trail.checker_results[1],
+                    );
+                    let v = format!(
+                        "{} literal(s) without quantity compounds: {}",
+                        hints.len(),
+                        hints
+                            .iter()
+                            .map(|h| format!("\"{}\"", h.literal))
+                            .collect::<Vec<_>>()
+                            .join(", "),
+                    );
+                    retry_decompose_on_typed_quantity_failure(
+                        &TypedQuantityClarificationRequest {
+                            original: original.clone(),
+                            violation_description: v,
+                            previous_ir: previous_ir_json.clone(),
+                            missing_literals: hints,
+                        },
+                        &gateway,
+                        1,
+                        make_now(),
+                    )
                 } else {
                     // ADJ03 failed; build a polarity hint from the
                     // violation detail when we can.
                     let v = format_first_adj03_violation(
-                        &output.audit_trail.checker_results[1],
+                        &output.audit_trail.checker_results[2],
                     );
                     let hint = build_polarity_hint(
-                        &output.audit_trail.checker_results[1],
+                        &output.audit_trail.checker_results[2],
                         &cfg.source_text,
                     );
                     retry_decompose_on_polarity_failure(
@@ -1483,6 +1524,50 @@ fn format_first_adj02_violation(adj02: &adjudication_audit_trail::CheckerResult)
     }
 }
 
+/// Walk the ADJ22 checker result and build one
+/// [`MissingLiteralHint`] per `Violation` so the typed-quantity
+/// retry primitive (ADJ06-for-ADJ22) can name each dropped
+/// literal in its correction prompt. The pipeline's
+/// `typed_quantity_violation_to_audit` records each missing
+/// literal as a `detail: {"literal": ..., "location": [start,end],
+/// "nearby_nodes": [...]}` JSON object; this just shovels that
+/// back into the typed `MissingLiteralHint` shape ADJ06 consumes.
+///
+/// Returns an empty Vec if the checker result has no violations —
+/// that means the retry loop fell through to ADJ22 even though
+/// nothing was wrong, which would be a pipeline bug; the empty
+/// list is still rendered as a "no missing literals" prompt by
+/// the clarification builder rather than crashing.
+fn collect_typed_quantity_hints(
+    adj22: &adjudication_audit_trail::CheckerResult,
+) -> Vec<MissingLiteralHint> {
+    adj22
+        .violations
+        .iter()
+        .filter_map(|v| {
+            let literal = v.detail.get("literal")?.as_str()?.to_string();
+            let location = v.detail.get("location")?;
+            let lo = location.get(0)?.as_u64()? as usize;
+            let hi = location.get(1)?.as_u64()? as usize;
+            let nearby_node_ids = v
+                .detail
+                .get("nearby_nodes")
+                .and_then(|x| x.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|n| n.as_str().map(str::to_string))
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default();
+            Some(MissingLiteralHint {
+                literal,
+                source_byte_range: (lo, hi),
+                nearby_node_ids,
+            })
+        })
+        .collect()
+}
+
 /// Best-effort retrieval of the previous LLM IR JSON for the
 /// correction prompt. When `IrSourceTelemetry::LlmExtracted` is in
 /// hand we have the raw JSON verbatim; otherwise we fall back to an
@@ -1740,15 +1825,22 @@ pub fn tsa_rulebook_strict_ir() -> IRDocument {
 /// Encodes one definitional rule:
 ///
 /// ```text
-/// compliant(passenger_a) :- carry_on(1).
+/// compliant(passenger_a) :- carry_on(quantity(1, count)).
 /// ```
+///
+/// The body fact uses the typed-quantity shape (ADJ21/ADJ22/ADJ24)
+/// so it can unify with the source IR's `carry_on(quantity(1,
+/// count))` fact under the engine's term unification.
 pub fn tsa_rulebook_lenient_ir() -> IRDocument {
     let doc_id = DocumentId::new("rb-tsa-lenient-v1");
     let rule_term = compound(
         "definitional",
         vec![
             compound("compliant", vec![atom("passenger_a")]),
-            logic_core::logic_list(vec![compound("carry_on", vec![atom("1")])]),
+            logic_core::logic_list(vec![compound(
+                "carry_on",
+                vec![compound("quantity", vec![atom("1"), atom("count")])],
+            )]),
         ],
     );
     IRDocument {
@@ -1878,10 +1970,18 @@ pub fn tsa_ir_document(source_text: &str) -> IRDocument {
     let mut nodes = Vec::new();
 
     if source_text == "1 carry-on bag, matches." {
+        // F1 uses the typed-quantity shape per ADJ21/ADJ22/ADJ24:
+        // the bag count is wrapped in `quantity(1, count)` rather
+        // than left as a bare atom. This matches the v5
+        // decompose_text contract and lets the pipeline's ADJ22
+        // gate accept this hand-built fixture.
         nodes.push(IRNode {
             id: NodeId::new("F1"),
             kind: NodeKind::Fact,
-            term: compound("carry_on", vec![atom("1")]),
+            term: compound(
+                "carry_on",
+                vec![compound("quantity", vec![atom("1"), atom("count")])],
+            ),
             polarity: Polarity::Affirmed,
             modality: Modality::Present,
             source_spans: vec![Span::new(doc_id.clone(), 0, 16)],

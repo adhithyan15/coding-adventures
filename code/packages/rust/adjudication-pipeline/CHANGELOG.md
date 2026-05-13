@@ -2,6 +2,59 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-05-13 — ADJ24 typed-quantity wiring
+
+### Added
+
+ADJ22 is now a first-class pipeline pass. Per
+[ADJ24](../../../specs/ADJ24-typed-quantity-pipeline-wiring.md):
+
+- Both `run_with_gateway` and `run_with_rulebooks` now call
+  `adjudication_coverage::check_typed_quantity_coverage` between
+  ADJ02 (coverage) and ADJ03 (polarity/modality). The result is
+  recorded as a `CheckerResult` with
+  `pass_name: PassName::Adj22TypedQuantity` and
+  `pass_version: "v0.1"`.
+- ADJ22 joins the engine-gating set: the engine runs only when
+  ADJ02 passes AND ADJ22 passes AND ADJ03 passes. ADJ04 and ADJ05
+  are also skipped if ADJ22 fails (no point paying for the LLM
+  calls when the IR's missing typed quantities the downstream
+  engine needs).
+- New helper `typed_quantity_to_checker_result` maps the
+  `TypedQuantityResult` (Pass / Fail) into the audit-trail shape;
+  each `TypedQuantityViolation::MissingQuantity` becomes one
+  `Violation` with `kind: MissingQuantity` and a `detail` JSON of
+  `{ literal, location: [start,end], nearby_nodes: [ids…] }` —
+  the exact shape ADJ06's typed-quantity retry consumes.
+
+### Why this ordering
+
+Per the ADJ24 spec rationale:
+
+- **ADJ02 first** — if the IR doesn't tile the source, ADJ22's
+  `nearby_nodes` computation (which uses overlapping source spans)
+  reports misleading information. Fix coverage first.
+- **ADJ22 before ADJ03** — typed quantities are a structural
+  property of the IR shape, the same way coverage is. ADJ03's
+  polarity / modality concerns are layered on top of a
+  structurally-correct IR.
+
+### Compatibility
+
+- The pre-existing API surface (`run`, `run_with_gateway`,
+  `run_with_rulebooks`) is unchanged. Existing callers continue
+  to work; the only behaviour change is one additional
+  `checker_result` in the trail and the gate-tightening on the
+  engine path.
+- `adjudication-coverage` dep is unchanged at `path = "../..."`
+  (v0.3.0 ships the `check_typed_quantity_coverage` entry).
+
+### Tests
+
+Existing pipeline tests stay green. Behaviour is exercised
+end-to-end through `adjudication-tsa-demo` (v0.x → next, which
+adds an ADJ22 branch to its clarification loop).
+
 ## [0.7.0] - 2026-05-12
 
 ### Added
