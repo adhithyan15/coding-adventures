@@ -110,7 +110,7 @@ pub mod validate;
 // ── Public re-exports ─────────────────────────────────────────────────────────
 
 pub use validate::validate_for_jvm;
-pub use lower::{IIRJvmConfig, IIRJvmError, lower_iir_to_jvm};
+pub use lower::{IIRJvmConfig, IIRJvmError, lower_iir_to_jvm, serialize_jvm_class_file};
 pub use codegen::IIRJvmCodeGenerator;
 
 // Re-export JvmClassFile so callers do not need a separate jvm-class-file
