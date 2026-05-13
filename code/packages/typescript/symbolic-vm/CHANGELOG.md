@@ -9,6 +9,8 @@
   like `x^2*y - y`.
 - Added a bivariate perfect-square factoring foothold so `Factor` recognises
   expressions like `x^2 + 2*x*y + y^2` as `(x+y)^2`.
+- Added a bivariate difference-of-squares factoring foothold so `Factor`
+  recognises expressions like `x^2 - y^2` as `(x-y)*(x+y)`.
 - Added a symbolic-backend-only `D` handler for pure IR differentiation,
   including arithmetic, power, elementary, hyperbolic, and inverse hyperbolic
   chain rules.
