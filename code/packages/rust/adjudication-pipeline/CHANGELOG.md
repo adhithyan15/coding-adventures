@@ -2,6 +2,121 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-05-12
+
+### Added
+
+ADJ16 step 3: `DisputedAnswer` detection.
+
+- `DisputedAnswer { query, candidates, resolution_required }` — new
+  public type. Captures a query whose engine proof DAG contains
+  multiple proofs that come from different rulebooks AND produce
+  different variable bindings.
+- `DisputeCandidate { bindings, via_facts, via_rules, source_rulebooks }` —
+  one entry per distinct (binding, rulebook-attribution) pair in a
+  disputed answer's proof DAG. `source_rulebooks` is sorted
+  lexicographically for stable display.
+- `ResolutionRequirement::HumanReview` — the default emitted by
+  `detect_disputes` in v0.6. A future variant
+  `TrustTierDominates { winner_rulebook_id }` is sketched in the
+  spec for deployments where a higher-trust rulebook should win
+  automatically; not emitted yet.
+- `detect_disputes(answers, provenance) -> Vec<DisputedAnswer>` —
+  the dispute-detection function. Walks every `EnumerateAllResult`
+  in `answers`, attributes each proof's `via_facts` / `via_rules`
+  to source rulebooks via the `ClauseProvenanceTable`, and surfaces
+  a dispute whenever distinct rulebook attributions produce
+  distinct bindings. Returns an empty vec when no dispute is
+  detected.
+- `PipelineOutput.disputed_answers: Vec<DisputedAnswer>` — new
+  public field. Empty for legacy entry points (run,
+  run_with_gateway), populated by `run_with_rulebooks` based on
+  `detect_disputes`'s output.
+
+### Changed
+
+- `run_with_rulebooks` now uses `SearchMode::EnumerateAll` when the
+  `rulebooks` slice is non-empty (was `AutoDetect`). Rationale:
+  dispute detection requires every successful proof to be returned
+  — `FindFirst` would stop at the first success and hide
+  disagreements between rulebooks. The audit trail's `search_mode`
+  reflects what actually ran. With no rulebooks attached the search
+  mode is still `AutoDetect`.
+
+### Dispute semantics
+
+A dispute requires a **pair of proofs** `(p_i, p_j)` satisfying:
+
+1. `p_i.source_rulebooks != p_j.source_rulebooks` — different
+   rulebooks contributed to the two proofs, AND
+2. `p_i.bindings != p_j.bindings` — those rulebooks produced
+   different bindings for the query variables.
+
+The joint per-pair check (rather than two global existence
+checks) avoids a subtle false-positive where one rulebook's
+within-rulebook ambiguity gets paired with an unrelated second
+rulebook's *corroborating* proof. The standard formulation is "is
+there a pair of proofs that disagree across rulebook boundaries",
+and that's exactly what the implementation checks.
+
+Same bindings from different rulebooks = **corroboration**, not a
+dispute. Same rulebook with different bindings (alone) =
+**within-rulebook ambiguity**, also not a dispute. Tests in
+`no_dispute_when_two_rulebooks_corroborate_with_same_bindings` and
+`no_dispute_from_corroborating_pair_even_with_within_rulebook_ambiguity`
+document the edge cases.
+
+### Tests
+
+6 new tests added (27 lib + 4 integration total, all passing):
+- `no_dispute_when_single_proof_returned` — single proof = no
+  ambiguity to dispute
+- `no_dispute_when_two_rulebooks_corroborate_with_same_bindings` —
+  same bindings across rulebooks = corroboration
+- `dispute_detected_when_rulebooks_produce_different_bindings` —
+  canonical conflict case (strict vs lenient classification)
+- `no_dispute_from_corroborating_pair_even_with_within_rulebook_ambiguity` —
+  joint per-pair check correctly flags only genuine
+  cross-rulebook disagreements
+- `detect_disputes_with_empty_attribution_returns_empty` — sanity
+- `run_with_rulebooks_uses_enumerate_all_when_rulebooks_attached` —
+  documents the search-mode change
+
+### Rationale (ADJ16 step 3)
+
+[ADJ16](../../../specs/ADJ16-engine-programmatic-adjudication.md)
+§"Open questions §2" names the data shape: when two rulebooks
+disagree, the engine should return BOTH proof paths attributed to
+their sources rather than silently picking one. v0.5 added the
+provenance plumbing; v0.6 adds the detector that surfaces the
+disagreement through `disputed_answers`. Downstream consumers
+(ADJ06 clarification dialogue, ADJ09 expert review, or a
+deployment-policy resolver) decide what to do with the dispute.
+
+### Compatibility
+
+- `run` and `run_with_gateway` signatures unchanged. Both still
+  return `PipelineOutput` with `disputed_answers: Vec::new()`.
+- `PipelineOutput` gained one new field
+  (`disputed_answers: Vec<DisputedAnswer>`). Soft-break for
+  pattern destructuring (no in-tree caller does that). All three
+  downstream demos build unchanged.
+- `run_with_rulebooks`'s search-mode change is observable in the
+  audit trail (`engine_artifacts.search_mode == EnumerateAll`
+  instead of `AutoDetect`). Callers that asserted `AutoDetect` in
+  the rulebook path need to update — the new mode is the correct
+  one for dispute-aware adjudication. The existing
+  `run_with_rulebooks_merges_external_rule_into_kb` test was
+  updated to reflect this.
+
+### Dependency change
+
+- `logic-core` moved from `[dev-dependencies]` to `[dependencies]`.
+  `DisputeCandidate.bindings: logic_core::Substitution` requires
+  the type at compile time of consumers. Logic-engine already
+  depends on logic-core, so no transitive dependency is added to
+  the workspace.
+
 ## [0.5.0] - 2026-05-12
 
 ### Added

@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-pipeline"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "Orchestrator for the adjudication framework. Composes ADJ02 + ADJ03 + ADJ04 + ADJ05 + engine into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. v0.4 wires the ADJ05 adversarial checker behind a family-disjoint Adversary client; the pipeline auto-skips if independence is violated. v0.5 adds ADJ16 step 2: run_with_rulebooks() accepts pre-lowered rulebooks with per-clause provenance, combines them into one KB via LoweredKb::extend, and exposes the per-FactId / per-RuleId attribution in PipelineOutput.clause_provenance."
+description = "Orchestrator for the adjudication framework. Composes ADJ02 + ADJ03 + ADJ04 + ADJ05 + engine into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. v0.4 wires the ADJ05 adversarial checker. v0.5 adds ADJ16 step 2: run_with_rulebooks() merges typed rulebooks into the engine KB with per-clause provenance. v0.6 adds ADJ16 step 3: DisputedAnswer detection — when multiple rulebooks produce conflicting bindings for the same query, the dispute is surfaced through PipelineOutput.disputed_answers for downstream resolution (ADJ09 review / ADJ06 dialogue)."
 
 [dependencies]
 adjudication-adversarial = { path = "../adjudication-adversarial" }
@@ -13,9 +13,9 @@ adjudication-ir = { path = "../adjudication-ir" }
 adjudication-polarity-modality = { path = "../adjudication-polarity-modality" }
 adjudication-round-trip = { path = "../adjudication-round-trip" }
 llm-primitives = { path = "../llm-primitives" }
+logic-core = { path = "../logic-core" }
 logic-engine = { path = "../logic-engine" }
 serde_json = "1"
 
 [dev-dependencies]
 llm-gateway = { path = "../llm-gateway" }
-logic-core = { path = "../logic-core" }

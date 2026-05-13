@@ -138,9 +138,62 @@ input document's IR — query nodes in rulebook IRs are ignored.
 
 The returned `PipelineOutput.clause_provenance` maps each
 `logic_engine::FactId` / `RuleId` back to its source rulebook and
-trust tier. Step 3 of ADJ16 will consume this to surface
-`DisputedAnswer { candidates: Vec<(verdict, proof, source)> }`
-when different rulebooks disagree.
+trust tier.
+
+## Dispute Detection (v0.6, ADJ16 step 3)
+
+When `run_with_rulebooks` runs with multiple rulebooks attached,
+the engine is invoked in `EnumerateAll` mode so every successful
+proof is returned. The pipeline then walks each query's proof DAG
+and surfaces disputes — queries where distinct rulebooks lead to
+distinct variable bindings.
+
+```rust
+let out = run_with_rulebooks(
+    input,
+    id,
+    now,
+    Some(&gateway),
+    &[
+        (strict_rulebook.ir,  RulebookProvenance::new("rb-strict",  RulebookTrustTier::Tentative)),
+        (lenient_rulebook.ir, RulebookProvenance::new("rb-lenient", RulebookTrustTier::Tentative)),
+    ],
+);
+
+for dispute in &out.disputed_answers {
+    println!(
+        "DISPUTE on query {:?}: {} candidates ({})",
+        dispute.query,
+        dispute.candidates.len(),
+        match &dispute.resolution_required {
+            ResolutionRequirement::HumanReview => "needs human review",
+            ResolutionRequirement::TrustTierDominates { winner_rulebook_id } =>
+                &format!("trust-tier dominance: {}", winner_rulebook_id),
+        }
+    );
+    for cand in &dispute.candidates {
+        println!(
+            "  bindings={:?} from rulebooks={:?}",
+            cand.bindings, cand.source_rulebooks
+        );
+    }
+}
+```
+
+A dispute requires **both** distinct rulebook attributions AND
+distinct bindings:
+
+- Same bindings from different rulebooks → **corroboration**, not a dispute.
+- Different bindings from the same rulebook → **within-rulebook ambiguity**, a rulebook-quality issue, not an inter-rulebook conflict.
+
+Empty `disputed_answers` is the common case — every adversarial
+benchmark we've run that converges on the same verdict produces
+zero disputes even though the proofs route through different
+rulebooks.
+
+The `detect_disputes(answers, provenance)` function is also public
+for callers who want to run dispute detection over a custom set of
+answers (e.g., replaying an audit trail).
 
 ## Why `adjudication_id` and `now` are caller-supplied
 
