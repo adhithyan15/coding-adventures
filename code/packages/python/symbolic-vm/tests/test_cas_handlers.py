@@ -218,6 +218,18 @@ def test_factor_common_multivariate_symbolic_factor() -> None:
     assert result != expr
 
 
+def test_factor_multivariate_perfect_square() -> None:
+    """Factor(x^2 + 2*x*y + y^2) recognises a bivariate square."""
+    vm, _ = make_vm()
+    x2 = IRApply(POW, (x, IRInteger(2)))
+    two_xy = IRApply(MUL, (IRInteger(2), IRApply(MUL, (x, y))))
+    y2 = IRApply(POW, (y, IRInteger(2)))
+    target = IRApply(ADD, (IRApply(ADD, (x2, two_xy)), y2))
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(POW, (IRApply(ADD, (x, y)), IRInteger(2)))
+
+
 def test_factor_linear() -> None:
     """Factor(x - 3) → x - 3 (already irreducible linear, content 1)."""
     vm, _ = make_vm()

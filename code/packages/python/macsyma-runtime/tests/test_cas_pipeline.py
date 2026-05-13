@@ -726,6 +726,18 @@ def test_pipeline_factor_common_multivariate_factor() -> None:
     assert "y" in str(result)
 
 
+def test_pipeline_factor_multivariate_perfect_square() -> None:
+    """factor(x^2 + 2*x*y + y^2) recognises (x+y)^2."""
+    result = _eval("factor(x^2 + 2*x*y + y^2)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Pow"
+    base, exponent = result.args
+    assert exponent == IRInteger(2)
+    assert isinstance(base, IRApply)
+    assert base.head.name == "Add"
+    assert set(base.args) == {IRSymbol("x"), IRSymbol("y")}
+
+
 # ---------------------------------------------------------------------------
 # Section S — Calculus: diff and integrate (already wired, no pipeline tests)
 # ---------------------------------------------------------------------------
