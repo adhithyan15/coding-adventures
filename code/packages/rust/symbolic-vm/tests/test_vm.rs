@@ -290,6 +290,31 @@ fn symbolic_factor_extracts_multivariate_perfect_square() {
     );
 }
 
+#[test]
+fn symbolic_factor_extracts_multivariate_difference_of_squares() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(SUB),
+            vec![
+                apply(sym(POW), vec![sym("x"), int(2)]),
+                apply(sym(POW), vec![sym("y"), int(2)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+            ],
+        )
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Symbol resolution
 // ---------------------------------------------------------------------------

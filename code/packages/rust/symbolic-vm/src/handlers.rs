@@ -1374,6 +1374,10 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         }
     }
 
+    if let Some(rewritten) = factor_multivariate_difference_of_squares(input) {
+        return rewritten;
+    }
+
     if let Some(rewritten) = factor_multivariate_perfect_square(input) {
         return rewritten;
     }
@@ -1464,6 +1468,43 @@ fn factor_multivariate_perfect_square(node: &IRNode) -> Option<IRNode> {
         apply_node(SUB, vec![squares[0].clone(), squares[1].clone()])
     };
     Some(apply_node(POW, vec![base, IRNode::Integer(2)]))
+}
+
+fn factor_multivariate_difference_of_squares(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 2 {
+        return None;
+    }
+
+    let mut positive_square = None;
+    let mut negative_square = None;
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if powers.len() != 1 {
+            return None;
+        }
+
+        let (base, exponent) = powers.iter().next()?;
+        if *exponent != 2 {
+            return None;
+        }
+
+        match coefficient {
+            1 => positive_square = Some(base.clone()),
+            -1 => negative_square = Some(base.clone()),
+            _ => return None,
+        }
+    }
+
+    let positive_square = positive_square?;
+    let negative_square = negative_square?;
+    Some(apply_node(
+        MUL,
+        vec![
+            apply_node(SUB, vec![positive_square.clone(), negative_square.clone()]),
+            apply_node(ADD, vec![positive_square, negative_square]),
+        ],
+    ))
 }
 
 fn additive_terms(node: &IRNode) -> Option<Vec<IRNode>> {
