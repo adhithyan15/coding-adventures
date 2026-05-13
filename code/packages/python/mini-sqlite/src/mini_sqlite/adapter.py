@@ -1450,9 +1450,25 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
 
 
 def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    # function_call = NAME "(" (STAR | [value_list]) ")"
-    name_tok = next(c for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME")
+    # function_call = (NAME | "REPLACE") "(" (STAR | "DISTINCT" value_list | [value_list]) ")"
+    #
+    # The function name is either a NAME token or the REPLACE keyword (which the
+    # lexer tokenises as KEYWORD, not NAME, because REPLACE is also used for DML).
+    name_tok = next(
+        c
+        for c in node.children
+        if isinstance(c, Token)
+        and (
+            _token_type(c) == "NAME"
+            or (_token_type(c) == "KEYWORD" and c.value.upper() == "REPLACE")
+        )
+    )
     name = name_tok.value
+    # DISTINCT modifier: COUNT(DISTINCT col), SUM(DISTINCT col), …
+    distinct = any(
+        isinstance(c, Token) and _token_type(c) == "KEYWORD" and c.value.upper() == "DISTINCT"
+        for c in node.children
+    )
     star = any(_is_token(c, type_="STAR") for c in node.children)
     vl = _maybe_child(node, "value_list")
     args: list[FuncArg] = []
@@ -1475,7 +1491,7 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     if upper in agg_map:
         if len(args) != 1:
             raise ProgrammingError(f"{upper}: expected 1 argument, got {len(args)}")
-        return AggregateExpr(func=agg_map[upper], arg=args[0])
+        return AggregateExpr(func=agg_map[upper], arg=args[0], distinct=distinct)
 
     if upper == "GROUP_CONCAT":
         # GROUP_CONCAT(col)          — SQLite default separator ','
@@ -1874,18 +1890,39 @@ def _parse_number(s: str) -> int | float:
 
 
 def _unquote_string(s: str) -> str:
-    # The SQL lexer accepts backslash-escapes: 'O\'Brien', 'back\\slash'.
-    # Strip the surrounding quotes and unescape any `\x` → `x` pair.
-    if len(s) >= 2 and s[0] == s[-1] and s[0] in ("'", '"'):
-        body = s[1:-1]
-        out = []
-        i = 0
-        while i < len(body):
-            if body[i] == "\\" and i + 1 < len(body):
-                out.append(body[i + 1])
-                i += 2
-            else:
-                out.append(body[i])
-                i += 1
-        return "".join(out)
-    return s
+    """Unescape the body of a SQL string literal received from the sql-lexer.
+
+    The sql-lexer already strips the surrounding single quotes before handing the
+    token value to the adapter, so ``s`` here is the *body* of the literal — e.g.
+    the SQL text ``'O''Brien'`` arrives here as ``O''Brien``.
+
+    Two escape conventions are processed:
+
+    * **Doubled-quote escape** — ANSI SQL standard: the pair ``''`` inside a
+      single-quoted string stands for a single literal quote.  ``O''Brien`` →
+      ``O'Brien``.  This is what real SQLite uses.
+
+    * **Backslash escapes** — MySQL / C-style extension: ``\\'`` → ``'``,
+      ``\\\\`` → ``\\``, etc.  Any ``\\x`` pair is collapsed to ``x``.  The
+      backslash form is checked *before* the lone-character fallback so a
+      ``\\'`` is not mis-split.
+
+    The ``''`` alternative is checked *before* the lone-character fallback so
+    that two consecutive apostrophes are always consumed as a single escaped
+    quote rather than the first being treated as a premature end-of-body marker.
+    """
+    out = []
+    i = 0
+    while i < len(s):
+        if s[i] == "\\" and i + 1 < len(s):
+            # Backslash escape: \' → ', \\ → \, \n → n (raw character), etc.
+            out.append(s[i + 1])
+            i += 2
+        elif s[i] == "'" and i + 1 < len(s) and s[i + 1] == "'":
+            # ANSI SQL doubled-quote escape: '' → '
+            out.append("'")
+            i += 2
+        else:
+            out.append(s[i])
+            i += 1
+    return "".join(out)

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.19.0] - 2026-05-13
+
+### Added
+
+- **`InitAgg.distinct` field** (`ir.py`) — the `InitAgg` instruction gains a new
+  `distinct: bool = False` field.  When `True` the VM initialises a `seen` set on
+  the corresponding `_AggState` and deduplicates inputs before accumulation,
+  implementing `COUNT(DISTINCT col)`, `SUM(DISTINCT col)`, etc.
+
+- **`distinct` propagated to `InitAgg` in `_compile_aggregate`** (`compiler.py`) —
+  the aggregate body loop now emits `InitAgg(slot=s, func=..., separator=...,
+  distinct=a.distinct)` so that the VM's deduplication logic is activated when the
+  planner marks an `AggregateItem` as `distinct=True`.
+
 ## [1.18.0] - 2026-05-12
 
 ### Added

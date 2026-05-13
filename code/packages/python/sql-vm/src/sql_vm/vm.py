@@ -201,6 +201,8 @@ class _AggState:
     acc: SqlValue = None       # sum / min / max carrier
     items: list = field(default_factory=list)   # GROUP_CONCAT accumulator
     separator: str = ","       # GROUP_CONCAT separator (baked in at InitAgg time)
+    distinct: bool = False     # True → only count/sum/concat each distinct value once
+    seen: set | None = None    # deduplicated value set; populated lazily when distinct=True
 
 
 # --------------------------------------------------------------------------
@@ -1193,9 +1195,18 @@ def _do_init_agg(ins: InitAgg, st: _VmState) -> None:
     # allocate on first encounter; on subsequent calls the existing
     # accumulator is preserved. MIN/MAX/SUM start at NULL; AVG tracks
     # sum and count; GROUP_CONCAT accumulates a list.
+    #
+    # When ``ins.distinct`` is True the accumulator tracks a ``seen`` set so
+    # that duplicate non-NULL inputs are silently discarded — implementing
+    # COUNT(DISTINCT col), SUM(DISTINCT col), etc.
     slots = _ensure_group(st)
     while len(slots) <= ins.slot:
-        state = _AggState(func=ins.func, separator=ins.separator)
+        state = _AggState(
+            func=ins.func,
+            separator=ins.separator,
+            distinct=ins.distinct,
+            seen=set() if ins.distinct else None,
+        )
         slots.append(state)
 
 
@@ -1210,6 +1221,13 @@ def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
         return
     if value is None:
         return  # SQL: NULL inputs ignored for everything except COUNT(*)
+    # DISTINCT deduplication: skip this value if we have already seen it.
+    # The ``seen`` set is created during _do_init_agg when InitAgg.distinct=True.
+    # COUNT(DISTINCT col), SUM(DISTINCT col), etc. all go through this path.
+    if agg.distinct and agg.seen is not None:
+        if value in agg.seen:
+            return  # duplicate — discard silently
+        agg.seen.add(value)
     if agg.func is AggFunc.COUNT:
         agg.count += 1
         return

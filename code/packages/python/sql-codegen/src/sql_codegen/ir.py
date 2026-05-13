@@ -353,10 +353,16 @@ class InitAgg:
     the separator string into the instruction at compile time (the separator
     must be a literal in SQL, so this is always valid).  For all other
     aggregate functions the field is ignored.
+
+    ``distinct`` enables per-slot deduplication: when ``True`` the VM tracks
+    each non-NULL input value in a set and passes only the *first occurrence*
+    to the accumulator.  This implements ``COUNT(DISTINCT col)``,
+    ``SUM(DISTINCT col)``, etc.
     """
     slot: int
     func: AggFunc
-    separator: str = ","  # GROUP_CONCAT separator; ignored for other funcs
+    separator: str = ","     # GROUP_CONCAT separator; ignored for other funcs
+    distinct: bool = False   # True → deduplicate inputs before accumulating
 
 
 @dataclass(frozen=True, slots=True)

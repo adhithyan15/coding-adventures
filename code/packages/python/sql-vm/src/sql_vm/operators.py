@@ -121,7 +121,11 @@ def _arithmetic(op: BinaryOpCode, left: SqlValue, right: SqlValue) -> SqlValue:
         return a / b
     if op is BinaryOpCode.MOD:
         if b == 0:
-            raise DivisionByZero()
+            # SQLite returns NULL for x % 0 rather than raising an error.
+            # Python raises ZeroDivisionError; we match the SQLite behaviour here
+            # so that queries like `SELECT 5 % 0` silently yield NULL instead of
+            # crashing the VM.
+            return None
         return a % b
     raise TypeMismatch(expected="arithmetic op", got=op.name, context="BinaryOp")
 

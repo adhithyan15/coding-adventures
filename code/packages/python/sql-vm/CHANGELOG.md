@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.18.0 — 2026-05-13
+
+### Fixed
+
+- **`x % 0` returns NULL** (`operators.py`) — the `BinaryOpCode.MOD` branch in
+  `_arithmetic` now returns `None` (SQL NULL) when the divisor is zero instead of
+  raising `DivisionByZero`.  This matches real SQLite's behaviour: `SELECT 5 % 0`
+  → `NULL`.  Division by zero for `/` still raises `DivisionByZero` (SQLite
+  behaviour).
+
+### Added
+
+- **DISTINCT deduplication for aggregate slots** (`vm.py`, `_AggState`) — the
+  `_AggState` accumulator gains two new fields:
+
+  - `distinct: bool = False` — set at `InitAgg` time; activates deduplication.
+  - `seen: set | None = None` — lazily-populated set of already-accumulated values;
+    only allocated when `distinct=True` to keep the common case lightweight.
+
+  `_do_update_agg` now checks `agg.distinct` before accumulating a value.  If the
+  value is already in `agg.seen` the row is silently skipped, implementing
+  `COUNT(DISTINCT col)`, `SUM(DISTINCT col)`, `AVG(DISTINCT col)`, etc.
+
+  `_do_init_agg` populates `distinct` and `seen` from the new `InitAgg.distinct`
+  field added in `sql-codegen 1.19.0`.
+
 ## 1.17.0 — 2026-05-12
 
 ### Added

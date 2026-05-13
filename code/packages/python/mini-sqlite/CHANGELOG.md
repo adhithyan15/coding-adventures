@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.27.0] - 2026-05-13
+
+### Fixed
+
+- **`x % 0` returns NULL** — `SELECT 5 % 0` now returns `NULL` instead of
+  crashing.  Fix is in `sql-vm 1.18.0`.
+
+- **Doubled-quote `''` escape in string literals** — SQL strings containing
+  `''` (the ANSI standard way to embed a single quote) now parse and store
+  correctly.  `INSERT INTO t VALUES (1, 'O''Brien')` stores `O'Brien`.
+
+  Two-layer fix:
+  1. `sql-parser 0.16.0` — updated `STRING_SQ` token regex to `'(''|[^'\\]|\\.)*'`
+  2. `mini_sqlite.adapter._unquote_string` — updated to process `''` → `'` on the
+     already-quote-stripped token body received from the sql-lexer.
+
+- **`COUNT(DISTINCT col)` / `SUM(DISTINCT col)` deduplication** — aggregate
+  functions with `DISTINCT` now correctly deduplicate values before accumulating.
+  Previously the `DISTINCT` flag was parsed and propagated through the plan but
+  ignored in the VM, causing `COUNT(DISTINCT col)` to behave like `COUNT(col)`.
+
+  Fix is in `sql-codegen 1.19.0` (new `InitAgg.distinct` field) and
+  `sql-vm 1.18.0` (`_AggState.seen` deduplication set).
+
+- **`REPLACE(str, from, to)` scalar function** — `REPLACE` is a SQL keyword used
+  for `REPLACE INTO` DML.  The grammar previously rejected `REPLACE(...)` as a
+  function call.  `sql-parser 0.16.0` extends `function_call` to allow `REPLACE`
+  as a function name alongside the existing `NAME` alternative.
+
+  The adapter's `_function_call` is updated to recognise `KEYWORD` tokens with
+  value `REPLACE` as the function name.
+
+### Tests
+
+- Added `tests/test_tier13_convergence.py` — 30 oracle-grade integration tests
+  comparing mini-sqlite against real `sqlite3` for all four fixed patterns:
+  - `TestModuloByZero` (6 tests)
+  - `TestDoubledQuoteEscape` (7 tests)
+  - `TestCountDistinct` + `TestSumDistinct` + `TestCountDistinctWithGroupBy` (12 tests)
+  - `TestReplaceFunction` (8 tests — including regression checks for DML syntax)
+
 ## [1.26.0] - 2026-05-12
 
 ### Fixed

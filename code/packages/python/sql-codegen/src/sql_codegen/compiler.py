@@ -1022,7 +1022,7 @@ def _compile_aggregate(
             # doesn't need to look it up on every row.  The separator field is
             # ignored for all other aggregate functions.
             sep = a.separator if a.separator is not None else ","
-            out.append(InitAgg(slot=s, func=ir_func, separator=sep))
+            out.append(InitAgg(slot=s, func=ir_func, separator=sep, distinct=a.distinct))
         # Update each aggregate with the row's value.
         for s, a in zip(slots, aggregates, strict=True):
             if a.arg.star:
