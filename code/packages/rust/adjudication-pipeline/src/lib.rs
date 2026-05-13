@@ -70,6 +70,12 @@ use adjudication_adversarial::{
 };
 use llm_primitives::{GatewayConfig, Role as PrimitiveRole};
 
+pub mod hierarchical;
+pub use hierarchical::{
+    decompose_hierarchical, HierarchicalDecomposeError, HierarchicalDecomposeOutcome,
+    HierarchicalDecomposeRequest, DEFAULT_MAX_RETRIES_PER_PARENT, PER_LEVEL_DISPATCH_CAP,
+};
+
 // `SearchMode` and `TrailSearchMode` collapse to the same trail-side
 // enum; alias for clarity.
 const _: () = {
