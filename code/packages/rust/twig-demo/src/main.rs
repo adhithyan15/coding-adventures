@@ -86,11 +86,14 @@ fn main() {
     let (c, r_us, r) = run_clr(FIB_PROGRAM);
     results.push(BackendResult::new("CLR (.NET 9)", c, r_us, r));
 
-    print_results(&results);
+    print_results(&results, EXPECTED);
 
     // ── AOT deep-dive: phase breakdown + type correctness demo ────────────────
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     run_aot_demos();
+
+    // ── Optional-typing demo: untyped / partial / fully-typed ────────────────
+    run_typing_demo();
 }
 
 // ── Result types ──────────────────────────────────────────────────────────────
@@ -149,7 +152,7 @@ fn print_banner() {
     println!();
 }
 
-fn print_results(results: &[BackendResult]) {
+fn print_results(results: &[BackendResult], expected: i64) {
     // Column widths: name(32) + compile(10) + runtime(10) + result(8) + status
     let w = 74;
     println!("\n{}", "─".repeat(w));
@@ -163,7 +166,7 @@ fn print_results(results: &[BackendResult]) {
     for r in results {
         let (result_str, status) = match &r.outcome {
             Ok(v) => {
-                let correct = *v == EXPECTED;
+                let correct = *v == expected;
                 if !correct { all_pass = false; }
                 (v.to_string(), if correct { "✅ PASS" } else { "❌ WRONG" })
             }
@@ -187,9 +190,9 @@ fn print_results(results: &[BackendResult]) {
     println!("{}", "─".repeat(w));
     println!();
     if all_pass {
-        println!("🎉 All 6 backends returned {EXPECTED}. Twig runs everywhere!");
+        println!("  All backends returned {expected}. ✅");
     } else {
-        println!("Some backends need attention (see errors above).");
+        println!("  Some backends need attention (see above).");
     }
     println!();
 }
@@ -1450,6 +1453,221 @@ fn aot_type_correctness_demo() {
 
     println!();
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Optional-typing demo: untyped / partially typed / fully typed
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Expected result for all three typing variants: 0.
+///
+/// `(process 5)` = `clamp_low(add_offset(5, −10))` = `clamp_low(−5)` = 0.
+const TYPING_EXPECTED: i64 = 0;
+
+/// Untyped version — no annotations anywhere.
+///
+/// Twig accepts this without complaint; every backend that uses a type-inference
+/// pass (interpreter, BEAM, WASM, JVM, CLR) produces the correct answer.
+/// The AOT backend must fall back to **unsigned (u64)** comparisons because
+/// it has no type information, so `(< −5 0)` reads as `large_u64 < 0` = false
+/// and `clamp_low` skips the branch — returning −5 instead of 0.
+const TYPING_UNTYPED: &str = "\
+(define (add-offset x offset) (+ x offset))
+(define (clamp-low x) (if (< x 0) 0 x))
+(define (process val) (clamp-low (add-offset val -10)))
+(process 5)";
+
+/// Partially typed — only `clamp-low` carries type annotations.
+///
+/// The annotation `(x : int)` tells the AOT pipeline that `x` is a signed
+/// 64-bit integer, so the compiler emits a signed `CMP` for `(< x 0)`.
+/// That is the only comparison in the hot path, so this is enough to fix
+/// the wrong result.  `add-offset` and `process` remain untyped (u64), which
+/// is fine for addition (two's-complement addition is the same for signed
+/// and unsigned).
+const TYPING_PARTIAL: &str = "\
+(define (add-offset x offset) (+ x offset))
+(define (clamp-low (x : int) -> int) (if (< x 0) 0 x))
+(define (process val) (clamp-low (add-offset val -10)))
+(process 5)";
+
+/// Fully typed — every parameter and return type is annotated.
+///
+/// The AOT backend emits signed instructions for every arithmetic operation
+/// and comparison in the module.  No u64 fall-back is needed.
+const TYPING_FULL: &str = "\
+(define (add-offset (x : int) (offset : int) -> int) (+ x offset))
+(define (clamp-low (x : int) -> int) (if (< x 0) 0 x))
+(define (process (val : int) -> int) (clamp-low (add-offset val -10)))
+(process 5)";
+
+// ── Annotation-aware in-process AOT runner ────────────────────────────────────
+
+/// AOT path for the typing demo: reads `param_refinements` from the compiled
+/// `IIRModule` and seeds the ARM64 type-propagation pass from them.
+///
+/// ## Why this matters
+///
+/// `twig_ir_compiler::compile_source` stores Twig type annotations in
+/// `func.param_refinements: Vec<Option<RefinedType>>`, but leaves
+/// `func.params` typed as `"any"` for all parameters.  The standard AOT
+/// preparation pipeline (`prepare_module_for_aot`) overwrites every param
+/// with `"u64"` — so annotations would otherwise be silently ignored.
+///
+/// This function bridges the gap:
+/// 1. Pre-lower builtins (`call_builtin "+"` → `add`, etc.)
+/// 2. Walk `param_refinements` and, wherever a `Some(rt)` exists, set
+///    `func.params[i].1 = rt.kind.as_type_hint()` (e.g. `"i64"` for `int`).
+/// 3. Hand the annotated module to `compile_typed_module_to_arm64_bytes`,
+///    which propagates those types and defaults anything still `"any"` to u64.
+///
+/// Result: annotated params use signed i64 semantics; unannotated params
+/// use unsigned u64 semantics — exactly what "optional typing" promises.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn run_aot_annotated(source: &str) -> (u128, u128, Result<i64, String>) {
+    let t_compile = Instant::now();
+
+    // Step 1: compile Twig source → IIRModule (param_refinements populated).
+    let mut module = match compile_source(source, "typing_demo") {
+        Ok(m)  => m,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("compile: {e}"))),
+    };
+
+    // Step 2: pre-lower builtins so named ops are visible to type propagation.
+    twig_aot::pre_lower_aot_builtins_on_module(&mut module);
+
+    // Step 3: seed param types from source-level annotations.
+    //
+    // `param_refinements[i]` is `Some(rt)` when the i-th parameter has a type
+    // annotation in the Twig source (e.g. `(x : int)`).
+    // `rt.kind.as_type_hint()` maps:
+    //   Kind::Int  → "i64"   (Twig's `int` = signed 64-bit)
+    //   Kind::Bool → "bool"
+    //   Kind::Any  → "any"   (no-op — keeps the default)
+    //   … etc.
+    //
+    // Unannotated params remain "any" and are defaulted to "u64" downstream.
+    for func in &mut module.functions {
+        for (i, (_, param_ty)) in func.params.iter_mut().enumerate() {
+            if let Some(Some(rt)) = func.param_refinements.get(i) {
+                let hint = rt.kind.as_type_hint();
+                if hint != "any" {
+                    *param_ty = hint.to_string();
+                }
+            }
+        }
+    }
+
+    // Step 4: propagate types seeded from annotated params, default remaining
+    // "any" to u64, and compile to flat ARM64 code bytes.
+    let (bytes, offsets) = match twig_aot::compile_typed_module_to_arm64_bytes(&module) {
+        Ok(r)  => r,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("aot compile: {e:?}"))),
+    };
+    let compile_us = t_compile.elapsed().as_micros();
+
+    // Step 5: execute `process(5)` in-process.
+    let t_run = Instant::now();
+    let outcome = twig_aot::call_arm64_function_in_process(
+        &bytes, &offsets, "process", 5,
+    ).map_err(|e| format!("aot run: {e:?}"));
+    let run_us = t_run.elapsed().as_micros();
+
+    (compile_us, run_us, outcome)
+}
+
+/// Fallback on non-macOS/ARM64 platforms — AOT in-process is not available.
+#[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
+fn run_aot_annotated(_source: &str) -> (u128, u128, Result<i64, String>) {
+    (0, 0, Err("AOT in-process: macOS/ARM64 only".into()))
+}
+
+// ── Typing demo entry point ───────────────────────────────────────────────────
+
+/// Run the optional-typing demo and print one results table per type state.
+///
+/// Three variants of the same computation are compared:
+///
+/// | State    | `add-offset` | `clamp-low`       | `process`   |
+/// |----------|-------------|-------------------|-------------|
+/// | Untyped  | no ann.     | no ann.           | no ann.     |
+/// | Partial  | no ann.     | `(x:int) -> int`  | no ann.     |
+/// | Full     | `(x:int)(offset:int)->int` | `(x:int)->int` | `(val:int)->int` |
+///
+/// The critical operation is `(< x 0)` inside `clamp-low`.
+/// - Without a type annotation, the AOT backend defaults `x` to **u64**
+///   and emits an unsigned `CMP` — so `(< −5 0)` is **false** (wrong).
+/// - With `(x : int)` on `clamp-low`, the AOT backend seeds `x` as **i64**
+///   and emits a signed `CMP` — so `(< −5 0)` is **true** (correct).
+///
+/// The interpreter, BEAM, WASM, JVM, and CLR backends are correct in all
+/// three states because they run their own type-inference pass.
+fn run_typing_demo() {
+    let sep = "═".repeat(74);
+    println!("\n{sep}");
+    println!("  Twig optional-typing demo");
+    println!("  Program:  (process 5)  =  clamp-low(add-offset(5, −10))  =  clamp-low(−5)");
+    println!("  Expected: {TYPING_EXPECTED}   (add-offset returns −5; clamp-low must see it as signed)");
+    println!("{sep}");
+    println!();
+    println!("  The signed/unsigned split lives in `(< x 0)` inside clamp-low:");
+    println!("    −5 as u64 = 0xFFFF_FFFF_FFFF_FFFB  →  u64 < 0  = false  →  returns −5 ❌");
+    println!("    −5 as i64 = −5                      →  i64 < 0  = true   →  returns  0 ✅");
+    println!();
+
+    let variants: &[(&str, &str, &str)] = &[
+        (
+            "UNTYPED",
+            TYPING_UNTYPED,
+            "no annotations — AOT uses u64 throughout",
+        ),
+        (
+            "PARTIALLY TYPED",
+            TYPING_PARTIAL,
+            "clamp-low annotated `(x:int)->int` — enough to fix the comparison",
+        ),
+        (
+            "FULLY TYPED",
+            TYPING_FULL,
+            "all params annotated — AOT uses i64 throughout",
+        ),
+    ];
+
+    for (label, source, note) in variants {
+        println!("  ── {label}");
+        println!("     {note}");
+
+        let mut results: Vec<BackendResult> = Vec::new();
+
+        let (c, r, res) = run_interpreter(source);
+        results.push(BackendResult::new("Interpreter (twig-vm)", c, r, res));
+
+        // AOT: annotation-aware in-process path.
+        // Unannotated params default to u64 (may give wrong answer);
+        // annotated params use their declared type (signed i64 for `int`).
+        let (c, r, res) = run_aot_annotated(source);
+        results.push(BackendResult::new("AOT (in-process)", c, r, res));
+
+        let (c, r, res) = run_beam(source);
+        results.push(BackendResult::new("BEAM (Erlang VM)", c, r, res));
+
+        let (c, r, res) = run_wasm(source);
+        results.push(BackendResult::new("WebAssembly (Rust runtime)", c, r, res));
+
+        let (c, r, res) = run_jvm(source);
+        results.push(BackendResult::new("JVM (Java 21)", c, r, res));
+
+        let (c, r, res) = run_clr(source);
+        results.push(BackendResult::new("CLR (.NET 9)", c, r, res));
+
+        print_results(&results, TYPING_EXPECTED);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CLR local-count estimator
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /// Scan bytecode to estimate how many local variable slots are needed.
 ///
