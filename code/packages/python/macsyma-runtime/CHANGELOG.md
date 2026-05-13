@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added MACSYMA `factor` parity for a first multivariate case with a common
+  symbolic factor, so `factor(x^2*y - y)` now extracts `y` and factors the
+  residual through the canonical symbolic VM handler.
 - Added a small MACSYMA help catalog plus `?` query parsing helpers for REPL
   and session frontends.
 - Added MACSYMA session-property operations: `declare(sym, property, ...)`,

@@ -206,6 +206,18 @@ def test_factor_irreducible_passthrough() -> None:
     assert result == expr
 
 
+def test_factor_common_multivariate_symbolic_factor() -> None:
+    """Factor(x^2*y - y) extracts y, then factors the residual."""
+    vm, _ = make_vm()
+    x2_y = IRApply(MUL, (IRApply(POW, (x, IRInteger(2))), y))
+    target = IRApply(SUB, (x2_y, y))
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+    assert result.head == MUL
+    assert result != expr
+
+
 def test_factor_linear() -> None:
     """Factor(x - 3) → x - 3 (already irreducible linear, content 1)."""
     vm, _ = make_vm()

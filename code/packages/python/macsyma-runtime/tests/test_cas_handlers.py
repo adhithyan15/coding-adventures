@@ -619,6 +619,19 @@ def test_factor_multivariate_returns_unevaluated() -> None:
     assert result.head == _sym("Factor")  # type: ignore[union-attr]
 
 
+def test_factor_common_multivariate_symbolic_factor() -> None:
+    """Factor(x^2*y - y) extracts y, then factors the univariate residual."""
+    vm = _vm()
+    x = _sym("x")
+    y = _sym("y")
+    x2_y = IRApply(MUL, (IRApply(POW, (x, _int(2))), y))
+    expr = _apply("Factor", IRApply(SUB, (x2_y, y)))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+    assert result.head == _sym("Mul")  # type: ignore[union-attr]
+    assert result != expr
+
+
 def test_solve_no_variable_returns_unevaluated() -> None:
     """Solve(5, 3) — second arg is not a symbol → unevaluated."""
     vm = _vm()
