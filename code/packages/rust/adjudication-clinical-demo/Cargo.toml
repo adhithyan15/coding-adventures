@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-clinical-demo"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "A/B demo harness for clinical notes: run a short patient assessment through both a raw local model and the structured adjudication pipeline, surface where the structured pipeline catches what the raw model glossed over. Mirrors adjudication-tsa-demo's shape for a different domain (clinical reasoning instead of TSA compliance)."
+description = "A/B demo harness for clinical notes: run a short patient assessment through both a raw local model and the structured adjudication pipeline. v0.3 brings parity with adjudication-tsa-demo v0.12: rulebook injection (fixture_clinical_rulebook + ADJ_DEMO_RULEBOOK_MODE env var), configurable max_answer_tokens (default 2048), verdict-first prompt format, and opt-in two-turn priming dispatch (ADJ_DEMO_ARM_A_MODE=priming). Required for the ADJ19 cross-domain bench."
 
 [[bin]]
 name = "adjudication-clinical-demo"
