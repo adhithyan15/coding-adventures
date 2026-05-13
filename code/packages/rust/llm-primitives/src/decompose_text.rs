@@ -373,7 +373,10 @@ fn build_completion_request(
         temperature: 0.0,
         // IR documents can be large; pick a higher cap than other
         // primitives. A long clinical note can easily run to several
-        // thousand output tokens.
+        // thousand output tokens. Wired through
+        // `complete_json_with_truncation_retry`, so on
+        // `OutputTruncated` the cap auto-doubles up to
+        // `MAX_TOKENS_CEILING` (32 768).
         max_tokens: Some(8192),
         stop_sequences: Vec::new(),
         seed: None,
