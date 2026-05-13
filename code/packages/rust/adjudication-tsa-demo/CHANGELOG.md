@@ -2,6 +2,115 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-05-12 — Arm A truncation hardening
+
+### Motivation
+
+ADJ17 documented a real workflow problem: gemma4 in adversarial
+mode burns its 512-token output cap on chain-of-thought narration
+of the injected rulebook and never reaches the `VERDICT:` line.
+The framework surfaces this as a typed `OutputTruncated` error —
+the *failure shape* is correct, but the *failure rate* is too
+high to be ignored. v0.12 addresses the root cause with three
+coordinated changes.
+
+### Added
+
+- **`ADJ_DEMO_MAX_ANSWER_TOKENS`** env var. Controls Arm A's
+  output-token cap. Default is **2048** (was 512 hard-coded).
+  Configurable per-run; lower it to test the truncation path,
+  raise it for very verbose models. Plumbed through to the
+  `CompletionRequest.max_tokens` field.
+- **`ADJ_DEMO_ARM_A_MODE`** env var, accepting:
+  - `single-turn` (default): unchanged v0.11 behaviour.
+  - `priming`: two-turn dispatch. Turn 1 hands the model the
+    rulebook with an explicit instruction to respond only with
+    `ACK` (no rule narration, no analysis). Turn 2 sends the
+    declaration and asks for a verdict-first response. The model
+    digests the rulebook silently in turn 1, then produces a
+    tight verdict in turn 2 — drastically reducing the
+    chance of output truncation on verbose 8B-class models.
+- `ArmAMode` enum: `SingleTurn` / `Priming`. Added to
+  `DemoConfig` along with `max_answer_tokens: usize`. Both have
+  sensible defaults.
+- New public prompt builders: `build_priming_system_prompt`,
+  `build_priming_turn1_user_prompt`,
+  `build_priming_turn2_user_prompt`. Pulled out so tests can
+  assert on prompt structure without invoking the model.
+- `build_raw_system_prompt` is now `pub` (was crate-private) so
+  external callers and tests can inspect it.
+
+### Changed
+
+- **Verdict-first prompt format.** Both `build_raw_system_prompt`
+  (single-turn) and `build_priming_system_prompt` (two-turn) now
+  instruct the model to put `VERDICT: COMPLIANT` or
+  `VERDICT: NON-COMPLIANT` as the FIRST line of the response,
+  followed by 2-3 sentences of reasoning. Rationale: even when
+  truncation hits during the reasoning portion, the verdict line
+  survives. The system prompt explicitly cites this as the reason
+  for the format ("ensures the verdict is captured even if your
+  reasoning is truncated").
+- Arm A's startup banner now displays the active mode and token
+  cap so the run is self-documenting:
+  `Arm A mode:    SingleTurn (max 2048 output tokens)`.
+
+### How the three changes interact
+
+- **Verdict-first prompt** is a free defense: zero overhead, no
+  extra calls, and the verdict survives truncation when it happens.
+- **Raised output cap** is the backstop: the default doubles to
+  2048, so most truncations the v0.11 demo would hit just don't.
+- **Priming mode** is the architectural fix for the
+  large-rulebook case: the model's chain-of-thought happens
+  silently in turn 1's hidden state, so turn 2's output budget
+  is spent on the verdict, not on rulebook narration.
+
+### Tests
+
+7 new tests added (38 lib total, all passing):
+- default config uses SingleTurn + 2048 token cap
+- raw system prompt demands verdict-first AND mentions truncation
+  (both no-rulebook and with-rulebook variants)
+- priming system prompt describes the two-turn protocol (Turn 1,
+  Turn 2, ACK, no analysis until turn 2)
+- priming turn 1 user prompt embeds the rulebook and demands ACK
+- priming turn 2 user prompt embeds the declaration and re-states
+  the verdict-first format
+- ArmAMode enum round-trips through Debug/Clone/Eq
+- DemoConfig.arm_a_mode is field-addressable
+
+The existing test asserting on the v0.11 prompt's exact wording
+was updated to match the v0.12 phrasing
+("citing specific rule numbers", removed the article).
+
+### Compatibility
+
+- `DemoConfig` gained two new public fields
+  (`max_answer_tokens`, `arm_a_mode`). Soft break for callers
+  that pattern-destructure `DemoConfig`; no in-tree caller does.
+  Existing tests and downstream demos (clinical / contract)
+  build unchanged.
+- Existing `run_raw_arm(cfg)` signature unchanged. Inside, it
+  now dispatches via `cfg.arm_a_mode`.
+- Default behaviour preserved: a no-knobs invocation runs
+  `SingleTurn` with the new 2048-token cap and the verdict-first
+  prompt. The verdict-first change is observable in the output
+  (verdict line moves to the top) but not behaviourally
+  load-bearing for downstream tooling.
+
+### Why this isn't ADJ16 step 6
+
+ADJ16's spec didn't enumerate Arm A hardening as a step — the
+ADJ16 sequence is about replacing answer-time LLM with the
+engine (Arm C), not about making Arm A more robust. This change
+is a tactical fix to keep the empirical-comparison value of Arm
+A meaningful: if half of gemma4's adversarial runs truncate to
+"Arm A failed", the comparison against Arms B and C loses
+signal. Hardened Arm A → cleaner Engine-Arm-vs-LLM-Arm bench
+data, which is what the next ADJ-numbered spec (probably
+"ADJ18") will document.
+
 ## [0.11.1] - 2026-05-12 — Engine Arm in the CLI (ADJ16 step 5.5)
 
 ### Added
