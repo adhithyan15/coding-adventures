@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-05-12 — Adversarial multi-model elicit-mode wiring
+
+### Added
+
+`ADJ_DEMO_RULEBOOK_MODE=adversarial:model1,model2,...` — elicit
+rulebooks from N independent models and inject the
+provenance-tagged merged text into Arm A's system prompt. Builds
+on `adjudication_rulebook::acquire_rulebook_adversarial` (added in
+that crate's v0.2) and the existing elicit-mode plumbing (v0.9).
+
+The demo binary parses the comma-separated model list, builds one
+OllamaClient + GatewayConfig per model, and dispatches the
+adversarial elicit. Each model's outcome is logged with a checkmark
+or cross plus byte count and validation status:
+
+```text
+[stage 0] adversarial elicitation across 2 models: gemma4:latest, llama3.1:8b
+[stage 0] adversarial elicit: 2/2 models succeeded (0 failed)
+[stage 0]   ✓ `gemma4:latest`: 1938 bytes (validation=FAILED (...))
+[stage 0]   ✓ `llama3.1:8b`: 1709 bytes (validation=FAILED (...))
+```
+
+A reviewer reading Arm A's answer can grep the cited rule back to
+the `=== RULEBOOK FROM <model> ===` section header in the audit
+trail and see which model produced it. A rule appearing in only
+one model's section is lower-trust than one in both.
+
+`ADJ_DEMO_DUMP_RULEBOOK=1` works in adversarial mode too — dumps
+the full provenance-tagged merged rulebook between markers.
+
+### Why this matters
+
+ADJ15's empirical results showed single-model recursive elicitation
+flips verdicts at 3B+ but every elicited rulebook had at least one
+fabrication (the matches-as-flammable-materials leap, the
+fabricated doctor's-note exception, the wrong knife-length limit).
+Multi-model elicitation reduces this risk: a fabricated rule that
+appears in only one model's training shows up as a single-source
+rule in the merged text, where reviewers can spot it. Rules
+multiple models produced independently are higher trust.
+
+24 unit tests still pass. Demo binary smoke-tested with
+`adversarial:gemma4:latest,llama3.1:8b`.
+
 ## [0.9.0] - 2026-05-12 — elicit-mode wiring + visibility fixes
 
 ### Added
