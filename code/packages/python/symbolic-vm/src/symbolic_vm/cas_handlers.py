@@ -1033,6 +1033,26 @@ def _split_common_factor_term(node: IRNode) -> dict[IRNode, int] | None:
     return powers
 
 
+def _split_integer_coefficient_and_powers(
+    node: IRNode,
+) -> tuple[int, dict[IRNode, int]] | None:
+    coefficient = 1
+    powers: dict[IRNode, int] = {}
+    for factor in _flatten_factor_terms(node):
+        if isinstance(factor, IRInteger):
+            coefficient *= factor.value
+            continue
+        if isinstance(factor, IRApply) and factor.head == POW and len(factor.args) == 2:
+            base, exponent = factor.args
+            if isinstance(exponent, IRInteger) and exponent.value > 0:
+                powers[base] = powers.get(base, 0) + exponent.value
+                continue
+        if isinstance(factor, IRSymbol) and factor.name in _CONSTANT_NAMES:
+            return None
+        powers[factor] = powers.get(factor, 0) + 1
+    return coefficient, powers
+
+
 def _remove_common_factor(node: IRNode, common: dict[IRNode, int]) -> IRNode:
     remaining = dict(common)
     rebuilt: list[IRNode] = []
@@ -1092,6 +1112,47 @@ def _extract_common_symbolic_factor(inner: IRNode) -> IRNode | None:
     return IRApply(MUL, (common_ir, IRApply(IRSymbol("Factor"), (residual,))))
 
 
+def _extract_multivariate_perfect_square(inner: IRNode) -> IRNode | None:
+    """Recognise the small ``a^2 +/- 2ab + b^2`` multivariate factor case."""
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 3:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    squares: list[IRNode] = []
+    cross: tuple[int, IRNode, IRNode] | None = None
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if coefficient == 1 and len(powers) == 1:
+            base, exponent = next(iter(powers.items()))
+            if exponent == 2:
+                squares.append(base)
+                continue
+        if abs(coefficient) == 2 and len(powers) == 2:
+            items = list(powers.items())
+            if items[0][1] == 1 and items[1][1] == 1:
+                cross = (coefficient, items[0][0], items[1][0])
+                continue
+        return None
+
+    if len(squares) != 2 or cross is None:
+        return None
+    first, second = squares
+    cross_coefficient, cross_first, cross_second = cross
+    if {first, second} != {cross_first, cross_second}:
+        return None
+
+    if cross_coefficient > 0:
+        base = IRApply(ADD, (first, second))
+    else:
+        base = IRApply(SUB, (first, second))
+    return IRApply(POW, (base, IRInteger(2)))
+
+
 def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
@@ -1121,6 +1182,9 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     # Try to lift to rational function.
     rational = to_rational(inner, x)
     if rational is None:
+        perfect_square = _extract_multivariate_perfect_square(inner)
+        if perfect_square is not None:
+            return perfect_square
         common_factored = _extract_common_symbolic_factor(inner)
         if common_factored is not None:
             return _vm.eval(common_factored)

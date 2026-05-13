@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added a second small multivariate factoring foothold to `Factor`:
+  bivariate perfect-square quadratics such as `x^2 + 2*x*y + y^2` now factor
+  to `(x+y)^2`.
 - Added a small multivariate factoring foothold to `Factor`: additive
   expressions with a common symbolic factor, such as `x^2*y - y`, now extract
   that common factor and then reuse the existing univariate integer factorizer
