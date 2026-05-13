@@ -143,6 +143,16 @@ pub struct LoweredKb {
     pub kb: KnowledgeBase,
     pub fact_provenance: HashMap<FactId, ClauseProvenance>,
     pub rule_provenance: HashMap<RuleId, ClauseProvenance>,
+    /// **ADJ25 PR-5** — `CorrelationId` of the IR node each emitted
+    /// Fact derives from. Populated by
+    /// [`lower_to_kb_with_provenance`] when the source node carries
+    /// a correlation id in its `adj.correlation_id` metadata. The
+    /// engine + audit trail use this to trace a verdict citation
+    /// back to a source span.
+    pub fact_correlation: HashMap<FactId, adjudication_ir::CorrelationId>,
+    /// **ADJ25 PR-5** — `CorrelationId` of the IR node each emitted
+    /// Rule derives from.
+    pub rule_correlation: HashMap<RuleId, adjudication_ir::CorrelationId>,
 }
 
 impl LoweredKb {
@@ -165,17 +175,23 @@ impl LoweredKb {
             kb: other_kb,
             fact_provenance: other_facts,
             rule_provenance: other_rules,
+            fact_correlation: other_fact_corr,
+            rule_correlation: other_rule_corr,
         } = other;
         // Walk the other KB's clauses in stable order, reinsert into
-        // self.kb, and re-key provenance under the new IDs. We
-        // intentionally do not preserve old FactId/RuleId values —
-        // they are local to whichever KB they were minted in.
+        // self.kb, and re-key provenance + correlation under the
+        // new IDs. We intentionally do not preserve old
+        // FactId/RuleId values — they are local to whichever KB
+        // they were minted in.
         for (old_id, prov) in other_facts {
             if let Some(fact) = other_kb.find_fact_by_id(old_id) {
                 let mut fresh = fact.clone();
                 fresh.id = FactId(u64::MAX);
                 let new_id = self.kb.add_fact(fresh);
                 self.fact_provenance.insert(new_id, prov);
+                if let Some(corr) = other_fact_corr.get(&old_id) {
+                    self.fact_correlation.insert(new_id, corr.clone());
+                }
             }
         }
         for (old_id, prov) in other_rules {
@@ -184,6 +200,9 @@ impl LoweredKb {
                 fresh.id = RuleId(u64::MAX);
                 let new_id = self.kb.add_rule(fresh);
                 self.rule_provenance.insert(new_id, prov);
+                if let Some(corr) = other_rule_corr.get(&old_id) {
+                    self.rule_correlation.insert(new_id, corr.clone());
+                }
             }
         }
     }
@@ -196,6 +215,18 @@ impl LoweredKb {
     /// Look up the provenance for a given Rule ID, if recorded.
     pub fn provenance_for_rule(&self, id: RuleId) -> Option<&ClauseProvenance> {
         self.rule_provenance.get(&id)
+    }
+
+    /// **ADJ25 PR-5** — look up the source-node `CorrelationId` for
+    /// a given Fact ID, if recorded.
+    pub fn correlation_for_fact(&self, id: FactId) -> Option<&adjudication_ir::CorrelationId> {
+        self.fact_correlation.get(&id)
+    }
+
+    /// **ADJ25 PR-5** — look up the source-node `CorrelationId` for
+    /// a given Rule ID, if recorded.
+    pub fn correlation_for_rule(&self, id: RuleId) -> Option<&adjudication_ir::CorrelationId> {
+        self.rule_correlation.get(&id)
     }
 }
 
@@ -220,6 +251,10 @@ pub fn lower_to_kb_with_provenance(
     let mut lowered = LoweredKb::new();
     let mut constraint_counter: u64 = 0;
     for node in &ir_doc.nodes {
+        // ADJ25 PR-5: read the source-node correlation id (if any)
+        // once per node, then record it under every clause this
+        // node lowers to.
+        let source_correlation = adjudication_ir::node_correlation_id(node);
         match node.kind {
             NodeKind::Fact => {
                 let ids = lower_fact_tracked(&mut lowered.kb, node)?;
@@ -227,10 +262,16 @@ pub fn lower_to_kb_with_provenance(
                     match id {
                         ClauseId::Fact(fid) => {
                             lowered.fact_provenance.insert(fid, provenance.clone());
+                            if let Some(c) = source_correlation.as_ref() {
+                                lowered.fact_correlation.insert(fid, c.clone());
+                            }
                         }
                         ClauseId::Rule(rid) => {
                             // Denied facts lower to a NAF rule, not a fact.
                             lowered.rule_provenance.insert(rid, provenance.clone());
+                            if let Some(c) = source_correlation.as_ref() {
+                                lowered.rule_correlation.insert(rid, c.clone());
+                            }
                         }
                     }
                 }
@@ -241,9 +282,15 @@ pub fn lower_to_kb_with_provenance(
                     match id {
                         ClauseId::Fact(fid) => {
                             lowered.fact_provenance.insert(fid, provenance.clone());
+                            if let Some(c) = source_correlation.as_ref() {
+                                lowered.fact_correlation.insert(fid, c.clone());
+                            }
                         }
                         ClauseId::Rule(rid) => {
                             lowered.rule_provenance.insert(rid, provenance.clone());
+                            if let Some(c) = source_correlation.as_ref() {
+                                lowered.rule_correlation.insert(rid, c.clone());
+                            }
                         }
                     }
                 }
@@ -1465,6 +1512,49 @@ mod tests {
             }
             other => panic!("expected UnknownRuleSubtype, got {:?}", other),
         }
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ25 PR-5 — connector propagates source-node CorrelationIds
+    // into the lowered KB's fact_correlation / rule_correlation maps.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn adj25_lower_to_kb_propagates_node_correlation_id_to_fact_clauses() {
+        let mut fact = affirmed_fact_node("F1", atom("p"));
+        adjudication_ir::set_node_correlation_id(
+            &mut fact,
+            adjudication_ir::CorrelationId::new("corr.test-fact-1"),
+        );
+        let doc = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![fact],
+            edges: vec![],
+        };
+        let prov = ClauseProvenance::new("rb1", TrustTier::Tentative);
+        let lowered = lower_to_kb_with_provenance(&doc, prov).unwrap();
+        // One fact was emitted; its correlation map entry should
+        // resolve to the source node's CorrelationId.
+        assert_eq!(lowered.fact_correlation.len(), 1);
+        let (fid, corr) = lowered.fact_correlation.iter().next().unwrap();
+        assert_eq!(corr.0, "corr.test-fact-1");
+        assert!(lowered.correlation_for_fact(*fid).is_some());
+    }
+
+    #[test]
+    fn adj25_lower_to_kb_skips_correlation_when_source_node_uncorrelated() {
+        // No correlation id on the node → no entry in the
+        // correlation map. The clause is still emitted; only
+        // attribution is absent.
+        let fact = affirmed_fact_node("F1", atom("p"));
+        let doc = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![fact],
+            edges: vec![],
+        };
+        let prov = ClauseProvenance::new("rb1", TrustTier::Tentative);
+        let lowered = lower_to_kb_with_provenance(&doc, prov).unwrap();
+        assert!(lowered.fact_correlation.is_empty());
     }
 
     #[test]

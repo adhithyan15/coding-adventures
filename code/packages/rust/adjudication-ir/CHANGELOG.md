@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-05-13 — ADJ25 PR-5: correlation IDs (additive helpers)
+
+### Added
+
+New types + helpers for the ADJ25 correlation vector. Every node
+and edge can now carry a `CorrelationId` via metadata, threading
+source-byte → IR node → engine clause → verdict citation
+traceability through the IR.
+
+- `CorrelationId(pub String)` — newtype around the opaque identifier
+  with `new`, `is_empty`, `as_str`, `Display`.
+- `CORRELATION_ID_METADATA_KEY = "adj.correlation_id"` — reserved
+  metadata key under the framework's `adj.*` namespace.
+- `node_correlation_id(node) -> Option<CorrelationId>` /
+  `edge_correlation_id(edge)` — read helpers.
+- `set_node_correlation_id(node, id)` /
+  `set_edge_correlation_id(edge, id)` — write helpers (idempotent).
+- `check_correlation_completeness(ir_doc)` — verifies every node
+  carries a non-empty CorrelationId; returns the first violation
+  (`NodeMissingCorrelation { node_id }` / `NodeEmptyCorrelation
+  { node_id }`).
+
+### Why metadata-keyed rather than a first-class field on `IRNode`
+
+Adding a required field to `IRNode` is a SemVer-breaking change
+that ripples through 400+ struct-literal construction sites in the
+workspace, most of them tests. The `metadata: HashMap<String,
+String>` field was designed for exactly this kind of additive
+attribute. PR-7 (cutover) may promote to a dedicated struct field
+once the workspace sweep is in scope.
+
+### Tests
+
+5 new test cases: metadata round-trip, completeness pass on fully
+correlated IR, completeness rejects missing id, completeness
+rejects empty id, metadata-key constant lock. Total tests: 34 → 39,
+all passing.
+
+### Notes
+
+- Version: 0.4.0 → 0.5.0 (additive public surface).
+
 ## [0.4.0] - 2026-05-13 — ADJ25 PR-1: hierarchical-decomposition node kinds
 
 ### Added

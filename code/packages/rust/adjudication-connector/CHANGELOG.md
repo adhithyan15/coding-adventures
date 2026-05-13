@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-13 — ADJ25 PR-5: correlation IDs propagated to emitted clauses
+
+### Added
+
+- `LoweredKb::fact_correlation: HashMap<FactId, CorrelationId>` and
+  `LoweredKb::rule_correlation: HashMap<RuleId, CorrelationId>` —
+  per-clause attribution to the source IR node's `CorrelationId`.
+- `LoweredKb::correlation_for_fact(id)` /
+  `LoweredKb::correlation_for_rule(id)` — lookup helpers mirroring
+  `provenance_for_fact` / `provenance_for_rule`.
+- `lower_to_kb_with_provenance` now reads
+  `adjudication_ir::node_correlation_id(node)` for every Fact / Rule
+  source node and records the id under every emitted clause
+  (handling both the certain-fact and NAF-rule paths for denied
+  facts). Nodes without a correlation id are unaffected — the
+  clause is still emitted; only the correlation map entry is
+  skipped.
+
+This wires the ADJ25 correlation-vector pass-through at the engine
+boundary: every Fact/Rule the engine reasons over now traces back
+through its source IR node's `CorrelationId`, which in turn maps to
+a source span in the original document.
+
+### Changed
+
+- `LoweredKb` is still `#[derive(Default)]`; the new fields are
+  `HashMap`s that default to empty. Construction via
+  `LoweredKb::new()` / `LoweredKb::default()` continues to work
+  unchanged. The internal destructure in `LoweredKb::extend` was
+  updated to include the new fields and re-key them under the
+  fresh `FactId` / `RuleId`.
+
+### Tests
+
+2 new test cases covering: propagation of a Fact node's correlation
+id into `fact_correlation`, and graceful skip when the source node
+carries no correlation id. Total tests: 25 → 27, all passing.
+
+### Notes
+
+- Version: 0.2.0 → 0.3.0 (additive public surface).
+
 ## [0.2.0] - 2026-05-12
 
 ### Added
