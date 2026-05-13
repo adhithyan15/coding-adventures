@@ -142,6 +142,23 @@ fn factors_multivariate_perfect_squares_through_runtime() {
 }
 
 #[test]
+fn factors_multivariate_difference_of_squares_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 - y^2);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+            ],
+        )
+    );
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();
