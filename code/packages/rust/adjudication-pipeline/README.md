@@ -88,6 +88,60 @@ match out.verdict {
 let trail_json = serde_json::to_string_pretty(&out.audit_trail).unwrap();
 ```
 
+## Rulebook-Merging (v0.5, ADJ16 step 2)
+
+For deployments that have a typed rulebook (e.g., from
+`adjudication_rulebook::acquire_rulebook_adversarial` or a
+hand-authored ADJ09 review-promoted rulebook), use
+`run_with_rulebooks` to inject the rulebook's facts and rules into
+the engine's KB at answer time:
+
+```rust
+use adjudication_pipeline::{
+    run_with_rulebooks, RulebookProvenance, RulebookTrustTier, Verdict,
+};
+
+let rulebooks = vec![
+    (gemma_rulebook.ir, RulebookProvenance::new(
+        "tsa-gemma-2026-05-12",
+        RulebookTrustTier::Tentative,
+    )),
+    (llama_rulebook.ir, RulebookProvenance::new(
+        "tsa-llama-2026-05-12",
+        RulebookTrustTier::Tentative,
+    )),
+];
+
+let out = run_with_rulebooks(
+    input,
+    AdjudicationId::new("adj-001"),
+    || chrono::Utc::now().to_rfc3339(),
+    Some(&gateway),
+    &rulebooks,
+);
+
+if let Some(table) = &out.clause_provenance {
+    // Every fact and rule the engine saw is attributable.
+    for (fact_id, prov) in &table.fact_provenance {
+        println!("fact {} → from {} ({})",
+            fact_id.0, prov.source_rulebook_id, prov.trust_tier.as_str());
+    }
+}
+```
+
+The input document's IR gets a default `Authoritative` provenance
+keyed to the document id (the source declaration is authoritative
+for itself); each rulebook gets the caller-supplied provenance. All
+clauses are combined into one KB via `LoweredKb::extend` from
+`adjudication-connector` v0.2. Queries are extracted only from the
+input document's IR — query nodes in rulebook IRs are ignored.
+
+The returned `PipelineOutput.clause_provenance` maps each
+`logic_engine::FactId` / `RuleId` back to its source rulebook and
+trust tier. Step 3 of ADJ16 will consume this to surface
+`DisputedAnswer { candidates: Vec<(verdict, proof, source)> }`
+when different rulebooks disagree.
+
 ## Why `adjudication_id` and `now` are caller-supplied
 
 The pipeline is otherwise pure: same input + same id + same
