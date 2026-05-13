@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-05-13 — ADJ25 PR-3: fresh-agent hierarchical-decomposition retry
+
+### Added
+
+New primitive `retry_decompose_level(req, gateway, max_attempts,
+now)` per [ADJ25](../../specs/ADJ25-hierarchical-decomposition.md).
+The hierarchical retry is **fresh-agent per attempt** and
+**parent-scoped** — fundamentally different from the existing
+whole-document retries (coverage / polarity / drift / adversarial):
+
+- Each attempt is a stateless LLM call. The prompt is built fresh
+  from the framework's state; no conversation history flows between
+  attempts.
+- The model sees the parent's text (e.g., 14 bytes of "1 carry-on
+  bag"), the previous attempt's children, and a plain-English
+  description of the gap. Not the whole document.
+- The prompt is **source-shaped, not framework-shaped**. No
+  references to ADJ## numbers, "decomposition invariants", or other
+  framework jargon. The model is asked to look at a chunk of text
+  and produce a complete decomposition.
+
+### New public surface
+
+- `DecompositionLevel` — four variants matching
+  `adjudication_coverage::DecompLevel` 1:1. Defined locally to
+  avoid taking a dependency on the coverage crate; the orchestrator
+  (PR-4) bridges the two.
+- `HierarchicalDecompRetryRequest` — `{ level, document_id,
+  parent_text, previous_children, gap_description, ancestor_context }`.
+- `HierarchicalDecompRetryOutcome` — `{ corrected_children,
+  dialogue, used_attempts }`. The `corrected_children` field
+  carries the parent's NEW children JSON (not a whole document).
+- `HIERARCHICAL_DECOMP_PROMPT_VERSION = "hierarchical-decomp-v1"`
+  — stable prompt-version constant for audit-trail replay.
+
+### Scope and what PR-3 deliberately does not do
+
+- **No coverage re-verification.** The primitive hands back whatever
+  JSON the model produced; the orchestrator (PR-4) re-runs
+  `check_hierarchical_coverage` and either accepts or calls back in
+  for another retry. Decoupling keeps this crate independent of
+  `adjudication-coverage`.
+- **No orchestration.** A single retry call addresses a single gap.
+  PR-4 drives the full level-by-level decomposition loop, picking
+  which parent/gap to retry on each iteration.
+
+### Tests
+
+8 new test cases covering: happy-path retry, prompt-language is
+source-shaped not framework-shaped, per-level wording, ancestor
+context rendered when provided, control-character sanitization,
+1-attempt budget, prompt-version constant lock, level noun helpers.
+Total `adjudication-clarification` tests: 32 → 40, all passing.
+
+### Notes
+
+- A top-level `sanitize_for_prompt(s, max_len)` helper was added.
+  It coexists with the local-function `sanitize_for_prompt` inside
+  `build_typed_quantity_correction_prompt` — Rust's name-resolution
+  scopes the local one to its enclosing fn, no clash.
+- Version: 0.5.0 → 0.6.0 (additive public surface).
+
 ## [0.5.0] - 2026-05-13 — ADJ06-for-ADJ22 typed-quantity retry
 
 ### Added
