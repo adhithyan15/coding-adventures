@@ -4,6 +4,7 @@ import {
   ASSUME,
   EQUAL,
   EXP,
+  FACTOR,
   FALSE,
   FORGET,
   GREATER,
@@ -133,6 +134,23 @@ describe("macsyma-runtime", () => {
     expect(killResult.input).toEqual(app(KILL, [sym("x")]));
     expect(evResult.input).toEqual(app(EV, [app(ADD, [int(1), int(2)]), sym("numer")]));
     expect(evResult.output).toEqual(numberNode(3));
+  });
+
+  it("factors univariate integer polynomials through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^2 - 1);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(ADD, [int(1), sym("x")]),
+      app(ADD, [int(-1), sym("x")]),
+    ]));
+  });
+
+  it("leaves multivariate factor calls unevaluated", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x + y);");
+
+    expect(result.output).toEqual(app(FACTOR, [app(ADD, [sym("x"), sym("y")])]));
   });
 
   it("tracks the showtime option flag through normal assignments", () => {

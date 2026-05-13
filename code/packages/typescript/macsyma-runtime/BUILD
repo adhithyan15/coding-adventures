@@ -12,6 +12,7 @@ cd ../macsyma-compiler && npm ci --quiet
 cd ../cas-list-operations && npm ci --quiet
 cd ../cas-pattern-matching && npm ci --quiet
 cd ../cas-pretty-printer && npm ci --quiet
+cd ../cas-factor && npm ci --quiet
 cd ../cas-simplify && npm ci --quiet
 cd ../cas-solve && npm ci --quiet
 cd ../cas-substitution && npm ci --quiet

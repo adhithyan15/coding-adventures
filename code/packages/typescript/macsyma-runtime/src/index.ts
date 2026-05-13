@@ -1,4 +1,5 @@
 import { compileMacsyma } from "@coding-adventures/macsyma-compiler";
+import { factorIntegerPolynomial } from "@coding-adventures/cas-factor";
 import {
   append,
   applyList,
@@ -21,6 +22,7 @@ import { expandTrig, trigReduce, trigSimplify } from "@coding-adventures/cas-tri
 import {
   ACOS,
   ACOSH,
+  ADD,
   ASSUME,
   ASIN,
   ASINH,
@@ -41,10 +43,13 @@ import {
   LESS_EQUAL,
   LIST,
   LOG,
+  MUL,
+  POW,
   SIN,
   SINH,
   SOLVE,
   SQRT,
+  SUB,
   SUBST,
   SUM,
   TAN,
@@ -52,6 +57,7 @@ import {
   TRUE,
   app,
   equals,
+  int,
   numberNode,
   stringNode,
   sym,
@@ -388,6 +394,7 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(PROP_VARS.name, propvarsHandler);
     table.set(SOLVE.name, solveHandler);
     table.set(SUBST.name, substHandler);
+    table.set(FACTOR.name, factorHandler);
     table.set(SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
     table.set(RAT_SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
     table.set(TRIG_SIMPLIFY.name, unaryHandler((value) => simplifyCas(trigSimplify(value))));
@@ -419,6 +426,7 @@ export class MacsymaBackend extends SymbolicBackend {
       PROP_VARS.name,
       SOLVE.name,
       SUBST.name,
+      FACTOR.name,
     ]);
   }
 
@@ -820,6 +828,21 @@ function substHandler(_vm: VM, expr: IRApply): IRNode {
   return subst(value, variable, target);
 }
 
+function factorHandler(_vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 1) return expr;
+  const variable = findSingleVariable(expr.args[0]);
+  if (variable === undefined) return expr;
+  const coeffs = irToIntegerPoly(expr.args[0], variable);
+  if (coeffs === undefined) return expr;
+
+  const [content, factors] = factorIntegerPolynomial(coeffs);
+  if (factors.length === 0) return expr.args[0];
+  if (coeffs.length > 2 && factors.length === 1 && factors[0][1] === 1 && absBigint(content) === 1n) {
+    return expr;
+  }
+  return factorResultToIr(content, factors, variable);
+}
+
 function unaryHandler(body: (value: IRNode) => IRNode): Handler {
   return (_vm, expr) => {
     if (expr.args.length !== 1) return expr;
@@ -829,6 +852,129 @@ function unaryHandler(body: (value: IRNode) => IRNode): Handler {
       return expr;
     }
   };
+}
+
+function findSingleVariable(node: IRNode): IRSymbol | undefined {
+  const variables = new Set<string>();
+  collectVariables(node, variables);
+  if (variables.size !== 1) return undefined;
+  return sym([...variables][0]);
+}
+
+function collectVariables(node: IRNode, variables: Set<string>): void {
+  if (node.kind === "symbol" && !node.name.startsWith("%")) {
+    variables.add(node.name);
+    return;
+  }
+  if (node.kind === "apply") {
+    for (const arg of node.args) collectVariables(arg, variables);
+  }
+}
+
+function irToIntegerPoly(node: IRNode, variable: IRSymbol): bigint[] | undefined {
+  if (node.kind === "integer") return [node.value];
+  if (equals(node, variable)) return [0n, 1n];
+  if (node.kind !== "apply" || node.head.kind !== "symbol") return undefined;
+
+  if (node.head.name === ADD.name) {
+    return node.args.reduce<bigint[] | undefined>((acc, arg) => {
+      const p = irToIntegerPoly(arg, variable);
+      return acc === undefined || p === undefined ? undefined : polyAdd(acc, p);
+    }, [0n]);
+  }
+  if (node.head.name === SUB.name && node.args.length === 2) {
+    const a = irToIntegerPoly(node.args[0], variable);
+    const b = irToIntegerPoly(node.args[1], variable);
+    return a === undefined || b === undefined ? undefined : polySub(a, b);
+  }
+  if (node.head.name === MUL.name) {
+    return node.args.reduce<bigint[] | undefined>((acc, arg) => {
+      const p = irToIntegerPoly(arg, variable);
+      return acc === undefined || p === undefined ? undefined : polyMul(acc, p);
+    }, [1n]);
+  }
+  if (node.head.name === POW.name && node.args.length === 2 && node.args[1].kind === "integer" && node.args[1].value >= 0n) {
+    const base = irToIntegerPoly(node.args[0], variable);
+    return base === undefined ? undefined : polyPow(base, node.args[1].value);
+  }
+  return undefined;
+}
+
+function factorResultToIr(content: bigint, factors: Array<[bigint[], number]>, variable: IRSymbol): IRNode {
+  const pieces: IRNode[] = [];
+  if (content !== 1n) pieces.push(int(content));
+  for (const [coeffs, multiplicity] of factors) {
+    const factor = polyToIr(coeffs, variable);
+    pieces.push(multiplicity === 1 ? factor : app(POW, [factor, int(multiplicity)]));
+  }
+  return multiplyNodes(pieces);
+}
+
+function polyToIr(coeffs: readonly bigint[], variable: IRSymbol): IRNode {
+  const terms: IRNode[] = [];
+  for (let degree = 0; degree < coeffs.length; degree += 1) {
+    const coeff = coeffs[degree];
+    if (coeff === 0n) continue;
+    terms.push(monomialToIr(coeff, degree, variable));
+  }
+  return terms.length === 0 ? int(0) : addNodes(terms);
+}
+
+function monomialToIr(coeff: bigint, degree: number, variable: IRSymbol): IRNode {
+  if (degree === 0) return int(coeff);
+  const power = degree === 1 ? variable : app(POW, [variable, int(degree)]);
+  if (coeff === 1n) return power;
+  if (coeff === -1n) return app(MUL, [int(-1), power]);
+  return app(MUL, [int(coeff), power]);
+}
+
+function addNodes(nodes: readonly IRNode[]): IRNode {
+  if (nodes.length === 1) return nodes[0];
+  return app(ADD, nodes);
+}
+
+function multiplyNodes(nodes: readonly IRNode[]): IRNode {
+  if (nodes.length === 0) return int(1);
+  if (nodes.length === 1) return nodes[0];
+  return app(MUL, nodes);
+}
+
+function polyAdd(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  const len = Math.max(a.length, b.length);
+  const out = Array<bigint>(len).fill(0n);
+  for (let i = 0; i < len; i += 1) out[i] = (a[i] ?? 0n) + (b[i] ?? 0n);
+  return trimPoly(out);
+}
+
+function polySub(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  const len = Math.max(a.length, b.length);
+  const out = Array<bigint>(len).fill(0n);
+  for (let i = 0; i < len; i += 1) out[i] = (a[i] ?? 0n) - (b[i] ?? 0n);
+  return trimPoly(out);
+}
+
+function polyMul(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  const out = Array<bigint>(a.length + b.length - 1).fill(0n);
+  for (let i = 0; i < a.length; i += 1) {
+    for (let j = 0; j < b.length; j += 1) out[i + j] += a[i] * b[j];
+  }
+  return trimPoly(out);
+}
+
+function polyPow(base: readonly bigint[], exp: bigint): bigint[] | undefined {
+  if (exp > 32n) return undefined;
+  let out = [1n];
+  for (let i = 0n; i < exp; i += 1n) out = polyMul(out, base);
+  return out;
+}
+
+function trimPoly(poly: bigint[]): bigint[] {
+  while (poly.length > 1 && poly[poly.length - 1] === 0n) poly.pop();
+  return poly;
+}
+
+function absBigint(value: bigint): bigint {
+  return value < 0n ? -value : value;
 }
 
 function listHandler(
