@@ -1,5 +1,23 @@
 # Changelog — `aarch64-backend`
 
+## 0.1.2 — 2026-05-13
+
+### Added
+
+- **Cross-function `BL` relocations** — new `compile_with_relocs` public
+  entry point returns `(Vec<u8>, Vec<Reloc>)`.  Each `Reloc` records the
+  word index of a placeholder `BL #0` instruction that targets a function
+  outside the current binary.  The two-pass AOT linker in `twig-aot` uses
+  these to patch the final linked image with correct PC-relative offsets.
+- `Reloc` is a re-export of `aarch64_encoder::ExternalReloc`.
+
+### Changed
+
+- Cross-function `call` instructions now emit a `BL #0` placeholder via
+  `Assembler::bl_external` instead of returning `Err(UnsupportedOp)`.
+  Self-recursive calls continue to emit a direct `BL` to the body-entry
+  label.
+
 ## 0.1.0 — 2026-05-05
 
 Initial release.  ARM64 native-code backend for jit-core / aot-core,

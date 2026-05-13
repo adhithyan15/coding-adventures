@@ -1,0 +1,40 @@
+[package]
+name = "twig-demo"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Twig multi-backend demo: interpreter, AOT, JVM, CLR, BEAM, and WASM"
+
+[[bin]]
+name = "twig-demo"
+path = "src/main.rs"
+
+[dependencies]
+# Interpreter backend
+twig-vm            = { path = "../twig-vm" }
+
+# AOT backend
+twig-aot           = { path = "../twig-aot" }
+
+# BEAM backend
+twig-to-beam       = { path = "../twig-to-beam" }
+
+# WASM backend
+twig-to-wasm       = { path = "../twig-to-wasm" }
+wasm-runtime       = { path = "../wasm-runtime" }
+
+# JVM backend
+twig-to-jvm        = { path = "../twig-to-jvm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+jvm-class-file     = { path = "../jvm-class-file" }
+
+# CLR backend
+twig-to-cil        = { path = "../twig-to-cil" }
+ir-to-cil-bytecode = { path = "../ir-to-cil-bytecode" }
+
+# Shared IIR types and fixup
+interpreter-ir     = { path = "../interpreter-ir" }
+twig-ir-compiler   = { path = "../twig-ir-compiler" }
+iir-type-checker   = { path = "../iir-type-checker" }
+
+# Runtime utils
+tempfile           = "3"

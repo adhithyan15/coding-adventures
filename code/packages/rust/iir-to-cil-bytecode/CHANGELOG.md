@@ -2,6 +2,15 @@
 
 All notable changes to this crate are documented here.
 
+## [0.4.1] — 2026-05-13
+
+### Fixed (Multi-backend demo — fib(10)=55)
+
+- **`"mov"` opcode support** — added handling for the `mov` IIR instruction
+  (pre-lowered form of `call_builtin "_move"`).  The CLR lowerer now emits
+  the source operand load followed by a `stloc`/`starg` store, mirroring what
+  was already done for other copy-value instructions.
+
 ## [0.4.0] — 2026-05-12
 
 ### Added (LANG37 — CLR Closure Lowering)

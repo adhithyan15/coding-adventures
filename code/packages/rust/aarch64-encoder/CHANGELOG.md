@@ -1,5 +1,19 @@
 # Changelog — `aarch64-encoder`
 
+## 0.1.1 — 2026-05-13
+
+### Added
+
+- **`ExternalReloc` struct** — records a placeholder `BL #0` instruction site
+  for cross-function calls.  Fields: `word_idx: usize` (index into the
+  per-function code word array), `symbol: String` (callee name to resolve).
+- **`Assembler::bl_external`** — emits `BL #0` (opcode `0x94000000`) at the
+  current position, appends an `ExternalReloc`, and returns the word index
+  for tracing.
+- **`Assembler::external_relocs`** field — collects all `ExternalReloc`
+  entries emitted during assembly.  The AOT linker drains this via
+  `std::mem::take` after the function body is complete.
+
 ## 0.1.0 — 2026-05-05
 
 Initial release.  Pure-Rust ARM64 instruction encoder covering the subset

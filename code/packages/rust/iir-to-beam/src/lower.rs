@@ -150,6 +150,28 @@ const OP_GC_BIF2: u8 = 125;
 /// **Not** 6, which is `call_only` (tail-call within the same module).
 const OP_CALL_EXT: u8 = 7;
 
+/// `{allocate, {u,StackNeed}, {u,Live}}` — allocate a stack frame.
+///
+/// Allocates `StackNeed` Y-register (stack) slots for the current activation.
+/// `Live` is the number of live X-registers at this point (used by the GC to
+/// know which X-registers contain heap pointers).
+///
+/// Must appear before any `call` in functions that need to preserve values
+/// across calls.  Every function that executes `allocate` must execute the
+/// matching `deallocate` on every path to `return`.
+///
+/// OTP 28: opcode 12 (beam_opcodes:opcode(allocate,2) -> 12).
+const OP_ALLOCATE: u8 = 12;
+
+/// `{deallocate, {u,StackNeed}}` — deallocate the stack frame.
+///
+/// Tears down the stack frame allocated by `allocate`.  Must match the
+/// `StackNeed` from the corresponding `allocate`.  Must be emitted on every
+/// return path from a function that called `allocate`.
+///
+/// OTP 28: opcode 18 (beam_opcodes:opcode(deallocate,1) -> 18).
+const OP_DEALLOCATE: u8 = 18;
+
 // ===========================================================================
 // BEAM heap/list opcodes (Phase 2 heap ops, LANG31)
 // ===========================================================================
@@ -518,6 +540,23 @@ pub fn lower_iir_to_beam(
         reg_map: HashMap<String, u8>, // variable name → x-register index
         iir_label_map: HashMap<String, u32>, // IIR label name → BEAM label number
         next_reg: u8,      // first register after all assigned ones
+        // ── Y-register (stack-slot) state for call-site save/restore ──────
+        //
+        // When a function makes internal `call` instructions, the callee can
+        // clobber ALL x-registers.  To preserve values across calls, BEAM uses
+        // a per-activation stack frame (Y-registers).
+        //
+        // `y_reg_map` maps an IIR variable name to its Y-register slot index.
+        // Only variables that are "live across at least one call" (defined before
+        // a call and used after that call) appear here.
+        //
+        // `live_across`: maps instruction index → sorted list of variable names
+        // that are live across that call and must be saved/restored around it.
+        //
+        // `n_yregs`: total number of Y-slots (= y_reg_map.len()).
+        y_reg_map: HashMap<String, u8>,
+        live_across: HashMap<usize, Vec<String>>,
+        n_yregs: u8,
     }
 
     let mut fn_metas: Vec<FnMeta> = Vec::with_capacity(module.functions.len());
@@ -620,6 +659,128 @@ pub fn lower_iir_to_beam(
             }
         }
 
+        // ── Liveness analysis for Y-register save/restore ────────────────
+        //
+        // In BEAM, executing a `call` or `call_ext` instruction clobbers ALL
+        // x-registers.  Values that must survive across a call must be saved
+        // to Y-registers (stack slots) before the call and restored afterwards.
+        //
+        // We compute, for each call at instruction index `call_idx`, the set of
+        // IIR variables that are:
+        //   1. Defined (as a parameter or as a prior instruction's dest) before
+        //      the call, AND
+        //   2. Used as a source operand in some instruction AFTER the call.
+        //
+        // These variables must be spilled to Y-registers around the call.
+        //
+        // Algorithm:
+        //   a) Build `def_before[v]` = true for params, and true for instr dest
+        //      at position j if j < call_idx (strict, not equal).
+        //   b) Build `last_use[v]` = max index where `v` appears as a Var source.
+        //   c) For each call at `call_idx`, collect variables where
+        //      def_before(v, call_idx) AND last_use[v] > call_idx.
+        //
+        // The union over all calls forms `all_live_vars`, each assigned a
+        // Y-register slot.
+
+        // Step (a)/(b): build def_pos and last_use maps.
+        // def_pos[v] = index of the instruction that produces v.  Parameters get
+        // usize::MAX so that `def_pos[v] < call_idx` is always true.
+        let mut def_pos: HashMap<String, usize> = HashMap::new();
+        let mut last_use: HashMap<String, usize> = HashMap::new();
+
+        for (param_name, _) in &func.params {
+            // Sentinel: parameters are "defined before any instruction" →
+            // always satisfy def_pos < call_idx.
+            def_pos.insert(param_name.clone(), usize::MAX);
+        }
+
+        for (idx, instr) in func.instructions.iter().enumerate() {
+            // Source variables
+            for src in &instr.srcs {
+                if let Operand::Var(name) = src {
+                    // Only track data variables — skip label-name variables
+                    // (they appear as srcs of `label`, `jmp`, `jmp_if_*` but
+                    // are looked up in `iir_label_map`, not in reg_map).
+                    if reg_map.contains_key(name.as_str()) {
+                        last_use.insert(name.clone(), idx);
+                    }
+                }
+            }
+            // Destination variable
+            if let Some(dest) = &instr.dest {
+                // Only record the first definition (SSA: each var is defined once).
+                def_pos.entry(dest.clone()).or_insert(idx);
+            }
+        }
+
+        // Step (c): for each call instruction, determine which variables
+        // are live across it.
+        let mut live_across: HashMap<usize, Vec<String>> = HashMap::new();
+
+        for (call_idx, instr) in func.instructions.iter().enumerate() {
+            if instr.op != "call" && instr.op != "call_ext" {
+                continue;
+            }
+
+            let call_dest: Option<&str> = instr.dest.as_deref();
+
+            let live_vars: Vec<String> = def_pos.iter()
+                .filter(|(var_name, &d_pos)| {
+                    // Defined before this call:
+                    // - parameters: d_pos == usize::MAX (always "before")
+                    // - instruction results: d_pos < call_idx (strictly before)
+                    let defined_before = d_pos == usize::MAX || d_pos < call_idx;
+                    // Used after this call:
+                    let used_after = last_use.get(var_name.as_str())
+                        .map(|&u| u > call_idx)
+                        .unwrap_or(false);
+                    // Not the destination of this call (that's a new binding):
+                    let not_call_dest = call_dest != Some(var_name.as_str());
+
+                    defined_before && used_after && not_call_dest
+                })
+                .map(|(name, _)| name.clone())
+                .collect::<std::collections::BTreeSet<_>>()  // sort for determinism
+                .into_iter()
+                .collect();
+
+            if !live_vars.is_empty() {
+                live_across.insert(call_idx, live_vars);
+            }
+        }
+
+        // Assign a Y-register slot to every variable that is live across at
+        // least one call.  We collect all such variables, sort for determinism,
+        // and assign slots 0, 1, 2, …
+        let mut all_live_vars: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+        for vars in live_across.values() {
+            for v in vars {
+                all_live_vars.insert(v.clone());
+            }
+        }
+
+        // Guard: BEAM Y-registers are 8-bit (0–255).  More than 255 live-across-
+        // call variables cannot be represented; the `slot as u8` and `len() as u8`
+        // casts below would silently overflow without this check.
+        if all_live_vars.len() > 255 {
+            return Err(IIRBeamError::UnsupportedOp {
+                function: func.name.clone(),
+                op: format!(
+                    "too many live-across-call variables ({}); \
+                     BEAM Y-registers are limited to 255",
+                    all_live_vars.len()
+                ),
+            });
+        }
+
+        let mut y_reg_map: HashMap<String, u8> = HashMap::new();
+        for (slot, var) in all_live_vars.iter().enumerate() {
+            y_reg_map.insert(var.clone(), slot as u8);
+        }
+
+        let n_yregs = y_reg_map.len() as u8;
+
         fn_metas.push(FnMeta {
             fn_atom,
             arity: func.params.len() as u32,
@@ -627,6 +788,9 @@ pub fn lower_iir_to_beam(
             reg_map,
             iir_label_map,
             next_reg: next_reg as u8, // safe: bounded to <255 by alloc_reg!
+            y_reg_map,
+            live_across,
+            n_yregs,
         });
     }
 
@@ -670,6 +834,24 @@ pub fn lower_iir_to_beam(
             label: meta.entry_label,
         });
 
+        // ── Stack frame allocation (Y-registers for cross-call liveness) ─────
+        //
+        // If this function makes any `call` or `call_ext` instructions that
+        // have live variables crossing them, we must allocate a stack frame.
+        //
+        // `{allocate, StackNeed, Live}`:
+        //   - StackNeed = number of Y-register slots we will use.
+        //   - Live      = number of live X-registers at this point (used by GC
+        //                 to scan X-registers for heap pointers).  Conservatively
+        //                 set to the function arity (only parameters are live
+        //                 at function entry; we haven't read any locals yet).
+        if meta.n_yregs > 0 {
+            instrs.push(BEAMInstruction::new(OP_ALLOCATE, vec![
+                BEAMOperand::u(meta.n_yregs as u64),  // StackNeed
+                BEAMOperand::u(meta.arity as u64),    // Live (function arity)
+            ]));
+        }
+
         // ── Translate each IIR instruction ──────────────────────────────────
 
         // `live` = number of live x-registers at gc_bif call sites.
@@ -682,6 +864,9 @@ pub fn lower_iir_to_beam(
         // (We can't borrow `label_counter` mutably inside a closure here,
         //  so we use a raw counter variable.)
         let reg_map = &meta.reg_map;
+        let y_reg_map = &meta.y_reg_map;
+        let live_across = &meta.live_across;
+        let n_yregs = meta.n_yregs;
         let iir_label_map = &meta.iir_label_map;
         let fn_name = &func.name;
 
@@ -1144,10 +1329,15 @@ pub fn lower_iir_to_beam(
                 //
                 // Branch to target if cond != 0 (truthy).
                 //
-                // Synthesis:
-                //   is_eq_exact {f,fall_synth} {x,cond} {i,0}  ← jump to fall_synth if cond == 0
-                //   jump {f,target}                             ← cond != 0: take the branch
-                //   label {u,fall_synth}                        ← cond == 0: continue here
+                // Synthesis — single instruction:
+                //
+                //   is_eq_exact {f,target} {x,cond} {i,0}
+                //
+                // `is_eq_exact {f,Fail} A B` semantics:
+                //   - If A == B: test passes, fall through (cond==0 → FALSE → don't branch)
+                //   - If A != B: test fails, jump to Fail (cond!=0 → TRUE → take branch)
+                //
+                // This is correct: jump to target only when cond != 0.
                 "jmp_if_true" => {
                     let cond_reg = operand_reg!(get_src!(instr, 0));
                     let target_name = match instr.srcs.last() {
@@ -1158,35 +1348,30 @@ pub fn lower_iir_to_beam(
                         }),
                     };
                     let target_lbl = resolve_label!(target_name);
-                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
-                        IIRBeamError::UnsupportedOp {
-                            function: fn_name.clone(),
-                            op: "label counter overflow — too many conditional branches".into(),
-                        }
-                    })?;
-                    let fall_synth = label_counter;
 
+                    // is_eq_exact {f,target} cond 0:
+                    //   cond == 0 (FALSE) → fall through (don't take branch, stay in current code)
+                    //   cond != 0 (TRUE)  → jump to target (take the branch)
                     instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
-                        BEAMOperand::f(fall_synth),  // branch here if cond == 0
+                        BEAMOperand::f(target_lbl),  // jump to target when cond != 0 (TRUE)
                         BEAMOperand::x(cond_reg),
                         BEAMOperand::i(0),
                     ]));
-                    instrs.push(BEAMInstruction::new(
-                        OP_JUMP, vec![BEAMOperand::f(target_lbl)],
-                    ));
-                    instrs.push(BEAMInstruction::new(
-                        OP_LABEL, vec![BEAMOperand::u(fall_synth as u64)],
-                    ));
                 }
 
                 // ── jmp_if_false ─────────────────────────────────────────────
                 //
                 // Branch to target if cond == 0 (falsy).
                 //
-                // Synthesis:
-                //   is_ne_exact {f,fall_synth} {x,cond} {i,0}  ← jump to fall_synth if cond != 0
-                //   jump {f,target}                             ← cond == 0: take the branch
-                //   label {u,fall_synth}                        ← cond != 0: continue here
+                // Synthesis — single instruction:
+                //
+                //   is_ne_exact {f,target} {x,cond} {i,0}
+                //
+                // `is_ne_exact {f,Fail} A B` semantics:
+                //   - If A != B: test passes, fall through (cond!=0 → TRUE → don't branch to else)
+                //   - If A == B: test fails, jump to Fail (cond==0 → FALSE → take else branch)
+                //
+                // This is correct: jump to target only when cond == 0.
                 "jmp_if_false" => {
                     let cond_reg = operand_reg!(get_src!(instr, 0));
                     let target_name = match instr.srcs.last() {
@@ -1197,25 +1382,15 @@ pub fn lower_iir_to_beam(
                         }),
                     };
                     let target_lbl = resolve_label!(target_name);
-                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
-                        IIRBeamError::UnsupportedOp {
-                            function: fn_name.clone(),
-                            op: "label counter overflow — too many conditional branches".into(),
-                        }
-                    })?;
-                    let fall_synth = label_counter;
 
+                    // is_ne_exact {f,target} cond 0:
+                    //   cond != 0 (TRUE)  → fall through (condition is true, stay in then-branch)
+                    //   cond == 0 (FALSE) → jump to target (condition is false, take else-branch)
                     instrs.push(BEAMInstruction::new(OP_IS_NE_EXACT, vec![
-                        BEAMOperand::f(fall_synth),  // branch here if cond != 0
+                        BEAMOperand::f(target_lbl),  // jump to target when cond == 0 (FALSE)
                         BEAMOperand::x(cond_reg),
                         BEAMOperand::i(0),
                     ]));
-                    instrs.push(BEAMInstruction::new(
-                        OP_JUMP, vec![BEAMOperand::f(target_lbl)],
-                    ));
-                    instrs.push(BEAMInstruction::new(
-                        OP_LABEL, vec![BEAMOperand::u(fall_synth as u64)],
-                    ));
                 }
 
                 // ── ret ─────────────────────────────────────────────────────
@@ -1226,6 +1401,10 @@ pub fn lower_iir_to_beam(
                 // If the value is already in x0 (e.g. for single-arg functions),
                 // the move is a no-op (same src = same dst), but we emit it
                 // unconditionally for simplicity.
+                //
+                // If a stack frame was allocated (`n_yregs > 0`), we must
+                // `deallocate` it before returning.  The return value is moved
+                // into x0 BEFORE deallocating so it is not affected.
                 "ret" => {
                     let r = operand_reg!(get_src!(instr, 0));
                     if r != 0 {
@@ -1233,6 +1412,12 @@ pub fn lower_iir_to_beam(
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r),
                             BEAMOperand::x(0),
+                        ]));
+                    }
+                    // Tear down the stack frame before returning.
+                    if n_yregs > 0 {
+                        instrs.push(BEAMInstruction::new(OP_DEALLOCATE, vec![
+                            BEAMOperand::u(n_yregs as u64),
                         ]));
                     }
                     instrs.push(BEAMInstruction::new(OP_RETURN, vec![]));
@@ -1243,6 +1428,12 @@ pub fn lower_iir_to_beam(
                 // Return without a value.  BEAM `return` always returns x0,
                 // but the caller is expected to ignore it for void functions.
                 "ret_void" => {
+                    // Tear down the stack frame before returning.
+                    if n_yregs > 0 {
+                        instrs.push(BEAMInstruction::new(OP_DEALLOCATE, vec![
+                            BEAMOperand::u(n_yregs as u64),
+                        ]));
+                    }
                     instrs.push(BEAMInstruction::new(OP_RETURN, vec![]));
                 }
 
@@ -1258,6 +1449,33 @@ pub fn lower_iir_to_beam(
                 //   2. `call {u,arity} {f,entry_label}`.
                 //   3. The return value is in x0; move it to the result register.
                 "call" => {
+                    // ── Save live-across-call variables to Y-registers ────────
+                    //
+                    // BEAM `call` clobbers ALL x-registers.  Any variable that
+                    // was defined before this call and is used in instructions
+                    // after it must be saved to a Y-register BEFORE we start
+                    // moving arguments into x0, x1, … (which also clobbers
+                    // x-registers).
+                    //
+                    // `instr_idx - 1` is the 0-based index of the current
+                    // instruction (the loop incremented `instr_idx` at the top
+                    // of the while-body, so the current instruction is at
+                    // `instr_idx - 1`).
+                    let cur_idx = instr_idx - 1;
+                    if let Some(live_vars) = live_across.get(&cur_idx) {
+                        for var in live_vars {
+                            if let (Some(&x_reg), Some(&y_slot)) =
+                                (reg_map.get(var.as_str()), y_reg_map.get(var.as_str()))
+                            {
+                                // move {x,x_reg} {y,y_slot}
+                                instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                    BEAMOperand::x(x_reg),
+                                    BEAMOperand::y(y_slot),
+                                ]));
+                            }
+                        }
+                    }
+
                     // srcs[0] = function name, srcs[1..] = arguments
                     let callee_name = match instr.srcs.first() {
                         Some(Operand::Var(name)) => name.as_str(),
@@ -1320,6 +1538,26 @@ pub fn lower_iir_to_beam(
                                 BEAMOperand::x(0),
                                 BEAMOperand::x(rd),
                             ]));
+                        }
+                    }
+
+                    // ── Restore live-across-call variables from Y-registers ───
+                    //
+                    // After the callee returns, x-registers other than x0 are
+                    // garbage.  Reload the saved variables from their Y-slots
+                    // back into their assigned x-registers so subsequent
+                    // instructions can use them normally.
+                    if let Some(live_vars) = live_across.get(&cur_idx) {
+                        for var in live_vars {
+                            if let (Some(&x_reg), Some(&y_slot)) =
+                                (reg_map.get(var.as_str()), y_reg_map.get(var.as_str()))
+                            {
+                                // move {y,y_slot} {x,x_reg}
+                                instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                    BEAMOperand::y(y_slot),
+                                    BEAMOperand::x(x_reg),
+                                ]));
+                            }
                         }
                     }
                 }

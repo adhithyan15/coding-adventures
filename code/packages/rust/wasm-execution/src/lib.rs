@@ -981,6 +981,9 @@ pub struct SavedFrame {
     pub control_flow_map: HashMap<usize, ControlTarget>,
     pub return_pc: usize,
     pub return_arity: usize,
+    /// The br_table targets table for the caller, saved so the callee can
+    /// overwrite `ctx.br_table_targets` and restore it on return (LANG34).
+    pub br_table_targets: Vec<Vec<u32>>,
 }
 
 /// The WASM execution context — all runtime state for WASM instructions.
@@ -997,6 +1000,11 @@ pub struct WasmExecutionContext {
     pub control_flow_map: HashMap<usize, ControlTarget>,
     pub saved_frames: Vec<SavedFrame>,
     pub returned: bool,
+    /// Per-function br_table label arrays.  Each `br_table` instruction
+    /// stores an index into this Vec as its operand; the Vec entry holds
+    /// `[l0, l1, ..., l_{n-1}, default]`.  Saved/restored on every call so
+    /// that the callee's table doesn't collide with the caller's (LANG34).
+    pub br_table_targets: Vec<Vec<u32>>,
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -2308,18 +2316,39 @@ fn register_control(vm: &mut GenericVM) {
     });
 
     // br_table (0x0E)
+    //
+    // The dispatch-loop pattern emitted by iir-to-wasm looks like:
+    //
+    //   loop                          ← outer loop label (depth = N from inside)
+    //     block ... (N blocks)
+    //       local.get $dispatch
+    //       br_table 0 1 … N-1  N    ← labels[i] → break out of block i
+    //                                   default  N → jump back to loop (infinite)
+    //     end ... end end
+    //
+    // The operand stored in the `Instruction` is the *index* into
+    // `ctx.br_table_targets`, a per-function Vec populated when the callee's
+    // instructions are built.  Each entry is `[l0, l1, ..., l_{n-1}, default]`.
     vm.register_context_opcode(0x0E, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
+        // Pop the selector from the stack.
         let index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        // The operand holds the index into decoded BrTable data.
-        // We need to re-interpret. For simplicity, br_table is handled via
-        // the Index operand which holds the default label in our encoding.
-        // In our encoding, the operand is the default label index.
-        let default_label = operand_int(instr) as usize;
-        // For a full br_table we'd need the labels array. Since our operand
-        // encoding is limited, just use the default.
-        let _ = index;
-        execute_branch(vm, ctx, default_label)?;
+        // Look up the full label table for this specific br_table instruction.
+        let table_idx = operand_int(instr) as usize;
+        let targets = ctx
+            .br_table_targets
+            .get(table_idx)
+            .ok_or_else(|| VMError::GenericError(format!("br_table targets[{}] missing", table_idx)))?;
+        // `targets` = [l0, l1, ..., l_{n-1}, default_label]
+        // If index is in-bounds for the non-default entries, use targets[index];
+        // otherwise fall through to the default (last entry).
+        let n = targets.len().saturating_sub(1); // number of non-default labels
+        let depth = if index >= 0 && (index as usize) < n {
+            targets[index as usize] as usize
+        } else {
+            *targets.last().unwrap_or(&0) as usize
+        };
+        execute_branch(vm, ctx, depth)?;
         Ok(None)
     });
 
@@ -2401,7 +2430,8 @@ fn call_function(
         .ok_or_else(|| VMError::GenericError(format!("no body for function {}", func_index)))?
         .clone();
 
-    // Save caller state.
+    // Save caller state (including br_table targets so the callee can
+    // install its own without clobbering the caller's dispatch table).
     ctx.saved_frames.push(SavedFrame {
         locals: ctx.typed_locals.clone(),
         label_stack: ctx.label_stack.clone(),
@@ -2409,6 +2439,7 @@ fn call_function(
         control_flow_map: ctx.control_flow_map.clone(),
         return_pc: vm.pc + 1,
         return_arity: func_type.results.len(),
+        br_table_targets: std::mem::take(&mut ctx.br_table_targets),
     });
 
     // Initialize callee locals.
@@ -2424,29 +2455,39 @@ fn call_function(
     let decoded = decode_function_body(&body);
     ctx.control_flow_map = build_control_flow_map(&decoded);
 
-    // Convert to VM instructions.
-    let vm_instructions: Vec<Instruction> = decoded
-        .iter()
-        .map(|d| {
-            let operand = match &d.operand {
-                DecodedOperand::None => None,
-                DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
-                DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
-                DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
-                DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
-                DecodedOperand::CallIndirect { type_idx, .. } => {
-                    Some(Operand::Index(*type_idx as usize))
-                }
-                DecodedOperand::BrTable { default_label, .. } => {
-                    Some(Operand::Index(*default_label as usize))
-                }
-            };
-            Instruction {
-                opcode: d.opcode,
-                operand,
+    // Convert to VM instructions, and simultaneously build the callee's
+    // br_table targets table.  Each br_table instruction stores its index
+    // into this Vec as its Operand::Index; the Vec entry holds
+    // [l0, l1, ..., l_{n-1}, default_label] so the handler can dispatch
+    // the correct branch depth based on the runtime selector.
+    let mut callee_br_table_targets: Vec<Vec<u32>> = Vec::new();
+    let mut vm_instructions: Vec<Instruction> = Vec::new();
+    for d in &decoded {
+        let operand = match &d.operand {
+            DecodedOperand::None => None,
+            DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
+            DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
+            DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
+            DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
+            DecodedOperand::CallIndirect { type_idx, .. } => {
+                Some(Operand::Index(*type_idx as usize))
             }
-        })
-        .collect();
+            DecodedOperand::BrTable { labels, default_label } => {
+                // Record the full label table and use its index as the operand.
+                let idx = callee_br_table_targets.len();
+                let mut table: Vec<u32> = labels.clone();
+                table.push(*default_label);
+                callee_br_table_targets.push(table);
+                Some(Operand::Index(idx))
+            }
+        };
+        vm_instructions.push(Instruction {
+            opcode: d.opcode,
+            operand,
+        });
+    }
+    // Install the callee's br_table targets; the caller's were saved above.
+    ctx.br_table_targets = callee_br_table_targets;
 
     // Set up callee code and jump to start.
     // We need to use a recursive execution approach. Execute the callee inline.
@@ -2493,6 +2534,7 @@ fn call_function(
         ctx.typed_locals = frame.locals;
         ctx.label_stack = frame.label_stack;
         ctx.control_flow_map = frame.control_flow_map;
+        ctx.br_table_targets = frame.br_table_targets;
 
         // Truncate stack to caller's height.
         while vm.typed_stack.len() > frame.stack_height {
@@ -2617,29 +2659,35 @@ impl WasmExecutionEngine {
         let decoded = decode_function_body(&body);
         let control_flow_map = build_control_flow_map(&decoded);
 
-        // Convert to VM instructions.
-        let vm_instructions: Vec<Instruction> = decoded
-            .iter()
-            .map(|d| {
-                let operand = match &d.operand {
-                    DecodedOperand::None => None,
-                    DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
-                    DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
-                    DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
-                    DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
-                    DecodedOperand::CallIndirect { type_idx, .. } => {
-                        Some(Operand::Index(*type_idx as usize))
-                    }
-                    DecodedOperand::BrTable { default_label, .. } => {
-                        Some(Operand::Index(*default_label as usize))
-                    }
-                };
-                Instruction {
-                    opcode: d.opcode,
-                    operand,
+        // Convert to VM instructions, building the top-level br_table targets
+        // table in lockstep.  Each br_table instruction stores its index into
+        // this Vec as its Operand::Index.  Nested calls save/restore this on
+        // the saved-frame stack so callee and caller don't collide.
+        let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
+        let mut vm_instructions: Vec<Instruction> = Vec::new();
+        for d in &decoded {
+            let operand = match &d.operand {
+                DecodedOperand::None => None,
+                DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
+                DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
+                DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
+                DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
+                DecodedOperand::CallIndirect { type_idx, .. } => {
+                    Some(Operand::Index(*type_idx as usize))
                 }
-            })
-            .collect();
+                DecodedOperand::BrTable { labels, default_label } => {
+                    let idx = br_table_targets.len();
+                    let mut table: Vec<u32> = labels.clone();
+                    table.push(*default_label);
+                    br_table_targets.push(table);
+                    Some(Operand::Index(idx))
+                }
+            };
+            vm_instructions.push(Instruction {
+                opcode: d.opcode,
+                operand,
+            });
+        }
 
         // Initialize locals.
         let mut typed_locals: Vec<WasmValue> = args.to_vec();
@@ -2669,6 +2717,7 @@ impl WasmExecutionEngine {
             control_flow_map,
             saved_frames: Vec::new(),
             returned: false,
+            br_table_targets,
         };
 
         let code = CodeObject {

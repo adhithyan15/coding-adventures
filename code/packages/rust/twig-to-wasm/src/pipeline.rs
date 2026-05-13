@@ -180,7 +180,7 @@ pub fn compile_twig_to_wasm(
 /// This is a pipeline-local function distinct from `iir_builtin_lowering::lower_builtins`:
 /// the crate version rejects `"any"` type hints (to catch ordering bugs); this
 /// version is intentionally permissive because it runs before inference.
-pub(crate) fn pre_lower_builtins(module: &mut IIRModule) {
+pub fn pre_lower_builtins(module: &mut IIRModule) {
     for function in &mut module.functions {
         pre_lower_function(function);
     }
@@ -229,22 +229,46 @@ fn pre_lower_function(func: &mut IIRFunction) {
 ///
 /// The WASM validator requires every instruction to have a concrete type hint
 /// (not `"any"`).  Inference handles arithmetic; this pass handles control-flow.
-pub(crate) fn fixup_control_flow_types(module: &mut IIRModule) {
+pub fn fixup_control_flow_types(module: &mut IIRModule) {
     for function in &mut module.functions {
         fixup_function(function);
     }
 }
 
 fn fixup_function(func: &mut IIRFunction) {
+    // ── Pass 0: Fix param and return type hints ────────────────────────────
+    //
+    // Twig is dynamically typed, so every param and the return type are
+    // emitted as "any" by the compiler.  The WASM backend requires concrete
+    // types in the FuncType entry (for the function signature) and for
+    // `infer_local_types` (to declare the right WASM ValueType for the
+    // parameter slot in the function body).
+    //
+    // Default: "any" → "i64"  (Twig's integer runtime representation).
+    //
+    // Without this fix, `hint_to_value_type("any")` returns `None`, which
+    // causes `filter_map` to drop every parameter from the WASM FuncType.
+    // A zero-param FuncType makes the `call` opcode push 0 args, so the
+    // callee's typed_locals is `body.locals` only (no param slot).  When
+    // the dispatch variable (at index `total_vars`) is set the index equals
+    // the length of typed_locals → index-out-of-bounds panic.
+    for (_, type_hint) in &mut func.params {
+        if type_hint == "any" {
+            *type_hint = "i64".to_string();
+        }
+    }
+    if func.return_type == "any" {
+        func.return_type = "i64".to_string();
+    }
+
     // Pass 1: SSA env from all concretely-typed instructions.
     //
-    // Seed function parameters as "i64" (Twig's integer runtime type).
-    // This lets arithmetic ops that take param variables propagate a
-    // concrete type, even though the Twig compiler emits "any" for params.
+    // Seed function parameters with their (now-fixed) types.  This lets
+    // arithmetic ops that take param variables propagate concrete types.
     let mut env: HashMap<String, String> = HashMap::new();
 
-    for (param_name, _) in &func.params {
-        env.insert(param_name.clone(), "i64".to_string());
+    for (param_name, param_type) in &func.params {
+        env.insert(param_name.clone(), param_type.clone());
     }
 
     for instr in &func.instructions {
@@ -312,14 +336,36 @@ fn fixup_function(func: &mut IIRFunction) {
                 from_ops.unwrap_or_else(|| "i64".to_string())
             }
 
-            // ── Comparison: always bool ───────────────────────────────────────
+            // ── Comparison: use the OPERAND type, not the result type ─────────
             //
-            // The WASM backend uses the short names `"eq"`, `"ne"`, `"lt"`,
-            // `"le"`, `"gt"`, `"ge"` (matching WASM opcode naming).  These
-            // produce an i32 result (0 or 1) which the WASM type system sees
-            // as `bool` in the IIR type hint.
+            // WASM comparisons always produce I32 (0 or 1) regardless of the
+            // operand type.  However, the WASM *opcode* to emit depends on the
+            // operand type: `i64.lt_s` for I64 operands, `i32.lt_s` for I32.
+            //
+            // The lowerer (`emit_instr`) checks `is_i64_hint(type_hint)` to
+            // pick the opcode.  If we leave this as "bool", the lowerer always
+            // emits `i32.lt_s` even when the operands are I64 — causing a
+            // runtime type-mismatch trap ("expected i32, got I64").
+            //
+            // By using the first operand's type as the hint, the lowerer emits
+            // the correct opcode.  I64_LT_S pushes WasmValue::I32(result), so
+            // `jmp_if_false` (which calls `i32.eqz`) still works correctly.
             "eq" | "ne" | "lt" | "le" | "gt" | "ge" => {
-                "bool".to_string()
+                let op_type = instr.srcs.first().and_then(|s| {
+                    if let Operand::Var(name) = s {
+                        env.get(name).cloned()
+                    } else {
+                        None
+                    }
+                });
+                // If the operand type is "any" or unknown, default to "i64"
+                // (Twig integers are always i64 at runtime).
+                match op_type.as_deref() {
+                    Some("i64") | Some("u64") => "i64".to_string(),
+                    Some("f32") => "f32".to_string(),
+                    Some("f64") => "f64".to_string(),
+                    _ => "i64".to_string(), // default: Twig integers are i64
+                }
             }
 
             // ── lnot: bool ───────────────────────────────────────────────────

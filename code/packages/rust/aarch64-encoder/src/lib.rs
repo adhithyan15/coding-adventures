@@ -222,11 +222,27 @@ impl std::error::Error for EncodeError {}
 // Assembler
 // ===========================================================================
 
+/// A pending external (cross-function) `BL` relocation.
+///
+/// Emitted at instruction-emission time when the callee is in a different
+/// function body.  The linker resolves these after concatenating all function
+/// binaries.
+#[derive(Debug, Clone)]
+pub struct ExternalReloc {
+    /// Word index (in the per-function code vector) of the `BL` placeholder.
+    pub word_idx: usize,
+    /// Name of the external symbol (callee function).
+    pub symbol: String,
+}
+
 /// Stream-style assembler that emits ARM64 instructions and resolves
 /// label-relative branches at finalisation time.
 ///
 /// Instructions are stored as `u32` little-endian-on-output words; the
 /// final byte stream is produced by [`Assembler::finish`].
+///
+/// For cross-function calls, [`Assembler::bl_external`] records the
+/// placeholder BL site so the caller can patch it after linking.
 #[derive(Debug)]
 pub struct Assembler {
     /// One entry per instruction word, in emission order.
@@ -235,6 +251,9 @@ pub struct Assembler {
     labels: Vec<Option<usize>>,
     /// Branch fix-ups; resolved at `finish()` time.
     fixups: Vec<Fixup>,
+    /// External cross-function BL relocations (placeholder BL at word_idx
+    /// that must be patched by the multi-function linker).
+    pub external_relocs: Vec<ExternalReloc>,
 }
 
 impl Default for Assembler {
@@ -244,7 +263,12 @@ impl Default for Assembler {
 impl Assembler {
     /// Create an empty assembler.
     pub fn new() -> Self {
-        Assembler { code: Vec::new(), labels: Vec::new(), fixups: Vec::new() }
+        Assembler {
+            code: Vec::new(),
+            labels: Vec::new(),
+            fixups: Vec::new(),
+            external_relocs: Vec::new(),
+        }
     }
 
     /// Number of words emitted so far (each is 4 bytes).
@@ -540,6 +564,23 @@ impl Assembler {
     pub fn bl(&mut self, target: LabelId) {
         // 1 0 0 1 0 1 imm26
         self.emit_branch(target, BranchKind::Imm26, 0x94000000);
+    }
+
+    /// Emit a `BL` placeholder for an **external** (cross-function) callee.
+    ///
+    /// The instruction is emitted with `imm26 = 0` as a placeholder.  The
+    /// caller must later pass this assembler's `external_relocs` to the linker,
+    /// which patches the BL instruction word with the correct relative offset
+    /// after all function binaries have been concatenated.
+    ///
+    /// Returns the word index of the placeholder `BL` so the caller can
+    /// cross-reference it with the `ExternalReloc` entries.
+    pub fn bl_external(&mut self, symbol: impl Into<String>) -> usize {
+        let word_idx = self.code.len();
+        // BL encoding: opcode = 0x94000000, imm26 = 0 (will be patched).
+        self.emit(0x94000000);
+        self.external_relocs.push(ExternalReloc { word_idx, symbol: symbol.into() });
+        word_idx
     }
 
     /// `B.cond label` — conditional branch (PC-relative, 19-bit signed

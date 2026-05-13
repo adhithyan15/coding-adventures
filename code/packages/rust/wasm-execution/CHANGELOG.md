@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] — 2026-05-13
+
+### Fixed
+
+- **`br_table` handler** — corrected out-of-range index handling: when the
+  branch index exceeds the target table length, the default label is now
+  used (as per the WASM spec).  Previously the handler indexed past the
+  end of the table, causing a panic.
+- **`call_indirect` stub** — added a graceful error message for
+  `call_indirect` (not yet supported) so the engine reports the opcode name
+  instead of panicking on an unknown byte.
+- **`i32.const` sign extension** — `i32.const` operands are now
+  LEB128-decoded as signed (i32) and zero-extended to i64, matching the WASM
+  spec for negative literal values.
+- Various opcode stubs improved to match the WASM binary format byte layout.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

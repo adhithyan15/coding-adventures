@@ -1,5 +1,57 @@
 # Changelog — `twig-aot`
 
+## 0.1.3 — 2026-05-13
+
+**AOT preparation pipeline — cross-function fib compiles and runs.**
+
+The AOT pipeline previously failed to compile recursive Twig programs
+(like fibonacci) because:
+1. `call_builtin "+"` / `call_builtin "_move"` instructions were left
+   unresolved when the ARM64 backend received the CIR — both are
+   `UnsupportedOp` in V1.
+2. All function parameters had type `"any"`, which blocked
+   `aot_specialise`'s type-specialisation logic (it can only lower
+   `call_builtin "+"` → `add_u64` when it knows the operand types).
+3. The two-pass linker for cross-function `BL` patching was implemented
+   but not yet exercised.
+
+### New: `prepare_module_for_aot` pipeline
+
+A three-step IIR preparation pass now runs before `aot_specialise`:
+
+1. **`pre_lower_aot_builtins`** — converts `call_builtin "+" a b` →
+   `add a b`, `call_builtin "_move" n` → `mov n`, etc.  (mirrors the
+   JVM/CLR/WASM pre-lowering passes).
+2. **`normalize_params_to_u64`** — promotes every `"any"` param type
+   to `"u64"` so `infer_types` can seed the type environment from
+   params and propagate concrete types through arithmetic chains.
+3. **`propagate_aot_types` + `default_any_to_u64`** — fixed-point type
+   propagation (seeds from params, handles `const`, `cmp_*`,
+   arithmetic, `mov`) followed by defaulting any remaining `"any"`
+   arithmetic instructions to `"u64"`.  This ensures `aot_specialise`
+   never emits `type_assert` guards (which the ARM64 backend lowers to
+   `udf` hard-traps).
+
+### New: `"mov"` handling in `aot-core::specialise`
+
+`aot_specialise` now lowers `mov dest, src` (produced by
+`pre_lower_aot_builtins`) to `mov_<ty>` so the ARM64 backend can emit
+a typed stack-spill load/store pair.
+
+### End-to-end result
+
+`fib(10)` compiles and executes natively, returning `55`.
+
+```text
+AOT (ARM64 native)    224 ms    55  ✅ PASS
+```
+
+The two-pass cross-function BL linker (landed in 0.1.2) is now
+exercised for real by the mutual recursion in `fib` → `fib`.
+
+New test: `fib_compiles_ok` — asserts the full fib program compiles to
+a valid Mach-O object without error.
+
 ## 0.1.2 — 2026-05-10
 
 **LANG25-25A — Windows compilation hygiene.**

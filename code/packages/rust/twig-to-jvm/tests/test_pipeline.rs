@@ -382,3 +382,50 @@ fn typed_void_function_compiles_via_pipeline() {
     let class_file = run_pipeline_from_iir(module, config).unwrap();
     assert!(!class_file.methods.is_empty());
 }
+
+/// Diagnostic test - print full JVM error for fib
+#[test]
+fn diag_jvm_fib_full_error() {
+    use std::collections::HashMap;
+    use interpreter_ir::{IIRInstr, Operand};
+    use iir_type_checker::infer_and_check;
+    use twig_ir_compiler::compile_source;
+    use twig_to_jvm::pipeline::run_pipeline_from_iir;
+    use twig_to_jvm::IIRJvmConfig;
+
+    const FIB_PROGRAM: &str =
+        "(define (fib n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2))))) (fib 10)";
+    const JVM_BUILTIN_MAP: &[(&str, &str)] = &[
+        ("+",  "add"),   ("-",  "sub"),  ("*",  "mul"),  ("/",  "div"),
+        ("=",  "cmp_eq"), ("<", "cmp_lt"), (">", "cmp_gt"),
+        ("<=", "cmp_le"), (">=", "cmp_ge"),
+        ("not", "not"),  ("_move", "mov"),
+    ];
+
+    let mut iir = compile_source(FIB_PROGRAM, "twig_fib").unwrap();
+    for func in &mut iir.functions {
+        let old = std::mem::take(&mut func.instructions);
+        func.instructions = old.into_iter().map(|instr| {
+            if instr.op != "call_builtin" { return instr; }
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(n)) => n.as_str(),
+                _ => return instr,
+            };
+            let Some((_, op)) = JVM_BUILTIN_MAP.iter().find(|(b, _)| *b == name) else { return instr; };
+            let args: Vec<Operand> = instr.srcs[1..].to_vec();
+            IIRInstr::new(*op, instr.dest.clone(), args, &instr.type_hint)
+        }).collect();
+    }
+    infer_and_check(&mut iir);
+    for func in &iir.functions {
+        eprintln!("--- Function: {} ---", func.name);
+        for instr in &func.instructions {
+            eprintln!("  {:?} = {} {:?} : {}", instr.dest, instr.op, instr.srcs, instr.type_hint);
+        }
+    }
+    let config = IIRJvmConfig::new("TwigFib");
+    match run_pipeline_from_iir(iir, config) {
+        Ok(_) => eprintln!("SUCCESS"),
+        Err(e) => eprintln!("FULL ERROR: {:?}", e),
+    }
+}

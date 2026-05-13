@@ -82,6 +82,12 @@ impl BEAMOperand {
     pub fn a(index: u32) -> Self { Self { tag: BEAMTag::A, value: index as u64 } }
     /// Construct an x-register operand.
     pub fn x(reg: u8) -> Self { Self { tag: BEAMTag::X, value: reg as u64 } }
+    /// Construct a y-register (stack slot) operand.
+    ///
+    /// Y-registers are per-activation-frame stack slots used to preserve values
+    /// across calls.  They are allocated by `allocate {u,N} {u,Live}` and
+    /// accessed with `move {y,slot} {x,R}` / `move {x,R} {y,slot}`.
+    pub fn y(slot: u8) -> Self { Self { tag: BEAMTag::Y, value: slot as u64 } }
     /// Construct a label operand.
     pub fn f(label: u32) -> Self { Self { tag: BEAMTag::F, value: label as u64 } }
 }

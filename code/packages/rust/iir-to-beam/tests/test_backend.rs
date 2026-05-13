@@ -887,12 +887,16 @@ fn test_label_and_jmp() {
 // 34. test_jmp_if_true
 // ===========================================================================
 
-/// `jmp_if_true` must produce `is_eq_exact` (branch-if-false) + `jump` + label.
+/// `jmp_if_true` must produce `is_eq_exact` (branch-if-NOT-zero).
 ///
-/// The synthesis:
-///   is_eq_exact {f,fall} {x,cond} {i,0}  ← skip jump when cond == 0
-///   jump {f,target}                        ← cond != 0: take the branch
-///   label {u,fall}
+/// The synthesis (single-instruction form):
+///   is_eq_exact {f,target} {x,cond} {i,0}
+///
+/// `is_eq_exact {f,Fail} A B` semantics:
+///   - A == B (cond == 0, FALSE): test passes, fall through (don't take branch)
+///   - A != B (cond != 0, TRUE):  test fails, jump to target (take the branch)
+///
+/// This is the minimal correct encoding — no synthetic fall-through label needed.
 #[test]
 fn test_jmp_if_true() {
     let m = make_module_single(vec![
@@ -918,14 +922,21 @@ fn test_jmp_if_true() {
     ]);
     let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
     assert!(has_opcode(&beam, OP_IS_EQ_EXACT), "expected is_eq_exact for jmp_if_true");
-    assert!(has_opcode(&beam, OP_JUMP));
+    // No OP_JUMP needed — the direct label reference in is_eq_exact suffices.
 }
 
 // ===========================================================================
 // 35. test_jmp_if_false
 // ===========================================================================
 
-/// `jmp_if_false` must produce `is_ne_exact` (branch-if-true) + `jump` + label.
+/// `jmp_if_false` must produce `is_ne_exact` (branch-if-zero, single-instruction form).
+///
+/// The synthesis:
+///   is_ne_exact {f,target} {x,cond} {i,0}
+///
+/// `is_ne_exact {f,Fail} A B` semantics:
+///   - A != B (cond != 0, TRUE):  test passes, fall through (don't take branch)
+///   - A == B (cond == 0, FALSE): test fails, jump to target (take the else-branch)
 #[test]
 fn test_jmp_if_false() {
     let m = make_module_single(vec![
@@ -951,7 +962,7 @@ fn test_jmp_if_false() {
     ]);
     let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
     assert!(has_opcode(&beam, OP_IS_NE_EXACT), "expected is_ne_exact for jmp_if_false");
-    assert!(has_opcode(&beam, OP_JUMP));
+    // No OP_JUMP needed — the direct label reference in is_ne_exact suffices.
 }
 
 // ===========================================================================
