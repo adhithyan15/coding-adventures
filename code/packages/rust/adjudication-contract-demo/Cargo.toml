@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-contract-demo"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "A/B demo harness for contract clauses. Third domain alongside adjudication-tsa-demo and adjudication-clinical-demo; reuses the same checkers + engine to demonstrate generality. v0.3 brings parity with adjudication-tsa-demo v0.12: rulebook injection (fixture_contract_rulebook + ADJ_DEMO_RULEBOOK_MODE env var), configurable max_answer_tokens (default 2048), verdict-first prompt format, and opt-in two-turn priming dispatch. Required for the ADJ19 cross-domain bench."
+description = "A/B demo harness for contract clauses. Third domain alongside adjudication-tsa-demo and adjudication-clinical-demo. v0.3 brought parity with adjudication-tsa-demo v0.12. v0.4 mirrors tsa-demo v0.13: adds VERDICT: ESCALATE as a third option in with-rulebook Arm A prompts, with the conservative semantic that silence in the rulebook is not permission. Framework-level instructions are domain-neutral; role descriptors and rulebook content remain contract-specific."
 
 [[bin]]
 name = "adjudication-contract-demo"
