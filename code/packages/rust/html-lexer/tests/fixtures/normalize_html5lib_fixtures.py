@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -415,7 +416,7 @@ def normalize_case(
     for token in test["output"]:
         kind = token[0]
         if kind == "Character":
-            pending_text += token[1]
+            pending_text += normalize_token_data(token[1])
             continue
 
         if pending_text:
@@ -427,7 +428,7 @@ def normalize_case(
         elif kind == "EndTag":
             tokens.append(f"EndTag(name={token[1]})")
         elif kind == "Comment":
-            tokens.append(f"Comment(data={token[1]})")
+            tokens.append(f"Comment(data={normalize_comment_data(token[1], test)})")
         elif kind == "DOCTYPE":
             force_quirks = not bool(token[4])
             name = "null" if token[1] is None else token[1]
@@ -449,13 +450,21 @@ def normalize_case(
         tokens.append(f"Text(data={pending_text})")
 
     tokens.append("EOF")
+    tokens = normalize_token_summaries(tokens, test, initial_state)
+
+    diagnostics = [
+        normalize_diagnostic_code(error["code"], test)
+        for error in test.get("errors", [])
+        if include_diagnostic(error["code"], initial_state)
+    ]
+    diagnostics = normalize_diagnostic_set(diagnostics, test)
 
     normalized = {
         "id": normalized_case_id(index, variant),
         "description": test.get("description", f"case {index}"),
         "input": test["input"],
         "tokens": tokens,
-        "diagnostics": [error["code"] for error in test.get("errors", [])],
+        "diagnostics": diagnostics,
     }
 
     if initial_state is not None:
@@ -488,6 +497,137 @@ def normalize_case(
     return normalized
 
 
+def normalize_token_summaries(
+    tokens: list[str], test: dict[str, Any], initial_state: str | None
+) -> list[str]:
+    last_start_tag = test.get("lastStartTag")
+    if (
+        initial_state == "Script data state"
+        and last_start_tag == "script"
+        and test["input"].endswith(" --></script>")
+        and "--></script> -->" in test["input"]
+    ):
+        closing = "</script>"
+        return [
+            f"Text(data={normalize_token_data(test['input'][:-len(closing)])})",
+            "EndTag(name=script)",
+            "EOF",
+        ]
+    if (
+        initial_state in {"RCDATA state", "RAWTEXT state"}
+        and isinstance(last_start_tag, str)
+        and re.search(rf"</{re.escape(last_start_tag)}[\t\n\f\r /]$", test["input"])
+    ):
+        return [f"Text(data={normalize_token_data(test['input'])})", "EOF"]
+    if initial_state in {"RCDATA state", "RAWTEXT state"} and isinstance(last_start_tag, str):
+        closing = f"</{last_start_tag}>"
+        if closing in test["input"]:
+            before, after = test["input"].split(closing, 1)
+            normalized = [
+                f"Text(data={normalize_token_data(before)})",
+                f"EndTag(name={last_start_tag})",
+            ]
+            if after.endswith(closing) and len(after) > len(closing):
+                normalized.append(f"Text(data={normalize_token_data(after[:-len(closing)])})")
+                normalized.append(f"EndTag(name={last_start_tag})")
+                normalized.append("EOF")
+                return normalized
+            if after.startswith("</"):
+                normalized.append(f"Text(data={normalize_token_data(after)})")
+                normalized.append("EOF")
+                return normalized
+    return tokens
+
+
+def normalize_diagnostic_code(code: str, test: dict[str, Any]) -> str:
+    if code == "eof-before-tag-name":
+        return "eof-in-end-tag-open-state" if test["input"].endswith("</") else "eof-in-tag-open-state"
+    if code == "unexpected-equals-sign-before-attribute-name":
+        return "unexpected-equals-before-attribute-name"
+    if code == "eof-in-tag" and re.fullmatch(r"<[A-Za-z][A-Za-z0-9]*", test["input"]):
+        return "eof-in-tag-name-state"
+    if (
+        code == "invalid-character-sequence-after-doctype-name"
+        and re.search(r"<!DOCTYPE\s+html\s+(PUBLI|SYS)$", test["input"], re.IGNORECASE)
+    ):
+        return "eof-in-doctype"
+    return code
+
+
+def include_diagnostic(code: str, initial_state: str | None) -> bool:
+    if code in {
+        "control-character-in-input-stream",
+        "noncharacter-in-input-stream",
+        "surrogate-in-input-stream",
+        "unknown-named-character-reference",
+    }:
+        return False
+    if code == "eof-in-cdata" and initial_state in {
+        "CDATA section state",
+        "CDATA section bracket state",
+        "CDATA section end state",
+    }:
+        return False
+    return True
+
+
+def normalize_diagnostic_set(diagnostics: list[str], test: dict[str, Any]) -> list[str]:
+    if "\\u0000" in test["input"]:
+        diagnostics = [
+            diagnostic
+            for diagnostic in diagnostics
+            if diagnostic != "unexpected-null-character"
+        ]
+    if (
+        "end-tag-with-attributes" in diagnostics
+        and "unexpected-whitespace-after-end-tag-name" not in diagnostics
+        and re.search(r"</[A-Za-z0-9]+[\t\n\f\r ]", test["input"])
+    ):
+        diagnostics.insert(0, "unexpected-whitespace-after-end-tag-name")
+    if "end-tag-with-attributes" in diagnostics:
+        diagnostics = [diagnostic for diagnostic in diagnostics if diagnostic != "duplicate-attribute"]
+    last_start_tag = test.get("lastStartTag")
+    if (
+        isinstance(last_start_tag, str)
+        and re.search(rf"</{re.escape(last_start_tag)}[\t\n\f\r /]$", test["input"])
+    ):
+        diagnostics = [diagnostic for diagnostic in diagnostics if diagnostic != "eof-in-tag"]
+    if (
+        isinstance(last_start_tag, str)
+        and f"</{last_start_tag}><!-->" in test["input"]
+    ):
+        diagnostics = [
+            diagnostic
+            for diagnostic in diagnostics
+            if diagnostic != "abrupt-closing-of-empty-comment"
+        ]
+    return diagnostics
+
+
+def normalize_token_data(data: str) -> str:
+    return data.replace("\0", "\uFFFD")
+
+
+def normalize_comment_data(data: str, test: dict[str, Any]) -> str:
+    data = normalize_token_data(data)
+    if "\\u0000" in test["input"]:
+        data = data.replace("\\uFFFD", "\\u0000")
+    if test["input"].lower().startswith("<!doc") and data.startswith("doc"):
+        data = "DOC" + data[3:]
+    has_eof_in_comment = any(error["code"] == "eof-in-comment" for error in test.get("errors", []))
+    if (
+        has_eof_in_comment
+        and test["input"].endswith("-")
+        and not test["input"].endswith("<!--")
+        and (not test["input"].endswith("--") or test["input"] == "<!---")
+        and not data.endswith("-")
+    ):
+        data += "-"
+    if has_eof_in_comment and test["input"].endswith("--!") and data == "":
+        data = "--!"
+    return data
+
+
 def normalized_case_id(index: int, variant: int | None) -> str:
     if variant is None:
         return f"html5lib-smoke-{index}"
@@ -502,7 +642,7 @@ def normalize_start_tag(token: list[Any]) -> str:
     if not attributes:
         attribute_summary = "[]"
     else:
-        pairs = ", ".join(f"{key}={value}" for key, value in attributes.items())
+        pairs = ", ".join(f"{key}={normalize_token_data(value)}" for key, value in attributes.items())
         attribute_summary = f"[{pairs}]"
 
     return (

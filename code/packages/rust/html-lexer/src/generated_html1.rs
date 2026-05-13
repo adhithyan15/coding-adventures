@@ -4,11 +4,7 @@
 //! Do not edit by hand.
 
 #[allow(unused_imports)]
-use state_machine::{
-    EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind,
-    MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition,
-    TokenDefinition, TransitionDefinition,
-};
+use state_machine::{EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition, TransitionDefinition};
 
 pub fn html1_lexer_definition() -> StateMachineDefinition {
     let mut definition = StateMachineDefinition::new("html1-lexer", MachineKind::Transducer);
@@ -81,7 +77,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
     definition.tokens = vec![
         TokenDefinition {
             name: "Text".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "StartTag".to_string(),
@@ -93,11 +91,15 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         TokenDefinition {
             name: "EndTag".to_string(),
-            fields: vec!["name".to_string()],
+            fields: vec![
+                "name".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Comment".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Doctype".to_string(),
@@ -11602,9 +11604,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "create_doctype".to_string(),
-            ],
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -11617,9 +11617,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "create_doctype".to_string(),
-            ],
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -12811,8 +12809,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-doctype)".to_string(),
-                "mark_force_quirks".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(D)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -12823,18 +12822,17 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "doctype_name".to_string(),
+                "bogus_comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(invalid-doctype-keyword)".to_string(),
-                "mark_force_quirks".to_string(),
-                "append_doctype_name(d)".to_string(),
-                "append_doctype_name(current_lowercase)".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(D)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "doctype_keyword_c".to_string(),
@@ -12873,8 +12871,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-doctype)".to_string(),
-                "mark_force_quirks".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DO)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -12885,18 +12884,17 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "doctype_name".to_string(),
+                "bogus_comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(invalid-doctype-keyword)".to_string(),
-                "mark_force_quirks".to_string(),
-                "append_doctype_name(do)".to_string(),
-                "append_doctype_name(current_lowercase)".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DO)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "doctype_keyword_t".to_string(),
@@ -12935,8 +12933,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-doctype)".to_string(),
-                "mark_force_quirks".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOC)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -12947,18 +12946,17 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "doctype_name".to_string(),
+                "bogus_comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(invalid-doctype-keyword)".to_string(),
-                "mark_force_quirks".to_string(),
-                "append_doctype_name(doc)".to_string(),
-                "append_doctype_name(current_lowercase)".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOC)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "doctype_keyword_y".to_string(),
@@ -12997,8 +12995,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-doctype)".to_string(),
-                "mark_force_quirks".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOCT)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -13009,18 +13008,17 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "doctype_name".to_string(),
+                "bogus_comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(invalid-doctype-keyword)".to_string(),
-                "mark_force_quirks".to_string(),
-                "append_doctype_name(doct)".to_string(),
-                "append_doctype_name(current_lowercase)".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOCT)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "doctype_keyword_p".to_string(),
@@ -13059,8 +13057,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-doctype)".to_string(),
-                "mark_force_quirks".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOCTY)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -13071,18 +13070,17 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "doctype_name".to_string(),
+                "bogus_comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(invalid-doctype-keyword)".to_string(),
-                "mark_force_quirks".to_string(),
-                "append_doctype_name(docty)".to_string(),
-                "append_doctype_name(current_lowercase)".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOCTY)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "doctype_keyword_e".to_string(),
@@ -13094,7 +13092,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: Vec::new(),
+            actions: vec![
+                "create_doctype".to_string(),
+            ],
             consume: true,
         },
         TransitionDefinition {
@@ -13107,7 +13107,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: Vec::new(),
+            actions: vec![
+                "create_doctype".to_string(),
+            ],
             consume: true,
         },
         TransitionDefinition {
@@ -13121,8 +13123,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(eof-in-doctype)".to_string(),
-                "mark_force_quirks".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOCTYP)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -13133,18 +13136,17 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "doctype_name".to_string(),
+                "bogus_comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(invalid-doctype-keyword)".to_string(),
-                "mark_force_quirks".to_string(),
-                "append_doctype_name(doctyp)".to_string(),
-                "append_doctype_name(current_lowercase)".to_string(),
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(DOCTYP)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "doctype_after_keyword".to_string(),
