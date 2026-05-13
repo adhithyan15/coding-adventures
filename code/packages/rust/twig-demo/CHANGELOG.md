@@ -1,5 +1,85 @@
 # Changelog — `twig-demo`
 
+## [0.1.3] — 2026-05-13
+
+**Optional-typing demo: untyped / partially typed / fully typed.**
+
+Added `run_typing_demo()` which runs three variants of the same program through
+all six backends and prints a compile/runtime table for each:
+
+### Program
+
+```twig
+(define (add-offset x offset) (+ x offset))
+(define (clamp-low x) (if (< x 0) 0 x))
+(define (process val) (clamp-low (add-offset val -10)))
+(process 5)    ; → 0
+```
+
+The critical operation is `(< x 0)` in `clamp-low`.  With unsigned u64
+semantics, −5 compares as a huge positive number and the branch is never
+taken (returns −5, wrong).  With signed i64 semantics, −5 < 0 is true
+(returns 0, correct).
+
+### Type states
+
+| State    | Annotations |
+|----------|-------------|
+| UNTYPED  | none |
+| PARTIAL  | `clamp-low` only: `(x : int) -> int` |
+| FULL     | all three functions fully annotated |
+
+### Key finding
+
+A single annotation on the function where the comparison lives is
+sufficient to fix the AOT backend — `PARTIAL` is enough.  The other five
+backends (interpreter, BEAM, WASM, JVM, CLR) are correct in all three
+states because they run their own type-inference pass regardless of source
+annotations.
+
+### Implementation
+
+- `run_aot_annotated(source)` — new AOT runner that reads `param_refinements`
+  from the compiled `IIRModule` and seeds `func.params` type hints from them
+  before calling `compile_typed_module_to_arm64_bytes`.  Unannotated params
+  default to u64; annotated params use their declared type (e.g. i64 for `int`).
+- `run_typing_demo()` — runs all 6 backends for each of the three source
+  variants and calls `print_results` (now parameterised on `expected`).
+- `print_results` refactored to accept `expected: i64` instead of using the
+  module-level `EXPECTED` constant.
+
+## [0.1.2] — 2026-05-13
+
+**Split results table into Compile and Runtime columns.**
+
+The main 6-backend table now shows two separate timing columns:
+
+- **Compile** — time spent turning Twig source into backend-specific
+  bytecode or a native binary.  Includes IIR generation, type inference,
+  backend lowering, and (for AOT/BEAM/JVM) any subprocess link/assemble step.
+- **Runtime** — time spent actually executing the generated code.
+  In-process backends (Interpreter, WASM, CLR) show pure interpreter
+  throughput in µs.  Subprocess backends (AOT, BEAM, JVM) include OS
+  process-launch and runtime-startup cost.
+
+A new `format_time` helper auto-scales: < 1 000 µs → "Xµs",
+< 1 000 ms → "Xms", ≥ 1 s → "X.Xs".
+
+Example output:
+```
+Backend                            Compile     Runtime    Result  Status
+────────────────────────────────────────────────────────────────────────
+Interpreter (twig-vm)                  1ms       230µs        55  ✅ PASS
+AOT (ARM64 native)                   230ms       210ms        55  ✅ PASS
+BEAM (Erlang VM)                      45ms        1.8s        55  ✅ PASS
+WebAssembly (Rust runtime)             2ms         8µs        55  ✅ PASS
+JVM (Java 21)                          8ms       180ms        55  ✅ PASS
+CLR (.NET 9)                           3ms        94µs        55  ✅ PASS
+```
+
+Each `run_*` function now returns `(compile_us, run_us, Result<i64, String>)`.
+For the interpreter, `TwigVM::compile` is timed separately from `twig_vm::run`.
+
 ## [0.1.1] — 2026-05-13
 
 **AOT deep-dive section: phase breakdown + in-process execution + type correctness.**

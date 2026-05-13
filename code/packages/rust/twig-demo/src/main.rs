@@ -63,55 +63,81 @@ fn main() {
     let mut results: Vec<BackendResult> = Vec::new();
 
     // 1. Interpreter
-    let t = Instant::now();
-    let r = run_interpreter(FIB_PROGRAM);
-    results.push(BackendResult::new("Interpreter (twig-vm)", t.elapsed().as_millis(), r));
+    let (c, r_us, r) = run_interpreter(FIB_PROGRAM);
+    results.push(BackendResult::new("Interpreter (twig-vm)", c, r_us, r));
 
     // 2. AOT
-    let t = Instant::now();
-    let r = run_aot(FIB_PROGRAM);
-    results.push(BackendResult::new("AOT (ARM64 native)", t.elapsed().as_millis(), r));
+    let (c, r_us, r) = run_aot(FIB_PROGRAM);
+    results.push(BackendResult::new("AOT (ARM64 native)", c, r_us, r));
 
     // 3. BEAM
-    let t = Instant::now();
-    let r = run_beam(FIB_PROGRAM);
-    results.push(BackendResult::new("BEAM (Erlang VM)", t.elapsed().as_millis(), r));
+    let (c, r_us, r) = run_beam(FIB_PROGRAM);
+    results.push(BackendResult::new("BEAM (Erlang VM)", c, r_us, r));
 
     // 4. WASM
-    let t = Instant::now();
-    let r = run_wasm(FIB_PROGRAM);
-    results.push(BackendResult::new("WebAssembly (Rust runtime)", t.elapsed().as_millis(), r));
+    let (c, r_us, r) = run_wasm(FIB_PROGRAM);
+    results.push(BackendResult::new("WebAssembly (Rust runtime)", c, r_us, r));
 
     // 5. JVM
-    let t = Instant::now();
-    let r = run_jvm(FIB_PROGRAM);
-    results.push(BackendResult::new("JVM (Java 21)", t.elapsed().as_millis(), r));
+    let (c, r_us, r) = run_jvm(FIB_PROGRAM);
+    results.push(BackendResult::new("JVM (Java 21)", c, r_us, r));
 
     // 6. CLR
-    let t = Instant::now();
-    let r = run_clr(FIB_PROGRAM);
-    results.push(BackendResult::new("CLR (.NET 9)", t.elapsed().as_millis(), r));
+    let (c, r_us, r) = run_clr(FIB_PROGRAM);
+    results.push(BackendResult::new("CLR (.NET 9)", c, r_us, r));
 
-    print_results(&results);
+    print_results(&results, EXPECTED);
 
     // ── AOT deep-dive: phase breakdown + type correctness demo ────────────────
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     run_aot_demos();
+
+    // ── Optional-typing demo: untyped / partial / fully-typed ────────────────
+    run_typing_demo();
 }
 
 // ── Result types ──────────────────────────────────────────────────────────────
 
+/// Timing split for one backend run.
+///
+/// Both values are in **microseconds** so sub-millisecond runtimes remain
+/// visible.  `format_time` converts them to a human-readable string.
 struct BackendResult {
-    name: String,
-    elapsed_ms: u128,
+    name:       String,
+    /// Time spent compiling the Twig source → backend bytecode / binary.
+    /// Includes IIR generation, type inference, backend lowering, and
+    /// (for AOT/JVM/BEAM) the subprocess link / assemble step.
+    compile_us: u128,
+    /// Time spent actually **executing** the generated code.
+    /// For interpreter, WASM, and CLR this is purely in-process.
+    /// For AOT, BEAM, and JVM it includes process-launch and dyld/JVM-startup
+    /// overhead, but that is an inherent cost of those runtimes.
+    run_us: u128,
     outcome: Result<i64, String>,
 }
 
 impl BackendResult {
-    fn new(name: &str, elapsed_ms: u128, outcome: Result<i64, String>) -> Self {
-        Self { name: name.to_string(), elapsed_ms, outcome }
+    fn new(name: &str, compile_us: u128, run_us: u128, outcome: Result<i64, String>) -> Self {
+        Self { name: name.to_string(), compile_us, run_us, outcome }
     }
+}
 
+/// Format a microsecond count for display.
+///
+/// | Range          | Format  | Example  |
+/// |----------------|---------|----------|
+/// | < 1 000 µs     | µs      | 412µs    |
+/// | 1 000–999 999  | ms      | 230ms    |
+/// | ≥ 1 000 000    | s       | 1.8s     |
+fn format_time(us: u128) -> String {
+    if us < 1_000 {
+        format!("{us}µs")
+    } else if us < 1_000_000 {
+        format!("{}ms", us / 1_000)
+    } else {
+        // Show one decimal place for seconds (e.g. 1.8s).
+        format!("{:.1}s", us as f64 / 1_000_000.0)
+    }
 }
 
 // ── Banner ────────────────────────────────────────────────────────────────────
@@ -126,35 +152,47 @@ fn print_banner() {
     println!();
 }
 
-fn print_results(results: &[BackendResult]) {
-    println!("\n{}", "─".repeat(62));
-    println!("{:<32}  {:>8}  {:>12}  {}", "Backend", "Time(ms)", "Result", "Status");
-    println!("{}", "─".repeat(62));
+fn print_results(results: &[BackendResult], expected: i64) {
+    // Column widths: name(32) + compile(10) + runtime(10) + result(8) + status
+    let w = 74;
+    println!("\n{}", "─".repeat(w));
+    println!(
+        "{:<32}  {:>10}  {:>10}  {:>8}  {}",
+        "Backend", "Compile", "Runtime", "Result", "Status"
+    );
+    println!("{}", "─".repeat(w));
 
     let mut all_pass = true;
     for r in results {
         let (result_str, status) = match &r.outcome {
             Ok(v) => {
-                let correct = *v == EXPECTED;
+                let correct = *v == expected;
                 if !correct { all_pass = false; }
                 (v.to_string(), if correct { "✅ PASS" } else { "❌ WRONG" })
             }
             Err(e) => {
                 all_pass = false;
-                // Truncate long errors
+                // Truncate long errors so the table stays readable.
                 let short = if e.len() > 30 { format!("{}…", &e[..30]) } else { e.clone() };
                 (short, "❌ FAIL")
             }
         };
-        println!("{:<32}  {:>8}  {:>12}  {}", r.name, r.elapsed_ms, result_str, status);
+        println!(
+            "{:<32}  {:>10}  {:>10}  {:>8}  {}",
+            r.name,
+            format_time(r.compile_us),
+            format_time(r.run_us),
+            result_str,
+            status
+        );
     }
 
-    println!("{}", "─".repeat(62));
+    println!("{}", "─".repeat(w));
     println!();
     if all_pass {
-        println!("🎉 All 6 backends returned {EXPECTED}. Twig runs everywhere!");
+        println!("  All backends returned {expected}. ✅");
     } else {
-        println!("Some backends need attention (see errors above).");
+        println!("  Some backends need attention (see above).");
     }
     println!();
 }
@@ -163,183 +201,313 @@ fn print_results(results: &[BackendResult]) {
 // Backend 1: Interpreter
 // ═══════════════════════════════════════════════════════════════════════════════
 
-fn run_interpreter(source: &str) -> Result<i64, String> {
+/// Run the twig-vm interpreter, returning (compile_us, run_us, result).
+///
+/// **Compile phase** — `TwigVM::compile` turns Twig source into an `IIRModule`.
+/// This is the same IIR generation step every backend performs.
+///
+/// **Run phase** — `twig_vm::run` tree-walks the `IIRModule`.  No subprocess,
+/// no JIT — purely in-process, so this measures interpreter throughput directly.
+fn run_interpreter(source: &str) -> (u128, u128, Result<i64, String>) {
     let vm = twig_vm::TwigVM::new();
-    let val = vm.run(source).map_err(|e| format!("interpreter: {e}"))?;
 
-    // LispyValue is a tagged i64.  For integers, the tag is in the low bits.
-    // `as_int()` extracts the numeric value.
-    match val.as_int() {
-        Some(n) => Ok(n),
-        None => Err(format!("interpreter: unexpected return value {:?}", val)),
-    }
+    // Phase 1: compile Twig source → IIRModule.
+    let t_compile = Instant::now();
+    let module = match vm.compile(source) {
+        Ok(m)  => m,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("interpreter compile: {e}"))),
+    };
+    let compile_us = t_compile.elapsed().as_micros();
+
+    // Phase 2: execute the IIR module.
+    let t_run = Instant::now();
+    let val = twig_vm::run(&module).map_err(|e| format!("interpreter run: {e}"));
+    let run_us = t_run.elapsed().as_micros();
+
+    // LispyValue is a tagged i64.  `as_int()` strips the tag bits.
+    let outcome = match val {
+        Ok(v) => match v.as_int() {
+            Some(n) => Ok(n),
+            None    => Err(format!("interpreter: unexpected value {v:?}")),
+        },
+        Err(e) => Err(e),
+    };
+
+    (compile_us, run_us, outcome)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Backend 2: AOT (ARM64)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-fn run_aot(source: &str) -> Result<i64, String> {
-    // Write source to a temp .twig file.
-    let dir = tempfile::tempdir().map_err(|e| format!("tempdir: {e}"))?;
+/// Run the AOT backend, returning (compile_us, run_us, result).
+///
+/// **Compile phase** — `compile_file_macos_arm64` encompasses:
+///   IIR generation → ARM64 object bytes → `ld` subprocess → Mach-O binary.
+/// The linker is the dominant cost (~26ms out of ~230ms total).
+///
+/// **Run phase** — fork + exec the native binary.  Includes dyld startup
+/// (~200ms on macOS) before a single instruction of fib(10) runs.  The
+/// exit code (`main() % 256`) carries the return value.
+fn run_aot(source: &str) -> (u128, u128, Result<i64, String>) {
+    let dir = match tempfile::tempdir() {
+        Ok(d)  => d,
+        Err(e) => return (0, 0, Err(format!("tempdir: {e}"))),
+    };
     let src_path = dir.path().join("prog.twig");
     let bin_path = dir.path().join("prog");
 
-    std::fs::write(&src_path, source).map_err(|e| format!("write src: {e}"))?;
+    if let Err(e) = std::fs::write(&src_path, source) {
+        return (0, 0, Err(format!("write src: {e}")));
+    }
 
-    // Compile to native ARM64 Mach-O.
-    twig_aot::compile_file_macos_arm64(&src_path, &bin_path)
-        .map_err(|e| format!("aot compile: {e:?}"))?;
+    // Phase 1: IIR → ARM64 Mach-O binary (includes ld).
+    let t_compile = Instant::now();
+    if let Err(e) = twig_aot::compile_file_macos_arm64(&src_path, &bin_path) {
+        return (t_compile.elapsed().as_micros(), 0, Err(format!("aot compile: {e:?}")));
+    }
+    let compile_us = t_compile.elapsed().as_micros();
 
-    // Execute: the process exit code is main() % 256.
+    // Phase 2: execute the native binary.
+    let t_run = Instant::now();
     let status = Command::new(&bin_path)
         .status()
-        .map_err(|e| format!("aot run: {e}"))?;
+        .map_err(|e| format!("aot run: {e}"));
+    let run_us = t_run.elapsed().as_micros();
 
-    let code = status.code().unwrap_or(-1) as i64;
-    Ok(code)
+    let outcome = match status {
+        Ok(s)  => Ok(s.code().unwrap_or(-1) as i64),
+        Err(e) => Err(e),
+    };
+
+    (compile_us, run_us, outcome)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Backend 3: BEAM (Erlang VM)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-fn run_beam(source: &str) -> Result<i64, String> {
+/// Run the BEAM backend, returning (compile_us, run_us, result).
+///
+/// **Compile phase** — `compile_twig_to_beam` runs:
+///   IIR generation → builtin lowering → type inference → BEAM lowering →
+///   ChunkedBEAM byte encoding.  We also write the `.beam` file to disk.
+///
+/// **Run phase** — `erl -noshell` starts the BEAM VM, loads our module, calls
+/// `twig_fib:main()`, and prints the result.  The dominant cost is BEAM VM
+/// startup (~600ms cold, ~200ms warm), not fib(10) itself.
+fn run_beam(source: &str) -> (u128, u128, Result<i64, String>) {
     use twig_to_beam::compile_twig_to_beam;
 
-    // BEAM module name must be a valid Erlang atom.  Use "twig_fib" so the
-    // .beam file name matches the module name embedded in the binary.
     let module_name = "twig_fib";
 
-    let beam_bytes = compile_twig_to_beam(source, module_name)
-        .map_err(|e| format!("BEAM compile: {e}"))?;
-
-    // Write .beam file to a temp directory.
-    let dir = tempfile::tempdir().map_err(|e| format!("tempdir: {e}"))?;
+    // Phase 1: compile Twig → BEAM bytes and write the .beam file.
+    let t_compile = Instant::now();
+    let beam_bytes = match compile_twig_to_beam(source, module_name) {
+        Ok(b)  => b,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("BEAM compile: {e}"))),
+    };
+    let dir = match tempfile::tempdir() {
+        Ok(d)  => d,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("tempdir: {e}"))),
+    };
     let beam_path = dir.path().join(format!("{module_name}.beam"));
-    std::fs::write(&beam_path, &beam_bytes).map_err(|e| format!("write beam: {e}"))?;
+    if let Err(e) = std::fs::write(&beam_path, &beam_bytes) {
+        return (t_compile.elapsed().as_micros(), 0, Err(format!("write beam: {e}")));
+    }
+    let compile_us = t_compile.elapsed().as_micros();
 
-    // Run via `erl -noshell`.  The `-pa` flag adds the temp dir to the code path
-    // so `twig_fib:main()` can be loaded.  We use `io:format` to print the
-    // integer result followed by a newline so we can parse it.
+    // Phase 2: run via `erl -noshell`.
+    // `-pa` adds the temp dir to the code path so `twig_fib:main()` can load.
+    let t_run = Instant::now();
     let output = Command::new("erl")
         .arg("-noshell")
-        .arg("-pa")
-        .arg(dir.path())
+        .arg("-pa").arg(dir.path())
         .arg("-eval")
         .arg(format!("io:format(\"~w~n\", [{module_name}:main()]), init:stop()"))
         .output()
-        .map_err(|e| format!("erl not found: {e}"))?;
+        .map_err(|e| format!("erl not found: {e}"));
+    let run_us = t_run.elapsed().as_micros();
 
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let trimmed = stdout.trim();
+    let outcome = match output {
+        Ok(o) => {
+            let stdout = String::from_utf8_lossy(&o.stdout);
+            let trimmed = stdout.trim();
+            trimmed.parse::<i64>().map_err(|_| {
+                format!("BEAM stdout parse error: {:?} (stderr: {})",
+                    trimmed, String::from_utf8_lossy(&o.stderr).trim())
+            })
+        }
+        Err(e) => Err(e),
+    };
 
-    trimmed.parse::<i64>()
-        .map_err(|_| format!("BEAM stdout parse error: {:?} (stderr: {})",
-            trimmed, String::from_utf8_lossy(&output.stderr).trim()))
+    (compile_us, run_us, outcome)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Backend 4: WebAssembly (pure-Rust runtime)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-fn run_wasm(source: &str) -> Result<i64, String> {
+/// Run the WASM backend, returning (compile_us, run_us, result).
+///
+/// **Compile phase** — `compile_twig_to_wasm` runs the full pipeline:
+///   IIR generation → builtin lowering → type inference → WASM binary encoding.
+///
+/// **Run phase** — `WasmRuntime::load_and_run` is a pure-Rust WASM interpreter
+/// (no subprocess, no JIT), so this measures the in-process WASM interpreter
+/// throughput directly.  The twig-to-wasm pipeline exports a synthesised
+/// `main` function that calls the top-level expression.
+fn run_wasm(source: &str) -> (u128, u128, Result<i64, String>) {
     use twig_to_wasm::compile_twig_to_wasm;
 
-    let wasm_bytes = compile_twig_to_wasm(source, "twig_fib")
-        .map_err(|e| format!("WASM compile: {e}"))?;
+    // Phase 1: compile Twig → WASM bytes.
+    let t_compile = Instant::now();
+    let wasm_bytes = match compile_twig_to_wasm(source, "twig_fib") {
+        Ok(b)  => b,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("WASM compile: {e}"))),
+    };
+    let compile_us = t_compile.elapsed().as_micros();
 
-    // The twig-to-wasm pipeline exports ALL functions by their IIR name.
-    // The Twig compiler synthesises a `main` function that calls the top-level
-    // expression.  We call `main` with no arguments.
+    // Phase 2: load the WASM module and execute `main`.
+    let t_run = Instant::now();
     let runtime = WasmRuntime::new();
     let result = runtime
         .load_and_run(&wasm_bytes, "main", &[])
-        .map_err(|e| format!("WASM run: {e}"))?;
+        .map_err(|e| format!("WASM run: {e}"));
+    let run_us = t_run.elapsed().as_micros();
 
-    result.first().copied()
-        .ok_or_else(|| "WASM: main returned no values".to_string())
+    let outcome = match result {
+        Ok(v)  => v.first().copied()
+                    .ok_or_else(|| "WASM: main returned no values".to_string()),
+        Err(e) => Err(e),
+    };
+
+    (compile_us, run_us, outcome)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Backend 5: JVM (Java 21)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-fn run_jvm(source: &str) -> Result<i64, String> {
+/// Run the JVM backend, returning (compile_us, run_us, result).
+///
+/// **Compile phase** — IIR generation + builtin lowering + type inference +
+/// JVM class-file generation + serialisation + disk write.  We also generate
+/// the thin `TwigLauncher.class` shim that wraps the entry point.
+///
+/// **Run phase** — `java -cp <dir> TwigLauncher` starts the JVM.  JVM startup
+/// (~100–400ms cold) dominates; fib(10) itself is a handful of µs once JIT'd.
+fn run_jvm(source: &str) -> (u128, u128, Result<i64, String>) {
     use iir_to_jvm_class_file::serialize_jvm_class_file;
+    use twig_to_jvm::pipeline::run_pipeline_from_iir;
+    use twig_to_jvm::IIRJvmConfig;
 
-    // The JVM pipeline (like BEAM/WASM) requires concrete type hints.
-    // Apply the same fixup: pre-lower builtins + infer + control-flow fixup.
-    // NOTE: compile_twig_to_jvm already calls twig-ir-compiler + iir-type-checker
-    // + iir-builtin-lowering internally, but it uses the strict lowering pass
-    // that rejects "any" type hints.  We use a local pre-lower + infer + fixup
-    // pipeline (mirroring what twig-to-beam and twig-to-wasm do) and bypass the
-    // twig_to_jvm::compile_twig_to_jvm entry point by calling the pipeline directly.
     let class_name = "TwigFib";
 
-    // Build the typed IIR manually using the same steps the BEAM/WASM pipelines use.
-    let mut iir = compile_source(source, "twig_fib")
-        .map_err(|e| format!("JVM compile: {e}"))?;
+    // Phase 1: IIR → class file bytes → disk.
+    let t_compile = Instant::now();
+
+    let mut iir = match compile_source(source, "twig_fib") {
+        Ok(m)  => m,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("JVM compile: {e}"))),
+    };
     pre_lower_builtins_jvm(&mut iir);
     infer_and_check(&mut iir);
     fixup_control_flow_types(&mut iir);
 
-    // Compile the fixed-up IIR through the JVM backend directly.
-    use twig_to_jvm::pipeline::run_pipeline_from_iir;
-    use twig_to_jvm::IIRJvmConfig;
     let config = IIRJvmConfig::new(class_name);
-    let class_file = run_pipeline_from_iir(iir, config)
-        .map_err(|e| format!("JVM backend: {e}"))?;
-
-    // Serialise the class file to bytes.
+    let class_file = match run_pipeline_from_iir(iir, config) {
+        Ok(cf) => cf,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("JVM backend: {e}"))),
+    };
     let class_bytes = serialize_jvm_class_file(&class_file);
 
-    // Write to a temp directory.
-    let dir = tempfile::tempdir().map_err(|e| format!("tempdir: {e}"))?;
+    let dir = match tempfile::tempdir() {
+        Ok(d)  => d,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("tempdir: {e}"))),
+    };
     let class_path = dir.path().join(format!("{class_name}.class"));
-    std::fs::write(&class_path, &class_bytes).map_err(|e| format!("write class: {e}"))?;
+    if let Err(e) = std::fs::write(&class_path, &class_bytes) {
+        return (t_compile.elapsed().as_micros(), 0, Err(format!("write class: {e}")));
+    }
 
-    // Generate a tiny launcher class (TwigLauncher.class) that has the
-    // required `public static void main(String[])` method.  It calls
-    // TwigFib.main() and exits with the integer result (result % 256 = exit code).
-    let launcher_bytes = gen_jvm_launcher(class_name, dir.path())?;
+    let launcher_bytes = match gen_jvm_launcher(class_name, dir.path()) {
+        Ok(b)  => b,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0, Err(e)),
+    };
     let launcher_path = dir.path().join("TwigLauncher.class");
-    std::fs::write(&launcher_path, &launcher_bytes).map_err(|e| format!("write launcher: {e}"))?;
+    if let Err(e) = std::fs::write(&launcher_path, &launcher_bytes) {
+        return (t_compile.elapsed().as_micros(), 0, Err(format!("write launcher: {e}")));
+    }
+    let compile_us = t_compile.elapsed().as_micros();
 
-    // Run: java -cp <dir> TwigLauncher
+    // Phase 2: run via `java -cp <dir> TwigLauncher`.
+    let t_run = Instant::now();
     let status = Command::new("java")
-        .arg("-cp")
-        .arg(dir.path())
+        .arg("-cp").arg(dir.path())
         .arg("TwigLauncher")
         .status()
-        .map_err(|e| format!("java not found: {e}"))?;
+        .map_err(|e| format!("java not found: {e}"));
+    let run_us = t_run.elapsed().as_micros();
 
-    let code = status.code().unwrap_or(-1) as i64;
-    Ok(code)
+    let outcome = match status {
+        Ok(s)  => Ok(s.code().unwrap_or(-1) as i64),
+        Err(e) => Err(e),
+    };
+
+    (compile_us, run_us, outcome)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Backend 6: CLR (multi-method CIL simulator)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-fn run_clr(source: &str) -> Result<i64, String> {
-    // Apply the same fixup pipeline as JVM/BEAM/WASM.
-    let mut iir = compile_source(source, "twig_fib")
-        .map_err(|e| format!("CLR compile: {e}"))?;
+/// Run the CLR backend, returning (compile_us, run_us, result).
+///
+/// **Compile phase** — IIR generation + builtin lowering + type inference +
+/// CIL bytecode generation (`iir-to-cil-bytecode`).  No disk write, no JIT.
+///
+/// **Run phase** — `run_cil_artifact` is a pure-Rust CIL interpreter (the
+/// multi-method executor below).  Like the WASM backend, there is no subprocess
+/// or JVM/CLR runtime startup cost, so this measures interpreter throughput.
+fn run_clr(source: &str) -> (u128, u128, Result<i64, String>) {
+    use twig_to_cil::pipeline::run_pipeline_from_iir as run_cil_from_iir;
+    use twig_to_cil::IIRClrConfig;
+
+    // Phase 1: IIR → CIL artifact.
+    let t_compile = Instant::now();
+
+    let mut iir = match compile_source(source, "twig_fib") {
+        Ok(m)  => m,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("CLR compile: {e}"))),
+    };
     pre_lower_builtins_clr(&mut iir);
     infer_and_check(&mut iir);
     fixup_control_flow_types(&mut iir);
 
-    // Compile through the CLR backend.
-    use twig_to_cil::pipeline::run_pipeline_from_iir as run_cil_from_iir;
-    use twig_to_cil::IIRClrConfig;
     let config = IIRClrConfig::new("TwigFib");
-    let artifact = run_cil_from_iir(iir, config)
-        .map_err(|e| format!("CLR backend: {e}"))?;
+    let artifact = match run_cil_from_iir(iir, config) {
+        Ok(a)  => a,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("CLR backend: {e}"))),
+    };
+    let compile_us = t_compile.elapsed().as_micros();
 
-    // Execute with the multi-method CIL runner.
-    run_cil_artifact(&artifact)
-        .map_err(|e| format!("CLR execute: {e}"))
+    // Phase 2: execute the CIL artifact in-process.
+    let t_run = Instant::now();
+    let outcome = run_cil_artifact(&artifact)
+        .map_err(|e| format!("CLR execute: {e}"));
+    let run_us = t_run.elapsed().as_micros();
+
+    (compile_us, run_us, outcome)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1285,6 +1453,221 @@ fn aot_type_correctness_demo() {
 
     println!();
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Optional-typing demo: untyped / partially typed / fully typed
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Expected result for all three typing variants: 0.
+///
+/// `(process 5)` = `clamp_low(add_offset(5, −10))` = `clamp_low(−5)` = 0.
+const TYPING_EXPECTED: i64 = 0;
+
+/// Untyped version — no annotations anywhere.
+///
+/// Twig accepts this without complaint; every backend that uses a type-inference
+/// pass (interpreter, BEAM, WASM, JVM, CLR) produces the correct answer.
+/// The AOT backend must fall back to **unsigned (u64)** comparisons because
+/// it has no type information, so `(< −5 0)` reads as `large_u64 < 0` = false
+/// and `clamp_low` skips the branch — returning −5 instead of 0.
+const TYPING_UNTYPED: &str = "\
+(define (add-offset x offset) (+ x offset))
+(define (clamp-low x) (if (< x 0) 0 x))
+(define (process val) (clamp-low (add-offset val -10)))
+(process 5)";
+
+/// Partially typed — only `clamp-low` carries type annotations.
+///
+/// The annotation `(x : int)` tells the AOT pipeline that `x` is a signed
+/// 64-bit integer, so the compiler emits a signed `CMP` for `(< x 0)`.
+/// That is the only comparison in the hot path, so this is enough to fix
+/// the wrong result.  `add-offset` and `process` remain untyped (u64), which
+/// is fine for addition (two's-complement addition is the same for signed
+/// and unsigned).
+const TYPING_PARTIAL: &str = "\
+(define (add-offset x offset) (+ x offset))
+(define (clamp-low (x : int) -> int) (if (< x 0) 0 x))
+(define (process val) (clamp-low (add-offset val -10)))
+(process 5)";
+
+/// Fully typed — every parameter and return type is annotated.
+///
+/// The AOT backend emits signed instructions for every arithmetic operation
+/// and comparison in the module.  No u64 fall-back is needed.
+const TYPING_FULL: &str = "\
+(define (add-offset (x : int) (offset : int) -> int) (+ x offset))
+(define (clamp-low (x : int) -> int) (if (< x 0) 0 x))
+(define (process (val : int) -> int) (clamp-low (add-offset val -10)))
+(process 5)";
+
+// ── Annotation-aware in-process AOT runner ────────────────────────────────────
+
+/// AOT path for the typing demo: reads `param_refinements` from the compiled
+/// `IIRModule` and seeds the ARM64 type-propagation pass from them.
+///
+/// ## Why this matters
+///
+/// `twig_ir_compiler::compile_source` stores Twig type annotations in
+/// `func.param_refinements: Vec<Option<RefinedType>>`, but leaves
+/// `func.params` typed as `"any"` for all parameters.  The standard AOT
+/// preparation pipeline (`prepare_module_for_aot`) overwrites every param
+/// with `"u64"` — so annotations would otherwise be silently ignored.
+///
+/// This function bridges the gap:
+/// 1. Pre-lower builtins (`call_builtin "+"` → `add`, etc.)
+/// 2. Walk `param_refinements` and, wherever a `Some(rt)` exists, set
+///    `func.params[i].1 = rt.kind.as_type_hint()` (e.g. `"i64"` for `int`).
+/// 3. Hand the annotated module to `compile_typed_module_to_arm64_bytes`,
+///    which propagates those types and defaults anything still `"any"` to u64.
+///
+/// Result: annotated params use signed i64 semantics; unannotated params
+/// use unsigned u64 semantics — exactly what "optional typing" promises.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn run_aot_annotated(source: &str) -> (u128, u128, Result<i64, String>) {
+    let t_compile = Instant::now();
+
+    // Step 1: compile Twig source → IIRModule (param_refinements populated).
+    let mut module = match compile_source(source, "typing_demo") {
+        Ok(m)  => m,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("compile: {e}"))),
+    };
+
+    // Step 2: pre-lower builtins so named ops are visible to type propagation.
+    twig_aot::pre_lower_aot_builtins_on_module(&mut module);
+
+    // Step 3: seed param types from source-level annotations.
+    //
+    // `param_refinements[i]` is `Some(rt)` when the i-th parameter has a type
+    // annotation in the Twig source (e.g. `(x : int)`).
+    // `rt.kind.as_type_hint()` maps:
+    //   Kind::Int  → "i64"   (Twig's `int` = signed 64-bit)
+    //   Kind::Bool → "bool"
+    //   Kind::Any  → "any"   (no-op — keeps the default)
+    //   … etc.
+    //
+    // Unannotated params remain "any" and are defaulted to "u64" downstream.
+    for func in &mut module.functions {
+        for (i, (_, param_ty)) in func.params.iter_mut().enumerate() {
+            if let Some(Some(rt)) = func.param_refinements.get(i) {
+                let hint = rt.kind.as_type_hint();
+                if hint != "any" {
+                    *param_ty = hint.to_string();
+                }
+            }
+        }
+    }
+
+    // Step 4: propagate types seeded from annotated params, default remaining
+    // "any" to u64, and compile to flat ARM64 code bytes.
+    let (bytes, offsets) = match twig_aot::compile_typed_module_to_arm64_bytes(&module) {
+        Ok(r)  => r,
+        Err(e) => return (t_compile.elapsed().as_micros(), 0,
+                          Err(format!("aot compile: {e:?}"))),
+    };
+    let compile_us = t_compile.elapsed().as_micros();
+
+    // Step 5: execute `process(5)` in-process.
+    let t_run = Instant::now();
+    let outcome = twig_aot::call_arm64_function_in_process(
+        &bytes, &offsets, "process", 5,
+    ).map_err(|e| format!("aot run: {e:?}"));
+    let run_us = t_run.elapsed().as_micros();
+
+    (compile_us, run_us, outcome)
+}
+
+/// Fallback on non-macOS/ARM64 platforms — AOT in-process is not available.
+#[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
+fn run_aot_annotated(_source: &str) -> (u128, u128, Result<i64, String>) {
+    (0, 0, Err("AOT in-process: macOS/ARM64 only".into()))
+}
+
+// ── Typing demo entry point ───────────────────────────────────────────────────
+
+/// Run the optional-typing demo and print one results table per type state.
+///
+/// Three variants of the same computation are compared:
+///
+/// | State    | `add-offset` | `clamp-low`       | `process`   |
+/// |----------|-------------|-------------------|-------------|
+/// | Untyped  | no ann.     | no ann.           | no ann.     |
+/// | Partial  | no ann.     | `(x:int) -> int`  | no ann.     |
+/// | Full     | `(x:int)(offset:int)->int` | `(x:int)->int` | `(val:int)->int` |
+///
+/// The critical operation is `(< x 0)` inside `clamp-low`.
+/// - Without a type annotation, the AOT backend defaults `x` to **u64**
+///   and emits an unsigned `CMP` — so `(< −5 0)` is **false** (wrong).
+/// - With `(x : int)` on `clamp-low`, the AOT backend seeds `x` as **i64**
+///   and emits a signed `CMP` — so `(< −5 0)` is **true** (correct).
+///
+/// The interpreter, BEAM, WASM, JVM, and CLR backends are correct in all
+/// three states because they run their own type-inference pass.
+fn run_typing_demo() {
+    let sep = "═".repeat(74);
+    println!("\n{sep}");
+    println!("  Twig optional-typing demo");
+    println!("  Program:  (process 5)  =  clamp-low(add-offset(5, −10))  =  clamp-low(−5)");
+    println!("  Expected: {TYPING_EXPECTED}   (add-offset returns −5; clamp-low must see it as signed)");
+    println!("{sep}");
+    println!();
+    println!("  The signed/unsigned split lives in `(< x 0)` inside clamp-low:");
+    println!("    −5 as u64 = 0xFFFF_FFFF_FFFF_FFFB  →  u64 < 0  = false  →  returns −5 ❌");
+    println!("    −5 as i64 = −5                      →  i64 < 0  = true   →  returns  0 ✅");
+    println!();
+
+    let variants: &[(&str, &str, &str)] = &[
+        (
+            "UNTYPED",
+            TYPING_UNTYPED,
+            "no annotations — AOT uses u64 throughout",
+        ),
+        (
+            "PARTIALLY TYPED",
+            TYPING_PARTIAL,
+            "clamp-low annotated `(x:int)->int` — enough to fix the comparison",
+        ),
+        (
+            "FULLY TYPED",
+            TYPING_FULL,
+            "all params annotated — AOT uses i64 throughout",
+        ),
+    ];
+
+    for (label, source, note) in variants {
+        println!("  ── {label}");
+        println!("     {note}");
+
+        let mut results: Vec<BackendResult> = Vec::new();
+
+        let (c, r, res) = run_interpreter(source);
+        results.push(BackendResult::new("Interpreter (twig-vm)", c, r, res));
+
+        // AOT: annotation-aware in-process path.
+        // Unannotated params default to u64 (may give wrong answer);
+        // annotated params use their declared type (signed i64 for `int`).
+        let (c, r, res) = run_aot_annotated(source);
+        results.push(BackendResult::new("AOT (in-process)", c, r, res));
+
+        let (c, r, res) = run_beam(source);
+        results.push(BackendResult::new("BEAM (Erlang VM)", c, r, res));
+
+        let (c, r, res) = run_wasm(source);
+        results.push(BackendResult::new("WebAssembly (Rust runtime)", c, r, res));
+
+        let (c, r, res) = run_jvm(source);
+        results.push(BackendResult::new("JVM (Java 21)", c, r, res));
+
+        let (c, r, res) = run_clr(source);
+        results.push(BackendResult::new("CLR (.NET 9)", c, r, res));
+
+        print_results(&results, TYPING_EXPECTED);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CLR local-count estimator
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /// Scan bytecode to estimate how many local variable slots are needed.
 ///
