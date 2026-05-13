@@ -1,6 +1,6 @@
 [package]
 name = "adjudication-clarification"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 description = "ADJ06 — clarification dialogue. v0.5 adds the ADJ22 typed-quantity retry: `retry_decompose_on_typed_quantity_failure` re-prompts the extractor with per-missing-literal hints (literal value, source byte range, nearby node IDs) so the model gets pinpoint feedback instead of repeating the v5 system prompt. Now covers ALL five LLM-touched checker passes: ADJ02 coverage, ADJ03 polarity/modality, ADJ04 round-trip drift, ADJ05 adversarial reading, ADJ22 typed-quantity coverage."
 
