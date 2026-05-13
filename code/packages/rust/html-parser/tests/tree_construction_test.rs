@@ -216,7 +216,7 @@ fn dump_element(element: &Element, depth: usize, lines: &mut Vec<String>) {
     attributes.sort_by(|left, right| left.name.cmp(&right.name));
     for attribute in attributes {
         if element.namespace.is_some() {
-            if let Some(local_name) = attribute.name.strip_prefix("xlink:") {
+            if let Some(local_name) = attribute.name.strip_prefix("xlink ") {
                 lines.push(format!(
                     "{}xlink {}=\"{}\"",
                     prefix(depth + 1),
@@ -225,7 +225,7 @@ fn dump_element(element: &Element, depth: usize, lines: &mut Vec<String>) {
                 ));
                 continue;
             }
-            if let Some(local_name) = attribute.name.strip_prefix("xml:") {
+            if let Some(local_name) = attribute.name.strip_prefix("xml ") {
                 lines.push(format!(
                     "{}xml {}=\"{}\"",
                     prefix(depth + 1),

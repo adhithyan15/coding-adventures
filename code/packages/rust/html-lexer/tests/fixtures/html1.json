@@ -184,26 +184,26 @@
     },
     {
       "id": "doctype-keyword-eof-quirks",
-      "description": "DOCTYPE keyword cut off by EOF emits a force-quirks doctype",
+      "description": "Truncated DOCTYPE opener recovers as a bogus comment at EOF",
       "input": "<!DOC",
       "tokens": [
-        "Doctype(name=null, force_quirks=true)",
+        "Comment(data=DOC)",
         "EOF"
       ],
       "diagnostics": [
-        "eof-in-doctype"
+        "incorrectly-opened-comment"
       ]
     },
     {
       "id": "doctype-invalid-keyword-quirks",
-      "description": "Malformed DOCTYPE keyword text marks force-quirks",
+      "description": "Malformed DOCTYPE opener recovers as a bogus comment",
       "input": "<!DOX>",
       "tokens": [
-        "Doctype(name=dox, force_quirks=true)",
+        "Comment(data=DOX)",
         "EOF"
       ],
       "diagnostics": [
-        "invalid-doctype-keyword"
+        "incorrectly-opened-comment"
       ]
     },
     {

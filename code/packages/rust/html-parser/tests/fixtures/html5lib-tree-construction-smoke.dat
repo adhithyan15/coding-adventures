@@ -37109,3 +37109,3261 @@ Line 1 Col 19 Expected closing tag. Unexpected end of file.
 |     <math math>
 |     <br>
 |     <foo>
+
+
+#source adoption01.dat:18
+#data
+<b><em><foo><foob><fooc><aside></b></em>
+#errors
+(1,35): adoption-agency-1.3
+(1,40): adoption-agency-1.3
+(1,40): expected-closing-tag-but-got-eof
+#document-fragment
+div
+#document
+| <b>
+|   <em>
+|     <foo>
+|       <foob>
+|         <fooc>
+| <aside>
+|   <b>
+
+
+#source foreign-fragment.dat:1
+#data
+<nobr>X
+#errors
+6: HTML start tag “nobr” in a foreign namespace context.
+7: End of file seen and there were open elements.
+#document-fragment
+svg path
+#document
+| <nobr>
+|   "X"
+
+
+#source foreign-fragment.dat:2
+#data
+<font color></font>X
+#errors
+12: HTML start tag “font” in a foreign namespace context.
+#document-fragment
+svg path
+#document
+| <font>
+|   color=""
+| "X"
+
+
+#source foreign-fragment.dat:3
+#data
+<font></font>X
+#errors
+#document-fragment
+svg path
+#document
+| <svg font>
+| "X"
+
+
+#source foreign-fragment.dat:4
+#data
+<g></path>X
+#errors
+10: End tag “path” did not match the name of the current open element (“g”).
+11: End of file seen and there were open elements.
+#document-fragment
+svg path
+#document
+| <svg g>
+|   "X"
+
+
+#source foreign-fragment.dat:5
+#data
+</path>X
+#errors
+5: Stray end tag “path”.
+#document-fragment
+svg path
+#document
+| "X"
+
+
+#source foreign-fragment.dat:6
+#data
+</foreignObject>X
+#errors
+5: Stray end tag “foreignobject”.
+#document-fragment
+svg foreignObject
+#document
+| "X"
+
+
+#source foreign-fragment.dat:7
+#data
+</desc>X
+#errors
+5: Stray end tag “desc”.
+#document-fragment
+svg desc
+#document
+| "X"
+
+
+#source foreign-fragment.dat:8
+#data
+</title>X
+#errors
+5: Stray end tag “title”.
+#document-fragment
+svg title
+#document
+| "X"
+
+
+#source foreign-fragment.dat:9
+#data
+</svg>X
+#errors
+5: Stray end tag “svg”.
+#document-fragment
+svg svg
+#document
+| "X"
+
+
+#source foreign-fragment.dat:10
+#data
+</mfenced>X
+#errors
+5: Stray end tag “mfenced”.
+#document-fragment
+math mfenced
+#document
+| "X"
+
+
+#source foreign-fragment.dat:11
+#data
+</malignmark>X
+#errors
+5: Stray end tag “malignmark”.
+#document-fragment
+math malignmark
+#document
+| "X"
+
+
+#source foreign-fragment.dat:12
+#data
+</math>X
+#errors
+5: Stray end tag “math”.
+#document-fragment
+math math
+#document
+| "X"
+
+
+#source foreign-fragment.dat:13
+#data
+</annotation-xml>X
+#errors
+5: Stray end tag “annotation-xml”.
+#document-fragment
+math annotation-xml
+#document
+| "X"
+
+
+#source foreign-fragment.dat:14
+#data
+</mtext>X
+#errors
+5: Stray end tag “mtext”.
+#document-fragment
+math mtext
+#document
+| "X"
+
+
+#source foreign-fragment.dat:15
+#data
+</mi>X
+#errors
+5: Stray end tag “mi”.
+#document-fragment
+math mi
+#document
+| "X"
+
+
+#source foreign-fragment.dat:16
+#data
+</mo>X
+#errors
+5: Stray end tag “mo”.
+#document-fragment
+math mo
+#document
+| "X"
+
+
+#source foreign-fragment.dat:17
+#data
+</mn>X
+#errors
+5: Stray end tag “mn”.
+#document-fragment
+math mn
+#document
+| "X"
+
+
+#source foreign-fragment.dat:18
+#data
+</ms>X
+#errors
+5: Stray end tag “ms”.
+#document-fragment
+math ms
+#document
+| "X"
+
+
+#source foreign-fragment.dat:19
+#data
+<b></b><mglyph/><i></i><malignmark/><u></u><ms/>X
+#errors
+51: Self-closing syntax (“/>”) used on a non-void HTML element. Ignoring the slash and treating as a start tag.
+52: End of file seen and there were open elements.
+#new-errors
+(1:44-1:49) non-void-html-element-start-tag-with-trailing-solidus
+#document-fragment
+math ms
+#document
+| <b>
+| <math mglyph>
+| <i>
+| <math malignmark>
+| <u>
+| <ms>
+|   "X"
+
+
+#source foreign-fragment.dat:20
+#data
+<malignmark></malignmark>
+#errors
+#document-fragment
+math ms
+#document
+| <math malignmark>
+
+
+#source foreign-fragment.dat:21
+#data
+<div></div>
+#errors
+#document-fragment
+math ms
+#document
+| <div>
+
+
+#source foreign-fragment.dat:22
+#data
+<figure></figure>
+#errors
+#document-fragment
+math ms
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:23
+#data
+<b></b><mglyph/><i></i><malignmark/><u></u><mn/>X
+#errors
+51: Self-closing syntax (“/>”) used on a non-void HTML element. Ignoring the slash and treating as a start tag.
+52: End of file seen and there were open elements.
+#new-errors
+(1:44-1:49) non-void-html-element-start-tag-with-trailing-solidus
+#document-fragment
+math mn
+#document
+| <b>
+| <math mglyph>
+| <i>
+| <math malignmark>
+| <u>
+| <mn>
+|   "X"
+
+
+#source foreign-fragment.dat:24
+#data
+<malignmark></malignmark>
+#errors
+#document-fragment
+math mn
+#document
+| <math malignmark>
+
+
+#source foreign-fragment.dat:25
+#data
+<div></div>
+#errors
+#document-fragment
+math mn
+#document
+| <div>
+
+
+#source foreign-fragment.dat:26
+#data
+<figure></figure>
+#errors
+#document-fragment
+math mn
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:27
+#data
+<b></b><mglyph/><i></i><malignmark/><u></u><mo/>X
+#errors
+51: Self-closing syntax (“/>”) used on a non-void HTML element. Ignoring the slash and treating as a start tag.
+52: End of file seen and there were open elements.
+#new-errors
+(1:44-1:49) non-void-html-element-start-tag-with-trailing-solidus
+#document-fragment
+math mo
+#document
+| <b>
+| <math mglyph>
+| <i>
+| <math malignmark>
+| <u>
+| <mo>
+|   "X"
+
+
+#source foreign-fragment.dat:28
+#data
+<malignmark></malignmark>
+#errors
+#document-fragment
+math mo
+#document
+| <math malignmark>
+
+
+#source foreign-fragment.dat:29
+#data
+<div></div>
+#errors
+#document-fragment
+math mo
+#document
+| <div>
+
+
+#source foreign-fragment.dat:30
+#data
+<figure></figure>
+#errors
+#document-fragment
+math mo
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:31
+#data
+<b></b><mglyph/><i></i><malignmark/><u></u><mi/>X
+#errors
+51: Self-closing syntax (“/>”) used on a non-void HTML element. Ignoring the slash and treating as a start tag.
+52: End of file seen and there were open elements.
+#new-errors
+(1:44-1:49) non-void-html-element-start-tag-with-trailing-solidus
+#document-fragment
+math mi
+#document
+| <b>
+| <math mglyph>
+| <i>
+| <math malignmark>
+| <u>
+| <mi>
+|   "X"
+
+
+#source foreign-fragment.dat:32
+#data
+<malignmark></malignmark>
+#errors
+#document-fragment
+math mi
+#document
+| <math malignmark>
+
+
+#source foreign-fragment.dat:33
+#data
+<div></div>
+#errors
+#document-fragment
+math mi
+#document
+| <div>
+
+
+#source foreign-fragment.dat:34
+#data
+<figure></figure>
+#errors
+#document-fragment
+math mi
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:35
+#data
+<b></b><mglyph/><i></i><malignmark/><u></u><mtext/>X
+#errors
+51: Self-closing syntax (“/>”) used on a non-void HTML element. Ignoring the slash and treating as a start tag.
+52: End of file seen and there were open elements.
+#new-errors
+(1:44-1:52) non-void-html-element-start-tag-with-trailing-solidus
+#document-fragment
+math mtext
+#document
+| <b>
+| <math mglyph>
+| <i>
+| <math malignmark>
+| <u>
+| <mtext>
+|   "X"
+
+
+#source foreign-fragment.dat:36
+#data
+<malignmark></malignmark>
+#errors
+#document-fragment
+math mtext
+#document
+| <math malignmark>
+
+
+#source foreign-fragment.dat:37
+#data
+<div></div>
+#errors
+#document-fragment
+math mtext
+#document
+| <div>
+
+
+#source foreign-fragment.dat:38
+#data
+<figure></figure>
+#errors
+#document-fragment
+math mtext
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:39
+#data
+<div></div>
+#errors
+5: HTML start tag “div” in a foreign namespace context.
+#document-fragment
+math annotation-xml
+#document
+| <div>
+
+
+#source foreign-fragment.dat:40
+#data
+<figure></figure>
+#errors
+#document-fragment
+math annotation-xml
+#document
+| <math figure>
+
+
+#source foreign-fragment.dat:41
+#data
+<div></div>
+#errors
+5: HTML start tag “div” in a foreign namespace context.
+#document-fragment
+math math
+#document
+| <div>
+
+
+#source foreign-fragment.dat:42
+#data
+<figure></figure>
+#errors
+#document-fragment
+math math
+#document
+| <math figure>
+
+
+#source foreign-fragment.dat:43
+#data
+<div></div>
+#errors
+#document-fragment
+svg foreignObject
+#document
+| <div>
+
+
+#source foreign-fragment.dat:44
+#data
+<figure></figure>
+#errors
+#document-fragment
+svg foreignObject
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:45
+#data
+<div></div>
+#errors
+#document-fragment
+svg title
+#document
+| <div>
+
+
+#source foreign-fragment.dat:46
+#data
+<figure></figure>
+#errors
+#document-fragment
+svg title
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:47
+#data
+<figure></figure>
+#errors
+#document-fragment
+svg desc
+#document
+| <figure>
+
+
+#source foreign-fragment.dat:48
+#data
+<div><h1>X</h1></div>
+#errors
+5: HTML start tag “div” in a foreign namespace context.
+#document-fragment
+svg svg
+#document
+| <div>
+|   <h1>
+|     "X"
+
+
+#source foreign-fragment.dat:49
+#data
+<div></div>
+#errors
+5: HTML start tag “div” in a foreign namespace context.
+#document-fragment
+svg svg
+#document
+| <div>
+
+
+#source foreign-fragment.dat:50
+#data
+<div></div>
+#errors
+#document-fragment
+svg desc
+#document
+| <div>
+
+
+#source foreign-fragment.dat:51
+#data
+<plaintext><foo>
+#errors
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+svg desc
+#document
+| <plaintext>
+|   "<foo>"
+
+
+#source foreign-fragment.dat:52
+#data
+<frameset>X
+#errors
+6: Stray start tag “frameset”.
+#document-fragment
+svg desc
+#document
+| "X"
+
+
+#source foreign-fragment.dat:53
+#data
+<head>X
+#errors
+6: Stray start tag “head”.
+#document-fragment
+svg desc
+#document
+| "X"
+
+
+#source foreign-fragment.dat:54
+#data
+<body>X
+#errors
+6: Stray start tag “body”.
+#document-fragment
+svg desc
+#document
+| "X"
+
+
+#source foreign-fragment.dat:55
+#data
+<html>X
+#errors
+6: Stray start tag “html”.
+#document-fragment
+svg desc
+#document
+| "X"
+
+
+#source foreign-fragment.dat:56
+#data
+<html class="foo">X
+#errors
+6: Stray start tag “html”.
+#document-fragment
+svg desc
+#document
+| "X"
+
+
+#source foreign-fragment.dat:57
+#data
+<body class="foo">X
+#errors
+6: Stray start tag “body”.
+#document-fragment
+svg desc
+#document
+| "X"
+
+
+#source foreign-fragment.dat:58
+#data
+<svg><p>
+#errors
+8: HTML start tag “p” in a foreign namespace context.
+#document-fragment
+div
+#document
+| <svg svg>
+| <p>
+
+
+#source foreign-fragment.dat:59
+#data
+<p>
+#errors
+3: HTML start tag “p” in a foreign namespace context.
+#document-fragment
+svg svg
+#document
+| <p>
+
+
+#source foreign-fragment.dat:60
+#data
+<svg></p><foo>
+#errors
+9: HTML end tag “p” in a foreign namespace context.
+(1:6) Unexpected </p> from in body insertion mode
+(1:15) Unexpected EOF
+#document-fragment
+div
+#document
+| <svg svg>
+| <p>
+| <foo>
+
+
+#source foreign-fragment.dat:61
+#data
+<svg></br><foo>
+#errors
+10: HTML end tag “br” in a foreign namespace context.
+(1:6) Unexpected </br> from in body insertion mode
+(1:16) Unexpected EOF
+#document-fragment
+div
+#document
+| <svg svg>
+| <br>
+| <foo>
+
+
+#source foreign-fragment.dat:62
+#data
+</p><foo>
+#errors
+4: HTML end tag “p” in a foreign namespace context.
+(1:1) Unexpected </p> from in body insertion mode
+(1:10) Unexpected EOF
+#document-fragment
+svg svg
+#document
+| <p>
+| <svg foo>
+
+
+#source foreign-fragment.dat:63
+#data
+</br><foo>
+#errors
+5: HTML end tag “br” in a foreign namespace context.
+(1:1) Unexpected </br> from in body insertion mode
+(1:11) Unexpected EOF
+#document-fragment
+svg svg
+#document
+| <br>
+| <svg foo>
+
+
+#source foreign-fragment.dat:64
+#data
+<body><foo>
+#errors
+6: HTML start tag “body” in a foreign namespace context.
+(1:1) Unexpected <body> from in body insertion mode
+(1:12) Unexpected EOF
+#document-fragment
+svg svg
+#document
+| <svg foo>
+
+
+#source foreign-fragment.dat:65
+#data
+<p><foo>
+#errors
+3: HTML start tag “p” in a foreign namespace context.
+(1:9) Unexpected EOF
+#document-fragment
+svg svg
+#document
+| <p>
+|   <foo>
+
+
+#source foreign-fragment.dat:66
+#data
+<p></p><foo>
+#errors
+3: HTML start tag “p” in a foreign namespace context.
+(1:13) Unexpected EOF
+#document-fragment
+svg svg
+#document
+| <p>
+| <svg foo>
+
+
+#source math.dat:1
+#data
+<math><tr><td><mo><tr>
+#errors
+(1,22): unexpected-start-tag
+(1,23): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <math math>
+|   <math tr>
+|     <math td>
+|       <math mo>
+
+
+#source math.dat:2
+#data
+<math><tr><td><mo><tr>
+#errors
+(1,6): foster-parenting-start-tag
+(1,22): expected-tr-in-table-scope
+(1,23): expected-closing-tag-but-got-eof
+#document-fragment
+tr
+#document
+| <math math>
+|   <math tr>
+|     <math td>
+|       <math mo>
+
+
+#source math.dat:3
+#data
+<math><thead><mo><tbody>
+#errors
+(1,6): foster-parenting-start-tag
+(1,24): expected-table-part-in-table-scope
+(1,25): expected-closing-tag-but-got-eof
+#document-fragment
+thead
+#document
+| <math math>
+|   <math thead>
+|     <math mo>
+
+
+#source math.dat:4
+#data
+<math><tfoot><mo><tbody>
+#errors
+(1,6): foster-parenting-start-tag
+(1,24): expected-table-part-in-table-scope
+(1,25): expected-closing-tag-but-got-eof
+#document-fragment
+tfoot
+#document
+| <math math>
+|   <math tfoot>
+|     <math mo>
+
+
+#source math.dat:5
+#data
+<math><tbody><mo><tfoot>
+#errors
+(1,6): foster-parenting-start-tag
+(1,24): expected-table-part-in-table-scope
+(1,25): expected-closing-tag-but-got-eof
+#document-fragment
+tbody
+#document
+| <math math>
+|   <math tbody>
+|     <math mo>
+
+
+#source math.dat:6
+#data
+<math><tbody><mo></table>
+#errors
+(1,6): foster-parenting-start-tag
+(1,25): unexpected-end-tag-in-math
+(1,26): expected-closing-tag-but-got-eof
+#document-fragment
+tbody
+#document
+| <math math>
+|   <math tbody>
+|     <math mo>
+
+
+#source math.dat:7
+#data
+<math><thead><mo></table>
+#errors
+(1,6): foster-parenting-start-tag
+(1,25): unexpected-end-tag-in-math
+(1,26): expected-closing-tag-but-got-eof
+#document-fragment
+tbody
+#document
+| <math math>
+|   <math thead>
+|     <math mo>
+
+
+#source math.dat:8
+#data
+<math><tfoot><mo></table>
+#errors
+(1,6): foster-parenting-start-tag
+(1,25): unexpected-end-tag-in-math
+(1,26): expected-closing-tag-but-got-eof
+#document-fragment
+tbody
+#document
+| <math math>
+|   <math tfoot>
+|     <math mo>
+
+
+#source scripted/adoption01.dat:1
+#data
+<p><b id="A"><script>document.getElementById("A").id = "B"</script></p>TEXT</b>
+#errors
+#script-on
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <b>
+|         id="B"
+|         <script>
+|           "document.getElementById("A").id = "B""
+|     <b>
+|       id="A"
+|       "TEXT"
+
+
+#source scripted/ark.dat:1
+#data
+<p><font size=4><font size=4><font size=4><script>document.getElementsByTagName("font")[2].setAttribute("size", "5");</script><font size=4><p>X
+#errors
+#script-on
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <font>
+|         size="4"
+|         <font>
+|           size="4"
+|           <font>
+|             size="5"
+|             <script>
+|               "document.getElementsByTagName("font")[2].setAttribute("size", "5");"
+|             <font>
+|               size="4"
+|     <p>
+|       <font>
+|         size="4"
+|         <font>
+|           size="4"
+|           <font>
+|             size="4"
+|             "X"
+
+
+#source scripted/webkit01.dat:1
+#data
+1<script>document.write("2")</script>3
+#errors
+#script-on
+#document
+| <html>
+|   <head>
+|   <body>
+|     "1"
+|     <script>
+|       "document.write("2")"
+|     "23"
+
+
+#source scripted/webkit01.dat:2
+#data
+1<script>document.write("<script>document.write('2')</scr"+ "ipt><script>document.write('3')</scr" + "ipt>")</script>4
+#errors
+#script-on
+#document
+| <html>
+|   <head>
+|   <body>
+|     "1"
+|     <script>
+|       "document.write("<script>document.write('2')</scr"+ "ipt><script>document.write('3')</scr" + "ipt>")"
+|     <script>
+|       "document.write('2')"
+|     "2"
+|     <script>
+|       "document.write('3')"
+|     "34"
+
+
+#source svg.dat:1
+#data
+<svg><tr><td><title><tr>
+#errors
+(1:21) Unexpected <tr> tag
+(1:25) Unexpected EOF
+#document-fragment
+td
+#document
+| <svg svg>
+|   <svg tr>
+|     <svg td>
+|       <svg title>
+
+
+#source svg.dat:2
+#data
+<svg><tr><td><title><tr>
+#errors
+(1:1) Unexpected <svg> tag
+(1:21) Unexpected <tr> tag
+(1:25) Unexpected EOF
+#document-fragment
+tr
+#document
+| <svg svg>
+|   <svg tr>
+|     <svg td>
+|       <svg title>
+
+
+#source svg.dat:3
+#data
+<svg><thead><title><tbody>
+#errors
+(1:1) Unexpected <svg> tag
+(1:20) Unexpected <tbody> tag
+(1:27) Unexpected EOF
+#document-fragment
+thead
+#document
+| <svg svg>
+|   <svg thead>
+|     <svg title>
+
+
+#source svg.dat:4
+#data
+<svg><tfoot><title><tbody>
+#errors
+(1:1) Unexpected <svg> tag
+(1:20) Unexpected <tbody> tag
+(1:27) Unexpected EOF
+#document-fragment
+tfoot
+#document
+| <svg svg>
+|   <svg tfoot>
+|     <svg title>
+
+
+#source svg.dat:5
+#data
+<svg><tbody><title><tfoot>
+#errors
+(1:1) Unexpected <svg> tag
+(1:20) Unexpected <tfoot> tag
+(1:27) Unexpected EOF
+#document-fragment
+tbody
+#document
+| <svg svg>
+|   <svg tbody>
+|     <svg title>
+
+
+#source svg.dat:6
+#data
+<svg><tbody><title></table>
+#errors
+(1:1) Unexpected <svg> tag
+(1:20) Unexpected </table> tag
+(1:28) Unexpected EOF
+#document-fragment
+tbody
+#document
+| <svg svg>
+|   <svg tbody>
+|     <svg title>
+
+
+#source svg.dat:7
+#data
+<svg><thead><title></table>
+#errors
+(1:1) Unexpected <svg> tag
+(1:20) Unexpected </table> tag
+(1:28) Unexpected EOF
+#document-fragment
+tbody
+#document
+| <svg svg>
+|   <svg thead>
+|     <svg title>
+
+
+#source svg.dat:8
+#data
+<svg><tfoot><title></table>
+#errors
+(1:1) Unexpected <svg> tag
+(1:20) Unexpected </table> tag
+(1:28) Unexpected EOF
+#document-fragment
+tbody
+#document
+| <svg svg>
+|   <svg tfoot>
+|     <svg title>
+
+
+#source template.dat:112
+#data
+<!DOCTYPE HTML><template><tr><td>cell</td></tr>a</template>
+#errors
+(1,59): foster-parenting-character
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <tr>
+|           <td>
+|             "cell"
+|         "a"
+|   <body>
+
+
+#source tricky01.dat:1
+#data
+<b><p>Bold </b> Not bold</p>
+Also not bold.
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,15): adoption-agency-1.3
+#document
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|     <p>
+|       <b>
+|         "Bold "
+|       " Not bold"
+|     "
+Also not bold."
+
+
+#source tricky01.dat:2
+#data
+<html>
+<font color=red><i>Italic and Red<p>Italic and Red </font> Just italic.</p> Italic only.</i> Plain
+<p>I should not be red. <font color=red>Red. <i>Italic and red.</p>
+<p>Italic and red. </i> Red.</font> I should not be red.</p>
+<b>Bold <i>Bold and italic</b> Only Italic </i> Plain
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(2,58): adoption-agency-1.3
+(3,67): unexpected-end-tag
+(4,23): adoption-agency-1.3
+(4,35): adoption-agency-1.3
+(5,30): adoption-agency-1.3
+#document
+| <html>
+|   <head>
+|   <body>
+|     <font>
+|       color="red"
+|       <i>
+|         "Italic and Red"
+|     <i>
+|       <p>
+|         <font>
+|           color="red"
+|           "Italic and Red "
+|         " Just italic."
+|       " Italic only."
+|     " Plain
+"
+|     <p>
+|       "I should not be red. "
+|       <font>
+|         color="red"
+|         "Red. "
+|         <i>
+|           "Italic and red."
+|     <font>
+|       color="red"
+|       <i>
+|         "
+"
+|     <p>
+|       <font>
+|         color="red"
+|         <i>
+|           "Italic and red. "
+|         " Red."
+|       " I should not be red."
+|     "
+"
+|     <b>
+|       "Bold "
+|       <i>
+|         "Bold and italic"
+|     <i>
+|       " Only Italic "
+|     " Plain"
+
+
+#source tricky01.dat:3
+#data
+<html><body>
+<p><font size="7">First paragraph.</p>
+<p>Second paragraph.</p></font>
+<b><p><i>Bold and Italic</b> Italic</p>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(2,38): unexpected-end-tag
+(4,28): adoption-agency-1.3
+(4,28): adoption-agency-1.3
+(4,39): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     "
+"
+|     <p>
+|       <font>
+|         size="7"
+|         "First paragraph."
+|     <font>
+|       size="7"
+|       "
+"
+|       <p>
+|         "Second paragraph."
+|     "
+"
+|     <b>
+|     <p>
+|       <b>
+|         <i>
+|           "Bold and Italic"
+|       <i>
+|         " Italic"
+
+
+#source tricky01.dat:4
+#data
+<html>
+<dl>
+<dt><b>Boo
+<dd>Goo?
+</dl>
+</html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(4,4): end-tag-too-early
+(5,5): end-tag-too-early
+(6,7): expected-one-end-tag-but-got-another
+#document
+| <html>
+|   <head>
+|   <body>
+|     <dl>
+|       "
+"
+|       <dt>
+|         <b>
+|           "Boo
+"
+|       <dd>
+|         <b>
+|           "Goo?
+"
+|     <b>
+|       "
+"
+
+
+#source tricky01.dat:5
+#data
+<html><body>
+<label><a><div>Hello<div>World</div></a></label>  
+</body></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(2,40): adoption-agency-1.3
+(2,48): unexpected-end-tag
+(3,7): expected-one-end-tag-but-got-another
+#document
+| <html>
+|   <head>
+|   <body>
+|     "
+"
+|     <label>
+|       <a>
+|       <div>
+|         <a>
+|           "Hello"
+|           <div>
+|             "World"
+|         "  
+"
+
+
+#source tricky01.dat:6
+#data
+<table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,15): foster-parenting-start-tag
+(1,16): foster-parenting-character
+(1,22): foster-parenting-start-tag
+(1,23): foster-parenting-character
+(1,32): foster-parenting-end-tag
+(1,32): end-tag-too-early
+(1,33): foster-parenting-character
+(1,38): foster-parenting-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <center>
+|       " "
+|       <font>
+|         "a"
+|     <font>
+|       <img>
+|       " "
+|     <table>
+|       " "
+|       <tbody>
+|         <tr>
+|           <td>
+|             " "
+|           " "
+|         " "
+
+
+#source tricky01.dat:7
+#data
+<table><tr><p><a><p>You should see this text.
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,14): unexpected-start-tag-implies-table-voodoo
+(1,17): unexpected-start-tag-implies-table-voodoo
+(1,20): unexpected-start-tag-implies-table-voodoo
+(1,20): closing-non-current-p-element
+(1,21): foster-parenting-character
+(1,22): foster-parenting-character
+(1,23): foster-parenting-character
+(1,24): foster-parenting-character
+(1,25): foster-parenting-character
+(1,26): foster-parenting-character
+(1,27): foster-parenting-character
+(1,28): foster-parenting-character
+(1,29): foster-parenting-character
+(1,30): foster-parenting-character
+(1,31): foster-parenting-character
+(1,32): foster-parenting-character
+(1,33): foster-parenting-character
+(1,34): foster-parenting-character
+(1,35): foster-parenting-character
+(1,36): foster-parenting-character
+(1,37): foster-parenting-character
+(1,38): foster-parenting-character
+(1,39): foster-parenting-character
+(1,40): foster-parenting-character
+(1,41): foster-parenting-character
+(1,42): foster-parenting-character
+(1,43): foster-parenting-character
+(1,44): foster-parenting-character
+(1,45): foster-parenting-character
+(1,45): eof-in-table
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <a>
+|     <p>
+|       <a>
+|         "You should see this text."
+|     <table>
+|       <tbody>
+|         <tr>
+
+
+#source tricky01.dat:8
+#data
+<TABLE>
+<TR>
+<CENTER><CENTER><TD></TD></TR><TR>
+<FONT>
+<TABLE><tr></tr></TABLE>
+</P>
+<a></font><font></a>
+This page contains an insanely badly-nested tag sequence.
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(3,8): unexpected-start-tag-implies-table-voodoo
+(3,16): unexpected-start-tag-implies-table-voodoo
+(4,6): unexpected-start-tag-implies-table-voodoo
+(4,6): unexpected character token in table (the newline)
+(5,7): unexpected-start-tag-implies-end-tag
+(6,4): unexpected p end tag
+(7,10): adoption-agency-1.3
+(7,20): adoption-agency-1.3
+(8,57): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <center>
+|       <center>
+|     <font>
+|       "
+"
+|     <table>
+|       "
+"
+|       <tbody>
+|         <tr>
+|           "
+"
+|           <td>
+|         <tr>
+|           "
+"
+|     <table>
+|       <tbody>
+|         <tr>
+|     <font>
+|       "
+"
+|       <p>
+|       "
+"
+|       <a>
+|     <a>
+|       <font>
+|     <font>
+|       "
+This page contains an insanely badly-nested tag sequence."
+
+
+#source tricky01.dat:9
+#data
+<html>
+<body>
+<b><nobr><div>This text is in a div inside a nobr</nobr>More text that should not be in the nobr, i.e., the
+nobr should have closed the div inside it implicitly. </b><pre>A pre tag outside everything else.</pre>
+</body>
+</html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(3,56): adoption-agency-1.3
+(4,58): adoption-agency-1.3
+(5,7): expected-one-end-tag-but-got-another
+#document
+| <html>
+|   <head>
+|   <body>
+|     "
+"
+|     <b>
+|       <nobr>
+|     <div>
+|       <b>
+|         <nobr>
+|           "This text is in a div inside a nobr"
+|         "More text that should not be in the nobr, i.e., the
+nobr should have closed the div inside it implicitly. "
+|       <pre>
+|         "A pre tag outside everything else."
+|       "
+
+"
+
+
+#source webkit01.dat:1
+#data
+Test
+#errors
+(1,4): expected-doctype-but-got-chars
+#document
+| <html>
+|   <head>
+|   <body>
+|     "Test"
+
+
+#source webkit01.dat:2
+#data
+<div></div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+
+
+#source webkit01.dat:3
+#data
+<div>Test</div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "Test"
+
+
+#source webkit01.dat:4
+#data
+<di
+#errors
+(1,3): eof-in-tag-name
+(1,3): expected-doctype-but-got-eof
+#new-errors
+(1:4) eof-in-tag
+#document
+| <html>
+|   <head>
+|   <body>
+
+
+#source webkit01.dat:5
+#data
+<div>Hello</div>
+<script>
+console.log("PASS");
+</script>
+<div>Bye</div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "Hello"
+|     "
+"
+|     <script>
+|       "
+console.log("PASS");
+"
+|     "
+"
+|     <div>
+|       "Bye"
+
+
+#source webkit01.dat:6
+#data
+<div foo="bar">Hello</div>
+#errors
+(1,15): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       foo="bar"
+|       "Hello"
+
+
+#source webkit01.dat:7
+#data
+<div>Hello</div>
+<script>
+console.log("FOO<span>BAR</span>BAZ");
+</script>
+<div>Bye</div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       "Hello"
+|     "
+"
+|     <script>
+|       "
+console.log("FOO<span>BAR</span>BAZ");
+"
+|     "
+"
+|     <div>
+|       "Bye"
+
+
+#source webkit01.dat:8
+#data
+<foo bar="baz"></foo><potato quack="duck"></potato>
+#errors
+(1,15): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <foo>
+|       bar="baz"
+|     <potato>
+|       quack="duck"
+
+
+#source webkit01.dat:9
+#data
+<foo bar="baz"><potato quack="duck"></potato></foo>
+#errors
+(1,15): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <foo>
+|       bar="baz"
+|       <potato>
+|         quack="duck"
+
+
+#source webkit01.dat:10
+#data
+<foo></foo bar="baz"><potato></potato quack="duck">
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,21): attributes-in-end-tag
+(1,51): attributes-in-end-tag
+#new-errors
+(1:21) end-tag-with-attributes
+(1:51) end-tag-with-attributes
+#document
+| <html>
+|   <head>
+|   <body>
+|     <foo>
+|     <potato>
+
+
+#source webkit01.dat:11
+#data
+</ tttt>
+#errors
+(1,2): expected-closing-tag-but-got-char
+(1,8): expected-doctype-but-got-eof
+#new-errors
+(1:3) invalid-first-character-of-tag-name
+#document
+| <!--  tttt -->
+| <html>
+|   <head>
+|   <body>
+
+
+#source webkit01.dat:12
+#data
+<div FOO ><img><img></div>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       foo=""
+|       <img>
+|       <img>
+
+
+#source webkit01.dat:13
+#data
+<p>Test</p<p>Test2</p>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,13): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       "TestTest2"
+
+
+#source webkit01.dat:14
+#data
+<rdar://problem/6869687>
+#errors
+(1,7): unexpected-character-after-solidus-in-tag
+(1,8): unexpected-character-after-solidus-in-tag
+(1,16): unexpected-character-after-solidus-in-tag
+(1,24): expected-doctype-but-got-start-tag
+(1,24): expected-closing-tag-but-got-eof
+#new-errors
+(1:8) unexpected-solidus-in-tag
+(1:9) unexpected-solidus-in-tag
+(1:17) unexpected-solidus-in-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <rdar:>
+|       6869687=""
+|       problem=""
+
+
+#source webkit01.dat:15
+#data
+<A>test< /A>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,8): expected-tag-name
+(1,12): expected-closing-tag-but-got-eof
+#new-errors
+(1:9) invalid-first-character-of-tag-name
+#document
+| <html>
+|   <head>
+|   <body>
+|     <a>
+|       "test< /A>"
+
+
+#source webkit01.dat:16
+#data
+&lt;
+#errors
+(1,4): expected-doctype-but-got-chars
+#document
+| <html>
+|   <head>
+|   <body>
+|     "<"
+
+
+#source webkit01.dat:17
+#data
+<body foo='bar'><body foo='baz' yo='mama'>
+#errors
+(1,16): expected-doctype-but-got-start-tag
+(1,42): unexpected-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     foo="bar"
+|     yo="mama"
+
+
+#source webkit01.dat:18
+#data
+<body></br foo="bar"></body>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,21): attributes-in-end-tag
+(1,21): unexpected-end-tag-treated-as
+#new-errors
+(1:21) end-tag-with-attributes
+#document
+| <html>
+|   <head>
+|   <body>
+|     <br>
+
+
+#source webkit01.dat:19
+#data
+<bdy><br foo="bar"></body>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,26): expected-one-end-tag-but-got-another
+#document
+| <html>
+|   <head>
+|   <body>
+|     <bdy>
+|       <br>
+|         foo="bar"
+
+
+#source webkit01.dat:20
+#data
+<body></body></br foo="bar">
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,28): attributes-in-end-tag
+(1,28): unexpected-end-tag-after-body
+(1,28): unexpected-end-tag-treated-as
+#new-errors
+(1:28) end-tag-with-attributes
+#document
+| <html>
+|   <head>
+|   <body>
+|     <br>
+
+
+#source webkit01.dat:21
+#data
+<bdy></body><br foo="bar">
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,12): expected-one-end-tag-but-got-another
+(1,26): unexpected-start-tag-after-body
+(1,26): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <bdy>
+|       <br>
+|         foo="bar"
+
+
+#source webkit01.dat:22
+#data
+<html><body></body></html><!-- Hi there -->
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+| <!--  Hi there  -->
+
+
+#source webkit01.dat:23
+#data
+<html><body></body></html><!-- Comment A --><!-- Comment B --><!-- Comment C --><!-- Comment D --><!-- Comment E -->
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+| <!--  Comment A  -->
+| <!--  Comment B  -->
+| <!--  Comment C  -->
+| <!--  Comment D  -->
+| <!--  Comment E  -->
+
+
+#source webkit01.dat:24
+#data
+<html><body></body></html>x<!-- Hi there -->
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,27): expected-eof-but-got-char
+#document
+| <html>
+|   <head>
+|   <body>
+|     "x"
+|     <!--  Hi there  -->
+
+
+#source webkit01.dat:25
+#data
+<html><body></body></html>x<!-- Hi there --></html><!-- Again -->
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,27): expected-eof-but-got-char
+#document
+| <html>
+|   <head>
+|   <body>
+|     "x"
+|     <!--  Hi there  -->
+| <!--  Again  -->
+
+
+#source webkit01.dat:26
+#data
+<html><body></body></html>x<!-- Hi there --></body></html><!-- Again -->
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,27): expected-eof-but-got-char
+#document
+| <html>
+|   <head>
+|   <body>
+|     "x"
+|     <!--  Hi there  -->
+| <!--  Again  -->
+
+
+#source webkit01.dat:27
+#data
+<html><body></body>
+   <!-- Hi there --></html>
+#errors
+no-doctype
+#document
+| <html>
+|   <head>
+|   <body>
+|     "
+   "
+|   <!--  Hi there  -->
+
+
+#source webkit01.dat:28
+#data
+<html><body></body></html>
+   <!-- Hi there -->
+#errors
+no-doctype
+#document
+| <html>
+|   <head>
+|   <body>
+|     "
+   "
+| <!--  Hi there  -->
+
+
+#source webkit01.dat:29
+#data
+<html><body><ruby><div><rp>xx</rp></div></ruby></body></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,27): XXX-undefined-error
+#document
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <div>
+|         <rp>
+|           "xx"
+
+
+#source webkit01.dat:30
+#data
+<html><body><ruby><div><rt>xx</rt></div></ruby></body></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,27): XXX-undefined-error
+#document
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <div>
+|         <rt>
+|           "xx"
+
+
+#source webkit01.dat:31
+#data
+<html><frameset><!--1--><noframes>A</noframes><!--2--></frameset><!--3--><noframes>B</noframes><!--4--></html><!--5--><noframes>C</noframes><!--6-->
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <frameset>
+|     <!-- 1 -->
+|     <noframes>
+|       "A"
+|     <!-- 2 -->
+|   <!-- 3 -->
+|   <noframes>
+|     "B"
+|   <!-- 4 -->
+|   <noframes>
+|     "C"
+| <!-- 5 -->
+| <!-- 6 -->
+
+
+#source webkit01.dat:32
+#data
+<select><option>A<select><option>B<select><option>C<select><option>D<select><option>E<select><option>F<select><option>G<select>
+#errors
+1:1: ERROR: Expected a doctype token
+1:18: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, select, option.
+1:52: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, select, option.
+1:86: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, select, option.
+1:120: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, select, option.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+|         "A"
+|     <option>
+|       "B"
+|       <select>
+|         <option>
+|           "C"
+|     <option>
+|       "D"
+|       <select>
+|         <option>
+|           "E"
+|     <option>
+|       "F"
+|       <select>
+|         <option>
+|           "G"
+
+
+#source webkit01.dat:33
+#data
+<dd><dd><dt><dt><dd><li><li>
+#errors
+(1,4): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <dd>
+|     <dd>
+|     <dt>
+|     <dt>
+|     <dd>
+|       <li>
+|       <li>
+
+
+#source webkit01.dat:34
+#data
+<div><b></div><div><nobr>a<nobr>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,14): end-tag-too-early
+(1,32): unexpected-start-tag-implies-end-tag
+(1,32): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <b>
+|     <div>
+|       <b>
+|         <nobr>
+|           "a"
+|         <nobr>
+
+
+#source webkit01.dat:35
+#data
+<head></head>
+<body></body>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   "
+"
+|   <body>
+
+
+#source webkit01.dat:36
+#data
+<head></head> <style></style>ddd
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,21): unexpected-start-tag-out-of-my-head
+#document
+| <html>
+|   <head>
+|     <style>
+|   " "
+|   <body>
+|     "ddd"
+
+
+#source webkit01.dat:37
+#data
+<kbd><table></kbd><col><select><tr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:13: ERROR: End tag 'kbd' isn't allowed here. Currently open tags: html, body, kbd, table.
+1:13: ERROR: End tag 'kbd' isn't allowed here. Currently open tags: html, body, kbd, table.
+1:24: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, kbd, table.
+1:36: ERROR: Premature end of file. Currently open tags: html, body, kbd, table, tbody, tr.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <kbd>
+|       <select>
+|       <table>
+|         <colgroup>
+|           <col>
+|         <tbody>
+|           <tr>
+
+
+#source webkit01.dat:38
+#data
+<kbd><table></kbd><col><select><tr></table><div>
+#errors
+1:1: ERROR: Expected a doctype token
+1:13: ERROR: End tag 'kbd' isn't allowed here. Currently open tags: html, body, kbd, table.
+1:13: ERROR: End tag 'kbd' isn't allowed here. Currently open tags: html, body, kbd, table.
+1:24: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, kbd, table.
+1:49: ERROR: Premature end of file. Currently open tags: html, body, kbd, div.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <kbd>
+|       <select>
+|       <table>
+|         <colgroup>
+|           <col>
+|         <tbody>
+|           <tr>
+|       <div>
+
+
+#source webkit01.dat:39
+#data
+<a><li><style></style><title></title></a>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,41): adoption-agency-1.3
+#document
+| <html>
+|   <head>
+|   <body>
+|     <a>
+|     <li>
+|       <a>
+|         <style>
+|         <title>
+
+
+#source webkit01.dat:40
+#data
+<font></p><p><meta><title></title></font>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,10): unexpected-end-tag
+(1,41): adoption-agency-1.3
+#document
+| <html>
+|   <head>
+|   <body>
+|     <font>
+|       <p>
+|     <p>
+|       <font>
+|         <meta>
+|         <title>
+
+
+#source webkit01.dat:41
+#data
+<a><center><title></title><a>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,29): unexpected-start-tag-implies-end-tag
+(1,29): adoption-agency-1.3
+(1,29): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <a>
+|     <center>
+|       <a>
+|         <title>
+|       <a>
+
+
+#source webkit01.dat:42
+#data
+<svg><title><div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,17): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg title>
+|         <div>
+
+
+#source webkit01.dat:43
+#data
+<svg><title><rect><div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,23): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg title>
+|         <rect>
+|           <div>
+
+
+#source webkit01.dat:44
+#data
+<svg><title><svg><div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,22): unexpected-html-element-in-foreign-content
+(1,22): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg title>
+|         <svg svg>
+|         <div>
+
+
+#source webkit01.dat:45
+#data
+<img <="" FAIL>
+#errors
+(1,6): invalid-character-in-attribute-name
+(1,15): expected-doctype-but-got-start-tag
+#new-errors
+(1:6) unexpected-character-in-attribute-name
+#document
+| <html>
+|   <head>
+|   <body>
+|     <img>
+|       <=""
+|       fail=""
+
+
+#source webkit01.dat:46
+#data
+<ul><li><div id='foo'/>A</li><li>B<div>C</div></li></ul>
+#errors
+(1,4): expected-doctype-but-got-start-tag
+(1,23): non-void-element-with-trailing-solidus
+(1,29): end-tag-too-early
+#new-errors
+(1:9-1:24) non-void-html-element-start-tag-with-trailing-solidus
+#document
+| <html>
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         <div>
+|           id="foo"
+|           "A"
+|       <li>
+|         "B"
+|         <div>
+|           "C"
+
+
+#source webkit01.dat:47
+#data
+<svg><em><desc></em>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,9): unexpected-html-element-in-foreign-content
+(1,20): adoption-agency-1.3
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|     <em>
+|       <desc>
+
+
+#source webkit01.dat:48
+#data
+<table><tr><td><svg><desc><td></desc><circle>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,30): unexpected-start-tag
+(1,37): unexpected-end-tag
+(1,22): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <svg svg>
+|               <svg desc>
+|           <td>
+|             <circle>
+
+
+#source webkit01.dat:49
+#data
+<svg><tfoot></mi><td>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,17): unexpected-end-tag
+(1,17): unexpected-end-tag
+(1,21): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg tfoot>
+|         <svg td>
+
+
+#source webkit01.dat:50
+#data
+<math><mrow><mrow><mn>1</mn></mrow><mi>a</mi></mrow></math>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mrow>
+|         <math mrow>
+|           <math mn>
+|             "1"
+|         <math mi>
+|           "a"
+
+
+#source webkit01.dat:51
+#data
+<!doctype html><input type="hidden"><frameset>
+#errors
+(1,46): unexpected-start-tag
+(1,46): eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source webkit01.dat:52
+#data
+<!doctype html><input type="button"><frameset>
+#errors
+(1,46): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <input>
+|       type="button"
+
+
+#source webkit02.dat:1
+#data
+<foo bar=qux/>
+#errors
+(1,14): expected-doctype-but-got-start-tag
+(1,14): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <foo>
+|       bar="qux/"
+
+
+#source webkit02.dat:2
+#data
+<p id="status"><noscript><strong>A</strong></noscript><span>B</span></p>
+#errors
+(1,15): expected-doctype-but-got-start-tag
+#script-on
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       id="status"
+|       <noscript>
+|         "<strong>A</strong>"
+|       <span>
+|         "B"
+
+
+#source webkit02.dat:3
+#data
+<p id="status"><noscript><strong>A</strong></noscript><span>B</span></p>
+#errors
+(1,15): expected-doctype-but-got-start-tag
+#script-off
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       id="status"
+|       <noscript>
+|         <strong>
+|           "A"
+|       <span>
+|         "B"
+
+
+#source webkit02.dat:4
+#data
+<div><sarcasm><div></div></sarcasm></div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <sarcasm>
+|         <div>
+
+
+#source webkit02.dat:5
+#data
+<html><body><img src="" border="0" alt="><div>A</div></body></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,67): eof-in-attribute-value-double-quote
+#new-errors
+(1:68) eof-in-tag
+#document
+| <html>
+|   <head>
+|   <body>
+
+
+#source webkit02.dat:6
+#data
+<table><td></tbody>A
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,11): unexpected-cell-in-table-body
+(1,20): foster-parenting-character
+(1,20): eof-in-table
+#document
+| <html>
+|   <head>
+|   <body>
+|     "A"
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+
+
+#source webkit02.dat:7
+#data
+<table><td></thead>A
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,11): unexpected-cell-in-table-body
+(1,19): XXX-undefined-error
+(1,20): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             "A"
+
+
+#source webkit02.dat:8
+#data
+<table><td></tfoot>A
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,11): unexpected-cell-in-table-body
+(1,19): XXX-undefined-error
+(1,20): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             "A"
+
+
+#source webkit02.dat:9
+#data
+<table><thead><td></tbody>A
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,18): unexpected-cell-in-table-body
+(1,26): XXX-undefined-error
+(1,27): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <thead>
+|         <tr>
+|           <td>
+|             "A"
+
+
+#source webkit02.dat:10
+#data
+<legend>test</legend>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <legend>
+|       "test"
+
+
+#source webkit02.dat:11
+#data
+<table><input>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,14): foster-parenting-start-tag
+(1,15): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <input>
+|     <table>
+
+
+#source webkit02.dat:12
+#data
+<b><em><dcell><postfield><postfield><postfield><postfield><missing_glyph><missing_glyph><missing_glyph><missing_glyph><hkern><aside></b></em>
+#errors
+unexpected-b-end-tag
+unexpected-em-end-tag
+eof-in-aside
+#document-fragment
+div
+#document
+| <b>
+|   <em>
+|     <dcell>
+|       <postfield>
+|         <postfield>
+|           <postfield>
+|             <postfield>
+|               <missing_glyph>
+|                 <missing_glyph>
+|                   <missing_glyph>
+|                     <missing_glyph>
+|                       <hkern>
+| <aside>
+|   <b>
+
+
+#source webkit02.dat:13
+#data
+<b><em><foo><foo><aside></b>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,28): adoption-agency-9
+(1,29): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       <em>
+|         <foo>
+|           <foo>
+|     <em>
+|       <aside>
+|         <b>
+
+
+#source webkit02.dat:14
+#data
+<b><em><foo><foo><aside></b></em>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,28): adoption-agency-9
+(1,33): adoption-agency-9
+(1,34): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       <em>
+|         <foo>
+|           <foo>
+|     <em>
+|     <aside>
+|       <em>
+|         <b>
+
+
+#source webkit02.dat:15
+#data
+<b><em><foo><foo><foo><aside></b>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,33): adoption-agency-9
+(1,34): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       <em>
+|         <foo>
+|           <foo>
+|             <foo>
+|     <aside>
+|       <b>
+
+
+#source webkit02.dat:16
+#data
+<b><em><foo><foo><foo><aside></b></em>
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,33): adoption-agency-9
+(1,38): adoption-agency-9
+(1,39): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       <em>
+|         <foo>
+|           <foo>
+|             <foo>
+|     <aside>
+|       <b>
+
+
+#source webkit02.dat:17
+#data
+<b><em><foo><foo><foo><foo><foo><foo><foo><foo><foo><foo><aside></b></em>
+#errors
+(1,68): adoption-agency-9
+(1,73): adoption-agency-9
+(1,74): expected-closing-tag-but-got-eof
+#document-fragment
+div
+#document
+| <b>
+|   <em>
+|     <foo>
+|       <foo>
+|         <foo>
+|           <foo>
+|             <foo>
+|               <foo>
+|                 <foo>
+|                   <foo>
+|                     <foo>
+|                       <foo>
+| <aside>
+|   <b>
+
+
+#source webkit02.dat:18
+#data
+<b><em><foo><foob><foob><foob><foob><fooc><fooc><fooc><fooc><food><aside></b></em>
+#errors
+(1,77): adoption-agency-9
+(1,82): adoption-agency-9
+(1,83): expected-closing-tag-but-got-eof
+#document-fragment
+div
+#document
+| <b>
+|   <em>
+|     <foo>
+|       <foob>
+|         <foob>
+|           <foob>
+|             <foob>
+|               <fooc>
+|                 <fooc>
+|                   <fooc>
+|                     <fooc>
+|                       <food>
+| <aside>
+|   <b>
+
+
+#source webkit02.dat:19
+#data
+<option><XH<optgroup></optgroup>
+#errors
+1:22: ERROR: End tag 'optgroup' isn't allowed here. Currently open tags: html, option, xh<optgroup.
+1:33: ERROR: Premature end of file. Currently open tags: html, option, xh<optgroup.
+#document-fragment
+select
+#document
+| <option>
+|   <xh<optgroup>
+
+
+#source webkit02.dat:20
+#data
+<svg><foreignObject><div>foo</div><plaintext></foreignObject></svg><div>bar</div>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,82): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <div>
+|           "foo"
+|         <plaintext>
+|           "</foreignObject></svg><div>bar</div>"
+
+
+#source webkit02.dat:21
+#data
+<svg><foreignObject></foreignObject><title></svg>foo
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,49): expected-one-end-tag-but-got-another
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|       <svg title>
+|     "foo"
+
+
+#source webkit02.dat:22
+#data
+</foreignObject><plaintext><div>foo</div>
+#errors
+(1,16): expected-doctype-but-got-end-tag
+(1,16): unexpected-end-tag-before-html
+(1,42): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "<div>foo</div>"
+
+
+#source webkit02.dat:23
+#data
+<svg xml:base xml:lang xml:space xml:baaah definitionurl>
+#errors
+no-doctype
+eof-in-svg
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       definitionurl=""
+|       xml lang=""
+|       xml space=""
+|       xml:baaah=""
+|       xml:base=""
+
+
+#source webkit02.dat:24
+#data
+<math definitionurl xlink:title xlink:show>
+#errors
+no-doctype
+eof-in-math
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       definitionURL=""
+|       xlink show=""
+|       xlink title=""
+
+
+#source webkit02.dat:25
+#data
+<math DEFINITIONURL>
+#errors
+no-doctype
+eof-in-math
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       definitionURL=""
+
+
+#source webkit02.dat:26
+#data
+<select><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:13: ERROR: Premature end of file. Currently open tags: html, body, select.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <hr>
+
+
+#source webkit02.dat:27
+#data
+<select><option><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:21: ERROR: Premature end of file. Currently open tags: html, body, select.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+|       <hr>
+
+
+#source webkit02.dat:28
+#data
+<select><optgroup><option><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:31: ERROR: Premature end of file. Currently open tags: html, body, select.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <optgroup>
+|         <option>
+|       <hr>
+
+
+#source webkit02.dat:29
+#data
+<select><optgroup><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:23: ERROR: Premature end of file. Currently open tags: html, body, select, optgroup.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <optgroup>
+|       <hr>
+
+
+#source webkit02.dat:30
+#data
+<select><option><optgroup><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:31: ERROR: Premature end of file. Currently open tags: html, body, select, optgroup.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+|       <optgroup>
+|       <hr>
+
+
+#source webkit02.dat:31
+#data
+<table><tr><td><select><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:28: ERROR: Premature end of file. Currently open tags: html, body, table, tbody, tr, td, select.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <select>
+|               <hr>
+
+
+#source webkit02.dat:32
+#data
+<table><tr><td><select><option><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:36: ERROR: Premature end of file. Currently open tags: html, body, table, tbody, tr, td, select.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <select>
+|               <option>
+|               <hr>
+
+
+#source webkit02.dat:33
+#data
+<table><tr><td><select><optgroup><option><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:46: ERROR: Premature end of file. Currently open tags: html, body, table, tbody, tr, td, select, optgroup.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <select>
+|               <optgroup>
+|                 <option>
+|               <hr>
+
+
+#source webkit02.dat:34
+#data
+<table><tr><td><select><optgroup><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:38: ERROR: Premature end of file. Currently open tags: html, body, table, tbody, tr, td, select, optgroup.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <select>
+|               <optgroup>
+|               <hr>
+
+
+#source webkit02.dat:35
+#data
+<table><tr><td><select><option><optgroup><hr>
+#errors
+1:1: ERROR: Expected a doctype token
+1:38: ERROR: Premature end of file. Currently open tags: html, body, table, tbody, tr, td, select, optgroup.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <select>
+|               <option>
+|               <optgroup>
+|               <hr>
+
+
+#source webkit02.dat:36
+#data
+<select><div><i></div><option>option
+#errors
+1:1: ERROR: Expected a doctype token
+1:17: ERROR: End tag 'div' isn't allowed here. Currently open tags: html, body, select, div, i.
+1:37: ERROR: Premature end of file. Currently open tags: html, body, select, option, i.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <div>
+|         <i>
+|       <i>
+|         <option>
+|           "option"
+
+
+#source webkit02.dat:37
+#data
+<div><i></div><option>option
+#errors
+1:1: ERROR: Expected a doctype token
+1:9: ERROR: End tag 'div' isn't allowed here. Currently open tags: html, body, div, i.
+1:29: ERROR: Premature end of file. Currently open tags: html, body, i, option.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <i>
+|     <i>
+|       <option>
+|         "option"
+
+
+#source webkit02.dat:38
+#data
+<select><div>div 1</div><button>button</button><div>div 2</div><datalist><option>option</option></datalist><div>div 3</div></select>
+#errors
+1:1: ERROR: Expected a doctype token
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <div>
+|         "div 1"
+|       <button>
+|         "button"
+|       <div>
+|         "div 2"
+|       <datalist>
+|         <option>
+|           "option"
+|       <div>
+|         "div 3"
+
+
+#source webkit02.dat:39
+#data
+<select><button>button</select>
+#errors
+1:1: ERROR: Expected a doctype token
+1:23: ERROR: End tag 'select' isn't allowed here. Currently open tags: html, body, select, button.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+|         "button"
+
+
+#source webkit02.dat:40
+#data
+<select><datalist>datalist</select>
+#errors
+1:1: ERROR: Expected a doctype token
+1:27: ERROR: End tag 'select' isn't allowed here. Currently open tags: html, body, select, datalist.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <datalist>
+|         "datalist"
+
+
+#source webkit02.dat:41
+#data
+<select><button><select></select></button></select>
+#errors
+1:1: ERROR: Expected a doctype token
+1:17: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, select, button.
+1:25: ERROR: End tag 'select' isn't allowed here. Currently open tags: html, body.
+1:34: ERROR: End tag 'button' isn't allowed here. Currently open tags: html, body.
+1:43: ERROR: End tag 'select' isn't allowed here. Currently open tags: html, body.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+
+
+#source webkit02.dat:42
+#data
+<select><button><div><select></select>
+#errors
+1:1: ERROR: Expected a doctype token
+1:22: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, select, button, div.
+1:30: ERROR: End tag 'select' isn't allowed here. Currently open tags: html, body.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+|         <div>
+
+
+#source webkit02.dat:43
+#data
+<select><div><option><img>option</option></div></select>
+#errors
+1:1: ERROR: Expected a doctype token
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <div>
+|         <option>
+|           <img>
+|           "option"
+
+
+#source webkit02.dat:44
+#data
+<select><input>
+#errors
+1:1: ERROR: Expected a doctype token
+1:16: ERROR: Premature end of file. Currently open tags: html, body, select.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|     <input>
+
+
+#source webkit02.dat:45
+#data
+<select><button><selectedcontent></button><option>X
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+|         <selectedcontent>
+|           "X"
+|       <option>
+|         "X"
+
+
+#source webkit02.dat:46
+#data
+<select><button><selectedcontent></button><option>x<i>i<b>ib</i>b
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+|         <selectedcontent>
+|           "x"
+|           <i>
+|             "i"
+|             <b>
+|               "ib"
+|           <b>
+|             "b"
+|       <option>
+|         "x"
+|         <i>
+|           "i"
+|           <b>
+|             "ib"
+|         <b>
+|           "b"
+
+
+#source webkit02.dat:47
+#data
+<select><button><selectedcontent></button><option>X<option>Y
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+|         <selectedcontent>
+|           "X"
+|       <option>
+|         "X"
+|       <option>
+|         "Y"
+
+
+#source webkit02.dat:48
+#data
+<select><button><selectedcontent></button><option>X<option selected>Y
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <button>
+|         <selectedcontent>
+|           "Y"
+|       <option>
+|         "X"
+|       <option>
+|         selected=""
+|         "Y"
+
+
+#source webkit02.dat:49
+#data
+<font><select><option>a</option></font></select>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <font>
+|       <select>
+|         <option>
+|           "a"
