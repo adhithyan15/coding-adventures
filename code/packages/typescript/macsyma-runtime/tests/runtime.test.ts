@@ -186,6 +186,38 @@ describe("macsyma-runtime", () => {
     ]));
   });
 
+  it("factors bivariate differences of cubes through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^3 - y^3);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(SUB, [sym("x"), sym("y")]),
+      app(ADD, [
+        app(ADD, [
+          app(POW, [sym("x"), int(2)]),
+          app(MUL, [sym("x"), sym("y")]),
+        ]),
+        app(POW, [sym("y"), int(2)]),
+      ]),
+    ]));
+  });
+
+  it("factors bivariate sums of cubes through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^3 + y^3);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(ADD, [sym("x"), sym("y")]),
+      app(ADD, [
+        app(ADD, [
+          app(POW, [sym("x"), int(2)]),
+          app(MUL, [int(-1), app(MUL, [sym("x"), sym("y")])]),
+        ]),
+        app(POW, [sym("y"), int(2)]),
+      ]),
+    ]));
+  });
+
   it("tracks the showtime option flag through normal assignments", () => {
     const session = new MacsymaSession();
     const [enabled, timed, disabled, untimed] = session.evalSource(

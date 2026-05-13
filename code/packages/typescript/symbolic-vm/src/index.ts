@@ -373,6 +373,8 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
 
   const coeffs = irToIntegerPoly(inner, variable);
   if (coeffs === undefined) {
+    const cubicIdentity = extractMultivariateCubicIdentity(inner);
+    if (cubicIdentity !== undefined) return cubicIdentity;
     const difference = extractMultivariateDifferenceOfSquares(inner);
     if (difference !== undefined) return difference;
     const perfectSquare = extractMultivariatePerfectSquare(inner);
@@ -692,6 +694,54 @@ function extractMultivariateDifferenceOfSquares(inner: IRNode): IRNode | undefin
   return app(MUL, [
     app(SUB, [positiveSquare, negativeSquare]),
     app(ADD, [positiveSquare, negativeSquare]),
+  ]);
+}
+
+function extractMultivariateCubicIdentity(inner: IRNode): IRNode | undefined {
+  const terms = flattenAddTerms(inner);
+  if (terms.length !== 2) return undefined;
+
+  const parsed = terms.map((term) => splitIntegerCoefficientAndPowers(term));
+  if (parsed.some((term) => term === undefined)) return undefined;
+
+  const cubes: Array<{ readonly coefficient: bigint; readonly base: IRNode }> = [];
+  for (const parsedTerm of parsed) {
+    if (parsedTerm === undefined) return undefined;
+    const { coefficient, powers } = parsedTerm;
+    if ((coefficient !== 1n && coefficient !== -1n) || powers.size !== 1) return undefined;
+    const [power] = [...powers.values()];
+    if (power.exponent !== 3) return undefined;
+    cubes.push({ coefficient, base: power.base });
+  }
+
+  const signs = cubes.map((cube) => cube.coefficient).join(",");
+  let first: IRNode;
+  let second: IRNode;
+  let linear: IRNode;
+  let middle: IRNode;
+  if (signs === "1,1") {
+    first = cubes[0].base;
+    second = cubes[1].base;
+    linear = app(ADD, [first, second]);
+    middle = app(MUL, [int(-1), app(MUL, [first, second])]);
+  } else if (cubes.some((cube) => cube.coefficient === 1n) && cubes.some((cube) => cube.coefficient === -1n)) {
+    const positive = cubes.find((cube) => cube.coefficient === 1n);
+    const negative = cubes.find((cube) => cube.coefficient === -1n);
+    if (positive === undefined || negative === undefined) return undefined;
+    first = positive.base;
+    second = negative.base;
+    linear = app(SUB, [first, second]);
+    middle = app(MUL, [first, second]);
+  } else {
+    return undefined;
+  }
+
+  return app(MUL, [
+    linear,
+    app(ADD, [
+      app(ADD, [app(POW, [first, int(2)]), middle]),
+      app(POW, [second, int(2)]),
+    ]),
   ]);
 }
 
