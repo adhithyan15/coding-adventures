@@ -193,14 +193,32 @@ pub enum Modality {
 
 /// The role a node plays in the IR.
 ///
-/// **v3** drops `TextRun` (replaced by [`Section`](NodeKind::Section)
-/// which carries meaningful structural metadata) and adds
+/// **v3** dropped `TextRun` (replaced by [`Section`](NodeKind::Section)
+/// which carries meaningful structural metadata) and added
 /// [`Entity`](NodeKind::Entity) for deduplicated reference targets.
+///
+/// **ADJ25 (PR-1, additive)** adds the hierarchical decomposition
+/// kinds required by `code/specs/ADJ25-hierarchical-decomposition.md`:
+/// [`Document`](NodeKind::Document), [`Sentence`](NodeKind::Sentence),
+/// [`Phrase`](NodeKind::Phrase), and [`Question`](NodeKind::Question)
+/// form the level-0 → level-3 skeleton; the level-4 typed-component
+/// kinds [`Quantity`](NodeKind::Quantity),
+/// [`Polarity`](NodeKind::Polarity),
+/// [`Predicate`](NodeKind::Predicate),
+/// [`Comparator`](NodeKind::Comparator),
+/// [`TimeRef`](NodeKind::TimeRef), and
+/// [`Modifier`](NodeKind::Modifier) decompose a `Fact`'s content into
+/// structured slots. [`Entity`](NodeKind::Entity) doubles as the
+/// level-4 entity component. PR-1 is additive only — the v3 kinds
+/// remain valid; PR-7 retires `Section` and the demoted kinds after
+/// the foundation bench passes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum NodeKind {
     /// A claim about the world.
     Fact,
-    /// A question the adjudication is asked.
+    /// A question the adjudication is asked. Engine-facing — distinct
+    /// from [`Question`](NodeKind::Question), which is an interrogative
+    /// present in the source text (per ADJ25 level 3).
     Query,
     /// The source explicitly raised a question without answering it.
     Uncertainty,
@@ -216,11 +234,83 @@ pub enum NodeKind {
     /// kind (e.g., `paragraph(_)`, `row(3)`); its source_spans cover
     /// the *meta-text* (heading, numbering, delimiters), not the
     /// content. Content is reached via `Contains` edges.
+    ///
+    /// **ADJ25**: retiring in favour of the explicit level kinds
+    /// [`Sentence`](NodeKind::Sentence) and
+    /// [`Phrase`](NodeKind::Phrase). Deprecation lands with PR-7
+    /// (cutover) once the foundation bench (PR-6) passes.
     Section,
     /// A deduplicated reference target for an atom or compound term
     /// mentioned at multiple sites. Mentioning nodes connect via
     /// `Mentions` edges. May have empty source_spans if synthesized.
+    ///
+    /// **ADJ25**: also serves as the level-4 entity component when
+    /// it is a child of a `Fact` via `Contains` (a non-synthesized
+    /// Entity with non-empty spans inside a Fact's bytes).
     Entity,
+
+    // -----------------------------------------------------------------
+    // ADJ25 — hierarchical decomposition skeleton (levels 0 → 3)
+    // -----------------------------------------------------------------
+    /// **ADJ25 level 0.** The root of the hierarchical decomposition.
+    /// Exactly one per IR document. Its span covers `[0, N)` where
+    /// `N = len(normalized_text)`. Its children are `Sentence` (and
+    /// document-scope `Discarded`) nodes that tile the full range.
+    Document,
+    /// **ADJ25 level 1.** A natural-language sentence in the source.
+    /// Decomposition granularity is model-determined subject to the
+    /// per-level coverage check. Tiles part of a [`Document`]'s span;
+    /// children are [`Phrase`] and (sentence-scope) [`Discarded`] nodes
+    /// that tile the Sentence's span.
+    Sentence,
+    /// **ADJ25 level 2.** A sub-sentence chunk — a coherent unit of
+    /// meaning the model commits to as *"this stretch contributes one
+    /// claim (or one uncertainty / question / discardable)."* Tiles
+    /// part of a [`Sentence`]'s span; children are level-3 claim
+    /// nodes ([`Fact`], [`Uncertainty`], [`Question`],
+    /// phrase-scope [`Discarded`]) tiling the Phrase's span.
+    Phrase,
+    /// **ADJ25 level 3.** An interrogative present in the source text
+    /// ("Is this allowed?", "How many batteries can I bring?").
+    /// Distinct from [`Query`](NodeKind::Query), which is an
+    /// engine-facing posed question synthesized downstream of the
+    /// source decomposition.
+    Question,
+
+    // -----------------------------------------------------------------
+    // ADJ25 — level-4 typed-component slots (children of `Fact`)
+    // -----------------------------------------------------------------
+    /// **ADJ25 level 4.** A typed numerical literal — `Quantity(value,
+    /// unit)`. Every numerical literal in the source within a
+    /// [`Fact`]'s span MUST surface as a `Quantity` child of that
+    /// Fact. Flattening the literal into an atom name (e.g.,
+    /// `battery_50_wh`) is rejected by the no-flattening rule.
+    Quantity,
+    /// **ADJ25 level 4.** A typed polarity slot — `Polarity(Affirmed |
+    /// Denied)`. Exists when a [`Fact`]'s span contains negation cues
+    /// ("no", "not", "denies", "without"). The structural slot is
+    /// gated; the *value* the model assigns is not (per
+    /// `feedback_adjudication_no_interpretive_gating`).
+    ///
+    /// Note: the variant name shadows the lattice enum
+    /// [`Polarity`](crate::Polarity); use `NodeKind::Polarity` to
+    /// disambiguate.
+    Polarity,
+    /// **ADJ25 level 4.** The relation / verb of a [`Fact`]. Often a
+    /// single source word ("carry", "deliver", "exceeds"). Decomposes
+    /// the Fact's predicate from its arguments.
+    Predicate,
+    /// **ADJ25 level 4.** A relational operator — `Eq`, `Lt`, `Le`,
+    /// `Gt`, `Ge`, `Ne`. Used in threshold conditions ("blade length
+    /// > 2.36 inches", "battery capacity ≤ 100 Wh").
+    Comparator,
+    /// **ADJ25 level 4.** A date, duration, or temporal phrase
+    /// ("by 2026-12-01", "within 30 days", "Q3 2024").
+    TimeRef,
+    /// **ADJ25 level 4.** An adjective or adverb refinement that
+    /// doesn't fit the other level-4 slots ("strike-anywhere",
+    /// "disposable", "carry-on", "promptly").
+    Modifier,
 }
 
 /// Controlled vocabulary for [`NodeKind::Discarded`] nodes'
@@ -838,7 +928,25 @@ fn validate_per_node(n: &IRNode, doc: &IRDocument) -> Result<(), ValidationError
                 });
             }
         }
-        NodeKind::Section | NodeKind::Entity | NodeKind::Discarded => {
+        NodeKind::Section
+        | NodeKind::Entity
+        | NodeKind::Discarded
+        // ADJ25 PR-1: hierarchical-decomposition skeleton kinds. These
+        // are structural slots — no polarity constraint at the kind
+        // level. Per-level coverage rules (PR-2) will enforce structural
+        // invariants. The model-assigned polarity *value* lives in a
+        // dedicated `Polarity` child node, not on these structural
+        // ancestors.
+        | NodeKind::Document
+        | NodeKind::Sentence
+        | NodeKind::Phrase
+        | NodeKind::Question
+        | NodeKind::Quantity
+        | NodeKind::Polarity
+        | NodeKind::Predicate
+        | NodeKind::Comparator
+        | NodeKind::TimeRef
+        | NodeKind::Modifier => {
             // No polarity constraint beyond "set to something legal";
             // the lattice itself is the legal set.
         }
@@ -2081,5 +2189,150 @@ mod tests {
             edges: vec![excepts_edge_marker, mention_passenger],
         };
         assert_eq!(validate(&doc), Ok(()));
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ25 PR-1 — additive node-kind smoke tests
+    //
+    // PR-1 only introduces the new variants; the per-level coverage
+    // invariants and Contains-edge tiling are PR-2's responsibility.
+    // These tests confirm the additive change is sound: each new kind
+    // can be constructed, validates as a stand-alone node tiling a
+    // document, and respects the discard_reason rules.
+    // -----------------------------------------------------------------
+
+    fn typed_node(id: &str, kind: NodeKind, did: &DocumentId, start: usize, end: usize) -> IRNode {
+        IRNode {
+            id: NodeId::new(id),
+            kind,
+            term: atom("placeholder"),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![span(did, start, end)],
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: HashMap::new(),
+        }
+    }
+
+    fn assert_validates_as_root_node(node: IRNode) {
+        let did = node.source_spans[0].document_id.clone();
+        let doc = IRDocument {
+            document_id: did,
+            nodes: vec![node],
+            edges: vec![],
+        };
+        assert_eq!(validate(&doc), Ok(()));
+    }
+
+    #[test]
+    fn adj25_document_node_validates() {
+        let did = DocumentId::new("d");
+        let n = typed_node("Doc", NodeKind::Document, &did, 0, 24);
+        assert_validates_as_root_node(n);
+    }
+
+    #[test]
+    fn adj25_sentence_node_validates() {
+        let did = DocumentId::new("d");
+        let n = typed_node("S1", NodeKind::Sentence, &did, 0, 24);
+        assert_validates_as_root_node(n);
+    }
+
+    #[test]
+    fn adj25_phrase_node_validates() {
+        let did = DocumentId::new("d");
+        let n = typed_node("P1", NodeKind::Phrase, &did, 0, 16);
+        assert_validates_as_root_node(n);
+    }
+
+    #[test]
+    fn adj25_question_node_validates() {
+        let did = DocumentId::new("d");
+        let n = typed_node("Q1", NodeKind::Question, &did, 0, 17);
+        assert_validates_as_root_node(n);
+    }
+
+    #[test]
+    fn adj25_quantity_component_validates() {
+        let did = DocumentId::new("d");
+        let n = IRNode {
+            id: NodeId::new("Q200wh"),
+            kind: NodeKind::Quantity,
+            term: compound("quantity", vec![atom("200"), atom("wh")]),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![span(&did, 0, 6)],
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: HashMap::new(),
+        };
+        assert_validates_as_root_node(n);
+    }
+
+    #[test]
+    fn adj25_polarity_component_validates() {
+        let did = DocumentId::new("d");
+        let n = IRNode {
+            id: NodeId::new("PolDenied"),
+            kind: NodeKind::Polarity,
+            term: atom("denied"),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![span(&did, 0, 2)],
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: HashMap::new(),
+        };
+        assert_validates_as_root_node(n);
+    }
+
+    #[test]
+    fn adj25_typed_components_reject_discard_reason() {
+        let did = DocumentId::new("d");
+        let mut n = typed_node("Pred", NodeKind::Predicate, &did, 0, 5);
+        n.discard_reason = Some(DiscardReason::NonDomainContent);
+        let doc = IRDocument {
+            document_id: did,
+            nodes: vec![n],
+            edges: vec![],
+        };
+        match validate(&doc) {
+            Err(ValidationError::NonDiscardedWithReason { node_id, kind }) => {
+                assert_eq!(node_id.0, "Pred");
+                assert_eq!(kind, NodeKind::Predicate);
+            }
+            other => panic!("expected NonDiscardedWithReason, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn adj25_all_new_kinds_round_trip_through_match() {
+        // Sanity that the exhaustive match in validate_per_node was
+        // updated for every new variant. If a new kind is added later
+        // without updating the match, this test still passes (compile
+        // error would catch it earlier); the test documents the
+        // expected per-kind validation behaviour.
+        let did = DocumentId::new("d");
+        for (kind, end) in [
+            (NodeKind::Document, 10usize),
+            (NodeKind::Sentence, 10),
+            (NodeKind::Phrase, 10),
+            (NodeKind::Question, 10),
+            (NodeKind::Quantity, 10),
+            (NodeKind::Polarity, 10),
+            (NodeKind::Predicate, 10),
+            (NodeKind::Comparator, 10),
+            (NodeKind::TimeRef, 10),
+            (NodeKind::Modifier, 10),
+        ] {
+            let n = typed_node("X", kind, &did, 0, end);
+            let doc = IRDocument {
+                document_id: did.clone(),
+                nodes: vec![n],
+                edges: vec![],
+            };
+            assert_eq!(validate(&doc), Ok(()), "kind {:?} failed validation", kind);
+        }
     }
 }
