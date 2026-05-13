@@ -74,6 +74,37 @@ fn parses_and_renders_question_mark_help() {
 }
 
 #[test]
+fn factors_univariate_integer_polynomials_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 - 1);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![int(1), sym("x")]),
+                apply(sym(ADD), vec![int(-1), sym("x")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn keeps_multivariate_factor_calls_unevaluated() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x + y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym("Factor"),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")])]
+        )
+    );
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();
