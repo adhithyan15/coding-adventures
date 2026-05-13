@@ -64,7 +64,8 @@
 
 use std::collections::HashMap;
 
-use aarch64_encoder::{Assembler, Cond, EncodeError, LabelId, Reg};
+use aarch64_encoder::{Assembler, Cond, EncodeError, ExternalReloc, LabelId, Reg};
+pub use aarch64_encoder::ExternalReloc as Reloc;
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use vm_core::value::Value;
@@ -179,12 +180,28 @@ impl From<EncodeError> for BackendError {
 // ===========================================================================
 
 /// Public-ish entry point used by tests.  Production callers go through
-/// the `Backend` trait.
+/// the `Backend` trait.  Relocations are silently discarded; use
+/// [`compile_with_relocs`] when you need them for AOT cross-function linking.
 pub fn compile(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, String> {
+    compile_inner(ctx, ir)
+        .map(|(bytes, _relocs)| bytes)
+        .map_err(|e| format!("aarch64-backend: {e:?}"))
+}
+
+/// Like [`compile`] but also returns external (cross-function) relocations.
+///
+/// Each [`ExternalReloc`] describes a `BL` placeholder instruction that must
+/// be patched after all functions are linked into a single code section.
+/// The linker writes the correct PC-relative offset into the placeholder once
+/// it knows the absolute byte offsets of all functions.
+pub fn compile_with_relocs(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+) -> Result<(Vec<u8>, Vec<ExternalReloc>), String> {
     compile_inner(ctx, ir).map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
-fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
+fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
     if ctx.params.len() > 8 {
         return Err(BackendError::TooManyParams(ctx.params.len()));
     }
@@ -228,8 +245,8 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
             }
         }
     }
-    // Pre-create labels referenced by jmp* (the targets may be defined
-    // either before or after the jump — pre-create all of them).
+    // Pre-create labels referenced by jmp* and call (targets may be before or
+    // after their use; forward references require pre-creation).
     for instr in ir {
         if matches!(instr.op.as_str(), "jmp" | "jmp_if_true" | "jmp_if_false") {
             if let Some(target) = label_name(instr) {
@@ -237,6 +254,29 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
                     .or_insert_with(|| asm.create_label());
             }
         }
+        // For `call callee_name, args...`: pre-create a label for the callee
+        // name so self-recursive calls can be resolved within this function.
+        if instr.op == "call" {
+            if let Some(CIROperand::Var(name)) = instr.srcs.first() {
+                labels.entry(name.clone())
+                    .or_insert_with(|| asm.create_label());
+            }
+        }
+    }
+
+    // ── Self-recursive call target ─────────────────────────────────────────
+    //
+    // Bind the current function's own name as a label pointing to the
+    // very start of the prologue.  `call <fn_name> …` instructions in
+    // the body emit `BL fn_name_label` which re-enters the function here,
+    // re-executing the full AAPCS64 prologue (stp fp,lr + spill args) for
+    // each new call frame — the same sequence the first call into the function
+    // executes.
+    //
+    // Cross-function calls (callee_name != fn_name) are not yet supported and
+    // will return `BackendError::UnsupportedOp` at instruction-emit time.
+    if let Some(&entry_label) = labels.get(ctx.name) {
+        asm.bind(entry_label).map_err(BackendError::from)?;
     }
 
     // ---- Prologue --------------------------------------------------------
@@ -251,7 +291,7 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
 
     // ---- Body ------------------------------------------------------------
     for instr in ir {
-        emit_instr(&mut asm, instr, &mut alloc, &labels, frame)?;
+        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name)?;
     }
 
     // ---- Final epilogue (only reached if the function falls off the end) -
@@ -260,7 +300,9 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
     // arbitrary code execution past the end of the function.
     emit_epilogue(&mut asm, frame)?;
 
-    asm.finish().map_err(BackendError::from)
+    let external_relocs = std::mem::take(&mut asm.external_relocs);
+    let bytes = asm.finish().map_err(BackendError::from)?;
+    Ok((bytes, external_relocs))
 }
 
 // ===========================================================================
@@ -273,6 +315,7 @@ fn emit_instr(
     alloc: &mut RegAlloc,
     labels: &HashMap<String, LabelId>,
     frame: u32,
+    fn_name: &str,
 ) -> Result<(), BackendError> {
     let op = instr.op.as_str();
 
@@ -370,6 +413,88 @@ fn emit_instr(
         let (rel, ty) = parse_cmp_suffix(rest)
             .ok_or_else(|| BackendError::MalformedInstr(format!("bad cmp mnemonic: {op}")))?;
         return emit_cmp(asm, alloc, instr, rel, ty);
+    }
+
+    // ---- call  callee_name, arg0, arg1, … ----------------------------------
+    //
+    // IIR/CIR `call` layout:
+    //   op = "call", dest = Some(result_var), srcs = [Var(fn_name), Var(a0), …]
+    //
+    // AAPCS64 calling convention:
+    //   1. Load each argument from its stack slot into x0..x7.
+    //   2. Emit `BL <target_label>`.
+    //   3. After the call returns, store x0 (return value) to dest's stack slot.
+    //
+    // The stack-spill allocator stores all values in fixed `[sp, #slot]`
+    // locations, so there are no in-register live values to save around the
+    // call.  The saved `fp` and `lr` are already on the stack (via `stp` in
+    // the prologue) and therefore survive the callee's prologue/epilogue.
+    //
+    // Self-recursive calls (callee == current function) are supported by
+    // resolving `fn_name` against the `labels` map (which includes a
+    // binding for `fn_name` → the function body entry label, added in
+    // `compile_inner`).
+    //
+    // Cross-function calls (callee != current function, i.e. mutual recursion
+    // or calls to other module functions) are not yet supported in V1 because
+    // each function is compiled independently into a separate byte buffer; the
+    // relative offset to the callee is not known at instruction-emit time.
+    if op == "call" {
+        // srcs[0] = Var(callee_name), srcs[1..] = arguments
+        let callee_name = match instr.srcs.first() {
+            Some(CIROperand::Var(name)) => name.as_str(),
+            _ => return Err(BackendError::MalformedInstr(
+                "call: srcs[0] must be Var(function_name)".into()
+            )),
+        };
+        let arg_srcs = &instr.srcs[1..];
+        if arg_srcs.len() > 8 {
+            return Err(BackendError::UnsupportedOp(format!(
+                "call: too many arguments ({}) — AAPCS64 supports at most 8 register args",
+                arg_srcs.len()
+            )));
+        }
+
+        // Step 1 — load arguments into x0..x7.
+        // We collect (arg_reg, stack_slot) pairs first to detect any overlap
+        // between an argument's src slot and an earlier argument's destination
+        // register.  With stack-spill allocation, all values are already on
+        // the stack, so we can load them sequentially without aliasing issues
+        // as long as we process them left-to-right.
+        const ARG_REGS: [Reg; 8] = [
+            Reg::X0, Reg::X1, Reg::X2, Reg::X3,
+            Reg::X4, Reg::X5, Reg::X6, Reg::X7,
+        ];
+        for (i, src) in arg_srcs.iter().enumerate() {
+            load_operand(asm, alloc, ARG_REGS[i], src)?;
+        }
+
+        // Step 2 — branch-with-link to the callee.
+        //
+        // Self-recursive calls: `fn_name` == the current function name, and
+        // compile_inner bound `fn_name` as a label at the function body entry
+        // (after the prologue parameter-spill) so BL re-enters the function.
+        //
+        // Cross-function calls: emit a placeholder `BL #0` and record an
+        // `ExternalReloc` so the multi-function AOT linker can patch the offset
+        // after all function binaries are concatenated.
+        if callee_name == fn_name {
+            let target_id = *labels.get(callee_name).ok_or_else(|| {
+                BackendError::MalformedInstr(format!("call: no label for '{callee_name}'"))
+            })?;
+            asm.bl(target_id);
+        } else {
+            // Cross-function call: placeholder BL (offset will be patched by linker).
+            asm.bl_external(callee_name);
+        }
+
+        // Step 3 — save return value from x0 to the destination stack slot.
+        if let Some(dest) = &instr.dest {
+            let slot = alloc.slot_of(dest);
+            asm.str_(Reg::X0, Reg::Sp, slot)?;
+        }
+
+        return Ok(());
     }
 
     // Anything else is unsupported for V1 — caller should fall back.

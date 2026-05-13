@@ -615,10 +615,15 @@ fn has_control_flow(fn_: &IIRFunction) -> bool {
 /// - `fn_name` — the enclosing function name (for error context).
 /// - `dispatch_reg` — local index of the dispatch variable (for control flow).
 /// - `label_to_block` — label name → block index map.
-/// - `n_blocks` — total number of basic blocks in the function.
+/// - `block_idx` — index of the **current** basic block being emitted (0-based,
+///   only meaningful when `is_dispatch_loop` is `true`).  Used to compute
+///   the correct WASM branch depth for `jmp`/`jmp_if_*` instructions.
+/// - `n_blocks` — total number of basic blocks in the function (needed to
+///   compute the "loop back" depth for backward jumps).
 /// - `is_dispatch_loop` — whether we are inside a dispatch-loop structure.
 ///   When `true`, `jmp`/`jmp_if_*` instructions set the dispatch variable and
-///   branch to the loop.  When `false`, they emit simplified forms.
+///   branch to the appropriate position.  When `false`, they emit simplified
+///   forms.
 /// - `lispy_pair_type_idx` — if `Some(idx)`, this function contains at least
 ///   one `ref<LispyPair>` instruction and the `$LispyPair` struct type is at
 ///   type-section index `idx`.  Used by `alloc`, `field_load`, `field_store`.
@@ -635,7 +640,8 @@ fn emit_instr(
     fn_name: &str,
     dispatch_reg: u32,
     label_to_block: &HashMap<String, u32>,
-    _n_blocks: usize,
+    block_idx: usize,
+    n_blocks: usize,
     is_dispatch_loop: bool,
     lispy_pair_type_idx: Option<u32>,
     global_map: &HashMap<String, u32>,
@@ -1090,13 +1096,36 @@ fn emit_instr(
                 })?;
 
             if is_dispatch_loop {
-                let block_idx = get_label(label)?;
-                code.extend(encode_i32_const(block_idx as i32));
+                let target_idx = get_label(label)? as usize;
+                code.extend(encode_i32_const(target_idx as i32));
                 code.extend(encode_local_set(dispatch_reg));
-                // Depth 0 inside the loop = branch back to the loop's start.
-                // The loop is at nesting depth 0 from inside the basic block
-                // area (just `loop` + `block` around us).
-                code.extend(encode_br(0));
+                // Compute the WASM branch depth.
+                //
+                // The dispatch-loop works by ALWAYS re-entering the LOOP, never
+                // jumping directly between basic-block bodies.  Every jump (forward
+                // or backward) sets the dispatch variable, then branches back to the
+                // LOOP so br_table can redispatch to the correct block.
+                //
+                // After the br_table fires for the first time, each successive END
+                // instruction pops one label from the stack.  From body[block_idx]
+                // the surviving labels are exactly:
+                //
+                //   [outer_exit, LOOP, bb_0, …, bb_{n_blocks-block_idx-3}]
+                //
+                // which is `n_blocks - block_idx` labels total.  The LOOP label is
+                // always at depth `n_blocks - block_idx - 2` from the innermost label:
+                //
+                //   depth(LOOP) = n_blocks - block_idx - 2
+                //
+                // For the last block (block_idx = n_blocks - 1) the LOOP has already
+                // been consumed; those blocks always end with `ret` in well-formed
+                // programs so this case should never occur in practice.
+                let depth = if block_idx + 1 < n_blocks {
+                    (n_blocks - block_idx - 2) as u32
+                } else {
+                    0 // last block — should not normally jmp, but fall safe
+                };
+                code.extend(encode_br(depth));
             } else {
                 // Simplified: emit RETURN (matches "exit" semantics for
                 // straight-line code that happens to have a terminal jmp).
@@ -1130,20 +1159,31 @@ fn emit_instr(
             let cond_reg = get_reg(cond)?;
 
             if is_dispatch_loop {
-                let block_idx = get_label(label)?;
-                // Emit: if cond != 0 { dispatch = block_idx; br $loop }
-                // We use the `if` block for correctness:
-                //   local.get cond
-                //   if (then
-                //     i32.const block_idx; local.set dispatch; br $loop
-                //   end)
+                let target_idx = get_label(label)? as usize;
+                // Emit:  if cond != 0 { dispatch = target_idx; br <depth> }
+                //
+                // Like `jmp`, we always re-enter the LOOP (not jump directly to the
+                // target block).  Inside the `if` block there is one extra label on
+                // the label_stack, so the LOOP depth is one higher than for a plain
+                // `jmp`:
+                //
+                //   depth(LOOP) inside `if` = (n_blocks - block_idx - 2) + 1
+                //                           = n_blocks - block_idx - 1
+                //
+                // For the last block the LOOP is gone; use depth=1 to exit `if`
+                // plus outer_exit (should not occur in well-formed programs).
+                let depth = if block_idx + 1 < n_blocks {
+                    (n_blocks - block_idx - 1) as u32
+                } else {
+                    1 // last block — should not normally conditional-jmp
+                };
                 code.extend(encode_local_get(cond_reg));
                 // if (empty block type, no result)
                 code.push(crate::codegen::IF);
                 code.push(BLOCK_EMPTY);
-                code.extend(encode_i32_const(block_idx as i32));
+                code.extend(encode_i32_const(target_idx as i32));
                 code.extend(encode_local_set(dispatch_reg));
-                code.extend(encode_br(1)); // depth 1: exit the `if` block AND continue loop
+                code.extend(encode_br(depth));
                 code.push(END); // end of if
             } else {
                 // Simplified: just consume the condition (drop it).
@@ -1178,15 +1218,22 @@ fn emit_instr(
             let cond_reg = get_reg(cond)?;
 
             if is_dispatch_loop {
-                let block_idx = get_label(label)?;
-                // Emit: if cond == 0 { dispatch = block_idx; br $loop }
+                let target_idx = get_label(label)? as usize;
+                // Emit: if cond == 0 { dispatch = target_idx; br <depth> }
+                // Same depth computation as jmp_if_true: always re-enter the LOOP,
+                // one extra label level for the enclosing `if` block.
+                let depth = if block_idx + 1 < n_blocks {
+                    (n_blocks - block_idx - 1) as u32
+                } else {
+                    1 // last block — should not normally conditional-jmp
+                };
                 code.extend(encode_local_get(cond_reg));
                 code.push(I32_EQZ);
                 code.push(crate::codegen::IF);
                 code.push(BLOCK_EMPTY);
-                code.extend(encode_i32_const(block_idx as i32));
+                code.extend(encode_i32_const(target_idx as i32));
                 code.extend(encode_local_set(dispatch_reg));
-                code.extend(encode_br(1));
+                code.extend(encode_br(depth));
                 code.push(END);
             } else {
                 code.extend(encode_local_get(cond_reg));
@@ -1597,6 +1644,7 @@ fn lower_function(
                     &fn_.name,
                     dispatch_reg,
                     &label_to_block,
+                    block_idx,  // current block index (for branch-depth computation)
                     n_blocks,
                     true, // inside dispatch-loop
                     lispy_pair_type_idx,
@@ -1607,18 +1655,30 @@ fn lower_function(
 
             // At the end of each block, if execution reaches here (i.e. it
             // was not ended by a ret/jmp), advance to the next block and
-            // loop back.  For the last block this is unreachable in
-            // well-formed programs, but we emit it for safety.
+            // re-enter the loop so br_table can redispatch.
+            //
+            // We MUST re-enter the LOOP (not fall through to the next block
+            // body directly) to keep the label_stack consistent.  The loop
+            // depth from body[block_idx] is `n_blocks - block_idx - 2`.
+            //
+            // Special case: the last block (block_idx = n_blocks - 1) has
+            // label_stack = [outer_exit], so `br 0` exits the outer block,
+            // which terminates the function.  This is correct: well-formed
+            // programs end the last block with `ret`, so fall-through there
+            // is unreachable, but we emit a valid instruction for safety.
             let last_op = block.instrs.last().map(|i| i.op.as_str()).unwrap_or("");
             if !matches!(last_op, "ret" | "ret_void" | "jmp") {
-                let next_block = (block_idx + 1) as i32;
                 if block_idx + 1 < n_blocks {
+                    let next_block = (block_idx + 1) as i32;
                     code.extend(encode_i32_const(next_block));
                     code.extend(encode_local_set(dispatch_reg));
+                    // Re-enter loop: depth = n_blocks - block_idx - 2.
+                    let loop_depth = (n_blocks - block_idx - 2) as u32;
+                    code.extend(encode_br(loop_depth));
+                } else {
+                    // Last block: `br 0` exits outer_exit → function ends.
+                    code.extend(encode_br(0));
                 }
-                // `br 0` branches back to the loop (depth 0 from inside
-                // the loop body = the loop instruction itself).
-                code.extend(encode_br(0));
             }
         }
 
@@ -1638,8 +1698,9 @@ fn lower_function(
                 &fn_.name,
                 dispatch_reg,
                 &label_to_block,
+                0,      // block_idx unused when is_dispatch_loop=false
                 n_blocks,
-                false, // no dispatch loop
+                false,  // no dispatch loop
                 lispy_pair_type_idx,
                 global_map,
                 print_fn_idx,

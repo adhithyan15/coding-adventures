@@ -3,6 +3,28 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.1] — 2026-05-13
+
+### Fixed (Multi-backend demo — fib(10)=55)
+
+- **`"mov"` opcode support** — added handling for the `mov` IIR instruction
+  (pre-lowered form of `call_builtin "_move"`).  The lowerer now emits the
+  appropriate load + store sequence for Long / Int slots.
+- **Long arithmetic for integer parameters** — parameters typed as `"i64"`
+  (after the `fixup_control_flow_types` Pass 0 normalization) now use
+  `lload`/`lstore` instead of `iload`/`istore`, preventing JVM verifier
+  errors (`Bad local variable type`).
+- **Long comparison** — `cmp_lt`/`cmp_gt`/`cmp_le`/`cmp_ge` now emit
+  `lcmp` + conditional branch (not `if_icmp*`) when operands are `Long`.
+  The `emit_long_compare` helper sequences `lcmp; ifXX 7; iconst_1; goto 4;
+  iconst_0` to produce a boolean result.
+- **`emit_lconst` fixed** — values 2–127 are now synthesised with
+  `iconst_N; i2l` (or `bipush; i2l` / `sipush; i2l`) instead of an
+  invalid `ldc2_w #0` placeholder that caused `VerifyError`.
+- **Class file version 49** — downgraded from Java 8 (52) to Java 5 (49)
+  to use the old type-inferencing verifier, removing the requirement for
+  `StackMapTable` attributes in branching methods.
+
 ## [0.4.0] — 2026-05-12
 
 ### Added (LANG36 — JVM Closure Lowering)

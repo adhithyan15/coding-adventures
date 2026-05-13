@@ -293,12 +293,13 @@ fn lower_super_class_is_object() {
     assert_eq!(class.super_class_name, "java/lang/Object");
 }
 
-/// We target Java 8 (major version 52).
+/// We target Java 5 (major version 49) to avoid the mandatory StackMapTable
+/// attribute required by the Java 7+ verifier for branching methods.
 #[test]
-fn lower_version_is_java8() {
+fn lower_version_is_java5() {
     let module = module_with(void_fn("main"));
     let class = lower(&module);
-    assert_eq!(class.version.major, 52);
+    assert_eq!(class.version.major, 49);
     assert_eq!(class.version.minor, 0);
 }
 

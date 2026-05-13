@@ -374,3 +374,19 @@ fn function_name_embedded_in_binary() {
     let found = bytes.windows(name_bytes.len()).any(|w| w == name_bytes);
     assert!(found, "function name 'add' should appear in the WASM export section");
 }
+
+/// Direct execution test for fibonacci — catches the wasm-execution locals bug
+#[test]
+fn fib_executes_via_wasm_runtime() {
+    let source = "(define (fib n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2))))) (fib 10)";
+    let bytes = compile_ok(source);
+    let runtime = wasm_runtime::WasmRuntime::new();
+    let result = runtime.load_and_run(&bytes, "main", &[]);
+    match &result {
+        Ok(v) => eprintln!("WASM fib result: {v:?}"),
+        Err(e) => eprintln!("WASM fib error: {e}"),
+    }
+    assert!(result.is_ok(), "WASM fibonacci should execute without error");
+    assert_eq!(result.unwrap(), vec![55i64]);
+}
+

@@ -504,3 +504,104 @@ fn valid_twig_does_not_produce_type_check_error() {
         "valid Twig must not produce a TypeCheck error"
     );
 }
+
+/// Diagnostic: print full CLR artifact for fib
+#[test]
+fn diag_clr_fib_exec() {
+    use std::collections::HashMap;
+    use interpreter_ir::{IIRInstr, Operand};
+    use iir_type_checker::infer_and_check;
+    use twig_ir_compiler::compile_source;
+    use twig_to_cil::pipeline::run_pipeline_from_iir;
+    use twig_to_cil::IIRClrConfig;
+
+    const FIB_PROGRAM: &str =
+        "(define (fib n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2))))) (fib 10)";
+    const CLR_BUILTIN_MAP: &[(&str, &str)] = &[
+        ("+",  "add"),   ("-",  "sub"),  ("*",  "mul"),  ("/",  "div"),
+        ("=",  "cmp_eq"), ("<", "cmp_lt"), (">", "cmp_gt"),
+        ("<=", "cmp_le"), (">=", "cmp_ge"),
+        ("not", "not"),  ("_move", "mov"),
+    ];
+
+    let mut iir = compile_source(FIB_PROGRAM, "twig_fib").unwrap();
+    // pre_lower_builtins_clr
+    for func in &mut iir.functions {
+        let old = std::mem::take(&mut func.instructions);
+        func.instructions = old.into_iter().map(|instr| {
+            if instr.op != "call_builtin" { return instr; }
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(n)) => n.as_str(),
+                _ => return instr,
+            };
+            let Some((_, op)) = CLR_BUILTIN_MAP.iter().find(|(b, _)| *b == name) else { return instr; };
+            let args: Vec<Operand> = instr.srcs[1..].to_vec();
+            IIRInstr::new(*op, instr.dest.clone(), args, &instr.type_hint)
+        }).collect();
+    }
+    infer_and_check(&mut iir);
+    
+    // fixup_control_flow_types
+    for func in &mut iir.functions {
+        let mut env: HashMap<String, String> = HashMap::new();
+        for (param_name, _) in &func.params {
+            env.insert(param_name.clone(), "i64".to_string());
+        }
+        for instr in &func.instructions {
+            if let Some(dest) = &instr.dest {
+                let ty = &instr.type_hint;
+                if ty != "any" && ty != "polymorphic" {
+                    env.insert(dest.clone(), ty.clone());
+                }
+            }
+        }
+        for instr in &mut func.instructions {
+            if instr.type_hint != "any" { continue; }
+            let fixed = match instr.op.as_str() {
+                "ret_void" | "label" | "jmp" | "jmp_if_true" | "jmp_if_false" => "void".to_string(),
+                "ret" => match instr.srcs.first() {
+                    Some(Operand::Var(src)) => env.get(src).cloned().unwrap_or("void".into()),
+                    Some(Operand::Int(_)) => "i64".to_string(),
+                    _ => "void".to_string(),
+                },
+                "call" => {
+                    if let Some(dest) = &instr.dest {
+                        env.get(dest).cloned().unwrap_or("i64".into())
+                    } else { "void".to_string() }
+                }
+                "mov" => match instr.srcs.first() {
+                    Some(Operand::Var(src)) => env.get(src).cloned().unwrap_or("i64".into()),
+                    _ => "i64".to_string(),
+                },
+                "add" | "sub" | "mul" | "div" => {
+                    instr.srcs.iter().find_map(|s| {
+                        if let Operand::Var(n) = s { env.get(n).cloned() } else { None }
+                    }).unwrap_or("i64".into())
+                }
+                "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => "bool".to_string(),
+                _ => "any".to_string(),
+            };
+            if fixed != "any" {
+                instr.type_hint = fixed.clone();
+                if let Some(dest) = &instr.dest {
+                    env.insert(dest.clone(), fixed);
+                }
+            }
+        }
+    }
+    
+    let config = IIRClrConfig::new("TwigFib");
+    match run_pipeline_from_iir(iir, config) {
+        Err(e) => {
+            eprintln!("CLR compile FAILED: {:?}", e);
+            return;
+        }
+        Ok(artifact) => {
+            eprintln!("CLR compile OK: {} methods", artifact.methods.len());
+            for (i, m) in artifact.methods.iter().enumerate() {
+                eprintln!("  method[{}] = {} ({} params): {:02X?}", 
+                    i, m.name, m.parameter_types.len(), &m.body[..m.body.len().min(30)]);
+            }
+        }
+    }
+}

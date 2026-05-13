@@ -3,6 +3,37 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.1] — 2026-05-13
+
+### Added
+
+- **Y-register (stack-slot) support** — functions that make internal `call`
+  or `call_ext` instructions now emit `{allocate, StackNeed, Live}` at
+  function entry and `{deallocate, StackNeed}` on every return path.
+  Values that are live across a call are saved to Y-registers before the
+  call and restored afterwards, matching the BEAM calling convention where
+  all X-registers are caller-saved.
+  Live-across-call analysis is done with a lightweight def-pos/last-use
+  pass over the IIR instruction list.
+- **`OP_ALLOCATE` (12) and `OP_DEALLOCATE` (18) constants** — added alongside
+  the existing opcode constants, with full literate-programming explanations.
+
+### Fixed
+
+- **Y-register overflow guard** — `y_reg_map.len() as u8` previously silently
+  truncated to 0 when more than 255 live-across-call variables were present.
+  Now returns `IIRBeamError::UnsupportedOp` with a clear message before the
+  truncation can happen.  BEAM Y-registers are 8-bit (0–255).
+- **`jmp_if_true` / `jmp_if_false` synthesis** — replaced the old three-
+  instruction pattern (`is_eq_exact + jump + label`) with the minimal correct
+  single-instruction form:
+  - `jmp_if_true`  → `is_eq_exact  {f,target} cond 0`
+    (BEAM fails = jumps to target when `cond != 0`, i.e. TRUE)
+  - `jmp_if_false` → `is_ne_exact  {f,target} cond 0`
+    (BEAM fails = jumps to target when `cond == 0`, i.e. FALSE)
+  The previous synthesis used a synthetic fall-through label that inverted
+  the branch sense, which was semantically wrong.  Tests updated to match.
+
 ## [0.4.0] — 2026-05-12
 
 ### Fixed (OTP 28 runtime compatibility — BEAM opcode correctness)

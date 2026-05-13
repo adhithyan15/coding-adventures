@@ -772,6 +772,28 @@ pub fn lower_iir_to_cil(
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
+                // ── mov (copy) ────────────────────────────────────────────────
+                //
+                // `mov rd, rs` — copy a value from one variable to another.
+                // This is the IIR encoding of the Twig `_move` builtin used for
+                // if-expression arm unification and result forwarding.
+                //
+                // CIL sequence:
+                //   ldloc/ldarg rs    ← push source value
+                //   stloc/starg rd    ← pop and store to destination
+                "mov" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "mov must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    emit_load(&mut builder, &src, fn_name)?;
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+
                 // ── cmp_eq r1, r2 → rd ───────────────────────────────────────
                 //
                 // CIL: ldloc r1; ldloc r2; ceq; stloc rd

@@ -20,3 +20,4 @@ name = "test_pipeline"
 path = "tests/test_pipeline.rs"
 
 [dev-dependencies]
+wasm-runtime = { path = "../wasm-runtime" }

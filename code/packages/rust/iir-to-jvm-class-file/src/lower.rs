@@ -181,8 +181,12 @@ const INVOKEVIRTUAL: u8 = 0xB6;  // invoke instance method (2-byte CP index)
 const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
 
 // ── Comparison and branching ───────────────────────────────────────────────
-const IFEQ: u8 = 0x99;      // branch if top-of-stack == 0
-const IFNE: u8 = 0x9A;      // branch if top-of-stack != 0
+const IFEQ: u8 = 0x99;      // branch if TOS int == 0
+const IFNE: u8 = 0x9A;      // branch if TOS int != 0
+const IFLT: u8 = 0x9B;      // branch if TOS int < 0  (used after lcmp)
+const IFGE: u8 = 0x9C;      // branch if TOS int >= 0 (used after lcmp)
+const IFGT: u8 = 0x9D;      // branch if TOS int > 0  (used after lcmp)
+const IFLE: u8 = 0x9E;      // branch if TOS int <= 0 (used after lcmp)
 const IF_ICMPEQ: u8 = 0x9F; // branch if int1 == int2
 const IF_ICMPNE: u8 = 0xA0; // branch if int1 != int2
 const IF_ICMPLT: u8 = 0xA1; // branch if int1 < int2
@@ -836,18 +840,55 @@ fn emit_iconst(code: &mut Vec<u8>, value: i32) {
 /// Emit a long constant push.
 ///
 /// JVM only has short forms for `0L` and `1L`.  Anything else needs an
-/// `ldc2_w` instruction with a constant pool `Long` entry.  For v1 simplicity
-/// we only handle 0 and 1 precisely; other values emit `lconst_0` as a
-/// placeholder (tests use 0/1 or rely on load/store).
+/// Emit a long (i64) constant push onto the JVM operand stack.
+///
+/// JVM has dedicated opcodes for `0L` (`lconst_0`) and `1L` (`lconst_1`).
+/// For other values that fit in a short int we synthesise the long via an int
+/// push followed by `i2l` (int-to-long widening):
+///
+/// ```text
+/// iconst_N    — push int N          (2 ≤ N ≤ 5: 1 byte)
+/// bipush  N   — push byte  N        (-128 ≤ N ≤ 127: 2 bytes)
+/// sipush  N   — push short N        (-32768 ≤ N ≤ 32767: 3 bytes)
+/// i2l         — widen int → long    (1 byte)
+/// ```
+///
+/// Full long constants (larger than i16 range) would require a `ldc2_w` with
+/// a proper `Long` constant-pool entry; the constant pool builder (`ConstantPool`)
+/// does support `add_long`, so callers needing that path should use it directly.
+/// For the arithmetic programs in this VM (Twig fib, etc.) values never exceed
+/// i16 range, so this covers all practical cases.
 fn emit_lconst(code: &mut Vec<u8>, value: i64) {
     match value {
+        // JVM has dedicated 1-byte long constants for 0 and 1.
         0 => code.push(LCONST_0),
         1 => code.push(LCONST_1),
+        // iconst_2 … iconst_5 + i2l (2 bytes total)
+        2 => { code.push(ICONST_2); code.push(I2L); }
+        3 => { code.push(ICONST_3); code.push(I2L); }
+        4 => { code.push(ICONST_4); code.push(I2L); }
+        5 => { code.push(ICONST_5); code.push(I2L); }
+        // iconst_m1 + i2l for -1
+        -1 => { code.push(ICONST_M1); code.push(I2L); }
+        // bipush (byte-range) + i2l
+        v if v >= -128 && v <= 127 => {
+            code.push(BIPUSH);
+            code.push(v as i8 as u8);
+            code.push(I2L);
+        }
+        // sipush (short-range) + i2l
+        v if v >= i16::MIN as i64 && v <= i16::MAX as i64 => {
+            code.push(SIPUSH);
+            code.extend_from_slice(&(v as i16).to_be_bytes());
+            code.push(I2L);
+        }
         _ => {
-            // For v1, emit ldc2_w with a placeholder CP index.
-            // A full implementation would add a Long CP entry.
+            // Values outside i16 range need a real Long CP entry.
+            // This path is unreachable for Twig arithmetic programs.
+            // Emit a deliberate invalid sequence so the verifier surfaces it
+            // rather than producing silent wrong results.
             code.push(LDC2_W);
-            code.extend_from_slice(&0u16.to_be_bytes()); // placeholder
+            code.extend_from_slice(&0xFFFFu16.to_be_bytes()); // invalid CP index
         }
     }
 }
@@ -945,6 +986,49 @@ fn emit_int_compare(code: &mut Vec<u8>, cmp_opcode: u8) {
     // False arm — condition did not hold
     code.push(ICONST_0);
     // 8 bytes total emitted
+}
+
+/// Emit a "compare two longs on the stack (already loaded), push 1 if
+/// condition holds, else 0" sequence.
+///
+/// This is the long counterpart of `emit_int_compare`.  JVM does not have
+/// `if_lcmpXX` instructions; instead the idiom is:
+///
+/// ```text
+/// lcmp          ; compare top two longs → int (-1, 0, +1)
+/// <ifXX> +7     ; negated condition: skip iconst_1 when condition is FALSE
+/// iconst_1      ; condition was true
+/// goto   +4
+/// iconst_0      ; condition was false
+/// ```
+///
+/// `cmp_opcode` is the **negated** unary branch instruction (operates on the
+/// `lcmp` int result):
+///
+/// | IIR op   | negated opcode (skip true when false) |
+/// |----------|---------------------------------------|
+/// | `cmp_eq` | `IFNE` (0x9A)  — skip when result ≠ 0 |
+/// | `cmp_ne` | `IFEQ` (0x99)  — skip when result = 0 |
+/// | `cmp_lt` | `IFGE` (0x9C)  — skip when result ≥ 0 |
+/// | `cmp_le` | `IFGT` (0x9D)  — skip when result > 0 |
+/// | `cmp_gt` | `IFLE` (0x9E)  — skip when result ≤ 0 |
+/// | `cmp_ge` | `IFLT` (0x9B)  — skip when result < 0 |
+///
+/// Stack state on entry: `[…, long1, long2]`
+/// Stack state on exit:  `[…, 0_or_1]`
+fn emit_long_compare(code: &mut Vec<u8>, cmp_opcode: u8) {
+    code.push(LCMP); // 1 byte: compare longs, push -1/0/1
+    // ifXX at current PC, offset to iconst_0 (7 bytes forward)
+    code.push(cmp_opcode);
+    code.extend_from_slice(&7i16.to_be_bytes());
+    // True arm — condition held
+    code.push(ICONST_1);
+    // Jump past the false arm
+    code.push(GOTO);
+    code.extend_from_slice(&4i16.to_be_bytes());
+    // False arm
+    code.push(ICONST_0);
+    // 9 bytes total (1 for lcmp + 8 for the branch pattern)
 }
 
 // ---------------------------------------------------------------------------
@@ -1641,30 +1725,97 @@ fn lower_function(
 
             // ── Comparisons ──────────────────────────────────────────────────
             //
-            // For integer comparisons we use the 8-byte fixed pattern from
-            // `emit_int_compare`.  The JVM `if_icmpXX` family only works on
-            // `int`; for `long` and `float` comparisons, a more elaborate
-            // `lcmp`/`fcmpl`/`dcmpl` path is needed.  We use integer compare
-            // for all types in v1 (tests use int types for comparisons).
+            // For integer (`int`) operands we use the 8-byte `emit_int_compare`
+            // pattern with `if_icmpXX` (two-int branch instructions).
+            //
+            // For `long` operands (type "i64") we use the 9-byte
+            // `emit_long_compare` pattern: `lload` both values, `lcmp` to
+            // get an int result, then a unary `ifXX` branch.
+            //
+            // The comparison result is always stored as an int (0 or 1) in the
+            // destination slot, regardless of operand type.
             "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
                 let (src0, src1) = two_srcs(func, instr, &slots)?;
-                emit_iload(&mut code, src0.0);
-                emit_iload(&mut code, src1.0);
-                let cmp_opcode = match instr.op.as_str() {
-                    // We use the NEGATED opcode so fall-through is the true case.
-                    "cmp_eq" => IF_ICMPNE, // if NOT equal → skip true arm
-                    "cmp_ne" => IF_ICMPEQ, // if IS equal  → skip true arm
-                    "cmp_lt" => IF_ICMPGE, // if >= → skip true arm
-                    "cmp_le" => IF_ICMPGT, // if >  → skip true arm
-                    "cmp_gt" => IF_ICMPLE, // if <= → skip true arm
-                    "cmp_ge" => IF_ICMPLT, // if <  → skip true arm
-                    _ => IF_ICMPNE,
-                };
-                emit_int_compare(&mut code, cmp_opcode);
+
+                if src0.1 == JvmType::Long {
+                    // Long comparison: lload both, lcmp, then unary ifXX.
+                    emit_typed_load(&mut code, src0.0, JvmType::Long);
+                    emit_typed_load(&mut code, src1.0, JvmType::Long);
+                    let cmp_opcode = match instr.op.as_str() {
+                        // Negated unary branch opcodes (ifXX operates on lcmp int result).
+                        "cmp_eq" => IFNE, // skip true when result ≠ 0 (not equal)
+                        "cmp_ne" => IFEQ, // skip true when result = 0 (equal)
+                        "cmp_lt" => IFGE, // skip true when result ≥ 0 (not less)
+                        "cmp_le" => IFGT, // skip true when result > 0 (greater)
+                        "cmp_gt" => IFLE, // skip true when result ≤ 0 (not greater)
+                        "cmp_ge" => IFLT, // skip true when result < 0 (less)
+                        _ => IFNE,
+                    };
+                    emit_long_compare(&mut code, cmp_opcode);
+                } else {
+                    // Int comparison: iload both, if_icmpXX.
+                    emit_iload(&mut code, src0.0);
+                    emit_iload(&mut code, src1.0);
+                    let cmp_opcode = match instr.op.as_str() {
+                        // We use the NEGATED opcode so fall-through is the true case.
+                        "cmp_eq" => IF_ICMPNE, // if NOT equal → skip true arm
+                        "cmp_ne" => IF_ICMPEQ, // if IS equal  → skip true arm
+                        "cmp_lt" => IF_ICMPGE, // if >= → skip true arm
+                        "cmp_le" => IF_ICMPGT, // if >  → skip true arm
+                        "cmp_gt" => IF_ICMPLE, // if <= → skip true arm
+                        "cmp_ge" => IF_ICMPLT, // if <  → skip true arm
+                        _ => IF_ICMPNE,
+                    };
+                    emit_int_compare(&mut code, cmp_opcode);
+                }
                 // Result (0 or 1) is now on the stack; store it.
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_istore(&mut code, dest_slot);
+                }
+            }
+
+            // ── mov (copy) ────────────────────────────────────────────────────
+            //
+            // `mov rd, rs` — copy a value from one variable to another.
+            // This is the IIR encoding of the Twig `_move` builtin, emitted by
+            // the compiler for if-expression arm unification and function-call
+            // result forwarding.
+            //
+            // JVM sequence:
+            //   <typed-load rs>    ← push rs onto the JVM operand stack
+            //   <typed-store rd>   ← pop and store into rd's local slot
+            //
+            // We use the source variable's type to pick the right load/store
+            // opcodes (iload/lload/fload/dload and their store mirrors).
+            "mov" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "mov must have a dest".to_string(),
+                })?;
+                let (dest_slot, _dest_type) = lookup_var(dest_name)?;
+
+                match instr.srcs.first() {
+                    Some(Operand::Var(src_name)) => {
+                        let (src_slot, src_type) = lookup_var(src_name)?;
+                        emit_typed_load(&mut code, src_slot, src_type);
+                        emit_typed_store(&mut code, dest_slot, src_type);
+                    }
+                    Some(Operand::Int(v)) => {
+                        // Constant mov — unusual but valid; emit iconst.
+                        emit_iconst(&mut code, *v as i32);
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    Some(Operand::Bool(b)) => {
+                        emit_iconst(&mut code, if *b { 1 } else { 0 });
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    _ => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: "mov: first src must be Var, Int, or Bool".to_string(),
+                        });
+                    }
                 }
             }
 
@@ -3129,9 +3280,18 @@ fn serialize_method_attribute(
 ///
 /// # Target class version
 ///
-/// We emit Java 8 class files (major version 52, minor version 0).  Java 8
-/// is the oldest LTS version that still sees widespread deployment, and all
-/// modern JVMs can load it.
+/// We emit Java 5 class files (major version 49, minor version 0).
+///
+/// **Why version 49?**  The Java 7+ verifier (used for class file versions
+/// ≥ 51) requires a `StackMapTable` attribute in every method that contains
+/// branches.  Generating a correct StackMapTable requires a dataflow pass
+/// over the bytecode, which is non-trivial to implement in v1 of this lowerer.
+///
+/// Class file version 49 (Java 5) uses the older type-inferencing verifier,
+/// which does not require `StackMapTable`.  All modern JVMs — including Java
+/// 21 — support loading class files as far back as version 45.3, and use the
+/// old verifier for versions ≤ 49.  The code we emit is semantically correct
+/// for any JVM version; only the verification path differs.
 ///
 /// # Example
 ///
@@ -3227,8 +3387,10 @@ pub fn lower_iir_to_jvm(
 
     // ── Step 4: assemble JvmClassFile ─────────────────────────────────────────
     Ok(JvmClassFile {
-        // Java 8 = major version 52.
-        version: JvmClassVersion { major: 52, minor: 0 },
+        // Java 5 = major version 49.  See doc-comment above for why we stay at
+        // version 49 rather than targeting Java 8 (52): version 49 avoids the
+        // mandatory StackMapTable attribute required by the Java 7+ verifier.
+        version: JvmClassVersion { major: 49, minor: 0 },
         // ACC_PUBLIC | ACC_SUPER — standard flags for a public class.
         // ACC_SUPER must be set for Java 1.1+ classes (changes how `invokespecial`
         // searches the superclass method table).
@@ -3315,10 +3477,12 @@ mod tests {
     }
 
     #[test]
-    fn lower_version_is_java8() {
+    fn lower_version_is_java5() {
+        // We emit version 49 (Java 5) to avoid the mandatory StackMapTable
+        // required by the Java 7+ verifier.  See the doc-comment on lower_iir_to_jvm.
         let module = make_module(void_fn("main"));
         let class = lower_iir_to_jvm(&module, &make_cfg()).unwrap();
-        assert_eq!(class.version.major, 52);
+        assert_eq!(class.version.major, 49);
         assert_eq!(class.version.minor, 0);
     }
 
