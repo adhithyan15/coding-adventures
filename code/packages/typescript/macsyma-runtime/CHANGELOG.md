@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Delegate `factor` to the canonical TypeScript symbolic VM handler so common
+  multivariate terms such as `factor(x^2*y - y)` reduce through the shared CAS
+  substrate.
 - Add `?` / `? topic` help-query handling for TypeScript MACSYMA sessions and
   JSON responses.
 - Wire `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a

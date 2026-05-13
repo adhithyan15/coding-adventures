@@ -4,6 +4,9 @@
 
 ### Added
 
+- Added a canonical symbolic `Factor` handler backed by `cas-factor`, including
+  a small common-symbolic-factor extraction pass for multivariate expressions
+  like `x^2*y - y`.
 - Added a symbolic-backend-only `D` handler for pure IR differentiation,
   including arithmetic, power, elementary, hyperbolic, and inverse hyperbolic
   chain rules.
