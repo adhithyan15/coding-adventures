@@ -59,20 +59,38 @@ assert!(!artifact.methods[0].body.is_empty());
 assert!(artifact.methods[0].body.contains(&0x2A)); // ret
 ```
 
+## Closure lowering (LANG37)
+
+Since LANG37 the CLR backend supports first-class closures via an `int32[]`
+dispatch table.
+
+```rust
+// alloc_closure: build a closure over captured i32 values
+// call_closure: call a closure at runtime via __callClosure dispatch
+```
+
+| Closure type | Support |
+|---|---|
+| `i32` / `bool` captures | ✅ LANG37 |
+| `i64` / `u64` / `f32` / `f64` captures | ❌ LANG38 (ClosureOpcode error) |
+
+A closure is an `int32[]` array:
+- `[0]` = function dispatch index (alphabetical order, deterministic)
+- `[1..n]` = captured values as `int32`
+
+A synthetic `__callClosure(int32[], int32[]) → int32` method is appended to
+the program artifact whenever any `alloc_closure` instruction appears.
+
 ## Validation errors
 
 | Error | Condition |
 |-------|-----------|
 | `EmptyModule` | Module has no functions |
 | `EmptyFunction` | A function has no instructions |
-| `ClosureOpcode` | op is `alloc_closure` or `call_closure` — closures require the BEAM backend |
-| `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
-| `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
+| `ClosureOpcode` | `alloc_closure` with i64/u64/f32/f64 capture — deferred to LANG38 |
+| `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` (except `call_closure` which is exempt) |
+| `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` (except `ref<LispyPair>`) |
 | `UnsupportedOp` | Any unsupported opcode (see below) |
-
-> **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
-> closure opcodes) are BEAM-only and return a `ClosureOpcode` validation error
-> rather than the generic `UntypedInstruction` message.
 
 ## Supported IIR opcodes
 
@@ -84,7 +102,9 @@ assert!(artifact.methods[0].body.contains(&0x2A)); // ret
 | Comparison | `cmp_eq`, `cmp_ne`, `cmp_lt`, `cmp_le`, `cmp_gt`, `cmp_ge` |
 | Control flow | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | Return | `ret`, `ret_void` |
-| Calls | `call` |
+| Calls | `call`, `call_closure` (LANG37) |
+| Closures | `alloc_closure` (LANG37, i32/bool captures only) |
+| Heap | `alloc` (`ref<LispyPair>` only), `field_load`, `field_store`, `is_null` |
 | Register | `load_reg`, `store_reg` |
 | Coercion | `type_assert` (becomes `nop`) |
 

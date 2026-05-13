@@ -62,6 +62,19 @@ const INT8_MAX: i32 = 127;
 /// index 0 = head value, index 1 = tail (next pair or null).
 pub const OBJECT_ARRAY_TYPE_TOKEN: u32 = 0x0100_0001;
 
+/// Metadata token for `System.Int32[]` — used with `newarr` to allocate a
+/// primitive integer array for the LANG37 closure dispatch table.
+///
+/// Encoding follows the same convention as `OBJECT_ARRAY_TYPE_TOKEN`:
+/// - Upper byte `0x01` = TypeRef metadata table.
+/// - Low three bytes = 1-based row index.  Row 2 by convention = System.Int32.
+///
+/// Any conforming CLR simulator should treat this token as "allocate an
+/// `int32[]` of the requested length".  Integer captures and call-time
+/// arguments are stored as raw `int32` elements, accessed with `ldelem.i4`
+/// and `stelem.i4`.
+pub const INT32_ARRAY_TYPE_TOKEN: u32 = 0x0100_0002;
+
 // ---------------------------------------------------------------------------
 // CILBuilderError
 // ---------------------------------------------------------------------------
