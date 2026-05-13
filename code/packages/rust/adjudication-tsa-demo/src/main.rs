@@ -42,6 +42,15 @@
 //! # be traced back to the specific model that produced it.
 //! ADJ_DEMO_RULEBOOK_MODE=adversarial:gemma4:latest,llama3.1:8b \
 //!     cargo run -p adjudication-tsa-demo
+//!
+//! # Add Arm C: the deterministic engine arm (ADJ16 step 5). Runs the
+//! # logic engine over a hand-authored rulebook fixture — no LLM at
+//! # answer time. `strict` (default) derives non_compliant from
+//! # prohibited(matches); `lenient` derives compliant from
+//! # carry_on(1); `both` attaches both rulebooks and exercises the
+//! # ADJ16 step 3 dispute-detection path.
+//! ADJ_DEMO_ENGINE_ARM=strict cargo run -p adjudication-tsa-demo
+//! ADJ_DEMO_ENGINE_ARM=both   cargo run -p adjudication-tsa-demo
 //! ```
 //!
 //! The binary is intentionally environment-variable driven rather
@@ -53,9 +62,11 @@ use std::time::Duration;
 use adjudication_rulebook::{
     acquire_rulebook_adversarial, AcquireRulebookAdversarialRequest, PerModelOutcome,
 };
+use adjudication_pipeline::{RulebookProvenance, RulebookTrustTier, Verdict};
 use adjudication_tsa_demo::{
-    acquire_demo_rulebook, fixture_tsa_rulebook, format_side_by_side, run_pipeline_arm,
-    run_raw_arm, DemoConfig, IrMode, IrSourceTelemetry,
+    acquire_demo_rulebook, fixture_tsa_rulebook, format_side_by_side, run_engine_arm,
+    run_pipeline_arm, run_raw_arm, tsa_rulebook_lenient_ir, tsa_rulebook_strict_ir, DemoConfig,
+    IrMode, IrSourceTelemetry,
 };
 use llm_cache::CachingClient;
 use llm_gateway::LlmClient;
@@ -317,6 +328,108 @@ fn main() {
 
     // --- side-by-side ---
     println!("\n{}", format_side_by_side(&raw, &pipe));
+
+    // --- optional Arm C: the deterministic Engine Arm (ADJ16 step 5) ---
+    //
+    // Triggered by `ADJ_DEMO_ENGINE_ARM`. Accepted values:
+    //   * `1`, `strict`        — use the strict fixture rulebook only
+    //     (`tsa_rulebook_strict_ir`); derives `non_compliant(passenger_a)`
+    //     from `prohibited(matches)`. The canonical "matches →
+    //     non-compliant" demo with the categorical leap auditable.
+    //   * `lenient`             — use the lenient fixture rulebook only
+    //     (`tsa_rulebook_lenient_ir`); derives `compliant(passenger_a)`
+    //     from `carry_on(1)`. Deliberately wrong for the canonical
+    //     case; shipped to demonstrate the dispute path below.
+    //   * `both`, `adversarial` — load both fixture rulebooks. The
+    //     resulting engine arm exercises ADJ16 step 3's dispute
+    //     detection; the dispute_count field on the report reports
+    //     any cross-rulebook conflicts the proof DAG surfaces.
+    //
+    // No LLM is called by this arm. Same input + same rulebooks +
+    // same query = byte-for-byte reproducible verdict.
+    if let Ok(mode) = std::env::var("ADJ_DEMO_ENGINE_ARM") {
+        let rulebooks: Vec<_> = match mode.as_str() {
+            "1" | "strict" | "" => vec![(
+                tsa_rulebook_strict_ir(),
+                RulebookProvenance::new("rb-tsa-strict-v1", RulebookTrustTier::Reviewed),
+            )],
+            "lenient" => vec![(
+                tsa_rulebook_lenient_ir(),
+                RulebookProvenance::new("rb-tsa-lenient-v1", RulebookTrustTier::Reviewed),
+            )],
+            "both" | "adversarial" => vec![
+                (
+                    tsa_rulebook_strict_ir(),
+                    RulebookProvenance::new("rb-tsa-strict-v1", RulebookTrustTier::Reviewed),
+                ),
+                (
+                    tsa_rulebook_lenient_ir(),
+                    RulebookProvenance::new("rb-tsa-lenient-v1", RulebookTrustTier::Reviewed),
+                ),
+            ],
+            other => {
+                eprintln!(
+                    "warning: ADJ_DEMO_ENGINE_ARM={other:?} not recognised; \
+                     accepted values: 1 / strict / lenient / both / adversarial. \
+                     Falling back to strict."
+                );
+                vec![(
+                    tsa_rulebook_strict_ir(),
+                    RulebookProvenance::new("rb-tsa-strict-v1", RulebookTrustTier::Reviewed),
+                )]
+            }
+        };
+        println!(
+            "\n[arm C] running the deterministic engine arm with {n} rulebook(s) (no LLM)...",
+            n = rulebooks.len()
+        );
+        let engine = run_engine_arm(&cfg, &rulebooks);
+        println!("--- ARM C: deterministic engine ---");
+        println!("rulebooks:       {} attached", rulebooks.len());
+        println!("verdict:         {}", engine.verdict_summary);
+        println!("dispute count:   {}", engine.dispute_count);
+        if let Some(table) = engine.clause_provenance() {
+            println!(
+                "KB attribution:  {} fact(s), {} rule(s) from {} source(s)",
+                table.fact_provenance.len(),
+                table.rule_provenance.len(),
+                {
+                    let mut sources: std::collections::BTreeSet<&str> = Default::default();
+                    for p in table.fact_provenance.values() {
+                        sources.insert(&p.source_rulebook_id);
+                    }
+                    for p in table.rule_provenance.values() {
+                        sources.insert(&p.source_rulebook_id);
+                    }
+                    sources.len()
+                }
+            );
+        }
+        // Print each disputed answer so the reviewer can act.
+        for (i, dispute) in engine.disputed_answers().iter().enumerate() {
+            println!(
+                "  dispute {}: query={:?} candidates={} resolution={:?}",
+                i + 1,
+                dispute.query,
+                dispute.candidates.len(),
+                dispute.resolution_required
+            );
+        }
+        // Compact verdict summary echoing the structured outcome.
+        match &engine.pipeline_output.verdict {
+            Verdict::Resolved { answers } => {
+                for (i, a) in answers.iter().enumerate() {
+                    println!("  answer {}: query={:?}", i + 1, a.query);
+                }
+            }
+            Verdict::Blocked { violation_count } => {
+                println!("  BLOCKED ({violation_count} violation(s) — see audit trail)");
+            }
+            Verdict::EngineError(msg) => {
+                println!("  ENGINE ERROR: {msg}");
+            }
+        }
+    }
 
     // --- optional audit-trail + LLM-IR dump ---
     if std::env::var("ADJ_DEMO_AUDIT").is_ok() {

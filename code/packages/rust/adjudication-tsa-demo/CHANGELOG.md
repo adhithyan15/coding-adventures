@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.1] - 2026-05-12 — Engine Arm in the CLI (ADJ16 step 5.5)
+
+### Added
+
+The engine arm (introduced as a library API in v0.11) is now
+wired into the CLI binary behind the new `ADJ_DEMO_ENGINE_ARM`
+env var. After Arms A and B print, the demo loads one or both
+fixture rulebooks and runs the engine arm.
+
+Accepted values:
+
+- `ADJ_DEMO_ENGINE_ARM=strict` (or `=1`): use only
+  `tsa_rulebook_strict_ir()`. Demonstrates the canonical
+  "matches → non-compliant" categorical leap as an external,
+  auditable rule.
+- `ADJ_DEMO_ENGINE_ARM=lenient`: use only
+  `tsa_rulebook_lenient_ir()`. Demonstrates a deliberately wrong
+  rule (declaring carry-on baggage doesn't make you compliant).
+- `ADJ_DEMO_ENGINE_ARM=both` (or `=adversarial`): load both
+  fixture rulebooks. Exercises the ADJ16 step 3 dispute detection
+  path; the printed dispute count reflects any cross-rulebook
+  conflicts the proof DAG surfaces.
+
+Unrecognised values fall back to `strict` with a warning on
+stderr.
+
+### Output
+
+The new Arm C block prints below the existing side-by-side:
+
+```text
+[arm C] running the deterministic engine arm with 1 rulebook(s) (no LLM)...
+--- ARM C: deterministic engine ---
+rulebooks:       1 attached
+verdict:         RESOLVED: 1 answer(s)
+dispute count:   0
+KB attribution:  2 fact(s), 1 rule(s) from 2 source(s)
+  answer 1: query=Compound { functor: "compliant", args: [Atom("passenger_a")] }
+```
+
+The structured outcome is still available via `ADJ_DEMO_AUDIT=1`
+which dumps the full audit trail (including the engine arm's
+clause-provenance attribution) as JSON.
+
+### Rationale
+
+ADJ16 step 5 landed the library API; v0.11.1 plugs it into the
+CLI so users see all three arms together. The CLI flag is opt-in
+to keep the no-knobs invocation unchanged for callers who only
+want Arms A and B.
+
+### Compatibility
+
+- Arms A and B are unchanged.
+- Default invocation (no `ADJ_DEMO_ENGINE_ARM` set) prints the
+  same two-arm output as v0.11.
+- The `ADJ_DEMO_AUDIT` flag, when combined with
+  `ADJ_DEMO_ENGINE_ARM`, dumps the full audit trail from Arm B as
+  before. (Future iteration could fold Arm C's audit into the
+  same dump.)
+
 ## [0.11.0] - 2026-05-12 — Engine Arm (ADJ16 step 5)
 
 ### Added

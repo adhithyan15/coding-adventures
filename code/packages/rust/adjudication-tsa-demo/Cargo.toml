@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-tsa-demo"
-version = "0.11.0"
+version = "0.11.1"
 edition = "2021"
-description = "A/B/C demo harness: compare a raw local Ollama model (Arm A) and the full adjudication pipeline (Arm B) against a third deterministic engine arm (Arm C, v0.11). v0.10 added adversarial multi-model elicitation; v0.10.1 fixed a cache-bypass in Stage 0. v0.11 adds ADJ16 step 5: run_engine_arm() takes the canonical TSA source IR plus hand-authored rulebook IRs and runs adjudication_pipeline::run_with_rulebooks to produce a verdict deterministically — no LLM at answer time. Includes tsa_rulebook_strict_ir / tsa_rulebook_lenient_ir fixtures."
+description = "A/B/C demo harness: compare a raw local Ollama model (Arm A) and the full adjudication pipeline (Arm B) against a third deterministic engine arm (Arm C, v0.11). v0.10 added adversarial multi-model elicitation; v0.10.1 fixed a cache-bypass in Stage 0. v0.11 added ADJ16 step 5 library API for the engine arm. v0.11.1 wires the engine arm into main.rs behind ADJ_DEMO_ENGINE_ARM={strict|lenient|both} for CLI side-by-side output."
 
 [[bin]]
 name = "adjudication-tsa-demo"
