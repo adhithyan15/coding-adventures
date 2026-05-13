@@ -135,7 +135,7 @@ MODES = {
 # Helpers
 # ---------------------------------------------------------------------------
 
-VERDICT_RE = re.compile(r"VERDICT:\s*(COMPLIANT|NON-COMPLIANT)", re.IGNORECASE)
+VERDICT_RE = re.compile(r"VERDICT:\s*(COMPLIANT|NON-COMPLIANT|ESCALATE)", re.IGNORECASE)
 ARM_A_BLOCK_RE = re.compile(r"--- ARM A: raw model ---(.*?)(?:---|$)", re.DOTALL)
 TRUNCATION_RE = re.compile(r"Arm A failed:.*?truncated", re.IGNORECASE)
 FINISH_REASON_RE = re.compile(r"finish reason:\s+(\S+)")
