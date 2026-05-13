@@ -1026,6 +1026,40 @@ module CodingAdventures
         assert_equal [10_000], transport.timeout_values
       end
 
+      def test_session_capabilities_uses_hardened_default_timeout
+        runner = FakeRunner.new
+        transport = FakeTransactTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 250
+        ) do |board|
+          board.session.capabilities
+        end
+
+        assert_equal [BoardVM::DEFAULT_CAPABILITIES_TIMEOUT_MS], transport.timeout_values
+      end
+
+      def test_session_capabilities_honors_explicit_timeout
+        runner = FakeRunner.new
+        transport = FakeTransactTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 250
+        ) do |board|
+          board.session.capabilities(timeout_ms: 750)
+        end
+
+        assert_equal [750], transport.timeout_values
+      end
+
       def test_dispatch_protocol_frame_skips_stale_responses_until_request_and_kind_match
         runner = FakeRunner.new
         transport = FakeReadAfterTransactTransport.new(["stale-id", "stale-kind", "matched"])
