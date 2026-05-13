@@ -141,13 +141,17 @@ module CodingAdventures
         dispatch(:hello, native_session.hello_wire(host_name, host_nonce))
       end
 
-      def capabilities
-        dispatch(:capabilities, native_session.caps_query_wire)
+      def capabilities(timeout_ms: nil)
+        dispatch(
+          :capabilities,
+          native_session.caps_query_wire,
+          timeout_ms: timeout_ms || default_capabilities_timeout_ms
+        )
       end
       alias caps capabilities
 
-      def board_descriptor
-        capabilities.board_descriptor
+      def board_descriptor(timeout_ms: nil)
+        capabilities(timeout_ms: timeout_ms).board_descriptor
       end
       alias describe board_descriptor
 
@@ -737,6 +741,10 @@ module CodingAdventures
 
       def current_request_id
         native_session.next_request_id - 1
+      end
+
+      def default_capabilities_timeout_ms
+        [connection.timeout_ms, BoardVM::DEFAULT_CAPABILITIES_TIMEOUT_MS].max
       end
 
       def expected_response_kind(command)
