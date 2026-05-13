@@ -66,3 +66,26 @@ def parse_macsyma(source: str) -> ASTNode:
         assert ast.rule_name == "program"
     """
     return create_macsyma_parser(source).parse()
+
+
+def format_macsyma_syntax_error(source: str, error: BaseException) -> str:
+    """Format parser/lexer failures as a MACSYMA-style syntax diagnostic."""
+    line = getattr(getattr(error, "token", None), "line", None)
+    column = getattr(getattr(error, "token", None), "column", None)
+    message = _strip_parse_prefix(str(error))
+    if isinstance(line, int) and isinstance(column, int) and line >= 1 and column >= 1:
+        source_line = source.splitlines()[line - 1] if line <= len(source.splitlines()) else ""
+        caret = " " * (column - 1) + "^"
+        return f"Incorrect syntax at line {line}, column {column}: {message}\n{source_line}\n{caret}"
+    return f"Incorrect syntax: {message}"
+
+
+def _strip_parse_prefix(message: str) -> str:
+    prefixes = ("Parse error: ",)
+    for prefix in prefixes:
+        if message.startswith(prefix):
+            return message[len(prefix) :]
+    if message.startswith("Parse error at "):
+        _, _, rest = message.partition(": ")
+        return rest or message
+    return message

@@ -716,6 +716,8 @@ describe("macsyma-runtime", () => {
     const payload = JSON.parse(session.evalJson("1 + ;"));
     expect(payload.ok).toBe(false);
     expect(payload.error.kind).toBe("runtime");
+    expect(payload.error.message).toMatch(/^Incorrect syntax at line 1, column \d+:/);
+    expect(payload.error.message).toContain("1 + ;\n");
     expect(payload.history.inputCount).toBe(1);
   });
 

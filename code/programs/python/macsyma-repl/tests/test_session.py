@@ -209,7 +209,9 @@ def test_cli_file_mode_reports_errors_to_stderr(tmp_path: Path, capsys) -> None:
     assert macsyma_main(["--file", str(program)]) == 1
     captured = capsys.readouterr()
     assert captured.out == ""
-    assert "parse error:" in captured.err
+    assert "Incorrect syntax at line 1, column" in captured.err
+    assert "1 +;" in captured.err
+    assert "^" in captured.err
 
 
 # ---------------------------------------------------------------------------

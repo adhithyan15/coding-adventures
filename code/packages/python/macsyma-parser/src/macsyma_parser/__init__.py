@@ -16,9 +16,14 @@ Usage::
     print(ast.rule_name)  # "program"
 """
 
-from macsyma_parser.parser import create_macsyma_parser, parse_macsyma
+from macsyma_parser.parser import (
+    create_macsyma_parser,
+    format_macsyma_syntax_error,
+    parse_macsyma,
+)
 
 __all__ = [
     "create_macsyma_parser",
+    "format_macsyma_syntax_error",
     "parse_macsyma",
 ]

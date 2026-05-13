@@ -74,6 +74,12 @@ describe("macsyma compiler", () => {
     ]);
   });
 
+  it("formats parser failures as MACSYMA syntax diagnostics", () => {
+    expect(() => compileMacsyma("1 + ;")).toThrow(
+      /Incorrect syntax at line 1, column \d+: .*\n1 \+ ;\n\s+\^/,
+    );
+  });
+
   it("compiles if expressions to symbolic If", () => {
     expect(one("if x < 0 then -x else x;")).toEqual(app(IF, [
       app(LESS, [sym("x"), int(0)]),
