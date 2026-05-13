@@ -325,7 +325,7 @@ mod tests {
         assert!(payload["error"]["message"]
             .as_str()
             .unwrap()
-            .contains("parse"));
+            .starts_with("Incorrect syntax at line 1, column "));
     }
 
     #[test]

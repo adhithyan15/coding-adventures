@@ -23,7 +23,7 @@ from pathlib import Path
 from coding_adventures_repl import Language
 from macsyma_compiler import compile_macsyma
 from macsyma_compiler.compiler import _STANDARD_FUNCTIONS
-from macsyma_parser import parse_macsyma
+from macsyma_parser import format_macsyma_syntax_error, parse_macsyma
 from macsyma_runtime import (
     History,
     MacsymaBackend,
@@ -99,7 +99,7 @@ class MacsymaLanguage(Language):
             ast = parse_macsyma(source)
             statements = compile_macsyma(ast, wrap_terminators=True)
         except Exception as exc:
-            return ("error", f"parse error: {exc}")
+            return ("error", format_macsyma_syntax_error(source, exc))
 
         outputs: list[str] = []
         for stmt in statements:

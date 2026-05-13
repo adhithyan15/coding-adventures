@@ -1,6 +1,6 @@
 import type { Token } from "@coding-adventures/lexer";
 import { parseMacsyma } from "@coding-adventures/macsyma-parser";
-import { isASTNode } from "@coding-adventures/parser";
+import { GrammarParseError, isASTNode } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import {
   ACOS,
@@ -122,8 +122,26 @@ export interface CompileOptions {
 }
 
 export function compileMacsyma(input: string | ASTNode, options: CompileOptions = {}): IRNode[] {
-  const ast = typeof input === "string" ? parseMacsyma(input) : input;
+  const ast = typeof input === "string" ? parseMacsymaFriendly(input) : input;
   return new Compiler(options).compileProgram(ast);
+}
+
+export function formatMacsymaSyntaxError(source: string, error: unknown): string {
+  if (error instanceof GrammarParseError && error.token !== null) {
+    const { line, column } = error.token;
+    const sourceLine = source.split(/\r?\n/)[line - 1] ?? "";
+    const caret = " ".repeat(Math.max(0, column - 1)) + "^";
+    return `Incorrect syntax at line ${line}, column ${column}: ${stripParsePrefix(error.message)}\n${sourceLine}\n${caret}`;
+  }
+  return `Incorrect syntax: ${stripParsePrefix(errorMessage(error))}`;
+}
+
+function parseMacsymaFriendly(source: string): ASTNode {
+  try {
+    return parseMacsyma(source);
+  } catch (error) {
+    throw new CompileError(formatMacsymaSyntaxError(source, error));
+  }
 }
 
 export class Compiler {
@@ -433,4 +451,19 @@ function canonicalCallHead(head: IRNode): IRNode {
 
 function isSameSymbol(node: IRNode, symbol: IRSymbol): boolean {
   return node.kind === "symbol" && node.name === symbol.name;
+}
+
+function stripParsePrefix(message: string): string {
+  if (message.startsWith("Parse error: ")) {
+    return message.slice("Parse error: ".length);
+  }
+  if (message.startsWith("Parse error at ")) {
+    const separator = message.indexOf(": ");
+    return separator === -1 ? message : message.slice(separator + 2);
+  }
+  return message;
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
