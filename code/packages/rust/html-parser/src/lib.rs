@@ -13,6 +13,8 @@ use coding_adventures_html_lexer::{
 use dom_core::{Attribute, Document, DocumentType, Element, Node};
 use std::fmt;
 
+const FRAGMENT_CONTEXT_MARKER: &str = "data-venture-fragment-context";
+
 /// Parser options that influence tokenizer handoff and tree construction.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HtmlParseOptions {
@@ -650,6 +652,42 @@ pub fn parse_html_fragment_with_options(
     Ok(parse_html_fragment_with_diagnostics_and_options(source, options)?.nodes)
 }
 
+/// Parse an HTML fragment in the context of a given HTML element.
+pub fn parse_html_fragment_for_context(
+    source: &str,
+    context_element: &str,
+) -> Result<Vec<Node>, ParseError> {
+    Ok(parse_html_fragment_for_context_with_diagnostics(source, context_element)?.nodes)
+}
+
+/// Parse an HTML fragment in the context of a given HTML element plus diagnostics.
+pub fn parse_html_fragment_for_context_with_diagnostics(
+    source: &str,
+    context_element: &str,
+) -> Result<FragmentOutput, ParseError> {
+    parse_html_fragment_for_context_with_diagnostics_and_options(
+        source,
+        context_element,
+        HtmlParseOptions::default(),
+    )
+}
+
+/// Parse an HTML fragment in the context of a given HTML element with explicit options.
+pub fn parse_html_fragment_for_context_with_options(
+    source: &str,
+    context_element: &str,
+    options: HtmlParseOptions,
+) -> Result<Vec<Node>, ParseError> {
+    Ok(
+        parse_html_fragment_for_context_with_diagnostics_and_options(
+            source,
+            context_element,
+            options,
+        )?
+        .nodes,
+    )
+}
+
 /// Parse a complete HTML string into a DOM document plus diagnostics with explicit parser options.
 pub fn parse_html_with_diagnostics_and_options(
     source: &str,
@@ -703,6 +741,39 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
 
     Ok(FragmentOutput {
         nodes: body_fragment_nodes(document),
+        lexer_diagnostics,
+        parser_diagnostics: parser.diagnostics,
+    })
+}
+
+/// Parse an HTML fragment in the context of a given HTML element plus diagnostics.
+pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
+    source: &str,
+    context_element: &str,
+    options: HtmlParseOptions,
+) -> Result<FragmentOutput, ParseError> {
+    let context_element = context_element.to_ascii_lowercase();
+    let mut lexer = create_html_lexer()?;
+    let lex_context = fragment_initial_lex_context(&context_element, options)
+        .unwrap_or_else(|| options.initial_tokenizer_context.lex_context());
+    apply_html_lex_context(&mut lexer, &lex_context)?;
+    let mut parser = HtmlParser::with_fragment_context_options(options, &context_element);
+
+    for ch in source.chars() {
+        let mut buffer = [0; 4];
+        lexer.push(ch.encode_utf8(&mut buffer))?;
+        drain_parser_tokens(&mut lexer, &mut parser, false)?;
+    }
+
+    lexer.finish()?;
+    drain_parser_tokens(&mut lexer, &mut parser, true)?;
+    parser.process_token(Token::Eof);
+
+    let lexer_diagnostics = lexer.diagnostics().to_vec();
+    let document = parser.finish_document();
+
+    Ok(FragmentOutput {
+        nodes: marked_fragment_context_nodes(document),
         lexer_diagnostics,
         parser_diagnostics: parser.diagnostics,
     })
@@ -799,6 +870,29 @@ impl HtmlParser {
         }
     }
 
+    fn with_fragment_context_options(options: HtmlParseOptions, context_element: &str) -> Self {
+        let (document, open_elements) = fragment_context_shell(context_element);
+
+        Self {
+            document,
+            open_elements,
+            pending_formatting_reconstruction: Vec::new(),
+            prunable_empty_reconstructed_formatting_paths: Vec::new(),
+            diagnostics: Vec::new(),
+            options,
+            quirks_mode: true,
+            strip_next_leading_lf: false,
+            explicit_head_end_seen: false,
+            explicit_body_end_seen: false,
+            explicit_body_start_seen: matches!(context_element, "body"),
+            explicit_html_end_seen: false,
+            pending_table_text: String::new(),
+            strip_next_leading_noscript_literal: false,
+            form_element_pointer_set: matches!(context_element, "form"),
+            foreign_cdata_text: None,
+        }
+    }
+
     pub fn parse_tokens(&mut self, tokens: impl IntoIterator<Item = Token>) -> Document {
         for token in tokens {
             self.process_token(token);
@@ -808,6 +902,82 @@ impl HtmlParser {
 
     pub fn diagnostics(&self) -> &[ParserDiagnostic] {
         &self.diagnostics
+    }
+
+    fn current_element_is_marked_fragment_context(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        element_ref_at_path(&self.document, path)
+            .is_some_and(|element| element.name == name && has_fragment_context_marker(element))
+    }
+
+    fn fragment_context_ignores_table_start_tag(&self, name: &str) -> bool {
+        if self.has_unmarked_table_after_last_fragment_marker() {
+            return false;
+        }
+        let Some(context) = self.open_fragment_context_name() else {
+            return false;
+        };
+        match context {
+            "table" => name == "table",
+            "caption" => matches!(
+                name,
+                "caption"
+                    | "col"
+                    | "colgroup"
+                    | "html"
+                    | "tbody"
+                    | "td"
+                    | "tfoot"
+                    | "thead"
+                    | "th"
+                    | "tr"
+            ),
+            "colgroup" => name != "col",
+            "tbody" | "thead" | "tfoot" => {
+                matches!(
+                    name,
+                    "caption" | "col" | "colgroup" | "tbody" | "thead" | "tfoot"
+                )
+            }
+            "tr" => matches!(
+                name,
+                "caption" | "col" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr"
+            ),
+            "td" | "th" => matches!(
+                name,
+                "caption" | "col" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
+            ),
+            _ => false,
+        }
+    }
+
+    fn open_fragment_context_name(&self) -> Option<&str> {
+        self.open_elements.iter().rev().find_map(|path| {
+            let element = element_ref_at_path(&self.document, path)?;
+            fragment_marker_value(element)
+        })
+    }
+
+    fn open_marked_fragment_shell_element_matches(&self, name: &str) -> bool {
+        self.open_elements.iter().rev().any(|path| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(|element| element.name == name && has_fragment_context_marker(element))
+        })
+    }
+
+    fn has_unmarked_table_after_last_fragment_marker(&self) -> bool {
+        let Some(marker_index) = self.open_elements.iter().rposition(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(has_fragment_context_marker)
+        }) else {
+            return false;
+        };
+        self.open_elements[marker_index + 1..].iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.name == "table" && !has_fragment_context_marker(element)
+            })
+        })
     }
 
     fn finish_document(&mut self) -> Document {
@@ -1131,6 +1301,9 @@ impl HtmlParser {
             self.apply_document_shell_implied_contexts(&name);
             self.close_fostered_formatting_before_table_context(&name);
             self.pop_fostered_content_before_table_context(&name);
+            if self.fragment_context_ignores_table_start_tag(&name) {
+                return;
+            }
             if self.has_open_element("select")
                 && self.has_open_table_context()
                 && (name == "table" || starts_table_context(&name))
@@ -1577,6 +1750,15 @@ impl HtmlParser {
         let text = if self.strip_next_leading_lf {
             self.strip_next_leading_lf = false;
             text.strip_prefix('\n').unwrap_or(&text).to_string()
+        } else {
+            text
+        };
+        let text = if self.current_element_is_marked_fragment_context("colgroup")
+            && !is_html_whitespace_text(&text)
+        {
+            text.chars()
+                .filter(|character| is_html_whitespace(*character))
+                .collect::<String>()
         } else {
             text
         };
@@ -2383,6 +2565,12 @@ impl HtmlParser {
     fn handle_end_tag(&mut self, name: &str) {
         if name == "script" && self.current_script_text_treats_next_end_tag_as_data() {
             self.append_text_to_current("</script>".to_string());
+            return;
+        }
+        if name != "html" && self.current_element_is_marked_fragment_context(name) {
+            return;
+        }
+        if self.open_marked_fragment_shell_element_matches(name) {
             return;
         }
         if self.has_open_svg_html_integration_point()
@@ -4845,6 +5033,280 @@ fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
     }
 
     fragment
+}
+
+fn fragment_context_shell(context_element: &str) -> (Document, Vec<Vec<usize>>) {
+    let chain = fragment_context_chain(context_element);
+    let mut document = Document::new();
+    let html = marked_shell_element("html", context_element == "html", context_element);
+    document.push_child(html);
+
+    let mut open_elements = vec![vec![0]];
+    let mut parent_path = vec![0];
+    for (index, element_name) in chain.iter().enumerate().skip(1) {
+        let marker = index == chain.len() - 1
+            || is_fragment_table_shell_wrapper(element_name, context_element);
+        let child_index = {
+            let parent = element_at_path_mut(&mut document, &parent_path)
+                .expect("fragment shell parent must exist");
+            parent
+                .children
+                .push(marked_shell_element(element_name, marker, context_element));
+            parent.children.len() - 1
+        };
+
+        if *element_name == "head" && !marker {
+            continue;
+        }
+
+        let mut path = parent_path.clone();
+        path.push(child_index);
+        open_elements.push(path.clone());
+        parent_path = path;
+    }
+
+    (document, open_elements)
+}
+
+fn fragment_context_chain(context_element: &str) -> Vec<&str> {
+    match context_element {
+        "html" => vec!["html"],
+        "head" => vec!["html", "head"],
+        "body" => vec!["html", "head", "body"],
+        "frameset" => vec!["html", "head", "frameset"],
+        "caption" => vec!["html", "head", "body", "table", "caption"],
+        "colgroup" => vec!["html", "head", "body", "table", "colgroup"],
+        "tbody" | "thead" | "tfoot" => {
+            vec!["html", "head", "body", "table", context_element]
+        }
+        "tr" => vec!["html", "head", "body", "table", "tbody", "tr"],
+        "td" | "th" => {
+            vec![
+                "html",
+                "head",
+                "body",
+                "table",
+                "tbody",
+                "tr",
+                context_element,
+            ]
+        }
+        _ => vec!["html", "head", "body", context_element],
+    }
+}
+
+fn is_fragment_table_shell_wrapper(element_name: &str, context_element: &str) -> bool {
+    if context_element == "table" {
+        return false;
+    }
+    matches!(
+        context_element,
+        "caption" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
+    ) && matches!(element_name, "table" | "tbody" | "thead" | "tfoot" | "tr")
+}
+
+fn marked_shell_element(name: &str, marker: bool, context_element: &str) -> Node {
+    let attributes = if marker {
+        vec![Attribute {
+            name: FRAGMENT_CONTEXT_MARKER.to_string(),
+            value: context_element.to_string(),
+        }]
+    } else {
+        Vec::new()
+    };
+    Node::element(name.to_string(), attributes)
+}
+
+fn fragment_initial_lex_context(
+    context_element: &str,
+    options: HtmlParseOptions,
+) -> Option<HtmlLexContext> {
+    let state = match context_element {
+        "title" | "textarea" => HtmlTokenizerState::Rcdata,
+        "iframe" | "noembed" | "noframes" | "style" | "xmp" => HtmlTokenizerState::Rawtext,
+        "noscript" if options.scripting == HtmlScriptingMode::Enabled => {
+            HtmlTokenizerState::Rawtext
+        }
+        "script" => HtmlTokenizerState::ScriptData,
+        "plaintext" => HtmlTokenizerState::Plaintext,
+        _ => return None,
+    };
+
+    Some(HtmlLexContext::new(state))
+}
+
+fn marked_fragment_context_nodes(mut document: Document) -> Vec<Node> {
+    let Some(marker_path) = find_fragment_context_marker_path(document.children.as_slice()) else {
+        return body_fragment_nodes(document);
+    };
+    let marker_name = element_ref_at_path(&document, &marker_path)
+        .map(|element| element.name.as_str())
+        .unwrap_or_default();
+
+    if marker_name == "html" {
+        let Some(html) = element_at_path_mut(&mut document, &marker_path) else {
+            return Vec::new();
+        };
+        strip_fragment_context_markers(&mut html.children);
+        move_leading_html_fragment_misc_after_body(&mut html.children);
+        return std::mem::take(&mut html.children)
+            .into_iter()
+            .filter(|node| !matches!(node, Node::DocumentType(_)))
+            .collect();
+    }
+
+    if marker_name == "head" {
+        let Some(head) = element_at_path_mut(&mut document, &marker_path) else {
+            return Vec::new();
+        };
+        strip_fragment_context_markers(&mut head.children);
+        return std::mem::take(&mut head.children)
+            .into_iter()
+            .filter(|node| !matches!(node, Node::DocumentType(_)))
+            .collect();
+    }
+
+    let flatten_root = marker_path
+        .iter()
+        .enumerate()
+        .rev()
+        .find_map(|(depth, _)| {
+            let ancestor_path = &marker_path[..=depth];
+            let name = element_ref_at_path(&document, ancestor_path)?.name.as_str();
+            matches!(name, "body" | "frameset").then_some(ancestor_path.to_vec())
+        })
+        .unwrap_or_else(|| marker_path.clone());
+
+    let Some(root) = element_at_path_mut(&mut document, &flatten_root) else {
+        return Vec::new();
+    };
+    let mut fragment = flatten_marked_fragment_branch(std::mem::take(&mut root.children), None);
+    strip_fragment_context_markers(&mut fragment);
+    fragment
+        .into_iter()
+        .filter(|node| !matches!(node, Node::DocumentType(_)))
+        .collect()
+}
+
+fn find_fragment_context_marker_path(nodes: &[Node]) -> Option<Vec<usize>> {
+    for (index, node) in nodes.iter().enumerate() {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if has_fragment_context_marker(element) {
+            return Some(vec![index]);
+        }
+        if let Some(mut path) = find_fragment_context_marker_path(&element.children) {
+            path.insert(0, index);
+            return Some(path);
+        }
+    }
+    None
+}
+
+fn flatten_marked_fragment_branch(
+    nodes: Vec<Node>,
+    unwrap_table_scaffold_context: Option<String>,
+) -> Vec<Node> {
+    let mut flattened = Vec::new();
+    for node in nodes {
+        match node {
+            Node::Element(mut element) if has_fragment_context_marker(&element) => {
+                let unwrap_children = fragment_marker_value(&element)
+                    .filter(|context| context_unwraps_table_scaffold(context))
+                    .map(str::to_string);
+                flattened.extend(flatten_marked_fragment_branch(
+                    std::mem::take(&mut element.children),
+                    unwrap_children,
+                ));
+            }
+            Node::Element(mut element)
+                if unwrap_table_scaffold_context
+                    .as_deref()
+                    .is_some_and(|context| {
+                        is_table_scaffold_element_for_context(&element.name, context)
+                    }) =>
+            {
+                flattened.extend(flatten_marked_fragment_branch(
+                    std::mem::take(&mut element.children),
+                    unwrap_table_scaffold_context.clone(),
+                ));
+            }
+            Node::Element(mut element)
+                if find_fragment_context_marker_path(&element.children).is_some() =>
+            {
+                flattened.extend(flatten_marked_fragment_branch(
+                    std::mem::take(&mut element.children),
+                    unwrap_table_scaffold_context.clone(),
+                ));
+            }
+            node => flattened.push(node),
+        }
+    }
+    flattened
+}
+
+fn context_unwraps_table_scaffold(context_element: &str) -> bool {
+    matches!(
+        context_element,
+        "caption" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
+    )
+}
+
+fn is_table_scaffold_element_for_context(name: &str, context_element: &str) -> bool {
+    match context_element {
+        "tbody" | "thead" | "tfoot" => matches!(name, "tbody" | "thead" | "tfoot"),
+        "tr" | "td" | "th" => matches!(name, "tbody" | "thead" | "tfoot" | "tr"),
+        "caption" | "colgroup" => matches!(name, "tbody" | "thead" | "tfoot" | "tr"),
+        _ => false,
+    }
+}
+
+fn strip_fragment_context_markers(nodes: &mut [Node]) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        element
+            .attributes
+            .retain(|attribute| attribute.name != FRAGMENT_CONTEXT_MARKER);
+        strip_fragment_context_markers(&mut element.children);
+    }
+}
+
+fn move_leading_html_fragment_misc_after_body(nodes: &mut Vec<Node>) {
+    let body_index = nodes
+        .iter()
+        .position(|node| matches!(node, Node::Element(element) if element.name == "body"));
+    let Some(body_index) = body_index else {
+        return;
+    };
+
+    let mut leading_misc = Vec::new();
+    while matches!(nodes.first(), Some(Node::Comment(_) | Node::Text(_))) {
+        leading_misc.push(nodes.remove(0));
+    }
+    if leading_misc.is_empty() {
+        return;
+    }
+
+    let body_index = body_index.saturating_sub(leading_misc.len());
+    let insert_at = body_index + 1;
+    for (offset, node) in leading_misc.into_iter().enumerate() {
+        nodes.insert(insert_at + offset, node);
+    }
+}
+
+fn has_fragment_context_marker(element: &Element) -> bool {
+    fragment_marker_value(element).is_some()
+}
+
+fn fragment_marker_value(element: &Element) -> Option<&str> {
+    element
+        .attributes
+        .iter()
+        .find(|attribute| attribute.name == FRAGMENT_CONTEXT_MARKER)
+        .map(|attribute| attribute.value.as_str())
 }
 
 #[derive(Debug, Default)]

@@ -1,5 +1,7 @@
 use coding_adventures_html_lexer::HtmlScriptingMode;
-use coding_adventures_html_parser::{parse_html_with_options, HtmlParseOptions};
+use coding_adventures_html_parser::{
+    parse_html_fragment_for_context_with_options, parse_html_with_options, HtmlParseOptions,
+};
 use dom_core::{Document, DocumentType, Element, Node};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
@@ -9,6 +11,7 @@ struct TreeConstructionCase {
     source: String,
     data: String,
     scripting: HtmlScriptingMode,
+    fragment_context: Option<String>,
     document: Vec<String>,
 }
 
@@ -18,15 +21,20 @@ fn html5lib_tree_construction_smoke_cases_match_dom_dump() {
     assert!(!cases.is_empty(), "fixture should contain cases");
 
     for (index, case) in cases.iter().enumerate() {
-        let document = parse_html_with_options(
-            &case.data,
-            HtmlParseOptions {
-                scripting: case.scripting,
-                ..HtmlParseOptions::default()
-            },
-        )
-        .expect("parser should accept any HTML input");
-        let actual = dump_document(&document);
+        let options = HtmlParseOptions {
+            scripting: case.scripting,
+            ..HtmlParseOptions::default()
+        };
+        let actual = if let Some(fragment_context) = &case.fragment_context {
+            let nodes =
+                parse_html_fragment_for_context_with_options(&case.data, fragment_context, options)
+                    .expect("parser should accept any HTML fragment input");
+            dump_nodes(&nodes)
+        } else {
+            let document = parse_html_with_options(&case.data, options)
+                .expect("parser should accept any HTML input");
+            dump_document(&document)
+        };
         assert_eq!(
             actual,
             case.document,
@@ -63,9 +71,19 @@ fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
         }
 
         let mut scripting = HtmlScriptingMode::Enabled;
-        for line in lines.by_ref() {
+        let mut fragment_context = None;
+        while let Some(line) = lines.next() {
             if line == "#document" {
                 break;
+            }
+            if line == "#document-fragment" {
+                fragment_context = Some(
+                    lines
+                        .next()
+                        .expect("document-fragment marker should name a context element")
+                        .to_string(),
+                );
+                continue;
             }
             if line == "#script-off" {
                 scripting = HtmlScriptingMode::Disabled;
@@ -89,6 +107,7 @@ fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
             source: std::mem::take(&mut source),
             data: data.join("\n"),
             scripting,
+            fragment_context,
             document,
         });
     }
@@ -97,8 +116,12 @@ fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
 }
 
 fn dump_document(document: &Document) -> Vec<String> {
+    dump_nodes(&document.children)
+}
+
+fn dump_nodes(nodes: &[Node]) -> Vec<String> {
     let mut lines = Vec::new();
-    for node in &document.children {
+    for node in nodes {
         dump_node(node, 0, &mut lines);
     }
     lines
