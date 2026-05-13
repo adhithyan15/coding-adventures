@@ -105,6 +105,29 @@ fn keeps_multivariate_factor_calls_unevaluated() {
 }
 
 #[test]
+fn factors_common_multivariate_terms_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2*y - y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                sym("y"),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![int(1), sym("x")]),
+                        apply(sym(ADD), vec![int(-1), sym("x")]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();

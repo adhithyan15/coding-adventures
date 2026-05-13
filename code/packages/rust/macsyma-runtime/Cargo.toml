@@ -7,7 +7,6 @@ license = "MIT"
 
 [dependencies]
 cas-list-operations = { path = "../cas-list-operations" }
-cas-factor = { path = "../cas-factor" }
 cas-pretty-printer = { path = "../cas-pretty-printer" }
 cas-solve = { path = "../cas-solve" }
 cas-simplify = { path = "../cas-simplify" }

@@ -8,7 +8,6 @@ use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
-use cas_factor::factor_integer_polynomial;
 use cas_list_operations::{
     append, apply_ as list_apply, first, flatten, join, last, length, map_ as list_map, part,
     range_ as list_range, rest, reverse, sort_, ListOperationError, ListResult,
@@ -23,8 +22,8 @@ use coding_adventures_macsyma_compiler::{
     SUPPRESS as COMPILER_SUPPRESS,
 };
 use symbolic_ir::{
-    apply, str_node, sym, IRApply, IRNode, ADD, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS,
-    LESS_EQUAL, LIST, MUL, POW, SUB,
+    apply, str_node, sym, IRApply, IRNode, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS,
+    LESS_EQUAL, LIST, POW,
 };
 use symbolic_vm::backend::{handler_fn, Backend, Handler};
 use symbolic_vm::handlers::build_handler_table;
@@ -512,7 +511,6 @@ impl MacsymaBackend {
         handlers.insert(SOLVE.to_string(), handler_fn(solve_handler));
         handlers.insert(SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(SUBST.to_string(), handler_fn(subst_handler));
-        handlers.insert(FACTOR.to_string(), handler_fn(factor_handler));
         handlers.insert(RAT_SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
         handlers.insert(TRIG_EXPAND.to_string(), handler_fn(trig_expand_handler));
@@ -1029,28 +1027,6 @@ fn subst_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     subst(expr.args[0].clone(), &expr.args[1], expr.args[2].clone())
 }
 
-fn factor_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
-    let fallback = IRNode::Apply(Box::new(expr.clone()));
-    if expr.args.len() != 1 {
-        return fallback;
-    }
-    let Some(variable) = find_single_variable(&expr.args[0]) else {
-        return fallback;
-    };
-    let Some(coeffs) = ir_to_integer_poly(&expr.args[0], &variable) else {
-        return fallback;
-    };
-
-    let (content, factors) = factor_integer_polynomial(&coeffs);
-    if factors.is_empty() {
-        return expr.args[0].clone();
-    }
-    if coeffs.len() > 2 && factors.len() == 1 && factors[0].1 == 1 && content.abs() == 1 {
-        return fallback;
-    }
-    factor_result_to_ir(content, factors, &variable)
-}
-
 fn list_handler<F>(arity: Option<usize>, body: F) -> Handler
 where
     F: Fn(&[IRNode]) -> ListResult<IRNode> + Send + Sync + 'static,
@@ -1062,181 +1038,6 @@ where
         }
         body(&expr.args).unwrap_or(fallback)
     })
-}
-
-fn find_single_variable(node: &IRNode) -> Option<String> {
-    let mut variables = HashSet::new();
-    collect_variables(node, &mut variables);
-    if variables.len() == 1 {
-        variables.into_iter().next()
-    } else {
-        None
-    }
-}
-
-fn collect_variables(node: &IRNode, variables: &mut HashSet<String>) {
-    match node {
-        IRNode::Symbol(name) if !name.starts_with('%') => {
-            variables.insert(name.clone());
-        }
-        IRNode::Apply(apply) => {
-            for arg in &apply.args {
-                collect_variables(arg, variables);
-            }
-        }
-        _ => {}
-    }
-}
-
-fn ir_to_integer_poly(node: &IRNode, variable: &str) -> Option<Vec<i64>> {
-    match node {
-        IRNode::Integer(value) => Some(vec![*value]),
-        IRNode::Symbol(name) if name == variable => Some(vec![0, 1]),
-        IRNode::Apply(apply) if is_head_name(&apply.head, ADD) => {
-            apply.args.iter().try_fold(vec![0], |acc, arg| {
-                Some(poly_add(&acc, &ir_to_integer_poly(arg, variable)?))
-            })
-        }
-        IRNode::Apply(apply) if is_head_name(&apply.head, SUB) && apply.args.len() == 2 => {
-            let a = ir_to_integer_poly(&apply.args[0], variable)?;
-            let b = ir_to_integer_poly(&apply.args[1], variable)?;
-            Some(poly_sub(&a, &b))
-        }
-        IRNode::Apply(apply) if is_head_name(&apply.head, MUL) => {
-            apply.args.iter().try_fold(vec![1], |acc, arg| {
-                Some(poly_mul(&acc, &ir_to_integer_poly(arg, variable)?))
-            })
-        }
-        IRNode::Apply(apply) if is_head_name(&apply.head, POW) && apply.args.len() == 2 => {
-            let IRNode::Integer(exp) = apply.args[1] else {
-                return None;
-            };
-            if !(0..=32).contains(&exp) {
-                return None;
-            }
-            let base = ir_to_integer_poly(&apply.args[0], variable)?;
-            Some(poly_pow(&base, exp as usize))
-        }
-        _ => None,
-    }
-}
-
-fn factor_result_to_ir(content: i64, factors: Vec<(Vec<i64>, usize)>, variable: &str) -> IRNode {
-    let mut pieces = Vec::new();
-    if content != 1 {
-        pieces.push(IRNode::Integer(content));
-    }
-    for (coeffs, multiplicity) in factors {
-        let factor = poly_to_ir(&coeffs, variable);
-        if multiplicity == 1 {
-            pieces.push(factor);
-        } else {
-            pieces.push(apply(
-                sym(POW),
-                vec![factor, IRNode::Integer(multiplicity as i64)],
-            ));
-        }
-    }
-    multiply_nodes(pieces)
-}
-
-fn poly_to_ir(coeffs: &[i64], variable: &str) -> IRNode {
-    let terms: Vec<IRNode> = coeffs
-        .iter()
-        .enumerate()
-        .filter_map(|(degree, coeff)| {
-            if *coeff == 0 {
-                None
-            } else {
-                Some(monomial_to_ir(*coeff, degree, variable))
-            }
-        })
-        .collect();
-    if terms.is_empty() {
-        IRNode::Integer(0)
-    } else {
-        add_nodes(terms)
-    }
-}
-
-fn monomial_to_ir(coeff: i64, degree: usize, variable: &str) -> IRNode {
-    if degree == 0 {
-        return IRNode::Integer(coeff);
-    }
-    let power = if degree == 1 {
-        sym(variable)
-    } else {
-        apply(
-            sym(POW),
-            vec![sym(variable), IRNode::Integer(degree as i64)],
-        )
-    };
-    match coeff {
-        1 => power,
-        -1 => apply(sym(MUL), vec![IRNode::Integer(-1), power]),
-        _ => apply(sym(MUL), vec![IRNode::Integer(coeff), power]),
-    }
-}
-
-fn add_nodes(nodes: Vec<IRNode>) -> IRNode {
-    if nodes.len() == 1 {
-        nodes.into_iter().next().unwrap()
-    } else {
-        apply(sym(ADD), nodes)
-    }
-}
-
-fn multiply_nodes(nodes: Vec<IRNode>) -> IRNode {
-    if nodes.is_empty() {
-        IRNode::Integer(1)
-    } else if nodes.len() == 1 {
-        nodes.into_iter().next().unwrap()
-    } else {
-        apply(sym(MUL), nodes)
-    }
-}
-
-fn poly_add(a: &[i64], b: &[i64]) -> Vec<i64> {
-    let len = a.len().max(b.len());
-    let mut out = vec![0; len];
-    for i in 0..len {
-        out[i] = a.get(i).copied().unwrap_or(0) + b.get(i).copied().unwrap_or(0);
-    }
-    trim_poly(out)
-}
-
-fn poly_sub(a: &[i64], b: &[i64]) -> Vec<i64> {
-    let len = a.len().max(b.len());
-    let mut out = vec![0; len];
-    for i in 0..len {
-        out[i] = a.get(i).copied().unwrap_or(0) - b.get(i).copied().unwrap_or(0);
-    }
-    trim_poly(out)
-}
-
-fn poly_mul(a: &[i64], b: &[i64]) -> Vec<i64> {
-    let mut out = vec![0; a.len() + b.len() - 1];
-    for (i, ca) in a.iter().enumerate() {
-        for (j, cb) in b.iter().enumerate() {
-            out[i + j] += ca * cb;
-        }
-    }
-    trim_poly(out)
-}
-
-fn poly_pow(base: &[i64], exp: usize) -> Vec<i64> {
-    let mut out = vec![1];
-    for _ in 0..exp {
-        out = poly_mul(&out, base);
-    }
-    out
-}
-
-fn trim_poly(mut poly: Vec<i64>) -> Vec<i64> {
-    while poly.len() > 1 && poly.last() == Some(&0) {
-        poly.pop();
-    }
-    poly
 }
 
 fn range_handler(args: &[IRNode]) -> ListResult<IRNode> {
