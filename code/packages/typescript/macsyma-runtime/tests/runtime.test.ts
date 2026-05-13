@@ -153,6 +153,19 @@ describe("macsyma-runtime", () => {
     expect(result.output).toEqual(app(FACTOR, [app(ADD, [sym("x"), sym("y")])]));
   });
 
+  it("factors common multivariate terms through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^2*y - y);");
+
+    expect(result.output).toEqual(app(MUL, [
+      sym("y"),
+      app(MUL, [
+        app(ADD, [int(1), sym("x")]),
+        app(ADD, [int(-1), sym("x")]),
+      ]),
+    ]));
+  });
+
   it("tracks the showtime option flag through normal assignments", () => {
     const session = new MacsymaSession();
     const [enabled, timed, disabled, untimed] = session.evalSource(

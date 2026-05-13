@@ -17,6 +17,7 @@ import {
   DIV,
   EQUAL,
   EXP,
+  FACTOR,
   FALSE,
   GREATER,
   GREATER_EQUAL,
@@ -25,6 +26,7 @@ import {
   INV,
   IRApply,
   IRNode,
+  IRSymbol,
   LESS,
   LESS_EQUAL,
   LIST,
@@ -53,6 +55,7 @@ import {
   rational,
   sym,
 } from "@coding-adventures/symbolic-ir";
+import { factorIntegerPolynomial } from "@coding-adventures/cas-factor";
 
 export type Handler = (vm: VM, expr: IRApply) => IRNode;
 export type RulePredicate = (expr: IRApply) => boolean;
@@ -353,12 +356,291 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
     return name;
   });
   table.set(LIST.name, (_vm, expr) => expr);
+  table.set(FACTOR.name, factorHandler);
   if (simplify) {
     table.set(D.name, differentiate());
     table.set(INTEGRATE.name, integrate());
   }
 
   return table;
+}
+
+function factorHandler(vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 1) return expr;
+  const inner = expr.args[0];
+  const variable = findVariable(inner);
+  if (variable === undefined) return inner;
+
+  const coeffs = irToIntegerPoly(inner, variable);
+  if (coeffs === undefined) {
+    const commonFactored = extractCommonSymbolicFactor(inner);
+    return commonFactored === undefined ? expr : vm.eval(commonFactored);
+  }
+
+  const [content, factors] = factorIntegerPolynomial(coeffs);
+  if (factors.length === 0) return inner;
+  if (
+    coeffs.length > 2
+    && content === 1n
+    && factors.length === 1
+    && factors[0][1] === 1
+    && polyEquals(factors[0][0], coeffs)
+  ) {
+    return expr;
+  }
+  return factorResultToIr(content, factors, variable);
+}
+
+function findVariable(node: IRNode): IRSymbol | undefined {
+  if (node.kind === "symbol") {
+    return node.name.startsWith("%") ? undefined : node;
+  }
+  if (node.kind === "apply") {
+    for (const arg of node.args) {
+      const found = findVariable(arg);
+      if (found !== undefined) return found;
+    }
+  }
+  return undefined;
+}
+
+function irToIntegerPoly(node: IRNode, variable: IRSymbol): bigint[] | undefined {
+  if (node.kind === "integer") return [node.value];
+  if (equals(node, variable)) return [0n, 1n];
+  if (node.kind !== "apply" || node.head.kind !== "symbol") return undefined;
+
+  if (node.head.name === ADD.name) {
+    return node.args.reduce<bigint[] | undefined>((acc, arg) => {
+      const p = irToIntegerPoly(arg, variable);
+      return acc === undefined || p === undefined ? undefined : polyAdd(acc, p);
+    }, [0n]);
+  }
+  if (node.head.name === SUB.name && node.args.length === 2) {
+    const a = irToIntegerPoly(node.args[0], variable);
+    const b = irToIntegerPoly(node.args[1], variable);
+    return a === undefined || b === undefined ? undefined : polySub(a, b);
+  }
+  if (node.head.name === MUL.name) {
+    return node.args.reduce<bigint[] | undefined>((acc, arg) => {
+      const p = irToIntegerPoly(arg, variable);
+      return acc === undefined || p === undefined ? undefined : polyMul(acc, p);
+    }, [1n]);
+  }
+  if (
+    node.head.name === POW.name
+    && node.args.length === 2
+    && node.args[1].kind === "integer"
+    && node.args[1].value >= 0n
+  ) {
+    const base = irToIntegerPoly(node.args[0], variable);
+    return base === undefined ? undefined : polyPow(base, node.args[1].value);
+  }
+  return undefined;
+}
+
+function factorResultToIr(content: bigint, factors: Array<[bigint[], number]>, variable: IRSymbol): IRNode {
+  const pieces: IRNode[] = [];
+  if (content !== 1n) pieces.push(int(content));
+  for (const [coeffs, multiplicity] of factors) {
+    const factor = polyToIr(coeffs, variable);
+    pieces.push(multiplicity === 1 ? factor : app(POW, [factor, int(multiplicity)]));
+  }
+  return multiplyNodes(pieces);
+}
+
+function polyToIr(coeffs: readonly bigint[], variable: IRSymbol): IRNode {
+  const terms: IRNode[] = [];
+  for (let degree = 0; degree < coeffs.length; degree += 1) {
+    const coeff = coeffs[degree];
+    if (coeff === 0n) continue;
+    terms.push(monomialToIr(coeff, degree, variable));
+  }
+  return terms.length === 0 ? int(0) : addNodes(terms);
+}
+
+function monomialToIr(coeff: bigint, degree: number, variable: IRSymbol): IRNode {
+  if (degree === 0) return int(coeff);
+  const power = degree === 1 ? variable : app(POW, [variable, int(degree)]);
+  if (coeff === 1n) return power;
+  if (coeff === -1n) return app(MUL, [int(-1), power]);
+  return app(MUL, [int(coeff), power]);
+}
+
+function flattenFactorTerms(node: IRNode): IRNode[] {
+  if (node.kind === "apply" && equals(node.head, MUL)) {
+    return node.args.flatMap((arg) => flattenFactorTerms(arg));
+  }
+  return [node];
+}
+
+function flattenAddTerms(node: IRNode): IRNode[] {
+  if (node.kind === "apply" && equals(node.head, ADD)) {
+    return node.args.flatMap((arg) => flattenAddTerms(arg));
+  }
+  if (node.kind === "apply" && equals(node.head, SUB) && node.args.length === 2) {
+    return [...flattenAddTerms(node.args[0]), negateIr(node.args[1])];
+  }
+  return [node];
+}
+
+function negateIr(node: IRNode): IRNode {
+  if (node.kind === "integer") return int(-node.value);
+  if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) return node.args[0];
+  return app(MUL, [int(-1), node]);
+}
+
+function powNode(base: IRNode, exponent: number): IRNode {
+  return exponent === 1 ? base : app(POW, [base, int(exponent)]);
+}
+
+function addNodes(nodes: readonly IRNode[]): IRNode {
+  if (nodes.length === 0) return int(0);
+  if (nodes.length === 1) return nodes[0];
+  return app(ADD, nodes);
+}
+
+function multiplyNodes(nodes: readonly IRNode[]): IRNode {
+  if (nodes.length === 0) return int(1);
+  if (nodes.length === 1) return nodes[0];
+  return app(MUL, nodes);
+}
+
+type FactorPower = { readonly base: IRNode; exponent: number };
+
+function splitCommonFactorTerm(node: IRNode): Map<string, FactorPower> {
+  const powers = new Map<string, FactorPower>();
+  for (const factor of flattenFactorTerms(node)) {
+    if (factor.kind === "integer") continue;
+    if (factor.kind === "symbol" && factor.name.startsWith("%")) continue;
+
+    if (factor.kind === "apply" && equals(factor.head, POW) && factor.args.length === 2) {
+      const [base, exponent] = factor.args;
+      if (exponent.kind === "integer" && exponent.value > 0n) {
+        addPower(powers, base, Number(exponent.value));
+        continue;
+      }
+    }
+    addPower(powers, factor, 1);
+  }
+  return powers;
+}
+
+function addPower(powers: Map<string, FactorPower>, base: IRNode, exponent: number): void {
+  const key = nodeKey(base);
+  const existing = powers.get(key);
+  powers.set(key, { base, exponent: (existing?.exponent ?? 0) + exponent });
+}
+
+function removeCommonFactor(node: IRNode, common: ReadonlyMap<string, FactorPower>): IRNode {
+  const remaining = new Map<string, number>();
+  for (const [key, power] of common.entries()) remaining.set(key, power.exponent);
+
+  const rebuilt: IRNode[] = [];
+  for (const factor of flattenFactorTerms(node)) {
+    if (factor.kind === "apply" && equals(factor.head, POW) && factor.args.length === 2) {
+      const [base, exponent] = factor.args;
+      if (exponent.kind === "integer" && exponent.value > 0n) {
+        const key = nodeKey(base);
+        const take = Math.min(Number(exponent.value), remaining.get(key) ?? 0);
+        if (take > 0) {
+          remaining.set(key, (remaining.get(key) ?? 0) - take);
+          const leftover = Number(exponent.value) - take;
+          if (leftover > 0) rebuilt.push(powNode(base, leftover));
+          continue;
+        }
+      }
+    }
+    const key = nodeKey(factor);
+    const take = remaining.get(key) ?? 0;
+    if (take > 0) {
+      remaining.set(key, take - 1);
+    } else {
+      rebuilt.push(factor);
+    }
+  }
+  return multiplyNodes(rebuilt);
+}
+
+function extractCommonSymbolicFactor(inner: IRNode): IRNode | undefined {
+  const terms = flattenAddTerms(inner);
+  if (terms.length < 2) return undefined;
+
+  const perTerm = terms.map((term) => splitCommonFactorTerm(term));
+  const common = new Map(perTerm[0]);
+  for (const powers of perTerm.slice(1)) {
+    for (const [key, power] of [...common.entries()]) {
+      const shared = Math.min(power.exponent, powers.get(key)?.exponent ?? 0);
+      if (shared > 0) {
+        common.set(key, { base: power.base, exponent: shared });
+      } else {
+        common.delete(key);
+      }
+    }
+  }
+  if (common.size === 0) return undefined;
+
+  const commonTerms = [...common.values()]
+    .sort((a, b) => nodeKey(a.base).localeCompare(nodeKey(b.base)))
+    .map((power) => powNode(power.base, power.exponent));
+  const residualTerms = terms.map((term) => removeCommonFactor(term, common));
+  return app(MUL, [multiplyNodes(commonTerms), app(FACTOR, [addNodes(residualTerms)])]);
+}
+
+function polyAdd(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  const len = Math.max(a.length, b.length);
+  const out = Array<bigint>(len).fill(0n);
+  for (let i = 0; i < len; i += 1) out[i] = (a[i] ?? 0n) + (b[i] ?? 0n);
+  return trimPoly(out);
+}
+
+function polySub(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  const len = Math.max(a.length, b.length);
+  const out = Array<bigint>(len).fill(0n);
+  for (let i = 0; i < len; i += 1) out[i] = (a[i] ?? 0n) - (b[i] ?? 0n);
+  return trimPoly(out);
+}
+
+function polyMul(a: readonly bigint[], b: readonly bigint[]): bigint[] {
+  const out = Array<bigint>(a.length + b.length - 1).fill(0n);
+  for (let i = 0; i < a.length; i += 1) {
+    for (let j = 0; j < b.length; j += 1) out[i + j] += a[i] * b[j];
+  }
+  return trimPoly(out);
+}
+
+function polyPow(base: readonly bigint[], exp: bigint): bigint[] | undefined {
+  if (exp > 32n) return undefined;
+  let out = [1n];
+  for (let i = 0n; i < exp; i += 1n) out = polyMul(out, base);
+  return out;
+}
+
+function trimPoly(poly: bigint[]): bigint[] {
+  while (poly.length > 1 && poly[poly.length - 1] === 0n) poly.pop();
+  return poly;
+}
+
+function polyEquals(a: readonly bigint[], b: readonly bigint[]): boolean {
+  const ta = trimPoly([...a]);
+  const tb = trimPoly([...b]);
+  return ta.length === tb.length && ta.every((value, index) => value === tb[index]);
+}
+
+function nodeKey(node: IRNode): string {
+  switch (node.kind) {
+    case "integer":
+      return `i:${node.value}`;
+    case "rational":
+      return `q:${node.numer}/${node.denom}`;
+    case "float":
+      return `f:${node.value}`;
+    case "string":
+      return `s:${node.value}`;
+    case "symbol":
+      return `y:${node.name}`;
+    case "apply":
+      return `a:${nodeKey(node.head)}(${node.args.map((arg) => nodeKey(arg)).join(",")})`;
+  }
 }
 
 function integrate(): Handler {

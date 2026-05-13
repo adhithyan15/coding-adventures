@@ -14,6 +14,7 @@ import {
   DIV,
   EQUAL,
   EXP,
+  FACTOR,
   FALSE,
   IF,
   INTEGRATE,
@@ -68,6 +69,37 @@ describe("symbolic-vm", () => {
     const expr = app(sym("Mystery"), [app(ADD, [int(1), int(2)])]);
     const result = vm.eval(expr);
     expect(result).toEqual(app(sym("Mystery"), [int(3)]));
+  });
+
+  it("factors univariate integer polynomials in the symbolic backend", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const expr = app(FACTOR, [app(SUB, [app(POW, [x, int(2)]), int(1)])]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(ADD, [int(1), x]),
+      app(ADD, [int(-1), x]),
+    ]));
+  });
+
+  it("extracts common multivariate factors before univariate factoring", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const expr = app(FACTOR, [
+      app(SUB, [
+        app(MUL, [app(POW, [x, int(2)]), y]),
+        y,
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      y,
+      app(MUL, [
+        app(ADD, [int(1), x]),
+        app(ADD, [int(-1), x]),
+      ]),
+    ]));
   });
 
   it("supports assignment and later lookup", () => {
