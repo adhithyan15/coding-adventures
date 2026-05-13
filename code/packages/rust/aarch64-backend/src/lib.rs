@@ -4,18 +4,23 @@
 //! [`aarch64_encoder`].  Plugs into both `jit-core` and `aot-core` through
 //! the shared [`jit_core::backend::Backend`] trait.
 //!
-//! ## Scope (V1 — what fib() needs)
+//! ## Scope
 //!
 //! | Family | CIR mnemonics |
 //! |--------|---------------|
 //! | Constants | `const_u8` … `const_u64`, `const_i8` … `const_i64`, `const_bool` |
 //! | Integer arithmetic | `add_<ty>`, `sub_<ty>`, `mul_<ty>` |
+//! | Division | `div_<ty>` (SDIV/UDIV), `mod_<ty>` (SDIV+MSUB or UDIV+MSUB) — LANG38 |
 //! | Comparisons | `cmp_eq_<ty>`, `cmp_ne_<ty>`, `cmp_lt_<ty>`, `cmp_le_<ty>`, `cmp_gt_<ty>`, `cmp_ge_<ty>` (signed and unsigned) |
+//! | Logical | `and_<ty>`, `or_<ty>`, `xor_<ty>` — LANG38 |
+//! | Shifts | `shl_<ty>`, `shr_<ty>` (arithmetic for `i*`, logical for `u*`) — LANG38 |
+//! | Unary | `neg_<ty>` (negate), `not_<ty>` (bitwise NOT), `mov_<ty>` — LANG38 |
 //! | Control flow | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 //! | Returns | `ret_<ty>`, `ret_void` |
 //! | Type guards | `type_assert` (lowered to `udf` trap — AOT has no deopt) |
-//! | Calls | `call`, `call_runtime` — **NOT YET** (returns `None` to defer to interpreter) |
+//! | Calls | `call` (direct + cross-function BL via external relocs) |
 //! | Float, send, properties | **NOT YET** |
+//! | Closures, globals | **NOT YET** (LANG39/LANG40) |
 //!
 //! Anything outside this list causes the backend to return `None`, which
 //! `aot-core` reports as a compile failure for that function (it falls
@@ -497,7 +502,80 @@ fn emit_instr(
         return Ok(());
     }
 
-    // Anything else is unsupported for V1 — caller should fall back.
+    // ── LANG38 additions ─────────────────────────────────────────────────────
+
+    // ---- div_<ty> dest = a / b -------------------------------------------
+    //
+    // Signed types (i*): SDIV.  Unsigned types (u*): UDIV.
+    // Division by zero produces 0 per the ARM architecture spec — no trap.
+    //
+    // The type suffix drives signed/unsigned:
+    //   "i64" → sdiv   "u64" → udiv   etc.
+    if let Some(_ty) = op.strip_prefix("div_") {
+        return emit_div(asm, alloc, instr, _ty, false);
+    }
+
+    // ---- mod_<ty> dest = a % b -------------------------------------------
+    //
+    // Modulo via divide-then-multiply-subtract:
+    //   sdiv/udiv X2, X0, X1     ; X2 = a / b
+    //   msub      X0, X2, X1, X0 ; X0 = X0 - X2*X1  =  a mod b
+    //
+    // This uses X2 as an additional scratch register.  With the stack-spill
+    // allocator every value lives in a fixed stack slot, so X2 is never
+    // "live" between instructions — borrowing it here is safe.
+    if let Some(_ty) = op.strip_prefix("mod_") {
+        return emit_div(asm, alloc, instr, _ty, true);
+    }
+
+    // ---- and_<ty> / or_<ty> / xor_<ty> dest = a OP b --------------------
+    //
+    // Logical binary operations — type suffix is informational only; the
+    // operation is always 64-bit word-level (same as add/sub/mul).
+    for (prefix, kind) in &[("and_", BitwiseKind::And), ("or_", BitwiseKind::Or), ("xor_", BitwiseKind::Xor)] {
+        if op.starts_with(*prefix) {
+            return emit_bitwise(asm, alloc, instr, *kind);
+        }
+    }
+
+    // ---- shl_<ty> / shr_<ty>  dest = a SHIFT b ---------------------------
+    //
+    // Variable-amount shifts.  `shr_<ty>` emits ASRV (arithmetic, sign-
+    // extending) for signed types and LSRV (logical, zero-filling) for
+    // unsigned ones.  Both clamp the shift amount to 0..63 per the ARM spec.
+    if let Some(ty) = op.strip_prefix("shl_") {
+        return emit_shift(asm, alloc, instr, ShiftKind::Lsl, ty);
+    }
+    if let Some(ty) = op.strip_prefix("shr_") {
+        let kind = if ty.starts_with('i') { ShiftKind::Asr } else { ShiftKind::Lsr };
+        return emit_shift(asm, alloc, instr, kind, ty);
+    }
+
+    // ---- neg_<ty> dest = -src  (two's-complement negate) -----------------
+    if let Some(_ty) = op.strip_prefix("neg_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::X0, src)?;
+        asm.neg_(Reg::X0, Reg::X0);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // ---- not_<ty> dest = ~src  (bitwise NOT) -----------------------------
+    if let Some(_ty) = op.strip_prefix("not_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::X0, src)?;
+        asm.mvn(Reg::X0, Reg::X0);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // Anything else is unsupported — caller should fall back.
     Err(BackendError::UnsupportedOp(op.to_string()))
 }
 
@@ -570,6 +648,109 @@ fn emit_cmp(
         (CmpRel::Ge, false)     => Cond::Hs, // unsigned ≥
     };
     asm.cset(Reg::X0, cond);
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+// ===========================================================================
+// LANG38 helpers — division, bitwise, shift
+// ===========================================================================
+
+/// Emit `div_<ty>` or `mod_<ty>`.
+///
+/// Both division flavours share the same load sequence; the only difference
+/// is what happens after the divide instruction:
+/// - **div**: the quotient in X0 is the result.
+/// - **mod**: a follow-up `MSUB X0, X2, X1, X0` computes `a − (a/b)×b`.
+///
+/// X2 is used as a scratch register for the intermediate quotient during
+/// modulo.  The stack-spill allocator keeps every live value in a fixed
+/// stack slot, so X2 is free between instructions.
+fn emit_div(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    ty: &str,
+    want_mod: bool,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    // dividend → X0,  divisor → X1
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+
+    let signed = ty.starts_with('i');
+
+    if want_mod {
+        // quotient into X2 (scratch), then msub to get remainder
+        if signed { asm.sdiv(Reg::X2, Reg::X0, Reg::X1); }
+        else       { asm.udiv(Reg::X2, Reg::X0, Reg::X1); }
+        // X0 = X0 - X2 * X1 = dividend - quotient * divisor = remainder
+        asm.msub(Reg::X0, Reg::X2, Reg::X1, Reg::X0);
+    } else {
+        if signed { asm.sdiv(Reg::X0, Reg::X0, Reg::X1); }
+        else       { asm.udiv(Reg::X0, Reg::X0, Reg::X1); }
+    }
+
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+/// Bitwise binary operation kinds (AND / OR / XOR).
+#[derive(Debug, Clone, Copy)]
+enum BitwiseKind { And, Or, Xor }
+
+/// Emit a two-operand bitwise op: `dest = a OP b`.
+fn emit_bitwise(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: BitwiseKind,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+    match kind {
+        BitwiseKind::And => asm.and_(Reg::X0, Reg::X0, Reg::X1),
+        BitwiseKind::Or  => asm.orr(Reg::X0, Reg::X0, Reg::X1),
+        BitwiseKind::Xor => asm.eor(Reg::X0, Reg::X0, Reg::X1),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+/// Variable-shift operation kinds.
+#[derive(Debug, Clone, Copy)]
+enum ShiftKind { Lsl, Lsr, Asr }
+
+/// Emit a shift: `dest = value SHIFT amount`.
+fn emit_shift(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: ShiftKind,
+    _ty: &str,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    // value → X0,  shift amount → X1
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+    match kind {
+        ShiftKind::Lsl => asm.lsl_reg(Reg::X0, Reg::X0, Reg::X1),
+        ShiftKind::Lsr => asm.lsr_reg(Reg::X0, Reg::X0, Reg::X1),
+        ShiftKind::Asr => asm.asr_reg(Reg::X0, Reg::X0, Reg::X1),
+    }
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
     Ok(())
@@ -754,6 +935,139 @@ mod tests {
         ];
         let result = AArch64Backend.compile_function(&ctx("x", &[], "any"), &cir);
         assert!(result.is_none());
+    }
+
+    // ---- LANG38: division, modulo, logical, shift, unary ----
+
+    fn make_binop_cir(op: &str, dest: &str, a: &str, b: &str, ty: &str) -> CIRInstr {
+        CIRInstr {
+            op: op.into(),
+            dest: Some(dest.into()),
+            srcs: vec![CIROperand::Var(a.into()), CIROperand::Var(b.into())],
+            ty: ty.into(),
+            deopt_to: None,
+        }
+    }
+
+    fn make_unop_cir(op: &str, dest: &str, src: &str, ty: &str) -> CIRInstr {
+        CIRInstr {
+            op: op.into(),
+            dest: Some(dest.into()),
+            srcs: vec![CIROperand::Var(src.into())],
+            ty: ty.into(),
+            deopt_to: None,
+        }
+    }
+
+    // Helper: compile a tiny function [prologue, instr, ret] and assert it
+    // succeeds and produces valid-length ARM64 output.
+    fn compile_with_binop(
+        op: &str,
+        ty: &str,
+        signed: bool,
+    ) -> Vec<u8> {
+        let param_ty = if signed { "i64" } else { "u64" };
+        let params = vec![("a".into(), param_ty.into()), ("b".into(), param_ty.into())];
+        let ret_ty = format!("ret_{param_ty}");
+        let cir = vec![
+            make_binop_cir(op, "v0", "a", "b", ty),
+            CIRInstr {
+                op: ret_ty,
+                dest: None,
+                srcs: vec![CIROperand::Var("v0".into())],
+                ty: param_ty.into(),
+                deopt_to: None,
+            },
+        ];
+        compile(&ctx(&format!("f_{op}"), &params, param_ty), &cir)
+            .unwrap_or_else(|e| panic!("{op} compile failed: {e}"))
+    }
+
+    #[test]
+    fn div_i64_lowers() {
+        let bytes = compile_with_binop("div_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn div_u64_lowers() {
+        let bytes = compile_with_binop("div_u64", "u64", false);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn mod_i64_lowers() {
+        let bytes = compile_with_binop("mod_i64", "i64", true);
+        // mod expands to sdiv + msub = 2 extra instructions vs div
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn mod_u64_lowers() {
+        let bytes = compile_with_binop("mod_u64", "u64", false);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn and_i64_lowers() {
+        let bytes = compile_with_binop("and_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn or_i64_lowers() {
+        let bytes = compile_with_binop("or_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn xor_i64_lowers() {
+        let bytes = compile_with_binop("xor_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn shl_i64_lowers() {
+        let bytes = compile_with_binop("shl_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn shr_i64_lowers_asr() {
+        // Signed shift right → ASRV
+        let bytes = compile_with_binop("shr_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn shr_u64_lowers_lsr() {
+        // Unsigned shift right → LSRV
+        let bytes = compile_with_binop("shr_u64", "u64", false);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn neg_i64_lowers() {
+        let params = vec![("x".into(), "i64".into())];
+        let cir = vec![
+            make_unop_cir("neg_i64", "v0", "x", "i64"),
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                srcs: vec![CIROperand::Var("v0".into())], ty: "i64".into(), deopt_to: None },
+        ];
+        let bytes = compile(&ctx("fneg", &params, "i64"), &cir).expect("neg_i64");
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn not_i64_lowers() {
+        let params = vec![("x".into(), "i64".into())];
+        let cir = vec![
+            make_unop_cir("not_i64", "v0", "x", "i64"),
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                srcs: vec![CIROperand::Var("v0".into())], ty: "i64".into(), deopt_to: None },
+        ];
+        let bytes = compile(&ctx("fnot", &params, "i64"), &cir).expect("not_i64");
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
     }
 
     #[test]
