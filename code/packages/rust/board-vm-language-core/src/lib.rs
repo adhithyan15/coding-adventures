@@ -54,8 +54,9 @@ use board_vm_protocol::{
     CAP_FLAG_PROTOCOL_FEATURE, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
 use board_vm_targets::{
-    all_targets, BoardFamily, BoardTargetInfo, OnboardLed as TargetOnboardLed,
-    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
+    all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
+    OnboardLed as TargetOnboardLed, WirelessInterfaceInfo as TargetWirelessInterface,
+    WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -380,9 +381,26 @@ pub struct LanguageTargetInfo {
     pub onboard_led: Option<LanguageOnboardLed>,
     pub led_matrix: Option<LanguageLedMatrix>,
     pub digital_pin_count: usize,
+    pub digital_pins: Vec<LanguageDigitalPin>,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageDigitalPin {
+    pub pin: u8,
+    pub label: String,
+    pub supports_input: bool,
+    pub supports_output: bool,
+    pub supports_pullup: bool,
+    pub supports_pulldown: bool,
+    pub supports_adc: bool,
+    pub supports_pwm: bool,
+    pub supports_touch: bool,
+    pub supports_interrupt: bool,
+    pub boot_strap: bool,
+    pub notes: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1036,6 +1054,11 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             columns: matrix.columns,
         }),
         digital_pin_count: target.digital_pin_count,
+        digital_pins: target
+            .digital_pins
+            .iter()
+            .map(language_digital_pin)
+            .collect(),
         wireless: target
             .wireless
             .iter()
@@ -1047,6 +1070,23 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .iter()
             .map(|capability| (*capability).to_owned())
             .collect(),
+    }
+}
+
+fn language_digital_pin(pin: &TargetDigitalPin) -> LanguageDigitalPin {
+    LanguageDigitalPin {
+        pin: pin.pin,
+        label: pin.label.to_owned(),
+        supports_input: pin.supports_input,
+        supports_output: pin.supports_output,
+        supports_pullup: pin.supports_pullup,
+        supports_pulldown: pin.supports_pulldown,
+        supports_adc: pin.supports_adc,
+        supports_pwm: pin.supports_pwm,
+        supports_touch: pin.supports_touch,
+        supports_interrupt: pin.supports_interrupt,
+        boot_strap: pin.boot_strap,
+        notes: pin.notes.to_owned(),
     }
 }
 
@@ -2684,6 +2724,7 @@ mod tests {
     fn known_targets_are_owned_by_rust_language_core() {
         let targets = known_targets();
         let esp32 = known_target("esp32-devkit-v1").unwrap();
+        let uno = known_target("arduino-uno-r4-wifi").unwrap();
         let pico_w = known_target("raspberry-pi-pico-w").unwrap();
 
         assert!(targets
@@ -2694,12 +2735,18 @@ mod tests {
         assert_eq!(esp32.runtime_id, "board-vm-esp32");
         assert_eq!(esp32.onboard_led, Some(LanguageOnboardLed::Gpio(2)));
         assert_eq!(
-            known_target("arduino-uno-r4-wifi").unwrap().led_matrix,
+            uno.led_matrix,
             Some(LanguageLedMatrix {
                 rows: 8,
                 columns: 12
             })
         );
+        assert_eq!(uno.digital_pin_count, uno.digital_pins.len());
+        let uno_d3 = uno.digital_pins.iter().find(|pin| pin.pin == 3).unwrap();
+        assert_eq!(uno_d3.label, "D3");
+        assert!(uno_d3.supports_pwm);
+        assert!(uno_d3.supports_interrupt);
+        assert!(!uno_d3.supports_adc);
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None

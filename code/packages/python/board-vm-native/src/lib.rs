@@ -30,8 +30,8 @@ use board_vm_language_core::{
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
-    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
-    LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
+    LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed,
+    LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
 use python_bridge::*;
 
@@ -886,6 +886,11 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
         "digital_pin_count",
         usize_to_py(target.digital_pin_count),
     );
+    dict_set(
+        dict,
+        "digital_pins",
+        language_digital_pins_to_py(&target.digital_pins),
+    );
     dict_set(dict, "wireless", language_wireless_to_py(&target.wireless));
     dict_set(
         dict,
@@ -898,6 +903,31 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
     }
     dict_set(dict, "capabilities", capabilities);
     dict
+}
+
+unsafe fn language_digital_pins_to_py(pins: &[LanguageDigitalPin]) -> PyObjectPtr {
+    let array = PyList_New(pins.len() as isize);
+    for (index, pin) in pins.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(dict, "pin", usize_to_py(pin.pin as usize));
+        dict_set(dict, "label", str_to_py(&pin.label));
+        dict_set(dict, "supports_input", bool_to_py(pin.supports_input));
+        dict_set(dict, "supports_output", bool_to_py(pin.supports_output));
+        dict_set(dict, "supports_pullup", bool_to_py(pin.supports_pullup));
+        dict_set(dict, "supports_pulldown", bool_to_py(pin.supports_pulldown));
+        dict_set(dict, "supports_adc", bool_to_py(pin.supports_adc));
+        dict_set(dict, "supports_pwm", bool_to_py(pin.supports_pwm));
+        dict_set(dict, "supports_touch", bool_to_py(pin.supports_touch));
+        dict_set(
+            dict,
+            "supports_interrupt",
+            bool_to_py(pin.supports_interrupt),
+        );
+        dict_set(dict, "boot_strap", bool_to_py(pin.boot_strap));
+        dict_set(dict, "notes", str_to_py(&pin.notes));
+        PyList_SetItem(array, index as isize, dict);
+    }
+    array
 }
 
 unsafe fn language_led_matrix_to_py(

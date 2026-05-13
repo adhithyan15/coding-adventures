@@ -35,6 +35,41 @@ pub struct LedMatrixInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DigitalPinInfo {
+    pub pin: u8,
+    pub label: &'static str,
+    pub supports_input: bool,
+    pub supports_output: bool,
+    pub supports_pullup: bool,
+    pub supports_pulldown: bool,
+    pub supports_adc: bool,
+    pub supports_pwm: bool,
+    pub supports_touch: bool,
+    pub supports_interrupt: bool,
+    pub boot_strap: bool,
+    pub notes: &'static str,
+}
+
+impl DigitalPinInfo {
+    const fn placeholder() -> Self {
+        Self {
+            pin: 0,
+            label: "",
+            supports_input: false,
+            supports_output: false,
+            supports_pullup: false,
+            supports_pulldown: false,
+            supports_adc: false,
+            supports_pwm: false,
+            supports_touch: false,
+            supports_interrupt: false,
+            boot_strap: false,
+            notes: "",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BoardTargetInfo {
     pub board_id: &'static str,
     pub display_name: &'static str,
@@ -48,6 +83,7 @@ pub struct BoardTargetInfo {
     pub onboard_led: Option<OnboardLed>,
     pub led_matrix: Option<LedMatrixInfo>,
     pub digital_pin_count: usize,
+    pub digital_pins: &'static [DigitalPinInfo],
     pub wireless: &'static [WirelessInterfaceInfo],
     pub capabilities: &'static [&'static str],
 }
@@ -170,6 +206,102 @@ pub const PICO_W_WIRELESS: [WirelessInterfaceInfo; 3] = [
     },
 ];
 
+pub const UNO_R4_DIGITAL_PINS: [DigitalPinInfo; 14] =
+    map_uno_r4_digital_pins(board_vm_uno_r4::UNO_R4_DIGITAL_PINS);
+
+pub const ESP32_DIGITAL_PINS: [DigitalPinInfo; 30] =
+    map_esp32_digital_pins(board_vm_esp32::ESP32_DEVKIT_V1_DIGITAL_PINS);
+
+pub const PICO_DIGITAL_PINS: [DigitalPinInfo; 29] =
+    map_pico_digital_pins(board_vm_pico::PICO_DIGITAL_PINS);
+
+const fn map_uno_r4_digital_pins<const N: usize>(
+    source: [board_vm_uno_r4::DigitalPinDescriptor; N],
+) -> [DigitalPinInfo; N] {
+    let mut pins = [DigitalPinInfo::placeholder(); N];
+    let mut index = 0;
+    while index < N {
+        pins[index] = uno_r4_digital_pin(source[index]);
+        index += 1;
+    }
+    pins
+}
+
+const fn uno_r4_digital_pin(pin: board_vm_uno_r4::DigitalPinDescriptor) -> DigitalPinInfo {
+    DigitalPinInfo {
+        pin: pin.arduino_pin,
+        label: pin.label,
+        supports_input: true,
+        supports_output: true,
+        supports_pullup: true,
+        supports_pulldown: false,
+        supports_adc: false,
+        supports_pwm: pin.supports_pwm,
+        supports_touch: false,
+        supports_interrupt: pin.supports_interrupt,
+        boot_strap: false,
+        notes: pin.notes,
+    }
+}
+
+const fn map_esp32_digital_pins<const N: usize>(
+    source: [board_vm_esp32::DigitalPinDescriptor; N],
+) -> [DigitalPinInfo; N] {
+    let mut pins = [DigitalPinInfo::placeholder(); N];
+    let mut index = 0;
+    while index < N {
+        pins[index] = esp32_digital_pin(source[index]);
+        index += 1;
+    }
+    pins
+}
+
+const fn esp32_digital_pin(pin: board_vm_esp32::DigitalPinDescriptor) -> DigitalPinInfo {
+    DigitalPinInfo {
+        pin: pin.gpio,
+        label: pin.label,
+        supports_input: pin.supports_input,
+        supports_output: pin.supports_output,
+        supports_pullup: pin.supports_pullup,
+        supports_pulldown: pin.supports_pulldown,
+        supports_adc: pin.supports_adc,
+        supports_pwm: pin.supports_output,
+        supports_touch: pin.supports_touch,
+        supports_interrupt: pin.supports_input,
+        boot_strap: pin.boot_strap,
+        notes: pin.notes,
+    }
+}
+
+const fn map_pico_digital_pins<const N: usize>(
+    source: [board_vm_pico::DigitalPinDescriptor; N],
+) -> [DigitalPinInfo; N] {
+    let mut pins = [DigitalPinInfo::placeholder(); N];
+    let mut index = 0;
+    while index < N {
+        pins[index] = pico_digital_pin(source[index]);
+        index += 1;
+    }
+    pins
+}
+
+const fn pico_digital_pin(pin: board_vm_pico::DigitalPinDescriptor) -> DigitalPinInfo {
+    DigitalPinInfo {
+        pin: pin.gpio,
+        label: pin.label,
+        supports_input: pin.supports_input,
+        supports_output: pin.supports_output,
+        supports_pullup: pin.supports_pullup,
+        supports_pulldown: pin.supports_pulldown,
+        supports_adc: pin.supports_adc,
+        supports_pwm: pin.supports_pwm,
+        supports_touch: false,
+        supports_interrupt: pin.supports_input,
+        boot_strap: false,
+        notes: pin.notes,
+    }
+}
+
 pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
     BoardTargetInfo {
         board_id: board_vm_uno_r4::UNO_R4_MINIMA.board_id,
@@ -185,7 +317,8 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
             board_vm_uno_r4::UNO_R4_MINIMA.onboard_led_pin,
         )),
         led_matrix: None,
-        digital_pin_count: board_vm_uno_r4::UNO_R4_MINIMA.digital_pins.len(),
+        digital_pin_count: UNO_R4_DIGITAL_PINS.len(),
+        digital_pins: &UNO_R4_DIGITAL_PINS,
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
     },
@@ -207,7 +340,8 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         } else {
             None
         },
-        digital_pin_count: board_vm_uno_r4::UNO_R4_WIFI.digital_pins.len(),
+        digital_pin_count: UNO_R4_DIGITAL_PINS.len(),
+        digital_pins: &UNO_R4_DIGITAL_PINS,
         wireless: &UNO_R4_WIFI_WIRELESS,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
@@ -226,7 +360,8 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
             None => None,
         },
         led_matrix: None,
-        digital_pin_count: board_vm_esp32::ESP32_DEVKIT_V1.digital_pins.len(),
+        digital_pin_count: ESP32_DIGITAL_PINS.len(),
+        digital_pins: &ESP32_DIGITAL_PINS,
         wireless: &ESP32_WIRELESS,
         capabilities: &ESP32_CAPABILITIES,
     },
@@ -248,7 +383,8 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
             None => None,
         },
         led_matrix: None,
-        digital_pin_count: board_vm_pico::PICO.digital_pins.len(),
+        digital_pin_count: PICO_DIGITAL_PINS.len(),
+        digital_pins: &PICO_DIGITAL_PINS,
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
     },
@@ -270,7 +406,8 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
             None => None,
         },
         led_matrix: None,
-        digital_pin_count: board_vm_pico::PICO_W.digital_pins.len(),
+        digital_pin_count: PICO_DIGITAL_PINS.len(),
+        digital_pins: &PICO_DIGITAL_PINS,
         wireless: &PICO_W_WIRELESS,
         capabilities: &PICO_W_CAPABILITIES,
     },
@@ -328,6 +465,36 @@ mod tests {
             None
         );
         assert_eq!(find_target("raspberry-pi-pico-w").unwrap().led_matrix, None);
+    }
+
+    #[test]
+    fn registry_exposes_digital_pin_capability_metadata() {
+        let uno = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(uno.digital_pin_count, uno.digital_pins.len());
+
+        let d3 = uno.digital_pins.iter().find(|pin| pin.pin == 3).unwrap();
+        assert_eq!(d3.label, "D3");
+        assert!(d3.supports_input);
+        assert!(d3.supports_output);
+        assert!(d3.supports_pullup);
+        assert!(!d3.supports_pulldown);
+        assert!(d3.supports_pwm);
+        assert!(d3.supports_interrupt);
+        assert!(!d3.supports_adc);
+
+        let d13 = uno.digital_pins.iter().find(|pin| pin.pin == 13).unwrap();
+        assert!(d13.notes.contains("onboard LED"));
+        assert!(!d13.supports_pwm);
+
+        let pico = find_target("raspberry-pi-pico").unwrap();
+        let adc0 = pico.digital_pins.iter().find(|pin| pin.pin == 26).unwrap();
+        assert!(adc0.supports_adc);
+        assert!(adc0.supports_pwm);
+
+        let esp32 = find_target("esp32-devkit-v1").unwrap();
+        let boot = esp32.digital_pins.iter().find(|pin| pin.pin == 0).unwrap();
+        assert!(boot.boot_strap);
+        assert!(boot.supports_touch);
     }
 
     #[test]

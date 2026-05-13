@@ -212,6 +212,16 @@ class BoardTarget:
         return int(self.raw["digital_pin_count"])
 
     @property
+    def digital_pins(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("digital_pins", [])]
+
+    def digital_pin(self, pin: int) -> dict[str, Any] | None:
+        for item in self.digital_pins:
+            if int(item["pin"]) == int(pin):
+                return item
+        return None
+
+    @property
     def wireless(self) -> list[dict[str, Any]]:
         return [dict(item) for item in self.raw.get("wireless", [])]
 
