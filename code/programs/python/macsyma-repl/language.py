@@ -28,7 +28,9 @@ from macsyma_runtime import (
     History,
     MacsymaBackend,
     extend_compiler_name_table,
+    help_text,
     output_text_for,
+    parse_help_query,
 )
 from symbolic_ir import IRApply, IRNode, IRSymbol
 from symbolic_vm import VM
@@ -82,6 +84,9 @@ class MacsymaLanguage(Language):
             return ("ok", None)
         if stripped.lower() in _QUIT_COMMANDS:
             return "quit"
+        help_topic = parse_help_query(stripped)
+        if help_topic is not None:
+            return ("ok", help_text(help_topic))
 
         # Auto-append ``;`` so a line typed without a terminator still
         # parses (better UX than rejecting valid expressions).

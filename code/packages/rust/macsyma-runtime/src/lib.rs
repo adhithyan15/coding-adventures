@@ -22,8 +22,8 @@ use coding_adventures_macsyma_compiler::{
     SUPPRESS as COMPILER_SUPPRESS,
 };
 use symbolic_ir::{
-    apply, sym, IRApply, IRNode, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS, LESS_EQUAL,
-    LIST, POW,
+    apply, str_node, sym, IRApply, IRNode, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS,
+    LESS_EQUAL, LIST, POW,
 };
 use symbolic_vm::backend::{handler_fn, Backend, Handler};
 use symbolic_vm::handlers::build_handler_table;
@@ -228,6 +228,122 @@ const MACSYMA_NAME_TABLE: &[(&str, &str)] = &[
     ("fresnel_c", "FresnelC"),
     ("lambert_w", "LambertW"),
 ];
+
+const MACSYMA_HELP_TOPICS: &[(&str, &str)] = &[
+    (
+        "arithmetic",
+        "Arithmetic: use +, -, *, /, and ^. Example: expand((x + 1)^2);",
+    ),
+    (
+        "calculus",
+        "Calculus: diff(expr, var), integrate(expr, var), limit(expr, var, point), and taylor(expr, var, point, order).",
+    ),
+    (
+        "diff",
+        "diff(expr, var) differentiates expr with respect to var. Example: diff(x^3, x);",
+    ),
+    (
+        "integrate",
+        "integrate(expr, var) computes an antiderivative when supported. Example: integrate(x^2, x);",
+    ),
+    (
+        "solve",
+        "solve(expr, var) solves equations or supported inequalities. Use linsolve([...], [...]) for linear systems and nsolve(poly, var) for numeric polynomial roots.",
+    ),
+    (
+        "matrix",
+        "Matrix tools: matrix([...], ...), transpose, determinant, invert, dot, rank, rowreduce, ident, zeromatrix, and matrix_size.",
+    ),
+    (
+        "lists",
+        "List tools: length, first, rest, last, append, reverse, range, map, apply, sublist, sort, part, flatten, join, and makelist.",
+    ),
+    (
+        "assumptions",
+        "Assumptions: assume(x > 0), declare(x, positive), is(x > 0), forget(), properties(x), and propvars().",
+    ),
+    (
+        "properties",
+        "properties(symbol) lists declared properties. propvars() lists symbols with declared properties.",
+    ),
+    (
+        "display",
+        "Display: terminate with ; to show output and $ to suppress it. ev(expr, display2d) renders 2D output.",
+    ),
+    (
+        "history",
+        "History: % is the last output; %iN and %oN refer to input and output number N.",
+    ),
+    (
+        "showtime",
+        "showtime:true enables per-expression timing; showtime:false disables it.",
+    ),
+    (
+        "repl",
+        "REPL commands: :quit exits. Use --file path.mac for batch execution.",
+    ),
+];
+
+const MACSYMA_HELP_ALIASES: &[(&str, &str)] = &[
+    ("d", "diff"),
+    ("derivative", "diff"),
+    ("integral", "integrate"),
+    ("matrices", "matrix"),
+    ("list", "lists"),
+    ("assume", "assumptions"),
+    ("declare", "assumptions"),
+    ("propvars", "properties"),
+    ("display2d", "display"),
+    ("%", "history"),
+    ("timing", "showtime"),
+    ("quit", "repl"),
+];
+
+/// Return the requested topic for a MACSYMA `?` help query.
+pub fn parse_macsyma_help_query(source: &str) -> Option<String> {
+    let stripped = source.trim();
+    if !stripped.starts_with('?') {
+        return None;
+    }
+    let mut topic = stripped.trim_start_matches('?').trim().to_string();
+    if topic.ends_with(';') || topic.ends_with('$') {
+        topic.truncate(topic.len() - 1);
+        topic = topic.trim().to_string();
+    }
+    Some(topic)
+}
+
+/// Return user-facing MACSYMA help text for `topic`.
+pub fn macsyma_help_text(topic: Option<&str>) -> String {
+    let raw_key = topic.unwrap_or("").trim().to_ascii_lowercase();
+    if raw_key.is_empty() {
+        return format!(
+            "MACSYMA help topics: {}. Use ? topic for details.",
+            sorted_help_topics().join(", ")
+        );
+    }
+    let key = MACSYMA_HELP_ALIASES
+        .iter()
+        .find_map(|(alias, target)| (*alias == raw_key).then_some(*target))
+        .unwrap_or(raw_key.as_str());
+    if let Some((_, text)) = MACSYMA_HELP_TOPICS.iter().find(|(name, _)| *name == key) {
+        return (*text).to_string();
+    }
+    format!(
+        "No MACSYMA help topic named {:?}. Available topics: {}.",
+        topic.unwrap_or(""),
+        sorted_help_topics().join(", ")
+    )
+}
+
+fn sorted_help_topics() -> Vec<&'static str> {
+    let mut topics = MACSYMA_HELP_TOPICS
+        .iter()
+        .map(|(name, _)| *name)
+        .collect::<Vec<_>>();
+    topics.sort_unstable();
+    topics
+}
 
 /// One evaluated MACSYMA statement.
 #[derive(Debug, Clone, PartialEq)]
@@ -558,6 +674,9 @@ impl MacsymaSession {
 
     /// Compile and evaluate every statement in `source`.
     pub fn eval_source(&mut self, source: &str) -> Result<Vec<EvalResult>, CompileError> {
+        if let Some(topic) = parse_macsyma_help_query(source) {
+            return Ok(vec![self.eval_help_query(&topic)]);
+        }
         let statements = compile_macsyma_with_options(
             source,
             CompileOptions {
@@ -603,6 +722,28 @@ impl MacsymaSession {
             output_text,
             display,
             timing_text: show_timing.then(|| format_timing(elapsed.as_secs_f64())),
+        }
+    }
+
+    fn eval_help_query(&mut self, topic: &str) -> EvalResult {
+        let query = if topic.is_empty() {
+            "?".to_string()
+        } else {
+            format!("? {topic}")
+        };
+        let text = macsyma_help_text(Some(topic));
+        let input = str_node(query);
+        let output = str_node(text.clone());
+        let input_index = self.history.record_input(input.clone());
+        let output_index = self.history.record_output(output.clone());
+        EvalResult {
+            input_index,
+            output_index,
+            input,
+            output,
+            output_text: text,
+            display: true,
+            timing_text: None,
         }
     }
 }

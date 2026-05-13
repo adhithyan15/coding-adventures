@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `?` / `? topic` help-query handling for TypeScript MACSYMA sessions and
+  JSON responses.
 - Wire `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a
   TypeScript MACSYMA session assumption context so declared properties feed
   property queries and assumption-backed relation checks.

@@ -36,6 +36,7 @@ from macsyma_runtime.heads import (
     SUPPRESS,
 )
 from macsyma_runtime.history import History
+from macsyma_runtime.help import help_text, parse_help_query
 from macsyma_runtime.name_table import (
     MACSYMA_NAME_TABLE,
     extend_compiler_name_table,
@@ -60,5 +61,7 @@ __all__ = [
     "SUPPRESS",
     "extend_compiler_name_table",
     "has_ev_flag",
+    "help_text",
     "output_text_for",
+    "parse_help_query",
 ]

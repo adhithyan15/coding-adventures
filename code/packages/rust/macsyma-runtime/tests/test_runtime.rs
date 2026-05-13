@@ -1,7 +1,7 @@
 use cas_solve::SOLVE;
 use coding_adventures_macsyma_runtime::{
-    extend_macsyma_name_table, macsyma_name_table, MacsymaSession, DECLARE, EV, KILL, PROPERTIES,
-    PROP_VARS,
+    extend_macsyma_name_table, macsyma_help_text, macsyma_name_table, parse_macsyma_help_query,
+    MacsymaSession, DECLARE, EV, KILL, PROPERTIES, PROP_VARS,
 };
 use std::collections::HashMap;
 use symbolic_ir::{
@@ -52,6 +52,34 @@ fn reports_showtime_diagnostics_for_suppressed_statements() {
     assert_eq!(results[1].output, int(5));
     assert!(!results[1].display);
     assert_timing_text(results[1].timing_text.as_deref());
+}
+
+#[test]
+fn parses_and_renders_question_mark_help() {
+    assert_eq!(
+        parse_macsyma_help_query("? solve;").as_deref(),
+        Some("solve")
+    );
+    assert_eq!(parse_macsyma_help_query("solve(x, x);"), None);
+    assert!(macsyma_help_text(Some("solve")).contains("solve(expr, var)"));
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("? solve").unwrap();
+
+    assert_eq!(results.len(), 1);
+    assert!(results[0].display);
+    assert!(results[0].output_text.contains("solve(expr, var)"));
+    assert!(matches!(results[0].input, symbolic_ir::IRNode::Str(_)));
+    assert!(matches!(results[0].output, symbolic_ir::IRNode::Str(_)));
+}
+
+#[test]
+fn question_mark_without_topic_lists_help_topics() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("?").unwrap();
+
+    assert!(results[0].output_text.contains("MACSYMA help topics:"));
+    assert!(results[0].output_text.contains("solve"));
 }
 
 #[test]
