@@ -9,6 +9,9 @@
   foothold, so `factor(x^2 + 2*x*y + y^2)` returns `(x+y)^2`.
 - Add TypeScript MACSYMA parity for the bivariate difference-of-squares
   factoring foothold, so `factor(x^2 - y^2)` returns `(x-y)*(x+y)`.
+- Add TypeScript MACSYMA parity for bivariate cubic identities, so
+  `factor(x^3 - y^3)` and `factor(x^3 + y^3)` return the textbook two-factor
+  decompositions through the shared symbolic VM handler.
 - Add `?` / `? topic` help-query handling for TypeScript MACSYMA sessions and
   JSON responses.
 - Wire `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a

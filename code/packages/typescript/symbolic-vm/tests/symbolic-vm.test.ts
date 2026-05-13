@@ -139,6 +139,52 @@ describe("symbolic-vm", () => {
     ]));
   });
 
+  it("factors bivariate differences of cubes", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const expr = app(FACTOR, [
+      app(SUB, [
+        app(POW, [x, int(3)]),
+        app(POW, [y, int(3)]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(SUB, [x, y]),
+      app(ADD, [
+        app(ADD, [
+          app(POW, [x, int(2)]),
+          app(MUL, [x, y]),
+        ]),
+        app(POW, [y, int(2)]),
+      ]),
+    ]));
+  });
+
+  it("factors bivariate sums of cubes", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(POW, [x, int(3)]),
+        app(POW, [y, int(3)]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(ADD, [x, y]),
+      app(ADD, [
+        app(ADD, [
+          app(POW, [x, int(2)]),
+          app(MUL, [int(-1), app(MUL, [x, y])]),
+        ]),
+        app(POW, [y, int(2)]),
+      ]),
+    ]));
+  });
+
   it("supports assignment and later lookup", () => {
     const vm = new VM(new SymbolicBackend());
     expect(vm.eval(app(ASSIGN, [sym("x"), app(ADD, [int(2), int(3)])]))).toEqual(int(5));
