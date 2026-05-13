@@ -6,6 +6,7 @@
 
 use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 use cas_list_operations::{
     append, apply_ as list_apply, first, flatten, join, last, length, map_ as list_map, part,
@@ -75,6 +76,9 @@ const SORT: &str = "Sort";
 const PART: &str = "Part";
 const FLATTEN: &str = "Flatten";
 const JOIN: &str = "Join";
+const SHOWTIME: &str = "showtime";
+const TRUE_SYMBOL: &str = "True";
+const FALSE_SYMBOL: &str = "False";
 
 /// Return the runtime extension table for MACSYMA surface function names.
 ///
@@ -241,6 +245,8 @@ pub struct EvalResult {
     /// Whether this statement should be shown by a REPL. `;` displays, `$`
     /// suppresses.
     pub display: bool,
+    /// Optional wall-clock timing diagnostic emitted when `showtime` is true.
+    pub timing_text: Option<String>,
 }
 
 /// In-memory `%i`/`%o` history for a single runtime session.
@@ -318,6 +324,7 @@ fn parse_history_index(digits: &str) -> Option<usize> {
 struct MacsymaBackendState {
     env: HashMap<String, IRNode>,
     assumptions: AssumptionContext,
+    showtime: bool,
 }
 
 impl MacsymaBackendState {
@@ -325,22 +332,41 @@ impl MacsymaBackendState {
         Self {
             env: initial_env(),
             assumptions: AssumptionContext::new(),
+            showtime: false,
         }
     }
 
     fn unbind(&mut self, name: &str) {
-        self.env.remove(name);
+        if name == SHOWTIME {
+            self.showtime = false;
+            self.env.insert(SHOWTIME.to_string(), sym(FALSE_SYMBOL));
+        } else {
+            self.env.remove(name);
+        }
     }
 
     fn reset_environment(&mut self) {
         self.env = initial_env();
+        self.showtime = false;
+    }
+
+    fn bind(&mut self, name: &str, value: IRNode) {
+        if name == SHOWTIME {
+            self.showtime = matches_symbol(&value, TRUE_SYMBOL);
+        }
+        self.env.insert(name.to_string(), value);
+    }
+
+    fn showtime(&self) -> bool {
+        self.showtime
     }
 }
 
 fn initial_env() -> HashMap<String, IRNode> {
     let mut env = HashMap::new();
-    env.insert("True".to_string(), sym("True"));
-    env.insert("False".to_string(), sym("False"));
+    env.insert(TRUE_SYMBOL.to_string(), sym(TRUE_SYMBOL));
+    env.insert(FALSE_SYMBOL.to_string(), sym(FALSE_SYMBOL));
+    env.insert(SHOWTIME.to_string(), sym(FALSE_SYMBOL));
     env.insert("%pi".to_string(), IRNode::Float(std::f64::consts::PI));
     env.insert("%e".to_string(), IRNode::Float(std::f64::consts::E));
     env.insert("%i".to_string(), sym("ImaginaryUnit"));
@@ -484,8 +510,7 @@ impl Backend for MacsymaBackend {
         self.state
             .lock()
             .expect("macsyma backend state poisoned")
-            .env
-            .insert(name.to_string(), value);
+            .bind(name, value);
     }
 
     fn on_unresolved(&self, name: &str) -> IRNode {
@@ -509,6 +534,7 @@ impl Backend for MacsymaBackend {
 pub struct MacsymaSession {
     vm: VM,
     history: History,
+    backend_state: Arc<Mutex<MacsymaBackendState>>,
 }
 
 impl MacsymaSession {
@@ -518,6 +544,7 @@ impl MacsymaSession {
         Self {
             vm: VM::new(Box::new(backend)),
             history: History::default(),
+            backend_state,
         }
     }
 
@@ -551,10 +578,18 @@ impl MacsymaSession {
 
     fn eval_statement(&mut self, statement: IRNode) -> EvalResult {
         let (input, display) = unwrap_display(canonicalize_surface_names(statement));
+        let show_timing = self
+            .backend_state
+            .lock()
+            .expect("macsyma backend state poisoned")
+            .showtime()
+            && !is_showtime_assignment(&input);
+        let started_at = Instant::now();
         let input_index = self.history.record_input(input.clone());
         let resolved_input = resolve_session_references(&self.history, input.clone());
         let kill_all = is_kill_all(&input);
         let output = self.vm.eval(resolved_input);
+        let elapsed = started_at.elapsed();
         let output_index = self.history.record_output(output.clone());
         let output_text = display_text_for(&input, &output);
         if kill_all {
@@ -567,6 +602,7 @@ impl MacsymaSession {
             output,
             output_text,
             display,
+            timing_text: show_timing.then(|| format_timing(elapsed.as_secs_f64())),
         }
     }
 }
@@ -970,8 +1006,25 @@ fn is_kill_all(node: &IRNode) -> bool {
     }
 }
 
+fn is_showtime_assignment(node: &IRNode) -> bool {
+    match node {
+        IRNode::Apply(apply) if is_head_name(&apply.head, ASSIGN) && apply.args.len() == 2 => {
+            matches_symbol(&apply.args[0], SHOWTIME)
+        }
+        _ => false,
+    }
+}
+
+fn format_timing(elapsed_seconds: f64) -> String {
+    format!("Evaluation took {elapsed_seconds:.6} seconds.")
+}
+
 fn is_head_name(head: &IRNode, expected: &str) -> bool {
     symbol_name(head).is_some_and(|name| name == expected)
+}
+
+fn matches_symbol(node: &IRNode, expected: &str) -> bool {
+    symbol_name(node).is_some_and(|name| name == expected)
 }
 
 fn symbol_name(node: &IRNode) -> Option<&str> {

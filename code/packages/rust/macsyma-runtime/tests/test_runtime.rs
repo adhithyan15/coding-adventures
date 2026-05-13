@@ -31,6 +31,43 @@ fn preserves_suppressed_statement_metadata() {
 }
 
 #[test]
+fn tracks_showtime_option_through_normal_assignments() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("showtime:true$ 2 + 3; showtime:false$ 4 + 5;")
+        .unwrap();
+
+    assert_eq!(results[1].output, int(5));
+    assert_timing_text(results[1].timing_text.as_deref());
+    assert_eq!(results[0].timing_text, None);
+    assert_eq!(results[2].timing_text, None);
+    assert_eq!(results[3].timing_text, None);
+}
+
+#[test]
+fn reports_showtime_diagnostics_for_suppressed_statements() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("showtime:true$ 2 + 3$").unwrap();
+
+    assert_eq!(results[1].output, int(5));
+    assert!(!results[1].display);
+    assert_timing_text(results[1].timing_text.as_deref());
+}
+
+#[test]
+fn kill_showtime_restores_false_binding() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("showtime:true$ kill(showtime); showtime; 2;")
+        .unwrap();
+
+    assert_timing_text(results[1].timing_text.as_deref());
+    assert_eq!(results[2].output, sym("False"));
+    assert_eq!(results[2].timing_text, None);
+    assert_eq!(results[3].timing_text, None);
+}
+
+#[test]
 fn records_input_and_output_history() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("x : 5$ x + 2;").unwrap();
@@ -336,6 +373,24 @@ fn manual_kill_and_ev_heads_are_first_class() {
     ]);
     assert_eq!(results[0].output, sym("done"));
     assert_eq!(results[1].output, symbolic_ir::flt(1.5));
+}
+
+fn assert_timing_text(value: Option<&str>) {
+    let Some(value) = value else {
+        panic!("expected showtime timing text");
+    };
+    let Some(elapsed) = value
+        .strip_prefix("Evaluation took ")
+        .and_then(|value| value.strip_suffix(" seconds."))
+    else {
+        panic!("unexpected showtime timing text: {value}");
+    };
+    let Some((seconds, micros)) = elapsed.split_once('.') else {
+        panic!("showtime timing text lacks fractional seconds: {value}");
+    };
+    assert!(seconds.parse::<u64>().is_ok());
+    assert_eq!(micros.len(), 6);
+    assert!(micros.chars().all(|ch| ch.is_ascii_digit()));
 }
 
 #[test]
