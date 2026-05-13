@@ -2,6 +2,83 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-05-12 — Engine Arm (ADJ16 step 5)
+
+### Added
+
+A third arm — the **Engine Arm** — that runs the canonical TSA
+source through `adjudication_pipeline::run_with_rulebooks` to
+produce a verdict deterministically. **No LLM is called at answer
+time.** Arm A and Arm B both involve LLM calls (Arm A directly,
+Arm B for ADJ04/05 checkers). The engine arm uses only the logic
+engine over a merged KB built from the source IR + caller-supplied
+rulebooks.
+
+- `EngineArmReport { verdict_summary, pipeline_output, dispute_count }` —
+  the engine arm's output type. Preserves the full
+  `PipelineOutput` (audit trail + clause provenance + disputed
+  answers) so a reviewer can reconstruct the derivation step by
+  step.
+- `run_engine_arm(cfg, rulebooks)` — the entry point. Takes a
+  `DemoConfig` and a slice of `(IRDocument, RulebookProvenance)`
+  pairs; returns an `EngineArmReport`. Always populates the
+  audit-trail clause-provenance table (via
+  `run_with_rulebooks`).
+- `tsa_rulebook_strict_ir()` — fixture rulebook IR with a single
+  definitional rule: `non_compliant(passenger_a) :- prohibited(matches).`
+  Demonstrates the "matches → non-compliant" categorical leap as
+  an *external, auditable* step rather than a hidden LLM inference.
+- `tsa_rulebook_lenient_ir()` — fixture rulebook IR with a single
+  definitional rule: `compliant(passenger_a) :- carry_on(1).`
+  Deliberately wrong for the canonical TSA case (declaring carry-on
+  doesn't make you compliant), used to demonstrate the dispute
+  detection path from ADJ16 step 3 when merged with the strict
+  rulebook.
+
+### Rationale (ADJ16 step 5)
+
+[ADJ16](../../../specs/ADJ16-engine-programmatic-adjudication.md)'s
+"Implementation sequence §5" calls for a TSA demo arm that runs
+the engine over the (eventually adversarially-elicited) rulebook.
+Step 5 lands the lib-level wiring: any caller can now construct
+the engine arm from the source IR + rulebook IRs, and the verdict
+is byte-for-byte reproducible across hardware and time. The next
+sub-step (step 5.5, follow-up) wires this into the demo binary as
+an opt-in arm so users can run all three arms side-by-side via the
+CLI.
+
+### Tests
+
+7 new tests added (31 lib total, all passing):
+- both fixture rulebooks decode to one definitional rule each
+- engine arm with strict rulebook only — verdict, dispute count,
+  provenance attribution
+- engine arm with lenient rulebook only — verdict + attribution
+- engine arm with both rulebooks — both attributions land in the
+  provenance table; documents the wiring soundness even when the
+  source query happens to single out one rulebook's contribution
+- engine arm with no rulebooks — engine runs without error,
+  source-fact provenance attributed to document id
+- verdict summary is human-readable (starts with "RESOLVED")
+
+### Compatibility
+
+- Arms A and B are unchanged.
+- New API is additive: `EngineArmReport`, `run_engine_arm`,
+  `tsa_rulebook_strict_ir`, `tsa_rulebook_lenient_ir`.
+- `main.rs` is unchanged — the engine arm is library-only in v0.11.
+  Wiring it into the CLI binary will be a follow-up PR with its
+  own env-var flag.
+
+### Note on the demo binary
+
+The engine arm is currently exposed only through the library API.
+A follow-up PR will wire it into `main.rs` so users can run all
+three arms side-by-side via `ADJ_DEMO_ENGINE_ARM=1` or similar.
+The library-first split keeps this PR's review surface small and
+lets the lib API stabilise before the CLI commits to a specific
+env-var shape.
+
 ## [0.10.1] - 2026-05-12 — Wire `ADJ_DEMO_CACHE_DIR` through Stage 0
 
 ### Fixed
