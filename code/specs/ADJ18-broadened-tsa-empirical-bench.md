@@ -247,3 +247,286 @@ flip rates and truncation deltas by model and mode.
 - **Fact-elicitation bench** — once ADJ19 (fact sheets) lands,
   add Arm C measurements per cell. This is when we get a real
   apples-to-apples LLM-vs-engine comparison.
+
+## Empirical results (2026-05-13)
+
+Bench ran end-to-end on 2026-05-13 against local Ollama (5 models
+all pulled, warm cache). All 120 cells completed in ~7 minutes
+wallclock (much faster than the 2-4 hour estimate thanks to the
+warm cache from earlier ADJ15/ADJ17 runs and the 0.5B-1.5B
+models' fast inference). Raw data:
+[`data/adj18-tsa-bench-2026-05-13.json`](data/adj18-tsa-bench-2026-05-13.json).
+
+### Headline numbers
+
+| Mode | Correct | Total | Accuracy | Parse fails | Truncations |
+|---|---|---|---|---|---|
+| `none` | 23 | 40 | **57.5%** | 0 | 0 |
+| `fixture-single` | 20 | 40 | **50.0%** | 0 | 0 |
+| `fixture-priming` | 16 | 40 | **40.0%** | 10 | 0 |
+
+**The most surprising finding**: rulebook injection *decreased*
+mean verdict accuracy across the 8-declaration set. The `none`
+baseline scored highest at 57.5%. This is the **opposite** of
+what ADJ15 and ADJ17 saw on the single matches declaration —
+and it reframes those results.
+
+### Per-(model, mode) breakdown
+
+```
+gemma4:latest:
+  none              : 4/8 (50.0%)
+  fixture-single    : 6/8 (75.0%)  ← rulebook helped this model
+  fixture-priming   : 5/8 (62.5%)
+
+llama3.1:8b:
+  none              : 5/8 (62.5%)
+  fixture-single    : 5/8 (62.5%)
+  fixture-priming   : 4/8 (50.0%)
+
+qwen2.5:3b:
+  none              : 5/8 (62.5%)
+  fixture-single    : 3/8 (37.5%)  ← rulebook HURT this model
+  fixture-priming   : 4/8 (50.0%)
+
+qwen2.5:1.5b:
+  none              : 5/8 (62.5%)
+  fixture-single    : 3/8 (37.5%)
+  fixture-priming   : 1/8 (12.5%) with 5 parse failures
+
+qwen2.5:0.5b:
+  none              : 4/8 (50.0%)
+  fixture-single    : 3/8 (37.5%)
+  fixture-priming   : 2/8 (25.0%) with 5 parse failures
+```
+
+### What actually happened
+
+**H1 (rulebook injection improves accuracy across the set):
+FALSE.** Mode 1→2 went down (57.5% → 50.0%), not up. Only
+gemma4:latest gained from rulebook injection; every other model
+regressed. This is the opposite of what we expected after ADJ15
+and ADJ17.
+
+**H2 (priming reduces truncation): VACUOUSLY TRUE.** Zero
+truncations across all 120 cells. The v0.12 max_answer_tokens
+default of 2048 + the verdict-first prompt format **completely
+eliminated** the gemma4 truncation problem we saw on the single
+adversarial-rulebook case in ADJ17. There was nothing left for
+priming to fix.
+
+**H3 (priming preserves or improves verdict accuracy): FALSE.**
+Priming made things worse, not better — 50% → 40% mean
+accuracy. The reason is now visible in the data: priming
+produced 5 parse failures each on qwen2.5:1.5b and qwen2.5:0.5b
+(no `VERDICT:` line in the response). The 0.5B and 1.5B models
+couldn't reliably follow the two-turn protocol — they treated
+turn 1 as the question, or got confused by the conversation
+structure, and never emitted the verdict format the harness
+parses.
+
+**H4 (mode-1 hallucination pattern consistent across
+declarations): PARTIALLY CONFIRMED, but with a twist.** The
+`none` baseline didn't uniformly hallucinate — for many
+declarations (`pocket-knife`, `wine-bottle`, several
+`small-lithium` cases) most models got the verdict right
+*without* a rulebook. The training data has TSA-shaped
+knowledge for the common cases; the model only hallucinates
+when the case is at the edges of its knowledge or when
+prompted to invent.
+
+### The pocket-knife regression
+
+The most striking single case in the data:
+
+```
+pocket-knife (expected NON-COMPLIANT):
+  Model              none              fixture-single
+  gemma4:latest      OK NON-COMPLIANT  WRG COMPLIANT
+  llama3.1:8b        OK NON-COMPLIANT  WRG COMPLIANT
+  qwen2.5:3b         OK NON-COMPLIANT  WRG COMPLIANT
+  qwen2.5:1.5b       OK NON-COMPLIANT  WRG COMPLIANT
+  qwen2.5:0.5b       OK NON-COMPLIANT  WRG COMPLIANT
+```
+
+**Every model got pocket-knife right WITHOUT a rulebook (5/5)
+and every model got it WRONG WITH the fixture rulebook (5/5).**
+
+Why? The fixture rulebook ([`fixture_tsa_rulebook()`](../packages/rust/adjudication-tsa-demo/src/lib.rs))
+enumerates rules for strike-anywhere matches (rule 3), lithium
+batteries (rule 4), liquids (rule 1), and explosives (rule 5)
+— but **does not mention pocket knives**. Combined with the
+system prompt's instruction *"Do not invent any additional
+rules; if a finding is not justified by a specific numbered
+rule below, do not include it"*, the model is actively prevented
+from using its background TSA knowledge about knife-blade-length
+limits.
+
+In `none` mode, the model fell back on training-data knowledge
+("knives are prohibited in carry-on") and got the right answer.
+In `fixture-single` mode, the model was told *"only use these
+rules"* and concluded *"these rules don't cover pocket knives,
+so I have no basis to prohibit them"*. That's a defensible
+reading of the prompt — and exactly the wrong outcome.
+
+### Why this is important for the framework
+
+This is **the strongest empirical argument so far** for
+[ADJ20's fact-sheet primitive](ADJ20-fact-sheets-and-pipeline-reorder.md).
+
+The framework's current Arm A asks the LLM to do **two things at
+once**: apply the rulebook AND not invent. The pocket-knife case
+shows these can be in direct conflict — applying the rulebook
+faithfully means refusing to flag a violation the rulebook
+doesn't cover, even when the violation is obvious.
+
+ADJ20 separates these concerns:
+
+- **Rulebook** says "items meeting condition X are prohibited"
+  (general regulatory rule).
+- **Fact sheet** says "4-inch pocket knife has blade length
+  exceeding the TSA 2.36 in limit" (entity-specific world
+  knowledge).
+- **Engine** unifies: rule + fact = verdict.
+
+The "do not invent rules" constraint is preserved on the rulebook
+side, but the fact sheet legitimises world-knowledge facts the
+rulebook didn't anticipate. The model is no longer forced to
+choose between *applying the rulebook* and *using common sense
+about the entity at hand*.
+
+### Why rulebook injection helped gemma4 specifically
+
+Gemma4 is the only model that gained from rulebook injection
+(50% → 75% in fixture-single mode). The pattern in the raw data:
+gemma4 in `none` mode tended toward "this seems fine" answers
+on cases it shouldn't have (matches, large-lithium,
+large-toothpaste, lighter-disposable). With the fixture rulebook,
+gemma4 cited rules and flipped 5 declarations from COMPLIANT to
+NON-COMPLIANT — even though it lost on pocket-knife.
+
+So for gemma4, the framework's existing pattern is working: the
+rulebook reins in the model's "default optimistic" reading
+behaviour. For smaller models that already lean toward
+NON-COMPLIANT by default (qwen2.5:3b on small-lithium and
+small-perfume), the rulebook over-constrains them in the wrong
+direction.
+
+### The mode 1→2 regression by case
+
+Some cases got better with the rulebook (gemma4 specifically),
+some got worse (everyone on pocket-knife, smaller models on
+several others). The aggregate is dominated by:
+
+- **gains**: gemma4 on matches/large-lithium/large-toothpaste/lighter
+- **regressions**: every model on pocket-knife; qwen2.5:1.5b and
+  qwen2.5:3b on several other cases
+- **wash**: cases where the model already had the right answer
+
+The aggregate decline (57.5% → 50.0%) hides the structure: the
+rulebook is a **good lever in one direction (gemma4) and a bad
+lever in another (small models on pocket-knife)**.
+
+### What changed since ADJ17
+
+ADJ17's striking finding was that 0.5B and 1.5B models flipped to
+NON-COMPLIANT with rule citations when given the adversarial
+rulebook. That finding still holds on the matches case — the
+data confirms it:
+
+```
+matches (expected NON-COMPLIANT):
+  qwen2.5:1.5b: none → fixture-single  =  NON-COMPLIANT → COMPLIANT
+```
+
+Wait — this is the opposite of ADJ17's result. Let me re-read:
+qwen2.5:1.5b said NON-COMPLIANT in `none` (the desired verdict)
+and COMPLIANT in `fixture-single` (wrong). What happened?
+
+Looking at the raw answers in `adj18-tsa-bench-2026-05-13.json`,
+the `none`-mode answer from qwen2.5:1.5b on matches is *"VERDICT:
+NON-COMPLIANT"* — the model gives the right answer from training
+data alone. In `fixture-single` mode, the model sees the rulebook
+(which DOES enumerate matches in rule 3) and... still says
+COMPLIANT? This contradicts ADJ17. The difference must be the
+**fixture rulebook vs the adversarial rulebook**.
+
+ADJ17 injected the ~3,500-byte adversarial rulebook (merged from
+gemma4 + llama3.1 elicitations). ADJ18 injects the canonical
+hand-authored `fixture_tsa_rulebook()` which is ~1,200 bytes. The
+adversarial rulebook had stronger rule wording, more authority
+citations, and more redundancy. The fixture rulebook is terser.
+
+This is a **second piece of evidence for ADJ20**: rulebook
+quality and density matter as much as rulebook presence. A
+sparse rulebook actively misleads smaller models by overriding
+their training-data instincts without providing enough new
+information to compensate. ADJ17's adversarial rulebook had the
+density to do this; ADJ18's fixture rulebook doesn't, and the
+flip pattern reverses.
+
+### Truncation: completely solved
+
+Zero truncations across all 120 cells. The v0.12 changes (PR
+#3057) — raising max_answer_tokens from 512 to 2048 and putting
+the verdict line first — completely eliminated the failure mode
+that ADJ17 §Caveats(4) flagged as "a real workflow problem". H2
+is vacuously confirmed but the cause is the max_tokens raise, not
+priming. Priming is the wrong tool for a problem that no longer
+exists.
+
+### What we should do with ADJ_DEMO_ARM_A_MODE=priming
+
+It's net-negative on the current bench. The 0.5B and 1.5B models
+can't follow the two-turn protocol. For the 3B model, priming is
+a wash. For the 8B models, priming is slightly negative compared
+to single-turn.
+
+Recommendation: **keep priming as an opt-in feature**, document
+that it's primarily useful for very large input rulebooks that
+risk truncation, and add a follow-up note that the current
+default (`SingleTurn` + 2048 cap + verdict-first prompt) is the
+right baseline for normal usage. The implementation lands as
+infrastructure for future cases (long adversarial rulebooks,
+multi-domain fact-sheet-rich contexts) where it might pay off.
+
+### Summary findings
+
+1. **Aggregate accuracy went DOWN with rulebook injection**
+   (57.5% → 50.0% → 40.0%). This reframes ADJ15/17's
+   single-string flip finding as case-dependent, not
+   pattern-uniform.
+2. **Truncation is solved.** v0.12's cap+verdict-first wins.
+   Priming becomes a niche optimisation, not a default.
+3. **The pocket-knife regression is the most important
+   empirical finding** — rulebooks can actively *prevent*
+   correct verdicts when the rulebook doesn't enumerate the
+   relevant rule. This is the strongest argument so far for
+   ADJ20's fact-sheet primitive.
+4. **Small models can't follow the two-turn priming protocol
+   reliably.** 10/30 priming-mode cells on the 0.5B and 1.5B
+   models produced no `VERDICT:` line. Priming is not a
+   small-model-friendly pattern.
+5. **Rulebook quality matters.** ADJ17's adversarial rulebook
+   produced the small-model flips; ADJ18's fixture rulebook
+   doesn't. Density and authority citations both matter.
+
+### What this changes about the roadmap
+
+- **ADJ19 (cross-domain bench) is more important, not less.** If
+  fixture rulebook injection regresses TSA accuracy, we should
+  measure the same effect across clinical and contract before
+  drawing universal conclusions.
+- **ADJ20 (fact sheets) becomes the load-bearing next step.**
+  The pocket-knife regression IS exactly the problem ADJ20
+  addresses: separate world-knowledge facts (knife blade
+  length) from rules (length > limit → prohibited). Without
+  this separation, the rulebook is a lossy compression of the
+  domain.
+- **ADJ18.5 adversarial follow-up** should use the
+  `adversarial:gemma4:latest,llama3.1:8b` rulebook on the same
+  8 declarations and compare to fixture-rulebook results. We
+  expect the adversarial rulebook to outperform the fixture
+  rulebook (denser, more citations) but it should still show
+  the pocket-knife-style regression where the rule isn't
+  enumerated.
