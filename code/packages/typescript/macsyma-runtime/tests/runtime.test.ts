@@ -176,6 +176,16 @@ describe("macsyma-runtime", () => {
     ]));
   });
 
+  it("factors bivariate differences of squares through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^2 - y^2);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(SUB, [sym("x"), sym("y")]),
+      app(ADD, [sym("x"), sym("y")]),
+    ]));
+  });
+
   it("tracks the showtime option flag through normal assignments", () => {
     const session = new MacsymaSession();
     const [enabled, timed, disabled, untimed] = session.evalSource(

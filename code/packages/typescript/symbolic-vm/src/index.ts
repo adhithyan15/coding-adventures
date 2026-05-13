@@ -373,6 +373,8 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
 
   const coeffs = irToIntegerPoly(inner, variable);
   if (coeffs === undefined) {
+    const difference = extractMultivariateDifferenceOfSquares(inner);
+    if (difference !== undefined) return difference;
     const perfectSquare = extractMultivariatePerfectSquare(inner);
     if (perfectSquare !== undefined) return perfectSquare;
     const commonFactored = extractCommonSymbolicFactor(inner);
@@ -660,6 +662,37 @@ function extractMultivariatePerfectSquare(inner: IRNode): IRNode | undefined {
     ? app(ADD, [first.base, second.base])
     : app(SUB, [first.base, second.base]);
   return app(POW, [base, int(2)]);
+}
+
+function extractMultivariateDifferenceOfSquares(inner: IRNode): IRNode | undefined {
+  const terms = flattenAddTerms(inner);
+  if (terms.length !== 2) return undefined;
+
+  const parsed = terms.map((term) => splitIntegerCoefficientAndPowers(term));
+  if (parsed.some((term) => term === undefined)) return undefined;
+
+  let positiveSquare: IRNode | undefined;
+  let negativeSquare: IRNode | undefined;
+  for (const parsedTerm of parsed) {
+    if (parsedTerm === undefined) return undefined;
+    const { coefficient, powers } = parsedTerm;
+    if (powers.size !== 1) return undefined;
+    const [power] = [...powers.values()];
+    if (power.exponent !== 2) return undefined;
+    if (coefficient === 1n) {
+      positiveSquare = power.base;
+    } else if (coefficient === -1n) {
+      negativeSquare = power.base;
+    } else {
+      return undefined;
+    }
+  }
+
+  if (positiveSquare === undefined || negativeSquare === undefined) return undefined;
+  return app(MUL, [
+    app(SUB, [positiveSquare, negativeSquare]),
+    app(ADD, [positiveSquare, negativeSquare]),
+  ]);
 }
 
 function polyAdd(a: readonly bigint[], b: readonly bigint[]): bigint[] {

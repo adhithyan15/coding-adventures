@@ -122,6 +122,23 @@ describe("symbolic-vm", () => {
     ]));
   });
 
+  it("factors bivariate differences of squares", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const expr = app(FACTOR, [
+      app(SUB, [
+        app(POW, [x, int(2)]),
+        app(POW, [y, int(2)]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(SUB, [x, y]),
+      app(ADD, [x, y]),
+    ]));
+  });
+
   it("supports assignment and later lookup", () => {
     const vm = new VM(new SymbolicBackend());
     expect(vm.eval(app(ASSIGN, [sym("x"), app(ADD, [int(2), int(3)])]))).toEqual(int(5));
