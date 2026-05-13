@@ -256,5 +256,14 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   that runs a compiled Prolog (or ProbLog) program over the
   rulebook + facts. Same input + same rulebook + same query =
   same verdict, reproducibly, with a full proof DAG.
+  **Status (2026-05-13)**: steps 1-5 fully implemented and on main.
+- [ADJ18](ADJ18-broadened-tsa-empirical-bench.md) — broadens the
+  ADJ12/15/17 single-string benches to **8 single-item TSA
+  declaration variants × 5 models × 3 Arm A modes** (none /
+  single-turn rulebook / two-turn priming). Tests whether the
+  rulebook-injection flip pattern generalises beyond the matches
+  case and whether the v0.12 priming dispatch reduces gemma4
+  truncation in practice. Harness at
+  [`scripts/adj18_bench.py`](../../scripts/adj18_bench.py).
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.
