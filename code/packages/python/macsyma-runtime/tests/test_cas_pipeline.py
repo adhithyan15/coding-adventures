@@ -749,6 +749,60 @@ def test_pipeline_factor_multivariate_difference_of_squares() -> None:
     )
 
 
+def test_pipeline_factor_multivariate_difference_of_cubes() -> None:
+    """factor(x^3 - y^3) recognises (x-y)*(x^2+x*y+y^2)."""
+    result = _eval("factor(x^3 - y^3)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert result.args == (
+        IRApply(IRSymbol("Sub"), (IRSymbol("x"), IRSymbol("y"))),
+        IRApply(
+            IRSymbol("Add"),
+            (
+                IRApply(
+                    IRSymbol("Add"),
+                    (
+                        IRApply(IRSymbol("Pow"), (IRSymbol("x"), IRInteger(2))),
+                        IRApply(IRSymbol("Mul"), (IRSymbol("x"), IRSymbol("y"))),
+                    ),
+                ),
+                IRApply(IRSymbol("Pow"), (IRSymbol("y"), IRInteger(2))),
+            ),
+        ),
+    )
+
+
+def test_pipeline_factor_multivariate_sum_of_cubes() -> None:
+    """factor(x^3 + y^3) recognises (x+y)*(x^2-x*y+y^2)."""
+    result = _eval("factor(x^3 + y^3)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert result.args == (
+        IRApply(IRSymbol("Add"), (IRSymbol("x"), IRSymbol("y"))),
+        IRApply(
+            IRSymbol("Add"),
+            (
+                IRApply(
+                    IRSymbol("Add"),
+                    (
+                        IRApply(IRSymbol("Pow"), (IRSymbol("x"), IRInteger(2))),
+                        IRApply(
+                            IRSymbol("Mul"),
+                            (
+                                IRInteger(-1),
+                                IRApply(
+                                    IRSymbol("Mul"), (IRSymbol("x"), IRSymbol("y"))
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                IRApply(IRSymbol("Pow"), (IRSymbol("y"), IRInteger(2))),
+            ),
+        ),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section S — Calculus: diff and integrate (already wired, no pipeline tests)
 # ---------------------------------------------------------------------------

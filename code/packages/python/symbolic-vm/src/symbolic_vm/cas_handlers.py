@@ -1192,6 +1192,51 @@ def _extract_multivariate_difference_of_squares(inner: IRNode) -> IRNode | None:
     )
 
 
+def _extract_multivariate_cubic_identity(inner: IRNode) -> IRNode | None:
+    """Recognise the small ``a^3 +/- b^3`` multivariate factor cases."""
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 2:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    cubes: list[tuple[int, IRNode]] = []
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if coefficient not in (-1, 1) or len(powers) != 1:
+            return None
+        base, exponent = next(iter(powers.items()))
+        if exponent != 3:
+            return None
+        cubes.append((coefficient, base))
+
+    signs = [coefficient for coefficient, _base in cubes]
+    if signs == [1, 1]:
+        first, second = cubes[0][1], cubes[1][1]
+        linear = IRApply(ADD, (first, second))
+        middle = IRApply(MUL, (IRInteger(-1), IRApply(MUL, (first, second))))
+    elif sorted(signs) == [-1, 1]:
+        positive = next(base for coefficient, base in cubes if coefficient == 1)
+        negative = next(base for coefficient, base in cubes if coefficient == -1)
+        first, second = positive, negative
+        linear = IRApply(SUB, (first, second))
+        middle = IRApply(MUL, (first, second))
+    else:
+        return None
+
+    quadratic = IRApply(
+        ADD,
+        (
+            IRApply(ADD, (IRApply(POW, (first, IRInteger(2))), middle)),
+            IRApply(POW, (second, IRInteger(2))),
+        ),
+    )
+    return IRApply(MUL, (linear, quadratic))
+
+
 def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
@@ -1221,6 +1266,9 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     # Try to lift to rational function.
     rational = to_rational(inner, x)
     if rational is None:
+        cubic_identity = _extract_multivariate_cubic_identity(inner)
+        if cubic_identity is not None:
+            return cubic_identity
         difference = _extract_multivariate_difference_of_squares(inner)
         if difference is not None:
             return difference
