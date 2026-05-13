@@ -24455,3 +24455,1120 @@ x<table><table>x
 |       <a>
 |       <p>
 |         <a>
+#source tests4.dat:1
+#data
+direct div content
+#errors
+#document-fragment
+div
+#document
+| "direct div content"
+
+#source tests4.dat:2
+#data
+direct textarea content
+#errors
+#document-fragment
+textarea
+#document
+| "direct textarea content"
+
+#source tests4.dat:3
+#data
+textarea content with <em>pseudo</em> <foo>markup
+#errors
+#document-fragment
+textarea
+#document
+| "textarea content with <em>pseudo</em> <foo>markup"
+
+#source tests4.dat:4
+#data
+this is &#x0043;DATA inside a <style> element
+#errors
+#document-fragment
+style
+#document
+| "this is &#x0043;DATA inside a <style> element"
+
+#source tests4.dat:5
+#data
+</plaintext>
+#errors
+#document-fragment
+plaintext
+#document
+| "</plaintext>"
+
+#source tests4.dat:6
+#data
+setting html's innerHTML
+#errors
+#document-fragment
+html
+#document
+| <head>
+| <body>
+|   "setting html's innerHTML"
+
+#source tests4.dat:7
+#data
+<title>setting head's innerHTML</title>
+#errors
+#document-fragment
+head
+#document
+| <title>
+|   "setting head's innerHTML"
+
+#source tests4.dat:8
+#data
+direct <title> content
+#errors
+#document-fragment
+title
+#document
+| "direct <title> content"
+
+#source tests6.dat:7
+#data
+<body>
+<div>
+#errors
+(1,6): unexpected-start-tag
+(2,5): expected-closing-tag-but-got-eof
+#document-fragment
+div
+#document
+| "
+"
+| <div>
+
+#source tests6.dat:18
+#data
+</caption><div>
+#errors
+(1,10): XXX-undefined-error
+(1,15): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <div>
+
+#source tests6.dat:21
+#data
+</table><div>
+#errors
+(1,8): unexpected-end-tag
+(1,13): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <div>
+
+#source tests6.dat:25
+#data
+</table></tbody></tfoot></thead></tr><div>
+#errors
+(1,8): unexpected-end-tag
+(1,16): unexpected-end-tag
+(1,24): unexpected-end-tag
+(1,32): unexpected-end-tag
+(1,37): unexpected-end-tag
+(1,42): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <div>
+
+#source tests6.dat:27
+#data
+foo<col>
+#errors
+(1,1): unexpected-character-in-colgroup
+(1,2): unexpected-character-in-colgroup
+(1,3): unexpected-character-in-colgroup
+#document-fragment
+colgroup
+#document
+| <col>
+
+#source tests6.dat:30
+#data
+</frameset><frame>
+#errors
+(1,11): unexpected-frameset-in-frameset-innerhtml
+#document-fragment
+frameset
+#document
+| <frame>
+
+#source tests6.dat:32
+#data
+</body><div>
+#errors
+(1,7): unexpected-close-tag
+(1,12): expected-closing-tag-but-got-eof
+#document-fragment
+body
+#document
+| <div>
+
+#source tests6.dat:34
+#data
+</tr><td>
+#errors
+(1,5): unexpected-end-tag
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests6.dat:35
+#data
+</tbody></tfoot></thead><td>
+#errors
+(1,8): unexpected-end-tag
+(1,16): unexpected-end-tag
+(1,24): unexpected-end-tag
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests6.dat:37
+#data
+<caption><col><colgroup><tbody><tfoot><thead><tr>
+#errors
+(1,9): unexpected-start-tag
+(1,14): unexpected-start-tag
+(1,24): unexpected-start-tag
+(1,31): unexpected-start-tag
+(1,38): unexpected-start-tag
+(1,45): unexpected-start-tag
+#document-fragment
+tbody
+#document
+| <tr>
+
+#source tests6.dat:39
+#data
+</table><tr>
+#errors
+(1,8): unexpected-end-tag
+#document-fragment
+tbody
+#document
+| <tr>
+
+#source tests6.dat:44
+#data
+</table><tr>
+#errors
+(1,8): unexpected-end-tag
+#document-fragment
+table
+#document
+| <tbody>
+|   <tr>
+
+#source tests6.dat:45
+#data
+<body></body></html>
+#errors
+(1,20): unexpected-end-tag-after-body-innerhtml
+#document-fragment
+html
+#document
+| <head>
+| <body>
+
+#source tests7.dat:28
+#data
+<body>X</body></body>
+#errors
+(1,21): unexpected-end-tag-after-body
+#document-fragment
+html
+#document
+| <head>
+| <body>
+|   "X"
+
+#source tests_innerHTML_1.dat:1
+#data
+<body><span>
+#errors
+(1,6): unexpected-start-tag
+(1,12): expected-closing-tag-but-got-eof
+#document-fragment
+body
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:2
+#data
+<span><body>
+#errors
+(1,12): unexpected-start-tag
+(1,12): expected-closing-tag-but-got-eof
+#document-fragment
+body
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:3
+#data
+<span><body>
+#errors
+(1,12): unexpected-start-tag
+(1,12): expected-closing-tag-but-got-eof
+#document-fragment
+div
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:4
+#data
+<body><span>
+#errors
+(1,12): expected-closing-tag-but-got-eof
+#document-fragment
+html
+#document
+| <head>
+| <body>
+|   <span>
+
+#source tests_innerHTML_1.dat:5
+#data
+<frameset><span>
+#errors
+(1,10): unexpected-start-tag
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+body
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:6
+#data
+<span><frameset>
+#errors
+(1,16): unexpected-start-tag
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+body
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:7
+#data
+<span><frameset>
+#errors
+(1,16): unexpected-start-tag
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+div
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:8
+#data
+<frameset><span>
+#errors
+(1,16): unexpected-start-tag-in-frameset
+(1,16): eof-in-frameset
+#document-fragment
+html
+#document
+| <head>
+| <frameset>
+
+#source tests_innerHTML_1.dat:9
+#data
+<table><tr>
+#errors
+(1,7): unexpected-start-tag
+#document-fragment
+table
+#document
+| <tbody>
+|   <tr>
+
+#source tests_innerHTML_1.dat:10
+#data
+</table><tr>
+#errors
+(1,8): unexpected-end-tag
+#document-fragment
+table
+#document
+| <tbody>
+|   <tr>
+
+#source tests_innerHTML_1.dat:11
+#data
+<a>
+#errors
+(1,3): unexpected-start-tag-implies-table-voodoo
+(1,3): eof-in-table
+#document-fragment
+table
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:12
+#data
+<a><caption>a
+#errors
+(1,3): unexpected-start-tag-implies-table-voodoo
+(1,13): expected-closing-tag-but-got-eof
+#document-fragment
+table
+#document
+| <a>
+| <caption>
+|   "a"
+
+#source tests_innerHTML_1.dat:13
+#data
+<a><colgroup><col>
+#errors
+(1,3): foster-parenting-start-token
+(1,18): expected-closing-tag-but-got-eof
+#document-fragment
+table
+#document
+| <a>
+| <colgroup>
+|   <col>
+
+#source tests_innerHTML_1.dat:14
+#data
+<a><tbody><tr>
+#errors
+(1,3): foster-parenting-start-tag
+#document-fragment
+table
+#document
+| <a>
+| <tbody>
+|   <tr>
+
+#source tests_innerHTML_1.dat:15
+#data
+<a><tfoot><tr>
+#errors
+(1,3): foster-parenting-start-tag
+#document-fragment
+table
+#document
+| <a>
+| <tfoot>
+|   <tr>
+
+#source tests_innerHTML_1.dat:16
+#data
+<a><thead><tr>
+#errors
+(1,3): foster-parenting-start-tag
+#document-fragment
+table
+#document
+| <a>
+| <thead>
+|   <tr>
+
+#source tests_innerHTML_1.dat:17
+#data
+<a><tr>
+#errors
+(1,3): foster-parenting-start-tag
+#document-fragment
+table
+#document
+| <a>
+| <tbody>
+|   <tr>
+
+#source tests_innerHTML_1.dat:18
+#data
+<a><th>
+#errors
+(1,3): unexpected-start-tag-implies-table-voodoo
+(1,7): unexpected-cell-in-table-body
+#document-fragment
+table
+#document
+| <a>
+| <tbody>
+|   <tr>
+|     <th>
+
+#source tests_innerHTML_1.dat:19
+#data
+<a><td>
+#errors
+(1,3): unexpected-start-tag-implies-table-voodoo
+(1,7): unexpected-cell-in-table-body
+#document-fragment
+table
+#document
+| <a>
+| <tbody>
+|   <tr>
+|     <td>
+
+#source tests_innerHTML_1.dat:20
+#data
+<table></table><tbody>
+#errors
+(1,22): unexpected-start-tag
+#document-fragment
+caption
+#document
+| <table>
+
+#source tests_innerHTML_1.dat:21
+#data
+</table><span>
+#errors
+(1,8): unexpected-end-tag
+(1,14): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:22
+#data
+<span></table>
+#errors
+(1,14): unexpected-end-tag
+(1,14): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:23
+#data
+</caption><span>
+#errors
+(1,10): XXX-undefined-error
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+
+#source tests_innerHTML_1.dat:24
+#data
+<span></caption><span>
+#errors
+(1,16): XXX-undefined-error
+(1,22): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:25
+#data
+<span><caption><span>
+#errors
+(1,15): unexpected-start-tag
+(1,21): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:26
+#data
+<span><col><span>
+#errors
+(1,11): unexpected-start-tag
+(1,17): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:27
+#data
+<span><colgroup><span>
+#errors
+(1,16): unexpected-start-tag
+(1,22): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:28
+#data
+<span><html><span>
+#errors
+(1,12): non-html-root
+(1,18): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:29
+#data
+<span><tbody><span>
+#errors
+(1,13): unexpected-start-tag
+(1,19): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:30
+#data
+<span><td><span>
+#errors
+(1,10): unexpected-start-tag
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:31
+#data
+<span><tfoot><span>
+#errors
+(1,13): unexpected-start-tag
+(1,19): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:32
+#data
+<span><thead><span>
+#errors
+(1,13): unexpected-start-tag
+(1,19): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:33
+#data
+<span><th><span>
+#errors
+(1,10): unexpected-start-tag
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:34
+#data
+<span><tr><span>
+#errors
+(1,10): unexpected-start-tag
+(1,16): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:35
+#data
+<span></table><span>
+#errors
+(1,14): unexpected-end-tag
+(1,20): expected-closing-tag-but-got-eof
+#document-fragment
+caption
+#document
+| <span>
+|   <span>
+
+#source tests_innerHTML_1.dat:36
+#data
+</colgroup><col>
+#errors
+(1,11): XXX-undefined-error
+#document-fragment
+colgroup
+#document
+| <col>
+
+#source tests_innerHTML_1.dat:37
+#data
+<a><col>
+#errors
+(1,3): XXX-undefined-error
+#document-fragment
+colgroup
+#document
+| <col>
+
+#source tests_innerHTML_1.dat:38
+#data
+<caption><a>
+#errors
+(1,9): XXX-undefined-error
+(1,12): unexpected-start-tag-implies-table-voodoo
+(1,12): eof-in-table
+#document-fragment
+tbody
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:39
+#data
+<col><a>
+#errors
+(1,5): XXX-undefined-error
+(1,8): unexpected-start-tag-implies-table-voodoo
+(1,8): eof-in-table
+#document-fragment
+tbody
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:40
+#data
+<colgroup><a>
+#errors
+(1,10): XXX-undefined-error
+(1,13): unexpected-start-tag-implies-table-voodoo
+(1,13): eof-in-table
+#document-fragment
+tbody
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:41
+#data
+<tbody><a>
+#errors
+(1,7): XXX-undefined-error
+(1,10): unexpected-start-tag-implies-table-voodoo
+(1,10): eof-in-table
+#document-fragment
+tbody
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:42
+#data
+<tfoot><a>
+#errors
+(1,7): XXX-undefined-error
+(1,10): unexpected-start-tag-implies-table-voodoo
+(1,10): eof-in-table
+#document-fragment
+tbody
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:43
+#data
+<thead><a>
+#errors
+(1,7): XXX-undefined-error
+(1,10): unexpected-start-tag-implies-table-voodoo
+(1,10): eof-in-table
+#document-fragment
+tbody
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:44
+#data
+</table><a>
+#errors
+(1,8): XXX-undefined-error
+(1,11): unexpected-start-tag-implies-table-voodoo
+(1,11): eof-in-table
+#document-fragment
+tbody
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:45
+#data
+<a><tr>
+#errors
+(1,3): unexpected-start-tag-implies-table-voodoo
+#document-fragment
+tbody
+#document
+| <a>
+| <tr>
+
+#source tests_innerHTML_1.dat:46
+#data
+<a><td>
+#errors
+(1,3): unexpected-start-tag-implies-table-voodoo
+(1,7): unexpected-cell-in-table-body
+#document-fragment
+tbody
+#document
+| <a>
+| <tr>
+|   <td>
+
+#source tests_innerHTML_1.dat:48
+#data
+</tr><td>
+#errors
+(1,5): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:50
+#data
+<caption><td>
+#errors
+(1,9): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:51
+#data
+<col><td>
+#errors
+(1,5): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:52
+#data
+<colgroup><td>
+#errors
+(1,10): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:53
+#data
+<tbody><td>
+#errors
+(1,7): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:54
+#data
+<tfoot><td>
+#errors
+(1,7): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:55
+#data
+<thead><td>
+#errors
+(1,7): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:56
+#data
+<tr><td>
+#errors
+(1,4): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:57
+#data
+</table><td>
+#errors
+(1,8): XXX-undefined-error
+#document-fragment
+tr
+#document
+| <td>
+
+#source tests_innerHTML_1.dat:58
+#data
+<td><table></table><td>
+#errors
+#document-fragment
+tr
+#document
+| <td>
+|   <table>
+| <td>
+
+#source tests_innerHTML_1.dat:59
+#data
+<caption><a>
+#errors
+(1,9): XXX-undefined-error
+(1,12): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:60
+#data
+<col><a>
+#errors
+(1,5): XXX-undefined-error
+(1,8): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:61
+#data
+<colgroup><a>
+#errors
+(1,10): XXX-undefined-error
+(1,13): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:62
+#data
+<tbody><a>
+#errors
+(1,7): XXX-undefined-error
+(1,10): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:63
+#data
+<tfoot><a>
+#errors
+(1,7): XXX-undefined-error
+(1,10): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:64
+#data
+<th><a>
+#errors
+(1,4): XXX-undefined-error
+(1,7): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:65
+#data
+<thead><a>
+#errors
+(1,7): XXX-undefined-error
+(1,10): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:66
+#data
+<tr><a>
+#errors
+(1,4): XXX-undefined-error
+(1,7): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:67
+#data
+</table><a>
+#errors
+(1,8): XXX-undefined-error
+(1,11): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:68
+#data
+</tbody><a>
+#errors
+(1,8): XXX-undefined-error
+(1,11): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:69
+#data
+</td><a>
+#errors
+(1,5): unexpected-end-tag
+(1,8): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:70
+#data
+</tfoot><a>
+#errors
+(1,8): XXX-undefined-error
+(1,11): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:71
+#data
+</thead><a>
+#errors
+(1,8): XXX-undefined-error
+(1,11): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:72
+#data
+</th><a>
+#errors
+(1,5): unexpected-end-tag
+(1,8): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:73
+#data
+</tr><a>
+#errors
+(1,5): XXX-undefined-error
+(1,8): expected-closing-tag-but-got-eof
+#document-fragment
+td
+#document
+| <a>
+
+#source tests_innerHTML_1.dat:75
+#data
+</select><option>
+#errors
+(1,9): XXX-undefined-error
+#document-fragment
+select
+#document
+| <option>
+
+#source tests_innerHTML_1.dat:76
+#data
+<input><option>
+#errors
+#document-fragment
+select
+#document
+| <input>
+| <option>
+
+#source tests_innerHTML_1.dat:77
+#data
+<keygen><option>
+#errors
+#document-fragment
+select
+#document
+| <keygen>
+| <option>
+
+#source tests_innerHTML_1.dat:78
+#data
+<textarea><option>
+#errors
+1:19: ERROR: Premature end of file. Currently open tags: html, textarea.
+#document-fragment
+select
+#document
+| <textarea>
+|   "<option>"
+
+#source tests_innerHTML_1.dat:79
+#data
+</html><!--abc-->
+#errors
+(1,7): unexpected-end-tag-after-body-innerhtml
+#document-fragment
+html
+#document
+| <head>
+| <body>
+| <!-- abc -->
+
+#source tests_innerHTML_1.dat:80
+#data
+</frameset><frame>
+#errors
+(1,11): unexpected-frameset-in-frameset-innerhtml
+#document-fragment
+frameset
+#document
+| <frame>
+
+#source tests_innerHTML_1.dat:81
+#data
+#errors
+#document-fragment
+html
+#document
+| <head>
+| <body>
