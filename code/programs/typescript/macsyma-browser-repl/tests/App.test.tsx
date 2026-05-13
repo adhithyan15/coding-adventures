@@ -60,4 +60,17 @@ describe("Macsyma browser REPL", () => {
     expect(await transcript.findByText((content) => content.includes("─") && content.includes("x + 1")))
       .toBeInTheDocument();
   });
+
+  it("renders showtime diagnostics from the runtime transcript metadata", async () => {
+    render(<App />);
+
+    fireEvent.change(screen.getByLabelText("MACSYMA source"), {
+      target: { value: "showtime:true$\n2 + 3$" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Run" }));
+
+    const transcript = within(screen.getByLabelText("Transcript"));
+    expect(await transcript.findByText(/^Evaluation took \d+\.\d{6} seconds\.$/)).toBeInTheDocument();
+    expect(transcript.queryByText("%o2")).toBeInTheDocument();
+  });
 });

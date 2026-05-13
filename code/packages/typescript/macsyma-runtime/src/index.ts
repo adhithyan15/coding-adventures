@@ -253,6 +253,7 @@ export interface EvalResult {
   readonly output: IRNode;
   readonly outputText: string;
   readonly display: boolean;
+  readonly timingText?: string;
 }
 
 export class History {
@@ -312,6 +313,7 @@ export class History {
 
 export class MacsymaBackend extends SymbolicBackend {
   numer = false;
+  showtime = false;
   readonly assumptions = new AssumptionContext();
   private readonly runtimeTable: ReadonlyMap<string, Handler>;
   private readonly runtimeHeld: ReadonlySet<string>;
@@ -373,6 +375,21 @@ export class MacsymaBackend extends SymbolicBackend {
     return this.history.resolveHistorySymbol(name);
   }
 
+  override bind(name: string, value: IRNode): void {
+    super.bind(name, value);
+    if (name === "showtime") {
+      this.showtime = equals(value, TRUE);
+    }
+  }
+
+  override unbind(name: string): void {
+    super.unbind(name);
+    if (name === "showtime") {
+      this.showtime = false;
+      super.bind("showtime", FALSE);
+    }
+  }
+
   override handlers(): ReadonlyMap<string, Handler> {
     return this.runtimeTable;
   }
@@ -385,6 +402,8 @@ export class MacsymaBackend extends SymbolicBackend {
     this.env.clear();
     this.env.set(TRUE.name, TRUE);
     this.env.set(FALSE.name, FALSE);
+    this.showtime = false;
+    this.env.set("showtime", FALSE);
     this.bindMacsymaConstants();
     this.history.reset();
   }
@@ -403,6 +422,7 @@ export class MacsymaBackend extends SymbolicBackend {
     this.bind("%pi", numberNode(Math.PI));
     this.bind("%e", numberNode(Math.E));
     this.bind("%i", sym("ImaginaryUnit"));
+    this.bind("showtime", this.showtime ? TRUE : FALSE);
   }
 }
 
@@ -437,14 +457,25 @@ export class MacsymaSession {
 
   private evalStatement(statement: IRNode): EvalResult {
     const [input, display] = unwrapDisplay(statement);
+    const showTiming = this.backend.showtime && !isShowtimeAssignment(input);
+    const startedAt = Date.now();
     const inputIndex = this.sessionHistory.recordInput(input);
     const output = this.vm.eval(input);
+    const elapsedSeconds = (Date.now() - startedAt) / 1000;
     const outputIndex = this.sessionHistory.recordOutput(output);
     const outputText = displayTextFor(input, output);
     if (isKillAll(input)) {
       this.sessionHistory.reset();
     }
-    return { inputIndex, outputIndex, input, output, outputText, display };
+    return {
+      inputIndex,
+      outputIndex,
+      input,
+      output,
+      outputText,
+      display,
+      ...(showTiming ? { timingText: formatTiming(elapsedSeconds) } : {}),
+    };
   }
 }
 
@@ -466,6 +497,7 @@ export interface JsonEvalResult {
   readonly display: boolean;
   readonly inputText: string;
   readonly outputText: string;
+  readonly timingText?: string;
   readonly inputIr: JsonIrNode;
   readonly outputIr: JsonIrNode;
 }
@@ -510,7 +542,10 @@ function evalResponseOk(results: readonly EvalResult[], history: History): JsonE
   return {
     ok: true,
     results: jsonResults,
-    visibleOutputs: jsonResults.filter((result) => result.display).map((result) => result.outputText),
+    visibleOutputs: jsonResults.flatMap((result) => [
+      ...(result.display ? [result.outputText] : []),
+      ...(result.timingText === undefined ? [] : [result.timingText]),
+    ]),
     history: historyToJson(history),
   };
 }
@@ -532,6 +567,7 @@ function resultToJson(result: EvalResult): JsonEvalResult {
     display: result.display,
     inputText: toDisplayString(result.input),
     outputText: result.outputText,
+    ...(result.timingText === undefined ? {} : { timingText: result.timingText }),
     inputIr: irToJson(result.input),
     outputIr: irToJson(result.output),
   };
@@ -814,6 +850,19 @@ function isKillAll(input: IRNode): boolean {
   return input.kind === "apply"
     && equals(input.head, KILL)
     && input.args.some((arg) => arg.kind === "symbol" && arg.name === ALL_SYMBOL.name);
+}
+
+function isShowtimeAssignment(input: IRNode): boolean {
+  return input.kind === "apply"
+    && input.head.kind === "symbol"
+    && input.head.name === "Assign"
+    && input.args.length === 2
+    && input.args[0].kind === "symbol"
+    && input.args[0].name === "showtime";
+}
+
+function formatTiming(elapsedSeconds: number): string {
+  return `Evaluation took ${elapsedSeconds.toFixed(6)} seconds.`;
 }
 
 function integerIndex(value: number): boolean {

@@ -4,6 +4,7 @@ import {
   ASSUME,
   EQUAL,
   EXP,
+  FALSE,
   FORGET,
   GREATER,
   GREATER_EQUAL,
@@ -130,6 +131,49 @@ describe("macsyma-runtime", () => {
     expect(killResult.input).toEqual(app(KILL, [sym("x")]));
     expect(evResult.input).toEqual(app(EV, [app(ADD, [int(1), int(2)]), sym("numer")]));
     expect(evResult.output).toEqual(numberNode(3));
+  });
+
+  it("tracks the showtime option flag through normal assignments", () => {
+    const session = new MacsymaSession();
+    const [enabled, timed, disabled, untimed] = session.evalSource(
+      "showtime:true$ 2 + 3; showtime:false$ 4 + 5;",
+    );
+
+    expect(enabled.output).toEqual(TRUE);
+    expect(timed.output).toEqual(int(5));
+    expect(timed.timingText).toMatch(/^Evaluation took \d+\.\d{6} seconds\.$/);
+    expect(disabled.output).toEqual(FALSE);
+    expect(disabled.timingText).toBeUndefined();
+    expect(untimed.output).toEqual(int(9));
+    expect(untimed.timingText).toBeUndefined();
+  });
+
+  it("reports showtime diagnostics for suppressed statements", () => {
+    const session = new MacsymaSession();
+    const [, suppressed] = session.evalSource("showtime:true$ 2 + 3$");
+
+    expect(suppressed.display).toBe(false);
+    expect(suppressed.output).toEqual(int(5));
+    expect(suppressed.timingText).toMatch(/^Evaluation took \d+\.\d{6} seconds\.$/);
+  });
+
+  it("restores showtime to false when killed", () => {
+    const backend = new MacsymaBackend(new History());
+    backend.bind("showtime", TRUE);
+
+    backend.unbind("showtime");
+
+    expect(backend.showtime).toBe(false);
+    expect(backend.lookup("showtime")).toEqual(FALSE);
+  });
+
+  it("includes showtime diagnostics in JSON visible outputs", () => {
+    const payload = JSON.parse(evalSourceJson("showtime:true$ 2 + 3$"));
+    const [, result] = payload.results;
+
+    expect(result.display).toBe(false);
+    expect(result.timingText).toMatch(/^Evaluation took \d+\.\d{6} seconds\.$/);
+    expect(payload.visibleOutputs).toEqual([result.timingText]);
   });
 
   it("records and resolves history references", () => {
