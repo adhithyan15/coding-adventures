@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-13 — ADJ25 PR-2: per-level hierarchical coverage + no-flattening rule
+
+### Added
+
+New checker `check_hierarchical_coverage(doc, ir_doc) ->
+HierarchicalCoverageResult` per
+[ADJ25](../../specs/ADJ25-hierarchical-decomposition.md), the
+foundational reset spec. The check walks the IR's `Contains`-edge
+hierarchy and enforces at every parent → children boundary
+(`Document → Sentence`, `Sentence → Phrase`, `Phrase → Claim`,
+`Fact → TypedComponent`) that:
+
+1. Children's spans tile the parent's span exactly (no gaps, no
+   overlaps).
+2. Each child has a non-empty span (synthesized `Entity` exempted).
+3. Each child's kind is allowed at the level (e.g., only
+   `Sentence`/`Discarded` can be a direct child of `Document`).
+
+Additionally, the **no-flattening rule** rejects atom names that
+smuggle source content:
+
+- Any atom containing a digit run that appears in the source is
+  rejected (`battery_200_wh` when source has `"200"`).
+- Any atom ending in a banned unit suffix joined by underscore is
+  rejected (`battery_wh` even when source has no digit).
+- Any atom of 3+ underscore-separated parts each drawn from source
+  words is rejected (`pocket_knife_blade_length`).
+
+Numbers in compound terms (`quantity(50, wh)`) are NOT flagged —
+the legitimate decomposition lifts the digit literal to a `Num`
+term, which the rule deliberately doesn't visit.
+
+### New public types
+
+- `DecompLevel` — `DocumentToSentence`, `SentenceToPhrase`,
+  `PhraseToClaim`, `FactToTypedComponent`.
+- `HierarchicalCoverageResult` — `Pass | Fail { gaps }`.
+- `HierarchicalGap` — `{ level, parent_node_id, kind }`.
+- `HierarchicalGapKind` — `UncoveredBytes`, `Overlap`,
+  `EmptyChildSpan`, `ChildSpansEscape`, `NoChildrenAtLevel`,
+  `WrongChildKindForLevel`, `FlattenedAtom`.
+- `FlatteningReason` — `DigitRunFromSource`, `UnitSuffix`,
+  `MultiWordCollapse`.
+
+### Scope and gating
+
+PR-2 is **additive only**. The new check is exposed as a public
+function but is NOT yet wired into any existing pipeline. PR-4 (the
+hierarchical orchestrator) will wire failures into PR-3's
+fresh-agent retry primitive. The existing `check_coverage` and
+`check_typed_quantity_coverage` are unchanged.
+
+### Tests
+
+13 new test cases covering: happy-path hierarchies, uncovered bytes
+at sentence level, overlap at phrase level, Fact-without-typed-components,
+wrong child kind for level, digit-run flattening, unit-suffix
+flattening, multi-word collapse, legitimate atoms accepted, typed
+quantity not falsely flagged, pure-flat-IR no-op, digit-run
+collection helper, classification priority helper. Total
+`adjudication-coverage` tests: 20 → 33.
+
 ## [0.3.0] - 2026-05-13 — ADJ22 typed-quantity coverage
 
 ### Added
