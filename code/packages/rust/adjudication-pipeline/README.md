@@ -195,6 +195,61 @@ The `detect_disputes(answers, provenance)` function is also public
 for callers who want to run dispute detection over a custom set of
 answers (e.g., replaying an audit trail).
 
+## Agreement-Weighted Rulebook Merging (v0.7, ADJ16 step 4)
+
+When N independent models elicit rulebooks (via
+`adjudication_rulebook::acquire_rulebook_adversarial`), you can
+merge them into a single probabilistic rulebook where each rule's
+weight reflects multi-model agreement:
+
+```rust
+use adjudication_pipeline::{
+    compute_agreement_weighted_rulebook, run_with_rulebooks,
+    RulebookProvenance, RulebookTrustTier,
+};
+
+let gemma_ir   = /* IR from acquire_rulebook on gemma4 */;
+let llama_ir   = /* IR from acquire_rulebook on llama3.1 */;
+let qwen_ir    = /* IR from acquire_rulebook on qwen2.5 */;
+
+let merged = compute_agreement_weighted_rulebook(
+    &[&gemma_ir, &llama_ir, &qwen_ir],
+    "rb-adversarial-merged-2026-05-12",
+);
+// Each definitional(head, [body...]) rule becomes
+//   probabilistic(count_of_rulebooks_with_this_rule / 3, head, [body...])
+// Rules all three models produced get weight 1.0.
+// Rules only one model produced get weight 1/3.
+
+let out = run_with_rulebooks(
+    input,
+    AdjudicationId::new("adj-001"),
+    || chrono::Utc::now().to_rfc3339(),
+    Some(&gateway),
+    &[(
+        merged,
+        RulebookProvenance::new(
+            "rb-adversarial-merged-2026-05-12",
+            RulebookTrustTier::Tentative,
+        ),
+    )],
+);
+```
+
+`run_with_rulebooks` automatically uses `SearchMode::EnumerateAll`
+when rulebooks are attached, so the engine returns
+weighted-model-counting probabilities that propagate the
+rule-level uncertainty into the verdict's marginal probability.
+
+Edge cases:
+
+- One rulebook: every rule gets weight 1.0 (1/1).
+- Within-rulebook duplicates are de-duplicated: a single rulebook
+  listing the same rule twice contributes at most 1 to the count.
+- Non-`definitional` rules (probabilistic / constraint / default)
+  pass through unchanged; the agreement-weight idiom applies only
+  to `definitional` rules in v0.7.
+
 ## Why `adjudication_id` and `now` are caller-supplied
 
 The pipeline is otherwise pure: same input + same id + same

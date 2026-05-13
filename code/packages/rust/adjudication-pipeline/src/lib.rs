@@ -323,6 +323,172 @@ pub enum Verdict {
 }
 
 // ---------------------------------------------------------------------------
+// ADJ16 step 4 — Multi-model agreement weighting
+// ---------------------------------------------------------------------------
+
+/// Merge multiple rulebook IRs into a single rulebook IR where each
+/// rule's weight reflects multi-model agreement.
+///
+/// The motivation, from
+/// [ADJ16](../../../specs/ADJ16-engine-programmatic-adjudication.md)
+/// §"Probabilistic extension (ProbLog)" §1: when N independent
+/// models elicit rulebooks via
+/// `adjudication_rulebook::acquire_rulebook_adversarial`, rules
+/// that *all N models produced* are more trustworthy than rules
+/// *only one model produced*. Step 4 quantifies that intuition by
+/// converting `definitional(head, [body...])` rules to
+/// `probabilistic(weight, head, [body...])` rules with
+/// `weight = count_of_rulebooks_containing_the_rule / N`.
+///
+/// Algorithm:
+/// 1. For each input rulebook, walk every Rule node.
+/// 2. For `definitional(head, [body...])` rules, group by exact
+///    Term equality of `(head, body)` across all rulebooks. The
+///    weight for each group is `count / total_rulebooks`. The
+///    output emits one `probabilistic(weight, head, [body...])`
+///    rule per group.
+/// 3. `probabilistic(p, head, [body...])` rules pass through
+///    unchanged — the caller's existing probability is preserved.
+/// 4. `constraint([body...])` and `default(head, [body...],
+///    [exceptions...])` rules pass through unchanged. They are not
+///    aggregated in v0.7; the agreement-weight idiom is naturally
+///    expressed over definitional rules and probabilistic rules,
+///    and a future iteration can extend to defaults if needed.
+///
+/// Edge cases:
+/// - Empty `rulebooks` slice returns an empty IRDocument with the
+///   given `output_document_id`.
+/// - One rulebook returns the same rules with weight 1.0
+///   (1 / 1 = 1.0). A `definitional` becomes
+///   `probabilistic(1.0, ...)`; nothing else changes.
+///
+/// The output IR is suitable to feed back into
+/// [`run_with_rulebooks`] as a single
+/// `(IRDocument, ClauseProvenance)` pair. The provenance ID
+/// usually reflects the agreement step (e.g.,
+/// `"adversarial-agreement-2026-05-12"`); the trust tier is
+/// caller-chosen (`Tentative` if the underlying rulebooks were
+/// LLM-elicited; `Reviewed` after expert sign-off).
+pub fn compute_agreement_weighted_rulebook(
+    rulebooks: &[&IRDocument],
+    output_document_id: &str,
+) -> IRDocument {
+    use logic_core::Term;
+    use adjudication_ir::{DocumentId, NodeId, NodeKind, Polarity, Modality, IRNode};
+
+    let doc_id = DocumentId::new(output_document_id);
+    let total = rulebooks.len();
+    if total == 0 {
+        return IRDocument {
+            document_id: doc_id,
+            nodes: Vec::new(),
+            edges: Vec::new(),
+        };
+    }
+
+    // Group definitional rules by (head, body_list) Term equality.
+    // Term doesn't implement Hash/Eq (only PartialEq), so we use a
+    // Vec of (term, count) and do linear lookups. Definitional rule
+    // counts in any realistic rulebook are small (typically < 20),
+    // so the O(n²) is fine.
+    let mut definitional_groups: Vec<(Term, usize)> = Vec::new();
+    // Passthrough rules preserved in declaration order across all
+    // input rulebooks. These keep their existing term as-is.
+    let mut passthrough_terms: Vec<Term> = Vec::new();
+
+    for rb in rulebooks {
+        // Track per-rulebook membership so a single rulebook can't
+        // inflate a group's count by listing the same rule twice.
+        let mut seen_in_this_rb: Vec<Term> = Vec::new();
+        for node in &rb.nodes {
+            if node.kind != NodeKind::Rule {
+                continue;
+            }
+            let term = &node.term;
+            let (functor, args) = match term {
+                Term::Compound { functor, args } => (functor.as_str(), args),
+                _ => {
+                    // Not a recognised rule shape — pass through as-is.
+                    if !passthrough_terms.iter().any(|t| t == term) {
+                        passthrough_terms.push(term.clone());
+                    }
+                    continue;
+                }
+            };
+            match functor {
+                "definitional" if args.len() == 2 => {
+                    if seen_in_this_rb.iter().any(|t| t == term) {
+                        continue; // skip duplicate within a single rulebook
+                    }
+                    seen_in_this_rb.push(term.clone());
+                    if let Some(entry) = definitional_groups
+                        .iter_mut()
+                        .find(|(t, _)| t == term)
+                    {
+                        entry.1 += 1;
+                    } else {
+                        definitional_groups.push((term.clone(), 1));
+                    }
+                }
+                _ => {
+                    if !passthrough_terms.iter().any(|t| t == term) {
+                        passthrough_terms.push(term.clone());
+                    }
+                }
+            }
+        }
+    }
+
+    // Build output nodes: one probabilistic rule per definitional
+    // group, then every passthrough rule preserved as-is.
+    let mut nodes: Vec<IRNode> = Vec::new();
+    let mut next_idx = 0usize;
+    for (def_term, count) in definitional_groups {
+        let (head, body_list) = match &def_term {
+            Term::Compound { args, .. } => (args[0].clone(), args[1].clone()),
+            _ => unreachable!("definitional groups only contain compound terms"),
+        };
+        let weight = count as f64 / total as f64;
+        let new_term = logic_core::compound(
+            "probabilistic",
+            vec![logic_core::float(weight), head, body_list],
+        );
+        nodes.push(IRNode {
+            id: NodeId::new(format!("R{}", next_idx)),
+            kind: NodeKind::Rule,
+            term: new_term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        });
+        next_idx += 1;
+    }
+    for term in passthrough_terms {
+        nodes.push(IRNode {
+            id: NodeId::new(format!("R{}", next_idx)),
+            kind: NodeKind::Rule,
+            term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        });
+        next_idx += 1;
+    }
+
+    IRDocument {
+        document_id: doc_id,
+        nodes,
+        edges: Vec::new(),
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
 
@@ -2414,5 +2580,241 @@ mod tests {
             SearchMode::AutoDetect => {}
             other => panic!("expected AutoDetect, got {:?}", other),
         }
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ16 step 4 — agreement-weighted rulebook tests
+    // -----------------------------------------------------------------
+
+    fn def_rule_ir(doc_id: &str, head: logic_core::Term, body: Vec<logic_core::Term>) -> IRDocument {
+        use logic_core::{compound, logic_list};
+        let rule_term = compound("definitional", vec![head, logic_list(body)]);
+        IRDocument {
+            document_id: IRDocumentId::new(doc_id),
+            nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
+        }
+    }
+
+    /// Helper: extract the `(weight, head, body_list_term)` triple
+    /// from a probabilistic rule term. Panics if shape is wrong.
+    fn unpack_probabilistic(term: &logic_core::Term) -> (f64, &logic_core::Term, &logic_core::Term) {
+        match term {
+            logic_core::Term::Compound { functor, args } if functor == "probabilistic" && args.len() == 3 => {
+                let weight = match &args[0] {
+                    logic_core::Term::Num(logic_core::Number::Float(f)) => *f,
+                    other => panic!("expected float weight, got {:?}", other),
+                };
+                (weight, &args[1], &args[2])
+            }
+            other => panic!("expected probabilistic compound, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn agreement_weight_empty_rulebooks_returns_empty_doc() {
+        let merged = compute_agreement_weighted_rulebook(&[], "out");
+        assert_eq!(merged.document_id.0, "out");
+        assert!(merged.nodes.is_empty());
+        assert!(merged.edges.is_empty());
+    }
+
+    #[test]
+    fn agreement_weight_single_rulebook_assigns_weight_one() {
+        use logic_core::{atom, compound};
+        let rb = def_rule_ir(
+            "rb1",
+            compound("non_compliant", vec![atom("p")]),
+            vec![compound("prohibited", vec![atom("matches")])],
+        );
+        let merged = compute_agreement_weighted_rulebook(&[&rb], "out");
+        assert_eq!(merged.nodes.len(), 1);
+        let (w, _, _) = unpack_probabilistic(&merged.nodes[0].term);
+        assert!((w - 1.0).abs() < 1e-9, "weight should be 1.0 for single-rulebook case");
+    }
+
+    #[test]
+    fn agreement_weight_two_rulebooks_full_agreement_yields_weight_one() {
+        use logic_core::{atom, compound};
+        let h = compound("non_compliant", vec![atom("p")]);
+        let b = vec![compound("prohibited", vec![atom("matches")])];
+        let rb1 = def_rule_ir("rb1", h.clone(), b.clone());
+        let rb2 = def_rule_ir("rb2", h.clone(), b.clone());
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2], "out");
+        // Single dedup-merged rule with weight 2/2 = 1.0.
+        assert_eq!(merged.nodes.len(), 1);
+        let (w, _, _) = unpack_probabilistic(&merged.nodes[0].term);
+        assert!((w - 1.0).abs() < 1e-9, "weight should be 1.0 when both rulebooks agree");
+    }
+
+    #[test]
+    fn agreement_weight_two_rulebooks_partial_overlap_yields_proportional_weight() {
+        // rb1: rule A, rule B.
+        // rb2: rule A only.
+        // After merge: rule A weight 2/2 = 1.0, rule B weight 1/2 = 0.5.
+        use logic_core::{atom, compound, logic_list};
+        let a_head = compound("non_compliant", vec![atom("p")]);
+        let a_body = vec![compound("prohibited", vec![atom("matches")])];
+        let b_head = compound("flagged", vec![atom("p")]);
+        let b_body = vec![compound("declared", vec![atom("lighter")])];
+        let rb1 = IRDocument {
+            document_id: IRDocumentId::new("rb1"),
+            nodes: vec![
+                rule_node(
+                    "R1",
+                    compound("definitional", vec![a_head.clone(), logic_list(a_body.clone())]),
+                ),
+                rule_node(
+                    "R2",
+                    compound("definitional", vec![b_head.clone(), logic_list(b_body.clone())]),
+                ),
+            ],
+            edges: vec![],
+        };
+        let rb2 = def_rule_ir("rb2", a_head.clone(), a_body.clone());
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2], "out");
+        assert_eq!(merged.nodes.len(), 2);
+        // Find by head term identity (insertion order is rule A
+        // first because it appears first in rb1).
+        let (w1, h1, _) = unpack_probabilistic(&merged.nodes[0].term);
+        let (w2, h2, _) = unpack_probabilistic(&merged.nodes[1].term);
+        assert_eq!(h1, &a_head);
+        assert!((w1 - 1.0).abs() < 1e-9, "rule A weight should be 1.0, got {}", w1);
+        assert_eq!(h2, &b_head);
+        assert!((w2 - 0.5).abs() < 1e-9, "rule B weight should be 0.5, got {}", w2);
+    }
+
+    #[test]
+    fn agreement_weight_three_rulebooks_no_overlap_yields_one_third_each() {
+        use logic_core::{atom, compound};
+        let rb1 = def_rule_ir(
+            "rb1",
+            compound("rule_a", vec![atom("p")]),
+            vec![atom("x")],
+        );
+        let rb2 = def_rule_ir(
+            "rb2",
+            compound("rule_b", vec![atom("p")]),
+            vec![atom("y")],
+        );
+        let rb3 = def_rule_ir(
+            "rb3",
+            compound("rule_c", vec![atom("p")]),
+            vec![atom("z")],
+        );
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2, &rb3], "out");
+        assert_eq!(merged.nodes.len(), 3);
+        for node in &merged.nodes {
+            let (w, _, _) = unpack_probabilistic(&node.term);
+            assert!(
+                (w - (1.0 / 3.0)).abs() < 1e-9,
+                "each rule should have weight 1/3, got {}",
+                w
+            );
+        }
+    }
+
+    #[test]
+    fn agreement_weight_dedups_within_a_single_rulebook() {
+        // A single rulebook listing the same rule twice shouldn't
+        // inflate the count to 2/1 = 2.0. The dedup-within-rulebook
+        // logic enforces "this rulebook contributes at most 1 to
+        // each rule's count".
+        use logic_core::{atom, compound, logic_list};
+        let head = compound("non_compliant", vec![atom("p")]);
+        let body = vec![compound("prohibited", vec![atom("matches")])];
+        let rule_term = compound("definitional", vec![head, logic_list(body)]);
+        let rb = IRDocument {
+            document_id: IRDocumentId::new("rb1"),
+            nodes: vec![
+                rule_node("R1", rule_term.clone()),
+                rule_node("R2", rule_term),
+            ],
+            edges: vec![],
+        };
+        let merged = compute_agreement_weighted_rulebook(&[&rb], "out");
+        assert_eq!(merged.nodes.len(), 1);
+        let (w, _, _) = unpack_probabilistic(&merged.nodes[0].term);
+        assert!((w - 1.0).abs() < 1e-9, "weight should be 1.0 (1/1), not 2.0");
+    }
+
+    #[test]
+    fn agreement_weight_passes_through_non_definitional_rules() {
+        // A probabilistic, constraint, or default rule should pass
+        // through unchanged. Currently the function preserves the
+        // term and reuses it once.
+        use logic_core::{atom, compound, logic_list, float};
+        let prob_term = compound(
+            "probabilistic",
+            vec![float(0.7), atom("h"), logic_list(vec![atom("b")])],
+        );
+        let constraint_term = compound("constraint", vec![logic_list(vec![atom("c")])]);
+        let rb = IRDocument {
+            document_id: IRDocumentId::new("rb"),
+            nodes: vec![
+                rule_node("R1", prob_term.clone()),
+                rule_node("R2", constraint_term.clone()),
+            ],
+            edges: vec![],
+        };
+        let merged = compute_agreement_weighted_rulebook(&[&rb], "out");
+        assert_eq!(merged.nodes.len(), 2);
+        // First should be the probabilistic (preserved as-is), then
+        // the constraint.
+        assert_eq!(merged.nodes[0].term, prob_term);
+        assert_eq!(merged.nodes[1].term, constraint_term);
+    }
+
+    #[test]
+    fn agreement_weighted_rulebook_feeds_run_with_rulebooks() {
+        // End-to-end smoke: the function's output can be fed back
+        // into run_with_rulebooks. Build two rulebooks that agree on
+        // a bridging rule, merge them, run the pipeline against the
+        // merged rulebook on a tiny source IR.
+        use logic_core::{atom, compound, logic_list};
+        let text = "x";
+        let f = fact_node("F1", atom("a"), 0, text.len());
+        let q = query_node("Q1", atom("b"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        // Both rulebooks supply the same bridging rule b :- a.
+        let rule_term = compound("definitional", vec![atom("b"), logic_list(vec![atom("a")])]);
+        let rb1 = IRDocument {
+            document_id: IRDocumentId::new("rb1"),
+            nodes: vec![rule_node("R1", rule_term.clone())],
+            edges: vec![],
+        };
+        let rb2 = IRDocument {
+            document_id: IRDocumentId::new("rb2"),
+            nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
+        };
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2], "rb-merged-v1");
+        // Weight is 1.0 (full agreement) → probabilistic rule.
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-step4-end-to-end"),
+            make_clock(),
+            None,
+            &[(
+                merged,
+                ClauseProvenance::new("rb-merged-v1", TrustTier::Reviewed),
+            )],
+        );
+        // Engine should derive `b` (probability 1.0 means certain).
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        // Provenance attributes the rule to the merged rulebook id.
+        let table = out.clause_provenance.as_ref().expect("provenance");
+        assert_eq!(table.rule_provenance.len(), 1);
+        let prov = table.rule_provenance.values().next().unwrap();
+        assert_eq!(prov.source_rulebook_id, "rb-merged-v1");
     }
 }

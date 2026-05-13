@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-pipeline"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
-description = "Orchestrator for the adjudication framework. Composes ADJ02 + ADJ03 + ADJ04 + ADJ05 + engine into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. v0.4 wires the ADJ05 adversarial checker. v0.5 adds ADJ16 step 2: run_with_rulebooks() merges typed rulebooks into the engine KB with per-clause provenance. v0.6 adds ADJ16 step 3: DisputedAnswer detection — when multiple rulebooks produce conflicting bindings for the same query, the dispute is surfaced through PipelineOutput.disputed_answers for downstream resolution (ADJ09 review / ADJ06 dialogue)."
+description = "Orchestrator for the adjudication framework. Composes ADJ02 + ADJ03 + ADJ04 + ADJ05 + engine into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. v0.5 adds ADJ16 step 2 (run_with_rulebooks); v0.6 adds ADJ16 step 3 (DisputedAnswer detection); v0.7 adds ADJ16 step 4: compute_agreement_weighted_rulebook() merges N independent rulebook IRs into one ProbLog-style rulebook where each rule's weight reflects multi-model agreement (count_of_rulebooks_with_rule / total_rulebooks)."
 
 [dependencies]
 adjudication-adversarial = { path = "../adjudication-adversarial" }
