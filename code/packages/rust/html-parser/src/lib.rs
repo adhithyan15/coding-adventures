@@ -961,10 +961,14 @@ impl HtmlParser {
     }
 
     fn open_marked_fragment_shell_element_matches(&self, name: &str) -> bool {
-        self.open_elements.iter().rev().any(|path| {
-            element_ref_at_path(&self.document, path)
-                .is_some_and(|element| element.name == name && has_fragment_context_marker(element))
-        })
+        self.open_elements
+            .iter()
+            .rev()
+            .find_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                (element.name == name).then_some(has_fragment_context_marker(element))
+            })
+            .unwrap_or(false)
     }
 
     fn has_unmarked_table_after_last_fragment_marker(&self) -> bool {
@@ -1859,7 +1863,9 @@ impl HtmlParser {
             self.pop_head_descendants();
         }
 
-        if self.current_element_is("script") {
+        if self.current_element_is("script")
+            && !self.current_element_is_marked_fragment_context("script")
+        {
             if let Some((end_tag_start, end_tag_end)) = rfind_script_end_marker(&text) {
                 if script_text_is_in_double_escaped_state(&text[..end_tag_start]) {
                     self.append_text_to_current(text);
@@ -2906,30 +2912,38 @@ impl HtmlParser {
         match incoming_name {
             "caption" | "colgroup" => {
                 self.pop_table_cell_row_and_section_contexts();
-                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_table_context_element_if(|name| {
+                    name == "caption" || name == "colgroup"
+                });
             }
             "tbody" | "thead" | "tfoot" => {
                 self.pop_table_cell_row_and_section_contexts();
-                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_table_context_element_if(|name| {
+                    name == "caption" || name == "colgroup"
+                });
             }
             "col" => {
                 self.pop_table_cell_row_and_section_contexts();
-                self.close_open_element_if(|name| name == "caption");
+                self.close_open_table_context_element_if(|name| name == "caption");
                 if self.current_element_is("table") {
                     self.append_implied_element("colgroup");
                 }
             }
             "tr" => {
-                self.close_open_element_if(|name| name == "td" || name == "th");
-                self.close_open_element_if(|name| name == "tr");
-                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_table_context_element_if(|name| name == "td" || name == "th");
+                self.close_open_table_context_element_if(|name| name == "tr");
+                self.close_open_table_context_element_if(|name| {
+                    name == "caption" || name == "colgroup"
+                });
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
                 }
             }
             "td" | "th" => {
-                self.close_open_element_if(|name| name == "td" || name == "th");
-                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_table_context_element_if(|name| name == "td" || name == "th");
+                self.close_open_table_context_element_if(|name| {
+                    name == "caption" || name == "colgroup"
+                });
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
                 }
@@ -2945,9 +2959,26 @@ impl HtmlParser {
     }
 
     fn pop_table_cell_row_and_section_contexts(&mut self) {
-        self.close_open_element_if(|name| name == "td" || name == "th");
-        self.close_open_element_if(|name| name == "tr");
-        self.close_open_element_if(is_table_section);
+        self.close_open_table_context_element_if(|name| name == "td" || name == "th");
+        self.close_open_table_context_element_if(|name| name == "tr");
+        self.close_open_table_context_element_if(is_table_section);
+    }
+
+    fn close_open_table_context_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
+        let lower_bound = self
+            .open_elements
+            .iter()
+            .rposition(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == "table")
+            })
+            .map_or(0, |index| index + 1);
+        let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+        }) else {
+            return false;
+        };
+        self.open_elements.truncate(lower_bound + relative_index);
+        true
     }
 
     fn apply_simple_implied_end_tags(&mut self, incoming_name: &str) {
