@@ -2,6 +2,73 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-05-12
+
+### Added
+
+ADJ16 step 2: the pipeline gains a rulebook-merging entry point.
+
+- `run_with_rulebooks(input, id, now, gateway, rulebooks)` —
+  new public entry point that accepts a slice of
+  `(IRDocument, ClauseProvenance)` pairs alongside the input
+  document. The input document's IR is lowered with a default
+  `Authoritative` provenance keyed to the document id; each
+  rulebook is lowered with its caller-supplied provenance. The
+  resulting `LoweredKb`s are combined via
+  `LoweredKb::extend` before the engine queries run. The returned
+  `PipelineOutput.clause_provenance` carries per-FactId /
+  per-RuleId attribution so the audit trail (and ADJ16 step 3's
+  future `DisputedAnswer` resolution) can trace each cited clause
+  back to its origin.
+- `ClauseProvenanceTable { fact_provenance, rule_provenance }` —
+  new public type mirroring
+  `adjudication_connector::LoweredKb`'s attribution maps, lifted
+  to the pipeline layer so downstream consumers don't have to
+  reach into the connector.
+- New optional field `PipelineOutput.clause_provenance`. `None`
+  for legacy entry points (`run`, `run_with_gateway`); `Some(table)`
+  for `run_with_rulebooks`.
+- Re-exports `ClauseProvenance` (as `RulebookProvenance`) and
+  `TrustTier` (as `RulebookTrustTier`) so callers can construct
+  rulebook inputs without depending on `adjudication-connector`
+  directly.
+- 7 new tests covering: empty-slice no-op, multi-rulebook merge,
+  per-rulebook attribution preservation, coverage-blocked early
+  exit, malformed-rulebook error path (names the offending
+  rulebook id), Query nodes in rulebook IRs ignored, backward-compat
+  of `clause_provenance: None` on legacy entry points.
+
+### Rationale (ADJ16 step 2)
+
+[ADJ16](../../../specs/ADJ16-engine-programmatic-adjudication.md)
+proposes replacing the answer-time LLM call with the
+deterministic logic engine. The pipeline's engine step already
+runs deterministically — what step 2 adds is the *plumbing for
+rulebook-merged KBs*: today the engine sees only facts/rules from
+the source document IR, so a Tentative rulebook elicited via
+`acquire_rulebook_adversarial` has no way to contribute clauses
+to the answer-time KB. After step 2, callers can pass a list of
+rulebook IRs with their provenance, the engine reasons over the
+combined KB, and the returned attribution table tells you which
+rulebook contributed which clause.
+
+This is the bedrock for step 3 (`EngineVerdict::DisputedAnswer`
+with attributed proof paths) and for the ADJ17 follow-up bench
+that runs the engine on the adversarially-elicited rulebook
+instead of injecting the rulebook text into an LLM system prompt.
+
+### Compatibility
+
+- `run` and `run_with_gateway` are unchanged in signature and
+  semantics. They construct `PipelineOutput` with
+  `clause_provenance: None`.
+- `PipelineOutput` gained a new public field
+  (`clause_provenance: Option<ClauseProvenanceTable>`). This is a
+  soft-break for callers that pattern-destructure
+  `PipelineOutput`; no in-tree caller does. All in-tree callers
+  (TSA demo, clinical demo, contract demo) access fields by name
+  and continue to build unchanged.
+
 ## [0.4.0] - 2026-05-12
 
 ### Added

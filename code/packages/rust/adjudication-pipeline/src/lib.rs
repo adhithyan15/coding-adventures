@@ -49,7 +49,9 @@ use adjudication_audit_trail::{
     DocumentId, EngineArtifacts, IrNode, KbSummary, NodeId, NormalizationRecord, PassName,
     PassOutcome, SearchMode as TrailSearchMode, SearchMode, Violation,
 };
-use adjudication_connector::AdjudicationResult;
+use adjudication_connector::{
+    lower_to_kb_with_provenance, AdjudicationResult, ClauseProvenance, LoweredKb, TrustTier,
+};
 use adjudication_coverage::{check_coverage, CoverageResult, CoverageViolation, Document as CovDocument};
 use adjudication_ir::{IRDocument, IRNode, NodeId as IRNodeId};
 use adjudication_polarity_modality::{
@@ -102,11 +104,47 @@ pub struct PipelineDocument {
 }
 
 /// What the pipeline produces.
+///
+/// `clause_provenance` is `None` for the legacy entry points
+/// ([`run`], [`run_with_gateway`]) and `Some` for
+/// [`run_with_rulebooks`] (ADJ16 step 2). Each `FactId` / `RuleId`
+/// that ended up in the engine's KB is keyed in the maps to the
+/// source rulebook that produced it. Step 3 will consume this to
+/// surface `DisputedAnswer` shapes when proofs disagree across
+/// rulebooks.
 #[derive(Debug)]
 pub struct PipelineOutput {
     pub verdict: Verdict,
     pub audit_trail: AuditTrail,
+    pub clause_provenance: Option<ClauseProvenanceTable>,
 }
+
+/// Parallel attribution maps from clause IDs to the rulebook that
+/// produced them. Mirrors `adjudication_connector::LoweredKb`'s
+/// fact_provenance / rule_provenance fields, lifted to the pipeline
+/// layer so downstream consumers don't have to reach into the
+/// connector to read attribution.
+#[derive(Debug, Clone, Default)]
+pub struct ClauseProvenanceTable {
+    pub fact_provenance: std::collections::HashMap<logic_engine::FactId, ClauseProvenance>,
+    pub rule_provenance: std::collections::HashMap<logic_engine::RuleId, ClauseProvenance>,
+}
+
+impl ClauseProvenanceTable {
+    fn from_lowered(lowered: &LoweredKb) -> Self {
+        Self {
+            fact_provenance: lowered.fact_provenance.clone(),
+            rule_provenance: lowered.rule_provenance.clone(),
+        }
+    }
+}
+
+// Re-export `ClauseProvenance` and `TrustTier` so callers can
+// construct rulebook inputs without depending on
+// `adjudication-connector` directly. `LoweredKb` stays internal —
+// the pipeline owns the lowering and exposes attribution via
+// `ClauseProvenanceTable` only.
+pub use adjudication_connector::{ClauseProvenance as RulebookProvenance, TrustTier as RulebookTrustTier};
 
 /// The pipeline's verdict — distinct from the audit trail's
 /// `AdjudicationOutcome` so callers can pattern-match without
@@ -264,6 +302,7 @@ pub fn run_with_gateway<F: Fn() -> String>(
         return PipelineOutput {
             verdict: Verdict::Blocked { violation_count },
             audit_trail: trail,
+            clause_provenance: None,
         };
     }
 
@@ -279,6 +318,7 @@ pub fn run_with_gateway<F: Fn() -> String>(
             return PipelineOutput {
                 verdict: Verdict::EngineError(detail),
                 audit_trail: trail,
+                clause_provenance: None,
             };
         }
     };
@@ -311,6 +351,215 @@ pub fn run_with_gateway<F: Fn() -> String>(
     PipelineOutput {
         verdict: Verdict::Resolved { answers },
         audit_trail: trail,
+        clause_provenance: None,
+    }
+}
+
+/// ADJ16 step 2: the rulebook-merging entry point.
+///
+/// Same gating checks as [`run_with_gateway`] (ADJ02 coverage, ADJ03
+/// polarity/modality, optional ADJ04 round-trip, optional ADJ05
+/// adversarial). What changes: at engine time, the input document's
+/// IR is lowered with a default `Authoritative` provenance keyed to
+/// the document id, and each entry in `rulebooks` is lowered with
+/// its caller-supplied provenance. All `LoweredKb`s are combined via
+/// [`LoweredKb::extend`] before queries run. The returned
+/// `PipelineOutput.clause_provenance` carries the per-FactId /
+/// per-RuleId attribution so the audit trail (and ADJ16 step 3's
+/// future `DisputedAnswer` resolution) can trace each cited clause
+/// back to its origin.
+///
+/// `rulebooks` is a slice of `(IRDocument, ClauseProvenance)` pairs.
+/// Pass an empty slice to mimic [`run_with_gateway`]'s behavior (no
+/// rulebooks injected, but the input doc is still lowered with
+/// provenance and the attribution table is populated for source
+/// facts).
+///
+/// Queries are extracted only from `input.ir_document`. Any Query
+/// nodes in rulebook IR documents are ignored — rulebooks contribute
+/// rules and facts, not questions.
+pub fn run_with_rulebooks<F: Fn() -> String>(
+    input: PipelineInput,
+    adjudication_id: AdjudicationId,
+    now: F,
+    gateway: Option<&GatewayConfig>,
+    rulebooks: &[(IRDocument, ClauseProvenance)],
+) -> PipelineOutput {
+    // Reuse run_with_gateway up to (but not including) the engine
+    // step by replaying its logic inline. We need a custom engine
+    // call here because `run_adjudication` uses the bare
+    // `lower_to_kb` path; we instead build a combined `LoweredKb`
+    // via `lower_to_kb_with_provenance`.
+    let started_at = now();
+    let mut trail = AuditTrail::new(adjudication_id, started_at.clone());
+
+    trail.documents.push(Document {
+        id: DocumentId::new(input.document.id.clone()),
+        name: input.document.name.clone(),
+        received_at: input.document.received_at.clone(),
+        normalized_text: input.document.normalized_text.clone(),
+        normalization: NormalizationRecord {
+            pipeline: input.document.normalization_pipeline.clone(),
+            version: input.document.normalization_version.clone(),
+            options: Default::default(),
+        },
+        raw_base64: None,
+        appended_turns: Vec::new(),
+    });
+
+    for node in &input.ir_document.nodes {
+        trail.ir_nodes.push(ir_node_to_audit(&input.document.id, node));
+    }
+
+    let cov_doc = CovDocument {
+        id: input.ir_document.document_id.clone(),
+        normalized_text: input.document.normalized_text.clone(),
+    };
+    let cov_started = now();
+    let cov_result = check_coverage(&cov_doc, &input.ir_document);
+    let cov_completed = now();
+    trail.checker_results.push(coverage_to_checker_result(
+        cov_started,
+        cov_completed,
+        &cov_result,
+    ));
+
+    let pm_started = now();
+    let pm_result = check_propagation(&input.ir_document);
+    let pm_completed = now();
+    trail.checker_results.push(propagation_to_checker_result(
+        pm_started,
+        pm_completed,
+        &pm_result,
+    ));
+
+    let prior_gating_ok =
+        matches!(cov_result, CoverageResult::Pass) && pm_result.pass();
+    let adj04_started = now();
+    let adj04_result = if prior_gating_ok {
+        run_adj04(gateway, &input.document.normalized_text, &input.ir_document)
+    } else {
+        Adj04Decision::Skipped
+    };
+    let adj04_completed = now();
+    trail
+        .checker_results
+        .push(adj04_to_checker_result(adj04_started, adj04_completed, &adj04_result));
+
+    let adj05_started = now();
+    let adj05_result = if prior_gating_ok {
+        run_adj05(gateway, &input.document.normalized_text, &input.ir_document)
+    } else {
+        Adj05Decision::Skipped {
+            reason: "ADJ02 or ADJ03 failed — adversarial check skipped",
+        }
+    };
+    let adj05_completed = now();
+    trail
+        .checker_results
+        .push(adj05_to_checker_result(adj05_started, adj05_completed, &adj05_result));
+
+    let coverage_ok = matches!(cov_result, CoverageResult::Pass);
+    let propagation_ok = pm_result.pass();
+
+    if !(coverage_ok && propagation_ok) {
+        let violation_count = trail
+            .checker_results
+            .iter()
+            .map(|cr| cr.violations.len())
+            .sum();
+        trail.outcome = AdjudicationOutcome::ClarificationExhausted {
+            unresolved: collect_violations(&trail.checker_results),
+        };
+        trail.completed_at = Some(now());
+        return PipelineOutput {
+            verdict: Verdict::Blocked { violation_count },
+            audit_trail: trail,
+            clause_provenance: None,
+        };
+    }
+
+    // ---------- engine, provenance-aware ----------
+    let source_provenance = ClauseProvenance::new(
+        input.ir_document.document_id.0.clone(),
+        TrustTier::Authoritative,
+    );
+    let mut combined = match lower_to_kb_with_provenance(
+        &input.ir_document,
+        source_provenance,
+    ) {
+        Ok(l) => l,
+        Err(e) => {
+            let detail = format!("{e:?}");
+            trail.outcome = AdjudicationOutcome::Aborted {
+                reason: detail.clone(),
+            };
+            trail.completed_at = Some(now());
+            return PipelineOutput {
+                verdict: Verdict::EngineError(detail),
+                audit_trail: trail,
+                clause_provenance: None,
+            };
+        }
+    };
+    for (rb_ir, rb_prov) in rulebooks {
+        match lower_to_kb_with_provenance(rb_ir, rb_prov.clone()) {
+            Ok(lowered) => combined.extend(lowered),
+            Err(e) => {
+                let detail = format!(
+                    "rulebook lowering failed for {}: {e:?}",
+                    rb_prov.source_rulebook_id
+                );
+                trail.outcome = AdjudicationOutcome::Aborted {
+                    reason: detail.clone(),
+                };
+                trail.completed_at = Some(now());
+                return PipelineOutput {
+                    verdict: Verdict::EngineError(detail),
+                    audit_trail: trail,
+                    clause_provenance: None,
+                };
+            }
+        }
+    }
+
+    let queries = adjudication_connector::extract_queries(&input.ir_document);
+    let answers: Vec<AdjudicationResult> = queries
+        .into_iter()
+        .map(|q| {
+            let result = logic_engine::search(&q, &combined.kb, logic_engine::SearchMode::AutoDetect);
+            AdjudicationResult { query: q, result }
+        })
+        .collect();
+
+    let provenance_table = ClauseProvenanceTable::from_lowered(&combined);
+
+    trail.engine_artifacts = Some(EngineArtifacts {
+        engine_version: "logic-engine 0.x".to_string(),
+        search_mode: SearchMode::AutoDetect,
+        kb_summary: KbSummary {
+            fact_count: provenance_table.fact_provenance.len(),
+            rule_count: provenance_table.rule_provenance.len(),
+            fact_ids: Vec::new(),
+            rule_ids: Vec::new(),
+            all_certain: answers
+                .iter()
+                .all(|a| !matches!(a.result, logic_engine::SearchResult::EnumerateAllResult { .. })),
+        },
+        proof_dag: serde_json::Value::Null,
+        formula: None,
+        wmc_result: None,
+        answer: answers_to_audit_json(&answers),
+    });
+    trail.outcome = AdjudicationOutcome::Resolved {
+        answer: answers_to_audit_json(&answers),
+    };
+    trail.completed_at = Some(now());
+
+    PipelineOutput {
+        verdict: Verdict::Resolved { answers },
+        audit_trail: trail,
+        clause_provenance: Some(provenance_table),
     }
 }
 
@@ -1327,5 +1576,331 @@ mod tests {
         assert!(matches!(adj05.outcome, PassOutcome::Skipped));
         let reason = adj05.telemetry["skipped_reason"].as_str().unwrap();
         assert!(reason.contains("Adversary") || reason.contains("adversary"));
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ16 step 2 — run_with_rulebooks tests
+    // -----------------------------------------------------------------
+
+    fn query_node(id: &str, term: Term) -> IRNode {
+        // Query nodes are synthesized at adjudication time, not
+        // extracted from the source. Per ADJ01 (and the convention
+        // in adjudication-tsa-demo), they carry empty source_spans
+        // so they don't participate in coverage.
+        IRNode {
+            id: IRNodeId::new(id.to_string()),
+            kind: NodeKind::Query,
+            term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        }
+    }
+
+    fn rule_node_no_spans(id: &str, term: Term) -> IRNode {
+        // Rule nodes from rulebooks aren't anchored in the source
+        // document's text — they come from the rulebook IR. For
+        // pipeline tests we use empty source_spans so the source
+        // document's coverage check stays clean.
+        IRNode {
+            id: IRNodeId::new(id.to_string()),
+            kind: NodeKind::Rule,
+            term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        }
+    }
+
+    fn rulebook_ir(doc_id: &str, nodes: Vec<IRNode>) -> IRDocument {
+        IRDocument {
+            document_id: IRDocumentId::new(doc_id),
+            nodes,
+            edges: Vec::new(),
+        }
+    }
+
+    fn rule_node(id: &str, term: Term) -> IRNode {
+        // Rule nodes from rulebooks don't anchor to the source
+        // document; use empty source_spans so the source's coverage
+        // check isn't affected by rulebook rules.
+        rule_node_no_spans(id, term)
+    }
+
+    #[test]
+    fn run_with_rulebooks_empty_slice_matches_run_with_gateway_outcome() {
+        // No rulebooks attached: behaviour should match the existing
+        // run_with_gateway path (modulo provenance metadata on the source).
+        let text = "ok";
+        let f = fact_node("F1", logic_core::atom("ok"), 0, text.len());
+        let q = query_node("Q1", logic_core::atom("ok"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-empty"),
+            make_clock(),
+            None,
+            &[],
+        );
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        let table = out
+            .clause_provenance
+            .as_ref()
+            .expect("provenance table should be populated by run_with_rulebooks");
+        // Source fact gets the document's id as its rulebook id.
+        assert_eq!(table.fact_provenance.len(), 1);
+        let prov = table.fact_provenance.values().next().unwrap();
+        assert_eq!(prov.source_rulebook_id, "doc1");
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+    }
+
+    #[test]
+    fn run_with_rulebooks_merges_external_rule_into_kb() {
+        // Source asserts `prohibited(matches)`; rulebook supplies
+        // the bridging rule that says any prohibited item makes the
+        // declaration non-compliant. Query: is the declaration
+        // non-compliant?
+        use logic_core::{compound, atom};
+        // 21-byte source text; fact spans 0..21 covers all bytes.
+        let text = "carry-on bag, matches";
+        let source_facts = vec![
+            fact_node("F1", compound("prohibited", vec![atom("matches")]), 0, text.len()),
+            query_node("Q1", atom("non_compliant")),
+        ];
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(source_facts),
+        };
+        // Rulebook: definitional(non_compliant, [prohibited(matches)])
+        let rule_term = compound(
+            "definitional",
+            vec![
+                atom("non_compliant"),
+                logic_core::logic_list(vec![compound("prohibited", vec![atom("matches")])]),
+            ],
+        );
+        let rb = rulebook_ir("rb-tsa-v1", vec![rule_node("R1", rule_term)]);
+        let rb_prov = ClauseProvenance::new("rb-tsa-v1", TrustTier::Reviewed);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-merge"),
+            make_clock(),
+            None,
+            &[(rb, rb_prov)],
+        );
+        match &out.verdict {
+            Verdict::Resolved { answers } => {
+                assert_eq!(answers.len(), 1);
+                match &answers[0].result {
+                    logic_engine::SearchResult::FindFirstResult(Some(_)) => {}
+                    other => panic!(
+                        "expected non_compliant to be provable from merged KB, got {:?}",
+                        other
+                    ),
+                }
+            }
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        let table = out.clause_provenance.as_ref().expect("provenance");
+        // Source contributes one fact (the prohibited item); rulebook
+        // contributes one rule (the bridging definitional). Query is
+        // not lowered.
+        assert_eq!(table.fact_provenance.len(), 1);
+        assert_eq!(table.rule_provenance.len(), 1);
+        let rule_prov = table.rule_provenance.values().next().unwrap();
+        assert_eq!(rule_prov.source_rulebook_id, "rb-tsa-v1");
+        assert_eq!(rule_prov.trust_tier, TrustTier::Reviewed);
+    }
+
+    #[test]
+    fn run_with_rulebooks_attributes_multiple_rulebooks_distinctly() {
+        // Two rulebooks contribute one rule each. After the run, each
+        // rule should be attributable to its origin rulebook.
+        use logic_core::{compound, atom};
+        // Empty text + only a query node = vacuous coverage pass.
+        let q = query_node("Q1", atom("any_answer"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: String::new(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![q]),
+        };
+        let rule_a = rule_node(
+            "Ra",
+            compound("definitional", vec![atom("from_a"), logic_core::logic_list(vec![])]),
+        );
+        let rule_b = rule_node(
+            "Rb",
+            compound("definitional", vec![atom("from_b"), logic_core::logic_list(vec![])]),
+        );
+        let rb_a = rulebook_ir("rb-alpha", vec![rule_a]);
+        let rb_b = rulebook_ir("rb-beta", vec![rule_b]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-multi"),
+            make_clock(),
+            None,
+            &[
+                (rb_a, ClauseProvenance::new("rb-alpha", TrustTier::Tentative)),
+                (rb_b, ClauseProvenance::new("rb-beta", TrustTier::Reviewed)),
+            ],
+        );
+        let table = out.clause_provenance.as_ref().expect("provenance");
+        assert_eq!(table.rule_provenance.len(), 2);
+        let mut origins: Vec<&str> = table
+            .rule_provenance
+            .values()
+            .map(|p| p.source_rulebook_id.as_str())
+            .collect();
+        origins.sort();
+        assert_eq!(origins, vec!["rb-alpha", "rb-beta"]);
+        // Tiers preserved per-rulebook.
+        let alpha_tier = table
+            .rule_provenance
+            .values()
+            .find(|p| p.source_rulebook_id == "rb-alpha")
+            .unwrap()
+            .trust_tier;
+        let beta_tier = table
+            .rule_provenance
+            .values()
+            .find(|p| p.source_rulebook_id == "rb-beta")
+            .unwrap()
+            .trust_tier;
+        assert_eq!(alpha_tier, TrustTier::Tentative);
+        assert_eq!(beta_tier, TrustTier::Reviewed);
+    }
+
+    #[test]
+    fn run_with_rulebooks_blocks_engine_when_coverage_fails() {
+        // Coverage failure short-circuits before the engine runs;
+        // clause_provenance stays None because no lowering occurred.
+        let n = fact_node("n1", logic_core::atom("anomaly"), 100, 150);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "short".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-blocked"),
+            make_clock(),
+            None,
+            &[],
+        );
+        assert!(matches!(out.verdict, Verdict::Blocked { .. }));
+        assert!(out.clause_provenance.is_none());
+    }
+
+    #[test]
+    fn run_with_rulebooks_surfaces_lowering_error_with_rulebook_id() {
+        // Malformed rulebook rule should produce an EngineError whose
+        // message names the offending rulebook id so the caller can
+        // identify which source rulebook to fix.
+        use logic_core::{compound, atom};
+        let q = query_node("Q1", atom("x"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: String::new(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![q]),
+        };
+        // `unknownify` is not a recognised Rule subtype.
+        let bad_rule = rule_node("Rbad", compound("unknownify", vec![atom("x")]));
+        let rb = rulebook_ir("rb-broken", vec![bad_rule]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-err"),
+            make_clock(),
+            None,
+            &[(rb, ClauseProvenance::new("rb-broken", TrustTier::Tentative))],
+        );
+        match &out.verdict {
+            Verdict::EngineError(msg) => {
+                assert!(
+                    msg.contains("rb-broken"),
+                    "engine error should name the rulebook id, got: {msg}"
+                );
+            }
+            other => panic!("expected EngineError, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn run_with_rulebooks_ignores_query_nodes_in_rulebook_ir() {
+        // A rulebook IR with a Query node should NOT cause that
+        // query to be answered. Only the source IR's queries run.
+        use logic_core::atom;
+        let source_q = query_node("Q1", atom("source_query"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: String::new(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![source_q]),
+        };
+        // Rulebook has its own (spurious) query; should be ignored.
+        let rb_q = query_node("RQ1", atom("rulebook_query"));
+        let rb = rulebook_ir("rb-with-query", vec![rb_q]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-ignore-q"),
+            make_clock(),
+            None,
+            &[(rb, ClauseProvenance::new("rb-with-query", TrustTier::Tentative))],
+        );
+        match &out.verdict {
+            Verdict::Resolved { answers } => {
+                assert_eq!(answers.len(), 1, "only the source query should run");
+                // The single answer is for `source_query`, not `rulebook_query`.
+                assert_eq!(format!("{:?}", answers[0].query), format!("{:?}", atom("source_query")));
+            }
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn run_with_gateway_leaves_provenance_table_unpopulated() {
+        // Backward compatibility: the existing entry point's output
+        // has clause_provenance = None. Callers that don't migrate to
+        // run_with_rulebooks see no behavioural change.
+        let text = "ok";
+        let f = fact_node("F1", logic_core::atom("ok"), 0, text.len());
+        let q = query_node("Q1", logic_core::atom("ok"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        let out = run(input, AdjudicationId::new("adj-bc"), make_clock());
+        assert!(out.clause_provenance.is_none());
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
     }
 }
