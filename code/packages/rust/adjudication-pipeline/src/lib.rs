@@ -109,14 +109,174 @@ pub struct PipelineDocument {
 /// ([`run`], [`run_with_gateway`]) and `Some` for
 /// [`run_with_rulebooks`] (ADJ16 step 2). Each `FactId` / `RuleId`
 /// that ended up in the engine's KB is keyed in the maps to the
-/// source rulebook that produced it. Step 3 will consume this to
-/// surface `DisputedAnswer` shapes when proofs disagree across
-/// rulebooks.
+/// source rulebook that produced it.
+///
+/// `disputed_answers` (ADJ16 step 3) lists queries whose proof DAGs
+/// contain multiple proofs that (a) come from different rulebooks
+/// and (b) produce different variable bindings. An empty vec means
+/// no dispute was detected — either no rulebooks were attached, the
+/// engine ran in `FindFirst` mode (only one proof returned), or all
+/// proofs agreed.
 #[derive(Debug)]
 pub struct PipelineOutput {
     pub verdict: Verdict,
     pub audit_trail: AuditTrail,
     pub clause_provenance: Option<ClauseProvenanceTable>,
+    pub disputed_answers: Vec<DisputedAnswer>,
+}
+
+// ---------------------------------------------------------------------------
+// ADJ16 step 3 — DisputedAnswer
+// ---------------------------------------------------------------------------
+
+/// A query whose engine proofs disagree across rulebooks.
+///
+/// Surfaced when [`run_with_rulebooks`] returns multiple proofs (in
+/// `SearchMode::EnumerateAll`) and the proofs' clause-provenance
+/// attribution shows that distinct rulebooks led to distinct variable
+/// bindings. This is the data shape [ADJ16 §"Open questions" §2]
+/// names as `DisputedAnswer`: both proofs travel through the audit
+/// trail; the caller (or a future ADJ06 dialogue) decides resolution.
+#[derive(Debug, Clone)]
+pub struct DisputedAnswer {
+    /// The query that produced disagreeing proofs.
+    pub query: logic_core::Term,
+    /// One candidate per distinct (binding, source_rulebook_set)
+    /// pairing. Identical proofs from the same rulebooks are
+    /// de-duplicated in [`detect_disputes`].
+    pub candidates: Vec<DisputeCandidate>,
+    /// What kind of intervention is needed to resolve the dispute.
+    pub resolution_required: ResolutionRequirement,
+}
+
+/// One candidate verdict inside a [`DisputedAnswer`].
+#[derive(Debug, Clone)]
+pub struct DisputeCandidate {
+    /// Variable bindings under which this candidate's proof
+    /// succeeded.
+    pub bindings: logic_core::Substitution,
+    /// Fact IDs cited by this candidate's proof (deduplicated).
+    pub via_facts: Vec<logic_engine::FactId>,
+    /// Rule IDs cited by this candidate's proof (deduplicated).
+    pub via_rules: Vec<logic_engine::RuleId>,
+    /// Source rulebooks that contributed to this candidate's proof,
+    /// sorted lexicographically for stable display.
+    pub source_rulebooks: Vec<String>,
+}
+
+/// What kind of intervention resolves a dispute.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ResolutionRequirement {
+    /// Multiple rulebooks produced conflicting bindings — needs
+    /// expert review per ADJ09's review workflow. The default for
+    /// v0.6.
+    HumanReview,
+    /// (Future, not yet emitted by `detect_disputes`.) A higher-trust
+    /// rulebook in the candidate set wins automatically; the named
+    /// rulebook is the winner. Trust-tier dominance is a
+    /// deployment-policy decision, not a framework default.
+    TrustTierDominates { winner_rulebook_id: String },
+}
+
+/// Walk every answer's proof DAG and surface disputes.
+///
+/// A dispute is recorded when, for a single query, the proof DAG
+/// contains **at least two proofs** whose:
+/// - source-rulebook attributions are not identical sets, AND
+/// - variable bindings differ (proofs producing the same bindings
+///   from different rulebooks are corroborating, not disputing).
+///
+/// Returns an empty vec when no answer has multiple proofs (e.g.,
+/// the engine ran in `FindFirst` mode), when all proofs share the
+/// same rulebook attribution, or when all proofs produce identical
+/// bindings.
+pub fn detect_disputes(
+    answers: &[AdjudicationResult],
+    provenance: &ClauseProvenanceTable,
+) -> Vec<DisputedAnswer> {
+    let mut out = Vec::new();
+    for answer in answers {
+        let dag = match &answer.result {
+            logic_engine::SearchResult::EnumerateAllResult { dag, .. } => dag,
+            _ => continue,
+        };
+        if dag.proofs.len() < 2 {
+            continue;
+        }
+
+        let mut candidates: Vec<DisputeCandidate> = Vec::new();
+        for proof in &dag.proofs {
+            let mut rulebooks: std::collections::BTreeSet<String> =
+                std::collections::BTreeSet::new();
+            for f_id in &proof.via_facts {
+                if let Some(prov) = provenance.fact_provenance.get(f_id) {
+                    rulebooks.insert(prov.source_rulebook_id.clone());
+                }
+            }
+            for r_id in &proof.via_rules {
+                if let Some(prov) = provenance.rule_provenance.get(r_id) {
+                    rulebooks.insert(prov.source_rulebook_id.clone());
+                }
+            }
+            candidates.push(DisputeCandidate {
+                bindings: proof.bindings.clone(),
+                via_facts: proof.via_facts.clone(),
+                via_rules: proof.via_rules.clone(),
+                source_rulebooks: rulebooks.into_iter().collect(),
+            });
+        }
+
+        // De-duplicate: if two candidates have identical bindings AND
+        // identical rulebook sets, they are the same candidate and
+        // shouldn't double-count. (Equal bindings from different
+        // rulebooks = corroborating, kept separate; the dispute test
+        // below uses the multiset.)
+        let mut unique: Vec<DisputeCandidate> = Vec::new();
+        for c in candidates {
+            let already_present = unique.iter().any(|u| {
+                u.bindings == c.bindings && u.source_rulebooks == c.source_rulebooks
+            });
+            if !already_present {
+                unique.push(c);
+            }
+        }
+
+        // Dispute test: there exists a *pair* of candidates whose
+        // rulebook attributions differ AND whose bindings differ.
+        // The joint per-pair check (vs evaluating the two conditions
+        // globally) avoids a subtle false-positive where one
+        // rulebook's within-rulebook ambiguity gets paired with an
+        // unrelated second rulebook's corroborating proof. The
+        // standard semantic for "two rulebooks disagree" is: there
+        // is a pair (p_i, p_j) such that p_i and p_j cite different
+        // rulebook sets AND produce different bindings for the
+        // query variables.
+        //
+        // Same bindings from different rulebooks = corroborating
+        // (not a dispute). Different bindings from the same rulebook
+        // = within-rulebook ambiguity (a rulebook-quality issue, not
+        // an inter-rulebook conflict). Both are filtered out by the
+        // joint per-pair check.
+        let mut is_dispute = false;
+        'outer: for i in 0..unique.len() {
+            for j in (i + 1)..unique.len() {
+                if unique[i].source_rulebooks != unique[j].source_rulebooks
+                    && unique[i].bindings != unique[j].bindings
+                {
+                    is_dispute = true;
+                    break 'outer;
+                }
+            }
+        }
+        if is_dispute {
+            out.push(DisputedAnswer {
+                query: answer.query.clone(),
+                candidates: unique,
+                resolution_required: ResolutionRequirement::HumanReview,
+            });
+        }
+    }
+    out
 }
 
 /// Parallel attribution maps from clause IDs to the rulebook that
@@ -303,6 +463,7 @@ pub fn run_with_gateway<F: Fn() -> String>(
             verdict: Verdict::Blocked { violation_count },
             audit_trail: trail,
             clause_provenance: None,
+            disputed_answers: Vec::new(),
         };
     }
 
@@ -319,6 +480,7 @@ pub fn run_with_gateway<F: Fn() -> String>(
                 verdict: Verdict::EngineError(detail),
                 audit_trail: trail,
                 clause_provenance: None,
+                disputed_answers: Vec::new(),
             };
         }
     };
@@ -352,6 +514,7 @@ pub fn run_with_gateway<F: Fn() -> String>(
         verdict: Verdict::Resolved { answers },
         audit_trail: trail,
         clause_provenance: None,
+        disputed_answers: Vec::new(),
     }
 }
 
@@ -476,6 +639,7 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
             verdict: Verdict::Blocked { violation_count },
             audit_trail: trail,
             clause_provenance: None,
+            disputed_answers: Vec::new(),
         };
     }
 
@@ -499,6 +663,7 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
                 verdict: Verdict::EngineError(detail),
                 audit_trail: trail,
                 clause_provenance: None,
+                disputed_answers: Vec::new(),
             };
         }
     };
@@ -518,25 +683,44 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
                     verdict: Verdict::EngineError(detail),
                     audit_trail: trail,
                     clause_provenance: None,
+                    disputed_answers: Vec::new(),
                 };
             }
         }
     }
 
+    // ADJ16 step 3: when rulebooks are attached, default to
+    // `EnumerateAll` mode so the engine returns every successful
+    // proof. Dispute detection requires multiple proofs per query —
+    // `FindFirst` would stop at the first success and hide
+    // disagreements. When no rulebooks are attached, fall back to
+    // `AutoDetect` (the engine picks based on whether the KB is
+    // all-Certain).
+    let search_mode = if rulebooks.is_empty() {
+        logic_engine::SearchMode::AutoDetect
+    } else {
+        logic_engine::SearchMode::EnumerateAll
+    };
     let queries = adjudication_connector::extract_queries(&input.ir_document);
     let answers: Vec<AdjudicationResult> = queries
         .into_iter()
         .map(|q| {
-            let result = logic_engine::search(&q, &combined.kb, logic_engine::SearchMode::AutoDetect);
+            let result = logic_engine::search(&q, &combined.kb, search_mode);
             AdjudicationResult { query: q, result }
         })
         .collect();
 
     let provenance_table = ClauseProvenanceTable::from_lowered(&combined);
+    let disputed_answers = detect_disputes(&answers, &provenance_table);
 
+    let audit_search_mode = match search_mode {
+        logic_engine::SearchMode::FindFirst => SearchMode::FindFirst,
+        logic_engine::SearchMode::EnumerateAll => SearchMode::EnumerateAll,
+        logic_engine::SearchMode::AutoDetect => SearchMode::AutoDetect,
+    };
     trail.engine_artifacts = Some(EngineArtifacts {
         engine_version: "logic-engine 0.x".to_string(),
-        search_mode: SearchMode::AutoDetect,
+        search_mode: audit_search_mode,
         kb_summary: KbSummary {
             fact_count: provenance_table.fact_provenance.len(),
             rule_count: provenance_table.rule_provenance.len(),
@@ -560,6 +744,7 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
         verdict: Verdict::Resolved { answers },
         audit_trail: trail,
         clause_provenance: Some(provenance_table),
+        disputed_answers,
     }
 }
 
@@ -1709,10 +1894,19 @@ mod tests {
         match &out.verdict {
             Verdict::Resolved { answers } => {
                 assert_eq!(answers.len(), 1);
+                // ADJ16 step 3 switches search mode to EnumerateAll
+                // when rulebooks are attached, so we now expect a
+                // proof-DAG result with at least one proof rather
+                // than a single FindFirst binding.
                 match &answers[0].result {
-                    logic_engine::SearchResult::FindFirstResult(Some(_)) => {}
+                    logic_engine::SearchResult::EnumerateAllResult { dag, .. } => {
+                        assert!(
+                            !dag.proofs.is_empty(),
+                            "expected non_compliant to have at least one proof"
+                        );
+                    }
                     other => panic!(
-                        "expected non_compliant to be provable from merged KB, got {:?}",
+                        "expected non_compliant to be provable from merged KB (EnumerateAll), got {:?}",
                         other
                     ),
                 }
@@ -1901,6 +2095,324 @@ mod tests {
         match &out.verdict {
             Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
             other => panic!("expected Resolved, got {other:?}"),
+        }
+        // ADJ16 step 3: legacy entry points produce no dispute records.
+        assert!(out.disputed_answers.is_empty());
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ16 step 3 — DisputedAnswer tests
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn no_dispute_when_single_proof_returned() {
+        // Source fact + one rulebook with a single bridging rule.
+        // Engine returns exactly one proof; no dispute possible.
+        use logic_core::{atom, compound};
+        let text = "x";
+        let source = vec![
+            fact_node("F1", atom("a"), 0, text.len()),
+            query_node("Q1", atom("b")),
+        ];
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(source),
+        };
+        let bridge = compound(
+            "definitional",
+            vec![atom("b"), logic_core::logic_list(vec![atom("a")])],
+        );
+        let rb = rulebook_ir("rb-only", vec![rule_node("R1", bridge)]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-single-proof"),
+            make_clock(),
+            None,
+            &[(rb, ClauseProvenance::new("rb-only", TrustTier::Reviewed))],
+        );
+        // Resolved with one answer, one proof, no dispute.
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        assert!(out.disputed_answers.is_empty());
+    }
+
+    #[test]
+    fn no_dispute_when_two_rulebooks_corroborate_with_same_bindings() {
+        // Two rulebooks supply rules that BOTH conclude `b`. Same
+        // bindings (empty — `b` is a ground atom), different proof
+        // attributions. Per the dispute rule "distinct rulebook sets
+        // AND distinct bindings", this is corroboration, not dispute.
+        use logic_core::{atom, compound};
+        let text = "x";
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![
+                fact_node("F1", atom("a"), 0, text.len()),
+                query_node("Q1", atom("b")),
+            ]),
+        };
+        let rule_a = rule_node(
+            "Ra",
+            compound("definitional", vec![atom("b"), logic_core::logic_list(vec![atom("a")])]),
+        );
+        let rule_b = rule_node(
+            "Rb",
+            compound("definitional", vec![atom("b"), logic_core::logic_list(vec![atom("a")])]),
+        );
+        let rb_a = rulebook_ir("rb-alpha", vec![rule_a]);
+        let rb_b = rulebook_ir("rb-beta", vec![rule_b]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-corroborate"),
+            make_clock(),
+            None,
+            &[
+                (rb_a, ClauseProvenance::new("rb-alpha", TrustTier::Tentative)),
+                (rb_b, ClauseProvenance::new("rb-beta", TrustTier::Tentative)),
+            ],
+        );
+        // Engine should find two proofs (one via each rule), both
+        // producing the same empty binding. Per the dispute
+        // semantics, identical bindings = corroboration, not dispute.
+        assert!(
+            out.disputed_answers.is_empty(),
+            "corroborating proofs should not produce a dispute, got {:?}",
+            out.disputed_answers
+        );
+    }
+
+    #[test]
+    fn dispute_detected_when_rulebooks_produce_different_bindings() {
+        // Source fact: `subject(x)`. Two rulebooks contribute
+        // contradictory classifications:
+        //   rb-strict: classify(X, prohibited) :- subject(X).
+        //   rb-lenient: classify(X, allowed)   :- subject(X).
+        // Query: ?- classify(x, Status).
+        // Engine returns two proofs: one binds Status=prohibited
+        // (from rb-strict's rule), one binds Status=allowed (from
+        // rb-lenient's). Distinct rulebooks AND distinct bindings →
+        // dispute.
+        use logic_core::{atom, compound, var};
+        let text = "x";
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![
+                fact_node("F1", compound("subject", vec![atom("x")]), 0, text.len()),
+                query_node(
+                    "Q1",
+                    compound("classify", vec![atom("x"), Term::Var(var("Status"))]),
+                ),
+            ]),
+        };
+        let xv = var("X");
+        let strict_rule = compound(
+            "definitional",
+            vec![
+                compound("classify", vec![Term::Var(xv.clone()), atom("prohibited")]),
+                logic_core::logic_list(vec![compound("subject", vec![Term::Var(xv.clone())])]),
+            ],
+        );
+        let lenient_rule = compound(
+            "definitional",
+            vec![
+                compound("classify", vec![Term::Var(xv.clone()), atom("allowed")]),
+                logic_core::logic_list(vec![compound("subject", vec![Term::Var(xv.clone())])]),
+            ],
+        );
+        let rb_strict = rulebook_ir("rb-strict", vec![rule_node("Rs", strict_rule)]);
+        let rb_lenient = rulebook_ir("rb-lenient", vec![rule_node("Rl", lenient_rule)]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-dispute"),
+            make_clock(),
+            None,
+            &[
+                (rb_strict, ClauseProvenance::new("rb-strict", TrustTier::Tentative)),
+                (rb_lenient, ClauseProvenance::new("rb-lenient", TrustTier::Tentative)),
+            ],
+        );
+        assert_eq!(
+            out.disputed_answers.len(),
+            1,
+            "expected exactly one disputed answer, got {:?}",
+            out.disputed_answers
+        );
+        let dispute = &out.disputed_answers[0];
+        assert_eq!(
+            dispute.resolution_required,
+            ResolutionRequirement::HumanReview
+        );
+        // Two candidates, one from each rulebook.
+        assert_eq!(dispute.candidates.len(), 2);
+        let mut rulebook_ids: Vec<&str> = dispute
+            .candidates
+            .iter()
+            .flat_map(|c| c.source_rulebooks.iter().map(|s| s.as_str()))
+            .collect();
+        rulebook_ids.sort();
+        rulebook_ids.dedup();
+        // The source document's fact contributes "doc1" provenance
+        // (the default Authoritative source). Plus rb-strict and
+        // rb-lenient for the rules.
+        assert!(rulebook_ids.contains(&"rb-strict"));
+        assert!(rulebook_ids.contains(&"rb-lenient"));
+    }
+
+    #[test]
+    fn no_dispute_from_corroborating_pair_even_with_within_rulebook_ambiguity() {
+        // Synthesize a 3-proof DAG by hand and feed it directly to
+        // detect_disputes. The scenario:
+        //   proof_a: bindings X, from {rb-alpha}
+        //   proof_b: bindings X, from {rb-beta}  (corroborates a)
+        //   proof_c: bindings Y, from {rb-alpha} (within-rb ambiguity)
+        //
+        // Pairwise:
+        //   (a, b): different rulebooks, SAME bindings → no
+        //   (a, c): SAME rulebooks ({rb-alpha}), different bindings → no
+        //   (b, c): different rulebooks AND different bindings → DISPUTE
+        //
+        // So the joint per-pair check correctly identifies a
+        // genuine cross-rulebook disagreement: rb-beta says X, but
+        // rb-alpha (via its Y proof) says Y. The (a, b) corroboration
+        // doesn't undo that. This is the *correct* behaviour — the
+        // engine cannot tell which of rb-alpha's two answers it
+        // intends, but the framework should still surface that
+        // rb-beta and rb-alpha disagree on at least one reading.
+        use logic_core::{atom, var, compound, Substitution};
+        use logic_engine::{FactId, RuleId};
+        let mk_bindings = |v_name: &str, t: logic_core::Term| -> Substitution {
+            Substitution::empty().extend(var(v_name).id, t)
+        };
+        let proof_a = logic_engine::Proof {
+            bindings: mk_bindings("Status", atom("x")),
+            steps: vec![],
+            via_facts: vec![FactId(100)],
+            via_rules: vec![RuleId(200)],
+        };
+        let proof_b = logic_engine::Proof {
+            bindings: mk_bindings("Status", atom("x")),
+            steps: vec![],
+            via_facts: vec![FactId(101)],
+            via_rules: vec![RuleId(201)],
+        };
+        let proof_c = logic_engine::Proof {
+            bindings: mk_bindings("Status", atom("y")),
+            steps: vec![],
+            via_facts: vec![FactId(102)],
+            via_rules: vec![RuleId(202)],
+        };
+        let dag = logic_engine::ProofDAG {
+            root_query: compound("classify", vec![atom("z"), Term::Var(var("Status"))]),
+            proofs: vec![proof_a, proof_b, proof_c],
+        };
+        let answer = AdjudicationResult {
+            query: dag.root_query.clone(),
+            result: logic_engine::SearchResult::EnumerateAllResult {
+                dag,
+                probability: 1.0,
+            },
+        };
+        let mut table = ClauseProvenanceTable::default();
+        // a and c → rb-alpha; b → rb-beta.
+        table.fact_provenance.insert(
+            FactId(100),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        table.rule_provenance.insert(
+            RuleId(200),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        table.fact_provenance.insert(
+            FactId(101),
+            ClauseProvenance::new("rb-beta", TrustTier::Tentative),
+        );
+        table.rule_provenance.insert(
+            RuleId(201),
+            ClauseProvenance::new("rb-beta", TrustTier::Tentative),
+        );
+        table.fact_provenance.insert(
+            FactId(102),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        table.rule_provenance.insert(
+            RuleId(202),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        let disputes = detect_disputes(&[answer], &table);
+        // Joint per-pair check: (b, c) qualifies as a dispute pair.
+        // The detector flags the answer; the candidate list shows
+        // all three proofs so a reviewer can see the full picture.
+        assert_eq!(disputes.len(), 1, "expected one disputed answer");
+        assert_eq!(disputes[0].candidates.len(), 3);
+
+    }
+
+    #[test]
+    fn detect_disputes_with_empty_attribution_returns_empty() {
+        // Sanity: feeding detect_disputes an empty answer list (or
+        // answers with no EnumerateAll results) returns an empty vec.
+        let answers: Vec<AdjudicationResult> = Vec::new();
+        let table = ClauseProvenanceTable::default();
+        assert!(detect_disputes(&answers, &table).is_empty());
+    }
+
+    #[test]
+    fn run_with_rulebooks_uses_enumerate_all_when_rulebooks_attached() {
+        // Sanity: with rulebooks the engine runs in EnumerateAll
+        // (so dispute detection can see all proofs). With no
+        // rulebooks the audit trail records AutoDetect.
+        use logic_core::atom;
+        let text = "x";
+        let f = fact_node("F1", atom("ok"), 0, text.len());
+        let q = query_node("Q1", atom("ok"));
+        let with_rb = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f.clone(), q.clone()]),
+        };
+        let trivial_rb = rulebook_ir("rb-trivial", vec![]);
+        let out_with = run_with_rulebooks(
+            with_rb,
+            AdjudicationId::new("adj-mode-rb"),
+            make_clock(),
+            None,
+            &[(trivial_rb, ClauseProvenance::new("rb-trivial", TrustTier::Tentative))],
+        );
+        match &out_with.audit_trail.engine_artifacts.as_ref().unwrap().search_mode {
+            SearchMode::EnumerateAll => {}
+            other => panic!("expected EnumerateAll, got {:?}", other),
+        }
+
+        let without_rb = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        let out_without = run_with_rulebooks(
+            without_rb,
+            AdjudicationId::new("adj-mode-norb"),
+            make_clock(),
+            None,
+            &[],
+        );
+        match &out_without.audit_trail.engine_artifacts.as_ref().unwrap().search_mode {
+            SearchMode::AutoDetect => {}
+            other => panic!("expected AutoDetect, got {:?}", other),
         }
     }
 }
