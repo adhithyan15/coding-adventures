@@ -285,10 +285,8 @@ pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
                  your reasoning is truncated."
             .to_string(),
         Some(text) => format!(
-            "You are a contract-review assistant. The contract-clause rules \
-             you MUST apply are listed below. Do not invent any additional \
-             rules; if a finding is not justified by a specific numbered rule \
-             below, do not include it.\n\
+            "You are a contract-review assistant. Use only the rules \
+             listed below. Do not invent or infer additional rules.\n\
              \n\
              {text}\n\
              \n\
@@ -298,14 +296,30 @@ pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
              Your response MUST begin with the verdict line as the very \
              first line of output:\n\
              \n\
-             VERDICT: OBLIGATION_HOLDS\n\
-             (or)\n\
-             VERDICT: OBLIGATION_EXCUSED\n\
+             VERDICT: OBLIGATION_HOLDS — only when a rule above \
+             explicitly affirms the obligation.\n\
+             VERDICT: OBLIGATION_EXCUSED — only when a rule above \
+             explicitly excuses the obligation.\n\
+             VERDICT: ESCALATE — <one sentence describing what a \
+             supervisor needs to clarify> — when the rules above don't \
+             cover the case, when you cannot evaluate a rule's \
+             condition from the clause, or when the clause is \
+             ambiguous.\n\
              \n\
-             After the verdict line, give 2-3 sentences of reasoning citing \
-             specific rule numbers for each finding. The verdict-first format \
-             ensures the verdict is captured even if your reasoning is \
-             truncated."
+             Important: silence is not permission. If no rule above \
+             either explicitly affirms the obligation or explicitly \
+             excuses it, the correct verdict is ESCALATE — not one of \
+             the binary verdicts. Use ESCALATE whenever you would \
+             otherwise need to reason beyond the rules above, \
+             fabricate a rule that isn't listed, or default to one of \
+             the binary verdicts because the rulebook doesn't resolve \
+             the case.\n\
+             \n\
+             After the verdict line, give 2-3 sentences of reasoning \
+             citing the specific rule number(s) that produced your \
+             verdict (e.g., \"per rule N, ...\"). The verdict-first \
+             format ensures the verdict is captured even if your \
+             reasoning is truncated."
         ),
     }
 }
@@ -323,19 +337,32 @@ pub fn build_priming_system_prompt() -> String {
      summarise the rules, comment on them, or analyse them until I \
      ask my question in turn 2.\n\
      \n\
-     Turn 2: I will give you a contract clause. Apply the rulebook \
-     from turn 1 and respond. Your response MUST begin with the \
-     verdict line as the very first line of output:\n\
+     Turn 2: I will give you a contract clause. Apply only the \
+     rulebook from turn 1 — do not invent or infer additional \
+     rules. Your response MUST begin with the verdict line as the \
+     very first line of output:\n\
      \n\
-     VERDICT: OBLIGATION_HOLDS\n\
-     (or)\n\
-     VERDICT: OBLIGATION_EXCUSED\n\
+     VERDICT: OBLIGATION_HOLDS — only when a rule from turn 1 \
+     explicitly affirms the obligation.\n\
+     VERDICT: OBLIGATION_EXCUSED — only when a rule from turn 1 \
+     explicitly excuses the obligation.\n\
+     VERDICT: ESCALATE — <one sentence describing what a supervisor \
+     needs to clarify> — when no rule from turn 1 covers the case, \
+     when you cannot evaluate a rule's condition from the clause, \
+     or when the clause is ambiguous.\n\
      \n\
-     After the verdict line, give 2-3 sentences of reasoning citing \
-     specific rule numbers from the turn 1 rulebook. The \
-     verdict-first format ensures the verdict is captured even if \
-     your reasoning is truncated. Do not invent rules that were not \
-     in the turn 1 rulebook."
+     Important: silence is not permission. If no rule from turn 1 \
+     either explicitly affirms the obligation or explicitly excuses \
+     it, the correct verdict is ESCALATE — not one of the binary \
+     verdicts. Use ESCALATE whenever you would otherwise need to \
+     reason beyond the rules from turn 1, fabricate a rule, or \
+     default to one of the binary verdicts because the rulebook \
+     doesn't resolve the case.\n\
+     \n\
+     After the verdict line, give 2-3 sentences of reasoning \
+     citing the specific rule number(s) from the turn 1 rulebook. \
+     The verdict-first format ensures the verdict is captured even \
+     if your reasoning is truncated."
         .to_string()
 }
 
@@ -359,8 +386,10 @@ pub fn build_priming_turn2_user_prompt(source_text: &str) -> String {
          Apply the rulebook from turn 1. Contract clause: {source_text}\n\
          \n\
          Does the seller have to deliver the goods? Remember: first \
-         line MUST be `VERDICT: OBLIGATION_HOLDS` or \
-         `VERDICT: OBLIGATION_EXCUSED`."
+         line MUST be `VERDICT: OBLIGATION_HOLDS`, \
+         `VERDICT: OBLIGATION_EXCUSED`, or \
+         `VERDICT: ESCALATE — <reason>`. Silence in the rulebook is \
+         not permission — ESCALATE if no rule covers the case."
     )
 }
 
@@ -734,7 +763,7 @@ mod tests {
         let with_rb = build_raw_system_prompt(Some("rule x"));
         assert!(with_rb.contains("first line"));
         assert!(with_rb.contains("Do not invent"));
-        assert!(with_rb.contains("citing specific rule numbers"));
+        assert!(with_rb.contains("citing the specific rule number"));
     }
 
     #[test]
@@ -785,5 +814,68 @@ mod tests {
         assert_eq!(a, b);
         let c = ArmAMode::Priming;
         assert_ne!(a, c);
+    }
+
+    // -----------------------------------------------------------------
+    // v0.4 — ESCALATE verdict in with-rulebook prompts (mirrors tsa)
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn raw_system_prompt_no_rulebook_keeps_binary_verdict() {
+        let s = build_raw_system_prompt(None);
+        assert!(s.contains("VERDICT: OBLIGATION_HOLDS"));
+        assert!(s.contains("VERDICT: OBLIGATION_EXCUSED"));
+        assert!(!s.contains("VERDICT: ESCALATE"));
+    }
+
+    #[test]
+    fn raw_system_prompt_with_rulebook_offers_escalate_verdict() {
+        let s = build_raw_system_prompt(Some("RULES: 1. test."));
+        assert!(s.contains("VERDICT: OBLIGATION_HOLDS"));
+        assert!(s.contains("VERDICT: OBLIGATION_EXCUSED"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("silence is not permission"));
+    }
+
+    #[test]
+    fn priming_system_prompt_offers_escalate_verdict() {
+        let s = build_priming_system_prompt();
+        assert!(s.contains("VERDICT: OBLIGATION_HOLDS"));
+        assert!(s.contains("VERDICT: OBLIGATION_EXCUSED"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("silence is not permission"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_lists_escalate_as_an_option() {
+        let s = build_priming_turn2_user_prompt("test clause");
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("ESCALATE if no rule covers the case"));
+    }
+
+    #[test]
+    fn framework_instructions_do_not_leak_contract_specific_metaphors() {
+        // Same discipline as tsa-demo and clinical-demo. The
+        // ESCALATE / verdict-first instructions should be
+        // domain-neutral.
+        let with_rb = build_raw_system_prompt(Some("RULES: 1."));
+        let priming = build_priming_system_prompt();
+
+        for needle in &[
+            "a real attorney",
+            "a real lawyer",
+            "a real contract-review officer",
+            "consulting senior counsel",
+            "escalate to legal",
+        ] {
+            assert!(
+                !with_rb.contains(needle),
+                "with-rulebook prompt should not invoke {needle:?}"
+            );
+            assert!(
+                !priming.contains(needle),
+                "priming prompt should not invoke {needle:?}"
+            );
+        }
     }
 }

@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-13 — VERDICT: ESCALATE (mirrors tsa-demo v0.13)
+
+### Added
+
+Mirrors [tsa-demo v0.13](../adjudication-tsa-demo/CHANGELOG.md):
+adds `VERDICT: ESCALATE` as a third option in with-rulebook Arm A
+prompts.
+
+Conservative semantic: silence in the rulebook is not permission.
+If no rule explicitly supports discharge or indicates further
+evaluation, ESCALATE — not SAFE_TO_DISCHARGE.
+
+### Scope
+
+- `build_raw_system_prompt(Some(rulebook))` — three-verdict.
+- `build_priming_system_prompt()` — three-verdict.
+- `build_priming_turn2_user_prompt()` — reminded.
+- `build_raw_system_prompt(None)` — UNCHANGED, binary verdict.
+
+### Framework instructions are domain-neutral
+
+The framework-level rules match tsa-demo's wording. Role
+descriptors and rulebook content stay clinical-specific.
+
+### Tests
+
+5 new tests (20 lib total). Existing test updated for the
+"citing the specific rule number(s)" wording.
+
 ## [0.3.0] - 2026-05-13 — v0.12 parity (rulebook injection + priming)
 
 ### Added

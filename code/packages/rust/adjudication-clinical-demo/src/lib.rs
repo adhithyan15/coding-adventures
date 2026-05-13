@@ -296,10 +296,8 @@ pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
                  your reasoning is truncated."
             .to_string(),
         Some(text) => format!(
-            "You are a primary-care triage assistant. The clinical triage \
-             rules you MUST apply are listed below. Do not invent any \
-             additional rules; if a finding is not justified by a specific \
-             numbered rule below, do not include it.\n\
+            "You are a primary-care triage assistant. Use only the rules \
+             listed below. Do not invent or infer additional rules.\n\
              \n\
              {text}\n\
              \n\
@@ -309,14 +307,27 @@ pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
              Your response MUST begin with the verdict line as the very \
              first line of output:\n\
              \n\
-             VERDICT: SAFE_TO_DISCHARGE\n\
-             (or)\n\
-             VERDICT: KEEP_FOR_OBSERVATION\n\
+             VERDICT: SAFE_TO_DISCHARGE — only when a rule above explicitly \
+             supports discharge for all findings declared.\n\
+             VERDICT: KEEP_FOR_OBSERVATION — only when a rule above \
+             explicitly indicates observation or further evaluation.\n\
+             VERDICT: ESCALATE — <one sentence describing what a supervisor \
+             needs to clarify> — when the rules above don't cover the case, \
+             when you cannot evaluate a rule's condition from the \
+             assessment, or when the assessment is ambiguous.\n\
+             \n\
+             Important: silence is not permission. If no rule above either \
+             explicitly supports discharge or explicitly indicates further \
+             evaluation, the correct verdict is ESCALATE — not \
+             SAFE_TO_DISCHARGE. Use ESCALATE whenever you would otherwise \
+             need to reason beyond the rules above, fabricate a rule that \
+             isn't listed, or default to one of the binary verdicts because \
+             the rulebook doesn't resolve the case.\n\
              \n\
              After the verdict line, give 2-3 sentences of reasoning citing \
-             specific rule numbers for each finding. The verdict-first \
-             format ensures the verdict is captured even if your reasoning \
-             is truncated."
+             the specific rule number(s) that produced your verdict (e.g., \
+             \"per rule N, ...\"). The verdict-first format ensures the \
+             verdict is captured even if your reasoning is truncated."
         ),
     }
 }
@@ -335,19 +346,32 @@ pub fn build_priming_system_prompt() -> String {
      summarise the rules, comment on them, or analyse them until I \
      ask my question in turn 2.\n\
      \n\
-     Turn 2: I will give you a patient assessment. Apply the \
-     rulebook from turn 1 and respond. Your response MUST begin \
-     with the verdict line as the very first line of output:\n\
+     Turn 2: I will give you a patient assessment. Apply only the \
+     rulebook from turn 1 — do not invent or infer additional \
+     rules. Your response MUST begin with the verdict line as the \
+     very first line of output:\n\
      \n\
-     VERDICT: SAFE_TO_DISCHARGE\n\
-     (or)\n\
-     VERDICT: KEEP_FOR_OBSERVATION\n\
+     VERDICT: SAFE_TO_DISCHARGE — only when a rule from turn 1 \
+     explicitly supports discharge.\n\
+     VERDICT: KEEP_FOR_OBSERVATION — only when a rule from turn 1 \
+     explicitly indicates observation or further evaluation.\n\
+     VERDICT: ESCALATE — <one sentence describing what a supervisor \
+     needs to clarify> — when no rule from turn 1 covers the case, \
+     when you cannot evaluate a rule's condition from the \
+     assessment, or when the assessment is ambiguous.\n\
      \n\
-     After the verdict line, give 2-3 sentences of reasoning citing \
-     specific rule numbers from the turn 1 rulebook. The \
-     verdict-first format ensures the verdict is captured even if \
-     your reasoning is truncated. Do not invent rules that were not \
-     in the turn 1 rulebook."
+     Important: silence is not permission. If no rule from turn 1 \
+     either explicitly supports discharge or explicitly indicates \
+     further evaluation, the correct verdict is ESCALATE — not \
+     SAFE_TO_DISCHARGE. Use ESCALATE whenever you would otherwise \
+     need to reason beyond the rules from turn 1, fabricate a \
+     rule, or default to one of the binary verdicts because the \
+     rulebook doesn't resolve the case.\n\
+     \n\
+     After the verdict line, give 2-3 sentences of reasoning \
+     citing the specific rule number(s) from the turn 1 rulebook. \
+     The verdict-first format ensures the verdict is captured even \
+     if your reasoning is truncated."
         .to_string()
 }
 
@@ -373,7 +397,9 @@ pub fn build_priming_turn2_user_prompt(source_text: &str) -> String {
          Apply the rulebook from turn 1. Assessment: {source_text}\n\
          \n\
          Is this patient safe to discharge? Remember: first line MUST \
-         be `VERDICT: SAFE_TO_DISCHARGE` or `VERDICT: KEEP_FOR_OBSERVATION`."
+         be `VERDICT: SAFE_TO_DISCHARGE`, `VERDICT: KEEP_FOR_OBSERVATION`, \
+         or `VERDICT: ESCALATE — <reason>`. Silence in the rulebook is \
+         not permission — ESCALATE if no rule covers the case."
     )
 }
 
@@ -759,7 +785,7 @@ mod tests {
         let with_rb = build_raw_system_prompt(Some("rule x"));
         assert!(with_rb.contains("first line"));
         assert!(with_rb.contains("Do not invent"));
-        assert!(with_rb.contains("citing specific rule numbers"));
+        assert!(with_rb.contains("citing the specific rule number"));
     }
 
     #[test]
@@ -812,5 +838,75 @@ mod tests {
         assert_ne!(a, c);
         let s = format!("{a:?}");
         assert!(s.contains("SingleTurn"));
+    }
+
+    // -----------------------------------------------------------------
+    // v0.4 — ESCALATE verdict in with-rulebook prompts (mirrors tsa)
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn raw_system_prompt_no_rulebook_keeps_binary_verdict() {
+        let s = build_raw_system_prompt(None);
+        assert!(s.contains("VERDICT: SAFE_TO_DISCHARGE"));
+        assert!(s.contains("VERDICT: KEEP_FOR_OBSERVATION"));
+        assert!(!s.contains("VERDICT: ESCALATE"));
+    }
+
+    #[test]
+    fn raw_system_prompt_with_rulebook_offers_escalate_verdict() {
+        let s = build_raw_system_prompt(Some("RULES: 1. test."));
+        assert!(s.contains("VERDICT: SAFE_TO_DISCHARGE"));
+        assert!(s.contains("VERDICT: KEEP_FOR_OBSERVATION"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(
+            s.contains("silence is not permission"),
+            "with-rulebook prompt must state silence-is-not-permission"
+        );
+    }
+
+    #[test]
+    fn priming_system_prompt_offers_escalate_verdict() {
+        let s = build_priming_system_prompt();
+        assert!(s.contains("VERDICT: SAFE_TO_DISCHARGE"));
+        assert!(s.contains("VERDICT: KEEP_FOR_OBSERVATION"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("silence is not permission"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_lists_escalate_as_an_option() {
+        let s = build_priming_turn2_user_prompt("test assessment");
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("ESCALATE if no rule covers the case"));
+    }
+
+    #[test]
+    fn framework_instructions_do_not_leak_clinical_specific_metaphors() {
+        // Same discipline as tsa-demo's framework-instruction test.
+        // The behavioural instructions about ESCALATE / verdict-first
+        // / silence-is-not-permission should be in domain-neutral
+        // language. Role descriptors and rulebook content stay
+        // domain-specific (each demo crate owns those).
+        let with_rb = build_raw_system_prompt(Some("RULES: 1."));
+        let priming = build_priming_system_prompt();
+
+        // No appeals to physician / nurse / hospital behaviour in the
+        // framework instructions about ESCALATE.
+        for needle in &[
+            "a real physician",
+            "a real nurse",
+            "a real triage officer asks",
+            "a real attending",
+            "consulting a colleague",
+        ] {
+            assert!(
+                !with_rb.contains(needle),
+                "with-rulebook prompt's framework instructions should not invoke {needle:?}"
+            );
+            assert!(
+                !priming.contains(needle),
+                "priming prompt's framework instructions should not invoke {needle:?}"
+            );
+        }
     }
 }
