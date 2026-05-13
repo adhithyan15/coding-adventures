@@ -189,7 +189,6 @@ cargo run -p board-vm-uno-r4-firmware --bin uno-r4-wifi-serialusb-artifact -- \
   --print-only \
   --core "$HOME/Library/Arduino15/packages/arduino/hardware/renesas_uno/1.5.3" \
   --arm-toolchain-bin /opt/homebrew/bin \
-  --bossac-path /tmp/arduino-bossa/bin \
   --port /dev/cu.usbmodem... \
   --upload \
   --smoke
@@ -204,20 +203,23 @@ it, follow the post-upload runtime port, and run the host smoke path:
 cargo run -p board-vm-uno-r4-firmware --bin uno-r4-wifi-serialusb-artifact -- \
   --core "$HOME/Library/Arduino15/packages/arduino/hardware/renesas_uno/1.5.3" \
   --arm-toolchain-bin /opt/homebrew/bin \
-  --bossac-path /tmp/arduino-bossa/bin \
   --port /dev/cu.usbmodem... \
   --upload \
   --smoke
 ```
 
 The helper discovers Rust's bundled `llvm-objcopy`, the stable rustup `rustc`,
-and `arm-none-eabi-*` tools on `PATH` when available. Override `--rustc`,
-`--arm-gcc`, `--arm-gxx`, `--arm-ar`, `--arm-compat-root`, `--objcopy`,
-`--arduino-cli`, `--bossac-path`, `--target-dir`, `--baud`, or `--timeout-ms`
-for local tooling differences. Before upload, the helper now performs the
-Arduino-compatible 1200-baud bootloader touch on the requested port and polls
-for the bootloader port before invoking Arduino CLI. Pass `--no-bootloader-touch`
-when the board is already in bootloader mode, or tune
+and `arm-none-eabi-*` tools on `PATH` when available. When `--core` points at an
+installed Arduino Renesas UNO core, it also discovers Arduino's packaged
+`bossac` root and passes it to Arduino CLI as the upload tool path. On Apple
+Silicon this keeps the upload path on Arduino's patched BOSSA build; install
+Rosetta if that packaged uploader is x86-only. Override `--rustc`, `--arm-gcc`,
+`--arm-gxx`, `--arm-ar`, `--arm-compat-root`, `--objcopy`, `--arduino-cli`,
+`--bossac-path`, `--target-dir`, `--baud`, or `--timeout-ms` for local tooling
+differences. Before upload, the helper now performs the Arduino-compatible
+1200-baud bootloader touch on the requested port and polls for the bootloader
+port before invoking Arduino CLI. Pass `--no-bootloader-touch` when the board is
+already in bootloader mode, or tune
 `--bootloader-touch-timeout-ms`, `--bootloader-touch-settle-ms`, and
 `--bootloader-port-wait-ms` for local USB timing.
 
@@ -242,8 +244,9 @@ arduino-cli upload \
 ```
 
 On Apple Silicon systems without Rosetta, Arduino's packaged macOS `bossac`
-may be x86-only. Build Arduino's patched BOSSA uploader locally and override the
-tool path when uploading:
+may be x86-only. Prefer installing Rosetta so the helper can keep using
+Arduino's packaged patched uploader. If a native uploader is still required,
+build Arduino's patched BOSSA locally and override the tool path when uploading:
 
 ```sh
 git clone --depth 1 https://github.com/arduino/BOSSA.git /tmp/arduino-bossa
