@@ -1,5 +1,37 @@
 # Changelog — `twig-demo`
 
+## [0.1.2] — 2026-05-13
+
+**Split results table into Compile and Runtime columns.**
+
+The main 6-backend table now shows two separate timing columns:
+
+- **Compile** — time spent turning Twig source into backend-specific
+  bytecode or a native binary.  Includes IIR generation, type inference,
+  backend lowering, and (for AOT/BEAM/JVM) any subprocess link/assemble step.
+- **Runtime** — time spent actually executing the generated code.
+  In-process backends (Interpreter, WASM, CLR) show pure interpreter
+  throughput in µs.  Subprocess backends (AOT, BEAM, JVM) include OS
+  process-launch and runtime-startup cost.
+
+A new `format_time` helper auto-scales: < 1 000 µs → "Xµs",
+< 1 000 ms → "Xms", ≥ 1 s → "X.Xs".
+
+Example output:
+```
+Backend                            Compile     Runtime    Result  Status
+────────────────────────────────────────────────────────────────────────
+Interpreter (twig-vm)                  1ms       230µs        55  ✅ PASS
+AOT (ARM64 native)                   230ms       210ms        55  ✅ PASS
+BEAM (Erlang VM)                      45ms        1.8s        55  ✅ PASS
+WebAssembly (Rust runtime)             2ms         8µs        55  ✅ PASS
+JVM (Java 21)                          8ms       180ms        55  ✅ PASS
+CLR (.NET 9)                           3ms        94µs        55  ✅ PASS
+```
+
+Each `run_*` function now returns `(compile_us, run_us, Result<i64, String>)`.
+For the interpreter, `TwigVM::compile` is timed separately from `twig_vm::run`.
+
 ## [0.1.1] — 2026-05-13
 
 **AOT deep-dive section: phase breakdown + in-process execution + type correctness.**
