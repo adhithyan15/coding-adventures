@@ -298,6 +298,7 @@ members = [
     "os-job-core",
     "os-job-runtime",
     "operation-primitives",
+    "required-capabilities-compiler",
     "event-loop",
     "hyperloglog",
     "hash-functions",

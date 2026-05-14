@@ -1,0 +1,37 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "required-capabilities-compiler",
+  "display_name": "Required Capabilities Compiler",
+  "description": "Compile required_capabilities.json into Rust operation boundary source.",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "input",
+      "long": "input",
+      "short": "i",
+      "description": "Path to the required_capabilities.json source file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "output",
+      "long": "output",
+      "short": "o",
+      "description": "Path to write the generated Rust operation source",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "check",
+      "long": "check",
+      "description": "Verify the output is already up to date without writing",
+      "type": "boolean",
+      "required": false
+    }
+  ]
+}
