@@ -4,6 +4,8 @@ import {
   SpiceError,
   capacitor,
   capacitorWithInitialVoltage,
+  inductor,
+  inductorWithInitialCurrent,
   resistor,
   transient,
   voltageSource,
@@ -41,6 +43,36 @@ describe("transient", () => {
     expectClose(points[1].voltage("out"), 0.25);
   });
 
+  it("uses a backward-Euler inductor companion for an RL step", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "out", 1_000.0));
+    circuit.add(inductor("L1", "out", "0", 1.0));
+
+    const points = transient(circuit, 1.0e-3, 3.0e-3);
+
+    expect(points).toHaveLength(3);
+    expectClose(points[0].voltage("out"), 0.5);
+    expectClose(points[0].branchCurrent("L1"), 0.5e-3);
+    expectClose(points[1].voltage("out"), 0.25);
+    expectClose(points[1].branchCurrent("L1"), 0.75e-3);
+    expectClose(points[2].voltage("out"), 0.125);
+    expectClose(points[2].branchCurrent("L1"), 0.875e-3);
+  });
+
+  it("respects inductor initial current", () => {
+    const circuit = new Circuit();
+    circuit.add(resistor("R1", "out", "0", 1_000.0));
+    circuit.add(inductorWithInitialCurrent("L1", "out", "0", 1.0, 1.0e-3));
+
+    const points = transient(circuit, 1.0e-3, 2.0e-3);
+
+    expectClose(points[0].voltage("out"), -0.5);
+    expectClose(points[0].branchCurrent("L1"), 0.5e-3);
+    expectClose(points[1].voltage("out"), -0.25);
+    expectClose(points[1].branchCurrent("L1"), 0.25e-3);
+  });
+
   it("rejects non-positive capacitance", () => {
     const circuit = new Circuit();
     circuit.add(capacitor("Cbad", "out", "0", 0.0));
@@ -48,6 +80,16 @@ describe("transient", () => {
     expect(() => transient(circuit, 1.0e-3, 1.0e-3)).toThrowError(SpiceError);
     expect(() => transient(circuit, 1.0e-3, 1.0e-3)).toThrowError(
       "invalid element Cbad",
+    );
+  });
+
+  it("rejects non-positive inductance", () => {
+    const circuit = new Circuit();
+    circuit.add(inductor("Lbad", "out", "0", 0.0));
+
+    expect(() => transient(circuit, 1.0e-3, 1.0e-3)).toThrowError(SpiceError);
+    expect(() => transient(circuit, 1.0e-3, 1.0e-3)).toThrowError(
+      "invalid element Lbad",
     );
   });
 
