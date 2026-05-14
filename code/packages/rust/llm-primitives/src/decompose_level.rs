@@ -59,7 +59,7 @@ pub enum DecomposeLevel {
 /// Stable version of the per-level prompt templates. Bumping this is
 /// an audit-trail-affecting change; the same string flows into
 /// `LlmCallRecord::prompt_version` for replay.
-pub const DECOMPOSE_LEVEL_PROMPT_VERSION: &str = "decompose-level-v1";
+pub const DECOMPOSE_LEVEL_PROMPT_VERSION: &str = "decompose-level-v2";
 
 /// Inputs to [`decompose_level`].
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -97,20 +97,44 @@ pub struct DecomposeLevelResponse {
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// Per-level system prompts — v2: text-shaped, not byte-shaped.
+// Per-level system prompts — v3: anti-discard + yes/no schema.
 //
-// IMPORTANT CONTRACT CHANGE (ADJ27): the model emits the literal
-// `text` it is claiming for each child, not byte offsets. The
-// framework matches each child's text against the parent text to
-// derive byte spans deterministically. The model does not do
-// arithmetic; the framework does.
+// ADJ27 (v2): text-shaped, not byte-shaped. The model emits the
+// literal `text` it claims per child; the framework matches against
+// parent text to derive byte spans. Math lives in the framework.
 //
-// Per `feedback_no_byte_arithmetic_for_llm` (saved separately):
-// asking small models to compute byte offsets was a structural
-// mismatch. They could pick the right kind, the right typing
-// (Quantity vs flat atom), and the right granularity — but couldn't
-// reliably count bytes. Pulling that math into the framework lets
-// the model focus on the linguistic work it's actually good at.
+// ADJ28 (v3): three structural changes targeting small-model
+// failure modes from the ADJ27 bench:
+//
+//   1. **WHAT NOT TO DO** worked example per prompt. Shows the
+//      cost of ignoring or discarding content. Operational
+//      response to ADJ27's "Discarded escape hatch" finding —
+//      three gemma4 cells passed by emitting a single Discarded
+//      over the whole document, satisfying coverage trivially but
+//      extracting zero semantic content.
+//
+//   2. **Yes/no booleans per kind** at multi-option levels
+//      (Phrase → Claim with 4 options, Fact → TypedComponent with
+//      7 options). Instead of asking the model to pick one of N
+//      kinds, ask it to answer is_X yes/no for each kind.
+//      Constraint: exactly one is true. This decomposes the
+//      N-way pick into N binary decisions, which small models
+//      handle better than multi-way classification. (The 0.5B
+//      model emitted *no* nodes at level 3 in the ADJ27
+//      walkthrough — empty `nodes` array — when asked to pick
+//      between Fact/Uncertainty/Question/Discarded.)
+//
+//   3. **Discarded requires `discard_reason` AND
+//      `discard_justification`** — a sentence explaining WHY
+//      discarding the chunk loses no information the framework
+//      needs. Lazy whole-parent Discarded becomes hard to
+//      justify in prose; the cost of dishonest discarding goes
+//      up.
+//
+// Levels 1 and 2 (Sentence, Phrase) keep the single `kind` field
+// since they only have 2 options each — yes/no booleans add no
+// signal. Levels 3 and 4 (Claim, TypedComponent) use the boolean
+// schema.
 // ---------------------------------------------------------------------------
 
 const SENTENCE_PROMPT: &str = "You break passages of text into NATURAL-LANGUAGE SENTENCES.\n\
@@ -124,9 +148,17 @@ node represents one sentence (or one chunk you discard). Allowed\n\
   - `Sentence` — a natural-language sentence (declarative,\n\
     interrogative, imperative). Most output nodes will be this.\n\
   - `Discarded` — a chunk of text that is not a sentence: a heading,\n\
-    a bullet marker, document metadata, a salutation. Use this for\n\
-    chunks that don't belong to any sentence. Discarded nodes need a\n\
-    `discard_reason` such as `DocumentMetadata` or `NonDomainContent`.\n\
+    a bullet marker, page number, salutation. Use this ONLY for\n\
+    chunks of the input that are genuinely non-content. Discarded\n\
+    nodes need BOTH a `discard_reason` (one of `DocumentMetadata`,\n\
+    `NonDomainContent`, `Pleasantry`, `Restatement`) AND a\n\
+    `discard_justification` — a sentence explaining WHY this chunk\n\
+    is safe to drop without losing information the framework needs.\n\
+\n\
+IMPORTANT — never discard the whole input. If you find yourself\n\
+wanting to mark the entire passage as Discarded, stop. The passage\n\
+was given to you because it contains real content; find the\n\
+sentences inside it. At least one node MUST have `kind: Sentence`.\n\
 \n\
 COVERAGE: List the nodes IN ORDER, left-to-right. Together, every\n\
 character of the input passage — whitespace and punctuation\n\
@@ -141,9 +173,10 @@ arithmetic. Just copy the substring.\n\
 EVERY node MUST include: `id` (your choice, unique in the response),\n\
 `kind`, `term` (any object, e.g. `{\"atom\": \"x\"}`), `polarity`\n\
 (`Affirmed`), `modality` (`Present`), and `text` (the literal\n\
-substring this node covers).\n\
+substring this node covers). Discarded nodes additionally need\n\
+`discard_reason` and `discard_justification`.\n\
 \n\
-EXAMPLE:\n\
+GOOD EXAMPLE:\n\
 INPUT (passage): \"Hello world. How are you?\"\n\
 OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
   { \"id\": \"S1\", \"kind\": \"Sentence\", \"term\": {\"atom\":\"greeting\"},\n\
@@ -157,6 +190,19 @@ OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
 Notice the trailing space in S1's text: every character of the input\n\
 appears in exactly one node, including spaces.\n\
 \n\
+BAD EXAMPLE — WHAT NOT TO DO:\n\
+INPUT (passage): \"Hello world. How are you?\"\n\
+BAD OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
+  { \"id\": \"S1\", \"kind\": \"Sentence\", \"term\": {\"atom\":\"greeting\"},\n\
+    \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+    \"text\": \"Hello world.\" }\n\
+] }\n\
+WHY THIS IS WRONG: this drops `\" How are you?\"` — over half the\n\
+input. The framework needs every character represented somewhere.\n\
+Skipping content means the engine can't reason about it later,\n\
+and downstream consumers get a partial decomposition that hides\n\
+real claims in the dropped bytes.\n\
+\n\
 Respond with the JSON object only. No prose, no markdown, no backticks.";
 
 const PHRASE_PROMPT: &str = "You break SENTENCES into PHRASES — coherent sub-sentence chunks.\n\
@@ -169,9 +215,17 @@ node represents one phrase. Allowed `kind` values, and ONLY these:\n\
   - `Phrase` — a coherent meaning-bearing chunk. A phrase is the unit\n\
     that contributes ONE claim. A short sentence may be one phrase;\n\
     a long one may be several.\n\
-  - `Discarded` — a chunk that doesn't carry meaning: pleasantries\n\
-    (`\"please\"`, `\"thank you\"`), filler, structural punctuation\n\
-    bridging two phrases. Discarded nodes need a `discard_reason`.\n\
+  - `Discarded` — a chunk that doesn't carry meaning. Use this ONLY\n\
+    for genuine filler: pleasantries (`\"please\"`, `\"thank you\"`),\n\
+    standalone punctuation that is not part of any phrase, document\n\
+    decoration. Discarded nodes need BOTH a `discard_reason` (one of\n\
+    `Pleasantry`, `NonDomainContent`, `Restatement`,\n\
+    `AdministrativeOnly`) AND a `discard_justification` — a sentence\n\
+    explaining WHY this chunk is safe to drop.\n\
+\n\
+IMPORTANT — never discard the whole input. The sentence given to\n\
+you contains real content; find the phrases inside it. At least\n\
+one node MUST have `kind: Phrase`.\n\
 \n\
 COVERAGE: List the nodes IN ORDER, left-to-right. Together, every\n\
 character of the input sentence must appear in exactly one node's\n\
@@ -182,9 +236,10 @@ of the input — character for character. The framework computes byte\n\
 offsets from your text; you do NOT compute offsets.\n\
 \n\
 EVERY node MUST include: `id`, `kind`, `term`, `polarity`\n\
-(`Affirmed`), `modality` (`Present`), and `text`.\n\
+(`Affirmed`), `modality` (`Present`), and `text`. Discarded nodes\n\
+additionally need `discard_reason` and `discard_justification`.\n\
 \n\
-EXAMPLE:\n\
+GOOD EXAMPLE:\n\
 INPUT (sentence): \"1 carry-on bag, matches.\"\n\
 OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
   { \"id\": \"P1\", \"kind\": \"Phrase\", \"term\": {\"atom\":\"bag_count\"},\n\
@@ -195,6 +250,19 @@ OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
     \"text\": \"matches.\" }\n\
 ] }\n\
 \n\
+BAD EXAMPLE — WHAT NOT TO DO:\n\
+INPUT (sentence): \"1 carry-on bag, matches.\"\n\
+BAD OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
+  { \"id\": \"P1\", \"kind\": \"Phrase\", \"term\": {\"atom\":\"bag_count\"},\n\
+    \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+    \"text\": \"1 carry-on bag, \" }\n\
+] }\n\
+WHY THIS IS WRONG: this drops `\"matches.\"` — the most\n\
+security-relevant part of the declaration. The framework can't\n\
+reason about content that isn't in the IR; a verdict downstream\n\
+would be based on the bag declaration alone, missing the\n\
+prohibited item entirely.\n\
+\n\
 Respond with the JSON object only.";
 
 const CLAIM_PROMPT: &str = "You break PHRASES into CLAIMS.\n\
@@ -202,33 +270,77 @@ const CLAIM_PROMPT: &str = "You break PHRASES into CLAIMS.\n\
 INPUT: one phrase.\n\
 \n\
 OUTPUT: a JSON object with `document_id` and a `nodes` array. Each\n\
-node represents one claim. Allowed `kind` values, and ONLY these:\n\
+node represents one claim and has FOUR boolean fields — one for\n\
+each kind of claim. Answer YES or NO to each:\n\
 \n\
-  - `Fact` — an assertion the phrase makes about the world.\n\
-  - `Uncertainty` — the phrase admits or implies the model isn't\n\
-    sure. Set `polarity` to `Uncertain`.\n\
-  - `Question` — the phrase is interrogative (asks a question).\n\
-  - `Discarded` — the phrase has no meaningful claim. Discarded\n\
-    nodes need a `discard_reason`.\n\
+  - `is_fact` (true/false): Is this chunk an assertion about the\n\
+    world — does it claim something is true? (e.g.\n\
+    \"1 carry-on bag\", \"matches in the bag\", \"the patient denies\n\
+    chest pain\".)\n\
+  - `is_uncertainty` (true/false): Does the chunk admit or imply\n\
+    the model is unsure? (e.g. \"maybe\", \"I think\", \"unclear\n\
+    whether\".)\n\
+  - `is_question` (true/false): Is the chunk interrogative — does\n\
+    it ask a question? (e.g. \"is this allowed?\")\n\
+  - `is_discarded` (true/false): Is the chunk genuine filler with\n\
+    no claim content? Only mark true for pure pleasantries, page\n\
+    decoration, or chunks that genuinely contribute nothing.\n\
 \n\
-COVERAGE: List the nodes IN ORDER, left-to-right. Every character\n\
+EXACTLY ONE of these four booleans must be true per node. The\n\
+framework rejects nodes where zero or multiple are true.\n\
+\n\
+IMPORTANT — never mark the WHOLE input as Discarded. The phrase\n\
+given to you contains real content; find the claim inside it. If\n\
+unsure, prefer `is_fact: true` with a generic term — never default\n\
+to `is_discarded: true` for a non-trivial phrase.\n\
+\n\
+DISCARDED NODES need BOTH `discard_reason` (one of `Pleasantry`,\n\
+`NonDomainContent`, `Restatement`, `AdministrativeOnly`) AND a\n\
+`discard_justification` — a sentence explaining WHY discarding\n\
+this chunk loses no claim content.\n\
+\n\
+COVERAGE: list the nodes IN ORDER, left-to-right. Every character\n\
 of the input phrase must appear in exactly one node's `text`.\n\
 \n\
-TEXT FIELD: each node has a `text` field. Copy the LITERAL substring\n\
-of the input — character for character. No byte offsets; the\n\
-framework derives them.\n\
+TEXT FIELD: copy the LITERAL substring of the input — character\n\
+for character. No byte offsets.\n\
 \n\
-EVERY node MUST include: `id`, `kind`, `term`, `polarity`\n\
-(`Affirmed` for Fact, `Uncertain` for Uncertainty, `Affirmed` for\n\
-Question and Discarded), `modality` (`Present`), and `text`.\n\
+EVERY node MUST include: `id`, the four `is_*` booleans, `term`,\n\
+`polarity` (`Affirmed` for Fact, `Uncertain` for Uncertainty,\n\
+`Affirmed` for Question and Discarded), `modality` (`Present`),\n\
+and `text`. Discarded additionally needs `discard_reason` and\n\
+`discard_justification`.\n\
 \n\
-EXAMPLE:\n\
+GOOD EXAMPLE:\n\
 INPUT (phrase): \"1 carry-on bag\"\n\
 OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
-  { \"id\": \"F1\", \"kind\": \"Fact\", \"term\": {\"atom\":\"declaration\"},\n\
+  { \"id\": \"F1\",\n\
+    \"is_fact\": true, \"is_uncertainty\": false,\n\
+    \"is_question\": false, \"is_discarded\": false,\n\
+    \"term\": {\"atom\":\"declaration\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
     \"text\": \"1 carry-on bag\" }\n\
 ] }\n\
+\n\
+BAD EXAMPLE — WHAT NOT TO DO:\n\
+INPUT (phrase): \"1 carry-on bag\"\n\
+BAD OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
+  { \"id\": \"D1\",\n\
+    \"is_fact\": false, \"is_uncertainty\": false,\n\
+    \"is_question\": false, \"is_discarded\": true,\n\
+    \"discard_reason\": \"NonDomainContent\",\n\
+    \"discard_justification\": \"not relevant\",\n\
+    \"term\": {\"atom\":\"x\"},\n\
+    \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+    \"text\": \"1 carry-on bag\" }\n\
+] }\n\
+WHY THIS IS WRONG: \"1 carry-on bag\" is a Fact about the world\n\
+(the passenger's declaration). Marking the whole phrase as\n\
+Discarded gives up on extracting the claim and means the engine\n\
+has no fact to reason about. The justification \"not relevant\"\n\
+is also lazy — if a chunk is truly out of scope you must say WHY\n\
+in a concrete sentence (\"this is a page footer with no domain\n\
+content\"). The right answer is `is_fact: true`.\n\
 \n\
 Respond with the JSON object only.";
 
@@ -236,53 +348,93 @@ const TYPED_COMPONENT_PROMPT: &str = "You break FACTS into TYPED COMPONENTS — 
 \n\
 INPUT: one Fact's text.\n\
 \n\
-OUTPUT: a JSON object with `document_id` and a `nodes` array. Allowed\n\
-`kind` values, and ONLY these:\n\
+OUTPUT: a JSON object with `document_id` and a `nodes` array. Each\n\
+node represents one typed component and has SEVEN boolean fields —\n\
+one for each kind. Answer YES or NO to each:\n\
 \n\
-  - `Quantity` — a numerical measurement. `term` is\n\
-    `{\"functor\": \"quantity\", \"args\": [{\"num\": <value>}, {\"atom\": \"<unit>\"}]}`.\n\
-    Every numerical literal in the Fact MUST surface as a `Quantity`.\n\
-  - `Polarity` — a negation/affirmation slot. Use when the Fact\n\
-    contains cues like \"no\", \"not\", \"denies\". `term` is\n\
-    `{\"atom\": \"denied\"}` or `{\"atom\": \"affirmed\"}`.\n\
-  - `Entity` — a named or referential noun phrase. `term` is\n\
-    `{\"atom\": \"<single_word>\"}` or `{\"atom\": \"<two_word_compound>\"}`.\n\
-  - `Predicate` — the verb/relation. `term` is `{\"atom\": \"<verb>\"}`.\n\
-  - `Comparator` — an operator. `term` is `{\"atom\": \"<op>\"}` where\n\
-    `<op>` is one of `Eq`, `Lt`, `Le`, `Gt`, `Ge`, `Ne`.\n\
-  - `TimeRef` — a date, duration, or temporal phrase.\n\
-  - `Modifier` — adjective/adverb refinement.\n\
+  - `is_quantity` (true/false): Is this chunk a numerical\n\
+    measurement? (e.g. \"200 Wh\", \"4 inch\", \"3 oz\"). EVERY\n\
+    numerical literal in the Fact MUST be a Quantity.\n\
+  - `is_polarity` (true/false): Is this chunk a negation cue?\n\
+    (e.g. \"no\", \"not\", \"denies\", \"without\").\n\
+  - `is_entity` (true/false): Is this a named or referential noun?\n\
+    (e.g. \"battery\", \"passenger\", \"matches\").\n\
+  - `is_predicate` (true/false): Is this the verb/relation of the\n\
+    Fact? (e.g. \"carry\", \"declared\", \"exceeds\").\n\
+  - `is_comparator` (true/false): Is this a comparison operator?\n\
+    (e.g. \">\", \"<=\", \"equals\").\n\
+  - `is_timeref` (true/false): Is this a date, duration, or\n\
+    temporal phrase?\n\
+  - `is_modifier` (true/false): Is this an adjective or adverb\n\
+    refinement? (e.g. \"strike-anywhere\", \"disposable\").\n\
 \n\
-COVERAGE: List the nodes IN ORDER, left-to-right. Every character\n\
-of the Fact's input must appear in exactly one node's `text`.\n\
+EXACTLY ONE of these seven booleans must be true per node. The\n\
+framework rejects nodes where zero or multiple are true.\n\
 \n\
-TEXT FIELD: each node has a `text` field. Copy the LITERAL substring\n\
-of the input — character for character. The framework computes byte\n\
-offsets from your text; you do NOT compute offsets.\n\
+The `term` field then follows the chosen kind's shape:\n\
 \n\
-NO FLATTENING: numerical literals MUST appear as `Quantity`\n\
-components, NOT inside atom names. `battery_50_wh` is REJECTED — the\n\
-`50` must be a `Quantity(50, wh)` slot. Atom names like\n\
-`pocket_knife_blade_length` that string together three or more source\n\
-words are also REJECTED.\n\
+  - Quantity: `{\"functor\": \"quantity\", \"args\": [{\"num\": <value>}, {\"atom\": \"<unit>\"}]}`\n\
+  - Polarity: `{\"atom\": \"denied\"}` or `{\"atom\": \"affirmed\"}`\n\
+  - Entity:   `{\"atom\": \"<single_word>\"}` or `{\"atom\": \"<two_word>\"}`\n\
+  - Predicate, Comparator, TimeRef, Modifier: `{\"atom\": \"<value>\"}`\n\
+  - For Comparator, `<value>` is one of `Eq`, `Lt`, `Le`, `Gt`, `Ge`, `Ne`.\n\
 \n\
-EVERY node MUST include: `id`, `kind`, `term`, `polarity`\n\
-(`Affirmed`), `modality` (`Present`), and `text`.\n\
+NO FLATTENING: numerical literals MUST appear as Quantity\n\
+components, NOT inside atom names. `battery_50_wh` is REJECTED.\n\
+Atom names that string together three or more source words\n\
+(`pocket_knife_blade_length`) are REJECTED.\n\
 \n\
-EXAMPLE:\n\
+COVERAGE: list the nodes IN ORDER, left-to-right. Every character\n\
+of the Fact's text must appear in exactly one node's `text`.\n\
+\n\
+TEXT FIELD: copy the LITERAL substring of the input — character\n\
+for character. The framework computes byte offsets from your\n\
+text; you do NOT compute offsets.\n\
+\n\
+EVERY node MUST include: `id`, the seven `is_*` booleans, `term`,\n\
+`polarity` (`Affirmed`), `modality` (`Present`), and `text`.\n\
+\n\
+GOOD EXAMPLE:\n\
 INPUT (fact): \"200 Wh battery\"\n\
 OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
-  { \"id\": \"T1\", \"kind\": \"Quantity\",\n\
+  { \"id\": \"T1\",\n\
+    \"is_quantity\": true, \"is_polarity\": false,\n\
+    \"is_entity\": false, \"is_predicate\": false,\n\
+    \"is_comparator\": false, \"is_timeref\": false,\n\
+    \"is_modifier\": false,\n\
     \"term\": {\"functor\": \"quantity\", \"args\": [{\"num\": 200}, {\"atom\": \"wh\"}]},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
     \"text\": \"200 Wh \" },\n\
-  { \"id\": \"T2\", \"kind\": \"Entity\", \"term\": {\"atom\": \"battery\"},\n\
+  { \"id\": \"T2\",\n\
+    \"is_quantity\": false, \"is_polarity\": false,\n\
+    \"is_entity\": true, \"is_predicate\": false,\n\
+    \"is_comparator\": false, \"is_timeref\": false,\n\
+    \"is_modifier\": false,\n\
+    \"term\": {\"atom\": \"battery\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
     \"text\": \"battery\" }\n\
 ] }\n\
 \n\
-Notice T1's text includes the trailing space — every character of\n\
-the input appears in exactly one node.\n\
+T1's text includes the trailing space — every character covered.\n\
+\n\
+BAD EXAMPLE — WHAT NOT TO DO:\n\
+INPUT (fact): \"200 Wh battery\"\n\
+BAD OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
+  { \"id\": \"E1\",\n\
+    \"is_quantity\": false, \"is_polarity\": false,\n\
+    \"is_entity\": true, \"is_predicate\": false,\n\
+    \"is_comparator\": false, \"is_timeref\": false,\n\
+    \"is_modifier\": false,\n\
+    \"term\": {\"atom\": \"battery_200_wh\"},\n\
+    \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+    \"text\": \"200 Wh battery\" }\n\
+] }\n\
+WHY THIS IS WRONG: this flattens the number `200` and the unit\n\
+`Wh` into the entity atom name. The framework needs the typed\n\
+value out — downstream rules compare the quantity against\n\
+thresholds (`200 Wh > 100 Wh → prohibited`), and the engine can\n\
+only do that if `200` appears as a `Quantity(200, wh)` slot. The\n\
+flattened atom `battery_200_wh` hides the comparable value.\n\
 \n\
 Respond with the JSON object only.";
 
@@ -551,7 +703,95 @@ mod tests {
 
     #[test]
     fn prompt_version_constant_is_stable() {
-        assert_eq!(DECOMPOSE_LEVEL_PROMPT_VERSION, "decompose-level-v1");
+        assert_eq!(DECOMPOSE_LEVEL_PROMPT_VERSION, "decompose-level-v2");
+    }
+
+    #[test]
+    fn adj28_every_prompt_carries_what_not_to_do_example() {
+        for level in [
+            DecomposeLevel::DocumentToSentence,
+            DecomposeLevel::SentenceToPhrase,
+            DecomposeLevel::PhraseToClaim,
+            DecomposeLevel::FactToTypedComponent,
+        ] {
+            let p = system_prompt_for(level);
+            assert!(
+                p.contains("WHAT NOT TO DO") || p.contains("BAD EXAMPLE"),
+                "{:?} prompt missing a what-not-to-do block",
+                level
+            );
+            assert!(
+                p.contains("WHY THIS IS WRONG"),
+                "{:?} prompt missing the wrong-reason explanation",
+                level
+            );
+        }
+    }
+
+    #[test]
+    fn adj28_discard_prompts_require_justification() {
+        for level in [
+            DecomposeLevel::DocumentToSentence,
+            DecomposeLevel::SentenceToPhrase,
+            DecomposeLevel::PhraseToClaim,
+        ] {
+            let p = system_prompt_for(level);
+            assert!(
+                p.contains("discard_justification"),
+                "{:?} prompt must require discard_justification",
+                level
+            );
+            assert!(
+                p.contains("discard_reason"),
+                "{:?} prompt must require discard_reason",
+                level
+            );
+        }
+    }
+
+    #[test]
+    fn adj28_claim_and_typed_component_use_yes_no_booleans() {
+        let claim = system_prompt_for(DecomposeLevel::PhraseToClaim);
+        for boolean in ["is_fact", "is_uncertainty", "is_question", "is_discarded"] {
+            assert!(
+                claim.contains(boolean),
+                "Claim prompt missing `{}` boolean",
+                boolean
+            );
+        }
+        let typed = system_prompt_for(DecomposeLevel::FactToTypedComponent);
+        for boolean in [
+            "is_quantity",
+            "is_polarity",
+            "is_entity",
+            "is_predicate",
+            "is_comparator",
+            "is_timeref",
+            "is_modifier",
+        ] {
+            assert!(
+                typed.contains(boolean),
+                "TypedComponent prompt missing `{}` boolean",
+                boolean
+            );
+        }
+    }
+
+    #[test]
+    fn adj28_prompts_forbid_whole_parent_discard_at_anti_escape_levels() {
+        for level in [
+            DecomposeLevel::DocumentToSentence,
+            DecomposeLevel::SentenceToPhrase,
+            DecomposeLevel::PhraseToClaim,
+        ] {
+            let p = system_prompt_for(level);
+            assert!(
+                p.contains("never")
+                    && (p.contains("whole input") || p.contains("whole phrase") || p.contains("WHOLE")),
+                "{:?} prompt should forbid whole-parent discard",
+                level
+            );
+        }
     }
 
     #[test]

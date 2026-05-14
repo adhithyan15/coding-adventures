@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-05-14 — ADJ28: orchestrator reads boolean kind schema + discard_justification
+
+### Changed
+
+`parse_child_node` now extracts the node's `kind` from two
+supported shapes:
+
+1. **Legacy single-`kind` string field** (levels 1 & 2 keep this).
+2. **ADJ28 per-kind `is_X` boolean schema** (levels 3 & 4). The
+   new helper `extract_kind` walks the boolean field set,
+   collects every `is_X: true`, and accepts the node only when
+   exactly one boolean is true. Zero true or multiple true →
+   node rejected.
+
+Discard nodes additionally have:
+
+- `discard_reason` parsed via the new helper `parse_discard_reason`
+  into the `adjudication_ir::DiscardReason` enum (unknown strings
+  fall back to `NonDomainContent`).
+- `discard_justification` (free-form string) stored on the node's
+  `metadata` map under the reserved key
+  `DISCARD_JUSTIFICATION_METADATA_KEY = "adj.discard_justification"`.
+  Lets the audit trail keep the model's own rationale for
+  discarding.
+
+### Tests
+
+4 new test cases:
+
+- `adj28_boolean_kind_schema_derives_kind` — end-to-end through
+  the orchestrator: a Claim node emitted via `is_fact: true` flows
+  through `parse_child_node` and lands in the IR as a Fact.
+- `adj28_zero_or_multiple_true_booleans_rejected` — both
+  failure paths (no true booleans, multiple true booleans) cause
+  the parser to skip the child.
+- `adj28_discard_justification_lands_in_metadata` — when the
+  LLM emits a `discard_justification`, the orchestrator copies it
+  into `node.metadata` under the reserved key.
+- `adj28_discard_reason_string_parsed_into_enum` — round-trip
+  every documented reason string + unknown / empty fallbacks.
+
+Total `adjudication-pipeline` hierarchical-module tests: 9 → 13,
+all passing. Workspace pipeline tests: 47 → 51.
+
+### Notes
+
+- Version: 0.12.0 → 0.13.0 (additive parsing change).
+
 ## [0.12.0] - 2026-05-13 — orchestrator: content-shaped span derivation
 
 ### Changed
