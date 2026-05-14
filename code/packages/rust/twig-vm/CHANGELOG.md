@@ -1,5 +1,34 @@
 # Changelog — twig-vm
 
+## [0.12.0] — 2026-05-14
+
+### Added (LANG52 — Host I/O stdlib)
+
+Three new `host/<capability>` arms in `exec_host_call` bridge Twig programs to OS-level I/O:
+
+#### `host/write_string` (IIR: `call_builtin "host/write_string" <string_reg>`)
+
+Write the UTF-8 bytes of a `LangString` heap value to stdout.  The argument must be a string
+value (class tag `CLASS_STRING = 3`).  This is the idiomatic way for Twig programs to print
+string data; `host/write_byte` remains available for byte-level I/O.
+
+#### `host/read_line` (IIR: `call_builtin "host/read_line" → dest`)
+
+Read one line from stdin (using `BufRead::read_line`).  The trailing `\n` (and `\r\n` on
+Windows) is stripped before the content is allocated as a heap string and stored in `dest`.
+Returns an empty heap string on EOF.
+
+#### `host/read_file` (IIR: `call_builtin "host/read_file" <path_reg> → dest`)
+
+Read the entire contents of the file at the path given by the string argument.  The contents
+are returned as a heap string.  OS errors propagate as `RunError::HostIo`.
+
+#### `host_arg_string` helper
+
+New private helper function mirroring `host_arg_int` for string arguments.  Extracts the
+`&'static [u8]` byte slice from a `LangString` heap object at a given argument position in
+an IIR instruction.  Returns `RunError::HostArgType` on type mismatch.
+
 ## [0.11.0] — 2026-05-14
 
 ### Added (LANG47 — String Heap Objects and Builtins)
