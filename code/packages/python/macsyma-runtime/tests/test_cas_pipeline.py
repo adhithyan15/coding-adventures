@@ -803,6 +803,32 @@ def test_pipeline_factor_multivariate_sum_of_cubes() -> None:
     )
 
 
+def test_pipeline_factor_multivariate_grouping() -> None:
+    """factor(x*y + x*z + y + z) recognises (x+1)*(y+z)."""
+    result = _eval("factor(x*y + x*z + y + z)")
+    assert isinstance(result, IRApply)
+    assert result.args == (
+        IRApply(IRSymbol("Add"), (IRSymbol("x"), IRInteger(1))),
+        IRApply(IRSymbol("Add"), (IRSymbol("y"), IRSymbol("z"))),
+    )
+
+
+def test_pipeline_factor_multivariate_grouping_with_signed_residual() -> None:
+    """factor(x*y - x*z + y - z) recognises (x+1)*(y-z)."""
+    result = _eval("factor(x*y - x*z + y - z)")
+    assert isinstance(result, IRApply)
+    assert result.args == (
+        IRApply(IRSymbol("Add"), (IRSymbol("x"), IRInteger(1))),
+        IRApply(
+            IRSymbol("Add"),
+            (
+                IRSymbol("y"),
+                IRApply(IRSymbol("Mul"), (IRInteger(-1), IRSymbol("z"))),
+            ),
+        ),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section S — Calculus: diff and integrate (already wired, no pipeline tests)
 # ---------------------------------------------------------------------------

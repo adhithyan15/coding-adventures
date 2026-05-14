@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added another small multivariate factoring foothold to `Factor`: four-term
+  bilinear grouping such as `x*y + x*z + y + z` now factors to
+  `(x+1)*(y+z)`.
 - Added another small multivariate factoring foothold to `Factor`: bivariate
   cubic identities such as `x^3 - y^3` and `x^3 + y^3` now factor to their
   textbook two-factor decompositions.

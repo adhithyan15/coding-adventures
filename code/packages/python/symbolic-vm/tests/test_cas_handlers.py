@@ -77,6 +77,7 @@ _EQUAL = IRSymbol("Equal")
 
 x = IRSymbol("x")
 y = IRSymbol("y")
+z = IRSymbol("z")
 
 
 def ilist(*args: object) -> IRApply:
@@ -310,6 +311,48 @@ def test_factor_multivariate_sum_of_cubes() -> None:
                     IRApply(POW, (y, IRInteger(2))),
                 ),
             ),
+        ),
+    )
+
+
+def test_factor_multivariate_grouping() -> None:
+    """Factor(x*y + x*z + y + z) recognises grouped bilinear factors."""
+    vm, _ = make_vm()
+    target = IRApply(
+        ADD,
+        (
+            IRApply(ADD, (IRApply(MUL, (x, y)), IRApply(MUL, (x, z)))),
+            IRApply(ADD, (y, z)),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(ADD, (x, IRInteger(1))),
+            IRApply(ADD, (y, z)),
+        ),
+    )
+
+
+def test_factor_multivariate_grouping_with_signed_residual() -> None:
+    """Factor(x*y - x*z + y - z) preserves the grouped residual sign."""
+    vm, _ = make_vm()
+    target = IRApply(
+        ADD,
+        (
+            IRApply(SUB, (IRApply(MUL, (x, y)), IRApply(MUL, (x, z)))),
+            IRApply(SUB, (y, z)),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(ADD, (x, IRInteger(1))),
+            IRApply(ADD, (y, IRApply(MUL, (IRInteger(-1), z)))),
         ),
     )
 

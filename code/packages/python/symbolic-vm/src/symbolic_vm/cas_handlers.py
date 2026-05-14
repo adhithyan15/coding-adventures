@@ -1237,6 +1237,95 @@ def _extract_multivariate_cubic_identity(inner: IRNode) -> IRNode | None:
     return IRApply(MUL, (linear, quadratic))
 
 
+def _common_symbolic_powers(terms: list[IRNode]) -> dict[IRNode, int]:
+    """Return symbolic factors shared by every term."""
+    if not terms:
+        return {}
+
+    common = dict(_split_common_factor_term(terms[0]))
+    for term in terms[1:]:
+        powers = _split_common_factor_term(term)
+        for base in list(common):
+            shared = min(common[base], powers.get(base, 0))
+            if shared:
+                common[base] = shared
+            else:
+                del common[base]
+    return common
+
+
+def _same_two_terms(left: list[IRNode], right: list[IRNode]) -> bool:
+    if len(left) != 2 or len(right) != 2:
+        return False
+    return (left[0] == right[0] and left[1] == right[1]) or (
+        left[0] == right[1] and left[1] == right[0]
+    )
+
+
+def _extract_multivariate_grouping(inner: IRNode) -> IRNode | None:
+    """Recognise a four-term factor-by-grouping case.
+
+    This intentionally small foothold covers bilinear groupings such as
+    ``x*y + x*z + y + z -> (x + 1)*(y + z)`` without pretending to be a full
+    multivariate factorization algorithm.
+    """
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 4:
+        return None
+
+    for first_index in range(3):
+        for second_index in range(first_index + 1, 4):
+            grouped = [terms[first_index], terms[second_index]]
+            first_common = _common_symbolic_powers(grouped)
+            if not first_common:
+                continue
+
+            rest = [
+                term
+                for index, term in enumerate(terms)
+                if index not in (first_index, second_index)
+            ]
+            first_residual = [
+                _remove_common_factor(term, first_common) for term in grouped
+            ]
+            second_common = _common_symbolic_powers(rest)
+            second_residual = [
+                _remove_common_factor(term, second_common) for term in rest
+            ]
+            if not _same_two_terms(first_residual, second_residual):
+                continue
+
+            first_factor = _mul_nodes(
+                [
+                    _pow_node(base, exponent)
+                    for base, exponent in sorted(
+                        first_common.items(), key=lambda item: str(item[0])
+                    )
+                ]
+            )
+            second_factor = (
+                _mul_nodes(
+                    [
+                        _pow_node(base, exponent)
+                        for base, exponent in sorted(
+                            second_common.items(), key=lambda item: str(item[0])
+                        )
+                    ]
+                )
+                if second_common
+                else IRInteger(1)
+            )
+            return IRApply(
+                MUL,
+                (
+                    IRApply(ADD, (first_factor, second_factor)),
+                    _add_nodes(first_residual),
+                ),
+            )
+
+    return None
+
+
 def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Factor(expr)`` — factor a univariate integer polynomial over Z.
 
@@ -1275,6 +1364,9 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
         perfect_square = _extract_multivariate_perfect_square(inner)
         if perfect_square is not None:
             return perfect_square
+        grouping = _extract_multivariate_grouping(inner)
+        if grouping is not None:
+            return grouping
         common_factored = _extract_common_symbolic_factor(inner)
         if common_factored is not None:
             return _vm.eval(common_factored)

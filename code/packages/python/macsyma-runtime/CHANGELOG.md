@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added MACSYMA `factor` parity for four-term bilinear grouping, so
+  `factor(x*y + x*z + y + z)` now returns `(x+1)*(y+z)` through the canonical
+  symbolic VM handler.
 - Added MACSYMA `factor` parity for bivariate cubic identities, so
   `factor(x^3 - y^3)` and `factor(x^3 + y^3)` now return the textbook
   two-factor decompositions through the canonical symbolic VM handler.
