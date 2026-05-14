@@ -159,13 +159,26 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         true
     }
 
+    fn supports_adc(&self) -> bool {
+        true
+    }
+
     fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
         self.inner.led_matrix_frame(frame)
     }
 
     fn write_pwm(&mut self, pin: u8, duty: u16) -> Result<(), HalError> {
-        if unsafe { pwm_ffi::board_vm_uno_r4_pwm_write(pin, duty) } {
+        if unsafe { board_io_ffi::board_vm_uno_r4_pwm_write(pin, duty) } {
             Ok(())
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
+    fn read_adc(&mut self, pin: u8) -> Result<u16, HalError> {
+        let mut sample = 0;
+        if unsafe { board_io_ffi::board_vm_uno_r4_adc_read(pin, &mut sample) } {
+            Ok(sample)
         } else {
             Err(HalError::UnsupportedMode)
         }
@@ -173,8 +186,9 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
 }
 
 #[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
-mod pwm_ffi {
+mod board_io_ffi {
     unsafe extern "C" {
         pub fn board_vm_uno_r4_pwm_write(pin: u8, duty: u16) -> bool;
+        pub fn board_vm_uno_r4_adc_read(pin: u8, sample: *mut u16) -> bool;
     }
 }
