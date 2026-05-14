@@ -113,6 +113,19 @@ def run(
         # metadata and return formatted rows without going through the planner.
         if re.match(r"\s*PRAGMA\b", bound, re.IGNORECASE):
             return _run_pragma(backend, bound, fk_child=fk_child)
+        # VACUUM / ANALYZE / REINDEX are no-ops in mini-sqlite.  SQLite uses
+        # VACUUM to rebuild the database file and ANALYZE to collect statistics
+        # for the query planner; neither concept applies to our in-memory /
+        # file-backed stack.  We silently succeed so migration scripts and ORM
+        # setup routines that call these statements don't crash.
+        # EXPLAIN / EXPLAIN QUERY PLAN are similarly intercepted — we return an
+        # empty result rather than trying to expose our internal IR.
+        if re.match(
+            r"\s*(VACUUM|ANALYZE|REINDEX|EXPLAIN\b)\b",
+            bound,
+            re.IGNORECASE,
+        ):
+            return QueryResult(rows_affected=0)
         ast = parse_sql(bound)
         stmt = to_statement(ast, view_defs=view_defs)
 

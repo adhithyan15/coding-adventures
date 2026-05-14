@@ -1515,6 +1515,8 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         # SQLite-specific: TOTAL() is like SUM() but returns 0.0 for empty
         # sets or all-NULL input, never returning NULL.
         "TOTAL": AggFunc.TOTAL,
+        # JSON aggregates: accumulate values across the group into a JSON document.
+        "JSON_GROUP_ARRAY": AggFunc.JSON_GROUP_ARRAY,
     }
     if upper in agg_map:
         # SQLite's MIN/MAX are overloaded: one-argument form is an aggregate
@@ -1555,6 +1557,23 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             func=AggFunc.GROUP_CONCAT,
             arg=args[0],
             separator=separator,
+        )
+
+    if upper == "JSON_GROUP_OBJECT":
+        # JSON_GROUP_OBJECT(key_expr, val_expr)
+        # Builds a JSON object by accumulating key-value pairs across the group.
+        # Both key and value may be arbitrary expressions — unlike GROUP_CONCAT's
+        # separator, the key is evaluated per row, not baked in at compile time.
+        # The key expression is stored in key_arg; val_expr goes in the normal arg.
+        if len(args) != 2:
+            raise ProgrammingError(
+                "JSON_GROUP_OBJECT: expected exactly 2 arguments (key, value), "
+                f"got {len(args)}"
+            )
+        return AggregateExpr(
+            func=AggFunc.JSON_GROUP_OBJECT,
+            arg=args[1],       # value expression → the main arg
+            key_arg=args[0],   # key expression → stored separately
         )
 
     return FunctionCall(name=name, args=tuple(args))

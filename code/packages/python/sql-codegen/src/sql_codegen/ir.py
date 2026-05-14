@@ -128,8 +128,10 @@ class AggFunc(Enum):
     AVG = "AVG"
     MIN = "MIN"
     MAX = "MAX"
-    GROUP_CONCAT = "GROUP_CONCAT"  # concatenate non-NULL strings with a separator
-    TOTAL = "TOTAL"               # SQLite-specific: SUM that returns 0.0 for empty/all-null
+    GROUP_CONCAT = "GROUP_CONCAT"       # concatenate non-NULL strings with a separator
+    TOTAL = "TOTAL"                     # SQLite-specific: SUM that returns 0.0 for empty/all-null
+    JSON_GROUP_ARRAY = "JSON_GROUP_ARRAY"    # build JSON array from non-NULL values in group
+    JSON_GROUP_OBJECT = "JSON_GROUP_OBJECT"  # build JSON object from (key, value) pairs in group
 
 
 class Direction(Enum):

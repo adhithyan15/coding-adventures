@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.22.0 — 2026-05-14
+
+### Added
+
+- **`AggFunc.JSON_GROUP_ARRAY`** (`vm.py`) — Accumulates non-NULL SQL values
+  across a GROUP BY group into a JSON array.  Returns `'[]'` for an empty group
+  (never NULL, unlike GROUP_CONCAT).  Uses `_sql_to_json_val` to convert each
+  SQL scalar to the appropriate JSON type before accumulation.
+- **`AggFunc.JSON_GROUP_OBJECT`** (`vm.py`) — Accumulates (key, val) pairs into
+  a JSON object.  The codegen pushes the key expression *before* the value;
+  `UpdateAgg` pops both.  Rows with NULL key or NULL value are silently skipped.
+  Duplicate keys: last writer wins.  Returns `'{}'` for an empty group.
+
+### Changed
+
+- `_do_update_agg` now handles `JSON_GROUP_OBJECT`'s two-value stack protocol:
+  when `value` is NULL the key is also popped to keep the stack balanced.
+- `import json as _json` added to `vm.py` to serialise JSON group results.
+- `_sql_to_json_val` imported from `scalar_functions` for JSON type conversion.
+
 ## 1.21.0 — 2026-05-13
 
 ### Added

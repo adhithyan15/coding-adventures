@@ -96,7 +96,9 @@ class AggFunc(Enum):
     MIN = "MIN"
     MAX = "MAX"
     GROUP_CONCAT = "GROUP_CONCAT"
-    TOTAL = "TOTAL"  # SQLite-specific: like SUM but returns 0.0 (not NULL) for empty/all-null
+    TOTAL = "TOTAL"                          # SQLite: like SUM but returns 0.0 for empty/all-null
+    JSON_GROUP_ARRAY = "JSON_GROUP_ARRAY"    # build JSON array from non-NULL values in group
+    JSON_GROUP_OBJECT = "JSON_GROUP_OBJECT"  # build JSON object from (key, value) pairs in group
 
 
 # ---- Expr variants --------------------------------------------------------
@@ -289,6 +291,7 @@ class AggregateExpr:
     arg: FuncArg  # star=True for COUNT(*)
     distinct: bool = False
     separator: str | None = None  # GROUP_CONCAT only; None → use default ","
+    key_arg: FuncArg | None = None  # JSON_GROUP_OBJECT only: the key expression
 
 
 @dataclass(frozen=True, slots=True)

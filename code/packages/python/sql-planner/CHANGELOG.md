@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.28.0] - 2026-05-14
+
+### Added
+
+- **`AggFunc.JSON_GROUP_ARRAY` / `AggFunc.JSON_GROUP_OBJECT`** (`expr.py`) —
+  Two new aggregate function enum values for JSON aggregation.  `JSON_GROUP_ARRAY`
+  accumulates non-NULL values into a JSON array; `JSON_GROUP_OBJECT` builds a
+  JSON object from (key, value) pairs.
+- **`AggregateExpr.key_arg`** (`expr.py`) — New optional `FuncArg | None` field
+  on `AggregateExpr` that holds the key expression for `JSON_GROUP_OBJECT`.  This
+  allows the planner to carry the key expression through the plan tree to the
+  codegen without changing the existing `arg` semantics.
+- **`AggregateItem.key_arg`** (`plan.py`) — Matching field on the `AggregateItem`
+  plan node so the compiler has access to the key expression when emitting
+  `UpdateAgg` instructions for `JSON_GROUP_OBJECT`.
+- Column-resolution support for `key_arg` in `_resolve_expr` (`planner.py`) so
+  the key expression is correctly disambiguated during planning.
+
 ## [0.27.0] - 2026-05-13
 
 ### Added

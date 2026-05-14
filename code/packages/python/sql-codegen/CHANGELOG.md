@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.23.0] - 2026-05-14
+
+### Added
+
+- **`AggFunc.JSON_GROUP_ARRAY` / `AggFunc.JSON_GROUP_OBJECT`** (`ir.py`) — Two
+  new aggregate enum values for JSON aggregation.  Both are automatically routed
+  by the existing name-lookup in `_plan_agg_to_ir`.
+- **`JSON_GROUP_OBJECT` codegen in `_compile_aggregate`** (`compiler.py`) — When
+  the aggregate has a `key_arg`, the compiler now emits the key expression
+  *before* the value expression in the update loop.  `UpdateAgg` for
+  `JSON_GROUP_OBJECT` then pops two values (value on top, key underneath).
+
 ## [1.22.0] - 2026-05-13
 
 ### Added
