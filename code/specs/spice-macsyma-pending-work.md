@@ -1,8 +1,9 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-14. Branch point: spice-engine v0.10.0 (PR #2901, merged),
-> macsyma-runtime + symbolic-vm after the elliptic-integral foothold (PR #3141).
+> Last updated: 2026-05-14. Sprint: TypeScript 0.2.0 releases (PR #3170),
+> Rust 0.2.0 releases (PR #3171), Python EllipticE/Pi — `symbolic-vm` 0.54.0
+> (PR #3173), TypeScript/Rust EllipticE/Pi — `symbolic-vm` 0.3.0 (in progress).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -120,16 +121,38 @@ Items are listed in priority order within each group.
 
 Every item below is wired end-to-end: surface syntax → compile → VM → correct result.
 
-#### Core infrastructure
+#### Core infrastructure (Python)
 
 | Package | Version | What it provides |
 |---|---|---|
 | `symbolic-ir` | latest | `IRSymbol`, `IRInteger`, `IRRational`, `IRFloat`, `IRString`, `IRApply` node types |
-| `symbolic-vm` | latest | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+), numeric folding, 100+ handlers |
+| `symbolic-vm` | 0.53.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K), numeric folding, 100+ handlers |
 | `macsyma-lexer` | 0.1.0 | Grammar-driven tokenizer |
 | `macsyma-parser` | 0.1.0 | Grammar-driven parser |
 | `macsyma-compiler` | 0.9.0 | AST → IR; 60+ MACSYMA identifier mappings in name table |
 | `macsyma-runtime` | 1.25.0 | History (`%`, `%i1`, `%o1`, …), `;`/`$` terminators, `kill`, `ev`, `MacsymaBackend` |
+
+#### TypeScript port version releases (PR #3170 — in review)
+
+The TypeScript port was at v0.1.0 with all implemented features in an "Unreleased"
+CHANGELOG section. PR #3170 cuts a proper 0.2.0 release.
+
+| Package | Version | Notes |
+|---|---|---|
+| `typescript/symbolic-vm` | 0.2.0 | EllipticF/K, multivariate Factor footholds, D derivative handler, reciprocal hyperbolic |
+| `typescript/macsyma-runtime` | 0.2.0 | Elliptic pipeline, multivariate factor, `?` help, assume/declare, ev display2d, list/solve wiring |
+
+#### Rust port version releases (PR #3171 — in review)
+
+The Rust port was at v0.1.x with all implemented features in an "Unreleased"
+CHANGELOG section. PR #3171 cuts proper 0.2.0 releases and creates the missing
+`cas-ode` CHANGELOG.
+
+| Package | Version | Notes |
+|---|---|---|
+| `rust/symbolic-vm` | 0.2.0 | Same feature set as TypeScript 0.2.0 |
+| `rust/macsyma-runtime` | 0.2.0 | Same feature set as TypeScript 0.2.0 |
+| `rust/cas-ode` | 0.1.0 | CHANGELOG.md created — documents all 9 ODE types (Phase 18–20) |
 
 #### CAS substrate packages — all fully wired
 
@@ -233,7 +256,8 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Case | Example | Status |
 |---|---|---|
 | Elliptic integrals — first-kind foothold | `∫ 1/√(1-k²sin²θ) dθ` | ✅ #3141: returns `EllipticF(θ,k)`; definite 0…π/2 returns `EllipticK(k)` |
-| Elliptic integrals — second/third kind | `∫ √(1-k²sin²θ) dθ` (E), Π-form | Open: `EllipticE(k)` / `EllipticPi(n,k)` forms not yet recognised |
+| Elliptic integrals — second kind | `∫ √(1-k²sin²θ) dθ`, `∫₀^(π/2) √(1-k²sin²θ) dθ` | ✅ Python `symbolic-vm` 0.54.0 PR #3173; TS/Rust 0.3.0 in progress |
+| Elliptic integrals — third kind | `∫₀^(π/2) 1/((1+n·sin²θ)·√(1-k²sin²θ)) dθ` | ✅ Python `symbolic-vm` 0.54.0 PR #3173; TS/Rust 0.3.0 in progress |
 | `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features
