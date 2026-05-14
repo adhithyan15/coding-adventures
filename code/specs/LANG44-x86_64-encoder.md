@@ -1,6 +1,23 @@
-# LANG41 — `x86_64-encoder`: X86-64 Instruction Encoder
+# LANG44 — `x86_64-encoder`: X86-64 Instruction Encoder
 
 **Status:** Draft — 2026-05-14
+
+> The x86-64 port spans four specs.  Reading order is encoder → backend
+> → object format → twig-aot driver:
+>
+> - **LANG44** (this) — pure instruction encoder.  ABI-agnostic.
+> - **LANG43** — CIR → x86-64 lowering, with both **System V** (Linux)
+>   and **Microsoft x64** (Windows) ABIs in V1.
+> - **LANG45** — object-file emitters (`elf_object.rs`, `pe_object.rs`)
+>   that wrap the encoder's `.text` bytes with relocations the system
+>   linker on each OS expects.
+> - **LANG46** — `twig-aot` multi-target dispatch, per-target runtime
+>   archive build, and linker integration (`cc` on Linux,
+>   `link.exe` / `lld-link` on Windows).
+>
+> Number LANG41 in this repo is already claimed by the AOT runtime
+> library work (twig-aot 0.1.8 etc.) — that's why this spec lands at
+> LANG44.
 
 ## Motivation
 
@@ -19,6 +36,12 @@ The companion spec **LANG43** defines `x86_64-backend`, which lowers
 CIR onto the encoder.  This spec stops at "given a method like
 `mov_r64_imm64(Reg::Rax, 42)`, what bytes come out?"
 
+The encoder is **OS-agnostic and ABI-agnostic** — the same bytes
+encode on Linux, Windows, and macOS.  ABI choice (which registers
+hold arguments, whether a shadow space exists) lives in the backend.
+Object-format choice (ELF vs PE/COFF, which relocation type IDs to
+use) lives in `code-packager` per LANG45.
+
 ## Non-goals
 
 - **Lowering**: no CIR awareness.  That belongs in `x86_64-backend`.
@@ -33,10 +56,11 @@ CIR onto the encoder.  This spec stops at "given a method like
   AArch64 encoder also defers floats).
 - **16-bit / 32-bit legacy modes**: only 64-bit (long) mode is
   encoded.
-- **Microsoft x64 ABI quirks**: home-stack space, RVA32 relocations,
-  unwind data tables — those are layered above the encoder.  The
-  encoder produces the same bytes regardless of host OS; the choice
-  of ABI is a *backend* concern.
+- **Microsoft x64 ABI quirks**: 32-byte home/shadow stack space,
+  unwind data tables (`.pdata` / `.xdata` in PE/COFF) — those are
+  layered above the encoder.  The encoder produces the same bytes
+  regardless of host OS; the choice of ABI is a *backend* concern
+  (LANG43); object-format reloc IDs are a *packager* concern (LANG45).
 
 ## ISA reference
 
@@ -180,17 +204,26 @@ pub struct ExternalReloc {
 }
 
 pub enum ExternalRelocKind {
-    /// `R_X86_64_PLT32` for ELF, `X86_64_RELOC_BRANCH` for Mach-O.
-    /// Used by `CALL rel32` to external functions.
+    /// PC-relative branch.  Maps to `R_X86_64_PLT32` on ELF,
+    /// `IMAGE_REL_AMD64_REL32` on PE/COFF, `X86_64_RELOC_BRANCH` on
+    /// Mach-O.  Used by `CALL rel32` to external functions.
     PltRel32,
-    /// `R_X86_64_PC32` for ELF.  Used for RIP-relative loads/stores
-    /// of globals when the symbol resolves locally.
+    /// PC-relative 32-bit displacement.  Maps to `R_X86_64_PC32` on
+    /// ELF, `IMAGE_REL_AMD64_REL32` on PE/COFF, `X86_64_RELOC_SIGNED`
+    /// on Mach-O.  Used for RIP-relative loads/stores of globals when
+    /// the symbol resolves locally.
     PcRel32,
-    /// `R_X86_64_REX_GOTPCRELX` (ELF) — RIP-relative GOT load for
-    /// possibly-external globals.
+    /// RIP-relative GOT load.  Maps to `R_X86_64_REX_GOTPCRELX` on
+    /// ELF.  On PE/COFF and Mach-O this collapses to a regular
+    /// PC-relative reloc (no separate GOT).  Used for possibly-external
+    /// globals.
     GotPcRel32,
 }
 ```
+
+The encoder produces the same 32-bit slot regardless of which kind is
+chosen; the packager (LANG45) translates the abstract kind to the
+right OS-specific relocation type ID at emit time.
 
 ---
 

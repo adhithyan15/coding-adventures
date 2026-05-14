@@ -2,6 +2,12 @@
 
 **Status:** Draft — 2026-05-14
 
+> The x86-64 port spans four specs (LANG44 encoder, **LANG43** backend,
+> LANG45 object emitters, LANG46 twig-aot driver).  Together they bring
+> Twig source → native binary that runs on **Linux x86-64** and
+> **Windows x86-64**.  This spec is the CIR-lowering layer; both ABIs
+> are in V1 scope so neither OS waits behind the other.
+
 ## Motivation
 
 `aarch64-backend` brings the LANG VM to ARM64 hosts (Apple Silicon,
@@ -10,15 +16,16 @@ which today dominate CI runners, cloud VMs, and developer laptops.
 
 This spec defines the backend that consumes CIR via the `Backend`
 trait (LANG05) and produces x86-64 machine code via `x86_64-encoder`
-(LANG41).  It plugs into both `aot-core` (LANG04) and `jit-core`
+(LANG44).  It plugs into both `aot-core` (LANG04) and `jit-core`
 (LANG03) without changes to either — the `Backend` trait is
 target-agnostic.
 
 The goal of V1 is **functional parity with `aarch64-backend`** after
-LANG38 (arithmetic completeness) + LANG39 (globals) + LANG40 (I/O):
-every CIR opcode currently supported on ARM64 must also compile on
-x86-64.  Subsequent PRs match `aarch64-backend` PR-for-PR; this spec
-lays out the V1 cut and the major design decisions.
+LANG38 (arithmetic completeness) + LANG39 (globals) + LANG40 (I/O) +
+LANG41 (runtime library) on **both** Linux and Windows x86-64: every
+CIR opcode currently supported on ARM64 must also compile on x86-64,
+and the same Twig program must produce a working ELF executable on
+Linux and a working PE executable on Windows.
 
 ## Non-goals (V1)
 
@@ -29,9 +36,16 @@ lays out the V1 cut and the major design decisions.
 - **Local-register allocator** — V1 uses stack spill exclusively
   (matches AArch64).  A real allocator can replace the spill core
   later behind the same public API.
-- **Microsoft x64 ABI** — V1 targets **System V AMD64 ABI** only
-  (Linux, macOS x86-64, FreeBSD).  Windows x86-64 is a follow-up;
-  see § Out of scope below.
+- **macOS x86-64** — Intel Macs are a shrinking population; defer.
+  The encoder works there, but `code-packager` would need a Mach-O
+  variant tuned for `CPU_TYPE_X86_64` (LANG45 covers only ELF + PE
+  in V1).
+- **Windows SEH unwind tables** (`.pdata` / `.xdata`) — required for
+  proper exception unwinding from a debugger or another module.
+  V1 emits no unwind data; uncaught traps terminate the process,
+  which is the same behaviour Linux gets without `.eh_frame`.
+  Adding tables is a follow-up; spec stays in `x86_64-backend` once
+  needed.
 
 ## Package layout
 
@@ -81,66 +95,132 @@ re-exported as `Reloc` for parity with the AArch64 backend's API).
 
 ---
 
-## ABI: System V AMD64
+## ABI selection
 
-V1 conforms strictly to the System V AMD64 ABI as documented in the
-draft revision 1.0 (Matz et al.).  The relevant rules for the LANG
-VM's integer-only V1:
+`X86_64Backend` ships with **two ABI modes** in V1, selected at
+backend construction time:
 
-- **Argument registers** (in order): `RDI`, `RSI`, `RDX`, `RCX`,
-  `R8`, `R9`.  Up to six integer/pointer arguments fit in registers;
-  beyond that, push right-to-left on the stack.
-- **Return value**: `RAX`.
-- **Caller-saved (volatile)**: `RAX`, `RCX`, `RDX`, `RSI`, `RDI`,
-  `R8`–`R11`.  Subset our spill allocator may freely clobber as
-  scratch.
-- **Callee-saved**: `RBX`, `RBP`, `R12`–`R15`.  V1 only clobbers
-  `RBP` (used as frame pointer), so we save and restore it in the
-  prologue/epilogue.
-- **Stack alignment**: 16-byte-aligned **at the point of a `CALL`
-  instruction** (so on entry, RSP ≡ 8 (mod 16) because the CALL
-  pushed an 8-byte return address).  After `push rbp`, RSP ≡ 0 (mod
-  16) — the prologue's frame allocation must keep it that way.
-- **Red zone**: 128 bytes below RSP are scratch for leaf functions.
-  V1 *does not* use the red zone; all locals live in the proper
-  frame.
+```rust
+pub enum X86_64Abi {
+    /// System V AMD64 — Linux, FreeBSD, (Intel) macOS.
+    SysV,
+    /// Microsoft x64 — Windows desktop/server.
+    MsX64,
+}
 
-### Prologue / epilogue
+impl X86_64Backend {
+    pub fn new() -> Self { Self::with_abi(X86_64Abi::SysV) }
+    pub fn with_abi(abi: X86_64Abi) -> Self { /* ... */ }
+}
+```
+
+The choice flows from `FunctionContext::target_triple` or an explicit
+constructor argument from `twig-aot` (LANG46).  Both ABIs share the
+same CIR-lowering logic — only the prologue/epilogue, arg register
+table, callee-saved set, and call-site stack-alignment math differ.
+
+### Side-by-side: System V AMD64 vs Microsoft x64
+
+| Concern | System V AMD64 (Linux) | Microsoft x64 (Windows) |
+|---|---|---|
+| Reference | System V AMD64 ABI draft 1.0 (Matz et al.) | MSDN: "x64 calling convention" |
+| Integer arg registers (in order) | RDI, RSI, RDX, RCX, R8, R9 | RCX, RDX, R8, R9 |
+| Max GPR-passed integer args | 6 | 4 |
+| Return value | RAX | RAX |
+| Caller-saved (volatile) | RAX, RCX, RDX, RSI, RDI, R8–R11 | RAX, RCX, RDX, R8–R11 |
+| Callee-saved | RBX, RBP, R12–R15 | RBX, RBP, RDI, RSI, R12–R15 |
+| Shadow / home space | None | **32 bytes** allocated by caller, *always* (even for ≤4 args) |
+| Stack alignment at CALL | 16-byte | 16-byte |
+| Red zone | 128 B below RSP | **None** — must not read/write below RSP |
+| Unwind metadata | `.eh_frame` (optional in V1) | `.pdata` / `.xdata` (optional in V1; see Non-goals) |
+
+V1 implements all four shaded lines (arg regs, callee-saved, shadow
+space, red-zone discipline) and ignores the unwind-metadata rows.
+
+### Prologue / epilogue — System V
 
 ```asm
 ;  --- prologue ---
 push  rbp
 mov   rbp, rsp
-sub   rsp, <frame>          ; <frame> rounded up to 16-byte multiple
+sub   rsp, <frame>          ; <frame> chosen so RSP ≡ 0 (mod 16)
 
-;  spill arg registers to their stack slots
-mov   [rbp - 8 - N*8 - 0],  rdi      ; arg 0
-mov   [rbp - 8 - N*8 - 8],  rsi      ; arg 1
-... up to 6 args ...
-                                     ; arg 7+ already on stack, accessed via [rbp + 16 + ...]
+;  spill incoming arg registers to their slots (up to 6)
+mov   [rbp - 8],  rdi
+mov   [rbp - 16], rsi
+mov   [rbp - 24], rdx
+mov   [rbp - 32], rcx
+mov   [rbp - 40], r8
+mov   [rbp - 48], r9
 
 ;  --- body ---
 
 ;  --- epilogue ---
-mov   rsp, rbp                       ; or `add rsp, <frame>`; mov is one byte shorter for large frames
+mov   rsp, rbp
 pop   rbp
 ret
 ```
 
-`<frame>` = `(num_virtuals * 8 + 15) & !15`.  Sub-128B frames could
-use the red zone, but uniformity wins for V1.
+### Prologue / epilogue — Microsoft x64
+
+```asm
+;  --- prologue ---
+push  rbp
+mov   rbp, rsp
+sub   rsp, <frame>          ; <frame> chosen so RSP ≡ 0 (mod 16)
+
+;  spill incoming arg registers to their slots (up to 4)
+mov   [rbp - 8],  rcx
+mov   [rbp - 16], rdx
+mov   [rbp - 24], r8
+mov   [rbp - 32], r9
+
+;  --- body ---
+
+;  --- epilogue ---
+mov   rsp, rbp
+pop   rbp
+ret
+```
+
+The only structural difference is the arg-spill register set (RDI/RSI
+vs RCX/RDX/R8/R9 etc.).  Frame layout is otherwise identical.
 
 ### Stack alignment invariant
 
-After `push rbp; sub rsp, frame`, RSP must be `≡ 0 (mod 16)`.  Since
-`push rbp` shifts the alignment by 8, we need `frame ≡ 8 (mod 16)`.
-The allocator rounds `frame` up to 16 *and then adds 8 if needed*.
-The corresponding check is part of the test suite.
+For both ABIs: at every `CALL` instruction in the emitted body, RSP
+must be `≡ 0 (mod 16)`.  The prologue `push rbp` shifts the inherited
+`≡ 8 (mod 16)` (post-entry `CALL` alignment) to `≡ 0 (mod 16)`, so
+the frame `sub rsp, N` must keep `N ≡ 0 (mod 16)`.
 
-When calling out (e.g., `__twig_print_i64`), the call site adjusts
-RSP if necessary to restore the 16-byte alignment at the call.  In
-V1, all locals are 8-byte slots and we don't pass stack arguments to
-external calls, so this works out naturally.
+### Microsoft x64 shadow space at call sites
+
+Every call to an external function in Microsoft x64 must reserve **32
+bytes of "home" / "shadow" space** on the stack — the callee owns
+that space (it's where it would spill RCX/RDX/R8/R9 if it chose to).
+The callee does **not** clean it up; the caller deallocates.
+
+V1 reserves the shadow space in the *prologue* by adding 32 to the
+frame size whenever the function will issue any `CALL` (i.e., is not a
+leaf).  This is simpler than reserve-per-call and costs at most 32
+unused bytes for non-leaf functions.
+
+```asm
+;  --- prologue (MS x64, non-leaf) ---
+push  rbp
+mov   rbp, rsp
+sub   rsp, <frame> + 32     ; +32 = persistent shadow space for callees
+```
+
+System V has no analogous requirement.
+
+### Red zone
+
+System V grants a 128-byte red zone below RSP for *leaf functions* —
+they may read/write `[rsp - 0..128]` without subtracting from RSP.
+V1 does **not** use the red zone on either ABI; all locals live in
+the proper frame.  This keeps the prologue/epilogue uniform across
+both targets.
 
 ---
 
@@ -303,13 +383,27 @@ guard failures abort.
 ### Calls (matches LANG39 wave)
 
 Cross-function `call` uses `CALL rel32` with an `ExternalReloc` of
-kind `PltRel32`.  The packager resolves the displacement at link
-time.  Arguments are loaded into the System V argument registers
-(RDI, RSI, RDX, RCX, R8, R9) before the call; the return value
-arrives in `RAX` and is stored to the destination slot.
+kind `PltRel32`.  The packager (LANG45) translates the abstract
+reloc kind into:
 
-V1 supports up to six arguments per call.  Beyond that → return
-`BackendRefused`.
+- `R_X86_64_PLT32` (or `R_X86_64_PC32` for static calls) on ELF
+- `IMAGE_REL_AMD64_REL32` on PE/COFF
+- `X86_64_RELOC_BRANCH` on Mach-O (deferred V1)
+
+Arguments are loaded into the ABI's argument registers before the
+call:
+
+- **System V**: RDI, RSI, RDX, RCX, R8, R9 — up to **six** GPR args.
+- **MS x64**: RCX, RDX, R8, R9 — up to **four** GPR args.
+
+The return value arrives in `RAX` and is stored to the destination
+slot.
+
+Beyond the per-ABI max → return `BackendRefused`.
+
+On Microsoft x64, the prologue already allocated the 32-byte shadow
+space; the call site itself emits only the argument moves + `CALL
+rel32` + return-value store.
 
 ### Globals (matches LANG39 wave)
 
@@ -329,27 +423,36 @@ lea  rax, [rip + name]   ; PcRel32 reloc
 mov  [rax], rcx
 ```
 
-### I/O (matches LANG40 wave)
+### I/O (matches LANG40 / LANG41 waves)
 
-`io_out v` lowers to a `CALL` to `__twig_print_i64` (Linux/macOS
-shared runtime), passing `[v]` in `RDI`:
+`io_out v` lowers to a `CALL` to `__twig_print_i64`, passing `[v]`
+in the ABI's first argument register:
 
-```
-mov  rdi, [v]
-call __twig_print_i64    ; PltRel32 reloc
-```
+- **System V (Linux)**: arg 0 → `RDI`
+  ```
+  mov  rdi, [v]
+  call __twig_print_i64    ; PltRel32 reloc
+  ```
+- **MS x64 (Windows)**: arg 0 → `RCX`
+  ```
+  mov  rcx, [v]
+  call __twig_print_i64    ; PltRel32 reloc
+  ```
 
 The runtime archive provides the symbol, resolved by the system
-linker.
+linker.  Per LANG46, separate runtime archives are built for each
+target (Linux x86-64 ELF `.a`; Windows x86-64 COFF `.lib`).
 
 ---
 
 ## Out of scope (deferred PRs)
 
-- **Microsoft x64 ABI** — argument registers differ (`RCX, RDX, R8,
-  R9`), 32-byte home stack space is required, unwind tables (`.pdata`
-  / `.xdata`) needed.  Follow-up spec **LANG44** or similar; the
-  backend stays inside `x86_64-backend` with a runtime ABI toggle.
+- **macOS x86-64** — encoder works; needs Mach-O object emitter
+  tuned for `CPU_TYPE_X86_64`.  Defer to a follow-up after Linux +
+  Windows ship.
+- **Windows SEH unwind tables** (`.pdata` / `.xdata`) — needed for
+  proper debugger / cross-module unwind; not blocking
+  compile-and-run.  Follow-up.
 - **Floats / SSE2** — both backends will gain this together.
 - **Local register allocator** — replace the spill core in place; no
   trait changes.
@@ -412,6 +515,8 @@ target via `target_triple()`-based lookup.
 |---|---|
 | Variable-length encoding edge cases (REX.B / SIB requirement when base ∈ {RSP, RBP, R12, R13}) | Encoder normalises these internally; backend never sees them. |
 | Division clobber surprises | All scratch regs (`RAX`, `RCX`, `RDX`) reserved up front; spill allocator never assumes their preservation across an instruction boundary. |
-| Stack alignment violations at calls | One test per call site shape; alignment check is a single arithmetic invariant. |
-| Mach-O vs ELF reloc kind differences | Encoder emits abstract `ExternalRelocKind`; `code-packager` maps to OS-specific reloc types. |
+| Stack alignment violations at calls | One test per call site shape per ABI; alignment check is a single arithmetic invariant. |
+| ELF vs PE vs Mach-O reloc kind differences | Encoder emits abstract `ExternalRelocKind`; `code-packager` (LANG45) maps to OS-specific reloc type IDs. |
+| MS x64 shadow space forgotten on a call site | Always reserve 32 B in the prologue of a non-leaf function; one targeted test verifies a six-call function leaves the stack 16-byte aligned and shadow-spaced at each call. |
+| Linux vs Windows argument register mismatch in `io_out` | Backend dispatches on `X86_64Abi`; per-ABI golden-byte test fixes the first instruction (`mov rdi, …` vs `mov rcx, …`). |
 | Mismatch between AArch64 and x86-64 CIR coverage as both backends evolve | Each future LANG NN that touches AArch64 backend should produce a sibling commit on x86-64.  This is a discipline issue, tracked in the changelog. |
