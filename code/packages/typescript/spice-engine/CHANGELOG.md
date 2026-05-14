@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add DC source sweeps for independent voltage and current sources.
 - Add capacitor support and backward-Euler RC transient analysis.
 - Add ideal-short DC and backward-Euler transient support for inductors.
 

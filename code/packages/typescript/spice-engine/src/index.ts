@@ -51,6 +51,11 @@ export interface DcResult {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface DcSweepPoint {
+  readonly value: number;
+  readonly result: DcResult;
+}
+
 export interface TransientPoint {
   readonly time: number;
   readonly nodeVoltages: ReadonlyMap<string, number>;
@@ -166,6 +171,28 @@ export function dcOp(circuit: Circuit): DcResult {
   return makeDcResult(solution.nodeVoltages, solution.branchCurrents);
 }
 
+export function dcSweep(
+  circuit: Circuit,
+  sourceName: string,
+  start: number,
+  stop: number,
+  step: number,
+): DcSweepPoint[] {
+  validateSweep(sourceName, start, stop, step);
+
+  const points: DcSweepPoint[] = [];
+  const epsilon = Math.abs(step) * 1.0e-9;
+  for (
+    let value = start;
+    sweepIncludes(value, stop, step, epsilon);
+    value += step
+  ) {
+    const swept = circuitWithSweptSource(circuit, sourceName, value);
+    points.push({ value, result: dcOp(swept) });
+  }
+  return points;
+}
+
 export function transient(
   circuit: Circuit,
   timeStep: number,
@@ -192,6 +219,70 @@ export function transient(
     );
   }
   return points;
+}
+
+function validateSweep(
+  sourceName: string,
+  start: number,
+  stop: number,
+  step: number,
+): void {
+  if (sourceName.length === 0) {
+    throw invalidElement("dcSweep", "source name must not be empty");
+  }
+  if (
+    !Number.isFinite(start) ||
+    !Number.isFinite(stop) ||
+    !Number.isFinite(step) ||
+    step === 0.0
+  ) {
+    throw invalidElement(
+      sourceName,
+      "sweep bounds and step must be finite, with non-zero step",
+    );
+  }
+  if (Math.sign(stop - start) !== Math.sign(step) && start !== stop) {
+    throw invalidElement(
+      sourceName,
+      "sweep step direction must move from start toward stop",
+    );
+  }
+}
+
+function sweepIncludes(
+  value: number,
+  stop: number,
+  step: number,
+  epsilon: number,
+): boolean {
+  return step > 0.0 ? value <= stop + epsilon : value >= stop - epsilon;
+}
+
+function circuitWithSweptSource(
+  circuit: Circuit,
+  sourceName: string,
+  value: number,
+): Circuit {
+  let found = false;
+  const swept = new Circuit();
+  for (const element of circuit.elements()) {
+    if (element.kind === "voltage-source" && element.name === sourceName) {
+      swept.add({ ...element, voltage: value });
+      found = true;
+    } else if (element.kind === "current-source" && element.name === sourceName) {
+      swept.add({ ...element, current: value });
+      found = true;
+    } else {
+      swept.add(element);
+    }
+  }
+  if (!found) {
+    throw invalidElement(
+      sourceName,
+      "sweep source must be an independent voltage or current source",
+    );
+  }
+  return swept;
 }
 
 interface CapacitorState {
