@@ -53,13 +53,14 @@ Matches the aarch64-backend baseline through LANG38:
 | Shifts | `shl_<ty>`, `shr_<ty>` (SAR for `i*`, SHR for `u*`) |
 | Unary | `neg_<ty>` |
 | Calls | `call callee_name, arg0, …, argN` — `CALL rel32` (self-recursive: label fixup; cross-function: `PltRel32` external reloc) |
+| Globals | `global_load name → dest`, `global_store name, val` — `LEA r64, [RIP+_twig_globals]` + `MOV r64, [r64 + slot*8]` (`PcRel32` reloc) |
+| I/O | `io_out val` — load arg into RDI (SysV) / RCX (MS x64), `CALL __twig_print_i64` (`PltRel32` reloc) |
 | Comparisons | `cmp_eq_<ty>`, `cmp_ne_<ty>`, `cmp_lt_<ty>`, `cmp_le_<ty>`, `cmp_gt_<ty>`, `cmp_ge_<ty>` (signed and unsigned) |
 | Control flow | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | Returns | `ret_<ty>`, `ret_void` |
 | Moves | `mov_<ty>` |
 | Type guards | `type_assert` (lowered to `UD2` trap — AOT has no deopt) |
 
-Globals and `io_out` are added by phase 6.
 
 ## Register allocation
 
