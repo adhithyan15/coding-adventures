@@ -1,5 +1,106 @@
 # Changelog — twig-type-checker
 
+## [0.5.0] — 2026-05-14
+
+### Added (LANG53 — TW05-C: Refinement Checker Bridge)
+
+- **`TwigKind::RefinedInt(Predicate)`** — new variant carrying a
+  `lang_refined_types::Predicate` through the type-checker pass.
+  `RefinedInt(p)` is a subtype of `Int`: every value satisfying `p` is a
+  valid `Int`, but not every `Int` satisfies `p`.  Mnemonic is `"int"` (same
+  as plain `Int`) for stable downstream API compatibility.
+
+- **`type_annotation_to_kind` updated** — `RangeInt { lo, hi }` now produces
+  `RefinedInt(Predicate::Range { lo, hi, inclusive_hi: false })` rather than
+  the old lossy `Int`.  `MembershipInt { values }` produces
+  `RefinedInt(Predicate::Membership { values })`.
+
+- **`annotation_to_refined_type`** — new helper in `kinds.rs`.  Converts a
+  `TypeAnnotation` directly to a `lang_refined_types::RefinedType` for storage
+  in `TypeEnv::fn_param_refinements`.  Returns `None` for unrefined
+  annotations (no proof obligation).
+
+- **`TwigKind::unify` updated** — integer-subtyping rules:
+  - `unify(RefinedInt(p), RefinedInt(p))` = `RefinedInt(p)` (same predicate preserved)
+  - `unify(RefinedInt(_), RefinedInt(_))` = `Int` (different predicates widen to Int)
+  - `unify(RefinedInt(_), Int)` = `Int`  (one refined, one not → Int)
+  - `unify(RefinedInt(_), Any)` = `Any`  (Any dominates)
+
+- **`TypeEnv::fn_param_refinements`** — new field
+  `HashMap<String, Vec<Option<RefinedType>>>`.  Stores the fully-lowered
+  `RefinedType` per parameter for each top-level function that has at least
+  one refined annotation.  Only functions with refinement-annotated params are
+  stored.
+
+- **`TypeEnv::register_fn_refinements`** — populates `fn_param_refinements`
+  during Pass 1.
+
+- **`classify_define` updated** — when the Lambda body has `param_annotations`,
+  calls `annotation_to_refined_type` per-param and stores results via
+  `register_fn_refinements`.
+
+- **`infer_apply` updated** — call-site refinement checking (TW05-C).
+  After arity checking, looks up `fn_param_refinements` for the callee and
+  runs `lang_refinement_checker::Checker::check` per annotated argument.
+  - `IntLit(n)` → `Evidence::Concrete(n)` → checked exactly.
+  - `VarRef → RefinedInt(p)` → `Evidence::Predicated([p])` → checked under `p`.
+  - `VarRef → Int / Any` → `Evidence::Unconstrained` → `Unknown`.
+  - `ProvenUnsafe(cx)` → `TypeErrorDiagnostic` in all modes.
+  - `Unknown` + `Strict` → `TypeErrorDiagnostic`.
+  - `Unknown` + `Lenient` → silent.
+
+- **`narrowing.rs`** — new module.  Provides:
+  - `extract_narrowing_facts(guard: &Expr) -> Vec<(String, Predicate)>` —
+    AST-level guard analysis.  Handles `<`, `<=`, `>`, `>=`, `=` comparisons
+    (`VarRef op IntLit` form), `and` conjunction (merges facts with
+    `Predicate::and`), and `not` negation (negates facts with `Predicate::not`).
+    Conservative: anything else returns an empty Vec.
+  - `merge_kind_with_predicate(base: &TwigKind, pred: Predicate) -> TwigKind` —
+    narrows a variable's kind by adding a guard predicate.  `Int` → `RefinedInt(p)`;
+    `RefinedInt(existing)` → `RefinedInt(and([existing, p]))`; everything else
+    unchanged.
+
+- **`infer_if` updated** — flow-sensitive narrowing.  After inferring the
+  condition, calls `extract_narrowing_facts` and applies narrowing predicates
+  to the true branch (via `push_frame` + `bind`) and negated predicates to the
+  false branch.  Uses the existing `ScopeStack` push/pop mechanism with no
+  structural changes.
+
+### Tests added (12)
+
+- `refined_kind_from_range_annotation` — `(Int 0 128)` annotation → `RefinedInt`
+- `refined_kind_from_membership_annotation` — `(Member int 1 2 5)` → `RefinedInt`
+- `unrefined_int_annotation_stays_int` — `int` annotation → plain `Int` (regression)
+- `call_site_literal_in_range_no_error` — `(ascii-info 42)` → no error
+- `call_site_literal_out_of_range_error` — `(ascii-info 200)` → `TypeErrorDiagnostic`
+- `call_site_unconstrained_lenient_silent` — unresolved arg in lenient mode → silent
+- `call_site_unconstrained_strict_error` — unresolved arg in strict mode → error
+- `narrowing_lt_proves_call` — `(if (< x 128) (ascii-info x) 0)` → no error in then
+- `narrowing_and_both_bounds` — `(if (and (>= x 0) (< x 128)) (ascii-info x) 0)` → no error
+- `narrowing_not_in_else` — `(if (< x 128) 0 (ascii-info x))` → error in else branch
+- `refined_kinds_unify_to_int` — `unify(RefinedInt(p1), RefinedInt(p2)) = Int`
+- `no_narrowing_for_non_numeric` — bool/Any guards do not crash narrowing
+
+Plus 13 unit tests added to `narrowing.rs` covering each guard form,
+`not`, `and`-merging, and `merge_kind_with_predicate`.
+
+### Dependencies added
+
+- `lang-refined-types = { path = "../lang-refined-types" }`
+- `lang-refinement-checker = { path = "../lang-refinement-checker" }`
+
+### Intentional deferrals (planned for TW05-D)
+
+- **Inter-procedural narrowing**: `(if (byte? x) (f x) …)` where `byte?` is a
+  user predicate with a declared refinement effect.
+- **CFG-based loop invariants**: `FunctionChecker` from `lang-refinement-checker`
+  for path-sensitive multi-return-site checking.
+- **Return-type annotation checking**: done by `iir-refinement-pass` (LANG42)
+  at the IIR level; no duplication here.
+- **`let`/`let*` binding refinements**: narrowing inside `let` RHS bindings.
+
+---
+
 ## [0.4.0] — 2026-05-14
 
 ### Added (LANG51 + LANG52 — string literal and let* type inference)
@@ -21,6 +122,8 @@
 ### Note on version numbering
 
 0.3.0 was the planned standalone LANG51 release; both LANG51 and LANG52 land here as 0.4.0.
+
+---
 
 ## [0.2.0] — 2026-05-14
 
