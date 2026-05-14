@@ -584,6 +584,7 @@ members = [
     "twig-semantic-tokens",
     "twig-completion",
     "twig-hover",
+    "twig-type-checker",
     "twig-ir-compiler",
     "lang-refined-types",
     "lang-refinement-checker",
