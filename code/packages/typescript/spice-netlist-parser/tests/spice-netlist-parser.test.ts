@@ -59,6 +59,25 @@ G1 out 0 in 0 2m
     ]);
   });
 
+  it("parses VCVS elements into operating-point circuits", () => {
+    const parsed = parseNetlist(`
+Vctrl in 0 DC 1.5
+Eamp out 0 in 0 4
+Rload out 0 1k
+.op
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements[1]).toMatchObject({
+      kind: "vcvs",
+      controlPositive: "in",
+      gain: 4.0,
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeCloseTo(6.0, 9);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
@@ -100,6 +119,33 @@ Xdiv vin mid 0 divider
 
     const result = dcOp(parsed.circuit);
     expect(result.voltage("mid")).toBeCloseTo(5.0, 9);
+  });
+
+  it("expands subcircuit VCVS nodes into engine elements", () => {
+    const parsed = parseNetlist(`
+.subckt gain inp outp
+Ebuf outp 0 inp 0 2
+.ends gain
+V1 in 0 DC 1.25
+Xgain in out gain
+Rload out 0 1k
+.op
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements.map((element) => element.name)).toEqual([
+      "V1",
+      "Xgain.Ebuf",
+      "Rload",
+    ]);
+    expect(elements[1]).toMatchObject({
+      kind: "vcvs",
+      positive: "out",
+      controlPositive: "in",
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeCloseTo(2.5, 9);
   });
 
   it("scopes subcircuit internal nodes by instance", () => {
