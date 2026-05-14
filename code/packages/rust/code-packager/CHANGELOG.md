@@ -2,6 +2,41 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.3.0] — 2026-05-14 (LANG45 phase 1 — ELF64 object emitter)
+
+**New `elf_object` module — Linux x86-64 ET_REL object-file writer.**
+
+Adds the ELF half of the LANG45 spec.  The companion PE/COFF object
+emitter for Windows lands in the next PR.
+
+### Added
+
+- **`elf_object::pack_elf64_object_x86_64(text, entry, n_globals,
+  relocs, target)`** — emits an `ET_REL`, `EM_X86_64` object file with
+  `.text` + (optional) `.data` + (optional) `.rela.text` + `.symtab` +
+  `.strtab` + `.shstrtab` sections.  The system linker (`cc` / `ld`)
+  consumes this and produces a runnable ELF executable.
+- **`X86RelocKind`** enum — `PltRel32` (→ `R_X86_64_PLT32`),
+  `PcRel32` (→ `R_X86_64_PC32`), `GotPcRel32` (→
+  `R_X86_64_REX_GOTPCRELX`).
+- **`X86RelocRecord`** struct — `{patch_offset, symbol, kind, addend}`.
+  The packager consumes these from the AOT linker after concatenating
+  per-function bytes; addend is always `-4` for the V1 instruction
+  forms `x86_64-encoder` emits.
+- All three re-exported from crate root.
+
+### Format details
+
+- Entry symbol: `main` (no leading underscore — Linux's `_start` calls
+  `main` directly).
+- Globals symbol: `_twig_globals` (matches macOS for backend
+  compatibility).
+- Relocations carry the addend explicitly in `Elf64_Rela.r_addend`.
+- Section header table is laid out at the end of the file, after all
+  section bodies, headers, and string tables.
+- 12 unit tests cover magic-bytes, header constants, section presence,
+  reloc type-ID mapping, symbol deduplication, and rejection paths.
+
 ## [0.2.2] — 2026-05-13 (LANG41)
 
 **External symbol support: `N_UNDF` entries + `ARM64_RELOC_BRANCH26` relocs
