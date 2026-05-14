@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add DC small-signal transfer-function analysis with input/output impedance.
 - Add AC small-signal frequency sweeps for linear RC/RL circuits.
 - Add DC source sweeps for independent voltage and current sources.
 - Add capacitor support and backward-Euler RC transient analysis.
