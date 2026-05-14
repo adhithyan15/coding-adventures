@@ -37,12 +37,22 @@ def test_det_2x2_returns_compound_expr() -> None:
 
 
 def test_det_3x3_structure() -> None:
-    """3x3 expands to a sum of three terms (signs alternate)."""
+    """3x3 expands to a nested binary Add tree (cofactor expansion along row 0).
+
+    The n-ary Add form would crash the binary Add handler; _fold_add ensures
+    the tree is left-associative: Add(Add(t0, t1), t2) with exactly 2 args
+    at each level.
+    """
     M = matrix([Is(1, 2, 3), Is(4, 5, 6), Is(7, 8, 9)])
     det = determinant(M)
     assert isinstance(det, IRApply)
+    # The outermost node is an Add (or Sub for negative last term) with 2 args.
     assert det.head.name == "Add"
-    assert len(det.args) == 3
+    assert len(det.args) == 2          # binary, not n-ary
+    # The left child is itself an Add (the first two cofactor terms folded).
+    left = det.args[0]
+    assert isinstance(left, IRApply)
+    assert left.head.name == "Add"
 
 
 def test_det_non_square_raises() -> None:

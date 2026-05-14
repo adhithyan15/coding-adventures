@@ -330,6 +330,15 @@ def _elliptic_first_kind_modulus(f: IRNode, x: IRSymbol) -> IRNode | None:
 def _modulus_from_squared_factor(
     modulus_square: IRNode, sine_square: IRNode, x: IRSymbol
 ) -> IRNode | None:
+    """Return k given that modulus_square = k² and sine_square = sin²(x).
+
+    Handles two forms of ``modulus_square``:
+    1. ``Pow(k, 2)`` — the symbolic case, returns ``k`` directly.
+    2. A pre-evaluated numeric literal (IRFloat, IRInteger, IRRational) —
+       the case that arises when the user writes ``0.5^2`` which the VM
+       immediately reduces to ``0.25`` before the integrate handler runs.
+       We extract ``k = sqrt(literal)`` numerically.
+    """
     if not (
         isinstance(sine_square, IRApply)
         and sine_square.head == POW
@@ -345,17 +354,44 @@ def _modulus_from_squared_factor(
         and sine.args[0] == x
     ):
         return None
-    if not (
+    # Case 1: modulus_square = Pow(k, 2) — the symbolic form.
+    if (
         isinstance(modulus_square, IRApply)
         and modulus_square.head == POW
         and len(modulus_square.args) == 2
         and modulus_square.args[1] == TWO
     ):
-        return None
-    modulus = modulus_square.args[0]
-    if _depends_on(modulus, x):
-        return None
-    return modulus
+        modulus = modulus_square.args[0]
+        if _depends_on(modulus, x):
+            return None
+        return modulus
+    # Case 2: modulus_square is a pre-evaluated numeric literal.
+    # This happens when the user writes e.g. 0.5^2 which reduces to 0.25
+    # before the integrate handler is called.  We recover k = sqrt(literal).
+    if isinstance(modulus_square, IRFloat):
+        val = modulus_square.value
+        if val < 0:
+            return None
+        return IRFloat(math.sqrt(val))
+    if isinstance(modulus_square, IRInteger):
+        val = modulus_square.value
+        if val < 0:
+            return None
+        root = math.isqrt(val)
+        if root * root == val:
+            return IRInteger(root)
+        return IRApply(SQRT, (modulus_square,))
+    if isinstance(modulus_square, IRRational):
+        num = modulus_square.numer
+        den = modulus_square.denom
+        if num < 0:
+            return None
+        root_num = math.isqrt(num)
+        root_den = math.isqrt(den)
+        if root_num * root_num == num and root_den * root_den == den:
+            return IRRational(root_num, root_den)
+        return IRApply(SQRT, (modulus_square,))
+    return None
 
 
 def _is_pi_over_two(node: IRNode) -> bool:
@@ -401,9 +437,9 @@ def _elliptic_second_kind_radicand(f: IRNode, x: IRSymbol) -> IRNode | None:
     ):
         return None
     first, second = product.args
-    return _modulus_from_squared_factor(
-        first, second, x
-    ) or _modulus_from_squared_factor(second, first, x)
+    return _modulus_from_squared_factor(first, second, x) or _modulus_from_squared_factor(
+        second, first, x
+    )
 
 
 def _try_complete_elliptic_e(
@@ -534,9 +570,7 @@ def _elliptic_third_kind_params(
         ):
             continue
         f1, f2 = prod.args
-        k = _modulus_from_squared_factor(
-            f1, f2, x
-        ) or _modulus_from_squared_factor(f2, f1, x)
+        k = _modulus_from_squared_factor(f1, f2, x) or _modulus_from_squared_factor(f2, f1, x)
         if k is None:
             continue
         # bracket must be Add(1, Mul(n, Pow(Sin(x), 2))) or equivalent

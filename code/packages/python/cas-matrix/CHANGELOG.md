@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1 — 2026-05-14
+
+**Bug fix: determinant uses binary `Add` fold instead of n-ary `IRApply(ADD, …)`.**
+
+The cofactor expansion in `determinant.py` accumulated expansion terms into a list
+and then created a single `IRApply(ADD, tuple(terms))` with N arguments.  The symbolic-VM
+`Add` handler is strictly binary (exactly 2 args), so 3×3 and larger determinants raised
+`ValueError: Add expects exactly 2 arguments`.
+
+Fixed by replacing the n-ary construction with `_fold_add`, a left-associative reducer that
+creates `Add(Add(t₀, t₁), t₂)` trees with exactly 2 args at every node.
+
 ## 0.3.0 — 2026-05-04
 
 **Phase 19 — Linear algebra completion: eigenvalues, eigenvectors, char poly,

@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+## 0.55.0 — 2026-05-14
+
+**Phase 26 — MACSYMA stress-test parity fixes: differentiation order, pattern matching,
+multivariate expansion, and elliptic integral float-modulus recognition.**
+
+### Bug fixes
+
+- **`D(f, x, n)` three-argument differentiation** (`derivative.py`): The `D` handler now
+  accepts a third integer argument `n` and applies `_diff` n times in a loop.  Previously
+  only `D(f, x)` was accepted; `D(f, x, 2)` raised `TypeError`.
+
+- **`apply1` / `apply2` argument order** (`cas_handlers.py`): MACSYMA convention is
+  `apply1(target, rule_name)` (target first, rule second).  The handlers had the arguments
+  reversed, so `defrule(r1, …); apply1(expr, r1)` silently returned the expression
+  unapplied.  Fixed by swapping `name_node, raw_target = expr.args` to
+  `raw_target, name_node = expr.args` in both handlers.
+
+- **Multivariate polynomial expansion** (`cas_handlers.py`): The `expand_handler` now
+  includes a `_sym_expand` fallback that recursively distributes `Mul` over `Add`/`Sub`
+  and uses binary-exponentiation for integer powers.  This makes
+  `expand((a+b)^2)` → `a^2 + 2ab + b^2` and `expand((a+b)^3)` work correctly
+  for multivariate inputs where the polynomial bridge previously returned the input unchanged.
+
+- **EllipticK/E/Pi float-modulus recognition** (`integrate.py`): `_modulus_from_squared_factor`
+  now handles pre-evaluated numeric literals (`IRFloat`, `IRInteger`, `IRRational`) as `k²`
+  by computing `k = sqrt(k²)` numerically.  Previously `0.5^2` evaluated to `IRFloat(0.25)`
+  before the integrate handler ran, causing the EllipticK/E/Pi pattern recogniser to miss it.
+  Now `integrate(1/sqrt(1-0.5^2*sin(theta)^2), theta, 0, %pi/2)` → `EllipticK(0.5)`,
+  and similarly for EllipticE and EllipticPi.
+
 - Recognised the first elliptic integration foothold: `Integrate` now returns
   `EllipticF(theta, k)` for `1/sqrt(1-k^2*sin(theta)^2)` and `EllipticK(k)`
   for the corresponding definite integral from `0` to `%pi/2`.

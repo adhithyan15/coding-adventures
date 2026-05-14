@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-macsyma-runtime"
-version = "1.25.0"
+version = "1.26.0"
 description = "MACSYMA-specific runtime layer on top of the symbolic VM — history, $/; terminators, kill, ev, name table, float() coercion, advanced matrix/log/trig ops, Fourier transforms, MNewton, algebraic factoring, Gröbner bases, special functions, assumption system."
 requires-python = ">=3.12"
 license = "MIT"

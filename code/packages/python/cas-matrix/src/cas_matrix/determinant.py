@@ -26,6 +26,22 @@ def determinant(M: IRNode) -> IRNode:
     return _det(rows)
 
 
+def _fold_add(terms: list[IRNode]) -> IRNode:
+    """Fold a list of terms into a left-associative binary Add tree.
+
+    All IR arithmetic handlers are strictly binary — ``Add`` always takes
+    exactly two arguments.  A cofactor expansion of an n×n matrix produces
+    n terms; building ``IRApply(ADD, (t0, t1, t2, …))`` with n > 2 args
+    would crash downstream.  This helper converts the flat list into the
+    correct nested form ``Add(Add(t0, t1), t2)``.
+    """
+    assert terms, "_fold_add called with empty list"
+    result = terms[0]
+    for term in terms[1:]:
+        result = IRApply(ADD, (result, term))
+    return result
+
+
 def _det(rows: tuple[tuple[IRNode, ...], ...]) -> IRNode:
     n = len(rows)
     if n == 0:
@@ -48,7 +64,9 @@ def _det(rows: tuple[tuple[IRNode, ...], ...]) -> IRNode:
         terms.append(product)
     if len(terms) == 1:
         return terms[0]
-    return IRApply(ADD, tuple(terms))
+    # All IR Add nodes must be binary.  _fold_add builds the left-associative
+    # nested tree  Add(Add(t0, t1), t2)  rather than the illegal n-ary node.
+    return _fold_add(terms)
 
 
 def _minor(

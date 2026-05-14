@@ -40,6 +40,7 @@ from fractions import Fraction
 
 from symbolic_ir import (
     ADD,
+    DIV,
     MUL,
     POW,
     PRODUCT,
@@ -106,9 +107,11 @@ def _try_geometric(
     """If f = coeff · base^k, return (coeff, base); else None.
 
     Handles:
-    - base^k           → (IRInteger(1), base)
-    - coeff * base^k   → (coeff, base)   where coeff is constant in k
-    - base^k * coeff   → (coeff, base)
+    - base^k              → (IRInteger(1), base)
+    - coeff * base^k      → (coeff, base)   where coeff is constant in k
+    - base^k * coeff      → (coeff, base)
+    - 1 / base^k          → (IRInteger(1), 1/base)   e.g. 1/2^k = (1/2)^k
+    - coeff / base^k      → (coeff, 1/base)
     """
     # Direct: base^k  where base is constant in k (and base ≠ k)
     if (
@@ -135,6 +138,24 @@ def _try_geometric(
                 and _is_constant_in(coeff_cand, k)
             ):
                 return (coeff_cand, pow_cand.args[0])
+
+    # DIV(coeff, base^k) — recognise  coeff / base^k  as  coeff * (1/base)^k.
+    # e.g. sum(1/2^k, k, 0, inf) → (1/2)^k with ratio 1/2.
+    if isinstance(f, IRApply) and f.head == DIV and len(f.args) == 2:
+        numer, denom = f.args
+        if _is_constant_in(numer, k):
+            # Check denominator is base^k.
+            if (
+                isinstance(denom, IRApply)
+                and denom.head == POW
+                and len(denom.args) == 2
+                and denom.args[1] == k
+                and _is_constant_in(denom.args[0], k)
+                and denom.args[0] != k
+            ):
+                base = denom.args[0]
+                recip_base = IRApply(DIV, (IRInteger(1), base))
+                return (numer, recip_base)
 
     return None
 

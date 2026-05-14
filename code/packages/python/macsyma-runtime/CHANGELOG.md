@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+## 1.26.0 — 2026-05-14
+
+**MACSYMA stress-test parity: limit L'Hôpital, multivariate expand, Taylor for transcendentals,
+and `re`/`im` aliases — raises end-to-end pass rate from 68% to 100% on the 50-problem suite.**
+
+### Bug fixes
+
+- **`limit` L'Hôpital route** (`cas_handlers.py`): The `limit_handler` previously used only
+  direct substitution (`limit_direct`).  It now delegates to `limit_advanced` which runs
+  L'Hôpital's rule for `0/0` and `∞/∞` forms.  A `ZeroDivisionError` guard around the
+  direct-substitution step ensures that `limit(sin(x)/x, x, 0)` routes correctly to the
+  L'Hôpital path instead of crashing.  Result: `limit(sin(x)/x, x, 0)` → `1`,
+  `limit((1-cos(x))/x^2, x, 0)` → `1/2`.
+
+- **`expand` multivariate** (`cas_handlers.py`): The local `expand_handler` that overrode
+  the full symbolic-vm version has been replaced with a thin delegation to
+  `symbolic_vm.cas_handlers.expand_handler`, which uses the `_sym_expand` multivariate
+  distributor as a fallback.  Result: `expand((a+b)^2)` and `expand((a+b)^3)` now work.
+
+- **`taylor` for transcendentals** (`cas_handlers.py`): The local `taylor_handler` that only
+  handled polynomial bodies now delegates to `symbolic_vm.cas_handlers.taylor_handler`, which
+  falls back to successive symbolic differentiation for transcendental functions.
+  Result: `taylor(sin(x), x, 0, 5)` and `taylor(exp(x), x, 0, 4)` now evaluate.
+
+- **`re` / `im` short aliases** (`name_table.py`): Added `"re": RE` and `"im": IM` entries
+  so both `realpart`/`imagpart` (canonical MACSYMA names) and `re`/`im` (short aliases)
+  map to the complex-number IR heads.  Result: `re(3+2*%i)` → `3`, `im(3+2*%i)` → `2`.
+
 - Added MACSYMA integration parity for the first elliptic-integral foothold:
   `integrate(1/sqrt(1-k^2*sin(theta)^2), theta)` now returns
   `EllipticF(theta,k)`, and the corresponding `0` to `%pi/2` definite integral
