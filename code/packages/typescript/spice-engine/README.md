@@ -6,8 +6,8 @@ primitives for TypeScript.
 The current slices implement DC operating-point analysis, DC source sweeps, DC
 sensitivity analysis, seeded DC Monte Carlo analysis, DC small-signal
 transfer-function analysis, AC small-signal frequency sweeps, and fixed-step
-RC/RL transient analysis for linear circuits using modified nodal analysis
-(MNA). The package supports
+AC noise analysis, and RC/RL transient analysis for linear circuits using
+modified nodal analysis (MNA). The package supports
 resistors, capacitors, inductors, independent current sources, independent
 voltage sources, voltage-controlled current sources (VCCS), PWL/SIN/PULSE/EXP
 source waveforms for transient analysis, ground aliases, node voltages,
