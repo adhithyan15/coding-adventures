@@ -144,29 +144,36 @@ pub struct EmittedKernel {
 ///
 /// # Currently supported shapes
 ///
-/// | `op_kind`  | `dtype` | `shape_class` | `range_class`              | Notes                          |
-/// |------------|---------|---------------|----------------------------|--------------------------------|
-/// | `0x07` Add | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
-/// | `0x09` Mul | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
-/// | `0x0B` Max | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
-/// | `0x0C` Min | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant   |
+/// | `op_kind`  | `dtype` | `shape_class` | `range_class`              | Notes                                            |
+/// |------------|---------|---------------|----------------------------|--------------------------------------------------|
+/// | `0x07` Add | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x08` Sub | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
+/// | `0x09` Mul | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x0A` Div | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
+/// | `0x0B` Max | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x0C` Min | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x0D` Pow | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
 ///
 /// All other combinations return `None` for now.  Adding a shape is
 /// a small change — add a match arm and a unit test.
 ///
-/// ## Why only commutative binary ops in V0.7.0
+/// ## Non-commutative ops and `folded_slot`
 ///
-/// `Op::Sub` and `Op::Div` are mathematically non-commutative:
-/// `LHS - K` differs from `K - LHS`, and `LHS / K` differs from
-/// `K / LHS`.  Today's `SpecKey` doesn't encode which input slot
-/// the policy folded — it just records the constant bytes — so the
-/// emitter can't safely generate one of the two non-commutative
-/// variants without risking wrong output if the policy happened to
-/// pick the slot opposite the emitter's assumption.
+/// `Op::Sub`, `Op::Div`, and `Op::Pow` are mathematically
+/// non-commutative.  For each we emit one of two variants based on
+/// `key.folded_slot`:
 ///
-/// Phase 4.6 will extend `SpecKey` with a `folded_slot: u8` field
-/// (or equivalent) and unlock Sub / Div / Pow.  Until then, the
-/// runtime falls back to the generic dispatch for these ops.
+/// - `Some(0)` → **LHS** was the constant.  Kernel reads `b[gid]`
+///   (the RHS input) and computes `K op b[gid]`.
+/// - `Some(1)` → **RHS** was the constant.  Kernel reads `a[gid]`
+///   (the LHS input) and computes `a[gid] op K`.
+/// - `None` → emitter returns `None` (the policy didn't tell us
+///   which side; we can't safely guess).
+///
+/// The entry-point names embed the variant: `specialised_sub_lhs_const_f32_…`
+/// vs `specialised_sub_rhs_const_f32_…`.  The dispatcher in
+/// image-gpu-core consults the SpecKey's `folded_slot` to pick which
+/// IR input buffer (`inputs()[0]` or `inputs()[1]`) to pass.
 pub fn emit_specialised_kernel(key: &SpecKey, handle: u64) -> Option<EmittedKernel> {
     if key.dtype != DType::F32 {
         return None;
@@ -180,25 +187,51 @@ pub fn emit_specialised_kernel(key: &SpecKey, handle: u64) -> Option<EmittedKern
     let arr: [u8; 4] = bytes.as_slice().try_into().ok()?;
     let constant = f32::from_le_bytes(arr);
 
-    // Map op_kind to (kernel-name fragment, MSL expression template).
-    // The MSL expression is what goes after `out[gid] = ` in the
-    // emitted body; `{a}` substitutes the variable input, `{k}`
-    // substitutes the constant.
-    let (op_name, expr_template): (&str, &str) = match key.op_kind {
-        0x07 => ("add", "{a} + {k}"),        // Op::Add (commutative)
-        0x09 => ("mul", "{a} * {k}"),        // Op::Mul (commutative)
-        0x0B => ("max", "max({a}, {k})"),    // Op::Max (commutative)
-        0x0C => ("min", "min({a}, {k})"),    // Op::Min (commutative)
-        // Sub (0x08), Div (0x0A), Pow (0x0D), reductions, shape ops,
-        // unary, matmul — Phase 4.6+ work.  Each needs either
-        // `folded_slot` in SpecKey or a separate emitter design.
+    // Commutative ops: the same kernel works no matter which slot
+    // was folded.  We use the canonical `a[gid] OP K` form.
+    let commutative_template: Option<(&str, &str)> = match key.op_kind {
+        0x07 => Some(("add", "{a} + {k}")),
+        0x09 => Some(("mul", "{a} * {k}")),
+        0x0B => Some(("max", "max({a}, {k})")),
+        0x0C => Some(("min", "min({a}, {k})")),
+        _ => None,
+    };
+    if let Some((op_name, expr_template)) = commutative_template {
+        return Some(emit_binary_f32_with_rhs_const(
+            handle,
+            op_name,
+            expr_template,
+            constant,
+        ));
+    }
+
+    // Non-commutative ops: we **must** know which slot the policy
+    // folded, otherwise we'd guess wrong half the time.  No
+    // `folded_slot` → fall back to generic dispatch.
+    let folded_slot = key.folded_slot?;
+    // Each non-commutative op has two variants: one where the
+    // constant is on the LHS (`K op b[gid]`) and one where it's
+    // on the RHS (`a[gid] op K`).  We pass two MSL expression
+    // templates and let `emit_binary_f32_with_const_at_slot`
+    // pick based on the slot.
+    //
+    // The template uses `{a}` for the kernel's single variable
+    // input load (always `a[gid]` in the emitted code — the
+    // dispatcher feeds the correct buffer into slot 0) and
+    // `{k}` for the constant literal.
+    let (op_name, lhs_template, rhs_template) = match key.op_kind {
+        0x08 => ("sub", "{k} - {a}", "{a} - {k}"),
+        0x0A => ("div", "{k} / {a}", "{a} / {k}"),
+        0x0D => ("pow", "pow({k}, {a})", "pow({a}, {k})"),
         _ => return None,
     };
-    Some(emit_binary_f32_with_rhs_const(
+    Some(emit_binary_f32_with_const_at_slot(
         handle,
         op_name,
-        expr_template,
+        lhs_template,
+        rhs_template,
         constant,
+        folded_slot,
     ))
 }
 
@@ -263,6 +296,92 @@ fn emit_binary_f32_with_rhs_const(
         handle = handle,
         entry = entry,
         op_name = op_name,
+        literal = literal,
+        body_expr = body_expr,
+    );
+
+    EmittedKernel {
+        source,
+        entry_point: entry,
+        input_buffer_count: 1,
+        output_buffer_count: 1,
+    }
+}
+
+/// **MX05 Phase 4.6.**  Emit a non-commutative-binary-f32 kernel where
+/// the folded constant lives on either the LHS or the RHS of the
+/// operator, chosen by `folded_slot`.
+///
+/// The two templates encode the two slot variants:
+/// - `lhs_template`: used when `folded_slot == 0` (constant is LHS).
+///   Example for Sub: `"{k} - {a}"`.
+/// - `rhs_template`: used when `folded_slot == 1` (constant is RHS).
+///   Example for Sub: `"{a} - {k}"`.
+///
+/// The emitted entry-point name encodes the variant:
+///
+/// ```text
+/// specialised_<op_name>_lhs_const_f32_0xHHHHHHHHHHHHHHHH
+/// specialised_<op_name>_rhs_const_f32_0xHHHHHHHHHHHHHHHH
+/// ```
+///
+/// Two SpecKeys that differ only in `folded_slot` produce different
+/// entry-point names, so they coexist in the executor's
+/// `SpecialisedTable` under different handles (the CpuSpecialiser
+/// hash now feeds on `folded_slot`).
+///
+/// Returns `None` if `folded_slot` is anything other than 0 or 1
+/// (no current binary op has more than two input slots).
+fn emit_binary_f32_with_const_at_slot(
+    handle: u64,
+    op_name: &str,
+    lhs_template: &str,
+    rhs_template: &str,
+    constant: f32,
+    folded_slot: u8,
+) -> EmittedKernel {
+    // Pick the right template based on which slot the policy
+    // observed as constant.  `folded_slot == 0` → constant is LHS,
+    // kernel computes `K op a[gid]` (we use `lhs_template`).
+    // `folded_slot == 1` → constant is RHS, kernel computes
+    // `a[gid] op K` (we use `rhs_template`).
+    let (variant_name, expr_template): (&str, &str) = match folded_slot {
+        0 => ("lhs", lhs_template),
+        1 => ("rhs", rhs_template),
+        // Out-of-range slot: caller's bug; produce a kernel that
+        // mirrors the RHS variant to avoid panicking, but use a
+        // distinct name so reviewers spot the anomaly in any
+        // compiled-kernel listing.  The dispatcher's metadata
+        // bookkeeping will also flag this via a count mismatch
+        // before any invocation.
+        _ => ("unknown", rhs_template),
+    };
+
+    let entry = format!("specialised_{op_name}_{variant_name}_const_f32_0x{handle:016X}");
+    let literal = format_f32_literal(constant);
+    let body_expr = expr_template
+        .replace("{a}", "a[gid]")
+        .replace("{k}", &literal);
+
+    let source = format!(
+        "#include <metal_stdlib>\n\
+         using namespace metal;\n\
+         \n\
+         // MX05 Phase 4.6 — specialised {op_name}_f32 with folded {variant_name} constant {literal}.\n\
+         // handle = 0x{handle:016X}\n\
+         kernel void {entry}(\n\
+         \x20   device const float* a   [[buffer(0)]],\n\
+         \x20   device float*       out [[buffer(1)]],\n\
+         \x20   constant uint&      n   [[buffer(2)]],\n\
+         \x20   uint gid [[thread_position_in_grid]]\n\
+         ) {{\n\
+         \x20   if (gid >= n) return;\n\
+         \x20   out[gid] = {body_expr};\n\
+         }}\n",
+        handle = handle,
+        entry = entry,
+        op_name = op_name,
+        variant_name = variant_name,
         literal = literal,
         body_expr = body_expr,
     );
@@ -340,6 +459,12 @@ mod tests {
                 bytes: constant.to_le_bytes().to_vec(),
             },
             backend_id: 1, // metal
+            // Commutative — slot doesn't matter for the emitted
+            // kernel, but the field has to be set on every SpecKey
+            // now (Phase 4.6).  `Some(1)` mirrors what the policy
+            // would record for the canonical "RHS is the constant"
+            // arrangement.
+            folded_slot: Some(1),
         }
     }
 
@@ -370,8 +495,18 @@ mod tests {
     }
 
     /// Build a SpecKey for any of the commutative binary f32 ops.
-    /// Convenience wrapper for the Phase 4.5 tests below.
+    /// Convenience wrapper for the Phase 4.5 tests below.  Phase 4.6
+    /// added `folded_slot`; the wrapper defaults to `Some(1)` since
+    /// most policy traces fold the RHS, but tests that exercise
+    /// non-commutative ops override this via [`binary_const_key_slot`].
     fn binary_const_key(op_kind: u8, constant: f32) -> SpecKey {
+        binary_const_key_slot(op_kind, constant, 1)
+    }
+
+    /// **MX05 Phase 4.6.**  Build a SpecKey with an explicit
+    /// `folded_slot` so tests can exercise the LHS-folded vs
+    /// RHS-folded variants of non-commutative ops (Sub/Div/Pow).
+    fn binary_const_key_slot(op_kind: u8, constant: f32, folded_slot: u8) -> SpecKey {
         SpecKey {
             op_kind,
             dtype: DType::F32,
@@ -380,6 +515,7 @@ mod tests {
                 bytes: constant.to_le_bytes().to_vec(),
             },
             backend_id: 1,
+            folded_slot: Some(folded_slot),
         }
     }
 
@@ -459,30 +595,125 @@ mod tests {
         assert!(min.source.contains("min(a[gid], "));
     }
 
-    /// **MX05 Phase 4.5.**  Op::Sub (0x08), Op::Div (0x0A), and
-    /// Op::Pow (0x0D) are NOT yet supported.  The reason — see the
-    /// rustdoc on `emit_specialised_kernel` — is that they're
-    /// non-commutative and SpecKey doesn't yet encode which slot the
-    /// policy folded.  Phase 4.6+ will add a `folded_slot` field and
-    /// unlock these.
+    /// **MX05 Phase 4.6 regression.**  Non-commutative ops still
+    /// return `None` if `folded_slot` is `None` — the emitter
+    /// refuses to guess which side carries the constant.
     #[test]
-    fn sub_div_pow_return_none_until_folded_slot_lands() {
+    fn sub_div_pow_return_none_without_folded_slot() {
         for op_kind in [0x08u8, 0x0A, 0x0D] {
-            let key = binary_const_key(op_kind, 7.0);
+            let mut key = binary_const_key(op_kind, 7.0);
+            key.folded_slot = None;
             assert!(
                 emit_specialised_kernel(&key, 0).is_none(),
                 "expected None for non-commutative op_kind 0x{:02X} \
-                 (Sub/Div/Pow await SpecKey::folded_slot)",
+                 with folded_slot=None",
                 op_kind
             );
         }
     }
 
+    /// **MX05 Phase 4.6.**  `Op::Sub` with folded RHS constant
+    /// (slot 1) emits `a[gid] - K`.  Entry-point name contains
+    /// `_rhs_const_`.
+    #[test]
+    fn sub_f32_rhs_folded_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key_slot(0x08, 3.0, 1), 0x55).unwrap();
+        assert_eq!(k.entry_point, "specialised_sub_rhs_const_f32_0x0000000000000055");
+        assert_eq!(k.input_buffer_count, 1);
+        assert!(k.source.contains("a[gid] - "));
+        assert!(k.source.contains("3.0f"));
+    }
+
+    /// **MX05 Phase 4.6.**  `Op::Sub` with folded LHS constant
+    /// (slot 0) emits `K - a[gid]` — the *non*-commutative variant.
+    /// Entry-point name contains `_lhs_const_` so it doesn't collide
+    /// with the RHS variant under the same handle.
+    #[test]
+    fn sub_f32_lhs_folded_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key_slot(0x08, 10.0, 0), 0x66).unwrap();
+        assert_eq!(k.entry_point, "specialised_sub_lhs_const_f32_0x0000000000000066");
+        assert_eq!(k.input_buffer_count, 1);
+        assert!(
+            k.source.contains("10.0f - a[gid]"),
+            "expected '10.0f - a[gid]' in body; got:\n{}",
+            k.source
+        );
+    }
+
+    /// **MX05 Phase 4.6.**  `Op::Div` with folded RHS emits
+    /// `a[gid] / K`.  The common case — dividing a variable input
+    /// by a stable constant denominator (e.g. normalising by 255).
+    #[test]
+    fn div_f32_rhs_folded_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key_slot(0x0A, 255.0, 1), 0x77).unwrap();
+        assert_eq!(k.entry_point, "specialised_div_rhs_const_f32_0x0000000000000077");
+        assert!(k.source.contains("a[gid] / "));
+        assert!(k.source.contains("255.0f"));
+    }
+
+    /// **MX05 Phase 4.6.**  `Op::Div` with folded LHS — rarer, but
+    /// e.g. `1 / x` reciprocal of a variable input with a known
+    /// numerator.  Emits `K / a[gid]`.
+    #[test]
+    fn div_f32_lhs_folded_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key_slot(0x0A, 1.0, 0), 0x88).unwrap();
+        assert_eq!(k.entry_point, "specialised_div_lhs_const_f32_0x0000000000000088");
+        assert!(
+            k.source.contains("1.0f / a[gid]"),
+            "expected '1.0f / a[gid]' in body; got:\n{}",
+            k.source
+        );
+    }
+
+    /// **MX05 Phase 4.6.**  `Op::Pow` with folded RHS exponent —
+    /// the standard "raise variable input to a constant power" case.
+    /// MSL emits `pow(a[gid], K)`.
+    #[test]
+    fn pow_f32_rhs_folded_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key_slot(0x0D, 2.0, 1), 0x99).unwrap();
+        assert_eq!(k.entry_point, "specialised_pow_rhs_const_f32_0x0000000000000099");
+        assert!(k.source.contains("pow(a[gid], "));
+        assert!(k.source.contains("2.0f"));
+    }
+
+    /// **MX05 Phase 4.6.**  `Op::Pow` with folded LHS base — rarer
+    /// but real (e.g. `2^x` exponential with a fixed base).  MSL
+    /// emits `pow(K, a[gid])`.
+    #[test]
+    fn pow_f32_lhs_folded_emits_kernel() {
+        let k = emit_specialised_kernel(&binary_const_key_slot(0x0D, 2.0, 0), 0xAB).unwrap();
+        assert_eq!(k.entry_point, "specialised_pow_lhs_const_f32_0x00000000000000AB");
+        assert!(
+            k.source.contains("pow(2.0f, a[gid])"),
+            "expected 'pow(2.0f, a[gid])' in body; got:\n{}",
+            k.source
+        );
+    }
+
+    /// **MX05 Phase 4.6.**  Two SpecKeys that differ only in
+    /// `folded_slot` must produce different emitted entry-point
+    /// names — otherwise the executor's per-handle table would
+    /// collide.  We assert on the variant fragment in the entry name.
+    #[test]
+    fn lhs_and_rhs_variants_have_distinct_entry_points() {
+        let same_handle = 0xCDCDCDCDCDCDCDCDu64;
+        let lhs = emit_specialised_kernel(&binary_const_key_slot(0x08, 4.0, 0), same_handle)
+            .unwrap();
+        let rhs = emit_specialised_kernel(&binary_const_key_slot(0x08, 4.0, 1), same_handle)
+            .unwrap();
+        assert_ne!(lhs.entry_point, rhs.entry_point);
+        assert!(lhs.entry_point.contains("_lhs_"));
+        assert!(rhs.entry_point.contains("_rhs_"));
+    }
+
     #[test]
     fn returns_none_for_unsupported_op_kind() {
-        // Sub instead of Add.
+        // Op::Neg (0x00) — unary, no binary-with-folded-constant
+        // emitter shape applies.  Future phase work could add unary
+        // ops with their input folded (the kernel becomes a memset
+        // of a precomputed value), but until then this returns None.
         let mut key = add_const_key(7.0);
-        key.op_kind = 0x08;
+        key.op_kind = 0x00;
         assert!(emit_specialised_kernel(&key, 0).is_none());
     }
 

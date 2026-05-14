@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-audit-trail"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "ADJ07 — JSON-serializable audit-trail schema for the adjudication framework. v0.2 adds prompt_version + prompt_hash fields to DialogueResponse so ADJ06 clarification turns are replayable through the same (prompt_version, prompt_hash) mechanism as primitive LLM calls."
+description = "ADJ07 — JSON-serializable audit-trail schema for the adjudication framework. v0.3 adds the `Adj22TypedQuantity` PassName variant and the `MissingQuantity` ClarificationKind variant so ADJ22 typed-quantity coverage results (per ADJ24 pipeline wiring) round-trip through the trail in snake_case JSON like every other pass."
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }

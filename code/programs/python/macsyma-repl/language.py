@@ -17,17 +17,20 @@ returns one combined string (one display block per displayed result, or
 from __future__ import annotations
 
 import re
+import time
 from pathlib import Path
 
 from coding_adventures_repl import Language
 from macsyma_compiler import compile_macsyma
 from macsyma_compiler.compiler import _STANDARD_FUNCTIONS
-from macsyma_parser import parse_macsyma
+from macsyma_parser import format_macsyma_syntax_error, parse_macsyma
 from macsyma_runtime import (
     History,
     MacsymaBackend,
     extend_compiler_name_table,
+    help_text,
     output_text_for,
+    parse_help_query,
 )
 from symbolic_ir import IRApply, IRNode, IRSymbol
 from symbolic_vm import VM
@@ -81,6 +84,9 @@ class MacsymaLanguage(Language):
             return ("ok", None)
         if stripped.lower() in _QUIT_COMMANDS:
             return "quit"
+        help_topic = parse_help_query(stripped)
+        if help_topic is not None:
+            return ("ok", help_text(help_topic))
 
         # Auto-append ``;`` so a line typed without a terminator still
         # parses (better UX than rejecting valid expressions).
@@ -98,20 +104,25 @@ class MacsymaLanguage(Language):
             ast = parse_macsyma(source)
             statements = compile_macsyma(ast, wrap_terminators=True)
         except Exception as exc:
-            return ("error", f"parse error: {exc}")
+            return ("error", format_macsyma_syntax_error(source, exc))
 
         outputs: list[str] = []
         for stmt in statements:
             displayed, inner = _split_wrapper(stmt)
+            show_timing = self.backend.showtime and not _is_showtime_assignment(inner)
+            start = time.perf_counter()
             try:
                 result = self.vm.eval(inner)
             except Exception as exc:
                 return ("error", f"runtime error: {exc}")
+            elapsed = time.perf_counter() - start
             self.history.record_input(inner)
             self.history.record_output(result)
             if displayed:
                 idx = len(self.history.outputs)
                 outputs.append(f"(%o{idx}) {output_text_for(inner, result)}")
+            if show_timing:
+                outputs.append(_format_timing(elapsed))
 
         if not outputs:
             return ("ok", None)
@@ -145,3 +156,20 @@ def _split_wrapper(stmt: IRNode) -> tuple[bool, IRNode]:
         if stmt.head.name == "Suppress":
             return False, stmt.args[0]
     return True, stmt
+
+
+def _format_timing(elapsed: float) -> str:
+    """Return the user-facing line for ``showtime:true`` diagnostics."""
+    return f"Evaluation took {elapsed:.6f} seconds."
+
+
+def _is_showtime_assignment(expr: IRNode) -> bool:
+    """Return whether ``expr`` toggles the ``showtime`` option flag."""
+    return (
+        isinstance(expr, IRApply)
+        and isinstance(expr.head, IRSymbol)
+        and expr.head.name == "Assign"
+        and len(expr.args) == 2
+        and isinstance(expr.args[0], IRSymbol)
+        and expr.args[0].name == "showtime"
+    )

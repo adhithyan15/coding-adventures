@@ -1,5 +1,16 @@
 # Changelog — aot-core
 
+## 0.2.1 — 2026-05-13
+
+### Added
+
+- `specialise::translate` now handles the `"mov"` opcode, lowering it to
+  `mov_<ty>` (or `mov_u64` when the type is still `"any"`).  This opcode is
+  emitted by the AOT preparation pipeline's builtin pre-lowering step as a
+  replacement for `call_builtin "_move"`.  Previously `"mov"` fell through to
+  the generic CIR passthrough and the ARM64 backend rejected it with
+  `UnsupportedOp("mov")`.
+
 ## 0.2.0 — 2026-05-11
 
 ### Changed (LANG32 — Operand::Str exhaustiveness)

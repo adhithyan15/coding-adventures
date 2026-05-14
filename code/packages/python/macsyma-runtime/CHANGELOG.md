@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Added MACSYMA `factor` parity for bivariate cubic identities, so
+  `factor(x^3 - y^3)` and `factor(x^3 + y^3)` now return the textbook
+  two-factor decompositions through the canonical symbolic VM handler.
+- Added MACSYMA `factor` parity for the bivariate difference-of-squares
+  factoring foothold, so `factor(x^2 - y^2)` now returns `(x-y)*(x+y)`
+  through the canonical symbolic VM handler.
+- Added MACSYMA `factor` parity for the bivariate perfect-square factoring
+  foothold, so `factor(x^2 + 2*x*y + y^2)` now returns `(x+y)^2` through the
+  canonical symbolic VM handler.
+- Added MACSYMA `factor` parity for a first multivariate case with a common
+  symbolic factor, so `factor(x^2*y - y)` now extracts `y` and factors the
+  residual through the canonical symbolic VM handler.
+- Added a small MACSYMA help catalog plus `?` query parsing helpers for REPL
+  and session frontends.
 - Added MACSYMA session-property operations: `declare(sym, property, ...)`,
   `properties(sym)`, and `propvars()`, backed by the VM assumption context so
   declared properties feed `is(...)` and simplification.

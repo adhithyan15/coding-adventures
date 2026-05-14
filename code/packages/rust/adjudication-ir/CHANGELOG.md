@@ -2,6 +2,106 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-05-13 — ADJ25 PR-5: correlation IDs (additive helpers)
+
+### Added
+
+New types + helpers for the ADJ25 correlation vector. Every node
+and edge can now carry a `CorrelationId` via metadata, threading
+source-byte → IR node → engine clause → verdict citation
+traceability through the IR.
+
+- `CorrelationId(pub String)` — newtype around the opaque identifier
+  with `new`, `is_empty`, `as_str`, `Display`.
+- `CORRELATION_ID_METADATA_KEY = "adj.correlation_id"` — reserved
+  metadata key under the framework's `adj.*` namespace.
+- `node_correlation_id(node) -> Option<CorrelationId>` /
+  `edge_correlation_id(edge)` — read helpers.
+- `set_node_correlation_id(node, id)` /
+  `set_edge_correlation_id(edge, id)` — write helpers (idempotent).
+- `check_correlation_completeness(ir_doc)` — verifies every node
+  carries a non-empty CorrelationId; returns the first violation
+  (`NodeMissingCorrelation { node_id }` / `NodeEmptyCorrelation
+  { node_id }`).
+
+### Why metadata-keyed rather than a first-class field on `IRNode`
+
+Adding a required field to `IRNode` is a SemVer-breaking change
+that ripples through 400+ struct-literal construction sites in the
+workspace, most of them tests. The `metadata: HashMap<String,
+String>` field was designed for exactly this kind of additive
+attribute. PR-7 (cutover) may promote to a dedicated struct field
+once the workspace sweep is in scope.
+
+### Tests
+
+5 new test cases: metadata round-trip, completeness pass on fully
+correlated IR, completeness rejects missing id, completeness
+rejects empty id, metadata-key constant lock. Total tests: 34 → 39,
+all passing.
+
+### Notes
+
+- Version: 0.4.0 → 0.5.0 (additive public surface).
+
+## [0.4.0] - 2026-05-13 — ADJ25 PR-1: hierarchical-decomposition node kinds
+
+### Added
+
+New `NodeKind` variants per
+[ADJ25](../../specs/ADJ25-hierarchical-decomposition.md), the
+foundational reset to per-level coverage for source decomposition.
+This PR is **additive only** — existing v3 kinds remain valid; the
+PR-2/PR-7 sequence retires `Section` in favour of the explicit
+level kinds once the foundation bench (PR-6) passes.
+
+**Level-0 → level-3 skeleton kinds:**
+
+- `NodeKind::Document` — the root of the hierarchical decomposition.
+  Exactly one per IR document, span `[0, N)`.
+- `NodeKind::Sentence` — a natural-language sentence in the source
+  (level 1; children of `Document`).
+- `NodeKind::Phrase` — a sub-sentence chunk that commits to one claim
+  / uncertainty / question / discardable (level 2; children of
+  `Sentence`).
+- `NodeKind::Question` — an interrogative present in the source text,
+  distinct from the engine-facing `Query` kind (level 3; children of
+  `Phrase`).
+
+**Level-4 typed-component slots (children of `Fact`):**
+
+- `NodeKind::Quantity` — typed numerical literal `quantity(value,
+  unit)`. Every numerical literal in a `Fact`'s span must surface as
+  one of these (PR-2 will enforce; PR-1 only introduces the kind).
+- `NodeKind::Polarity` — typed polarity slot, present when a `Fact`
+  contains negation cues. The variant name shadows the lattice enum
+  `Polarity`; disambiguate with `NodeKind::Polarity`.
+- `NodeKind::Predicate` — the relation / verb of a `Fact`.
+- `NodeKind::Comparator` — relational operator (`Eq`, `Lt`, `Le`,
+  `Gt`, `Ge`, `Ne`).
+- `NodeKind::TimeRef` — date, duration, or temporal phrase.
+- `NodeKind::Modifier` — adjective / adverb refinement.
+
+`NodeKind::Entity` is reused as the level-4 entity component
+unchanged.
+
+### Tests
+
+Eight new test cases in the `tests` module covering construction +
+validation of every new kind, plus a regression-guard on the
+`discard_reason` rule for typed components. Total tests: 26 → 34.
+
+### Notes
+
+- Adding variants to a non-`#[non_exhaustive]` enum is a SemVer
+  breaking change for downstream exhaustive matches. The workspace
+  consumers (`adjudication-connector`) have been updated in the same
+  PR. External consumers may need updates; this is consistent with
+  the 0.x convention of minor-bumps for breaking changes.
+- No coverage or per-level invariants are enforced yet — those land
+  in PR-2 (per-level coverage check). PR-1 deliberately ships only
+  the type-level additions so each subsequent PR has a tight scope.
+
 ## [0.3.0] - 2026-05-12 — ADJ01 v3 multi-directed acyclic graph
 
 ### Changed (breaking)

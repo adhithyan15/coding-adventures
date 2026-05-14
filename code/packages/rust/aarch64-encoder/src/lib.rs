@@ -13,19 +13,23 @@
 //!   beyond branch fix-ups.  Wrapping into Mach-O / ELF is the job of
 //!   `code-packager`.
 //!
-//! ## Coverage (V1 — what fib() needs)
+//! ## Coverage
 //!
 //! | Family | Mnemonics | Notes |
 //! |---|---|---|
 //! | Move immediate | `movz`, `movk` | + `mov_imm64` helper that synthesises a 1- to 4-instruction sequence |
 //! | Arithmetic (reg) | `add`, `sub`, `mul` | 64-bit operands |
 //! | Arithmetic (imm) | `add_imm`, `sub_imm` | 12-bit immediate |
+//! | Division | `sdiv`, `udiv`, `msub` | signed/unsigned divide; multiply-subtract for modulo (LANG38) |
 //! | Compare | `cmp`, `cmp_imm` | aliases for `subs xzr, ...` |
+//! | Logical (reg) | `and_`, `orr`, `eor`, `mvn` | AND / OR / XOR / NOT (LANG38) |
+//! | Shifts (reg) | `lsl_reg`, `lsr_reg`, `asr_reg` | variable-amount logical/arithmetic shifts (LANG38) |
+//! | Unary | `neg_` | two's-complement negate (LANG38) |
 //! | Memory | `ldr`, `str_` | unsigned-offset, 64-bit |
 //! | Pair | `stp_pre`, `ldp_post` | for prologue/epilogue framing |
 //! | Branch | `b`, `b_cond`, `bl` | PC-relative, label-resolved |
 //! | Indirect | `blr`, `ret` | function call/return via register |
-//! | Misc | `nop`, `udf` | trap for guard-fail in AOT |
+//! | Misc | `nop`, `udf`, `svc`, `cset`, `cbz`, `cbnz` | traps, condition-set, zero-branch |
 //!
 //! Floats, atomics, SIMD, system instructions, and large-immediate
 //! addressing modes are **out of scope** for V1; they can be added
@@ -222,11 +226,27 @@ impl std::error::Error for EncodeError {}
 // Assembler
 // ===========================================================================
 
+/// A pending external (cross-function) `BL` relocation.
+///
+/// Emitted at instruction-emission time when the callee is in a different
+/// function body.  The linker resolves these after concatenating all function
+/// binaries.
+#[derive(Debug, Clone)]
+pub struct ExternalReloc {
+    /// Word index (in the per-function code vector) of the `BL` placeholder.
+    pub word_idx: usize,
+    /// Name of the external symbol (callee function).
+    pub symbol: String,
+}
+
 /// Stream-style assembler that emits ARM64 instructions and resolves
 /// label-relative branches at finalisation time.
 ///
 /// Instructions are stored as `u32` little-endian-on-output words; the
 /// final byte stream is produced by [`Assembler::finish`].
+///
+/// For cross-function calls, [`Assembler::bl_external`] records the
+/// placeholder BL site so the caller can patch it after linking.
 #[derive(Debug)]
 pub struct Assembler {
     /// One entry per instruction word, in emission order.
@@ -235,6 +255,9 @@ pub struct Assembler {
     labels: Vec<Option<usize>>,
     /// Branch fix-ups; resolved at `finish()` time.
     fixups: Vec<Fixup>,
+    /// External cross-function BL relocations (placeholder BL at word_idx
+    /// that must be patched by the multi-function linker).
+    pub external_relocs: Vec<ExternalReloc>,
 }
 
 impl Default for Assembler {
@@ -244,7 +267,12 @@ impl Default for Assembler {
 impl Assembler {
     /// Create an empty assembler.
     pub fn new() -> Self {
-        Assembler { code: Vec::new(), labels: Vec::new(), fixups: Vec::new() }
+        Assembler {
+            code: Vec::new(),
+            labels: Vec::new(),
+            fixups: Vec::new(),
+            external_relocs: Vec::new(),
+        }
     }
 
     /// Number of words emitted so far (each is 4 bytes).
@@ -389,6 +417,235 @@ impl Assembler {
             | (rm.idx() << 16)
             | (0b11111 << 10)          // Ra = XZR
             | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    // -----------------------------------------------------------------------
+    // Division (LANG38)
+    // -----------------------------------------------------------------------
+    //
+    // Both division instructions use the *data-processing (2-source)* encoding
+    // family (DDI 0487 §C6.2):
+    //
+    //   sf=1  op=00  11010110  Rm[20:16]  opcode[15:10]  Rn[9:5]  Rd[4:0]
+    //   base = 0x9AC00000
+    //
+    // opcode field:
+    //   UDIV = 000010 = 2  → base | (2 << 10) = 0x9AC00800
+    //   SDIV = 000011 = 3  → base | (3 << 10) = 0x9AC00C00
+
+    /// `SDIV Xd, Xn, Xm` — signed 64-bit divide.
+    ///
+    /// `Xd = Xn / Xm` with signed semantics.  Division by zero produces 0
+    /// (ARM architectural guarantee, not a trap).  Minimum-integer / (-1)
+    /// wraps back to the minimum integer (no trap).
+    ///
+    /// ```text
+    /// SDIV x0, x1, x2   →   x0 = x1 / x2  (signed)
+    /// ```
+    pub fn sdiv(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0x9AC00C00
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    /// `UDIV Xd, Xn, Xm` — unsigned 64-bit divide.
+    ///
+    /// `Xd = Xn / Xm` with unsigned semantics.  Division by zero produces 0.
+    ///
+    /// ```text
+    /// UDIV x0, x1, x2   →   x0 = x1 / x2  (unsigned)
+    /// ```
+    pub fn udiv(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0x9AC00800
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    /// `MSUB Xd, Xn, Xm, Xa` — multiply-subtract: `Xd = Xa − Xn × Xm`.
+    ///
+    /// This is the building block for integer modulo.  Given a prior
+    /// `sdiv/udiv` that computed `q = a / b` into some register `Xq`, the
+    /// remainder follows as:
+    ///
+    /// ```text
+    /// SDIV X2, X0, X1      ; X2 = a / b
+    /// MSUB X0, X2, X1, X0  ; X0 = X0 − X2×X1  =  a − (a/b)×b  =  a mod b
+    /// ```
+    ///
+    /// Uses the *data-processing (3-source)* encoding (DDI 0487 §C6.2):
+    ///   `1 00 11011 000 Rm 1 Ra Rn Rd`  with o0=1 (MSUB vs MADD).
+    pub fn msub(&mut self, rd: Reg, rn: Reg, rm: Reg, ra: Reg) {
+        let word = 0x9B008000
+            | (rm.idx() << 16)
+            | (ra.idx() << 10)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    // -----------------------------------------------------------------------
+    // Logical — register form (LANG38)
+    // -----------------------------------------------------------------------
+    //
+    // Logical shifted-register family (DDI 0487 §C6.2):
+    //
+    //   sf=1  opc  01010  shift=00  N  Rm[20:16]  imm6=0  Rn[9:5]  Rd[4:0]
+    //
+    // opc / N combinations for 64-bit (sf=1, shift=LSL#0, imm6=0):
+    //   AND:  opc=00, N=0  →  0x8A000000
+    //   ORR:  opc=01, N=0  →  0xAA000000
+    //   EOR:  opc=10, N=0  →  0xCA000000
+    //   ORN:  opc=01, N=1  →  0xAA200000   (used by MVN when Rn=XZR)
+
+    /// `AND Xd, Xn, Xm` — bitwise AND.
+    ///
+    /// Named `and_` because `and` is a Rust keyword.
+    ///
+    /// ```text
+    /// AND x0, x1, x2   →   x0 = x1 & x2
+    /// ```
+    pub fn and_(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0x8A000000
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    /// `ORR Xd, Xn, Xm` — bitwise OR.
+    ///
+    /// ```text
+    /// ORR x0, x1, x2   →   x0 = x1 | x2
+    /// ```
+    pub fn orr(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0xAA000000
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    /// `EOR Xd, Xn, Xm` — bitwise exclusive-OR (XOR).
+    ///
+    /// ```text
+    /// EOR x0, x1, x2   →   x0 = x1 ^ x2
+    /// ```
+    pub fn eor(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0xCA000000
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    /// `MVN Xd, Xm` — bitwise NOT (alias `ORN Xd, XZR, Xm`).
+    ///
+    /// Inverts every bit of `Xm` and stores the result in `Xd`.
+    ///
+    /// ```text
+    /// MVN x0, x1   →   x0 = ~x1
+    /// ```
+    pub fn mvn(&mut self, rd: Reg, rm: Reg) {
+        // ORN Xd, XZR, Xm:  0xAA200000 | (Rm << 16) | (XZR << 5) | Rd
+        let word = 0xAA200000
+            | (rm.idx() << 16)
+            | (0b11111 << 5) // XZR = 31
+            | rd.idx();
+        self.emit(word);
+    }
+
+    // -----------------------------------------------------------------------
+    // Shifts — variable-shift (register) form (LANG38)
+    // -----------------------------------------------------------------------
+    //
+    // Variable-shift instructions are part of the data-processing (2-source)
+    // family (same encoding table as SDIV/UDIV):
+    //
+    //   sf=1  op=00  11010110  Rm[20:16]  opcode[15:10]  Rn[9:5]  Rd[4:0]
+    //   base = 0x9AC00000
+    //
+    // opcode assignments:
+    //   LSLV = 001000 = 8   →  0x9AC02000
+    //   LSRV = 001001 = 9   →  0x9AC02400
+    //   ASRV = 001010 = 10  →  0x9AC02800
+    //
+    // All three clamp the shift amount to 0..63 mod 64 by architectural
+    // specification, so values ≥ 64 are equivalent to values mod 64 — same
+    // behaviour as Rust `u64::wrapping_shl`.
+
+    /// `LSLV Xd, Xn, Xm` — logical shift left by register.
+    ///
+    /// `Xd = Xn << (Xm mod 64)`.  The shift amount is always taken mod 64.
+    ///
+    /// ```text
+    /// LSLV x0, x1, x2   →   x0 = x1 << x2
+    /// ```
+    pub fn lsl_reg(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0x9AC02000
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    /// `LSRV Xd, Xn, Xm` — logical (unsigned) shift right by register.
+    ///
+    /// `Xd = Xn >> (Xm mod 64)` with zero-filling.  Use for unsigned types.
+    ///
+    /// ```text
+    /// LSRV x0, x1, x2   →   x0 = x1 >> x2  (zero-fill)
+    /// ```
+    pub fn lsr_reg(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0x9AC02400
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    /// `ASRV Xd, Xn, Xm` — arithmetic (signed) shift right by register.
+    ///
+    /// `Xd = Xn >> (Xm mod 64)` with sign-extension.  Use for signed types.
+    ///
+    /// ```text
+    /// ASRV x0, x1, x2   →   x0 = x1 >> x2  (sign-extend)
+    /// ```
+    pub fn asr_reg(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        let word = 0x9AC02800
+            | (rm.idx() << 16)
+            | (rn.idx() << 5)
+            | rd.idx();
+        self.emit(word);
+    }
+
+    // -----------------------------------------------------------------------
+    // Unary arithmetic (LANG38)
+    // -----------------------------------------------------------------------
+
+    /// `NEG Xd, Xm` — 64-bit two's-complement negation (alias `SUB Xd, XZR, Xm`).
+    ///
+    /// `Xd = 0 - Xm = -Xm`.  For `Xm = 0` the result is 0; for `INT64_MIN`
+    /// the result wraps back to `INT64_MIN` (no trap).
+    ///
+    /// Named `neg_` to match the encoder naming pattern.  Encodes as the
+    /// arithmetic shifted-register `SUB` with `Rn = XZR`:
+    ///
+    /// ```text
+    /// NEG x0, x1   →   x0 = -x1
+    /// ```
+    pub fn neg_(&mut self, rd: Reg, rm: Reg) {
+        // SUB Xd, XZR, Xm (shifted-reg, sf=1, no-S):
+        //   1 10 01011 00 0 Rm 000000 Rn=XZR Rd
+        //   = 0xCB000000 | (Rm << 16) | (31 << 5) | Rd
+        let word = 0xCB000000
+            | (rm.idx() << 16)
+            | (0b11111 << 5) // XZR = 31
             | rd.idx();
         self.emit(word);
     }
@@ -540,6 +797,23 @@ impl Assembler {
     pub fn bl(&mut self, target: LabelId) {
         // 1 0 0 1 0 1 imm26
         self.emit_branch(target, BranchKind::Imm26, 0x94000000);
+    }
+
+    /// Emit a `BL` placeholder for an **external** (cross-function) callee.
+    ///
+    /// The instruction is emitted with `imm26 = 0` as a placeholder.  The
+    /// caller must later pass this assembler's `external_relocs` to the linker,
+    /// which patches the BL instruction word with the correct relative offset
+    /// after all function binaries have been concatenated.
+    ///
+    /// Returns the word index of the placeholder `BL` so the caller can
+    /// cross-reference it with the `ExternalReloc` entries.
+    pub fn bl_external(&mut self, symbol: impl Into<String>) -> usize {
+        let word_idx = self.code.len();
+        // BL encoding: opcode = 0x94000000, imm26 = 0 (will be patched).
+        self.emit(0x94000000);
+        self.external_relocs.push(ExternalReloc { word_idx, symbol: symbol.into() });
+        word_idx
     }
 
     /// `B.cond label` — conditional branch (PC-relative, 19-bit signed
@@ -1002,6 +1276,163 @@ mod tests {
         let cbnz = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
         // delta +1 → imm19 = 1; Rt = 1
         assert_eq!(cbnz, 0xB5000000 | (1 << 5) | 1);
+    }
+
+    // ---- LANG38: Division ----
+
+    #[test]
+    fn sdiv_encoding() {
+        // sdiv x0, x1, x2
+        // Data-processing 2-source: sf=1, op=00, 11010110, Rm=x2, opcode=000011, Rn=x1, Rd=x0
+        // = 0x9AC00C00 | (2 << 16) | (1 << 5) | 0
+        // = 0x9AC20C20
+        let mut a = Assembler::new();
+        a.sdiv(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x9AC20C20, "sdiv x0,x1,x2");
+    }
+
+    #[test]
+    fn udiv_encoding() {
+        // udiv x0, x1, x2
+        // = 0x9AC00800 | (2 << 16) | (1 << 5) | 0
+        // = 0x9AC20820
+        let mut a = Assembler::new();
+        a.udiv(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x9AC20820, "udiv x0,x1,x2");
+    }
+
+    #[test]
+    fn msub_encoding() {
+        // msub x0, x1, x2, x3
+        // Data-processing 3-source (DDI 0487 §C6.2):
+        //   sf=1, op54=00, op31=000, o0=1 → base 0x9B008000
+        //   Rm=x2 (idx=2) → (2 << 16) = 0x00020000
+        //   Ra=x3 (idx=3) → (3 << 10) = 0x00000C00
+        //   Rn=x1 (idx=1) → (1 << 5)  = 0x00000020
+        //   Rd=x0 (idx=0) → 0
+        // Total = 0x9B008000 | 0x00020000 | 0x00000C00 | 0x00000020 = 0x9B028C20
+        let mut a = Assembler::new();
+        a.msub(Reg::X0, Reg::X1, Reg::X2, Reg::X3);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x9B028C20, "msub x0,x1,x2,x3");
+    }
+
+    // ---- LANG38: Logical ----
+
+    #[test]
+    fn and_encoding() {
+        // and x0, x1, x2
+        // = 0x8A000000 | (2 << 16) | (1 << 5) | 0 = 0x8A020020
+        let mut a = Assembler::new();
+        a.and_(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x8A020020, "and x0,x1,x2");
+    }
+
+    #[test]
+    fn orr_encoding() {
+        // orr x0, x1, x2
+        // = 0xAA000000 | (2 << 16) | (1 << 5) | 0 = 0xAA020020
+        let mut a = Assembler::new();
+        a.orr(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0xAA020020, "orr x0,x1,x2");
+    }
+
+    #[test]
+    fn eor_encoding() {
+        // eor x0, x1, x2
+        // = 0xCA000000 | (2 << 16) | (1 << 5) | 0 = 0xCA020020
+        let mut a = Assembler::new();
+        a.eor(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0xCA020020, "eor x0,x1,x2");
+    }
+
+    #[test]
+    fn mvn_encoding() {
+        // mvn x0, x1  =  orn x0, xzr, x1
+        // = 0xAA200000 | (1 << 16) | (31 << 5) | 0
+        // = 0xAA200000 | 0x00010000 | 0x000003E0
+        // = 0xAA2103E0
+        let mut a = Assembler::new();
+        a.mvn(Reg::X0, Reg::X1);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0xAA2103E0, "mvn x0,x1");
+    }
+
+    // ---- LANG38: Shifts ----
+
+    #[test]
+    fn lsl_reg_encoding() {
+        // lslv x0, x1, x2
+        // = 0x9AC02000 | (2 << 16) | (1 << 5) | 0 = 0x9AC22020
+        let mut a = Assembler::new();
+        a.lsl_reg(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x9AC22020, "lsl_reg x0,x1,x2");
+    }
+
+    #[test]
+    fn lsr_reg_encoding() {
+        // lsrv x0, x1, x2
+        // = 0x9AC02400 | (2 << 16) | (1 << 5) | 0 = 0x9AC22420
+        let mut a = Assembler::new();
+        a.lsr_reg(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x9AC22420, "lsr_reg x0,x1,x2");
+    }
+
+    #[test]
+    fn asr_reg_encoding() {
+        // asrv x0, x1, x2
+        // = 0x9AC02800 | (2 << 16) | (1 << 5) | 0 = 0x9AC22820
+        let mut a = Assembler::new();
+        a.asr_reg(Reg::X0, Reg::X1, Reg::X2);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x9AC22820, "asr_reg x0,x1,x2");
+    }
+
+    // ---- LANG38: Unary ----
+
+    #[test]
+    fn neg_encoding() {
+        // neg x0, x1  =  sub x0, xzr, x1
+        // = 0xCB000000 | (1 << 16) | (31 << 5) | 0
+        // = 0xCB000000 | 0x00010000 | 0x000003E0
+        // = 0xCB0103E0
+        let mut a = Assembler::new();
+        a.neg_(Reg::X0, Reg::X1);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0xCB0103E0, "neg x0,x1");
+    }
+
+    // ---- LANG38: Composite — modulo via sdiv + msub ----
+
+    #[test]
+    fn modulo_sequence_emits_two_instructions() {
+        // a mod b:
+        //   sdiv x2, x0, x1   ; x2 = a / b
+        //   msub x0, x2, x1, x0  ; x0 = a - x2*b
+        let mut a = Assembler::new();
+        a.sdiv(Reg::X2, Reg::X0, Reg::X1);
+        a.msub(Reg::X0, Reg::X2, Reg::X1, Reg::X0);
+        let bytes = a.finish().unwrap();
+        assert_eq!(bytes.len(), 8, "sdiv + msub = 2 instructions = 8 bytes");
+        assert_eq!(bytes.len() % 4, 0);
     }
 
     #[test]

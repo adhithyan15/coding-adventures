@@ -4,6 +4,15 @@
 
 ### Added
 
+- `SymbolicBackend` now installs canonical `Factor` handling backed by
+  `cas-factor`, including common-symbolic-factor extraction for additive
+  multivariate expressions before univariate integer factorization.
+- `Factor` recognises bivariate perfect-square trinomials such as
+  `x^2 + 2*x*y + y^2` and rewrites them as `(x + y)^2`.
+- `Factor` recognises bivariate difference-of-squares expressions such as
+  `x^2 - y^2` and rewrites them as `(x - y) * (x + y)`.
+- `Factor` recognises bivariate cubic identities such as `x^3 - y^3` and
+  `x^3 + y^3`, rewriting them to their canonical linear/quadratic products.
 - `SymbolicBackend` installs a `D` derivative handler for symbolic-only
   differentiation of arithmetic, elementary, hyperbolic, and inverse
   hyperbolic expressions; `StrictBackend` continues to reject `D` as an

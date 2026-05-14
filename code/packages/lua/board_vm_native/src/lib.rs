@@ -19,8 +19,9 @@ use board_vm_language_core::{
     pico_uf2_upload_options_for_target, wireless_transport_name, BoardVmLanguageSession,
     BuiltWireFrame, LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice,
     LanguageBluetoothEndpoint, LanguageBluetoothEndpointCandidate, LanguageConnectionOption,
-    LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed,
-    LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageWirelessInterface,
+    LanguageCoreError, LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice,
+    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageTargetInfo,
+    LanguageWirelessInterface,
 };
 use lua_bridge::{
     get_str, luaL_Reg, luaL_checkinteger, lua_Integer, lua_State, lua_createtable, lua_getfield,
@@ -449,6 +450,10 @@ unsafe fn push_target(L: *mut lua_State, target: &LanguageTargetInfo) {
     );
     set_int(L, "digital_pin_count", target.digital_pin_count as u64);
 
+    let key = CString::new("digital_pins").unwrap();
+    push_digital_pins(L, &target.digital_pins);
+    lua_setfield(L, -2, key.as_ptr());
+
     let key = CString::new("onboard_led").unwrap();
     push_onboard_led(L, target.onboard_led);
     lua_setfield(L, -2, key.as_ptr());
@@ -468,6 +473,26 @@ unsafe fn push_target(L: *mut lua_State, target: &LanguageTargetInfo) {
     let key = CString::new("capabilities").unwrap();
     push_string_array(L, &target.capabilities);
     lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn push_digital_pins(L: *mut lua_State, pins: &[LanguageDigitalPin]) {
+    lua_createtable(L, pins.len() as c_int, 0);
+    for (index, pin) in pins.iter().enumerate() {
+        lua_bridge::lua_newtable(L);
+        set_int(L, "pin", pin.pin as u64);
+        set_str(L, "label", &pin.label);
+        set_bool(L, "supports_input", pin.supports_input);
+        set_bool(L, "supports_output", pin.supports_output);
+        set_bool(L, "supports_pullup", pin.supports_pullup);
+        set_bool(L, "supports_pulldown", pin.supports_pulldown);
+        set_bool(L, "supports_adc", pin.supports_adc);
+        set_bool(L, "supports_pwm", pin.supports_pwm);
+        set_bool(L, "supports_touch", pin.supports_touch);
+        set_bool(L, "supports_interrupt", pin.supports_interrupt);
+        set_bool(L, "boot_strap", pin.boot_strap);
+        set_str(L, "notes", &pin.notes);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
 }
 
 unsafe fn push_led_matrix(

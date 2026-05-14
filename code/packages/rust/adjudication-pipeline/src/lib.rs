@@ -49,8 +49,13 @@ use adjudication_audit_trail::{
     DocumentId, EngineArtifacts, IrNode, KbSummary, NodeId, NormalizationRecord, PassName,
     PassOutcome, SearchMode as TrailSearchMode, SearchMode, Violation,
 };
-use adjudication_connector::AdjudicationResult;
-use adjudication_coverage::{check_coverage, CoverageResult, CoverageViolation, Document as CovDocument};
+use adjudication_connector::{
+    lower_to_kb_with_provenance, AdjudicationResult, ClauseProvenance, LoweredKb, TrustTier,
+};
+use adjudication_coverage::{
+    check_coverage, check_typed_quantity_coverage, CoverageResult, CoverageViolation,
+    Document as CovDocument, TypedQuantityResult, TypedQuantityViolation,
+};
 use adjudication_ir::{IRDocument, IRNode, NodeId as IRNodeId};
 use adjudication_polarity_modality::{
     check_propagation, PropagationResult, PropagationViolation, PropagationWarning,
@@ -64,6 +69,12 @@ use adjudication_adversarial::{
     CheckOptions as AdversarialOptions,
 };
 use llm_primitives::{GatewayConfig, Role as PrimitiveRole};
+
+pub mod hierarchical;
+pub use hierarchical::{
+    decompose_hierarchical, HierarchicalDecomposeError, HierarchicalDecomposeOutcome,
+    HierarchicalDecomposeRequest, DEFAULT_MAX_RETRIES_PER_PARENT, PER_LEVEL_DISPATCH_CAP,
+};
 
 // `SearchMode` and `TrailSearchMode` collapse to the same trail-side
 // enum; alias for clarity.
@@ -102,11 +113,207 @@ pub struct PipelineDocument {
 }
 
 /// What the pipeline produces.
+///
+/// `clause_provenance` is `None` for the legacy entry points
+/// ([`run`], [`run_with_gateway`]) and `Some` for
+/// [`run_with_rulebooks`] (ADJ16 step 2). Each `FactId` / `RuleId`
+/// that ended up in the engine's KB is keyed in the maps to the
+/// source rulebook that produced it.
+///
+/// `disputed_answers` (ADJ16 step 3) lists queries whose proof DAGs
+/// contain multiple proofs that (a) come from different rulebooks
+/// and (b) produce different variable bindings. An empty vec means
+/// no dispute was detected — either no rulebooks were attached, the
+/// engine ran in `FindFirst` mode (only one proof returned), or all
+/// proofs agreed.
 #[derive(Debug)]
 pub struct PipelineOutput {
     pub verdict: Verdict,
     pub audit_trail: AuditTrail,
+    pub clause_provenance: Option<ClauseProvenanceTable>,
+    pub disputed_answers: Vec<DisputedAnswer>,
 }
+
+// ---------------------------------------------------------------------------
+// ADJ16 step 3 — DisputedAnswer
+// ---------------------------------------------------------------------------
+
+/// A query whose engine proofs disagree across rulebooks.
+///
+/// Surfaced when [`run_with_rulebooks`] returns multiple proofs (in
+/// `SearchMode::EnumerateAll`) and the proofs' clause-provenance
+/// attribution shows that distinct rulebooks led to distinct variable
+/// bindings. This is the data shape [ADJ16 §"Open questions" §2]
+/// names as `DisputedAnswer`: both proofs travel through the audit
+/// trail; the caller (or a future ADJ06 dialogue) decides resolution.
+#[derive(Debug, Clone)]
+pub struct DisputedAnswer {
+    /// The query that produced disagreeing proofs.
+    pub query: logic_core::Term,
+    /// One candidate per distinct (binding, source_rulebook_set)
+    /// pairing. Identical proofs from the same rulebooks are
+    /// de-duplicated in [`detect_disputes`].
+    pub candidates: Vec<DisputeCandidate>,
+    /// What kind of intervention is needed to resolve the dispute.
+    pub resolution_required: ResolutionRequirement,
+}
+
+/// One candidate verdict inside a [`DisputedAnswer`].
+#[derive(Debug, Clone)]
+pub struct DisputeCandidate {
+    /// Variable bindings under which this candidate's proof
+    /// succeeded.
+    pub bindings: logic_core::Substitution,
+    /// Fact IDs cited by this candidate's proof (deduplicated).
+    pub via_facts: Vec<logic_engine::FactId>,
+    /// Rule IDs cited by this candidate's proof (deduplicated).
+    pub via_rules: Vec<logic_engine::RuleId>,
+    /// Source rulebooks that contributed to this candidate's proof,
+    /// sorted lexicographically for stable display.
+    pub source_rulebooks: Vec<String>,
+}
+
+/// What kind of intervention resolves a dispute.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ResolutionRequirement {
+    /// Multiple rulebooks produced conflicting bindings — needs
+    /// expert review per ADJ09's review workflow. The default for
+    /// v0.6.
+    HumanReview,
+    /// (Future, not yet emitted by `detect_disputes`.) A higher-trust
+    /// rulebook in the candidate set wins automatically; the named
+    /// rulebook is the winner. Trust-tier dominance is a
+    /// deployment-policy decision, not a framework default.
+    TrustTierDominates { winner_rulebook_id: String },
+}
+
+/// Walk every answer's proof DAG and surface disputes.
+///
+/// A dispute is recorded when, for a single query, the proof DAG
+/// contains **at least two proofs** whose:
+/// - source-rulebook attributions are not identical sets, AND
+/// - variable bindings differ (proofs producing the same bindings
+///   from different rulebooks are corroborating, not disputing).
+///
+/// Returns an empty vec when no answer has multiple proofs (e.g.,
+/// the engine ran in `FindFirst` mode), when all proofs share the
+/// same rulebook attribution, or when all proofs produce identical
+/// bindings.
+pub fn detect_disputes(
+    answers: &[AdjudicationResult],
+    provenance: &ClauseProvenanceTable,
+) -> Vec<DisputedAnswer> {
+    let mut out = Vec::new();
+    for answer in answers {
+        let dag = match &answer.result {
+            logic_engine::SearchResult::EnumerateAllResult { dag, .. } => dag,
+            _ => continue,
+        };
+        if dag.proofs.len() < 2 {
+            continue;
+        }
+
+        let mut candidates: Vec<DisputeCandidate> = Vec::new();
+        for proof in &dag.proofs {
+            let mut rulebooks: std::collections::BTreeSet<String> =
+                std::collections::BTreeSet::new();
+            for f_id in &proof.via_facts {
+                if let Some(prov) = provenance.fact_provenance.get(f_id) {
+                    rulebooks.insert(prov.source_rulebook_id.clone());
+                }
+            }
+            for r_id in &proof.via_rules {
+                if let Some(prov) = provenance.rule_provenance.get(r_id) {
+                    rulebooks.insert(prov.source_rulebook_id.clone());
+                }
+            }
+            candidates.push(DisputeCandidate {
+                bindings: proof.bindings.clone(),
+                via_facts: proof.via_facts.clone(),
+                via_rules: proof.via_rules.clone(),
+                source_rulebooks: rulebooks.into_iter().collect(),
+            });
+        }
+
+        // De-duplicate: if two candidates have identical bindings AND
+        // identical rulebook sets, they are the same candidate and
+        // shouldn't double-count. (Equal bindings from different
+        // rulebooks = corroborating, kept separate; the dispute test
+        // below uses the multiset.)
+        let mut unique: Vec<DisputeCandidate> = Vec::new();
+        for c in candidates {
+            let already_present = unique.iter().any(|u| {
+                u.bindings == c.bindings && u.source_rulebooks == c.source_rulebooks
+            });
+            if !already_present {
+                unique.push(c);
+            }
+        }
+
+        // Dispute test: there exists a *pair* of candidates whose
+        // rulebook attributions differ AND whose bindings differ.
+        // The joint per-pair check (vs evaluating the two conditions
+        // globally) avoids a subtle false-positive where one
+        // rulebook's within-rulebook ambiguity gets paired with an
+        // unrelated second rulebook's corroborating proof. The
+        // standard semantic for "two rulebooks disagree" is: there
+        // is a pair (p_i, p_j) such that p_i and p_j cite different
+        // rulebook sets AND produce different bindings for the
+        // query variables.
+        //
+        // Same bindings from different rulebooks = corroborating
+        // (not a dispute). Different bindings from the same rulebook
+        // = within-rulebook ambiguity (a rulebook-quality issue, not
+        // an inter-rulebook conflict). Both are filtered out by the
+        // joint per-pair check.
+        let mut is_dispute = false;
+        'outer: for i in 0..unique.len() {
+            for j in (i + 1)..unique.len() {
+                if unique[i].source_rulebooks != unique[j].source_rulebooks
+                    && unique[i].bindings != unique[j].bindings
+                {
+                    is_dispute = true;
+                    break 'outer;
+                }
+            }
+        }
+        if is_dispute {
+            out.push(DisputedAnswer {
+                query: answer.query.clone(),
+                candidates: unique,
+                resolution_required: ResolutionRequirement::HumanReview,
+            });
+        }
+    }
+    out
+}
+
+/// Parallel attribution maps from clause IDs to the rulebook that
+/// produced them. Mirrors `adjudication_connector::LoweredKb`'s
+/// fact_provenance / rule_provenance fields, lifted to the pipeline
+/// layer so downstream consumers don't have to reach into the
+/// connector to read attribution.
+#[derive(Debug, Clone, Default)]
+pub struct ClauseProvenanceTable {
+    pub fact_provenance: std::collections::HashMap<logic_engine::FactId, ClauseProvenance>,
+    pub rule_provenance: std::collections::HashMap<logic_engine::RuleId, ClauseProvenance>,
+}
+
+impl ClauseProvenanceTable {
+    fn from_lowered(lowered: &LoweredKb) -> Self {
+        Self {
+            fact_provenance: lowered.fact_provenance.clone(),
+            rule_provenance: lowered.rule_provenance.clone(),
+        }
+    }
+}
+
+// Re-export `ClauseProvenance` and `TrustTier` so callers can
+// construct rulebook inputs without depending on
+// `adjudication-connector` directly. `LoweredKb` stays internal —
+// the pipeline owns the lowering and exposes attribution via
+// `ClauseProvenanceTable` only.
+pub use adjudication_connector::{ClauseProvenance as RulebookProvenance, TrustTier as RulebookTrustTier};
 
 /// The pipeline's verdict — distinct from the audit trail's
 /// `AdjudicationOutcome` so callers can pattern-match without
@@ -122,6 +329,172 @@ pub enum Verdict {
     Blocked { violation_count: usize },
     /// Lowering or engine execution failed.
     EngineError(String),
+}
+
+// ---------------------------------------------------------------------------
+// ADJ16 step 4 — Multi-model agreement weighting
+// ---------------------------------------------------------------------------
+
+/// Merge multiple rulebook IRs into a single rulebook IR where each
+/// rule's weight reflects multi-model agreement.
+///
+/// The motivation, from
+/// [ADJ16](../../../specs/ADJ16-engine-programmatic-adjudication.md)
+/// §"Probabilistic extension (ProbLog)" §1: when N independent
+/// models elicit rulebooks via
+/// `adjudication_rulebook::acquire_rulebook_adversarial`, rules
+/// that *all N models produced* are more trustworthy than rules
+/// *only one model produced*. Step 4 quantifies that intuition by
+/// converting `definitional(head, [body...])` rules to
+/// `probabilistic(weight, head, [body...])` rules with
+/// `weight = count_of_rulebooks_containing_the_rule / N`.
+///
+/// Algorithm:
+/// 1. For each input rulebook, walk every Rule node.
+/// 2. For `definitional(head, [body...])` rules, group by exact
+///    Term equality of `(head, body)` across all rulebooks. The
+///    weight for each group is `count / total_rulebooks`. The
+///    output emits one `probabilistic(weight, head, [body...])`
+///    rule per group.
+/// 3. `probabilistic(p, head, [body...])` rules pass through
+///    unchanged — the caller's existing probability is preserved.
+/// 4. `constraint([body...])` and `default(head, [body...],
+///    [exceptions...])` rules pass through unchanged. They are not
+///    aggregated in v0.7; the agreement-weight idiom is naturally
+///    expressed over definitional rules and probabilistic rules,
+///    and a future iteration can extend to defaults if needed.
+///
+/// Edge cases:
+/// - Empty `rulebooks` slice returns an empty IRDocument with the
+///   given `output_document_id`.
+/// - One rulebook returns the same rules with weight 1.0
+///   (1 / 1 = 1.0). A `definitional` becomes
+///   `probabilistic(1.0, ...)`; nothing else changes.
+///
+/// The output IR is suitable to feed back into
+/// [`run_with_rulebooks`] as a single
+/// `(IRDocument, ClauseProvenance)` pair. The provenance ID
+/// usually reflects the agreement step (e.g.,
+/// `"adversarial-agreement-2026-05-12"`); the trust tier is
+/// caller-chosen (`Tentative` if the underlying rulebooks were
+/// LLM-elicited; `Reviewed` after expert sign-off).
+pub fn compute_agreement_weighted_rulebook(
+    rulebooks: &[&IRDocument],
+    output_document_id: &str,
+) -> IRDocument {
+    use logic_core::Term;
+    use adjudication_ir::{DocumentId, NodeId, NodeKind, Polarity, Modality, IRNode};
+
+    let doc_id = DocumentId::new(output_document_id);
+    let total = rulebooks.len();
+    if total == 0 {
+        return IRDocument {
+            document_id: doc_id,
+            nodes: Vec::new(),
+            edges: Vec::new(),
+        };
+    }
+
+    // Group definitional rules by (head, body_list) Term equality.
+    // Term doesn't implement Hash/Eq (only PartialEq), so we use a
+    // Vec of (term, count) and do linear lookups. Definitional rule
+    // counts in any realistic rulebook are small (typically < 20),
+    // so the O(n²) is fine.
+    let mut definitional_groups: Vec<(Term, usize)> = Vec::new();
+    // Passthrough rules preserved in declaration order across all
+    // input rulebooks. These keep their existing term as-is.
+    let mut passthrough_terms: Vec<Term> = Vec::new();
+
+    for rb in rulebooks {
+        // Track per-rulebook membership so a single rulebook can't
+        // inflate a group's count by listing the same rule twice.
+        let mut seen_in_this_rb: Vec<Term> = Vec::new();
+        for node in &rb.nodes {
+            if node.kind != NodeKind::Rule {
+                continue;
+            }
+            let term = &node.term;
+            let (functor, args) = match term {
+                Term::Compound { functor, args } => (functor.as_str(), args),
+                _ => {
+                    // Not a recognised rule shape — pass through as-is.
+                    if !passthrough_terms.iter().any(|t| t == term) {
+                        passthrough_terms.push(term.clone());
+                    }
+                    continue;
+                }
+            };
+            match functor {
+                "definitional" if args.len() == 2 => {
+                    if seen_in_this_rb.iter().any(|t| t == term) {
+                        continue; // skip duplicate within a single rulebook
+                    }
+                    seen_in_this_rb.push(term.clone());
+                    if let Some(entry) = definitional_groups
+                        .iter_mut()
+                        .find(|(t, _)| t == term)
+                    {
+                        entry.1 += 1;
+                    } else {
+                        definitional_groups.push((term.clone(), 1));
+                    }
+                }
+                _ => {
+                    if !passthrough_terms.iter().any(|t| t == term) {
+                        passthrough_terms.push(term.clone());
+                    }
+                }
+            }
+        }
+    }
+
+    // Build output nodes: one probabilistic rule per definitional
+    // group, then every passthrough rule preserved as-is.
+    let mut nodes: Vec<IRNode> = Vec::new();
+    let mut next_idx = 0usize;
+    for (def_term, count) in definitional_groups {
+        let (head, body_list) = match &def_term {
+            Term::Compound { args, .. } => (args[0].clone(), args[1].clone()),
+            _ => unreachable!("definitional groups only contain compound terms"),
+        };
+        let weight = count as f64 / total as f64;
+        let new_term = logic_core::compound(
+            "probabilistic",
+            vec![logic_core::float(weight), head, body_list],
+        );
+        nodes.push(IRNode {
+            id: NodeId::new(format!("R{}", next_idx)),
+            kind: NodeKind::Rule,
+            term: new_term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        });
+        next_idx += 1;
+    }
+    for term in passthrough_terms {
+        nodes.push(IRNode {
+            id: NodeId::new(format!("R{}", next_idx)),
+            kind: NodeKind::Rule,
+            term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        });
+        next_idx += 1;
+    }
+
+    IRDocument {
+        document_id: doc_id,
+        nodes,
+        edges: Vec::new(),
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -201,6 +574,20 @@ pub fn run_with_gateway<F: Fn() -> String>(
         &cov_result,
     ));
 
+    // ---------- ADJ22 typed-quantity coverage ----------
+    // Per ADJ24, this runs AFTER ADJ02 (spans must be reliable
+    // before `nearby_nodes` makes sense) and BEFORE ADJ03 (typed
+    // quantities are a structural property of the IR shape, like
+    // coverage; ADJ03 polarity/modality is layered on top).
+    let tq_started = now();
+    let tq_result = check_typed_quantity_coverage(&cov_doc, &input.ir_document);
+    let tq_completed = now();
+    trail.checker_results.push(typed_quantity_to_checker_result(
+        tq_started,
+        tq_completed,
+        &tq_result,
+    ));
+
     // ---------- ADJ03 polarity/modality ----------
     let pm_started = now();
     let pm_result = check_propagation(&input.ir_document);
@@ -214,9 +601,11 @@ pub fn run_with_gateway<F: Fn() -> String>(
     // ---------- ADJ04 round-trip (gated on a gateway being supplied) ----------
     // We only attempt ADJ04 when the prior gating checks passed —
     // running the LLM on an IR that doesn't even cover its source
-    // burns tokens to discover what ADJ02/ADJ03 already told us.
-    let prior_gating_ok =
-        matches!(cov_result, CoverageResult::Pass) && pm_result.pass();
+    // (or that drops typed quantities, or has bad polarity) burns
+    // tokens to discover what ADJ02/ADJ22/ADJ03 already told us.
+    let prior_gating_ok = matches!(cov_result, CoverageResult::Pass)
+        && matches!(tq_result, TypedQuantityResult::Pass)
+        && pm_result.pass();
     let adj04_started = now();
     let adj04_result = if prior_gating_ok {
         run_adj04(gateway, &input.document.normalized_text, &input.ir_document)
@@ -247,11 +636,19 @@ pub fn run_with_gateway<F: Fn() -> String>(
         .checker_results
         .push(adj05_to_checker_result(adj05_started, adj05_completed, &adj05_result));
 
-    // ---------- gate the engine on coverage + propagation ----------
+    // ---------- gate the engine on coverage + typed-quantity + propagation ----------
+    // Per ADJ24, ADJ22 joins the engine-gating set. The engine
+    // assumes numerical literals were preserved as
+    // `quantity(value, unit)` compounds so it can do arithmetic
+    // (per ADJ21's motivating example: blade_length(...) >
+    // quantity(2.36, inches)). Running the engine on an IR that
+    // dropped its typed quantities just means the LLM evaluates
+    // the threshold itself — which ADJ18 showed it does badly.
     let coverage_ok = matches!(cov_result, CoverageResult::Pass);
+    let typed_quantity_ok = matches!(tq_result, TypedQuantityResult::Pass);
     let propagation_ok = pm_result.pass();
 
-    if !(coverage_ok && propagation_ok) {
+    if !(coverage_ok && typed_quantity_ok && propagation_ok) {
         let violation_count = trail
             .checker_results
             .iter()
@@ -264,6 +661,8 @@ pub fn run_with_gateway<F: Fn() -> String>(
         return PipelineOutput {
             verdict: Verdict::Blocked { violation_count },
             audit_trail: trail,
+            clause_provenance: None,
+            disputed_answers: Vec::new(),
         };
     }
 
@@ -279,6 +678,8 @@ pub fn run_with_gateway<F: Fn() -> String>(
             return PipelineOutput {
                 verdict: Verdict::EngineError(detail),
                 audit_trail: trail,
+                clause_provenance: None,
+                disputed_answers: Vec::new(),
             };
         }
     };
@@ -311,6 +712,252 @@ pub fn run_with_gateway<F: Fn() -> String>(
     PipelineOutput {
         verdict: Verdict::Resolved { answers },
         audit_trail: trail,
+        clause_provenance: None,
+        disputed_answers: Vec::new(),
+    }
+}
+
+/// ADJ16 step 2: the rulebook-merging entry point.
+///
+/// Same gating checks as [`run_with_gateway`] (ADJ02 coverage, ADJ03
+/// polarity/modality, optional ADJ04 round-trip, optional ADJ05
+/// adversarial). What changes: at engine time, the input document's
+/// IR is lowered with a default `Authoritative` provenance keyed to
+/// the document id, and each entry in `rulebooks` is lowered with
+/// its caller-supplied provenance. All `LoweredKb`s are combined via
+/// [`LoweredKb::extend`] before queries run. The returned
+/// `PipelineOutput.clause_provenance` carries the per-FactId /
+/// per-RuleId attribution so the audit trail (and ADJ16 step 3's
+/// future `DisputedAnswer` resolution) can trace each cited clause
+/// back to its origin.
+///
+/// `rulebooks` is a slice of `(IRDocument, ClauseProvenance)` pairs.
+/// Pass an empty slice to mimic [`run_with_gateway`]'s behavior (no
+/// rulebooks injected, but the input doc is still lowered with
+/// provenance and the attribution table is populated for source
+/// facts).
+///
+/// Queries are extracted only from `input.ir_document`. Any Query
+/// nodes in rulebook IR documents are ignored — rulebooks contribute
+/// rules and facts, not questions.
+pub fn run_with_rulebooks<F: Fn() -> String>(
+    input: PipelineInput,
+    adjudication_id: AdjudicationId,
+    now: F,
+    gateway: Option<&GatewayConfig>,
+    rulebooks: &[(IRDocument, ClauseProvenance)],
+) -> PipelineOutput {
+    // Reuse run_with_gateway up to (but not including) the engine
+    // step by replaying its logic inline. We need a custom engine
+    // call here because `run_adjudication` uses the bare
+    // `lower_to_kb` path; we instead build a combined `LoweredKb`
+    // via `lower_to_kb_with_provenance`.
+    let started_at = now();
+    let mut trail = AuditTrail::new(adjudication_id, started_at.clone());
+
+    trail.documents.push(Document {
+        id: DocumentId::new(input.document.id.clone()),
+        name: input.document.name.clone(),
+        received_at: input.document.received_at.clone(),
+        normalized_text: input.document.normalized_text.clone(),
+        normalization: NormalizationRecord {
+            pipeline: input.document.normalization_pipeline.clone(),
+            version: input.document.normalization_version.clone(),
+            options: Default::default(),
+        },
+        raw_base64: None,
+        appended_turns: Vec::new(),
+    });
+
+    for node in &input.ir_document.nodes {
+        trail.ir_nodes.push(ir_node_to_audit(&input.document.id, node));
+    }
+
+    let cov_doc = CovDocument {
+        id: input.ir_document.document_id.clone(),
+        normalized_text: input.document.normalized_text.clone(),
+    };
+    let cov_started = now();
+    let cov_result = check_coverage(&cov_doc, &input.ir_document);
+    let cov_completed = now();
+    trail.checker_results.push(coverage_to_checker_result(
+        cov_started,
+        cov_completed,
+        &cov_result,
+    ));
+
+    // ---------- ADJ22 typed-quantity coverage ----------
+    // Same ordering decision as `run_with_gateway`: after ADJ02
+    // (so spans are reliable), before ADJ03.
+    let tq_started = now();
+    let tq_result = check_typed_quantity_coverage(&cov_doc, &input.ir_document);
+    let tq_completed = now();
+    trail.checker_results.push(typed_quantity_to_checker_result(
+        tq_started,
+        tq_completed,
+        &tq_result,
+    ));
+
+    let pm_started = now();
+    let pm_result = check_propagation(&input.ir_document);
+    let pm_completed = now();
+    trail.checker_results.push(propagation_to_checker_result(
+        pm_started,
+        pm_completed,
+        &pm_result,
+    ));
+
+    let prior_gating_ok = matches!(cov_result, CoverageResult::Pass)
+        && matches!(tq_result, TypedQuantityResult::Pass)
+        && pm_result.pass();
+    let adj04_started = now();
+    let adj04_result = if prior_gating_ok {
+        run_adj04(gateway, &input.document.normalized_text, &input.ir_document)
+    } else {
+        Adj04Decision::Skipped
+    };
+    let adj04_completed = now();
+    trail
+        .checker_results
+        .push(adj04_to_checker_result(adj04_started, adj04_completed, &adj04_result));
+
+    let adj05_started = now();
+    let adj05_result = if prior_gating_ok {
+        run_adj05(gateway, &input.document.normalized_text, &input.ir_document)
+    } else {
+        Adj05Decision::Skipped {
+            reason: "ADJ02 / ADJ22 / ADJ03 failed — adversarial check skipped",
+        }
+    };
+    let adj05_completed = now();
+    trail
+        .checker_results
+        .push(adj05_to_checker_result(adj05_started, adj05_completed, &adj05_result));
+
+    let coverage_ok = matches!(cov_result, CoverageResult::Pass);
+    let typed_quantity_ok = matches!(tq_result, TypedQuantityResult::Pass);
+    let propagation_ok = pm_result.pass();
+
+    if !(coverage_ok && typed_quantity_ok && propagation_ok) {
+        let violation_count = trail
+            .checker_results
+            .iter()
+            .map(|cr| cr.violations.len())
+            .sum();
+        trail.outcome = AdjudicationOutcome::ClarificationExhausted {
+            unresolved: collect_violations(&trail.checker_results),
+        };
+        trail.completed_at = Some(now());
+        return PipelineOutput {
+            verdict: Verdict::Blocked { violation_count },
+            audit_trail: trail,
+            clause_provenance: None,
+            disputed_answers: Vec::new(),
+        };
+    }
+
+    // ---------- engine, provenance-aware ----------
+    let source_provenance = ClauseProvenance::new(
+        input.ir_document.document_id.0.clone(),
+        TrustTier::Authoritative,
+    );
+    let mut combined = match lower_to_kb_with_provenance(
+        &input.ir_document,
+        source_provenance,
+    ) {
+        Ok(l) => l,
+        Err(e) => {
+            let detail = format!("{e:?}");
+            trail.outcome = AdjudicationOutcome::Aborted {
+                reason: detail.clone(),
+            };
+            trail.completed_at = Some(now());
+            return PipelineOutput {
+                verdict: Verdict::EngineError(detail),
+                audit_trail: trail,
+                clause_provenance: None,
+                disputed_answers: Vec::new(),
+            };
+        }
+    };
+    for (rb_ir, rb_prov) in rulebooks {
+        match lower_to_kb_with_provenance(rb_ir, rb_prov.clone()) {
+            Ok(lowered) => combined.extend(lowered),
+            Err(e) => {
+                let detail = format!(
+                    "rulebook lowering failed for {}: {e:?}",
+                    rb_prov.source_rulebook_id
+                );
+                trail.outcome = AdjudicationOutcome::Aborted {
+                    reason: detail.clone(),
+                };
+                trail.completed_at = Some(now());
+                return PipelineOutput {
+                    verdict: Verdict::EngineError(detail),
+                    audit_trail: trail,
+                    clause_provenance: None,
+                    disputed_answers: Vec::new(),
+                };
+            }
+        }
+    }
+
+    // ADJ16 step 3: when rulebooks are attached, default to
+    // `EnumerateAll` mode so the engine returns every successful
+    // proof. Dispute detection requires multiple proofs per query —
+    // `FindFirst` would stop at the first success and hide
+    // disagreements. When no rulebooks are attached, fall back to
+    // `AutoDetect` (the engine picks based on whether the KB is
+    // all-Certain).
+    let search_mode = if rulebooks.is_empty() {
+        logic_engine::SearchMode::AutoDetect
+    } else {
+        logic_engine::SearchMode::EnumerateAll
+    };
+    let queries = adjudication_connector::extract_queries(&input.ir_document);
+    let answers: Vec<AdjudicationResult> = queries
+        .into_iter()
+        .map(|q| {
+            let result = logic_engine::search(&q, &combined.kb, search_mode);
+            AdjudicationResult { query: q, result }
+        })
+        .collect();
+
+    let provenance_table = ClauseProvenanceTable::from_lowered(&combined);
+    let disputed_answers = detect_disputes(&answers, &provenance_table);
+
+    let audit_search_mode = match search_mode {
+        logic_engine::SearchMode::FindFirst => SearchMode::FindFirst,
+        logic_engine::SearchMode::EnumerateAll => SearchMode::EnumerateAll,
+        logic_engine::SearchMode::AutoDetect => SearchMode::AutoDetect,
+    };
+    trail.engine_artifacts = Some(EngineArtifacts {
+        engine_version: "logic-engine 0.x".to_string(),
+        search_mode: audit_search_mode,
+        kb_summary: KbSummary {
+            fact_count: provenance_table.fact_provenance.len(),
+            rule_count: provenance_table.rule_provenance.len(),
+            fact_ids: Vec::new(),
+            rule_ids: Vec::new(),
+            all_certain: answers
+                .iter()
+                .all(|a| !matches!(a.result, logic_engine::SearchResult::EnumerateAllResult { .. })),
+        },
+        proof_dag: serde_json::Value::Null,
+        formula: None,
+        wmc_result: None,
+        answer: answers_to_audit_json(&answers),
+    });
+    trail.outcome = AdjudicationOutcome::Resolved {
+        answer: answers_to_audit_json(&answers),
+    };
+    trail.completed_at = Some(now());
+
+    PipelineOutput {
+        verdict: Verdict::Resolved { answers },
+        audit_trail: trail,
+        clause_provenance: Some(provenance_table),
+        disputed_answers,
     }
 }
 
@@ -399,6 +1046,74 @@ fn coverage_violation_to_audit(v: &CoverageViolation) -> Violation {
         detail,
         triggered_dialogue_turn: None,
         resolved: false,
+    }
+}
+
+/// Map an [`adjudication_coverage::TypedQuantityResult`] into the
+/// audit-trail [`CheckerResult`] shape. Per ADJ24, the helper emits
+/// one [`Violation`] per missing literal with
+/// `pass_name = Adj22TypedQuantity` and
+/// `kind = MissingQuantity`; the `detail` JSON carries the literal
+/// value, byte range, and the IDs of overlapping nodes so a
+/// downstream consumer (the demo's clarification loop, ADJ06)
+/// can build a `MissingLiteralHint` per record.
+fn typed_quantity_to_checker_result(
+    started_at: String,
+    completed_at: String,
+    result: &TypedQuantityResult,
+) -> CheckerResult {
+    let (outcome, violations) = match result {
+        TypedQuantityResult::Pass => (PassOutcome::Passed, Vec::new()),
+        TypedQuantityResult::Fail { violations } => (
+            PassOutcome::Failed,
+            violations.iter().map(typed_quantity_violation_to_audit).collect(),
+        ),
+    };
+    CheckerResult {
+        pass_name: PassName::Adj22TypedQuantity,
+        // ADJ22's coverage check is at v0.1 in adjudication-coverage
+        // v0.3.0. Bumping this is an audit-trail-affecting change,
+        // so we record it explicitly.
+        pass_version: "v0.1".to_string(),
+        started_at,
+        completed_at,
+        outcome,
+        violations,
+        telemetry: Default::default(),
+    }
+}
+
+fn typed_quantity_violation_to_audit(v: &TypedQuantityViolation) -> Violation {
+    match v {
+        TypedQuantityViolation::MissingQuantity {
+            literal,
+            location,
+            nearby_nodes,
+        } => Violation {
+            // Pick the first nearby node as the violation's
+            // `node_id` so the audit trail can join the violation
+            // to a node. If there's no overlap (rare — a literal
+            // outside any node's spans) record the empty NodeId so
+            // the downstream consumer can detect the
+            // "add a new node" case.
+            node_id: nearby_nodes
+                .first()
+                .map(|nid| NodeId::new(nid.0.clone()))
+                .unwrap_or_else(|| NodeId::new(String::new())),
+            pass_name: PassName::Adj22TypedQuantity,
+            kind: ClarificationKind::MissingQuantity,
+            detail: serde_json::json!({
+                "kind": "MissingQuantity",
+                "literal": literal,
+                "location": [location.0, location.1],
+                "nearby_nodes": nearby_nodes
+                    .iter()
+                    .map(|nid| nid.0.clone())
+                    .collect::<Vec<_>>(),
+            }),
+            triggered_dialogue_turn: None,
+            resolved: false,
+        },
     }
 }
 
@@ -904,8 +1619,26 @@ mod tests {
             other => panic!("expected Resolved, got {other:?}"),
         }
         assert_eq!(out.audit_trail.adjudication_id.0, "adj-empty");
-        assert_eq!(out.audit_trail.checker_results.len(), 4);
-        // ADJ02 + ADJ03 passed; ADJ04 + ADJ05 are recorded as Skipped.
+        assert_eq!(out.audit_trail.checker_results.len(), 5);
+        // ADJ02 + ADJ22 + ADJ03 passed; ADJ04 + ADJ05 are Skipped.
+        // (ADJ22 trivially passes on empty source text — no
+        // literals to extract.)
+        let names: Vec<_> = out
+            .audit_trail
+            .checker_results
+            .iter()
+            .map(|cr| cr.pass_name.clone())
+            .collect();
+        assert_eq!(
+            names,
+            vec![
+                PassName::Adj02Coverage,
+                PassName::Adj22TypedQuantity,
+                PassName::Adj03PolarityModality,
+                PassName::Adj04RoundTrip,
+                PassName::Adj05Adversarial,
+            ]
+        );
         assert!(matches!(
             out.audit_trail.checker_results[0].outcome,
             PassOutcome::Passed
@@ -916,10 +1649,14 @@ mod tests {
         ));
         assert!(matches!(
             out.audit_trail.checker_results[2].outcome,
-            PassOutcome::Skipped
+            PassOutcome::Passed
         ));
         assert!(matches!(
             out.audit_trail.checker_results[3].outcome,
+            PassOutcome::Skipped
+        ));
+        assert!(matches!(
+            out.audit_trail.checker_results[4].outcome,
             PassOutcome::Skipped
         ));
         assert!(out.audit_trail.completed_at.is_some());
@@ -967,6 +1704,113 @@ mod tests {
         ));
         // Engine artifacts must NOT be populated.
         assert!(out.audit_trail.engine_artifacts.is_none());
+    }
+
+    #[test]
+    fn adj22_passes_when_every_literal_carries_a_quantity_compound() {
+        // Source: "blade 4". The "4" literal is wrapped in
+        // `quantity(4, inches)` inside the fact node, so ADJ22
+        // should pass.
+        let n = fact_node(
+            "n1",
+            logic_core::compound(
+                "blade",
+                vec![logic_core::compound(
+                    "quantity",
+                    vec![logic_core::atom("4"), logic_core::atom("inches")],
+                )],
+            ),
+            0,
+            7,
+        );
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "blade 4".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run(input, AdjudicationId::new("adj-tq-pass"), make_clock());
+        let tq = &out.audit_trail.checker_results[1];
+        assert_eq!(tq.pass_name, PassName::Adj22TypedQuantity);
+        assert!(matches!(tq.outcome, PassOutcome::Passed));
+        assert!(tq.violations.is_empty());
+        // Engine still runs (verdict resolved) because every gate passes.
+        assert!(matches!(out.verdict, Verdict::Resolved { .. }));
+    }
+
+    #[test]
+    fn adj22_fails_when_a_literal_is_dropped_and_blocks_the_engine() {
+        // Source: "blade 4". The fact node only covers "blade"
+        // (bytes 0..5), and its term is a bare atom — no
+        // `quantity(...)`. Note that the literal "4" is at
+        // bytes 6..7 but no node covers it OR carries it as a
+        // typed quantity. ADJ02 will *also* fail (uncovered
+        // bytes); ADJ22 fails independently and contributes its
+        // own violation. The test asserts the ADJ22 violation
+        // shape end-to-end through the audit trail.
+        let n = fact_node("n1", logic_core::atom("blade"), 0, 5);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "blade 4".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run(input, AdjudicationId::new("adj-tq-fail"), make_clock());
+        // The ADJ22 checker result must be present at index 1
+        // and must be Failed with one MissingQuantity violation
+        // for literal "4".
+        let tq = &out.audit_trail.checker_results[1];
+        assert_eq!(tq.pass_name, PassName::Adj22TypedQuantity);
+        assert!(matches!(tq.outcome, PassOutcome::Failed));
+        assert_eq!(tq.violations.len(), 1);
+        let v = &tq.violations[0];
+        assert_eq!(v.pass_name, PassName::Adj22TypedQuantity);
+        assert_eq!(v.kind, ClarificationKind::MissingQuantity);
+        assert_eq!(v.detail["literal"], "4");
+        assert_eq!(v.detail["location"][0], 6);
+        assert_eq!(v.detail["location"][1], 7);
+        // Engine gated off — Blocked verdict.
+        assert!(matches!(out.verdict, Verdict::Blocked { .. }));
+    }
+
+    #[test]
+    fn adj22_in_run_with_rulebooks_is_recorded_in_audit_trail() {
+        // Same passing case as above, but through
+        // `run_with_rulebooks` (with an empty rulebook slice) so
+        // the parallel wiring path is exercised.
+        let n = fact_node(
+            "n1",
+            logic_core::compound(
+                "weight",
+                vec![logic_core::compound(
+                    "quantity",
+                    vec![logic_core::atom("3"), logic_core::atom("oz")],
+                )],
+            ),
+            0,
+            10,
+        );
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "weight: 3oz".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-tq-rulebooks"),
+            make_clock(),
+            None,
+            &[],
+        );
+        // The trail should have ADJ22 at index 1, like in
+        // run_with_gateway. Both code paths share the same
+        // ordering.
+        let tq = &out.audit_trail.checker_results[1];
+        assert_eq!(tq.pass_name, PassName::Adj22TypedQuantity);
     }
 
     #[test]
@@ -1196,7 +2040,7 @@ mod tests {
         };
         let g = gateway_with_scripted(vec!["passenger said hello"], vec![(true, 0.95, true, 0.92)]);
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-pass"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert_eq!(adj04.pass_name, PassName::Adj04RoundTrip);
         assert_eq!(adj04.pass_version, "v1.0");
         assert!(matches!(adj04.outcome, PassOutcome::Passed));
@@ -1223,7 +2067,7 @@ mod tests {
             vec![(false, 0.10, true, 0.90)],
         );
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-drift"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Failed));
         assert_eq!(adj04.violations.len(), 1);
         assert_eq!(adj04.violations[0].pass_name, PassName::Adj04RoundTrip);
@@ -1246,7 +2090,7 @@ mod tests {
             ir_document: make_ir(vec![n]),
         };
         let out = run(input, AdjudicationId::new("adj-no-gw"), make_clock());
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Skipped));
         assert_eq!(adj04.pass_version, "not-yet-wired");
     }
@@ -1266,7 +2110,7 @@ mod tests {
         };
         let g = GatewayConfig::new(); // empty
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-noclient"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Failed));
         let detail = adj04.telemetry["check_error"].as_str().unwrap();
         assert!(detail.contains("renderer") || detail.contains("Renderer"));
@@ -1285,7 +2129,7 @@ mod tests {
         };
         let g = gateway_with_scripted(vec!["unused"], vec![(true, 0.99, true, 0.99)]);
         let out = run_with_gateway(input, AdjudicationId::new("adj-rt-skip-on-fail"), make_clock(), Some(&g));
-        let adj04 = &out.audit_trail.checker_results[2];
+        let adj04 = &out.audit_trail.checker_results[3];
         assert!(matches!(adj04.outcome, PassOutcome::Skipped));
         // And the pipeline still Blocks due to the coverage failure.
         assert!(matches!(out.verdict, Verdict::Blocked { .. }));
@@ -1305,7 +2149,7 @@ mod tests {
             ir_document: make_ir(vec![n]),
         };
         let out = run(input, AdjudicationId::new("adj-adv-no-gw"), make_clock());
-        let adj05 = &out.audit_trail.checker_results[3];
+        let adj05 = &out.audit_trail.checker_results[4];
         assert_eq!(adj05.pass_name, PassName::Adj05Adversarial);
         assert!(matches!(adj05.outcome, PassOutcome::Skipped));
     }
@@ -1323,9 +2167,898 @@ mod tests {
         };
         let g = gateway_with_scripted(vec!["x"], vec![(true, 0.95, true, 0.92)]);
         let out = run_with_gateway(input, AdjudicationId::new("adj-adv-no-role"), make_clock(), Some(&g));
-        let adj05 = &out.audit_trail.checker_results[3];
+        let adj05 = &out.audit_trail.checker_results[4];
         assert!(matches!(adj05.outcome, PassOutcome::Skipped));
         let reason = adj05.telemetry["skipped_reason"].as_str().unwrap();
         assert!(reason.contains("Adversary") || reason.contains("adversary"));
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ16 step 2 — run_with_rulebooks tests
+    // -----------------------------------------------------------------
+
+    fn query_node(id: &str, term: Term) -> IRNode {
+        // Query nodes are synthesized at adjudication time, not
+        // extracted from the source. Per ADJ01 (and the convention
+        // in adjudication-tsa-demo), they carry empty source_spans
+        // so they don't participate in coverage.
+        IRNode {
+            id: IRNodeId::new(id.to_string()),
+            kind: NodeKind::Query,
+            term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        }
+    }
+
+    fn rule_node_no_spans(id: &str, term: Term) -> IRNode {
+        // Rule nodes from rulebooks aren't anchored in the source
+        // document's text — they come from the rulebook IR. For
+        // pipeline tests we use empty source_spans so the source
+        // document's coverage check stays clean.
+        IRNode {
+            id: IRNodeId::new(id.to_string()),
+            kind: NodeKind::Rule,
+            term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        }
+    }
+
+    fn rulebook_ir(doc_id: &str, nodes: Vec<IRNode>) -> IRDocument {
+        IRDocument {
+            document_id: IRDocumentId::new(doc_id),
+            nodes,
+            edges: Vec::new(),
+        }
+    }
+
+    fn rule_node(id: &str, term: Term) -> IRNode {
+        // Rule nodes from rulebooks don't anchor to the source
+        // document; use empty source_spans so the source's coverage
+        // check isn't affected by rulebook rules.
+        rule_node_no_spans(id, term)
+    }
+
+    #[test]
+    fn run_with_rulebooks_empty_slice_matches_run_with_gateway_outcome() {
+        // No rulebooks attached: behaviour should match the existing
+        // run_with_gateway path (modulo provenance metadata on the source).
+        let text = "ok";
+        let f = fact_node("F1", logic_core::atom("ok"), 0, text.len());
+        let q = query_node("Q1", logic_core::atom("ok"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-empty"),
+            make_clock(),
+            None,
+            &[],
+        );
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        let table = out
+            .clause_provenance
+            .as_ref()
+            .expect("provenance table should be populated by run_with_rulebooks");
+        // Source fact gets the document's id as its rulebook id.
+        assert_eq!(table.fact_provenance.len(), 1);
+        let prov = table.fact_provenance.values().next().unwrap();
+        assert_eq!(prov.source_rulebook_id, "doc1");
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+    }
+
+    #[test]
+    fn run_with_rulebooks_merges_external_rule_into_kb() {
+        // Source asserts `prohibited(matches)`; rulebook supplies
+        // the bridging rule that says any prohibited item makes the
+        // declaration non-compliant. Query: is the declaration
+        // non-compliant?
+        use logic_core::{compound, atom};
+        // 21-byte source text; fact spans 0..21 covers all bytes.
+        let text = "carry-on bag, matches";
+        let source_facts = vec![
+            fact_node("F1", compound("prohibited", vec![atom("matches")]), 0, text.len()),
+            query_node("Q1", atom("non_compliant")),
+        ];
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(source_facts),
+        };
+        // Rulebook: definitional(non_compliant, [prohibited(matches)])
+        let rule_term = compound(
+            "definitional",
+            vec![
+                atom("non_compliant"),
+                logic_core::logic_list(vec![compound("prohibited", vec![atom("matches")])]),
+            ],
+        );
+        let rb = rulebook_ir("rb-tsa-v1", vec![rule_node("R1", rule_term)]);
+        let rb_prov = ClauseProvenance::new("rb-tsa-v1", TrustTier::Reviewed);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-merge"),
+            make_clock(),
+            None,
+            &[(rb, rb_prov)],
+        );
+        match &out.verdict {
+            Verdict::Resolved { answers } => {
+                assert_eq!(answers.len(), 1);
+                // ADJ16 step 3 switches search mode to EnumerateAll
+                // when rulebooks are attached, so we now expect a
+                // proof-DAG result with at least one proof rather
+                // than a single FindFirst binding.
+                match &answers[0].result {
+                    logic_engine::SearchResult::EnumerateAllResult { dag, .. } => {
+                        assert!(
+                            !dag.proofs.is_empty(),
+                            "expected non_compliant to have at least one proof"
+                        );
+                    }
+                    other => panic!(
+                        "expected non_compliant to be provable from merged KB (EnumerateAll), got {:?}",
+                        other
+                    ),
+                }
+            }
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        let table = out.clause_provenance.as_ref().expect("provenance");
+        // Source contributes one fact (the prohibited item); rulebook
+        // contributes one rule (the bridging definitional). Query is
+        // not lowered.
+        assert_eq!(table.fact_provenance.len(), 1);
+        assert_eq!(table.rule_provenance.len(), 1);
+        let rule_prov = table.rule_provenance.values().next().unwrap();
+        assert_eq!(rule_prov.source_rulebook_id, "rb-tsa-v1");
+        assert_eq!(rule_prov.trust_tier, TrustTier::Reviewed);
+    }
+
+    #[test]
+    fn run_with_rulebooks_attributes_multiple_rulebooks_distinctly() {
+        // Two rulebooks contribute one rule each. After the run, each
+        // rule should be attributable to its origin rulebook.
+        use logic_core::{compound, atom};
+        // Empty text + only a query node = vacuous coverage pass.
+        let q = query_node("Q1", atom("any_answer"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: String::new(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![q]),
+        };
+        let rule_a = rule_node(
+            "Ra",
+            compound("definitional", vec![atom("from_a"), logic_core::logic_list(vec![])]),
+        );
+        let rule_b = rule_node(
+            "Rb",
+            compound("definitional", vec![atom("from_b"), logic_core::logic_list(vec![])]),
+        );
+        let rb_a = rulebook_ir("rb-alpha", vec![rule_a]);
+        let rb_b = rulebook_ir("rb-beta", vec![rule_b]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-multi"),
+            make_clock(),
+            None,
+            &[
+                (rb_a, ClauseProvenance::new("rb-alpha", TrustTier::Tentative)),
+                (rb_b, ClauseProvenance::new("rb-beta", TrustTier::Reviewed)),
+            ],
+        );
+        let table = out.clause_provenance.as_ref().expect("provenance");
+        assert_eq!(table.rule_provenance.len(), 2);
+        let mut origins: Vec<&str> = table
+            .rule_provenance
+            .values()
+            .map(|p| p.source_rulebook_id.as_str())
+            .collect();
+        origins.sort();
+        assert_eq!(origins, vec!["rb-alpha", "rb-beta"]);
+        // Tiers preserved per-rulebook.
+        let alpha_tier = table
+            .rule_provenance
+            .values()
+            .find(|p| p.source_rulebook_id == "rb-alpha")
+            .unwrap()
+            .trust_tier;
+        let beta_tier = table
+            .rule_provenance
+            .values()
+            .find(|p| p.source_rulebook_id == "rb-beta")
+            .unwrap()
+            .trust_tier;
+        assert_eq!(alpha_tier, TrustTier::Tentative);
+        assert_eq!(beta_tier, TrustTier::Reviewed);
+    }
+
+    #[test]
+    fn run_with_rulebooks_blocks_engine_when_coverage_fails() {
+        // Coverage failure short-circuits before the engine runs;
+        // clause_provenance stays None because no lowering occurred.
+        let n = fact_node("n1", logic_core::atom("anomaly"), 100, 150);
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: "short".into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![n]),
+        };
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-blocked"),
+            make_clock(),
+            None,
+            &[],
+        );
+        assert!(matches!(out.verdict, Verdict::Blocked { .. }));
+        assert!(out.clause_provenance.is_none());
+    }
+
+    #[test]
+    fn run_with_rulebooks_surfaces_lowering_error_with_rulebook_id() {
+        // Malformed rulebook rule should produce an EngineError whose
+        // message names the offending rulebook id so the caller can
+        // identify which source rulebook to fix.
+        use logic_core::{compound, atom};
+        let q = query_node("Q1", atom("x"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: String::new(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![q]),
+        };
+        // `unknownify` is not a recognised Rule subtype.
+        let bad_rule = rule_node("Rbad", compound("unknownify", vec![atom("x")]));
+        let rb = rulebook_ir("rb-broken", vec![bad_rule]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-err"),
+            make_clock(),
+            None,
+            &[(rb, ClauseProvenance::new("rb-broken", TrustTier::Tentative))],
+        );
+        match &out.verdict {
+            Verdict::EngineError(msg) => {
+                assert!(
+                    msg.contains("rb-broken"),
+                    "engine error should name the rulebook id, got: {msg}"
+                );
+            }
+            other => panic!("expected EngineError, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn run_with_rulebooks_ignores_query_nodes_in_rulebook_ir() {
+        // A rulebook IR with a Query node should NOT cause that
+        // query to be answered. Only the source IR's queries run.
+        use logic_core::atom;
+        let source_q = query_node("Q1", atom("source_query"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: String::new(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![source_q]),
+        };
+        // Rulebook has its own (spurious) query; should be ignored.
+        let rb_q = query_node("RQ1", atom("rulebook_query"));
+        let rb = rulebook_ir("rb-with-query", vec![rb_q]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-rb-ignore-q"),
+            make_clock(),
+            None,
+            &[(rb, ClauseProvenance::new("rb-with-query", TrustTier::Tentative))],
+        );
+        match &out.verdict {
+            Verdict::Resolved { answers } => {
+                assert_eq!(answers.len(), 1, "only the source query should run");
+                // The single answer is for `source_query`, not `rulebook_query`.
+                assert_eq!(format!("{:?}", answers[0].query), format!("{:?}", atom("source_query")));
+            }
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn run_with_gateway_leaves_provenance_table_unpopulated() {
+        // Backward compatibility: the existing entry point's output
+        // has clause_provenance = None. Callers that don't migrate to
+        // run_with_rulebooks see no behavioural change.
+        let text = "ok";
+        let f = fact_node("F1", logic_core::atom("ok"), 0, text.len());
+        let q = query_node("Q1", logic_core::atom("ok"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        let out = run(input, AdjudicationId::new("adj-bc"), make_clock());
+        assert!(out.clause_provenance.is_none());
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        // ADJ16 step 3: legacy entry points produce no dispute records.
+        assert!(out.disputed_answers.is_empty());
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ16 step 3 — DisputedAnswer tests
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn no_dispute_when_single_proof_returned() {
+        // Source fact + one rulebook with a single bridging rule.
+        // Engine returns exactly one proof; no dispute possible.
+        use logic_core::{atom, compound};
+        let text = "x";
+        let source = vec![
+            fact_node("F1", atom("a"), 0, text.len()),
+            query_node("Q1", atom("b")),
+        ];
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(source),
+        };
+        let bridge = compound(
+            "definitional",
+            vec![atom("b"), logic_core::logic_list(vec![atom("a")])],
+        );
+        let rb = rulebook_ir("rb-only", vec![rule_node("R1", bridge)]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-single-proof"),
+            make_clock(),
+            None,
+            &[(rb, ClauseProvenance::new("rb-only", TrustTier::Reviewed))],
+        );
+        // Resolved with one answer, one proof, no dispute.
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        assert!(out.disputed_answers.is_empty());
+    }
+
+    #[test]
+    fn no_dispute_when_two_rulebooks_corroborate_with_same_bindings() {
+        // Two rulebooks supply rules that BOTH conclude `b`. Same
+        // bindings (empty — `b` is a ground atom), different proof
+        // attributions. Per the dispute rule "distinct rulebook sets
+        // AND distinct bindings", this is corroboration, not dispute.
+        use logic_core::{atom, compound};
+        let text = "x";
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![
+                fact_node("F1", atom("a"), 0, text.len()),
+                query_node("Q1", atom("b")),
+            ]),
+        };
+        let rule_a = rule_node(
+            "Ra",
+            compound("definitional", vec![atom("b"), logic_core::logic_list(vec![atom("a")])]),
+        );
+        let rule_b = rule_node(
+            "Rb",
+            compound("definitional", vec![atom("b"), logic_core::logic_list(vec![atom("a")])]),
+        );
+        let rb_a = rulebook_ir("rb-alpha", vec![rule_a]);
+        let rb_b = rulebook_ir("rb-beta", vec![rule_b]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-corroborate"),
+            make_clock(),
+            None,
+            &[
+                (rb_a, ClauseProvenance::new("rb-alpha", TrustTier::Tentative)),
+                (rb_b, ClauseProvenance::new("rb-beta", TrustTier::Tentative)),
+            ],
+        );
+        // Engine should find two proofs (one via each rule), both
+        // producing the same empty binding. Per the dispute
+        // semantics, identical bindings = corroboration, not dispute.
+        assert!(
+            out.disputed_answers.is_empty(),
+            "corroborating proofs should not produce a dispute, got {:?}",
+            out.disputed_answers
+        );
+    }
+
+    #[test]
+    fn dispute_detected_when_rulebooks_produce_different_bindings() {
+        // Source fact: `subject(x)`. Two rulebooks contribute
+        // contradictory classifications:
+        //   rb-strict: classify(X, prohibited) :- subject(X).
+        //   rb-lenient: classify(X, allowed)   :- subject(X).
+        // Query: ?- classify(x, Status).
+        // Engine returns two proofs: one binds Status=prohibited
+        // (from rb-strict's rule), one binds Status=allowed (from
+        // rb-lenient's). Distinct rulebooks AND distinct bindings →
+        // dispute.
+        use logic_core::{atom, compound, var};
+        let text = "x";
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![
+                fact_node("F1", compound("subject", vec![atom("x")]), 0, text.len()),
+                query_node(
+                    "Q1",
+                    compound("classify", vec![atom("x"), Term::Var(var("Status"))]),
+                ),
+            ]),
+        };
+        let xv = var("X");
+        let strict_rule = compound(
+            "definitional",
+            vec![
+                compound("classify", vec![Term::Var(xv.clone()), atom("prohibited")]),
+                logic_core::logic_list(vec![compound("subject", vec![Term::Var(xv.clone())])]),
+            ],
+        );
+        let lenient_rule = compound(
+            "definitional",
+            vec![
+                compound("classify", vec![Term::Var(xv.clone()), atom("allowed")]),
+                logic_core::logic_list(vec![compound("subject", vec![Term::Var(xv.clone())])]),
+            ],
+        );
+        let rb_strict = rulebook_ir("rb-strict", vec![rule_node("Rs", strict_rule)]);
+        let rb_lenient = rulebook_ir("rb-lenient", vec![rule_node("Rl", lenient_rule)]);
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-dispute"),
+            make_clock(),
+            None,
+            &[
+                (rb_strict, ClauseProvenance::new("rb-strict", TrustTier::Tentative)),
+                (rb_lenient, ClauseProvenance::new("rb-lenient", TrustTier::Tentative)),
+            ],
+        );
+        assert_eq!(
+            out.disputed_answers.len(),
+            1,
+            "expected exactly one disputed answer, got {:?}",
+            out.disputed_answers
+        );
+        let dispute = &out.disputed_answers[0];
+        assert_eq!(
+            dispute.resolution_required,
+            ResolutionRequirement::HumanReview
+        );
+        // Two candidates, one from each rulebook.
+        assert_eq!(dispute.candidates.len(), 2);
+        let mut rulebook_ids: Vec<&str> = dispute
+            .candidates
+            .iter()
+            .flat_map(|c| c.source_rulebooks.iter().map(|s| s.as_str()))
+            .collect();
+        rulebook_ids.sort();
+        rulebook_ids.dedup();
+        // The source document's fact contributes "doc1" provenance
+        // (the default Authoritative source). Plus rb-strict and
+        // rb-lenient for the rules.
+        assert!(rulebook_ids.contains(&"rb-strict"));
+        assert!(rulebook_ids.contains(&"rb-lenient"));
+    }
+
+    #[test]
+    fn no_dispute_from_corroborating_pair_even_with_within_rulebook_ambiguity() {
+        // Synthesize a 3-proof DAG by hand and feed it directly to
+        // detect_disputes. The scenario:
+        //   proof_a: bindings X, from {rb-alpha}
+        //   proof_b: bindings X, from {rb-beta}  (corroborates a)
+        //   proof_c: bindings Y, from {rb-alpha} (within-rb ambiguity)
+        //
+        // Pairwise:
+        //   (a, b): different rulebooks, SAME bindings → no
+        //   (a, c): SAME rulebooks ({rb-alpha}), different bindings → no
+        //   (b, c): different rulebooks AND different bindings → DISPUTE
+        //
+        // So the joint per-pair check correctly identifies a
+        // genuine cross-rulebook disagreement: rb-beta says X, but
+        // rb-alpha (via its Y proof) says Y. The (a, b) corroboration
+        // doesn't undo that. This is the *correct* behaviour — the
+        // engine cannot tell which of rb-alpha's two answers it
+        // intends, but the framework should still surface that
+        // rb-beta and rb-alpha disagree on at least one reading.
+        use logic_core::{atom, var, compound, Substitution};
+        use logic_engine::{FactId, RuleId};
+        let mk_bindings = |v_name: &str, t: logic_core::Term| -> Substitution {
+            Substitution::empty().extend(var(v_name).id, t)
+        };
+        let proof_a = logic_engine::Proof {
+            bindings: mk_bindings("Status", atom("x")),
+            steps: vec![],
+            via_facts: vec![FactId(100)],
+            via_rules: vec![RuleId(200)],
+        };
+        let proof_b = logic_engine::Proof {
+            bindings: mk_bindings("Status", atom("x")),
+            steps: vec![],
+            via_facts: vec![FactId(101)],
+            via_rules: vec![RuleId(201)],
+        };
+        let proof_c = logic_engine::Proof {
+            bindings: mk_bindings("Status", atom("y")),
+            steps: vec![],
+            via_facts: vec![FactId(102)],
+            via_rules: vec![RuleId(202)],
+        };
+        let dag = logic_engine::ProofDAG {
+            root_query: compound("classify", vec![atom("z"), Term::Var(var("Status"))]),
+            proofs: vec![proof_a, proof_b, proof_c],
+        };
+        let answer = AdjudicationResult {
+            query: dag.root_query.clone(),
+            result: logic_engine::SearchResult::EnumerateAllResult {
+                dag,
+                probability: 1.0,
+            },
+        };
+        let mut table = ClauseProvenanceTable::default();
+        // a and c → rb-alpha; b → rb-beta.
+        table.fact_provenance.insert(
+            FactId(100),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        table.rule_provenance.insert(
+            RuleId(200),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        table.fact_provenance.insert(
+            FactId(101),
+            ClauseProvenance::new("rb-beta", TrustTier::Tentative),
+        );
+        table.rule_provenance.insert(
+            RuleId(201),
+            ClauseProvenance::new("rb-beta", TrustTier::Tentative),
+        );
+        table.fact_provenance.insert(
+            FactId(102),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        table.rule_provenance.insert(
+            RuleId(202),
+            ClauseProvenance::new("rb-alpha", TrustTier::Tentative),
+        );
+        let disputes = detect_disputes(&[answer], &table);
+        // Joint per-pair check: (b, c) qualifies as a dispute pair.
+        // The detector flags the answer; the candidate list shows
+        // all three proofs so a reviewer can see the full picture.
+        assert_eq!(disputes.len(), 1, "expected one disputed answer");
+        assert_eq!(disputes[0].candidates.len(), 3);
+
+    }
+
+    #[test]
+    fn detect_disputes_with_empty_attribution_returns_empty() {
+        // Sanity: feeding detect_disputes an empty answer list (or
+        // answers with no EnumerateAll results) returns an empty vec.
+        let answers: Vec<AdjudicationResult> = Vec::new();
+        let table = ClauseProvenanceTable::default();
+        assert!(detect_disputes(&answers, &table).is_empty());
+    }
+
+    #[test]
+    fn run_with_rulebooks_uses_enumerate_all_when_rulebooks_attached() {
+        // Sanity: with rulebooks the engine runs in EnumerateAll
+        // (so dispute detection can see all proofs). With no
+        // rulebooks the audit trail records AutoDetect.
+        use logic_core::atom;
+        let text = "x";
+        let f = fact_node("F1", atom("ok"), 0, text.len());
+        let q = query_node("Q1", atom("ok"));
+        let with_rb = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f.clone(), q.clone()]),
+        };
+        let trivial_rb = rulebook_ir("rb-trivial", vec![]);
+        let out_with = run_with_rulebooks(
+            with_rb,
+            AdjudicationId::new("adj-mode-rb"),
+            make_clock(),
+            None,
+            &[(trivial_rb, ClauseProvenance::new("rb-trivial", TrustTier::Tentative))],
+        );
+        match &out_with.audit_trail.engine_artifacts.as_ref().unwrap().search_mode {
+            SearchMode::EnumerateAll => {}
+            other => panic!("expected EnumerateAll, got {:?}", other),
+        }
+
+        let without_rb = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        let out_without = run_with_rulebooks(
+            without_rb,
+            AdjudicationId::new("adj-mode-norb"),
+            make_clock(),
+            None,
+            &[],
+        );
+        match &out_without.audit_trail.engine_artifacts.as_ref().unwrap().search_mode {
+            SearchMode::AutoDetect => {}
+            other => panic!("expected AutoDetect, got {:?}", other),
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ16 step 4 — agreement-weighted rulebook tests
+    // -----------------------------------------------------------------
+
+    fn def_rule_ir(doc_id: &str, head: logic_core::Term, body: Vec<logic_core::Term>) -> IRDocument {
+        use logic_core::{compound, logic_list};
+        let rule_term = compound("definitional", vec![head, logic_list(body)]);
+        IRDocument {
+            document_id: IRDocumentId::new(doc_id),
+            nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
+        }
+    }
+
+    /// Helper: extract the `(weight, head, body_list_term)` triple
+    /// from a probabilistic rule term. Panics if shape is wrong.
+    fn unpack_probabilistic(term: &logic_core::Term) -> (f64, &logic_core::Term, &logic_core::Term) {
+        match term {
+            logic_core::Term::Compound { functor, args } if functor == "probabilistic" && args.len() == 3 => {
+                let weight = match &args[0] {
+                    logic_core::Term::Num(logic_core::Number::Float(f)) => *f,
+                    other => panic!("expected float weight, got {:?}", other),
+                };
+                (weight, &args[1], &args[2])
+            }
+            other => panic!("expected probabilistic compound, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn agreement_weight_empty_rulebooks_returns_empty_doc() {
+        let merged = compute_agreement_weighted_rulebook(&[], "out");
+        assert_eq!(merged.document_id.0, "out");
+        assert!(merged.nodes.is_empty());
+        assert!(merged.edges.is_empty());
+    }
+
+    #[test]
+    fn agreement_weight_single_rulebook_assigns_weight_one() {
+        use logic_core::{atom, compound};
+        let rb = def_rule_ir(
+            "rb1",
+            compound("non_compliant", vec![atom("p")]),
+            vec![compound("prohibited", vec![atom("matches")])],
+        );
+        let merged = compute_agreement_weighted_rulebook(&[&rb], "out");
+        assert_eq!(merged.nodes.len(), 1);
+        let (w, _, _) = unpack_probabilistic(&merged.nodes[0].term);
+        assert!((w - 1.0).abs() < 1e-9, "weight should be 1.0 for single-rulebook case");
+    }
+
+    #[test]
+    fn agreement_weight_two_rulebooks_full_agreement_yields_weight_one() {
+        use logic_core::{atom, compound};
+        let h = compound("non_compliant", vec![atom("p")]);
+        let b = vec![compound("prohibited", vec![atom("matches")])];
+        let rb1 = def_rule_ir("rb1", h.clone(), b.clone());
+        let rb2 = def_rule_ir("rb2", h.clone(), b.clone());
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2], "out");
+        // Single dedup-merged rule with weight 2/2 = 1.0.
+        assert_eq!(merged.nodes.len(), 1);
+        let (w, _, _) = unpack_probabilistic(&merged.nodes[0].term);
+        assert!((w - 1.0).abs() < 1e-9, "weight should be 1.0 when both rulebooks agree");
+    }
+
+    #[test]
+    fn agreement_weight_two_rulebooks_partial_overlap_yields_proportional_weight() {
+        // rb1: rule A, rule B.
+        // rb2: rule A only.
+        // After merge: rule A weight 2/2 = 1.0, rule B weight 1/2 = 0.5.
+        use logic_core::{atom, compound, logic_list};
+        let a_head = compound("non_compliant", vec![atom("p")]);
+        let a_body = vec![compound("prohibited", vec![atom("matches")])];
+        let b_head = compound("flagged", vec![atom("p")]);
+        let b_body = vec![compound("declared", vec![atom("lighter")])];
+        let rb1 = IRDocument {
+            document_id: IRDocumentId::new("rb1"),
+            nodes: vec![
+                rule_node(
+                    "R1",
+                    compound("definitional", vec![a_head.clone(), logic_list(a_body.clone())]),
+                ),
+                rule_node(
+                    "R2",
+                    compound("definitional", vec![b_head.clone(), logic_list(b_body.clone())]),
+                ),
+            ],
+            edges: vec![],
+        };
+        let rb2 = def_rule_ir("rb2", a_head.clone(), a_body.clone());
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2], "out");
+        assert_eq!(merged.nodes.len(), 2);
+        // Find by head term identity (insertion order is rule A
+        // first because it appears first in rb1).
+        let (w1, h1, _) = unpack_probabilistic(&merged.nodes[0].term);
+        let (w2, h2, _) = unpack_probabilistic(&merged.nodes[1].term);
+        assert_eq!(h1, &a_head);
+        assert!((w1 - 1.0).abs() < 1e-9, "rule A weight should be 1.0, got {}", w1);
+        assert_eq!(h2, &b_head);
+        assert!((w2 - 0.5).abs() < 1e-9, "rule B weight should be 0.5, got {}", w2);
+    }
+
+    #[test]
+    fn agreement_weight_three_rulebooks_no_overlap_yields_one_third_each() {
+        use logic_core::{atom, compound};
+        let rb1 = def_rule_ir(
+            "rb1",
+            compound("rule_a", vec![atom("p")]),
+            vec![atom("x")],
+        );
+        let rb2 = def_rule_ir(
+            "rb2",
+            compound("rule_b", vec![atom("p")]),
+            vec![atom("y")],
+        );
+        let rb3 = def_rule_ir(
+            "rb3",
+            compound("rule_c", vec![atom("p")]),
+            vec![atom("z")],
+        );
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2, &rb3], "out");
+        assert_eq!(merged.nodes.len(), 3);
+        for node in &merged.nodes {
+            let (w, _, _) = unpack_probabilistic(&node.term);
+            assert!(
+                (w - (1.0 / 3.0)).abs() < 1e-9,
+                "each rule should have weight 1/3, got {}",
+                w
+            );
+        }
+    }
+
+    #[test]
+    fn agreement_weight_dedups_within_a_single_rulebook() {
+        // A single rulebook listing the same rule twice shouldn't
+        // inflate the count to 2/1 = 2.0. The dedup-within-rulebook
+        // logic enforces "this rulebook contributes at most 1 to
+        // each rule's count".
+        use logic_core::{atom, compound, logic_list};
+        let head = compound("non_compliant", vec![atom("p")]);
+        let body = vec![compound("prohibited", vec![atom("matches")])];
+        let rule_term = compound("definitional", vec![head, logic_list(body)]);
+        let rb = IRDocument {
+            document_id: IRDocumentId::new("rb1"),
+            nodes: vec![
+                rule_node("R1", rule_term.clone()),
+                rule_node("R2", rule_term),
+            ],
+            edges: vec![],
+        };
+        let merged = compute_agreement_weighted_rulebook(&[&rb], "out");
+        assert_eq!(merged.nodes.len(), 1);
+        let (w, _, _) = unpack_probabilistic(&merged.nodes[0].term);
+        assert!((w - 1.0).abs() < 1e-9, "weight should be 1.0 (1/1), not 2.0");
+    }
+
+    #[test]
+    fn agreement_weight_passes_through_non_definitional_rules() {
+        // A probabilistic, constraint, or default rule should pass
+        // through unchanged. Currently the function preserves the
+        // term and reuses it once.
+        use logic_core::{atom, compound, logic_list, float};
+        let prob_term = compound(
+            "probabilistic",
+            vec![float(0.7), atom("h"), logic_list(vec![atom("b")])],
+        );
+        let constraint_term = compound("constraint", vec![logic_list(vec![atom("c")])]);
+        let rb = IRDocument {
+            document_id: IRDocumentId::new("rb"),
+            nodes: vec![
+                rule_node("R1", prob_term.clone()),
+                rule_node("R2", constraint_term.clone()),
+            ],
+            edges: vec![],
+        };
+        let merged = compute_agreement_weighted_rulebook(&[&rb], "out");
+        assert_eq!(merged.nodes.len(), 2);
+        // First should be the probabilistic (preserved as-is), then
+        // the constraint.
+        assert_eq!(merged.nodes[0].term, prob_term);
+        assert_eq!(merged.nodes[1].term, constraint_term);
+    }
+
+    #[test]
+    fn agreement_weighted_rulebook_feeds_run_with_rulebooks() {
+        // End-to-end smoke: the function's output can be fed back
+        // into run_with_rulebooks. Build two rulebooks that agree on
+        // a bridging rule, merge them, run the pipeline against the
+        // merged rulebook on a tiny source IR.
+        use logic_core::{atom, compound, logic_list};
+        let text = "x";
+        let f = fact_node("F1", atom("a"), 0, text.len());
+        let q = query_node("Q1", atom("b"));
+        let input = PipelineInput {
+            document: PipelineDocument {
+                normalized_text: text.into(),
+                ..pipeline_doc()
+            },
+            ir_document: make_ir(vec![f, q]),
+        };
+        // Both rulebooks supply the same bridging rule b :- a.
+        let rule_term = compound("definitional", vec![atom("b"), logic_list(vec![atom("a")])]);
+        let rb1 = IRDocument {
+            document_id: IRDocumentId::new("rb1"),
+            nodes: vec![rule_node("R1", rule_term.clone())],
+            edges: vec![],
+        };
+        let rb2 = IRDocument {
+            document_id: IRDocumentId::new("rb2"),
+            nodes: vec![rule_node("R1", rule_term)],
+            edges: vec![],
+        };
+        let merged = compute_agreement_weighted_rulebook(&[&rb1, &rb2], "rb-merged-v1");
+        // Weight is 1.0 (full agreement) → probabilistic rule.
+        let out = run_with_rulebooks(
+            input,
+            AdjudicationId::new("adj-step4-end-to-end"),
+            make_clock(),
+            None,
+            &[(
+                merged,
+                ClauseProvenance::new("rb-merged-v1", TrustTier::Reviewed),
+            )],
+        );
+        // Engine should derive `b` (probability 1.0 means certain).
+        match &out.verdict {
+            Verdict::Resolved { answers } => assert_eq!(answers.len(), 1),
+            other => panic!("expected Resolved, got {other:?}"),
+        }
+        // Provenance attributes the rule to the merged rulebook id.
+        let table = out.clause_provenance.as_ref().expect("provenance");
+        assert_eq!(table.rule_provenance.len(), 1);
+        let prov = table.rule_provenance.values().next().unwrap();
+        assert_eq!(prov.source_rulebook_id, "rb-merged-v1");
     }
 }

@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-rulebook"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "ADJ14 implementation: bootstrap a typed Rulebook from the LLM's own weights. Composes the elicit_rules primitive with decompose_text to produce an audited rulebook IR plus a full audit trail; the same checker discipline that protects extracted facts now protects the rules under which those facts will be judged. Trust tiers (Tentative / Reviewed / Authoritative) record provenance so deployments can decide which rulebooks to use."
+description = "ADJ14 implementation: bootstrap a typed Rulebook from the LLM's own weights. v0.2 adds adversarial multi-model elicitation — acquire_rulebook_adversarial orchestrates elicitation across N independent models, returns per-model outcomes plus a provenance-tagged merged source text suitable for direct prompt injection. Rules cited at answer time can now be traced back to which model produced them, and rules appearing in only one model's training surface as lower-trust than rules multiple models agree on. The recursive use of the framework, made adversarial."
 
 [dependencies]
 adjudication-ir = { path = "../adjudication-ir" }

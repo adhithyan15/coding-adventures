@@ -203,6 +203,195 @@ fn symbolic_unknown_head_passes_through() {
     assert_eq!(symbolic().eval(expr.clone()), expr);
 }
 
+#[test]
+fn symbolic_factor_univariate_integer_polynomial() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(SUB),
+            vec![apply(sym(POW), vec![sym("x"), int(2)]), int(1)],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![int(1), sym("x")]),
+                apply(sym(ADD), vec![int(-1), sym("x")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_common_multivariate_term() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(SUB),
+            vec![
+                apply(
+                    sym(MUL),
+                    vec![apply(sym(POW), vec![sym("x"), int(2)]), sym("y")],
+                ),
+                sym("y"),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                sym("y"),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![int(1), sym("x")]),
+                        apply(sym(ADD), vec![int(-1), sym("x")]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_perfect_square() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(POW), vec![sym("x"), int(2)]),
+                        apply(
+                            sym(MUL),
+                            vec![int(2), apply(sym(MUL), vec![sym("x"), sym("y")])],
+                        ),
+                    ],
+                ),
+                apply(sym(POW), vec![sym("y"), int(2)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(2)]
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_difference_of_squares() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(SUB),
+            vec![
+                apply(sym(POW), vec![sym("x"), int(2)]),
+                apply(sym(POW), vec![sym("y"), int(2)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_difference_of_cubes() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(SUB),
+            vec![
+                apply(sym(POW), vec![sym("x"), int(3)]),
+                apply(sym(POW), vec![sym("y"), int(3)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(sym(MUL), vec![sym("x"), sym("y")]),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_sum_of_cubes() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(sym(POW), vec![sym("x"), int(3)]),
+                apply(sym(POW), vec![sym("y"), int(3)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(
+                                    sym(MUL),
+                                    vec![int(-1), apply(sym(MUL), vec![sym("x"), sym("y")]),],
+                                ),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Symbol resolution
 // ---------------------------------------------------------------------------

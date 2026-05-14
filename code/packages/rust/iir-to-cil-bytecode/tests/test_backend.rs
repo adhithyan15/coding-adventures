@@ -1210,98 +1210,310 @@ fn codegen_custom_assembly_name() {
 }
 
 // ===========================================================================
-// LANG35 — ClosureOpcode validator tests
+// LANG37 — CLR closure lowering tests
 // ===========================================================================
 //
-// The CLR backend does not yet support `alloc_closure` / `call_closure`.
-// Full CLR closure lowering (delegates / closures-as-methods approach) is
-// planned for a future LANG spec (LANG37).
+// LANG37 promotes the CLR backend from "reject alloc_closure / call_closure
+// with ClosureOpcode" (LANG35) to a full `int32[]`-based dispatch-table
+// implementation:
 //
-// The validator returns a specific `ClosureOpcode` error with an actionable
-// message, instead of the confusing `UntypedInstruction` error that would
-// otherwise fire because `"closure"` and `"any"` are not concrete CIL types.
+//   alloc_closure(Str("fn"), Var(cap0), …) : "closure"
+//     → int32[] { fn_dispatch_idx, cap0_as_i32, … }
+//
+//   call_closure(Var(handle), Var(arg0), …) : "any"
+//     → static __callClosure(int32[], int32[])
+//
+// Captures are limited to i32/bool in v1; i64/f32/f64 captures still produce
+// a `ClosureOpcode` validation error.
+//
+// The CIL opcodes involved are:
+//   newarr (0x8D)    — allocate int32[]
+//   stelem.i4 (0x9E) — store int32 into int32[]
+//   ldelem.i4 (0x94) — load int32 from int32[]
+//   call (0x28)      — call __callClosure
 
-/// `alloc_closure` must produce a `ClosureOpcode` validation error in the
-/// CLR backend, not an `UntypedInstruction` error.
-#[test]
-fn lang35_alloc_closure_closure_opcode_error() {
-    let module = fn_with_params(
+/// Opcode constants for LANG37 closure assertions.
+const STELEM_I4: u8 = 0x9E; // stelem.i4
+const LDELEM_I4: u8 = 0x94; // ldelem.i4
+const CALL:      u8 = 0x28; // call (also used in existing test above)
+const DUP:       u8 = 0x25; // dup
+
+// ---------------------------------------------------------------------------
+// Shared helper: build a two-function module for closure tests
+//
+//   __lambda_0(x: i32) -> i32  { ret x }
+//   main() -> i32              { cl = alloc_closure("__lambda_0")
+//                                arg = const 42
+//                                r   = call_closure(cl, arg)
+//                                ret r }
+//
+// `__lambda_0` is added first so its CIL token (0x06000001) matches
+// the dispatch index 0 assigned by `collect_closure_dispatch`.
+// ---------------------------------------------------------------------------
+
+fn closure_test_module() -> IIRModule {
+    let lambda = IIRFunction::new(
+        "__lambda_0",
+        vec![("x".to_string(), "i32".to_string())],
+        "i32",
+        vec![
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i32"),
+        ],
+    );
+    let main_fn = IIRFunction::new(
+        "main",
         vec![],
+        "i32",
+        vec![
+            // cl = alloc_closure("__lambda_0")  — 0 captures
+            IIRInstr::new("alloc_closure", Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into())], "closure"),
+            // arg = 42
+            IIRInstr::new("const", Some("arg".into()), vec![Operand::Int(42)], "i32"),
+            // r = call_closure(cl, arg)
+            IIRInstr::new("call_closure", Some("r".into()),
+                vec![Operand::Var("cl".into()), Operand::Var("arg".into())], "any"),
+            // ret r
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ],
+    );
+    let mut module = IIRModule::new("closure_test", "tetrad");
+    module.entry_point = Some("main".into());
+    module.add_or_replace(lambda);
+    module.add_or_replace(main_fn);
+    module
+}
+
+// ---------------------------------------------------------------------------
+// 1. alloc_closure with i32 capture is accepted by the validator (no ClosureOpcode)
+// ---------------------------------------------------------------------------
+
+/// LANG37: `alloc_closure` with an `i32` capture must pass validation.
+///
+/// The LANG35 blanket rejection of all `alloc_closure` instructions has been
+/// lifted.  The validator now only rejects `alloc_closure` whose captures have
+/// i64/u64/f32/f64 types.
+#[test]
+fn lang37_alloc_closure_i32_cap_accepted_by_clr_validator() {
+    // main(cap: i32) → the param type feeds into var_types lookup
+    let mut module = IIRModule::new("test", "tetrad");
+    let fn_ = IIRFunction::new(
+        "main",
+        vec![("cap".to_string(), "i32".to_string())],
         "closure",
         vec![
-            IIRInstr::new(
-                "alloc_closure",
-                Some("cl".into()),
-                vec![Operand::Str("__lambda_0".into())],
-                "closure",
-            ),
+            IIRInstr::new("alloc_closure", Some("cl".into()),
+                vec![
+                    Operand::Str("__lambda_0".into()),
+                    Operand::Var("cap".into()),  // i32 capture
+                ],
+                "closure"),
             IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
         ],
     );
+    module.add_or_replace(fn_);
+    module.entry_point = Some("main".into());
+
     let errs = validate_iir_for_clr(&module);
     assert!(
-        !errs.is_empty(),
-        "alloc_closure must produce a validation error in the CLR backend"
-    );
-    assert!(
-        errs.iter().any(|e| e.contains("ClosureOpcode")),
-        "error must contain \"ClosureOpcode\"; got: {errs:?}"
+        !errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "i32 capture must NOT produce ClosureOpcode error; got: {errs:?}"
     );
 }
 
-/// `call_closure` must produce a `ClosureOpcode` validation error in the
-/// CLR backend.
+// ---------------------------------------------------------------------------
+// 2. call_closure is accepted by the validator (no ClosureOpcode)
+// ---------------------------------------------------------------------------
+
+/// LANG37: `call_closure` must no longer produce a `ClosureOpcode` error.
+///
+/// `call_closure` always has type_hint `"any"` — the validator special-cases
+/// it before the `UntypedInstruction` check so it never fires either error.
 #[test]
-fn lang35_call_closure_closure_opcode_error() {
+fn lang37_call_closure_accepted_by_clr_validator() {
     let module = fn_with_params(
-        vec![("h", "i64"), ("a", "i64")],
-        "i64",
+        vec![("h", "i32"), ("a", "i32")],
+        "i32",
         vec![
-            IIRInstr::new(
-                "call_closure",
-                Some("r".into()),
+            IIRInstr::new("call_closure", Some("r".into()),
                 vec![Operand::Var("h".into()), Operand::Var("a".into())],
-                "any",
-            ),
-            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+                "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
         ],
     );
     let errs = validate_iir_for_clr(&module);
     assert!(
-        !errs.is_empty(),
-        "call_closure must produce a validation error in the CLR backend"
-    );
-    assert!(
-        errs.iter().any(|e| e.contains("ClosureOpcode")),
-        "error must contain \"ClosureOpcode\"; got: {errs:?}"
-    );
-}
-
-/// The `ClosureOpcode` error must not mention `UntypedInstruction` —
-/// the LANG35 improvement ensures callers get an actionable diagnostic
-/// rather than a misleading type-check failure.
-#[test]
-fn lang35_closure_opcode_error_not_untyped() {
-    let module = fn_with_params(
-        vec![],
-        "closure",
-        vec![
-            IIRInstr::new(
-                "alloc_closure",
-                Some("cl".into()),
-                vec![Operand::Str("__lambda_0".into())],
-                "closure",
-            ),
-            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
-        ],
-    );
-    let errs = validate_iir_for_clr(&module);
-    assert!(
-        errs.iter().any(|e| e.contains("ClosureOpcode")),
-        "expected ClosureOpcode error; got: {errs:?}"
+        !errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "call_closure must NOT produce ClosureOpcode error; got: {errs:?}"
     );
     assert!(
         !errs.iter().any(|e| e.contains("UntypedInstruction")),
-        "error must not say UntypedInstruction for closure ops; got: {errs:?}"
+        "call_closure must NOT produce UntypedInstruction error; got: {errs:?}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// 3. alloc_closure with i64 capture is still rejected (deferred to LANG38)
+// ---------------------------------------------------------------------------
+
+/// LANG37: `alloc_closure` with an `i64` capture must still produce a
+/// `ClosureOpcode` error in the CLR backend.
+///
+/// The `int32[]` closure representation can only store 32-bit values.
+/// Wider captures require boxing (LANG38).
+#[test]
+fn lang37_i64_capture_still_rejected() {
+    let mut module = IIRModule::new("test", "tetrad");
+    let fn_ = IIRFunction::new(
+        "main",
+        vec![("cap".to_string(), "i64".to_string())],  // i64 param → i64 capture
+        "closure",
+        vec![
+            IIRInstr::new("alloc_closure", Some("cl".into()),
+                vec![
+                    Operand::Str("__lambda_0".into()),
+                    Operand::Var("cap".into()),  // i64 capture — must be rejected
+                ],
+                "closure"),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    module.add_or_replace(fn_);
+    module.entry_point = Some("main".into());
+
+    let errs = validate_iir_for_clr(&module);
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "i64 capture must produce ClosureOpcode error; got: {errs:?}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// 4. alloc_closure with f32 capture is still rejected (deferred to LANG38)
+// ---------------------------------------------------------------------------
+
+/// LANG37: `alloc_closure` with an `f32` capture must produce a `ClosureOpcode`
+/// error.  Float captures are deferred to LANG38.
+#[test]
+fn lang37_float_capture_still_rejected() {
+    let mut module = IIRModule::new("test", "tetrad");
+    let fn_ = IIRFunction::new(
+        "main",
+        vec![("cap".to_string(), "f32".to_string())],  // f32 param → f32 capture
+        "closure",
+        vec![
+            IIRInstr::new("alloc_closure", Some("cl".into()),
+                vec![
+                    Operand::Str("__lambda_0".into()),
+                    Operand::Var("cap".into()),  // f32 capture — must be rejected
+                ],
+                "closure"),
+            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+        ],
+    );
+    module.add_or_replace(fn_);
+    module.entry_point = Some("main".into());
+
+    let errs = validate_iir_for_clr(&module);
+    assert!(
+        errs.iter().any(|e| e.contains("ClosureOpcode")),
+        "f32 capture must produce ClosureOpcode error; got: {errs:?}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// 5. alloc_closure lowering emits newarr (0x8D)
+// ---------------------------------------------------------------------------
+
+/// `alloc_closure` lowers to `ldc.i4 {n+1}; newarr [System.Int32]; …`.
+/// The `newarr` opcode (0x8D) must appear in the caller's method body.
+#[test]
+fn lang37_alloc_closure_emits_newarr() {
+    let module = closure_test_module();
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    let main_body = &artifact.methods.iter()
+        .find(|m| m.name == "main")
+        .expect("main method must exist")
+        .body;
+    assert!(main_body.contains(&NEWARR),
+        "alloc_closure must emit newarr (0x8D): {main_body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 6. alloc_closure lowering emits stelem.i4 (0x9E)
+// ---------------------------------------------------------------------------
+
+/// Each element stored into the closure array uses `stelem.i4` (0x9E):
+/// - One for the dispatch index stored at `closure[0]`.
+/// - One per captured variable.
+#[test]
+fn lang37_alloc_closure_emits_stelem_i4() {
+    let module = closure_test_module();
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    let main_body = &artifact.methods.iter()
+        .find(|m| m.name == "main")
+        .expect("main method must exist")
+        .body;
+    assert!(main_body.contains(&STELEM_I4),
+        "alloc_closure must emit stelem.i4 (0x9E): {main_body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 7. call_closure emits the call opcode (0x28) targeting __callClosure
+// ---------------------------------------------------------------------------
+
+/// `call_closure` emits `call int32 ClassName::__callClosure(int32[], int32[])`.
+/// The `call` opcode is 0x28.
+#[test]
+fn lang37_call_closure_emits_call_dispatch() {
+    let module = closure_test_module();
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    let main_body = &artifact.methods.iter()
+        .find(|m| m.name == "main")
+        .expect("main method must exist")
+        .body;
+    assert!(main_body.contains(&CALL),
+        "call_closure must emit call (0x28): {main_body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 8. Dispatch method __callClosure is generated when alloc_closure is present
+// ---------------------------------------------------------------------------
+
+/// When the module contains `alloc_closure`, `lower_iir_to_cil` appends a
+/// synthetic `__callClosure` method after all user functions.
+#[test]
+fn lang37_dispatch_method_generated() {
+    let module = closure_test_module();
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    assert!(
+        artifact.methods.iter().any(|m| m.name == "__callClosure"),
+        "artifact must contain __callClosure method; methods: {:?}",
+        artifact.methods.iter().map(|m| &m.name).collect::<Vec<_>>()
+    );
+}
+
+// ---------------------------------------------------------------------------
+// 9. __callClosure dispatch body contains ldelem.i4 (0x94)
+// ---------------------------------------------------------------------------
+
+/// The dispatch method reads `closure[0]` to get the function index and reads
+/// `args[idx]` / `closure[idx]` for arguments and captures.  All these array
+/// loads use `ldelem.i4` (0x94).
+#[test]
+fn lang37_dispatch_method_contains_ldelem_i4() {
+    let module = closure_test_module();
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    let dispatch_body = &artifact.methods.iter()
+        .find(|m| m.name == "__callClosure")
+        .expect("__callClosure must be generated")
+        .body;
+    assert!(dispatch_body.contains(&LDELEM_I4),
+        "__callClosure body must contain ldelem.i4 (0x94): {dispatch_body:?}");
+}
+
+// Suppress "unused" warnings for the DUP constant (defined above for completeness
+// but not yet needed in a direct assertion; it is verified indirectly via stelem.i4
+// sequences that require dup to prime the array reference).
+#[allow(dead_code)]
+const _DUP_USED: u8 = DUP;

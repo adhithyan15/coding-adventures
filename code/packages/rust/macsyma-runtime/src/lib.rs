@@ -6,13 +6,14 @@
 
 use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 use cas_list_operations::{
     append, apply_ as list_apply, first, flatten, join, last, length, map_ as list_map, part,
     range_ as list_range, rest, reverse, sort_, ListOperationError, ListResult,
 };
 use cas_pretty_printer::{pretty, pretty_2d, MacsymaDialect};
-use cas_simplify::simplify;
+use cas_simplify::{simplify, AssumptionContext};
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_substitution::subst;
 use cas_trig::{expand_trig, trig_reduce, trig_simplify};
@@ -21,8 +22,8 @@ use coding_adventures_macsyma_compiler::{
     SUPPRESS as COMPILER_SUPPRESS,
 };
 use symbolic_ir::{
-    apply, sym, IRApply, IRNode, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS, LESS_EQUAL,
-    LIST, POW,
+    apply, str_node, sym, IRApply, IRNode, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS,
+    LESS_EQUAL, LIST, POW,
 };
 use symbolic_vm::backend::{handler_fn, Backend, Handler};
 use symbolic_vm::handlers::build_handler_table;
@@ -42,11 +43,20 @@ pub const KILL: &str = "Kill";
 pub const EV: &str = "Ev";
 /// Sentinel symbol matched by `Kill(all)`.
 pub const ALL: &str = "all";
+/// Runtime-owned head for declaring MACSYMA symbol properties.
+pub const DECLARE: &str = "Declare";
+/// Runtime-owned head for querying properties declared on a symbol.
+pub const PROPERTIES: &str = "Properties";
+/// Runtime-owned head for querying symbols with declared properties.
+pub const PROP_VARS: &str = "PropVars";
 
+const ASSUME: &str = "Assume";
 const DONE: &str = "done";
 const EXPAND: &str = "Expand";
 const FACTOR: &str = "Factor";
 const FLOAT_FUNC: &str = "Float";
+const FORGET: &str = "Forget";
+const IS: &str = "Is";
 const RAT_SIMPLIFY: &str = "RatSimplify";
 const SIMPLIFY: &str = "Simplify";
 const SUBST: &str = "Subst";
@@ -66,6 +76,9 @@ const SORT: &str = "Sort";
 const PART: &str = "Part";
 const FLATTEN: &str = "Flatten";
 const JOIN: &str = "Join";
+const SHOWTIME: &str = "showtime";
+const TRUE_SYMBOL: &str = "True";
+const FALSE_SYMBOL: &str = "False";
 
 /// Return the runtime extension table for MACSYMA surface function names.
 ///
@@ -193,6 +206,9 @@ const MACSYMA_NAME_TABLE: &[(&str, &str)] = &[
     ("assume", "Assume"),
     ("forget", "Forget"),
     ("is", "Is"),
+    ("declare", DECLARE),
+    ("properties", PROPERTIES),
+    ("propvars", PROP_VARS),
     ("matchdeclare", "MatchDeclare"),
     ("defrule", "Defrule"),
     ("apply1", "Apply1"),
@@ -213,6 +229,122 @@ const MACSYMA_NAME_TABLE: &[(&str, &str)] = &[
     ("lambert_w", "LambertW"),
 ];
 
+const MACSYMA_HELP_TOPICS: &[(&str, &str)] = &[
+    (
+        "arithmetic",
+        "Arithmetic: use +, -, *, /, and ^. Example: expand((x + 1)^2);",
+    ),
+    (
+        "calculus",
+        "Calculus: diff(expr, var), integrate(expr, var), limit(expr, var, point), and taylor(expr, var, point, order).",
+    ),
+    (
+        "diff",
+        "diff(expr, var) differentiates expr with respect to var. Example: diff(x^3, x);",
+    ),
+    (
+        "integrate",
+        "integrate(expr, var) computes an antiderivative when supported. Example: integrate(x^2, x);",
+    ),
+    (
+        "solve",
+        "solve(expr, var) solves equations or supported inequalities. Use linsolve([...], [...]) for linear systems and nsolve(poly, var) for numeric polynomial roots.",
+    ),
+    (
+        "matrix",
+        "Matrix tools: matrix([...], ...), transpose, determinant, invert, dot, rank, rowreduce, ident, zeromatrix, and matrix_size.",
+    ),
+    (
+        "lists",
+        "List tools: length, first, rest, last, append, reverse, range, map, apply, sublist, sort, part, flatten, join, and makelist.",
+    ),
+    (
+        "assumptions",
+        "Assumptions: assume(x > 0), declare(x, positive), is(x > 0), forget(), properties(x), and propvars().",
+    ),
+    (
+        "properties",
+        "properties(symbol) lists declared properties. propvars() lists symbols with declared properties.",
+    ),
+    (
+        "display",
+        "Display: terminate with ; to show output and $ to suppress it. ev(expr, display2d) renders 2D output.",
+    ),
+    (
+        "history",
+        "History: % is the last output; %iN and %oN refer to input and output number N.",
+    ),
+    (
+        "showtime",
+        "showtime:true enables per-expression timing; showtime:false disables it.",
+    ),
+    (
+        "repl",
+        "REPL commands: :quit exits. Use --file path.mac for batch execution.",
+    ),
+];
+
+const MACSYMA_HELP_ALIASES: &[(&str, &str)] = &[
+    ("d", "diff"),
+    ("derivative", "diff"),
+    ("integral", "integrate"),
+    ("matrices", "matrix"),
+    ("list", "lists"),
+    ("assume", "assumptions"),
+    ("declare", "assumptions"),
+    ("propvars", "properties"),
+    ("display2d", "display"),
+    ("%", "history"),
+    ("timing", "showtime"),
+    ("quit", "repl"),
+];
+
+/// Return the requested topic for a MACSYMA `?` help query.
+pub fn parse_macsyma_help_query(source: &str) -> Option<String> {
+    let stripped = source.trim();
+    if !stripped.starts_with('?') {
+        return None;
+    }
+    let mut topic = stripped.trim_start_matches('?').trim().to_string();
+    if topic.ends_with(';') || topic.ends_with('$') {
+        topic.truncate(topic.len() - 1);
+        topic = topic.trim().to_string();
+    }
+    Some(topic)
+}
+
+/// Return user-facing MACSYMA help text for `topic`.
+pub fn macsyma_help_text(topic: Option<&str>) -> String {
+    let raw_key = topic.unwrap_or("").trim().to_ascii_lowercase();
+    if raw_key.is_empty() {
+        return format!(
+            "MACSYMA help topics: {}. Use ? topic for details.",
+            sorted_help_topics().join(", ")
+        );
+    }
+    let key = MACSYMA_HELP_ALIASES
+        .iter()
+        .find_map(|(alias, target)| (*alias == raw_key).then_some(*target))
+        .unwrap_or(raw_key.as_str());
+    if let Some((_, text)) = MACSYMA_HELP_TOPICS.iter().find(|(name, _)| *name == key) {
+        return (*text).to_string();
+    }
+    format!(
+        "No MACSYMA help topic named {:?}. Available topics: {}.",
+        topic.unwrap_or(""),
+        sorted_help_topics().join(", ")
+    )
+}
+
+fn sorted_help_topics() -> Vec<&'static str> {
+    let mut topics = MACSYMA_HELP_TOPICS
+        .iter()
+        .map(|(name, _)| *name)
+        .collect::<Vec<_>>();
+    topics.sort_unstable();
+    topics
+}
+
 /// One evaluated MACSYMA statement.
 #[derive(Debug, Clone, PartialEq)]
 pub struct EvalResult {
@@ -229,6 +361,8 @@ pub struct EvalResult {
     /// Whether this statement should be shown by a REPL. `;` displays, `$`
     /// suppresses.
     pub display: bool,
+    /// Optional wall-clock timing diagnostic emitted when `showtime` is true.
+    pub timing_text: Option<String>,
 }
 
 /// In-memory `%i`/`%o` history for a single runtime session.
@@ -305,26 +439,50 @@ fn parse_history_index(digits: &str) -> Option<usize> {
 #[derive(Debug, Clone)]
 struct MacsymaBackendState {
     env: HashMap<String, IRNode>,
+    assumptions: AssumptionContext,
+    showtime: bool,
 }
 
 impl MacsymaBackendState {
     fn new() -> Self {
-        Self { env: initial_env() }
+        Self {
+            env: initial_env(),
+            assumptions: AssumptionContext::new(),
+            showtime: false,
+        }
     }
 
     fn unbind(&mut self, name: &str) {
-        self.env.remove(name);
+        if name == SHOWTIME {
+            self.showtime = false;
+            self.env.insert(SHOWTIME.to_string(), sym(FALSE_SYMBOL));
+        } else {
+            self.env.remove(name);
+        }
     }
 
     fn reset_environment(&mut self) {
         self.env = initial_env();
+        self.showtime = false;
+    }
+
+    fn bind(&mut self, name: &str, value: IRNode) {
+        if name == SHOWTIME {
+            self.showtime = matches_symbol(&value, TRUE_SYMBOL);
+        }
+        self.env.insert(name.to_string(), value);
+    }
+
+    fn showtime(&self) -> bool {
+        self.showtime
     }
 }
 
 fn initial_env() -> HashMap<String, IRNode> {
     let mut env = HashMap::new();
-    env.insert("True".to_string(), sym("True"));
-    env.insert("False".to_string(), sym("False"));
+    env.insert(TRUE_SYMBOL.to_string(), sym(TRUE_SYMBOL));
+    env.insert(FALSE_SYMBOL.to_string(), sym(FALSE_SYMBOL));
+    env.insert(SHOWTIME.to_string(), sym(FALSE_SYMBOL));
     env.insert("%pi".to_string(), IRNode::Float(std::f64::consts::PI));
     env.insert("%e".to_string(), IRNode::Float(std::f64::consts::E));
     env.insert("%i".to_string(), sym("ImaginaryUnit"));
@@ -357,6 +515,37 @@ impl MacsymaBackend {
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
         handlers.insert(TRIG_EXPAND.to_string(), handler_fn(trig_expand_handler));
         handlers.insert(TRIG_REDUCE.to_string(), handler_fn(trig_reduce_handler));
+
+        let assume_state = state.clone();
+        handlers.insert(
+            ASSUME.to_string(),
+            Arc::new(move |_vm, expr| assume_handler(&assume_state, expr)),
+        );
+        let forget_state = state.clone();
+        handlers.insert(
+            FORGET.to_string(),
+            Arc::new(move |_vm, expr| forget_handler(&forget_state, expr)),
+        );
+        let is_state = state.clone();
+        handlers.insert(
+            IS.to_string(),
+            Arc::new(move |_vm, expr| is_handler(&is_state, expr)),
+        );
+        let declare_state = state.clone();
+        handlers.insert(
+            DECLARE.to_string(),
+            Arc::new(move |_vm, expr| declare_handler(&declare_state, expr)),
+        );
+        let properties_state = state.clone();
+        handlers.insert(
+            PROPERTIES.to_string(),
+            Arc::new(move |_vm, expr| properties_handler(&properties_state, expr)),
+        );
+        let propvars_state = state.clone();
+        handlers.insert(
+            PROP_VARS.to_string(),
+            Arc::new(move |_vm, expr| propvars_handler(&propvars_state, expr)),
+        );
         handlers.insert(
             LENGTH.to_string(),
             list_handler(Some(1), |args| length(&args[0])),
@@ -407,10 +596,13 @@ impl MacsymaBackend {
             }),
         );
 
-        let held = [ASSIGN, DEFINE, IF, KILL, EV, SOLVE, SUBST]
-            .into_iter()
-            .map(str::to_string)
-            .collect();
+        let held = [
+            ASSIGN, DEFINE, IF, KILL, EV, ASSUME, FORGET, IS, DECLARE, PROPERTIES, PROP_VARS,
+            SOLVE, SUBST,
+        ]
+        .into_iter()
+        .map(str::to_string)
+        .collect();
 
         Self {
             state,
@@ -434,8 +626,7 @@ impl Backend for MacsymaBackend {
         self.state
             .lock()
             .expect("macsyma backend state poisoned")
-            .env
-            .insert(name.to_string(), value);
+            .bind(name, value);
     }
 
     fn on_unresolved(&self, name: &str) -> IRNode {
@@ -459,6 +650,7 @@ impl Backend for MacsymaBackend {
 pub struct MacsymaSession {
     vm: VM,
     history: History,
+    backend_state: Arc<Mutex<MacsymaBackendState>>,
 }
 
 impl MacsymaSession {
@@ -468,6 +660,7 @@ impl MacsymaSession {
         Self {
             vm: VM::new(Box::new(backend)),
             history: History::default(),
+            backend_state,
         }
     }
 
@@ -481,6 +674,9 @@ impl MacsymaSession {
 
     /// Compile and evaluate every statement in `source`.
     pub fn eval_source(&mut self, source: &str) -> Result<Vec<EvalResult>, CompileError> {
+        if let Some(topic) = parse_macsyma_help_query(source) {
+            return Ok(vec![self.eval_help_query(&topic)]);
+        }
         let statements = compile_macsyma_with_options(
             source,
             CompileOptions {
@@ -501,10 +697,18 @@ impl MacsymaSession {
 
     fn eval_statement(&mut self, statement: IRNode) -> EvalResult {
         let (input, display) = unwrap_display(canonicalize_surface_names(statement));
+        let show_timing = self
+            .backend_state
+            .lock()
+            .expect("macsyma backend state poisoned")
+            .showtime()
+            && !is_showtime_assignment(&input);
+        let started_at = Instant::now();
         let input_index = self.history.record_input(input.clone());
         let resolved_input = resolve_session_references(&self.history, input.clone());
         let kill_all = is_kill_all(&input);
         let output = self.vm.eval(resolved_input);
+        let elapsed = started_at.elapsed();
         let output_index = self.history.record_output(output.clone());
         let output_text = display_text_for(&input, &output);
         if kill_all {
@@ -517,6 +721,29 @@ impl MacsymaSession {
             output,
             output_text,
             display,
+            timing_text: show_timing.then(|| format_timing(elapsed.as_secs_f64())),
+        }
+    }
+
+    fn eval_help_query(&mut self, topic: &str) -> EvalResult {
+        let query = if topic.is_empty() {
+            "?".to_string()
+        } else {
+            format!("? {topic}")
+        };
+        let text = macsyma_help_text(Some(topic));
+        let input = str_node(query);
+        let output = str_node(text.clone());
+        let input_index = self.history.record_input(input.clone());
+        let output_index = self.history.record_output(output.clone());
+        EvalResult {
+            input_index,
+            output_index,
+            input,
+            output,
+            output_text: text,
+            display: true,
+            timing_text: None,
         }
     }
 }
@@ -605,6 +832,84 @@ fn display_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 
 fn suppress_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     display_handler(_vm, expr)
+}
+
+fn assume_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    let mut state = state.lock().expect("macsyma backend state poisoned");
+    match expr.args.as_slice() {
+        [relation] => state.assumptions.assume_relation(relation),
+        [symbol, property] => state.assumptions.assume_property(symbol, property),
+        _ => {}
+    }
+    sym(DONE)
+}
+
+fn forget_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    let mut state = state.lock().expect("macsyma backend state poisoned");
+    if expr.args.is_empty() {
+        state.assumptions.forget_all();
+    } else {
+        state.assumptions.forget_relation(&expr.args[0]);
+    }
+    sym(DONE)
+}
+
+fn is_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let state = state.lock().expect("macsyma backend state poisoned");
+    match state.assumptions.is_true_relation(&expr.args[0]) {
+        Some(true) => sym("True"),
+        Some(false) => sym("False"),
+        None => sym("unknown"),
+    }
+}
+
+fn declare_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if expr.args.len() % 2 != 0 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let mut state = state.lock().expect("macsyma backend state poisoned");
+    for pair in expr.args.chunks_exact(2) {
+        state.assumptions.assume_property(&pair[0], &pair[1]);
+    }
+    sym(DONE)
+}
+
+fn properties_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let Some(name) = symbol_name(&expr.args[0]) else {
+        return apply(sym(LIST), vec![]);
+    };
+    let state = state.lock().expect("macsyma backend state poisoned");
+    apply(
+        sym(LIST),
+        state
+            .assumptions
+            .facts_for(name)
+            .into_iter()
+            .map(sym)
+            .collect(),
+    )
+}
+
+fn propvars_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if !expr.args.is_empty() {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let state = state.lock().expect("macsyma backend state poisoned");
+    apply(
+        sym(LIST),
+        state
+            .assumptions
+            .symbols_with_facts()
+            .into_iter()
+            .map(|name| sym(&name))
+            .collect(),
+    )
 }
 
 fn ev_handler(vm: &mut VM, expr: IRApply) -> IRNode {
@@ -842,8 +1147,25 @@ fn is_kill_all(node: &IRNode) -> bool {
     }
 }
 
+fn is_showtime_assignment(node: &IRNode) -> bool {
+    match node {
+        IRNode::Apply(apply) if is_head_name(&apply.head, ASSIGN) && apply.args.len() == 2 => {
+            matches_symbol(&apply.args[0], SHOWTIME)
+        }
+        _ => false,
+    }
+}
+
+fn format_timing(elapsed_seconds: f64) -> String {
+    format!("Evaluation took {elapsed_seconds:.6} seconds.")
+}
+
 fn is_head_name(head: &IRNode, expected: &str) -> bool {
     symbol_name(head).is_some_and(|name| name == expected)
+}
+
+fn matches_symbol(node: &IRNode, expected: &str) -> bool {
+    symbol_name(node).is_some_and(|name| name == expected)
 }
 
 fn symbol_name(node: &IRNode) -> Option<&str> {

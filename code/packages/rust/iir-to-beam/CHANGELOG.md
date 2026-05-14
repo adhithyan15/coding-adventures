@@ -3,6 +3,97 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.1] — 2026-05-13
+
+### Added
+
+- **Y-register (stack-slot) support** — functions that make internal `call`
+  or `call_ext` instructions now emit `{allocate, StackNeed, Live}` at
+  function entry and `{deallocate, StackNeed}` on every return path.
+  Values that are live across a call are saved to Y-registers before the
+  call and restored afterwards, matching the BEAM calling convention where
+  all X-registers are caller-saved.
+  Live-across-call analysis is done with a lightweight def-pos/last-use
+  pass over the IIR instruction list.
+- **`OP_ALLOCATE` (12) and `OP_DEALLOCATE` (18) constants** — added alongside
+  the existing opcode constants, with full literate-programming explanations.
+
+### Fixed
+
+- **Y-register overflow guard** — `y_reg_map.len() as u8` previously silently
+  truncated to 0 when more than 255 live-across-call variables were present.
+  Now returns `IIRBeamError::UnsupportedOp` with a clear message before the
+  truncation can happen.  BEAM Y-registers are 8-bit (0–255).
+- **`jmp_if_true` / `jmp_if_false` synthesis** — replaced the old three-
+  instruction pattern (`is_eq_exact + jump + label`) with the minimal correct
+  single-instruction form:
+  - `jmp_if_true`  → `is_eq_exact  {f,target} cond 0`
+    (BEAM fails = jumps to target when `cond != 0`, i.e. TRUE)
+  - `jmp_if_false` → `is_ne_exact  {f,target} cond 0`
+    (BEAM fails = jumps to target when `cond == 0`, i.e. FALSE)
+  The previous synthesis used a synthetic fall-through label that inverted
+  the branch sense, which was semantically wrong.  Tests updated to match.
+
+## [0.4.0] — 2026-05-12
+
+### Fixed (OTP 28 runtime compatibility — BEAM opcode correctness)
+
+This release fixes five bugs in `lower.rs` that prevented generated `.beam`
+files from loading under OTP 28.  The root causes were discovered by comparing
+`erlc`-compiled hexdumps against generated output, and by querying
+`beam_opcodes:opcode/2` directly.
+
+#### Corrected opcode numbers
+
+Four opcode constants were wrong, causing the VM to execute unrelated
+instructions:
+
+| Constant | Old value | New value | Old opcode | Correct opcode |
+|---|---|---|---|---|
+| `OP_JUMP` | 36 (`int_bsl`) | **61** | shift-left | unconditional branch |
+| `OP_IS_LT` | 47 (`is_number`) | **39** | type guard | signed less-than |
+| `OP_IS_GE` | 48 (`is_atom`) | **40** | type guard | signed ≥ |
+| `OP_CALL_EXT` | 6 (`call_only`) | **7** | tail call | regular external call |
+
+#### gc_bif2 / gc_bif1 import-index operand type
+
+- The import index in `gc_bif2` and `gc_bif1` must be a **U-type** (tag `0`)
+  compact term, not an A-type (tag `2`) atom reference.  OTP 25+ changed
+  the operand encoding; using A-type caused `{undef, [{M,F,A,[]},...]}` at
+  runtime because the VM decoded the index as an atom selector, not a BIF
+  index.  All 6 call sites (`add`, `sub`, `mul`, `div`, `mod`, `neg`,
+  arithmetic comparisons, global_store/global_load, io_out, and the closure
+  `erlang:'++'` and `erlang:apply`) changed from
+  `BEAMOperand::a(import_idx)` to `BEAMOperand::u(import_idx as u64)`.
+
+#### BEAM nil encoding
+
+- BEAM's compact-term encoding reserves atom index 0 as the **empty list
+  (`[]`)**.  Atom indices for user-defined atoms start at 1.  Four
+  occurrences of `BEAMOperand::a(atom_nil)` (which looked up the atom-table
+  index for the literal atom `'[]'`) were replaced with
+  `BEAMOperand::a(0)`.  Using `atom_nil` put the *atom* `'[]'` in a register
+  rather than a proper nil; `erlang:'++'` then rejected it with `{badarg,...}`.
+
+#### `max_opcode` field in Code chunk header
+
+- Changed from `0` (derived lazily from the instruction stream — always
+  too low) to the hard-coded value **`177`**, which is what `erlc` 28.4.1
+  emits.  The OTP 28 C-loader requires `max_opcode ≥ ~169`; a value of 0
+  or 125 triggers "compiled for an old version" even after the AtU8/Attr/Meta
+  fix.
+
+#### Real-ERL round-trip tests now pass
+
+- **Test 65** (`test_65_real_erl_arithmetic`) — re-enabled; passes with
+  OTP 28 loader after AtU8/Attr/CInf/Meta and max_opcode fixes.
+- **Test 66** (`test_66_real_erl_closure_adder`) — re-enabled; passes after
+  all five fixes above (opcodes, import operand type, nil encoding).
+- Both tests were previously marked `#[ignore]` with "pre-OTP-25 format"
+  notes; those annotations are removed in this release.
+
+---
+
 ## [0.3.0] — 2026-05-12
 
 ### Added (LANG35 — Closure Backend Integration)

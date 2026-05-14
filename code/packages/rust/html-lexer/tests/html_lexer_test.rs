@@ -748,7 +748,7 @@ fn default_html_lexer_marks_doctype_name_eof_force_quirks() {
 }
 
 #[test]
-fn default_html_lexer_marks_doctype_keyword_eof_force_quirks() {
+fn default_html_lexer_recovers_truncated_doctype_keyword_as_bogus_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer.push("<!DOC").unwrap();
@@ -757,23 +757,18 @@ fn default_html_lexer_marks_doctype_keyword_eof_force_quirks() {
     assert_eq!(
         lexer.drain_tokens(),
         vec![
-            Token::Doctype {
-                name: None,
-                public_identifier: None,
-                system_identifier: None,
-                force_quirks: true,
-            },
+            Token::Comment("DOC".to_string()),
             Token::Eof,
         ]
     );
     assert!(lexer
         .diagnostics()
         .iter()
-        .any(|diagnostic| diagnostic.code == "eof-in-doctype"));
+        .any(|diagnostic| diagnostic.code == "incorrectly-opened-comment"));
 }
 
 #[test]
-fn default_html_lexer_marks_invalid_doctype_keyword_force_quirks() {
+fn default_html_lexer_recovers_invalid_doctype_keyword_as_bogus_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer.push("<!DOX>").unwrap();
@@ -782,19 +777,14 @@ fn default_html_lexer_marks_invalid_doctype_keyword_force_quirks() {
     assert_eq!(
         lexer.drain_tokens(),
         vec![
-            Token::Doctype {
-                name: Some("dox".to_string()),
-                public_identifier: None,
-                system_identifier: None,
-                force_quirks: true,
-            },
+            Token::Comment("DOX".to_string()),
             Token::Eof,
         ]
     );
     assert!(lexer
         .diagnostics()
         .iter()
-        .any(|diagnostic| diagnostic.code == "invalid-doctype-keyword"));
+        .any(|diagnostic| diagnostic.code == "incorrectly-opened-comment"));
 }
 
 #[test]

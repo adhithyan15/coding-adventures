@@ -246,3 +246,191 @@ and the two modes (`none`, `elicit`); the canonical script is at
 [`data/adj15-recursive-rulebook-bench-2026-05-12.json`](data/adj15-recursive-rulebook-bench-2026-05-12.json)
 (includes wall-clock latencies and raw Arm A answers for every
 configuration).
+
+## Addendum (2026-05-12): per-model elicited rulebooks captured
+
+A follow-up run with `ADJ_DEMO_DUMP_RULEBOOK=1` (landed in
+`adjudication-tsa-demo` v0.9) captured the actual rulebook text
+each model produced during elicitation. Raw data:
+[`data/adj15-rulebook-contents-2026-05-12.json`](data/adj15-rulebook-contents-2026-05-12.json).
+The headline observation: **the three 3B+ rulebooks differ
+substantially in citation quality, categorical reasoning, and
+calibration.** Each model's elicited rules below, plus the rule
+it cited in its `elicit`-mode answer:
+
+### gemma4:latest (1,938 bytes, 8 rules)
+
+> COVERAGE: TSA carry-on rules are based on general guidelines and
+> historical regulations; specific, real-time operational changes
+> (e.g., post-pandemic adjustments, temporary mandates) may be
+> missing.
+>
+> 1. All liquids, aerosols, gels, creams, and pastes carried in
+>    carry-on baggage must be in containers no larger than 3.4
+>    ounces (100 milliliters) each, provided that these containers
+>    are placed within a single, clear, quart-sized plastic bag,
+>    and only one such bag is permitted per passenger.
+> 2. Exceptions to the liquid rule include personal medications …
+> 3. All lithium batteries … must be carried in carry-on baggage …
+> 4. Lithium batteries with an energy capacity exceeding 100 Wh …
+> **5. Items deemed weapons, explosives, flammable materials, or
+>    illegal substances are strictly prohibited in all carry-on and
+>    checked baggage, including, but not limited to, firearms,
+>    knives (with certain exceptions for personal grooming tools),
+>    fireworks, and chemical agents.**
+> 6. Electronics containing lithium batteries …
+> 7. Passengers must declare any items that are restricted …
+> 8. While the TSA reserves the right to screen any item …
+
+**Cited at answer time**: *"Matches are classified as flammable
+materials, which are strictly prohibited in all carry-on and
+checked baggage per rule 5."*
+
+Rule 5 is real-TSA-shaped: weapons / explosives / flammable
+materials / illegal substances. The model made a **categorical leap
+at answer time**: matches → "flammable materials" → rule 5 fires.
+The leap is plausible (matches are flammable) but the rule itself
+does not say "matches are flammable materials"; that classification
+is the model's own inference, made inside the forward pass that
+produced the answer, untraceable beyond the answer text. A
+reviewer reading the rulebook can see this and either accept the
+categorical leap or flag it.
+
+### llama3.1:8b (1,706 bytes, 10 rules)
+
+> COVERAGE: TSA carry-on rules as of ~2024; post-2024 amendments
+> may be missing.
+>
+> 1. Liquids, gels, and aerosols in containers of 3.4 ounces (100
+>    milliliters) or less are allowed in a clear, quart-sized
+>    zip-top bag per the Transportation Security Administration's
+>    (TSA) 3-1-1 liquids rule.
+> **2. Prohibited items include but are not limited to: firearms,
+>    ammunition, explosives, flammable liquids and solids, poisons,
+>    and certain chemicals per 49 CFR § 1540.111(a).**
+> 3. Electronic devices … must be removed from carry-on bags …
+> 4. Sharp objects like scissors, knives, and razors are allowed in
+>    checked baggage but prohibited in carry-on bags except when …
+> 5. Tools such as pliers, screwdrivers, and wrenches are permitted
+>    in carry-on bags if they fit in a clear, quart-sized zip-top
+>    bag.
+> 6. Fireworks, sparklers, and other pyrotechnic devices are
+>    prohibited in both checked and carry-on baggage per 49 CFR §
+>    1540.111(a).
+> 7. Certain medical equipment …
+> 8. Lithium batteries must be protected from accidental activation
+>    … per IATA's Dangerous Goods Regulations.
+> 9. Certain items like firearms, ammunition, and explosives
+>    require special handling and documentation …
+> 10. The TSA reserves the right to inspect any item …
+
+**Cited at answer time**: *"According to rule 2, prohibited items
+include but are not limited to flammable liquids and solids, which
+includes matches."*
+
+Strikingly, **llama3.1 cited a real CFR provision** — 49 CFR §
+1540.111(a) — which is genuinely the section governing prohibited
+items in carry-on baggage (and groups matches under flammable
+solids in the hazmat classification, UN3091/UN3092). This is the
+most defensible of the three citations: the rule it cites is real,
+the cited authority is real, and matches really are classified as
+flammable solids under hazmat regulations. The categorical leap is
+still happening (no rule explicitly mentions matches), but the
+rule's wording covers the inference more cleanly than gemma4's.
+
+Note: rule 4's "doctor's note exception" for sharp objects is
+**fabricated** — TSA has no such exception. The model fabricated a
+believable-but-wrong rule alongside the believable-and-correct
+ones. A reviewer would flag it.
+
+### qwen2.5:3b (3,124 bytes, 10 rules)
+
+> COVERAGE: This list covers TSA … guidelines specifically related
+> to carry-on baggage as of my last update in 2024, but post-2024
+> changes and specific airline policies may not be included.
+>
+> 1. Passengers are required to declare all items they intend to
+>    bring onto the aircraft during the security screening process.
+>    `UNCERTAIN: Specific wording on declaration requirements …
+>    varies by TSA directive, which is not always publicly
+>    available in a single document.`
+> 2. Electronic devices with lithium-ion batteries … if they exceed
+>    100 Wh … `UNCERTAIN: …`
+> **3. Passengers must declare any liquids, gels, aerosols, and
+>    creams that exceed 3.4 ounces (100 milliliters) in a single
+>    container. `UNCERTAIN: …`**
+> 4. Passengers must declare any sharp objects such as knives and
+>    scissors that exceed 3 inches (7.62 cm) in length. `UNCERTAIN`
+> 5. Passengers are required to declare any weapons …
+> 6. Passengers must declare any firearms …
+> 7. Passengers are required to declare any items considered
+>    dangerous goods …
+> 8. Passengers must declare any items that exceed the size limits …
+> **9. Passengers are required to declare any items that may
+>    interfere with security screening equipment, such as large
+>    electronic devices or bulky clothing. `UNCERTAIN: …`**
+> 10. Passengers must declare any items that exceed the weight
+>    limits for carry-on baggage as specified by TSA regulations.
+
+**Cited at answer time**: *"matches, which fall under the category
+of liquids/gels/aerosols/creams (rule 3) and could potentially
+interfere with security screening equipment (rule 9) … the passenger
+is non-compliant."*
+
+Two notable patterns:
+
+1. **qwen2.5:3b correctly self-flags uncertainty** on its own
+   rulebook items — every single rule has an `UNCERTAIN:` tag the
+   model attached itself. The model knows it doesn't know which
+   precise wording is authoritative.
+
+2. **It does NOT propagate that uncertainty to its answer.** The
+   answer confidently cites "rule 3" and "rule 9" — both of which
+   are tagged `UNCERTAIN` in the model's own rulebook — without
+   surfacing that uncertainty. The verdict is right
+   (NON-COMPLIANT) but the reasoning is wrong (matches are not
+   liquids/gels/aerosols/creams; the screening-interference
+   argument is a stretch).
+
+This is an interesting **calibration failure pattern**: the model is
+honest about its uncertainty in elicit mode and then forgets it at
+answer time. A pipeline-level fix would propagate the `UNCERTAIN:`
+tags from the rulebook into a probability weight on each rule
+(directly applicable to the ProbLog work in
+[ADJ16](ADJ16-engine-programmatic-adjudication.md)) so that
+"compliance" verdicts derived from uncertain rules carry a lower
+marginal probability.
+
+### Patterns across all three
+
+1. **Citations are imperfect across the board.** All three flips
+   happen through a categorical leap that's auditable in the
+   rulebook but happens *inside the forward pass* at answer time.
+   ADJ16's engine-programmatic adjudication addresses this
+   directly: the engine's proof DAG would show which rule unified
+   with which fact, making the leap an explicit step that can be
+   reviewed and rejected.
+
+2. **Rulebook quality scales with model size**, but not
+   monotonically with rulebook length. llama3.1's 1,706-byte
+   rulebook has real CFR citations; qwen2.5:3b's 3,124-byte rulebook
+   has more rules but worse rules. Size of elicited text is not
+   a quality signal.
+
+3. **Calibration is decoupled from rulebook accuracy.** qwen2.5:3b
+   is well-calibrated about its rulebook (UNCERTAIN tags) but
+   poorly calibrated about its answer (cites UNCERTAIN rules
+   confidently). gemma4 has neither calibration signal in either
+   direction. The framework would benefit from propagating
+   rulebook-level uncertainty into answer-level probability —
+   which is exactly the ProbLog extension ADJ16 specifies.
+
+4. **All three rulebooks have at least one fabrication.**
+   - gemma4's rule 5 doesn't explicitly cover matches; the
+     classification is the model's leap.
+   - llama3.1's rule 4 fabricates a "doctor's note exception".
+   - qwen2.5:3b's rule 4 has wrong dimensions (3" vs the actual
+     2.36" / 60mm TSA limit).
+   Human review remains necessary; the `Tentative` trust tier is
+   doing its job by refusing to promote any of these without
+   sign-off.

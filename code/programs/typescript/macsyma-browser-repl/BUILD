@@ -12,6 +12,7 @@ cd ../../../packages/typescript/macsyma-compiler && npm ci --quiet
 cd ../../../packages/typescript/cas-list-operations && npm ci --quiet
 cd ../../../packages/typescript/cas-pattern-matching && npm ci --quiet
 cd ../../../packages/typescript/cas-pretty-printer && npm ci --quiet
+cd ../../../packages/typescript/cas-factor && npm ci --quiet
 cd ../../../packages/typescript/cas-simplify && npm ci --quiet
 cd ../../../packages/typescript/cas-solve && npm ci --quiet
 cd ../../../packages/typescript/cas-substitution && npm ci --quiet

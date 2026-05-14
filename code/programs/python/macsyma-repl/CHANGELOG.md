@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added `?` / `? topic` help queries backed by the shared MACSYMA help catalog.
 - Route visible REPL output through `macsyma_runtime.output_text_for(...)`, so
   `ev(expr, display2d)` displays the 2D MACSYMA box layout in interactive and
   `--file` execution.

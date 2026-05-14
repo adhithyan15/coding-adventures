@@ -126,6 +126,7 @@ impl DefaultPolicy {
             shape_class: ShapeClass::Dynamic,
             range_class: range_class_for_observation(observation, output_dtype),
             backend_id,
+            folded_slot: None,
         }
     }
 }
@@ -150,6 +151,12 @@ impl SpecialisationPolicy for DefaultPolicy {
 
         // 1. Constant-input check: any input with observed_min == observed_max
         //    and stability threshold met.
+        //
+        // **MX05 Phase 4.6**: when we pick a Constant range_class we
+        // also record `folded_slot = Some(tobs.slot)` so downstream
+        // emitters (Sub/Div/Pow) know which operand was the literal.
+        // For commutative ops the field is informational; for
+        // non-commutative ops it's load-bearing.
         for tobs in observation
             .tensor_observations
             .iter()
@@ -163,6 +170,7 @@ impl SpecialisationPolicy for DefaultPolicy {
                     shape_class: ShapeClass::Dynamic,
                     range_class: RangeClass::Constant { bytes },
                     backend_id,
+                    folded_slot: Some(tobs.slot as u8),
                 });
             }
         }
@@ -182,6 +190,7 @@ impl SpecialisationPolicy for DefaultPolicy {
                     shape_class: ShapeClass::Dynamic,
                     range_class: range,
                     backend_id,
+                    folded_slot: None,
                 });
             }
         }

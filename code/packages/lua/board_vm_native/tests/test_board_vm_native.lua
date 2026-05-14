@@ -22,6 +22,21 @@ describe("coding_adventures.board_vm_native", function()
         assert.is_true(uno.connection_options[2].ota_update)
         assert.are.equal(8, uno.led_matrix.rows)
         assert.are.equal(12, uno.led_matrix.columns)
+        assert.are.equal(uno.digital_pin_count, #uno.digital_pins)
+        local d3 = nil
+        for _, pin in ipairs(uno.digital_pins) do
+            if pin.pin == 3 then
+                d3 = pin
+            end
+        end
+        assert.are.equal("D3", d3.label)
+        assert.is_true(d3.supports_input)
+        assert.is_true(d3.supports_output)
+        assert.is_true(d3.supports_pullup)
+        assert.is_false(d3.supports_pulldown)
+        assert.is_true(d3.supports_pwm)
+        assert.is_true(d3.supports_interrupt)
+        assert.is_false(d3.supports_adc)
         assert.are.equal("esp32-devkit-v1", esp.board_id)
         assert.are.equal("xtensa-esp32-none-elf", esp.rust_target)
         assert.are.equal("gpio", esp.onboard_led.kind)

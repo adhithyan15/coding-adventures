@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import math
 
-from symbolic_ir import IRFloat
+from symbolic_ir import ASSIGN, IRApply, IRFloat, IRSymbol
+from symbolic_vm import VM
 
 from macsyma_runtime import DISPLAY, EV, KILL, SUPPRESS, History, MacsymaBackend
 
@@ -24,6 +25,31 @@ def test_default_flags() -> None:
     b = MacsymaBackend()
     assert b.numer is False
     assert b.simp is True
+    assert b.showtime is False
+    assert b.lookup("showtime") == IRSymbol("False")
+
+
+def test_showtime_flag_tracks_assignment() -> None:
+    b = MacsymaBackend()
+    vm = VM(b)
+
+    vm.eval(IRApply(ASSIGN, (IRSymbol("showtime"), IRSymbol("True"))))
+    assert b.showtime is True
+    assert b.lookup("showtime") == IRSymbol("True")
+
+    vm.eval(IRApply(ASSIGN, (IRSymbol("showtime"), IRSymbol("False"))))
+    assert b.showtime is False
+    assert b.lookup("showtime") == IRSymbol("False")
+
+
+def test_kill_showtime_restores_default_flag() -> None:
+    b = MacsymaBackend()
+    b.bind("showtime", IRSymbol("True"))
+
+    b.unbind("showtime")
+
+    assert b.showtime is False
+    assert b.lookup("showtime") == IRSymbol("False")
 
 
 def test_runtime_handlers_installed() -> None:

@@ -1,8 +1,8 @@
 [package]
 name = "adjudication-clinical-demo"
-version = "0.2.0"
+version = "0.4.0"
 edition = "2021"
-description = "A/B demo harness for clinical notes: run a short patient assessment through both a raw local model and the structured adjudication pipeline, surface where the structured pipeline catches what the raw model glossed over. Mirrors adjudication-tsa-demo's shape for a different domain (clinical reasoning instead of TSA compliance)."
+description = "A/B demo harness for clinical notes. v0.3 brought parity with adjudication-tsa-demo v0.12 (rulebook injection, priming dispatch, max_answer_tokens). v0.4 mirrors tsa-demo v0.13: adds VERDICT: ESCALATE as a third option in with-rulebook Arm A prompts (single-turn and priming), with the conservative semantic that silence in the rulebook is not permission. Framework-level instructions are domain-neutral; role descriptors and rulebook content remain clinical-specific."
 
 [[bin]]
 name = "adjudication-clinical-demo"

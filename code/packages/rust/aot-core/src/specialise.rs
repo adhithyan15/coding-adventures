@@ -164,6 +164,34 @@ fn translate(instr: &IIRInstr, env: &HashMap<String, String>) -> Vec<CIRInstr> {
         return vec![translate_ret(instr, env)];
     }
 
+    // --- mov: typed register copy ---
+    //
+    // IIR `mov dest, src` is emitted by the pre-lowering pass as a
+    // replacement for `call_builtin "_move"`.  We specialise it here to
+    // `mov_<ty>` so the native backend can emit a simple register move
+    // (which with stack-spill allocation is a load-then-store pair).
+    //
+    // Type resolution order:
+    //  1. Explicit `type_hint` on the instruction (set by the AOT
+    //     preparation pass after type propagation).
+    //  2. `spec_type` — looks at the dest in `inferred`.
+    //  3. Default to `u64` (Twig integers are always 64-bit tagged).
+    if op == "mov" {
+        let sp = spec_type(instr, env);
+        let cir_op = if sp == "any" {
+            "mov_u64".to_string()
+        } else {
+            format!("mov_{sp}")
+        };
+        let effective_sp = if sp == "any" { "u64".to_string() } else { sp };
+        return vec![CIRInstr::new(
+            cir_op,
+            instr.dest.clone(),
+            lift_srcs(&instr.srcs),
+            effective_sp,
+        )];
+    }
+
     // --- call_builtin: try to lower operator builtins to typed ops ---
     //
     // The IR compiler emits primitive operators (`+`, `-`, `*`, `/`,

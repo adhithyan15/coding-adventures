@@ -243,12 +243,32 @@ pub fn acquire_rulebook(
     let model_identity = elicit_resp.call_record.provider.clone();
     let audit_trail = vec![elicit_resp.call_record, decompose_resp.call_record];
 
-    Ok(Rulebook {
+    Ok(make_rulebook_from_parts(
+        req,
+        decompose_resp.ir_document,
+        elicit_resp.rule_text,
+        validation_passed,
+        validation_error,
+        model_identity,
+        audit_trail,
+    ))
+}
+
+fn make_rulebook_from_parts(
+    req: &AcquireRulebookRequest,
+    ir_document: serde_json::Value,
+    source_text: String,
+    validation_passed: bool,
+    validation_error: Option<String>,
+    model_identity: ProviderIdentity,
+    audit_trail: Vec<LlmCallRecord>,
+) -> Rulebook {
+    Rulebook {
         document_id: req.document_id.clone(),
         domain: req.domain.clone(),
         scope: req.scope.clone(),
-        ir_document: decompose_resp.ir_document,
-        source_text: elicit_resp.rule_text,
+        ir_document,
+        source_text,
         trust: RulebookTrust::Tentative,
         elicit_prompt_version: ELICIT_RULES_PROMPT_VERSION.to_string(),
         decompose_prompt_version: DECOMPOSE_TEXT_PROMPT_VERSION.to_string(),
@@ -257,7 +277,169 @@ pub fn acquire_rulebook(
         audit_trail,
         validation_passed,
         validation_error,
-    })
+    }
+}
+
+// ===========================================================================
+// Adversarial multi-model elicitation
+// ===========================================================================
+
+/// Inputs to [`acquire_rulebook_adversarial`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AcquireRulebookAdversarialRequest {
+    /// Stable prefix used to construct per-model document ids.
+    /// The orchestrator generates each per-model document id as
+    /// `format!("{prefix}-{model_label}", ...)` where `model_label`
+    /// comes from the gateway list, sanitised for filesystem-safe
+    /// characters.
+    pub document_id_prefix: String,
+    pub domain: String,
+    pub scope: Option<String>,
+    pub as_of: String,
+    pub language_hint: Option<String>,
+}
+
+/// One model's contribution to an adversarial multi-model
+/// elicitation.
+#[derive(Debug)]
+pub enum PerModelOutcome {
+    /// The model produced a `Tentative` rulebook. The audit trail
+    /// is on the rulebook itself.
+    Acquired {
+        model_label: String,
+        rulebook: Rulebook,
+    },
+    /// The model failed at some step of `acquire_rulebook`. The
+    /// failure is captured here rather than propagating up so a
+    /// single failing model doesn't kill the whole adversarial
+    /// elicitation — the remaining models' rulebooks are still
+    /// useful, and reviewers see the partial result.
+    Failed {
+        model_label: String,
+        error_summary: String,
+    },
+}
+
+impl PerModelOutcome {
+    pub fn model_label(&self) -> &str {
+        match self {
+            PerModelOutcome::Acquired { model_label, .. } => model_label,
+            PerModelOutcome::Failed { model_label, .. } => model_label,
+        }
+    }
+    pub fn is_acquired(&self) -> bool {
+        matches!(self, PerModelOutcome::Acquired { .. })
+    }
+}
+
+/// The output of an adversarial multi-model elicitation. Carries
+/// the per-model outcomes plus a provenance-tagged merged source
+/// text suitable for direct injection into an answer-time system
+/// prompt.
+///
+/// The merged text format is one section per successful rulebook,
+/// each prefixed with a `=== RULEBOOK FROM <model> ===` header. A
+/// reviewer reading the eventual answer's audit trail can trace any
+/// cited rule back to the model that produced it. When no rulebook
+/// succeeded, `merged_source_text` is empty.
+#[derive(Debug)]
+pub struct AdversarialRulebook {
+    pub per_model: Vec<PerModelOutcome>,
+    pub merged_source_text: String,
+    pub successful_count: usize,
+    pub failed_count: usize,
+}
+
+/// Acquire rulebooks from multiple LLMs in parallel-or-serial (the
+/// implementation runs serially today) and merge them with
+/// provenance tags. The recursive use of the framework, made
+/// **adversarial**: a rule cited at answer time comes from one of
+/// several independent model elicitations, so reviewers can spot
+/// rules that only appear in a single model's training and treat
+/// them as lower-trust than rules multiple models agree on.
+///
+/// Cross-source-conflict detection is intentionally lightweight
+/// in v0.1: the answering model sees both rulebooks in context and
+/// the reviewer compares them against each other. A future version
+/// can add a `Confirms` / `ConflictsWith` semantic-equivalence pass
+/// (probably itself an LLM primitive) to materialise the agreement
+/// set as v3 IR edges per
+/// [ADJ09 §"Conflicts Between Sources"](../../../specs/ADJ09-rule-compilation-pipeline.md).
+///
+/// A single failing model does NOT fail the whole call — the
+/// remaining successful rulebooks are still returned. The caller
+/// inspects `per_model` to see which models contributed.
+///
+/// The `model_gateways` argument is consumed (each `GatewayConfig`
+/// owns its `Box<dyn LlmClient>` clients and isn't cheaply
+/// cloneable).
+pub fn acquire_rulebook_adversarial(
+    req: &AcquireRulebookAdversarialRequest,
+    model_gateways: Vec<(String, GatewayConfig)>,
+) -> AdversarialRulebook {
+    let mut per_model: Vec<PerModelOutcome> = Vec::with_capacity(model_gateways.len());
+    let mut merged_parts: Vec<String> = Vec::new();
+    let mut successful_count = 0;
+    let mut failed_count = 0;
+
+    for (label, gateway) in model_gateways {
+        let per_req = AcquireRulebookRequest {
+            document_id: format!(
+                "{prefix}-{label}",
+                prefix = req.document_id_prefix,
+                label = sanitize_label(&label)
+            ),
+            domain: req.domain.clone(),
+            scope: req.scope.clone(),
+            as_of: req.as_of.clone(),
+            language_hint: req.language_hint.clone(),
+        };
+        match acquire_rulebook(&per_req, &gateway) {
+            Ok(rb) => {
+                successful_count += 1;
+                merged_parts.push(format!(
+                    "=== RULEBOOK FROM {label} ===\n\
+                     (trust={trust}, validation_passed={ok}, model={model})\n\
+                     \n\
+                     {text}",
+                    label = label,
+                    trust = rb.trust.as_str(),
+                    ok = rb.validation_passed,
+                    model = rb.model_identity.model_family,
+                    text = rb.source_text,
+                ));
+                per_model.push(PerModelOutcome::Acquired {
+                    model_label: label,
+                    rulebook: rb,
+                });
+            }
+            Err(e) => {
+                failed_count += 1;
+                per_model.push(PerModelOutcome::Failed {
+                    model_label: label,
+                    error_summary: format!("{e}"),
+                });
+            }
+        }
+    }
+
+    AdversarialRulebook {
+        per_model,
+        merged_source_text: merged_parts.join("\n\n"),
+        successful_count,
+        failed_count,
+    }
+}
+
+/// Replace characters that don't belong in a document_id with `_`.
+/// Conservative: keeps ASCII alphanumerics, `-`, and `.`; everything
+/// else (including `:` which appears in model names like
+/// `qwen2.5:1.5b`) becomes `_`.
+fn sanitize_label(label: &str) -> String {
+    label
+        .chars()
+        .map(|c| if c.is_ascii_alphanumeric() || c == '-' || c == '.' { c } else { '_' })
+        .collect()
 }
 
 // ===========================================================================
@@ -716,5 +898,155 @@ mod tests {
         let g = GatewayConfig::new();
         let err = acquire_rulebook(&sample_request(), &g).unwrap_err();
         assert!(matches!(err, AcquireRulebookError::ElicitFailed(_)));
+    }
+
+    // --- Adversarial multi-model elicitation tests ---
+
+    fn adv_request() -> AcquireRulebookAdversarialRequest {
+        AcquireRulebookAdversarialRequest {
+            document_id_prefix: "rulebook-tsa-multi-2026-05-12".into(),
+            domain: "tsa-declaration".into(),
+            scope: Some("carry-on baggage".into()),
+            as_of: "2026-05-12".into(),
+            language_hint: None,
+        }
+    }
+
+    fn make_dual_gateway(rule_text: &str, ir: serde_json::Value) -> GatewayConfig {
+        let mock_for_rule_extractor = ScriptedDual::new(rule_text.to_string(), ir.clone());
+        let mock_for_extractor = ScriptedDual::new(String::new(), ir);
+        GatewayConfig::new()
+            .with_client(Role::RuleExtractor, Box::new(mock_for_rule_extractor))
+            .with_client(Role::Extractor, Box::new(mock_for_extractor))
+    }
+
+    #[test]
+    fn adversarial_all_models_succeed_merges_with_provenance_tags() {
+        let g_a = make_dual_gateway(
+            "COVERAGE: model A.\n1. Rule from A.\n",
+            sample_well_formed_ir(),
+        );
+        let g_b = make_dual_gateway(
+            "COVERAGE: model B.\n1. Rule from B.\n",
+            sample_well_formed_ir(),
+        );
+
+        let result = acquire_rulebook_adversarial(
+            &adv_request(),
+            vec![("gemma4".to_string(), g_a), ("llama3.1".to_string(), g_b)],
+        );
+
+        assert_eq!(result.successful_count, 2);
+        assert_eq!(result.failed_count, 0);
+        assert_eq!(result.per_model.len(), 2);
+        assert!(result.per_model.iter().all(|o| o.is_acquired()));
+        assert!(result.merged_source_text.contains("=== RULEBOOK FROM gemma4 ==="));
+        assert!(result.merged_source_text.contains("=== RULEBOOK FROM llama3.1 ==="));
+        assert!(result.merged_source_text.contains("Rule from A."));
+        assert!(result.merged_source_text.contains("Rule from B."));
+    }
+
+    #[test]
+    fn adversarial_one_model_failing_still_returns_the_others() {
+        let g_a = make_dual_gateway(
+            "COVERAGE: model A.\n1. Rule from A.\n",
+            sample_well_formed_ir(),
+        );
+        // g_b has no clients bound → elicit will fail with
+        // NoClientForRole, but the adversarial orchestrator must
+        // record it and keep going.
+        let g_b = GatewayConfig::new();
+
+        let result = acquire_rulebook_adversarial(
+            &adv_request(),
+            vec![("gemma4".to_string(), g_a), ("broken".to_string(), g_b)],
+        );
+
+        assert_eq!(result.successful_count, 1);
+        assert_eq!(result.failed_count, 1);
+        assert_eq!(result.per_model.len(), 2);
+        assert!(result.per_model[0].is_acquired());
+        assert!(!result.per_model[1].is_acquired());
+        assert!(result.merged_source_text.contains("=== RULEBOOK FROM gemma4 ==="));
+        assert!(!result.merged_source_text.contains("=== RULEBOOK FROM broken ==="));
+    }
+
+    #[test]
+    fn adversarial_all_fail_returns_empty_merged_text() {
+        let g_a = GatewayConfig::new();
+        let g_b = GatewayConfig::new();
+
+        let result = acquire_rulebook_adversarial(
+            &adv_request(),
+            vec![("a".to_string(), g_a), ("b".to_string(), g_b)],
+        );
+
+        assert_eq!(result.successful_count, 0);
+        assert_eq!(result.failed_count, 2);
+        assert_eq!(result.merged_source_text, "");
+    }
+
+    #[test]
+    fn adversarial_empty_input_returns_empty_output() {
+        let result = acquire_rulebook_adversarial(&adv_request(), vec![]);
+        assert_eq!(result.successful_count, 0);
+        assert_eq!(result.failed_count, 0);
+        assert!(result.per_model.is_empty());
+        assert_eq!(result.merged_source_text, "");
+    }
+
+    #[test]
+    fn adversarial_document_id_sanitizes_model_label() {
+        // qwen2.5:1.5b contains a `:` which isn't safe in a
+        // document_id. The orchestrator should sanitise it to
+        // `qwen2.5_1.5b`.
+        let g = make_dual_gateway(
+            "COVERAGE: q.\n1. Rule.\n",
+            sample_well_formed_ir(),
+        );
+        let result = acquire_rulebook_adversarial(
+            &adv_request(),
+            vec![("qwen2.5:1.5b".to_string(), g)],
+        );
+        let PerModelOutcome::Acquired { rulebook, .. } = &result.per_model[0] else {
+            panic!("expected Acquired");
+        };
+        assert!(
+            rulebook.document_id.contains("qwen2.5_1.5b"),
+            "expected sanitised document_id, got {}",
+            rulebook.document_id
+        );
+        assert!(!rulebook.document_id.contains(':'));
+    }
+
+    #[test]
+    fn per_model_outcome_helpers() {
+        let ok = PerModelOutcome::Acquired {
+            model_label: "a".to_string(),
+            rulebook: Rulebook {
+                document_id: "x".into(),
+                domain: "y".into(),
+                scope: None,
+                ir_document: serde_json::json!({}),
+                source_text: String::new(),
+                trust: RulebookTrust::Tentative,
+                elicit_prompt_version: "elicit-rules-v1".into(),
+                decompose_prompt_version: "decompose-text-v4".into(),
+                model_identity: rule_extractor_identity(),
+                as_of: "2026-05-12".into(),
+                audit_trail: vec![],
+                validation_passed: false,
+                validation_error: None,
+            },
+        };
+        assert_eq!(ok.model_label(), "a");
+        assert!(ok.is_acquired());
+
+        let bad = PerModelOutcome::Failed {
+            model_label: "b".to_string(),
+            error_summary: "boom".to_string(),
+        };
+        assert_eq!(bad.model_label(), "b");
+        assert!(!bad.is_acquired());
     }
 }

@@ -82,6 +82,12 @@ impl BEAMOperand {
     pub fn a(index: u32) -> Self { Self { tag: BEAMTag::A, value: index as u64 } }
     /// Construct an x-register operand.
     pub fn x(reg: u8) -> Self { Self { tag: BEAMTag::X, value: reg as u64 } }
+    /// Construct a y-register (stack slot) operand.
+    ///
+    /// Y-registers are per-activation-frame stack slots used to preserve values
+    /// across calls.  They are allocated by `allocate {u,N} {u,Live}` and
+    /// accessed with `move {y,slot} {x,R}` / `move {x,R} {y,slot}`.
+    pub fn y(slot: u8) -> Self { Self { tag: BEAMTag::Y, value: slot as u64 } }
     /// Construct a label operand.
     pub fn f(label: u32) -> Self { Self { tag: BEAMTag::F, value: label as u64 } }
 }
@@ -244,24 +250,119 @@ fn wrap_chunk(tag: &[u8; 4], payload: &[u8]) -> Vec<u8> {
 }
 
 // ===========================================================================
+// OTP 25+ required ETF constants
+// ===========================================================================
+
+/// Erlang External Term Format version tag.
+const ETF_VERSION: u8 = 131;
+
+/// ETF encoding of `[]` (empty list / nil).
+///
+/// `<<131, 106>>` — version tag + NIL_EXT (0x6A).
+///
+/// Used as the payload for the `Attr` (module attributes) and `CInf`
+/// (compilation information) chunks.  Both chunks are required to be present
+/// in any BEAM file loaded by OTP 25+, but empty lists are valid values.
+const ETF_NIL: [u8; 2] = [ETF_VERSION, 106];
+
+/// ETF encoding of `[{enabled_features, []}]`.
+///
+/// This is the minimal `Meta` chunk payload required by OTP 25+.  The chunk
+/// must be present and parseable; an empty features list disables no optional
+/// features but satisfies the loader's format check.
+///
+/// Byte breakdown:
+/// ```text
+/// 131            — ETF version tag
+/// 108 0 0 0 1    — LIST_EXT (0x6C), length = 1 element
+/// 104 2          — SMALL_TUPLE_EXT (0x68), arity = 2
+/// 119 0 16       — ATOM_UTF8_EXT (0x77), length = 16 bytes
+/// 101 110 97 98 108 101 100 95
+/// 102 101 97 116 117 114 101 115  — "enabled_features" in UTF-8
+/// 106            — NIL_EXT = [] (second tuple element, the feature list)
+/// 106            — NIL_EXT = [] (proper-list tail terminator)
+/// ```
+const ETF_META: [u8; 29] = [
+    ETF_VERSION,
+    108, 0, 0, 0, 1,                               // LIST_EXT, 1 element
+    104, 2,                                         // SMALL_TUPLE_EXT, arity 2
+    119, 0, 16,                                     // ATOM_UTF8_EXT, len 16
+    101, 110, 97, 98, 108, 101, 100, 95,            // "enabled_"
+    102, 101, 97, 116, 117, 114, 101, 115,          // "features"
+    106,                                            // NIL_EXT = []  (2nd element)
+    106,                                            // NIL_EXT = []  (list tail)
+];
+
+// ===========================================================================
 // Chunk encoders
 // ===========================================================================
 
-/// Encode the `AtU8` atom-table chunk.
+/// Encode the `AtU8` atom-table chunk using the **OTP 25+ new format**.
 ///
-/// Format: `<u32 BE count> (<u8 len> <utf-8 bytes>)*`
+/// # Format (OTP 25+, used by OTP 28 C-level loader)
+///
+/// ```text
+/// <i32 BE negative count>   4 bytes — e.g. -3 atoms → 0xFFFFFFFD
+/// For each atom:
+///   len < 16  → 1 byte: (len as u8) << 4          (high nibble = len, low = 0)
+///   len ≥ 16  → 2 bytes: [0x08, len as u8]        (marker + raw length)
+///   <utf-8 bytes>
+/// ```
+///
+/// # Why negative count?
+///
+/// OTP 25 extended the AtU8 chunk to support atoms up to 255 bytes with a
+/// richer per-atom length encoding.  The runtime distinguishes the old format
+/// (positive count) from the new format (negative count as a signed 32-bit
+/// big-endian integer) in the first 4 bytes.  The C-level loader in OTP 28
+/// **requires** the new format — passing the old positive count causes the
+/// loader to report "compiled for an old version of the runtime system" and
+/// reject the file.
+///
+/// Empirically verified from hex analysis of `erlc`-compiled `.beam` files
+/// under OTP 28:
+///
+/// ```text
+/// atom "main" (4 bytes) → length byte 0x40 = (4 << 4)
+/// atom "testmod" (7 bytes) → length byte 0x70 = (7 << 4)
+/// atom of 34 bytes       → [0x08, 0x22]
+/// ```
 fn encode_atu8(atoms: &[String]) -> Vec<u8> {
     let mut payload = Vec::new();
-    let count = atoms.len() as u32;
+
+    // OTP 25+ new format: emit a *negative* count so the runtime switches to
+    // the new per-atom length encoding below.
+    let count = -(atoms.len() as i32);
     payload.extend_from_slice(&count.to_be_bytes());
+
     for atom in atoms {
         let bytes = atom.as_bytes();
-        // Do not include the atom content in the assertion message — it may
-        // contain user-controlled data that should not leak into crash logs.
-        assert!(bytes.len() <= 255,
-            "BEAM atom exceeds 255-byte limit: {} bytes", bytes.len());
-        payload.push(bytes.len() as u8);
-        payload.extend_from_slice(bytes);
+        // The 255-byte limit is enforced at the IIR validation layer
+        // (validate_for_beam in iir-to-beam).  Use debug_assert! here so
+        // a missed validation surfaces in development builds without
+        // crashing a release-mode service on malformed input.
+        debug_assert!(
+            bytes.len() <= 255,
+            "BEAM atom exceeds 255-byte limit: {} bytes (validate before encoding)",
+            bytes.len()
+        );
+        // Silently truncate in release builds so the encoder remains infallible.
+        // A truncated atom produces a loadable but semantically wrong BEAM file;
+        // callers must validate before encoding.
+        let len = bytes.len().min(255);
+
+        if len < 16 {
+            // 1-byte length form: length packed into the high nibble.
+            //   e.g. len=4 → 0x40,  len=7 → 0x70,  len=0 → 0x00
+            payload.push((len as u8) << 4);
+        } else {
+            // 2-byte length form: 0x08 marker followed by the raw length byte.
+            //   e.g. len=34 → [0x08, 0x22]
+            payload.push(0x08u8);
+            payload.push(len as u8);
+        }
+
+        payload.extend_from_slice(&bytes[..len]);
     }
     payload
 }
@@ -350,6 +451,27 @@ pub fn encode_beam(module: &BEAMModule) -> Vec<u8> {
     if !loct_payload.is_empty() || !module.locals.is_empty() {
         chunks.extend(wrap_chunk(b"LocT", &loct_payload));
     }
+
+    // ── OTP 25+ mandatory chunks ───────────────────────────────────────────
+    //
+    // OTP 25 introduced a stricter BEAM loader that requires three chunks to
+    // be present in every loadable module.  Without them OTP 28 reports:
+    //
+    //   "This BEAM file was compiled for an old version of the runtime system."
+    //
+    // `Attr` — module attributes (e.g. `module_info/0` exports).  An ETF
+    //          encoding of `[]` satisfies the loader.
+    // `CInf` — compilation information (compiler version, options).  Same
+    //          format; an empty list is valid.
+    // `Meta` — OTP 25+ feature-flag metadata.  Must be the ETF encoding of
+    //          `[{enabled_features, [...]}]`; an empty feature list is fine.
+    //
+    // We always emit these three chunks so any BEAM file produced by this
+    // encoder can be loaded into OTP 25 through OTP 28+ without modification.
+    chunks.extend(wrap_chunk(b"Attr", &ETF_NIL));
+    chunks.extend(wrap_chunk(b"CInf", &ETF_NIL));
+    chunks.extend(wrap_chunk(b"Meta", &ETF_META));
+
     for (tag, payload) in &module.extra_chunks {
         chunks.extend(wrap_chunk(tag, payload));
     }
@@ -445,14 +567,54 @@ mod tests {
         assert_eq!(chunk.len(), 12); // 4 tag + 4 size + 4 payload = 12
     }
 
+    /// OTP 25+ AtU8 format: count is negative, lengths use nibble encoding.
     #[test]
-    fn test_encode_atu8() {
+    fn test_encode_atu8_new_format_count_is_negative() {
         let atoms = vec!["hello".to_string(), "world".to_string()];
         let encoded = encode_atu8(&atoms);
-        // count=2 (4 bytes) + [5, h,e,l,l,o] + [5, w,o,r,l,d]
-        assert_eq!(&encoded[0..4], &2u32.to_be_bytes());
-        assert_eq!(encoded[4], 5); // len of "hello"
+        // Count = -2 as signed i32 big-endian = 0xFFFFFFFE
+        let count = i32::from_be_bytes(encoded[0..4].try_into().unwrap());
+        assert_eq!(count, -2, "AtU8 count must be negative (OTP 25+ format)");
+    }
+
+    /// Atoms with len < 16 use single-byte `(len << 4)` encoding.
+    #[test]
+    fn test_encode_atu8_short_atom_length_encoding() {
+        let atoms = vec!["hello".to_string()]; // len = 5
+        let encoded = encode_atu8(&atoms);
+        // After 4-byte count: 1 length byte then atom bytes
+        assert_eq!(encoded[4], 5u8 << 4, "len=5 should encode as 0x50");
         assert_eq!(&encoded[5..10], b"hello");
+    }
+
+    /// Atoms with len in [16, 255] use two-byte `[0x08, len]` encoding.
+    #[test]
+    fn test_encode_atu8_long_atom_length_encoding() {
+        // "some_long_atom_name" = 19 bytes  (len >= 16)
+        let name = "some_long_atom_name".to_string();
+        let name_len = name.len(); // 19
+        let atoms = vec![name.clone()];
+        let encoded = encode_atu8(&atoms);
+        assert_eq!(encoded[4], 0x08u8, "long-atom marker byte must be 0x08");
+        assert_eq!(encoded[5], name_len as u8, "second byte must be raw length");
+        assert_eq!(&encoded[6..6 + name_len], name.as_bytes());
+    }
+
+    /// Boundary: atom of exactly 15 bytes still uses 1-byte encoding.
+    #[test]
+    fn test_encode_atu8_boundary_len_15() {
+        let name = "a".repeat(15);
+        let encoded = encode_atu8(&[name]);
+        assert_eq!(encoded[4], 15u8 << 4);
+    }
+
+    /// Boundary: atom of exactly 16 bytes switches to 2-byte encoding.
+    #[test]
+    fn test_encode_atu8_boundary_len_16() {
+        let name = "a".repeat(16);
+        let encoded = encode_atu8(&[name]);
+        assert_eq!(encoded[4], 0x08u8);
+        assert_eq!(encoded[5], 16u8);
     }
 
     // ------------------------------------------------------------------
@@ -495,6 +657,96 @@ mod tests {
         let bytes = encode_beam(&module);
         let pos = bytes.windows(4).position(|w| w == b"AtU8");
         assert!(pos.is_some(), "AtU8 chunk not found");
+    }
+
+    // ------------------------------------------------------------------
+    // OTP 25+ mandatory chunk presence
+    // ------------------------------------------------------------------
+
+    fn minimal_module() -> BEAMModule {
+        BEAMModule {
+            name: "m".to_string(),
+            atoms: vec!["m".to_string()],
+            instructions: vec![BEAMInstruction::new(3, vec![])],
+            imports: vec![],
+            exports: vec![],
+            locals: vec![],
+            label_count: 1,
+            max_opcode: 3,
+            instruction_set_version: 0,
+            extra_chunks: vec![],
+        }
+    }
+
+    /// OTP 25+ requires an `Attr` chunk in every loadable module.
+    #[test]
+    fn test_encode_beam_contains_attr_chunk() {
+        let bytes = encode_beam(&minimal_module());
+        assert!(
+            bytes.windows(4).any(|w| w == b"Attr"),
+            "Attr chunk not found — OTP 25+ will reject this BEAM file"
+        );
+    }
+
+    /// OTP 25+ requires a `CInf` chunk in every loadable module.
+    #[test]
+    fn test_encode_beam_contains_cinf_chunk() {
+        let bytes = encode_beam(&minimal_module());
+        assert!(
+            bytes.windows(4).any(|w| w == b"CInf"),
+            "CInf chunk not found — OTP 25+ will reject this BEAM file"
+        );
+    }
+
+    /// OTP 25+ requires a `Meta` chunk containing `[{enabled_features,[]}]`.
+    #[test]
+    fn test_encode_beam_contains_meta_chunk() {
+        let bytes = encode_beam(&minimal_module());
+        assert!(
+            bytes.windows(4).any(|w| w == b"Meta"),
+            "Meta chunk not found — OTP 25+ will reject this BEAM file"
+        );
+    }
+
+    /// The `Meta` chunk payload must be the ETF encoding of
+    /// `[{enabled_features,[]}]`.  Verify the raw bytes match exactly.
+    #[test]
+    fn test_meta_chunk_payload_is_correct_etf() {
+        let bytes = encode_beam(&minimal_module());
+        // Find the Meta chunk tag
+        let meta_pos = bytes.windows(4).position(|w| w == b"Meta")
+            .expect("Meta chunk not found");
+        // Bytes after "Meta": 4-byte big-endian payload size, then payload
+        let size_bytes: [u8; 4] = bytes[meta_pos+4..meta_pos+8].try_into().unwrap();
+        let payload_size = u32::from_be_bytes(size_bytes) as usize;
+        let payload = &bytes[meta_pos+8..meta_pos+8+payload_size];
+        assert_eq!(payload, &ETF_META,
+            "Meta chunk payload does not match expected ETF_META constant");
+    }
+
+    /// The `Attr` chunk payload must be the ETF encoding of `[]`.
+    #[test]
+    fn test_attr_chunk_payload_is_etf_nil() {
+        let bytes = encode_beam(&minimal_module());
+        let attr_pos = bytes.windows(4).position(|w| w == b"Attr")
+            .expect("Attr chunk not found");
+        let size_bytes: [u8; 4] = bytes[attr_pos+4..attr_pos+8].try_into().unwrap();
+        let payload_size = u32::from_be_bytes(size_bytes) as usize;
+        let payload = &bytes[attr_pos+8..attr_pos+8+payload_size];
+        assert_eq!(payload, &ETF_NIL,
+            "Attr chunk payload does not match ETF_NIL (ETF encoding of [])");
+    }
+
+    /// The ETF_META constant must start with the version byte 131.
+    #[test]
+    fn test_etf_meta_starts_with_version_tag() {
+        assert_eq!(ETF_META[0], 131, "ETF version tag must be 131");
+    }
+
+    /// The ETF_NIL constant must be exactly [131, 106].
+    #[test]
+    fn test_etf_nil_is_correct() {
+        assert_eq!(ETF_NIL, [131u8, 106u8]);
     }
 
     #[test]

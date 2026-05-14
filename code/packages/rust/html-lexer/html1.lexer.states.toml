@@ -5485,13 +5485,11 @@ actions = [
 from = "markup_declaration_open"
 matcher = { literal = "D" }
 to = "doctype_keyword_o"
-actions = ["create_doctype"]
 
 [[transitions]]
 from = "markup_declaration_open"
 matcher = { literal = "d" }
 to = "doctype_keyword_o"
-actions = ["create_doctype"]
 
 [[transitions]]
 from = "markup_declaration_open"
@@ -6097,8 +6095,9 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "parse_error(eof-in-doctype)",
-  "mark_force_quirks",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(D)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -6106,12 +6105,12 @@ actions = [
 [[transitions]]
 from = "doctype_keyword_o"
 matcher = { anything = true }
-to = "doctype_name"
+to = "bogus_comment"
+consume = false
 actions = [
-  "parse_error(invalid-doctype-keyword)",
-  "mark_force_quirks",
-  "append_doctype_name(d)",
-  "append_doctype_name(current_lowercase)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(D)",
 ]
 
 [[transitions]]
@@ -6130,8 +6129,9 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "parse_error(eof-in-doctype)",
-  "mark_force_quirks",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DO)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -6139,12 +6139,12 @@ actions = [
 [[transitions]]
 from = "doctype_keyword_c"
 matcher = { anything = true }
-to = "doctype_name"
+to = "bogus_comment"
+consume = false
 actions = [
-  "parse_error(invalid-doctype-keyword)",
-  "mark_force_quirks",
-  "append_doctype_name(do)",
-  "append_doctype_name(current_lowercase)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DO)",
 ]
 
 [[transitions]]
@@ -6163,8 +6163,9 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "parse_error(eof-in-doctype)",
-  "mark_force_quirks",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOC)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -6172,12 +6173,12 @@ actions = [
 [[transitions]]
 from = "doctype_keyword_t"
 matcher = { anything = true }
-to = "doctype_name"
+to = "bogus_comment"
+consume = false
 actions = [
-  "parse_error(invalid-doctype-keyword)",
-  "mark_force_quirks",
-  "append_doctype_name(doc)",
-  "append_doctype_name(current_lowercase)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOC)",
 ]
 
 [[transitions]]
@@ -6196,8 +6197,9 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "parse_error(eof-in-doctype)",
-  "mark_force_quirks",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOCT)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -6205,12 +6207,12 @@ actions = [
 [[transitions]]
 from = "doctype_keyword_y"
 matcher = { anything = true }
-to = "doctype_name"
+to = "bogus_comment"
+consume = false
 actions = [
-  "parse_error(invalid-doctype-keyword)",
-  "mark_force_quirks",
-  "append_doctype_name(doct)",
-  "append_doctype_name(current_lowercase)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOCT)",
 ]
 
 [[transitions]]
@@ -6229,8 +6231,9 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "parse_error(eof-in-doctype)",
-  "mark_force_quirks",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOCTY)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -6238,23 +6241,25 @@ actions = [
 [[transitions]]
 from = "doctype_keyword_p"
 matcher = { anything = true }
-to = "doctype_name"
+to = "bogus_comment"
+consume = false
 actions = [
-  "parse_error(invalid-doctype-keyword)",
-  "mark_force_quirks",
-  "append_doctype_name(docty)",
-  "append_doctype_name(current_lowercase)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOCTY)",
 ]
 
 [[transitions]]
 from = "doctype_keyword_e"
 matcher = { literal = "E" }
 to = "doctype_after_keyword"
+actions = ["create_doctype"]
 
 [[transitions]]
 from = "doctype_keyword_e"
 matcher = { literal = "e" }
 to = "doctype_after_keyword"
+actions = ["create_doctype"]
 
 [[transitions]]
 from = "doctype_keyword_e"
@@ -6262,8 +6267,9 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "parse_error(eof-in-doctype)",
-  "mark_force_quirks",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOCTYP)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -6271,12 +6277,12 @@ actions = [
 [[transitions]]
 from = "doctype_keyword_e"
 matcher = { anything = true }
-to = "doctype_name"
+to = "bogus_comment"
+consume = false
 actions = [
-  "parse_error(invalid-doctype-keyword)",
-  "mark_force_quirks",
-  "append_doctype_name(doctyp)",
-  "append_doctype_name(current_lowercase)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(DOCTYP)",
 ]
 
 [[transitions]]

@@ -242,5 +242,36 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   2 modes (no rulebook vs self-elicited rulebook) on the canonical
   ADJ10 source. The recursion flips verdicts at ≥ 3B parameters and
   breaks at ≤ 1.5B in two distinct failure modes.
+- [ADJ17](ADJ17-adversarial-rulebook-empirical-results.md) — follow-up
+  to ADJ15 measuring **adversarial multi-model rulebook elicitation**:
+  two 8B-class models (gemma4 + llama3.1) elicit independently, the
+  merged provenance-tagged rulebook is injected into Arm A across
+  the same 5 answerer models. Headline finding: the 0.5B and 1.5B
+  scales that broke in ADJ15 now produce defensible NON-COMPLIANT
+  verdicts with rule citations — elicitation and answer are
+  separable capabilities, big models pay the elicit cost once,
+  small models reuse the rulebook indefinitely.
+- [ADJ16](ADJ16-engine-programmatic-adjudication.md) — design for
+  replacing the LLM-answer-time call with a deterministic engine
+  that runs a compiled Prolog (or ProbLog) program over the
+  rulebook + facts. Same input + same rulebook + same query =
+  same verdict, reproducibly, with a full proof DAG.
+  **Status (2026-05-13)**: steps 1-5 fully implemented and on main.
+- [ADJ18](ADJ18-broadened-tsa-empirical-bench.md) — broadens the
+  ADJ12/15/17 single-string benches to **8 single-item TSA
+  declaration variants × 5 models × 3 Arm A modes** (none /
+  single-turn rulebook / two-turn priming). Tests whether the
+  rulebook-injection flip pattern generalises beyond the matches
+  case and whether the v0.12 priming dispatch reduces gemma4
+  truncation in practice. Harness at
+  [`scripts/adj18_bench.py`](../../scripts/adj18_bench.py).
+- [ADJ21](ADJ21-typed-quantity-decomposition.md) — `decompose_text`
+  prompt update (v4 → v5) that explicitly teaches typed-quantity
+  extraction. Every numerical value-with-unit in the source
+  becomes a `quantity(value, unit)` compound term, preserved in
+  the IR so the engine can evaluate threshold comparisons
+  deterministically (instead of asking the LLM to do arithmetic
+  inside its forward pass — the failure mode the ADJ18 v0.13
+  bench surfaced empirically).
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.

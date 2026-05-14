@@ -1,5 +1,57 @@
 # Changelog — `aarch64-backend`
 
+## 0.2.0 — 2026-05-13 (LANG38)
+
+**Division, modulo, bitwise logic, shifts, negate, and bitwise-NOT lowering.**
+
+Wires the 11 new `aarch64-encoder` instructions (0.2.0) into the CIR opcode
+dispatch table.  These are the ops that blocked any Twig program using
+integer division (e.g. number parsers) or bitwise manipulation.
+
+### New CIR opcodes handled
+
+| CIR mnemonic family | Lowering | Notes |
+|---------------------|----------|-------|
+| `div_<ty>` | `SDIV` (signed) / `UDIV` (unsigned) | 1 instruction |
+| `mod_<ty>` | `SDIV`/`UDIV` then `MSUB` | 2 instructions; uses X2 as scratch |
+| `and_<ty>` | `AND` | — |
+| `or_<ty>` | `ORR` | — |
+| `xor_<ty>` | `EOR` | — |
+| `shl_<ty>` | `LSLV` | shift amount mod 64 (ARM architectural) |
+| `shr_<ty>` | `ASRV` for `i*`; `LSRV` for `u*` | signed/unsigned based on type suffix |
+| `neg_<ty>` | `NEG` | two's-complement negate |
+| `not_<ty>` | `MVN` | bitwise NOT |
+
+### Implementation notes
+
+- Signed vs unsigned is determined by `ty.starts_with('i')`, matching the
+  same convention used by comparisons.
+- `mod_<ty>` uses X2 as an additional scratch register for the intermediate
+  quotient.  The stack-spill allocator keeps every live value in a fixed
+  stack slot, so X2 is free between instructions — no aliasing hazard.
+- New helpers: `emit_div`, `emit_bitwise` (+ `BitwiseKind`), `emit_shift`
+  (+ `ShiftKind`).
+
+14 new backend tests exercise each opcode family.
+
+## 0.1.2 — 2026-05-13
+
+### Added
+
+- **Cross-function `BL` relocations** — new `compile_with_relocs` public
+  entry point returns `(Vec<u8>, Vec<Reloc>)`.  Each `Reloc` records the
+  word index of a placeholder `BL #0` instruction that targets a function
+  outside the current binary.  The two-pass AOT linker in `twig-aot` uses
+  these to patch the final linked image with correct PC-relative offsets.
+- `Reloc` is a re-export of `aarch64_encoder::ExternalReloc`.
+
+### Changed
+
+- Cross-function `call` instructions now emit a `BL #0` placeholder via
+  `Assembler::bl_external` instead of returning `Err(UnsupportedOp)`.
+  Self-recursive calls continue to emit a direct `BL` to the body-entry
+  label.
+
 ## 0.1.0 — 2026-05-05
 
 Initial release.  ARM64 native-code backend for jit-core / aot-core,

@@ -325,7 +325,18 @@ mod tests {
         assert!(payload["error"]["message"]
             .as_str()
             .unwrap()
-            .contains("parse"));
+            .starts_with("Incorrect syntax at line 1, column "));
+    }
+
+    #[test]
+    fn reports_help_queries_as_json_visible_output() {
+        let payload = json(&eval_source_json("? solve"));
+        assert_eq!(payload["ok"], true);
+        assert!(payload["visible_outputs"][0]
+            .as_str()
+            .unwrap()
+            .contains("solve(expr, var)"));
+        assert_eq!(payload["results"][0]["output_ir"]["kind"], "string");
     }
 
     #[test]

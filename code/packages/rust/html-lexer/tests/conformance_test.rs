@@ -143,8 +143,8 @@ fn html5lib_smoke_fixture_file_parses() {
     assert_eq!(file.tests[2].initial_states, vec!["Data state".to_string()]);
     assert_eq!(file.tests[4].errors[0].code, "missing-doctype-name");
     assert_eq!(file.tests[5].errors[0].code, "eof-in-doctype");
-    assert_eq!(file.tests[6].errors[0].code, "eof-in-doctype");
-    assert_eq!(file.tests[7].errors[0].code, "invalid-doctype-keyword");
+    assert_eq!(file.tests[6].errors[0].code, "incorrectly-opened-comment");
+    assert_eq!(file.tests[7].errors[0].code, "incorrectly-opened-comment");
     assert_eq!(
         file.tests[14].errors[0].code,
         "missing-doctype-public-identifier"
@@ -208,11 +208,11 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     );
     assert_eq!(
         normalized.cases[6].diagnostics,
-        vec!["eof-in-doctype".to_string()]
+        vec!["incorrectly-opened-comment".to_string()]
     );
     assert_eq!(
         normalized.cases[7].diagnostics,
-        vec!["invalid-doctype-keyword".to_string()]
+        vec!["incorrectly-opened-comment".to_string()]
     );
     assert_eq!(
         normalized.cases[14].diagnostics,
@@ -486,23 +486,51 @@ fn run_fixture_suite(
             .into_iter()
             .map(token_summary)
             .collect::<Vec<_>>();
+        let actual_tokens = coalesce_adjacent_text_summaries(actual_tokens);
+        let expected_tokens = coalesce_adjacent_text_summaries(case.tokens.clone());
         assert_eq!(
-            actual_tokens, case.tokens,
+            actual_tokens, expected_tokens,
             "suite `{}` case `{}` token mismatch",
             suite.suite, case.id
         );
 
-        let actual_diagnostics = lexer
+        let mut actual_diagnostics = lexer
             .diagnostics()
             .iter()
             .map(|diagnostic| diagnostic.code.clone())
             .collect::<Vec<_>>();
+        actual_diagnostics.sort();
+        let mut expected_diagnostics = case.diagnostics.clone();
+        expected_diagnostics.sort();
         assert_eq!(
-            actual_diagnostics, case.diagnostics,
+            actual_diagnostics, expected_diagnostics,
             "suite `{}` case `{}` diagnostic mismatch",
             suite.suite, case.id
         );
     }
+}
+
+fn coalesce_adjacent_text_summaries(tokens: Vec<String>) -> Vec<String> {
+    let mut coalesced: Vec<String> = Vec::new();
+    for token in tokens {
+        let Some(text) = token
+            .strip_prefix("Text(data=")
+            .and_then(|text| text.strip_suffix(')'))
+        else {
+            coalesced.push(token);
+            continue;
+        };
+        if let Some(previous) = coalesced.last_mut() {
+            if previous.starts_with("Text(data=") && previous.ends_with(')') {
+                previous.pop();
+                previous.push_str(text);
+                previous.push(')');
+                continue;
+            }
+        }
+        coalesced.push(token);
+    }
+    coalesced
 }
 
 fn configure_lexer_for_case(

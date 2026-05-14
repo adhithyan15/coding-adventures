@@ -143,6 +143,17 @@ export class AssumptionContext {
     return (this.facts.get(symbolName)?.size ?? 0) > 0;
   }
 
+  factsFor(symbolName: string): readonly string[] {
+    return [...(this.facts.get(symbolName) ?? [])].sort();
+  }
+
+  symbolsWithFacts(): readonly string[] {
+    return [...this.facts.entries()]
+      .filter(([, facts]) => facts.size > 0)
+      .map(([name]) => name)
+      .sort();
+  }
+
   private add(symbolName: string, fact: string): void {
     const existing = this.facts.get(symbolName);
     if (existing === undefined) {

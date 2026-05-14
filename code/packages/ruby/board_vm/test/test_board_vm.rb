@@ -40,6 +40,16 @@ module CodingAdventures
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
         assert_equal ["wifi"], uno_r4_wifi["connection_options"].select { |item| item["ota_update"] }.map { |item| item["transport"] }
         assert_equal({ "rows" => 8, "columns" => 12 }, uno_r4_wifi["led_matrix"])
+        assert_equal uno_r4_wifi["digital_pin_count"], uno_r4_wifi["digital_pins"].length
+        d3 = uno_r4_wifi["digital_pins"].find { |pin| pin["pin"] == 3 }
+        assert_equal "D3", d3["label"]
+        assert d3["supports_input"]
+        assert d3["supports_output"]
+        assert d3["supports_pullup"]
+        refute d3["supports_pulldown"]
+        assert d3["supports_pwm"]
+        assert d3["supports_interrupt"]
+        refute d3["supports_adc"]
         assert_equal "esp32", esp32["family"]
         assert_equal "board-vm-esp32", esp32["runtime_id"]
         assert_equal({ "kind" => "gpio", "pin" => 2 }, esp32["onboard_led"])
@@ -1024,6 +1034,40 @@ module CodingAdventures
         end
 
         assert_equal [10_000], transport.timeout_values
+      end
+
+      def test_session_capabilities_uses_hardened_default_timeout
+        runner = FakeRunner.new
+        transport = FakeTransactTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 250
+        ) do |board|
+          board.session.capabilities
+        end
+
+        assert_equal [BoardVM::DEFAULT_CAPABILITIES_TIMEOUT_MS], transport.timeout_values
+      end
+
+      def test_session_capabilities_honors_explicit_timeout
+        runner = FakeRunner.new
+        transport = FakeTransactTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport,
+          timeout_ms: 250
+        ) do |board|
+          board.session.capabilities(timeout_ms: 750)
+        end
+
+        assert_equal [750], transport.timeout_values
       end
 
       def test_dispatch_protocol_frame_skips_stale_responses_until_request_and_kind_match

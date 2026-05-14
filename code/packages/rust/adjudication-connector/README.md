@@ -85,8 +85,59 @@ connector recognises the following compound functors as Rule subtypes:
 Any other compound functor used at a Rule node produces a
 `LoweringError::UnknownRuleSubtype`.
 
+## Provenance-Tracked Lowering (v0.2, ADJ16 step 1)
+
+For deployments that need to trace each engine-cited clause back to
+its source rulebook, use `lower_to_kb_with_provenance` instead of
+`lower_to_kb`:
+
+```rust
+use adjudication_connector::{
+    lower_to_kb_with_provenance, ClauseProvenance, LoweredKb, TrustTier,
+};
+
+let provenance = ClauseProvenance::new("tsa-rules-v1", TrustTier::Tentative);
+let lowered: LoweredKb = lower_to_kb_with_provenance(&ir_doc, provenance)?;
+
+// Every Fact ID and Rule ID emitted from `ir_doc` is keyed in:
+//   lowered.fact_provenance  : HashMap<FactId, ClauseProvenance>
+//   lowered.rule_provenance  : HashMap<RuleId, ClauseProvenance>
+// `lowered.kb` is the same KnowledgeBase shape `lower_to_kb` returns.
+```
+
+For multi-rulebook KBs (e.g., the adversarial elicitation pattern
+from ADJ17), call once per source rulebook and combine with
+`LoweredKb::extend`:
+
+```rust
+let mut combined = LoweredKb::new();
+combined.extend(lower_to_kb_with_provenance(&doc_a, prov_a)?);
+combined.extend(lower_to_kb_with_provenance(&doc_b, prov_b)?);
+// Each clause in `combined.kb` is now attributable to A or B.
+```
+
+`TrustTier` mirrors `adjudication_rulebook::RulebookTrust` (which the
+connector does **not** depend on, to keep the dependency direction
+downward); convert at the call site:
+
+```rust
+let tier = match rulebook.trust {
+    adjudication_rulebook::RulebookTrust::Tentative => TrustTier::Tentative,
+    adjudication_rulebook::RulebookTrust::Reviewed => TrustTier::Reviewed,
+    adjudication_rulebook::RulebookTrust::Authoritative => TrustTier::Authoritative,
+};
+```
+
+The motivation, from [ADJ16](../../../specs/ADJ16-engine-programmatic-adjudication.md):
+when the engine returns a proof DAG, every cited Fact/Rule must be
+traceable back to the rulebook it came from and the trust level
+that rulebook carried. v0.2 wires that pass-through; step 2 of ADJ16
+(the pipeline `AnswerMode::Engine` flag) and step 3
+(`DisputedAnswer` shape) consume these attribution maps.
+
 ## Status
 
 Experimental. The deterministic and probabilistic engine paths both
-work end-to-end. JSON ingestion, `as_of` priority resolution, and
-conditional-evidence wiring (LP19c) are planned follow-ups.
+work end-to-end. v0.2 adds per-clause provenance. JSON ingestion,
+`as_of` priority resolution, and conditional-evidence wiring (LP19c)
+are planned follow-ups.

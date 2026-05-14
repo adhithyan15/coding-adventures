@@ -21,16 +21,19 @@
 //! non-numeric nodes); [`from_numeric`] converts back to `IRNode`,
 //! collapsing `Rat(n, 1)` to `Int(n)`.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
+use cas_factor::factor_integer_polynomial;
 use symbolic_ir::{
     IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, COTH,
     CSCH, D, DEFINE, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, INV, LESS, LESS_EQUAL,
     LOG, MUL, NEG, NOT, NOT_EQUAL, OR, POW, SECH, SIN, SINH, SQRT, SUB, TAN, TANH,
 };
 
-use crate::backend::Handler;
+use crate::backend::{handler_fn, Handler};
 use crate::vm::VM;
+
+const FACTOR: &str = "Factor";
 
 // ---------------------------------------------------------------------------
 // Numeric intermediate value
@@ -1348,6 +1351,589 @@ fn apply_node(head: &str, args: Vec<IRNode>) -> IRNode {
 }
 
 // ---------------------------------------------------------------------------
+// Factor
+// ---------------------------------------------------------------------------
+
+fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    let fallback = IRNode::Apply(Box::new(expr.clone()));
+    if expr.args.len() != 1 {
+        return fallback;
+    }
+
+    let input = &expr.args[0];
+    if let Some(variable) = find_single_variable(input) {
+        if let Some(coeffs) = ir_to_integer_poly(input, &variable) {
+            let (content, factors) = factor_integer_polynomial(&coeffs);
+            if factors.is_empty() {
+                return input.clone();
+            }
+            if factors.len() == 1 && factors[0].1 == 1 && content == 1 && factors[0].0 == coeffs {
+                return fallback;
+            }
+            return factor_result_to_ir(content, factors, &variable);
+        }
+    }
+
+    if let Some(rewritten) = factor_multivariate_cubic_identity(input) {
+        return rewritten;
+    }
+
+    if let Some(rewritten) = factor_multivariate_difference_of_squares(input) {
+        return rewritten;
+    }
+
+    if let Some(rewritten) = factor_multivariate_perfect_square(input) {
+        return rewritten;
+    }
+
+    if let Some(rewritten) = factor_common_symbolic_term(input) {
+        return vm.eval(rewritten);
+    }
+
+    fallback
+}
+
+fn factor_common_symbolic_term(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() < 2 {
+        return None;
+    }
+
+    let mut common = term_factor_powers(&terms[0]);
+    for term in &terms[1..] {
+        let powers = term_factor_powers(term);
+        common.retain(|base, exponent| {
+            if let Some(other) = powers.get(base) {
+                *exponent = (*exponent).min(*other);
+                *exponent > 0
+            } else {
+                false
+            }
+        });
+        if common.is_empty() {
+            return None;
+        }
+    }
+
+    let common_factor = powers_to_ir(&common);
+    let residual_terms: Vec<IRNode> = terms
+        .iter()
+        .map(|term| remove_common_factor(term, &common))
+        .collect();
+    let residual = add_nodes(residual_terms);
+    Some(apply_node(
+        MUL,
+        vec![common_factor, apply_node(FACTOR, vec![residual])],
+    ))
+}
+
+fn factor_multivariate_perfect_square(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 3 {
+        return None;
+    }
+
+    let mut squares = Vec::new();
+    let mut cross = None;
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if coefficient == 1 && powers.len() == 1 {
+            let (base, exponent) = powers.iter().next()?;
+            if *exponent == 2 {
+                squares.push(base.clone());
+                continue;
+            }
+        }
+        if (coefficient == 2 || coefficient == -2) && powers.len() == 2 {
+            let mut items = powers.iter();
+            let (first, first_exponent) = items.next()?;
+            let (second, second_exponent) = items.next()?;
+            if *first_exponent == 1 && *second_exponent == 1 {
+                cross = Some((coefficient, first.clone(), second.clone()));
+                continue;
+            }
+        }
+        return None;
+    }
+
+    if squares.len() != 2 {
+        return None;
+    }
+    let (coefficient, cross_first, cross_second) = cross?;
+    let square_keys: HashSet<IRNode> = squares.iter().cloned().collect();
+    let cross_keys: HashSet<IRNode> = [cross_first, cross_second].into_iter().collect();
+    if square_keys != cross_keys {
+        return None;
+    }
+
+    let base = if coefficient > 0 {
+        apply_node(ADD, vec![squares[0].clone(), squares[1].clone()])
+    } else {
+        apply_node(SUB, vec![squares[0].clone(), squares[1].clone()])
+    };
+    Some(apply_node(POW, vec![base, IRNode::Integer(2)]))
+}
+
+fn factor_multivariate_cubic_identity(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 2 {
+        return None;
+    }
+
+    let mut positive_cube = None;
+    let mut negative_cube = None;
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if powers.len() != 1 {
+            return None;
+        }
+
+        let (base, exponent) = powers.iter().next()?;
+        if *exponent != 3 {
+            return None;
+        }
+
+        match coefficient {
+            1 => positive_cube = Some(base.clone()),
+            -1 => negative_cube = Some(base.clone()),
+            _ => return None,
+        }
+    }
+
+    if let Some(negative_cube) = negative_cube {
+        let positive_cube = positive_cube?;
+        return Some(apply_node(
+            MUL,
+            vec![
+                apply_node(SUB, vec![positive_cube.clone(), negative_cube.clone()]),
+                apply_node(
+                    ADD,
+                    vec![
+                        apply_node(
+                            ADD,
+                            vec![
+                                apply_node(POW, vec![positive_cube.clone(), IRNode::Integer(2)]),
+                                apply_node(MUL, vec![positive_cube, negative_cube.clone()]),
+                            ],
+                        ),
+                        apply_node(POW, vec![negative_cube, IRNode::Integer(2)]),
+                    ],
+                ),
+            ],
+        ));
+    }
+
+    let terms = additive_terms(node)?;
+    let mut cubes = Vec::new();
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if coefficient != 1 || powers.len() != 1 {
+            return None;
+        }
+        let (base, exponent) = powers.iter().next()?;
+        if *exponent != 3 {
+            return None;
+        }
+        cubes.push(base.clone());
+    }
+
+    if cubes.len() != 2 {
+        return None;
+    }
+    let first = cubes[0].clone();
+    let second = cubes[1].clone();
+    Some(apply_node(
+        MUL,
+        vec![
+            apply_node(ADD, vec![first.clone(), second.clone()]),
+            apply_node(
+                ADD,
+                vec![
+                    apply_node(
+                        ADD,
+                        vec![
+                            apply_node(POW, vec![first.clone(), IRNode::Integer(2)]),
+                            apply_node(
+                                MUL,
+                                vec![
+                                    IRNode::Integer(-1),
+                                    apply_node(MUL, vec![first, second.clone()]),
+                                ],
+                            ),
+                        ],
+                    ),
+                    apply_node(POW, vec![second, IRNode::Integer(2)]),
+                ],
+            ),
+        ],
+    ))
+}
+
+fn factor_multivariate_difference_of_squares(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 2 {
+        return None;
+    }
+
+    let mut positive_square = None;
+    let mut negative_square = None;
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        if powers.len() != 1 {
+            return None;
+        }
+
+        let (base, exponent) = powers.iter().next()?;
+        if *exponent != 2 {
+            return None;
+        }
+
+        match coefficient {
+            1 => positive_square = Some(base.clone()),
+            -1 => negative_square = Some(base.clone()),
+            _ => return None,
+        }
+    }
+
+    let positive_square = positive_square?;
+    let negative_square = negative_square?;
+    Some(apply_node(
+        MUL,
+        vec![
+            apply_node(SUB, vec![positive_square.clone(), negative_square.clone()]),
+            apply_node(ADD, vec![positive_square, negative_square]),
+        ],
+    ))
+}
+
+fn additive_terms(node: &IRNode) -> Option<Vec<IRNode>> {
+    match node {
+        IRNode::Apply(apply) if is_head_name(&apply.head, ADD) => {
+            let mut terms = Vec::new();
+            for arg in &apply.args {
+                collect_additive_terms(arg, &mut terms);
+            }
+            Some(terms)
+        }
+        IRNode::Apply(apply) if is_head_name(&apply.head, SUB) && apply.args.len() == 2 => {
+            let mut terms = Vec::new();
+            collect_additive_terms(&apply.args[0], &mut terms);
+            terms.push(negate_node(apply.args[1].clone()));
+            Some(terms)
+        }
+        _ => None,
+    }
+}
+
+fn collect_additive_terms(node: &IRNode, terms: &mut Vec<IRNode>) {
+    match node {
+        IRNode::Apply(apply) if is_head_name(&apply.head, ADD) => {
+            for arg in &apply.args {
+                collect_additive_terms(arg, terms);
+            }
+        }
+        IRNode::Apply(apply) if is_head_name(&apply.head, SUB) && apply.args.len() == 2 => {
+            collect_additive_terms(&apply.args[0], terms);
+            terms.push(negate_node(apply.args[1].clone()));
+        }
+        other => terms.push(other.clone()),
+    }
+}
+
+fn negate_node(node: IRNode) -> IRNode {
+    match node {
+        IRNode::Integer(value) => IRNode::Integer(-value),
+        IRNode::Apply(apply) if is_head_name(&apply.head, MUL) => {
+            let mut args = Vec::with_capacity(apply.args.len() + 1);
+            args.push(IRNode::Integer(-1));
+            args.extend(apply.args);
+            apply_node(MUL, args)
+        }
+        other => apply_node(MUL, vec![IRNode::Integer(-1), other]),
+    }
+}
+
+fn term_factor_powers(term: &IRNode) -> HashMap<IRNode, usize> {
+    let mut powers = HashMap::new();
+    for factor in multiplicative_factors(term) {
+        if let Some((base, exponent)) = factor_base_power(factor) {
+            *powers.entry(base).or_insert(0) += exponent;
+        }
+    }
+    powers
+}
+
+fn term_integer_coefficient_and_powers(term: &IRNode) -> Option<(i64, HashMap<IRNode, usize>)> {
+    let mut coefficient: i64 = 1;
+    let mut powers = HashMap::new();
+    for factor in multiplicative_factors(term) {
+        if let IRNode::Integer(value) = factor {
+            coefficient *= value;
+            continue;
+        }
+        let (base, exponent) = factor_base_power(factor)?;
+        *powers.entry(base).or_insert(0) += exponent;
+    }
+    Some((coefficient, powers))
+}
+
+fn multiplicative_factors(node: &IRNode) -> Vec<IRNode> {
+    match node {
+        IRNode::Apply(apply) if is_head_name(&apply.head, MUL) => {
+            apply.args.iter().flat_map(multiplicative_factors).collect()
+        }
+        other => vec![other.clone()],
+    }
+}
+
+fn factor_base_power(factor: IRNode) -> Option<(IRNode, usize)> {
+    match factor {
+        IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) => None,
+        IRNode::Symbol(name) if name.starts_with('%') => None,
+        IRNode::Apply(apply) if is_head_name(&apply.head, POW) && apply.args.len() == 2 => {
+            if let IRNode::Integer(exponent) = apply.args[1] {
+                if exponent > 0 && !is_numeric_or_protected(&apply.args[0]) {
+                    return Some((apply.args[0].clone(), exponent as usize));
+                }
+            }
+            Some((IRNode::Apply(apply), 1))
+        }
+        other if is_numeric_or_protected(&other) => None,
+        other => Some((other, 1)),
+    }
+}
+
+fn is_numeric_or_protected(node: &IRNode) -> bool {
+    match node {
+        IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) => true,
+        IRNode::Symbol(name) => name.starts_with('%'),
+        _ => false,
+    }
+}
+
+fn remove_common_factor(term: &IRNode, common: &HashMap<IRNode, usize>) -> IRNode {
+    let mut remaining = common.clone();
+    let mut pieces = Vec::new();
+    for factor in multiplicative_factors(term) {
+        let Some((base, exponent)) = factor_base_power(factor.clone()) else {
+            pieces.push(factor);
+            continue;
+        };
+        let Some(common_exponent) = remaining.get_mut(&base) else {
+            pieces.push(factor);
+            continue;
+        };
+
+        if exponent > *common_exponent {
+            pieces.push(power_to_ir(base.clone(), exponent - *common_exponent));
+            *common_exponent = 0;
+        } else {
+            *common_exponent -= exponent;
+        }
+    }
+    multiply_nodes(pieces)
+}
+
+fn powers_to_ir(powers: &HashMap<IRNode, usize>) -> IRNode {
+    let mut pieces: Vec<IRNode> = powers
+        .iter()
+        .map(|(base, exponent)| power_to_ir(base.clone(), *exponent))
+        .collect();
+    pieces.sort_by_key(|piece| piece.to_string());
+    multiply_nodes(pieces)
+}
+
+fn power_to_ir(base: IRNode, exponent: usize) -> IRNode {
+    if exponent == 1 {
+        base
+    } else {
+        apply_node(POW, vec![base, IRNode::Integer(exponent as i64)])
+    }
+}
+
+fn find_single_variable(node: &IRNode) -> Option<String> {
+    let mut variables = HashSet::new();
+    collect_variables(node, &mut variables);
+    if variables.len() == 1 {
+        variables.into_iter().next()
+    } else {
+        None
+    }
+}
+
+fn collect_variables(node: &IRNode, variables: &mut HashSet<String>) {
+    match node {
+        IRNode::Symbol(name) if !name.starts_with('%') => {
+            variables.insert(name.clone());
+        }
+        IRNode::Apply(apply) => {
+            for arg in &apply.args {
+                collect_variables(arg, variables);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn ir_to_integer_poly(node: &IRNode, variable: &str) -> Option<Vec<i64>> {
+    match node {
+        IRNode::Integer(value) => Some(vec![*value]),
+        IRNode::Symbol(name) if name == variable => Some(vec![0, 1]),
+        IRNode::Apply(apply) if is_head_name(&apply.head, ADD) => {
+            apply.args.iter().try_fold(vec![0], |acc, arg| {
+                Some(poly_add(&acc, &ir_to_integer_poly(arg, variable)?))
+            })
+        }
+        IRNode::Apply(apply) if is_head_name(&apply.head, SUB) && apply.args.len() == 2 => {
+            let a = ir_to_integer_poly(&apply.args[0], variable)?;
+            let b = ir_to_integer_poly(&apply.args[1], variable)?;
+            Some(poly_sub(&a, &b))
+        }
+        IRNode::Apply(apply) if is_head_name(&apply.head, MUL) => {
+            apply.args.iter().try_fold(vec![1], |acc, arg| {
+                Some(poly_mul(&acc, &ir_to_integer_poly(arg, variable)?))
+            })
+        }
+        IRNode::Apply(apply) if is_head_name(&apply.head, POW) && apply.args.len() == 2 => {
+            let IRNode::Integer(exp) = apply.args[1] else {
+                return None;
+            };
+            if !(0..=32).contains(&exp) {
+                return None;
+            }
+            let base = ir_to_integer_poly(&apply.args[0], variable)?;
+            Some(poly_pow(&base, exp as usize))
+        }
+        _ => None,
+    }
+}
+
+fn factor_result_to_ir(content: i64, factors: Vec<(Vec<i64>, usize)>, variable: &str) -> IRNode {
+    let mut pieces = Vec::new();
+    if content != 1 {
+        pieces.push(IRNode::Integer(content));
+    }
+    for (coeffs, multiplicity) in factors {
+        let factor = poly_to_ir(&coeffs, variable);
+        if multiplicity == 1 {
+            pieces.push(factor);
+        } else {
+            pieces.push(apply_node(
+                POW,
+                vec![factor, IRNode::Integer(multiplicity as i64)],
+            ));
+        }
+    }
+    multiply_nodes(pieces)
+}
+
+fn poly_to_ir(coeffs: &[i64], variable: &str) -> IRNode {
+    let terms: Vec<IRNode> = coeffs
+        .iter()
+        .enumerate()
+        .filter_map(|(degree, coeff)| {
+            if *coeff == 0 {
+                None
+            } else {
+                Some(monomial_to_ir(*coeff, degree, variable))
+            }
+        })
+        .collect();
+    if terms.is_empty() {
+        IRNode::Integer(0)
+    } else {
+        add_nodes(terms)
+    }
+}
+
+fn monomial_to_ir(coeff: i64, degree: usize, variable: &str) -> IRNode {
+    if degree == 0 {
+        return IRNode::Integer(coeff);
+    }
+    let power = if degree == 1 {
+        IRNode::Symbol(variable.to_string())
+    } else {
+        apply_node(
+            POW,
+            vec![
+                IRNode::Symbol(variable.to_string()),
+                IRNode::Integer(degree as i64),
+            ],
+        )
+    };
+    match coeff {
+        1 => power,
+        -1 => apply_node(MUL, vec![IRNode::Integer(-1), power]),
+        _ => apply_node(MUL, vec![IRNode::Integer(coeff), power]),
+    }
+}
+
+fn add_nodes(nodes: Vec<IRNode>) -> IRNode {
+    if nodes.len() == 1 {
+        nodes.into_iter().next().unwrap()
+    } else {
+        apply_node(ADD, nodes)
+    }
+}
+
+fn multiply_nodes(nodes: Vec<IRNode>) -> IRNode {
+    if nodes.is_empty() {
+        IRNode::Integer(1)
+    } else if nodes.len() == 1 {
+        nodes.into_iter().next().unwrap()
+    } else {
+        apply_node(MUL, nodes)
+    }
+}
+
+fn poly_add(a: &[i64], b: &[i64]) -> Vec<i64> {
+    let len = a.len().max(b.len());
+    let mut out = vec![0; len];
+    for i in 0..len {
+        out[i] = a.get(i).copied().unwrap_or(0) + b.get(i).copied().unwrap_or(0);
+    }
+    trim_poly(out)
+}
+
+fn poly_sub(a: &[i64], b: &[i64]) -> Vec<i64> {
+    let len = a.len().max(b.len());
+    let mut out = vec![0; len];
+    for i in 0..len {
+        out[i] = a.get(i).copied().unwrap_or(0) - b.get(i).copied().unwrap_or(0);
+    }
+    trim_poly(out)
+}
+
+fn poly_mul(a: &[i64], b: &[i64]) -> Vec<i64> {
+    let mut out = vec![0; a.len() + b.len() - 1];
+    for (i, ca) in a.iter().enumerate() {
+        for (j, cb) in b.iter().enumerate() {
+            out[i + j] += ca * cb;
+        }
+    }
+    trim_poly(out)
+}
+
+fn poly_pow(base: &[i64], exp: usize) -> Vec<i64> {
+    let mut out = vec![1];
+    for _ in 0..exp {
+        out = poly_mul(&out, base);
+    }
+    out
+}
+
+fn trim_poly(mut poly: Vec<i64>) -> Vec<i64> {
+    while poly.len() > 1 && poly.last() == Some(&0) {
+        poly.pop();
+    }
+    poly
+}
+
+fn is_head_name(head: &IRNode, expected: &str) -> bool {
+    matches!(head, IRNode::Symbol(name) if name == expected)
+}
+
+// ---------------------------------------------------------------------------
 // Build handler table
 // ---------------------------------------------------------------------------
 
@@ -1416,6 +2002,7 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
     if simplify {
         m.insert(D.to_string(), derivative_handler());
         m.insert(INTEGRATE.to_string(), integrate_handler());
+        m.insert(FACTOR.to_string(), handler_fn(factor_handler));
     }
     m
 }

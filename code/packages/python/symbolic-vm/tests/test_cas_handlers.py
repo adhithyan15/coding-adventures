@@ -206,6 +206,114 @@ def test_factor_irreducible_passthrough() -> None:
     assert result == expr
 
 
+def test_factor_common_multivariate_symbolic_factor() -> None:
+    """Factor(x^2*y - y) extracts y, then factors the residual."""
+    vm, _ = make_vm()
+    x2_y = IRApply(MUL, (IRApply(POW, (x, IRInteger(2))), y))
+    target = IRApply(SUB, (x2_y, y))
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert isinstance(result, IRApply)
+    assert result.head == MUL
+    assert result != expr
+
+
+def test_factor_multivariate_perfect_square() -> None:
+    """Factor(x^2 + 2*x*y + y^2) recognises a bivariate square."""
+    vm, _ = make_vm()
+    x2 = IRApply(POW, (x, IRInteger(2)))
+    two_xy = IRApply(MUL, (IRInteger(2), IRApply(MUL, (x, y))))
+    y2 = IRApply(POW, (y, IRInteger(2)))
+    target = IRApply(ADD, (IRApply(ADD, (x2, two_xy)), y2))
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(POW, (IRApply(ADD, (x, y)), IRInteger(2)))
+
+
+def test_factor_multivariate_difference_of_squares() -> None:
+    """Factor(x^2 - y^2) recognises a bivariate difference of squares."""
+    vm, _ = make_vm()
+    target = IRApply(
+        SUB,
+        (
+            IRApply(POW, (x, IRInteger(2))),
+            IRApply(POW, (y, IRInteger(2))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(SUB, (x, y)),
+            IRApply(ADD, (x, y)),
+        ),
+    )
+
+
+def test_factor_multivariate_difference_of_cubes() -> None:
+    """Factor(x^3 - y^3) recognises the cubic identity."""
+    vm, _ = make_vm()
+    target = IRApply(
+        SUB,
+        (
+            IRApply(POW, (x, IRInteger(3))),
+            IRApply(POW, (y, IRInteger(3))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(SUB, (x, y)),
+            IRApply(
+                ADD,
+                (
+                    IRApply(
+                        ADD,
+                        (IRApply(POW, (x, IRInteger(2))), IRApply(MUL, (x, y))),
+                    ),
+                    IRApply(POW, (y, IRInteger(2))),
+                ),
+            ),
+        ),
+    )
+
+
+def test_factor_multivariate_sum_of_cubes() -> None:
+    """Factor(x^3 + y^3) recognises the cubic identity."""
+    vm, _ = make_vm()
+    target = IRApply(
+        ADD,
+        (
+            IRApply(POW, (x, IRInteger(3))),
+            IRApply(POW, (y, IRInteger(3))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(ADD, (x, y)),
+            IRApply(
+                ADD,
+                (
+                    IRApply(
+                        ADD,
+                        (
+                            IRApply(POW, (x, IRInteger(2))),
+                            IRApply(MUL, (IRInteger(-1), IRApply(MUL, (x, y)))),
+                        ),
+                    ),
+                    IRApply(POW, (y, IRInteger(2))),
+                ),
+            ),
+        ),
+    )
+
+
 def test_factor_linear() -> None:
     """Factor(x - 3) → x - 3 (already irreducible linear, content 1)."""
     vm, _ = make_vm()

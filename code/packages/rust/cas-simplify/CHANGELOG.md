@@ -1,5 +1,13 @@
 # Changelog — cas-simplify (Rust)
 
+## Unreleased
+
+### Added
+
+- Added deterministic `AssumptionContext::facts_for(...)` and
+  `AssumptionContext::symbols_with_facts()` metadata queries for MACSYMA
+  property inspection.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

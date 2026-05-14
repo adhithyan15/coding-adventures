@@ -37,7 +37,9 @@
 //! `alloc` (when `type_hint == "ref<LispyPair>"`), `field_load`, `field_store`,
 //! `is_null`, and `const` with `type_hint == "ref<LispyPair>"` (nil).
 
-use interpreter_ir::IIRModule;
+use std::collections::HashMap;
+
+use interpreter_ir::{IIRModule, Operand};
 
 // ---------------------------------------------------------------------------
 // Opcodes not supported by this JVM backend
@@ -153,26 +155,65 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             continue; // no point scanning the (empty) instruction list
         }
 
+        // ── Check 2.5 pre-pass: build variable-type map for this function ────
+        //
+        // We need this to detect float-typed captures in `alloc_closure`.
+        // The map is built from function parameters and instruction dest
+        // type_hints (first declaration wins).
+        //
+        // This is a lightweight O(N) pre-pass — no full type inference needed.
+        let mut var_types: HashMap<&str, &str> = HashMap::new();
+        for (pname, ptype) in &func.params {
+            var_types.insert(pname.as_str(), ptype.as_str());
+        }
         for instr in &func.instructions {
-            // ── Check 2.5: ClosureOpcode (LANG35) ────────────────────────────
+            if let Some(dest) = &instr.dest {
+                var_types
+                    .entry(dest.as_str())
+                    .or_insert(instr.type_hint.as_str());
+            }
+        }
+
+        for instr in &func.instructions {
+            // ── Check 2.5: Closure early-accept (LANG36) ─────────────────────
             //
-            // `alloc_closure` and `call_closure` are valid IIR opcodes (LANG34)
-            // but the JVM backend does not yet implement closure lowering.
-            // Full JVM closure support (dispatch-table approach using `Object[]`
-            // cons cells and `lookupswitch` by method name) is planned for LANG36.
+            // `alloc_closure` and `call_closure` (LANG34 opcodes) are fully
+            // supported by the JVM backend since LANG36, using a `long[]`
+            // dispatch-table approach:
             //
-            // We emit a specific `ClosureOpcode` error rather than
-            // `UntypedInstruction` so callers understand the precise remediation:
-            // apply `iir-builtin-lowering` Phase 4 to downgrade to `call_builtin`
-            // form, or wait for LANG36.
-            if matches!(instr.op.as_str(), "alloc_closure" | "call_closure") {
-                errors.push(format!(
-                    "ClosureOpcode: function {:?}, op {:?} — closure opcodes are not \
-                     yet supported by the JVM backend; apply iir-builtin-lowering \
-                     Phase 4 to downgrade to call_builtin form before lowering to JVM \
-                     (full JVM closure support is planned for LANG36)",
-                    func.name, instr.op
-                ));
+            //   alloc_closure(Str(fn_name), Var(cap0), …) : "closure"
+            //     → long[] {fn_dispatch_idx, cap0_as_long, …}
+            //
+            //   call_closure(Var(handle), Var(arg0), …) : "any"
+            //     → static __callClosure(long[] closure, long[] args)
+            //
+            // EXCEPTION: float captures (f32/f64) are not supported in v1 —
+            // losslessly boxing a float into a long requires bit-casting, which
+            // is deferred to LANG38.  We detect float-typed captures here
+            // using the var_types map built above.
+            if instr.op == "alloc_closure" {
+                // Check each capture variable (srcs[1..]) for float type.
+                // srcs[0] is Operand::Str(fn_name) — not a capture variable.
+                for src in instr.srcs.iter().skip(1) {
+                    if let Operand::Var(cap_name) = src {
+                        let cap_type =
+                            var_types.get(cap_name.as_str()).copied().unwrap_or("");
+                        if cap_type == "f32" || cap_type == "f64" {
+                            errors.push(format!(
+                                "ClosureOpcode: function {:?}, alloc_closure captures \
+                                 float variable {:?} (type {:?}); float closure captures \
+                                 require the BEAM backend in v1 — use integer types or \
+                                 upgrade to LANG38",
+                                func.name, cap_name, cap_type
+                            ));
+                        }
+                    }
+                }
+                continue; // accepted (non-float captures OK)
+            }
+            if instr.op == "call_closure" {
+                // `call_closure` always has type_hint "any" — accepted here.
+                // The lowering pass validates that the closure target exists.
                 continue;
             }
 

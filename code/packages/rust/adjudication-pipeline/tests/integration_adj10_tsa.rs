@@ -59,10 +59,17 @@ fn tsa_document() -> PipelineDocument {
 fn tsa_ir_document() -> IRDocument {
     let doc_id = DocumentId::new("tsa-2026-05-11-001");
 
+    // F1 uses the typed-quantity shape per ADJ21/ADJ22: the bag
+    // count is wrapped in `quantity(1, count)` rather than left as
+    // a bare atom. This is the same shape ADJ22 enforces for every
+    // numerical literal, and matches the v5 decompose_text contract.
     let f1 = IRNode {
         id: NodeId::new("F1"),
         kind: NodeKind::Fact,
-        term: compound("carry_on", vec![atom("1")]),
+        term: compound(
+            "carry_on",
+            vec![compound("quantity", vec![atom("1"), atom("count")])],
+        ),
         polarity: Polarity::Affirmed,
         modality: Modality::Present,
         source_spans: vec![Span::new(doc_id.clone(), 0, 16)],
@@ -142,26 +149,40 @@ fn tsa_fixture_runs_end_to_end_through_the_pipeline() {
         other => panic!("expected Resolved, got {other:?}"),
     }
 
-    // Audit trail must have 4 checker results (ADJ02, ADJ03,
-    // ADJ04-Skipped, ADJ05-Skipped) plus engine artifacts.
+    // Audit trail must have 5 checker results (ADJ02, ADJ22, ADJ03,
+    // ADJ04-Skipped, ADJ05-Skipped) plus engine artifacts. ADJ22
+    // was wired in per ADJ24 between ADJ02 and ADJ03 — see spec.
     let trail = &out.audit_trail;
-    assert_eq!(trail.checker_results.len(), 4);
+    assert_eq!(trail.checker_results.len(), 5);
+    assert_eq!(trail.checker_results[0].pass_name, PassName::Adj02Coverage);
     assert!(matches!(
         trail.checker_results[0].outcome,
         PassOutcome::Passed
     ));
+    assert_eq!(
+        trail.checker_results[1].pass_name,
+        PassName::Adj22TypedQuantity
+    );
     assert!(matches!(
         trail.checker_results[1].outcome,
         PassOutcome::Passed
     ));
-    assert_eq!(trail.checker_results[2].pass_name, PassName::Adj04RoundTrip);
+    assert_eq!(
+        trail.checker_results[2].pass_name,
+        PassName::Adj03PolarityModality
+    );
     assert!(matches!(
         trail.checker_results[2].outcome,
-        PassOutcome::Skipped
+        PassOutcome::Passed
     ));
-    assert_eq!(trail.checker_results[3].pass_name, PassName::Adj05Adversarial);
+    assert_eq!(trail.checker_results[3].pass_name, PassName::Adj04RoundTrip);
     assert!(matches!(
         trail.checker_results[3].outcome,
+        PassOutcome::Skipped
+    ));
+    assert_eq!(trail.checker_results[4].pass_name, PassName::Adj05Adversarial);
+    assert!(matches!(
+        trail.checker_results[4].outcome,
         PassOutcome::Skipped
     ));
 

@@ -13,7 +13,7 @@ import {
   reverse,
   sortList,
 } from "@coding-adventures/cas-list-operations";
-import { simplify as simplifyCas } from "@coding-adventures/cas-simplify";
+import { AssumptionContext, simplify as simplifyCas } from "@coding-adventures/cas-simplify";
 import { MacsymaDialect, pretty } from "@coding-adventures/cas-pretty-printer";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import { subst } from "@coding-adventures/cas-substitution";
@@ -21,6 +21,8 @@ import { expandTrig, trigReduce, trigSimplify } from "@coding-adventures/cas-tri
 import {
   ACOS,
   ACOSH,
+  ADD,
+  ASSUME,
   ASIN,
   ASINH,
   ATAN,
@@ -31,17 +33,22 @@ import {
   EXP,
   FACTOR,
   FALSE,
+  FORGET,
   GREATER,
   GREATER_EQUAL,
   INTEGRATE,
+  IS,
   LESS,
   LESS_EQUAL,
   LIST,
   LOG,
+  MUL,
+  POW,
   SIN,
   SINH,
   SOLVE,
   SQRT,
+  SUB,
   SUBST,
   SUM,
   TAN,
@@ -49,7 +56,9 @@ import {
   TRUE,
   app,
   equals,
+  int,
   numberNode,
+  stringNode,
   sym,
   toDisplayString,
   type IRApply,
@@ -63,6 +72,9 @@ export const SUPPRESS = sym("Suppress");
 export const KILL = sym("Kill");
 export const EV = sym("Ev");
 export const ALL_SYMBOL = sym("all");
+export const DECLARE = sym("Declare");
+export const PROPERTIES = sym("Properties");
+export const PROP_VARS = sym("PropVars");
 
 export const SIMPLIFY = sym("Simplify");
 export const EXPAND = sym("Expand");
@@ -200,9 +212,12 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["kill", KILL],
   ["ev", EV],
   ["block", sym("Block")],
-  ["assume", sym("Assume")],
-  ["forget", sym("Forget")],
-  ["is", sym("Is")],
+  ["assume", ASSUME],
+  ["forget", FORGET],
+  ["is", IS],
+  ["declare", DECLARE],
+  ["properties", PROPERTIES],
+  ["propvars", PROP_VARS],
   ["matchdeclare", sym("MatchDeclare")],
   ["defrule", sym("DefRule")],
   ["apply1", sym("Apply1")],
@@ -222,6 +237,58 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["fresnel_c", sym("FresnelC")],
   ["lambert_w", sym("LambertW")],
 ]);
+
+const MACSYMA_HELP_TOPICS: Readonly<Record<string, string>> = Object.freeze({
+  arithmetic: "Arithmetic: use +, -, *, /, and ^. Example: expand((x + 1)^2);",
+  calculus: "Calculus: diff(expr, var), integrate(expr, var), limit(expr, var, point), and taylor(expr, var, point, order).",
+  diff: "diff(expr, var) differentiates expr with respect to var. Example: diff(x^3, x);",
+  integrate: "integrate(expr, var) computes an antiderivative when supported. Example: integrate(x^2, x);",
+  solve: "solve(expr, var) solves equations or supported inequalities. Use linsolve([...], [...]) for linear systems and nsolve(poly, var) for numeric polynomial roots.",
+  matrix: "Matrix tools: matrix([...], ...), transpose, determinant, invert, dot, rank, rowreduce, ident, zeromatrix, and matrix_size.",
+  lists: "List tools: length, first, rest, last, append, reverse, range, map, apply, sublist, sort, part, flatten, join, and makelist.",
+  assumptions: "Assumptions: assume(x > 0), declare(x, positive), is(x > 0), forget(), properties(x), and propvars().",
+  properties: "properties(symbol) lists declared properties. propvars() lists symbols with declared properties.",
+  display: "Display: terminate with ; to show output and $ to suppress it. ev(expr, display2d) renders 2D output.",
+  history: "History: % is the last output; %iN and %oN refer to input and output number N.",
+  showtime: "showtime:true enables per-expression timing; showtime:false disables it.",
+  repl: "REPL commands: :quit exits. Use --file path.mac for batch execution.",
+});
+
+const MACSYMA_HELP_ALIASES: Readonly<Record<string, string>> = Object.freeze({
+  d: "diff",
+  derivative: "diff",
+  integral: "integrate",
+  matrices: "matrix",
+  list: "lists",
+  assume: "assumptions",
+  declare: "assumptions",
+  propvars: "properties",
+  display2d: "display",
+  "%": "history",
+  timing: "showtime",
+  quit: "repl",
+});
+
+export function parseMacsymaHelpQuery(source: string): string | undefined {
+  const stripped = source.trim();
+  if (!stripped.startsWith("?")) return undefined;
+  let topic = stripped.replace(/^\?+/, "").trim();
+  if (topic.endsWith(";") || topic.endsWith("$")) {
+    topic = topic.slice(0, -1).trim();
+  }
+  return topic;
+}
+
+export function macsymaHelpText(topic = ""): string {
+  const rawKey = topic.trim().toLowerCase();
+  if (rawKey === "") {
+    return `MACSYMA help topics: ${Object.keys(MACSYMA_HELP_TOPICS).sort().join(", ")}. Use ? topic for details.`;
+  }
+  const key = MACSYMA_HELP_ALIASES[rawKey] ?? rawKey;
+  const text = MACSYMA_HELP_TOPICS[key];
+  if (text !== undefined) return text;
+  return `No MACSYMA help topic named ${JSON.stringify(topic)}. Available topics: ${Object.keys(MACSYMA_HELP_TOPICS).sort().join(", ")}.`;
+}
 
 export type CompilerNameTableTarget =
   | Map<string, IRSymbol>
@@ -244,6 +311,7 @@ export interface EvalResult {
   readonly output: IRNode;
   readonly outputText: string;
   readonly display: boolean;
+  readonly timingText?: string;
 }
 
 export class History {
@@ -303,6 +371,8 @@ export class History {
 
 export class MacsymaBackend extends SymbolicBackend {
   numer = false;
+  showtime = false;
+  readonly assumptions = new AssumptionContext();
   private readonly runtimeTable: ReadonlyMap<string, Handler>;
   private readonly runtimeHeld: ReadonlySet<string>;
 
@@ -315,6 +385,12 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(SUPPRESS.name, suppressHandler);
     table.set(KILL.name, makeKillHandler(this));
     table.set(EV.name, makeEvHandler());
+    table.set(ASSUME.name, assumeHandler);
+    table.set(FORGET.name, forgetHandler);
+    table.set(IS.name, isHandler);
+    table.set(DECLARE.name, declareHandler);
+    table.set(PROPERTIES.name, propertiesHandler);
+    table.set(PROP_VARS.name, propvarsHandler);
     table.set(SOLVE.name, solveHandler);
     table.set(SUBST.name, substHandler);
     table.set(SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
@@ -336,13 +412,41 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(PART.name, listHandler(2, ([value, index]) => part(value, integerArgument(index))));
     table.set(FLATTEN.name, listHandler(null, flattenHandler));
     this.runtimeTable = table;
-    this.runtimeHeld = new Set([...super.holdHeads(), KILL.name, EV.name, SOLVE.name, SUBST.name]);
+    this.runtimeHeld = new Set([
+      ...super.holdHeads(),
+      KILL.name,
+      EV.name,
+      ASSUME.name,
+      FORGET.name,
+      IS.name,
+      DECLARE.name,
+      PROPERTIES.name,
+      PROP_VARS.name,
+      SOLVE.name,
+      SUBST.name,
+      FACTOR.name,
+    ]);
   }
 
   override lookup(name: string): IRNode | undefined {
     const envValue = super.lookup(name);
     if (envValue !== undefined) return envValue;
     return this.history.resolveHistorySymbol(name);
+  }
+
+  override bind(name: string, value: IRNode): void {
+    super.bind(name, value);
+    if (name === "showtime") {
+      this.showtime = equals(value, TRUE);
+    }
+  }
+
+  override unbind(name: string): void {
+    super.unbind(name);
+    if (name === "showtime") {
+      this.showtime = false;
+      super.bind("showtime", FALSE);
+    }
   }
 
   override handlers(): ReadonlyMap<string, Handler> {
@@ -357,6 +461,8 @@ export class MacsymaBackend extends SymbolicBackend {
     this.env.clear();
     this.env.set(TRUE.name, TRUE);
     this.env.set(FALSE.name, FALSE);
+    this.showtime = false;
+    this.env.set("showtime", FALSE);
     this.bindMacsymaConstants();
     this.history.reset();
   }
@@ -375,6 +481,7 @@ export class MacsymaBackend extends SymbolicBackend {
     this.bind("%pi", numberNode(Math.PI));
     this.bind("%e", numberNode(Math.E));
     this.bind("%i", sym("ImaginaryUnit"));
+    this.bind("showtime", this.showtime ? TRUE : FALSE);
   }
 }
 
@@ -388,6 +495,10 @@ export class MacsymaSession {
   }
 
   evalSource(source: string): EvalResult[] {
+    const helpTopic = parseMacsymaHelpQuery(source);
+    if (helpTopic !== undefined) {
+      return [this.evalHelpQuery(helpTopic)];
+    }
     return this.evalStatements(compileMacsyma(source, { wrapTerminators: true }));
   }
 
@@ -409,14 +520,42 @@ export class MacsymaSession {
 
   private evalStatement(statement: IRNode): EvalResult {
     const [input, display] = unwrapDisplay(statement);
+    const showTiming = this.backend.showtime && !isShowtimeAssignment(input);
+    const startedAt = Date.now();
     const inputIndex = this.sessionHistory.recordInput(input);
     const output = this.vm.eval(input);
+    const elapsedSeconds = (Date.now() - startedAt) / 1000;
     const outputIndex = this.sessionHistory.recordOutput(output);
     const outputText = displayTextFor(input, output);
     if (isKillAll(input)) {
       this.sessionHistory.reset();
     }
-    return { inputIndex, outputIndex, input, output, outputText, display };
+    return {
+      inputIndex,
+      outputIndex,
+      input,
+      output,
+      outputText,
+      display,
+      ...(showTiming ? { timingText: formatTiming(elapsedSeconds) } : {}),
+    };
+  }
+
+  private evalHelpQuery(topic: string): EvalResult {
+    const query = topic === "" ? "?" : `? ${topic}`;
+    const text = macsymaHelpText(topic);
+    const input = stringNode(query);
+    const output = stringNode(text);
+    const inputIndex = this.sessionHistory.recordInput(input);
+    const outputIndex = this.sessionHistory.recordOutput(output);
+    return {
+      inputIndex,
+      outputIndex,
+      input,
+      output,
+      outputText: text,
+      display: true,
+    };
   }
 }
 
@@ -438,6 +577,7 @@ export interface JsonEvalResult {
   readonly display: boolean;
   readonly inputText: string;
   readonly outputText: string;
+  readonly timingText?: string;
   readonly inputIr: JsonIrNode;
   readonly outputIr: JsonIrNode;
 }
@@ -482,7 +622,10 @@ function evalResponseOk(results: readonly EvalResult[], history: History): JsonE
   return {
     ok: true,
     results: jsonResults,
-    visibleOutputs: jsonResults.filter((result) => result.display).map((result) => result.outputText),
+    visibleOutputs: jsonResults.flatMap((result) => [
+      ...(result.display ? [result.outputText] : []),
+      ...(result.timingText === undefined ? [] : [result.timingText]),
+    ]),
     history: historyToJson(history),
   };
 }
@@ -504,6 +647,7 @@ function resultToJson(result: EvalResult): JsonEvalResult {
     display: result.display,
     inputText: toDisplayString(result.input),
     outputText: result.outputText,
+    ...(result.timingText === undefined ? {} : { timingText: result.timingText }),
     inputIr: irToJson(result.input),
     outputIr: irToJson(result.output),
   };
@@ -590,6 +734,64 @@ function makeEvHandler(): Handler {
 
     return result;
   };
+}
+
+function assumeHandler(vm: VM, expr: IRApply): IRNode {
+  const ctx = assumptionContext(vm);
+  if (ctx === undefined) return expr;
+  if (expr.args.length === 1) {
+    ctx.assumeRelation(expr.args[0]);
+  } else if (expr.args.length === 2) {
+    ctx.assumeProperty(expr.args[0], expr.args[1]);
+  }
+  return sym("done");
+}
+
+function forgetHandler(vm: VM, expr: IRApply): IRNode {
+  const ctx = assumptionContext(vm);
+  if (ctx === undefined) return expr;
+  if (expr.args.length === 0) {
+    ctx.forgetAll();
+  } else {
+    ctx.forgetRelation(expr.args[0]);
+  }
+  return sym("done");
+}
+
+function isHandler(vm: VM, expr: IRApply): IRNode {
+  const ctx = assumptionContext(vm);
+  if (ctx === undefined || expr.args.length !== 1) return expr;
+  const result = ctx.isTrueRelation(expr.args[0]);
+  if (result === true) return TRUE;
+  if (result === false) return FALSE;
+  return sym("unknown");
+}
+
+function declareHandler(vm: VM, expr: IRApply): IRNode {
+  const ctx = assumptionContext(vm);
+  if (ctx === undefined || expr.args.length % 2 !== 0) return expr;
+  for (let i = 0; i < expr.args.length; i += 2) {
+    ctx.assumeProperty(expr.args[i], expr.args[i + 1]);
+  }
+  return sym("done");
+}
+
+function propertiesHandler(vm: VM, expr: IRApply): IRNode {
+  const ctx = assumptionContext(vm);
+  if (ctx === undefined || expr.args.length !== 1) return expr;
+  const [target] = expr.args;
+  if (target.kind !== "symbol") return app(LIST, []);
+  return app(LIST, ctx.factsFor(target.name).map((fact) => sym(fact)));
+}
+
+function propvarsHandler(vm: VM, expr: IRApply): IRNode {
+  const ctx = assumptionContext(vm);
+  if (ctx === undefined || expr.args.length !== 0) return expr;
+  return app(LIST, ctx.symbolsWithFacts().map((name) => sym(name)));
+}
+
+function assumptionContext(vm: VM): AssumptionContext | undefined {
+  return vm.backend instanceof MacsymaBackend ? vm.backend.assumptions : undefined;
 }
 
 function solveHandler(_vm: VM, expr: IRApply): IRNode {
@@ -728,6 +930,19 @@ function isKillAll(input: IRNode): boolean {
   return input.kind === "apply"
     && equals(input.head, KILL)
     && input.args.some((arg) => arg.kind === "symbol" && arg.name === ALL_SYMBOL.name);
+}
+
+function isShowtimeAssignment(input: IRNode): boolean {
+  return input.kind === "apply"
+    && input.head.kind === "symbol"
+    && input.head.name === "Assign"
+    && input.args.length === 2
+    && input.args[0].kind === "symbol"
+    && input.args[0].name === "showtime";
+}
+
+function formatTiming(elapsedSeconds: number): string {
+  return `Evaluation took ${elapsedSeconds.toFixed(6)} seconds.`;
 }
 
 function integerIndex(value: number): boolean {

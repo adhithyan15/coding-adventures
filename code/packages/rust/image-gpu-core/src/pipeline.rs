@@ -301,20 +301,35 @@ fn installed_handles() -> &'static Mutex<HashSet<u64>> {
     SLOT.get_or_init(|| Mutex::new(HashSet::new()))
 }
 
-/// **MX05 Phase 4.4.**  Per-handle metadata recorded at install time
-/// so the dispatch-routing path can validate buffer counts without
-/// re-emitting the kernel.  The tuple is
-/// `(input_buffer_count, output_buffer_count)`.
+/// **MX05 Phase 4.4 / extended in 4.6.**  Per-handle metadata recorded
+/// at install time so the dispatch-routing path can validate buffer
+/// counts and pick the correct unfolded slot without re-emitting the
+/// kernel.  The tuple is
+/// `(input_buffer_count, output_buffer_count, folded_slot)`.
 ///
-/// Why a side-table rather than threading through the
-/// `MetalExecutor`: the executor's `SpecialisedTable` stores boxed
-/// closures keyed by handle but doesn't expose introspection on the
-/// closure's expected argument shape.  Tracking these counts on the
-/// runtime side avoids piercing the closure abstraction and keeps
-/// the dispatcher's check cheap (one mutex lookup).
+/// `folded_slot` is `Some(s)` for binary ops where the policy
+/// observed slot `s` as a constant, and `None` otherwise (e.g.
+/// commutative ops where slot doesn't matter, or future
+/// `RangeClass::FloatBits`/`Integer` shapes).  Phase 4.6 introduced
+/// this so non-commutative ops (Sub/Div/Pow) can route the
+/// **unfolded** input through `DispatchSpecialised` regardless of
+/// which side carried the constant.
 #[cfg(feature = "metal-backend")]
-fn installed_kernel_metadata() -> &'static Mutex<HashMap<u64, (usize, usize)>> {
-    static SLOT: OnceLock<Mutex<HashMap<u64, (usize, usize)>>> = OnceLock::new();
+#[derive(Copy, Clone, Debug)]
+pub(crate) struct KernelMetadata {
+    pub n_in: usize,
+    pub n_out: usize,
+    /// Which IR input slot was folded.  Dispatcher uses this to
+    /// pick which `ir_op.inputs()` entries to actually pass to the
+    /// specialised kernel: it passes the **unfolded** slots.
+    /// `None` for commutative ops where the kernel accepts whichever
+    /// slot the dispatcher happens to pick first.
+    pub folded_slot: Option<u8>,
+}
+
+#[cfg(feature = "metal-backend")]
+fn installed_kernel_metadata() -> &'static Mutex<HashMap<u64, KernelMetadata>> {
+    static SLOT: OnceLock<Mutex<HashMap<u64, KernelMetadata>>> = OnceLock::new();
     SLOT.get_or_init(|| Mutex::new(HashMap::new()))
 }
 
@@ -323,12 +338,24 @@ fn installed_kernel_metadata() -> &'static Mutex<HashMap<u64, (usize, usize)>> {
 /// `MetalExecutor::install_specialised_from_emitted` rather than
 /// going through the auto-installer.
 #[cfg(all(test, feature = "metal-backend"))]
-pub(crate) fn record_test_kernel_metadata(handle: u64, n_in: usize, n_out: usize) {
+pub(crate) fn record_test_kernel_metadata(
+    handle: u64,
+    n_in: usize,
+    n_out: usize,
+    folded_slot: Option<u8>,
+) {
     let mut md = match installed_kernel_metadata().lock() {
         Ok(g) => g,
         Err(poisoned) => poisoned.into_inner(),
     };
-    md.insert(handle, (n_in, n_out));
+    md.insert(
+        handle,
+        KernelMetadata {
+            n_in,
+            n_out,
+            folded_slot,
+        },
+    );
 }
 
 /// **MX05 Phase 4.3.**  Try to auto-install a `SpecialisedKernel` onto
@@ -374,14 +401,21 @@ fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
     else {
         return false;
     };
-    // **MX05 Phase 4.4.**  Stash the kernel's input/output buffer
-    // counts before the EmittedKernel is consumed by the install
-    // call.  The dispatch-routing path reads these counts to trim
-    // `ir_op.inputs()` down to just the buffers the specialised
-    // kernel actually consumes (e.g. an Add-with-folded-constant
-    // kernel takes 1 input, not the IR-level 2).
+    // **MX05 Phase 4.4 / extended in 4.6.**  Stash the kernel's
+    // input/output buffer counts plus the SpecKey's `folded_slot`
+    // before the EmittedKernel is consumed by the install call.
+    // The dispatch-routing path reads these to:
+    //   - trim `ir_op.inputs()` down to the buffers the specialised
+    //     kernel actually consumes (commonly 1 for a binary op + 1
+    //     folded constant);
+    //   - pick which IR input slot to pass: for a binary op with
+    //     `folded_slot = Some(s)`, the unfolded slot is `1 - s` (so
+    //     LHS-folded → pass RHS, RHS-folded → pass LHS).  Phase 4.6
+    //     lights this up; Phase 4.4 ignored slot and always passed
+    //     the first `n_in` inputs.
     let n_in = emitted.input_buffer_count;
     let n_out = emitted.output_buffer_count;
+    let folded_slot = specialised.key.folded_slot;
     match backend
         .executor
         .install_specialised_from_emitted(specialised.handle, emitted)
@@ -398,7 +432,14 @@ fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
                 Ok(g) => g,
                 Err(poisoned) => poisoned.into_inner(),
             };
-            md.insert(specialised.handle, (n_in, n_out));
+            md.insert(
+                specialised.handle,
+                KernelMetadata {
+                    n_in,
+                    n_out,
+                    folded_slot,
+                },
+            );
             true
         }
         Err(_) => {
@@ -806,29 +847,33 @@ fn dispatch_specialised_via(
     output_byte_count: usize,
 ) -> Result<Vec<u8>, GpuError> {
     // Step 1: extract the Compute op's input / output BufferIds,
-    // trimmed to the count the installed kernel actually expects.
+    // trimmed to the count the installed kernel actually expects,
+    // and (for binary ops with a known `folded_slot`) picking the
+    // **unfolded** slot rather than blindly taking the first N.
     //
-    // The emitter folds at least one input into the kernel source
-    // (that's the whole point of specialisation), so the installed
-    // kernel's `input_buffer_count` is strictly less than the IR
-    // op's input count.  We take the **first** `n_in` IR inputs as
-    // the buffers to pass — this matches the emitter convention
-    // that *trailing* slots are folded.  See `msl_emitter` for the
-    // current folding convention (Add: RHS folded).  Future emitter
-    // shapes that fold non-trailing slots will need to encode the
-    // mapping in the SpecKey.
-    let (n_in, _n_out) = {
-        let md = match installed_kernel_metadata().lock() {
+    // Phase 4.4 took the first `n_in` IR inputs.  That was fine
+    // for the commutative-Add case but breaks Sub/Div/Pow when the
+    // policy folds the LHS — we'd pass the LHS buffer (which is
+    // the constant!) to the kernel and skip the RHS (the real
+    // variable input).
+    //
+    // Phase 4.6 fix: when `folded_slot = Some(s)`, the unfolded
+    // input is at slot `1 - s` (binary ops have exactly 2 IR
+    // inputs).  When `folded_slot = None`, fall back to the
+    // Phase 4.4 behaviour for commutative kernels.
+    let md = {
+        let g = match installed_kernel_metadata().lock() {
             Ok(g) => g,
             Err(poisoned) => poisoned.into_inner(),
         };
-        md.get(&handle).copied().ok_or_else(|| {
+        g.get(&handle).copied().ok_or_else(|| {
             GpuError::Other(format!(
                 "no kernel metadata for handle 0x{:016X} — did the install side run?",
                 handle
             ))
         })?
     };
+    let n_in = md.n_in;
     let (input_bufs, output_buf) = {
         let pop = &placed.ops[compute_op_idx];
         let PlacedOp::Compute { op: ir_op, .. } = pop else {
@@ -842,9 +887,20 @@ fn dispatch_specialised_via(
                 ir_inputs.len()
             )));
         }
-        let inputs: Vec<compute_ir::BufferId> = ir_inputs
+        // Resolve which IR inputs to actually pass.
+        //   - `folded_slot = Some(s)` and the op has exactly 2
+        //     inputs and the kernel takes exactly 1 → pass the
+        //     unfolded slot `1 - s`.
+        //   - Otherwise → first `n_in` inputs in declared order.
+        let selected_input_ids: Vec<matrix_ir::TensorId> = match md.folded_slot {
+            Some(s) if ir_inputs.len() == 2 && n_in == 1 => {
+                let unfolded = if s == 0 { 1usize } else { 0usize };
+                vec![ir_inputs[unfolded]]
+            }
+            _ => ir_inputs.iter().take(n_in).copied().collect(),
+        };
+        let inputs: Vec<compute_ir::BufferId> = selected_input_ids
             .iter()
-            .take(n_in)
             .map(|in_id| {
                 placed
                     .tensor(*in_id)
@@ -1355,6 +1411,7 @@ mod tests {
                 bytes: constant.to_le_bytes().to_vec(),
             },
             backend_id: 1, // metal convention
+            folded_slot: Some(1),
         };
         const TEST_HANDLE: u64 = 0xC0DE_C0DE_C0DE_C0DE;
         let emitted = matrix_metal::emit_specialised_kernel(&spec_key, TEST_HANDLE)
@@ -1368,7 +1425,7 @@ mod tests {
             .expect("install must succeed on a real Metal device");
         // Replicate what `try_auto_install_specialised` records so
         // `dispatch_specialised_via` can find the metadata.
-        record_test_kernel_metadata(TEST_HANDLE, n_in, n_out);
+        record_test_kernel_metadata(TEST_HANDLE, n_in, n_out, Some(1));
 
         // Step 3: build a placed ComputeGraph pinned to metal that:
         //   Op::Const → tensor A (the variable operand bytes)
@@ -1506,6 +1563,170 @@ mod tests {
             result,
             vec![8.0, 9.0, 10.0, 11.0],
             "specialised Add+7.0 kernel output must match generic Add"
+        );
+    }
+
+    /// **MX05 Phase 4.6 end-to-end test.**  Asserts the dispatcher
+    /// correctly picks the **unfolded** input when the policy folded
+    /// the LHS of a non-commutative op.
+    ///
+    /// Graph: `Op::Sub(A = [10, 10, 10, 10], B = [1, 2, 3, 4]) → C`,
+    /// where A (LHS) is observed as the constant `10.0`.  The
+    /// specialised kernel is the `sub_lhs_const_f32` variant — it
+    /// computes `K - b[gid]` where `K = 10.0`.  Expected output:
+    /// `[10 - 1, 10 - 2, 10 - 3, 10 - 4] = [9, 8, 7, 6]`.
+    ///
+    /// If the dispatcher mistakenly passed A's buffer (the LHS, the
+    /// constant) instead of B's buffer (the RHS, the variable), the
+    /// kernel would compute `K - a[gid] = 10 - 10 = 0` for every
+    /// element — the test would fail with `[0,0,0,0]`.  That's the
+    /// Phase 4.4 → Phase 4.6 regression this test pins.
+    #[cfg(all(feature = "metal-backend", target_vendor = "apple"))]
+    #[test]
+    fn dispatch_specialised_via_routes_lhs_folded_correctly() {
+        use crate::specialised_dispatch_count;
+        use compute_ir::{
+            BufferId, ComputeGraph, ExecutorId as ComputeExecutorId, OpTiming as PlanOpTiming,
+            PlacedConstant, PlacedOp, PlacedTensor, Residency, WIRE_FORMAT_VERSION,
+        };
+        use matrix_ir::{DType, Op, Shape, TensorId};
+
+        let backend = match metal_backend() {
+            Some(b) => b,
+            None => return,
+        };
+
+        // Install a Sub-with-LHS-folded-constant kernel: K = 10.0,
+        // folded_slot = 0 (LHS).  Kernel computes `10.0 - a[gid]`.
+        let constant: f32 = 10.0;
+        let spec_key = matrix_runtime::SpecKey {
+            op_kind: 0x08, // Op::Sub
+            dtype: DType::F32,
+            shape_class: matrix_runtime::ShapeClass::Dynamic,
+            range_class: matrix_runtime::RangeClass::Constant {
+                bytes: constant.to_le_bytes().to_vec(),
+            },
+            backend_id: 1,
+            folded_slot: Some(0), // LHS is the constant
+        };
+        const TEST_HANDLE: u64 = 0xABC0_ABC0_ABC0_ABC0;
+        let emitted = matrix_metal::emit_specialised_kernel(&spec_key, TEST_HANDLE)
+            .expect("Phase 4.6 emitter must support Sub with LHS-folded constant");
+        let n_in = emitted.input_buffer_count;
+        let n_out = emitted.output_buffer_count;
+        backend
+            .executor
+            .install_specialised_from_emitted(TEST_HANDLE, emitted)
+            .expect("install must succeed on a real Metal device");
+        record_test_kernel_metadata(TEST_HANDLE, n_in, n_out, Some(0));
+
+        // Build the placed graph: A = [10, 10, 10, 10] (LHS const),
+        // B = [1, 2, 3, 4] (RHS const, the variable from the
+        // dispatcher's POV), C = A - B.  Because both inputs are
+        // graph-level constants, both go through Op::Const into
+        // metal buffers; the dispatcher then routes
+        // DispatchSpecialised with the unfolded slot (slot 1 = B).
+        let metal_exec_id = ComputeExecutorId(1);
+        let a_residency = Residency { executor: metal_exec_id, buffer: BufferId(20) };
+        let b_residency = Residency { executor: metal_exec_id, buffer: BufferId(21) };
+        let c_residency = Residency { executor: metal_exec_id, buffer: BufferId(22) };
+        let a_bytes: Vec<u8> = [constant; 4].iter().flat_map(|v| v.to_le_bytes()).collect();
+        let b_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
+        let f32_shape4 = Shape::from(&[4u32]);
+
+        let tensor_a = PlacedTensor {
+            id: TensorId(0),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: a_residency,
+        };
+        let tensor_b = PlacedTensor {
+            id: TensorId(1),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: b_residency,
+        };
+        let tensor_c = PlacedTensor {
+            id: TensorId(2),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: c_residency,
+        };
+
+        let placed = ComputeGraph {
+            format_version: WIRE_FORMAT_VERSION,
+            inputs: vec![],
+            outputs: vec![tensor_c.clone()],
+            constants: vec![
+                PlacedConstant {
+                    tensor: TensorId(0),
+                    residency: a_residency,
+                    bytes: a_bytes,
+                },
+                PlacedConstant {
+                    tensor: TensorId(1),
+                    residency: b_residency,
+                    bytes: b_bytes,
+                },
+            ],
+            ops: vec![
+                PlacedOp::Compute {
+                    op: Op::Const { constant: 0, output: TensorId(0) },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Compute {
+                    op: Op::Const { constant: 1, output: TensorId(1) },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Alloc {
+                    residency: c_residency,
+                    bytes: 16,
+                },
+                PlacedOp::Compute {
+                    op: Op::Sub {
+                        lhs: TensorId(0),
+                        rhs: TensorId(1),
+                        output: TensorId(2),
+                    },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+            ],
+            tensors: vec![tensor_a, tensor_b, tensor_c.clone()],
+        };
+
+        let before = specialised_dispatch_count();
+        let bytes = dispatch_specialised_via(
+            &backend.transport,
+            &placed,
+            3, // Sub op is at index 3
+            TEST_HANDLE,
+            c_residency,
+            16,
+        )
+        .expect("specialised dispatch must succeed");
+        let after = specialised_dispatch_count();
+
+        assert!(after > before, "specialised_dispatch_count must rise");
+
+        // Expected: 10 - B = [10-1, 10-2, 10-3, 10-4] = [9, 8, 7, 6].
+        let result: Vec<f32> = bytes
+            .chunks(4)
+            .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+            .collect();
+        assert_eq!(
+            result,
+            vec![9.0, 8.0, 7.0, 6.0],
+            "Phase 4.6 LHS-folded Sub: dispatcher must pass the unfolded \
+             RHS slot to the kernel, not the LHS.  Got {:?} — if this is \
+             [0, 0, 0, 0] then the dispatcher passed the constant LHS \
+             instead of the variable RHS.",
+            result
         );
     }
 }

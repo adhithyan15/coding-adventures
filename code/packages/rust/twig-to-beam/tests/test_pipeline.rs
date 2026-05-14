@@ -374,3 +374,90 @@ fn module_name_embedded_in_binary() {
     let found = bytes.windows(name_bytes.len()).any(|w| w == name_bytes);
     assert!(found, "module name 'myapp' should appear in the BEAM binary");
 }
+
+/// Execute fib via the BEAM VM — catches the jmp_if branch-inversion bug.
+///
+/// This test writes the compiled BEAM binary to a temp file, then invokes
+/// the `erl` runtime as a subprocess to call `fib/1` and capture the result.
+/// The test is skipped (marked ignored) when `erl` is not on PATH.
+///
+/// Historically, fib(10) returned the wrong value (10 instead of 55) because
+/// the `jmp_if_true` / `jmp_if_false` branch synthesis was inverted: each used
+/// an `is_ne_exact` / `is_eq_exact` instruction with the fall-synth label as
+/// the *fail* destination, which caused the branch direction to be reversed.
+/// The fix uses a single `is_eq_exact {f,target}` / `is_ne_exact {f,target}`
+/// directly targeting the branch destination.
+#[test]
+fn fib_executes_via_beam_runtime() {
+    use twig_to_beam::compile_twig_to_beam;
+
+    // Check whether erl is available; skip if not.
+    if std::process::Command::new("erl").arg("-h").output().is_err() {
+        eprintln!("erl not found on PATH — skipping BEAM execution test");
+        return;
+    }
+
+    let source = "(define (fib n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2))))) (fib 10)";
+    let bytes = compile_twig_to_beam(source, "twig_fib_exec").unwrap();
+
+    // Write to a temp file.  The module name must match the file name (minus
+    // the .beam extension) so the BEAM loader can find it.
+    let beam_path = std::env::temp_dir().join("twig_fib_exec.beam");
+    std::fs::write(&beam_path, &bytes).expect("failed to write temp BEAM file");
+
+    // Build the Erlang one-liner that loads the module and calls fib(10).
+    //
+    // We strip the path-prefix from the module load so `code:load_abs` can
+    // find it with just the stem (no .beam extension).
+    let beam_stem = beam_path.with_extension("");
+
+    // Safety: sanitize the path before embedding in an Erlang string literal.
+    // TMPDIR can be set to a path containing Erlang metacharacters (quotes,
+    // backslashes) that would break out of the string literal and inject
+    // arbitrary code into the `erl -eval` argument.
+    let path_str = beam_stem
+        .to_str()
+        .expect("temp path is not valid UTF-8");
+    assert!(
+        !path_str.contains('"') && !path_str.contains('\\'),
+        "temp path contains characters unsafe for Erlang string interpolation: {path_str}"
+    );
+
+    let erlang_eval = format!(
+        "case code:load_abs(\"{}\") of \
+           {{module, twig_fib_exec}} -> \
+             R = twig_fib_exec:fib(10), \
+             io:format(\"RESULT:~p~n\", [R]); \
+           {{error, E}} -> \
+             io:format(\"LOAD_ERROR:~p~n\", [E]) \
+         end",
+        path_str
+    );
+
+    let output = std::process::Command::new("erl")
+        .args(["-noshell", "-eval", &erlang_eval, "-s", "init", "stop"])
+        .output()
+        .expect("failed to launch erl subprocess");
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+
+    eprintln!("erl stdout: {stdout}");
+    if !stderr.is_empty() {
+        eprintln!("erl stderr: {stderr}");
+    }
+
+    // Clean up temp file regardless of test outcome.
+    let _ = std::fs::remove_file(&beam_path);
+
+    // Verify the result.
+    assert!(
+        output.status.success(),
+        "erl subprocess exited with status {}: stderr={}",
+        output.status, stderr
+    );
+    assert!(
+        stdout.contains("RESULT:55"),
+        "expected RESULT:55 in output; got: {stdout}"
+    );
+}

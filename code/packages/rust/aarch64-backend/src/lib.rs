@@ -4,18 +4,23 @@
 //! [`aarch64_encoder`].  Plugs into both `jit-core` and `aot-core` through
 //! the shared [`jit_core::backend::Backend`] trait.
 //!
-//! ## Scope (V1 — what fib() needs)
+//! ## Scope
 //!
 //! | Family | CIR mnemonics |
 //! |--------|---------------|
 //! | Constants | `const_u8` … `const_u64`, `const_i8` … `const_i64`, `const_bool` |
 //! | Integer arithmetic | `add_<ty>`, `sub_<ty>`, `mul_<ty>` |
+//! | Division | `div_<ty>` (SDIV/UDIV), `mod_<ty>` (SDIV+MSUB or UDIV+MSUB) — LANG38 |
 //! | Comparisons | `cmp_eq_<ty>`, `cmp_ne_<ty>`, `cmp_lt_<ty>`, `cmp_le_<ty>`, `cmp_gt_<ty>`, `cmp_ge_<ty>` (signed and unsigned) |
+//! | Logical | `and_<ty>`, `or_<ty>`, `xor_<ty>` — LANG38 |
+//! | Shifts | `shl_<ty>`, `shr_<ty>` (arithmetic for `i*`, logical for `u*`) — LANG38 |
+//! | Unary | `neg_<ty>` (negate), `not_<ty>` (bitwise NOT), `mov_<ty>` — LANG38 |
 //! | Control flow | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 //! | Returns | `ret_<ty>`, `ret_void` |
 //! | Type guards | `type_assert` (lowered to `udf` trap — AOT has no deopt) |
-//! | Calls | `call`, `call_runtime` — **NOT YET** (returns `None` to defer to interpreter) |
+//! | Calls | `call` (direct + cross-function BL via external relocs) |
 //! | Float, send, properties | **NOT YET** |
+//! | Closures, globals | **NOT YET** (LANG39/LANG40) |
 //!
 //! Anything outside this list causes the backend to return `None`, which
 //! `aot-core` reports as a compile failure for that function (it falls
@@ -64,7 +69,8 @@
 
 use std::collections::HashMap;
 
-use aarch64_encoder::{Assembler, Cond, EncodeError, LabelId, Reg};
+use aarch64_encoder::{Assembler, Cond, EncodeError, ExternalReloc, LabelId, Reg};
+pub use aarch64_encoder::ExternalReloc as Reloc;
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use vm_core::value::Value;
@@ -179,12 +185,28 @@ impl From<EncodeError> for BackendError {
 // ===========================================================================
 
 /// Public-ish entry point used by tests.  Production callers go through
-/// the `Backend` trait.
+/// the `Backend` trait.  Relocations are silently discarded; use
+/// [`compile_with_relocs`] when you need them for AOT cross-function linking.
 pub fn compile(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, String> {
+    compile_inner(ctx, ir)
+        .map(|(bytes, _relocs)| bytes)
+        .map_err(|e| format!("aarch64-backend: {e:?}"))
+}
+
+/// Like [`compile`] but also returns external (cross-function) relocations.
+///
+/// Each [`ExternalReloc`] describes a `BL` placeholder instruction that must
+/// be patched after all functions are linked into a single code section.
+/// The linker writes the correct PC-relative offset into the placeholder once
+/// it knows the absolute byte offsets of all functions.
+pub fn compile_with_relocs(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+) -> Result<(Vec<u8>, Vec<ExternalReloc>), String> {
     compile_inner(ctx, ir).map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
-fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
+fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
     if ctx.params.len() > 8 {
         return Err(BackendError::TooManyParams(ctx.params.len()));
     }
@@ -228,8 +250,8 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
             }
         }
     }
-    // Pre-create labels referenced by jmp* (the targets may be defined
-    // either before or after the jump — pre-create all of them).
+    // Pre-create labels referenced by jmp* and call (targets may be before or
+    // after their use; forward references require pre-creation).
     for instr in ir {
         if matches!(instr.op.as_str(), "jmp" | "jmp_if_true" | "jmp_if_false") {
             if let Some(target) = label_name(instr) {
@@ -237,6 +259,29 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
                     .or_insert_with(|| asm.create_label());
             }
         }
+        // For `call callee_name, args...`: pre-create a label for the callee
+        // name so self-recursive calls can be resolved within this function.
+        if instr.op == "call" {
+            if let Some(CIROperand::Var(name)) = instr.srcs.first() {
+                labels.entry(name.clone())
+                    .or_insert_with(|| asm.create_label());
+            }
+        }
+    }
+
+    // ── Self-recursive call target ─────────────────────────────────────────
+    //
+    // Bind the current function's own name as a label pointing to the
+    // very start of the prologue.  `call <fn_name> …` instructions in
+    // the body emit `BL fn_name_label` which re-enters the function here,
+    // re-executing the full AAPCS64 prologue (stp fp,lr + spill args) for
+    // each new call frame — the same sequence the first call into the function
+    // executes.
+    //
+    // Cross-function calls (callee_name != fn_name) are not yet supported and
+    // will return `BackendError::UnsupportedOp` at instruction-emit time.
+    if let Some(&entry_label) = labels.get(ctx.name) {
+        asm.bind(entry_label).map_err(BackendError::from)?;
     }
 
     // ---- Prologue --------------------------------------------------------
@@ -251,7 +296,7 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
 
     // ---- Body ------------------------------------------------------------
     for instr in ir {
-        emit_instr(&mut asm, instr, &mut alloc, &labels, frame)?;
+        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name)?;
     }
 
     // ---- Final epilogue (only reached if the function falls off the end) -
@@ -260,7 +305,9 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
     // arbitrary code execution past the end of the function.
     emit_epilogue(&mut asm, frame)?;
 
-    asm.finish().map_err(BackendError::from)
+    let external_relocs = std::mem::take(&mut asm.external_relocs);
+    let bytes = asm.finish().map_err(BackendError::from)?;
+    Ok((bytes, external_relocs))
 }
 
 // ===========================================================================
@@ -273,6 +320,7 @@ fn emit_instr(
     alloc: &mut RegAlloc,
     labels: &HashMap<String, LabelId>,
     frame: u32,
+    fn_name: &str,
 ) -> Result<(), BackendError> {
     let op = instr.op.as_str();
 
@@ -372,7 +420,162 @@ fn emit_instr(
         return emit_cmp(asm, alloc, instr, rel, ty);
     }
 
-    // Anything else is unsupported for V1 — caller should fall back.
+    // ---- call  callee_name, arg0, arg1, … ----------------------------------
+    //
+    // IIR/CIR `call` layout:
+    //   op = "call", dest = Some(result_var), srcs = [Var(fn_name), Var(a0), …]
+    //
+    // AAPCS64 calling convention:
+    //   1. Load each argument from its stack slot into x0..x7.
+    //   2. Emit `BL <target_label>`.
+    //   3. After the call returns, store x0 (return value) to dest's stack slot.
+    //
+    // The stack-spill allocator stores all values in fixed `[sp, #slot]`
+    // locations, so there are no in-register live values to save around the
+    // call.  The saved `fp` and `lr` are already on the stack (via `stp` in
+    // the prologue) and therefore survive the callee's prologue/epilogue.
+    //
+    // Self-recursive calls (callee == current function) are supported by
+    // resolving `fn_name` against the `labels` map (which includes a
+    // binding for `fn_name` → the function body entry label, added in
+    // `compile_inner`).
+    //
+    // Cross-function calls (callee != current function, i.e. mutual recursion
+    // or calls to other module functions) are not yet supported in V1 because
+    // each function is compiled independently into a separate byte buffer; the
+    // relative offset to the callee is not known at instruction-emit time.
+    if op == "call" {
+        // srcs[0] = Var(callee_name), srcs[1..] = arguments
+        let callee_name = match instr.srcs.first() {
+            Some(CIROperand::Var(name)) => name.as_str(),
+            _ => return Err(BackendError::MalformedInstr(
+                "call: srcs[0] must be Var(function_name)".into()
+            )),
+        };
+        let arg_srcs = &instr.srcs[1..];
+        if arg_srcs.len() > 8 {
+            return Err(BackendError::UnsupportedOp(format!(
+                "call: too many arguments ({}) — AAPCS64 supports at most 8 register args",
+                arg_srcs.len()
+            )));
+        }
+
+        // Step 1 — load arguments into x0..x7.
+        // We collect (arg_reg, stack_slot) pairs first to detect any overlap
+        // between an argument's src slot and an earlier argument's destination
+        // register.  With stack-spill allocation, all values are already on
+        // the stack, so we can load them sequentially without aliasing issues
+        // as long as we process them left-to-right.
+        const ARG_REGS: [Reg; 8] = [
+            Reg::X0, Reg::X1, Reg::X2, Reg::X3,
+            Reg::X4, Reg::X5, Reg::X6, Reg::X7,
+        ];
+        for (i, src) in arg_srcs.iter().enumerate() {
+            load_operand(asm, alloc, ARG_REGS[i], src)?;
+        }
+
+        // Step 2 — branch-with-link to the callee.
+        //
+        // Self-recursive calls: `fn_name` == the current function name, and
+        // compile_inner bound `fn_name` as a label at the function body entry
+        // (after the prologue parameter-spill) so BL re-enters the function.
+        //
+        // Cross-function calls: emit a placeholder `BL #0` and record an
+        // `ExternalReloc` so the multi-function AOT linker can patch the offset
+        // after all function binaries are concatenated.
+        if callee_name == fn_name {
+            let target_id = *labels.get(callee_name).ok_or_else(|| {
+                BackendError::MalformedInstr(format!("call: no label for '{callee_name}'"))
+            })?;
+            asm.bl(target_id);
+        } else {
+            // Cross-function call: placeholder BL (offset will be patched by linker).
+            asm.bl_external(callee_name);
+        }
+
+        // Step 3 — save return value from x0 to the destination stack slot.
+        if let Some(dest) = &instr.dest {
+            let slot = alloc.slot_of(dest);
+            asm.str_(Reg::X0, Reg::Sp, slot)?;
+        }
+
+        return Ok(());
+    }
+
+    // ── LANG38 additions ─────────────────────────────────────────────────────
+
+    // ---- div_<ty> dest = a / b -------------------------------------------
+    //
+    // Signed types (i*): SDIV.  Unsigned types (u*): UDIV.
+    // Division by zero produces 0 per the ARM architecture spec — no trap.
+    //
+    // The type suffix drives signed/unsigned:
+    //   "i64" → sdiv   "u64" → udiv   etc.
+    if let Some(_ty) = op.strip_prefix("div_") {
+        return emit_div(asm, alloc, instr, _ty, false);
+    }
+
+    // ---- mod_<ty> dest = a % b -------------------------------------------
+    //
+    // Modulo via divide-then-multiply-subtract:
+    //   sdiv/udiv X2, X0, X1     ; X2 = a / b
+    //   msub      X0, X2, X1, X0 ; X0 = X0 - X2*X1  =  a mod b
+    //
+    // This uses X2 as an additional scratch register.  With the stack-spill
+    // allocator every value lives in a fixed stack slot, so X2 is never
+    // "live" between instructions — borrowing it here is safe.
+    if let Some(_ty) = op.strip_prefix("mod_") {
+        return emit_div(asm, alloc, instr, _ty, true);
+    }
+
+    // ---- and_<ty> / or_<ty> / xor_<ty> dest = a OP b --------------------
+    //
+    // Logical binary operations — type suffix is informational only; the
+    // operation is always 64-bit word-level (same as add/sub/mul).
+    for (prefix, kind) in &[("and_", BitwiseKind::And), ("or_", BitwiseKind::Or), ("xor_", BitwiseKind::Xor)] {
+        if op.starts_with(*prefix) {
+            return emit_bitwise(asm, alloc, instr, *kind);
+        }
+    }
+
+    // ---- shl_<ty> / shr_<ty>  dest = a SHIFT b ---------------------------
+    //
+    // Variable-amount shifts.  `shr_<ty>` emits ASRV (arithmetic, sign-
+    // extending) for signed types and LSRV (logical, zero-filling) for
+    // unsigned ones.  Both clamp the shift amount to 0..63 per the ARM spec.
+    if let Some(ty) = op.strip_prefix("shl_") {
+        return emit_shift(asm, alloc, instr, ShiftKind::Lsl, ty);
+    }
+    if let Some(ty) = op.strip_prefix("shr_") {
+        let kind = if ty.starts_with('i') { ShiftKind::Asr } else { ShiftKind::Lsr };
+        return emit_shift(asm, alloc, instr, kind, ty);
+    }
+
+    // ---- neg_<ty> dest = -src  (two's-complement negate) -----------------
+    if let Some(_ty) = op.strip_prefix("neg_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::X0, src)?;
+        asm.neg_(Reg::X0, Reg::X0);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // ---- not_<ty> dest = ~src  (bitwise NOT) -----------------------------
+    if let Some(_ty) = op.strip_prefix("not_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::X0, src)?;
+        asm.mvn(Reg::X0, Reg::X0);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // Anything else is unsupported — caller should fall back.
     Err(BackendError::UnsupportedOp(op.to_string()))
 }
 
@@ -445,6 +648,109 @@ fn emit_cmp(
         (CmpRel::Ge, false)     => Cond::Hs, // unsigned ≥
     };
     asm.cset(Reg::X0, cond);
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+// ===========================================================================
+// LANG38 helpers — division, bitwise, shift
+// ===========================================================================
+
+/// Emit `div_<ty>` or `mod_<ty>`.
+///
+/// Both division flavours share the same load sequence; the only difference
+/// is what happens after the divide instruction:
+/// - **div**: the quotient in X0 is the result.
+/// - **mod**: a follow-up `MSUB X0, X2, X1, X0` computes `a − (a/b)×b`.
+///
+/// X2 is used as a scratch register for the intermediate quotient during
+/// modulo.  The stack-spill allocator keeps every live value in a fixed
+/// stack slot, so X2 is free between instructions.
+fn emit_div(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    ty: &str,
+    want_mod: bool,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    // dividend → X0,  divisor → X1
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+
+    let signed = ty.starts_with('i');
+
+    if want_mod {
+        // quotient into X2 (scratch), then msub to get remainder
+        if signed { asm.sdiv(Reg::X2, Reg::X0, Reg::X1); }
+        else       { asm.udiv(Reg::X2, Reg::X0, Reg::X1); }
+        // X0 = X0 - X2 * X1 = dividend - quotient * divisor = remainder
+        asm.msub(Reg::X0, Reg::X2, Reg::X1, Reg::X0);
+    } else {
+        if signed { asm.sdiv(Reg::X0, Reg::X0, Reg::X1); }
+        else       { asm.udiv(Reg::X0, Reg::X0, Reg::X1); }
+    }
+
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+/// Bitwise binary operation kinds (AND / OR / XOR).
+#[derive(Debug, Clone, Copy)]
+enum BitwiseKind { And, Or, Xor }
+
+/// Emit a two-operand bitwise op: `dest = a OP b`.
+fn emit_bitwise(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: BitwiseKind,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+    match kind {
+        BitwiseKind::And => asm.and_(Reg::X0, Reg::X0, Reg::X1),
+        BitwiseKind::Or  => asm.orr(Reg::X0, Reg::X0, Reg::X1),
+        BitwiseKind::Xor => asm.eor(Reg::X0, Reg::X0, Reg::X1),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+/// Variable-shift operation kinds.
+#[derive(Debug, Clone, Copy)]
+enum ShiftKind { Lsl, Lsr, Asr }
+
+/// Emit a shift: `dest = value SHIFT amount`.
+fn emit_shift(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: ShiftKind,
+    _ty: &str,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    // value → X0,  shift amount → X1
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+    match kind {
+        ShiftKind::Lsl => asm.lsl_reg(Reg::X0, Reg::X0, Reg::X1),
+        ShiftKind::Lsr => asm.lsr_reg(Reg::X0, Reg::X0, Reg::X1),
+        ShiftKind::Asr => asm.asr_reg(Reg::X0, Reg::X0, Reg::X1),
+    }
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
     Ok(())
@@ -629,6 +935,139 @@ mod tests {
         ];
         let result = AArch64Backend.compile_function(&ctx("x", &[], "any"), &cir);
         assert!(result.is_none());
+    }
+
+    // ---- LANG38: division, modulo, logical, shift, unary ----
+
+    fn make_binop_cir(op: &str, dest: &str, a: &str, b: &str, ty: &str) -> CIRInstr {
+        CIRInstr {
+            op: op.into(),
+            dest: Some(dest.into()),
+            srcs: vec![CIROperand::Var(a.into()), CIROperand::Var(b.into())],
+            ty: ty.into(),
+            deopt_to: None,
+        }
+    }
+
+    fn make_unop_cir(op: &str, dest: &str, src: &str, ty: &str) -> CIRInstr {
+        CIRInstr {
+            op: op.into(),
+            dest: Some(dest.into()),
+            srcs: vec![CIROperand::Var(src.into())],
+            ty: ty.into(),
+            deopt_to: None,
+        }
+    }
+
+    // Helper: compile a tiny function [prologue, instr, ret] and assert it
+    // succeeds and produces valid-length ARM64 output.
+    fn compile_with_binop(
+        op: &str,
+        ty: &str,
+        signed: bool,
+    ) -> Vec<u8> {
+        let param_ty = if signed { "i64" } else { "u64" };
+        let params = vec![("a".into(), param_ty.into()), ("b".into(), param_ty.into())];
+        let ret_ty = format!("ret_{param_ty}");
+        let cir = vec![
+            make_binop_cir(op, "v0", "a", "b", ty),
+            CIRInstr {
+                op: ret_ty,
+                dest: None,
+                srcs: vec![CIROperand::Var("v0".into())],
+                ty: param_ty.into(),
+                deopt_to: None,
+            },
+        ];
+        compile(&ctx(&format!("f_{op}"), &params, param_ty), &cir)
+            .unwrap_or_else(|e| panic!("{op} compile failed: {e}"))
+    }
+
+    #[test]
+    fn div_i64_lowers() {
+        let bytes = compile_with_binop("div_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn div_u64_lowers() {
+        let bytes = compile_with_binop("div_u64", "u64", false);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn mod_i64_lowers() {
+        let bytes = compile_with_binop("mod_i64", "i64", true);
+        // mod expands to sdiv + msub = 2 extra instructions vs div
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn mod_u64_lowers() {
+        let bytes = compile_with_binop("mod_u64", "u64", false);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn and_i64_lowers() {
+        let bytes = compile_with_binop("and_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn or_i64_lowers() {
+        let bytes = compile_with_binop("or_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn xor_i64_lowers() {
+        let bytes = compile_with_binop("xor_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn shl_i64_lowers() {
+        let bytes = compile_with_binop("shl_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn shr_i64_lowers_asr() {
+        // Signed shift right → ASRV
+        let bytes = compile_with_binop("shr_i64", "i64", true);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn shr_u64_lowers_lsr() {
+        // Unsigned shift right → LSRV
+        let bytes = compile_with_binop("shr_u64", "u64", false);
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn neg_i64_lowers() {
+        let params = vec![("x".into(), "i64".into())];
+        let cir = vec![
+            make_unop_cir("neg_i64", "v0", "x", "i64"),
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                srcs: vec![CIROperand::Var("v0".into())], ty: "i64".into(), deopt_to: None },
+        ];
+        let bytes = compile(&ctx("fneg", &params, "i64"), &cir).expect("neg_i64");
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn not_i64_lowers() {
+        let params = vec![("x".into(), "i64".into())];
+        let cir = vec![
+            make_unop_cir("not_i64", "v0", "x", "i64"),
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                srcs: vec![CIROperand::Var("v0".into())], ty: "i64".into(), deopt_to: None },
+        ];
+        let bytes = compile(&ctx("fnot", &params, "i64"), &cir).expect("not_i64");
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
     }
 
     #[test]

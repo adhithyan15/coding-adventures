@@ -61,6 +61,28 @@ pub struct DemoConfig {
     pub timeout: Duration,
     pub source_text: String,
     pub cache_dir: Option<String>,
+    /// Optional rulebook text to inject into Arm A's system
+    /// prompt. v0.3 parity with `adjudication-tsa-demo` v0.12.
+    /// Pair with [`fixture_clinical_rulebook`] for a deterministic
+    /// baseline.
+    pub rulebook_text: Option<String>,
+    /// Output-token cap for Arm A. v0.3 parity with
+    /// `adjudication-tsa-demo`'s `ADJ_DEMO_MAX_ANSWER_TOKENS`.
+    pub max_answer_tokens: usize,
+    /// Arm A dispatch mode. Single-turn is the v0.1 behaviour;
+    /// Priming engages the two-turn protocol from
+    /// `adjudication-tsa-demo` v0.12.
+    pub arm_a_mode: ArmAMode,
+}
+
+/// Arm A dispatch strategies. Duplicated from
+/// `adjudication-tsa-demo` deliberately — keeping demo crates
+/// independent. If a third demo gains the same field a future
+/// `adjudication-demo-common` crate can pull this out.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArmAMode {
+    SingleTurn,
+    Priming,
 }
 
 impl Default for DemoConfig {
@@ -73,8 +95,53 @@ impl Default for DemoConfig {
             source_text:
                 "Patient: shortness of breath, mild fever, no known drug allergy.".into(),
             cache_dir: None,
+            rulebook_text: None,
+            max_answer_tokens: 2048,
+            arm_a_mode: ArmAMode::SingleTurn,
         }
     }
+}
+
+/// The canonical fixture clinical rulebook. Short, numbered, with
+/// references to authoritative reference material per ADJ19's
+/// methodology. v0.3 ships a small set covering the canonical
+/// fixture's symptoms (dyspnea, fever, denied-allergy reasoning);
+/// later iterations expand coverage as the cross-domain bench
+/// declaration set grows.
+///
+/// Same shape as `adjudication_tsa_demo::fixture_tsa_rulebook` so
+/// the bench harness can treat both domains uniformly.
+pub fn fixture_clinical_rulebook() -> String {
+    "CLINICAL TRIAGE RULEBOOK (v0.1, as of 2026-05-13):\n\
+     1. Chest pain radiating to arm + sweating + cardiac history → \
+        urgent evaluation per AHA 2019 ACS guideline.\n\
+     2. Stiff neck + photophobia + fever above 38.5°C → urgent \
+        evaluation; suspect bacterial meningitis per IDSA criteria.\n\
+     3. Severe asthma exacerbation indicators (peak flow <50% personal \
+        best, accessory muscle use, tripod position) → urgent \
+        evaluation per GINA 2024.\n\
+     4. Mild URI without red-flag features (no stridor, normal \
+        vitals, no chest pain) → outpatient supportive care per IDSA \
+        pharyngitis guideline.\n\
+     5. Mild-to-moderate dehydration in adults with normal vitals \
+        and ability to tolerate fluids → oral rehydration per WHO; \
+        outpatient is appropriate.\n\
+     6. Severe pediatric dehydration (lethargic, sunken eyes, \
+        capillary refill > 3s) → urgent IV fluids per WHO.\n\
+     7. Denied allergies (e.g., \"no known drug allergy\") remove a \
+        contraindication but do not change the indication. \
+        Decision-making proceeds with standard monitoring per ACR \
+        practice parameter.\n\
+     8. Isolated dyspnea without other red flags (no chest pain, \
+        normal vitals, no exertional component) is a clinical \
+        gray-zone; default to keep-for-observation pending further \
+        history per general triage guidelines.\n\
+     9. Fever above 39.5°C with rigors or altered mental status → \
+        urgent evaluation regardless of other findings.\n\
+     10. The framework's job is to apply these rules to a given \
+         patient assessment; if a finding doesn't trigger any rule \
+         above, default to keep-for-observation."
+        .to_string()
 }
 
 // ---------------------------------------------------------------------------
@@ -93,29 +160,28 @@ pub struct RawArmReport {
 }
 
 pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    match cfg.arm_a_mode {
+        ArmAMode::SingleTurn => run_raw_arm_single_turn(cfg),
+        ArmAMode::Priming => run_raw_arm_priming(cfg),
+    }
+}
+
+fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let client = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
         .with_timeout(cfg.timeout);
 
-    let prompt = format!(
-        "ASSESSMENT: {src}\n\nIs this patient safe to discharge?",
-        src = cfg.source_text
-    );
+    let prompt = build_raw_user_prompt(&cfg.source_text);
+    let system = build_raw_system_prompt(cfg.rulebook_text.as_deref());
     let req = CompletionRequest {
         model: cfg.model.clone(),
-        system: Some(
-            "You are a primary-care triage assistant. Given a short patient \
-             assessment, decide whether the patient is safe to discharge. \
-             Explain in 2-3 sentences, then end with a final line: \
-             `VERDICT: SAFE_TO_DISCHARGE` or `VERDICT: KEEP_FOR_OBSERVATION`."
-                .into(),
-        ),
+        system: Some(system),
         messages: vec![Message {
             role: MsgRole::User,
             content: MessageContent::Text(prompt.clone()),
         }],
         temperature: 0.0,
-        max_tokens: Some(512),
+        max_tokens: Some(cfg.max_answer_tokens),
         stop_sequences: Vec::new(),
         seed: Some(42),
         metadata: Default::default(),
@@ -131,6 +197,210 @@ pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
         latency_ms: resp.latency_ms,
         finish_reason: resp.finish_reason,
     })
+}
+
+/// Two-turn priming dispatch. Mirrors `adjudication-tsa-demo`'s
+/// implementation: turn 1 hands the model the rulebook with an
+/// ACK-only instruction; turn 2 sends the patient assessment and
+/// asks for a verdict-first answer. Falls back to single-turn when
+/// no rulebook is configured (priming with no rulebook to digest
+/// would be a wasted round-trip).
+fn run_raw_arm_priming(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    let rulebook = match cfg.rulebook_text.as_deref() {
+        Some(t) if !t.is_empty() => t,
+        _ => return run_raw_arm_single_turn(cfg),
+    };
+
+    let client = OllamaClient::new(cfg.model.clone())
+        .with_endpoint(cfg.endpoint.clone())
+        .with_timeout(cfg.timeout);
+
+    let priming_system = build_priming_system_prompt();
+    let priming_user = build_priming_turn1_user_prompt(rulebook);
+    let priming_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system.clone()),
+        messages: vec![Message {
+            role: MsgRole::User,
+            content: MessageContent::Text(priming_user.clone()),
+        }],
+        temperature: 0.0,
+        max_tokens: Some(64),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn1 = client.complete(priming_req)?;
+
+    let turn2_user = build_priming_turn2_user_prompt(&cfg.source_text);
+    let turn2_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system),
+        messages: vec![
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(priming_user),
+            },
+            Message {
+                role: MsgRole::Assistant,
+                content: MessageContent::Text(turn1.text.clone()),
+            },
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(turn2_user.clone()),
+            },
+        ],
+        temperature: 0.0,
+        max_tokens: Some(cfg.max_answer_tokens),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn2 = client.complete(turn2_req)?;
+
+    Ok(RawArmReport {
+        prompt: turn2_user,
+        answer: turn2.text,
+        model: turn2.model,
+        input_tokens: turn1.usage.input_tokens + turn2.usage.input_tokens,
+        output_tokens: turn1.usage.output_tokens + turn2.usage.output_tokens,
+        latency_ms: turn1.latency_ms + turn2.latency_ms,
+        finish_reason: turn2.finish_reason,
+    })
+}
+
+fn build_raw_user_prompt(source_text: &str) -> String {
+    format!(
+        "ASSESSMENT: {src}\n\nIs this patient safe to discharge?",
+        src = source_text,
+    )
+}
+
+/// Build Arm A's single-turn system prompt. v0.3 changes the
+/// format to put the VERDICT line FIRST so the verdict survives
+/// truncation. With a rulebook, also forbids invented rules.
+pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
+    match rulebook_text {
+        None => "You are a primary-care triage assistant. Given a short patient \
+                 assessment, decide whether the patient is safe to discharge.\n\
+                 \n\
+                 Your response MUST begin with the verdict line as the very \
+                 first line of output:\n\
+                 \n\
+                 VERDICT: SAFE_TO_DISCHARGE\n\
+                 (or)\n\
+                 VERDICT: KEEP_FOR_OBSERVATION\n\
+                 \n\
+                 After the verdict line, give 2-3 sentences of reasoning. The \
+                 verdict-first format ensures the verdict is captured even if \
+                 your reasoning is truncated."
+            .to_string(),
+        Some(text) => format!(
+            "You are a primary-care triage assistant. Use only the rules \
+             listed below. Do not invent or infer additional rules.\n\
+             \n\
+             {text}\n\
+             \n\
+             Given a patient assessment, decide whether the patient is safe \
+             to discharge.\n\
+             \n\
+             Your response MUST begin with the verdict line as the very \
+             first line of output:\n\
+             \n\
+             VERDICT: SAFE_TO_DISCHARGE — only when a rule above explicitly \
+             supports discharge for all findings declared.\n\
+             VERDICT: KEEP_FOR_OBSERVATION — only when a rule above \
+             explicitly indicates observation or further evaluation.\n\
+             VERDICT: ESCALATE — <one sentence describing what a supervisor \
+             needs to clarify> — when the rules above don't cover the case, \
+             when you cannot evaluate a rule's condition from the \
+             assessment, or when the assessment is ambiguous.\n\
+             \n\
+             Important: silence is not permission. If no rule above either \
+             explicitly supports discharge or explicitly indicates further \
+             evaluation, the correct verdict is ESCALATE — not \
+             SAFE_TO_DISCHARGE. Use ESCALATE whenever you would otherwise \
+             need to reason beyond the rules above, fabricate a rule that \
+             isn't listed, or default to one of the binary verdicts because \
+             the rulebook doesn't resolve the case.\n\
+             \n\
+             After the verdict line, give 2-3 sentences of reasoning citing \
+             the specific rule number(s) that produced your verdict (e.g., \
+             \"per rule N, ...\"). The verdict-first format ensures the \
+             verdict is captured even if your reasoning is truncated."
+        ),
+    }
+}
+
+/// Build the system prompt for the priming dispatch path. Same
+/// role (triage assistant) but with explicit ground rules about
+/// the two-turn protocol: read silently on turn 1, answer on
+/// turn 2.
+pub fn build_priming_system_prompt() -> String {
+    "You are a primary-care triage assistant. You will receive \
+     information in two turns:\n\
+     \n\
+     Turn 1: I will give you a clinical triage rulebook. Read it \
+     carefully and store the rules in your working memory. Respond \
+     with exactly the single word `ACK` and nothing else. Do NOT \
+     summarise the rules, comment on them, or analyse them until I \
+     ask my question in turn 2.\n\
+     \n\
+     Turn 2: I will give you a patient assessment. Apply only the \
+     rulebook from turn 1 — do not invent or infer additional \
+     rules. Your response MUST begin with the verdict line as the \
+     very first line of output:\n\
+     \n\
+     VERDICT: SAFE_TO_DISCHARGE — only when a rule from turn 1 \
+     explicitly supports discharge.\n\
+     VERDICT: KEEP_FOR_OBSERVATION — only when a rule from turn 1 \
+     explicitly indicates observation or further evaluation.\n\
+     VERDICT: ESCALATE — <one sentence describing what a supervisor \
+     needs to clarify> — when no rule from turn 1 covers the case, \
+     when you cannot evaluate a rule's condition from the \
+     assessment, or when the assessment is ambiguous.\n\
+     \n\
+     Important: silence is not permission. If no rule from turn 1 \
+     either explicitly supports discharge or explicitly indicates \
+     further evaluation, the correct verdict is ESCALATE — not \
+     SAFE_TO_DISCHARGE. Use ESCALATE whenever you would otherwise \
+     need to reason beyond the rules from turn 1, fabricate a \
+     rule, or default to one of the binary verdicts because the \
+     rulebook doesn't resolve the case.\n\
+     \n\
+     After the verdict line, give 2-3 sentences of reasoning \
+     citing the specific rule number(s) from the turn 1 rulebook. \
+     The verdict-first format ensures the verdict is captured even \
+     if your reasoning is truncated."
+        .to_string()
+}
+
+/// Build the turn 1 user message for the priming path: the
+/// rulebook, framed as "intake this and acknowledge".
+pub fn build_priming_turn1_user_prompt(rulebook_text: &str) -> String {
+    format!(
+        "TURN 1: RULEBOOK INTAKE.\n\
+         \n\
+         The following clinical triage rulebook applies to my next \
+         question. Read it. Respond with `ACK` only.\n\
+         \n\
+         {rulebook_text}"
+    )
+}
+
+/// Build the turn 2 user message for the priming path: the patient
+/// assessment, framed as "now apply turn 1's rulebook and answer".
+pub fn build_priming_turn2_user_prompt(source_text: &str) -> String {
+    format!(
+        "TURN 2: QUESTION.\n\
+         \n\
+         Apply the rulebook from turn 1. Assessment: {source_text}\n\
+         \n\
+         Is this patient safe to discharge? Remember: first line MUST \
+         be `VERDICT: SAFE_TO_DISCHARGE`, `VERDICT: KEEP_FOR_OBSERVATION`, \
+         or `VERDICT: ESCALATE — <reason>`. Silence in the rulebook is \
+         not permission — ESCALATE if no rule covers the case."
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -477,5 +747,166 @@ mod tests {
         assert_eq!(format_outcome(&PassOutcome::Passed), "Passed");
         assert_eq!(format_outcome(&PassOutcome::Failed), "Failed");
         assert_eq!(format_outcome(&PassOutcome::Skipped), "Skipped");
+    }
+
+    // -----------------------------------------------------------------
+    // v0.3 — rulebook injection + max_answer_tokens + priming tests
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn default_config_uses_single_turn_and_2048_token_cap() {
+        let cfg = DemoConfig::default();
+        assert_eq!(cfg.arm_a_mode, ArmAMode::SingleTurn);
+        assert_eq!(cfg.max_answer_tokens, 2048);
+        assert!(cfg.rulebook_text.is_none());
+    }
+
+    #[test]
+    fn fixture_rulebook_covers_canonical_symptoms() {
+        let rb = fixture_clinical_rulebook();
+        assert!(rb.contains("Severe asthma"));
+        assert!(rb.contains("URI"));
+        assert!(rb.contains("dehydration"));
+        // Denied-allergy reasoning is the load-bearing clinical edge
+        // case from ADJ19 §clinical-domain.
+        assert!(rb.contains("Denied allergies"));
+        assert!(rb.contains("monitoring"));
+    }
+
+    #[test]
+    fn raw_system_prompt_demands_verdict_first() {
+        let no_rb = build_raw_system_prompt(None);
+        assert!(no_rb.contains("first line"));
+        assert!(no_rb.contains("truncated"));
+        // Verdict set is clinical-specific.
+        assert!(no_rb.contains("SAFE_TO_DISCHARGE"));
+        assert!(no_rb.contains("KEEP_FOR_OBSERVATION"));
+
+        let with_rb = build_raw_system_prompt(Some("rule x"));
+        assert!(with_rb.contains("first line"));
+        assert!(with_rb.contains("Do not invent"));
+        assert!(with_rb.contains("citing the specific rule number"));
+    }
+
+    #[test]
+    fn priming_system_prompt_describes_two_turn_protocol() {
+        let s = build_priming_system_prompt();
+        assert!(s.contains("Turn 1"));
+        assert!(s.contains("Turn 2"));
+        assert!(s.contains("ACK"));
+        assert!(s.contains("SAFE_TO_DISCHARGE"));
+        assert!(s.contains("KEEP_FOR_OBSERVATION"));
+        assert!(s.contains("Do NOT"));
+    }
+
+    #[test]
+    fn priming_turn1_user_prompt_embeds_rulebook_and_demands_ack() {
+        let rb = "1. test rule about dyspnea.\n2. test rule about fever.";
+        let s = build_priming_turn1_user_prompt(rb);
+        assert!(s.contains("RULEBOOK INTAKE"));
+        assert!(s.contains("ACK"));
+        assert!(s.contains("test rule about dyspnea"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_embeds_assessment_and_restates_verdict_format() {
+        let s = build_priming_turn2_user_prompt(
+            "Patient: shortness of breath, mild fever.",
+        );
+        assert!(s.contains("TURN 2"));
+        assert!(s.contains("shortness of breath"));
+        assert!(s.contains("rulebook from turn 1"));
+        assert!(s.contains("SAFE_TO_DISCHARGE"));
+        assert!(s.contains("KEEP_FOR_OBSERVATION"));
+    }
+
+    #[test]
+    fn config_with_priming_mode_is_addressable_via_struct_field() {
+        let mut cfg = DemoConfig::default();
+        cfg.arm_a_mode = ArmAMode::Priming;
+        cfg.rulebook_text = Some(fixture_clinical_rulebook());
+        assert_eq!(cfg.arm_a_mode, ArmAMode::Priming);
+        assert!(cfg.rulebook_text.is_some());
+    }
+
+    #[test]
+    fn arm_a_mode_round_trips_through_debug_clone_eq() {
+        let a = ArmAMode::SingleTurn;
+        let b = a;
+        assert_eq!(a, b);
+        let c = ArmAMode::Priming;
+        assert_ne!(a, c);
+        let s = format!("{a:?}");
+        assert!(s.contains("SingleTurn"));
+    }
+
+    // -----------------------------------------------------------------
+    // v0.4 — ESCALATE verdict in with-rulebook prompts (mirrors tsa)
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn raw_system_prompt_no_rulebook_keeps_binary_verdict() {
+        let s = build_raw_system_prompt(None);
+        assert!(s.contains("VERDICT: SAFE_TO_DISCHARGE"));
+        assert!(s.contains("VERDICT: KEEP_FOR_OBSERVATION"));
+        assert!(!s.contains("VERDICT: ESCALATE"));
+    }
+
+    #[test]
+    fn raw_system_prompt_with_rulebook_offers_escalate_verdict() {
+        let s = build_raw_system_prompt(Some("RULES: 1. test."));
+        assert!(s.contains("VERDICT: SAFE_TO_DISCHARGE"));
+        assert!(s.contains("VERDICT: KEEP_FOR_OBSERVATION"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(
+            s.contains("silence is not permission"),
+            "with-rulebook prompt must state silence-is-not-permission"
+        );
+    }
+
+    #[test]
+    fn priming_system_prompt_offers_escalate_verdict() {
+        let s = build_priming_system_prompt();
+        assert!(s.contains("VERDICT: SAFE_TO_DISCHARGE"));
+        assert!(s.contains("VERDICT: KEEP_FOR_OBSERVATION"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("silence is not permission"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_lists_escalate_as_an_option() {
+        let s = build_priming_turn2_user_prompt("test assessment");
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("ESCALATE if no rule covers the case"));
+    }
+
+    #[test]
+    fn framework_instructions_do_not_leak_clinical_specific_metaphors() {
+        // Same discipline as tsa-demo's framework-instruction test.
+        // The behavioural instructions about ESCALATE / verdict-first
+        // / silence-is-not-permission should be in domain-neutral
+        // language. Role descriptors and rulebook content stay
+        // domain-specific (each demo crate owns those).
+        let with_rb = build_raw_system_prompt(Some("RULES: 1."));
+        let priming = build_priming_system_prompt();
+
+        // No appeals to physician / nurse / hospital behaviour in the
+        // framework instructions about ESCALATE.
+        for needle in &[
+            "a real physician",
+            "a real nurse",
+            "a real triage officer asks",
+            "a real attending",
+            "consulting a colleague",
+        ] {
+            assert!(
+                !with_rb.contains(needle),
+                "with-rulebook prompt's framework instructions should not invoke {needle:?}"
+            );
+            assert!(
+                !priming.contains(needle),
+                "priming prompt's framework instructions should not invoke {needle:?}"
+            );
+        }
     }
 }

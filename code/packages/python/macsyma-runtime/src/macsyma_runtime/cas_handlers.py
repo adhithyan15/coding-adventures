@@ -10,7 +10,7 @@ Organised in sections that mirror the substrate packages:
 
 - **simplify / expand** — :mod:`cas_simplify`
 - **substitution** — :mod:`cas_substitution`
-- **factor** — :mod:`cas_factor`
+- **factor** — canonical :mod:`symbolic_vm.cas_handlers`
 - **solve** — :mod:`cas_solve`
 - **list operations** — :mod:`cas_list_operations`
 - **matrix** — :mod:`cas_matrix`
@@ -36,7 +36,6 @@ import math
 from fractions import Fraction
 from typing import TYPE_CHECKING
 
-from cas_factor import factor_integer_polynomial
 from cas_laplace import build_laplace_handler_table as _build_laplace_handlers
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
 from cas_list_operations import (
@@ -70,10 +69,6 @@ from cas_solve import (
 )
 from cas_substitution import subst
 from symbolic_ir import (
-    ADD,
-    MUL,
-    NEG,
-    POW,
     IRApply,
     IRInteger,
     IRNode,
@@ -92,6 +87,7 @@ from symbolic_vm.cas_handlers import erfc_handler as _erfc_handler
 from symbolic_vm.cas_handlers import erfi_handler as _erfi_handler
 from symbolic_vm.cas_handlers import fresnel_c_handler as _fresnel_c_handler
 from symbolic_vm.cas_handlers import fresnel_s_handler as _fresnel_s_handler
+from symbolic_vm.cas_handlers import factor_handler as _factor_handler_full
 from symbolic_vm.cas_handlers import gamma_handler as _gamma_handler
 from symbolic_vm.cas_handlers import li2_handler as _li2_handler
 from symbolic_vm.cas_handlers import (
@@ -180,54 +176,8 @@ def subst_handler(vm: VM, expr: IRApply) -> IRNode:
 
 
 def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
-    """``Factor(poly_expr)`` — factor a univariate integer polynomial.
-
-    Identifies the single free variable in ``poly_expr``, converts to
-    an integer coefficient list, calls :func:`cas_factor.factor_integer_polynomial`,
-    and reassembles the IR as ``Mul(content, Pow(factor_1, mult_1), …)``.
-
-    Returns the expression unevaluated if:
-
-    - the expression has more than one free variable,
-    - it cannot be represented as an integer polynomial over the free variable,
-    - the polynomial is constant (degree 0).
-    """
-    if len(expr.args) != 1:
-        return expr
-    inner = expr.args[0]
-
-    # Pick the single free variable.
-    x = _find_variable(inner)
-    if x is None:
-        return expr  # no variable — constant already
-
-    # Convert to integer coefficient list via the polynomial bridge.
-    coeffs = _ir_to_integer_poly(inner, x)
-    if coeffs is None:
-        return expr
-
-    # Factor.
-    content_val, factors = factor_integer_polynomial(coeffs)
-
-    if not factors:
-        # The polynomial was just the content (constant).
-        return inner
-
-    # Degree-1 polynomials (linear: [b, a]) are already in "factored form"
-    # by definition — return the polynomial directly rather than unevaluated.
-    # Only for degree ≥ 2 do we distinguish "irreducible" from "factored".
-    if len(coeffs) <= 2:
-        return _factor_result_to_ir(content_val, factors, x)
-
-    # For degree ≥ 2: if there is exactly one factor with multiplicity 1
-    # and the content is ±1, the polynomial is irreducible over Z — no
-    # non-trivial factoring was possible.  Return the expression
-    # *unevaluated* (head stays ``Factor``) so the user can see that it
-    # cannot be simplified further.
-    if len(factors) == 1 and factors[0][1] == 1 and abs(content_val) == 1:
-        return expr
-
-    return _factor_result_to_ir(content_val, factors, x)
+    """``Factor(poly_expr)`` — use the canonical symbolic VM factor handler."""
+    return _factor_handler_full(_vm, expr)
 
 
 def _find_variable(node: IRNode) -> IRSymbol | None:
@@ -251,133 +201,6 @@ def _collect_variables(node: IRNode, found: set[str]) -> None:
     elif isinstance(node, IRApply):
         for arg in node.args:
             _collect_variables(arg, found)
-
-
-def _ir_to_integer_poly(inner: IRNode, x: IRSymbol) -> list[int] | None:
-    """Convert IR to ``list[int]`` coefficient list (low-degree first).
-
-    Returns ``None`` if ``inner`` is not a pure polynomial in ``x`` with
-    rational coefficients, or if the denominators don't clear to integers.
-    """
-    result = to_rational(inner, x)
-    if result is None:
-        return None
-    num, den = result
-    # Must be a polynomial, not a genuine rational function.
-    if den != (Fraction(1),):
-        return None
-
-    # Clear denominators: find LCM of all coefficient denominators,
-    # then scale up to get integer coefficients.
-    denom_lcm = 1
-    for c in num:
-        denom_lcm = _lcm(denom_lcm, c.denominator)
-
-    int_coeffs = [int(c * denom_lcm) for c in num]
-
-    # Only include denom_lcm in the content if it's > 1 and we'd lose
-    # info. For integer polynomials this is a no-op; for rational inputs
-    # we scale up — that changes the polynomial, so bail out instead.
-    if denom_lcm != 1:
-        return None  # rational polynomial, not integer — leave unevaluated
-
-    return int_coeffs
-
-
-def _gcd(a: int, b: int) -> int:
-    while b:
-        a, b = b, a % b
-    return abs(a)
-
-
-def _lcm(a: int, b: int) -> int:
-    return abs(a * b) // _gcd(a, b) if a and b else 0
-
-
-def _factor_result_to_ir(
-    content_val: int,
-    factors: list[tuple[list[int], int]],
-    x: IRSymbol,
-) -> IRNode:
-    """Assemble ``Mul(content, Pow(f1, m1), Pow(f2, m2), …)`` as IR."""
-    parts: list[IRNode] = []
-
-    if content_val != 1:
-        parts.append(IRInteger(content_val))
-
-    for poly_coeffs, mult in factors:
-        factor_ir = _linear_poly_to_ir(poly_coeffs, x)
-        if mult == 1:
-            parts.append(factor_ir)
-        else:
-            parts.append(IRApply(POW, (factor_ir, IRInteger(mult))))
-
-    if not parts:
-        return IRInteger(content_val)
-    if len(parts) == 1:
-        return parts[0]
-    # Fold into left-associative binary Mul chain.
-    acc: IRNode = parts[0]
-    for p in parts[1:]:
-        acc = IRApply(MUL, (acc, p))
-    return acc
-
-
-def _linear_poly_to_ir(coeffs: list[int], x: IRSymbol) -> IRNode:
-    """Convert a small coefficient list to IR.
-
-    Covers the linear case ``[b, a]`` → ``a*x + b``.  Higher degrees
-    fall through to a generic builder.
-    """
-    if len(coeffs) == 1:
-        return IRInteger(coeffs[0])
-    if len(coeffs) == 2:
-        b, a = coeffs
-        # Build ``a*x``
-        if a == 1:
-            ax: IRNode = x
-        elif a == -1:
-            ax = IRApply(NEG, (x,))
-        else:
-            ax = IRApply(MUL, (IRInteger(a), x))
-        if b == 0:
-            return ax
-        if b > 0:
-            return IRApply(ADD, (ax, IRInteger(b)))
-        # b < 0: emit Sub(a*x, |b|)
-        from symbolic_ir import SUB
-
-        return IRApply(SUB, (ax, IRInteger(-b)))
-    # Generic: build Add chain for each term.
-    terms: list[IRNode] = []
-    for i, c in enumerate(coeffs):
-        if c == 0:
-            continue
-        if i == 0:
-            terms.append(IRInteger(c))
-        elif i == 1:
-            if c == 1:
-                terms.append(x)
-            elif c == -1:
-                terms.append(IRApply(NEG, (x,)))
-            else:
-                terms.append(IRApply(MUL, (IRInteger(c), x)))
-        else:
-            power: IRNode = IRApply(POW, (x, IRInteger(i)))
-            if c == 1:
-                terms.append(power)
-            elif c == -1:
-                terms.append(IRApply(NEG, (power,)))
-            else:
-                terms.append(IRApply(MUL, (IRInteger(c), power)))
-    if not terms:
-        return IRInteger(0)
-    from symbolic_ir import ADD as _ADD
-
-    acc2: IRNode = terms[0]
-    for t in terms[1:]:
-        acc2 = IRApply(_ADD, (acc2, t))
-    return acc2
 
 
 # ---------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-12. Branch point: spice-engine v0.10.0 (PR #2901),
-> macsyma-runtime v1.25.0 (PR #2379).
+> Last updated: 2026-05-13. Branch point: spice-engine v0.10.0 (PR #2901),
+> macsyma-runtime after the MACSYMA help-system merge (PR #3065).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -117,7 +117,7 @@ Items are listed in priority order within each group.
 
 ## MACSYMA Pipeline
 
-### What is on `main` (macsyma-runtime v1.25.0, Phase 34)
+### What is on `main` (MACSYMA pipeline after PR #3065)
 
 Every item below is wired end-to-end: surface syntax → compile → VM → correct result.
 
@@ -143,7 +143,7 @@ Every item below is wired end-to-end: surface syntax → compile → VM → corr
 | `cas-list-operations` | 0.1.0 | `length`, `first`, `rest`, `last`, `append`, `reverse`, `range`, `map`, `apply`, `select`, `sort`, `part`, `flatten`, `join`, `makelist` |
 | `cas-matrix` | 0.3.0 | Basic: `matrix`, `transpose`, `determinant`, `invert`. Advanced: `dot`, `mattrace`, `matrix_size`, `ident`, `zeromatrix`, `rank`, `rowreduce`, `eigenvalues`, `eigenvectors`, `charpoly`, `nullspace`, `columnspace`, `rowspace`, `norm`, `lu` |
 | `cas-limit-series` | 0.2.0 | `limit` (direct substitution + L'Hôpital), `taylor` |
-| `cas-ode` | 0.1.0 | `ode2` — first-order linear, separable, 2nd-order constant-coefficient (all 3 characteristic-root cases) |
+| `cas-ode` | latest | `ode2` — first-order linear, separable, Bernoulli, exact, homogeneous-type, 2nd-order constant-coefficient homogeneous/non-homogeneous, Euler-Cauchy, and variation-of-parameters fallback |
 | `cas-laplace` | latest | `laplace`, `ilt` (inverse Laplace), `dirac_delta`, `unit_step` |
 | `cas-trig` | 0.1.0 | `trigsimp`, `trigexpand`, `trigreduce` |
 | `cas-complex` | 0.1.0 | `re`, `im`, `conjugate`, `cabs`, `carg`, `rectform`, `polarform`; `%i` pre-bound; `%i²→-1` fires automatically |
@@ -158,7 +158,8 @@ Every item below is wired end-to-end: surface syntax → compile → VM → corr
 
 **Integration** (Risch phases 1–14+): polynomials, rational functions, trig,
 exp, log, IBP, partial fractions, inverse-trig, hyperbolic powers,
-exp×hyperbolic, Rothstein-Trager for rational functions.
+exp×hyperbolic, sinh/cosh mixed powers, Rothstein-Trager for rational
+functions.
 
 **Calculus:** `diff` (all elementary functions).
 
@@ -174,8 +175,13 @@ closed forms.
 `cbrt`, `float`, `radcan`, `logcontract`, `logexpand`, `exponentialize`,
 `demoivre`.
 
-**Assumptions:** `assume(x > 0)`, `is(x > 0)`, `forget()`, `forget(relation)`
-— shared VM state, persists across REPL statements.
+**Assumptions and properties:** `assume(x > 0)`, `is(x > 0)`, `forget()`,
+`forget(relation)`, `declare(x, positive)`, `properties(x)`, and `propvars()`
+— shared VM/session state, persists across REPL statements.
+
+**Session/runtime tooling:** batch `.mac` file execution in the Python REPL,
+`ev(expr, display2d)` 2D presentation, `showtime:true` diagnostics, friendly
+syntax errors, and `?` / `? topic` help are all present.
 
 **Constants pre-bound:** `%pi`, `%e`, `%i`.
 
@@ -183,21 +189,22 @@ closed forms.
 
 ### What is not yet built
 
-#### ODE gaps (in `cas-ode` spec; `ode2` currently handles 4 types)
+#### ODE status and remaining gap
 
-The following five ODE classes are specified in `code/specs/phase18-ode-completion.md`
-but not yet implemented. They cover the bulk of remaining textbook ODE problems.
+Phase 18/20 ODE coverage has landed across the Python, TypeScript, and Rust
+`cas-ode` packages. `ode2` now covers the previously listed textbook classes
+except for variable-coefficient second-order power-series/Frobenius solving.
 
 | ODE type | Identifying form | Algorithm |
 |---|---|---|
-| **Bernoulli** | `y' + P(x)·y = Q(x)·yⁿ` | Substitution `v = y^(1−n)` reduces to linear |
-| **Exact** | `M(x,y) dx + N(x,y) dy = 0`, `∂M/∂y = ∂N/∂x` | Integrate M w.r.t. x, match N to find integration function |
-| **Homogeneous** | `y' = f(y/x)` | Substitution `v = y/x` reduces to separable |
-| **2nd-order non-homogeneous, constant coefficients** | `a·y'' + b·y' + c·y = g(x)` | Method of undetermined coefficients or variation of parameters |
-| **Variable-coefficient 2nd-order** | `P(x)·y'' + Q(x)·y' + R(x)·y = 0` | Power series / Frobenius method |
+| **Bernoulli** | `y' + P(x)·y = Q(x)·yⁿ` | Implemented with `v = y^(1−n)` reduction |
+| **Exact** | `M(x,y) dx + N(x,y) dy = 0`, `∂M/∂y = ∂N/∂x` | Implemented with implicit potential construction |
+| **Homogeneous type** | `y' = f(y/x)` | Implemented with `v = y/x` reduction |
+| **2nd-order non-homogeneous, constant coefficients** | `a·y'' + b·y' + c·y = g(x)` | Implemented with undetermined coefficients and variation of parameters |
+| **Variable-coefficient 2nd-order** | `P(x)·y'' + Q(x)·y' + R(x)·y = 0` | Still open: power series / Frobenius method |
 
-All five are in `code/specs/phase18-ode-completion.md`. Target: `cas-ode` 0.2.0,
-new `ode2` type-dispatch branch for each form.
+Next ODE work should focus only on the variable-coefficient/Frobenius case
+unless a parity audit finds a smaller drift between the three language ports.
 
 #### Factoring gaps
 
@@ -221,28 +228,32 @@ The Risch integration suite is ~85% complete. Known remaining gaps:
 
 | Case | Example | Status |
 |---|---|---|
-| `sinh^m · cosh^n`, both `m, n ≥ 2` | `∫ sinh²(x)·cosh²(x) dx` | Returns unevaluated. Use double-angle reduction first. |
 | Elliptic integrals | `∫ 1/√(1-k²sin²θ) dθ` | Non-elementary; should return unevaluated with a recognised `EllipticK(k)` form |
 | `∫ f(x)·g(x)` where neither factor integrates alone | General product rule fallback missing; currently only specific matched patterns work |
 
-#### REPL and session features
+#### Completed REPL and session features
 
 | Feature | Priority | Notes |
 |---|---|---|
-| **Batch / file execution** | High | No way to run a `.mac` file non-interactively. Add a `macsyma_run_file(path)` entry point to `macsyma-runtime` and a `--file` flag to `macsyma-repl`. |
-| **`declare` with properties** | Medium | `declare(n, integer)`, `declare(f, antisymmetric)`, `declare(x, positive)`. Properties feed into the assumption system for automatic simplification. |
-| **`display2d` flag in `ev`** | Medium | `ev(expr, display2d)` should route output through `cas-pretty-printer` 2D layout. Currently the `pretty()` API exists but isn't triggered by `ev`. |
+| **Batch / file execution** | Done | Python `macsyma-repl` supports `--file` / `-f` execution for `.mac` programs. |
+| **`declare` with properties** | Done | Python, TypeScript, and Rust sessions support `declare`, and properties feed assumption queries. |
+| **`display2d` flag in `ev`** | Done | Python, TypeScript, and Rust sessions route `ev(expr, display2d)` through the 2D box pretty-printer. |
+| **`propvars` / `properties`** | Done | Python, TypeScript, and Rust sessions expose property queries for declared symbols. |
+
+#### Remaining REPL and session features
+
+| Feature | Priority | Notes |
+|---|---|---|
 | **MACSYMA package system** | Low | `:load`, `:algebraic`, `:orthopoly` etc. No design yet. |
 | **Symbolic infinite sums** | Low | `sum` handles Faulhaber and geometric closed forms. Hypergeometric / telescoping detection not done. |
-| **`propvars` / `properties`** | Low | Querying what properties a symbol has been declared with. |
 
 #### Diagnostic / tooling gaps
 
 | Feature | Notes |
 |---|---|
-| **Friendly error messages** | Syntax errors from the parser surface as raw Python exceptions. Should produce MACSYMA-style messages: `Incorrect syntax: …` with the offending token highlighted. |
-| **`?` help system** | No documentation lookup. A thin wrapper over docstrings would cover most cases. |
-| **`showtime`** | MACSYMA's wall-clock / GC timing per expression. Useful for performance work. |
+| **Friendly error messages** | Python, TypeScript, and Rust MACSYMA syntax failures now surface as `Incorrect syntax ...` diagnostics with line/column and a caret where parser token metadata is available. |
+| **`?` help system** | Python, TypeScript, and Rust sessions support `?` and `? topic` with a small curated help catalog for core runtime/CAS topics. |
+| **`showtime`** | Python, TypeScript, and Rust sessions support `showtime:true` / `showtime:false` wall-clock timing per expression, including suppressed statements. |
 
 ---
 

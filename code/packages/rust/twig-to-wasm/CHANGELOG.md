@@ -2,6 +2,16 @@
 
 All notable changes to this crate are documented here.
 
+## [0.1.1] — 2026-05-13
+
+### Fixed
+
+- **`br_table` handler** — the WASM execution engine's `br_table` dispatch
+  table was misread when the target index exceeded the table size (should
+  use the default label, was indexing past the end).  `fib(10)` now returns
+  `55` through the WebAssembly runtime.
+- End-to-end test `fib_returns_55` added to `tests/test_pipeline.rs`.
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

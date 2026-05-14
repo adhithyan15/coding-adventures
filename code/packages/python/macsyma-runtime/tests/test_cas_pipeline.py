@@ -717,6 +717,92 @@ def test_pipeline_factor_irreducible_x2_plus_1_unchanged() -> None:
     assert result.head.name == "Factor"
 
 
+def test_pipeline_factor_common_multivariate_factor() -> None:
+    """factor(x^2*y - y) extracts the common y factor."""
+    result = _eval("factor(x^2*y - y)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert "Factor" not in str(result)
+    assert "y" in str(result)
+
+
+def test_pipeline_factor_multivariate_perfect_square() -> None:
+    """factor(x^2 + 2*x*y + y^2) recognises (x+y)^2."""
+    result = _eval("factor(x^2 + 2*x*y + y^2)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Pow"
+    base, exponent = result.args
+    assert exponent == IRInteger(2)
+    assert isinstance(base, IRApply)
+    assert base.head.name == "Add"
+    assert set(base.args) == {IRSymbol("x"), IRSymbol("y")}
+
+
+def test_pipeline_factor_multivariate_difference_of_squares() -> None:
+    """factor(x^2 - y^2) recognises (x-y)*(x+y)."""
+    result = _eval("factor(x^2 - y^2)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert result.args == (
+        IRApply(IRSymbol("Sub"), (IRSymbol("x"), IRSymbol("y"))),
+        IRApply(IRSymbol("Add"), (IRSymbol("x"), IRSymbol("y"))),
+    )
+
+
+def test_pipeline_factor_multivariate_difference_of_cubes() -> None:
+    """factor(x^3 - y^3) recognises (x-y)*(x^2+x*y+y^2)."""
+    result = _eval("factor(x^3 - y^3)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert result.args == (
+        IRApply(IRSymbol("Sub"), (IRSymbol("x"), IRSymbol("y"))),
+        IRApply(
+            IRSymbol("Add"),
+            (
+                IRApply(
+                    IRSymbol("Add"),
+                    (
+                        IRApply(IRSymbol("Pow"), (IRSymbol("x"), IRInteger(2))),
+                        IRApply(IRSymbol("Mul"), (IRSymbol("x"), IRSymbol("y"))),
+                    ),
+                ),
+                IRApply(IRSymbol("Pow"), (IRSymbol("y"), IRInteger(2))),
+            ),
+        ),
+    )
+
+
+def test_pipeline_factor_multivariate_sum_of_cubes() -> None:
+    """factor(x^3 + y^3) recognises (x+y)*(x^2-x*y+y^2)."""
+    result = _eval("factor(x^3 + y^3)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Mul"
+    assert result.args == (
+        IRApply(IRSymbol("Add"), (IRSymbol("x"), IRSymbol("y"))),
+        IRApply(
+            IRSymbol("Add"),
+            (
+                IRApply(
+                    IRSymbol("Add"),
+                    (
+                        IRApply(IRSymbol("Pow"), (IRSymbol("x"), IRInteger(2))),
+                        IRApply(
+                            IRSymbol("Mul"),
+                            (
+                                IRInteger(-1),
+                                IRApply(
+                                    IRSymbol("Mul"), (IRSymbol("x"), IRSymbol("y"))
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                IRApply(IRSymbol("Pow"), (IRSymbol("y"), IRInteger(2))),
+            ),
+        ),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section S — Calculus: diff and integrate (already wired, no pipeline tests)
 # ---------------------------------------------------------------------------

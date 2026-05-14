@@ -23,8 +23,12 @@ pub const ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSer
 pub const UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
 pub const UNO_R4_WIFI_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
 pub const UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES: usize = 512;
+pub const UNO_R4_WIFI_VBATT_BACKUP_BYTES: usize = 512;
 pub const UNO_R4_WIFI_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
 pub const UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC: u32 = 0x0773_8135;
+pub const UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_BACKUP_OFFSET: usize = 0;
+pub const UNO_R4_WIFI_USB_MUX_BACKUP_OFFSET: usize = 4;
+pub const UNO_R4_WIFI_USB_MUX_BACKUP_BYTES: usize = 4;
 pub const TINYUSB_CDC_LINE_STATE_CALLBACK_SYMBOL: &str = "tud_cdc_line_state_cb";
 pub const TINYUSB_CDC_LINE_CODING_CALLBACK_SYMBOL: &str = "tud_cdc_line_coding_cb";
 
@@ -465,10 +469,13 @@ mod arduino_bootloader_touch {
 mod arduino_bootloader_reset {
     use core::ptr::{read_volatile, write_volatile};
 
-    use super::UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC;
+    use super::{
+        UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_BACKUP_OFFSET, UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC,
+    };
 
     const SYSTEM_PRCR: *mut u16 = 0x4001_E3FE as *mut u16;
-    const SYSTEM_VBTBKR0: *mut u32 = 0x4001_E500 as *mut u32;
+    const SYSTEM_VBTBKR_BOOTLOADER_DOUBLE_TAP: *mut u32 =
+        (0x4001_E500 + UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_BACKUP_OFFSET) as *mut u32;
     const USBFS_SYSCFG: *mut u16 = 0x4009_0000 as *mut u16;
     const SCB_AIRCR: *mut u32 = 0xE000_ED0C as *mut u32;
 
@@ -482,7 +489,10 @@ mod arduino_bootloader_reset {
 
     pub unsafe fn go_bootloader() -> ! {
         unlock_system_registers();
-        write_volatile(SYSTEM_VBTBKR0, UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC);
+        write_volatile(
+            SYSTEM_VBTBKR_BOOTLOADER_DOUBLE_TAP,
+            UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC,
+        );
         lock_system_registers();
 
         let syscfg = read_volatile(USBFS_SYSCFG);
@@ -515,7 +525,10 @@ mod uno_r4_wifi_usb_mux {
     use core::ptr::{null_mut, read_volatile, write_volatile};
 
     const SYSTEM_PRCR: *mut u16 = 0x4001_E3FE as *mut u16;
-    const SYSTEM_VBTBKR1: *mut u8 = 0x4001_E501 as *mut u8;
+    use super::{UNO_R4_WIFI_USB_MUX_BACKUP_BYTES, UNO_R4_WIFI_USB_MUX_BACKUP_OFFSET};
+
+    const SYSTEM_VBTBKR_USB_MUX: *mut u8 =
+        (0x4001_E500 + UNO_R4_WIFI_USB_MUX_BACKUP_OFFSET) as *mut u8;
     const USBFS_USBMC: *mut u16 = 0x4009_00CC as *mut u16;
 
     const PRCR_KEY: u16 = 0xA500;
@@ -529,10 +542,10 @@ mod uno_r4_wifi_usb_mux {
 
     pub unsafe fn route_usb_c_to_ra4m1() {
         unlock_system_registers();
-        write_volatile(SYSTEM_VBTBKR1, USB_MUX_BACKUP_MARKER);
-        write_volatile(SYSTEM_VBTBKR1.add(1), 0);
-        write_volatile(SYSTEM_VBTBKR1.add(2), 0);
-        write_volatile(SYSTEM_VBTBKR1.add(3), 0);
+        write_volatile(SYSTEM_VBTBKR_USB_MUX, USB_MUX_BACKUP_MARKER);
+        for offset in 1..UNO_R4_WIFI_USB_MUX_BACKUP_BYTES {
+            write_volatile(SYSTEM_VBTBKR_USB_MUX.add(offset), 0);
+        }
         lock_system_registers();
 
         unsafe {
@@ -800,8 +813,12 @@ mod tests {
             "_Z23usb_post_initializationv"
         );
         assert_eq!(UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES, 512);
+        assert_eq!(UNO_R4_WIFI_VBATT_BACKUP_BYTES, 512);
         assert_eq!(UNO_R4_WIFI_BOOTLOADER_TOUCH_BAUD, 1_200);
         assert_eq!(UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC, 0x0773_8135);
+        assert_eq!(UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_BACKUP_OFFSET, 0);
+        assert_eq!(UNO_R4_WIFI_USB_MUX_BACKUP_OFFSET, 4);
+        assert_eq!(UNO_R4_WIFI_USB_MUX_BACKUP_BYTES, 4);
         assert_eq!(
             TINYUSB_CDC_LINE_STATE_CALLBACK_SYMBOL,
             "tud_cdc_line_state_cb"
@@ -830,6 +847,16 @@ mod tests {
             UsbCdcLineCoding::new(115_200),
             UsbCdcControlLineState::disconnected(),
         ));
+    }
+
+    #[test]
+    fn usb_mux_backup_marker_does_not_overlap_bootloader_double_tap_word() {
+        let double_tap_end =
+            UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_BACKUP_OFFSET + core::mem::size_of::<u32>();
+        let usb_mux_end = UNO_R4_WIFI_USB_MUX_BACKUP_OFFSET + UNO_R4_WIFI_USB_MUX_BACKUP_BYTES;
+
+        assert!(UNO_R4_WIFI_USB_MUX_BACKUP_OFFSET >= double_tap_end);
+        assert!(usb_mux_end <= UNO_R4_WIFI_VBATT_BACKUP_BYTES);
     }
 
     #[test]

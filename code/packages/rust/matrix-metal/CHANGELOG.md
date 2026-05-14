@@ -1,5 +1,61 @@
 # Changelog — matrix-metal
 
+## 0.8.0 — 2026-05-13
+
+### Added — MX05 Phase 4.6 (Sub/Div/Pow with folded constant unlock)
+
+The MSL emitter now supports the three remaining binary f32 ops with
+a folded constant, picking the LHS- or RHS-folded variant based on
+the new `SpecKey::folded_slot` field that matrix-profile v0.2 added.
+
+| `op_kind`  | `folded_slot = Some(0)` (LHS) | `folded_slot = Some(1)` (RHS) |
+|------------|-------------------------------|-------------------------------|
+| `0x08` Sub | `K - a[gid]`                  | `a[gid] - K`                  |
+| `0x0A` Div | `K / a[gid]`                  | `a[gid] / K`                  |
+| `0x0D` Pow | `pow(K, a[gid])`              | `pow(a[gid], K)`              |
+
+Entry-point names embed the variant: `specialised_sub_lhs_const_f32_0xH…H`
+vs `specialised_sub_rhs_const_f32_0xH…H`, so two SpecKeys differing
+only in `folded_slot` produce distinct compiled kernels (no
+collision when both end up in an executor's `SpecialisedTable`).
+
+#### New helper
+
+`emit_binary_f32_with_const_at_slot(handle, op_name, lhs_template,
+rhs_template, constant, folded_slot)` — mirror of Phase 4.5's
+`emit_binary_f32_with_rhs_const` but takes both templates and
+selects between them.
+
+#### `folded_slot = None` for non-commutative ops
+
+The emitter still returns `None` for Sub / Div / Pow if the policy
+didn't tell us which slot was folded — we won't guess.  Test
+`sub_div_pow_return_none_without_folded_slot` pins this.
+
+#### Tests (12 new emitter tests; 19 → 31 total)
+
+- `sub_f32_rhs_folded_emits_kernel`
+- `sub_f32_lhs_folded_emits_kernel`
+- `div_f32_rhs_folded_emits_kernel`
+- `div_f32_lhs_folded_emits_kernel`
+- `pow_f32_rhs_folded_emits_kernel`
+- `pow_f32_lhs_folded_emits_kernel`
+- `lhs_and_rhs_variants_have_distinct_entry_points`
+- `sub_div_pow_return_none_without_folded_slot` (replaces the old
+  Phase 4.5 deferral guard)
+- 5 existing Phase 4.5 tests updated to set `folded_slot` (semantic
+  no-op for commutative ops).
+
+The existing 14 Phase 4.2 tests still pass — emitter output for
+commutative ops is byte-identical.
+
+### Updated `returns_none_for_unsupported_op_kind`
+
+Phase 4.5 used `Op::Sub` (0x08) as the "unsupported" exemplar; now
+that Sub is supported we pivot the test to `Op::Neg` (0x00), which
+is unary and still outside the emitter's binary-with-constant
+shape.
+
 ## 0.7.0 — 2026-05-12
 
 ### Added — MX05 Phase 4.5 (MSL emitter supports more binary ops)

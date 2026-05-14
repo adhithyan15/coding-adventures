@@ -6,9 +6,9 @@
 use std::error::Error;
 use std::fmt;
 
-use coding_adventures_macsyma_parser::parse_macsyma;
+use coding_adventures_macsyma_parser::create_macsyma_parser;
 use lexer::token::Token;
-use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParseError};
 use symbolic_ir::{
     apply, flt, int, str_node, sym, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN,
     ATANH, COS, COSH, D, DEFINE, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, LESS,
@@ -57,8 +57,22 @@ pub fn compile_macsyma_with_options(
     source: &str,
     options: CompileOptions,
 ) -> Result<Vec<IRNode>, CompileError> {
-    let ast = parse_macsyma(source);
+    let mut parser = create_macsyma_parser(source);
+    let ast = parser
+        .parse()
+        .map_err(|err| CompileError::new(format_macsyma_syntax_error(source, &err)))?;
     Compiler::new(options).compile_program(&ast)
+}
+
+pub fn format_macsyma_syntax_error(source: &str, error: &GrammarParseError) -> String {
+    let line = error.token.line;
+    let column = error.token.column;
+    let source_line = source.lines().nth(line.saturating_sub(1)).unwrap_or("");
+    let caret = format!("{}^", " ".repeat(column.saturating_sub(1)));
+    format!(
+        "Incorrect syntax at line {line}, column {column}: {}\n{source_line}\n{caret}",
+        error.message
+    )
 }
 
 pub struct Compiler {

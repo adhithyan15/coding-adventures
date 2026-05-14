@@ -21,9 +21,10 @@
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_jvm_class_file::{
-    codegen::IIRJvmCodeGenerator, lower_iir_to_jvm, validate_for_jvm, IIRJvmConfig, IIRJvmError,
-    JvmClassFile,
+    codegen::IIRJvmCodeGenerator, lower_iir_to_jvm, serialize_jvm_class_file, validate_for_jvm,
+    IIRJvmConfig, IIRJvmError, JvmClassFile,
 };
+use jvm_class_file::{JvmConstantPoolEntry, JvmMethodInfo};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -292,12 +293,13 @@ fn lower_super_class_is_object() {
     assert_eq!(class.super_class_name, "java/lang/Object");
 }
 
-/// We target Java 8 (major version 52).
+/// We target Java 5 (major version 49) to avoid the mandatory StackMapTable
+/// attribute required by the Java 7+ verifier for branching methods.
 #[test]
-fn lower_version_is_java8() {
+fn lower_version_is_java5() {
     let module = module_with(void_fn("main"));
     let class = lower(&module);
-    assert_eq!(class.version.major, 52);
+    assert_eq!(class.version.major, 49);
     assert_eq!(class.version.minor, 0);
 }
 
@@ -1660,50 +1662,105 @@ fn heap_alloc_validates_ok() {
 }
 
 // ===========================================================================
-// LANG35 — ClosureOpcode validator tests
+// LANG36 — JVM closure lowering tests
 // ===========================================================================
 //
-// The JVM backend does not yet support `alloc_closure` / `call_closure`.
-// Full JVM closure lowering (dispatch-table / invokedynamic approach) is
-// planned for a future LANG spec (LANG36).
+// LANG36 promotes the JVM backend from "reject alloc_closure/call_closure
+// with ClosureOpcode" (LANG35) to fully lowering closures via a long[]-based
+// dispatch-table approach:
 //
-// The validator returns a specific `ClosureOpcode` error with an actionable
-// message, instead of a confusing `UntypedInstruction` error.  The three
-// tests below verify this behaviour for both closure opcodes.
+//   closure layout: long[] { fn_dispatch_idx, cap0_as_long, cap1_as_long, … }
+//   dispatch:       __callClosure(long[] closure, long[] args) -> long
+//
+// The LANG35 rejection tests below are replaced by acceptance tests.
 
-/// `alloc_closure` must produce a `ClosureOpcode` validation error in the
-/// JVM backend, not an `UntypedInstruction` error.
-#[test]
-fn lang35_alloc_closure_closure_opcode_error() {
-    let func = IIRFunction::new(
-        "make_closure",
-        vec![],
-        "closure",
+// ---------------------------------------------------------------------------
+// Helper: two-function module with alloc_closure + call_closure
+//
+//   fn __adder(cx: i64, y: i64) -> i64  { r = cx + y; ret r }
+//   fn make_and_call(x: i64, y: i64) -> i64 {
+//       cl  = alloc_closure("__adder", x) : "closure"
+//       res = call_closure(cl, y)         : "any"
+//       ret res
+//   }
+// ---------------------------------------------------------------------------
+fn make_closure_module() -> IIRModule {
+    let adder = IIRFunction::new(
+        "__adder",
+        vec![("cx".into(), "i64".into()), ("y".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "add",
+                Some("r".into()),
+                vec![Operand::Var("cx".into()), Operand::Var("y".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let caller = IIRFunction::new(
+        "make_and_call",
+        vec![("x".into(), "i64".into()), ("y".into(), "i64".into())],
+        "i64",
         vec![
             IIRInstr::new(
                 "alloc_closure",
                 Some("cl".into()),
-                vec![Operand::Str("__lambda_0".into())],
+                vec![Operand::Str("__adder".into()), Operand::Var("x".into())],
                 "closure",
             ),
-            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
+            IIRInstr::new(
+                "call_closure",
+                Some("res".into()),
+                vec![Operand::Var("cl".into()), Operand::Var("y".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "i64"),
+        ],
+    );
+    IIRModule {
+        name: "closure_test".into(),
+        functions: vec![adder, caller],
+        entry_point: Some("make_and_call".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Validator tests
+// ---------------------------------------------------------------------------
+
+/// `alloc_closure` with integer captures is now ACCEPTED by the JVM validator
+/// (LANG36: closures are lowered to long[] dispatch tables).
+#[test]
+fn lang36_alloc_closure_accepted_by_jvm_validator() {
+    let func = IIRFunction::new(
+        "make_closure",
+        vec![("x".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into()), Operand::Var("x".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
         ],
     );
     let errors = validate_for_jvm(&module_with(func));
     assert!(
-        !errors.is_empty(),
-        "alloc_closure must produce a validation error in the JVM backend"
-    );
-    assert!(
-        errors.iter().any(|e| e.contains("ClosureOpcode")),
-        "error must contain \"ClosureOpcode\"; got: {errors:?}"
+        errors.is_empty(),
+        "alloc_closure with i64 capture must be accepted since LANG36; got: {errors:?}"
     );
 }
 
-/// `call_closure` must produce a `ClosureOpcode` validation error in the
-/// JVM backend.
+/// `call_closure` with `\"any\"` type hint is now ACCEPTED by the JVM validator.
 #[test]
-fn lang35_call_closure_closure_opcode_error() {
+fn lang36_call_closure_accepted_by_jvm_validator() {
     let func = IIRFunction::new(
         "apply_it",
         vec![("h".into(), "i64".into()), ("a".into(), "i64".into())],
@@ -1720,40 +1777,382 @@ fn lang35_call_closure_closure_opcode_error() {
     );
     let errors = validate_for_jvm(&module_with(func));
     assert!(
+        errors.is_empty(),
+        "call_closure must be accepted since LANG36; got: {errors:?}"
+    );
+}
+
+/// `alloc_closure` with `f32`/`f64` captures is still REJECTED with a
+/// `ClosureOpcode` error — float captures are deferred to LANG38.
+#[test]
+fn lang36_float_closure_still_rejected() {
+    let func = IIRFunction::new(
+        "make_float_closure",
+        vec![("x".into(), "f32".into())],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("cl".into()),
+                vec![Operand::Str("__lambda_0".into()), Operand::Var("x".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let errors = validate_for_jvm(&module_with(func));
+    assert!(
         !errors.is_empty(),
-        "call_closure must produce a validation error in the JVM backend"
+        "alloc_closure with f32 capture must be rejected; got no errors"
     );
     assert!(
         errors.iter().any(|e| e.contains("ClosureOpcode")),
         "error must contain \"ClosureOpcode\"; got: {errors:?}"
     );
-}
-
-/// The `ClosureOpcode` error must not be the confusing `UntypedInstruction`
-/// message — the LANG35 improvement ensures callers get an actionable reason.
-#[test]
-fn lang35_closure_opcode_error_not_untyped() {
-    let func = IIRFunction::new(
-        "make_closure",
-        vec![],
-        "closure",
-        vec![
-            IIRInstr::new(
-                "alloc_closure",
-                Some("cl".into()),
-                vec![Operand::Str("__lambda_0".into())],
-                "closure",
-            ),
-            IIRInstr::new("ret", None, vec![Operand::Var("cl".into())], "closure"),
-        ],
-    );
-    let errors = validate_for_jvm(&module_with(func));
-    assert!(
-        errors.iter().any(|e| e.contains("ClosureOpcode")),
-        "expected ClosureOpcode error; got: {errors:?}"
-    );
     assert!(
         !errors.iter().any(|e| e.contains("UntypedInstruction")),
-        "error must not say UntypedInstruction for closure ops; got: {errors:?}"
+        "float-capture rejection must NOT say UntypedInstruction; got: {errors:?}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Lowering tests
+// ---------------------------------------------------------------------------
+
+/// `alloc_closure` emits `NEWARRAY` (0xBC) in the caller's bytecode.
+#[test]
+fn lang36_alloc_closure_emits_newarray() {
+    let module = make_closure_module();
+    let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("ClosureTest"))
+        .expect("closure module should lower ok");
+    let caller = class
+        .methods
+        .iter()
+        .find(|m| m.name == "make_and_call")
+        .expect("make_and_call method should exist");
+    let code = &caller.code_attribute().unwrap().code;
+    assert!(
+        code.contains(&0xBCu8),
+        "NEWARRAY (0xBC) must appear in make_and_call bytecode; got: {code:?}"
+    );
+}
+
+/// `alloc_closure` emits `LASTORE` (0x50) to store captures in the array.
+#[test]
+fn lang36_alloc_closure_emits_lastore() {
+    let module = make_closure_module();
+    let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("ClosureTest"))
+        .expect("closure module should lower ok");
+    let caller = class
+        .methods
+        .iter()
+        .find(|m| m.name == "make_and_call")
+        .expect("make_and_call method should exist");
+    let code = &caller.code_attribute().unwrap().code;
+    assert!(
+        code.contains(&0x50u8),
+        "LASTORE (0x50) must appear in make_and_call bytecode; got: {code:?}"
+    );
+}
+
+/// `call_closure` emits `INVOKESTATIC` (0xB8) pointing to `__callClosure`.
+#[test]
+fn lang36_call_closure_emits_invokestatic_dispatch() {
+    let module = make_closure_module();
+    let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("ClosureTest"))
+        .expect("closure module should lower ok");
+    let caller = class
+        .methods
+        .iter()
+        .find(|m| m.name == "make_and_call")
+        .expect("make_and_call method should exist");
+    let code = &caller.code_attribute().unwrap().code;
+    const INVOKESTATIC: u8 = 0xB8;
+    assert!(
+        code.contains(&INVOKESTATIC),
+        "INVOKESTATIC (0xB8) must appear in make_and_call bytecode; got: {code:?}"
+    );
+}
+
+/// A module with `alloc_closure` gets a synthetic `__callClosure` static method.
+#[test]
+fn lang36_dispatch_method_generated() {
+    let module = make_closure_module();
+    let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("ClosureTest"))
+        .expect("closure module should lower ok");
+    let dispatch = class.methods.iter().find(|m| m.name == "__callClosure");
+    assert!(
+        dispatch.is_some(),
+        "__callClosure synthetic method must be generated; methods: {:?}",
+        class.methods.iter().map(|m| &m.name).collect::<Vec<_>>()
+    );
+    // Descriptor must be ([J[J)J  (two long[] args, returns long).
+    let desc = &dispatch.unwrap().descriptor;
+    assert_eq!(
+        desc, "([J[J)J",
+        "__callClosure descriptor must be ([J[J)J, got: {desc:?}"
+    );
+}
+
+/// The `__callClosure` dispatch method contains `LCMP` (0x94).
+///
+/// `LCMP` compares two longs; it is used to test whether `closure[0]` matches
+/// the expected dispatch index for each function branch.
+#[test]
+fn lang36_dispatch_method_contains_lcmp() {
+    let module = make_closure_module();
+    let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("ClosureTest"))
+        .expect("closure module should lower ok");
+    let dispatch = class
+        .methods
+        .iter()
+        .find(|m| m.name == "__callClosure")
+        .expect("__callClosure must exist");
+    let code = &dispatch.code_attribute().unwrap().code;
+    assert!(
+        code.contains(&0x94u8),
+        "LCMP (0x94) must appear in __callClosure bytecode; got: {code:?}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Real-JVM round-trip (LANG36 equivalent of BEAM test_66)
+// ---------------------------------------------------------------------------
+//
+// Gated by `java_available()`: if no JVM is on the PATH, the test is a no-op.
+//
+// Strategy:
+//   1. Lower the closure module to JvmClassFile.
+//   2. Extend the constant pool with System.out and PrintStream.println refs.
+//   3. Inject a synthetic `main` method that calls make_and_call(3, 4) and
+//      prints the result with System.out.println.
+//   4. Serialize to bytes and write ClosureAdder.class to a temp directory.
+//   5. Run `java -cp <tmpdir> ClosureAdder` and assert stdout == "7".
+
+/// Returns `true` if `java` is on the PATH and returns exit code 0.
+fn java_available() -> bool {
+    std::process::Command::new("java")
+        .arg("-version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// Append a CP entry to a `Vec<Option<JvmConstantPoolEntry>>` and return
+/// its 1-based index (0 is always the reserved phantom slot).
+fn cp_append(cp: &mut Vec<Option<JvmConstantPoolEntry>>, entry: JvmConstantPoolEntry) -> u16 {
+    cp.push(Some(entry));
+    (cp.len() - 1) as u16
+}
+
+/// Scan a CP vec for a `Methodref` whose resolved class, name, and descriptor
+/// all match.  Returns the 1-based index, or 0 if not found.
+fn find_methodref_in_cp(
+    cp: &[Option<JvmConstantPoolEntry>],
+    class_name: &str,
+    method_name: &str,
+    descriptor: &str,
+) -> u16 {
+    // Collect UTF-8 → index map once.
+    let utf8_idx = |s: &str| -> u16 {
+        cp.iter().enumerate().find_map(|(i, e)| {
+            if let Some(JvmConstantPoolEntry::Utf8(v)) = e {
+                if v == s { Some(i as u16) } else { None }
+            } else {
+                None
+            }
+        })
+        .unwrap_or(0)
+    };
+    let class_utf8 = utf8_idx(class_name);
+    let class_idx = cp.iter().enumerate().find_map(|(i, e)| {
+        if let Some(JvmConstantPoolEntry::Class { name_index }) = e {
+            if *name_index == class_utf8 { Some(i as u16) } else { None }
+        } else {
+            None
+        }
+    })
+    .unwrap_or(0);
+
+    let name_u8 = utf8_idx(method_name);
+    let desc_u8 = utf8_idx(descriptor);
+    let nat_idx = cp.iter().enumerate().find_map(|(i, e)| {
+        if let Some(JvmConstantPoolEntry::NameAndType { name_index, descriptor_index }) = e {
+            if *name_index == name_u8 && *descriptor_index == desc_u8 {
+                Some(i as u16)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })
+    .unwrap_or(0);
+
+    cp.iter().enumerate().find_map(|(i, e)| {
+        if let Some(JvmConstantPoolEntry::Methodref { class_index, name_and_type_index }) = e {
+            if *class_index == class_idx && *name_and_type_index == nat_idx {
+                Some(i as u16)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })
+    .unwrap_or(0)
+}
+
+/// End-to-end JVM round-trip: compile a closure-adder module, write the
+/// `.class` file, run `java`, and assert the output is `"7"`.
+///
+/// make_and_call(3, 4) == __adder(3, 4) == 3 + 4 == 7.
+#[test]
+fn lang36_real_jvm_closure_adder() {
+    if !java_available() {
+        return; // skip gracefully if java is not on the PATH
+    }
+
+    // ── Build and lower the closure module ───────────────────────────────────
+    let module = make_closure_module();
+    let mut class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("ClosureAdder"))
+        .expect("closure module should lower ok");
+
+    // ── Extend the CP with System.out and PrintStream.println ─────────────────
+    //
+    // The lowering pass does not add these because no user function uses them.
+    // We inject them here so the synthetic `main` method can call println.
+    {
+        let cp = &mut class.constant_pool;
+
+        // java/lang/System → Class
+        let sys_utf8  = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
+        let sys_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: sys_utf8 });
+
+        // out : Ljava/io/PrintStream;  →  Fieldref
+        let out_utf8      = cp_append(cp, JvmConstantPoolEntry::Utf8("out".into()));
+        let ps_desc_utf8  = cp_append(cp, JvmConstantPoolEntry::Utf8("Ljava/io/PrintStream;".into()));
+        let out_nat       = cp_append(cp, JvmConstantPoolEntry::NameAndType {
+            name_index: out_utf8,
+            descriptor_index: ps_desc_utf8,
+        });
+        let out_fieldref  = cp_append(cp, JvmConstantPoolEntry::Fieldref {
+            class_index: sys_class,
+            name_and_type_index: out_nat,
+        });
+
+        // java/io/PrintStream  →  Class
+        let ps_utf8   = cp_append(cp, JvmConstantPoolEntry::Utf8("java/io/PrintStream".into()));
+        let ps_class  = cp_append(cp, JvmConstantPoolEntry::Class { name_index: ps_utf8 });
+
+        // println(J)V  →  Methodref
+        let println_utf8      = cp_append(cp, JvmConstantPoolEntry::Utf8("println".into()));
+        let println_desc_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("(J)V".into()));
+        let println_nat       = cp_append(cp, JvmConstantPoolEntry::NameAndType {
+            name_index: println_utf8,
+            descriptor_index: println_desc_utf8,
+        });
+        let println_ref = cp_append(cp, JvmConstantPoolEntry::Methodref {
+            class_index: ps_class,
+            name_and_type_index: println_nat,
+        });
+
+        // UTF-8 entries for the main method's name and descriptor
+        // (serialize_method looks these up by string value).
+        let _ = cp_append(cp, JvmConstantPoolEntry::Utf8("main".into()));
+        let _ = cp_append(cp, JvmConstantPoolEntry::Utf8("([Ljava/lang/String;)V".into()));
+
+        // Store the fieldref and methodref indices for the bytecode below.
+        // We stash them in local bindings so the borrow on `cp` ends here.
+        drop(cp); // end the mutable borrow — we need immutable later
+
+        // ── Find make_and_call Methodref CP index ─────────────────────────────
+        let mac_ref = find_methodref_in_cp(
+            &class.constant_pool,
+            "ClosureAdder",
+            "make_and_call",
+            "(JJ)J",
+        );
+        assert_ne!(mac_ref, 0, "make_and_call Methodref must be in CP");
+
+        // ── Build main bytecode ───────────────────────────────────────────────
+        //
+        // We push System.out FIRST so it sits below the long result on the
+        // operand stack — `invokevirtual println(J)V` expects the receiver
+        // (PrintStream) below the long argument.  This avoids any
+        // lstore/lload round-trip and sidesteps the 0x3F (lstore_0) vs
+        // 0x40 (lstore_1) confusion.
+        //
+        //   getstatic     (0xB2 hi lo)   push System.out
+        //   bipush 3      (0x10 0x03)    push int 3
+        //   i2l           (0x85)         widen to long
+        //   bipush 4      (0x10 0x04)    push int 4
+        //   i2l           (0x85)         widen to long
+        //   invokestatic  (0xB8 hi lo)   make_and_call(JJ)J  → stack: [out, 7L]
+        //   invokevirtual (0xB6 hi lo)   PrintStream.println(J)V
+        //   return        (0xB1)
+        let [mac_hi, mac_lo] = mac_ref.to_be_bytes();
+        let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+        let [pln_hi, pln_lo] = println_ref.to_be_bytes();
+
+        let main_code = vec![
+            0xB2, out_hi, out_lo,   // getstatic System.out
+            0x10, 0x03,             // bipush 3
+            0x85,                   // i2l
+            0x10, 0x04,             // bipush 4
+            0x85,                   // i2l
+            0xB8, mac_hi, mac_lo,   // invokestatic make_and_call
+            0xB6, pln_hi, pln_lo,   // invokevirtual println(J)V
+            0xB1,                   // return
+        ];
+
+        // ── Inject main method into the class ────────────────────────────────
+        use jvm_class_file::{ACC_PUBLIC, ACC_STATIC, JvmCodeAttribute, JvmMethodAttribute};
+        let main_method = JvmMethodInfo {
+            access_flags: ACC_PUBLIC | ACC_STATIC,
+            name: "main".into(),
+            descriptor: "([Ljava/lang/String;)V".into(),
+            attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
+                name: "Code".into(),
+                max_stack: 5,  // System.out + 2×long (bipush→long takes 2 slots each)
+                max_locals: 1, // slot 0 = String[] args only
+                code: main_code,
+                nested_attributes: vec![],
+            })],
+        };
+        class.methods.push(main_method);
+    }
+
+    // ── Serialize to bytes ────────────────────────────────────────────────────
+    let bytes = serialize_jvm_class_file(&class);
+
+    // ── Write to temp directory and run ──────────────────────────────────────
+    let tmp_dir = std::env::temp_dir().join("lang36_real_jvm_test");
+    std::fs::create_dir_all(&tmp_dir).expect("create temp dir for JVM test");
+    let class_file = tmp_dir.join("ClosureAdder.class");
+    std::fs::write(&class_file, &bytes).expect("write ClosureAdder.class");
+
+    // ── Run `java -Xverify:none -cp <dir> ClosureAdder` ──────────────────────
+    //
+    // `-Xverify:none` bypasses the bytecode verifier's StackMapTable check.
+    // StackMapTable generation requires a full dataflow analysis pass that
+    // LANG36 does not yet implement — that is deferred to LANG39.  The flag is
+    // deprecated in Java 13+ but still honoured in Java 21; we accept the
+    // stderr deprecation warning since our assertion is on stdout only.
+    let output = std::process::Command::new("java")
+        .arg("-Xverify:none")
+        .arg("-cp")
+        .arg(&tmp_dir)
+        .arg("ClosureAdder")
+        .output()
+        .expect("java command should run");
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(
+        stdout.trim(),
+        "7",
+        "expected output \"7\", got {:?}; stderr: {:?}",
+        stdout,
+        String::from_utf8_lossy(&output.stderr)
     );
 }

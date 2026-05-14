@@ -1,10 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
   ADD,
+  ASSUME,
   EQUAL,
   EXP,
+  FACTOR,
+  FALSE,
+  FORGET,
   GREATER,
   GREATER_EQUAL,
+  IS,
   LESS,
   LESS_EQUAL,
   LIST,
@@ -16,6 +21,7 @@ import {
   SOLVE,
   SUB,
   SUBST,
+  TRUE,
   app,
   int,
   numberNode,
@@ -27,6 +33,7 @@ import {
   ALL_SYMBOL,
   APPEND,
   APPLY,
+  DECLARE,
   DISPLAY,
   EV,
   EXPAND,
@@ -42,6 +49,8 @@ import {
   MacsymaSession,
   MAP,
   PART,
+  PROP_VARS,
+  PROPERTIES,
   RAT_SIMPLIFY,
   RANGE,
   REST,
@@ -54,6 +63,8 @@ import {
   TRIG_SIMPLIFY,
   extendCompilerNameTable,
   evalSourceJson,
+  macsymaHelpText,
+  parseMacsymaHelpQuery,
 } from "../src/index.js";
 
 describe("macsyma-runtime", () => {
@@ -78,11 +89,20 @@ describe("macsyma-runtime", () => {
     expect(SUPPRESS).toEqual(sym("Suppress"));
     expect(KILL).toEqual(sym("Kill"));
     expect(EV).toEqual(sym("Ev"));
+    expect(DECLARE).toEqual(sym("Declare"));
+    expect(PROPERTIES).toEqual(sym("Properties"));
+    expect(PROP_VARS).toEqual(sym("PropVars"));
   });
 
   it("exports MACSYMA name-table routes and extends maps idempotently", () => {
     expect(MACSYMA_NAME_TABLE.get("kill")).toEqual(KILL);
     expect(MACSYMA_NAME_TABLE.get("ev")).toEqual(EV);
+    expect(MACSYMA_NAME_TABLE.get("assume")).toEqual(ASSUME);
+    expect(MACSYMA_NAME_TABLE.get("forget")).toEqual(FORGET);
+    expect(MACSYMA_NAME_TABLE.get("is")).toEqual(IS);
+    expect(MACSYMA_NAME_TABLE.get("declare")).toEqual(DECLARE);
+    expect(MACSYMA_NAME_TABLE.get("properties")).toEqual(PROPERTIES);
+    expect(MACSYMA_NAME_TABLE.get("propvars")).toEqual(PROP_VARS);
     expect(MACSYMA_NAME_TABLE.get("expand")).toEqual(EXPAND);
     expect(MACSYMA_NAME_TABLE.get("simplify")).toEqual(SIMPLIFY);
     expect(MACSYMA_NAME_TABLE.get("ratsimp")).toEqual(RAT_SIMPLIFY);
@@ -114,6 +134,153 @@ describe("macsyma-runtime", () => {
     expect(killResult.input).toEqual(app(KILL, [sym("x")]));
     expect(evResult.input).toEqual(app(EV, [app(ADD, [int(1), int(2)]), sym("numer")]));
     expect(evResult.output).toEqual(numberNode(3));
+  });
+
+  it("factors univariate integer polynomials through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^2 - 1);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(ADD, [int(1), sym("x")]),
+      app(ADD, [int(-1), sym("x")]),
+    ]));
+  });
+
+  it("leaves multivariate factor calls unevaluated", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x + y);");
+
+    expect(result.output).toEqual(app(FACTOR, [app(ADD, [sym("x"), sym("y")])]));
+  });
+
+  it("factors common multivariate terms through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^2*y - y);");
+
+    expect(result.output).toEqual(app(MUL, [
+      sym("y"),
+      app(MUL, [
+        app(ADD, [int(1), sym("x")]),
+        app(ADD, [int(-1), sym("x")]),
+      ]),
+    ]));
+  });
+
+  it("factors bivariate perfect squares through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^2 + 2*x*y + y^2);");
+
+    expect(result.output).toEqual(app(POW, [
+      app(ADD, [sym("x"), sym("y")]),
+      int(2),
+    ]));
+  });
+
+  it("factors bivariate differences of squares through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^2 - y^2);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(SUB, [sym("x"), sym("y")]),
+      app(ADD, [sym("x"), sym("y")]),
+    ]));
+  });
+
+  it("factors bivariate differences of cubes through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^3 - y^3);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(SUB, [sym("x"), sym("y")]),
+      app(ADD, [
+        app(ADD, [
+          app(POW, [sym("x"), int(2)]),
+          app(MUL, [sym("x"), sym("y")]),
+        ]),
+        app(POW, [sym("y"), int(2)]),
+      ]),
+    ]));
+  });
+
+  it("factors bivariate sums of cubes through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^3 + y^3);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(ADD, [sym("x"), sym("y")]),
+      app(ADD, [
+        app(ADD, [
+          app(POW, [sym("x"), int(2)]),
+          app(MUL, [int(-1), app(MUL, [sym("x"), sym("y")])]),
+        ]),
+        app(POW, [sym("y"), int(2)]),
+      ]),
+    ]));
+  });
+
+  it("tracks the showtime option flag through normal assignments", () => {
+    const session = new MacsymaSession();
+    const [enabled, timed, disabled, untimed] = session.evalSource(
+      "showtime:true$ 2 + 3; showtime:false$ 4 + 5;",
+    );
+
+    expect(enabled.output).toEqual(TRUE);
+    expect(timed.output).toEqual(int(5));
+    expect(timed.timingText).toMatch(/^Evaluation took \d+\.\d{6} seconds\.$/);
+    expect(disabled.output).toEqual(FALSE);
+    expect(disabled.timingText).toBeUndefined();
+    expect(untimed.output).toEqual(int(9));
+    expect(untimed.timingText).toBeUndefined();
+  });
+
+  it("reports showtime diagnostics for suppressed statements", () => {
+    const session = new MacsymaSession();
+    const [, suppressed] = session.evalSource("showtime:true$ 2 + 3$");
+
+    expect(suppressed.display).toBe(false);
+    expect(suppressed.output).toEqual(int(5));
+    expect(suppressed.timingText).toMatch(/^Evaluation took \d+\.\d{6} seconds\.$/);
+  });
+
+  it("restores showtime to false when killed", () => {
+    const backend = new MacsymaBackend(new History());
+    backend.bind("showtime", TRUE);
+
+    backend.unbind("showtime");
+
+    expect(backend.showtime).toBe(false);
+    expect(backend.lookup("showtime")).toEqual(FALSE);
+  });
+
+  it("includes showtime diagnostics in JSON visible outputs", () => {
+    const payload = JSON.parse(evalSourceJson("showtime:true$ 2 + 3$"));
+    const [, result] = payload.results;
+
+    expect(result.display).toBe(false);
+    expect(result.timingText).toMatch(/^Evaluation took \d+\.\d{6} seconds\.$/);
+    expect(payload.visibleOutputs).toEqual([result.timingText]);
+  });
+
+  it("parses and renders MACSYMA question-mark help", () => {
+    expect(parseMacsymaHelpQuery("? solve;")).toBe("solve");
+    expect(parseMacsymaHelpQuery("solve(x, x);")).toBeUndefined();
+    expect(macsymaHelpText("solve")).toContain("solve(expr, var)");
+
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("? solve");
+
+    expect(result.display).toBe(true);
+    expect(result.outputText).toContain("solve(expr, var)");
+    expect(result.input.kind).toBe("string");
+    expect(result.output.kind).toBe("string");
+  });
+
+  it("includes question-mark help in JSON visible outputs", () => {
+    const payload = JSON.parse(evalSourceJson("?"));
+
+    expect(payload.ok).toBe(true);
+    expect(payload.visibleOutputs[0]).toContain("MACSYMA help topics:");
+    expect(payload.results[0].outputText).toContain("MACSYMA help topics:");
   });
 
   it("records and resolves history references", () => {
@@ -186,10 +353,16 @@ describe("macsyma-runtime", () => {
     expect(backend.lookup("not_history")).toBeUndefined();
   });
 
-  it("registers held Kill and Ev runtime handlers", () => {
+  it("registers held runtime handlers", () => {
     const backend = new MacsymaBackend(new History());
     expect(backend.handlers().has(KILL.name)).toBe(true);
     expect(backend.handlers().has(EV.name)).toBe(true);
+    expect(backend.handlers().has(ASSUME.name)).toBe(true);
+    expect(backend.handlers().has(FORGET.name)).toBe(true);
+    expect(backend.handlers().has(IS.name)).toBe(true);
+    expect(backend.handlers().has(DECLARE.name)).toBe(true);
+    expect(backend.handlers().has(PROPERTIES.name)).toBe(true);
+    expect(backend.handlers().has(PROP_VARS.name)).toBe(true);
     expect(backend.handlers().has(SOLVE.name)).toBe(true);
     expect(backend.handlers().has(SUBST.name)).toBe(true);
     expect(backend.handlers().has(SIMPLIFY.name)).toBe(true);
@@ -200,6 +373,12 @@ describe("macsyma-runtime", () => {
     expect(backend.handlers().has(LENGTH.name)).toBe(true);
     expect(backend.holdHeads().has(KILL.name)).toBe(true);
     expect(backend.holdHeads().has(EV.name)).toBe(true);
+    expect(backend.holdHeads().has(ASSUME.name)).toBe(true);
+    expect(backend.holdHeads().has(FORGET.name)).toBe(true);
+    expect(backend.holdHeads().has(IS.name)).toBe(true);
+    expect(backend.holdHeads().has(DECLARE.name)).toBe(true);
+    expect(backend.holdHeads().has(PROPERTIES.name)).toBe(true);
+    expect(backend.holdHeads().has(PROP_VARS.name)).toBe(true);
     expect(backend.holdHeads().has(SOLVE.name)).toBe(true);
     expect(backend.holdHeads().has(SUBST.name)).toBe(true);
   });
@@ -234,6 +413,48 @@ describe("macsyma-runtime", () => {
     session.evalSource("x : 5; 1; kill(all);");
     expect(session.history().nextInputIndex()).toBe(1);
     expect(session.evalSource("x;")[0].output).toEqual(sym("x"));
+  });
+
+  it("assume, is, and forget share session assumptions", () => {
+    const session = new MacsymaSession();
+    const [assumeResult, trueResult, forgetResult, unknownResult] = session.evalSource(
+      "assume(x > 0); is(x > 0); forget(); is(x > 0);",
+    );
+
+    expect(assumeResult.output).toEqual(sym("done"));
+    expect(trueResult.output).toEqual(TRUE);
+    expect(forgetResult.output).toEqual(sym("done"));
+    expect(unknownResult.output).toEqual(sym("unknown"));
+  });
+
+  it("declare feeds properties into is queries", () => {
+    const session = new MacsymaSession();
+    const [declareResult, query] = session.evalSource("declare(x, positive); is(x > 0);");
+
+    expect(declareResult.input).toEqual(app(DECLARE, [sym("x"), sym("positive")]));
+    expect(declareResult.output).toEqual(sym("done"));
+    expect(query.output).toEqual(TRUE);
+  });
+
+  it("properties lists declared properties deterministically", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("declare(n, integer, n, positive); properties(n);");
+
+    expect(result.output).toEqual(app(LIST, [sym("integer"), sym("positive")]));
+  });
+
+  it("propvars lists symbols with declared properties deterministically", () => {
+    const session = new MacsymaSession();
+    const [, , result] = session.evalSource("declare(z, integer); declare(a, positive); propvars();");
+
+    expect(result.output).toEqual(app(LIST, [sym("a"), sym("z")]));
+  });
+
+  it("properties queries raw symbols even when they are bound", () => {
+    const session = new MacsymaSession();
+    const [, , result] = session.evalSource("x : 10; declare(x, integer); properties(x);");
+
+    expect(result.output).toEqual(app(LIST, [sym("integer")]));
   });
 
   it("Ev numer and float coerce evaluated exact results to floats", () => {
@@ -602,6 +823,8 @@ describe("macsyma-runtime", () => {
     const payload = JSON.parse(session.evalJson("1 + ;"));
     expect(payload.ok).toBe(false);
     expect(payload.error.kind).toBe("runtime");
+    expect(payload.error.message).toMatch(/^Incorrect syntax at line 1, column \d+:/);
+    expect(payload.error.message).toContain("1 + ;\n");
     expect(payload.history.inputCount).toBe(1);
   });
 

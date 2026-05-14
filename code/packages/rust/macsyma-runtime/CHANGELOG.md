@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Delegated Rust MACSYMA `factor` evaluation to the shared `symbolic-vm`
+  canonical handler, including coverage for common multivariate factors.
+- Added Rust MACSYMA parity for bivariate perfect-square factoring, so
+  `factor(x^2 + 2*x*y + y^2)` returns `(x + y)^2` through the shared symbolic
+  VM handler.
+- Added Rust MACSYMA parity for bivariate difference-of-squares factoring, so
+  `factor(x^2 - y^2)` returns `(x - y) * (x + y)` through the shared symbolic
+  VM handler.
+- Added Rust MACSYMA parity for bivariate cubic-identity factoring, so
+  `factor(x^3 - y^3)` and `factor(x^3 + y^3)` return their linear/quadratic
+  products through the shared symbolic VM handler.
+- Added `?` / `? topic` help-query handling for Rust MACSYMA sessions.
+- Wired `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a
+  Rust MACSYMA session assumption context so declared properties feed property
+  queries and assumption-backed relation checks.
+
 ## [0.1.1] - 2026-05-12
 
 ### Added

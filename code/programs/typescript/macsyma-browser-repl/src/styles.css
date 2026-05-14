@@ -248,6 +248,14 @@ pre {
   word-break: break-word;
 }
 
+.timing {
+  grid-column: 2;
+  padding: 0 14px 12px;
+  color: #5c685f;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.85rem;
+}
+
 .suppressed {
   opacity: 0.68;
 }

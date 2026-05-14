@@ -1,8 +1,8 @@
 [package]
 name = "llm-provider-ollama"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "LM00a Ollama provider — local-only LLM client over std::net (zero third-party HTTP dep). Implements LlmClient for any Ollama-served model. v0.2 adds HTTP/1.1 chunked transfer-encoding support + an OutputTruncated rescue for thinking-mode models that burn the max_tokens budget on chain-of-thought."
+description = "LM00a Ollama provider — local-only LLM client over std::net (zero third-party HTTP dep). Implements LlmClient for any Ollama-served model. v0.3 broadens the OutputTruncated rescue in complete_json: when the wire response carries `done_reason: \"length\"` AND the partial content fails to parse as JSON (gemma4's mid-string truncation at 14–20 KB observed in the ADJ23 bench), the error is now surfaced as `OutputTruncated` so upstream `complete_json_with_truncation_retry` can auto-double the cap. Previously these surfaced as `SchemaInvalid` and the retry never fired. v0.2 added HTTP/1.1 chunked transfer-encoding support + the first OutputTruncated rescue."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }

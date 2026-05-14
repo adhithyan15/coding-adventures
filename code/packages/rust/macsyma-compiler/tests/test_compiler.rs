@@ -111,6 +111,15 @@ fn compiles_lists_and_optional_terminator_wrappers() {
 }
 
 #[test]
+fn formats_parser_failures_as_macsyma_syntax_diagnostics() {
+    let err = compile_macsyma("1 + ;").expect_err("invalid syntax should fail");
+    let message = err.to_string();
+    assert!(message.starts_with("Incorrect syntax at line 1, column "));
+    assert!(message.contains("1 + ;\n"));
+    assert!(message.contains("^"));
+}
+
+#[test]
 fn compiles_if_expressions_to_symbolic_if() {
     assert_eq!(
         one("if x < 0 then -x else x;"),

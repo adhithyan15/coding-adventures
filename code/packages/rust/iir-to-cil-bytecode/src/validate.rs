@@ -48,6 +48,8 @@
 //! Previously unsupported but now accepted: `alloc` (LispyPair only),
 //! `field_load`, `field_store`, `is_null`.
 
+use std::collections::HashMap;
+
 use interpreter_ir::{IIRModule, Operand};
 
 // ---------------------------------------------------------------------------
@@ -76,6 +78,11 @@ use interpreter_ir::{IIRModule, Operand};
 // - `io_out`        — lowered to `call System.Console.WriteLine(int64)`.
 // - `global_store`  — UnsupportedOp in V1 (LANG32b will add static fields).
 // - `global_load`   — UnsupportedOp in V1 (LANG32b will add static fields).
+//
+// LANG37 — supported in CLR backend:
+// - `alloc_closure` — lowered to `newarr int32[]` + `stelem.i4` sequence.
+// - `call_closure`  — lowered to `__callClosure(int32[], int32[])` call.
+//   Exception: i64/u64/f32/f64 captures produce a ClosureOpcode error.
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
@@ -192,26 +199,85 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             continue; // no point scanning the (empty) instruction list
         }
 
+        // ── Check 2.5 pre-pass: build variable-type map for this function ────
+        //
+        // Needed to detect i64/float-typed captures in `alloc_closure`.
+        // The map is built from function parameters and instruction dest
+        // type_hints (first declaration wins).
+        let mut var_types: HashMap<&str, &str> = HashMap::new();
+        for (pname, ptype) in &func.params {
+            var_types.insert(pname.as_str(), ptype.as_str());
+        }
         for instr in &func.instructions {
-            // ── Check 2.5: ClosureOpcode (LANG35) ────────────────────────────
+            if let Some(dest) = &instr.dest {
+                var_types
+                    .entry(dest.as_str())
+                    .or_insert(instr.type_hint.as_str());
+            }
+        }
+
+        for instr in &func.instructions {
+            // ── Check 2.5: Closure early-accept (LANG37) ─────────────────────
             //
-            // `alloc_closure` and `call_closure` are valid IIR opcodes (LANG34)
-            // but the CLR backend does not yet implement closure lowering.
-            // Full CLR closure support (dispatch-table approach using `object[]`
-            // cons cells and `MethodInfo.Invoke` reflection) is planned for LANG37.
+            // `alloc_closure` and `call_closure` (LANG34 opcodes) are fully
+            // supported by the CLR backend since LANG37, using an `int32[]`
+            // dispatch-table approach:
             //
-            // We emit a specific `ClosureOpcode` error rather than
-            // `UntypedInstruction` so callers understand the precise remediation:
-            // apply `iir-builtin-lowering` Phase 4 to downgrade to `call_builtin`
-            // form, or wait for LANG37.
-            if matches!(instr.op.as_str(), "alloc_closure" | "call_closure") {
-                errors.push(format!(
-                    "ClosureOpcode: function {:?}, op {:?} — closure opcodes are not \
-                     yet supported by the CLR backend; apply iir-builtin-lowering \
-                     Phase 4 to downgrade to call_builtin form before lowering to CIL \
-                     (full CLR closure support is planned for LANG37)",
-                    func.name, instr.op
-                ));
+            //   alloc_closure(Str(fn_name), Var(cap0), …) : "closure"
+            //     → int32[] {fn_dispatch_idx, cap0_as_i32, …}
+            //
+            //   call_closure(Var(handle), Var(arg0), …) : "any"
+            //     → static __callClosure(int32[] closure, int32[] args)
+            //
+            // EXCEPTION: i64/u64/f32/f64 captures are not supported in v1.
+            // The `int32[]` array can only hold 32-bit integers; wider captures
+            // require either boxing (LANG38) or a wider array type.
+            if instr.op == "alloc_closure" {
+                // Check each capture operand (srcs[1..]).
+                // srcs[0] is Operand::Str(fn_name) — not a capture variable.
+                //
+                // Each capture must be:
+                //   (a) an Operand::Var — non-Var captures (Int, Float, Str)
+                //       have no place in a variable-captured closure and are
+                //       rejected with a clear error (not silently ignored).
+                //   (b) of type i32/bool — i64/u64/f32/f64 captures require
+                //       wider storage than int32[] provides (deferred to LANG38).
+                for (i, src) in instr.srcs.iter().skip(1).enumerate() {
+                    match src {
+                        Operand::Var(cap_name) => {
+                            let cap_type =
+                                var_types.get(cap_name.as_str()).copied().unwrap_or("");
+                            let is_wide = matches!(
+                                cap_type,
+                                "i64" | "u64" | "f32" | "f64"
+                            );
+                            if is_wide {
+                                errors.push(format!(
+                                    "ClosureOpcode: function {:?}, alloc_closure captures \
+                                     variable {:?} (type {:?}); only i32/bool captures are \
+                                     supported by the CLR backend in v1 — use integer types \
+                                     or upgrade to LANG38",
+                                    func.name, cap_name, cap_type
+                                ));
+                            }
+                        }
+                        other => {
+                            // Non-Var operands at capture positions are always
+                            // invalid — reject with a ClosureOpcode error.
+                            errors.push(format!(
+                                "ClosureOpcode: function {:?}, alloc_closure srcs[{}] \
+                                 must be Var(captured variable), got {:?}; only variable \
+                                 captures are supported",
+                                func.name, i + 1, other
+                            ));
+                        }
+                    }
+                }
+                continue; // accepted (i32/bool Var captures OK)
+            }
+            if instr.op == "call_closure" {
+                // `call_closure` always has type_hint "any" — accepted here.
+                // The lowering pass validates that the closure target exists.
                 continue;
             }
 

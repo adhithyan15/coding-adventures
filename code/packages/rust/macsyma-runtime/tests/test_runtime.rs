@@ -1,6 +1,7 @@
 use cas_solve::SOLVE;
 use coding_adventures_macsyma_runtime::{
-    extend_macsyma_name_table, macsyma_name_table, MacsymaSession, EV, KILL,
+    extend_macsyma_name_table, macsyma_help_text, macsyma_name_table, parse_macsyma_help_query,
+    MacsymaSession, DECLARE, EV, KILL, PROPERTIES, PROP_VARS,
 };
 use std::collections::HashMap;
 use symbolic_ir::{
@@ -27,6 +28,217 @@ fn preserves_suppressed_statement_metadata() {
     assert!(!results[0].display);
     assert!(results[1].display);
     assert_eq!(results[1].output, int(6));
+}
+
+#[test]
+fn tracks_showtime_option_through_normal_assignments() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("showtime:true$ 2 + 3; showtime:false$ 4 + 5;")
+        .unwrap();
+
+    assert_eq!(results[1].output, int(5));
+    assert_timing_text(results[1].timing_text.as_deref());
+    assert_eq!(results[0].timing_text, None);
+    assert_eq!(results[2].timing_text, None);
+    assert_eq!(results[3].timing_text, None);
+}
+
+#[test]
+fn reports_showtime_diagnostics_for_suppressed_statements() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("showtime:true$ 2 + 3$").unwrap();
+
+    assert_eq!(results[1].output, int(5));
+    assert!(!results[1].display);
+    assert_timing_text(results[1].timing_text.as_deref());
+}
+
+#[test]
+fn parses_and_renders_question_mark_help() {
+    assert_eq!(
+        parse_macsyma_help_query("? solve;").as_deref(),
+        Some("solve")
+    );
+    assert_eq!(parse_macsyma_help_query("solve(x, x);"), None);
+    assert!(macsyma_help_text(Some("solve")).contains("solve(expr, var)"));
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("? solve").unwrap();
+
+    assert_eq!(results.len(), 1);
+    assert!(results[0].display);
+    assert!(results[0].output_text.contains("solve(expr, var)"));
+    assert!(matches!(results[0].input, symbolic_ir::IRNode::Str(_)));
+    assert!(matches!(results[0].output, symbolic_ir::IRNode::Str(_)));
+}
+
+#[test]
+fn factors_univariate_integer_polynomials_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 - 1);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![int(1), sym("x")]),
+                apply(sym(ADD), vec![int(-1), sym("x")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn keeps_multivariate_factor_calls_unevaluated() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x + y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym("Factor"),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")])]
+        )
+    );
+}
+
+#[test]
+fn factors_common_multivariate_terms_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2*y - y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                sym("y"),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![int(1), sym("x")]),
+                        apply(sym(ADD), vec![int(-1), sym("x")]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_perfect_squares_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 + 2*x*y + y^2);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(2)]
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_difference_of_squares_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 - y^2);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_difference_of_cubes_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^3 - y^3);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(sym(MUL), vec![sym("x"), sym("y")]),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_sum_of_cubes_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^3 + y^3);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(
+                                    sym(MUL),
+                                    vec![int(-1), apply(sym(MUL), vec![sym("x"), sym("y")]),],
+                                ),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn question_mark_without_topic_lists_help_topics() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("?").unwrap();
+
+    assert!(results[0].output_text.contains("MACSYMA help topics:"));
+    assert!(results[0].output_text.contains("solve"));
+}
+
+#[test]
+fn kill_showtime_restores_false_binding() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("showtime:true$ kill(showtime); showtime; 2;")
+        .unwrap();
+
+    assert_timing_text(results[1].timing_text.as_deref());
+    assert_eq!(results[2].output, sym("False"));
+    assert_eq!(results[2].timing_text, None);
+    assert_eq!(results[3].timing_text, None);
 }
 
 #[test]
@@ -135,6 +347,15 @@ fn exports_and_extends_runtime_name_table_idempotently() {
         table.get("trigsimp").map(String::as_str),
         Some("TrigSimplify")
     );
+    assert_eq!(table.get("assume").map(String::as_str), Some("Assume"));
+    assert_eq!(table.get("forget").map(String::as_str), Some("Forget"));
+    assert_eq!(table.get("is").map(String::as_str), Some("Is"));
+    assert_eq!(table.get("declare").map(String::as_str), Some(DECLARE));
+    assert_eq!(
+        table.get("properties").map(String::as_str),
+        Some(PROPERTIES)
+    );
+    assert_eq!(table.get("propvars").map(String::as_str), Some(PROP_VARS));
 
     let mut target = HashMap::from([("custom".to_string(), "CustomHead".to_string())]);
     extend_macsyma_name_table(&mut target);
@@ -169,6 +390,70 @@ fn kill_all_clears_bindings_and_history() {
     let results = session.eval_source("x; %;").unwrap();
     assert_eq!(results[0].output, sym("x"));
     assert_eq!(results[1].output, sym("x"));
+}
+
+#[test]
+fn assume_is_and_forget_share_session_assumptions() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x > 0); is(x > 0); forget(); is(x > 0);")
+        .unwrap();
+
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, sym("True"));
+    assert_eq!(results[2].output, sym("done"));
+    assert_eq!(results[3].output, sym("unknown"));
+}
+
+#[test]
+fn declare_feeds_properties_into_is_queries() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(x, positive); is(x > 0);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].input,
+        apply(sym(DECLARE), vec![sym("x"), sym("positive")])
+    );
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, sym("True"));
+}
+
+#[test]
+fn properties_lists_declared_properties_deterministically() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(n, integer, n, positive); properties(n);")
+        .unwrap();
+
+    assert_eq!(
+        results[1].output,
+        apply(sym(LIST), vec![sym("integer"), sym("positive")])
+    );
+}
+
+#[test]
+fn propvars_lists_symbols_with_declared_properties_deterministically() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(z, integer); declare(a, positive); propvars();")
+        .unwrap();
+
+    assert_eq!(
+        results[2].output,
+        apply(sym(LIST), vec![sym("a"), sym("z")])
+    );
+}
+
+#[test]
+fn properties_queries_raw_symbols_even_when_bound() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("x : 10; declare(x, integer); properties(x);")
+        .unwrap();
+
+    assert_eq!(results[2].output, apply(sym(LIST), vec![sym("integer")]));
 }
 
 #[test]
@@ -262,6 +547,24 @@ fn manual_kill_and_ev_heads_are_first_class() {
     ]);
     assert_eq!(results[0].output, sym("done"));
     assert_eq!(results[1].output, symbolic_ir::flt(1.5));
+}
+
+fn assert_timing_text(value: Option<&str>) {
+    let Some(value) = value else {
+        panic!("expected showtime timing text");
+    };
+    let Some(elapsed) = value
+        .strip_prefix("Evaluation took ")
+        .and_then(|value| value.strip_suffix(" seconds."))
+    else {
+        panic!("unexpected showtime timing text: {value}");
+    };
+    let Some((seconds, micros)) = elapsed.split_once('.') else {
+        panic!("showtime timing text lacks fractional seconds: {value}");
+    };
+    assert!(seconds.parse::<u64>().is_ok());
+    assert_eq!(micros.len(), 6);
+    assert!(micros.chars().all(|ch| ch.is_ascii_digit()));
 }
 
 #[test]

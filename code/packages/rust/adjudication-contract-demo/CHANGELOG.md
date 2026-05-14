@@ -2,6 +2,90 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-13 — VERDICT: ESCALATE (mirrors tsa-demo v0.13)
+
+### Added
+
+Mirrors [tsa-demo v0.13](../adjudication-tsa-demo/CHANGELOG.md):
+adds `VERDICT: ESCALATE` as a third option in with-rulebook Arm A
+prompts.
+
+Conservative semantic: silence in the rulebook is not permission.
+If no rule explicitly affirms or excuses the obligation, ESCALATE
+— not OBLIGATION_HOLDS / OBLIGATION_EXCUSED.
+
+### Scope
+
+- `build_raw_system_prompt(Some(rulebook))` — three-verdict.
+- `build_priming_system_prompt()` — three-verdict.
+- `build_priming_turn2_user_prompt()` — reminded.
+- `build_raw_system_prompt(None)` — UNCHANGED, binary verdict.
+
+### Framework instructions are domain-neutral
+
+Framework-level rules match tsa-demo's wording. Role descriptors
+and rulebook content stay contract-specific.
+
+### Tests
+
+5 new tests (19 lib total). Existing test updated for the
+"citing the specific rule number(s)" wording.
+
+## [0.3.0] - 2026-05-13 — v0.12 parity (rulebook injection + priming)
+
+### Added
+
+ADJ19 prerequisite: bring contract-demo up to parity with
+[adjudication-tsa-demo v0.12](../adjudication-tsa-demo/CHANGELOG.md)
+and [adjudication-clinical-demo v0.3](../adjudication-clinical-demo/CHANGELOG.md)
+so the cross-domain bench harness can treat all three domains
+uniformly.
+
+- `ArmAMode { SingleTurn, Priming }` enum.
+- `DemoConfig` gains:
+  - `rulebook_text: Option<String>`
+  - `max_answer_tokens: usize` (default 2048)
+  - `arm_a_mode: ArmAMode` (default SingleTurn)
+- `fixture_contract_rulebook()` — hand-authored canonical
+  rulebook covering force-majeure / stock-exception / on-time
+  delivery / disputed-case reasoning. Cites Restatement (Second)
+  of Contracts §261 per ADJ19 §contract-domain.
+- Public prompt builders: `build_raw_system_prompt`,
+  `build_priming_system_prompt`,
+  `build_priming_turn1_user_prompt`,
+  `build_priming_turn2_user_prompt`.
+- Two-turn priming dispatch in `run_raw_arm`.
+
+### Changed
+
+- `run_raw_arm` dispatches on `cfg.arm_a_mode`.
+- Verdict-first prompt format in both single-turn and priming
+  variants (`VERDICT: OBLIGATION_HOLDS` / `OBLIGATION_EXCUSED`).
+
+### Tests
+
+8 new tests (14 lib total, all passing). Same shape as
+clinical-demo v0.3.
+
+### Verdict set unchanged
+
+v0.3 preserves contract-demo's existing 2-value set
+(`OBLIGATION_HOLDS` / `OBLIGATION_EXCUSED`). ADJ19's proposed
+3-value set (`IN-BREACH` / `NOT-IN-BREACH` / `DISPUTED`) is
+queued for when the cross-domain bench actually needs it.
+
+### Compatibility
+
+- DemoConfig gained three new public fields. Soft break for
+  pattern destructuring; no in-tree caller does that.
+- `run_raw_arm(cfg)` signature unchanged.
+- Default behaviour preserved (modulo verdict line position).
+
+### Follow-ups
+
+Same as clinical-demo v0.3: main.rs env-var wiring + harness
+generalization, queued together.
+
 ## [0.2.0] - 2026-05-12
 
 ### Added

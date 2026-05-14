@@ -157,6 +157,49 @@ that the Section groups N1 and N2 — semantic structure that the \
 checker passes use. Coverage adds up: N1[0,14] + S1[14,16] + \
 N2[16,23] + S1[23,24] = [0,24).\n\
 \n\
+Second worked example, showing typed quantities. SOURCE: \
+`\"4 inch pocket knife.\"` (20 bytes). Correct output:\n\
+\n\
+{\n\
+  \"document_id\": \"<doc-id>\",\n\
+  \"nodes\": [\n\
+    { \"id\": \"N1\", \"kind\": \"Fact\",\n\
+      \"term\": { \"functor\": \"declared\", \"args\": [ { \"atom\": \"pocket_knife\" } ] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [ { \"start\": 7, \"end\": 19 } ] },\n\
+    { \"id\": \"N2\", \"kind\": \"Fact\",\n\
+      \"term\": { \"functor\": \"blade_length\", \"args\": [\n\
+        { \"atom\": \"pocket_knife\" },\n\
+        { \"functor\": \"quantity\", \"args\": [ { \"atom\": \"4\" }, { \"atom\": \"inches\" } ] }\n\
+      ] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [ { \"start\": 0, \"end\": 6 } ] },\n\
+    { \"id\": \"S1\", \"kind\": \"Section\",\n\
+      \"term\": { \"functor\": \"sentence\", \"args\": [] },\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [ { \"start\": 6, \"end\": 7 }, { \"start\": 19, \"end\": 20 } ] }\n\
+  ],\n\
+  \"edges\": [\n\
+    { \"id\": \"E1\", \"source\": \"S1\", \"target\": \"N1\",\n\
+      \"relation\": \"Contains\",\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [] },\n\
+    { \"id\": \"E2\", \"source\": \"S1\", \"target\": \"N2\",\n\
+      \"relation\": \"Contains\",\n\
+      \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
+      \"source_spans\": [] }\n\
+  ]\n\
+}\n\
+\n\
+N2's term carries the typed quantity `quantity(4, inches)` as a \
+nested compound. A downstream rule like \
+`prohibited(X) :- blade_length(X, quantity(L, inches)), gt(L, \
+quantity(2.36, inches))` can pattern-match `L = 4` and evaluate \
+`4 > 2.36` deterministically in the engine. If the IR had \
+flattened the number into the predicate name (`blade_4_inches`) \
+or dropped the unit (`blade_length(pocket_knife, 4)`), the rule \
+could not fire correctly. Preserve the typed value.\n\
+\n\
 RULES (every rule is mandatory, no exceptions):\n\
 \n\
 ## NODE rules\n\
@@ -189,6 +232,37 @@ recursively use the same term shape.\n\
 synthesized questions. Entity nodes MAY have empty `source_spans` \
 when synthesized. Every other kind MUST have non-empty \
 `source_spans`.\n\
+\n\
+## QUANTITY rules\n\
+\n\
+7a. **Every numerical quantity in the source gets a typed term.** \
+Whenever the source mentions a value paired with a unit (`\"3.4 \
+oz\"`, `\"200 Wh\"`, `\"4 inch\"`, `\"30 days\"`, `\"750 ml\"`, \
+`\"70% ABV\"`, `\"38.5°C\"`, `\"4 hours\"`), the value MUST appear \
+in IR as a `quantity(<value>, <unit>)` compound term: \
+\n\
+   * `<value>` is a numeric atom — preserve the literal number from \
+the source (`4`, `3.4`, `200`, `750`, `38.5`). Do NOT round, \
+truncate, or convert.\n\
+   * `<unit>` is a snake_case atom — normalise common units to their \
+canonical forms: `oz`, `ml`, `inches`, `mm`, `days`, `hours`, \
+`wh`, `kg`, `celsius`, `percent_abv`, `usd`, etc.\n\
+   * Embed the quantity inside the surrounding fact's args, do NOT \
+flatten the number into the predicate name. \
+**Wrong**: `blade_4_inches(knife)`. \
+**Right**: `blade_length(knife, quantity(4, inches))`.\n\
+\n\
+7b. **Numbers without units are still atoms, but use `count` or the \
+domain-appropriate predicate.** `\"1 carry-on bag\"` becomes \
+`carry_on(quantity(1, count))` or `carry_on_bag(quantity(1, count))`; \
+the literal `1` is not lost.\n\
+\n\
+7c. **Why this matters:** downstream rules will compare quantities \
+against thresholds (`gt(L, quantity(2.36, inches))`, \
+`le(V, quantity(100, ml))`). The engine evaluates these comparisons \
+deterministically — but only if the source IR preserves the typed \
+value. Lose the unit, or fold the number into the predicate name, \
+and the engine has nothing to compare.\n\
 \n\
 ## EDGE rules\n\
 \n\
@@ -299,7 +373,10 @@ fn build_completion_request(
         temperature: 0.0,
         // IR documents can be large; pick a higher cap than other
         // primitives. A long clinical note can easily run to several
-        // thousand output tokens.
+        // thousand output tokens. Wired through
+        // `complete_json_with_truncation_retry`, so on
+        // `OutputTruncated` the cap auto-doubles up to
+        // `MAX_TOKENS_CEILING` (32 768).
         max_tokens: Some(8192),
         stop_sequences: Vec::new(),
         seed: None,
@@ -509,7 +586,7 @@ mod tests {
 
         assert_eq!(resp.call_record.primitive, "decompose_text");
         assert_eq!(resp.call_record.role, "extractor");
-        assert_eq!(resp.call_record.prompt_version, "decompose-text-v4");
+        assert_eq!(resp.call_record.prompt_version, "decompose-text-v5");
         assert!(!resp.call_record.prompt_hash.is_empty());
         assert_eq!(resp.call_record.usage.input_tokens, 700);
         assert_eq!(resp.call_record.usage.output_tokens, 320);
@@ -533,6 +610,77 @@ mod tests {
     fn missing_language_hint_renders_auto_detect() {
         let text = build_user_text(&req());
         assert!(text.contains("LANGUAGE: auto-detect"));
+    }
+
+    #[test]
+    fn system_prompt_documents_typed_quantity_extraction() {
+        // ADJ21: every numerical quantity in the source must lower
+        // into a `quantity(value, unit)` compound term. The prompt
+        // explicitly says so and shows a worked example.
+        let s = SYSTEM_PROMPT;
+        assert!(
+            s.contains("quantity(<value>, <unit>)") || s.contains("quantity(4, inches)"),
+            "system prompt must teach the quantity(value, unit) shape"
+        );
+        // The quantity rule must explicitly forbid flattening the
+        // number into the predicate name (the pocket-knife regression
+        // from ADJ18).
+        assert!(
+            s.contains("blade_4_inches"),
+            "prompt must show the canonical wrong pattern (blade_4_inches) as a forbidden example"
+        );
+        assert!(
+            s.contains("blade_length(knife, quantity(4, inches))"),
+            "prompt must show the canonical right pattern (blade_length + quantity) as the worked example"
+        );
+        // Common units must be enumerated so the model uses
+        // consistent atoms across runs.
+        for unit in &["oz", "ml", "inches", "wh", "kg", "days"] {
+            assert!(
+                s.contains(unit),
+                "common unit `{unit}` should be mentioned in the unit-normalisation list"
+            );
+        }
+    }
+
+    #[test]
+    fn system_prompt_includes_pocket_knife_worked_example() {
+        // The second worked example specifically demonstrates that
+        // typed quantities lower correctly. Without this example the
+        // model has no anchor for what the shape looks like in
+        // practice.
+        let s = SYSTEM_PROMPT;
+        assert!(
+            s.contains("\"4 inch pocket knife.\""),
+            "prompt must include the typed-quantity worked example source"
+        );
+        assert!(
+            s.contains("blade_length") && s.contains("pocket_knife"),
+            "prompt's typed-quantity worked example must produce a blade_length fact"
+        );
+        // The rationale paragraph after the example must connect
+        // the quantity preservation back to the engine's job.
+        assert!(
+            s.contains("4 > 2.36"),
+            "prompt must explain why preserving the typed quantity matters (the engine evaluates the threshold)"
+        );
+    }
+
+    #[test]
+    fn system_prompt_uses_domain_neutral_quantity_rules() {
+        // The quantity rule should NOT presume a specific domain's
+        // unit vocabulary; the unit list is an example, not an
+        // enumeration. (TSA happens to be in the worked example;
+        // the framework should also handle clinical, contract, etc.)
+        let s = SYSTEM_PROMPT;
+        // Clinical-flavored units should NOT appear in the rule
+        // text (only in domain-flavored worked examples, if at all).
+        // The point: the rule applies to ANY value+unit pairing,
+        // not just TSA's.
+        assert!(s.contains("snake_case atom"));
+        // The rule explicitly says "every numerical quantity",
+        // not "every TSA quantity" or similar.
+        assert!(s.contains("Every numerical quantity in the source"));
     }
 
     #[test]

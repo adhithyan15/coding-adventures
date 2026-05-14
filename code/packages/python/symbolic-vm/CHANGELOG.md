@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- Added another small multivariate factoring foothold to `Factor`: bivariate
+  cubic identities such as `x^3 - y^3` and `x^3 + y^3` now factor to their
+  textbook two-factor decompositions.
+- Added another small multivariate factoring foothold to `Factor`: bivariate
+  differences of squares such as `x^2 - y^2` now factor to `(x-y)*(x+y)`.
+- Added a second small multivariate factoring foothold to `Factor`:
+  bivariate perfect-square quadratics such as `x^2 + 2*x*y + y^2` now factor
+  to `(x+y)^2`.
+- Added a small multivariate factoring foothold to `Factor`: additive
+  expressions with a common symbolic factor, such as `x^2*y - y`, now extract
+  that common factor and then reuse the existing univariate integer factorizer
+  on the residual.
+
 ## 0.53.0 — 2026-05-05
 
 **Phase 33 — Trig special values at rational multiples of π.**

@@ -2,6 +2,165 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-13 — ADJ25 PR-2: per-level hierarchical coverage + no-flattening rule
+
+### Added
+
+New checker `check_hierarchical_coverage(doc, ir_doc) ->
+HierarchicalCoverageResult` per
+[ADJ25](../../specs/ADJ25-hierarchical-decomposition.md), the
+foundational reset spec. The check walks the IR's `Contains`-edge
+hierarchy and enforces at every parent → children boundary
+(`Document → Sentence`, `Sentence → Phrase`, `Phrase → Claim`,
+`Fact → TypedComponent`) that:
+
+1. Children's spans tile the parent's span exactly (no gaps, no
+   overlaps).
+2. Each child has a non-empty span (synthesized `Entity` exempted).
+3. Each child's kind is allowed at the level (e.g., only
+   `Sentence`/`Discarded` can be a direct child of `Document`).
+
+Additionally, the **no-flattening rule** rejects atom names that
+smuggle source content:
+
+- Any atom containing a digit run that appears in the source is
+  rejected (`battery_200_wh` when source has `"200"`).
+- Any atom ending in a banned unit suffix joined by underscore is
+  rejected (`battery_wh` even when source has no digit).
+- Any atom of 3+ underscore-separated parts each drawn from source
+  words is rejected (`pocket_knife_blade_length`).
+
+Numbers in compound terms (`quantity(50, wh)`) are NOT flagged —
+the legitimate decomposition lifts the digit literal to a `Num`
+term, which the rule deliberately doesn't visit.
+
+### New public types
+
+- `DecompLevel` — `DocumentToSentence`, `SentenceToPhrase`,
+  `PhraseToClaim`, `FactToTypedComponent`.
+- `HierarchicalCoverageResult` — `Pass | Fail { gaps }`.
+- `HierarchicalGap` — `{ level, parent_node_id, kind }`.
+- `HierarchicalGapKind` — `UncoveredBytes`, `Overlap`,
+  `EmptyChildSpan`, `ChildSpansEscape`, `NoChildrenAtLevel`,
+  `WrongChildKindForLevel`, `FlattenedAtom`.
+- `FlatteningReason` — `DigitRunFromSource`, `UnitSuffix`,
+  `MultiWordCollapse`.
+
+### Scope and gating
+
+PR-2 is **additive only**. The new check is exposed as a public
+function but is NOT yet wired into any existing pipeline. PR-4 (the
+hierarchical orchestrator) will wire failures into PR-3's
+fresh-agent retry primitive. The existing `check_coverage` and
+`check_typed_quantity_coverage` are unchanged.
+
+### Tests
+
+13 new test cases covering: happy-path hierarchies, uncovered bytes
+at sentence level, overlap at phrase level, Fact-without-typed-components,
+wrong child kind for level, digit-run flattening, unit-suffix
+flattening, multi-word collapse, legitimate atoms accepted, typed
+quantity not falsely flagged, pure-flat-IR no-op, digit-run
+collection helper, classification priority helper. Total
+`adjudication-coverage` tests: 20 → 33.
+
+## [0.3.0] - 2026-05-13 — ADJ22 typed-quantity coverage
+
+### Added
+
+`check_typed_quantity_coverage(doc, ir_doc)` — a sibling checker to
+the existing `check_coverage`, implementing
+[ADJ22](../../../specs/ADJ22-typed-quantity-coverage.md).
+
+For every numerical literal in the source text (`\d+(\.\d+)?`), the
+checker verifies that at least one IR node has source_spans
+overlapping the literal AND a `quantity(value, unit)` compound term
+somewhere in its term tree (recursively, so deeply-nested
+quantities are also detected).
+
+Violations come back as
+`TypedQuantityViolation::MissingQuantity { literal, location,
+nearby_nodes }` which an ADJ06 clarification prompt can use to
+re-prompt the model: *"You produced node N1 over this span but did
+not include the quantity 4."*
+
+### Why this exists
+
+ADJ18's empirical bench (v0.13 prompts, PR #3066) showed that
+LLMs reliably mishandle numerical thresholds when asked to apply
+rules inside their own forward pass. The structural fix is to
+preserve typed quantities in the source IR so the engine can do
+the arithmetic deterministically.
+
+[ADJ21](../../../specs/ADJ21-typed-quantity-decomposition.md)
+(PR #3071) updates `decompose_text`'s prompt to teach the LLM to
+emit `quantity(value, unit)` compounds. ADJ22 is the validator
+that catches when the LLM drops the quantity anyway — either by
+omitting it, flattening it into the predicate name
+(`blade_4_inches` instead of `blade_length(knife, quantity(4,
+inches))`), or losing the unit.
+
+### Scope
+
+The check focuses on `NodeKind::Fact`, `NodeKind::Rule`, and
+`NodeKind::Uncertainty` nodes — the kinds that are expected to
+carry source-level quantities. Section, Entity, Query, Discarded,
+and Exception nodes are exempt; their terms carry structure,
+identity, or queries rather than measurements.
+
+The checker matches the literal's value (post-normalisation —
+`"4"`, `"4.0"`, `"04"` all canonicalise to `"4"`) against atoms
+OR numeric `Term::Num` values in the IR. Units are not validated
+in this iteration — the checker only verifies that *some*
+`quantity(<lit>, _)` compound exists; subsequent passes (a future
+ADJ22.x) can enforce specific unit vocabularies per domain.
+
+### Edge cases
+
+- Numbers without units (`"1 carry-on bag"`): still flagged if no
+  `quantity(1, _)` exists. The ADJ21 prompt teaches the model to
+  emit `quantity(1, count)` for these.
+- Decimals (`"3.4 oz"`): matched via canonical-decimal
+  normalisation so `quantity(3.4, oz)` and `quantity(Float(3.4), oz)`
+  both pass.
+- Nested compounds: the term-tree walk is recursive, so deeply-
+  nested quantities inside other compounds (e.g.,
+  `meets_threshold(blade_length(knife, quantity(4, inches)))`) are
+  detected.
+
+### Tests
+
+13 new tests added (20 lib total, all passing):
+
+- Literal scan: integers, decimals, multiples, none.
+- Pass: top-level quantity compound, decimal, numeric-atom,
+  no-numbers-in-source, deeply-nested quantity.
+- Fail: missing quantity, flattened-into-predicate
+  (`blade_4_inches`), multiple missing literals reported
+  separately.
+- Normalisation: leading zeros, trailing decimal zeros, 0.5
+  edge case.
+
+### Compatibility
+
+- Pre-existing `check_coverage` API unchanged.
+- `Document` struct unchanged.
+- New types (`TypedQuantityViolation`, `TypedQuantityResult`,
+  `check_typed_quantity_coverage`) are additive.
+- `logic-core` moved from dev-dep to dep so the checker can
+  inspect `Term` shapes.
+
+### What's NOT in this PR
+
+- **Pipeline wiring**: ADJ22 is a pure check today. Wiring it
+  into `adjudication-pipeline` so failures route to ADJ06
+  clarification is a follow-up. The check is callable standalone
+  in the meantime.
+- **Unit-vocabulary enforcement**: the check verifies a
+  `quantity(<lit>, _)` exists but doesn't validate the unit
+  atom. A future iteration could enforce per-domain unit
+  vocabularies if needed.
+
 ## [0.2.0] - 2026-05-11 — ADJ02 v2 structural rewrite
 
 ### Replaced

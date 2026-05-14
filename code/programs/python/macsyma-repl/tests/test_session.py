@@ -7,6 +7,7 @@ and verifies the recorded transcript.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -44,6 +45,10 @@ def _run(inputs: list[str]) -> list[str]:
         mode="sync",
     )
     return outputs
+
+
+def _output_lines(outputs: list[str]) -> list[str]:
+    return [line for output in outputs for line in output.splitlines()]
 
 
 # ---------------------------------------------------------------------------
@@ -144,6 +149,44 @@ def test_auto_terminator_appended() -> None:
     assert any(line == "(%o1) 5" for line in out)
 
 
+def test_question_mark_help_lists_topics() -> None:
+    out = _output_lines(_run(["?", ":quit"]))
+
+    assert any("MACSYMA help topics:" in line for line in out)
+    assert any("solve" in line for line in out)
+
+
+def test_question_mark_help_topic() -> None:
+    out = _output_lines(_run(["? solve", ":quit"]))
+
+    assert any("solve(expr, var)" in line for line in out)
+    assert not any(line.startswith("(%o1)") for line in out)
+
+
+def test_showtime_appends_timing_after_displayed_statement() -> None:
+    out = _output_lines(_run(["showtime:true$", "2 + 3;", ":quit"]))
+
+    assert any(line == "(%o2) 5" for line in out)
+    assert any(
+        re.fullmatch(r"Evaluation took \d+\.\d{6} seconds\.", line)
+        for line in out
+    )
+
+
+def test_showtime_false_disables_timing() -> None:
+    out = _output_lines(_run(["showtime:true$", "showtime:false$", "2 + 3;", ":quit"]))
+
+    assert any(line == "(%o3) 5" for line in out)
+    assert not any(line.startswith("Evaluation took ") for line in out)
+
+
+def test_showtime_reports_suppressed_statement_timing() -> None:
+    out = _output_lines(_run(["showtime:true$", "2 + 3$", ":quit"]))
+
+    assert not any(line.startswith("(%o2) ") for line in out)
+    assert any(line.startswith("Evaluation took ") for line in out)
+
+
 def test_eval_file_uses_same_session_semantics(tmp_path: Path) -> None:
     program = tmp_path / "batch.mac"
     program.write_text("x: 5$\nx + 1;\n2 + 3;\n", encoding="utf-8")
@@ -180,7 +223,9 @@ def test_cli_file_mode_reports_errors_to_stderr(tmp_path: Path, capsys) -> None:
     assert macsyma_main(["--file", str(program)]) == 1
     captured = capsys.readouterr()
     assert captured.out == ""
-    assert "parse error:" in captured.err
+    assert "Incorrect syntax at line 1, column" in captured.err
+    assert "1 +;" in captured.err
+    assert "^" in captured.err
 
 
 # ---------------------------------------------------------------------------
