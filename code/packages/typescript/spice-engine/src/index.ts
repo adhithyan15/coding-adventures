@@ -57,6 +57,13 @@ export interface DcSweepPoint {
   readonly result: DcResult;
 }
 
+export interface TfResult {
+  readonly transferRatio: number;
+  readonly inputImpedanceOhms: number;
+  readonly outputImpedanceOhms: number;
+  gain(): number;
+}
+
 export interface Complex {
   readonly real: number;
   readonly imag: number;
@@ -215,6 +222,59 @@ export function dcSweep(
   return points;
 }
 
+export function tf(
+  circuit: Circuit,
+  outputNode: string,
+  inputSource: string,
+): TfResult {
+  const nodeIndices = collectNodeIndices(circuit);
+  if (!isGround(outputNode) && !nodeIndices.has(outputNode)) {
+    throw invalidElement(outputNode, "output node was not found in circuit");
+  }
+
+  const input = findInputSource(circuit, inputSource);
+  const voltageSources = collectAcVoltageSources(circuit);
+  const nodeCount = nodeIndices.size;
+  const matrix = buildSmallSignalMatrix(circuit, nodeIndices, voltageSources);
+  const size = matrix.length;
+  const outputIndex = nodeIndex(nodeIndices, outputNode);
+
+  const forwardRhs = Array.from({ length: size }, () => 0.0);
+  if (input.kind === "voltage-source") {
+    const sourceIndex = voltageSources.get(input.name);
+    if (sourceIndex === undefined) {
+      throw invalidElement(input.name, "voltage source was not indexed");
+    }
+    forwardRhs[nodeCount + sourceIndex] = 1.0;
+  } else {
+    const positive = nodeIndex(nodeIndices, input.positive);
+    const negative = nodeIndex(nodeIndices, input.negative);
+    if (positive !== undefined) {
+      forwardRhs[positive] -= 1.0;
+    }
+    if (negative !== undefined) {
+      forwardRhs[negative] += 1.0;
+    }
+  }
+
+  const forward = solveLinearSystem(cloneMatrix(matrix), forwardRhs);
+  const transferRatio = outputIndex === undefined ? 0.0 : forward[outputIndex];
+  const inputImpedanceOhms =
+    input.kind === "voltage-source"
+      ? voltageSourceInputImpedance(input, voltageSources, nodeCount, forward)
+      : currentSourceInputImpedance(input, nodeIndices, forward);
+
+  const outputRhs = Array.from({ length: size }, () => 0.0);
+  if (outputIndex !== undefined) {
+    outputRhs[outputIndex] = 1.0;
+  }
+  const output = solveLinearSystem(matrix, outputRhs);
+  const outputImpedanceOhms =
+    outputIndex === undefined ? 0.0 : output[outputIndex];
+
+  return makeTfResult(transferRatio, inputImpedanceOhms, outputImpedanceOhms);
+}
+
 export function acSweep(
   circuit: Circuit,
   startHz: number,
@@ -366,6 +426,8 @@ interface AcSolution {
   readonly branchCurrents: ReadonlyMap<string, Complex>;
 }
 
+type InputSource = VoltageSource | CurrentSource;
+
 function solveLinearCircuit(
   circuit: Circuit,
   capacitorStates: readonly CapacitorState[],
@@ -444,6 +506,57 @@ function solveLinearCircuit(
   return { nodeVoltages, branchCurrents };
 }
 
+function buildSmallSignalMatrix(
+  circuit: Circuit,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+): number[][] {
+  const nodeCount = nodeIndices.size;
+  const matrixSize = nodeCount + voltageSources.size;
+  const matrix = Array.from({ length: matrixSize }, () =>
+    Array.from({ length: matrixSize }, () => 0.0),
+  );
+
+  for (const element of circuit.elements()) {
+    switch (element.kind) {
+      case "resistor":
+        stampResistor(element, nodeIndices, matrix);
+        break;
+      case "capacitor":
+        validateCapacitor(element);
+        break;
+      case "inductor": {
+        validateInductor(element);
+        const n1 = nodeIndex(nodeIndices, element.n1);
+        const n2 = nodeIndex(nodeIndices, element.n2);
+        stampConductance(matrix, n1, n2, 1.0e12);
+        break;
+      }
+      case "voltage-source": {
+        if (!Number.isFinite(element.voltage)) {
+          throw invalidElement(element.name, "voltage must be finite");
+        }
+        const sourceIndex = voltageSources.get(element.name);
+        if (sourceIndex === undefined) {
+          throw invalidElement(element.name, "voltage source was not indexed");
+        }
+        const branch = nodeCount + sourceIndex;
+        const positive = nodeIndex(nodeIndices, element.positive);
+        const negative = nodeIndex(nodeIndices, element.negative);
+        stampBranchMatrix(matrix, branch, positive, negative);
+        break;
+      }
+      case "current-source":
+        if (!Number.isFinite(element.current)) {
+          throw invalidElement(element.name, "current must be finite");
+        }
+        break;
+    }
+  }
+
+  return matrix;
+}
+
 function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
   const nodeIndices = collectNodeIndices(circuit);
   const voltageSources = collectAcVoltageSources(circuit);
@@ -518,6 +631,21 @@ function makeDcResult(
         ? sourceName
         : `I(${sourceName})`;
       return branchCurrents.get(key);
+    },
+  };
+}
+
+function makeTfResult(
+  transferRatio: number,
+  inputImpedanceOhms: number,
+  outputImpedanceOhms: number,
+): TfResult {
+  return {
+    transferRatio,
+    inputImpedanceOhms,
+    outputImpedanceOhms,
+    gain(): number {
+      return transferRatio;
     },
   };
 }
@@ -617,6 +745,57 @@ function collectAcVoltageSources(circuit: Circuit): Map<string, number> {
     }
   }
   return sources;
+}
+
+function findInputSource(circuit: Circuit, inputSource: string): InputSource {
+  for (const element of circuit.elements()) {
+    if (
+      (element.kind === "voltage-source" || element.kind === "current-source") &&
+      element.name === inputSource
+    ) {
+      return element;
+    }
+    if (
+      (element.kind === "resistor" ||
+        element.kind === "capacitor" ||
+        element.kind === "inductor") &&
+      element.name === inputSource
+    ) {
+      throw invalidElement(
+        inputSource,
+        `input element must be an independent voltage or current source, got ${element.kind}`,
+      );
+    }
+  }
+  throw invalidElement(inputSource, "input source was not found");
+}
+
+function voltageSourceInputImpedance(
+  source: VoltageSource,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  forward: readonly number[],
+): number {
+  const sourceIndex = voltageSources.get(source.name);
+  if (sourceIndex === undefined) {
+    throw invalidElement(source.name, "voltage source was not indexed");
+  }
+  const branchCurrent = forward[nodeCount + sourceIndex];
+  return Math.abs(branchCurrent) > 1.0e-30
+    ? -1.0 / branchCurrent
+    : Number.POSITIVE_INFINITY;
+}
+
+function currentSourceInputImpedance(
+  source: CurrentSource,
+  nodeIndices: ReadonlyMap<string, number>,
+  forward: readonly number[],
+): number {
+  const positive = nodeIndex(nodeIndices, source.positive);
+  const negative = nodeIndex(nodeIndices, source.negative);
+  const vPlus = positive === undefined ? 0.0 : forward[positive];
+  const vMinus = negative === undefined ? 0.0 : forward[negative];
+  return vMinus - vPlus;
 }
 
 function insertBranchName(
@@ -1122,6 +1301,10 @@ function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
     solution[row] = (rhs[row] - tailSum) / matrix[row][row];
   }
   return solution;
+}
+
+function cloneMatrix(matrix: readonly (readonly number[])[]): number[][] {
+  return matrix.map((row) => [...row]);
 }
 
 function solveComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
