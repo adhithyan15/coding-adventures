@@ -1318,6 +1318,54 @@ fn integrate_constant_base_power() {
 }
 
 #[test]
+fn integrate_elliptic_first_kind_forms() {
+    let theta = sym("theta");
+    let k = sym("k");
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(SQRT),
+                vec![apply(
+                    sym(SUB),
+                    vec![
+                        int(1),
+                        apply(
+                            sym(MUL),
+                            vec![
+                                apply(sym(POW), vec![k.clone(), int(2)]),
+                                apply(sym(POW), vec![apply(sym(SIN), vec![theta.clone()]), int(2)]),
+                            ],
+                        ),
+                    ],
+                )],
+            ),
+        ],
+    );
+
+    assert_eq!(
+        symbolic().eval(apply(
+            sym(INTEGRATE),
+            vec![integrand.clone(), theta.clone()]
+        )),
+        apply(sym("EllipticF"), vec![theta.clone(), k.clone()])
+    );
+    assert_eq!(
+        symbolic().eval(apply(
+            sym(INTEGRATE),
+            vec![
+                integrand,
+                theta,
+                int(0),
+                apply(sym(DIV), vec![sym("%pi"), int(2)]),
+            ],
+        )),
+        apply(sym("EllipticK"), vec![k])
+    );
+}
+
+#[test]
 fn integrate_unknown_dependent_form_stays_unevaluated() {
     let f = apply(sym("F"), vec![sym("x")]);
     let expr = apply(sym(INTEGRATE), vec![f, sym("x")]);

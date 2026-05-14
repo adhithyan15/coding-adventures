@@ -998,8 +998,11 @@ fn derivative_handler() -> Handler {
 
 fn integrate_handler() -> Handler {
     std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
-        if expr.args.len() != 2 {
-            panic!("Integrate expects 2 arguments, got {}", expr.args.len());
+        if expr.args.len() != 2 && expr.args.len() != 4 {
+            panic!(
+                "Integrate expects 2 or 4 arguments, got {}",
+                expr.args.len()
+            );
         }
 
         let f = expr.args[0].clone();
@@ -1007,6 +1010,14 @@ fn integrate_handler() -> Handler {
             IRNode::Symbol(s) => s.clone(),
             _ => return IRNode::Apply(Box::new(expr)),
         };
+
+        if expr.args.len() == 4 {
+            if let Some(result) = complete_elliptic_first_kind(&f, &x, &expr.args[2], &expr.args[3])
+            {
+                return vm.eval(result);
+            }
+            return IRNode::Apply(Box::new(expr));
+        }
 
         let result = integrate(&f, &x);
         let original = apply_node(INTEGRATE, vec![f, IRNode::Symbol(x)]);
@@ -1031,6 +1042,10 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
                 apply_node(POW, vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)]),
             ],
         );
+    }
+
+    if let Some(result) = incomplete_elliptic_first_kind(f, x) {
+        return result;
     }
 
     let IRNode::Apply(apply) = f else {
@@ -1093,6 +1108,133 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
             ],
         ),
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
+    }
+}
+
+fn complete_elliptic_first_kind(
+    f: &IRNode,
+    x: &str,
+    lower: &IRNode,
+    upper: &IRNode,
+) -> Option<IRNode> {
+    if !to_numeric(lower).is_some_and(Numeric::is_zero) || !is_pi_over_two(upper) {
+        return None;
+    }
+    elliptic_first_kind_modulus(f, x).map(|modulus| apply_node("EllipticK", vec![modulus]))
+}
+
+fn incomplete_elliptic_first_kind(f: &IRNode, x: &str) -> Option<IRNode> {
+    elliptic_first_kind_modulus(f, x)
+        .map(|modulus| apply_node("EllipticF", vec![IRNode::Symbol(x.to_string()), modulus]))
+}
+
+fn elliptic_first_kind_modulus(f: &IRNode, x: &str) -> Option<IRNode> {
+    let radicand = match f {
+        IRNode::Apply(apply) if apply.head == IRNode::Symbol(DIV.to_string()) => {
+            let [numerator, denominator] = apply.args.as_slice() else {
+                return None;
+            };
+            let IRNode::Apply(sqrt) = denominator else {
+                return None;
+            };
+            let [radicand] = sqrt.args.as_slice() else {
+                return None;
+            };
+            if to_numeric(numerator).is_some_and(Numeric::is_one)
+                && sqrt.head == IRNode::Symbol(SQRT.to_string())
+            {
+                radicand
+            } else {
+                return None;
+            }
+        }
+        IRNode::Apply(apply) if apply.head == IRNode::Symbol(POW.to_string()) => {
+            let [base, exponent] = apply.args.as_slice() else {
+                return None;
+            };
+            if to_numeric(exponent) == Some(Numeric::Rat(-1, 2)) {
+                base
+            } else {
+                return None;
+            }
+        }
+        _ => return None,
+    };
+
+    let IRNode::Apply(sub) = radicand else {
+        return None;
+    };
+    let [constant, product] = sub.args.as_slice() else {
+        return None;
+    };
+    if sub.head != IRNode::Symbol(SUB.to_string())
+        || !to_numeric(constant).is_some_and(Numeric::is_one)
+    {
+        return None;
+    }
+    let IRNode::Apply(mul) = product else {
+        return None;
+    };
+    let [left, right] = mul.args.as_slice() else {
+        return None;
+    };
+    if mul.head != IRNode::Symbol(MUL.to_string()) {
+        return None;
+    }
+    modulus_from_squared_factor(left, right, x)
+        .or_else(|| modulus_from_squared_factor(right, left, x))
+}
+
+fn modulus_from_squared_factor(
+    modulus_square: &IRNode,
+    sine_square: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(sine_power) = sine_square else {
+        return None;
+    };
+    let [sine, sine_exponent] = sine_power.args.as_slice() else {
+        return None;
+    };
+    if sine_power.head != IRNode::Symbol(POW.to_string()) || sine_exponent != &IRNode::Integer(2) {
+        return None;
+    }
+    let IRNode::Apply(sine_call) = sine else {
+        return None;
+    };
+    let [inner] = sine_call.args.as_slice() else {
+        return None;
+    };
+    if sine_call.head != IRNode::Symbol(SIN.to_string()) || inner != &IRNode::Symbol(x.to_string())
+    {
+        return None;
+    }
+
+    let IRNode::Apply(modulus_power) = modulus_square else {
+        return None;
+    };
+    let [modulus, modulus_exponent] = modulus_power.args.as_slice() else {
+        return None;
+    };
+    if modulus_power.head == IRNode::Symbol(POW.to_string())
+        && modulus_exponent == &IRNode::Integer(2)
+    {
+        Some(modulus.clone())
+    } else {
+        None
+    }
+}
+
+fn is_pi_over_two(node: &IRNode) -> bool {
+    match node {
+        IRNode::Float(value) => (*value - std::f64::consts::FRAC_PI_2).abs() < 1e-12,
+        IRNode::Apply(apply) if apply.head == IRNode::Symbol(DIV.to_string()) => {
+            let [numerator, denominator] = apply.args.as_slice() else {
+                return false;
+            };
+            numerator == &IRNode::Symbol("%pi".to_string()) && denominator == &IRNode::Integer(2)
+        }
+        _ => false,
     }
 }
 

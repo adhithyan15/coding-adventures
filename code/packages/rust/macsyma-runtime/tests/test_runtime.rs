@@ -396,6 +396,29 @@ fn factors_multivariate_perfect_cube_difference_through_runtime() {
 }
 
 #[test]
+fn recognizes_elliptic_first_kind_integrals_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(1/sqrt(1-k^2*sin(theta)^2), theta);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(sym("EllipticF"), vec![sym("theta"), sym("k")])
+    );
+}
+
+#[test]
+fn recognizes_complete_elliptic_first_kind_integrals_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);")
+        .unwrap();
+
+    assert_eq!(results[0].output, apply(sym("EllipticK"), vec![sym("k")]));
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();
