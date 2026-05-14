@@ -1,5 +1,27 @@
 # Changelog — twig-parser
 
+## [0.5.0] — 2026-05-14 — LANG51 string literals
+
+### Added
+
+- `StrLit { value: String, line, column }` AST node — represents a
+  double-quoted string literal such as `"hello"` or `"say \"hi\"\n"`.
+- `Expr::StrLit(StrLit)` variant — added between `SymLit` and `VarRef` so that
+  match exhaustiveness checks catch all Expr variants immediately.
+- `Expr::pos()` arm for `StrLit`.
+- `lib.rs` re-exports `StrLit`.
+- `extract_atom` handles `"STRING"` token type.  The GrammarLexer pre-decodes
+  escape sequences and strips surrounding quotes before the token reaches the
+  parser, so `extract_atom` uses `tok.value` directly as the decoded content.
+- `expr_to_kind` in `type_decls.rs` returns `KindDecl::Str` for `Expr::StrLit`.
+- `twig.grammar` atom rule: `atom = STRING | INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;`
+- `twig.tokens`: `STRING = /"([^"\\]|\\.)*"/` added before `INTEGER`.
+
+### Changed
+
+- Removed draft `decode_string_escapes` helper from `ast_extract.rs` (the
+  GrammarLexer's `process_escapes` already handles the same escapes).
+
 ## [0.4.0] — 2026-05-14 — LANG48 TW05-A typed syntax
 
 ### Added

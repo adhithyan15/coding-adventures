@@ -164,7 +164,7 @@ fn emit_form(out: &mut Vec<FoldingRange>, form: &Form) {
 
 fn descend_expr(out: &mut Vec<FoldingRange>, expr: &Expr) {
     match expr {
-        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) | Expr::VarRef(_) => {}
+        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) | Expr::StrLit(_) | Expr::VarRef(_) => {}
         Expr::If(If { cond, then_branch, else_branch, line, .. }) => {
             let start = u32_of(*line);
             let end = max_line_in_expr(cond)
@@ -245,6 +245,7 @@ fn max_line_in_expr(expr: &Expr) -> u32 {
         Expr::BoolLit(b) => u32_of(b.line),
         Expr::NilLit(n) => u32_of(n.line),
         Expr::SymLit(s) => u32_of(s.line),
+        Expr::StrLit(s) => u32_of(s.line),
         Expr::VarRef(v) => u32_of(v.line),
         Expr::If(If { cond, then_branch, else_branch, line, .. }) => u32_of(*line)
             .max(max_line_in_expr(cond))

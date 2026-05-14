@@ -1,5 +1,13 @@
 # Changelog — twig-type-checker
 
+## [0.3.0] — 2026-05-14
+
+### Added (LANG51 — String literals)
+
+- `literal_kind` in `profile.rs`: `"STRING"` token → `Some(KindDecl::Str)`.
+  The comment on the `atom` grammar rule has been updated to include `STRING`.
+- `infer_expr` in `check.rs`: `Expr::StrLit` arm → `TwigKind::Str`.
+
 ## [0.2.0] — 2026-05-14
 
 ### Added (LANG50 — Generic Grammar Type Checker integration)

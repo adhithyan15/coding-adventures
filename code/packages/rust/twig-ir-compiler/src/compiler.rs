@@ -76,7 +76,7 @@ use lang_refined_types::{Kind, Predicate, RefinedType};
 
 use twig_parser::{
     Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, Match, MatchPat, NilLit, Program,
-    RecordDef, SymLit, TypeAnnotation, UnionDef, VarRef,
+    RecordDef, StrLit, SymLit, TypeAnnotation, UnionDef, VarRef,
 };
 
 use crate::errors::TwigCompileError;
@@ -653,6 +653,29 @@ impl Compiler {
                     Some(v.clone()),
                     vec![Operand::Var("make_symbol".into()), Operand::Var(name_reg)],
                     "any",
+                ), loc);
+                Ok(v)
+            }
+
+            // LANG51: double-quoted string literal — `"hello"`.
+            //
+            // Lower to a single `const(Operand::Str(value))` instruction with
+            // type_hint `"str"`.  The VM's `exec_const` (twig-vm/src/dispatch.rs)
+            // already handles `Operand::Str` by calling `alloc_string` and
+            // wrapping the result as a heap `LispyValue` — no VM changes needed.
+            //
+            // We use `Operand::Str` (the LANG32-canonical compile-time string form)
+            // rather than the older `string_arg` helper that emits `Operand::Var`
+            // because that helper was designed for internal builtin-call scaffolding,
+            // not for user-visible string data.  `Operand::Str` is cleaner and
+            // propagates the `"str"` type_hint automatically through LANG50 inference.
+            Expr::StrLit(StrLit { value, .. }) => {
+                let v = ctx.fresh_var("s");
+                ctx.emit(IIRInstr::new(
+                    "const",
+                    Some(v.clone()),
+                    vec![Operand::Str(value.clone())],
+                    "str",
                 ), loc);
                 Ok(v)
             }

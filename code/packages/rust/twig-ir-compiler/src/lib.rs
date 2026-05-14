@@ -1134,4 +1134,132 @@ mod tests {
         let baseline = compile_source(src, "test");
         assert_eq!(result.is_ok(), baseline.is_ok());
     }
+
+    // =========================================================================
+    // LANG51: String literal tests
+    // =========================================================================
+    //
+    // String literals ("hello") are the highest-priority self-hosting blocker:
+    // without them, compiler keywords like "define" can only be built at runtime
+    // from char codes.  These tests verify the full front-end → IIR path.
+
+    /// A bare string literal compiles to a single `const(Operand::Str(...))` in main.
+    #[test]
+    fn string_literal_basic() {
+        let instrs = main_instrs("\"hello\"");
+        // Expected: const(Str("hello")), ret
+        assert_eq!(instrs.len(), 2, "expected const + ret, got {instrs:?}");
+        assert_eq!(instrs[0].op, "const");
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "hello"),
+            other => panic!("expected Operand::Str(\"hello\"), got {other:?}"),
+        }
+    }
+
+    /// An empty string literal is valid and produces `const(Str(""))`.
+    #[test]
+    fn string_literal_empty() {
+        let instrs = main_instrs("\"\"");
+        assert_eq!(instrs[0].op, "const");
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, ""),
+            other => panic!("expected Operand::Str(\"\"), got {other:?}"),
+        }
+    }
+
+    /// `\"` inside a string literal is decoded to a literal double-quote character.
+    #[test]
+    fn string_literal_escaped_quote() {
+        let instrs = main_instrs(r#""say \"hi\"""#);
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "say \"hi\""),
+            other => panic!("expected escaped-quote string, got {other:?}"),
+        }
+    }
+
+    /// `\n` in a string literal is decoded to a real newline character (0x0a).
+    #[test]
+    fn string_literal_newline_escape() {
+        let instrs = main_instrs(r#""\n""#);
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => {
+                assert_eq!(s.len(), 1);
+                assert_eq!(s.as_bytes()[0], b'\n');
+            }
+            other => panic!("expected Operand::Str(\"\\n\"), got {other:?}"),
+        }
+    }
+
+    /// `\t` → tab, `\r` → CR, `\\` → backslash.
+    #[test]
+    fn string_literal_all_basic_escapes() {
+        let instrs = main_instrs(r#""\t\r\\""#);
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "\t\r\\"),
+            other => panic!("expected tab+CR+backslash, got {other:?}"),
+        }
+    }
+
+    /// The `const` instruction for a string literal carries `type_hint = "str"`.
+    /// This is what LANG50 inference uses to propagate the str kind.
+    #[test]
+    fn string_literal_type_hint_is_str() {
+        let instrs = main_instrs("\"hello\"");
+        assert_eq!(instrs[0].op, "const");
+        assert_eq!(
+            instrs[0].type_hint.as_str(),
+            "str",
+            "string literal const must carry type_hint = \"str\""
+        );
+    }
+
+    /// A string literal used as an argument to a builtin call compiles cleanly.
+    /// This covers the most common self-hosting usage: `(print "define")`.
+    #[test]
+    fn string_literal_as_argument() {
+        // (define (greet s) s)  then  (greet "world")
+        // We just want compilation to succeed and produce a call instruction.
+        let m = module("(define (greet s) s) (greet \"world\")");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        // main should contain a call to greet
+        let has_call_greet = main
+            .instructions
+            .iter()
+            .any(|i| i.op == "call" && i.srcs.iter().any(|s| matches!(s, Operand::Var(v) if v == "greet")));
+        assert!(has_call_greet, "expected call to greet in main");
+    }
+
+    /// `compile_typed_source` on a string literal returns Ok and the main
+    /// function is at least PartiallyTyped (the `const` instruction has
+    /// type_hint "str" which is a concrete type).
+    #[test]
+    fn string_literal_compile_typed_source() {
+        let m = compile_typed_source("\"hello\"", "test")
+            .expect("typed compile of string literal should succeed");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        assert_ne!(
+            main.type_status,
+            FunctionTypeStatus::Untyped,
+            "string literal should yield at least PartiallyTyped"
+        );
+    }
+
+    /// A string literal inside a lambda body compiles without error.
+    /// Tests that StrLit is handled in closure free-variable analysis (it has no
+    /// free variables, just like IntLit).
+    #[test]
+    fn string_literal_in_lambda() {
+        let m = module("(lambda () \"captured\")");
+        // Should compile to a __lambda_0 function + main that creates the closure.
+        let lambda_fn = m.functions.iter().find(|f| f.name.starts_with("__lambda"));
+        assert!(lambda_fn.is_some(), "lambda function should be emitted");
+        let lambda_instrs = &lambda_fn.unwrap().instructions;
+        // Lambda body: const(Str("captured")) + ret
+        let const_instr = lambda_instrs.iter().find(|i| i.op == "const");
+        assert!(const_instr.is_some(), "lambda body should have a const instr");
+        match &const_instr.unwrap().srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "captured"),
+            other => panic!("expected Str(\"captured\") in lambda, got {other:?}"),
+        }
+    }
 }

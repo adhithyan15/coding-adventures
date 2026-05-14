@@ -1,5 +1,20 @@
 # Changelog — twig-ir-compiler
 
+## [0.7.0] — 2026-05-14
+
+### Added (LANG51 — String literals)
+
+- `Expr::StrLit` arm in `compile_expr_inner` — lowers a double-quoted string
+  literal to `const(Operand::Str(value))` with `type_hint = "str"`.
+  The VM's `exec_const` already handles `Operand::Str` by calling
+  `lispy_runtime::heap::alloc_string` (no VM changes needed — infrastructure
+  was present from LANG47).
+- `StrLit` added to the `use twig_parser::{ … }` import list.
+- `Expr::StrLit` added to `free_vars.rs` as a leaf (no captured variables).
+- 9 new unit tests covering: basic string, empty string, escaped quote,
+  newline escape, all basic escapes, `type_hint = "str"`, string as argument,
+  `compile_typed_source` round-trip, string in lambda closure.
+
 ## [0.6.0] — 2026-05-14
 
 ### Added (LANG50 — Annotation-aware IIR emission)

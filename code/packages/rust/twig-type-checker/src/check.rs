@@ -160,6 +160,8 @@ pub fn infer_expr(
         Expr::BoolLit(_) => TwigKind::Bool,
         Expr::NilLit(_) => TwigKind::Nil,
         Expr::SymLit(_) => TwigKind::Symbol,
+        // LANG51: string literals have kind Str.
+        Expr::StrLit(_) => TwigKind::Str,
 
         // ── Variable reference ───────────────────────────────────────────────
         Expr::VarRef(v) => infer_var_ref(v.name.as_str(), v.line, v.column, env, scope, mode, errors),

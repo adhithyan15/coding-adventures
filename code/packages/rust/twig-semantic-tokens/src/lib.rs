@@ -68,7 +68,7 @@ use std::fmt;
 
 use twig_parser::{
     parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program,
-    SymLit, TwigParseError, VarRef,
+    StrLit, SymLit, TwigParseError, VarRef,
 };
 
 // ---------------------------------------------------------------------------
@@ -236,6 +236,16 @@ fn emit_expr(out: &mut Vec<SemanticToken>, expr: &Expr) {
         Expr::SymLit(SymLit { name, line, column }) => {
             // 'foo  — 1 (apostrophe) + len(name)
             let len = 1u32.saturating_add(len_u32(name));
+            push_token(out, u32_of(*line), u32_of(*column), len, TokenKind::Symbol);
+        }
+        // LANG51 — string literals.  Emit as a Symbol token (data literal).
+        // Length = 2 (surrounding quotes) + number of chars in the decoded value.
+        // The formatter re-escapes the value; here we use the decoded length
+        // because the token spans the full quoted source text including escapes.
+        // Using decoded length is approximate for escape-heavy strings, but is
+        // the best we can do without re-encoding the value here.
+        Expr::StrLit(StrLit { value, line, column }) => {
+            let len = 2u32.saturating_add(len_u32(value));
             push_token(out, u32_of(*line), u32_of(*column), len, TokenKind::Symbol);
         }
         Expr::VarRef(VarRef { name, line, column }) => {

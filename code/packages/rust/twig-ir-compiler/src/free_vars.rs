@@ -73,7 +73,8 @@ fn walk(
         // ------------------------------------------------------------------
         // Atoms with no embedded names
         // ------------------------------------------------------------------
-        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) => {}
+        // LANG51: StrLit is also a leaf — no variable names to capture.
+        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) | Expr::StrLit(_) => {}
 
         // ------------------------------------------------------------------
         // Variable reference — the only place a name actually becomes "free"

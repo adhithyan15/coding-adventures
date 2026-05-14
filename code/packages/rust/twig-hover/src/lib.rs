@@ -54,8 +54,8 @@ use std::fmt;
 
 use twig_document_symbols::{symbols_for_program, DocumentSymbol, SymbolKind};
 use twig_parser::{
-    parse, Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
-    TwigParseError, VarRef,
+    parse, Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, StrLit,
+    SymLit, TwigParseError, VarRef,
 };
 
 // ---------------------------------------------------------------------------
@@ -328,6 +328,25 @@ fn visit_expr(
         }
         Expr::SymLit(SymLit { name, line: l, column: c }) => {
             let display = format!("'{name}");
+            let len = len_u32(&display);
+            try_token(
+                found,
+                line,
+                column,
+                Hover {
+                    kind: HoverKind::Symbol,
+                    name: display,
+                    signature: None,
+                    line: u32_of(*l),
+                    column: u32_of(*c),
+                    length: len,
+                },
+            );
+        }
+        // LANG51 — string literals.  Surface as a Symbol token; the display
+        // form includes the surrounding double-quote characters.
+        Expr::StrLit(StrLit { value, line: l, column: c }) => {
+            let display = format!("\"{value}\"");
             let len = len_u32(&display);
             try_token(
                 found,
