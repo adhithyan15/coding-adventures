@@ -2,8 +2,8 @@
 
 use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
-    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ_U8,
+    CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -79,6 +79,10 @@ pub trait BoardHal {
     }
 
     fn i2c_write_u8(&mut self, _token: u32, _address: u16, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_read_u8(&mut self, _token: u32, _address: u16) -> Result<u8, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -469,6 +473,19 @@ where
                         kind: hal_error_kind(err),
                     })
             }
+            CAP_I2C_READ_U8 => {
+                let address = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::I2c, ip)?;
+                let byte = self
+                    .hal
+                    .i2c_read_u8(token, address)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::U8(byte), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -714,6 +731,7 @@ mod tests {
         DacWriteU12(u16, u16),
         I2cOpen(u16),
         I2cWriteU8(u32, u16, u8),
+        I2cReadU8(u32, u16),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -792,6 +810,11 @@ mod tests {
         fn i2c_write_u8(&mut self, token: u32, address: u16, byte: u8) -> Result<(), HalError> {
             self.events.push(Event::I2cWriteU8(token, address, byte));
             Ok(())
+        }
+
+        fn i2c_read_u8(&mut self, token: u32, address: u16) -> Result<u8, HalError> {
+            self.events.push(Event::I2cReadU8(token, address));
+            Ok(0x5a)
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -972,6 +995,24 @@ mod tests {
         assert_eq!(
             runtime.hal().events,
             vec![Event::I2cOpen(1), Event::I2cWriteU8(0x1_2001, 0x3c, 0xa5)]
+        );
+    }
+
+    #[test]
+    fn i2c_read_u8_dispatches_handle_address_and_returns_byte() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 1, 0x40, CAP_I2C_OPEN as u8, 0x20, 0x50];
+        let read = [0x20, 0x12, 0x3c, 0x40, CAP_I2C_READ_U8 as u8, 0x50];
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_code(&read, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::U8(0x5a));
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::I2cOpen(1), Event::I2cReadU8(0x1_2001, 0x3c)]
         );
     }
 }

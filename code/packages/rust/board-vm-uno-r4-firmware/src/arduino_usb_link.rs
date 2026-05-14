@@ -31,6 +31,7 @@ pub const BOARD_VM_UNO_R4_PWM_WRITE_SYMBOL: &str = "board_vm_uno_r4_pwm_write";
 pub const BOARD_VM_UNO_R4_ADC_READ_SYMBOL: &str = "board_vm_uno_r4_adc_read";
 pub const BOARD_VM_UNO_R4_DAC_WRITE_U12_SYMBOL: &str = "board_vm_uno_r4_dac_write_u12";
 pub const BOARD_VM_UNO_R4_I2C_WRITE_U8_SYMBOL: &str = "board_vm_uno_r4_i2c_write_u8";
+pub const BOARD_VM_UNO_R4_I2C_READ_U8_SYMBOL: &str = "board_vm_uno_r4_i2c_read_u8";
 pub const RUST_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const RUST_USB_CONFIGURE_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
 pub const RUST_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
@@ -282,6 +283,10 @@ mod tests {
         assert_eq!(
             BOARD_VM_UNO_R4_I2C_WRITE_U8_SYMBOL,
             "board_vm_uno_r4_i2c_write_u8"
+        );
+        assert_eq!(
+            BOARD_VM_UNO_R4_I2C_READ_U8_SYMBOL,
+            "board_vm_uno_r4_i2c_read_u8"
         );
         assert_eq!(
             BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE,
