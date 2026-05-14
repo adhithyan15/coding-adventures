@@ -3,6 +3,7 @@ from math import isclose
 import pytest
 from spice_engine import (
     CCCS,
+    CCVS,
     VCCS,
     VCVS,
     Capacitor,
@@ -117,6 +118,27 @@ Rload out 0 500
     assert isclose(result.node_voltages["out"], 1.0, abs_tol=1e-9)
 
 
+def test_parse_ccvs_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 1
+Rin in mid 1k
+Vsense mid 0 0
+Hamp out 0 Vsense 1k
+Rload out 0 500
+.op
+"""
+    )
+
+    assert isinstance(parsed.circuit.elements[3], CCVS)
+    assert parsed.circuit.elements[3].ctrl_source == "Vsense"
+    assert parsed.circuit.elements[3].transresistance == 1000.0
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert isclose(result.node_voltages["out"], 1.0, abs_tol=1e-9)
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
@@ -216,6 +238,38 @@ Rload out 0 500
     assert isinstance(cccs, CCCS)
     assert cccs.n_plus == "out"
     assert cccs.ctrl_source == "Xmirror.Vsense"
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert isclose(result.node_voltages["out"], 1.0, abs_tol=1e-9)
+
+
+def test_expands_subcircuit_ccvs_control_source_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt transimpedance inp outp
+Rin inp mid 1k
+Vsense mid 0 0
+Hamp outp 0 Vsense 1k
+.ends transimpedance
+Vin in 0 DC 1
+Xamp in out transimpedance
+Rload out 0 500
+.op
+"""
+    )
+
+    assert [element.name for element in parsed.circuit.elements] == [
+        "Vin",
+        "Xamp.Rin",
+        "Xamp.Vsense",
+        "Xamp.Hamp",
+        "Rload",
+    ]
+    ccvs = parsed.circuit.elements[3]
+    assert isinstance(ccvs, CCVS)
+    assert ccvs.n_plus == "out"
+    assert ccvs.ctrl_source == "Xamp.Vsense"
 
     result = dc_op(parsed.circuit)
     assert result.converged
