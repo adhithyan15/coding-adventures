@@ -52,6 +52,7 @@ pub enum CliCommand {
     PicoUf2List,
     Smoke(SmokeOptions),
     Repl(ReplOptions),
+    BootloaderReboot(BootloaderRebootOptions),
     EjectBlink(EjectBlinkOptions),
     Help,
 }
@@ -161,6 +162,33 @@ pub struct ReplOptions {
 }
 
 impl ReplOptions {
+    pub fn serial_config(&self, port: &str) -> SerialConfig {
+        SerialConfig::new(port)
+            .baud_rate(self.baud_rate)
+            .timeout(Duration::from_millis(self.timeout_ms))
+            .dtr_on_open(true)
+            .clear_on_open(true)
+            .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+    }
+
+    pub fn tcp_config(&self, endpoint: &str) -> TcpConfig {
+        TcpConfig::new(endpoint)
+            .connect_timeout(Duration::from_millis(self.timeout_ms))
+            .io_timeout(Duration::from_millis(self.timeout_ms))
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BootloaderRebootOptions {
+    pub port: Option<String>,
+    pub endpoint: Option<String>,
+    pub board: String,
+    pub baud_rate: u32,
+    pub timeout_ms: u64,
+    pub host_nonce: u32,
+}
+
+impl BootloaderRebootOptions {
     pub fn serial_config(&self, port: &str) -> SerialConfig {
         SerialConfig::new(port)
             .baud_rate(self.baud_rate)
@@ -422,6 +450,7 @@ where
         "pico-uf2-list" | "list-pico-uf2" | "list-pico" => Ok(CliCommand::PicoUf2List),
         "smoke" => parse_smoke_args(args),
         "repl" => parse_repl_args(args),
+        "bootloader-reboot" | "reboot-bootloader" => parse_bootloader_reboot_args(args),
         "eject" => parse_eject_args(args),
         "help" | "--help" | "-h" => Ok(CliCommand::Help),
         other => Err(CliError::UnknownCommand(other.to_owned())),
@@ -585,6 +614,21 @@ where
         timeout_ms: options.timeout_ms,
         program_id: options.program_id,
         instruction_budget: options.instruction_budget,
+        host_nonce: options.host_nonce,
+    }))
+}
+
+fn parse_bootloader_reboot_args<I>(mut args: I) -> Result<CliCommand, CliError>
+where
+    I: Iterator<Item = String>,
+{
+    let options = parse_session_options(&mut args)?;
+    Ok(CliCommand::BootloaderReboot(BootloaderRebootOptions {
+        port: options.port,
+        endpoint: options.endpoint,
+        board: options.board,
+        baud_rate: options.baud_rate,
+        timeout_ms: options.timeout_ms,
         host_nonce: options.host_nonce,
     }))
 }
@@ -826,6 +870,12 @@ pub struct SmokeReport {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BootloaderRebootReport {
+    pub connection: SmokeConnectionReport,
+    pub hello: HelloAckInfo,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmokeConnectionReport {
     pub transport: SmokeConnectionTransport,
     pub label: String,
@@ -1022,6 +1072,19 @@ pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
     run_smoke_with_connection(options, connection_transport, connection_label, transport)
 }
 
+pub fn run_bootloader_reboot(
+    options: &BootloaderRebootOptions,
+) -> Result<BootloaderRebootReport, CliError> {
+    let (connection_transport, connection_label, transport) =
+        open_bootloader_reboot_transport(options)?;
+    run_bootloader_reboot_with_connection(
+        options,
+        connection_transport,
+        connection_label,
+        transport,
+    )
+}
+
 #[cfg(test)]
 fn run_smoke_with_transport<T>(
     options: &SmokeOptions,
@@ -1034,6 +1097,22 @@ where
         options,
         smoke_connection_transport(options),
         smoke_connection_label(options),
+        transport,
+    )
+}
+
+#[cfg(test)]
+fn run_bootloader_reboot_with_transport<T>(
+    options: &BootloaderRebootOptions,
+    transport: T,
+) -> Result<BootloaderRebootReport, CliError>
+where
+    T: RawFrameTransport,
+{
+    run_bootloader_reboot_with_connection(
+        options,
+        bootloader_reboot_connection_transport(options),
+        bootloader_reboot_connection_label(options),
         transport,
     )
 }
@@ -1088,6 +1167,28 @@ where
         descriptor,
         upload,
         run,
+    })
+}
+
+fn run_bootloader_reboot_with_connection<T>(
+    options: &BootloaderRebootOptions,
+    connection_transport: SmokeConnectionTransport,
+    connection_label: impl Into<String>,
+    transport: T,
+) -> Result<BootloaderRebootReport, CliError>
+where
+    T: RawFrameTransport,
+{
+    let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
+    let hello = client.hello_with_name(DEFAULT_HOST_NAME, options.host_nonce)?;
+    client.reboot_to_bootloader()?;
+    Ok(BootloaderRebootReport {
+        connection: SmokeConnectionReport {
+            transport: connection_transport,
+            label: connection_label.into(),
+            timeout_ms: options.timeout_ms,
+        },
+        hello,
     })
 }
 
@@ -1374,8 +1475,54 @@ fn smoke_connection_label(options: &SmokeOptions) -> String {
     }
 }
 
+#[cfg(test)]
+fn bootloader_reboot_connection_transport(
+    options: &BootloaderRebootOptions,
+) -> SmokeConnectionTransport {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        return SmokeConnectionTransport::from(
+            endpoint_transport(endpoint).expect("test bootloader endpoint should be valid"),
+        );
+    }
+    SmokeConnectionTransport::SerialPort
+}
+
+#[cfg(test)]
+fn bootloader_reboot_connection_label(options: &BootloaderRebootOptions) -> String {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        return format!("endpoint={endpoint}");
+    }
+    match options.port.as_deref() {
+        Some(port) => format!("port={port} baud={}", options.baud_rate),
+        None => format!("board={} baud={}", options.board, options.baud_rate),
+    }
+}
+
 fn open_smoke_transport(
     options: &SmokeOptions,
+) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
+        let connection_transport = SmokeConnectionTransport::from(endpoint_transport(endpoint)?);
+        let transport = open_endpoint_transport(endpoint, &options.tcp_config(endpoint))?;
+        return Ok((
+            connection_transport,
+            format!("endpoint={endpoint}"),
+            transport,
+        ));
+    }
+
+    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
+    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    Ok((
+        SmokeConnectionTransport::SerialPort,
+        format!("port={} baud={}", port, options.baud_rate),
+        SessionTransport::Serial(transport),
+    ))
+}
+
+fn open_bootloader_reboot_transport(
+    options: &BootloaderRebootOptions,
 ) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
@@ -1831,7 +1978,7 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm bootloader-reboot [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -1839,7 +1986,10 @@ mod tests {
     use super::*;
     use board_vm_client::{CapabilityInfo, TransportError};
     use board_vm_loopback::{LoopbackBoard, LOOPBACK_BOARD_ID, LOOPBACK_RUNTIME_ID};
-    use board_vm_protocol::RunStatus;
+    use board_vm_protocol::{
+        decode_frame, decode_hello, encode_frame, encode_hello_ack, Frame, HelloAck, MessageType,
+        RunStatus, FLAG_IS_RESPONSE,
+    };
 
     struct LoopbackSmokeTransport {
         board: LoopbackBoard<512, 8, 8>,
@@ -1864,6 +2014,64 @@ mod tests {
             self.board
                 .handle_raw_frame(request, &mut self.board_payload, response_out)
                 .map_err(|_| TransportError::Io)
+        }
+    }
+
+    struct BootloaderRebootTransport {
+        payload: [u8; 128],
+    }
+
+    impl BootloaderRebootTransport {
+        fn new() -> Self {
+            Self { payload: [0; 128] }
+        }
+    }
+
+    impl RawFrameTransport for BootloaderRebootTransport {
+        fn exchange_raw_frame(
+            &mut self,
+            request: &[u8],
+            response_out: &mut [u8],
+        ) -> Result<usize, TransportError> {
+            let request = decode_frame(request).map_err(|_| TransportError::Io)?;
+            match request.message_type {
+                MessageType::HELLO => {
+                    let hello = decode_hello(request.payload).map_err(|_| TransportError::Io)?;
+                    let payload_len = encode_hello_ack(
+                        &HelloAck {
+                            selected_version: 1,
+                            board_name: LOOPBACK_BOARD_ID,
+                            runtime_name: LOOPBACK_RUNTIME_ID,
+                            host_nonce: hello.host_nonce,
+                            board_nonce: 0xB04D_B007,
+                            max_frame_payload: 256,
+                        },
+                        &mut self.payload,
+                    )
+                    .map_err(|_| TransportError::Io)?;
+                    encode_frame(
+                        &Frame {
+                            flags: FLAG_IS_RESPONSE,
+                            message_type: MessageType::HELLO_ACK,
+                            request_id: request.request_id,
+                            payload: &self.payload[..payload_len],
+                        },
+                        response_out,
+                    )
+                    .map_err(|_| TransportError::Io)
+                }
+                MessageType::BOOTLOADER_REBOOT => encode_frame(
+                    &Frame {
+                        flags: FLAG_IS_RESPONSE,
+                        message_type: MessageType::BOOTLOADER_REBOOT,
+                        request_id: request.request_id,
+                        payload: &[],
+                    },
+                    response_out,
+                )
+                .map_err(|_| TransportError::Io),
+                _ => Err(TransportError::Io),
+            }
         }
     }
 
@@ -2372,6 +2580,35 @@ mod tests {
     }
 
     #[test]
+    fn parses_bootloader_reboot_defaults() {
+        let command = parse_args(["bootloader-reboot", "--port", "/dev/cu.usbmodem-test"]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::BootloaderReboot(BootloaderRebootOptions {
+                port: Some("/dev/cu.usbmodem-test".to_owned()),
+                endpoint: None,
+                board: "auto".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
+        );
+
+        assert_eq!(
+            parse_args(["reboot-bootloader", "--board", "uno-r4-wifi"]).unwrap(),
+            CliCommand::BootloaderReboot(BootloaderRebootOptions {
+                port: None,
+                endpoint: None,
+                board: "uno-r4-wifi".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
+        );
+    }
+
+    #[test]
     fn parses_smoke_ble_endpoint() {
         let endpoint = "ble://AA:BB:CC:DD:EE:FF?service=6e400001-b5a3-f393-e0a9-e50e24dcca9e&write=6e400002-b5a3-f393-e0a9-e50e24dcca9e&notify=6e400003-b5a3-f393-e0a9-e50e24dcca9e";
         let command = parse_args(["smoke", "--endpoint", endpoint]).unwrap();
@@ -2734,6 +2971,32 @@ caps board=loopback-uno-r4 runtime=board-vm-loopback max_program_bytes=512 stack
 upload program_id=3 bytes=42 crc32=0xCAFEBABE\n\
 blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 open_handles=0 returns=[99]\n"
         );
+    }
+
+    #[test]
+    fn bootloader_reboot_sequence_sends_hello_then_reboot() {
+        let options = BootloaderRebootOptions {
+            port: None,
+            endpoint: Some("tcp://127.0.0.1:4170".to_owned()),
+            board: "auto".to_owned(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout_ms: 750,
+            host_nonce: 0x1020_3040,
+        };
+
+        let report =
+            run_bootloader_reboot_with_transport(&options, BootloaderRebootTransport::new())
+                .unwrap();
+
+        assert_eq!(
+            report.connection.transport,
+            SmokeConnectionTransport::TcpSocket
+        );
+        assert_eq!(report.connection.label, "endpoint=tcp://127.0.0.1:4170");
+        assert_eq!(report.connection.timeout_ms, 750);
+        assert_eq!(report.hello.board_name, LOOPBACK_BOARD_ID);
+        assert_eq!(report.hello.runtime_name, LOOPBACK_RUNTIME_ID);
+        assert_eq!(report.hello.host_nonce, 0x1020_3040);
     }
 
     #[test]

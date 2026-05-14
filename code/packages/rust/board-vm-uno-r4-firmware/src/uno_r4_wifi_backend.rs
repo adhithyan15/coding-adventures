@@ -163,6 +163,10 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         true
     }
 
+    fn supports_bootloader_reboot(&self) -> bool {
+        true
+    }
+
     fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
         self.inner.led_matrix_frame(frame)
     }
@@ -182,6 +186,10 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         } else {
             Err(HalError::UnsupportedMode)
         }
+    }
+
+    fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+        board_vm_uno_r4_usb_cdc::reboot_to_bootloader()
     }
 }
 

@@ -593,6 +593,7 @@ pub struct BoardVmDevice<
     program_id: u16,
     upload: UploadState,
     background: Option<BackgroundRun>,
+    bootloader_reboot_requested: bool,
 }
 
 impl<'a, H, const MAX_PROGRAM_BYTES: usize, const MAX_STACK: usize, const MAX_HANDLES: usize>
@@ -609,6 +610,7 @@ where
             program_id: 0,
             upload: UploadState::default(),
             background: None,
+            bootloader_reboot_requested: false,
         }
     }
 
@@ -646,6 +648,12 @@ where
 
     pub fn is_background_running(&self) -> bool {
         self.background.is_some()
+    }
+
+    pub fn take_bootloader_reboot_requested(&mut self) -> bool {
+        let requested = self.bootloader_reboot_requested;
+        self.bootloader_reboot_requested = false;
+        requested
     }
 
     pub fn poll_background(
@@ -709,6 +717,9 @@ where
             MessageType::PROGRAM_END => self.handle_program_end(request, payload_out, frame_out),
             MessageType::RUN => self.handle_run(request, payload_out, frame_out),
             MessageType::STOP => self.handle_stop(request, payload_out, frame_out),
+            MessageType::BOOTLOADER_REBOOT => {
+                self.handle_bootloader_reboot(request, payload_out, frame_out)
+            }
             _ => Err(BoardFault::UnsupportedMessage),
         }
     }
@@ -909,6 +920,29 @@ where
             MessageType::RUN_REPORT,
             request.request_id,
             &payload_out[..payload_len],
+            frame_out,
+        )
+    }
+
+    fn handle_bootloader_reboot(
+        &mut self,
+        request: Frame<'_>,
+        _payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<usize, BoardFault> {
+        if !request.payload.is_empty() {
+            return Err(BoardFault::InvalidFrame);
+        }
+        if !self.runtime.hal().supports_bootloader_reboot() {
+            return Err(BoardFault::UnsupportedMessage);
+        }
+        self.background = None;
+        self.runtime.reset_vm();
+        self.bootloader_reboot_requested = true;
+        write_response(
+            MessageType::BOOTLOADER_REBOOT,
+            request.request_id,
+            &[],
             frame_out,
         )
     }
@@ -1412,6 +1446,7 @@ mod tests {
         GpioOpen { pin: u16, mode: GpioMode },
         GpioWrite { token: u32, level: Level },
         SleepMs(u16),
+        BootloaderReboot,
     }
 
     struct FakeHal {
@@ -1420,6 +1455,7 @@ mod tests {
         events: [Option<Event>; 128],
         event_len: usize,
         capabilities: CapabilitySet,
+        supports_bootloader_reboot: bool,
     }
 
     impl FakeHal {
@@ -1430,7 +1466,13 @@ mod tests {
                 events: [None; 128],
                 event_len: 0,
                 capabilities,
+                supports_bootloader_reboot: false,
             }
+        }
+
+        fn with_bootloader_reboot(mut self) -> Self {
+            self.supports_bootloader_reboot = true;
+            self
         }
 
         fn push_event(&mut self, event: Event) {
@@ -1478,6 +1520,19 @@ mod tests {
 
         fn now_ms(&self) -> u32 {
             self.now_ms
+        }
+
+        fn supports_bootloader_reboot(&self) -> bool {
+            self.supports_bootloader_reboot
+        }
+
+        fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+            if self.supports_bootloader_reboot {
+                self.push_event(Event::BootloaderReboot);
+                Ok(())
+            } else {
+                Err(HalError::UnsupportedMode)
+            }
         }
     }
 
@@ -1722,6 +1777,58 @@ mod tests {
         }
         decoder.finish().unwrap();
         assert!(found_time_now_ms);
+    }
+
+    #[test]
+    fn bootloader_reboot_request_is_acked_before_runtime_reset() {
+        let mut device = BoardVmDevice::new(
+            DeviceDescriptor::blink_mvp("test-board", 0xB04D_1001),
+            FakeHal::new(CapabilitySet::blink_mvp()).with_bootloader_reboot(),
+        );
+        let mut session = HostSession::new();
+        let mut request = [0u8; 64];
+        let mut device_payload = [0u8; 64];
+        let mut response = [0u8; 96];
+
+        let reboot = session.bootloader_reboot_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..reboot.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+
+        assert_eq!(frame.flags, FLAG_IS_RESPONSE);
+        assert_eq!(frame.message_type, MessageType::BOOTLOADER_REBOOT);
+        assert_eq!(frame.request_id, reboot.request_id);
+        assert!(frame.payload.is_empty());
+        assert!(device.take_bootloader_reboot_requested());
+        assert!(!device.take_bootloader_reboot_requested());
+    }
+
+    #[test]
+    fn bootloader_reboot_request_reports_unsupported_when_hal_cannot_reset() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let mut request = [0u8; 64];
+        let mut device_payload = [0u8; 64];
+        let mut response = [0u8; 96];
+
+        let reboot = session.bootloader_reboot_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..reboot.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let error = decode_error_payload(frame.payload).unwrap();
+
+        assert_eq!(frame.message_type, MessageType::ERROR);
+        assert_eq!(error.code, ERROR_UNSUPPORTED_MESSAGE);
+        assert_eq!(error.message, "unsupported message");
+        assert!(!device.take_bootloader_reboot_requested());
     }
 
     #[test]
