@@ -4,6 +4,7 @@ import {
   SinWaveform,
   SpiceError,
   cccs,
+  ccvs,
   currentSource,
   dcOp,
   dcSweep,
@@ -128,6 +129,21 @@ describe("dcOp", () => {
     expectClose(result.voltage("out"), 2.0);
   });
 
+  it("stamps CCVS voltage from a voltage-source branch current", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(ccvs("H1", "out", "0", "Vsense", 2_000.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.branchCurrent("Vsense"), 1.0e-3);
+    expectClose(result.voltage("out"), 2.0);
+    expectClose(result.branchCurrent("H1"), -2.0e-3);
+  });
+
   it("rejects missing CCCS control sources", () => {
     const circuit = new Circuit();
     circuit.add(cccs("Fbad", "0", "out", "Vmissing", 2.0));
@@ -161,6 +177,15 @@ describe("dcOp", () => {
     circuit.add(resistor("Rload", "out", "0", 1_000.0));
 
     expect(() => dcOp(circuit)).toThrowError("gain must be finite");
+  });
+
+  it("rejects non-finite CCVS transresistance", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(ccvs("Hbad", "out", "0", "Vsense", Number.NaN));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    expect(() => dcOp(circuit)).toThrowError("transresistance must be finite");
   });
 
   it("uses static source value when a waveform is present", () => {

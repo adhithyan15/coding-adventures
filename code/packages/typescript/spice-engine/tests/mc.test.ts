@@ -3,6 +3,7 @@ import {
   Circuit,
   SpiceError,
   cccs,
+  ccvs,
   currentSource,
   mcDc,
   resistor,
@@ -115,6 +116,25 @@ describe("mcDc", () => {
 
     const result = mcDc(circuit, "out", 40, {
       seed: 11,
+      tolerance: 0.05,
+      distribution: "uniform",
+    });
+
+    expect(result.mean).toBeGreaterThan(1.8);
+    expect(result.mean).toBeLessThan(2.2);
+    expect(result.stdDev).toBeGreaterThan(0.0);
+  });
+
+  it("varies CCVS transresistance in DC Monte Carlo trials", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(ccvs("H1", "out", "0", "Vsense", 2_000.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = mcDc(circuit, "out", 40, {
+      seed: 13,
       tolerance: 0.05,
       distribution: "uniform",
     });

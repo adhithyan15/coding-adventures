@@ -5,6 +5,7 @@ import {
   acSweep,
   capacitor,
   cccs,
+  ccvs,
   complexAbs,
   complexPhase,
   currentSource,
@@ -121,6 +122,24 @@ describe("acSweep", () => {
     expect(out).not.toBeUndefined();
     expectClose(out!.real, 3.0);
     expectClose(out!.imag, 0.0);
+  });
+
+  it("applies CCVS transresistance in AC analysis", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(ccvs("H1", "out", "0", "Vsense", 3_000.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 10);
+
+    expect(points).toHaveLength(1);
+    const out = points[0].voltage("out");
+    expect(out).not.toBeUndefined();
+    expectClose(out!.real, 3.0);
+    expectClose(out!.imag, 0.0);
+    expectClose(points[0].branchCurrent("H1")?.real, -3.0e-3);
   });
 
   it("rejects invalid frequency bounds", () => {

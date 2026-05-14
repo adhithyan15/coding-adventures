@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add current-controlled voltage source support across DC, AC, transfer
+  function, sensitivity, Monte Carlo, and transient analyses.
 - Add current-controlled current source support across DC, AC, transfer
   function, sensitivity, Monte Carlo, and transient analyses.
 - Add voltage-controlled voltage source support across DC, AC, transfer

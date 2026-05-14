@@ -10,7 +10,8 @@ export type Element =
   | CurrentSource
   | Vccs
   | Vcvs
-  | Cccs;
+  | Cccs
+  | Ccvs;
 
 export interface Resistor {
   readonly kind: "resistor";
@@ -297,6 +298,15 @@ export interface Cccs {
   readonly negative: string;
   readonly controlSource: string;
   readonly gain: number;
+}
+
+export interface Ccvs {
+  readonly kind: "ccvs";
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly controlSource: string;
+  readonly transresistanceOhms: number;
 }
 
 export interface DcResult {
@@ -590,6 +600,23 @@ export function cccs(
     negative,
     controlSource,
     gain,
+  };
+}
+
+export function ccvs(
+  name: string,
+  positive: string,
+  negative: string,
+  controlSource: string,
+  transresistanceOhms: number,
+): Ccvs {
+  return {
+    kind: "ccvs",
+    name,
+    positive,
+    negative,
+    controlSource,
+    transresistanceOhms,
   };
 }
 
@@ -1082,6 +1109,12 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "gain",
         nominalValue: element.gain,
       };
+    case "ccvs":
+      return {
+        elementName: element.name,
+        parameter: "transresistanceOhms",
+        nominalValue: element.transresistanceOhms,
+      };
     case "capacitor":
     case "inductor":
       return undefined;
@@ -1128,6 +1161,12 @@ function circuitWithPerturbedElement(
         break;
       case "cccs":
         perturbed.add({ ...element, gain: element.gain + delta });
+        break;
+      case "ccvs":
+        perturbed.add({
+          ...element,
+          transresistanceOhms: element.transresistanceOhms + delta,
+        });
         break;
       case "capacitor":
       case "inductor":
@@ -1234,6 +1273,16 @@ function randomizedElement(
       return {
         ...element,
         gain: randomizedValue(element.gain, tolerance, distribution, rng),
+      };
+    case "ccvs":
+      return {
+        ...element,
+        transresistanceOhms: randomizedValue(
+          element.transresistanceOhms,
+          tolerance,
+          distribution,
+          rng,
+        ),
       };
     case "capacitor":
     case "inductor":
@@ -1360,6 +1409,15 @@ function solveLinearCircuit(
       case "cccs":
         stampCccs(element, nodeIndices, voltageSources, matrix);
         break;
+      case "ccvs":
+        stampCcvs(
+          element,
+          nodeIndices,
+          voltageSources,
+          nodeCount,
+          matrix,
+        );
+        break;
     }
   }
 
@@ -1446,6 +1504,15 @@ function buildSmallSignalMatrix(
       case "cccs":
         stampCccs(element, nodeIndices, voltageSources, matrix);
         break;
+      case "ccvs":
+        stampCcvs(
+          element,
+          nodeIndices,
+          voltageSources,
+          nodeCount,
+          matrix,
+        );
+        break;
     }
   }
 
@@ -1485,6 +1552,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "vccs":
       case "vcvs":
       case "cccs":
+      case "ccvs":
         break;
     }
   }
@@ -1556,6 +1624,15 @@ function buildAcMatrix(
         break;
       case "cccs":
         stampAcCccs(element, nodeIndices, voltageSources, matrix);
+        break;
+      case "ccvs":
+        stampAcCcvs(
+          element,
+          nodeIndices,
+          voltageSources,
+          nodeCount,
+          matrix,
+        );
         break;
     }
   }
@@ -1742,6 +1819,10 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         insertNode(names, element.positive);
         insertNode(names, element.negative);
         break;
+      case "ccvs":
+        insertNode(names, element.positive);
+        insertNode(names, element.negative);
+        break;
     }
   }
 
@@ -1758,7 +1839,11 @@ function collectVoltageSources(
 ): Map<string, number> {
   const sources = new Map<string, number>();
   for (const element of circuit.elements()) {
-    if (element.kind === "voltage-source" || element.kind === "vcvs") {
+    if (
+      element.kind === "voltage-source" ||
+      element.kind === "vcvs" ||
+      element.kind === "ccvs"
+    ) {
       insertBranchName(sources, element.name, "duplicate voltage source name");
     } else if (element.kind === "inductor") {
       if (sources.has(element.name)) {
@@ -1775,7 +1860,11 @@ function collectVoltageSources(
 function collectAcVoltageSources(circuit: Circuit): Map<string, number> {
   const sources = new Map<string, number>();
   for (const element of circuit.elements()) {
-    if (element.kind === "voltage-source" || element.kind === "vcvs") {
+    if (
+      element.kind === "voltage-source" ||
+      element.kind === "vcvs" ||
+      element.kind === "ccvs"
+    ) {
       insertBranchName(sources, element.name, "duplicate voltage source name");
     }
   }
@@ -1796,7 +1885,8 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "inductor" ||
         element.kind === "vccs" ||
         element.kind === "vcvs" ||
-        element.kind === "cccs") &&
+        element.kind === "cccs" ||
+        element.kind === "ccvs") &&
       element.name === inputSource
     ) {
       throw invalidElement(
@@ -2344,6 +2434,34 @@ function stampCccs(
   );
 }
 
+function stampCcvs(
+  element: Ccvs,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  matrix: number[][],
+): void {
+  if (!Number.isFinite(element.transresistanceOhms)) {
+    throw invalidElement(element.name, "transresistance must be finite");
+  }
+
+  const sourceIndex = voltageSources.get(element.name);
+  if (sourceIndex === undefined) {
+    throw invalidElement(element.name, "voltage source was not indexed");
+  }
+  const controlSourceIndex = voltageSources.get(element.controlSource);
+  if (controlSourceIndex === undefined) {
+    throw invalidElement(element.name, "control source was not indexed");
+  }
+
+  const branch = nodeCount + sourceIndex;
+  const controlBranch = nodeCount + controlSourceIndex;
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  stampBranchMatrix(matrix, branch, positive, negative);
+  matrix[branch][controlBranch] -= element.transresistanceOhms;
+}
+
 function stampCurrentControlledCurrent(
   matrix: number[][],
   positive: number | undefined,
@@ -2612,6 +2730,37 @@ function stampAcCccs(
     negative,
     sourceIndex + nodeIndices.size,
     complex(element.gain, 0.0),
+  );
+}
+
+function stampAcCcvs(
+  element: Ccvs,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  matrix: Complex[][],
+): void {
+  if (!Number.isFinite(element.transresistanceOhms)) {
+    throw invalidElement(element.name, "transresistance must be finite");
+  }
+
+  const sourceIndex = voltageSources.get(element.name);
+  if (sourceIndex === undefined) {
+    throw invalidElement(element.name, "voltage source was not indexed");
+  }
+  const controlSourceIndex = voltageSources.get(element.controlSource);
+  if (controlSourceIndex === undefined) {
+    throw invalidElement(element.name, "control source was not indexed");
+  }
+
+  const branch = nodeCount + sourceIndex;
+  const controlBranch = nodeCount + controlSourceIndex;
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  stampComplexBranchMatrix(matrix, branch, positive, negative);
+  matrix[branch][controlBranch] = complexSub(
+    matrix[branch][controlBranch],
+    complex(element.transresistanceOhms, 0.0),
   );
 }
 

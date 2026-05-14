@@ -4,6 +4,7 @@ import {
   SpiceError,
   SensResult,
   cccs,
+  ccvs,
   currentSource,
   resistor,
   sensDc,
@@ -110,6 +111,21 @@ describe("sensDc", () => {
     expectClose(result.nominalVoltage, 2.0);
     expectClose(entry(result, "F1", "gain").sensitivity, 1.0);
     expectClose(entry(result, "F1", "gain").relativeSensitivity, 1.0);
+  });
+
+  it("reports CCVS transresistance sensitivity", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(ccvs("H1", "out", "0", "Vsense", 2_000.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = sensDc(circuit, "out");
+
+    expectClose(result.nominalVoltage, 2.0);
+    expectClose(entry(result, "H1", "transresistanceOhms").sensitivity, 1.0e-3);
+    expectClose(entry(result, "H1", "transresistanceOhms").relativeSensitivity, 1.0);
   });
 
   it("sorts entries by absolute relative sensitivity", () => {
