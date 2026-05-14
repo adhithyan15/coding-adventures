@@ -1,5 +1,55 @@
 # Changelog
 
+## [0.12.0] — 2026-05-13
+
+### Added
+
+- **DC convergence aids** — `dc_op` now implements a three-stage fallback chain
+  that mirrors the SPICE3 approach for hard-to-converge circuits:
+
+  1. **Plain Newton-Raphson** (existing behaviour, always tried first).
+  2. **Gmin stepping** (`_dc_gmin_step`) — adds a small conductance `gmin` from
+     every non-ground node to ground, logarithmically sweeping `gmin` from
+     `1e-3 S` down to `1e-12 S` then removing it entirely.  Each step
+     warm-starts from the previous converged solution.  The regularisation
+     prevents the MNA matrix from becoming singular during early Newton
+     iterations on strongly nonlinear circuits.
+  3. **Source stepping** (`_dc_source_step`) — scales every independent voltage
+     source and current source from `0` to their full value in `n_steps`
+     equal increments.  Warm-starts each step from the previous converged
+     solution.  Effective when Gmin stepping alone fails.
+
+  Both aids are transparent for circuits that already converge with plain Newton
+  (the result is identical).  The fallback chain is entered only when the
+  previous stage diverges.
+
+  **New `convergence_aids` parameter on `dc_op`:**
+  ```python
+  dc_op(circuit, convergence_aids=True)   # default — enable full chain
+  dc_op(circuit, convergence_aids=False)  # raw Newton only (previous behaviour)
+  ```
+
+- **`_dc_newton` private helper** — the Newton-Raphson inner loop is now
+  exposed as `_dc_newton(circuit, *, max_iterations, tol, x_init=None)`.
+  The optional `x_init` argument warm-starts the solver from a previously
+  converged state, enabling efficient multi-step convergence aids.
+
+- **`_x_from_result` private helper** — reconstructs the raw MNA `x` vector
+  (node voltages + branch currents) from a `DcResult`, so it can be passed
+  as `x_init` to the next `_dc_newton` call.
+
+### Implementation notes
+
+- Gmin resistors reference only existing circuit nodes; the MNA variable
+  ordering is identical between the original and augmented circuits, so no
+  index remapping is needed when warm-starting across Gmin steps.
+- Source stepping skips `waveform`-bearing sources (DC/AC analysis ignores
+  waveforms) and also skips controlled sources (VCVS, VCCS, CCCS, CCVS).
+- `iterations` field of `DcResult` now reflects the Newton iterations used
+  in the *final* successful stage (plain Newton, Gmin, or source step).
+
+---
+
 ## [0.11.0] — 2026-05-13
 
 ### Added
