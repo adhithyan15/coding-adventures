@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.4
+
+- Parse `.model <name> D(...)` cards into `ModelCard` records.
+- Parse `D` diode elements into `spice_engine.Diode` instances using `IS` and
+  `VT` model parameters.
+- Remap diode terminals during `.subckt` expansion.
+
 ## 0.1.3
 
 - Add SPICE `H` / CCVS controlled-source parsing, including subcircuit output

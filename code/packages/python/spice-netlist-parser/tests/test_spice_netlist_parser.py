@@ -8,6 +8,7 @@ from spice_engine import (
     VCVS,
     Capacitor,
     CurrentSource,
+    Diode,
     Inductor,
     Resistor,
     VoltageSource,
@@ -17,6 +18,7 @@ from spice_engine import (
 from spice_netlist_parser import (
     AcAnalysis,
     DcAnalysis,
+    ModelCard,
     NetlistParseError,
     OpAnalysis,
     TranAnalysis,
@@ -137,6 +139,32 @@ Rload out 0 500
     result = dc_op(parsed.circuit)
     assert result.converged
     assert isclose(result.node_voltages["out"], 1.0, abs_tol=1e-9)
+
+
+def test_parse_diode_model_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+.model fast D(IS=1e-12 VT=25m)
+V1 in 0 DC 0.7
+D1 in out fast
+Rload out 0 1k
+.op
+"""
+    )
+
+    assert parsed.models == {
+        "fast": ModelCard("fast", "D", {"IS": 1.0e-12, "VT": 25.0e-3})
+    }
+    diode = parsed.circuit.elements[1]
+    assert isinstance(diode, Diode)
+    assert diode.anode == "in"
+    assert diode.cathode == "out"
+    assert diode.Is == 1.0e-12
+    assert diode.Vt == 25.0e-3
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert 0.1 < result.node_voltages["out"] < 0.7
 
 
 def test_parse_pwl_and_sin_source_waveforms() -> None:
@@ -276,6 +304,25 @@ Rload out 0 500
     assert isclose(result.node_voltages["out"], 1.0, abs_tol=1e-9)
 
 
+def test_expands_subcircuit_diode_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.model clamp D(IS=1e-12 VT=25m)
+.subckt limiter inp outp
+Dlim inp outp clamp
+.ends limiter
+Xlim in out limiter
+"""
+    )
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.name == "Xlim.Dlim"
+    assert diode.anode == "in"
+    assert diode.cathode == "out"
+    assert diode.Is == 1.0e-12
+
+
 def test_subcircuit_internal_nodes_are_instance_scoped() -> None:
     parsed = parse_netlist(
         """
@@ -304,10 +351,29 @@ def test_engineering_suffixes() -> None:
 
 
 def test_rejects_unsupported_element_with_line_number() -> None:
-    with pytest.raises(NetlistParseError, match="line 2: unsupported element 'D1'"):
+    with pytest.raises(NetlistParseError, match="line 2: unsupported element 'Q1'"):
         parse_netlist(
             """
-D1 a 0 diode
+Q1 c b e model
+"""
+        )
+
+
+def test_rejects_diode_with_unknown_model() -> None:
+    with pytest.raises(NetlistParseError, match="line 2: unknown model 'missing' for diode 'D1'"):
+        parse_netlist(
+            """
+D1 a 0 missing
+"""
+        )
+
+
+def test_rejects_diode_bound_to_non_diode_model() -> None:
+    with pytest.raises(NetlistParseError, match="line 3: model 'amp' has kind 'NPN'"):
+        parse_netlist(
+            """
+.model amp NPN(IS=1e-15)
+D1 a 0 amp
 """
         )
 
