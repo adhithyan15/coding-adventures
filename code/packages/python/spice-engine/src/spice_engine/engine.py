@@ -365,39 +365,53 @@ def _is_ground(name: str) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def dc_op(
+def _dc_newton(
     circuit: Circuit,
     *,
     max_iterations: int = 50,
     tol: float = 1e-6,
+    x_init: list[float] | None = None,
 ) -> DcResult:
-    """Solve DC operating point via Newton-Raphson on a linearized MNA."""
+    """Run Newton-Raphson DC solve, optionally warm-started from *x_init*.
+
+    This is the inner Newton loop shared by :func:`dc_op` and the convergence-
+    aid helpers.  Unlike :func:`dc_op` it does **not** retry on non-convergence
+    — it returns a :class:`DcResult` with ``converged=False`` immediately.
+
+    Parameters
+    ----------
+    circuit:
+        The (possibly augmented) circuit to solve.
+    max_iterations:
+        Maximum Newton iterations.
+    tol:
+        Convergence tolerance: ``max |Δx| < tol`` declares convergence.
+    x_init:
+        Optional initial-guess vector (node voltages followed by branch
+        currents, in the same order as :func:`_node_index` and
+        :func:`_branch_sources`).  Defaults to all-zeros.
+    """
     node_to_idx, nodes = _node_index(circuit)
     branch_srcs = _branch_sources(circuit)
     n = len(nodes)
     m = len(branch_srcs)
     size = n + m
 
-    # Initial guess: all zeros
-    x = [0.0] * size
+    x = list(x_init) if x_init is not None else [0.0] * size
 
+    max_delta = float("inf")
     for it in range(max_iterations):
-        # Stamp linearized contributions at the current x.
         G = [[0.0] * size for _ in range(size)]
         b = [0.0] * size
-
         for el in circuit.elements:
             _stamp_dc(el, G, b, x, node_to_idx, branch_srcs)
-
-        # Solve G x_new = b via Gaussian elimination.
         try:
             x_new = _solve(G, b)
         except ZeroDivisionError:
-            return DcResult({nd: x[i] for nd, i in node_to_idx.items()},
-                            {}, iterations=it, converged=False)
+            node_v = {nd: x[i] for nd, i in node_to_idx.items()}
+            return DcResult(node_v, {}, iterations=it, converged=False)
 
-        # Check convergence
-        max_delta = max(abs(a - b) for a, b in zip(x, x_new, strict=False)) if x else 0.0
+        max_delta = max(abs(a - bv) for a, bv in zip(x, x_new, strict=False)) if x else 0.0
         x = x_new
         if max_delta < tol:
             break
@@ -405,6 +419,272 @@ def dc_op(
     node_v = {nd: x[i] for nd, i in node_to_idx.items()}
     branch_i = {f"I({el.name})": x[n + i] for i, el in enumerate(branch_srcs)}
     return DcResult(node_v, branch_i, iterations=it + 1, converged=max_delta < tol)
+
+
+def _x_from_result(
+    result: DcResult,
+    nodes: list[str],
+    branch_srcs: list,
+) -> list[float]:
+    """Reconstruct the raw *x* vector from a :class:`DcResult`.
+
+    Needed to warm-start the next Newton iteration from a previously
+    converged solution.
+
+    Parameters
+    ----------
+    result:
+        A converged (or partially converged) :class:`DcResult`.
+    nodes:
+        Non-ground node names in MNA order (from :func:`_node_index`).
+    branch_srcs:
+        Branch-source elements in MNA order (from :func:`_branch_sources`).
+    """
+    x = [result.node_voltages.get(nd, 0.0) for nd in nodes]
+    x += [result.branch_currents.get(f"I({el.name})", 0.0) for el in branch_srcs]
+    return x
+
+
+def _dc_gmin_step(
+    circuit: Circuit,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    gmin_start: float = 1e-3,
+    n_steps: int = 10,
+) -> DcResult | None:
+    """DC operating point via Gmin stepping (convergence aid #1).
+
+    **What it does:**  A small conductance *Gmin* is added from every
+    non-ground node to ground.  Large *Gmin* (1 mS) regularises the MNA
+    matrix and guarantees convergence even when the zero-state initial guess
+    is far from the operating point (e.g. strongly nonlinear diode circuits).
+    The conductance is then reduced logarithmically to zero; each step uses
+    the previous solution as a warm start so Newton converges quickly.
+
+    **Step sequence:**
+
+    ::
+
+        gmin_start (1e-3)
+            → gmin_start / 10
+            → gmin_start / 100
+            → ...  (n_steps log-spaced values)
+            → 0  (original circuit, warm start from last Gmin solve)
+
+    Parameters
+    ----------
+    circuit:
+        Original circuit (not augmented — augmentation is done internally).
+    max_iterations:
+        Newton iterations per step.
+    tol:
+        Convergence tolerance.
+    gmin_start:
+        Initial Gmin conductance (S).  1 mS = 1 kΩ shunt gives good
+        numerical stability across a wide range of circuits.
+    n_steps:
+        Number of log-spaced Gmin values before the final no-Gmin step.
+
+    Returns
+    -------
+    DcResult or None
+        ``None`` if any intermediate Newton step fails to converge.
+        Otherwise the :class:`DcResult` of the final no-Gmin solve.
+    """
+    _, nodes = _node_index(circuit)
+    if not nodes:
+        # Trivial circuit (no non-ground nodes) — Gmin stepping adds nothing.
+        return None
+
+    orig_branch_srcs = _branch_sources(circuit)
+
+    # Build log-spaced Gmin sequence from gmin_start down to ~1e-12, then 0.
+    # Using math.log10 (math module is imported at top of file).
+    log_start = math.log10(gmin_start)
+    log_end = math.log10(1e-12)
+    gmin_sequence: list[float] = [
+        10.0 ** (log_start + (log_end - log_start) * k / (n_steps - 1))
+        for k in range(n_steps)
+    ]
+    gmin_sequence.append(0.0)  # final step: no Gmin (solve original circuit)
+
+    x_init: list[float] | None = None
+
+    for gmin in gmin_sequence:
+        if gmin > 0.0:
+            # Augment the circuit: add a resistor R = 1/gmin from each node to ground.
+            # These resistors are named with a leading underscore so they cannot
+            # collide with user element names.
+            gmin_elements = [
+                Resistor(f"_gmin_{nd}", nd, "0", 1.0 / gmin)
+                for nd in nodes
+            ]
+            aug = Circuit(elements=list(circuit.elements) + gmin_elements)
+        else:
+            # Final step: original circuit, warm-started from the last Gmin solve.
+            aug = circuit
+
+        result = _dc_newton(aug, max_iterations=max_iterations, tol=tol, x_init=x_init)
+        if not result.converged:
+            return None  # This step diverged — Gmin stepping has failed.
+
+        # Reconstruct x_init for the next step.  Gmin resistors add no new
+        # non-ground nodes, so the x-vector ordering is identical to the
+        # original circuit's ordering.
+        x_init = _x_from_result(result, nodes, orig_branch_srcs)
+
+    return result
+
+
+def _dc_source_step(
+    circuit: Circuit,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    n_steps: int = 10,
+) -> DcResult | None:
+    """DC operating point via source stepping (convergence aid #2).
+
+    **What it does:**  All independent voltage sources and current sources
+    are scaled from 0 to their full values in *n_steps* equal steps.  At
+    scale = 0 the trivial solution x = 0 is exact; each subsequent step
+    uses the previous solution as a warm start.  This gives Newton a very
+    good initial guess at each step and avoids the large nonlinear jumps
+    that cause divergence when the full source voltages are applied at once.
+
+    **Step sequence:**
+
+    ::
+
+        scale = 0.0   (all sources zero → trivial x = 0 solution)
+        scale = 0.1
+        scale = 0.2
+        ...
+        scale = 1.0   (full original source values)
+
+    Only ``VoltageSource.voltage`` and ``CurrentSource.current`` are scaled.
+    Controlled sources (VCVS, VCCS, CCCS, CCVS) pass through unchanged.
+
+    Parameters
+    ----------
+    circuit:
+        Original circuit.
+    max_iterations:
+        Newton iterations per step.
+    tol:
+        Convergence tolerance.
+    n_steps:
+        Number of source-scaling steps from 0 to 1 (inclusive).
+        More steps = smaller increments = higher chance of convergence
+        but more total Newton iterations.
+
+    Returns
+    -------
+    DcResult or None
+        ``None`` if any intermediate step fails to converge.
+        Otherwise the :class:`DcResult` at scale = 1.0 (full sources).
+    """
+    _, nodes = _node_index(circuit)
+    orig_branch_srcs = _branch_sources(circuit)
+
+    # Build the scale sequence: 0, 1/n_steps, 2/n_steps, ..., 1.
+    scales = [k / n_steps for k in range(n_steps + 1)]
+
+    x_init: list[float] | None = None
+
+    for scale in scales:
+        # Build a circuit with all independent sources scaled by `scale`.
+        scaled_elements = []
+        for e in circuit.elements:
+            if isinstance(e, VoltageSource):
+                scaled_elements.append(VoltageSource(
+                    name=e.name,
+                    n_plus=e.n_plus,
+                    n_minus=e.n_minus,
+                    voltage=e.voltage * scale,
+                ))
+            elif isinstance(e, CurrentSource):
+                scaled_elements.append(CurrentSource(
+                    name=e.name,
+                    n_plus=e.n_plus,
+                    n_minus=e.n_minus,
+                    current=e.current * scale,
+                ))
+            else:
+                scaled_elements.append(e)
+        scaled_circuit = Circuit(elements=scaled_elements)
+
+        result = _dc_newton(
+            scaled_circuit, max_iterations=max_iterations, tol=tol, x_init=x_init
+        )
+        if not result.converged:
+            return None  # This step diverged — source stepping has failed.
+
+        # Reconstruct x_init for the next step.  Source scaling does not
+        # change circuit topology (same nodes, same branch sources), so the
+        # x-vector ordering is unchanged.
+        x_init = _x_from_result(result, nodes, orig_branch_srcs)
+
+    return result
+
+
+def dc_op(
+    circuit: Circuit,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+) -> DcResult:
+    """Solve DC operating point via Newton-Raphson on a linearized MNA.
+
+    When the plain Newton-Raphson pass does not converge and
+    ``convergence_aids=True`` (the default), the engine automatically retries
+    using SPICE3-style fallback strategies:
+
+    1. **Gmin stepping** — adds a small shunt conductance from every
+       non-ground node to ground and logarithmically reduces it to zero.
+       Stabilises the matrix against floating nodes and large nonlinearities.
+
+    2. **Source stepping** — scales all independent sources from 0 to their
+       full values in 10 steps, using each converged solution as a warm
+       start.  Particularly effective for circuits with diode clamps and
+       other strongly nonlinear devices.
+
+    The chain is tried in sequence (Newton → Gmin → source step).  The first
+    method to converge is returned.  If all methods fail the result has
+    ``converged=False``.
+
+    Parameters
+    ----------
+    circuit:
+        The circuit to analyse.
+    max_iterations:
+        Maximum Newton-Raphson iterations per attempt.
+    tol:
+        Convergence tolerance: ``max |Δx| < tol`` declares convergence.
+    convergence_aids:
+        When ``True`` (default), automatically fall back to Gmin stepping
+        then source stepping when plain Newton diverges.  Set to ``False``
+        to force plain Newton only (faster for simple linear circuits).
+    """
+    # Attempt 1: plain Newton-Raphson.
+    result = _dc_newton(circuit, max_iterations=max_iterations, tol=tol)
+    if result.converged or not convergence_aids:
+        return result
+
+    # Attempt 2: Gmin stepping.
+    gmin_result = _dc_gmin_step(circuit, max_iterations=max_iterations, tol=tol)
+    if gmin_result is not None and gmin_result.converged:
+        return gmin_result
+
+    # Attempt 3: source stepping.
+    src_result = _dc_source_step(circuit, max_iterations=max_iterations, tol=tol)
+    if src_result is not None and src_result.converged:
+        return src_result
+
+    # All methods exhausted — return the plain-Newton result (converged=False).
+    return result
 
 
 def _stamp_dc(
