@@ -360,6 +360,7 @@ members = [
     "gpu-runtime",
     "image-gpu-core",
     "matrix-cpu",
+    "matrix-cuda",
     "matrix-ir",
     "matrix-metal",
     "matrix-profile",
