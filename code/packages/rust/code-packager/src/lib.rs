@@ -90,5 +90,6 @@ pub mod wasm;
 
 pub use artifact::{CodeArtifact, MetadataValue};
 pub use errors::PackagerError;
+pub use macho_object::ExternBranchReloc;
 pub use registry::PackagerRegistry;
 pub use target::Target;

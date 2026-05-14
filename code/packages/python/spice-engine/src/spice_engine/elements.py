@@ -2,7 +2,236 @@
 
 from __future__ import annotations
 
+import bisect
+import math
 from dataclasses import dataclass
+
+# ---------------------------------------------------------------------------
+# Source waveforms — SPICE3 transient source forms
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True, slots=True)
+class PwlWaveform:
+    """Piecewise-linear (PWL) voltage or current waveform.
+
+    Linearly interpolates between a sequence of ``(time, value)`` breakpoints.
+    Before the first breakpoint the value is clamped to the first value; after
+    the last breakpoint it is clamped to the last value.
+
+    SPICE3 syntax::
+
+        V1 a 0 PWL(0 0  1n 0  1.001n 1.8  10n 1.8)
+
+    Example — a 0 → 1.8 V step at t = 1 ns with 1 ps rise time::
+
+        PwlWaveform(points=((0, 0), (1e-9, 0), (1.001e-9, 1.8), (10e-9, 1.8)))
+
+    The ``points`` tuple must contain at least two breakpoints; breakpoints
+    must be in strictly increasing time order.  All values may be negative.
+    """
+
+    # ((t0, v0), (t1, v1), …) — at least two breakpoints, monotone in time.
+    points: tuple[tuple[float, float], ...]
+
+    def __call__(self, t: float) -> float:
+        """Return the linearly-interpolated value at time *t*."""
+        times = [p[0] for p in self.points]
+        values = [p[1] for p in self.points]
+
+        if t <= times[0]:
+            return values[0]
+        if t >= times[-1]:
+            return values[-1]
+
+        # Find the segment [i-1, i] that contains t.
+        i = bisect.bisect_right(times, t)
+        t0, v0 = times[i - 1], values[i - 1]
+        t1, v1 = times[i], values[i]
+        slope = (v1 - v0) / (t1 - t0)
+        return v0 + slope * (t - t0)
+
+
+@dataclass(frozen=True, slots=True)
+class SinWaveform:
+    """Sinusoidal (SIN) voltage or current waveform.
+
+    SPICE3 formula (after the optional delay ``td``)::
+
+        v(t) = offset + amplitude × sin(2π × freq × (t − td))
+                      × exp(−damping × (t − td))
+
+    Before the delay time the source holds at ``offset + amplitude × sin(0) =
+    offset``.
+
+    SPICE3 syntax::
+
+        V1 a 0 SIN(V_offset V_amplitude FREQ TD THETA)
+
+    The ``damping`` parameter corresponds to SPICE's ``THETA`` (exponential
+    decay rate, 1/s).  ``damping = 0`` gives a pure undamped sinusoid.
+
+    Parameters
+    ----------
+    offset:
+        DC offset voltage/current (V or A).
+    amplitude:
+        Peak amplitude (V or A).
+    frequency:
+        Frequency in Hz.
+    delay:
+        Start delay in seconds (default 0).
+    damping:
+        Exponential decay rate (1/s, default 0 = no damping).
+    """
+
+    offset: float = 0.0
+    amplitude: float = 1.0
+    frequency: float = 1.0
+    delay: float = 0.0
+    damping: float = 0.0
+
+    def __call__(self, t: float) -> float:
+        """Evaluate the sinusoidal waveform at time *t*."""
+        if t < self.delay:
+            return self.offset
+        dt = t - self.delay
+        envelope = math.exp(-self.damping * dt) if self.damping != 0.0 else 1.0
+        return self.offset + self.amplitude * math.sin(2.0 * math.pi * self.frequency * dt) * envelope
+
+
+@dataclass(frozen=True, slots=True)
+class PulseWaveform:
+    """Rectangular pulse (PULSE) voltage or current waveform.
+
+    Generates a periodic trapezoidal pulse train:
+
+    - From ``t = 0`` to ``t = td``: holds at *v_initial*.
+    - Rise over *tr* seconds from *v_initial* to *v_pulsed*.
+    - Holds at *v_pulsed* for *pw* seconds.
+    - Falls over *tf* seconds back to *v_initial*.
+    - Holds at *v_initial* until the next period starts at ``td + period``.
+    - Repeats with period *period*.
+
+    SPICE3 syntax::
+
+        V1 a 0 PULSE(V1 V2 TD TR TF PW PER)
+
+    Parameters
+    ----------
+    v_initial:
+        Value before and between pulses (V or A).
+    v_pulsed:
+        Peak pulse value (V or A).
+    delay:
+        Time before first pulse edge (s, default 0).
+    rise_time:
+        Rise time (s, default 0).
+    fall_time:
+        Fall time (s, default 0).
+    pulse_width:
+        Width of the high phase (s, default half-period).
+    period:
+        Full cycle period (s, default 1).
+    """
+
+    v_initial: float = 0.0
+    v_pulsed: float = 1.0
+    delay: float = 0.0
+    rise_time: float = 0.0
+    fall_time: float = 0.0
+    pulse_width: float = 0.5
+    period: float = 1.0
+
+    def __call__(self, t: float) -> float:
+        """Evaluate the pulse waveform at time *t*."""
+        if t < self.delay:
+            return self.v_initial
+
+        # Fold into the current period.
+        t_rel = (t - self.delay) % self.period
+
+        tr = max(self.rise_time, 0.0)
+        tf = max(self.fall_time, 0.0)
+        pw = self.pulse_width
+
+        if tr > 0 and t_rel < tr:
+            # Rising edge
+            return self.v_initial + (self.v_pulsed - self.v_initial) * (t_rel / tr)
+        elif t_rel < tr + pw:
+            # High phase (flat top)
+            return self.v_pulsed
+        elif tf > 0 and t_rel < tr + pw + tf:
+            # Falling edge
+            phase = (t_rel - tr - pw) / tf
+            return self.v_pulsed + (self.v_initial - self.v_pulsed) * phase
+        else:
+            # Low phase (between pulses)
+            return self.v_initial
+
+
+@dataclass(frozen=True, slots=True)
+class ExpWaveform:
+    """Double-exponential (EXP) voltage or current waveform.
+
+    Models a rising exponential followed by a falling exponential:
+
+    - For ``t < rise_delay``:           ``v = v_initial``
+    - For ``rise_delay ≤ t < fall_delay``:
+      ``v = v_initial + (v_pulsed − v_initial) × (1 − exp(−(t − td1)/tc1))``
+    - For ``t ≥ fall_delay``:
+      adds the falling component back towards *v_initial*.
+
+    SPICE3 syntax::
+
+        V1 a 0 EXP(V1 V2 TD1 TC1 TD2 TC2)
+
+    Parameters
+    ----------
+    v_initial:
+        Value before the rising edge (V or A).
+    v_pulsed:
+        Peak (asymptote) value reached by the rising exponential (V or A).
+    rise_delay:
+        Time constant start for the rising edge (s, default 0).
+    rise_tc:
+        Rising time constant (s, default 1).
+    fall_delay:
+        Time constant start for the falling edge (s, default 1).
+    fall_tc:
+        Falling time constant (s, default 1).
+    """
+
+    v_initial: float = 0.0
+    v_pulsed: float = 1.0
+    rise_delay: float = 0.0
+    rise_tc: float = 1.0
+    fall_delay: float = 1.0
+    fall_tc: float = 1.0
+
+    def __call__(self, t: float) -> float:
+        """Evaluate the double-exponential waveform at time *t*."""
+        if t <= self.rise_delay:
+            return self.v_initial
+
+        # Rising component
+        value = self.v_initial + (self.v_pulsed - self.v_initial) * (
+            1.0 - math.exp(-(t - self.rise_delay) / self.rise_tc)
+        )
+
+        # Falling component (kicks in at fall_delay)
+        if t >= self.fall_delay:
+            value += (self.v_initial - self.v_pulsed) * (
+                1.0 - math.exp(-(t - self.fall_delay) / self.fall_tc)
+            )
+
+        return value
+
+
+# Waveform union type — accepted by VoltageSource.waveform and
+# CurrentSource.waveform.  A plain callable ``(float) -> float`` (e.g. a
+# lambda) is also accepted at runtime; the type alias covers the four named
+# forms only.
+Waveform = PwlWaveform | SinWaveform | PulseWaveform | ExpWaveform
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,22 +267,49 @@ class Inductor:
 
 @dataclass(frozen=True, slots=True)
 class VoltageSource:
-    """V<name> n+ n- value"""
+    """V<name> n+ n- value [waveform]
+
+    An independent voltage source.  In DC and AC analysis the ``voltage``
+    field is used directly.  In *transient* analysis, if ``waveform`` is not
+    ``None`` the engine calls ``waveform(t)`` at each timestep and
+    temporarily substitutes the returned value for ``voltage``; the stored
+    ``voltage`` field then serves only as the t = 0 bias.
+
+    Example — 1 V sinusoidal source at 1 kHz::
+
+        VoltageSource("V1", "in", "0", voltage=0.0,
+                      waveform=SinWaveform(amplitude=1.0, frequency=1e3))
+    """
 
     name: str
     n_plus: str
     n_minus: str
-    voltage: float  # volts
+    voltage: float  # volts (DC value / t=0 bias)
+    waveform: Waveform | None = None  # time-varying override
 
 
 @dataclass(frozen=True, slots=True)
 class CurrentSource:
-    """I<name> n+ n- value (current flows from n+ to n-)"""
+    """I<name> n+ n- value [waveform] (current flows from n+ to n-)
+
+    An independent current source.  In DC and AC analysis the ``current``
+    field is used directly.  In *transient* analysis, if ``waveform`` is not
+    ``None`` the engine calls ``waveform(t)`` at each timestep and
+    temporarily substitutes the returned value for ``current``; the stored
+    ``current`` field then serves only as the t = 0 bias.
+
+    Example — pulse current source switching between 0 A and 10 mA::
+
+        CurrentSource("I1", "out", "0", current=0.0,
+                      waveform=PulseWaveform(v_initial=0.0, v_pulsed=10e-3,
+                                             pulse_width=0.5e-6, period=1e-6))
+    """
 
     name: str
     n_plus: str
     n_minus: str
-    current: float  # amperes
+    current: float  # amperes (DC value / t=0 bias)
+    waveform: Waveform | None = None  # time-varying override
 
 
 @dataclass(frozen=True, slots=True)

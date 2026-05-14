@@ -1832,4 +1832,5 @@ def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
         order_cols=order_cols,
         result_col=spec.alias,
         extra_args=extra,
+        frame=spec.frame,   # type: ignore[arg-type]  WinFrame|None from planner
     )

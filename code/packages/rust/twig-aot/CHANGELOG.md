@@ -1,5 +1,63 @@
 # Changelog — `twig-aot`
 
+## 0.1.8 — 2026-05-13 (LANG41)
+
+**Replace macOS-specific `emit_print_helper` injection with a portable C
+runtime archive linked via the system linker.**
+
+LANG40 injected a 208-byte ARM64 subroutine with hardcoded macOS `write(2)`
+syscall numbers (`x16=4`, `SVC #0x80`) into user code before linking.
+LANG41 removes that approach entirely; `__twig_print_i64` is now defined in
+a portable C file compiled at `cargo build` time and embedded in the
+`twig-aot` binary, then written to a temp file and passed to `ld` for each
+AOT compilation.
+
+### New files
+
+- **`runtime/twig_runtime.c`** — defines `__twig_print_i64(int64_t val)` using
+  `printf("%lld\n", (long long)val)` + `fflush(stdout)`.  Pure POSIX — no raw
+  syscall numbers, no platform ifdefs.  On macOS, `printf` routes through
+  `libSystem`; on Linux, it routes through `libc`.  The same source file works
+  on both platforms without change.
+
+- **`build.rs`** — uses the `cc` crate to compile `runtime/twig_runtime.c`
+  into `$OUT_DIR/libtwig_aot_runtime.a` at `cargo build` time.
+  Exports `cargo:rustc-env=TWIG_RUNTIME_ARCHIVE=<path>` so the archive path
+  is available to `include_bytes!` at compile time.
+  `cargo:rerun-if-changed=runtime/twig_runtime.c` invalidates only when the
+  C source changes.
+
+### Changed
+
+- **`[build-dependencies]`**: `cc = "1"` added to `Cargo.toml`.
+
+- **`RUNTIME_ARCHIVE`** static: `include_bytes!(env!("TWIG_RUNTIME_ARCHIVE"))`
+  embeds the archive in the binary.  Zero disk overhead at runtime (extracted
+  only during AOT compilation).
+
+- **`compile_module_to_text_raw`** return type is now a 5-tuple:
+  `(text, offsets, n_global_slots, global_byte_relocs, extern_branch_relocs)`.
+  The fifth element replaces the old "fail on unresolved external" logic;
+  unresolved `BL` targets are now collected and forwarded to the packager.
+
+- **`compile_module_macos_arm64_object`** always calls
+  `pack_object_with_globals_and_externals` (no more conditional on whether
+  globals are present).
+
+- **`invoke_ld`** writes `RUNTIME_ARCHIVE` to a temp file (`twig_aot_runtime_<pid>.a`)
+  and passes it as an argument to `ld` before cleanup.
+
+- **`emit_print_helper` injection removed** — the old "inject helper if any
+  function references `__twig_print_i64`" block in
+  `compile_module_to_text_raw` is gone.
+
+### Tests
+
+All existing tests pass.  Integration tests in `tests/macos_arm64_smoke.rs`
+exercise the full pipeline including `end_to_end_object_through_ld_returns_42`.
+
+---
+
 ## 0.1.7 — 2026-05-13 (LANG40)
 
 **AOT `io_out` — integer print to stdout via `__twig_print_i64`.**

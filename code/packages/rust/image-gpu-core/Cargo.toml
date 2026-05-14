@@ -1,6 +1,6 @@
 [package]
 name = "image-gpu-core"
-version = "0.12.0"
+version = "0.14.0"
 edition = "2021"
 description = "IMG06: image-domain library built on the matrix execution layer (MX01–MX04). v0.3 wires the optional matrix-metal GPU backend. v0.4 wires the MX05 specialisation pipeline. v0.5 installs CpuSpecialiser. v0.6 adds tensor-byte sampling. v0.7 (MX05 Phase 4.3) adds the runtime-side auto-installer with a specialised_install_count() counter. v0.8 (MX05 Phase 4.4) closes the dispatch half: when a single-Compute-op graph has an installed specialised kernel on metal, image-gpu-core now routes the dispatch through ExecutorRequest::DispatchSpecialised (a prep Dispatch sets up buffers, then DispatchSpecialised invokes the installed kernel by handle). Counter specialised_dispatch_count() tracks how many invocations went specialised."
 

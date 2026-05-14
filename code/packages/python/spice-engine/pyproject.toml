@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-spice-engine"
-version = "0.10.0"
-description = "SPICE-compatible analog circuit simulator with MNA + Newton-Raphson DC + transient + AC small-signal sweep + DC transfer function (.TF) + DC parameter sweep (.DC) + DC sensitivity analysis (.SENS) + Monte Carlo (.MC) + noise analysis (.NOISE) + controlled sources (VCVS, VCCS, CCCS, CCVS)."
+version = "0.11.0"
+description = "SPICE-compatible analog circuit simulator with MNA + Newton-Raphson DC + transient + AC small-signal sweep + DC transfer function (.TF) + DC parameter sweep (.DC) + DC sensitivity analysis (.SENS) + Monte Carlo (.MC) + noise analysis (.NOISE) + controlled sources (VCVS, VCCS, CCCS, CCVS) + time-varying source waveforms (PWL, SIN, PULSE, EXP)."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

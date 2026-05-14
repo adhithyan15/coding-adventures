@@ -1,6 +1,6 @@
 [package]
 name = "code-packager"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 description = "Cross-platform binary packaging for compiled code (LANG10) — Mach-O on Apple Silicon ships ad-hoc code-signed."
 license = "MIT"

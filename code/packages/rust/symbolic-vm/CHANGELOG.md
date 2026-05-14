@@ -7,6 +7,11 @@
 - `SymbolicBackend` now installs canonical `Factor` handling backed by
   `cas-factor`, including common-symbolic-factor extraction for additive
   multivariate expressions before univariate integer factorization.
+- `Factor` extracts the greatest common integer content (GCD of all term
+  coefficients) and intersection of common symbolic powers before attempting
+  specific pattern matches. For example `factor(2*x + 4*y)` → `2*(x + 2*y)`,
+  `factor(2*x*y + 2*x*z)` → `2*x*(y + z)`, and `factor(2*x^2*y - 2*y)` →
+  `2*y*(x+1)*(x-1)` (the univariate residual is factored recursively).
 - `Factor` recognises bivariate perfect-square trinomials such as
   `x^2 + 2*x*y + y^2` and rewrites them as `(x + y)^2`.
 - `Factor` recognises bivariate difference-of-squares expressions such as

@@ -6,6 +6,11 @@
 
 - Delegated Rust MACSYMA `factor` evaluation to the shared `symbolic-vm`
   canonical handler, including coverage for common multivariate factors.
+- Added Rust MACSYMA parity for multivariate integer content extraction, so
+  `factor(2*x + 4*y)` returns `2*(x + 2*y)`, `factor(2*x*y + 2*x*z)` returns
+  `2*x*(y + z)`, and `factor(2*x^2*y - 2*y)` returns `2*y*(x+1)*(x-1)` through
+  the shared symbolic VM handler. Brings Rust to parity with Python (#3120) and
+  TypeScript (#3124).
 - Added Rust MACSYMA parity for bivariate perfect-square factoring, so
   `factor(x^2 + 2*x*y + y^2)` returns `(x + y)^2` through the shared symbolic
   VM handler.

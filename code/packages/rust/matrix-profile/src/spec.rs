@@ -340,6 +340,39 @@ impl SpecCache {
         self.entries.clear();
         self.order.clear();
     }
+
+    /// **MX05 Phase 5.**  Drop the single cache entry whose kernel
+    /// has the given backend handle.  Returns `true` if an entry
+    /// was removed, `false` otherwise.
+    ///
+    /// Used by the deoptimisation path: when an observation reveals
+    /// that a previously-folded constant has changed, the runtime
+    /// invalidates the cached `SpecialisedKernel` so the next
+    /// `route()` call falls back to the generic dispatch and starts
+    /// re-accumulating fresh observations.  The matching executor
+    /// eviction happens in parallel via
+    /// `CpuExecutor::evict_specialised` / `MetalExecutor::evict_specialised`
+    /// — the cache and the executor's `SpecialisedTable` go out of
+    /// sync if either side is updated alone.
+    ///
+    /// Linear in cache size because the cache is keyed by `SpecKey`,
+    /// not by `handle`.  The cache is small (V1 default capacity is
+    /// 64) so this is sub-microsecond.  Phase 6+ could maintain a
+    /// secondary `handle → SpecKey` index if this becomes hot.
+    pub fn invalidate(&mut self, handle: u64) -> bool {
+        let victim = self
+            .entries
+            .iter()
+            .find(|(_, k)| k.handle == handle)
+            .map(|(key, _)| key.clone());
+        if let Some(key) = victim {
+            self.entries.remove(&key);
+            self.order.retain(|k| k != &key);
+            true
+        } else {
+            false
+        }
+    }
 }
 
 impl Default for SpecCache {

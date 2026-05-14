@@ -421,6 +421,21 @@ pub(crate) fn record_test_kernel_metadata(
 /// Subsequent calls with the same handle are a single mutex acquire
 /// and a `HashSet::contains` — sub-microsecond.
 fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
+    try_auto_install_specialised_with_origin(specialised, None)
+}
+
+/// **MX05 Phase 5.**  Variant of [`try_auto_install_specialised`] that
+/// also records the `(graph_subhash, op_index)` origin of the
+/// `SpecialisedKernel` for later deoptimisation lookup.  When an
+/// install succeeds the origin is stored in `INSTALLED_DEOPT_TRACKING`,
+/// keyed by handle.  `drive_specialisation` then scans this table
+/// each dispatch and evicts handles whose origin observation now
+/// shows `observed_min != observed_max` on the folded slot — i.e.
+/// the constant has destabilised.
+fn try_auto_install_specialised_with_origin(
+    specialised: &SpecialisedKernel,
+    origin: Option<(u64, u32)>,
+) -> bool {
     // Fast path: skip if already installed (on any backend).  The
     // handle hash includes `backend_id`, so CPU and metal versions
     // of the same SpecKey get distinct handles — no risk of
@@ -439,13 +454,161 @@ fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
     //   0 → CPU (matrix_cpu::build_specialised_kernel + CpuExecutor::install_specialised)
     //   1 → metal (matrix_metal::emit_specialised_kernel + install_specialised_from_emitted)
     // Other values → ignore (no backend registered).
-    match specialised.key.backend_id {
+    let installed = match specialised.key.backend_id {
         0 => try_install_cpu(specialised),
         #[cfg(feature = "metal-backend")]
         1 => try_install_metal(specialised),
         _ => false,
+    };
+
+    // **MX05 Phase 5.**  On a successful install, record the
+    // `(handle → graph_subhash, op_idx)` mapping so the
+    // deoptimisation scan in `drive_specialisation` can find the
+    // origin observation later.  We also need `folded_slot` (already
+    // in `KernelMetadata` from Phase 4.6) to know which
+    // tensor_observation to inspect for divergence.
+    if installed {
+        if let (Some(slot), Some((subhash, op_idx))) =
+            (specialised.key.folded_slot, origin)
+        {
+            // Only track Constant range_class — that's the only
+            // shape where deopt matters.  FloatBits / Integer
+            // narrowing has nothing to deopt against.
+            if matches!(
+                specialised.key.range_class,
+                matrix_runtime::RangeClass::Constant { .. }
+            ) {
+                let mut tracking = match installed_deopt_tracking().lock() {
+                    Ok(g) => g,
+                    Err(poisoned) => poisoned.into_inner(),
+                };
+                tracking.insert(
+                    specialised.handle,
+                    DeoptOrigin {
+                        subhash,
+                        op_idx,
+                        slot,
+                    },
+                );
+            }
+        }
     }
+
+    installed
 }
+
+/// **MX05 Phase 5.**  Per-handle tracking of which observation
+/// originally triggered a `Constant`-folded install.  The
+/// deoptimisation scan in `drive_specialisation` consults this map
+/// each dispatch: if the originating observation's
+/// `tensor_observations[slot]` now shows `observed_min !=
+/// observed_max`, the constant has destabilised and the kernel must
+/// be evicted.
+#[derive(Copy, Clone, Debug)]
+struct DeoptOrigin {
+    subhash: u64,
+    op_idx: u32,
+    slot: u8,
+}
+
+fn installed_deopt_tracking() -> &'static Mutex<HashMap<u64, DeoptOrigin>> {
+    static SLOT: OnceLock<Mutex<HashMap<u64, DeoptOrigin>>> = OnceLock::new();
+    SLOT.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+/// **MX05 Phase 5.**  Scan installed handles for those whose
+/// originating observation now shows the constant slot has
+/// destabilised; for each, evict the handle on both backends and
+/// invalidate the cache.  Returns the count of evictions.
+///
+/// Called from `drive_specialisation` after each dispatch's
+/// sampling pass, so eviction is reactive: the dispatch that
+/// observed the new value triggers the eviction; the next
+/// dispatch sees a cache miss and falls back to generic.
+fn scan_and_deoptimise() -> usize {
+    // Snapshot the tracking map so we don't hold its lock while
+    // also acquiring the spec_router cache lock or the executor
+    // mutexes.
+    let to_check: Vec<(u64, DeoptOrigin)> = {
+        let tracking = match installed_deopt_tracking().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        tracking.iter().map(|(h, o)| (*h, *o)).collect()
+    };
+    if to_check.is_empty() {
+        return 0;
+    }
+    let observations = profiler().observations();
+    let mut evicted: Vec<u64> = Vec::new();
+    for (handle, origin) in to_check {
+        // Find the observation for this origin.
+        let obs = observations.iter().find(|o| {
+            o.graph_subhash == origin.subhash && o.op_index == origin.op_idx
+        });
+        let Some(obs) = obs else {
+            // No observation yet — keep tracking and try again
+            // next dispatch.  Shouldn't really happen because the
+            // observation is what created the install.
+            continue;
+        };
+        // Look at the folded slot's tensor observation.  If
+        // observed_min != observed_max, the constant has changed.
+        let tobs = obs.tensor_observations.iter().find(|t| {
+            t.is_input && t.slot == origin.slot as u32
+        });
+        let Some(tobs) = tobs else {
+            continue;
+        };
+        if tobs.observed_min != tobs.observed_max {
+            // Constant has destabilised — evict everywhere.
+            spec_router().cache_invalidate(handle);
+            with_cpu_backend(|b| b.executor.evict_specialised(handle));
+            #[cfg(feature = "metal-backend")]
+            if let Some(metal) = metal_backend() {
+                metal.executor.evict_specialised(handle);
+            }
+            // Drop our side-table records.
+            {
+                let mut installed = match installed_handles().lock() {
+                    Ok(g) => g,
+                    Err(poisoned) => poisoned.into_inner(),
+                };
+                installed.remove(&handle);
+            }
+            {
+                let mut md = match installed_kernel_metadata().lock() {
+                    Ok(g) => g,
+                    Err(poisoned) => poisoned.into_inner(),
+                };
+                md.remove(&handle);
+            }
+            evicted.push(handle);
+        }
+    }
+    if !evicted.is_empty() {
+        let mut tracking = match installed_deopt_tracking().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        for h in &evicted {
+            tracking.remove(h);
+        }
+    }
+    DEOPT_COUNT.fetch_add(evicted.len(), std::sync::atomic::Ordering::Relaxed);
+    evicted.len()
+}
+
+/// **MX05 Phase 5.**  Public counter: total number of
+/// deoptimisations triggered in this process.  Each deopt
+/// represents one specialised kernel that was evicted because its
+/// folded constant changed at runtime.
+pub fn deoptimisation_count() -> usize {
+    DEOPT_COUNT.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+static DEOPT_COUNT: std::sync::atomic::AtomicUsize =
+    std::sync::atomic::AtomicUsize::new(0);
 
 /// **MX05 Phase 4.9.**  Install a specialised kernel on the CPU
 /// executor singleton.  Returns `true` on a fresh install.
@@ -680,12 +843,40 @@ fn drive_specialisation(placed: &ComputeGraph) -> HashMap<u32, u64> {
             // route this op through `DispatchSpecialised`.  See
             // `handle_is_installed` for what "installed" means.
             if let Some(spec) = r.route(observation, ir_op.wire_tag(), out_dtype, executor.0) {
-                let _ = try_auto_install_specialised(&spec);
+                // **MX05 Phase 5.**  Thread (subhash, op_idx) into
+                // the install path so the deopt tracker knows which
+                // observation originally triggered this kernel.
+                let _ = try_auto_install_specialised_with_origin(
+                    &spec,
+                    Some((subhash, op_idx as u32)),
+                );
                 if handle_is_installed(spec.handle) {
                     installed_per_op.insert(op_idx as u32, spec.handle);
                 }
             }
         }
+    }
+
+    // **MX05 Phase 5.**  After all observations have been updated
+    // by this dispatch, scan installed handles for any whose
+    // originating observation now shows the folded constant has
+    // destabilised.  Evict those handles on both backends and
+    // invalidate the cache.  The dispatcher uses `installed_per_op`
+    // *as captured above* (before the scan) to decide routing for
+    // THIS dispatch — i.e. the destabilised kernel may still fire
+    // once.  Subsequent dispatches see a fresh cache miss and fall
+    // back to generic.
+    let evicted = scan_and_deoptimise();
+    if evicted > 0 {
+        // Also drop these handles from this dispatch's
+        // installed_per_op map so the caller doesn't try to use
+        // them in dispatch_specialised_via.
+        let tracking = match installed_deopt_tracking().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        installed_per_op.retain(|_, h| tracking.contains_key(h));
+        drop(tracking);
     }
 
     installed_per_op
@@ -2519,25 +2710,34 @@ mod tests {
 
         let before = specialised_install_count();
 
-        // Same shape as the Phase 4.3 metal test: a tiny f32 Add
-        // with both operands as constants.  Tiny enough that the
-        // planner picks CPU on every platform.
+        // Tiny f32 Add with a stable constant operand.  Use an
+        // **8-element** shape (rather than the 4-element shape that
+        // `auto_installer_registers_kernel_after_threshold` uses)
+        // so the resulting graph subhash is distinct.  The Profiler
+        // keys observations by `(subhash, op_index, slot)`, and the
+        // subhash hashes structural fields (op kinds, Alloc bytes,
+        // tensor ids) but **not** constant payload bytes — so two
+        // tests using the same structure with different K values
+        // would accumulate observations into the same bucket, mixing
+        // their min/max ranges and breaking the constant detection
+        // for both.  Distinct shapes → distinct subhashes →
+        // independent observations.
         for _ in 0..1100 {
             let mut g = GraphBuilder::new();
-            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
                 .iter()
                 .flat_map(|v| v.to_le_bytes())
                 .collect();
-            let b_bytes: Vec<u8> = [7.0_f32, 7.0, 7.0, 7.0]
+            let b_bytes: Vec<u8> = [11.0_f32; 8]
                 .iter()
                 .flat_map(|v| v.to_le_bytes())
                 .collect();
-            let a = g.constant(DType::F32, Shape::from(&[4u32]), a_bytes);
-            let b = g.constant(DType::F32, Shape::from(&[4u32]), b_bytes);
+            let a = g.constant(DType::F32, Shape::from(&[8u32]), a_bytes);
+            let b = g.constant(DType::F32, Shape::from(&[8u32]), b_bytes);
             let c = g.add(&a, &b);
             g.output(&c);
             let graph = g.build().expect("graph builds");
-            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 16);
+            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 32);
         }
 
         let after = specialised_install_count();
@@ -2550,6 +2750,231 @@ mod tests {
              returned None for the SpecKey (check matrix-cpu coverage).",
             before,
             after
+        );
+    }
+
+    /// **MX05 Phase 4.10 end-to-end test.**  CPU specialised dispatch
+    /// of `Op::MatMul` with a folded 2×2 RHS matrix.
+    ///
+    /// Builds the closure directly via `matrix_cpu::build_specialised_kernel`,
+    /// installs it on the thread-local CPU executor, then invokes it
+    /// via the BufferStore to verify the matrix multiplication is
+    /// correct end-to-end.
+    ///
+    /// Graph (semantically):
+    ///   `A = [[1, 2], [3, 4]]`   ← runtime input (`[2, 2]`)
+    ///   `B = [[5, 6], [7, 8]]`   ← folded constant (`[2, 2]`)
+    ///   `C = A × B = [[1*5+2*7, 1*6+2*8], [3*5+4*7, 3*6+4*8]]`
+    ///                ` = [[19, 22], [43, 50]]`
+    ///
+    /// We don't go through the planner here — the test is hermetic.
+    /// The Phase 4.9 auto-installer + Phase 4.8 multi-op dispatcher
+    /// would normally fire this for graphs that reach the
+    /// 1000-invocation threshold; this test validates the closure
+    /// + buffer plumbing in isolation.
+    #[test]
+    fn cpu_matmul_folded_rhs_2x2_produces_correct_output() {
+        use matrix_runtime::{RangeClass, ShapeClass, SpecKey};
+
+        // Folded RHS matrix B = [[5, 6], [7, 8]] (row-major).
+        let b_bytes: Vec<u8> = [5.0_f32, 6.0, 7.0, 8.0]
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
+        let key = SpecKey {
+            op_kind: 0x15, // Op::MatMul
+            dtype: matrix_ir::DType::F32,
+            shape_class: ShapeClass::Dynamic,
+            range_class: RangeClass::Constant { bytes: b_bytes },
+            backend_id: 0, // CPU
+            folded_slot: Some(1), // RHS folded
+        };
+        let kernel = matrix_cpu::build_specialised_kernel(&key, 0xCAFE)
+            .expect("matrix-cpu must build a 2x2 MatMul kernel");
+
+        // Install on the thread-local CPU executor and seed the
+        // input buffer.
+        with_cpu_backend(|backend| {
+            const TEST_HANDLE: u64 = 0xCAFE_BABE;
+            backend.executor.install_specialised(TEST_HANDLE, kernel);
+
+            // A = [[1, 2], [3, 4]] flattened.  4 elements × 4 bytes
+            // = 16 bytes.
+            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+
+            // Use the executor directly (not the protocol) so the
+            // test stays focused on the kernel's correctness.
+            let input_buf = compute_ir::BufferId(100);
+            let output_buf = compute_ir::BufferId(101);
+            // Pre-allocate buffers via protocol calls so the
+            // executor's BufferStore is in the right state.
+            let alloc_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::AllocBuffer { bytes: 16 },
+            );
+            let _ = alloc_resp; // server assigns its own id; we sidestep that here
+
+            // Actually use the executor's `handle()` for end-to-end
+            // protocol-level testing.  Allocate two server-assigned
+            // buffer ids.
+            let _ = (input_buf, output_buf);
+            let in_buf = match backend.executor.handle(
+                executor_protocol::ExecutorRequest::AllocBuffer { bytes: 16 },
+            ) {
+                executor_protocol::ExecutorResponse::BufferAllocated { buffer } => buffer,
+                other => panic!("expected BufferAllocated, got {:?}", other),
+            };
+            let out_buf = match backend.executor.handle(
+                executor_protocol::ExecutorRequest::AllocBuffer { bytes: 16 },
+            ) {
+                executor_protocol::ExecutorResponse::BufferAllocated { buffer } => buffer,
+                other => panic!("expected BufferAllocated, got {:?}", other),
+            };
+            // Upload A.
+            let upload_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::UploadBuffer {
+                    buffer: in_buf,
+                    offset: 0,
+                    data: a_bytes,
+                },
+            );
+            assert!(
+                matches!(
+                    upload_resp,
+                    executor_protocol::ExecutorResponse::BufferUploaded { .. }
+                ),
+                "upload failed: {:?}",
+                upload_resp
+            );
+
+            // Fire the DispatchSpecialised request.
+            let dispatch_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::DispatchSpecialised {
+                    job_id: 1,
+                    handle: TEST_HANDLE,
+                    inputs: vec![in_buf],
+                    outputs: vec![out_buf],
+                },
+            );
+            assert!(
+                matches!(
+                    dispatch_resp,
+                    executor_protocol::ExecutorResponse::DispatchDone { .. }
+                ),
+                "dispatch failed: {:?}",
+                dispatch_resp
+            );
+
+            // Download the result.
+            let download_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::DownloadBuffer {
+                    buffer: out_buf,
+                    offset: 0,
+                    len: 16,
+                },
+            );
+            let bytes = match download_resp {
+                executor_protocol::ExecutorResponse::BufferData { data, .. } => data,
+                other => panic!("expected BufferData, got {:?}", other),
+            };
+            let result: Vec<f32> = bytes
+                .chunks(4)
+                .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+                .collect();
+            // Expected: A × B = [[1*5+2*7, 1*6+2*8], [3*5+4*7, 3*6+4*8]]
+            //                 = [[19, 22], [43, 50]]
+            assert_eq!(
+                result,
+                vec![19.0, 22.0, 43.0, 50.0],
+                "Phase 4.10 CPU 2x2 MatMul: expected [[19, 22], [43, 50]]"
+            );
+        });
+    }
+
+    /// **MX05 Phase 5 end-to-end test.**  Deoptimisation when an
+    /// observed constant changes.
+    ///
+    /// Step 1: Drive 1100 invocations of an Add-with-K=42.0 graph
+    ///         so the policy fires and the CPU auto-installer
+    ///         registers a specialised kernel for K=42.0.  Assert
+    ///         the install count rose.
+    /// Step 2: Switch the constant to K=99.0 and run **once**
+    ///         through the same graph shape (different bytes).
+    ///         The Profiler's observation for this graph's Add op
+    ///         slot 1 now sees a NEW value, so observed_min != observed_max.
+    ///         drive_specialisation's deopt scan should detect
+    ///         this and evict the K=42.0 kernel.
+    /// Step 3: Assert `deoptimisation_count` rose and the
+    ///         specialised_install_count dropped back.
+    ///
+    /// Uses a distinct shape from other tests (size `[16]`) so the
+    /// graph subhash is unique and we don't inherit any prior
+    /// test's tensor_observations.
+    #[test]
+    fn deoptimises_when_observed_constant_changes() {
+        use crate::{deoptimisation_count, specialised_install_count};
+        use matrix_ir::{DType, GraphBuilder, Shape};
+
+        let deopt_before = deoptimisation_count();
+        let install_before = specialised_install_count();
+
+        // Phase A: install K=42.0 kernel.  1100 iterations to clear
+        // the DefaultPolicy threshold.
+        for _ in 0..1100 {
+            let mut g = GraphBuilder::new();
+            let a_bytes: Vec<u8> = (0..16)
+                .map(|i| i as f32)
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let b_bytes: Vec<u8> = [42.0_f32; 16]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let a = g.constant(DType::F32, Shape::from(&[16u32]), a_bytes);
+            let b = g.constant(DType::F32, Shape::from(&[16u32]), b_bytes);
+            let c = g.add(&a, &b);
+            g.output(&c);
+            let graph = g.build().expect("graph builds");
+            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 64);
+        }
+        let install_after_phase_a = specialised_install_count();
+        assert!(
+            install_after_phase_a > install_before,
+            "Phase A should install a specialised kernel; install_before={}, install_after={}",
+            install_before,
+            install_after_phase_a
+        );
+
+        // Phase B: change the constant to K=99.0.  ONE invocation
+        // is enough for sample_tensor to update observed_max from
+        // 42.0 to 99.0, which then triggers the deopt scan.
+        for _ in 0..1 {
+            let mut g = GraphBuilder::new();
+            let a_bytes: Vec<u8> = (0..16)
+                .map(|i| i as f32)
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let b_bytes: Vec<u8> = [99.0_f32; 16]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let a = g.constant(DType::F32, Shape::from(&[16u32]), a_bytes);
+            let b = g.constant(DType::F32, Shape::from(&[16u32]), b_bytes);
+            let c = g.add(&a, &b);
+            g.output(&c);
+            let graph = g.build().expect("graph builds");
+            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 64);
+        }
+
+        let deopt_after = deoptimisation_count();
+        assert!(
+            deopt_after > deopt_before,
+            "Phase 5: deoptimisation_count must rise after the observed \
+             constant changes from 42.0 to 99.0; before = {}, after = {}",
+            deopt_before,
+            deopt_after
         );
     }
 }

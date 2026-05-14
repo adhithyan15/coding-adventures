@@ -1394,39 +1394,63 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return rewritten;
     }
 
-    if let Some(rewritten) = factor_common_integer_symbolic_term(input) {
+    if let Some(rewritten) = factor_common_symbolic_term(input) {
         return vm.eval(rewritten);
     }
 
     fallback
 }
 
-fn factor_common_integer_symbolic_term(node: &IRNode) -> Option<IRNode> {
+/// Extract the greatest common integer coefficient and the intersection of
+/// symbolic powers shared by every additive term.
+///
+/// This is the Rust equivalent of the Python / TypeScript
+/// `_extract_multivariate_integer_content` / `extractCommonSymbolicFactor`
+/// functions.  It handles both cases that the old symbolic-only version
+/// handled *and* the integer-GCD case:
+///
+/// ```text
+/// x^2·y − y          →  y · Factor(x^2 − 1)   = y·(x−1)·(x+1)
+/// 2·x·y + 2·x·z      →  2·x · (y + z)
+/// 2·x^2 + 4·x·y + 2·y^2 →  2 · Factor(x^2 + 2·x·y + y^2) = 2·(x+y)^2
+/// ```
+///
+/// Returns `None` if the GCD of coefficients is 1 **and** there are no
+/// common symbolic powers (i.e., nothing to pull out).
+fn factor_common_symbolic_term(node: &IRNode) -> Option<IRNode> {
     let terms = additive_terms(node)?;
     if terms.len() < 2 {
         return None;
     }
 
-    let parsed_terms: Vec<(i64, HashMap<IRNode, usize>)> = terms
+    // Parse every term into (integer coefficient, symbolic power map).
+    // If any term cannot be parsed this way, bail — another handler may
+    // recognise the pattern.
+    let parsed: Vec<(i64, HashMap<IRNode, usize>)> = terms
         .iter()
-        .map(term_integer_coefficient_and_powers)
-        .collect::<Option<_>>()?;
-    let mut common_content = 0_u64;
-    for (coefficient, _) in &parsed_terms {
-        common_content = gcd(common_content, coefficient.unsigned_abs());
+        .map(|term| term_integer_coefficient_and_powers(term))
+        .collect::<Option<Vec<_>>>()?;
+
+    // --- Integer GCD ---
+    // Fold |coeff| values through GCD; if *all* coefficients are negative,
+    // negate the result so the sign itself is factored out.
+    let mut common_coefficient: i64 = 0;
+    for (coeff, _) in &parsed {
+        common_coefficient = integer_gcd(common_coefficient, coeff.abs());
     }
-    if common_content == 0 || common_content > i64::MAX as u64 {
-        return None;
+    if common_coefficient != 0 && parsed.iter().all(|(c, _)| *c < 0) {
+        common_coefficient = -common_coefficient;
+    }
+    if common_coefficient == 0 {
+        common_coefficient = 1;
     }
 
-    let mut common_content = common_content as i64;
-    if parsed_terms.iter().all(|(coefficient, _)| *coefficient < 0) {
-        common_content = -common_content;
-    }
-
-    let mut common = parsed_terms[0].1.clone();
-    for (_, powers) in &parsed_terms[1..] {
-        common.retain(|base, exponent| {
+    // --- Common symbolic powers ---
+    // Start with a clone of the first term's powers, then intersect with
+    // each subsequent term, taking the minimum exponent at each variable.
+    let mut common_powers = parsed[0].1.clone();
+    for (_, powers) in &parsed[1..] {
+        common_powers.retain(|base, exponent| {
             if let Some(other) = powers.get(base) {
                 *exponent = (*exponent).min(*other);
                 *exponent > 0
@@ -1436,22 +1460,85 @@ fn factor_common_integer_symbolic_term(node: &IRNode) -> Option<IRNode> {
         });
     }
 
-    if common_content == 1 && common.is_empty() {
+    // Nothing to factor if coefficient is 1 and no common symbolic powers.
+    if common_coefficient == 1 && common_powers.is_empty() {
         return None;
     }
 
-    let common_factor = term_from_integer_coefficient_and_powers(common_content, &common);
-    let residual_terms: Vec<IRNode> = terms
-        .iter()
-        .zip(parsed_terms.iter())
-        .map(|(_, (coefficient, powers))| {
-            let residual_coefficient = coefficient / common_content;
-            let residual_powers = remove_common_powers(powers, &common);
-            term_from_integer_coefficient_and_powers(residual_coefficient, &residual_powers)
+    // --- Build the common factor ---
+    let common_ir = term_from_coefficient_and_powers(common_coefficient, &common_powers);
+
+    // --- Build residual: divide each term by the common factor ---
+    let residual_terms: Vec<IRNode> = parsed
+        .into_iter()
+        .map(|(coeff, powers)| {
+            let residual_coeff = coeff / common_coefficient;
+            let residual_powers: HashMap<IRNode, usize> = powers
+                .into_iter()
+                .filter_map(|(base, exponent)| {
+                    let shared = common_powers.get(&base).copied().unwrap_or(0);
+                    let remaining = exponent - shared;
+                    if remaining > 0 {
+                        Some((base, remaining))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            term_from_coefficient_and_powers(residual_coeff, &residual_powers)
         })
         .collect();
-    let residual = maybe_factor_residual(add_nodes(residual_terms));
-    Some(apply_node(MUL, vec![common_factor, residual]))
+
+    let residual = add_nodes(residual_terms);
+    Some(apply_node(
+        MUL,
+        vec![common_ir, maybe_factor_residual(residual)],
+    ))
+}
+
+/// Build an IR term from an integer coefficient and a map of symbolic powers.
+///
+/// When `coefficient == 1` **and** there are powers, the `1` is dropped so
+/// `term_from_coefficient_and_powers(1, {x: 2})` → `x^2` not `1·x^2`.
+fn term_from_coefficient_and_powers(coefficient: i64, powers: &HashMap<IRNode, usize>) -> IRNode {
+    let mut factors: Vec<IRNode> = Vec::new();
+    if coefficient != 1 || powers.is_empty() {
+        factors.push(IRNode::Integer(coefficient));
+    }
+    // Sort keys deterministically so tests can write exact assertions.
+    let mut sorted: Vec<(&IRNode, usize)> = powers.iter().map(|(b, e)| (b, *e)).collect();
+    sorted.sort_by_key(|(base, _)| base.to_string());
+    for (base, exponent) in sorted {
+        factors.push(power_to_ir(base.clone(), exponent));
+    }
+    multiply_nodes(factors)
+}
+
+/// Euclidean GCD over non-negative `i64` values.
+fn integer_gcd(a: i64, b: i64) -> i64 {
+    let mut x = a.abs();
+    let mut y = b.abs();
+    while y != 0 {
+        let next = x % y;
+        x = y;
+        y = next;
+    }
+    x
+}
+
+/// Wrap `node` in `Factor(node)` if and only if it is a univariate integer
+/// polynomial, enabling recursive factoring of the residual.
+///
+/// If the residual spans two or more variables — or is not a polynomial
+/// at all — it is returned as-is so the caller does not produce an
+/// unevaluated `Factor(...)` wrapper at the top level.
+fn maybe_factor_residual(node: IRNode) -> IRNode {
+    if let Some(variable) = find_single_variable(&node) {
+        if ir_to_integer_poly(&node, &variable).is_some() {
+            return apply_node(FACTOR, vec![node]);
+        }
+    }
+    node
 }
 
 fn factor_multivariate_perfect_square(node: &IRNode) -> Option<IRNode> {
@@ -1976,54 +2063,6 @@ fn remove_common_factor(term: &IRNode, common: &HashMap<IRNode, usize>) -> IRNod
         }
     }
     multiply_nodes(pieces)
-}
-
-fn remove_common_powers(
-    powers: &HashMap<IRNode, usize>,
-    common: &HashMap<IRNode, usize>,
-) -> HashMap<IRNode, usize> {
-    let mut residual = HashMap::new();
-    for (base, exponent) in powers {
-        let common_exponent = common.get(base).copied().unwrap_or(0);
-        if *exponent > common_exponent {
-            residual.insert(base.clone(), *exponent - common_exponent);
-        }
-    }
-    residual
-}
-
-fn term_from_integer_coefficient_and_powers(
-    coefficient: i64,
-    powers: &HashMap<IRNode, usize>,
-) -> IRNode {
-    let mut pieces = Vec::new();
-    if coefficient != 1 || powers.is_empty() {
-        pieces.push(IRNode::Integer(coefficient));
-    }
-    let mut power_pieces: Vec<IRNode> = powers
-        .iter()
-        .map(|(base, exponent)| power_to_ir(base.clone(), *exponent))
-        .collect();
-    power_pieces.sort_by_key(|piece| piece.to_string());
-    pieces.extend(power_pieces);
-    multiply_nodes(pieces)
-}
-
-fn maybe_factor_residual(residual: IRNode) -> IRNode {
-    let Some(variable) = find_single_variable(&residual) else {
-        return residual;
-    };
-    let Some(coeffs) = ir_to_integer_poly(&residual, &variable) else {
-        return residual;
-    };
-    let (content, factors) = factor_integer_polynomial(&coeffs);
-    if factors.is_empty() {
-        return residual;
-    }
-    if factors.len() == 1 && factors[0].1 == 1 && content == 1 && factors[0].0 == coeffs {
-        return residual;
-    }
-    apply_node(FACTOR, vec![residual])
 }
 
 fn powers_to_ir(powers: &HashMap<IRNode, usize>) -> IRNode {

@@ -2,6 +2,44 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.7.0] — 2026-05-14
+
+### Added — MX05 Phase 5 (kernel eviction)
+
+- `SpecialisedTable::evict(handle) -> bool` — drops a kernel by
+  handle.
+- `CpuExecutor::evict_specialised(handle) -> bool` — public API
+  exposed to the deoptimisation path in image-gpu-core.  When a
+  previously-folded constant changes at runtime, the cached
+  closure is wrong; this drops it so subsequent
+  `DispatchSpecialised` requests fall through to the generic path.
+
+## [0.6.0] — 2026-05-13
+
+### Added — MX05 Phase 4.10 (MatMul closure with folded matrix)
+
+`build_specialised_kernel` now produces a closure for
+`Op::MatMul(0x15)` f32 with a folded **RHS** matrix.  Mirrors
+matrix-metal's emitter (v0.10.0):
+
+  - 2×2 (16 bytes) and 4×4 (64 bytes) constant matrices only
+  - `folded_slot = Some(1)` only (RHS folded)
+  - Variable LHS shape `[m, dim]`; closure derives `m` from input
+    buffer byte length
+
+Closure logic: for each output element `C[r, c]`, computes
+`sum_k A[r, k] * B[k, c]` using the captured constant matrix.
+
+#### Tests
+
+All 33 existing tests still pass.  The new MatMul closure is
+exercised by image-gpu-core's
+`cpu_matmul_folded_rhs_2x2_produces_correct_output` integration
+test, which asserts the result of
+`A = [[1, 2], [3, 4]] × B = [[5, 6], [7, 8]] = [[19, 22], [43, 50]]`
+through the full
+install → DispatchSpecialised → DownloadBuffer path.
+
 ## [0.5.0] — 2026-05-13
 
 ### Added — MX05 Phase 4.9 (CpuSpecialiser closure builder)

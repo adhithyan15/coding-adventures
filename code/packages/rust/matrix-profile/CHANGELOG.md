@@ -1,5 +1,21 @@
 # Changelog — matrix-profile
 
+## [0.3.0] — 2026-05-14
+
+### Added — MX05 Phase 5 (deoptimisation hooks)
+
+- `SpecCache::invalidate(handle) -> bool` — drops a single cache
+  entry by backend handle (linear scan since the cache is keyed by
+  `SpecKey`, not handle).  Returns `true` if removed.
+- `SpecRouter::cache_invalidate(handle) -> bool` — same, threaded
+  through the router's internal mutex.
+
+Both are called by image-gpu-core's deoptimisation path when an
+observation reveals that a previously-folded constant has
+changed.  Combined with `CpuExecutor::evict_specialised` /
+`MetalExecutor::evict_specialised`, this evicts the stale kernel
+across all backends so subsequent dispatches fall back to generic.
+
 ## [0.2.0] — 2026-05-13
 
 ### Added — MX05 Phase 4.6 (`folded_slot` for non-commutative ops)

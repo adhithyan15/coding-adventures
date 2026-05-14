@@ -288,9 +288,38 @@ cast_expr         = "CAST" "(" expr "AS" NAME ")" ;
 # function_call.
 
 window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spec ")" ;
-window_spec       = [ partition_clause ] [ order_clause ] ;
+window_spec       = [ partition_clause ] [ order_clause ] [ frame_clause ] ;
 partition_clause  = "PARTITION" "BY" expr { "," expr } ;
 value_list        = expr { "," expr } ;
+
+# Window frame clause:  ROWS|RANGE|GROUPS  BETWEEN start AND end
+#                    or ROWS|RANGE|GROUPS  start
+#
+# frame_unit selects the frame mode:
+#   ROWS    — physical row positions
+#   RANGE   — logical (peer-group) positions (SQLite default for ORDER BY)
+#   GROUPS  — peer-group count positions
+#
+# frame_bound describes one endpoint:
+#   UNBOUNDED PRECEDING  — start of the partition
+#   CURRENT ROW          — the current row (or its peer group in RANGE mode)
+#   expr PRECEDING       — n rows/peers before the current row
+#   expr FOLLOWING       — n rows/peers after the current row
+#   UNBOUNDED FOLLOWING  — end of the partition
+#
+# In the BETWEEN … AND … form:
+#   BETWEEN <start> AND <end>
+# In the shorthand form:
+#   frame_unit frame_bound      (end is implicitly CURRENT ROW)
+
+frame_clause  = frame_unit "BETWEEN" frame_bound "AND" frame_bound
+              | frame_unit frame_bound ;
+frame_unit    = "ROWS" | "RANGE" | "GROUPS" ;
+frame_bound   = "UNBOUNDED" "PRECEDING"
+              | "UNBOUNDED" "FOLLOWING"
+              | "CURRENT" "ROW"
+              | expr "PRECEDING"
+              | expr "FOLLOWING" ;
 
 # ── CREATE TRIGGER / DROP TRIGGER ────────────────────────────────────────────
 #

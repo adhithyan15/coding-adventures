@@ -500,7 +500,22 @@ class TestNthValue:
         assert eng == {80000}
 
     def test_nth_value_second_row(self) -> None:
-        """NTH_VALUE(salary, 2) returns the 2nd-smallest salary in each partition."""
+        """NTH_VALUE(salary, 2) returns the 2nd value in the cumulative frame.
+
+        With ORDER BY present the default frame is cumulative (RANGE BETWEEN
+        UNBOUNDED PRECEDING AND CURRENT ROW).  The n-th element only enters the
+        frame once the frame contains at least n rows.  Rows before that point
+        return NULL.
+
+        eng sorted ASC: Bob(80000), Eve(85000), Alice(90000)
+          Row 1 Bob:   frame=[80000]         → no 2nd → NULL
+          Row 2 Eve:   frame=[80000, 85000]  → 2nd = 85000
+          Row 3 Alice: frame=[80000, 85000, 90000] → 2nd = 85000
+
+        sales sorted ASC: Carol(70000), Dave(75000)
+          Row 1 Carol: frame=[70000]         → no 2nd → NULL
+          Row 2 Dave:  frame=[70000, 75000]  → 2nd = 75000
+        """
         spec = PlanWindowFuncSpec(
             func="nth_value",
             arg_expr=_col("salary"),
@@ -510,13 +525,18 @@ class TestNthValue:
             extra_args=(Literal(2),),
         )
         rows = _run([spec], ["dept", "salary"], ["dept", "salary", "nth"])
-        eng = {r[2] for r in rows if r[0] == "eng"}
-        # eng sorted ASC: Bob 80000, Eve 85000, Alice 90000  → 2nd = 85000
-        assert eng == {85000}
 
-        sales = {r[2] for r in rows if r[0] == "sales"}
-        # sales sorted ASC: Carol 70000, Dave 75000  → 2nd = 75000
-        assert sales == {75000}
+        # eng: first row (80000) gets NULL, remaining rows get 85000
+        eng_rows = sorted(
+            [(r[1], r[2]) for r in rows if r[0] == "eng"], key=lambda x: x[0]
+        )
+        assert eng_rows == [(80000, None), (85000, 85000), (90000, 85000)]
+
+        # sales: first row (70000) gets NULL, second row (75000) gets 75000
+        sales_rows = sorted(
+            [(r[1], r[2]) for r in rows if r[0] == "sales"], key=lambda x: x[0]
+        )
+        assert sales_rows == [(70000, None), (75000, 75000)]
 
     def test_nth_value_beyond_partition_size(self) -> None:
         """NTH_VALUE with n > partition size returns NULL for all rows."""
@@ -532,7 +552,18 @@ class TestNthValue:
         assert all(r[2] is None for r in rows)
 
     def test_nth_value_global_no_partition(self) -> None:
-        """NTH_VALUE(salary, 3) over all 5 rows (no partition) → the 3rd smallest."""
+        """NTH_VALUE(salary, 3) over all 5 rows (no partition).
+
+        With ORDER BY and the default cumulative frame, the 3rd value (80000)
+        only enters the frame starting at row 3.  The first two rows return NULL.
+
+        Salaries sorted ASC: 70000, 75000, 80000, 85000, 90000
+          Row 1 (70000): frame=[70000]            → no 3rd → NULL
+          Row 2 (75000): frame=[70000, 75000]     → no 3rd → NULL
+          Row 3 (80000): frame=[70000,75000,80000]→ 3rd = 80000
+          Row 4 (85000): frame=[70000..85000]     → 3rd = 80000
+          Row 5 (90000): frame=[70000..90000]     → 3rd = 80000
+        """
         spec = PlanWindowFuncSpec(
             func="nth_value",
             arg_expr=_col("salary"),
@@ -542,8 +573,11 @@ class TestNthValue:
             extra_args=(Literal(3),),
         )
         rows = _run([spec], ["salary"], ["salary", "nth"])
-        # All 5 salaries ASC: 70000, 75000, 80000, 85000, 90000  → 3rd = 80000
-        assert all(r[1] == 80000 for r in rows)
+        # Sort by salary to get a stable order and compare per-row nth values.
+        by_salary = sorted(rows, key=lambda r: r[0])
+        nth_vals = [r[1] for r in by_salary]
+        # First two rows have frames too small for the 3rd element → NULL.
+        assert nth_vals == [None, None, 80000, 80000, 80000]
 
 
 # ---------------------------------------------------------------------------

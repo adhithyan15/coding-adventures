@@ -645,6 +645,60 @@ class IndexScan:
 
 
 @dataclass(frozen=True, slots=True)
+class FrameBound:
+    """One endpoint of a window frame specification.
+
+    The ``kind`` field describes what this bound means:
+
+    - ``"UNBOUNDED_PRECEDING"`` — the start of the partition (always the first
+      row in physical/logical/group-count order).
+    - ``"PRECEDING"`` — ``offset`` rows/peers/groups before the current row.
+    - ``"CURRENT_ROW"`` — the current row (ROWS mode) or its peer group
+      (RANGE mode) or its peer-group count (GROUPS mode).
+    - ``"FOLLOWING"`` — ``offset`` rows/peers/groups after the current row.
+    - ``"UNBOUNDED_FOLLOWING"`` — the end of the partition.
+
+    The ``offset`` field is only meaningful when ``kind`` is ``"PRECEDING"``
+    or ``"FOLLOWING"``; all other kinds ignore it.
+    """
+
+    # UNBOUNDED_PRECEDING | PRECEDING | CURRENT_ROW | FOLLOWING | UNBOUNDED_FOLLOWING
+    kind: str
+    offset: int = 0    # N for N PRECEDING / N FOLLOWING; 0 otherwise
+
+
+@dataclass(frozen=True, slots=True)
+class WinFrame:
+    """Window frame clause (ROWS / RANGE / GROUPS BETWEEN start AND end).
+
+    A ``WinFrame`` is attached to a :class:`WindowFuncSpec` when the user
+    wrote an explicit ``ROWS BETWEEN … AND …`` (or similar) clause.  When
+    ``None`` is stored on the spec, the VM applies the SQL-standard default:
+
+    - No ORDER BY  →  ``RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED
+      FOLLOWING``  (full-partition aggregate).
+    - ORDER BY present  →  ``RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT
+      ROW``  (cumulative/running aggregate).
+
+    Fields
+    ------
+    unit:
+        ``"ROWS"`` (physical row offset), ``"RANGE"`` (peer-group extent),
+        or ``"GROUPS"`` (peer-group count offset).  The VM currently
+        implements ``ROWS`` and ``RANGE``; ``GROUPS`` is accepted by the
+        parser but treated as ``ROWS`` for simplicity.
+    start:
+        The lower bound of the frame.
+    end:
+        The upper bound of the frame.
+    """
+
+    unit: str           # "ROWS" | "RANGE" | "GROUPS"
+    start: FrameBound
+    end: FrameBound
+
+
+@dataclass(frozen=True, slots=True)
 class WindowFuncSpec:
     """Specification for a single window function inside a :class:`WindowAgg` node.
 
@@ -666,6 +720,10 @@ class WindowFuncSpec:
         Tuple of ``(resolved_expr, descending)`` sort keys.
     alias:
         Output column name — the SELECT-item alias or a generated name.
+    frame:
+        Explicit window frame specification, or ``None`` to use the SQL
+        standard default (full partition when no ORDER BY; cumulative when
+        ORDER BY is present).
     """
 
     func: str
@@ -674,6 +732,7 @@ class WindowFuncSpec:
     order_by: tuple[tuple[Expr, bool], ...]
     alias: str
     extra_args: tuple[Expr, ...] = ()   # LAG/LEAD offset+default; NTH_VALUE n
+    frame: WinFrame | None = None       # explicit ROWS/RANGE/GROUPS BETWEEN … AND …
 
 
 @dataclass(frozen=True, slots=True)

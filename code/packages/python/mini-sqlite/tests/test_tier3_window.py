@@ -438,19 +438,34 @@ class TestWindowIntegration:
         assert mx == 90000
 
     def test_first_last_value(self):
-        """FIRST_VALUE and LAST_VALUE over ordered partition."""
+        """FIRST_VALUE and LAST_VALUE over ordered partition.
+
+        With ORDER BY present the SQL-standard default frame is cumulative
+        (RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW).
+
+        FIRST_VALUE always returns the first row of the frame, which starts at
+        UNBOUNDED PRECEDING — so it is always 90000 for every eng row.
+
+        LAST_VALUE returns the last row of the cumulative frame, which ends at
+        the CURRENT ROW — so it equals the current row's salary:
+          Alice (90000, 1st in DESC): last = 90000
+          Eve   (85000, 2nd in DESC): last = 85000
+          Bob   (80000, 3rd in DESC): last = 80000
+        """
         con = _conn()
         rows = _rows(
             con,
-            "SELECT dept, "
+            "SELECT dept, salary, "
             "FIRST_VALUE(salary) OVER (PARTITION BY dept ORDER BY salary DESC) AS highest, "
             "LAST_VALUE(salary) OVER (PARTITION BY dept ORDER BY salary DESC) AS lowest "
-            "FROM employees ORDER BY dept",
+            "FROM employees ORDER BY dept, salary DESC",
         )
-        eng = [(dept, hi, lo) for dept, hi, lo in rows if dept == "Engineering"]
-        # Highest salary in Engineering = 90000, lowest = 80000
+        eng = [(salary, hi, lo) for dept, salary, hi, lo in rows if dept == "Engineering"]
+        # FIRST_VALUE is always the highest salary (90000) — stable across all rows.
         assert all(hi == 90000 for _, hi, lo in eng)
-        assert all(lo == 80000 for _, hi, lo in eng)
+        # LAST_VALUE with cumulative frame equals the current row's salary.
+        for salary, _, lo in eng:
+            assert lo == salary, f"expected LAST_VALUE={salary}, got {lo}"
 
     def test_multiple_window_functions(self):
         """Multiple window functions in one SELECT are all computed."""

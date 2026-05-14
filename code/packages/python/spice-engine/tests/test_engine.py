@@ -91,15 +91,19 @@ from spice_engine import (
     DcSweepPoint,
     DcSweepResult,
     Diode,
+    ExpWaveform,
     Inductor,
     McPoint,
     McResult,
     NoiseEntry,
     NoisePoint,
     NoiseResult,
+    PulseWaveform,
+    PwlWaveform,
     Resistor,
     SensEntry,
     SensResult,
+    SinWaveform,
     TfResult,
     VoltageSource,
     ac_sweep,
@@ -4523,3 +4527,344 @@ def test_ccvs_ac_unknown_ctrl_source_raises() -> None:
     ])
     with pytest.raises(ValueError, match="Vbad"):
         ac_sweep(c, f_start=1.0, f_stop=1e3, n_points=2)
+
+
+# ---------------------------------------------------------------------------
+# Section 66 — Time-varying source waveforms
+# ---------------------------------------------------------------------------
+#
+# Each waveform class is exercised in two layers:
+#   (a) unit tests on the callable directly (Waveform.__call__)
+#   (b) integration tests that wire the waveform into a transient sim and
+#       verify that node voltages track the expected waveform shape.
+#
+# The integration circuits are always a simple voltage-follower topology:
+#
+#     Vsrc (waveform) ─── "in" ─── R ─── "out" ─── 0
+#
+# With R → 0 (1 mΩ), V("out") ≈ V("in") = waveform(t).
+#
+# Alternatively for current sources:
+#
+#     Isrc (waveform) ─── "out" ─┬─── R ─── 0
+#                                 └ V("out") = I_src(t) * R
+
+
+# ---- PwlWaveform unit tests ------------------------------------------------
+
+
+def test_pwl_waveform_before_first_breakpoint() -> None:
+    """Before the first breakpoint PwlWaveform holds the first value."""
+    w = PwlWaveform(points=((1.0, 0.5), (2.0, 1.5)))
+    assert w(0.0) == pytest.approx(0.5)
+    assert w(-10.0) == pytest.approx(0.5)
+
+
+def test_pwl_waveform_after_last_breakpoint() -> None:
+    """After the last breakpoint PwlWaveform holds the last value."""
+    w = PwlWaveform(points=((0.0, 0.0), (1.0, 5.0)))
+    assert w(2.0) == pytest.approx(5.0)
+    assert w(100.0) == pytest.approx(5.0)
+
+
+def test_pwl_waveform_at_breakpoints() -> None:
+    """PwlWaveform returns exact values at defined breakpoints."""
+    w = PwlWaveform(points=((0.0, 0.0), (1.0, 3.0), (2.0, 1.0)))
+    assert w(0.0) == pytest.approx(0.0)
+    assert w(1.0) == pytest.approx(3.0)
+    assert w(2.0) == pytest.approx(1.0)
+
+
+def test_pwl_waveform_linear_interpolation() -> None:
+    """PwlWaveform interpolates linearly between breakpoints."""
+    w = PwlWaveform(points=((0.0, 0.0), (1.0, 1.0)))
+    assert w(0.25) == pytest.approx(0.25)
+    assert w(0.5) == pytest.approx(0.5)
+    assert w(0.75) == pytest.approx(0.75)
+
+
+def test_pwl_waveform_negative_values() -> None:
+    """PwlWaveform handles negative breakpoint values correctly."""
+    w = PwlWaveform(points=((0.0, -2.0), (1.0, 2.0)))
+    assert w(0.5) == pytest.approx(0.0)
+
+
+def test_pwl_waveform_transient_step() -> None:
+    """Transient sim driven by a PWL step: node voltage follows the ramp."""
+    # PWL: 0 V at t=0, ramp to 1 V over 0.5 s, hold 1 V from 0.5 s onward.
+    w = PwlWaveform(points=((0.0, 0.0), (0.5, 1.0), (1.0, 1.0)))
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", voltage=0.0, waveform=w),
+        Resistor("Rser", "in", "out", 1e-3),  # near-ideal follower
+        Resistor("Rload", "out", "0", 1.0),
+    ])
+    result = transient(c, t_stop=1.0, t_step=0.1)
+    assert result.converged
+
+    for pt in result.points:
+        v_out = pt.node_voltages.get("out", 0.0)
+        expected = w(pt.time)
+        assert abs(v_out - expected) < 0.02, (
+            f"t={pt.time:.2f}: V(out)={v_out:.4f} expected ~{expected:.4f}"
+        )
+
+
+# ---- SinWaveform unit tests ------------------------------------------------
+
+
+def test_sin_waveform_before_delay() -> None:
+    """SinWaveform returns offset before the delay time."""
+    w = SinWaveform(offset=1.0, amplitude=2.0, frequency=10.0, delay=0.5)
+    assert w(0.0) == pytest.approx(1.0)
+    assert w(0.499) == pytest.approx(1.0)
+
+
+def test_sin_waveform_at_zero_phase() -> None:
+    """At t = delay the waveform returns offset (sin(0) = 0)."""
+    w = SinWaveform(offset=0.5, amplitude=1.0, frequency=1.0, delay=0.1)
+    assert w(0.1) == pytest.approx(0.5, abs=1e-12)
+
+
+def test_sin_waveform_quarter_period() -> None:
+    """At t = delay + T/4 the waveform hits its peak (sin = 1)."""
+    freq = 2.0  # Hz
+    T = 1.0 / freq
+    delay = 0.0
+    w = SinWaveform(offset=0.0, amplitude=3.0, frequency=freq, delay=delay)
+    assert w(delay + T / 4) == pytest.approx(3.0, abs=1e-10)
+
+
+def test_sin_waveform_damped_decays() -> None:
+    """Damped sinusoid amplitude decreases over time."""
+    w = SinWaveform(offset=0.0, amplitude=1.0, frequency=1.0, damping=1.0)
+    # Peak at t = T/4 ≈ 0.25; a later peak (at ~1.25) should be smaller.
+    v_first = abs(w(0.25))
+    v_later = abs(w(1.25))
+    assert v_later < v_first
+
+
+def test_sin_waveform_transient_sinusoid() -> None:
+    """Transient sim driven by SinWaveform: node tracks sin at sample times."""
+    freq = 2.0   # Hz
+    amp = 1.5
+    w = SinWaveform(offset=0.0, amplitude=amp, frequency=freq)
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", voltage=0.0, waveform=w),
+        Resistor("Rser", "in", "out", 1e-3),
+        Resistor("Rload", "out", "0", 1.0),
+    ])
+    result = transient(c, t_stop=1.0, t_step=0.02)
+    assert result.converged
+
+    for pt in result.points:
+        v_out = pt.node_voltages.get("out", 0.0)
+        expected = amp * math.sin(2.0 * math.pi * freq * pt.time)
+        assert abs(v_out - expected) < 0.05, (
+            f"t={pt.time:.3f}: V(out)={v_out:.4f} expected ~{expected:.4f}"
+        )
+
+
+# ---- PulseWaveform unit tests -----------------------------------------------
+
+
+def test_pulse_waveform_before_delay() -> None:
+    """PulseWaveform holds v_initial before the delay time."""
+    w = PulseWaveform(v_initial=0.0, v_pulsed=5.0, delay=1.0)
+    assert w(0.0) == pytest.approx(0.0)
+    assert w(0.999) == pytest.approx(0.0)
+
+
+def test_pulse_waveform_during_high_phase() -> None:
+    """PulseWaveform is v_pulsed during the flat top."""
+    # delay=0, rise_time=0, pulse_width=0.5, period=1.0
+    w = PulseWaveform(v_initial=0.0, v_pulsed=3.3, pulse_width=0.5, period=1.0)
+    assert w(0.1) == pytest.approx(3.3)
+    assert w(0.49) == pytest.approx(3.3)
+
+
+def test_pulse_waveform_during_low_phase() -> None:
+    """PulseWaveform is v_initial during the low phase."""
+    w = PulseWaveform(v_initial=0.0, v_pulsed=5.0, pulse_width=0.5, period=1.0)
+    assert w(0.75) == pytest.approx(0.0)
+    assert w(0.99) == pytest.approx(0.0)
+
+
+def test_pulse_waveform_rise_edge() -> None:
+    """PulseWaveform linearly ramps from v_initial to v_pulsed over rise_time."""
+    w = PulseWaveform(v_initial=0.0, v_pulsed=1.0,
+                      rise_time=0.2, fall_time=0.0,
+                      pulse_width=0.5, period=1.0)
+    assert w(0.0) == pytest.approx(0.0)
+    assert w(0.1) == pytest.approx(0.5)
+    assert w(0.2) == pytest.approx(1.0)
+
+
+def test_pulse_waveform_fall_edge() -> None:
+    """PulseWaveform linearly ramps from v_pulsed to v_initial over fall_time."""
+    w = PulseWaveform(v_initial=0.0, v_pulsed=1.0,
+                      rise_time=0.0, fall_time=0.2,
+                      pulse_width=0.5, period=1.0)
+    # During falling edge: t_rel ∈ [0.5, 0.7)
+    assert w(0.5) == pytest.approx(1.0, abs=1e-10)  # start of fall
+    assert w(0.6) == pytest.approx(0.5, abs=1e-10)  # mid-fall
+    assert w(0.7) == pytest.approx(0.0, abs=1e-10)  # end of fall → low
+
+
+def test_pulse_waveform_periodic() -> None:
+    """PulseWaveform repeats with the given period."""
+    w = PulseWaveform(v_initial=0.0, v_pulsed=1.0, pulse_width=0.5, period=1.0)
+    # t=0.1 (first period high) and t=1.1 (second period high) should match.
+    assert w(0.1) == pytest.approx(w(1.1))
+    assert w(0.75) == pytest.approx(w(1.75))
+
+
+def test_pulse_waveform_transient_current_source() -> None:
+    """Transient sim: PWM current source drives a load; V = I*R follows pulse.
+
+    Convention: CurrentSource(n_plus, n_minus, current=I) injects I into
+    n_minus (positive terminal in SPICE3 terms).  Using n_plus="0" and
+    n_minus="out" makes V("out") = I * R > 0 for positive I.
+    """
+    # 10 mA pulse with 50% duty cycle, period = 0.1 s
+    R = 100.0
+    I_high = 10e-3
+    w = PulseWaveform(v_initial=0.0, v_pulsed=I_high,
+                      pulse_width=0.05, period=0.1)
+    c = Circuit([
+        CurrentSource("Is", "0", "out", current=0.0, waveform=w),
+        Resistor("Rload", "out", "0", R),
+    ])
+    result = transient(c, t_stop=0.2, t_step=0.005)
+    assert result.converged
+
+    for pt in result.points:
+        v_out = pt.node_voltages.get("out", 0.0)
+        expected = w(pt.time) * R
+        # Allow ±5% of R*I_high for timestep quantisation
+        assert abs(v_out - expected) < 0.05 * R * I_high + 1e-9, (
+            f"t={pt.time:.4f}: V(out)={v_out:.5f} expected ~{expected:.5f}"
+        )
+
+
+# ---- ExpWaveform unit tests -------------------------------------------------
+
+
+def test_exp_waveform_before_rise_delay() -> None:
+    """ExpWaveform holds v_initial before rise_delay."""
+    w = ExpWaveform(v_initial=0.0, v_pulsed=1.0, rise_delay=0.5, rise_tc=0.1)
+    assert w(0.0) == pytest.approx(0.0)
+    assert w(0.5) == pytest.approx(0.0)
+
+
+def test_exp_waveform_rises_exponentially() -> None:
+    """ExpWaveform approaches v_pulsed with rising exponential after rise_delay."""
+    import math
+    v0, v1 = 0.0, 5.0
+    td1, tc1 = 0.0, 1.0
+    # Disable fall by setting fall_delay after simulation horizon
+    w = ExpWaveform(v_initial=v0, v_pulsed=v1,
+                    rise_delay=td1, rise_tc=tc1,
+                    fall_delay=100.0, fall_tc=1.0)
+    for t in [0.5, 1.0, 2.0, 3.0]:
+        expected = v0 + (v1 - v0) * (1.0 - math.exp(-t / tc1))
+        assert w(t) == pytest.approx(expected, abs=1e-12)
+
+
+def test_exp_waveform_falls_after_fall_delay() -> None:
+    """ExpWaveform falls back towards v_initial after fall_delay."""
+    v0, v1 = 0.0, 1.0
+    # Rise at t=0 with very fast rise_tc so by fall_delay it is essentially v1.
+    # Fall starts at fall_delay=0.5 with tc=0.5.
+    w = ExpWaveform(v_initial=v0, v_pulsed=v1,
+                    rise_delay=0.0, rise_tc=0.001,
+                    fall_delay=0.5, fall_tc=0.5)
+    # At t=2.0 (1.5 s after fall_delay), should be well below 0.5.
+    assert w(2.0) < 0.5
+
+
+def test_exp_waveform_transient_integration() -> None:
+    """Transient sim driven by ExpWaveform: node tracks expected waveform."""
+    import math
+    v0, v1 = 0.0, 2.0
+    rise_tc = 0.1
+    w = ExpWaveform(v_initial=v0, v_pulsed=v1,
+                    rise_delay=0.0, rise_tc=rise_tc,
+                    fall_delay=10.0, fall_tc=1.0)   # no fall during sim
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", voltage=0.0, waveform=w),
+        Resistor("Rser", "in", "out", 1e-3),
+        Resistor("Rload", "out", "0", 1.0),
+    ])
+    result = transient(c, t_stop=0.5, t_step=0.02)
+    assert result.converged
+
+    for pt in result.points:
+        v_out = pt.node_voltages.get("out", 0.0)
+        t = pt.time
+        expected = v0 + (v1 - v0) * (1.0 - math.exp(-t / rise_tc))
+        # Allow 2% of v1 for integration error
+        assert abs(v_out - expected) < 0.02 * v1 + 1e-6, (
+            f"t={pt.time:.3f}: V(out)={v_out:.5f} expected ~{expected:.5f}"
+        )
+
+
+# ---- Waveform type alias and export tests ------------------------------------
+
+
+def test_waveform_type_alias_covers_all_forms() -> None:
+    """Waveform type alias is the union of all four waveform classes."""
+    # The type alias itself is not a runtime class, but we can verify that
+    # each concrete form is a valid Waveform by checking isinstance against
+    # the individual classes.
+    forms = [
+        PwlWaveform(points=((0.0, 0.0), (1.0, 1.0))),
+        SinWaveform(),
+        PulseWaveform(),
+        ExpWaveform(),
+    ]
+    for form in forms:
+        assert callable(form), f"{type(form).__name__} must be callable"
+        assert isinstance(form, (PwlWaveform, SinWaveform, PulseWaveform, ExpWaveform))
+
+
+def test_waveform_exported_from_package() -> None:
+    """PwlWaveform, SinWaveform, PulseWaveform, ExpWaveform, Waveform are exported."""
+    import spice_engine
+    assert hasattr(spice_engine, "PwlWaveform")
+    assert hasattr(spice_engine, "SinWaveform")
+    assert hasattr(spice_engine, "PulseWaveform")
+    assert hasattr(spice_engine, "ExpWaveform")
+    assert hasattr(spice_engine, "Waveform")
+
+
+def test_voltage_source_accepts_waveform_field() -> None:
+    """VoltageSource.waveform defaults to None and accepts a waveform object."""
+    v_static = VoltageSource("V1", "a", "0", voltage=5.0)
+    assert v_static.waveform is None
+
+    w = SinWaveform(amplitude=1.0, frequency=60.0)
+    v_dyn = VoltageSource("V2", "a", "0", voltage=0.0, waveform=w)
+    assert v_dyn.waveform is w
+
+
+def test_current_source_accepts_waveform_field() -> None:
+    """CurrentSource.waveform defaults to None and accepts a waveform object."""
+    i_static = CurrentSource("I1", "a", "0", current=1e-3)
+    assert i_static.waveform is None
+
+    w = PulseWaveform(v_initial=0.0, v_pulsed=5e-3)
+    i_dyn = CurrentSource("I2", "a", "0", current=0.0, waveform=w)
+    assert i_dyn.waveform is w
+
+
+def test_waveform_source_dc_op_uses_static_voltage() -> None:
+    """DC op-point of a waveform source uses the stored `voltage` field."""
+    # The waveform is irrelevant for DC; only `voltage` is used.
+    w = SinWaveform(amplitude=10.0, frequency=1e3)
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", voltage=3.0, waveform=w),
+        Resistor("R", "in", "0", 1.0),
+    ])
+    op = dc_op(c)
+    assert op.converged
+    assert op.node_voltages["in"] == pytest.approx(3.0)

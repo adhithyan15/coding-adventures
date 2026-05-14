@@ -127,6 +127,72 @@ fn factors_common_multivariate_terms_through_runtime() {
     );
 }
 
+// Integer content: GCD of coefficients ± common symbolic factor pulled out
+// before the specific pattern matchers.
+
+#[test]
+fn factors_multivariate_integer_content_only_through_runtime() {
+    // factor(2*x + 4*y) → 2*(x + 2*y)
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x + 4*y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                int(2),
+                apply(
+                    sym(ADD),
+                    vec![sym("x"), apply(sym(MUL), vec![int(2), sym("y")])],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_integer_content_and_symbolic_through_runtime() {
+    // factor(2*x*y + 2*x*z) → 2*x*(y + z)
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x*y + 2*x*z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_integer_content_with_recursive_factoring_through_runtime() {
+    // factor(2*x^2*y - 2*y) → 2*y*(x+1)*(x-1)
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x^2*y - 2*y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("y")]),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![int(1), sym("x")]),
+                        apply(sym(ADD), vec![int(-1), sym("x")]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
 #[test]
 fn factors_multivariate_perfect_squares_through_runtime() {
     let mut session = MacsymaSession::new();

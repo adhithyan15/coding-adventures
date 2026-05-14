@@ -242,6 +242,83 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 5 landed — deoptimisation when observed assumptions fail)**:
+> The feedback loop that the whole MX05 spec built up toward is
+> now closed.  When a previously-folded constant changes at
+> runtime — e.g. the policy saw K=42.0 for 1000 invocations but
+> the 1001st invocation sees K=99.0 — the runtime reactively
+> evicts the stale kernel and falls back to generic dispatch.
+>
+> **matrix-profile v0.3.0** ships `SpecCache::invalidate(handle)`
+> and `SpecRouter::cache_invalidate(handle)` — drop a single
+> cache entry by backend handle.
+>
+> **matrix-cpu v0.7.0** ships `SpecialisedTable::evict(handle)` and
+> `CpuExecutor::evict_specialised(handle)`.  Dropping the boxed
+> closure releases it.
+>
+> **matrix-metal v0.11.0** ships the matching `evict` /
+> `evict_specialised` on Apple targets (no-op stub elsewhere).
+> Dropping the closure releases the compiled
+> `MetalComputePipeline` back to the Metal driver.
+>
+> **image-gpu-core v0.14.0** ties it together:
+>   1. `try_auto_install_specialised_with_origin(spec, (subhash,
+>      op_idx))` records every Constant-folded install in
+>      `INSTALLED_DEOPT_TRACKING` with its originating observation.
+>   2. `scan_and_deoptimise()` runs at the end of every
+>      `drive_specialisation` call.  For each tracked handle, it
+>      re-reads the origin observation's tensor for the folded
+>      slot.  If `observed_min != observed_max`, the constant has
+>      destabilised: invalidate the cache, evict on both backends,
+>      remove from all side-tables.
+>   3. New public `deoptimisation_count()` counter for
+>      observability.
+>
+> End-to-end test `deoptimises_when_observed_constant_changes`:
+> drives 1100 invocations with K=42.0 (install fires), then ONE
+> invocation with K=99.0 (same shape, different bytes).  The
+> sample_tensor on the second variant updates observed_max from
+> 42 to 99; the deopt scan detects the divergence, evicts the
+> K=42 kernel, and `deoptimisation_count` rises.
+>
+> Test counts: matrix-profile 57 (unchanged; existing tests
+> cover the new methods), matrix-cpu 33 (unchanged), matrix-metal
+> 45 emitter (unchanged), image-gpu-core 35 → 36.
+>
+> **MX05 is feature-complete.**  The full tier — sampler → policy
+> → router → cache → emitter → install → dispatch → deopt — is
+> alive end-to-end on both CPU and metal backends, with the loop
+> closing back to generic dispatch when observations contradict
+> earlier assumptions.
+
+> **Implementation status (Phase 4.10 landed — MatMul emitter with folded matrix)**:
+> The emitter now supports its first **non-elementwise** op:
+> `Op::MatMul(0x15)` f32 with the RHS matrix folded as a stable
+> constant.  matrix-metal v0.10.0 emits MSL that bakes the
+> constant matrix's elements as float literals and computes
+> `C[r, c] = sum_k A[r, k] * B[k, c]` via a branch-per-column
+> dispatch.  matrix-cpu v0.6.0 mirrors this with a closure that
+> captures the matrix and iterates per output element.  V1 caps
+> at 2×2 and 4×4 constant matrices (16 or 64 bytes); larger
+> matrices need a different representation than baked literals
+> and land in a later phase.  Constraint: `folded_slot = Some(1)`
+> only (RHS folded).  LHS-folded MatMul returns `None` because
+> the runtime variable dimension sits on a different axis and
+> needs a separate kernel shape.  End-to-end test
+> `cpu_matmul_folded_rhs_2x2_produces_correct_output` runs on
+> every platform: installs a 2×2 specialised kernel with
+> `B = [[5, 6], [7, 8]]` folded, dispatches with
+> `A = [[1, 2], [3, 4]]` as the variable input, and asserts the
+> output is `[[19, 22], [43, 50]]`.  Test counts: matrix-metal
+> 40 → 45 emitter, image-gpu-core 34 → 35.  **MatMul is the first
+> emitter shape heavy enough that the planner could plausibly
+> pick metal** end-to-end through `run_graph_with_constant_inputs`
+> — its flop count (2·m·k·n) overcomes the per-element transfer
+> cost.  The planner-driven test is deferred to a later phase
+> because building a runnable matmul graph through `GraphBuilder`
+> would require fleshing out more of the builder API.
+
 > **Implementation status (Phase 4.9 landed — matrix-cpu auto-install + dispatch routing)**:
 > Closes the gap that's been open since Phase 4.3 — the
 > auto-installer now installs on the **CPU executor** too, not just

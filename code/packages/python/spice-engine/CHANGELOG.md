@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.11.0] — 2026-05-13
+
+### Added
+
+- **Time-varying source waveforms** — four SPICE3 transient source forms are
+  now first-class elements, usable with both `VoltageSource` and
+  `CurrentSource` via the new optional `waveform` field:
+
+  | Class | SPICE keyword | Description |
+  |-------|--------------|-------------|
+  | `PwlWaveform` | `PWL` | Piecewise-linear; linearly interpolates between `(time, value)` breakpoints |
+  | `SinWaveform` | `SIN` | Sinusoidal with optional DC offset, frequency, delay, and exponential damping |
+  | `PulseWaveform` | `PULSE` | Trapezoidal pulse train with configurable delay, rise/fall times, pulse width, and period |
+  | `ExpWaveform` | `EXP` | Double-exponential (rising then falling) with independent rise/fall delays and time constants |
+
+  All four waveform classes are frozen dataclasses whose `__call__(t)` method
+  returns the waveform value at simulation time `t`.  A `Waveform` union type
+  alias is also exported for type annotations.
+
+  Usage:
+  ```python
+  from spice_engine import (
+      Circuit, VoltageSource, CurrentSource, Resistor, Capacitor,
+      SinWaveform, PulseWaveform, PwlWaveform, ExpWaveform,
+      transient,
+  )
+
+  # 1 V sinusoidal source at 1 kHz driving an RC filter
+  c = Circuit([
+      VoltageSource("Vin", "in", "0", voltage=0.0,
+                    waveform=SinWaveform(amplitude=1.0, frequency=1e3)),
+      Resistor("R1", "in", "out", 1e3),
+      Capacitor("C1", "out", "0", 100e-9),
+  ])
+  result = transient(c, t_stop=2e-3, t_step=1e-6)
+  ```
+
+- **Engine: time-aware companion circuit construction** — `_build_transient_companions`
+  now accepts a `t: float` parameter (current simulation time, default `0.0`).
+  At each timestep, any `VoltageSource` or `CurrentSource` with a non-`None`
+  `waveform` is replaced in the companion circuit with a static copy whose
+  `voltage`/`current` is evaluated at `t`.  Sources without a waveform are
+  unchanged.
+
+- **Engine: waveform evaluation at t = 0** — the initial-condition circuit
+  (used to establish the DC operating point at `t = 0`) also evaluates
+  waveforms at `t = 0`, so the initial bias correctly reflects the waveform
+  value at simulation start.
+
 ## [0.10.0] — 2026-05-12
 
 ### Added

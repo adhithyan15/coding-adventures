@@ -1,5 +1,61 @@
 # Changelog
 
+## [1.29.0] - 2026-05-13
+
+### Added
+
+- **Tier 15 — Window frame clause (`ROWS BETWEEN … AND …`)** — SQL-standard
+  window frame bounds are now parsed, planned, threaded through the IR, and
+  evaluated in the VM.  This fixes correctness of running aggregates (SUM, COUNT,
+  AVG, MIN, MAX) and the value functions FIRST_VALUE, LAST_VALUE, NTH_VALUE when
+  an explicit `ROWS BETWEEN … AND …` or the implicit SQL-standard defaults apply.
+
+  **Grammar changes** (`sql.tokens`, `sql.grammar`):
+  - Seven new keywords: `ROWS`, `RANGE`, `GROUPS`, `PRECEDING`, `FOLLOWING`,
+    `UNBOUNDED`, `CURRENT` — these tokenise as `KEYWORD` so the parser can match
+    them case-insensitively.
+  - New grammar rules: `frame_clause`, `frame_unit`, `frame_bound` attached to
+    `window_spec`.
+
+  **sql-planner 0.26.0** — `FrameBound` and `WinFrame` dataclasses carry frame
+  semantics from the adapter through to `WindowFuncSpec.frame` and
+  `WindowFuncExpr.frame`.
+
+  **sql-codegen 1.21.0** — `WinFuncSpec.frame` re-exports `WinFrame`; compiler
+  copies the field through verbatim.
+
+  **sql-vm 1.20.0** — `_frame_slice(partition, i, spec)` helper maps frame bounds
+  to Python slice indices; all running aggregates and value functions call it
+  per-row instead of using a fixed slice.
+
+  **mini-sqlite adapter** — `_frame_clause(node)` walks the AST frame_clause node,
+  using recursive `_find_number` to locate offset tokens deep inside the expression
+  grammar tower, and returns a `WinFrame`.
+
+### Fixed
+
+- **Running SUM / COUNT / AVG / MIN / MAX with `ORDER BY`** — previously all
+  aggregates used the full partition regardless of ORDER BY.  They now correctly
+  apply the SQL-standard cumulative default (equivalent to `ROWS BETWEEN
+  UNBOUNDED PRECEDING AND CURRENT ROW`) when an ORDER BY clause is present.
+
+- **LAST_VALUE default frame** — `LAST_VALUE` previously always returned the last
+  value in the full partition.  It now returns the last value in the current frame
+  window (cumulative by default with ORDER BY), matching SQLite behaviour.
+
+- **NTH_VALUE with frame offset** — the offset integer was not being extracted
+  from deeply nested AST expression nodes.  Fixed with a recursive `_find_number`
+  tree walk in the adapter.
+
+### Tests
+
+- **`test_tier15_window_frames.py`** (34 tests, 10 classes) — comprehensive
+  oracle-verified tests covering: running SUM/COUNT/AVG/MIN/MAX with and without
+  ORDER BY, explicit `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`,
+  `ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING`, sliding windows
+  (`N PRECEDING`), RANGE BETWEEN syntax, and all ranking functions verified
+  unaffected.
+
 ## [1.28.0] - 2026-05-13
 
 ### Fixed
