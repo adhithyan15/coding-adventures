@@ -2,7 +2,7 @@
 
 use board_vm_ir::{
     parse_module, validate, CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN,
-    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ_U8, CAP_I2C_WRITE_U8,
+    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ_U8, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 use board_vm_protocol::{
@@ -104,6 +104,12 @@ const I2C_READ_U8_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescript
     version: 1,
     flags: CAP_FLAG_BYTECODE_CALLABLE,
     name: "i2c.read_u8",
+};
+const I2C_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.write",
 };
 const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
     id: CAP_LED_MATRIX_FRAME,
@@ -598,7 +604,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'st
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];
 
-pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES: [CapabilityDescriptor<'static>; 13] = [
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES: [CapabilityDescriptor<'static>; 14] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -611,6 +617,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES: [CapabilityDescriptor
     I2C_OPEN_DESCRIPTOR,
     I2C_WRITE_U8_DESCRIPTOR,
     I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];
 
@@ -669,7 +676,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDes
 
 pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<
     'static,
->; 14] = [
+>; 15] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -682,6 +689,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES: [Capabilit
     I2C_OPEN_DESCRIPTOR,
     I2C_WRITE_U8_DESCRIPTOR,
     I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
     LED_MATRIX_FRAME_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];
