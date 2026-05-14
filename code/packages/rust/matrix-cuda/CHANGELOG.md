@@ -1,5 +1,73 @@
 # Changelog — matrix-cuda
 
+## 0.7.0 — 2026-05-13
+
+### Added — MX06 Phase 7 (planner cost-model calibration)
+
+Final phase of MX06.  Replaces Phase 1's placeholder `profile()`
+coefficients with calibrated values for the modern NVIDIA workstation
+/ single-card server: **PCIe gen 4** host link, **Ampere-class GPU**
+(RTX 3090 / A40 / A5000 / A6000), GDDR6X / HBM2e on-device memory.
+
+| Field                  | Before (Phase 1) | After (Phase 7) | Rationale                                                                                  |
+| ---------------------- | ---------------- | --------------- | ------------------------------------------------------------------------------------------ |
+| `gflops_f32`           | 20 000           | **10 000**      | Sustainable rate on a non-tensor-core matmul; 40–60% of 35 TFLOPS peak. Conservative bias. |
+| `host_to_device_bw`    | 25 GB/s          | **20 GB/s**     | Captures both pinned (~25) and pageable (~14) host-buffer modes.                            |
+| `device_to_host_bw`    | 25 GB/s          | **20 GB/s**     | Symmetric with H2D.                                                                         |
+| `device_internal_bw`   | 700 GB/s         | **600 GB/s**    | GDDR6X consumer cards at sustained 60–80% of 936 GB/s peak.                                 |
+| `launch_overhead_ns`   | 8 000            | **7 000**       | Middle of Linux (5–8 µs) and Windows (8–12 µs).                                              |
+
+Every coefficient has a multi-paragraph rationale in the source.  The
+guiding principle: **bias conservative so the planner never picks
+CUDA when transfer overhead would dominate**.
+
+### Tests
+
+- `profile_coefficients_are_phase7_calibrated` — pins each
+  coefficient to the documented Ampere-class realistic range so a
+  regression to placeholder values fails the build.
+- `planner_cost_model_favours_cuda_for_big_matmul` — for a
+  1024×1024 × 1024×1024 matmul the calibrated profile keeps the
+  GPU cost-model estimate well below a CPU at 100 GFLOPS.  Sanity
+  check that we didn't over-tune toward CPU.
+
+Plus the existing 77 unit tests continue to pass.  Total: 79.
+
+### MX06 is feature-complete
+
+This release closes the MX06 (`matrix-cuda`) roadmap:
+
+| Phase | Lands                                                                              | Status      |
+| ----- | ---------------------------------------------------------------------------------- | ----------- |
+| 1     | crate skeleton, `BackendProfile`, stubbed dispatch                                 | 0.1.0       |
+| 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`                                       | 0.2.0       |
+| 3     | NVRTC-compiled kernels + buffer-op wiring + `cuda-compute` `Send`                  | 0.3.0       |
+| 4     | `cuda_emitter` — specialised-kernel code generator                                 | 0.4.0       |
+| 5a    | `specialised_table` module + `cuda-compute` `Send + Sync` audit                    | 0.5.0       |
+| 5b    | Real `Executor` impl (`Dispatch` / `DispatchSpecialised` / install / evict / bitset) | 0.6.0       |
+| 6     | image-gpu-core CUDA hooks (`backend_id = 2`, deopt evict, planner reg)             | (image-gpu-core 0.15.0) |
+| **7** | **Planner cost-model calibration**                                                  | **0.7.0**   |
+
+NVIDIA users now get GPU acceleration end-to-end through the same
+narrow-waist abstraction Apple users have had since matrix-metal V1.
+The full MX01 → MX02 → MX03 → MX04 → MX05 → MX06 stack is alive.
+
+### Deferred to future phases
+
+- **GPU CI runner** (Phase 8 / out of scope): real device tests
+  currently silently pass on non-NVIDIA hosts.  Adding a self-hosted
+  NVIDIA runner to GitHub Actions would gate the `MATRIX_CUDA_TESTS=1`
+  test suite.  Filed as a follow-up TODO.
+- **Per-device probe / auto-calibration**: a future helper could
+  detect Hopper / Lovelace / Blackwell at startup and override the
+  PCIe gen 4 / Ampere defaults.  Out of scope for V1.
+- **AMD / ROCm port** (`matrix-rocm`): mentioned in [MX06 spec]
+  as future MX08 work.  HIP is API-compatible with CUDA at the
+  source level, so the emitter ports easily; driver wiring is
+  larger work.
+
+[MX06 spec]: ../../specs/MX06-cuda-executor.md
+
 ## 0.6.0 — 2026-05-13
 
 ### Added — MX06 Phase 5b (real Executor impl)

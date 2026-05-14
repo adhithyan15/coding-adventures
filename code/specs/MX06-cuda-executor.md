@@ -2,7 +2,39 @@
 
 ## Status
 
-Draft.  V1 spec.  Adds a second GPU executor next to `matrix-metal`
+**Feature-complete (2026-05-13).**  All seven phases of the V1 spec
+landed:
+
+| Phase | Lands                                                                              | PR |
+| ----- | ---------------------------------------------------------------------------------- | --- |
+| 1     | crate skeleton, `BackendProfile`, stubbed dispatch                                  | matrix-cuda 0.1.0 |
+| 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`                                       | matrix-cuda 0.2.0 |
+| 3     | NVRTC-compiled kernels + buffer-op wiring + `cuda-compute` `Send`                  | matrix-cuda 0.3.0 |
+| 4     | `cuda_emitter` — specialised-kernel code generator                                 | matrix-cuda 0.4.0 |
+| 5a    | `specialised_table` module + `cuda-compute` `Send + Sync` audit                    | matrix-cuda 0.5.0 |
+| 5b    | Real `Executor` impl (`Dispatch` / `DispatchSpecialised` / install / evict / bitset) | matrix-cuda 0.6.0 |
+| 6     | image-gpu-core CUDA hooks (`backend_id = 2`, deopt evict, planner reg)             | image-gpu-core 0.15.0 |
+| 7     | Planner cost-model calibration                                                      | matrix-cuda 0.7.0 |
+
+NVIDIA users on Linux / Windows / WSL2 now get end-to-end GPU
+acceleration through the same narrow-waist abstraction Apple users
+have had since `matrix-metal` V1.  When a user writes
+`gpu_brightness(...)`, the planner picks `matrix-cuda` when
+available, otherwise falls back to `matrix-cpu`.  No user-facing
+config.
+
+**Deferred (post-V1)**:
+
+- GPU CI runner — currently `MATRIX_CUDA_TESTS=1`-gated device tests
+  silently pass on non-NVIDIA hosts.  Self-hosted runner is filed as
+  a follow-up.
+- Per-device probe / auto-calibration for Hopper / Lovelace /
+  Blackwell + PCIe gen 5.
+- AMD ROCm port (`matrix-rocm`, future MX08).
+
+What follows below is the original V1 spec, preserved unchanged.
+
+Adds a second GPU executor next to `matrix-metal`
 ([MX03](MX03-executor-protocol.md)) so the matrix execution layer
 runs on NVIDIA GPUs.  Reuses MX01–MX05 wholesale — no IR, protocol,
 planner, or specialisation-runtime changes.
