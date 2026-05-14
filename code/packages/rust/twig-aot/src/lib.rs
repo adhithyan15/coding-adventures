@@ -60,7 +60,10 @@ use aot_core::specialise::aot_specialise;
 use code_packager::macho_object::{
     pack_object_with_globals_and_externals, ExternBranchReloc, GlobalByteReloc,
 };
-use code_packager::Target;
+use code_packager::{
+    pack_elf64_object_x86_64, pack_pe_object_x86_64,
+    Target, X86RelocKind, X86RelocRecord,
+};
 
 // ── Embedded Twig AOT runtime archive ──────────────────────────────────────
 //
@@ -79,6 +82,23 @@ use code_packager::Target;
 // - Portable: `twig_runtime.c` uses `<stdio.h>` (printf), which resolves
 //   through `-lSystem` on macOS and `-lc` on Linux — no raw syscall numbers.
 static RUNTIME_ARCHIVE: &[u8] = include_bytes!(env!("TWIG_RUNTIME_ARCHIVE"));
+
+/// Linux x86-64 runtime archive embedded at compile time (LANG46).
+///
+/// On a Linux x86-64 build host, this is the real `.a` archive built by
+/// `build.rs` via the `cc` crate.  On other hosts it is a 1-byte stub;
+/// `compile_file_linux_x86_64` checks the length and refuses with a
+/// clear error if invoked on a non-Linux host's build.
+static RUNTIME_LINUX_X86_64: &[u8] =
+    include_bytes!(env!("TWIG_RUNTIME_ARCHIVE_LINUX_X86_64"));
+
+/// Windows x86-64 runtime archive embedded at compile time (LANG46).
+///
+/// On a Windows x86-64 build host, this is the real `.lib` archive
+/// built by `build.rs` via the `cc` crate using MSVC's `cl.exe`.  On
+/// other hosts it is a 1-byte stub.
+static RUNTIME_WINDOWS_X86_64: &[u8] =
+    include_bytes!(env!("TWIG_RUNTIME_ARCHIVE_WINDOWS_X86_64"));
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
@@ -596,6 +616,333 @@ fn sdk_lib_path() -> PathBuf {
         }
     }
     PathBuf::from("/usr/lib")
+}
+
+// ===========================================================================
+// x86-64 multi-target driver (LANG46 phase 2)
+// ===========================================================================
+//
+// Mirrors the macOS ARM64 path above, but for Linux x86-64 (ELF + cc) and
+// Windows x86-64 (PE/COFF + link.exe / lld-link / gcc).
+
+use x86_64_backend::{compile_function_with_globals as x86_64_compile_with_globals, X86_64Abi};
+
+/// Per-function compile for x86-64, then concatenate function bytes into a
+/// single `.text` and lift each function's relocations into linked-text byte
+/// offsets.
+///
+/// Cross-function calls *within the same module* end up as `PltRel32`
+/// relocation records targeting another function in the module.  The linker
+/// resolves those because every module function ends up as a symbol in the
+/// emitted object (via the AOT runtime helper for `main` — multi-function
+/// programs that need cross-function symbols are deferred to a follow-up).
+///
+/// Returns `(linked_text, fn_offsets, entry_byte_offset, relocs)`.
+///
+/// `entry_byte_offset` is the position of `main` in the linked text; the
+/// caller passes it to `pack_*_object_x86_64`.
+///
+/// Pass strategy: this V1 driver performs **no in-place patching** of
+/// cross-function call sites; all calls become `PltRel32` external
+/// relocations.  For single-function programs (the smoke-test target),
+/// that yields the correct linker output trivially.  Multi-function
+/// programs that emit cross-function `call` records currently rely on
+/// each function appearing as a global symbol in the emitted object —
+/// a refinement deferred to a follow-up alongside multi-fn smoke tests.
+fn compile_module_x86_64_to_text(
+    module: &IIRModule,
+    abi: X86_64Abi,
+) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<X86RelocRecord>), AotError> {
+    let global_slots = collect_global_slots(module);
+
+    // Pass 1: compile each function with the x86_64 backend.
+    let mut fn_results: Vec<(String, Vec<u8>, Vec<x86_64_encoder::ExternalReloc>)> =
+        Vec::with_capacity(module.functions.len());
+
+    for fn_ in &module.functions {
+        let ctx = FunctionContext {
+            name: &fn_.name,
+            params: &fn_.params,
+            return_type: &fn_.return_type,
+        };
+        let inferred = infer_types(fn_);
+        let cir = aot_specialise(fn_, Some(&inferred));
+        let (bytes, relocs) = x86_64_compile_with_globals(&ctx, &cir, abi, &global_slots)
+            .map_err(|_| AotError::BackendRefused { function: fn_.name.clone() })?;
+        fn_results.push((fn_.name.clone(), bytes, relocs));
+    }
+
+    // Concatenate function bytes and record per-function offsets.
+    let plain: Vec<(String, Vec<u8>)> = fn_results.iter()
+        .map(|(name, bytes, _)| (name.clone(), bytes.clone()))
+        .collect();
+    let (linked, offsets) = link(&plain);
+
+    let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
+    let entry_off = entry_point_offset(&offsets, Some(entry));
+
+    // Pass 2: lift per-function reloc offsets into linked-text offsets.
+    //
+    // Reloc patch_offsets from each function are local to that function's
+    // byte stream; add the function's start offset in the linked text so
+    // the packager records the correct file-relative addresses.
+    let mut all_relocs: Vec<X86RelocRecord> = Vec::new();
+    for (fn_name, _bytes, fn_relocs) in &fn_results {
+        let base = *offsets.get(fn_name.as_str()).unwrap_or(&0) as u32;
+        for r in fn_relocs {
+            all_relocs.push(X86RelocRecord {
+                patch_offset: base + r.patch_offset as u32,
+                symbol: r.symbol.clone(),
+                kind: match r.kind {
+                    x86_64_encoder::ExternalRelocKind::PltRel32   => X86RelocKind::PltRel32,
+                    x86_64_encoder::ExternalRelocKind::PcRel32    => X86RelocKind::PcRel32,
+                    x86_64_encoder::ExternalRelocKind::GotPcRel32 => X86RelocKind::GotPcRel32,
+                },
+                addend: r.addend,
+            });
+        }
+    }
+
+    Ok((linked, offsets, entry_off, all_relocs))
+}
+
+/// Compile an `IIRModule` to a Linux x86-64 ELF object file (`*.o`).
+///
+/// Returns the raw object bytes ready to hand to `cc` / `ld`.
+pub fn compile_module_linux_x86_64_object(module: &IIRModule) -> Result<Vec<u8>, AotError> {
+    let mut module = module.clone();
+    prepare_module_for_aot(&mut module);
+    let global_slots = collect_global_slots(&module);
+    let (text, _, entry_off, relocs) =
+        compile_module_x86_64_to_text(&module, X86_64Abi::SysV)?;
+    pack_elf64_object_x86_64(
+        &text, entry_off, global_slots.len(), &relocs, &Target::linux_x64(),
+    ).map_err(|e| AotError::Packager(format!("{e}")))
+}
+
+/// Convenience: compile Twig source text directly to an ELF object.
+pub fn compile_linux_x86_64_object(source: &str, module_name: &str) -> Result<Vec<u8>, AotError> {
+    let module = twig_ir_compiler::compile_source(source, module_name)
+        .map_err(|e| AotError::Compile(format!("{e}")))?;
+    compile_module_linux_x86_64_object(&module)
+}
+
+/// Compile an `IIRModule` to a Windows x86-64 PE/COFF object file (`*.obj`).
+pub fn compile_module_windows_x86_64_object(module: &IIRModule) -> Result<Vec<u8>, AotError> {
+    let mut module = module.clone();
+    prepare_module_for_aot(&mut module);
+    let global_slots = collect_global_slots(&module);
+    let (text, _, entry_off, relocs) =
+        compile_module_x86_64_to_text(&module, X86_64Abi::MsX64)?;
+    pack_pe_object_x86_64(
+        &text, entry_off, global_slots.len(), &relocs, &Target::windows_x64(),
+    ).map_err(|e| AotError::Packager(format!("{e}")))
+}
+
+/// Convenience: compile Twig source text directly to a PE/COFF object.
+pub fn compile_windows_x86_64_object(source: &str, module_name: &str) -> Result<Vec<u8>, AotError> {
+    let module = twig_ir_compiler::compile_source(source, module_name)
+        .map_err(|e| AotError::Compile(format!("{e}")))?;
+    compile_module_windows_x86_64_object(&module)
+}
+
+// ---------------------------------------------------------------------------
+// End-to-end pipelines: Twig source → object → system linker → executable
+// ---------------------------------------------------------------------------
+
+/// Compile a Twig source file to a runnable Linux x86-64 ELF executable.
+///
+/// Pipeline: source → IR → x86_64-backend (SysV ABI) → ELF object →
+/// `cc` (the system C compiler) → executable.  Uses `cc` rather than
+/// `ld` directly so that libc startup files (`crt1.o`, `crti.o`, etc.)
+/// and dynamic-linker setup are handled correctly.
+///
+/// Requires a Linux build host (the embedded runtime archive is host-
+/// specific per LANG46 phase 1).  Returns an error with a clear "no
+/// Linux runtime archive on this host" message if invoked from a build
+/// that wasn't done on Linux.
+#[cfg(target_os = "linux")]
+pub fn compile_file_linux_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
+    use std::io::Write as _;
+    use std::os::unix::fs::PermissionsExt;
+
+    if RUNTIME_LINUX_X86_64.len() <= 4 {
+        return Err(AotError::Linker {
+            status: None,
+            stderr: "twig-aot: no Linux x86-64 runtime archive on this host \
+                     (build twig-aot on a Linux x86-64 host)".into(),
+        });
+    }
+
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
+    let obj_bytes = compile_linux_x86_64_object(&source, stem)?;
+
+    let mut obj_tmp = tempfile::Builder::new()
+        .prefix(&format!("twig-aot-{stem}-"))
+        .suffix(".o")
+        .tempfile()?;
+    obj_tmp.write_all(&obj_bytes)?;
+
+    let mut rt_tmp = tempfile::Builder::new()
+        .prefix("twig_aot_runtime_")
+        .suffix(".a")
+        .tempfile()?;
+    rt_tmp.write_all(RUNTIME_LINUX_X86_64)?;
+
+    let cc = std::env::var("CC").unwrap_or_else(|_| "cc".into());
+    let output = std::process::Command::new(&cc)
+        .arg("-o").arg(out)
+        .arg(obj_tmp.path())
+        .arg(rt_tmp.path())
+        .arg("-lc").arg("-lm")
+        .output()
+        .map_err(|e| AotError::Linker {
+            status: None,
+            stderr: format!("twig-aot: {cc} not found on PATH: {e}"),
+        })?;
+    drop(obj_tmp);
+    drop(rt_tmp);
+
+    if !output.status.success() {
+        return Err(AotError::Linker {
+            status: output.status.code(),
+            stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
+        });
+    }
+
+    let mut perms = std::fs::metadata(out)?.permissions();
+    perms.set_mode(0o755);
+    std::fs::set_permissions(out, perms)?;
+    Ok(())
+}
+
+/// Compile a Twig source file to a runnable Windows x86-64 PE executable.
+///
+/// Pipeline: source → IR → x86_64-backend (MS x64 ABI) → PE/COFF object
+/// → linker probe (`link.exe` → `lld-link.exe` → `gcc.exe`) → `.exe`.
+///
+/// Requires a Windows build host with at least one supported linker on
+/// `PATH`.  Returns an error with a clear "no Windows linker found"
+/// message if none is available.
+#[cfg(target_os = "windows")]
+pub fn compile_file_windows_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
+    use std::io::Write as _;
+
+    if RUNTIME_WINDOWS_X86_64.len() <= 4 {
+        return Err(AotError::Linker {
+            status: None,
+            stderr: "twig-aot: no Windows x86-64 runtime archive on this host \
+                     (build twig-aot on a Windows x86-64 host)".into(),
+        });
+    }
+
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
+    let obj_bytes = compile_windows_x86_64_object(&source, stem)?;
+
+    let mut obj_tmp = tempfile::Builder::new()
+        .prefix(&format!("twig-aot-{stem}-"))
+        .suffix(".obj")
+        .tempfile()?;
+    obj_tmp.write_all(&obj_bytes)?;
+
+    let mut rt_tmp = tempfile::Builder::new()
+        .prefix("twig_aot_runtime_")
+        .suffix(".lib")
+        .tempfile()?;
+    rt_tmp.write_all(RUNTIME_WINDOWS_X86_64)?;
+
+    let linker = find_windows_linker().ok_or_else(|| AotError::Linker {
+        status: None,
+        stderr: "twig-aot: no Windows linker found on PATH \
+                 (tried link.exe, lld-link.exe, gcc.exe)".into(),
+    })?;
+
+    let output = match linker.kind {
+        WinLinkerKind::Link | WinLinkerKind::LldLink => {
+            std::process::Command::new(&linker.path)
+                .arg(format!("/OUT:{}", out.display()))
+                .arg("/ENTRY:main")
+                .arg("/SUBSYSTEM:CONSOLE")
+                .arg(obj_tmp.path())
+                .arg(rt_tmp.path())
+                .arg("libcmt.lib")
+                .arg("legacy_stdio_definitions.lib")
+                .output()
+        }
+        WinLinkerKind::Gcc => {
+            std::process::Command::new(&linker.path)
+                .arg("-o").arg(out)
+                .arg(obj_tmp.path())
+                .arg(rt_tmp.path())
+                .output()
+        }
+    }.map_err(|e| AotError::Linker {
+        status: None,
+        stderr: format!("twig-aot: linker spawn failed: {e}"),
+    })?;
+    drop(obj_tmp);
+    drop(rt_tmp);
+
+    if !output.status.success() {
+        return Err(AotError::Linker {
+            status: output.status.code(),
+            stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
+        });
+    }
+    Ok(())
+}
+
+#[cfg(target_os = "windows")]
+struct WinLinker {
+    path: PathBuf,
+    kind: WinLinkerKind,
+}
+
+#[cfg(target_os = "windows")]
+#[derive(Debug, Clone, Copy)]
+enum WinLinkerKind { Link, LldLink, Gcc }
+
+/// Probe `PATH` for a supported Windows linker.  Returns the first one
+/// found in priority order (link.exe → lld-link.exe → gcc.exe).
+///
+/// The probe checks the program's banner output rather than just
+/// whether it can be spawned — git-bash environments ship a POSIX
+/// `link(1)` utility on `PATH` that has the same name as MSVC's
+/// `link.exe` but the wrong CLI grammar.
+#[cfg(target_os = "windows")]
+fn find_windows_linker() -> Option<WinLinker> {
+    use std::process::Command;
+    for (name, kind) in [
+        ("link.exe", WinLinkerKind::Link),
+        ("lld-link.exe", WinLinkerKind::LldLink),
+        ("gcc.exe", WinLinkerKind::Gcc),
+    ] {
+        let probe = match kind {
+            WinLinkerKind::Link | WinLinkerKind::LldLink => {
+                // MSVC link.exe and lld-link.exe both print a banner
+                // to stderr when invoked without args, then exit non-zero.
+                Command::new(name).output()
+            }
+            WinLinkerKind::Gcc => Command::new(name).arg("--version").output(),
+        };
+        let Ok(o) = probe else { continue; };
+        let stdout = String::from_utf8_lossy(&o.stdout);
+        let stderr = String::from_utf8_lossy(&o.stderr);
+        let banner = format!("{stdout}{stderr}");
+        let is_real = match kind {
+            // MSVC link.exe banner contains "Microsoft (R) Incremental Linker".
+            // POSIX `link(1)` (coreutils) prints "link: missing operand" instead.
+            WinLinkerKind::Link    => banner.contains("Microsoft") && banner.contains("Linker"),
+            WinLinkerKind::LldLink => banner.contains("LLD") || banner.contains("lld-link"),
+            WinLinkerKind::Gcc     => banner.contains("gcc") || banner.contains("GCC"),
+        };
+        if is_real {
+            return Some(WinLinker { path: PathBuf::from(name), kind });
+        }
+    }
+    None
 }
 
 

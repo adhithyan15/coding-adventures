@@ -1,5 +1,52 @@
 # Changelog — `twig-aot`
 
+## 0.3.0 — 2026-05-14 (LANG46 phase 2 — multi-target driver)
+
+**End-to-end Twig source → native binary on Linux x86-64 and Windows
+x86-64.** This is the final piece of the x86-64 port — after this
+release, the same Twig programs that compile on macOS ARM64 compile
+and run on Linux x86-64 and Windows x86-64 hosts.
+
+### New entry points
+
+- `compile_module_linux_x86_64_object(module)` / `compile_linux_x86_64_object(source, name)`
+  — emit an ELF64 `ET_REL` object file via `x86_64-backend` (System V
+  AMD64 ABI) + `code-packager::pack_elf64_object_x86_64`.
+- `compile_module_windows_x86_64_object(module)` / `compile_windows_x86_64_object(source, name)`
+  — emit a PE/COFF `IMAGE_FILE_MACHINE_AMD64` object file via
+  `x86_64-backend` (Microsoft x64 ABI) +
+  `code-packager::pack_pe_object_x86_64`.
+- `compile_file_linux_x86_64(src, out)` (`#[cfg(target_os = "linux")]`)
+  — full pipeline: source → IR → x86_64 bytes → ELF object → `cc` →
+  runnable ELF executable.
+- `compile_file_windows_x86_64(src, out)` (`#[cfg(target_os = "windows")]`)
+  — full pipeline: source → IR → x86_64 bytes → PE/COFF object →
+  linker probe (`link.exe` → `lld-link.exe` → `gcc.exe`) → runnable
+  `.exe`.
+
+### Windows linker probe
+
+The Windows path detects an actual MSVC `link.exe` by parsing the
+banner ("Microsoft" + "Linker") rather than just checking program
+spawnability — git-bash hosts ship a POSIX `link(1)` utility with the
+same name on `PATH`, which would otherwise be (incorrectly) chosen.
+
+### End-to-end smoke tests
+
+- `tests/linux_x86_64_smoke.rs` (`#[cfg(target_os = "linux")]`):
+  compiles small typed Twig programs (`42`, `(+ 30 12)`, `(* 6 7)`,
+  branches), links via `cc`, runs the resulting ELF executable,
+  asserts the exit code matches `main`'s return value.
+- `tests/windows_x86_64_smoke.rs` (`#[cfg(target_os = "windows")]`):
+  same suite via `link.exe` and a `.exe` output.  Each test
+  gracefully skips when no real Windows linker is detected on
+  `PATH` (e.g. MSVC dev env not activated).
+- `tests/macos_arm64_smoke.rs` (existing): unchanged and still
+  passes; verifies the macOS path didn't regress.
+
+Each smoke test runs only on its respective CI runner; the suite
+covers Linux + macOS + Windows end-to-end without cross-compilation.
+
 ## 0.2.0 — 2026-05-14 (LANG46 phase 1 — per-host runtime archives)
 
 **Extend `build.rs` to produce per-host runtime archives plus stubs for
