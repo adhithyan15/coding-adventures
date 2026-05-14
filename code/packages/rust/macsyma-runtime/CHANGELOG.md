@@ -18,6 +18,9 @@
 - Added Rust MACSYMA parity for four-term bilinear grouping, so
   `factor(x*y + x*z + y + z)` returns `(x + 1) * (y + z)` through the shared
   symbolic VM handler.
+- Added Rust MACSYMA parity for shared multivariate integer content, so
+  `factor(2*x*y + 2*x*z)` returns `2*x*(y + z)` through the shared symbolic VM
+  handler.
 - Added Rust MACSYMA parity for four-term perfect-cube expansions, so
   `factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3)` returns `(x + y)^3` and
   `factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3)` returns `(x - y)^3` through the

@@ -1394,22 +1394,38 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return rewritten;
     }
 
-    if let Some(rewritten) = factor_common_symbolic_term(input) {
+    if let Some(rewritten) = factor_common_integer_symbolic_term(input) {
         return vm.eval(rewritten);
     }
 
     fallback
 }
 
-fn factor_common_symbolic_term(node: &IRNode) -> Option<IRNode> {
+fn factor_common_integer_symbolic_term(node: &IRNode) -> Option<IRNode> {
     let terms = additive_terms(node)?;
     if terms.len() < 2 {
         return None;
     }
 
-    let mut common = term_factor_powers(&terms[0]);
-    for term in &terms[1..] {
-        let powers = term_factor_powers(term);
+    let parsed_terms: Vec<(i64, HashMap<IRNode, usize>)> = terms
+        .iter()
+        .map(term_integer_coefficient_and_powers)
+        .collect::<Option<_>>()?;
+    let mut common_content = 0_u64;
+    for (coefficient, _) in &parsed_terms {
+        common_content = gcd(common_content, coefficient.unsigned_abs());
+    }
+    if common_content == 0 || common_content > i64::MAX as u64 {
+        return None;
+    }
+
+    let mut common_content = common_content as i64;
+    if parsed_terms.iter().all(|(coefficient, _)| *coefficient < 0) {
+        common_content = -common_content;
+    }
+
+    let mut common = parsed_terms[0].1.clone();
+    for (_, powers) in &parsed_terms[1..] {
         common.retain(|base, exponent| {
             if let Some(other) = powers.get(base) {
                 *exponent = (*exponent).min(*other);
@@ -1418,21 +1434,24 @@ fn factor_common_symbolic_term(node: &IRNode) -> Option<IRNode> {
                 false
             }
         });
-        if common.is_empty() {
-            return None;
-        }
     }
 
-    let common_factor = powers_to_ir(&common);
+    if common_content == 1 && common.is_empty() {
+        return None;
+    }
+
+    let common_factor = term_from_integer_coefficient_and_powers(common_content, &common);
     let residual_terms: Vec<IRNode> = terms
         .iter()
-        .map(|term| remove_common_factor(term, &common))
+        .zip(parsed_terms.iter())
+        .map(|(_, (coefficient, powers))| {
+            let residual_coefficient = coefficient / common_content;
+            let residual_powers = remove_common_powers(powers, &common);
+            term_from_integer_coefficient_and_powers(residual_coefficient, &residual_powers)
+        })
         .collect();
-    let residual = add_nodes(residual_terms);
-    Some(apply_node(
-        MUL,
-        vec![common_factor, apply_node(FACTOR, vec![residual])],
-    ))
+    let residual = maybe_factor_residual(add_nodes(residual_terms));
+    Some(apply_node(MUL, vec![common_factor, residual]))
 }
 
 fn factor_multivariate_perfect_square(node: &IRNode) -> Option<IRNode> {
@@ -1728,8 +1747,7 @@ fn factor_multivariate_perfect_cube(node: &IRNode) -> Option<IRNode> {
     };
 
     // Cross-term variable sets must equal exactly {a_node, b_node}.
-    let variable_pair: HashSet<IRNode> =
-        [a_node.clone(), b_node.clone()].into_iter().collect();
+    let variable_pair: HashSet<IRNode> = [a_node.clone(), b_node.clone()].into_iter().collect();
     for (_, powers) in &cross_terms {
         if powers.len() != 2 {
             return None;
@@ -1873,14 +1891,34 @@ fn term_integer_coefficient_and_powers(term: &IRNode) -> Option<(i64, HashMap<IR
     let mut coefficient: i64 = 1;
     let mut powers = HashMap::new();
     for factor in multiplicative_factors(term) {
-        if let IRNode::Integer(value) = factor {
-            coefficient *= value;
-            continue;
-        }
-        let (base, exponent) = factor_base_power(factor)?;
-        *powers.entry(base).or_insert(0) += exponent;
+        absorb_factor_integer_coefficient_and_powers(factor, &mut coefficient, &mut powers)?;
     }
     Some((coefficient, powers))
+}
+
+fn absorb_factor_integer_coefficient_and_powers(
+    factor: IRNode,
+    coefficient: &mut i64,
+    powers: &mut HashMap<IRNode, usize>,
+) -> Option<()> {
+    match factor {
+        IRNode::Integer(value) => {
+            *coefficient *= value;
+            Some(())
+        }
+        IRNode::Apply(apply) if is_head_name(&apply.head, NEG) && apply.args.len() == 1 => {
+            *coefficient *= -1;
+            for inner_factor in multiplicative_factors(&apply.args[0]) {
+                absorb_factor_integer_coefficient_and_powers(inner_factor, coefficient, powers)?;
+            }
+            Some(())
+        }
+        other => {
+            let (base, exponent) = factor_base_power(other)?;
+            *powers.entry(base).or_insert(0) += exponent;
+            Some(())
+        }
+    }
 }
 
 fn multiplicative_factors(node: &IRNode) -> Vec<IRNode> {
@@ -1938,6 +1976,54 @@ fn remove_common_factor(term: &IRNode, common: &HashMap<IRNode, usize>) -> IRNod
         }
     }
     multiply_nodes(pieces)
+}
+
+fn remove_common_powers(
+    powers: &HashMap<IRNode, usize>,
+    common: &HashMap<IRNode, usize>,
+) -> HashMap<IRNode, usize> {
+    let mut residual = HashMap::new();
+    for (base, exponent) in powers {
+        let common_exponent = common.get(base).copied().unwrap_or(0);
+        if *exponent > common_exponent {
+            residual.insert(base.clone(), *exponent - common_exponent);
+        }
+    }
+    residual
+}
+
+fn term_from_integer_coefficient_and_powers(
+    coefficient: i64,
+    powers: &HashMap<IRNode, usize>,
+) -> IRNode {
+    let mut pieces = Vec::new();
+    if coefficient != 1 || powers.is_empty() {
+        pieces.push(IRNode::Integer(coefficient));
+    }
+    let mut power_pieces: Vec<IRNode> = powers
+        .iter()
+        .map(|(base, exponent)| power_to_ir(base.clone(), *exponent))
+        .collect();
+    power_pieces.sort_by_key(|piece| piece.to_string());
+    pieces.extend(power_pieces);
+    multiply_nodes(pieces)
+}
+
+fn maybe_factor_residual(residual: IRNode) -> IRNode {
+    let Some(variable) = find_single_variable(&residual) else {
+        return residual;
+    };
+    let Some(coeffs) = ir_to_integer_poly(&residual, &variable) else {
+        return residual;
+    };
+    let (content, factors) = factor_integer_polynomial(&coeffs);
+    if factors.is_empty() {
+        return residual;
+    }
+    if factors.len() == 1 && factors[0].1 == 1 && content == 1 && factors[0].0 == coeffs {
+        return residual;
+    }
+    apply_node(FACTOR, vec![residual])
 }
 
 fn powers_to_ir(powers: &HashMap<IRNode, usize>) -> IRNode {
