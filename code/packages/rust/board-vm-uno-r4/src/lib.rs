@@ -10,6 +10,8 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_SPI_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
     BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
@@ -61,6 +63,7 @@ pub struct TargetDescriptor {
     pub capabilities: CapabilitySet,
     pub digital_pins: &'static [DigitalPinDescriptor],
     pub i2c_buses: &'static [I2cBusDescriptor],
+    pub spi_buses: &'static [SpiBusDescriptor],
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -81,6 +84,17 @@ pub struct I2cBusDescriptor {
     pub sda_pin: u8,
     pub scl_pin: u8,
     pub qwiic: bool,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiBusDescriptor {
+    pub bus: u8,
+    pub name: &'static str,
+    pub copi_pin: u8,
+    pub cipo_pin: u8,
+    pub sck_pin: u8,
+    pub default_cs_pin: u8,
     pub notes: &'static str,
 }
 
@@ -289,6 +303,19 @@ pub const UNO_R4_MINIMA_I2C_BUSES: [I2cBusDescriptor; 1] = [UNO_R4_HEADER_I2C_BU
 pub const UNO_R4_WIFI_I2C_BUSES: [I2cBusDescriptor; 2] =
     [UNO_R4_HEADER_I2C_BUS, UNO_R4_QWIIC_I2C_BUS];
 
+pub const UNO_R4_HEADER_SPI_BUS: SpiBusDescriptor = SpiBusDescriptor {
+    bus: 0,
+    name: "SPI",
+    copi_pin: 11,
+    cipo_pin: 12,
+    sck_pin: 13,
+    default_cs_pin: 10,
+    notes:
+        "Header SPI bus on D11/COPI, D12/CIPO, and D13/SCK with D10 as the conventional chip select",
+};
+
+pub const UNO_R4_SPI_BUSES: [SpiBusDescriptor; 1] = [UNO_R4_HEADER_SPI_BUS];
+
 pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     board_id: "arduino-uno-r4-minima",
     display_name: "Arduino Uno R4 Minima",
@@ -309,9 +336,11 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
         .with_pwm()
         .with_adc()
         .with_dac()
-        .with_i2c(),
+        .with_i2c()
+        .with_spi(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
+    spi_buses: &UNO_R4_SPI_BUSES,
 };
 
 pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
@@ -335,9 +364,11 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_adc()
         .with_dac()
         .with_i2c()
+        .with_spi()
         .with_led_matrix(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
+    spi_buses: &UNO_R4_SPI_BUSES,
 };
 
 pub trait UnoR4Backend {
@@ -363,6 +394,10 @@ pub trait UnoR4Backend {
         false
     }
 
+    fn supports_spi(&self) -> bool {
+        false
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -380,6 +415,10 @@ pub trait UnoR4Backend {
     }
 
     fn open_i2c(&mut self, _bus: u8) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn open_spi(&mut self, _bus: u8) -> Result<u32, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -467,6 +506,7 @@ where
         capabilities.adc = self.backend.supports_adc();
         capabilities.dac = self.backend.supports_dac();
         capabilities.i2c = self.backend.supports_i2c();
+        capabilities.spi = self.backend.supports_spi();
         capabilities
     }
 }
@@ -528,6 +568,11 @@ where
     fn i2c_open(&mut self, bus: u16) -> Result<u32, HalError> {
         let bus = normalize_i2c_bus(self.target, bus)?;
         self.backend.open_i2c(bus)
+    }
+
+    fn spi_open(&mut self, bus: u16) -> Result<u32, HalError> {
+        let bus = normalize_spi_bus(self.target, bus)?;
+        self.backend.open_spi(bus)
     }
 
     fn i2c_write_u8(&mut self, token: u32, address: u16, byte: u8) -> Result<(), HalError> {
@@ -638,6 +683,19 @@ fn normalize_i2c_token(target: &TargetDescriptor, token: u32) -> Result<u8, HalE
     normalize_i2c_bus(target, bus)
 }
 
+fn normalize_spi_bus(target: &TargetDescriptor, bus: u16) -> Result<u8, HalError> {
+    let bus = u8::try_from(bus).map_err(|_| HalError::InvalidPin)?;
+    if target
+        .spi_buses
+        .iter()
+        .any(|descriptor| descriptor.bus == bus)
+    {
+        Ok(bus)
+    } else {
+        Err(HalError::InvalidPin)
+    }
+}
+
 fn normalize_i2c_address(address: u16) -> Result<(), HalError> {
     if address <= 0x7f {
         Ok(())
@@ -669,6 +727,14 @@ fn uno_r4_device_descriptor_for_capabilities(
             && capabilities.adc
             && capabilities.dac
             && capabilities.i2c
+            && capabilities.spi
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
         {
             &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix
@@ -691,6 +757,13 @@ fn uno_r4_device_descriptor_for_capabilities(
             &BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_SPI_CAPABILITIES
         } else if capabilities.pwm && capabilities.adc && capabilities.dac && capabilities.i2c {
             &BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES
         } else if capabilities.pwm && capabilities.adc && capabilities.dac {
@@ -769,6 +842,7 @@ mod tests {
         I2cReadU8(u8, u16),
         I2cRead(u8, u16, u8),
         I2cTransfer(u8, u16, Vec<u8>, u8),
+        SpiOpen(u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -828,6 +902,10 @@ mod tests {
             true
         }
 
+        fn supports_spi(&self) -> bool {
+            true
+        }
+
         fn supports_bootloader_reboot(&self) -> bool {
             true
         }
@@ -850,6 +928,11 @@ mod tests {
         fn open_i2c(&mut self, bus: u8) -> Result<u32, HalError> {
             self.events.push(Event::I2cOpen(bus));
             Ok(0x1_2000 | bus as u32)
+        }
+
+        fn open_spi(&mut self, bus: u8) -> Result<u32, HalError> {
+            self.events.push(Event::SpiOpen(bus));
+            Ok(0x2_2000 | bus as u32)
         }
 
         fn write_i2c_u8(&mut self, bus: u8, address: u16, byte: u8) -> Result<(), HalError> {
@@ -941,6 +1024,17 @@ mod tests {
     }
 
     #[test]
+    fn knows_uno_r4_spi_buses() {
+        assert_eq!(UNO_R4_MINIMA.spi_buses, &[UNO_R4_HEADER_SPI_BUS]);
+        assert_eq!(UNO_R4_WIFI.spi_buses, &[UNO_R4_HEADER_SPI_BUS]);
+        assert_eq!(UNO_R4_WIFI.spi_buses[0].name, "SPI");
+        assert_eq!(UNO_R4_WIFI.spi_buses[0].copi_pin, 11);
+        assert_eq!(UNO_R4_WIFI.spi_buses[0].cipo_pin, 12);
+        assert_eq!(UNO_R4_WIFI.spi_buses[0].sck_pin, 13);
+        assert_eq!(UNO_R4_WIFI.spi_buses[0].default_cs_pin, 10);
+    }
+
+    #[test]
     fn blink_runs_through_abstract_uno_r4_backend() {
         let board = UnoR4Board::minima(FakeBackend::new());
         let mut runtime: Runtime<_, 8, 4> = Runtime::new(board);
@@ -978,7 +1072,7 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES.len()
         );
         assert!(UNO_R4_WIFI
             .capabilities
@@ -1001,6 +1095,7 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_I2C_TRANSFER));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_SPI_OPEN));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1028,6 +1123,9 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_I2C_TRANSFER));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_SPI_OPEN));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1122,6 +1220,22 @@ mod tests {
 
         assert_eq!(board.i2c_open(1), Err(HalError::InvalidPin));
         assert_eq!(board.i2c_open(99), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn spi_open_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.spi_open(0).unwrap(), 0x2_2000);
+        assert_eq!(board.backend().events, vec![Event::SpiOpen(0)]);
+    }
+
+    #[test]
+    fn spi_open_rejects_unknown_bus() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.spi_open(1), Err(HalError::InvalidPin));
+        assert_eq!(board.spi_open(99), Err(HalError::InvalidPin));
     }
 
     #[test]

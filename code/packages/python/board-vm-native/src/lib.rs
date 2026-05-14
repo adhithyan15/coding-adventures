@@ -30,8 +30,9 @@ use board_vm_language_core::{
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
-    LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed,
-    LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
+    LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageI2cBus,
+    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus, LanguageTargetInfo,
+    LanguageValue, LanguageWirelessInterface,
 };
 use python_bridge::*;
 
@@ -891,6 +892,8 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
         "digital_pins",
         language_digital_pins_to_py(&target.digital_pins),
     );
+    dict_set(dict, "i2c_buses", language_i2c_buses_to_py(&target.i2c_buses));
+    dict_set(dict, "spi_buses", language_spi_buses_to_py(&target.spi_buses));
     dict_set(dict, "wireless", language_wireless_to_py(&target.wireless));
     dict_set(
         dict,
@@ -941,6 +944,41 @@ unsafe fn language_led_matrix_to_py(
     dict_set(dict, "rows", usize_to_py(matrix.rows as usize));
     dict_set(dict, "columns", usize_to_py(matrix.columns as usize));
     dict
+}
+
+unsafe fn language_i2c_buses_to_py(buses: &[LanguageI2cBus]) -> PyObjectPtr {
+    let list = PyList_New(buses.len() as isize);
+    for (index, bus) in buses.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(dict, "bus", usize_to_py(bus.bus as usize));
+        dict_set(dict, "name", str_to_py(&bus.name));
+        dict_set(dict, "sda_pin", usize_to_py(bus.sda_pin as usize));
+        dict_set(dict, "scl_pin", usize_to_py(bus.scl_pin as usize));
+        dict_set(dict, "qwiic", bool_to_py(bus.qwiic));
+        dict_set(dict, "notes", str_to_py(&bus.notes));
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
+}
+
+unsafe fn language_spi_buses_to_py(buses: &[LanguageSpiBus]) -> PyObjectPtr {
+    let list = PyList_New(buses.len() as isize);
+    for (index, bus) in buses.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(dict, "bus", usize_to_py(bus.bus as usize));
+        dict_set(dict, "name", str_to_py(&bus.name));
+        dict_set(dict, "copi_pin", usize_to_py(bus.copi_pin as usize));
+        dict_set(dict, "cipo_pin", usize_to_py(bus.cipo_pin as usize));
+        dict_set(dict, "sck_pin", usize_to_py(bus.sck_pin as usize));
+        dict_set(
+            dict,
+            "default_cs_pin",
+            usize_to_py(bus.default_cs_pin as usize),
+        );
+        dict_set(dict, "notes", str_to_py(&bus.notes));
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
 }
 
 unsafe fn language_wireless_to_py(interfaces: &[LanguageWirelessInterface]) -> PyObjectPtr {
