@@ -373,6 +373,8 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
 
   const coeffs = irToIntegerPoly(inner, variable);
   if (coeffs === undefined) {
+    const perfectCube = extractMultivariatePerfectCube(inner);
+    if (perfectCube !== undefined) return perfectCube;
     const cubicIdentity = extractMultivariateCubicIdentity(inner);
     if (cubicIdentity !== undefined) return cubicIdentity;
     const difference = extractMultivariateDifferenceOfSquares(inner);
@@ -803,6 +805,115 @@ function extractMultivariateCubicIdentity(inner: IRNode): IRNode | undefined {
       app(POW, [second, int(2)]),
     ]),
   ]);
+}
+
+function extractMultivariatePerfectCube(inner: IRNode): IRNode | undefined {
+  // Recognise (a±b)^3 perfect-cube expansions.
+  //
+  //   a^3 + 3·a^2·b + 3·a·b^2 + b^3  →  (a + b)^3   [sum cube]
+  //   a^3 − 3·a^2·b + 3·a·b^2 − b^3  →  (a − b)^3   [difference cube]
+  //
+  // Requires exactly 4 additive terms: 2 pure-cube terms (|coeff|=1, one
+  // variable, exponent=3) and 2 cross terms (two variables, |coeff|=3).
+  const terms = flattenAddTerms(inner);
+  if (terms.length !== 4) return undefined;
+
+  const parsed = terms.map((term) => splitIntegerCoefficientAndPowers(term));
+  if (parsed.some((term) => term === undefined)) return undefined;
+
+  const pureCubes: Array<{ readonly coefficient: bigint; readonly base: IRNode }> = [];
+  const crossTerms: Array<{ readonly coefficient: bigint; readonly powers: Map<string, FactorPower> }> = [];
+
+  for (const parsedTerm of parsed) {
+    if (parsedTerm === undefined) return undefined;
+    const { coefficient, powers } = parsedTerm;
+    if (powers.size === 1) {
+      const [power] = [...powers.values()];
+      if (power.exponent === 3 && (coefficient === 1n || coefficient === -1n)) {
+        pureCubes.push({ coefficient, base: power.base });
+        continue;
+      }
+    }
+    if (powers.size === 2) {
+      crossTerms.push({ coefficient, powers });
+      continue;
+    }
+    return undefined; // unexpected shape (wrong exponent or variable count)
+  }
+
+  if (pureCubes.length !== 2 || crossTerms.length !== 2) return undefined;
+
+  // Identify a and b; determine sum vs. difference from the pure-cube signs.
+  let aNode: IRNode;
+  let bNode: IRNode;
+  let isSum: boolean;
+
+  if (pureCubes[0].coefficient === 1n && pureCubes[1].coefficient === 1n) {
+    // Sum: (a + b)^3 — both cubic terms positive.
+    aNode = pureCubes[0].base;
+    bNode = pureCubes[1].base;
+    isSum = true;
+  } else if (
+    pureCubes.some((c) => c.coefficient === 1n)
+    && pureCubes.some((c) => c.coefficient === -1n)
+  ) {
+    // Difference: (a − b)^3 — a^3 positive, b^3 negative.
+    const pos = pureCubes.find((c) => c.coefficient === 1n);
+    const neg = pureCubes.find((c) => c.coefficient === -1n);
+    if (pos === undefined || neg === undefined) return undefined;
+    aNode = pos.base;
+    bNode = neg.base;
+    isSum = false;
+  } else {
+    return undefined;
+  }
+
+  // Cross-term variable sets must equal exactly {aNode, bNode}.
+  const aKey = nodeKey(aNode);
+  const bKey = nodeKey(bNode);
+  const variablePair = new Set([aKey, bKey]);
+  for (const { powers } of crossTerms) {
+    if (powers.size !== 2) return undefined;
+    if (![...powers.keys()].every((k) => variablePair.has(k))) return undefined;
+  }
+
+  // Validate cross-term coefficients and exponent distributions.
+  if (isSum) {
+    // Expect +3·a^2·b and +3·a·b^2 in any order.
+    let foundA2b = false;
+    let foundAb2 = false;
+    for (const { coefficient, powers } of crossTerms) {
+      const expA = powers.get(aKey)?.exponent ?? 0;
+      const expB = powers.get(bKey)?.exponent ?? 0;
+      if (coefficient === 3n && expA === 2 && expB === 1) {
+        foundA2b = true;
+      } else if (coefficient === 3n && expA === 1 && expB === 2) {
+        foundAb2 = true;
+      } else {
+        return undefined;
+      }
+    }
+    if (!foundA2b || !foundAb2) return undefined;
+    return app(POW, [app(ADD, [aNode, bNode]), int(3)]);
+  }
+
+  // Difference: expect −3·a^2·b and +3·a·b^2.
+  // The a^2·b sign flips because (a−b)^3 expansion gives −3a^2b.
+  let foundNegA2b = false;
+  let foundPosAb2 = false;
+  for (const { coefficient, powers } of crossTerms) {
+    const expA = powers.get(aKey)?.exponent ?? 0;
+    const expB = powers.get(bKey)?.exponent ?? 0;
+    if (coefficient === -3n && expA === 2 && expB === 1) {
+      foundNegA2b = true;
+    } else if (coefficient === 3n && expA === 1 && expB === 2) {
+      foundPosAb2 = true;
+    } else {
+      return undefined;
+    }
+  }
+  if (!foundNegA2b || !foundPosAb2) return undefined;
+  return app(POW, [app(SUB, [aNode, bNode]), int(3)]);
 }
 
 function commonSymbolicPowers(terms: readonly IRNode[]): Map<string, FactorPower> {

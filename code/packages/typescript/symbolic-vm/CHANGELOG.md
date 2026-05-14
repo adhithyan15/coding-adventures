@@ -4,6 +4,9 @@
 
 ### Added
 
+- Added a bivariate perfect-cube factoring foothold so `Factor` recognises
+  four-term binomial cube expansions: `x^3 + 3x^2y + 3xy^2 + y^3` as
+  `(x+y)^3` and `x^3 - 3x^2y + 3xy^2 - y^3` as `(x-y)^3`.
 - Added a canonical symbolic `Factor` handler backed by `cas-factor`, including
   a small common-symbolic-factor extraction pass for multivariate expressions
   like `x^2*y - y`.

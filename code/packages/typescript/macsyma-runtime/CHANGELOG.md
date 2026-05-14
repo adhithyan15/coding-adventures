@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add TypeScript MACSYMA parity for perfect-cube expansions, so
+  `factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3)` returns `(x+y)^3` and
+  `factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3)` returns `(x-y)^3` through the
+  shared symbolic VM handler.
 - Delegate `factor` to the canonical TypeScript symbolic VM handler so common
   multivariate terms such as `factor(x^2*y - y)` reduce through the shared CAS
   substrate.

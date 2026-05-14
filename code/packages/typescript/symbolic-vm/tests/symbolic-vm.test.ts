@@ -257,6 +257,50 @@ describe("symbolic-vm", () => {
     ]));
   });
 
+  it("factors bivariate perfect cube sums", () => {
+    // (a + b)^3 = a^3 + 3a^2b + 3ab^2 + b^3
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    // Build x^3 + 3*x^2*y + 3*x*y^2 + y^3 as nested ADD nodes
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(ADD, [
+          app(ADD, [
+            app(POW, [x, int(3)]),
+            app(MUL, [int(3), app(MUL, [app(POW, [x, int(2)]), y])]),
+          ]),
+          app(MUL, [int(3), app(MUL, [x, app(POW, [y, int(2)])])]),
+        ]),
+        app(POW, [y, int(3)]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(POW, [app(ADD, [x, y]), int(3)]));
+  });
+
+  it("factors bivariate perfect cube differences", () => {
+    // (a - b)^3 = a^3 - 3a^2b + 3ab^2 - b^3
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    // Build x^3 - 3*x^2*y + 3*x*y^2 - y^3 using SUB to negate the right terms
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(SUB, [
+          app(ADD, [
+            app(POW, [x, int(3)]),
+            app(MUL, [int(3), app(MUL, [x, app(POW, [y, int(2)])])]),
+          ]),
+          app(MUL, [int(3), app(MUL, [app(POW, [x, int(2)]), y])]),
+        ]),
+        app(MUL, [int(-1), app(POW, [y, int(3)])]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(POW, [app(SUB, [x, y]), int(3)]));
+  });
+
   it("supports assignment and later lookup", () => {
     const vm = new VM(new SymbolicBackend());
     expect(vm.eval(app(ASSIGN, [sym("x"), app(ADD, [int(2), int(3)])]))).toEqual(int(5));
