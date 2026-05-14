@@ -64,7 +64,7 @@
 //! the old convention: `global_set`, `global_get`, `make_symbol`.  See the
 //! LANG32 spec for details on the `global_load`/`global_store` lowering pass.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use interpreter_ir::{
     function::{FunctionTypeStatus, IIRFunction},
@@ -75,8 +75,8 @@ use interpreter_ir::{
 use lang_refined_types::{Kind, Predicate, RefinedType};
 
 use twig_parser::{
-    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
-    TypeAnnotation, VarRef,
+    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, Match, MatchPat, NilLit, Program,
+    RecordDef, SymLit, TypeAnnotation, UnionDef, VarRef,
 };
 
 use crate::errors::TwigCompileError;
@@ -118,6 +118,10 @@ fn type_annotation_to_refined_type(ann: &TypeAnnotation) -> RefinedType {
             Kind::Int,
             Predicate::Membership { values: values.clone() },
         ),
+        // TW05-A / LANG48: Opaque annotations (non-LANG23 TW05 type expressions)
+        // are erased to `any` in TW05-A.  The TW05-B type checker will interpret
+        // them; for now they're treated as unconstrained.
+        TypeAnnotation::Opaque(_) => RefinedType::unrefined(Kind::Any),
     }
 }
 
@@ -239,6 +243,13 @@ pub struct Compiler {
     /// Counter for synthesising lambda names (`__lambda_0`,
     /// `__lambda_1`, …).
     lambda_counter: usize,
+    /// TW05-A / LANG48: integer tag for each union variant constructor.
+    ///
+    /// Populated during the pre-pass when `Form::UnionDef` forms are
+    /// encountered.  Consulted when lowering `Expr::Match` arms — a
+    /// pattern whose name is in this map is a variant pattern;
+    /// otherwise it is a bare-name binding.
+    variant_tags: HashMap<String, usize>,
 }
 
 impl Compiler {
@@ -248,6 +259,7 @@ impl Compiler {
             value_globals: HashSet::new(),
             functions: Vec::new(),
             lambda_counter: 0,
+            variant_tags: HashMap::new(),
         }
     }
 
@@ -257,17 +269,53 @@ impl Compiler {
 
     /// Compile a [`Program`] into an [`IIRModule`].  Consumes `self`.
     pub fn compile(mut self, program: &Program, module_name: &str) -> Result<IIRModule, TwigCompileError> {
-        // ── Pre-pass: classify top-level defines ─────────────────────
-        // Free-variable analysis at lambda sites needs to know which
-        // names are globals (and therefore *not* free) before we walk
-        // any bodies, so we do this in one pre-pass.
+        // ── Pre-pass: classify top-level defines + register typed forms ────
+        //
+        // Free-variable analysis at lambda sites needs to know which names are
+        // globals (and therefore *not* free) before we walk any bodies, so we
+        // do this in one pre-pass.
+        //
+        // TW05-A / LANG48 additions:
+        // - `Form::RecordDef` generates constructor + accessors — all registered
+        //   as `fn_globals` so direct calls reach the fast `call` path.
+        // - `Form::UnionDef` generates constructors + predicates + accessors *and*
+        //   populates `self.variant_tags` so `match` lowering can look up tags.
         for form in &program.forms {
-            if let Form::Define(def) = form {
-                if matches!(def.expr, Expr::Lambda(_)) {
-                    self.fn_globals.insert(def.name.clone());
-                } else {
-                    self.value_globals.insert(def.name.clone());
+            match form {
+                Form::Define(def) => {
+                    if matches!(def.expr, Expr::Lambda(_)) {
+                        self.fn_globals.insert(def.name.clone());
+                    } else {
+                        self.value_globals.insert(def.name.clone());
+                    }
                 }
+                Form::RecordDef(rec) => {
+                    // Constructor name (same as type name, e.g. "Span").
+                    self.fn_globals.insert(rec.name.clone());
+                    // Accessor names: <lower(RecordName)>-<field-name>.
+                    let prefix = rec.name.to_lowercase();
+                    for f in &rec.fields {
+                        self.fn_globals.insert(format!("{prefix}-{}", f.name));
+                    }
+                    // Type predicate: <lower(RecordName)>?
+                    self.fn_globals.insert(format!("{prefix}?"));
+                }
+                Form::UnionDef(union) => {
+                    for (idx, variant) in union.variants.iter().enumerate() {
+                        // Constructor name (same as variant name, e.g. "IntLit").
+                        self.fn_globals.insert(variant.name.clone());
+                        // Predicate: <VariantName>?
+                        self.fn_globals.insert(format!("{}?", variant.name));
+                        // Accessor names: <lower(VariantName)>-<field-name>.
+                        let vprefix = variant.name.to_lowercase();
+                        for f in &variant.fields {
+                            self.fn_globals.insert(format!("{vprefix}-{}", f.name));
+                        }
+                        // Register the integer tag for match-arm lowering.
+                        self.variant_tags.insert(variant.name.clone(), idx);
+                    }
+                }
+                _ => {}
             }
         }
 
@@ -305,6 +353,23 @@ impl Compiler {
                 }
                 Form::Expr(e) => {
                     last_main_value = Some(self.compile_expr(e, &mut main_ctx)?);
+                }
+
+                // ── TW05-A / LANG48 typed-syntax forms ────────────────
+                //
+                // `type_alias`: compile-time only; no IIR emitted.
+                Form::TypeAlias(_) => {}
+
+                // `record_def`: erased to constructor + accessor IIR fns.
+                Form::RecordDef(rec) => {
+                    let rec = rec.clone();
+                    self.emit_record_def(&rec)?;
+                }
+
+                // `union_def`: erased to integer-tagged constructors + predicates + accessors.
+                Form::UnionDef(union) => {
+                    let union = union.clone();
+                    self.emit_union_def(&union)?;
                 }
             }
         }
@@ -610,6 +675,9 @@ impl Compiler {
             Expr::Lambda(l) => self.compile_anonymous_lambda(l, ctx),
 
             Expr::Apply(a) => self.compile_apply(a, ctx),
+
+            // TW05-A / LANG48: match expression — lowered to if/let chain.
+            Expr::Match(m) => self.compile_match(m, ctx),
         }
     }
 
@@ -830,6 +898,611 @@ impl Compiler {
             "any",
         ), loc);
         Ok(dest)
+    }
+
+    // ------------------------------------------------------------------
+    // TW05-A / LANG48 — match lowering
+    // ------------------------------------------------------------------
+
+    /// Lower a `(match scrutinee arm+)` expression to an if/let chain.
+    ///
+    /// Evaluation strategy:
+    /// 1. Evaluate the scrutinee exactly once into `#matched_N`.
+    /// 2. For each arm in order:
+    ///    - **Variant arm** `(VarName b1 … bn) body+`:
+    ///      Emit an `if` that tests `(= (car #matched_N) tag)`.
+    ///      On true: bind fields via `(car (cdr …))` chains and evaluate body.
+    ///    - **Binding arm** `name body+`:
+    ///      Emit a `let`-style binding of `#matched_N` to `name`, evaluate body.
+    ///    - **Wildcard arm** `_ body+`:
+    ///      Evaluate body directly with no extra binding.
+    /// 3. Fallthrough (no arm matched) → `nil`.
+    ///
+    /// Arms are chained in the else-branch of each if.  The innermost else
+    /// produces a `make_nil` call so behaviour is deterministic when no arm
+    /// matches (forward-compatible with exhaustiveness checking in TW05-B).
+    fn compile_match(&mut self, m: &Match, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(m.line, m.column);
+
+        // Evaluate the scrutinee once.
+        let scrutinee_reg = self.compile_expr(&m.scrutinee, ctx)?;
+        // Bind to a fresh stable register so arms can reference it freely.
+        let matched = ctx.fresh_var("matched");
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(matched.clone()),
+            vec![Operand::Var("_move".into()), Operand::Var(scrutinee_reg)],
+            "any",
+        ), loc);
+
+        // Result register — each arm writes its value here.
+        let result = ctx.fresh_var("match_result");
+        // Initialise to nil (fallthrough value).
+        let nil_init = ctx.fresh_var("nil");
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(nil_init.clone()),
+            vec![Operand::Var("make_nil".into())],
+            "any",
+        ), loc);
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(result.clone()),
+            vec![Operand::Var("_move".into()), Operand::Var(nil_init)],
+            "any",
+        ), loc);
+
+        // Generate labels for the chain.
+        // We build: if (test0) { arm0 } else { if (test1) { arm1 } else { … } }
+        // via explicit label/jmp/jmpif instructions.
+        let end_label = ctx.fresh_label("match_end");
+
+        for arm in &m.arms {
+            let arm_loc = if arm.body.is_empty() { loc } else {
+                let p = arm.body[0].pos();
+                SourceLoc::new(p.0, p.1)
+            };
+            match &arm.pat {
+                MatchPat::Variant { name, bindings } => {
+                    // Look up the integer tag.  Unknown names are treated as
+                    // binding patterns (forward-compatible with future types).
+                    let tag = match self.variant_tags.get(name) {
+                        Some(&t) => t,
+                        None => {
+                            // Unknown constructor — treat as bare binding.
+                            let arm_result = self.compile_match_binding_arm(
+                                &matched, name, &arm.body, ctx, arm_loc)?;
+                            ctx.emit(IIRInstr::new(
+                                "call_builtin",
+                                Some(result.clone()),
+                                vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
+                                "any",
+                            ), arm_loc);
+                            ctx.emit(IIRInstr::new(
+                                "jmp",
+                                None,
+                                vec![Operand::Var(end_label.clone())],
+                                "void",
+                            ), arm_loc);
+                            continue;
+                        }
+                    };
+
+                    // Emit: tag_reg = (car matched)
+                    let tag_reg = ctx.fresh_var("tag");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(tag_reg.clone()),
+                        vec![Operand::Var("car".into()), Operand::Var(matched.clone())],
+                        "any",
+                    ), arm_loc);
+
+                    // Emit: tag_int = integer constant for this variant
+                    let tag_int_reg = ctx.fresh_var("tag_val");
+                    ctx.emit(IIRInstr::new(
+                        "const",
+                        Some(tag_int_reg.clone()),
+                        vec![Operand::Int(tag as i64)],
+                        "any",
+                    ), arm_loc);
+
+                    // Emit: cond = (= tag_reg tag_int)
+                    let cond_reg = ctx.fresh_var("tag_eq");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(cond_reg.clone()),
+                        vec![
+                            Operand::Var("=".into()),
+                            Operand::Var(tag_reg),
+                            Operand::Var(tag_int_reg),
+                        ],
+                        "any",
+                    ), arm_loc);
+
+                    // jmpif cond → arm_body_label; else fall to next_arm_label
+                    let arm_label = ctx.fresh_label("match_arm");
+                    let skip_label = ctx.fresh_label("match_skip");
+                    ctx.emit(IIRInstr::new(
+                        "jmpif",
+                        None,
+                        vec![
+                            Operand::Var(cond_reg),
+                            Operand::Var(arm_label.clone()),
+                            Operand::Var(skip_label.clone()),
+                        ],
+                        "void",
+                    ), arm_loc);
+
+                    // arm_body_label: bind fields, evaluate body
+                    ctx.emit(IIRInstr::new(
+                        "label",
+                        None,
+                        vec![Operand::Var(arm_label)],
+                        "void",
+                    ), arm_loc);
+
+                    // Bind fields: field_i = (car (cdr^(i+1) matched))
+                    let mut added_names: Vec<String> = Vec::new();
+                    let mut cur_cdr = matched.clone();
+                    for binding in bindings {
+                        // Advance one cdr step
+                        let next_cdr = ctx.fresh_var("cdr");
+                        ctx.emit(IIRInstr::new(
+                            "call_builtin",
+                            Some(next_cdr.clone()),
+                            vec![Operand::Var("cdr".into()), Operand::Var(cur_cdr.clone())],
+                            "any",
+                        ), arm_loc);
+                        cur_cdr = next_cdr;
+
+                        // Extract field: car of the cdr chain
+                        let field_reg = ctx.fresh_var("field");
+                        ctx.emit(IIRInstr::new(
+                            "call_builtin",
+                            Some(field_reg.clone()),
+                            vec![Operand::Var("car".into()), Operand::Var(cur_cdr.clone())],
+                            "any",
+                        ), arm_loc);
+
+                        // Bind field to name in ctx.locals
+                        if ctx.locals.insert(binding.clone()) {
+                            added_names.push(binding.clone());
+                        }
+                        ctx.emit(IIRInstr::new(
+                            "call_builtin",
+                            Some(binding.clone()),
+                            vec![Operand::Var("_move".into()), Operand::Var(field_reg)],
+                            "any",
+                        ), arm_loc);
+                    }
+
+                    // Evaluate body
+                    let mut body_result: Option<String> = None;
+                    for e in &arm.body {
+                        body_result = Some(self.compile_expr(e, ctx)?);
+                    }
+                    let body_v = body_result.expect("arm body non-empty (parser-enforced)");
+
+                    // Copy to result register
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(result.clone()),
+                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
+                        "any",
+                    ), arm_loc);
+
+                    // Unbind field names
+                    for n in added_names {
+                        ctx.locals.remove(&n);
+                    }
+
+                    // jmp to end
+                    ctx.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(end_label.clone())],
+                        "void",
+                    ), arm_loc);
+
+                    // skip_label: next arm or fallthrough
+                    ctx.emit(IIRInstr::new(
+                        "label",
+                        None,
+                        vec![Operand::Var(skip_label)],
+                        "void",
+                    ), arm_loc);
+                }
+
+                MatchPat::Binding(name) => {
+                    let arm_result = self.compile_match_binding_arm(
+                        &matched, name, &arm.body, ctx, arm_loc)?;
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(result.clone()),
+                        vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
+                        "any",
+                    ), arm_loc);
+                    // Binding arm always matches → jump to end immediately.
+                    ctx.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(end_label.clone())],
+                        "void",
+                    ), arm_loc);
+                }
+
+                MatchPat::Wildcard => {
+                    // No binding; evaluate body directly.
+                    let mut body_result: Option<String> = None;
+                    for e in &arm.body {
+                        body_result = Some(self.compile_expr(e, ctx)?);
+                    }
+                    let body_v = body_result.expect("arm body non-empty");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(result.clone()),
+                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
+                        "any",
+                    ), arm_loc);
+                    // Wildcard always matches → jump to end.
+                    ctx.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(end_label.clone())],
+                        "void",
+                    ), arm_loc);
+                }
+            }
+        }
+
+        // end_label: all paths converge here.
+        ctx.emit(IIRInstr::new(
+            "label",
+            None,
+            vec![Operand::Var(end_label)],
+            "void",
+        ), loc);
+
+        Ok(result)
+    }
+
+    /// Helper: bind `matched_reg` to `name` in locals, evaluate `body`,
+    /// then remove the binding.  Returns the body's result register.
+    fn compile_match_binding_arm(
+        &mut self,
+        matched_reg: &str,
+        name: &str,
+        body: &[twig_parser::Expr],
+        ctx: &mut FnCtx,
+        loc: SourceLoc,
+    ) -> Result<String, TwigCompileError> {
+        let was_new = ctx.locals.insert(name.to_string());
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(name.to_string()),
+            vec![Operand::Var("_move".into()), Operand::Var(matched_reg.to_string())],
+            "any",
+        ), loc);
+        let mut last: Option<String> = None;
+        for e in body {
+            last = Some(self.compile_expr(e, ctx)?);
+        }
+        let last = last.expect("arm body non-empty (parser-enforced)");
+        if was_new {
+            ctx.locals.remove(name);
+        }
+        Ok(last)
+    }
+
+    // ------------------------------------------------------------------
+    // TW05-A / LANG48 — record and union erasure
+    // ------------------------------------------------------------------
+
+    /// Erase a `(record Name field*)` declaration into IIR functions:
+    ///
+    /// - Constructor `Name(f0, f1, …, fn)` → `cons` chain ending in `nil`
+    /// - Accessor `<lower(Name)>-<field>(r)` → `car` of the right `cdr` chain
+    /// - Predicate `<lower(Name)>?(v)` → `(pair? v)`
+    fn emit_record_def(&mut self, rec: &RecordDef) -> Result<(), TwigCompileError> {
+        let loc = SourceLoc::SYNTHETIC;
+        let prefix = rec.name.to_lowercase();
+
+        // ── Constructor: Name(f0, f1, …, fn) ──────────────────────────
+        // Builds (cons f0 (cons f1 (… (cons fn nil) …))).
+        {
+            let mut ctx = FnCtx::new();
+            let params: Vec<String> = rec.fields.iter().map(|f| f.name.clone()).collect();
+            for p in &params {
+                ctx.locals.insert(p.clone());
+            }
+
+            // Start from the nil end and fold right.
+            let nil_r = ctx.fresh_var("nil");
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(nil_r.clone()),
+                vec![Operand::Var("make_nil".into())],
+                "any",
+            ), loc);
+
+            let mut tail = nil_r;
+            for field_name in params.iter().rev() {
+                let cell = ctx.fresh_var("cell");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(cell.clone()),
+                    vec![
+                        Operand::Var("cons".into()),
+                        Operand::Var(field_name.clone()),
+                        Operand::Var(tail),
+                    ],
+                    "any",
+                ), loc);
+                tail = cell;
+            }
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(tail)], "any"), loc);
+
+            self.functions.push(IIRFunction {
+                name: rec.name.clone(),
+                params: params.iter().map(|p| (p.clone(), "any".to_string())).collect(),
+                return_type: "any".into(),
+                register_count: count_registers(&ctx.instrs),
+                instructions: ctx.instrs,
+                type_status: FunctionTypeStatus::Untyped,
+                call_count: 0,
+                feedback_slots: HashMap::new(),
+                source_map: ctx.source_map,
+                param_refinements: Vec::new(),
+                return_refinement: None,
+            });
+        }
+
+        // ── Accessors: <prefix>-<field>(r) → car(cdr^i(r)) ───────────
+        for (i, field) in rec.fields.iter().enumerate() {
+            let mut ctx = FnCtx::new();
+            ctx.locals.insert("r".to_string());
+
+            // Build the cdr chain: apply `cdr` i times.
+            let mut cur = "r".to_string();
+            for _ in 0..i {
+                let next = ctx.fresh_var("cdr");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(next.clone()),
+                    vec![Operand::Var("cdr".into()), Operand::Var(cur)],
+                    "any",
+                ), loc);
+                cur = next;
+            }
+            // Then take car.
+            let field_val = ctx.fresh_var("fv");
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(field_val.clone()),
+                vec![Operand::Var("car".into()), Operand::Var(cur)],
+                "any",
+            ), loc);
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(field_val)], "any"), loc);
+
+            self.functions.push(IIRFunction {
+                name: format!("{prefix}-{}", field.name),
+                params: vec![("r".to_string(), "any".to_string())],
+                return_type: "any".into(),
+                register_count: count_registers(&ctx.instrs),
+                instructions: ctx.instrs,
+                type_status: FunctionTypeStatus::Untyped,
+                call_count: 0,
+                feedback_slots: HashMap::new(),
+                source_map: ctx.source_map,
+                param_refinements: Vec::new(),
+                return_refinement: None,
+            });
+        }
+
+        // ── Predicate: <prefix>?(v) → (pair? v) ───────────────────────
+        {
+            let mut ctx = FnCtx::new();
+            ctx.locals.insert("v".to_string());
+            let pred = ctx.fresh_var("pred");
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(pred.clone()),
+                vec![Operand::Var("pair?".into()), Operand::Var("v".to_string())],
+                "any",
+            ), loc);
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(pred)], "any"), loc);
+
+            self.functions.push(IIRFunction {
+                name: format!("{prefix}?"),
+                params: vec![("v".to_string(), "any".to_string())],
+                return_type: "any".into(),
+                register_count: count_registers(&ctx.instrs),
+                instructions: ctx.instrs,
+                type_status: FunctionTypeStatus::Untyped,
+                call_count: 0,
+                feedback_slots: HashMap::new(),
+                source_map: ctx.source_map,
+                param_refinements: Vec::new(),
+                return_refinement: None,
+            });
+        }
+        Ok(())
+    }
+
+    /// Erase a `(union Name variant*)` declaration into IIR functions.
+    ///
+    /// Each variant at zero-based index `i` produces:
+    /// - Constructor `VarName(f0, …, fn)` → `(cons i (cons f0 (… (cons fn nil) …)))`
+    /// - Predicate `VarName?(v)` → `(= (car v) i)`
+    /// - Accessor `<lower(VarName)>-<field>(v)` → `car(cdr^(k+1) v)` (k = field index)
+    fn emit_union_def(&mut self, union: &UnionDef) -> Result<(), TwigCompileError> {
+        let loc = SourceLoc::SYNTHETIC;
+
+        for (tag, variant) in union.variants.iter().enumerate() {
+            let vprefix = variant.name.to_lowercase();
+
+            // ── Constructor: VarName(f0, …, fn) ───────────────────────
+            // → (cons tag (cons f0 (cons f1 (… (cons fn nil) …))))
+            {
+                let mut ctx = FnCtx::new();
+                let params: Vec<String> = variant.fields.iter().map(|f| f.name.clone()).collect();
+                for p in &params {
+                    ctx.locals.insert(p.clone());
+                }
+
+                // Start from nil, fold right over fields.
+                let nil_r = ctx.fresh_var("nil");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(nil_r.clone()),
+                    vec![Operand::Var("make_nil".into())],
+                    "any",
+                ), loc);
+
+                let mut tail = nil_r;
+                for field_name in params.iter().rev() {
+                    let cell = ctx.fresh_var("cell");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(cell.clone()),
+                        vec![
+                            Operand::Var("cons".into()),
+                            Operand::Var(field_name.clone()),
+                            Operand::Var(tail),
+                        ],
+                        "any",
+                    ), loc);
+                    tail = cell;
+                }
+
+                // Prepend the integer tag.
+                let tag_reg = ctx.fresh_var("tag");
+                ctx.emit(IIRInstr::new(
+                    "const",
+                    Some(tag_reg.clone()),
+                    vec![Operand::Int(tag as i64)],
+                    "any",
+                ), loc);
+                let head = ctx.fresh_var("head");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(head.clone()),
+                    vec![
+                        Operand::Var("cons".into()),
+                        Operand::Var(tag_reg),
+                        Operand::Var(tail),
+                    ],
+                    "any",
+                ), loc);
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(head)], "any"), loc);
+
+                self.functions.push(IIRFunction {
+                    name: variant.name.clone(),
+                    params: params.iter().map(|p| (p.clone(), "any".to_string())).collect(),
+                    return_type: "any".into(),
+                    register_count: count_registers(&ctx.instrs),
+                    instructions: ctx.instrs,
+                    type_status: FunctionTypeStatus::Untyped,
+                    call_count: 0,
+                    feedback_slots: HashMap::new(),
+                    source_map: ctx.source_map,
+                    param_refinements: Vec::new(),
+                    return_refinement: None,
+                });
+            }
+
+            // ── Predicate: VarName?(v) → (= (car v) tag) ──────────────
+            {
+                let mut ctx = FnCtx::new();
+                ctx.locals.insert("v".to_string());
+
+                let car_v = ctx.fresh_var("hd");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(car_v.clone()),
+                    vec![Operand::Var("car".into()), Operand::Var("v".to_string())],
+                    "any",
+                ), loc);
+
+                let tag_reg = ctx.fresh_var("tag");
+                ctx.emit(IIRInstr::new(
+                    "const",
+                    Some(tag_reg.clone()),
+                    vec![Operand::Int(tag as i64)],
+                    "any",
+                ), loc);
+
+                let result = ctx.fresh_var("pred");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(result.clone()),
+                    vec![
+                        Operand::Var("=".into()),
+                        Operand::Var(car_v),
+                        Operand::Var(tag_reg),
+                    ],
+                    "any",
+                ), loc);
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(result)], "any"), loc);
+
+                self.functions.push(IIRFunction {
+                    name: format!("{}?", variant.name),
+                    params: vec![("v".to_string(), "any".to_string())],
+                    return_type: "any".into(),
+                    register_count: count_registers(&ctx.instrs),
+                    instructions: ctx.instrs,
+                    type_status: FunctionTypeStatus::Untyped,
+                    call_count: 0,
+                    feedback_slots: HashMap::new(),
+                    source_map: ctx.source_map,
+                    param_refinements: Vec::new(),
+                    return_refinement: None,
+                });
+            }
+
+            // ── Accessors: <vprefix>-<field>(v) → car(cdr^(k+1) v) ────
+            // Field k is at position k+1 (after the tag at cdr^0/car).
+            for (k, field) in variant.fields.iter().enumerate() {
+                let mut ctx = FnCtx::new();
+                ctx.locals.insert("v".to_string());
+
+                // cdr^(k+1) v: skip the tag (1 cdr) then k more for field index.
+                let mut cur = "v".to_string();
+                for _ in 0..=(k) {
+                    let next = ctx.fresh_var("cdr");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(next.clone()),
+                        vec![Operand::Var("cdr".into()), Operand::Var(cur)],
+                        "any",
+                    ), loc);
+                    cur = next;
+                }
+                let fval = ctx.fresh_var("fv");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(fval.clone()),
+                    vec![Operand::Var("car".into()), Operand::Var(cur)],
+                    "any",
+                ), loc);
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(fval)], "any"), loc);
+
+                self.functions.push(IIRFunction {
+                    name: format!("{vprefix}-{}", field.name),
+                    params: vec![("v".to_string(), "any".to_string())],
+                    return_type: "any".into(),
+                    register_count: count_registers(&ctx.instrs),
+                    instructions: ctx.instrs,
+                    type_status: FunctionTypeStatus::Untyped,
+                    call_count: 0,
+                    feedback_slots: HashMap::new(),
+                    source_map: ctx.source_map,
+                    param_refinements: Vec::new(),
+                    return_refinement: None,
+                });
+            }
+        }
+        Ok(())
     }
 
     // ------------------------------------------------------------------

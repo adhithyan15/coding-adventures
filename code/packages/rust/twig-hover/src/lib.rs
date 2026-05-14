@@ -209,6 +209,66 @@ fn visit_form(
             visit_expr(&d.expr, line, column, symbols, found);
         }
         Form::Expr(e) => visit_expr(e, line, column, symbols, found),
+        // LANG48 — type/record/union declarations.  Surface the keyword and
+        // the declared name.  Fields/variants don't carry per-token positions
+        // in the AST yet, so we skip them.
+        Form::TypeAlias(t) => {
+            let l = u32_of(t.line);
+            let c = u32_of(t.column);
+            try_keyword(found, line, column, l, c.saturating_add(1), "type");
+            // "(type " = 6 chars → name starts at column + 6.
+            try_token(
+                found,
+                line,
+                column,
+                Hover {
+                    kind: HoverKind::Variable,
+                    name: t.name.clone(),
+                    signature: None,
+                    line: l,
+                    column: c.saturating_add(6),
+                    length: len_u32(&t.name),
+                },
+            );
+        }
+        Form::RecordDef(r) => {
+            let l = u32_of(r.line);
+            let c = u32_of(r.column);
+            try_keyword(found, line, column, l, c.saturating_add(1), "record");
+            // "(record " = 8 chars → name starts at column + 8.
+            try_token(
+                found,
+                line,
+                column,
+                Hover {
+                    kind: HoverKind::Variable,
+                    name: r.name.clone(),
+                    signature: None,
+                    line: l,
+                    column: c.saturating_add(8),
+                    length: len_u32(&r.name),
+                },
+            );
+        }
+        Form::UnionDef(u) => {
+            let l = u32_of(u.line);
+            let c = u32_of(u.column);
+            try_keyword(found, line, column, l, c.saturating_add(1), "union");
+            // "(union " = 7 chars → name starts at column + 7.
+            try_token(
+                found,
+                line,
+                column,
+                Hover {
+                    kind: HoverKind::Variable,
+                    name: u.name.clone(),
+                    signature: None,
+                    line: l,
+                    column: c.saturating_add(7),
+                    length: len_u32(&u.name),
+                },
+            );
+        }
     }
 }
 
@@ -360,6 +420,20 @@ fn visit_expr(
             visit_expr(fn_expr, line, column, symbols, found);
             for a in args {
                 visit_expr(a, line, column, symbols, found);
+            }
+        }
+        // LANG48 — match expression.  Surface the `match` keyword, then
+        // walk the scrutinee and each arm's body for nested hover targets.
+        // Pattern binding names don't carry per-token positions yet.
+        Expr::Match(m) => {
+            let l = u32_of(m.line);
+            let c = u32_of(m.column);
+            try_keyword(found, line, column, l, c.saturating_add(1), "match");
+            visit_expr(&m.scrutinee, line, column, symbols, found);
+            for arm in &m.arms {
+                for e in &arm.body {
+                    visit_expr(e, line, column, symbols, found);
+                }
             }
         }
     }

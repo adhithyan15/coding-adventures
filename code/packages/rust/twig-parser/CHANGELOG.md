@@ -1,5 +1,76 @@
 # Changelog — twig-parser
 
+## [0.4.0] — 2026-05-14 — LANG48 TW05-A typed syntax
+
+### Added
+
+New AST nodes for the TW05-A bootstrap stage (parse typed Twig syntax;
+erase annotations to dynamic IIR; type checking deferred to TW05-B/C).
+
+#### Module metadata
+
+- `TypedMode` enum (`Off`, `Lenient`, `Strict`) — the `(typed …)` clause.
+- `ModuleInfo { name, typed_mode, exports, imports }` — extracted from
+  `(module name (typed …) (export …) (import …))` preamble.
+- `Program::module_info: Option<ModuleInfo>` — populated when source starts
+  with a `(module …)` form.
+
+#### Type expressions
+
+- `TypeExpr` enum (`Name(String)`, `Int(i64)`, `List(Vec<TypeExpr>)`) — a
+  typed representation of raw type annotation S-expressions, used internally
+  by `extract_type_annotation` to pattern-match LANG23 shapes against the
+  recursive LANG48 grammar.
+- `TypeAnnotation::Opaque(TypeExpr)` — catch-all variant for type expressions
+  that don't map to a LANG23 shape.  The compiler erases these to `Any`.
+- `TypeAnnotation` and `TypeExpr` both re-exported from `lib.rs`.
+
+#### Record and union type declarations
+
+- `RecordField { name, type_annotation }` — a named typed field.
+- `RecordDef { name, fields, line, column }` — `(record Name (field : T) …)`.
+  The AST compiler erases this to constructor + accessors + predicate functions.
+- `UnionVariant { name, fields }` — one tagged variant.
+- `UnionDef { name, variants, line, column }` — `(union Name (Variant …) …)`.
+  Each variant gets a zero-based integer tag.
+- `Form::RecordDef(RecordDef)` and `Form::UnionDef(UnionDef)` — top-level forms.
+- `Form::TypeAlias(TypeAlias)` — `(type Name type_expr)`; no-op in TW05-A.
+- All new `Form` variants and struct types re-exported from `lib.rs`.
+
+#### Pattern-matching
+
+- `MatchPat` enum: `Variant { name, bindings }`, `Binding(String)`, `Wildcard`.
+- `MatchArm { pat, body }` — one arm in a `(match …)` expression.
+- `Match { scrutinee, arms, line, column }` — `(match expr arm+)` expression.
+- `Expr::Match(Match)` — new expression variant.
+- All re-exported from `lib.rs`.
+
+### Changed
+
+- `extract_type_annotation` rewritten to use a TypeExpr-first approach:
+  convert the recursive LANG48 grammar node to a `TypeExpr` tree, then
+  pattern-match LANG23 shapes on the typed tree.  This fixes `(Int lo hi)`
+  and `(Member int (vals…))` annotations silently falling through to
+  `Opaque` under the new recursive grammar.
+- Grammar: `type_annotation` made fully recursive (all children are
+  `type_annotation` sub-nodes rather than NAME/INTEGER tokens).  See
+  `code/grammars/twig.grammar`.
+- Grammar: new keywords `typed`, `type`, `record`, `union`, `match` added
+  to `code/grammars/twig.tokens` (using `#` comment syntax, not `;`).
+- `ast_extract.rs`: adds extractors for module forms, type aliases, record
+  defs, union defs, and match expressions.
+
+### Tests added (56 total, up from 31)
+
+- Module form parsing (typed off/lenient/strict, exports, imports).
+- Type alias round-trips.
+- Record and union definition parsing.
+- Match expression parsing (variant, binding, wildcard arms).
+- Type annotation round-trips for all LANG23 shapes via the new
+  TypeExpr-first path.
+
+---
+
 ## [0.3.0] — LS04 spec dump
 
 ### Added

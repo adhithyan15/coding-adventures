@@ -1,5 +1,60 @@
 # Changelog — twig-ir-compiler
 
+## [0.4.0] — 2026-05-14
+
+### Added (LANG48 — TW05-A annotation erasure)
+
+Implements the TW05-A bootstrap stage: typed Twig source compiles to
+dynamic IIR by erasing all type annotations.  No type checker yet (that's
+TW05-B/C); the compiler accepts typed programs and lowers them faithfully.
+
+#### New `Compiler` field
+
+- `variant_tags: HashMap<String, usize>` — populated during the pre-pass
+  from every `Form::UnionDef`; consulted when lowering `Expr::Match` arms
+  to determine variant integer tags for dispatch.
+
+#### New form lowering
+
+- `Form::TypeAlias` — erased (no-op, type aliases are compile-time only).
+- `Form::RecordDef` — lowered via `emit_record_def`:
+  - Constructor function `Name(f0, f1, …)` using a right-fold `cons` chain.
+  - Positional accessor `name-field-i(r)` using `car` of `cdr^i`.
+  - Type predicate `name?(v)` using `pair?`.
+- `Form::UnionDef` — lowered via `emit_union_def`:
+  - Per-variant constructor `Variant(f0, …)` — prepends the zero-based
+    integer tag via `cons`.
+  - Per-variant predicate `Variant?(v)` — checks `(= (car v) tag)`.
+  - Per-variant field accessor `variant-field-k(v)` using `car` of
+    `cdr^(k+1)` (skip the tag slot).
+
+#### New expression lowering
+
+- `Expr::Match` — lowered via `compile_match` to a `jmpif`/`label`/`jmp`
+  chain:
+  - Scrutinee evaluated once into a fresh register.
+  - `Variant` arm: test `(= (car scrutinee) tag)`, bind fields via
+    `car`/`cdr` chains, evaluate body.
+  - `Binding` arm: bind scrutinee to name, evaluate body.
+  - `Wildcard` arm: evaluate body directly.
+  - After all arms: fall through to `nil`.
+
+#### Annotation erasure extension
+
+- `TypeAnnotation::Opaque(_)` → `TypeAnnotation::Any` in the annotation
+  map.  Any type expression that isn't a LANG23 shape is silently erased
+  to the `Any` (untyped) refinement, preserving backward compat.
+
+### Tests
+
+- Regression tests confirm `alloc_closure` / `call_closure` emission is
+  unchanged by LANG48 changes.
+- New compiler tests for record def erasure (constructor + accessor +
+  predicate IIR shapes), union def erasure (tagged variants), and match
+  expression lowering (variant/binding/wildcard dispatch chains).
+
+---
+
 ## [0.3.0] — 2026-05-12
 
 ### Changed (LANG34 — Emit alloc_closure / call_closure)

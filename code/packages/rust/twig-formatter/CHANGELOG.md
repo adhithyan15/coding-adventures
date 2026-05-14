@@ -1,5 +1,43 @@
 # Changelog — twig-formatter
 
+## [0.2.0] — 2026-05-14
+
+### Added (LANG48 — TW05-A pretty-printing)
+
+Extends the formatter to handle the three new top-level `Form` variants and
+the `Expr::Match` expression introduced by LANG48.
+
+#### New `Form` pretty-printing
+
+- `Form::TypeAlias(t)` → `(type Name type_expr)` using the new
+  `type_expr_to_doc` helper.
+- `Form::RecordDef(r)` → `(record Name (f0 : T0) …)` with each field as
+  a nested `(name : type_annotation)` s-expression.
+- `Form::UnionDef(u)` → `(union Name (Var0 (f0 : T0) …) …)` with each
+  variant on its own sub-line.
+
+#### New `Expr::Match` pretty-printing
+
+- `Expr::Match(m)` → `(match scrutinee arm0 arm1 …)` with each arm on
+  its own line:
+  - Variant arm: `((Variant b0 b1) body…)`
+  - Binding arm: `(name body…)`
+  - Wildcard arm: `(_ body…)`
+
+#### New helpers
+
+- `type_expr_to_doc(te)` — formats a `TypeExpr` back to surface
+  s-expression notation.
+- `type_annotation_to_doc(ta)` — formats a `TypeAnnotation` back to
+  surface notation (wraps `type_expr_to_doc` for opaque annotations).
+
+#### Test infrastructure
+
+- `strip_form` and `strip_expr` extended to handle new variants.
+- `strip_positions` fixed to carry `module_info` through the `Program`.
+
+---
+
 ## [0.1.1] — 2026-05-04
 
 ### Fixed (LANG23 PR 23-E compatibility)

@@ -1,5 +1,31 @@
 # Changelog — twig-hover
 
+## [0.1.1] — 2026-05-14
+
+### Added (LANG48 — TW05-A hover coverage)
+
+Extends the hover walker to handle the three new top-level `Form` variants
+and the `Expr::Match` expression introduced by LANG48.
+
+#### New `Form` arms in `visit_form`
+
+- `Form::TypeAlias(t)` — surfaces `Keyword("type")` and `Variable` hover for
+  the alias name at `(column + 6)`.
+- `Form::RecordDef(r)` — surfaces `Keyword("record")` and `Variable` hover for
+  the record name at `(column + 8)`.
+- `Form::UnionDef(u)` — surfaces `Keyword("union")` and `Variable` hover for
+  the union name at `(column + 7)`.
+- Field and variant names are skipped in v1 — they don't carry per-token
+  positions in the AST yet.
+
+#### New `Expr::Match` arm in `visit_expr`
+
+- `Expr::Match(m)` — surfaces `Keyword("match")` for the keyword, then
+  recursively visits the scrutinee and each arm body for nested hover targets.
+  Pattern binding names are not yet surfaced (no per-token positions).
+
+---
+
 ## [0.1.0] — 2026-05-01
 
 Initial release.  LSP hover-info extraction for Twig — the fifth
