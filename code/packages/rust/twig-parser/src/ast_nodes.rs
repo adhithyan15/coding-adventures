@@ -467,6 +467,20 @@ pub struct Let {
     pub column: usize,
 }
 
+/// `(let* ((x e1) (y e2) ...) body+)` — LANG52 sequential bindings.
+///
+/// Each RHS is evaluated in a scope that includes all *prior* bindings.
+/// This is Scheme `let*`, not plain `let`.
+///
+/// Example: `(let* ((a 1) (b (+ a 1))) b)` → 2.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LetStar {
+    pub bindings: Vec<(String, Expr)>,
+    pub body: Vec<Expr>,
+    pub line: usize,
+    pub column: usize,
+}
+
 /// `(begin e1 e2 ...)` — sequencing.  Returns the value of the final expression.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Begin {
@@ -553,6 +567,8 @@ pub enum Expr {
     VarRef(VarRef),
     If(If),
     Let(Let),
+    /// `(let* ((x e1) (y (+ x 1)) …) body+)` — sequential bindings (LANG52).
+    LetStar(LetStar),
     Begin(Begin),
     Lambda(Lambda),
     Apply(Apply),
@@ -572,6 +588,7 @@ impl Expr {
             Expr::VarRef(v) => (v.line, v.column),
             Expr::If(i) => (i.line, i.column),
             Expr::Let(l) => (l.line, l.column),
+            Expr::LetStar(l) => (l.line, l.column),
             Expr::Begin(b) => (b.line, b.column),
             Expr::Lambda(l) => (l.line, l.column),
             Expr::Apply(a) => (a.line, a.column),

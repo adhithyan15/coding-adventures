@@ -105,7 +105,10 @@ pub use ast_extract::{
 pub use type_decls::emit_type_declarations;
 pub use ast_nodes::{
     // ── Atoms ─────────────────────────────────────────────────────────────
-    Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program,
+    Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+    NilLit, Program,
     // LANG51: string literal AST node
     StrLit, SymLit,
     TypeAnnotation, VarRef,

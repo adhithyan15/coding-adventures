@@ -1,26 +1,39 @@
 # Changelog — twig-parser
 
-## [0.5.0] — 2026-05-14 — LANG51 string literals
+## [0.6.0] — 2026-05-14 — LANG51 string literals + LANG52 let*
 
 ### Added
 
-- `StrLit { value: String, line, column }` AST node — represents a
-  double-quoted string literal such as `"hello"` or `"say \"hi\"\n"`.
-- `Expr::StrLit(StrLit)` variant — added between `SymLit` and `VarRef` so that
-  match exhaustiveness checks catch all Expr variants immediately.
-- `Expr::pos()` arm for `StrLit`.
+#### LANG51: `StrLit` AST node and STRING grammar rule
+
+- **`pub struct StrLit { value: String, line, column }`** — new AST node representing a
+  string literal.  The `value` field contains the decoded string content (escape sequences
+  already processed by the GrammarLexer before the token reaches the extractor).
+- **`Expr::StrLit(StrLit)`** — new variant in the `Expr` enum; `Expr::pos()` covers it.
+- **Grammar**: `atom = STRING | INTEGER | ...` — the STRING token (regex `/"([^"\]|\.)*"/`)
+  precedes INTEGER so the lexer matches double-quoted strings first.
+- **`extract_atom`**: `"STRING"` case calls `tok.value.clone()` directly; the GrammarLexer's
+  `process_escapes` already strips surrounding quotes and decodes `
+`, `	`, `\`, `\"`.
+- **`type_decls.rs`**: `Expr::StrLit(_) => KindDecl::Str` — string literals have kind `Str`.
 - `lib.rs` re-exports `StrLit`.
-- `extract_atom` handles `"STRING"` token type.  The GrammarLexer pre-decodes
-  escape sequences and strips surrounding quotes before the token reaches the
-  parser, so `extract_atom` uses `tok.value` directly as the decoded content.
-- `expr_to_kind` in `type_decls.rs` returns `KindDecl::Str` for `Expr::StrLit`.
-- `twig.grammar` atom rule: `atom = STRING | INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;`
-- `twig.tokens`: `STRING = /"([^"\\]|\\.)*"/` added before `INTEGER`.
 
-### Changed
+#### LANG52: `LetStar` AST node and `let*` grammar rule
 
-- Removed draft `decode_string_escapes` helper from `ast_extract.rs` (the
-  GrammarLexer's `process_escapes` already handles the same escapes).
+- **`pub struct LetStar { bindings: Vec<(String, Expr)>, body: Vec<Expr>, line, column }`** —
+  sequential `let*` bindings; each binding's RHS is evaluated in a scope extended by all
+  prior binding names (unlike `let` where all RHS expressions see only the outer scope).
+- **`Expr::LetStar(LetStar)`** — new variant; `Expr::pos()` covers it.
+- **Grammar**: `let_star_form` rule added to `compound`; `let*` promoted to a keyword so the
+  lexer wins over the `NAME` pattern (asterisk is valid in a NAME).
+- **`extract_let_star`**: walks child nodes; requires at least one body expression.
+- **`type_decls.rs`**: `Expr::LetStar(_)` added to the `Any` fallback arm.
+- `lib.rs` re-exports `LetStar`.
+
+### Note on version numbering
+
+0.5.0 was the planned standalone LANG51 release; both LANG51 and LANG52 land here as 0.6.0
+since LANG52 depends on LANG51 and they ship together.
 
 ## [0.4.0] — 2026-05-14 — LANG48 TW05-A typed syntax
 
