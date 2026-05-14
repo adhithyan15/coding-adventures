@@ -1,4 +1,4 @@
-"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC + DC sweep + .SENS + .MC + .NOISE + controlled sources)."""
+"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC + DC sweep + .SENS + .MC + .NOISE + controlled sources + time-varying sources)."""
 
 from spice_engine.elements import (
     BJT,
@@ -10,10 +10,15 @@ from spice_engine.elements import (
     CurrentSource,
     Diode,
     Element,
+    ExpWaveform,
     Inductor,
     Mosfet,
+    PulseWaveform,
+    PwlWaveform,
     Resistor,
+    SinWaveform,
     VoltageSource,
+    Waveform,
 )
 from spice_engine.engine import (
     AcPoint,
@@ -42,7 +47,7 @@ from spice_engine.engine import (
     transient,
 )
 
-__version__ = "0.10.0"
+__version__ = "0.11.0"
 
 __all__ = [
     "AcPoint",
@@ -58,6 +63,7 @@ __all__ = [
     "DcSweepResult",
     "Diode",
     "Element",
+    "ExpWaveform",
     "Inductor",
     "McPoint",
     "McResult",
@@ -65,15 +71,19 @@ __all__ = [
     "NoiseEntry",
     "NoisePoint",
     "NoiseResult",
+    "PulseWaveform",
+    "PwlWaveform",
     "Resistor",
     "SensEntry",
     "SensResult",
+    "SinWaveform",
     "TfResult",
     "TransientPoint",
     "TransientResult",
     "VCCS",
     "VCVS",
     "VoltageSource",
+    "Waveform",
     "__version__",
     "ac_sweep",
     "dc_op",

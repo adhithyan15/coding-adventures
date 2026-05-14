@@ -919,11 +919,27 @@ def _build_transient_companions(
     cap_currents: dict[str, float],
     ind_currents: dict[str, float],
     ind_voltages: dict[str, float],
+    t: float = 0.0,
 ) -> Circuit:
     """Build the linearised companion circuit for one timestep.
 
     Replaces each capacitor and inductor with their Norton companion models.
-    All other elements pass through unchanged.
+    All other elements pass through unchanged.  Independent sources that
+    carry a ``waveform`` callable are replaced with a static version whose
+    ``voltage`` / ``current`` is evaluated at time *t*.
+
+    Parameters
+    ----------
+    circuit:
+        The original (user-specified) circuit.
+    h:
+        Current timestep size (seconds).
+    method:
+        ``"trap"`` (trapezoidal) or ``"euler"`` (backward Euler).
+    cap_voltages, cap_currents, ind_currents, ind_voltages:
+        Reactive-element history dictionaries from the previous timestep.
+    t:
+        Current simulation time (seconds).  Used to evaluate source waveforms.
 
     Capacitor companion (backward Euler, method="euler")
     ----------------------------------------------------
@@ -967,10 +983,32 @@ def _build_transient_companions(
         G_eq = h/L
         I_eq = I_n                (parallel current source from n+ to n-)
     """
-    aug = Circuit(elements=[
-        e for e in circuit.elements
-        if not isinstance(e, (Capacitor, Inductor))
-    ])
+    # Build the base element list, substituting time-varying source values.
+    # VoltageSource / CurrentSource elements that carry a waveform callable
+    # are replaced here with a plain static copy at the current time t.
+    # Capacitors and Inductors are always excluded (they get companion models).
+    base_elements: list = []
+    for e in circuit.elements:
+        if isinstance(e, (Capacitor, Inductor)):
+            continue
+        if isinstance(e, VoltageSource) and e.waveform is not None:
+            # Evaluate the waveform at the current simulation time.
+            base_elements.append(VoltageSource(
+                name=e.name,
+                n_plus=e.n_plus,
+                n_minus=e.n_minus,
+                voltage=e.waveform(t),
+            ))
+        elif isinstance(e, CurrentSource) and e.waveform is not None:
+            base_elements.append(CurrentSource(
+                name=e.name,
+                n_plus=e.n_plus,
+                n_minus=e.n_minus,
+                current=e.waveform(t),
+            ))
+        else:
+            base_elements.append(e)
+    aug = Circuit(elements=base_elements)
 
     for el in circuit.elements:
         # ---- Capacitor companion ------------------------------------------
@@ -1200,11 +1238,29 @@ def transient(
 
     # ---- t = 0: solve initial conditions -----------------------------------
     # Replace each capacitor with a voltage source at its initial voltage so
-    # that the rest of the circuit settles consistently.
-    init_circuit = Circuit(elements=[
-        e for e in circuit.elements
-        if not isinstance(e, (Capacitor, Inductor))
-    ])
+    # that the rest of the circuit settles consistently.  Time-varying sources
+    # are evaluated at t = 0 to obtain the correct initial bias.
+    init_elements: list = []
+    for e in circuit.elements:
+        if isinstance(e, (Capacitor, Inductor)):
+            continue
+        if isinstance(e, VoltageSource) and e.waveform is not None:
+            init_elements.append(VoltageSource(
+                name=e.name,
+                n_plus=e.n_plus,
+                n_minus=e.n_minus,
+                voltage=e.waveform(0.0),
+            ))
+        elif isinstance(e, CurrentSource) and e.waveform is not None:
+            init_elements.append(CurrentSource(
+                name=e.name,
+                n_plus=e.n_plus,
+                n_minus=e.n_minus,
+                current=e.waveform(0.0),
+            ))
+        else:
+            init_elements.append(e)
+    init_circuit = Circuit(elements=init_elements)
     for el in circuit.elements:
         if isinstance(el, Capacitor):
             init_circuit.add(VoltageSource(
@@ -1286,6 +1342,7 @@ def transient(
             circuit, h, method,
             cap_voltages, cap_currents,
             ind_currents, ind_voltages,
+            t=t,
         )
         op = dc_op(aug, max_iterations=max_iterations, tol=tol)
         if not op.converged:
