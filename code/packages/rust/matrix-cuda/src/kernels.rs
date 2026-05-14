@@ -184,27 +184,52 @@ impl Kernels {
     /// Dispatch one of the elementwise-unary kernels.  `n` is the
     /// element count; both buffers must hold at least `n * 4` bytes.
     ///
-    /// Used by Phase 3+ dispatch code and by the device-gated
-    /// tests in this module.
+    /// Takes `&CudaBuffer` instead of `&mut CudaBuffer` so the
+    /// dispatch path can keep multiple buffer references alive at
+    /// once (e.g. for binary ops where we need both inputs from the
+    /// same `BufferStore`).  Internally we copy the buffer's
+    /// `CUdeviceptr` (a u64) into local storage and pass that to
+    /// CUDA — the device pointer is just an integer handle.
     pub fn launch_unary(
         &self,
         device: &CudaDevice,
         name: &str,
-        input: &mut CudaBuffer,
-        output: &mut CudaBuffer,
+        input: &CudaBuffer,
+        output: &CudaBuffer,
+        n: u32,
+    ) -> Result<(), String> {
+        self.launch_unary_by_ptr(device, name, input.device_ptr(), output.device_ptr(), n)
+    }
+
+    /// `launch_unary` core — `cuLaunchKernel` only needs the device
+    /// pointers, so the dispatch path can call this directly when
+    /// it has already extracted the `CUdeviceptr`s from the
+    /// `BufferStore` (which keeps the `&CudaBuffer` lifetimes
+    /// simpler upstream).
+    pub fn launch_unary_by_ptr(
+        &self,
+        device: &CudaDevice,
+        name: &str,
+        in_ptr: cuda_compute::CUdeviceptr,
+        out_ptr: cuda_compute::CUdeviceptr,
         n: u32,
     ) -> Result<(), String> {
         let func = self.get(name)?;
         let block: [u32; 3] = [256, 1, 1];
         let grid: [u32; 3] = [n.div_ceil(block[0]).max(1), 1, 1];
-        // SAFETY: pointers below remain valid until launch returns.
-        // We assemble the args array and call launch in the same
-        // expression — no moves of `input`/`output`/`n` in between.
-        unsafe {
+        // SAFETY: every pointer below is to a `let mut` binding in
+        // this function's frame.  The bindings live until the end
+        // of the surrounding scope — `launch` synchronously
+        // dispatches and `synchronize` blocks until the kernel
+        // completes, so the pointers are never read after they go
+        // out of scope.
+        {
+            let mut in_local = in_ptr;
+            let mut out_local = out_ptr;
             let mut n_local = n;
             let mut args: [*mut c_void; 3] = [
-                input.as_kernel_arg(),
-                output.as_kernel_arg(),
+                &mut in_local as *mut _ as *mut c_void,
+                &mut out_local as *mut _ as *mut c_void,
                 &mut n_local as *mut u32 as *mut c_void,
             ];
             device
@@ -223,20 +248,43 @@ impl Kernels {
         &self,
         device: &CudaDevice,
         name: &str,
-        a: &mut CudaBuffer,
-        b: &mut CudaBuffer,
-        output: &mut CudaBuffer,
+        a: &CudaBuffer,
+        b: &CudaBuffer,
+        output: &CudaBuffer,
+        n: u32,
+    ) -> Result<(), String> {
+        self.launch_binary_by_ptr(
+            device,
+            name,
+            a.device_ptr(),
+            b.device_ptr(),
+            output.device_ptr(),
+            n,
+        )
+    }
+
+    /// `launch_binary` core that accepts device pointers directly.
+    pub fn launch_binary_by_ptr(
+        &self,
+        device: &CudaDevice,
+        name: &str,
+        a_ptr: cuda_compute::CUdeviceptr,
+        b_ptr: cuda_compute::CUdeviceptr,
+        out_ptr: cuda_compute::CUdeviceptr,
         n: u32,
     ) -> Result<(), String> {
         let func = self.get(name)?;
         let block: [u32; 3] = [256, 1, 1];
         let grid: [u32; 3] = [n.div_ceil(block[0]).max(1), 1, 1];
-        unsafe {
+        {
+            let mut a_local = a_ptr;
+            let mut b_local = b_ptr;
+            let mut out_local = out_ptr;
             let mut n_local = n;
             let mut args: [*mut c_void; 4] = [
-                a.as_kernel_arg(),
-                b.as_kernel_arg(),
-                output.as_kernel_arg(),
+                &mut a_local as *mut _ as *mut c_void,
+                &mut b_local as *mut _ as *mut c_void,
+                &mut out_local as *mut _ as *mut c_void,
                 &mut n_local as *mut u32 as *mut c_void,
             ];
             device
@@ -250,15 +298,34 @@ impl Kernels {
 
     /// Dispatch the rank-2 row-major MatMul: `c = a * b` where
     /// `a` is `[m, k]`, `b` is `[k, n]`, and `c` is `[m, n]`.
-    ///
-    /// Buffers must be F32 of the correct sizes; this method doesn't
-    /// validate (the executor's pre-dispatch validation is upstream).
     pub fn launch_matmul(
         &self,
         device: &CudaDevice,
-        a: &mut CudaBuffer,
-        b: &mut CudaBuffer,
-        c: &mut CudaBuffer,
+        a: &CudaBuffer,
+        b: &CudaBuffer,
+        c: &CudaBuffer,
+        m: u32,
+        k: u32,
+        n: u32,
+    ) -> Result<(), String> {
+        self.launch_matmul_by_ptr(
+            device,
+            a.device_ptr(),
+            b.device_ptr(),
+            c.device_ptr(),
+            m,
+            k,
+            n,
+        )
+    }
+
+    /// `launch_matmul` core that accepts device pointers directly.
+    pub fn launch_matmul_by_ptr(
+        &self,
+        device: &CudaDevice,
+        a_ptr: cuda_compute::CUdeviceptr,
+        b_ptr: cuda_compute::CUdeviceptr,
+        c_ptr: cuda_compute::CUdeviceptr,
         m: u32,
         k: u32,
         n: u32,
@@ -266,14 +333,17 @@ impl Kernels {
         let func = self.get("matmul_f32")?;
         let block: [u32; 3] = [16, 16, 1];
         let grid: [u32; 3] = [n.div_ceil(block[0]).max(1), m.div_ceil(block[1]).max(1), 1];
-        unsafe {
+        {
+            let mut a_local = a_ptr;
+            let mut b_local = b_ptr;
+            let mut c_local = c_ptr;
             let mut m_local = m;
             let mut k_local = k;
             let mut n_local = n;
             let mut args: [*mut c_void; 6] = [
-                a.as_kernel_arg(),
-                b.as_kernel_arg(),
-                c.as_kernel_arg(),
+                &mut a_local as *mut _ as *mut c_void,
+                &mut b_local as *mut _ as *mut c_void,
+                &mut c_local as *mut _ as *mut c_void,
                 &mut m_local as *mut u32 as *mut c_void,
                 &mut k_local as *mut u32 as *mut c_void,
                 &mut n_local as *mut u32 as *mut c_void,
@@ -314,7 +384,7 @@ mod tests {
             .unwrap();
 
         kernels
-            .launch_unary(&device, name, &mut in_buf, &mut out_buf, n)
+            .launch_unary(&device, name, &in_buf, &out_buf, n)
             .unwrap();
 
         let got_bytes = device.download(&out_buf).unwrap();
@@ -354,7 +424,7 @@ mod tests {
         device.upload(&b_buf, bytemuck_like(b)).unwrap();
 
         kernels
-            .launch_binary(&device, name, &mut a_buf, &mut b_buf, &mut out_buf, n)
+            .launch_binary(&device, name, &a_buf, &b_buf, &out_buf, n)
             .unwrap();
 
         let got_bytes = device.download(&out_buf).unwrap();
@@ -536,7 +606,7 @@ mod tests {
         device.upload(&b_buf, bytemuck_like(&b)).unwrap();
 
         kernels
-            .launch_matmul(&device, &mut a_buf, &mut b_buf, &mut c_buf, 2, 2, 2)
+            .launch_matmul(&device, &a_buf, &b_buf, &c_buf, 2, 2, 2)
             .unwrap();
 
         let got = bytes_to_f32(&device.download(&c_buf).unwrap());
@@ -564,7 +634,7 @@ mod tests {
         device.upload(&b_buf, bytemuck_like(&b)).unwrap();
 
         kernels
-            .launch_matmul(&device, &mut a_buf, &mut b_buf, &mut c_buf, 3, 4, 2)
+            .launch_matmul(&device, &a_buf, &b_buf, &c_buf, 3, 4, 2)
             .unwrap();
 
         let got = bytes_to_f32(&device.download(&c_buf).unwrap());
