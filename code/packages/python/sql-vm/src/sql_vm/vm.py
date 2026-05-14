@@ -1232,7 +1232,7 @@ def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
     if agg.func is AggFunc.COUNT:
         agg.count += 1
         return
-    if agg.func is AggFunc.SUM:
+    if agg.func in (AggFunc.SUM, AggFunc.TOTAL):
         agg.acc = value if agg.acc is None else agg.acc + value  # type: ignore[operator]
         return
     if agg.func is AggFunc.AVG:
@@ -1289,6 +1289,14 @@ def _do_finalize_agg(ins: FinalizeAgg, st: _VmState) -> None:
             st.push(None)
         else:
             st.push(agg.separator.join(agg.items))
+        return
+    if agg.func is AggFunc.TOTAL:
+        # TOTAL() is SQLite-specific: returns 0.0 (float) for empty groups or
+        # all-NULL input.  Unlike SUM(), it never returns NULL.  This matches
+        # the documented SQLite behaviour: "The total() aggregate function
+        # returns the sum of all non-NULL values in the group. If there are no
+        # non-NULL input rows then total() returns 0.0."
+        st.push(0.0 if agg.acc is None else float(agg.acc))  # type: ignore[arg-type]
         return
     # SUM / MIN / MAX — the accumulator *is* the result (may be NULL for empty).
     st.push(agg.acc)

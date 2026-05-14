@@ -1,5 +1,45 @@
 # Changelog
 
+## [1.30.0] - 2026-05-13
+
+### Added
+
+- **Tier 16 — JSON1 scalar functions** — 14 SQLite-compatible JSON functions
+  are now recognised by the mini-sqlite pipeline end-to-end:
+
+  | Function | Description |
+  |---|---|
+  | `json(x)` | Canonical (minified) JSON |
+  | `json_valid(x)` | 1 / 0 / NULL validation |
+  | `json_quote(x)` | SQL value → JSON text |
+  | `json_array(v…)` | Build JSON array |
+  | `json_object(k, v…)` | Build JSON object |
+  | `json_extract(json, path…)` | Extract one or more paths |
+  | `json_type(json [, path])` | Type name at path |
+  | `json_array_length(json [, path])` | Array length (0 for non-arrays) |
+  | `json_keys(json [, path])` | Object keys as JSON array |
+  | `json_patch(target, patch)` | RFC 7396 merge patch |
+  | `json_remove(json, path…)` | Remove paths |
+  | `json_set(json, path, val…)` | Insert or replace paths |
+  | `json_insert(json, path, val…)` | Insert only (no overwrite) |
+  | `json_replace(json, path, val…)` | Replace only (no insert) |
+
+  Implemented in `sql_vm.scalar_functions`; no parser/planner/codegen
+  changes required — JSON functions are dispatched via `CallScalar`.
+
+  82 oracle-verified tests in `tests/test_tier16_json_total.py`.
+
+- **`TOTAL()` aggregate** — SQLite-specific aggregate function that returns
+  `0.0` (float) instead of NULL for empty groups or all-NULL input.  Follows
+  the SQLite documentation: "If there are no non-NULL input rows then
+  `TOTAL()` returns 0.0."  Added `AggFunc.TOTAL` to the planner (`expr.py`),
+  codegen IR (`ir.py`), and VM (`vm.py`); registered in the adapter's
+  `agg_map` so `SELECT TOTAL(col) FROM t ...` queries compile correctly.
+
+  8 oracle-verified tests cover normal summation, empty-table, all-NULL, and
+  `GROUP BY` with TOTAL, plus a contrast test showing SUM returns NULL where
+  TOTAL returns 0.0.
+
 ## [1.29.0] - 2026-05-13
 
 ### Added

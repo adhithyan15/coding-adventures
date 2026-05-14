@@ -1512,12 +1512,15 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         "AVG": AggFunc.AVG,
         "MIN": AggFunc.MIN,
         "MAX": AggFunc.MAX,
+        # SQLite-specific: TOTAL() is like SUM() but returns 0.0 for empty
+        # sets or all-NULL input, never returning NULL.
+        "TOTAL": AggFunc.TOTAL,
     }
     if upper in agg_map:
         # SQLite's MIN/MAX are overloaded: one-argument form is an aggregate
         # (MIN(col) over a GROUP BY), while two-or-more-argument form is a
         # scalar function that picks the smallest/largest among its arguments.
-        # COUNT/SUM/AVG are always aggregates (no scalar overload).
+        # COUNT/SUM/AVG/TOTAL are always aggregates (no scalar overload).
         if len(args) > 1 and upper in ("MIN", "MAX"):
             # Scalar form: MIN(a, b, ...) / MAX(a, b, ...) — route to the
             # scalar function registry, not the aggregate path.

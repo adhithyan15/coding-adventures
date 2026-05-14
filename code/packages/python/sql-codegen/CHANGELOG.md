@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.22.0] - 2026-05-13
+
+### Added
+
+- **`AggFunc.TOTAL`** (`ir.py`) — Added `TOTAL = "TOTAL"` to the `AggFunc`
+  enum to represent SQLite's `TOTAL()` aggregate.  The `_plan_agg_to_ir`
+  helper in the compiler automatically maps `PlanAggFunc.TOTAL` → `IrAggFunc.TOTAL`
+  via name-lookup, requiring no further compiler changes.
+
 ## [1.21.0] - 2026-05-13
 
 ### Added

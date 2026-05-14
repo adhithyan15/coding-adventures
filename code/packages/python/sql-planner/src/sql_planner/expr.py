@@ -96,6 +96,7 @@ class AggFunc(Enum):
     MIN = "MIN"
     MAX = "MAX"
     GROUP_CONCAT = "GROUP_CONCAT"
+    TOTAL = "TOTAL"  # SQLite-specific: like SUM but returns 0.0 (not NULL) for empty/all-null
 
 
 # ---- Expr variants --------------------------------------------------------

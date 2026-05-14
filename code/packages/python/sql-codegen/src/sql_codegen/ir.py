@@ -129,6 +129,7 @@ class AggFunc(Enum):
     MIN = "MIN"
     MAX = "MAX"
     GROUP_CONCAT = "GROUP_CONCAT"  # concatenate non-NULL strings with a separator
+    TOTAL = "TOTAL"               # SQLite-specific: SUM that returns 0.0 for empty/all-null
 
 
 class Direction(Enum):

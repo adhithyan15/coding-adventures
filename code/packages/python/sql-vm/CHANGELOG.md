@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.21.0 — 2026-05-13
+
+### Added
+
+- **JSON1 scalar functions** (`scalar_functions.py`) — 14 new functions
+  matching the SQLite JSON1 extension, all implemented with Python's built-in
+  `json` module:
+  - `json(x)` — canonical (minified) JSON string.
+  - `json_valid(x)` — 1 if *x* is valid JSON, 0 otherwise, NULL for NULL input.
+  - `json_quote(x)` — SQL value → JSON text representation.
+  - `json_array(v1, v2, …)` — build a JSON array from zero or more SQL values.
+  - `json_object(k1, v1, k2, v2, …)` — build a JSON object from key/value pairs.
+  - `json_extract(json, path [, path…])` — extract one or more values at JSON
+    paths; multiple paths return a JSON array.
+  - `json_type(json [, path])` — return the SQLite JSON type name
+    ("null", "true", "false", "integer", "real", "text", "array", "object").
+  - `json_array_length(json [, path])` — number of elements in a JSON array,
+    or 0 for non-arrays (matching SQLite semantics).
+  - `json_keys(json [, path])` — JSON array of the keys in a JSON object.
+  - `json_patch(target, patch)` — RFC 7396 JSON Merge Patch.
+  - `json_remove(json, path [, path…])` — remove one or more paths.
+  - `json_set(json, path, val [, path, val…])` — insert or replace paths.
+  - `json_insert(json, path, val [, …])` — insert only (no overwrite).
+  - `json_replace(json, path, val [, …])` — replace only (no insert).
+  - `json_group_array(v1, v2, …)` — scalar alias for `json_array`.
+
+- **`TOTAL()` aggregate** (`vm.py`) — SQLite-specific aggregate that returns
+  `0.0` (float) for empty groups or all-NULL input, never returning NULL.
+  Added `AggFunc.TOTAL` to the `AggFunc` enum in `sql-codegen/ir.py` and
+  handled in `_do_update_agg` (identical accumulation to SUM) and
+  `_do_finalize_agg` (returns `0.0` instead of `None` on empty/all-null).
+
 ## 1.20.0 — 2026-05-13
 
 ### Added

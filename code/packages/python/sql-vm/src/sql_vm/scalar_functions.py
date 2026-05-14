@@ -50,6 +50,8 @@ SQLite compat notes
 from __future__ import annotations
 
 import calendar
+import copy
+import json as _json
 import math
 import os
 import re
@@ -1683,3 +1685,838 @@ def _strftime(*args: SqlValue) -> SqlValue:
         return _sqlite_strftime(fmt, dt)
     except (ValueError, OSError):
         return None
+
+
+# ---------------------------------------------------------------------------
+# JSON functions (SQLite-compatible subset)
+# ---------------------------------------------------------------------------
+#
+# SQLite ships a built-in JSON1 extension that exposes a family of functions
+# for creating, extracting, and mutating JSON documents.  Our implementation
+# uses Python's :mod:`json` stdlib and mirrors SQLite semantics as closely as
+# possible.
+#
+# Type mapping
+# ~~~~~~~~~~~~
+# SQL → JSON (for inputs):
+#   None        → null
+#   bool        → true / false
+#   int         → integer
+#   float       → real
+#   str         → string
+#   bytes/blob  → NULL (blobs are not representable in JSON; SQLite also
+#                 returns NULL when a blob appears in a JSON context)
+#
+# JSON → SQL (for outputs extracted by json_extract):
+#   null        → None (SQL NULL)
+#   true        → 1   (SQLite uses integers, not booleans)
+#   false       → 0
+#   integer     → int
+#   real        → float
+#   string      → str
+#   array       → str  (the JSON text of the array)
+#   object      → str  (the JSON text of the object)
+#
+# Path format
+# ~~~~~~~~~~~
+# SQLite JSON paths start with ``$`` (the root) followed by zero or more
+# selectors:
+#   ``$.field``   — object key access
+#   ``$[N]``      — array index (0-based, negative indices allowed)
+#   ``$[#-1]``    — last element (``#`` means array length)
+# Selectors chain: ``$.a.b[0].c``
+#
+# Reference: https://www.sqlite.org/json1.html
+
+
+# --- internal helpers -------------------------------------------------------
+
+_JSON_PATH_COMPONENT = re.compile(
+    r'\.([^\.\[\]]+)'  # .field  (everything up to the next dot or bracket)
+    r'|\[(-?\d+|\#(?:[+-]\d+)?)\]'  # [N] or [#] or [#-N] array indexing
+)
+
+# Safety cap: reject JSON strings larger than this to prevent CPU/memory DoS
+# via pathologically large or deeply-nested documents.  1 MB is generous for
+# any realistic SQL JSON value while still blocking obvious abuse.
+_JSON_MAX_BYTES: int = 1_000_000  # 1 MB
+
+
+def _safe_json_loads(s: str) -> tuple[object, bool]:
+    """Parse *s* as JSON and return ``(parsed, ok)``.
+
+    Returns ``(None, False)`` if *s* exceeds :data:`_JSON_MAX_BYTES`, is not
+    valid JSON, or causes a ``RecursionError`` (deeply-nested documents).
+    This is the single choke-point for all user-supplied JSON in the VM; it
+    prevents CPU/memory denial-of-service via crafted payloads.
+    """
+    if len(s) > _JSON_MAX_BYTES:
+        return None, False
+    try:
+        return _json.loads(s), True
+    except (ValueError, TypeError, RecursionError):
+        return None, False
+
+
+def _sql_to_json_val(v: SqlValue) -> object:
+    """Convert a SQL scalar value to a Python value suitable for json.dumps.
+
+    Blobs (bytes) have no JSON representation and are converted to None,
+    which serialises as JSON ``null``.  This matches SQLite's behaviour.
+    """
+    if isinstance(v, (type(None), bool, int, float, str)):
+        return v
+    if isinstance(v, (bytes, bytearray)):
+        return None   # blobs → null
+    return str(v)
+
+
+def _json_to_sql_val(v: object) -> SqlValue:
+    """Convert a Python JSON value back to a SQL scalar.
+
+    JSON booleans are integers (true→1, false→0) in SQLite.
+    Nested arrays and objects are returned as their JSON text representation.
+    """
+    if v is None:
+        return None
+    if isinstance(v, bool):
+        return 1 if v else 0
+    if isinstance(v, int):
+        return v
+    if isinstance(v, float):
+        return v
+    if isinstance(v, str):
+        return v
+    if isinstance(v, (list, dict)):
+        return _json.dumps(v, separators=(",", ":"))
+    return str(v)
+
+
+def _json_type_name(v: object) -> str:
+    """Return the SQLite json_type() name for a Python JSON value.
+
+    Possible return values: ``"null"``, ``"true"``, ``"false"``,
+    ``"integer"``, ``"real"``, ``"text"``, ``"array"``, ``"object"``.
+    """
+    if v is None:
+        return "null"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, int):
+        return "integer"
+    if isinstance(v, float):
+        return "real"
+    if isinstance(v, str):
+        return "text"
+    if isinstance(v, list):
+        return "array"
+    if isinstance(v, dict):
+        return "object"
+    return "text"
+
+
+def _json_navigate(root: object, path: str) -> tuple[object, bool]:
+    """Follow *path* from *root* and return ``(value, found)``.
+
+    Returns ``(None, False)`` when any segment of the path does not exist.
+    """
+    if not isinstance(path, str) or not path.startswith("$"):
+        return None, False
+    remainder = path[1:]
+    current = root
+    while remainder:
+        m = _JSON_PATH_COMPONENT.match(remainder)
+        if m is None:
+            return None, False
+        remainder = remainder[m.end():]
+        field = m.group(1)
+        idx_s = m.group(2)
+        if field is not None:
+            # Object key access: $.field
+            if not isinstance(current, dict):
+                return None, False
+            if field not in current:
+                return None, False
+            current = current[field]
+        else:
+            # Array index access: $[N] or $[#] or $[#-N]
+            if not isinstance(current, list):
+                return None, False
+            length = len(current)
+            if idx_s == "#":
+                idx = length        # past-the-end (used internally)
+            elif idx_s.startswith("#"):
+                delta = int(idx_s[1:])  # e.g. "#-1" → -1
+                idx = length + delta
+            else:
+                idx = int(idx_s)
+            if idx < 0:
+                idx += length
+            if idx < 0 or idx >= length:
+                return None, False
+            current = current[idx]
+    return current, True
+
+
+def _json_set_path(
+    root: object,
+    path: str,
+    value: object,
+    *,
+    insert: bool,
+    replace: bool,
+) -> object:
+    """Return a deep copy of *root* with *path* set to *value*.
+
+    - ``insert=True, replace=False`` → only creates, never overwrites (json_insert)
+    - ``insert=False, replace=True`` → only overwrites, never creates (json_replace)
+    - ``insert=True, replace=True``  → creates or overwrites (json_set)
+    """
+    if not isinstance(path, str) or not path.startswith("$"):
+        return root
+    if path == "$":
+        return value    # replace root — unusual but valid
+
+    # Collect path segments so we can navigate to the parent.
+    segments: list[tuple[str, object]] = []  # ("field", name) or ("index", int)
+    remainder = path[1:]
+    while remainder:
+        m = _JSON_PATH_COMPONENT.match(remainder)
+        if m is None:
+            return root   # malformed path → no-op
+        remainder = remainder[m.end():]
+        field = m.group(1)
+        idx_s = m.group(2)
+        if field is not None:
+            segments.append(("field", field))
+        else:
+            segments.append(("index", idx_s))
+
+    # Deep copy so we don't mutate the original.
+    result = copy.deepcopy(root)
+
+    # Navigate to the parent node.
+    parent: object = result
+    for seg_type, seg_key in segments[:-1]:
+        if seg_type == "field":
+            if not isinstance(parent, dict) or seg_key not in parent:
+                return result   # path does not exist → no-op
+            parent = parent[seg_key]  # type: ignore[index]
+        else:
+            if not isinstance(parent, list):
+                return result
+            length = len(parent)
+            if isinstance(seg_key, str):
+                idx = length if seg_key == "#" else (
+                    length + int(seg_key[1:]) if seg_key.startswith("#")
+                    else int(seg_key)
+                )
+            else:
+                idx = int(seg_key)
+            if idx < 0:
+                idx += length
+            if idx < 0 or idx >= length:
+                return result
+            parent = parent[idx]   # type: ignore[index]
+
+    # Apply the final segment.
+    last_type, last_key = segments[-1]
+    if last_type == "field":
+        if not isinstance(parent, dict):
+            return result
+        exists = last_key in parent
+        if (exists and replace) or (not exists and insert):
+            parent[last_key] = value  # type: ignore[index]
+    else:
+        if not isinstance(parent, list):
+            return result
+        length = len(parent)
+        if isinstance(last_key, str):
+            idx = (
+                length if last_key == "#" else
+                (length + int(last_key[1:]) if last_key.startswith("#") else int(last_key))
+            )
+        else:
+            idx = int(last_key)
+        if idx < 0:
+            idx += length
+        if idx == length and insert:
+            parent.append(value)   # type: ignore[union-attr]
+        elif 0 <= idx < length and replace:
+            parent[idx] = value    # type: ignore[index]
+
+    return result
+
+
+def _json_remove_path(root: object, path: str) -> object:
+    """Return a deep copy of *root* with the node at *path* removed."""
+    if not isinstance(path, str) or not path.startswith("$"):
+        return root
+    if path == "$":
+        return root  # cannot remove root
+
+    segments: list[tuple[str, object]] = []
+    remainder = path[1:]
+    while remainder:
+        m = _JSON_PATH_COMPONENT.match(remainder)
+        if m is None:
+            return root
+        remainder = remainder[m.end():]
+        field = m.group(1)
+        idx_s = m.group(2)
+        if field is not None:
+            segments.append(("field", field))
+        else:
+            segments.append(("index", idx_s))
+
+    result = copy.deepcopy(root)
+    parent: object = result
+    for seg_type, seg_key in segments[:-1]:
+        if seg_type == "field":
+            if not isinstance(parent, dict) or seg_key not in parent:
+                return result
+            parent = parent[seg_key]  # type: ignore[index]
+        else:
+            if not isinstance(parent, list):
+                return result
+            length = len(parent)
+            sk = str(seg_key)
+            if sk == "#":
+                idx = length
+            elif sk.startswith("#"):
+                idx = length + int(sk[1:])
+            else:
+                idx = int(sk)
+            if idx < 0:
+                idx += length
+            if idx < 0 or idx >= length:
+                return result
+            parent = parent[idx]   # type: ignore[index]
+
+    last_type, last_key = segments[-1]
+    if last_type == "field":
+        if isinstance(parent, dict) and last_key in parent:
+            del parent[last_key]  # type: ignore[attr-defined]
+    else:
+        if isinstance(parent, list):
+            length = len(parent)
+            lk = str(last_key)
+            if lk == "#":
+                idx = length
+            elif lk.startswith("#"):
+                idx = length + int(lk[1:])
+            else:
+                idx = int(lk)
+            if idx < 0:
+                idx += length
+            if 0 <= idx < length:
+                parent.pop(idx)   # type: ignore[union-attr]
+
+    return result
+
+
+# --- public JSON functions ---------------------------------------------------
+
+
+@register("json")
+def _json_fn(x: SqlValue) -> SqlValue:
+    """Return the canonical minified form of a JSON string.
+
+    Parses *x* and re-serialises it with no extra whitespace.  Returns NULL
+    if *x* is NULL or not valid JSON.
+
+    Examples::
+
+        JSON('{ "a" : 1, "b" : 2 }')   → '{"a":1,"b":2}'
+        JSON('[1, 2,  3]')              → '[1,2,3]'
+        JSON(NULL)                      → NULL
+        JSON('invalid')                 → NULL
+    """
+    if x is None:
+        return None
+    if not isinstance(x, str):
+        return None
+    parsed, ok = _safe_json_loads(x)
+    if not ok:
+        return None
+    return _json.dumps(parsed, separators=(",", ":"))
+
+
+@register("json_valid")
+def _json_valid(x: SqlValue) -> SqlValue:
+    """Return 1 if *x* is valid JSON, 0 otherwise.  NULL input → NULL.
+
+    Matches SQLite 3.45+ behaviour where ``JSON_VALID(NULL)`` returns NULL
+    rather than 0.  For non-null, non-string inputs the result is 0.
+
+    Examples::
+
+        JSON_VALID('{"a":1}')    → 1
+        JSON_VALID('[1,2,3]')    → 1
+        JSON_VALID('invalid')    → 0
+        JSON_VALID(NULL)         → NULL
+    """
+    if x is None:
+        return None
+    if not isinstance(x, str):
+        return 0
+    _, ok = _safe_json_loads(x)
+    return 1 if ok else 0
+
+
+@register("json_quote")
+def _json_quote_fn(x: SqlValue) -> SqlValue:
+    """Convert a SQL value to its JSON representation as a TEXT string.
+
+    This is the inverse of ``json_extract`` for scalar values.
+
+    - NULL → ``"null"``
+    - integers → decimal string: ``1``
+    - floats   → decimal string: ``3.14``
+    - text     → double-quoted JSON string: ``"hello"``
+    - blob     → ``"null"``  (blobs not representable)
+
+    Examples::
+
+        JSON_QUOTE(NULL)         → 'null'
+        JSON_QUOTE(42)           → '42'
+        JSON_QUOTE(3.14)         → '3.14'
+        JSON_QUOTE('hello')      → '"hello"'
+        JSON_QUOTE('it"s')       → '"it\\"s"'
+    """
+    return _json.dumps(_sql_to_json_val(x), separators=(",", ":"))
+
+
+@register("json_array")
+def _json_array_fn(*args: SqlValue) -> SqlValue:
+    """Build a JSON array from zero or more SQL values.
+
+    Each argument becomes one element.  NULL arguments become JSON null.
+
+    Examples::
+
+        JSON_ARRAY(1, 2, 3)        → '[1,2,3]'
+        JSON_ARRAY('a', NULL, 'b') → '["a",null,"b"]'
+        JSON_ARRAY()               → '[]'
+    """
+    items = [_sql_to_json_val(a) for a in args]
+    return _json.dumps(items, separators=(",", ":"))
+
+
+@register("json_object")
+def _json_object_fn(*args: SqlValue) -> SqlValue:
+    """Build a JSON object from alternating key/value pairs.
+
+    ``JSON_OBJECT(key1, val1, key2, val2, ...)``
+
+    Keys must be TEXT.  Values follow the SQL-to-JSON mapping (NULL → null,
+    etc.).  An odd number of arguments raises an error.  Duplicate keys
+    produce an object where the last value wins (matching SQLite behaviour).
+
+    Examples::
+
+        JSON_OBJECT('a', 1, 'b', 2)     → '{"a":1,"b":2}'
+        JSON_OBJECT('x', NULL)          → '{"x":null}'
+        JSON_OBJECT('n', 3.14)          → '{"n":3.14}'
+    """
+    if len(args) % 2 != 0:
+        raise WrongNumberOfArguments(
+            name="json_object",
+            expected="an even number",
+            got=len(args),
+        )
+    obj: dict[str, object] = {}
+    for i in range(0, len(args), 2):
+        key = args[i]
+        val = args[i + 1]
+        if key is None:
+            # SQLite returns an error for a NULL key; we follow suit by
+            # converting it to the string "null" which is the least-bad
+            # behaviour without raising a hard exception.
+            key = "null"
+        obj[str(key)] = _sql_to_json_val(val)
+    return _json.dumps(obj, separators=(",", ":"))
+
+
+@register("json_extract")
+def _json_extract(*args: SqlValue) -> SqlValue:
+    """Extract one or more values from a JSON document at the given paths.
+
+    ``JSON_EXTRACT(json, path1 [, path2 ...])``
+
+    - One path: returns the SQL value at that path (NULL if not found).
+    - Multiple paths: returns a JSON array of the extracted values.
+
+    Extracted scalars are returned as SQL values (string, integer, real, NULL).
+    Extracted arrays/objects are returned as their JSON text.
+
+    Examples::
+
+        JSON_EXTRACT('{"a":1,"b":2}', '$.a')       → 1
+        JSON_EXTRACT('[10,20,30]', '$[1]')          → 20
+        JSON_EXTRACT('{"a":{"b":3}}', '$.a.b')     → 3
+        JSON_EXTRACT('{"a":1}', '$.missing')       → NULL
+        JSON_EXTRACT('{"a":1}', '$.a', '$.b')      → '[1,null]'
+        JSON_EXTRACT(NULL, '$.a')                  → NULL
+    """
+    if len(args) < 2:
+        raise WrongNumberOfArguments(name="json_extract", expected="at least 2", got=len(args))
+    json_str = args[0]
+    paths = args[1:]
+
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    results: list[object] = []
+    for path in paths:
+        if not isinstance(path, str):
+            results.append(None)
+            continue
+        val, found = _json_navigate(doc, path)
+        results.append(val if found else None)
+
+    if len(results) == 1:
+        return _json_to_sql_val(results[0])
+    # Multiple paths → return as JSON array.
+    return _json.dumps(results, separators=(",", ":"))
+
+
+@register("json_type")
+def _json_type(*args: SqlValue) -> SqlValue:
+    """Return the type of a JSON value or a value within a JSON document.
+
+    ``JSON_TYPE(json)``          → type of the root element
+    ``JSON_TYPE(json, path)``    → type of the element at *path*
+
+    Return values: ``"null"``, ``"true"``, ``"false"``, ``"integer"``,
+    ``"real"``, ``"text"``, ``"array"``, ``"object"``.
+
+    Returns NULL if the JSON is invalid or the path does not exist.
+
+    Examples::
+
+        JSON_TYPE('{"a":1}')              → 'object'
+        JSON_TYPE('[1,2,3]')              → 'array'
+        JSON_TYPE('"hello"')              → 'text'
+        JSON_TYPE('{"a":1}', '$.a')       → 'integer'
+        JSON_TYPE('{"a":null}', '$.a')    → 'null'
+        JSON_TYPE('{"a":1}', '$.missing') → NULL
+    """
+    _arity("json_type", list(args), 1, 2)
+    json_str = args[0]
+    path = args[1] if len(args) == 2 else "$"
+
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    if path == "$":
+        return _json_type_name(doc)
+
+    val, found = _json_navigate(doc, path)  # type: ignore[arg-type]
+    if not found:
+        return None
+    return _json_type_name(val)
+
+
+@register("json_array_length")
+def _json_array_length(*args: SqlValue) -> SqlValue:
+    """Return the number of elements in a JSON array.
+
+    ``JSON_ARRAY_LENGTH(json)``          → length of root array
+    ``JSON_ARRAY_LENGTH(json, path)``    → length of array at *path*
+
+    Returns NULL if the JSON is invalid, the path does not exist, or the
+    target element is not an array.
+
+    Examples::
+
+        JSON_ARRAY_LENGTH('[1,2,3]')              → 3
+        JSON_ARRAY_LENGTH('{"a":[1,2]}', '$.a')   → 2
+        JSON_ARRAY_LENGTH('{"a":1}')              → NULL   (not an array)
+        JSON_ARRAY_LENGTH(NULL)                   → NULL
+    """
+    _arity("json_array_length", list(args), 1, 2)
+    json_str = args[0]
+    path = args[1] if len(args) == 2 else "$"
+
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    if path == "$":
+        target = doc
+    else:
+        target, found = _json_navigate(doc, path)  # type: ignore[arg-type]
+        if not found:
+            return None
+
+    if not isinstance(target, list):
+        # Valid JSON but not an array — SQLite returns 0, not NULL.
+        # "The json_array_length(X) function returns … 0 if X is some kind of
+        # JSON value other than an array" — SQLite documentation.
+        return 0
+    return len(target)
+
+
+@register("json_keys")
+def _json_keys(*args: SqlValue) -> SqlValue:
+    """Return a JSON array of the keys in a JSON object.
+
+    ``JSON_KEYS(json)``         → keys of the root object
+    ``JSON_KEYS(json, path)``   → keys of the object at *path*
+
+    Returns NULL if the target element is not an object or the path does
+    not exist.
+
+    Examples::
+
+        JSON_KEYS('{"a":1,"b":2}')         → '["a","b"]'
+        JSON_KEYS('{"x":{"y":3}}', '$.x')  → '["y"]'
+        JSON_KEYS('[1,2]')                  → NULL   (not an object)
+        JSON_KEYS(NULL)                     → NULL
+    """
+    _arity("json_keys", list(args), 1, 2)
+    json_str = args[0]
+    path = args[1] if len(args) == 2 else "$"
+
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    if path == "$":
+        target = doc
+    else:
+        target, found = _json_navigate(doc, path)  # type: ignore[arg-type]
+        if not found:
+            return None
+
+    if not isinstance(target, dict):
+        return None
+    return _json.dumps(list(target.keys()), separators=(",", ":"))
+
+
+@register("json_patch")
+def _json_patch(target: SqlValue, patch: SqlValue) -> SqlValue:
+    """Apply an RFC 7396 JSON Merge Patch to a JSON document.
+
+    ``JSON_PATCH(target, patch)``
+
+    The merge patch algorithm:
+    - If *patch* is an object, recursively merge into *target*.
+    - A key in *patch* whose value is null removes that key from *target*.
+    - Other values in *patch* overwrite or insert into *target*.
+    - If *patch* is not an object, replace *target* entirely with *patch*.
+
+    Returns NULL if either argument is NULL or not valid JSON.
+
+    Examples::
+
+        JSON_PATCH('{"a":1,"b":2}', '{"b":null,"c":3}')
+            → '{"a":1,"c":3}'
+        JSON_PATCH('[1,2]', '[3,4,5]')
+            → '[3,4,5]'
+    """
+    if target is None or patch is None:
+        return None
+    if not isinstance(target, str) or not isinstance(patch, str):
+        return None
+    t, ok1 = _safe_json_loads(target)
+    p, ok2 = _safe_json_loads(patch)
+    if not ok1 or not ok2:
+        return None
+
+    def _merge(a: object, b: object) -> object:
+        if not isinstance(b, dict):
+            return b
+        result = copy.deepcopy(a) if isinstance(a, dict) else {}
+        for k, v in b.items():
+            if v is None:
+                result.pop(k, None)   # type: ignore[union-attr]
+            else:
+                result[k] = _merge(result.get(k), v)  # type: ignore[union-attr]
+        return result
+
+    return _json.dumps(_merge(t, p), separators=(",", ":"))
+
+
+@register("json_remove")
+def _json_remove(*args: SqlValue) -> SqlValue:
+    """Remove one or more paths from a JSON document.
+
+    ``JSON_REMOVE(json, path1 [, path2 ...])``
+
+    Paths that do not exist are silently ignored.  Returns NULL if *json*
+    is NULL or not valid JSON.
+
+    Examples::
+
+        JSON_REMOVE('{"a":1,"b":2}', '$.a')       → '{"b":2}'
+        JSON_REMOVE('[1,2,3]', '$[1]')             → '[1,3]'
+        JSON_REMOVE('{"a":1}', '$.missing')       → '{"a":1}'
+        JSON_REMOVE(NULL, '$.a')                   → NULL
+    """
+    if len(args) < 2:
+        raise WrongNumberOfArguments(name="json_remove", expected="at least 2", got=len(args))
+    json_str = args[0]
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    for path in args[1:]:
+        if isinstance(path, str):
+            doc = _json_remove_path(doc, path)
+
+    return _json.dumps(doc, separators=(",", ":"))
+
+
+@register("json_set")
+def _json_set(*args: SqlValue) -> SqlValue:
+    """Insert or replace values in a JSON document.
+
+    ``JSON_SET(json, path1, val1 [, path2, val2 ...])``
+
+    Creates the path if it does not exist; overwrites it if it does.
+    Arguments after the first must come in path/value pairs.
+
+    Returns NULL if *json* is NULL or not valid JSON.
+
+    Examples::
+
+        JSON_SET('{"a":1}', '$.a', 99)         → '{"a":99}'
+        JSON_SET('{"a":1}', '$.b', 2)          → '{"a":1,"b":2}'
+        JSON_SET('[1,2,3]', '$[1]', 99)        → '[1,99,3]'
+    """
+    if len(args) < 3 or (len(args) - 1) % 2 != 0:
+        raise WrongNumberOfArguments(
+            name="json_set", expected="1 + even number of path/value pairs", got=len(args)
+        )
+    json_str = args[0]
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    for i in range(1, len(args), 2):
+        path = args[i]
+        value = _sql_to_json_val(args[i + 1])
+        if isinstance(path, str):
+            doc = _json_set_path(doc, path, value, insert=True, replace=True)
+
+    return _json.dumps(doc, separators=(",", ":"))
+
+
+@register("json_insert")
+def _json_insert(*args: SqlValue) -> SqlValue:
+    """Insert values into a JSON document without overwriting existing paths.
+
+    ``JSON_INSERT(json, path1, val1 [, path2, val2 ...])``
+
+    Only inserts where the path does not yet exist.  Existing values are
+    left unchanged (use ``JSON_SET`` to overwrite).
+
+    Returns NULL if *json* is NULL or not valid JSON.
+
+    Examples::
+
+        JSON_INSERT('{"a":1}', '$.a', 99)   → '{"a":1}'     (no-op)
+        JSON_INSERT('{"a":1}', '$.b', 2)    → '{"a":1,"b":2}'
+    """
+    if len(args) < 3 or (len(args) - 1) % 2 != 0:
+        raise WrongNumberOfArguments(
+            name="json_insert", expected="1 + even number of path/value pairs", got=len(args)
+        )
+    json_str = args[0]
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    for i in range(1, len(args), 2):
+        path = args[i]
+        value = _sql_to_json_val(args[i + 1])
+        if isinstance(path, str):
+            doc = _json_set_path(doc, path, value, insert=True, replace=False)
+
+    return _json.dumps(doc, separators=(",", ":"))
+
+
+@register("json_replace")
+def _json_replace(*args: SqlValue) -> SqlValue:
+    """Replace existing values in a JSON document without creating new paths.
+
+    ``JSON_REPLACE(json, path1, val1 [, path2, val2 ...])``
+
+    Only replaces values where the path already exists.  Missing paths are
+    silently ignored (use ``JSON_SET`` to create new keys).
+
+    Returns NULL if *json* is NULL or not valid JSON.
+
+    Examples::
+
+        JSON_REPLACE('{"a":1}', '$.a', 99)   → '{"a":99}'
+        JSON_REPLACE('{"a":1}', '$.b', 2)    → '{"a":1}'   (no-op)
+    """
+    if len(args) < 3 or (len(args) - 1) % 2 != 0:
+        raise WrongNumberOfArguments(
+            name="json_replace", expected="1 + even number of path/value pairs", got=len(args)
+        )
+    json_str = args[0]
+    if json_str is None:
+        return None
+    if not isinstance(json_str, str):
+        return None
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
+        return None
+
+    for i in range(1, len(args), 2):
+        path = args[i]
+        value = _sql_to_json_val(args[i + 1])
+        if isinstance(path, str):
+            doc = _json_set_path(doc, path, value, insert=False, replace=True)
+
+    return _json.dumps(doc, separators=(",", ":"))
+
+
+@register("json_group_array")
+def _json_group_array_scalar(*args: SqlValue) -> SqlValue:
+    """Scalar variant of json_group_array called with explicit value list.
+
+    This is exposed for completeness but the real aggregate form
+    (``SELECT json_group_array(col) FROM t GROUP BY ...``) is handled
+    elsewhere.  Called as a scalar, it builds a JSON array from its
+    arguments exactly like ``json_array``.
+
+    Examples::
+
+        JSON_GROUP_ARRAY(1, 2, 3)  → '[1,2,3]'
+    """
+    return _json_array_fn(*args)
