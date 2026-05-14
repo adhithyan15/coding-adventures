@@ -155,6 +155,8 @@ ZERO = IRInteger(0)
 _PI_SYM = IRSymbol("%pi")
 _ELLIPTIC_F = IRSymbol("EllipticF")
 _ELLIPTIC_K = IRSymbol("EllipticK")
+_ELLIPTIC_E = IRSymbol("EllipticE")
+_ELLIPTIC_PI = IRSymbol("EllipticPi")
 
 
 def integrate() -> Handler:
@@ -184,6 +186,14 @@ def integrate() -> Handler:
             elliptic_k = _try_complete_elliptic_k(f, x, a, b)
             if elliptic_k is not None:
                 return elliptic_k
+
+            elliptic_e = _try_complete_elliptic_e(f, x, a, b)
+            if elliptic_e is not None:
+                return elliptic_e
+
+            elliptic_pi = _try_complete_elliptic_pi(f, x, a, b)
+            if elliptic_pi is not None:
+                return elliptic_pi
 
             F: IRNode | None = None
 
@@ -240,6 +250,9 @@ def integrate() -> Handler:
             _elliptic_result = _try_incomplete_elliptic_f(f, x)
             if _elliptic_result is not None:
                 return _elliptic_result
+            _elliptic_e_result = _try_incomplete_elliptic_e(f, x)
+            if _elliptic_e_result is not None:
+                return _elliptic_e_result
             return IRApply(INTEGRATE, (f, x))
         return vm.eval(result)
 
@@ -355,6 +368,200 @@ def _is_pi_over_two(node: IRNode) -> bool:
         and node.args[0] == _PI_SYM
         and node.args[1] == TWO
     )
+
+
+def _elliptic_second_kind_radicand(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``k`` when *f* is ``sqrt(1 - k² sin²(x))``.
+
+    The second-kind elliptic integrand is the *positive* square root of the
+    same radicand that appears inverted in the first-kind integrand.  That is,
+    ``f = Sqrt(Sub(1, Mul(Pow(k, 2), Pow(Sin(x), 2))))``.
+    """
+    # f must be Sqrt(radicand)
+    if not (
+        isinstance(f, IRApply)
+        and f.head == SQRT
+        and len(f.args) == 1
+    ):
+        return None
+    radicand = f.args[0]
+    # radicand must be (1 - k²·sin²(x))
+    if not (
+        isinstance(radicand, IRApply)
+        and radicand.head == SUB
+        and len(radicand.args) == 2
+        and radicand.args[0] == ONE
+    ):
+        return None
+    product = radicand.args[1]
+    if not (
+        isinstance(product, IRApply)
+        and product.head == MUL
+        and len(product.args) == 2
+    ):
+        return None
+    first, second = product.args
+    return _modulus_from_squared_factor(first, second, x) or _modulus_from_squared_factor(
+        second, first, x
+    )
+
+
+def _try_complete_elliptic_e(
+    f: IRNode, x: IRSymbol, lower: IRNode, upper: IRNode
+) -> IRNode | None:
+    """Recognise the complete elliptic integral of the second kind.
+
+    ``∫₀^(π/2) sqrt(1-k² sin²(x)) dx`` is returned as ``EllipticE(k)``.
+    """
+    if lower != ZERO:
+        return None
+    if not _is_pi_over_two(upper):
+        return None
+    modulus = _elliptic_second_kind_radicand(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_E, (modulus,))
+
+
+def _try_incomplete_elliptic_e(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Recognise the incomplete elliptic integral of the second kind.
+
+    ``∫ sqrt(1-k² sin²(x)) dx`` is non-elementary; returning
+    ``EllipticE(x, k)`` makes the special-function form explicit.
+    """
+    modulus = _elliptic_second_kind_radicand(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_E, (x, modulus))
+
+
+def _extract_characteristic_n(bracket: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return *n* when *bracket* is ``(1 + n·sin²(x))``.
+
+    Accepts both ``Add(1, Mul(n, Pow(Sin(x), 2)))`` and the commuted form
+    ``Add(Mul(n, Pow(Sin(x), 2)), 1)``.
+    """
+    if not (
+        isinstance(bracket, IRApply)
+        and bracket.head == ADD
+        and len(bracket.args) == 2
+    ):
+        return None
+    a, b = bracket.args
+    # Try (1, n·sin²(x)) and (n·sin²(x), 1)
+    for one_part, prod_part in [(a, b), (b, a)]:
+        if one_part != ONE:
+            continue
+        # prod_part must be Mul(n, Pow(Sin(x), 2))
+        if not (
+            isinstance(prod_part, IRApply)
+            and prod_part.head == MUL
+            and len(prod_part.args) == 2
+        ):
+            continue
+        p1, p2 = prod_part.args
+        for n_candidate, sin_sq in [(p1, p2), (p2, p1)]:
+            # sin_sq must be Pow(Sin(x), 2)
+            if not (
+                isinstance(sin_sq, IRApply)
+                and sin_sq.head == POW
+                and len(sin_sq.args) == 2
+                and sin_sq.args[1] == TWO
+            ):
+                continue
+            inner = sin_sq.args[0]
+            if not (
+                isinstance(inner, IRApply)
+                and inner.head == SIN
+                and len(inner.args) == 1
+                and inner.args[0] == x
+            ):
+                continue
+            if _depends_on(n_candidate, x):
+                continue
+            return n_candidate
+    return None
+
+
+def _elliptic_third_kind_params(
+    f: IRNode, x: IRSymbol
+) -> tuple[IRNode, IRNode] | None:
+    """Return ``(n, k)`` when *f* is ``1/((1+n·sin²(x))·sqrt(1-k²·sin²(x)))``.
+
+    The third-kind elliptic integrand introduces a characteristic parameter
+    *n* in a second factor ``(1 + n·sin²(x))`` that multiplies the usual
+    first-kind denominator ``sqrt(1-k²·sin²(x))``.
+    """
+    # f must be Div(1, denominator)
+    if not (
+        isinstance(f, IRApply)
+        and f.head == DIV
+        and len(f.args) == 2
+        and f.args[0] == ONE
+    ):
+        return None
+    denominator = f.args[1]
+    # denominator must be Mul(bracket, sqrt_term) in either order
+    if not (
+        isinstance(denominator, IRApply)
+        and denominator.head == MUL
+        and len(denominator.args) == 2
+    ):
+        return None
+    a, b = denominator.args
+    # Try both orderings: (bracket, sqrt) and (sqrt, bracket)
+    for bracket, sqrt_term in [(a, b), (b, a)]:
+        # sqrt_term must be Sqrt(1 - k²·sin²(x)) — same as first kind
+        if not (
+            isinstance(sqrt_term, IRApply)
+            and sqrt_term.head == SQRT
+            and len(sqrt_term.args) == 1
+        ):
+            continue
+        radicand = sqrt_term.args[0]
+        if not (
+            isinstance(radicand, IRApply)
+            and radicand.head == SUB
+            and len(radicand.args) == 2
+            and radicand.args[0] == ONE
+        ):
+            continue
+        prod = radicand.args[1]
+        if not (
+            isinstance(prod, IRApply)
+            and prod.head == MUL
+            and len(prod.args) == 2
+        ):
+            continue
+        f1, f2 = prod.args
+        k = _modulus_from_squared_factor(f1, f2, x) or _modulus_from_squared_factor(f2, f1, x)
+        if k is None:
+            continue
+        # bracket must be Add(1, Mul(n, Pow(Sin(x), 2))) or equivalent
+        # Accept: (1 + n·sin²(x)) as Add(1, Mul(n, Pow(Sin(x), 2)))
+        n = _extract_characteristic_n(bracket, x)
+        if n is None:
+            continue
+        return (n, k)
+    return None
+
+
+def _try_complete_elliptic_pi(
+    f: IRNode, x: IRSymbol, lower: IRNode, upper: IRNode
+) -> IRNode | None:
+    """Recognise the complete elliptic integral of the third kind.
+
+    ``∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²·sin²θ)) dθ`` → ``EllipticPi(n, k)``.
+    """
+    if lower != ZERO:
+        return None
+    if not _is_pi_over_two(upper):
+        return None
+    params = _elliptic_third_kind_params(f, x)
+    if params is None:
+        return None
+    n, k = params
+    return IRApply(_ELLIPTIC_PI, (n, k))
 
 
 # ---------------------------------------------------------------------------

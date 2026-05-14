@@ -27,6 +27,44 @@
   that common factor and then reuse the existing univariate integer factorizer
   on the residual.
 
+## 0.54.0 — 2026-05-14
+
+**Phase 25 — Elliptic integrals of the second and third kind.**
+
+Extended the integration engine with two new special-function fallbacks that
+complement the first-kind handlers (EllipticF/EllipticK) added in the previous
+release.
+
+### New functions
+
+- `_elliptic_second_kind_radicand(f, x)` — extracts the modulus *k* from the
+  second-kind integrand `sqrt(1 - k²·sin²(x))`.
+- `_try_complete_elliptic_e(f, x, lower, upper)` — recognises the complete
+  second-kind integral `∫₀^(π/2) sqrt(1-k²·sin²θ) dθ` → `EllipticE(k)`.
+- `_try_incomplete_elliptic_e(f, x)` — recognises the indefinite form
+  `∫ sqrt(1-k²·sin²θ) dθ` → `EllipticE(θ, k)`.
+- `_extract_characteristic_n(bracket, x)` — extracts the characteristic
+  parameter *n* from a `(1 + n·sin²(x))` factor.
+- `_elliptic_third_kind_params(f, x)` — extracts `(n, k)` from the third-kind
+  integrand `1/((1+n·sin²x)·sqrt(1-k²·sin²x))`.
+- `_try_complete_elliptic_pi(f, x, lower, upper)` — recognises the complete
+  third-kind integral `∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²·sin²θ)) dθ`
+  → `EllipticPi(n, k)`.
+
+### Integration points
+
+- Definite handler: EllipticE(k) and EllipticPi(n,k) are tried immediately
+  after EllipticK(k), before computing any antiderivative.
+- Indefinite handler: EllipticE(θ,k) is tried after EllipticF(θ,k) in the
+  special-function fallback chain.
+
+### Not implemented
+
+- Incomplete EllipticPi(φ,n,k) — the general 3-argument form with variable
+  upper limit. Returns unevaluated `Integrate(...)`.
+- Second and third-kind elliptic integrals in non-canonical forms (e.g., with
+  additional constant factors or shifted sine arguments). Returns unevaluated.
+
 ## 0.53.0 — 2026-05-05
 
 **Phase 33 — Trig special values at rational multiples of π.**
