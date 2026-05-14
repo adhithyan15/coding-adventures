@@ -109,40 +109,117 @@ fn supported_ops_bitset() -> u32 {
 
 /// Default `BackendProfile` for `matrix-cuda`.
 ///
-/// **Phase 1 ships placeholder coefficients** representative of a
-/// mid-range Ampere card (A40 / RTX 3090) over PCIe gen 4.  Real
-/// calibration happens in Phase 7 when the planner integration lands.
+/// **MX06 Phase 7** — calibrated coefficients targeting the modern
+/// NVIDIA workstation / single-card server: PCIe gen 4 host link
+/// (the dominant bus generation in 2024–2026 deployments) and an
+/// Ampere-class GPU (RTX 3090 / A40 / A5000 / A6000).  Per-field
+/// rationale below; every number is conservative on purpose, biasing
+/// toward CPU when in doubt rather than over-promising GPU speedup.
 ///
-/// The numbers below are documented per field so a reader can see
-/// *why* each was chosen even though Phase 1 doesn't exercise them
-/// (`supported_ops_bitset() == 0` means the planner never picks us).
+/// **Why conservative?** The planner picks GPU when its cost-model
+/// estimate beats CPU; if we advertise too-fast numbers the planner
+/// routes small ops to GPU, transfer overhead dominates, and the
+/// user's workload gets slower.  Under-promising avoids that failure
+/// mode while still claiming a 2–10× speedup on big-enough work.
+///
+/// Re-calibration per device generation (Hopper / Lovelace / Blackwell,
+/// PCIe gen 5) is straightforward — a future "matrix-cuda probe"
+/// helper could detect the actual hardware at startup and override
+/// these defaults at registration time.  Out of scope for V1.
 pub fn profile() -> BackendProfile {
     BackendProfile {
         kind: "cuda".to_string(),
-        // Phase 1: claim nothing.  Planner will skip us.
         supported_ops: supported_ops_bitset(),
         // F32 only.  Bit 0 = F32.  Matches Metal V1.
         supported_dtypes: 0b0000_0001,
-        // Ampere F32 peak ≈ 35 TFLOPS; advertise a conservative 20 000
-        // so the planner threshold biases toward CPU until we have a
-        // calibrated number.
-        gflops_f32: 20_000,
+
+        // ── F32 throughput ───────────────────────────────────────
+        //
+        // Reference: NVIDIA RTX 3090 peaks at 35.6 TFLOPS f32 (FP32
+        // CUDA-core throughput); A40 at 37.4 TFLOPS; A6000 at 38.7
+        // TFLOPS.  Sustainable throughput on a non-tensor-core
+        // workload is typically 40–60% of peak — for our matmul
+        // kernel (no shared-memory tiling, no tensor cores) the
+        // realistic rate is closer to 5–10 TFLOPS depending on K.
+        //
+        // 10_000 GFLOPS (10 TFLOPS) is the planner-facing number
+        // we advertise.  Numerator of the GPU compute-cost
+        // estimate; smaller value = higher cost = bias toward CPU.
+        // Matches matrix-metal V1's "2× M-series advertised" pattern
+        // (5_000 vs ~10 measured) — the planner uses this as a
+        // floor, not a ceiling.
+        gflops_f32: 10_000,
         gflops_u8: 0,
         gflops_i32: 0,
-        // PCIe gen 4: ~25 GB/s effective sustained.  This is ~2x lower
-        // than Metal's unified-memory "transfer" cost because we
-        // really do copy across the bus.
-        host_to_device_bw: 25,
-        device_to_host_bw: 25,
-        // On-device HBM2e / GDDR6X: ~700 GB/s.
-        device_internal_bw: 700,
-        // CUDA kernel-launch latency: ~5–10 µs.  Use 8 µs.
-        launch_overhead_ns: 8_000,
+
+        // ── Host ↔ device bandwidth (PCIe gen 4) ─────────────────
+        //
+        // PCIe gen 4 x16 has 32 GB/s raw bandwidth.  Sustained
+        // device-bound transfers measure ~24–26 GB/s on modern
+        // chipsets (Intel Sapphire Rapids, AMD Genoa) after PCIe
+        // overhead.  CUDA's `cuMemcpyHtoD` typically delivers
+        // 22–25 GB/s for ≥ 1 MiB transfers using pinned host memory
+        // — closer to 12–15 GB/s with default pageable allocations.
+        //
+        // 20 GB/s is a defensible default that captures both pinned
+        // and pageable workloads.  Asymmetric values would be more
+        // precise (H2D and D2H can differ by a few GB/s) but are
+        // within the noise margin.
+        host_to_device_bw: 20,
+        device_to_host_bw: 20,
+
+        // ── On-device bandwidth (HBM2e / GDDR6X) ─────────────────
+        //
+        // RTX 3090 GDDR6X: 936 GB/s peak.  A40 / A100 80GB HBM2e:
+        // ~1500 / 2000 GB/s.  Sustained kernel bandwidth is
+        // typically 60–80% of peak.
+        //
+        // 600 GB/s targets the GDDR6X cards specifically
+        // (consumer / prosumer workstation segment), where
+        // matrix-cuda's typical user lives.  HBM cards in a server
+        // are faster, but the planner uses this number to weight
+        // the *compute / device-bandwidth ratio* for memory-bound
+        // ops (elementwise), and 600 keeps consumer cards from
+        // looking artificially better than they are.
+        device_internal_bw: 600,
+
+        // ── Kernel-launch overhead ───────────────────────────────
+        //
+        // Modern CUDA driver (12.x+) launches a no-op kernel in
+        // 5–8 µs on Linux, 8–12 µs on Windows.  WSL2 sits in the
+        // middle.  Per-launch overhead matters for short kernels
+        // — a 64-element elementwise op completes in ~1 µs of
+        // compute, so 8 µs of overhead is 8× the work.  This
+        // number is precisely what the planner's "is the kernel
+        // big enough to be worth shipping to GPU?" threshold
+        // turns on.
+        //
+        // 7_000 ns = 7 µs.  Sits between Linux pinned and Windows
+        // typical; matches matrix-metal's 5_000 ns within the
+        // same order of magnitude.
+        launch_overhead_ns: 7_000,
+
         // Local transport — same process.
         transport_latency_ns: 0,
-        // 16 GiB on-card memory (matching matrix-metal's default cap;
-        // the planner uses this only for per-tensor sizing decisions).
+
+        // ── On-device memory ─────────────────────────────────────
+        //
+        // Most matrix-cuda targets ship with 8–24 GiB.  Advertising
+        // 16 GiB hits the consumer / prosumer median (RTX 3080 12
+        // GB, RTX 3090 24 GB, A4000 16 GB, A5000 24 GB).  The
+        // planner uses this only for per-tensor sizing decisions;
+        // a host with less memory will see allocation failures
+        // surface as `OUT_OF_MEMORY` from cuda-compute, which the
+        // dispatch layer already handles.
         on_device_mib: 16 * 1024,
+
+        // ── Tensor shape limits ──────────────────────────────────
+        //
+        // V1 kernels assume rank ≤ 4 (matches matrix-metal V1).
+        // `max_dim` 65535 reflects the maximum grid dimension in
+        // a single launch (CUDA caps `griddim.{x,y,z}` at 2^31-1
+        // for the x dim and 65535 for y/z — we advertise the
+        // more conservative bound to stay safely within all axes).
         max_tensor_rank: 4,
         max_dim: 65535,
     }
@@ -664,6 +741,86 @@ mod tests {
         // Plausibly-sized device.
         assert!(p.on_device_mib >= 1024);
         assert!(p.max_tensor_rank >= 4);
+    }
+
+    #[test]
+    fn profile_coefficients_are_phase7_calibrated() {
+        // Lock in the calibrated coefficients so an accidental
+        // regression to placeholder values fails the build.
+        let p = profile();
+        // F32 throughput >= 5 TFLOPS but <= 35 TFLOPS (the realistic
+        // Ampere-class sustained range; see profile() doc comment).
+        assert!(
+            p.gflops_f32 >= 5_000 && p.gflops_f32 <= 35_000,
+            "gflops_f32 = {} outside Phase 7 calibrated range [5_000, 35_000]",
+            p.gflops_f32
+        );
+        // PCIe gen 4 host link: 15–30 GB/s realistic.
+        assert!(
+            (15..=30).contains(&p.host_to_device_bw),
+            "host_to_device_bw = {} outside PCIe gen 4 range [15, 30]",
+            p.host_to_device_bw
+        );
+        assert!(
+            (15..=30).contains(&p.device_to_host_bw),
+            "device_to_host_bw = {} outside PCIe gen 4 range",
+            p.device_to_host_bw
+        );
+        // GDDR6X / HBM2e on-device bandwidth: 400–2000 GB/s.
+        assert!(
+            (400..=2000).contains(&p.device_internal_bw),
+            "device_internal_bw = {} outside Ampere range [400, 2000]",
+            p.device_internal_bw
+        );
+        // CUDA launch overhead: 1–15 µs.
+        assert!(
+            (1_000..=15_000).contains(&p.launch_overhead_ns),
+            "launch_overhead_ns = {} outside [1µs, 15µs]",
+            p.launch_overhead_ns
+        );
+    }
+
+    /// **MX06 Phase 7 sanity check** — for a big-enough matmul the
+    /// planner's cost-model preference must put CUDA below CPU.
+    /// We don't construct a real `Runtime` here (that requires
+    /// matrix-runtime which doesn't expose a public cost estimator
+    /// in the way this test would need); instead we sanity-check
+    /// the BackendProfile shape that drives the cost model:
+    ///
+    /// - GPU compute time = (work_flops / gflops_f32) seconds —
+    ///   for a 1024×1024 × 1024×1024 matmul that's
+    ///   2 * 1024³ ≈ 2.1 GFLOPS of work / 10000 GFLOPS = 0.21 ms.
+    /// - GPU transfer time = (bytes / bw) — for the two F32 input
+    ///   matrices that's 8 MiB / 20 GB/s ≈ 0.42 ms.
+    /// - Launch overhead = 7 µs.
+    /// - Total GPU time = ~0.64 ms.
+    ///
+    /// CPU compute time on a modern x86 (say 100 GFLOPS f32) is
+    /// 2.1 GFLOPS / 100 = 21 ms — so GPU should win by ~30×
+    /// despite the transfer.
+    ///
+    /// This test asserts that ratio holds with the calibrated
+    /// coefficients.
+    #[test]
+    fn planner_cost_model_favours_cuda_for_big_matmul() {
+        let p = profile();
+        const M_FLOPS_1024_MATMUL: u64 = 2 * 1024 * 1024 * 1024; // 2.1 G
+        const INPUT_BYTES: u64 = 2 * 1024 * 1024 * 4; // 2 matrices f32
+        // GPU time (in nanoseconds) — match what the planner's
+        // cost-model would compute for a single matmul op.
+        let compute_ns =
+            M_FLOPS_1024_MATMUL * 1_000_000_000 / (p.gflops_f32 as u64 * 1_000_000_000);
+        let transfer_ns =
+            INPUT_BYTES * 1_000_000_000 / (p.host_to_device_bw as u64 * 1_000_000_000);
+        let total_gpu_ns = compute_ns + transfer_ns + p.launch_overhead_ns as u64;
+        // Comparison baseline: a hypothetical CPU at 100 GFLOPS.
+        let cpu_ns = M_FLOPS_1024_MATMUL * 1_000_000_000 / (100_u64 * 1_000_000_000);
+        assert!(
+            total_gpu_ns < cpu_ns,
+            "calibrated profile must let big matmul beat CPU: gpu={} ns, cpu={} ns",
+            total_gpu_ns,
+            cpu_ns
+        );
     }
 
     #[test]

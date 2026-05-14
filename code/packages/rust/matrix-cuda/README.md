@@ -42,9 +42,13 @@ for the full design.  Phased rollout, one PR per phase:
 | 3     | `kernels.rs` — generic NVRTC-compiled kernels + buffer-op wiring (adds `Send` to `CudaBuffer`) | landed (0.3.0) |
 | 4     | `cuda_emitter.rs` — specialised-kernel code generator   | landed (0.4.0) |
 | 5a    | `specialised_table.rs` module + cuda-compute Send/Sync audit | landed (0.5.0) |
-| 5b    | Real `Dispatch` + `DispatchSpecialised` + `install_specialised_from_emitted` + `evict_specialised` + flip `supported_ops_bitset` | **this PR** (0.6.0) |
-| 6     | MX05 hooks — `backend_id = 2` in image-gpu-core         | pending |
-| 7     | Planner integration — cost-model coefficients           | pending |
+| 5b    | Real `Dispatch` + `DispatchSpecialised` + `install_specialised_from_emitted` + `evict_specialised` + flip `supported_ops_bitset` | landed (0.6.0) |
+| 6     | MX05 hooks — `backend_id = 2` in image-gpu-core         | landed (image-gpu-core 0.15.0) |
+| 7     | Planner integration — cost-model coefficients           | **this PR** (0.7.0) |
+
+**MX06 is feature-complete with this PR.**  NVIDIA users get
+end-to-end GPU acceleration through the same narrow-waist
+abstraction Apple users have had since `matrix-metal` V1.
 
 ## Phase 5b additions
 
