@@ -2181,9 +2181,7 @@ mod tests {
     #[test]
     fn generated_operation_source_matches_required_capabilities_compiler() {
         let generated = required_capabilities_compiler::compile_required_capabilities_json(
-            &umbrella_agent_required_capabilities_json(Path::new(
-                "/tmp/umbrella-generated-operation.txt",
-            )),
+            include_str!("../required_capabilities.json"),
         )
         .unwrap();
 

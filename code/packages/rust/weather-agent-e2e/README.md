@@ -5,11 +5,11 @@ the umbrella-today agent described in `code/specs/weather-agent.md`.
 
 The crate keeps a deterministic Seattle weather fixture for CI and also exposes
 an ignored live mode that fetches real Weather.gov data through `tls-platform`
-and `http1`. The live operation module is generated from the Weather Agent
-`required_capabilities.json` shape, and its HTTP client refuses undeclared
-domains before opening TLS sockets. The fixture keeps CI stable while still
-forcing the fetch, classify, supervise, write, journal, store, and capability
-boundaries to run as one pipeline.
+and `http1`. The live operation module is generated at build time from
+`required_capabilities.json` and statically linked as Rust source, and its HTTP
+client refuses undeclared domains before opening TLS sockets. The fixture keeps
+CI stable while still forcing the fetch, classify, supervise, write, journal,
+store, and capability boundaries to run as one pipeline.
 
 The primary tests write a real `umbrella-today.txt` file through the capability
 cage, assert that the supervised agent says to bring an umbrella for the rainy
