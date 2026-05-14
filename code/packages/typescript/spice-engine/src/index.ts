@@ -1,5 +1,6 @@
 const PIVOT_EPSILON = 1.0e-12;
 const TWO_PI = Math.PI * 2.0;
+const BOLTZMANN = 1.380_649e-23;
 
 export type Element =
   | Resistor
@@ -347,6 +348,29 @@ export interface AcPoint {
   readonly branchCurrents: ReadonlyMap<string, Complex>;
   voltage(node: string): Complex | undefined;
   branchCurrent(sourceName: string): Complex | undefined;
+}
+
+export type NoiseType = "thermal";
+
+export interface NoiseEntry {
+  readonly elementName: string;
+  readonly noiseType: NoiseType;
+  readonly sourcePsd: number;
+  readonly outputPsd: number;
+}
+
+export interface NoisePoint {
+  readonly frequencyHz: number;
+  readonly outputPsd: number;
+  readonly inputReferredPsd: number;
+  readonly entries: readonly NoiseEntry[];
+}
+
+export interface NoiseResult {
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly temperatureKelvin: number;
+  readonly points: readonly NoisePoint[];
 }
 
 export interface TransientPoint {
@@ -752,6 +776,114 @@ export function acSweep(
   return points;
 }
 
+export function noiseAc(
+  circuit: Circuit,
+  outputNode: string,
+  inputSource: string,
+  frequenciesHz: readonly number[] = defaultNoiseFrequencies(),
+  temperatureKelvin = 300.0,
+): NoiseResult {
+  if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
+    throw invalidElement("noiseAc", "temperature must be finite and positive");
+  }
+  for (const frequency of frequenciesHz) {
+    if (!Number.isFinite(frequency) || frequency <= 0.0) {
+      throw invalidElement(
+        "noiseAc",
+        "frequencies must be finite and positive",
+      );
+    }
+  }
+
+  validateReactiveElements(circuit);
+
+  const nodeIndices = collectNodeIndices(circuit);
+  if (!isGround(outputNode) && !nodeIndices.has(outputNode)) {
+    throw invalidElement(outputNode, "output node was not found in circuit");
+  }
+
+  const input = findInputSource(circuit, inputSource);
+  const voltageSources = collectAcVoltageSources(circuit);
+  const nodeCount = nodeIndices.size;
+  const matrixSize = nodeCount + voltageSources.size;
+  const outputIndex = nodeIndex(nodeIndices, outputNode);
+  const noiseSources = collectNoiseSources(
+    circuit,
+    nodeIndices,
+    temperatureKelvin,
+  );
+
+  const points = frequenciesHz.map((frequencyHz) => {
+    if (outputIndex === undefined || matrixSize === 0) {
+      return makeNoisePoint(frequencyHz, 0.0, 0.0, zeroNoiseEntries(noiseSources));
+    }
+
+    const matrix = buildAcMatrix(
+      circuit,
+      TWO_PI * frequencyHz,
+      nodeIndices,
+      voltageSources,
+    );
+    const rhs = Array.from({ length: matrixSize }, () => complex(0.0, 0.0));
+    rhs[outputIndex] = complex(1.0, 0.0);
+
+    let adjoint: Complex[];
+    try {
+      adjoint = solveComplexLinearSystem(transposeComplexMatrix(matrix), rhs);
+    } catch (error) {
+      if (error instanceof SpiceError && error.code === "SINGULAR_MATRIX") {
+        return makeNoisePoint(
+          frequencyHz,
+          0.0,
+          0.0,
+          zeroNoiseEntries(noiseSources),
+        );
+      }
+      throw error;
+    }
+
+    const entries = noiseSources.map((source) => {
+      const hPositive =
+        source.positive === undefined ? complex(0.0, 0.0) : adjoint[source.positive];
+      const hNegative =
+        source.negative === undefined ? complex(0.0, 0.0) : adjoint[source.negative];
+      const transfer = complexSub(hPositive, hNegative);
+      return {
+        elementName: source.elementName,
+        noiseType: source.noiseType,
+        sourcePsd: source.sourcePsd,
+        outputPsd: complexAbs(transfer) ** 2 * source.sourcePsd,
+      };
+    });
+    entries.sort(
+      (left, right) =>
+        right.outputPsd - left.outputPsd ||
+        left.elementName.localeCompare(right.elementName),
+    );
+
+    const outputPsd = entries.reduce((sum, entry) => sum + entry.outputPsd, 0.0);
+    const inputGain = adjointInputGain(
+      input,
+      adjoint,
+      nodeIndices,
+      voltageSources,
+      nodeCount,
+    );
+    const gainSquared = complexAbs(inputGain) ** 2;
+    const inputReferredPsd =
+      gainSquared > 1.0e-100 ? outputPsd / gainSquared : 0.0;
+
+    return makeNoisePoint(frequencyHz, outputPsd, inputReferredPsd, entries);
+  });
+
+  return {
+    outputNode,
+    inputSource,
+    temperatureKelvin,
+    points,
+  };
+}
+
 export function transient(
   circuit: Circuit,
   timeStep: number,
@@ -1064,6 +1196,14 @@ interface AcSolution {
   readonly branchCurrents: ReadonlyMap<string, Complex>;
 }
 
+interface NoiseSource {
+  readonly elementName: string;
+  readonly noiseType: NoiseType;
+  readonly positive: number | undefined;
+  readonly negative: number | undefined;
+  readonly sourcePsd: number;
+}
+
 type InputSource = VoltageSource | CurrentSource;
 
 function solveLinearCircuit(
@@ -1214,37 +1354,26 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
     return { nodeVoltages: new Map(), branchCurrents: new Map() };
   }
 
-  const matrix = Array.from({ length: matrixSize }, () =>
-    Array.from({ length: matrixSize }, () => complex(0.0, 0.0)),
-  );
+  const matrix = buildAcMatrix(circuit, omega, nodeIndices, voltageSources);
   const rhs = Array.from({ length: matrixSize }, () => complex(0.0, 0.0));
 
   for (const element of circuit.elements()) {
     switch (element.kind) {
-      case "resistor":
-        stampAcResistor(element, nodeIndices, matrix);
-        break;
-      case "capacitor":
-        stampAcCapacitor(element, omega, nodeIndices, matrix);
-        break;
-      case "inductor":
-        stampAcInductor(element, omega, nodeIndices, matrix);
-        break;
       case "voltage-source":
-        stampAcVoltageSource(
+        stampAcVoltageSourceRhs(
           element,
-          nodeIndices,
           voltageSources,
           nodeCount,
-          matrix,
           rhs,
         );
         break;
       case "current-source":
         stampAcCurrentSource(element, nodeIndices, rhs);
         break;
+      case "resistor":
+      case "capacitor":
+      case "inductor":
       case "vccs":
-        stampAcVccs(element, nodeIndices, matrix);
         break;
     }
   }
@@ -1263,6 +1392,52 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
     branchCurrents.set(`I(${sourceName})`, solution[nodeCount + branchIndex]);
   }
   return { nodeVoltages, branchCurrents };
+}
+
+function buildAcMatrix(
+  circuit: Circuit,
+  omega: number,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+): Complex[][] {
+  const nodeCount = nodeIndices.size;
+  const matrixSize = nodeCount + voltageSources.size;
+  const matrix = Array.from({ length: matrixSize }, () =>
+    Array.from({ length: matrixSize }, () => complex(0.0, 0.0)),
+  );
+
+  for (const element of circuit.elements()) {
+    switch (element.kind) {
+      case "resistor":
+        stampAcResistor(element, nodeIndices, matrix);
+        break;
+      case "capacitor":
+        stampAcCapacitor(element, omega, nodeIndices, matrix);
+        break;
+      case "inductor":
+        stampAcInductor(element, omega, nodeIndices, matrix);
+        break;
+      case "voltage-source":
+        stampAcVoltageSourceMatrix(
+          element,
+          nodeIndices,
+          voltageSources,
+          nodeCount,
+          matrix,
+        );
+        break;
+      case "current-source":
+        if (!Number.isFinite(element.current)) {
+          throw invalidElement(element.name, "current must be finite");
+        }
+        break;
+      case "vccs":
+        stampAcVccs(element, nodeIndices, matrix);
+        break;
+    }
+  }
+
+  return matrix;
 }
 
 function makeDcResult(
@@ -1378,6 +1553,20 @@ function makeAcPoint(
   };
 }
 
+function makeNoisePoint(
+  frequencyHz: number,
+  outputPsd: number,
+  inputReferredPsd: number,
+  entries: readonly NoiseEntry[],
+): NoisePoint {
+  return {
+    frequencyHz,
+    outputPsd,
+    inputReferredPsd,
+    entries,
+  };
+}
+
 function makeTransientPoint(
   time: number,
   nodeVoltages: ReadonlyMap<string, number>,
@@ -1482,6 +1671,69 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
     }
   }
   throw invalidElement(inputSource, "input source was not found");
+}
+
+function collectNoiseSources(
+  circuit: Circuit,
+  nodeIndices: ReadonlyMap<string, number>,
+  temperatureKelvin: number,
+): NoiseSource[] {
+  const sources: NoiseSource[] = [];
+  for (const element of circuit.elements()) {
+    if (element.kind !== "resistor") {
+      continue;
+    }
+    if (!Number.isFinite(element.resistanceOhms) || element.resistanceOhms <= 0) {
+      throw invalidElement(element.name, "resistance must be finite and positive");
+    }
+    sources.push({
+      elementName: element.name,
+      noiseType: "thermal",
+      positive: nodeIndex(nodeIndices, element.n1),
+      negative: nodeIndex(nodeIndices, element.n2),
+      sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.resistanceOhms,
+    });
+  }
+  return sources;
+}
+
+function zeroNoiseEntries(sources: readonly NoiseSource[]): NoiseEntry[] {
+  return sources.map((source) => ({
+    elementName: source.elementName,
+    noiseType: source.noiseType,
+    sourcePsd: source.sourcePsd,
+    outputPsd: 0.0,
+  }));
+}
+
+function defaultNoiseFrequencies(): number[] {
+  const count = 50;
+  return Array.from({ length: count }, (_unused, index) => {
+    const exponent = 6.0 * index / (count - 1);
+    return 10.0 ** exponent;
+  });
+}
+
+function adjointInputGain(
+  input: InputSource,
+  adjoint: readonly Complex[],
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+): Complex {
+  if (input.kind === "voltage-source") {
+    const sourceIndex = voltageSources.get(input.name);
+    if (sourceIndex === undefined) {
+      throw invalidElement(input.name, "voltage source was not indexed");
+    }
+    return adjoint[nodeCount + sourceIndex];
+  }
+
+  const positive = nodeIndex(nodeIndices, input.positive);
+  const negative = nodeIndex(nodeIndices, input.negative);
+  const hPositive = positive === undefined ? complex(0.0, 0.0) : adjoint[positive];
+  const hNegative = negative === undefined ? complex(0.0, 0.0) : adjoint[negative];
+  return complexSub(hNegative, hPositive);
 }
 
 function voltageSourceInputImpedance(
@@ -1981,13 +2233,33 @@ function stampComplexConductance(
   }
 }
 
-function stampAcVoltageSource(
+function stampAcVoltageSourceRhs(
+  element: VoltageSource,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  rhs: Complex[],
+): void {
+  if (!Number.isFinite(element.voltage)) {
+    throw invalidElement(element.name, "voltage must be finite");
+  }
+
+  const sourceIndex = voltageSources.get(element.name);
+  if (sourceIndex === undefined) {
+    throw invalidElement(element.name, "voltage source was not indexed");
+  }
+
+  rhs[nodeCount + sourceIndex] = complexAdd(
+    rhs[nodeCount + sourceIndex],
+    complex(element.voltage, 0.0),
+  );
+}
+
+function stampAcVoltageSourceMatrix(
   element: VoltageSource,
   nodeIndices: ReadonlyMap<string, number>,
   voltageSources: ReadonlyMap<string, number>,
   nodeCount: number,
   matrix: Complex[][],
-  rhs: Complex[],
 ): void {
   if (!Number.isFinite(element.voltage)) {
     throw invalidElement(element.name, "voltage must be finite");
@@ -2001,9 +2273,7 @@ function stampAcVoltageSource(
   const branch = nodeCount + sourceIndex;
   const positive = nodeIndex(nodeIndices, element.positive);
   const negative = nodeIndex(nodeIndices, element.negative);
-
   stampComplexBranchMatrix(matrix, branch, positive, negative);
-  rhs[branch] = complexAdd(rhs[branch], complex(element.voltage, 0.0));
 }
 
 function stampComplexBranchMatrix(
@@ -2153,6 +2423,12 @@ function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
 
 function cloneMatrix(matrix: readonly (readonly number[])[]): number[][] {
   return matrix.map((row) => [...row]);
+}
+
+function transposeComplexMatrix(matrix: readonly (readonly Complex[])[]): Complex[][] {
+  return matrix.map((row, rowIndex) =>
+    row.map((_value, colIndex) => matrix[colIndex][rowIndex]),
+  );
 }
 
 function solveComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
