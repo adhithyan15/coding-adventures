@@ -115,6 +115,13 @@ keywords:
   module
   export
   import
+  # TW05-A / LANG48 — typed syntax keywords.  These names become reserved
+  # in typed Twig modules.  None were valid identifiers in earlier Twig code.
+  typed    ; (typed strict/lenient/off) — module typing mode declaration
+  type     ; (type Name type_expr) — type alias declaration
+  record   ; (record Name (field : T) ...) — record type declaration
+  union    ; (union Name (Variant ...) ...) — tagged union declaration
+  match    ; (match expr arm ...) — pattern matching expression
 
 # ---------------------------------------------------------------------------
 # Skip patterns — consumed silently, never reach the parser
