@@ -41,10 +41,41 @@ for the full design.  Phased rollout, one PR per phase:
 | 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`           | landed (0.2.0) |
 | 3     | `kernels.rs` — generic NVRTC-compiled kernels + buffer-op wiring (adds `Send` to `CudaBuffer`) | landed (0.3.0) |
 | 4     | `cuda_emitter.rs` — specialised-kernel code generator   | landed (0.4.0) |
-| 5a    | `specialised_table.rs` module + cuda-compute Send/Sync audit | **this PR** (0.5.0) |
-| 5b    | Real `Dispatch` + `DispatchSpecialised` + `install_specialised_from_emitted` + `evict_specialised` + flip `supported_ops_bitset` | pending |
+| 5a    | `specialised_table.rs` module + cuda-compute Send/Sync audit | landed (0.5.0) |
+| 5b    | Real `Dispatch` + `DispatchSpecialised` + `install_specialised_from_emitted` + `evict_specialised` + flip `supported_ops_bitset` | **this PR** (0.6.0) |
 | 6     | MX05 hooks — `backend_id = 2` in image-gpu-core         | pending |
 | 7     | Planner integration — cost-model coefficients           | pending |
+
+## Phase 5b additions
+
+This is the big phase.  matrix-cuda is now a fully functional
+executor on NVIDIA hardware:
+
+- New `pub mod dispatch` — walks a `ComputeGraph` and dispatches
+  each op through the cached `Kernels` module.  Mirrors
+  `matrix-metal::dispatch::run` in shape.
+- `State` gains `kernels: Option<Kernels>` (lazy NVRTC compile on
+  first `Dispatch`) and `specialised: SpecialisedTable`.
+- `handle()` routes `Dispatch` and `DispatchSpecialised` through
+  the real paths.  `Dispatch` returns `DispatchDone`;
+  `DispatchSpecialised` looks up the handle in `specialised_table`
+  and falls back to `NOT_IMPLEMENTED` (so the runtime can route to
+  generic) if not installed.
+- `install_specialised_from_emitted(handle, EmittedKernel)`
+  NVRTC-compiles the source, looks up the function by entry-point,
+  builds a closure that captures the module + function, and
+  installs it.
+- `evict_specialised(handle)` — completes the MX05 deopt loop on
+  this backend.
+- `supported_ops_bitset()` flipped on: V1 ops are now claimed
+  (`0x00..=0x0D`, `0x15`, `0x1B`).
+
+**What still doesn't change**:
+
+- `matrix-cuda` is not yet registered anywhere — that wiring is
+  Phase 6 (image-gpu-core).
+- No planner cost-model calibration — Phase 7.
+- No GPU CI runner — Phase 7.
 
 ## Phase 5a additions
 

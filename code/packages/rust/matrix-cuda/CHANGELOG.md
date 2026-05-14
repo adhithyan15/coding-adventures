@@ -1,5 +1,89 @@
 # Changelog — matrix-cuda
 
+## 0.6.0 — 2026-05-13
+
+### Added — MX06 Phase 5b (real Executor impl)
+
+This is the big one.  matrix-cuda is now a fully functional executor
+on NVIDIA hardware.  Six pieces in one PR:
+
+1. New `src/dispatch.rs` — walks a `ComputeGraph`'s `PlacedOps` and
+   dispatches each to the cached `Kernels` module.  Mirrors
+   `matrix-metal::dispatch::run` in shape.
+2. `State` gains `kernels: Option<Kernels>` and
+   `specialised: SpecialisedTable`.  Kernels compile lazily on the
+   first `Dispatch` (one-time ~100 ms NVRTC cost).
+3. `handle()` routes `Dispatch` through `dispatch::run`,
+   `DispatchSpecialised` through `specialised.get(handle)`.
+4. `install_specialised_from_emitted` accepts a real
+   `cuda_emitter::EmittedKernel`, NVRTC-compiles its source, looks
+   up the function by entry-point name, builds a closure that
+   captures the `CudaModule` + `CudaFunction`, and installs into
+   `specialised_table`.
+5. `evict_specialised(handle)` delegates to `SpecialisedTable::evict`
+   — completes the MX05 Phase 5 deoptimisation loop on this backend.
+6. `supported_ops_bitset()` now claims the V1 set: `0x00..=0x0D` +
+   `0x15` (MatMul) + `0x1B` (Const).  The planner will route those
+   ops to us once `matrix-cuda` is registered (Phase 6 wiring in
+   image-gpu-core).
+
+### Op coverage (Phase 5b)
+
+| Tag(s)        | Op                                           |
+| ------------- | -------------------------------------------- |
+| `0x00..=0x06` | F32 elementwise unary: Neg / Abs / Sqrt / Exp / Log / Tanh / Recip |
+| `0x07..=0x0D` | F32 elementwise binary: Add / Sub / Mul / Div / Max / Min / Pow |
+| `0x15`        | F32 MatMul (rank-2)                          |
+| `0x1B`        | Const (uploaded via `BufferStore::write`)     |
+
+V2 (not yet claimed; planner falls back to CPU): reductions
+(`0x0E..=0x10`), reshape (`0x11`), transpose (`0x12`), broadcast
+(`0x13`), cast (`0x1A`).
+
+### Kernel launch helpers
+
+The `Kernels::launch_unary` / `launch_binary` / `launch_matmul`
+methods were updated to take `&CudaBuffer` (not `&mut`).  This lets
+the dispatch path keep multiple buffer references alive at once
+(needed for binary ops that read from two different `BufferId`s
+in the same `BufferStore`).  New `*_by_ptr` variants accept the
+`CUdeviceptr` directly — that's what `dispatch.rs` calls.
+
+### `EmittedKernelPlaceholder` removed
+
+The Phase 1 stub type is gone; `install_specialised_from_emitted`
+now takes the real `cuda_emitter::EmittedKernel` produced in
+Phase 4.
+
+### Tests
+
+77 unit tests in this crate; the new ones:
+
+- `supported_ops_bitset_phase5b_claims_v1_ops` — verifies the V1
+  bitmask shape (and that V2 ops are not yet claimed).
+- `handle_dispatch_empty_graph_succeeds` — Dispatch path returns
+  `DispatchDone` for an empty graph.  Device-gated.
+- `handle_dispatch_specialised_unknown_handle_errors` — unknown
+  handle returns `NOT_IMPLEMENTED` so the runtime can fall back.
+  Device-gated.
+- `install_specialised_with_phony_closure_increments_count` —
+  install, count, evict.  Device-gated.
+
+The pre-existing per-op kernel tests in `kernels::tests` continue
+to cover the launch path against a CPU oracle (also device-gated).
+Fuller end-to-end tests that build a `ComputeGraph` and dispatch
+it through `handle()` belong with the CI GPU runner (Phase 7) —
+documented in the README's "what this phase does NOT change"
+section.
+
+### What this phase does NOT change
+
+- `matrix-cuda` is still not registered anywhere — `image-gpu-core`
+  wiring is Phase 6.  Workloads on a developer's NVIDIA box won't
+  automatically pick CUDA until then.
+- No planner cost-model calibration yet — Phase 7.
+- No GPU CI runner — Phase 7.
+
 ## 0.5.0 — 2026-05-13
 
 ### Added — MX06 Phase 5a (`specialised_table` + Send/Sync foundation)

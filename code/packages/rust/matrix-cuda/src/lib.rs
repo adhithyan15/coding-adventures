@@ -62,6 +62,7 @@
 
 mod buffers;
 pub mod cuda_emitter;
+pub mod dispatch;
 pub mod kernels;
 pub mod specialised_table;
 
@@ -71,6 +72,7 @@ pub use kernels::{Kernels, KERNELS_CUDA_C, KERNEL_ENTRY_POINTS};
 pub use specialised_table::{CudaSpecialisedKernelFn, SpecialisedTable};
 
 use compute_ir::ExecutorId;
+use cuda_compute::CudaDevice;
 use executor_protocol::{
     BackendProfile, ErrorCode, ExecutorRequest, ExecutorResponse, LocalTransport,
 };
@@ -79,27 +81,30 @@ use std::sync::{Arc, Mutex};
 
 // ─────────────────────────── BackendProfile ───────────────────────────
 
-/// V1 op coverage bitset for `matrix-cuda`.
+/// V1 op coverage bitset for `matrix-cuda`.  **Phase 5b flips this
+/// on** alongside the real `Dispatch` wiring, so the planner can
+/// route the claimed ops to us with confidence.
 ///
-/// **Phase 1 returns `0`** — no ops are claimed yet.  The planner's
-/// capability filter therefore routes every op to `matrix-cpu` (or
-/// `matrix-metal` on Apple hosts), and `matrix-cuda` is effectively
-/// dormant.  This is correct behaviour for a stub.
+/// Claimed (subset of `matrix-metal` V1):
 ///
-/// Phase 5 will flip on the same bits `matrix-metal` advertises in V1:
+/// - `0x00..=0x06` — F32 elementwise unary (`Neg`, `Abs`, `Sqrt`,
+///   `Exp`, `Log`, `Tanh`, `Recip`).
+/// - `0x07..=0x0D` — F32 elementwise binary (`Add`, `Sub`, `Mul`,
+///   `Div`, `Max`, `Min`, `Pow`).
+/// - `0x15` — `MatMul` (rank-2).
+/// - `0x1B` — `Const`.
 ///
-/// - 0x00..=0x06 — F32 elementwise unary (`Neg`, `Abs`, `Sqrt`, `Exp`,
-///   `Log`, `Tanh`, `Recip`)
-/// - 0x07..=0x0D — F32 elementwise binary (`Add`, `Sub`, `Mul`, `Div`,
-///   `Max`, `Min`, `Pow`)
-/// - 0x15 — `MatMul` (rank-2)
-/// - 0x1B — `Const`
-///
-/// Everything else (reductions, casts, shape ops, integer dtypes)
-/// falls back to CPU via the same path Metal uses for the bits it
-/// doesn't claim.
+/// Not yet claimed (V2 work — planner routes them to CPU):
+/// reductions (`0x0E..=0x10`), reshape (`0x11`), transpose (`0x12`),
+/// broadcast (`0x13`), cast (`0x1A`).
 fn supported_ops_bitset() -> u32 {
-    0
+    let mut mask: u32 = 0;
+    for tag in 0x00..=0x0Du8 {
+        mask |= 1u32 << tag;
+    }
+    mask |= 1u32 << 0x15; // MatMul
+    mask |= 1u32 << 0x1B; // Const
+    mask
 }
 
 /// Default `BackendProfile` for `matrix-cuda`.
@@ -160,30 +165,25 @@ struct State {
     /// The CUDA device handle, kept alive for the executor's lifetime
     /// so dispatches don't pay the device-init cost per call.
     /// `Option` so test paths can construct the struct without a
-    /// real device — `CudaExecutor::new` always puts `Some` here
-    /// (errors before constructing State if the device probe fails).
+    /// real device — `CudaExecutor::new` always puts `Some` here.
     device: Option<cuda_compute::CudaDevice>,
     /// **MX06 Phase 2/3.**  Per-executor map of `BufferId → CudaBuffer`.
-    /// Lives under the executor's `Mutex` so concurrent buffer
-    /// requests serialise.
     buffers: BufferStore,
+    /// **MX06 Phase 5b.**  NVRTC-compiled kernel module + per-kernel
+    /// function cache.  Lazily populated on the first `Dispatch` so
+    /// `CudaExecutor::new` stays fast (NVRTC compile is ~100 ms).
+    /// After the first dispatch, subsequent calls hit the cache.
+    kernels: Option<Kernels>,
+    /// **MX06 Phase 5b.**  Per-handle specialised-kernel closure
+    /// table.  Lives under the same `Mutex<State>` so install /
+    /// evict / dispatch all serialise.
+    specialised: SpecialisedTable,
     /// Monotonically incrementing `BufferId` counter.  Hands out a
-    /// fresh id for each `AllocBuffer` request.  Matches
-    /// `matrix-metal::State::next_buffer` semantics.
-    ///
-    /// **Note (Phase 3)**: the kernel cache ([`Kernels`]) is
-    /// intentionally **not** stored on `State` yet.  Adding
-    /// `Kernels` here would require `cuda-compute::CudaModuleInner`
-    /// to be `Send + Sync` (it currently has only `Send`); the wider
-    /// `Send + Sync` audit of `CudaLib` / `NvrtcLib` belongs in the
-    /// Phase 5 PR that also wires `Dispatch`.  For now `Kernels::new`
-    /// is callable directly — `dispatch.rs` (Phase 5) will lift it
-    /// into State at the same time it lifts the `Dispatch` request
-    /// handling.
+    /// fresh id for each `AllocBuffer` request.
     next_buffer: u64,
-    /// `ExecutorId` assigned by the runtime when we registered.  Same
-    /// purpose as `matrix-metal::State::our_id`: lets dispatch detect
-    /// mis-routed graphs.
+    /// `ExecutorId` assigned by the runtime when we registered.
+    /// See `matrix-metal::State::our_id` for the mis-routing-check
+    /// rationale.
     our_id: ExecutorId,
 }
 
@@ -207,6 +207,8 @@ impl CudaExecutor {
             state: Mutex::new(State {
                 device: Some(device),
                 buffers: BufferStore::new(),
+                kernels: None,
+                specialised: SpecialisedTable::new(),
                 next_buffer: 1,
                 our_id: ExecutorId(u32::MAX),
             }),
@@ -324,20 +326,109 @@ impl CudaExecutor {
                 ExecutorResponse::BufferFreed
             }
 
-            // ── Phases 5+: still stubbed ────────────────────────────
-            ExecutorRequest::Dispatch { job_id, .. }
-            | ExecutorRequest::DispatchSpecialised { job_id, .. }
-            | ExecutorRequest::CancelJob { job_id } => ExecutorResponse::Error {
+            // ── Phase 5b: real dispatch ─────────────────────────────
+            ExecutorRequest::Dispatch { job_id, graph } => {
+                // Lazily compile kernels on first dispatch.  This is
+                // ~100 ms one-time NVRTC cost; subsequent dispatches
+                // hit the cached module.
+                if s.kernels.is_none() {
+                    let Some(device) = s.device.as_ref() else {
+                        return ExecutorResponse::Error {
+                            code: ErrorCode::DEVICE_LOST,
+                            message: "matrix-cuda: no CUDA device bound".to_string(),
+                            job_id: Some(job_id),
+                        };
+                    };
+                    match Kernels::new(device) {
+                        Ok(k) => s.kernels = Some(k),
+                        Err(e) => {
+                            return ExecutorResponse::Error {
+                                code: ErrorCode::COMPILATION_FAILED,
+                                message: format!("matrix-cuda: kernel compile: {}", e),
+                                job_id: Some(job_id),
+                            }
+                        }
+                    }
+                }
+                let State {
+                    buffers,
+                    device,
+                    kernels,
+                    our_id,
+                    ..
+                } = &mut *s;
+                let Some(device) = device.as_ref() else {
+                    return ExecutorResponse::Error {
+                        code: ErrorCode::DEVICE_LOST,
+                        message: "matrix-cuda: no CUDA device bound".to_string(),
+                        job_id: Some(job_id),
+                    };
+                };
+                let kernels = kernels.as_ref().expect("just compiled above");
+                let mut ctx = dispatch::DispatchCtx {
+                    device,
+                    buffers,
+                    kernels,
+                    our_id: *our_id,
+                };
+                match dispatch::run(&mut ctx, &graph) {
+                    Ok(timings) => ExecutorResponse::DispatchDone { job_id, timings },
+                    Err(e) => ExecutorResponse::Error {
+                        code: ErrorCode::COMPILATION_FAILED,
+                        message: format!("matrix-cuda dispatch: {}", e),
+                        job_id: Some(job_id),
+                    },
+                }
+            }
+            ExecutorRequest::DispatchSpecialised {
+                job_id,
+                handle,
+                inputs,
+                outputs,
+            } => {
+                let State {
+                    buffers,
+                    device,
+                    specialised,
+                    ..
+                } = &mut *s;
+                let Some(device) = device.as_ref() else {
+                    return ExecutorResponse::Error {
+                        code: ErrorCode::DEVICE_LOST,
+                        message: "matrix-cuda: no CUDA device bound".to_string(),
+                        job_id: Some(job_id),
+                    };
+                };
+                match specialised.get(handle) {
+                    Some(kernel) => match kernel(device, buffers, &inputs, &outputs) {
+                        Ok(timings) => ExecutorResponse::DispatchDone { job_id, timings },
+                        Err(e) => ExecutorResponse::Error {
+                            code: ErrorCode::COMPILATION_FAILED,
+                            message: format!("specialised dispatch: {}", e),
+                            job_id: Some(job_id),
+                        },
+                    },
+                    None => ExecutorResponse::Error {
+                        code: ErrorCode::NOT_IMPLEMENTED,
+                        message: format!(
+                            "no specialised kernel installed for handle 0x{:016X}; \
+                             install one via CudaExecutor::install_specialised \
+                             or install_specialised_from_emitted",
+                            handle
+                        ),
+                        job_id: Some(job_id),
+                    },
+                }
+            }
+            ExecutorRequest::CancelJob { job_id } => ExecutorResponse::Error {
                 code: ErrorCode::NOT_IMPLEMENTED,
-                message:
-                    "matrix-cuda: dispatch lands in Phase 5; see code/specs/MX06-cuda-executor.md"
-                        .to_string(),
+                message: "matrix-cuda: CancelJob not implemented (V1 is synchronous)".to_string(),
                 job_id: Some(job_id),
             },
             ExecutorRequest::PrepareKernel { .. } => ExecutorResponse::Error {
                 code: ErrorCode::NOT_IMPLEMENTED,
                 message:
-                    "matrix-cuda: PrepareKernel unused — kernels compile at Kernels::new (Phase 3)"
+                    "matrix-cuda: PrepareKernel unused — kernels compile lazily on first Dispatch"
                         .to_string(),
                 job_id: None,
             },
@@ -354,66 +445,178 @@ impl CudaExecutor {
         s.our_id = id;
     }
 
-    /// **MX05 Phase 4.x shape** — Phase-1 no-op.
-    ///
-    /// Accepts a handle + closure pair and returns immediately.  Real
-    /// install lands in MX06 Phase 5 once the specialised dispatch
-    /// path is wired.  Exists now so upstream MX05 plumbing (the
-    /// auto-installer in image-gpu-core, scheduled for Phase 6) can
-    /// be written against a stable surface.
-    pub fn install_specialised(
-        &self,
-        _handle: u64,
-        _kernel: Box<dyn for<'a> Fn(
-                &'a (),
-                &[compute_ir::BufferId],
-                &[compute_ir::BufferId],
-            ) -> Result<Vec<executor_protocol::OpTiming>, String>
-            + Send>,
-    ) {
-        // Intentionally a no-op in Phase 1.
+    /// **MX06 Phase 5b.**  Install a specialised kernel closure
+    /// under `handle`.  Subsequent `DispatchSpecialised { handle }`
+    /// requests route through the closure instead of generic
+    /// dispatch.  Re-installing under the same handle replaces the
+    /// closure (Phase 5 deopt-without-evict-step contract).
+    pub fn install_specialised(&self, handle: u64, kernel: Box<CudaSpecialisedKernelFn>) {
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(p) => p.into_inner(),
+        };
+        s.specialised.install(handle, kernel);
     }
 
-    /// **MX05 Phase 4.x shape** — Phase-1 always-error.
+    /// **MX06 Phase 5b.**  NVRTC-compile the emitted CUDA C source,
+    /// build a closure that captures the resulting `CudaModule` and
+    /// `CudaFunction`, and install it under `handle`.
     ///
-    /// Symmetric with the Metal stub on non-Apple platforms: returns
-    /// `Err` so a caller that *expected* a real install can branch.
+    /// The closure conforms to [`CudaSpecialisedKernelFn`]: given
+    /// `(&CudaDevice, &mut BufferStore, &[BufferId], &[BufferId])`,
+    /// it resolves the buffer ids to `CudaBuffer`s, extracts their
+    /// `CUdeviceptr`s, calls `cuLaunchKernel` through cuda-compute's
+    /// `device.launch`, then synchronises.
+    ///
+    /// V1 launch config is conservative: 256-thread 1-D blocks for
+    /// unary / binary kernels (matches `Kernels::launch_unary` etc).
+    /// Matmul-shaped specialised kernels currently follow the same
+    /// 1-D shape — the emitter's `_matmul_NxN_rhs_const` kernels
+    /// flatten the work into a 1-D `gid` index internally.
     pub fn install_specialised_from_emitted(
         &self,
-        _handle: u64,
-        _emitted: EmittedKernelPlaceholder,
+        handle: u64,
+        emitted: EmittedKernel,
     ) -> Result<(), String> {
-        Err(
-            "matrix-cuda: install_specialised_from_emitted unavailable in Phase 1 — lands in Phase 5"
-                .to_string(),
-        )
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(p) => p.into_inner(),
+        };
+        let device = s
+            .device
+            .as_ref()
+            .ok_or_else(|| "matrix-cuda: no CUDA device bound".to_string())?;
+
+        // Compile through NVRTC.  Module is moved into the closure
+        // below so it stays alive for as long as the closure does.
+        let module = device
+            .compile(&emitted.source)
+            .map_err(|e| format!("NVRTC compile for handle 0x{:016X}: {:?}", handle, e))?;
+        let func = module
+            .function(&emitted.entry_point)
+            .map_err(|e| format!("function {} not found: {:?}", emitted.entry_point, e))?;
+
+        let input_count = emitted.input_buffer_count;
+        let output_count = emitted.output_buffer_count;
+        let entry_name = emitted.entry_point;
+
+        let closure = Box::new(
+            move |device: &CudaDevice,
+                  buffers: &mut BufferStore,
+                  inputs: &[compute_ir::BufferId],
+                  outputs: &[compute_ir::BufferId]|
+                  -> Result<Vec<executor_protocol::OpTiming>, String> {
+                if inputs.len() != input_count {
+                    return Err(format!(
+                        "{}: expected {} inputs, got {}",
+                        entry_name,
+                        input_count,
+                        inputs.len()
+                    ));
+                }
+                if outputs.len() != output_count {
+                    return Err(format!(
+                        "{}: expected {} outputs, got {}",
+                        entry_name,
+                        output_count,
+                        outputs.len()
+                    ));
+                }
+
+                // Determine element count from the output buffer
+                // size.  V1 specialised kernels all operate on F32
+                // (4 bytes per element).
+                let out_buf = buffers.get(outputs[0])?;
+                let n_elems = (out_buf.len() / 4) as u32;
+                if n_elems == 0 {
+                    return Ok(Vec::new());
+                }
+
+                // Build args array.  Layout matches the CUDA C kernel
+                // signatures emitted by `cuda_emitter`:
+                //
+                // - unary folded-input precomputed (input_count = 0):
+                //     (out, n)
+                // - commutative binary / non-commutative binary
+                //   (input_count = 1):
+                //     (a, out, n)
+                // - matmul with folded RHS (input_count = 1):
+                //     (a, out, n)
+                //
+                // So 0-input → 2 args, 1-input → 3 args.  Phase 5b
+                // covers exactly these two shapes; richer specialised
+                // signatures are V2 work.
+                let block: [u32; 3] = [256, 1, 1];
+                let grid: [u32; 3] = [n_elems.div_ceil(block[0]).max(1), 1, 1];
+
+                let out_ptr = out_buf.device_ptr();
+
+                let mut n_local = n_elems;
+                let mut out_local = out_ptr;
+                match input_count {
+                    0 => {
+                        let mut args: [*mut std::ffi::c_void; 2] = [
+                            &mut out_local as *mut _ as *mut std::ffi::c_void,
+                            &mut n_local as *mut u32 as *mut std::ffi::c_void,
+                        ];
+                        device
+                            .launch(&func, grid, block, &mut args)
+                            .map_err(|e| format!("launch {}: {:?}", entry_name, e))?;
+                    }
+                    1 => {
+                        let in_buf = buffers.get(inputs[0])?;
+                        let mut in_local = in_buf.device_ptr();
+                        let mut args: [*mut std::ffi::c_void; 3] = [
+                            &mut in_local as *mut _ as *mut std::ffi::c_void,
+                            &mut out_local as *mut _ as *mut std::ffi::c_void,
+                            &mut n_local as *mut u32 as *mut std::ffi::c_void,
+                        ];
+                        device
+                            .launch(&func, grid, block, &mut args)
+                            .map_err(|e| format!("launch {}: {:?}", entry_name, e))?;
+                    }
+                    other => {
+                        return Err(format!(
+                            "{}: V1 specialised kernels support 0 or 1 inputs, got {}",
+                            entry_name, other
+                        ));
+                    }
+                }
+                device
+                    .synchronize()
+                    .map_err(|e| format!("synchronize: {:?}", e))?;
+                // `module` stays alive via the closure capture; drop
+                // happens when the closure is evicted.
+                let _ = &module;
+                Ok(Vec::new())
+            },
+        );
+
+        s.specialised.install(handle, closure);
+        Ok(())
     }
 
-    /// **MX05 Phase 4.x shape** — always `0` in Phase 1.
+    /// **MX06 Phase 5b.**  Number of installed specialised kernels.
     pub fn specialised_count(&self) -> usize {
-        0
+        let s = match self.state.lock() {
+            Ok(g) => g,
+            Err(p) => p.into_inner(),
+        };
+        s.specialised.len()
     }
 
-    /// **MX05 Phase 5 shape** — always `false` in Phase 1.
-    ///
-    /// Real eviction lands once `specialised_table` exists (MX06
-    /// Phase 5).  Returning `false` matches the contract every other
-    /// `evict_specialised` already implements: "the handle was not
-    /// present, nothing was evicted."
-    pub fn evict_specialised(&self, _handle: u64) -> bool {
-        false
+    /// **MX06 Phase 5b** (MX05 Phase 5 deoptimisation hook).  Evict
+    /// the specialised kernel installed under `handle`.  Returns
+    /// `true` if an entry was removed.  Used when an observation
+    /// reveals that a previously-folded constant has changed —
+    /// dropping the closure releases the underlying `CudaModule`.
+    pub fn evict_specialised(&self, handle: u64) -> bool {
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(p) => p.into_inner(),
+        };
+        s.specialised.evict(handle)
     }
-}
-
-/// Placeholder type the Phase-1 `install_specialised_from_emitted`
-/// accepts.  Mirrors `matrix-metal::EmittedKernel` in role — the real
-/// `EmittedKernel` lands in MX06 Phase 4 with the `cuda_emitter`
-/// module.  Existing now lets upstream code reference a stable name.
-#[derive(Debug, Clone, Default)]
-pub struct EmittedKernelPlaceholder {
-    /// The CUDA C source string.  Phase 4 will replace this struct
-    /// wholesale with a richer type carrying parameter metadata.
-    pub source: String,
 }
 
 // ─────────────────────────── Free helpers ───────────────────────────
@@ -451,8 +654,11 @@ mod tests {
     fn profile_advertises_cuda_kind() {
         let p = profile();
         assert_eq!(p.kind, "cuda");
-        // Phase 1: no ops claimed.
-        assert_eq!(p.supported_ops, 0);
+        // Phase 5b: V1 ops claimed.  Bit 0x07 (Add) is in the mask.
+        assert_ne!(p.supported_ops, 0);
+        assert!(p.supported_ops & (1 << 0x07) != 0, "Add bit must be set");
+        assert!(p.supported_ops & (1 << 0x15) != 0, "MatMul bit must be set");
+        assert!(p.supported_ops & (1 << 0x1B) != 0, "Const bit must be set");
         // F32 only (bit 0).
         assert_eq!(p.supported_dtypes & 1, 1);
         // Plausibly-sized device.
@@ -461,10 +667,22 @@ mod tests {
     }
 
     #[test]
-    fn supported_ops_bitset_is_zero_in_phase_1() {
-        // This test exists to catch an accidental Phase 5 merge into
-        // Phase 1.  When the real bitset lands, delete this test.
-        assert_eq!(supported_ops_bitset(), 0);
+    fn supported_ops_bitset_phase5b_claims_v1_ops() {
+        let mask = supported_ops_bitset();
+        // Every V1 op (matrix-metal subset) must be claimed.
+        for tag in 0x00..=0x0Du8 {
+            assert!(mask & (1 << tag) != 0, "op tag 0x{:02X} must be claimed", tag);
+        }
+        assert!(mask & (1 << 0x15) != 0, "MatMul (0x15) must be claimed");
+        assert!(mask & (1 << 0x1B) != 0, "Const (0x1B) must be claimed");
+        // Reductions / shape ops / cast NOT yet claimed.
+        for tag in [0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x1A] {
+            assert!(
+                mask & (1u32 << tag) == 0,
+                "op tag 0x{:02X} should be V2 (not claimed in V1)",
+                tag
+            );
+        }
     }
 
     #[test]
@@ -509,37 +727,31 @@ mod tests {
     }
 
     #[test]
-    fn install_specialised_from_emitted_phase1_errors() {
+    fn install_specialised_with_phony_closure_increments_count() {
+        // Phase 5b: install accepts a real CudaSpecialisedKernelFn.
+        // We can install + count without running a kernel.  On hosts
+        // without CUDA, `new()` fails and the test silently passes.
         if let Ok(exec) = CudaExecutor::new() {
-            let r = exec.install_specialised_from_emitted(
-                7,
-                EmittedKernelPlaceholder {
-                    source: "/* placeholder */".into(),
-                },
-            );
-            assert!(r.is_err());
-        }
-    }
-
-    #[test]
-    fn install_specialised_phase1_is_noop() {
-        // No assertion beyond "doesn't panic" — the contract is that
-        // upstream callers can issue installs and the stub absorbs
-        // them silently until Phase 5.
-        if let Ok(exec) = CudaExecutor::new() {
+            assert_eq!(exec.specialised_count(), 0);
             exec.install_specialised(
                 42,
-                Box::new(|_ctx, _ins, _outs| Ok(Vec::new())),
+                Box::new(|_device, _buffers, _ins, _outs| Ok(Vec::new())),
             );
+            assert_eq!(exec.specialised_count(), 1);
+            // Eviction removes it.
+            assert!(exec.evict_specialised(42));
             assert_eq!(exec.specialised_count(), 0);
+            assert!(!exec.evict_specialised(42));
         }
     }
 
     #[test]
-    fn handle_dispatch_returns_not_implemented() {
-        // The simplest test of the dispatch path: handing a Dispatch
-        // request to the executor returns NOT_IMPLEMENTED with the
-        // documented "Phase 1" message and the original job id.
+    fn handle_dispatch_empty_graph_succeeds() {
+        // Phase 5b: Dispatch routes through dispatch::run.  An empty
+        // graph compiles the kernels (one-time NVRTC cost on the
+        // first call) and returns DispatchDone with no timings.
+        // On non-NVIDIA hosts CudaExecutor::new() fails and the test
+        // silently passes.
         if let Ok(exec) = CudaExecutor::new() {
             let job_id = 12345;
             let resp = exec.handle(ExecutorRequest::Dispatch {
@@ -554,22 +766,23 @@ mod tests {
                 },
             });
             match resp {
-                ExecutorResponse::Error {
-                    code,
-                    message,
+                ExecutorResponse::DispatchDone {
                     job_id: jid,
+                    timings,
                 } => {
-                    assert_eq!(code, ErrorCode::NOT_IMPLEMENTED);
-                    assert_eq!(jid, Some(job_id));
-                    assert!(message.contains("Phase 1"));
+                    assert_eq!(jid, job_id);
+                    assert!(timings.is_empty());
                 }
-                other => panic!("expected Error, got {:?}", other),
+                other => panic!("expected DispatchDone, got {:?}", other),
             }
         }
     }
 
     #[test]
-    fn handle_dispatch_specialised_returns_not_implemented() {
+    fn handle_dispatch_specialised_unknown_handle_errors() {
+        // Phase 5b: DispatchSpecialised with an uninstalled handle
+        // returns NOT_IMPLEMENTED so the runtime can fall back to
+        // generic dispatch.  Same contract as matrix-metal.
         if let Ok(exec) = CudaExecutor::new() {
             let job_id = 99;
             let resp = exec.handle(ExecutorRequest::DispatchSpecialised {
@@ -580,10 +793,17 @@ mod tests {
             });
             match resp {
                 ExecutorResponse::Error {
-                    code, job_id: jid, ..
+                    code,
+                    job_id: jid,
+                    message,
                 } => {
                     assert_eq!(code, ErrorCode::NOT_IMPLEMENTED);
                     assert_eq!(jid, Some(job_id));
+                    assert!(
+                        message.contains("0xABCD") || message.contains("specialised"),
+                        "{}",
+                        message
+                    );
                 }
                 other => panic!("expected Error, got {:?}", other),
             }
