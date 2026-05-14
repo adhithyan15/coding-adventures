@@ -166,6 +166,26 @@ describe("macsyma-runtime", () => {
     ]));
   });
 
+  it("factors common multivariate integer content through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(2*x*y + 2*x*z);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(MUL, [int(2), sym("x")]),
+      app(ADD, [sym("y"), sym("z")]),
+    ]));
+  });
+
+  it("factors negative common multivariate integer content through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(-2*x*y - 2*x*z);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(MUL, [int(-2), sym("x")]),
+      app(ADD, [sym("y"), sym("z")]),
+    ]));
+  });
+
   it("factors bivariate perfect squares through the runtime", () => {
     const session = new MacsymaSession();
     const [result] = session.evalSource("factor(x^2 + 2*x*y + y^2);");

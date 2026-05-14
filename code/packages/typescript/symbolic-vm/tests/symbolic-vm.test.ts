@@ -102,6 +102,42 @@ describe("symbolic-vm", () => {
     ]));
   });
 
+  it("extracts common integer content from multivariate factors", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const z = sym("z");
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(MUL, [int(2), app(MUL, [x, y])]),
+        app(MUL, [int(2), app(MUL, [x, z])]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(MUL, [int(2), x]),
+      app(ADD, [y, z]),
+    ]));
+  });
+
+  it("extracts negative common integer content from multivariate factors", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const z = sym("z");
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(MUL, [int(-2), app(MUL, [x, y])]),
+        app(MUL, [int(-2), app(MUL, [x, z])]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(MUL, [int(-2), x]),
+      app(ADD, [y, z]),
+    ]));
+  });
+
   it("factors bivariate perfect squares", () => {
     const vm = new VM(new SymbolicBackend());
     const x = sym("x");

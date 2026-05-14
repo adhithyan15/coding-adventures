@@ -541,23 +541,45 @@ function splitCommonFactorTerm(node: IRNode): Map<string, FactorPower> {
 function splitIntegerCoefficientAndPowers(node: IRNode): CoefficientPowers | undefined {
   let coefficient = 1n;
   const powers = new Map<string, FactorPower>();
-  for (const factor of flattenFactorTerms(node)) {
+
+  const visitFactor = (factor: IRNode): boolean => {
     if (factor.kind === "integer") {
       coefficient *= factor.value;
-      continue;
+      return true;
     }
-    if (factor.kind === "symbol" && factor.name.startsWith("%")) return undefined;
+    if (factor.kind === "apply" && equals(factor.head, NEG) && factor.args.length === 1) {
+      coefficient *= -1n;
+      for (const nested of flattenFactorTerms(factor.args[0])) {
+        if (!visitFactor(nested)) return false;
+      }
+      return true;
+    }
+    if (factor.kind === "symbol" && factor.name.startsWith("%")) return false;
 
     if (factor.kind === "apply" && equals(factor.head, POW) && factor.args.length === 2) {
       const [base, exponent] = factor.args;
       if (exponent.kind === "integer" && exponent.value > 0n) {
         addPower(powers, base, Number(exponent.value));
-        continue;
+        return true;
       }
     }
     addPower(powers, factor, 1);
+    return true;
+  };
+
+  for (const factor of flattenFactorTerms(node)) {
+    if (!visitFactor(factor)) return undefined;
   }
   return { coefficient, powers };
+}
+
+function termFromIntegerCoefficientAndPowers(coefficient: bigint, powers: ReadonlyMap<string, FactorPower>): IRNode {
+  const terms: IRNode[] = [];
+  if (coefficient !== 1n || powers.size === 0) terms.push(int(coefficient));
+  terms.push(...[...powers.values()]
+    .sort((a, b) => nodeKey(a.base).localeCompare(nodeKey(b.base)))
+    .map((power) => powNode(power.base, power.exponent)));
+  return multiplyNodes(terms);
 }
 
 function addPower(powers: Map<string, FactorPower>, base: IRNode, exponent: number): void {
@@ -596,13 +618,44 @@ function removeCommonFactor(node: IRNode, common: ReadonlyMap<string, FactorPowe
   return multiplyNodes(rebuilt);
 }
 
+function gcdBigInt(a: bigint, b: bigint): bigint {
+  let x = a < 0n ? -a : a;
+  let y = b < 0n ? -b : b;
+  while (y !== 0n) {
+    const next = x % y;
+    x = y;
+    y = next;
+  }
+  return x;
+}
+
+function maybeFactorResidual(residual: IRNode): IRNode {
+  const variable = findVariable(residual);
+  return variable !== undefined && irToIntegerPoly(residual, variable) !== undefined
+    ? app(FACTOR, [residual])
+    : residual;
+}
+
 function extractCommonSymbolicFactor(inner: IRNode): IRNode | undefined {
   const terms = flattenAddTerms(inner);
   if (terms.length < 2) return undefined;
 
-  const perTerm = terms.map((term) => splitCommonFactorTerm(term));
-  const common = new Map(perTerm[0]);
-  for (const powers of perTerm.slice(1)) {
+  const parsed = terms.map((term) => splitIntegerCoefficientAndPowers(term));
+  if (parsed.some((term) => term === undefined)) return undefined;
+
+  const parsedTerms = parsed as CoefficientPowers[];
+  const coefficients = parsedTerms.map((term) => term.coefficient);
+  let commonCoefficient = coefficients.reduce(
+    (acc, coefficient) => gcdBigInt(acc, coefficient),
+    0n,
+  );
+  if (commonCoefficient !== 0n && coefficients.every((coefficient) => coefficient < 0n)) {
+    commonCoefficient = -commonCoefficient;
+  }
+  if (commonCoefficient === 0n) commonCoefficient = 1n;
+
+  const common = new Map(parsedTerms[0].powers);
+  for (const { powers } of parsedTerms.slice(1)) {
     for (const [key, power] of [...common.entries()]) {
       const shared = Math.min(power.exponent, powers.get(key)?.exponent ?? 0);
       if (shared > 0) {
@@ -612,13 +665,18 @@ function extractCommonSymbolicFactor(inner: IRNode): IRNode | undefined {
       }
     }
   }
-  if (common.size === 0) return undefined;
+  if (commonCoefficient === 1n && common.size === 0) return undefined;
 
-  const commonTerms = [...common.values()]
-    .sort((a, b) => nodeKey(a.base).localeCompare(nodeKey(b.base)))
-    .map((power) => powNode(power.base, power.exponent));
-  const residualTerms = terms.map((term) => removeCommonFactor(term, common));
-  return app(MUL, [multiplyNodes(commonTerms), app(FACTOR, [addNodes(residualTerms)])]);
+  const commonFactor = termFromIntegerCoefficientAndPowers(commonCoefficient, common);
+  const residualTerms = parsedTerms.map(({ coefficient, powers }) => {
+    const residualPowers = new Map<string, FactorPower>();
+    for (const [key, power] of powers.entries()) {
+      const exponent = power.exponent - (common.get(key)?.exponent ?? 0);
+      if (exponent > 0) residualPowers.set(key, { base: power.base, exponent });
+    }
+    return termFromIntegerCoefficientAndPowers(coefficient / commonCoefficient, residualPowers);
+  });
+  return app(MUL, [commonFactor, maybeFactorResidual(addNodes(residualTerms))]);
 }
 
 function extractMultivariatePerfectSquare(inner: IRNode): IRNode | undefined {
