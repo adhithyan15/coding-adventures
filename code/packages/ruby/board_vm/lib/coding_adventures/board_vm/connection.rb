@@ -106,6 +106,10 @@ module CodingAdventures
         Adc.new(self)
       end
 
+      def dac
+        Dac.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -263,6 +267,28 @@ module CodingAdventures
           program_id: program_id,
           budget: budget,
           pin: pin,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def dac_write_u12!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin:,
+        sample:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.dac_write_u12(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
+          sample: sample,
           max_stack: max_stack,
           handshake: true,
           query_caps: true,
@@ -976,6 +1002,43 @@ module CodingAdventures
           pin: pin,
           max_stack: max_stack
         )
+      end
+    end
+
+    class Dac
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def write_u12(
+        pin:,
+        sample:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.dac_write_u12!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          sample: sample,
+          max_stack: max_stack
+        )
+      end
+      alias write write_u12
+
+      def off(pin:, **options)
+        write_u12(pin: pin, sample: 0, **options)
+      end
+
+      def midpoint(pin:, **options)
+        write_u12(pin: pin, sample: 0x0800, **options)
+      end
+
+      def full(pin:, **options)
+        write_u12(pin: pin, sample: 0x0FFF, **options)
       end
     end
 

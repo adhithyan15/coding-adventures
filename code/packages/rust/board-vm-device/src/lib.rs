@@ -1,8 +1,9 @@
 #![no_std]
 
 use board_vm_ir::{
-    parse_module, validate, CAP_ADC_READ, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
-    CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    parse_module, validate, CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN,
+    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS,
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -31,6 +32,73 @@ pub const ERROR_BAD_CRC: u16 = 0x0005;
 pub const ERROR_INVALID_PROGRAM: u16 = 0x0200;
 pub const ERROR_INVALID_BYTECODE: u16 = 0x0201;
 pub const ERROR_BOARD_FAULT: u16 = 0x0400;
+
+const GPIO_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_OPEN,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.open",
+};
+const GPIO_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.write",
+};
+const GPIO_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.read",
+};
+const GPIO_CLOSE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_CLOSE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.close",
+};
+const TIME_SLEEP_MS_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_TIME_SLEEP_MS,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "time.sleep_ms",
+};
+const TIME_NOW_MS_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_TIME_NOW_MS,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "time.now_ms",
+};
+const PWM_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_PWM_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "pwm.write",
+};
+const ADC_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_ADC_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "adc.read",
+};
+const DAC_WRITE_U12_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_DAC_WRITE_U12,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "dac.write_u12",
+};
+const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_LED_MATRIX_FRAME,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "led_matrix.frame",
+};
+const PROGRAM_RAM_EXEC_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_PROGRAM_RAM_EXEC,
+    version: 1,
+    flags: CAP_FLAG_PROTOCOL_FEATURE,
+    name: "program.ram_exec",
+};
 
 pub const BLINK_MVP_CAPABILITIES: [CapabilityDescriptor<'static>; 7] = [
     CapabilityDescriptor {
@@ -462,6 +530,107 @@ pub const BLINK_MVP_WITH_PWM_ADC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescrip
         flags: CAP_FLAG_PROTOCOL_FEATURE,
         name: "program.ram_exec",
     },
+];
+
+pub const BLINK_MVP_WITH_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 8] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_ADC_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 10] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 10] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_ADC_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 10] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>;
+    11] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -44,6 +44,7 @@ pub struct DigitalPinInfo {
     pub supports_pulldown: bool,
     pub supports_adc: bool,
     pub supports_pwm: bool,
+    pub supports_dac: bool,
     pub supports_touch: bool,
     pub supports_interrupt: bool,
     pub boot_strap: bool,
@@ -61,6 +62,7 @@ impl DigitalPinInfo {
             supports_pulldown: false,
             supports_adc: false,
             supports_pwm: false,
+            supports_dac: false,
             supports_touch: false,
             supports_interrupt: false,
             boot_strap: false,
@@ -99,7 +101,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 10] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 11] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -109,10 +111,11 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 10] = [
     "time.now_ms",
     "pwm.write",
     "adc.read",
+    "dac.write_u12",
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 14] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 15] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -125,6 +128,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 14] = [
     "time.now_ms",
     "pwm.write",
     "adc.read",
+    "dac.write_u12",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -252,6 +256,7 @@ const fn uno_r4_digital_pin(pin: board_vm_uno_r4::DigitalPinDescriptor) -> Digit
         supports_pulldown: false,
         supports_adc: pin.supports_adc,
         supports_pwm: pin.supports_pwm,
+        supports_dac: pin.supports_dac,
         supports_touch: false,
         supports_interrupt: pin.supports_interrupt,
         boot_strap: false,
@@ -281,6 +286,7 @@ const fn esp32_digital_pin(pin: board_vm_esp32::DigitalPinDescriptor) -> Digital
         supports_pulldown: pin.supports_pulldown,
         supports_adc: pin.supports_adc,
         supports_pwm: pin.supports_output,
+        supports_dac: false,
         supports_touch: pin.supports_touch,
         supports_interrupt: pin.supports_input,
         boot_strap: pin.boot_strap,
@@ -310,6 +316,7 @@ const fn pico_digital_pin(pin: board_vm_pico::DigitalPinDescriptor) -> DigitalPi
         supports_pulldown: pin.supports_pulldown,
         supports_adc: pin.supports_adc,
         supports_pwm: pin.supports_pwm,
+        supports_dac: false,
         supports_touch: false,
         supports_interrupt: pin.supports_input,
         boot_strap: false,
@@ -504,6 +511,7 @@ mod tests {
         let a0 = uno.digital_pins.iter().find(|pin| pin.pin == 14).unwrap();
         assert_eq!(a0.label, "A0/D14");
         assert!(a0.supports_adc);
+        assert!(a0.supports_dac);
         assert!(!a0.supports_pwm);
 
         let pico = find_target("raspberry-pi-pico").unwrap();
@@ -529,6 +537,7 @@ mod tests {
         let uno = find_target("arduino-uno-r4-wifi").unwrap();
         assert!(uno.capabilities.contains(&"pwm.write"));
         assert!(uno.capabilities.contains(&"adc.read"));
+        assert!(uno.capabilities.contains(&"dac.write_u12"));
     }
 
     #[test]

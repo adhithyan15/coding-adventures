@@ -1,8 +1,9 @@
 use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_ADC_READ,
-    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME,
-    CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER,
-    FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MODULE_MAGIC, MODULE_VERSION,
+    CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
+    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MODULE_MAGIC,
+    MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -38,6 +39,8 @@ pub const PWM_WRITE_CODE_LEN: usize = 8;
 pub const PWM_WRITE_MODULE_LEN: usize = 18;
 pub const ADC_READ_CODE_LEN: usize = 5;
 pub const ADC_READ_MODULE_LEN: usize = 15;
+pub const DAC_WRITE_U12_CODE_LEN: usize = 8;
+pub const DAC_WRITE_U12_MODULE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -166,6 +169,13 @@ pub struct AdcReadProgram {
     pub max_stack: u8,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DacWriteU12Program {
+    pub pin: u8,
+    pub sample: u16,
+    pub max_stack: u8,
+}
+
 impl GpioOpenProgram {
     pub const fn output(pin: u8) -> Self {
         Self {
@@ -277,6 +287,16 @@ impl PwmWriteProgram {
 impl AdcReadProgram {
     pub const fn new(pin: u8) -> Self {
         Self { pin, max_stack: 1 }
+    }
+}
+
+impl DacWriteU12Program {
+    pub const fn new(pin: u8, sample: u16) -> Self {
+        Self {
+            pin,
+            sample,
+            max_stack: 2,
+        }
     }
 }
 
@@ -1072,6 +1092,46 @@ pub fn write_adc_read_module(program: AdcReadProgram, out: &mut [u8]) -> Result<
     Ok(offset)
 }
 
+pub fn write_dac_write_u12_code(
+    program: DacWriteU12Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < DAC_WRITE_U12_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_push_u16(out, &mut offset, program.sample)?;
+    write_call_u8(out, &mut offset, CAP_DAC_WRITE_U12)?;
+    write_u8(out, &mut offset, OP_HALT)?;
+    Ok(offset)
+}
+
+pub fn write_dac_write_u12_module(
+    program: DacWriteU12Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < DAC_WRITE_U12_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; DAC_WRITE_U12_CODE_LEN];
+    let code_len = write_dac_write_u12_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_dac(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_led_matrix_frame_code(
     program: LedMatrixFrameProgram,
     out: &mut [u8],
@@ -1221,7 +1281,7 @@ mod tests {
     use super::*;
     use board_vm_ir::{
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
-        CAP_ADC_READ, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
+        CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -1267,6 +1327,10 @@ mod tests {
     ];
     const ADC_READ_A0_MODULE_HEX: [u8; ADC_READ_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x0E, 0x40, 0x21, 0x50, 0x00,
+    ];
+    const DAC_WRITE_A0_MID_MODULE_HEX: [u8; DAC_WRITE_U12_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x08, 0x12, 0x0E, 0x13, 0x00, 0x08, 0x40,
+        0x22, 0x00, 0x00,
     ];
     const LED_MATRIX_HEART_MODULE_HEX: [u8; LED_MATRIX_FRAME_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x12, 0x14, 0x44, 0xA4, 0x84, 0x31, 0x14,
@@ -1440,6 +1504,21 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_ADC_READ]);
+    }
+
+    #[test]
+    fn builds_dac_write_u12_module() {
+        let mut module = [0u8; DAC_WRITE_U12_MODULE_LEN];
+        let len =
+            write_dac_write_u12_module(DacWriteU12Program::new(14, 0x0800), &mut module).unwrap();
+        assert_eq!(len, DAC_WRITE_U12_MODULE_LEN);
+        assert_eq!(module, DAC_WRITE_A0_MID_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_dac(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_DAC_WRITE_U12]);
     }
 
     #[test]

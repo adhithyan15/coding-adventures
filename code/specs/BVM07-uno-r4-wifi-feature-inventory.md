@@ -28,7 +28,7 @@ Source snapshot:
 | LED matrix | 12x8 matrix, 96 pixels, UNO R4 WiFi only | implemented | `led_matrix.frame` |
 | PWM output | D3, D5, D6, D9, D10, D11 in the Arduino variant init path | implemented as direct write | `pwm.write` |
 | Analog input | A0-A5 | implemented as direct read | `adc.read` |
-| DAC output | A0, one 12-bit DAC channel | pending | `dac.write_u12` or `analog.write` |
+| DAC output | A0, one 12-bit DAC channel | implemented as direct write | `dac.write_u12` |
 | I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | pending | `i2c.open`, `i2c.write`, `i2c.read`, `i2c.transfer` |
 | SPI master | MOSI D11, MISO D12, SCK D13, CS D10 | pending | `spi.open`, `spi.transfer`, `spi.close` |
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | partially transport-only | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
@@ -64,12 +64,11 @@ reject conflicting handles.
 2. Descriptor metadata for header pins, onboard LED, LED matrix dimensions,
    PWM-capable pins, and analog-capable pins is present; keep deepening it with
    hidden pins, reserved pins, and bus pin groups.
-3. `pwm.write` and `adc.read` are the first direct analog-adjacent VM
-   operations. Add handle-oriented PWM/ADC variants only when a later streaming
-   or event tranche needs persistent resource ownership.
-4. Add DAC output on A0 as the next scalar analog capability.
-5. Implement I2C and SPI as bus handles with explicit transfer boundaries.
-6. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
+3. `pwm.write`, `adc.read`, and `dac.write_u12` are the first direct
+   analog-adjacent VM operations. Add handle-oriented variants only when a
+   later streaming or event tranche needs persistent resource ownership.
+4. Implement I2C and SPI as bus handles with explicit transfer boundaries.
+5. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
    capabilities in separate tranches with conformance tests.
 
 Every tranche should include the same layers: spec entry, IR capability id,

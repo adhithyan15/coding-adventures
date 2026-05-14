@@ -2,10 +2,15 @@
 
 use board_vm_device::{
     BoardVmDevice, DeviceDescriptor, BLINK_MVP_CAPABILITIES,
-    BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_ADC_CAPABILITIES,
-    BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_ADC_AND_LED_MATRIX_CAPABILITIES,
-    BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES,
-    BLINK_MVP_WITH_PWM_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
+    BLINK_MVP_WITH_ADC_AND_DAC_CAPABILITIES, BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_ADC_CAPABILITIES, BLINK_MVP_WITH_ADC_DAC_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_DAC_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_DAC_CAPABILITIES,
+    BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_ADC_AND_DAC_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
 };
 use board_vm_ir::CapabilitySet;
 use board_vm_runtime::{BoardHal, GpioMode, HalError, Level};
@@ -61,6 +66,7 @@ pub struct DigitalPinDescriptor {
     pub label: &'static str,
     pub supports_pwm: bool,
     pub supports_adc: bool,
+    pub supports_dac: bool,
     pub supports_interrupt: bool,
     pub notes: &'static str,
 }
@@ -71,6 +77,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D0/RX0",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 0 / Serial 0 receiver",
     },
@@ -79,6 +86,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D1/TX0",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 1 / Serial 0 transmitter",
     },
@@ -87,6 +95,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D2",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: true,
         notes: "GPIO 2 / external interrupt",
     },
@@ -95,6 +104,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D3",
         supports_pwm: true,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: true,
         notes: "GPIO 3 / PWM / external interrupt",
     },
@@ -103,6 +113,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D4",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 4 / CAN alternate function on Minima header docs",
     },
@@ -111,6 +122,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D5",
         supports_pwm: true,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 5 / PWM",
     },
@@ -119,6 +131,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D6",
         supports_pwm: true,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 6 / PWM",
     },
@@ -127,6 +140,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D7",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 7",
     },
@@ -135,6 +149,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D8",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 8",
     },
@@ -143,6 +158,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D9",
         supports_pwm: true,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 9 / PWM",
     },
@@ -151,6 +167,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D10/CS",
         supports_pwm: true,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 10 / PWM / SPI chip select",
     },
@@ -159,6 +176,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D11/COPI",
         supports_pwm: true,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 11 / PWM / SPI controller out",
     },
@@ -167,6 +185,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D12/CIPO",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 12 / SPI controller in",
     },
@@ -175,6 +194,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "D13/SCK",
         supports_pwm: false,
         supports_adc: false,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "GPIO 13 / SPI clock / onboard LED",
     },
@@ -183,6 +203,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "A0/D14",
         supports_pwm: false,
         supports_adc: true,
+        supports_dac: true,
         supports_interrupt: false,
         notes: "Analog input A0 / DAC output / digital pin 14",
     },
@@ -191,6 +212,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "A1/D15",
         supports_pwm: false,
         supports_adc: true,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "Analog input A1 / digital pin 15",
     },
@@ -199,6 +221,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "A2/D16",
         supports_pwm: false,
         supports_adc: true,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "Analog input A2 / digital pin 16",
     },
@@ -207,6 +230,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "A3/D17",
         supports_pwm: false,
         supports_adc: true,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "Analog input A3 / digital pin 17",
     },
@@ -215,6 +239,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "A4/SDA/D18",
         supports_pwm: false,
         supports_adc: true,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "Analog input A4 / I2C SDA / digital pin 18",
     },
@@ -223,6 +248,7 @@ pub const UNO_R4_DIGITAL_PINS: [DigitalPinDescriptor; 20] = [
         label: "A5/SCL/D19",
         supports_pwm: false,
         supports_adc: true,
+        supports_dac: false,
         supports_interrupt: false,
         notes: "Analog input A5 / I2C SCL / digital pin 19",
     },
@@ -244,7 +270,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     onboard_led_pin: UNO_R4_ONBOARD_LED_PIN,
     supports_wifi_module: false,
     supports_led_matrix: false,
-    capabilities: CapabilitySet::blink_mvp().with_pwm().with_adc(),
+    capabilities: CapabilitySet::blink_mvp().with_pwm().with_adc().with_dac(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
 };
 
@@ -267,6 +293,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     capabilities: CapabilitySet::blink_mvp()
         .with_pwm()
         .with_adc()
+        .with_dac()
         .with_led_matrix(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
 };
@@ -286,6 +313,10 @@ pub trait UnoR4Backend {
         false
     }
 
+    fn supports_dac(&self) -> bool {
+        false
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -295,6 +326,10 @@ pub trait UnoR4Backend {
     }
 
     fn read_adc(&mut self, _pin: u8) -> Result<u16, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn write_dac_u12(&mut self, _pin: u8, _sample: u16) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -354,6 +389,7 @@ where
         let mut capabilities = self.target.capabilities;
         capabilities.pwm = self.backend.supports_pwm();
         capabilities.adc = self.backend.supports_adc();
+        capabilities.dac = self.backend.supports_dac();
         capabilities
     }
 }
@@ -404,6 +440,14 @@ where
         self.backend.read_adc(pin)
     }
 
+    fn dac_write_u12(&mut self, pin: u16, sample: u16) -> Result<(), HalError> {
+        if sample > 0x0fff {
+            return Err(HalError::UnsupportedMode);
+        }
+        let pin = normalize_dac_pin(pin)?;
+        self.backend.write_dac_u12(pin, sample)
+    }
+
     fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
         if !self.target.supports_led_matrix {
             return Err(HalError::UnsupportedMode);
@@ -448,6 +492,15 @@ fn normalize_adc_pin(pin: u16) -> Result<u8, HalError> {
     }
 }
 
+fn normalize_dac_pin(pin: u16) -> Result<u8, HalError> {
+    let pin = normalize_digital_pin(pin)?;
+    match digital_pin(pin) {
+        Some(descriptor) if descriptor.supports_dac => Ok(pin),
+        Some(_) => Err(HalError::UnsupportedMode),
+        None => Err(HalError::InvalidPin),
+    }
+}
+
 pub fn uno_r4_device_descriptor(
     target: &'static TargetDescriptor,
     board_nonce: u32,
@@ -466,7 +519,19 @@ fn uno_r4_device_descriptor_for_capabilities(
         board_nonce,
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: false,
-        capabilities: if target.supports_led_matrix && capabilities.pwm && capabilities.adc {
+        capabilities: if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix && capabilities.pwm && capabilities.dac {
+            &BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix && capabilities.adc && capabilities.dac {
+            &BLINK_MVP_WITH_ADC_DAC_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix && capabilities.dac {
+            &BLINK_MVP_WITH_DAC_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix && capabilities.pwm && capabilities.adc {
             &BLINK_MVP_WITH_PWM_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix && capabilities.pwm {
             &BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES
@@ -474,6 +539,14 @@ fn uno_r4_device_descriptor_for_capabilities(
             &BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm && capabilities.adc && capabilities.dac {
+            &BLINK_MVP_WITH_PWM_ADC_AND_DAC_CAPABILITIES
+        } else if capabilities.pwm && capabilities.dac {
+            &BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES
+        } else if capabilities.adc && capabilities.dac {
+            &BLINK_MVP_WITH_ADC_AND_DAC_CAPABILITIES
+        } else if capabilities.dac {
+            &BLINK_MVP_WITH_DAC_CAPABILITIES
         } else if capabilities.pwm && capabilities.adc {
             &BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES
         } else if capabilities.pwm {
@@ -535,6 +608,7 @@ mod tests {
         Sleep(u16),
         PwmWrite(u8, u16),
         AdcRead(u8),
+        DacWriteU12(u8, u16),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -586,6 +660,10 @@ mod tests {
             true
         }
 
+        fn supports_dac(&self) -> bool {
+            true
+        }
+
         fn supports_bootloader_reboot(&self) -> bool {
             true
         }
@@ -598,6 +676,11 @@ mod tests {
         fn read_adc(&mut self, pin: u8) -> Result<u16, HalError> {
             self.events.push(Event::AdcRead(pin));
             Ok(0x02aa)
+        }
+
+        fn write_dac_u12(&mut self, pin: u8, sample: u16) -> Result<(), HalError> {
+            self.events.push(Event::DacWriteU12(pin, sample));
+            Ok(())
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -633,6 +716,7 @@ mod tests {
         let a0 = digital_pin(14).unwrap();
         assert_eq!(a0.label, "A0/D14");
         assert!(a0.supports_adc);
+        assert!(a0.supports_dac);
         assert!(!a0.supports_pwm);
         assert!(is_valid_digital_pin(19));
     }
@@ -675,18 +759,24 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_AND_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES.len()
         );
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
         assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_ADC_READ));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_DAC_WRITE_U12));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_ADC_READ));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_DAC_WRITE_U12));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -742,6 +832,29 @@ mod tests {
 
         assert_eq!(board.adc_read(13), Err(HalError::UnsupportedMode));
         assert_eq!(board.adc_read(99), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn dac_write_u12_runs_through_dac_pin_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.dac_write_u12(14, 0x0800).unwrap();
+        assert_eq!(board.backend().events, vec![Event::DacWriteU12(14, 0x0800)]);
+    }
+
+    #[test]
+    fn dac_write_u12_rejects_non_dac_pin() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(
+            board.dac_write_u12(15, 0x0800),
+            Err(HalError::UnsupportedMode)
+        );
+        assert_eq!(
+            board.dac_write_u12(14, 0x1000),
+            Err(HalError::UnsupportedMode)
+        );
+        assert_eq!(board.dac_write_u12(99, 0x0800), Err(HalError::InvalidPin));
     }
 
     #[test]
