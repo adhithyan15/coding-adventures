@@ -229,6 +229,15 @@ module CodingAdventures
         native_session.i2c_read_module(address, i2c_read_length_value(length), max_stack)
       end
 
+      def i2c_transfer_module(address:, write_bytes:, read_length:, max_stack: 5)
+        native_session.i2c_transfer_module(
+          address,
+          i2c_bytes_value(write_bytes),
+          i2c_read_length_value(read_length),
+          max_stack
+        )
+      end
+
       def gpio_open_module(pin:, mode: :output, max_stack: 2)
         native_session.gpio_open_module(pin, gpio_mode(mode), max_stack)
       end
@@ -359,6 +368,24 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: i2c_read_module(address: address, length: length, max_stack: max_stack)
+        )
+      end
+
+      def upload_i2c_transfer(
+        program_id: @program_id,
+        address:,
+        write_bytes:,
+        read_length:,
+        max_stack: 5
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: i2c_transfer_module(
+            address: address,
+            write_bytes: write_bytes,
+            read_length: read_length,
+            max_stack: max_stack
+          )
         )
       end
 
@@ -801,6 +828,32 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def i2c_transfer(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        address:,
+        write_bytes:,
+        read_length:,
+        max_stack: 5
+      )
+        results = upload_i2c_transfer(
+          program_id: program_id,
+          address: address,
+          write_bytes: write_bytes,
+          read_length: read_length,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def gpio_open(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1010,6 +1063,8 @@ module CodingAdventures
           upload_i2c_read_u8(**i2c_read_u8_command_options(words, command, options, require_budget: false))
         when "upload-i2c-read-bytes", "upload-i2c.read"
           upload_i2c_read(**i2c_read_command_options(words, command, options, require_budget: false))
+        when "upload-i2c-transfer", "upload-i2c.transfer"
+          upload_i2c_transfer(**i2c_transfer_command_options(words, command, options, require_budget: false))
         when "upload-gpio-open", "upload-gpio.open"
           upload_gpio_open(**gpio_open_command_options(words, command, options, require_budget: false))
         when "upload-gpio-handle-read", "upload-gpio.handle-read"
@@ -1056,6 +1111,8 @@ module CodingAdventures
           i2c_read_u8(**i2c_read_u8_command_options(words, command, options))
         when "i2c-read-bytes", "i2c.read"
           i2c_read(**i2c_read_command_options(words, command, options))
+        when "i2c-transfer", "i2c.transfer"
+          i2c_transfer(**i2c_transfer_command_options(words, command, options))
         when "gpio-high", "gpio.high"
           gpio_write(**gpio_level_command_options(words, command, options, value: true))
         when "gpio-low", "gpio.low"
@@ -1360,6 +1417,24 @@ module CodingAdventures
         ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires address" unless merged.key?(:address)
         raise ArgumentError, "#{command} requires length" unless merged.key?(:length)
+
+        merged
+      end
+
+      def i2c_transfer_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:address] = integer_argument(words.shift, "#{command} address") unless words.empty?
+        merged[:write_bytes] = i2c_bytes_argument(words.shift, "#{command} write bytes") unless words.empty?
+        merged[:read_length] = i2c_read_length_value(words.shift) unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires address" unless merged.key?(:address)
+        raise ArgumentError, "#{command} requires write bytes" unless merged.key?(:write_bytes)
+        raise ArgumentError, "#{command} requires read length" unless merged.key?(:read_length)
 
         merged
       end

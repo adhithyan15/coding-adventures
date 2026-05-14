@@ -5,14 +5,14 @@ use std::slice;
 use board_vm_host::{
     AdcReadProgram, BlinkProgram, DacWriteU12Program, GpioHandleCloseProgram,
     GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram,
-    GpioWriteProgram, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cWriteProgram, I2cWriteU8Program,
-    LedMatrixFrameProgram, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
-    DAC_WRITE_U12_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
-    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN,
-    I2C_OPEN_MODULE_LEN, I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_WRITE_MAX_MODULE_LEN,
-    I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
-    TIME_SLEEP_MS_MODULE_LEN,
+    GpioWriteProgram, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
+    I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, PwmWriteProgram, TimeNowProgram,
+    TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
+    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
+    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
+    I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_TRANSFER_MAX_MODULE_LEN,
+    I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
@@ -21,7 +21,7 @@ use board_vm_language_core::{
     build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
     build_dac_write_u12_module, build_gpio_read_module, build_gpio_write_module,
     build_hello_wire_frame, build_i2c_open_module, build_i2c_read_module, build_i2c_read_u8_module,
-    build_i2c_write_module, build_i2c_write_u8_module,
+    build_i2c_transfer_module, build_i2c_write_module, build_i2c_write_u8_module,
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
     build_program_end_wire_frame, build_pwm_write_module, build_adc_read_module, build_raw_module,
     build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
@@ -332,6 +332,24 @@ extern "C" fn session_i2c_read_module(
 
     let module = build_i2c_read_module_value(address, len, max_stack)
         .unwrap_or_else(|error| raise_core_error("i2c_read_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_transfer_module(
+    _self_val: VALUE,
+    address_val: VALUE,
+    write_bytes_val: VALUE,
+    read_len_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let address = rb_u16(address_val, "address");
+    let write_bytes = ruby_bridge::bytes_from_rb(write_bytes_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("write_bytes must be a Ruby binary String"));
+    let read_len = rb_u8(read_len_val, "read_len");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_transfer_module_value(address, &write_bytes, read_len, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_transfer_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -1605,6 +1623,26 @@ fn build_i2c_read_module_value(
     Ok(module)
 }
 
+fn build_i2c_transfer_module_value(
+    address: u16,
+    write_bytes: &[u8],
+    read_len: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_TRANSFER_MAX_MODULE_LEN];
+    let len = build_i2c_transfer_module(
+        I2cTransferProgram {
+            address,
+            write_bytes,
+            read_len,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_raw_module_value(
     flags: u8,
     max_stack: u8,
@@ -1949,6 +1987,12 @@ pub extern "C" fn Init_board_vm_native() {
         "i2c_read_module",
         session_i2c_read_module as *const c_void,
         3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_transfer_module",
+        session_i2c_transfer_module as *const c_void,
+        4,
     );
     ruby_bridge::define_method_raw(
         session_class,

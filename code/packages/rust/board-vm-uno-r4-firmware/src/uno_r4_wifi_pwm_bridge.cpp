@@ -543,3 +543,53 @@ extern "C" bool board_vm_uno_r4_i2c_read(uint8_t bus, uint16_t address, uint8_t 
   *read_len = len;
   return true;
 }
+
+extern "C" bool board_vm_uno_r4_i2c_transfer(uint8_t bus, uint16_t address, const uint8_t *write_bytes,
+                                             size_t write_len, uint8_t *read_bytes, size_t read_len,
+                                             size_t *actual_read_len) {
+  if ((write_bytes == nullptr && write_len != 0) || (read_bytes == nullptr && read_len != 0) ||
+      actual_read_len == nullptr || address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  if (write_len != 0) {
+    wire->beginTransmission(address);
+    if (wire->write(write_bytes, write_len) != write_len) {
+      return false;
+    }
+    if (wire->endTransmission(read_len == 0) != END_TX_OK) {
+      return false;
+    }
+  }
+
+  if (read_len == 0) {
+    *actual_read_len = 0;
+    return true;
+  }
+
+  if (wire->requestFrom(static_cast<uint8_t>(address), read_len) != read_len) {
+    return false;
+  }
+
+  for (size_t index = 0; index < read_len; ++index) {
+    int value = wire->read();
+    if (value < 0) {
+      return false;
+    }
+    read_bytes[index] = static_cast<uint8_t>(value);
+  }
+
+  *actual_read_len = read_len;
+  return true;
+}

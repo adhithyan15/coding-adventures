@@ -211,6 +211,7 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x25` | `i2c.read_u8` | `handle`, `address: u16/u8` | `u8` |
 | `0x26` | `i2c.write` | `handle`, `address: u16/u8`, `bytes` | `unit` |
 | `0x27` | `i2c.read` | `handle`, `address: u16/u8`, `length: u8` | `bytes` |
+| `0x28` | `i2c.transfer` | `handle`, `address: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -221,8 +222,9 @@ opened bus handle. `i2c.read_u8` reads one byte from that same 7-bit address and
 returns it as a scalar `u8`. These are the first concrete I2C transfer
 primitives. `i2c.write` writes a bounded VM byte buffer to the device address
 using the same handle model. `i2c.read` reads a bounded byte buffer of up to the
-VM byte-buffer limit from the same handle/address pair. Wider `i2c.transfer`
-operations should reuse the bounded byte-buffer ABI.
+VM byte-buffer limit from the same handle/address pair. `i2c.transfer` performs
+a bounded write-then-read transaction, preserving the bus handle and returning
+the bounded read bytes.
 
 ### LED Matrix
 

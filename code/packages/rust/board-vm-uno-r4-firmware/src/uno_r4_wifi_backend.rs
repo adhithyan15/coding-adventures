@@ -253,6 +253,32 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         }
     }
 
+    fn transfer_i2c(
+        &mut self,
+        bus: u8,
+        address: u16,
+        write_bytes: &[u8],
+        read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
+        let mut bytes = [0u8; board_vm_ir::MAX_BYTE_BUFFER_LEN];
+        let mut actual_read_len = 0;
+        if unsafe {
+            board_io_ffi::board_vm_uno_r4_i2c_transfer(
+                bus,
+                address,
+                write_bytes.as_ptr(),
+                write_bytes.len(),
+                bytes.as_mut_ptr(),
+                read_len as usize,
+                &mut actual_read_len,
+            )
+        } {
+            ByteBuffer::from_slice(&bytes[..actual_read_len]).map_err(|_| HalError::UnsupportedMode)
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
     fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
         board_vm_uno_r4_usb_cdc::reboot_to_bootloader()
     }
@@ -278,6 +304,15 @@ mod board_io_ffi {
             bytes: *mut u8,
             len: usize,
             read_len: *mut usize,
+        ) -> bool;
+        pub fn board_vm_uno_r4_i2c_transfer(
+            bus: u8,
+            address: u16,
+            write_bytes: *const u8,
+            write_len: usize,
+            read_bytes: *mut u8,
+            read_len: usize,
+            actual_read_len: *mut usize,
         ) -> bool;
     }
 }
