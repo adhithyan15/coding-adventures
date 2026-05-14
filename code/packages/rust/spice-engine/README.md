@@ -11,6 +11,8 @@ The initial slices implement:
   resistor and independent source parameters.
 - Seeded DC Monte Carlo analysis for linear element tolerances with Gaussian
   and uniform distributions.
+- AC noise analysis with resistor thermal-noise contributions and
+  input-referred PSD.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
   impedance estimates.
 - AC small-signal frequency sweeps for linear RC/RL circuits.
