@@ -328,6 +328,37 @@ describe("macsyma-runtime", () => {
     expect(result.output).toEqual(app(sym("EllipticPi"), [sym("n"), sym("k")]));
   });
 
+  it("recognizes complete EllipticE with pre-evaluated numeric modulus k=1/2", () => {
+    // The MACSYMA compiler folds (1/2)^2 to rational(1,4) before the integration
+    // handler runs.  The modulus extractor must recover k = 1/2 from k²=1/4.
+    const session = new MacsymaSession();
+    const [result] = session.evalSource(
+      "integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta, 0, %pi/2);",
+    );
+
+    expect(result.output).toEqual(app(sym("EllipticE"), [rational(1, 2)]));
+  });
+
+  it("recognizes incomplete EllipticE with pre-evaluated numeric modulus k=1/2", () => {
+    // Same fold as above; incomplete form adds the amplitude argument first.
+    const session = new MacsymaSession();
+    const [result] = session.evalSource(
+      "integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta);",
+    );
+
+    expect(result.output).toEqual(app(sym("EllipticE"), [sym("theta"), rational(1, 2)]));
+  });
+
+  it("recognizes complete EllipticPi with pre-evaluated numeric modulus k=1/2 and n=2", () => {
+    // The MACSYMA compiler folds (1/2)^2 to rational(1,4).
+    const session = new MacsymaSession();
+    const [result] = session.evalSource(
+      "integrate(1/((1+2*sin(theta)^2)*sqrt(1-(1/2)^2*sin(theta)^2)), theta, 0, %pi/2);",
+    );
+
+    expect(result.output).toEqual(app(sym("EllipticPi"), [int(2), rational(1, 2)]));
+  });
+
   it("regression: still recognizes complete elliptic first-kind integrals after adding second and third kind", () => {
     const session = new MacsymaSession();
     const [result] = session.evalSource("integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);");

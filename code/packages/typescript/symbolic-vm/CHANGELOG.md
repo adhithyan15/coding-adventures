@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.1] — 2026-05-14
+
+**Bug fix: elliptic modulus extraction now handles pre-evaluated numeric `k²`.**
+
+`modulusFromSquaredFactor` previously only recognised `Pow(k, 2)` as the squared
+modulus factor.  The MACSYMA compiler (and TypeScript IR evaluator) eagerly folds
+`(1/2)^2` → `IRRational(1/4)` and `0.5^2` → `IRFloat(0.25)` before the
+integration handler runs, so the pattern was never matched.
+
+Extended the recogniser to extract `k` from:
+- `IRFloat(v)` — returns `IRFloat(√v)`; e.g. `0.25` → `0.5`
+- `IRRational(p/q)` where both numerator and denominator are perfect squares
+  — returns `IRRational(√p / √q)`; e.g. `1/4` → `1/2`
+- `IRInteger(n)` where `n` is a perfect square — returns `IRInteger(√n)`;
+  e.g. `4` → `2`
+- Non-perfect-square rationals/integers — falls back to `Sqrt(k²)` (unevaluated)
+
+Added a new helper `bigIntIsqrt(n)` for exact integer square root over `bigint`.
+
+Result: `integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta, 0, %pi/2)` now returns
+`EllipticE(1/2)` instead of falling through unevaluated.
+
 ## [0.3.0] — 2026-05-14
 
 - Added EllipticE (second kind) integration recognition:

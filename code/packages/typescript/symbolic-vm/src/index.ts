@@ -1185,7 +1185,45 @@ function ellipticFirstKindModulus(f: IRNode, x: IRNode): IRNode | undefined {
   return modulusFromSquaredFactor(left, right, x) ?? modulusFromSquaredFactor(right, left, x);
 }
 
+/**
+ * Compute the integer square root of a non-negative BigInt.
+ *
+ * Returns the root only when ``n`` is a perfect square; returns ``undefined``
+ * otherwise.  The implementation uses a floating-point seed followed by two
+ * Newton correction steps, which is exact for all BigInts whose magnitude fits
+ * in a 64-bit double (i.e. n < 2^53) and safe for the small integers that
+ * appear in CAS modulus expressions.
+ */
+function bigIntIsqrt(n: bigint): bigint | undefined {
+  if (n < 0n) return undefined;
+  if (n === 0n) return 0n;
+  let x = BigInt(Math.round(Math.sqrt(Number(n))));
+  // Clamp down if floating-point over-shot
+  while (x > 0n && x * x > n) x--;
+  // Clamp up if floating-point under-shot
+  while ((x + 1n) * (x + 1n) <= n) x++;
+  return x * x === n ? x : undefined;
+}
+
+/**
+ * Extract the elliptic modulus ``k`` from a product factor ``modulusSquare *
+ * sineSquare`` inside a ``1 - k²·sin²(x)`` radicand.
+ *
+ * Handles two cases:
+ *
+ * 1. **Symbolic form** ``Pow(k, 2)`` — returns the base ``k``.
+ * 2. **Pre-evaluated numeric literal** — the compiler may fold ``(1/2)^2``
+ *    to ``IRRational(1/4)`` or ``0.5^2`` to ``IRFloat(0.25)`` before the
+ *    integration handler runs.  In those cases we compute ``sqrt(k²)``
+ *    analytically and return the simplified numeric node:
+ *    - ``IRFloat(v)``     → ``IRFloat(Math.sqrt(v))``
+ *    - ``IRRational(p/q)`` where both ``p`` and ``q`` are perfect squares
+ *                         → ``IRRational(√p / √q)``
+ *    - ``IRInteger(n)``   where ``n`` is a perfect square → ``IRInteger(√n)``
+ *    - Non-perfect-square rationals/integers → ``Sqrt(k²)`` (unevaluated)
+ */
 function modulusFromSquaredFactor(modulusSquare: IRNode, sineSquare: IRNode, x: IRNode): IRNode | undefined {
+  // Validate sineSquare = Pow(Sin(x), 2) first.
   if (sineSquare.kind !== "apply" || !equals(sineSquare.head, POW)) {
     return undefined;
   }
@@ -1197,11 +1235,42 @@ function modulusFromSquaredFactor(modulusSquare: IRNode, sineSquare: IRNode, x: 
   if (!equals(inner, x)) {
     return undefined;
   }
-  if (modulusSquare.kind !== "apply" || !equals(modulusSquare.head, POW)) {
-    return undefined;
+
+  // Case 1: Pow(k, 2) — the symbolic form; return the base k directly.
+  if (modulusSquare.kind === "apply" && equals(modulusSquare.head, POW)) {
+    const [modulus, modulusExponent] = binaryArgs(modulusSquare);
+    return equals(modulusExponent, int(2)) ? modulus : undefined;
   }
-  const [modulus, modulusExponent] = binaryArgs(modulusSquare);
-  return equals(modulusExponent, int(2)) ? modulus : undefined;
+
+  // Case 2: Pre-evaluated numeric literal k² → return √(k²) = k.
+  // This handles inputs like (1/2)^2 which the compiler folds to IRRational(1,4)
+  // or 0.5^2 which folds to IRFloat(0.25) before the integration handler runs.
+  if (modulusSquare.kind === "float") {
+    const val = modulusSquare.value;
+    if (val < 0) return undefined;
+    return numberNode(Math.sqrt(val));
+  }
+  if (modulusSquare.kind === "integer") {
+    const val = modulusSquare.value;
+    if (val < 0n) return undefined;
+    const root = bigIntIsqrt(val);
+    if (root !== undefined) return int(root);
+    // Non-perfect-square integer: leave as Sqrt(k²)
+    return app(SQRT, [modulusSquare]);
+  }
+  if (modulusSquare.kind === "rational") {
+    const { numer, denom } = modulusSquare;
+    if (numer < 0n) return undefined;
+    const rootNum = bigIntIsqrt(numer);
+    const rootDen = bigIntIsqrt(denom);
+    if (rootNum !== undefined && rootDen !== undefined) {
+      return rational(rootNum, rootDen);
+    }
+    // Non-perfect-square rational: leave as Sqrt(k²)
+    return app(SQRT, [modulusSquare]);
+  }
+
+  return undefined;
 }
 
 function isPiOverTwo(node: IRNode): boolean {
