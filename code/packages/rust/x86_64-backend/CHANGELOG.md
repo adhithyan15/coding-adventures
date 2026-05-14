@@ -1,5 +1,55 @@
 # Changelog — `x86_64-backend`
 
+## 0.4.0 — 2026-05-14 (LANG43 phase 6 — globals + io_out)
+
+Adds the last CIR opcodes needed to match `aarch64-backend`'s
+LANG39/LANG40/LANG41 coverage.  After this release, the same Twig
+programs that compile and run end-to-end on macOS ARM64 will compile
+and run end-to-end on Linux x86-64 and Windows x86-64 once LANG45
+(object emitters) and LANG46 (twig-aot driver) land.
+
+**New CIR opcodes:**
+
+- `global_load name → dest` — read from a slot in the `_twig_globals`
+  data section:
+  ```
+  lea  rax, [rip + _twig_globals]   ; PcRel32 reloc
+  mov  rax, [rax + slot*8]          ; load 64-bit value
+  mov  [rbp + dest_slot], rax
+  ```
+  Note that x86-64's RIP-relative addressing collapses ARM64's
+  ADRP+ADD pair into a single `LEA` + a single `PcRel32` reloc
+  record — much simpler than the AArch64 `GlobalWordReloc` shape.
+
+- `global_store name, val` — write to a slot:
+  ```
+  mov  rcx, [val_slot]               ; load value
+  lea  rax, [rip + _twig_globals]    ; PcRel32 reloc
+  mov  [rax + slot*8], rcx
+  ```
+
+- `io_out val` — call `__twig_print_i64`:
+  ```
+  mov  <arg0>, [rbp + val_slot]      ; SysV: RDI; MS x64: RCX
+  call __twig_print_i64               ; PltRel32 reloc
+  ```
+  Stack alignment at the call is correct without per-call adjustment:
+  the prologue established RSP ≡ 0 (mod 16), and CALL pushes 8 bytes
+  for the return address, giving RSP ≡ 8 (mod 16) at helper entry —
+  exactly what the ABI requires.  MS x64 shadow space is already
+  reserved in the prologue.
+
+**New public function:**
+
+- `compile_function_with_globals(ctx, ir, abi, global_slots) ->
+  (Vec<u8>, Vec<Reloc>)` — resolves global names through `global_slots`
+  into slot indices and emits the corresponding `PcRel32` relocs
+  alongside any cross-function / runtime `PltRel32` relocs.
+
+`compile_function` and `compile_function_with_relocs` are unchanged
+for callers that don't use globals (passing an empty slot map is
+equivalent).
+
 ## 0.3.0 — 2026-05-14 (LANG43 phase 5 — calls + relocations)
 
 Adds cross-function `call` lowering and external relocation surfacing.

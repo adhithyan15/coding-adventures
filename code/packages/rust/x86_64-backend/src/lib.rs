@@ -171,7 +171,7 @@ pub fn compile_function(
     ir: &[CIRInstr],
     abi: X86_64Abi,
 ) -> Result<Vec<u8>, String> {
-    compile_inner(ctx, ir, abi)
+    compile_inner(ctx, ir, abi, &HashMap::new())
         .map(|(bytes, _relocs)| bytes)
         .map_err(|e| format!("x86_64-backend: {e:?}"))
 }
@@ -188,7 +188,31 @@ pub fn compile_function_with_relocs(
     ir: &[CIRInstr],
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, Vec<Reloc>), String> {
-    compile_inner(ctx, ir, abi)
+    compile_inner(ctx, ir, abi, &HashMap::new())
+        .map_err(|e| format!("x86_64-backend: {e:?}"))
+}
+
+/// Like [`compile_function_with_relocs`] but also handles
+/// `global_load` / `global_store` CIR instructions using the supplied
+/// slot map.
+///
+/// `global_slots` maps each global name (as it appears in
+/// `srcs[0].as_var()`) to a zero-based slot index.  Slot `i`
+/// corresponds to bytes `[i*8, i*8 + 8)` in the `_twig_globals` data
+/// section that the packager (LANG45) emits.
+///
+/// Returns the function's machine code bytes plus any external
+/// relocations.  Cross-function `call`s, `io_out` calls into the
+/// runtime, and globals access all surface as entries in the
+/// returned relocation list (with `PltRel32` for calls and
+/// `PcRel32` for global addresses).
+pub fn compile_function_with_globals(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<Reloc>), String> {
+    compile_inner(ctx, ir, abi, global_slots)
         .map_err(|e| format!("x86_64-backend: {e:?}"))
 }
 
@@ -253,6 +277,7 @@ fn compile_inner(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
     abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
 ) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
     if ctx.params.len() > abi.max_args() {
         return Err(BackendError::TooManyParams {
@@ -346,7 +371,8 @@ fn compile_inner(
 
     // ---- Body --------------------------------------------------------------
     for instr in ir {
-        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name, abi)?;
+        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name, abi,
+                   global_slots)?;
     }
 
     // ---- Defensive epilogue (in case CIR falls off the end) ----------------
@@ -371,6 +397,7 @@ fn emit_epilogue(asm: &mut Assembler, _frame: u32) {
 // Per-instruction lowering
 // ===========================================================================
 
+#[allow(clippy::too_many_arguments)]
 fn emit_instr(
     asm: &mut Assembler,
     instr: &CIRInstr,
@@ -379,6 +406,7 @@ fn emit_instr(
     frame: u32,
     fn_name: &str,
     abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
 ) -> Result<(), BackendError> {
     let op = instr.op.as_str();
 
@@ -532,6 +560,96 @@ fn emit_instr(
             let slot = alloc.slot_of(dest);
             asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         }
+        return Ok(());
+    }
+
+    // --- global_load name → dest  (LANG39 parity) ---
+    //
+    // CIR encoding: dest = result_var; srcs[0] = Var(global_name).
+    //
+    // x86-64 sequence (much simpler than ARM64's ADRP+ADD pair):
+    //
+    //   lea  rax, [rip + _twig_globals]    ; PcRel32 reloc on _twig_globals
+    //   mov  rax, [rax + slot*8]            ; load 64-bit value
+    //   mov  [rbp + dest_slot], rax         ; store to dest slot
+    //
+    // The PcRel32 reloc record carries `addend = -4` (encoder default).
+    // The slot byte offset is encoded in the second instruction's disp32.
+    if op == "global_load" {
+        let dest = require_dest(instr)?;
+        let name = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr(
+                "global_load: srcs[0] must be Var(name)".into()))?;
+        let slot_idx = *global_slots.get(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!("global_load: unknown global '{name}'"))
+        })?;
+        asm.lea_rip_rel(Reg::Rax, "_twig_globals", ExternalRelocKind::PcRel32);
+        let byte_off: i32 = (slot_idx as i64 * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_load: slot byte offset overflows i32 (slot={slot_idx})")))?;
+        asm.mov_r64_mem(Reg::Rax, Reg::Rax, byte_off);
+        let dest_slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(dest_slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // --- global_store name, val  (LANG39 parity) ---
+    //
+    // CIR encoding: dest = None; srcs[0] = Var(name); srcs[1] = Var(value).
+    //
+    // x86-64 sequence:
+    //
+    //   mov  rcx, [rbp + val_slot]          ; load value
+    //   lea  rax, [rip + _twig_globals]    ; PcRel32 reloc
+    //   mov  [rax + slot*8], rcx            ; write to global slot
+    if op == "global_store" {
+        let name = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr(
+                "global_store: srcs[0] must be Var(name)".into()))?;
+        let slot_idx = *global_slots.get(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!("global_store: unknown global '{name}'"))
+        })?;
+        let val_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("global_store: needs srcs[1]=value".into())
+        })?;
+        // Load value into RCX (RAX is needed for the LEA result).
+        load_operand(asm, alloc, Reg::Rcx, val_src);
+        asm.lea_rip_rel(Reg::Rax, "_twig_globals", ExternalRelocKind::PcRel32);
+        let byte_off: i32 = (slot_idx as i64 * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_store: slot byte offset overflows i32 (slot={slot_idx})")))?;
+        asm.mov_mem_r64(Reg::Rax, byte_off, Reg::Rcx);
+        return Ok(());
+    }
+
+    // --- io_out val  (LANG40/LANG41 parity) ---
+    //
+    // CIR encoding: dest = None; srcs[0] = Var(value).
+    //
+    // Lowers to a CALL into the runtime helper `__twig_print_i64`,
+    // passing the value in the ABI's first argument register:
+    //
+    //   System V: mov rdi, [rbp + val_slot]; call __twig_print_i64
+    //   MS x64:   mov rcx, [rbp + val_slot]; call __twig_print_i64
+    //
+    // The runtime archive (LANG46) provides the helper symbol; the
+    // packager (LANG45) emits the PltRel32 reloc record the linker
+    // patches.
+    //
+    // Stack alignment: prologue established RSP ≡ 0 (mod 16); CALL
+    // pushes 8 bytes for the return addr, so during the helper's
+    // execution RSP ≡ 8 (mod 16) — exactly what the ABI requires on
+    // entry to a function.  No per-call adjustment needed.  MS x64
+    // shadow space was already reserved in the prologue.
+    if op == "io_out" {
+        let val_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("io_out: needs srcs[0]=value".into())
+        })?;
+        let arg0_reg = abi.arg_regs()[0];
+        load_operand(asm, alloc, arg0_reg, val_src);
+        asm.call_rel32("__twig_print_i64", ExternalRelocKind::PltRel32);
         return Ok(());
     }
 
@@ -1325,6 +1443,122 @@ mod tests {
         ];
         let result = compile_function(&ctx, &ir, X86_64Abi::MsX64);
         assert!(result.is_err(), "expected `too many args` error");
+    }
+
+    // ---- Globals + io_out (phase 6) ----
+
+    #[test]
+    fn fn_global_load_emits_lea_and_mov() {
+        // CIR: global_load "g0" → v0; ret_u64 v0
+        use std::collections::HashMap;
+        let mut globals = HashMap::new();
+        globals.insert("g0".to_string(), 0usize);
+        let ctx = fn_ctx("rd", &[], "u64");
+        let ir = vec![
+            instr("global_load", Some("v0"), vec![Op::Var("g0".into())]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals).unwrap();
+        // LEA RAX, [RIP+_twig_globals]: 48 8D 05 .. .. .. ..
+        assert!(body_contains(&bytes, &[0x48, 0x8D, 0x05]),
+                "expected `lea rax, [rip+...]` in {bytes:02X?}");
+        // Exactly one PcRel32 reloc on _twig_globals.
+        let pcrel: Vec<_> = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PcRel32)
+            .collect();
+        assert_eq!(pcrel.len(), 1);
+        assert_eq!(pcrel[0].symbol, "_twig_globals");
+        assert_eq!(pcrel[0].addend, -4);
+    }
+
+    #[test]
+    fn fn_global_store_emits_lea_and_mov() {
+        // CIR: const_u64 v0=42; global_store "g0" = v0; ret_void
+        use std::collections::HashMap;
+        let mut globals = HashMap::new();
+        globals.insert("g0".to_string(), 0usize);
+        let ctx = fn_ctx("wr", &[], "void");
+        let ir = vec![
+            instr("const_u64", Some("v0"), vec![Op::Int(42)]),
+            instr("global_store", None,
+                  vec![Op::Var("g0".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x8D, 0x05]),
+                "expected `lea rax, [rip+...]` in {bytes:02X?}");
+        let pcrel_count = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PcRel32)
+            .count();
+        assert_eq!(pcrel_count, 1);
+    }
+
+    #[test]
+    fn fn_global_load_higher_slot_uses_byte_offset() {
+        // global slot 3 should produce a disp32 of 24 in the following MOV.
+        use std::collections::HashMap;
+        let mut globals = HashMap::new();
+        globals.insert("g3".to_string(), 3usize);
+        let ctx = fn_ctx("rd", &[], "u64");
+        let ir = vec![
+            instr("global_load", Some("v0"), vec![Op::Var("g3".into())]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        let (bytes, _) = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals).unwrap();
+        // Look for `mov rax, [rax + 24]` — encoded as 48 8B 80 18 00 00 00.
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x80, 0x18, 0x00, 0x00, 0x00]),
+                "expected `mov rax, [rax+24]` in {bytes:02X?}");
+    }
+
+    #[test]
+    fn fn_io_out_sysv_uses_rdi() {
+        // CIR: const_i64 v0 = 99; io_out v0; ret_void
+        let ctx = fn_ctx("p", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("v0"), vec![Op::Int(99)]),
+            instr("io_out", None, vec![Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // System V arg 0 → RDI.  `mov rdi, [rbp+disp32]` = 48 8B BD ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for io_out arg on SysV");
+        // Then `call __twig_print_i64` (E8) with one PltRel32 reloc.
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32
+                     && r.symbol == "__twig_print_i64")
+            .collect();
+        assert_eq!(plt.len(), 1);
+    }
+
+    #[test]
+    fn fn_io_out_msx64_uses_rcx() {
+        let ctx = fn_ctx("p", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("v0"), vec![Op::Int(99)]),
+            instr("io_out", None, vec![Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // MS x64 arg 0 → RCX.  `mov rcx, [rbp+disp32]` = 48 8B 8D ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x8D]),
+                "expected `mov rcx, [rbp+disp]` for io_out arg on MS x64");
+        // And not the System V form (48 8B BD).
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "should NOT emit `mov rdi, ...` on MS x64");
+    }
+
+    #[test]
+    fn fn_global_load_unknown_errors() {
+        use std::collections::HashMap;
+        let globals = HashMap::<String, usize>::new();
+        let ctx = fn_ctx("rd", &[], "u64");
+        let ir = vec![
+            instr("global_load", Some("v0"), vec![Op::Var("nope".into())]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        let result = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals);
+        assert!(result.is_err());
     }
 
     #[test]
