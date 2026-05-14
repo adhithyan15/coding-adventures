@@ -78,6 +78,27 @@ Rload out 0 1k
     expect(result.voltage("out")).toBeCloseTo(6.0, 9);
   });
 
+  it("parses CCCS elements into operating-point circuits", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rin in sense 1k
+Vsense sense 0 DC 0
+Fcopy out 0 Vsense 2
+Rload out 0 500
+.op
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements[3]).toMatchObject({
+      kind: "cccs",
+      controlSource: "Vsense",
+      gain: 2.0,
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeCloseTo(-1.0, 9);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
@@ -146,6 +167,37 @@ Rload out 0 1k
 
     const result = dcOp(parsed.circuit);
     expect(result.voltage("out")).toBeCloseTo(2.5, 9);
+  });
+
+  it("expands subcircuit CCCS control sources into engine elements", () => {
+    const parsed = parseNetlist(`
+.subckt mirror inp outp
+Rin inp sense 1k
+Vsense sense 0 DC 0
+Fcopy outp 0 Vsense 2
+.ends mirror
+Vin in 0 DC 1
+Xmirror in out mirror
+Rload out 0 500
+.op
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements.map((element) => element.name)).toEqual([
+      "Vin",
+      "Xmirror.Rin",
+      "Xmirror.Vsense",
+      "Xmirror.Fcopy",
+      "Rload",
+    ]);
+    expect(elements[3]).toMatchObject({
+      kind: "cccs",
+      positive: "out",
+      controlSource: "Xmirror.Vsense",
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeCloseTo(-1.0, 9);
   });
 
   it("scopes subcircuit internal nodes by instance", () => {
