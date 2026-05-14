@@ -170,9 +170,21 @@ SDKs can grow without renumbering.
 
 | ID | Name | Args | Returns |
 |---:|---|---|---|
-| `0x20` | `pwm.open` | `pin: u16/u8`, `frequency_hz: u16` | `handle` |
-| `0x21` | `pwm.set_duty_u16` | `handle`, `duty: u16` | `unit` |
-| `0x22` | `pwm.close` | `handle` | `unit` |
+| `0x20` | `pwm.write` | `pin: u16/u8`, `duty: u16` | `unit` |
+
+`pwm.write` is the v1 direct-control operation used by the host SDKs and UNO R4
+runtime. It intentionally avoids allocating a persistent PWM handle. A later
+streaming/motor-control tranche can add handle-oriented PWM operations if it
+needs frequency selection, ramping, or lifetime-managed timer ownership.
+
+### ADC
+
+| ID | Name | Args | Returns |
+|---:|---|---|---|
+| `0x21` | `adc.read` | `pin: u16/u8` | `u16` |
+
+`adc.read` returns a normalized 16-bit sample. Board adapters choose the
+underlying hardware resolution and scale into the portable result range.
 
 ### LED Matrix
 

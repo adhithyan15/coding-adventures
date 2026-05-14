@@ -2,6 +2,70 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-05-14 — ADJ28: anti-discard + yes/no boolean kind schema
+
+### Changed
+
+`DECOMPOSE_LEVEL_PROMPT_VERSION: "decompose-level-v1" → "decompose-level-v2"`.
+
+Three structural changes to the per-level system prompts, targeting
+the small-model failure modes the ADJ27 bench surfaced:
+
+1. **"WHAT NOT TO DO" worked example** added to every level's
+   system prompt. Shows the cost of dropping content or escape-
+   hatching to Discarded. Operationalises the ADJ27 finding that
+   3 of 3 fully-passing cells were degenerate (gemma4 marking the
+   whole document as Discarded to satisfy coverage trivially).
+
+2. **Yes/no boolean kind schema** at the multi-option levels
+   (`Phrase → Claim` with 4 options, `Fact → TypedComponent` with
+   7). Each node now carries `is_X` booleans per allowed kind
+   instead of a single `kind` string; exactly one must be `true`.
+   Decomposes N-way classification into N binary decisions, which
+   small models handle better. (The 0.5B model emitted *no* nodes
+   at the Claim level in the ADJ27 walkthrough; with the new
+   schema it now emits a correct Fact in ~3s on the same input.)
+   Levels 1 and 2 keep the single `kind` field since they only
+   have 2 options each.
+
+3. **Discarded requires `discard_reason` AND
+   `discard_justification`** — the latter is a sentence
+   explaining WHY discarding the chunk loses no information the
+   framework needs. Lazy whole-parent Discarded becomes hard to
+   justify in prose; the cost of dishonest discarding goes up.
+   Prompts also explicitly forbid whole-parent Discarded
+   ("at least one node MUST have `kind: Sentence/Phrase/...`").
+
+Each prompt is still under 4 KB (regression-guarded). The new
+content adds ~1 KB total across the four prompts.
+
+### Tests
+
+4 new test cases:
+
+- `adj28_every_prompt_carries_what_not_to_do_example` — regression
+  guard for the negative example block in every prompt.
+- `adj28_discard_prompts_require_justification` — every level
+  that allows Discarded requires both `discard_reason` and
+  `discard_justification`.
+- `adj28_claim_and_typed_component_use_yes_no_booleans` — the
+  4 / 7 booleans are named verbatim in their respective prompts.
+- `adj28_prompts_forbid_whole_parent_discard_at_anti_escape_levels`
+  — every level (except level 4 which has no Discarded option)
+  forbids whole-parent Discarded.
+
+Plus updated `prompt_version_constant_is_stable` to expect v2.
+
+Total `llm-primitives` tests: 91 → 95, all passing.
+
+### Notes
+
+- Version: 0.12.0 → 0.13.0 (additive schema change with prompt-version bump).
+- Smoke test on qwen2.5:0.5b confirms the Claim-level empty-nodes
+  failure from ADJ27 is fixed (~3s, valid `is_fact: true` Fact node
+  produced). Level 4 still occasionally drops `text` on the 0.5B
+  model — the bench will quantify.
+
 ## [0.12.0] - 2026-05-13 — decompose_level: per-level prompts + content-shaped contract for ADJ25 hierarchy
 
 ### Contract change: text instead of byte offsets

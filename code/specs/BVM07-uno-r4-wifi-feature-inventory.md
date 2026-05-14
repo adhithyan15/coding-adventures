@@ -25,9 +25,9 @@ Source snapshot:
 | Built-in LED | D13 | implemented through GPIO | GPIO metadata should identify `onboard_led_pin = 13` |
 | Millisecond time | runtime clock/sleep | implemented | `time.sleep_ms`, `time.now_ms` |
 | RAM program execution | protocol upload/run path | implemented | `program.ram_exec` |
-| LED matrix | 12x8 matrix, 96 pixels, UNO R4 WiFi only | implemented by this tranche | `led_matrix.frame` |
-| PWM output | D3, D5, D6, D9, D10, D11 in the Arduino variant init path | pending | `pwm.open`, `pwm.set_duty_u16`, `pwm.close` |
-| Analog input | A0-A5 | pending | `adc.open`, `adc.read_u16`, `adc.close` |
+| LED matrix | 12x8 matrix, 96 pixels, UNO R4 WiFi only | implemented | `led_matrix.frame` |
+| PWM output | D3, D5, D6, D9, D10, D11 in the Arduino variant init path | implemented as direct write | `pwm.write` |
+| Analog input | A0-A5 | implemented as direct read | `adc.read` |
 | DAC output | A0, one 12-bit DAC channel | pending | `dac.write_u12` or `analog.write` |
 | I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | pending | `i2c.open`, `i2c.write`, `i2c.read`, `i2c.transfer` |
 | SPI master | MOSI D11, MISO D12, SCK D13, CS D10 | pending | `spi.open`, `spi.transfer`, `spi.close` |
@@ -61,12 +61,15 @@ reject conflicting handles.
 
 1. Keep `gpio.*`, `time.*`, `program.ram_exec`, transports, and
    `led_matrix.frame` as the proven vertical slice.
-2. Add descriptor metadata for header pins, hidden pins, onboard LED, LED
-   matrix dimensions, PWM-capable pins, analog-capable pins, and bus pin groups.
-3. Implement PWM and ADC next because they extend the existing handle model
-   without requiring multi-device bus transactions.
-4. Implement I2C and SPI as bus handles with explicit transfer boundaries.
-5. Add DAC, UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
+2. Descriptor metadata for header pins, onboard LED, LED matrix dimensions,
+   PWM-capable pins, and analog-capable pins is present; keep deepening it with
+   hidden pins, reserved pins, and bus pin groups.
+3. `pwm.write` and `adc.read` are the first direct analog-adjacent VM
+   operations. Add handle-oriented PWM/ADC variants only when a later streaming
+   or event tranche needs persistent resource ownership.
+4. Add DAC output on A0 as the next scalar analog capability.
+5. Implement I2C and SPI as bus handles with explicit transfer boundaries.
+6. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
    capabilities in separate tranches with conformance tests.
 
 Every tranche should include the same layers: spec entry, IR capability id,

@@ -297,6 +297,7 @@ members = [
     "windows-job-backend-task-xml",
     "os-job-core",
     "os-job-runtime",
+    "operation-primitives",
     "event-loop",
     "hyperloglog",
     "hash-functions",
@@ -617,5 +618,6 @@ members = [
     "zigbee-zdo",
     "zwave-command-classes",
     "capability-cage",
+    "capability-os-sandbox",
     "iir-to-jvm-class-file",
 ]

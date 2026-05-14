@@ -11,7 +11,9 @@ one pipeline.
 
 The primary tests write a real `umbrella-today.txt` file through the capability
 cage, assert that the supervised agent says to bring an umbrella for the rainy
-fixture, and prove the supervisor recreates a killed child before the next tick.
+fixture, prove the supervisor recreates a killed child before the next tick, and
+lower the Weather Agent capability manifest into Linux, macOS, Windows, FreeBSD,
+OpenBSD, and portable host-broker sandbox primitive plans.
 
 Run the live HTTPS smoke manually when network access is acceptable:
 

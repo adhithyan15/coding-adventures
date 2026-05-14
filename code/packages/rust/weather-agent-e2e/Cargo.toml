@@ -8,6 +8,7 @@ license = "MIT"
 [dependencies]
 actor = { path = "../actor" }
 artifact-store = { path = "../artifact-store" }
+capability-os-sandbox = { path = "../capability-os-sandbox" }
 capability-cage = { path = "../capability-cage" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding-adventures-json-value = { path = "../json-value" }

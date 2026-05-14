@@ -832,6 +832,70 @@ fn render_gap_description(
 /// Legacy `source_spans` arrays are NOT read — older LLM responses
 /// emitting byte offsets are not accepted; the orchestrator returns
 /// an empty span list and the coverage check surfaces the gap.
+/// Metadata key for the model's `discard_justification` field.
+/// ADJ28: when the model marks a chunk Discarded, it must include a
+/// sentence explaining WHY discarding loses no information. The
+/// orchestrator stores that sentence in the node's metadata under
+/// this reserved key so the audit trail can replay the model's
+/// reasoning verbatim.
+pub const DISCARD_JUSTIFICATION_METADATA_KEY: &str = "adj.discard_justification";
+
+/// Read the kind from an LLM-emitted JSON node, supporting two
+/// schemas (ADJ28):
+///
+/// 1. **Legacy single-`kind` string field** (levels 1 & 2 — Sentence
+///    and Phrase prompts kept this since they only have 2 options
+///    each). Maps directly via [`parse_kind`].
+/// 2. **New per-kind `is_X` boolean schema** (levels 3 & 4 — Claim
+///    with 4 options, TypedComponent with 7). The model emits a
+///    boolean per allowed kind; the orchestrator requires exactly
+///    one to be `true`. This decomposes multi-way picking into
+///    sequential yes/no decisions, which small models handle
+///    better than direct N-way classification.
+///
+/// Returns `None` if neither schema yields a valid kind (zero or
+/// multiple `true` booleans count as invalid), letting the caller
+/// skip the child and surface the gap via the coverage check.
+fn extract_kind(obj: &serde_json::Map<String, serde_json::Value>) -> Option<NodeKind> {
+    if let Some(kind_str) = obj.get("kind").and_then(|v| v.as_str()) {
+        if let Some(k) = parse_kind(kind_str) {
+            return Some(k);
+        }
+    }
+    // ADJ28 boolean schema. Pairs map each `is_X` field to the
+    // NodeKind it represents. Covers every kind that levels 3 and
+    // 4 emit; levels 1 and 2 would also work via this path if the
+    // model decides to switch.
+    let pairs: &[(&str, NodeKind)] = &[
+        ("is_fact", NodeKind::Fact),
+        ("is_uncertainty", NodeKind::Uncertainty),
+        ("is_question", NodeKind::Question),
+        ("is_discarded", NodeKind::Discarded),
+        ("is_sentence", NodeKind::Sentence),
+        ("is_phrase", NodeKind::Phrase),
+        ("is_quantity", NodeKind::Quantity),
+        ("is_polarity", NodeKind::Polarity),
+        ("is_entity", NodeKind::Entity),
+        ("is_predicate", NodeKind::Predicate),
+        ("is_comparator", NodeKind::Comparator),
+        ("is_timeref", NodeKind::TimeRef),
+        ("is_modifier", NodeKind::Modifier),
+    ];
+    let mut hits: Vec<NodeKind> = Vec::new();
+    for (key, kind) in pairs {
+        if obj.get(*key).and_then(|v| v.as_bool()) == Some(true) {
+            hits.push(*kind);
+        }
+    }
+    // Exactly-one-true contract. Zero hits or multiple hits both
+    // indicate the model didn't commit; reject so the caller can
+    // surface the gap.
+    match hits.len() {
+        1 => Some(hits[0]),
+        _ => None,
+    }
+}
+
 fn parse_child_node(
     v: &serde_json::Value,
     allowed_kinds: &[NodeKind],
@@ -839,7 +903,7 @@ fn parse_child_node(
     id_prefix: &str,
 ) -> Option<(IRNode, Option<String>)> {
     let obj = v.as_object()?;
-    let kind = parse_kind(obj.get("kind").and_then(|v| v.as_str())?)?;
+    let kind = extract_kind(obj)?;
     if !allowed_kinds.contains(&kind) {
         return None;
     }
@@ -869,11 +933,22 @@ fn parse_child_node(
         .get("text")
         .and_then(|t| t.as_str())
         .map(|s| s.to_string());
+    // ADJ28: read `discard_reason` and `discard_justification` for
+    // Discarded nodes. Default reason is `NonDomainContent` for
+    // back-compat with the previous schema; the justification (if
+    // any) lands in metadata so the audit trail keeps the model's
+    // own rationale.
     let discard_reason = if kind == NodeKind::Discarded {
-        Some(adjudication_ir::DiscardReason::NonDomainContent)
+        Some(parse_discard_reason(
+            obj.get("discard_reason").and_then(|v| v.as_str()),
+        ))
     } else {
         None
     };
+    let discard_justification = obj
+        .get("discard_justification")
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_string());
     let mut node = IRNode {
         id,
         kind,
@@ -885,12 +960,30 @@ fn parse_child_node(
         discard_reason,
         metadata: HashMap::new(),
     };
+    if let Some(justification) = discard_justification {
+        node.metadata
+            .insert(DISCARD_JUSTIFICATION_METADATA_KEY.to_string(), justification);
+    }
     // ADJ25 PR-5: assign a CorrelationId to every parsed child. The
     // ID derives from the (assigned) NodeId so the correlation tree
     // mirrors the Contains-edge hierarchy.
     let corr = correlation_id_for_node(&node.id);
     set_node_correlation_id(&mut node, corr);
     Some((node, claimed_text))
+}
+
+fn parse_discard_reason(s: Option<&str>) -> adjudication_ir::DiscardReason {
+    use adjudication_ir::DiscardReason::*;
+    match s.unwrap_or("") {
+        "Pleasantry" => Pleasantry,
+        "DocumentMetadata" => DocumentMetadata,
+        "NonDomainContent" => NonDomainContent,
+        "Restatement" => Restatement,
+        "Unparseable" => Unparseable,
+        "AdministrativeOnly" => AdministrativeOnly,
+        "ExplicitlyOutOfScope" => ExplicitlyOutOfScope,
+        _ => NonDomainContent,
+    }
 }
 
 fn parse_term(v: &serde_json::Value, depth: usize) -> Option<Term> {
@@ -1414,5 +1507,132 @@ mod tests {
             );
             assert!(corr.unwrap().0.starts_with("corr.e."));
         }
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ28 — boolean kind schema + discard_justification
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn adj28_boolean_kind_schema_derives_kind() {
+        // The new Claim-level schema uses is_fact/is_uncertainty/
+        // is_question/is_discarded booleans. Exactly one is true.
+        let gateway = gateway_with(vec![
+            one_node_response(child_node("S1", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("P1", "Phrase", 0, 7, "phr", "matches")),
+            // Claim level: emit via boolean schema instead of `kind`.
+            serde_json::json!({
+                "document_id": "doc1",
+                "nodes": [{
+                    "id": "F1",
+                    "is_fact": true,
+                    "is_uncertainty": false,
+                    "is_question": false,
+                    "is_discarded": false,
+                    "term": {"atom": "matches"},
+                    "polarity": "Affirmed",
+                    "modality": "Present",
+                    "text": "matches",
+                }]
+            }),
+            one_node_response(child_node("E1", "Entity", 0, 7, "matches", "matches")),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "matches".into(),
+            max_retries_per_parent: 0,
+        };
+        let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
+        // The Claim-level child should be parsed as a Fact, deriving
+        // its kind from the boolean schema.
+        let fact = out
+            .ir_document
+            .nodes
+            .iter()
+            .find(|n| n.kind == NodeKind::Fact)
+            .expect("expected a Fact-kind node from boolean schema");
+        assert_eq!(fact.id.0, "F1");
+    }
+
+    #[test]
+    fn adj28_zero_or_multiple_true_booleans_rejected() {
+        // Levels 3 and 4 use the boolean schema; if zero or multiple
+        // is_X booleans are true, the orchestrator must reject the
+        // child (and the coverage check surfaces the missing bytes).
+        let mut id_state = IdState::new();
+        // No booleans true → not a kind. Returns None.
+        let raw = serde_json::json!({
+            "id": "X1",
+            "is_fact": false,
+            "is_uncertainty": false,
+            "is_question": false,
+            "is_discarded": false,
+            "term": {"atom": "x"},
+            "text": "x",
+        });
+        let allowed = &[NodeKind::Fact, NodeKind::Discarded][..];
+        assert!(parse_child_node(&raw, allowed, &mut id_state, "C").is_none());
+        // Two booleans true → also rejected.
+        let raw2 = serde_json::json!({
+            "id": "X2",
+            "is_fact": true,
+            "is_uncertainty": true,
+            "is_question": false,
+            "is_discarded": false,
+            "term": {"atom": "x"},
+            "text": "x",
+        });
+        assert!(parse_child_node(&raw2, allowed, &mut id_state, "C").is_none());
+    }
+
+    #[test]
+    fn adj28_discard_justification_lands_in_metadata() {
+        // When the model marks a chunk Discarded with a
+        // discard_justification, the orchestrator stores that
+        // justification in the node's metadata under the
+        // DISCARD_JUSTIFICATION_METADATA_KEY.
+        let mut id_state = IdState::new();
+        let raw = serde_json::json!({
+            "id": "D1",
+            "kind": "Discarded",
+            "discard_reason": "Pleasantry",
+            "discard_justification":
+                "The string `please` is a politeness marker that adds no claim content.",
+            "term": {"atom": "x"},
+            "polarity": "Affirmed",
+            "modality": "Present",
+            "text": "please",
+        });
+        let allowed = &[NodeKind::Fact, NodeKind::Discarded][..];
+        let (node, _text) =
+            parse_child_node(&raw, allowed, &mut id_state, "C").expect("parsed");
+        assert_eq!(node.kind, NodeKind::Discarded);
+        let stored = node.metadata.get(DISCARD_JUSTIFICATION_METADATA_KEY);
+        assert_eq!(
+            stored.map(|s| s.as_str()),
+            Some("The string `please` is a politeness marker that adds no claim content.")
+        );
+    }
+
+    #[test]
+    fn adj28_discard_reason_string_parsed_into_enum() {
+        // Each documented discard_reason string maps to the right
+        // DiscardReason variant. Unknown strings fall back to
+        // NonDomainContent rather than panicking.
+        use adjudication_ir::DiscardReason::*;
+        for (s, expected) in [
+            ("Pleasantry", Pleasantry),
+            ("DocumentMetadata", DocumentMetadata),
+            ("NonDomainContent", NonDomainContent),
+            ("Restatement", Restatement),
+            ("Unparseable", Unparseable),
+            ("AdministrativeOnly", AdministrativeOnly),
+            ("ExplicitlyOutOfScope", ExplicitlyOutOfScope),
+            ("not-a-real-reason", NonDomainContent),
+            ("", NonDomainContent),
+        ] {
+            assert_eq!(parse_discard_reason(Some(s)), expected);
+        }
+        assert_eq!(parse_discard_reason(None), NonDomainContent);
     }
 }

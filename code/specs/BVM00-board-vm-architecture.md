@@ -156,8 +156,9 @@ A capability is a stable, portable operation family exposed by the board:
 |---|---|---|
 | `gpio.digital` | configure pin, write pin, read pin | pin registers / HAL GPIO |
 | `time.sleep` | sleep or yield for milliseconds | timer peripheral / RTOS delay |
-| `pwm.output` | set duty cycle and frequency | timer channel |
-| `adc.input` | sample analog input | ADC peripheral |
+| `pwm.write` | set duty cycle on a PWM-capable pin | timer channel |
+| `adc.read` | sample analog input | ADC peripheral |
+| `dac.write_u12` | write analog output sample | DAC peripheral |
 | `i2c.master` | write/read I2C transactions | I2C peripheral |
 | `serial.log` | stream text or binary logs | current transport or extra UART |
 | `program.store` | save bytecode for boot | flash / EEPROM / filesystem |

@@ -8,6 +8,8 @@
   stages.
 - Add DC source sweeps for independent voltage and current sources.
 - Add DC sensitivity analysis for resistor and independent source parameters.
+- Add seeded DC Monte Carlo analysis for linear element parameters with
+  Gaussian and uniform tolerance distributions.
 - Add DC small-signal transfer-function analysis with input/output impedance.
 - Add AC small-signal frequency sweeps for linear RC/RL circuits.
 - Add backward-Euler transient analysis for linear RC circuits.
