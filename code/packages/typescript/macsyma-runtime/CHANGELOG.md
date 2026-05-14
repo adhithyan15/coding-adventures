@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.2.0] — 2026-05-14
 
 - Add TypeScript MACSYMA parity for elliptic first-kind integration, so
   `integrate(1/sqrt(1-k^2*sin(theta)^2), theta)` returns
