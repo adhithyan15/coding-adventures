@@ -2,6 +2,61 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.5.0] — 2026-05-13
+
+### Added — MX05 Phase 4.9 (CpuSpecialiser closure builder)
+
+Closes the gap that's been open since Phase 4.3: matrix-cpu now
+emits **Rust closures** (`Box<SpecialisedKernelFn>`) for the same
+SpecKey shapes the matrix-metal MSL emitter handles.  This lets
+image-gpu-core's auto-installer install on the CPU executor too,
+not just metal.
+
+#### New public function
+
+`matrix_cpu::build_specialised_kernel(key: &SpecKey, _handle: u64)
+-> Option<Box<SpecialisedKernelFn>>`
+
+Mirrors `matrix_metal::emit_specialised_kernel` — instead of an
+MSL string, it returns a closure that operates on the
+`BufferStore` directly.  Coverage matches matrix-metal v0.9.0:
+
+  - **Commutative binary** (Add 0x07, Mul 0x09, Max 0x0B, Min 0x0C)
+    with folded constant — `out[i] = a[i] OP K`
+  - **Non-commutative binary** (Sub 0x08, Div 0x0A, Pow 0x0D) with
+    `folded_slot = Some(0)` or `Some(1)` — picks `K OP a[i]` or
+    `a[i] OP K`
+  - **Unary with folded input** (Neg 0x00, Abs 0x01, Sqrt 0x02,
+    Exp 0x03, Log 0x04, Tanh 0x05, Recip 0x06) — `f(K)` is
+    precomputed at build time; the closure becomes a memset
+
+f32 only in V1.
+
+### Changed — `dispatch::run` always reallocates constant buffers
+
+Previously matrix-cpu's `dispatch::run` had:
+```rust
+if !buffers.contains(c.residency.buffer) {
+    buffers.alloc(c.residency.buffer, c.bytes.len());
+}
+buffers.write(c.residency.buffer, 0, &c.bytes)?;
+```
+
+The `if !contains` guard was brittle once image-gpu-core promoted
+`CpuExecutor` to a long-lived (thread-local) singleton: a stale
+buffer with the wrong size could shadow a fresh constant's
+allocation, causing `write past end` errors.  The guard is gone;
+we now always call `buffers.alloc(...)` (which replaces, per its
+docstring).  Reallocation on host is cheap and matches matrix-metal's
+behaviour.
+
+### Tests
+
+All 33 existing tests still pass.  The new closure builder is
+exercised by image-gpu-core's
+`cpu_auto_installer_registers_kernel_after_threshold` integration
+test (v0.12.0).
+
 ## [0.4.1] — 2026-05-13
 
 ### Changed — MX05 Phase 4.6 (handle hash includes `folded_slot`)

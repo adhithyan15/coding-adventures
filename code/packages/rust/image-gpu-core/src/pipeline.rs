@@ -63,16 +63,11 @@ use matrix_ir::{Graph, Op, TensorId};
 use matrix_runtime::{DefaultPolicy, Profiler, Runtime, SpecCache, SpecRouter};
 use std::cell::Cell;
 use std::collections::HashMap;
-#[cfg(feature = "metal-backend")]
 use std::collections::HashSet;
-#[cfg(feature = "metal-backend")]
 use std::sync::{Arc, Mutex, OnceLock};
-#[cfg(not(feature = "metal-backend"))]
-use std::sync::OnceLock;
 // matrix_profile re-exports SpecialisedKernel via matrix_runtime; we
 // take it directly so the auto-installer can pattern-match on its
 // `key` field.
-#[cfg(feature = "metal-backend")]
 use matrix_runtime::SpecialisedKernel;
 
 // ─────────────────────────── Last-executor reporting ───────────────────────────
@@ -149,6 +144,49 @@ fn metal_backend() -> Option<&'static MetalBackend> {
     .as_ref()
 }
 
+// ─────────────────────────── CPU backend singleton (Phase 4.9) ───────────────────────────
+//
+// Up to Phase 4.8 the CPU dispatch path called `matrix_cpu::local_transport()`
+// per invocation, which created a fresh `CpuExecutor` each time.
+// That was fine when specialised kernels only ever lived on the
+// metal executor, but Phase 4.9 wants the auto-installer to install
+// closures on the CPU executor too — and those installs need to
+// persist across invocations.  So we promote the CPU executor to
+// a process-wide singleton, exactly parallel to `MetalBackend`.
+
+struct CpuBackend {
+    /// Direct reference to the CPU executor so the auto-installer
+    /// can call `install_specialised(handle, kernel)` on it.
+    executor: Arc<matrix_cpu::CpuExecutor>,
+    /// The standard wire-format transport used by the dispatcher.
+    transport: LocalTransport,
+}
+
+// **Per-thread** so concurrent unit tests don't contaminate each
+// other's BufferStore.  Within one thread (real workloads, or one
+// test's sequence of dispatches) the backend is persistent — so
+// specialised kernels installed by the auto-installer survive
+// across the 1000+ invocations that real workflows need.  Each
+// production dispatch path lives on its own thread (or runs
+// serially within image-gpu-core's caller), so per-thread
+// persistence matches the actual sharing model.
+thread_local! {
+    static CPU_BACKEND: CpuBackend = {
+        let exec = Arc::new(matrix_cpu::CpuExecutor::new());
+        let exec2 = exec.clone();
+        let transport = LocalTransport::new(move |req| exec2.handle(req));
+        CpuBackend { executor: exec, transport }
+    };
+}
+
+/// Run a closure with access to the thread-local `CpuBackend`.
+/// Used by every caller that needs to interact with the CPU
+/// executor — the dispatcher, the auto-installer, and the public
+/// `specialised_install_count`.
+fn with_cpu_backend<R>(f: impl FnOnce(&CpuBackend) -> R) -> R {
+    CPU_BACKEND.with(f)
+}
+
 // ─────────────────────────── MX05 specialisation singletons ───────────────────────────
 //
 // MX05 Phase 1 / 2a / 3 V1 / V2 / V3 shipped the Profiler /
@@ -220,22 +258,24 @@ pub fn spec_cache_len() -> usize {
 /// installs are in flight or when an install fails (e.g. compilation
 /// rejects the emitted MSL).
 ///
-/// On non-Apple targets this always returns `0` — there's no Metal
-/// executor to install onto, and the matrix-cpu auto-install path
-/// (which would need a closure source, not just a handle) is later
-/// MX05 phase work.
-#[cfg(feature = "metal-backend")]
+/// **MX05 Phase 4.9.**  Now counts installs on **both** the CPU and
+/// metal executors.  Before Phase 4.9 the CPU auto-install path
+/// didn't exist (matrix-cpu's `CpuSpecialiser` emitted opaque handles
+/// without closure sources), so this counter was metal-only and
+/// returned 0 on non-Apple builds.  The new
+/// `matrix_cpu::build_specialised_kernel` closes that gap, so the
+/// counter now reflects the **total** kernels registered across
+/// every backing executor in this process.
 pub fn specialised_install_count() -> usize {
-    match metal_backend() {
+    let cpu_count = with_cpu_backend(|b| b.executor.specialised_count());
+    #[cfg(feature = "metal-backend")]
+    let metal_count = match metal_backend() {
         Some(b) => b.executor.specialised_count(),
         None => 0,
-    }
-}
-
-/// **MX05 Phase 4.3.**  No-op stub for non-Apple targets.  Always `0`.
-#[cfg(not(feature = "metal-backend"))]
-pub fn specialised_install_count() -> usize {
-    0
+    };
+    #[cfg(not(feature = "metal-backend"))]
+    let metal_count = 0usize;
+    cpu_count + metal_count
 }
 
 /// **MX05 Phase 4.4.**  Number of dispatches the runtime has routed
@@ -292,29 +332,27 @@ static SPECIALISED_DISPATCH_COUNT: std::sync::atomic::AtomicUsize =
 //     end-to-end DispatchDone → speedup loop.  Splitting that work
 //     into its own PR keeps Phase 4.3 reviewable.
 
-/// Process-wide set of handles we've already attempted to install
-/// onto a metal executor.  Initialisation is lazy so non-metal builds
-/// never allocate.
-#[cfg(feature = "metal-backend")]
+/// Process-wide set of handles already installed on **any** backend
+/// (CPU or metal).  Phase 4.9: shared between the two backends so
+/// the auto-installer can short-circuit on already-installed handles
+/// regardless of which executor they ended up on.
 fn installed_handles() -> &'static Mutex<HashSet<u64>> {
     static SLOT: OnceLock<Mutex<HashSet<u64>>> = OnceLock::new();
     SLOT.get_or_init(|| Mutex::new(HashSet::new()))
 }
 
-/// **MX05 Phase 4.4 / extended in 4.6.**  Per-handle metadata recorded
-/// at install time so the dispatch-routing path can validate buffer
-/// counts and pick the correct unfolded slot without re-emitting the
-/// kernel.  The tuple is
-/// `(input_buffer_count, output_buffer_count, folded_slot)`.
+/// **MX05 Phase 4.4 / extended in 4.6 / 4.9.**  Per-handle metadata
+/// recorded at install time so the dispatch-routing path can
+/// validate buffer counts and pick the correct unfolded slot without
+/// re-emitting the kernel.  Shared between CPU and metal install
+/// paths (Phase 4.9): both backends record the same
+/// `(n_in, n_out, folded_slot)` triple, keyed by the SpecKey's
+/// 64-bit handle.
 ///
 /// `folded_slot` is `Some(s)` for binary ops where the policy
 /// observed slot `s` as a constant, and `None` otherwise (e.g.
 /// commutative ops where slot doesn't matter, or future
-/// `RangeClass::FloatBits`/`Integer` shapes).  Phase 4.6 introduced
-/// this so non-commutative ops (Sub/Div/Pow) can route the
-/// **unfolded** input through `DispatchSpecialised` regardless of
-/// which side carried the constant.
-#[cfg(feature = "metal-backend")]
+/// `RangeClass::FloatBits`/`Integer` shapes).
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct KernelMetadata {
     pub n_in: usize,
@@ -327,7 +365,6 @@ pub(crate) struct KernelMetadata {
     pub folded_slot: Option<u8>,
 }
 
-#[cfg(feature = "metal-backend")]
 fn installed_kernel_metadata() -> &'static Mutex<HashMap<u64, KernelMetadata>> {
     static SLOT: OnceLock<Mutex<HashMap<u64, KernelMetadata>>> = OnceLock::new();
     SLOT.get_or_init(|| Mutex::new(HashMap::new()))
@@ -336,8 +373,10 @@ fn installed_kernel_metadata() -> &'static Mutex<HashMap<u64, KernelMetadata>> {
 /// **Test-only**.  Manually record kernel metadata for a handle.
 /// Used by integration tests that install a kernel directly via
 /// `MetalExecutor::install_specialised_from_emitted` rather than
-/// going through the auto-installer.
-#[cfg(all(test, feature = "metal-backend"))]
+/// going through the auto-installer.  Available on all platforms
+/// since Phase 4.9 because the CPU install path also exercises
+/// this metadata table.
+#[cfg(test)]
 pub(crate) fn record_test_kernel_metadata(
     handle: u64,
     n_in: usize,
@@ -381,12 +420,11 @@ pub(crate) fn record_test_kernel_metadata(
 /// mutex acquire inside `MetalExecutor::install_specialised_from_emitted`.
 /// Subsequent calls with the same handle are a single mutex acquire
 /// and a `HashSet::contains` — sub-microsecond.
-#[cfg(feature = "metal-backend")]
 fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
-    let Some(backend) = metal_backend() else {
-        return false;
-    };
-    // Fast path: skip if already installed.
+    // Fast path: skip if already installed (on any backend).  The
+    // handle hash includes `backend_id`, so CPU and metal versions
+    // of the same SpecKey get distinct handles — no risk of
+    // confusing one for the other.
     {
         let installed = match installed_handles().lock() {
             Ok(g) => g,
@@ -396,23 +434,91 @@ fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
             return false;
         }
     }
+
+    // Dispatch on `backend_id`:
+    //   0 → CPU (matrix_cpu::build_specialised_kernel + CpuExecutor::install_specialised)
+    //   1 → metal (matrix_metal::emit_specialised_kernel + install_specialised_from_emitted)
+    // Other values → ignore (no backend registered).
+    match specialised.key.backend_id {
+        0 => try_install_cpu(specialised),
+        #[cfg(feature = "metal-backend")]
+        1 => try_install_metal(specialised),
+        _ => false,
+    }
+}
+
+/// **MX05 Phase 4.9.**  Install a specialised kernel on the CPU
+/// executor singleton.  Returns `true` on a fresh install.
+fn try_install_cpu(specialised: &SpecialisedKernel) -> bool {
+    let Some(kernel) =
+        matrix_cpu::build_specialised_kernel(&specialised.key, specialised.handle)
+    else {
+        return false;
+    };
+    // matrix_cpu::CpuExecutor::install_specialised is infallible
+    // (no compile step on CPU).  No error path here — record and
+    // mark as installed.
+    with_cpu_backend(|b| {
+        b.executor.install_specialised(specialised.handle, kernel);
+    });
+    // Record metadata.  CPU kernels' (n_in, n_out) is determined by
+    // the SpecKey shape: unary memset → (0, 1); binary-with-folded
+    // → (1, 1).
+    let (n_in, n_out) = derive_buffer_counts(&specialised.key);
+    {
+        let mut installed = match installed_handles().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        installed.insert(specialised.handle);
+    }
+    {
+        let mut md = match installed_kernel_metadata().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        md.insert(
+            specialised.handle,
+            KernelMetadata {
+                n_in,
+                n_out,
+                folded_slot: specialised.key.folded_slot,
+            },
+        );
+    }
+    true
+}
+
+/// **MX05 Phase 4.9 helper.**  Reverse-engineer `(n_in, n_out)`
+/// from a SpecKey, mirroring the logic in
+/// `matrix_cpu::build_specialised_kernel`.  Used to populate
+/// `KernelMetadata` for CPU installs, where the kernel closure
+/// doesn't carry a separate descriptor.
+///
+/// Returns `(0, 1)` for unary-folded-input kernels (memset shape)
+/// and `(1, 1)` for binary-with-folded-constant kernels.
+fn derive_buffer_counts(key: &matrix_runtime::SpecKey) -> (usize, usize) {
+    // Unary ops with folded input → 0 inputs.
+    let is_unary_memset = matches!(key.op_kind, 0x00..=0x06)
+        && matches!(key.folded_slot, Some(0));
+    if is_unary_memset {
+        (0, 1)
+    } else {
+        // Binary-with-folded-constant → 1 input + 1 output.
+        (1, 1)
+    }
+}
+
+#[cfg(feature = "metal-backend")]
+fn try_install_metal(specialised: &SpecialisedKernel) -> bool {
+    let Some(backend) = metal_backend() else {
+        return false;
+    };
     // Slow path: emit MSL, compile, install.
     let Some(emitted) = matrix_metal::emit_specialised_kernel(&specialised.key, specialised.handle)
     else {
         return false;
     };
-    // **MX05 Phase 4.4 / extended in 4.6.**  Stash the kernel's
-    // input/output buffer counts plus the SpecKey's `folded_slot`
-    // before the EmittedKernel is consumed by the install call.
-    // The dispatch-routing path reads these to:
-    //   - trim `ir_op.inputs()` down to the buffers the specialised
-    //     kernel actually consumes (commonly 1 for a binary op + 1
-    //     folded constant);
-    //   - pick which IR input slot to pass: for a binary op with
-    //     `folded_slot = Some(s)`, the unfolded slot is `1 - s` (so
-    //     LHS-folded → pass RHS, RHS-folded → pass LHS).  Phase 4.6
-    //     lights this up; Phase 4.4 ignored slot and always passed
-    //     the first `n_in` inputs.
     let n_in = emitted.input_buffer_count;
     let n_out = emitted.output_buffer_count;
     let folded_slot = specialised.key.folded_slot;
@@ -448,11 +554,6 @@ fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
             false
         }
     }
-}
-
-#[cfg(not(feature = "metal-backend"))]
-fn try_auto_install_specialised(_specialised: &matrix_runtime::SpecialisedKernel) -> bool {
-    false
 }
 
 /// Drive the MX05 specialisation pipeline for one placed graph:
@@ -595,18 +696,12 @@ fn drive_specialisation(placed: &ComputeGraph) -> HashMap<u32, u64> {
 /// the per-op installed-handle map even on cache hits where
 /// `try_auto_install_specialised` would have short-circuited and
 /// returned `false`.
-#[cfg(feature = "metal-backend")]
 fn handle_is_installed(handle: u64) -> bool {
     let installed = match installed_handles().lock() {
         Ok(g) => g,
         Err(poisoned) => poisoned.into_inner(),
     };
     installed.contains(&handle)
-}
-
-#[cfg(not(feature = "metal-backend"))]
-fn handle_is_installed(_handle: u64) -> bool {
-    false
 }
 
 // ─────────────────────────── Public entry point ───────────────────────────
@@ -641,8 +736,17 @@ pub fn run_graph_with_constant_inputs(
             return if only == metal_id {
                 dispatch_via(&metal.transport, placed, output_id, output_byte_count, "metal")
             } else if only == CPU_EXECUTOR {
-                let cpu_transport = matrix_cpu::local_transport();
-                dispatch_via(&cpu_transport, placed, output_id, output_byte_count, "cpu")
+                // **MX05 Phase 4.9.**  Run inside the thread-local
+                // CPU backend so the installed specialised kernels
+                // (registered in this same thread by earlier
+                // dispatches) are visible.  Per-thread isolation
+                // means parallel unit tests don't contaminate each
+                // other's `BufferStore`; persistence within a thread
+                // means real workflows with thousands of repeat
+                // dispatches see the auto-installer's installs.
+                with_cpu_backend(|b| {
+                    dispatch_via(&b.transport, placed, output_id, output_byte_count, "cpu")
+                })
             } else {
                 // The planner chose an executor we didn't register.
                 // Shouldn't happen with the registry above, but be
@@ -1317,8 +1421,12 @@ fn dispatch_cpu_only(
     let placed: ComputeGraph = runtime
         .plan(graph)
         .map_err(|e| GpuError::Other(format!("plan: {:?}", e)))?;
-    let transport = matrix_cpu::local_transport();
-    dispatch_via(&transport, placed, output_id, output_byte_count, "cpu")
+    // **MX05 Phase 4.9.**  Run inside the thread-local CPU backend
+    // so installed specialised kernels are visible.  Same pattern as
+    // the dual-backend path above.
+    with_cpu_backend(|b| {
+        dispatch_via(&b.transport, placed, output_id, output_byte_count, "cpu")
+    })
 }
 
 /// Returns `Some(id)` iff every `Compute` op and every constant in
@@ -2378,6 +2486,70 @@ mod tests {
             result,
             vec![8.0, 10.0, 12.0, 14.0],
             "Phase 4.8 multi-op chain Add+Mul must produce (x + 3) * 2"
+        );
+    }
+
+    /// **MX05 Phase 4.9 end-to-end test.**  Auto-installer + dispatch
+    /// routing on the **CPU** executor.  Phase 4.3 introduced the
+    /// auto-installer for metal but left the CPU side as a "Phase 4.9
+    /// or later" TODO.  Phase 4.9 closes that gap.
+    ///
+    /// This test drives a small Add-with-constant graph through
+    /// `run_graph_with_constant_inputs` enough times to fire
+    /// `DefaultPolicy` (1100 iterations).  After the policy fires:
+    ///   - `r.route(...)` returns `Some(SpecialisedKernel)` with
+    ///     `backend_id = 0` (CPU)
+    ///   - `try_auto_install_specialised` matches the CPU branch
+    ///     and calls `matrix_cpu::build_specialised_kernel` to
+    ///     produce a Rust closure
+    ///   - The closure is installed on the thread-local
+    ///     `cpu_backend().executor` via `CpuExecutor::install_specialised`
+    ///   - `specialised_install_count` rises above zero
+    ///
+    /// This is the CPU counterpart of Phase 4.3's
+    /// `auto_installer_registers_kernel_after_threshold` (which
+    /// covered the metal path).  Runs on **every platform** —
+    /// unlike the metal tests, this doesn't need an Apple device.
+    /// On non-Apple targets, the planner picks CPU anyway because
+    /// there's no metal executor registered.
+    #[test]
+    fn cpu_auto_installer_registers_kernel_after_threshold() {
+        use crate::specialised_install_count;
+        use matrix_ir::{DType, GraphBuilder, Shape};
+
+        let before = specialised_install_count();
+
+        // Same shape as the Phase 4.3 metal test: a tiny f32 Add
+        // with both operands as constants.  Tiny enough that the
+        // planner picks CPU on every platform.
+        for _ in 0..1100 {
+            let mut g = GraphBuilder::new();
+            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let b_bytes: Vec<u8> = [7.0_f32, 7.0, 7.0, 7.0]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+            let a = g.constant(DType::F32, Shape::from(&[4u32]), a_bytes);
+            let b = g.constant(DType::F32, Shape::from(&[4u32]), b_bytes);
+            let c = g.add(&a, &b);
+            g.output(&c);
+            let graph = g.build().expect("graph builds");
+            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 16);
+        }
+
+        let after = specialised_install_count();
+        assert!(
+            after > before,
+            "Phase 4.9: CPU auto-installer must fire after 1100 invocations \
+             of an Add-with-constant graph; before = {}, after = {}.  If 0 \
+             here, either (a) the policy didn't fire (check tensor sampling \
+             in drive_specialisation), or (b) build_specialised_kernel \
+             returned None for the SpecKey (check matrix-cpu coverage).",
+            before,
+            after
         );
     }
 }

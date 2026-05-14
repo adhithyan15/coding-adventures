@@ -1,6 +1,6 @@
 [package]
 name = "matrix-cpu"
-version = "0.4.1"
+version = "0.5.0"
 edition = "2021"
 description = "CPU reference executor for the matrix execution layer. Implements every matrix-ir op on every dtype using straight-line Rust. The always-available safety net that supports operations no GPU backend can take. v0.4 (MX05 Phase 4.1) adds the per-handle specialised kernel table and live DispatchSpecialised handler: install a closure under a u64 handle via install_specialised, then DispatchSpecialised invokes it and returns DispatchDone instead of NOT_IMPLEMENTED. Zero external dependencies."
 license = "MIT"
