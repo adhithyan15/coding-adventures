@@ -12,3 +12,6 @@ All notable changes to this package will be documented in this file.
 - Added a live Weather.gov HTTPS mode through `tls-platform` + `http1`, plus a
   supervisor restart proof that kills and recreates a weather child before the
   pipeline tick.
+- Added an end-to-end sandbox-plan proof that lowers the Weather Agent
+  capability manifest into OS-specific defense-in-depth primitives for Linux,
+  macOS, Windows, FreeBSD, OpenBSD, and the portable host broker.

@@ -1,0 +1,7 @@
+[package]
+name = "operation-primitives"
+version = "0.1.0"
+edition = "2021"
+description = "Rust operation envelope primitives for generated capability cages"
+
+[dependencies]
