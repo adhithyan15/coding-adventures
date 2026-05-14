@@ -43,6 +43,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "i2c.read_u8"
         assert_includes uno_r4_wifi["capabilities"], "i2c.write"
         assert_includes uno_r4_wifi["capabilities"], "i2c.read"
+        assert_includes uno_r4_wifi["capabilities"], "i2c.transfer"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
@@ -1397,6 +1398,36 @@ module CodingAdventures
           read_result.results.map(&:command)
       end
 
+      def test_i2c_transfer_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        open_result = nil
+        transfer_result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          open_result = board.i2c.open(bus: 0, program_id: 10, budget: 24)
+          transfer_result = board.i2c.transfer(
+            address: 0x3c,
+            write_bytes: [0x00, 0x10],
+            read_length: 3,
+            program_id: 11,
+            budget: 24
+          )
+        end
+
+        assert_empty runner.calls
+        assert_equal 10, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal open_result.frames + transfer_result.frames, transport.frames
+        assert_equal [:program_begin, :program_chunk, :program_end, :run],
+          transfer_result.results.map(&:command)
+      end
+
       def test_store_program_dispatches_native_protocol_frame_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -1919,6 +1950,26 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_i2c_transfer
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("i2c.transfer 60 0x0010 3 24", program_id: 9)
+          upload = board.session.run_command("upload-i2c.transfer 60 0x0010 3", program_id: 10)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            result.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload.results.map(&:command)
+          assert_equal result.frames + upload.frames, transport.frames
+        end
+      end
+
       def test_board_descriptor_wraps_rust_decoded_capability_report
         decoded = {
           "kind" => "caps_report",
@@ -2059,6 +2110,10 @@ module CodingAdventures
         i2c_read_bytes_module_bytes = session.i2c_read_module(0x3c, 3, 4)
         assert_instance_of String, i2c_read_bytes_module_bytes
         assert_operator i2c_read_bytes_module_bytes.bytesize, :>, 0
+
+        i2c_transfer_module_bytes = session.i2c_transfer_module(0x3c, "\x00\x10".b, 3, 5)
+        assert_instance_of String, i2c_transfer_module_bytes
+        assert_operator i2c_transfer_module_bytes.bytesize, :>, 0
 
         gpio_module_bytes = session.gpio_read_module(13, 2, 2)
         assert_instance_of String, gpio_module_bytes

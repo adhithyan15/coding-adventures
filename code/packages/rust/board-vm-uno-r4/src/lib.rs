@@ -399,6 +399,16 @@ pub trait UnoR4Backend {
         Err(HalError::UnsupportedMode)
     }
 
+    fn transfer_i2c(
+        &mut self,
+        _bus: u8,
+        _address: u16,
+        _write_bytes: &[u8],
+        _read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn supports_bootloader_reboot(&self) -> bool {
         false
     }
@@ -542,6 +552,19 @@ where
         let bus = normalize_i2c_token(self.target, token)?;
         normalize_i2c_address(address)?;
         self.backend.read_i2c(bus, address, len)
+    }
+
+    fn i2c_transfer(
+        &mut self,
+        token: u32,
+        address: u16,
+        write_bytes: &[u8],
+        read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
+        let bus = normalize_i2c_token(self.target, token)?;
+        normalize_i2c_address(address)?;
+        self.backend
+            .transfer_i2c(bus, address, write_bytes, read_len)
     }
 
     fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -745,6 +768,7 @@ mod tests {
         I2cWrite(u8, u16, Vec<u8>),
         I2cReadU8(u8, u16),
         I2cRead(u8, u16, u8),
+        I2cTransfer(u8, u16, Vec<u8>, u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -847,6 +871,23 @@ mod tests {
         fn read_i2c(&mut self, bus: u8, address: u16, len: u8) -> Result<ByteBuffer, HalError> {
             self.events.push(Event::I2cRead(bus, address, len));
             ByteBuffer::from_slice(&[0xca, 0xfe, 0x42][..len as usize])
+                .map_err(|_| HalError::UnsupportedMode)
+        }
+
+        fn transfer_i2c(
+            &mut self,
+            bus: u8,
+            address: u16,
+            write_bytes: &[u8],
+            read_len: u8,
+        ) -> Result<ByteBuffer, HalError> {
+            self.events.push(Event::I2cTransfer(
+                bus,
+                address,
+                write_bytes.to_vec(),
+                read_len,
+            ));
+            ByteBuffer::from_slice(&[0x11, 0x22, 0x33][..read_len as usize])
                 .map_err(|_| HalError::UnsupportedMode)
         }
 
@@ -957,6 +998,9 @@ mod tests {
             .capabilities
             .supports(board_vm_ir::CAP_I2C_WRITE));
         assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_I2C_READ));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_I2C_TRANSFER));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -981,6 +1025,9 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_I2C_READ));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_I2C_TRANSFER));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1164,6 +1211,36 @@ mod tests {
 
         assert_eq!(board.i2c_read(0x1_2001, 0x3c, 3), Err(HalError::InvalidPin));
         assert_eq!(board.i2c_read(0x1_2000, 0x80, 3), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn i2c_transfer_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(
+            board
+                .i2c_transfer(0x1_2001, 0x3c, &[0x00, 0x10], 3)
+                .unwrap(),
+            ByteBuffer::from_slice(&[0x11, 0x22, 0x33]).unwrap()
+        );
+        assert_eq!(
+            board.backend().events,
+            vec![Event::I2cTransfer(1, 0x3c, vec![0x00, 0x10], 3)]
+        );
+    }
+
+    #[test]
+    fn i2c_transfer_rejects_unknown_bus_or_address() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(
+            board.i2c_transfer(0x1_2001, 0x3c, &[0x00, 0x10], 3),
+            Err(HalError::InvalidPin)
+        );
+        assert_eq!(
+            board.i2c_transfer(0x1_2000, 0x80, &[0x00, 0x10], 3),
+            Err(HalError::InvalidPin)
+        );
     }
 
     #[test]

@@ -35,22 +35,23 @@ use board_vm_esp_rom::{
     DEFAULT_TIMEOUT_MS as ESP_DEFAULT_TIMEOUT_MS,
 };
 use board_vm_host::{
-    i2c_write_module_len, write_adc_read_module, write_blink_module, write_dac_write_u12_module,
-    write_gpio_handle_close_module, write_gpio_handle_read_module, write_gpio_handle_write_module,
-    write_gpio_open_module, write_gpio_read_module, write_gpio_write_module, write_i2c_open_module,
-    write_i2c_read_module, write_i2c_read_u8_module, write_i2c_write_module,
+    i2c_transfer_module_len, i2c_write_module_len, write_adc_read_module, write_blink_module,
+    write_dac_write_u12_module, write_gpio_handle_close_module, write_gpio_handle_read_module,
+    write_gpio_handle_write_module, write_gpio_open_module, write_gpio_read_module,
+    write_gpio_write_module, write_i2c_open_module, write_i2c_read_module,
+    write_i2c_read_u8_module, write_i2c_transfer_module, write_i2c_write_module,
     write_i2c_write_u8_module, write_led_matrix_frame_module, write_module, write_pwm_write_module,
     write_time_now_module, write_time_sleep_ms_module, AdcReadProgram, BlinkProgram,
     DacWriteU12Program, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
     GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, I2cOpenProgram,
-    I2cReadProgram, I2cReadU8Program, I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram,
-    ModuleSpec, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN,
-    BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
-    DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
-    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN, I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN,
-    I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN,
-    TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
+    I2cReadProgram, I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
+    LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
+    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
+    DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN,
+    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN, I2C_READ_MODULE_LEN,
+    I2C_READ_U8_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -1666,6 +1667,13 @@ pub fn build_i2c_read_module(
     Ok(write_i2c_read_module(program, out)?)
 }
 
+pub fn build_i2c_transfer_module(
+    program: I2cTransferProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_transfer_module(program, out)?)
+}
+
 pub fn build_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2484,6 +2492,35 @@ pub unsafe extern "C" fn board_vm_language_i2c_read_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_transfer_module(
+    address: u16,
+    write_bytes: *const u8,
+    write_bytes_len: u64,
+    read_len: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let write_bytes = unsafe { in_slice(write_bytes, write_bytes_len, "write_bytes") }?;
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_transfer_module(
+            I2cTransferProgram {
+                address,
+                write_bytes,
+                read_len,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2832,6 +2869,14 @@ pub extern "C" fn board_vm_language_i2c_read_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_i2c_transfer_module_len(write_len: u64) -> u64 {
+    let Ok(write_len) = usize::try_from(write_len) else {
+        return 0;
+    };
+    i2c_transfer_module_len(write_len).unwrap_or(0) as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_led_matrix_frame_module_len() -> u64 {
     LED_MATRIX_FRAME_MODULE_LEN as u64
 }
@@ -3073,6 +3118,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"i2c.read_u8".to_owned()));
         assert!(uno.capabilities.contains(&"i2c.write".to_owned()));
         assert!(uno.capabilities.contains(&"i2c.read".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.transfer".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -3953,6 +3999,28 @@ mod tests {
         assert_eq!(
             i2c_read_bytes_status.len,
             board_vm_language_i2c_read_module_len()
+        );
+
+        let i2c_transfer_payload = [0x00, 0x10];
+        let mut i2c_transfer_module = [0u8; board_vm_host::I2C_TRANSFER_MAX_MODULE_LEN];
+        let i2c_transfer_status = unsafe {
+            board_vm_language_i2c_transfer_module(
+                0x3c,
+                i2c_transfer_payload.as_ptr(),
+                i2c_transfer_payload.len() as u64,
+                3,
+                5,
+                i2c_transfer_module.as_mut_ptr(),
+                i2c_transfer_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            i2c_transfer_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            i2c_transfer_status.len,
+            board_vm_language_i2c_transfer_module_len(i2c_transfer_payload.len() as u64)
         );
 
         let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];

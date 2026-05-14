@@ -518,6 +518,26 @@ module CodingAdventures
         )
       end
 
+      def i2c_transfer!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        write_bytes:,
+        read_length:,
+        max_stack: 5
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_transfer(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          write_bytes: write_bytes,
+          read_length: read_length,
+          max_stack: max_stack
+        )
+      end
+
       def store_program!(
         program_id: DEFAULT_PROGRAM_ID,
         slot: DEFAULT_EJECT_SLOT,
@@ -1215,6 +1235,24 @@ module CodingAdventures
           budget: budget,
           address: address,
           length: length,
+          max_stack: max_stack
+        )
+      end
+
+      def transfer(
+        address:,
+        write_bytes:,
+        read_length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 5
+      )
+        @connection.i2c_transfer!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          write_bytes: write_bytes,
+          read_length: read_length,
           max_stack: max_stack
         )
       end
