@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Recognised the first elliptic integration foothold: `Integrate` now returns
+  `EllipticF(theta, k)` for `1/sqrt(1-k^2*sin(theta)^2)` and `EllipticK(k)`
+  for the corresponding definite integral from `0` to `%pi/2`.
 - Extended the common multivariate factoring foothold to extract shared
   integer content as well as symbolic powers, so expressions like
   `2*x*y + 2*x*z` now factor to `2*x*(y+z)`.

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added MACSYMA integration parity for the first elliptic-integral foothold:
+  `integrate(1/sqrt(1-k^2*sin(theta)^2), theta)` now returns
+  `EllipticF(theta,k)`, and the corresponding `0` to `%pi/2` definite integral
+  returns `EllipticK(k)`.
 - Added MACSYMA `factor` parity for shared integer content in multivariate
   common-factor expressions, so `factor(2*x*y + 2*x*z)` now returns
   `2*x*(y+z)` through the canonical symbolic VM handler.
