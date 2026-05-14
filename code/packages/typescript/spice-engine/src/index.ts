@@ -35,12 +35,227 @@ export interface Inductor {
   readonly initialCurrent: number;
 }
 
+export type Waveform =
+  | PwlWaveform
+  | SinWaveform
+  | PulseWaveform
+  | ExpWaveform;
+
+export class PwlWaveform {
+  constructor(readonly points: readonly (readonly [number, number])[]) {}
+
+  valueAt(timeSeconds: number): number {
+    if (this.points.length === 0) {
+      return Number.NaN;
+    }
+    if (timeSeconds <= this.points[0][0]) {
+      return this.points[0][1];
+    }
+    const last = this.points[this.points.length - 1];
+    if (timeSeconds >= last[0]) {
+      return last[1];
+    }
+
+    for (let index = 0; index < this.points.length - 1; index++) {
+      const [leftTime, leftValue] = this.points[index];
+      const [rightTime, rightValue] = this.points[index + 1];
+      if (timeSeconds <= rightTime) {
+        const phase = (timeSeconds - leftTime) / (rightTime - leftTime);
+        return leftValue + (rightValue - leftValue) * phase;
+      }
+    }
+    return last[1];
+  }
+
+  validate(): string | undefined {
+    if (this.points.length < 2) {
+      return "PWL waveform requires at least two points";
+    }
+    let previousTime = Number.NEGATIVE_INFINITY;
+    for (const [time, value] of this.points) {
+      if (!Number.isFinite(time) || !Number.isFinite(value)) {
+        return "PWL waveform times and values must be finite";
+      }
+      if (time <= previousTime) {
+        return "PWL waveform times must be strictly increasing";
+      }
+      previousTime = time;
+    }
+    return undefined;
+  }
+}
+
+export class SinWaveform {
+  constructor(
+    readonly offset = 0.0,
+    readonly amplitude = 1.0,
+    readonly frequencyHz = 1.0,
+    readonly delaySeconds = 0.0,
+    readonly damping = 0.0,
+  ) {}
+
+  valueAt(timeSeconds: number): number {
+    if (timeSeconds < this.delaySeconds) {
+      return this.offset;
+    }
+    const shiftedTime = timeSeconds - this.delaySeconds;
+    const envelope =
+      this.damping === 0.0 ? 1.0 : Math.exp(-this.damping * shiftedTime);
+    return (
+      this.offset +
+      this.amplitude *
+        Math.sin(TWO_PI * this.frequencyHz * shiftedTime) *
+        envelope
+    );
+  }
+
+  validate(): string | undefined {
+    if (
+      !Number.isFinite(this.offset) ||
+      !Number.isFinite(this.amplitude) ||
+      !Number.isFinite(this.frequencyHz) ||
+      !Number.isFinite(this.delaySeconds) ||
+      !Number.isFinite(this.damping)
+    ) {
+      return "SIN waveform parameters must be finite";
+    }
+    if (this.frequencyHz < 0.0) {
+      return "SIN waveform frequency must be non-negative";
+    }
+    if (this.delaySeconds < 0.0) {
+      return "SIN waveform delay must be non-negative";
+    }
+    return undefined;
+  }
+}
+
+export class PulseWaveform {
+  constructor(
+    readonly initialValue = 0.0,
+    readonly pulsedValue = 1.0,
+    readonly delaySeconds = 0.0,
+    readonly riseTimeSeconds = 0.0,
+    readonly fallTimeSeconds = 0.0,
+    readonly pulseWidthSeconds = 0.5,
+    readonly periodSeconds = 1.0,
+  ) {}
+
+  valueAt(timeSeconds: number): number {
+    if (timeSeconds < this.delaySeconds) {
+      return this.initialValue;
+    }
+    const elapsed =
+      (timeSeconds - this.delaySeconds) % this.periodSeconds;
+    if (this.riseTimeSeconds > 0.0 && elapsed < this.riseTimeSeconds) {
+      const phase = elapsed / this.riseTimeSeconds;
+      return this.initialValue + (this.pulsedValue - this.initialValue) * phase;
+    }
+    if (elapsed < this.riseTimeSeconds + this.pulseWidthSeconds) {
+      return this.pulsedValue;
+    }
+    const fallStart = this.riseTimeSeconds + this.pulseWidthSeconds;
+    if (this.fallTimeSeconds > 0.0 && elapsed < fallStart + this.fallTimeSeconds) {
+      const phase = (elapsed - fallStart) / this.fallTimeSeconds;
+      return this.pulsedValue + (this.initialValue - this.pulsedValue) * phase;
+    }
+    return this.initialValue;
+  }
+
+  validate(): string | undefined {
+    if (
+      !Number.isFinite(this.initialValue) ||
+      !Number.isFinite(this.pulsedValue) ||
+      !Number.isFinite(this.delaySeconds) ||
+      !Number.isFinite(this.riseTimeSeconds) ||
+      !Number.isFinite(this.fallTimeSeconds) ||
+      !Number.isFinite(this.pulseWidthSeconds) ||
+      !Number.isFinite(this.periodSeconds)
+    ) {
+      return "PULSE waveform parameters must be finite";
+    }
+    if (
+      this.delaySeconds < 0.0 ||
+      this.riseTimeSeconds < 0.0 ||
+      this.fallTimeSeconds < 0.0 ||
+      this.pulseWidthSeconds < 0.0 ||
+      this.periodSeconds <= 0.0
+    ) {
+      return "PULSE waveform timing values must be non-negative and period positive";
+    }
+    if (
+      this.riseTimeSeconds + this.pulseWidthSeconds + this.fallTimeSeconds >
+      this.periodSeconds
+    ) {
+      return "PULSE waveform high interval must fit within the period";
+    }
+    return undefined;
+  }
+}
+
+export class ExpWaveform {
+  constructor(
+    readonly initialValue = 0.0,
+    readonly pulsedValue = 1.0,
+    readonly riseDelaySeconds = 0.0,
+    readonly riseTimeConstantSeconds = 1.0,
+    readonly fallDelaySeconds = 1.0,
+    readonly fallTimeConstantSeconds = 1.0,
+  ) {}
+
+  valueAt(timeSeconds: number): number {
+    if (timeSeconds <= this.riseDelaySeconds) {
+      return this.initialValue;
+    }
+    let value =
+      this.initialValue +
+      (this.pulsedValue - this.initialValue) *
+        (1.0 -
+          Math.exp(
+            -(timeSeconds - this.riseDelaySeconds) /
+              this.riseTimeConstantSeconds,
+          ));
+    if (timeSeconds >= this.fallDelaySeconds) {
+      value +=
+        (this.initialValue - this.pulsedValue) *
+        (1.0 -
+          Math.exp(
+            -(timeSeconds - this.fallDelaySeconds) /
+              this.fallTimeConstantSeconds,
+          ));
+    }
+    return value;
+  }
+
+  validate(): string | undefined {
+    if (
+      !Number.isFinite(this.initialValue) ||
+      !Number.isFinite(this.pulsedValue) ||
+      !Number.isFinite(this.riseDelaySeconds) ||
+      !Number.isFinite(this.riseTimeConstantSeconds) ||
+      !Number.isFinite(this.fallDelaySeconds) ||
+      !Number.isFinite(this.fallTimeConstantSeconds)
+    ) {
+      return "EXP waveform parameters must be finite";
+    }
+    if (
+      this.riseDelaySeconds < 0.0 ||
+      this.fallDelaySeconds < 0.0 ||
+      this.riseTimeConstantSeconds <= 0.0 ||
+      this.fallTimeConstantSeconds <= 0.0
+    ) {
+      return "EXP waveform delays must be non-negative and time constants positive";
+    }
+    return undefined;
+  }
+}
+
 export interface VoltageSource {
   readonly kind: "voltage-source";
   readonly name: string;
   readonly positive: string;
   readonly negative: string;
   readonly voltage: number;
+  readonly waveform?: Waveform;
 }
 
 export interface CurrentSource {
@@ -49,6 +264,7 @@ export interface CurrentSource {
   readonly positive: string;
   readonly negative: string;
   readonly current: number;
+  readonly waveform?: Waveform;
 }
 
 export interface Vccs {
@@ -209,6 +425,23 @@ export function voltageSource(
   return { kind: "voltage-source", name, positive, negative, voltage };
 }
 
+export function voltageSourceWithWaveform(
+  name: string,
+  positive: string,
+  negative: string,
+  voltage: number,
+  waveform: Waveform,
+): VoltageSource {
+  return {
+    kind: "voltage-source",
+    name,
+    positive,
+    negative,
+    voltage,
+    waveform,
+  };
+}
+
 export function currentSource(
   name: string,
   positive: string,
@@ -216,6 +449,23 @@ export function currentSource(
   current: number,
 ): CurrentSource {
   return { kind: "current-source", name, positive, negative, current };
+}
+
+export function currentSourceWithWaveform(
+  name: string,
+  positive: string,
+  negative: string,
+  current: number,
+  waveform: Waveform,
+): CurrentSource {
+  return {
+    kind: "current-source",
+    name,
+    positive,
+    negative,
+    current,
+    waveform,
+  };
 }
 
 export function vccs(
@@ -246,7 +496,7 @@ export function complexPhase(value: Complex): number {
 }
 
 export function dcOp(circuit: Circuit): DcResult {
-  const solution = solveLinearCircuit(circuit, [], []);
+  const solution = solveLinearCircuit(circuit, [], [], undefined);
   return makeDcResult(solution.nodeVoltages, solution.branchCurrents);
 }
 
@@ -426,7 +676,12 @@ export function transient(
   const inductorStates = initialInductorStates(circuit, timeStep);
   const points: TransientPoint[] = [];
   for (let time = timeStep; time <= stopTime + timeStep * 1.0e-9; time += timeStep) {
-    const solution = solveLinearCircuit(circuit, capacitorStates, inductorStates);
+    const solution = solveLinearCircuit(
+      circuit,
+      capacitorStates,
+      inductorStates,
+      time,
+    );
     updateCapacitorStates(circuit, solution.nodeVoltages, capacitorStates);
     updateInductorStates(circuit, solution.nodeVoltages, inductorStates);
     points.push(
@@ -610,6 +865,7 @@ function solveLinearCircuit(
   circuit: Circuit,
   capacitorStates: readonly CapacitorState[],
   inductorStates: readonly InductorState[],
+  sourceTime: number | undefined,
 ): LinearSolution {
   const nodeIndices = collectNodeIndices(circuit);
   const voltageSources = collectVoltageSources(circuit, inductorStates);
@@ -653,10 +909,11 @@ function solveLinearCircuit(
           nodeCount,
           matrix,
           rhs,
+          sourceTime,
         );
         break;
       case "current-source":
-        stampCurrentSource(element, nodeIndices, rhs);
+        stampCurrentSource(element, nodeIndices, rhs, sourceTime);
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -1291,8 +1548,10 @@ function stampVoltageSource(
   nodeCount: number,
   matrix: number[][],
   rhs: number[],
+  sourceTime: number | undefined,
 ): void {
-  if (!Number.isFinite(element.voltage)) {
+  const voltage = sourceVoltageAt(element, sourceTime);
+  if (!Number.isFinite(voltage)) {
     throw invalidElement(element.name, "voltage must be finite");
   }
 
@@ -1306,7 +1565,7 @@ function stampVoltageSource(
   const negative = nodeIndex(nodeIndices, element.negative);
 
   stampBranchMatrix(matrix, branch, positive, negative);
-  rhs[branch] += element.voltage;
+  rhs[branch] += voltage;
 }
 
 function stampBranchMatrix(
@@ -1329,19 +1588,49 @@ function stampCurrentSource(
   element: CurrentSource,
   nodeIndices: ReadonlyMap<string, number>,
   rhs: number[],
+  sourceTime: number | undefined,
 ): void {
-  if (!Number.isFinite(element.current)) {
+  const current = sourceCurrentAt(element, sourceTime);
+  if (!Number.isFinite(current)) {
     throw invalidElement(element.name, "current must be finite");
   }
 
   const positive = nodeIndex(nodeIndices, element.positive);
   const negative = nodeIndex(nodeIndices, element.negative);
   if (positive !== undefined) {
-    rhs[positive] -= element.current;
+    rhs[positive] -= current;
   }
   if (negative !== undefined) {
-    rhs[negative] += element.current;
+    rhs[negative] += current;
   }
+}
+
+function sourceVoltageAt(
+  source: VoltageSource,
+  sourceTime: number | undefined,
+): number {
+  if (sourceTime !== undefined && source.waveform !== undefined) {
+    const reason = source.waveform.validate();
+    if (reason !== undefined) {
+      throw invalidElement(source.name, reason);
+    }
+    return source.waveform.valueAt(sourceTime);
+  }
+  return source.voltage;
+}
+
+function sourceCurrentAt(
+  source: CurrentSource,
+  sourceTime: number | undefined,
+): number {
+  if (sourceTime !== undefined && source.waveform !== undefined) {
+    const reason = source.waveform.validate();
+    if (reason !== undefined) {
+      throw invalidElement(source.name, reason);
+    }
+    return source.waveform.valueAt(sourceTime);
+  }
+  return source.current;
 }
 
 function stampVccs(

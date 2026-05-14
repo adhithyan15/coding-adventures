@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add PWL, SIN, PULSE, and EXP source waveforms for transient voltage and
+  current sources while preserving static source values for DC, AC, transfer
+  function, sensitivity, and sweep analyses.
 - Add voltage-controlled current source support across DC, AC, transfer
   function, and sensitivity analyses.
 - Add DC sensitivity analysis for resistor and independent source parameters.
