@@ -78,6 +78,7 @@
 
 pub mod artifact;
 pub mod elf64;
+pub mod elf_object;
 pub mod errors;
 pub mod intel_hex;
 pub mod macho64;
@@ -89,6 +90,7 @@ pub mod target;
 pub mod wasm;
 
 pub use artifact::{CodeArtifact, MetadataValue};
+pub use elf_object::{pack_elf64_object_x86_64, X86RelocKind, X86RelocRecord};
 pub use errors::PackagerError;
 pub use macho_object::ExternBranchReloc;
 pub use registry::PackagerRegistry;
