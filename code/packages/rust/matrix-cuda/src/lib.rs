@@ -63,10 +63,12 @@
 mod buffers;
 pub mod cuda_emitter;
 pub mod kernels;
+pub mod specialised_table;
 
 pub use buffers::BufferStore;
 pub use cuda_emitter::{emit_specialised_kernel, EmittedKernel};
 pub use kernels::{Kernels, KERNELS_CUDA_C, KERNEL_ENTRY_POINTS};
+pub use specialised_table::{CudaSpecialisedKernelFn, SpecialisedTable};
 
 use compute_ir::ExecutorId;
 use executor_protocol::{

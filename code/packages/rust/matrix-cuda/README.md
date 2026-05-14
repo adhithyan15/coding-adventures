@@ -40,10 +40,31 @@ for the full design.  Phased rollout, one PR per phase:
 | 1     | crate skeleton, `BackendProfile`, stubbed dispatch     | landed (0.1.0) |
 | 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`           | landed (0.2.0) |
 | 3     | `kernels.rs` — generic NVRTC-compiled kernels + buffer-op wiring (adds `Send` to `CudaBuffer`) | landed (0.3.0) |
-| 4     | `cuda_emitter.rs` — specialised-kernel code generator   | **this PR** (0.4.0) |
-| 5     | `specialised_table.rs` + real `Executor` impl (flips `supported_ops_bitset` on, lifts `Kernels` into `State`) | pending |
+| 4     | `cuda_emitter.rs` — specialised-kernel code generator   | landed (0.4.0) |
+| 5a    | `specialised_table.rs` module + cuda-compute Send/Sync audit | **this PR** (0.5.0) |
+| 5b    | Real `Dispatch` + `DispatchSpecialised` + `install_specialised_from_emitted` + `evict_specialised` + flip `supported_ops_bitset` | pending |
 | 6     | MX05 hooks — `backend_id = 2` in image-gpu-core         | pending |
 | 7     | Planner integration — cost-model coefficients           | pending |
+
+## Phase 5a additions
+
+- New `pub mod specialised_table` with `SpecialisedTable` — the
+  per-executor `HashMap<u64 handle, Box<closure>>` of installed
+  specialised kernels.  Same shape as `matrix-metal`'s table; the
+  closure signature differs because CUDA closures capture their own
+  `CudaFunction` and launch through `CudaDevice` directly.
+- Companion `cuda-compute` v0.1.2 release adds `Sync` to
+  `CudaModuleInner` / `CudaFunction` and both `Send + Sync` to
+  `CudaLib` / `NvrtcLib`.  This makes `Kernels: Send + Sync`,
+  unlocking the Phase 5b lift into `Mutex<State>`.
+- New compile-only test `kernels_is_send_and_sync` that fails the
+  build if cuda-compute ever regresses on its Send/Sync promise.
+
+**Note**: Phase 5a is **purely additive** — no executor behaviour
+changed.  `Dispatch` still returns `NOT_IMPLEMENTED`,
+`supported_ops_bitset()` stays at `0`, and
+`install_specialised_from_emitted` still errors.  Phase 5b wires
+all of that in one coherent change.
 
 ## Phase 4 additions
 
