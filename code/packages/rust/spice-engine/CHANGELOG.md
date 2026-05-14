@@ -12,3 +12,5 @@
 - Add AC small-signal frequency sweeps for linear RC/RL circuits.
 - Add backward-Euler transient analysis for linear RC circuits.
 - Add ideal-short DC and backward-Euler transient support for inductors.
+- Add transient source waveforms for independent voltage and current sources:
+  PWL, SIN, PULSE, and EXP.

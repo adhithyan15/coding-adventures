@@ -1,6 +1,6 @@
 use spice_engine::{
-    dc_op, dc_sweep, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, Vccs,
-    VoltageSource,
+    dc_op, dc_sweep, Circuit, CurrentSource, Element, Inductor, Resistor, SinWaveform, SpiceError,
+    Vccs, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -220,4 +220,21 @@ fn dc_rejects_non_finite_vccs_transconductance() {
         dc_op(&circuit),
         Err(SpiceError::InvalidElement { name, .. }) if name == "Gbad"
     ));
+}
+
+#[test]
+fn dc_op_uses_static_source_value_when_waveform_is_present() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "n1",
+        "0",
+        3.0,
+        Waveform::Sin(SinWaveform::new(0.0, 10.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "n1", "0", 1_000.0)));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("n1").unwrap(), 3.0);
 }

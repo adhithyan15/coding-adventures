@@ -32,6 +32,307 @@ impl Default for Circuit {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub enum Waveform {
+    Pwl(PwlWaveform),
+    Sin(SinWaveform),
+    Pulse(PulseWaveform),
+    Exp(ExpWaveform),
+}
+
+impl Waveform {
+    pub fn value_at(&self, time_seconds: f64) -> f64 {
+        match self {
+            Self::Pwl(waveform) => waveform.value_at(time_seconds),
+            Self::Sin(waveform) => waveform.value_at(time_seconds),
+            Self::Pulse(waveform) => waveform.value_at(time_seconds),
+            Self::Exp(waveform) => waveform.value_at(time_seconds),
+        }
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        match self {
+            Self::Pwl(waveform) => waveform.validate(),
+            Self::Sin(waveform) => waveform.validate(),
+            Self::Pulse(waveform) => waveform.validate(),
+            Self::Exp(waveform) => waveform.validate(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PwlWaveform {
+    pub points: Vec<(f64, f64)>,
+}
+
+impl PwlWaveform {
+    pub fn new(points: impl Into<Vec<(f64, f64)>>) -> Self {
+        Self {
+            points: points.into(),
+        }
+    }
+
+    pub fn value_at(&self, time_seconds: f64) -> f64 {
+        if self.points.is_empty() {
+            return f64::NAN;
+        }
+        if time_seconds <= self.points[0].0 {
+            return self.points[0].1;
+        }
+        if time_seconds >= self.points[self.points.len() - 1].0 {
+            return self.points[self.points.len() - 1].1;
+        }
+        for window in self.points.windows(2) {
+            let (left_time, left_value) = window[0];
+            let (right_time, right_value) = window[1];
+            if time_seconds <= right_time {
+                let phase = (time_seconds - left_time) / (right_time - left_time);
+                return left_value + (right_value - left_value) * phase;
+            }
+        }
+        self.points[self.points.len() - 1].1
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        if self.points.len() < 2 {
+            return Err("PWL waveform requires at least two points".to_string());
+        }
+        let mut previous_time = f64::NEG_INFINITY;
+        for (time, value) in &self.points {
+            if !time.is_finite() || !value.is_finite() {
+                return Err("PWL waveform times and values must be finite".to_string());
+            }
+            if *time <= previous_time {
+                return Err("PWL waveform times must be strictly increasing".to_string());
+            }
+            previous_time = *time;
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct SinWaveform {
+    pub offset: f64,
+    pub amplitude: f64,
+    pub frequency_hz: f64,
+    pub delay_seconds: f64,
+    pub damping: f64,
+}
+
+impl SinWaveform {
+    pub fn new(offset: f64, amplitude: f64, frequency_hz: f64) -> Self {
+        Self {
+            offset,
+            amplitude,
+            frequency_hz,
+            delay_seconds: 0.0,
+            damping: 0.0,
+        }
+    }
+
+    pub fn with_delay_damping(
+        offset: f64,
+        amplitude: f64,
+        frequency_hz: f64,
+        delay_seconds: f64,
+        damping: f64,
+    ) -> Self {
+        Self {
+            offset,
+            amplitude,
+            frequency_hz,
+            delay_seconds,
+            damping,
+        }
+    }
+
+    pub fn value_at(&self, time_seconds: f64) -> f64 {
+        if time_seconds < self.delay_seconds {
+            return self.offset;
+        }
+        let shifted_time = time_seconds - self.delay_seconds;
+        let envelope = if self.damping == 0.0 {
+            1.0
+        } else {
+            (-self.damping * shifted_time).exp()
+        };
+        self.offset + self.amplitude * (TWO_PI * self.frequency_hz * shifted_time).sin() * envelope
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        if !self.offset.is_finite()
+            || !self.amplitude.is_finite()
+            || !self.frequency_hz.is_finite()
+            || !self.delay_seconds.is_finite()
+            || !self.damping.is_finite()
+        {
+            return Err("SIN waveform parameters must be finite".to_string());
+        }
+        if self.frequency_hz < 0.0 {
+            return Err("SIN waveform frequency must be non-negative".to_string());
+        }
+        if self.delay_seconds < 0.0 {
+            return Err("SIN waveform delay must be non-negative".to_string());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct PulseWaveform {
+    pub initial_value: f64,
+    pub pulsed_value: f64,
+    pub delay_seconds: f64,
+    pub rise_time_seconds: f64,
+    pub fall_time_seconds: f64,
+    pub pulse_width_seconds: f64,
+    pub period_seconds: f64,
+}
+
+impl PulseWaveform {
+    pub fn new(
+        initial_value: f64,
+        pulsed_value: f64,
+        delay_seconds: f64,
+        rise_time_seconds: f64,
+        fall_time_seconds: f64,
+        pulse_width_seconds: f64,
+        period_seconds: f64,
+    ) -> Self {
+        Self {
+            initial_value,
+            pulsed_value,
+            delay_seconds,
+            rise_time_seconds,
+            fall_time_seconds,
+            pulse_width_seconds,
+            period_seconds,
+        }
+    }
+
+    pub fn value_at(&self, time_seconds: f64) -> f64 {
+        if time_seconds < self.delay_seconds {
+            return self.initial_value;
+        }
+        let elapsed = (time_seconds - self.delay_seconds) % self.period_seconds;
+        if self.rise_time_seconds > 0.0 && elapsed < self.rise_time_seconds {
+            let phase = elapsed / self.rise_time_seconds;
+            return self.initial_value + (self.pulsed_value - self.initial_value) * phase;
+        }
+        if elapsed < self.rise_time_seconds + self.pulse_width_seconds {
+            return self.pulsed_value;
+        }
+        let fall_start = self.rise_time_seconds + self.pulse_width_seconds;
+        if self.fall_time_seconds > 0.0 && elapsed < fall_start + self.fall_time_seconds {
+            let phase = (elapsed - fall_start) / self.fall_time_seconds;
+            return self.pulsed_value + (self.initial_value - self.pulsed_value) * phase;
+        }
+        self.initial_value
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        if !self.initial_value.is_finite()
+            || !self.pulsed_value.is_finite()
+            || !self.delay_seconds.is_finite()
+            || !self.rise_time_seconds.is_finite()
+            || !self.fall_time_seconds.is_finite()
+            || !self.pulse_width_seconds.is_finite()
+            || !self.period_seconds.is_finite()
+        {
+            return Err("PULSE waveform parameters must be finite".to_string());
+        }
+        if self.delay_seconds < 0.0
+            || self.rise_time_seconds < 0.0
+            || self.fall_time_seconds < 0.0
+            || self.pulse_width_seconds < 0.0
+            || self.period_seconds <= 0.0
+        {
+            return Err(
+                "PULSE waveform timing values must be non-negative and period positive".to_string(),
+            );
+        }
+        if self.rise_time_seconds + self.pulse_width_seconds + self.fall_time_seconds
+            > self.period_seconds
+        {
+            return Err("PULSE waveform high interval must fit within the period".to_string());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct ExpWaveform {
+    pub initial_value: f64,
+    pub pulsed_value: f64,
+    pub rise_delay_seconds: f64,
+    pub rise_time_constant_seconds: f64,
+    pub fall_delay_seconds: f64,
+    pub fall_time_constant_seconds: f64,
+}
+
+impl ExpWaveform {
+    pub fn new(
+        initial_value: f64,
+        pulsed_value: f64,
+        rise_delay_seconds: f64,
+        rise_time_constant_seconds: f64,
+        fall_delay_seconds: f64,
+        fall_time_constant_seconds: f64,
+    ) -> Self {
+        Self {
+            initial_value,
+            pulsed_value,
+            rise_delay_seconds,
+            rise_time_constant_seconds,
+            fall_delay_seconds,
+            fall_time_constant_seconds,
+        }
+    }
+
+    pub fn value_at(&self, time_seconds: f64) -> f64 {
+        if time_seconds <= self.rise_delay_seconds {
+            return self.initial_value;
+        }
+        let mut value = self.initial_value
+            + (self.pulsed_value - self.initial_value)
+                * (1.0
+                    - (-(time_seconds - self.rise_delay_seconds)
+                        / self.rise_time_constant_seconds)
+                        .exp());
+        if time_seconds >= self.fall_delay_seconds {
+            value += (self.initial_value - self.pulsed_value)
+                * (1.0
+                    - (-(time_seconds - self.fall_delay_seconds)
+                        / self.fall_time_constant_seconds)
+                        .exp());
+        }
+        value
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        if !self.initial_value.is_finite()
+            || !self.pulsed_value.is_finite()
+            || !self.rise_delay_seconds.is_finite()
+            || !self.rise_time_constant_seconds.is_finite()
+            || !self.fall_delay_seconds.is_finite()
+            || !self.fall_time_constant_seconds.is_finite()
+        {
+            return Err("EXP waveform parameters must be finite".to_string());
+        }
+        if self.rise_delay_seconds < 0.0
+            || self.fall_delay_seconds < 0.0
+            || self.rise_time_constant_seconds <= 0.0
+            || self.fall_time_constant_seconds <= 0.0
+        {
+            return Err(
+                "EXP waveform delays must be non-negative and time constants positive".to_string(),
+            );
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum Element {
     Resistor(Resistor),
     Capacitor(Capacitor),
@@ -143,6 +444,7 @@ pub struct VoltageSource {
     pub positive: String,
     pub negative: String,
     pub voltage: f64,
+    pub waveform: Option<Waveform>,
 }
 
 impl VoltageSource {
@@ -157,6 +459,23 @@ impl VoltageSource {
             positive: positive.into(),
             negative: negative.into(),
             voltage,
+            waveform: None,
+        }
+    }
+
+    pub fn with_waveform(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        voltage: f64,
+        waveform: Waveform,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            voltage,
+            waveform: Some(waveform),
         }
     }
 }
@@ -167,6 +486,7 @@ pub struct CurrentSource {
     pub positive: String,
     pub negative: String,
     pub current: f64,
+    pub waveform: Option<Waveform>,
 }
 
 impl CurrentSource {
@@ -181,6 +501,23 @@ impl CurrentSource {
             positive: positive.into(),
             negative: negative.into(),
             current,
+            waveform: None,
+        }
+    }
+
+    pub fn with_waveform(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        current: f64,
+        waveform: Waveform,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            current,
+            waveform: Some(waveform),
         }
     }
 }
@@ -432,7 +769,7 @@ impl fmt::Display for SpiceError {
 impl std::error::Error for SpiceError {}
 
 pub fn dc_op(circuit: &Circuit) -> Result<DcResult, SpiceError> {
-    let linear_solution = solve_linear_circuit(circuit, &[], &[])?;
+    let linear_solution = solve_linear_circuit(circuit, &[], &[], None)?;
 
     Ok(DcResult {
         node_voltages: linear_solution.node_voltages,
@@ -662,7 +999,8 @@ pub fn transient(
     let mut points = Vec::new();
     let mut time = time_step;
     while time <= stop_time + time_step * 1.0e-9 {
-        let linear_solution = solve_linear_circuit(circuit, &capacitor_states, &inductor_states)?;
+        let linear_solution =
+            solve_linear_circuit(circuit, &capacitor_states, &inductor_states, Some(time))?;
         update_capacitor_states(
             circuit,
             &linear_solution.node_voltages,
@@ -809,6 +1147,7 @@ fn solve_linear_circuit(
     circuit: &Circuit,
     capacitor_states: &[CapacitorState],
     inductor_states: &[InductorState],
+    source_time: Option<f64>,
 ) -> Result<LinearSolution, SpiceError> {
     let node_indices = collect_node_indices(circuit);
     let voltage_sources = collect_voltage_sources(circuit, inductor_states)?;
@@ -850,11 +1189,12 @@ fn solve_linear_circuit(
                 &node_indices,
                 &voltage_sources,
                 node_count,
+                source_time,
                 &mut matrix,
                 &mut rhs,
             )?,
             Element::CurrentSource(source) => {
-                stamp_current_source(source, &node_indices, &mut rhs)?
+                stamp_current_source(source, &node_indices, source_time, &mut rhs)?
             }
             Element::Vccs(source) => stamp_vccs(source, &node_indices, &mut matrix)?,
         }
@@ -1437,10 +1777,12 @@ fn stamp_voltage_source(
     node_indices: &HashMap<String, usize>,
     voltage_sources: &BTreeMap<String, usize>,
     node_count: usize,
+    source_time: Option<f64>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
 ) -> Result<(), SpiceError> {
-    if !source.voltage.is_finite() {
+    let voltage = source_voltage_at(source, source_time)?;
+    if !voltage.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: source.name.clone(),
             reason: "voltage must be finite".to_string(),
@@ -1452,7 +1794,7 @@ fn stamp_voltage_source(
     let negative = node_index(node_indices, &source.negative);
 
     stamp_branch_matrix(matrix, branch, positive, negative);
-    rhs[branch] += source.voltage;
+    rhs[branch] += voltage;
     Ok(())
 }
 
@@ -1475,9 +1817,11 @@ fn stamp_branch_matrix(
 fn stamp_current_source(
     source: &CurrentSource,
     node_indices: &HashMap<String, usize>,
+    source_time: Option<f64>,
     rhs: &mut [f64],
 ) -> Result<(), SpiceError> {
-    if !source.current.is_finite() {
+    let current = source_current_at(source, source_time)?;
+    if !current.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: source.name.clone(),
             reason: "current must be finite".to_string(),
@@ -1485,12 +1829,54 @@ fn stamp_current_source(
     }
 
     if let Some(i) = node_index(node_indices, &source.positive) {
-        rhs[i] -= source.current;
+        rhs[i] -= current;
     }
     if let Some(j) = node_index(node_indices, &source.negative) {
-        rhs[j] += source.current;
+        rhs[j] += current;
     }
     Ok(())
+}
+
+fn source_voltage_at(source: &VoltageSource, source_time: Option<f64>) -> Result<f64, SpiceError> {
+    if let (Some(time), Some(waveform)) = (source_time, &source.waveform) {
+        waveform
+            .validate()
+            .map_err(|reason| SpiceError::InvalidElement {
+                name: source.name.clone(),
+                reason,
+            })?;
+        let value = waveform.value_at(time);
+        if !value.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: source.name.clone(),
+                reason: "waveform produced a non-finite voltage".to_string(),
+            });
+        }
+        Ok(value)
+    } else {
+        Ok(source.voltage)
+    }
+}
+
+fn source_current_at(source: &CurrentSource, source_time: Option<f64>) -> Result<f64, SpiceError> {
+    if let (Some(time), Some(waveform)) = (source_time, &source.waveform) {
+        waveform
+            .validate()
+            .map_err(|reason| SpiceError::InvalidElement {
+                name: source.name.clone(),
+                reason,
+            })?;
+        let value = waveform.value_at(time);
+        if !value.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: source.name.clone(),
+                reason: "waveform produced a non-finite current".to_string(),
+            });
+        }
+        Ok(value)
+    } else {
+        Ok(source.current)
+    }
 }
 
 fn stamp_vccs(
