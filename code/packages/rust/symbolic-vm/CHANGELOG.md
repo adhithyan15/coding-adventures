@@ -1,6 +1,19 @@
 # Changelog — symbolic-vm (Rust)
 
-## Unreleased
+## [0.2.0] — 2026-05-14
+
+### Added
+
+- Added EllipticE (second kind) integration recognition:
+  - `∫₀^(π/2) √(1-k²sin²θ) dθ` → `EllipticE(k)` (complete)
+  - `∫ √(1-k²sin²θ) dθ` → `EllipticE(θ, k)` (incomplete)
+- Added EllipticPi (third kind) complete integration recognition:
+  - `∫₀^(π/2) 1/((1+n·sin²θ)·√(1-k²sin²θ)) dθ` → `EllipticPi(n, k)`
+- New helper functions: `elliptic_second_kind_radicand`, `complete_elliptic_second_kind`,
+  `incomplete_elliptic_second_kind`, `extract_characteristic_n`,
+  `elliptic_third_kind_params`, `complete_elliptic_third_kind`
+
+## [0.1.1] — 2026-04-28
 
 ## [0.2.0] — 2026-05-14
 
