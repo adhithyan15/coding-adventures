@@ -17,6 +17,7 @@ use capability_cage::{
     secure_file, Action as CageAction, Capability as CageCapability, CapabilityFlavor,
     CapabilityTrust, Category as CageCategory, Manifest,
 };
+use capability_os_sandbox::{plan_all_supported, OsFamily, SandboxPlanSummary};
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
     ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind,
@@ -450,6 +451,7 @@ pub struct UmbrellaAgentRun {
     pub output_path: PathBuf,
     pub output_text: String,
     pub weather_fetch: WeatherFetchSummary,
+    pub sandbox_plan: UmbrellaSandboxPlanSummary,
     pub supervisor: UmbrellaSupervisorSummary,
     pub tool_journal_health: ToolExecutionJournalHealthSummary,
     pub context_inventory: ContextStoreInventorySummary,
@@ -463,10 +465,77 @@ pub struct UmbrellaAgentRun {
     pub actor_channel_messages: usize,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UmbrellaSandboxPlanSummary {
+    pub package: String,
+    pub plan_count: usize,
+    pub current_os: OsFamily,
+    pub current_os_rules: usize,
+    pub total_rules: usize,
+    pub direct_rules: usize,
+    pub brokered_rules: usize,
+    pub launch_time_rules: usize,
+    pub advisory_rules: usize,
+    pub native_rules: usize,
+    pub host_broker_rules: usize,
+    pub os_summaries: Vec<SandboxPlanSummary>,
+}
+
+impl UmbrellaSandboxPlanSummary {
+    fn from_summaries(os_summaries: Vec<SandboxPlanSummary>, current_os: OsFamily) -> Self {
+        let package = os_summaries
+            .first()
+            .map(|summary| summary.package.clone())
+            .unwrap_or_default();
+        let current_os_rules = os_summaries
+            .iter()
+            .find(|summary| summary.os == current_os)
+            .map(|summary| summary.total_rules)
+            .unwrap_or_default();
+        Self {
+            package,
+            plan_count: os_summaries.len(),
+            current_os,
+            current_os_rules,
+            total_rules: os_summaries.iter().map(|summary| summary.total_rules).sum(),
+            direct_rules: os_summaries
+                .iter()
+                .map(|summary| summary.direct_rules)
+                .sum(),
+            brokered_rules: os_summaries
+                .iter()
+                .map(|summary| summary.brokered_rules)
+                .sum(),
+            launch_time_rules: os_summaries
+                .iter()
+                .map(|summary| summary.launch_time_rules)
+                .sum(),
+            advisory_rules: os_summaries
+                .iter()
+                .map(|summary| summary.advisory_rules)
+                .sum(),
+            native_rules: os_summaries
+                .iter()
+                .map(|summary| summary.native_rules)
+                .sum(),
+            host_broker_rules: os_summaries
+                .iter()
+                .map(|summary| summary.host_broker_rules)
+                .sum(),
+            os_summaries,
+        }
+    }
+
+    pub fn summary_for_os(&self, os: OsFamily) -> Option<&SandboxPlanSummary> {
+        self.os_summaries.iter().find(|summary| summary.os == os)
+    }
+}
+
 pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<UmbrellaAgentRun> {
     let pipeline = Arc::new(UmbrellaPipeline::new(config.clone())?);
     pipeline.bootstrap_substrate()?;
 
+    let sandbox_plan = plan_agent_sandbox(&config)?;
     let (job_plan_backend, job_plan_file_count) = plan_agent_job(&config)?;
     let job_executor_status = run_executor_tick(&config)?;
 
@@ -518,6 +587,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         output_path: config.output_path,
         output_text,
         weather_fetch,
+        sandbox_plan,
         supervisor: supervisor_summary(&system, &actor_stats, supervisor_events),
         tool_journal_health,
         context_inventory,
@@ -1510,6 +1580,67 @@ fn recommendation_schema() -> JsonSchema {
         ],
         allow_unknown_fields: false,
     }
+}
+
+fn plan_agent_sandbox(config: &UmbrellaAgentConfig) -> UmbrellaResult<UmbrellaSandboxPlanSummary> {
+    let manifest_json = umbrella_agent_required_capabilities_json(&config.output_path);
+    let plans = plan_all_supported(&manifest_json).map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to lower Weather Agent sandbox plan: {error}"
+        ))
+    })?;
+    let summaries = plans.into_iter().map(|plan| plan.summary()).collect();
+    Ok(UmbrellaSandboxPlanSummary::from_summaries(
+        summaries,
+        OsFamily::current(),
+    ))
+}
+
+fn umbrella_agent_required_capabilities_json(output_path: &Path) -> String {
+    let output_path = json_escape(&output_path.to_string_lossy());
+    format!(
+        r#"{{
+  "version": 1,
+  "package": "rust/weather-agent-e2e",
+  "capabilities": [
+    {{
+      "category": "net",
+      "action": "dns",
+      "target": "api.weather.gov",
+      "justification": "Resolve Weather.gov for the live umbrella-today weather fetch."
+    }},
+    {{
+      "category": "net",
+      "action": "connect",
+      "target": "api.weather.gov:443",
+      "justification": "Fetch Weather.gov points and forecast resources over TLS."
+    }},
+    {{
+      "category": "fs",
+      "action": "write",
+      "target": "{output_path}",
+      "justification": "Write the umbrella-today decision text file."
+    }}
+  ],
+  "justification": "Weather Agent E2E fetches Seattle weather and writes the umbrella decision."
+}}"#
+    )
+}
+
+fn json_escape(input: &str) -> String {
+    let mut escaped = String::new();
+    for ch in input.chars() {
+        match ch {
+            '"' => escaped.push_str("\\\""),
+            '\\' => escaped.push_str("\\\\"),
+            '\n' => escaped.push_str("\\n"),
+            '\r' => escaped.push_str("\\r"),
+            '\t' => escaped.push_str("\\t"),
+            ch if ch.is_control() => escaped.push_str(&format!("\\u{:04x}", ch as u32)),
+            ch => escaped.push(ch),
+        }
+    }
+    escaped
 }
 
 fn plan_agent_job(config: &UmbrellaAgentConfig) -> UmbrellaResult<(BackendKind, usize)> {
