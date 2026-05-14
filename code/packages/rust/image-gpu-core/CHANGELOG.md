@@ -1,5 +1,63 @@
 # Changelog — image-gpu-core
 
+## 0.15.0 — 2026-05-13
+
+### Added — MX06 Phase 6 (CUDA backend wired in)
+
+Wires `matrix-cuda` (MX06 Phase 5b) into the image-gpu-core
+pipeline so the planner can route work to NVIDIA GPUs on Linux /
+Windows / WSL2.  Mirrors the existing matrix-metal integration:
+
+- New `cuda-backend` Cargo feature, default-on alongside
+  `metal-backend`.  When enabled, image-gpu-core depends on
+  `matrix-cuda` and registers the executor.
+- New `CudaBackend` singleton (`Arc<CudaExecutor>` + `LocalTransport`
+  + `BackendProfile`) — parallel to `MetalBackend`.  Lazily
+  initialises on first use via `OnceLock`; on hosts without a CUDA
+  driver `CudaExecutor::new()` returns `Err` and the singleton
+  permanently holds `None`.
+- Dispatch flow gains a Step 2 "CPU + CUDA" branch reached when the
+  metal singleton is absent (typical on Linux + NVIDIA).  Same
+  single-executor / mixed-placement → CPU-only-fallback policy as
+  the metal path.
+- Auto-installer gains a `2 => try_install_cuda(specialised)` arm.
+  `try_install_cuda` parallels `try_install_metal`: calls
+  `matrix_cuda::emit_specialised_kernel`, hands the result to
+  `CudaExecutor::install_specialised_from_emitted` (NVRTC compile +
+  closure capture), records the handle in `installed_handles` and
+  the metadata in `installed_kernel_metadata`.
+- `scan_and_deoptimise` gains a `cuda.executor.evict_specialised`
+  call alongside the existing CPU + metal evicts.  Completes the
+  MX05 Phase 5 deopt loop on the third backend.
+
+### Why this matters
+
+NVIDIA users (most ML practitioners, gamers, scientific computing
+hobbyists) get GPU acceleration *automatically* through the same
+narrow-waist abstraction Apple users have had since matrix-metal
+landed.  No user-facing config; the planner's cost model picks per
+graph.  When the user writes `gpu_brightness(...)`, it runs on:
+
+- macOS: `matrix-metal` when available, else CPU.
+- Linux/Windows + NVIDIA: `matrix-cuda` when available, else CPU.
+- Everywhere else: CPU.
+
+### Tests
+
+All 36 existing image-gpu-core tests continue to pass on macOS
+(where `cuda_backend()` returns `None` and the new Step 2 branch
+is never taken).  Real CUDA exercise lands when a GPU CI runner
+arrives (Phase 7).
+
+### What this PR does NOT change
+
+- No GPU CI runner — Phase 7.
+- No cost-model calibration for CUDA — Phase 7.  The planner's
+  default thresholds work but aren't tuned to specific cards yet.
+- Three-way mixed placement (CPU + Metal + CUDA on the same host)
+  still falls back to CPU-only.  In practice no host has both
+  Apple Silicon and an NVIDIA GPU, so this isn't a real limitation.
+
 ## 0.14.0 — 2026-05-14
 
 ### Added — MX05 Phase 5 (deoptimisation when observed assumptions fail)
