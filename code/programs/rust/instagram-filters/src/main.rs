@@ -25,7 +25,7 @@
 //! invoking user.  The program treats `--input` and `--output` as
 //! literal paths — same trust model as `cp`.
 
-use instagram_filters::{apply_filter, Filter, FilterParamError};
+use instagram_filters::{apply_filter, run_bench, BenchOpts, Filter, FilterParamError};
 use std::collections::HashMap;
 use std::process::ExitCode;
 
@@ -34,6 +34,14 @@ fn main() -> ExitCode {
     if argv.iter().any(|a| a == "-h" || a == "--help") {
         print_help();
         return ExitCode::SUCCESS;
+    }
+
+    // Subcommand dispatch: if the first positional is a known
+    // subcommand name, route to its handler.  Otherwise fall through
+    // to the original `--input/--output/--filter` flag style so the
+    // existing CLI surface is unchanged.
+    if argv.len() >= 2 && argv[1] == "bench-specialisation" {
+        return run_bench_subcommand(&argv[2..]);
     }
 
     let parsed = match parse_args(&argv[1..]) {
@@ -114,6 +122,159 @@ fn main() -> ExitCode {
         parsed.output
     );
     ExitCode::SUCCESS
+}
+
+/// Subcommand handler for `bench-specialisation`.
+///
+/// Argv layout (after the subcommand token has been stripped):
+///   <input.ppm> <output_dir> [--iterations N] [--batch N]
+///                            [--brightness N] [--contrast S]
+///
+/// We accept the two required positionals first to mirror typical Unix
+/// tools (`cp src dst`), then optional flags for tuning.  All flags
+/// have defaults from [`BenchOpts::with_paths`].
+fn run_bench_subcommand(args: &[String]) -> ExitCode {
+    let opts = match parse_bench_args(args) {
+        Ok(o) => o,
+        Err(e) => {
+            eprintln!("instagram-filters bench-specialisation: {}", e);
+            eprintln!("(run with --help for usage)");
+            return ExitCode::from(2);
+        }
+    };
+
+    eprintln!(
+        "instagram-filters: running bench: {} iterations, batch {} on {}",
+        opts.iterations, opts.batch, opts.input
+    );
+
+    match run_bench(&opts) {
+        Ok(summary) => {
+            eprintln!(
+                "instagram-filters: bench done — {} snapshots, image {}×{}, wrote {} bytes",
+                summary.snapshots.len(),
+                summary.image_width,
+                summary.image_height,
+                summary.final_result_bytes
+            );
+            if let Some(last) = summary.snapshots.last() {
+                eprintln!(
+                    "instagram-filters: final counters — cache={} installs={} dispatches={} deopts={}",
+                    last.spec_cache_len,
+                    last.specialised_install_count,
+                    last.specialised_dispatch_count,
+                    last.deoptimisation_count
+                );
+            }
+            ExitCode::SUCCESS
+        }
+        Err(e) => {
+            eprintln!("instagram-filters bench-specialisation: {}", e);
+            ExitCode::from(6)
+        }
+    }
+}
+
+#[derive(Debug)]
+enum BenchArgError {
+    MissingInput,
+    MissingOutputDir,
+    MissingValue(&'static str),
+    UnknownFlag(String),
+    InvalidNumber { flag: &'static str, value: String },
+}
+
+impl core::fmt::Display for BenchArgError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            BenchArgError::MissingInput => write!(f, "missing <input.ppm> positional"),
+            BenchArgError::MissingOutputDir => write!(f, "missing <output_dir> positional"),
+            BenchArgError::MissingValue(flag) => write!(f, "flag --{} needs a value", flag),
+            BenchArgError::UnknownFlag(s) => write!(f, "unknown argument '{}'", s),
+            BenchArgError::InvalidNumber { flag, value } => {
+                write!(f, "--{} expects a number, got '{}'", flag, value)
+            }
+        }
+    }
+}
+
+fn parse_bench_args(args: &[String]) -> Result<BenchOpts, BenchArgError> {
+    // Collect positionals (anything not starting with `--`) and flags.
+    let mut positional: Vec<String> = Vec::new();
+    let mut iterations: Option<usize> = None;
+    let mut batch: Option<usize> = None;
+    let mut brightness: Option<i16> = None;
+    let mut contrast: Option<f32> = None;
+
+    let mut i = 0;
+    while i < args.len() {
+        let a = &args[i];
+        if let Some(stripped) = a.strip_prefix("--") {
+            let v = args
+                .get(i + 1)
+                .ok_or(BenchArgError::MissingValue(match stripped {
+                    "iterations" => "iterations",
+                    "batch" => "batch",
+                    "brightness" => "brightness",
+                    "contrast" => "contrast",
+                    _ => "value",
+                }))?
+                .clone();
+            match stripped {
+                "iterations" => {
+                    iterations = Some(v.parse().map_err(|_| BenchArgError::InvalidNumber {
+                        flag: "iterations",
+                        value: v.clone(),
+                    })?);
+                }
+                "batch" => {
+                    batch = Some(v.parse().map_err(|_| BenchArgError::InvalidNumber {
+                        flag: "batch",
+                        value: v.clone(),
+                    })?);
+                }
+                "brightness" => {
+                    brightness = Some(v.parse().map_err(|_| BenchArgError::InvalidNumber {
+                        flag: "brightness",
+                        value: v.clone(),
+                    })?);
+                }
+                "contrast" => {
+                    contrast = Some(v.parse().map_err(|_| BenchArgError::InvalidNumber {
+                        flag: "contrast",
+                        value: v.clone(),
+                    })?);
+                }
+                other => return Err(BenchArgError::UnknownFlag(format!("--{}", other))),
+            }
+            i += 2;
+        } else {
+            positional.push(a.clone());
+            i += 1;
+        }
+    }
+
+    let mut pos = positional.into_iter();
+    let input = pos.next().ok_or(BenchArgError::MissingInput)?;
+    let output_dir = pos.next().ok_or(BenchArgError::MissingOutputDir)?;
+    if let Some(extra) = pos.next() {
+        return Err(BenchArgError::UnknownFlag(extra));
+    }
+
+    let mut opts = BenchOpts::with_paths(input, output_dir);
+    if let Some(n) = iterations {
+        opts.iterations = n;
+    }
+    if let Some(n) = batch {
+        opts.batch = n;
+    }
+    if let Some(d) = brightness {
+        opts.brightness_delta = d;
+    }
+    if let Some(s) = contrast {
+        opts.contrast_scale = s;
+    }
+    Ok(opts)
 }
 
 #[derive(Debug)]
@@ -223,7 +384,19 @@ fn print_help() {
          \n\
          The pipeline:\n\
          \x20\x20PPM bytes → PixelContainer → image-gpu-core (MatrixIR builder)\n\
-         \x20\x20         → matrix-runtime planner → matrix-cpu → PixelContainer → PPM bytes\n"
+         \x20\x20         → matrix-runtime planner → matrix-cpu → PixelContainer → PPM bytes\n\
+         \n\
+         SUBCOMMANDS:\n\
+         \x20\x20bench-specialisation <input.ppm> <output_dir>\n\
+         \x20\x20    [--iterations N] [--batch N] [--brightness N] [--contrast S]\n\
+         \n\
+         \x20\x20    Runs a brightness → contrast → sepia chain repeatedly,\n\
+         \x20\x20    snapshotting the MX05 specialisation pipeline counters\n\
+         \x20\x20    (spec_cache_len, specialised_install_count,\n\
+         \x20\x20    specialised_dispatch_count, deoptimisation_count) every\n\
+         \x20\x20    --batch iterations.  Writes <output_dir>/result.ppm and\n\
+         \x20\x20    <output_dir>/summary.json.  Defaults: 3000 iterations,\n\
+         \x20\x20    batch of 1000.\n"
     );
 }
 
@@ -311,5 +484,76 @@ mod tests {
         ]);
         let p = parse_args(&argv).unwrap();
         assert_eq!(p.filter, Filter::Posterize { levels: 8 });
+    }
+
+    #[test]
+    fn bench_args_two_positionals_only() {
+        let opts = parse_bench_args(&s(&["in.ppm", "out_dir"])).unwrap();
+        assert_eq!(opts.input, "in.ppm");
+        assert_eq!(opts.output_dir, "out_dir");
+        assert_eq!(opts.iterations, 3000);
+        assert_eq!(opts.batch, 1000);
+    }
+
+    #[test]
+    fn bench_args_with_overrides() {
+        let opts = parse_bench_args(&s(&[
+            "in.ppm",
+            "out",
+            "--iterations",
+            "10",
+            "--batch",
+            "5",
+            "--brightness",
+            "12",
+            "--contrast",
+            "1.25",
+        ]))
+        .unwrap();
+        assert_eq!(opts.iterations, 10);
+        assert_eq!(opts.batch, 5);
+        assert_eq!(opts.brightness_delta, 12);
+        assert!((opts.contrast_scale - 1.25).abs() < 1e-6);
+    }
+
+    #[test]
+    fn bench_args_flags_before_positionals_ok() {
+        // Order independence: flags can come first.
+        let opts =
+            parse_bench_args(&s(&["--iterations", "5", "in.ppm", "--batch", "2", "out"])).unwrap();
+        assert_eq!(opts.input, "in.ppm");
+        assert_eq!(opts.output_dir, "out");
+        assert_eq!(opts.iterations, 5);
+        assert_eq!(opts.batch, 2);
+    }
+
+    #[test]
+    fn bench_args_missing_positional() {
+        assert!(matches!(
+            parse_bench_args(&s(&["only_input"])).unwrap_err(),
+            BenchArgError::MissingOutputDir
+        ));
+        assert!(matches!(
+            parse_bench_args(&s(&[])).unwrap_err(),
+            BenchArgError::MissingInput
+        ));
+    }
+
+    #[test]
+    fn bench_args_unknown_flag_errors() {
+        let err = parse_bench_args(&s(&["in", "out", "--bogus", "1"])).unwrap_err();
+        assert!(matches!(err, BenchArgError::UnknownFlag(_)));
+    }
+
+    #[test]
+    fn bench_args_invalid_number_errors() {
+        let err = parse_bench_args(&s(&["in", "out", "--iterations", "lots"])).unwrap_err();
+        assert!(matches!(err, BenchArgError::InvalidNumber { .. }));
+    }
+
+    #[test]
+    fn bench_args_extra_positional_errors() {
+        let err = parse_bench_args(&s(&["in", "out", "extra"])).unwrap_err();
+        assert!(matches!(err, BenchArgError::UnknownFlag(_)));
     }
 }

@@ -78,6 +78,40 @@ $ ./target/release/instagram-filters --input photo.ppm --output gr.ppm   --filte
 $ ./target/release/instagram-filters --input photo.ppm --output i.ppm    --filter invert
 ```
 
+### `bench-specialisation` — MX05 pipeline demo
+
+The `bench-specialisation` subcommand drives a constant-parameter
+filter chain (`brightness → contrast → sepia`) over and over so the
+MX05 specialisation pipeline (sampler → policy → router → cache →
+emitter → install → dispatch → deopt) has a chance to fire on a real
+workload.  After every `--batch` iterations it snapshots the
+process-wide counters exposed by `image-gpu-core`:
+
+| Counter | What it tracks |
+| --- | --- |
+| `spec_cache_len` | Number of `SpecialisedKernel`s the emitter has produced and cached. |
+| `specialised_install_count` | Number of those kernels that the auto-installer was able to register as a fast-path handle on the executor. |
+| `specialised_dispatch_count` | Number of dispatches that went through an installed handle instead of generic. |
+| `deoptimisation_count` | Number of installed handles evicted because an observed-constant assumption later failed. |
+
+```sh
+$ ./target/release/instagram-filters bench-specialisation \
+      photo.ppm out_dir \
+      --iterations 3000 --batch 1000
+```
+
+This writes two files into `out_dir/`:
+
+- `result.ppm` — the final filtered image after all iterations.
+- `summary.json` — a fixed-shape JSON document with one snapshot per
+  batch.
+
+The intent is to **surface what the specialisation tier did** on a
+real image-processing workload, not to assert any particular speedup.
+Depending on which ops have install paths wired up, `spec_cache_len`
+may grow even when `specialised_install_count` stays at zero — that
+gap itself is useful signal for the runtime team.
+
 ## File format
 
 Input and output are **PPM (P6)** files — the simple binary format

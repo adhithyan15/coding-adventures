@@ -30,6 +30,9 @@ use image_gpu_core::{
 };
 use pixel_container::PixelContainer;
 
+pub mod bench;
+pub use bench::{run_bench, BenchError, BenchOpts, BenchSummary, Snapshot};
+
 /// The set of filters this program supports.  Each variant maps to a
 /// single image-gpu-core function which in turn builds a MatrixIR
 /// graph and runs it through the matrix execution layer.
