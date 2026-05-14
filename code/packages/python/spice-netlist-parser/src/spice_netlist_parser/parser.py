@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 
 from spice_engine import (
     VCCS,
+    VCVS,
     Capacitor,
     Circuit,
     CurrentSource,
@@ -215,6 +216,9 @@ def _parse_element(fields: list[str]) -> object:
     if prefix == "G":
         _require_fields(fields, 6, "VCCS")
         return VCCS(name, fields[1], fields[2], fields[3], fields[4], parse_value(fields[5]))
+    if prefix == "E":
+        _require_fields(fields, 6, "VCVS")
+        return VCVS(name, fields[1], fields[2], fields[3], fields[4], parse_value(fields[5]))
     raise NetlistParseError(f"unsupported element {name!r}")
 
 
@@ -289,8 +293,8 @@ def _map_subckt_fields(
         _require_min_fields(fields, 3, "subcircuit element")
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
-    elif prefix == "G":
-        _require_min_fields(fields, 5, "subcircuit VCCS")
+    elif prefix in {"E", "G"}:
+        _require_min_fields(fields, 5, "subcircuit controlled source")
         for index in range(1, 5):
             mapped[index] = _map_subckt_node(fields[index], instance_name, node_map)
     elif prefix == "X":

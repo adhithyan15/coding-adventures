@@ -1,7 +1,16 @@
 from math import isclose
 
 import pytest
-from spice_engine import VCCS, Capacitor, CurrentSource, Inductor, Resistor, VoltageSource, dc_op
+from spice_engine import (
+    VCCS,
+    VCVS,
+    Capacitor,
+    CurrentSource,
+    Inductor,
+    Resistor,
+    VoltageSource,
+    dc_op,
+)
 
 from spice_netlist_parser import (
     AcAnalysis,
@@ -67,6 +76,25 @@ G1 out 0 in 0 2m
     ]
 
 
+def test_parse_vcvs_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+Vctrl in 0 DC 1.5
+Eamp out 0 in 0 4
+Rload out 0 1k
+.op
+"""
+    )
+
+    assert isinstance(parsed.circuit.elements[1], VCVS)
+    assert parsed.circuit.elements[1].ctrl_plus == "in"
+    assert parsed.circuit.elements[1].gain == 4.0
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert isclose(result.node_voltages["out"], 6.0, abs_tol=1e-9)
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
@@ -110,6 +138,34 @@ Xdiv vin mid 0 divider
     result = dc_op(parsed.circuit)
     assert result.converged
     assert isclose(result.node_voltages["mid"], 5.0, abs_tol=1e-9)
+
+
+def test_expands_subcircuit_vcvs_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt gain inp outp
+Ebuf outp 0 inp 0 2
+.ends gain
+V1 in 0 DC 1.25
+Xgain in out gain
+Rload out 0 1k
+.op
+"""
+    )
+
+    assert [element.name for element in parsed.circuit.elements] == [
+        "V1",
+        "Xgain.Ebuf",
+        "Rload",
+    ]
+    vcvs = parsed.circuit.elements[1]
+    assert isinstance(vcvs, VCVS)
+    assert vcvs.n_plus == "out"
+    assert vcvs.ctrl_plus == "in"
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert isclose(result.node_voltages["out"], 2.5, abs_tol=1e-9)
 
 
 def test_subcircuit_internal_nodes_are_instance_scoped() -> None:
