@@ -15,6 +15,9 @@
 - Added Rust MACSYMA parity for bivariate cubic-identity factoring, so
   `factor(x^3 - y^3)` and `factor(x^3 + y^3)` return their linear/quadratic
   products through the shared symbolic VM handler.
+- Added Rust MACSYMA parity for four-term bilinear grouping, so
+  `factor(x*y + x*z + y + z)` returns `(x + 1) * (y + z)` through the shared
+  symbolic VM handler.
 - Added `?` / `? topic` help-query handling for Rust MACSYMA sessions.
 - Wired `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a
   Rust MACSYMA session assumption context so declared properties feed property
