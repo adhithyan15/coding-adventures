@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add voltage-controlled current source support across DC, AC, transfer
+  function, and sensitivity analyses.
 - Add DC sensitivity analysis for resistor and independent source parameters.
 - Add DC small-signal transfer-function analysis with input/output impedance.
 - Add AC small-signal frequency sweeps for linear RC/RL circuits.
