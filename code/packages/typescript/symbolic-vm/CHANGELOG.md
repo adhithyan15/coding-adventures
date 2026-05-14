@@ -7,6 +7,9 @@
 - Added a canonical symbolic `Factor` handler backed by `cas-factor`, including
   a small common-symbolic-factor extraction pass for multivariate expressions
   like `x^2*y - y`.
+- Extended the common multivariate factoring foothold to extract shared integer
+  content as well as symbolic powers, so `2*x*y + 2*x*z` factors to
+  `2*x*(y+z)`.
 - Added a bivariate perfect-square factoring foothold so `Factor` recognises
   expressions like `x^2 + 2*x*y + y^2` as `(x+y)^2`.
 - Added a bivariate difference-of-squares factoring foothold so `Factor`

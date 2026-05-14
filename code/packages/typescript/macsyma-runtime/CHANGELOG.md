@@ -5,6 +5,8 @@
 - Delegate `factor` to the canonical TypeScript symbolic VM handler so common
   multivariate terms such as `factor(x^2*y - y)` reduce through the shared CAS
   substrate.
+- Add TypeScript MACSYMA parity for shared integer content in multivariate
+  common-factor expressions, so `factor(2*x*y + 2*x*z)` returns `2*x*(y+z)`.
 - Add TypeScript MACSYMA parity for the bivariate perfect-square factoring
   foothold, so `factor(x^2 + 2*x*y + y^2)` returns `(x+y)^2`.
 - Add TypeScript MACSYMA parity for the bivariate difference-of-squares
