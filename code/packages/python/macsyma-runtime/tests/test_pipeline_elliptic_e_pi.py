@@ -79,29 +79,25 @@ def _is_apply_with_head(result: object, head: IRSymbol) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def test_complete_elliptic_e_numeric_k_folds_to_unevaluated() -> None:
-    """integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta, 0, %pi/2) stays unevaluated.
+def test_complete_elliptic_e_numeric_k_evaluates() -> None:
+    """integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta, 0, %pi/2) → EllipticE(1/2).
 
-    When the modulus is a numeric literal, the compiler folds ``(1/2)^2`` to
-    ``IRRational(1, 4)`` — a bare rational constant, not a ``Pow(k, 2)`` node.
-    The ``_modulus_from_squared_factor`` extractor requires the ``Pow``
-    structure to identify ``k``, so numeric-coefficient forms are not currently
-    recognised.  The integral returns unevaluated rather than raising.
-
-    This mirrors the same limitation for EllipticK: the test
-    ``test_regression_elliptic_k_still_works`` passes with symbolic ``k``;
-    the numeric form also falls through to unevaluated.
+    The compiler folds ``(1/2)^2`` to ``IRRational(1, 4)``.
+    ``_modulus_from_squared_factor`` now handles numeric literal ``k²`` by
+    computing ``k = sqrt(k²)`` — so IRRational(1,4) → k = IRRational(1,2).
+    The result is ``EllipticE(1/2)``.
     """
     result = _eval(
         "integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta, 0, %pi/2)"
     )
-    # Must not silently mis-classify as EllipticE
-    assert not _is_apply_with_head(result, _ELLIPTIC_E_HEAD), (
-        f"numeric (1/2)^2 folds to 1/4; should not be recognised as EllipticE"
+    assert _is_apply_with_head(result, _ELLIPTIC_E_HEAD), (
+        f"expected EllipticE(...), got {result!r}"
     )
-    # Must return unevaluated Integrate (consistent with EllipticK behaviour)
-    assert _is_apply_with_head(result, IRSymbol("Integrate")), (
-        f"expected unevaluated Integrate, got {result!r}"
+    assert isinstance(result, IRApply)
+    assert len(result.args) == 1, "complete EllipticE takes one arg (modulus)"
+    from symbolic_ir import IRRational
+    assert result.args[0] == IRRational(1, 2), (
+        f"expected modulus 1/2, got {result.args[0]!r}"
     )
 
 
@@ -153,21 +149,23 @@ def test_incomplete_elliptic_e_symbolic_k() -> None:
     ), f"expected EllipticE(theta, k), got {result!r}"
 
 
-def test_incomplete_elliptic_e_numeric_k_folds_to_unevaluated() -> None:
-    """integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta) stays unevaluated.
+def test_incomplete_elliptic_e_numeric_k_evaluates() -> None:
+    """integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta) → EllipticE(theta, 1/2).
 
-    Same limitation as the definite case above: the compiler folds ``(1/2)^2``
-    to ``IRRational(1, 4)`` and the ``Pow`` structure the extractor needs is
-    absent.  The integral returns unevaluated.
+    The compiler folds ``(1/2)^2`` to ``IRRational(1, 4)``.
+    ``_modulus_from_squared_factor`` now handles numeric literal ``k²``:
+    IRRational(1,4) → k = IRRational(1,2).
+    The incomplete integral result is ``EllipticE(theta, 1/2)``.
     """
     result = _eval("integrate(sqrt(1-(1/2)^2*sin(theta)^2), theta)")
-    # Must not be silently mis-classified as EllipticE
-    assert not _is_apply_with_head(result, _ELLIPTIC_E_HEAD), (
-        f"numeric (1/2)^2 folds to 1/4; should not be recognised as EllipticE"
+    assert _is_apply_with_head(result, _ELLIPTIC_E_HEAD), (
+        f"expected EllipticE(...), got {result!r}"
     )
-    # Must return unevaluated Integrate
-    assert _is_apply_with_head(result, IRSymbol("Integrate")), (
-        f"expected unevaluated Integrate, got {result!r}"
+    assert isinstance(result, IRApply)
+    assert len(result.args) == 2, "incomplete EllipticE takes two args (phi, modulus)"
+    from symbolic_ir import IRRational
+    assert result.args[1] == IRRational(1, 2), (
+        f"expected modulus 1/2, got {result.args[1]!r}"
     )
 
 
@@ -183,23 +181,26 @@ def test_incomplete_elliptic_e_result_has_two_args() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_complete_elliptic_pi_numeric_k_folds_to_unevaluated() -> None:
-    """integrate(1/((1+2*sin^2)*sqrt(1-(1/2)^2*sin^2)), theta, 0, %pi/2) → unevaluated.
+def test_complete_elliptic_pi_numeric_k_evaluates() -> None:
+    """integrate(1/((1+2*sin^2)*sqrt(1-(1/2)^2*sin^2)), theta, 0, %pi/2) → EllipticPi(2, 1/2).
 
-    The compiler folds ``(1/2)^2`` to ``IRRational(1, 4)``; the EllipticPi
-    recogniser shares the same ``_modulus_from_squared_factor`` extractor as
-    EllipticK/E, so it has the same numeric-coefficient limitation.
+    The compiler folds ``(1/2)^2`` to ``IRRational(1, 4)``.
+    ``_modulus_from_squared_factor`` now handles numeric literal ``k²``:
+    IRRational(1,4) → k = IRRational(1,2).
+    The result is ``EllipticPi(2, 1/2)``.
     """
     result = _eval(
         "integrate(1/((1+2*sin(theta)^2)*sqrt(1-(1/2)^2*sin(theta)^2)), theta, 0, %pi/2)"
     )
-    # Must not be silently mis-classified
-    assert not _is_apply_with_head(result, _ELLIPTIC_PI_HEAD), (
-        f"numeric (1/2)^2 folds to 1/4; should not be recognised as EllipticPi"
+    assert _is_apply_with_head(result, _ELLIPTIC_PI_HEAD), (
+        f"expected EllipticPi(...), got {result!r}"
     )
-    # Must return unevaluated Integrate
-    assert _is_apply_with_head(result, IRSymbol("Integrate")), (
-        f"expected unevaluated Integrate, got {result!r}"
+    assert isinstance(result, IRApply)
+    assert len(result.args) == 2, "EllipticPi takes two args (n, modulus)"
+    from symbolic_ir import IRRational, IRInteger
+    assert result.args[0] == IRInteger(2), f"expected n=2, got {result.args[0]!r}"
+    assert result.args[1] == IRRational(1, 2), (
+        f"expected modulus 1/2, got {result.args[1]!r}"
     )
 
 

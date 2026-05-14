@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.1.1 — 2026-05-14
+
+**Bug fixes: infinite recursion guard in `laplace_handler` and `exp(-t)` pattern recognition.**
+
+### `handlers.py` — infinite recursion guard
+
+`laplace_handler` passed every result from `laplace_transform` through `vm.eval()`.  When
+`laplace_transform` fell through to the unevaluated form `IRApply(LAPLACE, (f, t, s))`, the
+VM looked up the `Laplace` head, called `laplace_handler` again, which fell through again —
+causing a `RecursionError` for any unrecognised input (e.g. `laplace(exp(-t), t, s)`).
+
+Fixed by checking whether the result is still a `Laplace(…)` node before calling `vm.eval()`.
+If it is, the unevaluated form is returned directly.
+
+### `table.py` — `exp(-t)` and `exp(-(a·t))` pattern recognition
+
+`_match_exp` previously only recognised `Exp(t)` and `Exp(Mul(a, t))`.  The MACSYMA parser
+represents `-t` as `Neg(t)` (not `Mul(-1, t)`), so `exp(-t)` compiled to `Exp(Neg(t))`
+which fell through the table, triggering the recursion bug above.
+
+Extended `_match_exp` to also handle:
+- `Exp(Neg(t))` → `a = −1`
+- `Exp(Neg(Mul(a, t)))` → `a = −a`
+
+Result: `laplace(exp(-t), t, s)` → `1/(s+1)`, and `laplace(exp(-2*t), t, s)` → `1/(s+2)`.
+
 ## 0.1.0 — 2026-04-27
 
 **Initial release: Laplace transform and inverse Laplace transform.**

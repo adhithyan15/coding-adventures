@@ -490,8 +490,9 @@ def defrule_handler(vm: VM, expr: IRApply) -> IRNode:
 
 
 def apply1_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Apply1(name, target)`` — apply a named rule once at the root.
+    """``Apply1(target, name)`` — apply a named rule once at the root.
 
+    MACSYMA surface: ``apply1(target, rule_name)``.
     Evaluates ``target`` first (the handler receives it unevaluated
     because the head is held), then tries the rule at the outermost
     level only.  Returns the rewritten and re-evaluated expression on a
@@ -499,7 +500,8 @@ def apply1_handler(vm: VM, expr: IRApply) -> IRNode:
     """
     if len(expr.args) != 2:
         return expr
-    name_node, raw_target = expr.args
+    # MACSYMA: apply1(target, rule_name) — target is args[0], name is args[1].
+    raw_target, name_node = expr.args
     if not isinstance(name_node, IRSymbol):
         return expr
     target = vm.eval(raw_target)
@@ -513,8 +515,9 @@ def apply1_handler(vm: VM, expr: IRApply) -> IRNode:
 
 
 def apply2_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Apply2(name, target)`` — apply a named rule recursively (bottom-up).
+    """``Apply2(target, name)`` — apply a named rule recursively (bottom-up).
 
+    MACSYMA surface: ``apply2(target, rule_name)``.
     Evaluates ``target`` first, then calls
     :func:`cas_pattern_matching.rewriter.rewrite` for a full bottom-up
     fixed-point traversal.  Returns the fully rewritten expression.
@@ -525,7 +528,8 @@ def apply2_handler(vm: VM, expr: IRApply) -> IRNode:
     """
     if len(expr.args) != 2:
         return expr
-    name_node, raw_target = expr.args
+    # MACSYMA: apply2(target, rule_name) — target is args[0], name is args[1].
+    raw_target, name_node = expr.args
     if not isinstance(name_node, IRSymbol):
         return expr
     target = vm.eval(raw_target)
@@ -574,20 +578,116 @@ def tellsimp_handler(vm: VM, expr: IRApply) -> IRNode:
     return IRSymbol("done")
 
 
+def _sym_expand_mul(a: IRNode, b: IRNode) -> IRNode:
+    """Distribute multiplication over addition: ``(a+b)*c = a*c + b*c``.
+
+    Works for both ``Add`` and ``Sub`` to handle the full binary IR.
+    Returns ``Mul(a, b)`` if no distribution is possible.
+    """
+    # Distribute a over b first (handles ``(a+b)*(c+d)`` fully via recursion).
+    if isinstance(a, IRApply) and a.head == ADD:
+        left = _sym_expand_mul(a.args[0], b)
+        right = _sym_expand_mul(a.args[1], b)
+        return IRApply(ADD, (left, right))
+    if isinstance(a, IRApply) and a.head == SUB:
+        left = _sym_expand_mul(a.args[0], b)
+        right = _sym_expand_mul(a.args[1], b)
+        return IRApply(SUB, (left, right))
+    if isinstance(b, IRApply) and b.head == ADD:
+        left = _sym_expand_mul(a, b.args[0])
+        right = _sym_expand_mul(a, b.args[1])
+        return IRApply(ADD, (left, right))
+    if isinstance(b, IRApply) and b.head == SUB:
+        left = _sym_expand_mul(a, b.args[0])
+        right = _sym_expand_mul(a, b.args[1])
+        return IRApply(SUB, (left, right))
+    return IRApply(MUL, (a, b))
+
+
+def _sym_expand_pow(base: IRNode, n: int) -> IRNode:
+    """Expand ``base^n`` (n ≥ 0 integer) via repeated binary-exponentiation.
+
+    Uses the square-and-multiply algorithm so that e.g. ``(a+b)^5`` only
+    requires O(log n) expansion calls instead of O(n).
+    """
+    if n == 0:
+        return IRInteger(1)
+    if n == 1:
+        return base
+    half = _sym_expand_pow(base, n // 2)
+    sq = _sym_expand_mul(half, half)
+    if n % 2 == 1:
+        return _sym_expand_mul(sq, base)
+    return sq
+
+
+_SYM_EXPAND_MAX_POW: int = 32  # guard against astronomically large exponents
+
+
+def _sym_expand(f: IRNode) -> IRNode:
+    """Recursively distribute ``Mul`` over ``Add`` and expand integer ``Pow``.
+
+    This handles multivariate polynomial expressions (e.g. ``(a+b)^5``,
+    ``(x+y)*(x-y)``) where the single-variable ``to_rational`` bridge
+    cannot help because the coefficients are symbolic.
+
+    Returns ``f`` unchanged for non-polynomial subexpressions (trig,
+    transcendentals, symbolic powers) so the function is safe to call on
+    any IR tree.
+    """
+    if isinstance(f, (IRInteger, IRFloat, IRRational, IRSymbol)):
+        return f
+    if not isinstance(f, IRApply):
+        return f  # shouldn't happen in practice
+
+    head = f.head
+    # Recurse into children first (bottom-up expansion).
+    expanded_args = tuple(_sym_expand(a) for a in f.args)
+
+    if head == ADD:
+        return IRApply(ADD, expanded_args)
+    if head == SUB:
+        return IRApply(SUB, expanded_args)
+    if head == NEG:
+        (inner,) = expanded_args
+        return IRApply(NEG, (inner,))
+    if head == MUL:
+        a, b = expanded_args
+        return _sym_expand_mul(a, b)
+    if head == POW:
+        base, exp = expanded_args
+        if isinstance(exp, IRInteger) and 0 <= exp.value <= _SYM_EXPAND_MAX_POW:
+            return _sym_expand_pow(base, exp.value)
+        return IRApply(POW, expanded_args)
+    # DIV, transcendentals, etc. — return with recursively-expanded args.
+    return IRApply(head, expanded_args)
+
+
 def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Expand(expr)`` — full polynomial expansion.
 
     Distributes ``Mul`` over ``Add`` and expands integer powers of
-    polynomials via the polynomial bridge. Works for single-variable
-    polynomials with rational (Q) coefficients. For multi-variable or
-    transcendental expressions (where :func:`~symbolic_vm.polynomial_bridge.to_rational`
-    returns ``None``) the implementation falls back to
-    :func:`cas_simplify.canonical`.
+    polynomials.
+
+    **Single-variable path**: Uses the polynomial bridge
+    (:func:`~symbolic_vm.polynomial_bridge.to_rational`) for univariate
+    polynomials with rational (Q) coefficients — fast and canonical.
+
+    **Multi-variable path**: For expressions containing more than one symbol
+    (e.g. ``(a+b)^5``, ``(x+y)*(x-y)``) ``to_rational`` returns ``None``
+    because it only handles one variable.  The implementation then falls
+    back to :func:`_sym_expand`, a recursive distributor that handles
+    arbitrary multivariate polynomial expressions.
+
+    **Transcendental fallback**: If the expression is neither a univariate
+    nor a multivariate polynomial (e.g. ``sin(x+y)``), :func:`_sym_expand`
+    leaves it structurally unchanged and we return the result of
+    :func:`cas_simplify.canonical` on the original.
 
     Examples::
 
-        Expand(Mul(Add(x, 1), Add(x, 2)))  →  Add(Add(2, Mul(3, x)), Pow(x, 2))
-        Expand(Pow(Add(x, 1), 2))          →  Add(Add(1, Mul(2, x)), Pow(x, 2))
+        Expand(Pow(Add(a, b), 2))   →  Add(Pow(a,2), Add(Mul(2,Mul(a,b)), Pow(b,2)))
+        Expand(Mul(Add(x,1), Add(x,2)))  →  Add(Add(2, Mul(3,x)), Pow(x,2))
     """
     if len(expr.args) != 1:
         return expr
@@ -598,18 +698,22 @@ def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
         return canonical(inner)
 
     rational = to_rational(inner, x)
-    if rational is None:
+    if rational is not None:
+        num, den = rational
+        _ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
+        if _poly_normalize(den) == _ONE_FRAC:
+            # Pure single-variable polynomial — emit fully expanded form.
+            return from_polynomial(num, x)
+        # Rational function — expand numerator and denominator separately.
+        return IRApply(DIV, (from_polynomial(num, x), from_polynomial(den, x)))
+
+    # Multivariate or symbolic-coefficient polynomial: recursive expansion.
+    expanded = _sym_expand(inner)
+    # If expansion didn't change anything it's likely transcendental; fall
+    # back to canonical simplification to at least normalise constants.
+    if expanded == inner:
         return canonical(inner)
-
-    num, den = rational
-    _ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
-
-    if _poly_normalize(den) == _ONE_FRAC:
-        # Pure polynomial — emit fully expanded form
-        return from_polynomial(num, x)
-
-    # Rational function — expand numerator and denominator separately
-    return IRApply(DIV, (from_polynomial(num, x), from_polynomial(den, x)))
+    return expanded
 
 
 # ===========================================================================

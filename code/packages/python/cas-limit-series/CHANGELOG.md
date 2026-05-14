@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.1 — 2026-05-14
+
+**Bug fix: `ZeroDivisionError` from direct substitution now routes to L'Hôpital.**
+
+In `limit_advanced.py`, the direct-substitution step called `eval_fn(subst_result)` without
+catching arithmetic exceptions.  For expressions like `sin(x)/x` at `x=0`, the VM raises
+`ZeroDivisionError` when evaluating `sin(0)/0 = 0/0`.  Previously this exception propagated
+to the caller instead of routing to `_handle_form` (the L'Hôpital / rewrite engine).
+
+Fixed by wrapping the `eval_fn` call in `try/except (ZeroDivisionError, ArithmeticError)`
+and delegating to `_handle_form` on any arithmetic singularity.  This makes
+`limit(sin(x)/x, x, 0)` evaluate to `1` end-to-end.
+
 ## 0.2.0 — 2026-05-04
 
 **Phase 20 — Full limit evaluation: L'Hôpital, ±∞, indeterminate forms, one-sided limits.**
