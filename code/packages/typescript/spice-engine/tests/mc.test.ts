@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   Circuit,
   SpiceError,
+  cccs,
   currentSource,
   mcDc,
   resistor,
@@ -101,6 +102,25 @@ describe("mcDc", () => {
 
     expect(result.mean).toBeGreaterThan(1.5);
     expect(result.mean).toBeLessThan(2.5);
+    expect(result.stdDev).toBeGreaterThan(0.0);
+  });
+
+  it("varies CCCS gain in DC Monte Carlo trials", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(cccs("F1", "0", "out", "Vsense", 2.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = mcDc(circuit, "out", 40, {
+      seed: 11,
+      tolerance: 0.05,
+      distribution: "uniform",
+    });
+
+    expect(result.mean).toBeGreaterThan(1.8);
+    expect(result.mean).toBeLessThan(2.2);
     expect(result.stdDev).toBeGreaterThan(0.0);
   });
 

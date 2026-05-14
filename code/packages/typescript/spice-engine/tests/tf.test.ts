@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   Circuit,
   capacitor,
+  cccs,
   currentSource,
   inductor,
   resistor,
@@ -90,6 +91,20 @@ describe("tf", () => {
     expectClose(result.outputImpedanceOhms, 1_000.0);
   });
 
+  it("reports CCCS current gain through a sensing voltage source", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(cccs("F1", "0", "out", "Vsense", 2.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = tf(circuit, "out", "Vin");
+
+    expectClose(result.gain(), 2.0);
+    expectClose(result.outputImpedanceOhms, 1_000.0);
+  });
+
   it("rejects missing output nodes", () => {
     const circuit = new Circuit();
 
@@ -113,6 +128,17 @@ describe("tf", () => {
     circuit.add(resistor("Rload", "out", "0", 1_000.0));
 
     expect(() => tf(circuit, "out", "Gm")).toThrowError(
+      "input element must be an independent voltage or current source",
+    );
+  });
+
+  it("rejects CCCS elements as input sources", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(cccs("F1", "0", "out", "Vsense", 1.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    expect(() => tf(circuit, "out", "F1")).toThrowError(
       "input element must be an independent voltage or current source",
     );
   });

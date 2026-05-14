@@ -3,6 +3,7 @@ import {
   Circuit,
   SpiceError,
   SensResult,
+  cccs,
   currentSource,
   resistor,
   sensDc,
@@ -94,6 +95,21 @@ describe("sensDc", () => {
       entry(result, "Gm", "transconductanceSiemens").relativeSensitivity,
       1.0,
     );
+  });
+
+  it("reports CCCS gain sensitivity", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(cccs("F1", "0", "out", "Vsense", 2.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = sensDc(circuit, "out");
+
+    expectClose(result.nominalVoltage, 2.0);
+    expectClose(entry(result, "F1", "gain").sensitivity, 1.0);
+    expectClose(entry(result, "F1", "gain").relativeSensitivity, 1.0);
   });
 
   it("sorts entries by absolute relative sensitivity", () => {
