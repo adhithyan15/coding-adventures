@@ -1,2 +1,3 @@
+npm ci --quiet
 npm run build
-npm test
+npx vitest run
