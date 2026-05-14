@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/spice-engine",
+  "version": "0.1.0",
+  "description": "SPICE-style circuit analysis primitives and solvers",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "spice",
+    "circuits",
+    "mna",
+    "electronics",
+    "simulation"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
