@@ -60,6 +60,9 @@
 
 #![warn(rust_2018_idioms)]
 
+mod buffers;
+pub use buffers::BufferStore;
+
 use compute_ir::ExecutorId;
 use executor_protocol::{
     BackendProfile, ErrorCode, ExecutorRequest, ExecutorResponse, LocalTransport,
@@ -199,6 +202,14 @@ impl CudaExecutor {
     ///   resources to release.
     /// - Every other variant returns `NOT_IMPLEMENTED` with a
     ///   pointer to the spec so future readers know where to look.
+    ///
+    /// **Note (MX06 Phase 2)**: the new [`BufferStore`] module is
+    /// callable directly (see its docs) but is **not** wired into
+    /// this dispatch handler yet — that requires `cuda-compute`'s
+    /// `CudaBuffer` to be `Send` so it can live behind the
+    /// executor's `Mutex<State>`.  Phase 3 will land both the
+    /// `Send` impl on `CudaBuffer` and the wiring here in one
+    /// coherent change, alongside generic kernel compilation.
     pub fn handle(&self, req: ExecutorRequest) -> ExecutorResponse {
         let our_id = match self.state.lock() {
             Ok(g) => g.our_id,
@@ -210,9 +221,6 @@ impl CudaExecutor {
             },
             ExecutorRequest::Heartbeat => ExecutorResponse::Alive { profile: profile() },
             ExecutorRequest::Shutdown => ExecutorResponse::Registered {
-                // Shutdown has no dedicated reply; mirror matrix-metal's
-                // pattern of echoing Registered when we have nothing to
-                // tear down.
                 executor_id: our_id,
             },
             ExecutorRequest::Dispatch { job_id, .. }
@@ -220,7 +228,7 @@ impl CudaExecutor {
             | ExecutorRequest::CancelJob { job_id } => ExecutorResponse::Error {
                 code: ErrorCode::NOT_IMPLEMENTED,
                 message:
-                    "matrix-cuda: Phase 1 stub — dispatch lands in Phase 5; see code/specs/MX06-cuda-executor.md"
+                    "matrix-cuda: dispatch lands in Phase 5; see code/specs/MX06-cuda-executor.md"
                         .to_string(),
                 job_id: Some(job_id),
             },
@@ -231,7 +239,7 @@ impl CudaExecutor {
             | ExecutorRequest::FreeBuffer { .. } => ExecutorResponse::Error {
                 code: ErrorCode::NOT_IMPLEMENTED,
                 message:
-                    "matrix-cuda: Phase 1 stub — buffer / kernel ops land in Phases 2–3"
+                    "matrix-cuda: buffer / kernel dispatch wiring lands in Phase 3 (BufferStore module is callable directly, see crate docs)"
                         .to_string(),
                 job_id: None,
             },

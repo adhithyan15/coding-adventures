@@ -1,6 +1,6 @@
 [package]
 name = "matrix-cuda"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "MX06 Phase 1 — CUDA GPU executor skeleton for the matrix execution layer. Wraps the runtime-loaded `cuda-compute` driver wrapper so the crate compiles on every platform; when libcuda is unavailable at runtime, constructors return Err(...) and the planner silently skips this executor. Phase 1 ships the executor shell, capability declaration, and stubbed dispatch handler; Phases 2–7 land buffers, kernels, the specialised emitter, real Executor impl, MX05 hooks, and planner integration."
 license = "MIT"

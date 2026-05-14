@@ -1,5 +1,79 @@
 # Changelog — matrix-cuda
 
+## 0.2.0 — 2026-05-13
+
+### Added — MX06 Phase 2 (`BufferStore` over `cuMemAlloc` / `cuMemcpy*`)
+
+Lands the device-memory module, the per-executor `HashMap<BufferId,
+CudaBuffer>` that Phase 3+ dispatch will use to alloc / upload /
+download / free GPU buffers.
+
+- New module `src/buffers.rs` with `pub struct BufferStore`:
+  - `new()` / `default()` — empty store.
+  - `alloc(device, id, bytes) -> Result<(), String>` —
+    `cuMemAlloc` via `cuda-compute`, replaces any prior buffer at
+    `id`, propagates `cuda-compute`'s typed error on zero-length
+    allocations.
+  - `write(device, id, offset, data)` — `cuMemcpyHtoD` via
+    `cuda-compute::CudaDevice::upload`.  Phase 2 supports
+    `offset = 0` only (every caller in `matrix-metal::dispatch`
+    uses 0 today; partial writes land in a later phase).
+  - `read(device, id, offset, len) -> Result<Vec<u8>, _>` —
+    `cuMemcpyDtoH` via `cuda-compute::CudaDevice::download`, then
+    slice on the host.  Supports arbitrary offset / len.
+  - `free(id)` — idempotent.
+  - `get(id) -> Result<&CudaBuffer, _>` — used by Phase 3 dispatch
+    to look up `CUdeviceptr`s for `cuLaunchKernel`.
+  - `contains(id)`, `len()`, `is_empty()`.
+- Re-exported from `lib.rs` as `matrix_cuda::BufferStore`.
+
+### Why this is its own PR
+
+Phase 2 ships the module **alone**, without wiring it into the
+executor's `Mutex<State>` and `handle()`.  That deferral exists
+because `cuda-compute::CudaBuffer` doesn't yet implement `Send` —
+adding it (and wiring the alloc/upload/download/free request paths
+through the executor mutex) is a coherent unit of work that
+belongs in Phase 3 alongside generic NVRTC kernel compilation.
+
+The module is usable directly today (see the unit tests for
+example call patterns); Phase 3 will simply replace the existing
+`NOT_IMPLEMENTED` branches for `AllocBuffer` / `UploadBuffer` /
+`DownloadBuffer` / `FreeBuffer` with delegation to a
+`Mutex<BufferStore>` field on the executor.
+
+### Tests
+
+14 new unit tests in `buffers::tests`, all passing:
+
+- `new_store_is_empty`, `default_matches_new`,
+  `free_unknown_id_is_idempotent_noop`, `get_unknown_id_errors`
+  run on every platform.
+- `alloc_then_free_round_trips`, `alloc_replaces_existing_buffer_at_same_id`,
+  `round_trip_write_then_read_matches_input`,
+  `read_with_offset_returns_correct_slice`,
+  `write_unknown_id_errors`, `write_nonzero_offset_errors_in_phase_2`,
+  `read_unknown_id_errors`, `read_past_end_errors`,
+  `read_offset_plus_len_overflow_errors`, `alloc_zero_bytes_errors`
+  are device-gated: on hosts without an NVIDIA driver
+  (`CudaDevice::new(0)` fails) they silently pass.  On the Linux
+  CI runner they currently no-op for the same reason; Phase 5 will
+  add a `MATRIX_CUDA_TESTS=1` env-gated suite for real GPU
+  coverage.
+
+Total crate test count: 26 (12 from Phase 1 + 14 new).
+
+### No public surface broken
+
+Phase 1's API is unchanged.  `BufferStore` is a strictly additive
+addition.  `local_transport()`, `register()`, `CudaExecutor::new()`
+all behave exactly as before.
+
+### No `unsafe` introduced
+
+`buffers.rs` is `unsafe`-free; all FFI safety lives in
+`cuda-compute`.
+
 ## 0.1.0 — 2026-05-13
 
 ### Added — MX06 Phase 1 (crate skeleton + stub)
