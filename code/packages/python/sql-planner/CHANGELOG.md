@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.27.0] - 2026-05-13
+
+### Added
+
+- **`AggFunc.TOTAL`** (`expr.py`) — Added `TOTAL = "TOTAL"` to the `AggFunc`
+  enum in the SQL planner.  The adapter (`mini_sqlite/adapter.py`) maps the
+  SQL name `TOTAL` to this enum value, allowing `TOTAL(col)` expressions to
+  be planned as `AggregateExpr(func=AggFunc.TOTAL, …)`.
+
 ## [0.26.0] - 2026-05-13
 
 ### Added
