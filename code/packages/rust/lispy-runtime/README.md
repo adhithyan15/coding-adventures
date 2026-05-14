@@ -7,9 +7,9 @@
 | Module | What |
 |--------|------|
 | [`value`](src/value.rs) | `LispyValue` — tagged i64 (immediate ints / nil / true / false / symbols + heap-tagged pointers) |
-| [`heap`](src/heap.rs) | `ConsCell`, `Closure` — `#[repr(C)]` with the LANG20 16-byte header. `alloc_cons`, `alloc_closure`, `car`, `cdr`, `is_*`, `as_closure` |
+| [`heap`](src/heap.rs) | `ConsCell`, `Closure`, `LangString` — `#[repr(C)]` with the LANG20 16-byte header. `alloc_cons`, `alloc_closure`, `alloc_string`, `car`, `cdr`, `is_*`, `as_closure`, `string_bytes` |
 | [`intern`](src/intern.rs) | Process-global symbol intern table with `intern(name)` / `name_of(id)` |
-| [`builtins`](src/builtins.rs) | TW00 builtin handlers: `+ - * / = < >`, `cons car cdr`, `null? pair? number? symbol?`, `print` |
+| [`builtins`](src/builtins.rs) | TW00 builtin handlers: `+ - * / = < >`, `cons car cdr`, `null? pair? number? symbol?`, `print`; **LANG47** string builtins: `string?`, `string-length`, `string-ref`, `substring`, `string-append`, `make-string`, `string=?`, `string<?`, `string>?`, `number->string`, `string->number`, `string->symbol`, `symbol->string`, and all `char-*` predicates/converters |
 | [`binding`](src/binding.rs) | `LispyBinding` — full `LangBinding` impl + `LispyClass` + `LispyICEntry` |
 | [`abi`](src/abi.rs) | `extern "C"` surface: `lispy_cons`, `lispy_car`, `lispy_cdr`, `lispy_make_symbol`, `lispy_make_closure`, `lispy_apply_closure`, `lispy_closure_capture_count` |
 

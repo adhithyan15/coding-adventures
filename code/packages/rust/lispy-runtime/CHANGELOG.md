@@ -1,5 +1,47 @@
 # Changelog — lispy-runtime
 
+## [0.3.0] — 2026-05-14
+
+### Added — LANG47 string heap objects and builtins
+
+- **`heap::LangString`** — new `#[repr(C)]` heap object type
+  (`CLASS_STRING = 3`).  Stores an immutable UTF-8 byte sequence as a
+  `Box<[u8]>` fat pointer.  Layout is 32 bytes (same as `ConsCell`),
+  8-byte aligned.
+
+- **`heap::CLASS_STRING`** — class id constant `3` (alongside
+  `CLASS_CONS = 1` and `CLASS_CLOSURE = 2`).
+
+- **`heap::alloc_string(bytes: &[u8]) -> LispyValue`** — allocate a
+  `LangString` from a byte slice; returns a heap-tagged `LispyValue`.
+
+- **`heap::is_string(v: LispyValue) -> bool`** — `unsafe` predicate;
+  reads the `class_or_kind` from the heap header.
+
+- **`heap::string_bytes(v: LispyValue) -> Option<&'static [u8]>`** —
+  `unsafe` accessor; returns the string's UTF-8 bytes.
+
+- **`LispyClass::String`** — new variant in the `LispyClass` enum.
+  `class_of` now returns `Some(LispyClass::String)` for heap strings.
+
+- **`LispyBinding::equal`** now byte-compares two `LangString` values
+  (structural equality via the `LangBinding` trait).
+
+- **`LispyBinding::trace_object`** handles `CLASS_STRING` (strings
+  have no interior `LispyValue` references).
+
+- **22 string builtins** registered in `resolve_builtin`:
+  `string?`, `string-length`, `string-ref`, `substring`,
+  `string-append`, `make-string`, `string=?`, `string<?`, `string>?`,
+  `number->string`, `string->number`, `string->symbol`, `symbol->string`,
+  `char-alphabetic?`, `char-numeric?`, `char-whitespace?`,
+  `char-upper-case?`, `char-lower-case?`, `char->integer`,
+  `integer->char`, `char-upcase`, `char-downcase`.
+
+- **30 new unit tests** covering all of the above.
+
+---
+
 ## [0.2.0] — 2026-04-29
 
 ### Added — supporting LANG20 PR 5 (twig-vm closures / globals / symbols)

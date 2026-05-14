@@ -828,6 +828,7 @@ fn lispy_class_str(value: LispyValue) -> Option<&'static str> {
         LispyClass::Symbol => Some("symbol"),
         LispyClass::Cons => Some("cons"),
         LispyClass::Closure => Some("closure"),
+        LispyClass::String => Some("string"),
     }
 }
 
@@ -1169,16 +1170,17 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
             }
             LispyValue::symbol(id)
         }
-        // LANG32: Str is a compile-time string literal (global variable name).
-        // Intern it as a symbol — same treatment as Var string-literals above.
+        // LANG47: Str is a compile-time string literal — allocate a LangString
+        // heap object.  The old PR 5 behaviour (intern as a symbol) is no longer
+        // needed here: LANG34 removed the last user of `Operand::Str` through a
+        // `const` instruction for non-string purposes (closure fn names are now
+        // inline in `alloc_closure`'s operand list, not through a register).
+        //
+        // String-valued constants produced by the twig-ir-compiler for explicit
+        // `"hello"` literals in Twig source now produce real heap strings that
+        // `string-length`, `string-ref`, etc. can operate on.
         Operand::Str(text) => {
-            let id = intern(text);
-            if id == SymbolId::NONE {
-                return Err(RunError::Runtime(RuntimeError::TypeError(format!(
-                    "intern table exhausted: cannot intern {text:?}"
-                ))));
-            }
-            LispyValue::symbol(id)
+            lispy_runtime::heap::alloc_string(text.as_bytes())
         }
     };
     frame.set(dest.clone(), value)?;
@@ -4337,5 +4339,310 @@ mod tests {
         ";
         let result = run_source(src).unwrap();
         assert_eq!(result.as_int(), Some(15), "expected 15, got {result}");
+    }
+
+    // ── String builtins (LANG47) ────────────────────────────────────
+    //
+    // These tests hand-build IIRModules with `const dest = Operand::Str(…)`
+    // and `call_builtin "string-length" / "string-ref" / …` to exercise
+    // every string operation end-to-end through the dispatch loop.
+
+    /// Build: `const s = Operand::Str(text); r = call_builtin name s; ret r`
+    fn string_builtin_1(text: &str, builtin: &str) -> LispyValue {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str(text.into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var(builtin.into()), Operand::Var("s".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        run(&module_with_main(instrs, 3)).unwrap()
+    }
+
+    /// Build: `const s = Str; const i = Int; r = call_builtin name s i; ret r`
+    fn string_builtin_str_int(text: &str, builtin: &str, n: i64) -> LispyValue {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str(text.into())], "string"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(n)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var(builtin.into()),
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        run(&module_with_main(instrs, 4)).unwrap()
+    }
+
+    #[test]
+    fn string_const_operand_str_produces_heap_string() {
+        // After LANG47, `const s = Operand::Str("hello")` must produce
+        // a heap string (not an interned symbol).
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("hello".into())], "string"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 1)).unwrap();
+        assert!(v.is_heap(), "Operand::Str should produce a heap value");
+        // SAFETY: v was produced by alloc_string in exec_const.
+        unsafe {
+            assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
+            let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
+            assert_eq!(bytes, b"hello");
+        }
+    }
+
+    #[test]
+    fn string_p_builtin_true_for_heap_string() {
+        let v = string_builtin_1("hi", "string?");
+        assert_eq!(v, LispyValue::TRUE);
+    }
+
+    #[test]
+    fn string_p_builtin_false_for_integer() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(42)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("string?".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 2)).unwrap();
+        assert_eq!(v, LispyValue::FALSE);
+    }
+
+    #[test]
+    fn string_length_builtin_ascii() {
+        let v = string_builtin_1("hello", "string-length");
+        assert_eq!(v.as_int(), Some(5), "\"hello\" has 5 code points");
+    }
+
+    #[test]
+    fn string_length_builtin_empty() {
+        let v = string_builtin_1("", "string-length");
+        assert_eq!(v.as_int(), Some(0));
+    }
+
+    #[test]
+    fn string_ref_builtin_returns_codepoint() {
+        // 'h' = 104
+        let v = string_builtin_str_int("hello", "string-ref", 0);
+        assert_eq!(v.as_int(), Some(104), "'h' should be code point 104");
+    }
+
+    #[test]
+    fn string_ref_builtin_last_char() {
+        // 'o' = 111
+        let v = string_builtin_str_int("hello", "string-ref", 4);
+        assert_eq!(v.as_int(), Some(111), "'o' should be code point 111");
+    }
+
+    #[test]
+    fn string_ref_builtin_out_of_bounds_errors() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("hi".into())], "string"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(5)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("string-ref".into()),
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let result = run(&module_with_main(instrs, 4));
+        assert!(result.is_err(), "string-ref out-of-bounds must error");
+    }
+
+    #[test]
+    fn string_append_builtin_concatenates() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Str("foo".into())], "string"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Str("bar".into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("string-append".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 4)).unwrap();
+        // SAFETY: v was produced by alloc_string.
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("appended string bytes");
+            assert_eq!(bytes, b"foobar");
+        }
+    }
+
+    #[test]
+    fn substring_builtin_slices_correctly() {
+        // "hello"[1..4) = "ell"
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("hello".into())], "string"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "int"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(4)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("substring".into()),
+                    Operand::Var("s".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 5)).unwrap();
+        // SAFETY: v was produced by alloc_string.
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("substring bytes");
+            assert_eq!(bytes, b"ell");
+        }
+    }
+
+    #[test]
+    fn string_eq_p_builtin_equal_strings() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Str("abc".into())], "string"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Str("abc".into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("string=?".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 4)).unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn number_to_string_builtin_decimal() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(42)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("number->string".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 3)).unwrap();
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("number->string bytes");
+            assert_eq!(bytes, b"42");
+        }
+    }
+
+    #[test]
+    fn string_to_number_builtin_parses_valid() {
+        let v = string_builtin_1("42", "string->number");
+        assert_eq!(v.as_int(), Some(42));
+    }
+
+    #[test]
+    fn string_to_number_builtin_invalid_returns_false() {
+        let v = string_builtin_1("abc", "string->number");
+        assert_eq!(v, LispyValue::FALSE);
+    }
+
+    #[test]
+    fn string_to_symbol_and_back_roundtrip() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("my-sym".into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("sym".into()),
+                vec![Operand::Var("string->symbol".into()), Operand::Var("s".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("back".into()),
+                vec![Operand::Var("symbol->string".into()), Operand::Var("sym".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("back".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 4)).unwrap();
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("roundtrip string bytes");
+            assert_eq!(bytes, b"my-sym");
+        }
+    }
+
+    #[test]
+    fn char_alphabetic_p_builtin() {
+        // 'a' = 97
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(97)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("char-alphabetic?".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 3)).unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn char_whitespace_p_builtin_space() {
+        // 32 = space
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(32)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("char-whitespace?".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 3)).unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn char_upcase_builtin_lowercases_to_uppercase() {
+        // 'a' (97) → 'A' (65)
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(97)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("char-upcase".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 3)).unwrap().as_int(), Some(65));
     }
 }

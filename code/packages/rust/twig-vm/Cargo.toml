@@ -1,8 +1,8 @@
 [package]
 name = "twig-vm"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
-description = "LANG26 — host/ I/O builtins (write_byte, read_byte, exit, flush_stdout) via Rust stdlib dispatch"
+description = "LANG47 — string heap objects (LangString) and string/char builtins in the dispatch loop"
 
 [dependencies]
 twig-ir-compiler  = { path = "../twig-ir-compiler" }
