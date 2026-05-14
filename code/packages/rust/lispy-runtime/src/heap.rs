@@ -68,6 +68,9 @@ pub const CLASS_CONS: u32 = 1;
 /// Class id for [`Closure`].
 pub const CLASS_CLOSURE: u32 = 2;
 
+/// Class id for [`LangString`] (LANG47).
+pub const CLASS_STRING: u32 = 3;
+
 // ---------------------------------------------------------------------------
 // ConsCell
 // ---------------------------------------------------------------------------
@@ -221,6 +224,71 @@ impl Closure {
 }
 
 // ---------------------------------------------------------------------------
+// LangString (LANG47)
+// ---------------------------------------------------------------------------
+
+/// A Lispy/Twig string — an immutable UTF-8 byte sequence managed by the
+/// same `Box::leak` allocator as cons cells and closures.
+///
+/// ## Layout
+///
+/// ```text
+/// LangString (32 bytes on 64-bit):
+///   ┌──────────────────────────────────┐
+///   │  ObjectHeader (16 bytes)         │  class_or_kind = CLASS_STRING
+///   ├──────────────────────────────────┤
+///   │  data: Box<[u8]> (16 bytes)      │  fat pointer: ptr (8) + len (8)
+///   └──────────────────────────────────┘
+/// ```
+///
+/// The `data` field stores the raw UTF-8 bytes.  Character operations such
+/// as `string-ref` iterate over the byte sequence to count code points; this
+/// is O(n) but correct.  A future optimised string type may add a code-point
+/// count alongside the bytes.
+///
+/// ## Immutability
+///
+/// Strings are never mutated after construction.  Using `Box<[u8]>` (rather
+/// than `Vec<u8>`) eliminates the unused-capacity footgun and communicates
+/// the intent.
+#[repr(C)]
+pub struct LangString {
+    /// LANG20 uniform 16-byte header.  `class_or_kind == CLASS_STRING`.
+    pub header: ObjectHeader,
+    /// The string's UTF-8 bytes.  The `Box` is a fat pointer (addr + len) so
+    /// the total struct size is 16 + 16 = 32 bytes — matching `ConsCell`.
+    pub data: Box<[u8]>,
+}
+
+impl std::fmt::Debug for LangString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Show bytes as a UTF-8 string if valid, otherwise as raw bytes.
+        match std::str::from_utf8(&self.data) {
+            Ok(s)  => write!(f, "LangString({s:?})"),
+            Err(_) => write!(f, "LangString(<{} raw bytes>)", self.data.len()),
+        }
+    }
+}
+
+// 32 bytes: 16 (ObjectHeader) + 16 (Box<[u8]> fat pointer).
+const _: () = assert!(std::mem::size_of::<LangString>() == 32);
+const _: () = assert!(std::mem::align_of::<LangString>() == 8);
+
+impl LangString {
+    /// Construct a `LangString` from a byte slice.  The bytes are copied
+    /// into a `Box<[u8]>`.  Caller must box + leak via [`alloc_string`].
+    pub fn new(bytes: &[u8]) -> LangString {
+        LangString {
+            header: ObjectHeader::new(
+                CLASS_STRING,
+                std::mem::size_of::<LangString>() as u32,
+            ),
+            data: bytes.into(),
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Allocator (PR 2: Box::leak; PR 4+: real GC)
 // ---------------------------------------------------------------------------
 
@@ -265,6 +333,35 @@ pub fn alloc_builtin_closure(fn_name: SymbolId) -> LispyValue {
     let clos = Box::new(Closure::new_builtin(fn_name));
     let ptr = Box::leak(clos) as *const Closure;
     // SAFETY: Box::leak'd Closure is 8-aligned (const_assert) and lives forever.
+    unsafe { LispyValue::from_heap(ptr) }
+}
+
+/// Allocate a [`LangString`] from a byte slice and return a tagged
+/// [`LispyValue`] (LANG47).
+///
+/// **PR 2 / LANG47 implementation:** `Box::leak`.  The string lives forever
+/// in the current model; when LANG16's `gc-core` lands the allocator body
+/// changes without affecting callers.
+///
+/// # Example
+///
+/// ```
+/// use lispy_runtime::heap::{alloc_string, is_string, string_bytes};
+///
+/// let v = alloc_string(b"hello");
+/// assert!(v.is_heap());
+/// // SAFETY: v was just produced by alloc_string.
+/// unsafe {
+///     assert!(is_string(v));
+///     let bytes = string_bytes(v).expect("bytes round-trip");
+///     assert_eq!(bytes, b"hello");
+/// }
+/// ```
+pub fn alloc_string(bytes: &[u8]) -> LispyValue {
+    let s = Box::new(LangString::new(bytes));
+    let ptr = Box::leak(s) as *const LangString;
+    // SAFETY: Box::leak'd LangString is 8-aligned (compile-time const_assert)
+    // and lives forever (intentional PR 2 leak).
     unsafe { LispyValue::from_heap(ptr) }
 }
 
@@ -357,6 +454,43 @@ pub unsafe fn as_closure(value: LispyValue) -> Option<&'static Closure> {
         }
         let clos = header_ptr as *const Closure;
         Some(&*clos)
+    }
+}
+
+/// `true` iff `value` is a heap-tagged [`LangString`] (LANG47).
+///
+/// # Safety
+///
+/// Same contract as [`is_cons`]: `value` must have been produced by a safe
+/// constructor of this crate (or be `is_heap()` = false, in which case this
+/// function returns `false` without dereferencing).
+pub unsafe fn is_string(value: LispyValue) -> bool {
+    if let Some(header_ptr) = value.as_heap_ptr::<ObjectHeader>() {
+        unsafe { (*header_ptr).class_or_kind == CLASS_STRING }
+    } else {
+        false
+    }
+}
+
+/// Borrow the UTF-8 bytes of a heap string.
+///
+/// Returns `None` if `value` is not a `LangString`.
+///
+/// # Safety
+///
+/// `value` must be a live heap value produced by this crate's allocators
+/// (i.e., it was returned by [`alloc_string`]).  In the current
+/// `Box::leak` model this is always satisfied for any value created during
+/// the program's lifetime.  Once LANG16 GC lands, callers must hold the
+/// value inside the GC root set for the duration of the borrow.
+pub unsafe fn string_bytes(value: LispyValue) -> Option<&'static [u8]> {
+    let header_ptr: *const ObjectHeader = value.as_heap_ptr()?;
+    unsafe {
+        if (*header_ptr).class_or_kind != CLASS_STRING {
+            return None;
+        }
+        let s = header_ptr as *const LangString;
+        Some(&(*s).data)
     }
 }
 
@@ -472,5 +606,123 @@ mod tests {
             assert!(!is_cons(clos_v));
             assert!(is_closure(clos_v));
         }
+    }
+
+    // ── LangString tests (LANG47) ─────────────────────────────────────
+
+    #[test]
+    fn lang_string_is_32_bytes() {
+        // Layout invariant: 16 (ObjectHeader) + 16 (Box<[u8]> fat ptr).
+        assert_eq!(std::mem::size_of::<LangString>(), 32);
+    }
+
+    #[test]
+    fn lang_string_is_8_aligned() {
+        assert_eq!(std::mem::align_of::<LangString>(), 8);
+    }
+
+    #[test]
+    fn lang_string_class_id_is_distinct() {
+        // CLASS_STRING must differ from the other two; GC trace
+        // dispatch keyed on class_or_kind depends on this.
+        assert_ne!(CLASS_STRING, CLASS_CONS);
+        assert_ne!(CLASS_STRING, CLASS_CLOSURE);
+    }
+
+    #[test]
+    fn alloc_string_returns_heap_tagged_value() {
+        let v = alloc_string(b"hello");
+        assert!(v.is_heap(), "a heap string must be heap-tagged");
+        // SAFETY: v came from alloc_string in this test.
+        unsafe {
+            assert!(is_string(v), "is_string should recognise the allocation");
+            let bytes = string_bytes(v).expect("bytes round-trip");
+            assert_eq!(bytes, b"hello");
+        }
+    }
+
+    #[test]
+    fn alloc_empty_string_round_trips() {
+        let v = alloc_string(b"");
+        // SAFETY: v came from alloc_string.
+        unsafe {
+            assert!(is_string(v));
+            let bytes = string_bytes(v).expect("empty string bytes");
+            assert_eq!(bytes.len(), 0);
+        }
+    }
+
+    #[test]
+    fn alloc_string_with_utf8_multibyte_round_trips() {
+        // "café" contains a 2-byte UTF-8 sequence (é = 0xC3 0xA9).
+        let s = "café";
+        let v = alloc_string(s.as_bytes());
+        // SAFETY: v came from alloc_string.
+        unsafe {
+            assert!(is_string(v));
+            let bytes = string_bytes(v).expect("multi-byte string bytes");
+            assert_eq!(bytes, s.as_bytes());
+        }
+    }
+
+    #[test]
+    fn is_string_rejects_immediates() {
+        // Immediates are never strings — the heap-tag check short-
+        // circuits the class-id read.
+        // SAFETY: passing immediates is sound (no deref for non-heap).
+        unsafe {
+            assert!(!is_string(LispyValue::int(0)));
+            assert!(!is_string(LispyValue::NIL));
+            assert!(!is_string(LispyValue::TRUE));
+            assert!(!is_string(LispyValue::FALSE));
+            assert!(!is_string(LispyValue::symbol(SymbolId(1))));
+        }
+    }
+
+    #[test]
+    fn is_string_rejects_cons_and_closure() {
+        let cons_v = alloc_cons(LispyValue::NIL, LispyValue::NIL);
+        let clos_v = alloc_closure(SymbolId(0), vec![]);
+        // SAFETY: both values came from this crate's allocators.
+        unsafe {
+            assert!(!is_string(cons_v), "cons is not a string");
+            assert!(!is_string(clos_v), "closure is not a string");
+        }
+    }
+
+    #[test]
+    fn string_bytes_returns_none_for_non_string() {
+        let cons_v = alloc_cons(LispyValue::NIL, LispyValue::NIL);
+        // SAFETY: cons_v is a valid heap value from this crate.
+        unsafe {
+            assert!(string_bytes(cons_v).is_none(), "cons has no string bytes");
+        }
+    }
+
+    #[test]
+    fn string_bytes_returns_none_for_immediate() {
+        // SAFETY: immediate values are safe to pass (no deref).
+        unsafe {
+            assert!(string_bytes(LispyValue::int(42)).is_none());
+        }
+    }
+
+    #[test]
+    fn string_class_id_is_in_header() {
+        // Directly verify the header field so the GC dispatch table
+        // can trust it without special-casing LangString.
+        let s = LangString::new(b"abc");
+        let ptr = &s as *const LangString as *const u32;
+        // SAFETY: ptr points at the first field (class_or_kind: u32).
+        let class_id = unsafe { *ptr };
+        assert_eq!(class_id, CLASS_STRING);
+    }
+
+    #[test]
+    fn alloc_multiple_strings_are_distinct_objects() {
+        // Two alloc_string calls must return different heap addresses.
+        let a = alloc_string(b"foo");
+        let b = alloc_string(b"foo");  // same bytes, different allocation
+        assert_ne!(a.bits(), b.bits(), "each alloc_string must allocate a new object");
     }
 }
