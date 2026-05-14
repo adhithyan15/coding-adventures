@@ -455,6 +455,29 @@ extern "C" bool board_vm_uno_r4_i2c_write_u8(uint8_t bus, uint16_t address, uint
   return wire->endTransmission() == END_TX_OK;
 }
 
+extern "C" bool board_vm_uno_r4_i2c_write(uint8_t bus, uint16_t address, const uint8_t *bytes, size_t len) {
+  if ((bytes == nullptr && len != 0) || address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  wire->beginTransmission(address);
+  if (len != 0 && wire->write(bytes, len) != len) {
+    return false;
+  }
+  return wire->endTransmission() == END_TX_OK;
+}
+
 extern "C" bool board_vm_uno_r4_i2c_read_u8(uint8_t bus, uint16_t address, uint8_t *byte) {
   if (byte == nullptr || address > kI2cMax7BitAddress) {
     return false;

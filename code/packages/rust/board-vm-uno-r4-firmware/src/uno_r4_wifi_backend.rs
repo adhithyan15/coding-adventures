@@ -216,6 +216,16 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         }
     }
 
+    fn write_i2c(&mut self, bus: u8, address: u16, bytes: &[u8]) -> Result<(), HalError> {
+        if unsafe {
+            board_io_ffi::board_vm_uno_r4_i2c_write(bus, address, bytes.as_ptr(), bytes.len())
+        } {
+            Ok(())
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
     fn read_i2c_u8(&mut self, bus: u8, address: u16) -> Result<u8, HalError> {
         let mut byte = 0;
         if unsafe { board_io_ffi::board_vm_uno_r4_i2c_read_u8(bus, address, &mut byte) } {
@@ -237,6 +247,12 @@ mod board_io_ffi {
         pub fn board_vm_uno_r4_adc_read(pin: u8, sample: *mut u16) -> bool;
         pub fn board_vm_uno_r4_dac_write_u12(pin: u8, sample: u16) -> bool;
         pub fn board_vm_uno_r4_i2c_write_u8(bus: u8, address: u16, byte: u8) -> bool;
+        pub fn board_vm_uno_r4_i2c_write(
+            bus: u8,
+            address: u16,
+            bytes: *const u8,
+            len: usize,
+        ) -> bool;
         pub fn board_vm_uno_r4_i2c_read_u8(bus: u8, address: u16, byte: *mut u8) -> bool;
     }
 }

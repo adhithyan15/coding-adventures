@@ -466,6 +466,24 @@ module CodingAdventures
         )
       end
 
+      def i2c_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        bytes:,
+        max_stack: 4
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_write(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          bytes: bytes,
+          max_stack: max_stack
+        )
+      end
+
       def i2c_read_u8!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -1133,6 +1151,22 @@ module CodingAdventures
           budget: budget,
           address: address,
           byte: byte,
+          max_stack: max_stack
+        )
+      end
+
+      def write(
+        address:,
+        bytes:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 4
+      )
+        @connection.i2c_write!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          bytes: bytes,
           max_stack: max_stack
         )
       end

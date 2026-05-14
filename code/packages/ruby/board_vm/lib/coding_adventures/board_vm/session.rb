@@ -217,6 +217,10 @@ module CodingAdventures
         native_session.i2c_write_u8_module(address, byte, max_stack)
       end
 
+      def i2c_write_module(address:, bytes:, max_stack: 4)
+        native_session.i2c_write_module(address, i2c_bytes_value(bytes), max_stack)
+      end
+
       def i2c_read_u8_module(address:, max_stack: 3)
         native_session.i2c_read_u8_module(address, max_stack)
       end
@@ -316,6 +320,18 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: i2c_write_u8_module(address: address, byte: byte, max_stack: max_stack)
+        )
+      end
+
+      def upload_i2c_write(
+        program_id: @program_id,
+        address:,
+        bytes:,
+        max_stack: 4
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: i2c_write_module(address: address, bytes: bytes, max_stack: max_stack)
         )
       end
 
@@ -699,6 +715,30 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def i2c_write(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        address:,
+        bytes:,
+        max_stack: 4
+      )
+        results = upload_i2c_write(
+          program_id: program_id,
+          address: address,
+          bytes: bytes,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def i2c_read_u8(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -924,6 +964,8 @@ module CodingAdventures
           upload_i2c_open(**i2c_open_command_options(words, command, options, require_budget: false))
         when "upload-i2c-write-u8", "upload-i2c.write_u8", "upload-i2c-write"
           upload_i2c_write_u8(**i2c_write_u8_command_options(words, command, options, require_budget: false))
+        when "upload-i2c-write-bytes", "upload-i2c.write"
+          upload_i2c_write(**i2c_write_command_options(words, command, options, require_budget: false))
         when "upload-i2c-read-u8", "upload-i2c.read_u8", "upload-i2c-read"
           upload_i2c_read_u8(**i2c_read_u8_command_options(words, command, options, require_budget: false))
         when "upload-gpio-open", "upload-gpio.open"
@@ -966,6 +1008,8 @@ module CodingAdventures
           i2c_open(**i2c_open_command_options(words, command, options))
         when "i2c-write-u8", "i2c.write_u8", "i2c-write"
           i2c_write_u8(**i2c_write_u8_command_options(words, command, options))
+        when "i2c-write-bytes", "i2c.write"
+          i2c_write(**i2c_write_command_options(words, command, options))
         when "i2c-read-u8", "i2c.read_u8", "i2c-read"
           i2c_read_u8(**i2c_read_u8_command_options(words, command, options))
         when "gpio-high", "gpio.high"
@@ -1230,6 +1274,22 @@ module CodingAdventures
         merged
       end
 
+      def i2c_write_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:address] = integer_argument(words.shift, "#{command} address") unless words.empty?
+        merged[:bytes] = i2c_bytes_argument(words.shift, "#{command} bytes") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires address" unless merged.key?(:address)
+        raise ArgumentError, "#{command} requires bytes" unless merged.key?(:bytes)
+
+        merged
+      end
+
       def i2c_read_u8_command_options(words, command, options, require_budget: true)
         merged = options.dup
         merged[:address] = integer_argument(words.shift, "#{command} address") unless words.empty?
@@ -1335,6 +1395,50 @@ module CodingAdventures
         raise ArgumentError, "DAC sample must fit in u12" if sample.negative? || sample > 0x0FFF
 
         sample
+      end
+
+      def i2c_bytes_value(value)
+        case value
+        when String
+          value.b
+        when Array
+          value.map { |byte| byte_value(byte) }.pack("C*")
+        else
+          [byte_value(value)].pack("C")
+        end
+      end
+
+      def i2c_bytes_argument(value, name)
+        raise ArgumentError, "#{name} is required" if value.nil?
+
+        text = value.to_s
+        if text.start_with?("0x", "0X")
+          hex = text[2..]
+          raise ArgumentError, "#{name} hex payload must contain an even number of digits" if hex.length.odd?
+          raise ArgumentError, "#{name} hex payload must contain only hex digits" unless hex.match?(/\A[0-9a-fA-F]*\z/)
+          return [hex].pack("H*")
+        end
+
+        if text.include?(",")
+          return text.split(",").map { |byte| byte_value(byte) }.pack("C*")
+        end
+
+        i2c_bytes_value(value)
+      end
+
+      def byte_value(value)
+        byte = if value.is_a?(Integer)
+          value
+        else
+          begin
+            Integer(value, 0)
+          rescue ArgumentError
+            raise ArgumentError, "byte must be an integer: #{value.inspect}"
+          end
+        end
+        raise ArgumentError, "byte must fit in u8" if byte.negative? || byte > 0xFF
+
+        byte
       end
 
       def boot_policy_value(value)
