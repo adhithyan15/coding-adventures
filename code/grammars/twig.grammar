@@ -148,6 +148,7 @@ quoted = QUOTE NAME ;
 # form is wrapped in its own non-terminal for clarity.
 compound = if_form
          | let_form
+         | let_star_form
          | begin_form
          | lambda_form
          | quote_form
@@ -160,6 +161,15 @@ if_form     = LPAREN "if"     expr expr expr RPAREN ;
 # Bindings are mutually independent (Scheme ``let``, not ``let*``).
 let_form    = LPAREN "let" LPAREN { binding } RPAREN expr { expr } RPAREN ;
 binding     = LPAREN NAME expr RPAREN ;
+
+# (let* ((x e1) (y e2) ...) body+)                                 — LANG52
+# Sequential bindings: each RHS is evaluated in a scope that includes all
+# prior bindings.  ``(let* ((a 1) (b (+ a 1))) b)`` → 2.
+# ``let*`` is listed AFTER ``let`` so that the ``(`` dispatch reaches ``let``
+# before ``let*``; in practice both start with LPAREN ``"let"``/``"let*"``
+# and PEG commit as soon as the keyword token differs, so order only matters
+# for the documented PEG preference rule.
+let_star_form = LPAREN "let*" LPAREN { binding } RPAREN expr { expr } RPAREN ;
 
 # (begin e1 e2 ...) — sequencing, returns the value of the last expr.
 begin_form  = LPAREN "begin" expr { expr } RPAREN ;

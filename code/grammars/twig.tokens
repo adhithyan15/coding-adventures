@@ -141,6 +141,11 @@ keywords:
   union
   # (match expr arm ...) — pattern matching expression
   match
+  # LANG52 — sequential let bindings.  ``let*`` is promoted to a keyword
+  # so the grammar's ``"let*"`` literal match wins over the NAME pattern.
+  # (The ``*`` character is legal inside a Twig identifier — see the NAME
+  # regex — so ``let*`` would otherwise lex as a plain NAME token.)
+  let*
 
 # ---------------------------------------------------------------------------
 # Skip patterns — consumed silently, never reach the parser
