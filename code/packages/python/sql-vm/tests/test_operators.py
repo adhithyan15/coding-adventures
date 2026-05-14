@@ -35,8 +35,9 @@ class TestArithmetic:
             apply_binary(BinaryOpCode.DIV, 5, 0)
 
     def test_mod_by_zero(self) -> None:
-        with pytest.raises(DivisionByZero):
-            apply_binary(BinaryOpCode.MOD, 5, 0)
+        # SQLite returns NULL for x % 0, unlike DIV which raises ZeroDivisionError.
+        # Our VM follows SQLite's behaviour here.
+        assert apply_binary(BinaryOpCode.MOD, 5, 0) is None
 
     def test_arithmetic_with_non_numeric_raises(self) -> None:
         with pytest.raises(TypeMismatch):
