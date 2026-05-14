@@ -11,6 +11,7 @@ import {
   inductor,
   resistor,
   vccs,
+  vcvs,
   voltageSource,
   voltageSourceWithWaveform,
   type Element,
@@ -243,6 +244,10 @@ function parseElement(fields: readonly string[]): Element {
     requireFields(fields, 6, "VCCS");
     return vccs(name, fields[1], fields[2], fields[3], fields[4], parseValue(fields[5]));
   }
+  if (prefix === "E") {
+    requireFields(fields, 6, "VCVS");
+    return vcvs(name, fields[1], fields[2], fields[3], fields[4], parseValue(fields[5]));
+  }
   throw new NetlistParseError(`unsupported element ${JSON.stringify(name)}`);
 }
 
@@ -329,8 +334,8 @@ function mapSubcktFields(
     requireMinFields(fields, 3, "subcircuit element");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
-  } else if (prefix === "G") {
-    requireMinFields(fields, 5, "subcircuit VCCS");
+  } else if (prefix === "E" || prefix === "G") {
+    requireMinFields(fields, 5, "subcircuit controlled source");
     for (let index = 1; index < 5; index++) {
       mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
     }
