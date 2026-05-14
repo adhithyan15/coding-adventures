@@ -719,6 +719,21 @@ impl Assembler {
         });
     }
 
+    /// `CALL rel32` to an *internal* label (same `.text` section).
+    /// Opcode `0xE8 cd`.  Used for self-recursive calls where the
+    /// callee is bound to a label inside this function's bytes; the
+    /// displacement is resolved at [`Assembler::finish`] time exactly
+    /// like a [`Assembler::jmp`].
+    ///
+    /// 5 bytes total.
+    pub fn call_label(&mut self, target: LabelId) {
+        self.emit_u8(0xE8);
+        let slot_offset = self.code.len();
+        self.emit_u32_le(0);
+        let instr_end_offset = self.code.len();
+        self.fixups.push(Fixup { slot_offset, instr_end_offset, target });
+    }
+
     /// `CALL r/m64` — indirect call through a register.  Opcode
     /// `0xFF /2`.
     pub fn call_r64(&mut self, target: Reg) {
@@ -1111,6 +1126,23 @@ mod tests {
         assert_eq!(relocs[0].kind, ExternalRelocKind::PltRel32);
         assert_eq!(relocs[0].addend, -4);
         assert_eq!(relocs[0].patch_offset, 1);
+    }
+
+    #[test]
+    fn call_label_back_edge() {
+        // bind(top); nop                      → 90       (top = offset 0)
+        // call top                            → E8 ?? ?? ?? ??   (rel32 from instr end)
+        let mut a = Assembler::new();
+        let top = a.create_label();
+        a.bind(top).unwrap();
+        a.nop();
+        a.call_label(top);
+        let bytes = finish(a);
+        // Bytes: 90 E8 disp32
+        assert_eq!(&bytes[..2], &[0x90, 0xE8]);
+        let disp = i32::from_le_bytes([bytes[2], bytes[3], bytes[4], bytes[5]]);
+        // Instruction ends at byte 6; target is byte 0 → delta = -6.
+        assert_eq!(disp, -6);
     }
 
     #[test]

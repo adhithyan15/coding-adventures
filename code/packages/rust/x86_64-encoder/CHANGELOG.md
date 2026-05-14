@@ -1,5 +1,14 @@
 # Changelog — `x86_64-encoder`
 
+## 0.2.0 — 2026-05-14 (LANG43 phase 5 — calls)
+
+Added `call_label(LabelId)` — `CALL rel32` to an internal label,
+resolved at `finish()` time exactly like `jmp` / `jcc`.  Used by
+`x86_64-backend` for self-recursive calls where the callee lives at
+a label inside the same function's bytes; cross-function calls
+continue to use `call_rel32(symbol, kind)` with an external
+relocation.
+
 ## 0.1.0 — 2026-05-14 (LANG44)
 
 Initial release.  Covers the V1 instruction set from LANG44:
