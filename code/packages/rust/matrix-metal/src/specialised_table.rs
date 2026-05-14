@@ -116,6 +116,17 @@ impl SpecialisedTable {
         self.kernels.len()
     }
 
+    /// **MX05 Phase 5.**  Evict the kernel under `handle`.  Returns
+    /// `true` if an entry was removed.  Used by the deoptimisation
+    /// path: when an observation reveals that a previously-folded
+    /// constant has changed, the compiled `MetalComputePipeline` in
+    /// the closure encodes the *old* constant and is now wrong, so
+    /// the runtime drops it.  The Metal driver releases the pipeline
+    /// when the boxed closure drops.
+    pub fn evict(&mut self, handle: u64) -> bool {
+        self.kernels.remove(&handle).is_some()
+    }
+
     /// Whether the table has no installed kernels.
     pub fn is_empty(&self) -> bool {
         self.kernels.is_empty()

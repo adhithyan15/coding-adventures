@@ -2,6 +2,18 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.7.0] — 2026-05-14
+
+### Added — MX05 Phase 5 (kernel eviction)
+
+- `SpecialisedTable::evict(handle) -> bool` — drops a kernel by
+  handle.
+- `CpuExecutor::evict_specialised(handle) -> bool` — public API
+  exposed to the deoptimisation path in image-gpu-core.  When a
+  previously-folded constant changes at runtime, the cached
+  closure is wrong; this drops it so subsequent
+  `DispatchSpecialised` requests fall through to the generic path.
+
 ## [0.6.0] — 2026-05-13
 
 ### Added — MX05 Phase 4.10 (MatMul closure with folded matrix)

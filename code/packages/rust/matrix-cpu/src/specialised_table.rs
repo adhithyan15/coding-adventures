@@ -146,6 +146,17 @@ impl SpecialisedTable {
         self.kernels.len()
     }
 
+    /// **MX05 Phase 5.**  Evict the kernel under `handle`.  Returns
+    /// `true` if an entry was removed.  Used by the deoptimisation
+    /// path when a previously-stable observation reveals a new
+    /// distinct value — the cached closure encodes the *old*
+    /// constant and is now wrong, so we drop it and let subsequent
+    /// dispatches fall back to the generic path until/unless the
+    /// policy re-stabilises.
+    pub fn evict(&mut self, handle: u64) -> bool {
+        self.kernels.remove(&handle).is_some()
+    }
+
     /// Whether the table has no installed kernels.
     pub fn is_empty(&self) -> bool {
         self.kernels.is_empty()

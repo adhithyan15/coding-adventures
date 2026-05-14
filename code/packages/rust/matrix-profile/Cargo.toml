@@ -1,6 +1,6 @@
 [package]
 name = "matrix-profile"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "MX05 — profile-guided specialisation runtime for the matrix execution layer.  Owns invocation counters, tensor-byte sampling, the SpecKey + Specialiser + SpecCache types, the SpecialisationPolicy trait, and the SpecRouter glue.  v0.2 (MX05 Phase 4.6) adds the `folded_slot: Option<u8>` field on SpecKey so emitters know which input slot the policy folded — unlocking specialisation for non-commutative ops (Sub/Div/Pow)."
 license = "MIT"
