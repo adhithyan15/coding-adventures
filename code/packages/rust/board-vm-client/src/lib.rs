@@ -392,6 +392,16 @@ where
         self.expect_run_report(written.request_id, written.len)
     }
 
+    pub fn reboot_to_bootloader(&mut self) -> Result<(), ClientError> {
+        let written = self.session.bootloader_reboot_frame(&mut self.request)?;
+        self.exchange_checked(
+            written.request_id,
+            written.len,
+            MessageType::BOOTLOADER_REBOOT,
+        )?;
+        Ok(())
+    }
+
     pub fn blink_onboard_led(
         &mut self,
         program_id: u16,
@@ -618,6 +628,46 @@ mod tests {
 
         let run = client.run_background(2, 32).unwrap();
         assert_eq!(run.returns, vec![RunValue::Bool(false), RunValue::U32(42)]);
+    }
+
+    #[test]
+    fn requests_bootloader_reboot() {
+        use board_vm_protocol::{decode_frame, encode_frame, Frame, FLAG_IS_RESPONSE};
+
+        #[derive(Default)]
+        struct BootloaderRebootTransport {
+            reboot_seen: bool,
+        }
+
+        impl RawFrameTransport for BootloaderRebootTransport {
+            fn exchange_raw_frame(
+                &mut self,
+                request: &[u8],
+                response_out: &mut [u8],
+            ) -> Result<usize, TransportError> {
+                let request = decode_frame(request).map_err(|_| TransportError::Io)?;
+                assert_eq!(request.message_type, MessageType::BOOTLOADER_REBOOT);
+                assert!(request.payload.is_empty());
+                self.reboot_seen = true;
+                encode_frame(
+                    &Frame {
+                        flags: FLAG_IS_RESPONSE,
+                        message_type: MessageType::BOOTLOADER_REBOOT,
+                        request_id: request.request_id,
+                        payload: &[],
+                    },
+                    response_out,
+                )
+                .map_err(|_| TransportError::Io)
+            }
+        }
+
+        let mut client: BoardVmClient<_, 256, 512, 512> =
+            BoardVmClient::new(BootloaderRebootTransport::default());
+
+        client.reboot_to_bootloader().unwrap();
+
+        assert!(client.transport().reboot_seen);
     }
 
     #[test]

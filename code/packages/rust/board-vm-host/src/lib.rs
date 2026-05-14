@@ -566,6 +566,13 @@ impl HostSession {
         self.request_frame(MessageType::STOP, &[], frame_out)
     }
 
+    pub fn bootloader_reboot_frame(
+        &mut self,
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        self.request_frame(MessageType::BOOTLOADER_REBOOT, &[], frame_out)
+    }
+
     pub fn request_stream_frame(
         &mut self,
         message_type: MessageType,
@@ -1586,6 +1593,20 @@ mod tests {
         assert_eq!(run_payload.flags, RUN_FLAG_KEEP_HANDLES_AFTER_RUN);
         assert_eq!(run_payload.instruction_budget, 777);
         assert_eq!(run_payload.time_budget_ms, 250);
+    }
+
+    #[test]
+    fn writes_bootloader_reboot_frame() {
+        let mut session = HostSession::with_next_request_id(42);
+        let mut frame = [0u8; 32];
+
+        let written = session.bootloader_reboot_frame(&mut frame).unwrap();
+        let decoded = decode_frame(&frame[..written.len]).unwrap();
+
+        assert_eq!(written.request_id, 42);
+        assert_eq!(decoded.flags, FLAG_RESPONSE_REQUIRED);
+        assert_eq!(decoded.message_type, MessageType::BOOTLOADER_REBOOT);
+        assert!(decoded.payload.is_empty());
     }
 
     #[test]

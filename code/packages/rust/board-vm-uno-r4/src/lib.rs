@@ -297,6 +297,14 @@ pub trait UnoR4Backend {
     fn read_adc(&mut self, _pin: u8) -> Result<u16, HalError> {
         Err(HalError::UnsupportedMode)
     }
+
+    fn supports_bootloader_reboot(&self) -> bool {
+        false
+    }
+
+    fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
 }
 
 pub struct UnoR4Board<B>
@@ -401,6 +409,14 @@ where
             return Err(HalError::UnsupportedMode);
         }
         self.backend.led_matrix_frame(frame)
+    }
+
+    fn supports_bootloader_reboot(&self) -> bool {
+        self.backend.supports_bootloader_reboot()
+    }
+
+    fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+        self.backend.reboot_to_bootloader()
     }
 }
 
@@ -520,6 +536,7 @@ mod tests {
         PwmWrite(u8, u16),
         AdcRead(u8),
         LedMatrixFrame([u32; 3]),
+        BootloaderReboot,
     }
 
     struct FakeBackend {
@@ -569,6 +586,10 @@ mod tests {
             true
         }
 
+        fn supports_bootloader_reboot(&self) -> bool {
+            true
+        }
+
         fn write_pwm(&mut self, pin: u8, duty: u16) -> Result<(), HalError> {
             self.events.push(Event::PwmWrite(pin, duty));
             Ok(())
@@ -581,6 +602,11 @@ mod tests {
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
             self.events.push(Event::LedMatrixFrame(frame));
+            Ok(())
+        }
+
+        fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+            self.events.push(Event::BootloaderReboot);
             Ok(())
         }
     }
@@ -725,6 +751,16 @@ mod tests {
             board.led_matrix_frame([0, 0, 0]),
             Err(HalError::UnsupportedMode)
         );
+    }
+
+    #[test]
+    fn bootloader_reboot_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert!(board.supports_bootloader_reboot());
+        board.reboot_to_bootloader().unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::BootloaderReboot]);
     }
 
     #[test]

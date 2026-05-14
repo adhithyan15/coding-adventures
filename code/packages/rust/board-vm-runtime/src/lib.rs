@@ -73,6 +73,14 @@ pub trait BoardHal {
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
+
+    fn supports_bootloader_reboot(&self) -> bool {
+        false
+    }
+
+    fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

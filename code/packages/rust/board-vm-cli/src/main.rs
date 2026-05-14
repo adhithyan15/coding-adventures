@@ -2,8 +2,8 @@ use std::env;
 
 use board_vm_cli::{
     format_onboard_led, list_pico_bootsel_mounts, list_ports, list_targets, parse_args,
-    run_eject_blink, run_esp_detect, run_esp_upload, run_pico_uf2_upload, run_repl, run_smoke,
-    usage, write_smoke_report, CliCommand,
+    run_bootloader_reboot, run_eject_blink, run_esp_detect, run_esp_upload, run_pico_uf2_upload,
+    run_repl, run_smoke, usage, write_smoke_report, CliCommand,
 };
 
 fn main() {
@@ -89,6 +89,18 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
             let stdin = std::io::stdin();
             let stdout = std::io::stdout();
             run_repl(&options, stdin.lock(), stdout.lock())
+        }
+        CliCommand::BootloaderReboot(options) => {
+            let report = run_bootloader_reboot(&options)?;
+            println!(
+                "bootloader-reboot transport={} {} timeout_ms={} board={} runtime={}",
+                report.connection.transport,
+                report.connection.label,
+                report.connection.timeout_ms,
+                report.hello.board_name,
+                report.hello.runtime_name
+            );
+            Ok(())
         }
         CliCommand::EjectBlink(options) => {
             let report = run_eject_blink(&options)?;

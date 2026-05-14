@@ -66,6 +66,11 @@ pub const fn bootloader_touch_requests_reset(
     line_coding.baud_rate == UNO_R4_WIFI_BOOTLOADER_TOUCH_BAUD && !control_line_state.dtr
 }
 
+#[cfg(target_arch = "arm")]
+pub fn reboot_to_bootloader() -> ! {
+    unsafe { arduino_bootloader_reset::go_bootloader() }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UnoR4WifiSerialUsbCdc<A> {
     api: A,
