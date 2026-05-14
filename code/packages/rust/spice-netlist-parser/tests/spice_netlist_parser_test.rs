@@ -143,6 +143,30 @@ Rload out 0 500
 }
 
 #[test]
+fn parses_ccvs_into_operating_point_circuit() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+Rin in sense 1k
+Vsense sense 0 DC 0
+Hamp out 0 Vsense 1k
+Rload out 0 500
+.op
+"#,
+    )
+    .unwrap();
+
+    let Element::Ccvs(source) = &parsed.circuit.elements()[3] else {
+        panic!("expected CCVS");
+    };
+    assert_eq!(source.control_source, "Vsense");
+    assert_close(source.transresistance_ohms, 1000.0);
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("out").unwrap(), 1.0);
+}
+
+#[test]
 fn parses_pwl_and_sin_source_waveforms() {
     let parsed = parse_netlist(
         r#"
@@ -281,6 +305,49 @@ Rload out 0 500
 
     let result = dc_op(&parsed.circuit).unwrap();
     assert_close(result.voltage("out").unwrap(), -1.0);
+}
+
+#[test]
+fn expands_subcircuit_ccvs_control_sources_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.subckt transimpedance inp outp
+Rin inp sense 1k
+Vsense sense 0 DC 0
+Hamp outp 0 Vsense 1k
+.ends transimpedance
+Vin in 0 DC 1
+Xamp in out transimpedance
+Rload out 0 500
+.op
+"#,
+    )
+    .unwrap();
+
+    let elements = parsed.circuit.elements();
+    let names = elements
+        .iter()
+        .map(|element| match element {
+            Element::VoltageSource(source) => source.name.as_str(),
+            Element::Resistor(resistor) => resistor.name.as_str(),
+            Element::Ccvs(source) => source.name.as_str(),
+            _ => panic!("unexpected element"),
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(
+        names,
+        vec!["Vin", "Xamp.Rin", "Xamp.Vsense", "Xamp.Hamp", "Rload"]
+    );
+
+    let Element::Ccvs(source) = &elements[3] else {
+        panic!("expected CCVS");
+    };
+    assert_eq!(source.positive, "out");
+    assert_eq!(source.control_source, "Xamp.Vsense");
+    assert_close(source.transresistance_ohms, 1000.0);
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("out").unwrap(), 1.0);
 }
 
 #[test]
