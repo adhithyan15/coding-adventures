@@ -570,6 +570,34 @@ class TestJsonReplace:
 
 
 # ---------------------------------------------------------------------------
+# DoS protection — size cap
+# ---------------------------------------------------------------------------
+
+
+class TestJsonSizeCap:
+    """The _JSON_MAX_BYTES guard rejects pathologically large JSON payloads."""
+
+    def test_json_oversized_returns_null(self) -> None:
+        # A 1.1 MB string exceeds the cap; json() returns NULL.
+        big = "[" + ",".join(["1"] * 100_000) + "]"  # ~600 KB but well > 1 000 000 chars when padded
+        huge = '{"x":"' + "a" * 1_100_000 + '"}'  # 1.1 MB raw
+        # json_valid must return 0 (not crash) for oversized input.
+        assert fn("json_valid", huge) == 0
+
+    def test_json_valid_oversized_returns_0(self) -> None:
+        huge = '"' + "z" * 1_100_000 + '"'  # 1.1 MB string literal, valid JSON
+        # Even though it is structurally valid JSON, the size cap kicks in first.
+        assert fn("json_valid", huge) == 0
+
+    def test_json_fn_oversized_returns_null(self) -> None:
+        # 1,000,001 + chars exceeds _JSON_MAX_BYTES (1_000_000)
+        # Wrap in quotes so it is syntactically valid JSON (a long string),
+        # but the size cap fires before json.loads is ever called.
+        huge = '"' + "x" * 1_100_000 + '"'  # 1.1 MB string literal
+        assert fn("json", huge) is None
+
+
+# ---------------------------------------------------------------------------
 # json_group_array() — scalar alias
 # ---------------------------------------------------------------------------
 

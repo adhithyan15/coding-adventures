@@ -1736,6 +1736,27 @@ _JSON_PATH_COMPONENT = re.compile(
     r'|\[(-?\d+|\#(?:[+-]\d+)?)\]'  # [N] or [#] or [#-N] array indexing
 )
 
+# Safety cap: reject JSON strings larger than this to prevent CPU/memory DoS
+# via pathologically large or deeply-nested documents.  1 MB is generous for
+# any realistic SQL JSON value while still blocking obvious abuse.
+_JSON_MAX_BYTES: int = 1_000_000  # 1 MB
+
+
+def _safe_json_loads(s: str) -> tuple[object, bool]:
+    """Parse *s* as JSON and return ``(parsed, ok)``.
+
+    Returns ``(None, False)`` if *s* exceeds :data:`_JSON_MAX_BYTES`, is not
+    valid JSON, or causes a ``RecursionError`` (deeply-nested documents).
+    This is the single choke-point for all user-supplied JSON in the VM; it
+    prevents CPU/memory denial-of-service via crafted payloads.
+    """
+    if len(s) > _JSON_MAX_BYTES:
+        return None, False
+    try:
+        return _json.loads(s), True
+    except (ValueError, TypeError, RecursionError):
+        return None, False
+
 
 def _sql_to_json_val(v: SqlValue) -> object:
     """Convert a SQL scalar value to a Python value suitable for json.dumps.
@@ -2015,11 +2036,10 @@ def _json_fn(x: SqlValue) -> SqlValue:
         return None
     if not isinstance(x, str):
         return None
-    try:
-        parsed = _json.loads(x)
-        return _json.dumps(parsed, separators=(",", ":"))
-    except (ValueError, TypeError):
+    parsed, ok = _safe_json_loads(x)
+    if not ok:
         return None
+    return _json.dumps(parsed, separators=(",", ":"))
 
 
 @register("json_valid")
@@ -2040,11 +2060,8 @@ def _json_valid(x: SqlValue) -> SqlValue:
         return None
     if not isinstance(x, str):
         return 0
-    try:
-        _json.loads(x)
-        return 1
-    except (ValueError, TypeError):
-        return 0
+    _, ok = _safe_json_loads(x)
+    return 1 if ok else 0
 
 
 @register("json_quote")
@@ -2151,9 +2168,8 @@ def _json_extract(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     results: list[object] = []
@@ -2199,9 +2215,8 @@ def _json_type(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     if path == "$":
@@ -2238,9 +2253,8 @@ def _json_array_length(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     if path == "$":
@@ -2283,9 +2297,8 @@ def _json_keys(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     if path == "$":
@@ -2325,10 +2338,9 @@ def _json_patch(target: SqlValue, patch: SqlValue) -> SqlValue:
         return None
     if not isinstance(target, str) or not isinstance(patch, str):
         return None
-    try:
-        t = _json.loads(target)
-        p = _json.loads(patch)
-    except (ValueError, TypeError):
+    t, ok1 = _safe_json_loads(target)
+    p, ok2 = _safe_json_loads(patch)
+    if not ok1 or not ok2:
         return None
 
     def _merge(a: object, b: object) -> object:
@@ -2368,9 +2380,8 @@ def _json_remove(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     for path in args[1:]:
@@ -2406,9 +2417,8 @@ def _json_set(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     for i in range(1, len(args), 2):
@@ -2445,9 +2455,8 @@ def _json_insert(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     for i in range(1, len(args), 2):
@@ -2484,9 +2493,8 @@ def _json_replace(*args: SqlValue) -> SqlValue:
         return None
     if not isinstance(json_str, str):
         return None
-    try:
-        doc = _json.loads(json_str)
-    except (ValueError, TypeError):
+    doc, ok = _safe_json_loads(json_str)
+    if not ok:
         return None
 
     for i in range(1, len(args), 2):
