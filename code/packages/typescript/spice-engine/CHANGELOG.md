@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add capacitor support and backward-Euler RC transient analysis.
+- Add ideal-short DC and backward-Euler transient support for inductors.
 
 ## 0.1.0
 

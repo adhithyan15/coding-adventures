@@ -4,6 +4,7 @@ import {
   SpiceError,
   currentSource,
   dcOp,
+  inductor,
   resistor,
   voltageSource,
 } from "../src/index.js";
@@ -58,6 +59,18 @@ describe("dcOp", () => {
     expectClose(result.voltage("n1"), 3.3);
     expectClose(result.voltage("gnd"), 0.0);
     expectClose(result.voltage("GND"), 0.0);
+  });
+
+  it("treats inductors as ideal shorts in DC", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "out", 1_000.0));
+    circuit.add(inductor("L1", "out", "0", 1.0));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("out"), 0.0);
+    expectClose(result.branchCurrent("L1"), 1.0e-3);
   });
 
   it("returns a singular matrix error for a floating resistor", () => {
