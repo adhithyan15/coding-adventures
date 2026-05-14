@@ -76,6 +76,18 @@ export class ParsedNetlist {
   }
 }
 
+interface Statement {
+  readonly lineNumber: number;
+  readonly fields: string[];
+}
+
+interface SubcktDefinition {
+  readonly name: string;
+  readonly pins: string[];
+  readonly body: Statement[];
+  readonly lineNumber: number;
+}
+
 const VALUE_RE = /^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)([a-zA-Z]*)\s*$/;
 const SUFFIXES = new Map<string, number>([
   ["t", 1.0e12],
@@ -93,6 +105,9 @@ const SUFFIXES = new Map<string, number>([
 export function parseNetlist(text: string): ParsedNetlist {
   const circuit = new Circuit();
   const analyses: Analysis[] = [];
+  const statements: Statement[] = [];
+  const subckts = new Map<string, SubcktDefinition>();
+  let currentSubckt: SubcktDefinition | undefined;
   let title: string | undefined;
   let sawContent = false;
 
@@ -123,17 +138,57 @@ export function parseNetlist(text: string): ParsedNetlist {
       continue;
     }
     const head = fields[0];
-    if (head.toLowerCase() === ".end") {
-      break;
-    }
+    const headLower = head.toLowerCase();
+
     try {
-      if (head.startsWith(".")) {
-        analyses.push(parseDirective(fields));
-      } else {
-        circuit.add(parseElement(fields));
+      if (currentSubckt !== undefined) {
+        if (headLower === ".ends") {
+          finishSubckt(currentSubckt, fields);
+          subckts.set(currentSubckt.name.toLowerCase(), currentSubckt);
+          currentSubckt = undefined;
+        } else if (headLower === ".subckt") {
+          throw new NetlistParseError("nested .subckt definitions are not supported");
+        } else {
+          currentSubckt.body.push({ lineNumber, fields });
+        }
+        continue;
+      }
+      if (headLower === ".subckt") {
+        currentSubckt = startSubckt(fields, lineNumber, subckts);
+        continue;
+      }
+      if (headLower === ".ends") {
+        throw new NetlistParseError(".ends without matching .subckt");
       }
     } catch (error) {
       throw lineError(lineNumber, error);
+    }
+
+    if (headLower === ".end") {
+      break;
+    }
+    statements.push({ lineNumber, fields });
+  }
+
+  if (currentSubckt !== undefined) {
+    throw new NetlistParseError(
+      `line ${currentSubckt.lineNumber}: .subckt ${JSON.stringify(currentSubckt.name)} is missing .ends`,
+    );
+  }
+
+  for (const statement of statements) {
+    try {
+      if (statement.fields[0].startsWith(".")) {
+        analyses.push(parseDirective(statement.fields));
+      } else if (statement.fields[0].toUpperCase().startsWith("X")) {
+        for (const element of expandSubcktInstance(statement.fields, subckts, [])) {
+          circuit.add(element);
+        }
+      } else {
+        circuit.add(parseElement(statement.fields));
+      }
+    } catch (error) {
+      throw lineError(statement.lineNumber, error);
     }
   }
 
@@ -157,7 +212,7 @@ export function parseValue(token: string): number {
 
 function parseElement(fields: readonly string[]): Element {
   const name = fields[0];
-  const prefix = name[0].toUpperCase();
+  const prefix = elementPrefix(name);
   if (prefix === "R") {
     requireFields(fields, 4, "resistor");
     return resistor(name, fields[1], fields[2], parseValue(fields[3]));
@@ -189,6 +244,118 @@ function parseElement(fields: readonly string[]): Element {
     return vccs(name, fields[1], fields[2], fields[3], fields[4], parseValue(fields[5]));
   }
   throw new NetlistParseError(`unsupported element ${JSON.stringify(name)}`);
+}
+
+function startSubckt(
+  fields: readonly string[],
+  lineNumber: number,
+  subckts: ReadonlyMap<string, SubcktDefinition>,
+): SubcktDefinition {
+  requireMinFields(fields, 3, ".subckt");
+  const name = fields[1];
+  if (subckts.has(name.toLowerCase())) {
+    throw new NetlistParseError(`duplicate .subckt definition ${JSON.stringify(name)}`);
+  }
+  return { name, pins: fields.slice(2), body: [], lineNumber };
+}
+
+function finishSubckt(definition: SubcktDefinition, fields: readonly string[]): void {
+  if (fields.length > 2) {
+    throw new NetlistParseError(".ends expects at most a subcircuit name");
+  }
+  if (fields.length === 2 && fields[1].toLowerCase() !== definition.name.toLowerCase()) {
+    throw new NetlistParseError(
+      `.ends ${JSON.stringify(fields[1])} does not match .subckt ${JSON.stringify(definition.name)}`,
+    );
+  }
+}
+
+function expandSubcktInstance(
+  fields: readonly string[],
+  subckts: ReadonlyMap<string, SubcktDefinition>,
+  stack: readonly string[],
+): Element[] {
+  requireMinFields(fields, 3, "subcircuit instance");
+  const instanceName = fields[0];
+  const subcktName = fields[fields.length - 1];
+  const definition = subckts.get(subcktName.toLowerCase());
+  if (definition === undefined) {
+    throw new NetlistParseError(`unknown subcircuit ${JSON.stringify(subcktName)}`);
+  }
+  if (stack.includes(definition.name.toLowerCase())) {
+    const cycle = [...stack, definition.name.toLowerCase()].join(" -> ");
+    throw new NetlistParseError(`recursive subcircuit expansion is not supported: ${cycle}`);
+  }
+
+  const actualNodes = fields.slice(1, -1);
+  if (actualNodes.length !== definition.pins.length) {
+    throw new NetlistParseError(
+      `subcircuit ${JSON.stringify(definition.name)} expects ${definition.pins.length} pins, got ${actualNodes.length}`,
+    );
+  }
+
+  const nodeMap = new Map<string, string>();
+  for (let index = 0; index < definition.pins.length; index++) {
+    nodeMap.set(definition.pins[index], actualNodes[index]);
+    nodeMap.set(definition.pins[index].toLowerCase(), actualNodes[index]);
+  }
+
+  const elements: Element[] = [];
+  const nextStack = [...stack, definition.name.toLowerCase()];
+  for (const statement of definition.body) {
+    if (statement.fields[0].startsWith(".")) {
+      throw new NetlistParseError(
+        `line ${statement.lineNumber}: directives inside .subckt are not supported`,
+      );
+    }
+    const localFields = mapSubcktFields(statement.fields, instanceName, nodeMap);
+    if (elementPrefix(statement.fields[0]) === "X") {
+      elements.push(...expandSubcktInstance(localFields, subckts, nextStack));
+    } else {
+      elements.push(parseElement(localFields));
+    }
+  }
+  return elements;
+}
+
+function mapSubcktFields(
+  fields: readonly string[],
+  instanceName: string,
+  nodeMap: ReadonlyMap<string, string>,
+): string[] {
+  const mapped = [`${instanceName}.${fields[0]}`, ...fields.slice(1)];
+  const prefix = fields[0][0].toUpperCase();
+  if (["R", "C", "L", "V", "I"].includes(prefix)) {
+    requireMinFields(fields, 3, "subcircuit element");
+    mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
+    mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
+  } else if (prefix === "G") {
+    requireMinFields(fields, 5, "subcircuit VCCS");
+    for (let index = 1; index < 5; index++) {
+      mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
+    }
+  } else if (prefix === "X") {
+    for (let index = 1; index < fields.length - 1; index++) {
+      mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
+    }
+  }
+  return mapped;
+}
+
+function mapSubcktNode(
+  node: string,
+  instanceName: string,
+  nodeMap: ReadonlyMap<string, string>,
+): string {
+  if (node.toLowerCase() === "0" || node.toLowerCase() === "gnd") {
+    return node;
+  }
+  return nodeMap.get(node) ?? nodeMap.get(node.toLowerCase()) ?? `${instanceName}.${node}`;
+}
+
+function elementPrefix(name: string): string {
+  const localName = name.split(".").at(-1) ?? name;
+  return localName[0].toUpperCase();
 }
 
 function parseSourceValue(fields: readonly string[]): readonly [number, Waveform | undefined] {

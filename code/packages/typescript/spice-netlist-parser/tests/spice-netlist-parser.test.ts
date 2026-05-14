@@ -75,6 +75,54 @@ I1 in 0 SIN(0 2m 1k 10u 5)
     expect(current.waveform?.valueAt(1.0e-6)).toBeCloseTo(0.0, 12);
   });
 
+  it("expands subcircuit instances into engine elements", () => {
+    const parsed = parseNetlist(`
+.subckt divider top mid bot
+Rtop top mid 1k
+Rbot mid bot 1k
+.ends divider
+V1 vin 0 DC 10
+Xdiv vin mid 0 divider
+.op
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements.map((element) => element.name)).toEqual([
+      "V1",
+      "Xdiv.Rtop",
+      "Xdiv.Rbot",
+    ]);
+    expect(elements[1]).toMatchObject({
+      kind: "resistor",
+      n1: "vin",
+      n2: "mid",
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("mid")).toBeCloseTo(5.0, 9);
+  });
+
+  it("scopes subcircuit internal nodes by instance", () => {
+    const parsed = parseNetlist(`
+.subckt load in out
+R1 in inner 1k
+C1 inner out 1u
+.ends load
+Xleft a b load
+Xright c d load
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements[0]).toMatchObject({
+      kind: "resistor",
+      n2: "Xleft.inner",
+    });
+    expect(elements[2]).toMatchObject({
+      kind: "resistor",
+      n2: "Xright.inner",
+    });
+  });
+
   it("parses engineering suffixes", () => {
     expect(parseValue("1k")).toBe(1.0e3);
     expect(parseValue("2.2meg")).toBe(2.2e6);
@@ -89,5 +137,11 @@ I1 in 0 SIN(0 2m 1k 10u 5)
 
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
+  });
+
+  it("rejects unknown subcircuit instances", () => {
+    expect(() => parseNetlist("X1 a b missing\n")).toThrow(
+      "line 1: unknown subcircuit \"missing\"",
+    );
   });
 });
