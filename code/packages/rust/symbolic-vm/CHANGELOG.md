@@ -4,6 +4,9 @@
 
 ### Added
 
+- `Integrate` recognises canonical elliptic first-kind forms, returning
+  `EllipticF(theta, k)` for the incomplete integral and `EllipticK(k)` for the
+  complete `[0, %pi/2]` definite integral.
 - `SymbolicBackend` now installs canonical `Factor` handling backed by
   `cas-factor`, including common-symbolic-factor extraction for additive
   multivariate expressions before univariate integer factorization.
