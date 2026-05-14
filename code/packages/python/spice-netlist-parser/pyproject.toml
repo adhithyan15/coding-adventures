@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-spice-netlist-parser"
-version = "0.1.0"
+version = "0.1.1"
 description = "SPICE3 netlist parser that builds coding-adventures SPICE engine circuits"
 requires-python = ">=3.12"
 license = "MIT"

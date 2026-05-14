@@ -11,7 +11,7 @@ from spice_netlist_parser.parser import (
 )
 
 parse = parse_netlist
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "AcAnalysis",
