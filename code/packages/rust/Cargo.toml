@@ -225,6 +225,7 @@ members = [
     "starlark-vm",
     "state-machine",
     "statistics-core",
+    "spice-engine",
     "system-board",
     "block-ram",
     "device-driver-framework",
