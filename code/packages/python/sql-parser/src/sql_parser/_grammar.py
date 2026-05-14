@@ -992,6 +992,19 @@ PARSER_GRAMMAR = ParserGrammar(
                             Literal(value='NOT'),
                             Literal(value='NULL'),
                         ]),
+                        Sequence(elements=[
+                            Literal(value='IS'),
+                            Literal(value='DISTINCT'),
+                            Literal(value='FROM'),
+                            RuleReference(name='additive', is_token=False),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='IS'),
+                            Literal(value='NOT'),
+                            Literal(value='DISTINCT'),
+                            Literal(value='FROM'),
+                            RuleReference(name='additive', is_token=False),
+                        ]),
                     ]),
                 ),
             ]),
@@ -1123,11 +1136,27 @@ PARSER_GRAMMAR = ParserGrammar(
             name='function_call',
             body=
             Sequence(elements=[
-                RuleReference(name='NAME', is_token=True),
+                # Some SQL functions share their name with a keyword — most notably
+                # REPLACE(str, from, to) which is also valid DML ("REPLACE INTO t …").
+                # The lexer tokenises REPLACE as a KEYWORD, so the bare NAME reference
+                # would fail.  We therefore accept either a NAME token OR any of the
+                # keyword literals that are also valid scalar/aggregate function names.
+                Alternation(choices=[
+                    RuleReference(name='NAME', is_token=True),
+                    Literal(value='REPLACE'),
+                ]),
                 Literal(value='('),
+                # Argument list — three forms:
+                #   COUNT(*)               →  STAR
+                #   COUNT(DISTINCT expr)   →  DISTINCT + value_list  (keyword must come first)
+                #   f(expr [, expr …])     →  optional value_list (covers the empty-args case)
                 Group(element=
                     Alternation(choices=[
                         RuleReference(name='STAR', is_token=True),
+                        Sequence(elements=[
+                            Literal(value='DISTINCT'),
+                            RuleReference(name='value_list', is_token=False),
+                        ]),
                         Optional(element=
                             RuleReference(name='value_list', is_token=False),
                         ),

@@ -1,5 +1,102 @@
 # Changelog
 
+## [1.28.0] - 2026-05-13
+
+### Fixed
+
+- **`IS DISTINCT FROM` / `IS NOT DISTINCT FROM` operators** — SQL:1999 NULL-safe
+  equality comparisons now work end-to-end.  These operators never return NULL:
+  `NULL IS DISTINCT FROM NULL` → `FALSE`, `NULL IS DISTINCT FROM 1` → `TRUE`,
+  `1 IS NOT DISTINCT FROM 1` → `TRUE`, etc.
+
+  Four-layer fix:
+  1. `sql-parser 0.17.0` — grammar extended with two new comparison suffix
+     alternatives; adapter emits `BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, …)`.
+  2. `sql-planner 0.25.0` — two new `BinaryOp` enum values pass through unchanged.
+  3. `sql-codegen 1.20.0` — two new `BinaryOpCode` enum values added; both mapped
+     in `_BINOP_MAP` so the generic `_compile_expr` path handles them.
+  4. `sql-vm 1.19.0` — `apply_binary` handles both opcodes *before* the general
+     `if left is None or right is None: return None` short-circuit, which is
+     critical because these operators must see NULL operands directly.
+  5. `sql-optimizer 0.10.0` — constant folding handles `IS DISTINCT FROM` before
+     the generic NULL propagation guard to avoid incorrectly folding
+     `NULL IS DISTINCT FROM 1` to `NULL`.
+
+- **Aggregate SELECT aliases now resolve in HAVING and ORDER BY** — queries like
+  `SELECT SUM(amount) AS total FROM t HAVING total > 100 ORDER BY total` previously
+  raised `ColumnNotFound: total`.  `sql-planner 0.25.0` introduces
+  `_substitute_aliases` which rewrites alias references in HAVING / ORDER BY
+  expressions to their source aggregate expressions before column resolution.
+
+- **`MAX()` / `MIN()` scalar functions propagate NULL** — `SELECT MAX(NULL, 1)`
+  now returns `NULL`, matching SQLite.  Previously the NULL argument was silently
+  dropped.
+
+- **`ABS()` on non-numeric text returns `0.0`** — `SELECT ABS('hello')` now
+  returns `0.0` to match SQLite's coercion behaviour.  Previously passed the string
+  through unchanged.
+
+- **`HEX(NULL)` returns `''`** — `SELECT HEX(NULL)` now returns an empty string
+  instead of `None`, matching SQLite.
+
+- **`date()` month arithmetic overflow** — adding months that push the day past the
+  last day of the resulting month (e.g. `date('2024-01-31', '+1 month')`) now
+  overflows into the next month (`2024-03-02`) rather than clamping to `2024-02-29`.
+  This matches SQLite's behaviour.
+
+### Tests
+
+- Added `tests/test_tier14_convergence.py` — 33 oracle-grade integration tests
+  comparing mini-sqlite against real `sqlite3` for all six fixed patterns:
+  - `TestIsDistinctFrom` (8 tests)
+  - `TestIsNotDistinctFrom` (8 tests)
+  - `TestAggregateAliasInHavingAndOrderBy` (5 tests)
+  - `TestScalarMaxMinNull` (4 tests)
+  - `TestAbsNonNumeric` (3 tests)
+  - `TestHexNull` (3 tests)
+  - `TestDateMonthOverflow` (2 tests)
+
+## [1.27.0] - 2026-05-13
+
+### Fixed
+
+- **`x % 0` returns NULL** — `SELECT 5 % 0` now returns `NULL` instead of
+  crashing.  Fix is in `sql-vm 1.18.0`.
+
+- **Doubled-quote `''` escape in string literals** — SQL strings containing
+  `''` (the ANSI standard way to embed a single quote) now parse and store
+  correctly.  `INSERT INTO t VALUES (1, 'O''Brien')` stores `O'Brien`.
+
+  Two-layer fix:
+  1. `sql-parser 0.16.0` — updated `STRING_SQ` token regex to `'(''|[^'\\]|\\.)*'`
+  2. `mini_sqlite.adapter._unquote_string` — updated to process `''` → `'` on the
+     already-quote-stripped token body received from the sql-lexer.
+
+- **`COUNT(DISTINCT col)` / `SUM(DISTINCT col)` deduplication** — aggregate
+  functions with `DISTINCT` now correctly deduplicate values before accumulating.
+  Previously the `DISTINCT` flag was parsed and propagated through the plan but
+  ignored in the VM, causing `COUNT(DISTINCT col)` to behave like `COUNT(col)`.
+
+  Fix is in `sql-codegen 1.19.0` (new `InitAgg.distinct` field) and
+  `sql-vm 1.18.0` (`_AggState.seen` deduplication set).
+
+- **`REPLACE(str, from, to)` scalar function** — `REPLACE` is a SQL keyword used
+  for `REPLACE INTO` DML.  The grammar previously rejected `REPLACE(...)` as a
+  function call.  `sql-parser 0.16.0` extends `function_call` to allow `REPLACE`
+  as a function name alongside the existing `NAME` alternative.
+
+  The adapter's `_function_call` is updated to recognise `KEYWORD` tokens with
+  value `REPLACE` as the function name.
+
+### Tests
+
+- Added `tests/test_tier13_convergence.py` — 30 oracle-grade integration tests
+  comparing mini-sqlite against real `sqlite3` for all four fixed patterns:
+  - `TestModuloByZero` (6 tests)
+  - `TestDoubledQuoteEscape` (7 tests)
+  - `TestCountDistinct` + `TestSumDistinct` + `TestCountDistinctWithGroupBy` (12 tests)
+  - `TestReplaceFunction` (8 tests — including regression checks for DML syntax)
+
 ## [1.26.0] - 2026-05-12
 
 ### Fixed

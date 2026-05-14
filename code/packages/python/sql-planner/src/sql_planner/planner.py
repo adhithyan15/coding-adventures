@@ -248,10 +248,35 @@ def _plan_select(
         )
         for it in stmt.items
     )
-    having = _resolve(stmt.having, scope, schema, outer_scope) if stmt.having is not None else None
+    # Build an alias map from resolved SELECT items so that HAVING and ORDER BY
+    # can reference aliases defined in the SELECT list.  For example:
+    #
+    #   SELECT LENGTH(name) AS n FROM t HAVING n > 3
+    #
+    # The HAVING clause refers to alias ``n``, but the column resolver only
+    # knows about table columns, not expression aliases.  We substitute the
+    # alias with the underlying expression *before* resolution so the resolver
+    # sees ``LENGTH(name)`` rather than the bare name ``n``.
+    #
+    # Only unqualified column references (table=None) that exactly match an
+    # alias name are substituted; all others pass through unchanged.
+    select_aliases: dict[str, Expr] = {
+        it.alias: it.expr
+        for it in resolved_items
+        if it.alias is not None
+    }
+    having_raw = stmt.having
+    if having_raw is not None and select_aliases:
+        having_raw = _substitute_aliases(having_raw, select_aliases)
+    having = _resolve(having_raw, scope, schema, outer_scope) if having_raw is not None else None
     order_by = tuple(
         P.SortKey(
-            expr=_resolve(k.expr, scope, schema, outer_scope),
+            expr=_resolve(
+                _substitute_aliases(k.expr, select_aliases) if select_aliases else k.expr,
+                scope,
+                schema,
+                outer_scope,
+            ),
             descending=k.descending,
             nulls_first=k.nulls_first,
         )
@@ -702,6 +727,44 @@ def _add_to_scope(scope: Scope, alias: str, columns: list[str]) -> None:
     if alias in scope:
         raise UnsupportedStatement(kind=f"duplicate alias: {alias}")
     scope[alias] = columns
+
+
+# --------------------------------------------------------------------------
+# Alias substitution
+# --------------------------------------------------------------------------
+
+
+def _substitute_aliases(expr: Expr, alias_map: dict[str, Expr]) -> Expr:
+    """Replace ``Column(None, alias)`` references with their aliased expression.
+
+    SQLite allows HAVING and ORDER BY to reference SELECT-list aliases (e.g.
+    ``HAVING total > 200`` when the SELECT list contains
+    ``SUM(amount) AS total``).  The planner calls this function before
+    resolving the HAVING / ORDER BY expressions so that the alias is expanded
+    to the real aggregate or column expression before column qualification
+    takes place.
+
+    Only bare column references with no table qualifier are substituted —
+    ``t.total`` is never an alias reference, so it is left unchanged.
+
+    Structural note: only the expression types that actually appear in HAVING
+    and ORDER BY need to be handled here.  Unknown node types are returned
+    unchanged (they either don't contain Column references or will be caught
+    later by ``_resolve``).
+    """
+    match expr:
+        case Column(table=None, col=name) if name in alias_map:
+            return alias_map[name]
+        case BinaryExpr(op=op, left=left, right=right):
+            return BinaryExpr(
+                op=op,
+                left=_substitute_aliases(left, alias_map),
+                right=_substitute_aliases(right, alias_map),
+            )
+        case UnaryExpr(op=op, operand=operand):
+            return UnaryExpr(op=op, operand=_substitute_aliases(operand, alias_map))
+        case _:
+            return expr
 
 
 # --------------------------------------------------------------------------

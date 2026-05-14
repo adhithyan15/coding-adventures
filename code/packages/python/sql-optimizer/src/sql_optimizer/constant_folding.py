@@ -80,7 +80,8 @@ from sql_planner import (
     Update,
 )
 from sql_planner.plan import Assignment as PlanAssignment
-from sql_planner.plan import Limit, SortKey, UpsertAction, UpsertAssignment as PlanUpsertAssignment
+from sql_planner.plan import Limit, SortKey, UpsertAction
+from sql_planner.plan import UpsertAssignment as PlanUpsertAssignment
 
 
 class ConstantFolding:
@@ -281,6 +282,26 @@ def _fold_binary(op: BinaryOp, left: Expr, right: Expr) -> Expr:
         simp = _simplify_or(left, right)
         if simp is not None:
             return simp
+
+    # IS [NOT] DISTINCT FROM — NULL-safe comparisons.  Both operators accept
+    # NULL operands and always return a bool, never NULL.  They must be handled
+    # before the generic NULL-propagation guard below.
+    if op is BinaryOp.IS_DISTINCT_FROM or op is BinaryOp.IS_NOT_DISTINCT_FROM:
+        if isinstance(left, Literal) and isinstance(right, Literal):
+            lv, rv = left.value, right.value
+            if op is BinaryOp.IS_DISTINCT_FROM:
+                if lv is None and rv is None:
+                    return Literal(value=False)
+                if lv is None or rv is None:
+                    return Literal(value=True)
+                return Literal(value=lv != rv)
+            else:  # IS_NOT_DISTINCT_FROM
+                if lv is None and rv is None:
+                    return Literal(value=True)
+                if lv is None or rv is None:
+                    return Literal(value=False)
+                return Literal(value=lv == rv)
+        return BinaryExpr(op=op, left=left, right=right)
 
     if not (isinstance(left, Literal) and isinstance(right, Literal)):
         return BinaryExpr(op=op, left=left, right=right)

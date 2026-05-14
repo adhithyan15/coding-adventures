@@ -39,7 +39,14 @@ TOKEN_GRAMMAR = TokenGrammar(
         ),
         TokenDefinition(
             name='STRING_SQ',
-            pattern="'([^'\\\\]|\\\\.)*'",
+            # Pattern accepts:
+            #   ''        — SQL standard escape for a literal single-quote inside a string
+            #   [^'\\]    — any character that is neither a quote nor a backslash
+            #   \\.       — backslash-escape sequences (\n, \t, \', etc.)
+            # The '' alternative MUST be listed first so the regex engine greedily
+            # consumes the pair before the engine tries to match a lone quote that
+            # would terminate the string prematurely.
+            pattern="'(''|[^'\\\\]|\\\\.)*'",
             is_regex=True,
             line_number=20,
             alias='STRING',

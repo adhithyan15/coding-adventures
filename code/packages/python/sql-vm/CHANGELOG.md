@@ -1,5 +1,67 @@
 # Changelog
 
+## 1.19.0 — 2026-05-13
+
+### Fixed
+
+- **IS DISTINCT FROM / IS NOT DISTINCT FROM** (`operators.py`) — new
+  NULL-safe comparison operators.  `IS DISTINCT FROM` returns `True` when
+  the operands differ *or* exactly one is NULL; `IS NOT DISTINCT FROM`
+  returns `True` when both are equal or both are NULL.  Neither operator
+  ever returns NULL, unlike the regular `=` / `<>` operators.
+
+- **Scalar MAX/MIN NULL propagation** (`scalar_functions.py`) — the
+  two-or-more-argument scalar `MAX(…)` / `MIN(…)` now return `NULL`
+  when any argument is `NULL`, matching SQLite's multi-argument max/min
+  semantics.  The previous implementation treated `NULL` as less than
+  all values (aggregate semantics); the scalar form propagates `NULL`.
+
+- **ABS(text) → 0.0** (`scalar_functions.py`) — non-numeric text inputs
+  now coerce to `0.0` via numeric-prefix regex rather than returning
+  the original string.  Matches SQLite.
+
+- **HEX(NULL) → ""** (`scalar_functions.py`) — returns an empty string
+  instead of `NULL`, matching SQLite.
+
+- **DATE +1 month overflow** (`scalar_functions.py`) — landing on a
+  non-existent day (e.g. Jan 31 + 1 month → Feb 31) now overflows into
+  the next month rather than clamping to the last valid day.  Matches
+  SQLite: `date('2023-01-31', '+1 months')` → `'2023-03-03'`.
+
+### Tests updated
+
+- `test_mod_by_zero` — expects `None` instead of `DivisionByZero`.
+- `test_abs_non_numeric_passthrough` — asserts `0.0` (not pass-through).
+- `test_hex_null` — asserts `""` (not `None`).
+- `test_date_plus_month_*_clamp` renamed to `*_overflow`; values updated.
+- `test_max_with_null_returns_non_null` renamed; now asserts `None`.
+
+## 1.18.0 — 2026-05-13
+
+### Fixed
+
+- **`x % 0` returns NULL** (`operators.py`) — the `BinaryOpCode.MOD` branch in
+  `_arithmetic` now returns `None` (SQL NULL) when the divisor is zero instead of
+  raising `DivisionByZero`.  This matches real SQLite's behaviour: `SELECT 5 % 0`
+  → `NULL`.  Division by zero for `/` still raises `DivisionByZero` (SQLite
+  behaviour).
+
+### Added
+
+- **DISTINCT deduplication for aggregate slots** (`vm.py`, `_AggState`) — the
+  `_AggState` accumulator gains two new fields:
+
+  - `distinct: bool = False` — set at `InitAgg` time; activates deduplication.
+  - `seen: set | None = None` — lazily-populated set of already-accumulated values;
+    only allocated when `distinct=True` to keep the common case lightweight.
+
+  `_do_update_agg` now checks `agg.distinct` before accumulating a value.  If the
+  value is already in `agg.seen` the row is silently skipped, implementing
+  `COUNT(DISTINCT col)`, `SUM(DISTINCT col)`, `AVG(DISTINCT col)`, etc.
+
+  `_do_init_agg` populates `distinct` and `seen` from the new `InitAgg.distinct`
+  field added in `sql-codegen 1.19.0`.
+
 ## 1.17.0 — 2026-05-12
 
 ### Added

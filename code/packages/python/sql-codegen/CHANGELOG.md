@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.20.0] - 2026-05-13
+
+### Added
+
+- **`IS_DISTINCT_FROM` and `IS_NOT_DISTINCT_FROM` IR opcodes** (`ir.py`) — two new
+  `BinaryOpCode` variants implement the SQL:1999 NULL-safe equality operators.
+  Unlike `=` and `<>`, these operators never return NULL: they treat two NULL
+  operands as equal and a NULL vs. non-NULL pair as distinct.
+
+  Truth tables::
+
+      NULL IS DISTINCT FROM NULL         → FALSE  (both null = same)
+      NULL IS DISTINCT FROM 1            → TRUE   (one null, one not)
+      1    IS DISTINCT FROM 2            → TRUE   (different values)
+      1    IS DISTINCT FROM 1            → FALSE  (equal values)
+
+      NULL IS NOT DISTINCT FROM NULL     → TRUE
+      NULL IS NOT DISTINCT FROM 1        → FALSE
+      1    IS NOT DISTINCT FROM 1        → TRUE
+      1    IS NOT DISTINCT FROM 2        → FALSE
+
+- **`IS_DISTINCT_FROM` / `IS_NOT_DISTINCT_FROM` entries in `_BINOP_MAP`**
+  (`compiler.py`) — the planner's `AstBinaryOp.IS_DISTINCT_FROM` and
+  `AstBinaryOp.IS_NOT_DISTINCT_FROM` are mapped to the corresponding VM opcodes,
+  so `_compile_expr` handles them without any special-casing beyond the generic
+  binary-op path.
+
+## [1.19.0] - 2026-05-13
+
+### Added
+
+- **`InitAgg.distinct` field** (`ir.py`) — the `InitAgg` instruction gains a new
+  `distinct: bool = False` field.  When `True` the VM initialises a `seen` set on
+  the corresponding `_AggState` and deduplicates inputs before accumulation,
+  implementing `COUNT(DISTINCT col)`, `SUM(DISTINCT col)`, etc.
+
+- **`distinct` propagated to `InitAgg` in `_compile_aggregate`** (`compiler.py`) —
+  the aggregate body loop now emits `InitAgg(slot=s, func=..., separator=...,
+  distinct=a.distinct)` so that the VM's deduplication logic is activated when the
+  planner marks an `AggregateItem` as `distinct=True`.
+
 ## [1.18.0] - 2026-05-12
 
 ### Added

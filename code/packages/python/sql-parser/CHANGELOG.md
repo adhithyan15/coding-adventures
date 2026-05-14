@@ -2,6 +2,57 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.17.0] - 2026-05-13
+
+### Added
+
+- **`IS DISTINCT FROM` / `IS NOT DISTINCT FROM` comparison syntax** (`_grammar.py`,
+  `sql.grammar`) — the `comparison` grammar rule's optional trailing suffix is
+  extended with two new alternatives:
+
+      | "IS" "DISTINCT" "FROM" additive
+      | "IS" "NOT" "DISTINCT" "FROM" additive
+
+  These appear after the existing `IS NULL` / `IS NOT NULL` alternatives so that
+  the parser greedily matches the longer keyword sequence first.
+
+  The adapter's `_comparison` helper detects the `DISTINCT` keyword child to
+  distinguish these new operators from the existing `IS NULL` / `IS NOT NULL` forms
+  and emits the corresponding `BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, …)` or
+  `BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, …)` plan node.
+
+## [0.16.0] - 2026-05-13
+
+### Fixed
+
+- **`''` (doubled-quote) escape in string literals** (`_tokens.py`, `sql.tokens`) —
+  the `STRING_SQ` token regex was `'([^'\\]|\\.)*'` which could not match a string
+  containing `''` (two consecutive quotes, the ANSI SQL escape for a literal
+  single-quote).  The updated regex is `'(''|[^'\\]|\\.)*'` — the `''` alternative
+  is tried first so a pair of apostrophes is consumed as a unit rather than
+  terminating the string early.  This allows `SELECT 'O''Brien'` to produce
+  `O'Brien` rather than a parse error.
+
+- **`REPLACE()` as a function name** (`_grammar.py`, `sql.grammar`) — the
+  `function_call` grammar rule previously required the function name to be a `NAME`
+  token.  Because `REPLACE` is a keyword (used for `REPLACE INTO` DML), it was
+  tokenised as `KEYWORD` and rejected.  The rule now accepts either `NAME` or the
+  literal keyword `REPLACE`, enabling `REPLACE(str, from, to)` scalar-function
+  calls alongside the existing `REPLACE INTO` DML syntax.
+
+- **`COUNT(DISTINCT col)` parsing** (`_grammar.py`, `sql.grammar`) — the
+  `function_call` rule's argument alternation is extended from:
+
+      STAR | Optional(value_list)
+
+  to:
+
+      STAR | Sequence([Literal('DISTINCT'), value_list]) | Optional(value_list)
+
+  This lets `COUNT(DISTINCT col)`, `SUM(DISTINCT col)`, etc. parse without
+  ambiguity.  The `DISTINCT` keyword is detected in `_function_call` (adapter) and
+  forwarded as `distinct=True` on the resulting `AggregateExpr`.
+
 ## [0.15.0] - 2026-05-04
 
 ### Added

@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.10.0] - 2026-05-13
+
+### Fixed
+
+- **`IS DISTINCT FROM` / `IS NOT DISTINCT FROM` constant folding** (`constant_folding.py`) —
+  these NULL-safe operators must be evaluated *before* the generic NULL-propagation
+  guard in `_fold_binary`.  The previous code would short-circuit `IS DISTINCT FROM
+  NULL, 1` to `Literal(None)` instead of `Literal(True)` because the generic
+  ``if lv is None or rv is None: return Literal(None)`` clause fired first.
+
+  The fix inserts a dedicated branch at the top of `_fold_binary` for
+  `BinaryOp.IS_DISTINCT_FROM` and `BinaryOp.IS_NOT_DISTINCT_FROM`.  When both
+  operands are literals the branch folds them to the correct boolean (following the
+  same truth table as the VM's ``apply_binary``); otherwise it returns the
+  expression unchanged so the VM evaluates it at runtime.
+
+### Tests
+
+- Added `TestIsDistinctFrom` in `tests/test_constant_folding.py` with 11 cases
+  covering all combinations of NULL / non-NULL / non-literal operands for both
+  operators.
+
 ## [0.9.0] - 2026-05-12
 
 ### Added

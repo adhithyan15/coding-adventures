@@ -838,6 +838,17 @@ def _compile_source(
             # "empty" row context (which only contains literal/scalar values).
             return body(ctx)
 
+        case EmptyResult():
+            # The planner detected a statically-false WHERE (e.g. WHERE 1 = 0).
+            # No rows will ever satisfy the predicate so the body is never called.
+            # We emit zero instructions — the scan loop is a no-op.
+            #
+            # When an Aggregate wraps an EmptyResult the aggregate accumulator is
+            # never initialized; FinalizeAgg's auto-grow path handles this by
+            # producing the correct zero-state result (0 for COUNT, NULL for
+            # SUM / MIN / MAX / AVG / GROUP_CONCAT).
+            return []
+
         case _:
             raise UnsupportedNode(type(p).__name__)
 
@@ -1022,7 +1033,7 @@ def _compile_aggregate(
             # doesn't need to look it up on every row.  The separator field is
             # ignored for all other aggregate functions.
             sep = a.separator if a.separator is not None else ","
-            out.append(InitAgg(slot=s, func=ir_func, separator=sep))
+            out.append(InitAgg(slot=s, func=ir_func, separator=sep, distinct=a.distinct))
         # Update each aggregate with the row's value.
         for s, a in zip(slots, aggregates, strict=True):
             if a.arg.star:
@@ -1559,6 +1570,8 @@ _BINOP_MAP = {
     AstBinaryOp.AND: BinaryOpCode.AND,
     AstBinaryOp.OR: BinaryOpCode.OR,
     AstBinaryOp.CONCAT: BinaryOpCode.CONCAT,  # SQL || string concatenation
+    AstBinaryOp.IS_DISTINCT_FROM: BinaryOpCode.IS_DISTINCT_FROM,
+    AstBinaryOp.IS_NOT_DISTINCT_FROM: BinaryOpCode.IS_NOT_DISTINCT_FROM,
 }
 
 

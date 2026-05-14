@@ -204,7 +204,9 @@ comparison        = additive [ cmp_op additive
                   | "GLOB" additive
                   | "NOT" "GLOB" additive
                   | "IS" "NULL"
-                  | "IS" "NOT" "NULL" ] ;
+                  | "IS" "NOT" "NULL"
+                  | "IS" "DISTINCT" "FROM" additive
+                  | "IS" "NOT" "DISTINCT" "FROM" additive ] ;
 
 # in_expr: a subquery takes priority (starts with SELECT); otherwise a
 # comma-separated value list is used.
@@ -244,7 +246,13 @@ primary           = NUMBER | STRING | BLOB | "NULL" | "TRUE" | "FALSE"
                   | "(" expr ")" ;
 
 column_ref        = NAME [ "." NAME ] ;
-function_call     = NAME "(" ( STAR | [ value_list ] ) ")" ;
+# function_call accepts:
+#   NAME or "REPLACE"  — REPLACE() is a keyword that is also a scalar function
+#   (STAR | "DISTINCT" value_list | [value_list])
+#     COUNT(*)           — star form
+#     COUNT(DISTINCT x)  — DISTINCT aggregate
+#     f(x, y, …)        — regular args (value_list is optional for zero-arg calls)
+function_call     = (NAME | "REPLACE") "(" ( STAR | "DISTINCT" value_list | [ value_list ] ) ")" ;
 
 # cast_expr: CAST(expr AS type_name)
 # CAST is a keyword so it cannot appear in function_call (which uses NAME).

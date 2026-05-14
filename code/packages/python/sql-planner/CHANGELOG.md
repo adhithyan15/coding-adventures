@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.25.0] - 2026-05-13
+
+### Added
+
+- **`IS_DISTINCT_FROM` and `IS_NOT_DISTINCT_FROM` binary operators** (`expr.py`) —
+  two new `BinaryOp` enum values represent the SQL:1999 NULL-safe equality
+  operators.  They are propagated from the parser tree through the planner without
+  special-casing, appearing in the output plan as `BinaryExpr` nodes with the new
+  operators.
+
+### Fixed
+
+- **Aggregate aliases now resolve in HAVING and ORDER BY** (`planner.py`) — when a
+  SELECT list assigns an alias to an expression (e.g. `SUM(amount) AS total`),
+  referring to that alias in HAVING (`HAVING total > 100`) or ORDER BY
+  (`ORDER BY total DESC`) previously raised a `ColumnNotFound` error because the
+  alias was not in scope during expression resolution.
+
+  The fix introduces `_substitute_aliases(expr, aliases)` — called in `_select`
+  before resolving HAVING and ORDER BY expressions — which walks the expression
+  tree and replaces any `ColumnRef` whose name matches a SELECT alias with the
+  alias's source expression.  After substitution, the resolved expression uses the
+  aggregate slot name rather than the user-facing alias, which the planner can
+  always resolve.
+
 ## [0.24.0] - 2026-05-12
 
 ### Fixed
