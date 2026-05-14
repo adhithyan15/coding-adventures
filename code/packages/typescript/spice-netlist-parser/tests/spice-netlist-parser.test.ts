@@ -99,6 +99,27 @@ Rload out 0 500
     expect(result.voltage("out")).toBeCloseTo(-1.0, 9);
   });
 
+  it("parses CCVS elements into operating-point circuits", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rin in sense 1k
+Vsense sense 0 DC 0
+Hamp out 0 Vsense 1k
+Rload out 0 500
+.op
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements[3]).toMatchObject({
+      kind: "ccvs",
+      controlSource: "Vsense",
+      transresistanceOhms: 1000.0,
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeCloseTo(1.0, 9);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
@@ -198,6 +219,38 @@ Rload out 0 500
 
     const result = dcOp(parsed.circuit);
     expect(result.voltage("out")).toBeCloseTo(-1.0, 9);
+  });
+
+  it("expands subcircuit CCVS control sources into engine elements", () => {
+    const parsed = parseNetlist(`
+.subckt transimpedance inp outp
+Rin inp sense 1k
+Vsense sense 0 DC 0
+Hamp outp 0 Vsense 1k
+.ends transimpedance
+Vin in 0 DC 1
+Xamp in out transimpedance
+Rload out 0 500
+.op
+`);
+
+    const elements = parsed.circuit.elements();
+    expect(elements.map((element) => element.name)).toEqual([
+      "Vin",
+      "Xamp.Rin",
+      "Xamp.Vsense",
+      "Xamp.Hamp",
+      "Rload",
+    ]);
+    expect(elements[3]).toMatchObject({
+      kind: "ccvs",
+      positive: "out",
+      controlSource: "Xamp.Vsense",
+      transresistanceOhms: 1000.0,
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeCloseTo(1.0, 9);
   });
 
   it("scopes subcircuit internal nodes by instance", () => {
