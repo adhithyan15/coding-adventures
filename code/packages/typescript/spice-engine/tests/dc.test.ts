@@ -4,6 +4,7 @@ import {
   SpiceError,
   currentSource,
   dcOp,
+  dcSweep,
   inductor,
   resistor,
   voltageSource,
@@ -71,6 +72,52 @@ describe("dcOp", () => {
 
     expectClose(result.voltage("out"), 0.0);
     expectClose(result.branchCurrent("L1"), 1.0e-3);
+  });
+
+  it("sweeps voltage sources and collects operating points", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 0.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+
+    const points = dcSweep(circuit, "V1", 0.0, 2.0, 1.0);
+
+    expect(points).toHaveLength(3);
+    expectClose(points[0].value, 0.0);
+    expectClose(points[0].result.voltage("mid"), 0.0);
+    expectClose(points[1].value, 1.0);
+    expectClose(points[1].result.voltage("mid"), 0.5);
+    expectClose(points[2].value, 2.0);
+    expectClose(points[2].result.voltage("mid"), 1.0);
+  });
+
+  it("sweeps current sources and collects operating points", () => {
+    const circuit = new Circuit();
+    circuit.add(currentSource("I1", "0", "n1", 0.0));
+    circuit.add(resistor("R1", "n1", "0", 1_000.0));
+
+    const points = dcSweep(circuit, "I1", 0.0, 2.0e-3, 1.0e-3);
+
+    expect(points).toHaveLength(3);
+    expectClose(points[0].result.voltage("n1"), 0.0);
+    expectClose(points[1].result.voltage("n1"), 1.0);
+    expectClose(points[2].result.voltage("n1"), 2.0);
+  });
+
+  it("rejects sweep steps that do not reach the stop value", () => {
+    const circuit = new Circuit();
+
+    expect(() => dcSweep(circuit, "V1", 0.0, 1.0, -0.1)).toThrowError(
+      "sweep step direction",
+    );
+  });
+
+  it("rejects missing sweep sources", () => {
+    const circuit = new Circuit();
+
+    expect(() => dcSweep(circuit, "Vmissing", 0.0, 1.0, 1.0)).toThrowError(
+      "sweep source must be an independent voltage or current source",
+    );
   });
 
   it("returns a singular matrix error for a floating resistor", () => {
