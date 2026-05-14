@@ -1,5 +1,41 @@
 # Changelog — `aarch64-backend`
 
+## 0.2.3 — 2026-05-13 (LANG41)
+
+**Remove self-contained `emit_print_helper`; resolve `__twig_print_i64` from
+portable C runtime archive instead.**
+
+LANG40 injected a 208-byte ARM64 function that used macOS raw `write(2)`
+syscall numbers (`x16=4`, `SVC #0x80`) baked in as ARM64 instruction words.
+LANG41 removes this macOS-specific helper entirely.
+
+### Removed
+
+- `emit_print_helper() → Vec<u8>` — public API function deleted.
+  Callers previously used this to inject a self-contained integer-print
+  subroutine alongside user code; the symbol `__twig_print_i64` is now
+  left unresolved in the object file for the system linker (`ld`) to
+  resolve from `libtwig_aot_runtime.a` (built by `twig-aot`'s `build.rs`).
+
+### Retained
+
+- `io_out` CIR handler still emits `LDR X0, [X19, #offset]` + `BL __twig_print_i64`.
+  The BL produces a `Reloc { symbol: "__twig_print_i64", … }` placeholder
+  exactly as before — the only change is that twig-aot no longer injects the
+  helper into the link; instead it writes the runtime archive to a temp file
+  and passes it to `ld`.
+
+### Tests removed
+
+- `emit_print_helper_has_prologue`
+- `emit_print_helper_ends_with_ret`
+- `emit_print_helper_size_is_52_words`
+
+Remaining tests `io_out_emits_bl_reloc` and `io_out_missing_src_errors` are
+unchanged and still pass.
+
+---
+
 ## 0.2.2 — 2026-05-13 (LANG40)
 
 **`io_out` CIR handler + self-contained `__twig_print_i64` helper.**

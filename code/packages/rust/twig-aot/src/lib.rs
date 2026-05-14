@@ -53,12 +53,32 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use aarch64_backend::{compile_with_globals, emit_print_helper, GlobalWordReloc, Reloc};
+use aarch64_backend::{compile_with_globals, GlobalWordReloc, Reloc};
 use aot_core::infer::infer_types;
 use aot_core::link::{entry_point_offset, link};
 use aot_core::specialise::aot_specialise;
-use code_packager::macho_object::{pack_object, pack_object_with_globals, GlobalByteReloc};
-use code_packager::{CodeArtifact, Target};
+use code_packager::macho_object::{
+    pack_object_with_globals_and_externals, ExternBranchReloc, GlobalByteReloc,
+};
+use code_packager::Target;
+
+// ── Embedded Twig AOT runtime archive ──────────────────────────────────────
+//
+// `build.rs` compiles `runtime/twig_runtime.c` (via the `cc` crate) into a
+// static archive at `$OUT_DIR/libtwig_aot_runtime.a` and exports the path
+// via `cargo:rustc-env=TWIG_RUNTIME_ARCHIVE`.  `include_bytes!` resolves
+// the path at *compile time* (not runtime) and bakes the archive bytes into
+// this binary.
+//
+// At AOT link time (when the user runs `twig-aot`), we write these bytes to
+// a temp file and pass it to the system linker (`ld`).  `ld` extracts
+// whatever symbols it needs (e.g. `__twig_print_i64`) from the archive and
+// links them into the final executable.  This means:
+//
+// - No separate installation of a runtime library.
+// - Portable: `twig_runtime.c` uses `<stdio.h>` (printf), which resolves
+//   through `-lSystem` on macOS and `-lc` on Linux — no raw syscall numbers.
+static RUNTIME_ARCHIVE: &[u8] = include_bytes!(env!("TWIG_RUNTIME_ARCHIVE"));
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
@@ -147,19 +167,29 @@ pub fn compile_macos_arm64_object(source: &str, module_name: &str) -> Result<Vec
 /// `ADRP + ADD` instruction pairs that address `_twig_globals`.
 pub fn compile_module_macos_arm64_object(module: &IIRModule) -> Result<Vec<u8>, AotError> {
     let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
-    let (text, offsets, n_global_slots, global_relocs) = compile_module_to_text(module)?;
+    let (text, offsets, n_global_slots, global_relocs, extern_relocs) =
+        compile_module_to_text(module)?;
     let entry_off = entry_point_offset(&offsets, Some(entry));
 
-    if n_global_slots > 0 {
-        // Module uses globals: emit a two-section Mach-O (text + data) with
-        // ARM64 relocation records so the linker patches ADRP+ADD pairs.
-        pack_object_with_globals(&text, entry_off, n_global_slots, &global_relocs, &Target::macos_arm64())
-            .map_err(|e| AotError::Packager(format!("{e}")))
-    } else {
-        // No globals: use the simpler single-section object packager.
-        let artifact = CodeArtifact::new(text, entry_off, Target::macos_arm64());
-        pack_object(&artifact).map_err(|e| AotError::Packager(format!("{e}")))
-    }
+    // Use pack_object_with_globals_and_externals for all cases (LANG41).
+    //
+    // This function always produces a two-section Mach-O (text + data).
+    // When neither globals nor externals are present the data section is
+    // empty and the reloc/symbol tables are minimal — functionally
+    // equivalent to the old `pack_object` path.
+    //
+    // External BL targets (e.g. `__twig_print_i64`) become N_UNDF | N_EXT
+    // symbol-table entries + ARM64_RELOC_BRANCH26 records so the system
+    // linker can patch them from the embedded runtime archive.
+    pack_object_with_globals_and_externals(
+        &text,
+        entry_off,
+        n_global_slots,
+        &global_relocs,
+        &extern_relocs,
+        &Target::macos_arm64(),
+    )
+    .map_err(|e| AotError::Packager(format!("{e}")))
 }
 
 /// Returns raw ARM64 machine code bytes and a function-name→byte-offset map.
@@ -175,7 +205,11 @@ pub fn compile_module_macos_arm64_object(module: &IIRModule) -> Result<Vec<u8>, 
 pub fn compile_module_to_arm64_bytes(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
-    let (text, offsets, _, _) = compile_module_to_text(module)?;
+    // Extern relocs (5th element) are discarded for in-process execution:
+    // the JIT path does not link against the runtime archive, so `io_out`
+    // BL placeholders remain unpatched.  Programs using `io_out` must
+    // use the AOT path (compile_module_macos_arm64_object) to run.
+    let (text, offsets, _, _, _) = compile_module_to_text(module)?;
     Ok((text, offsets))
 }
 
@@ -223,9 +257,9 @@ pub fn compile_typed_module_to_arm64_bytes(
         // (Should be rare after propagation with typed params.)
         default_any_to_i64(func);
     }
-    // Discard global reloc metadata — typed callers obtain Mach-O objects via
-    // `compile_module_macos_arm64_object`, which preserves those fields.
-    let (text, offsets, _, _) = compile_module_to_text_raw(&module)?;
+    // Discard global and extern reloc metadata — typed callers that need a full
+    // Mach-O object should use `compile_module_macos_arm64_object` instead.
+    let (text, offsets, _, _, _) = compile_module_to_text_raw(&module)?;
     Ok((text, offsets))
 }
 
@@ -399,16 +433,20 @@ pub fn compile_file_macos_arm64(
         .unwrap_or("twig");
     let object_bytes = compile_macos_arm64_object(&source, stem)?;
 
-    // Object files go to a temp file the linker reads.  We can't
-    // deterministically name it (concurrent invocations would collide)
-    // so use the OS tempdir.
-    let tmp_dir  = std::env::temp_dir();
-    let tmp_obj  = tmp_dir.join(format!("twig-aot-{}-{}.o", stem, std::process::id()));
-    std::fs::write(&tmp_obj, &object_bytes)?;
-
-    let link_result = invoke_ld(&tmp_obj, out_path);
-    let _ = std::fs::remove_file(&tmp_obj); // best-effort cleanup
-    link_result?;
+    // Object files go to a secure temp file (O_EXCL + random name) so that
+    // concurrent `twig-aot` invocations don't collide and symlink attacks
+    // against a predictable path are not possible.  `NamedTempFile` deletes
+    // the file automatically when it drops.
+    {
+        use std::io::Write as _;
+        let mut tmp_obj = tempfile::Builder::new()
+            .prefix(&format!("twig-aot-{stem}-"))
+            .suffix(".o")
+            .tempfile()?;
+        tmp_obj.write_all(&object_bytes)?;
+        invoke_ld(tmp_obj.path(), out_path)?;
+        // tmp_obj drops here — temp file deleted by NamedTempFile destructor.
+    }
 
     let mut perms = std::fs::metadata(out_path)?.permissions();
     perms.set_mode(0o755);
@@ -422,25 +460,53 @@ pub fn compile_file_macos_arm64(
 /// - `-arch arm64`            — explicit target arch
 /// - `-platform_version macos 15.0 15.0` — minOS + SDK declaration
 /// - `-e _main`               — entry symbol (matches our object's symtab)
+/// - `<runtime.a>`            — Twig AOT runtime archive (provides `__twig_print_i64` etc.)
+/// - `-lSystem`               — macOS C runtime (printf, exit, …)
 /// - `-o <out>`               — output path
 ///
 /// We intentionally **do not** pass `-static`.  Modern macOS heavily
 /// privileges binaries that link against `libSystem` (the standard C
 /// runtime) — they get the trusted toolchain provenance and pass the
-/// kernel's security policy.  Our compiled `_main` doesn't actually
-/// call any libSystem function (it makes raw `svc` syscalls), so the
-/// link is "free" in the sense that no library code ends up reachable
-/// from `main`, but the LC_LOAD_DYLIB stub makes the kernel happy.
+/// kernel's security policy.
 ///
-/// `ld` itself sets up: `LC_LOAD_DYLINKER`, `LC_LOAD_DYLIB libSystem`,
+/// The Twig AOT runtime archive (`libtwig_aot_runtime.a`, compiled from
+/// `runtime/twig_runtime.c` by `build.rs`) is embedded in this binary as
+/// [`RUNTIME_ARCHIVE`] and written to a temp file for each link invocation.
+/// `ld` extracts whatever symbols it needs (e.g. `__twig_print_i64`) from
+/// the archive; the static-archive format means only referenced object files
+/// are pulled in, so programs that don't use `io_out` don't pay for the
+/// print helper.
+///
+/// `ld` sets up: `LC_LOAD_DYLINKER`, `LC_LOAD_DYLIB libSystem`,
 /// `LC_DYLD_CHAINED_FIXUPS`, ad-hoc code signature, etc.
 fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
+    use std::io::Write as _;
+
+    // Write the embedded runtime archive to a secure temp file.
+    //
+    // Security: we use `tempfile::Builder` (O_EXCL + random suffix) rather than
+    // a PID-derived path.  A PID-based name is predictable and can be raced by
+    // an attacker with write access to `$TMPDIR` (TOCTOU / symlink attack):
+    //
+    // - Symlink write-through: if a symlink at the predicted path already exists,
+    //   `fs::write` would follow it and overwrite an arbitrary file.
+    // - Replace-after-write: the attacker races to replace the just-written
+    //   archive with a malicious one before `ld` opens it, injecting arbitrary
+    //   machine code into the produced binary.
+    //
+    // `NamedTempFile` prevents both: the kernel creates the file atomically with
+    // `O_EXCL`, and the random name is not guessable.  The file is deleted when
+    // `runtime_tmp` drops (after `ld` exits below).
+    let mut runtime_tmp = tempfile::Builder::new()
+        .prefix("twig_aot_runtime_")
+        .suffix(".a")
+        .tempfile()?;
+    runtime_tmp.write_all(RUNTIME_ARCHIVE)?;
+
     // `-lSystem` is non-negotiable on modern macOS: `ld` refuses to
     // produce a dynamic executable without linking the C runtime.
-    // Our compiled `_main` doesn't actually call any libSystem
-    // function (it makes raw `svc` syscalls), so the link is "free"
-    // in terms of reachability — but the LC_LOAD_DYLIB stub is what
-    // makes the kernel accept the binary.
+    // The runtime archive itself uses `printf` (from libSystem), so
+    // linking both is required and correct.
     //
     // `-L<sdk>/usr/lib` tells ld where to find `libSystem.tbd`.  We
     // probe `xcrun --sdk macosx --show-sdk-path` first, falling back
@@ -455,11 +521,15 @@ fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
         .arg("-lSystem")
         .arg("-o").arg(out_path)
         .arg(object_path)
+        .arg(runtime_tmp.path()) // runtime archive: provides __twig_print_i64 etc.
         .output()
         .map_err(|e| AotError::Linker {
             status: None,
             stderr: format!("ld not found on PATH or could not be spawned: {e}"),
         })?;
+
+    // `runtime_tmp` drops here — NamedTempFile deletes the temp archive file.
+    drop(runtime_tmp);
 
     if !output.status.success() {
         return Err(AotError::Linker {
@@ -781,7 +851,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
 /// `u64`.  For signed `i64` semantics use [`compile_typed_module_to_arm64_bytes`].
 fn compile_module_to_text(
     module: &IIRModule,
-) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>), AotError> {
+) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
     // We work on a clone so the caller's `IIRModule` is never mutated.
     // `prepare_module_for_aot` runs four passes (LANG39 adds step 0):
     //   0. `lower_global_io` — `call_builtin "global_set/get"` → `global_store/load`
@@ -849,10 +919,16 @@ fn collect_global_slots(module: &IIRModule) -> HashMap<String, usize> {
 /// ARM64 `BL` encoding: opcode `0x94000000`, 26-bit signed PC-relative
 /// offset in units of 4 bytes (instruction words).
 ///
-/// Returns `(linked_text, fn_offsets, n_global_slots, global_byte_relocs)`.
+/// Returns `(linked_text, fn_offsets, n_global_slots, global_byte_relocs, extern_branch_relocs)`.
+///
+/// `extern_branch_relocs` — BL instructions in the linked text that target
+/// symbols not defined in this module (e.g. `__twig_print_i64`).  The
+/// packager ([`pack_object_with_globals_and_externals`]) converts them into
+/// `N_UNDF | N_EXT` symbol-table entries and `ARM64_RELOC_BRANCH26` records
+/// so the system linker can patch them from the Twig AOT runtime archive.
 fn compile_module_to_text_raw(
     module: &IIRModule,
-) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>), AotError> {
+) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
     // ── Collect global names (LANG39) ─────────────────────────────────────────
     let global_slots = collect_global_slots(module);
     let n_global_slots = global_slots.len();
@@ -868,27 +944,20 @@ fn compile_module_to_text_raw(
         fn_results.push((fn_.name.clone(), bytes, ext_relocs, glob_relocs));
     }
 
-    // ── LANG40: inject __twig_print_i64 helper if needed ─────────────────────
+    // ── LANG41: external symbols are resolved by the system linker ───────────
     //
-    // If any compiled function emits `BL __twig_print_i64` (an io_out
-    // instruction), the cross-function BL patcher (Pass 2 below) must be able
-    // to resolve the symbol.  We inject the helper BEFORE `link()` so the
-    // linker assigns it a byte offset and the patcher can compute the correct
-    // PC-relative delta.
+    // Unlike the LANG40 approach (which injected a macOS-specific helper with
+    // raw `SVC #0x80` syscalls), LANG41 lets BL instructions that target
+    // symbols outside this module remain unpatched.  Pass 2 below collects
+    // them as `ExternBranchReloc` entries; `pack_object_with_globals_and_externals`
+    // emits them as `N_UNDF | N_EXT` symbol-table entries and
+    // `ARM64_RELOC_BRANCH26` records so `ld` can patch them from the embedded
+    // Twig AOT runtime archive (`libtwig_aot_runtime.a`).
     //
-    // The helper has no external relocs and no global-word relocs of its own,
-    // so the extra entry is a clean no-op for the global-reloc collection pass.
-    let needs_print_helper = fn_results.iter().any(|(_, _, relocs, _)| {
-        relocs.iter().any(|r| r.symbol == "__twig_print_i64")
-    });
-    if needs_print_helper {
-        fn_results.push((
-            "__twig_print_i64".to_string(),
-            emit_print_helper(),
-            vec![], // no cross-function relocs inside the helper itself
-            vec![], // no global-slot relocs
-        ));
-    }
+    // The runtime archive (compiled from `runtime/twig_runtime.c` by `build.rs`)
+    // provides `__twig_print_i64` using `printf` from libc — portable across
+    // macOS (`-lSystem`) and Linux (`-lc`).
+    let mut extern_branch_relocs: Vec<ExternBranchReloc> = Vec::new();
 
     // ── Link: concatenate binaries and record byte offsets ──────────────────
     let plain_binaries: Vec<(String, Vec<u8>)> = fn_results
@@ -946,18 +1015,17 @@ fn compile_module_to_text_raw(
                 })?;
             // Byte offset of the callee's first instruction.
             let Some(&callee_offset) = offsets.get(reloc.symbol.as_str()) else {
-                // Callee not in this module — unresolved external symbol.
-                // Return an explicit error rather than leaving a `BL #0`
-                // placeholder (which would silently produce a self-recursive
-                // call or a misaligned trap in the output binary).
-                return Err(AotError::Linker {
-                    status: None,
-                    stderr: format!(
-                        "twig-aot: unresolved external symbol '{}' called from '{}'; \
-                         only within-module calls are supported in AOT mode",
-                        reloc.symbol, fn_name
-                    ),
+                // Callee not in this module — record as an external branch
+                // relocation.  The system linker will patch this BL from
+                // the Twig AOT runtime archive (or any dylib that defines
+                // the symbol).  The `BL #0` placeholder (`0x94000000`)
+                // already has the correct opcode; `ld` overwrites only the
+                // 26-bit immediate.
+                extern_branch_relocs.push(ExternBranchReloc {
+                    byte_offset: call_byte_offset as u32,
+                    symbol: reloc.symbol.clone(),
                 });
+                continue; // leave the BL #0 placeholder in place
             };
 
             // PC-relative offset in instruction words (4 bytes each).
@@ -995,7 +1063,7 @@ fn compile_module_to_text_raw(
         }
     }
 
-    Ok((linked, offsets, n_global_slots, global_byte_relocs))
+    Ok((linked, offsets, n_global_slots, global_byte_relocs, extern_branch_relocs))
 }
 
 /// Compile one `IIRFunction` to ARM64 machine code, returning the bytes,
@@ -1062,23 +1130,28 @@ mod tests {
         assert!(result.is_ok(), "fib should compile; got: {:?}", result.err());
     }
 
-    // ---- LANG40: io_out / __twig_print_i64 injection ----
+    // ---- LANG41: io_out / __twig_print_i64 via runtime library ----
 
     #[test]
     fn print_program_compiles_ok() {
         // A Twig program that calls `io_out` must compile end-to-end to a valid
         // Mach-O MH_OBJECT without error.  The `print` builtin lowers to
         // `io_out` in the IIR compiler, which becomes `BL __twig_print_i64` in
-        // the ARM64 backend.  The `compile_module_to_text_raw` injection pass
-        // must resolve that symbol by appending the helper to the text section.
+        // the ARM64 backend.
         //
-        // NOTE: io_out with a non-integer argument (like (print "hello")) may
-        // fail type-checking; we use (print 42) which produces a typed i64.
+        // Under LANG41, `__twig_print_i64` is NOT injected as a synthetic
+        // function; instead, the object file contains an N_UNDF | N_EXT
+        // symbol-table entry and an ARM64_RELOC_BRANCH26 record so the system
+        // linker (`ld`) can resolve the symbol from the embedded runtime archive
+        // (`libtwig_aot_runtime.a`).
+        //
+        // NOTE: (print "hello") may fail type-checking; use (print 42) which
+        // produces a typed i64 value.
         let src = "(print 42)";
         let result = compile_macos_arm64_object(src, "print_test");
         assert!(
             result.is_ok(),
-            "io_out program should compile with LANG40; got: {:?}",
+            "io_out program should compile with LANG41; got: {:?}",
             result.err()
         );
 
@@ -1091,27 +1164,22 @@ mod tests {
 
     #[test]
     fn print_program_is_valid_macho() {
-        // The compiled object must be ≥ 512 bytes (a realistic lower bound for
-        // a Mach-O with __TEXT/__text + symbols, and with the injected helper
-        // adding 208 bytes of machine code).
+        // The compiled object should be a reasonable size — header (312 bytes)
+        // plus user code, symbol table, and reloc records.  Under LANG41 the
+        // 208-byte injected helper is gone; the object is smaller but still
+        // well above 200 bytes.
         //
-        // This test catches regressions where the helper injection is silently
-        // skipped (e.g. the needs_print_helper check returns false incorrectly)
-        // and the output shrinks dramatically.
+        // This test catches silent compilation failures (e.g. the packager
+        // returning an empty buffer) rather than verifying exact byte counts.
         let src = "(print 99)";
         let result = compile_macos_arm64_object(src, "print_size_test");
-        // If compilation fails (e.g. io_out not yet lowered from print), skip
-        // the size check gracefully — the print_program_compiles_ok test above
-        // is the authoritative failure.
         if let Ok(bytes) = result {
-            // A Mach-O with the injected 208-byte print helper plus headers and
-            // symbol table should comfortably exceed 400 bytes.  This threshold
-            // is loose enough to survive minor header layout changes while still
-            // catching the case where helper injection was silently skipped
-            // (output would be ~250 bytes, just header + tiny user function).
+            // Minimum: 312 (header) + ~60 (user fn) + 8 (1 reloc) + 48 (3 syms)
+            //        + 39 (strtab) ≈ 467 bytes.  Use 300 as the floor.
             assert!(
-                bytes.len() >= 400,
-                "Mach-O with print helper should be ≥ 400 bytes; got {} bytes",
+                bytes.len() >= 300,
+                "Mach-O should be ≥ 300 bytes (LANG41: no helper injection); \
+                 got {} bytes",
                 bytes.len()
             );
         }
