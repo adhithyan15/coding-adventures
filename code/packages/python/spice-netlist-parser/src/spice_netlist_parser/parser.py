@@ -61,6 +61,20 @@ class AcAnalysis:
 type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
 
 
+@dataclass(frozen=True, slots=True)
+class _Statement:
+    line_number: int
+    fields: list[str]
+
+
+@dataclass(slots=True)
+class _SubcktDefinition:
+    name: str
+    pins: list[str]
+    body: list[_Statement] = field(default_factory=list)
+    line_number: int = 0
+
+
 @dataclass(slots=True)
 class ParsedNetlist:
     """Parsed SPICE3 netlist with an executable SPICE engine circuit."""
@@ -104,6 +118,9 @@ def parse_netlist(text: str) -> ParsedNetlist:
     """Parse SPICE3 netlist text into a :class:`ParsedNetlist`."""
 
     parsed = ParsedNetlist()
+    statements: list[_Statement] = []
+    subckts: dict[str, _SubcktDefinition] = {}
+    current_subckt: _SubcktDefinition | None = None
     saw_content = False
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
         stripped = raw_line.strip()
@@ -119,15 +136,47 @@ def parse_netlist(text: str) -> ParsedNetlist:
         if not fields:
             continue
         head = fields[0]
-        if head.lower() == ".end":
-            break
+        head_lower = head.lower()
+
         try:
-            if head.startswith("."):
-                parsed.analyses.append(_parse_directive(fields))
-            else:
-                parsed.circuit.add(_parse_element(fields))
+            if current_subckt is not None:
+                if head_lower == ".ends":
+                    _finish_subckt(current_subckt, fields)
+                    subckts[current_subckt.name.lower()] = current_subckt
+                    current_subckt = None
+                elif head_lower == ".subckt":
+                    raise NetlistParseError("nested .subckt definitions are not supported")
+                else:
+                    current_subckt.body.append(_Statement(line_number, fields))
+                continue
+            if head_lower == ".subckt":
+                current_subckt = _start_subckt(fields, line_number, subckts)
+                continue
+            if head_lower == ".ends":
+                raise NetlistParseError(".ends without matching .subckt")
         except NetlistParseError as exc:
             raise NetlistParseError(f"line {line_number}: {exc}") from exc
+
+        if head_lower == ".end":
+            break
+        statements.append(_Statement(line_number, fields))
+
+    if current_subckt is not None:
+        raise NetlistParseError(
+            f"line {current_subckt.line_number}: .subckt {current_subckt.name!r} is missing .ends"
+        )
+
+    for statement in statements:
+        try:
+            if statement.fields[0].startswith("."):
+                parsed.analyses.append(_parse_directive(statement.fields))
+            elif statement.fields[0].upper().startswith("X"):
+                for element in _expand_subckt_instance(statement.fields, subckts, []):
+                    parsed.circuit.add(element)
+            else:
+                parsed.circuit.add(_parse_element(statement.fields))
+        except NetlistParseError as exc:
+            raise NetlistParseError(f"line {statement.line_number}: {exc}") from exc
     return parsed
 
 
@@ -145,7 +194,7 @@ def parse_value(token: str) -> float:
 
 def _parse_element(fields: list[str]) -> object:
     name = fields[0]
-    prefix = name[0].upper()
+    prefix = _element_prefix(name)
     if prefix == "R":
         _require_fields(fields, 4, "resistor")
         return Resistor(name, fields[1], fields[2], parse_value(fields[3]))
@@ -167,6 +216,103 @@ def _parse_element(fields: list[str]) -> object:
         _require_fields(fields, 6, "VCCS")
         return VCCS(name, fields[1], fields[2], fields[3], fields[4], parse_value(fields[5]))
     raise NetlistParseError(f"unsupported element {name!r}")
+
+
+def _start_subckt(
+    fields: list[str], line_number: int, subckts: dict[str, _SubcktDefinition]
+) -> _SubcktDefinition:
+    _require_min_fields(fields, 3, ".subckt")
+    name = fields[1]
+    key = name.lower()
+    if key in subckts:
+        raise NetlistParseError(f"duplicate .subckt definition {name!r}")
+    return _SubcktDefinition(name=name, pins=fields[2:], line_number=line_number)
+
+
+def _finish_subckt(definition: _SubcktDefinition, fields: list[str]) -> None:
+    if len(fields) > 2:
+        raise NetlistParseError(".ends expects at most a subcircuit name")
+    if len(fields) == 2 and fields[1].lower() != definition.name.lower():
+        raise NetlistParseError(
+            f".ends {fields[1]!r} does not match .subckt {definition.name!r}"
+        )
+
+
+def _expand_subckt_instance(
+    fields: list[str],
+    subckts: dict[str, _SubcktDefinition],
+    stack: list[str],
+) -> list[object]:
+    _require_min_fields(fields, 3, "subcircuit instance")
+    instance_name = fields[0]
+    subckt_name = fields[-1]
+    definition = subckts.get(subckt_name.lower())
+    if definition is None:
+        raise NetlistParseError(f"unknown subcircuit {subckt_name!r}")
+    if definition.name.lower() in stack:
+        cycle = " -> ".join([*stack, definition.name.lower()])
+        raise NetlistParseError(f"recursive subcircuit expansion is not supported: {cycle}")
+
+    actual_nodes = fields[1:-1]
+    if len(actual_nodes) != len(definition.pins):
+        raise NetlistParseError(
+            f"subcircuit {definition.name!r} expects {len(definition.pins)} pins, "
+            f"got {len(actual_nodes)}"
+        )
+
+    node_map = {pin: actual for pin, actual in zip(definition.pins, actual_nodes, strict=True)}
+    node_map.update(
+        {pin.lower(): actual for pin, actual in zip(definition.pins, actual_nodes, strict=True)}
+    )
+    elements: list[object] = []
+    next_stack = [*stack, definition.name.lower()]
+    for statement in definition.body:
+        if statement.fields[0].startswith("."):
+            raise NetlistParseError(
+                f"line {statement.line_number}: directives inside .subckt are not supported"
+            )
+        local_fields = _map_subckt_fields(statement.fields, instance_name, node_map)
+        if _element_prefix(statement.fields[0]) == "X":
+            elements.extend(_expand_subckt_instance(local_fields, subckts, next_stack))
+        else:
+            elements.append(_parse_element(local_fields))
+    return elements
+
+
+def _map_subckt_fields(
+    fields: list[str], instance_name: str, node_map: dict[str, str]
+) -> list[str]:
+    name = f"{instance_name}.{fields[0]}"
+    prefix = fields[0][0].upper()
+    mapped = [name, *fields[1:]]
+    if prefix in {"R", "C", "L", "V", "I"}:
+        _require_min_fields(fields, 3, "subcircuit element")
+        mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
+        mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
+    elif prefix == "G":
+        _require_min_fields(fields, 5, "subcircuit VCCS")
+        for index in range(1, 5):
+            mapped[index] = _map_subckt_node(fields[index], instance_name, node_map)
+    elif prefix == "X":
+        mapped[1:-1] = [
+            _map_subckt_node(node, instance_name, node_map) for node in fields[1:-1]
+        ]
+    return mapped
+
+
+def _map_subckt_node(node: str, instance_name: str, node_map: dict[str, str]) -> str:
+    if node.lower() in {"0", "gnd"}:
+        return node
+    if node in node_map:
+        return node_map[node]
+    if node.lower() in node_map:
+        return node_map[node.lower()]
+    return f"{instance_name}.{node}"
+
+
+def _element_prefix(name: str) -> str:
+    local_name = name.rsplit(".", 1)[-1]
+    return local_name[0].upper()
 
 
 def _parse_source_value(fields: list[str]) -> tuple[float, Waveform | None]:

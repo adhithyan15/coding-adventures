@@ -20,4 +20,5 @@ netlist.analyses
 
 This first parser slice supports `R`, `C`, `L`, `V`, `I`, and `G` elements,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
-and `.op`, `.tran`, `.dc`, and `.ac` analysis cards.
+`.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, and `.ac`
+analysis cards.

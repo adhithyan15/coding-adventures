@@ -85,6 +85,53 @@ I1 in 0 SIN(0 2m 1k 10u 5)
     assert isclose(current.waveform(1.0e-6), 0.0, abs_tol=1e-12)
 
 
+def test_expands_subcircuit_instances_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt divider top mid bot
+Rtop top mid 1k
+Rbot mid bot 1k
+.ends divider
+V1 vin 0 DC 10
+Xdiv vin mid 0 divider
+.op
+"""
+    )
+
+    assert [element.name for element in parsed.circuit.elements] == [
+        "V1",
+        "Xdiv.Rtop",
+        "Xdiv.Rbot",
+    ]
+    assert isinstance(parsed.circuit.elements[1], Resistor)
+    assert parsed.circuit.elements[1].n_plus == "vin"
+    assert parsed.circuit.elements[1].n_minus == "mid"
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert isclose(result.node_voltages["mid"], 5.0, abs_tol=1e-9)
+
+
+def test_subcircuit_internal_nodes_are_instance_scoped() -> None:
+    parsed = parse_netlist(
+        """
+.subckt load in out
+R1 in inner 1k
+C1 inner out 1u
+.ends load
+Xleft a b load
+Xright c d load
+"""
+    )
+
+    left_resistor = parsed.circuit.elements[0]
+    right_resistor = parsed.circuit.elements[2]
+    assert isinstance(left_resistor, Resistor)
+    assert isinstance(right_resistor, Resistor)
+    assert left_resistor.n_minus == "Xleft.inner"
+    assert right_resistor.n_minus == "Xright.inner"
+
+
 def test_engineering_suffixes() -> None:
     assert parse_value("1k") == 1.0e3
     assert parse_value("2.2meg") == 2.2e6
@@ -104,3 +151,8 @@ D1 a 0 diode
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
+
+
+def test_rejects_unknown_subcircuit_instance() -> None:
+    with pytest.raises(NetlistParseError, match="line 1: unknown subcircuit 'missing'"):
+        parse_netlist("X1 a b missing\n")
