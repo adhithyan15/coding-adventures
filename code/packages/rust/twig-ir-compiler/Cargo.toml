@@ -1,8 +1,8 @@
 [package]
 name = "twig-ir-compiler"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler"
+description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler.  LANG50: compile_typed_source uses grammar-type-checker annotations to populate type_hint fields."
 
 [dependencies]
 twig-parser        = { path = "../twig-parser" }
@@ -12,3 +12,5 @@ interpreter-ir     = { path = "../interpreter-ir" }
 lang-refined-types = { path = "../lang-refined-types" }
 # LANG49 TW05-B: optional type-check pre-pass for (typed lenient|strict) modules.
 twig-type-checker  = { path = "../twig-type-checker" }
+# LANG50: AnnotatedNode type for post-processing type_hint fields.
+type-declarations  = { path = "../type-declarations" }
