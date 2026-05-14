@@ -123,6 +123,14 @@ pub fn build_specialised_kernel(
     let RangeClass::Constant { bytes } = &key.range_class else {
         return None;
     };
+
+    // **MX05 Phase 4.10.**  Op::MatMul (0x15) with a folded matrix.
+    // The constant is more than 4 bytes — a flat row-major f32
+    // matrix.  Branch off before the single-f32 check below.
+    if key.op_kind == 0x15 {
+        return build_matmul_with_folded_matrix(key, bytes);
+    }
+
     if bytes.len() != 4 {
         return None;
     }
@@ -247,6 +255,96 @@ fn build_unary_memset_f32_kernel(value: f32) -> Box<crate::SpecialisedKernelFn> 
         buffers.write(outputs[0], 0, &out_data)?;
         Ok(vec![OpTiming { op_index: 0, ns: 0 }])
     })
+}
+
+/// **MX05 Phase 4.10.**  Build a CPU closure for
+/// `Op::MatMul(A[m, k] × B[k, n] = C[m, n])` where one of the
+/// operands is a folded constant matrix.  V1 supports
+/// `folded_slot = Some(1)` (RHS folded) with the constant matrix
+/// being 2×2 (4 elements) or 4×4 (16 elements) — same coverage as
+/// matrix-metal's emitter.
+///
+/// The non-folded input is a runtime `[m, dim]` matrix where `m`
+/// derives from the input buffer's byte length.  Each output row
+/// is `m` dot products against the folded matrix's columns.
+fn build_matmul_with_folded_matrix(
+    key: &SpecKey,
+    bytes: &[u8],
+) -> Option<Box<crate::SpecialisedKernelFn>> {
+    use executor_protocol::OpTiming;
+
+    // Only RHS-folded in V1.
+    if key.folded_slot != Some(1) {
+        return None;
+    }
+    if bytes.len() % 4 != 0 {
+        return None;
+    }
+    let n_floats = bytes.len() / 4;
+    let dim = match n_floats {
+        4 => 2usize,
+        16 => 4usize,
+        _ => return None,
+    };
+    let matrix: Vec<f32> = bytes
+        .chunks(4)
+        .map(|c| {
+            let arr: [u8; 4] = c.try_into().unwrap();
+            f32::from_le_bytes(arr)
+        })
+        .collect();
+
+    Some(Box::new(move |buffers, inputs, outputs| {
+        if inputs.len() != 1 {
+            return Err(format!(
+                "specialised matmul kernel expects 1 input, got {}",
+                inputs.len()
+            ));
+        }
+        if outputs.len() != 1 {
+            return Err(format!(
+                "specialised matmul kernel expects 1 output, got {}",
+                outputs.len()
+            ));
+        }
+        let in_data = buffers.get(inputs[0])?.to_vec();
+        // Input is `[m, dim]` row-major f32.  Derive m from byte
+        // length: m = bytes / (dim * 4).  Reject mis-shaped inputs.
+        if in_data.len() % (dim * 4) != 0 {
+            return Err(format!(
+                "matmul kernel input length {} not a multiple of {} f32s (dim {})",
+                in_data.len(),
+                dim,
+                dim
+            ));
+        }
+        let m = in_data.len() / (dim * 4);
+        // Output is `[m, dim]` row-major f32 = m * dim * 4 bytes.
+        let out_len = m * dim * 4;
+        let mut out_data = vec![0u8; out_len];
+
+        for r in 0..m {
+            for c in 0..dim {
+                // C[r, c] = sum_k A[r, k] * B[k, c]
+                let mut sum = 0.0_f32;
+                for k in 0..dim {
+                    let a_bytes_start = (r * dim + k) * 4;
+                    let a_arr: [u8; 4] = in_data[a_bytes_start..a_bytes_start + 4]
+                        .try_into()
+                        .unwrap();
+                    let a_val = f32::from_le_bytes(a_arr);
+                    let b_val = matrix[k * dim + c];
+                    sum += a_val * b_val;
+                }
+                let out_bytes_start = (r * dim + c) * 4;
+                out_data[out_bytes_start..out_bytes_start + 4]
+                    .copy_from_slice(&sum.to_le_bytes());
+            }
+        }
+
+        buffers.write(outputs[0], 0, &out_data)?;
+        Ok(vec![OpTiming { op_index: 0, ns: 0 }])
+    }))
 }
 
 // ────────────────────────── deterministic handles ──────────────────────────

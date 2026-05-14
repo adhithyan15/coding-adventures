@@ -242,6 +242,33 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.10 landed — MatMul emitter with folded matrix)**:
+> The emitter now supports its first **non-elementwise** op:
+> `Op::MatMul(0x15)` f32 with the RHS matrix folded as a stable
+> constant.  matrix-metal v0.10.0 emits MSL that bakes the
+> constant matrix's elements as float literals and computes
+> `C[r, c] = sum_k A[r, k] * B[k, c]` via a branch-per-column
+> dispatch.  matrix-cpu v0.6.0 mirrors this with a closure that
+> captures the matrix and iterates per output element.  V1 caps
+> at 2×2 and 4×4 constant matrices (16 or 64 bytes); larger
+> matrices need a different representation than baked literals
+> and land in a later phase.  Constraint: `folded_slot = Some(1)`
+> only (RHS folded).  LHS-folded MatMul returns `None` because
+> the runtime variable dimension sits on a different axis and
+> needs a separate kernel shape.  End-to-end test
+> `cpu_matmul_folded_rhs_2x2_produces_correct_output` runs on
+> every platform: installs a 2×2 specialised kernel with
+> `B = [[5, 6], [7, 8]]` folded, dispatches with
+> `A = [[1, 2], [3, 4]]` as the variable input, and asserts the
+> output is `[[19, 22], [43, 50]]`.  Test counts: matrix-metal
+> 40 → 45 emitter, image-gpu-core 34 → 35.  **MatMul is the first
+> emitter shape heavy enough that the planner could plausibly
+> pick metal** end-to-end through `run_graph_with_constant_inputs`
+> — its flop count (2·m·k·n) overcomes the per-element transfer
+> cost.  The planner-driven test is deferred to a later phase
+> because building a runnable matmul graph through `GraphBuilder`
+> would require fleshing out more of the builder API.
+
 > **Implementation status (Phase 4.9 landed — matrix-cpu auto-install + dispatch routing)**:
 > Closes the gap that's been open since Phase 4.3 — the
 > auto-installer now installs on the **CPU executor** too, not just

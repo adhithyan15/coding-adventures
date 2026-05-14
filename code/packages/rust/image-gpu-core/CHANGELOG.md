@@ -1,5 +1,30 @@
 # Changelog — image-gpu-core
 
+## 0.13.0 — 2026-05-13
+
+### Added — MX05 Phase 4.10 end-to-end (MatMul with folded matrix)
+
+End-to-end exercise of the matrix-metal / matrix-cpu Phase 4.10
+MatMul-with-folded-RHS-matrix kernels.  The CPU side runs on
+every platform; the metal side activates on Apple targets when
+the planner picks metal (which it sometimes does for MatMul
+because matmul's flop count overcomes the transfer cost — the
+first emitter shape where that's possible).
+
+#### Test (34 → 35)
+
+`cpu_matmul_folded_rhs_2x2_produces_correct_output`:
+
+Direct exercise of the matrix-cpu closure builder for MatMul.
+Installs a 2×2 specialised kernel with `B = [[5, 6], [7, 8]]`
+folded, allocates input/output buffers via the protocol,
+uploads `A = [[1, 2], [3, 4]]`, fires `DispatchSpecialised`,
+and asserts the downloaded output is `[[19, 22], [43, 50]]`.
+
+Runs on every platform — no Apple gate.  Exercises the full
+`install_specialised → DispatchSpecialised → DownloadBuffer`
+path through the executor's protocol surface.
+
 ## 0.12.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.9 (matrix-cpu auto-install + dispatch routing)

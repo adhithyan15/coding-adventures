@@ -197,6 +197,17 @@ pub fn emit_specialised_kernel(key: &SpecKey, handle: u64) -> Option<EmittedKern
     let RangeClass::Constant { bytes } = &key.range_class else {
         return None;
     };
+
+    // **MX05 Phase 4.10.**  Op::MatMul (wire tag 0x15) with a
+    // folded **matrix** constant.  Branches off here because the
+    // constant is more than 4 bytes — a flat [m_b, n_b] f32 matrix.
+    // V1 supports only 2x2 (16 bytes) with `folded_slot = Some(1)`
+    // (RHS folded — the common case: variable input times a stable
+    // transform).
+    if key.op_kind == 0x15 {
+        return emit_matmul_with_folded_matrix(key, handle, bytes);
+    }
+
     if bytes.len() != 4 {
         return None;
     }
@@ -425,6 +436,119 @@ fn emit_binary_f32_with_const_at_slot(
         input_buffer_count: 1,
         output_buffer_count: 1,
     }
+}
+
+/// **MX05 Phase 4.10.**  Emit an MSL kernel for
+/// `Op::MatMul(A[m, k] × B[k, n] = C[m, n])` where **one** of the
+/// two input matrices is a stable constant baked into the kernel
+/// source as literal values.
+///
+/// V1 supports a single shape: **2×2** with `folded_slot = Some(1)`
+/// (RHS folded — the variable input `A` is `[m, 2]`, the constant
+/// `B` is `[2, 2]`, and the output `C` is `[m, 2]`).  The kernel
+/// fans out one thread per output element.
+///
+/// `m` is determined at dispatch time from the output buffer's
+/// byte length (`n_elems = bytes / 4`; the kernel uses `gid >> 1`
+/// for the row and `gid & 1` for the column).
+///
+/// Why folded RHS first: the typical workload is "multiply an
+/// image's pixel matrix by a constant colour transform", where
+/// the transform matrix is the RHS and is the constant.  LHS-folded
+/// MatMul is a future phase — it'd need a different kernel shape
+/// because `n` (the runtime dim) would be on a different axis.
+///
+/// Why 2×2 specifically: the bake-in approach (each constant
+/// element as a float literal in the kernel) is only realistic
+/// for small matrices.  16-element (4×4) is doable; bigger
+/// matrices would generate huge kernels.  We hard-cap at 16
+/// elements and let larger matrices fall back to generic dispatch.
+fn emit_matmul_with_folded_matrix(
+    key: &SpecKey,
+    handle: u64,
+    bytes: &[u8],
+) -> Option<EmittedKernel> {
+    // Only RHS-folded in V1.  LHS-folded support will land in a
+    // later phase with its own kernel shape.
+    if key.folded_slot != Some(1) {
+        return None;
+    }
+
+    // Decode the constant matrix.  Bytes must be a multiple of 4
+    // (f32) and the count must match a supported square shape.
+    if bytes.len() % 4 != 0 {
+        return None;
+    }
+    let n_floats = bytes.len() / 4;
+    let dim = match n_floats {
+        4 => 2usize,  // 2x2
+        16 => 4usize, // 4x4
+        _ => return None,
+    };
+    let matrix: Vec<f32> = bytes
+        .chunks(4)
+        .map(|c| {
+            let arr: [u8; 4] = c.try_into().unwrap();
+            f32::from_le_bytes(arr)
+        })
+        .collect();
+
+    // Build the dot-product expression for each output column.
+    // For 2×2: out[r*2 + c] = a[r*2 + 0] * B[0,c] + a[r*2 + 1] * B[1,c].
+    // For 4×4: same shape, just larger sum.
+    //
+    // We emit a flat `if-else` chain on `c` to pick the right
+    // column's worth of constants.  Could use `select(...)` for a
+    // branch-free form, but for 2×2 / 4×4 the branch predictor
+    // handles this trivially and the source is more readable.
+    let mut col_arms = String::new();
+    for c in 0..dim {
+        let mut sum_terms = Vec::with_capacity(dim);
+        for k in 0..dim {
+            let b_val = matrix[k * dim + c];
+            let lit = format_f32_literal(b_val);
+            sum_terms.push(format!("a[r * {dim} + {k}] * {lit}"));
+        }
+        let body = sum_terms.join(" + ");
+        col_arms.push_str(&format!(
+            "        if (c == {c}) {{ out[gid] = {body}; return; }}\n"
+        ));
+    }
+
+    let entry = format!(
+        "specialised_matmul_{dim}x{dim}_rhs_const_f32_0x{handle:016X}"
+    );
+
+    let source = format!(
+        "#include <metal_stdlib>\n\
+         using namespace metal;\n\
+         \n\
+         // MX05 Phase 4.10 — specialised {dim}x{dim} matmul with RHS matrix folded.\n\
+         // handle = 0x{handle:016X}\n\
+         // Output element count `n = m * {dim}` — passed in as a uniform.\n\
+         kernel void {entry}(\n\
+         \x20   device const float* a   [[buffer(0)]],\n\
+         \x20   device float*       out [[buffer(1)]],\n\
+         \x20   constant uint&      n   [[buffer(2)]],\n\
+         \x20   uint gid [[thread_position_in_grid]]\n\
+         ) {{\n\
+         \x20   if (gid >= n) return;\n\
+         \x20   uint r = gid / {dim};\n\
+         \x20   uint c = gid % {dim};\n\
+         {col_arms}\
+         }}\n",
+        dim = dim,
+        handle = handle,
+        entry = entry,
+        col_arms = col_arms,
+    );
+
+    Some(EmittedKernel {
+        source,
+        entry_point: entry,
+        input_buffer_count: 1,
+        output_buffer_count: 1,
+    })
 }
 
 /// **MX05 Phase 4.7.**  Emit a unary-f32 kernel whose input is a
@@ -932,6 +1056,108 @@ mod tests {
                 op_kind
             );
         }
+    }
+
+    // ───────────── MX05 Phase 4.10 — MatMul with folded matrix ─────────────
+
+    /// Build a SpecKey for `Op::MatMul(0x15)` with the RHS matrix
+    /// folded as a flat f32 byte sequence (`[m, n]` row-major).
+    fn matmul_const_key(matrix: &[f32]) -> SpecKey {
+        let bytes: Vec<u8> = matrix.iter().flat_map(|v| v.to_le_bytes()).collect();
+        SpecKey {
+            op_kind: 0x15,
+            dtype: DType::F32,
+            shape_class: ShapeClass::Dynamic,
+            range_class: RangeClass::Constant { bytes },
+            backend_id: 1,
+            folded_slot: Some(1),
+        }
+    }
+
+    /// **MX05 Phase 4.10.**  A 2×2 RHS-folded MatMul kernel emits
+    /// a per-column dot-product expression with the four constant
+    /// values baked in.  Verifies the entry-point convention and
+    /// that all four matrix elements appear in the kernel source.
+    #[test]
+    fn matmul_2x2_rhs_folded_emits_kernel() {
+        // B = [[1, 2], [3, 4]] (row-major)
+        let b = [1.0_f32, 2.0, 3.0, 4.0];
+        let k = emit_specialised_kernel(&matmul_const_key(&b), 0xCAFE).unwrap();
+        assert_eq!(
+            k.entry_point,
+            "specialised_matmul_2x2_rhs_const_f32_0x000000000000CAFE"
+        );
+        assert_eq!(k.input_buffer_count, 1);
+        assert_eq!(k.output_buffer_count, 1);
+        // All four matrix elements should appear as literals in the
+        // kernel source.  format_f32_literal appends `.0` when the
+        // value has no decimal, so 1.0_f32 → "1.0f".
+        for v in &b {
+            let lit = format_f32_literal(*v);
+            assert!(
+                k.source.contains(&lit),
+                "expected '{}' in:\n{}",
+                lit,
+                k.source
+            );
+        }
+        // The kernel must have a `c == 0` branch and a `c == 1`
+        // branch — one per column.
+        assert!(k.source.contains("if (c == 0)"));
+        assert!(k.source.contains("if (c == 1)"));
+    }
+
+    /// **MX05 Phase 4.10.**  A 4×4 RHS-folded MatMul kernel emits
+    /// 16 baked-in constants and 4 column branches.
+    #[test]
+    fn matmul_4x4_rhs_folded_emits_kernel() {
+        // 16 distinct values so each literal is unique in the source.
+        let b: Vec<f32> = (1..=16).map(|i| i as f32).collect();
+        let k = emit_specialised_kernel(&matmul_const_key(&b), 0xCD).unwrap();
+        assert_eq!(
+            k.entry_point,
+            "specialised_matmul_4x4_rhs_const_f32_0x00000000000000CD"
+        );
+        for v in &b {
+            let lit = format_f32_literal(*v);
+            assert!(k.source.contains(&lit), "expected '{}' in kernel", lit);
+        }
+        // 4 column branches.
+        for c in 0..4 {
+            assert!(k.source.contains(&format!("if (c == {})", c)));
+        }
+    }
+
+    /// **MX05 Phase 4.10.**  Unsupported matrix sizes (e.g. 3×3 = 9
+    /// elements, or 5×5 = 25) return `None`.  V1 caps at 4×4.
+    #[test]
+    fn matmul_unsupported_size_returns_none() {
+        let three_x_three: Vec<f32> = vec![1.0; 9];
+        let five_x_five: Vec<f32> = vec![1.0; 25];
+        assert!(emit_specialised_kernel(&matmul_const_key(&three_x_three), 0).is_none());
+        assert!(emit_specialised_kernel(&matmul_const_key(&five_x_five), 0).is_none());
+    }
+
+    /// **MX05 Phase 4.10.**  LHS-folded MatMul isn't supported in
+    /// V1 — emitter returns `None` so the runtime falls back to
+    /// generic dispatch.  LHS-folded support would need a
+    /// different kernel shape (`n` is on a different axis) and
+    /// lands in a later phase.
+    #[test]
+    fn matmul_lhs_folded_returns_none() {
+        let mut k = matmul_const_key(&[1.0_f32, 2.0, 3.0, 4.0]);
+        k.folded_slot = Some(0);
+        assert!(emit_specialised_kernel(&k, 0).is_none());
+    }
+
+    /// **MX05 Phase 4.10.**  Without a `folded_slot`, MatMul is
+    /// non-commutative and the emitter has no idea which side is
+    /// folded — returns `None`.
+    #[test]
+    fn matmul_no_folded_slot_returns_none() {
+        let mut k = matmul_const_key(&[1.0_f32, 2.0, 3.0, 4.0]);
+        k.folded_slot = None;
+        assert!(emit_specialised_kernel(&k, 0).is_none());
     }
 
     #[test]
