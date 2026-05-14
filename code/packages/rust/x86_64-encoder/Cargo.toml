@@ -1,6 +1,6 @@
 [package]
 name = "x86_64-encoder"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Pure-Rust x86-64 (AMD64 / Intel 64) instruction encoder — covers the subset needed by jit-core / aot-core to lower CIR to native machine code on Linux and Windows."
 

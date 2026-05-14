@@ -58,7 +58,11 @@ use std::collections::HashMap;
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use vm_core::value::Value;
-use x86_64_encoder::{Assembler, Cond, EncodeError, LabelId, Reg};
+use x86_64_encoder::{
+    Assembler, Cond, EncodeError, ExternalReloc, ExternalRelocKind, LabelId, Reg,
+};
+
+pub use x86_64_encoder::ExternalReloc as Reloc;
 
 // ===========================================================================
 // ABI selection
@@ -158,11 +162,32 @@ impl Backend for X86_64Backend {
 /// Compile a single function with the given ABI.  Returns the
 /// function's machine-code bytes on success, or a diagnostic string on
 /// failure (for surfaceable errors from tests).
+///
+/// External relocations (cross-function calls, runtime helpers) are
+/// silently discarded.  Use [`compile_function_with_relocs`] when the
+/// AOT linker needs the relocation list.
 pub fn compile_function(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
     abi: X86_64Abi,
 ) -> Result<Vec<u8>, String> {
+    compile_inner(ctx, ir, abi)
+        .map(|(bytes, _relocs)| bytes)
+        .map_err(|e| format!("x86_64-backend: {e:?}"))
+}
+
+/// Like [`compile_function`] but also returns the list of external
+/// relocations the AOT linker must patch after concatenating all
+/// function bodies into a single text section.
+///
+/// Each [`Reloc`] points at a 32-bit slot in the function's bytes
+/// (`patch_offset`) plus the symbol name and reloc kind the packager
+/// (LANG45) translates to an OS-specific relocation record.
+pub fn compile_function_with_relocs(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+) -> Result<(Vec<u8>, Vec<Reloc>), String> {
     compile_inner(ctx, ir, abi)
         .map_err(|e| format!("x86_64-backend: {e:?}"))
 }
@@ -228,7 +253,7 @@ fn compile_inner(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
     abi: X86_64Abi,
-) -> Result<Vec<u8>, BackendError> {
+) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
     if ctx.params.len() > abi.max_args() {
         return Err(BackendError::TooManyParams {
             abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
@@ -285,6 +310,23 @@ fn compile_inner(
                     .or_insert_with(|| asm.create_label());
             }
         }
+        // Self-recursive call: pre-create a label for the callee name so
+        // it can be bound at the function entry below.
+        if instr.op == "call" {
+            if let Some(CIROperand::Var(name)) = instr.srcs.first() {
+                labels.entry(name.clone())
+                    .or_insert_with(|| asm.create_label());
+            }
+        }
+    }
+
+    // Bind the current function's own name to the very start of the
+    // prologue.  `call <fn_name>` instructions in the body emit
+    // `call_label(entry_label)` which re-enters the function here,
+    // re-executing the full prologue (push rbp + spill args) for each
+    // new call frame.
+    if let Some(&entry_label) = labels.get(ctx.name) {
+        asm.bind(entry_label).map_err(BackendError::from)?;
     }
 
     // ---- Prologue ----------------------------------------------------------
@@ -304,14 +346,15 @@ fn compile_inner(
 
     // ---- Body --------------------------------------------------------------
     for instr in ir {
-        emit_instr(&mut asm, instr, &mut alloc, &labels, frame)?;
+        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name, abi)?;
     }
 
     // ---- Defensive epilogue (in case CIR falls off the end) ----------------
     emit_epilogue(&mut asm, frame);
 
+    let external_relocs = std::mem::take(&mut asm.external_relocs);
     let bytes = asm.finish().map_err(BackendError::from)?;
-    Ok(bytes)
+    Ok((bytes, external_relocs))
 }
 
 fn emit_epilogue(asm: &mut Assembler, _frame: u32) {
@@ -334,6 +377,8 @@ fn emit_instr(
     alloc: &mut RegAlloc,
     labels: &HashMap<String, LabelId>,
     frame: u32,
+    fn_name: &str,
+    abi: X86_64Abi,
 ) -> Result<(), BackendError> {
     let op = instr.op.as_str();
 
@@ -437,6 +482,57 @@ fn emit_instr(
         let (rel, signed) = parse_cmp_suffix(rest)
             .ok_or_else(|| BackendError::MalformedInstr(format!("bad cmp mnemonic: {op}")))?;
         return emit_cmp(asm, alloc, instr, rel, signed);
+    }
+
+    // --- call callee_name, arg0, ..., argN ---
+    //
+    // CIR encoding: srcs[0] = Var(callee_name), srcs[1..] = arguments.
+    // The dest slot (if any) receives the return value from RAX.
+    //
+    // Self-recursive calls (callee == fn_name) emit `call_label(entry_label)`
+    // resolved within this function's bytes; cross-function calls emit
+    // `call_rel32(callee_name, PltRel32)` and rely on the AOT linker to
+    // patch the displacement once all function bodies are concatenated.
+    if op == "call" {
+        let callee_name = match instr.srcs.first() {
+            Some(CIROperand::Var(name)) => name.as_str(),
+            _ => return Err(BackendError::MalformedInstr(
+                "call: srcs[0] must be Var(function_name)".into(),
+            )),
+        };
+        let arg_srcs = &instr.srcs[1..];
+        if arg_srcs.len() > abi.max_args() {
+            return Err(BackendError::UnsupportedOp(format!(
+                "call: too many arguments ({}) for {:?} ABI — max {}",
+                arg_srcs.len(), abi, abi.max_args()
+            )));
+        }
+
+        // Load each argument from its stack slot into the ABI's arg register.
+        // With stack-spill allocation, all values are already on the stack,
+        // so loading left-to-right is correct — no aliasing between an arg's
+        // source slot and another arg's destination register.
+        let arg_regs = abi.arg_regs();
+        for (i, src) in arg_srcs.iter().enumerate() {
+            load_operand(asm, alloc, arg_regs[i], src);
+        }
+
+        // Emit the call itself.
+        if callee_name == fn_name {
+            let target_id = *labels.get(callee_name).ok_or_else(|| {
+                BackendError::MalformedInstr(format!("call: no label for '{callee_name}'"))
+            })?;
+            asm.call_label(target_id);
+        } else {
+            asm.call_rel32(callee_name, ExternalRelocKind::PltRel32);
+        }
+
+        // Save the return value from RAX into the destination slot.
+        if let Some(dest) = &instr.dest {
+            let slot = alloc.slot_of(dest);
+            asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        }
+        return Ok(());
     }
 
     // --- LANG38-parity additions ---
@@ -1152,6 +1248,83 @@ mod tests {
         ];
         let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
         assert!(body_contains(&bytes, &[0x48, 0xF7, 0xD8]), "neg rax missing");
+    }
+
+    // ---- Calls ----
+
+    #[test]
+    fn fn_call_external_records_reloc() {
+        // fn caller() -> u64 { return external(42); }
+        // CIR: const_u64 v0=42; call external, v0 → r; ret_u64 r
+        let ctx = fn_ctx("caller", &[], "u64");
+        let ir = vec![
+            instr("const_u64", Some("v0"), vec![Op::Int(42)]),
+            instr("call", Some("r"),
+                  vec![Op::Var("external".into()), Op::Var("v0".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Must contain `mov rdi, [rbp-...]` (System V arg 0)
+        // and `call rel32` (E8 ?? ?? ?? ??) with a recorded reloc.
+        assert!(body_contains(&bytes, &[0xE8]),
+                "expected `call rel32` opcode (E8) in {bytes:02X?}");
+        assert_eq!(relocs.len(), 1, "expected exactly one external reloc");
+        assert_eq!(relocs[0].symbol, "external");
+        assert_eq!(relocs[0].kind, ExternalRelocKind::PltRel32);
+        assert_eq!(relocs[0].addend, -4);
+    }
+
+    #[test]
+    fn fn_self_recursive_call_no_reloc() {
+        // fn fact(n: u64) -> u64 { return fact(n); }  (degenerate but tests the wiring)
+        // CIR: call fact, n → r; ret_u64 r
+        let params = vec![("n".to_string(), "u64".to_string())];
+        let ctx = fn_ctx("fact", &params, "u64");
+        let ir = vec![
+            instr("call", Some("r"),
+                  vec![Op::Var("fact".into()), Op::Var("n".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Self-recursive: no external relocation.
+        assert!(relocs.is_empty(),
+                "self-recursive call should not record external reloc, got {relocs:?}");
+        // Must contain a CALL opcode (E8).
+        assert!(body_contains(&bytes, &[0xE8]),
+                "expected `call rel32` opcode (E8) in {bytes:02X?}");
+    }
+
+    #[test]
+    fn fn_call_msx64_loads_into_rcx() {
+        // MS x64: arg 0 → RCX, not RDI.
+        let ctx = fn_ctx("caller", &[], "u64");
+        let ir = vec![
+            instr("const_u64", Some("v0"), vec![Op::Int(42)]),
+            instr("call", Some("r"),
+                  vec![Op::Var("external".into()), Op::Var("v0".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // Look for `mov rcx, [rbp-disp]` — encoded as 48 8B 8D .. .. .. ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x8D]),
+                "expected `mov rcx, [rbp+disp32]` in MS x64 call setup");
+        // And NOT `mov rdi, [rbp-disp]` (48 8B BD) — the SysV arg-0 load.
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "should NOT emit `mov rdi, ...` on MS x64");
+    }
+
+    #[test]
+    fn fn_call_too_many_args_msx64() {
+        // 5 args > 4 GPR slots on MS x64.
+        let ctx = fn_ctx("caller", &[], "u64");
+        let mut srcs = vec![Op::Var("external".into())];
+        for i in 0..5 { srcs.push(Op::Int(i)); }
+        let ir = vec![
+            instr("call", Some("r"), srcs),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::MsX64);
+        assert!(result.is_err(), "expected `too many args` error");
     }
 
     #[test]

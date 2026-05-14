@@ -52,14 +52,14 @@ Matches the aarch64-backend baseline through LANG38:
 | Logical | `and_<ty>`, `or_<ty>`, `xor_<ty>`, `not_<ty>` |
 | Shifts | `shl_<ty>`, `shr_<ty>` (SAR for `i*`, SHR for `u*`) |
 | Unary | `neg_<ty>` |
+| Calls | `call callee_name, arg0, …, argN` — `CALL rel32` (self-recursive: label fixup; cross-function: `PltRel32` external reloc) |
 | Comparisons | `cmp_eq_<ty>`, `cmp_ne_<ty>`, `cmp_lt_<ty>`, `cmp_le_<ty>`, `cmp_gt_<ty>`, `cmp_ge_<ty>` (signed and unsigned) |
 | Control flow | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | Returns | `ret_<ty>`, `ret_void` |
 | Moves | `mov_<ty>` |
 | Type guards | `type_assert` (lowered to `UD2` trap — AOT has no deopt) |
 
-Calls, globals, and `io_out` are added by subsequent waves
-(LANG43 phases 5–6).
+Globals and `io_out` are added by phase 6.
 
 ## Register allocation
 
