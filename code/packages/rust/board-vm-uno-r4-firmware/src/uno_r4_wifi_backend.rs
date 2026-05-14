@@ -163,6 +163,10 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         true
     }
 
+    fn supports_dac(&self) -> bool {
+        true
+    }
+
     fn supports_bootloader_reboot(&self) -> bool {
         true
     }
@@ -188,6 +192,14 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         }
     }
 
+    fn write_dac_u12(&mut self, pin: u8, sample: u16) -> Result<(), HalError> {
+        if unsafe { board_io_ffi::board_vm_uno_r4_dac_write_u12(pin, sample) } {
+            Ok(())
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
     fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
         board_vm_uno_r4_usb_cdc::reboot_to_bootloader()
     }
@@ -198,5 +210,6 @@ mod board_io_ffi {
     unsafe extern "C" {
         pub fn board_vm_uno_r4_pwm_write(pin: u8, duty: u16) -> bool;
         pub fn board_vm_uno_r4_adc_read(pin: u8, sample: *mut u16) -> bool;
+        pub fn board_vm_uno_r4_dac_write_u12(pin: u8, sample: u16) -> bool;
     }
 }

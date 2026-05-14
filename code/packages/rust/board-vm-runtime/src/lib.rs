@@ -1,9 +1,9 @@
 #![no_std]
 
 use board_vm_ir::{
-    decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_GPIO_CLOSE, CAP_GPIO_OPEN,
-    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS,
+    decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
+    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME,
+    CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -67,6 +67,10 @@ pub trait BoardHal {
     }
 
     fn adc_read(&mut self, _pin: u16) -> Result<u16, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn dac_write_u12(&mut self, _pin: u16, _sample: u16) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -425,6 +429,16 @@ where
                 })?;
                 self.push(Value::U16(sample), ip)
             }
+            CAP_DAC_WRITE_U12 => {
+                let sample = self.pop_u16(ip)?;
+                let pin = self.pop_u16(ip)?;
+                self.hal
+                    .dac_write_u12(pin, sample)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -657,6 +671,7 @@ mod tests {
         Sleep(u16),
         PwmWrite(u16, u16),
         AdcRead(u16),
+        DacWriteU12(u16, u16),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -679,6 +694,7 @@ mod tests {
             CapabilitySet::blink_mvp()
                 .with_pwm()
                 .with_adc()
+                .with_dac()
                 .with_led_matrix()
         }
 
@@ -718,6 +734,11 @@ mod tests {
         fn adc_read(&mut self, pin: u16) -> Result<u16, HalError> {
             self.events.push(Event::AdcRead(pin));
             Ok(0x03ff)
+        }
+
+        fn dac_write_u12(&mut self, pin: u16, sample: u16) -> Result<(), HalError> {
+            self.events.push(Event::DacWriteU12(pin, sample));
+            Ok(())
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -843,5 +864,25 @@ mod tests {
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_value, Value::U16(0x03ff));
         assert_eq!(runtime.hal().events, vec![Event::AdcRead(14)]);
+    }
+
+    #[test]
+    fn dac_write_u12_dispatches_pin_and_sample() {
+        let mut runtime: Runtime<FakeHal, 4, 1> = Runtime::new(FakeHal::new());
+        let code = [
+            0x12,
+            14,
+            0x13,
+            0x00,
+            0x08,
+            0x40,
+            CAP_DAC_WRITE_U12 as u8,
+            0x00,
+        ];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(runtime.hal().events, vec![Event::DacWriteU12(14, 0x0800)]);
     }
 }

@@ -4,7 +4,7 @@
 // Arduino's Renesas core still owns the RA4M1 TinyUSB descriptors, IRQ
 // plumbing, FSP USB driver objects needed by `__USBStart`, and the low-level
 // GPT/AGT timer setup behind the SerialUSB firmware's PWM backend, plus the
-// FSP ADC driver used by the physical analog-read backend.
+// FSP ADC/DAC drivers used by the physical analog-read and analog-write backends.
 
 pub const ARDUINO_RENESAS_UNO_CORE_VERSION: &str = "1.5.3";
 pub const UNO_R4_WIFI_FQBN: &str = "arduino:renesas_uno:unor4wifi";
@@ -29,6 +29,7 @@ pub const ARDUINO_ARM_COMPAT_ROOT_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_COMPAT_RO
 pub const ARDUINO_USB_START_SYMBOL: &str = "_Z10__USBStartv";
 pub const BOARD_VM_UNO_R4_PWM_WRITE_SYMBOL: &str = "board_vm_uno_r4_pwm_write";
 pub const BOARD_VM_UNO_R4_ADC_READ_SYMBOL: &str = "board_vm_uno_r4_adc_read";
+pub const BOARD_VM_UNO_R4_DAC_WRITE_U12_SYMBOL: &str = "board_vm_uno_r4_dac_write_u12";
 pub const RUST_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const RUST_USB_CONFIGURE_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
 pub const RUST_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
@@ -271,6 +272,10 @@ mod tests {
             "board_vm_uno_r4_pwm_write"
         );
         assert_eq!(BOARD_VM_UNO_R4_ADC_READ_SYMBOL, "board_vm_uno_r4_adc_read");
+        assert_eq!(
+            BOARD_VM_UNO_R4_DAC_WRITE_U12_SYMBOL,
+            "board_vm_uno_r4_dac_write_u12"
+        );
         assert_eq!(
             BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE,
             "src/uno_r4_wifi_pwm_bridge.cpp"
