@@ -3,6 +3,7 @@ use std::fmt;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
 const TWO_PI: f64 = std::f64::consts::PI * 2.0;
+const BOLTZMANN: f64 = 1.380_649e-23;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
@@ -765,6 +766,35 @@ impl AcPoint {
     }
 }
 
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum NoiseType {
+    Thermal,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct NoiseEntry {
+    pub element_name: String,
+    pub noise_type: NoiseType,
+    pub source_psd: f64,
+    pub output_psd: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct NoisePoint {
+    pub frequency_hz: f64,
+    pub output_psd: f64,
+    pub input_referred_psd: f64,
+    pub entries: Vec<NoiseEntry>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct NoiseResult {
+    pub output_node: String,
+    pub input_source: String,
+    pub temperature_kelvin: f64,
+    pub points: Vec<NoisePoint>,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct TransientPoint {
     pub time: f64,
@@ -1100,6 +1130,144 @@ pub fn ac_sweep(
     Ok(points)
 }
 
+pub fn noise_ac(
+    circuit: &Circuit,
+    output_node: &str,
+    input_source: &str,
+    frequencies_hz: &[f64],
+    temperature_kelvin: f64,
+) -> Result<NoiseResult, SpiceError> {
+    if !temperature_kelvin.is_finite() || temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "noise_ac".to_string(),
+            reason: "temperature must be finite and positive".to_string(),
+        });
+    }
+    for frequency in frequencies_hz {
+        if !frequency.is_finite() || *frequency <= 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "noise_ac".to_string(),
+                reason: "frequencies must be finite and positive".to_string(),
+            });
+        }
+    }
+
+    validate_reactive_elements(circuit)?;
+
+    let node_indices = collect_node_indices(circuit);
+    if !is_ground(output_node) && !node_indices.contains_key(output_node) {
+        return Err(SpiceError::InvalidElement {
+            name: output_node.to_string(),
+            reason: "output node was not found in circuit".to_string(),
+        });
+    }
+
+    let input = find_input_source(circuit, input_source)?;
+    let voltage_sources = collect_ac_voltage_sources(circuit)?;
+    let node_count = node_indices.len();
+    let matrix_size = node_count + voltage_sources.len();
+    let output_index = node_index(&node_indices, output_node);
+    let noise_sources = collect_noise_sources(circuit, &node_indices, temperature_kelvin)?;
+    let frequencies = if frequencies_hz.is_empty() {
+        default_noise_frequencies()
+    } else {
+        frequencies_hz.to_vec()
+    };
+
+    let mut points = Vec::with_capacity(frequencies.len());
+    for frequency_hz in frequencies {
+        if output_index.is_none() || matrix_size == 0 {
+            points.push(NoisePoint {
+                frequency_hz,
+                output_psd: 0.0,
+                input_referred_psd: 0.0,
+                entries: zero_noise_entries(&noise_sources),
+            });
+            continue;
+        }
+
+        let matrix = build_ac_matrix(
+            circuit,
+            TWO_PI * frequency_hz,
+            &node_indices,
+            &voltage_sources,
+        )?;
+        let mut rhs = vec![Complex::zero(); matrix_size];
+        rhs[output_index.unwrap()] = Complex::new(1.0, 0.0);
+
+        let adjoint = match solve_complex_linear_system(transpose_complex_matrix(&matrix), rhs) {
+            Ok(solution) => solution,
+            Err(SpiceError::SingularMatrix) => {
+                points.push(NoisePoint {
+                    frequency_hz,
+                    output_psd: 0.0,
+                    input_referred_psd: 0.0,
+                    entries: zero_noise_entries(&noise_sources),
+                });
+                continue;
+            }
+            Err(error) => return Err(error),
+        };
+
+        let mut entries: Vec<NoiseEntry> = noise_sources
+            .iter()
+            .map(|source| {
+                let h_positive = source
+                    .positive
+                    .map_or(Complex::zero(), |index| adjoint[index]);
+                let h_negative = source
+                    .negative
+                    .map_or(Complex::zero(), |index| adjoint[index]);
+                let transfer = h_positive - h_negative;
+                NoiseEntry {
+                    element_name: source.element_name.clone(),
+                    noise_type: source.noise_type,
+                    source_psd: source.source_psd,
+                    output_psd: transfer.abs().powi(2) * source.source_psd,
+                }
+            })
+            .collect();
+        entries.sort_by(|left, right| {
+            right
+                .output_psd
+                .total_cmp(&left.output_psd)
+                .then_with(|| left.element_name.cmp(&right.element_name))
+        });
+
+        let output_psd = entries.iter().map(|entry| entry.output_psd).sum();
+        let input_gain =
+            adjoint_input_gain(input, &adjoint, &node_indices, &voltage_sources, node_count)?;
+        let gain_squared = input_gain.abs().powi(2);
+        let input_referred_psd = if gain_squared > 1.0e-100 {
+            output_psd / gain_squared
+        } else {
+            0.0
+        };
+
+        points.push(NoisePoint {
+            frequency_hz,
+            output_psd,
+            input_referred_psd,
+            entries,
+        });
+    }
+
+    Ok(NoiseResult {
+        output_node: output_node.to_string(),
+        input_source: input_source.to_string(),
+        temperature_kelvin,
+        points,
+    })
+}
+
+pub fn noise_ac_default(
+    circuit: &Circuit,
+    output_node: &str,
+    input_source: &str,
+) -> Result<NoiseResult, SpiceError> {
+    noise_ac(circuit, output_node, input_source, &[], 300.0)
+}
+
 pub fn transient(
     circuit: &Circuit,
     time_step: f64,
@@ -1373,6 +1541,15 @@ struct AcSolution {
     branch_currents: BTreeMap<String, Complex>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct NoiseSource {
+    element_name: String,
+    noise_type: NoiseType,
+    positive: Option<usize>,
+    negative: Option<usize>,
+    source_psd: f64,
+}
+
 #[derive(Debug, Copy, Clone)]
 enum InputSource<'a> {
     Voltage(&'a VoltageSource),
@@ -1472,30 +1649,21 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
         });
     }
 
-    let mut matrix = vec![vec![Complex::zero(); matrix_size]; matrix_size];
+    let matrix = build_ac_matrix(circuit, omega, &node_indices, &voltage_sources)?;
     let mut rhs = vec![Complex::zero(); matrix_size];
 
     for element in circuit.elements() {
         match element {
-            Element::Resistor(resistor) => stamp_ac_resistor(resistor, &node_indices, &mut matrix)?,
-            Element::Capacitor(capacitor) => {
-                stamp_ac_capacitor(capacitor, omega, &node_indices, &mut matrix)?
+            Element::VoltageSource(source) => {
+                stamp_ac_voltage_source(source, &voltage_sources, node_count, &mut rhs)?
             }
-            Element::Inductor(inductor) => {
-                stamp_ac_inductor(inductor, omega, &node_indices, &mut matrix)?
-            }
-            Element::VoltageSource(source) => stamp_ac_voltage_source(
-                source,
-                &node_indices,
-                &voltage_sources,
-                node_count,
-                &mut matrix,
-                &mut rhs,
-            )?,
             Element::CurrentSource(source) => {
                 stamp_ac_current_source(source, &node_indices, &mut rhs)?
             }
-            Element::Vccs(source) => stamp_ac_vccs(source, &node_indices, &mut matrix)?,
+            Element::Resistor(_)
+            | Element::Capacitor(_)
+            | Element::Inductor(_)
+            | Element::Vccs(_) => {}
         }
     }
 
@@ -1513,6 +1681,47 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
         node_voltages,
         branch_currents,
     })
+}
+
+fn build_ac_matrix(
+    circuit: &Circuit,
+    omega: f64,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+) -> Result<Vec<Vec<Complex>>, SpiceError> {
+    let node_count = node_indices.len();
+    let matrix_size = node_count + voltage_sources.len();
+    let mut matrix = vec![vec![Complex::zero(); matrix_size]; matrix_size];
+
+    for element in circuit.elements() {
+        match element {
+            Element::Resistor(resistor) => stamp_ac_resistor(resistor, node_indices, &mut matrix)?,
+            Element::Capacitor(capacitor) => {
+                stamp_ac_capacitor(capacitor, omega, node_indices, &mut matrix)?
+            }
+            Element::Inductor(inductor) => {
+                stamp_ac_inductor(inductor, omega, node_indices, &mut matrix)?
+            }
+            Element::VoltageSource(source) => stamp_ac_voltage_source_matrix(
+                source,
+                node_indices,
+                voltage_sources,
+                node_count,
+                &mut matrix,
+            )?,
+            Element::CurrentSource(source) => {
+                if !source.current.is_finite() {
+                    return Err(SpiceError::InvalidElement {
+                        name: source.name.clone(),
+                        reason: "current must be finite".to_string(),
+                    });
+                }
+            }
+            Element::Vccs(source) => stamp_ac_vccs(source, node_indices, &mut matrix)?,
+        }
+    }
+
+    Ok(matrix)
 }
 
 fn build_small_signal_matrix(
@@ -1711,6 +1920,77 @@ fn input_source_type_error(input_source: &str, kind: &str) -> SpiceError {
         reason: format!(
             "input element must be an independent voltage or current source, got {kind}"
         ),
+    }
+}
+
+fn collect_noise_sources(
+    circuit: &Circuit,
+    node_indices: &HashMap<String, usize>,
+    temperature_kelvin: f64,
+) -> Result<Vec<NoiseSource>, SpiceError> {
+    let mut sources = Vec::new();
+    for element in circuit.elements() {
+        if let Element::Resistor(resistor) = element {
+            if !resistor.resistance_ohms.is_finite() || resistor.resistance_ohms <= 0.0 {
+                return Err(SpiceError::InvalidElement {
+                    name: resistor.name.clone(),
+                    reason: "resistance must be finite and positive".to_string(),
+                });
+            }
+            sources.push(NoiseSource {
+                element_name: resistor.name.clone(),
+                noise_type: NoiseType::Thermal,
+                positive: node_index(node_indices, &resistor.n1),
+                negative: node_index(node_indices, &resistor.n2),
+                source_psd: 4.0 * BOLTZMANN * temperature_kelvin / resistor.resistance_ohms,
+            });
+        }
+    }
+    Ok(sources)
+}
+
+fn zero_noise_entries(sources: &[NoiseSource]) -> Vec<NoiseEntry> {
+    sources
+        .iter()
+        .map(|source| NoiseEntry {
+            element_name: source.element_name.clone(),
+            noise_type: source.noise_type,
+            source_psd: source.source_psd,
+            output_psd: 0.0,
+        })
+        .collect()
+}
+
+fn default_noise_frequencies() -> Vec<f64> {
+    (0..50)
+        .map(|index| 10.0_f64.powf(6.0 * index as f64 / 49.0))
+        .collect()
+}
+
+fn adjoint_input_gain(
+    input: InputSource<'_>,
+    adjoint: &[Complex],
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+) -> Result<Complex, SpiceError> {
+    match input {
+        InputSource::Voltage(source) => {
+            let Some(source_index) = voltage_sources.get(&source.name) else {
+                return Err(SpiceError::InvalidElement {
+                    name: source.name.clone(),
+                    reason: "voltage source was not indexed".to_string(),
+                });
+            };
+            Ok(adjoint[node_count + source_index])
+        }
+        InputSource::Current(source) => {
+            let h_positive = node_index(node_indices, &source.positive)
+                .map_or(Complex::zero(), |index| adjoint[index]);
+            let h_negative = node_index(node_indices, &source.negative)
+                .map_or(Complex::zero(), |index| adjoint[index]);
+            Ok(h_negative - h_positive)
+        }
     }
 }
 
@@ -2235,11 +2515,28 @@ fn stamp_complex_conductance(
 
 fn stamp_ac_voltage_source(
     source: &VoltageSource,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    rhs: &mut [Complex],
+) -> Result<(), SpiceError> {
+    if !source.voltage.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "voltage must be finite".to_string(),
+        });
+    }
+
+    let branch = node_count + voltage_sources[&source.name];
+    rhs[branch] += Complex::new(source.voltage, 0.0);
+    Ok(())
+}
+
+fn stamp_ac_voltage_source_matrix(
+    source: &VoltageSource,
     node_indices: &HashMap<String, usize>,
     voltage_sources: &BTreeMap<String, usize>,
     node_count: usize,
     matrix: &mut [Vec<Complex>],
-    rhs: &mut [Complex],
 ) -> Result<(), SpiceError> {
     if !source.voltage.is_finite() {
         return Err(SpiceError::InvalidElement {
@@ -2251,9 +2548,7 @@ fn stamp_ac_voltage_source(
     let branch = node_count + voltage_sources[&source.name];
     let positive = node_index(node_indices, &source.positive);
     let negative = node_index(node_indices, &source.negative);
-
     stamp_complex_branch_matrix(matrix, branch, positive, negative);
-    rhs[branch] += Complex::new(source.voltage, 0.0);
     Ok(())
 }
 
@@ -2441,4 +2736,10 @@ fn solve_complex_linear_system(
         }
     }
     Ok(solution)
+}
+
+fn transpose_complex_matrix(matrix: &[Vec<Complex>]) -> Vec<Vec<Complex>> {
+    (0..matrix.len())
+        .map(|row| (0..matrix.len()).map(|col| matrix[col][row]).collect())
+        .collect()
 }

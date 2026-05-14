@@ -10,6 +10,8 @@
 - Add DC sensitivity analysis for resistor and independent source parameters.
 - Add seeded DC Monte Carlo analysis for linear element parameters with
   Gaussian and uniform tolerance distributions.
+- Add AC noise analysis with resistor Johnson-Nyquist source PSDs, adjoint
+  output contributions, input-referred PSD, and default log sweeps.
 - Add DC small-signal transfer-function analysis with input/output impedance.
 - Add AC small-signal frequency sweeps for linear RC/RL circuits.
 - Add backward-Euler transient analysis for linear RC circuits.
