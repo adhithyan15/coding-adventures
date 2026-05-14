@@ -12,6 +12,9 @@
 - Add TypeScript MACSYMA parity for bivariate cubic identities, so
   `factor(x^3 - y^3)` and `factor(x^3 + y^3)` return the textbook two-factor
   decompositions through the shared symbolic VM handler.
+- Add TypeScript MACSYMA parity for four-term bilinear grouping, so
+  `factor(x*y + x*z + y + z)` returns `(x+1)*(y+z)` through the shared
+  symbolic VM handler.
 - Add `?` / `? topic` help-query handling for TypeScript MACSYMA sessions and
   JSON responses.
 - Wire `assume`, `forget`, `is`, `declare`, `properties`, and `propvars` to a

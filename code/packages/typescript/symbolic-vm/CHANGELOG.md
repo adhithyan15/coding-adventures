@@ -14,6 +14,8 @@
 - Added a bivariate cubic-identity factoring foothold so `Factor` recognises
   expressions like `x^3 - y^3` and `x^3 + y^3` as their textbook two-factor
   decompositions.
+- Added a four-term bilinear grouping factoring foothold so `Factor`
+  recognises expressions like `x*y + x*z + y + z` as `(x+1)*(y+z)`.
 - Added a symbolic-backend-only `D` handler for pure IR differentiation,
   including arithmetic, power, elementary, hyperbolic, and inverse hyperbolic
   chain rules.
