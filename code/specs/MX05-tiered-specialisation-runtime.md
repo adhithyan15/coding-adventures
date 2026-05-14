@@ -242,6 +242,33 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.9 landed — matrix-cpu auto-install + dispatch routing)**:
+> Closes the gap that's been open since Phase 4.3 — the
+> auto-installer now installs on the **CPU executor** too, not just
+> metal.  matrix-cpu v0.5.0 ships `build_specialised_kernel(key,
+> handle) -> Option<Box<SpecialisedKernelFn>>` mirroring matrix-metal's
+> `emit_specialised_kernel`: f32 commutative binary (Add/Mul/Max/Min),
+> non-commutative binary (Sub/Div/Pow) with `folded_slot`, and
+> unary-with-folded-input (Neg/Abs/Sqrt/Exp/Log/Tanh/Recip) all
+> produce Rust closures that operate on `BufferStore` directly.
+> image-gpu-core v0.12.0 promotes the CPU executor to a
+> **thread-local singleton** (`with_cpu_backend(|b| ...)`)
+> so installed kernels persist within a thread but tests don't
+> cross-contaminate.  `try_auto_install_specialised` now branches
+> on `key.backend_id`: 0 → CPU, 1 → metal.  Public
+> `specialised_install_count()` sums both backends' counts.
+> Side-table state (`installed_handles`, `installed_kernel_metadata`,
+> `handle_is_installed`) is now always-on rather than metal-only.
+> End-to-end test
+> `cpu_auto_installer_registers_kernel_after_threshold` runs on
+> every platform (no Apple gate) — drives 1100 invocations of an
+> Add-with-constant graph and asserts `specialised_install_count`
+> rises.  Bonus matrix-cpu fix: `dispatch::run`'s constant-buffer
+> alloc is no longer guarded by `if !buffers.contains(...)` —
+> always reallocates to avoid stale-buffer size mismatches under
+> the long-lived executor.  Test counts: matrix-cpu 33, image-gpu-core
+> 33 → 34.
+
 > **Implementation status (Phase 4.8 landed — multi-op specialised dispatch)**:
 > image-gpu-core v0.11.0 lifts the Phase 4.4 restriction that
 > capped specialised dispatch routing at one non-Const Compute op

@@ -1,5 +1,73 @@
 # Changelog — image-gpu-core
 
+## 0.12.0 — 2026-05-13
+
+### Added — MX05 Phase 4.9 (matrix-cpu auto-install + dispatch routing)
+
+Closes the gap that's been open since Phase 4.3: the auto-installer
+now installs on the **CPU executor** too, not just metal.  Combined
+with matrix-cpu v0.5.0's new `build_specialised_kernel`, this
+finally exercises specialised dispatch on every platform — Linux
+and Windows CI included, where metal is unavailable.
+
+#### Per-thread `CpuBackend`
+
+Promotes the CPU executor from a per-dispatch construction
+(`matrix_cpu::local_transport()` per call) to a **thread-local**
+singleton.  Persistence within a thread means a real workload's
+1000+ repeat dispatches see the auto-installer's installs.
+Per-thread isolation means cargo's parallel unit-test runner
+doesn't cross-contaminate `BufferStore` state.
+
+```rust
+thread_local! {
+    static CPU_BACKEND: CpuBackend = { /* Arc<CpuExecutor> + LocalTransport */ };
+}
+```
+
+Callers use `with_cpu_backend(|b| ...)` to access the
+thread-local instance.
+
+#### `try_auto_install_specialised` dispatches on `backend_id`
+
+The auto-installer now branches on `specialised.key.backend_id`:
+
+  - `0` → CPU: `matrix_cpu::build_specialised_kernel` →
+    `CpuExecutor::install_specialised`.  Always available.
+  - `1` → metal: `matrix_metal::emit_specialised_kernel` →
+    `MetalExecutor::install_specialised_from_emitted`.
+    Apple-only.
+
+Both paths share `INSTALLED_HANDLES` (handles are unique because
+the SpecKey hash feeds on `backend_id` since Phase 4.6) and
+`INSTALLED_KERNEL_METADATA`.
+
+#### Updated `specialised_install_count`
+
+Was Apple-only via `#[cfg(feature = "metal-backend")]` returning
+the metal executor's count.  Now sums **both** backends' counts —
+matrix-cpu's `specialised_count()` plus matrix-metal's (when
+available).  Returns the total installs in this thread, across
+backends.
+
+#### Test (33 → 34)
+
+`cpu_auto_installer_registers_kernel_after_threshold` — the CPU
+counterpart of Phase 4.3's metal-only `auto_installer_registers_kernel_after_threshold`.
+
+Drives an Add-with-constant graph 1100 times, asserts
+`specialised_install_count` rises.  **Runs on every platform**
+because the planner picks CPU for tiny graphs unconditionally
+(no metal-vs-CPU cost-model gymnastics required).
+
+#### Side-table cfg cleanup
+
+`installed_handles`, `installed_kernel_metadata`,
+`record_test_kernel_metadata`, `KernelMetadata`, and
+`handle_is_installed` lost their `#[cfg(feature = "metal-backend")]`
+gates — they're now always-on because the CPU install path also
+exercises them.
+
 ## 0.11.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.8 (multi-op specialised dispatch)

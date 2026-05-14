@@ -38,7 +38,7 @@ mod specialiser;
 
 pub use calibrate::calibrate;
 pub use specialised_table::{SpecialisedKernelFn, SpecialisedTable};
-pub use specialiser::{specialiser, CpuSpecialiser};
+pub use specialiser::{build_specialised_kernel, specialiser, CpuSpecialiser};
 
 use compute_ir::{BufferId, KernelId};
 use executor_protocol::{

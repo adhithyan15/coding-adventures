@@ -87,9 +87,21 @@ pub fn run(buffers: &mut BufferStore, graph: &ComputeGraph) -> Result<Vec<OpTimi
         // Upload constant bytes to its declared buffer.
         // (The runtime would normally do this via UploadBuffer, but we
         // honour it here when the constant's bytes are still in the graph.)
-        if !buffers.contains(c.residency.buffer) {
-            buffers.alloc(c.residency.buffer, c.bytes.len());
-        }
+        //
+        // **MX05 Phase 4.9 fix.**  We now **always** allocate (which
+        // replaces any existing buffer at the same id, per
+        // `BufferStore::alloc`'s docstring).  The previous
+        // `if !buffers.contains(...)` check was brittle once
+        // image-gpu-core promoted `CpuExecutor` to a process-wide
+        // singleton (so installed specialised kernels persist
+        // across invocations) — concurrent dispatches across tests
+        // share BufferStore state, and a stale buffer with the
+        // wrong size could shadow a fresh constant's allocation,
+        // causing `write past end` errors when the new constant's
+        // bytes exceed the stale buffer's length.  Unconditionally
+        // reallocating is cheap (it's just a `Vec::new()` on the
+        // host) and matches matrix-metal's behaviour.
+        buffers.alloc(c.residency.buffer, c.bytes.len());
         buffers.write(c.residency.buffer, 0, &c.bytes)?;
     }
 

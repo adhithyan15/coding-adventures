@@ -80,6 +80,175 @@ pub fn specialiser() -> Box<dyn Specialiser> {
     Box::new(CpuSpecialiser::new())
 }
 
+/// **MX05 Phase 4.9.**  Given a `SpecKey`, build the Rust closure
+/// that implements the specialised op on a CPU `BufferStore`.  This
+/// is the matrix-cpu equivalent of matrix-metal's `msl_emitter` —
+/// instead of generating an MSL string, we generate a closure
+/// (`Box<SpecialisedKernelFn>`) ready to install on a `CpuExecutor`
+/// via [`crate::CpuExecutor::install_specialised`].
+///
+/// Mirrors matrix-metal's emitter coverage:
+///   - **Commutative binary** ops (Add, Mul, Max, Min) with a
+///     folded constant — `out[i] = a[i] OP K`.
+///   - **Non-commutative binary** ops (Sub, Div, Pow) with a
+///     `folded_slot` set — `out[i] = K OP a[i]` or `a[i] OP K`.
+///   - **Unary** ops (Neg, Abs, Sqrt, Exp, Log, Tanh, Recip) with a
+///     folded input constant — `out[i] = f(K)` (memset).
+///
+/// f32 only in V1, matching the metal emitter.  Returns `None` for
+/// shapes the matrix-cpu specialiser doesn't yet know how to lower.
+///
+/// ## Why a separate function, not a trait method
+///
+/// The `Specialiser` trait in matrix-profile lives in a crate that
+/// doesn't know about closures or executors — its
+/// `specialise(key) -> Option<SpecialisedKernel>` returns just the
+/// opaque handle.  Phase 4.9 keeps that contract intact and instead
+/// adds this dedicated function that downstream callers
+/// (image-gpu-core's auto-installer) invoke after a successful
+/// `route()` to build the matching closure.
+///
+/// Pattern matches matrix-metal's `emit_specialised_kernel(key, handle)`.
+pub fn build_specialised_kernel(
+    key: &SpecKey,
+    _handle: u64,
+) -> Option<Box<crate::SpecialisedKernelFn>> {
+    use matrix_ir::DType;
+    use matrix_profile::RangeClass;
+
+    // V1: f32 only, RangeClass::Constant only.
+    if key.dtype != DType::F32 {
+        return None;
+    }
+    let RangeClass::Constant { bytes } = &key.range_class else {
+        return None;
+    };
+    if bytes.len() != 4 {
+        return None;
+    }
+    let arr: [u8; 4] = bytes.as_slice().try_into().ok()?;
+    let constant = f32::from_le_bytes(arr);
+
+    // Commutative binary ops: same kernel regardless of which slot
+    // was folded.  Pass-through pattern: `a[i] OP K`.
+    let commutative: Option<fn(f32, f32) -> f32> = match key.op_kind {
+        0x07 => Some(|a, k| a + k), // Add
+        0x09 => Some(|a, k| a * k), // Mul
+        0x0B => Some(|a, k| a.max(k)), // Max
+        0x0C => Some(|a, k| a.min(k)), // Min
+        _ => None,
+    };
+    if let Some(op) = commutative {
+        return Some(build_binary_f32_kernel(constant, op));
+    }
+
+    // Unary with folded input: precompute f(K) at build time, then
+    // the closure is a pure memset of `precomputed` for every
+    // element.  `folded_slot` must be Some(0) since unary ops have
+    // exactly one input slot.
+    let folded_slot = key.folded_slot?;
+    let unary_precomputed: Option<f32> = match key.op_kind {
+        0x00 if folded_slot == 0 => Some(-constant),
+        0x01 if folded_slot == 0 => Some(constant.abs()),
+        0x02 if folded_slot == 0 => Some(constant.sqrt()),
+        0x03 if folded_slot == 0 => Some(constant.exp()),
+        0x04 if folded_slot == 0 => Some(constant.ln()),
+        0x05 if folded_slot == 0 => Some(constant.tanh()),
+        0x06 if folded_slot == 0 => Some(1.0_f32 / constant),
+        _ => None,
+    };
+    if let Some(precomputed) = unary_precomputed {
+        return Some(build_unary_memset_f32_kernel(precomputed));
+    }
+
+    // Non-commutative binary ops: pick the variant based on
+    // `folded_slot`.
+    //   Some(0) → constant is LHS → `out[i] = K OP a[i]`
+    //   Some(1) → constant is RHS → `out[i] = a[i] OP K`
+    let non_commutative_op: Option<(fn(f32, f32) -> f32, fn(f32, f32) -> f32)> = match key.op_kind {
+        0x08 => Some((|a, k| k - a, |a, k| a - k)), // Sub: (lhs-folded, rhs-folded)
+        0x0A => Some((|a, k| k / a, |a, k| a / k)), // Div
+        0x0D => Some((|a, k| k.powf(a), |a, k| a.powf(k))), // Pow
+        _ => None,
+    };
+    if let Some((lhs_op, rhs_op)) = non_commutative_op {
+        let op = match folded_slot {
+            0 => lhs_op,
+            1 => rhs_op,
+            _ => return None,
+        };
+        return Some(build_binary_f32_kernel(constant, op));
+    }
+
+    None
+}
+
+/// **MX05 Phase 4.9 helper.**  Build a closure that reads input[0]
+/// (f32 buffer) element-by-element and writes `op(in[i], K)` to
+/// output[0].  The kernel takes 1 input + 1 output buffer.
+fn build_binary_f32_kernel(
+    constant: f32,
+    op: fn(f32, f32) -> f32,
+) -> Box<crate::SpecialisedKernelFn> {
+    use executor_protocol::OpTiming;
+    Box::new(move |buffers, inputs, outputs| {
+        if inputs.len() != 1 {
+            return Err(format!(
+                "specialised binary kernel expects 1 input, got {}",
+                inputs.len()
+            ));
+        }
+        if outputs.len() != 1 {
+            return Err(format!(
+                "specialised binary kernel expects 1 output, got {}",
+                outputs.len()
+            ));
+        }
+        let in_data = buffers.get(inputs[0])?.to_vec();
+        let n_elems = in_data.len() / 4;
+        let mut out_data = vec![0u8; n_elems * 4];
+        for i in 0..n_elems {
+            let arr: [u8; 4] = in_data[i * 4..(i + 1) * 4].try_into().unwrap();
+            let a = f32::from_le_bytes(arr);
+            let result = op(a, constant);
+            out_data[i * 4..(i + 1) * 4].copy_from_slice(&result.to_le_bytes());
+        }
+        buffers.write(outputs[0], 0, &out_data)?;
+        Ok(vec![OpTiming { op_index: 0, ns: 0 }])
+    })
+}
+
+/// **MX05 Phase 4.9 helper.**  Build a closure that writes the
+/// precomputed `value` to every f32 element of `output[0]`.  Kernel
+/// takes 0 inputs + 1 output — matching matrix-metal's unary
+/// memset pattern from Phase 4.7.
+fn build_unary_memset_f32_kernel(value: f32) -> Box<crate::SpecialisedKernelFn> {
+    use executor_protocol::OpTiming;
+    Box::new(move |buffers, inputs, outputs| {
+        if !inputs.is_empty() {
+            return Err(format!(
+                "specialised unary memset kernel expects 0 inputs, got {}",
+                inputs.len()
+            ));
+        }
+        if outputs.len() != 1 {
+            return Err(format!(
+                "specialised unary memset kernel expects 1 output, got {}",
+                outputs.len()
+            ));
+        }
+        let out_len = buffers.get(outputs[0])?.len();
+        let n_elems = out_len / 4;
+        let mut out_data = vec![0u8; n_elems * 4];
+        let val_bytes = value.to_le_bytes();
+        for i in 0..n_elems {
+            out_data[i * 4..(i + 1) * 4].copy_from_slice(&val_bytes);
+        }
+        buffers.write(outputs[0], 0, &out_data)?;
+        Ok(vec![OpTiming { op_index: 0, ns: 0 }])
+    })
+}
+
 // ────────────────────────── deterministic handles ──────────────────────────
 
 /// Produce a deterministic 64-bit handle for a given `SpecKey`.
