@@ -1,6 +1,10 @@
 #![forbid(unsafe_code)]
 
+use std::ffi::{OsStr, OsString};
 use std::fmt;
+use std::fs;
+use std::path::{Path, PathBuf};
+use std::process::Command;
 
 use capability_cage::{Action, Capability, Category, Manifest};
 use coding_adventures_json_value::{parse, JsonValue};
@@ -205,6 +209,153 @@ impl fmt::Display for SandboxPlanError {
 
 impl std::error::Error for SandboxPlanError {}
 
+const MACOS_SANDBOX_EXEC: &str = "/usr/bin/sandbox-exec";
+const MACOS_KERNEL_PRIMITIVE: &str = "macos.sandbox-exec.seatbelt";
+
+/// Whether the current host has a kernel sandbox applier for the plan.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct KernelSandboxSupport {
+    pub os: OsFamily,
+    pub primitive: String,
+    pub available: bool,
+    pub reason: String,
+}
+
+/// Process output from a command launched under an OS kernel sandbox.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct KernelSandboxCommandOutput {
+    pub os: OsFamily,
+    pub primitive: String,
+    pub status_code: Option<i32>,
+    pub stdout: String,
+    pub stderr: String,
+}
+
+impl KernelSandboxCommandOutput {
+    pub fn success(&self) -> bool {
+        self.status_code == Some(0)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum KernelSandboxError {
+    Unsupported(KernelSandboxSupport),
+    InvalidPlan(String),
+    Io(String),
+}
+
+impl fmt::Display for KernelSandboxError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Unsupported(support) => write!(
+                f,
+                "kernel sandbox unsupported on {} via {}: {}",
+                support.os, support.primitive, support.reason
+            ),
+            Self::InvalidPlan(message) => write!(f, "invalid kernel sandbox plan: {message}"),
+            Self::Io(message) => write!(f, "kernel sandbox launcher I/O error: {message}"),
+        }
+    }
+}
+
+impl std::error::Error for KernelSandboxError {}
+
+/// Report whether this host can apply the current OS plan in the kernel.
+pub fn current_kernel_sandbox_support() -> KernelSandboxSupport {
+    match OsFamily::current() {
+        OsFamily::Macos => {
+            let available = Path::new(MACOS_SANDBOX_EXEC).exists();
+            KernelSandboxSupport {
+                os: OsFamily::Macos,
+                primitive: MACOS_KERNEL_PRIMITIVE.to_string(),
+                available,
+                reason: if available {
+                    "sandbox-exec is available for Seatbelt profile application".to_string()
+                } else {
+                    "sandbox-exec was not found at /usr/bin/sandbox-exec".to_string()
+                },
+            }
+        }
+        os => KernelSandboxSupport {
+            os,
+            primitive: "not-yet-implemented".to_string(),
+            available: false,
+            reason: "this crate currently applies kernel sandboxes only through macOS Seatbelt"
+                .to_string(),
+        },
+    }
+}
+
+/// Generate the macOS Seatbelt profile used to enforce a macOS sandbox plan.
+///
+/// V1 enforces filesystem write/create/delete capabilities as exact absolute
+/// path literals. Other capability families still lower to plan records and
+/// remain candidates for the next kernel applier slice.
+pub fn macos_seatbelt_profile_for_plan(plan: &SandboxPlan) -> Result<String, KernelSandboxError> {
+    if plan.os != OsFamily::Macos {
+        return Err(KernelSandboxError::InvalidPlan(format!(
+            "expected a macOS plan, got {}",
+            plan.os
+        )));
+    }
+
+    let mut writable_paths = writable_path_literals(plan)?;
+    writable_paths.sort();
+    writable_paths.dedup();
+
+    let mut profile = String::from("(version 1)\n(allow default)\n");
+    match writable_paths.as_slice() {
+        [] => profile.push_str("(deny file-write*)\n"),
+        [path] => {
+            profile.push_str("(deny file-write* (require-not (literal \"");
+            profile.push_str(&seatbelt_escape(path)?);
+            profile.push_str("\")))\n");
+        }
+        paths => {
+            profile.push_str("(deny file-write* (require-not (require-any");
+            for path in paths {
+                profile.push_str(" (literal \"");
+                profile.push_str(&seatbelt_escape(path)?);
+                profile.push_str("\")");
+            }
+            profile.push_str(")))\n");
+        }
+    }
+    Ok(profile)
+}
+
+/// Launch a child process through the current host's kernel sandbox primitive.
+pub fn run_with_kernel_sandbox<I, S>(
+    plan: &SandboxPlan,
+    program: impl AsRef<OsStr>,
+    args: I,
+) -> Result<KernelSandboxCommandOutput, KernelSandboxError>
+where
+    I: IntoIterator<Item = S>,
+    S: AsRef<OsStr>,
+{
+    let program = program.as_ref().to_os_string();
+    let args = args
+        .into_iter()
+        .map(|arg| arg.as_ref().to_os_string())
+        .collect::<Vec<OsString>>();
+
+    if plan.os != OsFamily::current() {
+        return Err(KernelSandboxError::InvalidPlan(format!(
+            "plan targets {}, but current host is {}",
+            plan.os,
+            OsFamily::current()
+        )));
+    }
+
+    match OsFamily::current() {
+        OsFamily::Macos => run_macos_seatbelt(plan, program, args),
+        _ => Err(KernelSandboxError::Unsupported(
+            current_kernel_sandbox_support(),
+        )),
+    }
+}
+
 /// Lower one manifest JSON document into one OS plan.
 pub fn plan_from_json(manifest_json: &str, os: OsFamily) -> Result<SandboxPlan, SandboxPlanError> {
     let fallback = SandboxPlan::empty("<invalid>", os);
@@ -238,6 +389,106 @@ pub fn plan_all_supported(manifest_json: &str) -> Result<Vec<SandboxPlan>, Sandb
 /// Lower one manifest JSON document for the current host OS.
 pub fn plan_for_current_os(manifest_json: &str) -> Result<SandboxPlan, SandboxPlanError> {
     plan_from_json(manifest_json, OsFamily::current())
+}
+
+fn run_macos_seatbelt(
+    plan: &SandboxPlan,
+    program: OsString,
+    args: Vec<OsString>,
+) -> Result<KernelSandboxCommandOutput, KernelSandboxError> {
+    let support = current_kernel_sandbox_support();
+    if !support.available {
+        return Err(KernelSandboxError::Unsupported(support));
+    }
+
+    let profile = macos_seatbelt_profile_for_plan(plan)?;
+    let output = Command::new(MACOS_SANDBOX_EXEC)
+        .arg("-p")
+        .arg(profile)
+        .arg(program)
+        .args(args)
+        .output()
+        .map_err(|error| KernelSandboxError::Io(error.to_string()))?;
+
+    Ok(KernelSandboxCommandOutput {
+        os: OsFamily::Macos,
+        primitive: MACOS_KERNEL_PRIMITIVE.to_string(),
+        status_code: output.status.code(),
+        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
+        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
+    })
+}
+
+fn writable_path_literals(plan: &SandboxPlan) -> Result<Vec<String>, KernelSandboxError> {
+    let mut paths = Vec::new();
+    for rule in &plan.rules {
+        if rule.capability.category != Category::Fs
+            || !matches!(
+                rule.capability.action,
+                Action::Write | Action::Create | Action::Delete
+            )
+        {
+            continue;
+        }
+        let target = rule.capability.target.as_str();
+        if target == "*" || has_glob_syntax(target) {
+            return Err(KernelSandboxError::InvalidPlan(format!(
+                "macOS kernel enforcement requires exact absolute filesystem write targets, got '{target}'"
+            )));
+        }
+        paths.push(
+            canonicalize_literal_target(target)?
+                .to_string_lossy()
+                .to_string(),
+        );
+    }
+    Ok(paths)
+}
+
+fn has_glob_syntax(target: &str) -> bool {
+    target.chars().any(|ch| matches!(ch, '*' | '?' | '[' | ']'))
+}
+
+fn canonicalize_literal_target(target: &str) -> Result<PathBuf, KernelSandboxError> {
+    let path = Path::new(target);
+    if !path.is_absolute() {
+        return Err(KernelSandboxError::InvalidPlan(format!(
+            "kernel file targets must be absolute paths, got '{target}'"
+        )));
+    }
+    if let Ok(canonical) = fs::canonicalize(path) {
+        return Ok(canonical);
+    }
+
+    let parent = path.parent().ok_or_else(|| {
+        KernelSandboxError::InvalidPlan(format!("path '{target}' has no parent directory"))
+    })?;
+    let file_name = path.file_name().ok_or_else(|| {
+        KernelSandboxError::InvalidPlan(format!("path '{target}' has no final path component"))
+    })?;
+    let parent = fs::canonicalize(parent).map_err(|error| {
+        KernelSandboxError::InvalidPlan(format!(
+            "parent directory for '{target}' must exist before kernel enforcement: {error}"
+        ))
+    })?;
+    Ok(parent.join(file_name))
+}
+
+fn seatbelt_escape(input: &str) -> Result<String, KernelSandboxError> {
+    let mut escaped = String::new();
+    for ch in input.chars() {
+        match ch {
+            '\n' | '\r' | '\0' => {
+                return Err(KernelSandboxError::InvalidPlan(
+                    "Seatbelt profile literals cannot contain control characters".to_string(),
+                ))
+            }
+            '"' => escaped.push_str("\\\""),
+            '\\' => escaped.push_str("\\\\"),
+            other => escaped.push(other),
+        }
+    }
+    Ok(escaped)
 }
 
 fn build_plan_from_json(
@@ -501,6 +752,7 @@ fn expression_for(capability: &Capability, primitive: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     const WEATHER_MANIFEST: &str = r#"{
       "version": 1,
@@ -599,5 +851,113 @@ mod tests {
         assert_eq!(plans.len(), 6);
         assert_eq!(plans[0].os, OsFamily::Linux);
         assert_eq!(plans[5].os, OsFamily::Portable);
+    }
+
+    #[test]
+    fn macos_seatbelt_profile_limits_file_writes_to_manifest_targets() {
+        let dir = unique_temp_dir("profile");
+        let allowed = dir.join("umbrella-today.txt");
+        let manifest = weather_manifest_for_path(&allowed);
+        let plan = plan_from_json(&manifest, OsFamily::Macos).unwrap();
+
+        let profile = macos_seatbelt_profile_for_plan(&plan).unwrap();
+        let allowed = fs::canonicalize(&dir)
+            .unwrap()
+            .join("umbrella-today.txt")
+            .to_string_lossy()
+            .to_string();
+
+        assert!(profile.contains("(allow default)"));
+        assert!(profile.contains("(deny file-write*"));
+        assert!(profile.contains("(require-not"));
+        assert!(profile.contains(&allowed));
+        fs::remove_dir_all(dir).ok();
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn macos_kernel_sandbox_blocks_undeclared_file_writes() {
+        if !Path::new(MACOS_SANDBOX_EXEC).exists() {
+            return;
+        }
+
+        let dir = unique_temp_dir("kernel");
+        let allowed = dir.join("allowed.txt");
+        let denied = dir.join("denied.txt");
+        let manifest = weather_manifest_for_path(&allowed);
+        let plan = plan_from_json(&manifest, OsFamily::Macos).unwrap();
+        let allowed_arg = fs::canonicalize(&dir)
+            .unwrap()
+            .join("allowed.txt")
+            .to_string_lossy()
+            .to_string();
+        let denied_arg = fs::canonicalize(&dir)
+            .unwrap()
+            .join("denied.txt")
+            .to_string_lossy()
+            .to_string();
+
+        let output = run_with_kernel_sandbox(
+            &plan,
+            "/bin/sh",
+            [
+                "-c",
+                "printf allowed > \"$1\"; printf denied > \"$2\"",
+                "sh",
+                &allowed_arg,
+                &denied_arg,
+            ],
+        )
+        .unwrap();
+
+        assert_eq!(fs::read_to_string(&allowed).unwrap(), "allowed");
+        assert!(!denied.exists());
+        assert!(!output.success());
+        assert!(output.stderr.contains("Operation not permitted"));
+        fs::remove_dir_all(dir).ok();
+    }
+
+    fn weather_manifest_for_path(path: &Path) -> String {
+        let path = path.to_string_lossy();
+        format!(
+            r#"{{
+              "version": 1,
+              "package": "rust/weather-agent-e2e",
+              "capabilities": [
+                {{
+                  "category": "net",
+                  "action": "dns",
+                  "target": "api.weather.gov",
+                  "justification": "Resolve Weather.gov for the live umbrella forecast."
+                }},
+                {{
+                  "category": "net",
+                  "action": "connect",
+                  "target": "api.weather.gov:443",
+                  "justification": "Fetch the Weather.gov points and forecast resources over TLS."
+                }},
+                {{
+                  "category": "fs",
+                  "action": "write",
+                  "target": "{path}",
+                  "justification": "Write the umbrella decision text file."
+                }}
+              ],
+              "justification": "Weather Agent E2E fetches live weather and writes one report."
+            }}"#
+        )
+    }
+
+    fn unique_temp_dir(label: &str) -> PathBuf {
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "capability-os-sandbox-{label}-{}-{now}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&path).unwrap();
+        path
     }
 }
