@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.22.0 — 2026-05-14
+## 1.22.0 — 2026-05-13
 
 ### Added
 
@@ -19,6 +19,20 @@
   when `value` is NULL the key is also popped to keep the stack balanced.
 - `import json as _json` added to `vm.py` to serialise JSON group results.
 - `_sql_to_json_val` imported from `scalar_functions` for JSON type conversion.
+
+### Fixed
+
+- **Non-finite float JSON safety** (`vm.py`): `json_group_array` and
+  `json_group_object` finalize handlers now map `inf` and `nan` values to
+  JSON `null` before serialising.  Python's `json.dumps` emits `Infinity` /
+  `NaN` for non-finite floats by default, which is not valid per RFC 8259.
+  SQLite maps such values to null; we now match that behaviour.
+- **DISTINCT stack balance for `json_group_object`** (`vm.py`): the DISTINCT
+  duplicate-skip early-return path now pops the stranded key from the operand
+  stack when the aggregate function is `JSON_GROUP_OBJECT`.  Previously the
+  key value was left on the stack, which would corrupt subsequent operand
+  reads.  (The adapter never emits `DISTINCT json_group_object` today, so
+  this was latent; the fix removes the time-bomb before it can fire.)
 
 ## 1.21.0 — 2026-05-13
 

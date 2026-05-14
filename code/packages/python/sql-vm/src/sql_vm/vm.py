@@ -1237,8 +1237,14 @@ def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
     # DISTINCT deduplication: skip this value if we have already seen it.
     # The ``seen`` set is created during _do_init_agg when InitAgg.distinct=True.
     # COUNT(DISTINCT col), SUM(DISTINCT col), etc. all go through this path.
+    #
+    # JSON_GROUP_OBJECT is special: the codegen pushed *two* values (key, then
+    # value) before UpdateAgg.  When we discard a duplicate value we must also
+    # pop the stranded key to keep the operand stack balanced.
     if agg.distinct and agg.seen is not None:
         if value in agg.seen:
+            if agg.func is AggFunc.JSON_GROUP_OBJECT:
+                st.pop()  # discard the stranded key; value already popped above
             return  # duplicate — discard silently
         agg.seen.add(value)
     if agg.func is AggFunc.COUNT:
@@ -1334,15 +1340,25 @@ def _do_finalize_agg(ins: FinalizeAgg, st: _VmState) -> None:
     if agg.func is AggFunc.JSON_GROUP_ARRAY:
         # Always returns a JSON array (never NULL — SQLite returns '[]' for an
         # empty group, unlike GROUP_CONCAT which returns NULL).
-        st.push(_json.dumps(agg.items, separators=(",", ":")))
+        #
+        # Non-finite floats (inf, nan) are not valid JSON (RFC 8259 §6).
+        # SQLite maps them to JSON null, so we do the same by replacing any
+        # non-finite float with None before serialising.
+        safe_items = [
+            None if isinstance(x, float) and not math.isfinite(x) else x
+            for x in agg.items
+        ]
+        st.push(_json.dumps(safe_items, separators=(",", ":")))
         return
     if agg.func is AggFunc.JSON_GROUP_OBJECT:
         # Build a JSON object from the accumulated (key, value) pairs.
         # Duplicate keys: last writer wins (matches SQLite behaviour).
         # Returns '{}' for an empty group (never NULL).
+        #
+        # Same non-finite float → null mapping as JSON_GROUP_ARRAY above.
         obj: dict = {}
         for k, v in agg.items:  # type: ignore[misc]
-            obj[k] = v
+            obj[k] = None if isinstance(v, float) and not math.isfinite(v) else v
         st.push(_json.dumps(obj, separators=(",", ":")))
         return
     # SUM / MIN / MAX — the accumulator *is* the result (may be NULL for empty).
