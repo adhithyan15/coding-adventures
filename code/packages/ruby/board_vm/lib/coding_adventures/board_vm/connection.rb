@@ -500,6 +500,24 @@ module CodingAdventures
         )
       end
 
+      def i2c_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        length:,
+        max_stack: 4
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_read(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          length: length,
+          max_stack: max_stack
+        )
+      end
+
       def store_program!(
         program_id: DEFAULT_PROGRAM_ID,
         slot: DEFAULT_EJECT_SLOT,
@@ -1181,6 +1199,22 @@ module CodingAdventures
           program_id: program_id,
           budget: budget,
           address: address,
+          max_stack: max_stack
+        )
+      end
+
+      def read(
+        address:,
+        length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 4
+      )
+        @connection.i2c_read!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          length: length,
           max_stack: max_stack
         )
       end

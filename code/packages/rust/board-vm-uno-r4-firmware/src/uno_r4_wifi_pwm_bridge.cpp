@@ -506,3 +506,40 @@ extern "C" bool board_vm_uno_r4_i2c_read_u8(uint8_t bus, uint16_t address, uint8
   *byte = static_cast<uint8_t>(value);
   return true;
 }
+
+extern "C" bool board_vm_uno_r4_i2c_read(uint8_t bus, uint16_t address, uint8_t *bytes, size_t len, size_t *read_len) {
+  if ((bytes == nullptr && len != 0) || read_len == nullptr || address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  if (len == 0) {
+    *read_len = 0;
+    return true;
+  }
+
+  if (wire->requestFrom(static_cast<uint8_t>(address), len) != len) {
+    return false;
+  }
+
+  for (size_t index = 0; index < len; ++index) {
+    int value = wire->read();
+    if (value < 0) {
+      return false;
+    }
+    bytes[index] = static_cast<uint8_t>(value);
+  }
+
+  *read_len = len;
+  return true;
+}

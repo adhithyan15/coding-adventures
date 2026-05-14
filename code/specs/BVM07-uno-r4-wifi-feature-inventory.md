@@ -29,7 +29,7 @@ Source snapshot:
 | PWM output | D3, D5, D6, D9, D10, D11 in the Arduino variant init path | implemented as direct write | `pwm.write` |
 | Analog input | A0-A5 | implemented as direct read | `adc.read` |
 | DAC output | A0, one 12-bit DAC channel | implemented as direct write | `dac.write_u12` |
-| I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata, handle open, single-byte write/read, and byte-buffer write implemented | `i2c.open`, `i2c.write_u8`, `i2c.read_u8`, `i2c.write`, then wider `i2c.read`, `i2c.transfer` |
+| I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata, handle open, single-byte write/read, and byte-buffer write/read implemented | `i2c.open`, `i2c.write_u8`, `i2c.read_u8`, `i2c.write`, `i2c.read`, then `i2c.transfer` |
 | SPI master | MOSI D11, MISO D12, SCK D13, CS D10 | pending | `spi.open`, `spi.transfer`, `spi.close` |
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | partially transport-only | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | pending | `can.open`, `can.write`, `can.read` |
@@ -70,8 +70,9 @@ reject conflicting handles.
 4. Implement I2C and SPI as bus handles with explicit transfer boundaries;
    `i2c.open` establishes the first I2C handle tranche, while `i2c.write_u8`
    and `i2c.read_u8` prove the Rust-owned transfer path through Arduino
-   `Wire`/`Wire1`. `i2c.write` now proves the byte-buffer transfer path; wider
-   read/transfer transactions should still land as separate capability slices.
+   `Wire`/`Wire1`. `i2c.write` and `i2c.read` now prove the byte-buffer transfer
+   path; combined transfer transactions should still land as separate capability
+   slices.
 5. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
    capabilities in separate tranches with conformance tests.
 
