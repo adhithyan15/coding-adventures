@@ -9,6 +9,7 @@ import {
   inductor,
   resistor,
   vccs,
+  vcvs,
   voltageSource,
   voltageSourceWithWaveform,
 } from "../src/index.js";
@@ -88,6 +89,30 @@ describe("dcOp", () => {
     expectClose(result.voltage("out"), 1.0);
   });
 
+  it("stamps VCVS output voltage from control voltage", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vctrl", "ctrl", "0", 1.5));
+    circuit.add(vcvs("E1", "out", "0", "ctrl", "0", 2.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("out"), 3.0);
+    expectClose(result.branchCurrent("E1"), -3.0e-3);
+  });
+
+  it("stamps VCVS differential control polarity", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vp", "p", "0", 4.0));
+    circuit.add(voltageSource("Vn", "n", "0", 1.0));
+    circuit.add(vcvs("E1", "out", "0", "p", "n", 0.5));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("out"), 1.5);
+  });
+
   it("rejects non-finite VCCS transconductance", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vctrl", "ctrl", "0", 1.0));
@@ -95,6 +120,15 @@ describe("dcOp", () => {
     circuit.add(resistor("Rload", "out", "0", 1_000.0));
 
     expect(() => dcOp(circuit)).toThrowError("transconductance must be finite");
+  });
+
+  it("rejects non-finite VCVS gain", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vctrl", "ctrl", "0", 1.0));
+    circuit.add(vcvs("Ebad", "out", "0", "ctrl", "0", Number.NaN));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    expect(() => dcOp(circuit)).toThrowError("gain must be finite");
   });
 
   it("uses static source value when a waveform is present", () => {
