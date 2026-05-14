@@ -401,9 +401,9 @@ def _elliptic_second_kind_radicand(f: IRNode, x: IRSymbol) -> IRNode | None:
     ):
         return None
     first, second = product.args
-    return _modulus_from_squared_factor(
-        first, second, x
-    ) or _modulus_from_squared_factor(second, first, x)
+    return _modulus_from_squared_factor(first, second, x) or _modulus_from_squared_factor(
+        second, first, x
+    )
 
 
 def _try_complete_elliptic_e(
@@ -534,9 +534,7 @@ def _elliptic_third_kind_params(
         ):
             continue
         f1, f2 = prod.args
-        k = _modulus_from_squared_factor(
-            f1, f2, x
-        ) or _modulus_from_squared_factor(f2, f1, x)
+        k = _modulus_from_squared_factor(f1, f2, x) or _modulus_from_squared_factor(f2, f1, x)
         if k is None:
             continue
         # bracket must be Add(1, Mul(n, Pow(Sin(x), 2))) or equivalent
