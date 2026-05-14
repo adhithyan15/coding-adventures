@@ -439,7 +439,166 @@ fn emit_instr(
         return emit_cmp(asm, alloc, instr, rel, signed);
     }
 
+    // --- LANG38-parity additions ---
+
+    // div_<ty> / mod_<ty> — signed types use IDIV, unsigned use DIV.
+    if let Some(ty) = op.strip_prefix("div_") { return emit_divmod(asm, alloc, instr, ty, false); }
+    if let Some(ty) = op.strip_prefix("mod_") { return emit_divmod(asm, alloc, instr, ty, true);  }
+
+    // and_<ty> / or_<ty> / xor_<ty>
+    if op.starts_with("and_") { return emit_bitwise(asm, alloc, instr, Bitwise::And); }
+    if op.starts_with("or_")  { return emit_bitwise(asm, alloc, instr, Bitwise::Or);  }
+    if op.starts_with("xor_") { return emit_bitwise(asm, alloc, instr, Bitwise::Xor); }
+
+    // shl_<ty>: logical shift left (same for signed/unsigned).
+    if op.starts_with("shl_") { return emit_shift(asm, alloc, instr, ShiftKind::Shl); }
+    // shr_<ty>: arithmetic for signed (SAR), logical for unsigned (SHR).
+    if let Some(ty) = op.strip_prefix("shr_") {
+        let kind = if ty.starts_with('i') { ShiftKind::Sar } else { ShiftKind::Shr };
+        return emit_shift(asm, alloc, instr, kind);
+    }
+
+    // neg_<ty> dest = -src
+    if op.starts_with("neg_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::Rax, src);
+        asm.neg_(Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // not_<ty> dest = ~src
+    if op.starts_with("not_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::Rax, src);
+        asm.not_(Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
     Err(BackendError::UnsupportedOp(op.to_string()))
+}
+
+// ===========================================================================
+// Division and modulo
+// ===========================================================================
+
+/// `div_<ty>` and `mod_<ty>` both go through this helper.
+///
+/// x86-64 division is awkward: `IDIV r/m64` consumes `RDX:RAX` as the
+/// 128-bit dividend and produces quotient in `RAX`, remainder in `RDX`.
+/// For signed types we must sign-extend `RAX` into `RDX:RAX` with `CQO`;
+/// for unsigned we just zero `RDX`.
+///
+/// Sequence (signed div):
+///
+/// ```text
+/// mov  rax, [lhs]
+/// cqo                     ; rdx:rax = sign-extend(rax)
+/// mov  rcx, [rhs]
+/// idiv rcx
+/// mov  [dst], rax         ; (for mod_, [dst], rdx)
+/// ```
+fn emit_divmod(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    ty: &str,
+    is_mod: bool,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[1]".into()))?;
+    let signed = ty.starts_with('i');
+
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    // Sign-/zero-extend RAX into RDX.
+    if signed {
+        asm.cqo();
+    } else {
+        asm.xor_(Reg::Rdx, Reg::Rdx);
+    }
+    // Load divisor into RCX (IDIV/DIV r/m64 form — divisor in a register).
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    if signed { asm.idiv(Reg::Rcx); } else { asm.div(Reg::Rcx); }
+    // Result lives in RAX (quotient) or RDX (remainder).
+    let result_reg = if is_mod { Reg::Rdx } else { Reg::Rax };
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), result_reg);
+    Ok(())
+}
+
+// ===========================================================================
+// Bitwise ops (AND / OR / XOR)
+// ===========================================================================
+
+#[derive(Debug, Clone, Copy)]
+enum Bitwise { And, Or, Xor }
+
+fn emit_bitwise(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    op: Bitwise,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("bitwise needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("bitwise needs srcs[1]".into()))?;
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    match op {
+        Bitwise::And => asm.and_(Reg::Rax, Reg::Rcx),
+        Bitwise::Or  => asm.or_(Reg::Rax,  Reg::Rcx),
+        Bitwise::Xor => asm.xor_(Reg::Rax, Reg::Rcx),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+// ===========================================================================
+// Variable shifts (SHL / SHR / SAR)
+// ===========================================================================
+
+/// Variable shift kind.  Signed-shift-right (SAR) preserves the sign bit;
+/// logical-shift-right (SHR) zero-fills.
+#[derive(Debug, Clone, Copy)]
+enum ShiftKind { Shl, Shr, Sar }
+
+fn emit_shift(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: ShiftKind,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("shift needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("shift needs srcs[1]".into()))?;
+    // x86-64 variable shift uses CL as the count.  Load the value to be
+    // shifted into RAX and the count into RCX (which has CL in its low
+    // byte), then issue `shl/shr/sar rax, cl`.
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    match kind {
+        ShiftKind::Shl => asm.shl_cl(Reg::Rax),
+        ShiftKind::Shr => asm.shr_cl(Reg::Rax),
+        ShiftKind::Sar => asm.sar_cl(Reg::Rax),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
 }
 
 // ===========================================================================
@@ -841,6 +1000,170 @@ mod tests {
     fn backend_trait_name_reflects_abi() {
         assert_eq!(X86_64Backend::with_abi(X86_64Abi::SysV).name(), "x86_64-sysv");
         assert_eq!(X86_64Backend::with_abi(X86_64Abi::MsX64).name(), "x86_64-msx64");
+    }
+
+    // ---- LANG38-parity opcodes ----
+
+    fn body_contains(bytes: &[u8], needle: &[u8]) -> bool {
+        bytes.windows(needle.len()).any(|w| w == needle)
+    }
+
+    #[test]
+    fn fn_div_i64_emits_cqo_idiv() {
+        // fn d(a: i64, b: i64) -> i64 { return a / b; }
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("d", &params, "i64");
+        let ir = vec![
+            instr("div_i64", Some("q"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_i64", None, vec![Op::Var("q".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x99]),         "cqo missing");      // CQO
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xF9]),   "idiv rcx missing"); // IDIV rcx
+    }
+
+    #[test]
+    fn fn_div_u64_emits_xor_div() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("d", &params, "u64");
+        let ir = vec![
+            instr("div_u64", Some("q"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("q".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Unsigned div: XOR RDX, RDX (48 31 D2) then DIV RCX (48 F7 F1)
+        assert!(body_contains(&bytes, &[0x48, 0x31, 0xD2]),   "xor rdx,rdx missing");
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xF1]),   "div rcx missing");
+    }
+
+    #[test]
+    fn fn_mod_i64_stores_rdx() {
+        // mod: result is the remainder (RDX), not the quotient.
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("m", &params, "i64");
+        let ir = vec![
+            instr("mod_i64", Some("r"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_i64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // After IDIV, the result slot is written from RDX (encoded as
+        // ModR/M reg=2): `mov [rbp - off], rdx`  →  48 89 95 .. .. .. ..
+        // The reg field's low 3 bits = 2, so ModR/M = (10 << 6) | (010 << 3) | rm = 0x95 when rm=5 (RBP).
+        // We assert the `48 89 95` byte trio appears somewhere after IDIV.
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x95]),
+                "mov [rbp+disp32], rdx missing — should be storing remainder");
+    }
+
+    #[test]
+    fn fn_and_or_xor_emit_correct_opcodes() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("f", &params, "u64");
+        let ir = vec![
+            instr("and_u64", Some("v0"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("or_u64",  Some("v1"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("xor_u64", Some("v2"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("v2".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x21, 0xC8]), "and rax,rcx missing");
+        assert!(body_contains(&bytes, &[0x48, 0x09, 0xC8]), "or  rax,rcx missing");
+        assert!(body_contains(&bytes, &[0x48, 0x31, 0xC8]), "xor rax,rcx missing");
+    }
+
+    #[test]
+    fn fn_shl_u64_emits_shl_cl() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("s", &params, "u64");
+        let ir = vec![
+            instr("shl_u64", Some("v"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // shl rax, cl: 48 D3 E0
+        assert!(body_contains(&bytes, &[0x48, 0xD3, 0xE0]), "shl rax,cl missing");
+    }
+
+    #[test]
+    fn fn_shr_signed_emits_sar() {
+        // shr_i64 must lower to SAR (arithmetic shift), not SHR (logical).
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("s", &params, "i64");
+        let ir = vec![
+            instr("shr_i64", Some("v"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // sar rax, cl: 48 D3 F8
+        assert!(body_contains(&bytes, &[0x48, 0xD3, 0xF8]), "sar rax,cl missing");
+        // And NOT shr: 48 D3 E8
+        assert!(!body_contains(&bytes, &[0x48, 0xD3, 0xE8]), "shr unexpectedly present");
+    }
+
+    #[test]
+    fn fn_shr_unsigned_emits_shr() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("s", &params, "u64");
+        let ir = vec![
+            instr("shr_u64", Some("v"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0xD3, 0xE8]), "shr rax,cl missing");
+        assert!(!body_contains(&bytes, &[0x48, 0xD3, 0xF8]), "sar unexpectedly present");
+    }
+
+    #[test]
+    fn fn_neg_emits_neg() {
+        let params = vec![("a".to_string(), "i64".to_string())];
+        let ctx = fn_ctx("n", &params, "i64");
+        let ir = vec![
+            instr("neg_i64", Some("v"), vec![Op::Var("a".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xD8]), "neg rax missing");
+    }
+
+    #[test]
+    fn fn_not_emits_not() {
+        let params = vec![("a".to_string(), "u64".to_string())];
+        let ctx = fn_ctx("n", &params, "u64");
+        let ir = vec![
+            instr("not_u64", Some("v"), vec![Op::Var("a".into())]),
+            instr("ret_u64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xD0]), "not rax missing");
     }
 
     #[test]
