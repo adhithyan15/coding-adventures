@@ -224,18 +224,176 @@ even if H1/H2 only partially hold.
 
 ## Empirical results
 
-**TBD — populated by a follow-up data PR after the bench has been
-run end-to-end against a live Ollama instance with the 5 models
-pulled.** The data PR adds a new section here summarising:
+> Bench run: 2026-05-13 on local Ollama, all five models pulled
+> (gemma4:latest, llama3.1:8b, qwen2.5:3b/1.5b/0.5b), default
+> harness settings (per-cell timeout 180s, max_retries_per_parent
+> 3, cell hard cap 600s). Total wallclock for the 40-cell matrix:
+> **36.8 minutes**. Raw data:
+> [`data/adj25-pr6-foundation-bench-2026-05-13.json`](data/adj25-pr6-foundation-bench-2026-05-13.json).
 
-- Aggregate per-level pass rates (one number per level).
-- Per-model breakdown (overall pass, per-level pass, average
-  wallclock, average LLM calls).
-- Notable failure patterns (which declarations break which models
-  at which level).
-- Comparison to the ADJ23 / ADJ24 baseline (10% / 20% ADJ22 pass).
-- Whether the gate condition (the threshold required to unblock
-  ADJ14/15/17/16/18/19) is met.
+### Headline numbers
+
+| Metric | Result |
+|---|---|
+| Cells run | 40 / 40 (no harness errors) |
+| Cells producing usable IR (no orchestrator error) | **0 / 40** |
+| Cells fully passing per-level coverage | **0 / 40** |
+| Cells with correlation completeness | n/a (zero IRs to check) |
+
+The orchestrator failed **every** cell. The framework's reaction was
+exactly the shape ADJ26 §"Hypotheses" §H3 predicted: every failure
+surfaced as a *typed error* with a structured gap recorded in the
+audit trail — no silent bad output anywhere. But H1 and H2 (per-level
+coverage actually holds, fresh-agent retries close gaps at small
+scales) are empirically refuted by this run.
+
+### Failure-mode breakdown
+
+| Error kind | Cells | What it means |
+|---|---|---|
+| `CoverageUnresolved(1 gap)` | **36 / 40** | The model produced *something*; the orchestrator accepted it; none of the children matched the level's allowed-kinds filter (`Sentence` / `Discarded` for the Doc→Sentence boundary); the parent ended up with no children; retries hit the budget without producing a Sentence node. |
+| `Primitive @ DocumentToSentence` | **4 / 40** | The model's response wasn't parseable JSON at all (the existing `decompose_text` truncation path returned an error after the retry primitive's internal budget exhausted). All 4 are gemma4 cells. |
+
+The 4 gemma4 primitive errors match the ADJ23 finding: gemma4 emits
+verbose IR JSON that occasionally truncates mid-string. Bigger
+output budget would help but doesn't address the root cause.
+
+### Per-model breakdown
+
+| Model | Cells | IR produced | Fully passing | Avg wallclock | Max wallclock |
+|---|---|---|---|---|---|
+| gemma4:latest | 8 | 0 | 0 | **124.5s** | 242.9s |
+| llama3.1:8b | 8 | 0 | 0 | 64.0s | 74.3s |
+| qwen2.5:3b | 8 | 0 | 0 | 43.2s | 57.7s |
+| qwen2.5:1.5b | 8 | 0 | 0 | 30.5s | 33.8s |
+| qwen2.5:0.5b | 8 | 0 | 0 | 13.7s | 21.5s |
+
+Wallclock scales monotonically with parameter count. The 0.5B model
+finishes a cell in ~14s; gemma4 averages 124s with a peak of 4 min.
+On the framework's deployment-economics axis this is consistent with
+ADJ12 / ADJ17: the small-model tier is fast enough that retries are
+affordable.
+
+### Why every cell failed — the system-prompt mismatch
+
+`decompose_hierarchical` dispatches per-parent calls via
+`retry_decompose_level`, which in turn invokes `decompose_text`. The
+`decompose_text` primitive's *system prompt* is `v5` — written for
+the v3 flat IR, instructing the model to produce
+`Fact`/`Rule`/`Uncertainty`/`Discarded`/etc. The orchestrator's
+*correction prompt* (in the `domain_hint`) asks the model to
+"decompose into sentences" / "decompose into phrases".
+
+The model sees two instructions and follows the system prompt,
+producing flat IR. The orchestrator's per-level allowed-kinds filter
+rejects every `Fact` returned for `Document→Sentence` (only
+`Sentence` and `Discarded` are valid there). The Document is left
+with zero children. The retry primitive re-prompts; same outcome;
+budget exhausts; `CoverageUnresolved` fires.
+
+This was the load-bearing known limitation called out in ADJ26
+§"Known limitations" item 1, and ADJ25 PR-6 explicitly deferred a
+new prompt:
+
+> "The orchestrator currently relies on whatever prompt
+> `decompose_text` is shipping with (currently `v5`, which teaches
+> the v3 flat IR). Real-LLM behaviour against a hierarchy-aware
+> prompt is measured in PR-6 (the foundation bench)."
+
+The bench has confirmed: no `decompose-text-v6`, no useful coverage.
+**The unblock path is to ship `decompose-text-v6`** (or an entirely
+new primitive `decompose_level` with its own per-level system
+prompt) and re-run.
+
+### Comparison to ADJ23 / ADJ24 baseline
+
+ADJ23 measured typed-quantity recall at 28% first-pass (10% strict
+pass) on the same source set. ADJ24's retry loop pushed this to 36%
+/ 20%. Those numbers used the v5 prompt's flat-IR contract that *is*
+aligned with what the model is being asked for (the typed-quantity
+contract is additive on top of flat IR).
+
+ADJ26 measures hierarchical coverage with **0% / 0%**. The gap is
+explained entirely by the system-prompt mismatch — the orchestrator's
+per-level retry prompt is incompatible with v5's system prompt at
+the response-kind level. ADJ23's flat-IR + ADJ22 typed-quantity
+contract is the *upper bound* on what the current v5 prompt can
+deliver; the hierarchical contract requires a different prompt
+entirely.
+
+### What this validates (and doesn't)
+
+**Validated** (per ADJ26 §"Hypotheses" §H3):
+
+- The orchestrator + per-level coverage check + retry primitive
+  *machinery* works end-to-end. Every failure is a typed error
+  (`CoverageUnresolved` / `Primitive`) the framework can route to a
+  retry or escalate. No `Tentative`-style silent-bypass behaviour.
+- The error structure is informative enough to direct the next
+  intervention without ambiguity: 36/40 cells failed at
+  `NoChildrenAtLevel(DocumentToSentence)`, which points at the
+  prompt contract, not the orchestrator code.
+
+**Refuted** (per ADJ26 §"Hypotheses" §H1 / §H2 with current `v5`
+prompt):
+
+- The hierarchical contract is NOT meetable against `v5`'s flat-IR
+  system prompt. No model in the lineup produced even a single
+  Sentence node when asked to "decompose into sentences" with
+  `v5`'s "produce Fact / Rule / etc." system prompt in force.
+- Fresh-agent retries with parent-scoped correction prompts do not
+  override a strong system prompt that points elsewhere. This is
+  consistent with the broader LLM literature: system-prompt
+  contracts dominate user-message corrections.
+
+### Gating condition: NOT met. Cutover stays queued.
+
+Every reasonable threshold from §"Gating condition" fails: strict
+(0/40), per-model 50% (0/8 per model), per-level 70% (0% at every
+level).
+
+Per the ADJ25 spec, no paused workstream resumes (ADJ14 / 15 / 16 /
+17 / 18 / 19 / 20). The cutover itself (PR-7's substantive code work
+— retiring `Section`, removing the standalone ADJ22 check, promoting
+`CorrelationId` to a struct field) likewise stays queued: removing
+the `v5` flat-IR machinery now would leave the framework with no
+working decompose path at all.
+
+### Next steps the data justifies
+
+In strict priority order:
+
+1. **Land `decompose-text-v6`.** A new system prompt that teaches
+   the LLM the ADJ25 hierarchy taxonomy with worked examples per
+   level. This is the single biggest lever — current 0% pass rate
+   is bounded above by "model doesn't know what kinds to emit at
+   each level". A v6 prompt that names `Sentence` / `Phrase` /
+   `Fact` / `TypedComponent` and gives one worked example per is the
+   minimum viable change. **Alternatively** add a sibling primitive
+   `decompose_level(parent_text, level, gateway)` in `llm-primitives`
+   with its own per-level system prompt; the orchestrator switches
+   to that primitive for level-boundary calls and `decompose_text`
+   stays available for legacy flat-IR consumers.
+2. **Re-run this bench against v6.** Same harness, same matrix, same
+   threshold candidates. If v6 produces 50%+ cells fully passing
+   on the 8B tier, the gate is in reach.
+3. **If v6 alone is insufficient at the small-model tier**, the
+   ADJ24 learned-prior pattern (small models ignoring instructions)
+   probably recurs. The next intervention is constrained-decoding
+   on the kind enum (per ADJ23 workstream C). Confirm with bench
+   data before committing.
+
+### Notable methodological wins
+
+- **The harness ran the full 40 cells in 36.8 min** — well inside
+  the 30 min – 2 h spec estimate. Re-runs against `v6` will fit in
+  a coffee break.
+- **Per-cell persistence works as designed**: a hypothetical mid-run
+  crash would have lost at most the in-flight cell.
+- **Failure shapes are typed and consistent** — the data file's
+  `error.kind` field cleanly partitioned the 40 cells into 2 groups
+  (`CoverageUnresolved` × 36, `Primitive` × 4). This is the
+  audit-trail richness ADJ25 was designed for.
 
 ## Gating condition for unblocking other workstreams
 
@@ -274,6 +432,12 @@ piece).
 
 ## Status
 
-- v1 — methodology + harness landed (this PR).
-- Empirical results — follow-up data PR after the bench has run
-  end-to-end.
+- v1 — methodology + harness landed
+  ([#3107](https://github.com/adhithyan15/coding-adventures/pull/3107),
+  merged 2026-05-13).
+- v2 — empirical results from the 2026-05-13 Ollama run added
+  inline above. Gating condition **NOT met**: 0/40 cells produced
+  usable IR under the current `decompose-text-v5` system prompt.
+  Next step: land `decompose-text-v6` (or sibling
+  `decompose_level` primitive) with hierarchy-aware system prompt
+  + worked examples, then re-run this bench.
