@@ -33,13 +33,14 @@
 //! | `TypeAnnotation` variant | `TwigKind` |
 //! |--------------------------|------------|
 //! | `UnrefinedInt`           | `Int`      |
-//! | `RangeInt { lo, hi }`    | `Int`      |
-//! | `MembershipInt { … }`    | `Int`      |
+//! | `RangeInt { lo, hi }`    | `RefinedInt(Range { lo, hi, … })` |
+//! | `MembershipInt { values }` | `RefinedInt(Membership { values })` |
 //! | `UnrefinedBool`          | `Bool`     |
 //! | `Any`                    | `Any`      |
 //! | `Opaque(TypeExpr)`       | resolved via `type_expr_to_kind` |
 
 use crate::env::TypeEnv;
+use lang_refined_types::Predicate;
 use twig_parser::{TypeAnnotation, TypeExpr};
 
 // ---------------------------------------------------------------------------
@@ -119,6 +120,28 @@ pub enum TwigKind {
     /// Used when the kind cannot be statically determined, or when the
     /// source code explicitly annotates with `any`.
     Any,
+
+    /// An integer value narrowed by a refinement predicate (TW05-C).
+    ///
+    /// `RefinedInt(p)` is a *subtype* of `Int`: every value that satisfies
+    /// predicate `p` is also a valid `Int`, but not every `Int` satisfies `p`.
+    ///
+    /// ## Examples
+    ///
+    /// ```text
+    /// (Int 0 128)         → RefinedInt(Range { lo: Some(0), hi: Some(128), inclusive_hi: false })
+    /// (Member int 1 2 5)  → RefinedInt(Membership { values: [1, 2, 5] })
+    /// ```
+    ///
+    /// ## Subtyping in `unify`
+    ///
+    /// ```text
+    /// unify(RefinedInt(p), RefinedInt(p)) = RefinedInt(p)   (same predicate)
+    /// unify(RefinedInt(_), RefinedInt(_)) = Int              (different predicates)
+    /// unify(RefinedInt(_), Int)           = Int              (widening)
+    /// unify(RefinedInt(_), Any)           = Any              (widening)
+    /// ```
+    RefinedInt(Predicate),
 }
 
 impl TwigKind {
@@ -130,6 +153,10 @@ impl TwigKind {
     pub fn mnemonic(&self) -> &'static str {
         match self {
             TwigKind::Int => "int",
+            // RefinedInt is a subtype of Int; its mnemonic is the same stable
+            // string so that downstream stages (IIR type hints, LSP tokens) see
+            // "int" regardless of whether a refinement predicate is attached.
+            TwigKind::RefinedInt(_) => "int",
             TwigKind::Bool => "bool",
             TwigKind::Nil => "nil",
             TwigKind::Symbol => "symbol",
@@ -142,21 +169,42 @@ impl TwigKind {
         }
     }
 
-    /// Unify two kinds: return the shared kind if equal, `Any` if not.
+    /// Unify two kinds: return the most specific shared kind, or `Any` when
+    /// the two kinds disagree at the base level.
     ///
-    /// This is used to find the result kind of an `if` expression:
+    /// ## Basic cases
     ///
     /// ```text
-    /// (if cond 1 2)    → then:Int, else:Int  → unified:Int
-    /// (if cond 1 #t)   → then:Int, else:Bool → unified:Any
-    /// (if cond x nil)  → then:Any, else:Nil  → unified:Any
+    /// (if cond 1 2)    → then:Int,  else:Int  → unified:Int
+    /// (if cond 1 #t)   → then:Int,  else:Bool → unified:Any
+    /// (if cond x nil)  → then:Any,  else:Nil  → unified:Any
+    /// ```
+    ///
+    /// ## Integer subtyping (TW05-C)
+    ///
+    /// `RefinedInt` is a subtype of `Int`.  When one or both branches carry a
+    /// refinement predicate, the unifier widens to the *least specific* integer
+    /// kind that is still sound:
+    ///
+    /// ```text
+    /// unify(RefinedInt(p), RefinedInt(p)) = RefinedInt(p)   (same predicate → preserved)
+    /// unify(RefinedInt(_), RefinedInt(_)) = Int              (differ → widen to Int)
+    /// unify(RefinedInt(_), Int)           = Int              (one refined, one not → Int)
+    /// unify(Int, RefinedInt(_))           = Int
     /// ```
     pub fn unify(a: TwigKind, b: TwigKind) -> TwigKind {
+        // Fast path: identical kinds (covers the equal-RefinedInt case too since
+        // Predicate derives PartialEq/Eq).
         if a == b {
-            a
-        } else {
-            TwigKind::Any
+            return a;
         }
+        // Integer subtyping rules: any combination of Int / RefinedInt widens to Int.
+        let a_is_int = matches!(a, TwigKind::Int | TwigKind::RefinedInt(_));
+        let b_is_int = matches!(b, TwigKind::Int | TwigKind::RefinedInt(_));
+        if a_is_int && b_is_int {
+            return TwigKind::Int;
+        }
+        TwigKind::Any
     }
 }
 
@@ -166,6 +214,7 @@ impl std::fmt::Display for TwigKind {
             TwigKind::Record(name) => write!(f, "record:{name}"),
             TwigKind::Union(name) => write!(f, "union:{name}"),
             TwigKind::Function { arity } => write!(f, "function/{arity}"),
+            TwigKind::RefinedInt(pred) => write!(f, "int[{pred}]"),
             other => f.write_str(other.mnemonic()),
         }
     }
@@ -177,28 +226,61 @@ impl std::fmt::Display for TwigKind {
 
 /// Map a parsed [`TypeAnnotation`] to a [`TwigKind`].
 ///
-/// This is a one-directional, lossy conversion: range and membership
-/// predicates are collapsed to the base `Int` kind.  TW05-C recovers the
-/// predicate from the original `TypeAnnotation` to feed into the constraint
-/// solver.
+/// For `RangeInt` and `MembershipInt`, a `RefinedInt(predicate)` kind is
+/// returned rather than the old lossy `Int` — this is the TW05-C change.
+/// The predicate is preserved through the type-checker pass and used to
+/// build `Evidence::Predicated` at call sites.
 ///
 /// # Examples
 ///
 /// ```text
-/// UnrefinedInt              → Int
-/// RangeInt { lo: 0, hi: 256 } → Int   (predicate stripped — TW05-C's job)
-/// UnrefinedBool             → Bool
-/// Any                       → Any
-/// Opaque(Name("Symbol"))    → Symbol  (via type_expr_to_kind)
+/// UnrefinedInt                   → Int
+/// RangeInt { lo: 0, hi: 128 }   → RefinedInt(Range { lo: Some(0), hi: Some(128), inclusive_hi: false })
+/// MembershipInt { values: [1,2] } → RefinedInt(Membership { values: [1, 2] })
+/// UnrefinedBool                  → Bool
+/// Any                            → Any
+/// Opaque(Name("Symbol"))         → Symbol  (via type_expr_to_kind)
 /// ```
 pub fn type_annotation_to_kind(ann: &TypeAnnotation, env: &TypeEnv) -> TwigKind {
     match ann {
-        TypeAnnotation::UnrefinedInt
-        | TypeAnnotation::RangeInt { .. }
-        | TypeAnnotation::MembershipInt { .. } => TwigKind::Int,
+        TypeAnnotation::UnrefinedInt => TwigKind::Int,
+
+        // TW05-C: preserve the refinement predicate rather than collapsing to Int.
+        TypeAnnotation::RangeInt { lo, hi } => TwigKind::RefinedInt(Predicate::Range {
+            lo: Some(*lo),
+            hi: Some(*hi),
+            inclusive_hi: false, // Twig `(Int lo hi)` means lo ≤ x < hi (exclusive upper bound)
+        }),
+        TypeAnnotation::MembershipInt { values } => {
+            TwigKind::RefinedInt(Predicate::Membership { values: values.clone() })
+        }
+
         TypeAnnotation::UnrefinedBool => TwigKind::Bool,
         TypeAnnotation::Any => TwigKind::Any,
         TypeAnnotation::Opaque(te) => type_expr_to_kind(te, env),
+    }
+}
+
+/// Lower a [`TypeAnnotation`] directly to a [`lang_refined_types::RefinedType`]
+/// for storage in `TypeEnv::fn_param_refinements`.
+///
+/// Returns `None` for annotations that carry no solver-checkable predicate
+/// (unrefined int, bool, any, opaque).
+///
+/// The returned `RefinedType` is what the per-binding `Checker` expects.
+pub fn annotation_to_refined_type(ann: &TypeAnnotation) -> Option<lang_refined_types::RefinedType> {
+    use lang_refined_types::{Kind, RefinedType};
+    match ann {
+        TypeAnnotation::RangeInt { lo, hi } => Some(RefinedType::refined(
+            Kind::Int,
+            Predicate::Range { lo: Some(*lo), hi: Some(*hi), inclusive_hi: false },
+        )),
+        TypeAnnotation::MembershipInt { values } => Some(RefinedType::refined(
+            Kind::Int,
+            Predicate::Membership { values: values.clone() },
+        )),
+        // Unrefined annotations produce no proof obligation.
+        _ => None,
     }
 }
 
