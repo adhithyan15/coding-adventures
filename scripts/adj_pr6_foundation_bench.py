@@ -135,7 +135,7 @@ def run_cell(
     model: str,
     endpoint: str,
     timeout_secs: int,
-    max_retries: int,
+    max_retries: Optional[int],
     cell_timeout: int,
 ) -> CellResult:
     env = os.environ.copy()
@@ -143,7 +143,8 @@ def run_cell(
     env["ADJ_PR6_MODEL"] = model
     env["ADJ_PR6_ENDPOINT"] = endpoint
     env["ADJ_PR6_TIMEOUT_SECS"] = str(timeout_secs)
-    env["ADJ_PR6_MAX_RETRIES"] = str(max_retries)
+    if max_retries is not None:
+        env["ADJ_PR6_MAX_RETRIES"] = str(max_retries)
     env["ADJ_PR6_DOCUMENT_ID"] = f"pr6-{declaration['id']}-{model.replace(':', '_').replace('/', '_')}"
 
     started = time.monotonic()
@@ -275,6 +276,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     )
     p.add_argument("--timeout-secs", type=int, default=300, help="per-call LLM timeout")
     p.add_argument("--max-retries", type=int, default=3)
+    p.add_argument(
+        "--per-level-defaults",
+        action="store_true",
+        help="omit ADJ_PR6_MAX_RETRIES so the binary uses PerLevelRetryBudget::default() "
+        "(3/4/5/8 across DocSent/SentPhrase/PhraseClaim/FactTyped). Overrides --max-retries.",
+    )
     p.add_argument("--cell-timeout", type=int, default=900, help="hard cap per cell")
     p.add_argument(
         "--out",
@@ -334,7 +341,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 model=model,
                 endpoint=args.endpoint,
                 timeout_secs=args.timeout_secs,
-                max_retries=args.max_retries,
+                max_retries=None if args.per_level_defaults else args.max_retries,
                 cell_timeout=args.cell_timeout,
             )
             cells.append(result)
