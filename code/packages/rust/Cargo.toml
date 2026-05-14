@@ -4,6 +4,7 @@ members = [
     "aarch64-backend",
     "aarch64-encoder",
     "x86_64-encoder",
+    "x86_64-backend",
     "twig-aot",
     "nib-iir-compiler",
     "jit-loader-macos",
