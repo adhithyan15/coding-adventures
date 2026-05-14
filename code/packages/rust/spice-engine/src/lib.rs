@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
+const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
@@ -195,6 +196,111 @@ pub struct DcSweepPoint {
     pub result: DcResult,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Complex {
+    pub real: f64,
+    pub imag: f64,
+}
+
+impl Complex {
+    pub fn new(real: f64, imag: f64) -> Self {
+        Self { real, imag }
+    }
+
+    pub fn zero() -> Self {
+        Self::new(0.0, 0.0)
+    }
+
+    pub fn abs(self) -> f64 {
+        self.real.hypot(self.imag)
+    }
+
+    pub fn phase(self) -> f64 {
+        self.imag.atan2(self.real)
+    }
+
+    fn is_finite(self) -> bool {
+        self.real.is_finite() && self.imag.is_finite()
+    }
+}
+
+impl std::ops::Add for Complex {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self::new(self.real + rhs.real, self.imag + rhs.imag)
+    }
+}
+
+impl std::ops::AddAssign for Complex {
+    fn add_assign(&mut self, rhs: Self) {
+        *self = *self + rhs;
+    }
+}
+
+impl std::ops::Sub for Complex {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self::new(self.real - rhs.real, self.imag - rhs.imag)
+    }
+}
+
+impl std::ops::SubAssign for Complex {
+    fn sub_assign(&mut self, rhs: Self) {
+        *self = *self - rhs;
+    }
+}
+
+impl std::ops::Mul for Complex {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self::new(
+            self.real * rhs.real - self.imag * rhs.imag,
+            self.real * rhs.imag + self.imag * rhs.real,
+        )
+    }
+}
+
+impl std::ops::Div for Complex {
+    type Output = Self;
+
+    fn div(self, rhs: Self) -> Self::Output {
+        let denominator = rhs.real * rhs.real + rhs.imag * rhs.imag;
+        Self::new(
+            (self.real * rhs.real + self.imag * rhs.imag) / denominator,
+            (self.imag * rhs.real - self.real * rhs.imag) / denominator,
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AcPoint {
+    pub frequency_hz: f64,
+    pub node_voltages: BTreeMap<String, Complex>,
+    pub branch_currents: BTreeMap<String, Complex>,
+}
+
+impl AcPoint {
+    pub fn voltage(&self, node: &str) -> Option<Complex> {
+        if is_ground(node) {
+            Some(Complex::zero())
+        } else {
+            self.node_voltages.get(node).copied()
+        }
+    }
+
+    pub fn branch_current(&self, source_name: &str) -> Option<Complex> {
+        let key = if source_name.starts_with("I(") {
+            source_name.to_string()
+        } else {
+            format!("I({source_name})")
+        };
+        self.branch_currents.get(&key).copied()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct TransientPoint {
     pub time: f64,
@@ -286,6 +392,49 @@ pub fn dc_sweep(
             result: dc_op(&swept)?,
         });
         value += step;
+    }
+    Ok(points)
+}
+
+pub fn ac_sweep(
+    circuit: &Circuit,
+    start_hz: f64,
+    stop_hz: f64,
+    points_per_decade: usize,
+) -> Result<Vec<AcPoint>, SpiceError> {
+    if !start_hz.is_finite() || !stop_hz.is_finite() || start_hz <= 0.0 || stop_hz <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "frequency bounds must be finite and positive".to_string(),
+        });
+    }
+    if stop_hz < start_hz {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "stop frequency must be greater than or equal to start frequency".to_string(),
+        });
+    }
+    if points_per_decade == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "points per decade must be positive".to_string(),
+        });
+    }
+
+    validate_reactive_elements(circuit)?;
+
+    let mut points = Vec::new();
+    let ratio = 10.0_f64.powf(1.0 / points_per_decade as f64);
+    let epsilon = stop_hz * 1.0e-12;
+    let mut frequency = start_hz;
+    while frequency <= stop_hz + epsilon {
+        let solution = solve_ac_circuit(circuit, TWO_PI * frequency)?;
+        points.push(AcPoint {
+            frequency_hz: frequency,
+            node_voltages: solution.node_voltages,
+            branch_currents: solution.branch_currents,
+        });
+        frequency *= ratio;
     }
     Ok(points)
 }
@@ -410,6 +559,12 @@ struct LinearSolution {
     branch_currents: BTreeMap<String, f64>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct AcSolution {
+    node_voltages: BTreeMap<String, Complex>,
+    branch_currents: BTreeMap<String, Complex>,
+}
+
 fn solve_linear_circuit(
     circuit: &Circuit,
     capacitor_states: &[CapacitorState],
@@ -486,10 +641,79 @@ fn solve_linear_circuit(
     })
 }
 
+fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    let voltage_sources = collect_ac_voltage_sources(circuit)?;
+    let node_count = node_indices.len();
+    let branch_count = voltage_sources.len();
+    let matrix_size = node_count + branch_count;
+
+    if matrix_size == 0 {
+        return Ok(AcSolution {
+            node_voltages: BTreeMap::new(),
+            branch_currents: BTreeMap::new(),
+        });
+    }
+
+    let mut matrix = vec![vec![Complex::zero(); matrix_size]; matrix_size];
+    let mut rhs = vec![Complex::zero(); matrix_size];
+
+    for element in circuit.elements() {
+        match element {
+            Element::Resistor(resistor) => stamp_ac_resistor(resistor, &node_indices, &mut matrix)?,
+            Element::Capacitor(capacitor) => {
+                stamp_ac_capacitor(capacitor, omega, &node_indices, &mut matrix)?
+            }
+            Element::Inductor(inductor) => {
+                stamp_ac_inductor(inductor, omega, &node_indices, &mut matrix)?
+            }
+            Element::VoltageSource(source) => stamp_ac_voltage_source(
+                source,
+                &node_indices,
+                &voltage_sources,
+                node_count,
+                &mut matrix,
+                &mut rhs,
+            )?,
+            Element::CurrentSource(source) => {
+                stamp_ac_current_source(source, &node_indices, &mut rhs)?
+            }
+        }
+    }
+
+    let solution = solve_complex_linear_system(matrix, rhs)?;
+    let node_voltages = complex_node_voltages_from_solution(&node_indices, &solution);
+    let mut branch_currents = BTreeMap::new();
+    for (source_name, branch_index) in voltage_sources {
+        branch_currents.insert(
+            format!("I({source_name})"),
+            solution[node_count + branch_index],
+        );
+    }
+
+    Ok(AcSolution {
+        node_voltages,
+        branch_currents,
+    })
+}
+
 fn node_voltages_from_solution(
     node_indices: &HashMap<String, usize>,
     solution: &[f64],
 ) -> BTreeMap<String, f64> {
+    let mut node_voltages = BTreeMap::new();
+    let mut nodes_by_index: Vec<_> = node_indices.iter().collect();
+    nodes_by_index.sort_by_key(|(_, index)| **index);
+    for (node, index) in nodes_by_index {
+        node_voltages.insert(node.clone(), solution[*index]);
+    }
+    node_voltages
+}
+
+fn complex_node_voltages_from_solution(
+    node_indices: &HashMap<String, usize>,
+    solution: &[Complex],
+) -> BTreeMap<String, Complex> {
     let mut node_voltages = BTreeMap::new();
     let mut nodes_by_index: Vec<_> = node_indices.iter().collect();
     nodes_by_index.sort_by_key(|(_, index)| **index);
@@ -557,6 +781,16 @@ fn collect_voltage_sources(
                 }
             }
             _ => {}
+        }
+    }
+    Ok(sources)
+}
+
+fn collect_ac_voltage_sources(circuit: &Circuit) -> Result<BTreeMap<String, usize>, SpiceError> {
+    let mut sources = BTreeMap::new();
+    for element in circuit.elements() {
+        if let Element::VoltageSource(source) = element {
+            insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
         }
     }
     Ok(sources)
@@ -917,6 +1151,133 @@ fn stamp_current_source(
     Ok(())
 }
 
+fn stamp_ac_resistor(
+    resistor: &Resistor,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    if !resistor.resistance_ohms.is_finite() || resistor.resistance_ohms <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: resistor.name.clone(),
+            reason: "resistance must be finite and positive".to_string(),
+        });
+    }
+
+    let conductance = Complex::new(1.0 / resistor.resistance_ohms, 0.0);
+    let n1 = node_index(node_indices, &resistor.n1);
+    let n2 = node_index(node_indices, &resistor.n2);
+    stamp_complex_conductance(matrix, n1, n2, conductance);
+    Ok(())
+}
+
+fn stamp_ac_capacitor(
+    capacitor: &Capacitor,
+    omega: f64,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    validate_capacitor(capacitor)?;
+    let admittance = Complex::new(0.0, omega * capacitor.capacitance_farads);
+    let n1 = node_index(node_indices, &capacitor.n1);
+    let n2 = node_index(node_indices, &capacitor.n2);
+    stamp_complex_conductance(matrix, n1, n2, admittance);
+    Ok(())
+}
+
+fn stamp_ac_inductor(
+    inductor: &Inductor,
+    omega: f64,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    validate_inductor(inductor)?;
+    let admittance = Complex::new(0.0, -1.0 / (omega * inductor.inductance_henrys));
+    let n1 = node_index(node_indices, &inductor.n1);
+    let n2 = node_index(node_indices, &inductor.n2);
+    stamp_complex_conductance(matrix, n1, n2, admittance);
+    Ok(())
+}
+
+fn stamp_complex_conductance(
+    matrix: &mut [Vec<Complex>],
+    n1: Option<usize>,
+    n2: Option<usize>,
+    conductance: Complex,
+) {
+    if let Some(i) = n1 {
+        matrix[i][i] += conductance;
+    }
+    if let Some(j) = n2 {
+        matrix[j][j] += conductance;
+    }
+    if let (Some(i), Some(j)) = (n1, n2) {
+        matrix[i][j] -= conductance;
+        matrix[j][i] -= conductance;
+    }
+}
+
+fn stamp_ac_voltage_source(
+    source: &VoltageSource,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<Complex>],
+    rhs: &mut [Complex],
+) -> Result<(), SpiceError> {
+    if !source.voltage.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "voltage must be finite".to_string(),
+        });
+    }
+
+    let branch = node_count + voltage_sources[&source.name];
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+
+    stamp_complex_branch_matrix(matrix, branch, positive, negative);
+    rhs[branch] += Complex::new(source.voltage, 0.0);
+    Ok(())
+}
+
+fn stamp_complex_branch_matrix(
+    matrix: &mut [Vec<Complex>],
+    branch: usize,
+    positive: Option<usize>,
+    negative: Option<usize>,
+) {
+    if let Some(i) = positive {
+        matrix[i][branch] += Complex::new(1.0, 0.0);
+        matrix[branch][i] += Complex::new(1.0, 0.0);
+    }
+    if let Some(j) = negative {
+        matrix[j][branch] -= Complex::new(1.0, 0.0);
+        matrix[branch][j] -= Complex::new(1.0, 0.0);
+    }
+}
+
+fn stamp_ac_current_source(
+    source: &CurrentSource,
+    node_indices: &HashMap<String, usize>,
+    rhs: &mut [Complex],
+) -> Result<(), SpiceError> {
+    if !source.current.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "current must be finite".to_string(),
+        });
+    }
+
+    let current = Complex::new(source.current, 0.0);
+    if let Some(i) = node_index(node_indices, &source.positive) {
+        rhs[i] -= current;
+    }
+    if let Some(j) = node_index(node_indices, &source.negative) {
+        rhs[j] += current;
+    }
+    Ok(())
+}
+
 fn solve_linear_system(
     mut matrix: Vec<Vec<f64>>,
     mut rhs: Vec<f64>,
@@ -959,6 +1320,55 @@ fn solve_linear_system(
             .map(|col| matrix[row][col] * solution[col])
             .sum();
         solution[row] = (rhs[row] - tail_sum) / matrix[row][row];
+    }
+    Ok(solution)
+}
+
+fn solve_complex_linear_system(
+    mut matrix: Vec<Vec<Complex>>,
+    mut rhs: Vec<Complex>,
+) -> Result<Vec<Complex>, SpiceError> {
+    let n = rhs.len();
+    for pivot_col in 0..n {
+        let pivot_row = (pivot_col..n)
+            .max_by(|&a, &b| {
+                matrix[a][pivot_col]
+                    .abs()
+                    .partial_cmp(&matrix[b][pivot_col].abs())
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .ok_or(SpiceError::SingularMatrix)?;
+
+        if matrix[pivot_row][pivot_col].abs() < PIVOT_EPSILON {
+            return Err(SpiceError::SingularMatrix);
+        }
+
+        matrix.swap(pivot_col, pivot_row);
+        rhs.swap(pivot_col, pivot_row);
+
+        let pivot = matrix[pivot_col][pivot_col];
+        for row in (pivot_col + 1)..n {
+            let factor = matrix[row][pivot_col] / pivot;
+            if factor == Complex::zero() {
+                continue;
+            }
+            matrix[row][pivot_col] = Complex::zero();
+            for col in (pivot_col + 1)..n {
+                matrix[row][col] = matrix[row][col] - factor * matrix[pivot_col][col];
+            }
+            rhs[row] = rhs[row] - factor * rhs[pivot_col];
+        }
+    }
+
+    let mut solution = vec![Complex::zero(); n];
+    for row in (0..n).rev() {
+        let tail_sum = ((row + 1)..n)
+            .map(|col| matrix[row][col] * solution[col])
+            .fold(Complex::zero(), |acc, value| acc + value);
+        solution[row] = (rhs[row] - tail_sum) / matrix[row][row];
+        if !solution[row].is_finite() {
+            return Err(SpiceError::SingularMatrix);
+        }
     }
     Ok(solution)
 }
