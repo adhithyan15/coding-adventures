@@ -72,6 +72,7 @@ pub mod env;
 pub mod errors;
 pub mod exhaustiveness;
 pub mod kinds;
+pub mod narrowing;
 pub mod profile;
 
 pub use env::TypeEnv;
@@ -279,7 +280,7 @@ impl TypeChecker<Program, TypedProgram> for TwigTypeCheckerImpl {
 // Tests
 // ---------------------------------------------------------------------------
 //
-// 28 unit tests covering:
+// 28 unit tests covering TW05-B (LANG50):
 // - Atom kind inference (Int, Bool, Nil, Symbol)
 // - Variable resolution (resolved / unresolved)
 // - Define forms (value binding, function arity, annotation)
@@ -292,6 +293,20 @@ impl TypeChecker<Program, TypedProgram> for TwigTypeCheckerImpl {
 // - Typed modes (off / strict / lenient)
 // - Direct `check_program` path
 // - Parse error path
+//
+// Plus 12 tests covering TW05-C (LANG53):
+// - refined_kind_from_range_annotation
+// - refined_kind_from_membership_annotation
+// - unrefined_int_annotation_stays_int
+// - call_site_literal_in_range_no_error
+// - call_site_literal_out_of_range_error
+// - call_site_unconstrained_lenient_silent
+// - call_site_unconstrained_strict_error
+// - narrowing_lt_proves_call
+// - narrowing_and_both_bounds
+// - narrowing_not_in_else
+// - refined_kinds_unify_to_int
+// - no_narrowing_for_non_numeric
 
 #[cfg(test)]
 mod tests {
@@ -740,5 +755,252 @@ mod tests {
             Err(TwigTypeCheckError::Parse(_)) => {}
             other => panic!("expected TwigTypeCheckError::Parse, got {other:?}"),
         }
+    }
+
+    // ── TW05-C: RefinedInt kind from annotations (LANG53) ────────────────────
+
+    #[test]
+    fn refined_kind_from_range_annotation() {
+        // A value annotated with `(Int 0 128)` should be bound to
+        // `TwigKind::RefinedInt(Range { lo: Some(0), hi: Some(128) })`, not plain `Int`.
+        use kinds::{type_annotation_to_kind, TwigKind};
+        use lang_refined_types::Predicate;
+        use twig_parser::TypeAnnotation;
+
+        let env = TypeEnv::new();
+        let ann = TypeAnnotation::RangeInt { lo: 0, hi: 128 };
+        let kind = type_annotation_to_kind(&ann, &env);
+
+        assert!(
+            matches!(&kind, TwigKind::RefinedInt(Predicate::Range {
+                lo: Some(0),
+                hi: Some(128),
+                inclusive_hi: false,
+            })),
+            "expected RefinedInt(Range {{0, 128}}), got {kind:?}"
+        );
+        // Mnemonic must be "int" regardless of refinement.
+        assert_eq!(kind.mnemonic(), "int");
+    }
+
+    #[test]
+    fn refined_kind_from_membership_annotation() {
+        // `(Member int 1 2 5)` → `TwigKind::RefinedInt(Membership { values: [1, 2, 5] })`.
+        use kinds::{type_annotation_to_kind, TwigKind};
+        use lang_refined_types::Predicate;
+        use twig_parser::TypeAnnotation;
+
+        let env = TypeEnv::new();
+        let ann = TypeAnnotation::MembershipInt { values: vec![1, 2, 5] };
+        let kind = type_annotation_to_kind(&ann, &env);
+
+        assert!(
+            matches!(&kind, TwigKind::RefinedInt(Predicate::Membership { values }) if *values == vec![1i128, 2, 5]),
+            "expected RefinedInt(Membership {{1,2,5}}), got {kind:?}"
+        );
+        assert_eq!(kind.mnemonic(), "int");
+    }
+
+    #[test]
+    fn unrefined_int_annotation_stays_int() {
+        // `int` annotation → plain `Int`, not `RefinedInt`.  Regression guard.
+        use kinds::{type_annotation_to_kind, TwigKind};
+        use twig_parser::TypeAnnotation;
+
+        let env = TypeEnv::new();
+        let kind = type_annotation_to_kind(&TypeAnnotation::UnrefinedInt, &env);
+        assert_eq!(kind, TwigKind::Int, "UnrefinedInt should stay Int");
+    }
+
+    // ── TW05-C: call-site refinement checking ───────────────────────────────
+
+    /// Build the "ascii-info" function with an `(Int 0 128)` param annotation,
+    /// plus stubs for the arithmetic/comparison builtins used in the tests.
+    ///
+    /// The `twig-type-checker` does not pre-populate builtins into `TypeEnv` —
+    /// in a real program those come from the standard prelude.  The stubs below
+    /// let us write self-contained test programs without needing a prelude file.
+    fn ascii_info_prelude() -> String {
+        [
+            "(define (ascii-info (x : (Int 0 128))) x)",
+            "(define (< a b) 0)",     // comparison stub  — 2 args
+            "(define (<= a b) 0)",
+            "(define (> a b) 0)",
+            "(define (>= a b) 0)",
+            "(define (and a b) 0)",   // logical-and stub
+        ]
+        .join(" ")
+    }
+
+    #[test]
+    fn call_site_literal_in_range_no_error() {
+        // `(ascii-info 42)` — literal 42 ∈ [0, 128) → proven safe → no error.
+        let src = format!("{} (ascii-info 42)", ascii_info_prelude());
+        let r = tc_strict(&src);
+        assert!(r.ok, "literal in range should produce no error; errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(), "unexpected errors: {:?}", r.errors);
+    }
+
+    #[test]
+    fn call_site_literal_out_of_range_error() {
+        // `(ascii-info 200)` — literal 200 ∉ [0, 128) → proven unsafe → refinement error.
+        let src = format!("{} (ascii-info 200)", ascii_info_prelude());
+        let r = tc_strict(&src);
+        assert!(!r.ok, "literal out of range should produce a refinement error");
+        assert!(!r.errors.is_empty(), "expected at least 1 error");
+        assert!(
+            r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "error should mention refinement; got: {:?}",
+            r.errors
+        );
+    }
+
+    #[test]
+    fn call_site_unconstrained_lenient_silent() {
+        // Calling with an unannotated variable → Unconstrained evidence → Unknown.
+        // In lenient mode Unknown is silent (ok: true, no refinement error).
+        //
+        // `n` has no annotation so its kind is `Any` — the checker can't prove
+        // safety, but lenient mode silently accepts Unknown.
+        let src = format!(
+            "{} (define (process n) (ascii-info n))",
+            ascii_info_prelude()
+        );
+        let r = tc_lenient(&src);
+        assert!(r.ok, "lenient mode should be ok for unconstrained call");
+        let has_refinement_error = r.errors.iter().any(|e| e.message.contains("refinement error"));
+        assert!(
+            !has_refinement_error,
+            "lenient mode should not emit refinement error for unconstrained arg; errors: {:?}",
+            r.errors
+        );
+    }
+
+    #[test]
+    fn call_site_unconstrained_strict_error() {
+        // Same call with a plain-Int variable in strict mode → Unknown → error.
+        // `n : int` gives n kind `Int` (unrefined) → Unconstrained evidence → Unknown
+        // → strict mode reports a refinement error.
+        let src = format!(
+            "{} (define (process (n : int)) (ascii-info n))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(!r.ok, "strict mode should fail for unconstrained Int argument");
+        assert!(
+            r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "expected refinement error; got: {:?}",
+            r.errors
+        );
+    }
+
+    // ── TW05-C: flow-sensitive narrowing ────────────────────────────────────
+
+    #[test]
+    fn narrowing_lt_proves_call() {
+        // In the true branch of `(< x 128)`, x is narrowed to RefinedInt(x < 128).
+        // The `ascii-info` annotation is `[0, 128)`.
+        // Evidence: Predicated([x < 128]) — the solver checks [0,128) ∧ ¬(x < 128)
+        //   which is UNSAT → ProvenSafe → no error in the then-branch.
+        let src = format!(
+            "{} (define (process (x : int)) (if (< x 128) (ascii-info x) 0))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            r.ok,
+            "narrowing via (< x 128) should prove ascii-info safe; errors: {:?}",
+            r.errors
+        );
+        assert!(r.errors.is_empty(), "unexpected errors: {:?}", r.errors);
+    }
+
+    #[test]
+    fn narrowing_and_both_bounds() {
+        // `(if (and (>= x 0) (< x 128)) (ascii-info x) 0)` —
+        // Both bounds are established; x is narrowed to RefinedInt(x >= 0 AND x < 128).
+        // The annotation [0, 128) is satisfied → ProvenSafe.
+        let src = format!(
+            "{} (define (process (x : int)) (if (and (>= x 0) (< x 128)) (ascii-info x) 0))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            r.ok,
+            "and-guard [>=0 AND <128] should prove ascii-info safe; errors: {:?}",
+            r.errors
+        );
+        assert!(r.errors.is_empty(), "unexpected errors: {:?}", r.errors);
+    }
+
+    #[test]
+    fn narrowing_not_in_else() {
+        // In the else branch of `(if (< x 128) ... ...)`, x is narrowed to
+        // RefinedInt(NOT(x < 128)) = RefinedInt(x >= 128).
+        // Calling `(ascii-info x)` in the else branch → Evidence: Predicated([¬(x<128)]).
+        // The annotation [0, 128) combined with evidence x >= 128 is SAT → ProvenUnsafe → error.
+        let src = format!(
+            "{} (define (process (x : int)) (if (< x 128) 0 (ascii-info x)))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            !r.ok,
+            "calling ascii-info in else branch (x>=128) should be unsafe; errors: {:?}",
+            r.errors
+        );
+        assert!(
+            r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "expected refinement error; got: {:?}",
+            r.errors
+        );
+    }
+
+    // ── TW05-C: TwigKind::unify with RefinedInt ─────────────────────────────
+
+    #[test]
+    fn refined_kinds_unify_to_int() {
+        // Two different RefinedInt variants in then/else branches should unify to Int
+        // (not Any), since both branches produce an integer.
+        //
+        // We test the `unify` function directly since constructing source that
+        // produces RefinedInt branches requires annotated variable bindings.
+        use kinds::TwigKind;
+        use lang_refined_types::Predicate;
+
+        let p1 = Predicate::Range { lo: Some(0), hi: Some(10), inclusive_hi: false };
+        let p2 = Predicate::Range { lo: Some(20), hi: Some(30), inclusive_hi: false };
+
+        // Same predicate → preserved.
+        let same = TwigKind::unify(TwigKind::RefinedInt(p1.clone()), TwigKind::RefinedInt(p1.clone()));
+        assert_eq!(same, TwigKind::RefinedInt(p1.clone()), "same predicate should be preserved");
+
+        // Different predicates → widened to Int.
+        let widened = TwigKind::unify(TwigKind::RefinedInt(p1.clone()), TwigKind::RefinedInt(p2));
+        assert_eq!(widened, TwigKind::Int, "different RefinedInt predicates should unify to Int");
+
+        // RefinedInt + Int → Int.
+        let with_int = TwigKind::unify(TwigKind::RefinedInt(p1.clone()), TwigKind::Int);
+        assert_eq!(with_int, TwigKind::Int, "RefinedInt + Int should unify to Int");
+
+        // RefinedInt + Any → Any.
+        let with_any = TwigKind::unify(TwigKind::RefinedInt(p1), TwigKind::Any);
+        assert_eq!(with_any, TwigKind::Any, "RefinedInt + Any should unify to Any");
+    }
+
+    #[test]
+    fn no_narrowing_for_non_numeric() {
+        // Guards with non-numeric variables should not crash the narrowing code.
+        // `(if (< b 1) ...)` where b has kind Bool — merge_kind_with_predicate
+        // on Bool should return Bool unchanged.
+        //
+        // We verify this by checking a program where the guard is over a bool-typed
+        // variable (defined as a bool literal) and ensuring it produces no panics.
+        let src = "(define b #t) (if (< b 1) b #f)";
+        // No annotation means b is Any; `< b 1` still extracts a narrowing fact
+        // (VarRef + IntLit), but merge_kind_with_predicate(Any, pred) returns Any.
+        let r = tc_strict(src);
+        // Result might have errors (e.g. b is Any, not Int), but it should not panic.
+        let _ = r; // Success: no panic.
     }
 }
