@@ -5,6 +5,7 @@
 - Add a DC modified nodal analysis solver for resistors, independent voltage
   sources, and independent current sources.
 - Add DC source sweeps for independent voltage and current sources.
+- Add DC sensitivity analysis for resistor and independent source parameters.
 - Add DC small-signal transfer-function analysis with input/output impedance.
 - Add AC small-signal frequency sweeps for linear RC/RL circuits.
 - Add backward-Euler transient analysis for linear RC circuits.

@@ -209,6 +209,30 @@ impl TfResult {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct SensEntry {
+    pub element_name: String,
+    pub parameter: String,
+    pub nominal_value: f64,
+    pub sensitivity: f64,
+    pub relative_sensitivity: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SensResult {
+    pub output_node: String,
+    pub nominal_voltage: f64,
+    pub entries: Vec<SensEntry>,
+}
+
+impl SensResult {
+    pub fn entry(&self, element_name: &str, parameter: &str) -> Option<&SensEntry> {
+        self.entries
+            .iter()
+            .find(|entry| entry.element_name == element_name && entry.parameter == parameter)
+    }
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Complex {
     pub real: f64,
@@ -485,6 +509,60 @@ pub fn tf(
     })
 }
 
+pub fn sens_dc(circuit: &Circuit, output_node: &str) -> Result<SensResult, SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    if !is_ground(output_node) && !node_indices.contains_key(output_node) {
+        return Err(SpiceError::InvalidElement {
+            name: output_node.to_string(),
+            reason: "output node was not found in circuit".to_string(),
+        });
+    }
+
+    let nominal = dc_op(circuit)?;
+    let nominal_voltage = nominal.voltage(output_node).unwrap_or(0.0);
+    let mut entries = Vec::new();
+
+    for element_index in 0..circuit.elements.len() {
+        if let Some((element_name, parameter, nominal_value)) =
+            element_parameter(&circuit.elements[element_index])
+        {
+            let delta = perturbation_for(nominal_value);
+            let mut perturbed = circuit.clone();
+            perturb_element_parameter(&mut perturbed.elements[element_index], delta);
+            let perturbed_result = dc_op(&perturbed)?;
+            let perturbed_voltage = perturbed_result.voltage(output_node).unwrap_or(0.0);
+            let sensitivity = (perturbed_voltage - nominal_voltage) / delta;
+            let relative_sensitivity = if nominal_voltage.abs() > 1.0e-30 {
+                sensitivity * nominal_value / nominal_voltage
+            } else {
+                0.0
+            };
+            entries.push(SensEntry {
+                element_name,
+                parameter,
+                nominal_value,
+                sensitivity,
+                relative_sensitivity,
+            });
+        }
+    }
+
+    entries.sort_by(|left, right| {
+        right
+            .relative_sensitivity
+            .abs()
+            .total_cmp(&left.relative_sensitivity.abs())
+            .then_with(|| left.element_name.cmp(&right.element_name))
+            .then_with(|| left.parameter.cmp(&right.parameter))
+    });
+
+    Ok(SensResult {
+        output_node: output_node.to_string(),
+        nominal_voltage,
+        entries,
+    })
+}
+
 pub fn ac_sweep(
     circuit: &Circuit,
     start_hz: f64,
@@ -626,6 +704,36 @@ fn set_source_value(
         name: source_name.to_string(),
         reason: "sweep source must be an independent voltage or current source".to_string(),
     })
+}
+
+fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
+    match element {
+        Element::Resistor(resistor) => Some((
+            resistor.name.clone(),
+            "resistance_ohms".to_string(),
+            resistor.resistance_ohms,
+        )),
+        Element::VoltageSource(source) => {
+            Some((source.name.clone(), "voltage".to_string(), source.voltage))
+        }
+        Element::CurrentSource(source) => {
+            Some((source.name.clone(), "current".to_string(), source.current))
+        }
+        Element::Capacitor(_) | Element::Inductor(_) => None,
+    }
+}
+
+fn perturbation_for(value: f64) -> f64 {
+    (value.abs() * 1.0e-6).max(1.0e-9)
+}
+
+fn perturb_element_parameter(element: &mut Element, delta: f64) {
+    match element {
+        Element::Resistor(resistor) => resistor.resistance_ohms += delta,
+        Element::VoltageSource(source) => source.voltage += delta,
+        Element::CurrentSource(source) => source.current += delta,
+        Element::Capacitor(_) | Element::Inductor(_) => {}
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
