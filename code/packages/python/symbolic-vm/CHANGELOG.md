@@ -3,6 +3,9 @@
 ## Unreleased
 
 - Added another small multivariate factoring foothold to `Factor`: four-term
+  perfect-cube expansions such as `x^3 + 3*x^2*y + 3*x*y^2 + y^3` now factor
+  to `(x+y)^3`, and `x^3 - 3*x^2*y + 3*x*y^2 - y^3` to `(x-y)^3`.
+- Added another small multivariate factoring foothold to `Factor`: four-term
   bilinear grouping such as `x*y + x*z + y + z` now factors to
   `(x+1)*(y+z)`.
 - Added another small multivariate factoring foothold to `Factor`: bivariate

@@ -1237,6 +1237,131 @@ def _extract_multivariate_cubic_identity(inner: IRNode) -> IRNode | None:
     return IRApply(MUL, (linear, quadratic))
 
 
+def _extract_multivariate_perfect_cube(inner: IRNode) -> IRNode | None:
+    """Recognise (a±b)^3 perfect-cube expansions.
+
+    The two identities handled are::
+
+        a^3 + 3·a^2·b + 3·a·b^2 + b^3  →  (a + b)^3   [sum cube]
+        a^3 − 3·a^2·b + 3·a·b^2 − b^3  →  (a − b)^3   [difference cube]
+
+    Preconditions (checked in order):
+
+    1. The additive form has **exactly four** terms after flattening ``ADD``
+       and ``SUB`` nodes.
+    2. Every term parses cleanly via :func:`_split_integer_coefficient_and_powers`.
+    3. Exactly two terms are *pure cubes*: ``|coeff| = 1``, exactly one
+       symbolic variable, exponent = 3.
+    4. The other two terms are *cross terms*: exactly two distinct symbolic
+       variables, total exponent = 3 (one variable at exponent 2, the other
+       at exponent 1).
+    5. The cross-term variable set equals ``{a_node, b_node}`` where
+       ``a_node`` and ``b_node`` come from the pure-cube bases.
+    6. Coefficient constraints per case:
+
+       *Sum case* (both pure-cube coefficients = +1):
+         both cross terms have ``coeff = +3``; one is ``a^2·b`` (exp_a=2,
+         exp_b=1) and the other is ``a·b^2`` (exp_a=1, exp_b=2).
+
+       *Difference case* (one pure-cube coeff = +1, the other = −1):
+         the ``a^2·b`` cross term has ``coeff = −3``; the ``a·b^2`` cross
+         term has ``coeff = +3``.
+
+    Returns ``Pow(Add(a, b), 3)`` for the sum case or ``Pow(Sub(a, b), 3)``
+    for the difference case.  Returns ``None`` on any mismatch so
+    :func:`factor_handler` continues to the next pattern.
+    """
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 4:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    # Separate pure-cube terms from cross terms.
+    #   Pure cube: |coeff| = 1, exactly one variable with exponent 3.
+    #   Cross term: exactly two variables whose exponents sum to 3.
+    pure_cubes: list[tuple[int, IRNode]] = []
+    cross_terms: list[tuple[int, dict[IRNode, int]]] = []
+
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if len(powers) == 1:
+            base, exponent = next(iter(powers.items()))
+            if exponent == 3 and coefficient in (-1, 1):
+                pure_cubes.append((coefficient, base))
+                continue
+        if len(powers) == 2:
+            cross_terms.append((coefficient, powers))
+            continue
+        return None  # unexpected shape (e.g. a single variable with wrong exp)
+
+    if len(pure_cubes) != 2 or len(cross_terms) != 2:
+        return None
+
+    # Identify a and b; determine sum vs. difference from the pure-cube signs.
+    signs = [coeff for coeff, _ in pure_cubes]
+
+    if signs == [1, 1]:
+        # Sum: (a + b)^3 — both cubic terms are positive.
+        a_node = pure_cubes[0][1]
+        b_node = pure_cubes[1][1]
+        is_sum = True
+    elif sorted(signs) == [-1, 1]:
+        # Difference: (a − b)^3 — a^3 positive, b^3 negative.
+        a_node = next(base for coeff, base in pure_cubes if coeff == 1)
+        b_node = next(base for coeff, base in pure_cubes if coeff == -1)
+        is_sum = False
+    else:
+        return None
+
+    # Cross-term variables must be exactly {a_node, b_node}; any foreign
+    # variable means this is not a pure (a±b)^3 pattern.
+    variable_pair = {a_node, b_node}
+    for _coeff, powers in cross_terms:
+        if set(powers.keys()) != variable_pair:
+            return None
+
+    if is_sum:
+        # Expect +3·a^2·b and +3·a·b^2 in any order.
+        found_a2b = False
+        found_ab2 = False
+        for coeff, powers in cross_terms:
+            exp_a = powers.get(a_node, 0)
+            exp_b = powers.get(b_node, 0)
+            if coeff == 3 and exp_a == 2 and exp_b == 1:
+                found_a2b = True
+            elif coeff == 3 and exp_a == 1 and exp_b == 2:
+                found_ab2 = True
+            else:
+                return None
+        if not (found_a2b and found_ab2):
+            return None
+        linear: IRNode = IRApply(ADD, (a_node, b_node))
+    else:
+        # Expect −3·a^2·b and +3·a·b^2.  The sign on a^2·b flips because
+        # d/db(a − b)^3 contains a −3a^2 factor; the b^2 term stays positive
+        # because the binomial coefficient 3ab^2 carries through unchanged.
+        found_neg_a2b = False
+        found_pos_ab2 = False
+        for coeff, powers in cross_terms:
+            exp_a = powers.get(a_node, 0)
+            exp_b = powers.get(b_node, 0)
+            if coeff == -3 and exp_a == 2 and exp_b == 1:
+                found_neg_a2b = True
+            elif coeff == 3 and exp_a == 1 and exp_b == 2:
+                found_pos_ab2 = True
+            else:
+                return None
+        if not (found_neg_a2b and found_pos_ab2):
+            return None
+        linear = IRApply(SUB, (a_node, b_node))
+
+    return IRApply(POW, (linear, IRInteger(3)))
+
+
 def _common_symbolic_powers(terms: list[IRNode]) -> dict[IRNode, int]:
     """Return symbolic factors shared by every term."""
     if not terms:
@@ -1355,6 +1480,9 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
     # Try to lift to rational function.
     rational = to_rational(inner, x)
     if rational is None:
+        perfect_cube = _extract_multivariate_perfect_cube(inner)
+        if perfect_cube is not None:
+            return perfect_cube
         cubic_identity = _extract_multivariate_cubic_identity(inner)
         if cubic_identity is not None:
             return cubic_identity
