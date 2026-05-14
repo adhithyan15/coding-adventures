@@ -372,24 +372,45 @@ impl MetalExecutor {
             // (see binary_dispatch in dispatch.rs).  The buffers
             // outlive the dispatch call because the BufferStore
             // owns them and we hold the executor mutex.
-            let a_ptr = ctx
-                .buffers
-                .get(inputs[0])
-                .map_err(|e| format!("input[0] buffer not found: {}", e))? as *const _;
             let out_ptr = ctx
                 .buffers
                 .get(outputs[0])
                 .map_err(|e| format!("output[0] buffer not found: {}", e))? as *const _;
-            let a_buf = unsafe { &*a_ptr };
             let out_buf = unsafe { &*out_ptr };
 
-            ctx.queue.dispatch(|enc| {
-                enc.set_pipeline(&pipeline);
-                enc.set_buffer(a_buf, 0);
-                enc.set_buffer(out_buf, 1);
-                enc.set_bytes(&n_bytes, 2);
-                enc.dispatch_threads_1d(n, tg);
-            });
+            // **MX05 Phase 4.7.**  Two kernel signatures depending
+            // on `n_in`:
+            //
+            // - `n_in == 0` → memset kernel (unary with folded
+            //   input).  Signature: `(out [buffer(0)], n [buffer(1)])`.
+            //   No input buffer to bind.
+            // - `n_in == 1` → binary-with-folded-constant kernel.
+            //   Signature: `(a [buffer(0)], out [buffer(1)], n [buffer(2)])`.
+            //
+            // Higher arities (n_in >= 2) aren't emitted today; the
+            // length-check above already rejects them at runtime.
+            if n_in == 0 {
+                ctx.queue.dispatch(|enc| {
+                    enc.set_pipeline(&pipeline);
+                    enc.set_buffer(out_buf, 0);
+                    enc.set_bytes(&n_bytes, 1);
+                    enc.dispatch_threads_1d(n, tg);
+                });
+            } else {
+                let a_ptr = ctx
+                    .buffers
+                    .get(inputs[0])
+                    .map_err(|e| format!("input[0] buffer not found: {}", e))?
+                    as *const _;
+                let a_buf = unsafe { &*a_ptr };
+                ctx.queue.dispatch(|enc| {
+                    enc.set_pipeline(&pipeline);
+                    enc.set_buffer(a_buf, 0);
+                    enc.set_buffer(out_buf, 1);
+                    enc.set_bytes(&n_bytes, 2);
+                    enc.dispatch_threads_1d(n, tg);
+                });
+            }
 
             Ok(vec![OpTiming { op_index: 0, ns: 0 }])
         });

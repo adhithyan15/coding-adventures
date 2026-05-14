@@ -1,6 +1,6 @@
 [package]
 name = "matrix-metal"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 description = "First real GPU executor for the matrix execution layer. Lowers a subset of MatrixIR ops to MSL kernels and dispatches via the metal-compute crate. Falls back to CPU automatically (via the planner's capability filter) for ops it doesn't yet support. v0.6 (MX05 Phase 4.2) ships the MSL emitter — given a SpecKey it generates an MSL kernel string with observed constants folded in as literal values — plus the per-handle specialised pipeline table and live DispatchSpecialised handler that runs on Apple targets."
 license = "MIT"

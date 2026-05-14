@@ -1,5 +1,76 @@
 # Changelog — matrix-metal
 
+## 0.9.0 — 2026-05-13
+
+### Added — MX05 Phase 4.7 (unary ops with folded input constant)
+
+The MSL emitter now supports **unary f32 ops** when their single
+input is itself observed as a stable constant `K`.  In that case
+every output element equals `f(K)`, so the kernel collapses to a
+**memset of the precomputed value** — zero input buffers, just
+the output.
+
+| `op_kind`     | `f(K)` baked in | Example                       |
+|---------------|-----------------|-------------------------------|
+| `0x00` Neg    | `-K`            | `K = 3.0`  → output `-3.0`    |
+| `0x01` Abs    | `\|K\|`           | `K = -7.5` → output `7.5`     |
+| `0x02` Sqrt   | `√K`            | `K = 16.0` → output `4.0`     |
+| `0x03` Exp    | `e^K`           | `K = 0.0`  → output `1.0`     |
+| `0x04` Log    | `ln K`          | `K = 1.0`  → output `0.0`     |
+| `0x05` Tanh   | `tanh K`        | `K = 0.0`  → output `0.0`     |
+| `0x06` Recip  | `1/K`           | `K = 4.0`  → output `0.25`    |
+
+#### Kernel signature
+
+The unary-folded-input kernel has **zero input buffers** — `K` is
+baked into the source as a literal.  Binding order:
+
+  - `out [[buffer(0)]]`
+  - `n   [[buffer(1)]]`
+
+(vs the binary-folded-constant kernel's `(a, out, n)` at slots
+0/1/2.)
+
+Entry points embed `_input_const_` to distinguish from the binary
+`_const_` / `_lhs_const_` / `_rhs_const_` naming:
+
+```
+specialised_sqrt_input_const_f32_0xHHHHHHHHHHHHHHHH
+```
+
+#### Runtime install path
+
+`MetalExecutor::install_specialised_from_emitted` now branches on
+`emitted.input_buffer_count`:
+
+  - `n_in == 0` → bind `(out, n)` to slots `(0, 1)` — memset kernel
+  - `n_in == 1` → bind `(a, out, n)` to slots `(0, 1, 2)` — existing
+    binary path
+
+The branch is internal to the closure stored in `SpecialisedTable`;
+no protocol or public API changes.
+
+#### Tests
+
+9 new emitter tests (31 → 40 in matrix-metal; the `lib` test count
+went 35 → 40, +5 op-specific + +4 structural):
+
+- `neg_f32_with_folded_input_emits_memset_kernel`
+- `abs_f32_with_folded_input_emits_memset_kernel`
+- `sqrt_f32_with_folded_input_emits_memset_kernel`
+- `exp_f32_with_folded_input_emits_memset_kernel`
+- `log_f32_with_folded_input_emits_memset_kernel`
+- `tanh_f32_with_folded_input_emits_memset_kernel`
+- `recip_f32_with_folded_input_emits_memset_kernel`
+- `unary_input_const_entry_names_distinct_from_binary_const` —
+  proves namespace separation
+- `unary_ops_return_none_without_folded_slot` — pins the
+  "no folded_slot → no kernel" guard
+
+Plus `returns_none_for_unsupported_op_kind` was retargeted: Op::Neg
+is now supported, so the test now uses `Op::ReduceSum` (0x0E) as
+the "not yet" exemplar — reductions are future phase work.
+
 ## 0.8.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.6 (Sub/Div/Pow with folded constant unlock)

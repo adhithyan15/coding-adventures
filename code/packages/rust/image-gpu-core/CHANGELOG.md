@@ -1,5 +1,36 @@
 # Changelog — image-gpu-core
 
+## 0.10.0 — 2026-05-13
+
+### Added — MX05 Phase 4.7 end-to-end (unary memset path through DispatchSpecialised)
+
+matrix-metal v0.9.0 added an emitter shape where a unary op's
+input is folded into the kernel source — the kernel becomes a
+memset of `f(K)` with zero input buffers.  This release verifies
+the full chain end-to-end: image-gpu-core's `dispatch_specialised_via`
+handles `n_in == 0` correctly (passes an empty `inputs: vec![]`
+to `DispatchSpecialised`), and the metal executor's install
+closure binds only the output buffer.
+
+#### Test
+
+`dispatch_specialised_via_routes_unary_folded_input` (Apple-only):
+
+Builds `Op::Sqrt(input = [16, 16, 16, 16]) → C`, installs the
+`sqrt_input_const_f32` specialised kernel (K=16), and asserts
+the output is `[4.0, 4.0, 4.0, 4.0]` — `√16 = 4` written by the
+memset kernel.
+
+Test count: 31 → 32.
+
+#### Dispatcher change
+
+No source change needed — the Phase 4.6 trimming logic
+`ir_inputs.iter().take(n_in)` naturally yields an empty Vec when
+`n_in == 0`, and the slot-shuffle guard only fires when
+`ir_inputs.len() == 2 && n_in == 1`.  The unary-memset path
+"just works" through existing code.
+
 ## 0.9.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.6 (dispatch routes the unfolded slot)

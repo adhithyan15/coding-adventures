@@ -144,15 +144,31 @@ pub struct EmittedKernel {
 ///
 /// # Currently supported shapes
 ///
-/// | `op_kind`  | `dtype` | `shape_class` | `range_class`              | Notes                                            |
-/// |------------|---------|---------------|----------------------------|--------------------------------------------------|
-/// | `0x07` Add | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
-/// | `0x08` Sub | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
-/// | `0x09` Mul | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
-/// | `0x0A` Div | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
-/// | `0x0B` Max | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
-/// | `0x0C` Min | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
-/// | `0x0D` Pow | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
+/// | `op_kind`    | `dtype` | `shape_class` | `range_class`              | Notes                                            |
+/// |--------------|---------|---------------|----------------------------|--------------------------------------------------|
+/// | `0x00` Neg   | `F32`   | any           | `Constant { bytes: 4 B }`  | Unary; output precomputed (memset of `-K`)       |
+/// | `0x01` Abs   | `F32`   | any           | `Constant { bytes: 4 B }`  | Unary; output precomputed (memset of `\|K\|`)      |
+/// | `0x02` Sqrt  | `F32`   | any           | `Constant { bytes: 4 B }`  | Unary; output precomputed (memset of `√K`)       |
+/// | `0x03` Exp   | `F32`   | any           | `Constant { bytes: 4 B }`  | Unary; output precomputed (memset of `e^K`)      |
+/// | `0x04` Log   | `F32`   | any           | `Constant { bytes: 4 B }`  | Unary; output precomputed (memset of `ln K`)     |
+/// | `0x05` Tanh  | `F32`   | any           | `Constant { bytes: 4 B }`  | Unary; output precomputed (memset of `tanh K`)   |
+/// | `0x06` Recip | `F32`   | any           | `Constant { bytes: 4 B }`  | Unary; output precomputed (memset of `1/K`)      |
+/// | `0x07` Add   | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x08` Sub   | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
+/// | `0x09` Mul   | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x0A` Div   | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
+/// | `0x0B` Max   | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x0C` Min   | `F32`   | any           | `Constant { bytes: 4 B }`  | Commutative; slot irrelevant                     |
+/// | `0x0D` Pow   | `F32`   | any           | `Constant { bytes: 4 B }`  | Non-commutative; LHS- and RHS-folded variants    |
+///
+/// ## Unary ops with folded input constant (Phase 4.7)
+///
+/// When a unary op's single input is itself observed as a stable
+/// constant `K`, the entire output is precomputed at emit time:
+/// every element is `f(K)`.  The kernel collapses to a memset —
+/// `input_buffer_count = 0`, only the output buffer is bound.
+/// The dispatcher passes an empty `inputs` vector to
+/// `DispatchSpecialised`.
 ///
 /// All other combinations return `None` for now.  Adding a shape is
 /// a small change — add a match arm and a unit test.
@@ -209,16 +225,33 @@ pub fn emit_specialised_kernel(key: &SpecKey, handle: u64) -> Option<EmittedKern
     // folded, otherwise we'd guess wrong half the time.  No
     // `folded_slot` → fall back to generic dispatch.
     let folded_slot = key.folded_slot?;
-    // Each non-commutative op has two variants: one where the
-    // constant is on the LHS (`K op b[gid]`) and one where it's
-    // on the RHS (`a[gid] op K`).  We pass two MSL expression
-    // templates and let `emit_binary_f32_with_const_at_slot`
-    // pick based on the slot.
+
+    // **MX05 Phase 4.7.**  Unary f32 ops with a folded input constant.
     //
-    // The template uses `{a}` for the kernel's single variable
-    // input load (always `a[gid]` in the emitted code — the
-    // dispatcher feeds the correct buffer into slot 0) and
-    // `{k}` for the constant literal.
+    // When the single input of a unary op is itself observed as a
+    // stable constant `K`, the entire output tensor is precomputed:
+    // every element is `f(K)`.  The kernel collapses to a memset.
+    // The kernel takes **zero** input buffers — the value is baked
+    // into the source as a literal.  Output buffer count is still 1.
+    //
+    // For `folded_slot` we require `Some(0)` since unary ops have
+    // exactly one input slot.
+    let unary_eval: Option<(&str, f32)> = match key.op_kind {
+        0x00 if folded_slot == 0 => Some(("neg", -constant)),
+        0x01 if folded_slot == 0 => Some(("abs", constant.abs())),
+        0x02 if folded_slot == 0 => Some(("sqrt", constant.sqrt())),
+        0x03 if folded_slot == 0 => Some(("exp", constant.exp())),
+        0x04 if folded_slot == 0 => Some(("log", constant.ln())),
+        0x05 if folded_slot == 0 => Some(("tanh", constant.tanh())),
+        0x06 if folded_slot == 0 => Some(("recip", 1.0_f32 / constant)),
+        _ => None,
+    };
+    if let Some((op_name, precomputed)) = unary_eval {
+        return Some(emit_unary_f32_folded_constant(handle, op_name, precomputed));
+    }
+
+    // Non-commutative binary ops: we **must** know which slot the
+    // policy folded, otherwise we'd guess wrong half the time.
     let (op_name, lhs_template, rhs_template) = match key.op_kind {
         0x08 => ("sub", "{k} - {a}", "{a} - {k}"),
         0x0A => ("div", "{k} / {a}", "{a} / {k}"),
@@ -390,6 +423,59 @@ fn emit_binary_f32_with_const_at_slot(
         source,
         entry_point: entry,
         input_buffer_count: 1,
+        output_buffer_count: 1,
+    }
+}
+
+/// **MX05 Phase 4.7.**  Emit a unary-f32 kernel whose input is a
+/// known constant, producing a memset of the precomputed value.
+///
+/// The output is `f(K)` for every element, where `f` is the unary
+/// op (Neg / Abs / Sqrt / Exp / Log / Tanh / Recip) and `K` is the
+/// observed constant input.  Since every output element is the same
+/// value, the kernel is a one-line write of the precomputed literal.
+///
+/// Kernel signature:
+/// - **0 inputs** (input was folded away)
+/// - 1 output buffer at `buffer(0)`
+/// - `n` element count at `buffer(1)`
+///
+/// Entry-point name: `specialised_<op_name>_input_const_f32_0xHHHHHHHHHHHHHHHH`.
+/// The `_input_const_` fragment distinguishes these from the binary
+/// `_const_` and `_lhs_const_`/`_rhs_const_` kernels in the same
+/// library.
+///
+/// The dispatcher in image-gpu-core consults `KernelMetadata.n_in`
+/// and passes an empty `inputs: vec![]` when `n_in == 0`.
+fn emit_unary_f32_folded_constant(handle: u64, op_name: &str, precomputed: f32) -> EmittedKernel {
+    let entry = format!("specialised_{op_name}_input_const_f32_0x{handle:016X}");
+    let literal = format_f32_literal(precomputed);
+
+    let source = format!(
+        "#include <metal_stdlib>\n\
+         using namespace metal;\n\
+         \n\
+         // MX05 Phase 4.7 — specialised {op_name}_f32 with folded input.\n\
+         // handle = 0x{handle:016X}\n\
+         // precomputed = {literal}\n\
+         kernel void {entry}(\n\
+         \x20   device float*       out [[buffer(0)]],\n\
+         \x20   constant uint&      n   [[buffer(1)]],\n\
+         \x20   uint gid [[thread_position_in_grid]]\n\
+         ) {{\n\
+         \x20   if (gid >= n) return;\n\
+         \x20   out[gid] = {literal};\n\
+         }}\n",
+        handle = handle,
+        entry = entry,
+        op_name = op_name,
+        literal = literal,
+    );
+
+    EmittedKernel {
+        source,
+        entry_point: entry,
+        input_buffer_count: 0,
         output_buffer_count: 1,
     }
 }
@@ -708,13 +794,144 @@ mod tests {
 
     #[test]
     fn returns_none_for_unsupported_op_kind() {
-        // Op::Neg (0x00) — unary, no binary-with-folded-constant
-        // emitter shape applies.  Future phase work could add unary
-        // ops with their input folded (the kernel becomes a memset
-        // of a precomputed value), but until then this returns None.
+        // Op::ReduceSum (0x0E) — reductions aren't yet in the
+        // emitter's shape catalogue.  Future phase work could add
+        // them (with the reduction axis encoded in the SpecKey),
+        // but until then this returns None.
         let mut key = add_const_key(7.0);
-        key.op_kind = 0x00;
+        key.op_kind = 0x0E;
         assert!(emit_specialised_kernel(&key, 0).is_none());
+    }
+
+    // ───────────── MX05 Phase 4.7 — unary with folded input ─────────────
+
+    /// Build a SpecKey for a unary op with its single input folded
+    /// as a constant.
+    fn unary_input_const_key(op_kind: u8, constant: f32) -> SpecKey {
+        SpecKey {
+            op_kind,
+            dtype: DType::F32,
+            shape_class: ShapeClass::Dynamic,
+            range_class: RangeClass::Constant {
+                bytes: constant.to_le_bytes().to_vec(),
+            },
+            backend_id: 1,
+            folded_slot: Some(0), // Unary ops have only one input slot.
+        }
+    }
+
+    /// **MX05 Phase 4.7.**  `Op::Neg` (0x00) with folded input
+    /// constant `K` collapses to a memset of `-K`.  The emitted
+    /// kernel takes **zero** input buffers — the value is baked in.
+    #[test]
+    fn neg_f32_with_folded_input_emits_memset_kernel() {
+        let k = emit_specialised_kernel(&unary_input_const_key(0x00, 3.0), 0xA1).unwrap();
+        assert_eq!(
+            k.entry_point,
+            "specialised_neg_input_const_f32_0x00000000000000A1"
+        );
+        assert_eq!(k.input_buffer_count, 0);
+        assert_eq!(k.output_buffer_count, 1);
+        // -3.0 formats as `-3.0f` after Ryu + suffix.
+        assert!(
+            k.source.contains("out[gid] = -3.0f"),
+            "expected 'out[gid] = -3.0f' in body:\n{}",
+            k.source
+        );
+        // No input buffer in the signature.
+        assert!(
+            !k.source.contains("device const float* a"),
+            "specialised unary kernel must NOT take an input buffer"
+        );
+    }
+
+    /// **MX05 Phase 4.7.**  `Op::Sqrt` (0x02) with `K = 16.0` is the
+    /// canonical example: the kernel writes `4.0` everywhere.
+    #[test]
+    fn sqrt_f32_with_folded_input_emits_memset_kernel() {
+        let k = emit_specialised_kernel(&unary_input_const_key(0x02, 16.0), 0xA2).unwrap();
+        assert_eq!(
+            k.entry_point,
+            "specialised_sqrt_input_const_f32_0x00000000000000A2"
+        );
+        assert_eq!(k.input_buffer_count, 0);
+        assert!(k.source.contains("out[gid] = 4.0f"));
+    }
+
+    /// **MX05 Phase 4.7.**  `Op::Abs` (0x01) with `K = -7.5` writes
+    /// `7.5` everywhere.
+    #[test]
+    fn abs_f32_with_folded_input_emits_memset_kernel() {
+        let k = emit_specialised_kernel(&unary_input_const_key(0x01, -7.5), 0xA3).unwrap();
+        assert_eq!(k.input_buffer_count, 0);
+        assert!(k.source.contains("out[gid] = 7.5f"));
+    }
+
+    /// **MX05 Phase 4.7.**  `Op::Exp` (0x03) with `K = 0.0` writes
+    /// `1.0` (since `exp(0) = 1`).
+    #[test]
+    fn exp_f32_with_folded_input_emits_memset_kernel() {
+        let k = emit_specialised_kernel(&unary_input_const_key(0x03, 0.0), 0xA4).unwrap();
+        assert_eq!(k.input_buffer_count, 0);
+        assert!(k.source.contains("out[gid] = 1.0f"));
+    }
+
+    /// **MX05 Phase 4.7.**  `Op::Log` (0x04) with `K = 1.0` writes
+    /// `0.0` (since `ln(1) = 0`).
+    #[test]
+    fn log_f32_with_folded_input_emits_memset_kernel() {
+        let k = emit_specialised_kernel(&unary_input_const_key(0x04, 1.0), 0xA5).unwrap();
+        assert_eq!(k.input_buffer_count, 0);
+        assert!(k.source.contains("out[gid] = 0.0f"));
+    }
+
+    /// **MX05 Phase 4.7.**  `Op::Tanh` (0x05) with `K = 0.0` writes
+    /// `0.0` (since `tanh(0) = 0`).
+    #[test]
+    fn tanh_f32_with_folded_input_emits_memset_kernel() {
+        let k = emit_specialised_kernel(&unary_input_const_key(0x05, 0.0), 0xA6).unwrap();
+        assert_eq!(k.input_buffer_count, 0);
+        assert!(k.source.contains("out[gid] = 0.0f"));
+    }
+
+    /// **MX05 Phase 4.7.**  `Op::Recip` (0x06) with `K = 4.0` writes
+    /// `0.25` everywhere.
+    #[test]
+    fn recip_f32_with_folded_input_emits_memset_kernel() {
+        let k = emit_specialised_kernel(&unary_input_const_key(0x06, 4.0), 0xA7).unwrap();
+        assert_eq!(k.input_buffer_count, 0);
+        assert!(k.source.contains("out[gid] = 0.25f"));
+    }
+
+    /// **MX05 Phase 4.7.**  Unary kernels' entry-point names embed
+    /// the `_input_const_` fragment so they don't collide with the
+    /// binary-with-folded-constant kernels (`_const_`,
+    /// `_lhs_const_`, `_rhs_const_`).
+    #[test]
+    fn unary_input_const_entry_names_distinct_from_binary_const() {
+        let neg = emit_specialised_kernel(&unary_input_const_key(0x00, 3.0), 0xBB).unwrap();
+        let add = emit_specialised_kernel(&binary_const_key(0x07, 3.0), 0xBB).unwrap();
+        assert_ne!(neg.entry_point, add.entry_point);
+        assert!(neg.entry_point.contains("_input_const_"));
+        assert!(add.entry_point.contains("_const_"));
+        assert!(!add.entry_point.contains("_input_const_"));
+    }
+
+    /// **MX05 Phase 4.7.**  Unary ops still return `None` if the
+    /// policy didn't fold the input — the emitter has no other
+    /// useful unary specialisation to offer until later phases
+    /// (e.g. range narrowing) land.
+    #[test]
+    fn unary_ops_return_none_without_folded_slot() {
+        for op_kind in [0x00u8, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06] {
+            let mut key = unary_input_const_key(op_kind, 1.0);
+            key.folded_slot = None;
+            assert!(
+                emit_specialised_kernel(&key, 0).is_none(),
+                "expected None for unary op_kind 0x{:02X} with folded_slot=None",
+                op_kind
+            );
+        }
     }
 
     #[test]
