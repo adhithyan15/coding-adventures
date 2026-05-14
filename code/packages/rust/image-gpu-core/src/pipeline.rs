@@ -2519,25 +2519,34 @@ mod tests {
 
         let before = specialised_install_count();
 
-        // Same shape as the Phase 4.3 metal test: a tiny f32 Add
-        // with both operands as constants.  Tiny enough that the
-        // planner picks CPU on every platform.
+        // Tiny f32 Add with a stable constant operand.  Use an
+        // **8-element** shape (rather than the 4-element shape that
+        // `auto_installer_registers_kernel_after_threshold` uses)
+        // so the resulting graph subhash is distinct.  The Profiler
+        // keys observations by `(subhash, op_index, slot)`, and the
+        // subhash hashes structural fields (op kinds, Alloc bytes,
+        // tensor ids) but **not** constant payload bytes — so two
+        // tests using the same structure with different K values
+        // would accumulate observations into the same bucket, mixing
+        // their min/max ranges and breaking the constant detection
+        // for both.  Distinct shapes → distinct subhashes →
+        // independent observations.
         for _ in 0..1100 {
             let mut g = GraphBuilder::new();
-            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
                 .iter()
                 .flat_map(|v| v.to_le_bytes())
                 .collect();
-            let b_bytes: Vec<u8> = [7.0_f32, 7.0, 7.0, 7.0]
+            let b_bytes: Vec<u8> = [11.0_f32; 8]
                 .iter()
                 .flat_map(|v| v.to_le_bytes())
                 .collect();
-            let a = g.constant(DType::F32, Shape::from(&[4u32]), a_bytes);
-            let b = g.constant(DType::F32, Shape::from(&[4u32]), b_bytes);
+            let a = g.constant(DType::F32, Shape::from(&[8u32]), a_bytes);
+            let b = g.constant(DType::F32, Shape::from(&[8u32]), b_bytes);
             let c = g.add(&a, &b);
             g.output(&c);
             let graph = g.build().expect("graph builds");
-            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 16);
+            let _ = crate::pipeline::run_graph_with_constant_inputs(&graph, c.id, 32);
         }
 
         let after = specialised_install_count();
