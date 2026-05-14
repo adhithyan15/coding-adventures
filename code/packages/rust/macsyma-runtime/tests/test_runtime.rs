@@ -322,6 +322,40 @@ fn factors_grouped_multivariate_terms_with_signed_residuals_through_runtime() {
     );
 }
 
+#[test]
+fn factors_multivariate_integer_content_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x*y + 2*x*z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_negative_multivariate_integer_content_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(-2*x*y - 2*x*z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(-2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
 // Perfect-cube expansions: a^3 ± 3a^2b ± 3ab^2 ± b^3 = (a ± b)^3
 // These are four-term patterns and are detected before the two-term cubic
 // identity a^3 ± b^3, so they must be tested here to confirm the dispatch

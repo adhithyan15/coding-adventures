@@ -375,6 +375,68 @@ fn symbolic_factor_extracts_multivariate_integer_content_with_recursive_factorin
 }
 
 #[test]
+fn symbolic_factor_extracts_multivariate_integer_content() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(MUL),
+                    vec![int(2), apply(sym(MUL), vec![sym("x"), sym("y")])],
+                ),
+                apply(
+                    sym(MUL),
+                    vec![int(2), apply(sym(MUL), vec![sym("x"), sym("z")])],
+                ),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_negative_multivariate_integer_content() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(MUL),
+                    vec![int(-2), apply(sym(MUL), vec![sym("x"), sym("y")])],
+                ),
+                apply(
+                    sym(MUL),
+                    vec![int(-2), apply(sym(MUL), vec![sym("x"), sym("z")])],
+                ),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(-2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
 fn symbolic_factor_extracts_multivariate_perfect_square() {
     let expr = apply(
         sym("Factor"),
@@ -597,10 +659,7 @@ fn symbolic_factor_extracts_multivariate_perfect_cube_sum() {
                                         int(3),
                                         apply(
                                             sym(MUL),
-                                            vec![
-                                                apply(sym(POW), vec![sym("x"), int(2)]),
-                                                sym("y"),
-                                            ],
+                                            vec![apply(sym(POW), vec![sym("x"), int(2)]), sym("y")],
                                         ),
                                     ],
                                 ),
@@ -625,7 +684,10 @@ fn symbolic_factor_extracts_multivariate_perfect_cube_sum() {
 
     assert_eq!(
         symbolic().eval(expr),
-        apply(sym(POW), vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(3)])
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(3)]
+        )
     );
 }
 
@@ -654,10 +716,7 @@ fn symbolic_factor_extracts_multivariate_perfect_cube_difference() {
                                         int(3),
                                         apply(
                                             sym(MUL),
-                                            vec![
-                                                sym("x"),
-                                                apply(sym(POW), vec![sym("y"), int(2)]),
-                                            ],
+                                            vec![sym("x"), apply(sym(POW), vec![sym("y"), int(2)])],
                                         ),
                                     ],
                                 ),
@@ -669,23 +728,26 @@ fn symbolic_factor_extracts_multivariate_perfect_cube_difference() {
                                 int(3),
                                 apply(
                                     sym(MUL),
-                                    vec![
-                                        apply(sym(POW), vec![sym("x"), int(2)]),
-                                        sym("y"),
-                                    ],
+                                    vec![apply(sym(POW), vec![sym("x"), int(2)]), sym("y")],
                                 ),
                             ],
                         ),
                     ],
                 ),
-                apply(sym(MUL), vec![int(-1), apply(sym(POW), vec![sym("y"), int(3)])]),
+                apply(
+                    sym(MUL),
+                    vec![int(-1), apply(sym(POW), vec![sym("y"), int(3)])],
+                ),
             ],
         )],
     );
 
     assert_eq!(
         symbolic().eval(expr),
-        apply(sym(POW), vec![apply(sym(SUB), vec![sym("x"), sym("y")]), int(3)])
+        apply(
+            sym(POW),
+            vec![apply(sym(SUB), vec![sym("x"), sym("y")]), int(3)]
+        )
     );
 }
 

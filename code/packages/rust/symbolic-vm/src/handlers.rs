@@ -1834,8 +1834,7 @@ fn factor_multivariate_perfect_cube(node: &IRNode) -> Option<IRNode> {
     };
 
     // Cross-term variable sets must equal exactly {a_node, b_node}.
-    let variable_pair: HashSet<IRNode> =
-        [a_node.clone(), b_node.clone()].into_iter().collect();
+    let variable_pair: HashSet<IRNode> = [a_node.clone(), b_node.clone()].into_iter().collect();
     for (_, powers) in &cross_terms {
         if powers.len() != 2 {
             return None;
@@ -1979,14 +1978,34 @@ fn term_integer_coefficient_and_powers(term: &IRNode) -> Option<(i64, HashMap<IR
     let mut coefficient: i64 = 1;
     let mut powers = HashMap::new();
     for factor in multiplicative_factors(term) {
-        if let IRNode::Integer(value) = factor {
-            coefficient *= value;
-            continue;
-        }
-        let (base, exponent) = factor_base_power(factor)?;
-        *powers.entry(base).or_insert(0) += exponent;
+        absorb_factor_integer_coefficient_and_powers(factor, &mut coefficient, &mut powers)?;
     }
     Some((coefficient, powers))
+}
+
+fn absorb_factor_integer_coefficient_and_powers(
+    factor: IRNode,
+    coefficient: &mut i64,
+    powers: &mut HashMap<IRNode, usize>,
+) -> Option<()> {
+    match factor {
+        IRNode::Integer(value) => {
+            *coefficient *= value;
+            Some(())
+        }
+        IRNode::Apply(apply) if is_head_name(&apply.head, NEG) && apply.args.len() == 1 => {
+            *coefficient *= -1;
+            for inner_factor in multiplicative_factors(&apply.args[0]) {
+                absorb_factor_integer_coefficient_and_powers(inner_factor, coefficient, powers)?;
+            }
+            Some(())
+        }
+        other => {
+            let (base, exponent) = factor_base_power(other)?;
+            *powers.entry(base).or_insert(0) += exponent;
+            Some(())
+        }
+    }
 }
 
 fn multiplicative_factors(node: &IRNode) -> Vec<IRNode> {

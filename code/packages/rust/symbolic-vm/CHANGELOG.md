@@ -20,6 +20,8 @@
   `x^3 + y^3`, rewriting them to their canonical linear/quadratic products.
 - `Factor` recognises four-term bilinear grouping such as
   `x*y + x*z + y + z` and rewrites it as `(x + 1) * (y + z)`.
+- `Factor` extracts shared multivariate integer content such as
+  `2*x*y + 2*x*z`, including all-negative shared signs.
 - `Factor` recognises four-term bivariate perfect-cube expansions such as
   `x^3 + 3*x^2*y + 3*x*y^2 + y^3` and `x^3 - 3*x^2*y + 3*x*y^2 - y^3`,
   rewriting them as `(x + y)^3` and `(x - y)^3` respectively.
