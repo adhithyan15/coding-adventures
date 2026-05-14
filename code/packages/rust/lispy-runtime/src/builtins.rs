@@ -200,6 +200,116 @@ pub fn gt(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     Ok(LispyValue::bool(a > b))
 }
 
+/// `(<= a b)` — integer less-than-or-equal (LANG52).
+pub fn le(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("<=", 2, args.len()));
+    }
+    let a = as_int("<=", args[0])?;
+    let b = as_int("<=", args[1])?;
+    Ok(LispyValue::bool(a <= b))
+}
+
+/// `(>= a b)` — integer greater-than-or-equal (LANG52).
+pub fn ge(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error(">=", 2, args.len()));
+    }
+    let a = as_int(">=", args[0])?;
+    let b = as_int(">=", args[1])?;
+    Ok(LispyValue::bool(a >= b))
+}
+
+// ---------------------------------------------------------------------------
+// Extended integer arithmetic (LANG52)
+// ---------------------------------------------------------------------------
+//
+// Scheme distinguishes three integer division operations with different
+// sign conventions for the result:
+//
+//   `quotient`  — truncates toward zero (same as C's `/`).
+//   `remainder` — remainder after `quotient`; sign matches the *dividend*.
+//   `modulo`    — remainder after floor division; sign matches the *divisor*.
+//
+// Truth table for negative inputs (Scheme reference):
+//
+//   | a  | b  | quotient | remainder | modulo |
+//   |----|----|----------|-----------|--------|
+//   | 13 |  4 |  3       |  1        |  1     |
+//   |-13 |  4 | -3       | -1        |  3     |
+//   | 13 | -4 | -3       |  1        | -3     |
+//   |-13 | -4 |  3       | -1        | -1     |
+//
+// Rust's `%` operator has `remainder` semantics (sign matches dividend),
+// so `remainder` maps directly to `checked_rem`, and `modulo` adds one
+// adjustment step: if the Rust remainder is non-zero *and* its sign
+// differs from the divisor's sign, add the divisor.
+
+/// `(quotient a b)` — truncating integer division (LANG52).
+///
+/// `(quotient 13 4)` → 3;  `(quotient -13 4)` → -3.
+/// Errors on division by zero or signed-overflow (INT_MIN / -1).
+pub fn quotient(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("quotient", 2, args.len()));
+    }
+    let a = as_int("quotient", args[0])?;
+    let b = as_int("quotient", args[1])?;
+    if b == 0 {
+        return Err(RuntimeError::TypeError("quotient: division by zero".into()));
+    }
+    let q = a.checked_div(b).ok_or_else(|| {
+        RuntimeError::TypeError("quotient: integer overflow".into())
+    })?;
+    box_int_checked("quotient", q)
+}
+
+/// `(remainder a b)` — remainder after `quotient`; sign matches dividend (LANG52).
+///
+/// `(remainder 13 4)` → 1;  `(remainder -13 4)` → -1.
+pub fn remainder(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("remainder", 2, args.len()));
+    }
+    let a = as_int("remainder", args[0])?;
+    let b = as_int("remainder", args[1])?;
+    if b == 0 {
+        return Err(RuntimeError::TypeError("remainder: division by zero".into()));
+    }
+    let r = a.checked_rem(b).ok_or_else(|| {
+        RuntimeError::TypeError("remainder: integer overflow".into())
+    })?;
+    box_int_checked("remainder", r)
+}
+
+/// `(modulo a b)` — Scheme-style floor-division remainder; sign matches divisor (LANG52).
+///
+/// `(modulo -13 4)` → 3;  `(modulo 13 -4)` → -3.
+pub fn modulo(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("modulo", 2, args.len()));
+    }
+    let a = as_int("modulo", args[0])?;
+    let b = as_int("modulo", args[1])?;
+    if b == 0 {
+        return Err(RuntimeError::TypeError("modulo: division by zero".into()));
+    }
+    // Rust's `%` gives remainder (sign matches dividend).  One adjustment
+    // step converts it to Scheme's modulo (sign matches divisor): if the
+    // remainder is nonzero and its sign differs from the divisor's, add b.
+    let r = a.checked_rem(b).ok_or_else(|| {
+        RuntimeError::TypeError("modulo: integer overflow".into())
+    })?;
+    let m = if r != 0 && (r < 0) != (b < 0) {
+        r.checked_add(b).ok_or_else(|| {
+            RuntimeError::TypeError("modulo: integer overflow".into())
+        })?
+    } else {
+        r
+    };
+    box_int_checked("modulo", m)
+}
+
 // ---------------------------------------------------------------------------
 // Cons cells
 // ---------------------------------------------------------------------------
@@ -273,6 +383,367 @@ pub fn symbol_p(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
         return Err(arity_error("symbol?", 1, args.len()));
     }
     Ok(LispyValue::bool(args[0].is_symbol()))
+}
+
+/// `(boolean? x)` — true iff `x` is `#t` or `#f` (LANG52).
+pub fn boolean_p(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("boolean?", 1, args.len()));
+    }
+    Ok(LispyValue::bool(args[0].is_bool()))
+}
+
+// ---------------------------------------------------------------------------
+// Logic (LANG52)
+// ---------------------------------------------------------------------------
+//
+// `not` is a straightforward predicate: only `#f` and `nil` are falsy in
+// Scheme (and Twig inherits that rule — every other value, including `0`,
+// is truthy).
+//
+// `and` / `or` are special forms handled by the *compiler* as short-circuit
+// lowerings — they never appear here as builtins.  Only `not` needs to live
+// in the runtime because it has no compile-time short-circuit behaviour; it
+// is a plain 1-argument function.
+//
+// `equal?` provides structural equality across all value kinds:
+//   * immediates    — bitwise comparison (int, bool, nil, symbol)
+//   * cons cells    — recursive structural comparison
+//   * strings       — byte-for-byte comparison
+//   * closures      — identity (eq? semantics for opaque values)
+//
+// `equal?` is placed here rather than in binding.rs to avoid a circular
+// dependency: binding.rs imports builtins; builtins cannot import binding.
+// The implementation is a private `values_equal` helper that mirrors
+// `LispyBinding::equal` exactly.
+
+/// Structural equality used by `equal?` and `assoc`.
+///
+/// Private helper — not a builtin entry point.  Mirrors
+/// [`crate::binding::LispyBinding::equal`] without the circular dep.
+///
+/// # Safety / DoS hardening
+///
+/// Uses an **explicit work-stack** (iterative, not recursive) to avoid Rust
+/// call-stack overflow on arbitrarily-deep nested lists.  A depth cap of
+/// 4096 pairs prevents adversarial input from growing the work-stack without
+/// bound while still handling any practically reasonable data structure.  On
+/// hitting the cap the function returns `false` (safe-conservative).
+fn values_equal(a: LispyValue, b: LispyValue) -> bool {
+    /// Maximum number of pair comparisons before we give up.
+    ///
+    /// A deeply-nested list `(cons 1 (cons 1 … nil))` with 4 096 levels
+    /// requires exactly 4 096 work-stack entries.  Real Twig data
+    /// structures are well below this limit; the cap is a DoS guard, not
+    /// a semantic limit on `equal?`.
+    const MAX_PAIRS: usize = 4096;
+
+    // The work-stack holds pairs of values that must themselves be equal
+    // for the overall comparison to be `true`.  We pop one pair per
+    // iteration, check for fast-path equality, and push sub-pairs for
+    // cons cells.
+    let mut work: Vec<(LispyValue, LispyValue)> = Vec::with_capacity(16);
+    work.push((a, b));
+
+    while let Some((a, b)) = work.pop() {
+        // Fast path: bitwise equality covers all immediates (int, bool,
+        // nil, symbol) and pointer-equal heap objects.
+        if a.bits() == b.bits() {
+            continue;
+        }
+
+        // Depth / DoS guard.
+        if work.len() >= MAX_PAIRS {
+            return false;
+        }
+
+        // SAFETY: values in the work-stack originate from the runtime's
+        // value space — heap tags always reflect real, live allocations.
+        unsafe {
+            if heap::is_cons(a) && heap::is_cons(b) {
+                // Structural: push both car/car and cdr/cdr pairs.
+                let ca = heap::car(a); let da = heap::cdr(a);
+                let cb = heap::car(b); let db = heap::cdr(b);
+                match (ca, da, cb, db) {
+                    (Some(ca), Some(da), Some(cb), Some(db)) => {
+                        work.push((ca, cb));
+                        work.push((da, db));
+                        continue;
+                    }
+                    _ => return false,
+                }
+            }
+            if heap::is_string(a) && heap::is_string(b) {
+                // Byte-for-byte string equality.
+                let ab = heap::string_bytes(a).unwrap_or(&[]);
+                let bb = heap::string_bytes(b).unwrap_or(&[]);
+                if ab == bb { continue; } else { return false; }
+            }
+        }
+        // Different types — not equal.
+        return false;
+    }
+    // All pairs in the work-stack compared equal.
+    true
+}
+
+/// `(not x)` — logical negation; returns `#t` iff `x` is falsy (LANG52).
+///
+/// Scheme falsy values: `#f` and `nil`.  Everything else — including `0`
+/// and the empty string — is truthy.
+pub fn not(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("not", 1, args.len()));
+    }
+    Ok(LispyValue::bool(!args[0].is_truthy()))
+}
+
+/// `(equal? a b)` — structural equality (LANG52).
+///
+/// Integers, booleans, nil, and symbols compare by value.  Cons cells
+/// recurse on car/cdr.  Strings compare byte-for-byte.  Closures compare
+/// by identity (pointer equality, matching R7RS for opaque values).
+pub fn equal_p(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("equal?", 2, args.len()));
+    }
+    Ok(LispyValue::bool(values_equal(args[0], args[1])))
+}
+
+// ---------------------------------------------------------------------------
+// List operations (LANG52)
+// ---------------------------------------------------------------------------
+//
+// These operations build on the cons-cell primitives (`cons`, `car`, `cdr`)
+// already in this file.  Higher-order operations (`map`, `filter`,
+// `fold-left`) require calling back into the VM interpreter and are deferred
+// to LANG53 or a stdlib.tw once the self-hosted compiler exists.
+//
+// | Builtin     | Arity | Description                                      |
+// |-------------|------:|--------------------------------------------------|
+// | `list`      | n-ary | Build a proper list from positional args         |
+// | `list?`     |     1 | Proper-list predicate (nil-terminated)           |
+// | `length`    |     1 | Number of elements in a proper list              |
+// | `append`    |     2 | Concatenate two proper lists                     |
+// | `reverse`   |     1 | Reverse a proper list                            |
+// | `list-ref`  |     2 | 0-indexed element access                         |
+// | `assoc`     |     2 | Alist lookup; uses `equal?` for key comparison   |
+
+/// `(list a b c ...)` — construct a proper list from positional args (LANG52).
+///
+/// `(list 1 2 3)` → `(1 2 3)` (= `(cons 1 (cons 2 (cons 3 nil)))`).
+/// `(list)` → `nil`.
+pub fn list(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    // Build the list from the right so each `alloc_cons` prepends one cell.
+    let mut result = LispyValue::NIL;
+    for a in args.iter().rev() {
+        result = heap::alloc_cons(*a, result);
+    }
+    Ok(result)
+}
+
+/// `(list? x)` — `#t` iff `x` is a proper (nil-terminated) list (LANG52).
+///
+/// `(list? nil)` → `#t`.  `(list? (cons 1 2))` → `#f` (improper list).
+/// Uses an iterative walk to avoid stack overflow on long lists.
+pub fn list_p(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("list?", 1, args.len()));
+    }
+    let mut cur = args[0];
+    loop {
+        if cur.is_nil() {
+            return Ok(LispyValue::TRUE);
+        }
+        // SAFETY: see `car`.
+        if !unsafe { heap::is_cons(cur) } {
+            return Ok(LispyValue::FALSE);
+        }
+        cur = unsafe { heap::cdr(cur) }.unwrap_or(LispyValue::NIL);
+    }
+}
+
+/// `(length lst)` — number of elements in proper list `lst` (LANG52).
+///
+/// Errors if `lst` is not a proper list (e.g. a dotted pair or non-list).
+pub fn length(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("length", 1, args.len()));
+    }
+    let mut cur = args[0];
+    let mut n: i64 = 0;
+    loop {
+        if cur.is_nil() {
+            return box_int_checked("length", n);
+        }
+        // SAFETY: see `car`.
+        if !unsafe { heap::is_cons(cur) } {
+            return Err(RuntimeError::TypeError(
+                "length: not a proper list".into(),
+            ));
+        }
+        cur = unsafe { heap::cdr(cur) }.unwrap_or(LispyValue::NIL);
+        n += 1;
+    }
+}
+
+/// `(append lst1 lst2)` — concatenate two proper lists (LANG52).
+///
+/// The result shares the structure of `lst2`; `lst1` elements are copied
+/// (each gets a fresh cons cell).  Errors if `lst1` is not a proper list.
+pub fn append(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("append", 2, args.len()));
+    }
+    // Collect the elements of lst1 into a Vec so we can prepend them to
+    // lst2 in reverse order.
+    let mut items: Vec<LispyValue> = Vec::new();
+    let mut cur = args[0];
+    loop {
+        if cur.is_nil() {
+            break;
+        }
+        // SAFETY: see `car`.
+        if !unsafe { heap::is_cons(cur) } {
+            return Err(RuntimeError::TypeError(
+                "append: first argument is not a proper list".into(),
+            ));
+        }
+        unsafe {
+            items.push(heap::car(cur).unwrap_or(LispyValue::NIL));
+            cur = heap::cdr(cur).unwrap_or(LispyValue::NIL);
+        }
+    }
+    let mut result = args[1];
+    for item in items.iter().rev() {
+        result = heap::alloc_cons(*item, result);
+    }
+    Ok(result)
+}
+
+/// `(reverse lst)` — return `lst` with elements in reverse order (LANG52).
+///
+/// `(reverse '(1 2 3))` → `(3 2 1)`.  Errors if `lst` is not a proper list.
+pub fn reverse(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 1 {
+        return Err(arity_error("reverse", 1, args.len()));
+    }
+    let mut result = LispyValue::NIL;
+    let mut cur = args[0];
+    loop {
+        if cur.is_nil() {
+            return Ok(result);
+        }
+        // SAFETY: see `car`.
+        if !unsafe { heap::is_cons(cur) } {
+            return Err(RuntimeError::TypeError(
+                "reverse: not a proper list".into(),
+            ));
+        }
+        unsafe {
+            result = heap::alloc_cons(heap::car(cur).unwrap_or(LispyValue::NIL), result);
+            cur = heap::cdr(cur).unwrap_or(LispyValue::NIL);
+        }
+    }
+}
+
+/// `(list-ref lst i)` — return the element at 0-based index `i` (LANG52).
+///
+/// `(list-ref '(a b c) 1)` → `b`.  Errors if `i` is out of bounds.
+pub fn list_ref(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("list-ref", 2, args.len()));
+    }
+    let idx = as_int("list-ref", args[1])?;
+    if idx < 0 {
+        return Err(RuntimeError::TypeError(format!(
+            "list-ref: index {idx} is negative"
+        )));
+    }
+    let mut cur = args[0];
+    let mut remaining = idx;
+    loop {
+        // SAFETY: see `car`.
+        if !unsafe { heap::is_cons(cur) } {
+            return Err(RuntimeError::TypeError(format!(
+                "list-ref: index {idx} out of bounds"
+            )));
+        }
+        if remaining == 0 {
+            return Ok(unsafe { heap::car(cur) }.unwrap_or(LispyValue::NIL));
+        }
+        cur = unsafe { heap::cdr(cur) }.unwrap_or(LispyValue::NIL);
+        remaining -= 1;
+    }
+}
+
+/// `(assoc key alist)` — find the first pair in `alist` whose car is
+/// `equal?` to `key`; return the pair, or `#f` if not found (LANG52).
+///
+/// `(assoc 2 '((1 . a) (2 . b) (3 . c)))` → `(2 . b)`.
+pub fn assoc(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("assoc", 2, args.len()));
+    }
+    let key = args[0];
+    let mut cur = args[1];
+    loop {
+        if cur.is_nil() {
+            return Ok(LispyValue::FALSE);
+        }
+        // SAFETY: see `car`.
+        if !unsafe { heap::is_cons(cur) } {
+            return Err(RuntimeError::TypeError(
+                "assoc: second argument is not a proper list".into(),
+            ));
+        }
+        let pair = unsafe { heap::car(cur) }.unwrap_or(LispyValue::NIL);
+        // Each element of the alist must itself be a pair.
+        if unsafe { heap::is_cons(pair) } {
+            let pair_key = unsafe { heap::car(pair) }.unwrap_or(LispyValue::NIL);
+            if values_equal(key, pair_key) {
+                return Ok(pair);
+            }
+        }
+        cur = unsafe { heap::cdr(cur) }.unwrap_or(LispyValue::NIL);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Symbol operations (LANG52)
+// ---------------------------------------------------------------------------
+
+/// `(symbol-append sym1 sym2)` — intern the concatenation of both symbols'
+/// names as a new symbol (LANG52).
+///
+/// `(symbol-append 'foo 'bar)` → `foobar` (as a symbol).
+/// Useful in macro-expansion contexts where generated symbol names are
+/// built from component names.
+pub fn symbol_append(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    if args.len() != 2 {
+        return Err(arity_error("symbol-append", 2, args.len()));
+    }
+    let id1 = args[0].as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!(
+            "symbol-append: first arg must be a symbol, got {}",
+            args[0]
+        ))
+    })?;
+    let id2 = args[1].as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!(
+            "symbol-append: second arg must be a symbol, got {}",
+            args[1]
+        ))
+    })?;
+    let name1 = crate::intern::name_of(id1).ok_or_else(|| {
+        RuntimeError::TypeError(format!("symbol-append: unknown symbol id {id1:?}"))
+    })?;
+    let name2 = crate::intern::name_of(id2).ok_or_else(|| {
+        RuntimeError::TypeError(format!("symbol-append: unknown symbol id {id2:?}"))
+    })?;
+    let combined = format!("{name1}{name2}");
+    let id = crate::intern::intern(&combined);
+    Ok(LispyValue::symbol(id))
 }
 
 // ---------------------------------------------------------------------------
@@ -1228,5 +1699,281 @@ mod tests {
     #[test]
     fn integer_to_char_is_identity() {
         assert_eq!(integer_to_char(&[i(65)]).unwrap(), i(65));
+    }
+
+    // ── Extended comparisons (LANG52) ────────────────────────────────
+
+    #[test]
+    fn le_basic() {
+        assert_eq!(le(&[i(1), i(2)]).unwrap(), LispyValue::TRUE);   // 1 ≤ 2
+        assert_eq!(le(&[i(2), i(2)]).unwrap(), LispyValue::TRUE);   // 2 ≤ 2
+        assert_eq!(le(&[i(3), i(2)]).unwrap(), LispyValue::FALSE);  // 3 ≤ 2 false
+    }
+
+    #[test]
+    fn ge_basic() {
+        assert_eq!(ge(&[i(2), i(1)]).unwrap(), LispyValue::TRUE);   // 2 ≥ 1
+        assert_eq!(ge(&[i(2), i(2)]).unwrap(), LispyValue::TRUE);   // 2 ≥ 2
+        assert_eq!(ge(&[i(1), i(2)]).unwrap(), LispyValue::FALSE);  // 1 ≥ 2 false
+    }
+
+    #[test]
+    fn le_ge_reject_wrong_arity() {
+        assert!(le(&[i(1)]).is_err());
+        assert!(ge(&[i(1), i(2), i(3)]).is_err());
+    }
+
+    // ── Extended arithmetic (LANG52) ─────────────────────────────────
+
+    #[test]
+    fn quotient_basic() {
+        // Same as truncating division.
+        assert_eq!(quotient(&[i(13), i(4)]).unwrap(), i(3));
+        assert_eq!(quotient(&[i(-13), i(4)]).unwrap(), i(-3));
+        assert_eq!(quotient(&[i(13), i(-4)]).unwrap(), i(-3));
+        assert_eq!(quotient(&[i(-13), i(-4)]).unwrap(), i(3));
+    }
+
+    #[test]
+    fn quotient_by_zero_errors() {
+        assert!(quotient(&[i(7), i(0)]).is_err());
+    }
+
+    #[test]
+    fn remainder_basic() {
+        // Sign matches dividend.
+        assert_eq!(remainder(&[i(13), i(4)]).unwrap(), i(1));
+        assert_eq!(remainder(&[i(-13), i(4)]).unwrap(), i(-1));
+        assert_eq!(remainder(&[i(13), i(-4)]).unwrap(), i(1));
+        assert_eq!(remainder(&[i(-13), i(-4)]).unwrap(), i(-1));
+    }
+
+    #[test]
+    fn remainder_by_zero_errors() {
+        assert!(remainder(&[i(5), i(0)]).is_err());
+    }
+
+    #[test]
+    fn modulo_basic() {
+        // Sign matches divisor (Scheme rule).
+        assert_eq!(modulo(&[i(13), i(4)]).unwrap(), i(1));
+        assert_eq!(modulo(&[i(-13), i(4)]).unwrap(), i(3));
+        assert_eq!(modulo(&[i(13), i(-4)]).unwrap(), i(-3));
+        assert_eq!(modulo(&[i(-13), i(-4)]).unwrap(), i(-1));
+    }
+
+    #[test]
+    fn modulo_by_zero_errors() {
+        assert!(modulo(&[i(7), i(0)]).is_err());
+    }
+
+    // ── Logic (LANG52) ────────────────────────────────────────────────
+
+    #[test]
+    fn boolean_p_true_for_bools() {
+        assert_eq!(boolean_p(&[LispyValue::TRUE]).unwrap(), LispyValue::TRUE);
+        assert_eq!(boolean_p(&[LispyValue::FALSE]).unwrap(), LispyValue::TRUE);
+        assert_eq!(boolean_p(&[LispyValue::NIL]).unwrap(), LispyValue::FALSE);
+        assert_eq!(boolean_p(&[i(0)]).unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn not_returns_logical_inverse() {
+        // Falsy inputs → #t
+        assert_eq!(not(&[LispyValue::FALSE]).unwrap(), LispyValue::TRUE);
+        assert_eq!(not(&[LispyValue::NIL]).unwrap(), LispyValue::TRUE);
+        // Truthy inputs → #f  (0 is truthy in Scheme!)
+        assert_eq!(not(&[LispyValue::TRUE]).unwrap(), LispyValue::FALSE);
+        assert_eq!(not(&[i(0)]).unwrap(), LispyValue::FALSE);
+        assert_eq!(not(&[i(42)]).unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn not_rejects_wrong_arity() {
+        assert!(not(&[]).is_err());
+        assert!(not(&[LispyValue::TRUE, LispyValue::FALSE]).is_err());
+    }
+
+    #[test]
+    fn equal_p_integers_by_value() {
+        assert_eq!(equal_p(&[i(7), i(7)]).unwrap(), LispyValue::TRUE);
+        assert_eq!(equal_p(&[i(7), i(8)]).unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn equal_p_strings_by_content() {
+        let s = |t: &str| heap::alloc_string(t.as_bytes());
+        assert_eq!(equal_p(&[s("abc"), s("abc")]).unwrap(), LispyValue::TRUE);
+        assert_eq!(equal_p(&[s("abc"), s("xyz")]).unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn equal_p_lists_structurally() {
+        // Two distinct allocations of (1 . 2) are equal?.
+        let a = heap::alloc_cons(i(1), i(2));
+        let b = heap::alloc_cons(i(1), i(2));
+        assert_eq!(equal_p(&[a, b]).unwrap(), LispyValue::TRUE);
+        // (1 2) vs (1 3) — differ in second element.
+        let xs = heap::alloc_cons(i(1), heap::alloc_cons(i(2), LispyValue::NIL));
+        let ys = heap::alloc_cons(i(1), heap::alloc_cons(i(3), LispyValue::NIL));
+        assert_eq!(equal_p(&[xs, ys]).unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn equal_p_symbols_by_identity() {
+        let id_a = intern("alpha");
+        let id_b = intern("beta");
+        let sa = LispyValue::symbol(id_a);
+        let sb = LispyValue::symbol(id_b);
+        assert_eq!(equal_p(&[sa, sa]).unwrap(), LispyValue::TRUE);
+        assert_eq!(equal_p(&[sa, sb]).unwrap(), LispyValue::FALSE);
+    }
+
+    // ── List operations (LANG52) ──────────────────────────────────────
+
+    #[test]
+    fn list_builds_proper_list() {
+        // (list 1 2 3) → (1 2 3)
+        let v = list(&[i(1), i(2), i(3)]).unwrap();
+        assert_eq!(unsafe { heap::car(v) }.unwrap(), i(1));
+        let tl = unsafe { heap::cdr(v) }.unwrap();
+        assert_eq!(unsafe { heap::car(tl) }.unwrap(), i(2));
+        let ttl = unsafe { heap::cdr(tl) }.unwrap();
+        assert_eq!(unsafe { heap::car(ttl) }.unwrap(), i(3));
+        assert!(unsafe { heap::cdr(ttl) }.unwrap().is_nil());
+    }
+
+    #[test]
+    fn list_empty_is_nil() {
+        assert_eq!(list(&[]).unwrap(), LispyValue::NIL);
+    }
+
+    #[test]
+    fn list_p_proper_list_is_true() {
+        let lst = list(&[i(1), i(2), i(3)]).unwrap();
+        assert_eq!(list_p(&[lst]).unwrap(), LispyValue::TRUE);
+        assert_eq!(list_p(&[LispyValue::NIL]).unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn list_p_dotted_pair_is_false() {
+        let pair = heap::alloc_cons(i(1), i(2)); // (1 . 2) — cdr is not nil
+        assert_eq!(list_p(&[pair]).unwrap(), LispyValue::FALSE);
+        assert_eq!(list_p(&[i(42)]).unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn length_of_proper_list() {
+        let lst = list(&[i(10), i(20), i(30)]).unwrap();
+        assert_eq!(length(&[lst]).unwrap(), i(3));
+        assert_eq!(length(&[LispyValue::NIL]).unwrap(), i(0));
+    }
+
+    #[test]
+    fn length_of_non_list_errors() {
+        let dotted = heap::alloc_cons(i(1), i(2));
+        assert!(length(&[dotted]).is_err());
+    }
+
+    #[test]
+    fn append_two_lists() {
+        let a = list(&[i(1), i(2)]).unwrap();
+        let b = list(&[i(3), i(4)]).unwrap();
+        let result = append(&[a, b]).unwrap();
+        assert_eq!(length(&[result]).unwrap(), i(4));
+        assert_eq!(list_ref(&[result, i(0)]).unwrap(), i(1));
+        assert_eq!(list_ref(&[result, i(3)]).unwrap(), i(4));
+    }
+
+    #[test]
+    fn append_empty_first() {
+        let b = list(&[i(1), i(2)]).unwrap();
+        let result = append(&[LispyValue::NIL, b]).unwrap();
+        assert_eq!(length(&[result]).unwrap(), i(2));
+    }
+
+    #[test]
+    fn reverse_reverses() {
+        let lst = list(&[i(1), i(2), i(3)]).unwrap();
+        let rev = reverse(&[lst]).unwrap();
+        assert_eq!(list_ref(&[rev, i(0)]).unwrap(), i(3));
+        assert_eq!(list_ref(&[rev, i(1)]).unwrap(), i(2));
+        assert_eq!(list_ref(&[rev, i(2)]).unwrap(), i(1));
+    }
+
+    #[test]
+    fn reverse_empty_is_nil() {
+        assert_eq!(reverse(&[LispyValue::NIL]).unwrap(), LispyValue::NIL);
+    }
+
+    #[test]
+    fn list_ref_indexes_correctly() {
+        let lst = list(&[i(10), i(20), i(30)]).unwrap();
+        assert_eq!(list_ref(&[lst, i(0)]).unwrap(), i(10));
+        assert_eq!(list_ref(&[lst, i(1)]).unwrap(), i(20));
+        assert_eq!(list_ref(&[lst, i(2)]).unwrap(), i(30));
+    }
+
+    #[test]
+    fn list_ref_out_of_bounds_errors() {
+        let lst = list(&[i(1)]).unwrap();
+        assert!(list_ref(&[lst, i(1)]).is_err());
+        assert!(list_ref(&[lst, i(-1)]).is_err());
+    }
+
+    #[test]
+    fn assoc_finds_key() {
+        // Build ((1 . a) (2 . b) (3 . c))
+        let sym_a = LispyValue::symbol(intern("a"));
+        let sym_b = LispyValue::symbol(intern("b"));
+        let sym_c = LispyValue::symbol(intern("c"));
+        let alist = list(&[
+            heap::alloc_cons(i(1), sym_a),
+            heap::alloc_cons(i(2), sym_b),
+            heap::alloc_cons(i(3), sym_c),
+        ]).unwrap();
+        let found = assoc(&[i(2), alist]).unwrap();
+        assert!(unsafe { heap::is_cons(found) });
+        assert_eq!(unsafe { heap::car(found) }.unwrap(), i(2));
+        assert_eq!(unsafe { heap::cdr(found) }.unwrap(), sym_b);
+    }
+
+    #[test]
+    fn assoc_not_found_returns_false() {
+        let pair = heap::alloc_cons(i(1), LispyValue::symbol(intern("x")));
+        let alist = list(&[pair]).unwrap();
+        assert_eq!(assoc(&[i(99), alist]).unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn assoc_empty_alist_returns_false() {
+        assert_eq!(assoc(&[i(1), LispyValue::NIL]).unwrap(), LispyValue::FALSE);
+    }
+
+    // ── Symbol operations (LANG52) ────────────────────────────────────
+
+    #[test]
+    fn symbol_append_combines_names() {
+        let foo = LispyValue::symbol(intern("foo"));
+        let bar = LispyValue::symbol(intern("bar"));
+        let result = symbol_append(&[foo, bar]).unwrap();
+        assert!(result.is_symbol());
+        let id = result.as_symbol().unwrap();
+        let name = crate::intern::name_of(id).unwrap();
+        assert_eq!(name, "foobar");
+    }
+
+    #[test]
+    fn symbol_append_rejects_non_symbol() {
+        let foo = LispyValue::symbol(intern("foo"));
+        assert!(symbol_append(&[foo, i(1)]).is_err());
+        assert!(symbol_append(&[i(1), foo]).is_err());
+    }
+
+    #[test]
+    fn symbol_append_rejects_wrong_arity() {
+        let foo = LispyValue::symbol(intern("foo"));
+        assert!(symbol_append(&[foo]).is_err());
+        assert!(symbol_append(&[]).is_err());
     }
 }
