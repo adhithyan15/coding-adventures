@@ -82,7 +82,7 @@ pub use errors::TwigCompileError;
 pub use free_vars::free_vars;
 
 use interpreter_ir::IIRModule;
-use twig_parser::{parse, Program};
+use twig_parser::{parse, Program, TypedMode};
 
 /// Compile a parsed [`Program`] into an [`IIRModule`].
 ///
@@ -100,6 +100,43 @@ pub fn compile_program(
     program: &Program,
     module_name: &str,
 ) -> Result<IIRModule, TwigCompileError> {
+    // ── Optional TW05-B type-check pre-pass (LANG49) ──────────────────────
+    //
+    // Runs only when the module declares `(typed lenient)` or `(typed strict)`.
+    // `(typed off)` and programs with no `(module …)` declaration are untouched —
+    // `check_program` returns immediately in those cases.
+    //
+    // Lenient mode: errors are printed as warnings but compilation continues.
+    // Strict mode:  any type error blocks compilation and returns Err.
+    if let Some(mode) = program
+        .module_info
+        .as_ref()
+        .and_then(|mi| mi.typed_mode.as_ref())
+    {
+        let tc_result = twig_type_checker::check_program(program, None);
+        match mode {
+            TypedMode::Strict if !tc_result.ok => {
+                // Return the first type error as a compile error.
+                if let Some(d) = tc_result.errors.first() {
+                    return Err(TwigCompileError {
+                        message: format!("type error: {}", d.message),
+                        line: d.line,
+                        column: d.column,
+                    });
+                }
+            }
+            TypedMode::Lenient => {
+                for d in &tc_result.errors {
+                    eprintln!(
+                        "twig type warning ({}:{}): {}",
+                        d.line, d.column, d.message
+                    );
+                }
+            }
+            _ => {}
+        }
+    }
+
     Compiler::new().compile(program, module_name)
 }
 
