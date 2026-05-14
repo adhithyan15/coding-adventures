@@ -65,10 +65,10 @@ use logic_core::{atom, Term};
 // Caps and defaults
 // ---------------------------------------------------------------------------
 
-/// Default per-parent retry budget. PR-2 doesn't gate on retry yet,
-/// so this is a starting point informed by ADJ24 (where 3 attempts
-/// caught roughly half of post-prompt failures on the small-model
-/// bench). PR-6 will revisit.
+/// Default per-parent retry budget when a uniform budget is used.
+/// Kept for back-compat / single-knob bench configurations; the
+/// orchestrator's real retry policy is now per-level (see
+/// [`PerLevelRetryBudget`]).
 pub const DEFAULT_MAX_RETRIES_PER_PARENT: usize = 3;
 
 /// Hard cap on per-level dispatched LLM calls. Prevents runaway
@@ -89,6 +89,70 @@ const MAX_TERM_ARGS: usize = 256;
 // Public surface
 // ---------------------------------------------------------------------------
 
+/// Per-level retry budget. Each decomposition layer owns its own
+/// budget — the careful-decomposition fan-out at deeper levels
+/// (Phrase → Claim, Fact → TypedComponent) means they need MORE
+/// retries than the shallow levels do, not fewer.
+///
+/// Rationale: when a model produces a granular decomposition (e.g.,
+/// gemma4 splitting `"1 carry-on bag, lithium battery, 200 Wh."`
+/// into three phrases instead of one), the framework now has THREE
+/// downstream Phrase parents to verify instead of one. Each of
+/// those produces its own Fact→TypedComponent boundary. A single
+/// shared retry budget across all parents at all levels gets
+/// exhausted long before the careful decomposition's deeper tile
+/// boundaries close. Per-level budgets fix that — Doc→Sentence can
+/// keep its small budget (one parent, low fan-out) while
+/// Fact→TypedComponent gets a generous budget (many parents at
+/// that depth, strict tiling).
+///
+/// Per `feedback_per_level_retry_budget`. The defaults grow with
+/// depth.
+#[derive(Debug, Clone, Copy)]
+pub struct PerLevelRetryBudget {
+    pub document_to_sentence: usize,
+    pub sentence_to_phrase: usize,
+    pub phrase_to_claim: usize,
+    pub fact_to_typed_component: usize,
+}
+
+impl Default for PerLevelRetryBudget {
+    /// Defaults grow with depth (3 / 4 / 5 / 8) since deeper levels
+    /// see more parents and stricter tiling, per ADJ28 bench data.
+    fn default() -> Self {
+        Self {
+            document_to_sentence: 3,
+            sentence_to_phrase: 4,
+            phrase_to_claim: 5,
+            fact_to_typed_component: 8,
+        }
+    }
+}
+
+impl PerLevelRetryBudget {
+    /// Build a budget with the same cap at every level. Useful for
+    /// bench A/B comparisons and for callers that want a single
+    /// configuration knob.
+    pub fn uniform(n: usize) -> Self {
+        Self {
+            document_to_sentence: n,
+            sentence_to_phrase: n,
+            phrase_to_claim: n,
+            fact_to_typed_component: n,
+        }
+    }
+
+    /// Look up the budget for a specific level.
+    pub fn at(self, level: DecompLevel) -> usize {
+        match level {
+            DecompLevel::DocumentToSentence => self.document_to_sentence,
+            DecompLevel::SentenceToPhrase => self.sentence_to_phrase,
+            DecompLevel::PhraseToClaim => self.phrase_to_claim,
+            DecompLevel::FactToTypedComponent => self.fact_to_typed_component,
+        }
+    }
+}
+
 /// What the caller hands the orchestrator.
 #[derive(Debug, Clone)]
 pub struct HierarchicalDecomposeRequest {
@@ -101,9 +165,11 @@ pub struct HierarchicalDecomposeRequest {
     /// bytes; it only forwards them to the LLM at each level and
     /// uses `len()` for the Document span.
     pub source_text: String,
-    /// Per-parent retry budget at every level. Default
-    /// [`DEFAULT_MAX_RETRIES_PER_PARENT`].
-    pub max_retries_per_parent: usize,
+    /// Per-LEVEL retry budget. Each decomposition layer owns its
+    /// own cap. Default budgets grow with depth (3 / 4 / 5 / 8)
+    /// since deeper levels see more parents from any careful
+    /// decomposition upstream.
+    pub max_retries_per_parent: PerLevelRetryBudget,
 }
 
 /// Successful outcome of [`decompose_hierarchical`].
@@ -265,9 +331,10 @@ pub fn decompose_hierarchical(
         normalized_text: req.source_text.clone(),
     };
     let mut budget: HashMap<NodeId, usize> = HashMap::new();
-    // `max_retries_per_parent = 0` is honoured literally — no retries.
-    // Cap at 64 so a runaway misconfiguration cannot blow LLM budgets.
-    let max_retries = req.max_retries_per_parent.min(64);
+    // Per-level retry caps, looked up from `req.max_retries_per_parent`.
+    // Each level's cap is clamped to 64 so a runaway misconfiguration
+    // cannot blow LLM budgets.
+    let retry_budget = req.max_retries_per_parent;
     loop {
         let gaps = match check_hierarchical_coverage(&doc_for_coverage, &ir) {
             HierarchicalCoverageResult::Pass => break,
@@ -282,8 +349,13 @@ pub fn decompose_hierarchical(
             if matches!(gap.kind, HierarchicalGapKind::FlattenedAtom { .. }) {
                 continue;
             }
+            // ADJ29: per-LEVEL retry cap. Each layer owns its budget;
+            // careful decomposition (which fans out at deeper levels)
+            // gets adequate headroom there without spending the
+            // shallow-level budget.
+            let level_cap = retry_budget.at(gap.level).min(64);
             let used = budget.entry(gap.parent_node_id.clone()).or_insert(0);
-            if *used >= max_retries {
+            if *used >= level_cap {
                 continue;
             }
             *used += 1;
@@ -1229,7 +1301,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "matches".into(),
-            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         // Document + Sentence + Phrase + Fact + Entity = 5 nodes.
@@ -1280,7 +1352,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "ABCDEFGHIJ".into(),
-            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         // Phrase Pa should land at doc [0..3); Phrase Pb at doc [3..10).
@@ -1310,7 +1382,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "hello".into(),
-            max_retries_per_parent: 0,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(0),
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         // Document has no children (the fabricated text was rejected);
@@ -1334,7 +1406,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "x".into(),
-            max_retries_per_parent: 1,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(1),
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         match err {
@@ -1357,7 +1429,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "hello".into(),
-            max_retries_per_parent: 0, // no retries — fail fast
+            max_retries_per_parent: PerLevelRetryBudget::uniform(0), // no retries — fail fast
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         match err {
@@ -1395,7 +1467,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "hello".into(),
-            max_retries_per_parent: 1,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(1),
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         assert!(matches!(
@@ -1449,7 +1521,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "matches".into(),
-            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         let completeness =
@@ -1492,7 +1564,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "matches".into(),
-            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         for edge in &out.ir_document.edges {
@@ -1540,7 +1612,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "matches".into(),
-            max_retries_per_parent: 0,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(0),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         // The Claim-level child should be parsed as a Fact, deriving
@@ -1612,6 +1684,78 @@ mod tests {
             stored.map(|s| s.as_str()),
             Some("The string `please` is a politeness marker that adds no claim content.")
         );
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ29 — per-level retry budgets
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn adj29_per_level_budget_at_returns_layer_specific_cap() {
+        let b = PerLevelRetryBudget {
+            document_to_sentence: 3,
+            sentence_to_phrase: 4,
+            phrase_to_claim: 5,
+            fact_to_typed_component: 8,
+        };
+        assert_eq!(b.at(DecompLevel::DocumentToSentence), 3);
+        assert_eq!(b.at(DecompLevel::SentenceToPhrase), 4);
+        assert_eq!(b.at(DecompLevel::PhraseToClaim), 5);
+        assert_eq!(b.at(DecompLevel::FactToTypedComponent), 8);
+    }
+
+    #[test]
+    fn adj29_per_level_budget_default_grows_with_depth() {
+        let d = PerLevelRetryBudget::default();
+        assert!(d.document_to_sentence < d.sentence_to_phrase);
+        assert!(d.sentence_to_phrase < d.phrase_to_claim);
+        assert!(d.phrase_to_claim < d.fact_to_typed_component);
+        assert_eq!(d.document_to_sentence, 3);
+        assert_eq!(d.fact_to_typed_component, 8);
+    }
+
+    #[test]
+    fn adj29_per_level_budget_uniform_applies_same_cap() {
+        let b = PerLevelRetryBudget::uniform(7);
+        for level in [
+            DecompLevel::DocumentToSentence,
+            DecompLevel::SentenceToPhrase,
+            DecompLevel::PhraseToClaim,
+            DecompLevel::FactToTypedComponent,
+        ] {
+            assert_eq!(b.at(level), 7);
+        }
+    }
+
+    #[test]
+    fn adj29_zero_budget_at_one_level_aborts_only_there() {
+        // Set Fact→TypedComponent budget to 0; shallow levels keep
+        // generous budgets. A non-matching text at level 4 should
+        // immediately fail without consuming retries (because the
+        // budget is 0), while levels 1-3 still complete cleanly.
+        let gateway = gateway_with(vec![
+            one_node_response(child_node("S1", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("P1", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("F1", "Fact", 0, 7, "matches", "matches")),
+            // Bogus text — would normally trigger a retry, but the
+            // level-4 budget is 0, so the orchestrator gives up.
+            one_node_response(child_node("E1", "Entity", 0, 7, "x", "DOES_NOT_MATCH")),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "matches".into(),
+            max_retries_per_parent: PerLevelRetryBudget {
+                document_to_sentence: 8,
+                sentence_to_phrase: 8,
+                phrase_to_claim: 8,
+                fact_to_typed_component: 0,
+            },
+        };
+        let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
+        assert!(matches!(
+            err,
+            HierarchicalDecomposeError::CoverageUnresolved { .. }
+        ));
     }
 
     #[test]

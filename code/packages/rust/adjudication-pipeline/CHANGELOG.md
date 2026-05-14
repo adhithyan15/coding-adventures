@@ -2,6 +2,80 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-05-14 — ADJ29: per-level retry budgets
+
+### Changed (breaking — caller construction)
+
+`HierarchicalDecomposeRequest::max_retries_per_parent` changed type
+from `usize` (single global cap) to `PerLevelRetryBudget` (per-level
+caps). The orchestrator's retry loop now looks up the cap by the
+gap's level via `retry_budget.at(gap.level)`.
+
+### Why
+
+ADJ28's bench showed bigger models producing finer-grained
+decompositions — `gemma4` splits `"1 carry-on bag, lithium battery,
+200 Wh."` into THREE phrases, which is the correct linguistic
+reading. But that fine decomposition fans out at every level: 3
+phrases → 3 Phrase→Claim calls → 3 Fact→TypedComponent calls. A
+single global retry budget gets exhausted before the careful
+decomposition's deeper tile boundaries close.
+
+The fix is per-level budgets. Doc→Sentence rarely fails (low
+fan-out, simple choice); Fact→TypedComponent has the most fan-out
+and strictest tiling. Defaults grow with depth:
+
+  document_to_sentence:       3
+  sentence_to_phrase:         4
+  phrase_to_claim:            5
+  fact_to_typed_component:    8
+
+### New public surface
+
+- `PerLevelRetryBudget { document_to_sentence, sentence_to_phrase,
+  phrase_to_claim, fact_to_typed_component }` with `Default` impl
+  (3/4/5/8), `uniform(n: usize)` constructor for back-compat tests,
+  and `at(level)` lookup helper.
+- Re-exported from `adjudication_pipeline::` top-level alongside the
+  other hierarchical types.
+
+### Bench binary
+
+`adj_pr6_bench` now supports two retry-budget modes:
+
+- **Uniform** (back-compat): `ADJ_PR6_MAX_RETRIES=N` sets all four
+  levels to N. Matches the previous bench-knob shape.
+- **Per-level**: when `ADJ_PR6_MAX_RETRIES` is unset, the defaults
+  (3/4/5/8) apply, with individual overrides via
+  `ADJ_PR6_MAX_RETRIES_DOC_SENT`,
+  `ADJ_PR6_MAX_RETRIES_SENT_PHRASE`,
+  `ADJ_PR6_MAX_RETRIES_PHRASE_CLAIM`, and
+  `ADJ_PR6_MAX_RETRIES_FACT_TYPED`.
+
+### Tests
+
+4 new `adj29_*` test cases:
+
+- `adj29_per_level_budget_at_returns_layer_specific_cap` — `at`
+  lookup over a manually-constructed budget.
+- `adj29_per_level_budget_default_grows_with_depth` — regression
+  guard for the depth-monotonic defaults.
+- `adj29_per_level_budget_uniform_applies_same_cap` — `uniform(n)`
+  ergonomics.
+- `adj29_zero_budget_at_one_level_aborts_only_there` — end-to-end
+  through the orchestrator with a 0-budget at level 4 and generous
+  shallow budgets; verifies the level-4 abort path doesn't consume
+  shallow retries.
+
+Total hierarchical-module tests: 13 → 17. Pipeline lib tests: 51 → 55.
+
+### Notes
+
+- Version: 0.13.0 → 0.14.0 (breaking type change on the request struct).
+- Per `feedback_per_level_retry_budget`: don't add prompt-level
+  examples discouraging fine decomposition. The right linguistic
+  reading should be rewarded; the framework adjusts to support it.
+
 ## [0.13.0] - 2026-05-14 — ADJ28: orchestrator reads boolean kind schema + discard_justification
 
 ### Changed
