@@ -1,6 +1,8 @@
 # Changelog — symbolic-vm (Rust)
 
-## [0.2.0] — 2026-05-14
+## Unreleased
+
+## [0.3.0] — 2026-05-14
 
 ### Added
 
