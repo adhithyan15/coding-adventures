@@ -1,5 +1,46 @@
 # Changelog — `twig-aot`
 
+## 0.1.9 — 2026-05-13 (LANG42)
+
+**Wire the refinement obligation checker into the AOT pipeline.**
+
+LANG23 built a complete refinement-type infrastructure (solver, checker, type
+annotations on `IIRFunction`), but the IIR never reached the checker —
+annotations silently did nothing.  LANG42 fixes this by adding a pre-codegen
+pass that runs immediately after `twig-ir-compiler` emits the `IIRModule`,
+before any lowering, and discharges every proof obligation through the existing
+`lang-refinement-checker` API.
+
+### New dependency
+
+- **`iir-refinement-pass = { path = "../iir-refinement-pass" }`** — new crate
+  that implements `check_module(module, mode) -> Vec<RefinementError>`.
+
+### New `AotError` variant
+
+- **`AotError::RefinementViolations(Vec<iir_refinement_pass::RefinementError>)`** —
+  returned when one or more proof obligations are `ProvenUnsafe` (Lenient mode)
+  or `ProvenUnsafe | Unknown` (Strict mode).
+
+### Changed
+
+- **`compile_module_macos_arm64_object`** now calls `check_refinements` before
+  `compile_module_to_text`.  In `Lenient` mode (default) only `ProvenUnsafe`
+  outcomes abort compilation.
+
+- **`compile_module_macos_arm64_object_with_mode`** — new public function
+  accepting an explicit `RefinementMode`.  The old function delegates to it
+  with `Lenient`.
+
+### Tests added
+
+- `refinement_violation_becomes_aot_error` — a literal that violates a
+  `(Int 0 128)` annotation returns `Err(AotError::RefinementViolations)`.
+- `safe_annotated_program_compiles_ok` — a literal within range compiles
+  normally.
+
+---
+
 ## 0.1.8 — 2026-05-13 (LANG41)
 
 **Replace macOS-specific `emit_print_helper` injection with a portable C

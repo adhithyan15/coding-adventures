@@ -83,6 +83,7 @@ use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
 use iir_builtin_lowering::lower_global_io;
+use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
 
 // ---------------------------------------------------------------------------
@@ -116,6 +117,11 @@ pub enum AotError {
         /// `ld`'s stderr, captured for diagnostics.
         stderr: String,
     },
+    /// One or more refinement proof obligations were violated (LANG42).
+    ///
+    /// In `Lenient` mode this fires only for `ProvenUnsafe` outcomes.
+    /// In `Strict` mode it also fires for `Unknown` outcomes.
+    RefinementViolations(Vec<iir_refinement_pass::RefinementError>),
 }
 
 impl std::fmt::Display for AotError {
@@ -129,6 +135,13 @@ impl std::fmt::Display for AotError {
             AotError::Io(e)                 => write!(f, "io: {e}"),
             AotError::Linker { status, stderr } =>
                 write!(f, "linker (ld) failed: status={status:?}: {stderr}"),
+            AotError::RefinementViolations(errs) => {
+                write!(f, "{} refinement violation(s):", errs.len())?;
+                for e in errs {
+                    write!(f, "\n  {e}")?;
+                }
+                Ok(())
+            }
         }
     }
 }
@@ -166,6 +179,31 @@ pub fn compile_macos_arm64_object(source: &str, module_name: &str) -> Result<Vec
 /// relocation records so that the system linker (`ld`) can patch the
 /// `ADRP + ADD` instruction pairs that address `_twig_globals`.
 pub fn compile_module_macos_arm64_object(module: &IIRModule) -> Result<Vec<u8>, AotError> {
+    compile_module_macos_arm64_object_with_mode(module, RefinementMode::Lenient)
+}
+
+/// Like [`compile_module_macos_arm64_object`] but with an explicit
+/// [`RefinementMode`].
+///
+/// Use `RefinementMode::Strict` for `(typed strict)` modules (TW05-A) or any
+/// pipeline that must treat `Unknown` solver outcomes as hard errors.
+pub fn compile_module_macos_arm64_object_with_mode(
+    module: &IIRModule,
+    refinement_mode: RefinementMode,
+) -> Result<Vec<u8>, AotError> {
+    // ── LANG42: refinement obligation pass ──────────────────────────────────
+    //
+    // Run the pass on the *original* IIR before any lowering.  After
+    // `prepare_module_for_aot` runs, variable names are rewritten and the
+    // correspondence between names and annotations is lost — so we must check
+    // before we mutate the module.
+    //
+    // `check_refinements` returns an empty Vec if there are no violations.
+    let refinement_errors = check_refinements(module, refinement_mode);
+    if !refinement_errors.is_empty() {
+        return Err(AotError::RefinementViolations(refinement_errors));
+    }
+
     let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
     let (text, offsets, n_global_slots, global_relocs, extern_relocs) =
         compile_module_to_text(module)?;
@@ -1208,5 +1246,54 @@ mod tests {
         assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE]);
         let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
         assert_eq!(filetype, 1, "MH_OBJECT");
+    }
+
+    // ── LANG42: refinement checker wired into twig-aot ────────────────────
+    //
+    // The Twig IR compiler already parses `(param : (Int lo hi))` syntax and
+    // wires the annotation into `IIRFunction::param_refinements`.  LANG42 adds
+    // the pass that *checks* those annotations before codegen.
+    //
+    // These tests use the source-string path (`compile_macos_arm64_object`) so
+    // we don't need to add `lang-refined-types` to twig-aot's dev-dependencies.
+
+    #[test]
+    fn refinement_violation_becomes_aot_error() {
+        // The worked example from the LANG42 spec (top-level expression form,
+        // same pattern as `fib_compiles_ok` which avoids BackendRefused):
+        //
+        //   (define (ascii-info (codepoint : (Int 0 128))) codepoint)
+        //   (ascii-info 200)        ← 200 violates [0, 128)
+        //
+        // The refinement pass fires BEFORE prepare_module_for_aot so we catch
+        // the violation even though the module might fail codegen later.
+        //
+        // 200 violates (Int 0 128) → ProvenUnsafe → AotError::RefinementViolations.
+        let src = "(define (ascii-info (codepoint : (Int 0 128))) codepoint) \
+                   (ascii-info 200)";
+        let result = compile_macos_arm64_object(src, "refinement_test");
+        assert!(
+            matches!(result, Err(AotError::RefinementViolations(_))),
+            "expected RefinementViolations, got: {:?}",
+            result.as_ref().err(),
+        );
+        if let Err(AotError::RefinementViolations(errs)) = result {
+            assert!(!errs.is_empty(), "at least one error expected");
+            assert_eq!(errs[0].counter_example, 200, "counter-example should be 200");
+        }
+    }
+
+    #[test]
+    fn safe_annotated_program_compiles_ok() {
+        // (ascii-info 42) — 42 ∈ [0, 128) → ProvenSafe → no refinement error.
+        // Same top-level expression form as fib_compiles_ok.
+        let src = "(define (ascii-info (codepoint : (Int 0 128))) codepoint) \
+                   (ascii-info 42)";
+        let result = compile_macos_arm64_object(src, "refinement_safe");
+        assert!(
+            result.is_ok(),
+            "safe annotated program should compile; got: {:?}",
+            result.err(),
+        );
     }
 }

@@ -565,6 +565,7 @@ members = [
     "brainfuck-iir-compiler",
     "ir-to-beam",
     "iir-builtin-lowering",
+    "iir-refinement-pass",
     "iir-linker",
     "iir-to-beam",
     "iir-to-wasm",
