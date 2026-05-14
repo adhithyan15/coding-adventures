@@ -256,6 +256,45 @@ fn factors_grouped_multivariate_terms_with_signed_residuals_through_runtime() {
     );
 }
 
+// Perfect-cube expansions: a^3 ± 3a^2b ± 3ab^2 ± b^3 = (a ± b)^3
+// These are four-term patterns and are detected before the two-term cubic
+// identity a^3 ± b^3, so they must be tested here to confirm the dispatch
+// order does not swallow them as a partial match.
+
+#[test]
+fn factors_multivariate_perfect_cube_sum_through_runtime() {
+    // x^3 + 3*x^2*y + 3*x*y^2 + y^3  =  (x + y)^3
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(3)],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_perfect_cube_difference_through_runtime() {
+    // x^3 - 3*x^2*y + 3*x*y^2 - y^3  =  (x - y)^3
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(POW),
+            vec![apply(sym(SUB), vec![sym("x"), sym("y")]), int(3)],
+        )
+    );
+}
+
 #[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
