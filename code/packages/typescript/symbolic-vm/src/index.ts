@@ -1046,8 +1046,13 @@ function integrate(): Handler {
       return expr;
     }
     if (expr.args.length === 4) {
-      const result = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
-      return result === undefined ? expr : vm.eval(result);
+      const resultK = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
+      if (resultK !== undefined) return vm.eval(resultK);
+      const resultE = completeEllipticSecondKind(f, x, expr.args[2], expr.args[3]);
+      if (resultE !== undefined) return vm.eval(resultE);
+      const resultPi = completeEllipticThirdKind(f, x, expr.args[2], expr.args[3]);
+      if (resultPi !== undefined) return vm.eval(resultPi);
+      return expr;
     }
     const result = integrateIndefinite(f, x);
     if (result === undefined) {
@@ -1067,6 +1072,10 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   const elliptic = incompleteEllipticFirstKind(f, x);
   if (elliptic !== undefined) {
     return elliptic;
+  }
+  const ellipticE = incompleteEllipticSecondKind(f, x);
+  if (ellipticE !== undefined) {
+    return ellipticE;
   }
   if (f.kind !== "apply") {
     return undefined;
@@ -1204,6 +1213,81 @@ function isPiOverTwo(node: IRNode): boolean {
   }
   const [numerator, denominator] = binaryArgs(node);
   return numerator.kind === "symbol" && numerator.name === "%pi" && equals(denominator, int(2));
+}
+
+/** Return k when f = Sqrt(1 - k² sin²(x)), else undefined. */
+function ellipticSecondKindRadicand(f: IRNode, x: IRNode): IRNode | undefined {
+  if (f.kind !== "apply" || !equals(f.head, SQRT)) return undefined;
+  const [radicand] = unaryArgs(f);
+  if (radicand.kind !== "apply" || !equals(radicand.head, SUB)) return undefined;
+  const [constant, product] = binaryArgs(radicand);
+  if (!isOne(constant) || product.kind !== "apply" || !equals(product.head, MUL)) return undefined;
+  const [left, right] = binaryArgs(product);
+  return modulusFromSquaredFactor(left, right, x) ?? modulusFromSquaredFactor(right, left, x);
+}
+
+/** ∫₀^(π/2) sqrt(1-k²sin²θ)dθ → EllipticE(k) */
+function completeEllipticSecondKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {
+  if (!isZero(lower) || !isPiOverTwo(upper)) return undefined;
+  const modulus = ellipticSecondKindRadicand(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticE"), [modulus]);
+}
+
+/** ∫ sqrt(1-k²sin²θ)dθ → EllipticE(θ, k) */
+function incompleteEllipticSecondKind(f: IRNode, x: IRNode): IRNode | undefined {
+  const modulus = ellipticSecondKindRadicand(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticE"), [x, modulus]);
+}
+
+/** Return n when bracket = Add(1, Mul(n, Pow(Sin(x), 2))), else undefined. */
+function extractCharacteristicN(bracket: IRNode, x: IRNode): IRNode | undefined {
+  if (bracket.kind !== "apply" || !equals(bracket.head, ADD)) return undefined;
+  const [a, b] = binaryArgs(bracket);
+  for (const [onePart, prodPart] of [[a, b], [b, a]] as [IRNode, IRNode][]) {
+    if (!isOne(onePart)) continue;
+    if (prodPart.kind !== "apply" || !equals(prodPart.head, MUL)) continue;
+    const [p1, p2] = binaryArgs(prodPart);
+    for (const [nCandidate, sinSq] of [[p1, p2], [p2, p1]] as [IRNode, IRNode][]) {
+      if (sinSq.kind !== "apply" || !equals(sinSq.head, POW)) continue;
+      const [sine, sineExp] = binaryArgs(sinSq);
+      if (!equals(sineExp, int(2))) continue;
+      if (sine.kind !== "apply" || !equals(sine.head, SIN)) continue;
+      const [inner] = unaryArgs(sine);
+      if (!equals(inner, x)) continue;
+      if (!dependsOn(nCandidate, x)) return nCandidate;
+    }
+  }
+  return undefined;
+}
+
+/** Return {n, k} when f = 1/((1+n·sin²x)·sqrt(1-k²sin²x)), else undefined. */
+function ellipticThirdKindParams(f: IRNode, x: IRNode): { n: IRNode; k: IRNode } | undefined {
+  if (f.kind !== "apply" || !equals(f.head, DIV)) return undefined;
+  const [numerator, denominator] = binaryArgs(f);
+  if (!isOne(numerator)) return undefined;
+  if (denominator.kind !== "apply" || !equals(denominator.head, MUL)) return undefined;
+  const [a, b] = binaryArgs(denominator);
+  for (const [bracket, sqrtTerm] of [[a, b], [b, a]] as [IRNode, IRNode][]) {
+    if (sqrtTerm.kind !== "apply" || !equals(sqrtTerm.head, SQRT)) continue;
+    const [radicand] = unaryArgs(sqrtTerm);
+    if (radicand.kind !== "apply" || !equals(radicand.head, SUB)) continue;
+    const [constant, product] = binaryArgs(radicand);
+    if (!isOne(constant) || product.kind !== "apply" || !equals(product.head, MUL)) continue;
+    const [left, right] = binaryArgs(product);
+    const k = modulusFromSquaredFactor(left, right, x) ?? modulusFromSquaredFactor(right, left, x);
+    if (k === undefined) continue;
+    const n = extractCharacteristicN(bracket, x);
+    if (n === undefined) continue;
+    return { n, k };
+  }
+  return undefined;
+}
+
+/** ∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²sin²θ))dθ → EllipticPi(n, k) */
+function completeEllipticThirdKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {
+  if (!isZero(lower) || !isPiOverTwo(upper)) return undefined;
+  const params = ellipticThirdKindParams(f, x);
+  return params === undefined ? undefined : app(sym("EllipticPi"), [params.n, params.k]);
 }
 
 function differentiate(): Handler {

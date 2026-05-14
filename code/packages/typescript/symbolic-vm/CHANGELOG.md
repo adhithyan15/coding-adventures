@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0] — 2026-05-14
+
+- Added EllipticE (second kind) integration recognition:
+  - `∫₀^(π/2) sqrt(1-k²sin²θ) dθ` → `EllipticE(k)` (complete)
+  - `∫ sqrt(1-k²sin²θ) dθ` → `EllipticE(θ, k)` (incomplete)
+- Added EllipticPi (third kind) complete integration recognition:
+  - `∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²sin²θ)) dθ` → `EllipticPi(n, k)`
+- New helper functions: `ellipticSecondKindRadicand`, `completeEllipticSecondKind`,
+  `incompleteEllipticSecondKind`, `extractCharacteristicN`, `ellipticThirdKindParams`,
+  `completeEllipticThirdKind`
+
 ## [0.2.0] — 2026-05-14
 
 ### Added
