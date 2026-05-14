@@ -242,6 +242,26 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.8 landed — multi-op specialised dispatch)**:
+> image-gpu-core v0.11.0 lifts the Phase 4.4 restriction that
+> capped specialised dispatch routing at one non-Const Compute op
+> per graph.  When every Compute op in `placed.ops` has an
+> installed specialised kernel, the dispatcher routes through
+> `dispatch_specialised_via_multi`: one prep `Dispatch` for all
+> setup ops, then a sequence of `DispatchSpecialised` requests
+> (one per Compute op in placement order), then one
+> `DownloadBuffer`.  New helpers
+> `all_non_const_computes_with_handles` (gate) and
+> `build_specialised_inputs_outputs` (shared trimming + folded-slot
+> logic refactored out of the single-op path).  Routing precedence
+> in `dispatch_via`: multi-op → single-op → generic, with silent
+> fall-through on any specialised-path error.  End-to-end test
+> `dispatch_multi_op_specialised_chain_produces_correct_output`
+> drives `Add(x, 3) → Mul(_, 2)` with both ops specialised and
+> asserts the final output is `[8, 10, 12, 14]` (i.e.
+> `(x + 3) * 2`) and `specialised_dispatch_count` rose by at
+> least 2.  Test count: image-gpu-core 32 → 33.
+
 > **Implementation status (Phase 4.7 landed — unary ops with folded input collapse to memset)**:
 > matrix-metal v0.9.0 extends `msl_emitter` to support **unary
 > f32 ops** (Neg, Abs, Sqrt, Exp, Log, Tanh, Recip) when their

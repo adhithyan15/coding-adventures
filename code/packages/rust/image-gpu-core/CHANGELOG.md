@@ -1,5 +1,75 @@
 # Changelog — image-gpu-core
 
+## 0.11.0 — 2026-05-13
+
+### Added — MX05 Phase 4.8 (multi-op specialised dispatch)
+
+Lifts the Phase 4.4 restriction that limited specialised dispatch
+routing to graphs with **exactly one** non-Const Compute op.  A
+graph with multiple chained ops — e.g. `Add(x, 3) → Mul(_, 2)` —
+where every op has an installed specialised kernel now routes
+through `DispatchSpecialised` for every Compute op instead of
+falling back to generic `Dispatch`.
+
+#### Strategy
+
+```
+runtime ─Dispatch{prep_graph}─►        metal  (single dispatch:
+                                              allocates all
+                                              buffers, uploads all
+                                              constants)
+
+for each (op_idx, handle) in computes (ordered by op_idx):
+    runtime ─DispatchSpecialised{handle, inputs, outputs}─► metal
+                                                              ↓
+                                                           DispatchDone
+
+runtime ─DownloadBuffer─►              metal  (final output)
+```
+
+The prep graph is `placed.ops` minus the non-Const Compute ops we
+intend to dispatch as specialised.  All `Op::Const`, `Alloc`,
+`Free`, and `Transfer` ops stay, so matrix-metal's existing
+handler does all buffer management under planner-assigned IDs.
+
+#### New helpers
+
+- `all_non_const_computes_with_handles(placed, installed_per_op)`
+  — returns `Some(Vec<(usize, u64)>)` iff **every** non-Const
+  Compute op has an installed handle.  `None` triggers fallback
+  to the Phase 4.4 single-op gate, then to generic dispatch.
+- `dispatch_specialised_via_multi(transport, placed, computes, ...)`
+  — the multi-op equivalent of `dispatch_specialised_via`.
+  Increments `SPECIALISED_DISPATCH_COUNT` by `computes.len()` on
+  success.
+- `build_specialised_inputs_outputs(placed, compute_op_idx, handle)`
+  — refactored from `dispatch_specialised_via` so both single-op
+  and multi-op paths share the IR-input trimming + folded-slot
+  shuffle logic.
+
+#### Routing precedence in `dispatch_via`
+
+  1. Try multi-op route (when every Compute op is specialised).
+  2. Try single-op route (Phase 4.4 path).
+  3. Fall back to generic `Dispatch { graph }`.
+
+#### Test (32 → 33)
+
+`dispatch_multi_op_specialised_chain_produces_correct_output`
+(Apple-only):
+
+Builds the chain
+`x = [1,2,3,4]` → `Add(x, 3) = y` → `Mul(y, 2) = z`
+with `Add` and `Mul` each having their own
+`*_const_f32` specialised kernel installed.  Drives through
+`dispatch_specialised_via_multi` and asserts:
+
+- `specialised_dispatch_count` rises by **at least** 2 (one per
+  Compute op).  We use `>=` because cargo runs tests in parallel
+  and other tests bump the same counter concurrently.
+- Final output is `[8, 10, 12, 14]` — i.e. `(x + 3) * 2` computed
+  via two chained DispatchSpecialised requests.
+
 ## 0.10.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.7 end-to-end (unary memset path through DispatchSpecialised)
