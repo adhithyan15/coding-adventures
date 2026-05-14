@@ -326,9 +326,18 @@ class TestValueFuncs:
             [spec], ["dept", "name", "salary"],
             ["dept", "name", "salary", "last_name"],
         )
-        # In eng sorted by salary desc: Bob(80000) is last
-        eng_last = {r[3] for r in rows if r[0] == "eng"}
-        assert eng_last == {"Bob"}
+        # With ORDER BY present the SQL-standard default frame is cumulative
+        # (RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW).  LAST_VALUE of
+        # that frame is always the current row itself, so last_name == name for
+        # every row.  The eng partition sorted salary DESC is:
+        #   Alice(90000) → last_name = 'Alice'
+        #   Eve(85000)   → last_name = 'Eve'
+        #   Bob(80000)   → last_name = 'Bob'
+        # All three names appear in the result set.
+        eng_rows = [(r[1], r[3]) for r in rows if r[0] == "eng"]
+        # Each employee's last_name equals their own name (last in cumulative frame).
+        for name, last_name in eng_rows:
+            assert last_name == name, f"expected last_name={name!r}, got {last_name!r}"
 
 
 # ---------------------------------------------------------------------------
