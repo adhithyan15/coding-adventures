@@ -15,6 +15,9 @@
   `x^3 + y^3`, rewriting them to their canonical linear/quadratic products.
 - `Factor` recognises four-term bilinear grouping such as
   `x*y + x*z + y + z` and rewrites it as `(x + 1) * (y + z)`.
+- `Factor` recognises four-term bivariate perfect-cube expansions such as
+  `x^3 + 3*x^2*y + 3*x*y^2 + y^3` and `x^3 - 3*x^2*y + 3*x*y^2 - y^3`,
+  rewriting them as `(x + y)^3` and `(x - y)^3` respectively.
 - `SymbolicBackend` installs a `D` derivative handler for symbolic-only
   differentiation of arithmetic, elementary, hyperbolic, and inverse
   hyperbolic expressions; `StrictBackend` continues to reject `D` as an

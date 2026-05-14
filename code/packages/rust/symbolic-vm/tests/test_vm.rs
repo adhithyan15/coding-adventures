@@ -457,6 +457,123 @@ fn symbolic_factor_extracts_grouped_multivariate_terms_with_signed_residuals() {
     );
 }
 
+#[test]
+fn symbolic_factor_extracts_multivariate_perfect_cube_sum() {
+    // Factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3) → (x+y)^3
+    //
+    // The binomial cube expansion (a+b)^3 = a^3 + 3a^2b + 3ab^2 + b^3 is a
+    // 4-term pattern handled by factor_multivariate_perfect_cube, distinct
+    // from the 2-term cubic identity (a^3 ± b^3).
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(3)]),
+                                apply(
+                                    sym(MUL),
+                                    vec![
+                                        int(3),
+                                        apply(
+                                            sym(MUL),
+                                            vec![
+                                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                                sym("y"),
+                                            ],
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                        apply(
+                            sym(MUL),
+                            vec![
+                                int(3),
+                                apply(
+                                    sym(MUL),
+                                    vec![sym("x"), apply(sym(POW), vec![sym("y"), int(2)])],
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                apply(sym(POW), vec![sym("y"), int(3)]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(sym(POW), vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(3)])
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_perfect_cube_difference() {
+    // Factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3) → (x-y)^3
+    //
+    // The difference expansion (a-b)^3 = a^3 - 3a^2b + 3ab^2 - b^3 has
+    // a negative cross term (-3a^2b) and a negative cubic (-b^3), which
+    // distinguishes it from the sum case.
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(SUB),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(3)]),
+                                apply(
+                                    sym(MUL),
+                                    vec![
+                                        int(3),
+                                        apply(
+                                            sym(MUL),
+                                            vec![
+                                                sym("x"),
+                                                apply(sym(POW), vec![sym("y"), int(2)]),
+                                            ],
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                        apply(
+                            sym(MUL),
+                            vec![
+                                int(3),
+                                apply(
+                                    sym(MUL),
+                                    vec![
+                                        apply(sym(POW), vec![sym("x"), int(2)]),
+                                        sym("y"),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                apply(sym(MUL), vec![int(-1), apply(sym(POW), vec![sym("y"), int(3)])]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(sym(POW), vec![apply(sym(SUB), vec![sym("x"), sym("y")]), int(3)])
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Symbol resolution
 // ---------------------------------------------------------------------------

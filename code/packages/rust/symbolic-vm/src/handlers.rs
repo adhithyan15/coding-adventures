@@ -1374,6 +1374,10 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         }
     }
 
+    if let Some(rewritten) = factor_multivariate_perfect_cube(input) {
+        return rewritten;
+    }
+
     if let Some(rewritten) = factor_multivariate_cubic_identity(input) {
         return rewritten;
     }
@@ -1665,6 +1669,120 @@ fn factor_multivariate_grouping(node: &IRNode) -> Option<IRNode> {
     }
 
     None
+}
+
+/// Recognise `(a±b)^3` perfect-cube expansions.
+///
+/// The two identities handled are:
+///
+/// ```text
+/// a^3 + 3·a^2·b + 3·a·b^2 + b^3  →  (a + b)^3   [sum cube]
+/// a^3 − 3·a^2·b + 3·a·b^2 − b^3  →  (a − b)^3   [difference cube]
+/// ```
+///
+/// Requires exactly four additive terms: two *pure-cube* terms (`|coeff|=1`,
+/// one variable, exponent 3) and two *cross terms* (two variables, `|coeff|=3`).
+/// Returns `None` on any mismatch so `factor_handler` can continue to the next
+/// pattern.
+fn factor_multivariate_perfect_cube(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 4 {
+        return None;
+    }
+
+    let mut pure_cubes: Vec<(i64, IRNode)> = Vec::new(); // (sign, base)
+    let mut cross_terms: Vec<(i64, HashMap<IRNode, usize>)> = Vec::new();
+
+    for term in &terms {
+        let (coefficient, powers) = term_integer_coefficient_and_powers(term)?;
+        match powers.len() {
+            1 => {
+                let (base, exponent) = powers.into_iter().next()?;
+                if exponent == 3 && (coefficient == 1 || coefficient == -1) {
+                    pure_cubes.push((coefficient, base));
+                } else {
+                    return None; // wrong exponent or coeff
+                }
+            }
+            2 => {
+                cross_terms.push((coefficient, powers));
+            }
+            _ => return None,
+        }
+    }
+
+    if pure_cubes.len() != 2 || cross_terms.len() != 2 {
+        return None;
+    }
+
+    // Identify a and b; derive sum vs. difference from pure-cube signs.
+    let (a_node, b_node, is_sum) = {
+        let (c0, ref b0) = pure_cubes[0];
+        let (c1, ref b1) = pure_cubes[1];
+        match (c0, c1) {
+            (1, 1) => (b0.clone(), b1.clone(), true),
+            (1, -1) => (b0.clone(), b1.clone(), false),
+            (-1, 1) => (b1.clone(), b0.clone(), false),
+            _ => return None,
+        }
+    };
+
+    // Cross-term variable sets must equal exactly {a_node, b_node}.
+    let variable_pair: HashSet<IRNode> =
+        [a_node.clone(), b_node.clone()].into_iter().collect();
+    for (_, powers) in &cross_terms {
+        if powers.len() != 2 {
+            return None;
+        }
+        let keys: HashSet<IRNode> = powers.keys().cloned().collect();
+        if keys != variable_pair {
+            return None;
+        }
+    }
+
+    // Validate cross-term coefficients and exponent distributions.
+    if is_sum {
+        // Expect +3·a^2·b and +3·a·b^2 in any order.
+        let mut found_a2b = false;
+        let mut found_ab2 = false;
+        for (coefficient, powers) in &cross_terms {
+            let exp_a = powers.get(&a_node).copied().unwrap_or(0);
+            let exp_b = powers.get(&b_node).copied().unwrap_or(0);
+            match (*coefficient, exp_a, exp_b) {
+                (3, 2, 1) => found_a2b = true,
+                (3, 1, 2) => found_ab2 = true,
+                _ => return None,
+            }
+        }
+        if !found_a2b || !found_ab2 {
+            return None;
+        }
+        Some(apply_node(
+            POW,
+            vec![apply_node(ADD, vec![a_node, b_node]), IRNode::Integer(3)],
+        ))
+    } else {
+        // Expect −3·a^2·b and +3·a·b^2.
+        // The sign on a^2·b flips because (a−b)^3 = a^3 − 3a^2b + 3ab^2 − b^3.
+        let mut found_neg_a2b = false;
+        let mut found_pos_ab2 = false;
+        for (coefficient, powers) in &cross_terms {
+            let exp_a = powers.get(&a_node).copied().unwrap_or(0);
+            let exp_b = powers.get(&b_node).copied().unwrap_or(0);
+            match (*coefficient, exp_a, exp_b) {
+                (-3, 2, 1) => found_neg_a2b = true,
+                (3, 1, 2) => found_pos_ab2 = true,
+                _ => return None,
+            }
+        }
+        if !found_neg_a2b || !found_pos_ab2 {
+            return None;
+        }
+        Some(apply_node(
+            POW,
+            vec![apply_node(SUB, vec![a_node, b_node]), IRNode::Integer(3)],
+        ))
+    }
 }
 
 fn common_symbolic_powers(terms: &[IRNode]) -> HashMap<IRNode, usize> {
