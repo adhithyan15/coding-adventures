@@ -220,6 +220,43 @@ fn factors_multivariate_sum_of_cubes_through_runtime() {
 }
 
 #[test]
+fn factors_grouped_multivariate_terms_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x*y + x*z + y + z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), int(1)]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_grouped_multivariate_terms_with_signed_residuals_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x*y - x*z + y - z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), int(1)]),
+                apply(
+                    sym(ADD),
+                    vec![sym("y"), apply(sym(MUL), vec![int(-1), sym("z")]),],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();

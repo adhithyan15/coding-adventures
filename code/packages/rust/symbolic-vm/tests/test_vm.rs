@@ -392,6 +392,71 @@ fn symbolic_factor_extracts_multivariate_sum_of_cubes() {
     );
 }
 
+#[test]
+fn symbolic_factor_extracts_grouped_multivariate_terms() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(MUL), vec![sym("x"), sym("y")]),
+                        apply(sym(MUL), vec![sym("x"), sym("z")]),
+                    ],
+                ),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), int(1)]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_grouped_multivariate_terms_with_signed_residuals() {
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(SUB),
+                    vec![
+                        apply(sym(MUL), vec![sym("x"), sym("y")]),
+                        apply(sym(MUL), vec![sym("x"), sym("z")]),
+                    ],
+                ),
+                apply(sym(SUB), vec![sym("y"), sym("z")]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), int(1)]),
+                apply(
+                    sym(ADD),
+                    vec![sym("y"), apply(sym(MUL), vec![int(-1), sym("z")]),],
+                ),
+            ],
+        )
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Symbol resolution
 // ---------------------------------------------------------------------------

@@ -1386,6 +1386,10 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return rewritten;
     }
 
+    if let Some(rewritten) = factor_multivariate_grouping(input) {
+        return rewritten;
+    }
+
     if let Some(rewritten) = factor_common_symbolic_term(input) {
         return vm.eval(rewritten);
     }
@@ -1604,6 +1608,90 @@ fn factor_multivariate_difference_of_squares(node: &IRNode) -> Option<IRNode> {
             apply_node(ADD, vec![positive_square, negative_square]),
         ],
     ))
+}
+
+fn factor_multivariate_grouping(node: &IRNode) -> Option<IRNode> {
+    let terms = additive_terms(node)?;
+    if terms.len() != 4 {
+        return None;
+    }
+
+    for first_index in 0..terms.len() - 1 {
+        for second_index in first_index + 1..terms.len() {
+            let grouped = vec![terms[first_index].clone(), terms[second_index].clone()];
+            let first_common = common_symbolic_powers(&grouped);
+            if first_common.is_empty() {
+                continue;
+            }
+
+            let rest: Vec<IRNode> = terms
+                .iter()
+                .enumerate()
+                .filter_map(|(index, term)| {
+                    if index == first_index || index == second_index {
+                        None
+                    } else {
+                        Some(term.clone())
+                    }
+                })
+                .collect();
+            let first_residual: Vec<IRNode> = grouped
+                .iter()
+                .map(|term| remove_common_factor(term, &first_common))
+                .collect();
+            let second_common = common_symbolic_powers(&rest);
+            let second_residual: Vec<IRNode> = rest
+                .iter()
+                .map(|term| remove_common_factor(term, &second_common))
+                .collect();
+            if !same_two_terms(&first_residual, &second_residual) {
+                continue;
+            }
+
+            let first_factor = powers_to_ir(&first_common);
+            let second_factor = if second_common.is_empty() {
+                IRNode::Integer(1)
+            } else {
+                powers_to_ir(&second_common)
+            };
+            return Some(apply_node(
+                MUL,
+                vec![
+                    apply_node(ADD, vec![first_factor, second_factor]),
+                    add_nodes(first_residual),
+                ],
+            ));
+        }
+    }
+
+    None
+}
+
+fn common_symbolic_powers(terms: &[IRNode]) -> HashMap<IRNode, usize> {
+    let Some((first, rest)) = terms.split_first() else {
+        return HashMap::new();
+    };
+
+    let mut common = term_factor_powers(first);
+    for term in rest {
+        let powers = term_factor_powers(term);
+        common.retain(|base, exponent| {
+            if let Some(other) = powers.get(base) {
+                *exponent = (*exponent).min(*other);
+                *exponent > 0
+            } else {
+                false
+            }
+        });
+    }
+    common
+}
+
+fn same_two_terms(left: &[IRNode], right: &[IRNode]) -> bool {
+    left.len() == 2
+        && right.len() == 2
+        && ((left[0] == right[0] && left[1] == right[1])
+            || (left[0] == right[1] && left[1] == right[0]))
 }
 
 fn additive_terms(node: &IRNode) -> Option<Vec<IRNode>> {
