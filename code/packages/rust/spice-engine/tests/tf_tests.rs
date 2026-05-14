@@ -1,6 +1,6 @@
 use spice_engine::{
-    tf, Capacitor, Cccs, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, TfResult,
-    Vccs, Vcvs, VoltageSource,
+    tf, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError,
+    TfResult, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -138,6 +138,31 @@ fn tf_cccs_stage_reports_current_gain() {
 }
 
 #[test]
+fn tf_ccvs_stage_reports_transresistance_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rsense", "in", "sense", 1_000.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vsense", "sense", "0", 0.0,
+    )));
+    circuit.add(Element::Ccvs(Ccvs::new(
+        "H1", "out", "0", "Vsense", 2_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = tf(&circuit, "out", "Vin").unwrap();
+
+    assert_close(result.gain(), 2.0);
+    assert_close(result.output_impedance_ohms, 0.0);
+}
+
+#[test]
 fn tf_capacitor_is_open_and_inductor_is_short_at_dc_small_signal() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
@@ -210,5 +235,24 @@ fn tf_rejects_cccs_as_input_source() {
     assert!(matches!(
         tf(&circuit, "out", "F1"),
         Err(SpiceError::InvalidElement { name, .. }) if name == "F1"
+    ));
+}
+
+#[test]
+fn tf_rejects_ccvs_as_input_source() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vsense", "sense", "0", 0.0,
+    )));
+    circuit.add(Element::Ccvs(Ccvs::new(
+        "H1", "out", "0", "Vsense", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    assert!(matches!(
+        tf(&circuit, "out", "H1"),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "H1"
     ));
 }

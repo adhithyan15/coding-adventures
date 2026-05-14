@@ -10,6 +10,8 @@
   function, sensitivity, Monte Carlo, and transient analyses.
 - Add current-controlled current sources (CCCS) across DC, AC, transfer
   function, sensitivity, Monte Carlo, and transient analyses.
+- Add current-controlled voltage sources (CCVS) across DC, AC, transfer
+  function, sensitivity, Monte Carlo, and transient analyses.
 - Add DC source sweeps for independent voltage and current sources.
 - Add DC sensitivity analysis for resistor and independent source parameters.
 - Add seeded DC Monte Carlo analysis for linear element parameters with
