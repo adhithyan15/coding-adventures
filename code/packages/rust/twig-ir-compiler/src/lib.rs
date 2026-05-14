@@ -116,14 +116,18 @@ pub fn compile_program(
         let tc_result = twig_type_checker::check_program(program, None);
         match mode {
             TypedMode::Strict if !tc_result.ok => {
-                // Return the first type error as a compile error.
-                if let Some(d) = tc_result.errors.first() {
-                    return Err(TwigCompileError {
-                        message: format!("type error: {}", d.message),
-                        line: d.line,
-                        column: d.column,
-                    });
-                }
+                // Invariant: ok == false in Strict mode ↔ errors is non-empty.
+                // Using expect here enforces the invariant at this integration
+                // boundary.  A panic here means a bug in the type checker, not
+                // in user input — fail loudly rather than silently.
+                let d = tc_result.errors.first().expect(
+                    "type-checker invariant violated: ok==false but errors is empty",
+                );
+                return Err(TwigCompileError {
+                    message: format!("type error: {}", d.message),
+                    line: d.line,
+                    column: d.column,
+                });
             }
             TypedMode::Lenient => {
                 for d in &tc_result.errors {
