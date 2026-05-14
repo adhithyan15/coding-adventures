@@ -1,5 +1,5 @@
 use spice_engine::{
-    tf, Capacitor, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, TfResult,
+    tf, Capacitor, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, TfResult, Vccs,
     VoltageSource,
 };
 
@@ -77,6 +77,26 @@ fn tf_current_source_input_reports_transimpedance() {
 }
 
 #[test]
+fn tf_vccs_stage_reports_transconductance_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Vccs(Vccs::new(
+        "Gm", "0", "out", "in", "0", 2.0e-3,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = tf(&circuit, "out", "Vin").unwrap();
+
+    assert_close(result.gain(), 2.0);
+    assert_close(result.output_impedance_ohms, 1_000.0);
+    assert!(result.input_impedance_ohms.is_infinite());
+}
+
+#[test]
 fn tf_capacitor_is_open_and_inductor_is_short_at_dc_small_signal() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
@@ -119,5 +139,18 @@ fn tf_rejects_non_source_input_element() {
     assert!(matches!(
         tf(&circuit, "in", "Rin"),
         Err(SpiceError::InvalidElement { name, .. }) if name == "Rin"
+    ));
+}
+
+#[test]
+fn tf_rejects_vccs_as_input_source() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Vccs(Vccs::new(
+        "Gm", "0", "out", "in", "0", 1.0e-3,
+    )));
+
+    assert!(matches!(
+        tf(&circuit, "out", "Gm"),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Gm"
     ));
 }

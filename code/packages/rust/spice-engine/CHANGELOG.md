@@ -4,6 +4,8 @@
 
 - Add a DC modified nodal analysis solver for resistors, independent voltage
   sources, and independent current sources.
+- Add voltage-controlled current sources (VCCS) for linear transconductance
+  stages.
 - Add DC source sweeps for independent voltage and current sources.
 - Add DC sensitivity analysis for resistor and independent source parameters.
 - Add DC small-signal transfer-function analysis with input/output impedance.
