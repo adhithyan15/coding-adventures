@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.31.0] - 2026-05-14
+
+### Added
+
+- **`json_group_array(val)` aggregate** — Fixed silent-bug where
+  `json_group_array` was dispatched as a scalar (returning only the current
+  row's value).  It is now a proper aggregate that accumulates non-NULL values
+  into a JSON array, consistent with SQLite.  Returns `'[]'` for an empty group.
+- **`json_group_object(key, val)` aggregate** — New SQLite-compatible aggregate
+  that builds a JSON object from key-value pairs across a GROUP BY group.  Rows
+  with NULL key or NULL value are silently skipped.  Duplicate keys: last writer
+  wins.  Returns `'{}'` for an empty group.
+- **`VACUUM`, `ANALYZE`, `REINDEX`, `EXPLAIN` stubs** (`engine.py`) — These
+  statements previously raised `ProgrammingError` because the SQL parser does
+  not recognise them.  They are now intercepted by a regex match in `engine.py`
+  (like `PRAGMA`) and silently return `QueryResult(rows_affected=0)`.  This
+  matches the expectations of migration tools and ORM setup routines that call
+  these statements unconditionally.
+
 ## [1.30.0] - 2026-05-13
 
 ### Added

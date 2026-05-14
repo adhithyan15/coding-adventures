@@ -850,11 +850,19 @@ def _resolve(
             return Like(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
         case NotLike(operand, pattern):
             return NotLike(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
-        case AggregateExpr(func, arg, distinct, separator):
+        case AggregateExpr(func, arg, distinct, separator, key_arg):
             if arg.star or arg.value is None:
                 return expr
             new_arg = type(arg)(star=False, value=_resolve(arg.value, scope, schema, outer_scope))
-            return AggregateExpr(func=func, arg=new_arg, distinct=distinct, separator=separator)
+            new_key = (
+                type(key_arg)(star=False, value=_resolve(key_arg.value, scope, schema, outer_scope))
+                if key_arg is not None and key_arg.value is not None
+                else key_arg
+            )
+            return AggregateExpr(
+                func=func, arg=new_arg, distinct=distinct,
+                separator=separator, key_arg=new_key,
+            )
         case CaseExpr(whens, else_):
             return CaseExpr(
                 whens=tuple(
@@ -1039,14 +1047,15 @@ def _collect_aggregates(
     def collect_in(expr: Expr, is_output: bool) -> None:
         nonlocal counter
         match expr:
-            case AggregateExpr(func, arg, distinct, separator):
-                key = (func, arg, distinct, separator)
+            case AggregateExpr(func, arg, distinct, separator, key_arg):
+                key = (func, arg, distinct, separator, key_arg)
                 if key not in seen:
                     alias = f"_agg_{counter}"
                     counter += 1
                     seen[key] = P.AggregateItem(
                         func=func, arg=arg, alias=alias,
                         distinct=distinct, separator=separator,
+                        key_arg=key_arg,
                         output=is_output,
                     )
                 elif is_output and not seen[key].output:
@@ -1056,6 +1065,7 @@ def _collect_aggregates(
                     seen[key] = P.AggregateItem(
                         func=old.func, arg=old.arg, alias=old.alias,
                         distinct=old.distinct, separator=old.separator,
+                        key_arg=old.key_arg,
                         output=True,
                     )
             case BinaryExpr(_, left, right):

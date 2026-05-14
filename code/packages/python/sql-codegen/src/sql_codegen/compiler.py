@@ -1041,6 +1041,11 @@ def _compile_aggregate(
                 # COUNT_STAR semantics ignore the value and just increment.
                 out.append(LoadConst(value=1))
             else:
+                # JSON_GROUP_OBJECT(key_expr, val_expr): push key *first*, then
+                # the value.  UpdateAgg for JSON_GROUP_OBJECT pops two values
+                # (value on top, key underneath) to build the (key, val) pair.
+                if a.key_arg is not None:
+                    out.extend(_compile_expr(a.key_arg.value, c))  # type: ignore[arg-type]
                 out.extend(_compile_expr(a.arg.value, c))  # type: ignore[arg-type]
             out.append(UpdateAgg(slot=s))
         return out

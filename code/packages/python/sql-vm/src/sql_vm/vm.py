@@ -28,8 +28,11 @@ out into helpers so that this file reads like pseudocode.
 
 from __future__ import annotations
 
+import json as _json
 import math
-from collections.abc import Callable
+from collections.abc import (
+    Callable,
+)
 from dataclasses import dataclass, field
 
 import sql_backend.errors as be
@@ -133,6 +136,7 @@ from .errors import (
 )
 from .operators import apply_binary, apply_unary, like_match
 from .result import QueryResult, _MutableResult
+from .scalar_functions import _sql_to_json_val
 from .scalar_functions import call as _call_scalar
 
 # --------------------------------------------------------------------------
@@ -184,17 +188,19 @@ class _AggState:
 
     The field that matters depends on ``func``:
 
-    - COUNT / COUNT(*)  — count
-    - SUM               — sum (Null until first non-null input)
-    - AVG               — sum + count
-    - MIN / MAX         — extremum
-    - GROUP_CONCAT      — items (list of non-null string representations) + separator
+    - COUNT / COUNT(*)      — count
+    - SUM                   — sum (Null until first non-null input)
+    - AVG                   — sum + count
+    - MIN / MAX             — extremum
+    - GROUP_CONCAT          — items (list of non-null string representations) + separator
+    - JSON_GROUP_ARRAY      — items (list of JSON-compatible Python values)
+    - JSON_GROUP_OBJECT     — items (list of (key, value) pairs; key is a JSON string)
 
-    ``items`` and ``separator`` are only populated for GROUP_CONCAT.  They are
-    left as empty list / "," respectively for all other functions to keep the
-    class lightweight; accessing them on non-GROUP_CONCAT slots is a logic
-    error that will produce incorrect output rather than a crash, so keep it
-    that way intentionally — the codegen guarantees correct dispatch.
+    ``items`` and ``separator`` are only populated for GROUP_CONCAT /
+    JSON_GROUP_ARRAY / JSON_GROUP_OBJECT.  They are left as empty list / ","
+    respectively for all other functions to keep the class lightweight;
+    accessing them on other slots is a logic error that will produce incorrect
+    output rather than a crash — the codegen guarantees correct dispatch.
     """
 
     func: AggFunc
@@ -1221,12 +1227,24 @@ def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
         agg.count += 1
         return
     if value is None:
-        return  # SQL: NULL inputs ignored for everything except COUNT(*)
+        # SQL: NULL inputs are ignored for everything except COUNT(*).
+        # JSON_GROUP_OBJECT is special: the codegen pushed *two* values (key,
+        # then value) before UpdateAgg.  If the value is NULL we must still pop
+        # the key to keep the stack balanced.
+        if agg.func is AggFunc.JSON_GROUP_OBJECT:
+            st.pop()  # discard the key; value was already popped above
+        return
     # DISTINCT deduplication: skip this value if we have already seen it.
     # The ``seen`` set is created during _do_init_agg when InitAgg.distinct=True.
     # COUNT(DISTINCT col), SUM(DISTINCT col), etc. all go through this path.
+    #
+    # JSON_GROUP_OBJECT is special: the codegen pushed *two* values (key, then
+    # value) before UpdateAgg.  When we discard a duplicate value we must also
+    # pop the stranded key to keep the operand stack balanced.
     if agg.distinct and agg.seen is not None:
         if value in agg.seen:
+            if agg.func is AggFunc.JSON_GROUP_OBJECT:
+                st.pop()  # discard the stranded key; value already popped above
             return  # duplicate — discard silently
         agg.seen.add(value)
     if agg.func is AggFunc.COUNT:
@@ -1261,6 +1279,27 @@ def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
             agg.items.append(str(int(value)))
         else:
             agg.items.append(str(value))
+        return
+    if agg.func is AggFunc.JSON_GROUP_ARRAY:
+        # Accumulate every non-NULL value as a JSON-compatible Python value.
+        # NULL inputs are silently ignored (SQLite behaviour: "json_group_array()
+        # returns a JSON array comprised of all values in the aggregation").
+        # The value is already a SQL scalar; _sql_to_json_val converts it to
+        # the correct Python type for json.dumps.
+        agg.items.append(_sql_to_json_val(value))
+        return
+    if agg.func is AggFunc.JSON_GROUP_OBJECT:
+        # JSON_GROUP_OBJECT(key_expr, val_expr): the codegen pushes key then
+        # value, so the stack has [... key value] with value on top.
+        # _do_update_agg already popped `value` (the top of stack).
+        # Now pop `key` (the value below).  Rows where either key or value is
+        # NULL are silently ignored — SQLite skips them too.
+        key = st.pop()
+        if key is None:
+            return   # skip rows with NULL key (mirrors SQLite)
+        # Keys must be TEXT in SQLite's json_group_object; coerce to string.
+        key_str = str(key) if not isinstance(key, str) else key
+        agg.items.append((key_str, _sql_to_json_val(value)))
         return
 
 
@@ -1297,6 +1336,30 @@ def _do_finalize_agg(ins: FinalizeAgg, st: _VmState) -> None:
         # returns the sum of all non-NULL values in the group. If there are no
         # non-NULL input rows then total() returns 0.0."
         st.push(0.0 if agg.acc is None else float(agg.acc))  # type: ignore[arg-type]
+        return
+    if agg.func is AggFunc.JSON_GROUP_ARRAY:
+        # Always returns a JSON array (never NULL — SQLite returns '[]' for an
+        # empty group, unlike GROUP_CONCAT which returns NULL).
+        #
+        # Non-finite floats (inf, nan) are not valid JSON (RFC 8259 §6).
+        # SQLite maps them to JSON null, so we do the same by replacing any
+        # non-finite float with None before serialising.
+        safe_items = [
+            None if isinstance(x, float) and not math.isfinite(x) else x
+            for x in agg.items
+        ]
+        st.push(_json.dumps(safe_items, separators=(",", ":")))
+        return
+    if agg.func is AggFunc.JSON_GROUP_OBJECT:
+        # Build a JSON object from the accumulated (key, value) pairs.
+        # Duplicate keys: last writer wins (matches SQLite behaviour).
+        # Returns '{}' for an empty group (never NULL).
+        #
+        # Same non-finite float → null mapping as JSON_GROUP_ARRAY above.
+        obj: dict = {}
+        for k, v in agg.items:  # type: ignore[misc]
+            obj[k] = None if isinstance(v, float) and not math.isfinite(v) else v
+        st.push(_json.dumps(obj, separators=(",", ":")))
         return
     # SUM / MIN / MAX — the accumulator *is* the result (may be NULL for empty).
     st.push(agg.acc)
