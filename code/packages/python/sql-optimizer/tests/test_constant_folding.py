@@ -135,6 +135,51 @@ class TestNullPropagation:
         assert fold_expr(IsNotNull(operand=Literal(None))) == Literal(False)
 
 
+class TestIsDistinctFrom:
+    """Constant-folding of the NULL-safe IS [NOT] DISTINCT FROM operators."""
+
+    def test_distinct_two_literals_unequal(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=Literal(1), right=Literal(2))
+        assert fold_expr(e) == Literal(True)
+
+    def test_distinct_two_literals_equal(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=Literal(1), right=Literal(1))
+        assert fold_expr(e) == Literal(False)
+
+    def test_distinct_null_left(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=Literal(None), right=Literal(1))
+        assert fold_expr(e) == Literal(True)
+
+    def test_distinct_null_right(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=Literal(1), right=Literal(None))
+        assert fold_expr(e) == Literal(True)
+
+    def test_distinct_both_null(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=Literal(None), right=Literal(None))
+        assert fold_expr(e) == Literal(False)
+
+    def test_not_distinct_equal(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=Literal(5), right=Literal(5))
+        assert fold_expr(e) == Literal(True)
+
+    def test_not_distinct_both_null(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=Literal(None), right=Literal(None))
+        assert fold_expr(e) == Literal(True)
+
+    def test_not_distinct_mixed_null(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=Literal(None), right=Literal(1))
+        assert fold_expr(e) == Literal(False)
+
+    def test_not_distinct_different_values(self) -> None:
+        e = BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=Literal(1), right=Literal(2))
+        assert fold_expr(e) == Literal(False)
+
+    def test_distinct_with_column_not_folded(self) -> None:
+        # When one side is a column (not a literal), we can't fold.
+        e = BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=Column("t", "x"), right=Literal(1))
+        assert fold_expr(e) == e
+
+
 class TestIdempotent:
     def test_fold_twice(self) -> None:
         e = BinaryExpr(op=BinaryOp.ADD, left=Literal(1), right=Literal(2))

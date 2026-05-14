@@ -13,10 +13,7 @@ from __future__ import annotations
 
 import sqlite3
 
-import pytest
-
 import mini_sqlite
-
 
 # ---------------------------------------------------------------------------
 # Helper
@@ -229,10 +226,11 @@ class TestCountDistinctWithGroupBy:
             "INSERT INTO orders VALUES ('A', 'p2')",
             "INSERT INTO orders VALUES ('B', 'p3')",
         ]
-        ref, got = _both(
-            "SELECT category, COUNT(DISTINCT product) FROM orders GROUP BY category ORDER BY category",
-            setup=setup,
+        sql = (
+            "SELECT category, COUNT(DISTINCT product) FROM orders"
+            " GROUP BY category ORDER BY category"
         )
+        ref, got = _both(sql, setup=setup)
         assert got == ref
 
 

@@ -65,6 +65,35 @@ def apply_binary(op: BinaryOpCode, left: SqlValue, right: SqlValue) -> SqlValue:
     if op is BinaryOpCode.OR:
         return _or(left, right)
 
+    # IS [NOT] DISTINCT FROM — NULL-safe comparisons that always return a bool,
+    # never NULL.  They must be handled *before* the general NULL short-circuit
+    # because they need to see NULL operands directly.
+    if op is BinaryOpCode.IS_DISTINCT_FROM:
+        # Two values are "distinct" when they differ or exactly one is NULL.
+        # Truth table (never returns NULL):
+        #   NULL IS DISTINCT FROM NULL  → FALSE  (both null = same)
+        #   NULL IS DISTINCT FROM 1     → TRUE   (one null, one not)
+        #   1    IS DISTINCT FROM 2     → TRUE   (different values)
+        #   1    IS DISTINCT FROM 1     → FALSE  (equal values)
+        if left is None and right is None:
+            return False
+        if left is None or right is None:
+            return True
+        return left != right
+    if op is BinaryOpCode.IS_NOT_DISTINCT_FROM:
+        # Two values are "not distinct" when they are equal or both NULL.
+        # NULL-safe equality — equivalent to Python ``left == right`` where
+        # None == None.
+        #   NULL IS NOT DISTINCT FROM NULL  → TRUE
+        #   NULL IS NOT DISTINCT FROM 1     → FALSE
+        #   1    IS NOT DISTINCT FROM 1     → TRUE
+        #   1    IS NOT DISTINCT FROM 2     → FALSE
+        if left is None and right is None:
+            return True
+        if left is None or right is None:
+            return False
+        return left == right
+
     if left is None or right is None:
         return None
 

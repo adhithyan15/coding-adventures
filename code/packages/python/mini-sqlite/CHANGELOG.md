@@ -1,5 +1,61 @@
 # Changelog
 
+## [1.28.0] - 2026-05-13
+
+### Fixed
+
+- **`IS DISTINCT FROM` / `IS NOT DISTINCT FROM` operators** — SQL:1999 NULL-safe
+  equality comparisons now work end-to-end.  These operators never return NULL:
+  `NULL IS DISTINCT FROM NULL` → `FALSE`, `NULL IS DISTINCT FROM 1` → `TRUE`,
+  `1 IS NOT DISTINCT FROM 1` → `TRUE`, etc.
+
+  Four-layer fix:
+  1. `sql-parser 0.17.0` — grammar extended with two new comparison suffix
+     alternatives; adapter emits `BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, …)`.
+  2. `sql-planner 0.25.0` — two new `BinaryOp` enum values pass through unchanged.
+  3. `sql-codegen 1.20.0` — two new `BinaryOpCode` enum values added; both mapped
+     in `_BINOP_MAP` so the generic `_compile_expr` path handles them.
+  4. `sql-vm 1.19.0` — `apply_binary` handles both opcodes *before* the general
+     `if left is None or right is None: return None` short-circuit, which is
+     critical because these operators must see NULL operands directly.
+  5. `sql-optimizer 0.10.0` — constant folding handles `IS DISTINCT FROM` before
+     the generic NULL propagation guard to avoid incorrectly folding
+     `NULL IS DISTINCT FROM 1` to `NULL`.
+
+- **Aggregate SELECT aliases now resolve in HAVING and ORDER BY** — queries like
+  `SELECT SUM(amount) AS total FROM t HAVING total > 100 ORDER BY total` previously
+  raised `ColumnNotFound: total`.  `sql-planner 0.25.0` introduces
+  `_substitute_aliases` which rewrites alias references in HAVING / ORDER BY
+  expressions to their source aggregate expressions before column resolution.
+
+- **`MAX()` / `MIN()` scalar functions propagate NULL** — `SELECT MAX(NULL, 1)`
+  now returns `NULL`, matching SQLite.  Previously the NULL argument was silently
+  dropped.
+
+- **`ABS()` on non-numeric text returns `0.0`** — `SELECT ABS('hello')` now
+  returns `0.0` to match SQLite's coercion behaviour.  Previously passed the string
+  through unchanged.
+
+- **`HEX(NULL)` returns `''`** — `SELECT HEX(NULL)` now returns an empty string
+  instead of `None`, matching SQLite.
+
+- **`date()` month arithmetic overflow** — adding months that push the day past the
+  last day of the resulting month (e.g. `date('2024-01-31', '+1 month')`) now
+  overflows into the next month (`2024-03-02`) rather than clamping to `2024-02-29`.
+  This matches SQLite's behaviour.
+
+### Tests
+
+- Added `tests/test_tier14_convergence.py` — 33 oracle-grade integration tests
+  comparing mini-sqlite against real `sqlite3` for all six fixed patterns:
+  - `TestIsDistinctFrom` (8 tests)
+  - `TestIsNotDistinctFrom` (8 tests)
+  - `TestAggregateAliasInHavingAndOrderBy` (5 tests)
+  - `TestScalarMaxMinNull` (4 tests)
+  - `TestAbsNonNumeric` (3 tests)
+  - `TestHexNull` (3 tests)
+  - `TestDateMonthOverflow` (2 tests)
+
 ## [1.27.0] - 2026-05-13
 
 ### Fixed

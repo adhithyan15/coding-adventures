@@ -62,6 +62,12 @@ class BinaryOp(Enum):
     DIV = "/"
     MOD = "%"
     CONCAT = "||"  # SQL string concatenation: 'hello' || ' ' || 'world' → 'hello world'
+    # NULL-safe equality operators.  Unlike ``=`` / ``<>``, these never return
+    # NULL: IS DISTINCT FROM returns TRUE when the operands differ *or* one is
+    # NULL while the other is not; IS NOT DISTINCT FROM returns TRUE when they
+    # are equal or both NULL.
+    IS_DISTINCT_FROM = "IS DISTINCT FROM"
+    IS_NOT_DISTINCT_FROM = "IS NOT DISTINCT FROM"
 
 
 class UnaryOp(Enum):

@@ -279,8 +279,10 @@ class TestNumeric:
         assert fn("abs", None) is None
 
     def test_abs_non_numeric_passthrough(self) -> None:
-        # Non-numeric: pass through unchanged.
-        assert fn("abs", "hello") == "hello"
+        # Non-numeric strings: SQLite returns 0.0 (not the original string).
+        # SQLite's ABS() coerces the argument to a number — strings that
+        # contain no numeric prefix coerce to 0.
+        assert fn("abs", "hello") == 0.0
 
     # ROUND --------------------------------------------------------------
     def test_round_no_precision(self) -> None:
@@ -600,7 +602,8 @@ class TestHexBlob:
         assert fn("hex", "AB") == "4142"
 
     def test_hex_null(self) -> None:
-        assert fn("hex", None) is None
+        # SQLite returns empty string for HEX(NULL), not NULL.
+        assert fn("hex", None) == ""
 
     def test_hex_integer(self) -> None:
         result = fn("hex", 255)
@@ -1065,10 +1068,12 @@ class TestScalarMinMax:
     def test_min_strings(self) -> None:
         assert fn("min", "apple", "fig") == "apple"
 
-    def test_max_with_null_returns_non_null(self) -> None:
-        # NULL is "less than everything" so MAX(x, NULL) → x
-        assert fn("max", 1, None) == 1
-        assert fn("max", None, 1) == 1
+    def test_max_with_null_returns_null(self) -> None:
+        # Scalar MAX propagates NULL: any NULL argument → NULL result.
+        # This matches SQLite's multi-argument MAX() semantics, where NULL
+        # infects the result (unlike the aggregate MAX which ignores NULLs).
+        assert fn("max", 1, None) is None
+        assert fn("max", None, 1) is None
 
     def test_min_with_null_returns_null(self) -> None:
         # NULL is "less than everything" so MIN(x, NULL) → NULL
@@ -1212,13 +1217,16 @@ class TestDateTimeFunctions:
     def test_date_plus_months(self) -> None:
         assert fn("date", "2024-02-15", "+1 months") == "2024-03-15"
 
-    def test_date_plus_month_leap_year_clamp(self) -> None:
-        # Jan 31 + 1 month → Feb 29 (2024 is a leap year)
-        assert fn("date", "2024-01-31", "+1 months") == "2024-02-29"
+    def test_date_plus_month_leap_year_overflow(self) -> None:
+        # Jan 31 + 1 month: Feb 31 does not exist. SQLite overflows into the
+        # next month.  2024 is a leap year (Feb has 29 days), so overflow is
+        # 31 - 29 = 2 days, landing on March 2.
+        assert fn("date", "2024-01-31", "+1 months") == "2024-03-02"
 
-    def test_date_plus_month_non_leap_clamp(self) -> None:
-        # Jan 31 + 1 month → Feb 28 (2023 is NOT a leap year)
-        assert fn("date", "2023-01-31", "+1 months") == "2023-02-28"
+    def test_date_plus_month_non_leap_overflow(self) -> None:
+        # Jan 31 + 1 month: Feb 31 does not exist. 2023 is NOT a leap year
+        # (Feb has 28 days), so overflow is 31 - 28 = 3 days → March 3.
+        assert fn("date", "2023-01-31", "+1 months") == "2023-03-03"
 
     def test_date_start_of_month(self) -> None:
         assert fn("date", "2024-03-15", "start of month") == "2024-03-01"

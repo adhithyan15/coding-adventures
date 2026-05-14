@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.20.0] - 2026-05-13
+
+### Added
+
+- **`IS_DISTINCT_FROM` and `IS_NOT_DISTINCT_FROM` IR opcodes** (`ir.py`) — two new
+  `BinaryOpCode` variants implement the SQL:1999 NULL-safe equality operators.
+  Unlike `=` and `<>`, these operators never return NULL: they treat two NULL
+  operands as equal and a NULL vs. non-NULL pair as distinct.
+
+  Truth tables::
+
+      NULL IS DISTINCT FROM NULL         → FALSE  (both null = same)
+      NULL IS DISTINCT FROM 1            → TRUE   (one null, one not)
+      1    IS DISTINCT FROM 2            → TRUE   (different values)
+      1    IS DISTINCT FROM 1            → FALSE  (equal values)
+
+      NULL IS NOT DISTINCT FROM NULL     → TRUE
+      NULL IS NOT DISTINCT FROM 1        → FALSE
+      1    IS NOT DISTINCT FROM 1        → TRUE
+      1    IS NOT DISTINCT FROM 2        → FALSE
+
+- **`IS_DISTINCT_FROM` / `IS_NOT_DISTINCT_FROM` entries in `_BINOP_MAP`**
+  (`compiler.py`) — the planner's `AstBinaryOp.IS_DISTINCT_FROM` and
+  `AstBinaryOp.IS_NOT_DISTINCT_FROM` are mapped to the corresponding VM opcodes,
+  so `_compile_expr` handles them without any special-casing beyond the generic
+  binary-op path.
+
 ## [1.19.0] - 2026-05-13
 
 ### Added

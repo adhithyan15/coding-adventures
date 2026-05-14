@@ -328,22 +328,43 @@ def _glob_fn(pattern: SqlValue, string: SqlValue) -> SqlValue:
 
 
 @register("abs")
-@null_propagating
 def _abs(x: SqlValue) -> SqlValue:
     """Return the absolute value of *x*.
 
-    Returns NULL for NULL input (handled by ``null_propagating``).
-    Returns *x* unchanged for non-numeric types.
+    Returns NULL for NULL input.
+    For integers and floats, returns the standard absolute value.
+    For text or blobs, SQLite attempts to parse a leading numeric portion;
+    if the string doesn't start with a number, the result is 0.0.  This
+    matches real SQLite: ``ABS('text')`` → ``0.0``, ``ABS('-3.5abc')`` →
+    ``3.5``.
 
     Examples::
 
-        ABS(-5)     → 5
-        ABS(-3.14)  → 3.14
-        ABS(NULL)   → NULL
+        ABS(-5)      → 5
+        ABS(-3.14)   → 3.14
+        ABS(NULL)    → NULL
+        ABS('text')  → 0.0      ← differs from Python; matches SQLite
+        ABS('-3abc') → 3.0
     """
+    if x is None:
+        return None
+    if isinstance(x, bool):
+        return abs(int(x))
     if isinstance(x, (int, float)):
         return abs(x)  # type: ignore[arg-type]
-    return x
+    # Text / blob: try to extract a leading numeric value exactly as SQLite does.
+    # SQLite reads as many characters as form a valid number; the rest is ignored.
+    s = x.decode("utf-8", errors="replace") if isinstance(x, (bytes, bytearray)) else str(x)
+    s = s.strip()
+    # Collect leading numeric portion: optional sign, digits, optional dot + digits.
+    import re as _re
+    m = _re.match(r"^[+-]?(\d+\.?\d*|\.\d+)", s)
+    if m:
+        num = float(m.group(0))
+        result = abs(num)
+        # Return int if the result is a whole number (SQLite style).
+        return int(result) if result == int(result) and isinstance(x, str) else result
+    return 0.0
 
 
 @register("round")
@@ -858,7 +879,10 @@ def _hex(x: SqlValue) -> SqlValue:
         HEX(255)           → "00000000000000FF"
     """
     if x is None:
-        return None
+        # SQLite: HEX(NULL) → '' (empty string, not NULL).
+        # This differs from most other functions which propagate NULL, but it
+        # matches the documented SQLite behaviour and real-world expectations.
+        return ""
     if isinstance(x, (bytes, bytearray)):
         return bytes(x).hex().upper()
     if isinstance(x, str):
@@ -1273,16 +1297,22 @@ def _max_scalar(*args: SqlValue) -> SqlValue:
     planner routes to the aggregate opcode instead; this registry entry
     handles the two-or-more-argument scalar form.
 
-    NULL is treated as less than any non-null value (SQLite semantics).
+    NULL propagation: if ANY argument is NULL the result is NULL.  This
+    differs from the aggregate MAX(), which *ignores* NULLs.  SQLite
+    documents this explicitly: "The multi-argument max() works like the
+    SQLite extension" and "if any argument is NULL, the result is NULL."
 
     Examples::
 
         MAX(3, 5)           → 5
         MAX('apple', 'fig') → 'fig'
-        MAX(1, NULL)        → 1
+        MAX(1, NULL)        → NULL
         MAX(NULL, NULL)     → NULL
     """
     if not args:
+        return None
+    # Propagate NULL: any NULL argument → NULL result (scalar semantics).
+    if any(a is None for a in args):
         return None
     result = args[0]
     for a in args[1:]:
@@ -1295,16 +1325,20 @@ def _max_scalar(*args: SqlValue) -> SqlValue:
 def _min_scalar(*args: SqlValue) -> SqlValue:
     """Scalar MIN — return the least of two or more arguments.
 
-    NULL is treated as less than any non-null value, so MIN(x, NULL) → NULL
-    only when all arguments are NULL.
+    NULL propagation: if ANY argument is NULL the result is NULL.  This
+    matches SQLite's scalar MIN() semantics (distinct from aggregate MIN()
+    which ignores NULLs).
 
     Examples::
 
-        MIN(3, 5)    → 3
-        MIN(1, NULL) → NULL   (NULL wins because it's "smallest")
+        MIN(3, 5)       → 3
+        MIN(1, NULL)    → NULL
         MIN(NULL, NULL) → NULL
     """
     if not args:
+        return None
+    # Propagate NULL: any NULL argument → NULL result (scalar semantics).
+    if any(a is None for a in args):
         return None
     result = args[0]
     for a in args[1:]:
@@ -1440,9 +1474,17 @@ def _apply_modifier(dt: datetime, modifier: str) -> datetime | None:
             month = dt.month - 1 + n
             year = dt.year + month // 12
             month = month % 12 + 1
-            # Clamp day to the last valid day of the resulting month.
-            day = min(dt.day, calendar.monthrange(year, month)[1])
-            return dt.replace(year=year, month=month, day=day)
+            # SQLite does NOT clamp when the day overflows the target month —
+            # it lets the date roll into the next month.  E.g.:
+            #   DATE('2024-01-31', '+1 month') → 2024-02-31 → 2024-03-02
+            # We try the original day first; on ValueError we compute the
+            # overflow and add it as extra days from the month's last day.
+            try:
+                return dt.replace(year=year, month=month, day=dt.day)
+            except ValueError:
+                last_day = calendar.monthrange(year, month)[1]
+                overflow = dt.day - last_day
+                return dt.replace(year=year, month=month, day=last_day) + timedelta(days=overflow)
         if unit in ("year", "years"):
             year = dt.year + n
             # Clamp Feb 29 → Feb 28 in non-leap years.

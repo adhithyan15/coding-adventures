@@ -102,6 +102,11 @@ class BinaryOpCode(Enum):
     AND = "AND"
     OR = "OR"
     CONCAT = "CONCAT"
+    # NULL-safe equality — never produce NULL as a result.
+    # IS_DISTINCT_FROM: True when the values differ *or* one is NULL and the other is not.
+    # IS_NOT_DISTINCT_FROM: True when both are equal or both are NULL (i.e., NOT DISTINCT).
+    IS_DISTINCT_FROM = "IS_DISTINCT_FROM"
+    IS_NOT_DISTINCT_FROM = "IS_NOT_DISTINCT_FROM"
 
 
 class UnaryOpCode(Enum):

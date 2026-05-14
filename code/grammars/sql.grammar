@@ -204,7 +204,9 @@ comparison        = additive [ cmp_op additive
                   | "GLOB" additive
                   | "NOT" "GLOB" additive
                   | "IS" "NULL"
-                  | "IS" "NOT" "NULL" ] ;
+                  | "IS" "NOT" "NULL"
+                  | "IS" "DISTINCT" "FROM" additive
+                  | "IS" "NOT" "DISTINCT" "FROM" additive ] ;
 
 # in_expr: a subquery takes priority (starts with SELECT); otherwise a
 # comma-separated value list is used.

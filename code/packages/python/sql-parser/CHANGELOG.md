@@ -2,6 +2,25 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.17.0] - 2026-05-13
+
+### Added
+
+- **`IS DISTINCT FROM` / `IS NOT DISTINCT FROM` comparison syntax** (`_grammar.py`,
+  `sql.grammar`) — the `comparison` grammar rule's optional trailing suffix is
+  extended with two new alternatives:
+
+      | "IS" "DISTINCT" "FROM" additive
+      | "IS" "NOT" "DISTINCT" "FROM" additive
+
+  These appear after the existing `IS NULL` / `IS NOT NULL` alternatives so that
+  the parser greedily matches the longer keyword sequence first.
+
+  The adapter's `_comparison` helper detects the `DISTINCT` keyword child to
+  distinguish these new operators from the existing `IS NULL` / `IS NOT NULL` forms
+  and emits the corresponding `BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, …)` or
+  `BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, …)` plan node.
+
 ## [0.16.0] - 2026-05-13
 
 ### Fixed
