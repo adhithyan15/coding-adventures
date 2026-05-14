@@ -578,10 +578,8 @@ class TestJsonSizeCap:
     """The _JSON_MAX_BYTES guard rejects pathologically large JSON payloads."""
 
     def test_json_oversized_returns_null(self) -> None:
-        # A 1.1 MB string exceeds the cap; json() returns NULL.
-        big = "[" + ",".join(["1"] * 100_000) + "]"  # ~600 KB but well > 1 000 000 chars when padded
+        # A 1.1 MB object string exceeds the cap; json_valid returns 0 (not crash).
         huge = '{"x":"' + "a" * 1_100_000 + '"}'  # 1.1 MB raw
-        # json_valid must return 0 (not crash) for oversized input.
         assert fn("json_valid", huge) == 0
 
     def test_json_valid_oversized_returns_0(self) -> None:
