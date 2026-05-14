@@ -20,8 +20,8 @@ use board_vm_language_core::{
     BuiltWireFrame, LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice,
     LanguageBluetoothEndpoint, LanguageBluetoothEndpointCandidate, LanguageConnectionOption,
     LanguageCoreError, LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice,
-    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageTargetInfo,
-    LanguageWirelessInterface,
+    LanguageI2cBus, LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus,
+    LanguageTargetInfo, LanguageWirelessInterface,
 };
 use lua_bridge::{
     get_str, luaL_Reg, luaL_checkinteger, lua_Integer, lua_State, lua_createtable, lua_getfield,
@@ -454,6 +454,14 @@ unsafe fn push_target(L: *mut lua_State, target: &LanguageTargetInfo) {
     push_digital_pins(L, &target.digital_pins);
     lua_setfield(L, -2, key.as_ptr());
 
+    let key = CString::new("i2c_buses").unwrap();
+    push_i2c_buses(L, &target.i2c_buses);
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("spi_buses").unwrap();
+    push_spi_buses(L, &target.spi_buses);
+    lua_setfield(L, -2, key.as_ptr());
+
     let key = CString::new("onboard_led").unwrap();
     push_onboard_led(L, target.onboard_led);
     lua_setfield(L, -2, key.as_ptr());
@@ -491,6 +499,35 @@ unsafe fn push_digital_pins(L: *mut lua_State, pins: &[LanguageDigitalPin]) {
         set_bool(L, "supports_interrupt", pin.supports_interrupt);
         set_bool(L, "boot_strap", pin.boot_strap);
         set_str(L, "notes", &pin.notes);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe fn push_i2c_buses(L: *mut lua_State, buses: &[LanguageI2cBus]) {
+    lua_createtable(L, buses.len() as c_int, 0);
+    for (index, bus) in buses.iter().enumerate() {
+        lua_bridge::lua_newtable(L);
+        set_int(L, "bus", bus.bus as u64);
+        set_str(L, "name", &bus.name);
+        set_int(L, "sda_pin", bus.sda_pin as u64);
+        set_int(L, "scl_pin", bus.scl_pin as u64);
+        set_bool(L, "qwiic", bus.qwiic);
+        set_str(L, "notes", &bus.notes);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe fn push_spi_buses(L: *mut lua_State, buses: &[LanguageSpiBus]) {
+    lua_createtable(L, buses.len() as c_int, 0);
+    for (index, bus) in buses.iter().enumerate() {
+        lua_bridge::lua_newtable(L);
+        set_int(L, "bus", bus.bus as u64);
+        set_str(L, "name", &bus.name);
+        set_int(L, "copi_pin", bus.copi_pin as u64);
+        set_int(L, "cipo_pin", bus.cipo_pin as u64);
+        set_int(L, "sck_pin", bus.sck_pin as u64);
+        set_int(L, "default_cs_pin", bus.default_cs_pin as u64);
+        set_str(L, "notes", &bus.notes);
         lua_rawseti(L, -2, (index + 1) as lua_Integer);
     }
 }

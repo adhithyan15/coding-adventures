@@ -213,6 +213,10 @@ module CodingAdventures
         native_session.i2c_open_module(bus, max_stack)
       end
 
+      def spi_open_module(bus:, max_stack: 2)
+        native_session.spi_open_module(bus, max_stack)
+      end
+
       def i2c_write_u8_module(address:, byte:, max_stack: 4)
         native_session.i2c_write_u8_module(address, byte, max_stack)
       end
@@ -321,6 +325,17 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: i2c_open_module(bus: bus, max_stack: max_stack)
+        )
+      end
+
+      def upload_spi_open(
+        program_id: @program_id,
+        bus:,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: spi_open_module(bus: bus, max_stack: max_stack)
         )
       end
 
@@ -734,6 +749,30 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def spi_open(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        bus:,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_spi_open(program_id: program_id, bus: bus, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def i2c_write_u8(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1055,6 +1094,8 @@ module CodingAdventures
           upload_dac_write_u12(**dac_write_u12_command_options(words, command, options, require_budget: false))
         when "upload-i2c-open", "upload-i2c.open"
           upload_i2c_open(**i2c_open_command_options(words, command, options, require_budget: false))
+        when "upload-spi-open", "upload-spi.open"
+          upload_spi_open(**spi_open_command_options(words, command, options, require_budget: false))
         when "upload-i2c-write-u8", "upload-i2c.write_u8", "upload-i2c-write"
           upload_i2c_write_u8(**i2c_write_u8_command_options(words, command, options, require_budget: false))
         when "upload-i2c-write-bytes", "upload-i2c.write"
@@ -1103,6 +1144,8 @@ module CodingAdventures
           dac_write_u12(**dac_write_u12_command_options(words, command, options))
         when "i2c-open", "i2c.open"
           i2c_open(**i2c_open_command_options(words, command, options))
+        when "spi-open", "spi.open"
+          spi_open(**spi_open_command_options(words, command, options))
         when "i2c-write-u8", "i2c.write_u8", "i2c-write"
           i2c_write_u8(**i2c_write_u8_command_options(words, command, options))
         when "i2c-write-bytes", "i2c.write"
@@ -1358,6 +1401,8 @@ module CodingAdventures
 
         merged
       end
+
+      alias spi_open_command_options i2c_open_command_options
 
       def i2c_write_u8_command_options(words, command, options, require_budget: true)
         merged = options.dup

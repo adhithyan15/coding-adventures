@@ -2,7 +2,7 @@ use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_ADC_READ,
     CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN,
     CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
     FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN,
     MODULE_MAGIC, MODULE_VERSION,
 };
@@ -55,6 +55,8 @@ pub const I2C_READ_MODULE_LEN: usize = 19;
 pub const I2C_TRANSFER_CODE_LEN: usize = 13;
 pub const I2C_TRANSFER_MAX_MODULE_LEN: usize =
     8 + 1 + I2C_TRANSFER_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const SPI_OPEN_CODE_LEN: usize = 6;
+pub const SPI_OPEN_MODULE_LEN: usize = 16;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -198,6 +200,12 @@ pub struct I2cOpenProgram {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiOpenProgram {
+    pub bus: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct I2cWriteU8Program {
     pub address: u16,
     pub byte: u8,
@@ -233,6 +241,12 @@ pub struct I2cTransferProgram<'a> {
 }
 
 impl I2cOpenProgram {
+    pub const fn new(bus: u8) -> Self {
+        Self { bus, max_stack: 2 }
+    }
+}
+
+impl SpiOpenProgram {
     pub const fn new(bus: u8) -> Self {
         Self { bus, max_stack: 2 }
     }
@@ -1278,6 +1292,40 @@ pub fn write_i2c_open_module(program: I2cOpenProgram, out: &mut [u8]) -> Result<
     Ok(offset)
 }
 
+pub fn write_spi_open_code(program: SpiOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < SPI_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.bus)?;
+    write_call_u8(out, &mut offset, CAP_SPI_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_spi_open_module(program: SpiOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < SPI_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; SPI_OPEN_CODE_LEN];
+    let code_len = write_spi_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_spi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_i2c_write_u8_code(
     program: I2cWriteU8Program,
     out: &mut [u8],
@@ -1690,6 +1738,7 @@ mod tests {
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
         CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8,
         CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
+        CAP_SPI_OPEN,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -1742,6 +1791,10 @@ mod tests {
     ];
     const I2C_OPEN_BUS0_MODULE_HEX: [u8; I2C_OPEN_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x23, 0x20, 0x50,
+        0x00,
+    ];
+    const SPI_OPEN_BUS0_MODULE_HEX: [u8; SPI_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x29, 0x20, 0x50,
         0x00,
     ];
     const I2C_WRITE_U8_3C_A5_MODULE_HEX: [u8; I2C_WRITE_U8_MODULE_LEN] = [
@@ -1965,6 +2018,20 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_I2C_OPEN]);
+    }
+
+    #[test]
+    fn builds_spi_open_module() {
+        let mut module = [0u8; SPI_OPEN_MODULE_LEN];
+        let len = write_spi_open_module(SpiOpenProgram::new(0), &mut module).unwrap();
+        assert_eq!(len, SPI_OPEN_MODULE_LEN);
+        assert_eq!(module, SPI_OPEN_BUS0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_OPEN]);
     }
 
     #[test]

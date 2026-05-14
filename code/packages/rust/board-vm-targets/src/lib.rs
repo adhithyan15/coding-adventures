@@ -45,6 +45,17 @@ pub struct I2cBusInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiBusInfo {
+    pub bus: u8,
+    pub name: &'static str,
+    pub copi_pin: u8,
+    pub cipo_pin: u8,
+    pub sck_pin: u8,
+    pub default_cs_pin: u8,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DigitalPinInfo {
     pub pin: u8,
     pub label: &'static str,
@@ -97,6 +108,7 @@ pub struct BoardTargetInfo {
     pub digital_pin_count: usize,
     pub digital_pins: &'static [DigitalPinInfo],
     pub i2c_buses: &'static [I2cBusInfo],
+    pub spi_buses: &'static [SpiBusInfo],
     pub wireless: &'static [WirelessInterfaceInfo],
     pub capabilities: &'static [&'static str],
 }
@@ -112,7 +124,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 17] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 18] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -129,10 +141,11 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 17] = [
     "i2c.write",
     "i2c.read",
     "i2c.transfer",
+    "spi.open",
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 21] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 22] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -152,6 +165,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 21] = [
     "i2c.write",
     "i2c.read",
     "i2c.transfer",
+    "spi.open",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -254,6 +268,8 @@ pub const UNO_R4_MINIMA_I2C_BUSES: [I2cBusInfo; 1] =
     map_uno_r4_i2c_buses(board_vm_uno_r4::UNO_R4_MINIMA_I2C_BUSES);
 pub const UNO_R4_WIFI_I2C_BUSES: [I2cBusInfo; 2] =
     map_uno_r4_i2c_buses(board_vm_uno_r4::UNO_R4_WIFI_I2C_BUSES);
+pub const UNO_R4_SPI_BUSES: [SpiBusInfo; 1] =
+    map_uno_r4_spi_buses(board_vm_uno_r4::UNO_R4_SPI_BUSES);
 
 pub const ESP32_DIGITAL_PINS: [DigitalPinInfo; 30] =
     map_esp32_digital_pins(board_vm_esp32::ESP32_DEVKIT_V1_DIGITAL_PINS);
@@ -311,6 +327,35 @@ const fn map_uno_r4_i2c_buses<const N: usize>(
             sda_pin: bus.sda_pin,
             scl_pin: bus.scl_pin,
             qwiic: bus.qwiic,
+            notes: bus.notes,
+        };
+        index += 1;
+    }
+    buses
+}
+
+const fn map_uno_r4_spi_buses<const N: usize>(
+    source: [board_vm_uno_r4::SpiBusDescriptor; N],
+) -> [SpiBusInfo; N] {
+    let mut buses = [SpiBusInfo {
+        bus: 0,
+        name: "",
+        copi_pin: 0,
+        cipo_pin: 0,
+        sck_pin: 0,
+        default_cs_pin: 0,
+        notes: "",
+    }; N];
+    let mut index = 0;
+    while index < N {
+        let bus = source[index];
+        buses[index] = SpiBusInfo {
+            bus: bus.bus,
+            name: bus.name,
+            copi_pin: bus.copi_pin,
+            cipo_pin: bus.cipo_pin,
+            sck_pin: bus.sck_pin,
+            default_cs_pin: bus.default_cs_pin,
             notes: bus.notes,
         };
         index += 1;
@@ -396,6 +441,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pin_count: UNO_R4_DIGITAL_PINS.len(),
         digital_pins: &UNO_R4_DIGITAL_PINS,
         i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
+        spi_buses: &UNO_R4_SPI_BUSES,
         wireless: &[],
         capabilities: &UNO_R4_MINIMA_CAPABILITIES,
     },
@@ -420,6 +466,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pin_count: UNO_R4_DIGITAL_PINS.len(),
         digital_pins: &UNO_R4_DIGITAL_PINS,
         i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
+        spi_buses: &UNO_R4_SPI_BUSES,
         wireless: &UNO_R4_WIFI_WIRELESS,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
@@ -441,6 +488,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pin_count: ESP32_DIGITAL_PINS.len(),
         digital_pins: &ESP32_DIGITAL_PINS,
         i2c_buses: &[],
+        spi_buses: &[],
         wireless: &ESP32_WIRELESS,
         capabilities: &ESP32_CAPABILITIES,
     },
@@ -465,6 +513,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pin_count: PICO_DIGITAL_PINS.len(),
         digital_pins: &PICO_DIGITAL_PINS,
         i2c_buses: &[],
+        spi_buses: &[],
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
     },
@@ -489,6 +538,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pin_count: PICO_DIGITAL_PINS.len(),
         digital_pins: &PICO_DIGITAL_PINS,
         i2c_buses: &[],
+        spi_buses: &[],
         wireless: &PICO_W_WIRELESS,
         capabilities: &PICO_W_CAPABILITIES,
     },
@@ -568,6 +618,19 @@ mod tests {
     }
 
     #[test]
+    fn registry_exposes_spi_bus_metadata() {
+        let uno = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(uno.spi_buses.len(), 1);
+        assert_eq!(uno.spi_buses[0].name, "SPI");
+        assert_eq!(uno.spi_buses[0].copi_pin, 11);
+        assert_eq!(uno.spi_buses[0].cipo_pin, 12);
+        assert_eq!(uno.spi_buses[0].sck_pin, 13);
+        assert_eq!(uno.spi_buses[0].default_cs_pin, 10);
+
+        assert!(find_target("esp32-devkit-v1").unwrap().spi_buses.is_empty());
+    }
+
+    #[test]
     fn registry_exposes_digital_pin_capability_metadata() {
         let uno = find_target("arduino-uno-r4-wifi").unwrap();
         assert_eq!(uno.digital_pin_count, uno.digital_pins.len());
@@ -622,6 +685,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"i2c.write"));
         assert!(uno.capabilities.contains(&"i2c.read"));
         assert!(uno.capabilities.contains(&"i2c.transfer"));
+        assert!(uno.capabilities.contains(&"spi.open"));
     }
 
     #[test]

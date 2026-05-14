@@ -4,7 +4,7 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
     CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ,
     CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME,
-    CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, MAX_BYTE_BUFFER_LEN,
+    CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -154,6 +154,10 @@ pub trait BoardHal {
         Err(HalError::UnsupportedMode)
     }
 
+    fn spi_open(&mut self, _bus: u16) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -233,6 +237,7 @@ enum HandleKind {
     Empty,
     Gpio,
     I2c,
+    Spi,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -646,6 +651,15 @@ where
                     })?;
                 self.push(Value::Bytes(bytes), ip)
             }
+            CAP_SPI_OPEN => {
+                let bus = self.pop_u16(ip)?;
+                let token = self.hal.spi_open(bus).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })?;
+                let handle = self.alloc_handle(HandleKind::Spi, token, ip)?;
+                self.push(Value::Handle(handle), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -905,6 +919,7 @@ mod tests {
         I2cReadU8(u32, u16),
         I2cRead(u32, u16, u8),
         I2cTransfer(u32, u16, ByteBuffer, u8),
+        SpiOpen(u16),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -929,6 +944,7 @@ mod tests {
                 .with_adc()
                 .with_dac()
                 .with_i2c()
+                .with_spi()
                 .with_led_matrix()
         }
 
@@ -1020,6 +1036,11 @@ mod tests {
             ));
             ByteBuffer::from_slice(&[0x11, 0x22, 0x33][..read_len as usize])
                 .map_err(|_| HalError::UnsupportedMode)
+        }
+
+        fn spi_open(&mut self, bus: u16) -> Result<u32, HalError> {
+            self.events.push(Event::SpiOpen(bus));
+            Ok(0x2_2000 | bus as u32)
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -1205,6 +1226,25 @@ mod tests {
         );
         assert_eq!(report.open_handles, 1);
         assert_eq!(runtime.hal().events, vec![Event::I2cOpen(0)]);
+    }
+
+    #[test]
+    fn spi_open_dispatches_bus_and_returns_handle() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let code = [0x12, 0, 0x40, CAP_SPI_OPEN as u8, 0x50];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            report.return_value,
+            Value::Handle(Handle {
+                index: 0,
+                generation: 1
+            })
+        );
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(runtime.hal().events, vec![Event::SpiOpen(0)]);
     }
 
     #[test]

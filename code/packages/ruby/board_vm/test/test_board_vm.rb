@@ -44,6 +44,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "i2c.write"
         assert_includes uno_r4_wifi["capabilities"], "i2c.read"
         assert_includes uno_r4_wifi["capabilities"], "i2c.transfer"
+        assert_includes uno_r4_wifi["capabilities"], "spi.open"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
@@ -53,6 +54,9 @@ module CodingAdventures
           {"bus" => 0, "name" => "Wire", "sda_pin" => 18, "scl_pin" => 19, "qwiic" => false, "notes" => "Header I2C bus on A4/SDA and A5/SCL"},
           {"bus" => 1, "name" => "Wire1", "sda_pin" => 27, "scl_pin" => 26, "qwiic" => true, "notes" => "UNO R4 WiFi Qwiic I2C bus"}
         ], uno_r4_wifi["i2c_buses"]
+        assert_equal [
+          {"bus" => 0, "name" => "SPI", "copi_pin" => 11, "cipo_pin" => 12, "sck_pin" => 13, "default_cs_pin" => 10, "notes" => "Header SPI bus on D11/COPI, D12/CIPO, and D13/SCK with D10 as the conventional chip select"}
+        ], uno_r4_wifi["spi_buses"]
         assert_equal uno_r4_wifi["digital_pin_count"], uno_r4_wifi["digital_pins"].length
         d3 = uno_r4_wifi["digital_pins"].find { |pin| pin["pin"] == 3 }
         assert_equal "D3", d3["label"]
@@ -1302,6 +1306,28 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_spi_open_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.spi.open(bus: 0, program_id: 10, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+      end
+
       def test_i2c_write_u8_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -1842,6 +1868,26 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_spi_open
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("spi-open 0 24", program_id: 9)
+          upload = board.session.run_command("upload-spi-open 0", program_id: 10)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            result.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload.results.map(&:command)
+          assert_equal result.frames + upload.frames, transport.frames
+        end
+      end
+
       def test_session_run_command_accepts_repl_style_i2c_write_u8
         transport = FakeWriteTransport.new
 
@@ -2094,6 +2140,10 @@ module CodingAdventures
         i2c_module_bytes = session.i2c_open_module(0, 2)
         assert_instance_of String, i2c_module_bytes
         assert_operator i2c_module_bytes.bytesize, :>, 0
+
+        spi_module_bytes = session.spi_open_module(0, 2)
+        assert_instance_of String, spi_module_bytes
+        assert_operator spi_module_bytes.bytesize, :>, 0
 
         i2c_write_module_bytes = session.i2c_write_u8_module(0x3c, 0xa5, 4)
         assert_instance_of String, i2c_write_module_bytes

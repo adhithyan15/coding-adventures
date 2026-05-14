@@ -212,6 +212,7 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x26` | `i2c.write` | `handle`, `address: u16/u8`, `bytes` | `unit` |
 | `0x27` | `i2c.read` | `handle`, `address: u16/u8`, `length: u8` | `bytes` |
 | `0x28` | `i2c.transfer` | `handle`, `address: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
+| `0x29` | `spi.open` | `bus: u16/u8` | `handle` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -225,6 +226,14 @@ using the same handle model. `i2c.read` reads a bounded byte buffer of up to the
 VM byte-buffer limit from the same handle/address pair. `i2c.transfer` performs
 a bounded write-then-read transaction, preserving the bus handle and returning
 the bounded read bytes.
+
+### SPI
+
+`spi.open` opens a board-advertised SPI controller and returns a persistent bus
+handle. Target metadata owns the controller name and header pins such as COPI,
+CIPO, SCK, and the conventional chip-select pin; language frontends pass only
+the bus id. Follow-on SPI transfer capabilities should use the returned handle
+instead of repeating pin or bus metadata in each command.
 
 ### LED Matrix
 

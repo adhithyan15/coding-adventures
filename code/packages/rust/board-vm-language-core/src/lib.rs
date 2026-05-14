@@ -41,17 +41,18 @@ use board_vm_host::{
     write_gpio_write_module, write_i2c_open_module, write_i2c_read_module,
     write_i2c_read_u8_module, write_i2c_transfer_module, write_i2c_write_module,
     write_i2c_write_u8_module, write_led_matrix_frame_module, write_module, write_pwm_write_module,
-    write_time_now_module, write_time_sleep_ms_module, AdcReadProgram, BlinkProgram,
-    DacWriteU12Program, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
-    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, I2cOpenProgram,
-    I2cReadProgram, I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
-    LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
-    DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN,
-    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
-    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN, I2C_READ_MODULE_LEN,
-    I2C_READ_U8_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
-    PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
+    write_spi_open_module, write_time_now_module, write_time_sleep_ms_module, AdcReadProgram,
+    BlinkProgram, DacWriteU12Program, GpioHandleCloseProgram, GpioHandleReadProgram,
+    GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError,
+    HostSession, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
+    I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram,
+    SpiOpenProgram, TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
+    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
+    I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN,
+    LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -62,7 +63,7 @@ use board_vm_protocol::{
 };
 use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
-    I2cBusInfo as TargetI2cBus, OnboardLed as TargetOnboardLed,
+    I2cBusInfo as TargetI2cBus, OnboardLed as TargetOnboardLed, SpiBusInfo as TargetSpiBus,
     WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
 };
 
@@ -390,6 +391,7 @@ pub struct LanguageTargetInfo {
     pub digital_pin_count: usize,
     pub digital_pins: Vec<LanguageDigitalPin>,
     pub i2c_buses: Vec<LanguageI2cBus>,
+    pub spi_buses: Vec<LanguageSpiBus>,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
@@ -402,6 +404,17 @@ pub struct LanguageI2cBus {
     pub sda_pin: u8,
     pub scl_pin: u8,
     pub qwiic: bool,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageSpiBus {
+    pub bus: u8,
+    pub name: String,
+    pub copi_pin: u8,
+    pub cipo_pin: u8,
+    pub sck_pin: u8,
+    pub default_cs_pin: u8,
     pub notes: String,
 }
 
@@ -1079,6 +1092,7 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .map(language_digital_pin)
             .collect(),
         i2c_buses: target.i2c_buses.iter().map(language_i2c_bus).collect(),
+        spi_buses: target.spi_buses.iter().map(language_spi_bus).collect(),
         wireless: target
             .wireless
             .iter()
@@ -1118,6 +1132,18 @@ fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
         sda_pin: bus.sda_pin,
         scl_pin: bus.scl_pin,
         qwiic: bus.qwiic,
+        notes: bus.notes.to_owned(),
+    }
+}
+
+fn language_spi_bus(bus: &TargetSpiBus) -> LanguageSpiBus {
+    LanguageSpiBus {
+        bus: bus.bus,
+        name: bus.name.to_owned(),
+        copi_pin: bus.copi_pin,
+        cipo_pin: bus.cipo_pin,
+        sck_pin: bus.sck_pin,
+        default_cs_pin: bus.default_cs_pin,
         notes: bus.notes.to_owned(),
     }
 }
@@ -1637,6 +1663,13 @@ pub fn build_i2c_open_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_i2c_open_module(program, out)?)
+}
+
+pub fn build_spi_open_module(
+    program: SpiOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_spi_open_module(program, out)?)
 }
 
 pub fn build_i2c_write_u8_module(
@@ -2398,6 +2431,23 @@ pub unsafe extern "C" fn board_vm_language_i2c_open_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_spi_open_module(
+    bus: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_spi_open_module(SpiOpenProgram { bus, max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_i2c_write_u8_module(
     address: u16,
     byte: u8,
@@ -2846,6 +2896,11 @@ pub extern "C" fn board_vm_language_i2c_open_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_spi_open_module_len() -> u64 {
+    SPI_OPEN_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_i2c_write_u8_module_len() -> u64 {
     I2C_WRITE_U8_MODULE_LEN as u64
 }
@@ -3110,6 +3165,12 @@ mod tests {
         assert_eq!(uno.i2c_buses[0].scl_pin, 19);
         assert_eq!(uno.i2c_buses[1].name, "Wire1");
         assert!(uno.i2c_buses[1].qwiic);
+        assert_eq!(uno.spi_buses.len(), 1);
+        assert_eq!(uno.spi_buses[0].name, "SPI");
+        assert_eq!(uno.spi_buses[0].copi_pin, 11);
+        assert_eq!(uno.spi_buses[0].cipo_pin, 12);
+        assert_eq!(uno.spi_buses[0].sck_pin, 13);
+        assert_eq!(uno.spi_buses[0].default_cs_pin, 10);
         assert!(uno.capabilities.contains(&"pwm.write".to_owned()));
         assert!(uno.capabilities.contains(&"adc.read".to_owned()));
         assert!(uno.capabilities.contains(&"dac.write_u12".to_owned()));
@@ -3119,6 +3180,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"i2c.write".to_owned()));
         assert!(uno.capabilities.contains(&"i2c.read".to_owned()));
         assert!(uno.capabilities.contains(&"i2c.transfer".to_owned()));
+        assert!(uno.capabilities.contains(&"spi.open".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -3935,6 +3997,18 @@ mod tests {
         };
         assert_eq!(i2c_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(i2c_status.len, I2C_OPEN_MODULE_LEN as u64);
+
+        let mut spi_module = [0u8; SPI_OPEN_MODULE_LEN];
+        let spi_status = unsafe {
+            board_vm_language_spi_open_module(
+                0,
+                2,
+                spi_module.as_mut_ptr(),
+                spi_module.len() as u64,
+            )
+        };
+        assert_eq!(spi_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(spi_status.len, SPI_OPEN_MODULE_LEN as u64);
 
         let mut i2c_write_module = [0u8; I2C_WRITE_U8_MODULE_LEN];
         let i2c_write_status = unsafe {
