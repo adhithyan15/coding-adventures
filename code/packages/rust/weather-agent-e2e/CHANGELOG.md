@@ -15,5 +15,5 @@ All notable changes to this package will be documented in this file.
 - Added an end-to-end sandbox-plan proof that lowers the Weather Agent
   capability manifest into OS-specific defense-in-depth primitives for Linux,
   macOS, Windows, FreeBSD, OpenBSD, and the portable host broker.
-- Added manifest-derived HTTP domain enforcement so the live Weather.gov client
-  refuses any domain that is not declared in `required_capabilities.json`.
+- Added a generated operation-side HTTP client so live Weather.gov operations
+  refuse any domain that is not declared in `required_capabilities.json`.

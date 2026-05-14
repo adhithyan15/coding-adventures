@@ -5,3 +5,5 @@ edition = "2021"
 description = "Rust operation envelope primitives for generated capability cages"
 
 [dependencies]
+capability-cage = { path = "../capability-cage" }
+url-parser = { path = "../url-parser" }

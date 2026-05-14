@@ -1,0 +1,9 @@
+[package]
+name = "required-capabilities-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compile required_capabilities.json into Rust operation boundary modules"
+
+[dependencies]
+capability-cage = { path = "../capability-cage" }
+coding-adventures-json-value = { path = "../json-value" }

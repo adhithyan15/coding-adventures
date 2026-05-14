@@ -44,6 +44,7 @@ use http_core::BodyKind;
 use memory_store::{
     MemoryClass, MemoryInventorySummary, MemoryListOptions, MemoryRecord, MemoryStore,
 };
+use operation_primitives::{OperationError, OperationHttpClientError, OperationHttpRequest};
 use os_job_core::{
     BackendKind, ConcurrencyPolicy, DateTimeParts, JobAction, JobSpec, JobTrigger, OutputPolicy,
     RetryPolicy,
@@ -59,6 +60,10 @@ use skill_store::{
 use storage_core::{InMemoryStorageBackend, StorageError};
 use tls_platform::TlsConfig;
 
+mod generated_operations;
+
+use generated_operations::GeneratedOperationHttpClient;
+
 const AGENT_ID: &str = "umbrella_today_agent";
 const SESSION_ID: &str = "umbrella_today_session";
 const JOB_ID: &str = "umbrella_today_job";
@@ -67,7 +72,6 @@ const FETCH_TOOL_ID: &str = "weather.fetch_current";
 const CLASSIFY_TOOL_ID: &str = "weather.classify_umbrella";
 const WRITE_TOOL_ID: &str = "file.write_text";
 const WEATHER_API_DOMAIN: &str = "api.weather.gov";
-const WEATHER_API_PORT: u16 = 443;
 
 pub type UmbrellaResult<T> = Result<T, UmbrellaAgentError>;
 
@@ -146,8 +150,14 @@ impl From<capability_cage::ManifestError> for UmbrellaAgentError {
     }
 }
 
-impl From<capability_cage::CapabilityViolationError> for UmbrellaAgentError {
-    fn from(value: capability_cage::CapabilityViolationError) -> Self {
+impl From<OperationError> for UmbrellaAgentError {
+    fn from(value: OperationError) -> Self {
+        Self::new(value.to_string())
+    }
+}
+
+impl From<OperationHttpClientError> for UmbrellaAgentError {
+    fn from(value: OperationHttpClientError) -> Self {
         Self::new(value.to_string())
     }
 }
@@ -252,7 +262,7 @@ impl WeatherFetchSummary {
     fn live(
         points_status: u16,
         forecast: &WeatherSnapshot,
-        domain_policy: &DeclaredHttpDomainPolicy,
+        http_client: &GeneratedOperationHttpClient,
     ) -> Self {
         Self {
             source_kind: WeatherFetchSourceKind::LiveHttps,
@@ -262,210 +272,8 @@ impl WeatherFetchSummary {
             endpoint_count: 2,
             forecast_endpoint: forecast.endpoint_url.clone(),
             http_domain_policy_enforced: true,
-            declared_http_domains: domain_policy.declared_domains().to_vec(),
+            declared_http_domains: http_client.declared_domains().to_vec(),
         }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct DeclaredHttpDomainPolicy {
-    manifest: Manifest,
-    declared_domains: Vec<String>,
-}
-
-impl DeclaredHttpDomainPolicy {
-    fn from_required_capabilities_json(manifest_json: &str) -> UmbrellaResult<Self> {
-        let manifest = Manifest::load_from_str(manifest_json)?;
-        let mut declared_domains = Vec::new();
-
-        for capability in manifest.capabilities() {
-            if capability.category != CageCategory::Net {
-                continue;
-            }
-            match capability.action {
-                CageAction::Dns => {
-                    let domain = normalize_exact_domain(&capability.target)?;
-                    push_unique(&mut declared_domains, domain);
-                }
-                CageAction::Connect => {
-                    let endpoint =
-                        DeclaredHttpEndpoint::from_capability_target(&capability.target)?;
-                    push_unique(&mut declared_domains, endpoint.host);
-                }
-                _ => {}
-            }
-        }
-
-        if declared_domains.is_empty() {
-            return Err(UmbrellaAgentError::new(
-                "HTTP domain policy found no net:dns or net:connect entries in required_capabilities.json",
-            ));
-        }
-
-        Ok(Self {
-            manifest,
-            declared_domains,
-        })
-    }
-
-    fn declared_domains(&self) -> &[String] {
-        &self.declared_domains
-    }
-
-    fn enforce_https_url(&self, url: &str) -> UmbrellaResult<DeclaredHttpRequest> {
-        let request = DeclaredHttpRequest::parse(url)?;
-        self.manifest
-            .check(CageCategory::Net, CageAction::Dns, &request.host)
-            .map_err(UmbrellaAgentError::from)?;
-        self.manifest
-            .check(CageCategory::Net, CageAction::Connect, &request.authority)
-            .map_err(UmbrellaAgentError::from)?;
-        Ok(request)
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct DeclaredHttpEndpoint {
-    host: String,
-    port: u16,
-}
-
-impl DeclaredHttpEndpoint {
-    fn from_capability_target(target: &str) -> UmbrellaResult<Self> {
-        let (host, port_text) = target.rsplit_once(':').ok_or_else(|| {
-            UmbrellaAgentError::new(format!(
-                "HTTP connect capability target must include host:port, got {target}"
-            ))
-        })?;
-        let host = normalize_exact_domain(host)?;
-        let port = port_text.parse::<u16>().map_err(|error| {
-            UmbrellaAgentError::new(format!(
-                "HTTP connect capability target had invalid port '{port_text}': {error}"
-            ))
-        })?;
-        if port == 0 {
-            return Err(UmbrellaAgentError::new(
-                "HTTP connect capability target used invalid port 0",
-            ));
-        }
-        Ok(Self { host, port })
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct DeclaredHttpRequest {
-    host: String,
-    port: u16,
-    authority: String,
-    path_and_query: String,
-}
-
-impl DeclaredHttpRequest {
-    fn parse(url: &str) -> UmbrellaResult<Self> {
-        let rest = url.strip_prefix("https://").ok_or_else(|| {
-            UmbrellaAgentError::new(format!(
-                "HTTP client only permits HTTPS URLs declared in required_capabilities.json, got {url}"
-            ))
-        })?;
-        let path_start = rest
-            .char_indices()
-            .find_map(|(index, ch)| matches!(ch, '/' | '?' | '#').then_some(index));
-        let (authority, path_and_query) = match path_start {
-            Some(index) => {
-                let suffix = &rest[index..];
-                let path = if suffix.starts_with('?') {
-                    format!("/{suffix}")
-                } else {
-                    suffix.to_string()
-                };
-                (&rest[..index], path)
-            }
-            None => (rest, "/".to_string()),
-        };
-        if authority.is_empty() {
-            return Err(UmbrellaAgentError::new(format!(
-                "HTTPS URL has no authority: {url}"
-            )));
-        }
-        if authority.contains('@') {
-            return Err(UmbrellaAgentError::new(format!(
-                "HTTPS URL userinfo is not allowed by the declared-domain policy: {url}"
-            )));
-        }
-        let endpoint = parse_https_authority(authority)?;
-        let path_and_query = if path_and_query.is_empty() {
-            "/".to_string()
-        } else {
-            path_and_query
-        };
-        if path_and_query.contains('#') {
-            return Err(UmbrellaAgentError::new(format!(
-                "HTTPS URL fragments are not sent over HTTP and are not allowed: {url}"
-            )));
-        }
-        Ok(Self {
-            authority: format!("{}:{}", endpoint.host, endpoint.port),
-            host: endpoint.host,
-            port: endpoint.port,
-            path_and_query,
-        })
-    }
-}
-
-fn parse_https_authority(authority: &str) -> UmbrellaResult<DeclaredHttpEndpoint> {
-    if authority.starts_with('[') || authority.contains(']') {
-        return Err(UmbrellaAgentError::new(format!(
-            "HTTP declared-domain policy only accepts DNS names, got {authority}"
-        )));
-    }
-    let (host, port) = match authority.rsplit_once(':') {
-        Some((host, port_text)) => {
-            let port = port_text.parse::<u16>().map_err(|error| {
-                UmbrellaAgentError::new(format!(
-                    "HTTPS URL authority had invalid port '{port_text}': {error}"
-                ))
-            })?;
-            (host, port)
-        }
-        None => (authority, WEATHER_API_PORT),
-    };
-    if port == 0 {
-        return Err(UmbrellaAgentError::new(format!(
-            "HTTPS URL authority used invalid port {port}"
-        )));
-    }
-    Ok(DeclaredHttpEndpoint {
-        host: normalize_exact_domain(host)?,
-        port,
-    })
-}
-
-fn normalize_exact_domain(domain: &str) -> UmbrellaResult<String> {
-    let normalized = domain.trim().trim_end_matches('.').to_ascii_lowercase();
-    if normalized.is_empty() {
-        return Err(UmbrellaAgentError::new(
-            "HTTP domain capability target must not be empty",
-        ));
-    }
-    if normalized.contains('*') {
-        return Err(UmbrellaAgentError::new(format!(
-            "HTTP domain policy requires exact domains; wildcard target '{domain}' is not allowed"
-        )));
-    }
-    if normalized
-        .chars()
-        .any(|ch| ch.is_ascii_whitespace() || matches!(ch, '/' | '\\' | ':' | '@' | '?' | '#'))
-    {
-        return Err(UmbrellaAgentError::new(format!(
-            "HTTP domain capability target is not a DNS name: {domain}"
-        )));
-    }
-    Ok(normalized)
-}
-
-fn push_unique(values: &mut Vec<String>, value: String) {
-    if !values.iter().any(|existing| existing == &value) {
-        values.push(value);
     }
 }
 
@@ -866,13 +674,13 @@ struct UmbrellaPipeline {
 impl UmbrellaPipeline {
     fn new(config: UmbrellaAgentConfig) -> UmbrellaResult<Self> {
         let mut tool_runtime = InMemoryToolRuntime::new();
-        let http_domain_policy = umbrella_agent_http_domain_policy(&config.output_path)?;
+        let http_client = generated_operations::generated_http_client()?;
         register_weather_fetch_tool(
             &mut tool_runtime,
             config.weather_source.clone(),
             config.fetched_at_ms,
             config.fetched_at_iso.clone(),
-            http_domain_policy,
+            http_client,
         )
         .map_err(UmbrellaAgentError::from)?;
         register_weather_classifier_tool(&mut tool_runtime)?;
@@ -996,9 +804,8 @@ impl UmbrellaPipeline {
         let fetch_summary = match &self.config.weather_source {
             WeatherSource::Fixture(_) => WeatherFetchSummary::fixture(&snapshot),
             WeatherSource::LiveNws { .. } => {
-                let http_domain_policy =
-                    umbrella_agent_http_domain_policy(&self.config.output_path)?;
-                WeatherFetchSummary::live(200, &snapshot, &http_domain_policy)
+                let http_client = generated_operations::generated_http_client()?;
+                WeatherFetchSummary::live(200, &snapshot, &http_client)
             }
         };
         *self.snapshot.lock().expect("snapshot mutex poisoned") = Some(snapshot.clone());
@@ -1373,7 +1180,7 @@ fn register_weather_fetch_tool(
     source: WeatherSource,
     fetched_at_ms: u64,
     fetched_at_iso: String,
-    http_domain_policy: DeclaredHttpDomainPolicy,
+    http_client: GeneratedOperationHttpClient,
 ) -> Result<(), ToolApiError> {
     runtime.register_handler(
         tool_definition(
@@ -1400,7 +1207,7 @@ fn register_weather_fetch_tool(
                 location,
                 fetched_at_ms,
                 &fetched_at_iso,
-                &http_domain_policy,
+                &http_client,
             )
             .map_err(|error| {
                 ToolCallError::new(
@@ -1435,7 +1242,7 @@ fn fetch_weather_from_source(
     location: String,
     fetched_at_ms: u64,
     fetched_at_iso: &str,
-    http_domain_policy: &DeclaredHttpDomainPolicy,
+    http_client: &GeneratedOperationHttpClient,
 ) -> UmbrellaResult<WeatherFetchPayload> {
     match source {
         WeatherSource::Fixture(snapshot) if snapshot.location == location => {
@@ -1459,7 +1266,7 @@ fn fetch_weather_from_source(
             fetched_at_ms,
             fetched_at_iso,
             user_agent,
-            http_domain_policy,
+            http_client,
         ),
     }
 }
@@ -1469,10 +1276,10 @@ fn fetch_live_nws_weather(
     fetched_at_ms: u64,
     fetched_at_iso: &str,
     user_agent: &str,
-    http_domain_policy: &DeclaredHttpDomainPolicy,
+    http_client: &GeneratedOperationHttpClient,
 ) -> UmbrellaResult<WeatherFetchPayload> {
     let points_url = format!("https://{WEATHER_API_DOMAIN}/points/47.6062,-122.3321");
-    let points = https_get_declared_weather_url(&points_url, user_agent, http_domain_policy)?;
+    let points = https_get_declared_weather_url(&points_url, user_agent, http_client)?;
     if points.status != 200 {
         return Err(UmbrellaAgentError::new(format!(
             "Weather.gov points request returned HTTP {}",
@@ -1483,7 +1290,7 @@ fn fetch_live_nws_weather(
     let points_json = coding_adventures_json_value::parse(&points.body)
         .map_err(|error| UmbrellaAgentError::new(format!("points JSON parse failed: {error}")))?;
     let forecast_url = extract_forecast_url(&points_json)?;
-    let forecast = https_get_declared_weather_url(&forecast_url, user_agent, http_domain_policy)?;
+    let forecast = https_get_declared_weather_url(&forecast_url, user_agent, http_client)?;
     if forecast.status != 200 {
         return Err(UmbrellaAgentError::new(format!(
             "Weather.gov forecast request returned HTTP {}",
@@ -1502,11 +1309,11 @@ fn fetch_live_nws_weather(
         &forecast.body,
         &forecast_json,
     )?;
-    let summary = WeatherFetchSummary::live(points.status, &snapshot, http_domain_policy);
+    let summary = WeatherFetchSummary::live(points.status, &snapshot, http_client);
     Ok(WeatherFetchPayload { snapshot, summary })
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 struct HttpFetchResponse {
     status: u16,
     body: String,
@@ -1515,9 +1322,20 @@ struct HttpFetchResponse {
 fn https_get_declared_weather_url(
     url: &str,
     user_agent: &str,
-    http_domain_policy: &DeclaredHttpDomainPolicy,
+    http_client: &GeneratedOperationHttpClient,
 ) -> UmbrellaResult<HttpFetchResponse> {
-    let request_target = http_domain_policy.enforce_https_url(url)?;
+    http_client
+        .get_with_transport(url, HttpFetchResponse::default(), |request_target| {
+            https_get_preflighted_weather_url(request_target, user_agent)
+        })
+        .into_result()
+        .map_err(UmbrellaAgentError::from)
+}
+
+fn https_get_preflighted_weather_url(
+    request_target: OperationHttpRequest,
+    user_agent: &str,
+) -> UmbrellaResult<HttpFetchResponse> {
     let mut tls_config = TlsConfig::https_default();
     tls_config.connect_timeout = Duration::from_secs(10);
     tls_config.handshake_timeout = Duration::from_secs(10);
@@ -1526,12 +1344,12 @@ fn https_get_declared_weather_url(
 
     let connector = tls_platform::default_connector();
     let mut stream = connector
-        .connect(&request_target.host, request_target.port, &tls_config)
+        .connect(request_target.host(), request_target.port(), &tls_config)
         .map_err(|error| UmbrellaAgentError::new(format!("TLS connect failed: {error}")))?;
     let request = format!(
         "GET {} HTTP/1.1\r\nHost: {}\r\nUser-Agent: {user_agent}\r\nAccept: application/geo+json, application/json\r\nAccept-Encoding: identity\r\nConnection: close\r\n\r\n",
-        request_target.path_and_query,
-        request_target.host
+        request_target.path_and_query(),
+        request_target.host()
     );
     stream.write_all(request.as_bytes())?;
     stream.flush()?;
@@ -2063,14 +1881,6 @@ fn umbrella_agent_required_capabilities_json(output_path: &Path) -> String {
     )
 }
 
-fn umbrella_agent_http_domain_policy(
-    output_path: &Path,
-) -> UmbrellaResult<DeclaredHttpDomainPolicy> {
-    DeclaredHttpDomainPolicy::from_required_capabilities_json(
-        &umbrella_agent_required_capabilities_json(output_path),
-    )
-}
-
 fn json_escape(input: &str) -> String {
     let mut escaped = String::new();
     for ch in input.chars() {
@@ -2369,28 +2179,53 @@ mod tests {
     }
 
     #[test]
-    fn http_domain_policy_allows_only_required_capability_domains() {
-        let policy =
-            umbrella_agent_http_domain_policy(Path::new("/tmp/umbrella-domain-policy.txt"))
-                .unwrap();
+    fn generated_operation_source_matches_required_capabilities_compiler() {
+        let generated = required_capabilities_compiler::compile_required_capabilities_json(
+            &umbrella_agent_required_capabilities_json(Path::new(
+                "/tmp/umbrella-generated-operation.txt",
+            )),
+        )
+        .unwrap();
 
-        let request = policy
-            .enforce_https_url("https://api.weather.gov/gridpoints/SEW/124,67/forecast")
-            .unwrap();
-        assert_eq!(request.host, "api.weather.gov");
-        assert_eq!(request.authority, "api.weather.gov:443");
-        assert_eq!(request.path_and_query, "/gridpoints/SEW/124,67/forecast");
-        assert_eq!(policy.declared_domains(), &["api.weather.gov".to_string()]);
-
-        let error = policy
-            .enforce_https_url("https://example.com/gridpoints/SEW/124,67/forecast")
-            .unwrap_err();
-        assert!(error.to_string().contains("net:dns:example.com"));
-        assert!(error.to_string().contains("required_capabilities.json"));
+        assert_eq!(
+            generated.rust_source.trim_end(),
+            include_str!("generated_operations.rs").trim_end()
+        );
     }
 
     #[test]
-    fn http_domain_policy_rejects_wildcard_required_capabilities() {
+    fn generated_operation_http_client_allows_only_required_capability_domains() {
+        let client = generated_operations::generated_http_client().unwrap();
+
+        let request = client
+            .preflight_get("https://api.weather.gov/gridpoints/SEW/124,67/forecast")
+            .unwrap();
+        assert_eq!(request.host(), "api.weather.gov");
+        assert_eq!(request.authority(), "api.weather.gov:443");
+        assert_eq!(request.path_and_query(), "/gridpoints/SEW/124,67/forecast");
+        assert_eq!(client.declared_domains(), &["api.weather.gov".to_string()]);
+
+        let mut transport_called = false;
+        let outcome = client.get_with_transport(
+            "https://example.com/gridpoints/SEW/124,67/forecast",
+            HttpFetchResponse::default(),
+            |_request| -> UmbrellaResult<HttpFetchResponse> {
+                transport_called = true;
+                Ok(HttpFetchResponse {
+                    status: 200,
+                    body: "should not run".to_string(),
+                })
+            },
+        );
+
+        assert!(!transport_called);
+        let error = outcome.error.expect("undeclared domain should fail");
+        assert!(error.message.contains("net:dns:example.com"));
+        assert!(error.message.contains("required_capabilities.json"));
+    }
+
+    #[test]
+    fn required_capabilities_compiler_rejects_wildcard_http_capabilities() {
         let json = r#"{
           "version": 1,
           "package": "rust/weather-agent-e2e",
@@ -2410,7 +2245,8 @@ mod tests {
           ]
         }"#;
 
-        let error = DeclaredHttpDomainPolicy::from_required_capabilities_json(json).unwrap_err();
-        assert!(error.to_string().contains("exact domains"));
+        let error =
+            required_capabilities_compiler::compile_required_capabilities_json(json).unwrap_err();
+        assert!(error.to_string().contains("exact"));
     }
 }
