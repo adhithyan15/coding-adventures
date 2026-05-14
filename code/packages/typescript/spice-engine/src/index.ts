@@ -64,6 +64,21 @@ export interface TfResult {
   gain(): number;
 }
 
+export interface SensEntry {
+  readonly elementName: string;
+  readonly parameter: string;
+  readonly nominalValue: number;
+  readonly sensitivity: number;
+  readonly relativeSensitivity: number;
+}
+
+export interface SensResult {
+  readonly outputNode: string;
+  readonly nominalVoltage: number;
+  readonly entries: readonly SensEntry[];
+  entry(elementName: string, parameter: string): SensEntry | undefined;
+}
+
 export interface Complex {
   readonly real: number;
   readonly imag: number;
@@ -275,6 +290,52 @@ export function tf(
   return makeTfResult(transferRatio, inputImpedanceOhms, outputImpedanceOhms);
 }
 
+export function sensDc(circuit: Circuit, outputNode: string): SensResult {
+  const nodeIndices = collectNodeIndices(circuit);
+  if (!isGround(outputNode) && !nodeIndices.has(outputNode)) {
+    throw invalidElement(outputNode, "output node was not found in circuit");
+  }
+
+  const nominal = dcOp(circuit);
+  const nominalVoltage = nominal.voltage(outputNode) ?? 0.0;
+  const entries: SensEntry[] = [];
+
+  for (let elementIndex = 0; elementIndex < circuit.elements().length; elementIndex++) {
+    const element = circuit.elements()[elementIndex];
+    const parameter = elementParameter(element);
+    if (parameter === undefined) {
+      continue;
+    }
+
+    const delta = perturbationFor(parameter.nominalValue);
+    const perturbed = circuitWithPerturbedElement(circuit, elementIndex, delta);
+    const perturbedResult = dcOp(perturbed);
+    const perturbedVoltage = perturbedResult.voltage(outputNode) ?? 0.0;
+    const sensitivity = (perturbedVoltage - nominalVoltage) / delta;
+    const relativeSensitivity =
+      Math.abs(nominalVoltage) > 1.0e-30
+        ? sensitivity * parameter.nominalValue / nominalVoltage
+        : 0.0;
+
+    entries.push({
+      elementName: parameter.elementName,
+      parameter: parameter.parameter,
+      nominalValue: parameter.nominalValue,
+      sensitivity,
+      relativeSensitivity,
+    });
+  }
+
+  entries.sort(
+    (left, right) =>
+      Math.abs(right.relativeSensitivity) - Math.abs(left.relativeSensitivity) ||
+      left.elementName.localeCompare(right.elementName) ||
+      left.parameter.localeCompare(right.parameter),
+  );
+
+  return makeSensResult(outputNode, nominalVoltage, entries);
+}
+
 export function acSweep(
   circuit: Circuit,
   startHz: number,
@@ -402,6 +463,76 @@ function circuitWithSweptSource(
     );
   }
   return swept;
+}
+
+interface ElementParameter {
+  readonly elementName: string;
+  readonly parameter: string;
+  readonly nominalValue: number;
+}
+
+function elementParameter(element: Element): ElementParameter | undefined {
+  switch (element.kind) {
+    case "resistor":
+      return {
+        elementName: element.name,
+        parameter: "resistanceOhms",
+        nominalValue: element.resistanceOhms,
+      };
+    case "voltage-source":
+      return {
+        elementName: element.name,
+        parameter: "voltage",
+        nominalValue: element.voltage,
+      };
+    case "current-source":
+      return {
+        elementName: element.name,
+        parameter: "current",
+        nominalValue: element.current,
+      };
+    case "capacitor":
+    case "inductor":
+      return undefined;
+  }
+}
+
+function perturbationFor(value: number): number {
+  return Math.max(Math.abs(value) * 1.0e-6, 1.0e-9);
+}
+
+function circuitWithPerturbedElement(
+  circuit: Circuit,
+  elementIndex: number,
+  delta: number,
+): Circuit {
+  const perturbed = new Circuit();
+  circuit.elements().forEach((element, index) => {
+    if (index !== elementIndex) {
+      perturbed.add(element);
+      return;
+    }
+
+    switch (element.kind) {
+      case "resistor":
+        perturbed.add({
+          ...element,
+          resistanceOhms: element.resistanceOhms + delta,
+        });
+        break;
+      case "voltage-source":
+        perturbed.add({ ...element, voltage: element.voltage + delta });
+        break;
+      case "current-source":
+        perturbed.add({ ...element, current: element.current + delta });
+        break;
+      case "capacitor":
+      case "inductor":
+        perturbed.add(element);
+        break;
+    }
+  });
+  return perturbed;
 }
 
 interface CapacitorState {
@@ -646,6 +777,25 @@ function makeTfResult(
     outputImpedanceOhms,
     gain(): number {
       return transferRatio;
+    },
+  };
+}
+
+function makeSensResult(
+  outputNode: string,
+  nominalVoltage: number,
+  entries: readonly SensEntry[],
+): SensResult {
+  return {
+    outputNode,
+    nominalVoltage,
+    entries,
+    entry(elementName: string, parameter: string): SensEntry | undefined {
+      return entries.find(
+        (candidate) =>
+          candidate.elementName === elementName &&
+          candidate.parameter === parameter,
+      );
     },
   };
 }
