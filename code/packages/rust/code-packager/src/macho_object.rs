@@ -234,11 +234,36 @@ pub fn pack_object(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
 /// Conventional file extension for object files written by [`pack_object`].
 pub fn file_extension() -> &'static str { ".o" }
 
-// ── Global-variable support (LANG39) ─────────────────────────────────────────
+// ── Global-variable support (LANG39) + External-branch support (LANG41) ──────
 
-/// ARM64 relocation type codes (subset of `<mach-o/arm64/reloc.h>`).
-const ARM64_RELOC_PAGE21:    u32 = 1;
-const ARM64_RELOC_PAGEOFF12: u32 = 2;
+/// ARM64 relocation type codes (from `<mach-o/arm64/reloc.h>`).
+///
+/// ```text
+/// enum reloc_type_arm64 {
+///     ARM64_RELOC_UNSIGNED    = 0,  /* for pointers */
+///     ARM64_RELOC_SUBTRACTOR  = 1,  /* must precede ARM64_RELOC_UNSIGNED */
+///     ARM64_RELOC_BRANCH26    = 2,  /* B/BL with 26-bit displacement */
+///     ARM64_RELOC_PAGE21      = 3,  /* pc-rel distance to page of target */
+///     ARM64_RELOC_PAGEOFF12   = 4,  /* offset within page, scaled by r_length */
+///     …
+/// };
+/// ```
+const ARM64_RELOC_BRANCH26:  u32 = 2; // B/BL instruction — new in LANG41
+const ARM64_RELOC_PAGE21:    u32 = 3; // ADRP instruction
+const ARM64_RELOC_PAGEOFF12: u32 = 4; // ADD/LDR/STR instruction
+
+// nlist_64 n_type constants for undefined external symbols (LANG41).
+//
+// An undefined external symbol (`N_UNDF | N_EXT`) in the symbol table tells
+// the system linker (`ld`) that this compilation unit requires the symbol to
+// be defined by another object file or static archive.  `ld` resolves it from
+// the libraries and archives passed on its command line (e.g. the Twig AOT
+// runtime archive that provides `__twig_print_i64`).
+//
+// `N_UNDF = 0x00` is the "undefined" type; OR'ing with `N_EXT = 0x01` marks
+// the symbol as external (linkage-visible).  For undefined symbols n_sect = 0
+// (NO_SECT) and n_value = 0.
+const N_UNDF: u8 = 0x00;
 
 /// Byte offsets within the `__text` section of one `ADRP + ADD` instruction
 /// pair that must be patched by the system linker to address `_twig_globals`.
@@ -487,7 +512,7 @@ pub fn pack_object_with_globals(
     //     r_pcrel      = 1
     //     r_length     = 2  (log2(4) = 2 for 4-byte instruction)
     //     r_extern     = 1  (symbol-relative, not section-relative)
-    //     r_type       = ARM64_RELOC_PAGE21 (1)
+    //     r_type       = ARM64_RELOC_PAGE21 (3)
     //
     //   ARM64_RELOC_PAGEOFF12 on the ADD instruction:
     //     r_address    = add_byte_offset
@@ -495,7 +520,7 @@ pub fn pack_object_with_globals(
     //     r_pcrel      = 0
     //     r_length     = 2
     //     r_extern     = 1
-    //     r_type       = ARM64_RELOC_PAGEOFF12 (2)
+    //     r_type       = ARM64_RELOC_PAGEOFF12 (4)
     //
     // The packed u32 (second field):
     //   bits  0-23: r_symbolnum
@@ -507,8 +532,8 @@ pub fn pack_object_with_globals(
     // SYMBOL_IDX = 1 (_twig_globals is the second symbol in the symtab).
     const SYMBOL_IDX: u32 = 1;
 
-    // PAGE21:    symbolnum=1, pcrel=1, length=2, extern=1, type=1
-    //   packed = 1 | (1<<24) | (2<<25) | (1<<27) | (1<<28) = 0x1D000001
+    // PAGE21:    symbolnum=1, pcrel=1, length=2, extern=1, type=3
+    //   packed = 1 | (1<<24) | (2<<25) | (1<<27) | (3<<28) = 0x3D000001
     let page21_info: u32 =
         SYMBOL_IDX
         | (1u32 << 24)                      // r_pcrel
@@ -516,8 +541,8 @@ pub fn pack_object_with_globals(
         | (1u32 << 27)                      // r_extern
         | (ARM64_RELOC_PAGE21 << 28);       // r_type
 
-    // PAGEOFF12: symbolnum=1, pcrel=0, length=2, extern=1, type=2
-    //   packed = 1 | (0<<24) | (2<<25) | (1<<27) | (2<<28) = 0x2C000001
+    // PAGEOFF12: symbolnum=1, pcrel=0, length=2, extern=1, type=4
+    //   packed = 1 | (0<<24) | (2<<25) | (1<<27) | (4<<28) = 0x4C000001
     let pageoff12_info: u32 =
         SYMBOL_IDX
         | (0u32 << 24)                      // r_pcrel = 0
@@ -555,6 +580,356 @@ pub fn pack_object_with_globals(
     out.extend_from_slice(&strtab);
 
     debug_assert_eq!(out.len(), total_size, "layout mismatch: expected {total_size} got {}", out.len());
+    Ok(out)
+}
+
+// ── External-branch relocations (LANG41) ─────────────────────────────────────
+
+/// An unresolved external branch: a `BL` instruction in `__text` that targets
+/// a symbol defined outside this compilation unit (e.g. in the Twig AOT
+/// runtime library).
+///
+/// `twig-aot`'s two-pass linker collects these from compiled functions that
+/// reference symbols not present in the module (e.g. `__twig_print_i64` from
+/// the `io_out` CIR opcode).  The packager emits:
+///
+/// 1. An `N_UNDF | N_EXT` symbol-table entry for each unique symbol.
+/// 2. An `ARM64_RELOC_BRANCH26` (r_extern=1) relocation record for each `BL`
+///    instruction, so the system linker can patch the 26-bit immediate.
+///
+/// The `BL` instruction itself is left as `0x94000000` (offset = 0) by the
+/// ARM64 backend's `bl_external` method — the linker patches it at final
+/// link time.
+#[derive(Debug, Clone)]
+pub struct ExternBranchReloc {
+    /// Byte offset of the `BL` instruction within the linked `__text` section.
+    pub byte_offset: u32,
+    /// External symbol name (e.g. `"__twig_print_i64"`).
+    pub symbol: String,
+}
+
+/// Like [`pack_object_with_globals`] but also handles unresolved external
+/// branch relocations (LANG41).
+///
+/// When a Twig function calls a runtime helper (e.g. `__twig_print_i64` for
+/// the `io_out` / `print` builtin), the ARM64 backend emits a `BL` with a
+/// placeholder offset and records an [`ExternBranchReloc`].  This function
+/// packages those as:
+///
+/// - `N_UNDF | N_EXT` symbol-table entries (one per unique external symbol).
+/// - `ARM64_RELOC_BRANCH26` relocation records (one per `BL` site) so the
+///   system linker can patch the 26-bit PC-relative offset.
+///
+/// The runtime archive (providing the external symbols) must be passed to the
+/// system linker separately — `twig-aot` embeds the archive bytes and writes
+/// them to a temp file that is added to the `ld` command line.
+///
+/// # Parameters
+///
+/// - `text_bytes` — ARM64 machine code for `__text`.
+/// - `entry_point` — byte offset of `_main` within `text_bytes`.
+/// - `globals_n_slots` — number of 8-byte global variable slots (may be 0).
+/// - `global_relocs` — `ADRP + ADD` relocation pairs for `_twig_globals`.
+/// - `extern_relocs` — one [`ExternBranchReloc`] per external `BL` site.
+/// - `target` — must be `macos` + `arm64`.
+///
+/// # Object-file layout
+///
+/// ```text
+/// 0              │ 312       │ Headers (mach_header_64 + 2×LC_SEGMENT_64 + LC_BUILD_VERSION + LC_SYMTAB)
+/// 312            │ N         │ __text bytes
+/// 312+N          │ M         │ __data bytes (zero-init, M = globals_n_slots × 8; may be 0)
+/// 312+N+M        │ (E+2G)×8  │ relocation records:
+///                │           │   E × ARM64_RELOC_BRANCH26 (extern BL sites)
+///                │           │   2G × ARM64_RELOC_PAGE21 / PAGEOFF12 (global ADRP+ADD pairs)
+/// …              │ (2+U)×16  │ symbol table: _main + _twig_globals + U undefined externals
+/// …              │ S         │ string table
+/// ```
+///
+/// where E = extern_relocs.len(), G = global_relocs.len(),
+/// U = number of unique symbols in extern_relocs.
+pub fn pack_object_with_globals_and_externals(
+    text_bytes: &[u8],
+    entry_point: usize,
+    globals_n_slots: usize,
+    global_relocs: &[GlobalByteReloc],
+    extern_relocs: &[ExternBranchReloc],
+    target: &Target,
+) -> Result<Vec<u8>, PackagerError> {
+    if target.os != "macos" {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "pack_object_with_globals_and_externals expects os=macos, got {:?}",
+            target.os
+        )));
+    }
+    if target.arch != "arm64" {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "pack_object_with_globals_and_externals: ARM64 only; got arch {:?}",
+            target.arch
+        )));
+    }
+    let (cputype, cpusubtype) = cpu_type(target)?;
+
+    let code_len  = text_bytes.len() as u64;
+    let data_len  = (globals_n_slots * 8) as u64;
+    let entry_off = entry_point as u64;
+
+    if entry_off > code_len {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "pack_object_with_globals_and_externals: entry_point {entry_off} exceeds text length {code_len}"
+        )));
+    }
+
+    // ── Unique external symbols (preserve order of first appearance) ──────────
+    //
+    // The symbol-table index of each unique extern is (2 + position_in_vec):
+    //   index 0 = _main
+    //   index 1 = _twig_globals
+    //   index 2 = first unique extern
+    //   index 3 = second unique extern
+    //   …
+    let mut unique_ext_syms: Vec<&str> = Vec::new();
+    for er in extern_relocs {
+        if !unique_ext_syms.contains(&er.symbol.as_str()) {
+            unique_ext_syms.push(&er.symbol);
+        }
+    }
+    let n_ext_syms = unique_ext_syms.len();
+
+    // ── Relocation record counts ──────────────────────────────────────────────
+    //
+    // Global accesses produce 2 records each (PAGE21 + PAGEOFF12).
+    // External BL sites produce 1 record each (BRANCH26).
+    let n_global_pairs  = global_relocs.len() as u32;
+    let n_extern_bls    = extern_relocs.len() as u32;
+    let total_reloc_recs = n_global_pairs * 2 + n_extern_bls;
+    let reloc_bytes     = (total_reloc_recs as u64) * 8; // 8 bytes per relocation_info
+
+    // ── Symbol counts ─────────────────────────────────────────────────────────
+    let n_symbols = 2u32 + n_ext_syms as u32; // _main + _twig_globals + externals
+
+    // ── String table ─────────────────────────────────────────────────────────
+    //
+    // Layout: "\0_main\0_twig_globals\0<ext0>\0<ext1>\0…"
+    const GLOBALS_SYMBOL: &str = "_twig_globals";
+    let mut strtab: Vec<u8> = Vec::new();
+    strtab.push(0u8);                                      // leading NUL (sentinel)
+    let main_strx      = strtab.len() as u32;              // = 1
+    strtab.extend_from_slice(ENTRY_SYMBOL.as_bytes());     // "_main"
+    strtab.push(0u8);
+    let globals_strx   = strtab.len() as u32;             // = 1 + 5 + 1 = 7
+    strtab.extend_from_slice(GLOBALS_SYMBOL.as_bytes());  // "_twig_globals"
+    strtab.push(0u8);
+    let mut ext_strx: Vec<u32> = Vec::with_capacity(n_ext_syms);
+    for sym in &unique_ext_syms {
+        ext_strx.push(strtab.len() as u32);
+        strtab.extend_from_slice(sym.as_bytes());
+        strtab.push(0u8);
+    }
+
+    // ── File-offset calculations ──────────────────────────────────────────────
+    let text_file_off  = HEADER_TOTAL_WITH_DATA as u64;
+    let data_file_off  = text_file_off + code_len;
+    let reloc_file_off = data_file_off + data_len;
+    let symtab_off     = reloc_file_off + reloc_bytes;
+    let strtab_off     = symtab_off + (n_symbols as u64) * NLIST_64_SIZE as u64;
+    let total_size: usize = strtab_off as usize + strtab.len();
+
+    // Checked u32 conversions for Mach-O file-offset fields.
+    macro_rules! off32 {
+        ($val:expr, $name:expr) => {
+            u32::try_from($val).map_err(|_| PackagerError::UnsupportedTarget(format!(
+                "pack_object_with_globals_and_externals: {} offset {} exceeds 4 GiB",
+                $name, $val
+            )))?
+        };
+    }
+    let text_file_off_u32  = off32!(text_file_off,  "text");
+    let data_file_off_u32  = off32!(data_file_off,  "data");
+    let reloc_file_off_u32 = off32!(reloc_file_off, "reloc");
+    let symtab_off_u32     = off32!(symtab_off,     "symtab");
+    let strtab_off_u32     = off32!(strtab_off,     "strtab");
+
+    let sizeofcmds: u32 = (LC_SEGMENT_TWO_SECTS + LC_BUILD_VERSION_SIZE + LC_SYMTAB_SIZE) as u32;
+
+    let mut out: Vec<u8> = Vec::with_capacity(total_size);
+
+    // ── mach_header_64 ───────────────────────────────────────────────────────
+    out.extend_from_slice(&MH_MAGIC_64.to_le_bytes());
+    out.extend_from_slice(&cputype.to_le_bytes());
+    out.extend_from_slice(&cpusubtype.to_le_bytes());
+    out.extend_from_slice(&MH_OBJECT.to_le_bytes());
+    out.extend_from_slice(&3u32.to_le_bytes());         // ncmds = 3
+    out.extend_from_slice(&sizeofcmds.to_le_bytes());
+    out.extend_from_slice(&0u32.to_le_bytes());         // flags
+    out.extend_from_slice(&0u32.to_le_bytes());         // reserved
+    debug_assert_eq!(out.len(), MACH_HEADER_SIZE);
+
+    // ── LC_SEGMENT_64 (two sections: __text + __data) ─────────────────────
+    let segment_vmsize = code_len + data_len;
+    out.extend_from_slice(&LC_SEGMENT_64.to_le_bytes());
+    out.extend_from_slice(&(LC_SEGMENT_TWO_SECTS as u32).to_le_bytes());
+    write_name16(&mut out, b"");                 // segname = empty
+    out.extend_from_slice(&0u64.to_le_bytes()); // vmaddr = 0
+    out.extend_from_slice(&segment_vmsize.to_le_bytes());
+    out.extend_from_slice(&text_file_off.to_le_bytes());
+    out.extend_from_slice(&segment_vmsize.to_le_bytes());
+    out.extend_from_slice(&7u32.to_le_bytes()); // maxprot  = rwx
+    out.extend_from_slice(&7u32.to_le_bytes()); // initprot = rwx
+    out.extend_from_slice(&2u32.to_le_bytes()); // nsects = 2
+    out.extend_from_slice(&0u32.to_le_bytes()); // flags
+
+    // ── section_64: __text / __TEXT ─────────────────────────────────────────
+    write_name16(&mut out, b"__text");
+    write_name16(&mut out, b"__TEXT");
+    out.extend_from_slice(&0u64.to_le_bytes());                      // addr = 0
+    out.extend_from_slice(&code_len.to_le_bytes());                  // size
+    out.extend_from_slice(&text_file_off_u32.to_le_bytes());         // offset
+    out.extend_from_slice(&4u32.to_le_bytes());                      // align = 2^4 = 16
+    out.extend_from_slice(&reloc_file_off_u32.to_le_bytes());        // reloff
+    out.extend_from_slice(&total_reloc_recs.to_le_bytes());          // nreloc
+    out.extend_from_slice(&SECTION_FLAGS_CODE.to_le_bytes());
+    out.extend_from_slice(&0u32.to_le_bytes());                      // reserved1
+    out.extend_from_slice(&0u32.to_le_bytes());                      // reserved2
+    out.extend_from_slice(&0u32.to_le_bytes());                      // reserved3
+
+    // ── section_64: __data / __DATA ─────────────────────────────────────────
+    write_name16(&mut out, b"__data");
+    write_name16(&mut out, b"__DATA");
+    out.extend_from_slice(&code_len.to_le_bytes());       // addr = immediately after __text
+    out.extend_from_slice(&data_len.to_le_bytes());       // size (0 if no globals)
+    out.extend_from_slice(&data_file_off_u32.to_le_bytes()); // offset
+    out.extend_from_slice(&3u32.to_le_bytes());           // align = 2^3 = 8
+    out.extend_from_slice(&0u32.to_le_bytes());           // reloff = 0
+    out.extend_from_slice(&0u32.to_le_bytes());           // nreloc = 0
+    out.extend_from_slice(&0u32.to_le_bytes());           // flags = S_REGULAR
+    out.extend_from_slice(&0u32.to_le_bytes());           // reserved1
+    out.extend_from_slice(&0u32.to_le_bytes());           // reserved2
+    out.extend_from_slice(&0u32.to_le_bytes());           // reserved3
+
+    debug_assert_eq!(out.len(), MACH_HEADER_SIZE + LC_SEGMENT_TWO_SECTS);
+
+    // ── LC_BUILD_VERSION ─────────────────────────────────────────────────────
+    out.extend_from_slice(&LC_BUILD_VERSION.to_le_bytes());
+    out.extend_from_slice(&(LC_BUILD_VERSION_SIZE as u32).to_le_bytes());
+    out.extend_from_slice(&PLATFORM_MACOS.to_le_bytes());
+    out.extend_from_slice(&MIN_OS_VERSION.to_le_bytes());
+    out.extend_from_slice(&SDK_VERSION.to_le_bytes());
+    out.extend_from_slice(&0u32.to_le_bytes()); // ntools
+
+    // ── LC_SYMTAB ────────────────────────────────────────────────────────────
+    out.extend_from_slice(&LC_SYMTAB.to_le_bytes());
+    out.extend_from_slice(&(LC_SYMTAB_SIZE as u32).to_le_bytes());
+    out.extend_from_slice(&symtab_off_u32.to_le_bytes());
+    out.extend_from_slice(&n_symbols.to_le_bytes());
+    out.extend_from_slice(&strtab_off_u32.to_le_bytes());
+    out.extend_from_slice(&(strtab.len() as u32).to_le_bytes());
+
+    debug_assert_eq!(out.len(), HEADER_TOTAL_WITH_DATA);
+
+    // ── __text bytes ─────────────────────────────────────────────────────────
+    out.extend_from_slice(text_bytes);
+
+    // ── __data bytes (zero-initialised) ──────────────────────────────────────
+    let data_start = out.len();
+    out.resize(data_start + data_len as usize, 0u8);
+
+    // ── Relocation records ────────────────────────────────────────────────────
+    //
+    // The packed `r_info` u32 layout (ARM64 Mach-O):
+    //   bits  0-23: r_symbolnum (24-bit symbol-table index)
+    //   bit     24: r_pcrel     (1 = PC-relative, 0 = absolute)
+    //   bits 25-26: r_length    (log2 of instruction byte width: 2 → 4 bytes)
+    //   bit     27: r_extern    (1 = symbol-table index, 0 = section index)
+    //   bits 28-31: r_type      (ARM64 relocation type)
+
+    // ── BRANCH26 records (one per extern BL) — emitted first ──────────────
+    //
+    // ARM64_RELOC_BRANCH26: r_pcrel=1, r_length=2, r_extern=1, r_type=2.
+    // r_symbolnum = 2 + position in unique_ext_syms (after _main and _twig_globals).
+    //
+    // The `BL` instruction placeholder (`0x94000000`) already has the correct
+    // opcode bits; the linker patches only the 26-bit immediate field.
+    for er in extern_relocs {
+        let sym_idx = unique_ext_syms
+            .iter()
+            .position(|&s| s == er.symbol)
+            .expect("all extern symbols were collected above") as u32
+            + 2; // +2 to skip _main (0) and _twig_globals (1)
+        let branch26_info: u32 = sym_idx
+            | (1u32 << 24)                         // r_pcrel = 1
+            | (2u32 << 25)                         // r_length = 2
+            | (1u32 << 27)                         // r_extern = 1
+            | (ARM64_RELOC_BRANCH26 << 28);        // r_type = 2
+        out.extend_from_slice(&(er.byte_offset as i32).to_le_bytes());
+        out.extend_from_slice(&branch26_info.to_le_bytes());
+    }
+
+    // ── PAGE21 + PAGEOFF12 records (2 per global access) — emitted after ──
+    //
+    // _twig_globals is always symbol index 1.
+    const GLOBALS_SYM_IDX: u32 = 1;
+
+    // PAGE21 (ADRP): r_pcrel=1, r_length=2, r_extern=1, r_type=3.
+    let page21_info: u32 = GLOBALS_SYM_IDX
+        | (1u32 << 24)                             // r_pcrel = 1
+        | (2u32 << 25)                             // r_length = 2
+        | (1u32 << 27)                             // r_extern = 1
+        | (ARM64_RELOC_PAGE21 << 28);              // r_type = 3
+
+    // PAGEOFF12 (ADD): r_pcrel=0, r_length=2, r_extern=1, r_type=4.
+    let pageoff12_info: u32 = GLOBALS_SYM_IDX
+        | (0u32 << 24)                             // r_pcrel = 0
+        | (2u32 << 25)                             // r_length = 2
+        | (1u32 << 27)                             // r_extern = 1
+        | (ARM64_RELOC_PAGEOFF12 << 28);           // r_type = 4
+
+    for reloc in global_relocs {
+        // ARM64_RELOC_PAGE21 on ADRP
+        out.extend_from_slice(&(reloc.adrp_byte_offset as i32).to_le_bytes());
+        out.extend_from_slice(&page21_info.to_le_bytes());
+        // ARM64_RELOC_PAGEOFF12 on ADD
+        out.extend_from_slice(&(reloc.add_byte_offset as i32).to_le_bytes());
+        out.extend_from_slice(&pageoff12_info.to_le_bytes());
+    }
+
+    // ── Symbol table ─────────────────────────────────────────────────────────
+
+    // index 0: _main — defined in __text (section 1), at entry_off.
+    out.extend_from_slice(&main_strx.to_le_bytes());
+    out.push(N_SECT | N_EXT);
+    out.push(1u8);                                     // n_sect = 1 (__text)
+    out.extend_from_slice(&0u16.to_le_bytes());        // n_desc
+    out.extend_from_slice(&entry_off.to_le_bytes());   // n_value = byte offset
+
+    // index 1: _twig_globals — defined in __data (section 2), at VM start of data.
+    out.extend_from_slice(&globals_strx.to_le_bytes());
+    out.push(N_SECT | N_EXT);
+    out.push(2u8);                                     // n_sect = 2 (__data)
+    out.extend_from_slice(&0u16.to_le_bytes());        // n_desc
+    out.extend_from_slice(&code_len.to_le_bytes());    // n_value = VM addr of __data
+
+    // index 2, 3, …: unique external symbols — undefined externals.
+    //
+    // N_UNDF | N_EXT = 0x01.  n_sect = 0 (NO_SECT).  n_value = 0.
+    // The system linker resolves these from the runtime archive or dylibs.
+    for (i, sym) in unique_ext_syms.iter().enumerate() {
+        let _ = sym; // name is in the string table via ext_strx
+        out.extend_from_slice(&ext_strx[i].to_le_bytes());
+        out.push(N_UNDF | N_EXT);
+        out.push(0u8);                                 // n_sect = 0 (NO_SECT)
+        out.extend_from_slice(&0u16.to_le_bytes());    // n_desc
+        out.extend_from_slice(&0u64.to_le_bytes());    // n_value = 0 (undefined)
+    }
+
+    // ── String table ─────────────────────────────────────────────────────────
+    out.extend_from_slice(&strtab);
+
+    debug_assert_eq!(
+        out.len(), total_size,
+        "layout mismatch: expected {total_size} got {}",
+        out.len()
+    );
     Ok(out)
 }
 
@@ -698,17 +1073,19 @@ mod tests {
         let rec0 = &bytes[reloc_start..reloc_start + 8];
         let rec1 = &bytes[reloc_start + 8..reloc_start + 16];
 
-        // rec0: r_address=0 (ADRP), r_info=0x1D000001 (PAGE21, extern, sym=1)
+        // rec0: r_address=0 (ADRP), r_info=0x3D000001
+        //   sym=1, pcrel=1, length=2, extern=1, r_type=ARM64_RELOC_PAGE21 (3)
         let r0_addr = i32::from_le_bytes(rec0[0..4].try_into().unwrap());
         let r0_info = u32::from_le_bytes(rec0[4..8].try_into().unwrap());
         assert_eq!(r0_addr, 0, "ADRP byte offset");
-        assert_eq!(r0_info, 0x1D000001, "PAGE21 packed info");
+        assert_eq!(r0_info, 0x3D000001, "PAGE21 packed info");
 
-        // rec1: r_address=4 (ADD), r_info=0x2C000001 (PAGEOFF12, extern, sym=1)
+        // rec1: r_address=4 (ADD), r_info=0x4C000001
+        //   sym=1, pcrel=0, length=2, extern=1, r_type=ARM64_RELOC_PAGEOFF12 (4)
         let r1_addr = i32::from_le_bytes(rec1[0..4].try_into().unwrap());
         let r1_info = u32::from_le_bytes(rec1[4..8].try_into().unwrap());
         assert_eq!(r1_addr, 4, "ADD byte offset");
-        assert_eq!(r1_info, 0x2C000001, "PAGEOFF12 packed info");
+        assert_eq!(r1_info, 0x4C000001, "PAGEOFF12 packed info");
     }
 
     #[test]
@@ -741,5 +1118,129 @@ mod tests {
         ];
         let bytes = arm64_globals_bytes(vec![0x00u8; n], 2, &relocs);
         assert_eq!(bytes.len(), expected, "size formula");
+    }
+
+    // ── pack_object_with_globals_and_externals tests (LANG41) ─────────────────
+
+    fn arm64_full(
+        code: Vec<u8>,
+        n_slots: usize,
+        glob: &[GlobalByteReloc],
+        ext: &[ExternBranchReloc],
+    ) -> Vec<u8> {
+        pack_object_with_globals_and_externals(
+            &code, 0, n_slots, glob, ext, &Target::macos_arm64()
+        ).unwrap()
+    }
+
+    #[test]
+    fn full_no_externals_produces_macho_magic() {
+        // Without any extern relocs, the function still produces a valid MH_OBJECT.
+        let bytes = arm64_full(vec![0x00; 4], 0, &[], &[]);
+        assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE], "Mach-O magic");
+    }
+
+    #[test]
+    fn full_with_one_extern_emits_branch26_reloc() {
+        // A single extern BL should produce exactly one BRANCH26 reloc record.
+        // The reloc is emitted before the global relocs (extern BLs go first).
+        //
+        // Code: 8 bytes (2 instructions), extern BL at byte offset 0.
+        let code = vec![0x00u8; 8];
+        let ext = vec![ExternBranchReloc {
+            byte_offset: 0,
+            symbol: "__twig_print_i64".to_string(),
+        }];
+        let bytes = arm64_full(code, 0, &[], &ext);
+
+        // Reloc block starts at 312 + 8 (text) + 0 (no data) = 320.
+        // 1 reloc record = 8 bytes.
+        let reloc_start = 312usize + 8;
+        let r_addr = i32::from_le_bytes(bytes[reloc_start..reloc_start + 4].try_into().unwrap());
+        let r_info = u32::from_le_bytes(bytes[reloc_start + 4..reloc_start + 8].try_into().unwrap());
+
+        assert_eq!(r_addr, 0, "BL byte offset");
+
+        // sym_idx=2, r_pcrel=1, r_length=2, r_extern=1, r_type=ARM64_RELOC_BRANCH26 (2)
+        // = 2 | (1<<24) | (2<<25) | (1<<27) | (2<<28)
+        // = 2 | 0x01000000 | 0x04000000 | 0x08000000 | 0x20000000
+        // = 0x2D000002
+        assert_eq!(r_info, 0x2D000002, "BRANCH26 packed info for sym_idx=2");
+    }
+
+    #[test]
+    fn full_extern_symbol_emitted_as_n_undf() {
+        // The external symbol must appear in the symbol table with n_type = 0x01
+        // (N_UNDF | N_EXT) and n_sect = 0 (NO_SECT).
+        let code = vec![0x00u8; 4];
+        let ext = vec![ExternBranchReloc {
+            byte_offset: 0,
+            symbol: "__twig_print_i64".to_string(),
+        }];
+        let bytes = arm64_full(code, 0, &[], &ext);
+
+        // Symbol table:
+        //   index 0: _main       → nlist at symtab_off
+        //   index 1: _twig_globals
+        //   index 2: __twig_print_i64  ← we check this one
+        //
+        // symtab_off = 312 + code(4) + data(0) + relocs(1×8) = 324.
+        let symtab_off = 312usize + 4 + 0 + 8;
+        let ext_sym_off = symtab_off + 2 * 16; // skip _main and _twig_globals
+
+        // nlist_64: n_strx(4) n_type(1) n_sect(1) n_desc(2) n_value(8)
+        let n_type = bytes[ext_sym_off + 4];
+        let n_sect = bytes[ext_sym_off + 5];
+        let n_value = u64::from_le_bytes(
+            bytes[ext_sym_off + 8..ext_sym_off + 16].try_into().unwrap()
+        );
+
+        assert_eq!(n_type, 0x01, "N_UNDF | N_EXT for undefined external");
+        assert_eq!(n_sect, 0,    "n_sect must be 0 (NO_SECT) for undefined symbol");
+        assert_eq!(n_value, 0,   "n_value must be 0 for undefined symbol");
+    }
+
+    #[test]
+    fn full_output_size_formula_no_globals_one_extern() {
+        // total = 312 (header) + N (text) + 0 (no data) + 1×8 (reloc) +
+        //         3×16 (syms: _main + _twig_globals + extern) + strtab_len
+        //
+        // strtab = "\0_main\0_twig_globals\0__twig_print_i64\0"
+        //   "\0"           = 1 byte  (leading NUL sentinel)
+        //   "_main\0"      = 6 bytes
+        //   "_twig_globals\0" = 14 bytes
+        //   "__twig_print_i64\0" = 17 bytes  (16 chars + NUL)
+        //                         ─────────
+        //                   total = 38 bytes
+        let n = 8usize;
+        let strtab_len = 1 + 6 + 14 + 17; // 38
+        let expected = 312 + n + 0 + 1 * 8 + 3 * 16 + strtab_len;
+        let ext = vec![ExternBranchReloc {
+            byte_offset: 0,
+            symbol: "__twig_print_i64".to_string(),
+        }];
+        let bytes = arm64_full(vec![0x00u8; n], 0, &[], &ext);
+        assert_eq!(bytes.len(), expected, "size formula for no-globals + 1 extern");
+    }
+
+    #[test]
+    fn full_deduplicated_extern_symbols() {
+        // Two BL instructions targeting the same external symbol must produce
+        // only ONE N_UNDF symbol-table entry (deduplication).
+        let code = vec![0x00u8; 16];
+        let ext = vec![
+            ExternBranchReloc { byte_offset: 0, symbol: "__twig_print_i64".to_string() },
+            ExternBranchReloc { byte_offset: 4, symbol: "__twig_print_i64".to_string() },
+        ];
+        let bytes = arm64_full(code, 0, &[], &ext);
+
+        // nsyms in LC_SYMTAB (4 bytes at offset 300 in the 2-section header) must be 3:
+        //   _main + _twig_globals + 1 unique extern (not 4 = 2 + 2 dupes).
+        //
+        // 2-section layout: mach_header_64(32) + LC_SEGMENT_64+2sects(232)
+        //   + LC_BUILD_VERSION(24) = 288 (LC_SYMTAB start)
+        //   + cmd(4) + cmdsize(4) + symoff(4) = offset 300 for nsyms.
+        let nsyms = u32::from_le_bytes(bytes[300..304].try_into().unwrap());
+        assert_eq!(nsyms, 3, "deduplicated: only 1 unique extern symbol");
     }
 }

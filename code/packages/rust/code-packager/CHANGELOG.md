@@ -2,6 +2,56 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.2.2] — 2026-05-13 (LANG41)
+
+**External symbol support: `N_UNDF` entries + `ARM64_RELOC_BRANCH26` relocs
+for unresolved `BL` targets; corrected ARM64 relocation type constants.**
+
+### Added
+
+- **`ExternBranchReloc`** struct — `(byte_offset: u32, symbol: String)` pair
+  representing one unresolved `BL <extern>` instruction in the text section.
+  Re-exported from crate root as `code_packager::ExternBranchReloc`.
+
+- **`pack_object_with_globals_and_externals`** — supersedes
+  `pack_object_with_globals`; always uses the 2-section layout (header = 312
+  bytes) and additionally:
+  - Deduplicates external symbols (first-appearance order); emits one
+    `nlist_64` per unique symbol with `n_type = N_UNDF | N_EXT = 0x01`,
+    `n_sect = 0`, `n_value = 0` — the standard Mach-O undefined-external
+    sentinel that tells `ld` to resolve the symbol from archives or dylibs.
+  - Emits one `ARM64_RELOC_BRANCH26` relocation record per `ExternBranchReloc`
+    entry, packed as `sym_idx | 0x2D000000` (r_pcrel=1, r_length=2,
+    r_extern=1, r_type=2).
+  - Relocation order: BRANCH26 records first (externals), then PAGE21 +
+    PAGEOFF12 pairs (globals).
+
+### Fixed
+
+- **ARM64 relocation type constants were incorrect** (LANG39 introduced the
+  wrong values):
+  - `ARM64_RELOC_PAGE21` corrected from `1` to `3`
+  - `ARM64_RELOC_PAGEOFF12` corrected from `2` to `4`
+  - New constant `ARM64_RELOC_BRANCH26 = 2` added
+  - Constants now match Apple's `<mach-o/arm64/reloc.h>` enum exactly
+  - Existing test expectations updated (`0x1D000001` → `0x3D000001` for
+    PAGE21; `0x2C000001` → `0x4C000001` for PAGEOFF12)
+
+### Tests added (5)
+
+- `full_no_externals_produces_macho_magic` — round-trips through the new
+  function with no globals and no externals; verifies magic bytes.
+- `full_with_one_extern_emits_branch26_reloc` — confirms r_info =
+  `0x2D000002` for the first external symbol (sym_idx = 2).
+- `full_extern_symbol_emitted_as_n_undf` — verifies `n_type = 0x01`,
+  `n_sect = 0`, `n_value = 0` in the symbol table entry.
+- `full_output_size_formula_no_globals_one_extern` — asserts exact byte
+  length via the formula `312 + relocs*8 + nsyms*16 + text + strtab`.
+- `full_deduplicated_extern_symbols` — two `ExternBranchReloc` entries with
+  the same symbol name produce exactly 3 nlist entries (not 4).
+
+---
+
 ## [0.2.1] — 2026-05-13 (LANG39)
 
 ### Added

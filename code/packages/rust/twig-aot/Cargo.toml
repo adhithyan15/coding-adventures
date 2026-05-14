@@ -1,6 +1,6 @@
 [package]
 name = "twig-aot"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source."
 
@@ -17,6 +17,9 @@ iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
 [[bin]]
 name = "twig-aot"
 path = "bin/twig_aot.rs"
+
+[build-dependencies]
+cc = "1"
 
 [dev-dependencies]
 tempfile         = "3"
