@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add seeded DC Monte Carlo analysis for linear element parameters with
+  Gaussian and uniform tolerance distributions.
 - Add PWL, SIN, PULSE, and EXP source waveforms for transient voltage and
   current sources while preserving static source values for DC, AC, transfer
   function, sensitivity, and sweep analyses.

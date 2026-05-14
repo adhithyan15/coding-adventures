@@ -289,6 +289,31 @@ export interface DcSweepPoint {
   readonly result: DcResult;
 }
 
+export type McDistribution = "gaussian" | "uniform";
+
+export interface McOptions {
+  readonly tolerance?: number;
+  readonly distribution?: McDistribution;
+  readonly seed?: number;
+}
+
+export interface McPoint {
+  readonly trial: number;
+  readonly nodeVoltages: ReadonlyMap<string, number>;
+  readonly branchCurrents: ReadonlyMap<string, number>;
+  readonly converged: boolean;
+  voltage(node: string): number | undefined;
+  branchCurrent(sourceName: string): number | undefined;
+}
+
+export interface McResult {
+  readonly outputNode: string;
+  readonly points: readonly McPoint[];
+  readonly nTrials: number;
+  readonly mean: number;
+  readonly stdDev: number;
+}
+
 export interface TfResult {
   readonly transferRatio: number;
   readonly inputImpedanceOhms: number;
@@ -520,6 +545,75 @@ export function dcSweep(
     points.push({ value, result: dcOp(swept) });
   }
   return points;
+}
+
+export function mcDc(
+  circuit: Circuit,
+  outputNode: string,
+  nTrials = 100,
+  options: McOptions = {},
+): McResult {
+  const nodeIndices = collectNodeIndices(circuit);
+  if (!isGround(outputNode) && !nodeIndices.has(outputNode)) {
+    throw invalidElement(outputNode, "output node was not found in circuit");
+  }
+  if (!Number.isInteger(nTrials) || nTrials < 1) {
+    throw invalidElement("mcDc", "nTrials must be a positive integer");
+  }
+
+  const tolerance = options.tolerance ?? 0.05;
+  const distribution = options.distribution ?? "gaussian";
+  if (!Number.isFinite(tolerance) || tolerance < 0.0) {
+    throw invalidElement("mcDc", "tolerance must be finite and non-negative");
+  }
+  if (distribution !== "gaussian" && distribution !== "uniform") {
+    throw invalidElement(
+      "mcDc",
+      "distribution must be 'gaussian' or 'uniform'",
+    );
+  }
+
+  const rng = seededRandom(options.seed);
+  const points: McPoint[] = [];
+
+  for (let trial = 0; trial < nTrials; trial++) {
+    const trialCircuit = circuitWithRandomizedElements(
+      circuit,
+      tolerance,
+      distribution,
+      rng,
+    );
+
+    try {
+      const result = dcOp(trialCircuit);
+      points.push(
+        makeMcPoint(
+          trial,
+          result.nodeVoltages,
+          result.branchCurrents,
+          true,
+        ),
+      );
+    } catch (error) {
+      if (error instanceof SpiceError && error.code === "SINGULAR_MATRIX") {
+        points.push(makeMcPoint(trial, new Map(), new Map(), false));
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  const convergedVoltages = points
+    .filter((point) => point.converged)
+    .map((point) => point.voltage(outputNode) ?? 0.0);
+
+  return makeMcResult(
+    outputNode,
+    points,
+    nTrials,
+    sampleMean(convergedVoltages),
+    sampleStdDev(convergedVoltages),
+  );
 }
 
 export function tf(
@@ -837,6 +931,117 @@ function circuitWithPerturbedElement(
   return perturbed;
 }
 
+type RandomSource = () => number;
+
+function seededRandom(seed: number | undefined): RandomSource {
+  if (seed === undefined) {
+    return Math.random;
+  }
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4_294_967_296;
+  };
+}
+
+function randomizedValue(
+  nominalValue: number,
+  tolerance: number,
+  distribution: McDistribution,
+  rng: RandomSource,
+): number {
+  if (tolerance === 0.0) {
+    return nominalValue;
+  }
+  if (distribution === "uniform") {
+    return nominalValue * (1.0 + tolerance * (2.0 * rng() - 1.0));
+  }
+  return nominalValue * (1.0 + gaussian(rng) * tolerance / 3.0);
+}
+
+function gaussian(rng: RandomSource): number {
+  const u1 = Math.max(rng(), Number.MIN_VALUE);
+  const u2 = rng();
+  return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(TWO_PI * u2);
+}
+
+function circuitWithRandomizedElements(
+  circuit: Circuit,
+  tolerance: number,
+  distribution: McDistribution,
+  rng: RandomSource,
+): Circuit {
+  const randomized = new Circuit();
+  for (const element of circuit.elements()) {
+    randomized.add(randomizedElement(element, tolerance, distribution, rng));
+  }
+  return randomized;
+}
+
+function randomizedElement(
+  element: Element,
+  tolerance: number,
+  distribution: McDistribution,
+  rng: RandomSource,
+): Element {
+  switch (element.kind) {
+    case "resistor":
+      return {
+        ...element,
+        resistanceOhms: randomizedValue(
+          element.resistanceOhms,
+          tolerance,
+          distribution,
+          rng,
+        ),
+      };
+    case "voltage-source":
+      return {
+        ...element,
+        voltage: randomizedValue(element.voltage, tolerance, distribution, rng),
+      };
+    case "current-source":
+      return {
+        ...element,
+        current: randomizedValue(element.current, tolerance, distribution, rng),
+      };
+    case "vccs":
+      return {
+        ...element,
+        transconductanceSiemens: randomizedValue(
+          element.transconductanceSiemens,
+          tolerance,
+          distribution,
+          rng,
+        ),
+      };
+    case "capacitor":
+    case "inductor":
+      return element;
+  }
+}
+
+function sampleMean(values: readonly number[]): number {
+  if (values.length === 0) {
+    return 0.0;
+  }
+  return values.reduce((sum, value) => sum + value, 0.0) / values.length;
+}
+
+function sampleStdDev(values: readonly number[]): number {
+  if (values.length < 2) {
+    return 0.0;
+  }
+  const mean = sampleMean(values);
+  const variance =
+    values.reduce((sum, value) => sum + (value - mean) ** 2, 0.0) /
+    (values.length - 1);
+  return Math.sqrt(variance);
+}
+
 interface CapacitorState {
   readonly name: string;
   previousVoltage: number;
@@ -1110,6 +1315,45 @@ function makeSensResult(
           candidate.parameter === parameter,
       );
     },
+  };
+}
+
+function makeMcPoint(
+  trial: number,
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: ReadonlyMap<string, number>,
+  converged: boolean,
+): McPoint {
+  return {
+    trial,
+    nodeVoltages,
+    branchCurrents,
+    converged,
+    voltage(node: string): number | undefined {
+      return isGround(node) ? 0.0 : nodeVoltages.get(node);
+    },
+    branchCurrent(sourceName: string): number | undefined {
+      const key = sourceName.startsWith("I(")
+        ? sourceName
+        : `I(${sourceName})`;
+      return branchCurrents.get(key);
+    },
+  };
+}
+
+function makeMcResult(
+  outputNode: string,
+  points: readonly McPoint[],
+  nTrials: number,
+  mean: number,
+  stdDev: number,
+): McResult {
+  return {
+    outputNode,
+    points,
+    nTrials,
+    mean,
+    stdDev,
   };
 }
 
