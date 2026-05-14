@@ -4,6 +4,7 @@
 #include <new>
 
 #include "Arduino.h"
+#include "Wire.h"
 #include "hal_data.h"
 #include "pwm.h"
 #include "pinmux.inc"
@@ -19,11 +20,21 @@ constexpr size_t kOperatorNewHeapBytes = 2048;
 constexpr uint32_t kAdcRawMax = (1u << BSP_FEATURE_ADC_MAX_RESOLUTION_BITS) - 1u;
 constexpr uint32_t kAdcNormalizedMax = 65535u;
 constexpr uint32_t kAdcScanPollLimit = 100000u;
+constexpr uint16_t kI2cMax7BitAddress = 0x7Fu;
 
 struct PwmSlot {
   uint8_t pin;
   alignas(PwmOut) uint8_t storage[sizeof(PwmOut)];
   PwmOut *pwm;
+  bool started;
+};
+
+struct I2cSlot {
+  uint8_t bus;
+  uint8_t scl_pin;
+  uint8_t sda_pin;
+  alignas(TwoWire) uint8_t storage[sizeof(TwoWire)];
+  TwoWire *wire;
   bool started;
 };
 
@@ -36,6 +47,10 @@ PwmSlot g_pwm_slots[] = {
   {9, {}, nullptr, false},
   {10, {}, nullptr, false},
   {11, {}, nullptr, false},
+};
+I2cSlot g_i2c_slots[] = {
+  {0, WIRE_SCL_PIN, WIRE_SDA_PIN, {}, nullptr, false},
+  {1, WIRE1_SCL_PIN, WIRE1_SDA_PIN, {}, nullptr, false},
 };
 bool g_pwm_channels_reserved = false;
 adc_instance_ctrl_t g_board_vm_adc_ctrl = {};
@@ -51,6 +66,15 @@ bool g_board_vm_dac_opened = false;
 PwmSlot *find_slot(uint8_t pin) {
   for (auto &slot : g_pwm_slots) {
     if (slot.pin == pin) {
+      return &slot;
+    }
+  }
+  return nullptr;
+}
+
+I2cSlot *find_i2c_slot(uint8_t bus) {
+  for (auto &slot : g_i2c_slots) {
+    if (slot.bus == bus) {
       return &slot;
     }
   }
@@ -97,6 +121,13 @@ PwmOut *slot_pwm(PwmSlot &slot) {
     slot.pwm = new (slot.storage) PwmOut(slot.pin);
   }
   return slot.pwm;
+}
+
+TwoWire *slot_wire(I2cSlot &slot) {
+  if (slot.wire == nullptr) {
+    slot.wire = new (slot.storage) TwoWire(slot.scl_pin, slot.sda_pin);
+  }
+  return slot.wire;
 }
 
 bool pin_cfg_matches(uint16_t cfg, PinCfgReq_t req) {
@@ -207,6 +238,12 @@ void operator delete[](void *) noexcept {}
 void operator delete(void *, size_t) noexcept {}
 
 void operator delete[](void *, size_t) noexcept {}
+
+// Wire.cpp uses micros() only as a transaction timeout clock in this firmware.
+unsigned long micros() {
+  static unsigned long ticks = 0;
+  return ++ticks;
+}
 
 extern "C" const PinMuxCfg_t g_pin_cfg[] = {
   {BSP_IO_PORT_03_PIN_01, P301}, /* (0) D0 */
@@ -393,4 +430,27 @@ extern "C" bool board_vm_uno_r4_dac_write_u12(uint8_t pin, uint16_t sample) {
   }
 
   return R_DAC_Write(&g_board_vm_dac_ctrl, sample) == FSP_SUCCESS;
+}
+
+extern "C" bool board_vm_uno_r4_i2c_write_u8(uint8_t bus, uint16_t address, uint8_t byte) {
+  if (address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  wire->beginTransmission(address);
+  if (wire->write(byte) != 1) {
+    return false;
+  }
+  return wire->endTransmission() == END_TX_OK;
 }

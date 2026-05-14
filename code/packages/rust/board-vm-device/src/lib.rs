@@ -2,8 +2,8 @@
 
 use board_vm_ir::{
     parse_module, validate, CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN,
-    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
-    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME,
+    CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -92,6 +92,12 @@ const I2C_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor 
     version: 1,
     flags: CAP_FLAG_BYTECODE_CALLABLE,
     name: "i2c.open",
+};
+const I2C_WRITE_U8_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_WRITE_U8,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.write_u8",
 };
 const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
     id: CAP_LED_MATRIX_FRAME,
@@ -586,7 +592,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'st
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];
 
-pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES: [CapabilityDescriptor<'static>; 11] = [
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES: [CapabilityDescriptor<'static>; 12] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -597,6 +603,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES: [CapabilityDescriptor
     ADC_READ_DESCRIPTOR,
     DAC_WRITE_U12_DESCRIPTOR,
     I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];
 
@@ -655,7 +662,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDes
 
 pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<
     'static,
->; 12] = [
+>; 13] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -666,6 +673,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES: [Capabilit
     ADC_READ_DESCRIPTOR,
     DAC_WRITE_U12_DESCRIPTOR,
     I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
     LED_MATRIX_FRAME_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];

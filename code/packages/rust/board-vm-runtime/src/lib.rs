@@ -2,7 +2,7 @@
 
 use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
-    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN,
+    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 
@@ -75,6 +75,10 @@ pub trait BoardHal {
     }
 
     fn i2c_open(&mut self, _bus: u16) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_write_u8(&mut self, _token: u32, _address: u16, _byte: u8) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -453,6 +457,18 @@ where
                 let handle = self.alloc_handle(HandleKind::I2c, token, ip)?;
                 self.push(Value::Handle(handle), ip)
             }
+            CAP_I2C_WRITE_U8 => {
+                let byte = self.pop_u8(ip)?;
+                let address = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::I2c, ip)?;
+                self.hal
+                    .i2c_write_u8(token, address, byte)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -531,6 +547,16 @@ where
         match self.pop(ip)? {
             Value::U8(value) => Ok(value as u16),
             Value::U16(value) => Ok(value),
+            _ => Err(RuntimeError {
+                ip,
+                kind: RuntimeErrorKind::TypeMismatch,
+            }),
+        }
+    }
+
+    fn pop_u8(&mut self, ip: usize) -> Result<u8, RuntimeError> {
+        match self.pop(ip)? {
+            Value::U8(value) => Ok(value),
             _ => Err(RuntimeError {
                 ip,
                 kind: RuntimeErrorKind::TypeMismatch,
@@ -687,6 +713,7 @@ mod tests {
         AdcRead(u16),
         DacWriteU12(u16, u16),
         I2cOpen(u16),
+        I2cWriteU8(u32, u16, u8),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -760,6 +787,11 @@ mod tests {
         fn i2c_open(&mut self, bus: u16) -> Result<u32, HalError> {
             self.events.push(Event::I2cOpen(bus));
             Ok(0x1_2000 | bus as u32)
+        }
+
+        fn i2c_write_u8(&mut self, token: u32, address: u16, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::I2cWriteU8(token, address, byte));
+            Ok(())
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -924,5 +956,22 @@ mod tests {
         );
         assert_eq!(report.open_handles, 1);
         assert_eq!(runtime.hal().events, vec![Event::I2cOpen(0)]);
+    }
+
+    #[test]
+    fn i2c_write_u8_dispatches_handle_address_and_byte() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 1, 0x40, CAP_I2C_OPEN as u8, 0x20, 0x50];
+        let write = [0x20, 0x12, 0x3c, 0x12, 0xa5, 0x40, CAP_I2C_WRITE_U8 as u8];
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_code(&write, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::I2cOpen(1), Event::I2cWriteU8(0x1_2001, 0x3c, 0xa5)]
+        );
     }
 }

@@ -213,6 +213,10 @@ module CodingAdventures
         native_session.i2c_open_module(bus, max_stack)
       end
 
+      def i2c_write_u8_module(address:, byte:, max_stack: 4)
+        native_session.i2c_write_u8_module(address, byte, max_stack)
+      end
+
       def gpio_open_module(pin:, mode: :output, max_stack: 2)
         native_session.gpio_open_module(pin, gpio_mode(mode), max_stack)
       end
@@ -296,6 +300,18 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: i2c_open_module(bus: bus, max_stack: max_stack)
+        )
+      end
+
+      def upload_i2c_write_u8(
+        program_id: @program_id,
+        address:,
+        byte:,
+        max_stack: 4
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: i2c_write_u8_module(address: address, byte: byte, max_stack: max_stack)
         )
       end
 
@@ -644,6 +660,30 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def i2c_write_u8(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        address:,
+        byte:,
+        max_stack: 4
+      )
+        results = upload_i2c_write_u8(
+          program_id: program_id,
+          address: address,
+          byte: byte,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def gpio_open(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -845,6 +885,8 @@ module CodingAdventures
           upload_dac_write_u12(**dac_write_u12_command_options(words, command, options, require_budget: false))
         when "upload-i2c-open", "upload-i2c.open"
           upload_i2c_open(**i2c_open_command_options(words, command, options, require_budget: false))
+        when "upload-i2c-write-u8", "upload-i2c.write_u8", "upload-i2c-write"
+          upload_i2c_write_u8(**i2c_write_u8_command_options(words, command, options, require_budget: false))
         when "upload-gpio-open", "upload-gpio.open"
           upload_gpio_open(**gpio_open_command_options(words, command, options, require_budget: false))
         when "upload-gpio-handle-read", "upload-gpio.handle-read"
@@ -883,6 +925,8 @@ module CodingAdventures
           dac_write_u12(**dac_write_u12_command_options(words, command, options))
         when "i2c-open", "i2c.open"
           i2c_open(**i2c_open_command_options(words, command, options))
+        when "i2c-write-u8", "i2c.write_u8", "i2c-write"
+          i2c_write_u8(**i2c_write_u8_command_options(words, command, options))
         when "gpio-high", "gpio.high"
           gpio_write(**gpio_level_command_options(words, command, options, value: true))
         when "gpio-low", "gpio.low"
@@ -1125,6 +1169,22 @@ module CodingAdventures
 
         ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires bus" unless merged.key?(:bus)
+
+        merged
+      end
+
+      def i2c_write_u8_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:address] = integer_argument(words.shift, "#{command} address") unless words.empty?
+        merged[:byte] = integer_argument(words.shift, "#{command} byte") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires address" unless merged.key?(:address)
+        raise ArgumentError, "#{command} requires byte" unless merged.key?(:byte)
 
         merged
       end

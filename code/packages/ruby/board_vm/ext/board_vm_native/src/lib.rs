@@ -3,23 +3,24 @@ use std::ptr;
 use std::slice;
 
 use board_vm_host::{
-    AdcReadProgram, BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram,
-    DacWriteU12Program, GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram, GpioWriteProgram,
-    I2cOpenProgram, LedMatrixFrameProgram, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN,
-    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN,
-    TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
+    AdcReadProgram, BlinkProgram, DacWriteU12Program, GpioHandleCloseProgram,
+    GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram,
+    GpioWriteProgram, I2cOpenProgram, I2cWriteU8Program, LedMatrixFrameProgram, PwmWriteProgram,
+    TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    DAC_WRITE_U12_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
+    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN,
+    I2C_OPEN_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
     bluetooth_endpoint_candidates_from_devices, bluetooth_transact_wire_frame, board_family_name,
     build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
     build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
-    build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
-    build_dac_write_u12_module, build_i2c_open_module, build_led_matrix_frame_module, build_program_begin_wire_frame,
-    build_program_chunk_wire_frame, build_program_end_wire_frame, build_pwm_write_module,
-    build_adc_read_module, build_raw_module,
+    build_dac_write_u12_module, build_gpio_read_module, build_gpio_write_module,
+    build_hello_wire_frame, build_i2c_open_module, build_i2c_write_u8_module,
+    build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
+    build_program_end_wire_frame, build_pwm_write_module, build_adc_read_module, build_raw_module,
     build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
@@ -269,6 +270,21 @@ extern "C" fn session_i2c_open_module(
 
     let module = build_i2c_open_module_value(bus, max_stack)
         .unwrap_or_else(|error| raise_core_error("i2c_open_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_write_u8_module(
+    _self_val: VALUE,
+    address_val: VALUE,
+    byte_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let address = rb_u16(address_val, "address");
+    let byte = rb_u8(byte_val, "byte");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_write_u8_module_value(address, byte, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_write_u8_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -1485,6 +1501,24 @@ fn build_i2c_open_module_value(bus: u8, max_stack: u8) -> Result<Vec<u8>, Langua
     Ok(module)
 }
 
+fn build_i2c_write_u8_module_value(
+    address: u16,
+    byte: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_WRITE_U8_MODULE_LEN];
+    let len = build_i2c_write_u8_module(
+        I2cWriteU8Program {
+            address,
+            byte,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_raw_module_value(
     flags: u8,
     max_stack: u8,
@@ -1805,6 +1839,12 @@ pub extern "C" fn Init_board_vm_native() {
         "i2c_open_module",
         session_i2c_open_module as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_write_u8_module",
+        session_i2c_write_u8_module as *const c_void,
+        3,
     );
     ruby_bridge::define_method_raw(
         session_class,
