@@ -1,5 +1,33 @@
 # Changelog — `x86_64-backend`
 
+## 0.2.0 — 2026-05-14 (LANG43 — LANG38-parity wave)
+
+Extends the V1 backend with the same opcodes `aarch64-backend` gained
+in its LANG38 release.  Same CIR coverage now compiles on both
+backends.
+
+**New CIR opcodes:**
+
+- `div_<ty>`, `mod_<ty>` — integer division and modulo.  Signed types
+  use `CQO` + `IDIV`; unsigned types use `XOR rdx, rdx` + `DIV`.
+  Quotient lives in `RAX`, remainder in `RDX` (sequenced by hand —
+  no register-allocator surprises because RAX/RCX/RDX were already
+  reserved in V1).
+- `and_<ty>`, `or_<ty>`, `xor_<ty>` — bitwise logical (64-bit).
+- `not_<ty>` — bitwise complement (`NOT r/m64`).
+- `shl_<ty>` — logical shift left (`SHL r/m64, CL`).
+- `shr_<ty>` — arithmetic shift right (`SAR`) for signed types,
+  logical shift right (`SHR`) for unsigned types.
+- `neg_<ty>` — two's-complement negate (`NEG r/m64`).
+
+All shifts use `CL` as the count register (x86-64 ISA constraint);
+the backend pre-loads `rhs` into `RCX` before issuing the shift.
+
+Still out of scope (added by later phases):
+- Calls + external relocations (phase 5)
+- Globals + `io_out` (phase 6)
+- Floats / closures
+
 ## 0.1.0 — 2026-05-14 (LANG43)
 
 Initial release.  V1 backend matching the `aarch64-backend` V1 baseline.

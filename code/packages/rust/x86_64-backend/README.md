@@ -40,22 +40,26 @@ let backend = X86_64Backend::with_abi(X86_64Abi::MsX64);  // Windows
 `X86_64Backend::new()` defaults to `SysV`.  `twig-aot` will pick the
 right ABI based on `--target` (LANG46).
 
-## V1 scope
+## Scope
 
-Matches the aarch64-backend V1 baseline:
+Matches the aarch64-backend baseline through LANG38:
 
 | Family | CIR mnemonics |
 |---|---|
 | Constants | `const_u8` … `const_u64`, `const_i8` … `const_i64`, `const_bool` |
 | Integer arithmetic | `add_<ty>`, `sub_<ty>`, `mul_<ty>` |
+| Division | `div_<ty>` (IDIV / DIV via RDX:RAX), `mod_<ty>` |
+| Logical | `and_<ty>`, `or_<ty>`, `xor_<ty>`, `not_<ty>` |
+| Shifts | `shl_<ty>`, `shr_<ty>` (SAR for `i*`, SHR for `u*`) |
+| Unary | `neg_<ty>` |
 | Comparisons | `cmp_eq_<ty>`, `cmp_ne_<ty>`, `cmp_lt_<ty>`, `cmp_le_<ty>`, `cmp_gt_<ty>`, `cmp_ge_<ty>` (signed and unsigned) |
 | Control flow | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | Returns | `ret_<ty>`, `ret_void` |
 | Moves | `mov_<ty>` |
 | Type guards | `type_assert` (lowered to `UD2` trap — AOT has no deopt) |
 
-Division, modulo, logical ops, shifts, calls, globals, and `io_out`
-are added by subsequent waves (LANG43 phases 4–6).
+Calls, globals, and `io_out` are added by subsequent waves
+(LANG43 phases 5–6).
 
 ## Register allocation
 
