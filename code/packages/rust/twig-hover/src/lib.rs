@@ -54,7 +54,8 @@ use std::fmt;
 
 use twig_document_symbols::{symbols_for_program, DocumentSymbol, SymbolKind};
 use twig_parser::{
-    parse, Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, StrLit,
+    parse, Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, LetStar, NilLit, Program,
+    StrLit,
     SymLit, TwigParseError, VarRef,
 };
 
@@ -409,6 +410,17 @@ fn visit_expr(
         }
         Expr::Let(Let { bindings, body, line: l, column: c }) => {
             try_keyword(found, line, column, u32_of(*l), u32_of(*c).saturating_add(1), "let");
+            for (_n, e) in bindings {
+                visit_expr(e, line, column, symbols, found);
+            }
+            for e in body {
+                visit_expr(e, line, column, symbols, found);
+            }
+        }
+        // LANG52 — let* with sequential bindings; surface as the "let*" keyword
+        // and recurse into each binding RHS and each body expression.
+        Expr::LetStar(LetStar { bindings, body, line: l, column: c }) => {
+            try_keyword(found, line, column, u32_of(*l), u32_of(*c).saturating_add(1), "let*");
             for (_n, e) in bindings {
                 visit_expr(e, line, column, symbols, found);
             }

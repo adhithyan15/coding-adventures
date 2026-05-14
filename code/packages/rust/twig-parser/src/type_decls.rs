@@ -297,6 +297,8 @@ fn expr_to_kind(expr: &Expr) -> KindDecl {
         | Expr::Apply(_)
         | Expr::If(_)
         | Expr::Let(_)
+        // LANG52: let* has the same fallback as let — runtime-dependent.
+        | Expr::LetStar(_)
         | Expr::Begin(_)
         | Expr::Match(_) => KindDecl::Any,
     }

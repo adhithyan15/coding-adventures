@@ -44,7 +44,10 @@ use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast_nodes::{
-    Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, Match, MatchArm, MatchPat,
+    Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+    Match, MatchArm, MatchPat,
     ModuleInfo, NilLit, Program, RecordDef, RecordField, SymLit, TypeAlias, TypeAnnotation,
     TypeExpr, TypedMode, UnionDef, UnionVariant, VarRef,
 };
@@ -1183,9 +1186,11 @@ fn extract_compound(node: &GrammarASTNode, depth: usize) -> Result<Expr, TwigPar
             column,
         })?;
     match inner.rule_name.as_str() {
-        "if_form"     => Ok(Expr::If(extract_if(inner, depth + 1)?)),
-        "let_form"    => Ok(Expr::Let(extract_let(inner, depth + 1)?)),
-        "begin_form"  => Ok(Expr::Begin(extract_begin(inner, depth + 1)?)),
+        "if_form"        => Ok(Expr::If(extract_if(inner, depth + 1)?)),
+        "let_form"       => Ok(Expr::Let(extract_let(inner, depth + 1)?)),
+        // LANG52: let* form — sequential bindings
+        "let_star_form"  => Ok(Expr::LetStar(extract_let_star(inner, depth + 1)?)),
+        "begin_form"     => Ok(Expr::Begin(extract_begin(inner, depth + 1)?)),
         "lambda_form" => Ok(Expr::Lambda(extract_lambda(inner, depth + 1)?)),
         "quote_form"  => Ok(Expr::SymLit(extract_quote_form(inner)?)),
         "match_form"  => Ok(Expr::Match(extract_match(inner, depth + 1)?)),
@@ -1238,6 +1243,33 @@ fn extract_let(node: &GrammarASTNode, depth: usize) -> Result<Let, TwigParseErro
         });
     }
     Ok(Let { bindings, body, line, column })
+}
+
+/// LANG52: extract `(let* ((x e1) (y e2) ...) body+)`.
+///
+/// The shape is identical to `(let ...)` — same grammar rule structure,
+/// same `binding` children, same `expr` body children.  The semantic
+/// difference (sequential vs. parallel binding) is handled by the
+/// IR compiler, not the extractor.
+fn extract_let_star(node: &GrammarASTNode, depth: usize) -> Result<LetStar, TwigParseError> {
+    let (line, column) = pos(node);
+    let mut bindings: Vec<(String, Expr)> = Vec::new();
+    let mut body: Vec<Expr> = Vec::new();
+    for child in ast_children(node) {
+        match child.rule_name.as_str() {
+            "binding" => bindings.push(extract_binding(child, depth + 1)?),
+            "expr" => body.push(extract_expr(child, depth + 1)?),
+            _ => {}
+        }
+    }
+    if body.is_empty() {
+        return Err(TwigParseError {
+            message: "(let* (...) ...) needs at least one body expression".into(),
+            line,
+            column,
+        });
+    }
+    Ok(LetStar { bindings, body, line, column })
 }
 
 fn extract_binding(

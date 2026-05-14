@@ -102,8 +102,8 @@ use format_doc::{
     LayoutOptions,
 };
 use twig_parser::{
-    parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program,
-    StrLit, SymLit, TwigParseError, TypeAnnotation, TypeExpr, VarRef,
+    parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, LetStar, NilLit,
+    Program, StrLit, SymLit, TwigParseError, TypeAnnotation, TypeExpr, VarRef,
 };
 
 // ---------------------------------------------------------------------------
@@ -363,6 +363,9 @@ fn expr_to_doc(expr: &Expr) -> Doc {
         Expr::VarRef(VarRef { name, .. }) => text(name.clone()),
         Expr::If(i) => if_to_doc(i),
         Expr::Let(l) => let_to_doc(l),
+        // LANG52 — let* with sequential bindings; same layout as let
+        // but opens with `(let* ` to preserve the sequential semantics.
+        Expr::LetStar(l) => let_star_to_doc(l),
         Expr::Begin(b) => begin_to_doc(b),
         Expr::Lambda(l) => lambda_to_doc(l),
         Expr::Apply(a) => apply_to_doc(a),
@@ -457,6 +460,39 @@ fn let_to_doc(l: &Let) -> Doc {
     }
     group(concat([
         text("(let "),
+        bindings_doc,
+        indent(concat(body_parts), 1),
+        text(")"),
+    ]))
+}
+
+/// Format `(let* ((x e1) (y e2)) body)` — layout identical to `let_to_doc`
+/// but uses `"(let* "` so sequential binding semantics are preserved.
+fn let_star_to_doc(l: &LetStar) -> Doc {
+    let bindings_doc = if l.bindings.is_empty() {
+        text("()")
+    } else {
+        let mut binding_parts: Vec<Doc> = Vec::with_capacity(l.bindings.len() * 2 - 1);
+        for (i, (name, expr)) in l.bindings.iter().enumerate() {
+            if i > 0 {
+                binding_parts.push(line());
+            }
+            binding_parts.push(group(concat([
+                text("("),
+                text(name.clone()),
+                indent(concat([line(), expr_to_doc(expr)]), 1),
+                text(")"),
+            ])));
+        }
+        concat([text("("), group(concat(binding_parts)), text(")")])
+    };
+    let mut body_parts: Vec<Doc> = Vec::with_capacity(l.body.len() * 2);
+    for e in &l.body {
+        body_parts.push(line());
+        body_parts.push(expr_to_doc(e));
+    }
+    group(concat([
+        text("(let* "),
         bindings_doc,
         indent(concat(body_parts), 1),
         text(")"),
@@ -636,6 +672,12 @@ mod tests {
                 column: 0,
             }),
             Expr::Let(l) => Expr::Let(Let {
+                bindings: l.bindings.iter().map(|(n, e)| (n.clone(), strip_expr(e))).collect(),
+                body: l.body.iter().map(strip_expr).collect(),
+                line: 0,
+                column: 0,
+            }),
+            Expr::LetStar(l) => Expr::LetStar(LetStar {
                 bindings: l.bindings.iter().map(|(n, e)| (n.clone(), strip_expr(e))).collect(),
                 body: l.body.iter().map(strip_expr).collect(),
                 line: 0,

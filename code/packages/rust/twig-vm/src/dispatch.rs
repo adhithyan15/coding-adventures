@@ -1884,10 +1884,139 @@ fn exec_host_call(
             Ok(())
         }
 
+        // ── host/write_string (LANG52) ────────────────────────────────
+        //
+        // Write the UTF-8 bytes of a heap string to stdout.  The single
+        // argument must be a `LangString` heap object produced by
+        // `alloc_string` (i.e. a value whose class tag is CLASS_STRING).
+        //
+        // IIR: call_builtin "host/write_string" <string_reg>
+        //
+        // This is the idiomatic way to print string values from Twig
+        // code; `host/write_byte` writes individual bytes and is useful
+        // for protocol-level I/O.
+        "write_string" => {
+            let bytes = host_arg_string(name, instr, frame, 1)?;
+            use std::io::Write as _;
+            std::io::stdout()
+                .write_all(bytes)
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            // void — no dest
+            Ok(())
+        }
+
+        // ── host/read_line (LANG52) ───────────────────────────────────
+        //
+        // Read one line from stdin, stripping the trailing `\n` (and
+        // `\r\n` on Windows).  Returns the content as a heap string.
+        // Returns an empty string on EOF.
+        //
+        // IIR: call_builtin "host/read_line" → dest
+        //
+        // Security: capped at 1 MiB per line to prevent adversarial
+        // input from causing unbounded memory growth (DoS).  Lines that
+        // exceed the cap return a HostIo error rather than truncating
+        // silently (truncation would produce a different semantic result,
+        // which is harder to reason about).
+        "read_line" => {
+            use std::io::{BufRead as _, Read as _};
+            /// Maximum bytes we will read for a single line.
+            const MAX_LINE_BYTES: u64 = 1 * 1024 * 1024; // 1 MiB
+            let mut line = String::new();
+            let stdin = std::io::stdin();
+            let mut limited = stdin.lock().take(MAX_LINE_BYTES + 1);
+            limited
+                .read_line(&mut line)
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            // Reject lines that hit or exceed the cap.
+            if line.len() as u64 > MAX_LINE_BYTES {
+                return Err(RunError::HostIo(
+                    "host/read_line: line exceeds 1 MiB limit".into(),
+                ));
+            }
+            // Strip trailing newline / CRLF.
+            if line.ends_with('\n') {
+                line.pop();
+                if line.ends_with('\r') {
+                    line.pop();
+                }
+            }
+            let val = lispy_runtime::heap::alloc_string(line.as_bytes());
+            if let Some(d) = &instr.dest {
+                frame.set(d.clone(), val)?;
+            }
+            Ok(())
+        }
+
+        // ── host/read_file (LANG52) ───────────────────────────────────
+        //
+        // Read the entire contents of the file at the path given by the
+        // argument string.  Returns the file contents as a heap string.
+        // Propagates OS errors as `RunError::HostIo`.
+        //
+        // IIR: call_builtin "host/read_file" <path_reg> → dest
+        //
+        // Security hardening:
+        //
+        // 1. **Size cap** — files larger than 64 MiB return a HostIo
+        //    error.  `std::fs::read` on an unbounded file (or a synthetic
+        //    "infinite" file like `/dev/zero`) would otherwise OOM the
+        //    process.
+        //
+        // 2. **Error message** — the path is NOT included in the public
+        //    error string to prevent filesystem enumeration via
+        //    OS-error side channels ("permission denied" vs "not found").
+        //    The path is Debug-printed only at the `RunError::HostIo`
+        //    level, which the host can choose to log or suppress.
+        //
+        // Note: path-traversal sandboxing (restricting which directories
+        // are accessible) is a host-level concern.  The VM's caller is
+        // responsible for not passing untrusted Twig programs to VMs
+        // with ambient filesystem access.
+        "read_file" => {
+            /// Maximum bytes we will read from a single file.
+            ///
+            /// The cap is enforced via `Read::take()` on the open file handle
+            /// (NOT via a `metadata()` pre-check).  `metadata()` reports
+            /// `len() == 0` for special files such as FIFOs, named pipes, and
+            /// `/proc` virtual files, which would bypass a metadata-based
+            /// guard entirely.  `take()` limits the actual bytes transferred
+            /// regardless of file type.
+            const MAX_FILE_BYTES: u64 = 64 * 1024 * 1024; // 64 MiB
+            let path_bytes = host_arg_string(name, instr, frame, 1)?;
+            let path_str = std::str::from_utf8(path_bytes)
+                .map_err(|_| RunError::HostIo(
+                    "host/read_file: path argument is not valid UTF-8".into(),
+                ))?;
+            // Open the file, then read through a `take()` adapter that limits
+            // how many bytes are transferred.  We request one byte beyond the
+            // cap so we can distinguish "exactly at the limit" from "over".
+            use std::io::Read as _;
+            let f = std::fs::File::open(path_str)
+                .map_err(|e| RunError::HostIo(format!("host/read_file: {e}")))?;
+            let mut buf = Vec::with_capacity(
+                (MAX_FILE_BYTES as usize).min(256 * 1024) // 256 KiB initial
+            );
+            f.take(MAX_FILE_BYTES + 1)
+                .read_to_end(&mut buf)
+                .map_err(|e| RunError::HostIo(format!("host/read_file: {e}")))?;
+            // If we read more bytes than the cap, the file was too large.
+            if buf.len() as u64 > MAX_FILE_BYTES {
+                return Err(RunError::HostIo(format!(
+                    "host/read_file: file exceeds {MAX_FILE_BYTES}-byte limit",
+                )));
+            }
+            let val = lispy_runtime::heap::alloc_string(&buf);
+            if let Some(d) = &instr.dest {
+                frame.set(d.clone(), val)?;
+            }
+            Ok(())
+        }
+
         // ── Unknown host/ capability ──────────────────────────────────
         //
         // Any unrecognised `host/<name>` is an error.  Future
-        // capabilities (e.g. `host/read_line`, `host/open_file`) will
+        // capabilities (e.g. `host/open_file`, `host/write_file`) will
         // be added here alongside their backend lowering rules.
         cap => {
             Err(RunError::UnknownBuiltin(format!("host/{cap}")))
@@ -1917,6 +2046,36 @@ fn host_arg_int(
         function: host_fn.to_string(),
         received: format!("{val}"),
     })
+}
+
+/// Extract the heap-string bytes at argument position `pos` (1-based).
+///
+/// Used by `host/write_string`, `host/read_file`, and any future
+/// host call that takes a string argument.  Returns a `HostArgType`
+/// error if the value is not a `LangString` heap object.
+///
+/// The returned slice is `'static` because `alloc_string` uses
+/// `Box::leak` — all heap strings live for the process lifetime.
+fn host_arg_string(
+    host_fn: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<&'static [u8], RunError> {
+    let src = instr.srcs.get(pos)
+        .ok_or_else(|| RunError::MalformedInstruction(
+            format!("host/{host_fn}: missing argument at position {pos}"),
+        ))?;
+    let frame_ref = frame;
+    let val = operand_to_value(src, &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    // SAFETY: values in the dispatch loop come from the VM's value space —
+    // heap tags always reflect real, live allocations.
+    unsafe { lispy_runtime::heap::string_bytes(val) }
+        .ok_or_else(|| RunError::HostArgType {
+            function: host_fn.to_string(),
+            received: format!("{val}"),
+        })
 }
 
 // ---------------------------------------------------------------------------

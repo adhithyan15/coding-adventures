@@ -374,6 +374,27 @@ impl LangBinding for LispyBinding {
             "integer->char"    => Some(builtins::integer_to_char),
             "char-upcase"      => Some(builtins::char_upcase),
             "char-downcase"    => Some(builtins::char_downcase),
+            // ── Extended comparisons (LANG52) ───────────────────────────
+            "<="  => Some(builtins::le),
+            ">="  => Some(builtins::ge),
+            // ── Extended arithmetic (LANG52) ────────────────────────────
+            "quotient"   => Some(builtins::quotient),
+            "remainder"  => Some(builtins::remainder),
+            "modulo"     => Some(builtins::modulo),
+            // ── Logic (LANG52) ──────────────────────────────────────────
+            "not"      => Some(builtins::not),
+            "boolean?" => Some(builtins::boolean_p),
+            "equal?"   => Some(builtins::equal_p),
+            // ── List operations (LANG52) ────────────────────────────────
+            "list"       => Some(builtins::list),
+            "list?"      => Some(builtins::list_p),
+            "length"     => Some(builtins::length),
+            "append"     => Some(builtins::append),
+            "reverse"    => Some(builtins::reverse),
+            "list-ref"   => Some(builtins::list_ref),
+            "assoc"      => Some(builtins::assoc),
+            // ── Symbol operations (LANG52) ──────────────────────────────
+            "symbol-append" => Some(builtins::symbol_append),
             _ => None,
         }
     }

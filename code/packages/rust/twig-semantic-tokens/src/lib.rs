@@ -67,8 +67,8 @@
 use std::fmt;
 
 use twig_parser::{
-    parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program,
-    StrLit, SymLit, TwigParseError, VarRef,
+    parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, LetStar, NilLit,
+    Program, StrLit, SymLit, TwigParseError, VarRef,
 };
 
 // ---------------------------------------------------------------------------
@@ -285,6 +285,21 @@ fn emit_expr(out: &mut Vec<SemanticToken>, expr: &Expr) {
             // accuracy.  Most consumers will instead rely on the
             // VarRef colouring for the binding's body usages, which
             // we DO emit accurately.
+            for (_name, expr) in bindings {
+                emit_expr(out, expr);
+            }
+            for e in body {
+                emit_expr(out, e);
+            }
+            let _ = (l, c);
+        }
+        // LANG52 — let* with sequential bindings.  Emit "let*" as a keyword,
+        // then recurse into binding RHS expressions and body.  Same position
+        // caveat as Let: binding names are emitted with column 0 sentinel.
+        Expr::LetStar(LetStar { bindings, body, line, column }) => {
+            let l = u32_of(*line);
+            let c = u32_of(*column);
+            push_keyword(out, l, c.saturating_add(1), "let*");
             for (_name, expr) in bindings {
                 emit_expr(out, expr);
             }

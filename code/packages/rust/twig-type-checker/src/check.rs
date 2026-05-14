@@ -44,7 +44,10 @@
 //! that any sub-call can append to.
 
 use twig_parser::{
-    Apply, Begin, Define, Expr, Form, If, Lambda, Let, Match, MatchPat, Program, TypedMode,
+    Apply, Begin, Define, Expr, Form, If, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+    Match, MatchPat, Program, TypedMode,
 };
 use type_checker_protocol::TypeErrorDiagnostic;
 
@@ -177,6 +180,13 @@ pub fn infer_expr(
 
         // ── Let binding ─────────────────────────────────────────────────────
         Expr::Let(let_expr) => infer_let(let_expr, env, scope, mode, errors),
+
+        // ── Sequential let* binding (LANG52) ─────────────────────────────────
+        //
+        // For type checking purposes, let* behaves like a chain of nested lets.
+        // We walk each binding's RHS in the scope that includes all prior
+        // bindings, then walk the body in the full accumulated scope.
+        Expr::LetStar(let_star) => infer_let_star(let_star, env, scope, mode, errors),
 
         // ── Sequencing ──────────────────────────────────────────────────────
         Expr::Begin(begin) => infer_begin(begin, env, scope, mode, errors),
@@ -387,6 +397,40 @@ fn infer_let(
     // Step 5: pop frame.
     scope.pop_frame();
 
+    last_kind
+}
+
+// ---------------------------------------------------------------------------
+// LetStar (LANG52)
+// ---------------------------------------------------------------------------
+
+/// Infer a `(let* ((x e1) (y e2) …) body+)` expression.
+///
+/// Unlike `infer_let`, each binding's RHS is evaluated in the scope that
+/// includes all *prior* bindings.  Modelled as a single push-frame followed
+/// by incremental binding additions.
+fn infer_let_star(
+    let_star: &LetStar,
+    env: &TypeEnv,
+    scope: &mut ScopeStack,
+    mode: &TypedMode,
+    errors: &mut Vec<TypeErrorDiagnostic>,
+) -> TwigKind {
+    scope.push_frame();
+
+    // Evaluate each RHS in the accumulated scope, then immediately bind.
+    for (name, rhs) in &let_star.bindings {
+        let kind = infer_expr(rhs, env, scope, mode, errors);
+        scope.bind(name, kind);
+    }
+
+    // Infer body.
+    let mut last_kind = TwigKind::Any;
+    for e in &let_star.body {
+        last_kind = infer_expr(e, env, scope, mode, errors);
+    }
+
+    scope.pop_frame();
     last_kind
 }
 

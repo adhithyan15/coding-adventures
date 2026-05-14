@@ -66,7 +66,7 @@
 use std::fmt;
 
 use twig_parser::{
-    parse, Apply, Begin, Expr, Form, If, Lambda, Let, Program, TwigParseError,
+    parse, Apply, Begin, Expr, Form, If, Lambda, Let, LetStar, Program, TwigParseError,
 };
 
 // ---------------------------------------------------------------------------
@@ -186,6 +186,18 @@ fn descend_expr(out: &mut Vec<FoldingRange>, expr: &Expr) {
                 descend_expr(out, e);
             }
         }
+        // LANG52 — let* with sequential bindings; fold identical to let.
+        Expr::LetStar(LetStar { bindings, body, line, .. }) => {
+            let start = u32_of(*line);
+            let end = max_line_in_bindings(bindings).max(max_line_in_exprs(body));
+            push_if_multiline(out, start, end);
+            for (_n, e) in bindings {
+                descend_expr(out, e);
+            }
+            for e in body {
+                descend_expr(out, e);
+            }
+        }
         Expr::Begin(Begin { exprs, line, .. }) => {
             let start = u32_of(*line);
             let end = max_line_in_exprs(exprs);
@@ -252,6 +264,10 @@ fn max_line_in_expr(expr: &Expr) -> u32 {
             .max(max_line_in_expr(then_branch))
             .max(max_line_in_expr(else_branch)),
         Expr::Let(Let { bindings, body, line, .. }) => u32_of(*line)
+            .max(max_line_in_bindings(bindings))
+            .max(max_line_in_exprs(body)),
+        // LANG52 — let* max-line identical to let.
+        Expr::LetStar(LetStar { bindings, body, line, .. }) => u32_of(*line)
             .max(max_line_in_bindings(bindings))
             .max(max_line_in_exprs(body)),
         Expr::Begin(Begin { exprs, line, .. }) => u32_of(*line).max(max_line_in_exprs(exprs)),
