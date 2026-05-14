@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0] — 2026-05-14
+
+- Add TypeScript MACSYMA parity for EllipticE (second kind) integration:
+  - `integrate(sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2)` → `EllipticE(k)`
+  - `integrate(sqrt(1-k^2*sin(theta)^2), theta)` → `EllipticE(theta, k)`
+- Add TypeScript MACSYMA parity for EllipticPi (third kind) integration:
+  - `integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2)` → `EllipticPi(n, k)`
+- Fix numeric modulus extraction: `(1/2)^2` now correctly yields modulus `1/2`
+  for EllipticE/Pi recognition (same fix as `symbolic-vm` v0.3.1).
+- Add pipeline tests for numeric modulus forms (k=1/2, n=2, k=1/2).
+
 ## [0.2.0] — 2026-05-14
 
 - Add TypeScript MACSYMA parity for elliptic first-kind integration, so
