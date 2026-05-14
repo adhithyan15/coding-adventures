@@ -1,6 +1,6 @@
 use spice_engine::{
-    mc_dc, Circuit, CurrentSource, Element, McDistribution, McOptions, Resistor, SpiceError, Vccs,
-    Vcvs, VoltageSource,
+    mc_dc, Cccs, Circuit, CurrentSource, Element, McDistribution, McOptions, Resistor, SpiceError,
+    Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -183,6 +183,40 @@ fn mc_dc_varies_vcvs_gain() {
             tolerance: 0.05,
             distribution: McDistribution::Uniform,
             seed: Some(11),
+        },
+    )
+    .unwrap();
+
+    assert!(result.mean > 1.8, "mean was {}", result.mean);
+    assert!(result.mean < 2.2, "mean was {}", result.mean);
+    assert!(result.std_dev > 0.0, "std_dev was {}", result.std_dev);
+}
+
+#[test]
+fn mc_dc_varies_cccs_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rsense", "in", "sense", 1_000.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vsense", "sense", "0", 0.0,
+    )));
+    circuit.add(Element::Cccs(Cccs::new("F1", "0", "out", "Vsense", 2.0)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = mc_dc(
+        &circuit,
+        "out",
+        40,
+        McOptions {
+            tolerance: 0.05,
+            distribution: McDistribution::Uniform,
+            seed: Some(13),
         },
     )
     .unwrap();

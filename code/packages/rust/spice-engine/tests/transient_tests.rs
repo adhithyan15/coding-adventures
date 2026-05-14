@@ -1,6 +1,6 @@
 use spice_engine::{
-    transient, Capacitor, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
+    transient, Capacitor, Cccs, Circuit, CurrentSource, Element, ExpWaveform, Inductor,
+    PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -173,6 +173,34 @@ fn transient_voltage_source_uses_sin_waveform() {
 
     assert_close(points[0].voltage("in").unwrap(), 2.0);
     assert_close(points[1].voltage("in").unwrap(), 0.0);
+}
+
+#[test]
+fn transient_cccs_updates_from_sensed_branch_current() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        Waveform::Pwl(PwlWaveform::new(vec![(0.0, 0.0), (0.25, 1.0), (0.5, 1.0)])),
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rsense", "in", "sense", 1_000.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vsense", "sense", "0", 0.0,
+    )));
+    circuit.add(Element::Cccs(Cccs::new("F1", "0", "out", "Vsense", 2.0)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25, 0.5).unwrap();
+
+    assert_close(points[0].branch_current("Vsense").unwrap(), 1.0e-3);
+    assert_close(points[0].voltage("out").unwrap(), 2.0);
+    assert_close(points[1].voltage("out").unwrap(), 2.0);
 }
 
 #[test]
