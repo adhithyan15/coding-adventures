@@ -882,7 +882,19 @@ fn compile_module_to_text_raw(
     // adding the function's byte offset and multiplying word index by 4.
     let mut global_byte_relocs: Vec<GlobalByteReloc> = Vec::new();
     for (fn_name, _bytes, _, glob_relocs) in &fn_results {
-        let fn_byte_offset = *offsets.get(fn_name.as_str()).unwrap_or(&0);
+        // Use an explicit error rather than `unwrap_or(&0)`.  A missing entry
+        // in `offsets` here would mean a function was compiled but not linked,
+        // which indicates a linker bug — silently using offset 0 would produce
+        // relocation records pointing to the wrong instructions.
+        let fn_byte_offset = *offsets.get(fn_name.as_str())
+            .ok_or_else(|| AotError::Linker {
+                status: None,
+                stderr: format!(
+                    "twig-aot: internal error: function '{}' missing from link offsets \
+                     during global reloc collection",
+                    fn_name
+                ),
+            })?;
         for gr in glob_relocs {
             global_byte_relocs.push(GlobalByteReloc {
                 adrp_byte_offset: (fn_byte_offset + gr.adrp_word * 4) as u32,

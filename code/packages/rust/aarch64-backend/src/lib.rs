@@ -666,7 +666,25 @@ fn emit_instr(
         global_relocs.push(GlobalWordReloc { adrp_word, add_word });
 
         // LDR X0, [X1, #slot*8]
-        let byte_offset = (slot * 8) as u32;
+        //
+        // Guard against slot indices that would overflow the ARM64 12-bit
+        // unsigned offset field.  For 64-bit (8-byte) accesses the LDR
+        // immediate is encoded in units of 8, so the maximum representable
+        // offset is 0xFFF * 8 = 32,760 bytes → 4,095 slots.  Silently
+        // truncating a large slot to u32 would produce a machine instruction
+        // that reads from the wrong address at runtime.
+        const MAX_GLOBAL_SLOT: usize = 4_095;
+        if slot > MAX_GLOBAL_SLOT {
+            return Err(BackendError::MalformedInstr(format!(
+                "global_load: slot index {slot} exceeds ARM64 12-bit LDR offset limit \
+                 (max {MAX_GLOBAL_SLOT} slots)"
+            )));
+        }
+        let byte_offset: u32 = (slot * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_load: slot byte offset overflows u32 (slot={slot})")
+            ))?;
         asm.ldr(Reg::X0, Reg::X1, byte_offset)?;
 
         // Spill to dest's stack slot
@@ -708,7 +726,20 @@ fn emit_instr(
         global_relocs.push(GlobalWordReloc { adrp_word, add_word });
 
         // STR X0, [X1, #slot*8]
-        let byte_offset = (slot * 8) as u32;
+        //
+        // Same 4,095-slot limit as global_load — ARM64 12-bit unsigned offset.
+        const MAX_GLOBAL_SLOT_STORE: usize = 4_095;
+        if slot > MAX_GLOBAL_SLOT_STORE {
+            return Err(BackendError::MalformedInstr(format!(
+                "global_store: slot index {slot} exceeds ARM64 12-bit STR offset limit \
+                 (max {MAX_GLOBAL_SLOT_STORE} slots)"
+            )));
+        }
+        let byte_offset: u32 = (slot * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_store: slot byte offset overflows u32 (slot={slot})")
+            ))?;
         asm.str_(Reg::X0, Reg::X1, byte_offset)?;
         // global_store has no dest.
         return Ok(());

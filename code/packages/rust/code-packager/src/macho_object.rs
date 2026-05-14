@@ -361,6 +361,30 @@ pub fn pack_object_with_globals(
     // ── sizeofcmds ───────────────────────────────────────────────────────────
     let sizeofcmds: u32 = (LC_SEGMENT_TWO_SECTS + LC_BUILD_VERSION_SIZE + LC_SYMTAB_SIZE) as u32;
 
+    // ── Checked u64 → u32 conversions for Mach-O 32-bit file-offset fields ──
+    //
+    // All Mach-O section and symtab file-offset fields are 32-bit.  For normal
+    // AOT object files these offsets will never approach 4 GiB, but we verify
+    // that explicitly so a pathological input (e.g. a module with >512 MB of
+    // machine code) produces a clear error rather than a silently malformed
+    // object file with truncated offsets.
+    //
+    // Helper closure: try_into() with a meaningful PackagerError on overflow.
+    macro_rules! off32 {
+        ($val:expr, $name:expr) => {
+            u32::try_from($val).map_err(|_| PackagerError::UnsupportedTarget(format!(
+                "pack_object_with_globals: {} file offset {} exceeds 4 GiB; \
+                 object files do not support this",
+                $name, $val
+            )))?
+        };
+    }
+    let text_file_off_u32  = off32!(text_file_off,  "text");
+    let reloc_file_off_u32 = off32!(reloc_file_off, "reloc");
+    let data_file_off_u32  = off32!(data_file_off,  "data");
+    let symtab_off_u32     = off32!(symtab_off,     "symtab");
+    let strtab_off_u32     = off32!(strtab_off,     "strtab");
+
     let mut out: Vec<u8> = Vec::with_capacity(total_size);
 
     // ── mach_header_64 ───────────────────────────────────────────────────────
@@ -398,10 +422,10 @@ pub fn pack_object_with_globals(
     write_name16(&mut out, b"__TEXT");
     out.extend_from_slice(&0u64.to_le_bytes());          // addr = 0 (relocatable)
     out.extend_from_slice(&code_len.to_le_bytes());       // size
-    out.extend_from_slice(&(text_file_off as u32).to_le_bytes()); // offset
+    out.extend_from_slice(&text_file_off_u32.to_le_bytes()); // offset
     out.extend_from_slice(&4u32.to_le_bytes());           // align = 2^4 = 16
     // reloff = file offset of our relocation records
-    out.extend_from_slice(&(reloc_file_off as u32).to_le_bytes());
+    out.extend_from_slice(&reloc_file_off_u32.to_le_bytes());
     // nreloc = 2 records per GlobalByteReloc (PAGE21 + PAGEOFF12)
     out.extend_from_slice(&(n_relocs * 2).to_le_bytes());
     out.extend_from_slice(&SECTION_FLAGS_CODE.to_le_bytes());
@@ -417,7 +441,7 @@ pub fn pack_object_with_globals(
     write_name16(&mut out, b"__DATA");
     out.extend_from_slice(&code_len.to_le_bytes());  // addr = immediately after __text
     out.extend_from_slice(&data_len.to_le_bytes());  // size = n_slots * 8
-    out.extend_from_slice(&(data_file_off as u32).to_le_bytes()); // offset
+    out.extend_from_slice(&data_file_off_u32.to_le_bytes()); // offset
     out.extend_from_slice(&3u32.to_le_bytes());       // align = 2^3 = 8 (64-bit slots)
     out.extend_from_slice(&0u32.to_le_bytes());       // reloff = 0 (no data relocs)
     out.extend_from_slice(&0u32.to_le_bytes());       // nreloc = 0
@@ -439,9 +463,9 @@ pub fn pack_object_with_globals(
     // ── LC_SYMTAB ────────────────────────────────────────────────────────────
     out.extend_from_slice(&LC_SYMTAB.to_le_bytes());
     out.extend_from_slice(&(LC_SYMTAB_SIZE as u32).to_le_bytes());
-    out.extend_from_slice(&(symtab_off as u32).to_le_bytes());    // symoff
+    out.extend_from_slice(&symtab_off_u32.to_le_bytes());          // symoff
     out.extend_from_slice(&2u32.to_le_bytes());                   // nsyms = 2
-    out.extend_from_slice(&(strtab_off as u32).to_le_bytes());    // stroff
+    out.extend_from_slice(&strtab_off_u32.to_le_bytes());          // stroff
     out.extend_from_slice(&(strtab.len() as u32).to_le_bytes());  // strsize
 
     debug_assert_eq!(out.len(), HEADER_TOTAL_WITH_DATA);
