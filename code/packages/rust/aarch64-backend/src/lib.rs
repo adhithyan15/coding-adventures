@@ -20,8 +20,9 @@
 //! | Type guards | `type_assert` (lowered to `udf` trap — AOT has no deopt) |
 //! | Calls | `call` (direct + cross-function BL via external relocs) |
 //! | Globals | `global_load`, `global_store` (LANG39 — ADRP+ADD+LDR/STR via `_twig_globals`) |
+//! | I/O | `io_out` (LANG40 — BL `__twig_print_i64`; helper injected by twig-aot) |
 //! | Float, send, properties | **NOT YET** |
-//! | Closures | **NOT YET** (LANG40) |
+//! | Closures | **NOT YET** |
 //!
 //! Anything outside this list causes the backend to return `None`, which
 //! `aot-core` reports as a compile failure for that function (it falls
@@ -745,6 +746,34 @@ fn emit_instr(
         return Ok(());
     }
 
+    // ── LANG40 — io_out: print integer to stdout ──────────────────────────────
+    //
+    // CIR encoding:
+    //   op    = "io_out"
+    //   dest  = None  (void side-effect)
+    //   srcs  = [Var(val_reg)]  (the i64 value to print)
+    //
+    // The backend emits:
+    //   LDR X0, [SP, #val_slot]      ; load value → first AAPCS64 arg reg
+    //   BL  __twig_print_i64         ; placeholder; patched by cross-fn linker
+    //
+    // `__twig_print_i64` is a self-contained helper injected into the text
+    // section by `twig-aot::compile_module_to_text_raw` whenever this reloc
+    // appears.  It converts x0 (i64) to decimal ASCII and writes to fd 1 via
+    // the macOS write(2) syscall (x16=4, SVC #0x80), followed by '\n'.
+    //
+    // No dest register is written — io_out is a pure side-effecting call.
+    if op == "io_out" {
+        if instr.srcs.is_empty() {
+            return Err(BackendError::MalformedInstr("io_out needs 1 src".into()));
+        }
+        // Load the integer value into X0 (first AAPCS64 argument register).
+        load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+        // Emit a placeholder BL that the AOT linker resolves to the helper.
+        asm.bl_external("__twig_print_i64");
+        return Ok(());
+    }
+
     // Anything else is unsupported — caller should fall back.
     Err(BackendError::UnsupportedOp(op.to_string()))
 }
@@ -967,6 +996,198 @@ fn emit_epilogue(asm: &mut Assembler, frame: u32) -> Result<(), BackendError> {
     asm.ldp_post(Reg::Fp, Reg::Lr, Reg::Sp, frame as i32)?;
     asm.ret();
     Ok(())
+}
+
+// ===========================================================================
+// LANG40 — emit_print_helper(): self-contained i64-to-stdout printer
+// ===========================================================================
+
+/// Emit a self-contained ARM64 function (`__twig_print_i64`) that converts
+/// the signed 64-bit integer in `x0` to decimal ASCII and writes it to
+/// stdout (fd 1) followed by `'\n'`, using the macOS `write(2)` syscall
+/// (`x16 = 4`, `SVC #0x80`).
+///
+/// # Why not `_printf`?
+///
+/// Calling `_printf` requires dyld stub sections and external-symbol nlist
+/// entries that `code-packager` does not currently emit.  This self-contained
+/// helper lives directly in `__TEXT/__text` alongside user functions and is
+/// resolved by the existing cross-function BL linker — zero additional Mach-O
+/// complexity.
+///
+/// # Stack layout
+///
+/// ```text
+/// [sp +  0]  saved x29 (fp)
+/// [sp +  8]  saved x30 (lr)
+/// [sp + 16]  digit buffer — 32 bytes (holds 20 decimal digits + sign)
+/// ── frame = 48 bytes (16-byte aligned) ──
+/// [sp + 48]  scratch byte (red zone; used for '\n' write)
+/// ```
+///
+/// # Algorithm
+///
+/// 1. Prologue: `STP x29,x30,[sp,#-48]!`.
+/// 2. Special-case `x0 == 0`: write literal `"0\n"` and return.
+/// 3. If negative: set sign flag (`x1 = 1`) and negate `x0`.
+/// 4. Digit loop: UDIV quotient into `x3`; MSUB remainder into `x4`;
+///    `ADD x4,'0'`; `STRB w4,[x5,#-1]!`; `CBNZ x0,.loop`.
+/// 5. Prepend `'-'` if sign flag is set.
+/// 6. `write(1, x5, x6-x5)` via SVC #0x80 (syscall 4).
+/// 7. Append newline: store `'\n'` at `[x6]` (red-zone safe) and repeat
+///    the write syscall for 1 byte.
+/// 8. Epilogue: `LDP x29,x30,[sp],#48; RET`.
+///
+/// # Register map
+///
+/// | Register | Role |
+/// |----------|------|
+/// | x0  | value (input); fd / modified by loop |
+/// | x1  | sign flag (0 = positive, 1 = negative); buf pointer for write |
+/// | x2  | constant divisor = 10; byte count for write |
+/// | x3  | quotient scratch |
+/// | x4  | digit / character scratch |
+/// | x5  | write pointer (starts at buf_end, decrements each digit) |
+/// | x6  | buf_end = sp+48 (one past digit buffer) |
+/// | x16 | syscall number (4 = write on macOS ARM64) |
+pub fn emit_print_helper() -> Vec<u8> {
+    // We build the instruction words directly (raw u32 constants) rather than
+    // through the label-aware Assembler, because the Assembler resolves labels
+    // within a single pass and doesn't support forward references across
+    // instruction-count-variable zero-paths.  Every instruction is fixed —
+    // no data-dependent branches change the helper's length — so we can
+    // precompute all branch offsets once and inline them as constants.
+    //
+    // All encodings verified against DDI 0487 (ARM Architecture Reference
+    // Manual) and cross-checked against the aarch64-encoder unit tests.
+    //
+    // Word layout (0-based index):
+    //
+    //  0: STP  x29,x30,[sp,#-48]!     ; prologue — save fp/lr, allocate frame
+    //  1: ADD  x29,sp,#0              ; fp = sp (debugger-friendly frame ptr)
+    //  2: ADD  x6,sp,#48              ; x6 = buf_end (one past 32-byte digit buf)
+    //  3: CMP  x0,#0                  ; is value zero?
+    //  4: CBNZ x0,.non_zero (+17)     ; if x0 ≠ 0 → word 21
+    //
+    //  — zero path (words 5..20) —
+    //  5: MOVZ w4,#48  ('0')
+    //  6: SUB  x5,x6,#1               ; x5 = buf_end - 1 (inside frame)
+    //  7: STRB w4,[x5]                ; write '0' to buffer
+    //  8: MOVZ x0,#1                  ; fd = stdout
+    //  9: MOV  x1,x5                  ; buf ptr
+    // 10: MOVZ x2,#1                  ; len = 1
+    // 11: MOVZ x16,#4                 ; write syscall
+    // 12: SVC  #0x80
+    // 13: MOVZ w4,#10  ('\n')
+    // 14: STRB w4,[x6]               ; '\n' at buf_end (red zone, safe)
+    // 15: MOVZ x0,#1
+    // 16: MOV  x1,x6
+    // 17: MOVZ x2,#1
+    // 18: MOVZ x16,#4
+    // 19: SVC  #0x80
+    // 20: B    .epilogue (+30)        ; → word 50
+    //
+    //  — non-zero path (.non_zero = word 21) —
+    // 21: MOVZ x1,#0                  ; sign = 0 (positive)
+    // 22: CMP  x0,#0
+    // 23: B.GE .digit_loop (+5)       ; if x0 ≥ 0 → word 28
+    // 24: MOVZ x1,#1                  ; sign = 1 (negative)
+    // 25: NEG  x0,x0                  ; negate to make positive
+    // 26: MOV  x5,x6                  ; write ptr = buf_end
+    // 27: MOVZ x2,#10                 ; divisor
+    //
+    // — .digit_loop (word 28) —
+    // 28: UDIV x3,x0,x2              ; quotient
+    // 29: MSUB x4,x3,x2,x0           ; remainder = x0 − x3×x2
+    // 30: MOV  x0,x3                  ; value ← quotient (advance)
+    // 31: ADD  x4,x4,#48             ; digit → ASCII ('0'=48)
+    // 32: STRB w4,[x5,#-1]!          ; *--x5 = digit
+    // 33: CBNZ x0,.digit_loop (-5)   ; → word 28 if value ≠ 0
+    //
+    // 34: CMP  x1,#0                  ; was value negative?
+    // 35: B.EQ .write (+3)            ; if positive → word 38
+    // 36: MOVZ w4,#45  ('-')
+    // 37: STRB w4,[x5,#-1]!          ; *--x5 = '-'
+    //
+    // — .write (word 38) —
+    // 38: MOVZ x0,#1                  ; fd = stdout
+    // 39: MOV  x1,x5                  ; buf = write pointer
+    // 40: SUB  x2,x6,x5              ; len = buf_end − write_ptr
+    // 41: MOVZ x16,#4
+    // 42: SVC  #0x80
+    // 43: MOVZ w4,#10  ('\n')
+    // 44: STRB w4,[x6]               ; '\n' at buf_end (red zone)
+    // 45: MOVZ x0,#1
+    // 46: MOV  x1,x6
+    // 47: MOVZ x2,#1
+    // 48: MOVZ x16,#4
+    // 49: SVC  #0x80
+    //
+    // — .epilogue (word 50) —
+    // 50: LDP  x29,x30,[sp],#48
+    // 51: RET
+    //
+    // Total: 52 words = 208 bytes.
+
+    // ── Words array — one entry per instruction (verified against DDI 0487) ──
+    #[rustfmt::skip]
+    let words: [u32; 52] = [
+        0xA9BD7BFD, // [ 0] STP x29,x30,[sp,#-48]!      ; prologue: save fp/lr, allocate 48-byte frame
+        0x910003FD, // [ 1] ADD x29,sp,#0               ; fp = sp
+        0x9100C3E6, // [ 2] ADD x6,sp,#48               ; x6 = buf_end (one past digit buffer)
+        0xF100001F, // [ 3] CMP x0,#0                   ; is value == 0?
+        0xB5000220, // [ 4] CBNZ x0,+17 (.non_zero)     ; if x0 != 0 skip zero path → word 21
+        0x52800604, // [ 5] MOVZ w4,#48 ('0')           ; zero path: prepare '0' character
+        0xD10004C5, // [ 6] SUB x5,x6,#1                ; x5 = buf_end - 1 (inside frame)
+        0x390000A4, // [ 7] STRB w4,[x5]                ; write '0' byte to buffer
+        0xD2800020, // [ 8] MOVZ x0,#1                  ; fd = stdout
+        0xAA0503E1, // [ 9] MOV x1,x5                   ; buf ptr
+        0xD2800042, // [10] MOVZ x2,#1                  ; len = 1
+        0xD2800090, // [11] MOVZ x16,#4                 ; write(2) syscall number
+        0xD4001001, // [12] SVC #0x80                   ; write('0')
+        0x52800144, // [13] MOVZ w4,#10 ('\n')
+        0x390000C4, // [14] STRB w4,[x6]                ; '\n' at buf_end (macOS red zone: safe)
+        0xD2800020, // [15] MOVZ x0,#1
+        0xAA0603E1, // [16] MOV x1,x6                   ; buf = &newline
+        0xD2800042, // [17] MOVZ x2,#1
+        0xD2800090, // [18] MOVZ x16,#4
+        0xD4001001, // [19] SVC #0x80                   ; write('\n')
+        0x1400001E, // [20] B +30 (.epilogue)            ; skip non-zero path → word 50
+        0xD2800001, // [21] MOVZ x1,#0                  ; non-zero path: sign = 0 (positive)
+        0xF100001F, // [22] CMP x0,#0
+        0x540000AA, // [23] B.GE +5 (.digit_loop)       ; if x0 >= 0 → word 28
+        0xD2800021, // [24] MOVZ x1,#1                  ; sign = 1 (negative)
+        0xCB0003E0, // [25] NEG x0,x0                   ; negate → make positive
+        0xAA0603E5, // [26] MOV x5,x6                   ; write ptr = buf_end
+        0xD2800142, // [27] MOVZ x2,#10                 ; divisor constant
+        0x9AC20803, // [28] UDIV x3,x0,x2               ; .digit_loop: quotient
+        0x9B028064, // [29] MSUB x4,x3,x2,x0            ; remainder = x0 - x3*x2
+        0xAA0303E0, // [30] MOV x0,x3                   ; advance: value = quotient
+        0x9100C084, // [31] ADD x4,x4,#48               ; digit -> ASCII ('0'=48)
+        0x381FFCA4, // [32] STRB w4,[x5,#-1]!           ; *--x5 = digit byte
+        0xB5FFFF60, // [33] CBNZ x0,-5 (.digit_loop)    ; loop while value != 0 → word 28
+        0xF100003F, // [34] CMP x1,#0                   ; was value negative?
+        0x54000060, // [35] B.EQ +3 (.write)            ; if positive skip '-' → word 38
+        0x528005A4, // [36] MOVZ w4,#45 ('-')
+        0x381FFCA4, // [37] STRB w4,[x5,#-1]!           ; *--x5 = '-'
+        0xD2800020, // [38] MOVZ x0,#1                  ; .write: fd = stdout
+        0xAA0503E1, // [39] MOV x1,x5                   ; buf = write pointer
+        0xCB0500C2, // [40] SUB x2,x6,x5                ; len = buf_end - write_ptr
+        0xD2800090, // [41] MOVZ x16,#4
+        0xD4001001, // [42] SVC #0x80                   ; write(number digits)
+        0x52800144, // [43] MOVZ w4,#10 ('\n')
+        0x390000C4, // [44] STRB w4,[x6]                ; '\n' at buf_end (red zone)
+        0xD2800020, // [45] MOVZ x0,#1
+        0xAA0603E1, // [46] MOV x1,x6
+        0xD2800042, // [47] MOVZ x2,#1
+        0xD2800090, // [48] MOVZ x16,#4
+        0xD4001001, // [49] SVC #0x80                   ; write('\n')
+        0xA8C37BFD, // [50] LDP x29,x30,[sp],#48        ; .epilogue: restore fp/lr, deallocate
+        0xD65F03C0, // [51] RET
+    ];
+
+    // Convert words → little-endian bytes
+    words.iter().flat_map(|w| w.to_le_bytes()).collect()
 }
 
 // ===========================================================================
@@ -1370,5 +1591,83 @@ mod tests {
         // udf #0xDEAD has the bit pattern 0xDEAD.  Search for it.
         let words: Vec<u32> = bytes.chunks(4).map(|c| u32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect();
         assert!(words.iter().any(|&w| w == 0x0000DEAD), "expected udf #0xDEAD in {words:?}");
+    }
+
+    // ---- LANG40: io_out handler + emit_print_helper ----
+
+    #[test]
+    fn io_out_emits_bl_reloc() {
+        // io_out with a single source should compile without error and emit
+        // exactly one ExternalReloc targeting "__twig_print_i64".
+        //
+        // CIR:
+        //   const_i64 v0 = 42
+        //   io_out v0
+        //   ret_void
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("v0".into()),
+                       srcs: vec![CIROperand::Int(42)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "io_out".into(), dest: None,
+                       srcs: vec![CIROperand::Var("v0".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None,
+                       srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let (bytes, ext_relocs, _) = compile_with_globals(
+            &ctx("print_42", &[], "void"), &cir, &HashMap::new()
+        ).expect("io_out should compile");
+
+        assert!(!bytes.is_empty(), "should produce machine code");
+        assert_eq!(ext_relocs.len(), 1, "exactly one external reloc (the BL placeholder)");
+        assert_eq!(ext_relocs[0].symbol, "__twig_print_i64",
+                   "reloc target must be the print helper");
+    }
+
+    #[test]
+    fn io_out_missing_src_errors() {
+        // io_out with no sources should return an error, not panic.
+        let cir = vec![
+            CIRInstr { op: "io_out".into(), dest: None,
+                       srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let result = compile_with_globals(
+            &ctx("bad_io", &[], "void"), &cir, &HashMap::new()
+        );
+        assert!(result.is_err(), "io_out with no srcs should error");
+    }
+
+    #[test]
+    fn emit_print_helper_has_prologue() {
+        // The helper must start with the canonical STP X29,X30,[SP,#-48]!
+        // word (0xA9BD7BFD).  This verifies the prologue is correctly formed
+        // and the frame size is 48 bytes as specified.
+        let bytes = emit_print_helper();
+        assert!(!bytes.is_empty(), "helper should be non-empty");
+        assert_eq!(bytes.len() % 4, 0, "helper must be word-aligned");
+        let first_word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(first_word, 0xA9BD7BFD,
+                   "first word must be STP x29,x30,[sp,#-48]! = 0xA9BD7BFD");
+    }
+
+    #[test]
+    fn emit_print_helper_ends_with_ret() {
+        // The last instruction must be RET (0xD65F03C0).
+        let bytes = emit_print_helper();
+        let n = bytes.len();
+        assert!(n >= 4);
+        let last_word = u32::from_le_bytes(bytes[n-4..n].try_into().unwrap());
+        assert_eq!(last_word, 0xD65F03C0,
+                   "last word must be RET = 0xD65F03C0");
+    }
+
+    #[test]
+    fn emit_print_helper_size_is_52_words() {
+        // The helper is a fixed-instruction-count function: 52 words = 208 bytes.
+        // If this assertion fails, update the B/CBNZ branch offsets in the
+        // emit_print_helper() source accordingly.
+        let bytes = emit_print_helper();
+        assert_eq!(bytes.len(), 52 * 4,
+                   "helper must be exactly 52 instructions (208 bytes)");
     }
 }

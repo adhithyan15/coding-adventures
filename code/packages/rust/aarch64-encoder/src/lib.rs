@@ -27,6 +27,7 @@
 //! | Unary | `neg_` | two's-complement negate (LANG38) |
 //! | PC-relative | `adrp_placeholder` | zeroed ADRP for Mach-O `ARM64_RELOC_PAGE21` (LANG39) |
 //! | Memory | `ldr`, `str_` | unsigned-offset, 64-bit |
+//! | Memory (byte) | `strb_pre_neg1` | pre-indexed byte store `[Rn,#-1]!` (LANG40) |
 //! | Pair | `stp_pre`, `ldp_post` | for prologue/epilogue framing |
 //! | Branch | `b`, `b_cond`, `bl` | PC-relative, label-resolved |
 //! | Indirect | `blr`, `ret` | function call/return via register |
@@ -787,6 +788,41 @@ impl Assembler {
         Ok(())
     }
 
+    /// `STRB Wt, [Xn, #-1]!` — pre-indexed byte store, always decrements Rn by 1.
+    ///
+    /// This is the ARM64 idiom for a "push byte" onto a downward-growing buffer:
+    /// it first subtracts 1 from `rn`, then stores the low byte of `wt` at that
+    /// address.  Used by the `__twig_print_i64` helper to build a decimal string
+    /// backwards in a stack buffer (LANG40).
+    ///
+    /// # Encoding
+    ///
+    /// Pre-indexed STRB: `size=00 V=0 opc=00` with `option=01` (pre-index):
+    ///
+    /// ```text
+    /// 0011 1000 0001 1111 1111 1100 0000 0000  (base with imm9 = -1 = 0x1FF)
+    /// 0x38_1F_FC_00 | (Rn << 5) | Rt
+    /// ```
+    ///
+    /// For `STRB W4, [X5, #-1]!` → `0x381FFCA4`.
+    ///
+    /// Note: `wt` uses the same [`Reg`] enum as 64-bit registers (same integer
+    /// encoding 0–31); the `size=00` field in the opcode makes the hardware treat
+    /// it as a W (32-bit / byte) operand.
+    pub fn strb_pre_neg1(&mut self, wt: Reg, rn: Reg) {
+        // STRB Wt, [Xn, #-1]!
+        //   bits 31:30 = 00  (size = byte)
+        //   bits 29:27 = 111 (V=0, then 11 from encoding)
+        //   bits 26:24 = 000 (opc = 00, writeback)
+        //   bits 23:21 = 000 (pre-index encoded as imm9[8]=1 combined below)
+        //   bits 20:12 = imm9 = 0x1FF (-1 in 9-bit two's complement)
+        //   bits 11:10 = 11  (pre-indexed addressing)
+        //   bits  9: 5 = Rn
+        //   bits  4: 0 = Rt
+        let word = 0x381FFC00 | (rn.idx() << 5) | wt.idx();
+        self.emit(word);
+    }
+
     // -----------------------------------------------------------------------
     // STP / LDP — used for prologue/epilogue (save/restore Fp+Lr)
     // -----------------------------------------------------------------------
@@ -1496,6 +1532,52 @@ mod tests {
         a.movz(Reg::X0, 43, 0);   // word 1
         let idx = a.adrp_placeholder(Reg::X1); // word 2
         assert_eq!(idx, 2);
+    }
+
+    // ---- LANG40: strb_pre_neg1 — pre-indexed byte store ----
+
+    #[test]
+    fn strb_pre_neg1_encoding() {
+        // STRB W4, [X5, #-1]!
+        //
+        // Pre-indexed STRB encoding:
+        //   size   = 00  (byte)
+        //   V      = 0
+        //   opc    = 00
+        //   imm9   = 0x1FF  (-1 in 9-bit two's complement)
+        //   option = 11  (pre-indexed writeback)
+        //
+        // Bit layout (fields shown in order 31→0):
+        //   31:30  = 00   (size)
+        //   29:27  = 111  (V=0, then opc/writeback encoding bits)
+        //   26:24  = 000  (V=0, opc[1:0]=00)
+        //   23:21  = 000
+        //   20:12  = imm9 = 0x1FF = 1_1111_1111
+        //   11:10  = 11   (pre-indexed)
+        //    9: 5  = Rn = X5 = 5 = 0b00101
+        //    4: 0  = Rt = W4 = 4 = 0b00100
+        //
+        // Base word:   0x38_1F_FC_00
+        // | (5 << 5) = 0x00_00_00_A0
+        // | 4        = 0x00_00_00_04
+        // = 0x38_1F_FC_A4
+        let mut a = Assembler::new();
+        a.strb_pre_neg1(Reg::X4, Reg::X5);
+        let bytes = a.finish().unwrap();
+        assert_eq!(bytes.len(), 4, "one instruction = 4 bytes");
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x381FFCA4, "STRB W4,[X5,#-1]!");
+    }
+
+    #[test]
+    fn strb_pre_neg1_x0_x0() {
+        // Degenerate case: same register for Rt and Rn.
+        // STRB W0, [X0, #-1]! = 0x381FFC00 | (0 << 5) | 0 = 0x381FFC00
+        let mut a = Assembler::new();
+        a.strb_pre_neg1(Reg::X0, Reg::X0);
+        let bytes = a.finish().unwrap();
+        let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        assert_eq!(word, 0x381FFC00, "STRB W0,[X0,#-1]!");
     }
 
     // ---- LANG38: Composite — modulo via sdiv + msub ----

@@ -166,6 +166,26 @@ describe("macsyma-runtime", () => {
     ]));
   });
 
+  it("factors common multivariate integer content through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(2*x*y + 2*x*z);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(MUL, [int(2), sym("x")]),
+      app(ADD, [sym("y"), sym("z")]),
+    ]));
+  });
+
+  it("factors negative common multivariate integer content through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(-2*x*y - 2*x*z);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(MUL, [int(-2), sym("x")]),
+      app(ADD, [sym("y"), sym("z")]),
+    ]));
+  });
+
   it("factors bivariate perfect squares through the runtime", () => {
     const session = new MacsymaSession();
     const [result] = session.evalSource("factor(x^2 + 2*x*y + y^2);");
@@ -236,6 +256,39 @@ describe("macsyma-runtime", () => {
       app(ADD, [sym("x"), int(1)]),
       app(ADD, [sym("y"), app(MUL, [int(-1), sym("z")])]),
     ]));
+  });
+
+  it("factors bivariate perfect cube sums through the runtime", () => {
+    // factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3) → (x+y)^3
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3);");
+
+    expect(result.output.kind).toBe("apply");
+    if (result.output.kind !== "apply") return;
+    expect(result.output.head).toEqual(sym("Pow"));
+    const [base, exponent] = result.output.args;
+    expect(exponent).toEqual(int(3));
+    expect(base.kind).toBe("apply");
+    if (base.kind !== "apply") return;
+    expect(base.head).toEqual(sym("Add"));
+    const baseKeys = new Set(base.args.map((a) => (a.kind === "symbol" ? a.name : "")));
+    expect(baseKeys).toEqual(new Set(["x", "y"]));
+  });
+
+  it("factors bivariate perfect cube differences through the runtime", () => {
+    // factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3) → (x-y)^3
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3);");
+
+    expect(result.output.kind).toBe("apply");
+    if (result.output.kind !== "apply") return;
+    expect(result.output.head).toEqual(sym("Pow"));
+    const [base, exponent] = result.output.args;
+    expect(exponent).toEqual(int(3));
+    expect(base.kind).toBe("apply");
+    if (base.kind !== "apply") return;
+    expect(base.head).toEqual(sym("Sub"));
+    expect(base.args).toEqual([sym("x"), sym("y")]);
   });
 
   it("tracks the showtime option flag through normal assignments", () => {

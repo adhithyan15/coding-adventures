@@ -1,5 +1,29 @@
 # Changelog — `aarch64-encoder`
 
+## 0.2.2 — 2026-05-13 (LANG40)
+
+**Pre-indexed byte store — `STRB Wt, [Xn, #-1]!`.**
+
+### New method
+
+| Method | ARM64 mnemonic | Encoding |
+|--------|---------------|----------|
+| `strb_pre_neg1(wt, rn)` | `STRB Wt, [Xn, #-1]!` | `0x381FFC00 \| (Rn << 5) \| Rt` |
+
+`STRB Wt, [Xn, #-1]!` is the ARM64 canonical "push byte" instruction:
+it decrements the base register by 1 before storing the low byte of `Wt`.
+Used by the `__twig_print_i64` helper (emitted into the text section by
+`aarch64-backend`) to write decimal digits backwards into a stack buffer
+during the integer-to-ASCII conversion loop.
+
+Note: `wt` uses the same [`Reg`] enum as 64-bit registers; the `size=00`
+opcode field makes the hardware treat it as a W (byte) operand.
+
+### Tests
+
+- `strb_pre_neg1_encoding` — canonical `STRB W4, [X5, #-1]!` = `0x381FFCA4`
+- `strb_pre_neg1_x0_x0` — degenerate same-register case = `0x381FFC00`
+
 ## 0.2.1 — 2026-05-13 (LANG39)
 
 **PC-relative ADRP placeholder for Mach-O data-section relocations.**
