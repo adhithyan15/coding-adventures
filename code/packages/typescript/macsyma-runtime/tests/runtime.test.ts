@@ -305,6 +305,36 @@ describe("macsyma-runtime", () => {
     expect(result.output).toEqual(app(sym("EllipticK"), [sym("k")]));
   });
 
+  it("recognizes complete elliptic second-kind integrals through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("integrate(sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);");
+
+    expect(result.output).toEqual(app(sym("EllipticE"), [sym("k")]));
+  });
+
+  it("recognizes incomplete elliptic second-kind integrals through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("integrate(sqrt(1-k^2*sin(theta)^2), theta);");
+
+    expect(result.output).toEqual(app(sym("EllipticE"), [sym("theta"), sym("k")]));
+  });
+
+  it("recognizes complete elliptic third-kind integrals through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource(
+      "integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2);",
+    );
+
+    expect(result.output).toEqual(app(sym("EllipticPi"), [sym("n"), sym("k")]));
+  });
+
+  it("regression: still recognizes complete elliptic first-kind integrals after adding second and third kind", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);");
+
+    expect(result.output).toEqual(app(sym("EllipticK"), [sym("k")]));
+  });
+
   it("tracks the showtime option flag through normal assignments", () => {
     const session = new MacsymaSession();
     const [enabled, timed, disabled, untimed] = session.evalSource(
