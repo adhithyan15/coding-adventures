@@ -167,6 +167,10 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         true
     }
 
+    fn supports_i2c(&self) -> bool {
+        true
+    }
+
     fn supports_bootloader_reboot(&self) -> bool {
         true
     }
@@ -198,6 +202,10 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         } else {
             Err(HalError::UnsupportedMode)
         }
+    }
+
+    fn open_i2c(&mut self, bus: u8) -> Result<u32, HalError> {
+        Ok(0x12_0000 | bus as u32)
     }
 
     fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {

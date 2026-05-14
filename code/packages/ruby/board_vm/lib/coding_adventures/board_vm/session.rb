@@ -209,6 +209,10 @@ module CodingAdventures
         native_session.dac_write_u12_module(pin, dac_sample_value(sample), max_stack)
       end
 
+      def i2c_open_module(bus:, max_stack: 2)
+        native_session.i2c_open_module(bus, max_stack)
+      end
+
       def gpio_open_module(pin:, mode: :output, max_stack: 2)
         native_session.gpio_open_module(pin, gpio_mode(mode), max_stack)
       end
@@ -281,6 +285,17 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: dac_write_u12_module(pin: pin, sample: sample, max_stack: max_stack)
+        )
+      end
+
+      def upload_i2c_open(
+        program_id: @program_id,
+        bus:,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: i2c_open_module(bus: bus, max_stack: max_stack)
         )
       end
 
@@ -605,6 +620,30 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def i2c_open(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        bus:,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_i2c_open(program_id: program_id, bus: bus, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def gpio_open(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -804,6 +843,8 @@ module CodingAdventures
           upload_adc_read(**adc_read_command_options(words, command, options, require_budget: false))
         when "upload-dac-write-u12", "upload-dac.write_u12", "upload-dac-write"
           upload_dac_write_u12(**dac_write_u12_command_options(words, command, options, require_budget: false))
+        when "upload-i2c-open", "upload-i2c.open"
+          upload_i2c_open(**i2c_open_command_options(words, command, options, require_budget: false))
         when "upload-gpio-open", "upload-gpio.open"
           upload_gpio_open(**gpio_open_command_options(words, command, options, require_budget: false))
         when "upload-gpio-handle-read", "upload-gpio.handle-read"
@@ -840,6 +881,8 @@ module CodingAdventures
           adc_read(**adc_read_command_options(words, command, options))
         when "dac-write-u12", "dac.write_u12", "dac-write"
           dac_write_u12(**dac_write_u12_command_options(words, command, options))
+        when "i2c-open", "i2c.open"
+          i2c_open(**i2c_open_command_options(words, command, options))
         when "gpio-high", "gpio.high"
           gpio_write(**gpio_level_command_options(words, command, options, value: true))
         when "gpio-low", "gpio.low"
@@ -1068,6 +1111,20 @@ module CodingAdventures
         ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires pin" unless merged.key?(:pin)
         raise ArgumentError, "#{command} requires sample" unless merged.key?(:sample)
+
+        merged
+      end
+
+      def i2c_open_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:bus] = integer_argument(words.shift, "#{command} bus") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires bus" unless merged.key?(:bus)
 
         merged
       end
