@@ -1,14 +1,20 @@
 import { describe, expect, it } from "vitest";
 import {
   Circuit,
+  ExpWaveform,
+  PulseWaveform,
+  PwlWaveform,
+  SinWaveform,
   SpiceError,
   capacitor,
   capacitorWithInitialVoltage,
+  currentSourceWithWaveform,
   inductor,
   inductorWithInitialCurrent,
   resistor,
   transient,
   voltageSource,
+  voltageSourceWithWaveform,
 } from "../src/index.js";
 
 function expectClose(actual: number | undefined, expected: number): void {
@@ -99,6 +105,155 @@ describe("transient", () => {
     expect(() => transient(circuit, 0.0, 1.0e-3)).toThrowError(SpiceError);
     expect(() => transient(circuit, 0.0, 1.0e-3)).toThrowError(
       "invalid element transient",
+    );
+  });
+
+  it("interpolates and clamps PWL waveforms", () => {
+    const waveform = new PwlWaveform([
+      [0.0, 0.0],
+      [0.5, 1.0],
+      [1.0, -1.0],
+    ]);
+
+    expectClose(waveform.valueAt(-1.0), 0.0);
+    expectClose(waveform.valueAt(0.25), 0.5);
+    expectClose(waveform.valueAt(0.75), 0.0);
+    expectClose(waveform.valueAt(2.0), -1.0);
+  });
+
+  it("uses a PWL waveform on a transient voltage source", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [0.5, 1.0],
+          [1.0, 1.0],
+        ]),
+      ),
+    );
+    circuit.add(resistor("Rload", "in", "0", 1_000.0));
+
+    const points = transient(circuit, 0.25, 1.0);
+
+    expect(points).toHaveLength(4);
+    expectClose(points[0].voltage("in"), 0.5);
+    expectClose(points[1].voltage("in"), 1.0);
+    expectClose(points[2].voltage("in"), 1.0);
+    expectClose(points[3].voltage("in"), 1.0);
+  });
+
+  it("respects SIN waveform delay and damping", () => {
+    const waveform = new SinWaveform(1.0, 2.0, 1.0, 0.5, 1.0);
+
+    expectClose(waveform.valueAt(0.25), 1.0);
+    expect(waveform.valueAt(0.75)).toBeCloseTo(
+      1.0 + 2.0 * Math.exp(-0.25),
+      12,
+    );
+  });
+
+  it("uses a SIN waveform on a transient voltage source", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 2.0, 1.0),
+      ),
+    );
+    circuit.add(resistor("Rload", "in", "0", 1_000.0));
+
+    const points = transient(circuit, 0.25, 0.5);
+
+    expectClose(points[0].voltage("in"), 2.0);
+    expectClose(points[1].voltage("in"), 0.0);
+  });
+
+  it("repeats PULSE waveforms with edges", () => {
+    const waveform = new PulseWaveform(0.0, 5.0, 0.0, 0.2, 0.2, 0.4, 1.0);
+
+    expectClose(waveform.valueAt(0.1), 2.5);
+    expectClose(waveform.valueAt(0.3), 5.0);
+    expectClose(waveform.valueAt(0.7), 2.5);
+    expectClose(waveform.valueAt(1.3), 5.0);
+  });
+
+  it("uses a PULSE waveform on a transient current source", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      currentSourceWithWaveform(
+        "Iin",
+        "0",
+        "out",
+        0.0,
+        new PulseWaveform(0.0, 0.01, 0.0, 0.0, 0.0, 0.5, 1.0),
+      ),
+    );
+    circuit.add(resistor("Rload", "out", "0", 100.0));
+
+    const points = transient(circuit, 0.25, 0.75);
+
+    expectClose(points[0].voltage("out"), 1.0);
+    expectClose(points[1].voltage("out"), 0.0);
+    expectClose(points[2].voltage("out"), 0.0);
+  });
+
+  it("rises and falls EXP waveforms", () => {
+    const waveform = new ExpWaveform(0.0, 2.0, 0.0, 0.5, 1.0, 0.5);
+
+    const rising = waveform.valueAt(0.5);
+    const falling = waveform.valueAt(2.0);
+
+    expect(rising).toBeGreaterThan(0.0);
+    expect(rising).toBeLessThan(2.0);
+    expect(falling).toBeLessThan(rising);
+  });
+
+  it("uses an EXP waveform on a transient voltage source", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new ExpWaveform(0.0, 1.0, 0.0, 0.5, 10.0, 1.0),
+      ),
+    );
+    circuit.add(resistor("Rload", "in", "0", 1_000.0));
+
+    const points = transient(circuit, 0.5, 1.0);
+
+    expectClose(points[0].voltage("in"), 1.0 - Math.exp(-1.0));
+    expectClose(points[1].voltage("in"), 1.0 - Math.exp(-2.0));
+  });
+
+  it("rejects invalid PWL waveforms during transient analysis", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [0.0, 1.0],
+        ]),
+      ),
+    );
+    circuit.add(resistor("Rload", "in", "0", 1_000.0));
+
+    expect(() => transient(circuit, 0.1, 0.1)).toThrowError(SpiceError);
+    expect(() => transient(circuit, 0.1, 0.1)).toThrowError(
+      "invalid element Vin",
     );
   });
 });

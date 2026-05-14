@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   Circuit,
+  SinWaveform,
   SpiceError,
   currentSource,
   dcOp,
@@ -9,6 +10,7 @@ import {
   resistor,
   vccs,
   voltageSource,
+  voltageSourceWithWaveform,
 } from "../src/index.js";
 
 function expectClose(actual: number | undefined, expected: number): void {
@@ -93,6 +95,24 @@ describe("dcOp", () => {
     circuit.add(resistor("Rload", "out", "0", 1_000.0));
 
     expect(() => dcOp(circuit)).toThrowError("transconductance must be finite");
+  });
+
+  it("uses static source value when a waveform is present", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "n1",
+        "0",
+        3.0,
+        new SinWaveform(0.0, 10.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "n1", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("n1"), 3.0);
   });
 
   it("sweeps voltage sources and collects operating points", () => {
