@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add TypeScript MACSYMA parity for elliptic first-kind integration, so
+  `integrate(1/sqrt(1-k^2*sin(theta)^2), theta)` returns
+  `EllipticF(theta, k)` and the `[0, %pi/2]` definite form returns
+  `EllipticK(k)`.
 - Add TypeScript MACSYMA parity for perfect-cube expansions, so
   `factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3)` returns `(x+y)^3` and
   `factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3)` returns `(x-y)^3` through the

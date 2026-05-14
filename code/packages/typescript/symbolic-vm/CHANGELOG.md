@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added symbolic integration recognition for the canonical elliptic first-kind
+  forms, returning `EllipticF(theta, k)` and complete `EllipticK(k)` nodes.
 - Added a bivariate perfect-cube factoring foothold so `Factor` recognises
   four-term binomial cube expansions: `x^3 + 3x^2y + 3xy^2 + y^3` as
   `(x+y)^3` and `x^3 - 3x^2y + 3xy^2 - y^3` as `(x-y)^3`.

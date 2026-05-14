@@ -537,6 +537,29 @@ describe("symbolic-vm", () => {
     );
   });
 
+  it("recognizes elliptic first-kind integrals", () => {
+    const vm = new VM(new SymbolicBackend());
+    const theta = sym("theta");
+    const k = sym("k");
+    const integrand = app(DIV, [
+      int(1),
+      app(SQRT, [
+        app(SUB, [
+          int(1),
+          app(MUL, [
+            app(POW, [k, int(2)]),
+            app(POW, [app(SIN, [theta]), int(2)]),
+          ]),
+        ]),
+      ]),
+    ]);
+
+    expect(vm.eval(app(INTEGRATE, [integrand, theta]))).toEqual(app(sym("EllipticF"), [theta, k]));
+    expect(vm.eval(app(INTEGRATE, [integrand, theta, int(0), app(DIV, [sym("%pi"), int(2)])]))).toEqual(
+      app(sym("EllipticK"), [k]),
+    );
+  });
+
   it("leaves unknown dependent integrals unevaluated", () => {
     const vm = new VM(new SymbolicBackend());
     const expr = app(INTEGRATE, [app(sym("F"), [sym("x")]), sym("x")]);

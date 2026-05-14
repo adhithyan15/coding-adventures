@@ -291,6 +291,20 @@ describe("macsyma-runtime", () => {
     expect(base.args).toEqual([sym("x"), sym("y")]);
   });
 
+  it("recognizes elliptic first-kind integrals through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("integrate(1/sqrt(1-k^2*sin(theta)^2), theta);");
+
+    expect(result.output).toEqual(app(sym("EllipticF"), [sym("theta"), sym("k")]));
+  });
+
+  it("recognizes complete elliptic first-kind integrals through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);");
+
+    expect(result.output).toEqual(app(sym("EllipticK"), [sym("k")]));
+  });
+
   it("tracks the showtime option flag through normal assignments", () => {
     const session = new MacsymaSession();
     const [enabled, timed, disabled, untimed] = session.evalSource(

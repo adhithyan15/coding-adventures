@@ -1038,12 +1038,16 @@ function nodeKey(node: IRNode): string {
 
 function integrate(): Handler {
   return (vm, expr) => {
-    if (expr.args.length !== 2) {
-      throw new ArityError(`Integrate expects 2 arguments, got ${expr.args.length}`);
+    if (expr.args.length !== 2 && expr.args.length !== 4) {
+      throw new ArityError(`Integrate expects 2 or 4 arguments, got ${expr.args.length}`);
     }
     const [f, x] = expr.args;
     if (x.kind !== "symbol") {
       return expr;
+    }
+    if (expr.args.length === 4) {
+      const result = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
+      return result === undefined ? expr : vm.eval(result);
     }
     const result = integrateIndefinite(f, x);
     if (result === undefined) {
@@ -1059,6 +1063,10 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   }
   if (equals(f, x)) {
     return app(MUL, [rational(1, 2), app(POW, [x, int(2)])]);
+  }
+  const elliptic = incompleteEllipticFirstKind(f, x);
+  if (elliptic !== undefined) {
+    return elliptic;
   }
   if (f.kind !== "apply") {
     return undefined;
@@ -1127,6 +1135,75 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   }
 
   return undefined;
+}
+
+function completeEllipticFirstKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {
+  if (!isZero(lower) || !isPiOverTwo(upper)) {
+    return undefined;
+  }
+  const modulus = ellipticFirstKindModulus(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticK"), [modulus]);
+}
+
+function incompleteEllipticFirstKind(f: IRNode, x: IRNode): IRNode | undefined {
+  const modulus = ellipticFirstKindModulus(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticF"), [x, modulus]);
+}
+
+function ellipticFirstKindModulus(f: IRNode, x: IRNode): IRNode | undefined {
+  let radicand: IRNode | undefined;
+  if (f.kind === "apply" && equals(f.head, DIV)) {
+    const [numerator, denominator] = binaryArgs(f);
+    if (isOne(numerator) && denominator.kind === "apply" && equals(denominator.head, SQRT)) {
+      [radicand] = unaryArgs(denominator);
+    }
+  } else if (f.kind === "apply" && equals(f.head, POW)) {
+    const [base, exponent] = binaryArgs(f);
+    const n = exactRational(exponent);
+    if (n?.numer === -1n && n.denom === 2n) {
+      radicand = base;
+    }
+  }
+  if (radicand?.kind !== "apply" || !equals(radicand.head, SUB)) {
+    return undefined;
+  }
+
+  const [constant, product] = binaryArgs(radicand);
+  if (!isOne(constant) || product.kind !== "apply" || !equals(product.head, MUL)) {
+    return undefined;
+  }
+  const [left, right] = binaryArgs(product);
+  return modulusFromSquaredFactor(left, right, x) ?? modulusFromSquaredFactor(right, left, x);
+}
+
+function modulusFromSquaredFactor(modulusSquare: IRNode, sineSquare: IRNode, x: IRNode): IRNode | undefined {
+  if (sineSquare.kind !== "apply" || !equals(sineSquare.head, POW)) {
+    return undefined;
+  }
+  const [sine, sineExponent] = binaryArgs(sineSquare);
+  if (!equals(sineExponent, int(2)) || sine.kind !== "apply" || !equals(sine.head, SIN)) {
+    return undefined;
+  }
+  const [inner] = unaryArgs(sine);
+  if (!equals(inner, x)) {
+    return undefined;
+  }
+  if (modulusSquare.kind !== "apply" || !equals(modulusSquare.head, POW)) {
+    return undefined;
+  }
+  const [modulus, modulusExponent] = binaryArgs(modulusSquare);
+  return equals(modulusExponent, int(2)) ? modulus : undefined;
+}
+
+function isPiOverTwo(node: IRNode): boolean {
+  if (node.kind === "float") {
+    return Math.abs(node.value - Math.PI / 2) < 1e-12;
+  }
+  if (node.kind !== "apply" || !equals(node.head, DIV)) {
+    return false;
+  }
+  const [numerator, denominator] = binaryArgs(node);
+  return numerator.kind === "symbol" && numerator.name === "%pi" && equals(denominator, int(2));
 }
 
 function differentiate(): Handler {
