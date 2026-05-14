@@ -9,6 +9,7 @@ import {
   capacitor,
   capacitorWithInitialVoltage,
   cccs,
+  ccvs,
   currentSourceWithWaveform,
   inductor,
   inductorWithInitialCurrent,
@@ -195,6 +196,33 @@ describe("transient", () => {
     circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
     circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
     circuit.add(cccs("F1", "0", "out", "Vsense", 2.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const points = transient(circuit, 0.25, 0.5);
+
+    expectClose(points[0].branchCurrent("Vsense"), 1.0e-3);
+    expectClose(points[0].voltage("out"), 2.0);
+    expectClose(points[1].voltage("out"), 2.0);
+  });
+
+  it("updates CCVS output from transient branch current", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [0.25, 1.0],
+          [0.5, 1.0],
+        ]),
+      ),
+    );
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(ccvs("H1", "out", "0", "Vsense", 2_000.0));
     circuit.add(resistor("Rload", "out", "0", 1_000.0));
 
     const points = transient(circuit, 0.25, 0.5);
