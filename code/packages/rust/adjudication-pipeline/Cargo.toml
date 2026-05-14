@@ -1,6 +1,6 @@
 [package]
 name = "adjudication-pipeline"
-version = "0.11.0"
+version = "0.12.0"
 edition = "2021"
 description = "Orchestrator for the adjudication framework. Composes ADJ02 + ADJ22 + ADJ03 + ADJ04 + ADJ05 + engine into a single end-to-end pipeline and writes results into an ADJ07 AuditTrail. v0.8 wires ADJ22 typed-quantity coverage into both `run_with_gateway` and `run_with_rulebooks` between ADJ02 and ADJ03; ADJ22 joins the engine-gating set so the engine only runs when every numerical literal in source was preserved as a `quantity(value, unit)` compound. v0.5 added ADJ16 step 2; v0.6 added ADJ16 step 3; v0.7 added ADJ16 step 4 (agreement-weighted rulebook merger)."
 

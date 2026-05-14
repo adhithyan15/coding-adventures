@@ -2,7 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.12.0] - 2026-05-13 — decompose_level: per-level prompts for ADJ25 hierarchy
+## [0.12.0] - 2026-05-13 — decompose_level: per-level prompts + content-shaped contract for ADJ25 hierarchy
+
+### Contract change: text instead of byte offsets
+
+The model emits a literal `text` field per child (the exact
+substring it claims) instead of `source_spans` byte offsets. The
+framework matches each child's text against the parent text to
+derive document-absolute spans. This pulls byte arithmetic — which
+LLMs reliably get wrong, especially small ones — out of the model's
+job. Per `feedback_no_byte_arithmetic_for_llm`.
+
+All four per-level system prompts (Sentence / Phrase / Claim /
+TypedComponent) were updated to:
+
+- Drop `source_spans` from the worked examples.
+- Add a `text` field instead, explaining "copy the LITERAL
+  substring — character for character — and the framework computes
+  byte offsets from your text; you do NOT compute offsets."
+- Show the worked examples with `text` strings that include exact
+  whitespace (the trailing space in `"200 Wh "` etc.) so the model
+  learns the every-character contract by example.
+
+Otherwise, the v0.12.0 entry below applies.
+
+
 
 ### Added
 

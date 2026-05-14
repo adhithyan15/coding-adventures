@@ -96,6 +96,23 @@ pub struct DecomposeLevelResponse {
 // Per-level system prompts
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Per-level system prompts — v2: text-shaped, not byte-shaped.
+//
+// IMPORTANT CONTRACT CHANGE (ADJ27): the model emits the literal
+// `text` it is claiming for each child, not byte offsets. The
+// framework matches each child's text against the parent text to
+// derive byte spans deterministically. The model does not do
+// arithmetic; the framework does.
+//
+// Per `feedback_no_byte_arithmetic_for_llm` (saved separately):
+// asking small models to compute byte offsets was a structural
+// mismatch. They could pick the right kind, the right typing
+// (Quantity vs flat atom), and the right granularity — but couldn't
+// reliably count bytes. Pulling that math into the framework lets
+// the model focus on the linguistic work it's actually good at.
+// ---------------------------------------------------------------------------
+
 const SENTENCE_PROMPT: &str = "You break passages of text into NATURAL-LANGUAGE SENTENCES.\n\
 \n\
 INPUT: a passage of plain text.\n\
@@ -108,31 +125,37 @@ node represents one sentence (or one chunk you discard). Allowed\n\
     interrogative, imperative). Most output nodes will be this.\n\
   - `Discarded` — a chunk of text that is not a sentence: a heading,\n\
     a bullet marker, document metadata, a salutation. Use this for\n\
-    bytes that don't belong to any sentence. Discarded nodes need a\n\
+    chunks that don't belong to any sentence. Discarded nodes need a\n\
     `discard_reason` such as `DocumentMetadata` or `NonDomainContent`.\n\
 \n\
-COVERAGE: Together, the nodes' `source_spans` MUST cover every byte\n\
-of the input passage exactly once. No gaps. No overlaps. Whitespace\n\
-counts. Punctuation counts. Trailing newlines count.\n\
+COVERAGE: List the nodes IN ORDER, left-to-right. Together, every\n\
+character of the input passage — whitespace and punctuation\n\
+included — must appear in exactly one node's `text` field. No\n\
+character left over.\n\
 \n\
-SPANS: `source_spans` is an array of `{ \"start\": <byte>, \"end\": <byte> }`.\n\
-Offsets are zero-based byte positions within the input passage.\n\
+TEXT FIELD: each node has a `text` field. Copy the LITERAL substring\n\
+of the input that this node covers — character for character. The\n\
+framework computes byte offsets from your text; you do NOT do any\n\
+arithmetic. Just copy the substring.\n\
 \n\
-EVERY node MUST include: `id` (your choice, unique within the response),\n\
-`kind` (one of the values above), `term` (any object, e.g.\n\
-`{\"atom\": \"x\"}`), `polarity` (`Affirmed` for sentences and discarded\n\
-items), `modality` (`Present`), and `source_spans` (as above).\n\
+EVERY node MUST include: `id` (your choice, unique in the response),\n\
+`kind`, `term` (any object, e.g. `{\"atom\": \"x\"}`), `polarity`\n\
+(`Affirmed`), `modality` (`Present`), and `text` (the literal\n\
+substring this node covers).\n\
 \n\
 EXAMPLE:\n\
 INPUT (passage): \"Hello world. How are you?\"\n\
 OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
   { \"id\": \"S1\", \"kind\": \"Sentence\", \"term\": {\"atom\":\"greeting\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-    \"source_spans\": [{\"start\": 0, \"end\": 13}] },\n\
+    \"text\": \"Hello world. \" },\n\
   { \"id\": \"S2\", \"kind\": \"Sentence\", \"term\": {\"atom\":\"question\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-    \"source_spans\": [{\"start\": 13, \"end\": 25}] }\n\
+    \"text\": \"How are you?\" }\n\
 ] }\n\
+\n\
+Notice the trailing space in S1's text: every character of the input\n\
+appears in exactly one node, including spaces.\n\
 \n\
 Respond with the JSON object only. No prose, no markdown, no backticks.";
 
@@ -150,25 +173,26 @@ node represents one phrase. Allowed `kind` values, and ONLY these:\n\
     (`\"please\"`, `\"thank you\"`), filler, structural punctuation\n\
     bridging two phrases. Discarded nodes need a `discard_reason`.\n\
 \n\
-COVERAGE: Together, the nodes' `source_spans` MUST cover every byte\n\
-of the input sentence exactly once. No gaps. No overlaps.\n\
+COVERAGE: List the nodes IN ORDER, left-to-right. Together, every\n\
+character of the input sentence must appear in exactly one node's\n\
+`text` field.\n\
 \n\
-SPANS: `source_spans` is an array of `{ \"start\": <byte>, \"end\": <byte> }`.\n\
-Offsets are zero-based byte positions WITHIN THE INPUT SENTENCE,\n\
-not the whole document.\n\
+TEXT FIELD: each node has a `text` field. Copy the LITERAL substring\n\
+of the input — character for character. The framework computes byte\n\
+offsets from your text; you do NOT compute offsets.\n\
 \n\
 EVERY node MUST include: `id`, `kind`, `term`, `polarity`\n\
-(`Affirmed`), `modality` (`Present`), and `source_spans`.\n\
+(`Affirmed`), `modality` (`Present`), and `text`.\n\
 \n\
 EXAMPLE:\n\
 INPUT (sentence): \"1 carry-on bag, matches.\"\n\
 OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
   { \"id\": \"P1\", \"kind\": \"Phrase\", \"term\": {\"atom\":\"bag_count\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-    \"source_spans\": [{\"start\": 0, \"end\": 16}] },\n\
+    \"text\": \"1 carry-on bag, \" },\n\
   { \"id\": \"P2\", \"kind\": \"Phrase\", \"term\": {\"atom\":\"item\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-    \"source_spans\": [{\"start\": 16, \"end\": 24}] }\n\
+    \"text\": \"matches.\" }\n\
 ] }\n\
 \n\
 Respond with the JSON object only.";
@@ -180,29 +204,30 @@ INPUT: one phrase.\n\
 OUTPUT: a JSON object with `document_id` and a `nodes` array. Each\n\
 node represents one claim. Allowed `kind` values, and ONLY these:\n\
 \n\
-  - `Fact` — an assertion the phrase makes about the world. Use this\n\
-    when the phrase commits to a definite claim.\n\
+  - `Fact` — an assertion the phrase makes about the world.\n\
   - `Uncertainty` — the phrase admits or implies the model isn't\n\
     sure. Set `polarity` to `Uncertain`.\n\
   - `Question` — the phrase is interrogative (asks a question).\n\
-  - `Discarded` — the phrase has no meaningful claim (pure filler).\n\
-    Discarded nodes need a `discard_reason`.\n\
+  - `Discarded` — the phrase has no meaningful claim. Discarded\n\
+    nodes need a `discard_reason`.\n\
 \n\
-COVERAGE: the nodes' `source_spans` MUST cover every byte of the\n\
-input phrase exactly once.\n\
+COVERAGE: List the nodes IN ORDER, left-to-right. Every character\n\
+of the input phrase must appear in exactly one node's `text`.\n\
 \n\
-SPANS: offsets are zero-based byte positions WITHIN THE INPUT PHRASE.\n\
+TEXT FIELD: each node has a `text` field. Copy the LITERAL substring\n\
+of the input — character for character. No byte offsets; the\n\
+framework derives them.\n\
 \n\
 EVERY node MUST include: `id`, `kind`, `term`, `polarity`\n\
-(`Affirmed` for Fact; `Uncertain` for Uncertainty; `Affirmed` for\n\
-Question and Discarded), `modality` (`Present`), and `source_spans`.\n\
+(`Affirmed` for Fact, `Uncertain` for Uncertainty, `Affirmed` for\n\
+Question and Discarded), `modality` (`Present`), and `text`.\n\
 \n\
 EXAMPLE:\n\
 INPUT (phrase): \"1 carry-on bag\"\n\
 OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
   { \"id\": \"F1\", \"kind\": \"Fact\", \"term\": {\"atom\":\"declaration\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-    \"source_spans\": [{\"start\": 0, \"end\": 14}] }\n\
+    \"text\": \"1 carry-on bag\" }\n\
 ] }\n\
 \n\
 Respond with the JSON object only.";
@@ -211,15 +236,14 @@ const TYPED_COMPONENT_PROMPT: &str = "You break FACTS into TYPED COMPONENTS — 
 \n\
 INPUT: one Fact's text.\n\
 \n\
-OUTPUT: a JSON object with `document_id` and a `nodes` array. Each\n\
-node represents one typed component. Allowed `kind` values, and\n\
-ONLY these:\n\
+OUTPUT: a JSON object with `document_id` and a `nodes` array. Allowed\n\
+`kind` values, and ONLY these:\n\
 \n\
   - `Quantity` — a numerical measurement. `term` is\n\
     `{\"functor\": \"quantity\", \"args\": [{\"num\": <value>}, {\"atom\": \"<unit>\"}]}`.\n\
     Every numerical literal in the Fact MUST surface as a `Quantity`.\n\
   - `Polarity` — a negation/affirmation slot. Use when the Fact\n\
-    contains cues like \"no\", \"not\", \"denies\". `term` is an atom\n\
+    contains cues like \"no\", \"not\", \"denies\". `term` is\n\
     `{\"atom\": \"denied\"}` or `{\"atom\": \"affirmed\"}`.\n\
   - `Entity` — a named or referential noun phrase. `term` is\n\
     `{\"atom\": \"<single_word>\"}` or `{\"atom\": \"<two_word_compound>\"}`.\n\
@@ -227,23 +251,23 @@ ONLY these:\n\
   - `Comparator` — an operator. `term` is `{\"atom\": \"<op>\"}` where\n\
     `<op>` is one of `Eq`, `Lt`, `Le`, `Gt`, `Ge`, `Ne`.\n\
   - `TimeRef` — a date, duration, or temporal phrase.\n\
-  - `Modifier` — adjective/adverb refinement (\"strike-anywhere\",\n\
-    \"disposable\").\n\
+  - `Modifier` — adjective/adverb refinement.\n\
 \n\
-COVERAGE: the nodes' `source_spans` MUST cover every byte of the\n\
-Fact's text exactly once.\n\
+COVERAGE: List the nodes IN ORDER, left-to-right. Every character\n\
+of the Fact's input must appear in exactly one node's `text`.\n\
+\n\
+TEXT FIELD: each node has a `text` field. Copy the LITERAL substring\n\
+of the input — character for character. The framework computes byte\n\
+offsets from your text; you do NOT compute offsets.\n\
 \n\
 NO FLATTENING: numerical literals MUST appear as `Quantity`\n\
 components, NOT inside atom names. `battery_50_wh` is REJECTED — the\n\
 `50` must be a `Quantity(50, wh)` slot. Atom names like\n\
-`pocket_knife_blade_length` that string together three or more\n\
-source words are also REJECTED.\n\
-\n\
-SPANS: offsets are zero-based byte positions WITHIN THE INPUT\n\
-FACT'S TEXT.\n\
+`pocket_knife_blade_length` that string together three or more source\n\
+words are also REJECTED.\n\
 \n\
 EVERY node MUST include: `id`, `kind`, `term`, `polarity`\n\
-(`Affirmed`), `modality` (`Present`), and `source_spans`.\n\
+(`Affirmed`), `modality` (`Present`), and `text`.\n\
 \n\
 EXAMPLE:\n\
 INPUT (fact): \"200 Wh battery\"\n\
@@ -251,11 +275,14 @@ OUTPUT: { \"document_id\": \"<copy from input>\", \"nodes\": [\n\
   { \"id\": \"T1\", \"kind\": \"Quantity\",\n\
     \"term\": {\"functor\": \"quantity\", \"args\": [{\"num\": 200}, {\"atom\": \"wh\"}]},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-    \"source_spans\": [{\"start\": 0, \"end\": 6}] },\n\
+    \"text\": \"200 Wh \" },\n\
   { \"id\": \"T2\", \"kind\": \"Entity\", \"term\": {\"atom\": \"battery\"},\n\
     \"polarity\": \"Affirmed\", \"modality\": \"Present\",\n\
-    \"source_spans\": [{\"start\": 7, \"end\": 14}] }\n\
+    \"text\": \"battery\" }\n\
 ] }\n\
+\n\
+Notice T1's text includes the trailing space — every character of\n\
+the input appears in exactly one node.\n\
 \n\
 Respond with the JSON object only.";
 
