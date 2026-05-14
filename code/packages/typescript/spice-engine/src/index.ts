@@ -1,4 +1,5 @@
 const PIVOT_EPSILON = 1.0e-12;
+const TWO_PI = Math.PI * 2.0;
 
 export type Element = Resistor | Capacitor | Inductor | VoltageSource | CurrentSource;
 
@@ -54,6 +55,19 @@ export interface DcResult {
 export interface DcSweepPoint {
   readonly value: number;
   readonly result: DcResult;
+}
+
+export interface Complex {
+  readonly real: number;
+  readonly imag: number;
+}
+
+export interface AcPoint {
+  readonly frequencyHz: number;
+  readonly nodeVoltages: ReadonlyMap<string, Complex>;
+  readonly branchCurrents: ReadonlyMap<string, Complex>;
+  voltage(node: string): Complex | undefined;
+  branchCurrent(sourceName: string): Complex | undefined;
 }
 
 export interface TransientPoint {
@@ -166,6 +180,14 @@ export function currentSource(
   return { kind: "current-source", name, positive, negative, current };
 }
 
+export function complexAbs(value: Complex): number {
+  return Math.hypot(value.real, value.imag);
+}
+
+export function complexPhase(value: Complex): number {
+  return Math.atan2(value.imag, value.real);
+}
+
 export function dcOp(circuit: Circuit): DcResult {
   const solution = solveLinearCircuit(circuit, [], []);
   return makeDcResult(solution.nodeVoltages, solution.branchCurrents);
@@ -189,6 +211,43 @@ export function dcSweep(
   ) {
     const swept = circuitWithSweptSource(circuit, sourceName, value);
     points.push({ value, result: dcOp(swept) });
+  }
+  return points;
+}
+
+export function acSweep(
+  circuit: Circuit,
+  startHz: number,
+  stopHz: number,
+  pointsPerDecade: number,
+): AcPoint[] {
+  if (!Number.isFinite(startHz) || !Number.isFinite(stopHz) || startHz <= 0.0 || stopHz <= 0.0) {
+    throw invalidElement("acSweep", "frequency bounds must be finite and positive");
+  }
+  if (stopHz < startHz) {
+    throw invalidElement(
+      "acSweep",
+      "stop frequency must be greater than or equal to start frequency",
+    );
+  }
+  if (!Number.isInteger(pointsPerDecade) || pointsPerDecade <= 0) {
+    throw invalidElement("acSweep", "points per decade must be positive");
+  }
+
+  validateReactiveElements(circuit);
+
+  const points: AcPoint[] = [];
+  const ratio = 10.0 ** (1.0 / pointsPerDecade);
+  const epsilon = stopHz * 1.0e-12;
+  for (
+    let frequency = startHz;
+    frequency <= stopHz + epsilon;
+    frequency *= ratio
+  ) {
+    const solution = solveAcCircuit(circuit, TWO_PI * frequency);
+    points.push(
+      makeAcPoint(frequency, solution.nodeVoltages, solution.branchCurrents),
+    );
   }
   return points;
 }
@@ -302,6 +361,11 @@ interface LinearSolution {
   readonly branchCurrents: ReadonlyMap<string, number>;
 }
 
+interface AcSolution {
+  readonly nodeVoltages: ReadonlyMap<string, Complex>;
+  readonly branchCurrents: ReadonlyMap<string, Complex>;
+}
+
 function solveLinearCircuit(
   circuit: Circuit,
   capacitorStates: readonly CapacitorState[],
@@ -380,6 +444,65 @@ function solveLinearCircuit(
   return { nodeVoltages, branchCurrents };
 }
 
+function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
+  const nodeIndices = collectNodeIndices(circuit);
+  const voltageSources = collectAcVoltageSources(circuit);
+  const nodeCount = nodeIndices.size;
+  const branchCount = voltageSources.size;
+  const matrixSize = nodeCount + branchCount;
+
+  if (matrixSize === 0) {
+    return { nodeVoltages: new Map(), branchCurrents: new Map() };
+  }
+
+  const matrix = Array.from({ length: matrixSize }, () =>
+    Array.from({ length: matrixSize }, () => complex(0.0, 0.0)),
+  );
+  const rhs = Array.from({ length: matrixSize }, () => complex(0.0, 0.0));
+
+  for (const element of circuit.elements()) {
+    switch (element.kind) {
+      case "resistor":
+        stampAcResistor(element, nodeIndices, matrix);
+        break;
+      case "capacitor":
+        stampAcCapacitor(element, omega, nodeIndices, matrix);
+        break;
+      case "inductor":
+        stampAcInductor(element, omega, nodeIndices, matrix);
+        break;
+      case "voltage-source":
+        stampAcVoltageSource(
+          element,
+          nodeIndices,
+          voltageSources,
+          nodeCount,
+          matrix,
+          rhs,
+        );
+        break;
+      case "current-source":
+        stampAcCurrentSource(element, nodeIndices, rhs);
+        break;
+    }
+  }
+
+  const solution = solveComplexLinearSystem(matrix, rhs);
+  const nodeVoltages = new Map<string, Complex>();
+  const nodesByIndex = Array.from(nodeIndices.entries()).sort(
+    ([, a], [, b]) => a - b,
+  );
+  for (const [node, index] of nodesByIndex) {
+    nodeVoltages.set(node, solution[index]);
+  }
+
+  const branchCurrents = new Map<string, Complex>();
+  for (const [sourceName, branchIndex] of voltageSources.entries()) {
+    branchCurrents.set(`I(${sourceName})`, solution[nodeCount + branchIndex]);
+  }
+  return { nodeVoltages, branchCurrents };
+}
+
 function makeDcResult(
   nodeVoltages: ReadonlyMap<string, number>,
   branchCurrents: ReadonlyMap<string, number>,
@@ -391,6 +514,27 @@ function makeDcResult(
       return isGround(node) ? 0.0 : nodeVoltages.get(node);
     },
     branchCurrent(sourceName: string): number | undefined {
+      const key = sourceName.startsWith("I(")
+        ? sourceName
+        : `I(${sourceName})`;
+      return branchCurrents.get(key);
+    },
+  };
+}
+
+function makeAcPoint(
+  frequencyHz: number,
+  nodeVoltages: ReadonlyMap<string, Complex>,
+  branchCurrents: ReadonlyMap<string, Complex>,
+): AcPoint {
+  return {
+    frequencyHz,
+    nodeVoltages,
+    branchCurrents,
+    voltage(node: string): Complex | undefined {
+      return isGround(node) ? complex(0.0, 0.0) : nodeVoltages.get(node);
+    },
+    branchCurrent(sourceName: string): Complex | undefined {
       const key = sourceName.startsWith("I(")
         ? sourceName
         : `I(${sourceName})`;
@@ -460,6 +604,16 @@ function collectVoltageSources(
       if (!inductorStates.some((state) => state.name === element.name)) {
         sources.set(element.name, sources.size);
       }
+    }
+  }
+  return sources;
+}
+
+function collectAcVoltageSources(circuit: Circuit): Map<string, number> {
+  const sources = new Map<string, number>();
+  for (const element of circuit.elements()) {
+    if (element.kind === "voltage-source") {
+      insertBranchName(sources, element.name, "duplicate voltage source name");
     }
   }
   return sources;
@@ -798,6 +952,127 @@ function stampCurrentSource(
   }
 }
 
+function stampAcResistor(
+  element: Resistor,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  if (!Number.isFinite(element.resistanceOhms) || element.resistanceOhms <= 0) {
+    throw invalidElement(element.name, "resistance must be finite and positive");
+  }
+
+  const conductance = complex(1.0 / element.resistanceOhms, 0.0);
+  const n1 = nodeIndex(nodeIndices, element.n1);
+  const n2 = nodeIndex(nodeIndices, element.n2);
+  stampComplexConductance(matrix, n1, n2, conductance);
+}
+
+function stampAcCapacitor(
+  element: Capacitor,
+  omega: number,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  validateCapacitor(element);
+  const admittance = complex(0.0, omega * element.capacitanceFarads);
+  const n1 = nodeIndex(nodeIndices, element.n1);
+  const n2 = nodeIndex(nodeIndices, element.n2);
+  stampComplexConductance(matrix, n1, n2, admittance);
+}
+
+function stampAcInductor(
+  element: Inductor,
+  omega: number,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  validateInductor(element);
+  const admittance = complex(0.0, -1.0 / (omega * element.inductanceHenrys));
+  const n1 = nodeIndex(nodeIndices, element.n1);
+  const n2 = nodeIndex(nodeIndices, element.n2);
+  stampComplexConductance(matrix, n1, n2, admittance);
+}
+
+function stampComplexConductance(
+  matrix: Complex[][],
+  n1: number | undefined,
+  n2: number | undefined,
+  conductance: Complex,
+): void {
+  if (n1 !== undefined) {
+    matrix[n1][n1] = complexAdd(matrix[n1][n1], conductance);
+  }
+  if (n2 !== undefined) {
+    matrix[n2][n2] = complexAdd(matrix[n2][n2], conductance);
+  }
+  if (n1 !== undefined && n2 !== undefined) {
+    matrix[n1][n2] = complexSub(matrix[n1][n2], conductance);
+    matrix[n2][n1] = complexSub(matrix[n2][n1], conductance);
+  }
+}
+
+function stampAcVoltageSource(
+  element: VoltageSource,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  matrix: Complex[][],
+  rhs: Complex[],
+): void {
+  if (!Number.isFinite(element.voltage)) {
+    throw invalidElement(element.name, "voltage must be finite");
+  }
+
+  const sourceIndex = voltageSources.get(element.name);
+  if (sourceIndex === undefined) {
+    throw invalidElement(element.name, "voltage source was not indexed");
+  }
+
+  const branch = nodeCount + sourceIndex;
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+
+  stampComplexBranchMatrix(matrix, branch, positive, negative);
+  rhs[branch] = complexAdd(rhs[branch], complex(element.voltage, 0.0));
+}
+
+function stampComplexBranchMatrix(
+  matrix: Complex[][],
+  branch: number,
+  positive: number | undefined,
+  negative: number | undefined,
+): void {
+  const one = complex(1.0, 0.0);
+  if (positive !== undefined) {
+    matrix[positive][branch] = complexAdd(matrix[positive][branch], one);
+    matrix[branch][positive] = complexAdd(matrix[branch][positive], one);
+  }
+  if (negative !== undefined) {
+    matrix[negative][branch] = complexSub(matrix[negative][branch], one);
+    matrix[branch][negative] = complexSub(matrix[branch][negative], one);
+  }
+}
+
+function stampAcCurrentSource(
+  element: CurrentSource,
+  nodeIndices: ReadonlyMap<string, number>,
+  rhs: Complex[],
+): void {
+  if (!Number.isFinite(element.current)) {
+    throw invalidElement(element.name, "current must be finite");
+  }
+
+  const current = complex(element.current, 0.0);
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  if (positive !== undefined) {
+    rhs[positive] = complexSub(rhs[positive], current);
+  }
+  if (negative !== undefined) {
+    rhs[negative] = complexAdd(rhs[negative], current);
+  }
+}
+
 function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
   const n = rhs.length;
   for (let pivotCol = 0; pivotCol < n; pivotCol++) {
@@ -847,6 +1122,93 @@ function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
     solution[row] = (rhs[row] - tailSum) / matrix[row][row];
   }
   return solution;
+}
+
+function solveComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
+  const n = rhs.length;
+  for (let pivotCol = 0; pivotCol < n; pivotCol++) {
+    let pivotRow = pivotCol;
+    let pivotAbs = complexAbs(matrix[pivotCol][pivotCol]);
+    for (let row = pivotCol + 1; row < n; row++) {
+      const candidateAbs = complexAbs(matrix[row][pivotCol]);
+      if (candidateAbs > pivotAbs) {
+        pivotAbs = candidateAbs;
+        pivotRow = row;
+      }
+    }
+
+    if (pivotAbs < PIVOT_EPSILON) {
+      throw new SpiceError(
+        "circuit matrix is singular",
+        "SINGULAR_MATRIX",
+      );
+    }
+
+    [matrix[pivotCol], matrix[pivotRow]] = [
+      matrix[pivotRow],
+      matrix[pivotCol],
+    ];
+    [rhs[pivotCol], rhs[pivotRow]] = [rhs[pivotRow], rhs[pivotCol]];
+
+    const pivot = matrix[pivotCol][pivotCol];
+    for (let row = pivotCol + 1; row < n; row++) {
+      const factor = complexDiv(matrix[row][pivotCol], pivot);
+      if (factor.real === 0.0 && factor.imag === 0.0) {
+        continue;
+      }
+      matrix[row][pivotCol] = complex(0.0, 0.0);
+      for (let col = pivotCol + 1; col < n; col++) {
+        matrix[row][col] = complexSub(
+          matrix[row][col],
+          complexMul(factor, matrix[pivotCol][col]),
+        );
+      }
+      rhs[row] = complexSub(rhs[row], complexMul(factor, rhs[pivotCol]));
+    }
+  }
+
+  const solution = Array.from({ length: n }, () => complex(0.0, 0.0));
+  for (let row = n - 1; row >= 0; row--) {
+    let tailSum = complex(0.0, 0.0);
+    for (let col = row + 1; col < n; col++) {
+      tailSum = complexAdd(tailSum, complexMul(matrix[row][col], solution[col]));
+    }
+    solution[row] = complexDiv(complexSub(rhs[row], tailSum), matrix[row][row]);
+    if (!Number.isFinite(solution[row].real) || !Number.isFinite(solution[row].imag)) {
+      throw new SpiceError(
+        "circuit matrix is singular",
+        "SINGULAR_MATRIX",
+      );
+    }
+  }
+  return solution;
+}
+
+function complex(real: number, imag: number): Complex {
+  return { real, imag };
+}
+
+function complexAdd(left: Complex, right: Complex): Complex {
+  return complex(left.real + right.real, left.imag + right.imag);
+}
+
+function complexSub(left: Complex, right: Complex): Complex {
+  return complex(left.real - right.real, left.imag - right.imag);
+}
+
+function complexMul(left: Complex, right: Complex): Complex {
+  return complex(
+    left.real * right.real - left.imag * right.imag,
+    left.real * right.imag + left.imag * right.real,
+  );
+}
+
+function complexDiv(left: Complex, right: Complex): Complex {
+  const denominator = right.real * right.real + right.imag * right.imag;
+  return complex(
+    (left.real * right.real + left.imag * right.imag) / denominator,
+    (left.imag * right.real - left.real * right.imag) / denominator,
+  );
 }
 
 function invalidElement(name: string, reason: string): SpiceError {
