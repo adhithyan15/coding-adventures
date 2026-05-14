@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Add SPICE `E` / VCVS controlled-source parsing, including subcircuit node
+  remapping for expanded VCVS elements.
+
 ## 0.1.0
 
 - Add a first SPICE3 netlist parser slice for linear R/C/L circuits,

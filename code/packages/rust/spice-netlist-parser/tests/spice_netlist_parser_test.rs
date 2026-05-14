@@ -97,6 +97,28 @@ G1 out 0 in 0 2m
 }
 
 #[test]
+fn parses_vcvs_into_operating_point_circuit() {
+    let parsed = parse_netlist(
+        r#"
+Vctrl in 0 DC 1.5
+Eamp out 0 in 0 4
+Rload out 0 1k
+.op
+"#,
+    )
+    .unwrap();
+
+    let Element::Vcvs(source) = &parsed.circuit.elements()[1] else {
+        panic!("expected VCVS");
+    };
+    assert_eq!(source.control_positive, "in");
+    assert_close(source.gain, 4.0);
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("out").unwrap(), 6.0);
+}
+
+#[test]
 fn parses_pwl_and_sin_source_waveforms() {
     let parsed = parse_netlist(
         r#"
@@ -150,6 +172,43 @@ Xdiv vin mid 0 divider
 
     let result = dc_op(&parsed.circuit).unwrap();
     assert_close(result.voltage("mid").unwrap(), 5.0);
+}
+
+#[test]
+fn expands_subcircuit_vcvs_nodes_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.subckt gain inp outp
+Ebuf outp 0 inp 0 2
+.ends gain
+V1 in 0 DC 1.25
+Xgain in out gain
+Rload out 0 1k
+.op
+"#,
+    )
+    .unwrap();
+
+    let elements = parsed.circuit.elements();
+    let names = elements
+        .iter()
+        .map(|element| match element {
+            Element::VoltageSource(source) => source.name.as_str(),
+            Element::Vcvs(source) => source.name.as_str(),
+            Element::Resistor(resistor) => resistor.name.as_str(),
+            _ => panic!("unexpected element"),
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(names, vec!["V1", "Xgain.Ebuf", "Rload"]);
+
+    let Element::Vcvs(source) = &elements[1] else {
+        panic!("expected VCVS");
+    };
+    assert_eq!(source.positive, "out");
+    assert_eq!(source.control_positive, "in");
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("out").unwrap(), 2.5);
 }
 
 #[test]
