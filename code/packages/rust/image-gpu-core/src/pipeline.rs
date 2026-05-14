@@ -1729,5 +1729,141 @@ mod tests {
             result
         );
     }
+
+    /// **MX05 Phase 4.7 end-to-end test.**  Unary op with folded
+    /// input constant — the kernel takes **zero** input buffers and
+    /// writes the precomputed `f(K)` to every output element.
+    ///
+    /// Graph: `Op::Sqrt(input = [16, 16, 16, 16]) → C`.  The input
+    /// is observed as the constant `K = 16.0`, so the specialised
+    /// kernel is `sqrt_input_const_f32` which writes `√16 = 4.0`
+    /// everywhere.  Expected output: `[4.0, 4.0, 4.0, 4.0]`.
+    ///
+    /// This exercises the `n_in == 0` path in
+    /// `dispatch_specialised_via`: the `DispatchSpecialised` request
+    /// carries an empty `inputs: vec![]`, and the metal kernel only
+    /// binds the output buffer at `buffer(0)`.
+    #[cfg(all(feature = "metal-backend", target_vendor = "apple"))]
+    #[test]
+    fn dispatch_specialised_via_routes_unary_folded_input() {
+        use crate::specialised_dispatch_count;
+        use compute_ir::{
+            BufferId, ComputeGraph, ExecutorId as ComputeExecutorId, OpTiming as PlanOpTiming,
+            PlacedConstant, PlacedOp, PlacedTensor, Residency, WIRE_FORMAT_VERSION,
+        };
+        use matrix_ir::{DType, Op, Shape, TensorId};
+
+        let backend = match metal_backend() {
+            Some(b) => b,
+            None => return,
+        };
+
+        // Install a Sqrt-with-input=16.0 kernel.  folded_slot = 0
+        // (unary ops have only one input slot).
+        let constant: f32 = 16.0;
+        let spec_key = matrix_runtime::SpecKey {
+            op_kind: 0x02, // Op::Sqrt
+            dtype: DType::F32,
+            shape_class: matrix_runtime::ShapeClass::Dynamic,
+            range_class: matrix_runtime::RangeClass::Constant {
+                bytes: constant.to_le_bytes().to_vec(),
+            },
+            backend_id: 1,
+            folded_slot: Some(0),
+        };
+        const TEST_HANDLE: u64 = 0x1717_1717_1717_1717;
+        let emitted = matrix_metal::emit_specialised_kernel(&spec_key, TEST_HANDLE)
+            .expect("Phase 4.7 emitter must support Sqrt with folded input");
+        assert_eq!(emitted.input_buffer_count, 0, "unary kernel must take 0 inputs");
+        let n_in = emitted.input_buffer_count;
+        let n_out = emitted.output_buffer_count;
+        backend
+            .executor
+            .install_specialised_from_emitted(TEST_HANDLE, emitted)
+            .expect("install must succeed on a real Metal device");
+        record_test_kernel_metadata(TEST_HANDLE, n_in, n_out, Some(0));
+
+        // Build the placed graph:
+        //   Op::Const → tensor A ([16, 16, 16, 16])
+        //   PlacedOp::Alloc → output buffer
+        //   Op::Sqrt(A) → tensor B
+        //
+        // The Sqrt op's input is A; the prep dispatch will still
+        // run the Const op (writes 16.0 four times into a buffer
+        // that the specialised kernel never reads).  The specialised
+        // kernel writes 4.0 to every element of B.  Wasted work for
+        // the Const but correct.
+        let metal_exec_id = ComputeExecutorId(1);
+        let a_residency = Residency { executor: metal_exec_id, buffer: BufferId(30) };
+        let b_residency = Residency { executor: metal_exec_id, buffer: BufferId(31) };
+        let a_bytes: Vec<u8> = [constant; 4].iter().flat_map(|v| v.to_le_bytes()).collect();
+        let f32_shape4 = Shape::from(&[4u32]);
+
+        let tensor_a = PlacedTensor {
+            id: TensorId(0),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: a_residency,
+        };
+        let tensor_b = PlacedTensor {
+            id: TensorId(1),
+            dtype: DType::F32,
+            shape: f32_shape4.clone(),
+            residency: b_residency,
+        };
+
+        let placed = ComputeGraph {
+            format_version: WIRE_FORMAT_VERSION,
+            inputs: vec![],
+            outputs: vec![tensor_b.clone()],
+            constants: vec![PlacedConstant {
+                tensor: TensorId(0),
+                residency: a_residency,
+                bytes: a_bytes,
+            }],
+            ops: vec![
+                PlacedOp::Compute {
+                    op: Op::Const { constant: 0, output: TensorId(0) },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Alloc {
+                    residency: b_residency,
+                    bytes: 16,
+                },
+                PlacedOp::Compute {
+                    op: Op::Sqrt { input: TensorId(0), output: TensorId(1) },
+                    executor: metal_exec_id,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+            ],
+            tensors: vec![tensor_a, tensor_b.clone()],
+        };
+
+        let before = specialised_dispatch_count();
+        let bytes = dispatch_specialised_via(
+            &backend.transport,
+            &placed,
+            2, // Sqrt op is at index 2
+            TEST_HANDLE,
+            b_residency,
+            16,
+        )
+        .expect("specialised unary dispatch must succeed");
+        let after = specialised_dispatch_count();
+
+        assert!(after > before, "specialised_dispatch_count must rise");
+
+        // Expected: [√16, √16, √16, √16] = [4.0, 4.0, 4.0, 4.0].
+        let result: Vec<f32> = bytes
+            .chunks(4)
+            .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+            .collect();
+        assert_eq!(
+            result,
+            vec![4.0, 4.0, 4.0, 4.0],
+            "Phase 4.7 Sqrt with folded input=16: kernel must memset √16=4.0"
+        );
+    }
 }
 

@@ -242,6 +242,28 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.7 landed — unary ops with folded input collapse to memset)**:
+> matrix-metal v0.9.0 extends `msl_emitter` to support **unary
+> f32 ops** (Neg, Abs, Sqrt, Exp, Log, Tanh, Recip) when their
+> single input is itself observed as a stable constant `K`.  In
+> that case every output element is `f(K)`, so the kernel collapses
+> to a memset of the precomputed value — `input_buffer_count = 0`,
+> only the output buffer is bound.  Entry-point names embed
+> `_input_const_` to distinguish from the binary `_const_` /
+> `_lhs_const_` / `_rhs_const_` namespace.
+> `MetalExecutor::install_specialised_from_emitted` branches its
+> install closure on `n_in`: 0-input kernels bind `(out, n)` at
+> slots `(0, 1)`; 1-input kernels keep the existing
+> `(a, out, n)` at `(0, 1, 2)` layout.  image-gpu-core v0.10.0
+> needed no dispatcher changes — Phase 4.6's
+> `ir_inputs.iter().take(n_in)` naturally yields an empty Vec when
+> `n_in == 0`.  End-to-end test
+> `dispatch_specialised_via_routes_unary_folded_input` runs
+> `Op::Sqrt(input=[16,16,16,16])` through the full chain and
+> asserts the output is `[4, 4, 4, 4]` — the memset kernel wrote
+> `√16 = 4` to every element.  Test counts:
+> matrix-metal 40 emitter (+9), image-gpu-core 32 (+1).
+
 > **Implementation status (Phase 4.6 landed — `folded_slot` unlocks non-commutative ops)**:
 > `SpecKey` gains a `folded_slot: Option<u8>` field
 > (matrix-profile v0.2.0) recording which input slot the policy
