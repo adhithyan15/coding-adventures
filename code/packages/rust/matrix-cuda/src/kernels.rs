@@ -406,6 +406,20 @@ mod tests {
         diff <= scale * 1.0e-4
     }
 
+    /// **MX06 Phase 5a invariant.**  `Kernels` must be `Send + Sync`
+    /// so it can live in `CudaExecutor::State` behind a `Mutex<State>`.
+    /// Verified via cuda-compute 0.1.2's Send + Sync impls on
+    /// `CudaModuleInner` and `CudaFunction`.
+    ///
+    /// Compile-only — no runtime cost; if Kernels ever drops Send or
+    /// Sync this test breaks the build, which is exactly what we want
+    /// before Phase 5b tries to wire Dispatch.
+    #[test]
+    fn kernels_is_send_and_sync() {
+        fn require_send_sync<T: Send + Sync>() {}
+        require_send_sync::<Kernels>();
+    }
+
     // ── kernels compile ─────────────────────────────────────────────
 
     #[test]

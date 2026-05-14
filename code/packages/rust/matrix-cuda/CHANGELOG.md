@@ -1,5 +1,95 @@
 # Changelog — matrix-cuda
 
+## 0.5.0 — 2026-05-13
+
+### Added — MX06 Phase 5a (`specialised_table` + Send/Sync foundation)
+
+Phase 5 is large enough to split.  This release is **Phase 5a**: the
+foundation needed by Phase 5b (real `Dispatch` wiring).  Two pieces:
+
+1. New `src/specialised_table.rs` module — per-executor
+   `HashMap<u64 handle, Box<closure>>` of installed specialised
+   kernels.  Mirrors `matrix-metal::SpecialisedTable` shape exactly.
+2. Companion `cuda-compute` v0.1.2 release adds `Sync` to
+   `CudaModuleInner` and `CudaFunction`, and both `Send + Sync` to
+   `CudaLib` / `NvrtcLib`.  This makes `Kernels` (which holds an
+   `Arc<CudaModuleInner>` and `HashMap<&str, CudaFunction>`)
+   `Send + Sync` so Phase 5b can lift it into `CudaExecutor::State`.
+
+#### `src/specialised_table.rs`
+
+- `pub type CudaSpecialisedKernelFn` — closure signature
+  `Fn(&CudaDevice, &mut BufferStore, &[BufferId], &[BufferId])
+   -> Result<Vec<OpTiming>, String> + Send`.
+- `pub struct SpecialisedTable` wrapping the closure HashMap.
+- Methods: `new`, `install`, `get`, `contains`, `len`, `is_empty`,
+  `evict`, plus a `Default` impl and a `Debug` impl that hides
+  closure pointers (prints sorted handle list).
+- `install` is monotonic up to overwriting: re-installing under the
+  same handle replaces the prior closure, matching matrix-metal's
+  Phase 5 deopt-without-evict-step contract.
+
+#### Compile-time invariants
+
+- `kernels::Kernels: Send + Sync` — verified by a new compile-only
+  test (`kernels_is_send_and_sync`).  This is the test that fails
+  loudly if cuda-compute regresses on its `Send + Sync` promise.
+- `SpecialisedTable: Send` — verified similarly.
+
+### Tests
+
+9 new unit tests in `specialised_table::tests`:
+
+- `new_table_is_empty`, `default_matches_new`, `is_empty` /
+  `len` accounting.
+- `install_then_lookup_finds_kernel`,
+  `lookup_of_missing_handle_returns_none`.
+- `install_overwrites_prior_kernel` — len stays at 1 after replace.
+- `evict_removes_kernel_and_returns_true`,
+  `evict_missing_handle_returns_false`.
+- `specialised_table_is_send` — compile-only.
+- `debug_impl_shows_handles_in_sorted_order` — guards against
+  accidental closure-pointer leaks.
+
+Plus the new `kernels_is_send_and_sync` test that verifies the
+cuda-compute Send/Sync audit landed before Phase 5b tries to lift
+Kernels into State.
+
+Total crate test count: 78 (68 from Phases 1–4 + 10 new in 5a).
+
+### Why split Phase 5
+
+The cron-defined Phase 5 covers seven sub-items (table + Send audit
++ lift Kernels + real Dispatch + DispatchSpecialised + install +
+evict + flip bitset).  Phase 5a ships the **foundation** that all
+the others depend on, with no behavioural change yet: `Dispatch`
+still returns `NOT_IMPLEMENTED`, `supported_ops_bitset()` stays at
+`0`, `install_specialised_from_emitted` still errors.
+
+Phase 5b will wire the executor state changes (lift Kernels into
+State, implement real Dispatch by walking ComputeGraph PlacedOps,
+implement DispatchSpecialised via the new table, implement
+install_specialised_from_emitted backed by `cuda_emitter`, and flip
+the supported_ops bitset to claim V1 ops).
+
+Splitting keeps each PR reviewable.  Phase 5a is purely additive —
+no executor behaviour changed.
+
+### Companion: cuda-compute v0.1.2
+
+Adds:
+- `unsafe impl Sync for CudaModuleInner {}` (Send was already there).
+- `unsafe impl Sync for CudaFunction {}` (Send was already there).
+- `unsafe impl {Send, Sync} for CudaLib {}` and `for NvrtcLib {}`.
+
+All justified: the underlying `*mut c_void` library handles from
+`dlopen` / `LoadLibrary` are thread-safe to share (POSIX `dlsym`
+and Windows `GetProcAddress` are explicitly thread-safe), and CUDA
+driver handles (`CUmodule`, `CUfunction`) are thread-safe to share
+per NVIDIA's docs.  Concurrent driver calls against the same
+module / function remain undefined; callers serialise via their
+own `Mutex` — Sync here means "transferring shared refs is safe."
+
 ## 0.4.0 — 2026-05-13
 
 ### Added — MX06 Phase 4 (`cuda_emitter` — specialised-kernel codegen)
