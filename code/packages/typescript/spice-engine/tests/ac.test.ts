@@ -9,6 +9,7 @@ import {
   currentSource,
   inductor,
   resistor,
+  vcvs,
   voltageSource,
 } from "../src/index.js";
 
@@ -86,6 +87,22 @@ describe("acSweep", () => {
     expect(n1).not.toBeUndefined();
     expectClose(n1!.real, 1.0);
     expectClose(n1!.imag, 0.0);
+  });
+
+  it("applies VCVS gain in AC analysis", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(vcvs("E1", "out", "0", "in", "0", 4.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 10);
+
+    expect(points).toHaveLength(1);
+    const out = points[0].voltage("out");
+    expect(out).not.toBeUndefined();
+    expectClose(out!.real, 4.0);
+    expectClose(out!.imag, 0.0);
+    expectClose(points[0].branchCurrent("E1")?.real, -4.0e-3);
   });
 
   it("rejects invalid frequency bounds", () => {
