@@ -1,5 +1,29 @@
 # Changelog — twig-ir-compiler
 
+## [0.5.0] — 2026-05-14
+
+### Added (LANG49 — TW05-B type-check pre-pass)
+
+Wires the new `twig-type-checker` crate as an optional pre-pass in
+`compile_program`.
+
+#### Behaviour
+
+- `TypedMode::Strict`: if `check_program` returns `ok: false`, the first
+  `TypeErrorDiagnostic` is wrapped in a `TwigCompileError` and returned
+  as `Err` before any IIR is emitted.
+- `TypedMode::Lenient`: type errors are printed as warnings to `stderr`
+  (prefix `twig type warning (line:col): …`), then compilation proceeds.
+- `TypedMode::Off` / no `module_info`: pre-pass skipped entirely —
+  zero performance overhead for dynamic Twig programs.
+
+#### Dependency added
+
+- `twig-type-checker = { path = "../twig-type-checker" }` — the new
+  TW05-B base type checker crate.
+
+---
+
 ## [0.4.0] — 2026-05-14
 
 ### Added (LANG48 — TW05-A annotation erasure)
