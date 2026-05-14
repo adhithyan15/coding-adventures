@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [0.2.0] — 2026-05-14
+
 ### Added
 
 - Added Rust MACSYMA parity for elliptic first-kind integration, so
