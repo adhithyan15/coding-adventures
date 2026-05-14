@@ -98,6 +98,10 @@ module CodingAdventures
         Gpio.new(self)
       end
 
+      def pwm
+        Pwm.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -213,6 +217,28 @@ module CodingAdventures
           budget: budget,
           pin: pin,
           value: value,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def pwm_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin:,
+        duty:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.pwm_write(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
+          duty: duty,
           max_stack: max_stack,
           handshake: true,
           query_caps: true,
@@ -872,6 +898,38 @@ module CodingAdventures
           budget: budget,
           max_stack: max_stack
         )
+      end
+    end
+
+    class Pwm
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def write(
+        pin:,
+        duty:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.pwm_write!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          duty: duty,
+          max_stack: max_stack
+        )
+      end
+
+      def off(pin:, **options)
+        write(pin: pin, duty: 0, **options)
+      end
+
+      def full(pin:, **options)
+        write(pin: pin, duty: 0xFFFF, **options)
       end
     end
 

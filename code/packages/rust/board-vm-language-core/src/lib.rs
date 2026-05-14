@@ -37,13 +37,14 @@ use board_vm_esp_rom::{
 use board_vm_host::{
     write_blink_module, write_gpio_handle_close_module, write_gpio_handle_read_module,
     write_gpio_handle_write_module, write_gpio_open_module, write_gpio_read_module,
-    write_gpio_write_module, write_led_matrix_frame_module, write_module, write_time_now_module,
-    write_time_sleep_ms_module, BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram,
-    GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError,
-    HostSession, LedMatrixFrameProgram, ModuleSpec, TimeNowProgram, TimeSleepMsProgram,
-    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
-    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
-    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    write_gpio_write_module, write_led_matrix_frame_module, write_module, write_pwm_write_module,
+    write_time_now_module, write_time_sleep_ms_module, BlinkProgram, GpioHandleCloseProgram,
+    GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram,
+    GpioWriteProgram, HostError, HostSession, LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram,
+    TimeNowProgram, TimeSleepMsProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
+    DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN,
+    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN,
     TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
@@ -1579,6 +1580,13 @@ pub fn build_led_matrix_frame_module(
     Ok(write_led_matrix_frame_module(program, out)?)
 }
 
+pub fn build_pwm_write_module(
+    program: PwmWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_pwm_write_module(program, out)?)
+}
+
 pub fn build_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2219,6 +2227,31 @@ pub unsafe extern "C" fn board_vm_language_led_matrix_frame_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_pwm_write_module(
+    pin: u8,
+    duty: u16,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_pwm_write_module(
+            PwmWriteProgram {
+                pin,
+                duty,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2524,6 +2557,11 @@ pub extern "C" fn board_vm_language_time_sleep_ms_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_pwm_write_module_len() -> u64 {
+    PWM_WRITE_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_led_matrix_frame_module_len() -> u64 {
     LED_MATRIX_FRAME_MODULE_LEN as u64
 }
@@ -2747,6 +2785,7 @@ mod tests {
         assert!(uno_d3.supports_pwm);
         assert!(uno_d3.supports_interrupt);
         assert!(!uno_d3.supports_adc);
+        assert!(uno.capabilities.contains(&"pwm.write".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -3513,6 +3552,19 @@ mod tests {
         };
         assert_eq!(led_matrix_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(led_matrix_status.len, LED_MATRIX_FRAME_MODULE_LEN as u64);
+
+        let mut pwm_module = [0u8; PWM_WRITE_MODULE_LEN];
+        let pwm_status = unsafe {
+            board_vm_language_pwm_write_module(
+                3,
+                0x8000,
+                2,
+                pwm_module.as_mut_ptr(),
+                pwm_module.len() as u64,
+            )
+        };
+        assert_eq!(pwm_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(pwm_status.len, PWM_WRITE_MODULE_LEN as u64);
 
         let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];
         let gpio_read_status = unsafe {
