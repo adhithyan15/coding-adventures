@@ -815,7 +815,7 @@ emerges from observed workloads.  Per-component tests:
 - **MX03** — `KernelSource` is what the specialiser produces (in
   generated form per backend)
 - **MX04** — runtime is where the profiler + trigger live
-- **Future MX06** — `matrix-cuda` executor will use the same
-  specialisation interface; nothing in MX05 is Metal-specific
+- **[MX06](MX06-cuda-executor.md)** — `matrix-cuda` executor uses
+  the same specialisation interface; nothing in MX05 is Metal-specific
 - **Future MX07** — kernel fusion across adjacent ops could build on
   MX05's specialised cache infrastructure
