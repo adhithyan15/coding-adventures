@@ -1,5 +1,22 @@
 # Changelog — `aarch64-encoder`
 
+## 0.2.1 — 2026-05-13 (LANG39)
+
+**PC-relative ADRP placeholder for Mach-O data-section relocations.**
+
+### New method
+
+| Method | ARM64 mnemonic | Purpose |
+|--------|---------------|---------|
+| `adrp_placeholder(rd) → usize` | `ADRP Xd, #0` | Emit a zeroed-immediate ADRP; returns word index for `ARM64_RELOC_PAGE21` relocation |
+
+`adrp_placeholder` is the first half of the ADRP+ADD address-materialisation
+pair used by `aarch64-backend` to access `_twig_globals` in the `__data`
+section.  The system linker patches the 21-bit `immhi:immlo` field at final
+link time.
+
+2 new unit tests verify the encoding and the returned word-index contract.
+
 ## 0.2.0 — 2026-05-13 (LANG38)
 
 **Integer division, bitwise logic, variable shifts, unary negate/NOT.**

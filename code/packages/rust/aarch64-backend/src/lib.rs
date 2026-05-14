@@ -19,8 +19,9 @@
 //! | Returns | `ret_<ty>`, `ret_void` |
 //! | Type guards | `type_assert` (lowered to `udf` trap — AOT has no deopt) |
 //! | Calls | `call` (direct + cross-function BL via external relocs) |
+//! | Globals | `global_load`, `global_store` (LANG39 — ADRP+ADD+LDR/STR via `_twig_globals`) |
 //! | Float, send, properties | **NOT YET** |
-//! | Closures, globals | **NOT YET** (LANG39/LANG40) |
+//! | Closures | **NOT YET** (LANG40) |
 //!
 //! Anything outside this list causes the backend to return `None`, which
 //! `aot-core` reports as a compile failure for that function (it falls
@@ -184,12 +185,42 @@ impl From<EncodeError> for BackendError {
 // Top-level compile() — stitches the prologue, body, and epilogue together
 // ===========================================================================
 
+// ===========================================================================
+// Global-variable relocation type (LANG39)
+// ===========================================================================
+
+/// Word-index positions of an ADRP+ADD instruction pair that references
+/// `_twig_globals` and needs two Mach-O ARM64 relocations:
+///
+/// - `adrp_word` → `ARM64_RELOC_PAGE21` on the `ADRP X1, #0` instruction.
+/// - `add_word`  → `ARM64_RELOC_PAGEOFF12` on the `ADD X1, X1, #0` instruction.
+///
+/// Both word indices are relative to the **start of this function's** byte
+/// output.  `twig-aot` converts them to byte offsets in the fully-linked
+/// text section by adding the function's byte offset.
+///
+/// # Example
+///
+/// If `global_load` for slot 2 is the 7th instruction in a function, `adrp_word`
+/// will be 7 and `add_word` will be 8 (they are always adjacent).
+#[derive(Debug, Clone, Copy)]
+pub struct GlobalWordReloc {
+    /// Word index of the `ADRP X1, #0` placeholder.
+    pub adrp_word: usize,
+    /// Word index of the `ADD X1, X1, #0` placeholder.
+    pub add_word: usize,
+}
+
+// ===========================================================================
+// Public compile entry points
+// ===========================================================================
+
 /// Public-ish entry point used by tests.  Production callers go through
 /// the `Backend` trait.  Relocations are silently discarded; use
 /// [`compile_with_relocs`] when you need them for AOT cross-function linking.
 pub fn compile(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, String> {
-    compile_inner(ctx, ir)
-        .map(|(bytes, _relocs)| bytes)
+    compile_inner(ctx, ir, &HashMap::new())
+        .map(|(bytes, _ext, _glob)| bytes)
         .map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
@@ -203,10 +234,36 @@ pub fn compile_with_relocs(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
 ) -> Result<(Vec<u8>, Vec<ExternalReloc>), String> {
-    compile_inner(ctx, ir).map_err(|e| format!("aarch64-backend: {e:?}"))
+    compile_inner(ctx, ir, &HashMap::new())
+        .map(|(bytes, ext, _glob)| (bytes, ext))
+        .map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
-fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
+/// Like [`compile_with_relocs`] but also handles `global_load`/`global_store`
+/// CIR instructions using the provided slot map.
+///
+/// `global_slots` maps each global name (as it appears in `srcs[0].as_var()`)
+/// to a zero-based slot index.  Slot `i` corresponds to bytes `[i*8, i*8+8)`
+/// in the `_twig_globals` data section.
+///
+/// Returns the function's machine code bytes, any cross-function `BL`
+/// relocation entries, and a list of [`GlobalWordReloc`] entries — one per
+/// `global_load` / `global_store` instruction — that the Mach-O packager uses
+/// to emit `ARM64_RELOC_PAGE21` / `ARM64_RELOC_PAGEOFF12` records.
+pub fn compile_with_globals(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<GlobalWordReloc>), String> {
+    compile_inner(ctx, ir, global_slots)
+        .map_err(|e| format!("aarch64-backend: {e:?}"))
+}
+
+fn compile_inner(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<GlobalWordReloc>), BackendError> {
     if ctx.params.len() > 8 {
         return Err(BackendError::TooManyParams(ctx.params.len()));
     }
@@ -295,8 +352,10 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<(Vec<u8>,
     }
 
     // ---- Body ------------------------------------------------------------
+    let mut global_relocs: Vec<GlobalWordReloc> = Vec::new();
     for instr in ir {
-        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name)?;
+        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name,
+                   global_slots, &mut global_relocs)?;
     }
 
     // ---- Final epilogue (only reached if the function falls off the end) -
@@ -307,7 +366,7 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<(Vec<u8>,
 
     let external_relocs = std::mem::take(&mut asm.external_relocs);
     let bytes = asm.finish().map_err(BackendError::from)?;
-    Ok((bytes, external_relocs))
+    Ok((bytes, external_relocs, global_relocs))
 }
 
 // ===========================================================================
@@ -321,6 +380,8 @@ fn emit_instr(
     labels: &HashMap<String, LabelId>,
     frame: u32,
     fn_name: &str,
+    global_slots: &HashMap<String, usize>,
+    global_relocs: &mut Vec<GlobalWordReloc>,
 ) -> Result<(), BackendError> {
     let op = instr.op.as_str();
 
@@ -572,6 +633,115 @@ fn emit_instr(
         asm.mvn(Reg::X0, Reg::X0);
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // ---- global_load Str("name") → dest  (LANG39) -------------------------
+    //
+    // Materialise the address of `_twig_globals` via ADRP+ADD (to be patched
+    // by the Mach-O linker), then load the 8-byte value at slot*8.
+    //
+    // CIR encoding after aot_specialise:
+    //   srcs[0] = Var("name")  (Str("name") was lifted to Var by CIROperand::From)
+    //   dest    = Some("%v")
+    //
+    // ARM64 sequence (4 instructions):
+    //   ADRP X1, _twig_globals@PAGE    ; placeholder, patched by ld
+    //   ADD  X1, X1, _twig_globals@PAGEOFF ; placeholder, patched by ld
+    //   LDR  X0, [X1, #slot*8]         ; load value from global slot
+    //   STR  X0, [SP, #dest_slot]      ; spill to stack frame
+    if op == "global_load" {
+        let name = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr("global_load: srcs[0] must be Var(name)".into()))?;
+        let slot = global_slots.get(name)
+            .copied()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("global_load: unknown global '{name}'")))?;
+        let dest = require_dest(instr)?;
+
+        // ADRP X1, #0  (ARM64_RELOC_PAGE21 target)
+        let adrp_word = asm.adrp_placeholder(Reg::X1);
+        // ADD  X1, X1, #0  (ARM64_RELOC_PAGEOFF12 target)
+        let add_word = asm.len_words();
+        asm.add_imm(Reg::X1, Reg::X1, 0)?;
+        global_relocs.push(GlobalWordReloc { adrp_word, add_word });
+
+        // LDR X0, [X1, #slot*8]
+        //
+        // Guard against slot indices that would overflow the ARM64 12-bit
+        // unsigned offset field.  For 64-bit (8-byte) accesses the LDR
+        // immediate is encoded in units of 8, so the maximum representable
+        // offset is 0xFFF * 8 = 32,760 bytes → 4,095 slots.  Silently
+        // truncating a large slot to u32 would produce a machine instruction
+        // that reads from the wrong address at runtime.
+        const MAX_GLOBAL_SLOT: usize = 4_095;
+        if slot > MAX_GLOBAL_SLOT {
+            return Err(BackendError::MalformedInstr(format!(
+                "global_load: slot index {slot} exceeds ARM64 12-bit LDR offset limit \
+                 (max {MAX_GLOBAL_SLOT} slots)"
+            )));
+        }
+        let byte_offset: u32 = (slot * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_load: slot byte offset overflows u32 (slot={slot})")
+            ))?;
+        asm.ldr(Reg::X0, Reg::X1, byte_offset)?;
+
+        // Spill to dest's stack slot
+        let d = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, d)?;
+        return Ok(());
+    }
+
+    // ---- global_store Str("name"), src  (LANG39) --------------------------
+    //
+    // Load the value from the stack frame, then store it into the global slot.
+    //
+    // CIR encoding:
+    //   srcs[0] = Var("name")   (global name, lifted from Str)
+    //   srcs[1] = Var("%v")     (value to write)
+    //
+    // ARM64 sequence (4 instructions):
+    //   LDR  X0, [SP, #val_slot]        ; load value from stack frame
+    //   ADRP X1, _twig_globals@PAGE     ; placeholder, patched by ld
+    //   ADD  X1, X1, _twig_globals@PAGEOFF ; placeholder, patched by ld
+    //   STR  X0, [X1, #slot*8]          ; write to global slot
+    if op == "global_store" {
+        let name = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr("global_store: srcs[0] must be Var(name)".into()))?;
+        let slot = global_slots.get(name)
+            .copied()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("global_store: unknown global '{name}'")))?;
+        let val_src = instr.srcs.get(1)
+            .ok_or_else(|| BackendError::MalformedInstr("global_store: needs srcs[1]=value".into()))?;
+
+        // Load value from caller's stack slot into X0.
+        load_operand(asm, alloc, Reg::X0, val_src)?;
+
+        // ADRP X1, #0  (ARM64_RELOC_PAGE21 target)
+        let adrp_word = asm.adrp_placeholder(Reg::X1);
+        // ADD  X1, X1, #0  (ARM64_RELOC_PAGEOFF12 target)
+        let add_word = asm.len_words();
+        asm.add_imm(Reg::X1, Reg::X1, 0)?;
+        global_relocs.push(GlobalWordReloc { adrp_word, add_word });
+
+        // STR X0, [X1, #slot*8]
+        //
+        // Same 4,095-slot limit as global_load — ARM64 12-bit unsigned offset.
+        const MAX_GLOBAL_SLOT_STORE: usize = 4_095;
+        if slot > MAX_GLOBAL_SLOT_STORE {
+            return Err(BackendError::MalformedInstr(format!(
+                "global_store: slot index {slot} exceeds ARM64 12-bit STR offset limit \
+                 (max {MAX_GLOBAL_SLOT_STORE} slots)"
+            )));
+        }
+        let byte_offset: u32 = (slot * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_store: slot byte offset overflows u32 (slot={slot})")
+            ))?;
+        asm.str_(Reg::X0, Reg::X1, byte_offset)?;
+        // global_store has no dest.
         return Ok(());
     }
 
@@ -1068,6 +1238,122 @@ mod tests {
         ];
         let bytes = compile(&ctx("fnot", &params, "i64"), &cir).expect("not_i64");
         assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+    }
+
+    // ---- LANG39: global_load / global_store ----
+
+    #[test]
+    fn global_store_emits_four_instructions() {
+        // global_store Var("x"), Var("v0")
+        // Sequence: LDR X0, [SP, #val_slot]; ADRP X1; ADD X1, X1, #0; STR X0, [X1, #0]
+        let mut slots: HashMap<String, usize> = HashMap::new();
+        slots.insert("x".into(), 0);
+
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("v0".into()),
+                       srcs: vec![CIROperand::Int(42)], ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "global_store".into(), dest: None,
+                       srcs: vec![CIROperand::Var("x".into()), CIROperand::Var("v0".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![],
+                       ty: "void".into(), deopt_to: None },
+        ];
+        let (bytes, _ext, g_relocs) = compile_with_globals(
+            &ctx("f_gs", &[], "void"), &cir, &slots
+        ).expect("global_store must compile");
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0, "byte-aligned output");
+        assert_eq!(g_relocs.len(), 1, "one global_store → one GlobalWordReloc");
+        let r = g_relocs[0];
+        assert_eq!(r.add_word, r.adrp_word + 1, "ADD immediately follows ADRP");
+    }
+
+    #[test]
+    fn global_load_emits_four_instructions() {
+        // global_load Var("x") → v1
+        // Sequence: ADRP X1; ADD X1, X1, #0; LDR X0, [X1, #0]; STR X0, [SP, #dest_slot]
+        let mut slots: HashMap<String, usize> = HashMap::new();
+        slots.insert("x".into(), 0);
+
+        let cir = vec![
+            CIRInstr { op: "global_load".into(), dest: Some("v1".into()),
+                       srcs: vec![CIROperand::Var("x".into())],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                       srcs: vec![CIROperand::Var("v1".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        let (bytes, _ext, g_relocs) = compile_with_globals(
+            &ctx("f_gl", &[], "i64"), &cir, &slots
+        ).expect("global_load must compile");
+        assert!(bytes.len() > 0 && bytes.len() % 4 == 0, "byte-aligned output");
+        assert_eq!(g_relocs.len(), 1, "one global_load → one GlobalWordReloc");
+        let r = g_relocs[0];
+        assert_eq!(r.add_word, r.adrp_word + 1, "ADD immediately follows ADRP");
+    }
+
+    #[test]
+    fn global_load_stores_slot_offset_in_ldr() {
+        // Slot 2 → offset 16 bytes.  The LDR instruction word should have
+        // imm12=2 (16/8=2) in the [21:10] field of an F9400000-class instruction.
+        let mut slots: HashMap<String, usize> = HashMap::new();
+        slots.insert("y".into(), 2);
+
+        let cir = vec![
+            CIRInstr { op: "global_load".into(), dest: Some("v0".into()),
+                       srcs: vec![CIROperand::Var("y".into())],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                       srcs: vec![CIROperand::Var("v0".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        let (bytes, _, g_relocs) = compile_with_globals(
+            &ctx("f_slot", &[], "i64"), &cir, &slots
+        ).expect("compile ok");
+
+        let r = g_relocs[0];
+        // The LDR instruction is immediately after the ADD (r.add_word + 1).
+        let ldr_byte = (r.add_word + 1) * 4;
+        let ldr_word = u32::from_le_bytes(bytes[ldr_byte..ldr_byte+4].try_into().unwrap());
+        // LDR X0, [X1, #16]: 0xF9400000 | (imm12=2 << 10) | (X1=1 << 5) | X0=0
+        //   = 0xF9400000 | 0x800 | 0x20 | 0 = 0xF9400820
+        assert_eq!(ldr_word, 0xF9400820, "LDR X0,[X1,#16] for slot 2");
+    }
+
+    #[test]
+    fn global_store_unknown_name_errors() {
+        let slots: HashMap<String, usize> = HashMap::new(); // empty!
+        let cir = vec![
+            CIRInstr { op: "global_store".into(), dest: None,
+                       srcs: vec![CIROperand::Var("z".into()), CIROperand::Int(0)],
+                       ty: "void".into(), deopt_to: None },
+        ];
+        let result = compile_with_globals(&ctx("f_err", &[], "void"), &cir, &slots);
+        assert!(result.is_err(), "unknown global should error");
+    }
+
+    #[test]
+    fn two_globals_produce_two_relocs() {
+        let mut slots: HashMap<String, usize> = HashMap::new();
+        slots.insert("a".into(), 0);
+        slots.insert("b".into(), 1);
+
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("v0".into()),
+                       srcs: vec![CIROperand::Int(1)], ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "global_store".into(), dest: None,
+                       srcs: vec![CIROperand::Var("a".into()), CIROperand::Var("v0".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "global_load".into(), dest: Some("v1".into()),
+                       srcs: vec![CIROperand::Var("b".into())],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                       srcs: vec![CIROperand::Var("v1".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        let (_, _, g_relocs) = compile_with_globals(
+            &ctx("f_two", &[], "i64"), &cir, &slots
+        ).expect("compile ok");
+        assert_eq!(g_relocs.len(), 2, "one reloc per global access");
     }
 
     #[test]
