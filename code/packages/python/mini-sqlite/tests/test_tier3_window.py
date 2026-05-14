@@ -464,7 +464,7 @@ class TestWindowIntegration:
         # FIRST_VALUE is always the highest salary (90000) — stable across all rows.
         assert all(hi == 90000 for _, hi, lo in eng)
         # LAST_VALUE with cumulative frame equals the current row's salary.
-        for salary, hi, lo in eng:
+        for salary, _, lo in eng:
             assert lo == salary, f"expected LAST_VALUE={salary}, got {lo}"
 
     def test_multiple_window_functions(self):
