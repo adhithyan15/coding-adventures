@@ -1,0 +1,199 @@
+{
+  "harness_version": "adj25-pr6-v1",
+  "endpoint": "http://127.0.0.1:11434",
+  "binary": "code/packages/rust/target/release/adj_pr6_bench",
+  "models": [
+    "gemma4:latest"
+  ],
+  "declarations": [
+    "matches",
+    "large-lithium",
+    "large-toothpaste",
+    "pocket-knife",
+    "wine-bottle",
+    "small-lithium",
+    "small-perfume",
+    "lighter-disposable"
+  ],
+  "cells": [
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 297.07500412501395,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 296.807677833
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 200 Wh.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 271.390659666853,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(20 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (20 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, lithium battery, 200 Wh.",
+        "wallclock_secs": 271.386524709
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-toothpaste",
+      "declaration_text": "1 carry-on bag, 4 oz toothpaste.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 296.78863724996336,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 4 oz toothpaste.",
+        "wallclock_secs": 296.782995583
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "pocket-knife",
+      "declaration_text": "1 carry-on bag, 4 inch pocket knife.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 246.58143037487753,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(6 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (6 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 4 inch pocket knife.",
+        "wallclock_secs": 246.577691125
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "wine-bottle",
+      "declaration_text": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 474.20003116712905,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(20 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (20 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+        "wallclock_secs": 474.195984625
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 50 Wh.",
+      "expected_verdict": "COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 300.8518367498182,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(20 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (20 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, lithium battery, 50 Wh.",
+        "wallclock_secs": 300.848293541
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-perfume",
+      "declaration_text": "1 carry-on bag, 3 oz perfume.",
+      "expected_verdict": "COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 203.7387417089194,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 3 oz perfume.",
+        "wallclock_secs": 203.73504525
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 191.9987044588197,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(15 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (15 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 191.995519208
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    }
+  ],
+  "summary": {
+    "totals": {
+      "cells_run": 8,
+      "ir_produced": 0,
+      "fully_passing": 0,
+      "correlation_complete": 0,
+      "correlation_total": 0
+    },
+    "by_model": {
+      "gemma4:latest": {
+        "cells": 8,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 2282.625045501394
+      }
+    },
+    "by_level": {
+      "DocumentToSentence": {
+        "passed": 0,
+        "total": 0
+      },
+      "SentenceToPhrase": {
+        "passed": 0,
+        "total": 0
+      },
+      "PhraseToClaim": {
+        "passed": 0,
+        "total": 0
+      },
+      "FactToTypedComponent": {
+        "passed": 0,
+        "total": 0
+      }
+    }
+  }
+}
