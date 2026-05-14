@@ -6,6 +6,7 @@ import {
   inductor,
   resistor,
   tf,
+  vccs,
   voltageSource,
 } from "../src/index.js";
 
@@ -77,6 +78,18 @@ describe("tf", () => {
     expect(result.outputImpedanceOhms).toBeLessThan(1.0e-6);
   });
 
+  it("reports VCCS transconductance gain", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(vccs("Gm", "0", "out", "in", "0", 2.0e-3));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = tf(circuit, "out", "Vin");
+
+    expectClose(result.gain(), 2.0);
+    expectClose(result.outputImpedanceOhms, 1_000.0);
+  });
+
   it("rejects missing output nodes", () => {
     const circuit = new Circuit();
 
@@ -90,6 +103,16 @@ describe("tf", () => {
     circuit.add(resistor("Rin", "in", "0", 1_000.0));
 
     expect(() => tf(circuit, "in", "Rin")).toThrowError(
+      "input element must be an independent voltage or current source",
+    );
+  });
+
+  it("rejects VCCS elements as input sources", () => {
+    const circuit = new Circuit();
+    circuit.add(vccs("Gm", "0", "out", "in", "0", 1.0e-3));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    expect(() => tf(circuit, "out", "Gm")).toThrowError(
       "input element must be an independent voltage or current source",
     );
   });

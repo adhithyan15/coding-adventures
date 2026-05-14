@@ -1,7 +1,13 @@
 const PIVOT_EPSILON = 1.0e-12;
 const TWO_PI = Math.PI * 2.0;
 
-export type Element = Resistor | Capacitor | Inductor | VoltageSource | CurrentSource;
+export type Element =
+  | Resistor
+  | Capacitor
+  | Inductor
+  | VoltageSource
+  | CurrentSource
+  | Vccs;
 
 export interface Resistor {
   readonly kind: "resistor";
@@ -43,6 +49,16 @@ export interface CurrentSource {
   readonly positive: string;
   readonly negative: string;
   readonly current: number;
+}
+
+export interface Vccs {
+  readonly kind: "vccs";
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly controlPositive: string;
+  readonly controlNegative: string;
+  readonly transconductanceSiemens: number;
 }
 
 export interface DcResult {
@@ -200,6 +216,25 @@ export function currentSource(
   current: number,
 ): CurrentSource {
   return { kind: "current-source", name, positive, negative, current };
+}
+
+export function vccs(
+  name: string,
+  positive: string,
+  negative: string,
+  controlPositive: string,
+  controlNegative: string,
+  transconductanceSiemens: number,
+): Vccs {
+  return {
+    kind: "vccs",
+    name,
+    positive,
+    negative,
+    controlPositive,
+    controlNegative,
+    transconductanceSiemens,
+  };
 }
 
 export function complexAbs(value: Complex): number {
@@ -491,6 +526,12 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "current",
         nominalValue: element.current,
       };
+    case "vccs":
+      return {
+        elementName: element.name,
+        parameter: "transconductanceSiemens",
+        nominalValue: element.transconductanceSiemens,
+      };
     case "capacitor":
     case "inductor":
       return undefined;
@@ -525,6 +566,12 @@ function circuitWithPerturbedElement(
         break;
       case "current-source":
         perturbed.add({ ...element, current: element.current + delta });
+        break;
+      case "vccs":
+        perturbed.add({
+          ...element,
+          transconductanceSiemens: element.transconductanceSiemens + delta,
+        });
         break;
       case "capacitor":
       case "inductor":
@@ -611,6 +658,9 @@ function solveLinearCircuit(
       case "current-source":
         stampCurrentSource(element, nodeIndices, rhs);
         break;
+      case "vccs":
+        stampVccs(element, nodeIndices, matrix);
+        break;
     }
   }
 
@@ -682,6 +732,9 @@ function buildSmallSignalMatrix(
           throw invalidElement(element.name, "current must be finite");
         }
         break;
+      case "vccs":
+        stampVccs(element, nodeIndices, matrix);
+        break;
     }
   }
 
@@ -727,6 +780,9 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
         break;
       case "current-source":
         stampAcCurrentSource(element, nodeIndices, rhs);
+        break;
+      case "vccs":
+        stampAcVccs(element, nodeIndices, matrix);
         break;
     }
   }
@@ -857,6 +913,12 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         insertNode(names, element.positive);
         insertNode(names, element.negative);
         break;
+      case "vccs":
+        insertNode(names, element.positive);
+        insertNode(names, element.negative);
+        insertNode(names, element.controlPositive);
+        insertNode(names, element.controlNegative);
+        break;
     }
   }
 
@@ -908,7 +970,8 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
     if (
       (element.kind === "resistor" ||
         element.kind === "capacitor" ||
-        element.kind === "inductor") &&
+        element.kind === "inductor" ||
+        element.kind === "vccs") &&
       element.name === inputSource
     ) {
       throw invalidElement(
@@ -1281,6 +1344,51 @@ function stampCurrentSource(
   }
 }
 
+function stampVccs(
+  element: Vccs,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+): void {
+  if (!Number.isFinite(element.transconductanceSiemens)) {
+    throw invalidElement(element.name, "transconductance must be finite");
+  }
+
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  const controlPositive = nodeIndex(nodeIndices, element.controlPositive);
+  const controlNegative = nodeIndex(nodeIndices, element.controlNegative);
+  stampTransconductance(
+    matrix,
+    positive,
+    negative,
+    controlPositive,
+    controlNegative,
+    element.transconductanceSiemens,
+  );
+}
+
+function stampTransconductance(
+  matrix: number[][],
+  positive: number | undefined,
+  negative: number | undefined,
+  controlPositive: number | undefined,
+  controlNegative: number | undefined,
+  transconductance: number,
+): void {
+  if (positive !== undefined && controlPositive !== undefined) {
+    matrix[positive][controlPositive] += transconductance;
+  }
+  if (positive !== undefined && controlNegative !== undefined) {
+    matrix[positive][controlNegative] -= transconductance;
+  }
+  if (negative !== undefined && controlPositive !== undefined) {
+    matrix[negative][controlPositive] -= transconductance;
+  }
+  if (negative !== undefined && controlNegative !== undefined) {
+    matrix[negative][controlNegative] += transconductance;
+  }
+}
+
 function stampAcResistor(
   element: Resistor,
   nodeIndices: ReadonlyMap<string, number>,
@@ -1399,6 +1507,63 @@ function stampAcCurrentSource(
   }
   if (negative !== undefined) {
     rhs[negative] = complexAdd(rhs[negative], current);
+  }
+}
+
+function stampAcVccs(
+  element: Vccs,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  if (!Number.isFinite(element.transconductanceSiemens)) {
+    throw invalidElement(element.name, "transconductance must be finite");
+  }
+
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  const controlPositive = nodeIndex(nodeIndices, element.controlPositive);
+  const controlNegative = nodeIndex(nodeIndices, element.controlNegative);
+  stampComplexTransconductance(
+    matrix,
+    positive,
+    negative,
+    controlPositive,
+    controlNegative,
+    complex(element.transconductanceSiemens, 0.0),
+  );
+}
+
+function stampComplexTransconductance(
+  matrix: Complex[][],
+  positive: number | undefined,
+  negative: number | undefined,
+  controlPositive: number | undefined,
+  controlNegative: number | undefined,
+  transconductance: Complex,
+): void {
+  if (positive !== undefined && controlPositive !== undefined) {
+    matrix[positive][controlPositive] = complexAdd(
+      matrix[positive][controlPositive],
+      transconductance,
+    );
+  }
+  if (positive !== undefined && controlNegative !== undefined) {
+    matrix[positive][controlNegative] = complexSub(
+      matrix[positive][controlNegative],
+      transconductance,
+    );
+  }
+  if (negative !== undefined && controlPositive !== undefined) {
+    matrix[negative][controlPositive] = complexSub(
+      matrix[negative][controlPositive],
+      transconductance,
+    );
+  }
+  if (negative !== undefined && controlNegative !== undefined) {
+    matrix[negative][controlNegative] = complexAdd(
+      matrix[negative][controlNegative],
+      transconductance,
+    );
   }
 }
 

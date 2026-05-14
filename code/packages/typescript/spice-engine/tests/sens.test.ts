@@ -6,6 +6,7 @@ import {
   currentSource,
   resistor,
   sensDc,
+  vccs,
   voltageSource,
 } from "../src/index.js";
 
@@ -72,6 +73,25 @@ describe("sensDc", () => {
     );
     expectClose(
       entry(result, "Rload", "resistanceOhms").relativeSensitivity,
+      1.0,
+    );
+  });
+
+  it("reports VCCS transconductance sensitivity", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(vccs("Gm", "0", "out", "in", "0", 2.0e-3));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = sensDc(circuit, "out");
+
+    expectClose(result.nominalVoltage, 2.0);
+    expectClose(
+      entry(result, "Gm", "transconductanceSiemens").sensitivity,
+      1_000.0,
+    );
+    expectClose(
+      entry(result, "Gm", "transconductanceSiemens").relativeSensitivity,
       1.0,
     );
   });
