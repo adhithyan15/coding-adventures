@@ -81,9 +81,12 @@ class SqlCsvSourceTest {
             fixtures()
         )
 
+        // dept_id is coerced to Long by CsvDataSource; COUNT(*) returns Int from List.size.
+        // listOf(1L, 2) would widen 2 to Long via Kotlin literal coercion, so we use
+        // explicit List<Any?> to keep the Int intact and match what the engine returns.
         assertEquals(listOf("dept_id", "cnt"), result.columns)
-        assertEquals(listOf(1L, 2), result.rows[0])
-        assertEquals(listOf(2L, 1), result.rows[1])
+        assertEquals(listOf<Any?>(1L, 2), result.rows[0])
+        assertEquals(listOf<Any?>(2L, 1), result.rows[1])
     }
 
     @Test
