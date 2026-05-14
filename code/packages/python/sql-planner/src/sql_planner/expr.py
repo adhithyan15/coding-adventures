@@ -466,6 +466,7 @@ class WindowFuncExpr:
     partition_by: tuple[Expr, ...] = ()
     order_by: tuple[tuple[Expr, bool], ...] = ()  # (expr, descending)
     extra_args: tuple[Expr, ...] = ()          # LAG/LEAD offset+default, NTILE n, NTH_VALUE n
+    frame: object | None = None               # WinFrame | None; avoids circular import
 
 
 @dataclass(frozen=True, slots=True)

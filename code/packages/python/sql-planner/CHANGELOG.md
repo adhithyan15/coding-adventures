@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.26.0] - 2026-05-13
+
+### Added
+
+- **`FrameBound` dataclass** (`plan.py`) — represents one endpoint of a window
+  frame: `UNBOUNDED_PRECEDING`, `PRECEDING`, `CURRENT_ROW`, `FOLLOWING`, or
+  `UNBOUNDED_FOLLOWING`.  The optional `offset` field carries `N` for `N
+  PRECEDING` / `N FOLLOWING`.
+
+- **`WinFrame` dataclass** (`plan.py`) — represents a full window frame clause
+  (`ROWS | RANGE | GROUPS  BETWEEN start AND end`).  Both types are exported
+  from `sql_planner` and re-exported by `sql_codegen.ir` so that all layers
+  share the same representation.
+
+- **`WindowFuncSpec.frame`** (`plan.py`) — optional `WinFrame` field added to
+  `WindowFuncSpec`.  `None` means "use the SQL-standard default based on
+  ORDER BY presence".  The planner passes the value through unchanged from the
+  adapter.
+
+- **`WindowFuncExpr.frame`** (`expr.py`) — matching `frame` field on the
+  expression-level `WindowFuncExpr`.  The planner's `_resolve` case preserves
+  the frame when resolving column references.
+
 ## [0.25.0] - 2026-05-13
 
 ### Added

@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.21.0] - 2026-05-13
+
+### Added
+
+- **`WinFuncSpec.frame` field** (`ir.py`) — `WinFuncSpec` gains an optional
+  `frame: WinFrame | None = None` field (re-exported from `sql_planner.plan`).
+  When `None` the VM applies its built-in SQL-standard defaults (full partition
+  when no ORDER BY, cumulative RANGE UNBOUNDED PRECEDING … CURRENT ROW when
+  ORDER BY is present).  When set, the VM uses `_frame_slice` to respect the
+  explicit frame bounds passed from the planner.
+
+- **`FrameBound` and `WinFrame` re-exported from `ir.py`** — callers of
+  `sql_codegen.ir` can import the two new plan types directly from the codegen
+  package without reaching into `sql_planner.plan`.
+
+- **`frame` propagated in `_to_ir_win_spec`** (`compiler.py`) — the compiler's
+  window-spec conversion function now copies `spec.frame` (a `WinFrame | None`
+  from the planner's `WindowFuncSpec`) verbatim into the IR `WinFuncSpec`.  No
+  interpretation happens here; the VM is the sole consumer of frame semantics.
+
 ## [1.20.0] - 2026-05-13
 
 ### Added

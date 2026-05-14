@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.20.0 — 2026-05-13
+
+### Added
+
+- **`_frame_slice` helper** (`vm.py`) — new internal function that converts a
+  `WinFuncSpec.frame` (or the SQL-standard default) to the list of partition
+  rows visible at each row position `i`.  Supports `UNBOUNDED PRECEDING`,
+  `CURRENT ROW`, `N PRECEDING`, `N FOLLOWING`, and `UNBOUNDED FOLLOWING`
+  bounds for both `ROWS` and `RANGE` units.
+
+### Fixed
+
+- **Running / cumulative aggregates** (`vm.py`,
+  `_do_compute_window`) — `SUM`, `COUNT`, `COUNT(*)`, `AVG`, `MIN`, and `MAX`
+  window functions now respect the SQL-standard default frame: when `ORDER BY`
+  is present in the window spec and no explicit frame is given, the frame is
+  `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` (cumulative).
+  Previously all aggregate window functions used the full-partition frame
+  unconditionally, causing `SUM(x) OVER (ORDER BY x)` to return the global
+  sum instead of a running sum.
+
+- **`NTH_VALUE` per-row frame** (`vm.py`) — `NTH_VALUE(col, n)` now looks up
+  the n-th value within the frame visible at each row position.  Rows whose
+  frame does not yet contain n elements return `NULL` instead of broadcasting
+  the partition-level n-th value to all rows.
+
+- **`LAST_VALUE` per-row frame** (`vm.py`) — `LAST_VALUE(col)` now returns
+  the last value within the current row's frame instead of always broadcasting
+  the final partition value.  With the default cumulative frame the last value
+  in the frame ending at the current row is the current row itself.
+
+- **`FIRST_VALUE` explicit frames** (`vm.py`) — `FIRST_VALUE(col)` now
+  correctly uses `_frame_slice` so that non-default start bounds (e.g.
+  `1 PRECEDING`) are honoured.
+
 ## 1.19.0 — 2026-05-13
 
 ### Fixed

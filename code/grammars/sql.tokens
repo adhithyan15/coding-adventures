@@ -133,6 +133,13 @@ keywords:
   CONFLICT
   DO
   NOTHING
+  ROWS
+  RANGE
+  GROUPS
+  PRECEDING
+  FOLLOWING
+  UNBOUNDED
+  CURRENT
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/
