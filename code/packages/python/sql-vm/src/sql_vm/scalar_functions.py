@@ -357,8 +357,7 @@ def _abs(x: SqlValue) -> SqlValue:
     s = x.decode("utf-8", errors="replace") if isinstance(x, (bytes, bytearray)) else str(x)
     s = s.strip()
     # Collect leading numeric portion: optional sign, digits, optional dot + digits.
-    import re as _re
-    m = _re.match(r"^[+-]?(\d+\.?\d*|\.\d+)", s)
+    m = re.match(r"^[+-]?(\d+\.?\d*|\.\d+)", s)
     if m:
         num = float(m.group(0))
         result = abs(num)
