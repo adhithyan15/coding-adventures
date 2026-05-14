@@ -976,6 +976,24 @@ def test_pipeline_integrate_sum() -> None:
     assert result.head.name != "Integrate"
 
 
+def test_pipeline_integrate_elliptic_first_kind() -> None:
+    """integrate(1/sqrt(1-k^2*sin(theta)^2), theta) → EllipticF(theta,k)."""
+    result = _eval("integrate(1/sqrt(1-k^2*sin(theta)^2), theta)")
+
+    assert result == IRApply(
+        IRSymbol("EllipticF"), (IRSymbol("theta"), IRSymbol("k"))
+    )
+
+
+def test_pipeline_definite_integrate_complete_elliptic_first_kind() -> None:
+    """integrate(..., theta, 0, %pi/2) → EllipticK(k)."""
+    result = _eval(
+        "integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2)"
+    )
+
+    assert result == IRApply(IRSymbol("EllipticK"), (IRSymbol("k"),))
+
+
 # ---------------------------------------------------------------------------
 # Section T — Matrix operations and numeric functions
 # ---------------------------------------------------------------------------

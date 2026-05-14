@@ -66,6 +66,7 @@ strict mode ``Integrate`` falls through to
 
 from __future__ import annotations
 
+import math
 from fractions import Fraction
 
 from polynomial import (
@@ -150,6 +151,10 @@ from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
 
 ONE = IRInteger(1)
 TWO = IRInteger(2)
+ZERO = IRInteger(0)
+_PI_SYM = IRSymbol("%pi")
+_ELLIPTIC_F = IRSymbol("EllipticF")
+_ELLIPTIC_K = IRSymbol("EllipticK")
 
 
 def integrate() -> Handler:
@@ -175,6 +180,10 @@ def integrate() -> Handler:
             f, x, a, b = expr.args
             if not isinstance(x, IRSymbol):
                 return expr
+
+            elliptic_k = _try_complete_elliptic_k(f, x, a, b)
+            if elliptic_k is not None:
+                return elliptic_k
 
             F: IRNode | None = None
 
@@ -228,10 +237,124 @@ def integrate() -> Handler:
                 _sf_result = _sf_try(f, x)
                 if _sf_result is not None:
                     return vm.eval(_sf_result)
+            _elliptic_result = _try_incomplete_elliptic_f(f, x)
+            if _elliptic_result is not None:
+                return _elliptic_result
             return IRApply(INTEGRATE, (f, x))
         return vm.eval(result)
 
     return handler
+
+
+def _try_complete_elliptic_k(
+    f: IRNode, x: IRSymbol, lower: IRNode, upper: IRNode
+) -> IRNode | None:
+    """Recognise the complete elliptic integral of the first kind.
+
+    ``∫₀^(π/2) 1/sqrt(1-k² sin²(x)) dx`` is returned as ``EllipticK(k)``.
+    """
+    if lower != ZERO:
+        return None
+    if not _is_pi_over_two(upper):
+        return None
+    modulus = _elliptic_first_kind_modulus(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_K, (modulus,))
+
+
+def _try_incomplete_elliptic_f(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Recognise the incomplete elliptic integral of the first kind.
+
+    ``∫ 1/sqrt(1-k² sin²(x)) dx`` is non-elementary; returning
+    ``EllipticF(x, k)`` makes the special-function form explicit instead of
+    leaving a generic unevaluated ``Integrate`` node.
+    """
+    modulus = _elliptic_first_kind_modulus(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_F, (x, modulus))
+
+
+def _elliptic_first_kind_modulus(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``k`` when *f* is ``1/sqrt(1-k² sin²(x))``."""
+    if not (
+        isinstance(f, IRApply)
+        and f.head == DIV
+        and len(f.args) == 2
+        and f.args[0] == ONE
+    ):
+        return None
+    denominator = f.args[1]
+    if not (
+        isinstance(denominator, IRApply)
+        and denominator.head == SQRT
+        and len(denominator.args) == 1
+    ):
+        return None
+    radicand = denominator.args[0]
+    if not (
+        isinstance(radicand, IRApply)
+        and radicand.head == SUB
+        and len(radicand.args) == 2
+        and radicand.args[0] == ONE
+    ):
+        return None
+    product = radicand.args[1]
+    if not (
+        isinstance(product, IRApply)
+        and product.head == MUL
+        and len(product.args) == 2
+    ):
+        return None
+
+    first, second = product.args
+    return _modulus_from_squared_factor(first, second, x) or _modulus_from_squared_factor(
+        second, first, x
+    )
+
+
+def _modulus_from_squared_factor(
+    modulus_square: IRNode, sine_square: IRNode, x: IRSymbol
+) -> IRNode | None:
+    if not (
+        isinstance(sine_square, IRApply)
+        and sine_square.head == POW
+        and len(sine_square.args) == 2
+        and sine_square.args[1] == TWO
+    ):
+        return None
+    sine = sine_square.args[0]
+    if not (
+        isinstance(sine, IRApply)
+        and sine.head == SIN
+        and len(sine.args) == 1
+        and sine.args[0] == x
+    ):
+        return None
+    if not (
+        isinstance(modulus_square, IRApply)
+        and modulus_square.head == POW
+        and len(modulus_square.args) == 2
+        and modulus_square.args[1] == TWO
+    ):
+        return None
+    modulus = modulus_square.args[0]
+    if _depends_on(modulus, x):
+        return None
+    return modulus
+
+
+def _is_pi_over_two(node: IRNode) -> bool:
+    if isinstance(node, IRFloat):
+        return math.isclose(node.value, math.pi / 2, rel_tol=0.0, abs_tol=1e-12)
+    return (
+        isinstance(node, IRApply)
+        and node.head == DIV
+        and len(node.args) == 2
+        and node.args[0] == _PI_SYM
+        and node.args[1] == TWO
+    )
 
 
 # ---------------------------------------------------------------------------
