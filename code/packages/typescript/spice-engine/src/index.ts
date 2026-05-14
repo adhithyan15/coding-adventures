@@ -9,7 +9,8 @@ export type Element =
   | VoltageSource
   | CurrentSource
   | Vccs
-  | Vcvs;
+  | Vcvs
+  | Cccs;
 
 export interface Resistor {
   readonly kind: "resistor";
@@ -289,6 +290,15 @@ export interface Vcvs {
   readonly gain: number;
 }
 
+export interface Cccs {
+  readonly kind: "cccs";
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly controlSource: string;
+  readonly gain: number;
+}
+
 export interface DcResult {
   readonly nodeVoltages: ReadonlyMap<string, number>;
   readonly branchCurrents: ReadonlyMap<string, number>;
@@ -562,6 +572,23 @@ export function vcvs(
     negative,
     controlPositive,
     controlNegative,
+    gain,
+  };
+}
+
+export function cccs(
+  name: string,
+  positive: string,
+  negative: string,
+  controlSource: string,
+  gain: number,
+): Cccs {
+  return {
+    kind: "cccs",
+    name,
+    positive,
+    negative,
+    controlSource,
     gain,
   };
 }
@@ -1049,6 +1076,12 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "gain",
         nominalValue: element.gain,
       };
+    case "cccs":
+      return {
+        elementName: element.name,
+        parameter: "gain",
+        nominalValue: element.gain,
+      };
     case "capacitor":
     case "inductor":
       return undefined;
@@ -1091,6 +1124,9 @@ function circuitWithPerturbedElement(
         });
         break;
       case "vcvs":
+        perturbed.add({ ...element, gain: element.gain + delta });
+        break;
+      case "cccs":
         perturbed.add({ ...element, gain: element.gain + delta });
         break;
       case "capacitor":
@@ -1190,6 +1226,11 @@ function randomizedElement(
         ),
       };
     case "vcvs":
+      return {
+        ...element,
+        gain: randomizedValue(element.gain, tolerance, distribution, rng),
+      };
+    case "cccs":
       return {
         ...element,
         gain: randomizedValue(element.gain, tolerance, distribution, rng),
@@ -1316,6 +1357,9 @@ function solveLinearCircuit(
           matrix,
         );
         break;
+      case "cccs":
+        stampCccs(element, nodeIndices, voltageSources, matrix);
+        break;
     }
   }
 
@@ -1399,6 +1443,9 @@ function buildSmallSignalMatrix(
           matrix,
         );
         break;
+      case "cccs":
+        stampCccs(element, nodeIndices, voltageSources, matrix);
+        break;
     }
   }
 
@@ -1437,6 +1484,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "inductor":
       case "vccs":
       case "vcvs":
+      case "cccs":
         break;
     }
   }
@@ -1505,6 +1553,9 @@ function buildAcMatrix(
           nodeCount,
           matrix,
         );
+        break;
+      case "cccs":
+        stampAcCccs(element, nodeIndices, voltageSources, matrix);
         break;
     }
   }
@@ -1687,6 +1738,10 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         insertNode(names, element.controlPositive);
         insertNode(names, element.controlNegative);
         break;
+      case "cccs":
+        insertNode(names, element.positive);
+        insertNode(names, element.negative);
+        break;
     }
   }
 
@@ -1740,7 +1795,8 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "capacitor" ||
         element.kind === "inductor" ||
         element.kind === "vccs" ||
-        element.kind === "vcvs") &&
+        element.kind === "vcvs" ||
+        element.kind === "cccs") &&
       element.name === inputSource
     ) {
       throw invalidElement(
@@ -2262,6 +2318,47 @@ function stampVcvs(
   );
 }
 
+function stampCccs(
+  element: Cccs,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  matrix: number[][],
+): void {
+  if (!Number.isFinite(element.gain)) {
+    throw invalidElement(element.name, "gain must be finite");
+  }
+
+  const sourceIndex = voltageSources.get(element.controlSource);
+  if (sourceIndex === undefined) {
+    throw invalidElement(element.name, "control source was not indexed");
+  }
+
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  stampCurrentControlledCurrent(
+    matrix,
+    positive,
+    negative,
+    sourceIndex + nodeIndices.size,
+    element.gain,
+  );
+}
+
+function stampCurrentControlledCurrent(
+  matrix: number[][],
+  positive: number | undefined,
+  negative: number | undefined,
+  controlBranch: number,
+  gain: number,
+): void {
+  if (positive !== undefined) {
+    matrix[positive][controlBranch] += gain;
+  }
+  if (negative !== undefined) {
+    matrix[negative][controlBranch] -= gain;
+  }
+}
+
 function stampControlledVoltageRow(
   matrix: number[][],
   branch: number,
@@ -2490,6 +2587,53 @@ function stampAcVcvs(
     controlNegative,
     complex(element.gain, 0.0),
   );
+}
+
+function stampAcCccs(
+  element: Cccs,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  if (!Number.isFinite(element.gain)) {
+    throw invalidElement(element.name, "gain must be finite");
+  }
+
+  const sourceIndex = voltageSources.get(element.controlSource);
+  if (sourceIndex === undefined) {
+    throw invalidElement(element.name, "control source was not indexed");
+  }
+
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  stampComplexCurrentControlledCurrent(
+    matrix,
+    positive,
+    negative,
+    sourceIndex + nodeIndices.size,
+    complex(element.gain, 0.0),
+  );
+}
+
+function stampComplexCurrentControlledCurrent(
+  matrix: Complex[][],
+  positive: number | undefined,
+  negative: number | undefined,
+  controlBranch: number,
+  gain: Complex,
+): void {
+  if (positive !== undefined) {
+    matrix[positive][controlBranch] = complexAdd(
+      matrix[positive][controlBranch],
+      gain,
+    );
+  }
+  if (negative !== undefined) {
+    matrix[negative][controlBranch] = complexSub(
+      matrix[negative][controlBranch],
+      gain,
+    );
+  }
 }
 
 function stampComplexControlledVoltageRow(

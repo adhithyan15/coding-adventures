@@ -4,6 +4,7 @@ import {
   SpiceError,
   acSweep,
   capacitor,
+  cccs,
   complexAbs,
   complexPhase,
   currentSource,
@@ -103,6 +104,23 @@ describe("acSweep", () => {
     expectClose(out!.real, 4.0);
     expectClose(out!.imag, 0.0);
     expectClose(points[0].branchCurrent("E1")?.real, -4.0e-3);
+  });
+
+  it("applies CCCS current gain in AC analysis", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("Rsense", "in", "sense", 1_000.0));
+    circuit.add(voltageSource("Vsense", "sense", "0", 0.0));
+    circuit.add(cccs("F1", "0", "out", "Vsense", 3.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 10);
+
+    expect(points).toHaveLength(1);
+    const out = points[0].voltage("out");
+    expect(out).not.toBeUndefined();
+    expectClose(out!.real, 3.0);
+    expectClose(out!.imag, 0.0);
   });
 
   it("rejects invalid frequency bounds", () => {
