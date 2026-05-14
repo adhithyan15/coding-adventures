@@ -6,6 +6,8 @@
   sources, and independent current sources.
 - Add voltage-controlled current sources (VCCS) for linear transconductance
   stages.
+- Add voltage-controlled voltage sources (VCVS) across DC, AC, transfer
+  function, sensitivity, Monte Carlo, and transient analyses.
 - Add DC source sweeps for independent voltage and current sources.
 - Add DC sensitivity analysis for resistor and independent source parameters.
 - Add seeded DC Monte Carlo analysis for linear element parameters with

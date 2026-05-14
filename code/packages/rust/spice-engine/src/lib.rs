@@ -341,6 +341,7 @@ pub enum Element {
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
     Vccs(Vccs),
+    Vcvs(Vcvs),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -549,6 +550,36 @@ impl Vccs {
             control_positive: control_positive.into(),
             control_negative: control_negative.into(),
             transconductance_siemens,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Vcvs {
+    pub name: String,
+    pub positive: String,
+    pub negative: String,
+    pub control_positive: String,
+    pub control_negative: String,
+    pub gain: f64,
+}
+
+impl Vcvs {
+    pub fn new(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        control_positive: impl Into<String>,
+        control_negative: impl Into<String>,
+        gain: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            control_positive: control_positive.into(),
+            control_negative: control_negative.into(),
+            gain,
         }
     }
 }
@@ -1387,6 +1418,7 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
             "transconductance_siemens".to_string(),
             source.transconductance_siemens,
         )),
+        Element::Vcvs(source) => Some((source.name.clone(), "gain".to_string(), source.gain)),
         Element::Capacitor(_) | Element::Inductor(_) => None,
     }
 }
@@ -1401,6 +1433,7 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::VoltageSource(source) => source.voltage += delta,
         Element::CurrentSource(source) => source.current += delta,
         Element::Vccs(source) => source.transconductance_siemens += delta,
+        Element::Vcvs(source) => source.gain += delta,
         Element::Capacitor(_) | Element::Inductor(_) => {}
     }
 }
@@ -1490,6 +1523,11 @@ fn randomized_element(
                 rng,
             );
             Element::Vccs(varied)
+        }
+        Element::Vcvs(source) => {
+            let mut varied = source.clone();
+            varied.gain = randomized_value(varied.gain, tolerance, distribution, rng);
+            Element::Vcvs(varied)
         }
         Element::Capacitor(_) | Element::Inductor(_) => element.clone(),
     }
@@ -1610,6 +1648,13 @@ fn solve_linear_circuit(
                 stamp_current_source(source, &node_indices, source_time, &mut rhs)?
             }
             Element::Vccs(source) => stamp_vccs(source, &node_indices, &mut matrix)?,
+            Element::Vcvs(source) => stamp_vcvs(
+                source,
+                &node_indices,
+                &voltage_sources,
+                node_count,
+                &mut matrix,
+            )?,
         }
     }
 
@@ -1663,7 +1708,8 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             Element::Resistor(_)
             | Element::Capacitor(_)
             | Element::Inductor(_)
-            | Element::Vccs(_) => {}
+            | Element::Vccs(_)
+            | Element::Vcvs(_) => {}
         }
     }
 
@@ -1718,6 +1764,13 @@ fn build_ac_matrix(
                 }
             }
             Element::Vccs(source) => stamp_ac_vccs(source, node_indices, &mut matrix)?,
+            Element::Vcvs(source) => stamp_ac_vcvs(
+                source,
+                node_indices,
+                voltage_sources,
+                node_count,
+                &mut matrix,
+            )?,
         }
     }
 
@@ -1769,6 +1822,15 @@ fn build_small_signal_matrix(
             }
             Element::Vccs(source) => {
                 stamp_vccs(source, node_indices, &mut matrix)?;
+            }
+            Element::Vcvs(source) => {
+                stamp_vcvs(
+                    source,
+                    node_indices,
+                    voltage_sources,
+                    node_count,
+                    &mut matrix,
+                )?;
             }
         }
     }
@@ -1832,6 +1894,12 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &source.control_positive);
                 insert_node(&mut names, &source.control_negative);
             }
+            Element::Vcvs(source) => {
+                insert_node(&mut names, &source.positive);
+                insert_node(&mut names, &source.negative);
+                insert_node(&mut names, &source.control_positive);
+                insert_node(&mut names, &source.control_negative);
+            }
         }
     }
     names
@@ -1849,6 +1917,9 @@ fn collect_voltage_sources(
     for element in circuit.elements() {
         match element {
             Element::VoltageSource(source) => {
+                insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
+            }
+            Element::Vcvs(source) => {
                 insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
             }
             Element::Inductor(inductor) => {
@@ -1874,8 +1945,14 @@ fn collect_voltage_sources(
 fn collect_ac_voltage_sources(circuit: &Circuit) -> Result<BTreeMap<String, usize>, SpiceError> {
     let mut sources = BTreeMap::new();
     for element in circuit.elements() {
-        if let Element::VoltageSource(source) = element {
-            insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
+        match element {
+            Element::VoltageSource(source) => {
+                insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
+            }
+            Element::Vcvs(source) => {
+                insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
+            }
+            _ => {}
         }
     }
     Ok(sources)
@@ -1904,6 +1981,9 @@ fn find_input_source<'a>(
             }
             Element::Vccs(source) if source.name == input_source => {
                 return Err(input_source_type_error(input_source, "VCCS"));
+            }
+            Element::Vcvs(source) if source.name == input_source => {
+                return Err(input_source_type_error(input_source, "VCVS"));
             }
             _ => {}
         }
@@ -2422,6 +2502,58 @@ fn stamp_vccs(
     Ok(())
 }
 
+fn stamp_vcvs(
+    source: &Vcvs,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<f64>],
+) -> Result<(), SpiceError> {
+    if !source.gain.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "gain must be finite".to_string(),
+        });
+    }
+
+    let Some(source_index) = voltage_sources.get(&source.name) else {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "voltage source was not indexed".to_string(),
+        });
+    };
+
+    let branch = node_count + source_index;
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+    let control_positive = node_index(node_indices, &source.control_positive);
+    let control_negative = node_index(node_indices, &source.control_negative);
+    stamp_branch_matrix(matrix, branch, positive, negative);
+    stamp_controlled_voltage_row(
+        matrix,
+        branch,
+        control_positive,
+        control_negative,
+        source.gain,
+    );
+    Ok(())
+}
+
+fn stamp_controlled_voltage_row(
+    matrix: &mut [Vec<f64>],
+    branch: usize,
+    control_positive: Option<usize>,
+    control_negative: Option<usize>,
+    gain: f64,
+) {
+    if let Some(cp) = control_positive {
+        matrix[branch][cp] -= gain;
+    }
+    if let Some(cn) = control_negative {
+        matrix[branch][cn] += gain;
+    }
+}
+
 fn stamp_transconductance(
     matrix: &mut [Vec<f64>],
     positive: Option<usize>,
@@ -2615,6 +2747,58 @@ fn stamp_ac_vccs(
         Complex::new(source.transconductance_siemens, 0.0),
     );
     Ok(())
+}
+
+fn stamp_ac_vcvs(
+    source: &Vcvs,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    if !source.gain.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "gain must be finite".to_string(),
+        });
+    }
+
+    let Some(source_index) = voltage_sources.get(&source.name) else {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "voltage source was not indexed".to_string(),
+        });
+    };
+
+    let branch = node_count + source_index;
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+    let control_positive = node_index(node_indices, &source.control_positive);
+    let control_negative = node_index(node_indices, &source.control_negative);
+    stamp_complex_branch_matrix(matrix, branch, positive, negative);
+    stamp_complex_controlled_voltage_row(
+        matrix,
+        branch,
+        control_positive,
+        control_negative,
+        Complex::new(source.gain, 0.0),
+    );
+    Ok(())
+}
+
+fn stamp_complex_controlled_voltage_row(
+    matrix: &mut [Vec<Complex>],
+    branch: usize,
+    control_positive: Option<usize>,
+    control_negative: Option<usize>,
+    gain: Complex,
+) {
+    if let Some(cp) = control_positive {
+        matrix[branch][cp] -= gain;
+    }
+    if let Some(cn) = control_negative {
+        matrix[branch][cn] += gain;
+    }
 }
 
 fn stamp_complex_transconductance(
