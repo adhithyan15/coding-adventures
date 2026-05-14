@@ -119,6 +119,30 @@ Rload out 0 1k
 }
 
 #[test]
+fn parses_cccs_into_operating_point_circuit() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+Rin in sense 1k
+Vsense sense 0 DC 0
+Fcopy out 0 Vsense 2
+Rload out 0 500
+.op
+"#,
+    )
+    .unwrap();
+
+    let Element::Cccs(source) = &parsed.circuit.elements()[3] else {
+        panic!("expected CCCS");
+    };
+    assert_eq!(source.control_source, "Vsense");
+    assert_close(source.gain, 2.0);
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("out").unwrap(), -1.0);
+}
+
+#[test]
 fn parses_pwl_and_sin_source_waveforms() {
     let parsed = parse_netlist(
         r#"
@@ -209,6 +233,54 @@ Rload out 0 1k
 
     let result = dc_op(&parsed.circuit).unwrap();
     assert_close(result.voltage("out").unwrap(), 2.5);
+}
+
+#[test]
+fn expands_subcircuit_cccs_control_sources_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.subckt mirror inp outp
+Rin inp sense 1k
+Vsense sense 0 DC 0
+Fcopy outp 0 Vsense 2
+.ends mirror
+Vin in 0 DC 1
+Xmirror in out mirror
+Rload out 0 500
+.op
+"#,
+    )
+    .unwrap();
+
+    let elements = parsed.circuit.elements();
+    let names = elements
+        .iter()
+        .map(|element| match element {
+            Element::VoltageSource(source) => source.name.as_str(),
+            Element::Resistor(resistor) => resistor.name.as_str(),
+            Element::Cccs(source) => source.name.as_str(),
+            _ => panic!("unexpected element"),
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(
+        names,
+        vec![
+            "Vin",
+            "Xmirror.Rin",
+            "Xmirror.Vsense",
+            "Xmirror.Fcopy",
+            "Rload"
+        ]
+    );
+
+    let Element::Cccs(source) = &elements[3] else {
+        panic!("expected CCCS");
+    };
+    assert_eq!(source.positive, "out");
+    assert_eq!(source.control_source, "Xmirror.Vsense");
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("out").unwrap(), -1.0);
 }
 
 #[test]

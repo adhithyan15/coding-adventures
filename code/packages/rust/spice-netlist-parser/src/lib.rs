@@ -1,8 +1,8 @@
 use std::{collections::HashMap, fmt};
 
 use spice_engine::{
-    Capacitor, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PulseWaveform, PwlWaveform,
-    Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
+    Capacitor, Cccs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -338,6 +338,16 @@ fn parse_element(fields: &[String]) -> Result<Element, NetlistParseError> {
                 parse_value(&fields[5])?,
             )))
         }
+        'F' => {
+            require_fields(fields, 5, "CCCS")?;
+            Ok(Element::Cccs(Cccs::new(
+                name,
+                &fields[1],
+                &fields[2],
+                &fields[3],
+                parse_value(&fields[4])?,
+            )))
+        }
         _ => Err(NetlistParseError::new(format!(
             "unsupported element {name:?}"
         ))),
@@ -464,6 +474,12 @@ fn map_subckt_fields(
                 mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
             }
         }
+        'F' => {
+            require_min_fields(fields, 4, "subcircuit current-controlled source")?;
+            mapped[1] = map_subckt_node(&fields[1], instance_name, node_map);
+            mapped[2] = map_subckt_node(&fields[2], instance_name, node_map);
+            mapped[3] = map_subckt_source_ref(&fields[3], instance_name);
+        }
         'X' => {
             for index in 1..fields.len() - 1 {
                 mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
@@ -483,6 +499,14 @@ fn map_subckt_node(node: &str, instance_name: &str, node_map: &HashMap<String, S
         .or_else(|| node_map.get(&node.to_ascii_lowercase()))
         .cloned()
         .unwrap_or_else(|| format!("{instance_name}.{node}"))
+}
+
+fn map_subckt_source_ref(source_name: &str, instance_name: &str) -> String {
+    if source_name.contains('.') {
+        source_name.to_string()
+    } else {
+        format!("{instance_name}.{source_name}")
+    }
 }
 
 fn element_prefix(name: &str) -> Result<char, NetlistParseError> {
