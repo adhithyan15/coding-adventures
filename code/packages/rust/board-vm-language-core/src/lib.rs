@@ -4049,7 +4049,7 @@ mod tests {
 
     #[test]
     fn rust_core_builds_raw_module_from_code_and_const_pool() {
-        let code = [0x00];
+        let code = [0x16, 0x00, 0x00, 0x02, 0x50];
         let const_pool = [0xAA, 0x55];
         let expected_len = raw_module_len(code.len() as u64, const_pool.len() as u64).unwrap();
         let mut module = vec![0u8; expected_len];
@@ -4059,7 +4059,10 @@ mod tests {
         assert_eq!(len, expected_len);
         assert_eq!(
             module,
-            [0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x02, 0xAA, 0x55,]
+            [
+                0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x16, 0x00, 0x00, 0x02, 0x50,
+                0x02, 0xAA, 0x55,
+            ]
         );
     }
 
@@ -4185,6 +4188,28 @@ mod tests {
                 assert_eq!(report.returns, vec![LanguageValue::U32(1234)]);
             }
             other => panic!("unexpected run response body: {other:?}"),
+        }
+
+        let run = RunReportHeader {
+            program_id: 8,
+            status: RunStatus::Halted,
+            instructions_executed: 43,
+            elapsed_ms: 9,
+            stack_depth: 0,
+            open_handles: 0,
+            return_count: 1,
+        };
+        let mut payload_len =
+            board_vm_protocol::encode_run_report_header(&run, &mut payload).unwrap();
+        payload_len +=
+            encode_value(&Value::Bytes(&[0xCA, 0xFE]), &mut payload[payload_len..]).unwrap();
+        let decoded = decode_response_fixture(MessageType::RUN_REPORT, 14, &payload[..payload_len]);
+        match decoded.body {
+            DecodedLanguageResponseBody::RunReport(report) => {
+                assert_eq!(report.program_id, 8);
+                assert_eq!(report.returns, vec![LanguageValue::Bytes(vec![0xCA, 0xFE])]);
+            }
+            other => panic!("unexpected bytes run response body: {other:?}"),
         }
     }
 

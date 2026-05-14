@@ -2,6 +2,7 @@
 
 pub const MODULE_MAGIC: [u8; 4] = *b"BVM1";
 pub const MODULE_VERSION: u8 = 1;
+pub const MAX_BYTE_BUFFER_LEN: usize = 32;
 
 pub const FLAG_PROGRAM_MAY_RUN_FOREVER: u8 = 0b0000_0001;
 pub const FLAG_PROGRAM_USES_EVENTS: u8 = 0b0000_0010;
@@ -48,6 +49,7 @@ pub enum Op {
     PushU16(u16),
     PushU32(u32),
     PushI16(i16),
+    PushBytes { offset: u16, len: u8 },
     Dup,
     Drop,
     Swap,
@@ -87,6 +89,8 @@ pub enum ValidateError {
     StackOverflow(usize),
     JumpTargetOutOfBounds(usize),
     JumpTargetNotBoundary(usize),
+    ConstPoolOutOfBounds(usize),
+    ByteBufferTooLarge(usize),
     UnsupportedCapability(u16),
 }
 
@@ -189,6 +193,13 @@ pub fn decode_next(code: &[u8], ip: usize) -> Result<(Op, usize), DecodeError> {
         0x13 => Ok((Op::PushU16(read_u16(code, next)?), next + 2)),
         0x14 => Ok((Op::PushU32(read_u32(code, next)?), next + 4)),
         0x15 => Ok((Op::PushI16(read_u16(code, next)? as i16), next + 2)),
+        0x16 => Ok((
+            Op::PushBytes {
+                offset: read_u16(code, next)?,
+                len: read_u8(code, next + 2)?,
+            },
+            next + 3,
+        )),
         0x20 => Ok((Op::Dup, next)),
         0x21 => Ok((Op::Drop, next)),
         0x22 => Ok((Op::Swap, next)),
@@ -276,6 +287,7 @@ pub fn validate(
         let (op, next_ip) = decode_next(module.code, ip).map_err(ValidateError::Decode)?;
         validate_stack_effect(op, instruction_start, &mut depth, module.max_stack)?;
         validate_capability(op, board_caps)?;
+        validate_const_pool_access(module.const_pool, op, instruction_start)?;
         validate_jump_target(module.code, op, next_ip)?;
         ip = next_ip;
     }
@@ -325,6 +337,27 @@ fn validate_capability(op: Op, board_caps: CapabilitySet) -> Result<(), Validate
     } else {
         Err(ValidateError::UnsupportedCapability(capability_id))
     }
+}
+
+fn validate_const_pool_access(
+    const_pool: &[u8],
+    op: Op,
+    instruction_start: usize,
+) -> Result<(), ValidateError> {
+    let Op::PushBytes { offset, len } = op else {
+        return Ok(());
+    };
+    if len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(ValidateError::ByteBufferTooLarge(instruction_start));
+    }
+    let offset = offset as usize;
+    let end = offset
+        .checked_add(len as usize)
+        .ok_or(ValidateError::ConstPoolOutOfBounds(instruction_start))?;
+    if end > const_pool.len() {
+        return Err(ValidateError::ConstPoolOutOfBounds(instruction_start));
+    }
+    Ok(())
 }
 
 pub fn called_capability(op: Op) -> Option<u16> {
@@ -391,7 +424,8 @@ fn stack_effect(op: Op) -> (i16, i16) {
         | Op::PushU8(_)
         | Op::PushU16(_)
         | Op::PushU32(_)
-        | Op::PushI16(_) => (0, 1),
+        | Op::PushI16(_)
+        | Op::PushBytes { .. } => (0, 1),
         Op::Dup => (1, 2),
         Op::Drop => (1, 0),
         Op::Swap => (2, 2),
@@ -471,6 +505,19 @@ mod tests {
     }
 
     #[test]
+    fn decodes_push_bytes() {
+        let (op, next) = decode_next(&[0x16, 0x34, 0x12, 0x03], 0).unwrap();
+        assert_eq!(
+            op,
+            Op::PushBytes {
+                offset: 0x1234,
+                len: 3
+            }
+        );
+        assert_eq!(next, 4);
+    }
+
+    #[test]
     fn parses_blink_module() {
         let module_bytes = [
             0x42, 0x56, 0x4d, 0x31, 0x01, 0x01, 0x04, 0x00, 0x1a, 0x12, 0x0d, 0x12, 0x01, 0x40,
@@ -493,6 +540,49 @@ mod tests {
             const_pool: &[],
         };
         validate(&module, CapabilitySet::blink_mvp(), 8).unwrap();
+    }
+
+    #[test]
+    fn validates_push_bytes_const_pool_slice() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x01, 0x00, 0x02, 0x50],
+            const_pool: &[0xAA, 0xBE, 0xEF],
+        };
+
+        validate(&module, CapabilitySet::empty(), 8).unwrap();
+    }
+
+    #[test]
+    fn rejects_push_bytes_const_pool_out_of_bounds() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x02, 0x00, 0x02],
+            const_pool: &[0xAA],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::empty(), 8),
+            Err(ValidateError::ConstPoolOutOfBounds(0))
+        );
+    }
+
+    #[test]
+    fn rejects_push_bytes_larger_than_vm_buffer() {
+        let const_pool = [0u8; MAX_BYTE_BUFFER_LEN + 1];
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x00, 0x00, (MAX_BYTE_BUFFER_LEN + 1) as u8],
+            const_pool: &const_pool,
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::empty(), 8),
+            Err(ValidateError::ByteBufferTooLarge(0))
+        );
     }
 
     #[test]

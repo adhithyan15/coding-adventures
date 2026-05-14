@@ -1601,7 +1601,7 @@ fn write_run_report_response(
         payload_out,
     )?;
     if return_count == 1 {
-        let value = protocol_value_from_runtime(report.return_value);
+        let value = protocol_value_from_runtime(&report.return_value);
         payload_len += encode_value(&value, &mut payload_out[payload_len..])?;
     }
     write_response(
@@ -1620,17 +1620,18 @@ fn runtime_return_count(status: ProtocolRunStatus, value: RuntimeValue) -> u32 {
     }
 }
 
-fn protocol_value_from_runtime(value: RuntimeValue) -> ProtocolValue<'static> {
+fn protocol_value_from_runtime(value: &RuntimeValue) -> ProtocolValue<'_> {
     match value {
         RuntimeValue::Unit => ProtocolValue::Unit,
-        RuntimeValue::Bool(value) => ProtocolValue::Bool(value),
-        RuntimeValue::U8(value) => ProtocolValue::U8(value),
-        RuntimeValue::U16(value) => ProtocolValue::U16(value),
-        RuntimeValue::U32(value) => ProtocolValue::U32(value),
-        RuntimeValue::I16(value) => ProtocolValue::I16(value),
+        RuntimeValue::Bool(value) => ProtocolValue::Bool(*value),
+        RuntimeValue::U8(value) => ProtocolValue::U8(*value),
+        RuntimeValue::U16(value) => ProtocolValue::U16(*value),
+        RuntimeValue::U32(value) => ProtocolValue::U32(*value),
+        RuntimeValue::I16(value) => ProtocolValue::I16(*value),
         RuntimeValue::Handle(value) => {
             ProtocolValue::Handle(u16::from(value.index) | (u16::from(value.generation) << 8))
         }
+        RuntimeValue::Bytes(value) => ProtocolValue::Bytes(value.as_slice()),
     }
 }
 
@@ -1653,8 +1654,8 @@ fn crc32_ieee(bytes: &[u8]) -> u32 {
 mod tests {
     use super::*;
     use board_vm_host::{
-        write_blink_module, write_time_now_module, BlinkProgram, HostSession, TimeNowProgram,
-        DEFAULT_PROGRAM_ID,
+        write_blink_module, write_module, write_time_now_module, BlinkProgram, HostSession,
+        ModuleSpec, TimeNowProgram, DEFAULT_PROGRAM_ID,
     };
     use board_vm_ir::CapabilitySet;
     use board_vm_protocol::{
@@ -2248,6 +2249,78 @@ mod tests {
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_count, 1);
         assert_eq!(decoder.read_value().unwrap(), Value::U32(0));
+        decoder.finish().unwrap();
+    }
+
+    #[test]
+    fn run_report_encodes_bytes_return_value() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let code = [0x16, 0x00, 0x00, 0x03, 0x50];
+        let const_pool = [0xCA, 0xFE, 0x42];
+        let mut module = [0u8; 32];
+        let module_len = write_module(
+            ModuleSpec::new(0, 1, &code).const_pool(&const_pool),
+            &mut module,
+        )
+        .unwrap();
+        let module = &module[..module_len];
+        let mut host_payload = [0u8; 128];
+        let mut request = [0u8; 192];
+        let mut device_payload = [0u8; 256];
+        let mut response = [0u8; 320];
+
+        let begin = session
+            .program_begin_frame(DEFAULT_PROGRAM_ID, module, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..begin.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let chunk = session
+            .program_chunk_frame(
+                DEFAULT_PROGRAM_ID,
+                0,
+                module,
+                &mut host_payload,
+                &mut request,
+            )
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..chunk.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let end = session
+            .program_end_frame(DEFAULT_PROGRAM_ID, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..end.len],
+            &mut device_payload,
+            &mut response,
+        );
+
+        let run = session
+            .run_background_frame(DEFAULT_PROGRAM_ID, 10, &mut host_payload, &mut request)
+            .unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..run.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let (report, mut decoder) = decode_run_report_header(frame.payload).unwrap();
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_count, 1);
+        assert_eq!(
+            decoder.read_value().unwrap(),
+            Value::Bytes(&[0xCA, 0xFE, 0x42])
+        );
         decoder.finish().unwrap();
     }
 
