@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{collections::HashMap, fmt};
 
 use spice_engine::{
     Capacitor, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PulseWaveform, PwlWaveform,
@@ -108,9 +108,26 @@ impl ParsedNetlist {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct Statement {
+    line_number: usize,
+    fields: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct SubcktDefinition {
+    name: String,
+    pins: Vec<String>,
+    body: Vec<Statement>,
+    line_number: usize,
+}
+
 pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
     let mut circuit = Circuit::new();
     let mut analyses = Vec::new();
+    let mut statements = Vec::new();
+    let mut subckts = HashMap::new();
+    let mut current_subckt: Option<SubcktDefinition> = None;
     let mut title = None;
     let mut saw_content = false;
 
@@ -137,14 +154,70 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
             continue;
         }
         let head = &fields[0];
-        if head.eq_ignore_ascii_case(".end") {
+        let head_lower = head.to_ascii_lowercase();
+
+        if let Some(definition) = current_subckt.as_mut() {
+            if head_lower == ".ends" {
+                finish_subckt(definition, &fields).map_err(|err| line_error(line_number, err))?;
+                let definition = current_subckt.take().expect("subckt exists");
+                subckts.insert(definition.name.to_ascii_lowercase(), definition);
+            } else if head_lower == ".subckt" {
+                return Err(line_error(
+                    line_number,
+                    NetlistParseError::new("nested .subckt definitions are not supported"),
+                ));
+            } else {
+                definition.body.push(Statement {
+                    line_number,
+                    fields,
+                });
+            }
+            continue;
+        }
+        if head_lower == ".subckt" {
+            current_subckt = Some(
+                start_subckt(&fields, line_number, &subckts)
+                    .map_err(|err| line_error(line_number, err))?,
+            );
+            continue;
+        }
+        if head_lower == ".ends" {
+            return Err(line_error(
+                line_number,
+                NetlistParseError::new(".ends without matching .subckt"),
+            ));
+        }
+
+        if head_lower == ".end" {
             break;
         }
-        if head.starts_with('.') {
-            let analysis = parse_directive(&fields).map_err(|err| line_error(line_number, err))?;
+        statements.push(Statement {
+            line_number,
+            fields,
+        });
+    }
+
+    if let Some(definition) = current_subckt {
+        return Err(NetlistParseError::new(format!(
+            "line {}: .subckt {:?} is missing .ends",
+            definition.line_number, definition.name
+        )));
+    }
+
+    for statement in statements {
+        if statement.fields[0].starts_with('.') {
+            let analysis = parse_directive(&statement.fields)
+                .map_err(|err| line_error(statement.line_number, err))?;
             analyses.push(analysis);
+        } else if statement.fields[0].to_ascii_uppercase().starts_with('X') {
+            let elements = expand_subckt_instance(&statement.fields, &subckts, &[])
+                .map_err(|err| line_error(statement.line_number, err))?;
+            for element in elements {
+                circuit.add(element);
+            }
         } else {
-            let element = parse_element(&fields).map_err(|err| line_error(line_number, err))?;
+            let element = parse_element(&statement.fields)
+                .map_err(|err| line_error(statement.line_number, err))?;
             circuit.add(element);
         }
     }
@@ -191,11 +264,7 @@ pub fn parse_value(token: &str) -> Result<f64, NetlistParseError> {
 
 fn parse_element(fields: &[String]) -> Result<Element, NetlistParseError> {
     let name = &fields[0];
-    let prefix = name
-        .chars()
-        .next()
-        .ok_or_else(|| NetlistParseError::new("element name is empty"))?
-        .to_ascii_uppercase();
+    let prefix = element_prefix(name)?;
 
     match prefix {
         'R' => {
@@ -262,6 +331,155 @@ fn parse_element(fields: &[String]) -> Result<Element, NetlistParseError> {
             "unsupported element {name:?}"
         ))),
     }
+}
+
+fn start_subckt(
+    fields: &[String],
+    line_number: usize,
+    subckts: &HashMap<String, SubcktDefinition>,
+) -> Result<SubcktDefinition, NetlistParseError> {
+    require_min_fields(fields, 3, ".subckt")?;
+    let name = fields[1].clone();
+    if subckts.contains_key(&name.to_ascii_lowercase()) {
+        return Err(NetlistParseError::new(format!(
+            "duplicate .subckt definition {name:?}"
+        )));
+    }
+    Ok(SubcktDefinition {
+        name,
+        pins: fields[2..].to_vec(),
+        body: Vec::new(),
+        line_number,
+    })
+}
+
+fn finish_subckt(
+    definition: &SubcktDefinition,
+    fields: &[String],
+) -> Result<(), NetlistParseError> {
+    if fields.len() > 2 {
+        return Err(NetlistParseError::new(
+            ".ends expects at most a subcircuit name",
+        ));
+    }
+    if fields.len() == 2 && !fields[1].eq_ignore_ascii_case(&definition.name) {
+        return Err(NetlistParseError::new(format!(
+            ".ends {:?} does not match .subckt {:?}",
+            fields[1], definition.name
+        )));
+    }
+    Ok(())
+}
+
+fn expand_subckt_instance(
+    fields: &[String],
+    subckts: &HashMap<String, SubcktDefinition>,
+    stack: &[String],
+) -> Result<Vec<Element>, NetlistParseError> {
+    require_min_fields(fields, 3, "subcircuit instance")?;
+    let instance_name = &fields[0];
+    let subckt_name = fields.last().expect("minimum fields checked");
+    let definition = subckts
+        .get(&subckt_name.to_ascii_lowercase())
+        .ok_or_else(|| NetlistParseError::new(format!("unknown subcircuit {subckt_name:?}")))?;
+    let definition_key = definition.name.to_ascii_lowercase();
+    if stack.contains(&definition_key) {
+        let mut cycle = stack.to_vec();
+        cycle.push(definition_key);
+        return Err(NetlistParseError::new(format!(
+            "recursive subcircuit expansion is not supported: {}",
+            cycle.join(" -> ")
+        )));
+    }
+
+    let actual_nodes = &fields[1..fields.len() - 1];
+    if actual_nodes.len() != definition.pins.len() {
+        return Err(NetlistParseError::new(format!(
+            "subcircuit {:?} expects {} pins, got {}",
+            definition.name,
+            definition.pins.len(),
+            actual_nodes.len()
+        )));
+    }
+
+    let mut node_map = HashMap::new();
+    for (pin, actual) in definition.pins.iter().zip(actual_nodes.iter()) {
+        node_map.insert(pin.clone(), actual.clone());
+        node_map.insert(pin.to_ascii_lowercase(), actual.clone());
+    }
+
+    let mut elements = Vec::new();
+    let mut next_stack = stack.to_vec();
+    next_stack.push(definition.name.to_ascii_lowercase());
+    for statement in &definition.body {
+        if statement.fields[0].starts_with('.') {
+            return Err(NetlistParseError::new(format!(
+                "line {}: directives inside .subckt are not supported",
+                statement.line_number
+            )));
+        }
+        let local_fields = map_subckt_fields(&statement.fields, instance_name, &node_map)?;
+        if element_prefix(&statement.fields[0])? == 'X' {
+            elements.extend(expand_subckt_instance(&local_fields, subckts, &next_stack)?);
+        } else {
+            elements.push(parse_element(&local_fields)?);
+        }
+    }
+    Ok(elements)
+}
+
+fn map_subckt_fields(
+    fields: &[String],
+    instance_name: &str,
+    node_map: &HashMap<String, String>,
+) -> Result<Vec<String>, NetlistParseError> {
+    let mut mapped = Vec::with_capacity(fields.len());
+    mapped.push(format!("{instance_name}.{}", fields[0]));
+    mapped.extend(fields[1..].iter().cloned());
+    let prefix = fields[0]
+        .chars()
+        .next()
+        .ok_or_else(|| NetlistParseError::new("element name is empty"))?
+        .to_ascii_uppercase();
+    match prefix {
+        'R' | 'C' | 'L' | 'V' | 'I' => {
+            require_min_fields(fields, 3, "subcircuit element")?;
+            mapped[1] = map_subckt_node(&fields[1], instance_name, node_map);
+            mapped[2] = map_subckt_node(&fields[2], instance_name, node_map);
+        }
+        'G' => {
+            require_min_fields(fields, 5, "subcircuit VCCS")?;
+            for index in 1..5 {
+                mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
+            }
+        }
+        'X' => {
+            for index in 1..fields.len() - 1 {
+                mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
+            }
+        }
+        _ => {}
+    }
+    Ok(mapped)
+}
+
+fn map_subckt_node(node: &str, instance_name: &str, node_map: &HashMap<String, String>) -> String {
+    if node.eq_ignore_ascii_case("0") || node.eq_ignore_ascii_case("gnd") {
+        return node.to_string();
+    }
+    node_map
+        .get(node)
+        .or_else(|| node_map.get(&node.to_ascii_lowercase()))
+        .cloned()
+        .unwrap_or_else(|| format!("{instance_name}.{node}"))
+}
+
+fn element_prefix(name: &str) -> Result<char, NetlistParseError> {
+    name.rsplit('.')
+        .next()
+        .and_then(|local_name| local_name.chars().next())
+        .map(|ch| ch.to_ascii_uppercase())
+        .ok_or_else(|| NetlistParseError::new("element name is empty"))
 }
 
 fn parse_source_value(fields: &[String]) -> Result<(f64, Option<Waveform>), NetlistParseError> {

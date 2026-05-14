@@ -117,6 +117,66 @@ I1 in 0 SIN(0 2m 1k 10u 5)
 }
 
 #[test]
+fn expands_subcircuit_instances_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.subckt divider top mid bot
+Rtop top mid 1k
+Rbot mid bot 1k
+.ends divider
+V1 vin 0 DC 10
+Xdiv vin mid 0 divider
+.op
+"#,
+    )
+    .unwrap();
+
+    let elements = parsed.circuit.elements();
+    let names = elements
+        .iter()
+        .map(|element| match element {
+            Element::VoltageSource(source) => source.name.as_str(),
+            Element::Resistor(resistor) => resistor.name.as_str(),
+            _ => panic!("unexpected element"),
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(names, vec!["V1", "Xdiv.Rtop", "Xdiv.Rbot"]);
+
+    let Element::Resistor(resistor) = &elements[1] else {
+        panic!("expected resistor");
+    };
+    assert_eq!(resistor.n1, "vin");
+    assert_eq!(resistor.n2, "mid");
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("mid").unwrap(), 5.0);
+}
+
+#[test]
+fn scopes_subcircuit_internal_nodes_by_instance() {
+    let parsed = parse_netlist(
+        r#"
+.subckt load in out
+R1 in inner 1k
+C1 inner out 1u
+.ends load
+Xleft a b load
+Xright c d load
+"#,
+    )
+    .unwrap();
+
+    let Element::Resistor(left_resistor) = &parsed.circuit.elements()[0] else {
+        panic!("expected resistor");
+    };
+    let Element::Resistor(right_resistor) = &parsed.circuit.elements()[2] else {
+        panic!("expected resistor");
+    };
+    assert_eq!(left_resistor.n2, "Xleft.inner");
+    assert_eq!(right_resistor.n2, "Xright.inner");
+}
+
+#[test]
 fn parses_engineering_suffixes() {
     assert_eq!(parse_value("1k").unwrap(), 1.0e3);
     assert_eq!(parse_value("2.2meg").unwrap(), 2.2e6);
@@ -137,6 +197,15 @@ fn rejects_unbalanced_waveform_parentheses() {
     let err = parse_netlist("V1 in 0 PULSE(0 1\n").unwrap_err();
 
     assert!(err.to_string().contains("unclosed parenthesis"));
+}
+
+#[test]
+fn rejects_unknown_subcircuit_instances() {
+    let err = parse_netlist("X1 a b missing\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 1: unknown subcircuit \"missing\""));
 }
 
 fn assert_error_type(_: NetlistParseError) {}
