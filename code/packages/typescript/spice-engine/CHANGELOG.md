@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add current-controlled current source support across DC, AC, transfer
+  function, sensitivity, Monte Carlo, and transient analyses.
+- Add voltage-controlled voltage source support across DC, AC, transfer
+  function, sensitivity, Monte Carlo, and transient analyses.
 - Add AC noise analysis with resistor Johnson-Nyquist source PSDs,
   adjoint output contributions, input-referred PSD, and default log sweeps.
 - Add seeded DC Monte Carlo analysis for linear element parameters with

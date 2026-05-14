@@ -1,7 +1,7 @@
 use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use capability_os_sandbox::OsFamily;
+use capability_os_sandbox::{current_kernel_sandbox_support, OsFamily};
 use os_job_core::BackendKind;
 use weather_agent_e2e::{
     run_umbrella_today_agent, RecommendationKind, UmbrellaAgentConfig, WeatherFetchSourceKind,
@@ -59,6 +59,17 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
             .host_broker_rules,
         3
     );
+
+    let kernel_support = current_kernel_sandbox_support();
+    assert_eq!(run.kernel_sandbox.os, OsFamily::current());
+    assert_eq!(run.kernel_sandbox.available, kernel_support.available);
+    if kernel_support.available {
+        assert!(run.kernel_sandbox.enforced);
+        assert!(run.kernel_sandbox.allowed_write_succeeded);
+        assert!(run.kernel_sandbox.denied_write_blocked);
+        assert!(run.kernel_sandbox.stderr_contains_operation_not_permitted);
+        assert!(!run.kernel_sandbox.denied_path.exists());
+    }
 
     assert_eq!(run.supervisor.child_count, 3);
     assert_eq!(run.supervisor.stopped_children, 3);

@@ -1,6 +1,6 @@
 use spice_engine::{
-    ac_sweep, Capacitor, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError,
-    VoltageSource,
+    ac_sweep, Capacitor, Cccs, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError,
+    Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -99,6 +99,51 @@ fn ac_current_source_injects_real_phasor_current() {
     let n1 = points[0].voltage("n1").unwrap();
     assert_close(n1.real, 1.0);
     assert_close(n1.imag, 0.0);
+}
+
+#[test]
+fn ac_vcvs_applies_controlled_voltage_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Vcvs(Vcvs::new("E1", "out", "0", "in", "0", 4.0)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let points = ac_sweep(&circuit, 1_000.0, 1_000.0, 10).unwrap();
+
+    assert_eq!(points.len(), 1);
+    let out = points[0].voltage("out").unwrap();
+    assert_close(out.real, 4.0);
+    assert_close(out.imag, 0.0);
+    assert_close(points[0].branch_current("E1").unwrap().real, -4.0e-3);
+}
+
+#[test]
+fn ac_cccs_applies_current_gain_from_sensed_branch_current() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rsense", "in", "sense", 1_000.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vsense", "sense", "0", 0.0,
+    )));
+    circuit.add(Element::Cccs(Cccs::new("F1", "0", "out", "Vsense", 3.0)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let points = ac_sweep(&circuit, 1_000.0, 1_000.0, 10).unwrap();
+
+    assert_eq!(points.len(), 1);
+    let out = points[0].voltage("out").unwrap();
+    assert_close(out.real, 3.0);
+    assert_close(out.imag, 0.0);
 }
 
 #[test]

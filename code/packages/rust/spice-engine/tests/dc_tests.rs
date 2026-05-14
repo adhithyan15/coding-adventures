@@ -1,6 +1,6 @@
 use spice_engine::{
-    dc_op, dc_sweep, Circuit, CurrentSource, Element, Inductor, Resistor, SinWaveform, SpiceError,
-    Vccs, VoltageSource, Waveform,
+    dc_op, dc_sweep, Cccs, Circuit, CurrentSource, Element, Inductor, Resistor, SinWaveform,
+    SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -56,6 +56,65 @@ fn dc_vccs_injects_current_from_control_voltage() {
 
     let result = dc_op(&circuit).unwrap();
 
+    assert_close(result.voltage("out").unwrap(), 2.0);
+}
+
+#[test]
+fn dc_vcvs_sets_output_from_control_voltage() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vctrl", "ctrl", "0", 1.5,
+    )));
+    circuit.add(Element::Vcvs(Vcvs::new("E1", "out", "0", "ctrl", "0", 2.0)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("out").unwrap(), 3.0);
+    assert_close(result.branch_current("E1").unwrap(), -3.0e-3);
+}
+
+#[test]
+fn dc_vcvs_respects_differential_control_polarity() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vp", "p", "0", 4.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vn", "n", "0", 1.0,
+    )));
+    circuit.add(Element::Vcvs(Vcvs::new("E1", "out", "0", "p", "n", 0.5)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("out").unwrap(), 1.5);
+}
+
+#[test]
+fn dc_cccs_injects_current_from_voltage_source_branch_current() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rsense", "in", "sense", 1_000.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vsense", "sense", "0", 0.0,
+    )));
+    circuit.add(Element::Cccs(Cccs::new("F1", "0", "out", "Vsense", 2.0)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.branch_current("Vsense").unwrap(), 1.0e-3);
     assert_close(result.voltage("out").unwrap(), 2.0);
 }
 
@@ -219,6 +278,69 @@ fn dc_rejects_non_finite_vccs_transconductance() {
     assert!(matches!(
         dc_op(&circuit),
         Err(SpiceError::InvalidElement { name, .. }) if name == "Gbad"
+    ));
+}
+
+#[test]
+fn dc_rejects_non_finite_vcvs_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vctrl", "ctrl", "0", 1.0,
+    )));
+    circuit.add(Element::Vcvs(Vcvs::new(
+        "Ebad",
+        "out",
+        "0",
+        "ctrl",
+        "0",
+        f64::NAN,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    assert!(matches!(
+        dc_op(&circuit),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Ebad"
+    ));
+}
+
+#[test]
+fn dc_rejects_non_finite_cccs_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vsense", "sense", "0", 0.0,
+    )));
+    circuit.add(Element::Cccs(Cccs::new(
+        "Fbad",
+        "0",
+        "out",
+        "Vsense",
+        f64::NAN,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    assert!(matches!(
+        dc_op(&circuit),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Fbad"
+    ));
+}
+
+#[test]
+fn dc_rejects_missing_cccs_control_source() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Cccs(Cccs::new(
+        "Fbad", "0", "out", "Vmissing", 2.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    assert!(matches!(
+        dc_op(&circuit),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Fbad"
     ));
 }
 

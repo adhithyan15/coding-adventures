@@ -186,6 +186,16 @@ needs frequency selection, ramping, or lifetime-managed timer ownership.
 `adc.read` returns a normalized 16-bit sample. Board adapters choose the
 underlying hardware resolution and scale into the portable result range.
 
+### DAC
+
+| ID | Name | Args | Returns |
+|---:|---|---|---|
+| `0x22` | `dac.write_u12` | `pin: u16/u8`, `sample: u16` | `unit` |
+
+`dac.write_u12` writes a 12-bit sample to a board DAC pin advertised by target
+metadata. The operation is intentionally direct and stateless, mirroring
+`pwm.write`; boards without a physical DAC do not advertise it.
+
 ### LED Matrix
 
 `led_matrix.*` capabilities model board-owned pixel displays such as the

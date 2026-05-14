@@ -4391,10 +4391,17 @@
           "Character",
           "x</script>tail"
         ]
+      ],
+      "errors": [
+        {
+          "code": "eof-in-script-html-comment-like-text",
+          "line": 1,
+          "col": 15
+        }
       ]
     },
     {
-      "description": "script double escaped dash dash state remains text after greater-than",
+      "description": "script double escaped dash dash state exits comment-like text after greater-than",
       "input": ">still</script>text",
       "initialStates": [
         "Script data double escaped dash dash state"
@@ -4403,7 +4410,15 @@
       "output": [
         [
           "Character",
-          ">still</script>text"
+          ">still"
+        ],
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "text"
         ]
       ]
     },
@@ -94366,6 +94381,1346 @@
         [
           "Character",
           "‌"
+        ]
+      ]
+    },
+    {
+      "description": "PLAINTEXT content model flag",
+      "initialStates": [
+        "PLAINTEXT state"
+      ],
+      "lastStartTag": "plaintext",
+      "input": "<head>&body;",
+      "output": [
+        [
+          "Character",
+          "<head>&body;"
+        ]
+      ]
+    },
+    {
+      "description": "PLAINTEXT with seeming close tag",
+      "initialStates": [
+        "PLAINTEXT state"
+      ],
+      "lastStartTag": "plaintext",
+      "input": "</plaintext>&body;",
+      "output": [
+        [
+          "Character",
+          "</plaintext>&body;"
+        ]
+      ]
+    },
+    {
+      "description": "Raw NUL replacement",
+      "doubleEscaped": true,
+      "initialStates": [
+        "RCDATA state",
+        "RAWTEXT state",
+        "PLAINTEXT state",
+        "Script data state"
+      ],
+      "input": "\\u0000",
+      "output": [
+        [
+          "Character",
+          "\\uFFFD"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unexpected-null-character",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "NUL in script HTML comment",
+      "doubleEscaped": true,
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--test\\u0000--><!--test-\\u0000--><!--test--\\u0000-->",
+      "output": [
+        [
+          "Character",
+          "<!--test\\uFFFD--><!--test-\\uFFFD--><!--test--\\uFFFD-->"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unexpected-null-character",
+          "line": 1,
+          "col": 9
+        },
+        {
+          "code": "unexpected-null-character",
+          "line": 1,
+          "col": 22
+        },
+        {
+          "code": "unexpected-null-character",
+          "line": 1,
+          "col": 36
+        }
+      ]
+    },
+    {
+      "description": "NUL in script HTML comment - double escaped",
+      "doubleEscaped": true,
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script>\\u0000--><!--<script>-\\u0000--><!--<script>--\\u0000-->",
+      "output": [
+        [
+          "Character",
+          "<!--<script>\\uFFFD--><!--<script>-\\uFFFD--><!--<script>--\\uFFFD-->"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unexpected-null-character",
+          "line": 1,
+          "col": 13
+        },
+        {
+          "code": "unexpected-null-character",
+          "line": 1,
+          "col": 30
+        },
+        {
+          "code": "unexpected-null-character",
+          "line": 1,
+          "col": 48
+        }
+      ]
+    },
+    {
+      "description": "EOF in script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--test",
+      "output": [
+        [
+          "Character",
+          "<!--test"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "eof-in-script-html-comment-like-text",
+          "line": 1,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "description": "EOF in script HTML comment after dash",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--test-",
+      "output": [
+        [
+          "Character",
+          "<!--test-"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "eof-in-script-html-comment-like-text",
+          "line": 1,
+          "col": 10
+        }
+      ]
+    },
+    {
+      "description": "EOF in script HTML comment after dash dash",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--test--",
+      "output": [
+        [
+          "Character",
+          "<!--test--"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "eof-in-script-html-comment-like-text",
+          "line": 1,
+          "col": 11
+        }
+      ]
+    },
+    {
+      "description": "EOF in script HTML comment double escaped after dash",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script>-",
+      "output": [
+        [
+          "Character",
+          "<!--<script>-"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "eof-in-script-html-comment-like-text",
+          "line": 1,
+          "col": 14
+        }
+      ]
+    },
+    {
+      "description": "EOF in script HTML comment double escaped after dash dash",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script>--",
+      "output": [
+        [
+          "Character",
+          "<!--<script>--"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "eof-in-script-html-comment-like-text",
+          "line": 1,
+          "col": 15
+        }
+      ]
+    },
+    {
+      "description": "EOF in script HTML comment - double escaped",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script>",
+      "output": [
+        [
+          "Character",
+          "<!--<script>"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "eof-in-script-html-comment-like-text",
+          "line": 1,
+          "col": 13
+        }
+      ]
+    },
+    {
+      "description": "Dash in script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!-- - -->",
+      "output": [
+        [
+          "Character",
+          "<!-- - -->"
+        ]
+      ]
+    },
+    {
+      "description": "Dash less-than in script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!-- -< -->",
+      "output": [
+        [
+          "Character",
+          "<!-- -< -->"
+        ]
+      ]
+    },
+    {
+      "description": "Dash at end of script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--test--->",
+      "output": [
+        [
+          "Character",
+          "<!--test--->"
+        ]
+      ]
+    },
+    {
+      "description": "leading U+FEFF must pass through",
+      "initialStates": [
+        "Data state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "doubleEscaped": true,
+      "input": "\\uFEFFfoo\\uFEFFbar",
+      "output": [
+        [
+          "Character",
+          "\\uFEFFfoo\\uFEFFbar"
+        ]
+      ]
+    },
+    {
+      "description": "Non BMP-charref in RCDATA",
+      "initialStates": [
+        "RCDATA state"
+      ],
+      "input": "&NotEqualTilde;",
+      "output": [
+        [
+          "Character",
+          "≂̸"
+        ]
+      ]
+    },
+    {
+      "description": "Bad charref in RCDATA",
+      "initialStates": [
+        "RCDATA state"
+      ],
+      "input": "&NotEqualTild;",
+      "output": [
+        [
+          "Character",
+          "&NotEqualTild;"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unknown-named-character-reference",
+          "line": 1,
+          "col": 14
+        }
+      ]
+    },
+    {
+      "description": "HTML tag in script data",
+      "input": "<b>hello world</b>",
+      "initialStates": [
+        "Script data state"
+      ],
+      "output": [
+        [
+          "Character",
+          "<b>hello world</b>"
+        ]
+      ]
+    },
+    {
+      "description": "< in script data",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<test-->",
+      "output": [
+        [
+          "Character",
+          "<test-->"
+        ]
+      ]
+    },
+    {
+      "description": "<! in script data",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!test-->",
+      "output": [
+        [
+          "Character",
+          "<!test-->"
+        ]
+      ]
+    },
+    {
+      "description": "<!- in script data",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!-test-->",
+      "output": [
+        [
+          "Character",
+          "<!-test-->"
+        ]
+      ]
+    },
+    {
+      "description": "Escaped script data",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--test-->",
+      "output": [
+        [
+          "Character",
+          "<!--test-->"
+        ]
+      ]
+    },
+    {
+      "description": "< in script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!-- < test -->",
+      "output": [
+        [
+          "Character",
+          "<!-- < test -->"
+        ]
+      ]
+    },
+    {
+      "description": "</ in script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!-- </ test -->",
+      "output": [
+        [
+          "Character",
+          "<!-- </ test -->"
+        ]
+      ]
+    },
+    {
+      "description": "Start tag in script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!-- <test> -->",
+      "output": [
+        [
+          "Character",
+          "<!-- <test> -->"
+        ]
+      ]
+    },
+    {
+      "description": "End tag in script HTML comment",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!-- </test> -->",
+      "output": [
+        [
+          "Character",
+          "<!-- </test> -->"
+        ]
+      ]
+    },
+    {
+      "description": "- in script HTML comment double escaped",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script>-</script>-->",
+      "output": [
+        [
+          "Character",
+          "<!--<script>-</script>-->"
+        ]
+      ]
+    },
+    {
+      "description": "-- in script HTML comment double escaped",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script>--</script>-->",
+      "output": [
+        [
+          "Character",
+          "<!--<script>--</script>-->"
+        ]
+      ]
+    },
+    {
+      "description": "--- in script HTML comment double escaped",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script>---</script>-->",
+      "output": [
+        [
+          "Character",
+          "<!--<script>---</script>-->"
+        ]
+      ]
+    },
+    {
+      "description": "- spaced in script HTML comment double escaped",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script> - </script>-->",
+      "output": [
+        [
+          "Character",
+          "<!--<script> - </script>-->"
+        ]
+      ]
+    },
+    {
+      "description": "-- spaced in script HTML comment double escaped",
+      "initialStates": [
+        "Script data state"
+      ],
+      "input": "<!--<script> -- </script>-->",
+      "output": [
+        [
+          "Character",
+          "<!--<script> -- </script>-->"
+        ]
+      ]
+    },
+    {
+      "description": "[empty]",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "",
+      "output": []
+    },
+    {
+      "description": "\\u0009",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "\t",
+      "output": [
+        [
+          "Character",
+          "\t"
+        ]
+      ]
+    },
+    {
+      "description": "\\u000A",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "\n",
+      "output": [
+        [
+          "Character",
+          "\n"
+        ]
+      ]
+    },
+    {
+      "description": "\\u000B",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "\u000b",
+      "output": [
+        [
+          "Character",
+          "\u000b"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "control-character-in-input-stream",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "\\u000C",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "\f",
+      "output": [
+        [
+          "Character",
+          "\f"
+        ]
+      ]
+    },
+    {
+      "description": " ",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": " ",
+      "output": [
+        [
+          "Character",
+          " "
+        ]
+      ]
+    },
+    {
+      "description": "!",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "!",
+      "output": [
+        [
+          "Character",
+          "!"
+        ]
+      ]
+    },
+    {
+      "description": "\"",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "\"",
+      "output": [
+        [
+          "Character",
+          "\""
+        ]
+      ]
+    },
+    {
+      "description": "%",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "%",
+      "output": [
+        [
+          "Character",
+          "%"
+        ]
+      ]
+    },
+    {
+      "description": "&",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "&",
+      "output": [
+        [
+          "Character",
+          "&"
+        ]
+      ]
+    },
+    {
+      "description": "'",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "'",
+      "output": [
+        [
+          "Character",
+          "'"
+        ]
+      ]
+    },
+    {
+      "description": ",",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ",",
+      "output": [
+        [
+          "Character",
+          ","
+        ]
+      ]
+    },
+    {
+      "description": "-",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "-",
+      "output": [
+        [
+          "Character",
+          "-"
+        ]
+      ]
+    },
+    {
+      "description": ".",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ".",
+      "output": [
+        [
+          "Character",
+          "."
+        ]
+      ]
+    },
+    {
+      "description": "/",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "/",
+      "output": [
+        [
+          "Character",
+          "/"
+        ]
+      ]
+    },
+    {
+      "description": "0",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "0",
+      "output": [
+        [
+          "Character",
+          "0"
+        ]
+      ]
+    },
+    {
+      "description": "1",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "1",
+      "output": [
+        [
+          "Character",
+          "1"
+        ]
+      ]
+    },
+    {
+      "description": "9",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "9",
+      "output": [
+        [
+          "Character",
+          "9"
+        ]
+      ]
+    },
+    {
+      "description": ";",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";",
+      "output": [
+        [
+          "Character",
+          ";"
+        ]
+      ]
+    },
+    {
+      "description": ";=",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";=",
+      "output": [
+        [
+          "Character",
+          ";="
+        ]
+      ]
+    },
+    {
+      "description": ";>",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";>",
+      "output": [
+        [
+          "Character",
+          ";>"
+        ]
+      ]
+    },
+    {
+      "description": ";?",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";?",
+      "output": [
+        [
+          "Character",
+          ";?"
+        ]
+      ]
+    },
+    {
+      "description": ";@",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";@",
+      "output": [
+        [
+          "Character",
+          ";@"
+        ]
+      ]
+    },
+    {
+      "description": ";A",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";A",
+      "output": [
+        [
+          "Character",
+          ";A"
+        ]
+      ]
+    },
+    {
+      "description": ";B",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";B",
+      "output": [
+        [
+          "Character",
+          ";B"
+        ]
+      ]
+    },
+    {
+      "description": ";Y",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";Y",
+      "output": [
+        [
+          "Character",
+          ";Y"
+        ]
+      ]
+    },
+    {
+      "description": ";Z",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";Z",
+      "output": [
+        [
+          "Character",
+          ";Z"
+        ]
+      ]
+    },
+    {
+      "description": ";`",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";`",
+      "output": [
+        [
+          "Character",
+          ";`"
+        ]
+      ]
+    },
+    {
+      "description": ";a",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";a",
+      "output": [
+        [
+          "Character",
+          ";a"
+        ]
+      ]
+    },
+    {
+      "description": ";b",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";b",
+      "output": [
+        [
+          "Character",
+          ";b"
+        ]
+      ]
+    },
+    {
+      "description": ";y",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";y",
+      "output": [
+        [
+          "Character",
+          ";y"
+        ]
+      ]
+    },
+    {
+      "description": ";z",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";z",
+      "output": [
+        [
+          "Character",
+          ";z"
+        ]
+      ]
+    },
+    {
+      "description": ";{",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";{",
+      "output": [
+        [
+          "Character",
+          ";{"
+        ]
+      ]
+    },
+    {
+      "description": ";\\uDBC0\\uDC00",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ";􀀀",
+      "output": [
+        [
+          "Character",
+          ";􀀀"
+        ]
+      ]
+    },
+    {
+      "description": "=",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "=",
+      "output": [
+        [
+          "Character",
+          "="
+        ]
+      ]
+    },
+    {
+      "description": ">",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": ">",
+      "output": [
+        [
+          "Character",
+          ">"
+        ]
+      ]
+    },
+    {
+      "description": "?",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "?",
+      "output": [
+        [
+          "Character",
+          "?"
+        ]
+      ]
+    },
+    {
+      "description": "@",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "@",
+      "output": [
+        [
+          "Character",
+          "@"
+        ]
+      ]
+    },
+    {
+      "description": "A",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "A",
+      "output": [
+        [
+          "Character",
+          "A"
+        ]
+      ]
+    },
+    {
+      "description": "B",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "B",
+      "output": [
+        [
+          "Character",
+          "B"
+        ]
+      ]
+    },
+    {
+      "description": "Y",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "Y",
+      "output": [
+        [
+          "Character",
+          "Y"
+        ]
+      ]
+    },
+    {
+      "description": "Z",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "Z",
+      "output": [
+        [
+          "Character",
+          "Z"
+        ]
+      ]
+    },
+    {
+      "description": "`",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "`",
+      "output": [
+        [
+          "Character",
+          "`"
+        ]
+      ]
+    },
+    {
+      "description": "a",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "a",
+      "output": [
+        [
+          "Character",
+          "a"
+        ]
+      ]
+    },
+    {
+      "description": "b",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "b",
+      "output": [
+        [
+          "Character",
+          "b"
+        ]
+      ]
+    },
+    {
+      "description": "y",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "y",
+      "output": [
+        [
+          "Character",
+          "y"
+        ]
+      ]
+    },
+    {
+      "description": "z",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "z",
+      "output": [
+        [
+          "Character",
+          "z"
+        ]
+      ]
+    },
+    {
+      "description": "{",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "{",
+      "output": [
+        [
+          "Character",
+          "{"
+        ]
+      ]
+    },
+    {
+      "description": "\\uDBC0\\uDC00",
+      "initialStates": [
+        "Data state",
+        "PLAINTEXT state",
+        "RCDATA state",
+        "RAWTEXT state",
+        "Script data state"
+      ],
+      "input": "􀀀",
+      "output": [
+        [
+          "Character",
+          "􀀀"
         ]
       ]
     }

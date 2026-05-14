@@ -13,6 +13,8 @@ namespace {
 
 constexpr uint8_t kPwmPins[] = {3, 5, 6, 9, 10, 11};
 constexpr uint8_t kAdcPins[] = {14, 15, 16, 17, 18, 19};
+constexpr uint8_t kDacPin = 14;
+constexpr uint16_t kDacU12Max = 0x0FFFu;
 constexpr size_t kOperatorNewHeapBytes = 2048;
 constexpr uint32_t kAdcRawMax = (1u << BSP_FEATURE_ADC_MAX_RESOLUTION_BITS) - 1u;
 constexpr uint32_t kAdcNormalizedMax = 65535u;
@@ -41,6 +43,10 @@ adc_extended_cfg_t g_board_vm_adc_extend = {};
 adc_cfg_t g_board_vm_adc_cfg = {};
 adc_channel_cfg_t g_board_vm_adc_channel_cfg = {};
 bool g_board_vm_adc_initialized = false;
+dac_instance_ctrl_t g_board_vm_dac_ctrl = {};
+dac_extended_cfg_t g_board_vm_dac_extend = {};
+dac_cfg_t g_board_vm_dac_cfg = {};
+bool g_board_vm_dac_opened = false;
 
 PwmSlot *find_slot(uint8_t pin) {
   for (auto &slot : g_pwm_slots) {
@@ -99,6 +105,8 @@ bool pin_cfg_matches(uint16_t cfg, PinCfgReq_t req) {
       return IS_PIN_PWM(cfg);
     case PIN_CFG_REQ_ADC:
       return IS_PIN_ANALOG(cfg);
+    case PIN_CFG_REQ_DAC:
+      return IS_PIN_DAC(cfg);
     default:
       return false;
   }
@@ -169,6 +177,17 @@ uint16_t normalize_adc_sample(uint16_t raw) {
   uint32_t scaled =
       (static_cast<uint32_t>(raw) * kAdcNormalizedMax + (kAdcRawMax / 2u)) / kAdcRawMax;
   return static_cast<uint16_t>(scaled);
+}
+
+void initialize_dac_config(uint8_t channel) {
+  g_board_vm_dac_extend.enable_charge_pump = false;
+  g_board_vm_dac_extend.output_amplifier_enabled = false;
+  g_board_vm_dac_extend.internal_output_enabled = false;
+  g_board_vm_dac_extend.data_format = DAC_DATA_FORMAT_FLUSH_RIGHT;
+
+  g_board_vm_dac_cfg.channel = channel;
+  g_board_vm_dac_cfg.ad_da_synchronized = false;
+  g_board_vm_dac_cfg.p_extend = &g_board_vm_dac_extend;
 }
 
 }  // namespace
@@ -336,4 +355,42 @@ extern "C" bool board_vm_uno_r4_adc_read(uint8_t pin, uint16_t *sample) {
 
   *sample = normalize_adc_sample(raw);
   return true;
+}
+
+extern "C" bool board_vm_uno_r4_dac_write_u12(uint8_t pin, uint16_t sample) {
+  if (pin != kDacPin || sample > kDacU12Max) {
+    return false;
+  }
+
+  auto cfg = getPinCfgs(pin, PIN_CFG_REQ_DAC);
+  if (cfg[0] == 0 || GET_CHANNEL(cfg[0]) >= DAC12_HOWMANY) {
+    return false;
+  }
+  uint8_t channel = GET_CHANNEL(cfg[0]);
+
+  fsp_err_t pin_status = R_IOPORT_PinCfg(
+      nullptr,
+      g_pin_cfg[pin].pin,
+      static_cast<uint32_t>(IOPORT_CFG_ANALOG_ENABLE | IOPORT_CFG_PERIPHERAL_PIN |
+                            IOPORT_PERIPHERAL_CAC_AD));
+  if (pin_status != FSP_SUCCESS) {
+    return false;
+  }
+
+  if (!g_board_vm_dac_opened) {
+    initialize_dac_config(channel);
+    if (R_DAC_Open(&g_board_vm_dac_ctrl, &g_board_vm_dac_cfg) != FSP_SUCCESS) {
+      return false;
+    }
+    if (R_DAC_Write(&g_board_vm_dac_ctrl, sample) != FSP_SUCCESS) {
+      return false;
+    }
+    if (R_DAC_Start(&g_board_vm_dac_ctrl) != FSP_SUCCESS) {
+      return false;
+    }
+    g_board_vm_dac_opened = true;
+    return true;
+  }
+
+  return R_DAC_Write(&g_board_vm_dac_ctrl, sample) == FSP_SUCCESS;
 }

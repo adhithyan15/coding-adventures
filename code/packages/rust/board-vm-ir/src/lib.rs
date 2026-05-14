@@ -18,6 +18,7 @@ pub const CAP_TIME_SLEEP_MS: u16 = 0x10;
 pub const CAP_TIME_NOW_MS: u16 = 0x11;
 pub const CAP_PWM_WRITE: u16 = 0x20;
 pub const CAP_ADC_READ: u16 = 0x21;
+pub const CAP_DAC_WRITE_U12: u16 = 0x22;
 pub const CAP_LED_MATRIX_FRAME: u16 = 0x30;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
@@ -28,6 +29,7 @@ const CAP_TIME_SLEEP_MS_U8: u8 = CAP_TIME_SLEEP_MS as u8;
 const CAP_TIME_NOW_MS_U8: u8 = CAP_TIME_NOW_MS as u8;
 const CAP_PWM_WRITE_U8: u8 = CAP_PWM_WRITE as u8;
 const CAP_ADC_READ_U8: u8 = CAP_ADC_READ as u8;
+const CAP_DAC_WRITE_U12_U8: u8 = CAP_DAC_WRITE_U12 as u8;
 const CAP_LED_MATRIX_FRAME_U8: u8 = CAP_LED_MATRIX_FRAME as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -102,6 +104,7 @@ pub struct CapabilitySet {
     pub time: bool,
     pub pwm: bool,
     pub adc: bool,
+    pub dac: bool,
     pub led_matrix: bool,
 }
 
@@ -112,6 +115,7 @@ impl CapabilitySet {
             time: false,
             pwm: false,
             adc: false,
+            dac: false,
             led_matrix: false,
         }
     }
@@ -122,6 +126,7 @@ impl CapabilitySet {
             time: true,
             pwm: false,
             adc: false,
+            dac: false,
             led_matrix: false,
         }
     }
@@ -132,6 +137,10 @@ impl CapabilitySet {
 
     pub const fn with_adc(self) -> Self {
         Self { adc: true, ..self }
+    }
+
+    pub const fn with_dac(self) -> Self {
+        Self { dac: true, ..self }
     }
 
     pub const fn with_led_matrix(self) -> Self {
@@ -147,6 +156,7 @@ impl CapabilitySet {
             CAP_TIME_SLEEP_MS | CAP_TIME_NOW_MS => self.time,
             CAP_PWM_WRITE => self.pwm,
             CAP_ADC_READ => self.adc,
+            CAP_DAC_WRITE_U12 => self.dac,
             CAP_LED_MATRIX_FRAME => self.led_matrix,
             _ => false,
         }
@@ -381,6 +391,7 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_TIME_NOW_MS_U8) | Op::CallU16(CAP_TIME_NOW_MS) => (0, 1),
         Op::CallU8(CAP_PWM_WRITE_U8) | Op::CallU16(CAP_PWM_WRITE) => (2, 0),
         Op::CallU8(CAP_ADC_READ_U8) | Op::CallU16(CAP_ADC_READ) => (1, 1),
+        Op::CallU8(CAP_DAC_WRITE_U12_U8) | Op::CallU16(CAP_DAC_WRITE_U12) => (2, 0),
         Op::CallU8(CAP_LED_MATRIX_FRAME_U8) | Op::CallU16(CAP_LED_MATRIX_FRAME) => (3, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
@@ -566,6 +577,21 @@ mod tests {
     }
 
     #[test]
+    fn validates_dac_write_u12_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 14, 0x13, 0x00, 0x08, 0x40, CAP_DAC_WRITE_U12 as u8],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_dac(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_DAC_WRITE_U12]);
+    }
+
+    #[test]
     fn rejects_pwm_write_without_capability() {
         let module = Module {
             flags: 0,
@@ -592,6 +618,21 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 1),
             Err(ValidateError::UnsupportedCapability(CAP_ADC_READ))
+        );
+    }
+
+    #[test]
+    fn rejects_dac_write_u12_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 14, 0x13, 0x00, 0x08, 0x40, CAP_DAC_WRITE_U12 as u8],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 2),
+            Err(ValidateError::UnsupportedCapability(CAP_DAC_WRITE_U12))
         );
     }
 

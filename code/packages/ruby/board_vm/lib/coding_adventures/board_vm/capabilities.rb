@@ -100,6 +100,10 @@ module CodingAdventures
         capabilities.select { |capability| capability.name.start_with?("adc.") }
       end
 
+      def dac
+        capabilities.select { |capability| capability.name.start_with?("dac.") }
+      end
+
       def program
         capabilities.select { |capability| capability.name.start_with?("program.") }
       end

@@ -35,18 +35,18 @@ use board_vm_esp_rom::{
     DEFAULT_TIMEOUT_MS as ESP_DEFAULT_TIMEOUT_MS,
 };
 use board_vm_host::{
-    write_adc_read_module, write_blink_module, write_gpio_handle_close_module,
-    write_gpio_handle_read_module, write_gpio_handle_write_module, write_gpio_open_module,
-    write_gpio_read_module, write_gpio_write_module, write_led_matrix_frame_module, write_module,
-    write_pwm_write_module, write_time_now_module, write_time_sleep_ms_module, AdcReadProgram,
-    BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
-    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession,
-    LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
-    DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
-    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
-    TIME_SLEEP_MS_MODULE_LEN,
+    write_adc_read_module, write_blink_module, write_dac_write_u12_module,
+    write_gpio_handle_close_module, write_gpio_handle_read_module, write_gpio_handle_write_module,
+    write_gpio_open_module, write_gpio_read_module, write_gpio_write_module,
+    write_led_matrix_frame_module, write_module, write_pwm_write_module, write_time_now_module,
+    write_time_sleep_ms_module, AdcReadProgram, BlinkProgram, DacWriteU12Program,
+    GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram,
+    GpioReadProgram, GpioWriteProgram, HostError, HostSession, LedMatrixFrameProgram, ModuleSpec,
+    PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
+    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -399,6 +399,7 @@ pub struct LanguageDigitalPin {
     pub supports_pulldown: bool,
     pub supports_adc: bool,
     pub supports_pwm: bool,
+    pub supports_dac: bool,
     pub supports_touch: bool,
     pub supports_interrupt: bool,
     pub boot_strap: bool,
@@ -1085,6 +1086,7 @@ fn language_digital_pin(pin: &TargetDigitalPin) -> LanguageDigitalPin {
         supports_pulldown: pin.supports_pulldown,
         supports_adc: pin.supports_adc,
         supports_pwm: pin.supports_pwm,
+        supports_dac: pin.supports_dac,
         supports_touch: pin.supports_touch,
         supports_interrupt: pin.supports_interrupt,
         boot_strap: pin.boot_strap,
@@ -1593,6 +1595,13 @@ pub fn build_adc_read_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_adc_read_module(program, out)?)
+}
+
+pub fn build_dac_write_u12_module(
+    program: DacWriteU12Program,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_dac_write_u12_module(program, out)?)
 }
 
 pub fn build_raw_module(
@@ -2277,6 +2286,31 @@ pub unsafe extern "C" fn board_vm_language_adc_read_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_dac_write_u12_module(
+    pin: u8,
+    sample: u16,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_dac_write_u12_module(
+            DacWriteU12Program {
+                pin,
+                sample,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2592,6 +2626,11 @@ pub extern "C" fn board_vm_language_adc_read_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_dac_write_u12_module_len() -> u64 {
+    DAC_WRITE_U12_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_led_matrix_frame_module_len() -> u64 {
     LED_MATRIX_FRAME_MODULE_LEN as u64
 }
@@ -2818,8 +2857,10 @@ mod tests {
         let uno_a0 = uno.digital_pins.iter().find(|pin| pin.pin == 14).unwrap();
         assert_eq!(uno_a0.label, "A0/D14");
         assert!(uno_a0.supports_adc);
+        assert!(uno_a0.supports_dac);
         assert!(uno.capabilities.contains(&"pwm.write".to_owned()));
         assert!(uno.capabilities.contains(&"adc.read".to_owned()));
+        assert!(uno.capabilities.contains(&"dac.write_u12".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -3611,6 +3652,19 @@ mod tests {
         };
         assert_eq!(adc_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(adc_status.len, ADC_READ_MODULE_LEN as u64);
+
+        let mut dac_module = [0u8; DAC_WRITE_U12_MODULE_LEN];
+        let dac_status = unsafe {
+            board_vm_language_dac_write_u12_module(
+                14,
+                0x0800,
+                2,
+                dac_module.as_mut_ptr(),
+                dac_module.len() as u64,
+            )
+        };
+        assert_eq!(dac_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(dac_status.len, DAC_WRITE_U12_MODULE_LEN as u64);
 
         let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];
         let gpio_read_status = unsafe {

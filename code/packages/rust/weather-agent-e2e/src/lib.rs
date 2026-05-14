@@ -17,7 +17,10 @@ use capability_cage::{
     secure_file, Action as CageAction, Capability as CageCapability, CapabilityFlavor,
     CapabilityTrust, Category as CageCategory, Manifest,
 };
-use capability_os_sandbox::{plan_all_supported, OsFamily, SandboxPlanSummary};
+use capability_os_sandbox::{
+    current_kernel_sandbox_support, plan_all_supported, plan_for_current_os,
+    run_with_kernel_sandbox, OsFamily, SandboxPlanSummary,
+};
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
     ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind,
@@ -452,6 +455,7 @@ pub struct UmbrellaAgentRun {
     pub output_text: String,
     pub weather_fetch: WeatherFetchSummary,
     pub sandbox_plan: UmbrellaSandboxPlanSummary,
+    pub kernel_sandbox: UmbrellaKernelSandboxSummary,
     pub supervisor: UmbrellaSupervisorSummary,
     pub tool_journal_health: ToolExecutionJournalHealthSummary,
     pub context_inventory: ContextStoreInventorySummary,
@@ -479,6 +483,20 @@ pub struct UmbrellaSandboxPlanSummary {
     pub native_rules: usize,
     pub host_broker_rules: usize,
     pub os_summaries: Vec<SandboxPlanSummary>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UmbrellaKernelSandboxSummary {
+    pub os: OsFamily,
+    pub primitive: String,
+    pub available: bool,
+    pub enforced: bool,
+    pub allowed_write_succeeded: bool,
+    pub denied_write_blocked: bool,
+    pub denied_path: PathBuf,
+    pub status_code: Option<i32>,
+    pub stderr_contains_operation_not_permitted: bool,
+    pub reason: String,
 }
 
 impl UmbrellaSandboxPlanSummary {
@@ -536,6 +554,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
     pipeline.bootstrap_substrate()?;
 
     let sandbox_plan = plan_agent_sandbox(&config)?;
+    let kernel_sandbox = probe_agent_kernel_sandbox(&config)?;
     let (job_plan_backend, job_plan_file_count) = plan_agent_job(&config)?;
     let job_executor_status = run_executor_tick(&config)?;
 
@@ -588,6 +607,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         output_text,
         weather_fetch,
         sandbox_plan,
+        kernel_sandbox,
         supervisor: supervisor_summary(&system, &actor_stats, supervisor_events),
         tool_journal_health,
         context_inventory,
@@ -1594,6 +1614,127 @@ fn plan_agent_sandbox(config: &UmbrellaAgentConfig) -> UmbrellaResult<UmbrellaSa
         summaries,
         OsFamily::current(),
     ))
+}
+
+fn probe_agent_kernel_sandbox(
+    config: &UmbrellaAgentConfig,
+) -> UmbrellaResult<UmbrellaKernelSandboxSummary> {
+    let support = current_kernel_sandbox_support();
+    let denied_path = kernel_denied_probe_path(&config.output_path);
+    if !support.available {
+        return Ok(UmbrellaKernelSandboxSummary {
+            os: support.os,
+            primitive: support.primitive,
+            available: false,
+            enforced: false,
+            allowed_write_succeeded: false,
+            denied_write_blocked: false,
+            denied_path,
+            status_code: None,
+            stderr_contains_operation_not_permitted: false,
+            reason: support.reason,
+        });
+    }
+
+    if let Some(parent) = config.output_path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    if denied_path.exists() {
+        fs::remove_file(&denied_path)?;
+    }
+
+    let manifest_json = umbrella_agent_required_capabilities_json(&config.output_path);
+    let plan = plan_for_current_os(&manifest_json).map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to lower Weather Agent kernel sandbox plan: {error}"
+        ))
+    })?;
+    let allowed_arg = canonical_kernel_probe_path(&config.output_path)?;
+    let denied_arg = canonical_kernel_probe_path(&denied_path)?;
+    let output = run_with_kernel_sandbox(
+        &plan,
+        "/bin/sh",
+        [
+            "-c",
+            "printf 'kernel sandbox allowed' > \"$1\"; printf 'kernel sandbox denied' > \"$2\"",
+            "sh",
+            &allowed_arg,
+            &denied_arg,
+        ],
+    )
+    .map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to launch Weather Agent kernel sandbox probe: {error}"
+        ))
+    })?;
+
+    let allowed_write_succeeded = fs::read_to_string(&config.output_path)
+        .map(|contents| contents == "kernel sandbox allowed")
+        .unwrap_or(false);
+    let denied_write_blocked = !denied_path.exists();
+    let stderr_contains_operation_not_permitted = output.stderr.contains("Operation not permitted");
+    let enforced = allowed_write_succeeded
+        && denied_write_blocked
+        && stderr_contains_operation_not_permitted
+        && !output.success();
+
+    if !enforced {
+        return Err(UmbrellaAgentError::new(format!(
+            "Weather Agent kernel sandbox probe did not enforce the manifest: status={:?} stderr={}",
+            output.status_code, output.stderr
+        )));
+    }
+
+    Ok(UmbrellaKernelSandboxSummary {
+        os: output.os,
+        primitive: output.primitive,
+        available: true,
+        enforced,
+        allowed_write_succeeded,
+        denied_write_blocked,
+        denied_path,
+        status_code: output.status_code,
+        stderr_contains_operation_not_permitted,
+        reason:
+            "kernel denied an undeclared filesystem write while allowing the declared report path"
+                .to_string(),
+    })
+}
+
+fn kernel_denied_probe_path(output_path: &Path) -> PathBuf {
+    let file_name = output_path
+        .file_name()
+        .map(|name| name.to_string_lossy().to_string())
+        .unwrap_or_else(|| "umbrella-today.txt".to_string());
+    output_path.with_file_name(format!("{file_name}.undeclared"))
+}
+
+fn canonical_kernel_probe_path(path: &Path) -> UmbrellaResult<String> {
+    let absolute = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()?.join(path)
+    };
+    if let Ok(canonical) = fs::canonicalize(&absolute) {
+        return Ok(canonical.to_string_lossy().to_string());
+    }
+
+    let parent = absolute.parent().ok_or_else(|| {
+        UmbrellaAgentError::new(format!(
+            "kernel sandbox probe path has no parent: {}",
+            absolute.display()
+        ))
+    })?;
+    let file_name = absolute.file_name().ok_or_else(|| {
+        UmbrellaAgentError::new(format!(
+            "kernel sandbox probe path has no final component: {}",
+            absolute.display()
+        ))
+    })?;
+    Ok(fs::canonicalize(parent)?
+        .join(file_name)
+        .to_string_lossy()
+        .to_string())
 }
 
 fn umbrella_agent_required_capabilities_json(output_path: &Path) -> String {
