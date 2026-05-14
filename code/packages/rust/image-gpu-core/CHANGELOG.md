@@ -1,5 +1,48 @@
 # Changelog — image-gpu-core
 
+## 0.14.0 — 2026-05-14
+
+### Added — MX05 Phase 5 (deoptimisation when observed assumptions fail)
+
+Phases 4.x committed to specialised kernels under the assumption
+that the observed constant remains the same.  Phase 5 closes the
+feedback loop: when an observation contradicts a kernel's folded
+constant, the runtime evicts the stale kernel and falls back to
+generic dispatch.
+
+#### Mechanism
+
+- `try_auto_install_specialised_with_origin(spec, Some((subhash, op_idx)))`
+  records each Constant-folded install in `INSTALLED_DEOPT_TRACKING`
+  with origin `(subhash, op_idx, slot)`.
+- `scan_and_deoptimise()` runs at the end of every
+  `drive_specialisation` call.  For each tracked handle, it
+  re-reads the origin observation's tensor for the folded slot.
+  If `observed_min != observed_max`, the constant has changed:
+    - `SpecRouter::cache_invalidate(handle)` drops the cache entry
+    - `CpuExecutor::evict_specialised(handle)` drops the closure
+    - `MetalExecutor::evict_specialised(handle)` drops the
+      compiled pipeline (Apple targets)
+    - `INSTALLED_HANDLES`, `INSTALLED_KERNEL_METADATA`, and
+      `INSTALLED_DEOPT_TRACKING` are all cleaned up.
+
+#### New public counter
+
+- `deoptimisation_count() -> usize` — total deopts in this process.
+  Useful for monitoring kernel stability under shifting workloads.
+
+#### Test (36 → 36, +1 new replacing previous slot)
+
+`deoptimises_when_observed_constant_changes`:
+
+1. 1100 invocations with K=42.0 → install fires.
+2. 1 invocation with K=99.0 (same graph shape) → the Profiler's
+   observation sees observed_min=42, observed_max=99, slot 1 is
+   no longer constant.  The deopt scan evicts the K=42.0 kernel.
+3. Assert `deoptimisation_count` rose.
+
+Test count: 35 → 36.
+
 ## 0.13.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.10 end-to-end (MatMul with folded matrix)

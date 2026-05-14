@@ -242,6 +242,56 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 5 landed — deoptimisation when observed assumptions fail)**:
+> The feedback loop that the whole MX05 spec built up toward is
+> now closed.  When a previously-folded constant changes at
+> runtime — e.g. the policy saw K=42.0 for 1000 invocations but
+> the 1001st invocation sees K=99.0 — the runtime reactively
+> evicts the stale kernel and falls back to generic dispatch.
+>
+> **matrix-profile v0.3.0** ships `SpecCache::invalidate(handle)`
+> and `SpecRouter::cache_invalidate(handle)` — drop a single
+> cache entry by backend handle.
+>
+> **matrix-cpu v0.7.0** ships `SpecialisedTable::evict(handle)` and
+> `CpuExecutor::evict_specialised(handle)`.  Dropping the boxed
+> closure releases it.
+>
+> **matrix-metal v0.11.0** ships the matching `evict` /
+> `evict_specialised` on Apple targets (no-op stub elsewhere).
+> Dropping the closure releases the compiled
+> `MetalComputePipeline` back to the Metal driver.
+>
+> **image-gpu-core v0.14.0** ties it together:
+>   1. `try_auto_install_specialised_with_origin(spec, (subhash,
+>      op_idx))` records every Constant-folded install in
+>      `INSTALLED_DEOPT_TRACKING` with its originating observation.
+>   2. `scan_and_deoptimise()` runs at the end of every
+>      `drive_specialisation` call.  For each tracked handle, it
+>      re-reads the origin observation's tensor for the folded
+>      slot.  If `observed_min != observed_max`, the constant has
+>      destabilised: invalidate the cache, evict on both backends,
+>      remove from all side-tables.
+>   3. New public `deoptimisation_count()` counter for
+>      observability.
+>
+> End-to-end test `deoptimises_when_observed_constant_changes`:
+> drives 1100 invocations with K=42.0 (install fires), then ONE
+> invocation with K=99.0 (same shape, different bytes).  The
+> sample_tensor on the second variant updates observed_max from
+> 42 to 99; the deopt scan detects the divergence, evicts the
+> K=42 kernel, and `deoptimisation_count` rises.
+>
+> Test counts: matrix-profile 57 (unchanged; existing tests
+> cover the new methods), matrix-cpu 33 (unchanged), matrix-metal
+> 45 emitter (unchanged), image-gpu-core 35 → 36.
+>
+> **MX05 is feature-complete.**  The full tier — sampler → policy
+> → router → cache → emitter → install → dispatch → deopt — is
+> alive end-to-end on both CPU and metal backends, with the loop
+> closing back to generic dispatch when observations contradict
+> earlier assumptions.
+
 > **Implementation status (Phase 4.10 landed — MatMul emitter with folded matrix)**:
 > The emitter now supports its first **non-elementwise** op:
 > `Op::MatMul(0x15)` f32 with the RHS matrix folded as a stable

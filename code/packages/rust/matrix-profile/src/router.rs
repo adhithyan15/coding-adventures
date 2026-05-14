@@ -160,6 +160,21 @@ impl SpecRouter {
         };
         c.clear();
     }
+
+    /// **MX05 Phase 5.**  Drop the single cache entry whose kernel
+    /// has the given backend handle.  Returns `true` if an entry
+    /// was removed, `false` otherwise.  Wraps `SpecCache::invalidate`
+    /// behind the router's internal mutex.
+    ///
+    /// Used by the deoptimisation path in image-gpu-core when an
+    /// observation contradicts a previously-folded constant.
+    pub fn cache_invalidate(&self, handle: u64) -> bool {
+        let mut c = match self.cache.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        c.invalidate(handle)
+    }
 }
 
 // ────────────────────────── tests ──────────────────────────

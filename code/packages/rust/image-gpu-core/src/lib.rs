@@ -67,7 +67,7 @@ pub use pipeline::last_executor;
 /// briefly while installs are in flight or when the emitter doesn't
 /// support a given `SpecKey` shape.
 pub use pipeline::{
-    profiler_observations, spec_cache_len, specialised_dispatch_count,
+    deoptimisation_count, profiler_observations, spec_cache_len, specialised_dispatch_count,
     specialised_install_count,
 };
 

@@ -1,5 +1,17 @@
 # Changelog — matrix-metal
 
+## 0.11.0 — 2026-05-14
+
+### Added — MX05 Phase 5 (kernel eviction)
+
+- `SpecialisedTable::evict(handle) -> bool`
+- `MetalExecutor::evict_specialised(handle) -> bool` — Apple-only,
+  with non-Apple stub returning `false`.
+
+When evicting, the boxed closure that owns the compiled
+`MetalComputePipeline` is dropped; the Metal driver releases the
+pipeline state object.
+
 ## 0.10.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.10 (MatMul emitter with folded matrix)

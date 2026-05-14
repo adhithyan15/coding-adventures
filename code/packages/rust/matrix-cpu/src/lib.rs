@@ -164,6 +164,22 @@ impl CpuExecutor {
         s.specialised.len()
     }
 
+    /// **MX05 Phase 5.**  Evict the specialised kernel under
+    /// `handle`.  Returns `true` if a kernel was removed.  Used by
+    /// the deoptimisation path: when an observation reveals that a
+    /// previously-folded constant has changed (e.g. K=7 for 1000
+    /// invocations, then K=8 on the 1001st), the runtime drops the
+    /// installed closure so subsequent `DispatchSpecialised` calls
+    /// against this handle return `NOT_IMPLEMENTED` and the dispatcher
+    /// falls back to the generic `Dispatch` path.
+    pub fn evict_specialised(&self, handle: u64) -> bool {
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        s.specialised.evict(handle)
+    }
+
     /// Process one request and produce a response.  Pure (modulo
     /// internal state) — does no I/O, never blocks.
     ///

@@ -431,6 +431,22 @@ impl MetalExecutor {
         s.specialised.len()
     }
 
+    /// **MX05 Phase 5.**  Evict the specialised kernel under
+    /// `handle`.  Returns `true` if a kernel was removed.  Used by
+    /// the deoptimisation path; see `CpuExecutor::evict_specialised`
+    /// for the matching CPU side.
+    ///
+    /// On metal, the boxed closure owns the compiled
+    /// `MetalComputePipeline`; dropping the closure releases the
+    /// pipeline back to the Metal driver.
+    pub fn evict_specialised(&self, handle: u64) -> bool {
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        s.specialised.evict(handle)
+    }
+
     /// Process one request.  Same contract as matrix-cpu's `handle`.
     pub fn handle(&self, req: ExecutorRequest) -> ExecutorResponse {
         let mut s = match self.state.lock() {
@@ -692,6 +708,12 @@ impl MetalExecutor {
     /// **MX05 Phase 4.2 stub (non-Apple)**.  Always `0`.
     pub fn specialised_count(&self) -> usize {
         0
+    }
+
+    /// **MX05 Phase 5 stub (non-Apple)**.  Always `false` — nothing
+    /// to evict.
+    pub fn evict_specialised(&self, _handle: u64) -> bool {
+        false
     }
 }
 
