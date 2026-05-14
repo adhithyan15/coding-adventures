@@ -103,7 +103,7 @@ use format_doc::{
 };
 use twig_parser::{
     parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program,
-    SymLit, TwigParseError, TypeAnnotation, TypeExpr, VarRef,
+    StrLit, SymLit, TwigParseError, TypeAnnotation, TypeExpr, VarRef,
 };
 
 // ---------------------------------------------------------------------------
@@ -355,6 +355,11 @@ fn expr_to_doc(expr: &Expr) -> Doc {
         Expr::BoolLit(BoolLit { value, .. }) => text(if *value { "#t" } else { "#f" }),
         Expr::NilLit(NilLit { .. }) => text("nil"),
         Expr::SymLit(SymLit { name, .. }) => text(format!("'{name}")),
+        Expr::StrLit(StrLit { value, .. }) => {
+            // Re-escape backslashes and double-quotes so the output
+            // round-trips through the parser unchanged.
+            text(format!("\"{}\"", value.replace('\\', "\\\\").replace('"', "\\\"")))
+        }
         Expr::VarRef(VarRef { name, .. }) => text(name.clone()),
         Expr::If(i) => if_to_doc(i),
         Expr::Let(l) => let_to_doc(l),
@@ -621,6 +626,7 @@ mod tests {
             Expr::BoolLit(b) => Expr::BoolLit(BoolLit { value: b.value, line: 0, column: 0 }),
             Expr::NilLit(_) => Expr::NilLit(NilLit { line: 0, column: 0 }),
             Expr::SymLit(s) => Expr::SymLit(SymLit { name: s.name.clone(), line: 0, column: 0 }),
+            Expr::StrLit(s) => Expr::StrLit(StrLit { value: s.value.clone(), line: 0, column: 0 }),
             Expr::VarRef(v) => Expr::VarRef(VarRef { name: v.name.clone(), line: 0, column: 0 }),
             Expr::If(i) => Expr::If(If {
                 cond: Box::new(strip_expr(&i.cond)),
