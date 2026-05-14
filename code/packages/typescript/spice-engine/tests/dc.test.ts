@@ -8,6 +8,7 @@ import {
   currentSource,
   dcOp,
   dcSweep,
+  diode,
   inductor,
   resistor,
   vccs,
@@ -142,6 +143,18 @@ describe("dcOp", () => {
     expectClose(result.branchCurrent("Vsense"), 1.0e-3);
     expectClose(result.voltage("out"), 2.0);
     expectClose(result.branchCurrent("H1"), -2.0e-3);
+  });
+
+  it("solves a forward-biased diode operating point", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 0.7));
+    circuit.add(diode("D1", "in", "out", 1.0e-12, 0.025));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expect(result.voltage("out")).toBeGreaterThan(0.1);
+    expect(result.voltage("out")).toBeLessThan(0.7);
   });
 
   it("rejects missing CCCS control sources", () => {

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/spice-netlist-parser",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "SPICE3 netlist parser that builds coding-adventures SPICE engine circuits",
   "type": "module",
   "main": "src/index.ts",

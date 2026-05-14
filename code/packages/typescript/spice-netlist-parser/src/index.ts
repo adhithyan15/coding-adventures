@@ -9,6 +9,7 @@ import {
   ccvs,
   currentSource,
   currentSourceWithWaveform,
+  diode,
   dcOp,
   inductor,
   resistor,
@@ -55,10 +56,17 @@ export interface AcAnalysis {
 
 export type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis;
 
+export interface ModelCard {
+  readonly name: string;
+  readonly kind: string;
+  readonly params: ReadonlyMap<string, number>;
+}
+
 export class ParsedNetlist {
   constructor(
     readonly circuit = new Circuit(),
     readonly analyses: Analysis[] = [],
+    readonly models: ReadonlyMap<string, ModelCard> = new Map(),
     readonly title?: string,
   ) {}
 
@@ -108,6 +116,7 @@ const SUFFIXES = new Map<string, number>([
 export function parseNetlist(text: string): ParsedNetlist {
   const circuit = new Circuit();
   const analyses: Analysis[] = [];
+  const models = new Map<string, ModelCard>();
   const statements: Statement[] = [];
   const subckts = new Map<string, SubcktDefinition>();
   let currentSubckt: SubcktDefinition | undefined;
@@ -180,22 +189,41 @@ export function parseNetlist(text: string): ParsedNetlist {
   }
 
   for (const statement of statements) {
+    if (statement.fields[0].toLowerCase() !== ".model") {
+      continue;
+    }
     try {
+      const model = parseModelCard(statement.fields);
+      const key = model.name.toLowerCase();
+      if (models.has(key)) {
+        throw new NetlistParseError(`duplicate .model definition ${JSON.stringify(model.name)}`);
+      }
+      models.set(key, model);
+    } catch (error) {
+      throw lineError(statement.lineNumber, error);
+    }
+  }
+
+  for (const statement of statements) {
+    try {
+      if (statement.fields[0].toLowerCase() === ".model") {
+        continue;
+      }
       if (statement.fields[0].startsWith(".")) {
         analyses.push(parseDirective(statement.fields));
       } else if (statement.fields[0].toUpperCase().startsWith("X")) {
-        for (const element of expandSubcktInstance(statement.fields, subckts, [])) {
+        for (const element of expandSubcktInstance(statement.fields, subckts, [], models)) {
           circuit.add(element);
         }
       } else {
-        circuit.add(parseElement(statement.fields));
+        circuit.add(parseElement(statement.fields, models));
       }
     } catch (error) {
       throw lineError(statement.lineNumber, error);
     }
   }
 
-  return new ParsedNetlist(circuit, analyses, title);
+  return new ParsedNetlist(circuit, analyses, models, title);
 }
 
 export const parse = parseNetlist;
@@ -213,7 +241,44 @@ export function parseValue(token: string): number {
   return Number.parseFloat(match[1]) * multiplier;
 }
 
-function parseElement(fields: readonly string[]): Element {
+function parseModelCard(fields: readonly string[]): ModelCard {
+  requireMinFields(fields, 3, ".model");
+  const tail = fields.slice(2).join(" ").trim();
+  const match = /^([A-Za-z][A-Za-z0-9_]*)(?:\s*\((.*)\)|\s+(.*))?$/.exec(tail);
+  if (match === null) {
+    throw new NetlistParseError(`invalid .model kind ${JSON.stringify(tail)}`);
+  }
+  let paramsText = (match[2] ?? match[3] ?? "").trim();
+  if (paramsText.startsWith("(") && paramsText.endsWith(")")) {
+    paramsText = paramsText.slice(1, -1);
+  }
+  return {
+    name: fields[1],
+    kind: match[1].toUpperCase(),
+    params: parseModelParams(paramsText),
+  };
+}
+
+function parseModelParams(paramsText: string): ReadonlyMap<string, number> {
+  const params = new Map<string, number>();
+  if (paramsText.trim().length === 0) {
+    return params;
+  }
+  const pattern = /([A-Za-z][A-Za-z0-9_]*)\s*=\s*([^,\s)]+)/g;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(paramsText)) !== null) {
+    params.set(match[1].toUpperCase(), parseValue(match[2]));
+  }
+  const leftover = paramsText.replace(pattern, "").replace(/[,\s]/g, "");
+  if (leftover.length > 0 || params.size === 0) {
+    throw new NetlistParseError(
+      `invalid .model parameter syntax ${JSON.stringify(paramsText)}`,
+    );
+  }
+  return params;
+}
+
+function parseElement(fields: readonly string[], models: ReadonlyMap<string, ModelCard>): Element {
   const name = fields[0];
   const prefix = elementPrefix(name);
   if (prefix === "R") {
@@ -241,6 +306,27 @@ function parseElement(fields: readonly string[]): Element {
     return waveform === undefined
       ? currentSource(name, fields[1], fields[2], current)
       : currentSourceWithWaveform(name, fields[1], fields[2], current, waveform);
+  }
+  if (prefix === "D") {
+    requireFields(fields, 4, "diode");
+    const model = models.get(fields[3].toLowerCase());
+    if (model === undefined) {
+      throw new NetlistParseError(
+        `unknown model ${JSON.stringify(fields[3])} for diode ${JSON.stringify(name)}`,
+      );
+    }
+    if (model.kind !== "D") {
+      throw new NetlistParseError(
+        `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "D"`,
+      );
+    }
+    return diode(
+      name,
+      fields[1],
+      fields[2],
+      model.params.get("IS") ?? 1.0e-15,
+      model.params.get("VT") ?? 0.02585,
+    );
   }
   if (prefix === "G") {
     requireFields(fields, 6, "VCCS");
@@ -289,6 +375,7 @@ function expandSubcktInstance(
   fields: readonly string[],
   subckts: ReadonlyMap<string, SubcktDefinition>,
   stack: readonly string[],
+  models: ReadonlyMap<string, ModelCard>,
 ): Element[] {
   requireMinFields(fields, 3, "subcircuit instance");
   const instanceName = fields[0];
@@ -325,9 +412,9 @@ function expandSubcktInstance(
     }
     const localFields = mapSubcktFields(statement.fields, instanceName, nodeMap);
     if (elementPrefix(statement.fields[0]) === "X") {
-      elements.push(...expandSubcktInstance(localFields, subckts, nextStack));
+      elements.push(...expandSubcktInstance(localFields, subckts, nextStack, models));
     } else {
-      elements.push(parseElement(localFields));
+      elements.push(parseElement(localFields, models));
     }
   }
   return elements;
@@ -340,7 +427,7 @@ function mapSubcktFields(
 ): string[] {
   const mapped = [`${instanceName}.${fields[0]}`, ...fields.slice(1)];
   const prefix = fields[0][0].toUpperCase();
-  if (["R", "C", "L", "V", "I"].includes(prefix)) {
+  if (["R", "C", "L", "V", "I", "D"].includes(prefix)) {
     requireMinFields(fields, 3, "subcircuit element");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
