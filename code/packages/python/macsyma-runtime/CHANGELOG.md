@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added MACSYMA `factor` parity for shared integer content in multivariate
+  common-factor expressions, so `factor(2*x*y + 2*x*z)` now returns
+  `2*x*(y+z)` through the canonical symbolic VM handler.
 - Added MACSYMA `factor` parity for perfect-cube expansions, so
   `factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3)` returns `(x+y)^3` and
   `factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3)` returns `(x-y)^3` through the
