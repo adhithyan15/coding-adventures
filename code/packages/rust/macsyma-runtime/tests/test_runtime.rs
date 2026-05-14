@@ -419,6 +419,60 @@ fn recognizes_complete_elliptic_first_kind_integrals_through_runtime() {
 }
 
 #[test]
+fn recognizes_elliptic_second_kind_integrals_through_runtime() {
+    // ∫ sqrt(1 - k^2 * sin(theta)^2) dtheta  →  EllipticE(theta, k)
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(sqrt(1-k^2*sin(theta)^2), theta);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(sym("EllipticE"), vec![sym("theta"), sym("k")])
+    );
+}
+
+#[test]
+fn recognizes_complete_elliptic_second_kind_integrals_through_runtime() {
+    // ∫₀^(π/2) sqrt(1 - k^2 * sin(theta)^2) dtheta  →  EllipticE(k)
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);")
+        .unwrap();
+
+    assert_eq!(results[0].output, apply(sym("EllipticE"), vec![sym("k")]));
+}
+
+#[test]
+fn recognizes_complete_elliptic_third_kind_integrals_through_runtime() {
+    // ∫₀^(π/2) 1/((1 + n*sin(theta)^2) * sqrt(1 - k^2*sin(theta)^2)) dtheta  →  EllipticPi(n, k)
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source(
+            "integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2);",
+        )
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(sym("EllipticPi"), vec![sym("n"), sym("k")])
+    );
+}
+
+#[test]
+fn elliptic_first_kind_regression_still_works() {
+    // Regression: the existing EllipticK recognition must still fire after the new handlers are
+    // tried first, since complete_elliptic_second_kind and complete_elliptic_third_kind are
+    // attempted before the fallback but must not accidentally consume the 1/sqrt(...) form.
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);")
+        .unwrap();
+
+    assert_eq!(results[0].output, apply(sym("EllipticK"), vec![sym("k")]));
+}
+
+#[test]
 fn question_mark_without_topic_lists_help_topics() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("?").unwrap();
