@@ -2,6 +2,7 @@ from math import isclose
 
 import pytest
 from spice_engine import (
+    CCCS,
     VCCS,
     VCVS,
     Capacitor,
@@ -95,6 +96,27 @@ Rload out 0 1k
     assert isclose(result.node_voltages["out"], 6.0, abs_tol=1e-9)
 
 
+def test_parse_cccs_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 1
+Rin in mid 1k
+Vsense mid 0 0
+Fcopy out 0 Vsense 2
+Rload out 0 500
+.op
+"""
+    )
+
+    assert isinstance(parsed.circuit.elements[3], CCCS)
+    assert parsed.circuit.elements[3].ctrl_source == "Vsense"
+    assert parsed.circuit.elements[3].beta == 2.0
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert isclose(result.node_voltages["out"], 1.0, abs_tol=1e-9)
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
@@ -166,6 +188,38 @@ Rload out 0 1k
     result = dc_op(parsed.circuit)
     assert result.converged
     assert isclose(result.node_voltages["out"], 2.5, abs_tol=1e-9)
+
+
+def test_expands_subcircuit_cccs_nodes_and_control_source_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt mirror inp outp
+Rin inp mid 1k
+Vsense mid 0 0
+Fcopy outp 0 Vsense 2
+.ends mirror
+Vin in 0 DC 1
+Xmirror in out mirror
+Rload out 0 500
+.op
+"""
+    )
+
+    assert [element.name for element in parsed.circuit.elements] == [
+        "Vin",
+        "Xmirror.Rin",
+        "Xmirror.Vsense",
+        "Xmirror.Fcopy",
+        "Rload",
+    ]
+    cccs = parsed.circuit.elements[3]
+    assert isinstance(cccs, CCCS)
+    assert cccs.n_plus == "out"
+    assert cccs.ctrl_source == "Xmirror.Vsense"
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert isclose(result.node_voltages["out"], 1.0, abs_tol=1e-9)
 
 
 def test_subcircuit_internal_nodes_are_instance_scoped() -> None:
