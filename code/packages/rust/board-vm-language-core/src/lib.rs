@@ -37,15 +37,16 @@ use board_vm_esp_rom::{
 use board_vm_host::{
     write_adc_read_module, write_blink_module, write_dac_write_u12_module,
     write_gpio_handle_close_module, write_gpio_handle_read_module, write_gpio_handle_write_module,
-    write_gpio_open_module, write_gpio_read_module, write_gpio_write_module,
+    write_gpio_open_module, write_gpio_read_module, write_gpio_write_module, write_i2c_open_module,
     write_led_matrix_frame_module, write_module, write_pwm_write_module, write_time_now_module,
     write_time_sleep_ms_module, AdcReadProgram, BlinkProgram, DacWriteU12Program,
     GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram,
-    GpioReadProgram, GpioWriteProgram, HostError, HostSession, LedMatrixFrameProgram, ModuleSpec,
-    PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
-    DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
-    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
-    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    GpioReadProgram, GpioWriteProgram, HostError, HostSession, I2cOpenProgram,
+    LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
+    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
+    DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN,
+    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
     PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
@@ -57,8 +58,8 @@ use board_vm_protocol::{
 };
 use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
-    OnboardLed as TargetOnboardLed, WirelessInterfaceInfo as TargetWirelessInterface,
-    WirelessTransport as TargetWirelessTransport,
+    I2cBusInfo as TargetI2cBus, OnboardLed as TargetOnboardLed,
+    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -384,9 +385,20 @@ pub struct LanguageTargetInfo {
     pub led_matrix: Option<LanguageLedMatrix>,
     pub digital_pin_count: usize,
     pub digital_pins: Vec<LanguageDigitalPin>,
+    pub i2c_buses: Vec<LanguageI2cBus>,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageI2cBus {
+    pub bus: u8,
+    pub name: String,
+    pub sda_pin: u8,
+    pub scl_pin: u8,
+    pub qwiic: bool,
+    pub notes: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1062,6 +1074,7 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .iter()
             .map(language_digital_pin)
             .collect(),
+        i2c_buses: target.i2c_buses.iter().map(language_i2c_bus).collect(),
         wireless: target
             .wireless
             .iter()
@@ -1091,6 +1104,17 @@ fn language_digital_pin(pin: &TargetDigitalPin) -> LanguageDigitalPin {
         supports_interrupt: pin.supports_interrupt,
         boot_strap: pin.boot_strap,
         notes: pin.notes.to_owned(),
+    }
+}
+
+fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
+    LanguageI2cBus {
+        bus: bus.bus,
+        name: bus.name.to_owned(),
+        sda_pin: bus.sda_pin,
+        scl_pin: bus.scl_pin,
+        qwiic: bus.qwiic,
+        notes: bus.notes.to_owned(),
     }
 }
 
@@ -1602,6 +1626,13 @@ pub fn build_dac_write_u12_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_dac_write_u12_module(program, out)?)
+}
+
+pub fn build_i2c_open_module(
+    program: I2cOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_open_module(program, out)?)
 }
 
 pub fn build_raw_module(
@@ -2311,6 +2342,23 @@ pub unsafe extern "C" fn board_vm_language_dac_write_u12_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_open_module(
+    bus: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_open_module(I2cOpenProgram { bus, max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2631,6 +2679,11 @@ pub extern "C" fn board_vm_language_dac_write_u12_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_i2c_open_module_len() -> u64 {
+    I2C_OPEN_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_led_matrix_frame_module_len() -> u64 {
     LED_MATRIX_FRAME_MODULE_LEN as u64
 }
@@ -2858,9 +2911,16 @@ mod tests {
         assert_eq!(uno_a0.label, "A0/D14");
         assert!(uno_a0.supports_adc);
         assert!(uno_a0.supports_dac);
+        assert_eq!(uno.i2c_buses.len(), 2);
+        assert_eq!(uno.i2c_buses[0].name, "Wire");
+        assert_eq!(uno.i2c_buses[0].sda_pin, 18);
+        assert_eq!(uno.i2c_buses[0].scl_pin, 19);
+        assert_eq!(uno.i2c_buses[1].name, "Wire1");
+        assert!(uno.i2c_buses[1].qwiic);
         assert!(uno.capabilities.contains(&"pwm.write".to_owned()));
         assert!(uno.capabilities.contains(&"adc.read".to_owned()));
         assert!(uno.capabilities.contains(&"dac.write_u12".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.open".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -3665,6 +3725,18 @@ mod tests {
         };
         assert_eq!(dac_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(dac_status.len, DAC_WRITE_U12_MODULE_LEN as u64);
+
+        let mut i2c_module = [0u8; I2C_OPEN_MODULE_LEN];
+        let i2c_status = unsafe {
+            board_vm_language_i2c_open_module(
+                0,
+                2,
+                i2c_module.as_mut_ptr(),
+                i2c_module.len() as u64,
+            )
+        };
+        assert_eq!(i2c_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(i2c_status.len, I2C_OPEN_MODULE_LEN as u64);
 
         let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];
         let gpio_read_status = unsafe {

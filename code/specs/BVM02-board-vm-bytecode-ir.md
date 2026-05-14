@@ -196,6 +196,17 @@ underlying hardware resolution and scale into the portable result range.
 metadata. The operation is intentionally direct and stateless, mirroring
 `pwm.write`; boards without a physical DAC do not advertise it.
 
+### I2C
+
+| ID | Name | Args | Returns |
+|---:|---|---|---|
+| `0x23` | `i2c.open` | `bus: u16/u8` | `handle` |
+
+`i2c.open` opens a board-advertised I2C controller and returns a persistent bus
+handle. The handle is the lifetime anchor for later `i2c.write`, `i2c.read`,
+and `i2c.transfer` operations, keeping bus identity and pin ownership out of
+language frontends.
+
 ### LED Matrix
 
 `led_matrix.*` capabilities model board-owned pixel displays such as the

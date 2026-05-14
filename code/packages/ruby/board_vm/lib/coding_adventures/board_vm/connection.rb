@@ -110,6 +110,10 @@ module CodingAdventures
         Dac.new(self)
       end
 
+      def i2c
+        I2c.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -417,6 +421,26 @@ module CodingAdventures
           words: words,
           pattern: pattern,
           preset: preset,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def i2c_open!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        bus:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_open(
+          program_id: program_id,
+          budget: budget,
+          bus: bus,
           max_stack: max_stack,
           handshake: true,
           query_caps: true,
@@ -1039,6 +1063,28 @@ module CodingAdventures
 
       def full(pin:, **options)
         write_u12(pin: pin, sample: 0x0FFF, **options)
+      end
+    end
+
+    class I2c
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def open(
+        bus:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.i2c_open!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          bus: bus,
+          max_stack: max_stack
+        )
       end
     end
 

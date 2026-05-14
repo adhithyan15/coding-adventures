@@ -29,7 +29,7 @@ Source snapshot:
 | PWM output | D3, D5, D6, D9, D10, D11 in the Arduino variant init path | implemented as direct write | `pwm.write` |
 | Analog input | A0-A5 | implemented as direct read | `adc.read` |
 | DAC output | A0, one 12-bit DAC channel | implemented as direct write | `dac.write_u12` |
-| I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | pending | `i2c.open`, `i2c.write`, `i2c.read`, `i2c.transfer` |
+| I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata and handle open implemented | `i2c.open`, then `i2c.write`, `i2c.read`, `i2c.transfer` |
 | SPI master | MOSI D11, MISO D12, SCK D13, CS D10 | pending | `spi.open`, `spi.transfer`, `spi.close` |
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | partially transport-only | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | pending | `can.open`, `can.write`, `can.read` |
@@ -67,7 +67,9 @@ reject conflicting handles.
 3. `pwm.write`, `adc.read`, and `dac.write_u12` are the first direct
    analog-adjacent VM operations. Add handle-oriented variants only when a
    later streaming or event tranche needs persistent resource ownership.
-4. Implement I2C and SPI as bus handles with explicit transfer boundaries.
+4. Implement I2C and SPI as bus handles with explicit transfer boundaries;
+   `i2c.open` establishes the first I2C handle tranche, with write/read/transfer
+   transactions following as separate slices.
 5. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
    capabilities in separate tranches with conformance tests.
 
