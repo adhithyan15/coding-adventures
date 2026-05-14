@@ -1,7 +1,7 @@
 use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_ADC_READ,
     CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN,
-    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
     FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MODULE_MAGIC,
     MODULE_VERSION,
 };
@@ -43,6 +43,8 @@ pub const DAC_WRITE_U12_CODE_LEN: usize = 8;
 pub const DAC_WRITE_U12_MODULE_LEN: usize = 18;
 pub const I2C_OPEN_CODE_LEN: usize = 6;
 pub const I2C_OPEN_MODULE_LEN: usize = 16;
+pub const I2C_WRITE_U8_CODE_LEN: usize = 8;
+pub const I2C_WRITE_U8_MODULE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -184,9 +186,26 @@ pub struct I2cOpenProgram {
     pub max_stack: u8,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cWriteU8Program {
+    pub address: u16,
+    pub byte: u8,
+    pub max_stack: u8,
+}
+
 impl I2cOpenProgram {
     pub const fn new(bus: u8) -> Self {
         Self { bus, max_stack: 2 }
+    }
+}
+
+impl I2cWriteU8Program {
+    pub const fn new(address: u16, byte: u8) -> Self {
+        Self {
+            address,
+            byte,
+            max_stack: 4,
+        }
     }
 }
 
@@ -1180,6 +1199,50 @@ pub fn write_i2c_open_module(program: I2cOpenProgram, out: &mut [u8]) -> Result<
     Ok(offset)
 }
 
+pub fn write_i2c_write_u8_code(
+    program: I2cWriteU8Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < I2C_WRITE_U8_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_u16(out, &mut offset, program.address)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.byte)?;
+    write_call_u8(out, &mut offset, CAP_I2C_WRITE_U8)?;
+    Ok(offset)
+}
+
+pub fn write_i2c_write_u8_module(
+    program: I2cWriteU8Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < I2C_WRITE_U8_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; I2C_WRITE_U8_CODE_LEN];
+    let code_len = write_i2c_write_u8_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_i2c(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_led_matrix_frame_code(
     program: LedMatrixFrameProgram,
     out: &mut [u8],
@@ -1329,7 +1392,8 @@ mod tests {
     use super::*;
     use board_vm_ir::{
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
-        CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_I2C_OPEN, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
+        CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_I2C_OPEN, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME,
+        CAP_PWM_WRITE,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -1383,6 +1447,10 @@ mod tests {
     const I2C_OPEN_BUS0_MODULE_HEX: [u8; I2C_OPEN_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x23, 0x20, 0x50,
         0x00,
+    ];
+    const I2C_WRITE_U8_3C_A5_MODULE_HEX: [u8; I2C_WRITE_U8_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x04, 0x00, 0x08, 0x20, 0x13, 0x3C, 0x00, 0x12, 0xA5,
+        0x40, 0x24, 0x00,
     ];
     const LED_MATRIX_HEART_MODULE_HEX: [u8; LED_MATRIX_FRAME_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x12, 0x14, 0x44, 0xA4, 0x84, 0x31, 0x14,
@@ -1585,6 +1653,21 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_I2C_OPEN]);
+    }
+
+    #[test]
+    fn builds_i2c_write_u8_module() {
+        let mut module = [0u8; I2C_WRITE_U8_MODULE_LEN];
+        let len =
+            write_i2c_write_u8_module(I2cWriteU8Program::new(0x3c, 0xa5), &mut module).unwrap();
+        assert_eq!(len, I2C_WRITE_U8_MODULE_LEN);
+        assert_eq!(module, I2C_WRITE_U8_3C_A5_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_WRITE_U8]);
     }
 
     #[test]

@@ -201,11 +201,17 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | ID | Name | Args | Returns |
 |---:|---|---|---|
 | `0x23` | `i2c.open` | `bus: u16/u8` | `handle` |
+| `0x24` | `i2c.write_u8` | `handle`, `address: u16/u8`, `byte: u8` | `unit` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
-handle. The handle is the lifetime anchor for later `i2c.write`, `i2c.read`,
-and `i2c.transfer` operations, keeping bus identity and pin ownership out of
-language frontends.
+handle. The handle is the lifetime anchor for transfer operations, keeping bus
+identity and pin ownership out of language frontends.
+
+`i2c.write_u8` writes a single byte to a 7-bit device address on an already
+opened bus handle. It is the first concrete I2C transfer primitive because the
+current VM value set has scalar integers but no byte-buffer value yet. Wider
+`i2c.write`, `i2c.read`, and `i2c.transfer` operations should reuse the same
+handle model once the byte-buffer ABI exists.
 
 ### LED Matrix
 
