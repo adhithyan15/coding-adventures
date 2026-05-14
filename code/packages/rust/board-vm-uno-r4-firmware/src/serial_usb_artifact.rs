@@ -10,11 +10,15 @@ use std::thread;
 use std::time::{Duration, Instant};
 use std::vec::Vec;
 
-use board_vm_serial::{available_ports, touch_arduino_bootloader_with_timing};
+use board_vm_serial::{
+    available_ports, touch_arduino_bootloader_with_timing, SerialPortInfo, SerialPortType,
+};
 
 use crate::arduino_usb_link::{
     ARDUINO_ARM_AR_ENV_VAR, ARDUINO_ARM_COMPAT_ROOT_ENV_VAR, ARDUINO_ARM_GCC_ENV_VAR,
-    ARDUINO_ARM_GXX_ENV_VAR, ARDUINO_CORE_ENV_VAR, ARDUINO_USB_LINK_ENV_VAR, UNO_R4_WIFI_FQBN,
+    ARDUINO_ARM_GXX_ENV_VAR, ARDUINO_CORE_ENV_VAR, ARDUINO_USB_LINK_ENV_VAR,
+    UNO_R4_WIFI_BOOTLOADER_USB_PID, UNO_R4_WIFI_FQBN, UNO_R4_WIFI_RUNTIME_USB_PID,
+    UNO_R4_WIFI_RUNTIME_USB_VID,
 };
 
 pub const SERIAL_USB_SERVER_BIN: &str = "uno-r4-wifi-serialusb-server";
@@ -289,7 +293,7 @@ impl SerialUsbArtifactOptions {
     }
 
     pub fn touch_bootloader_port(&self, port: &str) -> Result<String, ArtifactCliError> {
-        let before = serial_port_names()?;
+        let before = serial_ports()?;
         touch_arduino_bootloader_with_timing(
             port,
             Duration::from_millis(self.bootloader_touch_timeout_ms),
@@ -357,40 +361,78 @@ pub fn parse_new_upload_port(output: &str) -> Option<String> {
 
 pub fn choose_bootloader_port(
     requested: &str,
-    before: &[String],
-    after: &[String],
+    before: &[SerialPortInfo],
+    after: &[SerialPortInfo],
 ) -> Option<String> {
+    let is_new = |port: &SerialPortInfo| {
+        !before
+            .iter()
+            .any(|candidate| candidate.port_name == port.port_name)
+    };
+
     after
         .iter()
-        .find(|port| !before.contains(port) && port.contains("usbmodem"))
-        .or_else(|| after.iter().find(|port| !before.contains(port)))
-        .or_else(|| after.iter().find(|port| port.as_str() == requested))
-        .cloned()
+        .find(|port| port.port_name == requested && is_uno_r4_bootloader_port(port))
+        .or_else(|| {
+            after
+                .iter()
+                .find(|port| is_new(port) && is_uno_r4_bootloader_port(port))
+        })
+        .or_else(|| {
+            after.iter().find(|port| {
+                is_new(port) && port.port_name.contains("usbmodem") && !is_uno_r4_runtime_port(port)
+            })
+        })
+        .or_else(|| {
+            after
+                .iter()
+                .find(|port| is_new(port) && !is_uno_r4_runtime_port(port))
+        })
+        .map(|port| port.port_name.clone())
 }
 
 fn wait_for_bootloader_port(
     requested: &str,
-    before: &[String],
+    before: &[SerialPortInfo],
     wait: Duration,
     poll: Duration,
 ) -> Result<String, ArtifactCliError> {
     let deadline = Instant::now() + wait;
     loop {
-        let after = serial_port_names()?;
+        let after = serial_ports()?;
         if let Some(port) = choose_bootloader_port(requested, before, &after) {
             return Ok(port);
         }
         if Instant::now() >= deadline {
-            return Ok(requested.to_string());
+            return Err(ArtifactCliError::BootloaderPortTimeout {
+                port: requested.to_string(),
+                wait_ms: wait.as_millis(),
+            });
         }
         thread::sleep(poll);
     }
 }
 
-fn serial_port_names() -> Result<Vec<String>, ArtifactCliError> {
-    available_ports()
-        .map(|ports| ports.into_iter().map(|port| port.port_name).collect())
-        .map_err(|error| ArtifactCliError::BootloaderPortList(error.to_string()))
+fn serial_ports() -> Result<Vec<SerialPortInfo>, ArtifactCliError> {
+    available_ports().map_err(|error| ArtifactCliError::BootloaderPortList(error.to_string()))
+}
+
+fn is_uno_r4_bootloader_port(port: &SerialPortInfo) -> bool {
+    matches!(
+        &port.port_type,
+        SerialPortType::UsbPort(usb)
+            if usb.vid == UNO_R4_WIFI_RUNTIME_USB_VID
+                && usb.pid == UNO_R4_WIFI_BOOTLOADER_USB_PID
+    )
+}
+
+fn is_uno_r4_runtime_port(port: &SerialPortInfo) -> bool {
+    matches!(
+        &port.port_type,
+        SerialPortType::UsbPort(usb)
+            if usb.vid == UNO_R4_WIFI_RUNTIME_USB_VID
+                && usb.pid == UNO_R4_WIFI_RUNTIME_USB_PID
+    )
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -412,6 +454,7 @@ pub enum ArtifactCliError {
     InvalidNumber { option: &'static str, value: String },
     BootloaderTouch(String),
     BootloaderPortList(String),
+    BootloaderPortTimeout { port: String, wait_ms: u128 },
     UnknownOption(String),
 }
 
@@ -425,6 +468,10 @@ impl fmt::Display for ArtifactCliError {
             }
             Self::BootloaderTouch(error) => write!(f, "bootloader touch failed: {error}"),
             Self::BootloaderPortList(error) => write!(f, "bootloader port listing failed: {error}"),
+            Self::BootloaderPortTimeout { port, wait_ms } => write!(
+                f,
+                "bootloader port did not appear after touching {port}; waited {wait_ms}ms for UNO R4 WiFi USB VID 0x{UNO_R4_WIFI_RUNTIME_USB_VID:04X} PID 0x{UNO_R4_WIFI_BOOTLOADER_USB_PID:04X}"
+            ),
             Self::UnknownOption(option) => write!(f, "unknown option: {option}"),
         }
     }
@@ -660,6 +707,7 @@ fn shell_escape(value: &OsStr) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use board_vm_serial::UsbPortInfo;
     use std::ffi::OsString;
     use std::fs;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -709,6 +757,26 @@ mod tests {
         ));
         let _ = fs::remove_dir_all(&dir);
         dir
+    }
+
+    fn unknown_port(name: &str) -> SerialPortInfo {
+        SerialPortInfo {
+            port_name: name.to_string(),
+            port_type: SerialPortType::Unknown,
+        }
+    }
+
+    fn usb_port(name: &str, vid: u16, pid: u16) -> SerialPortInfo {
+        SerialPortInfo {
+            port_name: name.to_string(),
+            port_type: SerialPortType::UsbPort(UsbPortInfo {
+                vid,
+                pid,
+                serial_number: None,
+                manufacturer: None,
+                product: None,
+            }),
+        }
     }
 
     #[test]
@@ -930,13 +998,17 @@ mod tests {
     #[test]
     fn bootloader_port_selection_prefers_new_usbmodem_ports() {
         let before = vec![
-            "/dev/cu.debug-console".to_string(),
-            "/dev/cu.usbmodem1101".to_string(),
+            unknown_port("/dev/cu.debug-console"),
+            usb_port(
+                "/dev/cu.usbmodem1101",
+                UNO_R4_WIFI_RUNTIME_USB_VID,
+                UNO_R4_WIFI_RUNTIME_USB_PID,
+            ),
         ];
         let after = vec![
-            "/dev/cu.debug-console".to_string(),
-            "/dev/cu.usbserial-abc".to_string(),
-            "/dev/cu.usbmodem2201".to_string(),
+            unknown_port("/dev/cu.debug-console"),
+            unknown_port("/dev/cu.usbserial-abc"),
+            unknown_port("/dev/cu.usbmodem2201"),
         ];
 
         assert_eq!(
@@ -946,13 +1018,62 @@ mod tests {
     }
 
     #[test]
-    fn bootloader_port_selection_falls_back_to_requested_port() {
-        let before = vec!["/dev/cu.usbmodem1101".to_string()];
-        let after = vec!["/dev/cu.usbmodem1101".to_string()];
+    fn bootloader_port_selection_accepts_requested_port_when_it_is_bootloader() {
+        let before = vec![usb_port(
+            "/dev/cu.usbmodem1101",
+            UNO_R4_WIFI_RUNTIME_USB_VID,
+            UNO_R4_WIFI_RUNTIME_USB_PID,
+        )];
+        let after = vec![usb_port(
+            "/dev/cu.usbmodem1101",
+            UNO_R4_WIFI_RUNTIME_USB_VID,
+            UNO_R4_WIFI_BOOTLOADER_USB_PID,
+        )];
 
         assert_eq!(
             choose_bootloader_port("/dev/cu.usbmodem1101", &before, &after),
             Some("/dev/cu.usbmodem1101".to_string())
+        );
+    }
+
+    #[test]
+    fn bootloader_port_selection_rejects_unchanged_runtime_port() {
+        let before = vec![usb_port(
+            "/dev/cu.usbmodem1101",
+            UNO_R4_WIFI_RUNTIME_USB_VID,
+            UNO_R4_WIFI_RUNTIME_USB_PID,
+        )];
+        let after = before.clone();
+
+        assert_eq!(
+            choose_bootloader_port("/dev/cu.usbmodem1101", &before, &after),
+            None
+        );
+    }
+
+    #[test]
+    fn bootloader_port_selection_rejects_new_runtime_identity() {
+        let before = vec![usb_port(
+            "/dev/cu.usbmodem1101",
+            UNO_R4_WIFI_RUNTIME_USB_VID,
+            UNO_R4_WIFI_RUNTIME_USB_PID,
+        )];
+        let after = vec![
+            usb_port(
+                "/dev/cu.usbmodem1101",
+                UNO_R4_WIFI_RUNTIME_USB_VID,
+                UNO_R4_WIFI_RUNTIME_USB_PID,
+            ),
+            usb_port(
+                "/dev/cu.usbmodem2201",
+                UNO_R4_WIFI_RUNTIME_USB_VID,
+                UNO_R4_WIFI_RUNTIME_USB_PID,
+            ),
+        ];
+
+        assert_eq!(
+            choose_bootloader_port("/dev/cu.usbmodem1101", &before, &after),
+            None
         );
     }
 
