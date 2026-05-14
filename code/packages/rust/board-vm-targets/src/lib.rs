@@ -99,7 +99,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 9] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 10] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -108,10 +108,11 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 9] = [
     "time.sleep_ms",
     "time.now_ms",
     "pwm.write",
+    "adc.read",
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 13] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 14] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -123,6 +124,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 13] = [
     "time.sleep_ms",
     "time.now_ms",
     "pwm.write",
+    "adc.read",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -219,7 +221,7 @@ pub const PICO_W_WIRELESS: [WirelessInterfaceInfo; 3] = [
     },
 ];
 
-pub const UNO_R4_DIGITAL_PINS: [DigitalPinInfo; 14] =
+pub const UNO_R4_DIGITAL_PINS: [DigitalPinInfo; 20] =
     map_uno_r4_digital_pins(board_vm_uno_r4::UNO_R4_DIGITAL_PINS);
 
 pub const ESP32_DIGITAL_PINS: [DigitalPinInfo; 30] =
@@ -248,7 +250,7 @@ const fn uno_r4_digital_pin(pin: board_vm_uno_r4::DigitalPinDescriptor) -> Digit
         supports_output: true,
         supports_pullup: true,
         supports_pulldown: false,
-        supports_adc: false,
+        supports_adc: pin.supports_adc,
         supports_pwm: pin.supports_pwm,
         supports_touch: false,
         supports_interrupt: pin.supports_interrupt,
@@ -499,6 +501,11 @@ mod tests {
         assert!(d13.notes.contains("onboard LED"));
         assert!(!d13.supports_pwm);
 
+        let a0 = uno.digital_pins.iter().find(|pin| pin.pin == 14).unwrap();
+        assert_eq!(a0.label, "A0/D14");
+        assert!(a0.supports_adc);
+        assert!(!a0.supports_pwm);
+
         let pico = find_target("raspberry-pi-pico").unwrap();
         let adc0 = pico.digital_pins.iter().find(|pin| pin.pin == 26).unwrap();
         assert!(adc0.supports_adc);
@@ -521,6 +528,7 @@ mod tests {
 
         let uno = find_target("arduino-uno-r4-wifi").unwrap();
         assert!(uno.capabilities.contains(&"pwm.write"));
+        assert!(uno.capabilities.contains(&"adc.read"));
     }
 
     #[test]

@@ -102,6 +102,10 @@ module CodingAdventures
         Pwm.new(self)
       end
 
+      def adc
+        Adc.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -239,6 +243,26 @@ module CodingAdventures
           budget: budget,
           pin: pin,
           duty: duty,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def adc_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin:,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.adc_read(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
           max_stack: max_stack,
           handshake: true,
           query_caps: true,
@@ -930,6 +954,28 @@ module CodingAdventures
 
       def full(pin:, **options)
         write(pin: pin, duty: 0xFFFF, **options)
+      end
+    end
+
+    class Adc
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def read(
+        pin:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.adc_read!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          max_stack: max_stack
+        )
       end
     end
 

@@ -1,7 +1,7 @@
 use board_vm_ir::{
-    parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_GPIO_CLOSE,
-    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
-    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER,
+    parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_ADC_READ,
+    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME,
+    CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER,
     FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
@@ -36,6 +36,8 @@ pub const TIME_SLEEP_MS_CODE_LEN: usize = 5;
 pub const TIME_SLEEP_MS_MODULE_LEN: usize = 15;
 pub const PWM_WRITE_CODE_LEN: usize = 8;
 pub const PWM_WRITE_MODULE_LEN: usize = 18;
+pub const ADC_READ_CODE_LEN: usize = 5;
+pub const ADC_READ_MODULE_LEN: usize = 15;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -158,6 +160,12 @@ pub struct PwmWriteProgram {
     pub max_stack: u8,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AdcReadProgram {
+    pub pin: u8,
+    pub max_stack: u8,
+}
+
 impl GpioOpenProgram {
     pub const fn output(pin: u8) -> Self {
         Self {
@@ -263,6 +271,12 @@ impl PwmWriteProgram {
 
     pub const fn full(pin: u8) -> Self {
         Self::new(pin, u16::MAX)
+    }
+}
+
+impl AdcReadProgram {
+    pub const fn new(pin: u8) -> Self {
+        Self { pin, max_stack: 1 }
     }
 }
 
@@ -1018,6 +1032,39 @@ pub fn write_pwm_write_module(
     Ok(offset)
 }
 
+pub fn write_adc_read_code(program: AdcReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < ADC_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_call_u8(out, &mut offset, CAP_ADC_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_adc_read_module(program: AdcReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < ADC_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; ADC_READ_CODE_LEN];
+    let code_len = write_adc_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_adc(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_led_matrix_frame_code(
     program: LedMatrixFrameProgram,
     out: &mut [u8],
@@ -1167,7 +1214,7 @@ mod tests {
     use super::*;
     use board_vm_ir::{
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
-        CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
+        CAP_ADC_READ, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -1210,6 +1257,9 @@ mod tests {
     const PWM_WRITE_HALF_MODULE_HEX: [u8; PWM_WRITE_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x08, 0x12, 0x03, 0x13, 0x00, 0x80, 0x40,
         0x20, 0x00, 0x00,
+    ];
+    const ADC_READ_A0_MODULE_HEX: [u8; ADC_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x0E, 0x40, 0x21, 0x50, 0x00,
     ];
     const LED_MATRIX_HEART_MODULE_HEX: [u8; LED_MATRIX_FRAME_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x12, 0x14, 0x44, 0xA4, 0x84, 0x31, 0x14,
@@ -1369,6 +1419,20 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_PWM_WRITE]);
+    }
+
+    #[test]
+    fn builds_adc_read_module() {
+        let mut module = [0u8; ADC_READ_MODULE_LEN];
+        let len = write_adc_read_module(AdcReadProgram::new(14), &mut module).unwrap();
+        assert_eq!(len, ADC_READ_MODULE_LEN);
+        assert_eq!(module, ADC_READ_A0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_adc(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_ADC_READ]);
     }
 
     #[test]
