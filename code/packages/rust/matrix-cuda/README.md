@@ -37,13 +37,30 @@ for the full design.  Phased rollout, one PR per phase:
 
 | Phase | Lands                                                  | Status |
 | ----- | ------------------------------------------------------ | ------ |
-| 1     | crate skeleton, `BackendProfile`, stubbed dispatch     | **this PR** |
-| 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`           | pending |
-| 3     | `kernels.rs` — generic NVRTC-compiled kernels           | pending |
+| 1     | crate skeleton, `BackendProfile`, stubbed dispatch     | landed (0.1.0) |
+| 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`           | **this PR** (0.2.0) |
+| 3     | `kernels.rs` — generic NVRTC-compiled kernels (also adds `Send` to `CudaBuffer` and wires the buffer store into `handle()`) | pending |
 | 4     | `cuda_emitter.rs` — specialised-kernel code generator   | pending |
 | 5     | `specialised_table.rs` + real `Executor` impl           | pending |
 | 6     | MX05 hooks — `backend_id = 2` in image-gpu-core         | pending |
 | 7     | Planner integration — cost-model coefficients           | pending |
+
+## Phase 2 additions
+
+- `pub mod buffers` — `BufferStore` over `cuda-compute`'s
+  `CudaDevice::alloc` / `upload` / `download`.  Same shape as
+  `matrix-metal::BufferStore`, suitable for the dispatch wiring that
+  Phase 3 will add.
+- Re-exported as `matrix_cuda::BufferStore`.
+- 14 new unit tests (most device-gated; silent pass on non-NVIDIA
+  hosts).
+
+**Note**: the `handle()` dispatch surface still returns
+`NOT_IMPLEMENTED` for `AllocBuffer` / `UploadBuffer` /
+`DownloadBuffer` / `FreeBuffer`.  Wiring the store through the
+executor's `Mutex<State>` requires `CudaBuffer: Send`, which
+`cuda-compute` doesn't ship yet — both changes land together in
+Phase 3.
 
 ## What this phase ships
 
