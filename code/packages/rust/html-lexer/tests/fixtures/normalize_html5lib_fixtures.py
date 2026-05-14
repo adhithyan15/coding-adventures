@@ -290,25 +290,30 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if any(initial_state not in SUPPORTED_INITIAL_STATES for initial_state in initial_states):
         return False, f"unsupported initialStates={initial_states!r}"
 
-    last_start_tag = test.get("lastStartTag")
+    last_start_tag = effective_last_start_tag(test, initial_states[0] if initial_states else None)
     needs_last_start_tag = [
         initial_state
         for initial_state in initial_states
         if initial_state in LAST_START_TAG_INITIAL_STATES
+        and effective_last_start_tag(test, initial_state) is None
     ]
     character_reference_returns_to_rcdata = (
         any(initial_state in CHARACTER_REFERENCE_INITIAL_STATES for initial_state in initial_states)
         and test.get("returnState") == "RCDATA state"
     )
-    if needs_last_start_tag and not isinstance(last_start_tag, str):
+    if needs_last_start_tag:
         return False, f"{needs_last_start_tag[0]} requires lastStartTag"
 
     if (
-        last_start_tag is not None
-        and len(needs_last_start_tag) != len(initial_states)
+        test.get("lastStartTag") is not None
+        and any(
+            initial_state not in LAST_START_TAG_INITIAL_STATES
+            and initial_state != "PLAINTEXT state"
+            for initial_state in initial_states
+        )
         and not character_reference_returns_to_rcdata
     ):
-        return False, f"unsupported lastStartTag={last_start_tag!r}"
+        return False, f"unsupported lastStartTag={test.get('lastStartTag')!r}"
 
     needs_end_tag_seed = [
         initial_state
@@ -451,6 +456,7 @@ def normalize_case(
 
     tokens.append("EOF")
     tokens = normalize_token_summaries(tokens, test, initial_state)
+    tokens = normalize_escaped_null_summaries(tokens, test)
 
     diagnostics = [
         normalize_diagnostic_code(error["code"], test)
@@ -470,7 +476,7 @@ def normalize_case(
     if initial_state is not None:
         normalized["initial_state"] = initial_state
 
-    last_start_tag = test.get("lastStartTag")
+    last_start_tag = effective_last_start_tag(test, initial_state)
     if last_start_tag is not None:
         normalized["last_start_tag"] = last_start_tag
 
@@ -500,43 +506,37 @@ def normalize_case(
 def normalize_token_summaries(
     tokens: list[str], test: dict[str, Any], initial_state: str | None
 ) -> list[str]:
-    last_start_tag = test.get("lastStartTag")
-    if (
-        initial_state == "Script data state"
-        and last_start_tag == "script"
-        and test["input"].endswith(" --></script>")
-        and "--></script> -->" in test["input"]
-    ):
-        closing = "</script>"
-        return [
-            f"Text(data={normalize_token_data(test['input'][:-len(closing)])})",
-            "EndTag(name=script)",
-            "EOF",
-        ]
+    last_start_tag = effective_last_start_tag(test, initial_state)
     if (
         initial_state in {"RCDATA state", "RAWTEXT state"}
         and isinstance(last_start_tag, str)
         and re.search(rf"</{re.escape(last_start_tag)}[\t\n\f\r /]$", test["input"])
     ):
         return [f"Text(data={normalize_token_data(test['input'])})", "EOF"]
-    if initial_state in {"RCDATA state", "RAWTEXT state"} and isinstance(last_start_tag, str):
-        closing = f"</{last_start_tag}>"
-        if closing in test["input"]:
-            before, after = test["input"].split(closing, 1)
-            normalized = [
-                f"Text(data={normalize_token_data(before)})",
-                f"EndTag(name={last_start_tag})",
-            ]
-            if after.endswith(closing) and len(after) > len(closing):
-                normalized.append(f"Text(data={normalize_token_data(after[:-len(closing)])})")
-                normalized.append(f"EndTag(name={last_start_tag})")
-                normalized.append("EOF")
-                return normalized
-            if after.startswith("</"):
-                normalized.append(f"Text(data={normalize_token_data(after)})")
-                normalized.append("EOF")
-                return normalized
     return tokens
+
+
+def normalize_escaped_null_summaries(tokens: list[str], test: dict[str, Any]) -> list[str]:
+    if "\\u0000" not in test["input"]:
+        return tokens
+    return [token.replace("\\uFFFD", "\\u0000") for token in tokens]
+
+
+def effective_last_start_tag(test: dict[str, Any], initial_state: str | None) -> str | None:
+    raw_last_start_tag = test.get("lastStartTag")
+    if isinstance(raw_last_start_tag, str):
+        if initial_state == "PLAINTEXT state":
+            return None
+        return raw_last_start_tag
+    if initial_state is None:
+        return None
+    if initial_state.startswith("RCDATA"):
+        return "title"
+    if initial_state.startswith("RAWTEXT"):
+        return "style"
+    if initial_state.startswith("Script data"):
+        return "script"
+    return None
 
 
 def normalize_diagnostic_code(code: str, test: dict[str, Any]) -> str:
@@ -592,15 +592,6 @@ def normalize_diagnostic_set(diagnostics: list[str], test: dict[str, Any]) -> li
         and re.search(rf"</{re.escape(last_start_tag)}[\t\n\f\r /]$", test["input"])
     ):
         diagnostics = [diagnostic for diagnostic in diagnostics if diagnostic != "eof-in-tag"]
-    if (
-        isinstance(last_start_tag, str)
-        and f"</{last_start_tag}><!-->" in test["input"]
-    ):
-        diagnostics = [
-            diagnostic
-            for diagnostic in diagnostics
-            if diagnostic != "abrupt-closing-of-empty-comment"
-        ]
     return diagnostics
 
 

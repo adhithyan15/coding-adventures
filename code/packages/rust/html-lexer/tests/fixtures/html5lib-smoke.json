@@ -1955,16 +1955,20 @@
         "Text(data=x</script>tail)",
         "EOF"
       ],
-      "diagnostics": [],
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
       "initial_state": "Script data double escaped dash state",
       "last_start_tag": "script"
     },
     {
       "id": "html5lib-smoke-154",
-      "description": "script double escaped dash dash state remains text after greater-than",
+      "description": "script double escaped dash dash state exits comment-like text after greater-than",
       "input": ">still</script>text",
       "tokens": [
-        "Text(data=>still</script>text)",
+        "Text(data=>still)",
+        "EndTag(name=script)",
+        "Text(data=text)",
         "EOF"
       ],
       "diagnostics": [],
@@ -23864,7 +23868,7 @@
       "tokens": [
         "Text(data=foo)",
         "EndTag(name=xmp)",
-        "Text(data=</baz>)",
+        "EndTag(name=baz)",
         "EOF"
       ],
       "diagnostics": [],
@@ -23878,7 +23882,7 @@
       "tokens": [
         "Text(data=foo)",
         "EndTag(name=xmp)",
-        "Text(data=</baz>)",
+        "EndTag(name=baz)",
         "EOF"
       ],
       "diagnostics": [],
@@ -23972,11 +23976,14 @@
       "tokens": [
         "Text(data=foo<!-->)",
         "EndTag(name=xmp)",
-        "Text(data=<!-->baz)",
+        "Comment(data=)",
+        "Text(data=baz)",
         "EndTag(name=xmp)",
         "EOF"
       ],
-      "diagnostics": [],
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
       "initial_state": "RCDATA state",
       "last_start_tag": "xmp"
     },
@@ -23987,11 +23994,14 @@
       "tokens": [
         "Text(data=foo<!-->)",
         "EndTag(name=xmp)",
-        "Text(data=<!-->baz)",
+        "Comment(data=)",
+        "Text(data=baz)",
         "EndTag(name=xmp)",
         "EOF"
       ],
-      "diagnostics": [],
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
       "initial_state": "RAWTEXT state",
       "last_start_tag": "xmp"
     },
@@ -31001,7 +31011,9 @@
       "description": "</script> in script HTML comment - double escaped with abrupt end",
       "input": "<!-- <script>--></script> --></script>",
       "tokens": [
-        "Text(data=<!-- <script>--></script> -->)",
+        "Text(data=<!-- <script>-->)",
+        "EndTag(name=script)",
+        "Text(data= -->)",
         "EndTag(name=script)",
         "EOF"
       ],
@@ -74604,6 +74616,3295 @@
         "EOF"
       ],
       "diagnostics": []
+    },
+    {
+      "id": "html5lib-smoke-6936",
+      "description": "PLAINTEXT content model flag",
+      "input": "<head>&body;",
+      "tokens": [
+        "Text(data=<head>&body;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6937",
+      "description": "PLAINTEXT with seeming close tag",
+      "input": "</plaintext>&body;",
+      "tokens": [
+        "Text(data=</plaintext>&body;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6938-1",
+      "description": "Raw NUL replacement",
+      "input": "\\u0000",
+      "tokens": [
+        "Text(data=\\u0000)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6938-2",
+      "description": "Raw NUL replacement",
+      "input": "\\u0000",
+      "tokens": [
+        "Text(data=\\u0000)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6938-3",
+      "description": "Raw NUL replacement",
+      "input": "\\u0000",
+      "tokens": [
+        "Text(data=\\u0000)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6938-4",
+      "description": "Raw NUL replacement",
+      "input": "\\u0000",
+      "tokens": [
+        "Text(data=\\u0000)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6939",
+      "description": "NUL in script HTML comment",
+      "input": "<!--test\\u0000--><!--test-\\u0000--><!--test--\\u0000-->",
+      "tokens": [
+        "Text(data=<!--test\\u0000--><!--test-\\u0000--><!--test--\\u0000-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6940",
+      "description": "NUL in script HTML comment - double escaped",
+      "input": "<!--<script>\\u0000--><!--<script>-\\u0000--><!--<script>--\\u0000-->",
+      "tokens": [
+        "Text(data=<!--<script>\\u0000--><!--<script>-\\u0000--><!--<script>--\\u0000-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6941",
+      "description": "EOF in script HTML comment",
+      "input": "<!--test",
+      "tokens": [
+        "Text(data=<!--test)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6942",
+      "description": "EOF in script HTML comment after dash",
+      "input": "<!--test-",
+      "tokens": [
+        "Text(data=<!--test-)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6943",
+      "description": "EOF in script HTML comment after dash dash",
+      "input": "<!--test--",
+      "tokens": [
+        "Text(data=<!--test--)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6944",
+      "description": "EOF in script HTML comment double escaped after dash",
+      "input": "<!--<script>-",
+      "tokens": [
+        "Text(data=<!--<script>-)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6945",
+      "description": "EOF in script HTML comment double escaped after dash dash",
+      "input": "<!--<script>--",
+      "tokens": [
+        "Text(data=<!--<script>--)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6946",
+      "description": "EOF in script HTML comment - double escaped",
+      "input": "<!--<script>",
+      "tokens": [
+        "Text(data=<!--<script>)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6947",
+      "description": "Dash in script HTML comment",
+      "input": "<!-- - -->",
+      "tokens": [
+        "Text(data=<!-- - -->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6948",
+      "description": "Dash less-than in script HTML comment",
+      "input": "<!-- -< -->",
+      "tokens": [
+        "Text(data=<!-- -< -->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6949",
+      "description": "Dash at end of script HTML comment",
+      "input": "<!--test--->",
+      "tokens": [
+        "Text(data=<!--test--->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6950-1",
+      "description": "leading U+FEFF must pass through",
+      "input": "\\uFEFFfoo\\uFEFFbar",
+      "tokens": [
+        "Text(data=\\uFEFFfoo\\uFEFFbar)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6950-2",
+      "description": "leading U+FEFF must pass through",
+      "input": "\\uFEFFfoo\\uFEFFbar",
+      "tokens": [
+        "Text(data=\\uFEFFfoo\\uFEFFbar)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6950-3",
+      "description": "leading U+FEFF must pass through",
+      "input": "\\uFEFFfoo\\uFEFFbar",
+      "tokens": [
+        "Text(data=\\uFEFFfoo\\uFEFFbar)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6950-4",
+      "description": "leading U+FEFF must pass through",
+      "input": "\\uFEFFfoo\\uFEFFbar",
+      "tokens": [
+        "Text(data=\\uFEFFfoo\\uFEFFbar)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6951",
+      "description": "Non BMP-charref in RCDATA",
+      "input": "&NotEqualTilde;",
+      "tokens": [
+        "Text(data=\u2242\u0338)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6952",
+      "description": "Bad charref in RCDATA",
+      "input": "&NotEqualTild;",
+      "tokens": [
+        "Text(data=&NotEqualTild;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6953",
+      "description": "HTML tag in script data",
+      "input": "<b>hello world</b>",
+      "tokens": [
+        "Text(data=<b>hello world</b>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6954",
+      "description": "< in script data",
+      "input": "<test-->",
+      "tokens": [
+        "Text(data=<test-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6955",
+      "description": "<! in script data",
+      "input": "<!test-->",
+      "tokens": [
+        "Text(data=<!test-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6956",
+      "description": "<!- in script data",
+      "input": "<!-test-->",
+      "tokens": [
+        "Text(data=<!-test-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6957",
+      "description": "Escaped script data",
+      "input": "<!--test-->",
+      "tokens": [
+        "Text(data=<!--test-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6958",
+      "description": "< in script HTML comment",
+      "input": "<!-- < test -->",
+      "tokens": [
+        "Text(data=<!-- < test -->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6959",
+      "description": "</ in script HTML comment",
+      "input": "<!-- </ test -->",
+      "tokens": [
+        "Text(data=<!-- </ test -->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6960",
+      "description": "Start tag in script HTML comment",
+      "input": "<!-- <test> -->",
+      "tokens": [
+        "Text(data=<!-- <test> -->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6961",
+      "description": "End tag in script HTML comment",
+      "input": "<!-- </test> -->",
+      "tokens": [
+        "Text(data=<!-- </test> -->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6962",
+      "description": "- in script HTML comment double escaped",
+      "input": "<!--<script>-</script>-->",
+      "tokens": [
+        "Text(data=<!--<script>-</script>-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6963",
+      "description": "-- in script HTML comment double escaped",
+      "input": "<!--<script>--</script>-->",
+      "tokens": [
+        "Text(data=<!--<script>--</script>-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6964",
+      "description": "--- in script HTML comment double escaped",
+      "input": "<!--<script>---</script>-->",
+      "tokens": [
+        "Text(data=<!--<script>---</script>-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6965",
+      "description": "- spaced in script HTML comment double escaped",
+      "input": "<!--<script> - </script>-->",
+      "tokens": [
+        "Text(data=<!--<script> - </script>-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6966",
+      "description": "-- spaced in script HTML comment double escaped",
+      "input": "<!--<script> -- </script>-->",
+      "tokens": [
+        "Text(data=<!--<script> -- </script>-->)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6967-1",
+      "description": "[empty]",
+      "input": "",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6967-2",
+      "description": "[empty]",
+      "input": "",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6967-3",
+      "description": "[empty]",
+      "input": "",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6967-4",
+      "description": "[empty]",
+      "input": "",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6967-5",
+      "description": "[empty]",
+      "input": "",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6968-1",
+      "description": "\\u0009",
+      "input": "\t",
+      "tokens": [
+        "Text(data=\t)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6968-2",
+      "description": "\\u0009",
+      "input": "\t",
+      "tokens": [
+        "Text(data=\t)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6968-3",
+      "description": "\\u0009",
+      "input": "\t",
+      "tokens": [
+        "Text(data=\t)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6968-4",
+      "description": "\\u0009",
+      "input": "\t",
+      "tokens": [
+        "Text(data=\t)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6968-5",
+      "description": "\\u0009",
+      "input": "\t",
+      "tokens": [
+        "Text(data=\t)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6969-1",
+      "description": "\\u000A",
+      "input": "\n",
+      "tokens": [
+        "Text(data=\n)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6969-2",
+      "description": "\\u000A",
+      "input": "\n",
+      "tokens": [
+        "Text(data=\n)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6969-3",
+      "description": "\\u000A",
+      "input": "\n",
+      "tokens": [
+        "Text(data=\n)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6969-4",
+      "description": "\\u000A",
+      "input": "\n",
+      "tokens": [
+        "Text(data=\n)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6969-5",
+      "description": "\\u000A",
+      "input": "\n",
+      "tokens": [
+        "Text(data=\n)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6970-1",
+      "description": "\\u000B",
+      "input": "\u000b",
+      "tokens": [
+        "Text(data=\u000b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6970-2",
+      "description": "\\u000B",
+      "input": "\u000b",
+      "tokens": [
+        "Text(data=\u000b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6970-3",
+      "description": "\\u000B",
+      "input": "\u000b",
+      "tokens": [
+        "Text(data=\u000b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6970-4",
+      "description": "\\u000B",
+      "input": "\u000b",
+      "tokens": [
+        "Text(data=\u000b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6970-5",
+      "description": "\\u000B",
+      "input": "\u000b",
+      "tokens": [
+        "Text(data=\u000b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6971-1",
+      "description": "\\u000C",
+      "input": "\f",
+      "tokens": [
+        "Text(data=\f)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6971-2",
+      "description": "\\u000C",
+      "input": "\f",
+      "tokens": [
+        "Text(data=\f)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6971-3",
+      "description": "\\u000C",
+      "input": "\f",
+      "tokens": [
+        "Text(data=\f)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6971-4",
+      "description": "\\u000C",
+      "input": "\f",
+      "tokens": [
+        "Text(data=\f)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6971-5",
+      "description": "\\u000C",
+      "input": "\f",
+      "tokens": [
+        "Text(data=\f)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6972-1",
+      "description": " ",
+      "input": " ",
+      "tokens": [
+        "Text(data= )",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6972-2",
+      "description": " ",
+      "input": " ",
+      "tokens": [
+        "Text(data= )",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6972-3",
+      "description": " ",
+      "input": " ",
+      "tokens": [
+        "Text(data= )",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6972-4",
+      "description": " ",
+      "input": " ",
+      "tokens": [
+        "Text(data= )",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6972-5",
+      "description": " ",
+      "input": " ",
+      "tokens": [
+        "Text(data= )",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6973-1",
+      "description": "!",
+      "input": "!",
+      "tokens": [
+        "Text(data=!)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6973-2",
+      "description": "!",
+      "input": "!",
+      "tokens": [
+        "Text(data=!)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6973-3",
+      "description": "!",
+      "input": "!",
+      "tokens": [
+        "Text(data=!)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6973-4",
+      "description": "!",
+      "input": "!",
+      "tokens": [
+        "Text(data=!)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6973-5",
+      "description": "!",
+      "input": "!",
+      "tokens": [
+        "Text(data=!)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6974-1",
+      "description": "\"",
+      "input": "\"",
+      "tokens": [
+        "Text(data=\")",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6974-2",
+      "description": "\"",
+      "input": "\"",
+      "tokens": [
+        "Text(data=\")",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6974-3",
+      "description": "\"",
+      "input": "\"",
+      "tokens": [
+        "Text(data=\")",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6974-4",
+      "description": "\"",
+      "input": "\"",
+      "tokens": [
+        "Text(data=\")",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6974-5",
+      "description": "\"",
+      "input": "\"",
+      "tokens": [
+        "Text(data=\")",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6975-1",
+      "description": "%",
+      "input": "%",
+      "tokens": [
+        "Text(data=%)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6975-2",
+      "description": "%",
+      "input": "%",
+      "tokens": [
+        "Text(data=%)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6975-3",
+      "description": "%",
+      "input": "%",
+      "tokens": [
+        "Text(data=%)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6975-4",
+      "description": "%",
+      "input": "%",
+      "tokens": [
+        "Text(data=%)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6975-5",
+      "description": "%",
+      "input": "%",
+      "tokens": [
+        "Text(data=%)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6976-1",
+      "description": "&",
+      "input": "&",
+      "tokens": [
+        "Text(data=&)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6976-2",
+      "description": "&",
+      "input": "&",
+      "tokens": [
+        "Text(data=&)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6976-3",
+      "description": "&",
+      "input": "&",
+      "tokens": [
+        "Text(data=&)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6976-4",
+      "description": "&",
+      "input": "&",
+      "tokens": [
+        "Text(data=&)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6976-5",
+      "description": "&",
+      "input": "&",
+      "tokens": [
+        "Text(data=&)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6977-1",
+      "description": "'",
+      "input": "'",
+      "tokens": [
+        "Text(data=')",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6977-2",
+      "description": "'",
+      "input": "'",
+      "tokens": [
+        "Text(data=')",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6977-3",
+      "description": "'",
+      "input": "'",
+      "tokens": [
+        "Text(data=')",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6977-4",
+      "description": "'",
+      "input": "'",
+      "tokens": [
+        "Text(data=')",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6977-5",
+      "description": "'",
+      "input": "'",
+      "tokens": [
+        "Text(data=')",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6978-1",
+      "description": ",",
+      "input": ",",
+      "tokens": [
+        "Text(data=,)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6978-2",
+      "description": ",",
+      "input": ",",
+      "tokens": [
+        "Text(data=,)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6978-3",
+      "description": ",",
+      "input": ",",
+      "tokens": [
+        "Text(data=,)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6978-4",
+      "description": ",",
+      "input": ",",
+      "tokens": [
+        "Text(data=,)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6978-5",
+      "description": ",",
+      "input": ",",
+      "tokens": [
+        "Text(data=,)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6979-1",
+      "description": "-",
+      "input": "-",
+      "tokens": [
+        "Text(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6979-2",
+      "description": "-",
+      "input": "-",
+      "tokens": [
+        "Text(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6979-3",
+      "description": "-",
+      "input": "-",
+      "tokens": [
+        "Text(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6979-4",
+      "description": "-",
+      "input": "-",
+      "tokens": [
+        "Text(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6979-5",
+      "description": "-",
+      "input": "-",
+      "tokens": [
+        "Text(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6980-1",
+      "description": ".",
+      "input": ".",
+      "tokens": [
+        "Text(data=.)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6980-2",
+      "description": ".",
+      "input": ".",
+      "tokens": [
+        "Text(data=.)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6980-3",
+      "description": ".",
+      "input": ".",
+      "tokens": [
+        "Text(data=.)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6980-4",
+      "description": ".",
+      "input": ".",
+      "tokens": [
+        "Text(data=.)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6980-5",
+      "description": ".",
+      "input": ".",
+      "tokens": [
+        "Text(data=.)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6981-1",
+      "description": "/",
+      "input": "/",
+      "tokens": [
+        "Text(data=/)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6981-2",
+      "description": "/",
+      "input": "/",
+      "tokens": [
+        "Text(data=/)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6981-3",
+      "description": "/",
+      "input": "/",
+      "tokens": [
+        "Text(data=/)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6981-4",
+      "description": "/",
+      "input": "/",
+      "tokens": [
+        "Text(data=/)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6981-5",
+      "description": "/",
+      "input": "/",
+      "tokens": [
+        "Text(data=/)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6982-1",
+      "description": "0",
+      "input": "0",
+      "tokens": [
+        "Text(data=0)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6982-2",
+      "description": "0",
+      "input": "0",
+      "tokens": [
+        "Text(data=0)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6982-3",
+      "description": "0",
+      "input": "0",
+      "tokens": [
+        "Text(data=0)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6982-4",
+      "description": "0",
+      "input": "0",
+      "tokens": [
+        "Text(data=0)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6982-5",
+      "description": "0",
+      "input": "0",
+      "tokens": [
+        "Text(data=0)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6983-1",
+      "description": "1",
+      "input": "1",
+      "tokens": [
+        "Text(data=1)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6983-2",
+      "description": "1",
+      "input": "1",
+      "tokens": [
+        "Text(data=1)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6983-3",
+      "description": "1",
+      "input": "1",
+      "tokens": [
+        "Text(data=1)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6983-4",
+      "description": "1",
+      "input": "1",
+      "tokens": [
+        "Text(data=1)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6983-5",
+      "description": "1",
+      "input": "1",
+      "tokens": [
+        "Text(data=1)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6984-1",
+      "description": "9",
+      "input": "9",
+      "tokens": [
+        "Text(data=9)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6984-2",
+      "description": "9",
+      "input": "9",
+      "tokens": [
+        "Text(data=9)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6984-3",
+      "description": "9",
+      "input": "9",
+      "tokens": [
+        "Text(data=9)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6984-4",
+      "description": "9",
+      "input": "9",
+      "tokens": [
+        "Text(data=9)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6984-5",
+      "description": "9",
+      "input": "9",
+      "tokens": [
+        "Text(data=9)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6985-1",
+      "description": ";",
+      "input": ";",
+      "tokens": [
+        "Text(data=;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6985-2",
+      "description": ";",
+      "input": ";",
+      "tokens": [
+        "Text(data=;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6985-3",
+      "description": ";",
+      "input": ";",
+      "tokens": [
+        "Text(data=;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6985-4",
+      "description": ";",
+      "input": ";",
+      "tokens": [
+        "Text(data=;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6985-5",
+      "description": ";",
+      "input": ";",
+      "tokens": [
+        "Text(data=;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6986-1",
+      "description": ";=",
+      "input": ";=",
+      "tokens": [
+        "Text(data=;=)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6986-2",
+      "description": ";=",
+      "input": ";=",
+      "tokens": [
+        "Text(data=;=)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6986-3",
+      "description": ";=",
+      "input": ";=",
+      "tokens": [
+        "Text(data=;=)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6986-4",
+      "description": ";=",
+      "input": ";=",
+      "tokens": [
+        "Text(data=;=)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6986-5",
+      "description": ";=",
+      "input": ";=",
+      "tokens": [
+        "Text(data=;=)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6987-1",
+      "description": ";>",
+      "input": ";>",
+      "tokens": [
+        "Text(data=;>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6987-2",
+      "description": ";>",
+      "input": ";>",
+      "tokens": [
+        "Text(data=;>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6987-3",
+      "description": ";>",
+      "input": ";>",
+      "tokens": [
+        "Text(data=;>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6987-4",
+      "description": ";>",
+      "input": ";>",
+      "tokens": [
+        "Text(data=;>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6987-5",
+      "description": ";>",
+      "input": ";>",
+      "tokens": [
+        "Text(data=;>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6988-1",
+      "description": ";?",
+      "input": ";?",
+      "tokens": [
+        "Text(data=;?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6988-2",
+      "description": ";?",
+      "input": ";?",
+      "tokens": [
+        "Text(data=;?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6988-3",
+      "description": ";?",
+      "input": ";?",
+      "tokens": [
+        "Text(data=;?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6988-4",
+      "description": ";?",
+      "input": ";?",
+      "tokens": [
+        "Text(data=;?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6988-5",
+      "description": ";?",
+      "input": ";?",
+      "tokens": [
+        "Text(data=;?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6989-1",
+      "description": ";@",
+      "input": ";@",
+      "tokens": [
+        "Text(data=;@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6989-2",
+      "description": ";@",
+      "input": ";@",
+      "tokens": [
+        "Text(data=;@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6989-3",
+      "description": ";@",
+      "input": ";@",
+      "tokens": [
+        "Text(data=;@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6989-4",
+      "description": ";@",
+      "input": ";@",
+      "tokens": [
+        "Text(data=;@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6989-5",
+      "description": ";@",
+      "input": ";@",
+      "tokens": [
+        "Text(data=;@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6990-1",
+      "description": ";A",
+      "input": ";A",
+      "tokens": [
+        "Text(data=;A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6990-2",
+      "description": ";A",
+      "input": ";A",
+      "tokens": [
+        "Text(data=;A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6990-3",
+      "description": ";A",
+      "input": ";A",
+      "tokens": [
+        "Text(data=;A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6990-4",
+      "description": ";A",
+      "input": ";A",
+      "tokens": [
+        "Text(data=;A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6990-5",
+      "description": ";A",
+      "input": ";A",
+      "tokens": [
+        "Text(data=;A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6991-1",
+      "description": ";B",
+      "input": ";B",
+      "tokens": [
+        "Text(data=;B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6991-2",
+      "description": ";B",
+      "input": ";B",
+      "tokens": [
+        "Text(data=;B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6991-3",
+      "description": ";B",
+      "input": ";B",
+      "tokens": [
+        "Text(data=;B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6991-4",
+      "description": ";B",
+      "input": ";B",
+      "tokens": [
+        "Text(data=;B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6991-5",
+      "description": ";B",
+      "input": ";B",
+      "tokens": [
+        "Text(data=;B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6992-1",
+      "description": ";Y",
+      "input": ";Y",
+      "tokens": [
+        "Text(data=;Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6992-2",
+      "description": ";Y",
+      "input": ";Y",
+      "tokens": [
+        "Text(data=;Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6992-3",
+      "description": ";Y",
+      "input": ";Y",
+      "tokens": [
+        "Text(data=;Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6992-4",
+      "description": ";Y",
+      "input": ";Y",
+      "tokens": [
+        "Text(data=;Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6992-5",
+      "description": ";Y",
+      "input": ";Y",
+      "tokens": [
+        "Text(data=;Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6993-1",
+      "description": ";Z",
+      "input": ";Z",
+      "tokens": [
+        "Text(data=;Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6993-2",
+      "description": ";Z",
+      "input": ";Z",
+      "tokens": [
+        "Text(data=;Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6993-3",
+      "description": ";Z",
+      "input": ";Z",
+      "tokens": [
+        "Text(data=;Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6993-4",
+      "description": ";Z",
+      "input": ";Z",
+      "tokens": [
+        "Text(data=;Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6993-5",
+      "description": ";Z",
+      "input": ";Z",
+      "tokens": [
+        "Text(data=;Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6994-1",
+      "description": ";`",
+      "input": ";`",
+      "tokens": [
+        "Text(data=;`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6994-2",
+      "description": ";`",
+      "input": ";`",
+      "tokens": [
+        "Text(data=;`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6994-3",
+      "description": ";`",
+      "input": ";`",
+      "tokens": [
+        "Text(data=;`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6994-4",
+      "description": ";`",
+      "input": ";`",
+      "tokens": [
+        "Text(data=;`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6994-5",
+      "description": ";`",
+      "input": ";`",
+      "tokens": [
+        "Text(data=;`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6995-1",
+      "description": ";a",
+      "input": ";a",
+      "tokens": [
+        "Text(data=;a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6995-2",
+      "description": ";a",
+      "input": ";a",
+      "tokens": [
+        "Text(data=;a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6995-3",
+      "description": ";a",
+      "input": ";a",
+      "tokens": [
+        "Text(data=;a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6995-4",
+      "description": ";a",
+      "input": ";a",
+      "tokens": [
+        "Text(data=;a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6995-5",
+      "description": ";a",
+      "input": ";a",
+      "tokens": [
+        "Text(data=;a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6996-1",
+      "description": ";b",
+      "input": ";b",
+      "tokens": [
+        "Text(data=;b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6996-2",
+      "description": ";b",
+      "input": ";b",
+      "tokens": [
+        "Text(data=;b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6996-3",
+      "description": ";b",
+      "input": ";b",
+      "tokens": [
+        "Text(data=;b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6996-4",
+      "description": ";b",
+      "input": ";b",
+      "tokens": [
+        "Text(data=;b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6996-5",
+      "description": ";b",
+      "input": ";b",
+      "tokens": [
+        "Text(data=;b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6997-1",
+      "description": ";y",
+      "input": ";y",
+      "tokens": [
+        "Text(data=;y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6997-2",
+      "description": ";y",
+      "input": ";y",
+      "tokens": [
+        "Text(data=;y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6997-3",
+      "description": ";y",
+      "input": ";y",
+      "tokens": [
+        "Text(data=;y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6997-4",
+      "description": ";y",
+      "input": ";y",
+      "tokens": [
+        "Text(data=;y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6997-5",
+      "description": ";y",
+      "input": ";y",
+      "tokens": [
+        "Text(data=;y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6998-1",
+      "description": ";z",
+      "input": ";z",
+      "tokens": [
+        "Text(data=;z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6998-2",
+      "description": ";z",
+      "input": ";z",
+      "tokens": [
+        "Text(data=;z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6998-3",
+      "description": ";z",
+      "input": ";z",
+      "tokens": [
+        "Text(data=;z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6998-4",
+      "description": ";z",
+      "input": ";z",
+      "tokens": [
+        "Text(data=;z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6998-5",
+      "description": ";z",
+      "input": ";z",
+      "tokens": [
+        "Text(data=;z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-6999-1",
+      "description": ";{",
+      "input": ";{",
+      "tokens": [
+        "Text(data=;{)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-6999-2",
+      "description": ";{",
+      "input": ";{",
+      "tokens": [
+        "Text(data=;{)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-6999-3",
+      "description": ";{",
+      "input": ";{",
+      "tokens": [
+        "Text(data=;{)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-6999-4",
+      "description": ";{",
+      "input": ";{",
+      "tokens": [
+        "Text(data=;{)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-6999-5",
+      "description": ";{",
+      "input": ";{",
+      "tokens": [
+        "Text(data=;{)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7000-1",
+      "description": ";\\uDBC0\\uDC00",
+      "input": ";\udbc0\udc00",
+      "tokens": [
+        "Text(data=;\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7000-2",
+      "description": ";\\uDBC0\\uDC00",
+      "input": ";\udbc0\udc00",
+      "tokens": [
+        "Text(data=;\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7000-3",
+      "description": ";\\uDBC0\\uDC00",
+      "input": ";\udbc0\udc00",
+      "tokens": [
+        "Text(data=;\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7000-4",
+      "description": ";\\uDBC0\\uDC00",
+      "input": ";\udbc0\udc00",
+      "tokens": [
+        "Text(data=;\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7000-5",
+      "description": ";\\uDBC0\\uDC00",
+      "input": ";\udbc0\udc00",
+      "tokens": [
+        "Text(data=;\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7001-1",
+      "description": "=",
+      "input": "=",
+      "tokens": [
+        "Text(data==)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7001-2",
+      "description": "=",
+      "input": "=",
+      "tokens": [
+        "Text(data==)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7001-3",
+      "description": "=",
+      "input": "=",
+      "tokens": [
+        "Text(data==)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7001-4",
+      "description": "=",
+      "input": "=",
+      "tokens": [
+        "Text(data==)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7001-5",
+      "description": "=",
+      "input": "=",
+      "tokens": [
+        "Text(data==)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7002-1",
+      "description": ">",
+      "input": ">",
+      "tokens": [
+        "Text(data=>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7002-2",
+      "description": ">",
+      "input": ">",
+      "tokens": [
+        "Text(data=>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7002-3",
+      "description": ">",
+      "input": ">",
+      "tokens": [
+        "Text(data=>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7002-4",
+      "description": ">",
+      "input": ">",
+      "tokens": [
+        "Text(data=>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7002-5",
+      "description": ">",
+      "input": ">",
+      "tokens": [
+        "Text(data=>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7003-1",
+      "description": "?",
+      "input": "?",
+      "tokens": [
+        "Text(data=?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7003-2",
+      "description": "?",
+      "input": "?",
+      "tokens": [
+        "Text(data=?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7003-3",
+      "description": "?",
+      "input": "?",
+      "tokens": [
+        "Text(data=?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7003-4",
+      "description": "?",
+      "input": "?",
+      "tokens": [
+        "Text(data=?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7003-5",
+      "description": "?",
+      "input": "?",
+      "tokens": [
+        "Text(data=?)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7004-1",
+      "description": "@",
+      "input": "@",
+      "tokens": [
+        "Text(data=@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7004-2",
+      "description": "@",
+      "input": "@",
+      "tokens": [
+        "Text(data=@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7004-3",
+      "description": "@",
+      "input": "@",
+      "tokens": [
+        "Text(data=@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7004-4",
+      "description": "@",
+      "input": "@",
+      "tokens": [
+        "Text(data=@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7004-5",
+      "description": "@",
+      "input": "@",
+      "tokens": [
+        "Text(data=@)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7005-1",
+      "description": "A",
+      "input": "A",
+      "tokens": [
+        "Text(data=A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7005-2",
+      "description": "A",
+      "input": "A",
+      "tokens": [
+        "Text(data=A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7005-3",
+      "description": "A",
+      "input": "A",
+      "tokens": [
+        "Text(data=A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7005-4",
+      "description": "A",
+      "input": "A",
+      "tokens": [
+        "Text(data=A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7005-5",
+      "description": "A",
+      "input": "A",
+      "tokens": [
+        "Text(data=A)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7006-1",
+      "description": "B",
+      "input": "B",
+      "tokens": [
+        "Text(data=B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7006-2",
+      "description": "B",
+      "input": "B",
+      "tokens": [
+        "Text(data=B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7006-3",
+      "description": "B",
+      "input": "B",
+      "tokens": [
+        "Text(data=B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7006-4",
+      "description": "B",
+      "input": "B",
+      "tokens": [
+        "Text(data=B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7006-5",
+      "description": "B",
+      "input": "B",
+      "tokens": [
+        "Text(data=B)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7007-1",
+      "description": "Y",
+      "input": "Y",
+      "tokens": [
+        "Text(data=Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7007-2",
+      "description": "Y",
+      "input": "Y",
+      "tokens": [
+        "Text(data=Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7007-3",
+      "description": "Y",
+      "input": "Y",
+      "tokens": [
+        "Text(data=Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7007-4",
+      "description": "Y",
+      "input": "Y",
+      "tokens": [
+        "Text(data=Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7007-5",
+      "description": "Y",
+      "input": "Y",
+      "tokens": [
+        "Text(data=Y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7008-1",
+      "description": "Z",
+      "input": "Z",
+      "tokens": [
+        "Text(data=Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7008-2",
+      "description": "Z",
+      "input": "Z",
+      "tokens": [
+        "Text(data=Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7008-3",
+      "description": "Z",
+      "input": "Z",
+      "tokens": [
+        "Text(data=Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7008-4",
+      "description": "Z",
+      "input": "Z",
+      "tokens": [
+        "Text(data=Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7008-5",
+      "description": "Z",
+      "input": "Z",
+      "tokens": [
+        "Text(data=Z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7009-1",
+      "description": "`",
+      "input": "`",
+      "tokens": [
+        "Text(data=`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7009-2",
+      "description": "`",
+      "input": "`",
+      "tokens": [
+        "Text(data=`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7009-3",
+      "description": "`",
+      "input": "`",
+      "tokens": [
+        "Text(data=`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7009-4",
+      "description": "`",
+      "input": "`",
+      "tokens": [
+        "Text(data=`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7009-5",
+      "description": "`",
+      "input": "`",
+      "tokens": [
+        "Text(data=`)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7010-1",
+      "description": "a",
+      "input": "a",
+      "tokens": [
+        "Text(data=a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7010-2",
+      "description": "a",
+      "input": "a",
+      "tokens": [
+        "Text(data=a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7010-3",
+      "description": "a",
+      "input": "a",
+      "tokens": [
+        "Text(data=a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7010-4",
+      "description": "a",
+      "input": "a",
+      "tokens": [
+        "Text(data=a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7010-5",
+      "description": "a",
+      "input": "a",
+      "tokens": [
+        "Text(data=a)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7011-1",
+      "description": "b",
+      "input": "b",
+      "tokens": [
+        "Text(data=b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7011-2",
+      "description": "b",
+      "input": "b",
+      "tokens": [
+        "Text(data=b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7011-3",
+      "description": "b",
+      "input": "b",
+      "tokens": [
+        "Text(data=b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7011-4",
+      "description": "b",
+      "input": "b",
+      "tokens": [
+        "Text(data=b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7011-5",
+      "description": "b",
+      "input": "b",
+      "tokens": [
+        "Text(data=b)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7012-1",
+      "description": "y",
+      "input": "y",
+      "tokens": [
+        "Text(data=y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7012-2",
+      "description": "y",
+      "input": "y",
+      "tokens": [
+        "Text(data=y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7012-3",
+      "description": "y",
+      "input": "y",
+      "tokens": [
+        "Text(data=y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7012-4",
+      "description": "y",
+      "input": "y",
+      "tokens": [
+        "Text(data=y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7012-5",
+      "description": "y",
+      "input": "y",
+      "tokens": [
+        "Text(data=y)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7013-1",
+      "description": "z",
+      "input": "z",
+      "tokens": [
+        "Text(data=z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7013-2",
+      "description": "z",
+      "input": "z",
+      "tokens": [
+        "Text(data=z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7013-3",
+      "description": "z",
+      "input": "z",
+      "tokens": [
+        "Text(data=z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7013-4",
+      "description": "z",
+      "input": "z",
+      "tokens": [
+        "Text(data=z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7013-5",
+      "description": "z",
+      "input": "z",
+      "tokens": [
+        "Text(data=z)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7014-1",
+      "description": "{",
+      "input": "{",
+      "tokens": [
+        "Text(data={)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7014-2",
+      "description": "{",
+      "input": "{",
+      "tokens": [
+        "Text(data={)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7014-3",
+      "description": "{",
+      "input": "{",
+      "tokens": [
+        "Text(data={)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7014-4",
+      "description": "{",
+      "input": "{",
+      "tokens": [
+        "Text(data={)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7014-5",
+      "description": "{",
+      "input": "{",
+      "tokens": [
+        "Text(data={)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-7015-1",
+      "description": "\\uDBC0\\uDC00",
+      "input": "\udbc0\udc00",
+      "tokens": [
+        "Text(data=\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-7015-2",
+      "description": "\\uDBC0\\uDC00",
+      "input": "\udbc0\udc00",
+      "tokens": [
+        "Text(data=\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html5lib-smoke-7015-3",
+      "description": "\\uDBC0\\uDC00",
+      "input": "\udbc0\udc00",
+      "tokens": [
+        "Text(data=\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-7015-4",
+      "description": "\\uDBC0\\uDC00",
+      "input": "\udbc0\udc00",
+      "tokens": [
+        "Text(data=\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-7015-5",
+      "description": "\\uDBC0\\uDC00",
+      "input": "\udbc0\udc00",
+      "tokens": [
+        "Text(data=\udbc0\udc00)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
     }
   ],
   "skipped": []

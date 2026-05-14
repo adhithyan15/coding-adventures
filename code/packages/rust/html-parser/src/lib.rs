@@ -3158,6 +3158,10 @@ impl HtmlParser {
             return false;
         }
 
+        if incoming_name == "input" && self.current_element_is_marked_fragment_context("select") {
+            return true;
+        }
+
         self.close_open_element_if(|name| name == "option");
         self.close_open_element_if(|name| name == "select");
         incoming_name == "select"

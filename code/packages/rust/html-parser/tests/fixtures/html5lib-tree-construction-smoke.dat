@@ -25511,16 +25511,6 @@ select
 #document
 | <option>
 
-#source tests_innerHTML_1.dat:76
-#data
-<input><option>
-#errors
-#document-fragment
-select
-#document
-| <input>
-| <option>
-
 #source tests_innerHTML_1.dat:77
 #data
 <keygen><option>
@@ -40367,3 +40357,29 @@ eof-in-math
 |       <select>
 |         <option>
 |           "a"
+
+#source template.dat:109
+#data
+<template><form><input name="q"></form><div>second</div></template>
+#errors
+#document-fragment
+template
+#document
+| <template>
+|   content
+|     <form>
+|       <input>
+|         name="q"
+|     <div>
+|       "second"
+
+
+#source tests_innerHTML_1.dat:76
+#data
+<input><option>
+#errors
+(1,7): XXX-undefined-error
+#document-fragment
+select
+#document
+| <option>
