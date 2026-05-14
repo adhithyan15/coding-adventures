@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add Shockley diode elements with Newton-linearized DC operating-point support
+  and zero-bias small-signal conductance for AC/transfer analysis.
 - Add current-controlled voltage source support across DC, AC, transfer
   function, sensitivity, Monte Carlo, and transient analyses.
 - Add current-controlled current source support across DC, AC, transfer

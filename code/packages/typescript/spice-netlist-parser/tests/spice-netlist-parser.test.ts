@@ -120,6 +120,37 @@ Rload out 0 500
     expect(result.voltage("out")).toBeCloseTo(1.0, 9);
   });
 
+  it("parses diode models into operating-point circuits", () => {
+    const parsed = parseNetlist(`
+.model fast D(IS=1e-12 VT=25m)
+V1 in 0 DC 0.7
+D1 in out fast
+Rload out 0 1k
+.op
+`);
+
+    expect(parsed.models.get("fast")).toEqual({
+      name: "fast",
+      kind: "D",
+      params: new Map([
+        ["IS", 1.0e-12],
+        ["VT", 25.0e-3],
+      ]),
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "diode",
+      name: "D1",
+      anode: "in",
+      cathode: "out",
+      saturationCurrent: 1.0e-12,
+      thermalVoltage: 25.0e-3,
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeGreaterThan(0.1);
+    expect(result.voltage("out")).toBeLessThan(0.7);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
@@ -253,6 +284,23 @@ Rload out 0 500
     expect(result.voltage("out")).toBeCloseTo(1.0, 9);
   });
 
+  it("expands subcircuit diode nodes into engine elements", () => {
+    const parsed = parseNetlist(`
+.model clamp D(IS=1e-12 VT=25m)
+.subckt limiter inp outp
+Dlim inp outp clamp
+.ends limiter
+Xlim in out limiter
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      name: "Xlim.Dlim",
+      anode: "in",
+      cathode: "out",
+    });
+  });
+
   it("scopes subcircuit internal nodes by instance", () => {
     const parsed = parseNetlist(`
 .subckt load in out
@@ -282,8 +330,20 @@ Xright c d load
   });
 
   it("rejects unsupported elements with line numbers", () => {
-    expect(() => parseNetlist("\nD1 a 0 diode\n")).toThrow(NetlistParseError);
-    expect(() => parseNetlist("\nD1 a 0 diode\n")).toThrow("line 2: unsupported element");
+    expect(() => parseNetlist("\nQ1 c b e model\n")).toThrow(NetlistParseError);
+    expect(() => parseNetlist("\nQ1 c b e model\n")).toThrow("line 2: unsupported element");
+  });
+
+  it("rejects unknown diode models", () => {
+    expect(() => parseNetlist("D1 a 0 missing\n")).toThrow(
+      "line 1: unknown model \"missing\" for diode \"D1\"",
+    );
+  });
+
+  it("rejects non-diode models for diode elements", () => {
+    expect(() => parseNetlist(".model amp NPN(IS=1e-12)\nD1 a 0 amp\n")).toThrow(
+      'line 2: model "amp" has kind "NPN", expected "D"',
+    );
   });
 
   it("rejects unbalanced waveform parentheses", () => {

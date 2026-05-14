@@ -8,6 +8,7 @@ export type Element =
   | Inductor
   | VoltageSource
   | CurrentSource
+  | Diode
   | Vccs
   | Vcvs
   | Cccs
@@ -269,6 +270,15 @@ export interface CurrentSource {
   readonly negative: string;
   readonly current: number;
   readonly waveform?: Waveform;
+}
+
+export interface Diode {
+  readonly kind: "diode";
+  readonly name: string;
+  readonly anode: string;
+  readonly cathode: string;
+  readonly saturationCurrent: number;
+  readonly thermalVoltage: number;
 }
 
 export interface Vccs {
@@ -545,6 +555,23 @@ export function currentSourceWithWaveform(
     negative,
     current,
     waveform,
+  };
+}
+
+export function diode(
+  name: string,
+  anode: string,
+  cathode: string,
+  saturationCurrent = 1.0e-15,
+  thermalVoltage = 0.02585,
+): Diode {
+  return {
+    kind: "diode",
+    name,
+    anode,
+    cathode,
+    saturationCurrent,
+    thermalVoltage,
   };
 }
 
@@ -1091,6 +1118,12 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "current",
         nominalValue: element.current,
       };
+    case "diode":
+      return {
+        elementName: element.name,
+        parameter: "saturationCurrent",
+        nominalValue: element.saturationCurrent,
+      };
     case "vccs":
       return {
         elementName: element.name,
@@ -1149,6 +1182,12 @@ function circuitWithPerturbedElement(
         break;
       case "current-source":
         perturbed.add({ ...element, current: element.current + delta });
+        break;
+      case "diode":
+        perturbed.add({
+          ...element,
+          saturationCurrent: element.saturationCurrent + delta,
+        });
         break;
       case "vccs":
         perturbed.add({
@@ -1254,6 +1293,16 @@ function randomizedElement(
         ...element,
         current: randomizedValue(element.current, tolerance, distribution, rng),
       };
+    case "diode":
+      return {
+        ...element,
+        saturationCurrent: randomizedValue(
+          element.saturationCurrent,
+          tolerance,
+          distribution,
+          rng,
+        ),
+      };
     case "vccs":
       return {
         ...element,
@@ -1323,6 +1372,7 @@ interface InductorState {
 interface LinearSolution {
   readonly nodeVoltages: ReadonlyMap<string, number>;
   readonly branchCurrents: ReadonlyMap<string, number>;
+  readonly vector: readonly number[];
 }
 
 interface AcSolution {
@@ -1353,8 +1403,59 @@ function solveLinearCircuit(
   const matrixSize = nodeCount + branchCount;
 
   if (matrixSize === 0) {
-    return { nodeVoltages: new Map(), branchCurrents: new Map() };
+    return { nodeVoltages: new Map(), branchCurrents: new Map(), vector: [] };
   }
+
+  const hasDiode = circuit.elements().some((element) => element.kind === "diode");
+  let operatingPoint = Array.from({ length: matrixSize }, () => 0.0);
+  let solution = solveLinearCircuitAtOperatingPoint(
+    circuit,
+    capacitorStates,
+    inductorStates,
+    sourceTime,
+    nodeIndices,
+    voltageSources,
+    nodeCount,
+    matrixSize,
+    operatingPoint,
+  );
+  if (!hasDiode) {
+    return solution;
+  }
+
+  for (let iteration = 0; iteration < 80; iteration++) {
+    const delta = maxVectorDelta(solution.vector, operatingPoint);
+    operatingPoint = [...solution.vector];
+    if (delta < 1.0e-9) {
+      return solution;
+    }
+    solution = solveLinearCircuitAtOperatingPoint(
+      circuit,
+      capacitorStates,
+      inductorStates,
+      sourceTime,
+      nodeIndices,
+      voltageSources,
+      nodeCount,
+      matrixSize,
+      operatingPoint,
+    );
+  }
+
+  return solution;
+}
+
+function solveLinearCircuitAtOperatingPoint(
+  circuit: Circuit,
+  capacitorStates: readonly CapacitorState[],
+  inductorStates: readonly InductorState[],
+  sourceTime: number | undefined,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  matrixSize: number,
+  operatingPoint: readonly number[],
+): LinearSolution {
 
   const matrix = Array.from({ length: matrixSize }, () =>
     Array.from({ length: matrixSize }, () => 0.0),
@@ -1393,6 +1494,9 @@ function solveLinearCircuit(
         break;
       case "current-source":
         stampCurrentSource(element, nodeIndices, rhs, sourceTime);
+        break;
+      case "diode":
+        stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -1441,7 +1545,15 @@ function solveLinearCircuit(
     branchCurrents,
   );
 
-  return { nodeVoltages, branchCurrents };
+  return { nodeVoltages, branchCurrents, vector: solution };
+}
+
+function maxVectorDelta(left: readonly number[], right: readonly number[]): number {
+  let max = 0.0;
+  for (let index = 0; index < left.length; index++) {
+    max = Math.max(max, Math.abs(left[index] - right[index]));
+  }
+  return max;
 }
 
 function buildSmallSignalMatrix(
@@ -1488,6 +1600,15 @@ function buildSmallSignalMatrix(
         if (!Number.isFinite(element.current)) {
           throw invalidElement(element.name, "current must be finite");
         }
+        break;
+      case "diode":
+        validateDiode(element);
+        stampConductance(
+          matrix,
+          nodeIndex(nodeIndices, element.anode),
+          nodeIndex(nodeIndices, element.cathode),
+          element.saturationCurrent / element.thermalVoltage,
+        );
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -1549,6 +1670,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "resistor":
       case "capacitor":
       case "inductor":
+      case "diode":
       case "vccs":
       case "vcvs":
       case "cccs":
@@ -1609,6 +1731,15 @@ function buildAcMatrix(
         if (!Number.isFinite(element.current)) {
           throw invalidElement(element.name, "current must be finite");
         }
+        break;
+      case "diode":
+        validateDiode(element);
+        stampComplexConductance(
+          matrix,
+          nodeIndex(nodeIndices, element.anode),
+          nodeIndex(nodeIndices, element.cathode),
+          complex(element.saturationCurrent / element.thermalVoltage, 0.0),
+        );
         break;
       case "vccs":
         stampAcVccs(element, nodeIndices, matrix);
@@ -1803,6 +1934,10 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         insertNode(names, element.positive);
         insertNode(names, element.negative);
         break;
+      case "diode":
+        insertNode(names, element.anode);
+        insertNode(names, element.cathode);
+        break;
       case "vccs":
         insertNode(names, element.positive);
         insertNode(names, element.negative);
@@ -1883,6 +2018,7 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
       (element.kind === "resistor" ||
         element.kind === "capacitor" ||
         element.kind === "inductor" ||
+        element.kind === "diode" ||
         element.kind === "vccs" ||
         element.kind === "vcvs" ||
         element.kind === "cccs" ||
@@ -2121,6 +2257,34 @@ function stampConductance(
   }
 }
 
+function stampDiode(
+  element: Diode,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+  operatingPoint: readonly number[],
+): void {
+  validateDiode(element);
+  const anode = nodeIndex(nodeIndices, element.anode);
+  const cathode = nodeIndex(nodeIndices, element.cathode);
+  const voltage =
+    (anode === undefined ? 0.0 : operatingPoint[anode]) -
+    (cathode === undefined ? 0.0 : operatingPoint[cathode]);
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / element.thermalVoltage));
+  const expValue = Math.exp(exponent);
+  const current = element.saturationCurrent * (expValue - 1.0);
+  const conductance = element.saturationCurrent / element.thermalVoltage * expValue;
+  const equivalentCurrent = current - conductance * voltage;
+
+  stampConductance(matrix, anode, cathode, conductance);
+  if (anode !== undefined) {
+    rhs[anode] -= equivalentCurrent;
+  }
+  if (cathode !== undefined) {
+    rhs[cathode] += equivalentCurrent;
+  }
+}
+
 function validateReactiveElements(circuit: Circuit): void {
   for (const element of circuit.elements()) {
     if (element.kind === "capacitor") {
@@ -2128,6 +2292,15 @@ function validateReactiveElements(circuit: Circuit): void {
     } else if (element.kind === "inductor") {
       validateInductor(element);
     }
+  }
+}
+
+function validateDiode(element: Diode): void {
+  if (!Number.isFinite(element.saturationCurrent) || element.saturationCurrent <= 0.0) {
+    throw invalidElement(element.name, "saturation current must be finite and positive");
+  }
+  if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
+    throw invalidElement(element.name, "thermal voltage must be finite and positive");
   }
 }
 
