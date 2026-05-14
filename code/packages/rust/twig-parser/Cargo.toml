@@ -6,10 +6,11 @@ description = "Twig (Lisp-precursor) parser — thin wrapper over GrammarParser 
 build = "build.rs"
 
 [dependencies]
-grammar-tools = { path = "../grammar-tools" }
-lexer         = { path = "../lexer" }
-parser        = { path = "../parser" }
-twig-lexer    = { path = "../twig-lexer" }
+grammar-tools     = { path = "../grammar-tools" }
+lexer             = { path = "../lexer" }
+parser            = { path = "../parser" }
+twig-lexer        = { path = "../twig-lexer" }
+type-declarations = { path = "../type-declarations" }
 # Required by `bin/twig_spec_dump.rs` to pretty-print the language-spec
 # JSON.  Library code in twig-parser does not depend on serde_json.
 serde_json    = "1.0"

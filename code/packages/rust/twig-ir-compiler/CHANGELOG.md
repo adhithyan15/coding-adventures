@@ -1,5 +1,41 @@
 # Changelog — twig-ir-compiler
 
+## [0.6.0] — 2026-05-14
+
+### Added (LANG50 — Annotation-aware IIR emission)
+
+- `compile_typed_source(source, module_name) -> Result<IIRModule, TwigCompileError>`
+  — new compilation entry point that runs the LANG50 grammar-type-checker pass
+  first and post-processes the resulting IIR to propagate concrete `type_hint`
+  values (`"i64"`, `"bool"`, `"str"`, `"closure"`) on instructions whose source
+  positions map to concretely-typed `AnnotatedNode`s.
+- `build_hint_map` — traverses the `AnnotatedNode` tree to build a
+  `HashMap<(line, col), &'static str>` of concrete hints.
+- `apply_hints` — post-processes an `IIRFunction`'s instructions using the
+  hint map and the function's `source_map` for position correlation.
+- `set_function_type_status` — sets `IIRFunction::type_status` to
+  `FullyTyped` / `PartiallyTyped` / `Untyped` based on the fraction of
+  non-void instructions carrying a concrete type hint.
+- 7 new unit tests in `tests` module:
+  `typed_source_int_literal_hint`, `typed_source_bool_literal_hint`,
+  `typed_source_nil_literal_hint`, `typed_source_untyped_fallback`,
+  `typed_source_function_status_fully_typed`,
+  `typed_source_strict_mode_type_error_returns_err`,
+  `typed_source_off_mode_no_errors`.
+
+### Dependencies added
+
+- `type-declarations = { path = "../type-declarations" }`
+
+### Backward compatibility
+
+- `compile_source` and `compile_program` are **unchanged**.
+- `FunctionTypeStatus` set by `set_function_type_status` only affects
+  functions compiled via `compile_typed_source`; the existing path still
+  emits `Untyped` everywhere.
+
+---
+
 ## [0.5.0] — 2026-05-14
 
 ### Added (LANG49 — TW05-B type-check pre-pass)

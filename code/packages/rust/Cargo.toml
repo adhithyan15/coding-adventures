@@ -453,6 +453,8 @@ members = [
     "upc-a",
     "x25519",
     "type-checker-protocol",
+    "type-declarations",
+    "grammar-type-checker",
     "nib-lexer",
     "nib-parser",
     "nib-type-checker",

@@ -1,5 +1,39 @@
 # Changelog — twig-type-checker
 
+## [0.2.0] — 2026-05-14
+
+### Added (LANG50 — Generic Grammar Type Checker integration)
+
+- `type_check_source(source) -> Result<TypeCheckResult<AnnotatedNode>, TwigTypeCheckError>`
+  — new **compilation-first** entry point.  Runs `parse_to_ast` + `emit_type_declarations`
+  + `grammar_type_checker::check` to return a fully-annotated `AnnotatedNode` tree where
+  every node carries a `KindDecl` (and thus an IIR `type_hint` via `iir_hint()`).
+  Annotation is **always built** — even in `Off` mode — so the IIR compiler can use it
+  regardless of enforcement level.
+- `TwigLanguageProfile` (`src/profile.rs`) — implements `grammar_type_checker::LanguageProfile`
+  for Twig grammar rule names.  Transparent descent through `expr`/`compound`/`form` wrapper
+  nodes via `unwrap_expr`.  Handles: literals (`atom` + INTEGER/BOOL_TRUE/BOOL_FALSE/nil,
+  `quoted`), var refs (`atom` + NAME), function application (`apply`), lambda binding
+  (`lambda_form`), let binding (`let_form`), function-sugar define (`define` with LPAREN sig),
+  match expressions (`match_form`), begin sequences (`begin_form`), and if conditionals
+  (via `child_exprs` fallback).
+- `TwigLanguageProfile` re-exported from `crate` root.
+- `AnnotatedNode` re-exported from `crate` root.
+- 13 unit tests in `profile.rs` for the new path.
+
+### Dependencies added
+
+- `grammar-type-checker = { path = "../grammar-type-checker" }`
+- `type-declarations = { path = "../type-declarations" }`
+- `parser = { path = "../parser" }`
+
+### Backward compatibility
+
+- `type_check` and `check_program` are **unchanged** — existing callers work without
+  modification.  The new `type_check_source` path is additive only.
+
+---
+
 ## [0.1.0] — 2026-05-14
 
 Initial release. TW05-B — base static type checker for Twig.

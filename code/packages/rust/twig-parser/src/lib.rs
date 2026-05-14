@@ -64,6 +64,7 @@
 
 pub mod ast_extract;
 pub mod ast_nodes;
+pub mod type_decls;
 
 use std::fmt;
 use std::sync::OnceLock;
@@ -101,6 +102,7 @@ fn twig_parser_grammar() -> &'static ParserGrammar {
 pub use ast_extract::{
     check_membership_int_count, extract_program, MAX_AST_DEPTH, MAX_MEMBERSHIP_INT_VALUES,
 };
+pub use type_decls::emit_type_declarations;
 pub use ast_nodes::{
     // ── Atoms ─────────────────────────────────────────────────────────────
     Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
