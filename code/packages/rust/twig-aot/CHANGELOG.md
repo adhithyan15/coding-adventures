@@ -1,5 +1,39 @@
 # Changelog — `twig-aot`
 
+## 0.2.0 — 2026-05-14 (LANG46 phase 1 — per-host runtime archives)
+
+**Extend `build.rs` to produce per-host runtime archives plus stubs for
+non-host targets.**
+
+Sets up the runtime-archive layer that phase 10's multi-target driver
+will consume.  After this release, `twig-aot` compiled on any of the
+three V1-supported hosts exports three env vars
+(`TWIG_RUNTIME_ARCHIVE_MACOS_ARM64`,
+`TWIG_RUNTIME_ARCHIVE_LINUX_X86_64`,
+`TWIG_RUNTIME_ARCHIVE_WINDOWS_X86_64`), each pointing at either the
+real archive (for the build host's target) or a 1-byte stub (for
+other targets).
+
+The phase 10 driver uses these env vars with `include_bytes!` to bake
+all three runtime archives into the `twig-aot` binary; at AOT compile
+time, it picks the right one based on `--target` and refuses to emit
+for a target whose archive is a stub with a clear "no runtime archive
+for X on this host" error.
+
+### Host-targets-host policy
+
+V1 supports only host-targets-host AOT.  Each CI runner builds for
+its own host and verifies its respective smoke test.  Cross-OS
+compilation is deferred — adding it requires bundling cross
+toolchains with `twig-aot` or detecting them on the host.
+
+### Backwards compatibility
+
+The existing `TWIG_RUNTIME_ARCHIVE` env var is preserved as an alias
+for the host's archive (or a legacy stub on unsupported hosts), so
+the existing `compile_file_macos_arm64` entry point continues to
+work without changes.
+
 ## 0.1.9 — 2026-05-13 (LANG42)
 
 **Wire the refinement obligation checker into the AOT pipeline.**
