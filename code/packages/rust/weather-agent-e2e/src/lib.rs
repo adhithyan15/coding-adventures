@@ -4,6 +4,7 @@ use std::error::Error;
 use std::fmt;
 use std::fs;
 use std::io::{Read, Write};
+use std::net::TcpListener;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -19,7 +20,7 @@ use capability_cage::{
 };
 use capability_os_sandbox::{
     current_kernel_sandbox_support, plan_all_supported, plan_for_current_os,
-    run_with_kernel_sandbox, OsFamily, SandboxPlanSummary,
+    run_with_kernel_sandbox, OsFamily, SandboxPlan, SandboxPlanSummary,
 };
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
@@ -493,7 +494,12 @@ pub struct UmbrellaKernelSandboxSummary {
     pub enforced: bool,
     pub allowed_write_succeeded: bool,
     pub denied_write_blocked: bool,
+    pub network_outbound_enforced: bool,
+    pub network_denied_outbound_blocked: bool,
+    pub weather_https_allowed: bool,
+    pub host_exact_kernel_enforced: bool,
     pub denied_path: PathBuf,
+    pub denied_network_target: String,
     pub status_code: Option<i32>,
     pub stderr_contains_operation_not_permitted: bool,
     pub reason: String,
@@ -1621,6 +1627,7 @@ fn probe_agent_kernel_sandbox(
 ) -> UmbrellaResult<UmbrellaKernelSandboxSummary> {
     let support = current_kernel_sandbox_support();
     let denied_path = kernel_denied_probe_path(&config.output_path);
+    let denied_network_target = "localhost:<ephemeral-undeclared-port>".to_string();
     if !support.available {
         return Ok(UmbrellaKernelSandboxSummary {
             os: support.os,
@@ -1629,7 +1636,12 @@ fn probe_agent_kernel_sandbox(
             enforced: false,
             allowed_write_succeeded: false,
             denied_write_blocked: false,
+            network_outbound_enforced: false,
+            network_denied_outbound_blocked: false,
+            weather_https_allowed: false,
+            host_exact_kernel_enforced: false,
             denied_path,
+            denied_network_target,
             status_code: None,
             stderr_contains_operation_not_permitted: false,
             reason: support.reason,
@@ -1672,9 +1684,12 @@ fn probe_agent_kernel_sandbox(
         .map(|contents| contents == "kernel sandbox allowed")
         .unwrap_or(false);
     let denied_write_blocked = !denied_path.exists();
+    let network_denied = probe_denied_kernel_network_target(&plan)?;
+    let weather_https_allowed = probe_weather_https_kernel_target(config, &plan)?;
     let stderr_contains_operation_not_permitted = output.stderr.contains("Operation not permitted");
     let enforced = allowed_write_succeeded
         && denied_write_blocked
+        && network_denied.blocked
         && stderr_contains_operation_not_permitted
         && !output.success();
 
@@ -1692,13 +1707,59 @@ fn probe_agent_kernel_sandbox(
         enforced,
         allowed_write_succeeded,
         denied_write_blocked,
+        network_outbound_enforced: network_denied.blocked,
+        network_denied_outbound_blocked: network_denied.blocked,
+        weather_https_allowed,
+        host_exact_kernel_enforced: false,
         denied_path,
+        denied_network_target: network_denied.target,
         status_code: output.status_code,
         stderr_contains_operation_not_permitted,
-        reason:
-            "kernel denied an undeclared filesystem write while allowing the declared report path"
-                .to_string(),
+        reason: "kernel denied undeclared filesystem writes and undeclared outbound TCP ports; macOS Seatbelt constrains Weather.gov to TCP 443 while TLS/application checks retain host identity".to_string(),
     })
+}
+
+struct NetworkProbeSummary {
+    target: String,
+    blocked: bool,
+}
+
+fn probe_denied_kernel_network_target(plan: &SandboxPlan) -> UmbrellaResult<NetworkProbeSummary> {
+    let listener = TcpListener::bind("127.0.0.1:0")?;
+    let port = listener.local_addr()?.port().to_string();
+    let output =
+        run_with_kernel_sandbox(plan, "/usr/bin/nc", ["-z", "-G", "1", "localhost", &port])
+            .map_err(|error| {
+                UmbrellaAgentError::new(format!(
+                    "failed to launch Weather Agent kernel network deny probe: {error}"
+                ))
+            })?;
+
+    Ok(NetworkProbeSummary {
+        target: format!("localhost:{port}"),
+        blocked: !output.success(),
+    })
+}
+
+fn probe_weather_https_kernel_target(
+    config: &UmbrellaAgentConfig,
+    plan: &SandboxPlan,
+) -> UmbrellaResult<bool> {
+    if !matches!(config.weather_source, WeatherSource::LiveNws { .. }) {
+        return Ok(false);
+    }
+
+    let output = run_with_kernel_sandbox(
+        plan,
+        "/usr/bin/curl",
+        ["-I", "--max-time", "8", "https://api.weather.gov"],
+    )
+    .map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to launch Weather Agent kernel Weather.gov allow probe: {error}"
+        ))
+    })?;
+    Ok(output.success())
 }
 
 fn kernel_denied_probe_path(output_path: &Path) -> PathBuf {
