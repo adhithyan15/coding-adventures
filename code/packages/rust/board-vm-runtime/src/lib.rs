@@ -4,7 +4,56 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
     CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ_U8,
     CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    MAX_BYTE_BUFFER_LEN,
 };
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ByteBuffer {
+    len: u8,
+    bytes: [u8; MAX_BYTE_BUFFER_LEN],
+}
+
+impl ByteBuffer {
+    pub const fn empty() -> Self {
+        Self {
+            len: 0,
+            bytes: [0; MAX_BYTE_BUFFER_LEN],
+        }
+    }
+
+    pub fn from_slice(value: &[u8]) -> Result<Self, ByteBufferError> {
+        if value.len() > MAX_BYTE_BUFFER_LEN {
+            return Err(ByteBufferError);
+        }
+        let mut bytes = [0; MAX_BYTE_BUFFER_LEN];
+        bytes[..value.len()].copy_from_slice(value);
+        Ok(Self {
+            len: value.len() as u8,
+            bytes,
+        })
+    }
+
+    pub const fn len(&self) -> usize {
+        self.len as usize
+    }
+
+    pub const fn is_empty(&self) -> bool {
+        self.len == 0
+    }
+
+    pub fn as_slice(&self) -> &[u8] {
+        &self.bytes[..self.len()]
+    }
+}
+
+impl Default for ByteBuffer {
+    fn default() -> Self {
+        Self::empty()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ByteBufferError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Value {
@@ -15,6 +64,7 @@ pub enum Value {
     U32(u32),
     I16(i16),
     Handle(Handle),
+    Bytes(ByteBuffer),
 }
 
 impl Default for Value {
@@ -157,6 +207,7 @@ pub enum RuntimeErrorKind {
     InvalidPin,
     UnsupportedMode,
     BoardFault,
+    ByteBufferTooLarge,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -239,7 +290,12 @@ where
             kind: RuntimeErrorKind::ValidationFailed,
         })?;
         let mut cursor = RunCursor::new();
-        self.run_code_slice(module.code, &mut cursor, instruction_budget)
+        self.run_code_slice_with_const_pool(
+            module.code,
+            module.const_pool,
+            &mut cursor,
+            instruction_budget,
+        )
     }
 
     pub fn run_code(
@@ -261,12 +317,27 @@ where
             ip: 0,
             kind: RuntimeErrorKind::ValidationFailed,
         })?;
-        self.run_code_slice(module.code, cursor, instruction_budget)
+        self.run_code_slice_with_const_pool(
+            module.code,
+            module.const_pool,
+            cursor,
+            instruction_budget,
+        )
     }
 
     pub fn run_code_slice(
         &mut self,
         code: &[u8],
+        cursor: &mut RunCursor,
+        instruction_budget: u32,
+    ) -> Result<RunReport, RuntimeError> {
+        self.run_code_slice_with_const_pool(code, &[], cursor, instruction_budget)
+    }
+
+    fn run_code_slice_with_const_pool(
+        &mut self,
+        code: &[u8],
+        const_pool: &[u8],
         cursor: &mut RunCursor,
         instruction_budget: u32,
     ) -> Result<RunReport, RuntimeError> {
@@ -304,6 +375,24 @@ where
                 Op::PushU16(value) => self.push(Value::U16(value), instruction_ip)?,
                 Op::PushU32(value) => self.push(Value::U32(value), instruction_ip)?,
                 Op::PushI16(value) => self.push(Value::I16(value), instruction_ip)?,
+                Op::PushBytes { offset, len } => {
+                    let start = offset as usize;
+                    let end = start.checked_add(len as usize).ok_or(RuntimeError {
+                        ip: instruction_ip,
+                        kind: RuntimeErrorKind::InvalidBytecode,
+                    })?;
+                    let Some(bytes) = const_pool.get(start..end) else {
+                        return Err(RuntimeError {
+                            ip: instruction_ip,
+                            kind: RuntimeErrorKind::InvalidBytecode,
+                        });
+                    };
+                    let buffer = ByteBuffer::from_slice(bytes).map_err(|_| RuntimeError {
+                        ip: instruction_ip,
+                        kind: RuntimeErrorKind::ByteBufferTooLarge,
+                    })?;
+                    self.push(Value::Bytes(buffer), instruction_ip)?;
+                }
                 Op::Dup => {
                     let value = self.peek(instruction_ip)?;
                     self.push(value, instruction_ip)?;
@@ -881,6 +970,27 @@ mod tests {
         let report = runtime.run_code(&[0x13, 0x34, 0x12, 0x50], 10).unwrap();
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_value, Value::U16(0x1234));
+    }
+
+    #[test]
+    fn push_bytes_returns_const_pool_slice() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x01, 0x00, 0x03, 0x50],
+            const_pool: &[0x00, 0xCA, 0xFE, 0x42],
+        };
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+
+        let report = runtime.run_module(&module, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        let expected = ByteBuffer::from_slice(&[0xCA, 0xFE, 0x42]).unwrap();
+        assert_eq!(report.return_value, Value::Bytes(expected));
+        match report.return_value {
+            Value::Bytes(bytes) => assert_eq!(bytes.as_slice(), &[0xCA, 0xFE, 0x42]),
+            other => panic!("unexpected return value: {other:?}"),
+        }
     }
 
     #[test]

@@ -1750,7 +1750,7 @@ mod tests {
 
     #[test]
     fn writes_generic_module_from_code_and_const_pool() {
-        let code = [0x00];
+        let code = [0x16, 0x00, 0x00, 0x02, 0x50];
         let const_pool = [0xAA, 0x55];
         let mut module = [0u8; 32];
 
@@ -1765,6 +1765,7 @@ mod tests {
         assert_eq!(parsed.max_stack, 1);
         assert_eq!(parsed.code, &code);
         assert_eq!(parsed.const_pool, &const_pool);
+        validate(&parsed, CapabilitySet::empty(), 1).unwrap();
     }
 
     #[test]

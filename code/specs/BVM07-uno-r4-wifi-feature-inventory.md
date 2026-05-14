@@ -70,8 +70,9 @@ reject conflicting handles.
 4. Implement I2C and SPI as bus handles with explicit transfer boundaries;
    `i2c.open` establishes the first I2C handle tranche, while `i2c.write_u8`
    and `i2c.read_u8` prove the Rust-owned transfer path through Arduino
-   `Wire`/`Wire1`. Byte-buffer write/read/transfer transactions follow as
-   separate slices.
+   `Wire`/`Wire1`. The byte-buffer ABI is now the shared value substrate for
+   wider write/read/transfer transactions, which should still land as separate
+   capability slices.
 5. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
    capabilities in separate tranches with conformance tests.
 

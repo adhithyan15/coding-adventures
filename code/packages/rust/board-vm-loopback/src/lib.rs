@@ -508,6 +508,7 @@ impl BoardError {
                 | RuntimeErrorKind::HandleNotFound
                 | RuntimeErrorKind::ResourceBusy
                 | RuntimeErrorKind::InvalidPin
+                | RuntimeErrorKind::ByteBufferTooLarge
                 | RuntimeErrorKind::UnsupportedMode => ERROR_INVALID_PROGRAM,
                 RuntimeErrorKind::BoardFault => ERROR_BOARD_FAULT,
             },
@@ -529,6 +530,7 @@ impl BoardError {
                 | RuntimeErrorKind::HandleNotFound
                 | RuntimeErrorKind::ResourceBusy
                 | RuntimeErrorKind::InvalidPin
+                | RuntimeErrorKind::ByteBufferTooLarge
                 | RuntimeErrorKind::UnsupportedMode => "runtime rejected program",
                 RuntimeErrorKind::InvalidBytecode | RuntimeErrorKind::ValidationFailed => {
                     "invalid bytecode"
