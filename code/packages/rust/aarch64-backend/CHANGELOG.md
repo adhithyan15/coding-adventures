@@ -1,5 +1,35 @@
 # Changelog — `aarch64-backend`
 
+## 0.2.1 — 2026-05-13 (LANG39)
+
+**Global variable load / store lowering.**
+
+Wires the `global_load` and `global_store` CIR opcodes into the dispatch table.
+
+### New CIR opcodes handled
+
+| CIR opcode | ARM64 sequence | Notes |
+|------------|----------------|-------|
+| `global_load Var(name)` | `ADRP X1 + ADD X1 + LDR X0 + STR X0` | 4 instructions; reads from `_twig_globals[slot*8]` |
+| `global_store Var(name), val` | `LDR X0 + ADRP X1 + ADD X1 + STR X0` | 4 instructions; writes to `_twig_globals[slot*8]` |
+
+### New public API
+
+- `compile_with_globals(ctx, ir, global_slots) → (bytes, ExternalRelocs, GlobalWordRelocs)` —
+  like `compile_with_relocs` but also accepts a `HashMap<String, usize>` mapping global names
+  to slot indices and returns `Vec<GlobalWordReloc>` for Mach-O ARM64 relocation emission.
+
+- `GlobalWordReloc { adrp_word: usize, add_word: usize }` — word-index pair for one
+  `ARM64_RELOC_PAGE21` + `ARM64_RELOC_PAGEOFF12` relocation site.
+
+### Implementation notes
+
+- The ADRP and ADD are placeholder instructions (`ADRP Xd, #0` / `ADD X1, X1, #0`);
+  the system linker patches the immediates when producing the final executable.
+- The LDR/STR slot offset (`slot * 8`) is baked in at compile time.
+- 5 new unit tests cover the opcode handlers, slot offset encoding, error handling,
+  and multi-global reloc counting.
+
 ## 0.2.0 — 2026-05-13 (LANG38)
 
 **Division, modulo, bitwise logic, shifts, negate, and bitwise-NOT lowering.**

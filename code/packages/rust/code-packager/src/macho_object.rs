@@ -234,6 +234,306 @@ pub fn pack_object(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
 /// Conventional file extension for object files written by [`pack_object`].
 pub fn file_extension() -> &'static str { ".o" }
 
+// ── Global-variable support (LANG39) ─────────────────────────────────────────
+
+/// ARM64 relocation type codes (subset of `<mach-o/arm64/reloc.h>`).
+const ARM64_RELOC_PAGE21:    u32 = 1;
+const ARM64_RELOC_PAGEOFF12: u32 = 2;
+
+/// Byte offsets within the `__text` section of one `ADRP + ADD` instruction
+/// pair that must be patched by the system linker to address `_twig_globals`.
+///
+/// These correspond directly to [`aarch64_backend::GlobalWordReloc`] after
+/// converting word indices to byte offsets.
+///
+/// The Mach-O packager emits two relocation records per [`GlobalByteReloc`]:
+///
+/// 1. `ARM64_RELOC_PAGE21` at `adrp_byte_offset` — patches the 21-bit page
+///    offset in the `ADRP X1, #0` instruction.
+/// 2. `ARM64_RELOC_PAGEOFF12` at `add_byte_offset` — patches the 12-bit
+///    page-relative offset in the `ADD X1, X1, #0` instruction.
+///
+/// Both records reference the `_twig_globals` symbol (symbol table index 1).
+#[derive(Debug, Clone, Copy)]
+pub struct GlobalByteReloc {
+    /// Byte offset in the linked `__text` section of the `ADRP` instruction.
+    pub adrp_byte_offset: u32,
+    /// Byte offset in the linked `__text` section of the `ADD` instruction.
+    pub add_byte_offset:  u32,
+}
+
+// Header constant with two sections (for pack_object_with_globals).
+//
+// LC_SEGMENT_64 command with 2 sections = 72 + 2*80 = 232
+const LC_SEGMENT_TWO_SECTS: usize = LC_SEGMENT_SIZE + 2 * SECTION_SIZE;
+const HEADER_TOTAL_WITH_DATA: usize = MACH_HEADER_SIZE
+    + LC_SEGMENT_TWO_SECTS
+    + LC_BUILD_VERSION_SIZE
+    + LC_SYMTAB_SIZE; // = 312
+
+/// Like [`pack_object`] but also emits a `__DATA/__data` section that holds
+/// the Twig program's global variable slots, plus `ARM64_RELOC_PAGE21` /
+/// `ARM64_RELOC_PAGEOFF12` relocation records so the system linker can patch
+/// the `ADRP + ADD` address-materialisation pairs in the code.
+///
+/// # Parameters
+///
+/// - `text_bytes` — ARM64 machine code for the `__text` section.
+/// - `entry_point` — byte offset of `_main` within `text_bytes`.
+/// - `globals_n_slots` — number of 8-byte global variable slots.  The
+///   `__data` section will be `globals_n_slots * 8` bytes of zeroes.
+///   Pass `0` if there are no global accesses (the function degenerates to
+///   [`pack_object`] but with two sections and two symbols).
+/// - `text_relocs` — one [`GlobalByteReloc`] per `global_load`/`global_store`
+///   instruction across all compiled functions.
+/// - `target` — must be `macos` + `arm64` (x86_64 global support is NYI).
+///
+/// # Object-file layout
+///
+/// ```text
+/// 0              │ 312     │ Headers (mach_header_64 + LC_SEGMENT_64×2 + LC_BUILD_VERSION + LC_SYMTAB)
+/// 312            │ N       │ __text bytes
+/// 312+N          │ M       │ __data bytes (zero-initialised globals, M = globals_n_slots * 8)
+/// 312+N+M        │ 2*R*8   │ text relocation records (2 per global access = 2 × R × 8 bytes)
+/// 312+N+M+2*R*8  │ 32      │ 2 nlist_64 entries: _main (sect 1) + _twig_globals (sect 2)
+/// …              │ S       │ string table: "\0_main\0_twig_globals\0"
+/// ```
+///
+/// where `R = text_relocs.len()`.
+pub fn pack_object_with_globals(
+    text_bytes: &[u8],
+    entry_point: usize,
+    globals_n_slots: usize,
+    text_relocs: &[GlobalByteReloc],
+    target: &Target,
+) -> Result<Vec<u8>, PackagerError> {
+    if target.os != "macos" {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "pack_object_with_globals expects os=macos, got {:?}", target.os
+        )));
+    }
+    if target.arch != "arm64" {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "pack_object_with_globals: ARM64 global relocations only; got arch {:?}", target.arch
+        )));
+    }
+    let (cputype, cpusubtype) = cpu_type(target)?;
+
+    let code_len   = text_bytes.len() as u64;
+    let data_len   = (globals_n_slots * 8) as u64;
+    let n_relocs   = text_relocs.len() as u32;     // each becomes 2 reloc records
+    let reloc_bytes = (n_relocs as u64) * 2 * 8;   // 8 bytes per relocation_info
+    let entry_off  = entry_point as u64;
+
+    if entry_off > code_len {
+        return Err(PackagerError::UnsupportedTarget(format!(
+            "pack_object_with_globals: entry_point {entry_off} exceeds text length {code_len}"
+        )));
+    }
+
+    // ── String table ─────────────────────────────────────────────────────────
+    //
+    // Layout: "\0_main\0_twig_globals\0"
+    //                                 ^-- symbol 1 n_strx = 1 (_main)
+    //                                             ^-- symbol 2 n_strx = 7 (_twig_globals)
+    const GLOBALS_SYMBOL: &str = "_twig_globals";
+    let strtab: Vec<u8> = {
+        let mut s = Vec::new();
+        s.push(0u8);                                // leading NUL (reserved)
+        s.extend_from_slice(ENTRY_SYMBOL.as_bytes()); // "_main"
+        s.push(0u8);
+        s.extend_from_slice(GLOBALS_SYMBOL.as_bytes()); // "_twig_globals"
+        s.push(0u8);
+        s
+    };
+    // n_strx for _twig_globals = 1 (skip leading NUL) + len("_main") + 1 (NUL)
+    let twig_globals_strx: u32 = 1 + ENTRY_SYMBOL.len() as u32 + 1;
+
+    // ── File-offset calculations ──────────────────────────────────────────────
+    let text_file_off  = HEADER_TOTAL_WITH_DATA as u64;
+    let data_file_off  = text_file_off + code_len;
+    let reloc_file_off = data_file_off + data_len;
+    let symtab_off     = reloc_file_off + reloc_bytes;
+    let strtab_off     = symtab_off + 2 * NLIST_64_SIZE as u64; // 2 symbols
+
+    let total_size: usize = strtab_off as usize + strtab.len();
+
+    // ── sizeofcmds ───────────────────────────────────────────────────────────
+    let sizeofcmds: u32 = (LC_SEGMENT_TWO_SECTS + LC_BUILD_VERSION_SIZE + LC_SYMTAB_SIZE) as u32;
+
+    let mut out: Vec<u8> = Vec::with_capacity(total_size);
+
+    // ── mach_header_64 ───────────────────────────────────────────────────────
+    out.extend_from_slice(&MH_MAGIC_64.to_le_bytes());
+    out.extend_from_slice(&cputype.to_le_bytes());
+    out.extend_from_slice(&cpusubtype.to_le_bytes());
+    out.extend_from_slice(&MH_OBJECT.to_le_bytes());
+    out.extend_from_slice(&3u32.to_le_bytes());          // ncmds = 3
+    out.extend_from_slice(&sizeofcmds.to_le_bytes());
+    out.extend_from_slice(&0u32.to_le_bytes());          // flags
+    out.extend_from_slice(&0u32.to_le_bytes());          // reserved
+    debug_assert_eq!(out.len(), MACH_HEADER_SIZE);
+
+    // ── LC_SEGMENT_64 (two sections: __text + __data) ─────────────────────
+    //
+    // In MH_OBJECT files the segment command has an empty segname and covers
+    // all sections.  The vmsize spans both sections back-to-back.
+    let segment_vmsize = code_len + data_len;
+    out.extend_from_slice(&LC_SEGMENT_64.to_le_bytes());
+    out.extend_from_slice(&(LC_SEGMENT_TWO_SECTS as u32).to_le_bytes()); // cmdsize
+    write_name16(&mut out, b"");                  // segname = empty
+    out.extend_from_slice(&0u64.to_le_bytes());   // vmaddr = 0
+    out.extend_from_slice(&segment_vmsize.to_le_bytes()); // vmsize
+    out.extend_from_slice(&text_file_off.to_le_bytes());  // fileoff = first section offset
+    out.extend_from_slice(&segment_vmsize.to_le_bytes()); // filesize
+    out.extend_from_slice(&7u32.to_le_bytes());   // maxprot  = rwx
+    out.extend_from_slice(&7u32.to_le_bytes());   // initprot = rwx
+    out.extend_from_slice(&2u32.to_le_bytes());   // nsects = 2
+    out.extend_from_slice(&0u32.to_le_bytes());   // flags
+
+    // ── section_64: __text / __TEXT ─────────────────────────────────────────
+    //
+    // reloff points to the relocation records that follow the data section.
+    write_name16(&mut out, b"__text");
+    write_name16(&mut out, b"__TEXT");
+    out.extend_from_slice(&0u64.to_le_bytes());          // addr = 0 (relocatable)
+    out.extend_from_slice(&code_len.to_le_bytes());       // size
+    out.extend_from_slice(&(text_file_off as u32).to_le_bytes()); // offset
+    out.extend_from_slice(&4u32.to_le_bytes());           // align = 2^4 = 16
+    // reloff = file offset of our relocation records
+    out.extend_from_slice(&(reloc_file_off as u32).to_le_bytes());
+    // nreloc = 2 records per GlobalByteReloc (PAGE21 + PAGEOFF12)
+    out.extend_from_slice(&(n_relocs * 2).to_le_bytes());
+    out.extend_from_slice(&SECTION_FLAGS_CODE.to_le_bytes());
+    out.extend_from_slice(&0u32.to_le_bytes());           // reserved1
+    out.extend_from_slice(&0u32.to_le_bytes());           // reserved2
+    out.extend_from_slice(&0u32.to_le_bytes());           // reserved3
+
+    // ── section_64: __data / __DATA ─────────────────────────────────────────
+    //
+    // Zero-initialised mutable data holding global variable slots.
+    // No relocations in the data section itself.
+    write_name16(&mut out, b"__data");
+    write_name16(&mut out, b"__DATA");
+    out.extend_from_slice(&code_len.to_le_bytes());  // addr = immediately after __text
+    out.extend_from_slice(&data_len.to_le_bytes());  // size = n_slots * 8
+    out.extend_from_slice(&(data_file_off as u32).to_le_bytes()); // offset
+    out.extend_from_slice(&3u32.to_le_bytes());       // align = 2^3 = 8 (64-bit slots)
+    out.extend_from_slice(&0u32.to_le_bytes());       // reloff = 0 (no data relocs)
+    out.extend_from_slice(&0u32.to_le_bytes());       // nreloc = 0
+    out.extend_from_slice(&0u32.to_le_bytes());       // flags = S_REGULAR (plain data)
+    out.extend_from_slice(&0u32.to_le_bytes());       // reserved1
+    out.extend_from_slice(&0u32.to_le_bytes());       // reserved2
+    out.extend_from_slice(&0u32.to_le_bytes());       // reserved3
+
+    debug_assert_eq!(out.len(), MACH_HEADER_SIZE + LC_SEGMENT_TWO_SECTS);
+
+    // ── LC_BUILD_VERSION ─────────────────────────────────────────────────────
+    out.extend_from_slice(&LC_BUILD_VERSION.to_le_bytes());
+    out.extend_from_slice(&(LC_BUILD_VERSION_SIZE as u32).to_le_bytes());
+    out.extend_from_slice(&PLATFORM_MACOS.to_le_bytes());
+    out.extend_from_slice(&MIN_OS_VERSION.to_le_bytes());
+    out.extend_from_slice(&SDK_VERSION.to_le_bytes());
+    out.extend_from_slice(&0u32.to_le_bytes());       // ntools
+
+    // ── LC_SYMTAB ────────────────────────────────────────────────────────────
+    out.extend_from_slice(&LC_SYMTAB.to_le_bytes());
+    out.extend_from_slice(&(LC_SYMTAB_SIZE as u32).to_le_bytes());
+    out.extend_from_slice(&(symtab_off as u32).to_le_bytes());    // symoff
+    out.extend_from_slice(&2u32.to_le_bytes());                   // nsyms = 2
+    out.extend_from_slice(&(strtab_off as u32).to_le_bytes());    // stroff
+    out.extend_from_slice(&(strtab.len() as u32).to_le_bytes());  // strsize
+
+    debug_assert_eq!(out.len(), HEADER_TOTAL_WITH_DATA);
+
+    // ── __text bytes ─────────────────────────────────────────────────────────
+    out.extend_from_slice(text_bytes);
+
+    // ── __data bytes (zero-initialised) ──────────────────────────────────────
+    let data_start = out.len();
+    out.resize(data_start + data_len as usize, 0u8);
+
+    // ── ARM64 relocation records ──────────────────────────────────────────────
+    //
+    // Each GlobalByteReloc produces two relocation_info records (8 bytes each):
+    //
+    //   ARM64_RELOC_PAGE21 on the ADRP instruction:
+    //     r_address    = adrp_byte_offset
+    //     r_symbolnum  = 1 (index of _twig_globals in symtab)
+    //     r_pcrel      = 1
+    //     r_length     = 2  (log2(4) = 2 for 4-byte instruction)
+    //     r_extern     = 1  (symbol-relative, not section-relative)
+    //     r_type       = ARM64_RELOC_PAGE21 (1)
+    //
+    //   ARM64_RELOC_PAGEOFF12 on the ADD instruction:
+    //     r_address    = add_byte_offset
+    //     r_symbolnum  = 1
+    //     r_pcrel      = 0
+    //     r_length     = 2
+    //     r_extern     = 1
+    //     r_type       = ARM64_RELOC_PAGEOFF12 (2)
+    //
+    // The packed u32 (second field):
+    //   bits  0-23: r_symbolnum
+    //   bit     24: r_pcrel
+    //   bits 25-26: r_length
+    //   bit     27: r_extern
+    //   bits 28-31: r_type
+    //
+    // SYMBOL_IDX = 1 (_twig_globals is the second symbol in the symtab).
+    const SYMBOL_IDX: u32 = 1;
+
+    // PAGE21:    symbolnum=1, pcrel=1, length=2, extern=1, type=1
+    //   packed = 1 | (1<<24) | (2<<25) | (1<<27) | (1<<28) = 0x1D000001
+    let page21_info: u32 =
+        SYMBOL_IDX
+        | (1u32 << 24)                      // r_pcrel
+        | (2u32 << 25)                      // r_length = 2
+        | (1u32 << 27)                      // r_extern
+        | (ARM64_RELOC_PAGE21 << 28);       // r_type
+
+    // PAGEOFF12: symbolnum=1, pcrel=0, length=2, extern=1, type=2
+    //   packed = 1 | (0<<24) | (2<<25) | (1<<27) | (2<<28) = 0x2C000001
+    let pageoff12_info: u32 =
+        SYMBOL_IDX
+        | (0u32 << 24)                      // r_pcrel = 0
+        | (2u32 << 25)                      // r_length = 2
+        | (1u32 << 27)                      // r_extern
+        | (ARM64_RELOC_PAGEOFF12 << 28);    // r_type
+
+    for reloc in text_relocs {
+        // ARM64_RELOC_PAGE21 on ADRP
+        out.extend_from_slice(&(reloc.adrp_byte_offset as i32).to_le_bytes());
+        out.extend_from_slice(&page21_info.to_le_bytes());
+
+        // ARM64_RELOC_PAGEOFF12 on ADD
+        out.extend_from_slice(&(reloc.add_byte_offset as i32).to_le_bytes());
+        out.extend_from_slice(&pageoff12_info.to_le_bytes());
+    }
+
+    // ── Symbol table — _main (index 0) + _twig_globals (index 1) ─────────────
+    //
+    // _main: in __text (section 1), at entry_point offset.
+    out.extend_from_slice(&1u32.to_le_bytes());          // n_strx (skip leading NUL)
+    out.push(N_SECT | N_EXT);                            // n_type
+    out.push(1u8);                                       // n_sect = 1 (__text)
+    out.extend_from_slice(&0u16.to_le_bytes());          // n_desc
+    out.extend_from_slice(&entry_off.to_le_bytes());     // n_value (byte offset)
+
+    // _twig_globals: in __data (section 2), at offset 0 within that section.
+    out.extend_from_slice(&twig_globals_strx.to_le_bytes()); // n_strx
+    out.push(N_SECT | N_EXT);                           // n_type
+    out.push(2u8);                                       // n_sect = 2 (__data)
+    out.extend_from_slice(&0u16.to_le_bytes());          // n_desc
+    out.extend_from_slice(&code_len.to_le_bytes());      // n_value = VM addr of __data start
+
+    // ── String table ─────────────────────────────────────────────────────────
+    out.extend_from_slice(&strtab);
+
+    debug_assert_eq!(out.len(), total_size, "layout mismatch: expected {total_size} got {}", out.len());
+    Ok(out)
+}
+
 // ── Tests ────────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -311,5 +611,111 @@ mod tests {
         // strtab is at the very end, length 7 ("\0_main\0").
         let strtab = &bytes[bytes.len() - 7 ..];
         assert_eq!(strtab, b"\0_main\0");
+    }
+
+    // ── pack_object_with_globals tests (LANG39) ───────────────────────────────
+
+    fn arm64_globals_bytes(code: Vec<u8>, n_slots: usize, relocs: &[GlobalByteReloc]) -> Vec<u8> {
+        pack_object_with_globals(&code, 0, n_slots, relocs, &Target::macos_arm64()).unwrap()
+    }
+
+    #[test]
+    fn globals_produces_macho_magic() {
+        let bytes = arm64_globals_bytes(vec![0x00; 4], 2, &[]);
+        assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE]);
+    }
+
+    #[test]
+    fn globals_filetype_is_mh_object() {
+        let bytes = arm64_globals_bytes(vec![0x00; 4], 1, &[]);
+        let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
+        assert_eq!(filetype, 1u32, "MH_OBJECT");
+    }
+
+    #[test]
+    fn globals_ncmds_is_three() {
+        let bytes = arm64_globals_bytes(vec![0x00; 4], 1, &[]);
+        let ncmds = u32::from_le_bytes(bytes[16..20].try_into().unwrap());
+        assert_eq!(ncmds, 3);
+    }
+
+    #[test]
+    fn globals_header_is_312_bytes() {
+        // With 2 sections, HEADER_TOTAL_WITH_DATA = 312.
+        let code = vec![0x00u8; 8];
+        let bytes = arm64_globals_bytes(code, 3, &[]);
+        // text starts at byte 312.
+        assert_eq!(&bytes[312..320], &[0x00u8; 8]);
+    }
+
+    #[test]
+    fn globals_data_section_is_zeroed() {
+        let code = vec![0x42u8; 4];
+        let n_slots = 4;
+        let bytes = arm64_globals_bytes(code.clone(), n_slots, &[]);
+        // __data starts at 312 + code_len = 312 + 4 = 316
+        let data_start = 312 + 4;
+        let data = &bytes[data_start..data_start + n_slots * 8];
+        assert_eq!(data, &vec![0u8; n_slots * 8][..], "__data must be zero-init");
+    }
+
+    #[test]
+    fn globals_two_relocs_per_access() {
+        let code = vec![0x00u8; 16];
+        let relocs = vec![
+            GlobalByteReloc { adrp_byte_offset: 0, add_byte_offset: 4 },
+        ];
+        let n_slots = 1;
+        let bytes = arm64_globals_bytes(code, n_slots, &relocs);
+        // relocation records are at 312 + code + data
+        // = 312 + 16 + 8 = 336
+        let reloc_start = 312 + 16 + 8;
+        // Two records of 8 bytes each = 16 bytes.
+        let rec0 = &bytes[reloc_start..reloc_start + 8];
+        let rec1 = &bytes[reloc_start + 8..reloc_start + 16];
+
+        // rec0: r_address=0 (ADRP), r_info=0x1D000001 (PAGE21, extern, sym=1)
+        let r0_addr = i32::from_le_bytes(rec0[0..4].try_into().unwrap());
+        let r0_info = u32::from_le_bytes(rec0[4..8].try_into().unwrap());
+        assert_eq!(r0_addr, 0, "ADRP byte offset");
+        assert_eq!(r0_info, 0x1D000001, "PAGE21 packed info");
+
+        // rec1: r_address=4 (ADD), r_info=0x2C000001 (PAGEOFF12, extern, sym=1)
+        let r1_addr = i32::from_le_bytes(rec1[0..4].try_into().unwrap());
+        let r1_info = u32::from_le_bytes(rec1[4..8].try_into().unwrap());
+        assert_eq!(r1_addr, 4, "ADD byte offset");
+        assert_eq!(r1_info, 0x2C000001, "PAGEOFF12 packed info");
+    }
+
+    #[test]
+    fn globals_string_table_ends_with_twig_globals() {
+        let bytes = arm64_globals_bytes(vec![0x00; 4], 1, &[]);
+        // The string table always ends with "\0_twig_globals\0".
+        let tail = b"_twig_globals\0";
+        let end = &bytes[bytes.len() - tail.len()..];
+        assert_eq!(end, tail, "string table must end with _twig_globals");
+    }
+
+    #[test]
+    fn globals_rejects_non_arm64() {
+        let result = pack_object_with_globals(&[0x00; 4], 0, 0, &[], &Target::macos_x64());
+        assert!(result.is_err(), "x86_64 should be rejected");
+    }
+
+    #[test]
+    fn globals_output_size_matches_formula() {
+        // total = 312 + N + M + 2*R*8 + 2*16 + strtab_len
+        // strtab = "\0_main\0_twig_globals\0" = 21 bytes
+        let n = 12usize;   // code bytes
+        let m = 2 * 8;     // 2 global slots
+        let r = 2usize;    // 2 reloc entries → 4 records × 8 bytes
+        let strtab_len = 1 + 5 + 1 + 13 + 1; // "\0_main\0_twig_globals\0" = 21
+        let expected = 312 + n + m + 2 * r * 8 + 2 * 16 + strtab_len;
+        let relocs = vec![
+            GlobalByteReloc { adrp_byte_offset: 0, add_byte_offset: 4 },
+            GlobalByteReloc { adrp_byte_offset: 8, add_byte_offset: 12 },
+        ];
+        let bytes = arm64_globals_bytes(vec![0x00u8; n], 2, &relocs);
+        assert_eq!(bytes.len(), expected, "size formula");
     }
 }

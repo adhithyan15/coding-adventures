@@ -2,6 +2,24 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.2.1] — 2026-05-13 (LANG39)
+
+### Added
+
+- **`GlobalByteReloc`** struct — byte-offset pair (`adrp_byte_offset`, `add_byte_offset`)
+  for one `ADRP + ADD` instruction pair that references `_twig_globals`.
+- **`pack_object_with_globals`** — extends `pack_object` to emit:
+  - A `__DATA/__data` section (zero-initialised global variable slots)
+  - An exported `_twig_globals` symbol pointing to the start of that section
+  - `ARM64_RELOC_PAGE21` + `ARM64_RELOC_PAGEOFF12` relocation records per
+    `GlobalByteReloc` so the system linker can patch `ADRP + ADD` pairs
+
+  Header layout: `312` bytes (vs 232 in `pack_object`) due to the second `section_64`.
+  ARM64-only (x86_64 global relocations are deferred).
+
+9 new unit tests verify the Mach-O layout, relocation record encoding, and
+output size formula.
+
 ## [0.2.0] — 2026-05-05
 
 ### Added

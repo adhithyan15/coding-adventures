@@ -25,6 +25,7 @@
 //! | Logical (reg) | `and_`, `orr`, `eor`, `mvn` | AND / OR / XOR / NOT (LANG38) |
 //! | Shifts (reg) | `lsl_reg`, `lsr_reg`, `asr_reg` | variable-amount logical/arithmetic shifts (LANG38) |
 //! | Unary | `neg_` | two's-complement negate (LANG38) |
+//! | PC-relative | `adrp_placeholder` | zeroed ADRP for Mach-O `ARM64_RELOC_PAGE21` (LANG39) |
 //! | Memory | `ldr`, `str_` | unsigned-offset, 64-bit |
 //! | Pair | `stp_pre`, `ldp_post` | for prologue/epilogue framing |
 //! | Branch | `b`, `b_cond`, `bl` | PC-relative, label-resolved |
@@ -648,6 +649,48 @@ impl Assembler {
             | (0b11111 << 5) // XZR = 31
             | rd.idx();
         self.emit(word);
+    }
+
+    // -----------------------------------------------------------------------
+    // PC-relative addressing — ADRP placeholder for Mach-O relocation
+    // -----------------------------------------------------------------------
+
+    /// Emit `ADRP Xd, #0` with a **zeroed** 21-bit page offset.
+    ///
+    /// This is a placeholder instruction: the caller records the returned word
+    /// index and passes it to `code-packager` as an `ARM64_RELOC_PAGE21`
+    /// relocation site.  The system linker (`ld`) then patches the 21-bit
+    /// `immhi:immlo` field with the correct page-relative offset when
+    /// producing the final executable.
+    ///
+    /// Together with an immediately following `ADD Xd, Xd, #0` (issued via
+    /// [`add_imm`](Self::add_imm)) carrying an `ARM64_RELOC_PAGEOFF12`
+    /// relocation, this pair gives the runtime address of any `__data` symbol:
+    ///
+    /// ```text
+    /// ADRP X1, sym@PAGE       ; bits[31:12] of sym's VA → X1
+    /// ADD  X1, X1, sym@PAGEOFF ; low 12 bits of sym's VA → X1
+    /// LDR  X0, [X1, #offset]  ; access sym + offset
+    /// ```
+    ///
+    /// # Encoding (ARM ARM DDI 0487 §C3.3.5)
+    ///
+    /// ```text
+    /// │ 1 │ immlo[1:0] │ 10000 │ immhi[20:2] │ Rd[4:0] │
+    ///   31   30:29       28:24    23:5           4:0
+    /// ```
+    ///
+    /// With all immediate bits zero: `0x90000000 | Rd`.
+    ///
+    /// # Returns
+    ///
+    /// The word index (not byte offset) of the emitted instruction.  Pass
+    /// `word_index * 4 + fn_byte_offset` to the Mach-O packager.
+    pub fn adrp_placeholder(&mut self, rd: Reg) -> usize {
+        let word_idx = self.code.len();
+        // ADRP Xd, #0  =  sf:1, immlo:00, opcode:10000, immhi:all-zero, Rd
+        self.emit(0x90000000 | rd.idx());
+        word_idx
     }
 
     // -----------------------------------------------------------------------
@@ -1418,6 +1461,41 @@ mod tests {
         let bytes = a.finish().unwrap();
         let word = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
         assert_eq!(word, 0xCB0103E0, "neg x0,x1");
+    }
+
+    // ---- LANG39: adrp_placeholder ----
+
+    #[test]
+    fn adrp_placeholder_encoding() {
+        // ADRP X0, #0 = sf:1, immlo:00, opcode:10000, immhi:0*19, Rd:00000
+        //             = 0x90000000 | 0 = 0x90000000
+        //
+        // ADRP X1, #0 = 0x90000001
+        //
+        // These are the placeholder words emitted before the system linker
+        // patches in the real page offset via ARM64_RELOC_PAGE21.
+        let mut a = Assembler::new();
+        let idx0 = a.adrp_placeholder(Reg::X0);
+        let idx1 = a.adrp_placeholder(Reg::X1);
+        let bytes = a.finish().unwrap();
+
+        let w0 = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
+        let w1 = u32::from_le_bytes(bytes[4..8].try_into().unwrap());
+        assert_eq!(w0, 0x90000000, "ADRP X0, #0");
+        assert_eq!(w1, 0x90000001, "ADRP X1, #0");
+        assert_eq!(idx0, 0, "ADRP X0 is word 0");
+        assert_eq!(idx1, 1, "ADRP X1 is word 1");
+    }
+
+    #[test]
+    fn adrp_placeholder_returns_word_index() {
+        // After emitting some instructions, adrp_placeholder reports the
+        // correct word index (not byte offset).
+        let mut a = Assembler::new();
+        a.movz(Reg::X0, 42, 0);   // word 0
+        a.movz(Reg::X0, 43, 0);   // word 1
+        let idx = a.adrp_placeholder(Reg::X1); // word 2
+        assert_eq!(idx, 2);
     }
 
     // ---- LANG38: Composite — modulo via sdiv + msub ----

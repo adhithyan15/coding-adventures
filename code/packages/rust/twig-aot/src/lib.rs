@@ -53,15 +53,16 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use aarch64_backend::{compile_with_relocs, Reloc};
+use aarch64_backend::{compile_with_globals, GlobalWordReloc, Reloc};
 use aot_core::infer::infer_types;
 use aot_core::link::{entry_point_offset, link};
 use aot_core::specialise::aot_specialise;
-use code_packager::macho_object::pack_object;
+use code_packager::macho_object::{pack_object, pack_object_with_globals, GlobalByteReloc};
 use code_packager::{CodeArtifact, Target};
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
+use iir_builtin_lowering::lower_global_io;
 use jit_core::backend::FunctionContext;
 
 // ---------------------------------------------------------------------------
@@ -138,25 +139,44 @@ pub fn compile_macos_arm64_object(source: &str, module_name: &str) -> Result<Vec
 }
 
 /// Compile an already-built `IIRModule` to Mach-O object-file bytes.
+///
+/// When the module references global variables (LANG39), the object file
+/// is produced via [`pack_object_with_globals`] which adds a `__DATA/__data`
+/// section and emits `ARM64_RELOC_PAGE21` / `ARM64_RELOC_PAGEOFF12`
+/// relocation records so that the system linker (`ld`) can patch the
+/// `ADRP + ADD` instruction pairs that address `_twig_globals`.
 pub fn compile_module_macos_arm64_object(module: &IIRModule) -> Result<Vec<u8>, AotError> {
     let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
-    let (text, offsets) = compile_module_to_text(module)?;
+    let (text, offsets, n_global_slots, global_relocs) = compile_module_to_text(module)?;
     let entry_off = entry_point_offset(&offsets, Some(entry));
 
-    let artifact = CodeArtifact::new(text, entry_off, Target::macos_arm64());
-    pack_object(&artifact).map_err(|e| AotError::Packager(format!("{e}")))
+    if n_global_slots > 0 {
+        // Module uses globals: emit a two-section Mach-O (text + data) with
+        // ARM64 relocation records so the linker patches ADRP+ADD pairs.
+        pack_object_with_globals(&text, entry_off, n_global_slots, &global_relocs, &Target::macos_arm64())
+            .map_err(|e| AotError::Packager(format!("{e}")))
+    } else {
+        // No globals: use the simpler single-section object packager.
+        let artifact = CodeArtifact::new(text, entry_off, Target::macos_arm64());
+        pack_object(&artifact).map_err(|e| AotError::Packager(format!("{e}")))
+    }
 }
 
 /// Returns raw ARM64 machine code bytes and a function-name→byte-offset map.
 ///
-/// Uses the standard untyped prep pipeline (pre-lower + u64 normalization +
-/// type propagation + default-any-to-u64).  The resulting bytes are a flat
+/// Uses the standard untyped prep pipeline (pre-lower + i64 normalization +
+/// type propagation + default-any-to-i64).  The resulting bytes are a flat
 /// code section with no Mach-O wrapping — suitable for in-process execution
 /// via [`call_arm64_function_in_process`].
+///
+/// Global-variable relocation metadata (`n_global_slots`, `global_byte_relocs`)
+/// is intentionally discarded here; callers that need a full Mach-O object
+/// should use [`compile_module_macos_arm64_object`] instead.
 pub fn compile_module_to_arm64_bytes(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
-    compile_module_to_text(module)
+    let (text, offsets, _, _) = compile_module_to_text(module)?;
+    Ok((text, offsets))
 }
 
 /// Like [`compile_module_to_arm64_bytes`] but uses the caller-supplied type
@@ -203,7 +223,10 @@ pub fn compile_typed_module_to_arm64_bytes(
         // (Should be rare after propagation with typed params.)
         default_any_to_i64(func);
     }
-    compile_module_to_text_raw(&module)
+    // Discard global reloc metadata — typed callers obtain Mach-O objects via
+    // `compile_module_macos_arm64_object`, which preserves those fields.
+    let (text, offsets, _, _) = compile_module_to_text_raw(&module)?;
+    Ok((text, offsets))
 }
 
 /// Apply the AOT builtin pre-lowering pass to every function in `module`.
@@ -644,6 +667,51 @@ fn resolve_src_aot_type(src: Option<&Operand>, env: &HashMap<String, String>) ->
     }
 }
 
+/// Step 0b: remove dead string-literal `const` instructions.
+///
+/// The twig-ir-compiler emits a pattern like:
+/// ```text
+/// const  %n1 = Var("x")            -- name register (string literal)
+/// call_builtin "global_set" %n1 %v -- will be lowered by lower_global_io
+/// ```
+///
+/// After `lower_global_io` runs, `call_builtin "global_set"` becomes
+/// `global_store Str("x") Var("%v")` — the global name is now inline.
+/// The `const %n1` instruction becomes dead code (its register is never
+/// read again).  If left in place, `aot_specialise` converts it to
+/// `const_str`, which the ARM64 backend cannot lower.
+///
+/// This pass removes `const` instructions whose source is `Operand::Var(_)`
+/// (the string-literal-as-Var encoding) AND whose dest register never
+/// appears in any other instruction's `srcs`.  Instructions that are
+/// still referenced (e.g. as arg to an un-lowered `call_builtin`, or as
+/// a `make_closure` name register) are retained.
+fn strip_dead_string_consts(func: &mut IIRFunction) {
+    use std::collections::HashSet;
+
+    // Build a set of every Var-register name that is read in any src position.
+    let used: HashSet<String> = func.instructions
+        .iter()
+        .flat_map(|instr| instr.srcs.iter())
+        .filter_map(|op| {
+            if let Operand::Var(n) = op { Some(n.clone()) } else { None }
+        })
+        .collect();
+
+    // Remove const instructions of the form `%dest = Var("text")` whose
+    // dest is not in `used`.  These are dead name-register loads.
+    func.instructions.retain(|instr| {
+        if instr.op == "const" {
+            if let Some(Operand::Var(_)) = instr.srcs.first() {
+                if let Some(dest) = &instr.dest {
+                    return used.contains(dest);
+                }
+            }
+        }
+        true // keep everything else
+    });
+}
+
 /// Step 3b: default any remaining `"any"` hints on arithmetic / move
 /// instructions to `"i64"`.
 ///
@@ -667,9 +735,30 @@ fn default_any_to_i64(func: &mut IIRFunction) {
     }
 }
 
-/// Apply all three preparation steps to every function in `module`.
+/// Apply all preparation steps to every function in `module`.
+///
+/// Steps:
+///  0. `lower_global_io` — converts `call_builtin "global_set"` /
+///     `"global_get"` to `global_store` / `global_load` (LANG39).
+///     Must run first so the const-string look-back can see all instructions.
+///  0b. `strip_dead_string_consts` — removes `const %n = Var("name")`
+///     instructions that are now dead after step 0.  Without this pass,
+///     `aot_specialise` converts them to `const_str` which the ARM64 backend
+///     cannot lower (there is no stack-slot for a string pointer).
+///  1. `pre_lower_aot_builtins` — lowers `call_builtin "+"` → `add`, etc.
+///  2. `normalize_params_to_i64` — promotes untyped params to `i64`.
+///  3. `propagate_aot_types` — fixed-point type propagation.
+///  4. `default_any_to_i64` — defaults unresolved arithmetic types to `i64`.
 fn prepare_module_for_aot(module: &mut IIRModule) {
+    // Phase 0: lower global_set / global_get → global_store / global_load.
+    lower_global_io(module);
+
     for func in &mut module.functions {
+        // Phase 0b: remove dead name-register `const` instructions.
+        // `lower_global_io` leaves `const %n = Var("x")` in place even after
+        // the `global_set`/`global_get` that consumed it is rewritten.
+        // These become `const_str` in CIR which the ARM64 backend rejects.
+        strip_dead_string_consts(func);
         pre_lower_aot_builtins(func);
         normalize_params_to_i64(func);
         propagate_aot_types(func);
@@ -692,9 +781,10 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
 /// `u64`.  For signed `i64` semantics use [`compile_typed_module_to_arm64_bytes`].
 fn compile_module_to_text(
     module: &IIRModule,
-) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
+) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>), AotError> {
     // We work on a clone so the caller's `IIRModule` is never mutated.
-    // `prepare_module_for_aot` runs three passes:
+    // `prepare_module_for_aot` runs four passes (LANG39 adds step 0):
+    //   0. `lower_global_io` — `call_builtin "global_set/get"` → `global_store/load`
     //   1. `call_builtin "+"` → `add`, etc.   (see `pre_lower_aot_builtins`)
     //   2. param types "any" → "i64"           (see `normalize_params_to_i64`)
     //   3. propagate + default remaining "any" (see `propagate_aot_types` /
@@ -703,6 +793,35 @@ fn compile_module_to_text(
     prepare_module_for_aot(&mut module);
     compile_module_to_text_raw(&module)
 }
+
+// ---------------------------------------------------------------------------
+// Global-slot scanning (LANG39)
+// ---------------------------------------------------------------------------
+
+/// Scan all functions in a (post-`lower_global_io`) IIR module for
+/// `global_load` / `global_store` instructions and assign each unique global
+/// name a consecutive slot index (0, 1, 2, …).
+///
+/// Returns a map from global name → slot index.  If no globals are used the
+/// map is empty.
+fn collect_global_slots(module: &IIRModule) -> HashMap<String, usize> {
+    let mut map: HashMap<String, usize> = HashMap::new();
+    for fn_ in &module.functions {
+        for instr in &fn_.instructions {
+            if instr.op == "global_load" || instr.op == "global_store" {
+                if let Some(Operand::Str(name)) = instr.srcs.first() {
+                    let next = map.len();
+                    map.entry(name.clone()).or_insert(next);
+                }
+            }
+        }
+    }
+    map
+}
+
+// ---------------------------------------------------------------------------
+// Inner two-pass compile + link
+// ---------------------------------------------------------------------------
 
 /// Inner two-pass compile + link, operating on an already-prepared `IIRModule`.
 ///
@@ -716,38 +835,64 @@ fn compile_module_to_text(
 /// Pass 1 — compile each function independently.  Cross-function `call`
 ///   instructions emit `BL #0` placeholder instructions and record
 ///   [`Reloc`] entries (callee name + word index in the per-function binary).
+///   `global_load`/`global_store` instructions emit `ADRP + ADD` placeholder
+///   pairs and record [`GlobalWordReloc`] entries (word indices for Mach-O
+///   ARM64 relocations).
 ///
 /// Link — concatenate all function binaries into one flat code section and
 ///   record each function's byte offset.
 ///
 /// Pass 2 — patch every placeholder `BL` with the correct PC-relative
-///   offset using the now-known function offsets.
+///   offset using the now-known function offsets.  `GlobalWordReloc` entries
+///   are converted to [`GlobalByteReloc`] byte offsets (for `pack_object_with_globals`).
 ///
 /// ARM64 `BL` encoding: opcode `0x94000000`, 26-bit signed PC-relative
 /// offset in units of 4 bytes (instruction words).
+///
+/// Returns `(linked_text, fn_offsets, n_global_slots, global_byte_relocs)`.
 fn compile_module_to_text_raw(
     module: &IIRModule,
-) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
-    // ── Pass 1: compile all functions, collecting cross-function relocations ──
-    // Each entry: (fn_name, per-function bytes, list of ExternalReloc for that fn)
-    let mut fn_results: Vec<(String, Vec<u8>, Vec<Reloc>)> =
+) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>), AotError> {
+    // ── Collect global names (LANG39) ─────────────────────────────────────────
+    let global_slots = collect_global_slots(module);
+    let n_global_slots = global_slots.len();
+
+    // ── Pass 1: compile all functions, collecting cross-function + global relocs ─
+    // Each entry: (fn_name, per-function bytes, ExternalRelocs, GlobalWordRelocs)
+    let mut fn_results: Vec<(String, Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>)> =
         Vec::with_capacity(module.functions.len());
 
     for fn_ in &module.functions {
-        let (bytes, relocs) = compile_one_with_relocs(fn_)
+        let (bytes, ext_relocs, glob_relocs) = compile_one_with_globals(fn_, &global_slots)
             .ok_or_else(|| AotError::BackendRefused { function: fn_.name.clone() })?;
-        fn_results.push((fn_.name.clone(), bytes, relocs));
+        fn_results.push((fn_.name.clone(), bytes, ext_relocs, glob_relocs));
     }
 
     // ── Link: concatenate binaries and record byte offsets ──────────────────
     let plain_binaries: Vec<(String, Vec<u8>)> = fn_results
         .iter()
-        .map(|(name, bytes, _)| (name.clone(), bytes.clone()))
+        .map(|(name, bytes, _, _)| (name.clone(), bytes.clone()))
         .collect();
     let (mut linked, offsets) = link(&plain_binaries);
 
+    // ── Collect global byte relocs (LANG39) ───────────────────────────────
+    //
+    // Convert GlobalWordReloc (word indices relative to each function) to
+    // GlobalByteReloc (byte offsets relative to the linked text section) by
+    // adding the function's byte offset and multiplying word index by 4.
+    let mut global_byte_relocs: Vec<GlobalByteReloc> = Vec::new();
+    for (fn_name, _bytes, _, glob_relocs) in &fn_results {
+        let fn_byte_offset = *offsets.get(fn_name.as_str()).unwrap_or(&0);
+        for gr in glob_relocs {
+            global_byte_relocs.push(GlobalByteReloc {
+                adrp_byte_offset: (fn_byte_offset + gr.adrp_word * 4) as u32,
+                add_byte_offset:  (fn_byte_offset + gr.add_word  * 4) as u32,
+            });
+        }
+    }
+
     // ── Pass 2: patch cross-function BL placeholders ──────────────────────
-    for (fn_name, _bytes, relocs) in &fn_results {
+    for (fn_name, _bytes, relocs, _) in &fn_results {
         let fn_offset = *offsets.get(fn_name.as_str()).unwrap_or(&0);
 
         for reloc in relocs {
@@ -816,13 +961,16 @@ fn compile_module_to_text_raw(
         }
     }
 
-    Ok((linked, offsets))
+    Ok((linked, offsets, n_global_slots, global_byte_relocs))
 }
 
-/// Compile one `IIRFunction` to ARM64 machine code, returning the bytes and
-/// any cross-function call relocations.  Returns `None` if the function
-/// contains opcodes the backend doesn't support.
-fn compile_one_with_relocs(fn_: &IIRFunction) -> Option<(Vec<u8>, Vec<Reloc>)> {
+/// Compile one `IIRFunction` to ARM64 machine code, returning the bytes,
+/// any cross-function call relocations, and global-access relocations.
+/// Returns `None` if the function contains opcodes the backend doesn't support.
+fn compile_one_with_globals(
+    fn_: &IIRFunction,
+    global_slots: &HashMap<String, usize>,
+) -> Option<(Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>)> {
     let inferred = infer_types(fn_);
     let cir = aot_specialise(fn_, Some(&inferred));
     let ctx = FunctionContext {
@@ -830,7 +978,7 @@ fn compile_one_with_relocs(fn_: &IIRFunction) -> Option<(Vec<u8>, Vec<Reloc>)> {
         params:      &fn_.params,
         return_type: &fn_.return_type,
     };
-    compile_with_relocs(&ctx, &cir).ok()
+    compile_with_globals(&ctx, &cir, global_slots).ok()
 }
 
 // ===========================================================================
@@ -852,13 +1000,20 @@ mod tests {
     }
 
     #[test]
-    fn untyped_twig_returns_backend_refused() {
-        // `(define x 5)` is a top-level value define — the ir compiler
-        // emits a `global_set` call_builtin which the V1 backend doesn't
-        // support → BackendRefused.
+    fn global_define_compiles_ok() {
+        // `(define x 5)` is a top-level value define — the ir compiler emits a
+        // `global_set` call_builtin.  LANG39 (lower_global_io + ARM64 global
+        // load/store + pack_object_with_globals) now handles this end-to-end,
+        // so the program must compile to a valid Mach-O object file.
         let src = "(define x 5) x";
-        let err = compile_macos_arm64_object(src, "untyped").unwrap_err();
-        assert!(matches!(err, AotError::BackendRefused { .. }), "got: {err:?}");
+        let result = compile_macos_arm64_object(src, "globals_test");
+        assert!(result.is_ok(), "global define should compile with LANG39; got: {:?}", result.err());
+
+        // The output must be a Mach-O MH_OBJECT (filetype == 1).
+        let bytes = result.unwrap();
+        assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE], "Mach-O magic");
+        let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
+        assert_eq!(filetype, 1, "MH_OBJECT");
     }
 
     #[test]

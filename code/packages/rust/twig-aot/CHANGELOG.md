@@ -1,5 +1,82 @@
 # Changelog — `twig-aot`
 
+## 0.1.6 — 2026-05-13 (LANG39)
+
+**First-class global variable support — `(define x 5) x` now compiles to native code.**
+
+Twig programs that use top-level value defines (`(define x 5)`, `(define counter 0)`)
+previously failed with `AotError::BackendRefused` because the V1 ARM64 backend didn't
+know how to handle `global_set` / `global_get` builtins.  LANG39 closes that gap
+end-to-end across all four affected crates.
+
+### New dependency
+
+- `iir-builtin-lowering` added to `Cargo.toml` (provides `lower_global_io`).
+
+### Pipeline changes
+
+#### `prepare_module_for_aot`
+
+Two new phases prepend the existing four-step AOT preparation pipeline:
+
+**Phase 0 — `lower_global_io(module)`**
+Converts `call_builtin "global_set"/%n/%v` → `global_store Str("name") Var(val_reg)` and
+`call_builtin "global_get"/%n` → `global_load Str("name")` (imported from `iir-builtin-lowering`).
+Must run before arithmetic pre-lowering so the const-string look-back can see the full instruction list.
+
+**Phase 0b — `strip_dead_string_consts(func)`**
+The twig-ir-compiler emits `const %n = Var("x")` (name-register) before each
+`global_set`/`global_get` call.  After Phase 0, those call_builtins are gone
+but the `const %n` instruction remains dead in the list.  `aot_specialise` would
+convert it to `const_str` which the ARM64 backend cannot lower.
+
+This new pass removes every `const` instruction whose source is `Operand::Var(_)`
+(the string-literal-as-Var encoding) **and** whose dest register is never referenced
+in any other instruction's `srcs`.  Registers that are still read (e.g. name args to
+un-lowered `call_builtin "make_closure"`) are retained.
+
+#### `compile_module_to_text` / `compile_module_to_text_raw`
+
+Return type extended from `(Vec<u8>, HashMap<String, usize>)` to
+`(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>)`.
+
+New fields:
+- `n_global_slots` — number of unique globals found by `collect_global_slots`.
+- `global_byte_relocs` — `Vec<GlobalByteReloc>` containing the byte offsets of
+  every `ADRP + ADD` instruction pair in the linked text section (for `ld`'s
+  ARM64 relocation records).
+
+#### `compile_module_macos_arm64_object`
+
+When `n_global_slots > 0`, now calls `pack_object_with_globals` (from
+`code-packager 0.2.1`) instead of `pack_object`.  This emits a two-section
+Mach-O object file (`__TEXT/__text` + `__DATA/__data`) with:
+- A zero-initialised `__data` section (8 bytes per global slot).
+- An exported `_twig_globals` symbol pointing to the start of that section.
+- `ARM64_RELOC_PAGE21` + `ARM64_RELOC_PAGEOFF12` relocation records per `GlobalByteReloc`.
+
+When `n_global_slots == 0`, the original single-section `pack_object` path is used unchanged.
+
+#### `collect_global_slots(module)`
+
+New internal helper.  Scans all `global_load`/`global_store` instructions in a
+post-`lower_global_io` module for `Operand::Str(name)` in `srcs[0]`.  Assigns each
+unique global name a consecutive 0-based slot index (slot `i` lives at `_twig_globals + i*8`).
+
+### Test changes
+
+- `untyped_twig_returns_backend_refused` → renamed to `global_define_compiles_ok`.
+  The old test expected `(define x 5) x` to fail.  With LANG39 it must now succeed
+  and produce a valid `MH_OBJECT` Mach-O.
+
+### Upstream dependency versions
+
+| Crate | Old | New |
+|-------|-----|-----|
+| `aarch64-encoder` | 0.2.0 | 0.2.1 (adds `adrp_placeholder`) |
+| `aarch64-backend` | 0.2.0 | 0.2.1 (adds `compile_with_globals`, `GlobalWordReloc`) |
+| `code-packager` | 0.2.0 | 0.2.1 (adds `pack_object_with_globals`, `GlobalByteReloc`) |
+
 ## 0.1.5 — 2026-05-13
 
 **Default integer type changed from `u64` to `i64` — all typing states now correct.**
