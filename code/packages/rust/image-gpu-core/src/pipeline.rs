@@ -700,18 +700,41 @@ fn dispatch_via(
     // specialised dispatches, which is more buffer-management code
     // than fits cleanly here.  Phase 4.5 (or later) will extend the
     // routing to multi-op graphs.
+    // **MX05 Phase 4.8.**  Try the multi-op specialised route
+    // first.  When **every** non-Const Compute op has an installed
+    // handle we fire one prep Dispatch + N DispatchSpecialised
+    // requests + one DownloadBuffer.  When the multi-op coverage
+    // is incomplete (or the single-op gate fires), we still try
+    // the Phase 4.4 single-op fast path before falling back to
+    // generic Dispatch.
+    //
+    // Specialised routing remains an *optimisation*, not a
+    // correctness guarantee — any Err from the specialised path
+    // silently falls through to the generic Dispatch below so the
+    // graph still produces correct output.
     if executor_name == "metal" {
+        if let Some(computes) =
+            all_non_const_computes_with_handles(&placed, &installed_per_op)
+        {
+            if let Ok(data) = dispatch_specialised_via_multi(
+                transport,
+                &placed,
+                &computes,
+                output_residency,
+                output_byte_count,
+            ) {
+                set_last_executor(Some(executor_name));
+                return Ok(data);
+            }
+        }
+        // Phase 4.4/4.6/4.7 single-op fast path still works for
+        // graphs where only one Compute op is specialised but the
+        // multi-op gate didn't fire (e.g. mixed-coverage graphs).
+        // Kept for back-compat; the multi-op path covers everything
+        // single-op did when N == 1.
         if let Some((compute_idx, handle)) =
             single_non_const_compute_with_handle(&placed, &installed_per_op)
         {
-            // Returns Ok on success; on error we deliberately fall
-            // through to the generic path so the dispatch still
-            // succeeds.  Specialised routing is an optimisation, not
-            // a correctness guarantee.
-            //
-            // The counter is incremented inside
-            // `dispatch_specialised_via` itself so direct tests of
-            // that helper also see the bump.
             if let Ok(data) = dispatch_specialised_via(
                 transport,
                 &placed,
@@ -809,6 +832,273 @@ fn single_non_const_compute_with_handle(
         }
     }
     found
+}
+
+/// **MX05 Phase 4.8.**  Multi-op version of
+/// [`single_non_const_compute_with_handle`].  Returns
+/// `Some(Vec<(op_index, handle)>)` iff **every** non-Const Compute
+/// op in the placed graph has an installed specialised kernel for
+/// the metal executor.  Returns `None` if even one Compute op is
+/// missing a handle — in that case the dispatcher falls back to the
+/// generic `Dispatch { graph }` path, since interleaving generic
+/// and specialised dispatches across the same buffer-id space
+/// requires more bookkeeping than the prep-then-specialise pattern
+/// supports today.
+///
+/// The returned vector is ordered by `op_index` so the dispatcher
+/// can fire `DispatchSpecialised` requests in placement order,
+/// honouring the data-dependency chain encoded by the planner.
+fn all_non_const_computes_with_handles(
+    placed: &ComputeGraph,
+    installed_per_op: &HashMap<u32, u64>,
+) -> Option<Vec<(usize, u64)>> {
+    let mut out: Vec<(usize, u64)> = Vec::new();
+    for (idx, op) in placed.ops.iter().enumerate() {
+        if let PlacedOp::Compute { op: ir_op, .. } = op {
+            if matches!(ir_op, Op::Const { .. }) {
+                continue;
+            }
+            let handle = installed_per_op.get(&(idx as u32)).copied()?;
+            out.push((idx, handle));
+        }
+    }
+    if out.is_empty() {
+        // No non-Const Compute ops at all — nothing to specialise.
+        // Returning None here lets the caller fall back to generic
+        // dispatch (which will execute the Const + Alloc + Free
+        // bookkeeping); attempting a "specialised" dispatch of
+        // zero kernels would be wasted protocol round-trips.
+        return None;
+    }
+    Some(out)
+}
+
+/// **MX05 Phase 4.8.**  Run a multi-op graph through the
+/// `DispatchSpecialised` path, firing one specialised dispatch per
+/// non-Const Compute op in placement order.
+///
+/// Strategy:
+///   1. Build a **prep graph** containing every `PlacedOp` *except*
+///      the non-Const Compute ops listed in `computes`.  This keeps
+///      every `Op::Const`, `Alloc`, `Free`, and `Transfer` op — so
+///      matrix-metal's existing dispatch handler allocates the
+///      planner-assigned BufferIds, uploads all constants, and
+///      tears down any temporary buffers, exactly as it would for
+///      generic dispatch.
+///   2. Fire one `Dispatch { prep_graph }` request.  After it
+///      returns, the executor's BufferStore holds every buffer the
+///      pending Compute ops will read or write.
+///   3. For each `(op_idx, handle)` in `computes` (in placement
+///      order — `Vec` is already sorted by `op_idx`), fire one
+///      `DispatchSpecialised { handle, inputs, outputs }`.  The
+///      inputs/outputs trimming and folded-slot logic is identical
+///      to the single-op path in [`dispatch_specialised_via`], so
+///      we factor that into [`build_specialised_inputs_outputs`].
+///   4. Fire one `DownloadBuffer` for the final output.
+///   5. Increment `SPECIALISED_DISPATCH_COUNT` by `computes.len()`.
+///
+/// Why not interleave generic and specialised dispatches per op
+/// (i.e. fall back per-op to generic Dispatch when a kernel isn't
+/// installed): the prep dispatch already runs the Const + Alloc
+/// for buffers the unspecialised generic op would need, but the
+/// generic dispatcher walks `placed.ops` from the top, expecting
+/// to encounter all those Const/Alloc ops itself.  Splitting the
+/// graph between two dispatchers would either duplicate
+/// allocation (with planner-id collisions in the buffer store)
+/// or require a "skip ops" hint we'd have to add to the protocol.
+/// Both are out-of-scope for Phase 4.8; the all-or-nothing gate
+/// keeps the protocol surface stable.
+///
+/// Returns `Err` if any protocol step fails, so the caller can
+/// fall through to generic dispatch.
+fn dispatch_specialised_via_multi(
+    transport: &LocalTransport,
+    placed: &ComputeGraph,
+    computes: &[(usize, u64)],
+    output_residency: compute_ir::Residency,
+    output_byte_count: usize,
+) -> Result<Vec<u8>, GpuError> {
+    // Step 1: build the prep graph — original ops minus the
+    // non-Const Compute ops we'll dispatch as specialised.
+    let specialised_indices: std::collections::HashSet<usize> =
+        computes.iter().map(|(idx, _)| *idx).collect();
+    let prep_graph = ComputeGraph {
+        format_version: placed.format_version,
+        tensors: placed.tensors.clone(),
+        inputs: placed.inputs.clone(),
+        outputs: placed.outputs.clone(),
+        constants: placed.constants.clone(),
+        ops: placed
+            .ops
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| !specialised_indices.contains(i))
+            .map(|(_, op)| op.clone())
+            .collect(),
+    };
+
+    // Step 2: prep Dispatch — allocates buffers, uploads constants.
+    let prep_resp = block_on(transport.request(ExecutorRequest::Dispatch {
+        job_id: 200,
+        graph: prep_graph,
+    }))
+    .map_err(|e| GpuError::Other(format!("prep dispatch: {:?}", e)))?;
+    match prep_resp {
+        ExecutorResponse::DispatchDone { .. } => {}
+        ExecutorResponse::Error { code, message, .. } => {
+            return Err(GpuError::Other(format!(
+                "prep dispatch error 0x{:04X}: {}",
+                code.0, message
+            )));
+        }
+        other => {
+            return Err(GpuError::Other(format!(
+                "unexpected response to prep Dispatch: {:?}",
+                other
+            )));
+        }
+    }
+
+    // Step 3: fire DispatchSpecialised per Compute op, in placement
+    // order.  Each request reuses the same planner-assigned buffer
+    // ids — the executor's BufferStore is unchanged across calls
+    // because we hold no Free ops between them.  Job ids are
+    // sequential for observability in any timing/profiling capture.
+    let mut next_job_id: u64 = 201;
+    for &(compute_op_idx, handle) in computes {
+        let (input_bufs, output_buf) =
+            build_specialised_inputs_outputs(placed, compute_op_idx, handle)?;
+        let spec_resp = block_on(transport.request(ExecutorRequest::DispatchSpecialised {
+            job_id: next_job_id,
+            handle,
+            inputs: input_bufs,
+            outputs: vec![output_buf],
+        }))
+        .map_err(|e| {
+            GpuError::Other(format!(
+                "specialised dispatch (op {}): {:?}",
+                compute_op_idx, e
+            ))
+        })?;
+        match spec_resp {
+            ExecutorResponse::DispatchDone { .. } => {}
+            ExecutorResponse::Error { code, message, .. } => {
+                return Err(GpuError::Other(format!(
+                    "specialised dispatch error 0x{:04X} (op {}): {}",
+                    code.0, compute_op_idx, message
+                )));
+            }
+            other => {
+                return Err(GpuError::Other(format!(
+                    "unexpected response to DispatchSpecialised (op {}): {:?}",
+                    compute_op_idx, other
+                )));
+            }
+        }
+        next_job_id += 1;
+    }
+
+    // Step 4: download the final graph output.
+    let download = block_on(transport.request(ExecutorRequest::DownloadBuffer {
+        buffer: output_residency.buffer,
+        offset: 0,
+        len: output_byte_count as u64,
+    }))
+    .map_err(|e| GpuError::Other(format!("download: {:?}", e)))?;
+    let data = match download {
+        ExecutorResponse::BufferData { data, .. } => data,
+        ExecutorResponse::Error { code, message, .. } => {
+            return Err(GpuError::Other(format!(
+                "download error 0x{:04X}: {}",
+                code.0, message
+            )));
+        }
+        other => {
+            return Err(GpuError::Other(format!(
+                "unexpected response to DownloadBuffer: {:?}",
+                other
+            )));
+        }
+    };
+
+    // Step 5: bump the counter by the number of specialised
+    // dispatches we actually fired.  Atomic increment is `Relaxed`
+    // because the counter is observational.
+    SPECIALISED_DISPATCH_COUNT
+        .fetch_add(computes.len(), std::sync::atomic::Ordering::Relaxed);
+
+    Ok(data)
+}
+
+/// **MX05 Phase 4.8.**  Shared input/output buffer-id extraction
+/// used by both the single-op ([`dispatch_specialised_via`]) and
+/// the multi-op ([`dispatch_specialised_via_multi`]) paths.
+///
+/// Reads the kernel's `KernelMetadata` (n_in, n_out, folded_slot)
+/// from `INSTALLED_KERNEL_METADATA`, then resolves which IR input
+/// slots to pass to the kernel:
+///   - `folded_slot = Some(s)` on a 2-input op with `n_in == 1` →
+///     pass `ir_inputs[1 - s]` (the unfolded slot).
+///   - Otherwise → pass the first `n_in` ir_inputs in declared order.
+///
+/// Returns `(input_buffers, output_buffer)` ready for a
+/// `DispatchSpecialised` request.
+fn build_specialised_inputs_outputs(
+    placed: &ComputeGraph,
+    compute_op_idx: usize,
+    handle: u64,
+) -> Result<(Vec<compute_ir::BufferId>, compute_ir::BufferId), GpuError> {
+    let md = {
+        let g = match installed_kernel_metadata().lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+        g.get(&handle).copied().ok_or_else(|| {
+            GpuError::Other(format!(
+                "no kernel metadata for handle 0x{:016X} — did the install side run?",
+                handle
+            ))
+        })?
+    };
+    let n_in = md.n_in;
+    let pop = &placed.ops[compute_op_idx];
+    let PlacedOp::Compute { op: ir_op, .. } = pop else {
+        return Err(GpuError::Other("not a Compute op".to_string()));
+    };
+    let ir_inputs = ir_op.inputs();
+    if n_in > ir_inputs.len() {
+        return Err(GpuError::Other(format!(
+            "specialised kernel expects {} inputs but op has only {}",
+            n_in,
+            ir_inputs.len()
+        )));
+    }
+    let selected_input_ids: Vec<matrix_ir::TensorId> = match md.folded_slot {
+        Some(s) if ir_inputs.len() == 2 && n_in == 1 => {
+            let unfolded = if s == 0 { 1usize } else { 0usize };
+            vec![ir_inputs[unfolded]]
+        }
+        _ => ir_inputs.iter().take(n_in).copied().collect(),
+    };
+    let input_bufs: Vec<compute_ir::BufferId> = selected_input_ids
+        .iter()
+        .map(|in_id| {
+            placed
+                .tensor(*in_id)
+                .map(|t| t.residency.buffer)
+                .ok_or_else(|| {
+                    GpuError::Other(format!("tensor {} not in placed graph", in_id.0))
+                })
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let out_id = ir_op.output();
+    let out_buf = placed
+        .tensor(out_id)
+        .map(|t| t.residency.buffer)
+        .ok_or_else(|| {
+            GpuError::Other(format!("output tensor {} not in placed graph", out_id.0))
+        })?;
+    Ok((input_bufs, out_buf))
 }
 
 /// **MX05 Phase 4.4.**  Run a graph that has exactly one non-Const
@@ -1863,6 +2153,231 @@ mod tests {
             result,
             vec![4.0, 4.0, 4.0, 4.0],
             "Phase 4.7 Sqrt with folded input=16: kernel must memset √16=4.0"
+        );
+    }
+
+    /// **MX05 Phase 4.8 end-to-end test.**  Routes a graph with
+    /// **two chained specialised Compute ops** through the
+    /// `dispatch_specialised_via_multi` path.
+    ///
+    /// Graph (data flow):
+    /// ```
+    ///   x = [1, 2, 3, 4]
+    ///   const_3 = [3, 3, 3, 3]   (folded as the RHS of Add)
+    ///   const_2 = [2, 2, 2, 2]   (folded as the RHS of Mul)
+    ///   y = Add(x, const_3)      → [4, 5, 6, 7]
+    ///   z = Mul(y, const_2)      → [8, 10, 12, 14]    ← graph output
+    /// ```
+    /// Both Add and Mul are commutative — we use the canonical
+    /// `add_const_f32` and `mul_const_f32` kernels with the RHS
+    /// folded (`folded_slot = Some(1)`).  Each gets its own handle;
+    /// both are installed before dispatch; `dispatch_via` then
+    /// recognises both Compute ops have installed kernels and
+    /// routes through `dispatch_specialised_via_multi`.
+    ///
+    /// Assertions:
+    ///   1. `specialised_dispatch_count` rises by **2** (one per
+    ///      Compute op).
+    ///   2. The final output bytes are `[8, 10, 12, 14]`.  If the
+    ///      multi-op dispatcher had skipped one of the ops, or had
+    ///      reordered them, the output would differ.
+    #[cfg(all(feature = "metal-backend", target_vendor = "apple"))]
+    #[test]
+    fn dispatch_multi_op_specialised_chain_produces_correct_output() {
+        use crate::specialised_dispatch_count;
+        use compute_ir::{
+            BufferId, ComputeGraph, ExecutorId as ComputeExecutorId, OpTiming as PlanOpTiming,
+            PlacedConstant, PlacedOp, PlacedTensor, Residency, WIRE_FORMAT_VERSION,
+        };
+        use matrix_ir::{DType, Op, Shape, TensorId};
+
+        let backend = match metal_backend() {
+            Some(b) => b,
+            None => return,
+        };
+
+        // ── Install kernel for the Add(_, 3) specialisation ──
+        let add_const: f32 = 3.0;
+        let add_key = matrix_runtime::SpecKey {
+            op_kind: 0x07, // Op::Add
+            dtype: DType::F32,
+            shape_class: matrix_runtime::ShapeClass::Dynamic,
+            range_class: matrix_runtime::RangeClass::Constant {
+                bytes: add_const.to_le_bytes().to_vec(),
+            },
+            backend_id: 1,
+            folded_slot: Some(1), // RHS folded (Add is commutative; convention)
+        };
+        const ADD_HANDLE: u64 = 0x0808_0808_0808_0808;
+        let add_emitted = matrix_metal::emit_specialised_kernel(&add_key, ADD_HANDLE).unwrap();
+        let add_n_in = add_emitted.input_buffer_count;
+        let add_n_out = add_emitted.output_buffer_count;
+        backend
+            .executor
+            .install_specialised_from_emitted(ADD_HANDLE, add_emitted)
+            .unwrap();
+        record_test_kernel_metadata(ADD_HANDLE, add_n_in, add_n_out, Some(1));
+
+        // ── Install kernel for the Mul(_, 2) specialisation ──
+        let mul_const: f32 = 2.0;
+        let mul_key = matrix_runtime::SpecKey {
+            op_kind: 0x09, // Op::Mul
+            dtype: DType::F32,
+            shape_class: matrix_runtime::ShapeClass::Dynamic,
+            range_class: matrix_runtime::RangeClass::Constant {
+                bytes: mul_const.to_le_bytes().to_vec(),
+            },
+            backend_id: 1,
+            folded_slot: Some(1),
+        };
+        const MUL_HANDLE: u64 = 0x0909_0909_0909_0909;
+        let mul_emitted = matrix_metal::emit_specialised_kernel(&mul_key, MUL_HANDLE).unwrap();
+        let mul_n_in = mul_emitted.input_buffer_count;
+        let mul_n_out = mul_emitted.output_buffer_count;
+        backend
+            .executor
+            .install_specialised_from_emitted(MUL_HANDLE, mul_emitted)
+            .unwrap();
+        record_test_kernel_metadata(MUL_HANDLE, mul_n_in, mul_n_out, Some(1));
+
+        // ── Build the placed graph ──
+        // Tensors:
+        //   0 = x
+        //   1 = const_3
+        //   2 = y       (Add(x, const_3))
+        //   3 = const_2
+        //   4 = z       (Mul(y, const_2))   ← output
+        let metal = ComputeExecutorId(1);
+        let r = |b| Residency { executor: metal, buffer: BufferId(b) };
+        let r_x = r(40);
+        let r_c3 = r(41);
+        let r_y = r(42);
+        let r_c2 = r(43);
+        let r_z = r(44);
+        let shape4 = Shape::from(&[4u32]);
+        let mk_tensor = |id, res| PlacedTensor {
+            id: TensorId(id),
+            dtype: DType::F32,
+            shape: shape4.clone(),
+            residency: res,
+        };
+        let x_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
+        let c3_bytes: Vec<u8> = [add_const; 4].iter().flat_map(|v| v.to_le_bytes()).collect();
+        let c2_bytes: Vec<u8> = [mul_const; 4].iter().flat_map(|v| v.to_le_bytes()).collect();
+
+        let placed = ComputeGraph {
+            format_version: WIRE_FORMAT_VERSION,
+            inputs: vec![],
+            outputs: vec![mk_tensor(4, r_z)],
+            constants: vec![
+                PlacedConstant {
+                    tensor: TensorId(0),
+                    residency: r_x,
+                    bytes: x_bytes,
+                },
+                PlacedConstant {
+                    tensor: TensorId(1),
+                    residency: r_c3,
+                    bytes: c3_bytes,
+                },
+                PlacedConstant {
+                    tensor: TensorId(3),
+                    residency: r_c2,
+                    bytes: c2_bytes,
+                },
+            ],
+            ops: vec![
+                PlacedOp::Compute {
+                    op: Op::Const { constant: 0, output: TensorId(0) },
+                    executor: metal,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Compute {
+                    op: Op::Const { constant: 1, output: TensorId(1) },
+                    executor: metal,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Alloc {
+                    residency: r_y,
+                    bytes: 16,
+                },
+                PlacedOp::Compute {
+                    op: Op::Add {
+                        lhs: TensorId(0),
+                        rhs: TensorId(1),
+                        output: TensorId(2),
+                    },
+                    executor: metal,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Compute {
+                    op: Op::Const { constant: 2, output: TensorId(3) },
+                    executor: metal,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+                PlacedOp::Alloc {
+                    residency: r_z,
+                    bytes: 16,
+                },
+                PlacedOp::Compute {
+                    op: Op::Mul {
+                        lhs: TensorId(2),
+                        rhs: TensorId(3),
+                        output: TensorId(4),
+                    },
+                    executor: metal,
+                    timing: PlanOpTiming { estimated_ns: 0 },
+                },
+            ],
+            tensors: vec![
+                mk_tensor(0, r_x),
+                mk_tensor(1, r_c3),
+                mk_tensor(2, r_y),
+                mk_tensor(3, r_c2),
+                mk_tensor(4, r_z),
+            ],
+        };
+
+        // Non-Const Compute ops are at indices 3 (Add) and 6 (Mul).
+        let computes = vec![(3usize, ADD_HANDLE), (6usize, MUL_HANDLE)];
+
+        let before = specialised_dispatch_count();
+        let bytes = dispatch_specialised_via_multi(
+            &backend.transport,
+            &placed,
+            &computes,
+            r_z,
+            16,
+        )
+        .expect("multi-op specialised dispatch must succeed");
+        let after = specialised_dispatch_count();
+
+        // Counter must rise by **at least** the number of
+        // specialised ops we fired.  `>=` instead of `==` because
+        // cargo runs `#[test]` functions in parallel and concurrent
+        // tests increment the same process-wide counter.  This
+        // dispatch contributed exactly 2 increments; concurrent
+        // tests may have added more.
+        assert!(
+            after >= before + 2,
+            "specialised_dispatch_count must rise by at least 2 \
+             (one per Compute op); before = {}, after = {}",
+            before,
+            after
+        );
+
+        // Expected output: (x + 3) * 2 = ([1,2,3,4] + 3) * 2 = [8, 10, 12, 14].
+        let result: Vec<f32> = bytes
+            .chunks(4)
+            .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+            .collect();
+        assert_eq!(
+            result,
+            vec![8.0, 10.0, 12.0, 14.0],
+            "Phase 4.8 multi-op chain Add+Mul must produce (x + 3) * 2"
         );
     }
 }
