@@ -379,6 +379,8 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
     if (difference !== undefined) return difference;
     const perfectSquare = extractMultivariatePerfectSquare(inner);
     if (perfectSquare !== undefined) return perfectSquare;
+    const grouping = extractMultivariateGrouping(inner);
+    if (grouping !== undefined) return grouping;
     const commonFactored = extractCommonSymbolicFactor(inner);
     return commonFactored === undefined ? expr : vm.eval(commonFactored);
   }
@@ -743,6 +745,69 @@ function extractMultivariateCubicIdentity(inner: IRNode): IRNode | undefined {
       app(POW, [second, int(2)]),
     ]),
   ]);
+}
+
+function commonSymbolicPowers(terms: readonly IRNode[]): Map<string, FactorPower> {
+  if (terms.length === 0) return new Map();
+
+  const common = new Map(splitCommonFactorTerm(terms[0]));
+  for (const term of terms.slice(1)) {
+    const powers = splitCommonFactorTerm(term);
+    for (const [key, power] of [...common.entries()]) {
+      const shared = Math.min(power.exponent, powers.get(key)?.exponent ?? 0);
+      if (shared > 0) {
+        common.set(key, { base: power.base, exponent: shared });
+      } else {
+        common.delete(key);
+      }
+    }
+  }
+  return common;
+}
+
+function sameTwoTerms(left: readonly IRNode[], right: readonly IRNode[]): boolean {
+  if (left.length !== 2 || right.length !== 2) return false;
+  const leftKeys = left.map(nodeKey);
+  const rightKeys = right.map(nodeKey);
+  return (
+    (leftKeys[0] === rightKeys[0] && leftKeys[1] === rightKeys[1])
+    || (leftKeys[0] === rightKeys[1] && leftKeys[1] === rightKeys[0])
+  );
+}
+
+function extractMultivariateGrouping(inner: IRNode): IRNode | undefined {
+  const terms = flattenAddTerms(inner);
+  if (terms.length !== 4) return undefined;
+
+  for (let firstIndex = 0; firstIndex < terms.length - 1; firstIndex += 1) {
+    for (let secondIndex = firstIndex + 1; secondIndex < terms.length; secondIndex += 1) {
+      const grouped = [terms[firstIndex], terms[secondIndex]];
+      const firstCommon = commonSymbolicPowers(grouped);
+      if (firstCommon.size === 0) continue;
+
+      const rest = terms.filter((_term, index) => index !== firstIndex && index !== secondIndex);
+      const firstResidual = grouped.map((term) => removeCommonFactor(term, firstCommon));
+      const secondCommon = commonSymbolicPowers(rest);
+      const secondResidual = rest.map((term) => removeCommonFactor(term, secondCommon));
+      if (!sameTwoTerms(firstResidual, secondResidual)) continue;
+
+      const firstFactor = multiplyNodes([...firstCommon.values()]
+        .sort((a, b) => nodeKey(a.base).localeCompare(nodeKey(b.base)))
+        .map((power) => powNode(power.base, power.exponent)));
+      const secondFactor = secondCommon.size === 0
+        ? int(1)
+        : multiplyNodes([...secondCommon.values()]
+          .sort((a, b) => nodeKey(a.base).localeCompare(nodeKey(b.base)))
+          .map((power) => powNode(power.base, power.exponent)));
+
+      return app(MUL, [
+        app(ADD, [firstFactor, secondFactor]),
+        addNodes(firstResidual),
+      ]);
+    }
+  }
+
+  return undefined;
 }
 
 function polyAdd(a: readonly bigint[], b: readonly bigint[]): bigint[] {

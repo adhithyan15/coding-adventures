@@ -185,6 +185,42 @@ describe("symbolic-vm", () => {
     ]));
   });
 
+  it("factors grouped multivariate terms", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const z = sym("z");
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(ADD, [app(MUL, [x, y]), app(MUL, [x, z])]),
+        app(ADD, [y, z]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(ADD, [x, int(1)]),
+      app(ADD, [y, z]),
+    ]));
+  });
+
+  it("factors grouped multivariate terms with signed residuals", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const y = sym("y");
+    const z = sym("z");
+    const expr = app(FACTOR, [
+      app(ADD, [
+        app(SUB, [app(MUL, [x, y]), app(MUL, [x, z])]),
+        app(SUB, [y, z]),
+      ]),
+    ]);
+
+    expect(vm.eval(expr)).toEqual(app(MUL, [
+      app(ADD, [x, int(1)]),
+      app(ADD, [y, app(MUL, [int(-1), z])]),
+    ]));
+  });
+
   it("supports assignment and later lookup", () => {
     const vm = new VM(new SymbolicBackend());
     expect(vm.eval(app(ASSIGN, [sym("x"), app(ADD, [int(2), int(3)])]))).toEqual(int(5));

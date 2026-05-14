@@ -218,6 +218,26 @@ describe("macsyma-runtime", () => {
     ]));
   });
 
+  it("factors grouped multivariate terms through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x*y + x*z + y + z);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(ADD, [sym("x"), int(1)]),
+      app(ADD, [sym("y"), sym("z")]),
+    ]));
+  });
+
+  it("factors grouped multivariate terms with signed residuals through the runtime", () => {
+    const session = new MacsymaSession();
+    const [result] = session.evalSource("factor(x*y - x*z + y - z);");
+
+    expect(result.output).toEqual(app(MUL, [
+      app(ADD, [sym("x"), int(1)]),
+      app(ADD, [sym("y"), app(MUL, [int(-1), sym("z")])]),
+    ]));
+  });
+
   it("tracks the showtime option flag through normal assignments", () => {
     const session = new MacsymaSession();
     const [enabled, timed, disabled, untimed] = session.evalSource(
