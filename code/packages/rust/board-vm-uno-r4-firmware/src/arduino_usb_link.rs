@@ -2,7 +2,8 @@
 //
 // The Rust firmware owns the VM, protocol, device state, and CDC byte stream.
 // Arduino's Renesas core still owns the RA4M1 TinyUSB descriptors, IRQ
-// plumbing, and FSP USB driver objects needed by `__USBStart`.
+// plumbing, FSP USB driver objects needed by `__USBStart`, and the low-level
+// GPT/AGT timer setup behind the SerialUSB firmware's PWM backend.
 
 pub const ARDUINO_RENESAS_UNO_CORE_VERSION: &str = "1.5.3";
 pub const UNO_R4_WIFI_FQBN: &str = "arduino:renesas_uno:unor4wifi";
@@ -25,6 +26,7 @@ pub const ARDUINO_ARM_AR_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_AR";
 pub const ARDUINO_ARM_COMPAT_ROOT_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_COMPAT_ROOT";
 
 pub const ARDUINO_USB_START_SYMBOL: &str = "_Z10__USBStartv";
+pub const BOARD_VM_UNO_R4_PWM_WRITE_SYMBOL: &str = "board_vm_uno_r4_pwm_write";
 pub const RUST_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const RUST_USB_CONFIGURE_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
 pub const RUST_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
@@ -33,6 +35,7 @@ pub const RUST_USB_CDC_LINE_CODING_CALLBACK_SYMBOL: &str = "tud_cdc_line_coding_
 
 pub const UNO_R4_WIFI_FSP_ARCHIVE: &str = "variants/UNOWIFIR4/libs/libfsp.a";
 pub const UNO_R4_WIFI_FSP_LINKER_SCRIPT: &str = "variants/UNOWIFIR4/fsp.ld";
+pub const BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE: &str = "src/uno_r4_wifi_pwm_bridge.cpp";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ArduinoSourceLanguage {
@@ -80,6 +83,8 @@ pub const ARDUINO_USB_LINK_SOURCES: &[ArduinoLinkSource] = &[
     ArduinoLinkSource::c("cores/arduino/tinyusb/rusb2/dcd_rusb2.c"),
     ArduinoLinkSource::c("cores/arduino/tinyusb/rusb2/rusb2_common.c"),
     ArduinoLinkSource::cxx("cores/arduino/IRQManager.cpp"),
+    ArduinoLinkSource::cxx("cores/arduino/FspTimer.cpp"),
+    ArduinoLinkSource::cxx("cores/arduino/pwm.cpp"),
     ArduinoLinkSource::cxx("cores/arduino/usb/USB.cpp"),
     ArduinoLinkSource::static_archive(UNO_R4_WIFI_FSP_ARCHIVE),
 ];
@@ -172,6 +177,9 @@ pub const ARDUINO_PROVIDED_USB_SYMBOLS: &[&str] = &[
     ARDUINO_USB_START_SYMBOL,
     "R_IOPORT_PinCfg",
     "R_IOPORT_PinWrite",
+    "R_GPT_Open",
+    "R_GPT_Start",
+    "R_GPT_DutyCycleSet",
     "tud_task_ext",
     "tud_cdc_n_connected",
     "tud_cdc_n_get_line_state",
@@ -214,9 +222,11 @@ mod tests {
     }
 
     #[test]
-    fn link_manifest_includes_usb_start_tinyusb_and_fsp_objects() {
+    fn link_manifest_includes_usb_start_tinyusb_pwm_and_fsp_objects() {
         assert!(contains_source("cores/arduino/usb/USB.cpp"));
         assert!(contains_source("cores/arduino/IRQManager.cpp"));
+        assert!(contains_source("cores/arduino/FspTimer.cpp"));
+        assert!(contains_source("cores/arduino/pwm.cpp"));
         assert!(contains_source("cores/arduino/tinyusb/tusb.c"));
         assert!(contains_source(
             "cores/arduino/tinyusb/class/cdc/cdc_device.c"
@@ -251,7 +261,16 @@ mod tests {
         assert!(RUST_PROVIDED_USB_SYMBOLS.contains(&"tud_cdc_line_coding_cb"));
         assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"R_IOPORT_PinCfg"));
         assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"R_IOPORT_PinWrite"));
+        assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"R_GPT_DutyCycleSet"));
         assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"tud_cdc_n_read"));
         assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"tud_cdc_n_write_flush"));
+        assert_eq!(
+            BOARD_VM_UNO_R4_PWM_WRITE_SYMBOL,
+            "board_vm_uno_r4_pwm_write"
+        );
+        assert_eq!(
+            BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE,
+            "src/uno_r4_wifi_pwm_bridge.cpp"
+        );
     }
 }

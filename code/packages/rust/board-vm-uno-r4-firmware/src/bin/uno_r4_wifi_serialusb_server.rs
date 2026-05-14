@@ -9,7 +9,10 @@ mod firmware {
     use board_vm_uno_r4_firmware::serial_usb_server::{
         serial_usb_endpoint, serve_serial_usb_available,
     };
+    #[cfg(not(board_vm_uno_r4_arduino_usb_link))]
     use board_vm_uno_r4_firmware::uno_r4_wifi_backend::UnoR4WifiLedBackend;
+    #[cfg(board_vm_uno_r4_arduino_usb_link)]
+    use board_vm_uno_r4_firmware::uno_r4_wifi_backend::UnoR4WifiPwmBackend as UnoR4WifiLedBackend;
     use board_vm_uno_r4_usb_cdc::UnoR4WifiSerialUsb;
     use panic_halt as _;
 

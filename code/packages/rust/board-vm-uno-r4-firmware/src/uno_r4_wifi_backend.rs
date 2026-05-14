@@ -95,3 +95,86 @@ impl UnoR4Backend for UnoR4WifiLedBackend {
         Ok(())
     }
 }
+
+#[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
+pub struct UnoR4WifiPwmBackend {
+    inner: UnoR4WifiLedBackend,
+}
+
+#[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
+impl UnoR4WifiPwmBackend {
+    pub fn new() -> Self {
+        Self {
+            inner: UnoR4WifiLedBackend::new(),
+        }
+    }
+
+    pub fn set_led(&mut self, level: Level) {
+        self.inner.set_led(level);
+    }
+
+    pub fn pause_ms(&mut self, duration_ms: u32) {
+        self.inner.pause_ms(duration_ms);
+    }
+
+    pub fn blink_pattern(&mut self, pulses: u8, on_ms: u32, off_ms: u32) {
+        self.inner.blink_pattern(pulses, on_ms, off_ms);
+    }
+
+    pub fn refresh_led_matrix_once(&mut self) {
+        self.inner.refresh_led_matrix_once();
+    }
+}
+
+#[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
+impl Default for UnoR4WifiPwmBackend {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
+impl UnoR4Backend for UnoR4WifiPwmBackend {
+    fn configure_gpio(&mut self, pin: u8, mode: GpioMode) -> Result<(), HalError> {
+        self.inner.configure_gpio(pin, mode)
+    }
+
+    fn write_gpio(&mut self, pin: u8, level: Level) -> Result<(), HalError> {
+        self.inner.write_gpio(pin, level)
+    }
+
+    fn read_gpio(&mut self, pin: u8) -> Result<Level, HalError> {
+        self.inner.read_gpio(pin)
+    }
+
+    fn sleep_ms(&mut self, duration_ms: u16) -> Result<(), HalError> {
+        self.inner.sleep_ms(duration_ms)
+    }
+
+    fn now_ms(&self) -> u32 {
+        self.inner.now_ms()
+    }
+
+    fn supports_pwm(&self) -> bool {
+        true
+    }
+
+    fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
+        self.inner.led_matrix_frame(frame)
+    }
+
+    fn write_pwm(&mut self, pin: u8, duty: u16) -> Result<(), HalError> {
+        if unsafe { pwm_ffi::board_vm_uno_r4_pwm_write(pin, duty) } {
+            Ok(())
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+}
+
+#[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
+mod pwm_ffi {
+    unsafe extern "C" {
+        pub fn board_vm_uno_r4_pwm_write(pin: u8, duty: u16) -> bool;
+    }
+}
