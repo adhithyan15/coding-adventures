@@ -190,6 +190,12 @@ pub struct DcResult {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DcSweepPoint {
+    pub value: f64,
+    pub result: DcResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct TransientPoint {
     pub time: f64,
     pub node_voltages: BTreeMap<String, f64>,
@@ -260,6 +266,30 @@ pub fn dc_op(circuit: &Circuit) -> Result<DcResult, SpiceError> {
     })
 }
 
+pub fn dc_sweep(
+    circuit: &Circuit,
+    source_name: &str,
+    start: f64,
+    stop: f64,
+    step: f64,
+) -> Result<Vec<DcSweepPoint>, SpiceError> {
+    validate_sweep(source_name, start, stop, step)?;
+
+    let mut points = Vec::new();
+    let mut value = start;
+    let epsilon = step.abs() * 1.0e-9;
+    while sweep_includes(value, stop, step, epsilon) {
+        let mut swept = circuit.clone();
+        set_source_value(&mut swept, source_name, value)?;
+        points.push(DcSweepPoint {
+            value,
+            result: dc_op(&swept)?,
+        });
+        value += step;
+    }
+    Ok(points)
+}
+
 pub fn transient(
     circuit: &Circuit,
     time_step: f64,
@@ -304,6 +334,60 @@ pub fn transient(
         time += time_step;
     }
     Ok(points)
+}
+
+fn validate_sweep(source_name: &str, start: f64, stop: f64, step: f64) -> Result<(), SpiceError> {
+    if source_name.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_sweep".to_string(),
+            reason: "source name must not be empty".to_string(),
+        });
+    }
+    if !start.is_finite() || !stop.is_finite() || !step.is_finite() || step == 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: source_name.to_string(),
+            reason: "sweep bounds and step must be finite, with non-zero step".to_string(),
+        });
+    }
+    if (stop - start).signum() != step.signum() && start != stop {
+        return Err(SpiceError::InvalidElement {
+            name: source_name.to_string(),
+            reason: "sweep step direction must move from start toward stop".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn sweep_includes(value: f64, stop: f64, step: f64, epsilon: f64) -> bool {
+    if step > 0.0 {
+        value <= stop + epsilon
+    } else {
+        value >= stop - epsilon
+    }
+}
+
+fn set_source_value(
+    circuit: &mut Circuit,
+    source_name: &str,
+    value: f64,
+) -> Result<(), SpiceError> {
+    for element in &mut circuit.elements {
+        match element {
+            Element::VoltageSource(source) if source.name == source_name => {
+                source.voltage = value;
+                return Ok(());
+            }
+            Element::CurrentSource(source) if source.name == source_name => {
+                source.current = value;
+                return Ok(());
+            }
+            _ => {}
+        }
+    }
+    Err(SpiceError::InvalidElement {
+        name: source_name.to_string(),
+        reason: "sweep source must be an independent voltage or current source".to_string(),
+    })
 }
 
 #[derive(Debug, Clone, PartialEq)]

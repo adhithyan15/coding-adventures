@@ -1,5 +1,5 @@
 use spice_engine::{
-    dc_op, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, VoltageSource,
+    dc_op, dc_sweep, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -84,6 +84,64 @@ fn dc_inductor_behaves_as_ideal_short() {
 
     assert_close(result.voltage("out").unwrap(), 0.0);
     assert_close(result.branch_current("L1").unwrap(), 1.0e-3);
+}
+
+#[test]
+fn dc_sweep_varies_voltage_source_and_collects_operating_points() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+
+    let points = dc_sweep(&circuit, "V1", 0.0, 2.0, 1.0).unwrap();
+
+    assert_eq!(points.len(), 3);
+    assert_close(points[0].value, 0.0);
+    assert_close(points[0].result.voltage("mid").unwrap(), 0.0);
+    assert_close(points[1].value, 1.0);
+    assert_close(points[1].result.voltage("mid").unwrap(), 0.5);
+    assert_close(points[2].value, 2.0);
+    assert_close(points[2].result.voltage("mid").unwrap(), 1.0);
+}
+
+#[test]
+fn dc_sweep_supports_current_sources() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::CurrentSource(CurrentSource::new(
+        "I1", "0", "n1", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "n1", "0", 1_000.0)));
+
+    let points = dc_sweep(&circuit, "I1", 0.0, 2.0e-3, 1.0e-3).unwrap();
+
+    assert_eq!(points.len(), 3);
+    assert_close(points[0].result.voltage("n1").unwrap(), 0.0);
+    assert_close(points[1].result.voltage("n1").unwrap(), 1.0);
+    assert_close(points[2].result.voltage("n1").unwrap(), 2.0);
+}
+
+#[test]
+fn dc_sweep_rejects_step_that_does_not_reach_stop() {
+    let circuit = Circuit::new();
+
+    assert!(matches!(
+        dc_sweep(&circuit, "V1", 0.0, 1.0, -0.1),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "V1"
+    ));
+}
+
+#[test]
+fn dc_sweep_rejects_missing_source() {
+    let circuit = Circuit::new();
+
+    assert!(matches!(
+        dc_sweep(&circuit, "Vmissing", 0.0, 1.0, 1.0),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Vmissing"
+    ));
 }
 
 #[test]
