@@ -7,6 +7,8 @@ The initial slices implement:
 - DC operating-point analysis for linear circuits using modified nodal analysis
   (MNA).
 - DC source sweeps over independent voltage and current sources.
+- DC sensitivity analysis for output-node voltage changes with respect to
+  resistor and independent source parameters.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
   impedance estimates.
 - AC small-signal frequency sweeps for linear RC/RL circuits.
