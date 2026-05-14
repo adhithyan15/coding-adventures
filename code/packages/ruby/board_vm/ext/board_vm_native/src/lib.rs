@@ -2,12 +2,13 @@ use std::ffi::{c_char, c_int, c_long, c_void};
 use std::ptr;
 use std::slice;
 
+use board_vm_host::PwmWriteProgram;
 use board_vm_host::{
     BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
     GpioOpenProgram, GpioReadProgram, GpioWriteProgram, LedMatrixFrameProgram, TimeNowProgram,
     TimeSleepMsProgram, BLINK_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN,
     GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
-    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN,
     TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
@@ -17,10 +18,10 @@ use board_vm_language_core::{
     build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
     build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
-    build_program_end_wire_frame, build_raw_module, build_run_background_wire_frame,
-    build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
-    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
-    capability_bytecode_callable, capability_flag_names,
+    build_program_end_wire_frame, build_pwm_write_module, build_raw_module,
+    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
+    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
     detect_target as core_detect_target,
     discover_bluetooth_devices as core_discover_bluetooth_devices,
@@ -211,6 +212,21 @@ extern "C" fn session_led_matrix_frame_module(
 
     let module = build_led_matrix_frame_module_value([word0, word1, word2], max_stack)
         .unwrap_or_else(|error| raise_core_error("led_matrix_frame_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_pwm_write_module(
+    _self_val: VALUE,
+    pin_val: VALUE,
+    duty_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let pin = rb_u8(pin_val, "pin");
+    let duty = rb_u16(duty_val, "duty");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_pwm_write_module_value(pin, duty, max_stack)
+        .unwrap_or_else(|error| raise_core_error("pwm_write_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -791,8 +807,16 @@ fn language_digital_pins_to_rb(pins: &[LanguageDigitalPin]) -> VALUE {
             "supports_pulldown",
             ruby_bridge::bool_to_rb(pin.supports_pulldown),
         );
-        hash_set(hash, "supports_adc", ruby_bridge::bool_to_rb(pin.supports_adc));
-        hash_set(hash, "supports_pwm", ruby_bridge::bool_to_rb(pin.supports_pwm));
+        hash_set(
+            hash,
+            "supports_adc",
+            ruby_bridge::bool_to_rb(pin.supports_adc),
+        );
+        hash_set(
+            hash,
+            "supports_pwm",
+            ruby_bridge::bool_to_rb(pin.supports_pwm),
+        );
         hash_set(
             hash,
             "supports_touch",
@@ -1342,8 +1366,24 @@ fn build_led_matrix_frame_module_value(
     max_stack: u8,
 ) -> Result<Vec<u8>, LanguageCoreError> {
     let mut module = vec![0; LED_MATRIX_FRAME_MODULE_LEN];
-    let len = build_led_matrix_frame_module(
-        LedMatrixFrameProgram { words, max_stack },
+    let len =
+        build_led_matrix_frame_module(LedMatrixFrameProgram { words, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_pwm_write_module_value(
+    pin: u8,
+    duty: u16,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; PWM_WRITE_MODULE_LEN];
+    let len = build_pwm_write_module(
+        PwmWriteProgram {
+            pin,
+            duty,
+            max_stack,
+        },
         &mut module,
     )?;
     module.truncate(len);
@@ -1646,6 +1686,12 @@ pub extern "C" fn Init_board_vm_native() {
         "led_matrix_frame_module",
         session_led_matrix_frame_module as *const c_void,
         4,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "pwm_write_module",
+        session_pwm_write_module as *const c_void,
+        3,
     );
     ruby_bridge::define_method_raw(
         session_class,

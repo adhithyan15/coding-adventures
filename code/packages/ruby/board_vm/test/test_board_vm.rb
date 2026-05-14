@@ -35,6 +35,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "transport.wifi"
         assert_includes uno_r4_wifi["capabilities"], "transport.bluetooth_le"
         assert_includes uno_r4_wifi["capabilities"], "led_matrix.frame"
+        assert_includes uno_r4_wifi["capabilities"], "pwm.write"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
@@ -1196,6 +1197,28 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_pwm_write_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.pwm.write(pin: 3, duty: 0x8000, program_id: 10, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+      end
+
       def test_store_program_dispatches_native_protocol_frame_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -1530,6 +1553,26 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_pwm_write
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("pwm-write 3 0x8000 24", program_id: 9)
+          upload = board.session.run_command("upload-pwm-write 3 32768", program_id: 10)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            result.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload.results.map(&:command)
+          assert_equal result.frames + upload.frames, transport.frames
+        end
+      end
+
       def test_board_descriptor_wraps_rust_decoded_capability_report
         decoded = {
           "kind" => "caps_report",
@@ -1638,6 +1681,10 @@ module CodingAdventures
         )
         assert_instance_of String, led_matrix_module_bytes
         assert_operator led_matrix_module_bytes.bytesize, :>, 0
+
+        pwm_module_bytes = session.pwm_write_module(3, 0x8000, 2)
+        assert_instance_of String, pwm_module_bytes
+        assert_operator pwm_module_bytes.bytesize, :>, 0
 
         gpio_module_bytes = session.gpio_read_module(13, 2, 2)
         assert_instance_of String, gpio_module_bytes

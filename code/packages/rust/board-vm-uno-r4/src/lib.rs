@@ -2,7 +2,8 @@
 
 use board_vm_device::{
     BoardVmDevice, DeviceDescriptor, BLINK_MVP_CAPABILITIES,
-    BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
+    BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
 };
 use board_vm_ir::CapabilitySet;
 use board_vm_runtime::{BoardHal, GpioMode, HalError, Level};
@@ -178,7 +179,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     onboard_led_pin: UNO_R4_ONBOARD_LED_PIN,
     supports_wifi_module: false,
     supports_led_matrix: false,
-    capabilities: CapabilitySet::blink_mvp(),
+    capabilities: CapabilitySet::blink_mvp().with_pwm(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
 };
 
@@ -198,7 +199,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     onboard_led_pin: UNO_R4_ONBOARD_LED_PIN,
     supports_wifi_module: true,
     supports_led_matrix: true,
-    capabilities: CapabilitySet::blink_mvp().with_led_matrix(),
+    capabilities: CapabilitySet::blink_mvp().with_pwm().with_led_matrix(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
 };
 
@@ -209,7 +210,15 @@ pub trait UnoR4Backend {
     fn sleep_ms(&mut self, duration_ms: u16) -> Result<(), HalError>;
     fn now_ms(&self) -> u32;
 
+    fn supports_pwm(&self) -> bool {
+        false
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn write_pwm(&mut self, _pin: u8, _duty: u16) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 }
@@ -251,8 +260,16 @@ where
     }
 
     pub fn into_device(self, board_nonce: u32) -> UnoR4Device<B> {
-        let descriptor = uno_r4_device_descriptor(self.target, board_nonce);
+        let capabilities = self.resolved_capabilities();
+        let descriptor =
+            uno_r4_device_descriptor_for_capabilities(self.target, board_nonce, capabilities);
         BoardVmDevice::new(descriptor, self)
+    }
+
+    fn resolved_capabilities(&self) -> CapabilitySet {
+        let mut capabilities = self.target.capabilities;
+        capabilities.pwm = self.backend.supports_pwm();
+        capabilities
     }
 }
 
@@ -261,7 +278,7 @@ where
     B: UnoR4Backend,
 {
     fn capabilities(&self) -> CapabilitySet {
-        self.target.capabilities
+        self.resolved_capabilities()
     }
 
     fn gpio_open(&mut self, pin: u16, mode: GpioMode) -> Result<u32, HalError> {
@@ -292,6 +309,11 @@ where
         self.backend.now_ms()
     }
 
+    fn pwm_write(&mut self, pin: u16, duty: u16) -> Result<(), HalError> {
+        let pin = normalize_pwm_pin(pin)?;
+        self.backend.write_pwm(pin, duty)
+    }
+
     fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
         if !self.target.supports_led_matrix {
             return Err(HalError::UnsupportedMode);
@@ -310,9 +332,26 @@ pub fn is_valid_digital_pin(pin: u16) -> bool {
     pin <= 13
 }
 
+fn normalize_pwm_pin(pin: u16) -> Result<u8, HalError> {
+    let pin = normalize_digital_pin(pin)?;
+    match digital_pin(pin) {
+        Some(descriptor) if descriptor.supports_pwm => Ok(pin),
+        Some(_) => Err(HalError::UnsupportedMode),
+        None => Err(HalError::InvalidPin),
+    }
+}
+
 pub fn uno_r4_device_descriptor(
     target: &'static TargetDescriptor,
     board_nonce: u32,
+) -> DeviceDescriptor<'static> {
+    uno_r4_device_descriptor_for_capabilities(target, board_nonce, target.capabilities)
+}
+
+fn uno_r4_device_descriptor_for_capabilities(
+    target: &'static TargetDescriptor,
+    board_nonce: u32,
+    capabilities: CapabilitySet,
 ) -> DeviceDescriptor<'static> {
     DeviceDescriptor {
         board_id: target.board_id,
@@ -320,8 +359,12 @@ pub fn uno_r4_device_descriptor(
         board_nonce,
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: false,
-        capabilities: if target.supports_led_matrix {
+        capabilities: if target.supports_led_matrix && capabilities.pwm {
+            &BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm {
+            &BLINK_MVP_WITH_PWM_CAPABILITIES
         } else {
             &BLINK_MVP_CAPABILITIES
         },
@@ -375,6 +418,7 @@ mod tests {
         Configure(u8, GpioMode),
         Write(u8, Level),
         Sleep(u16),
+        PwmWrite(u8, u16),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -415,6 +459,15 @@ mod tests {
 
         fn now_ms(&self) -> u32 {
             self.now_ms
+        }
+
+        fn supports_pwm(&self) -> bool {
+            true
+        }
+
+        fn write_pwm(&mut self, pin: u8, duty: u16) -> Result<(), HalError> {
+            self.events.push(Event::PwmWrite(pin, duty));
+            Ok(())
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -478,8 +531,14 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES.len()
         );
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_PWM_WRITE));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_PWM_WRITE));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -503,6 +562,22 @@ mod tests {
                 0x100A_0040,
             ])]
         );
+    }
+
+    #[test]
+    fn pwm_write_runs_through_pwm_pin_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+        board.pwm_write(3, 0x8000).unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::PwmWrite(3, 0x8000)]);
+    }
+
+    #[test]
+    fn pwm_write_rejects_non_pwm_pin() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.pwm_write(2, 0x8000), Err(HalError::UnsupportedMode));
+        assert_eq!(board.pwm_write(99, 0x8000), Err(HalError::InvalidPin));
     }
 
     #[test]

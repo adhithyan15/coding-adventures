@@ -1,8 +1,8 @@
 use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_GPIO_CLOSE,
-    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
-    MODULE_MAGIC, MODULE_VERSION,
+    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
+    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER,
+    FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -34,6 +34,8 @@ pub const TIME_NOW_CODE_LEN: usize = 3;
 pub const TIME_NOW_MODULE_LEN: usize = 13;
 pub const TIME_SLEEP_MS_CODE_LEN: usize = 5;
 pub const TIME_SLEEP_MS_MODULE_LEN: usize = 15;
+pub const PWM_WRITE_CODE_LEN: usize = 8;
+pub const PWM_WRITE_MODULE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -149,6 +151,13 @@ pub struct GpioOpenProgram {
     pub max_stack: u8,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PwmWriteProgram {
+    pub pin: u8,
+    pub duty: u16,
+    pub max_stack: u8,
+}
+
 impl GpioOpenProgram {
     pub const fn output(pin: u8) -> Self {
         Self {
@@ -236,6 +245,24 @@ impl GpioHandleCloseProgram {
 impl Default for GpioHandleCloseProgram {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl PwmWriteProgram {
+    pub const fn new(pin: u8, duty: u16) -> Self {
+        Self {
+            pin,
+            duty,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn off(pin: u8) -> Self {
+        Self::new(pin, 0)
+    }
+
+    pub const fn full(pin: u8) -> Self {
+        Self::new(pin, u16::MAX)
     }
 }
 
@@ -954,6 +981,43 @@ pub fn write_time_sleep_ms_module(
     Ok(offset)
 }
 
+pub fn write_pwm_write_code(program: PwmWriteProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < PWM_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_push_u16(out, &mut offset, program.duty)?;
+    write_call_u8(out, &mut offset, CAP_PWM_WRITE)?;
+    write_u8(out, &mut offset, OP_HALT)?;
+    Ok(offset)
+}
+
+pub fn write_pwm_write_module(
+    program: PwmWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < PWM_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; PWM_WRITE_CODE_LEN];
+    let code_len = write_pwm_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_pwm(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_led_matrix_frame_code(
     program: LedMatrixFrameProgram,
     out: &mut [u8],
@@ -1103,7 +1167,7 @@ mod tests {
     use super::*;
     use board_vm_ir::{
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
-        CAP_LED_MATRIX_FRAME,
+        CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -1142,6 +1206,10 @@ mod tests {
     ];
     const TIME_SLEEP_MS_MODULE_HEX: [u8; TIME_SLEEP_MS_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x13, 0xFA, 0x00, 0x40, 0x10, 0x00,
+    ];
+    const PWM_WRITE_HALF_MODULE_HEX: [u8; PWM_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x08, 0x12, 0x03, 0x13, 0x00, 0x80, 0x40,
+        0x20, 0x00, 0x00,
     ];
     const LED_MATRIX_HEART_MODULE_HEX: [u8; LED_MATRIX_FRAME_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x12, 0x14, 0x44, 0xA4, 0x84, 0x31, 0x14,
@@ -1287,6 +1355,20 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_LED_MATRIX_FRAME]);
+    }
+
+    #[test]
+    fn builds_pwm_write_module() {
+        let mut module = [0u8; PWM_WRITE_MODULE_LEN];
+        let len = write_pwm_write_module(PwmWriteProgram::new(3, 0x8000), &mut module).unwrap();
+        assert_eq!(len, PWM_WRITE_MODULE_LEN);
+        assert_eq!(module, PWM_WRITE_HALF_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_pwm(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_PWM_WRITE]);
     }
 
     #[test]

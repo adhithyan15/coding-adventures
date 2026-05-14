@@ -99,7 +99,19 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 12] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 9] = [
+    "transport.serial",
+    "gpio.open",
+    "gpio.write",
+    "gpio.read",
+    "gpio.close",
+    "time.sleep_ms",
+    "time.now_ms",
+    "pwm.write",
+    "program.ram_exec",
+];
+
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 13] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -110,6 +122,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 12] = [
     "gpio.close",
     "time.sleep_ms",
     "time.now_ms",
+    "pwm.write",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -320,7 +333,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pin_count: UNO_R4_DIGITAL_PINS.len(),
         digital_pins: &UNO_R4_DIGITAL_PINS,
         wireless: &[],
-        capabilities: &BLINK_MVP_CAPABILITIES,
+        capabilities: &UNO_R4_MINIMA_CAPABILITIES,
     },
     BoardTargetInfo {
         board_id: board_vm_uno_r4::UNO_R4_WIFI.board_id,
@@ -504,6 +517,10 @@ mod tests {
         assert!(pico.capabilities.contains(&"transport.serial"));
         assert!(pico.capabilities.contains(&"gpio.open"));
         assert!(pico.capabilities.contains(&"program.ram_exec"));
+        assert!(!pico.capabilities.contains(&"pwm.write"));
+
+        let uno = find_target("arduino-uno-r4-wifi").unwrap();
+        assert!(uno.capabilities.contains(&"pwm.write"));
     }
 
     #[test]

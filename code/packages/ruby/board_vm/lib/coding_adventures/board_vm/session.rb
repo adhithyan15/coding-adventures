@@ -197,6 +197,10 @@ module CodingAdventures
         native_session.gpio_write_module(pin, gpio_write_value(value) ? 1 : 0, max_stack)
       end
 
+      def pwm_write_module(pin:, duty:, max_stack: 2)
+        native_session.pwm_write_module(pin, pwm_duty_value(duty), max_stack)
+      end
+
       def gpio_open_module(pin:, mode: :output, max_stack: 2)
         native_session.gpio_open_module(pin, gpio_mode(mode), max_stack)
       end
@@ -234,6 +238,18 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: gpio_write_module(pin: pin, value: value, max_stack: max_stack)
+        )
+      end
+
+      def upload_pwm_write(
+        program_id: @program_id,
+        pin:,
+        duty:,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: pwm_write_module(pin: pin, duty: duty, max_stack: max_stack)
         )
       end
 
@@ -470,6 +486,36 @@ module CodingAdventures
         gpio_write(pin: pin, value: false, **options)
       end
 
+      def pwm_write(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        pin:,
+        duty:,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_pwm_write(
+            program_id: program_id,
+            pin: pin,
+            duty: duty,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
       def gpio_open(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -663,6 +709,8 @@ module CodingAdventures
           upload_gpio_read(**gpio_read_command_options(words, command, options, require_budget: false))
         when "upload-gpio-write", "upload-gpio.write"
           upload_gpio_write(**gpio_write_command_options(words, command, options, require_budget: false))
+        when "upload-pwm-write", "upload-pwm.write"
+          upload_pwm_write(**pwm_write_command_options(words, command, options, require_budget: false))
         when "upload-gpio-open", "upload-gpio.open"
           upload_gpio_open(**gpio_open_command_options(words, command, options, require_budget: false))
         when "upload-gpio-handle-read", "upload-gpio.handle-read"
@@ -693,6 +741,8 @@ module CodingAdventures
           gpio_read(**gpio_read_command_options(words, command, options))
         when "gpio-write", "gpio.write"
           gpio_write(**gpio_write_command_options(words, command, options))
+        when "pwm-write", "pwm.write"
+          pwm_write(**pwm_write_command_options(words, command, options))
         when "gpio-high", "gpio.high"
           gpio_write(**gpio_level_command_options(words, command, options, value: true))
         when "gpio-low", "gpio.low"
@@ -879,6 +929,22 @@ module CodingAdventures
         merged
       end
 
+      def pwm_write_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:pin] = integer_argument(words.shift, "#{command} pin") unless words.empty?
+        merged[:duty] = pwm_duty_value(words.shift) unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires pin" unless merged.key?(:pin)
+        raise ArgumentError, "#{command} requires duty" unless merged.key?(:duty)
+
+        merged
+      end
+
       def gpio_open_command_options(words, command, options, require_budget: true)
         merged = options.dup
         merged[:pin] = integer_argument(words.shift, "#{command} pin") unless words.empty?
@@ -940,6 +1006,21 @@ module CodingAdventures
         GPIO_WRITE_VALUES.fetch(text.to_sym) do
           raise ArgumentError, "unsupported GPIO write value: #{value.inspect}"
         end
+      end
+
+      def pwm_duty_value(value)
+        duty = if value.is_a?(Integer)
+          value
+        else
+          begin
+            Integer(value, 0)
+          rescue ArgumentError
+            raise ArgumentError, "PWM duty must be an integer: #{value.inspect}"
+          end
+        end
+        raise ArgumentError, "PWM duty must fit in u16" if duty.negative? || duty > 0xFFFF
+
+        duty
       end
 
       def boot_policy_value(value)
