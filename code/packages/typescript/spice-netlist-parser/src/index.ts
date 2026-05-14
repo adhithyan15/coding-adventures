@@ -5,6 +5,7 @@ import {
   PwlWaveform,
   SinWaveform,
   capacitor,
+  cccs,
   currentSource,
   currentSourceWithWaveform,
   dcOp,
@@ -248,6 +249,10 @@ function parseElement(fields: readonly string[]): Element {
     requireFields(fields, 6, "VCVS");
     return vcvs(name, fields[1], fields[2], fields[3], fields[4], parseValue(fields[5]));
   }
+  if (prefix === "F") {
+    requireFields(fields, 5, "CCCS");
+    return cccs(name, fields[1], fields[2], fields[3], parseValue(fields[4]));
+  }
   throw new NetlistParseError(`unsupported element ${JSON.stringify(name)}`);
 }
 
@@ -339,6 +344,11 @@ function mapSubcktFields(
     for (let index = 1; index < 5; index++) {
       mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
     }
+  } else if (prefix === "F") {
+    requireMinFields(fields, 4, "subcircuit current-controlled source");
+    mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
+    mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
+    mapped[3] = mapSubcktSourceRef(fields[3], instanceName);
   } else if (prefix === "X") {
     for (let index = 1; index < fields.length - 1; index++) {
       mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
@@ -356,6 +366,10 @@ function mapSubcktNode(
     return node;
   }
   return nodeMap.get(node) ?? nodeMap.get(node.toLowerCase()) ?? `${instanceName}.${node}`;
+}
+
+function mapSubcktSourceRef(sourceName: string, instanceName: string): string {
+  return sourceName.includes(".") ? sourceName : `${instanceName}.${sourceName}`;
 }
 
 function elementPrefix(name: string): string {
