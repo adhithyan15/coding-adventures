@@ -1,5 +1,57 @@
 # Changelog — instagram-filters
 
+## 0.3.0 — 2026-05-13
+
+### Added — MX05 ergonomics: `bench-specialisation` subcommand
+
+A new subcommand that drives a constant-parameter filter chain
+(`brightness → contrast → sepia`) repeatedly so the MX05 tiered
+specialisation pipeline (sampler → policy → router → cache → emitter
+→ install → dispatch → deopt) has a chance to fire on a real
+image-processing workload, not a synthetic unit-test graph.
+
+```sh
+instagram-filters bench-specialisation <input.ppm> <output_dir>
+    [--iterations N] [--batch N]
+    [--brightness DELTA] [--contrast SCALE]
+```
+
+After every `--batch` iterations (default 1000) the bench snapshots
+`image_gpu_core::spec_cache_len()`,
+`specialised_install_count()`, `specialised_dispatch_count()`, and
+`deoptimisation_count()`.  Outputs:
+
+- `<output_dir>/result.ppm` — the final filtered image.
+- `<output_dir>/summary.json` — a fixed-shape JSON document with one
+  snapshot per batch, the input dimensions, the filter parameters,
+  and the total iteration count.
+
+### Why
+
+MX05 phases 1–5 landed the runtime specialisation tier; this
+subcommand is the ergonomics polish that lets a user run any
+PPM through a realistic filter chain and **see** what the
+specialisation tier did, without writing custom test plumbing.
+A growing `spec_cache_len` with `specialised_install_count = 0` is
+itself useful diagnostic signal — it shows which ops produce
+specialised kernels but lack an install path.
+
+### Tests
+
+- 9 unit tests in `bench.rs` covering happy path, partial-batch
+  snapshots, JSON shape, JSON escaping, error paths (zero
+  iterations/batch, missing input, oversized input).
+- 7 argv-parser tests in `main.rs` covering positional/flag handling.
+- 5 integration tests in `tests/bench_subcommand.rs` that actually
+  spawn the compiled binary.
+
+### Notes
+
+- The unit-test image is 2×2 so the bench loop is cheap; production
+  users will run on real images of a few hundred pixels per side.
+- The default `--iterations 3000` × 3 ops = 9000 dispatches comfortably
+  exceeds `DefaultPolicy::min_invocations = 1000` so the policy fires.
+
 ## 0.2.0 — 2026-05-04
 
 ### Added
