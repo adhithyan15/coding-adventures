@@ -67,6 +67,14 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
         assert!(run.kernel_sandbox.enforced);
         assert!(run.kernel_sandbox.allowed_write_succeeded);
         assert!(run.kernel_sandbox.denied_write_blocked);
+        assert!(run.kernel_sandbox.network_outbound_enforced);
+        assert!(run.kernel_sandbox.network_denied_outbound_blocked);
+        assert!(run
+            .kernel_sandbox
+            .denied_network_target
+            .starts_with("localhost:"));
+        assert!(!run.kernel_sandbox.weather_https_allowed);
+        assert!(!run.kernel_sandbox.host_exact_kernel_enforced);
         assert!(run.kernel_sandbox.stderr_contains_operation_not_permitted);
         assert!(!run.kernel_sandbox.denied_path.exists());
     }
@@ -168,5 +176,11 @@ fn umbrella_today_agent_fetches_live_weather_over_tls() {
         .starts_with("https://api.weather.gov/"));
     assert!(run.output_text.contains("location=Seattle"));
     assert!(run.output_text.contains("decision="));
+    if current_kernel_sandbox_support().available {
+        assert!(run.kernel_sandbox.network_outbound_enforced);
+        assert!(run.kernel_sandbox.network_denied_outbound_blocked);
+        assert!(run.kernel_sandbox.weather_https_allowed);
+        assert!(!run.kernel_sandbox.host_exact_kernel_enforced);
+    }
     assert!(output_path.exists());
 }

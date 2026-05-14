@@ -211,6 +211,7 @@ impl std::error::Error for SandboxPlanError {}
 
 const MACOS_SANDBOX_EXEC: &str = "/usr/bin/sandbox-exec";
 const MACOS_KERNEL_PRIMITIVE: &str = "macos.sandbox-exec.seatbelt";
+const MACOS_MDNSRESPONDER_SOCKET: &str = "/private/var/run/mDNSResponder";
 
 /// Whether the current host has a kernel sandbox applier for the plan.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -289,8 +290,9 @@ pub fn current_kernel_sandbox_support() -> KernelSandboxSupport {
 /// Generate the macOS Seatbelt profile used to enforce a macOS sandbox plan.
 ///
 /// V1 enforces filesystem write/create/delete capabilities as exact absolute
-/// path literals. Other capability families still lower to plan records and
-/// remain candidates for the next kernel applier slice.
+/// path literals and outbound network capabilities as resolver-socket plus
+/// TCP-port policy. macOS Seatbelt cannot target arbitrary remote hostnames,
+/// so host-exact checks remain paired with TLS/application validation.
 pub fn macos_seatbelt_profile_for_plan(plan: &SandboxPlan) -> Result<String, KernelSandboxError> {
     if plan.os != OsFamily::Macos {
         return Err(KernelSandboxError::InvalidPlan(format!(
@@ -319,6 +321,24 @@ pub fn macos_seatbelt_profile_for_plan(plan: &SandboxPlan) -> Result<String, Ker
                 profile.push_str("\")");
             }
             profile.push_str(")))\n");
+        }
+    }
+    match macos_network_policy(plan)? {
+        MacosNetworkPolicy::Unrestricted => {}
+        MacosNetworkPolicy::DenyAll => profile.push_str("(deny network-outbound)\n"),
+        MacosNetworkPolicy::Restricted(filters) => {
+            if filters.len() == 1 {
+                profile.push_str("(deny network-outbound (require-not ");
+                profile.push_str(&filters[0]);
+                profile.push_str("))\n");
+            } else {
+                profile.push_str("(deny network-outbound\n  (require-not\n    (require-any");
+                for filter in filters {
+                    profile.push_str("\n      ");
+                    profile.push_str(&filter);
+                }
+                profile.push_str(")))\n");
+            }
         }
     }
     Ok(profile)
@@ -443,6 +463,64 @@ fn writable_path_literals(plan: &SandboxPlan) -> Result<Vec<String>, KernelSandb
         );
     }
     Ok(paths)
+}
+
+enum MacosNetworkPolicy {
+    Unrestricted,
+    Restricted(Vec<String>),
+    DenyAll,
+}
+
+fn macos_network_policy(plan: &SandboxPlan) -> Result<MacosNetworkPolicy, KernelSandboxError> {
+    let mut filters = Vec::new();
+    for rule in &plan.rules {
+        if rule.capability.category != Category::Net {
+            continue;
+        }
+        match rule.capability.action {
+            Action::Dns => filters.push(format!(
+                "(literal \"{}\")",
+                seatbelt_escape(MACOS_MDNSRESPONDER_SOCKET)?
+            )),
+            Action::Connect => {
+                let target = rule.capability.target.as_str();
+                if target == "*" {
+                    return Ok(MacosNetworkPolicy::Unrestricted);
+                }
+                let port = network_target_port(target)?;
+                filters.push(format!("(remote tcp \"*:{port}\")"));
+            }
+            Action::Listen => {}
+            other => {
+                return Err(KernelSandboxError::InvalidPlan(format!(
+                    "unsupported macOS network action '{other}'"
+                )))
+            }
+        }
+    }
+
+    filters.sort();
+    filters.dedup();
+
+    if filters.is_empty() {
+        Ok(MacosNetworkPolicy::DenyAll)
+    } else {
+        Ok(MacosNetworkPolicy::Restricted(filters))
+    }
+}
+
+fn network_target_port(target: &str) -> Result<u16, KernelSandboxError> {
+    let port = target
+        .rsplit_once(':')
+        .map(|(_, port)| port)
+        .ok_or_else(|| {
+            KernelSandboxError::InvalidPlan(format!(
+                "macOS network kernel enforcement requires host:port targets, got '{target}'"
+            ))
+        })?;
+    port.parse::<u16>().map_err(|error| {
+        KernelSandboxError::InvalidPlan(format!("invalid network port in '{target}': {error}"))
+    })
 }
 
 fn has_glob_syntax(target: &str) -> bool {
@@ -606,6 +684,16 @@ fn lower_linux(capability: &Capability) -> (&'static str, SandboxCoverage, &'sta
 
 fn lower_macos(capability: &Capability) -> (&'static str, SandboxCoverage, &'static str) {
     match capability.category {
+        Category::Net if capability.action == Action::Dns => (
+            "macos.seatbelt.profile",
+            SandboxCoverage::Direct,
+            "Seatbelt can gate resolver socket access; hostname policy is paired with TLS/application checks",
+        ),
+        Category::Net => (
+            "macos.seatbelt.profile",
+            SandboxCoverage::Direct,
+            "Seatbelt can constrain outbound sockets by protocol and port; arbitrary remote hostnames are not kernel-matchable",
+        ),
         Category::Env => (
             "macos.posix_spawn.env_allowlist",
             SandboxCoverage::LaunchTime,
@@ -752,6 +840,7 @@ fn expression_for(capability: &Capability, primitive: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::net::TcpListener;
     use std::time::{SystemTime, UNIX_EPOCH};
 
     const WEATHER_MANIFEST: &str = r#"{
@@ -869,6 +958,9 @@ mod tests {
 
         assert!(profile.contains("(allow default)"));
         assert!(profile.contains("(deny file-write*"));
+        assert!(profile.contains("(deny network-outbound"));
+        assert!(profile.contains("(literal \"/private/var/run/mDNSResponder\")"));
+        assert!(profile.contains("(remote tcp \"*:443\")"));
         assert!(profile.contains("(require-not"));
         assert!(profile.contains(&allowed));
         fs::remove_dir_all(dir).ok();
@@ -917,6 +1009,42 @@ mod tests {
         fs::remove_dir_all(dir).ok();
     }
 
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn macos_kernel_sandbox_blocks_undeclared_network_ports() {
+        if !Path::new(MACOS_SANDBOX_EXEC).exists() {
+            return;
+        }
+
+        let allowed_listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let denied_listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let allowed_port = allowed_listener.local_addr().unwrap().port();
+        let denied_port = denied_listener.local_addr().unwrap().port();
+        let manifest = network_manifest_for_port(allowed_port);
+        let plan = plan_from_json(&manifest, OsFamily::Macos).unwrap();
+        let allowed_port = allowed_port.to_string();
+        let denied_port = denied_port.to_string();
+
+        let output = run_with_kernel_sandbox(
+            &plan,
+            "/bin/sh",
+            [
+                "-c",
+                "/usr/bin/nc -z -G 1 localhost \"$1\"; /usr/bin/nc -z -G 1 localhost \"$2\"",
+                "sh",
+                &allowed_port,
+                &denied_port,
+            ],
+        )
+        .unwrap();
+
+        assert!(!output.success());
+        assert!(output
+            .stderr
+            .contains(&format!("localhost port {allowed_port}")));
+        assert!(output.stderr.contains("succeeded"));
+    }
+
     fn weather_manifest_for_path(path: &Path) -> String {
         let path = path.to_string_lossy();
         format!(
@@ -944,6 +1072,24 @@ mod tests {
                 }}
               ],
               "justification": "Weather Agent E2E fetches live weather and writes one report."
+            }}"#
+        )
+    }
+
+    fn network_manifest_for_port(port: u16) -> String {
+        format!(
+            r#"{{
+              "version": 1,
+              "package": "rust/network-probe",
+              "capabilities": [
+                {{
+                  "category": "net",
+                  "action": "connect",
+                  "target": "localhost:{port}",
+                  "justification": "Connect to the declared local TCP test port."
+                }}
+              ],
+              "justification": "Network probe validates Seatbelt outbound port enforcement."
             }}"#
         )
     }
