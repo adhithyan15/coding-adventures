@@ -108,11 +108,14 @@ impl LanguageProfile for TwigLanguageProfile {
         let n = self.unwrap_expr(node);
         match n.rule_name.as_str() {
             "atom" => {
-                // atom = INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME
+                // atom = STRING | INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME
+                // (STRING added in LANG51)
                 // Literals are anything except NAME.
                 for child in &n.children {
                     if let ASTNodeOrToken::Token(t) = child {
                         return match t.effective_type_name() {
+                            // LANG51: double-quoted string literal → str kind.
+                            "STRING" => Some(KindDecl::Str),
                             "INTEGER" => Some(KindDecl::Int),
                             "BOOL_TRUE" | "BOOL_FALSE" => Some(KindDecl::Bool),
                             // "nil" is a KEYWORD token with value "nil".

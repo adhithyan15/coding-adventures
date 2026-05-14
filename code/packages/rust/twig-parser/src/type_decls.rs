@@ -277,6 +277,8 @@ fn expr_to_kind(expr: &Expr) -> KindDecl {
         Expr::BoolLit(_) => KindDecl::Bool,
         Expr::NilLit(_) => KindDecl::Nil,
         Expr::SymLit(_) => KindDecl::Symbol,
+        // LANG51: string literals are always KindDecl::Str.
+        Expr::StrLit(_) => KindDecl::Str,
 
         // ── Lambda: arity known from parameter list. ─────────────────────
         //

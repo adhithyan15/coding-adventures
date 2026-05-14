@@ -416,6 +416,24 @@ pub struct SymLit {
     pub column: usize,
 }
 
+/// A string literal: `"hello"`, `""`, `"say \"hi\""`.
+///
+/// The `value` field holds the **decoded** string — escape sequences
+/// (`\"`, `\\`, `\n`, `\t`, `\r`) are already converted to their byte
+/// values by the AST extractor.  The IIR compiler emits a `const`
+/// instruction with `Operand::Str(value)` which the VM materialises
+/// as a [`lispy_runtime::heap::LangString`] heap object.
+///
+/// Added in LANG51 to enable writing the self-hosted Twig compiler in
+/// Twig itself — the compiler source needs string constants for keyword
+/// names, error messages, and token strings.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StrLit {
+    pub value: String,
+    pub line: usize,
+    pub column: usize,
+}
+
 /// A bare name reference: `x`, `length`, `+`, `cons`.  Resolution to
 /// local / global / builtin happens at compile time.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -530,6 +548,8 @@ pub enum Expr {
     BoolLit(BoolLit),
     NilLit(NilLit),
     SymLit(SymLit),
+    /// A double-quoted string literal: `"hello"`.  Added in LANG51.
+    StrLit(StrLit),
     VarRef(VarRef),
     If(If),
     Let(Let),
@@ -548,6 +568,7 @@ impl Expr {
             Expr::BoolLit(b) => (b.line, b.column),
             Expr::NilLit(n) => (n.line, n.column),
             Expr::SymLit(s) => (s.line, s.column),
+            Expr::StrLit(s) => (s.line, s.column),
             Expr::VarRef(v) => (v.line, v.column),
             Expr::If(i) => (i.line, i.column),
             Expr::Let(l) => (l.line, l.column),

@@ -1,6 +1,6 @@
 [package]
 name        = "twig-type-checker"
-version     = "0.2.0"
+version     = "0.3.0"
 edition     = "2021"
 description = "Base static type checker for Twig (TW05-B / LANG50).  Exposes two paths: type_check_source (GrammarASTNode + grammar-type-checker) for AOT/JIT annotation, and check_program (typed Program) for backward compatibility."
 

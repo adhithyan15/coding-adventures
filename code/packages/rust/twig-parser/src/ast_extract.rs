@@ -1108,6 +1108,39 @@ fn extract_atom(node: &GrammarASTNode) -> Result<Expr, TwigParseError> {
         "BOOL_FALSE" => Ok(Expr::BoolLit(BoolLit { value: false, line: l, column: c })),
         "KEYWORD" if tok.value == "nil" => Ok(Expr::NilLit(NilLit { line: l, column: c })),
         "NAME" => Ok(Expr::VarRef(VarRef { name: tok.value.clone(), line: l, column: c })),
+        // LANG51: double-quoted string literals.
+        //
+        // The lexer preserves the surrounding quotes in `tok.value`; the
+        // extractor strips them and decodes the LANG51 escape sequences:
+        //   \\  →  \
+        //   \"  →  "
+        //   \n  →  newline (U+000A)
+        //   \t  →  tab (U+0009)
+        //   \r  →  carriage return (U+000D)
+        //
+        // Any other `\x` sequence is a parse error — better to fail loudly
+        // now than to silently misinterpret the program.
+        "STRING" => {
+            // The GrammarLexer automatically handles both quote-stripping AND
+            // escape-sequence decoding before the token reaches the parser:
+            //
+            //   1. It strips the surrounding `"` characters (quote_len = 1).
+            //   2. It runs `process_escapes` on the inner content, which converts:
+            //         \\  →  \       \n  →  newline     \t  →  tab
+            //         \r  →  CR      \"  →  "           \'  →  '
+            //      Unknown sequences `\x` are passed through as just `x`.
+            //
+            // So `tok.value` is ALREADY the fully-decoded string content.
+            // Example: Twig source `"say \"hi\"\n"` arrives here as `say "hi"\n`
+            // (with an actual newline byte, not the two-char sequence `\n`).
+            //
+            // We therefore use `tok.value` directly — no second decoding pass.
+            Ok(Expr::StrLit(crate::ast_nodes::StrLit {
+                value: tok.value.clone(),
+                line: l,
+                column: c,
+            }))
+        }
         other => Err(TwigParseError {
             message: format!(
                 "unexpected atom token: type={other:?} value={:?}",
@@ -1318,3 +1351,18 @@ fn extract_apply(node: &GrammarASTNode, depth: usize) -> Result<Apply, TwigParse
     let args: Vec<Expr> = it.collect();
     Ok(Apply { fn_expr, args, line, column })
 }
+
+// ---------------------------------------------------------------------------
+// Design note — LANG51 string escape handling
+// ---------------------------------------------------------------------------
+//
+// String escape sequences (`\\`, `\"`, `\n`, `\t`, `\r`) are decoded by the
+// GrammarLexer's `process_escapes` helper BEFORE the token is handed to the
+// parser.  The GrammarLexer also strips the surrounding double-quote delimiters.
+// Therefore `tok.value` for a STRING token already contains the fully-decoded
+// content, and `extract_atom` uses it directly without a second decode pass.
+//
+// The set of supported sequences is defined in `lexer/src/grammar_lexer.rs`
+// (`process_escapes`).  As of LANG51: `\n`, `\t`, `\r`, `\\`, `\"`, `\'`.
+// Unknown sequences `\x` are silently passed through as just `x` — future
+// LANGs can add stricter validation here if needed.

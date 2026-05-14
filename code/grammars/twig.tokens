@@ -64,6 +64,20 @@ BOOL_TRUE  = "#t"
 BOOL_FALSE = "#f"
 
 # ---------------------------------------------------------------------------
+# String literals (LANG51)
+#
+# Double-quoted UTF-8 strings.  The regex matches a ``"`` delimiter,
+# zero or more non-quote non-backslash characters (``[^"\\]``) or
+# escape sequences (``\\.``), and a closing ``"``.  This handles the
+# common escapes ``\\``, ``\"``, ``\n``, ``\t``, ``\r`` — the parser's
+# AST extractor decodes them into the actual byte values.
+#
+# STRING must appear before INTEGER and NAME so the lexer commits to
+# the string-literal rule on a leading ``"`` before trying other patterns.
+# ---------------------------------------------------------------------------
+STRING     = /"([^"\\]|\\.)*"/
+
+# ---------------------------------------------------------------------------
 # Numeric literals
 #
 # Twig V1 has only signed integers.  The leading ``-?`` handles

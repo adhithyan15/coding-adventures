@@ -139,7 +139,7 @@ type_annotation = LPAREN { type_annotation } RPAREN | NAME | INTEGER ;
 #   - a parenthesised compound form
 expr = atom | quoted | compound ;
 
-atom = INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;
+atom = STRING | INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;
 
 quoted = QUOTE NAME ;
 

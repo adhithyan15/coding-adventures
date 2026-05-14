@@ -1,6 +1,6 @@
 [package]
 name = "twig-ir-compiler"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler.  LANG50: compile_typed_source uses grammar-type-checker annotations to populate type_hint fields."
 
