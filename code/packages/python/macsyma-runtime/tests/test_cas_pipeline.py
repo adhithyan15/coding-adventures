@@ -803,6 +803,30 @@ def test_pipeline_factor_multivariate_sum_of_cubes() -> None:
     )
 
 
+def test_pipeline_factor_multivariate_perfect_cube_sum() -> None:
+    """factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3) recognises (x+y)^3."""
+    result = _eval("factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Pow"
+    base, exponent = result.args
+    assert exponent == IRInteger(3)
+    assert isinstance(base, IRApply)
+    assert base.head.name == "Add"
+    assert set(base.args) == {IRSymbol("x"), IRSymbol("y")}
+
+
+def test_pipeline_factor_multivariate_perfect_cube_difference() -> None:
+    """factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3) recognises (x-y)^3."""
+    result = _eval("factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Pow"
+    base, exponent = result.args
+    assert exponent == IRInteger(3)
+    assert isinstance(base, IRApply)
+    assert base.head.name == "Sub"
+    assert base.args == (IRSymbol("x"), IRSymbol("y"))
+
+
 def test_pipeline_factor_multivariate_grouping() -> None:
     """factor(x*y + x*z + y + z) recognises (x+1)*(y+z)."""
     result = _eval("factor(x*y + x*z + y + z)")

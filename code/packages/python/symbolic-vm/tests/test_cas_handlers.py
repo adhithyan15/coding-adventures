@@ -315,6 +315,104 @@ def test_factor_multivariate_sum_of_cubes() -> None:
     )
 
 
+def test_factor_multivariate_perfect_cube_sum() -> None:
+    """Factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3) recognises (x+y)^3.
+
+    The sum-of-cubes expansion binomial theorem:
+
+        (a + b)^3 = a^3 + 3·a^2·b + 3·a·b^2 + b^3
+
+    Four terms → handled by ``_extract_multivariate_perfect_cube``
+    (not the two-term cubic-identity handler).
+    """
+    vm, _ = make_vm()
+    # Build: x^3 + 3*x^2*y + 3*x*y^2 + y^3
+    target = IRApply(
+        ADD,
+        (
+            IRApply(
+                ADD,
+                (
+                    IRApply(
+                        ADD,
+                        (
+                            IRApply(POW, (x, IRInteger(3))),
+                            IRApply(
+                                MUL,
+                                (
+                                    IRInteger(3),
+                                    IRApply(MUL, (IRApply(POW, (x, IRInteger(2))), y)),
+                                ),
+                            ),
+                        ),
+                    ),
+                    IRApply(
+                        MUL,
+                        (
+                            IRInteger(3),
+                            IRApply(MUL, (x, IRApply(POW, (y, IRInteger(2))))),
+                        ),
+                    ),
+                ),
+            ),
+            IRApply(POW, (y, IRInteger(3))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(POW, (IRApply(ADD, (x, y)), IRInteger(3)))
+
+
+def test_factor_multivariate_perfect_cube_difference() -> None:
+    """Factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3) recognises (x-y)^3.
+
+    The difference-of-cubes expansion:
+
+        (a - b)^3 = a^3 − 3·a^2·b + 3·a·b^2 − b^3
+
+    The negative-coefficient cross term (−3·a^2·b) and negative cubic (−b^3)
+    distinguish this from the sum case.
+    """
+    vm, _ = make_vm()
+    # Build: x^3 - 3*x^2*y + 3*x*y^2 - y^3
+    # Arranged as ADD(SUB(ADD(x^3, 3xy^2), 3x^2y), -1*y^3) so that
+    # _flatten_add_terms produces exactly four signed terms.
+    target = IRApply(
+        ADD,
+        (
+            IRApply(
+                SUB,
+                (
+                    IRApply(
+                        ADD,
+                        (
+                            IRApply(POW, (x, IRInteger(3))),
+                            IRApply(
+                                MUL,
+                                (
+                                    IRInteger(3),
+                                    IRApply(MUL, (x, IRApply(POW, (y, IRInteger(2))))),
+                                ),
+                            ),
+                        ),
+                    ),
+                    IRApply(
+                        MUL,
+                        (
+                            IRInteger(3),
+                            IRApply(MUL, (IRApply(POW, (x, IRInteger(2))), y)),
+                        ),
+                    ),
+                ),
+            ),
+            IRApply(MUL, (IRInteger(-1), IRApply(POW, (y, IRInteger(3))))),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(POW, (IRApply(SUB, (x, y)), IRInteger(3)))
+
+
 def test_factor_multivariate_grouping() -> None:
     """Factor(x*y + x*z + y + z) recognises grouped bilinear factors."""
     vm, _ = make_vm()
