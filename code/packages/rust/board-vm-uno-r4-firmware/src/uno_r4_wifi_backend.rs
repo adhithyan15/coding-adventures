@@ -1,5 +1,5 @@
 use arduino_uno_r4_hal::Delay;
-use board_vm_runtime::{GpioMode, HalError, Level};
+use board_vm_runtime::{ByteBuffer, GpioMode, HalError, Level};
 use board_vm_uno_r4::UnoR4Backend;
 use embedded_hal::delay::DelayNs;
 
@@ -235,6 +235,24 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         }
     }
 
+    fn read_i2c(&mut self, bus: u8, address: u16, len: u8) -> Result<ByteBuffer, HalError> {
+        let mut bytes = [0u8; board_vm_ir::MAX_BYTE_BUFFER_LEN];
+        let mut read_len = 0;
+        if unsafe {
+            board_io_ffi::board_vm_uno_r4_i2c_read(
+                bus,
+                address,
+                bytes.as_mut_ptr(),
+                len as usize,
+                &mut read_len,
+            )
+        } {
+            ByteBuffer::from_slice(&bytes[..read_len]).map_err(|_| HalError::UnsupportedMode)
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
     fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
         board_vm_uno_r4_usb_cdc::reboot_to_bootloader()
     }
@@ -254,5 +272,12 @@ mod board_io_ffi {
             len: usize,
         ) -> bool;
         pub fn board_vm_uno_r4_i2c_read_u8(bus: u8, address: u16, byte: *mut u8) -> bool;
+        pub fn board_vm_uno_r4_i2c_read(
+            bus: u8,
+            address: u16,
+            bytes: *mut u8,
+            len: usize,
+            read_len: *mut usize,
+        ) -> bool;
     }
 }
