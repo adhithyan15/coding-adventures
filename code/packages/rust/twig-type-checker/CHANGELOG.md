@@ -1,12 +1,26 @@
 # Changelog — twig-type-checker
 
-## [0.3.0] — 2026-05-14
+## [0.4.0] — 2026-05-14
 
-### Added (LANG51 — String literals)
+### Added (LANG51 + LANG52 — string literal and let* type inference)
 
-- `literal_kind` in `profile.rs`: `"STRING"` token → `Some(KindDecl::Str)`.
-  The comment on the `atom` grammar rule has been updated to include `STRING`.
-- `infer_expr` in `check.rs`: `Expr::StrLit` arm → `TwigKind::Str`.
+#### LANG51: `TwigKind::Str` for string literals
+
+- **`infer_expr` `Expr::StrLit` arm** — returns `TwigKind::Str`.  String literals propagate
+  their type through the entire inference pass.
+- **`profile.rs` `literal_kind`** — `"STRING"` token maps to `Some(KindDecl::Str)`, enabling
+  the grammar-type-checker profile to classify string literal tokens as `Str`.
+
+#### LANG52: `let*` sequential binding inference
+
+- **`infer_let_star`** — new helper function; pushes a new scope frame, then for each
+  binding: infers the RHS type, binds the name in the current scope (so subsequent
+  bindings see it), and infers the body.  Returns the type of the last body expression.
+- **`Expr::LetStar` arm** — dispatches to `infer_let_star`.
+
+### Note on version numbering
+
+0.3.0 was the planned standalone LANG51 release; both LANG51 and LANG52 land here as 0.4.0.
 
 ## [0.2.0] — 2026-05-14
 
