@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [0.2.0] — 2026-05-14
+
 ### Added
 
 - `Integrate` recognises canonical elliptic first-kind forms, returning
