@@ -488,35 +488,47 @@ This spec lands first, alone, with no code changes. After it merges,
 implementation lands in sequenced PRs, each individually testable and
 small in scope:
 
-1. **PR-1 — new IR types.** Add `Document`, `Sentence`, `Phrase`, and
-   the level-4 `TypedComponent` kinds to
-   [adjudication-ir](../packages/rust/adjudication-ir). Keep old
-   kinds for now to avoid breaking compilation; mark them
-   `#[deprecated]` with a pointer to ADJ25.
-2. **PR-2 — per-level coverage check.** Implement the recursive
-   coverage check + no-flattening rule in
-   [adjudication-coverage](../packages/rust/adjudication-coverage).
-   Tests against hand-built IR fixtures at each level.
-3. **PR-3 — retry primitive.** Add `retry_decompose_level` to
+1. ✅ **PR-1 — new IR types** ([#3089](https://github.com/adhithyan15/coding-adventures/pull/3089), merged 2026-05-13).
+   Added `Document`, `Sentence`, `Phrase`, `Question` skeleton kinds
+   and `Quantity` / `Polarity` / `Predicate` / `Comparator` /
+   `TimeRef` / `Modifier` typed-component kinds to
+   [adjudication-ir](../packages/rust/adjudication-ir). Additive
+   only.
+2. ✅ **PR-2 — per-level coverage check** ([#3092](https://github.com/adhithyan15/coding-adventures/pull/3092), merged 2026-05-13).
+   `check_hierarchical_coverage` lands in
+   [adjudication-coverage](../packages/rust/adjudication-coverage)
+   alongside the no-flattening rule. 13 new tests covering every
+   gap kind.
+3. ✅ **PR-3 — fresh-agent retry primitive** ([#3096](https://github.com/adhithyan15/coding-adventures/pull/3096), merged 2026-05-13).
+   `retry_decompose_level` in
    [adjudication-clarification](../packages/rust/adjudication-clarification),
-   parameterized over level. Stub prompt templates per level.
-4. **PR-4 — orchestrator.** New `decompose_text_hierarchical`
-   primitive in [llm-primitives](../packages/rust/llm-primitives)
-   that drives the level-by-level flow with retries. Gated behind a
-   feature flag so the existing `decompose_text` continues to work
-   during the transition.
-5. **PR-5 — correlation vector.** Add `correlation_id` to IR objects;
-   propagate through `adjudication-connector` and the audit trail;
-   add the propagation check.
-6. **PR-6 — foundation bench.** Run the 8 × 5 matrix (8 ADJ18
-   declarations × 5 ADJ12 models) with the new flow. Report per-level
-   coverage pass/fail. **This is the first real measurement of
-   whether the foundation works.** Until PR-6 shows reliable per-level
-   coverage, no other workstream resumes.
-7. **PR-7 — cutover.** Once the bench shows reliable per-level
-   coverage, retire the old `decompose_text`, the legacy IR kinds,
-   and the standalone ADJ22 check. Old `adjudication-coverage`
-   typed-quantity check becomes a no-op then removed.
+   parameterized over `DecompositionLevel`. Each retry is stateless
+   per attempt; the prompt is source-shaped, not framework-shaped.
+4. ✅ **PR-4 — orchestrator** ([#3100](https://github.com/adhithyan15/coding-adventures/pull/3100), merged 2026-05-13).
+   `decompose_hierarchical` lands in
+   [adjudication-pipeline](../packages/rust/adjudication-pipeline)
+   (deviating from the spec's `llm-primitives` placement to avoid a
+   dependency cycle). Drives the four level-boundary dispatches +
+   per-parent coverage-driven retries.
+5. ✅ **PR-5 — correlation vector** ([#3103](https://github.com/adhithyan15/coding-adventures/pull/3103), merged 2026-05-13).
+   `CorrelationId` type + helpers in `adjudication-ir`, propagation
+   through `adjudication-connector` (per-clause `fact_correlation`
+   / `rule_correlation` maps), orchestrator assigns deterministic
+   IDs.
+6. ✅ **PR-6 — foundation bench harness + ADJ26 methodology spec**
+   ([#3107](https://github.com/adhithyan15/coding-adventures/pull/3107),
+   merged 2026-05-13). Single-cell Rust driver + Python harness +
+   methodology spec ready. Empirical results land in a follow-up
+   data PR after the bench has run end-to-end against a live Ollama
+   instance.
+7. ⏳ **PR-7 — cutover** (queued, gated on ADJ26 data). Once the
+   bench shows reliable per-level coverage, retire the old
+   `decompose_text` flat-IR path, the legacy `Section` kind, and
+   the standalone ADJ22 check. Old `adjudication-coverage`
+   typed-quantity check becomes a no-op then removed. Specific
+   removals depend on what the bench data justifies — premature
+   cutover before validating the new flow works against real LLMs
+   would risk losing useful machinery.
 
 Each PR is small, focused, and individually testable. None depend on
 work outside the decomposition flow.
@@ -568,10 +580,18 @@ work outside the decomposition flow.
 
 ## Status
 
-v1 draft. This spec replaces the foundation of the framework. No
-empirical work proceeds until the implementation lands and the
-foundation bench (PR-6) demonstrates reliable per-level coverage
-across the 8 × 5 matrix.
+- **v1 draft landed**. This spec replaced the foundation of the
+  framework. PRs 1–6 of the migration plan are merged
+  (2026-05-13); the framework's IR, coverage check, retry
+  primitive, orchestrator, and correlation-vector pass are all in
+  place. The ADJ26 foundation-bench harness is ready.
+- **PR-7 (cutover) remains queued**. The legacy `decompose_text`
+  flat-IR path, the `Section` kind, and the standalone ADJ22
+  check stay in place until the ADJ26 empirical-results PR
+  demonstrates the new flow's reliability against real LLMs.
+- **No paused workstream resumes** (ADJ14 / 15 / 16 / 17 / 18 / 19
+  / 20) until ADJ26's empirical results land and meet the gating
+  condition the data PR proposes.
 
 ## See also
 
