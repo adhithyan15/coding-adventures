@@ -228,6 +228,7 @@ members = [
     "state-machine",
     "statistics-core",
     "spice-engine",
+    "spice-netlist-parser",
     "system-board",
     "block-ram",
     "device-driver-framework",
