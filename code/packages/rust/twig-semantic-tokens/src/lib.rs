@@ -181,6 +181,30 @@ fn emit_form(out: &mut Vec<SemanticToken>, form: &Form) {
     match form {
         Form::Define(d) => emit_define(out, d),
         Form::Expr(e) => emit_expr(out, e),
+        // LANG48 — type/record/union declarations.  Emit the keyword and the
+        // declared name as a Parameter token; individual fields and variants
+        // don't carry per-token positions in the AST yet, so we skip them.
+        Form::TypeAlias(t) => {
+            let l = u32_of(t.line);
+            let c = u32_of(t.column);
+            push_keyword(out, l, c.saturating_add(1), "type");
+            // "(type " = 6 chars from `(` → name starts at column + 6.
+            push_token(out, l, c.saturating_add(6), len_u32(&t.name), TokenKind::Parameter);
+        }
+        Form::RecordDef(r) => {
+            let l = u32_of(r.line);
+            let c = u32_of(r.column);
+            push_keyword(out, l, c.saturating_add(1), "record");
+            // "(record " = 8 chars from `(` → name starts at column + 8.
+            push_token(out, l, c.saturating_add(8), len_u32(&r.name), TokenKind::Parameter);
+        }
+        Form::UnionDef(u) => {
+            let l = u32_of(u.line);
+            let c = u32_of(u.column);
+            push_keyword(out, l, c.saturating_add(1), "union");
+            // "(union " = 7 chars from `(` → name starts at column + 7.
+            push_token(out, l, c.saturating_add(7), len_u32(&u.name), TokenKind::Parameter);
+        }
     }
 }
 
@@ -295,6 +319,20 @@ fn emit_expr(out: &mut Vec<SemanticToken>, expr: &Expr) {
             }
             for a in args {
                 emit_expr(out, a);
+            }
+        }
+        // LANG48 — match expression.  Emit the `match` keyword, then walk
+        // the scrutinee and each arm's body.  Pattern names (bindings) don't
+        // carry per-token positions in the AST yet, so they're skipped.
+        Expr::Match(m) => {
+            let l = u32_of(m.line);
+            let c = u32_of(m.column);
+            push_keyword(out, l, c.saturating_add(1), "match");
+            emit_expr(out, &m.scrutinee);
+            for arm in &m.arms {
+                for e in &arm.body {
+                    emit_expr(out, e);
+                }
             }
         }
     }

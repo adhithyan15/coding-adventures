@@ -151,6 +151,35 @@ fn walk(
                 walk(a, bound, globals, found, seen, depth);
             }
         }
+
+        // TW05-A / LANG48 — match expression free-variable analysis.
+        //
+        // The scrutinee is evaluated in the outer scope.  Each arm's
+        // body is evaluated with the arm's bindings added to `bound`.
+        Expr::Match(m) => {
+            walk(&m.scrutinee, bound, globals, found, seen, depth);
+            for arm in &m.arms {
+                // Determine names bound by this arm's pattern.
+                let arm_bindings: Vec<String> = match &arm.pat {
+                    twig_parser::MatchPat::Variant { bindings, .. } => bindings.clone(),
+                    twig_parser::MatchPat::Binding(n) => vec![n.clone()],
+                    twig_parser::MatchPat::Wildcard => vec![],
+                };
+                // Add arm bindings to the bound set for the body.
+                let mut added: Vec<String> = Vec::new();
+                for n in &arm_bindings {
+                    if bound.insert(n.clone()) {
+                        added.push(n.clone());
+                    }
+                }
+                for e in &arm.body {
+                    walk(e, bound, globals, found, seen, depth);
+                }
+                for n in added {
+                    bound.remove(&n);
+                }
+            }
+        }
     }
 }
 

@@ -1,5 +1,28 @@
 # Changelog — twig-folding-ranges
 
+## [0.1.1] — 2026-05-14
+
+### Added (LANG48 — TW05-A folding-range coverage)
+
+Extends the folding-range walker to handle the three new top-level `Form`
+variants and the `Expr::Match` expression introduced by LANG48.
+
+#### New `Form` arms in `emit_form`
+
+- `Form::TypeAlias`, `Form::RecordDef`, `Form::UnionDef` — matched and
+  silently skipped (no fold emitted).  Field / variant positions are not
+  yet stored in the AST; folding over records and unions will be added in
+  a follow-up once `twig-parser` threads position data through those nodes.
+
+#### New `Expr::Match` arm in `descend_expr` and `max_line_in_expr`
+
+- `Expr::Match(m)` — folds the whole `(match …)` form when it spans more
+  than one line.  End line is the maximum of the scrutinee's last line and
+  the last line of any arm body.  Each arm body is recursively descended
+  for nested folds.
+
+---
+
 ## [0.1.0] — 2026-04-30
 
 Initial release.  LSP folding-range extraction for Twig — the

@@ -155,6 +155,10 @@ fn emit_form(out: &mut Vec<FoldingRange>, form: &Form) {
             push_if_multiline(out, u32_of(e.pos().0), max_line_in_expr(e));
             descend_expr(out, e);
         }
+        // LANG48 — type/record/union declarations.  Individual fields and
+        // variants don't carry per-token positions in the AST yet, so we
+        // cannot derive an accurate end-line.  Skip folding for v1.
+        Form::TypeAlias(_) | Form::RecordDef(_) | Form::UnionDef(_) => {}
     }
 }
 
@@ -207,6 +211,27 @@ fn descend_expr(out: &mut Vec<FoldingRange>, expr: &Expr) {
                 descend_expr(out, a);
             }
         }
+        // LANG48 — match expression.  Fold the whole `(match …)` form if it
+        // spans multiple lines; recurse into the scrutinee and each arm body.
+        Expr::Match(m) => {
+            let start = u32_of(m.line);
+            let scrutinee_max = max_line_in_expr(&m.scrutinee);
+            let arms_max = m
+                .arms
+                .iter()
+                .flat_map(|a| &a.body)
+                .map(max_line_in_expr)
+                .max()
+                .unwrap_or(0);
+            let end = scrutinee_max.max(arms_max);
+            push_if_multiline(out, start, end);
+            descend_expr(out, &m.scrutinee);
+            for arm in &m.arms {
+                for e in &arm.body {
+                    descend_expr(out, e);
+                }
+            }
+        }
     }
 }
 
@@ -233,6 +258,17 @@ fn max_line_in_expr(expr: &Expr) -> u32 {
         Expr::Apply(Apply { fn_expr, args, line, .. }) => u32_of(*line)
             .max(max_line_in_expr(fn_expr))
             .max(max_line_in_exprs(args)),
+        // LANG48 — match expression: max of self, scrutinee, and all arm bodies.
+        Expr::Match(m) => {
+            let arms_max = m
+                .arms
+                .iter()
+                .flat_map(|a| &a.body)
+                .map(max_line_in_expr)
+                .max()
+                .unwrap_or(0);
+            u32_of(m.line).max(max_line_in_expr(&m.scrutinee)).max(arms_max)
+        }
     }
 }
 
