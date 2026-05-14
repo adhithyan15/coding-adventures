@@ -1,4 +1,6 @@
-use spice_engine::{dc_op, Circuit, CurrentSource, Element, Resistor, SpiceError, VoltageSource};
+use spice_engine::{
+    dc_op, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, VoltageSource,
+};
 
 fn assert_close(actual: f64, expected: f64) {
     assert!(
@@ -65,6 +67,23 @@ fn dc_ground_aliases_are_zero_volt_reference() {
     assert_close(result.voltage("n1").unwrap(), 3.3);
     assert_close(result.voltage("gnd").unwrap(), 0.0);
     assert_close(result.voltage("GND").unwrap(), 0.0);
+}
+
+#[test]
+fn dc_inductor_behaves_as_ideal_short() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Inductor(Inductor::new("L1", "out", "0", 1.0)));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("out").unwrap(), 0.0);
+    assert_close(result.branch_current("L1").unwrap(), 1.0e-3);
 }
 
 #[test]

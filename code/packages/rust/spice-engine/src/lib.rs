@@ -34,6 +34,7 @@ impl Default for Circuit {
 pub enum Element {
     Resistor(Resistor),
     Capacitor(Capacitor),
+    Inductor(Inductor),
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
 }
@@ -94,6 +95,42 @@ impl Capacitor {
             n2: n2.into(),
             capacitance_farads,
             initial_voltage,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Inductor {
+    pub name: String,
+    pub n1: String,
+    pub n2: String,
+    pub inductance_henrys: f64,
+    pub initial_current: f64,
+}
+
+impl Inductor {
+    pub fn new(
+        name: impl Into<String>,
+        n1: impl Into<String>,
+        n2: impl Into<String>,
+        inductance_henrys: f64,
+    ) -> Self {
+        Self::with_initial_current(name, n1, n2, inductance_henrys, 0.0)
+    }
+
+    pub fn with_initial_current(
+        name: impl Into<String>,
+        n1: impl Into<String>,
+        n2: impl Into<String>,
+        inductance_henrys: f64,
+        initial_current: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            n1: n1.into(),
+            n2: n2.into(),
+            inductance_henrys,
+            initial_current,
         }
     }
 }
@@ -215,7 +252,7 @@ impl fmt::Display for SpiceError {
 impl std::error::Error for SpiceError {}
 
 pub fn dc_op(circuit: &Circuit) -> Result<DcResult, SpiceError> {
-    let linear_solution = solve_linear_circuit(circuit, &[])?;
+    let linear_solution = solve_linear_circuit(circuit, &[], &[])?;
 
     Ok(DcResult {
         node_voltages: linear_solution.node_voltages,
@@ -241,17 +278,23 @@ pub fn transient(
         });
     }
 
-    validate_capacitors(circuit)?;
+    validate_reactive_elements(circuit)?;
 
     let mut capacitor_states = initial_capacitor_states(circuit, time_step);
+    let mut inductor_states = initial_inductor_states(circuit, time_step);
     let mut points = Vec::new();
     let mut time = time_step;
     while time <= stop_time + time_step * 1.0e-9 {
-        let linear_solution = solve_linear_circuit(circuit, &capacitor_states)?;
+        let linear_solution = solve_linear_circuit(circuit, &capacitor_states, &inductor_states)?;
         update_capacitor_states(
             circuit,
             &linear_solution.node_voltages,
             &mut capacitor_states,
+        );
+        update_inductor_states(
+            circuit,
+            &linear_solution.node_voltages,
+            &mut inductor_states,
         );
         points.push(TransientPoint {
             time,
@@ -271,6 +314,13 @@ struct CapacitorState {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+struct InductorState {
+    name: String,
+    previous_current: f64,
+    time_step: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 struct LinearSolution {
     node_voltages: BTreeMap<String, f64>,
     branch_currents: BTreeMap<String, f64>,
@@ -279,9 +329,10 @@ struct LinearSolution {
 fn solve_linear_circuit(
     circuit: &Circuit,
     capacitor_states: &[CapacitorState],
+    inductor_states: &[InductorState],
 ) -> Result<LinearSolution, SpiceError> {
     let node_indices = collect_node_indices(circuit);
-    let voltage_sources = collect_voltage_sources(circuit)?;
+    let voltage_sources = collect_voltage_sources(circuit, inductor_states)?;
     let node_count = node_indices.len();
     let branch_count = voltage_sources.len();
     let matrix_size = node_count + branch_count;
@@ -303,6 +354,15 @@ fn solve_linear_circuit(
                 capacitor,
                 capacitor_states,
                 &node_indices,
+                &mut matrix,
+                &mut rhs,
+            )?,
+            Element::Inductor(inductor) => stamp_inductor(
+                inductor,
+                inductor_states,
+                &node_indices,
+                &voltage_sources,
+                node_count,
                 &mut matrix,
                 &mut rhs,
             )?,
@@ -329,6 +389,12 @@ fn solve_linear_circuit(
             solution[node_count + branch_index],
         );
     }
+    insert_transient_inductor_currents(
+        circuit,
+        inductor_states,
+        &node_voltages,
+        &mut branch_currents,
+    );
 
     Ok(LinearSolution {
         node_voltages,
@@ -361,6 +427,10 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &capacitor.n1);
                 insert_node(&mut names, &capacitor.n2);
             }
+            Element::Inductor(inductor) => {
+                insert_node(&mut names, &inductor.n1);
+                insert_node(&mut names, &inductor.n2);
+            }
             Element::VoltageSource(source) => {
                 insert_node(&mut names, &source.positive);
                 insert_node(&mut names, &source.negative);
@@ -378,20 +448,49 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
         .collect()
 }
 
-fn collect_voltage_sources(circuit: &Circuit) -> Result<BTreeMap<String, usize>, SpiceError> {
+fn collect_voltage_sources(
+    circuit: &Circuit,
+    inductor_states: &[InductorState],
+) -> Result<BTreeMap<String, usize>, SpiceError> {
     let mut sources = BTreeMap::new();
     for element in circuit.elements() {
-        if let Element::VoltageSource(source) = element {
-            if sources.contains_key(&source.name) {
-                return Err(SpiceError::InvalidElement {
-                    name: source.name.clone(),
-                    reason: "duplicate voltage source name".to_string(),
-                });
+        match element {
+            Element::VoltageSource(source) => {
+                insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
             }
-            sources.insert(source.name.clone(), sources.len());
+            Element::Inductor(inductor) => {
+                if sources.contains_key(&inductor.name) {
+                    return Err(SpiceError::InvalidElement {
+                        name: inductor.name.clone(),
+                        reason: "duplicate branch element name".to_string(),
+                    });
+                }
+                if !inductor_states
+                    .iter()
+                    .any(|state| state.name == inductor.name)
+                {
+                    sources.insert(inductor.name.clone(), sources.len());
+                }
+            }
+            _ => {}
         }
     }
     Ok(sources)
+}
+
+fn insert_branch_name(
+    sources: &mut BTreeMap<String, usize>,
+    name: &str,
+    duplicate_reason: &str,
+) -> Result<(), SpiceError> {
+    if sources.contains_key(name) {
+        return Err(SpiceError::InvalidElement {
+            name: name.to_string(),
+            reason: duplicate_reason.to_string(),
+        });
+    }
+    sources.insert(name.to_string(), sources.len());
+    Ok(())
 }
 
 fn insert_node(nodes: &mut BTreeMap<String, ()>, node: &str) {
@@ -461,6 +560,56 @@ fn stamp_capacitor(
     Ok(())
 }
 
+fn stamp_inductor(
+    inductor: &Inductor,
+    inductor_states: &[InductorState],
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    validate_inductor(inductor)?;
+    let n1 = node_index(node_indices, &inductor.n1);
+    let n2 = node_index(node_indices, &inductor.n2);
+    let Some(state) = inductor_states
+        .iter()
+        .find(|state| state.name == inductor.name)
+    else {
+        stamp_zero_voltage_branch(&inductor.name, voltage_sources, node_count, matrix, n1, n2)?;
+        return Ok(());
+    };
+
+    let conductance = state.time_step / inductor.inductance_henrys;
+    stamp_conductance(matrix, n1, n2, conductance);
+    if let Some(i) = n1 {
+        rhs[i] -= state.previous_current;
+    }
+    if let Some(j) = n2 {
+        rhs[j] += state.previous_current;
+    }
+    Ok(())
+}
+
+fn stamp_zero_voltage_branch(
+    name: &str,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<f64>],
+    positive: Option<usize>,
+    negative: Option<usize>,
+) -> Result<(), SpiceError> {
+    let Some(source_index) = voltage_sources.get(name) else {
+        return Err(SpiceError::InvalidElement {
+            name: name.to_string(),
+            reason: "branch element was not indexed".to_string(),
+        });
+    };
+    let branch = node_count + source_index;
+    stamp_branch_matrix(matrix, branch, positive, negative);
+    Ok(())
+}
+
 fn stamp_conductance(
     matrix: &mut [Vec<f64>],
     n1: Option<usize>,
@@ -479,10 +628,12 @@ fn stamp_conductance(
     }
 }
 
-fn validate_capacitors(circuit: &Circuit) -> Result<(), SpiceError> {
+fn validate_reactive_elements(circuit: &Circuit) -> Result<(), SpiceError> {
     for element in circuit.elements() {
-        if let Element::Capacitor(capacitor) = element {
-            validate_capacitor(capacitor)?;
+        match element {
+            Element::Capacitor(capacitor) => validate_capacitor(capacitor)?,
+            Element::Inductor(inductor) => validate_inductor(inductor)?,
+            _ => {}
         }
     }
     Ok(())
@@ -504,6 +655,22 @@ fn validate_capacitor(capacitor: &Capacitor) -> Result<(), SpiceError> {
     Ok(())
 }
 
+fn validate_inductor(inductor: &Inductor) -> Result<(), SpiceError> {
+    if !inductor.inductance_henrys.is_finite() || inductor.inductance_henrys <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: inductor.name.clone(),
+            reason: "inductance must be finite and positive".to_string(),
+        });
+    }
+    if !inductor.initial_current.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: inductor.name.clone(),
+            reason: "initial current must be finite".to_string(),
+        });
+    }
+    Ok(())
+}
+
 fn initial_capacitor_states(circuit: &Circuit, time_step: f64) -> Vec<CapacitorState> {
     circuit
         .elements()
@@ -512,6 +679,21 @@ fn initial_capacitor_states(circuit: &Circuit, time_step: f64) -> Vec<CapacitorS
             Element::Capacitor(capacitor) => Some(CapacitorState {
                 name: capacitor.name.clone(),
                 previous_voltage: capacitor.initial_voltage,
+                time_step,
+            }),
+            _ => None,
+        })
+        .collect()
+}
+
+fn initial_inductor_states(circuit: &Circuit, time_step: f64) -> Vec<InductorState> {
+    circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::Inductor(inductor) => Some(InductorState {
+                name: inductor.name.clone(),
+                previous_current: inductor.initial_current,
                 time_step,
             }),
             _ => None,
@@ -534,6 +716,52 @@ fn update_capacitor_states(
         state.previous_voltage =
             voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2);
     }
+}
+
+fn update_inductor_states(
+    circuit: &Circuit,
+    node_voltages: &BTreeMap<String, f64>,
+    inductor_states: &mut [InductorState],
+) {
+    for state in inductor_states {
+        let Some(inductor) = circuit.elements().iter().find_map(|element| match element {
+            Element::Inductor(inductor) if inductor.name == state.name => Some(inductor),
+            _ => None,
+        }) else {
+            continue;
+        };
+        state.previous_current = inductor_current(inductor, state, node_voltages);
+    }
+}
+
+fn insert_transient_inductor_currents(
+    circuit: &Circuit,
+    inductor_states: &[InductorState],
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &mut BTreeMap<String, f64>,
+) {
+    for state in inductor_states {
+        let Some(inductor) = circuit.elements().iter().find_map(|element| match element {
+            Element::Inductor(inductor) if inductor.name == state.name => Some(inductor),
+            _ => None,
+        }) else {
+            continue;
+        };
+        branch_currents.insert(
+            format!("I({})", inductor.name),
+            inductor_current(inductor, state, node_voltages),
+        );
+    }
+}
+
+fn inductor_current(
+    inductor: &Inductor,
+    state: &InductorState,
+    node_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    let conductance = state.time_step / inductor.inductance_henrys;
+    let voltage = voltage_at(node_voltages, &inductor.n1) - voltage_at(node_voltages, &inductor.n2);
+    state.previous_current + conductance * voltage
 }
 
 fn voltage_at(node_voltages: &BTreeMap<String, f64>, node: &str) -> f64 {
@@ -563,6 +791,17 @@ fn stamp_voltage_source(
     let positive = node_index(node_indices, &source.positive);
     let negative = node_index(node_indices, &source.negative);
 
+    stamp_branch_matrix(matrix, branch, positive, negative);
+    rhs[branch] += source.voltage;
+    Ok(())
+}
+
+fn stamp_branch_matrix(
+    matrix: &mut [Vec<f64>],
+    branch: usize,
+    positive: Option<usize>,
+    negative: Option<usize>,
+) {
     if let Some(i) = positive {
         matrix[i][branch] += 1.0;
         matrix[branch][i] += 1.0;
@@ -571,8 +810,6 @@ fn stamp_voltage_source(
         matrix[j][branch] -= 1.0;
         matrix[branch][j] -= 1.0;
     }
-    rhs[branch] += source.voltage;
-    Ok(())
 }
 
 fn stamp_current_source(

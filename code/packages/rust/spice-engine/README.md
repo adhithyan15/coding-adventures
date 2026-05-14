@@ -6,8 +6,8 @@ The initial slices implement:
 
 - DC operating-point analysis for linear circuits using modified nodal analysis
   (MNA).
-- Backward-Euler transient analysis for linear RC circuits.
+- Backward-Euler transient analysis for linear RC/RL circuits.
 
-The package supports resistors, capacitors, independent current sources,
+The package supports resistors, capacitors, inductors, independent current sources,
 independent voltage sources, ground aliases, node voltages, and voltage source
 branch currents.
