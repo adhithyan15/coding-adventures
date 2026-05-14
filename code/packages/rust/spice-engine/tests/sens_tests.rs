@@ -1,5 +1,5 @@
 use spice_engine::{
-    sens_dc, Circuit, CurrentSource, Element, Resistor, SensResult, SpiceError, VoltageSource,
+    sens_dc, Circuit, CurrentSource, Element, Resistor, SensResult, SpiceError, Vccs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -78,6 +78,32 @@ fn sens_dc_reports_current_source_and_load_resistance_sensitivities() {
     );
     assert_close(
         entry(&result, "Rload", "resistance_ohms").relative_sensitivity,
+        1.0,
+    );
+}
+
+#[test]
+fn sens_dc_reports_vccs_transconductance_sensitivity() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Vccs(Vccs::new(
+        "Gm", "0", "out", "in", "0", 2.0e-3,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = sens_dc(&circuit, "out").unwrap();
+
+    assert_close(result.nominal_voltage, 2.0);
+    assert_close(
+        entry(&result, "Gm", "transconductance_siemens").sensitivity,
+        1_000.0,
+    );
+    assert_close(
+        entry(&result, "Gm", "transconductance_siemens").relative_sensitivity,
         1.0,
     );
 }

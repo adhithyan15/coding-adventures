@@ -38,6 +38,7 @@ pub enum Element {
     Inductor(Inductor),
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
+    Vccs(Vccs),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -180,6 +181,36 @@ impl CurrentSource {
             positive: positive.into(),
             negative: negative.into(),
             current,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Vccs {
+    pub name: String,
+    pub positive: String,
+    pub negative: String,
+    pub control_positive: String,
+    pub control_negative: String,
+    pub transconductance_siemens: f64,
+}
+
+impl Vccs {
+    pub fn new(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        control_positive: impl Into<String>,
+        control_negative: impl Into<String>,
+        transconductance_siemens: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            control_positive: control_positive.into(),
+            control_negative: control_negative.into(),
+            transconductance_siemens,
         }
     }
 }
@@ -719,6 +750,11 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
         Element::CurrentSource(source) => {
             Some((source.name.clone(), "current".to_string(), source.current))
         }
+        Element::Vccs(source) => Some((
+            source.name.clone(),
+            "transconductance_siemens".to_string(),
+            source.transconductance_siemens,
+        )),
         Element::Capacitor(_) | Element::Inductor(_) => None,
     }
 }
@@ -732,6 +768,7 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::Resistor(resistor) => resistor.resistance_ohms += delta,
         Element::VoltageSource(source) => source.voltage += delta,
         Element::CurrentSource(source) => source.current += delta,
+        Element::Vccs(source) => source.transconductance_siemens += delta,
         Element::Capacitor(_) | Element::Inductor(_) => {}
     }
 }
@@ -819,6 +856,7 @@ fn solve_linear_circuit(
             Element::CurrentSource(source) => {
                 stamp_current_source(source, &node_indices, &mut rhs)?
             }
+            Element::Vccs(source) => stamp_vccs(source, &node_indices, &mut matrix)?,
         }
     }
 
@@ -881,6 +919,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             Element::CurrentSource(source) => {
                 stamp_ac_current_source(source, &node_indices, &mut rhs)?
             }
+            Element::Vccs(source) => stamp_ac_vccs(source, &node_indices, &mut matrix)?,
         }
     }
 
@@ -943,6 +982,9 @@ fn build_small_signal_matrix(
                     });
                 }
             }
+            Element::Vccs(source) => {
+                stamp_vccs(source, node_indices, &mut matrix)?;
+            }
         }
     }
 
@@ -998,6 +1040,12 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
             Element::CurrentSource(source) => {
                 insert_node(&mut names, &source.positive);
                 insert_node(&mut names, &source.negative);
+            }
+            Element::Vccs(source) => {
+                insert_node(&mut names, &source.positive);
+                insert_node(&mut names, &source.negative);
+                insert_node(&mut names, &source.control_positive);
+                insert_node(&mut names, &source.control_negative);
             }
         }
     }
@@ -1068,6 +1116,9 @@ fn find_input_source<'a>(
             }
             Element::Inductor(inductor) if inductor.name == input_source => {
                 return Err(input_source_type_error(input_source, "inductor"));
+            }
+            Element::Vccs(source) if source.name == input_source => {
+                return Err(input_source_type_error(input_source, "VCCS"));
             }
             _ => {}
         }
@@ -1442,6 +1493,59 @@ fn stamp_current_source(
     Ok(())
 }
 
+fn stamp_vccs(
+    source: &Vccs,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+) -> Result<(), SpiceError> {
+    if !source.transconductance_siemens.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "transconductance must be finite".to_string(),
+        });
+    }
+
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+    let control_positive = node_index(node_indices, &source.control_positive);
+    let control_negative = node_index(node_indices, &source.control_negative);
+    stamp_transconductance(
+        matrix,
+        positive,
+        negative,
+        control_positive,
+        control_negative,
+        source.transconductance_siemens,
+    );
+    Ok(())
+}
+
+fn stamp_transconductance(
+    matrix: &mut [Vec<f64>],
+    positive: Option<usize>,
+    negative: Option<usize>,
+    control_positive: Option<usize>,
+    control_negative: Option<usize>,
+    transconductance: f64,
+) {
+    if let Some(i) = positive {
+        if let Some(cp) = control_positive {
+            matrix[i][cp] += transconductance;
+        }
+        if let Some(cn) = control_negative {
+            matrix[i][cn] -= transconductance;
+        }
+    }
+    if let Some(j) = negative {
+        if let Some(cp) = control_positive {
+            matrix[j][cp] -= transconductance;
+        }
+        if let Some(cn) = control_negative {
+            matrix[j][cn] += transconductance;
+        }
+    }
+}
+
 fn stamp_ac_resistor(
     resistor: &Resistor,
     node_indices: &HashMap<String, usize>,
@@ -1567,6 +1671,59 @@ fn stamp_ac_current_source(
         rhs[j] += current;
     }
     Ok(())
+}
+
+fn stamp_ac_vccs(
+    source: &Vccs,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    if !source.transconductance_siemens.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "transconductance must be finite".to_string(),
+        });
+    }
+
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+    let control_positive = node_index(node_indices, &source.control_positive);
+    let control_negative = node_index(node_indices, &source.control_negative);
+    stamp_complex_transconductance(
+        matrix,
+        positive,
+        negative,
+        control_positive,
+        control_negative,
+        Complex::new(source.transconductance_siemens, 0.0),
+    );
+    Ok(())
+}
+
+fn stamp_complex_transconductance(
+    matrix: &mut [Vec<Complex>],
+    positive: Option<usize>,
+    negative: Option<usize>,
+    control_positive: Option<usize>,
+    control_negative: Option<usize>,
+    transconductance: Complex,
+) {
+    if let Some(i) = positive {
+        if let Some(cp) = control_positive {
+            matrix[i][cp] += transconductance;
+        }
+        if let Some(cn) = control_negative {
+            matrix[i][cn] -= transconductance;
+        }
+    }
+    if let Some(j) = negative {
+        if let Some(cp) = control_positive {
+            matrix[j][cp] -= transconductance;
+        }
+        if let Some(cn) = control_negative {
+            matrix[j][cn] += transconductance;
+        }
+    }
 }
 
 fn solve_linear_system(

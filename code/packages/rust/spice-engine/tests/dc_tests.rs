@@ -1,5 +1,6 @@
 use spice_engine::{
-    dc_op, dc_sweep, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, VoltageSource,
+    dc_op, dc_sweep, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, Vccs,
+    VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -38,6 +39,24 @@ fn dc_current_source_into_resistor_uses_positive_to_negative_orientation() {
     let result = dc_op(&circuit).unwrap();
 
     assert_close(result.voltage("n1").unwrap(), 1.0);
+}
+
+#[test]
+fn dc_vccs_injects_current_from_control_voltage() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vctrl", "ctrl", "0", 2.0,
+    )));
+    circuit.add(Element::Vccs(Vccs::new(
+        "G1", "0", "out", "ctrl", "0", 1.0e-3,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("out").unwrap(), 2.0);
 }
 
 #[test]
@@ -176,5 +195,29 @@ fn dc_rejects_duplicate_voltage_source_names() {
     assert!(matches!(
         dc_op(&circuit),
         Err(SpiceError::InvalidElement { name, .. }) if name == "V1"
+    ));
+}
+
+#[test]
+fn dc_rejects_non_finite_vccs_transconductance() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vctrl", "ctrl", "0", 1.0,
+    )));
+    circuit.add(Element::Vccs(Vccs::new(
+        "Gbad",
+        "0",
+        "out",
+        "ctrl",
+        "0",
+        f64::NAN,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    assert!(matches!(
+        dc_op(&circuit),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Gbad"
     ));
 }
