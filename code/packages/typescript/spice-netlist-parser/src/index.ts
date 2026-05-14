@@ -6,6 +6,7 @@ import {
   SinWaveform,
   capacitor,
   cccs,
+  ccvs,
   currentSource,
   currentSourceWithWaveform,
   dcOp,
@@ -253,6 +254,10 @@ function parseElement(fields: readonly string[]): Element {
     requireFields(fields, 5, "CCCS");
     return cccs(name, fields[1], fields[2], fields[3], parseValue(fields[4]));
   }
+  if (prefix === "H") {
+    requireFields(fields, 5, "CCVS");
+    return ccvs(name, fields[1], fields[2], fields[3], parseValue(fields[4]));
+  }
   throw new NetlistParseError(`unsupported element ${JSON.stringify(name)}`);
 }
 
@@ -344,7 +349,7 @@ function mapSubcktFields(
     for (let index = 1; index < 5; index++) {
       mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
     }
-  } else if (prefix === "F") {
+  } else if (prefix === "F" || prefix === "H") {
     requireMinFields(fields, 4, "subcircuit current-controlled source");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
