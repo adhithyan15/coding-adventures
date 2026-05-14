@@ -72,12 +72,18 @@ pub mod env;
 pub mod errors;
 pub mod exhaustiveness;
 pub mod kinds;
+pub mod profile;
 
 pub use env::TypeEnv;
 pub use errors::TwigTypeCheckError;
 pub use kinds::TwigKind;
+pub use profile::TwigLanguageProfile;
 
-use twig_parser::{parse, Program, TypedMode};
+// Re-export the AnnotatedNode type so callers don't need to depend on
+// type-declarations directly just to get the typed_ast out.
+pub use type_declarations::AnnotatedNode;
+
+use twig_parser::{emit_type_declarations, parse, parse_to_ast, Program, TypedMode};
 use type_checker_protocol::{TypeCheckResult, TypeChecker};
 
 // ---------------------------------------------------------------------------
@@ -101,7 +107,59 @@ pub struct TypedProgram {
 }
 
 // ---------------------------------------------------------------------------
-// Public API
+// Public API — LANG50: GrammarASTNode path (compilation-first)
+// ---------------------------------------------------------------------------
+
+/// Parse Twig source and type-check via the generic `grammar-type-checker`,
+/// returning a fully-annotated [`AnnotatedNode`] tree ready for IIR emission.
+///
+/// This is the **compilation-first** entry point introduced in LANG50.
+/// Every node in the returned tree carries a [`type_declarations::KindDecl`]
+/// that maps directly to an IIR `type_hint` via [`AnnotatedNode::iir_hint`].
+///
+/// ## Pipeline
+///
+/// ```text
+/// source → parse_to_ast → GrammarASTNode
+///                             │
+///        parse → Program → emit_type_declarations → TypeDeclarations
+///                                                         │
+///                        grammar_type_checker::check ←───┘
+///                             │
+///                         TypeCheckResult<AnnotatedNode>
+/// ```
+///
+/// ## Errors
+///
+/// Returns `Err(TwigTypeCheckError::Parse(…))` on lex/parse failure.
+/// Type errors are carried in `TypeCheckResult::errors`; `ok` reflects
+/// the module's `(typed …)` mode.
+///
+/// # Example
+///
+/// ```no_run
+/// use twig_type_checker::type_check_source;
+///
+/// let result = type_check_source("(module m (typed strict)) (define x : int 42)")
+///     .expect("parse should succeed");
+/// assert!(result.ok);
+/// // Every node has an IIR type hint — literals get "i64", "bool", etc.
+/// ```
+pub fn type_check_source(
+    source: &str,
+) -> Result<TypeCheckResult<AnnotatedNode>, TwigTypeCheckError> {
+    // 1. Parse to raw grammar AST (keeps position info for error messages).
+    let raw = parse_to_ast(source)?;
+    // 2. Parse to typed AST (needed to emit TypeDeclarations).
+    let program = parse(source)?;
+    // 3. Emit language-agnostic type declarations from the typed AST.
+    let decls = emit_type_declarations(&program);
+    // 4. Run the generic checker with the Twig language profile.
+    Ok(grammar_type_checker::check(&raw, &decls, &TwigLanguageProfile))
+}
+
+// ---------------------------------------------------------------------------
+// Public API — legacy Program path (backward compat)
 // ---------------------------------------------------------------------------
 
 /// Parse and type-check a Twig source string in one call.
