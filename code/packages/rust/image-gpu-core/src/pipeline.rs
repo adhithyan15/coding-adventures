@@ -144,6 +144,49 @@ fn metal_backend() -> Option<&'static MetalBackend> {
     .as_ref()
 }
 
+// ─────────────────────────── CUDA backend singleton (MX06 Phase 6) ───────────────────────────
+//
+// Parallel to `MetalBackend` but for NVIDIA hardware.  `cuda-compute`
+// loads `libcuda.so.1` / `nvcuda.dll` at runtime via `dlopen`/
+// `LoadLibrary`, so this whole singleton compiles on every platform.
+// `CudaExecutor::new()` returns `Err` when CUDA isn't installed — we
+// store `None` and never call this backend again.
+//
+// NVRTC compilation of the V1 generic kernel set is ~100 ms.  Doing
+// it once at first use, then caching, matches the metal singleton's
+// strategy.
+
+#[cfg(feature = "cuda-backend")]
+struct CudaBackend {
+    /// Direct reference to the CUDA executor so the auto-installer
+    /// ([`try_install_cuda`]) can call
+    /// [`matrix_cuda::CudaExecutor::install_specialised_from_emitted`]
+    /// when the `SpecRouter` produces a kernel.  Mirrors
+    /// `MetalBackend::executor`.
+    executor: Arc<matrix_cuda::CudaExecutor>,
+    transport: LocalTransport,
+    profile: executor_protocol::BackendProfile,
+}
+
+#[cfg(feature = "cuda-backend")]
+fn cuda_backend() -> Option<&'static CudaBackend> {
+    static SLOT: OnceLock<Option<CudaBackend>> = OnceLock::new();
+    SLOT.get_or_init(|| match matrix_cuda::CudaExecutor::new() {
+        Ok(exec) => {
+            let exec = Arc::new(exec);
+            let exec2 = exec.clone();
+            let transport = LocalTransport::new(move |req| exec2.handle(req));
+            Some(CudaBackend {
+                executor: exec,
+                transport,
+                profile: matrix_cuda::profile(),
+            })
+        }
+        Err(_) => None,
+    })
+    .as_ref()
+}
+
 // ─────────────────────────── CPU backend singleton (Phase 4.9) ───────────────────────────
 //
 // Up to Phase 4.8 the CPU dispatch path called `matrix_cpu::local_transport()`
@@ -453,11 +496,14 @@ fn try_auto_install_specialised_with_origin(
     // Dispatch on `backend_id`:
     //   0 → CPU (matrix_cpu::build_specialised_kernel + CpuExecutor::install_specialised)
     //   1 → metal (matrix_metal::emit_specialised_kernel + install_specialised_from_emitted)
+    //   2 → CUDA (matrix_cuda::emit_specialised_kernel + install_specialised_from_emitted)
     // Other values → ignore (no backend registered).
     let installed = match specialised.key.backend_id {
         0 => try_install_cpu(specialised),
         #[cfg(feature = "metal-backend")]
         1 => try_install_metal(specialised),
+        #[cfg(feature = "cuda-backend")]
+        2 => try_install_cuda(specialised),
         _ => false,
     };
 
@@ -567,6 +613,10 @@ fn scan_and_deoptimise() -> usize {
             #[cfg(feature = "metal-backend")]
             if let Some(metal) = metal_backend() {
                 metal.executor.evict_specialised(handle);
+            }
+            #[cfg(feature = "cuda-backend")]
+            if let Some(cuda) = cuda_backend() {
+                cuda.executor.evict_specialised(handle);
             }
             // Drop our side-table records.
             {
@@ -716,6 +766,62 @@ fn try_install_metal(specialised: &SpecialisedKernel) -> bool {
             // may want to retry this handle.
             false
         }
+    }
+}
+
+/// **MX06 Phase 6.**  Install a specialised kernel on the CUDA
+/// executor singleton.  Parallel to [`try_install_metal`] but emits
+/// CUDA C via `matrix_cuda::emit_specialised_kernel` and compiles
+/// through NVRTC.
+///
+/// Returns `false` (without installing) when:
+/// - No CUDA driver is present on the host (the singleton is `None`).
+/// - The emitter doesn't support this `SpecKey` shape (returns `None`).
+/// - NVRTC compilation fails.
+///
+/// On `false` the dispatcher falls back to either generic CUDA
+/// dispatch (when the planner has already routed the op to CUDA) or
+/// to whichever backend the planner picks.
+#[cfg(feature = "cuda-backend")]
+fn try_install_cuda(specialised: &SpecialisedKernel) -> bool {
+    let Some(backend) = cuda_backend() else {
+        return false;
+    };
+    let Some(emitted) =
+        matrix_cuda::emit_specialised_kernel(&specialised.key, specialised.handle)
+    else {
+        return false;
+    };
+    let n_in = emitted.input_buffer_count;
+    let n_out = emitted.output_buffer_count;
+    let folded_slot = specialised.key.folded_slot;
+    match backend
+        .executor
+        .install_specialised_from_emitted(specialised.handle, emitted)
+    {
+        Ok(()) => {
+            {
+                let mut installed = match installed_handles().lock() {
+                    Ok(g) => g,
+                    Err(poisoned) => poisoned.into_inner(),
+                };
+                installed.insert(specialised.handle);
+            }
+            let mut md = match installed_kernel_metadata().lock() {
+                Ok(g) => g,
+                Err(poisoned) => poisoned.into_inner(),
+            };
+            md.insert(
+                specialised.handle,
+                KernelMetadata {
+                    n_in,
+                    n_out,
+                    folded_slot,
+                },
+            );
+            true
+        }
+        Err(_) => false,
     }
 }
 
@@ -948,7 +1054,38 @@ pub fn run_graph_with_constant_inputs(
         // Mixed placement.  V1 falls back to CPU-only.
     }
 
-    // ── Step 2: CPU-only fallback. ──
+    // ── Step 2 (MX06 Phase 6): try the CPU + CUDA path. ──
+    //
+    // Reached on non-Apple hosts (or Apple hosts where Metal
+    // initialisation failed).  Mirrors the metal path one-for-one:
+    // register CUDA as a second executor, plan, dispatch through
+    // the chosen single executor, fall back to CPU-only on mixed
+    // placement.
+    #[cfg(feature = "cuda-backend")]
+    if let Some(cuda) = cuda_backend() {
+        let mut runtime = Runtime::new(matrix_cpu::profile());
+        let cuda_id = runtime.register("cuda", cuda.profile.clone());
+
+        let placed: ComputeGraph = runtime
+            .plan(graph)
+            .map_err(|e| GpuError::Other(format!("plan: {:?}", e)))?;
+
+        if let Some(only) = single_executor(&placed) {
+            return if only == cuda_id {
+                dispatch_via(&cuda.transport, placed, output_id, output_byte_count, "cuda")
+            } else if only == CPU_EXECUTOR {
+                with_cpu_backend(|b| {
+                    dispatch_via(&b.transport, placed, output_id, output_byte_count, "cpu")
+                })
+            } else {
+                dispatch_cpu_only(graph, output_id, output_byte_count)
+            };
+        }
+        // Mixed placement.  Fall back to CPU-only — same V1 policy
+        // as the metal path.
+    }
+
+    // ── Step 3: CPU-only fallback. ──
     dispatch_cpu_only(graph, output_id, output_byte_count)
 }
 
