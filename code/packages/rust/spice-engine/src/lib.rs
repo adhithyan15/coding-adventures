@@ -196,6 +196,19 @@ pub struct DcSweepPoint {
     pub result: DcResult,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct TfResult {
+    pub transfer_ratio: f64,
+    pub input_impedance_ohms: f64,
+    pub output_impedance_ohms: f64,
+}
+
+impl TfResult {
+    pub fn gain(&self) -> f64 {
+        self.transfer_ratio
+    }
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Complex {
     pub real: f64,
@@ -396,6 +409,82 @@ pub fn dc_sweep(
     Ok(points)
 }
 
+pub fn tf(
+    circuit: &Circuit,
+    output_node: &str,
+    input_source: &str,
+) -> Result<TfResult, SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    if !is_ground(output_node) && !node_indices.contains_key(output_node) {
+        return Err(SpiceError::InvalidElement {
+            name: output_node.to_string(),
+            reason: "output node was not found in circuit".to_string(),
+        });
+    }
+
+    let input = find_input_source(circuit, input_source)?;
+    let voltage_sources = collect_ac_voltage_sources(circuit)?;
+    let node_count = node_indices.len();
+    let matrix = build_small_signal_matrix(circuit, &node_indices, &voltage_sources)?;
+    let size = matrix.len();
+    let output_index = node_index(&node_indices, output_node);
+
+    let mut forward_rhs = vec![0.0; size];
+    match input {
+        InputSource::Voltage(source) => {
+            let Some(source_index) = voltage_sources.get(&source.name) else {
+                return Err(SpiceError::InvalidElement {
+                    name: source.name.clone(),
+                    reason: "voltage source was not indexed".to_string(),
+                });
+            };
+            forward_rhs[node_count + source_index] = 1.0;
+        }
+        InputSource::Current(source) => {
+            if let Some(i) = node_index(&node_indices, &source.positive) {
+                forward_rhs[i] -= 1.0;
+            }
+            if let Some(j) = node_index(&node_indices, &source.negative) {
+                forward_rhs[j] += 1.0;
+            }
+        }
+    }
+
+    let forward = solve_linear_system(matrix.clone(), forward_rhs)?;
+    let transfer_ratio = output_index.map_or(0.0, |idx| forward[idx]);
+    let input_impedance_ohms = match input {
+        InputSource::Voltage(source) => {
+            let source_index = voltage_sources[&source.name];
+            let branch_current = forward[node_count + source_index];
+            if branch_current.abs() > 1.0e-30 {
+                -1.0 / branch_current
+            } else {
+                f64::INFINITY
+            }
+        }
+        InputSource::Current(source) => {
+            let v_plus =
+                node_index(&node_indices, &source.positive).map_or(0.0, |idx| forward[idx]);
+            let v_minus =
+                node_index(&node_indices, &source.negative).map_or(0.0, |idx| forward[idx]);
+            v_minus - v_plus
+        }
+    };
+
+    let mut output_rhs = vec![0.0; size];
+    if let Some(idx) = output_index {
+        output_rhs[idx] = 1.0;
+    }
+    let output = solve_linear_system(matrix, output_rhs)?;
+    let output_impedance_ohms = output_index.map_or(0.0, |idx| output[idx]);
+
+    Ok(TfResult {
+        transfer_ratio,
+        input_impedance_ohms,
+        output_impedance_ohms,
+    })
+}
+
 pub fn ac_sweep(
     circuit: &Circuit,
     start_hz: f64,
@@ -565,6 +654,12 @@ struct AcSolution {
     branch_currents: BTreeMap<String, Complex>,
 }
 
+#[derive(Debug, Copy, Clone)]
+enum InputSource<'a> {
+    Voltage(&'a VoltageSource),
+    Current(&'a CurrentSource),
+}
+
 fn solve_linear_circuit(
     circuit: &Circuit,
     capacitor_states: &[CapacitorState],
@@ -697,6 +792,55 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
     })
 }
 
+fn build_small_signal_matrix(
+    circuit: &Circuit,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+) -> Result<Vec<Vec<f64>>, SpiceError> {
+    let node_count = node_indices.len();
+    let matrix_size = node_count + voltage_sources.len();
+    let mut matrix = vec![vec![0.0; matrix_size]; matrix_size];
+
+    for element in circuit.elements() {
+        match element {
+            Element::Resistor(resistor) => {
+                stamp_resistor(resistor, node_indices, &mut matrix)?;
+            }
+            Element::Capacitor(capacitor) => {
+                validate_capacitor(capacitor)?;
+            }
+            Element::Inductor(inductor) => {
+                validate_inductor(inductor)?;
+                let n1 = node_index(node_indices, &inductor.n1);
+                let n2 = node_index(node_indices, &inductor.n2);
+                stamp_conductance(&mut matrix, n1, n2, 1.0e12);
+            }
+            Element::VoltageSource(source) => {
+                if !source.voltage.is_finite() {
+                    return Err(SpiceError::InvalidElement {
+                        name: source.name.clone(),
+                        reason: "voltage must be finite".to_string(),
+                    });
+                }
+                let branch = node_count + voltage_sources[&source.name];
+                let positive = node_index(node_indices, &source.positive);
+                let negative = node_index(node_indices, &source.negative);
+                stamp_branch_matrix(&mut matrix, branch, positive, negative);
+            }
+            Element::CurrentSource(source) => {
+                if !source.current.is_finite() {
+                    return Err(SpiceError::InvalidElement {
+                        name: source.name.clone(),
+                        reason: "current must be finite".to_string(),
+                    });
+                }
+            }
+        }
+    }
+
+    Ok(matrix)
+}
+
 fn node_voltages_from_solution(
     node_indices: &HashMap<String, usize>,
     solution: &[f64],
@@ -794,6 +938,45 @@ fn collect_ac_voltage_sources(circuit: &Circuit) -> Result<BTreeMap<String, usiz
         }
     }
     Ok(sources)
+}
+
+fn find_input_source<'a>(
+    circuit: &'a Circuit,
+    input_source: &str,
+) -> Result<InputSource<'a>, SpiceError> {
+    for element in circuit.elements() {
+        match element {
+            Element::VoltageSource(source) if source.name == input_source => {
+                return Ok(InputSource::Voltage(source));
+            }
+            Element::CurrentSource(source) if source.name == input_source => {
+                return Ok(InputSource::Current(source));
+            }
+            Element::Resistor(resistor) if resistor.name == input_source => {
+                return Err(input_source_type_error(input_source, "resistor"));
+            }
+            Element::Capacitor(capacitor) if capacitor.name == input_source => {
+                return Err(input_source_type_error(input_source, "capacitor"));
+            }
+            Element::Inductor(inductor) if inductor.name == input_source => {
+                return Err(input_source_type_error(input_source, "inductor"));
+            }
+            _ => {}
+        }
+    }
+    Err(SpiceError::InvalidElement {
+        name: input_source.to_string(),
+        reason: "input source was not found".to_string(),
+    })
+}
+
+fn input_source_type_error(input_source: &str, kind: &str) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: input_source.to_string(),
+        reason: format!(
+            "input element must be an independent voltage or current source, got {kind}"
+        ),
+    }
 }
 
 fn insert_branch_name(
