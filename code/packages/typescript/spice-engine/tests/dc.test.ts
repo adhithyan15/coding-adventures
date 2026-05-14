@@ -7,6 +7,7 @@ import {
   dcSweep,
   inductor,
   resistor,
+  vccs,
   voltageSource,
 } from "../src/index.js";
 
@@ -72,6 +73,26 @@ describe("dcOp", () => {
 
     expectClose(result.voltage("out"), 0.0);
     expectClose(result.branchCurrent("L1"), 1.0e-3);
+  });
+
+  it("stamps VCCS current from control voltage", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vctrl", "ctrl", "0", 1.0));
+    circuit.add(vccs("G1", "0", "out", "ctrl", "0", 1.0e-3));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("out"), 1.0);
+  });
+
+  it("rejects non-finite VCCS transconductance", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vctrl", "ctrl", "0", 1.0));
+    circuit.add(vccs("Gbad", "0", "out", "ctrl", "0", Number.NaN));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    expect(() => dcOp(circuit)).toThrowError("transconductance must be finite");
   });
 
   it("sweeps voltage sources and collects operating points", () => {
