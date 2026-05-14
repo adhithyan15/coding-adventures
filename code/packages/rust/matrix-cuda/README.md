@@ -39,11 +39,30 @@ for the full design.  Phased rollout, one PR per phase:
 | ----- | ------------------------------------------------------ | ------ |
 | 1     | crate skeleton, `BackendProfile`, stubbed dispatch     | landed (0.1.0) |
 | 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`           | landed (0.2.0) |
-| 3     | `kernels.rs` — generic NVRTC-compiled kernels + buffer-op wiring (adds `Send` to `CudaBuffer`) | **this PR** (0.3.0) |
-| 4     | `cuda_emitter.rs` — specialised-kernel code generator   | pending |
+| 3     | `kernels.rs` — generic NVRTC-compiled kernels + buffer-op wiring (adds `Send` to `CudaBuffer`) | landed (0.3.0) |
+| 4     | `cuda_emitter.rs` — specialised-kernel code generator   | **this PR** (0.4.0) |
 | 5     | `specialised_table.rs` + real `Executor` impl (flips `supported_ops_bitset` on, lifts `Kernels` into `State`) | pending |
 | 6     | MX05 hooks — `backend_id = 2` in image-gpu-core         | pending |
 | 7     | Planner integration — cost-model coefficients           | pending |
+
+## Phase 4 additions
+
+- `pub mod cuda_emitter` — pure code-generator.  Takes a
+  `matrix_profile::SpecKey` + 64-bit handle and returns an
+  `EmittedKernel { source, entry_point, input_buffer_count,
+  output_buffer_count }`.
+- Supports the same SpecKey shapes as `matrix_metal::msl_emitter`:
+  unary folded-input precomputed (`0x00..=0x06`), commutative binary
+  with RHS constant (`0x07/0x09/0x0B/0x0C`), non-commutative binary
+  with LHS- and RHS-folded variants (`0x08/0x0A/0x0D`), and MatMul
+  with a folded RHS matrix (`0x15`, 2×2 or 4×4 only).
+- Entry-point naming matches the MSL emitter: handles are
+  zero-padded uppercase hex; per-handle modules are designed to
+  coexist in the same per-executor cache (Phase 5).
+- 24 new platform-independent tests (string comparison only).
+
+**Note**: this PR adds the generator; Phase 5 will hand its output
+to NVRTC compilation + the per-handle specialised-kernel table.
 
 ## Phase 3 additions
 

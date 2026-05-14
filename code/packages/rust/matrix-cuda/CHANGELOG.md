@@ -1,5 +1,110 @@
 # Changelog — matrix-cuda
 
+## 0.4.0 — 2026-05-13
+
+### Added — MX06 Phase 4 (`cuda_emitter` — specialised-kernel codegen)
+
+Direct port of `matrix-metal::msl_emitter` — same API surface, same
+SpecKey coverage, emitting CUDA C instead of MSL.  Pure code
+generation: no device required, runs on every platform.  Phase 5
+will hand its output to NVRTC compilation + the per-handle
+specialised-kernel table.
+
+#### `src/cuda_emitter.rs`
+
+- `pub struct EmittedKernel { source, entry_point, input_buffer_count,
+  output_buffer_count }` — plain-data carrier symmetric with
+  `matrix_metal::EmittedKernel`.
+- `pub fn emit_specialised_kernel(key: &SpecKey, handle: u64) ->
+  Option<EmittedKernel>` — returns `None` for shapes Phase 4 doesn't
+  understand, so the runtime falls back to generic dispatch.
+
+##### Supported SpecKey shapes (same as MSL emitter V1)
+
+| Op tag(s)      | Folded payload      | folded_slot          | Result                                          |
+| -------------- | ------------------- | -------------------- | ----------------------------------------------- |
+| `0x00..=0x06`  | 4 B f32 input value | `Some(0)`            | Unary; output precomputed (memset of `f(K)`)    |
+| `0x07` Add     | 4 B f32 operand     | any (commutative)    | `out[gid] = a[gid] + K`                         |
+| `0x09` Mul     | 4 B f32 operand     | any (commutative)    | `out[gid] = a[gid] * K`                         |
+| `0x0B` Max     | 4 B f32 operand     | any (commutative)    | `out[gid] = fmaxf(a[gid], K)`                   |
+| `0x0C` Min     | 4 B f32 operand     | any (commutative)    | `out[gid] = fminf(a[gid], K)`                   |
+| `0x08` Sub     | 4 B f32 operand     | `Some(0)`/`Some(1)`  | LHS- and RHS-folded variants                    |
+| `0x0A` Div     | 4 B f32 operand     | `Some(0)`/`Some(1)`  | LHS- and RHS-folded variants                    |
+| `0x0D` Pow     | 4 B f32 operand     | `Some(0)`/`Some(1)`  | LHS- and RHS-folded variants using `powf`       |
+| `0x15` MatMul  | 4 N² B f32 matrix   | `Some(1)`            | 2×2 or 4×4 only; RHS folded                     |
+
+Entry-point names follow the matrix-metal convention so the
+runtime's per-handle table layout is identical:
+
+- `specialised_<op>_const_f32_0x<HANDLE>` — commutative binary
+- `specialised_<op>_<lhs|rhs>_const_f32_0x<HANDLE>` — non-commutative
+- `specialised_<op>_input_const_f32_0x<HANDLE>` — unary folded input
+- `specialised_matmul_<N>x<N>_rhs_const_f32_0x<HANDLE>` — matmul
+
+Handles are zero-padded uppercase hex.
+
+##### CUDA-vs-MSL syntax differences
+
+| MSL                            | CUDA C                                   |
+| ------------------------------ | ---------------------------------------- |
+| `kernel void name(`            | `extern "C" __global__ void name(`        |
+| `device const float* a`        | `const float* __restrict__ a`             |
+| `device float* out`            | `float* __restrict__ out`                 |
+| `constant uint& n`             | `unsigned int n`                          |
+| `[[buffer(N)]]`                | (parameter order)                         |
+| `[[thread_position_in_grid]]`  | `blockIdx.x * blockDim.x + threadIdx.x`   |
+| `max(a, b)` / `min(a, b)`      | `fmaxf(a, b)` / `fminf(a, b)`             |
+| `pow(a, b)`                    | `powf(a, b)`                              |
+| `NAN` / `INFINITY` macros      | `__int_as_float(0x7fc00000)` etc.          |
+
+##### `format_f32_literal`
+
+- Uses Rust's default `{}` (Ryu-based) for shortest round-trip
+  decimal — same as the MSL emitter.
+- Appends `.0` when no decimal is present so the literal parses as
+  `float`.
+- Suffixes `f` for single-precision.
+- NaN → `__int_as_float(0x7fc00000)`; ±inf → `__int_as_float(0x7f800000)`
+  / `__int_as_float(0xff800000)`.  These are CUDA built-ins (no
+  header required by NVRTC).
+
+### Tests
+
+24 new platform-independent unit tests in `cuda_emitter::tests`:
+
+- Happy-path snapshots for Add, Sub (LHS + RHS), Div, Pow, Max, Min,
+  Mul.
+- Unary precomputed values for Neg, Abs, Sqrt, Recip.
+- MatMul 2×2 per-column dot-products + 4×4 supported.
+- MatMul rejects unsupported dims and LHS-folded.
+- Fall-through: non-F32, non-Constant range class, unsupported op
+  kind, missing `folded_slot`, 3-byte constant payload.
+- `format_f32_literal` round-trips with `f` suffix; handles NaN /
+  ±inf via `__int_as_float` intrinsics.
+- Handle encoded as zero-padded 16-hex uppercase.
+
+All run on every platform — no device required.
+
+Total crate test count: 68 (44 from Phases 1–3 + 24 new).
+
+### What this phase does NOT change
+
+- `install_specialised_from_emitted` still accepts
+  `EmittedKernelPlaceholder` (the Phase 1 stub type) and returns
+  `Err`.  Phase 5 will swap it for the real `EmittedKernel` and
+  wire NVRTC + the specialised-kernel table.
+- `supported_ops_bitset()` stays at `0` — Phase 5 flips it on.
+- `Kernels` from Phase 3 is unchanged; emitted kernels are
+  per-handle, separate from the generic-kernel module.
+
+### Why this is its own PR
+
+Phase 4 is the **code generator**.  Phase 5 will wire it into the
+executor's `Mutex<State>` alongside the per-handle compile +
+dispatch path.  Splitting the emitter from the wiring lets this PR
+land as a small, fully self-contained, platform-independent
+change — every test is just a string comparison.
+
 ## 0.3.0 — 2026-05-13
 
 ### Added — MX06 Phase 3 (generic NVRTC kernels + buffer-op wiring)
