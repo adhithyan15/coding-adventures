@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-05-13 — decompose_level: per-level prompts for ADJ25 hierarchy
+
+### Added
+
+New primitive `decompose_level` with **per-level system prompts** —
+one focused short prompt per decomposition level boundary
+(`Document → Sentence`, `Sentence → Phrase`, `Phrase → Claim`,
+`Fact → TypedComponent`). Each prompt teaches ONLY the kinds valid
+at its level + the byte-tiling contract + one worked example. None
+of them exceed 4 KB.
+
+This addresses the root cause the ADJ26 foundation bench surfaced:
+the previous orchestrator routed per-parent calls through
+`decompose_text`, whose v5 system prompt instructs the model to
+produce flat IR (`Fact`/`Rule`/etc.). The orchestrator's correction
+prompt asked for the hierarchy (`Sentence`/`Phrase`/etc.); the
+model followed the dominant system prompt; 0/40 cells produced
+usable IR. The new primitive removes the conflict by giving each
+level its own system prompt.
+
+### New public surface
+
+- `DecomposeLevel` enum — 4 variants matching the orchestrator's
+  level enum.
+- `DecomposeLevelRequest { document_id, level, parent_text,
+  correction_context, ancestor_context }`.
+- `DecomposeLevelResponse { ir_document, structural_ok, call_record }`.
+- `decompose_level(req, gateway) -> Result<DecomposeLevelResponse, PrimitiveError>`.
+- `DECOMPOSE_LEVEL_PROMPT_VERSION = "decompose-level-v1"`.
+
+### Tests
+
+7 new test cases: per-level system-prompt selection, prompt
+compactness (each < 4 KB), no-flattening rule taught at level 4,
+user-text correction-context embedding, user-text omits
+correction when absent, user-text renders ancestor context,
+prompt-version constant lock. Total `llm-primitives` tests:
+81 → 88, all passing.
+
+### Notes
+
+- The `decompose_text` primitive is unchanged; v5 stays the
+  contract for flat-IR consumers. Once the hierarchical
+  orchestrator is the only consumer, `decompose_text` can retire
+  with ADJ25 PR-7 cutover.
+- Smoke test against `llama3.1:8b` shows 3 of 4 levels now
+  succeed end-to-end on the canonical `"1 carry-on bag, matches."`
+  fixture (up from 0/4 in ADJ26). Full bench re-run lands in a
+  follow-up data PR.
+
 ## [0.11.0] - 2026-05-13 — decompose-text-v5 (typed quantities)
 
 ### Changed

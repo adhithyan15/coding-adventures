@@ -64,6 +64,7 @@ use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, LlmError, ProviderIdentity, TokenUsage,
 };
 
+pub mod decompose_level;
 pub mod decompose_text;
 pub mod elicit_rules;
 pub mod entail;
@@ -76,6 +77,10 @@ pub mod render_node;
 // namespaces, so callers can write `llm_primitives::entail(...)` /
 // `llm_primitives::render_node(...)` / `llm_primitives::judge_plausibility(...)`
 // directly.
+pub use decompose_level::{
+    decompose_level, DecomposeLevel, DecomposeLevelRequest, DecomposeLevelResponse,
+    DECOMPOSE_LEVEL_PROMPT_VERSION,
+};
 pub use decompose_text::{decompose_text, DecomposeTextRequest, DecomposeTextResponse};
 pub use elicit_rules::{elicit_rules, ElicitRulesRequest, ElicitRulesResponse};
 pub use entail::{entail, EntailRequest, EntailResponse};

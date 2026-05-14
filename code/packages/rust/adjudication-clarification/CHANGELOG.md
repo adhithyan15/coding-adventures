@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-05-13 — retry_decompose_level routes through decompose_level
+
+### Changed
+
+`retry_decompose_level` now calls `llm_primitives::decompose_level`
+under the hood instead of `decompose_text`. The level-aware system
+prompt (per `DecomposeLevel`) replaces the v5 flat-IR system prompt
+that was the load-bearing cause of the ADJ26 bench's 0/40 result.
+
+The retry primitive's correction-prompt logic stays intact: the
+prior attempt + gap description are rendered into a
+correction-context string and flow into `decompose_level` as
+`correction_context`. On initial-dispatch paths where the
+orchestrator funnels through this primitive with an empty
+`previous_children` array, the correction context is suppressed —
+the model sees the level-aware system prompt + parent text alone,
+without a confusing "your previous attempt was empty" framing.
+
+### New behaviour
+
+- Per-level dispatches see one focused system prompt instead of the
+  v5 monolith.
+- Initial dispatches with empty prior children skip the correction
+  context (the new prior-is-empty detector reads
+  `previous_children.nodes` and checks if the array is empty).
+- The `prompt_version` recorded in the audit-trail dialogue turn is
+  unchanged (`HIERARCHICAL_DECOMP_PROMPT_VERSION`) since the
+  primitive's own version is captured in its `call_record`.
+
+### Tests
+
+All 43 existing tests pass unchanged. The retry primitive's surface
+is unchanged — only the underlying LLM call changed.
+
+### Notes
+
+- Version: 0.6.0 → 0.7.0 (additive behaviour shift; surface
+  unchanged).
+
 ## [0.6.0] - 2026-05-13 — ADJ25 PR-3: fresh-agent hierarchical-decomposition retry
 
 ### Added
