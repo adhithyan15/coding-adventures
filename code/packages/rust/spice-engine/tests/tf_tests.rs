@@ -1,6 +1,6 @@
 use spice_engine::{
     tf, Capacitor, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError, TfResult, Vccs,
-    VoltageSource,
+    Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -93,6 +93,24 @@ fn tf_vccs_stage_reports_transconductance_gain() {
 
     assert_close(result.gain(), 2.0);
     assert_close(result.output_impedance_ohms, 1_000.0);
+    assert!(result.input_impedance_ohms.is_infinite());
+}
+
+#[test]
+fn tf_vcvs_stage_reports_voltage_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Vcvs(Vcvs::new("E1", "out", "0", "in", "0", 4.0)));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = tf(&circuit, "out", "Vin").unwrap();
+
+    assert_close(result.gain(), 4.0);
+    assert_close(result.output_impedance_ohms, 0.0);
     assert!(result.input_impedance_ohms.is_infinite());
 }
 
