@@ -241,8 +241,9 @@ descriptor and fake-backend target, but it is not complete for standalone use.
 | `serial.log` | required for dev builds | optional | optional |
 | `program.ram_exec` | required | required | optional |
 | `program.store` | optional | optional | optional |
-| `pwm.output` | early | early | later |
-| `adc.input` | early | early | later |
+| `pwm.write` | early | early | later |
+| `adc.read` | early | early | later |
+| `dac.write_u12` | early when present | later when present | unlikely first |
 | `i2c.master` | early | later | unlikely first |
 | `spi.master` | early | later | unlikely first |
 | `led_matrix.frame` | board-specific | board-specific | unlikely first |
