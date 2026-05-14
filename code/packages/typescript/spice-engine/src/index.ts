@@ -1,6 +1,6 @@
 const PIVOT_EPSILON = 1.0e-12;
 
-export type Element = Resistor | VoltageSource | CurrentSource;
+export type Element = Resistor | Capacitor | VoltageSource | CurrentSource;
 
 export interface Resistor {
   readonly kind: "resistor";
@@ -8,6 +8,15 @@ export interface Resistor {
   readonly n1: string;
   readonly n2: string;
   readonly resistanceOhms: number;
+}
+
+export interface Capacitor {
+  readonly kind: "capacitor";
+  readonly name: string;
+  readonly n1: string;
+  readonly n2: string;
+  readonly capacitanceFarads: number;
+  readonly initialVoltage: number;
 }
 
 export interface VoltageSource {
@@ -27,6 +36,14 @@ export interface CurrentSource {
 }
 
 export interface DcResult {
+  readonly nodeVoltages: ReadonlyMap<string, number>;
+  readonly branchCurrents: ReadonlyMap<string, number>;
+  voltage(node: string): number | undefined;
+  branchCurrent(sourceName: string): number | undefined;
+}
+
+export interface TransientPoint {
+  readonly time: number;
   readonly nodeVoltages: ReadonlyMap<string, number>;
   readonly branchCurrents: ReadonlyMap<string, number>;
   voltage(node: string): number | undefined;
@@ -65,6 +82,32 @@ export function resistor(
   return { kind: "resistor", name, n1, n2, resistanceOhms };
 }
 
+export function capacitor(
+  name: string,
+  n1: string,
+  n2: string,
+  capacitanceFarads: number,
+): Capacitor {
+  return capacitorWithInitialVoltage(name, n1, n2, capacitanceFarads, 0.0);
+}
+
+export function capacitorWithInitialVoltage(
+  name: string,
+  n1: string,
+  n2: string,
+  capacitanceFarads: number,
+  initialVoltage: number,
+): Capacitor {
+  return {
+    kind: "capacitor",
+    name,
+    n1,
+    n2,
+    capacitanceFarads,
+    initialVoltage,
+  };
+}
+
 export function voltageSource(
   name: string,
   positive: string,
@@ -84,6 +127,51 @@ export function currentSource(
 }
 
 export function dcOp(circuit: Circuit): DcResult {
+  const solution = solveLinearCircuit(circuit, []);
+  return makeDcResult(solution.nodeVoltages, solution.branchCurrents);
+}
+
+export function transient(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+): TransientPoint[] {
+  if (!Number.isFinite(timeStep) || timeStep <= 0.0) {
+    throw invalidElement("transient", "time step must be finite and positive");
+  }
+  if (!Number.isFinite(stopTime) || stopTime < 0.0) {
+    throw invalidElement("transient", "stop time must be finite and non-negative");
+  }
+
+  validateCapacitors(circuit);
+
+  const capacitorStates = initialCapacitorStates(circuit, timeStep);
+  const points: TransientPoint[] = [];
+  for (let time = timeStep; time <= stopTime + timeStep * 1.0e-9; time += timeStep) {
+    const solution = solveLinearCircuit(circuit, capacitorStates);
+    updateCapacitorStates(circuit, solution.nodeVoltages, capacitorStates);
+    points.push(
+      makeTransientPoint(time, solution.nodeVoltages, solution.branchCurrents),
+    );
+  }
+  return points;
+}
+
+interface CapacitorState {
+  readonly name: string;
+  previousVoltage: number;
+  readonly timeStep: number;
+}
+
+interface LinearSolution {
+  readonly nodeVoltages: ReadonlyMap<string, number>;
+  readonly branchCurrents: ReadonlyMap<string, number>;
+}
+
+function solveLinearCircuit(
+  circuit: Circuit,
+  capacitorStates: readonly CapacitorState[],
+): LinearSolution {
   const nodeIndices = collectNodeIndices(circuit);
   const voltageSources = collectVoltageSources(circuit);
   const nodeCount = nodeIndices.size;
@@ -91,7 +179,7 @@ export function dcOp(circuit: Circuit): DcResult {
   const matrixSize = nodeCount + branchCount;
 
   if (matrixSize === 0) {
-    return makeDcResult(new Map(), new Map());
+    return { nodeVoltages: new Map(), branchCurrents: new Map() };
   }
 
   const matrix = Array.from({ length: matrixSize }, () =>
@@ -103,6 +191,9 @@ export function dcOp(circuit: Circuit): DcResult {
     switch (element.kind) {
       case "resistor":
         stampResistor(element, nodeIndices, matrix);
+        break;
+      case "capacitor":
+        stampCapacitor(element, capacitorStates, nodeIndices, matrix, rhs);
         break;
       case "voltage-source":
         stampVoltageSource(
@@ -134,7 +225,7 @@ export function dcOp(circuit: Circuit): DcResult {
     branchCurrents.set(`I(${sourceName})`, solution[nodeCount + branchIndex]);
   }
 
-  return makeDcResult(nodeVoltages, branchCurrents);
+  return { nodeVoltages, branchCurrents };
 }
 
 function makeDcResult(
@@ -156,11 +247,33 @@ function makeDcResult(
   };
 }
 
+function makeTransientPoint(
+  time: number,
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: ReadonlyMap<string, number>,
+): TransientPoint {
+  return {
+    time,
+    nodeVoltages,
+    branchCurrents,
+    voltage(node: string): number | undefined {
+      return isGround(node) ? 0.0 : nodeVoltages.get(node);
+    },
+    branchCurrent(sourceName: string): number | undefined {
+      const key = sourceName.startsWith("I(")
+        ? sourceName
+        : `I(${sourceName})`;
+      return branchCurrents.get(key);
+    },
+  };
+}
+
 function collectNodeIndices(circuit: Circuit): Map<string, number> {
   const names = new Set<string>();
   for (const element of circuit.elements()) {
     switch (element.kind) {
       case "resistor":
+      case "capacitor":
         insertNode(names, element.n1);
         insertNode(names, element.n2);
         break;
@@ -225,6 +338,33 @@ function stampResistor(
   stampConductance(matrix, n1, n2, conductance);
 }
 
+function stampCapacitor(
+  element: Capacitor,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  validateCapacitor(element);
+  const state = capacitorStates.find((candidate) => candidate.name === element.name);
+  if (state === undefined) {
+    return;
+  }
+
+  const conductance = element.capacitanceFarads / state.timeStep;
+  const n1 = nodeIndex(nodeIndices, element.n1);
+  const n2 = nodeIndex(nodeIndices, element.n2);
+  stampConductance(matrix, n1, n2, conductance);
+
+  const historyCurrent = conductance * state.previousVoltage;
+  if (n1 !== undefined) {
+    rhs[n1] += historyCurrent;
+  }
+  if (n2 !== undefined) {
+    rhs[n2] -= historyCurrent;
+  }
+}
+
 function stampConductance(
   matrix: number[][],
   n1: number | undefined,
@@ -241,6 +381,67 @@ function stampConductance(
     matrix[n1][n2] -= conductance;
     matrix[n2][n1] -= conductance;
   }
+}
+
+function validateCapacitors(circuit: Circuit): void {
+  for (const element of circuit.elements()) {
+    if (element.kind === "capacitor") {
+      validateCapacitor(element);
+    }
+  }
+}
+
+function validateCapacitor(element: Capacitor): void {
+  if (!Number.isFinite(element.capacitanceFarads) || element.capacitanceFarads <= 0.0) {
+    throw invalidElement(element.name, "capacitance must be finite and positive");
+  }
+  if (!Number.isFinite(element.initialVoltage)) {
+    throw invalidElement(element.name, "initial voltage must be finite");
+  }
+}
+
+function initialCapacitorStates(
+  circuit: Circuit,
+  timeStep: number,
+): CapacitorState[] {
+  const states: CapacitorState[] = [];
+  for (const element of circuit.elements()) {
+    if (element.kind === "capacitor") {
+      states.push({
+        name: element.name,
+        previousVoltage: element.initialVoltage,
+        timeStep,
+      });
+    }
+  }
+  return states;
+}
+
+function updateCapacitorStates(
+  circuit: Circuit,
+  nodeVoltages: ReadonlyMap<string, number>,
+  capacitorStates: CapacitorState[],
+): void {
+  for (const state of capacitorStates) {
+    const element = circuit
+      .elements()
+      .find(
+        (candidate): candidate is Capacitor =>
+          candidate.kind === "capacitor" && candidate.name === state.name,
+      );
+    if (element === undefined) {
+      continue;
+    }
+    state.previousVoltage =
+      voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+  }
+}
+
+function voltageAt(
+  nodeVoltages: ReadonlyMap<string, number>,
+  node: string,
+): number {
+  return isGround(node) ? 0.0 : nodeVoltages.get(node) ?? 0.0;
 }
 
 function stampVoltageSource(
