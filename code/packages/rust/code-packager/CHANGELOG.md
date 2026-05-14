@@ -2,6 +2,52 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.4.0] — 2026-05-14 (LANG45 phase 2 — PE/COFF object emitter)
+
+**New `pe_object` module — Windows x86-64 PE/COFF object-file writer.**
+
+Adds the PE/COFF half of LANG45.  After this release, both Linux and
+Windows host pipelines have object-file emitters ready for the AOT
+linker integration in phases 9–10.
+
+### Added
+
+- **`pe_object::pack_pe_object_x86_64(text, entry, n_globals, relocs,
+  target)`** — emits an AMD64 PE/COFF object file (no MZ stub) with
+  `.text` + optional `.data` sections, IMAGE_RELOCATION records,
+  IMAGE_SYMBOL entries, and COFF string table.  The system linker
+  (`link.exe` / `lld-link.exe`) consumes this to produce a runnable
+  Windows PE executable.
+
+### Format details
+
+- `IMAGE_FILE_MACHINE_AMD64` (0x8664).
+- Entry symbol: `main` (Windows 64-bit ABI does NOT prepend an
+  underscore, unlike 32-bit Win32).
+- Globals symbol: `_twig_globals` (matches macOS / Linux).
+- Names ≤ 8 chars are inlined in `IMAGE_SYMBOL.Name`; longer names go
+  to the COFF string table with a 4-byte length prefix.
+- Unlike ELF, PE/COFF relocs do NOT carry an explicit addend; the
+  addend is baked into the instruction bytes (zero from
+  `x86_64-encoder`, which produces the same correct PC-relative delta
+  as ELF + addend=-4 because the PE/COFF `REL32` format implicitly
+  adjusts by +4 for end-of-instruction).
+- All three `X86RelocKind` variants map to `IMAGE_REL_AMD64_REL32`
+  (Windows has no GOT, so `GotPcRel32` collapses to plain PC-relative).
+
+### Re-exports
+
+- `pack_pe_object_x86_64` from crate root.
+- Reuses `X86RelocKind` and `X86RelocRecord` from `elf_object`
+  (neutral types — the same backend output feeds both packagers).
+
+### Tests
+
+17 unit tests cover: Machine field, NumberOfSections, no MZ stub,
+section header layout, .text bytes positioning, reloc type emission,
+inline vs. string-table symbol names, symbol deduplication,
+NumberOfSymbols correctness, and rejection paths.
+
 ## [0.3.0] — 2026-05-14 (LANG45 phase 1 — ELF64 object emitter)
 
 **New `elf_object` module — Linux x86-64 ET_REL object-file writer.**
