@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-05-13 — ADJ25 PR-6: foundation bench harness
+
+### Added
+
+- `src/bin/adj_pr6_bench.rs` — small CLI binary that wraps
+  `decompose_hierarchical` and reports per-level coverage as
+  structured JSON. Reads source / model / endpoint / timeout /
+  retries from env vars (`ADJ_PR6_*`) and emits one JSON record to
+  stdout per invocation. Errors always exit 0 so the harness can
+  capture diagnostics.
+- 3 unit tests for the binary's helpers: epoch conversion (1970-01-01
+  / one-day round-trip) and `summarise_coverage` shape.
+
+### Spec
+
+- `code/specs/ADJ26-foundation-bench.md` — methodology for the 8 ×
+  5 matrix bench, reproduction instructions, hypotheses, gating
+  condition for unblocking the other workstreams (ADJ14 / 15 / 16
+  / 17 / 18 / 19 / 20).
+
+### Harness
+
+- `scripts/adj_pr6_foundation_bench.py` — Python driver that iterates
+  the 8 ADJ18 declarations × 5 ADJ12 models matrix, shells out to
+  the bench binary per cell, captures JSON output, writes to
+  `code/specs/data/adj25-pr6-foundation-bench-YYYY-MM-DD.json`.
+  Persists after every cell so a crash loses at most the in-flight
+  cell.
+
+### Dependency change
+
+- `llm-gateway` promoted from `[dev-dependencies]` to a regular
+  dependency — needed by the new bench binary.
+- `llm-provider-ollama` added as a regular dependency — same.
+
+### Scope
+
+This PR is **methodology + harness only**. The empirical-results
+section of `ADJ26` is marked `TBD`; a follow-up data PR runs the
+bench against a live Ollama instance and adds the empirical
+results + a proposed threshold for unblocking the paused
+workstreams.
+
+### Notes
+
+- Version: 0.10.0 → 0.11.0 (new bin + new deps).
+
 ## [0.10.0] - 2026-05-13 — ADJ25 PR-5: orchestrator emits correlation IDs
 
 ### Added
