@@ -13,6 +13,7 @@ jit-core              = { path = "../jit-core" }
 code-packager         = { path = "../code-packager" }
 cli-builder           = { path = "../cli-builder" }
 iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
+tempfile             = "3"
 
 [[bin]]
 name = "twig-aot"
@@ -22,5 +23,4 @@ path = "bin/twig_aot.rs"
 cc = "1"
 
 [dev-dependencies]
-tempfile         = "3"
 aarch64-encoder  = { path = "../aarch64-encoder" }

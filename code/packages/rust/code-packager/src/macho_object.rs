@@ -688,10 +688,17 @@ pub fn pack_object_with_globals_and_externals(
     //   index 2 = first unique extern
     //   index 3 = second unique extern
     //   …
+    //
+    // Deduplication uses a HashMap for O(n) total work (Vec::contains is O(n²)
+    // and would enable a DoS via a large number of unique symbol names in a
+    // caller-controlled ExternBranchReloc slice).
     let mut unique_ext_syms: Vec<&str> = Vec::new();
-    for er in extern_relocs {
-        if !unique_ext_syms.contains(&er.symbol.as_str()) {
-            unique_ext_syms.push(&er.symbol);
+    {
+        let mut seen: std::collections::HashMap<&str, ()> = std::collections::HashMap::new();
+        for er in extern_relocs {
+            if seen.insert(er.symbol.as_str(), ()).is_none() {
+                unique_ext_syms.push(&er.symbol);
+            }
         }
     }
     let n_ext_syms = unique_ext_syms.len();

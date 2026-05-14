@@ -433,16 +433,20 @@ pub fn compile_file_macos_arm64(
         .unwrap_or("twig");
     let object_bytes = compile_macos_arm64_object(&source, stem)?;
 
-    // Object files go to a temp file the linker reads.  We can't
-    // deterministically name it (concurrent invocations would collide)
-    // so use the OS tempdir.
-    let tmp_dir  = std::env::temp_dir();
-    let tmp_obj  = tmp_dir.join(format!("twig-aot-{}-{}.o", stem, std::process::id()));
-    std::fs::write(&tmp_obj, &object_bytes)?;
-
-    let link_result = invoke_ld(&tmp_obj, out_path);
-    let _ = std::fs::remove_file(&tmp_obj); // best-effort cleanup
-    link_result?;
+    // Object files go to a secure temp file (O_EXCL + random name) so that
+    // concurrent `twig-aot` invocations don't collide and symlink attacks
+    // against a predictable path are not possible.  `NamedTempFile` deletes
+    // the file automatically when it drops.
+    {
+        use std::io::Write as _;
+        let mut tmp_obj = tempfile::Builder::new()
+            .prefix(&format!("twig-aot-{stem}-"))
+            .suffix(".o")
+            .tempfile()?;
+        tmp_obj.write_all(&object_bytes)?;
+        invoke_ld(tmp_obj.path(), out_path)?;
+        // tmp_obj drops here — temp file deleted by NamedTempFile destructor.
+    }
 
     let mut perms = std::fs::metadata(out_path)?.permissions();
     perms.set_mode(0o755);
@@ -476,11 +480,28 @@ pub fn compile_file_macos_arm64(
 /// `ld` sets up: `LC_LOAD_DYLINKER`, `LC_LOAD_DYLIB libSystem`,
 /// `LC_DYLD_CHAINED_FIXUPS`, ad-hoc code signature, etc.
 fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
-    // Write the embedded runtime archive to a per-PID temp file so concurrent
-    // `twig-aot` invocations don't collide.  Best-effort cleanup on exit.
-    let tmp_dir     = std::env::temp_dir();
-    let runtime_path = tmp_dir.join(format!("twig_aot_runtime_{}.a", std::process::id()));
-    std::fs::write(&runtime_path, RUNTIME_ARCHIVE).map_err(|e| AotError::Io(e))?;
+    use std::io::Write as _;
+
+    // Write the embedded runtime archive to a secure temp file.
+    //
+    // Security: we use `tempfile::Builder` (O_EXCL + random suffix) rather than
+    // a PID-derived path.  A PID-based name is predictable and can be raced by
+    // an attacker with write access to `$TMPDIR` (TOCTOU / symlink attack):
+    //
+    // - Symlink write-through: if a symlink at the predicted path already exists,
+    //   `fs::write` would follow it and overwrite an arbitrary file.
+    // - Replace-after-write: the attacker races to replace the just-written
+    //   archive with a malicious one before `ld` opens it, injecting arbitrary
+    //   machine code into the produced binary.
+    //
+    // `NamedTempFile` prevents both: the kernel creates the file atomically with
+    // `O_EXCL`, and the random name is not guessable.  The file is deleted when
+    // `runtime_tmp` drops (after `ld` exits below).
+    let mut runtime_tmp = tempfile::Builder::new()
+        .prefix("twig_aot_runtime_")
+        .suffix(".a")
+        .tempfile()?;
+    runtime_tmp.write_all(RUNTIME_ARCHIVE)?;
 
     // `-lSystem` is non-negotiable on modern macOS: `ld` refuses to
     // produce a dynamic executable without linking the C runtime.
@@ -500,16 +521,16 @@ fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
         .arg("-lSystem")
         .arg("-o").arg(out_path)
         .arg(object_path)
-        .arg(&runtime_path) // runtime archive: provides __twig_print_i64 etc.
+        .arg(runtime_tmp.path()) // runtime archive: provides __twig_print_i64 etc.
         .output()
         .map_err(|e| AotError::Linker {
             status: None,
             stderr: format!("ld not found on PATH or could not be spawned: {e}"),
-        });
+        })?;
 
-    let _ = std::fs::remove_file(&runtime_path); // best-effort cleanup
+    // `runtime_tmp` drops here — NamedTempFile deletes the temp archive file.
+    drop(runtime_tmp);
 
-    let output = output?;
     if !output.status.success() {
         return Err(AotError::Linker {
             status: output.status.code(),
