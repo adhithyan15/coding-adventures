@@ -13,6 +13,7 @@ from spice_engine import (
     Capacitor,
     Circuit,
     CurrentSource,
+    Diode,
     ExpWaveform,
     Inductor,
     PulseWaveform,
@@ -65,6 +66,15 @@ type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
 
 
 @dataclass(frozen=True, slots=True)
+class ModelCard:
+    """A parsed SPICE `.model` card."""
+
+    name: str
+    kind: str
+    params: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
 class _Statement:
     line_number: int
     fields: list[str]
@@ -84,6 +94,7 @@ class ParsedNetlist:
 
     circuit: Circuit = field(default_factory=Circuit)
     analyses: list[Analysis] = field(default_factory=list)
+    models: dict[str, ModelCard] = field(default_factory=dict)
     title: str | None = None
 
     def op_cards(self) -> list[OpAnalysis]:
@@ -170,14 +181,30 @@ def parse_netlist(text: str) -> ParsedNetlist:
         )
 
     for statement in statements:
+        if statement.fields[0].lower() != ".model":
+            continue
         try:
+            model = _parse_model_card(statement.fields)
+            key = model.name.lower()
+            if key in parsed.models:
+                raise NetlistParseError(f"duplicate .model definition {model.name!r}")
+            parsed.models[key] = model
+        except NetlistParseError as exc:
+            raise NetlistParseError(f"line {statement.line_number}: {exc}") from exc
+
+    for statement in statements:
+        try:
+            if statement.fields[0].lower() == ".model":
+                continue
             if statement.fields[0].startswith("."):
                 parsed.analyses.append(_parse_directive(statement.fields))
             elif statement.fields[0].upper().startswith("X"):
-                for element in _expand_subckt_instance(statement.fields, subckts, []):
+                for element in _expand_subckt_instance(
+                    statement.fields, subckts, [], parsed.models
+                ):
                     parsed.circuit.add(element)
             else:
-                parsed.circuit.add(_parse_element(statement.fields))
+                parsed.circuit.add(_parse_element(statement.fields, parsed.models))
         except NetlistParseError as exc:
             raise NetlistParseError(f"line {statement.line_number}: {exc}") from exc
     return parsed
@@ -195,7 +222,7 @@ def parse_value(token: str) -> float:
     return float(match.group(1)) * _SUFFIXES[suffix]
 
 
-def _parse_element(fields: list[str]) -> object:
+def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
     name = fields[0]
     prefix = _element_prefix(name)
     if prefix == "R":
@@ -215,6 +242,22 @@ def _parse_element(fields: list[str]) -> object:
         _require_min_fields(fields, 4, "current source")
         current, waveform = _parse_source_value(fields[3:])
         return CurrentSource(name, fields[1], fields[2], current, waveform)
+    if prefix == "D":
+        _require_fields(fields, 4, "diode")
+        model = models.get(fields[3].lower())
+        if model is None:
+            raise NetlistParseError(f"unknown model {fields[3]!r} for diode {name!r}")
+        if model.kind != "D":
+            raise NetlistParseError(
+                f"model {model.name!r} has kind {model.kind!r}, expected 'D'"
+            )
+        return Diode(
+            name,
+            fields[1],
+            fields[2],
+            Is=model.params.get("IS", 1e-15),
+            Vt=model.params.get("VT", 0.02585),
+        )
     if prefix == "G":
         _require_fields(fields, 6, "VCCS")
         return VCCS(name, fields[1], fields[2], fields[3], fields[4], parse_value(fields[5]))
@@ -254,6 +297,7 @@ def _expand_subckt_instance(
     fields: list[str],
     subckts: dict[str, _SubcktDefinition],
     stack: list[str],
+    models: dict[str, ModelCard],
 ) -> list[object]:
     _require_min_fields(fields, 3, "subcircuit instance")
     instance_name = fields[0]
@@ -285,9 +329,9 @@ def _expand_subckt_instance(
             )
         local_fields = _map_subckt_fields(statement.fields, instance_name, node_map)
         if _element_prefix(statement.fields[0]) == "X":
-            elements.extend(_expand_subckt_instance(local_fields, subckts, next_stack))
+            elements.extend(_expand_subckt_instance(local_fields, subckts, next_stack, models))
         else:
-            elements.append(_parse_element(local_fields))
+            elements.append(_parse_element(local_fields, models))
     return elements
 
 
@@ -297,7 +341,7 @@ def _map_subckt_fields(
     name = f"{instance_name}.{fields[0]}"
     prefix = fields[0][0].upper()
     mapped = [name, *fields[1:]]
-    if prefix in {"R", "C", "L", "V", "I"}:
+    if prefix in {"R", "C", "L", "V", "I", "D"}:
         _require_min_fields(fields, 3, "subcircuit element")
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
@@ -423,6 +467,42 @@ def _parse_directive(fields: list[str]) -> Analysis:
             stop_hz=parse_value(fields[4]),
         )
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_model_card(fields: list[str]) -> ModelCard:
+    _require_min_fields(fields, 3, ".model")
+    name = fields[1]
+    kind: str
+    params_text: str
+    joined_tail = " ".join(fields[2:]).strip()
+    inline = re.match(r"^([A-Za-z][A-Za-z0-9_]*)\s*(?:\((.*)\))?$", joined_tail)
+    if len(fields) == 3 and inline is not None:
+        kind = inline.group(1).upper()
+        params_text = inline.group(2) or ""
+    else:
+        kind = fields[2].upper()
+        params_text = " ".join(fields[3:]).strip()
+        if params_text.startswith("(") and params_text.endswith(")"):
+            params_text = params_text[1:-1]
+    return ModelCard(name=name, kind=kind, params=_parse_model_params(params_text))
+
+
+def _parse_model_params(params_text: str) -> dict[str, float]:
+    if not params_text.strip():
+        return {}
+    params: dict[str, float] = {}
+    spans: list[tuple[int, int]] = []
+    for match in re.finditer(r"([A-Za-z][A-Za-z0-9_]*)\s*=\s*([^,\s)]+)", params_text):
+        params[match.group(1).upper()] = parse_value(match.group(2))
+        spans.append(match.span())
+    cursor = 0
+    for start, end in spans:
+        if params_text[cursor:start].strip(" \t,"):
+            raise NetlistParseError(f"invalid .model parameter syntax {params_text!r}")
+        cursor = end
+    if params_text[cursor:].strip(" \t,"):
+        raise NetlistParseError(f"invalid .model parameter syntax {params_text!r}")
+    return params
 
 
 def _split_fields(line: str) -> list[str]:
