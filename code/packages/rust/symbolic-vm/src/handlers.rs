@@ -1012,8 +1012,13 @@ fn integrate_handler() -> Handler {
         };
 
         if expr.args.len() == 4 {
-            if let Some(result) = complete_elliptic_first_kind(&f, &x, &expr.args[2], &expr.args[3])
-            {
+            if let Some(result) = complete_elliptic_first_kind(&f, &x, &expr.args[2], &expr.args[3]) {
+                return vm.eval(result);
+            }
+            if let Some(result) = complete_elliptic_second_kind(&f, &x, &expr.args[2], &expr.args[3]) {
+                return vm.eval(result);
+            }
+            if let Some(result) = complete_elliptic_third_kind(&f, &x, &expr.args[2], &expr.args[3]) {
                 return vm.eval(result);
             }
             return IRNode::Apply(Box::new(expr));
@@ -1045,6 +1050,10 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
     }
 
     if let Some(result) = incomplete_elliptic_first_kind(f, x) {
+        return result;
+    }
+
+    if let Some(result) = incomplete_elliptic_second_kind(f, x) {
         return result;
     }
 
@@ -1236,6 +1245,131 @@ fn is_pi_over_two(node: &IRNode) -> bool {
         }
         _ => false,
     }
+}
+
+/// Return `k` when `f = Sqrt(Sub(1, Mul(Pow(k,2), Pow(Sin(x),2))))`.
+///
+/// This matches the integrand `sqrt(1 - k^2 * sin(x)^2)` which is the
+/// integrand for the complete and incomplete elliptic integrals of the
+/// second kind.
+fn elliptic_second_kind_radicand(f: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(sqrt) = f else { return None };
+    if sqrt.head != IRNode::Symbol(SQRT.to_string()) { return None; }
+    let [radicand] = sqrt.args.as_slice() else { return None };
+    let IRNode::Apply(sub) = radicand else { return None };
+    if sub.head != IRNode::Symbol(SUB.to_string()) { return None; }
+    let [constant, product] = sub.args.as_slice() else { return None };
+    if !to_numeric(constant).is_some_and(Numeric::is_one) { return None; }
+    let IRNode::Apply(mul) = product else { return None };
+    if mul.head != IRNode::Symbol(MUL.to_string()) { return None; }
+    let [left, right] = mul.args.as_slice() else { return None };
+    modulus_from_squared_factor(left, right, x)
+        .or_else(|| modulus_from_squared_factor(right, left, x))
+}
+
+/// `∫₀^(π/2) sqrt(1-k²sin²θ)dθ` → `EllipticE(k)`
+///
+/// Recognises the complete elliptic integral of the second kind over the
+/// canonical interval `[0, π/2]` and returns `EllipticE(k)`.
+fn complete_elliptic_second_kind(
+    f: &IRNode,
+    x: &str,
+    lower: &IRNode,
+    upper: &IRNode,
+) -> Option<IRNode> {
+    if !to_numeric(lower).is_some_and(Numeric::is_zero) || !is_pi_over_two(upper) {
+        return None;
+    }
+    elliptic_second_kind_radicand(f, x).map(|modulus| apply_node("EllipticE", vec![modulus]))
+}
+
+/// `∫ sqrt(1-k²sin²θ)dθ` → `EllipticE(θ, k)`
+///
+/// Recognises the incomplete elliptic integral of the second kind and
+/// returns `EllipticE(θ, k)`.
+fn incomplete_elliptic_second_kind(f: &IRNode, x: &str) -> Option<IRNode> {
+    elliptic_second_kind_radicand(f, x).map(|modulus| {
+        apply_node("EllipticE", vec![IRNode::Symbol(x.to_string()), modulus])
+    })
+}
+
+/// Return `n` when `bracket = Add(1, Mul(n, Pow(Sin(x), 2)))`.
+///
+/// This matches the characteristic factor `(1 + n*sin(x)^2)` in the
+/// denominator of the elliptic integral of the third kind.
+fn extract_characteristic_n(bracket: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(add) = bracket else { return None };
+    if add.head != IRNode::Symbol(ADD.to_string()) { return None; }
+    let [a, b] = add.args.as_slice() else { return None };
+    for (one_part, prod_part) in [(a, b), (b, a)] {
+        if !to_numeric(one_part).is_some_and(Numeric::is_one) { continue; }
+        let IRNode::Apply(mul) = prod_part else { continue };
+        if mul.head != IRNode::Symbol(MUL.to_string()) { continue; }
+        let [p1, p2] = mul.args.as_slice() else { continue };
+        for (n_candidate, sin_sq) in [(p1, p2), (p2, p1)] {
+            let IRNode::Apply(pow) = sin_sq else { continue };
+            if pow.head != IRNode::Symbol(POW.to_string()) { continue; }
+            let [sine, exp] = pow.args.as_slice() else { continue };
+            if exp != &IRNode::Integer(2) { continue; }
+            let IRNode::Apply(sin_call) = sine else { continue };
+            if sin_call.head != IRNode::Symbol(SIN.to_string()) { continue; }
+            let [inner] = sin_call.args.as_slice() else { continue };
+            if inner != &IRNode::Symbol(x.to_string()) { continue; }
+            if !depends_on(n_candidate, x) {
+                return Some(n_candidate.clone());
+            }
+        }
+    }
+    None
+}
+
+/// Return `(n, k)` when `f = Div(1, Mul(bracket, Sqrt(Sub(1, Mul(Pow(k,2), Pow(Sin(x),2))))))`.
+///
+/// This matches the integrand `1/((1 + n*sin(x)^2) * sqrt(1 - k^2*sin(x)^2))`
+/// for the complete elliptic integral of the third kind.
+fn elliptic_third_kind_params(f: &IRNode, x: &str) -> Option<(IRNode, IRNode)> {
+    let IRNode::Apply(div) = f else { return None };
+    if div.head != IRNode::Symbol(DIV.to_string()) { return None; }
+    let [numerator, denominator] = div.args.as_slice() else { return None };
+    if !to_numeric(numerator).is_some_and(Numeric::is_one) { return None; }
+    let IRNode::Apply(mul) = denominator else { return None };
+    if mul.head != IRNode::Symbol(MUL.to_string()) { return None; }
+    let [a, b] = mul.args.as_slice() else { return None };
+    for (bracket, sqrt_term) in [(a, b), (b, a)] {
+        let IRNode::Apply(sqrt) = sqrt_term else { continue };
+        if sqrt.head != IRNode::Symbol(SQRT.to_string()) { continue; }
+        let [radicand] = sqrt.args.as_slice() else { continue };
+        let IRNode::Apply(sub) = radicand else { continue };
+        if sub.head != IRNode::Symbol(SUB.to_string()) { continue; }
+        let [constant, product] = sub.args.as_slice() else { continue };
+        if !to_numeric(constant).is_some_and(Numeric::is_one) { continue; }
+        let IRNode::Apply(prod_mul) = product else { continue };
+        if prod_mul.head != IRNode::Symbol(MUL.to_string()) { continue; }
+        let [f1, f2] = prod_mul.args.as_slice() else { continue };
+        let k = modulus_from_squared_factor(f1, f2, x)
+            .or_else(|| modulus_from_squared_factor(f2, f1, x));
+        let Some(k) = k else { continue };
+        let Some(n) = extract_characteristic_n(bracket, x) else { continue };
+        return Some((n, k));
+    }
+    None
+}
+
+/// `∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²sin²θ))dθ` → `EllipticPi(n, k)`
+///
+/// Recognises the complete elliptic integral of the third kind over the
+/// canonical interval `[0, π/2]` and returns `EllipticPi(n, k)`.
+fn complete_elliptic_third_kind(
+    f: &IRNode,
+    x: &str,
+    lower: &IRNode,
+    upper: &IRNode,
+) -> Option<IRNode> {
+    if !to_numeric(lower).is_some_and(Numeric::is_zero) || !is_pi_over_two(upper) {
+        return None;
+    }
+    elliptic_third_kind_params(f, x)
+        .map(|(n, k)| apply_node("EllipticPi", vec![n, k]))
 }
 
 fn integrate_power_of_x(exponent: &IRNode, x: &str) -> IRNode {
