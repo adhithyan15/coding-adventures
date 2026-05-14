@@ -1,5 +1,24 @@
 # Changelog — cuda-compute
 
+## 0.1.1 — 2026-05-13
+
+### Added
+
+- `unsafe impl Send for CudaBuffer {}` — mirrors the existing
+  `Send` impls on `CudaDevice`, `CudaModuleInner`, and
+  `CudaFunction`.  Lets callers move buffers into a `Mutex<...>`,
+  which is required for `matrix-cuda`'s `Mutex<State>` to compile
+  once `BufferStore` (which holds `CudaBuffer`s) moves inside the
+  executor state.
+- `Sync` is intentionally NOT impl'd: concurrent calls against the
+  same buffer from multiple threads have undefined ordering in the
+  CUDA driver API.  Callers serialise via their own `Mutex`.
+
+Justification: `CUdeviceptr` is a `u64`-typed opaque driver handle;
+NVIDIA's docs say it's safe to transfer between threads.  The
+thread-bound entity is the CUDA *context*, not individual
+allocations.
+
 ## 0.1.0 — 2026-04-23
 
 Initial release.
