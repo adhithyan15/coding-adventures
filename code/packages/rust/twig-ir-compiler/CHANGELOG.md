@@ -1,19 +1,45 @@
 # Changelog — twig-ir-compiler
 
-## [0.7.0] — 2026-05-14
+## [0.8.0] — 2026-05-14
 
-### Added (LANG51 — String literals)
+### Added (LANG52 — stdlib completeness + LANG51 string literals)
 
-- `Expr::StrLit` arm in `compile_expr_inner` — lowers a double-quoted string
-  literal to `const(Operand::Str(value))` with `type_hint = "str"`.
-  The VM's `exec_const` already handles `Operand::Str` by calling
-  `lispy_runtime::heap::alloc_string` (no VM changes needed — infrastructure
-  was present from LANG47).
-- `StrLit` added to the `use twig_parser::{ … }` import list.
-- `Expr::StrLit` added to `free_vars.rs` as a leaf (no captured variables).
-- 9 new unit tests covering: basic string, empty string, escaped quote,
-  newline escape, all basic escapes, `type_hint = "str"`, string as argument,
-  `compile_typed_source` round-trip, string in lambda closure.
+#### LANG51: string literal lowering
+
+- **`Expr::StrLit` → `const(Operand::Str(value)) : "str"`** — string literals compile to a
+  `const` instruction with `Operand::Str` payload and `type_hint = "str"`.  The VM's
+  `exec_const` handler (introduced in LANG47) materialises this as a `LangString` heap object.
+- `Expr::StrLit` added to the leaf-atom arm of `free_vars.rs` (never a free variable).
+
+#### LANG52: `let*` sequential bindings
+
+- **`Expr::LetStar` → `compile_let_star`** — sequential bindings: each RHS is compiled in a
+  scope extended by all prior names.  Each binding gets a fresh register allocated via
+  `_move`; the body is compiled after all bindings are live.
+- **`free_vars.rs` Expr::LetStar walk** — incremental bound-set extension mirrors the
+  compiler's sequential scoping exactly (each name bound before the next RHS).
+
+#### LANG52: `and` / `or` special forms (short-circuit)
+
+- **`(and e₁ e₂ …)`** — intercepted in `compile_apply` before the builtin-resolution path.
+  Lowered to: evaluate `e₁`, branch on `jmp_if_false`, evaluate tail with
+  recursive `compile_and`, merge into shared result register via `_move`.
+  `(and)` → `#t`; `(and e)` → `e`.
+- **`(or e₁ e₂ …)`** — similar pattern.  `(or)` → `#f`; `(or e)` → `e`.
+- Neither `and` nor `or` is in the `BUILTINS` constant — they never reach the
+  `resolve_builtin` path.
+
+#### LANG52: expanded BUILTINS constant
+
+Added to the `BUILTINS: &[&str]` array (used for higher-order closure wrapping):
+`<=`, `>=`, `modulo`, `remainder`, `quotient`, `not`, `boolean?`, `equal?`,
+`list`, `list?`, `length`, `append`, `reverse`, `list-ref`, `assoc`,
+`symbol-append`, `host/write_string`, `host/read_line`, `host/read_file`.
+
+## [0.7.0] — 2026-05-14 (LANG51 — string literal lowering, included here)
+
+*Note: 0.7.0 was the planned standalone LANG51 release; changes are rolled into 0.8.0
+above since LANG52 depends on LANG51 and both land together.*
 
 ## [0.6.0] — 2026-05-14
 

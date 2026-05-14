@@ -20,7 +20,10 @@
 
 use std::collections::HashSet;
 
-use twig_parser::{Apply, Begin, Expr, If, Lambda, Let};
+use twig_parser::{Apply, Begin, Expr, If, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+};
 
 /// Maximum AST depth the walker will descend before bailing out.
 ///
@@ -113,6 +116,26 @@ fn walk(
             }
             let mut added: Vec<String> = Vec::new();
             for (n, _) in bindings {
+                if bound.insert(n.clone()) {
+                    added.push(n.clone());
+                }
+            }
+            for e in body {
+                walk(e, bound, globals, found, seen, depth);
+            }
+            for n in added {
+                bound.remove(&n);
+            }
+        }
+
+        // LANG52: let* — each RHS is in scope of all prior bindings, so we
+        // bind incrementally as we walk.
+        Expr::LetStar(LetStar { bindings, body, .. }) => {
+            let mut added: Vec<String> = Vec::new();
+            for (n, rhs) in bindings {
+                // The RHS is walked BEFORE the name is bound — same as the
+                // compiler: each binding sees all *prior* names, but not itself.
+                walk(rhs, bound, globals, found, seen, depth);
                 if bound.insert(n.clone()) {
                     added.push(n.clone());
                 }

@@ -75,7 +75,10 @@ use interpreter_ir::{
 use lang_refined_types::{Kind, Predicate, RefinedType};
 
 use twig_parser::{
-    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, Match, MatchPat, NilLit, Program,
+    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+    Match, MatchPat, NilLit, Program,
     RecordDef, StrLit, SymLit, TypeAnnotation, UnionDef, VarRef,
 };
 
@@ -146,14 +149,26 @@ pub const MAX_COMPILE_DEPTH: usize = 256;
 // ---------------------------------------------------------------------------
 
 const BUILTINS: &[&str] = &[
-    // Arithmetic / comparison
+    // Arithmetic / comparison (TW00 core)
     "+", "-", "*", "/", "=", "<", ">",
+    // LANG52: extended comparisons and arithmetic
+    "<=", ">=", "modulo", "remainder", "quotient",
     // Cons cells
     "cons", "car", "cdr",
-    // Predicates
+    // Predicates (TW00 core)
     "null?", "pair?", "number?", "symbol?",
+    // LANG52: boolean and type predicates
+    "not", "boolean?",
+    // LANG52: structural equality
+    "equal?",
+    // LANG52: list stdlib
+    "list", "length", "append", "reverse", "list-ref", "assoc", "list?",
+    // LANG52: symbol utilities
+    "symbol-append",
     // I/O
     "print",
+    // Host I/O (LANG52) — these dispatch via call_builtin to exec_host_call
+    "host/write_string", "host/read_line", "host/read_file",
 ];
 
 fn is_builtin(name: &str) -> bool {
@@ -695,6 +710,9 @@ impl Compiler {
 
             Expr::Let(l) => self.compile_let(l, ctx),
 
+            // LANG52: sequential let* — compile via compile_let_star.
+            Expr::LetStar(l) => self.compile_let_star(l, ctx),
+
             Expr::Lambda(l) => self.compile_anonymous_lambda(l, ctx),
 
             Expr::Apply(a) => self.compile_apply(a, ctx),
@@ -863,8 +881,194 @@ impl Compiler {
         Ok(last)
     }
 
+    /// LANG52: compile `(let* ((x e1) (y e2) ...) body+)`.
+    ///
+    /// Unlike `compile_let`, each binding's RHS is compiled AFTER the previous
+    /// binding is added to locals — so each name is in scope for all subsequent
+    /// RHSs.  This is Scheme `let*` semantics.
+    ///
+    /// ```text
+    /// ; (let* ((a 1) (b (+ a 1))) b)
+    /// const  %n0  = 1              ; compile a=1 in outer scope
+    /// _move  a    ← %n0           ; bind 'a' into locals (now in scope)
+    /// call_builtin +, a, 1 → %n1  ; compile b=(+ a 1) — 'a' is visible
+    /// _move  b    ← %n1           ; bind 'b' into locals
+    /// ret    b
+    /// ```
+    fn compile_let_star(&mut self, expr: &LetStar, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(expr.line, expr.column);
+        let mut added: Vec<String> = Vec::new();
+
+        for (name, rhs) in &expr.bindings {
+            // Compile the RHS in the current scope (which already includes
+            // all prior let* bindings).
+            let v = self.compile_expr(rhs, ctx)?;
+
+            // Bind the name into locals BEFORE compiling the next binding.
+            if ctx.locals.insert(name.clone()) {
+                added.push(name.clone());
+            }
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(name.clone()),
+                vec![Operand::Var("_move".into()), Operand::Var(v)],
+                "any",
+            ), loc);
+        }
+
+        // Compile body — parser-enforced at least one expression.
+        let mut last: Option<String> = None;
+        for e in &expr.body {
+            last = Some(self.compile_expr(e, ctx)?);
+        }
+        let last = last.expect("parser rejects empty let* body");
+
+        // Remove bindings so they don't leak into enclosing scope peers.
+        for n in added {
+            ctx.locals.remove(&n);
+        }
+        Ok(last)
+    }
+
+    // ── LANG52: and / or compile-time special forms ───────────────────────────
+
+    /// Compile `(and args…)` with short-circuit semantics.
+    ///
+    /// Expansion rules (PEG-style, applied left-to-right):
+    ///   `(and)`         → emit `const #t`, return the register
+    ///   `(and e)`       → compile e, return its register
+    ///   `(and e1 e2 …)` → compile e1; if truthy, evaluate `(and e2 …)`; else `#f`
+    ///
+    /// The result register holds the value of the last evaluated sub-expression,
+    /// or `#f` if any sub-expression was falsy.  This matches Scheme semantics.
+    ///
+    /// IIR pattern (mirrors `compile_if`):
+    ///   `jmp_if_false cond, else_label`
+    ///   then-path: compile rest, _move into dest, jmp end
+    ///   else-path: label else_label; const #f, _move into dest
+    ///   label end_label
+    fn compile_and(&mut self, args: &[Expr], ctx: &mut FnCtx, loc: SourceLoc) -> Result<String, TwigCompileError> {
+        match args {
+            [] => {
+                // (and) → #t
+                let v = ctx.fresh_var("and");
+                ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(true)], "any"), loc);
+                Ok(v)
+            }
+            [e] => {
+                // (and e) → e
+                self.compile_expr(e, ctx)
+            }
+            [first, rest @ ..] => {
+                // (and e1 e2 …) → if e1 then (and e2 …) else #f
+                let cond = self.compile_expr(first, ctx)?;
+                let dest = ctx.fresh_var("and");
+                let else_label = ctx.fresh_label("and_else");
+                let end_label  = ctx.fresh_label("and_end");
+
+                // jmp_if_false cond → else_label
+                ctx.emit(IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(cond), Operand::Var(else_label.clone())],
+                    "void"), loc);
+
+                // Then path: compile rest, copy to dest, jump to end.
+                let then_val = self.compile_and(rest, ctx, loc)?;
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(then_val)], "any"), loc);
+                ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
+
+                // Else path: dest ← #f
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(else_label)], "void"), loc);
+                let false_tmp = ctx.fresh_var("f");
+                ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()), vec![Operand::Bool(false)], "any"), loc);
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(false_tmp)], "any"), loc);
+
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
+                Ok(dest)
+            }
+        }
+    }
+
+    /// Compile `(or args…)` with short-circuit semantics.
+    ///
+    /// Expansion rules:
+    ///   `(or)`          → emit `const #f`, return the register
+    ///   `(or e)`        → compile e, return its register
+    ///   `(or e1 e2 …)`  → evaluate e1; if truthy return it, else `(or e2 …)`
+    ///
+    /// The result register holds the first truthy value, or the value of the
+    /// last sub-expression if all were falsy.  This matches Scheme semantics.
+    fn compile_or(&mut self, args: &[Expr], ctx: &mut FnCtx, loc: SourceLoc) -> Result<String, TwigCompileError> {
+        match args {
+            [] => {
+                // (or) → #f
+                let v = ctx.fresh_var("or");
+                ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(false)], "any"), loc);
+                Ok(v)
+            }
+            [e] => {
+                // (or e) → e
+                self.compile_expr(e, ctx)
+            }
+            [first, rest @ ..] => {
+                // (or e1 e2 …): if e1 is truthy return e1, else (or e2 …)
+                let cond = self.compile_expr(first, ctx)?;
+                let dest = ctx.fresh_var("or");
+                let falsy_label = ctx.fresh_label("or_falsy");
+                let end_label   = ctx.fresh_label("or_end");
+
+                // jmp_if_false cond → falsy_label (i.e. if cond is FALSE, skip)
+                ctx.emit(IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(cond.clone()), Operand::Var(falsy_label.clone())],
+                    "void"), loc);
+
+                // Truthy path: dest ← cond, jump to end.
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(cond)], "any"), loc);
+                ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
+
+                // Falsy path: evaluate rest.
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(falsy_label)], "void"), loc);
+                let rest_val = self.compile_or(rest, ctx, loc)?;
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(rest_val)], "any"), loc);
+
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
+                Ok(dest)
+            }
+        }
+    }
+
     fn compile_apply(&mut self, expr: &Apply, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
+        // ── LANG52: `and` / `or` short-circuit special forms ─────────────────
+        //
+        // `and` and `or` require short-circuit evaluation — the second argument
+        // must NOT be evaluated when the first is sufficient.  We intercept them
+        // at the apply site and lower them inline to `if` chains.  They do NOT
+        // appear in BUILTINS and never reach the runtime.
+        //
+        // | Expression      | Expansion                         |
+        // |-----------------|-----------------------------------|
+        // | (and)           | #t                                |
+        // | (and e)         | e                                 |
+        // | (and e1 e2 …)   | (if e1 (and e2 …) #f)            |
+        // | (or)            | #f                                |
+        // | (or e)          | e                                 |
+        // | (or e1 e2 …)    | emit cond-reg; if cond-reg return |
+        //
+        // The expansions are done recursively by re-entering compile_apply
+        // so the depth counter naturally bounds them.
+        if let Expr::VarRef(v) = expr.fn_expr.as_ref() {
+            if v.name == "and" {
+                return self.compile_and(&expr.args, ctx, loc);
+            }
+            if v.name == "or" {
+                return self.compile_or(&expr.args, ctx, loc);
+            }
+        }
+
         // Direct call: fn is a VarRef whose name is a top-level
         // function or a builtin.  We materialise this decision at
         // compile time so the hot path stays a single `call`.
