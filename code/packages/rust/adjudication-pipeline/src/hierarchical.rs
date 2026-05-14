@@ -77,11 +77,6 @@ pub const DEFAULT_MAX_RETRIES_PER_PARENT: usize = 3;
 /// LLM call.
 pub const PER_LEVEL_DISPATCH_CAP: usize = 1_024;
 
-/// Hard cap on parsed source-span count per LLM response. A
-/// well-behaved response carries one span per node; this exists to
-/// blunt an adversarial response that emits millions of spans.
-const MAX_SPANS_PER_NODE: usize = 64;
-
 /// Hard cap on term-tree depth during JSON parsing. Bounds recursive
 /// term walks so a deeply nested LLM response cannot stack-overflow
 /// the parser.
@@ -253,6 +248,7 @@ pub fn decompose_hierarchical(
                 &mut ir,
                 &parent_node,
                 outcome.corrected_children,
+                &req.source_text,
                 level,
                 &mut id_state,
             )?;
@@ -297,7 +293,8 @@ pub fn decompose_hierarchical(
             };
             let prior_children =
                 snapshot_children_as_json(&ir, &gap.parent_node_id, &req.source_text);
-            let gap_description = render_gap_description(gap);
+            let gap_description =
+                render_gap_description(gap, &parent_node, &req.source_text);
             let outcome = dispatch_level_call(
                 &parent_node,
                 &req.source_text,
@@ -319,6 +316,7 @@ pub fn decompose_hierarchical(
                 &mut ir,
                 &parent_node,
                 outcome.corrected_children,
+                &req.source_text,
                 gap.level,
                 &mut id_state,
             )?;
@@ -550,6 +548,7 @@ fn splice_children(
     ir: &mut IRDocument,
     parent: &IRNode,
     children_json: serde_json::Value,
+    full_source: &str,
     level: DecompLevel,
     id_state: &mut IdState,
 ) -> Result<(), HierarchicalDecomposeError> {
@@ -568,20 +567,79 @@ fn splice_children(
         }
     };
     let allowed = allowed_kinds_for_level(level);
-    let parent_span = parent.source_spans.first().cloned();
+    let parent_start_in_doc = parent
+        .source_spans
+        .first()
+        .map(|s| s.start)
+        .unwrap_or(0);
+    let parent_end_in_doc = parent
+        .source_spans
+        .first()
+        .map(|s| s.end)
+        .unwrap_or(full_source.len());
+    let parent_bytes = if parent_start_in_doc < parent_end_in_doc
+        && parent_end_in_doc <= full_source.len()
+    {
+        &full_source[parent_start_in_doc..parent_end_in_doc]
+    } else {
+        ""
+    };
     let id_prefix = match level {
         DecompLevel::DocumentToSentence => "S",
         DecompLevel::SentenceToPhrase => "P",
         DecompLevel::PhraseToClaim => "C",
         DecompLevel::FactToTypedComponent => "T",
     };
+    // ADJ27 content-matching: the LLM emits `text` for each child;
+    // the framework matches each text left-to-right against the
+    // parent's bytes to derive absolute spans. The cursor advances
+    // past each match, so duplicate substrings in the parent are
+    // distinguished by occurrence order, and out-of-order claims
+    // are surfaced as content-not-found (which the coverage check
+    // then renders as an uncovered-range gap).
+    let mut cursor: usize = 0;
     let mut accepted_children: Vec<(NodeId, NodeKind)> = Vec::new();
     for raw in nodes_raw.into_iter().take(PER_LEVEL_DISPATCH_CAP) {
-        let Some(node) =
-            parse_child_node(&raw, &ir.document_id, parent_span.as_ref(), allowed, id_state, id_prefix)
+        let Some((mut node, claimed_text)) =
+            parse_child_node(&raw, allowed, id_state, id_prefix)
         else {
             continue;
         };
+        let needle = claimed_text.unwrap_or_default();
+        if needle.is_empty() {
+            // Synthesized Entity / synthesized object — accept
+            // with empty spans. The coverage check handles the
+            // exemption.
+            if node.kind == NodeKind::Entity {
+                accepted_children.push((node.id.clone(), node.kind));
+                ir.nodes.push(node);
+            }
+            continue;
+        }
+        let search_in = if cursor <= parent_bytes.len() {
+            &parent_bytes[cursor..]
+        } else {
+            ""
+        };
+        let Some(rel_match) = search_in.find(needle.as_str()) else {
+            // Content not found in remaining parent text. Skip
+            // this child — the coverage check will later surface
+            // the bytes left uncovered.
+            continue;
+        };
+        let abs_start_in_parent = cursor + rel_match;
+        let abs_end_in_parent = abs_start_in_parent + needle.len();
+        if abs_end_in_parent > parent_bytes.len() {
+            continue;
+        }
+        let abs_start_in_doc = parent_start_in_doc + abs_start_in_parent;
+        let abs_end_in_doc = parent_start_in_doc + abs_end_in_parent;
+        node.source_spans = vec![Span::new(
+            ir.document_id.clone(),
+            abs_start_in_doc,
+            abs_end_in_doc,
+        )];
+        cursor = abs_end_in_parent;
         accepted_children.push((node.id.clone(), node.kind));
         ir.nodes.push(node);
     }
@@ -613,17 +671,13 @@ fn snapshot_children_as_json(
     full_source: &str,
 ) -> serde_json::Value {
     let mut nodes: Vec<serde_json::Value> = Vec::new();
-    let parent_node = match find_node(ir, parent_id) {
-        Some(n) => n,
-        None => {
-            return serde_json::json!({ "nodes": nodes });
-        }
-    };
-    let parent_start = parent_node
-        .source_spans
-        .first()
-        .map(|s| s.start)
-        .unwrap_or(0);
+    if find_node(ir, parent_id).is_none() {
+        return serde_json::json!({ "nodes": nodes });
+    }
+    // ADJ27: snapshot uses the same content-shaped contract as the
+    // primitive. Each child's `text` is the literal substring of
+    // the document its spans cover. The model never sees byte
+    // ranges in the snapshot — only the strings it claimed.
     for edge in &ir.edges {
         if edge.relation != EdgeRelation::Contains || edge.source != *parent_id {
             continue;
@@ -631,61 +685,131 @@ fn snapshot_children_as_json(
         let Some(child) = find_node(ir, &edge.target) else {
             continue;
         };
-        let span_relative: Vec<serde_json::Value> = child
+        let text_for_child = child
             .source_spans
-            .iter()
-            .map(|s| {
-                serde_json::json!({
-                    "start": s.start.saturating_sub(parent_start),
-                    "end": s.end.saturating_sub(parent_start),
-                })
+            .first()
+            .and_then(|s| {
+                let start = s.start.min(full_source.len());
+                let end = s.end.min(full_source.len());
+                if start < end {
+                    Some(full_source[start..end].to_string())
+                } else {
+                    None
+                }
             })
-            .collect();
+            .unwrap_or_default();
         nodes.push(serde_json::json!({
             "id": child.id.0,
             "kind": format!("{:?}", child.kind),
             "term": term_to_json(&child.term),
             "polarity": polarity_to_str(child.polarity),
             "modality": modality_to_str(child.modality),
-            "source_spans": span_relative,
+            "text": text_for_child,
         }));
     }
-    let _ = full_source;
     serde_json::json!({ "nodes": nodes })
 }
 
-fn render_gap_description(gap: &HierarchicalGap) -> String {
+/// Render a gap into a content-shaped description for the retry
+/// prompt. ADJ27: instead of speaking in byte ranges (which the
+/// model is bad at), the framework extracts the LITERAL missing
+/// substrings from the source and shows them to the model. The
+/// model sees text it forgot to account for, not arithmetic to do.
+fn render_gap_description(
+    gap: &HierarchicalGap,
+    parent_node: &IRNode,
+    full_source: &str,
+) -> String {
+    let parent_start = parent_node
+        .source_spans
+        .first()
+        .map(|s| s.start)
+        .unwrap_or(0);
+    let parent_end = parent_node
+        .source_spans
+        .first()
+        .map(|s| s.end)
+        .unwrap_or(full_source.len());
+    let parent_text = if parent_start < parent_end && parent_end <= full_source.len() {
+        &full_source[parent_start..parent_end]
+    } else {
+        ""
+    };
     match &gap.kind {
-        HierarchicalGapKind::UncoveredBytes { ranges } => format!(
-            "the following byte range(s) of the parent were not covered by any child: {ranges:?}"
-        ),
-        HierarchicalGapKind::Overlap { ranges, participants } => format!(
-            "two or more children overlapped on byte range(s) {ranges:?} (participants: {ids:?})",
-            ids = participants.iter().map(|n| &n.0).collect::<Vec<_>>()
-        ),
-        HierarchicalGapKind::EmptyChildSpan { child_id } => format!(
-            "child {} was emitted with an empty span; every child must cover \
-             at least one byte (synthesized Entity is the only exception)",
-            child_id.0
-        ),
-        HierarchicalGapKind::ChildSpansEscape { child_id, outside } => format!(
-            "child {} produced a span outside the parent's bounds: {outside:?}",
-            child_id.0
-        ),
-        HierarchicalGapKind::NoChildrenAtLevel => {
-            "the parent has no children — the decomposition must produce at least one"
-                .to_string()
+        HierarchicalGapKind::UncoveredBytes { ranges } => {
+            // Translate document-absolute ranges into the literal
+            // missing substrings of the parent text.
+            let missing_strs: Vec<String> = ranges
+                .iter()
+                .filter_map(|(s, e)| {
+                    let s = (*s).min(full_source.len());
+                    let e = (*e).min(full_source.len());
+                    if s < e {
+                        Some(format!("\"{}\"", &full_source[s..e]))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            format!(
+                "Your previous attempt covered some of the parent text but not all of it. \
+                 The parent text is exactly:\n  \"{parent_text}\"\n\n\
+                 You missed the following piece(s): {}.\n\n\
+                 Please redo the decomposition over the ENTIRE parent text. Every \
+                 character — including the missed piece(s) above — must appear in \
+                 exactly one child's `text` field. Do not skip any characters.",
+                missing_strs.join(", "),
+            )
         }
+        HierarchicalGapKind::Overlap { ranges, .. } => {
+            let overlap_strs: Vec<String> = ranges
+                .iter()
+                .filter_map(|(s, e)| {
+                    let s = (*s).min(full_source.len());
+                    let e = (*e).min(full_source.len());
+                    if s < e {
+                        Some(format!("\"{}\"", &full_source[s..e]))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            format!(
+                "Two or more of your children claimed the same piece(s) of the parent \
+                 text: {}. Each character of the parent must appear in EXACTLY ONE \
+                 child's `text` field. Redo the decomposition without overlapping \
+                 claims.",
+                overlap_strs.join(", "),
+            )
+        }
+        HierarchicalGapKind::EmptyChildSpan { child_id } => format!(
+            "Child {} had no `text`; every child must claim a non-empty substring \
+             of the parent.",
+            child_id.0
+        ),
+        HierarchicalGapKind::ChildSpansEscape { child_id, .. } => format!(
+            "Child {}'s `text` did not match any substring of the parent. Make sure \
+             every child's `text` is a LITERAL substring of the parent, character \
+             for character.",
+            child_id.0
+        ),
+        HierarchicalGapKind::NoChildrenAtLevel => format!(
+            "The parent text is:\n  \"{parent_text}\"\n\n\
+             You produced no children. Please decompose the parent text into one \
+             or more children whose `text` fields together cover every character.",
+        ),
         HierarchicalGapKind::WrongChildKindForLevel {
             child_id,
             child_kind,
         } => format!(
-            "child {} has kind {:?}, which is not allowed at this decomposition level",
-            child_id.0, child_kind
+            "Child {} had kind {:?}, which is not allowed at this level. See the \
+             system prompt for the allowed kinds.",
+            child_id.0, child_kind,
         ),
         HierarchicalGapKind::FlattenedAtom { atom, reason, .. } => format!(
-            "the atom \"{atom}\" smuggles source content into a name ({reason:?}); \
-             surface the underlying values as typed components instead"
+            "The atom \"{atom}\" smuggles source content into its name ({reason:?}). \
+             Surface the underlying values as separate components (Quantity for \
+             numbers, Entity for nouns) instead of flattening them into one atom."
         ),
     }
 }
@@ -694,14 +818,26 @@ fn render_gap_description(gap: &HierarchicalGap) -> String {
 // JSON-to-IR parsing
 // ---------------------------------------------------------------------------
 
+/// Parse one LLM-emitted child node. Returns the IR node (with
+/// EMPTY `source_spans` — those are computed by `splice_children`
+/// via content-matching against the parent text) and the literal
+/// `text` field the model emitted, if any.
+///
+/// ADJ27: the contract is content-based, not byte-offset-based.
+/// The LLM emits the exact substring it is claiming for each child;
+/// `splice_children` matches that substring left-to-right against
+/// the parent's bytes to derive document-absolute spans. The model
+/// never does byte arithmetic.
+///
+/// Legacy `source_spans` arrays are NOT read — older LLM responses
+/// emitting byte offsets are not accepted; the orchestrator returns
+/// an empty span list and the coverage check surfaces the gap.
 fn parse_child_node(
     v: &serde_json::Value,
-    doc_id: &DocumentId,
-    parent_span: Option<&Span>,
     allowed_kinds: &[NodeKind],
     id_state: &mut IdState,
     id_prefix: &str,
-) -> Option<IRNode> {
+) -> Option<(IRNode, Option<String>)> {
     let obj = v.as_object()?;
     let kind = parse_kind(obj.get("kind").and_then(|v| v.as_str())?)?;
     if !allowed_kinds.contains(&kind) {
@@ -725,7 +861,14 @@ fn parse_child_node(
         .and_then(|v| v.as_str())
         .map(parse_modality)
         .unwrap_or(Modality::Present);
-    let source_spans = parse_spans(obj.get("source_spans"), doc_id, parent_span);
+    // ADJ27: read the LLM-supplied `text` substring. The caller
+    // (`splice_children`) matches this against the parent text to
+    // compute spans. We don't do that here so this function stays
+    // a pure parse step.
+    let claimed_text = obj
+        .get("text")
+        .and_then(|t| t.as_str())
+        .map(|s| s.to_string());
     let discard_reason = if kind == NodeKind::Discarded {
         Some(adjudication_ir::DiscardReason::NonDomainContent)
     } else {
@@ -737,7 +880,7 @@ fn parse_child_node(
         term,
         polarity,
         modality,
-        source_spans,
+        source_spans: vec![],
         confidence: 1.0,
         discard_reason,
         metadata: HashMap::new(),
@@ -747,7 +890,7 @@ fn parse_child_node(
     // mirrors the Contains-edge hierarchy.
     let corr = correlation_id_for_node(&node.id);
     set_node_correlation_id(&mut node, corr);
-    Some(node)
+    Some((node, claimed_text))
 }
 
 fn parse_term(v: &serde_json::Value, depth: usize) -> Option<Term> {
@@ -823,55 +966,6 @@ fn parse_modality(s: &str) -> Modality {
         "Inherit" => Modality::Inherit,
         _ => Modality::Present,
     }
-}
-
-fn parse_spans(
-    v: Option<&serde_json::Value>,
-    doc_id: &DocumentId,
-    parent_span: Option<&Span>,
-) -> Vec<Span> {
-    let Some(arr) = v.and_then(|v| v.as_array()) else {
-        return vec![];
-    };
-    let mut out: Vec<Span> = Vec::new();
-    let bounded = if arr.len() > MAX_SPANS_PER_NODE {
-        &arr[..MAX_SPANS_PER_NODE]
-    } else {
-        arr.as_slice()
-    };
-    let parent_start = parent_span.map(|s| s.start).unwrap_or(0);
-    let parent_end = parent_span
-        .map(|s| s.end)
-        .unwrap_or(usize::MAX);
-    for s in bounded {
-        let obj = match s.as_object() {
-            Some(o) => o,
-            None => continue,
-        };
-        let Some(start_v) = obj.get("start").and_then(|x| x.as_u64()) else {
-            continue;
-        };
-        let Some(end_v) = obj.get("end").and_then(|x| x.as_u64()) else {
-            continue;
-        };
-        let start = start_v as usize;
-        let end = end_v as usize;
-        if start >= end {
-            continue;
-        }
-        // The LLM is asked to report spans relative to the parent's
-        // text (offset 0 = parent's first byte). Translate to
-        // document-absolute by adding the parent's start. Clamp to
-        // the parent's range so a misbehaving response cannot
-        // produce a span that extends past the parent.
-        let abs_start = parent_start.saturating_add(start).min(parent_end);
-        let abs_end = parent_start.saturating_add(end).min(parent_end);
-        if abs_start >= abs_end {
-            continue;
-        }
-        out.push(Span::new(doc_id.clone(), abs_start, abs_end));
-    }
-    out
 }
 
 // ---------------------------------------------------------------------------
@@ -993,12 +1087,20 @@ mod tests {
         || "2026-05-13T00:00:00Z".to_string()
     }
 
+    /// Build a JSON child node in the ADJ27 content-shaped contract:
+    /// the LLM emits the literal substring it claims for the child,
+    /// and the framework computes spans by matching that text
+    /// against the parent text. The `_start`/`_end` arguments are
+    /// retained for test-call-site readability (so each test cell
+    /// can document what byte range it expects to land at) but the
+    /// orchestrator never reads them.
     fn child_node(
         id: &str,
         kind: &str,
-        start: usize,
-        end: usize,
+        _start: usize,
+        _end: usize,
         atom_name: &str,
+        text: &str,
     ) -> serde_json::Value {
         serde_json::json!({
             "id": id,
@@ -1006,7 +1108,7 @@ mod tests {
             "term": { "atom": atom_name },
             "polarity": "Affirmed",
             "modality": "Present",
-            "source_spans": [{ "start": start, "end": end }]
+            "text": text,
         })
     }
 
@@ -1026,10 +1128,10 @@ mod tests {
         //   Phrase → Claim: 1 Fact covering [0, 7) (relative)
         //   Fact → TypedComponent: 1 Entity covering [0, 7) (relative)
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
-            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
-            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
-            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches", "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches", "matches")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
@@ -1052,42 +1154,83 @@ mod tests {
     }
 
     #[test]
-    fn adj25_parse_spans_translates_to_document_absolute() {
-        // Unit-level test for the parent-relative → document-absolute
-        // span translation. The LLM emits spans relative to the
-        // parent's text; the orchestrator translates to absolute
-        // offsets by adding the parent's `span.start`.
-        let doc_id = DocumentId::new("doc1");
-        let parent_span = Span::new(doc_id.clone(), 4, 10); // doc [4..10)
-        let llm_emitted_spans = serde_json::json!([
-            { "start": 0, "end": 3 },
-            { "start": 3, "end": 6 }
+    fn adj27_text_matching_derives_document_absolute_spans() {
+        // ADJ27: the LLM emits `text` per child; the orchestrator
+        // matches each text left-to-right against the parent's
+        // bytes and derives absolute spans. End-to-end test through
+        // the orchestrator: source "ABCDEFGHIJ" with a Sentence
+        // covering "ABCDEFGHIJ", then a Phrase covering "ABC", a
+        // Phrase covering "DEFGHIJ" — and the framework places
+        // them at doc [0..3) and doc [3..10).
+        let gateway = gateway_with(vec![
+            // Doc → Sentence: one Sentence covering the full doc
+            one_node_response(child_node(
+                "Sa", "Sentence", 0, 10, "sent", "ABCDEFGHIJ",
+            )),
+            // Sentence → Phrase: two phrases tiling the sentence
+            serde_json::json!({
+                "document_id": "doc1",
+                "nodes": [
+                    child_node("Pa", "Phrase", 0, 3, "p1", "ABC"),
+                    child_node("Pb", "Phrase", 3, 10, "p2", "DEFGHIJ"),
+                ]
+            }),
+            // Phrase Pa → Claim
+            one_node_response(child_node("Fa", "Fact", 0, 3, "fa", "ABC")),
+            // Phrase Pb → Claim
+            one_node_response(child_node("Fb", "Fact", 0, 7, "fb", "DEFGHIJ")),
+            // Fact Fa → TypedComponent
+            one_node_response(child_node("Ea", "Entity", 0, 3, "ea", "ABC")),
+            // Fact Fb → TypedComponent
+            one_node_response(child_node("Eb", "Entity", 0, 7, "eb", "DEFGHIJ")),
         ]);
-        let parsed =
-            parse_spans(Some(&llm_emitted_spans), &doc_id, Some(&parent_span));
-        assert_eq!(parsed.len(), 2);
-        // Relative 0..3 → absolute 4..7
-        assert_eq!(parsed[0].start, 4);
-        assert_eq!(parsed[0].end, 7);
-        // Relative 3..6 → absolute 7..10
-        assert_eq!(parsed[1].start, 7);
-        assert_eq!(parsed[1].end, 10);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "ABCDEFGHIJ".into(),
+            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+        };
+        let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
+        // Phrase Pa should land at doc [0..3); Phrase Pb at doc [3..10).
+        let phrases: Vec<_> = out
+            .ir_document
+            .nodes
+            .iter()
+            .filter(|n| n.kind == NodeKind::Phrase)
+            .collect();
+        assert_eq!(phrases.len(), 2);
+        assert_eq!(phrases[0].source_spans[0].start, 0);
+        assert_eq!(phrases[0].source_spans[0].end, 3);
+        assert_eq!(phrases[1].source_spans[0].start, 3);
+        assert_eq!(phrases[1].source_spans[0].end, 10);
     }
 
     #[test]
-    fn adj25_parse_spans_clamps_past_parent_end() {
-        // A misbehaving response that emits a relative span
-        // extending past the parent's end is clamped to the parent's
-        // bounds. (The coverage check will still catch the resulting
-        // gap, but at least the orchestrator doesn't pollute the IR
-        // with spans escaping the parent.)
-        let doc_id = DocumentId::new("doc1");
-        let parent_span = Span::new(doc_id.clone(), 0, 5);
-        let too_far = serde_json::json!([{ "start": 0, "end": 100 }]);
-        let parsed = parse_spans(Some(&too_far), &doc_id, Some(&parent_span));
-        assert_eq!(parsed.len(), 1);
-        assert_eq!(parsed[0].start, 0);
-        assert_eq!(parsed[0].end, 5); // clamped
+    fn adj27_text_not_in_parent_is_skipped() {
+        // LLM emits text that doesn't appear in the parent at all —
+        // the framework skips the child (no spans assigned). The
+        // coverage check then surfaces the bytes as uncovered.
+        let gateway = gateway_with(vec![
+            one_node_response(child_node(
+                "Sa", "Sentence", 0, 5, "sent", "ZZZZZZZ", // not in "hello"
+            )),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "hello".into(),
+            max_retries_per_parent: 0,
+        };
+        let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
+        // Document has no children (the fabricated text was rejected);
+        // coverage check surfaces NoChildrenAtLevel.
+        match err {
+            HierarchicalDecomposeError::CoverageUnresolved { gaps } => {
+                assert!(gaps.iter().any(|g| matches!(
+                    g.kind,
+                    HierarchicalGapKind::NoChildrenAtLevel
+                )));
+            }
+            other => panic!("expected CoverageUnresolved, got {other:?}"),
+        }
     }
 
     #[test]
@@ -1116,7 +1259,7 @@ mod tests {
         // filter, leaving the Document with no children — then
         // the coverage check will report no_children_at_level.
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Px", "Phrase", 0, 5, "phr")),
+            one_node_response(child_node("Px", "Phrase", 0, 5, "phr", "hello")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
@@ -1143,18 +1286,18 @@ mod tests {
         // covering only [0..3). With max_retries_per_parent=1, the
         // retry budget is exhausted on the second pass.
         let gateway = gateway_with(vec![
-            one_node_response(child_node("S1", "Sentence", 0, 3, "s")),
+            one_node_response(child_node("S1", "Sentence", 0, 3, "s", "hel")),
             // Phrase / Claim / TypedComp for the 0..3 sub-tree
             // so the inner levels can complete cleanly.
-            one_node_response(child_node("P1", "Phrase", 0, 3, "p")),
-            one_node_response(child_node("F1", "Fact", 0, 3, "f")),
-            one_node_response(child_node("E1", "Entity", 0, 3, "e")),
+            one_node_response(child_node("P1", "Phrase", 0, 3, "p", "hel")),
+            one_node_response(child_node("F1", "Fact", 0, 3, "f", "hel")),
+            one_node_response(child_node("E1", "Entity", 0, 3, "e", "hel")),
             // Retry on Document — still only [0..3).
-            one_node_response(child_node("S2", "Sentence", 0, 3, "s")),
+            one_node_response(child_node("S2", "Sentence", 0, 3, "s", "hel")),
             // Inner levels for the replacement sub-tree.
-            one_node_response(child_node("P2", "Phrase", 0, 3, "p")),
-            one_node_response(child_node("F2", "Fact", 0, 3, "f")),
-            one_node_response(child_node("E2", "Entity", 0, 3, "e")),
+            one_node_response(child_node("P2", "Phrase", 0, 3, "p", "hel")),
+            one_node_response(child_node("F2", "Fact", 0, 3, "f", "hel")),
+            one_node_response(child_node("E2", "Entity", 0, 3, "e", "hel")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
@@ -1205,10 +1348,10 @@ mod tests {
         // and assert `check_correlation_completeness` passes on the
         // result.
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
-            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
-            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
-            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches", "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches", "matches")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
@@ -1248,10 +1391,10 @@ mod tests {
     #[test]
     fn adj25_orchestrator_emits_correlation_ids_on_contains_edges() {
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
-            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
-            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
-            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches", "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches", "matches")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),

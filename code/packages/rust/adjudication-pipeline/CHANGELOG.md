@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-05-13 — orchestrator: content-shaped span derivation
+
+### Changed
+
+The hierarchical orchestrator now derives child `source_spans` by
+matching LLM-emitted `text` fields against the parent text — the
+model never computes byte offsets. Per
+`feedback_no_byte_arithmetic_for_llm`.
+
+Specifically:
+
+- `parse_child_node` reads each child's `text` field instead of
+  `source_spans` and returns `(IRNode, Option<String>)` so the
+  caller can do the content-matching.
+- `splice_children` walks LLM-emitted children left-to-right against
+  the parent text with a cursor. The leftmost match at-or-after the
+  cursor anchors the child's absolute spans; the cursor advances
+  past the match. Content fabrications (text not found in the
+  remaining parent) are skipped — the coverage check surfaces the
+  resulting gap.
+- `snapshot_children_as_json` (the prior-attempt rendering for
+  retries) emits `text` fields instead of `source_spans`, so the
+  model never sees its own byte offsets fed back.
+- `render_gap_description` extracts the LITERAL missing substrings
+  from the source and shows them to the model. Byte ranges are
+  banished from the retry prompt.
+- The dead `parse_spans` function and the `MAX_SPANS_PER_NODE`
+  constant were removed.
+
+### Tests
+
+Two prior parse_spans unit tests were replaced with content-shaped
+tests: `adj27_text_matching_derives_document_absolute_spans` (clean
+3-byte + 7-byte tiling with absolute-span verification) and
+`adj27_text_not_in_parent_is_skipped` (fabrication handling). Total
+hierarchical-module tests: 9, all passing. Workspace pipeline lib
+tests: 47/47.
+
+### Smoke benchmark
+
+Gemma4 against `"1 carry-on bag, matches."` cell wallclock dropped
+from 505s (ADJ27 byte-shaped contract) to 176s with the new content
+matching. Coverage still doesn't close fully — the model emits some
+text that doesn't match parent bytes verbatim — but more children
+are accepted into the IR per parent than before, and retries now
+ride on top of literal missing substrings rather than byte
+arithmetic.
+
+### Notes
+
+- Version: 0.11.0 → 0.12.0.
+
 ## [0.11.0] - 2026-05-13 — ADJ25 PR-6: foundation bench harness
 
 ### Added

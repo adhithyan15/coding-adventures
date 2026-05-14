@@ -908,18 +908,24 @@ fn build_hierarchical_correction_prompt(req: &HierarchicalDecompRetryRequest) ->
             )
         })
         .unwrap_or_default();
+    // ADJ27: the gap description from the orchestrator is already
+    // content-shaped (it names the literal missing substring rather
+    // than byte ranges), so the retry prompt just embeds it
+    // verbatim. The model never sees byte offsets — it sees the
+    // text it covered, the original parent text, and the literal
+    // characters it missed.
     format!(
-        "In the {parent_noun} \"{parent}\", a previous attempt produced:\n\n\
+        "In the {parent_noun} \"{parent}\", your previous attempt produced these \
+         children:\n\n\
          {prev}\n\
          {ancestor_block}\n\
-         But the following part of the {parent_noun} was not accounted for: {gap}\n\n\
-         Can you check this and produce a complete decomposition of the {parent_noun} \
-         into {children_noun}?\n\n\
-         Return JSON with the same shape the previous attempt used: a top-level object \
-         with a `nodes` array. Each node has `id`, `kind`, `term`, `polarity`, \
-         `modality`, and `source_spans`. Span offsets are bytes into the {parent_noun}'s \
-         text shown above, starting at 0. Cover every byte of the {parent_noun} \
-         exactly once — no gaps, no overlaps.",
+         {gap}\n\n\
+         Please redo the decomposition of the {parent_noun} into {children_noun}. \
+         Return JSON with the same shape as before: a top-level object with a \
+         `nodes` array, each node carrying `id`, `kind`, `term`, `polarity`, \
+         `modality`, and a `text` field that is the LITERAL substring of the \
+         {parent_noun} this node covers. Every character of the {parent_noun} \
+         must appear in exactly one child's `text` field.",
         parent_noun = parent_noun,
         parent = parent_safe,
         prev = previous_pretty,
@@ -2321,14 +2327,30 @@ mod tests {
         // Plain-English markers:
         assert!(prompt.contains("\"1 carry-on bag\""));
         assert!(prompt.contains("the substring '1'"));
-        assert!(prompt.contains("complete decomposition"));
+        // ADJ27 prompt asks the model to "redo the decomposition" —
+        // content-shaped, no byte arithmetic. The previous wording
+        // "complete decomposition" is replaced.
+        assert!(
+            prompt.contains("redo the decomposition")
+                || prompt.contains("complete decomposition"),
+            "prompt: {}",
+            prompt
+        );
         // Framework-jargon negative markers — must NOT appear.
         assert!(!prompt.contains("ADJ02"));
         assert!(!prompt.contains("ADJ25"));
+        assert!(!prompt.contains("ADJ27"));
         assert!(!prompt.contains("invariant"));
         // Level-specific wording.
         assert!(prompt.contains("fact"));
         assert!(prompt.contains("typed components"));
+        // ADJ27: byte-offset language is banished from the prompt.
+        // The model never sees "byte" or numeric ranges.
+        assert!(
+            !prompt.contains("byte offsets") && !prompt.contains("byte 0"),
+            "prompt should not reference byte offsets; got: {}",
+            prompt
+        );
     }
 
     #[test]
