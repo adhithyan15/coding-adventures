@@ -1,6 +1,6 @@
 [package]
 name = "llm-primitives"
-version = "0.11.0"
+version = "0.12.0"
 edition = "2021"
 description = "LM00b — typed LLM primitives layer. v0.11 bumps the decompose_text prompt to v5 (per ADJ21): the prompt now explicitly teaches typed-quantity extraction (every numerical value-with-unit in the source becomes a `quantity(value, unit)` compound term, never flattened into the predicate name). Includes a second worked example demonstrating the typed-quantity shape end-to-end so the engine can evaluate threshold comparisons deterministically rather than asking the LLM to do arithmetic inside its forward pass."
 

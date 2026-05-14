@@ -58,8 +58,9 @@ use adjudication_audit_trail::{
     DialogueOutcome, DialogueResponse, DialogueResponseSource, DialogueRung, DialogueTurn, TurnId,
 };
 use llm_primitives::{
-    decompose_text, render_node, DecomposeTextRequest, DecomposeTextResponse, GatewayConfig,
-    PrimitiveError, RenderNodeRequest, RenderNodeResponse,
+    decompose_level, decompose_text, render_node, DecomposeLevel as PrimitiveDecomposeLevel,
+    DecomposeLevelRequest, DecomposeLevelResponse, DecomposeTextRequest, DecomposeTextResponse,
+    GatewayConfig, PrimitiveError, RenderNodeRequest, RenderNodeResponse,
 };
 
 /// Stable version of the coverage-clarification prompt template.
@@ -676,6 +677,19 @@ impl DecompositionLevel {
             Self::FactToTypedComponent => "typed components (quantities, entities, etc.)",
         }
     }
+
+    /// Convert this clarification-side `DecompositionLevel` to the
+    /// `llm-primitives`-side `DecomposeLevel` so the primitive can
+    /// select its per-level system prompt. The two enums are
+    /// isomorphic by design; mapping is total.
+    fn to_primitive_level(self) -> PrimitiveDecomposeLevel {
+        match self {
+            Self::DocumentToSentence => PrimitiveDecomposeLevel::DocumentToSentence,
+            Self::SentenceToPhrase => PrimitiveDecomposeLevel::SentenceToPhrase,
+            Self::PhraseToClaim => PrimitiveDecomposeLevel::PhraseToClaim,
+            Self::FactToTypedComponent => PrimitiveDecomposeLevel::FactToTypedComponent,
+        }
+    }
 }
 
 /// Caller-supplied request for a hierarchical-decomposition retry.
@@ -759,28 +773,47 @@ pub fn retry_decompose_level(
 ) -> Result<HierarchicalDecompRetryOutcome, ClarificationError> {
     let mut dialogue: Vec<DialogueTurn> = Vec::new();
 
+    // ADJ27: when the orchestrator's "previous attempt" is empty
+    // (the initial dispatch path that the orchestrator funnels
+    // through this retry primitive for code-reuse), skip the
+    // correction-context wrapping. The level-aware system prompt
+    // does the lifting on the first attempt; correction only kicks
+    // in once there's an actual prior to correct.
+    let prior_is_empty = req
+        .previous_children
+        .get("nodes")
+        .and_then(|v| v.as_array())
+        .map(|a| a.is_empty())
+        .unwrap_or(true);
+
     for attempt in 1..=max_attempts.max(1) {
         // Each iteration builds the prompt fresh — no carryover
         // from prior iterations, no conversation context. The
         // model sees only what we choose to put in this prompt.
+        //
+        // ADJ27: the retry now routes through `decompose_level`,
+        // which carries a level-aware system prompt. The retry's
+        // correction prompt (prior attempt + gap description) flows
+        // through as `correction_context` ONLY when there is an
+        // actual prior attempt — initial dispatches see a clean
+        // system prompt + parent text + (optional) ancestor.
         let question_text = build_hierarchical_correction_prompt(req);
-        let scoped_request = DecomposeTextRequest {
+        let correction_for_primitive = if prior_is_empty {
+            None
+        } else {
+            Some(question_text.clone())
+        };
+        let scoped_request = DecomposeLevelRequest {
             document_id: req.document_id.clone(),
-            // The parent's bytes become the "source" for this
-            // scoped call. The model decomposes a chunk, not a
-            // whole document.
-            source_text: req.parent_text.clone(),
-            // The correction prompt rides in the domain_hint slot.
-            // decompose_text concatenates this verbatim into the
-            // user message; the model sees question_text after the
-            // standard system prompt.
-            domain_hint: question_text.clone(),
-            language_hint: None,
+            level: req.level.to_primitive_level(),
+            parent_text: req.parent_text.clone(),
+            correction_context: correction_for_primitive,
+            ancestor_context: req.ancestor_context.clone(),
         };
 
         let at = now();
-        let resp_result: Result<DecomposeTextResponse, PrimitiveError> =
-            decompose_text(&scoped_request, gateway);
+        let resp_result: Result<DecomposeLevelResponse, PrimitiveError> =
+            decompose_level(&scoped_request, gateway);
 
         match resp_result {
             Ok(resp) => {
