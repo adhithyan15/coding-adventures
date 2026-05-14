@@ -113,6 +113,7 @@ from sql_codegen import (
     UpdateRows,
     UpsertSpec,
     WinFunc,
+    WinFuncSpec,
 )
 from sql_codegen import IrAggFunc as AggFunc
 
@@ -1398,6 +1399,93 @@ def _do_distinct(st: _VmState) -> None:
     st.result.rows = out
 
 
+def _frame_slice(
+    partition: list[dict[str, SqlValue]],
+    i: int,
+    spec: WinFuncSpec,
+) -> list[dict[str, SqlValue]]:
+    """Return the window frame rows visible at position ``i`` of the partition.
+
+    Window frame semantics
+    ----------------------
+    SQL defines a default frame based on the presence of ORDER BY:
+
+    - ``ORDER BY`` absent → full-partition frame:
+        ``RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING``
+    - ``ORDER BY`` present → cumulative frame:
+        ``RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW``
+
+    When an explicit ``spec.frame`` is given, it overrides the default.
+
+    Implementation notes
+    --------------------
+    ``RANGE`` and ``GROUPS`` modes peer-group semantics are approximated as
+    ``ROWS`` physical positions — correct when all ORDER BY keys are distinct
+    (the common case).  For ``RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT
+    ROW``, the approximation is exact regardless of ties because the cumulative
+    default stops at the current physical row position.
+
+    Args:
+        partition: The sorted list of row dicts for this partition.
+        i:         0-based index of the current row within the partition.
+        spec:      The window function spec (carries frame + order_cols).
+
+    Returns:
+        A (possibly empty) sub-list of ``partition`` representing the frame
+        visible at row ``i``.
+    """
+    n = len(partition)
+    frame = spec.frame
+
+    if frame is None:
+        # Apply SQL-standard defaults.
+        if not spec.order_cols:
+            return partition          # full-partition frame
+        return partition[:i + 1]      # cumulative (UNBOUNDED PRECEDING → CURRENT ROW)
+
+    # --- Explicit frame ---------------------------------------------------
+    # Convert a FrameBound to an inclusive start index or exclusive end index.
+
+    def _start(bound: object) -> int:  # type: ignore[return]
+        """Inclusive start index."""
+        k: str = getattr(bound, "kind", "CURRENT_ROW")
+        off: int = getattr(bound, "offset", 0)
+        if k == "UNBOUNDED_PRECEDING":
+            return 0
+        if k == "CURRENT_ROW":
+            return i
+        if k == "PRECEDING":
+            return max(0, i - off)
+        if k == "FOLLOWING":
+            return min(n, i + off)
+        if k == "UNBOUNDED_FOLLOWING":
+            return n
+        return i                       # unreachable / defensive
+
+    def _end(bound: object) -> int:   # type: ignore[return]
+        """Exclusive end index (Python slice convention)."""
+        k: str = getattr(bound, "kind", "CURRENT_ROW")
+        off: int = getattr(bound, "offset", 0)
+        if k == "UNBOUNDED_PRECEDING":
+            return min(n, 1)           # only first row
+        if k == "CURRENT_ROW":
+            return i + 1
+        if k == "PRECEDING":
+            return max(0, i - off + 1)
+        if k == "FOLLOWING":
+            return min(n, i + off + 1)
+        if k == "UNBOUNDED_FOLLOWING":
+            return n
+        return i + 1                   # unreachable / defensive
+
+    s = _start(frame.start)
+    e = _end(frame.end)
+
+    if s >= e:
+        return []
+    return partition[s:e]
+
+
 def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
     """Evaluate all window functions against the materialised result buffer.
 
@@ -1489,62 +1577,94 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                             row[result_col] = rank
 
             elif func == WinFunc.SUM:
-                total: SqlValue = None
-                for row in partition:
-                    v = row.get(arg_col) if arg_col else None
-                    if v is not None:
-                        total = v if total is None else total + v  # type: ignore[operator]
-                for row in partition:
+                # SUM respects the window frame.  Default: full partition when
+                # no ORDER BY, cumulative (running) when ORDER BY present.
+                # _frame_slice handles both defaults and explicit ROWS/RANGE clauses.
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    total: SqlValue = None
+                    for fr in frame_rows:
+                        v = fr.get(arg_col) if arg_col else None
+                        if v is not None:
+                            total = v if total is None else total + v  # type: ignore[operator]
                     row[result_col] = total
 
             elif func == WinFunc.COUNT:
-                count = sum(1 for row in partition if arg_col and row.get(arg_col) is not None)
-                for row in partition:
-                    row[result_col] = count
+                # COUNT(col) respects the window frame (running count when ORDER BY).
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    row[result_col] = sum(
+                        1 for fr in frame_rows if arg_col and fr.get(arg_col) is not None
+                    )
 
             elif func == WinFunc.COUNT_STAR:
-                count = len(partition)
-                for row in partition:
-                    row[result_col] = count
+                # COUNT(*) respects the window frame (running count when ORDER BY).
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    row[result_col] = len(frame_rows)
 
             elif func == WinFunc.AVG:
-                vals = [
-                    row.get(arg_col) for row in partition
-                    if arg_col and row.get(arg_col) is not None
-                ]
-                avg: SqlValue = None
-                if vals:
-                    s = sum(float(v) for v in vals)  # type: ignore[arg-type]
-                    avg = s / len(vals)
-                for row in partition:
+                # AVG respects the window frame (running average when ORDER BY).
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    vals_avg = [
+                        fr.get(arg_col) for fr in frame_rows
+                        if arg_col and fr.get(arg_col) is not None
+                    ]
+                    avg: SqlValue = None
+                    if vals_avg:
+                        s_avg = sum(float(v) for v in vals_avg)  # type: ignore[arg-type]
+                        avg = s_avg / len(vals_avg)
                     row[result_col] = avg
 
             elif func == WinFunc.MIN:
+                # MIN respects the window frame (running min when ORDER BY).
                 def _min_key(v: SqlValue) -> tuple[int, object]:
                     return _win_sort_key(v)
-                vals = [row.get(arg_col) for row in partition if arg_col] if arg_col else []
-                non_null = [v for v in vals if v is not None]
-                min_val: SqlValue = min(non_null, key=_min_key) if non_null else None  # type: ignore[arg-type]
-                for row in partition:
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    non_null_min = [
+                        fr.get(arg_col) for fr in frame_rows
+                        if arg_col and fr.get(arg_col) is not None
+                    ]
+                    min_val: SqlValue = (
+                        min(non_null_min, key=_min_key) if non_null_min else None  # type: ignore[arg-type]
+                    )
                     row[result_col] = min_val
 
             elif func == WinFunc.MAX:
+                # MAX respects the window frame (running max when ORDER BY).
                 def _max_key(v: SqlValue) -> tuple[int, object]:
                     return _win_sort_key(v)
-                vals = [row.get(arg_col) for row in partition if arg_col] if arg_col else []
-                non_null = [v for v in vals if v is not None]
-                max_val: SqlValue = max(non_null, key=_max_key) if non_null else None  # type: ignore[arg-type]
-                for row in partition:
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    non_null_max = [
+                        fr.get(arg_col) for fr in frame_rows
+                        if arg_col and fr.get(arg_col) is not None
+                    ]
+                    max_val: SqlValue = (
+                        max(non_null_max, key=_max_key) if non_null_max else None  # type: ignore[arg-type]
+                    )
                     row[result_col] = max_val
 
             elif func == WinFunc.FIRST_VALUE:
-                first = partition[0].get(arg_col) if partition and arg_col else None
-                for row in partition:
+                # FIRST_VALUE: first row in the frame at each position.
+                # With the default cumulative frame the frame always starts
+                # at UNBOUNDED PRECEDING, so the first value never changes —
+                # it is always partition[0].  When an explicit frame narrows
+                # the start bound, the first visible value changes per row.
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    first = frame_rows[0].get(arg_col) if frame_rows and arg_col else None
                     row[result_col] = first
 
             elif func == WinFunc.LAST_VALUE:
-                last = partition[-1].get(arg_col) if partition and arg_col else None
-                for row in partition:
+                # LAST_VALUE: last row in the frame at each position.
+                # Default cumulative frame → last visible = current row.
+                # Explicit UNBOUNDED FOLLOWING frame → last = end of partition.
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    last = frame_rows[-1].get(arg_col) if frame_rows and arg_col else None
                     row[result_col] = last
 
             elif func == WinFunc.LAG:
@@ -1675,11 +1795,11 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
 
             elif func == WinFunc.NTH_VALUE:
                 # NTH_VALUE(col, n): return the value of ``col`` at the n-th
-                # row (1-indexed) of the partition.  Rows before the n-th row
-                # also receive that value (the window frame logically grows as
-                # each row is processed, but in our materialised model we simply
-                # broadcast the n-th value to all rows).  If the partition has
-                # fewer than n rows, return NULL.
+                # row (1-indexed) within the frame visible at each position.
+                # With the default cumulative frame (ORDER BY present), the
+                # frame at position i is partition[0..i]; a row whose 1-based
+                # position i+1 < n gets NULL because the n-th value has not
+                # yet entered the frame.
                 #
                 # extra_args = (n: int,) — 1-indexed.
                 (n_raw,) = spec.extra_args if spec.extra_args else (1,)
@@ -1690,11 +1810,12 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                         f"NTH_VALUE n must be an integer, got {type(n_raw).__name__!r}"
                     )
                 n_idx = n_raw - 1  # convert to 0-indexed
-                if 0 <= n_idx < len(partition) and arg_col:
-                    nth_val: SqlValue = partition[n_idx].get(arg_col)
-                else:
-                    nth_val = None
-                for row in partition:
+                for i, row in enumerate(partition):
+                    frame_rows = _frame_slice(partition, i, spec)
+                    if 0 <= n_idx < len(frame_rows) and arg_col:
+                        nth_val: SqlValue = frame_rows[n_idx].get(arg_col)
+                    else:
+                        nth_val = None
                     row[result_col] = nth_val
 
     # Project rows to output_cols and rebuild tuples.

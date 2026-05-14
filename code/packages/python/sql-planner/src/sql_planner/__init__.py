@@ -100,6 +100,7 @@ from .plan import (
     EmptyResult,
     Except,
     Filter,
+    FrameBound,
     Having,
     IndexScan,
     Insert,
@@ -120,6 +121,7 @@ from .plan import (
     UpsertAssignment,
     WindowAgg,
     WindowFuncSpec,
+    WinFrame,
     WorkingSetScan,
     children,
 )
@@ -239,8 +241,10 @@ __all__ = [
     "Update",
     "UpsertAction",
     "UpsertAssignment",
+    "FrameBound",
     "WindowAgg",
     "WindowFuncSpec",
+    "WinFrame",
     "children",
     # Errors
     "AmbiguousColumn",

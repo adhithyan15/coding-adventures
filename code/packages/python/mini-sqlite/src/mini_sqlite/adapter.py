@@ -66,6 +66,7 @@ from sql_planner import (
     ExceptStmt,
     ExcludedColumn,
     ExistsSubquery,
+    FrameBound,
     FuncArg,
     FunctionCall,
     In,
@@ -101,6 +102,7 @@ from sql_planner import (
     UpsertClause,
     Wildcard,
     WindowFuncExpr,
+    WinFrame,
 )
 from sql_planner.expr import Expr
 
@@ -1591,13 +1593,100 @@ def _cast_expr(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     )
 
 
+def _frame_clause(node: ASTNode) -> WinFrame | None:
+    """Parse a ``frame_clause`` node into a :class:`WinFrame`, or return None.
+
+    Grammar::
+
+        frame_clause  = frame_unit "BETWEEN" frame_bound "AND" frame_bound
+                      | frame_unit frame_bound ;
+        frame_unit    = "ROWS" | "RANGE" | "GROUPS" ;
+        frame_bound   = "UNBOUNDED" "PRECEDING"
+                      | "UNBOUNDED" "FOLLOWING"
+                      | "CURRENT" "ROW"
+                      | expr "PRECEDING"
+                      | expr "FOLLOWING" ;
+
+    Returns None if the node is not a frame_clause (defensive).
+    """
+    if node.rule_name != "frame_clause":
+        return None
+
+    # Determine frame unit from the frame_unit child.
+    fu = _maybe_child(node, "frame_unit")
+    unit = "ROWS"
+    if fu is not None:
+        unit_tok = next(
+            (c for c in fu.children if isinstance(c, Token) and _token_type(c) == "KEYWORD"),
+            None,
+        )
+        if unit_tok is not None:
+            unit = unit_tok.value.upper()   # ROWS | RANGE | GROUPS
+
+    def _parse_bound(bound_node: ASTNode) -> FrameBound:
+        """Convert a frame_bound AST node to a FrameBound dataclass."""
+        toks = [c for c in bound_node.children if isinstance(c, Token)]
+        kw_vals = [t.value.upper() for t in toks if _token_type(t) == "KEYWORD"]
+
+        if "UNBOUNDED" in kw_vals and "PRECEDING" in kw_vals:
+            return FrameBound(kind="UNBOUNDED_PRECEDING")
+        if "UNBOUNDED" in kw_vals and "FOLLOWING" in kw_vals:
+            return FrameBound(kind="UNBOUNDED_FOLLOWING")
+        if "CURRENT" in kw_vals and "ROW" in kw_vals:
+            return FrameBound(kind="CURRENT_ROW")
+
+        # expr PRECEDING / expr FOLLOWING — the offset is a literal integer
+        # constant but it is deeply nested inside the generic expr grammar
+        # (expr → or_expr → and_expr → … → primary → NUMBER).  Walk the
+        # entire subtree to find the first NUMBER token rather than relying on
+        # a shallow child scan.
+        expr_node = _maybe_child(bound_node, "expr")
+        if expr_node is not None:
+            def _find_number(n: object) -> Token | None:
+                if isinstance(n, Token) and _token_type(n) == "NUMBER":
+                    return n
+                if isinstance(n, ASTNode):
+                    for child in n.children:
+                        result = _find_number(child)
+                        if result is not None:
+                            return result
+                return None
+
+            num_tok = _find_number(expr_node)
+            offset = int(float(num_tok.value)) if num_tok else 0
+            if "FOLLOWING" in kw_vals:
+                return FrameBound(kind="FOLLOWING", offset=offset)
+            return FrameBound(kind="PRECEDING", offset=offset)
+
+        # Fallback: treat as CURRENT ROW.
+        return FrameBound(kind="CURRENT_ROW")
+
+    # Collect frame_bound children.
+    bounds = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "frame_bound"]
+
+    if len(bounds) == 2:
+        # BETWEEN start AND end form.
+        start = _parse_bound(bounds[0])
+        end = _parse_bound(bounds[1])
+    elif len(bounds) == 1:
+        # Shorthand: frame_unit frame_bound → end = CURRENT ROW.
+        start = _parse_bound(bounds[0])
+        end = FrameBound(kind="CURRENT_ROW")
+    else:
+        # Grammar mismatch — shouldn't happen; return full-partition frame.
+        start = FrameBound(kind="UNBOUNDED_PRECEDING")
+        end = FrameBound(kind="UNBOUNDED_FOLLOWING")
+
+    return WinFrame(unit=unit, start=start, end=end)
+
+
 def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncExpr:
     """Translate a ``window_func_call`` node into a :class:`WindowFuncExpr`.
 
     Grammar::
 
         window_func_call = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spec ")" ;
-        window_spec      = [ partition_clause ] [ order_clause ] ;
+        window_spec      = [ partition_clause ] [ order_clause ] [ frame_clause ] ;
         partition_clause = "PARTITION" "BY" expr { "," expr } ;
         order_clause     = "ORDER" "BY" order_item { "," order_item } ;
         order_item       = expr [ "ASC" | "DESC" ] ;
@@ -1674,12 +1763,20 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
                 )
                 order_keys.append((oi_expr, desc))
 
+    # ROWS / RANGE / GROUPS BETWEEN … AND … frame clause (optional).
+    frame: WinFrame | None = None
+    if ws is not None:
+        fc = _maybe_child(ws, "frame_clause")
+        if fc is not None:
+            frame = _frame_clause(fc)
+
     return WindowFuncExpr(
         func=func_name,
         arg=arg,
         partition_by=tuple(partition_exprs),
         order_by=tuple(order_keys),
         extra_args=extra_args_tuple,
+        frame=frame,
     )
 
 

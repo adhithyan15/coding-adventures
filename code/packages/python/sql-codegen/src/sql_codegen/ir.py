@@ -35,6 +35,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Final
 
+# WinFrame / FrameBound live in sql_planner.plan (their canonical home).
+# We import them here so the VM can use them via WinFuncSpec.frame without
+# needing to depend on the planner package directly.
+from sql_planner.plan import FrameBound, WinFrame
+
+__all__ = ["FrameBound", "WinFrame"]  # re-exported for vm.py consumers
+
 # --------------------------------------------------------------------------
 # Sentinel for ColumnDef.default
 # --------------------------------------------------------------------------
@@ -1085,14 +1092,18 @@ class WinFunc(Enum):
     Aggregate-style functions
     -------------------------
     SUM / COUNT / COUNT_STAR / AVG / MIN / MAX
-        — cumulate over the *entire* partition (the full-partition frame is
-          used, which is the default when no ROWS/RANGE clause is given).
+        — When an explicit ``WinFuncSpec.frame`` is provided, or when
+          ``order_cols`` is non-empty, the VM applies the standard SQL
+          cumulative default (``RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT
+          ROW``).  When ``order_cols`` is empty and no frame is given, the
+          full-partition frame is used.
           ``COUNT_STAR`` is ``COUNT(*)`` — no arg column, always counts rows.
 
     Value functions
     ---------------
-    FIRST_VALUE  — the value of ``arg_col`` in the first row of the partition.
-    LAST_VALUE   — the value of ``arg_col`` in the last row of the partition.
+    FIRST_VALUE  — the value of ``arg_col`` in the first row of the frame.
+    LAST_VALUE   — the value of ``arg_col`` in the last row of the frame;
+                   defaults to the current row when ORDER BY is present.
     """
 
     ROW_NUMBER = "ROW_NUMBER"
@@ -1156,6 +1167,11 @@ class WinFuncSpec:
     # NTH_VALUE   → extra_args = (n: int,)   — 1-indexed row position
     # NTILE       → extra_args = (n: int,)   — number of buckets
     # PERCENT_RANK, CUME_DIST, and all others → extra_args = ()
+    frame: WinFrame | None = None
+    # Explicit window frame from ROWS/RANGE/GROUPS BETWEEN … AND … clause.
+    # None means: apply the SQL-standard default based on order_cols presence:
+    #   order_cols non-empty → RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    #   order_cols empty     → RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
 
 
 @dataclass(frozen=True, slots=True)

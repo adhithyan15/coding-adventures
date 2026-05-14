@@ -387,7 +387,21 @@ class TestNthValueEndToEnd:
         assert by_name["Dave"] == 70000
 
     def test_nth_value_second(self):
-        """NTH_VALUE(salary, 2): the second row in each partition."""
+        """NTH_VALUE(salary, 2) with cumulative default frame.
+
+        With ORDER BY present the frame is RANGE BETWEEN UNBOUNDED PRECEDING
+        AND CURRENT ROW.  The 2nd value only enters the frame from the 2nd row
+        onward; the 1st row in each partition returns NULL.
+
+        eng sorted ASC: Bob(80000), Eve(85000), Alice(90000)
+          Bob   — frame=[80000]              → NULL  (only 1 row)
+          Eve   — frame=[80000, 85000]       → 85000
+          Alice — frame=[80000, 85000, 90000]→ 85000
+
+        sales sorted ASC: Carol(70000), Dave(75000)
+          Carol — frame=[70000]              → NULL
+          Dave  — frame=[70000, 75000]       → 75000
+        """
         con = _conn()
         rows = con.execute(
             """
@@ -398,12 +412,12 @@ class TestNthValueEndToEnd:
             """
         ).fetchall()
         by_name = {r[0]: r[3] for r in rows}
-        # eng 2nd = Eve = 85000
-        assert by_name["Bob"] == 85000
+        # eng: first row (Bob, lowest salary) gets NULL; Eve and Alice get 85000
+        assert by_name["Bob"] is None
         assert by_name["Eve"] == 85000
         assert by_name["Alice"] == 85000
-        # sales 2nd = Dave = 75000
-        assert by_name["Carol"] == 75000
+        # sales: first row (Carol) gets NULL; Dave gets 75000
+        assert by_name["Carol"] is None
         assert by_name["Dave"] == 75000
 
     def test_nth_value_beyond_partition_returns_null(self):
@@ -418,7 +432,18 @@ class TestNthValueEndToEnd:
         assert all(r[0] is None for r in rows)
 
     def test_nth_value_global(self):
-        """NTH_VALUE(salary, 3) over all rows (no partition) = the 3rd smallest salary."""
+        """NTH_VALUE(salary, 3) over all rows (no partition) with cumulative frame.
+
+        With ORDER BY and the default cumulative frame, the 3rd value (80000)
+        only enters the frame starting at row 3.  The first two rows get NULL.
+
+        Salaries sorted ASC: 70000, 75000, 80000, 85000, 90000
+          Row 1 (70000): frame=[70000]            → NULL
+          Row 2 (75000): frame=[70000, 75000]     → NULL
+          Row 3 (80000): frame=[70k,75k,80k]      → 80000
+          Row 4 (85000): frame=[70k..85k]         → 80000
+          Row 5 (90000): frame=[70k..90k]         → 80000
+        """
         con = _conn()
         rows = con.execute(
             """
@@ -428,8 +453,14 @@ class TestNthValueEndToEnd:
             ORDER BY salary
             """
         ).fetchall()
-        # All salaries ASC: 70000, 75000, 80000, 85000, 90000 → 3rd = 80000
-        assert all(r[1] == 80000 for r in rows)
+        # First two rows have frames too small → NULL; rows 3-5 get 80000.
+        assert rows == [
+            (70000, None),
+            (75000, None),
+            (80000, 80000),
+            (85000, 80000),
+            (90000, 80000),
+        ]
 
 
 # ---------------------------------------------------------------------------
