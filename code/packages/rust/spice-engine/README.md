@@ -9,6 +9,8 @@ The initial slices implement:
 - DC source sweeps over independent voltage and current sources.
 - DC sensitivity analysis for output-node voltage changes with respect to
   resistor and independent source parameters.
+- Seeded DC Monte Carlo analysis for linear element tolerances with Gaussian
+  and uniform distributions.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
   impedance estimates.
 - AC small-signal frequency sweeps for linear RC/RL circuits.
