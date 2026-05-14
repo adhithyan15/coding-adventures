@@ -564,6 +564,65 @@ pub struct DcSweepPoint {
     pub result: DcResult,
 }
 
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum McDistribution {
+    Gaussian,
+    Uniform,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct McOptions {
+    pub tolerance: f64,
+    pub distribution: McDistribution,
+    pub seed: Option<u64>,
+}
+
+impl Default for McOptions {
+    fn default() -> Self {
+        Self {
+            tolerance: 0.05,
+            distribution: McDistribution::Gaussian,
+            seed: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct McPoint {
+    pub trial: usize,
+    pub node_voltages: BTreeMap<String, f64>,
+    pub branch_currents: BTreeMap<String, f64>,
+    pub converged: bool,
+}
+
+impl McPoint {
+    pub fn voltage(&self, node: &str) -> Option<f64> {
+        if is_ground(node) {
+            Some(0.0)
+        } else {
+            self.node_voltages.get(node).copied()
+        }
+    }
+
+    pub fn branch_current(&self, source_name: &str) -> Option<f64> {
+        let key = if source_name.starts_with("I(") {
+            source_name.to_string()
+        } else {
+            format!("I({source_name})")
+        };
+        self.branch_currents.get(&key).copied()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct McResult {
+    pub output_node: String,
+    pub points: Vec<McPoint>,
+    pub n_trials: usize,
+    pub mean: f64,
+    pub std_dev: f64,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct TfResult {
     pub transfer_ratio: f64,
@@ -799,6 +858,73 @@ pub fn dc_sweep(
         value += step;
     }
     Ok(points)
+}
+
+pub fn mc_dc(
+    circuit: &Circuit,
+    output_node: &str,
+    n_trials: usize,
+    options: McOptions,
+) -> Result<McResult, SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    if !is_ground(output_node) && !node_indices.contains_key(output_node) {
+        return Err(SpiceError::InvalidElement {
+            name: output_node.to_string(),
+            reason: "output node was not found in circuit".to_string(),
+        });
+    }
+    if n_trials == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "mc_dc".to_string(),
+            reason: "n_trials must be positive".to_string(),
+        });
+    }
+    if !options.tolerance.is_finite() || options.tolerance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "mc_dc".to_string(),
+            reason: "tolerance must be finite and non-negative".to_string(),
+        });
+    }
+
+    let mut rng = McRng::new(options.seed.unwrap_or(0x6d2b_79f5));
+    let mut points = Vec::with_capacity(n_trials);
+    for trial in 0..n_trials {
+        let trial_circuit = circuit_with_randomized_elements(
+            circuit,
+            options.tolerance,
+            options.distribution,
+            &mut rng,
+        );
+        match dc_op(&trial_circuit) {
+            Ok(result) => points.push(McPoint {
+                trial,
+                node_voltages: result.node_voltages,
+                branch_currents: result.branch_currents,
+                converged: true,
+            }),
+            Err(SpiceError::SingularMatrix) => points.push(McPoint {
+                trial,
+                node_voltages: BTreeMap::new(),
+                branch_currents: BTreeMap::new(),
+                converged: false,
+            }),
+            Err(error) => return Err(error),
+        }
+    }
+
+    let converged_voltages: Vec<f64> = points
+        .iter()
+        .filter(|point| point.converged)
+        .map(|point| point.voltage(output_node).unwrap_or(0.0))
+        .collect();
+
+    Ok(McResult {
+        output_node: output_node.to_string(),
+        points,
+        n_trials,
+        mean: sample_mean(&converged_voltages),
+        std_dev: sample_std_dev(&converged_voltages),
+    })
 }
 
 pub fn tf(
@@ -1109,6 +1235,116 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::Vccs(source) => source.transconductance_siemens += delta,
         Element::Capacitor(_) | Element::Inductor(_) => {}
     }
+}
+
+#[derive(Debug, Clone)]
+struct McRng {
+    state: u64,
+}
+
+impl McRng {
+    fn new(seed: u64) -> Self {
+        Self { state: seed }
+    }
+
+    fn next_f64(&mut self) -> f64 {
+        self.state = self.state.wrapping_add(0x6d2b_79f5);
+        let mut value = self.state as u32;
+        value = (value ^ (value >> 15)).wrapping_mul(value | 1);
+        value ^= value.wrapping_add((value ^ (value >> 7)).wrapping_mul(value | 61));
+        ((value ^ (value >> 14)) as f64) / 4_294_967_296.0
+    }
+
+    fn gaussian(&mut self) -> f64 {
+        let u1 = self.next_f64().max(f64::MIN_POSITIVE);
+        let u2 = self.next_f64();
+        (-2.0 * u1.ln()).sqrt() * (TWO_PI * u2).cos()
+    }
+}
+
+fn randomized_value(
+    nominal_value: f64,
+    tolerance: f64,
+    distribution: McDistribution,
+    rng: &mut McRng,
+) -> f64 {
+    if tolerance == 0.0 {
+        return nominal_value;
+    }
+    match distribution {
+        McDistribution::Gaussian => nominal_value * (1.0 + rng.gaussian() * tolerance / 3.0),
+        McDistribution::Uniform => nominal_value * (1.0 + tolerance * (2.0 * rng.next_f64() - 1.0)),
+    }
+}
+
+fn circuit_with_randomized_elements(
+    circuit: &Circuit,
+    tolerance: f64,
+    distribution: McDistribution,
+    rng: &mut McRng,
+) -> Circuit {
+    let mut randomized = Circuit::new();
+    for element in circuit.elements() {
+        randomized.add(randomized_element(element, tolerance, distribution, rng));
+    }
+    randomized
+}
+
+fn randomized_element(
+    element: &Element,
+    tolerance: f64,
+    distribution: McDistribution,
+    rng: &mut McRng,
+) -> Element {
+    match element {
+        Element::Resistor(resistor) => {
+            let mut varied = resistor.clone();
+            varied.resistance_ohms =
+                randomized_value(varied.resistance_ohms, tolerance, distribution, rng);
+            Element::Resistor(varied)
+        }
+        Element::VoltageSource(source) => {
+            let mut varied = source.clone();
+            varied.voltage = randomized_value(varied.voltage, tolerance, distribution, rng);
+            Element::VoltageSource(varied)
+        }
+        Element::CurrentSource(source) => {
+            let mut varied = source.clone();
+            varied.current = randomized_value(varied.current, tolerance, distribution, rng);
+            Element::CurrentSource(varied)
+        }
+        Element::Vccs(source) => {
+            let mut varied = source.clone();
+            varied.transconductance_siemens = randomized_value(
+                varied.transconductance_siemens,
+                tolerance,
+                distribution,
+                rng,
+            );
+            Element::Vccs(varied)
+        }
+        Element::Capacitor(_) | Element::Inductor(_) => element.clone(),
+    }
+}
+
+fn sample_mean(values: &[f64]) -> f64 {
+    if values.is_empty() {
+        return 0.0;
+    }
+    values.iter().sum::<f64>() / values.len() as f64
+}
+
+fn sample_std_dev(values: &[f64]) -> f64 {
+    if values.len() < 2 {
+        return 0.0;
+    }
+    let mean = sample_mean(values);
+    let variance = values
+        .iter()
+        .map(|value| (value - mean).powi(2))
+        .sum::<f64>()
+        / (values.len() - 1) as f64;
+    variance.sqrt()
 }
 
 #[derive(Debug, Clone, PartialEq)]
