@@ -4,7 +4,8 @@ use std::time::Duration;
 use board_vm_client::{RawFrameTransport, TransportError};
 use board_vm_stream::{StreamTransport, StreamTransportError};
 pub use serialport::{
-    ClearBuffer, DataBits, FlowControl, Parity, SerialPort, SerialPortInfo, StopBits,
+    ClearBuffer, DataBits, FlowControl, Parity, SerialPort, SerialPortInfo, SerialPortType,
+    StopBits, UsbPortInfo,
 };
 
 pub const DEFAULT_BAUD_RATE: u32 = 115_200;
