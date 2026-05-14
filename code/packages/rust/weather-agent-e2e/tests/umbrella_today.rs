@@ -36,6 +36,8 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.weather_fetch.https_requests, 0);
     assert_eq!(run.weather_fetch.tls_handshakes, 0);
     assert_eq!(run.weather_fetch.http_statuses, vec![200]);
+    assert!(!run.weather_fetch.http_domain_policy_enforced);
+    assert!(run.weather_fetch.declared_http_domains.is_empty());
 
     assert_eq!(run.sandbox_plan.package, "rust/weather-agent-e2e");
     assert_eq!(run.sandbox_plan.plan_count, 6);
@@ -170,6 +172,11 @@ fn umbrella_today_agent_fetches_live_weather_over_tls() {
     assert_eq!(run.weather_fetch.tls_handshakes, 2);
     assert_eq!(run.weather_fetch.http_statuses, vec![200, 200]);
     assert_eq!(run.weather_fetch.endpoint_count, 2);
+    assert!(run.weather_fetch.http_domain_policy_enforced);
+    assert_eq!(
+        run.weather_fetch.declared_http_domains,
+        vec!["api.weather.gov".to_string()]
+    );
     assert!(run
         .weather_fetch
         .forecast_endpoint
