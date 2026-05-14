@@ -38,29 +38,34 @@ for the full design.  Phased rollout, one PR per phase:
 | Phase | Lands                                                  | Status |
 | ----- | ------------------------------------------------------ | ------ |
 | 1     | crate skeleton, `BackendProfile`, stubbed dispatch     | landed (0.1.0) |
-| 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`           | **this PR** (0.2.0) |
-| 3     | `kernels.rs` — generic NVRTC-compiled kernels (also adds `Send` to `CudaBuffer` and wires the buffer store into `handle()`) | pending |
+| 2     | `BufferStore` over `cuMemAlloc` / `cuMemcpy*`           | landed (0.2.0) |
+| 3     | `kernels.rs` — generic NVRTC-compiled kernels + buffer-op wiring (adds `Send` to `CudaBuffer`) | **this PR** (0.3.0) |
 | 4     | `cuda_emitter.rs` — specialised-kernel code generator   | pending |
-| 5     | `specialised_table.rs` + real `Executor` impl           | pending |
+| 5     | `specialised_table.rs` + real `Executor` impl (flips `supported_ops_bitset` on, lifts `Kernels` into `State`) | pending |
 | 6     | MX05 hooks — `backend_id = 2` in image-gpu-core         | pending |
 | 7     | Planner integration — cost-model coefficients           | pending |
 
-## Phase 2 additions
+## Phase 3 additions
 
-- `pub mod buffers` — `BufferStore` over `cuda-compute`'s
-  `CudaDevice::alloc` / `upload` / `download`.  Same shape as
-  `matrix-metal::BufferStore`, suitable for the dispatch wiring that
-  Phase 3 will add.
-- Re-exported as `matrix_cuda::BufferStore`.
-- 14 new unit tests (most device-gated; silent pass on non-NVIDIA
-  hosts).
+- `pub mod kernels` with:
+  - `KERNELS_CUDA_C` — single CUDA C source string for all V1
+    kernels (7 unary, 7 binary, MatMul).
+  - `KERNEL_ENTRY_POINTS` — names exposed by the compiled module.
+  - `Kernels::new(device)` — NVRTC-compiles + caches every
+    function on first call.  ~100 ms one-time cost.
+  - `launch_unary` / `launch_binary` / `launch_matmul` — direct
+    kernel launch helpers (used by Phase 5 dispatch and by the
+    device-gated unit tests).
+- Executor `handle()` now serves `AllocBuffer` / `UploadBuffer` /
+  `DownloadBuffer` / `FreeBuffer` through `BufferStore`
+  (`Mutex<State>`).  `Dispatch` is still `NOT_IMPLEMENTED` —
+  Phase 5.
+- `cuda-compute` v0.1.1 adds `unsafe impl Send for CudaBuffer {}`
+  so `BufferStore` can live inside the executor's mutex.
 
-**Note**: the `handle()` dispatch surface still returns
-`NOT_IMPLEMENTED` for `AllocBuffer` / `UploadBuffer` /
-`DownloadBuffer` / `FreeBuffer`.  Wiring the store through the
-executor's `Mutex<State>` requires `CudaBuffer: Send`, which
-`cuda-compute` doesn't ship yet — both changes land together in
-Phase 3.
+**Note**: `supported_ops_bitset()` stays at `0` until Phase 5
+wires `Dispatch`, so the planner never routes an op to us we
+can't yet execute.  `Kernels` is callable directly today.
 
 ## What this phase ships
 

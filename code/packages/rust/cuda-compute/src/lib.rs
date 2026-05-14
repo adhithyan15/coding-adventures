@@ -763,6 +763,17 @@ impl Drop for CudaBuffer {
     }
 }
 
+// `CudaBuffer` carries a `CUdeviceptr` (a `u64`-typed device pointer) and an
+// `Arc<CudaLib>`.  The pointer is an opaque driver handle that the docs say is
+// safe to transfer between threads (the bound entity is the CUDA *context*, not
+// individual allocations).  Adding `Send` lets callers move buffers into a
+// `Mutex<...>` — required by `matrix-cuda`'s `Mutex<State>` pattern.
+//
+// `Sync` is deliberately NOT impl'd: concurrent calls to `upload` / `download`
+// against the same `CudaBuffer` from multiple threads have undefined ordering
+// in the driver API.  Callers must serialise (which `Mutex<BufferStore>` does).
+unsafe impl Send for CudaBuffer {}
+
 impl CudaBuffer {
     pub fn len(&self) -> usize {
         self.len

@@ -61,7 +61,10 @@
 #![warn(rust_2018_idioms)]
 
 mod buffers;
+pub mod kernels;
+
 pub use buffers::BufferStore;
+pub use kernels::{Kernels, KERNELS_CUDA_C, KERNEL_ENTRY_POINTS};
 
 use compute_ir::ExecutorId;
 use executor_protocol::{
@@ -151,14 +154,29 @@ pub struct CudaExecutor {
 
 struct State {
     /// The CUDA device handle, kept alive for the executor's lifetime
-    /// so dispatches in later phases don't pay the device-init cost
-    /// per call.  `Option` so we can still construct the struct in
-    /// test paths that don't have a real device — Phase 1 always
-    /// puts `Some` here (errors out before constructing State if the
-    /// device probe fails) but Phase 2+ may want a zero-device test
-    /// double.
-    #[allow(dead_code)]
+    /// so dispatches don't pay the device-init cost per call.
+    /// `Option` so test paths can construct the struct without a
+    /// real device — `CudaExecutor::new` always puts `Some` here
+    /// (errors before constructing State if the device probe fails).
     device: Option<cuda_compute::CudaDevice>,
+    /// **MX06 Phase 2/3.**  Per-executor map of `BufferId → CudaBuffer`.
+    /// Lives under the executor's `Mutex` so concurrent buffer
+    /// requests serialise.
+    buffers: BufferStore,
+    /// Monotonically incrementing `BufferId` counter.  Hands out a
+    /// fresh id for each `AllocBuffer` request.  Matches
+    /// `matrix-metal::State::next_buffer` semantics.
+    ///
+    /// **Note (Phase 3)**: the kernel cache ([`Kernels`]) is
+    /// intentionally **not** stored on `State` yet.  Adding
+    /// `Kernels` here would require `cuda-compute::CudaModuleInner`
+    /// to be `Send + Sync` (it currently has only `Send`); the wider
+    /// `Send + Sync` audit of `CudaLib` / `NvrtcLib` belongs in the
+    /// Phase 5 PR that also wires `Dispatch`.  For now `Kernels::new`
+    /// is callable directly — `dispatch.rs` (Phase 5) will lift it
+    /// into State at the same time it lifts the `Dispatch` request
+    /// handling.
+    next_buffer: u64,
     /// `ExecutorId` assigned by the runtime when we registered.  Same
     /// purpose as `matrix-metal::State::our_id`: lets dispatch detect
     /// mis-routed graphs.
@@ -184,45 +202,125 @@ impl CudaExecutor {
         Ok(CudaExecutor {
             state: Mutex::new(State {
                 device: Some(device),
+                buffers: BufferStore::new(),
+                next_buffer: 1,
                 our_id: ExecutorId(u32::MAX),
             }),
         })
     }
 
-    /// Handle a single `ExecutorRequest`.  Phase 1 stubs the entire
-    /// protocol surface:
+    /// Handle a single `ExecutorRequest`.  As of MX06 Phase 3 the
+    /// buffer-management surface is live:
     ///
-    /// - `Register` echoes back our currently-stored `ExecutorId`
-    ///   (default `u32::MAX` until [`set_our_id`] is called from the
-    ///   runtime registration helper).  Matches `matrix-metal`'s
-    ///   behaviour.
-    /// - `Heartbeat` replies `Alive { profile }` so liveness probes
-    ///   work end-to-end in this phase.
-    /// - `Shutdown` is treated as a graceful no-op — Phase 1 has no
-    ///   resources to release.
-    /// - Every other variant returns `NOT_IMPLEMENTED` with a
-    ///   pointer to the spec so future readers know where to look.
+    /// - `Register` echoes our currently-stored `ExecutorId`.
+    /// - `Heartbeat` replies `Alive { profile }`.
+    /// - `Shutdown` graceful no-op (buffers free on `BufferStore`
+    ///   drop).
+    /// - `AllocBuffer`, `UploadBuffer`, `DownloadBuffer`,
+    ///   `FreeBuffer` route through the `Mutex<State>`-protected
+    ///   [`BufferStore`] (Phase 3 wiring).
+    /// - `Dispatch`, `DispatchSpecialised`, `CancelJob`,
+    ///   `PrepareKernel` still return `NOT_IMPLEMENTED` — those land
+    ///   in Phase 5 (real `Executor` impl).
     ///
-    /// **Note (MX06 Phase 2)**: the new [`BufferStore`] module is
-    /// callable directly (see its docs) but is **not** wired into
-    /// this dispatch handler yet — that requires `cuda-compute`'s
-    /// `CudaBuffer` to be `Send` so it can live behind the
-    /// executor's `Mutex<State>`.  Phase 3 will land both the
-    /// `Send` impl on `CudaBuffer` and the wiring here in one
-    /// coherent change, alongside generic kernel compilation.
+    /// Kernels are available via [`Kernels`] for callers that want
+    /// to launch directly; the V1 op bitset stays at `0` until
+    /// Phase 5 wires `Dispatch` so the planner doesn't route ops to
+    /// us prematurely.
     pub fn handle(&self, req: ExecutorRequest) -> ExecutorResponse {
-        let our_id = match self.state.lock() {
-            Ok(g) => g.our_id,
-            Err(p) => p.into_inner().our_id,
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(p) => p.into_inner(),
         };
         match req {
             ExecutorRequest::Register { .. } => ExecutorResponse::Registered {
-                executor_id: our_id,
+                executor_id: s.our_id,
             },
             ExecutorRequest::Heartbeat => ExecutorResponse::Alive { profile: profile() },
             ExecutorRequest::Shutdown => ExecutorResponse::Registered {
-                executor_id: our_id,
+                executor_id: s.our_id,
             },
+
+            // ── Phase 3: buffer ops ──────────────────────────────────
+            ExecutorRequest::AllocBuffer { bytes } => {
+                use compute_ir::BufferId;
+                let id = BufferId(s.next_buffer);
+                s.next_buffer += 1;
+                // Split the borrow so `buffers.alloc(device, ...)` can
+                // mutably take `buffers` while reading `device`.
+                let State {
+                    buffers, device, ..
+                } = &mut *s;
+                let Some(device) = device.as_ref() else {
+                    return ExecutorResponse::Error {
+                        code: ErrorCode::DEVICE_LOST,
+                        message: "matrix-cuda: no CUDA device bound".to_string(),
+                        job_id: None,
+                    };
+                };
+                if let Err(e) = buffers.alloc(device, id, bytes as usize) {
+                    return ExecutorResponse::Error {
+                        code: ErrorCode::OUT_OF_MEMORY,
+                        message: format!("AllocBuffer: {}", e),
+                        job_id: None,
+                    };
+                }
+                ExecutorResponse::BufferAllocated { buffer: id }
+            }
+            ExecutorRequest::UploadBuffer {
+                buffer,
+                offset,
+                data,
+            } => {
+                let State {
+                    buffers, device, ..
+                } = &mut *s;
+                let Some(device) = device.as_ref() else {
+                    return ExecutorResponse::Error {
+                        code: ErrorCode::DEVICE_LOST,
+                        message: "matrix-cuda: no CUDA device bound".to_string(),
+                        job_id: None,
+                    };
+                };
+                match buffers.write(device, buffer, offset as usize, &data) {
+                    Ok(()) => ExecutorResponse::BufferUploaded { buffer },
+                    Err(e) => ExecutorResponse::Error {
+                        code: ErrorCode::OUT_OF_MEMORY,
+                        message: format!("UploadBuffer: {}", e),
+                        job_id: None,
+                    },
+                }
+            }
+            ExecutorRequest::DownloadBuffer {
+                buffer,
+                offset,
+                len,
+            } => {
+                let State {
+                    buffers, device, ..
+                } = &mut *s;
+                let Some(device) = device.as_ref() else {
+                    return ExecutorResponse::Error {
+                        code: ErrorCode::DEVICE_LOST,
+                        message: "matrix-cuda: no CUDA device bound".to_string(),
+                        job_id: None,
+                    };
+                };
+                match buffers.read(device, buffer, offset as usize, len as usize) {
+                    Ok(data) => ExecutorResponse::BufferData { buffer, data },
+                    Err(e) => ExecutorResponse::Error {
+                        code: ErrorCode::OUT_OF_MEMORY,
+                        message: format!("DownloadBuffer: {}", e),
+                        job_id: None,
+                    },
+                }
+            }
+            ExecutorRequest::FreeBuffer { buffer } => {
+                s.buffers.free(buffer);
+                ExecutorResponse::BufferFreed
+            }
+
+            // ── Phases 5+: still stubbed ────────────────────────────
             ExecutorRequest::Dispatch { job_id, .. }
             | ExecutorRequest::DispatchSpecialised { job_id, .. }
             | ExecutorRequest::CancelJob { job_id } => ExecutorResponse::Error {
@@ -232,14 +330,10 @@ impl CudaExecutor {
                         .to_string(),
                 job_id: Some(job_id),
             },
-            ExecutorRequest::PrepareKernel { .. }
-            | ExecutorRequest::AllocBuffer { .. }
-            | ExecutorRequest::UploadBuffer { .. }
-            | ExecutorRequest::DownloadBuffer { .. }
-            | ExecutorRequest::FreeBuffer { .. } => ExecutorResponse::Error {
+            ExecutorRequest::PrepareKernel { .. } => ExecutorResponse::Error {
                 code: ErrorCode::NOT_IMPLEMENTED,
                 message:
-                    "matrix-cuda: buffer / kernel dispatch wiring lands in Phase 3 (BufferStore module is callable directly, see crate docs)"
+                    "matrix-cuda: PrepareKernel unused — kernels compile at Kernels::new (Phase 3)"
                         .to_string(),
                 job_id: None,
             },

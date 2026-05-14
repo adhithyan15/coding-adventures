@@ -1,5 +1,103 @@
 # Changelog — matrix-cuda
 
+## 0.3.0 — 2026-05-13
+
+### Added — MX06 Phase 3 (generic NVRTC kernels + buffer-op wiring)
+
+This phase lands two things in one PR:
+
+1. The handwritten CUDA C source for the V1 op set, compiled
+   through NVRTC at executor startup via `cuda-compute`'s
+   `CudaDevice::compile`.
+2. The executor's `handle()` dispatch surface for `AllocBuffer` /
+   `UploadBuffer` / `DownloadBuffer` / `FreeBuffer` is now wired
+   through the per-`State` `BufferStore` (Phase 2 shipped the
+   module standalone; this PR moves it into `Mutex<State>` and
+   routes the four request variants).
+
+#### `src/kernels.rs`
+
+- `pub const KERNELS_CUDA_C: &str` — single source string with
+  every V1 kernel: 7 unary (`neg_f32`, `abs_f32`, `sqrt_f32`,
+  `exp_f32`, `log_f32`, `tanh_f32`, `recip_f32`), 7 binary
+  (`add_f32`, `sub_f32`, `mul_f32`, `div_f32`, `max_f32`,
+  `min_f32`, `pow_f32`), plus `matmul_f32` (rank-2 row-major).
+  Mirrors `matrix-metal::KERNELS_MSL` in shape.
+- `pub const KERNEL_ENTRY_POINTS: &[&str]` — every entry-point
+  name; `Kernels::new` errors if any name fails to resolve.
+- `pub struct Kernels { module, fns: HashMap<&'static str, CudaFunction> }`
+  with:
+  - `new(device) -> Result<Self, String>` — compiles once, caches
+    every function.
+  - `get(name)` — function lookup.
+  - `launch_unary` / `launch_binary` / `launch_matmul` — launch
+    helpers with synchronise.  Used by tests and by Phase 5
+    dispatch.
+- `Const` (op tag 0x1B) is intentionally not a kernel — it's
+  handled by buffer upload (`BufferStore::write`).
+
+#### Executor wiring
+
+- `State` gains a `buffers: BufferStore` field and a
+  `next_buffer: u64` counter.
+- `handle()` now routes `AllocBuffer` / `UploadBuffer` /
+  `DownloadBuffer` / `FreeBuffer` through `BufferStore` (using
+  `split-borrow` of the Mutex guard to satisfy the borrow checker).
+- `Dispatch` / `DispatchSpecialised` / `PrepareKernel` /
+  `CancelJob` still return `NOT_IMPLEMENTED` — those land in
+  Phase 5.
+
+#### `cuda-compute` 0.1.1 (companion change)
+
+- `unsafe impl Send for CudaBuffer {}` — mirrors the existing
+  `Send` impls on sibling types.  Lets `BufferStore` live behind
+  `Mutex<State>`.  Sync is intentionally not impl'd; callers
+  serialise via their own `Mutex`.
+
+### Deferred to Phase 5
+
+- Lifting `Kernels` into `State` requires `cuda-compute`'s
+  `CudaLib` / `NvrtcLib` / `CudaModuleInner` to be `Send + Sync`.
+  That wider audit belongs in the Phase 5 PR that also wires the
+  `Dispatch` request.  Until then `Kernels` is callable directly.
+- `supported_ops_bitset()` stays at `0`; Phase 5 flips it on at
+  the same time `Dispatch` becomes real, so the planner never
+  routes an op to us that we can't execute.
+
+### Tests
+
+18 new unit tests in `kernels::tests`:
+
+- `kernels_new_compiles_all_entry_points` — every name in
+  `KERNEL_ENTRY_POINTS` resolves after compilation.
+- `unknown_kernel_name_errors` — graceful error path.
+- One test per unary kernel (`neg`, `abs`, `sqrt`, `exp`, `log`,
+  `tanh`, `recip`) comparing GPU output to a CPU oracle.
+- One test per binary kernel (`add`, `sub`, `mul`, `div`, `max`,
+  `min`, `pow`).
+- `matmul_f32_2x2_matches_cpu` — small handwritten case.
+- `matmul_f32_3x4_4x2_matches_cpu_oracle` — non-square,
+  computed CPU oracle.
+
+All device-gated: on hosts without an NVIDIA driver
+(`CudaDevice::new(0)` fails) the tests silently pass.  On a
+real CUDA box they exercise the full compile → launch →
+download → compare loop.
+
+Total crate test count: 44 (26 from Phases 1+2 + 18 new).
+
+### Why this is its own PR
+
+Phase 3 ships **two coherent pieces**: the kernels themselves (so
+later phases have a known source surface to dispatch against) and
+the buffer-op wiring (so the executor's protocol surface stops
+returning `NOT_IMPLEMENTED` for buffer requests).
+
+Splitting kernel + buffer wiring across two PRs would have been
+artificial — both depend on `CudaBuffer: Send` (which cuda-compute
+0.1.1 ships in the same PR) and the kernel tests need allocated
+buffers anyway.
+
 ## 0.2.0 — 2026-05-13
 
 ### Added — MX06 Phase 2 (`BufferStore` over `cuMemAlloc` / `cuMemcpy*`)
