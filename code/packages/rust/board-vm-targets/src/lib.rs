@@ -112,7 +112,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 13] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 14] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -125,10 +125,11 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 13] = [
     "dac.write_u12",
     "i2c.open",
     "i2c.write_u8",
+    "i2c.read_u8",
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 17] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 18] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -144,6 +145,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 17] = [
     "dac.write_u12",
     "i2c.open",
     "i2c.write_u8",
+    "i2c.read_u8",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -610,6 +612,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"dac.write_u12"));
         assert!(uno.capabilities.contains(&"i2c.open"));
         assert!(uno.capabilities.contains(&"i2c.write_u8"));
+        assert!(uno.capabilities.contains(&"i2c.read_u8"));
     }
 
     #[test]
