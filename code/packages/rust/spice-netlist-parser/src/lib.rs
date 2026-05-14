@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt};
 
 use spice_engine::{
-    Capacitor, Cccs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PulseWaveform,
+    Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PulseWaveform,
     PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
@@ -348,6 +348,16 @@ fn parse_element(fields: &[String]) -> Result<Element, NetlistParseError> {
                 parse_value(&fields[4])?,
             )))
         }
+        'H' => {
+            require_fields(fields, 5, "CCVS")?;
+            Ok(Element::Ccvs(Ccvs::new(
+                name,
+                &fields[1],
+                &fields[2],
+                &fields[3],
+                parse_value(&fields[4])?,
+            )))
+        }
         _ => Err(NetlistParseError::new(format!(
             "unsupported element {name:?}"
         ))),
@@ -474,7 +484,7 @@ fn map_subckt_fields(
                 mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
             }
         }
-        'F' => {
+        'F' | 'H' => {
             require_min_fields(fields, 4, "subcircuit current-controlled source")?;
             mapped[1] = map_subckt_node(&fields[1], instance_name, node_map);
             mapped[2] = map_subckt_node(&fields[2], instance_name, node_map);
