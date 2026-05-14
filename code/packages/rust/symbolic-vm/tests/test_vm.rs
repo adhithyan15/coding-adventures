@@ -259,6 +259,121 @@ fn symbolic_factor_extracts_common_multivariate_term() {
     );
 }
 
+// Integer content extraction: GCD of integer coefficients and/or common
+// symbolic powers are pulled out before the specific pattern matchers.
+
+#[test]
+fn symbolic_factor_extracts_multivariate_integer_content_only() {
+    // Factor(2*x + 4*y) → 2*(x + 2*y)
+    //
+    // Both terms share no symbolic factor, but their coefficients have GCD 2.
+    // The residual (x + 2*y) is bivariate so it is not wrapped in Factor.
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("x")]),
+                apply(sym(MUL), vec![int(4), sym("y")]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                int(2),
+                apply(
+                    sym(ADD),
+                    vec![sym("x"), apply(sym(MUL), vec![int(2), sym("y")])],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_integer_content_and_symbolic() {
+    // Factor(2*x*y + 2*x*z) → 2*x*(y + z)
+    //
+    // All terms share integer GCD 2 and symbolic factor x; the residual
+    // (y + z) spans two variables so stays unevaluated.
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(MUL),
+                    vec![int(2), apply(sym(MUL), vec![sym("x"), sym("y")])],
+                ),
+                apply(
+                    sym(MUL),
+                    vec![int(2), apply(sym(MUL), vec![sym("x"), sym("z")])],
+                ),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn symbolic_factor_extracts_multivariate_integer_content_with_recursive_factoring() {
+    // Factor(2*x^2*y - 2*y) → 2*y*(x+1)*(x-1)
+    //
+    // GCD 2 and symbolic factor y are pulled out.  The residual x^2 - 1 is
+    // univariate so it is wrapped in Factor and recursively factored to
+    // (x+1)*(x-1).
+    let expr = apply(
+        sym("Factor"),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(
+                    sym(MUL),
+                    vec![
+                        int(2),
+                        apply(
+                            sym(MUL),
+                            vec![apply(sym(POW), vec![sym("x"), int(2)]), sym("y")],
+                        ),
+                    ],
+                ),
+                apply(sym(MUL), vec![int(-2), sym("y")]),
+            ],
+        )],
+    );
+
+    assert_eq!(
+        symbolic().eval(expr),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("y")]),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![int(1), sym("x")]),
+                        apply(sym(ADD), vec![int(-1), sym("x")]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
 #[test]
 fn symbolic_factor_extracts_multivariate_perfect_square() {
     let expr = apply(
