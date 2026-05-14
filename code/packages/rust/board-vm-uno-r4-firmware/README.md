@@ -140,11 +140,11 @@ Arduino's `IRQManager.cpp` installs USBFS interrupt handlers dynamically during
 `src/arduino_usb_link.rs` records the Arduino Renesas/TinyUSB link contract for
 the built-in USB path: Arduino core version `1.5.3`, FQBN
 `arduino:renesas_uno:unor4wifi`, required TinyUSB C objects, `USB.cpp`,
-`IRQManager.cpp`, the Uno R4 WiFi `libfsp.a`, include directories, compile
-defines, and the Rust-provided C++ ABI hook symbols. The firmware build script
-uses the same manifest when `BOARD_VM_UNO_R4_LINK_ARDUINO_USB=1`, keeping CI
-independent from a local Arduino install while giving hardware builds an
-explicit link path.
+`IRQManager.cpp`, the Arduino GPT/AGT PWM objects, the Uno R4 WiFi `libfsp.a`,
+include directories, compile defines, and the Rust-provided C++ ABI hook
+symbols. The firmware build script uses the same manifest when
+`BOARD_VM_UNO_R4_LINK_ARDUINO_USB=1`, keeping CI independent from a local
+Arduino install while giving hardware builds an explicit link path.
 
 Build the firmware library and host-tested server path now:
 
@@ -166,10 +166,12 @@ rustup run stable cargo build \
   --release
 ```
 
-The build script compiles the manifest's Arduino/TinyUSB C/C++ sources into a
-small archive under Cargo's `OUT_DIR`, links it with the Uno R4 WiFi `libfsp.a`
-for `uno-r4-wifi-serialusb-server`, and leaves the other firmware binaries on
-the pure-Rust link path. Override `BOARD_VM_UNO_R4_ARM_GCC`,
+The build script compiles the manifest's Arduino/TinyUSB/PWM C/C++ sources into
+a small archive under Cargo's `OUT_DIR`, links it with the Uno R4 WiFi
+`libfsp.a` for `uno-r4-wifi-serialusb-server`, and leaves the other firmware
+binaries on the pure-Rust link path. With that link enabled, the SerialUSB
+server swaps in the PWM-capable firmware backend and advertises `pwm.write` for
+the board's PWM-capable digital pins. Override `BOARD_VM_UNO_R4_ARM_GCC`,
 `BOARD_VM_UNO_R4_ARM_GXX`, or `BOARD_VM_UNO_R4_ARM_AR` if the Arduino-packaged
 toolchain cannot run on the host. When using a native ARM compiler that does
 not carry Newlib/libstdc++ headers, point `BOARD_VM_UNO_R4_ARM_COMPAT_ROOT` at

@@ -13,7 +13,7 @@ use arduino_usb_link::{
     ARDUINO_ARM_GCC_ENV_VAR, ARDUINO_ARM_GXX_ENV_VAR, ARDUINO_CORE_ENV_VAR,
     ARDUINO_USB_LINK_CFLAGS, ARDUINO_USB_LINK_CXXFLAGS, ARDUINO_USB_LINK_DEFINES,
     ARDUINO_USB_LINK_ENV_VAR, ARDUINO_USB_LINK_INCLUDE_DIRS, ARDUINO_USB_LINK_SOURCES,
-    UNO_R4_WIFI_FSP_ARCHIVE,
+    BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE, UNO_R4_WIFI_FSP_ARCHIVE,
 };
 
 const UNO_R4_SKETCH_FLASH_ORIGIN: u32 = 0x0000_4000;
@@ -33,6 +33,7 @@ const FIRMWARE_BINS: [&str; 6] = [
 
 fn main() {
     emit_rerun_hints();
+    println!("cargo:rustc-check-cfg=cfg(board_vm_uno_r4_arduino_usb_link)");
 
     if env::var("CARGO_CFG_TARGET_ARCH").as_deref() == Ok("arm") {
         let out_dir = PathBuf::from(env::var_os("OUT_DIR").expect("OUT_DIR is set by Cargo"));
@@ -44,6 +45,7 @@ fn main() {
         }
 
         if env_enabled(ARDUINO_USB_LINK_ENV_VAR) {
+            println!("cargo:rustc-cfg=board_vm_uno_r4_arduino_usb_link");
             compile_and_link_arduino_usb(&out_dir);
         }
     }
@@ -118,6 +120,20 @@ fn compile_and_link_arduino_usb(out_dir: &Path) {
             }
         }
     }
+
+    let manifest_dir = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("manifest dir"));
+    let bridge_source = manifest_dir.join(BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE);
+    println!("cargo:rerun-if-changed={}", bridge_source.display());
+    let bridge_object = object_dir.join(object_name(BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE));
+    compile_source(
+        &gxx,
+        &core_dir,
+        &bridge_source,
+        &bridge_object,
+        ARDUINO_USB_LINK_CXXFLAGS,
+        &cxx_compat_args(&compat_root, &compat_header),
+    );
+    objects.push(bridge_object);
 
     let archive_path = out_dir.join(format!("lib{ARDUINO_USB_ARCHIVE}.a"));
     if archive_path.exists() {
