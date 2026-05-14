@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extended the common multivariate factoring foothold to extract shared
+  integer content as well as symbolic powers, so expressions like
+  `2*x*y + 2*x*z` now factor to `2*x*(y+z)`.
 - Added another small multivariate factoring foothold to `Factor`: four-term
   perfect-cube expansions such as `x^3 + 3*x^2*y + 3*x*y^2 + y^3` now factor
   to `(x+y)^3`, and `x^3 - 3*x^2*y + 3*x*y^2 - y^3` to `(x-y)^3`.

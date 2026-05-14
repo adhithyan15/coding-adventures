@@ -726,6 +726,32 @@ def test_pipeline_factor_common_multivariate_factor() -> None:
     assert "y" in str(result)
 
 
+def test_pipeline_factor_common_multivariate_integer_content() -> None:
+    """factor(2*x*y + 2*x*z) extracts the shared integer and symbolic factors."""
+    result = _eval("factor(2*x*y + 2*x*z)")
+    assert isinstance(result, IRApply)
+    assert result == IRApply(
+        IRSymbol("Mul"),
+        (
+            IRApply(IRSymbol("Mul"), (IRInteger(2), IRSymbol("x"))),
+            IRApply(IRSymbol("Add"), (IRSymbol("y"), IRSymbol("z"))),
+        ),
+    )
+
+
+def test_pipeline_factor_common_multivariate_negative_integer_content() -> None:
+    """factor(-2*x*y - 2*x*z) keeps the shared sign with the content."""
+    result = _eval("factor(-2*x*y - 2*x*z)")
+    assert isinstance(result, IRApply)
+    assert result == IRApply(
+        IRSymbol("Mul"),
+        (
+            IRApply(IRSymbol("Mul"), (IRInteger(-2), IRSymbol("x"))),
+            IRApply(IRSymbol("Add"), (IRSymbol("y"), IRSymbol("z"))),
+        ),
+    )
+
+
 def test_pipeline_factor_multivariate_perfect_square() -> None:
     """factor(x^2 + 2*x*y + y^2) recognises (x+y)^2."""
     result = _eval("factor(x^2 + 2*x*y + y^2)")

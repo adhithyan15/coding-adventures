@@ -1053,6 +1053,20 @@ def _split_integer_coefficient_and_powers(
     return coefficient, powers
 
 
+def _term_from_integer_coefficient_and_powers(
+    coefficient: int,
+    powers: dict[IRNode, int],
+) -> IRNode:
+    terms: list[IRNode] = []
+    if coefficient != 1 or not powers:
+        terms.append(IRInteger(coefficient))
+    terms.extend(
+        _pow_node(base, exponent)
+        for base, exponent in sorted(powers.items(), key=lambda item: str(item[0]))
+    )
+    return _mul_nodes(terms)
+
+
 def _remove_common_factor(node: IRNode, common: dict[IRNode, int]) -> IRNode:
     remaining = dict(common)
     rebuilt: list[IRNode] = []
@@ -1075,23 +1089,44 @@ def _remove_common_factor(node: IRNode, common: dict[IRNode, int]) -> IRNode:
     return _mul_nodes(rebuilt)
 
 
+def _maybe_factor_residual(residual: IRNode) -> IRNode:
+    x = _find_variable(residual)
+    if x is not None and to_rational(residual, x) is not None:
+        return IRApply(IRSymbol("Factor"), (residual,))
+    return residual
+
+
 def _extract_common_symbolic_factor(inner: IRNode) -> IRNode | None:
     """Pull a common symbolic factor from an additive expression.
 
     This is a deliberately small multivariate factoring foothold. It handles
-    cases like ``x^2*y - y`` by extracting ``y`` and leaving ``x^2 - 1`` for
-    the existing univariate integer factorizer.
+    cases like ``x^2*y - y`` and ``2*x*y + 2*x*z`` by extracting the common
+    symbolic powers and integer content shared by every term.
     """
     terms = _flatten_add_terms(inner)
     if len(terms) < 2:
         return None
 
-    per_term = [_split_common_factor_term(term) for term in terms]
-    if any(powers is None for powers in per_term):
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
         return None
-    common = dict(per_term[0] or {})
-    for powers in per_term[1:]:
-        assert powers is not None
+
+    parsed_terms: list[tuple[int, dict[IRNode, int]]] = []
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        parsed_terms.append(parsed_term)
+
+    coefficients = [coefficient for coefficient, _powers in parsed_terms]
+    common_coefficient = 0
+    for coefficient in coefficients:
+        common_coefficient = math.gcd(common_coefficient, abs(coefficient))
+    if common_coefficient and all(coefficient < 0 for coefficient in coefficients):
+        common_coefficient = -common_coefficient
+    if common_coefficient == 0:
+        common_coefficient = 1
+
+    common = dict(parsed_terms[0][1])
+    for _coefficient, powers in parsed_terms[1:]:
         for base in list(common):
             shared = min(common[base], powers.get(base, 0))
             if shared:
@@ -1099,17 +1134,23 @@ def _extract_common_symbolic_factor(inner: IRNode) -> IRNode | None:
             else:
                 del common[base]
 
-    if not common:
+    if common_coefficient == 1 and not common:
         return None
 
-    common_terms = [
-        _pow_node(base, exponent)
-        for base, exponent in sorted(common.items(), key=lambda item: str(item[0]))
+    common_ir = _term_from_integer_coefficient_and_powers(common_coefficient, common)
+    residual_terms = [
+        _term_from_integer_coefficient_and_powers(
+            coefficient // common_coefficient,
+            {
+                base: exponent - common.get(base, 0)
+                for base, exponent in powers.items()
+                if exponent - common.get(base, 0) > 0
+            },
+        )
+        for coefficient, powers in parsed_terms
     ]
-    common_ir = _mul_nodes(common_terms)
-    residual_terms = [_remove_common_factor(term, common) for term in terms]
     residual = _add_nodes(residual_terms)
-    return IRApply(MUL, (common_ir, IRApply(IRSymbol("Factor"), (residual,))))
+    return IRApply(MUL, (common_ir, _maybe_factor_residual(residual)))
 
 
 def _extract_multivariate_perfect_square(inner: IRNode) -> IRNode | None:

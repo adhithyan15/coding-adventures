@@ -219,6 +219,52 @@ def test_factor_common_multivariate_symbolic_factor() -> None:
     assert result != expr
 
 
+def test_factor_common_multivariate_integer_content() -> None:
+    """Factor(2*x*y + 2*x*z) extracts both 2 and x."""
+    vm, _ = make_vm()
+    xy = IRApply(MUL, (x, y))
+    xz = IRApply(MUL, (x, z))
+    target = IRApply(
+        ADD,
+        (
+            IRApply(MUL, (IRInteger(2), xy)),
+            IRApply(MUL, (IRInteger(2), xz)),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(MUL, (IRInteger(2), x)),
+            IRApply(ADD, (y, z)),
+        ),
+    )
+
+
+def test_factor_common_multivariate_negative_integer_content() -> None:
+    """Factor(-2*x*y - 2*x*z) extracts a negative common coefficient."""
+    vm, _ = make_vm()
+    xy = IRApply(MUL, (x, y))
+    xz = IRApply(MUL, (x, z))
+    target = IRApply(
+        ADD,
+        (
+            IRApply(MUL, (IRInteger(-2), xy)),
+            IRApply(MUL, (IRInteger(-2), xz)),
+        ),
+    )
+    expr = IRApply(_FACTOR, (target,))
+    result = vm.eval(expr)
+    assert result == IRApply(
+        MUL,
+        (
+            IRApply(MUL, (IRInteger(-2), x)),
+            IRApply(ADD, (y, z)),
+        ),
+    )
+
+
 def test_factor_multivariate_perfect_square() -> None:
     """Factor(x^2 + 2*x*y + y^2) recognises a bivariate square."""
     vm, _ = make_vm()
