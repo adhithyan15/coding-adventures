@@ -2552,5 +2552,145 @@ mod tests {
             after
         );
     }
+
+    /// **MX05 Phase 4.10 end-to-end test.**  CPU specialised dispatch
+    /// of `Op::MatMul` with a folded 2×2 RHS matrix.
+    ///
+    /// Builds the closure directly via `matrix_cpu::build_specialised_kernel`,
+    /// installs it on the thread-local CPU executor, then invokes it
+    /// via the BufferStore to verify the matrix multiplication is
+    /// correct end-to-end.
+    ///
+    /// Graph (semantically):
+    ///   `A = [[1, 2], [3, 4]]`   ← runtime input (`[2, 2]`)
+    ///   `B = [[5, 6], [7, 8]]`   ← folded constant (`[2, 2]`)
+    ///   `C = A × B = [[1*5+2*7, 1*6+2*8], [3*5+4*7, 3*6+4*8]]`
+    ///                ` = [[19, 22], [43, 50]]`
+    ///
+    /// We don't go through the planner here — the test is hermetic.
+    /// The Phase 4.9 auto-installer + Phase 4.8 multi-op dispatcher
+    /// would normally fire this for graphs that reach the
+    /// 1000-invocation threshold; this test validates the closure
+    /// + buffer plumbing in isolation.
+    #[test]
+    fn cpu_matmul_folded_rhs_2x2_produces_correct_output() {
+        use matrix_runtime::{RangeClass, ShapeClass, SpecKey};
+
+        // Folded RHS matrix B = [[5, 6], [7, 8]] (row-major).
+        let b_bytes: Vec<u8> = [5.0_f32, 6.0, 7.0, 8.0]
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect();
+        let key = SpecKey {
+            op_kind: 0x15, // Op::MatMul
+            dtype: matrix_ir::DType::F32,
+            shape_class: ShapeClass::Dynamic,
+            range_class: RangeClass::Constant { bytes: b_bytes },
+            backend_id: 0, // CPU
+            folded_slot: Some(1), // RHS folded
+        };
+        let kernel = matrix_cpu::build_specialised_kernel(&key, 0xCAFE)
+            .expect("matrix-cpu must build a 2x2 MatMul kernel");
+
+        // Install on the thread-local CPU executor and seed the
+        // input buffer.
+        with_cpu_backend(|backend| {
+            const TEST_HANDLE: u64 = 0xCAFE_BABE;
+            backend.executor.install_specialised(TEST_HANDLE, kernel);
+
+            // A = [[1, 2], [3, 4]] flattened.  4 elements × 4 bytes
+            // = 16 bytes.
+            let a_bytes: Vec<u8> = [1.0_f32, 2.0, 3.0, 4.0]
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect();
+
+            // Use the executor directly (not the protocol) so the
+            // test stays focused on the kernel's correctness.
+            let input_buf = compute_ir::BufferId(100);
+            let output_buf = compute_ir::BufferId(101);
+            // Pre-allocate buffers via protocol calls so the
+            // executor's BufferStore is in the right state.
+            let alloc_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::AllocBuffer { bytes: 16 },
+            );
+            let _ = alloc_resp; // server assigns its own id; we sidestep that here
+
+            // Actually use the executor's `handle()` for end-to-end
+            // protocol-level testing.  Allocate two server-assigned
+            // buffer ids.
+            let _ = (input_buf, output_buf);
+            let in_buf = match backend.executor.handle(
+                executor_protocol::ExecutorRequest::AllocBuffer { bytes: 16 },
+            ) {
+                executor_protocol::ExecutorResponse::BufferAllocated { buffer } => buffer,
+                other => panic!("expected BufferAllocated, got {:?}", other),
+            };
+            let out_buf = match backend.executor.handle(
+                executor_protocol::ExecutorRequest::AllocBuffer { bytes: 16 },
+            ) {
+                executor_protocol::ExecutorResponse::BufferAllocated { buffer } => buffer,
+                other => panic!("expected BufferAllocated, got {:?}", other),
+            };
+            // Upload A.
+            let upload_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::UploadBuffer {
+                    buffer: in_buf,
+                    offset: 0,
+                    data: a_bytes,
+                },
+            );
+            assert!(
+                matches!(
+                    upload_resp,
+                    executor_protocol::ExecutorResponse::BufferUploaded { .. }
+                ),
+                "upload failed: {:?}",
+                upload_resp
+            );
+
+            // Fire the DispatchSpecialised request.
+            let dispatch_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::DispatchSpecialised {
+                    job_id: 1,
+                    handle: TEST_HANDLE,
+                    inputs: vec![in_buf],
+                    outputs: vec![out_buf],
+                },
+            );
+            assert!(
+                matches!(
+                    dispatch_resp,
+                    executor_protocol::ExecutorResponse::DispatchDone { .. }
+                ),
+                "dispatch failed: {:?}",
+                dispatch_resp
+            );
+
+            // Download the result.
+            let download_resp = backend.executor.handle(
+                executor_protocol::ExecutorRequest::DownloadBuffer {
+                    buffer: out_buf,
+                    offset: 0,
+                    len: 16,
+                },
+            );
+            let bytes = match download_resp {
+                executor_protocol::ExecutorResponse::BufferData { data, .. } => data,
+                other => panic!("expected BufferData, got {:?}", other),
+            };
+            let result: Vec<f32> = bytes
+                .chunks(4)
+                .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+                .collect();
+            // Expected: A × B = [[1*5+2*7, 1*6+2*8], [3*5+4*7, 3*6+4*8]]
+            //                 = [[19, 22], [43, 50]]
+            assert_eq!(
+                result,
+                vec![19.0, 22.0, 43.0, 50.0],
+                "Phase 4.10 CPU 2x2 MatMul: expected [[19, 22], [43, 50]]"
+            );
+        });
+    }
 }
 

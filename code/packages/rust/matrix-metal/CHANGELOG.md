@@ -1,5 +1,63 @@
 # Changelog — matrix-metal
 
+## 0.10.0 — 2026-05-13
+
+### Added — MX05 Phase 4.10 (MatMul emitter with folded matrix)
+
+The MSL emitter now supports `Op::MatMul (wire tag 0x15)` for f32
+where the **RHS** matrix is observed as a stable constant.  The
+constant matrix's elements are baked into the kernel source as
+float literals; the kernel reads only the variable LHS matrix and
+computes the dot product per output element.
+
+#### Supported shapes
+
+| Constant size | Matrix shape | Kernel size                                |
+|---------------|--------------|--------------------------------------------|
+| 16 bytes      | 2×2          | 2 column branches × 2-term dot product     |
+| 64 bytes      | 4×4          | 4 column branches × 4-term dot product     |
+
+Other sizes return `None` — V1 hard-caps at 16 elements because
+the bake-in approach (each constant as a literal) only scales
+to small matrices.  Larger matrices need a different
+representation (e.g. uniform buffer of constants) which lands in
+a later phase.
+
+#### Constraints
+
+- `dtype = F32`
+- `folded_slot = Some(1)` (RHS folded).  LHS-folded MatMul returns
+  `None` in V1 because the runtime variable dimension sits on a
+  different axis and needs a separate kernel shape.
+
+#### Entry-point convention
+
+```
+specialised_matmul_<dim>x<dim>_rhs_const_f32_0xHHHHHHHHHHHHHHHH
+```
+
+#### Kernel shape
+
+The kernel fans out one thread per output element.  Grid uniform
+`n = m * dim` (m = runtime rows, dim = constant matrix side).
+Each thread:
+
+  1. Decodes `r = gid / dim`, `c = gid % dim`
+  2. Reads `a[r * dim + k]` for `k in 0..dim`
+  3. Picks the right column's constants via `if (c == 0) { ... } if (c == 1) { ... }`
+  4. Writes the dot product to `out[gid]`
+
+Branch-per-column is fine for 2×2 / 4×4 — branch prediction is
+trivial.  Larger matrices would want a branch-free formulation.
+
+#### Tests (40 → 45 emitter; 19 → 45 total since Phase 4.2)
+
+- `matmul_2x2_rhs_folded_emits_kernel` — 2×2 happy path
+- `matmul_4x4_rhs_folded_emits_kernel` — 4×4 (still fits the cap)
+- `matmul_unsupported_size_returns_none` — 3×3 and 5×5 rejected
+- `matmul_lhs_folded_returns_none` — pins the Phase 4.x deferral
+- `matmul_no_folded_slot_returns_none` — pins the "can't guess" guard
+
 ## 0.9.0 — 2026-05-13
 
 ### Added — MX05 Phase 4.7 (unary ops with folded input constant)
