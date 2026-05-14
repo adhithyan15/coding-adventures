@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Add SPICE `F` / CCCS controlled-source parsing, including subcircuit output
+  node remapping and local controlling source-name remapping.
+
 ## 0.1.1
 
 - Add SPICE `E` / VCVS controlled-source parsing, including subcircuit node

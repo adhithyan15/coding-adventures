@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass, field
 
 from spice_engine import (
+    CCCS,
     VCCS,
     VCVS,
     Capacitor,
@@ -219,6 +220,9 @@ def _parse_element(fields: list[str]) -> object:
     if prefix == "E":
         _require_fields(fields, 6, "VCVS")
         return VCVS(name, fields[1], fields[2], fields[3], fields[4], parse_value(fields[5]))
+    if prefix == "F":
+        _require_fields(fields, 5, "CCCS")
+        return CCCS(name, fields[1], fields[2], fields[3], parse_value(fields[4]))
     raise NetlistParseError(f"unsupported element {name!r}")
 
 
@@ -297,11 +301,22 @@ def _map_subckt_fields(
         _require_min_fields(fields, 5, "subcircuit controlled source")
         for index in range(1, 5):
             mapped[index] = _map_subckt_node(fields[index], instance_name, node_map)
+    elif prefix == "F":
+        _require_min_fields(fields, 4, "subcircuit current-controlled source")
+        mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
+        mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
+        mapped[3] = _map_subckt_source_ref(fields[3], instance_name)
     elif prefix == "X":
         mapped[1:-1] = [
             _map_subckt_node(node, instance_name, node_map) for node in fields[1:-1]
         ]
     return mapped
+
+
+def _map_subckt_source_ref(source: str, instance_name: str) -> str:
+    if "." in source:
+        return source
+    return f"{instance_name}.{source}"
 
 
 def _map_subckt_node(node: str, instance_name: str, node_map: dict[str, str]) -> str:
