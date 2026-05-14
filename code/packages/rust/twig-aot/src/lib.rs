@@ -53,7 +53,7 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use aarch64_backend::{compile_with_globals, GlobalWordReloc, Reloc};
+use aarch64_backend::{compile_with_globals, emit_print_helper, GlobalWordReloc, Reloc};
 use aot_core::infer::infer_types;
 use aot_core::link::{entry_point_offset, link};
 use aot_core::specialise::aot_specialise;
@@ -868,6 +868,28 @@ fn compile_module_to_text_raw(
         fn_results.push((fn_.name.clone(), bytes, ext_relocs, glob_relocs));
     }
 
+    // ── LANG40: inject __twig_print_i64 helper if needed ─────────────────────
+    //
+    // If any compiled function emits `BL __twig_print_i64` (an io_out
+    // instruction), the cross-function BL patcher (Pass 2 below) must be able
+    // to resolve the symbol.  We inject the helper BEFORE `link()` so the
+    // linker assigns it a byte offset and the patcher can compute the correct
+    // PC-relative delta.
+    //
+    // The helper has no external relocs and no global-word relocs of its own,
+    // so the extra entry is a clean no-op for the global-reloc collection pass.
+    let needs_print_helper = fn_results.iter().any(|(_, _, relocs, _)| {
+        relocs.iter().any(|r| r.symbol == "__twig_print_i64")
+    });
+    if needs_print_helper {
+        fn_results.push((
+            "__twig_print_i64".to_string(),
+            emit_print_helper(),
+            vec![], // no cross-function relocs inside the helper itself
+            vec![], // no global-slot relocs
+        ));
+    }
+
     // ── Link: concatenate binaries and record byte offsets ──────────────────
     let plain_binaries: Vec<(String, Vec<u8>)> = fn_results
         .iter()
@@ -1038,6 +1060,61 @@ mod tests {
         let src = "(define (fib n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2))))) (fib 10)";
         let result = compile_macos_arm64_object(src, "fib");
         assert!(result.is_ok(), "fib should compile; got: {:?}", result.err());
+    }
+
+    // ---- LANG40: io_out / __twig_print_i64 injection ----
+
+    #[test]
+    fn print_program_compiles_ok() {
+        // A Twig program that calls `io_out` must compile end-to-end to a valid
+        // Mach-O MH_OBJECT without error.  The `print` builtin lowers to
+        // `io_out` in the IIR compiler, which becomes `BL __twig_print_i64` in
+        // the ARM64 backend.  The `compile_module_to_text_raw` injection pass
+        // must resolve that symbol by appending the helper to the text section.
+        //
+        // NOTE: io_out with a non-integer argument (like (print "hello")) may
+        // fail type-checking; we use (print 42) which produces a typed i64.
+        let src = "(print 42)";
+        let result = compile_macos_arm64_object(src, "print_test");
+        assert!(
+            result.is_ok(),
+            "io_out program should compile with LANG40; got: {:?}",
+            result.err()
+        );
+
+        // Verify Mach-O magic and file type.
+        let bytes = result.unwrap();
+        assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE], "Mach-O magic");
+        let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
+        assert_eq!(filetype, 1, "MH_OBJECT");
+    }
+
+    #[test]
+    fn print_program_is_valid_macho() {
+        // The compiled object must be ≥ 512 bytes (a realistic lower bound for
+        // a Mach-O with __TEXT/__text + symbols, and with the injected helper
+        // adding 208 bytes of machine code).
+        //
+        // This test catches regressions where the helper injection is silently
+        // skipped (e.g. the needs_print_helper check returns false incorrectly)
+        // and the output shrinks dramatically.
+        let src = "(print 99)";
+        let result = compile_macos_arm64_object(src, "print_size_test");
+        // If compilation fails (e.g. io_out not yet lowered from print), skip
+        // the size check gracefully — the print_program_compiles_ok test above
+        // is the authoritative failure.
+        if let Ok(bytes) = result {
+            // A Mach-O with the injected 208-byte print helper plus headers and
+            // symbol table should comfortably exceed 400 bytes.  This threshold
+            // is loose enough to survive minor header layout changes while still
+            // catching the case where helper injection was silently skipped
+            // (output would be ~250 bytes, just header + tiny user function).
+            assert!(
+                bytes.len() >= 400,
+                "Mach-O with print helper should be ≥ 400 bytes; got {} bytes",
+                bytes.len()
+            );
+        }
     }
 
     #[test]

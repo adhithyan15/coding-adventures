@@ -1,5 +1,47 @@
 # Changelog — `aarch64-backend`
 
+## 0.2.2 — 2026-05-13 (LANG40)
+
+**`io_out` CIR handler + self-contained `__twig_print_i64` helper.**
+
+### New CIR opcode handled
+
+| CIR opcode | ARM64 sequence | Notes |
+|------------|----------------|-------|
+| `io_out Var(val)` | `LDR X0 + BL __twig_print_i64` | Loads value into X0; helper injected by twig-aot |
+
+### New public API
+
+- `emit_print_helper() → Vec<u8>` — emits a self-contained 52-instruction
+  (208-byte) ARM64 function that converts a signed 64-bit integer (in `x0`)
+  to decimal ASCII and writes it to stdout followed by `'\n'`, using the
+  macOS `write(2)` syscall (`x16 = 4`, `SVC #0x80`).
+
+### Implementation notes
+
+- **No external symbols** — the helper lives in `__TEXT/__text` alongside user
+  functions and is resolved by the existing cross-function BL linker in
+  `twig-aot::compile_module_to_text_raw`, avoiding the need for `_printf`
+  stubs or dyld machinery.
+- **Algorithm**: UDIV+MSUB digit-extraction loop writing bytes backwards into
+  a 32-byte stack buffer; `STRB Wt,[Xn,#-1]!` (from `aarch64-encoder` 0.2.2)
+  decrements the write pointer and stores each ASCII digit in one instruction.
+  Special-cases `x0 == 0`.  Prepends `'-'` for negatives.
+- **Frame**: 48 bytes (16-byte aligned).  `'\n'` written to `[sp+48]` which
+  lies in macOS's 128-byte red zone (safe for SVC helper functions).
+- **Verified encodings**: all 52 instruction words verified against ARM ARM
+  (DDI 0487).  `emit_print_helper_size_is_52_words` enforces the count.
+
+### Tests (5 new)
+
+| Test | Asserts |
+|------|---------|
+| `io_out_emits_bl_reloc` | exactly one `ExternalReloc { symbol: "__twig_print_i64" }` |
+| `io_out_missing_src_errors` | error on zero srcs |
+| `emit_print_helper_has_prologue` | first word = `0xA9BD7BFD` (STP x29,x30,[sp,#-48]!) |
+| `emit_print_helper_ends_with_ret` | last word = `0xD65F03C0` (RET) |
+| `emit_print_helper_size_is_52_words` | exactly 208 bytes |
+
 ## 0.2.1 — 2026-05-13 (LANG39)
 
 **Global variable load / store lowering.**

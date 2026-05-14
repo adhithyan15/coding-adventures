@@ -1,5 +1,49 @@
 # Changelog — `twig-aot`
 
+## 0.1.7 — 2026-05-13 (LANG40)
+
+**AOT `io_out` — integer print to stdout via `__twig_print_i64`.**
+
+Twig programs that use `(print n)` now compile to native ARM64 code without
+`BackendRefused`.  Previously the `io_out` CIR opcode had no ARM64 handler;
+LANG40 adds end-to-end support across three crates.
+
+### Pipeline change — helper injection
+
+`compile_module_to_text_raw` gains a new step between Pass 1 and the linker:
+
+```rust
+let needs_print_helper = fn_results.iter().any(|(_, _, relocs, _)| {
+    relocs.iter().any(|r| r.symbol == "__twig_print_i64")
+});
+if needs_print_helper {
+    fn_results.push(("__twig_print_i64".to_string(), emit_print_helper(), vec![], vec![]));
+}
+```
+
+If any compiled function contains a `BL __twig_print_i64` placeholder (from
+the `io_out` handler in `aarch64-backend`), the 208-byte self-contained print
+helper is appended to `fn_results` before `link()` runs.  The existing
+two-pass BL patcher then resolves the symbol and patches the correct
+PC-relative offset automatically — zero new linker infrastructure needed.
+
+The helper is **not** emitted when no `io_out` instructions are present,
+so programs without printing incur zero overhead.
+
+### Tests (2 new)
+
+| Test | Asserts |
+|------|---------|
+| `print_program_compiles_ok` | `(print 42)` compiles to a valid `MH_OBJECT` Mach-O |
+| `print_program_is_valid_macho` | compiled object is ≥ 400 bytes (helper present) |
+
+### Upstream dependency versions
+
+| Crate | Old | New |
+|-------|-----|-----|
+| `aarch64-encoder` | 0.2.1 | 0.2.2 (adds `strb_pre_neg1`) |
+| `aarch64-backend` | 0.2.1 | 0.2.2 (adds `io_out` handler + `emit_print_helper`) |
+
 ## 0.1.6 — 2026-05-13 (LANG39)
 
 **First-class global variable support — `(define x 5) x` now compiles to native code.**
