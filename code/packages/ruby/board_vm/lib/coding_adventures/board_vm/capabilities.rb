@@ -92,6 +92,14 @@ module CodingAdventures
         capabilities.select { |capability| capability.name.start_with?("time.") }
       end
 
+      def pwm
+        capabilities.select { |capability| capability.name.start_with?("pwm.") }
+      end
+
+      def adc
+        capabilities.select { |capability| capability.name.start_with?("adc.") }
+      end
+
       def program
         capabilities.select { |capability| capability.name.start_with?("program.") }
       end

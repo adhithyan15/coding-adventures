@@ -1,8 +1,8 @@
 #![no_std]
 
 use board_vm_ir::{
-    parse_module, validate, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
-    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    parse_module, validate, CAP_ADC_READ, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
+    CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -179,6 +179,114 @@ pub const BLINK_MVP_WITH_PWM_CAPABILITIES: [CapabilityDescriptor<'static>; 8] = 
     },
 ];
 
+pub const BLINK_MVP_WITH_ADC_CAPABILITIES: [CapabilityDescriptor<'static>; 8] = [
+    CapabilityDescriptor {
+        id: CAP_GPIO_OPEN,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.open",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_WRITE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.write",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.read",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_CLOSE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.close",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_SLEEP_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.sleep_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_NOW_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.now_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_ADC_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "adc.read",
+    },
+    CapabilityDescriptor {
+        id: CAP_PROGRAM_RAM_EXEC,
+        version: 1,
+        flags: CAP_FLAG_PROTOCOL_FEATURE,
+        name: "program.ram_exec",
+    },
+];
+
+pub const BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    CapabilityDescriptor {
+        id: CAP_GPIO_OPEN,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.open",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_WRITE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.write",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.read",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_CLOSE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.close",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_SLEEP_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.sleep_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_NOW_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.now_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_PWM_WRITE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "pwm.write",
+    },
+    CapabilityDescriptor {
+        id: CAP_ADC_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "adc.read",
+    },
+    CapabilityDescriptor {
+        id: CAP_PROGRAM_RAM_EXEC,
+        version: 1,
+        flags: CAP_FLAG_PROTOCOL_FEATURE,
+        name: "program.ram_exec",
+    },
+];
+
 pub const BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
     CapabilityDescriptor {
         id: CAP_GPIO_OPEN,
@@ -221,6 +329,126 @@ pub const BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<
         version: 1,
         flags: CAP_FLAG_BYTECODE_CALLABLE,
         name: "pwm.write",
+    },
+    CapabilityDescriptor {
+        id: CAP_LED_MATRIX_FRAME,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "led_matrix.frame",
+    },
+    CapabilityDescriptor {
+        id: CAP_PROGRAM_RAM_EXEC,
+        version: 1,
+        flags: CAP_FLAG_PROTOCOL_FEATURE,
+        name: "program.ram_exec",
+    },
+];
+
+pub const BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    CapabilityDescriptor {
+        id: CAP_GPIO_OPEN,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.open",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_WRITE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.write",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.read",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_CLOSE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.close",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_SLEEP_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.sleep_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_NOW_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.now_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_ADC_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "adc.read",
+    },
+    CapabilityDescriptor {
+        id: CAP_LED_MATRIX_FRAME,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "led_matrix.frame",
+    },
+    CapabilityDescriptor {
+        id: CAP_PROGRAM_RAM_EXEC,
+        version: 1,
+        flags: CAP_FLAG_PROTOCOL_FEATURE,
+        name: "program.ram_exec",
+    },
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 10] = [
+    CapabilityDescriptor {
+        id: CAP_GPIO_OPEN,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.open",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_WRITE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.write",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.read",
+    },
+    CapabilityDescriptor {
+        id: CAP_GPIO_CLOSE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "gpio.close",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_SLEEP_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.sleep_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_NOW_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.now_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_PWM_WRITE,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "pwm.write",
+    },
+    CapabilityDescriptor {
+        id: CAP_ADC_READ,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "adc.read",
     },
     CapabilityDescriptor {
         id: CAP_LED_MATRIX_FRAME,
