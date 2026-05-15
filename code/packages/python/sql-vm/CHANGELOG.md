@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.23.0 — 2026-05-14
+
+### Changed
+
+- **`_do_insert_from_result`** (`vm.py`) — Extended to support RETURNING on
+  INSERT … SELECT.  When ``ins.returning_columns`` is non-empty the function:
+
+  1. Snapshots the source rows from ``st.result.rows`` before clearing.
+  2. Inserts each row as before, updating ``st.last_inserted_row`` per row.
+  3. After each successful insert, reads the RETURNING column values from
+     ``row_dict`` and accumulates them in a local list.
+  4. After the loop, sets ``st.result.columns = ins.returning_columns``
+     and extends ``st.result.rows`` with the accumulated tuples.
+  5. Always updates ``rows_affected`` regardless of RETURNING.
+
+  Rows skipped by ON CONFLICT IGNORE are not included in the RETURNING
+  output, matching sqlite3 behaviour.  Column names absent from
+  ``row_dict`` contribute ``None`` (covers unsupported complex RETURNING
+  expressions).
+
 ## 1.22.0 — 2026-05-13
 
 ### Added

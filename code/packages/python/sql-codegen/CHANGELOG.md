@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.25.0] - 2026-05-14
+
+### Added
+
+- **`InsertFromResult.returning_columns`** (`ir.py`) — New optional field
+  (default `()`) on the `InsertFromResult` instruction.  When non-empty,
+  the instruction signals the VM to repurpose the result buffer for RETURNING
+  output after draining and inserting all source rows.  The tuple contains
+  the display/source column names (one entry per RETURNING expression); plain
+  `Column` references resolve to the column name, which doubles as the
+  ``row_dict`` lookup key in the VM.
+
+- **RETURNING codegen for INSERT … SELECT** (`compiler.py`,
+  `_compile_insert`) — The INSERT … SELECT path now passes
+  ``returning_columns`` to `InsertFromResult` when the plan node carries a
+  RETURNING clause.  No ``SetResultSchema`` prefix is required because
+  `InsertFromResult` sets the result schema directly.
+
 ## [1.24.0] - 2026-05-14
 
 ### Added
