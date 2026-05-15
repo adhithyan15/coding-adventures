@@ -217,6 +217,15 @@ module CodingAdventures
         native_session.spi_open_module(bus, max_stack)
       end
 
+      def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
+        native_session.spi_transfer_module(
+          cs_pin,
+          i2c_bytes_value(write_bytes),
+          i2c_read_length_value(read_length),
+          max_stack
+        )
+      end
+
       def i2c_write_u8_module(address:, byte:, max_stack: 4)
         native_session.i2c_write_u8_module(address, byte, max_stack)
       end
@@ -336,6 +345,24 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: spi_open_module(bus: bus, max_stack: max_stack)
+        )
+      end
+
+      def upload_spi_transfer(
+        program_id: @program_id,
+        cs_pin:,
+        write_bytes:,
+        read_length:,
+        max_stack: 5
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: spi_transfer_module(
+            cs_pin: cs_pin,
+            write_bytes: write_bytes,
+            read_length: read_length,
+            max_stack: max_stack
+          )
         )
       end
 
@@ -773,6 +800,32 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def spi_transfer(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        cs_pin:,
+        write_bytes:,
+        read_length:,
+        max_stack: 5
+      )
+        results = upload_spi_transfer(
+          program_id: program_id,
+          cs_pin: cs_pin,
+          write_bytes: write_bytes,
+          read_length: read_length,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def i2c_write_u8(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1096,6 +1149,8 @@ module CodingAdventures
           upload_i2c_open(**i2c_open_command_options(words, command, options, require_budget: false))
         when "upload-spi-open", "upload-spi.open"
           upload_spi_open(**spi_open_command_options(words, command, options, require_budget: false))
+        when "upload-spi-transfer", "upload-spi.transfer"
+          upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-i2c-write-u8", "upload-i2c.write_u8", "upload-i2c-write"
           upload_i2c_write_u8(**i2c_write_u8_command_options(words, command, options, require_budget: false))
         when "upload-i2c-write-bytes", "upload-i2c.write"
@@ -1146,6 +1201,8 @@ module CodingAdventures
           i2c_open(**i2c_open_command_options(words, command, options))
         when "spi-open", "spi.open"
           spi_open(**spi_open_command_options(words, command, options))
+        when "spi-transfer", "spi.transfer"
+          spi_transfer(**spi_transfer_command_options(words, command, options))
         when "i2c-write-u8", "i2c.write_u8", "i2c-write"
           i2c_write_u8(**i2c_write_u8_command_options(words, command, options))
         when "i2c-write-bytes", "i2c.write"
@@ -1478,6 +1535,24 @@ module CodingAdventures
 
         ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires address" unless merged.key?(:address)
+        raise ArgumentError, "#{command} requires write bytes" unless merged.key?(:write_bytes)
+        raise ArgumentError, "#{command} requires read length" unless merged.key?(:read_length)
+
+        merged
+      end
+
+      def spi_transfer_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:cs_pin] = integer_argument(words.shift, "#{command} chip select pin") unless words.empty?
+        merged[:write_bytes] = i2c_bytes_argument(words.shift, "#{command} write bytes") unless words.empty?
+        merged[:read_length] = i2c_read_length_value(words.shift) unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires chip select pin" unless merged.key?(:cs_pin)
         raise ArgumentError, "#{command} requires write bytes" unless merged.key?(:write_bytes)
         raise ArgumentError, "#{command} requires read length" unless merged.key?(:read_length)
 

@@ -213,6 +213,7 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x27` | `i2c.read` | `handle`, `address: u16/u8`, `length: u8` | `bytes` |
 | `0x28` | `i2c.transfer` | `handle`, `address: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
 | `0x29` | `spi.open` | `bus: u16/u8` | `handle` |
+| `0x2A` | `spi.transfer` | `handle`, `cs_pin: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -232,8 +233,13 @@ the bounded read bytes.
 `spi.open` opens a board-advertised SPI controller and returns a persistent bus
 handle. Target metadata owns the controller name and header pins such as COPI,
 CIPO, SCK, and the conventional chip-select pin; language frontends pass only
-the bus id. Follow-on SPI transfer capabilities should use the returned handle
-instead of repeating pin or bus metadata in each command.
+the bus id. `spi.transfer` uses the returned handle and an explicit chip-select
+pin to wrap one bounded transaction. The VM writes `write_bytes` while chip
+select is asserted, then clocks `read_length` bytes with zero-valued dummy writes
+and returns those bounded read bytes. `spi.transfer` therefore covers write-only
+transactions with `read_length = 0`, read-only transactions with an empty write
+buffer, and register-style write-then-read exchanges without repeating SPI bus
+metadata in language frontends.
 
 ### LED Matrix
 

@@ -4,7 +4,8 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
     CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ,
     CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME,
-    CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, MAX_BYTE_BUFFER_LEN,
+    CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -155,6 +156,16 @@ pub trait BoardHal {
     }
 
     fn spi_open(&mut self, _bus: u16) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn spi_transfer(
+        &mut self,
+        _token: u32,
+        _cs_pin: u16,
+        _write_bytes: &[u8],
+        _read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -660,6 +671,27 @@ where
                 let handle = self.alloc_handle(HandleKind::Spi, token, ip)?;
                 self.push(Value::Handle(handle), ip)
             }
+            CAP_SPI_TRANSFER => {
+                let read_len = self.pop_u8(ip)?;
+                if read_len as usize > MAX_BYTE_BUFFER_LEN {
+                    return Err(RuntimeError {
+                        ip,
+                        kind: RuntimeErrorKind::ByteBufferTooLarge,
+                    });
+                }
+                let write_bytes = self.pop_bytes(ip)?;
+                let cs_pin = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::Spi, ip)?;
+                let bytes = self
+                    .hal
+                    .spi_transfer(token, cs_pin, write_bytes.as_slice(), read_len)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::Bytes(bytes), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -920,6 +952,7 @@ mod tests {
         I2cRead(u32, u16, u8),
         I2cTransfer(u32, u16, ByteBuffer, u8),
         SpiOpen(u16),
+        SpiTransfer(u32, u16, ByteBuffer, u8),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -1041,6 +1074,27 @@ mod tests {
         fn spi_open(&mut self, bus: u16) -> Result<u32, HalError> {
             self.events.push(Event::SpiOpen(bus));
             Ok(0x2_2000 | bus as u32)
+        }
+
+        fn spi_transfer(
+            &mut self,
+            token: u32,
+            cs_pin: u16,
+            write_bytes: &[u8],
+            read_len: u8,
+        ) -> Result<ByteBuffer, HalError> {
+            self.events.push(Event::SpiTransfer(
+                token,
+                cs_pin,
+                ByteBuffer::from_slice(write_bytes).unwrap(),
+                read_len,
+            ));
+            let mut response = [0u8; MAX_BYTE_BUFFER_LEN];
+            response[0] = 0x9f;
+            response[1] = 0x01;
+            response[2] = 0x02;
+            ByteBuffer::from_slice(&response[..read_len as usize])
+                .map_err(|_| HalError::UnsupportedMode)
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -1245,6 +1299,49 @@ mod tests {
         );
         assert_eq!(report.open_handles, 1);
         assert_eq!(runtime.hal().events, vec![Event::SpiOpen(0)]);
+    }
+
+    #[test]
+    fn spi_transfer_dispatches_handle_cs_pin_write_bytes_and_returns_bytes() {
+        let mut runtime: Runtime<FakeHal, 5, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 0, 0x40, CAP_SPI_OPEN as u8, 0x20, 0x50];
+        let transfer = Module {
+            flags: board_vm_ir::FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 5,
+            code: &[
+                0x20,
+                0x13,
+                0x0a,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x01,
+                0x12,
+                0x03,
+                0x40,
+                CAP_SPI_TRANSFER as u8,
+                0x50,
+            ],
+            const_pool: &[0x9f],
+        };
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_module(&transfer, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            report.return_value,
+            Value::Bytes(ByteBuffer::from_slice(&[0x9f, 0x01, 0x02]).unwrap())
+        );
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::SpiOpen(0),
+                Event::SpiTransfer(0x2_2000, 10, ByteBuffer::from_slice(&[0x9f]).unwrap(), 3)
+            ]
+        );
     }
 
     #[test]

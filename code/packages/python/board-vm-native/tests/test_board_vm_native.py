@@ -134,6 +134,7 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "transport.bluetooth_le" in uno_r4_wifi.capabilities
     assert "pwm.write" in uno_r4_wifi.capabilities
     assert "spi.open" in uno_r4_wifi.capabilities
+    assert "spi.transfer" in uno_r4_wifi.capabilities
     assert uno_r4_wifi.wireless_transports == ["wifi", "bluetooth_le"]
     assert uno_r4_wifi.supports_wifi is True
     assert uno_r4_wifi.supports_bluetooth is True

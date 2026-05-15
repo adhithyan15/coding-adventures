@@ -422,6 +422,16 @@ pub trait UnoR4Backend {
         Err(HalError::UnsupportedMode)
     }
 
+    fn transfer_spi(
+        &mut self,
+        _bus: u8,
+        _cs_pin: u8,
+        _write_bytes: &[u8],
+        _read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn write_i2c_u8(&mut self, _bus: u8, _address: u16, _byte: u8) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -575,6 +585,19 @@ where
         self.backend.open_spi(bus)
     }
 
+    fn spi_transfer(
+        &mut self,
+        token: u32,
+        cs_pin: u16,
+        write_bytes: &[u8],
+        read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
+        let bus = normalize_spi_token(self.target, token)?;
+        let cs_pin = normalize_digital_pin(cs_pin)?;
+        self.backend
+            .transfer_spi(bus, cs_pin, write_bytes, read_len)
+    }
+
     fn i2c_write_u8(&mut self, token: u32, address: u16, byte: u8) -> Result<(), HalError> {
         let bus = normalize_i2c_token(self.target, token)?;
         normalize_i2c_address(address)?;
@@ -696,6 +719,11 @@ fn normalize_spi_bus(target: &TargetDescriptor, bus: u16) -> Result<u8, HalError
     }
 }
 
+fn normalize_spi_token(target: &TargetDescriptor, token: u32) -> Result<u8, HalError> {
+    let bus = u16::try_from(token & 0xff).map_err(|_| HalError::InvalidPin)?;
+    normalize_spi_bus(target, bus)
+}
+
 fn normalize_i2c_address(address: u16) -> Result<(), HalError> {
     if address <= 0x7f {
         Ok(())
@@ -815,6 +843,7 @@ extern crate std;
 mod tests {
     use super::*;
     use board_vm_host::{write_blink_module, BlinkProgram, HostSession, DEFAULT_PROGRAM_ID};
+    use board_vm_ir::MAX_BYTE_BUFFER_LEN;
     use board_vm_protocol::{
         decode_caps_report_header, decode_frame, decode_hello_ack, decode_run_report_header,
         MessageType, RunStatus as ProtocolRunStatus,
@@ -843,6 +872,7 @@ mod tests {
         I2cRead(u8, u16, u8),
         I2cTransfer(u8, u16, Vec<u8>, u8),
         SpiOpen(u8),
+        SpiTransfer(u8, u8, Vec<u8>, u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -933,6 +963,27 @@ mod tests {
         fn open_spi(&mut self, bus: u8) -> Result<u32, HalError> {
             self.events.push(Event::SpiOpen(bus));
             Ok(0x2_2000 | bus as u32)
+        }
+
+        fn transfer_spi(
+            &mut self,
+            bus: u8,
+            cs_pin: u8,
+            write_bytes: &[u8],
+            read_len: u8,
+        ) -> Result<ByteBuffer, HalError> {
+            self.events.push(Event::SpiTransfer(
+                bus,
+                cs_pin,
+                write_bytes.to_vec(),
+                read_len,
+            ));
+            let mut response = [0u8; MAX_BYTE_BUFFER_LEN];
+            response[0] = 0x9f;
+            response[1] = 0x01;
+            response[2] = 0x02;
+            ByteBuffer::from_slice(&response[..read_len as usize])
+                .map_err(|_| HalError::UnsupportedMode)
         }
 
         fn write_i2c_u8(&mut self, bus: u8, address: u16, byte: u8) -> Result<(), HalError> {
@@ -1096,6 +1147,9 @@ mod tests {
             .capabilities
             .supports(board_vm_ir::CAP_I2C_TRANSFER));
         assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_SPI_OPEN));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_SPI_TRANSFER));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1126,6 +1180,9 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_SPI_OPEN));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_SPI_TRANSFER));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1236,6 +1293,34 @@ mod tests {
 
         assert_eq!(board.spi_open(1), Err(HalError::InvalidPin));
         assert_eq!(board.spi_open(99), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn spi_transfer_runs_through_bus_metadata_and_chip_select_pin() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(
+            board.spi_transfer(0x2_2000, 10, &[0x9f], 3).unwrap(),
+            ByteBuffer::from_slice(&[0x9f, 0x01, 0x02]).unwrap()
+        );
+        assert_eq!(
+            board.backend().events,
+            vec![Event::SpiTransfer(0, 10, vec![0x9f], 3)]
+        );
+    }
+
+    #[test]
+    fn spi_transfer_rejects_unknown_bus_or_chip_select_pin() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(
+            board.spi_transfer(0x2_2001, 10, &[0x9f], 3),
+            Err(HalError::InvalidPin)
+        );
+        assert_eq!(
+            board.spi_transfer(0x2_2000, 99, &[0x9f], 3),
+            Err(HalError::InvalidPin)
+        );
     }
 
     #[test]

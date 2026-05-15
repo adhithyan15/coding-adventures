@@ -7,13 +7,14 @@ use board_vm_host::{
     GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram,
     GpioWriteProgram, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
     I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, PwmWriteProgram, SpiOpenProgram,
-    TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    SpiTransferProgram, TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
     DAC_WRITE_U12_MODULE_LEN,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
     I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_TRANSFER_MAX_MODULE_LEN,
     I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
-    PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
@@ -26,7 +27,7 @@ use board_vm_language_core::{
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
     build_program_end_wire_frame, build_pwm_write_module, build_adc_read_module, build_raw_module,
     build_run_background_wire_frame, build_run_wire_frame, build_spi_open_module,
-    build_stop_wire_frame,
+    build_spi_transfer_module, build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
@@ -289,6 +290,24 @@ extern "C" fn session_spi_open_module(
 
     let module = build_spi_open_module_value(bus, max_stack)
         .unwrap_or_else(|error| raise_core_error("spi_open_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_spi_transfer_module(
+    _self_val: VALUE,
+    cs_pin_val: VALUE,
+    write_bytes_val: VALUE,
+    read_len_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let cs_pin = rb_u16(cs_pin_val, "cs_pin");
+    let write_bytes = ruby_bridge::bytes_from_rb(write_bytes_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("write_bytes must be a Ruby binary String"));
+    let read_len = rb_u8(read_len_val, "read_len");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_spi_transfer_module_value(cs_pin, &write_bytes, read_len, max_stack)
+        .unwrap_or_else(|error| raise_core_error("spi_transfer_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -1606,6 +1625,26 @@ fn build_spi_open_module_value(bus: u8, max_stack: u8) -> Result<Vec<u8>, Langua
     Ok(module)
 }
 
+fn build_spi_transfer_module_value(
+    cs_pin: u16,
+    write_bytes: &[u8],
+    read_len: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; SPI_TRANSFER_MAX_MODULE_LEN];
+    let len = build_spi_transfer_module(
+        SpiTransferProgram {
+            cs_pin,
+            write_bytes,
+            read_len,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_i2c_write_u8_module_value(
     address: u16,
     byte: u8,
@@ -2009,6 +2048,12 @@ pub extern "C" fn Init_board_vm_native() {
         "spi_open_module",
         session_spi_open_module as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "spi_transfer_module",
+        session_spi_transfer_module as *const c_void,
+        4,
     );
     ruby_bridge::define_method_raw(
         session_class,

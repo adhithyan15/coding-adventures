@@ -472,6 +472,26 @@ module CodingAdventures
         )
       end
 
+      def spi_transfer!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        cs_pin:,
+        write_bytes:,
+        read_length:,
+        max_stack: 5
+      )
+        ensure_uno_r4_wifi!
+
+        session.spi_transfer(
+          program_id: program_id,
+          budget: budget,
+          cs_pin: cs_pin,
+          write_bytes: write_bytes,
+          read_length: read_length,
+          max_stack: max_stack
+        )
+      end
+
       def i2c_write_u8!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -1299,6 +1319,24 @@ module CodingAdventures
           budget: budget,
           host_nonce: host_nonce,
           bus: bus,
+          max_stack: max_stack
+        )
+      end
+
+      def transfer(
+        cs_pin:,
+        write_bytes:,
+        read_length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 5
+      )
+        @connection.spi_transfer!(
+          program_id: program_id,
+          budget: budget,
+          cs_pin: cs_pin,
+          write_bytes: write_bytes,
+          read_length: read_length,
           max_stack: max_stack
         )
       end
