@@ -1335,7 +1335,16 @@ mod tw05f_tests {
     }
 
     fn tempdir(tag: &str) -> PathBuf {
-        let d = std::env::temp_dir().join(format!("twig_tw05f_test_{tag}"));
+        // Use process ID + subsecond nanos to avoid predictable temp paths
+        // that could be pre-created as symlinks on shared CI machines.
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .subsec_nanos();
+        let d = std::env::temp_dir()
+            .join(format!("twig_tw05f_test_{tag}_{}_{}",
+                          std::process::id(), nonce));
         fs::create_dir_all(&d).unwrap();
         d
     }
