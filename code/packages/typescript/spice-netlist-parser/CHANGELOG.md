@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.6
+
+- Add SPICE `M` MOSFET element parsing via `.model <name> NMOS(...)` and
+  `.model <name> PMOS(...)` cards with Level-1 parameter aliases and
+  per-instance overrides such as `W=...` and `L=...`.
+- Remap MOSFET drain/gate/source/body terminals during subcircuit expansion.
+
 ## 0.1.5
 
 - Add SPICE `Q` BJT element parsing via `.model <name> NPN(...)` and

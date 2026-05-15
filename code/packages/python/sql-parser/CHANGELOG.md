@@ -2,6 +2,25 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.18.0] - 2026-05-14
+
+### Added
+
+- **`filter_clause` grammar rule** (`sql.grammar`, `_grammar.py`) — Extended the
+  `function_call` rule with an optional `filter_clause` suffix:
+
+      function_call = (NAME | "REPLACE") "(" ( STAR | "DISTINCT" value_list | [ value_list ] ) ")" [ filter_clause ] ;
+      filter_clause = "FILTER" "(" "WHERE" expr ")" ;
+
+  This allows the SQL parser to recognise the SQL:2003 / SQLite FILTER (WHERE …)
+  syntax on aggregate function calls such as:
+
+      COUNT(*) FILTER (WHERE active = 1)
+      SUM(salary) FILTER (WHERE dept = 'eng')
+
+  The `_grammar.py` file was regenerated from `sql.grammar` via the
+  `grammar_tools` CLI.
+
 ## [0.17.0] - 2026-05-13
 
 ### Added
