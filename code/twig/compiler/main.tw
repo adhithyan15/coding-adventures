@@ -1,38 +1,42 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG61 / TW05-H)
+; # main.tw — Root Module + Smoke-Test Entry Point (LANG62 / TW05-I)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
 ; TW05-E, and the IIR emitter from TW05-F/G/H) and exposes a `(main)` function
-; that exercises the full pipeline including the new `emit-program` entrypoint
-; added in TW05-H.
+; that exercises the full pipeline on real compiler source.
 ;
-; ## TW05-H pipeline (updated from TW05-G)
+; ## TW05-I pipeline (updated from TW05-H)
 ;
-;   src = "(define (first) 1)(define (second) 2)"
+; TW05-I is the first self-compilation check: the pipeline now runs on a
+; comment-stripped version of `span.tw` — the first of the compiler's own
+; modules.  This tests lexer comment-skipping, parser fallback paths for
+; `module` and `record` forms, and emitter skip-logic for non-definition
+; top-level forms.
 ;
-;   lex → 12 tokens
+;   src = "(module compiler/span ...) (record Span ...) (define (make-span ...)) (define (dummy-span ...))"
+;
+;   lex → ~50 tokens (whitespace and comments stripped)
 ;
 ;   parse
-;     → [DefExpr "first"  (LambdaExpr [] (IntLit 1) sp) sp,
-;        DefExpr "second" (LambdaExpr [] (IntLit 2) sp) sp]
+;     → [CallExpr "module" ...,       ; skipped by emit-program
+;        CallExpr "record" ...,       ; skipped by emit-program
+;        DefExpr "make-span" LambdaExpr,
+;        DefExpr "dummy-span" LambdaExpr]
 ;
 ;   emit-program
-;     → [(cons "first"  [instr1]),
-;        (cons "second" [instr1])]
+;     → [(cons "make-span"  [12 instrs]),
+;        (cons "dummy-span" [4 instrs])]
 ;
 ;   (length result) = 2
 ;
-; The `(main)` return value of `2` is the integration test assertion.
-; (Previous milestones returned 42; TW05-H returns 2 — the count of emitted
-; function definitions.)
+; The `(main)` return value of `2` is unchanged from TW05-H.
 ;
-; Note: A simpler no-param source is used here instead of the double/triple
-; example from the spec comment header.  The depth-256 VM call limit is
-; reached by the 57-char source with CallExpr bodies due to the 11-gate
-; dispatch chain.  No-param functions with IntLit bodies use gate 1 only,
-; keeping the peak call depth well within the limit.  The `emit_program_*`
-; unit tests in twig-module-driver already verify the double/triple case via
-; direct AST construction (no full-pipeline depth concern there).
+; ## VM call-depth note
+;
+; `twig-vm`'s `MAX_DISPATCH_DEPTH` was bumped from 256 to 4096 in LANG62.
+; The lex-loop recurses once per character; the stripped span.tw source is
+; ~365 chars, requiring ~365 recursive frames during lexing.  The old 256
+; limit would have caused `Run(DepthExceeded)` here.
 ;
 ; ## Naming conventions for generated accessors
 ;
@@ -64,29 +68,47 @@
 
 ; ── Entry point ──────────────────────────────────────────────────────────────
 ;
-; `(main)` is the TW05-H end-to-end smoke test:
-;   lex + parse two function definitions → emit-program → count results → 2
+; `(main)` is the TW05-I end-to-end self-compilation smoke test:
+;   lex + parse stripped span.tw → emit-program → count results → 2
 ;
-; Returns: 2  (number of functions emitted from a two-define program)
+; Returns: 2  (number of function definitions in span.tw: make-span + dummy-span)
 
 (define (main)
-  ; TW05-H pipeline: lex → parse → emit-program → count functions → 2
+  ; TW05-I pipeline: lex → parse → emit-program → count functions → 2
   ;
-  ; Two no-param functions with integer-literal bodies.  This keeps the
-  ; peak VM call-stack depth within the 256-frame limit: lex-loop iterates
-  ; 38 chars (fits in ~38 frames), each function body hits only gate 1
-  ; (IntLit) in the 11-gate dispatch chain.
-  (let* ((src    "(define (first) 1)(define (second) 2)")
+  ; Source: comment-stripped span.tw (≈ 365 chars).
+  ; Non-definition top-level forms (module declaration, record definition)
+  ; are parsed as CallExpr nodes and silently skipped by emit-program.
+  ; Only DefExpr(LambdaExpr) nodes are emitted:
+  ;   make-span  → 12 instructions (if + and + >= + <=)
+  ;   dummy-span → 4 instructions  (Span constructor with 3 const args)
+  ; `string-append` is a 2-arity builtin; chain calls to concatenate 7 pieces.
+  (let* ((src
+    (string-append
+      "(module compiler/span (typed lenient) "
+      (string-append
+        "(export Span span? span-source-id span-start span-end make-span dummy-span)) "
+        (string-append
+          "(record Span (source-id : int) (start : int) (end : int)) "
+          (string-append
+            "(define (make-span source-id start end) "
+            (string-append
+              "  (if (and (>= start 0) (<= start end)) "
+              (string-append
+                "      (Span source-id start end) nil)) "
+                "(define (dummy-span) (Span 0 0 0))")))))))
          (tokens (lex-source src))
 
-         ; parse-program returns a list of two DefExpr nodes:
-         ;   [DefExpr "first"  (LambdaExpr [] (IntLit 1) sp) sp,
-         ;    DefExpr "second" (LambdaExpr [] (IntLit 2) sp) sp]
+         ; parse-program returns 4 top-level forms:
+         ;   CallExpr "module" ...       → skipped by emit-program
+         ;   CallExpr "record" ...       → skipped by emit-program
+         ;   DefExpr "make-span" LambdaExpr  → emitted
+         ;   DefExpr "dummy-span" LambdaExpr → emitted
          (forms  (parse-program tokens))
 
-         ; emit-program processes each DefExpr(LambdaExpr) with a fresh builder
-         ; and returns (cons fn-name instruction-list) pairs:
-         ;   [(cons "first" [instr1]), (cons "second" [instr1])]
+         ; emit-program produces (fn-name . instruction-list) pairs:
+         ;   [(cons "make-span" [...12 instrs...]),
+         ;    (cons "dummy-span" [...4 instrs...])]
          (funcs  (emit-program forms)))
 
     ; Count of emitted function definitions.

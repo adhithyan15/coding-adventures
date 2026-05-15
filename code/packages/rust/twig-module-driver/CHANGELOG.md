@@ -1,5 +1,43 @@
 # Changelog — twig-module-driver
 
+## [0.7.0] — 2026-05-15
+
+### Added (LANG62 — TW05-I first self-compilation check)
+
+New `#[cfg(test)] mod tw05i_tests` with 6 integration tests that exercise the
+full lex → parse → `emit-program` pipeline on `compiler/span.tw` — the first
+of the compiler's own modules.
+
+#### Tests added
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_stripped_span_fn_count` | Stripped span source → 2 emitted functions |
+| `self_compile_stripped_span_fn_names` | First emitted function is `"make-span"` |
+| `self_compile_dummy_span_instr_count` | `dummy-span` body emits exactly 4 instructions |
+| `self_compile_make_span_instr_count` | `make-span` body emits exactly 12 instructions |
+| `self_compile_real_span_tw` | Actual `span.tw` file content (read at runtime) → 2 functions |
+| `full_lex_parse_emit_self_compile` | All 9 modules + `main.tw` → `(main) = 2` |
+
+#### Key behaviours verified
+
+- Lexer comment-skipping (`; …` lines skipped) and colon-token handling
+  (`(source-id : int)` → `TkColon` → `NilLit` fallback in parser)
+- Parser fallback `parse-call` path for `(module ...)` and `(record ...)` forms
+  (both become `CallExpr`, not `DefExpr`)
+- `emit-program` skip-logic: only `DefExpr(LambdaExpr)` nodes are emitted
+- `make-span` `IfExpr` body → 12 IIR instructions
+- `dummy-span` `CallExpr(Span, ...)` body → 4 IIR instructions
+
+#### `main.tw` updated to TW05-I
+
+`main.tw` now runs the pipeline on a comment-stripped version of `span.tw`
+(assembled via `string-append`) and returns `(length funcs)` = 2.  The
+`MAX_DISPATCH_DEPTH` bump (256 → 4096, in `twig-vm` 0.16.0) is required for
+lexing the ~365-char source.
+
+---
+
 ## [0.6.0] — 2026-05-15
 
 ### Added (LANG61 — TW05-H self-hosted program emitter)
