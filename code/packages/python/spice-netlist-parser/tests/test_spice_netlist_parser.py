@@ -18,6 +18,7 @@ from spice_engine import (
     VoltageSource,
     ac_sweep,
     dc_op,
+    sens_dc,
     tf,
 )
 
@@ -27,6 +28,7 @@ from spice_netlist_parser import (
     ModelCard,
     NetlistParseError,
     OpAnalysis,
+    SensAnalysis,
     TfAnalysis,
     TranAnalysis,
     parse_netlist,
@@ -111,6 +113,39 @@ def test_tf_analysis_card_rejects_non_voltage_output_probe() -> None:
 Vin in 0 DC 1
 R1 in out 1k
 .tf out Vin
+"""
+        )
+
+
+def test_parse_sens_analysis_card_and_run_dc_sensitivity() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.sens V(out)
+"""
+    )
+
+    assert parsed.analyses == [SensAnalysis(output_node="out")]
+    assert parsed.sens_cards() == [SensAnalysis(output_node="out")]
+    card = parsed.sens_cards()[0]
+    result = sens_dc(parsed.circuit, card.output_node)
+    assert result.converged
+    assert isclose(result.nominal_voltage, 0.5, abs_tol=1e-9)
+    assert any(
+        entry.element_name == "Vin" and entry.parameter == "voltage"
+        for entry in result.entries
+    )
+
+
+def test_sens_analysis_card_rejects_non_voltage_output_probe() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.sens output must be a voltage probe"):
+        parse_netlist(
+            """
+Vin in 0 DC 1
+R1 in out 1k
+.sens out
 """
         )
 

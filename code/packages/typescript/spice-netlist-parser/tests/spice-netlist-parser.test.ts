@@ -1,4 +1,4 @@
-import { acSweep, dcOp, tf } from "@coding-adventures/spice-engine";
+import { acSweep, dcOp, sensDc, tf } from "@coding-adventures/spice-engine";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -115,6 +115,32 @@ R1 in out 1k
 .tf out Vin
 `),
     ).toThrow(/\.tf output must be a voltage probe/);
+  });
+
+  it("parses .sens DC sensitivity analysis cards", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.sens V(out)
+`);
+
+    expect(parsed.analyses).toEqual([{ kind: "sens", outputNode: "out" }]);
+    expect(parsed.sensCards()).toEqual([{ kind: "sens", outputNode: "out" }]);
+    const [card] = parsed.sensCards();
+    const result = sensDc(parsed.circuit, card.outputNode);
+    expect(result.nominalVoltage).toBeCloseTo(0.5, 9);
+    expect(result.entry("Vin", "voltage")).not.toBeUndefined();
+  });
+
+  it("rejects .sens cards without a voltage output probe", () => {
+    expect(() =>
+      parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+.sens out
+`),
+    ).toThrow(/\.sens output must be a voltage probe/);
   });
 
   it("parses VCVS elements into operating-point circuits", () => {

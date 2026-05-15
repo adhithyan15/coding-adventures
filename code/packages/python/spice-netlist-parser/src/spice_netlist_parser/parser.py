@@ -75,7 +75,14 @@ class TfAnalysis:
     input_source: str
 
 
-type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis
+@dataclass(frozen=True, slots=True)
+class SensAnalysis:
+    """A `.sens V(output_node)` DC sensitivity analysis card."""
+
+    output_node: str
+
+
+type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis | SensAnalysis
 
 
 @dataclass(frozen=True, slots=True)
@@ -131,6 +138,9 @@ class ParsedNetlist:
 
     def tf_cards(self) -> list[TfAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, TfAnalysis)]
+
+    def sens_cards(self) -> list[SensAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, SensAnalysis)]
 
 
 _VALUE_RE = re.compile(
@@ -555,14 +565,22 @@ def _parse_directive(fields: list[str]) -> Analysis:
         )
     if directive == ".tf":
         _require_fields(fields, 3, ".tf")
-        return TfAnalysis(output_node=_parse_voltage_probe(fields[1]), input_source=fields[2])
+        return TfAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".tf"),
+            input_source=fields[2],
+        )
+    if directive == ".sens":
+        _require_fields(fields, 2, ".sens")
+        return SensAnalysis(output_node=_parse_voltage_probe(fields[1], ".sens"))
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
 
 
-def _parse_voltage_probe(token: str) -> str:
+def _parse_voltage_probe(token: str, directive: str) -> str:
     match = re.fullmatch(r"(?i)v\(([^()\s]+)\)", token)
     if match is None:
-        raise NetlistParseError(f".tf output must be a voltage probe V(node), got {token!r}")
+        raise NetlistParseError(
+            f"{directive} output must be a voltage probe V(node), got {token!r}"
+        )
     return match.group(1)
 
 
