@@ -1320,7 +1320,6 @@ mod tw05e_tests {
 
 #[cfg(test)]
 mod tw05f_tests {
-    use super::*;
     use std::fs;
     use std::path::{Path, PathBuf};
 
@@ -1557,11 +1556,12 @@ mod tw05f_tests {
     #[test]
     fn full_lex_parse_emit_roundtrip() {
         // Compile all 9 modules + main.tw.
-        // main.tw runs: lex "42" → parse → emit → extract const value → 42.
+        // main.tw (TW05-G) runs: lex "(define (answer) 42)" → parse → emit
+        // → extract const value → 42.
         let src = twig_compiler_src();
         let dir = tempdir("full_tw05f");
         copy_all_tw_modules(&src, &dir);
-        // Copy the actual main.tw (TW05-F version with emitter)
+        // Copy the actual main.tw (updated to TW05-G)
         copy_tw(&src, &dir, "main");
 
         let root = dir.join("compiler").join("main.tw");
@@ -1569,5 +1569,265 @@ mod tw05f_tests {
             .expect("full_lex_parse_emit_roundtrip: compile+run");
         assert_eq!(v.as_int(), Some(42),
             "(main) should return 42 via lex → parse → emit → extract const value");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TW05-G integration tests — LANG60: lambda expressions + function definitions
+// ---------------------------------------------------------------------------
+//
+// These tests verify that the parser and emitter correctly handle:
+//   • `(lambda (params) body)` — LambdaExpr variant (tag 11 in ast.tw)
+//   • `(define (name params) body)` — function-definition shorthand
+//     (parses to DefExpr wrapping a LambdaExpr)
+//
+// Instruction counts for lambda emission:
+//   (lambda () 99)         → 1  (const; no param-slot instructions)
+//   (lambda (x) (+ x 1))  → 2  (const 1 + call_builtin; VarRef x is free)
+//   (define (answer) 42)  → 1  (const; single body literal)
+
+#[cfg(test)]
+mod tw05g_tests {
+    use std::fs;
+    use std::path::{Path, PathBuf};
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    fn twig_compiler_src() -> PathBuf {
+        let manifest = env!("CARGO_MANIFEST_DIR");
+        PathBuf::from(manifest)
+            .join("../../../twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    fn tempdir(tag: &str) -> PathBuf {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .subsec_nanos();
+        let d = std::env::temp_dir()
+            .join(format!("twig_tw05g_test_{tag}_{}_{}",
+                          std::process::id(), nonce));
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler").join(format!("{name}.tw"));
+        fs::create_dir_all(dest.parent().unwrap()).unwrap();
+        fs::copy(&src, &dest)
+            .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
+    }
+
+    fn write_test_main(dest_dir: &Path, imports: &[&str], body: &str) -> PathBuf {
+        let import_clause: String = imports
+            .iter()
+            .map(|i| format!("          (import {i})"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let src = format!(
+            "(module compiler/main\n  (typed lenient)\n  (export main)\n{import_clause})\n\n(define (main) {body})\n"
+        );
+        let path = dest_dir.join("compiler").join("main.tw");
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, &src).unwrap();
+        path
+    }
+
+    /// Copy all modules needed by the full pipeline.
+    fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
+                      "lexer", "parser", "emit"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    /// Copy modules needed for parser tests (no emitter).
+    fn copy_parser_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "token", "ast", "lexer", "parser"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    /// Copy modules needed for emit tests (no lexer/parser).
+    fn copy_emit_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "ast", "iir-types", "iir-builder", "emit"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    // ── Test 1: parser produces LambdaExpr for "(lambda (x) x)" ─────────────
+
+    #[test]
+    fn parser_lambda_expr() {
+        // lex + parse "(lambda (x) x)" → the result should be a LambdaExpr.
+        // We verify with (LambdaExpr? ...) predicate → 1.
+        let src = twig_compiler_src();
+        let dir = tempdir("parse_lambda");
+        copy_parser_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/lexer", "compiler/parser"],
+            r#"(if (LambdaExpr? (car (parse-program (lex-source "(lambda (x) x)")))) 1 0)"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("parser_lambda_expr: compile+run");
+        assert_eq!(v.as_int(), Some(1),
+            "(parse-program \"(lambda (x) x)\") should produce a LambdaExpr");
+    }
+
+    // ── Test 2: parser produces DefExpr(LambdaExpr) for "(define (f x) x)" ──
+
+    #[test]
+    fn parser_define_fn_form() {
+        // lex + parse "(define (f x) x)":
+        //   → DefExpr "f" (LambdaExpr ["x"] (VarRef "x") sp) sp
+        // We verify that defexpr-expr is a LambdaExpr → 1.
+        let src = twig_compiler_src();
+        let dir = tempdir("parse_define_fn");
+        copy_parser_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/lexer", "compiler/parser"],
+            r#"(let* ((def (car (parse-program (lex-source "(define (f x) x)")))))
+                 (if (LambdaExpr? (defexpr-expr def)) 1 0))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("parser_define_fn_form: compile+run");
+        assert_eq!(v.as_int(), Some(1),
+            "(define (f x) x) body should be a LambdaExpr");
+    }
+
+    // ── Test 3: emitting (lambda () 99) produces exactly 1 instruction ───────
+
+    #[test]
+    fn emit_lambda_no_params() {
+        // LambdaExpr with no params emits exactly as many instructions as its body.
+        // (lambda () 99) body = IntLit 99 → 1 "const" instruction.
+        let src = twig_compiler_src();
+        let dir = tempdir("emit_lambda_no_params");
+        copy_emit_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder", "compiler/emit"],
+            r#"(let* ((sp     (make-span 0 0 0))
+                     (body   (IntLit 99 sp))
+                     (expr   (LambdaExpr (list) body sp))
+                     (b0     (new-builder "test"))
+                     (env    (env-empty))
+                     (res    (emit-expr expr b0 env))
+                     (b-fin  (car res))
+                     (instrs (finalise-builder b-fin)))
+               (length instrs))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_lambda_no_params: compile+run");
+        assert_eq!(v.as_int(), Some(1),
+            "(lambda () 99) should emit 1 instruction (const; no param slots)");
+    }
+
+    // ── Test 4: emitting (lambda (x) (+ x 1)) produces exactly 2 instructions ─
+
+    #[test]
+    fn emit_lambda_with_param() {
+        // (lambda (x) (+ x 1)):
+        //   param: alloc slot for x — no instruction emitted
+        //   body: (+ x 1)
+        //     VarRef "x" → existing slot, no instruction
+        //     IntLit 1   → 1 const instruction
+        //     CallExpr   → 1 call_builtin instruction
+        //   Total: 2 instructions.
+        let src = twig_compiler_src();
+        let dir = tempdir("emit_lambda_param");
+        copy_emit_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder", "compiler/emit"],
+            r#"(let* ((sp      (make-span 0 0 0))
+                     (x-ref   (VarRef "x" sp))
+                     (one     (IntLit 1 sp))
+                     (plus    (VarRef "+" sp))
+                     (body    (CallExpr plus (list x-ref one) sp))
+                     (params  (list "x"))
+                     (expr    (LambdaExpr params body sp))
+                     (b0      (new-builder "test"))
+                     (env     (env-empty))
+                     (res     (emit-expr expr b0 env))
+                     (b-fin   (car res))
+                     (instrs  (finalise-builder b-fin)))
+               (length instrs))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_lambda_with_param: compile+run");
+        assert_eq!(v.as_int(), Some(2),
+            "(lambda (x) (+ x 1)) should emit 2 instructions (const 1 + call_builtin)");
+    }
+
+    // ── Test 5: emitting (define (answer) 42) produces exactly 1 instruction ──
+
+    #[test]
+    fn emit_defexpr_answer_42() {
+        // DefExpr "answer" (LambdaExpr [] (IntLit 42) sp):
+        //   emit-defexpr detects LambdaExpr body, delegates to emit-lambdaexpr
+        //   emit-lambdaexpr: no params, emit body IntLit 42 → 1 const instruction.
+        let src = twig_compiler_src();
+        let dir = tempdir("emit_defexpr_42");
+        copy_emit_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder", "compiler/emit"],
+            r#"(let* ((sp     (make-span 0 0 0))
+                     (body   (IntLit 42 sp))
+                     (lam    (LambdaExpr (list) body sp))
+                     (expr   (DefExpr "answer" lam sp))
+                     (b0     (new-builder "answer"))
+                     (env    (env-empty))
+                     (res    (emit-expr expr b0 env))
+                     (b-fin  (car res))
+                     (instrs (finalise-builder b-fin)))
+               (length instrs))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_defexpr_answer_42: compile+run");
+        assert_eq!(v.as_int(), Some(1),
+            "(define (answer) 42) should emit 1 instruction (const 42)");
+    }
+
+    // ── Test 6: full lex+parse+emit pipeline for (define (answer) 42) ─────────
+
+    #[test]
+    fn full_lex_parse_emit_defexpr() {
+        // Compile all 9 modules + main.tw.
+        // main.tw (TW05-G) runs:
+        //   lex "(define (answer) 42)" → parse → emit DefExpr
+        //   → LambdaExpr body → const 42 → extract srcs[0] = 42.
+        let src = twig_compiler_src();
+        let dir = tempdir("full_tw05g");
+        copy_all_tw_modules(&src, &dir);
+        copy_tw(&src, &dir, "main");
+
+        let root = dir.join("compiler").join("main.tw");
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("full_lex_parse_emit_defexpr: compile+run");
+        assert_eq!(v.as_int(), Some(42),
+            "(main) should return 42 — lex+parse+emit of (define (answer) 42)");
     }
 }

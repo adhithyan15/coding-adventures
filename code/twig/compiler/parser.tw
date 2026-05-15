@@ -134,13 +134,63 @@
   (if (and (TkIdentifier? head-kind)
            (or (string=? head-lex "let") (string=? head-lex "let*")))
       (parse-let (cdr tokens) open-sp)
+      (parse-list-6 tokens head-tok head-kind head-lex open-sp)))
+
+; Gate 6: `lambda`
+(define (parse-list-6 tokens head-tok head-kind head-lex open-sp)
+  (if (and (TkIdentifier? head-kind) (string=? head-lex "lambda"))
+      ; tokens starts AT `lambda`; cdr skips past it to the `(` of params
+      (parse-lambda (cdr tokens) open-sp)
       ; Fallback: general call (fn arg …)
       (parse-call tokens open-sp)))
 
 ; ── Special form parsers ──────────────────────────────────────────────────────
 
-; Parse `(define name expr)` — tokens start AFTER `define`.
+; Parse `(define …)` — tokens start AFTER `define`.
+;
+; Two forms are supported:
+;   (define name expr)           → DefExpr name expr
+;   (define (name params) body)  → DefExpr name (LambdaExpr params body)
+;
+; The first token tells us which branch to take:
+;   TkLParen → function-definition shorthand
+;   otherwise → simple value binding
 (define (parse-define tokens open-sp)
+  (let* ((first-tok  (car tokens))
+         (first-kind (token-kind first-tok)))
+    (if (TkLParen? first-kind)
+        ; Function shorthand: consume `(` and parse (name params) + body
+        (parse-define-fn (cdr tokens) open-sp)
+        ; Simple binding: parse as before
+        (parse-define-simple tokens open-sp))))
+
+; Parse the function-definition shorthand `(define (name params) body)`.
+; tokens start AFTER the `(` of `(name params)`.
+;
+; Steps:
+;   1. Read function name (first identifier)
+;   2. Collect parameters until `)`
+;   3. Parse body expression
+;   4. Consume closing `)` of the define form
+;   5. Return DefExpr name (LambdaExpr params body sp)
+(define (parse-define-fn tokens open-sp)
+  (let* ((name-tok     (car tokens))
+         (name-lex     (token-lexeme name-tok))
+         (after-name   (cdr tokens))
+         (params-r     (parse-param-list after-name (list)))
+         (after-params (car params-r))
+         (params       (cdr params-r))
+         (body-r       (parse-expr after-params))
+         (after-body   (car body-r))
+         (body-expr    (cdr body-r))
+         (lambda-expr  (LambdaExpr params body-expr open-sp)))
+    ; consume the closing `)` of the define form
+    (cons (cdr after-body)
+          (DefExpr name-lex lambda-expr open-sp))))
+
+; Parse `(define name expr)` — original simple form.
+; tokens start AT the name token (AFTER `define`).
+(define (parse-define-simple tokens open-sp)
   (let* ((name-tok    (car tokens))
          (name-lex    (token-lexeme name-tok))
          (after-name  (cdr tokens))
@@ -150,6 +200,40 @@
     ; consume closing `)`
     (cons (cdr after-body)
           (DefExpr name-lex body-expr open-sp))))
+
+; Parse `(lambda (params) body)` — tokens start AFTER `lambda`, at `(`.
+;
+; Steps:
+;   1. Consume `(` — tokens starts at it
+;   2. Collect parameter names until `)`
+;   3. Parse body expression
+;   4. Consume closing `)` of the lambda form
+;   5. Return LambdaExpr params body sp
+(define (parse-lambda tokens open-sp)
+  ; tokens is AT the `(` opening the param list — consume it
+  (let* ((after-lp     (cdr tokens))
+         (params-r     (parse-param-list after-lp (list)))
+         (after-params (car params-r))
+         (params       (cdr params-r))
+         (body-r       (parse-expr after-params))
+         (after-body   (car body-r))
+         (body-expr    (cdr body-r)))
+    ; consume the closing `)` of the lambda form
+    (cons (cdr after-body)
+          (LambdaExpr params body-expr open-sp))))
+
+; Collect parameter name strings until `)`.
+; tokens starts at the first param identifier (or `)` for no-param lambdas).
+; Returns (cons rest-after-rparen list-of-name-strings).
+(define (parse-param-list tokens acc)
+  (let* ((tok  (car tokens))
+         (kind (token-kind tok))
+         (lex  (token-lexeme tok)))
+    (if (TkRParen? kind)
+        ; `)` ends the param list — consume it and return accumulated names
+        (cons (cdr tokens) (reverse acc))
+        ; identifier — add its lexeme to the accumulator
+        (parse-param-list (cdr tokens) (cons lex acc)))))
 
 ; Parse `(if cond then else)` — tokens start AFTER `if`.
 (define (parse-if tokens open-sp)
