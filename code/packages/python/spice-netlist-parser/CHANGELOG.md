@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.6
+
+- Parse `.model <name> NMOS(...)` and `.model <name> PMOS(...)` cards into
+  `mosfet_models.MOSFET` Level-1 wrappers.
+- Parse `M` MOSFET elements into `spice_engine.Mosfet` instances, including
+  per-instance Level-1 parameter overrides such as `W=...` and `L=...`.
+- Remap MOSFET drain/gate/source/body terminals during `.subckt` expansion.
+
 ## 0.1.5
 
 - Parse `.model <name> NPN(...)` and `.model <name> PNP(...)` cards into
