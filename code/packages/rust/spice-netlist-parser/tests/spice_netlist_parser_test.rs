@@ -167,6 +167,40 @@ Rload out 0 500
 }
 
 #[test]
+fn parses_diode_models_into_operating_point_circuits() {
+    let parsed = parse_netlist(
+        r#"
+.model fast D(IS=1e-12 VT=25m)
+V1 in 0 DC 0.7
+D1 in out fast
+Rload out 0 1k
+.op
+"#,
+    )
+    .unwrap();
+
+    let model = parsed.models.get("fast").unwrap();
+    assert_eq!(model.name, "fast");
+    assert_eq!(model.kind, "D");
+    assert_close(*model.params.get("IS").unwrap(), 1.0e-12);
+    assert_close(*model.params.get("VT").unwrap(), 25.0e-3);
+
+    let Element::Diode(diode) = &parsed.circuit.elements()[1] else {
+        panic!("expected diode");
+    };
+    assert_eq!(diode.name, "D1");
+    assert_eq!(diode.anode, "in");
+    assert_eq!(diode.cathode, "out");
+    assert_close(diode.saturation_current, 1.0e-12);
+    assert_close(diode.thermal_voltage, 25.0e-3);
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    let out = result.voltage("out").unwrap();
+    assert!(out > 0.1, "expected forward-biased output, got {out}");
+    assert!(out < 0.7, "expected diode drop below source, got {out}");
+}
+
+#[test]
 fn parses_pwl_and_sin_source_waveforms() {
     let parsed = parse_netlist(
         r#"
@@ -351,6 +385,27 @@ Rload out 0 500
 }
 
 #[test]
+fn expands_subcircuit_diode_nodes_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.model clamp D(IS=1e-12 VT=25m)
+.subckt limiter inp outp
+Dlim inp outp clamp
+.ends limiter
+Xlim in out limiter
+"#,
+    )
+    .unwrap();
+
+    let Element::Diode(diode) = &parsed.circuit.elements()[0] else {
+        panic!("expected diode");
+    };
+    assert_eq!(diode.name, "Xlim.Dlim");
+    assert_eq!(diode.anode, "in");
+    assert_eq!(diode.cathode, "out");
+}
+
+#[test]
 fn scopes_subcircuit_internal_nodes_by_instance() {
     let parsed = parse_netlist(
         r#"
@@ -384,10 +439,28 @@ fn parses_engineering_suffixes() {
 
 #[test]
 fn rejects_unsupported_elements_with_line_numbers() {
-    let err = parse_netlist("\nD1 a 0 diode\n").unwrap_err();
+    let err = parse_netlist("\nQ1 c b e model\n").unwrap_err();
 
     assert!(err.to_string().contains("line 2: unsupported element"));
     assert_error_type(err);
+}
+
+#[test]
+fn rejects_unknown_diode_models() {
+    let err = parse_netlist("D1 a 0 missing\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 1: unknown model \"missing\" for diode \"D1\""));
+}
+
+#[test]
+fn rejects_non_diode_models_for_diode_elements() {
+    let err = parse_netlist(".model amp NPN(IS=1e-12)\nD1 a 0 amp\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 2: model \"amp\" has kind \"NPN\", expected \"D\""));
 }
 
 #[test]

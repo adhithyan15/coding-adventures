@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4
+
+- Add SPICE `D` diode element parsing via `.model <name> D(...)` cards with
+  `IS` and `VT` parameters, including subcircuit terminal remapping.
+
 ## 0.1.3
 
 - Add SPICE `H` / CCVS controlled-source parsing, including subcircuit
