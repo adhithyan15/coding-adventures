@@ -2,8 +2,8 @@ use std::{collections::HashMap, fmt};
 
 use spice_engine::{
     Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
-    Inductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource,
-    Waveform,
+    Inductor, Mosfet, MosfetLevel1Params, MosfetType, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -359,6 +359,54 @@ fn parse_model_params(params_text: &str) -> Result<HashMap<String, f64>, Netlist
     Ok(params)
 }
 
+fn parse_element_params(
+    fields: &[String],
+    label: &str,
+) -> Result<HashMap<String, f64>, NetlistParseError> {
+    let mut params = HashMap::new();
+    for token in fields {
+        let Some((name, value)) = token.split_once('=') else {
+            return Err(NetlistParseError::new(format!(
+                "invalid {label} parameter syntax {token:?}"
+            )));
+        };
+        if name.is_empty() || value.is_empty() {
+            return Err(NetlistParseError::new(format!(
+                "invalid {label} parameter syntax {token:?}"
+            )));
+        }
+        params.insert(name.to_ascii_uppercase(), parse_value(value)?);
+    }
+    Ok(params)
+}
+
+fn build_mosfet_params(
+    model: &ModelCard,
+    instance_params: &HashMap<String, f64>,
+) -> MosfetLevel1Params {
+    let mut params = MosfetLevel1Params::default();
+    for (name, value) in model.params.iter().chain(instance_params.iter()) {
+        apply_mosfet_param(&mut params, name, *value);
+    }
+    params
+}
+
+fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
+    match name {
+        "VT0" | "VTO" => params.vt0 = value,
+        "KP" => params.kp = value,
+        "LAMBDA" => params.lambda = value,
+        "GAMMA" => params.gamma = value,
+        "PHI" => params.phi = value,
+        "W" => params.w = value,
+        "L" => params.l = value,
+        "IS" => params.saturation_current = value,
+        "N_SUB" | "NSUB" | "N" => params.n_sub = value,
+        "T_NOM" | "TNOM" => params.t_nom = value,
+        _ => {}
+    }
+}
+
 fn parse_element(
     fields: &[String],
     models: &HashMap<String, ModelCard>,
@@ -468,6 +516,35 @@ fn parse_element(
                 *model.params.get("IS").unwrap_or(&1.0e-14),
                 forward_beta,
                 *model.params.get("VT").unwrap_or(&0.02585),
+            )))
+        }
+        'M' => {
+            require_min_fields(fields, 6, "MOSFET")?;
+            let model = models.get(&fields[5].to_ascii_lowercase()).ok_or_else(|| {
+                NetlistParseError::new(format!(
+                    "unknown model {:?} for MOSFET {:?}",
+                    fields[5], name
+                ))
+            })?;
+            let mosfet_type = match model.kind.as_str() {
+                "NMOS" => MosfetType::Nmos,
+                "PMOS" => MosfetType::Pmos,
+                _ => {
+                    return Err(NetlistParseError::new(format!(
+                        "model {:?} has kind {:?}, expected \"NMOS\" or \"PMOS\"",
+                        model.name, model.kind
+                    )));
+                }
+            };
+            let instance_params = parse_element_params(&fields[6..], "MOSFET")?;
+            Ok(Element::Mosfet(Mosfet::with_model(
+                name,
+                &fields[1],
+                &fields[2],
+                &fields[3],
+                &fields[4],
+                mosfet_type,
+                build_mosfet_params(model, &instance_params),
             )))
         }
         'G' => {
@@ -641,6 +718,12 @@ fn map_subckt_fields(
         'Q' => {
             require_min_fields(fields, 4, "subcircuit BJT")?;
             for index in 1..4 {
+                mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
+            }
+        }
+        'M' => {
+            require_min_fields(fields, 5, "subcircuit MOSFET")?;
+            for index in 1..5 {
                 mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
             }
         }
