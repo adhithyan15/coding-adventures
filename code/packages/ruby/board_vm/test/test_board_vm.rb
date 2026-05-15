@@ -1361,6 +1361,46 @@ module CodingAdventures
           transfer_result.results.map(&:command)
       end
 
+      def test_spi_write_and_read_dispatch_native_transfer_wrappers_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        open_result = nil
+        write_result = nil
+        read_result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          open_result = board.spi.open(bus: 0, program_id: 10, budget: 24)
+          write_result = board.spi.write(
+            cs_pin: 10,
+            bytes: [0xde, 0xad, 0xbe],
+            program_id: 11,
+            budget: 24
+          )
+          read_result = board.spi.read(
+            cs_pin: 10,
+            length: 3,
+            program_id: 12,
+            budget: 24
+          )
+        end
+
+        assert_empty runner.calls
+        assert_equal 14, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal open_result.frames + write_result.frames + read_result.frames, transport.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          open_result.results.map(&:command)
+        assert_equal [:program_begin, :program_chunk, :program_end, :run],
+          write_result.results.map(&:command)
+        assert_equal [:program_begin, :program_chunk, :program_end, :run],
+          read_result.results.map(&:command)
+      end
+
       def test_i2c_write_u8_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -1944,6 +1984,36 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_spi_write_and_read
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          open = board.session.run_command("spi-open 0 24", program_id: 8)
+          write = board.session.run_command("spi-write 10 0xdeadbe 24", program_id: 9)
+          read = board.session.run_command("spi-read 10 3 24", program_id: 10)
+          upload_write = board.session.run_command("upload-spi.write 10 0xdeadbe", program_id: 11)
+          upload_read = board.session.run_command("upload-spi.read 10 3", program_id: 12)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            open.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            read.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_read.results.map(&:command)
+          assert_equal open.frames + write.frames + read.frames + upload_write.frames + upload_read.frames,
+            transport.frames
+        end
+      end
+
       def test_session_run_command_accepts_repl_style_i2c_write_u8
         transport = FakeWriteTransport.new
 
@@ -2204,6 +2274,14 @@ module CodingAdventures
         spi_transfer_module_bytes = session.spi_transfer_module(10, "\x9F".b, 3, 5)
         assert_instance_of String, spi_transfer_module_bytes
         assert_operator spi_transfer_module_bytes.bytesize, :>, 0
+
+        spi_write_module_bytes = session.spi_write_module(10, "\xDE\xAD\xBE".b, 5)
+        assert_instance_of String, spi_write_module_bytes
+        assert_operator spi_write_module_bytes.bytesize, :>, 0
+
+        spi_read_module_bytes = session.spi_read_module(10, 3, 5)
+        assert_instance_of String, spi_read_module_bytes
+        assert_operator spi_read_module_bytes.bytesize, :>, 0
 
         i2c_write_module_bytes = session.i2c_write_u8_module(0x3c, 0xa5, 4)
         assert_instance_of String, i2c_write_module_bytes

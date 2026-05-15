@@ -60,6 +60,8 @@ pub const SPI_OPEN_MODULE_LEN: usize = 16;
 pub const SPI_TRANSFER_CODE_LEN: usize = 13;
 pub const SPI_TRANSFER_MAX_MODULE_LEN: usize =
     8 + 1 + SPI_TRANSFER_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const SPI_WRITE_MAX_MODULE_LEN: usize = SPI_TRANSFER_MAX_MODULE_LEN;
+pub const SPI_READ_MODULE_LEN: usize = 8 + 1 + SPI_TRANSFER_CODE_LEN + 1;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -251,6 +253,20 @@ pub struct SpiTransferProgram<'a> {
     pub max_stack: u8,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiWriteProgram<'a> {
+    pub cs_pin: u16,
+    pub bytes: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiReadProgram {
+    pub cs_pin: u16,
+    pub len: u8,
+    pub max_stack: u8,
+}
+
 impl I2cOpenProgram {
     pub const fn new(bus: u8) -> Self {
         Self { bus, max_stack: 2 }
@@ -319,6 +335,26 @@ impl<'a> SpiTransferProgram<'a> {
             cs_pin,
             write_bytes,
             read_len,
+            max_stack: 5,
+        }
+    }
+}
+
+impl<'a> SpiWriteProgram<'a> {
+    pub const fn new(cs_pin: u16, bytes: &'a [u8]) -> Self {
+        Self {
+            cs_pin,
+            bytes,
+            max_stack: 5,
+        }
+    }
+}
+
+impl SpiReadProgram {
+    pub const fn new(cs_pin: u16, len: u8) -> Self {
+        Self {
+            cs_pin,
+            len,
             max_stack: 5,
         }
     }
@@ -1411,6 +1447,64 @@ pub fn write_spi_transfer_module(
     Ok(offset)
 }
 
+pub fn spi_write_module_len(byte_len: usize) -> Result<usize, HostError> {
+    spi_transfer_module_len(byte_len)
+}
+
+pub fn write_spi_write_code(
+    program: SpiWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    write_spi_transfer_code(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: program.bytes,
+            read_len: 0,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
+pub fn write_spi_write_module(
+    program: SpiWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    write_spi_transfer_module(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: program.bytes,
+            read_len: 0,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
+pub fn write_spi_read_code(program: SpiReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    write_spi_transfer_code(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: &[],
+            read_len: program.len,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
+pub fn write_spi_read_module(program: SpiReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    write_spi_transfer_module(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: &[],
+            read_len: program.len,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
 pub fn write_i2c_write_u8_code(
     program: I2cWriteU8Program,
     out: &mut [u8],
@@ -2133,6 +2227,50 @@ mod tests {
         assert_eq!(&module[..len], SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX);
 
         let parsed = parse_module(&module[..len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 5).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_TRANSFER]);
+    }
+
+    #[test]
+    fn builds_spi_write_module_as_transfer_wrapper() {
+        let payload = [0xde, 0xad, 0xbe];
+        let mut write_module = [0u8; SPI_WRITE_MAX_MODULE_LEN];
+        let write_len =
+            write_spi_write_module(SpiWriteProgram::new(10, &payload), &mut write_module).unwrap();
+        assert_eq!(write_len, spi_write_module_len(payload.len()).unwrap());
+
+        let mut transfer_module = [0u8; SPI_TRANSFER_MAX_MODULE_LEN];
+        let transfer_len = write_spi_transfer_module(
+            SpiTransferProgram::new(10, &payload, 0),
+            &mut transfer_module,
+        )
+        .unwrap();
+        assert_eq!(write_len, transfer_len);
+        assert_eq!(&write_module[..write_len], &transfer_module[..transfer_len]);
+
+        let parsed = parse_module(&write_module[..write_len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 5).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_TRANSFER]);
+    }
+
+    #[test]
+    fn builds_spi_read_module_as_transfer_wrapper() {
+        let mut read_module = [0u8; SPI_READ_MODULE_LEN];
+        let read_len = write_spi_read_module(SpiReadProgram::new(10, 3), &mut read_module).unwrap();
+        assert_eq!(read_len, SPI_READ_MODULE_LEN);
+
+        let mut transfer_module = [0u8; SPI_TRANSFER_MAX_MODULE_LEN];
+        let transfer_len =
+            write_spi_transfer_module(SpiTransferProgram::new(10, &[], 3), &mut transfer_module)
+                .unwrap();
+        assert_eq!(read_len, transfer_len);
+        assert_eq!(&read_module[..read_len], &transfer_module[..transfer_len]);
+
+        let parsed = parse_module(&read_module[..read_len]).unwrap();
         validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 5).unwrap();
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
