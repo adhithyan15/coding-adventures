@@ -46,12 +46,38 @@ pseudorandom round-trip up to `N = 1024`.
 
 ## Phase scope
 
-| Phase | Lands                                                | Status |
-| ----- | ---------------------------------------------------- | ------ |
-| 2     | Scalar reference (this crate)                        | **this PR** |
-| 3     | Matrix-IR lowering for power-of-2 sizes              | pending |
-| 4     | Bluestein for arbitrary lengths; rfft / irfft        | pending |
-| 5     | MX05 specialised emitters (folded twiddles)          | pending |
+| Phase  | Lands                                                | Status |
+| ------ | ---------------------------------------------------- | ------ |
+| 2      | Scalar reference                                     | landed (0.1.0) |
+| 3a     | `Op::Slice` in matrix-ir                              | landed |
+| 3b.i   | `Op::Concat` in matrix-ir                             | landed |
+| **3b.ii** | **matrix-ir-lowered FFT graph builder**             | **this PR (0.2.0)** |
+| 3b.iii | Execute graph via Runtime; replace public `fft`/`ifft` | pending |
+| 4      | Bluestein for arbitrary lengths; rfft / irfft        | pending |
+| 5      | MX05 specialised emitters (folded twiddles)          | pending |
+
+## Matrix-IR graph build (Phase 3b.ii)
+
+`build_fft_graph(n, Direction::Forward)` returns a
+`matrix_ir::Graph` that computes the radix-2 Cooley-Tukey FFT of a
+length-`n` real signal entirely through generic tensor ops.  Same
+graph runs on every backend MX supports (currently CPU; Metal /
+CUDA once they claim Slice / Concat).
+
+Inputs:
+- One input of shape `[n]`, dtype F32.
+
+Outputs:
+- One output of shape `[n, 2]`, dtype F32.  Interleaved `[re, im]`
+  complex spectrum.
+
+Constraints (validator-enforced):
+- `n ≥ 2`.
+- `n` is a power of two.
+
+Phase 3b.iii will add an execution helper that plans + dispatches
+the graph through `matrix-runtime` + `matrix-cpu` and compares the
+result to the scalar oracle.
 
 Phase 2 is intentionally small and CPU-only.  The public `fft` /
 `ifft` entry points are thin wrappers — Phase 3 will replace their
