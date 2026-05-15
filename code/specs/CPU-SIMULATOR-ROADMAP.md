@@ -54,52 +54,78 @@ each session adds variety while building a complete historical record.
 |------|-------|-----------|------|----------------|
 | ✅ | 07k | Zilog Z80 | 1976 | Direct 8080 superset; powered TRS-80, ZX Spectrum, CP/M |
 
-### Round 2 — next up
+### Round 2 — completed
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07l | Manchester Baby (SSEM) | 1948 | First stored-program computer ever run |
-| ⬜ | 07m | Intel 8086 | 1978 | Birth of x86; segmented memory; IBM PC |
+| ✅ | 07l | Manchester Baby (SSEM) | 1948 | First stored-program computer ever run |
+| ✅ | 07m | Intel 8086 | 1978 | Birth of x86; segmented memory; IBM PC |
 
-### Round 3
+### Round 3 — completed
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07n | EDSAC | 1949 | First practical stored-program computer; Wheeler jump |
-| ⬜ | 07o | Motorola 68000 | 1979 | Mac, Amiga, Atari ST, early Sun workstations |
+| ✅ | 07n | Motorola 68000 | 1979 | Mac, Amiga, Atari ST, early Sun workstations |
+| ✅ | 07o | PDP-11 | 1970 | Pioneered modern OS design; inspired Unix; C language |
 
-### Round 4
+### Round 4 — completed
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07p | PDP-8 | 1965 | First mass-market minicomputer; 12-bit words; paper tape |
-| ⬜ | 07q | Intel 80386 | 1985 | 32-bit x86; protected mode; paging; Linux foundation |
+| ✅ | 07p | Intel 8051 | 1980 | Most widely deployed MCU ever; billions of units |
+| ✅ | 07q | MIPS R2000 | 1985 | RISC pioneer; PlayStation; SGI; MIPS32 still in routers |
 
-### Round 5
+### Round 5 — completed
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07r | IBM System/360 | 1964 | First family architecture; EBCDIC; fixed-length ISA |
-| ⬜ | 07s | MIPS R3000 | 1988 | RISC pioneer; PlayStation; SGI; MIPS32 still in routers |
+| ✅ | 07r | SPARC V8 | 1987 | First open RISC standard; Sun workstations |
+| ✅ | 07s | DEC Alpha AXP 21064 | 1992 | First 64-bit RISC; broke the speed barrier |
 
-### Round 6
+### Round 6 — completed
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07t | CDC 6600 | 1964 | First supercomputer; scoreboarding; Seymour Cray |
-| ⬜ | 07u | PowerPC 601 | 1992 | Apple/IBM/Motorola AIM alliance; BeOS, classic Mac |
+| ✅ | 07t | CDC 6600 | 1964 | First supercomputer; scoreboarding; Seymour Cray |
+| ✅ | 07u | PowerPC 601 | 1992 | Apple/IBM/Motorola AIM alliance; BeOS, classic Mac |
 
-### Round 7 — 64-bit era
+### Round 7 — 64-bit era (completed)
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07v | x86-64 (AMD64) | 2003 | Ubiquitous server/desktop ISA; 64-bit x86 |
-| ⬜ | 07w | ARMv7-A (Cortex-A8) | 2004 | First iPhone-era ARM; Thumb-2; VFP/NEON |
+| ✅ | 07v | AArch64 (ARMv8-A) | 2011 | Apple A7+, all modern Android; clean 64-bit ARM |
+| ✅ | 07w | x86-64 (AMD64) | 2003 | Ubiquitous server/desktop ISA; 64-bit x86 |
 
-### Round 8 — modern mobile
+### Round 8 — modern mobile (completed)
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07x | AArch64 (ARMv8-A) | 2011 | Apple A7+, all modern Android; clean 64-bit ARM |
-| ⬜ | 07y | RISC-V (RV32I/RV64I) | 2010 | Open standard; the future of embedded and HPC |
+| ✅ | 07x | ARMv7-A / Thumb-2 | 2004 | First iPhone-era ARM; Thumb-2; VFP/NEON |
+| ✅ | 07y | RISC-V RV64I + M ext. | 2010 | Open standard; the future of embedded and HPC |
 
-### Round 9 — contemporary targets
+### Round 9 — contemporary targets (completed)
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07z | Apple M1 (AArch64 ext.) | 2020 | Apple Silicon; unified memory; performance islands |
+| ✅ | 07z | Apple M1 (AArch64 + NEON) | 2020 | Apple Silicon; unified memory; performance islands |
+
+---
+
+## Gate-Level Simulators
+
+Beyond behavioral simulation, selected processors have gate-level companions
+that route every data-path operation through actual logic gate functions
+(AND, OR, XOR, NOT, ripple_carry_adder). These show exactly how transistors
+implement arithmetic and logic at the circuit level.
+
+### Completed gate-level simulators
+
+| Step | Layer | Processor | Year | Notes |
+|------|-------|-----------|------|-------|
+| ✅ | 07d2 | Intel 4004 | 1971 | ~786 gates; 4-bit ALU; first microprocessor |
+| ✅ | 07e2 | ARM1 | 1985 | ~12,000 gates; barrel shifter; 32-bit ALU |
+| ✅ | 07f2 | Intel 8008 | 1972 | ~300 gates; 8-bit ALU; predecessor to 8080 |
+| ✅ | 07i2 | Intel 8080 | 1974 | ~104 ALU gates; 8 full adder stages |
+| **✅** | **07k2** | **Zilog Z80** | **1976** | **~200 ALU gates + alternate bank ← current** |
+
+### Upcoming gate-level simulators
+
+| Step | Layer | Processor | Year | Why it matters |
+|------|-------|-----------|------|----------------|
+| ⬜ | 07j2 | MOS 6502 | 1975 | Visual6502 transistor map; ~3,510 transistors |
+| ⬜ | 07m2 | Intel 8086 | 1978 | First x86 gate-level; 14-bit ALU; BIU/EU split |
 
 ---
 
@@ -253,4 +279,4 @@ the last session left off.  When resuming:
 
 ---
 
-*Last updated: 2026-05-04 — Z80 PR in progress*
+*Last updated: 2026-05-15 — 07a-07z complete; gate-level series at 07k2 (Z80), next: 07j2 (6502) and 07m2 (8086)*
