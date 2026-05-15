@@ -123,6 +123,15 @@ pub enum ModuleDriverError {
     /// a name collision that the Twig type-checker would have caught in
     /// strict mode.
     Link(Vec<LinkError>),
+
+    /// The import graph exceeds [`MAX_MODULES`].
+    ///
+    /// Prevents denial-of-service via artificially large or procedurally
+    /// generated import graphs that would exhaust memory or CPU.
+    TooManyModules {
+        /// Number of modules discovered before the limit was hit.
+        count: usize,
+    },
 }
 
 impl fmt::Display for ModuleDriverError {
@@ -150,6 +159,12 @@ impl fmt::Display for ModuleDriverError {
             ModuleDriverError::Link(errors) => {
                 write!(f, "linker error(s): {:?}", errors)
             }
+            ModuleDriverError::TooManyModules { count } => {
+                write!(
+                    f,
+                    "import graph too large: {count} modules exceeds the limit of {MAX_MODULES}"
+                )
+            }
         }
     }
 }
@@ -160,11 +175,26 @@ impl std::error::Error for ModuleDriverError {}
 // Path resolution
 // ---------------------------------------------------------------------------
 
+/// Maximum number of modules allowed in a single `compile_module_tree` call.
+///
+/// Guards against DoS via artificially large import graphs (OOM / CPU
+/// exhaustion when each discovered module triggers its own parse + compile).
+/// 1 000 modules is several orders of magnitude beyond any real Twig project.
+pub const MAX_MODULES: usize = 1_000;
+
 /// Convert an import name (e.g. `"compiler/lexer"`) to an absolute path.
 ///
 /// Tries each root in `search_roots` in order.  The root containing
 /// `requesting_file` is implicitly prepended.  Returns the first path that
-/// exists on disk with a `.tw` extension.
+/// exists on disk with a `.tw` extension, **provided that the resolved
+/// canonical path remains inside one of the valid search roots**.
+///
+/// Returns `None` if:
+/// - `import_name` contains a traversal component (`..`, `.`, empty string,
+///   or a raw OS path separator), preventing path-traversal attacks.
+/// - No file matching the name exists under any root.
+/// - The resolved file, after following symlinks, escapes every valid root
+///   (prevents symlink-based sandbox escapes).
 ///
 /// # Example
 ///
@@ -178,25 +208,71 @@ pub fn resolve_import(
     search_roots: &[&Path],
     requesting_file: &Path,
 ) -> Option<PathBuf> {
-    // Convert "compiler/lexer" → "compiler/lexer.tw" using OS-native separators.
-    // Import names use "/" as the separator regardless of OS; Path handles
-    // the conversion automatically on Windows because we push components one
-    // by one.
-    let relative: PathBuf = import_name
-        .split('/')
-        .fold(PathBuf::new(), |mut p, component| {
-            p.push(component);
-            p
-        });
+    // ── Security: validate path components ───────────────────────────────────
+    //
+    // Reject any component that could escape the search-root sandbox:
+    //   - `..`  — parent-directory traversal
+    //   - `.`   — current-directory reference (harmless but disallowed for clarity)
+    //   - empty — double-slash in import name, meaningless and rejected
+    //   - contains OS path separator — e.g. backslash on Windows
+    //
+    // This prevents `(import ../../etc/passwd)` or similar crafted names
+    // from assembling a path that escapes the project tree.
+    let raw_components: Vec<&str> = import_name.split('/').collect();
+    for component in &raw_components {
+        if component.is_empty()
+            || *component == ".."
+            || *component == "."
+            || component.contains(std::path::MAIN_SEPARATOR)
+            || component.contains('\\')  // reject Windows-style separator on all platforms
+        {
+            return None; // silently reject traversal attempts
+        }
+    }
+
+    // Build the relative path: "compiler/lexer" → compiler/lexer.tw
+    // (OS-native separators via push-component-by-component).
+    let relative: PathBuf = raw_components.iter().fold(PathBuf::new(), |mut p, c| {
+        p.push(c);
+        p
+    });
     let relative = relative.with_extension("tw");
 
-    // Build the effective search roots: [requesting_file's parent] ++ search_roots.
+    // Build the full ordered list of valid roots (requesting_dir first).
     let requesting_dir = requesting_file.parent().unwrap_or(Path::new("."));
-
-    std::iter::once(requesting_dir)
+    let all_roots: Vec<&Path> = std::iter::once(requesting_dir)
         .chain(search_roots.iter().copied())
+        .collect();
+
+    // Canonicalize each valid root once so we can use starts_with for the
+    // symlink-escape check below.  Roots that fail canonicalization are skipped.
+    let canonical_roots: Vec<PathBuf> = all_roots
+        .iter()
+        .filter_map(|r| std::fs::canonicalize(r).ok())
+        .collect();
+
+    all_roots
+        .iter()
         .map(|root| root.join(&relative))
-        .find(|candidate| candidate.exists())
+        .find(|candidate| {
+            if !candidate.exists() {
+                return false;
+            }
+            // ── Security: symlink-escape check ───────────────────────────────
+            //
+            // After `canonicalize` follows all symlinks, verify the resolved
+            // path still lives inside one of the valid roots.  A symlink
+            // inside a root that points outside it would otherwise bypass the
+            // component-validation above.
+            match std::fs::canonicalize(candidate) {
+                Ok(canonical_candidate) => {
+                    canonical_roots
+                        .iter()
+                        .any(|canon_root| canonical_candidate.starts_with(canon_root))
+                }
+                Err(_) => false,
+            }
+        })
 }
 
 // ---------------------------------------------------------------------------
@@ -309,6 +385,13 @@ pub fn compile_module_tree(
 
             // Enqueue the import if not yet visited (dedup guard).
             if visited.insert(resolved.clone()) {
+                // Security: cap the total number of modules to prevent
+                // denial-of-service via huge or procedurally generated graphs.
+                if visited.len() > MAX_MODULES {
+                    return Err(ModuleDriverError::TooManyModules {
+                        count: visited.len(),
+                    });
+                }
                 queue.push_back(resolved);
             }
         }

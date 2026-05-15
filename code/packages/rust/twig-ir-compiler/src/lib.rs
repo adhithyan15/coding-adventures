@@ -188,9 +188,15 @@ pub fn compile_program_with_externs(
         let tc_result = twig_type_checker::check_program(program, None);
         match mode {
             TypedMode::Strict if !tc_result.ok => {
-                let d = tc_result.errors.first().expect(
-                    "type-checker invariant violated: ok==false but errors is empty",
-                );
+                // Use ok_or_else rather than expect so that a downstream bug in
+                // the type-checker (ok==false with empty errors) returns a
+                // graceful Err rather than panicking in a library context.
+                let d = tc_result.errors.first().ok_or_else(|| TwigCompileError {
+                    message: "type-checker invariant violated: ok==false but errors is empty"
+                        .to_string(),
+                    line: 0,
+                    column: 0,
+                })?;
                 return Err(TwigCompileError {
                     message: format!("type error: {}", d.message),
                     line: d.line,
