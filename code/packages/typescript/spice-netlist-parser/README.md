@@ -19,8 +19,10 @@ netlist.circuit.elements();
 netlist.analyses;
 ```
 
-This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `G`, `E`, `F`, and `H`
+This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `G`, `E`, `F`, and `H`
 elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
+`.model <name> NPN(...)` / `.model <name> PNP(...)` BJT cards with `IS`,
+`BF` / `BETA_F`, and `VT` parameters,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
 `.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, and `.ac`
 analysis cards.

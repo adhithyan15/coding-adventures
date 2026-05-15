@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+- Add SPICE `Q` BJT element parsing via `.model <name> NPN(...)` and
+  `.model <name> PNP(...)` cards with `IS`, `BF` / `BETA_F`, and `VT`
+  parameters, including subcircuit collector/base/emitter remapping.
+
 ## 0.1.4
 
 - Add SPICE `D` diode element parsing via `.model <name> D(...)` cards with

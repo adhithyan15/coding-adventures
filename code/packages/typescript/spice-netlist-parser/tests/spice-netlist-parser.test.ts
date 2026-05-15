@@ -151,6 +151,63 @@ Rload out 0 1k
     expect(result.voltage("out")).toBeLessThan(0.7);
   });
 
+  it("parses BJT models into operating-point circuits", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(IS=1e-14 BF=120 VT=25m)
+Vcc vcc 0 DC 5
+Vb base 0 DC 0.7
+Rc vcc col 100
+Q1 col base 0 fast
+.op
+`);
+
+    expect(parsed.models.get("fast")).toEqual({
+      name: "fast",
+      kind: "NPN",
+      params: new Map([
+        ["IS", 1.0e-14],
+        ["BF", 120.0],
+        ["VT", 25.0e-3],
+      ]),
+    });
+    expect(parsed.circuit.elements()[3]).toMatchObject({
+      kind: "bjt",
+      name: "Q1",
+      collector: "col",
+      base: "base",
+      emitter: "0",
+      polarity: "NPN",
+      saturationCurrent: 1.0e-14,
+      forwardBeta: 120.0,
+      thermalVoltage: 25.0e-3,
+    });
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("col")).toBeGreaterThan(0.0);
+    expect(result.voltage("col")).toBeLessThan(5.0);
+  });
+
+  it("parses PNP BJT model aliases", () => {
+    const parsed = parseNetlist(`
+.model slow PNP(IS=2e-14 BETA_F=80 VT=26m)
+Q2 out base emit slow
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      name: "Q2",
+      polarity: "PNP",
+      saturationCurrent: 2.0e-14,
+      forwardBeta: 80.0,
+    });
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("bjt");
+    if (element.kind !== "bjt") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.thermalVoltage).toBeCloseTo(26.0e-3, 12);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
@@ -301,6 +358,25 @@ Xlim in out limiter
     });
   });
 
+  it("expands subcircuit BJT nodes into engine elements", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(IS=1e-14 BF=120)
+.subckt stage c b e
+Qamp c b e fast
+.ends stage
+Xstage out in 0 stage
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      name: "Xstage.Qamp",
+      collector: "out",
+      base: "in",
+      emitter: "0",
+      polarity: "NPN",
+    });
+  });
+
   it("scopes subcircuit internal nodes by instance", () => {
     const parsed = parseNetlist(`
 .subckt load in out
@@ -330,8 +406,8 @@ Xright c d load
   });
 
   it("rejects unsupported elements with line numbers", () => {
-    expect(() => parseNetlist("\nQ1 c b e model\n")).toThrow(NetlistParseError);
-    expect(() => parseNetlist("\nQ1 c b e model\n")).toThrow("line 2: unsupported element");
+    expect(() => parseNetlist("\nZ1 c b e model\n")).toThrow(NetlistParseError);
+    expect(() => parseNetlist("\nZ1 c b e model\n")).toThrow("line 2: unsupported element");
   });
 
   it("rejects unknown diode models", () => {
@@ -343,6 +419,18 @@ Xright c d load
   it("rejects non-diode models for diode elements", () => {
     expect(() => parseNetlist(".model amp NPN(IS=1e-12)\nD1 a 0 amp\n")).toThrow(
       'line 2: model "amp" has kind "NPN", expected "D"',
+    );
+  });
+
+  it("rejects unknown BJT models", () => {
+    expect(() => parseNetlist("Q1 c b e missing\n")).toThrow(
+      'line 1: unknown model "missing" for BJT "Q1"',
+    );
+  });
+
+  it("rejects non-BJT models for BJT elements", () => {
+    expect(() => parseNetlist(".model clamp D(IS=1e-12)\nQ1 c b e clamp\n")).toThrow(
+      'line 2: model "clamp" has kind "D", expected "NPN" or "PNP"',
     );
   });
 

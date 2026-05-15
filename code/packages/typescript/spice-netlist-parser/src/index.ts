@@ -4,6 +4,7 @@ import {
   PulseWaveform,
   PwlWaveform,
   SinWaveform,
+  bjt,
   capacitor,
   cccs,
   ccvs,
@@ -328,6 +329,30 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("VT") ?? 0.02585,
     );
   }
+  if (prefix === "Q") {
+    requireFields(fields, 5, "BJT");
+    const model = models.get(fields[4].toLowerCase());
+    if (model === undefined) {
+      throw new NetlistParseError(
+        `unknown model ${JSON.stringify(fields[4])} for BJT ${JSON.stringify(name)}`,
+      );
+    }
+    if (model.kind !== "NPN" && model.kind !== "PNP") {
+      throw new NetlistParseError(
+        `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "NPN" or "PNP"`,
+      );
+    }
+    return bjt(
+      name,
+      fields[1],
+      fields[2],
+      fields[3],
+      model.kind,
+      model.params.get("IS") ?? 1.0e-14,
+      model.params.get("BF") ?? model.params.get("BETA_F") ?? 100.0,
+      model.params.get("VT") ?? 0.02585,
+    );
+  }
   if (prefix === "G") {
     requireFields(fields, 6, "VCCS");
     return vccs(name, fields[1], fields[2], fields[3], fields[4], parseValue(fields[5]));
@@ -431,6 +456,11 @@ function mapSubcktFields(
     requireMinFields(fields, 3, "subcircuit element");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
+  } else if (prefix === "Q") {
+    requireMinFields(fields, 4, "subcircuit BJT");
+    mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
+    mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
+    mapped[3] = mapSubcktNode(fields[3], instanceName, nodeMap);
   } else if (prefix === "E" || prefix === "G") {
     requireMinFields(fields, 5, "subcircuit controlled source");
     for (let index = 1; index < 5; index++) {

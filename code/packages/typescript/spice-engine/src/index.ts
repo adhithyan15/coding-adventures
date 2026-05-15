@@ -9,6 +9,7 @@ export type Element =
   | VoltageSource
   | CurrentSource
   | Diode
+  | Bjt
   | Vccs
   | Vcvs
   | Cccs
@@ -278,6 +279,20 @@ export interface Diode {
   readonly anode: string;
   readonly cathode: string;
   readonly saturationCurrent: number;
+  readonly thermalVoltage: number;
+}
+
+export type BjtPolarity = "NPN" | "PNP";
+
+export interface Bjt {
+  readonly kind: "bjt";
+  readonly name: string;
+  readonly collector: string;
+  readonly base: string;
+  readonly emitter: string;
+  readonly polarity: BjtPolarity;
+  readonly saturationCurrent: number;
+  readonly forwardBeta: number;
   readonly thermalVoltage: number;
 }
 
@@ -571,6 +586,29 @@ export function diode(
     anode,
     cathode,
     saturationCurrent,
+    thermalVoltage,
+  };
+}
+
+export function bjt(
+  name: string,
+  collector: string,
+  base: string,
+  emitter: string,
+  polarity: BjtPolarity = "NPN",
+  saturationCurrent = 1.0e-14,
+  forwardBeta = 100.0,
+  thermalVoltage = 0.02585,
+): Bjt {
+  return {
+    kind: "bjt",
+    name,
+    collector,
+    base,
+    emitter,
+    polarity,
+    saturationCurrent,
+    forwardBeta,
     thermalVoltage,
   };
 }
@@ -1124,6 +1162,12 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "saturationCurrent",
         nominalValue: element.saturationCurrent,
       };
+    case "bjt":
+      return {
+        elementName: element.name,
+        parameter: "saturationCurrent",
+        nominalValue: element.saturationCurrent,
+      };
     case "vccs":
       return {
         elementName: element.name,
@@ -1184,6 +1228,12 @@ function circuitWithPerturbedElement(
         perturbed.add({ ...element, current: element.current + delta });
         break;
       case "diode":
+        perturbed.add({
+          ...element,
+          saturationCurrent: element.saturationCurrent + delta,
+        });
+        break;
+      case "bjt":
         perturbed.add({
           ...element,
           saturationCurrent: element.saturationCurrent + delta,
@@ -1303,6 +1353,16 @@ function randomizedElement(
           rng,
         ),
       };
+    case "bjt":
+      return {
+        ...element,
+        saturationCurrent: randomizedValue(
+          element.saturationCurrent,
+          tolerance,
+          distribution,
+          rng,
+        ),
+      };
     case "vccs":
       return {
         ...element,
@@ -1406,7 +1466,9 @@ function solveLinearCircuit(
     return { nodeVoltages: new Map(), branchCurrents: new Map(), vector: [] };
   }
 
-  const hasDiode = circuit.elements().some((element) => element.kind === "diode");
+  const hasNonlinearElement = circuit
+    .elements()
+    .some((element) => element.kind === "diode" || element.kind === "bjt");
   let operatingPoint = Array.from({ length: matrixSize }, () => 0.0);
   let solution = solveLinearCircuitAtOperatingPoint(
     circuit,
@@ -1419,7 +1481,7 @@ function solveLinearCircuit(
     matrixSize,
     operatingPoint,
   );
-  if (!hasDiode) {
+  if (!hasNonlinearElement) {
     return solution;
   }
 
@@ -1497,6 +1559,9 @@ function solveLinearCircuitAtOperatingPoint(
         break;
       case "diode":
         stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
+        break;
+      case "bjt":
+        stampBjt(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -1610,6 +1675,9 @@ function buildSmallSignalMatrix(
           element.saturationCurrent / element.thermalVoltage,
         );
         break;
+      case "bjt":
+        stampBjtSmallSignal(element, nodeIndices, matrix);
+        break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
         break;
@@ -1671,6 +1739,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "capacitor":
       case "inductor":
       case "diode":
+      case "bjt":
       case "vccs":
       case "vcvs":
       case "cccs":
@@ -1740,6 +1809,9 @@ function buildAcMatrix(
           nodeIndex(nodeIndices, element.cathode),
           complex(element.saturationCurrent / element.thermalVoltage, 0.0),
         );
+        break;
+      case "bjt":
+        stampAcBjtSmallSignal(element, nodeIndices, matrix);
         break;
       case "vccs":
         stampAcVccs(element, nodeIndices, matrix);
@@ -1938,6 +2010,11 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         insertNode(names, element.anode);
         insertNode(names, element.cathode);
         break;
+      case "bjt":
+        insertNode(names, element.collector);
+        insertNode(names, element.base);
+        insertNode(names, element.emitter);
+        break;
       case "vccs":
         insertNode(names, element.positive);
         insertNode(names, element.negative);
@@ -2019,6 +2096,7 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "capacitor" ||
         element.kind === "inductor" ||
         element.kind === "diode" ||
+        element.kind === "bjt" ||
         element.kind === "vccs" ||
         element.kind === "vcvs" ||
         element.kind === "cccs" ||
@@ -2285,6 +2363,62 @@ function stampDiode(
   }
 }
 
+function stampBjt(
+  element: Bjt,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+  operatingPoint: readonly number[],
+): void {
+  validateBjt(element);
+  const collector = nodeIndex(nodeIndices, element.collector);
+  const base = nodeIndex(nodeIndices, element.base);
+  const emitter = nodeIndex(nodeIndices, element.emitter);
+  const baseVoltage = base === undefined ? 0.0 : operatingPoint[base];
+  const emitterVoltage = emitter === undefined ? 0.0 : operatingPoint[emitter];
+
+  const junctionVoltage =
+    element.polarity === "NPN"
+      ? baseVoltage - emitterVoltage
+      : emitterVoltage - baseVoltage;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const expValue = Math.exp(exponent);
+  const collectorCurrent = element.saturationCurrent * (expValue - 1.0);
+  const transconductance = element.saturationCurrent / element.thermalVoltage * expValue;
+  const junctionConductance = transconductance / element.forwardBeta;
+  const baseCurrent = collectorCurrent / element.forwardBeta;
+  const equivalentCollectorCurrent =
+    collectorCurrent - transconductance * junctionVoltage;
+  const equivalentBaseCurrent =
+    baseCurrent - junctionConductance * junctionVoltage;
+
+  if (element.polarity === "NPN") {
+    stampConductance(matrix, base, emitter, junctionConductance);
+    stampTransconductance(matrix, collector, emitter, base, emitter, transconductance);
+    stampCurrentSourceEquivalent(rhs, base, emitter, equivalentBaseCurrent);
+    stampCurrentSourceEquivalent(rhs, collector, emitter, equivalentCollectorCurrent);
+  } else {
+    stampConductance(matrix, emitter, base, junctionConductance);
+    stampTransconductance(matrix, emitter, collector, emitter, base, transconductance);
+    stampCurrentSourceEquivalent(rhs, emitter, base, equivalentBaseCurrent);
+    stampCurrentSourceEquivalent(rhs, emitter, collector, equivalentCollectorCurrent);
+  }
+}
+
+function stampCurrentSourceEquivalent(
+  rhs: number[],
+  positive: number | undefined,
+  negative: number | undefined,
+  current: number,
+): void {
+  if (positive !== undefined) {
+    rhs[positive] -= current;
+  }
+  if (negative !== undefined) {
+    rhs[negative] += current;
+  }
+}
+
 function validateReactiveElements(circuit: Circuit): void {
   for (const element of circuit.elements()) {
     if (element.kind === "capacitor") {
@@ -2298,6 +2432,21 @@ function validateReactiveElements(circuit: Circuit): void {
 function validateDiode(element: Diode): void {
   if (!Number.isFinite(element.saturationCurrent) || element.saturationCurrent <= 0.0) {
     throw invalidElement(element.name, "saturation current must be finite and positive");
+  }
+  if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
+    throw invalidElement(element.name, "thermal voltage must be finite and positive");
+  }
+}
+
+function validateBjt(element: Bjt): void {
+  if (element.polarity !== "NPN" && element.polarity !== "PNP") {
+    throw invalidElement(element.name, "BJT polarity must be NPN or PNP");
+  }
+  if (!Number.isFinite(element.saturationCurrent) || element.saturationCurrent <= 0.0) {
+    throw invalidElement(element.name, "saturation current must be finite and positive");
+  }
+  if (!Number.isFinite(element.forwardBeta) || element.forwardBeta <= 0.0) {
+    throw invalidElement(element.name, "forward beta must be finite and positive");
   }
   if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
     throw invalidElement(element.name, "thermal voltage must be finite and positive");
@@ -2687,6 +2836,26 @@ function stampTransconductance(
   }
 }
 
+function stampBjtSmallSignal(
+  element: Bjt,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+): void {
+  validateBjt(element);
+  const collector = nodeIndex(nodeIndices, element.collector);
+  const base = nodeIndex(nodeIndices, element.base);
+  const emitter = nodeIndex(nodeIndices, element.emitter);
+  const transconductance = element.saturationCurrent / element.thermalVoltage;
+  const junctionConductance = transconductance / element.forwardBeta;
+  if (element.polarity === "NPN") {
+    stampConductance(matrix, base, emitter, junctionConductance);
+    stampTransconductance(matrix, collector, emitter, base, emitter, transconductance);
+  } else {
+    stampConductance(matrix, emitter, base, junctionConductance);
+    stampTransconductance(matrix, emitter, collector, emitter, base, transconductance);
+  }
+}
+
 function stampAcResistor(
   element: Resistor,
   nodeIndices: ReadonlyMap<string, number>,
@@ -3009,6 +3178,50 @@ function stampComplexTransconductance(
     matrix[negative][controlNegative] = complexAdd(
       matrix[negative][controlNegative],
       transconductance,
+    );
+  }
+}
+
+function stampAcBjtSmallSignal(
+  element: Bjt,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  validateBjt(element);
+  const collector = nodeIndex(nodeIndices, element.collector);
+  const base = nodeIndex(nodeIndices, element.base);
+  const emitter = nodeIndex(nodeIndices, element.emitter);
+  const transconductance = element.saturationCurrent / element.thermalVoltage;
+  const junctionConductance = transconductance / element.forwardBeta;
+  if (element.polarity === "NPN") {
+    stampComplexConductance(
+      matrix,
+      base,
+      emitter,
+      complex(junctionConductance, 0.0),
+    );
+    stampComplexTransconductance(
+      matrix,
+      collector,
+      emitter,
+      base,
+      emitter,
+      complex(transconductance, 0.0),
+    );
+  } else {
+    stampComplexConductance(
+      matrix,
+      emitter,
+      base,
+      complex(junctionConductance, 0.0),
+    );
+    stampComplexTransconductance(
+      matrix,
+      emitter,
+      collector,
+      emitter,
+      base,
+      complex(transconductance, 0.0),
     );
   }
 }
