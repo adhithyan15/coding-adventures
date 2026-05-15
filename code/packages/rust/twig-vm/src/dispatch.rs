@@ -33,9 +33,9 @@
 //! | `alloc_closure`    | (LANG34) allocate closure: `srcs[0] = Str(fn_name)`, `srcs[1..] = captures` |
 //! | `call_closure`     | (LANG34) invoke closure: `srcs[0] = handle`, `srcs[1..] = user args` |
 //!
-//! ### Special-cased `call_builtin` names (PR 5)
+//! ### Special-cased `call_builtin` names (PR 5 + LANG55)
 //!
-//! Three builtin names need access to per-VM state (globals
+//! These builtin names need access to per-VM state (globals
 //! table, IIRModule, dispatcher recursion) and so are handled
 //! inline in `exec_call_builtin` rather than as context-free
 //! `BuiltinFn` pointers:
@@ -45,6 +45,13 @@
 //! | `apply_closure` | Extract `(fn_name, captures)` from the closure handle.  If the closure flag says builtin, dispatch via `LispyBinding::resolve_builtin`.  Else look `fn_name` up in `module.functions` and recurse into `dispatch` with `captures ++ args`. |
 //! | `global_set`    | Write `globals[name] = value` (name and value both supplied as srcs). |
 //! | `global_get`    | Read `globals[name]`; error if unset.              |
+//! | `map`           | `(map fn lst)` — apply `fn` to each element; return new list. |
+//! | `filter`        | `(filter pred lst)` — keep elements for which `pred` is truthy. |
+//! | `fold-left`     | `(fold-left fn init lst)` — left fold: `acc = (fn acc elem)`. |
+//! | `fold-right`    | `(fold-right fn init lst)` — right fold: `acc = (fn elem acc)`. |
+//!
+//! `map`, `filter`, `fold-left`, `fold-right` share the `invoke_closure_value`
+//! helper which drives `dispatch` recursively for each element.
 //!
 //! All other `call_builtin` names route through
 //! `LispyBinding::resolve_builtin` exactly as before.
@@ -198,6 +205,29 @@ pub const MAX_IC_SLOTS_PER_FUNCTION: u32 = 1 << 16;
 /// adversarial inputs at the boundary.  Found by PR 7
 /// security review.
 pub const MAX_IC_FUNCTIONS: usize = 1 << 16;
+
+/// Maximum number of elements `collect_list` (LANG55) will materialise
+/// from a single cons-cell chain in one call.
+///
+/// ## Security rationale (found by LANG55 security review)
+///
+/// `collect_list` walks a runtime cons chain without access to the IIR
+/// instruction budget.  Without a cap, a single `(map fn huge-list)`
+/// instruction costs **one** budget tick but allocates O(N) `Vec` storage
+/// (for the element buffer), O(N) more storage for the result buffer, and
+/// O(N) `Box::leak`'d cons cells via `build_list` — all permanent because
+/// there is no GC yet.  An adversary who can supply a hand-built IIR
+/// module (or who can construct a large list at runtime) could OOM the
+/// process in a single budget tick.
+///
+/// Capping at `MAX_INSTRUCTIONS_PER_RUN` aligns the per-call work bound
+/// with the existing budget ceiling: iterating the maximum list costs
+/// exactly `MAX_INSTRUCTIONS_PER_RUN` budget ticks (one per element, via
+/// the `budget.tick()` call in `collect_list`), so a single HOF call on a
+/// maximum-length list costs the entire budget.  Real programs never
+/// approach this limit — compiler passes operate on thousands of tokens,
+/// not millions.
+pub const MAX_HOF_LIST_ELEMENTS: usize = MAX_INSTRUCTIONS_PER_RUN as usize;
 
 // ---------------------------------------------------------------------------
 // RunError
@@ -1240,6 +1270,26 @@ fn exec_call_builtin(
         name if name.starts_with("host/") => {
             return exec_host_call(name, instr, frame);
         }
+        // ── LANG55: higher-order list operations ─────────────────────
+        //
+        // `map`, `filter`, `fold-left`, `fold-right` all need to call a
+        // user-supplied closure for each list element, which requires
+        // recursing into `dispatch`.  They are special-cased here for the
+        // same reason as `apply_closure` — context-free `BuiltinFn` pointers
+        // in `lispy-runtime` have no access to the VM state needed to drive
+        // the recursive call.
+        "map" => {
+            return exec_hof_map(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        "filter" => {
+            return exec_hof_filter(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        "fold-left" => {
+            return exec_hof_fold_left(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        "fold-right" => {
+            return exec_hof_fold_right(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
         _ => {}
     }
 
@@ -2076,6 +2126,423 @@ fn host_arg_string(
             function: host_fn.to_string(),
             received: format!("{val}"),
         })
+}
+
+// ---------------------------------------------------------------------------
+// LANG55: higher-order list operations
+// ---------------------------------------------------------------------------
+//
+// `map`, `filter`, `fold-left`, and `fold-right` all need to call a closure
+// for each element of a list, which requires recursing into `dispatch`.
+// They are implemented here — in the layer of the VM that has access to
+// `module`, `depth`, `budget`, `globals`, etc. — for the same reason that
+// `apply_closure` and `global_set` live here rather than in `lispy-runtime`.
+//
+// ## Shared helper: `invoke_closure_value`
+//
+// The core "call a heap closure value with a slice of arguments" logic is
+// extracted into `invoke_closure_value` so that `map`, `filter`, and the
+// two fold variants don't each duplicate it.  The logic mirrors
+// `exec_call_closure` / `exec_apply_closure` but works directly on
+// `Vec<LispyValue>` rather than on an `IIRInstr`.
+//
+// ## List iteration protocol
+//
+// The list argument must be a **proper list**: a sequence of cons cells
+// terminated by `nil`.  Each iteration step is:
+//
+//   1. If the current cursor is `nil`, iteration is done.
+//   2. Otherwise read `car` (current element) and `cdr` (rest).
+//   3. Invoke the closure on the element.
+//   4. Advance the cursor to `cdr`.
+//
+// Passing a dotted pair (improper list) raises `HostArgType` on the step
+// where the tail is neither cons nor nil.
+//
+// ## Budget
+//
+// Each closure call ticks the budget once via the budget check inside
+// `dispatch`.  The outer HOF handler itself does not tick the budget —
+// the loop overhead is negligible compared to the body invocations.
+
+/// Call a `LispyValue` that is a heap closure (user-function or builtin).
+///
+/// This extracts the core closure-invocation logic shared by `exec_call_closure`,
+/// `exec_apply_closure`, and the four LANG55 higher-order functions.  Using a
+/// dedicated helper avoids three copies of the same `unsafe as_closure` +
+/// `is_builtin` + `dispatch` dance.
+///
+/// # Arguments
+///
+/// * `handle` — must be a heap closure value (`CLASS_CLOSURE`).
+/// * `args` — positional arguments to pass.  For user closures, captures are
+///   prepended automatically (same as `exec_call_closure`).
+///
+/// # Errors
+///
+/// Returns `RunError::NotCallable` if `handle` is not a closure.
+/// Returns `RunError::DepthExceeded` if `depth >= MAX_DISPATCH_DEPTH`.
+/// Propagates errors from the callee body.
+fn invoke_closure_value(
+    module: &IIRModule,
+    handle: LispyValue,
+    args: Vec<LispyValue>,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<LispyValue, RunError> {
+    // SAFETY: LispyValue tag encoding.
+    //
+    // `as_closure` first calls `as_heap_ptr()` which checks the low-3-bit tag.
+    // Only values with TAG_HEAP (= 0b111) pass the check; integers, booleans,
+    // nil, and symbols have distinct tags and return `None` before any
+    // pointer dereference.  All heap-tagged values in the dispatcher were
+    // produced by `lispy_runtime` allocators that `Box::leak` properly
+    // aligned objects — the live-pointer invariant holds for the process
+    // lifetime (no GC yet).  An adversarially-crafted integer that happens
+    // to have low bits 0b111 cannot be produced by `exec_const` for
+    // `Operand::Int(n)`, because `LispyValue::int(n)` shifts left 3,
+    // making the low bits always 0.
+    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+        RunError::NotCallable(format!("invoke_closure_value: {handle} is not a closure"))
+    })?;
+    let fn_name_id = closure.fn_name;
+    let captures = closure.captures.clone();
+    let is_builtin = closure.is_builtin();
+
+    if is_builtin {
+        // Hard guard: builtin closures must have zero captures.
+        // `make_builtin_closure` / `alloc_builtin_closure` never attach
+        // captures.  A malformed heap object with `CLOSURE_FLAG_BUILTIN`
+        // AND non-empty captures would silently drop the captures — reject
+        // it unconditionally (not just debug_assert!) so release builds are
+        // equally protected.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "invoke_closure_value: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "invoke_closure_value: builtin closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
+            .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
+        builtin(&args).map_err(RunError::Runtime)
+    } else {
+        // User-fn closure: prepend captures to args then recurse into dispatch.
+        //
+        // Depth / stack-overflow protection: `dispatch` checks
+        // `depth > MAX_DISPATCH_DEPTH` at entry and returns `RunError::DepthExceeded`
+        // before any allocation.  Passing `depth + 1` here matches the convention
+        // in `exec_call_closure`, `exec_apply_closure`, and `exec_call`.
+        let mut all_args = captures;
+        all_args.extend(args);
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "invoke_closure_value: closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let callee = module
+            .functions
+            .iter()
+            .find(|f| f.name == name_str)
+            .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile, debug)
+    }
+}
+
+/// Walk a `LispyValue` proper-list into a `Vec<LispyValue>`.
+///
+/// Returns `Err(RunError::HostArgType)` if a tail is neither nil nor a cons
+/// cell (improper list / wrong type).
+///
+/// Returns `Err(RunError::InstructionLimitExceeded)` if the list length
+/// exceeds [`MAX_HOF_LIST_ELEMENTS`].  Each element also ticks `budget`
+/// once, so iterating a list of length N charges N budget ticks.  This
+/// ensures that a single `call_builtin "map"` instruction cannot traverse
+/// more elements than the total `MAX_INSTRUCTIONS_PER_RUN` budget allows,
+/// preventing DoS via unbounded memory allocation.
+///
+/// # Security
+///
+/// Without a cap, a single HOF instruction on a very large list costs only
+/// **one** budget tick (the `call_builtin` itself) while performing O(N)
+/// allocations — a multiplier attack.  See `MAX_HOF_LIST_ELEMENTS` for the
+/// detailed rationale.
+///
+/// # Safety
+///
+/// Caller guarantees the value lives for the duration of this call (true
+/// for all VM-managed `LispyValue`s because allocations are `Box::leak`'d).
+fn collect_list(
+    fn_name: &str,
+    mut cursor: LispyValue,
+    budget: &mut ExecutionBudget,
+) -> Result<Vec<LispyValue>, RunError> {
+    let mut out = Vec::new();
+    loop {
+        if cursor.is_nil() {
+            return Ok(out);
+        }
+        // DoS guard: cap list length so one HOF instruction cannot
+        // allocate O(N) memory for an unbounded N.  `MAX_HOF_LIST_ELEMENTS`
+        // matches `MAX_INSTRUCTIONS_PER_RUN` so iterating the maximum list
+        // costs the whole budget.  Found by LANG55 security review.
+        if out.len() >= MAX_HOF_LIST_ELEMENTS {
+            return Err(RunError::InstructionLimitExceeded);
+        }
+        // Charge one budget tick per element traversed.  This accounts for
+        // the work that `dispatch` would normally charge per-instruction but
+        // cannot here because list traversal happens outside the dispatch loop.
+        budget.tick()?;
+
+        // SAFETY: see `invoke_closure_value` safety note — all heap-tagged
+        // values in the dispatcher came from `lispy_runtime` allocators.
+        let (head, tail) = unsafe {
+            let h = lispy_runtime::heap::car(cursor).ok_or_else(|| RunError::HostArgType {
+                function: fn_name.to_string(),
+                received: format!("list tail {cursor} is not a cons cell"),
+            })?;
+            let t = lispy_runtime::heap::cdr(cursor).ok_or_else(|| RunError::HostArgType {
+                function: fn_name.to_string(),
+                received: format!("list tail {cursor} is not a cons cell"),
+            })?;
+            (h, t)
+        };
+        out.push(head);
+        cursor = tail;
+    }
+}
+
+/// Build a proper `LispyValue` list from a `Vec<LispyValue>`.
+///
+/// Constructs `(cons v0 (cons v1 … nil))` — the natural in-order list.
+fn build_list(elements: Vec<LispyValue>) -> LispyValue {
+    let mut acc = LispyValue::NIL;
+    for elem in elements.into_iter().rev() {
+        acc = lispy_runtime::heap::alloc_cons(elem, acc);
+    }
+    acc
+}
+
+/// Helper: extract the fn-closure and list arguments from a HOF instruction.
+///
+/// For `map` and `filter`:
+///   `srcs = [name, fn_closure, list]`
+///   Returns `(fn_closure_val, list_val)`.
+///
+/// Validates argument count (exactly 3 srcs including the name).
+fn hof_fn_and_list(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+) -> Result<(LispyValue, LispyValue), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "{op}: expected 3 srcs (name, fn, list), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = frame;
+    let fn_val = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let list_val = operand_to_value(&instr.srcs[2], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    Ok((fn_val, list_val))
+}
+
+/// Helper: extract the fn-closure, init, and list arguments from a fold HOF instruction.
+///
+/// For `fold-left` and `fold-right`:
+///   `srcs = [name, fn_closure, init, list]`
+///   Returns `(fn_closure_val, init_val, list_val)`.
+///
+/// Validates argument count (exactly 4 srcs including the name).
+fn hof_fn_init_and_list(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+) -> Result<(LispyValue, LispyValue, LispyValue), RunError> {
+    if instr.srcs.len() != 4 {
+        return Err(RunError::MalformedInstruction(format!(
+            "{op}: expected 4 srcs (name, fn, init, list), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = frame;
+    let fn_val = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let init_val = operand_to_value(&instr.srcs[2], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let list_val = operand_to_value(&instr.srcs[3], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    Ok((fn_val, init_val, list_val))
+}
+
+/// `(map fn lst)` — apply `fn` to each element of `lst`; return a new list.
+///
+/// IIR convention: `call_builtin "map" fn_reg list_reg`.
+///
+/// ```text
+/// (map (lambda (x) (* x x)) (list 1 2 3)) → (1 4 9)
+/// (map fn nil)                             → nil
+/// ```
+///
+/// Error if `fn` is not a closure or `lst` is not a proper list.
+fn exec_hof_map(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, list_val) = hof_fn_and_list("map", instr, frame)?;
+    let elements = collect_list("map", list_val, budget)?;
+
+    // Apply fn to each element, collecting results.
+    let mut results = Vec::with_capacity(elements.len());
+    for elem in elements {
+        let r = invoke_closure_value(
+            module, fn_val, vec![elem], depth, budget, globals, ic_table, profile, debug,
+        )?;
+        results.push(r);
+    }
+
+    let result_list = build_list(results);
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result_list)?;
+    }
+    Ok(())
+}
+
+/// `(filter pred lst)` — keep elements for which `pred` returns truthy.
+///
+/// IIR convention: `call_builtin "filter" pred_reg list_reg`.
+///
+/// Truthy means anything except `#f` and `nil` (same as `jmp_if_false`).
+///
+/// ```text
+/// (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)) → (1 3 5)
+/// (filter pred nil)                                          → nil
+/// ```
+fn exec_hof_filter(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, list_val) = hof_fn_and_list("filter", instr, frame)?;
+    let elements = collect_list("filter", list_val, budget)?;
+
+    // Keep elements for which pred returns truthy.
+    let mut kept = Vec::with_capacity(elements.len());
+    for elem in elements {
+        let test = invoke_closure_value(
+            module, fn_val, vec![elem], depth, budget, globals, ic_table, profile, debug,
+        )?;
+        if test.is_truthy() {
+            kept.push(elem);
+        }
+    }
+
+    let result_list = build_list(kept);
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result_list)?;
+    }
+    Ok(())
+}
+
+/// `(fold-left fn init lst)` — left fold: `acc = (fn acc elem)` for each element.
+///
+/// IIR convention: `call_builtin "fold-left" fn_reg init_reg list_reg`.
+///
+/// ```text
+/// (fold-left + 0 (list 1 2 3 4)) → 10
+/// (fold-left fn init nil)        → init
+/// ```
+fn exec_hof_fold_left(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, init_val, list_val) = hof_fn_init_and_list("fold-left", instr, frame)?;
+    let elements = collect_list("fold-left", list_val, budget)?;
+
+    let mut acc = init_val;
+    for elem in elements {
+        // Left fold: (fn acc elem)
+        acc = invoke_closure_value(
+            module, fn_val, vec![acc, elem], depth, budget, globals, ic_table, profile, debug,
+        )?;
+    }
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), acc)?;
+    }
+    Ok(())
+}
+
+/// `(fold-right fn init lst)` — right fold: `acc = (fn elem acc)` for each element.
+///
+/// IIR convention: `call_builtin "fold-right" fn_reg init_reg list_reg`.
+///
+/// The list is collected into a `Vec` first, then traversed in reverse so
+/// that the rightmost element is processed first.
+///
+/// ```text
+/// (fold-right cons nil (list 1 2 3)) → (1 2 3)   ; identity for proper lists
+/// (fold-right fn init nil)           → init
+/// ```
+fn exec_hof_fold_right(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, init_val, list_val) = hof_fn_init_and_list("fold-right", instr, frame)?;
+    let elements = collect_list("fold-right", list_val, budget)?;
+
+    // Process elements from right to left.
+    let mut acc = init_val;
+    for elem in elements.into_iter().rev() {
+        // Right fold: (fn elem acc)
+        acc = invoke_closure_value(
+            module, fn_val, vec![elem, acc], depth, budget, globals, ic_table, profile, debug,
+        )?;
+    }
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), acc)?;
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -4803,5 +5270,160 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
         ];
         assert_eq!(run(&module_with_main(instrs, 3)).unwrap().as_int(), Some(65));
+    }
+
+    // ── LANG55: higher-order list operations ────────────────────────────
+
+    /// Helper: collect a proper-list `LispyValue` into a `Vec<i64>`.
+    ///
+    /// Panics with a clear message if the value is not a proper integer list.
+    fn collect_int_list(v: LispyValue) -> Vec<i64> {
+        let mut out = Vec::new();
+        let mut cur = v;
+        loop {
+            if cur.is_nil() { return out; }
+            let head = unsafe { lispy_runtime::heap::car(cur) }
+                .expect("car failed — not a cons cell");
+            let tail = unsafe { lispy_runtime::heap::cdr(cur) }
+                .expect("cdr failed — not a cons cell");
+            out.push(head.as_int().expect("element is not an integer"));
+            cur = tail;
+        }
+    }
+
+    #[test]
+    fn map_squares_list() {
+        // (define (sq x) (* x x))
+        // (map sq (list 1 2 3))  →  (1 4 9)
+        let result = run_source("
+            (define (sq x) (* x x))
+            (map sq (list 1 2 3))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![1, 4, 9]);
+    }
+
+    #[test]
+    fn map_empty_list() {
+        // (map fn nil) → nil
+        let result = run_source("
+            (define (inc x) (+ x 1))
+            (map inc nil)
+        ").unwrap();
+        assert!(result.is_nil(), "expected nil, got {result}");
+    }
+
+    #[test]
+    fn map_with_lambda() {
+        // inline lambda: (map (lambda (x) (* x 2)) (list 3 5 7)) → (6 10 14)
+        let result = run_source("
+            (map (lambda (x) (* x 2)) (list 3 5 7))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![6, 10, 14]);
+    }
+
+    #[test]
+    fn filter_keeps_odds() {
+        // (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)) → (1 3 5)
+        let result = run_source("
+            (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![1, 3, 5]);
+    }
+
+    #[test]
+    fn filter_empty_input() {
+        // (filter pred nil) → nil
+        let result = run_source("
+            (define (pos? x) (> x 0))
+            (filter pos? nil)
+        ").unwrap();
+        assert!(result.is_nil(), "expected nil, got {result}");
+    }
+
+    #[test]
+    fn filter_all_drop() {
+        // (filter (lambda (x) #f) (list 1 2 3)) → nil
+        let result = run_source("
+            (filter (lambda (x) #f) (list 1 2 3))
+        ").unwrap();
+        assert!(result.is_nil(), "expected nil, got {result}");
+    }
+
+    #[test]
+    fn fold_left_sum() {
+        // (fold-left + 0 (list 1 2 3 4 5)) → 15
+        let result = run_source("
+            (fold-left + 0 (list 1 2 3 4 5))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(15));
+    }
+
+    #[test]
+    fn fold_left_empty() {
+        // (fold-left + 0 nil) → 0
+        let result = run_source("
+            (fold-left + 0 nil)
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(0));
+    }
+
+    #[test]
+    fn fold_left_string_build() {
+        // Check ordering: (fold-left (lambda (acc x) (+ acc x)) 0 (list 10 3))
+        // = ((0 + 10) + 3) = 13
+        let result = run_source("
+            (fold-left (lambda (acc x) (+ acc x)) 0 (list 10 3))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(13));
+    }
+
+    #[test]
+    fn fold_right_cons_identity() {
+        // (fold-right cons nil (list 1 2 3)) → (1 2 3)   ; identity for proper lists
+        let result = run_source("
+            (fold-right cons nil (list 1 2 3))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![1, 2, 3]);
+    }
+
+    #[test]
+    fn fold_right_sum() {
+        // (fold-right + 0 (list 1 2 3)) → 6
+        let result = run_source("
+            (fold-right + 0 (list 1 2 3))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(6));
+    }
+
+    #[test]
+    fn fold_right_ordering() {
+        // fold-right processes right-to-left: (fn elem acc)
+        // (fold-right (lambda (x acc) (- acc x)) 100 (list 1 2 3))
+        // = (fn 3 (fn 2 (fn 1 100)))
+        // = (fn 3 (fn 2 99)) = (fn 3 97) = 94
+        let result = run_source("
+            (fold-right (lambda (x acc) (- acc x)) 100 (list 1 2 3))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(94));
+    }
+
+    #[test]
+    fn map_then_fold() {
+        // Compose: (fold-left + 0 (map (lambda (x) (* x x)) (list 1 2 3))) → 14
+        let result = run_source("
+            (fold-left + 0 (map (lambda (x) (* x x)) (list 1 2 3)))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(14));
+    }
+
+    #[test]
+    fn filter_then_map() {
+        // (map (lambda (x) (* x 2)) (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)))
+        // → (2 6 10)
+        let result = run_source("
+            (map (lambda (x) (* x 2))
+                 (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![2, 6, 10]);
     }
 }

@@ -1,8 +1,8 @@
 [package]
 name = "twig-vm"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
-description = "LANG47 + LANG52 — string heap objects (LangString), string/char builtins, host I/O (write_string, read_line, read_file) in the dispatch loop"
+description = "LANG47 + LANG52 + LANG55 — string heap objects (LangString), string/char builtins, host I/O, and higher-order list operations (map, filter, fold-left, fold-right)"
 
 [dependencies]
 twig-ir-compiler  = { path = "../twig-ir-compiler" }

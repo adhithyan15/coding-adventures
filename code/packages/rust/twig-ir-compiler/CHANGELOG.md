@@ -1,5 +1,17 @@
 # Changelog — twig-ir-compiler
 
+## [0.9.0] — 2026-05-14
+
+### Added (LANG55 — Higher-Order List Operations)
+
+- **BUILTINS expansion** — `"map"`, `"filter"`, `"fold-left"`, `"fold-right"` added
+  to the `BUILTINS` constant.  The compiler now emits `call_builtin "map" fn_reg list_reg`
+  (etc.) for these names rather than treating them as user-defined functions.
+  The actual execution is handled by the new special-cased `exec_hof_*` handlers in
+  `twig-vm` which can recurse into `dispatch` to call the supplied closure.
+
+---
+
 ## [0.8.0] — 2026-05-14
 
 ### Added (LANG52 — stdlib completeness + LANG51 string literals)
