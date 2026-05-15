@@ -1246,7 +1246,13 @@ pub fn tf(
     let input = find_input_source(circuit, input_source)?;
     let voltage_sources = collect_ac_voltage_sources(circuit)?;
     let node_count = node_indices.len();
-    let matrix = build_small_signal_matrix(circuit, &node_indices, &voltage_sources)?;
+    let operating_solution = solve_linear_circuit(circuit, &[], &[], None)?;
+    let matrix = build_small_signal_matrix(
+        circuit,
+        &node_indices,
+        &voltage_sources,
+        &operating_solution.vector,
+    )?;
     let size = matrix.len();
     let output_index = node_index(&node_indices, output_node);
 
@@ -2185,6 +2191,7 @@ fn build_small_signal_matrix(
     circuit: &Circuit,
     node_indices: &HashMap<String, usize>,
     voltage_sources: &BTreeMap<String, usize>,
+    operating_point: &[f64],
 ) -> Result<Vec<Vec<f64>>, SpiceError> {
     let node_count = node_indices.len();
     let matrix_size = node_count + voltage_sources.len();
@@ -2226,16 +2233,23 @@ fn build_small_signal_matrix(
             }
             Element::Diode(diode) => {
                 validate_diode(diode)?;
+                let anode = node_index(node_indices, &diode.anode);
+                let cathode = node_index(node_indices, &diode.cathode);
+                let voltage = vector_voltage(operating_point, anode)
+                    - vector_voltage(operating_point, cathode);
+                let exponent = (voltage / diode.thermal_voltage).clamp(-40.0, 40.0);
                 stamp_conductance(
                     &mut matrix,
-                    node_index(node_indices, &diode.anode),
-                    node_index(node_indices, &diode.cathode),
-                    diode.saturation_current / diode.thermal_voltage,
+                    anode,
+                    cathode,
+                    diode.saturation_current / diode.thermal_voltage * exponent.exp(),
                 );
             }
-            Element::Bjt(bjt) => stamp_bjt_small_signal(bjt, node_indices, &mut matrix)?,
+            Element::Bjt(bjt) => {
+                stamp_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point)?
+            }
             Element::Mosfet(mosfet) => {
-                stamp_mosfet_small_signal(mosfet, node_indices, &mut matrix)?
+                stamp_mosfet_small_signal(mosfet, node_indices, &mut matrix, operating_point)?
             }
             Element::Vccs(source) => {
                 stamp_vccs(source, node_indices, &mut matrix)?;
@@ -2786,12 +2800,20 @@ fn stamp_bjt_small_signal(
     bjt: &Bjt,
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
+    operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
-    let gm = bjt.saturation_current / bjt.thermal_voltage;
+    let base_voltage = vector_voltage(operating_point, base);
+    let emitter_voltage = vector_voltage(operating_point, emitter);
+    let junction_voltage = match bjt.polarity {
+        BjtPolarity::Npn => base_voltage - emitter_voltage,
+        BjtPolarity::Pnp => emitter_voltage - base_voltage,
+    };
+    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let gm = bjt.saturation_current / bjt.thermal_voltage * exponent.exp();
     let gpi = gm / bjt.forward_beta;
     match bjt.polarity {
         BjtPolarity::Npn => {
@@ -2943,13 +2965,21 @@ fn stamp_mosfet_small_signal(
     mosfet: &Mosfet,
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
+    operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_mosfet(mosfet)?;
     let drain = node_index(node_indices, &mosfet.drain);
     let gate = node_index(node_indices, &mosfet.gate);
     let source = node_index(node_indices, &mosfet.source);
     let body = node_index(node_indices, &mosfet.body);
-    let result = evaluate_mosfet_level1(mosfet, 0.0, 0.0, 0.0);
+    let drain_voltage = vector_voltage(operating_point, drain);
+    let gate_voltage = vector_voltage(operating_point, gate);
+    let source_voltage = vector_voltage(operating_point, source);
+    let body_voltage = vector_voltage(operating_point, body);
+    let vgs = gate_voltage - source_voltage;
+    let vds = drain_voltage - source_voltage;
+    let vbs = body_voltage - source_voltage;
+    let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
     stamp_conductance(matrix, drain, source, result.gds);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);

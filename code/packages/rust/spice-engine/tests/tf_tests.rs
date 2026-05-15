@@ -1,6 +1,6 @@
 use spice_engine::{
-    tf, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor,
-    Resistor, SpiceError, TfResult, Vccs, Vcvs, VoltageSource,
+    tf, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor, Mosfet,
+    MosfetLevel1Params, MosfetType, Resistor, SpiceError, TfResult, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -117,8 +117,12 @@ fn tf_vcvs_stage_reports_voltage_gain() {
 #[test]
 fn tf_bjt_common_emitter_reports_small_signal_gain() {
     let mut circuit = Circuit::new();
+    let thermal_voltage = 0.02585;
     circuit.add(Element::VoltageSource(VoltageSource::new(
-        "Vin", "base", "0", 1.0,
+        "Vin",
+        "base",
+        "0",
+        thermal_voltage * 2.0_f64.ln(),
     )));
     circuit.add(Element::Bjt(Bjt::with_model(
         "Q1",
@@ -128,7 +132,7 @@ fn tf_bjt_common_emitter_reports_small_signal_gain() {
         BjtPolarity::Npn,
         25.85e-6,
         100.0,
-        0.02585,
+        thermal_voltage,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,
@@ -136,8 +140,48 @@ fn tf_bjt_common_emitter_reports_small_signal_gain() {
 
     let result = tf(&circuit, "out", "Vin").unwrap();
 
+    assert_close(result.gain(), -2.0);
+    assert_close(result.input_impedance_ohms, 50_000.0);
+    assert_close(result.output_impedance_ohms, 1_000.0);
+}
+
+#[test]
+fn tf_mosfet_common_source_uses_gate_bias_for_small_signal_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "gate", "0", 1.5,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            vt0: 0.5,
+            kp: 1.0e-3,
+            lambda: 0.0,
+            gamma: 0.0,
+            phi: 0.7,
+            w: 1.0,
+            l: 1.0,
+            saturation_current: 1.0e-15,
+            n_sub: 1.0,
+            t_nom: 300.15,
+        },
+    )));
+
+    let result = tf(&circuit, "out", "Vin").unwrap();
+
     assert_close(result.gain(), -1.0);
-    assert_close(result.input_impedance_ohms, 100_000.0);
+    assert!(result.input_impedance_ohms.is_infinite());
     assert_close(result.output_impedance_ohms, 1_000.0);
 }
 
