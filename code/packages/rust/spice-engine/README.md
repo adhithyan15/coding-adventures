@@ -15,14 +15,16 @@ The initial slices implement:
   input-referred PSD.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
   impedance estimates.
-- AC small-signal frequency sweeps for linear RC/RL circuits.
+- AC small-signal frequency sweeps for linear RC/RL circuits and explicit AC
+  source phasors with DC-bias operating-point linearization for nonlinear
+  devices.
 - Backward-Euler transient analysis for linear RC/RL circuits.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
-current sources, optional source waveforms, ground aliases, node voltages, and
-voltage source branch currents.
+current sources, optional AC source phasors, optional source waveforms, ground
+aliases, node voltages, and voltage source branch currents.
 
 ```rust
 use spice_engine::{Circuit, Element, PwlWaveform, Resistor, VoltageSource, Waveform};

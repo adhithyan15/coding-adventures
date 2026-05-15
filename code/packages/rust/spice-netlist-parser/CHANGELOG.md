@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7
+
+- Add independent-source `AC <magnitude> [phase]` parsing, including combined
+  `DC <bias> AC <magnitude> [phase]` forms for AC analysis with separate DC
+  bias and small-signal excitation.
+
 ## 0.1.6
 
 - Add SPICE `M` MOSFET element parsing via `.model <name> NMOS|PMOS(...)`
