@@ -28,6 +28,7 @@ pub const CAP_I2C_READ: u16 = 0x27;
 pub const CAP_I2C_TRANSFER: u16 = 0x28;
 pub const CAP_SPI_OPEN: u16 = 0x29;
 pub const CAP_SPI_TRANSFER: u16 = 0x2A;
+pub const CAP_UART_OPEN: u16 = 0x2B;
 pub const CAP_LED_MATRIX_FRAME: u16 = 0x30;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
@@ -47,6 +48,7 @@ const CAP_I2C_READ_CAP_U8: u8 = CAP_I2C_READ as u8;
 const CAP_I2C_TRANSFER_U8: u8 = CAP_I2C_TRANSFER as u8;
 const CAP_SPI_OPEN_U8: u8 = CAP_SPI_OPEN as u8;
 const CAP_SPI_TRANSFER_U8: u8 = CAP_SPI_TRANSFER as u8;
+const CAP_UART_OPEN_U8: u8 = CAP_UART_OPEN as u8;
 const CAP_LED_MATRIX_FRAME_U8: u8 = CAP_LED_MATRIX_FRAME as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -127,6 +129,7 @@ pub struct CapabilitySet {
     pub dac: bool,
     pub i2c: bool,
     pub spi: bool,
+    pub uart: bool,
     pub led_matrix: bool,
 }
 
@@ -140,6 +143,7 @@ impl CapabilitySet {
             dac: false,
             i2c: false,
             spi: false,
+            uart: false,
             led_matrix: false,
         }
     }
@@ -153,6 +157,7 @@ impl CapabilitySet {
             dac: false,
             i2c: false,
             spi: false,
+            uart: false,
             led_matrix: false,
         }
     }
@@ -177,6 +182,10 @@ impl CapabilitySet {
         Self { spi: true, ..self }
     }
 
+    pub const fn with_uart(self) -> Self {
+        Self { uart: true, ..self }
+    }
+
     pub const fn with_led_matrix(self) -> Self {
         Self {
             led_matrix: true,
@@ -194,6 +203,7 @@ impl CapabilitySet {
             CAP_I2C_OPEN | CAP_I2C_WRITE_U8 | CAP_I2C_READ_U8 | CAP_I2C_WRITE | CAP_I2C_READ
             | CAP_I2C_TRANSFER => self.i2c,
             CAP_SPI_OPEN | CAP_SPI_TRANSFER => self.spi,
+            CAP_UART_OPEN => self.uart,
             CAP_LED_MATRIX_FRAME => self.led_matrix,
             _ => false,
         }
@@ -467,6 +477,7 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_I2C_TRANSFER_U8) | Op::CallU16(CAP_I2C_TRANSFER) => (4, 1),
         Op::CallU8(CAP_SPI_OPEN_U8) | Op::CallU16(CAP_SPI_OPEN) => (1, 1),
         Op::CallU8(CAP_SPI_TRANSFER_U8) | Op::CallU16(CAP_SPI_TRANSFER) => (4, 1),
+        Op::CallU8(CAP_UART_OPEN_U8) | Op::CallU16(CAP_UART_OPEN) => (1, 1),
         Op::CallU8(CAP_LED_MATRIX_FRAME_U8) | Op::CallU16(CAP_LED_MATRIX_FRAME) => (3, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
@@ -823,6 +834,21 @@ mod tests {
     }
 
     #[test]
+    fn validates_uart_open_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 0, 0x40, CAP_UART_OPEN as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_uart(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_OPEN]);
+    }
+
+    #[test]
     fn validates_spi_transfer_capability() {
         let module = Module {
             flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
@@ -923,6 +949,21 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 2),
             Err(ValidateError::UnsupportedCapability(CAP_SPI_OPEN))
+        );
+    }
+
+    #[test]
+    fn rejects_uart_open_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 0, 0x40, CAP_UART_OPEN as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 2),
+            Err(ValidateError::UnsupportedCapability(CAP_UART_OPEN))
         );
     }
 

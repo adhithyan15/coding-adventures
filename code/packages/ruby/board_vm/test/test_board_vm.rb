@@ -46,6 +46,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "i2c.transfer"
         assert_includes uno_r4_wifi["capabilities"], "spi.open"
         assert_includes uno_r4_wifi["capabilities"], "spi.transfer"
+        assert_includes uno_r4_wifi["capabilities"], "uart.open"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
@@ -1334,6 +1335,28 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_uart_open_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.uart.open(bus: 0, program_id: 10, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+      end
+
       def test_spi_transfer_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -1966,6 +1989,26 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_uart_open
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("uart-open 0 24", program_id: 9)
+          upload = board.session.run_command("upload-uart-open 1", program_id: 10)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            result.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload.results.map(&:command)
+          assert_equal result.frames + upload.frames, transport.frames
+        end
+      end
+
       def test_session_run_command_accepts_repl_style_spi_transfer
         transport = FakeWriteTransport.new
 
@@ -2275,6 +2318,10 @@ module CodingAdventures
         spi_module_bytes = session.spi_open_module(0, 2)
         assert_instance_of String, spi_module_bytes
         assert_operator spi_module_bytes.bytesize, :>, 0
+
+        uart_module_bytes = session.uart_open_module(0, 2)
+        assert_instance_of String, uart_module_bytes
+        assert_operator uart_module_bytes.bytesize, :>, 0
 
         spi_transfer_module_bytes = session.spi_transfer_module(10, "\x9F".b, 3, 5)
         assert_instance_of String, spi_transfer_module_bytes
