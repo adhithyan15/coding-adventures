@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-mos6502-gatelevel"
+version = "1.0.0"
+description = "MOS 6502 gate-level simulator — every operation routes through real logic gates"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["mos6502", "6502", "gate-level", "logic-gates", "simulator", "hardware", "education"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+dependencies = [
+    "coding-adventures-logic-gates",
+    "coding-adventures-arithmetic",
+    "coding-adventures-simulator-protocol",
+    "coding-adventures-mos6502-simulator",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-cov>=6.1", "ruff>=0.11"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mos6502_gatelevel"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=mos6502_gatelevel --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/mos6502_gatelevel"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
