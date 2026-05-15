@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Explicit AC source phasors** — `VoltageSource` and `CurrentSource` now
+  accept an optional `AcSource(magnitude, phase_degrees=0.0)` value.  AC
+  analysis uses those phasors independently from the DC bias value, and zeros
+  unspecified independent sources once any explicit AC source is present.
+
 ## [0.12.0] — 2026-05-13
 
 ### Added

@@ -3,6 +3,7 @@ from math import isclose
 import pytest
 from mosfet_models import Level1Model, MosfetType
 from spice_engine import (
+    AcSource,
     BJT,
     CCCS,
     CCVS,
@@ -15,6 +16,7 @@ from spice_engine import (
     Mosfet,
     Resistor,
     VoltageSource,
+    ac_sweep,
     dc_op,
 )
 
@@ -286,6 +288,40 @@ I1 in 0 SIN(0 2m 1k 10u 5)
     assert current.waveform is not None
     assert isclose(voltage.waveform(0.5e-9), 0.9, abs_tol=1e-12)
     assert isclose(current.waveform(1.0e-6), 0.0, abs_tol=1e-12)
+
+
+def test_parse_ac_source_specs_separate_from_dc_bias() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 10 AC 2 90
+Vbias bias 0 5
+Iprobe 0 out AC 1m 90
+R1 in out 1k
+R2 out 0 1k
+.ac dec 1 1k 1k
+"""
+    )
+
+    vin = parsed.circuit.elements[0]
+    vbias = parsed.circuit.elements[1]
+    iprobe = parsed.circuit.elements[2]
+    assert isinstance(vin, VoltageSource)
+    assert isinstance(vbias, VoltageSource)
+    assert isinstance(iprobe, CurrentSource)
+    assert vin.voltage == 10.0
+    assert vin.ac == AcSource(2.0, 90.0)
+    assert vbias.ac is None
+    assert iprobe.current == 0.0
+    assert iprobe.ac == AcSource(1.0e-3, 90.0)
+
+    result = ac_sweep(parsed.circuit, f_start=1.0e3, f_stop=1.0e3, n_points=1)
+    pt = result.points[0]
+    assert isclose(pt.node_voltages["bias"].real, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["bias"].imag, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["in"].real, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["in"].imag, 2.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["out"].real, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["out"].imag, 1.5, abs_tol=1e-12)
 
 
 def test_expands_subcircuit_instances_into_engine_elements() -> None:

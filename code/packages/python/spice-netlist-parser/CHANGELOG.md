@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Parse SPICE independent source `AC <magnitude> [phase]` specifications for
+  voltage and current sources, including `DC <value> AC ...` mixed bias/input
+  forms.
+
 ## 0.1.6
 
 - Parse `.model <name> NMOS(...)` and `.model <name> PMOS(...)` cards into

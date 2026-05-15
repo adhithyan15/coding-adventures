@@ -235,6 +235,18 @@ Waveform = PwlWaveform | SinWaveform | PulseWaveform | ExpWaveform
 
 
 @dataclass(frozen=True, slots=True)
+class AcSource:
+    """Small-signal AC source specification.
+
+    ``magnitude`` is the source phasor magnitude in volts or amperes.
+    ``phase_degrees`` is the optional phase angle in degrees.
+    """
+
+    magnitude: float
+    phase_degrees: float = 0.0
+
+
+@dataclass(frozen=True, slots=True)
 class Resistor:
     """R<name> n+ n- value"""
 
@@ -267,11 +279,12 @@ class Inductor:
 
 @dataclass(frozen=True, slots=True)
 class VoltageSource:
-    """V<name> n+ n- value [waveform]
+    """V<name> n+ n- value [waveform] [ac]
 
-    An independent voltage source.  In DC and AC analysis the ``voltage``
-    field is used directly.  In *transient* analysis, if ``waveform`` is not
-    ``None`` the engine calls ``waveform(t)`` at each timestep and
+    An independent voltage source.  In DC analysis the ``voltage`` field is
+    used directly.  In AC analysis, ``ac`` supplies the small-signal phasor
+    when present.  In *transient* analysis, if ``waveform`` is not ``None``
+    the engine calls ``waveform(t)`` at each timestep and
     temporarily substitutes the returned value for ``voltage``; the stored
     ``voltage`` field then serves only as the t = 0 bias.
 
@@ -286,15 +299,17 @@ class VoltageSource:
     n_minus: str
     voltage: float  # volts (DC value / t=0 bias)
     waveform: Waveform | None = None  # time-varying override
+    ac: AcSource | None = None  # small-signal AC phasor
 
 
 @dataclass(frozen=True, slots=True)
 class CurrentSource:
-    """I<name> n+ n- value [waveform] (current flows from n+ to n-)
+    """I<name> n+ n- value [waveform] [ac] (current flows from n+ to n-)
 
-    An independent current source.  In DC and AC analysis the ``current``
-    field is used directly.  In *transient* analysis, if ``waveform`` is not
-    ``None`` the engine calls ``waveform(t)`` at each timestep and
+    An independent current source.  In DC analysis the ``current`` field is
+    used directly.  In AC analysis, ``ac`` supplies the small-signal phasor
+    when present.  In *transient* analysis, if ``waveform`` is not ``None``
+    the engine calls ``waveform(t)`` at each timestep and
     temporarily substitutes the returned value for ``current``; the stored
     ``current`` field then serves only as the t = 0 bias.
 
@@ -310,6 +325,7 @@ class CurrentSource:
     n_minus: str
     current: float  # amperes (DC value / t=0 bias)
     waveform: Waveform | None = None  # time-varying override
+    ac: AcSource | None = None  # small-signal AC phasor
 
 
 @dataclass(frozen=True, slots=True)

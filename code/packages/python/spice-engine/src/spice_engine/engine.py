@@ -54,6 +54,7 @@ import statistics
 from dataclasses import dataclass, field
 
 from spice_engine.elements import (
+    AcSource,
     BJT,
     CCCS,
     CCVS,
@@ -603,6 +604,8 @@ def _dc_source_step(
                     n_plus=e.n_plus,
                     n_minus=e.n_minus,
                     voltage=e.voltage * scale,
+                    waveform=e.waveform,
+                    ac=e.ac,
                 ))
             elif isinstance(e, CurrentSource):
                 scaled_elements.append(CurrentSource(
@@ -610,6 +613,8 @@ def _dc_source_step(
                     n_plus=e.n_plus,
                     n_minus=e.n_minus,
                     current=e.current * scale,
+                    waveform=e.waveform,
+                    ac=e.ac,
                 ))
             else:
                 scaled_elements.append(e)
@@ -1278,6 +1283,7 @@ def _build_transient_companions(
                 n_plus=e.n_plus,
                 n_minus=e.n_minus,
                 voltage=e.waveform(t),
+                ac=e.ac,
             ))
         elif isinstance(e, CurrentSource) and e.waveform is not None:
             base_elements.append(CurrentSource(
@@ -1285,6 +1291,7 @@ def _build_transient_companions(
                 n_plus=e.n_plus,
                 n_minus=e.n_minus,
                 current=e.waveform(t),
+                ac=e.ac,
             ))
         else:
             base_elements.append(e)
@@ -1530,6 +1537,7 @@ def transient(
                 n_plus=e.n_plus,
                 n_minus=e.n_minus,
                 voltage=e.waveform(0.0),
+                ac=e.ac,
             ))
         elif isinstance(e, CurrentSource) and e.waveform is not None:
             init_elements.append(CurrentSource(
@@ -1537,6 +1545,7 @@ def transient(
                 n_plus=e.n_plus,
                 n_minus=e.n_minus,
                 current=e.waveform(0.0),
+                ac=e.ac,
             ))
         else:
             init_elements.append(e)
@@ -1796,6 +1805,36 @@ def _stamp_g_c(
         G[node_to_idx[n_minus]][node_to_idx[n_plus]] -= g
 
 
+def _has_explicit_ac_sources(circuit: Circuit) -> bool:
+    """Return True when at least one independent source has an AC spec."""
+
+    return any(
+        isinstance(el, (VoltageSource, CurrentSource)) and el.ac is not None
+        for el in circuit.elements
+    )
+
+
+def _ac_phasor(
+    name: str,
+    ac: AcSource | None,
+    fallback: float,
+    explicit_ac: bool,
+) -> complex:
+    """Return the source phasor for AC analysis.
+
+    Legacy circuits without explicit ``AC`` source specs keep using the DC
+    value as the AC phasor.  Once any independent source declares an explicit
+    AC spec, unspecified independent sources become zero small-signal sources.
+    """
+
+    if ac is None:
+        return 0j if explicit_ac else fallback + 0j
+    if not math.isfinite(ac.magnitude) or not math.isfinite(ac.phase_degrees):
+        raise ValueError(f"{name}: AC magnitude and phase must be finite")
+    phase = math.radians(ac.phase_degrees)
+    return ac.magnitude * complex(math.cos(phase), math.sin(phase))
+
+
 def _stamp_ac(
     el: Element,
     G: list[list[complex]],
@@ -1804,6 +1843,8 @@ def _stamp_ac(
     node_to_idx: dict[str, int],
     branch_srcs: list[VoltageSource | VCVS | CCVS],
     dc_x: list[float],
+    *,
+    explicit_ac_sources: bool = False,
 ) -> None:
     """Stamp one element's AC small-signal contribution at angular frequency ω.
 
@@ -1815,10 +1856,11 @@ def _stamp_ac(
 
     VoltageSource AC handling
     -------------------------
-    Each VoltageSource is treated as an ideal AC source with amplitude
-    ``el.voltage`` volts (AC amplitude, typically 1 V for the input and 0 V
-    for bias sources).  A 0 V AC source acts as a short circuit, which is
-    correct for DC-bias voltage sources in an AC analysis.
+    Each VoltageSource is treated as an ideal AC source.  If any independent
+    source has an explicit ``ac`` spec, only explicit AC specs contribute
+    phasors and unspecified sources are zeroed.  For backwards compatibility,
+    circuits with no explicit AC specs still use the DC source value as the
+    AC phasor.
 
     Parameters
     ----------
@@ -1870,14 +1912,15 @@ def _stamp_ac(
             q = node_to_idx[el.n_minus]
             G[q][branch] -= 1.0 + 0j
             G[branch][q] -= 1.0 + 0j
-        b[branch] += el.voltage + 0j
+        b[branch] += _ac_phasor(el.name, el.ac, el.voltage, explicit_ac_sources)
 
     elif isinstance(el, CurrentSource):
         # AC current source: inject phasor current.
+        current = _ac_phasor(el.name, el.ac, el.current, explicit_ac_sources)
         if not _is_ground(el.n_plus):
-            b[node_to_idx[el.n_plus]] -= el.current + 0j
+            b[node_to_idx[el.n_plus]] -= current
         if not _is_ground(el.n_minus):
-            b[node_to_idx[el.n_minus]] += el.current + 0j
+            b[node_to_idx[el.n_minus]] += current
 
     elif isinstance(el, VCCS):
         # Frequency-independent transconductance: same stamp as DC.
@@ -2101,6 +2144,7 @@ def ac_sweep(
     n_nodes = len(node_to_idx)
     n_branch = len(branch_srcs)
     size = n_nodes + n_branch
+    explicit_ac_sources = _has_explicit_ac_sources(circuit)
 
     # Reconstruct the indexed dc_x vector from the DcResult dict.
     dc_x: list[float] = [0.0] * size
@@ -2135,7 +2179,16 @@ def ac_sweep(
         b_c: list[complex] = [0j] * size
 
         for el in circuit.elements:
-            _stamp_ac(el, G_c, b_c, omega, node_to_idx, branch_srcs, dc_x)
+            _stamp_ac(
+                el,
+                G_c,
+                b_c,
+                omega,
+                node_to_idx,
+                branch_srcs,
+                dc_x,
+                explicit_ac_sources=explicit_ac_sources,
+            )
 
         try:
             x_c = _solve_complex(G_c, b_c)
@@ -2738,11 +2791,21 @@ def dc_sweep(
         # Create a new source element with the swept value.
         if isinstance(source_el, VoltageSource):
             new_el: VoltageSource | CurrentSource = VoltageSource(
-                source_el.name, source_el.n_plus, source_el.n_minus, val
+                source_el.name,
+                source_el.n_plus,
+                source_el.n_minus,
+                val,
+                source_el.waveform,
+                source_el.ac,
             )
         else:
             new_el = CurrentSource(
-                source_el.name, source_el.n_plus, source_el.n_minus, val
+                source_el.name,
+                source_el.n_plus,
+                source_el.n_minus,
+                val,
+                source_el.waveform,
+                source_el.ac,
             )
 
         # Rebuild circuit with the new element in place of the original.
@@ -3049,7 +3112,14 @@ def sens_dc(
             _make_entry(
                 "voltage",
                 el.voltage,
-                VoltageSource(el.name, el.n_plus, el.n_minus, el.voltage + delta_v),
+                VoltageSource(
+                    el.name,
+                    el.n_plus,
+                    el.n_minus,
+                    el.voltage + delta_v,
+                    el.waveform,
+                    el.ac,
+                ),
             )
 
         elif isinstance(el, CurrentSource):
@@ -3058,7 +3128,14 @@ def sens_dc(
             _make_entry(
                 "current",
                 el.current,
-                CurrentSource(el.name, el.n_plus, el.n_minus, el.current + delta_i),
+                CurrentSource(
+                    el.name,
+                    el.n_plus,
+                    el.n_minus,
+                    el.current + delta_i,
+                    el.waveform,
+                    el.ac,
+                ),
             )
 
         elif isinstance(el, Diode):
@@ -3274,10 +3351,24 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
         return Resistor(el.name, el.n_plus, el.n_minus, _draw(el.resistance))
 
     if isinstance(el, VoltageSource):
-        return VoltageSource(el.name, el.n_plus, el.n_minus, _draw(el.voltage))
+        return VoltageSource(
+            el.name,
+            el.n_plus,
+            el.n_minus,
+            _draw(el.voltage),
+            el.waveform,
+            el.ac,
+        )
 
     if isinstance(el, CurrentSource):
-        return CurrentSource(el.name, el.n_plus, el.n_minus, _draw(el.current))
+        return CurrentSource(
+            el.name,
+            el.n_plus,
+            el.n_minus,
+            _draw(el.current),
+            el.waveform,
+            el.ac,
+        )
 
     if isinstance(el, Diode):
         return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt)
@@ -3864,7 +3955,16 @@ def noise_ac(
         G_c: list[list[complex]] = [[0j] * size for _ in range(size)]
         b_c: list[complex] = [0j] * size  # dummy RHS for stamping (unused)
         for el in circuit.elements:
-            _stamp_ac(el, G_c, b_c, omega, node_to_idx, branch_srcs_noise, dc_x)
+            _stamp_ac(
+                el,
+                G_c,
+                b_c,
+                omega,
+                node_to_idx,
+                branch_srcs_noise,
+                dc_x,
+                explicit_ac_sources=_has_explicit_ac_sources(circuit),
+            )
 
         # Transpose G_c → G_T for the adjoint solve.
         # G_T[i][j] = G_c[j][i]
