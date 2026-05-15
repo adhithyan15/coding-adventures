@@ -1,17 +1,27 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG58 / TW05-E)
+; # main.tw — Root Module + Smoke-Test Entry Point (LANG59 / TW05-F)
 ;
-; This is the root module of the self-hosted compiler.  It imports all eight
-; sub-modules (six data-model modules from TW05-D plus lexer and parser from
-; TW05-E) and exposes a `(main)` function that exercises the full pipeline:
+; This is the root module of the self-hosted compiler.  It imports all nine
+; sub-modules (six data-model modules from TW05-D, lexer and parser from
+; TW05-E, and the IIR emitter from TW05-F) and exposes a `(main)` function
+; that exercises the full pipeline:
 ;
 ;   1. Lex the string `"42"` → list of tokens
 ;   2. Parse the token list → list of AST nodes
-;   3. Extract the integer value from the first node (an IntLit)
-;   4. Return 42
+;   3. Emit the first AST node (an IntLit) through the IIR emitter
+;   4. Extract the constant value from the emitted instruction
+;   5. Return 42
 ;
 ; The `(main)` return value of `42` is the integration test assertion:
-; if the entire module graph compiles and links correctly, and the lexer +
-; parser correctly round-trip a single integer literal, the result is 42.
+; if the entire module graph compiles and links correctly, and the full
+; lex → parse → emit pipeline correctly round-trips a single integer literal,
+; the result is 42.
+;
+; ## How the round-trip works
+;
+;   lex "42"                    → [TkInteger "42", TkEOF]
+;   parse                       → [IntLit 42 sp]
+;   emit IntLit 42              → [IirInstr "const" r0 (list 42) (TInt) sp]
+;   (car (iirinstr-srcs instr)) → 42
 ;
 ; ## Naming conventions for generated accessors
 ;
@@ -27,9 +37,6 @@
 ; Union variant tags are NOT propagated by the module driver.  Never use
 ; `(match ...)` on a union value that was constructed in an imported module.
 ; Use the predicate functions instead: `(IntLit? node)`, `(TkInteger? kind)`.
-;
-; Downstream passes will expand main.tw to include the IIR emitter, resolver,
-; and self-compilation driver once each phase is ported (TW05-F through TW05-G).
 
 (module compiler/main
   (typed lenient)
@@ -41,28 +48,42 @@
           compiler/iir-types
           compiler/iir-builder
           compiler/lexer
-          compiler/parser))
+          compiler/parser
+          compiler/emit))
 
 ; ── Entry point ──────────────────────────────────────────────────────────────
 ;
-; `(main)` is the end-to-end smoke test: lex "42", parse it, extract 42.
+; `(main)` is the end-to-end smoke test: lex "42", parse it, emit it,
+; extract the constant value from the emitted instruction.
 ;
-; Returns: 42  (the integer literal value round-tripped through lex + parse)
+; Returns: 42  (the integer literal value round-tripped through lex + parse + emit)
 
 (define (main)
   ; Step 1: lex the string "42"
   ; lex-source returns a list: (Token TkInteger "42" sp) (Token TkEOF "" sp)
-  (let* ((tokens (lex-source "42"))
+  (let* ((tokens  (lex-source "42"))
 
          ; Step 2: parse the token list
          ; parse-program returns a list of top-level Expr nodes.
          ; For "42", the list has one element: (IntLit 42 sp).
-         (exprs  (parse-program tokens))
+         (exprs   (parse-program tokens))
 
-         ; Step 3: extract the first (and only) expression
-         (first  (car exprs)))
+         ; Step 3: emit the first (and only) expression
+         ; emit-expr returns (cons updated-builder result-register).
+         (expr    (car exprs))
+         (b0      (new-builder "main-test"))
+         (env     (env-empty))
+         (result  (emit-expr expr b0 env))
+         (b-final (car result))
 
-    ; Step 4: read its integer value via the generated accessor.
-    ; `intlit-value` is the accessor for the `value` field of IntLit.
-    ; The field was declared `(value : int)` so this returns an integer.
-    (intlit-value first)))   ; → 42
+         ; Step 4: finalise the builder to get the instruction list.
+         ; For IntLit 42, this is [(IirInstr "const" r0 (list 42) (TInt) sp)].
+         (instrs  (finalise-builder b-final))
+
+         ; Step 5: extract the first instruction and read its srcs list.
+         ; srcs = (list 42), so (car srcs) = 42.
+         (instr   (car instrs)))
+
+    ; The `srcs` field of a const instruction holds the operand value.
+    ; `(car (iirinstr-srcs instr))` retrieves the integer 42.
+    (car (iirinstr-srcs instr))))   ; → 42
