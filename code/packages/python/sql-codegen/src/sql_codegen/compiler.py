@@ -1036,6 +1036,16 @@ def _compile_aggregate(
             out.append(InitAgg(slot=s, func=ir_func, separator=sep, distinct=a.distinct))
         # Update each aggregate with the row's value.
         for s, a in zip(slots, aggregates, strict=True):
+            # FILTER (WHERE expr): if the per-row predicate is false or NULL,
+            # skip this aggregate's UpdateAgg entirely.  The filter check is
+            # emitted BEFORE any argument pushes so that no values land on the
+            # stack when we jump — the stack stays balanced unconditionally.
+            filter_skip: str | None = None
+            if a.filter_expr is not None:
+                filter_skip = c.new_label("filter_skip")
+                out.extend(_compile_expr(a.filter_expr, c))
+                out.append(JumpIfFalse(label=filter_skip))
+
             if a.arg.star:
                 # COUNT(*) always increments — push a sentinel 1; the VM's
                 # COUNT_STAR semantics ignore the value and just increment.
@@ -1048,6 +1058,9 @@ def _compile_aggregate(
                     out.extend(_compile_expr(a.key_arg.value, c))  # type: ignore[arg-type]
                 out.extend(_compile_expr(a.arg.value, c))  # type: ignore[arg-type]
             out.append(UpdateAgg(slot=s))
+
+            if filter_skip is not None:
+                out.append(Label(name=filter_skip))
         return out
 
     core = _compile_source(agg.input, body, ctx)

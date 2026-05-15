@@ -291,7 +291,8 @@ class AggregateExpr:
     arg: FuncArg  # star=True for COUNT(*)
     distinct: bool = False
     separator: str | None = None  # GROUP_CONCAT only; None → use default ","
-    key_arg: FuncArg | None = None  # JSON_GROUP_OBJECT only: the key expression
+    key_arg: FuncArg | None = None    # JSON_GROUP_OBJECT only: the key expression
+    filter_expr: "Expr | None" = None  # FILTER (WHERE expr) — skip rows where False/NULL
 
 
 @dataclass(frozen=True, slots=True)
