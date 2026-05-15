@@ -1,7 +1,7 @@
 use spice_engine::{
-    dc_op, dc_sweep, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element,
-    Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError, Vccs,
-    Vcvs, VoltageSource, Waveform,
+    dc_op, dc_op_with_options, dc_sweep, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CurrentSource,
+    DcOpOptions, Diode, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
+    SinWaveform, SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -27,6 +27,8 @@ fn dc_voltage_divider_solves_midpoint_voltage() {
     assert_close(result.voltage("vin").unwrap(), 10.0);
     assert_close(result.voltage("mid").unwrap(), 5.0);
     assert_close(result.voltage("0").unwrap(), 0.0);
+    assert!(result.converged);
+    assert_eq!(result.iterations, 1);
 }
 
 #[test]
@@ -255,6 +257,49 @@ fn dc_mosfet_solves_nmos_source_follower_operating_point() {
     let out = result.voltage("out").unwrap();
     assert!(out > 0.0, "expected source follower output, got {out}");
     assert!(out < 2.5, "expected source below gate bias, got {out}");
+    assert!(result.converged);
+    assert!(result.iterations > 0);
+}
+
+#[test]
+fn dc_op_reports_unconverged_nonlinear_result_when_aids_are_disabled() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 2.5,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "vdd",
+        "gate",
+        "out",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 250.0e-6,
+            w: 4.0e-6,
+            l: 200.0e-9,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op_with_options(
+        &circuit,
+        DcOpOptions {
+            max_iterations: 1,
+            convergence_aids: false,
+            ..DcOpOptions::default()
+        },
+    )
+    .unwrap();
+
+    assert!(!result.converged);
+    assert_eq!(result.iterations, 1);
 }
 
 #[test]
@@ -387,6 +432,34 @@ fn dc_sweep_rejects_missing_source() {
     assert!(matches!(
         dc_sweep(&circuit, "Vmissing", 0.0, 1.0, 1.0),
         Err(SpiceError::InvalidElement { name, .. }) if name == "Vmissing"
+    ));
+}
+
+#[test]
+fn dc_op_rejects_invalid_options() {
+    let circuit = Circuit::new();
+
+    assert!(matches!(
+        dc_op_with_options(
+            &circuit,
+            DcOpOptions {
+                max_iterations: 0,
+                ..DcOpOptions::default()
+            },
+        ),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "dc_op" && reason == "max_iterations must be positive"
+    ));
+    assert!(matches!(
+        dc_op_with_options(
+            &circuit,
+            DcOpOptions {
+                tolerance: 0.0,
+                ..DcOpOptions::default()
+            },
+        ),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "dc_op" && reason == "tolerance must be finite and positive"
     ));
 }
 

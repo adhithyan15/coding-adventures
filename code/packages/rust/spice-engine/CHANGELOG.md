@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add DC operating-point convergence metadata and configurable Newton controls,
+  with nonlinear Gmin/source stepping fallback aids for difficult bias points.
+
 ## 0.1.0
 
 - Add a DC modified nodal analysis solver for resistors, independent voltage
