@@ -1,28 +1,38 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG60 / TW05-G)
+; # main.tw — Root Module + Smoke-Test Entry Point (LANG61 / TW05-H)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
-; TW05-E, and the IIR emitter from TW05-F/G) and exposes a `(main)` function
-; that exercises the full pipeline including lambda + function-definition
-; support added in TW05-G.
+; TW05-E, and the IIR emitter from TW05-F/G/H) and exposes a `(main)` function
+; that exercises the full pipeline including the new `emit-program` entrypoint
+; added in TW05-H.
 ;
-; ## TW05-G pipeline (updated from TW05-F)
+; ## TW05-H pipeline (updated from TW05-G)
 ;
-;   lex "(define (answer) 42)"
-;     → [TkLParen, TkIdentifier "define", TkLParen,
-;        TkIdentifier "answer", TkRParen, TkInteger "42", TkRParen, TkEOF]
+;   src = "(define (first) 1)(define (second) 2)"
+;
+;   lex → 12 tokens
 ;
 ;   parse
-;     → [DefExpr "answer" (LambdaExpr [] (IntLit 42 sp) sp) sp]
+;     → [DefExpr "first"  (LambdaExpr [] (IntLit 1) sp) sp,
+;        DefExpr "second" (LambdaExpr [] (IntLit 2) sp) sp]
 ;
-;   emit DefExpr
-;     → LambdaExpr? (defexpr-expr def) = #t
-;     → emit-lambdaexpr: no params to allocate, emit body IntLit 42
-;     → [IirInstr "const" r0 (list 42) (TInt) sp]
+;   emit-program
+;     → [(cons "first"  [instr1]),
+;        (cons "second" [instr1])]
 ;
-;   (car (iirinstr-srcs (car instrs))) = 42
+;   (length result) = 2
 ;
-; The `(main)` return value of `42` is the integration test assertion.
+; The `(main)` return value of `2` is the integration test assertion.
+; (Previous milestones returned 42; TW05-H returns 2 — the count of emitted
+; function definitions.)
+;
+; Note: A simpler no-param source is used here instead of the double/triple
+; example from the spec comment header.  The depth-256 VM call limit is
+; reached by the 57-char source with CallExpr bodies due to the 11-gate
+; dispatch chain.  No-param functions with IntLit bodies use gate 1 only,
+; keeping the peak call depth well within the limit.  The `emit_program_*`
+; unit tests in twig-module-driver already verify the double/triple case via
+; direct AST construction (no full-pipeline depth concern there).
 ;
 ; ## Naming conventions for generated accessors
 ;
@@ -54,45 +64,30 @@
 
 ; ── Entry point ──────────────────────────────────────────────────────────────
 ;
-; `(main)` is the TW05-G end-to-end smoke test:
-;   lex "(define (answer) 42)" → parse → emit function definition → 42
+; `(main)` is the TW05-H end-to-end smoke test:
+;   lex + parse two function definitions → emit-program → count results → 2
 ;
-; The source "(define (answer) 42)" parses to:
-;   DefExpr "answer" (LambdaExpr [] (IntLit 42 sp) sp) sp
-;
-; emit-expr on this DefExpr calls emit-defexpr, which detects a LambdaExpr
-; body and delegates to emit-lambdaexpr.  emit-lambdaexpr allocates no
-; parameter slots (answer takes no args) and emits the body: IntLit 42.
-; Result: one IirInstr "const" r0 (list 42) (TInt) sp.
-;
-; Extracting (car (iirinstr-srcs (car instrs))) gives back 42.
-;
-; Returns: 42
+; Returns: 2  (number of functions emitted from a two-define program)
 
 (define (main)
-  ; TW05-G pipeline: lex → parse → emit function definition → 42
-  (let* ((tokens  (lex-source "(define (answer) 42)"))
+  ; TW05-H pipeline: lex → parse → emit-program → count functions → 2
+  ;
+  ; Two no-param functions with integer-literal bodies.  This keeps the
+  ; peak VM call-stack depth within the 256-frame limit: lex-loop iterates
+  ; 38 chars (fits in ~38 frames), each function body hits only gate 1
+  ; (IntLit) in the 11-gate dispatch chain.
+  (let* ((src    "(define (first) 1)(define (second) 2)")
+         (tokens (lex-source src))
 
-         ; parse-program returns a list of top-level Expr nodes.
-         ; For "(define (answer) 42)", the list has one element:
-         ;   DefExpr "answer" (LambdaExpr [] (IntLit 42 sp) sp) sp
-         (exprs   (parse-program tokens))
+         ; parse-program returns a list of two DefExpr nodes:
+         ;   [DefExpr "first"  (LambdaExpr [] (IntLit 1) sp) sp,
+         ;    DefExpr "second" (LambdaExpr [] (IntLit 2) sp) sp]
+         (forms  (parse-program tokens))
 
-         ; emit-expr returns (cons updated-builder result-register).
-         ; For a DefExpr with LambdaExpr body, it calls emit-lambdaexpr
-         ; which emits the body (IntLit 42 → const instruction).
-         (expr    (car exprs))
-         (b0      (new-builder "answer"))
-         (env     (env-empty))
-         (result  (emit-expr expr b0 env))
-         (b-final (car result))
+         ; emit-program processes each DefExpr(LambdaExpr) with a fresh builder
+         ; and returns (cons fn-name instruction-list) pairs:
+         ;   [(cons "first" [instr1]), (cons "second" [instr1])]
+         (funcs  (emit-program forms)))
 
-         ; finalise-builder reverses the accumulated instruction list.
-         ; For (define (answer) 42) this is:
-         ;   [(IirInstr "const" r0 (list 42) (TInt) sp)]
-         (instrs  (finalise-builder b-final))
-         (instr   (car instrs)))
-
-    ; The `srcs` field of a const instruction holds the operand value.
-    ; `(car (iirinstr-srcs instr))` retrieves the integer 42.
-    (car (iirinstr-srcs instr))))   ; → 42
+    ; Count of emitted function definitions.
+    (length funcs)))   ; → 2

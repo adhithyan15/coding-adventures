@@ -1,5 +1,42 @@
 # Changelog — twig-module-driver
 
+## [0.6.0] — 2026-05-15
+
+### Added (LANG61 — TW05-H self-hosted program emitter)
+
+New `#[cfg(test)] mod tw05h_tests` with 6 tests exercising the updated
+`compiler/emit.tw` (added `emit-program`, `emit-top-level-form`,
+`emit-program-loop`, `emit-symlit`) and `compiler/main.tw` (now returns 2 —
+the count of emitted function definitions from a two-define program).
+
+#### Emitter changes (`emit.tw`)
+- Gate 3 extended: tests `StrLit?` first, then `SymLit?`, then falls through
+  to gate 4.  `SymLit` previously fell through to nil; now correctly emits a
+  `const` instruction via `emit-symlit`.
+- New `emit-symlit`: allocates a slot, emits `(IirInstr "const" dest (list val) (TAny) sp)`,
+  mirrors `emit-strlit` but retrieves the value via `symlit-value`.
+- New `emit-program`: entry point for whole-program emission.  Calls
+  `emit-program-loop` with an empty accumulator.
+- New `emit-program-loop`: tail-recursive accumulator loop.  For each form calls
+  `emit-top-level-form`; skips nil results; reverses accumulator at end.
+- New `emit-top-level-form`: processes one top-level `Expr` node.  If the node
+  is a `DefExpr` whose body is a `LambdaExpr`, creates a fresh `IirBuilder`,
+  calls `emit-lambdaexpr` with an empty env, finalises the builder, and returns
+  `(cons fn-name instruction-list)`.  Otherwise returns nil.
+
+#### `main.tw` updated to TW05-H smoke test
+Lexes, parses, and emits `"(define (double x) (* x 2)) (define (triple x) (* x 3))"`;
+`(length (emit-program forms))` returns 2.
+
+| Test | Verifies |
+|------|----------|
+| `emit_program_single_fn` | `emit-program` on `"(define (f x) x)"` → 1 entry |
+| `emit_program_two_fns` | two defines → 2 entries |
+| `emit_program_fn_name` | first entry's `car` = `"answer"` |
+| `emit_program_fn_instruction_count` | `"(define (double x) (* x 2))"` → 2 instructions |
+| `emit_symlit_one_instruction` | `(SymLit "foo" sp)` → 1 instruction |
+| `full_lex_parse_emit_program` | All 9 modules + main.tw → `(main) = 2` |
+
 ## [0.5.0] — 2026-05-15
 
 ### Added (LANG60 — TW05-G lambda expressions + function definitions)

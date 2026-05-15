@@ -1047,12 +1047,12 @@ mod tw05d_tests {
     #[test]
     fn full_module_tree_smoke_test() {
         // Compile all 10 .tw files (the actual source files from code/twig/compiler/,
-        // including the TW05-E lexer and parser (LANG58) and TW05-F emitter (LANG59))
-        // and run (main).
+        // including the TW05-E lexer and parser (LANG58), TW05-F emitter (LANG59),
+        // and the TW05-H program emitter (LANG61)) and run (main).
         //
-        // main.tw was updated in LANG59 to import compiler/emit and run the full
-        // lex → parse → emit pipeline, returning 42 (the integer constant extracted
-        // from the emitted IirInstr).
+        // main.tw was updated in LANG61 (TW05-H) to run the full lex → parse →
+        // emit-program pipeline on two no-param defines, returning 2 (the count
+        // of emitted function definitions).
         let src = twig_compiler_src();
         let dir = tempdir("full_tree");
 
@@ -1064,8 +1064,8 @@ mod tw05d_tests {
         let root = dir.join("compiler").join("main.tw");
         let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
             .expect("full compiler data-model tree should compile and run");
-        assert_eq!(v.as_int(), Some(42),
-            "(main) should return 42 — lex+parse+emit roundtrip of \"42\" (LANG59 TW05-F)");
+        assert_eq!(v.as_int(), Some(2),
+            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
     }
 }
 
@@ -1288,19 +1288,20 @@ mod tw05e_tests {
     fn full_lex_parse_roundtrip() {
         // Compile all 9 modules (span, token, diagnostic, ast, iir-types,
         // iir-builder, lexer, parser, emit) + main.tw, then run (main).
-        // main.tw now goes through the full lex → parse → emit pipeline and
-        // extracts (car (iirinstr-srcs first-instr)) = 42.
+        // main.tw was updated in LANG61 (TW05-H) to return 2 — the count of
+        // emitted function definitions from `emit-program` over two no-param
+        // defines.  All prior milestones' (main) = 42 is superseded.
         let src = twig_compiler_src();
         let dir = tempdir("full_e2e");
         copy_all_tw_modules(&src, &dir);
-        // Copy the actual main.tw (not a generated test stub)
+        // Copy the actual main.tw (updated to TW05-H)
         copy_tw(&src, &dir, "main");
 
         let root = dir.join("compiler").join("main.tw");
         let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
             .expect("full_lex_parse_roundtrip: compile+run");
-        assert_eq!(v.as_int(), Some(42),
-            "(main) should return 42 — the integer literal value roundtripped through lex+parse+emit");
+        assert_eq!(v.as_int(), Some(2),
+            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
     }
 }
 
@@ -1555,20 +1556,20 @@ mod tw05f_tests {
 
     #[test]
     fn full_lex_parse_emit_roundtrip() {
-        // Compile all 9 modules + main.tw.
-        // main.tw (TW05-G) runs: lex "(define (answer) 42)" → parse → emit
-        // → extract const value → 42.
+        // Compile all 9 modules + main.tw (updated to TW05-H).
+        // main.tw now runs: lex "(define (first) 1)(define (second) 2)"
+        // → parse → emit-program → (length funcs) = 2.
         let src = twig_compiler_src();
         let dir = tempdir("full_tw05f");
         copy_all_tw_modules(&src, &dir);
-        // Copy the actual main.tw (updated to TW05-G)
+        // Copy the actual main.tw (updated to TW05-H)
         copy_tw(&src, &dir, "main");
 
         let root = dir.join("compiler").join("main.tw");
         let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
             .expect("full_lex_parse_emit_roundtrip: compile+run");
-        assert_eq!(v.as_int(), Some(42),
-            "(main) should return 42 via lex → parse → emit → extract const value");
+        assert_eq!(v.as_int(), Some(2),
+            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
     }
 }
 
@@ -1815,10 +1816,10 @@ mod tw05g_tests {
 
     #[test]
     fn full_lex_parse_emit_defexpr() {
-        // Compile all 9 modules + main.tw.
-        // main.tw (TW05-G) runs:
-        //   lex "(define (answer) 42)" → parse → emit DefExpr
-        //   → LambdaExpr body → const 42 → extract srcs[0] = 42.
+        // Compile all 9 modules + main.tw (updated to TW05-H).
+        // main.tw now runs:
+        //   lex "(define (first) 1)(define (second) 2)"
+        //   → parse → emit-program → (length funcs) = 2.
         let src = twig_compiler_src();
         let dir = tempdir("full_tw05g");
         copy_all_tw_modules(&src, &dir);
@@ -1827,7 +1828,242 @@ mod tw05g_tests {
         let root = dir.join("compiler").join("main.tw");
         let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
             .expect("full_lex_parse_emit_defexpr: compile+run");
-        assert_eq!(v.as_int(), Some(42),
-            "(main) should return 42 — lex+parse+emit of (define (answer) 42)");
+        assert_eq!(v.as_int(), Some(2),
+            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TW05-H integration tests — LANG61: program emitter + SymLit
+// ---------------------------------------------------------------------------
+//
+// These tests verify:
+//   • `emit-program` compiles a list of top-level DefExpr nodes, each into
+//     its own builder, returning (fn-name . instruction-list) pairs.
+//   • `SymLit` is now correctly handled by gate 3 (emits a const instruction).
+//
+// `emit-program` skips non-function-definition top-level forms (bare exprs,
+// simple value bindings).  Only `DefExpr(LambdaExpr)` nodes are emitted.
+//
+// Instruction count for `(define (double x) (* x 2))`:
+//   param "x" → alloc slot, no instruction
+//   body (* x 2):
+//     VarRef "x" → existing slot, no instruction
+//     IntLit 2   → 1 const instruction
+//     CallExpr * → 1 call_builtin instruction
+//   Total: 2 instructions
+
+#[cfg(test)]
+mod tw05h_tests {
+    use std::fs;
+    use std::path::{Path, PathBuf};
+
+    fn twig_compiler_src() -> PathBuf {
+        let manifest = env!("CARGO_MANIFEST_DIR");
+        PathBuf::from(manifest)
+            .join("../../../twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    fn tempdir(tag: &str) -> PathBuf {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .subsec_nanos();
+        let d = std::env::temp_dir()
+            .join(format!("twig_tw05h_test_{tag}_{}_{}",
+                          std::process::id(), nonce));
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler").join(format!("{name}.tw"));
+        fs::create_dir_all(dest.parent().unwrap()).unwrap();
+        fs::copy(&src, &dest)
+            .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
+    }
+
+    fn write_test_main(dest_dir: &Path, imports: &[&str], body: &str) -> PathBuf {
+        let import_clause: String = imports
+            .iter()
+            .map(|i| format!("          (import {i})"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let src = format!(
+            "(module compiler/main\n  (typed lenient)\n  (export main)\n{import_clause})\n\n(define (main) {body})\n"
+        );
+        let path = dest_dir.join("compiler").join("main.tw");
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, &src).unwrap();
+        path
+    }
+
+    fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
+                      "lexer", "parser", "emit"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    fn copy_emit_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "ast", "iir-types", "iir-builder", "emit"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    // ── Test 1: emit-program on single function → 1 entry ────────────────────
+
+    #[test]
+    fn emit_program_single_fn() {
+        // lex + parse "(define (f x) x)" → emit-program → 1 function entry.
+        let src = twig_compiler_src();
+        let dir = tempdir("ep_single");
+        copy_all_tw_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder",
+              "compiler/lexer", "compiler/parser", "compiler/emit"],
+            r#"(length (emit-program (parse-program (lex-source "(define (f x) x)"))))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_program_single_fn: compile+run");
+        assert_eq!(v.as_int(), Some(1),
+            "emit-program on 1 define should return a list of 1 entry");
+    }
+
+    // ── Test 2: emit-program on two functions → 2 entries ────────────────────
+
+    #[test]
+    fn emit_program_two_fns() {
+        // Two top-level defines → 2 (name . instrs) pairs.
+        let src = twig_compiler_src();
+        let dir = tempdir("ep_two");
+        copy_all_tw_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder",
+              "compiler/lexer", "compiler/parser", "compiler/emit"],
+            r#"(length (emit-program (parse-program (lex-source "(define (f x) x) (define (g x) x)"))))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_program_two_fns: compile+run");
+        assert_eq!(v.as_int(), Some(2),
+            "emit-program on 2 defines should return a list of 2 entries");
+    }
+
+    // ── Test 3: function name is preserved in emit-program result ─────────────
+
+    #[test]
+    fn emit_program_fn_name() {
+        // "(define (answer) 42)" → emit-program → first entry has name "answer".
+        // We verify: (string=? (car (car funcs)) "answer") → 1.
+        let src = twig_compiler_src();
+        let dir = tempdir("ep_name");
+        copy_all_tw_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder",
+              "compiler/lexer", "compiler/parser", "compiler/emit"],
+            r#"(let* ((funcs (emit-program (parse-program (lex-source "(define (answer) 42)")))))
+                 (if (string=? (car (car funcs)) "answer") 1 0))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_program_fn_name: compile+run");
+        assert_eq!(v.as_int(), Some(1),
+            "emit-program result should carry the function name as its car");
+    }
+
+    // ── Test 4: instruction count for (define (double x) (* x 2)) ────────────
+
+    #[test]
+    fn emit_program_fn_instruction_count() {
+        // (define (double x) (* x 2)):
+        //   body (* x 2): VarRef x (no instr), IntLit 2 (1 instr), call_builtin * (1 instr)
+        //   Total: 2 instructions.
+        // (cdr (car funcs)) is the instruction list.
+        let src = twig_compiler_src();
+        let dir = tempdir("ep_instr_count");
+        copy_all_tw_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder",
+              "compiler/lexer", "compiler/parser", "compiler/emit"],
+            r#"(let* ((funcs (emit-program (parse-program (lex-source "(define (double x) (* x 2))")))))
+                 (length (cdr (car funcs))))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_program_fn_instruction_count: compile+run");
+        assert_eq!(v.as_int(), Some(2),
+            "(define (double x) (* x 2)) body should emit 2 instructions");
+    }
+
+    // ── Test 5: SymLit emits exactly 1 const instruction ─────────────────────
+
+    #[test]
+    fn emit_symlit_one_instruction() {
+        // (SymLit "foo" sp) → gate 3 now handles SymLit → 1 const instruction.
+        // Previously fell through to emit-nillit (call_builtin make_nil).
+        let src = twig_compiler_src();
+        let dir = tempdir("emit_symlit");
+        copy_emit_modules(&src, &dir);
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/ast",
+              "compiler/iir-types", "compiler/iir-builder", "compiler/emit"],
+            r#"(let* ((sp     (make-span 0 0 0))
+                     (expr   (SymLit "foo" sp))
+                     (b0     (new-builder "test"))
+                     (env    (env-empty))
+                     (res    (emit-expr expr b0 env))
+                     (b-fin  (car res))
+                     (instrs (finalise-builder b-fin)))
+               (length instrs))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("emit_symlit_one_instruction: compile+run");
+        assert_eq!(v.as_int(), Some(1),
+            "(SymLit \"foo\" sp) should emit 1 instruction (const)");
+    }
+
+    // ── Test 6: full pipeline — emit-program returns 2 functions ─────────────
+
+    #[test]
+    fn full_lex_parse_emit_program() {
+        // Compile all 9 modules + main.tw (TW05-H).
+        // main.tw runs:
+        //   lex "(define (first) 1)(define (second) 2)"
+        //   → parse → emit-program → (length funcs) = 2.
+        // No-param functions with IntLit bodies are used to keep the peak
+        // VM call-stack depth within the 256-frame limit (the 11-gate chain
+        // plus lex-loop depth for a 57-char source with CallExpr bodies would
+        // exceed it; 38-char source with IntLit bodies stays well under).
+        let src = twig_compiler_src();
+        let dir = tempdir("full_tw05h");
+        copy_all_tw_modules(&src, &dir);
+        copy_tw(&src, &dir, "main");
+
+        let root = dir.join("compiler").join("main.tw");
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("full_lex_parse_emit_program: compile+run");
+        assert_eq!(v.as_int(), Some(2),
+            "(main) should return 2 — emit-program of first+second");
     }
 }
