@@ -22,6 +22,13 @@ describe("coding_adventures.board_vm_native", function()
         assert.is_true(uno.connection_options[2].ota_update)
         assert.are.equal(8, uno.led_matrix.rows)
         assert.are.equal(12, uno.led_matrix.columns)
+        local capabilities = {}
+        for _, capability in ipairs(uno.capabilities) do
+            capabilities[capability] = true
+        end
+        assert.is_true(capabilities["uart.open"])
+        assert.is_true(capabilities["uart.write"])
+        assert.is_true(capabilities["uart.read"])
         assert.are.equal(uno.digital_pin_count, #uno.digital_pins)
         local d3 = nil
         for _, pin in ipairs(uno.digital_pins) do

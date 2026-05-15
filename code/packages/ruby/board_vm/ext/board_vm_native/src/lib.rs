@@ -8,14 +8,14 @@ use board_vm_host::{
     GpioWriteProgram, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
     I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, PwmWriteProgram, SpiOpenProgram,
     SpiReadProgram, SpiTransferProgram, SpiWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    UartOpenProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
-    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
-    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
-    I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_TRANSFER_MAX_MODULE_LEN,
-    I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
-    PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, SPI_READ_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN,
-    SPI_WRITE_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
-    UART_OPEN_MODULE_LEN,
+    UartOpenProgram, UartReadProgram, UartWriteProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    DAC_WRITE_U12_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
+    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
+    GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN, I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN,
+    I2C_TRANSFER_MAX_MODULE_LEN, I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN,
+    LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, SPI_READ_MODULE_LEN,
+    SPI_TRANSFER_MAX_MODULE_LEN, SPI_WRITE_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN, UART_WRITE_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
@@ -30,7 +30,7 @@ use board_vm_language_core::{
     build_run_background_wire_frame, build_run_wire_frame, build_spi_open_module,
     build_spi_read_module, build_spi_transfer_module, build_spi_write_module, build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
-    build_uart_open_module,
+    build_uart_open_module, build_uart_read_module, build_uart_write_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
     detect_target as core_detect_target,
@@ -305,6 +305,27 @@ extern "C" fn session_uart_open_module(
 
     let module = build_uart_open_module_value(bus, max_stack)
         .unwrap_or_else(|error| raise_core_error("uart_open_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_uart_write_module(
+    _self_val: VALUE,
+    byte_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let byte = rb_u8(byte_val, "byte");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_uart_write_module_value(byte, max_stack)
+        .unwrap_or_else(|error| raise_core_error("uart_write_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_uart_read_module(_self_val: VALUE, max_stack_val: VALUE) -> VALUE {
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_uart_read_module_value(max_stack)
+        .unwrap_or_else(|error| raise_core_error("uart_read_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -1699,6 +1720,20 @@ fn build_uart_open_module_value(bus: u8, max_stack: u8) -> Result<Vec<u8>, Langu
     Ok(module)
 }
 
+fn build_uart_write_module_value(byte: u8, max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; UART_WRITE_MODULE_LEN];
+    let len = build_uart_write_module(UartWriteProgram { byte, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_uart_read_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; UART_READ_MODULE_LEN];
+    let len = build_uart_read_module(UartReadProgram { max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_spi_transfer_module_value(
     cs_pin: u16,
     write_bytes: &[u8],
@@ -2164,6 +2199,18 @@ pub extern "C" fn Init_board_vm_native() {
         "uart_open_module",
         session_uart_open_module as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "uart_write_module",
+        session_uart_write_module as *const c_void,
+        2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "uart_read_module",
+        session_uart_read_module as *const c_void,
+        1,
     );
     ruby_bridge::define_method_raw(
         session_class,

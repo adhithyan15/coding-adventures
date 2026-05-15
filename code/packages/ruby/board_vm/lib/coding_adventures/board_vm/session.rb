@@ -221,6 +221,14 @@ module CodingAdventures
         native_session.uart_open_module(bus, max_stack)
       end
 
+      def uart_write_module(byte:, max_stack: 3)
+        native_session.uart_write_module(byte_value(byte), max_stack)
+      end
+
+      def uart_read_module(max_stack: 2)
+        native_session.uart_read_module(max_stack)
+      end
+
       def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
         native_session.spi_transfer_module(
           cs_pin,
@@ -368,6 +376,24 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: uart_open_module(bus: bus, max_stack: max_stack)
+        )
+      end
+
+      def upload_uart_write(
+        program_id: @program_id,
+        byte:,
+        max_stack: 3
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: uart_write_module(byte: byte, max_stack: max_stack)
+        )
+      end
+
+      def upload_uart_read(program_id: @program_id, max_stack: 2)
+        upload(
+          program_id: program_id,
+          module_bytes: uart_read_module(max_stack: max_stack)
         )
       end
 
@@ -871,6 +897,48 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def uart_write(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        byte:,
+        max_stack: 3
+      )
+        results = upload_uart_write(
+          program_id: program_id,
+          byte: byte,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def uart_read(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 2
+      )
+        results = upload_uart_read(
+          program_id: program_id,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def spi_transfer(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1270,6 +1338,10 @@ module CodingAdventures
           upload_spi_open(**spi_open_command_options(words, command, options, require_budget: false))
         when "upload-uart-open", "upload-uart.open"
           upload_uart_open(**uart_open_command_options(words, command, options, require_budget: false))
+        when "upload-uart-write", "upload-uart.write"
+          upload_uart_write(**uart_write_command_options(words, command, options, require_budget: false))
+        when "upload-uart-read", "upload-uart.read"
+          upload_uart_read(**uart_read_command_options(words, command, options, require_budget: false))
         when "upload-spi-transfer", "upload-spi.transfer"
           upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-spi-write", "upload-spi.write"
@@ -1328,6 +1400,10 @@ module CodingAdventures
           spi_open(**spi_open_command_options(words, command, options))
         when "uart-open", "uart.open"
           uart_open(**uart_open_command_options(words, command, options))
+        when "uart-write", "uart.write"
+          uart_write(**uart_write_command_options(words, command, options))
+        when "uart-read", "uart.read"
+          uart_read(**uart_read_command_options(words, command, options))
         when "spi-transfer", "spi.transfer"
           spi_transfer(**spi_transfer_command_options(words, command, options))
         when "spi-write", "spi.write"
@@ -1592,6 +1668,31 @@ module CodingAdventures
 
       alias spi_open_command_options i2c_open_command_options
       alias uart_open_command_options i2c_open_command_options
+
+      def uart_write_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:byte] = byte_value(words.shift) unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires byte" unless merged.key?(:byte)
+
+        merged
+      end
+
+      def uart_read_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        merged
+      end
 
       def i2c_write_u8_command_options(words, command, options, require_budget: true)
         merged = options.dup

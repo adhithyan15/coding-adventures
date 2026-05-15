@@ -215,6 +215,8 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x29` | `spi.open` | `bus: u16/u8` | `handle` |
 | `0x2A` | `spi.transfer` | `handle`, `cs_pin: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
 | `0x2B` | `uart.open` | `bus: u16/u8` | `handle` |
+| `0x2C` | `uart.write` | `handle`, `byte: u8` | `unit` |
+| `0x2D` | `uart.read` | `handle` | `u8` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -249,7 +251,11 @@ claiming separate bytecode capability ids.
 `uart.open` opens a board-advertised hardware UART and returns a persistent bus
 handle. The bus id is resolved from Rust-owned board descriptors, keeping UNO R4
 `Serial1`/`Serial2`/`Serial3` pin layout knowledge out of language frontends.
-Byte write/read operations are separate follow-on VM calls.
+`uart.write` writes a single byte through that handle and preserves the handle
+for subsequent calls. `uart.read` blocks for one byte on the same handle,
+returns it as `u8`, and also preserves the handle. Host SDKs may layer stream or
+buffer conveniences over these byte operations, but board discovery, descriptor
+metadata, and handle-token validation remain Rust-owned.
 
 ### LED Matrix
 
