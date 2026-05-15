@@ -492,6 +492,42 @@ module CodingAdventures
         )
       end
 
+      def spi_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        cs_pin:,
+        bytes:,
+        max_stack: 5
+      )
+        ensure_uno_r4_wifi!
+
+        session.spi_write(
+          program_id: program_id,
+          budget: budget,
+          cs_pin: cs_pin,
+          bytes: bytes,
+          max_stack: max_stack
+        )
+      end
+
+      def spi_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        cs_pin:,
+        length:,
+        max_stack: 5
+      )
+        ensure_uno_r4_wifi!
+
+        session.spi_read(
+          program_id: program_id,
+          budget: budget,
+          cs_pin: cs_pin,
+          length: length,
+          max_stack: max_stack
+        )
+      end
+
       def i2c_write_u8!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -1337,6 +1373,38 @@ module CodingAdventures
           cs_pin: cs_pin,
           write_bytes: write_bytes,
           read_length: read_length,
+          max_stack: max_stack
+        )
+      end
+
+      def write(
+        cs_pin:,
+        bytes:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 5
+      )
+        @connection.spi_write!(
+          program_id: program_id,
+          budget: budget,
+          cs_pin: cs_pin,
+          bytes: bytes,
+          max_stack: max_stack
+        )
+      end
+
+      def read(
+        cs_pin:,
+        length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 5
+      )
+        @connection.spi_read!(
+          program_id: program_id,
+          budget: budget,
+          cs_pin: cs_pin,
+          length: length,
           max_stack: max_stack
         )
       end

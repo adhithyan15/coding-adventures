@@ -7,14 +7,14 @@ use board_vm_host::{
     GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram,
     GpioWriteProgram, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
     I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, PwmWriteProgram, SpiOpenProgram,
-    SpiTransferProgram, TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
-    DAC_WRITE_U12_MODULE_LEN,
+    SpiReadProgram, SpiTransferProgram, SpiWriteProgram, TimeNowProgram, TimeSleepMsProgram,
+    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
     I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_TRANSFER_MAX_MODULE_LEN,
     I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
-    PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN,
-    TIME_SLEEP_MS_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, SPI_READ_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN,
+    SPI_WRITE_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
@@ -27,7 +27,7 @@ use board_vm_language_core::{
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
     build_program_end_wire_frame, build_pwm_write_module, build_adc_read_module, build_raw_module,
     build_run_background_wire_frame, build_run_wire_frame, build_spi_open_module,
-    build_spi_transfer_module, build_stop_wire_frame,
+    build_spi_read_module, build_spi_transfer_module, build_spi_write_module, build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
@@ -308,6 +308,37 @@ extern "C" fn session_spi_transfer_module(
 
     let module = build_spi_transfer_module_value(cs_pin, &write_bytes, read_len, max_stack)
         .unwrap_or_else(|error| raise_core_error("spi_transfer_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_spi_write_module(
+    _self_val: VALUE,
+    cs_pin_val: VALUE,
+    bytes_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let cs_pin = rb_u16(cs_pin_val, "cs_pin");
+    let bytes = ruby_bridge::bytes_from_rb(bytes_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("bytes must be a Ruby binary String"));
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_spi_write_module_value(cs_pin, &bytes, max_stack)
+        .unwrap_or_else(|error| raise_core_error("spi_write_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_spi_read_module(
+    _self_val: VALUE,
+    cs_pin_val: VALUE,
+    len_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let cs_pin = rb_u16(cs_pin_val, "cs_pin");
+    let len = rb_u8(len_val, "len");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_spi_read_module_value(cs_pin, len, max_stack)
+        .unwrap_or_else(|error| raise_core_error("spi_read_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -1645,6 +1676,42 @@ fn build_spi_transfer_module_value(
     Ok(module)
 }
 
+fn build_spi_write_module_value(
+    cs_pin: u16,
+    bytes: &[u8],
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; SPI_WRITE_MAX_MODULE_LEN];
+    let len = build_spi_write_module(
+        SpiWriteProgram {
+            cs_pin,
+            bytes,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_spi_read_module_value(
+    cs_pin: u16,
+    read_len: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; SPI_READ_MODULE_LEN];
+    let len = build_spi_read_module(
+        SpiReadProgram {
+            cs_pin,
+            len: read_len,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_i2c_write_u8_module_value(
     address: u16,
     byte: u8,
@@ -2054,6 +2121,18 @@ pub extern "C" fn Init_board_vm_native() {
         "spi_transfer_module",
         session_spi_transfer_module as *const c_void,
         4,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "spi_write_module",
+        session_spi_write_module as *const c_void,
+        3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "spi_read_module",
+        session_spi_read_module as *const c_void,
+        3,
     );
     ruby_bridge::define_method_raw(
         session_class,

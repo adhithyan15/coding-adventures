@@ -239,7 +239,9 @@ select is asserted, then clocks `read_length` bytes with zero-valued dummy write
 and returns those bounded read bytes. `spi.transfer` therefore covers write-only
 transactions with `read_length = 0`, read-only transactions with an empty write
 buffer, and register-style write-then-read exchanges without repeating SPI bus
-metadata in language frontends.
+metadata in language frontends. Host SDKs may expose `spi.write` and `spi.read`
+as convenience builders, but those must lower to `spi.transfer` rather than
+claiming separate bytecode capability ids.
 
 ### LED Matrix
 

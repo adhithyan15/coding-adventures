@@ -30,7 +30,7 @@ Source snapshot:
 | Analog input | A0-A5 | implemented as direct read | `adc.read` |
 | DAC output | A0, one 12-bit DAC channel | implemented as direct write | `dac.write_u12` |
 | I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata, handle open, single-byte write/read, byte-buffer write/read, and write-read transfer implemented | `i2c.open`, `i2c.write_u8`, `i2c.read_u8`, `i2c.write`, `i2c.read`, `i2c.transfer` |
-| SPI master | COPI D11, CIPO D12, SCK D13, conventional CS D10 | bus metadata, handle open, and bounded write-then-read transfer implemented | `spi.open`, `spi.transfer`; convenience read/write commands follow |
+| SPI master | COPI D11, CIPO D12, SCK D13, conventional CS D10 | bus metadata, handle open, bounded write-then-read transfer, and transfer-backed read/write SDK commands implemented | `spi.open`, `spi.transfer`; SDK `spi.write`/`spi.read` lower to transfer |
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | partially transport-only | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | pending | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | pending | `rtc.now`, `rtc.set`, alarms/events later |
@@ -73,7 +73,9 @@ reject conflicting handles.
    `Wire`/`Wire1`. `i2c.write`, `i2c.read`, and `i2c.transfer` cover the
    bounded byte-buffer transfer path. `spi.open` establishes the SPI handle
    tranche over Rust-owned UNO R4 bus metadata; `spi.transfer` layers a bounded
-   chip-select-scoped write-then-read transaction on that handle.
+   chip-select-scoped write-then-read transaction on that handle, with host SDK
+   `spi.write` and `spi.read` wrappers covering write-only and read-only SPI
+   cases without adding duplicate VM opcodes.
 5. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
    capabilities in separate tranches with conformance tests.
 
