@@ -32,7 +32,7 @@ use board_vm_language_core::{
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageI2cBus,
     LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus, LanguageTargetInfo,
-    LanguageValue, LanguageWirelessInterface,
+    LanguageUartBus, LanguageValue, LanguageWirelessInterface,
 };
 use python_bridge::*;
 
@@ -894,6 +894,11 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
     );
     dict_set(dict, "i2c_buses", language_i2c_buses_to_py(&target.i2c_buses));
     dict_set(dict, "spi_buses", language_spi_buses_to_py(&target.spi_buses));
+    dict_set(
+        dict,
+        "uart_buses",
+        language_uart_buses_to_py(&target.uart_buses),
+    );
     dict_set(dict, "wireless", language_wireless_to_py(&target.wireless));
     dict_set(
         dict,
@@ -975,6 +980,26 @@ unsafe fn language_spi_buses_to_py(buses: &[LanguageSpiBus]) -> PyObjectPtr {
             "default_cs_pin",
             usize_to_py(bus.default_cs_pin as usize),
         );
+        dict_set(dict, "notes", str_to_py(&bus.notes));
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
+}
+
+unsafe fn language_uart_buses_to_py(buses: &[LanguageUartBus]) -> PyObjectPtr {
+    let list = PyList_New(buses.len() as isize);
+    for (index, bus) in buses.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(dict, "bus", usize_to_py(bus.bus as usize));
+        dict_set(dict, "name", str_to_py(&bus.name));
+        dict_set(dict, "tx_pin", usize_to_py(bus.tx_pin as usize));
+        dict_set(dict, "rx_pin", usize_to_py(bus.rx_pin as usize));
+        dict_set(
+            dict,
+            "arduino_uart",
+            usize_to_py(bus.arduino_uart as usize),
+        );
+        dict_set(dict, "internal", bool_to_py(bus.internal));
         dict_set(dict, "notes", str_to_py(&bus.notes));
         PyList_SetItem(list, index as isize, dict);
     }

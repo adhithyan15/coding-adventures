@@ -31,7 +31,7 @@ Source snapshot:
 | DAC output | A0, one 12-bit DAC channel | implemented as direct write | `dac.write_u12` |
 | I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata, handle open, single-byte write/read, byte-buffer write/read, and write-read transfer implemented | `i2c.open`, `i2c.write_u8`, `i2c.read_u8`, `i2c.write`, `i2c.read`, `i2c.transfer` |
 | SPI master | COPI D11, CIPO D12, SCK D13, conventional CS D10 | bus metadata, handle open, bounded write-then-read transfer, and transfer-backed read/write SDK commands implemented | `spi.open`, `spi.transfer`; SDK `spi.write`/`spi.read` lower to transfer |
-| Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | partially transport-only | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
+| Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | descriptor metadata implemented; VM open/read/write pending | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | pending | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | pending | `rtc.now`, `rtc.set`, alarms/events later |
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | pending | `program.store` and possibly `kv.store` |
@@ -77,7 +77,9 @@ reject conflicting handles.
    `spi.write` and `spi.read` wrappers covering write-only and read-only SPI
    cases without adding duplicate VM opcodes.
 5. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
-   capabilities in separate tranches with conformance tests.
+   capabilities in separate tranches with conformance tests. UART now has
+   descriptor metadata for Minima `Serial1` and WiFi `Serial1`/`Serial2`/
+   `Serial3`, so the next UART tranche can focus on handles and byte I/O.
 
 Every tranche should include the same layers: spec entry, IR capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,

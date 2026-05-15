@@ -44,7 +44,7 @@ use board_vm_language_core::{
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageI2cBus,
     LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus, LanguageTargetInfo,
-    LanguageValue, LanguageWirelessInterface,
+    LanguageUartBus, LanguageValue, LanguageWirelessInterface,
 };
 use ruby_bridge::VALUE;
 
@@ -958,6 +958,11 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
     );
     hash_set(hash, "i2c_buses", language_i2c_buses_to_rb(&target.i2c_buses));
     hash_set(hash, "spi_buses", language_spi_buses_to_rb(&target.spi_buses));
+    hash_set(
+        hash,
+        "uart_buses",
+        language_uart_buses_to_rb(&target.uart_buses),
+    );
     hash_set(hash, "wireless", language_wireless_to_rb(&target.wireless));
     hash_set(
         hash,
@@ -1066,6 +1071,22 @@ fn language_spi_buses_to_rb(buses: &[LanguageSpiBus]) -> VALUE {
         hash_set(hash, "cipo_pin", rb_usize(bus.cipo_pin));
         hash_set(hash, "sck_pin", rb_usize(bus.sck_pin));
         hash_set(hash, "default_cs_pin", rb_usize(bus.default_cs_pin));
+        hash_set(hash, "notes", ruby_bridge::str_to_rb(&bus.notes));
+        ruby_bridge::array_push(array, hash);
+    }
+    array
+}
+
+fn language_uart_buses_to_rb(buses: &[LanguageUartBus]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for bus in buses {
+        let hash = ruby_bridge::hash_new();
+        hash_set(hash, "bus", rb_usize(bus.bus));
+        hash_set(hash, "name", ruby_bridge::str_to_rb(&bus.name));
+        hash_set(hash, "tx_pin", rb_usize(bus.tx_pin));
+        hash_set(hash, "rx_pin", rb_usize(bus.rx_pin));
+        hash_set(hash, "arduino_uart", rb_usize(bus.arduino_uart));
+        hash_set(hash, "internal", ruby_bridge::bool_to_rb(bus.internal));
         hash_set(hash, "notes", ruby_bridge::str_to_rb(&bus.notes));
         ruby_bridge::array_push(array, hash);
     }

@@ -58,6 +58,11 @@ module CodingAdventures
         assert_equal [
           {"bus" => 0, "name" => "SPI", "copi_pin" => 11, "cipo_pin" => 12, "sck_pin" => 13, "default_cs_pin" => 10, "notes" => "Header SPI bus on D11/COPI, D12/CIPO, and D13/SCK with D10 as the conventional chip select"}
         ], uno_r4_wifi["spi_buses"]
+        assert_equal [
+          {"bus" => 0, "name" => "Serial1", "tx_pin" => 22, "rx_pin" => 23, "arduino_uart" => 1, "internal" => false, "notes" => "UNO R4 WiFi UART on D22/TX and D23/RX"},
+          {"bus" => 1, "name" => "Serial2", "tx_pin" => 1, "rx_pin" => 0, "arduino_uart" => 2, "internal" => false, "notes" => "Header UART on D1/TX0 and D0/RX0"},
+          {"bus" => 2, "name" => "Serial3", "tx_pin" => 24, "rx_pin" => 25, "arduino_uart" => 3, "internal" => true, "notes" => "UNO R4 WiFi module UART on D24/TX WIFI and D25/RX WIFI"}
+        ], uno_r4_wifi["uart_buses"]
         assert_equal uno_r4_wifi["digital_pin_count"], uno_r4_wifi["digital_pins"].length
         d3 = uno_r4_wifi["digital_pins"].find { |pin| pin["pin"] == 3 }
         assert_equal "D3", d3["label"]
