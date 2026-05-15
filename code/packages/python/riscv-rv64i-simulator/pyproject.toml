@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-riscv-rv64i-simulator"
+version = "0.1.0"
+description = "RISC-V RV64I + M extension behavioral simulator — Layer 07y"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["coding-adventures-simulator-protocol"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/riscv_rv64i_simulator"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=riscv_rv64i_simulator --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
