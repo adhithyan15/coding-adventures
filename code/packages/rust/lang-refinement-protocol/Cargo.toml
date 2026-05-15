@@ -1,0 +1,9 @@
+[package]
+name        = "lang-refinement-protocol"
+version     = "0.1.0"
+edition     = "2021"
+description = "LANG54 — Generic protocol for wiring lang-refinement-checker into any language's type-checker. Exposes RefinementBridge trait, check_call_site_refinements(), and compute_if_narrowing() so a new language gets call-site proof obligations and flow-sensitive narrowing by implementing three bridge methods."
+
+[dependencies]
+lang-refined-types      = { path = "../lang-refined-types" }
+lang-refinement-checker = { path = "../lang-refinement-checker" }
