@@ -1,5 +1,21 @@
 # Changelog — twig-ir-compiler
 
+## [0.13.0] — 2026-05-15
+
+### Added (LANG58 — TW05-E string/char builtins)
+
+- **13 string and character builtins added to `BUILTINS`** — these operations
+  have been in `lispy-runtime` since LANG47 but were missing from the
+  compiler's `BUILTINS` constant, so calls from Twig source were treated as
+  user-function calls and failed with "unbound name" at runtime:
+  - `string-length`, `string-ref`, `substring`, `string-append`
+  - `string->number`, `string=?`, `string<?`, `string>?`
+  - `char->integer`, `integer->char`
+  - `char-alphabetic?`, `char-numeric?`, `char-whitespace?`
+
+  These are required by `compiler/lexer.tw` (TW05-E) for scanning source text
+  character-by-character using ASCII integer comparison.
+
 ## [0.12.0] — 2026-05-15
 
 ### Added (LANG57 — TW05-D string/symbol conversion builtins)

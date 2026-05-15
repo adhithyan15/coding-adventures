@@ -168,6 +168,11 @@ const BUILTINS: &[&str] = &[
     "symbol-append",
     // LANG57: string ↔ number ↔ symbol conversions (already in lispy-runtime LANG47+)
     "number->string", "string->symbol", "symbol->string",
+    // LANG58: string and character operations (lispy-runtime LANG47, wired here for TW05-E)
+    "string-length", "string-ref", "substring", "string-append",
+    "string->number", "string=?", "string<?", "string>?",
+    "char->integer", "integer->char",
+    "char-alphabetic?", "char-numeric?", "char-whitespace?",
     // I/O
     "print",
     // Host I/O (LANG52) — these dispatch via call_builtin to exec_host_call
