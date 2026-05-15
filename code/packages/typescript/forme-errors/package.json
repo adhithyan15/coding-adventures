@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-errors",
+  "version": "0.1.0",
+  "description": "Forme kernel: typed error model — StageError, CapabilityError, CancellationError, plus the canonical error-code vocabulary (FM01 §6).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

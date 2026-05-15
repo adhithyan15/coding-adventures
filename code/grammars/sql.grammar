@@ -252,7 +252,18 @@ column_ref        = NAME [ "." NAME ] ;
 #     COUNT(*)           — star form
 #     COUNT(DISTINCT x)  — DISTINCT aggregate
 #     f(x, y, …)        — regular args (value_list is optional for zero-arg calls)
-function_call     = (NAME | "REPLACE") "(" ( STAR | "DISTINCT" value_list | [ value_list ] ) ")" ;
+#
+# Optional trailing FILTER clause (SQL:2003 / SQLite extension):
+#   COUNT(*) FILTER (WHERE active = 1)
+#   SUM(salary) FILTER (WHERE dept = 'eng')
+# The FILTER expression is a boolean predicate evaluated per row before the
+# aggregate accumulator is updated.  Rows for which the predicate is false (or
+# NULL) are silently skipped, as if they had not been scanned.
+function_call     = (NAME | "REPLACE") "(" ( STAR | "DISTINCT" value_list | [ value_list ] ) ")" [ filter_clause ] ;
+
+# filter_clause = FILTER "(" WHERE expr ")"
+# Attached to an aggregate function call to restrict which rows are accumulated.
+filter_clause     = "FILTER" "(" "WHERE" expr ")" ;
 
 # cast_expr: CAST(expr AS type_name)
 # CAST is a keyword so it cannot appear in function_call (which uses NAME).

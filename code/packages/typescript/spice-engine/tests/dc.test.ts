@@ -11,6 +11,7 @@ import {
   dcSweep,
   diode,
   inductor,
+  mosfet,
   resistor,
   vccs,
   vcvs,
@@ -169,6 +170,35 @@ describe("dcOp", () => {
 
     expect(result.voltage("collector")).toBeGreaterThan(0.0);
     expect(result.voltage("collector")).toBeLessThan(5.0);
+  });
+
+  it("solves an NMOS operating point", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+    circuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
+      VT0: 0.45,
+      KP: 200.0e-6,
+      W: 2.0e-6,
+      L: 180.0e-9,
+      LAMBDA: 0.02,
+    }));
+
+    const result = dcOp(circuit);
+
+    expect(result.voltage("out")).toBeGreaterThanOrEqual(0.0);
+    expect(result.voltage("out")).toBeLessThan(1.8);
+  });
+
+  it("rejects invalid MOSFET model parameters", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+    circuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add(mosfet("Mbad", "out", "gate", "0", "0", "NMOS", { KP: 0.0 }));
+
+    expect(() => dcOp(circuit)).toThrowError("MOSFET KP must be positive");
   });
 
   it("rejects invalid BJT model parameters", () => {

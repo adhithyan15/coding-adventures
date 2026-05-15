@@ -208,6 +208,67 @@ Q2 out base emit slow
     expect(element.thermalVoltage).toBeCloseTo(26.0e-3, 12);
   });
 
+  it("parses MOSFET models into operating-point circuits", () => {
+    const parsed = parseNetlist(`
+.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02)
+Vdd vdd 0 DC 1.8
+Vgate gate 0 DC 1.8
+Rload vdd out 1k
+M1 out gate 0 0 nfast W=2u L=180n
+.op
+`);
+
+    const model = parsed.models.get("nfast");
+    expect(model?.name).toBe("nfast");
+    expect(model?.kind).toBe("NMOS");
+    expect(model?.params.get("VT0")).toBe(0.45);
+    expect(model?.params.get("KP")).toBeCloseTo(200.0e-6, 12);
+    expect(parsed.circuit.elements()[3]).toMatchObject({
+      kind: "mosfet",
+      name: "M1",
+      drain: "out",
+      gate: "gate",
+      source: "0",
+      body: "0",
+      type: "NMOS",
+      params: {
+        VT0: 0.45,
+        LAMBDA: 0.02,
+      },
+    });
+    const element = parsed.circuit.elements()[3];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.params.KP).toBeCloseTo(200.0e-6, 12);
+    expect(element.params.W).toBeCloseTo(2.0e-6, 12);
+    expect(element.params.L).toBeCloseTo(180.0e-9, 12);
+
+    const result = dcOp(parsed.circuit);
+    expect(result.voltage("out")).toBeGreaterThanOrEqual(0.0);
+    expect(result.voltage("out")).toBeLessThan(1.8);
+  });
+
+  it("parses PMOS MOSFET aliases", () => {
+    const parsed = parseNetlist(`
+.model pfast PMOS(VTO=0.4 KP=120u NSUB=1.2)
+Mp out gate vdd vdd pfast W=3u L=250n
+`);
+
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.type).toBe("PMOS");
+    expect(element.params.VT0).toBe(0.4);
+    expect(element.params.N_SUB).toBe(1.2);
+    expect(element.params.KP).toBeCloseTo(120.0e-6, 12);
+    expect(element.params.W).toBeCloseTo(3.0e-6, 12);
+    expect(element.params.L).toBeCloseTo(250.0e-9, 12);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
@@ -377,6 +438,31 @@ Xstage out in 0 stage
     });
   });
 
+  it("expands subcircuit MOSFET nodes into engine elements", () => {
+    const parsed = parseNetlist(`
+.model nfast NMOS(W=1u L=130n)
+.subckt pulldown in out vss
+Mpull out in inner vss nfast
+Rtail inner vss 10
+.ends pulldown
+Xpd gate drain 0 pulldown
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "mosfet",
+      name: "Xpd.Mpull",
+      drain: "drain",
+      gate: "gate",
+      source: "Xpd.inner",
+      body: "0",
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "resistor",
+      n1: "Xpd.inner",
+      n2: "0",
+    });
+  });
+
   it("scopes subcircuit internal nodes by instance", () => {
     const parsed = parseNetlist(`
 .subckt load in out
@@ -431,6 +517,24 @@ Xright c d load
   it("rejects non-BJT models for BJT elements", () => {
     expect(() => parseNetlist(".model clamp D(IS=1e-12)\nQ1 c b e clamp\n")).toThrow(
       'line 2: model "clamp" has kind "D", expected "NPN" or "PNP"',
+    );
+  });
+
+  it("rejects unknown MOSFET models", () => {
+    expect(() => parseNetlist("M1 d g s b missing\n")).toThrow(
+      'line 1: unknown model "missing" for MOSFET "M1"',
+    );
+  });
+
+  it("rejects non-MOSFET models for MOSFET elements", () => {
+    expect(() => parseNetlist(".model clamp D(IS=1e-12)\nM1 d g s b clamp\n")).toThrow(
+      'line 2: model "clamp" has kind "D", expected "NMOS" or "PMOS"',
+    );
+  });
+
+  it("rejects MOSFET parameters without assignments", () => {
+    expect(() => parseNetlist(".model nfast NMOS\nM1 d g s b nfast W\n")).toThrow(
+      'line 2: invalid MOSFET parameter syntax "W"',
     );
   });
 

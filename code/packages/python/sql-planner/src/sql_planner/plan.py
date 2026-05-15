@@ -180,8 +180,9 @@ class AggregateItem:
     arg: FuncArg
     alias: str
     distinct: bool = False
-    separator: str | None = None   # GROUP_CONCAT only
+    separator: str | None = None    # GROUP_CONCAT only
     key_arg: FuncArg | None = None  # JSON_GROUP_OBJECT only: the key expression
+    filter_expr: "Expr | None" = None  # FILTER (WHERE expr) — skip rows where False/NULL
     output: bool = True  # False → compute but do not emit as a result column
 
 

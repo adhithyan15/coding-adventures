@@ -10,6 +10,7 @@ export type Element =
   | CurrentSource
   | Diode
   | Bjt
+  | Mosfet
   | Vccs
   | Vcvs
   | Cccs
@@ -294,6 +295,33 @@ export interface Bjt {
   readonly saturationCurrent: number;
   readonly forwardBeta: number;
   readonly thermalVoltage: number;
+}
+
+export type MosfetType = "NMOS" | "PMOS";
+
+export interface MosfetLevel1Params {
+  readonly VT0: number;
+  readonly KP: number;
+  readonly LAMBDA: number;
+  readonly GAMMA: number;
+  readonly PHI: number;
+  readonly W: number;
+  readonly L: number;
+  readonly IS: number;
+  readonly N_SUB: number;
+  readonly T_NOM: number;
+}
+
+export interface Mosfet {
+  readonly kind: "mosfet";
+  readonly name: string;
+  readonly drain: string;
+  readonly gate: string;
+  readonly source: string;
+  readonly body: string;
+  readonly type: MosfetType;
+  readonly model: "level1";
+  readonly params: MosfetLevel1Params;
 }
 
 export interface Vccs {
@@ -610,6 +638,43 @@ export function bjt(
     saturationCurrent,
     forwardBeta,
     thermalVoltage,
+  };
+}
+
+export function defaultMosfetLevel1Params(): MosfetLevel1Params {
+  return {
+    VT0: 0.42,
+    KP: 220.0e-6,
+    LAMBDA: 0.05,
+    GAMMA: 0.27,
+    PHI: 0.84,
+    W: 1.0e-6,
+    L: 130.0e-9,
+    IS: 1.0e-15,
+    N_SUB: 1.4,
+    T_NOM: 300.15,
+  };
+}
+
+export function mosfet(
+  name: string,
+  drain: string,
+  gate: string,
+  source: string,
+  body: string,
+  type: MosfetType = "NMOS",
+  params: Partial<MosfetLevel1Params> = {},
+): Mosfet {
+  return {
+    kind: "mosfet",
+    name,
+    drain,
+    gate,
+    source,
+    body,
+    type,
+    model: "level1",
+    params: { ...defaultMosfetLevel1Params(), ...params },
   };
 }
 
@@ -1168,6 +1233,12 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "saturationCurrent",
         nominalValue: element.saturationCurrent,
       };
+    case "mosfet":
+      return {
+        elementName: element.name,
+        parameter: "KP",
+        nominalValue: element.params.KP,
+      };
     case "vccs":
       return {
         elementName: element.name,
@@ -1237,6 +1308,12 @@ function circuitWithPerturbedElement(
         perturbed.add({
           ...element,
           saturationCurrent: element.saturationCurrent + delta,
+        });
+        break;
+      case "mosfet":
+        perturbed.add({
+          ...element,
+          params: { ...element.params, KP: element.params.KP + delta },
         });
         break;
       case "vccs":
@@ -1363,6 +1440,14 @@ function randomizedElement(
           rng,
         ),
       };
+    case "mosfet":
+      return {
+        ...element,
+        params: {
+          ...element.params,
+          KP: randomizedValue(element.params.KP, tolerance, distribution, rng),
+        },
+      };
     case "vccs":
       return {
         ...element,
@@ -1468,7 +1553,7 @@ function solveLinearCircuit(
 
   const hasNonlinearElement = circuit
     .elements()
-    .some((element) => element.kind === "diode" || element.kind === "bjt");
+    .some((element) => element.kind === "diode" || element.kind === "bjt" || element.kind === "mosfet");
   let operatingPoint = Array.from({ length: matrixSize }, () => 0.0);
   let solution = solveLinearCircuitAtOperatingPoint(
     circuit,
@@ -1562,6 +1647,9 @@ function solveLinearCircuitAtOperatingPoint(
         break;
       case "bjt":
         stampBjt(element, nodeIndices, matrix, rhs, operatingPoint);
+        break;
+      case "mosfet":
+        stampMosfet(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -1678,6 +1766,9 @@ function buildSmallSignalMatrix(
       case "bjt":
         stampBjtSmallSignal(element, nodeIndices, matrix);
         break;
+      case "mosfet":
+        stampMosfetSmallSignal(element, nodeIndices, matrix);
+        break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
         break;
@@ -1740,6 +1831,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "inductor":
       case "diode":
       case "bjt":
+      case "mosfet":
       case "vccs":
       case "vcvs":
       case "cccs":
@@ -1812,6 +1904,9 @@ function buildAcMatrix(
         break;
       case "bjt":
         stampAcBjtSmallSignal(element, nodeIndices, matrix);
+        break;
+      case "mosfet":
+        stampAcMosfetSmallSignal(element, nodeIndices, matrix);
         break;
       case "vccs":
         stampAcVccs(element, nodeIndices, matrix);
@@ -2015,6 +2110,12 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         insertNode(names, element.base);
         insertNode(names, element.emitter);
         break;
+      case "mosfet":
+        insertNode(names, element.drain);
+        insertNode(names, element.gate);
+        insertNode(names, element.source);
+        insertNode(names, element.body);
+        break;
       case "vccs":
         insertNode(names, element.positive);
         insertNode(names, element.negative);
@@ -2097,6 +2198,7 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "inductor" ||
         element.kind === "diode" ||
         element.kind === "bjt" ||
+        element.kind === "mosfet" ||
         element.kind === "vccs" ||
         element.kind === "vcvs" ||
         element.kind === "cccs" ||
@@ -2405,6 +2507,104 @@ function stampBjt(
   }
 }
 
+interface MosfetDcResult {
+  readonly drainCurrent: number;
+  readonly gm: number;
+  readonly gds: number;
+  readonly gmb: number;
+}
+
+function stampMosfet(
+  element: Mosfet,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+  operatingPoint: readonly number[],
+): void {
+  validateMosfet(element);
+  const drain = nodeIndex(nodeIndices, element.drain);
+  const gate = nodeIndex(nodeIndices, element.gate);
+  const source = nodeIndex(nodeIndices, element.source);
+  const body = nodeIndex(nodeIndices, element.body);
+  const drainVoltage = vectorVoltage(operatingPoint, drain);
+  const gateVoltage = vectorVoltage(operatingPoint, gate);
+  const sourceVoltage = vectorVoltage(operatingPoint, source);
+  const bodyVoltage = vectorVoltage(operatingPoint, body);
+  const vgs = gateVoltage - sourceVoltage;
+  const vds = drainVoltage - sourceVoltage;
+  const vbs = bodyVoltage - sourceVoltage;
+  const result = evaluateMosfetLevel1(element, vgs, vds, vbs);
+  const equivalentCurrent =
+    result.drainCurrent - result.gm * vgs - result.gds * vds - result.gmb * vbs;
+
+  stampConductance(matrix, drain, source, result.gds);
+  stampTransconductance(matrix, drain, source, gate, source, result.gm);
+  stampTransconductance(matrix, drain, source, body, source, result.gmb);
+  stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+}
+
+function evaluateMosfetLevel1(
+  element: Mosfet,
+  vgs: number,
+  vds: number,
+  vbs: number,
+): MosfetDcResult {
+  if (element.type === "PMOS") {
+    const result = evaluateNmosLevel1(element.params, -vgs, -vds, -vbs);
+    return {
+      drainCurrent: -result.drainCurrent,
+      gm: result.gm,
+      gds: result.gds,
+      gmb: result.gmb,
+    };
+  }
+  return evaluateNmosLevel1(element.params, vgs, vds, vbs);
+}
+
+function evaluateNmosLevel1(
+  params: MosfetLevel1Params,
+  vgs: number,
+  vds: number,
+  vbs: number,
+): MosfetDcResult {
+  const beta = params.KP * (params.W / params.L);
+  const threshold =
+    params.PHI - vbs >= 0.0
+      ? params.VT0 + params.GAMMA * (Math.sqrt(params.PHI - vbs) - Math.sqrt(params.PHI))
+      : params.VT0;
+  const overdrive = vgs - threshold;
+  if (overdrive <= 0.0) {
+    return { drainCurrent: 0.0, gm: 0.0, gds: 0.0, gmb: 0.0 };
+  }
+  const bodyFactor =
+    params.PHI - vbs > 0.0
+      ? params.GAMMA / (2.0 * Math.sqrt(params.PHI - vbs))
+      : 0.0;
+  if (vds < overdrive) {
+    const channel = overdrive * vds - 0.5 * vds * vds;
+    const modulation = 1.0 + params.LAMBDA * vds;
+    const gm = beta * vds * modulation;
+    return {
+      drainCurrent: beta * channel * modulation,
+      gm,
+      gds: beta * (overdrive - vds) * modulation + beta * channel * params.LAMBDA,
+      gmb: gm * bodyFactor,
+    };
+  }
+  const current = 0.5 * beta * overdrive * overdrive * (1.0 + params.LAMBDA * vds);
+  const gm = beta * overdrive * (1.0 + params.LAMBDA * vds);
+  return {
+    drainCurrent: current,
+    gm,
+    gds: 0.5 * beta * overdrive * overdrive * params.LAMBDA,
+    gmb: gm * bodyFactor,
+  };
+}
+
+function vectorVoltage(vector: readonly number[], index: number | undefined): number {
+  return index === undefined ? 0.0 : vector[index];
+}
+
 function stampCurrentSourceEquivalent(
   rhs: number[],
   positive: number | undefined,
@@ -2450,6 +2650,30 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
     throw invalidElement(element.name, "thermal voltage must be finite and positive");
+  }
+}
+
+function validateMosfet(element: Mosfet): void {
+  if (element.type !== "NMOS" && element.type !== "PMOS") {
+    throw invalidElement(element.name, "MOSFET type must be NMOS or PMOS");
+  }
+  const params = element.params;
+  for (const [name, value] of Object.entries(params)) {
+    if (!Number.isFinite(value)) {
+      throw invalidElement(element.name, `MOSFET ${name} must be finite`);
+    }
+  }
+  if (params.KP <= 0.0) {
+    throw invalidElement(element.name, "MOSFET KP must be positive");
+  }
+  if (params.W <= 0.0 || params.L <= 0.0) {
+    throw invalidElement(element.name, "MOSFET W and L must be positive");
+  }
+  if (params.PHI <= 0.0) {
+    throw invalidElement(element.name, "MOSFET PHI must be positive");
+  }
+  if (params.IS <= 0.0 || params.N_SUB <= 0.0 || params.T_NOM <= 0.0) {
+    throw invalidElement(element.name, "MOSFET IS, N_SUB, and T_NOM must be positive");
   }
 }
 
@@ -2856,6 +3080,22 @@ function stampBjtSmallSignal(
   }
 }
 
+function stampMosfetSmallSignal(
+  element: Mosfet,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+): void {
+  validateMosfet(element);
+  const drain = nodeIndex(nodeIndices, element.drain);
+  const gate = nodeIndex(nodeIndices, element.gate);
+  const source = nodeIndex(nodeIndices, element.source);
+  const body = nodeIndex(nodeIndices, element.body);
+  const result = evaluateMosfetLevel1(element, 0.0, 0.0, 0.0);
+  stampConductance(matrix, drain, source, result.gds);
+  stampTransconductance(matrix, drain, source, gate, source, result.gm);
+  stampTransconductance(matrix, drain, source, body, source, result.gmb);
+}
+
 function stampAcResistor(
   element: Resistor,
   nodeIndices: ReadonlyMap<string, number>,
@@ -3224,6 +3464,36 @@ function stampAcBjtSmallSignal(
       complex(transconductance, 0.0),
     );
   }
+}
+
+function stampAcMosfetSmallSignal(
+  element: Mosfet,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  validateMosfet(element);
+  const drain = nodeIndex(nodeIndices, element.drain);
+  const gate = nodeIndex(nodeIndices, element.gate);
+  const source = nodeIndex(nodeIndices, element.source);
+  const body = nodeIndex(nodeIndices, element.body);
+  const result = evaluateMosfetLevel1(element, 0.0, 0.0, 0.0);
+  stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
+  stampComplexTransconductance(
+    matrix,
+    drain,
+    source,
+    gate,
+    source,
+    complex(result.gm, 0.0),
+  );
+  stampComplexTransconductance(
+    matrix,
+    drain,
+    source,
+    body,
+    source,
+    complex(result.gmb, 0.0),
+  );
 }
 
 function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
