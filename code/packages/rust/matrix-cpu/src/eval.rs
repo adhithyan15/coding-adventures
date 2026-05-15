@@ -497,6 +497,72 @@ pub fn slice_bytes(
     (out, out_dims)
 }
 
+// ──────────────────────────── Concat ────────────────────────────
+//
+// MX01 V2 op: concatenate two or more inputs along one axis.  All
+// inputs share dtype and shape on every axis except the concat axis;
+// the output's dim on that axis is the sum of input dims.
+//
+// We walk the output index space.  For each output element, decide
+// which input it belongs to (by checking the axis offset against
+// running input sizes) and read the corresponding input byte.
+
+/// Concatenate `inputs` (each with its dims) along `axis`.  All
+/// inputs must agree on dtype and on every non-axis dim — the
+/// validator has already enforced that.
+pub fn concat_bytes(
+    inputs: &[(&[u8], &[u32])],
+    axis: u32,
+    elem_bytes: usize,
+) -> (Vec<u8>, Vec<u32>) {
+    assert!(!inputs.is_empty(), "concat_bytes called with no inputs");
+    let first_dims = inputs[0].1;
+    let rank = first_dims.len();
+    let mut out_dims: Vec<u32> = first_dims.to_vec();
+    let mut axis_total: u32 = 0;
+    for (_, dims) in inputs.iter() {
+        axis_total += dims[axis as usize];
+    }
+    out_dims[axis as usize] = axis_total;
+
+    let n_out = numel(&out_dims);
+    let mut out = vec![0u8; n_out * elem_bytes];
+    let out_strides = row_major_strides(&out_dims);
+
+    // Per-input strides + cumulative axis offset.
+    let mut input_offsets: Vec<u32> = Vec::with_capacity(inputs.len());
+    let mut cum: u32 = 0;
+    for (_, dims) in inputs.iter() {
+        input_offsets.push(cum);
+        cum += dims[axis as usize];
+    }
+    let input_strides: Vec<Vec<usize>> =
+        inputs.iter().map(|(_, d)| row_major_strides(d)).collect();
+
+    for flat_out in 0..n_out {
+        let out_coords = unravel_with_strides(flat_out, &out_strides, rank);
+        let axis_coord = out_coords[axis as usize] as u32;
+        // Find which input this output element comes from.
+        let mut chosen = 0usize;
+        for (i, &off) in input_offsets.iter().enumerate() {
+            let end = off + inputs[i].1[axis as usize];
+            if axis_coord < end {
+                chosen = i;
+                break;
+            }
+            chosen = i; // keep advancing — last hit wins for axis_coord == axis_total
+        }
+        let local_axis = axis_coord - input_offsets[chosen];
+        let mut in_coords = out_coords.clone();
+        in_coords[axis as usize] = local_axis as usize;
+        let flat_in = ravel(&in_coords, &input_strides[chosen]);
+        let src = inputs[chosen].0;
+        out[flat_out * elem_bytes..(flat_out + 1) * elem_bytes]
+            .copy_from_slice(&src[flat_in * elem_bytes..(flat_in + 1) * elem_bytes]);
+    }
+    (out, out_dims)
+}
+
 // ──────────────────────────── Cast ────────────────────────────
 
 pub fn cast(input: &[u8], src: DType, dst: DType, n: usize) -> Vec<u8> {
@@ -687,5 +753,89 @@ mod tests {
         let (out, dims) = slice_bytes(&input, &[4], 0, 2, 2, 1, 4);
         assert_eq!(dims, vec![0]);
         assert!(out.is_empty());
+    }
+
+    // ── Concat tests (MX01 Phase 3b.i / DSP01 FFT prerequisite) ──
+
+    #[test]
+    fn concat_two_1d_tensors_axis0() {
+        let xs1 = [1.0f32, 2.0, 3.0];
+        let xs2 = [10.0f32, 20.0];
+        let mut a = vec![0u8; 12];
+        let mut b = vec![0u8; 8];
+        write_f32_vec(&mut a, &xs1);
+        write_f32_vec(&mut b, &xs2);
+        let (out, dims) = concat_bytes(&[(&a, &[3]), (&b, &[2])], 0, 4);
+        assert_eq!(dims, vec![5]);
+        assert_eq!(read_f32_vec(&out, 5), vec![1.0, 2.0, 3.0, 10.0, 20.0]);
+    }
+
+    #[test]
+    fn concat_three_1d_tensors_axis0() {
+        let xs1 = [1.0f32];
+        let xs2 = [2.0f32, 3.0];
+        let xs3 = [4.0f32, 5.0, 6.0];
+        let mut a = vec![0u8; 4];
+        let mut b = vec![0u8; 8];
+        let mut c = vec![0u8; 12];
+        write_f32_vec(&mut a, &xs1);
+        write_f32_vec(&mut b, &xs2);
+        write_f32_vec(&mut c, &xs3);
+        let (out, dims) = concat_bytes(&[(&a, &[1]), (&b, &[2]), (&c, &[3])], 0, 4);
+        assert_eq!(dims, vec![6]);
+        assert_eq!(read_f32_vec(&out, 6), vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+    }
+
+    #[test]
+    fn concat_2d_axis0_stacks_rows() {
+        // [[1,2,3]] ++ [[4,5,6], [7,8,9]] along axis 0 → 3x3.
+        let a_data = [1.0f32, 2.0, 3.0];
+        let b_data = [4.0f32, 5.0, 6.0, 7.0, 8.0, 9.0];
+        let mut a = vec![0u8; 12];
+        let mut b = vec![0u8; 24];
+        write_f32_vec(&mut a, &a_data);
+        write_f32_vec(&mut b, &b_data);
+        let (out, dims) = concat_bytes(&[(&a, &[1, 3]), (&b, &[2, 3])], 0, 4);
+        assert_eq!(dims, vec![3, 3]);
+        assert_eq!(
+            read_f32_vec(&out, 9),
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]
+        );
+    }
+
+    #[test]
+    fn concat_2d_axis1_interleaves_columns() {
+        // [[1,2], [3,4]] ++ [[5,6,7], [8,9,10]] along axis 1 → 2x5.
+        let a_data = [1.0f32, 2.0, 3.0, 4.0];
+        let b_data = [5.0f32, 6.0, 7.0, 8.0, 9.0, 10.0];
+        let mut a = vec![0u8; 16];
+        let mut b = vec![0u8; 24];
+        write_f32_vec(&mut a, &a_data);
+        write_f32_vec(&mut b, &b_data);
+        let (out, dims) = concat_bytes(&[(&a, &[2, 2]), (&b, &[2, 3])], 1, 4);
+        assert_eq!(dims, vec![2, 5]);
+        assert_eq!(
+            read_f32_vec(&out, 10),
+            vec![1.0, 2.0, 5.0, 6.0, 7.0, 3.0, 4.0, 8.0, 9.0, 10.0]
+        );
+    }
+
+    #[test]
+    fn concat_then_slice_round_trips_pairs() {
+        // The FFT pattern: produce a tensor by concat'ing two halves,
+        // then slice it back into halves and verify each matches.
+        let even = [0.0f32, 2.0, 4.0, 6.0];
+        let odd = [1.0f32, 3.0, 5.0, 7.0];
+        let mut e = vec![0u8; 16];
+        let mut o = vec![0u8; 16];
+        write_f32_vec(&mut e, &even);
+        write_f32_vec(&mut o, &odd);
+        let (concat, dims) = concat_bytes(&[(&e, &[4]), (&o, &[4])], 0, 4);
+        assert_eq!(dims, vec![8]);
+        // Slice the first half back.
+        let (re_even, _) = slice_bytes(&concat, &dims, 0, 0, 4, 1, 4);
+        assert_eq!(read_f32_vec(&re_even, 4), vec![0.0, 2.0, 4.0, 6.0]);
+        let (re_odd, _) = slice_bytes(&concat, &dims, 0, 4, 8, 1, 4);
+        assert_eq!(read_f32_vec(&re_odd, 4), vec![1.0, 3.0, 5.0, 7.0]);
     }
 }

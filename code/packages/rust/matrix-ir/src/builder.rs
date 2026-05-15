@@ -422,6 +422,66 @@ impl GraphBuilder {
         out
     }
 
+    /// **V2 op.**  Concatenate two or more tensors along `axis`.
+    ///
+    /// All inputs must share dtype and shape on every axis except
+    /// `axis`.  Output dim on `axis` is the sum of input dims on
+    /// `axis`.
+    ///
+    /// Panics if:
+    /// - `inputs` is empty.
+    /// - `axis >= input.shape.rank()` for any input.
+    /// - inputs disagree on dtype, rank, or any non-axis dim.
+    pub fn concat(&mut self, inputs: &[&Tensor], axis: u32) -> Tensor {
+        assert!(!inputs.is_empty(), "concat: at least one input required");
+        let first = inputs[0];
+        let rank = first.shape.rank();
+        assert!(
+            (axis as usize) < rank,
+            "concat: axis {} out of bounds for rank {}",
+            axis,
+            rank
+        );
+        let mut axis_total: u32 = first.shape.dims[axis as usize];
+        for (i, t) in inputs.iter().enumerate().skip(1) {
+            assert_eq!(
+                t.dtype, first.dtype,
+                "concat: input {} dtype {:?} differs from input 0 dtype {:?}",
+                i, t.dtype, first.dtype
+            );
+            assert_eq!(
+                t.shape.rank(),
+                rank,
+                "concat: input {} rank {} differs from input 0 rank {}",
+                i,
+                t.shape.rank(),
+                rank
+            );
+            for (ai, (a, b)) in t.shape.dims.iter().zip(first.shape.dims.iter()).enumerate() {
+                if ai as u32 == axis {
+                    continue;
+                }
+                assert_eq!(
+                    a, b,
+                    "concat: input {} dim {} = {} != input 0 dim {} = {}",
+                    i, ai, a, ai, b
+                );
+            }
+            axis_total = axis_total
+                .checked_add(t.shape.dims[axis as usize])
+                .expect("concat: axis dim overflows u32");
+        }
+        let mut new_dims = first.shape.dims.clone();
+        new_dims[axis as usize] = axis_total;
+        let out = self.alloc(first.dtype, Shape::from(&new_dims[..]));
+        self.ops.push(Op::Concat {
+            inputs: inputs.iter().map(|t| t.id).collect(),
+            axis,
+            output: out.id,
+        });
+        out
+    }
+
     // ──────────── linear algebra ────────────
 
     /// 2D matrix multiply.  `a: [m,k]` × `b: [k,n]` → `[m,n]`.

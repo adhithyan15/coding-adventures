@@ -861,5 +861,6 @@ fn op_kind_name(op: &Op) -> &'static str {
         Op::Cast { .. } => "Cast",
         Op::Const { .. } => "Const",
         Op::Slice { .. } => "Slice",
+        Op::Concat { .. } => "Concat",
     }
 }

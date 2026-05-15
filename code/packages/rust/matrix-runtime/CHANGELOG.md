@@ -3,6 +3,14 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.10.0] — 2026-05-13
+
+### Changed — cost model knows `Op::Concat`
+
+`cost::estimate_flops` now handles `Op::Concat` (matrix-ir 0.3.0).
+Same shape-op weighting as Reshape / Transpose / Broadcast / Slice
+— one op per output element.
+
 ## [0.9.0] — 2026-05-13
 
 ### Changed — cost model knows `Op::Slice`

@@ -3,6 +3,65 @@
 All notable changes to `matrix-ir` are documented here.  The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] — 2026-05-13
+
+### Added — `Op::Concat` (V2 op, wire tag 0x1D)
+
+Second post-V1 op.  Concatenates two or more inputs along one axis:
+
+```rust
+Op::Concat {
+    inputs: Vec<TensorId>,
+    axis: u32,
+    output: TensorId,
+}
+```
+
+All inputs must share dtype and shape on every axis except `axis`;
+the output's dim on `axis` is the sum of input dims on `axis`.
+Equivalent to numpy `np.concatenate([a, b, …], axis=axis)`.
+
+### Why
+
+DSP01 Phase 3b needs to reassemble even/odd halves of an
+interleaved complex tensor after each FFT butterfly stage.
+`Slice` (0.2.0) reads them; `Concat` reassembles them.  The
+slice-then-concat pattern is also the right primitive for
+many CV transforms (image stacking, channel concat).
+
+### Builder
+
+- `GraphBuilder::concat(inputs: &[&Tensor], axis: u32) -> Tensor` —
+  asserts on empty inputs, axis bounds, dtype mismatch, rank
+  mismatch, non-axis dim mismatch, and u32 overflow on the
+  summed axis.
+
+### Wire format
+
+Tag `0x1D` followed by:
+
+```
+uv64 n_inputs
+u32 input_id × n_inputs
+u32 axis
+u32 output_id
+```
+
+Decoder uses `bounded_capacity` to cap the Vec preallocation
+against the remaining input buffer (same defense-in-depth
+pattern as the existing reduction-axes decoding).
+
+### New error variant
+
+- `IrError::InvalidConcat { op_index, reason: &'static str }` for
+  empty inputs / dtype mismatch / rank mismatch / non-axis dim
+  mismatch / u32 overflow.
+
+### Tests
+
+`wire_tags_are_unique` updated from 28 → 29 variants.
+`sample_one_per_variant` gained a Concat sample.
+
 ## [0.2.0] — 2026-05-13
 
 ### Added — `Op::Slice` (V2 op, wire tag 0x1C)
