@@ -1,6 +1,6 @@
 use spice_engine::{
-    dc_op, dc_sweep, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor, Resistor, SinWaveform,
-    SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
+    dc_op, dc_sweep, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, Inductor, Resistor,
+    SinWaveform, SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -142,6 +142,25 @@ fn dc_ccvs_sets_voltage_from_voltage_source_branch_current() {
     assert_close(result.branch_current("Vsense").unwrap(), 1.0e-3);
     assert_close(result.voltage("out").unwrap(), 2.0);
     assert_close(result.branch_current("H1").unwrap(), -2.0e-3);
+}
+
+#[test]
+fn dc_diode_solves_forward_biased_operating_point() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 0.7,
+    )));
+    circuit.add(Element::Diode(Diode::with_model(
+        "D1", "in", "out", 1.0e-12, 0.025,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+    let out = result.voltage("out").unwrap();
+    assert!(out > 0.1, "expected forward-biased output, got {out}");
+    assert!(out < 0.7, "expected diode drop below source, got {out}");
 }
 
 #[test]

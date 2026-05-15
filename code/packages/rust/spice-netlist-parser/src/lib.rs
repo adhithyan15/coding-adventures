@@ -1,8 +1,8 @@
 use std::{collections::HashMap, fmt};
 
 use spice_engine::{
-    Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
+    Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform, Inductor,
+    PulseWaveform, PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -60,9 +60,17 @@ pub enum Analysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct ModelCard {
+    pub name: String,
+    pub kind: String,
+    pub params: HashMap<String, f64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct ParsedNetlist {
     pub circuit: Circuit,
     pub analyses: Vec<Analysis>,
+    pub models: HashMap<String, ModelCard>,
     pub title: Option<String>,
 }
 
@@ -125,6 +133,7 @@ struct SubcktDefinition {
 pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
     let mut circuit = Circuit::new();
     let mut analyses = Vec::new();
+    let mut models = HashMap::new();
     let mut statements = Vec::new();
     let mut subckts = HashMap::new();
     let mut current_subckt: Option<SubcktDefinition> = None;
@@ -204,19 +213,38 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
         )));
     }
 
+    for statement in &statements {
+        if !statement.fields[0].eq_ignore_ascii_case(".model") {
+            continue;
+        }
+        let model = parse_model_card(&statement.fields)
+            .map_err(|err| line_error(statement.line_number, err))?;
+        let key = model.name.to_ascii_lowercase();
+        if models.contains_key(&key) {
+            return Err(line_error(
+                statement.line_number,
+                NetlistParseError::new(format!("duplicate .model definition {:?}", model.name)),
+            ));
+        }
+        models.insert(key, model);
+    }
+
     for statement in statements {
+        if statement.fields[0].eq_ignore_ascii_case(".model") {
+            continue;
+        }
         if statement.fields[0].starts_with('.') {
             let analysis = parse_directive(&statement.fields)
                 .map_err(|err| line_error(statement.line_number, err))?;
             analyses.push(analysis);
         } else if statement.fields[0].to_ascii_uppercase().starts_with('X') {
-            let elements = expand_subckt_instance(&statement.fields, &subckts, &[])
+            let elements = expand_subckt_instance(&statement.fields, &subckts, &[], &models)
                 .map_err(|err| line_error(statement.line_number, err))?;
             for element in elements {
                 circuit.add(element);
             }
         } else {
-            let element = parse_element(&statement.fields)
+            let element = parse_element(&statement.fields, &models)
                 .map_err(|err| line_error(statement.line_number, err))?;
             circuit.add(element);
         }
@@ -225,6 +253,7 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
     Ok(ParsedNetlist {
         circuit,
         analyses,
+        models,
         title,
     })
 }
@@ -262,7 +291,77 @@ pub fn parse_value(token: &str) -> Result<f64, NetlistParseError> {
     )))
 }
 
-fn parse_element(fields: &[String]) -> Result<Element, NetlistParseError> {
+fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
+    require_min_fields(fields, 3, ".model")?;
+    let tail = fields[2..].join(" ");
+    let trimmed = tail.trim();
+    let kind_end = trimmed
+        .find(|ch: char| ch.is_whitespace() || ch == '(')
+        .unwrap_or(trimmed.len());
+    if kind_end == 0 {
+        return Err(NetlistParseError::new(format!(
+            "invalid .model kind {trimmed:?}"
+        )));
+    }
+    let kind = trimmed[..kind_end].to_ascii_uppercase();
+    let mut params_text = trimmed[kind_end..].trim();
+    if params_text.starts_with('(') && params_text.ends_with(')') {
+        params_text = &params_text[1..params_text.len() - 1];
+    }
+    Ok(ModelCard {
+        name: fields[1].clone(),
+        kind,
+        params: parse_model_params(params_text)?,
+    })
+}
+
+fn parse_model_params(params_text: &str) -> Result<HashMap<String, f64>, NetlistParseError> {
+    let mut params = HashMap::new();
+    let mut rest = params_text.trim();
+    while !rest.is_empty() {
+        rest = rest.trim_start_matches(|ch: char| ch.is_whitespace() || ch == ',');
+        if rest.is_empty() {
+            break;
+        }
+        let name_end = rest
+            .find(|ch: char| ch.is_whitespace() || ch == '=')
+            .unwrap_or(rest.len());
+        let name = &rest[..name_end];
+        if name.is_empty()
+            || !name
+                .chars()
+                .all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+        {
+            return Err(NetlistParseError::new(format!(
+                "invalid .model parameter syntax {params_text:?}"
+            )));
+        }
+        rest = rest[name_end..].trim_start();
+        if !rest.starts_with('=') {
+            return Err(NetlistParseError::new(format!(
+                "invalid .model parameter syntax {params_text:?}"
+            )));
+        }
+        rest = rest[1..].trim_start();
+        let value_end = rest
+            .find(|ch: char| ch.is_whitespace() || ch == ',')
+            .unwrap_or(rest.len());
+        let value = &rest[..value_end];
+        if value.is_empty() {
+            return Err(NetlistParseError::new(format!(
+                "invalid .model parameter syntax {params_text:?}"
+            )));
+        }
+        params.insert(name.to_ascii_uppercase(), parse_value(value)?);
+        rest = &rest[value_end..];
+    }
+    Ok(params)
+}
+
+fn parse_element(
+    fields: &[String],
+    models: &HashMap<String, ModelCard>,
+) -> Result<Element, NetlistParseError> {
     let name = &fields[0];
     let prefix = element_prefix(name)?;
 
@@ -315,6 +414,28 @@ fn parse_element(fields: &[String]) -> Result<Element, NetlistParseError> {
                 None => CurrentSource::new(name, &fields[1], &fields[2], current),
             };
             Ok(Element::CurrentSource(source))
+        }
+        'D' => {
+            require_fields(fields, 4, "diode")?;
+            let model = models.get(&fields[3].to_ascii_lowercase()).ok_or_else(|| {
+                NetlistParseError::new(format!(
+                    "unknown model {:?} for diode {:?}",
+                    fields[3], name
+                ))
+            })?;
+            if model.kind != "D" {
+                return Err(NetlistParseError::new(format!(
+                    "model {:?} has kind {:?}, expected \"D\"",
+                    model.name, model.kind
+                )));
+            }
+            Ok(Element::Diode(Diode::with_model(
+                name,
+                &fields[1],
+                &fields[2],
+                *model.params.get("IS").unwrap_or(&1.0e-15),
+                *model.params.get("VT").unwrap_or(&0.02585),
+            )))
         }
         'G' => {
             require_fields(fields, 6, "VCCS")?;
@@ -406,6 +527,7 @@ fn expand_subckt_instance(
     fields: &[String],
     subckts: &HashMap<String, SubcktDefinition>,
     stack: &[String],
+    models: &HashMap<String, ModelCard>,
 ) -> Result<Vec<Element>, NetlistParseError> {
     require_min_fields(fields, 3, "subcircuit instance")?;
     let instance_name = &fields[0];
@@ -451,9 +573,14 @@ fn expand_subckt_instance(
         }
         let local_fields = map_subckt_fields(&statement.fields, instance_name, &node_map)?;
         if element_prefix(&statement.fields[0])? == 'X' {
-            elements.extend(expand_subckt_instance(&local_fields, subckts, &next_stack)?);
+            elements.extend(expand_subckt_instance(
+                &local_fields,
+                subckts,
+                &next_stack,
+                models,
+            )?);
         } else {
-            elements.push(parse_element(&local_fields)?);
+            elements.push(parse_element(&local_fields, models)?);
         }
     }
     Ok(elements)
@@ -473,7 +600,7 @@ fn map_subckt_fields(
         .ok_or_else(|| NetlistParseError::new("element name is empty"))?
         .to_ascii_uppercase();
     match prefix {
-        'R' | 'C' | 'L' | 'V' | 'I' => {
+        'R' | 'C' | 'L' | 'V' | 'I' | 'D' => {
             require_min_fields(fields, 3, "subcircuit element")?;
             mapped[1] = map_subckt_node(&fields[1], instance_name, node_map);
             mapped[2] = map_subckt_node(&fields[2], instance_name, node_map);

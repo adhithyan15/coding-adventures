@@ -340,6 +340,7 @@ pub enum Element {
     Inductor(Inductor),
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
+    Diode(Diode),
     Vccs(Vccs),
     Vcvs(Vcvs),
     Cccs(Cccs),
@@ -522,6 +523,41 @@ impl CurrentSource {
             negative: negative.into(),
             current,
             waveform: Some(waveform),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Diode {
+    pub name: String,
+    pub anode: String,
+    pub cathode: String,
+    pub saturation_current: f64,
+    pub thermal_voltage: f64,
+}
+
+impl Diode {
+    pub fn new(
+        name: impl Into<String>,
+        anode: impl Into<String>,
+        cathode: impl Into<String>,
+    ) -> Self {
+        Self::with_model(name, anode, cathode, 1.0e-15, 0.02585)
+    }
+
+    pub fn with_model(
+        name: impl Into<String>,
+        anode: impl Into<String>,
+        cathode: impl Into<String>,
+        saturation_current: f64,
+        thermal_voltage: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            anode: anode.into(),
+            cathode: cathode.into(),
+            saturation_current,
+            thermal_voltage,
         }
     }
 }
@@ -1469,6 +1505,11 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
         Element::CurrentSource(source) => {
             Some((source.name.clone(), "current".to_string(), source.current))
         }
+        Element::Diode(diode) => Some((
+            diode.name.clone(),
+            "saturation_current".to_string(),
+            diode.saturation_current,
+        )),
         Element::Vccs(source) => Some((
             source.name.clone(),
             "transconductance_siemens".to_string(),
@@ -1494,6 +1535,7 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::Resistor(resistor) => resistor.resistance_ohms += delta,
         Element::VoltageSource(source) => source.voltage += delta,
         Element::CurrentSource(source) => source.current += delta,
+        Element::Diode(diode) => diode.saturation_current += delta,
         Element::Vccs(source) => source.transconductance_siemens += delta,
         Element::Vcvs(source) => source.gain += delta,
         Element::Cccs(source) => source.gain += delta,
@@ -1578,6 +1620,12 @@ fn randomized_element(
             varied.current = randomized_value(varied.current, tolerance, distribution, rng);
             Element::CurrentSource(varied)
         }
+        Element::Diode(diode) => {
+            let mut varied = diode.clone();
+            varied.saturation_current =
+                randomized_value(varied.saturation_current, tolerance, distribution, rng);
+            Element::Diode(varied)
+        }
         Element::Vccs(source) => {
             let mut varied = source.clone();
             varied.transconductance_siemens = randomized_value(
@@ -1646,6 +1694,7 @@ struct InductorState {
 struct LinearSolution {
     node_voltages: BTreeMap<String, f64>,
     branch_currents: BTreeMap<String, f64>,
+    vector: Vec<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1685,26 +1734,80 @@ fn solve_linear_circuit(
         return Ok(LinearSolution {
             node_voltages: BTreeMap::new(),
             branch_currents: BTreeMap::new(),
+            vector: Vec::new(),
         });
     }
 
+    let has_diode = circuit
+        .elements()
+        .iter()
+        .any(|element| matches!(element, Element::Diode(_)));
+    let mut operating_point = vec![0.0; matrix_size];
+    let mut solution = solve_linear_circuit_at_operating_point(
+        circuit,
+        capacitor_states,
+        inductor_states,
+        source_time,
+        &node_indices,
+        &voltage_sources,
+        node_count,
+        matrix_size,
+        &operating_point,
+    )?;
+    if !has_diode {
+        return Ok(solution);
+    }
+
+    for _ in 0..80 {
+        let delta = max_vector_delta(&solution.vector, &operating_point);
+        operating_point = solution.vector.clone();
+        if delta < 1.0e-9 {
+            return Ok(solution);
+        }
+        solution = solve_linear_circuit_at_operating_point(
+            circuit,
+            capacitor_states,
+            inductor_states,
+            source_time,
+            &node_indices,
+            &voltage_sources,
+            node_count,
+            matrix_size,
+            &operating_point,
+        )?;
+    }
+
+    Ok(solution)
+}
+
+fn solve_linear_circuit_at_operating_point(
+    circuit: &Circuit,
+    capacitor_states: &[CapacitorState],
+    inductor_states: &[InductorState],
+    source_time: Option<f64>,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix_size: usize,
+    operating_point: &[f64],
+) -> Result<LinearSolution, SpiceError> {
     let mut matrix = vec![vec![0.0; matrix_size]; matrix_size];
     let mut rhs = vec![0.0; matrix_size];
 
     for element in circuit.elements() {
         match element {
-            Element::Resistor(resistor) => stamp_resistor(resistor, &node_indices, &mut matrix)?,
+            Element::Resistor(resistor) => stamp_resistor(resistor, node_indices, &mut matrix)?,
             Element::Capacitor(capacitor) => stamp_capacitor(
                 capacitor,
                 capacitor_states,
-                &node_indices,
+                node_indices,
                 &mut matrix,
                 &mut rhs,
             )?,
             Element::Inductor(inductor) => stamp_inductor(
                 inductor,
                 inductor_states,
-                &node_indices,
+                node_indices,
                 &voltage_sources,
                 node_count,
                 &mut matrix,
@@ -1712,7 +1815,7 @@ fn solve_linear_circuit(
             )?,
             Element::VoltageSource(source) => stamp_voltage_source(
                 source,
-                &node_indices,
+                node_indices,
                 &voltage_sources,
                 node_count,
                 source_time,
@@ -1720,23 +1823,26 @@ fn solve_linear_circuit(
                 &mut rhs,
             )?,
             Element::CurrentSource(source) => {
-                stamp_current_source(source, &node_indices, source_time, &mut rhs)?
+                stamp_current_source(source, node_indices, source_time, &mut rhs)?
             }
-            Element::Vccs(source) => stamp_vccs(source, &node_indices, &mut matrix)?,
+            Element::Diode(diode) => {
+                stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
+            }
+            Element::Vccs(source) => stamp_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_vcvs(
                 source,
-                &node_indices,
+                node_indices,
                 &voltage_sources,
                 node_count,
                 &mut matrix,
             )?,
             Element::Cccs(source) => {
-                stamp_cccs(source, &node_indices, &voltage_sources, &mut matrix)?
+                stamp_cccs(source, node_indices, voltage_sources, &mut matrix)?
             }
             Element::Ccvs(source) => stamp_ccvs(
                 source,
-                &node_indices,
-                &voltage_sources,
+                node_indices,
+                voltage_sources,
                 node_count,
                 &mut matrix,
             )?,
@@ -1744,12 +1850,12 @@ fn solve_linear_circuit(
     }
 
     let solution = solve_linear_system(matrix, rhs)?;
-    let node_voltages = node_voltages_from_solution(&node_indices, &solution);
+    let node_voltages = node_voltages_from_solution(node_indices, &solution);
     let mut branch_currents = BTreeMap::new();
     for (source_name, branch_index) in voltage_sources {
         branch_currents.insert(
             format!("I({source_name})"),
-            solution[node_count + branch_index],
+            solution[node_count + *branch_index],
         );
     }
     insert_transient_inductor_currents(
@@ -1762,7 +1868,15 @@ fn solve_linear_circuit(
     Ok(LinearSolution {
         node_voltages,
         branch_currents,
+        vector: solution,
     })
+}
+
+fn max_vector_delta(left: &[f64], right: &[f64]) -> f64 {
+    left.iter()
+        .zip(right.iter())
+        .map(|(left, right)| (left - right).abs())
+        .fold(0.0, f64::max)
 }
 
 fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceError> {
@@ -1793,6 +1907,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             Element::Resistor(_)
             | Element::Capacitor(_)
             | Element::Inductor(_)
+            | Element::Diode(_)
             | Element::Vccs(_)
             | Element::Vcvs(_)
             | Element::Cccs(_)
@@ -1849,6 +1964,15 @@ fn build_ac_matrix(
                         reason: "current must be finite".to_string(),
                     });
                 }
+            }
+            Element::Diode(diode) => {
+                validate_diode(diode)?;
+                stamp_complex_conductance(
+                    &mut matrix,
+                    node_index(node_indices, &diode.anode),
+                    node_index(node_indices, &diode.cathode),
+                    Complex::new(diode.saturation_current / diode.thermal_voltage, 0.0),
+                );
             }
             Element::Vccs(source) => stamp_ac_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_ac_vcvs(
@@ -1916,6 +2040,15 @@ fn build_small_signal_matrix(
                         reason: "current must be finite".to_string(),
                     });
                 }
+            }
+            Element::Diode(diode) => {
+                validate_diode(diode)?;
+                stamp_conductance(
+                    &mut matrix,
+                    node_index(node_indices, &diode.anode),
+                    node_index(node_indices, &diode.cathode),
+                    diode.saturation_current / diode.thermal_voltage,
+                );
             }
             Element::Vccs(source) => {
                 stamp_vccs(source, node_indices, &mut matrix)?;
@@ -1996,6 +2129,10 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
             Element::CurrentSource(source) => {
                 insert_node(&mut names, &source.positive);
                 insert_node(&mut names, &source.negative);
+            }
+            Element::Diode(diode) => {
+                insert_node(&mut names, &diode.anode);
+                insert_node(&mut names, &diode.cathode);
             }
             Element::Vccs(source) => {
                 insert_node(&mut names, &source.positive);
@@ -2101,6 +2238,9 @@ fn find_input_source<'a>(
             }
             Element::Inductor(inductor) if inductor.name == input_source => {
                 return Err(input_source_type_error(input_source, "inductor"));
+            }
+            Element::Diode(diode) if diode.name == input_source => {
+                return Err(input_source_type_error(input_source, "diode"));
             }
             Element::Vccs(source) if source.name == input_source => {
                 return Err(input_source_type_error(input_source, "VCCS"));
@@ -2353,6 +2493,34 @@ fn stamp_conductance(
     }
 }
 
+fn stamp_diode(
+    diode: &Diode,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_diode(diode)?;
+    let anode = node_index(node_indices, &diode.anode);
+    let cathode = node_index(node_indices, &diode.cathode);
+    let voltage = anode.map_or(0.0, |index| operating_point[index])
+        - cathode.map_or(0.0, |index| operating_point[index]);
+    let exponent = (voltage / diode.thermal_voltage).clamp(-40.0, 40.0);
+    let exp_value = exponent.exp();
+    let current = diode.saturation_current * (exp_value - 1.0);
+    let conductance = diode.saturation_current / diode.thermal_voltage * exp_value;
+    let equivalent_current = current - conductance * voltage;
+
+    stamp_conductance(matrix, anode, cathode, conductance);
+    if let Some(index) = anode {
+        rhs[index] -= equivalent_current;
+    }
+    if let Some(index) = cathode {
+        rhs[index] += equivalent_current;
+    }
+    Ok(())
+}
+
 fn validate_reactive_elements(circuit: &Circuit) -> Result<(), SpiceError> {
     for element in circuit.elements() {
         match element {
@@ -2360,6 +2528,22 @@ fn validate_reactive_elements(circuit: &Circuit) -> Result<(), SpiceError> {
             Element::Inductor(inductor) => validate_inductor(inductor)?,
             _ => {}
         }
+    }
+    Ok(())
+}
+
+fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
+    if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "saturation current must be finite and positive".to_string(),
+        });
+    }
+    if !diode.thermal_voltage.is_finite() || diode.thermal_voltage <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "thermal voltage must be finite and positive".to_string(),
+        });
     }
     Ok(())
 }
