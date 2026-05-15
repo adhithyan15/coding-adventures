@@ -1046,19 +1046,256 @@ mod tw05d_tests {
 
     #[test]
     fn full_module_tree_smoke_test() {
-        // Compile all 7 .tw files (the actual source files from code/twig/compiler/)
-        // and run (main).  Expected result: 1 (one register slot allocated).
+        // Compile all 9 .tw files (the actual source files from code/twig/compiler/,
+        // including the TW05-E lexer and parser added in LANG58) and run (main).
+        //
+        // main.tw was updated in LANG58 to import compiler/lexer and compiler/parser
+        // and return 42 (the integer value of "42" round-tripped through lex+parse).
         let src = twig_compiler_src();
         let dir = tempdir("full_tree");
 
-        for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder", "main"] {
+        for name in &["span", "token", "diagnostic", "ast", "iir-types",
+                      "iir-builder", "lexer", "parser", "main"] {
             copy_tw(&src, &dir, name);
         }
 
         let root = dir.join("compiler").join("main.tw");
         let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
             .expect("full compiler data-model tree should compile and run");
-        assert_eq!(v.as_int(), Some(1),
-            "(main) should return 1 — one register slot was allocated by alloc-slot");
+        assert_eq!(v.as_int(), Some(42),
+            "(main) should return 42 — lex+parse roundtrip of \"42\" (LANG58 TW05-E)");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TW05-E integration tests — LANG58: self-hosted Twig lexer + parser
+// ---------------------------------------------------------------------------
+//
+// These tests verify that `compiler/lexer.tw` and `compiler/parser.tw`
+// compile, link, and run correctly through the full module driver pipeline.
+// They use the same helper functions as tw05d_tests.
+//
+// Key design constraints tested:
+//   - lex-source produces a token list ending with TkEOF
+//   - Whitespace and comments are skipped
+//   - parse-program returns a list of Expr nodes
+//   - The full pipeline: lex "42" → parse → intlit-value = 42
+
+#[cfg(test)]
+mod tw05e_tests {
+    use std::fs;
+    use std::path::{Path, PathBuf};
+
+    // ── Helpers (mirrors tw05d_tests) ────────────────────────────────────────
+
+    fn twig_compiler_src() -> PathBuf {
+        let manifest = env!("CARGO_MANIFEST_DIR");
+        Path::new(manifest)
+            .join("../../../twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    fn tempdir(tag: &str) -> PathBuf {
+        let d = std::env::temp_dir().join(format!("twig_tw05e_test_{tag}"));
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler").join(format!("{name}.tw"));
+        fs::create_dir_all(dest.parent().unwrap()).unwrap();
+        fs::copy(&src, &dest)
+            .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
+    }
+
+    fn write_test_main(dest_dir: &Path, imports: &[&str], body: &str) -> PathBuf {
+        let import_clause: String = imports
+            .iter()
+            .map(|i| format!("          (import {i})"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let src = format!(
+            "(module compiler/main\n  (typed lenient)\n  (export main)\n{import_clause})\n\n(define (main) {body})\n"
+        );
+        let path = dest_dir.join("compiler").join("main.tw");
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, &src).unwrap();
+        path
+    }
+
+    /// Copy all TW05-D + TW05-E modules to dest_dir.
+    fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder", "lexer", "parser"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    // ── Test 1: lexer produces TkInteger token for "42" ─────────────────────
+
+    #[test]
+    fn lexer_single_integer_token() {
+        // (lex-source "42") should return a list whose first token has
+        // lexeme "42".  We extract it with (token-lexeme (car (lex-source "42"))).
+        let src = twig_compiler_src();
+        let dir = tempdir("lex_int");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "token");
+        copy_tw(&src, &dir, "lexer");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/lexer"],
+            // string=? on the lexeme to return a bool; convert to int via if
+            r#"(if (string=? (token-lexeme (car (lex-source "42"))) "42") 1 0)"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("lexer_single_integer_token: compile+run");
+        assert_eq!(v.as_int(), Some(1), "first token lexeme should be \"42\"");
+    }
+
+    // ── Test 2: lexer produces 4 tokens for "(foo)" ─────────────────────────
+
+    #[test]
+    fn lexer_parens_and_identifier() {
+        // (lex-source "(foo)") → TkLParen, TkIdentifier, TkRParen, TkEOF = 4 tokens
+        let src = twig_compiler_src();
+        let dir = tempdir("lex_parens");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "token");
+        copy_tw(&src, &dir, "lexer");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/lexer"],
+            r#"(length (lex-source "(foo)"))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("lexer_parens_and_identifier: compile+run");
+        assert_eq!(v.as_int(), Some(4),
+            "(lex-source \"(foo)\") should produce 4 tokens: LP Ident RP EOF");
+    }
+
+    // ── Test 3: lexer skips whitespace ───────────────────────────────────────
+
+    #[test]
+    fn lexer_skips_whitespace() {
+        // "  42  " should lex to [TkInteger "42", TkEOF] = 2 tokens
+        let src = twig_compiler_src();
+        let dir = tempdir("lex_ws");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "token");
+        copy_tw(&src, &dir, "lexer");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/lexer"],
+            r#"(length (lex-source "  42  "))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("lexer_skips_whitespace: compile+run");
+        assert_eq!(v.as_int(), Some(2),
+            "\"  42  \" should lex to 2 tokens (TkInteger + TkEOF)");
+    }
+
+    // ── Test 4: lexer skips line comments ────────────────────────────────────
+
+    #[test]
+    fn lexer_skips_comment() {
+        // "; comment\n42" should produce [TkInteger "42", TkEOF] = 2 tokens
+        let src = twig_compiler_src();
+        let dir = tempdir("lex_comment");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "token");
+        copy_tw(&src, &dir, "lexer");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/lexer"],
+            // The Twig string "\n" is a real newline in the lexed source.
+            r#"(length (lex-source "; comment\n42"))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("lexer_skips_comment: compile+run");
+        assert_eq!(v.as_int(), Some(2),
+            "\"; comment\\n42\" should lex to 2 tokens (skipping the comment)");
+    }
+
+    // ── Test 5: parser produces IntLit for integer token ─────────────────────
+
+    #[test]
+    fn parser_integer_literal() {
+        // lex-source "99" → parse-program → (car exprs) → intlit-value = 99
+        let src = twig_compiler_src();
+        let dir = tempdir("parse_int");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "token");
+        copy_tw(&src, &dir, "ast");
+        copy_tw(&src, &dir, "lexer");
+        copy_tw(&src, &dir, "parser");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/lexer", "compiler/parser"],
+            r#"(intlit-value (car (parse-program (lex-source "99"))))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("parser_integer_literal: compile+run");
+        assert_eq!(v.as_int(), Some(99),
+            "parse-program on \"99\" should yield IntLit with value 99");
+    }
+
+    // ── Test 6: parser produces CallExpr for nested call ─────────────────────
+
+    #[test]
+    fn parser_nested_call() {
+        // (+ 1 2) parses to a CallExpr with 2 args.
+        // We verify by extracting the number of args: (length (callexpr-args expr)).
+        let src = twig_compiler_src();
+        let dir = tempdir("parse_call");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "token");
+        copy_tw(&src, &dir, "ast");
+        copy_tw(&src, &dir, "lexer");
+        copy_tw(&src, &dir, "parser");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token", "compiler/ast",
+              "compiler/lexer", "compiler/parser"],
+            r#"(length (callexpr-args (car (parse-program (lex-source "(+ 1 2)")))))"#,
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("parser_nested_call: compile+run");
+        assert_eq!(v.as_int(), Some(2),
+            "(+ 1 2) should parse to a CallExpr with 2 arguments");
+    }
+
+    // ── Test 7: full lex+parse roundtrip via main.tw ─────────────────────────
+
+    #[test]
+    fn full_lex_parse_roundtrip() {
+        // Compile all 8 modules (span, token, diagnostic, ast, iir-types,
+        // iir-builder, lexer, parser) + main.tw, then run (main).
+        // main.tw lexes "42", parses it, and returns (intlit-value first) = 42.
+        let src = twig_compiler_src();
+        let dir = tempdir("full_e2e");
+        copy_all_tw_modules(&src, &dir);
+        // Copy the actual main.tw (not a generated test stub)
+        copy_tw(&src, &dir, "main");
+
+        let root = dir.join("compiler").join("main.tw");
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("full_lex_parse_roundtrip: compile+run");
+        assert_eq!(v.as_int(), Some(42),
+            "(main) should return 42 — the integer literal value roundtripped through lex+parse");
     }
 }

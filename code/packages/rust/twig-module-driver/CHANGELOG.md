@@ -1,5 +1,22 @@
 # Changelog — twig-module-driver
 
+## [0.3.0] — 2026-05-15
+
+### Added (LANG58 — TW05-E self-hosted lexer + parser integration tests)
+
+New `#[cfg(test)] mod tw05e_tests` with 7 tests exercising `compiler/lexer.tw`
+and `compiler/parser.tw` through the full module driver pipeline:
+
+| Test | Verifies |
+|------|----------|
+| `lexer_single_integer_token` | `(lex-source "42")` first token lexeme = `"42"` |
+| `lexer_parens_and_identifier` | `(lex-source "(foo)")` → 4 tokens |
+| `lexer_skips_whitespace` | `"  42  "` → 2 tokens (TkInteger + TkEOF) |
+| `lexer_skips_comment` | `"; comment\n42"` → 2 tokens |
+| `parser_integer_literal` | parse `"99"` → `(intlit-value expr) = 99` |
+| `parser_nested_call` | parse `"(+ 1 2)"` → `(length (callexpr-args expr)) = 2` |
+| `full_lex_parse_roundtrip` | All 8 modules + main.tw → `(main) = 42` |
+
 ## [0.2.0] — 2026-05-15
 
 ### Added (LANG57 — TW05-D compiler data model integration tests)

@@ -1,0 +1,227 @@
+; # lexer.tw — Self-Hosted Twig Lexer (LANG58 / TW05-E)
+;
+; The lexer converts a Twig source string into a flat list of `Token` records.
+; The final token is always `TkEOF`, which acts as a sentinel for the parser.
+;
+; ## Algorithm
+;
+; `lex-source` calls `lex-loop`, a tail-recursive helper that threads:
+;   - `src`  — the full source string (never mutated)
+;   - `pos`  — the current character index
+;   - `len`  — string-length(src), computed once upfront
+;   - `acc`  — accumulated tokens in *reverse* order (prepend is O(1))
+;
+; At EOF the accumulator is reversed to restore source order.
+;
+; ## ASCII dispatch
+;
+; Twig has no character literal syntax, and top-level `(define NAME value)`
+; forms (non-lambda) are not available as globals across module boundaries.
+; Instead, ASCII comparisons use inline literals throughout, with comments
+; identifying each code point:
+;
+;   (= c 40)   ; `(` — ASCII 40
+;   (= c 41)   ; `)` — ASCII 41
+;
+; ## Paren-balance strategy
+;
+; Each character category is handled by a small dedicated helper (lex-c,
+; lex-c-2, ..., lex-c-11) that tests one condition and tails into the next
+; helper.  Each helper is a simple, easy-to-verify `(if cond then else)`.
+
+(module compiler/lexer
+  (typed lenient)
+  (export lex-source)
+  (import compiler/span compiler/token))
+
+; ── Predicate helpers ─────────────────────────────────────────────────────────
+
+(define (is-digit? c)
+  ; ASCII 48 = '0', 57 = '9'
+  (and (>= c 48) (<= c 57)))
+
+(define (is-whitespace? c)
+  ; 32=space 10=\n 9=\t 13=\r
+  (or (= c 32) (= c 10) (= c 9) (= c 13)))
+
+(define (is-delimiter? c)
+  ; Delimiters: ( ) ; and whitespace
+  (or (= c 40) (= c 41) (= c 59) (is-whitespace? c)))
+
+; ── Span helper ───────────────────────────────────────────────────────────────
+
+(define (make-tok-span start end)
+  (make-span 0 start end))
+
+; ── Multi-character scan helpers ──────────────────────────────────────────────
+;
+; Each returns `(cons new-pos lexeme-string)`.
+
+; scan-integer: advance while digits; `start` may include a leading `-`.
+(define (scan-integer src pos len start)
+  (if (>= pos len)
+      (cons pos (substring src start pos))
+      (if (is-digit? (char->integer (string-ref src pos)))
+          (scan-integer src (+ pos 1) len start)
+          (cons pos (substring src start pos)))))
+
+; scan-identifier: advance until a delimiter is reached.
+(define (scan-identifier src pos len start)
+  (if (>= pos len)
+      (cons pos (substring src start pos))
+      (if (is-delimiter? (char->integer (string-ref src pos)))
+          (cons pos (substring src start pos))
+          (scan-identifier src (+ pos 1) len start))))
+
+; scan-string: advance from pos until a closing `"` (skip `\"`).
+; `start` is the index AFTER the opening `"`.
+; Returns (cons pos-after-closing-quote lexeme).
+(define (scan-string src pos len start)
+  (if (>= pos len)
+      (cons pos (substring src start pos))
+      (let* ((c (char->integer (string-ref src pos))))
+        ; 34 = `"`, 92 = `\`
+        (if (= c 34)
+            (cons (+ pos 1) (substring src start pos))
+            (if (and (= c 92) (< (+ pos 1) len))
+                (scan-string src (+ pos 2) len start)
+                (scan-string src (+ pos 1) len start))))))
+
+; skip-whitespace: advance past spaces/tabs/newlines.
+(define (skip-whitespace src pos len)
+  (if (>= pos len)
+      pos
+      (if (is-whitespace? (char->integer (string-ref src pos)))
+          (skip-whitespace src (+ pos 1) len)
+          pos)))
+
+; skip-comment: advance from `;` to end of line (or EOF).
+(define (skip-comment src pos len)
+  (if (>= pos len)
+      pos
+      ; 10 = newline
+      (if (= (char->integer (string-ref src pos)) 10)
+          (+ pos 1)
+          (skip-comment src (+ pos 1) len))))
+
+; ── Emit helper ───────────────────────────────────────────────────────────────
+;
+; Prepend a token to the accumulator and continue the lex loop.
+
+(define (emit src next-pos len acc tok)
+  (lex-loop src next-pos len (cons tok acc)))
+
+; ── Main lexer loop ───────────────────────────────────────────────────────────
+
+(define (lex-loop src pos len acc)
+  (if (>= pos len)
+      (reverse (cons (Token (TkEOF) "" (make-tok-span pos pos)) acc))
+      (let* ((c (char->integer (string-ref src pos))))
+        (lex-c src pos len acc c))))
+
+; ── lex-c through lex-c-11: one function per character category ──────────────
+;
+; Each function tests one condition; if not matched, tails into the next.
+; This keeps paren nesting trivially shallow.
+
+; 40 = `(`
+(define (lex-c src pos len acc c)
+  (if (= c 40)
+      (emit src (+ pos 1) len acc
+            (Token (TkLParen) "(" (make-tok-span pos (+ pos 1))))
+      (lex-c-2 src pos len acc c)))
+
+; 41 = `)`
+(define (lex-c-2 src pos len acc c)
+  (if (= c 41)
+      (emit src (+ pos 1) len acc
+            (Token (TkRParen) ")" (make-tok-span pos (+ pos 1))))
+      (lex-c-3 src pos len acc c)))
+
+; 39 = `'`
+(define (lex-c-3 src pos len acc c)
+  (if (= c 39)
+      (emit src (+ pos 1) len acc
+            (Token (TkQuote) "'" (make-tok-span pos (+ pos 1))))
+      (lex-c-4 src pos len acc c)))
+
+; 46 = `.`
+(define (lex-c-4 src pos len acc c)
+  (if (= c 46)
+      (emit src (+ pos 1) len acc
+            (Token (TkDot) "." (make-tok-span pos (+ pos 1))))
+      (lex-c-5 src pos len acc c)))
+
+; 58 = `:`
+(define (lex-c-5 src pos len acc c)
+  (if (= c 58)
+      (emit src (+ pos 1) len acc
+            (Token (TkColon) ":" (make-tok-span pos (+ pos 1))))
+      (lex-c-6 src pos len acc c)))
+
+; whitespace — skip
+(define (lex-c-6 src pos len acc c)
+  (if (is-whitespace? c)
+      (lex-loop src (skip-whitespace src pos len) len acc)
+      (lex-c-7 src pos len acc c)))
+
+; 59 = `;` — comment to end-of-line
+(define (lex-c-7 src pos len acc c)
+  (if (= c 59)
+      (lex-loop src (skip-comment src (+ pos 1) len) len acc)
+      (lex-c-8 src pos len acc c)))
+
+; 34 = `"` — string literal
+(define (lex-c-8 src pos len acc c)
+  (if (= c 34)
+      (let* ((result  (scan-string src (+ pos 1) len (+ pos 1)))
+             (end-pos (car result))
+             (lexeme  (cdr result)))
+        (emit src end-pos len acc
+              (Token (TkString) lexeme (make-tok-span pos end-pos))))
+      (lex-c-9 src pos len acc c)))
+
+; 35 = `#` — boolean (#t or #f)
+(define (lex-c-9 src pos len acc c)
+  (if (= c 35)
+      ; Peek at next character: 116='t', 102='f'
+      (let* ((next-c (if (< (+ pos 1) len)
+                         (char->integer (string-ref src (+ pos 1)))
+                         0))
+             (lex    (if (= next-c 116) "#t" "#f"))
+             (end    (if (< (+ pos 1) len) (+ pos 2) (+ pos 1))))
+        (emit src end len acc
+              (Token (TkBoolean) lex (make-tok-span pos end))))
+      (lex-c-10 src pos len acc c)))
+
+; 45 = `-` followed by digit — negative integer
+(define (lex-c-10 src pos len acc c)
+  (if (and (= c 45)
+           (< (+ pos 1) len)
+           (is-digit? (char->integer (string-ref src (+ pos 1)))))
+      (let* ((result  (scan-integer src (+ pos 2) len pos))
+             (end-pos (car result))
+             (lexeme  (cdr result)))
+        (emit src end-pos len acc
+              (Token (TkInteger) lexeme (make-tok-span pos end-pos))))
+      (lex-c-11 src pos len acc c)))
+
+; digit — positive integer
+(define (lex-c-11 src pos len acc c)
+  (if (is-digit? c)
+      (let* ((result  (scan-integer src (+ pos 1) len pos))
+             (end-pos (car result))
+             (lexeme  (cdr result)))
+        (emit src end-pos len acc
+              (Token (TkInteger) lexeme (make-tok-span pos end-pos))))
+      ; Catch-all: identifier (any non-delimiter sequence).
+      (let* ((result  (scan-identifier src (+ pos 1) len pos))
+             (end-pos (car result))
+             (lexeme  (cdr result)))
+        (emit src end-pos len acc
+              (Token (TkIdentifier) lexeme (make-tok-span pos end-pos))))))
+
+; ── Public API ────────────────────────────────────────────────────────────────
+
+(define (lex-source src)
+  (lex-loop src 0 (string-length src) (list)))
