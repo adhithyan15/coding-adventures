@@ -1,5 +1,24 @@
 # Changelog — twig-vm
 
+## [0.15.0] — 2026-05-15
+
+### Added (LANG57 — TW05-D record/union/match runtime smoke tests)
+
+Eight new tests in `#[cfg(test)] mod tw05d_smoke` that verify the record,
+union, and match runtime paths end-to-end after the `jmpif` → `jmp_if_false`
+bug fix in `twig-ir-compiler`:
+
+- **`record_construction_and_first_accessor`** — `(record Point (x:int)(y:int)) (point-x (Point 3 4))` → 3
+- **`record_second_field_accessor`** — `(point-y (Point 3 4))` → 4
+- **`union_match_first_variant`** — `(union Shape (Circle(r:int))(Rect(w:int)(h:int))) (match (Circle 5) ((Circle r) r) (_ 0))` → 5
+- **`union_match_second_variant`** — `(match (Rect 3 4) ((Circle r) 0) ((Rect w h) w))` → 3
+- **`union_match_wildcard_arm`** — `(union Color (Red)(Green)) (match (Green) (_ 99))` → 99
+- **`union_predicate_true_for_matching_variant`** — `(union T (A)(B)) (A? (A))` → truthy
+- **`union_predicate_false_for_other_variant`** — `(A? (B))` → falsy
+- **`match_bare_binding_arm`** — `(match 42 (n n))` → 42
+
+---
+
 ## [0.14.0] — 2026-05-14
 
 ### Added (LANG56 — Multi-File Module Driver entry points)
