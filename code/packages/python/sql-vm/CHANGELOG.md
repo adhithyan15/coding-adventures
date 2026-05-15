@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.24.0 — 2026-05-15
+
+### Added
+
+- **`StripTrailingColumns`** (`vm.py`) — New post-processing instruction that
+  removes the last `count` columns from `st.result.columns` and trims each row
+  in `st.result.rows` by the same count.  Used by the codegen to erase hidden
+  sort-key columns after `SortResult` has run.
+
+  Implements `_do_strip_trailing(ins, st)`:
+
+  1. Guards against `count ≤ 0` or `count ≥ len(columns)` (defensive noop).
+  2. Slices `st.result.columns = st.result.columns[:-count]`.
+  3. Rebuilds `st.result.rows` as `[row[:-count] for row in rows]` — an
+     O(n·w) operation but unavoidable without lazy column hiding.
+
+  The handler is placed between `SortResult` and `LimitResult` in the dispatch
+  order so that stripping happens after sorting and before any LIMIT trim.
+
 ## 1.23.0 — 2026-05-14
 
 ### Changed

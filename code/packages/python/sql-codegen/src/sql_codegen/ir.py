@@ -467,6 +467,41 @@ class DistinctResult:
     """Deduplicate rows in the result buffer."""
 
 
+@dataclass(frozen=True, slots=True)
+class StripTrailingColumns:
+    """Remove the last ``count`` columns from every row in the result buffer.
+
+    Used to strip hidden sort-key columns that were injected to support
+    ``ORDER BY <col>`` when ``<col>`` is not in the SELECT output list.
+
+    Why hidden columns exist
+    ------------------------
+
+    SQL allows ORDER BY to reference columns not in the SELECT list::
+
+        SELECT name FROM employees ORDER BY salary
+
+    The VM sorts the result buffer by column name.  If ``salary`` is not
+    in ``st.result.columns``, the lookup fails.  The codegen handles this
+    by extending the Project's output with the missing sort-key columns as
+    **hidden trailing entries** — they exist in the rows during the sort
+    phase and are stripped immediately afterwards.
+
+    The flow (for ``SELECT name FROM t ORDER BY salary``):
+
+    1. ``SetResultSchema(('name', 'salary'))``   — extended schema
+    2. Scan loop: each row emits ``(name_val, salary_val)``
+    3. ``SortResult([SortKey('salary', ASC)])``   — sorts correctly
+    4. ``StripTrailingColumns(count=1)``         — removes salary column
+       → ``st.result.columns = ('name',)``
+       → each row shrinks from 2 → 1 element
+
+    Invariant: ``count`` must not exceed ``len(st.result.columns)``.
+    """
+
+    count: int
+
+
 # ---- Mutation -----------------------------------------------------------
 
 
@@ -1232,7 +1267,7 @@ Instruction = (
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
-    | SortResult | LimitResult | DistinctResult
+    | SortResult | LimitResult | DistinctResult | StripTrailingColumns
     | ComputeWindowFunctions
     | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable | AlterTable
     | CreateIndex | DropIndex | OpenIndexScan

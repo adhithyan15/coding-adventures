@@ -67,6 +67,7 @@ from sql_planner import (
     NotIn,
     NotInSubquery,
     Project,
+    ProjectionItem,
     Rollback,
     RowIdRef,
     ScalarSubquery,
@@ -203,6 +204,7 @@ from .ir import (
     SetResultSchema,
     SortKey,
     SortResult,
+    StripTrailingColumns,
     UnaryOp,
     UnaryOpCode,
     UpdateAgg,
@@ -437,8 +439,6 @@ def _schema_of(p: LogicalPlan) -> tuple[str, ...]:
 
 
 def _projection_name(item: object) -> str:
-    from sql_planner import ProjectionItem
-
     if isinstance(item, ProjectionItem):
         if item.alias is not None:
             return item.alias
@@ -477,6 +477,8 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     # resolved to the output column name emitted by _compile_aggregate.
     agg_alias_map = _build_agg_alias_map(p)
     post: list[Instruction] = []
+    ir_sort_keys: tuple[SortKey, ...] | None = None   # set if Sort was peeled
+    planner_sort_keys: tuple[object, ...] | None = None  # original planner SortKey objects
     cur = p
     while True:
         match cur:
@@ -484,7 +486,9 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
                 post.append(LimitResult(count=c, offset=o))
                 cur = inner
             case Sort(input=inner, keys=keys):
-                post.append(SortResult(keys=tuple(_to_sort_key(k, agg_alias_map) for k in keys)))
+                ir_sort_keys = tuple(_to_sort_key(k, agg_alias_map) for k in keys)
+                planner_sort_keys = keys  # preserve original exprs for hidden-col injection
+                post.append(SortResult(keys=ir_sort_keys))
                 cur = inner
             case Distinct(input=inner):
                 post.append(DistinctResult())
@@ -496,7 +500,89 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     # (Sort, then Limit). We reverse so Sort runs before Limit.
     post.reverse()
 
+    # ── Hidden sort-key columns ───────────────────────────────────────────────
+    # SQL allows ORDER BY to reference columns not in the SELECT list, e.g.
+    #
+    #     SELECT name FROM employees ORDER BY salary DESC
+    #
+    # The VM's SortResult handler looks up each sort-key column by name in
+    # ``st.result.columns``; if the column is absent it raises ValueError.
+    #
+    # Fix: when the inner plan is a Project and a sort key references a column
+    # not in the Project's output, we extend the Project with that column as a
+    # **hidden trailing entry**.  The extended rows flow through the sort, then
+    # StripTrailingColumns removes the extras so callers only see the original
+    # SELECT columns.
+    #
+    # We also prepend SetResultSchema(extended_schema) so the VM's column list
+    # matches the actual row width during the scan/sort phase.  This overrides
+    # the SetResultSchema(original_schema) emitted by _compile_plan, which comes
+    # before the instructions returned here.
+    #
+    # This only applies when the inner plan is a Project.  For Aggregate and
+    # set-operation plans the sort key is always an output column (the planner
+    # enforces this), so no injection is needed.
+    hidden_col_names: list[str] = []
+    extended_schema: tuple[str, ...] | None = None
+
+    if ir_sort_keys is not None and isinstance(cur, Project) and not any(
+        isinstance(it.expr, Wildcard) for it in cur.items  # type: ignore[union-attr]
+    ):
+        # Skip injection entirely when the Project contains SELECT * (Wildcard).
+        # For SELECT *, all table columns appear in the output at runtime via
+        # ScanAllColumns; the sort key is always present, so no injection is
+        # needed.  More importantly, we cannot determine the output column names
+        # at compile time (they depend on the table schema), so we cannot
+        # identify which sort keys are "hidden".
+        from sql_planner.plan import SortKey as PlanSortKey
+
+        output_names: set[str] = {_projection_name(it) for it in cur.items}
+        seen: set[str] = set()
+
+        for ir_sk, plan_sk in zip(ir_sort_keys, planner_sort_keys or (), strict=False):
+            col = ir_sk.column
+            # Skip "?" (un-named expression sort keys) — can't inject by name.
+            # Skip columns already in the SELECT output — no injection needed.
+            # Skip duplicates (same hidden column in multiple ORDER BY terms).
+            if col == "?" or col in output_names or col in seen:
+                continue
+            if isinstance(plan_sk, PlanSortKey):
+                hidden_col_names.append(col)
+                seen.add(col)
+
+        if hidden_col_names:
+            # Compute the original schema before extending the Project.
+            orig_schema = tuple(_projection_name(it) for it in cur.items)
+            extended_schema = orig_schema + tuple(hidden_col_names)
+
+            # Build new ProjectionItems using the original planner expressions
+            # so _compile_expr generates the right LoadColumn instructions (with
+            # the correct table alias / cursor id), not a generic cursor-0 load.
+            extra_items: list[object] = []
+            for col in hidden_col_names:
+                # Find the matching planner SortKey to get its expression.
+                for ir_sk, plan_sk in zip(ir_sort_keys, planner_sort_keys or (), strict=False):
+                    if ir_sk.column == col and isinstance(plan_sk, PlanSortKey):
+                        extra_items.append(ProjectionItem(expr=plan_sk.expr, alias=col))
+                        break
+
+            cur = Project(
+                input=cur.input,
+                items=cur.items + tuple(extra_items),  # type: ignore[arg-type]
+            )
+
+            # Insert StripTrailingColumns immediately after SortResult in post.
+            sort_idx = next(
+                i for i, ins in enumerate(post) if isinstance(ins, SortResult)
+            )
+            post.insert(sort_idx + 1, StripTrailingColumns(count=len(hidden_col_names)))
+
     core = _compile_core(cur, ctx)
+
+    if extended_schema is not None:
+        # Override the result schema for the scan phase to include hidden cols.
+        core = [SetResultSchema(columns=extended_schema)] + core
+
     return core + post
 
 

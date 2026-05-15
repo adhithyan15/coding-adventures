@@ -2,6 +2,24 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.19.0] - 2026-05-15
+
+### Changed
+
+- **`cte_def` grammar rule** (`sql.grammar`, `_grammar.py`) — Extended `cte_def`
+  with an optional column-alias list between the CTE name and `AS`:
+
+      cte_def = NAME [ "(" NAME { "," NAME } ")" ] "AS" "(" query_stmt ")" ;
+
+  This allows CTE definitions to declare explicit column names, which is required
+  by many real-world SQL queries and is standard SQL syntax:
+
+      WITH RECURSIVE cnt(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM cnt WHERE n<5)
+      SELECT n FROM cnt;
+
+  Queries without a column list continue to work unchanged — the new `[ … ]`
+  group is optional.
+
 ## [0.18.0] - 2026-05-14
 
 ### Added
