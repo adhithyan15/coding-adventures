@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/forme-pipeline-config",
+  "version": "0.1.0",
+  "description": "Forme orchestrator: PipelineConfig types, validator, and TS-form config loader (FM03 §2).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "@coding-adventures/forme-capability": "file:../forme-capability",
+    "@coding-adventures/forme-errors": "file:../forme-errors"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
