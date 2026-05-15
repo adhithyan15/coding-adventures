@@ -27,6 +27,7 @@ pub const CAP_I2C_WRITE: u16 = 0x26;
 pub const CAP_I2C_READ: u16 = 0x27;
 pub const CAP_I2C_TRANSFER: u16 = 0x28;
 pub const CAP_SPI_OPEN: u16 = 0x29;
+pub const CAP_SPI_TRANSFER: u16 = 0x2A;
 pub const CAP_LED_MATRIX_FRAME: u16 = 0x30;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
@@ -45,6 +46,7 @@ const CAP_I2C_WRITE_CAP_U8: u8 = CAP_I2C_WRITE as u8;
 const CAP_I2C_READ_CAP_U8: u8 = CAP_I2C_READ as u8;
 const CAP_I2C_TRANSFER_U8: u8 = CAP_I2C_TRANSFER as u8;
 const CAP_SPI_OPEN_U8: u8 = CAP_SPI_OPEN as u8;
+const CAP_SPI_TRANSFER_U8: u8 = CAP_SPI_TRANSFER as u8;
 const CAP_LED_MATRIX_FRAME_U8: u8 = CAP_LED_MATRIX_FRAME as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -191,7 +193,7 @@ impl CapabilitySet {
             CAP_DAC_WRITE_U12 => self.dac,
             CAP_I2C_OPEN | CAP_I2C_WRITE_U8 | CAP_I2C_READ_U8 | CAP_I2C_WRITE | CAP_I2C_READ
             | CAP_I2C_TRANSFER => self.i2c,
-            CAP_SPI_OPEN => self.spi,
+            CAP_SPI_OPEN | CAP_SPI_TRANSFER => self.spi,
             CAP_LED_MATRIX_FRAME => self.led_matrix,
             _ => false,
         }
@@ -464,6 +466,7 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_I2C_READ_CAP_U8) | Op::CallU16(CAP_I2C_READ) => (3, 1),
         Op::CallU8(CAP_I2C_TRANSFER_U8) | Op::CallU16(CAP_I2C_TRANSFER) => (4, 1),
         Op::CallU8(CAP_SPI_OPEN_U8) | Op::CallU16(CAP_SPI_OPEN) => (1, 1),
+        Op::CallU8(CAP_SPI_TRANSFER_U8) | Op::CallU16(CAP_SPI_TRANSFER) => (4, 1),
         Op::CallU8(CAP_LED_MATRIX_FRAME_U8) | Op::CallU16(CAP_LED_MATRIX_FRAME) => (3, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
@@ -820,6 +823,35 @@ mod tests {
     }
 
     #[test]
+    fn validates_spi_transfer_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 5,
+            code: &[
+                0x20,
+                0x13,
+                0x0a,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x01,
+                0x12,
+                0x03,
+                0x40,
+                CAP_SPI_TRANSFER as u8,
+                0x50,
+            ],
+            const_pool: &[0x9f],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_spi(), 5).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_TRANSFER]);
+    }
+
+    #[test]
     fn rejects_pwm_write_without_capability() {
         let module = Module {
             flags: 0,
@@ -891,6 +923,35 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 2),
             Err(ValidateError::UnsupportedCapability(CAP_SPI_OPEN))
+        );
+    }
+
+    #[test]
+    fn rejects_spi_transfer_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 5,
+            code: &[
+                0x20,
+                0x13,
+                0x0a,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x01,
+                0x12,
+                0x03,
+                0x40,
+                CAP_SPI_TRANSFER as u8,
+                0x50,
+            ],
+            const_pool: &[0x9f],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 5),
+            Err(ValidateError::UnsupportedCapability(CAP_SPI_TRANSFER))
         );
     }
 

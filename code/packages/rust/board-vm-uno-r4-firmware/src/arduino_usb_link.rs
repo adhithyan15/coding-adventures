@@ -35,6 +35,7 @@ pub const BOARD_VM_UNO_R4_I2C_WRITE_SYMBOL: &str = "board_vm_uno_r4_i2c_write";
 pub const BOARD_VM_UNO_R4_I2C_READ_U8_SYMBOL: &str = "board_vm_uno_r4_i2c_read_u8";
 pub const BOARD_VM_UNO_R4_I2C_READ_SYMBOL: &str = "board_vm_uno_r4_i2c_read";
 pub const BOARD_VM_UNO_R4_I2C_TRANSFER_SYMBOL: &str = "board_vm_uno_r4_i2c_transfer";
+pub const BOARD_VM_UNO_R4_SPI_TRANSFER_SYMBOL: &str = "board_vm_uno_r4_spi_transfer";
 pub const RUST_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const RUST_USB_CONFIGURE_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
 pub const RUST_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
@@ -94,6 +95,7 @@ pub const ARDUINO_USB_LINK_SOURCES: &[ArduinoLinkSource] = &[
     ArduinoLinkSource::cxx("cores/arduino/FspTimer.cpp"),
     ArduinoLinkSource::cxx("cores/arduino/pwm.cpp"),
     ArduinoLinkSource::cxx("libraries/Wire/Wire.cpp"),
+    ArduinoLinkSource::cxx("libraries/SPI/SPI.cpp"),
     ArduinoLinkSource::cxx("cores/arduino/usb/USB.cpp"),
     ArduinoLinkSource::static_archive(UNO_R4_WIFI_FSP_ARCHIVE),
 ];
@@ -107,6 +109,7 @@ pub const ARDUINO_USB_LINK_INCLUDE_DIRS: &[&str] = &[
     "cores/arduino/api/deprecated",
     "cores/arduino/api/deprecated-avr-comp",
     "libraries/Wire",
+    "libraries/SPI",
     "variants/UNOWIFIR4",
     "variants/UNOWIFIR4/includes/ra/fsp/inc",
     "variants/UNOWIFIR4/includes/ra/fsp/inc/api",
@@ -237,6 +240,7 @@ mod tests {
         assert!(contains_source("cores/arduino/FspTimer.cpp"));
         assert!(contains_source("cores/arduino/pwm.cpp"));
         assert!(contains_source("libraries/Wire/Wire.cpp"));
+        assert!(contains_source("libraries/SPI/SPI.cpp"));
         assert!(contains_source("cores/arduino/tinyusb/tusb.c"));
         assert!(contains_source(
             "cores/arduino/tinyusb/class/cdc/cdc_device.c"
@@ -250,6 +254,7 @@ mod tests {
     fn link_manifest_carries_arduino_flags_needed_by_tinyusb() {
         assert!(ARDUINO_USB_LINK_INCLUDE_DIRS.contains(&"cores/arduino/tinyusb"));
         assert!(ARDUINO_USB_LINK_INCLUDE_DIRS.contains(&"cores/arduino/api/deprecated"));
+        assert!(ARDUINO_USB_LINK_INCLUDE_DIRS.contains(&"libraries/SPI"));
         assert!(ARDUINO_USB_LINK_INCLUDE_DIRS.contains(&"variants/UNOWIFIR4"));
         assert!(ARDUINO_USB_LINK_DEFINES.contains(&"ARDUINO_UNOWIFIR4"));
         assert!(ARDUINO_USB_LINK_DEFINES.contains(&"ARDUINO_ARCH_RENESAS_UNO"));
@@ -299,6 +304,10 @@ mod tests {
         assert_eq!(
             BOARD_VM_UNO_R4_I2C_TRANSFER_SYMBOL,
             "board_vm_uno_r4_i2c_transfer"
+        );
+        assert_eq!(
+            BOARD_VM_UNO_R4_SPI_TRANSFER_SYMBOL,
+            "board_vm_uno_r4_spi_transfer"
         );
         assert_eq!(
             BOARD_VM_UNO_R4_PWM_BRIDGE_SOURCE,

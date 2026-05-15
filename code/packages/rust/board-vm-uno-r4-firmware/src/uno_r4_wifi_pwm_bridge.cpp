@@ -4,6 +4,7 @@
 #include <new>
 
 #include "Arduino.h"
+#include "SPI.h"
 #include "Wire.h"
 #include "hal_data.h"
 #include "pwm.h"
@@ -21,6 +22,7 @@ constexpr uint32_t kAdcRawMax = (1u << BSP_FEATURE_ADC_MAX_RESOLUTION_BITS) - 1u
 constexpr uint32_t kAdcNormalizedMax = 65535u;
 constexpr uint32_t kAdcScanPollLimit = 100000u;
 constexpr uint16_t kI2cMax7BitAddress = 0x7Fu;
+constexpr uint8_t kHeaderSpiBus = 0;
 
 struct PwmSlot {
   uint8_t pin;
@@ -241,6 +243,14 @@ void operator delete[](void *, size_t) noexcept {}
 
 // Wire.cpp uses micros() only as a transaction timeout clock in this firmware.
 unsigned long micros() {
+  static unsigned long ticks = 0;
+  return ++ticks;
+}
+
+// SPI.cpp uses millis() only for SCI-mode transfer timeouts. The UNO R4 WiFi
+// header SPI bus is forced to the native SPI peripheral, but provide a bounded
+// monotonic clock so the Arduino SPI object links without the full core time.cpp.
+unsigned long millis() {
   static unsigned long ticks = 0;
   return ++ticks;
 }
@@ -590,6 +600,43 @@ extern "C" bool board_vm_uno_r4_i2c_transfer(uint8_t bus, uint16_t address, cons
     read_bytes[index] = static_cast<uint8_t>(value);
   }
 
+  *actual_read_len = read_len;
+  return true;
+}
+
+extern "C" bool board_vm_uno_r4_spi_transfer(uint8_t bus, uint8_t cs_pin, const uint8_t *write_bytes,
+                                             size_t write_len, uint8_t *read_bytes, size_t read_len,
+                                             size_t *actual_read_len) {
+  if (bus != kHeaderSpiBus || (write_bytes == nullptr && write_len != 0) ||
+      (read_bytes == nullptr && read_len != 0) || actual_read_len == nullptr || cs_pin >= PINCOUNT_fn()) {
+    return false;
+  }
+
+  if (R_IOPORT_PinCfg(nullptr, g_pin_cfg[cs_pin].pin, IOPORT_CFG_PORT_DIRECTION_OUTPUT) != FSP_SUCCESS ||
+      R_IOPORT_PinWrite(nullptr, g_pin_cfg[cs_pin].pin, BSP_IO_LEVEL_HIGH) != FSP_SUCCESS) {
+    return false;
+  }
+
+  SPI.begin();
+  SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
+  if (R_IOPORT_PinWrite(nullptr, g_pin_cfg[cs_pin].pin, BSP_IO_LEVEL_LOW) != FSP_SUCCESS) {
+    SPI.endTransaction();
+    return false;
+  }
+
+  for (size_t index = 0; index < write_len; ++index) {
+    static_cast<void>(SPI.transfer(write_bytes[index]));
+  }
+
+  for (size_t index = 0; index < read_len; ++index) {
+    read_bytes[index] = SPI.transfer(0x00);
+  }
+
+  bool cs_high = R_IOPORT_PinWrite(nullptr, g_pin_cfg[cs_pin].pin, BSP_IO_LEVEL_HIGH) == FSP_SUCCESS;
+  SPI.endTransaction();
+  if (!cs_high) {
+    return false;
+  }
   *actual_read_len = read_len;
   return true;
 }
