@@ -1,0 +1,11 @@
+[package]
+name        = "twig-module-driver"
+version     = "0.1.0"
+edition     = "2021"
+description = "LANG56 — multi-file module resolver for Twig.  Reads a root .tw file, resolves (import …) declarations recursively, compiles each module, and links with iir-linker into a single IIRModule ready for twig-vm."
+
+[dependencies]
+twig-parser       = { path = "../twig-parser" }
+twig-ir-compiler  = { path = "../twig-ir-compiler" }
+iir-linker        = { path = "../iir-linker" }
+interpreter-ir    = { path = "../interpreter-ir" }

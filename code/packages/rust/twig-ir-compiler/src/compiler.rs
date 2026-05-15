@@ -70,6 +70,7 @@ use interpreter_ir::{
     function::{FunctionTypeStatus, IIRFunction},
     instr::{IIRInstr, Operand},
     module::IIRModule,
+    module_exports::IIRExport,
     SourceLoc,
 };
 use lang_refined_types::{Kind, Predicate, RefinedType};
@@ -281,6 +282,27 @@ impl Compiler {
         }
     }
 
+    /// Pre-populate `fn_globals` with extern function names from other modules.
+    ///
+    /// Called by `twig-module-driver` (LANG56) before compilation so that
+    /// cross-module calls compile to `call` instructions rather than failing
+    /// with "unbound name".  The linker resolves the actual call targets.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use twig_ir_compiler::Compiler;
+    ///
+    /// let c = Compiler::new().with_extern_fns(&["double", "triple"]);
+    /// // Now the compiler will accept `(double x)` even without a local define.
+    /// ```
+    pub fn with_extern_fns(mut self, extern_fns: &[&str]) -> Self {
+        for name in extern_fns {
+            self.fn_globals.insert((*name).to_string());
+        }
+        self
+    }
+
     // ------------------------------------------------------------------
     // Top-level driver
     // ------------------------------------------------------------------
@@ -432,12 +454,36 @@ impl Compiler {
         };
         self.functions.push(main_fn);
 
+        // ── LANG56: populate exports from module_info ─────────────────────────
+        //
+        // When the program carries a `(module name (export f1 f2 ...))` clause,
+        // register each exported name as an `IIRExport` — but only for names
+        // that were actually compiled as top-level functions.  Value-defines,
+        // builtins, and undeclared names are silently skipped rather than
+        // erroring; the type-checker enforces that exported names exist.
+        //
+        // Non-root modules (those without a top-level expression body) will
+        // have their `entry_point` cleared by `compile_module_tree` in
+        // `twig-module-driver`.  We always produce `entry_point = Some("main")`
+        // here; the driver overwrites it for library modules.
+        let exports: Vec<IIRExport> = program
+            .module_info
+            .as_ref()
+            .map(|mi| {
+                mi.exports
+                    .iter()
+                    .filter(|name| self.fn_globals.contains(*name))
+                    .map(|name| IIRExport::new(name))
+                    .collect()
+            })
+            .unwrap_or_default();
+
         Ok(IIRModule {
             name: module_name.to_string(),
             functions: self.functions,
             entry_point: Some("main".to_string()),
             language: "twig".to_string(),
-            exports: Vec::new(),
+            exports,
             imports: Vec::new(),
         })
     }

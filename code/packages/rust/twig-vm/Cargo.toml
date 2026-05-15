@@ -1,17 +1,18 @@
 [package]
 name = "twig-vm"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2021"
-description = "LANG47 + LANG52 + LANG55 — string heap objects (LangString), string/char builtins, host I/O, and higher-order list operations (map, filter, fold-left, fold-right)"
+description = "LANG47 + LANG52 + LANG55 + LANG56 — string heap objects (LangString), string/char builtins, host I/O, higher-order list ops, and multi-file module driver entry points (run_file, run_module_tree)"
 
 [dependencies]
-twig-ir-compiler  = { path = "../twig-ir-compiler" }
-twig-parser       = { path = "../twig-parser" }
-twig-lexer        = { path = "../twig-lexer" }
-lispy-runtime     = { path = "../lispy-runtime" }
-lang-runtime-core = { path = "../lang-runtime-core" }
-interpreter-ir    = { path = "../interpreter-ir" }
-serde_json        = "1"
+twig-ir-compiler   = { path = "../twig-ir-compiler" }
+twig-parser        = { path = "../twig-parser" }
+twig-lexer         = { path = "../twig-lexer" }
+twig-module-driver = { path = "../twig-module-driver" }
+lispy-runtime      = { path = "../lispy-runtime" }
+lang-runtime-core  = { path = "../lang-runtime-core" }
+interpreter-ir     = { path = "../interpreter-ir" }
+serde_json         = "1"
 
 [[bin]]
 name = "twig-vm"
