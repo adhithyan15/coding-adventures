@@ -1,5 +1,25 @@
 # Changelog — twig-module-driver
 
+## [0.4.0] — 2026-05-15
+
+### Added (LANG59 — TW05-F self-hosted IIR emitter integration tests)
+
+New `#[cfg(test)] mod tw05f_tests` with 6 tests exercising `compiler/emit.tw`
+(the self-hosted IIR emitter) through the full module driver pipeline.
+`copy_all_tw_modules` updated to include `"emit"`.
+
+| Test | Verifies |
+|------|----------|
+| `emit_intlit_one_instruction` | emit `(IntLit 42 sp)` → 1 instruction |
+| `emit_call_plus_1_2` | emit `(CallExpr (VarRef "+") [IntLit 1, IntLit 2])` → 3 instructions |
+| `emit_if_expr_count` | emit `(IfExpr (BoolLit #t) (IntLit 1) (IntLit 2))` → 9 instructions |
+| `emit_let_binding_count` | emit `(LetExpr [("x", IntLit 1)] (VarRef "x"))` → 1 instruction |
+| `emit_begin_sequence_count` | emit `(BeginExpr [IntLit 1, IntLit 2, IntLit 3])` → 3 instructions |
+| `full_lex_parse_emit_roundtrip` | All 9 modules + main.tw → `(main) = 42` |
+
+`full_lex_parse_roundtrip` (tw05e_tests) updated: comment clarified to reflect
+that main.tw now runs the full lex → parse → emit pipeline (still returns 42).
+
 ## [0.3.0] — 2026-05-15
 
 ### Added (LANG58 — TW05-E self-hosted lexer + parser integration tests)
