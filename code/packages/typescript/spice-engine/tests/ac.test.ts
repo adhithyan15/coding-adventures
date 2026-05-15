@@ -9,10 +9,12 @@ import {
   complexAbs,
   complexPhase,
   currentSource,
+  currentSourceWithAc,
   inductor,
   resistor,
   vcvs,
   voltageSource,
+  voltageSourceWithAc,
 } from "../src/index.js";
 
 function expectClose(actual: number | undefined, expected: number): void {
@@ -89,6 +91,45 @@ describe("acSweep", () => {
     expect(n1).not.toBeUndefined();
     expectClose(n1!.real, 1.0);
     expectClose(n1!.imag, 0.0);
+  });
+
+  it("uses explicit voltage-source AC magnitude and phase separately from DC bias", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSourceWithAc("Vin", "vin", "0", 10.0, 2.0, 90.0));
+    circuit.add(resistor("R1", "vin", "out", 1_000.0));
+    circuit.add(resistor("R2", "out", "0", 1_000.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 10);
+
+    expect(points).toHaveLength(1);
+    const vin = points[0].voltage("vin");
+    const out = points[0].voltage("out");
+    expect(vin).not.toBeUndefined();
+    expect(out).not.toBeUndefined();
+    expectClose(vin!.real, 0.0);
+    expectClose(vin!.imag, 2.0);
+    expectClose(out!.real, 0.0);
+    expectClose(out!.imag, 1.0);
+  });
+
+  it("zeros sources without AC specs when any explicit AC source is present", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vbias", "bias", "0", 5.0));
+    circuit.add(currentSourceWithAc("Iac", "0", "out", 0.0, 1.0e-3, 90.0));
+    circuit.add(resistor("R1", "bias", "out", 1_000.0));
+    circuit.add(resistor("R2", "out", "0", 1_000.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 10);
+
+    expect(points).toHaveLength(1);
+    const bias = points[0].voltage("bias");
+    const out = points[0].voltage("out");
+    expect(bias).not.toBeUndefined();
+    expect(out).not.toBeUndefined();
+    expectClose(bias!.real, 0.0);
+    expectClose(bias!.imag, 0.0);
+    expectClose(out!.real, 0.0);
+    expectClose(out!.imag, 0.5);
   });
 
   it("applies VCVS gain in AC analysis", () => {

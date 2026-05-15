@@ -1,4 +1,4 @@
-import { dcOp } from "@coding-adventures/spice-engine";
+import { acSweep, dcOp } from "@coding-adventures/spice-engine";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -57,6 +57,35 @@ G1 out 0 in 0 2m
       { kind: "dc", sourceName: "Vstep", start: 0.0, stop: 1.0, step: 0.5 },
       { kind: "ac", mode: "dec", points: 10, startHz: 1.0e3, stopHz: 1.0e6 },
     ]);
+  });
+
+  it("parses independent-source AC specs separately from DC bias", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 10 AC 2 90
+Vbias bias 0 5
+R1 in out 1k
+R2 out 0 1k
+.ac dec 10 1k 1k
+`);
+
+    const vin = parsed.circuit.elements()[0];
+    expect(vin).toMatchObject({
+      kind: "voltage-source",
+      voltage: 10.0,
+      ac: { magnitude: 2.0, phaseDegrees: 90.0 },
+    });
+    const bias = parsed.circuit.elements()[1];
+    expect(bias).toMatchObject({ kind: "voltage-source", voltage: 5.0 });
+
+    const points = acSweep(parsed.circuit, 1_000.0, 1_000.0, 10);
+    const out = points[0].voltage("out");
+    const biasVoltage = points[0].voltage("bias");
+    expect(out).not.toBeUndefined();
+    expect(biasVoltage).not.toBeUndefined();
+    expect(out!.real).toBeCloseTo(0.0, 9);
+    expect(out!.imag).toBeCloseTo(1.0, 9);
+    expect(biasVoltage!.real).toBeCloseTo(0.0, 9);
+    expect(biasVoltage!.imag).toBeCloseTo(0.0, 9);
   });
 
   it("parses VCVS elements into operating-point circuits", () => {
