@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-apple-m1-simulator"
+version = "0.1.0"
+description = "Apple M1 (AArch64 + NEON/AdvSIMD, 2020) behavioral simulator — Layer 07z"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-simulator-protocol",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/apple_m1_simulator"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "../simulator-protocol/src"]
+addopts = "--cov=apple_m1_simulator --cov-report=term-missing --cov-fail-under=80"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501", "E701", "E702"]
