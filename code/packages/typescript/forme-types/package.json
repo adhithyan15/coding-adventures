@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-types",
+  "version": "0.1.0",
+  "description": "Forme kernel: shared TypeScript types — Kinds, KindDescriptors, branded identity types, JSON utilities. The type system every Forme stage speaks (FM01 §2).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
