@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/forme-stage",
+  "version": "0.1.0",
+  "description": "Forme kernel: Stage<In, Out> interface, defineStage helper, StageContext + every capability-gated API surface, plus default in-memory implementations of the un-gated facilities (logger, clock, cache, event bus, telemetry). FM01 §3-4.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-errors": "file:../forme-errors",
+    "@coding-adventures/forme-capability": "file:../forme-capability"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
