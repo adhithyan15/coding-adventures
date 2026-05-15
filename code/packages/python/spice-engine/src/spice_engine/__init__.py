@@ -1,6 +1,7 @@
 """spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC + DC sweep + .SENS + .MC + .NOISE + controlled sources + time-varying sources)."""
 
 from spice_engine.elements import (
+    AcSource,
     BJT,
     CCCS,
     CCVS,
@@ -52,6 +53,7 @@ __version__ = "0.12.0"
 __all__ = [
     "AcPoint",
     "AcResult",
+    "AcSource",
     "BJT",
     "CCCS",
     "CCVS",

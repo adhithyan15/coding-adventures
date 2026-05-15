@@ -8,6 +8,7 @@ from dataclasses import fields as dataclass_fields
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
+    AcSource,
     BJT,
     CCCS,
     CCVS,
@@ -76,6 +77,13 @@ class ModelCard:
     name: str
     kind: str
     params: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class _SourceSpec:
+    dc_value: float
+    waveform: Waveform | None = None
+    ac: AcSource | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -240,12 +248,16 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         return Inductor(name, fields[1], fields[2], parse_value(fields[3]))
     if prefix == "V":
         _require_min_fields(fields, 4, "voltage source")
-        voltage, waveform = _parse_source_value(fields[3:])
-        return VoltageSource(name, fields[1], fields[2], voltage, waveform)
+        source = _parse_source_value(fields[3:])
+        return VoltageSource(
+            name, fields[1], fields[2], source.dc_value, source.waveform, source.ac
+        )
     if prefix == "I":
         _require_min_fields(fields, 4, "current source")
-        current, waveform = _parse_source_value(fields[3:])
-        return CurrentSource(name, fields[1], fields[2], current, waveform)
+        source = _parse_source_value(fields[3:])
+        return CurrentSource(
+            name, fields[1], fields[2], source.dc_value, source.waveform, source.ac
+        )
     if prefix == "D":
         _require_fields(fields, 4, "diode")
         model = models.get(fields[3].lower())
@@ -432,21 +444,35 @@ def _element_prefix(name: str) -> str:
     return local_name[0].upper()
 
 
-def _parse_source_value(fields: list[str]) -> tuple[float, Waveform | None]:
+def _parse_source_value(fields: list[str]) -> _SourceSpec:
     if not fields:
         raise NetlistParseError("source is missing a value")
     if fields[0].upper() == "DC":
         if len(fields) < 2:
             raise NetlistParseError("DC source form requires a value")
-        return parse_value(fields[1]), None
+        return _SourceSpec(parse_value(fields[1]), ac=_parse_ac_suffix(fields[2:]))
+    if fields[0].upper() == "AC":
+        return _SourceSpec(0.0, ac=_parse_ac_suffix(fields))
     if len(fields) == 1 and "(" in fields[0]:
         waveform = _parse_waveform(fields[0])
-        return waveform(0.0), waveform
+        return _SourceSpec(waveform(0.0), waveform)
     if fields[0].upper().startswith(("PWL(", "SIN(", "PULSE(", "EXP(")):
         joined = " ".join(fields)
         waveform = _parse_waveform(joined)
-        return waveform(0.0), waveform
-    return parse_value(fields[0]), None
+        return _SourceSpec(waveform(0.0), waveform)
+    return _SourceSpec(parse_value(fields[0]), ac=_parse_ac_suffix(fields[1:]))
+
+
+def _parse_ac_suffix(fields: list[str]) -> AcSource | None:
+    if not fields:
+        return None
+    if fields[0].upper() != "AC":
+        raise NetlistParseError(f"unsupported source suffix {fields[0]!r}")
+    if len(fields) not in {2, 3}:
+        raise NetlistParseError("AC source form requires magnitude and optional phase")
+    magnitude = parse_value(fields[1])
+    phase = parse_value(fields[2]) if len(fields) == 3 else 0.0
+    return AcSource(magnitude=magnitude, phase_degrees=phase)
 
 
 def _parse_waveform(token: str) -> Waveform:
