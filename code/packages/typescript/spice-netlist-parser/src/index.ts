@@ -9,6 +9,7 @@ import {
   cccs,
   ccvs,
   currentSource,
+  currentSourceWithAc,
   currentSourceWithWaveform,
   diode,
   dcOp,
@@ -18,6 +19,7 @@ import {
   vccs,
   vcvs,
   voltageSource,
+  voltageSourceWithAc,
   voltageSourceWithWaveform,
   type Element,
   type MosfetLevel1Params,
@@ -100,6 +102,15 @@ interface SubcktDefinition {
   readonly pins: string[];
   readonly body: Statement[];
   readonly lineNumber: number;
+}
+
+interface SourceSpec {
+  readonly dcValue: number;
+  readonly waveform?: Waveform;
+  readonly ac?: {
+    readonly magnitude: number;
+    readonly phaseDegrees: number;
+  };
 }
 
 const VALUE_RE = /^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)([a-zA-Z]*)\s*$/;
@@ -346,17 +357,49 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
   }
   if (prefix === "V") {
     requireMinFields(fields, 4, "voltage source");
-    const [voltage, waveform] = parseSourceValue(fields.slice(3));
-    return waveform === undefined
-      ? voltageSource(name, fields[1], fields[2], voltage)
-      : voltageSourceWithWaveform(name, fields[1], fields[2], voltage, waveform);
+    const source = parseSourceValue(fields.slice(3));
+    if (source.waveform !== undefined) {
+      return voltageSourceWithWaveform(
+        name,
+        fields[1],
+        fields[2],
+        source.dcValue,
+        source.waveform,
+      );
+    }
+    return source.ac === undefined
+      ? voltageSource(name, fields[1], fields[2], source.dcValue)
+      : voltageSourceWithAc(
+          name,
+          fields[1],
+          fields[2],
+          source.dcValue,
+          source.ac.magnitude,
+          source.ac.phaseDegrees,
+        );
   }
   if (prefix === "I") {
     requireMinFields(fields, 4, "current source");
-    const [current, waveform] = parseSourceValue(fields.slice(3));
-    return waveform === undefined
-      ? currentSource(name, fields[1], fields[2], current)
-      : currentSourceWithWaveform(name, fields[1], fields[2], current, waveform);
+    const source = parseSourceValue(fields.slice(3));
+    if (source.waveform !== undefined) {
+      return currentSourceWithWaveform(
+        name,
+        fields[1],
+        fields[2],
+        source.dcValue,
+        source.waveform,
+      );
+    }
+    return source.ac === undefined
+      ? currentSource(name, fields[1], fields[2], source.dcValue)
+      : currentSourceWithAc(
+          name,
+          fields[1],
+          fields[2],
+          source.dcValue,
+          source.ac.magnitude,
+          source.ac.phaseDegrees,
+        );
   }
   if (prefix === "D") {
     requireFields(fields, 4, "diode");
@@ -577,7 +620,7 @@ function elementPrefix(name: string): string {
   return localName[0].toUpperCase();
 }
 
-function parseSourceValue(fields: readonly string[]): readonly [number, Waveform | undefined] {
+function parseSourceValue(fields: readonly string[]): SourceSpec {
   if (fields.length === 0) {
     throw new NetlistParseError("source is missing a value");
   }
@@ -585,17 +628,52 @@ function parseSourceValue(fields: readonly string[]): readonly [number, Waveform
     if (fields.length < 2) {
       throw new NetlistParseError("DC source form requires a value");
     }
-    return [parseValue(fields[1]), undefined];
+    return {
+      dcValue: parseValue(fields[1]),
+      ac: parseSourceAc(fields.slice(2)),
+    };
+  }
+  if (fields[0].toUpperCase() === "AC") {
+    return {
+      dcValue: 0.0,
+      ac: parseSourceAc(fields),
+    };
   }
   if (fields.length === 1 && fields[0].includes("(")) {
     const waveform = parseWaveform(fields[0]);
-    return [waveform.valueAt(0.0), waveform];
+    return { dcValue: waveform.valueAt(0.0), waveform };
   }
   if (/^(PWL|SIN|PULSE|EXP)\(/i.test(fields[0])) {
     const waveform = parseWaveform(fields.join(" "));
-    return [waveform.valueAt(0.0), waveform];
+    return { dcValue: waveform.valueAt(0.0), waveform };
   }
-  return [parseValue(fields[0]), undefined];
+  return {
+    dcValue: parseValue(fields[0]),
+    ac: parseSourceAc(fields.slice(1)),
+  };
+}
+
+function parseSourceAc(
+  fields: readonly string[],
+): { readonly magnitude: number; readonly phaseDegrees: number } | undefined {
+  if (fields.length === 0) {
+    return undefined;
+  }
+  if (fields[0].toUpperCase() !== "AC") {
+    throw new NetlistParseError(
+      `unsupported source suffix ${JSON.stringify(fields.join(" "))}`,
+    );
+  }
+  if (fields.length < 2) {
+    throw new NetlistParseError("AC source form requires a magnitude");
+  }
+  if (fields.length > 3) {
+    throw new NetlistParseError("AC source form accepts magnitude and optional phase");
+  }
+  return {
+    magnitude: parseValue(fields[1]),
+    phaseDegrees: fields.length >= 3 ? parseValue(fields[2]) : 0.0,
+  };
 }
 
 function parseWaveform(token: string): Waveform {

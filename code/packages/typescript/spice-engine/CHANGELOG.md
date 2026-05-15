@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add independent-source AC phasors with separate DC bias for AC analysis.
+  Voltage and current sources can now carry an explicit AC magnitude and
+  phase; once any explicit AC source is present, other independent sources are
+  treated as AC-zero bias sources.
 - Add DC operating-point convergence metadata and opt-in controls, with
   nonlinear Gmin/source stepping fallback aids for difficult bias points.
 - Add Level-1 NMOS/PMOS MOSFET elements with Newton-linearized DC operating

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Parse independent-source `AC <magnitude> [phase]` specs, including combined
+  `DC <bias> AC <magnitude> [phase]` forms, and pass the AC phasor through to
+  TypeScript SPICE engine AC analysis while preserving DC bias.
+
 ## 0.1.6
 
 - Add SPICE `M` MOSFET element parsing via `.model <name> NMOS(...)` and
