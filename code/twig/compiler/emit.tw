@@ -1,0 +1,383 @@
+; # emit.tw — Self-Hosted Twig IIR Emitter (LANG59 / TW05-F)
+;
+; The emitter walks an `Expr` AST (from `compiler/ast`) and produces a list of
+; `IirInstr` records (from `compiler/iir-types`) via the `IirBuilder` API
+; (from `compiler/iir-builder`).
+;
+; ## Design: functional builder threading
+;
+; Each emit function takes `(expr b env)` and returns `(cons b2 reg)`:
+;   b2  — updated builder with new instructions prepended
+;   reg — register symbol holding the result of this expression
+;
+; The builder accumulates instructions in reverse order (O(1) prepend).
+; Call `(finalise-builder b)` to get the instruction list in source order.
+;
+; ## Environment: association list
+;
+; `env` is a list of `(cons name reg)` pairs, where `name` is a string
+; and `reg` is a register symbol (from `alloc-slot`).  Lookup uses `string=?`.
+;
+; ## Gate-chain dispatch
+;
+; `Expr` variants are imported from `compiler/ast`; their integer tags are NOT
+; propagated across module boundaries.  We cannot use `(match expr ...)`.
+; Instead, each predicate (`IntLit?`, `BoolLit?`, etc.) is tested in a chain
+; of small functions, each handling one case and tailing into the next.
+;
+; ## Label naming
+;
+; `alloc-label` returns an integer ID.  Label names are strings: `"L0"`, `"L1"`.
+; These appear as operands in `jmp_if_false`, `jmp`, and `label` instructions.
+;
+; ## Example: emitting `(+ 1 2)`
+;
+;   (let* ((b0  (new-builder "f"))
+;          (e   (CallExpr (VarRef "+" sp) (list (IntLit 1 sp) (IntLit 2 sp)) sp))
+;          (r   (emit-expr e b0 (env-empty)))
+;          (b1  (car r))
+;          (ins (finalise-builder b1)))
+;     (length ins))   ; → 3
+;
+; The three instructions are:
+;   (IirInstr "const"        r0  (list 1)        (TInt)  sp)
+;   (IirInstr "const"        r1  (list 2)        (TInt)  sp)
+;   (IirInstr "call_builtin" r2  (list "+" r0 r1) (TAny) sp)
+
+(module compiler/emit
+  (typed lenient)
+  (export emit-expr env-empty env-lookup env-extend)
+  (import compiler/span
+          compiler/ast
+          compiler/iir-types
+          compiler/iir-builder))
+
+; ── Environment helpers ───────────────────────────────────────────────────────
+;
+; An environment is a Twig association list: ((name . reg) ...).
+; `name` is a string; `reg` is a register symbol from `alloc-slot`.
+
+; env-empty: start with no bindings.
+(define (env-empty) nil)
+
+; env-lookup: search for `name` by string equality.
+; Returns the register symbol, or nil if not found.
+(define (env-lookup env name)
+  (if (null? env)
+      nil
+      (if (string=? (car (car env)) name)
+          (cdr (car env))
+          (env-lookup (cdr env) name))))
+
+; env-extend: prepend a new (name . reg) binding.
+; Shadowing is intentional — newer bindings hide older ones.
+(define (env-extend env name reg)
+  (cons (cons name reg) env))
+
+; ── Span helper ───────────────────────────────────────────────────────────────
+;
+; All emitted instructions use a dummy span (0 0 0).  Source-accurate spans
+; would require threading the original token spans through the AST, which is
+; deferred to TW05-H.
+
+(define (emit-span)
+  (make-span 0 0 0))
+
+; ── Label name ────────────────────────────────────────────────────────────────
+;
+; Convert an integer label ID (from alloc-label) to the string "LN" used in
+; jmp / jmp_if_false / label instructions.
+
+(define (label-name id)
+  (string-append "L" (number->string id)))
+
+; ── emit-expr: gate-chain dispatch ───────────────────────────────────────────
+;
+; Each gate tests one Expr variant predicate and either handles it or tails
+; into the next gate.  Returns (cons updated-builder result-register).
+
+; Gate 1: IntLit — emit a const int instruction.
+(define (emit-expr expr b env)
+  (if (IntLit? expr)
+      (emit-intlit expr b)
+      (emit-expr-2 expr b env)))
+
+; Gate 2: BoolLit — emit a const bool instruction.
+(define (emit-expr-2 expr b env)
+  (if (BoolLit? expr)
+      (emit-boollit expr b)
+      (emit-expr-3 expr b env)))
+
+; Gate 3: StrLit — emit a const str instruction.
+(define (emit-expr-3 expr b env)
+  (if (StrLit? expr)
+      (emit-strlit expr b)
+      (emit-expr-4 expr b env)))
+
+; Gate 4: NilLit — emit a call_builtin make_nil instruction.
+(define (emit-expr-4 expr b env)
+  (if (NilLit? expr)
+      (emit-nillit b)
+      (emit-expr-5 expr b env)))
+
+; Gate 5: VarRef — look up the register in env (no new instruction).
+(define (emit-expr-5 expr b env)
+  (if (VarRef? expr)
+      (emit-varref expr b env)
+      (emit-expr-6 expr b env)))
+
+; Gate 6: IfExpr — conditional branch with jmp_if_false.
+(define (emit-expr-6 expr b env)
+  (if (IfExpr? expr)
+      (emit-ifexpr expr b env)
+      (emit-expr-7 expr b env)))
+
+; Gate 7: BeginExpr — emit each sub-expression, return the last register.
+(define (emit-expr-7 expr b env)
+  (if (BeginExpr? expr)
+      (emit-beginexpr expr b env)
+      (emit-expr-8 expr b env)))
+
+; Gate 8: LetExpr — emit bindings sequentially, extend env, emit body.
+(define (emit-expr-8 expr b env)
+  (if (LetExpr? expr)
+      (emit-letexpr expr b env)
+      (emit-expr-9 expr b env)))
+
+; Gate 9: CallExpr — emit arguments, emit call_builtin.
+; Fallback for any unrecognised form: emit nil.
+(define (emit-expr-9 expr b env)
+  (if (CallExpr? expr)
+      (emit-callexpr expr b env)
+      (emit-nillit b)))
+
+; ── emit-intlit ───────────────────────────────────────────────────────────────
+;
+; (IntLit value span) → %rN = const value : TInt
+;
+; The `srcs` list contains the integer value directly.  The type-hint is TInt.
+
+(define (emit-intlit expr b)
+  (let* ((p     (alloc-slot b))
+         (b2    (car p))
+         (dest  (car (cdr p)))
+         (val   (intlit-value expr))
+         (sp    (emit-span))
+         (instr (IirInstr "const" dest (list val) (TInt) sp))
+         (b3    (append-instr b2 instr)))
+    (cons b3 dest)))
+
+; ── emit-boollit ──────────────────────────────────────────────────────────────
+;
+; (BoolLit value span) → %rN = const value : TBool
+
+(define (emit-boollit expr b)
+  (let* ((p     (alloc-slot b))
+         (b2    (car p))
+         (dest  (car (cdr p)))
+         (val   (boollit-value expr))
+         (sp    (emit-span))
+         (instr (IirInstr "const" dest (list val) (TBool) sp))
+         (b3    (append-instr b2 instr)))
+    (cons b3 dest)))
+
+; ── emit-strlit ───────────────────────────────────────────────────────────────
+;
+; (StrLit value span) → %rN = const value : TStr
+
+(define (emit-strlit expr b)
+  (let* ((p     (alloc-slot b))
+         (b2    (car p))
+         (dest  (car (cdr p)))
+         (val   (strlit-value expr))
+         (sp    (emit-span))
+         (instr (IirInstr "const" dest (list val) (TStr) sp))
+         (b3    (append-instr b2 instr)))
+    (cons b3 dest)))
+
+; ── emit-nillit ───────────────────────────────────────────────────────────────
+;
+; (NilLit span) → %rN = call_builtin make_nil : TAny
+;
+; Note: `b` is the builder at the call site; `expr` is not needed here since
+; NilLit carries only a span and we use the dummy span.
+
+(define (emit-nillit b)
+  (let* ((p     (alloc-slot b))
+         (b2    (car p))
+         (dest  (car (cdr p)))
+         (sp    (emit-span))
+         (instr (IirInstr "call_builtin" dest (list "make_nil") (TAny) sp))
+         (b3    (append-instr b2 instr)))
+    (cons b3 dest)))
+
+; ── emit-varref ───────────────────────────────────────────────────────────────
+;
+; (VarRef name span) → look up name in env, return existing register.
+;
+; No instruction is emitted.  If the name is not in the environment (undefined
+; variable), fall back to emitting nil (undefined-variable error handling is
+; deferred to TW05-H).
+
+(define (emit-varref expr b env)
+  (let* ((name (varref-name expr))
+         (reg  (env-lookup env name)))
+    (if (null? reg)
+        (emit-nillit b)
+        (cons b reg))))
+
+; ── emit-ifexpr ───────────────────────────────────────────────────────────────
+;
+; (IfExpr cond then-br else-br span) → conditional branch sequence:
+;
+;   emit cond         → %r_cond
+;   jmp_if_false %r_cond L_else
+;   emit then-br      → %r_then
+;   call_builtin _move %r_then → %r_result
+;   jmp L_end
+;   label L_else
+;   emit else-br      → %r_else
+;   call_builtin _move %r_else → %r_result
+;   label L_end
+;
+; Returns (cons b_final r_result).
+;
+; Instruction count for single-literal arms: 9
+;   1 (cond) + 1 (jmp_if_false) + 1 (then) + 1 (_move) + 1 (jmp) +
+;   1 (label else) + 1 (else) + 1 (_move) + 1 (label end)
+
+(define (emit-ifexpr expr b env)
+  (let* ((cond-r   (emit-expr (ifexpr-cond expr) b env))
+         (b1       (car cond-r))
+         (r-cond   (cdr cond-r))
+         (res-p    (alloc-slot b1))
+         (b2       (car res-p))
+         (r-result (car (cdr res-p)))
+         (else-p   (alloc-label b2))
+         (b3       (car else-p))
+         (else-id  (car (cdr else-p)))
+         (end-p    (alloc-label b3))
+         (b4       (car end-p))
+         (end-id   (car (cdr end-p)))
+         (l-else   (label-name else-id))
+         (l-end    (label-name end-id))
+         (sp       (emit-span))
+         (b5       (append-instr b4
+                     (IirInstr "jmp_if_false" nil
+                               (list r-cond l-else) (TVoid) sp)))
+         (then-r   (emit-expr (ifexpr-then-br expr) b5 env))
+         (b6       (car then-r))
+         (r-then   (cdr then-r))
+         (b7       (append-instr b6
+                     (IirInstr "call_builtin" r-result
+                               (list "_move" r-then) (TAny) sp)))
+         (b8       (append-instr b7
+                     (IirInstr "jmp" nil (list l-end) (TVoid) sp)))
+         (b9       (append-instr b8
+                     (IirInstr "label" nil (list l-else) (TVoid) sp)))
+         (else-r   (emit-expr (ifexpr-else-br expr) b9 env))
+         (b10      (car else-r))
+         (r-else   (cdr else-r))
+         (b11      (append-instr b10
+                     (IirInstr "call_builtin" r-result
+                               (list "_move" r-else) (TAny) sp)))
+         (b12      (append-instr b11
+                     (IirInstr "label" nil (list l-end) (TVoid) sp))))
+    (cons b12 r-result)))
+
+; ── emit-beginexpr ────────────────────────────────────────────────────────────
+;
+; (BeginExpr exprs span) → emit each sub-expression in order.
+; Returns the register of the last sub-expression.
+; If exprs is empty, emits nil.
+
+(define (emit-beginexpr expr b env)
+  (let* ((exprs (beginexpr-exprs expr)))
+    (if (null? exprs)
+        (emit-nillit b)
+        (emit-begin-list exprs b env nil))))
+
+; emit-begin-list: tail-recursive loop that threads the builder through
+; each sub-expression, keeping track of the last register seen.
+; Returns (cons b2 last-reg).
+
+(define (emit-begin-list exprs b env last-reg)
+  (if (null? exprs)
+      (cons b last-reg)
+      (let* ((result (emit-expr (car exprs) b env))
+             (b2     (car result))
+             (reg    (cdr result)))
+        (emit-begin-list (cdr exprs) b2 env reg))))
+
+; ── emit-letexpr ──────────────────────────────────────────────────────────────
+;
+; (LetExpr bindings body span) → emit bindings sequentially (let* semantics),
+; each binding's register enters env before the next binding's RHS is emitted.
+; Then emit body with the fully extended environment.
+;
+; `bindings` is a list of (cons name rhs-expr) pairs, as produced by the parser.
+
+(define (emit-letexpr expr b env)
+  (let* ((bindings (letexpr-bindings expr))
+         (body     (letexpr-body expr))
+         (env-b    (emit-let-bindings bindings b env))
+         (b-out    (car env-b))
+         (env2     (cdr env-b)))
+    (emit-expr body b-out env2)))
+
+; emit-let-bindings: process each (name . rhs) pair in order.
+; Returns (cons updated-builder extended-env).
+
+(define (emit-let-bindings bindings b env)
+  (if (null? bindings)
+      (cons b env)
+      (let* ((binding (car bindings))
+             (name    (car binding))
+             (rhs     (cdr binding))
+             (rhs-r   (emit-expr rhs b env))
+             (b2      (car rhs-r))
+             (reg     (cdr rhs-r))
+             (env2    (env-extend env name reg)))
+        (emit-let-bindings (cdr bindings) b2 env2))))
+
+; ── emit-callexpr ─────────────────────────────────────────────────────────────
+;
+; (CallExpr fn-expr args span) → emit each argument, then emit call_builtin.
+;
+; For TW05-F scope, `fn-expr` must be a VarRef; the name becomes the first
+; operand to `call_builtin`.  Non-VarRef callees (closures, higher-order calls)
+; fall back to emitting nil and are addressed in TW05-G.
+;
+; Example: (+ r0 r1) →
+;   (IirInstr "call_builtin" r2 (list "+" r0 r1) (TAny) sp)
+
+(define (emit-callexpr expr b env)
+  (let* ((fn-expr (callexpr-fn-expr expr))
+         (args    (callexpr-args expr))
+         (sp      (emit-span)))
+    (if (VarRef? fn-expr)
+        (let* ((fn-name (varref-name fn-expr))
+               (args-r  (emit-args args b env nil))
+               (b2      (car args-r))
+               (regs    (cdr args-r))
+               (res-p   (alloc-slot b2))
+               (b3      (car res-p))
+               (dest    (car (cdr res-p)))
+               (srcs    (cons fn-name regs))
+               (instr   (IirInstr "call_builtin" dest srcs (TAny) sp))
+               (b4      (append-instr b3 instr)))
+          (cons b4 dest))
+        (emit-nillit b))))
+
+; emit-args: emit each argument expression and collect result registers.
+; Arguments are accumulated in reverse order and then reversed before returning,
+; so the register list matches the source order.
+; Returns (cons updated-builder list-of-registers).
+
+(define (emit-args args b env acc)
+  (if (null? args)
+      (cons b (reverse acc))
+      (let* ((result (emit-expr (car args) b env))
+             (b2     (car result))
+             (reg    (cdr result)))
+        (emit-args (cdr args) b2 env (cons reg acc)))))
