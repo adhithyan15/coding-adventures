@@ -1,0 +1,11 @@
+[package]
+name = "dsp-fft"
+version = "0.1.0"
+edition = "2021"
+description = "DSP01 Phase 2: scalar reference FFT/IFFT for the DSP layer. Pure-Rust radix-2 Cooley-Tukey on interleaved [re, im] f32 buffers. The reference these scalar implementations provide is the oracle Phase 3 (matrix-ir lowering) tests against."
+license = "MIT"
+
+[dependencies]
+dsp-complex = { path = "../dsp-complex" }
+
+[dev-dependencies]
