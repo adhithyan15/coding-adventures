@@ -13,12 +13,14 @@ import {
   diode,
   dcOp,
   inductor,
+  mosfet,
   resistor,
   vccs,
   vcvs,
   voltageSource,
   voltageSourceWithWaveform,
   type Element,
+  type MosfetLevel1Params,
   type Waveform,
 } from "@coding-adventures/spice-engine";
 
@@ -279,6 +281,54 @@ function parseModelParams(paramsText: string): ReadonlyMap<string, number> {
   return params;
 }
 
+function parseElementParams(tokens: readonly string[], label: string): ReadonlyMap<string, number> {
+  const params = new Map<string, number>();
+  for (const token of tokens) {
+    const equals = token.indexOf("=");
+    if (equals <= 0 || equals === token.length - 1) {
+      throw new NetlistParseError(`invalid ${label} parameter syntax ${JSON.stringify(token)}`);
+    }
+    params.set(token.slice(0, equals).toUpperCase(), parseValue(token.slice(equals + 1)));
+  }
+  return params;
+}
+
+const MOSFET_PARAM_ALIASES = new Map<string, keyof MosfetLevel1Params>([
+  ["VTO", "VT0"],
+  ["NSUB", "N_SUB"],
+  ["N", "N_SUB"],
+  ["TNOM", "T_NOM"],
+]);
+
+function mosfetParams(
+  modelParams: ReadonlyMap<string, number>,
+  instanceParams: ReadonlyMap<string, number>,
+): Partial<MosfetLevel1Params> {
+  const params: Record<string, number> = {};
+  for (const [name, value] of [...modelParams, ...instanceParams]) {
+    const key = MOSFET_PARAM_ALIASES.get(name) ?? (name as keyof MosfetLevel1Params);
+    if (isMosfetParam(key)) {
+      params[key] = value;
+    }
+  }
+  return params;
+}
+
+function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
+  return [
+    "VT0",
+    "KP",
+    "LAMBDA",
+    "GAMMA",
+    "PHI",
+    "W",
+    "L",
+    "IS",
+    "N_SUB",
+    "T_NOM",
+  ].includes(name);
+}
+
 function parseElement(fields: readonly string[], models: ReadonlyMap<string, ModelCard>): Element {
   const name = fields[0];
   const prefix = elementPrefix(name);
@@ -351,6 +401,29 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("IS") ?? 1.0e-14,
       model.params.get("BF") ?? model.params.get("BETA_F") ?? 100.0,
       model.params.get("VT") ?? 0.02585,
+    );
+  }
+  if (prefix === "M") {
+    requireMinFields(fields, 6, "MOSFET");
+    const model = models.get(fields[5].toLowerCase());
+    if (model === undefined) {
+      throw new NetlistParseError(
+        `unknown model ${JSON.stringify(fields[5])} for MOSFET ${JSON.stringify(name)}`,
+      );
+    }
+    if (model.kind !== "NMOS" && model.kind !== "PMOS") {
+      throw new NetlistParseError(
+        `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "NMOS" or "PMOS"`,
+      );
+    }
+    return mosfet(
+      name,
+      fields[1],
+      fields[2],
+      fields[3],
+      fields[4],
+      model.kind,
+      mosfetParams(model.params, parseElementParams(fields.slice(6), "MOSFET")),
     );
   }
   if (prefix === "G") {
@@ -461,6 +534,11 @@ function mapSubcktFields(
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
     mapped[3] = mapSubcktNode(fields[3], instanceName, nodeMap);
+  } else if (prefix === "M") {
+    requireMinFields(fields, 5, "subcircuit MOSFET");
+    for (let index = 1; index < 5; index++) {
+      mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
+    }
   } else if (prefix === "E" || prefix === "G") {
     requireMinFields(fields, 5, "subcircuit controlled source");
     for (let index = 1; index < 5; index++) {
