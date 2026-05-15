@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add Level-1 NMOS/PMOS MOSFET elements with Newton-linearized DC operating
+  point support and zero-bias small-signal AC/transfer participation.
 - Add Ebers-Moll-style BJT elements with Newton-linearized DC operating-point
   support and zero-bias small-signal conductance/transconductance for AC and
   transfer analysis.
