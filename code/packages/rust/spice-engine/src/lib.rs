@@ -341,6 +341,7 @@ pub enum Element {
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
     Diode(Diode),
+    Bjt(Bjt),
     Vccs(Vccs),
     Vcvs(Vcvs),
     Cccs(Cccs),
@@ -557,6 +558,66 @@ impl Diode {
             anode: anode.into(),
             cathode: cathode.into(),
             saturation_current,
+            thermal_voltage,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum BjtPolarity {
+    Npn,
+    Pnp,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Bjt {
+    pub name: String,
+    pub collector: String,
+    pub base: String,
+    pub emitter: String,
+    pub polarity: BjtPolarity,
+    pub saturation_current: f64,
+    pub forward_beta: f64,
+    pub thermal_voltage: f64,
+}
+
+impl Bjt {
+    pub fn new(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+    ) -> Self {
+        Self::with_model(
+            name,
+            collector,
+            base,
+            emitter,
+            BjtPolarity::Npn,
+            1.0e-14,
+            100.0,
+            0.02585,
+        )
+    }
+
+    pub fn with_model(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            collector: collector.into(),
+            base: base.into(),
+            emitter: emitter.into(),
+            polarity,
+            saturation_current,
+            forward_beta,
             thermal_voltage,
         }
     }
@@ -1510,6 +1571,11 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
             "saturation_current".to_string(),
             diode.saturation_current,
         )),
+        Element::Bjt(bjt) => Some((
+            bjt.name.clone(),
+            "saturation_current".to_string(),
+            bjt.saturation_current,
+        )),
         Element::Vccs(source) => Some((
             source.name.clone(),
             "transconductance_siemens".to_string(),
@@ -1536,6 +1602,7 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::VoltageSource(source) => source.voltage += delta,
         Element::CurrentSource(source) => source.current += delta,
         Element::Diode(diode) => diode.saturation_current += delta,
+        Element::Bjt(bjt) => bjt.saturation_current += delta,
         Element::Vccs(source) => source.transconductance_siemens += delta,
         Element::Vcvs(source) => source.gain += delta,
         Element::Cccs(source) => source.gain += delta,
@@ -1625,6 +1692,12 @@ fn randomized_element(
             varied.saturation_current =
                 randomized_value(varied.saturation_current, tolerance, distribution, rng);
             Element::Diode(varied)
+        }
+        Element::Bjt(bjt) => {
+            let mut varied = bjt.clone();
+            varied.saturation_current =
+                randomized_value(varied.saturation_current, tolerance, distribution, rng);
+            Element::Bjt(varied)
         }
         Element::Vccs(source) => {
             let mut varied = source.clone();
@@ -1738,10 +1811,10 @@ fn solve_linear_circuit(
         });
     }
 
-    let has_diode = circuit
+    let has_nonlinear = circuit
         .elements()
         .iter()
-        .any(|element| matches!(element, Element::Diode(_)));
+        .any(|element| matches!(element, Element::Diode(_) | Element::Bjt(_)));
     let mut operating_point = vec![0.0; matrix_size];
     let mut solution = solve_linear_circuit_at_operating_point(
         circuit,
@@ -1754,7 +1827,7 @@ fn solve_linear_circuit(
         matrix_size,
         &operating_point,
     )?;
-    if !has_diode {
+    if !has_nonlinear {
         return Ok(solution);
     }
 
@@ -1827,6 +1900,9 @@ fn solve_linear_circuit_at_operating_point(
             }
             Element::Diode(diode) => {
                 stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
+            }
+            Element::Bjt(bjt) => {
+                stamp_bjt(bjt, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
             Element::Vccs(source) => stamp_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_vcvs(
@@ -1908,6 +1984,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             | Element::Capacitor(_)
             | Element::Inductor(_)
             | Element::Diode(_)
+            | Element::Bjt(_)
             | Element::Vccs(_)
             | Element::Vcvs(_)
             | Element::Cccs(_)
@@ -1974,6 +2051,7 @@ fn build_ac_matrix(
                     Complex::new(diode.saturation_current / diode.thermal_voltage, 0.0),
                 );
             }
+            Element::Bjt(bjt) => stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix)?,
             Element::Vccs(source) => stamp_ac_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_ac_vcvs(
                 source,
@@ -2050,6 +2128,7 @@ fn build_small_signal_matrix(
                     diode.saturation_current / diode.thermal_voltage,
                 );
             }
+            Element::Bjt(bjt) => stamp_bjt_small_signal(bjt, node_indices, &mut matrix)?,
             Element::Vccs(source) => {
                 stamp_vccs(source, node_indices, &mut matrix)?;
             }
@@ -2133,6 +2212,11 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
             Element::Diode(diode) => {
                 insert_node(&mut names, &diode.anode);
                 insert_node(&mut names, &diode.cathode);
+            }
+            Element::Bjt(bjt) => {
+                insert_node(&mut names, &bjt.collector);
+                insert_node(&mut names, &bjt.base);
+                insert_node(&mut names, &bjt.emitter);
             }
             Element::Vccs(source) => {
                 insert_node(&mut names, &source.positive);
@@ -2241,6 +2325,9 @@ fn find_input_source<'a>(
             }
             Element::Diode(diode) if diode.name == input_source => {
                 return Err(input_source_type_error(input_source, "diode"));
+            }
+            Element::Bjt(bjt) if bjt.name == input_source => {
+                return Err(input_source_type_error(input_source, "BJT"));
             }
             Element::Vccs(source) if source.name == input_source => {
                 return Err(input_source_type_error(input_source, "VCCS"));
@@ -2521,6 +2608,114 @@ fn stamp_diode(
     Ok(())
 }
 
+fn stamp_bjt(
+    bjt: &Bjt,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_bjt(bjt)?;
+    let collector = node_index(node_indices, &bjt.collector);
+    let base = node_index(node_indices, &bjt.base);
+    let emitter = node_index(node_indices, &bjt.emitter);
+    let base_voltage = base.map_or(0.0, |index| operating_point[index]);
+    let emitter_voltage = emitter.map_or(0.0, |index| operating_point[index]);
+    let junction_voltage = match bjt.polarity {
+        BjtPolarity::Npn => base_voltage - emitter_voltage,
+        BjtPolarity::Pnp => emitter_voltage - base_voltage,
+    };
+    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let exp_value = exponent.exp();
+    let collector_current = bjt.saturation_current * (exp_value - 1.0);
+    let gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let gpi = gm / bjt.forward_beta;
+    let base_current = collector_current / bjt.forward_beta;
+    let equivalent_collector_current = collector_current - gm * junction_voltage;
+    let equivalent_base_current = base_current - gpi * junction_voltage;
+
+    match bjt.polarity {
+        BjtPolarity::Npn => {
+            stamp_conductance(matrix, base, emitter, gpi);
+            stamp_transconductance(matrix, collector, emitter, base, emitter, gm);
+            stamp_equivalent_current_source(rhs, base, emitter, equivalent_base_current);
+            stamp_equivalent_current_source(rhs, collector, emitter, equivalent_collector_current);
+        }
+        BjtPolarity::Pnp => {
+            stamp_conductance(matrix, emitter, base, gpi);
+            stamp_transconductance(matrix, emitter, collector, emitter, base, gm);
+            stamp_equivalent_current_source(rhs, emitter, base, equivalent_base_current);
+            stamp_equivalent_current_source(rhs, emitter, collector, equivalent_collector_current);
+        }
+    }
+    Ok(())
+}
+
+fn stamp_equivalent_current_source(
+    rhs: &mut [f64],
+    positive: Option<usize>,
+    negative: Option<usize>,
+    current: f64,
+) {
+    if let Some(index) = positive {
+        rhs[index] -= current;
+    }
+    if let Some(index) = negative {
+        rhs[index] += current;
+    }
+}
+
+fn stamp_bjt_small_signal(
+    bjt: &Bjt,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+) -> Result<(), SpiceError> {
+    validate_bjt(bjt)?;
+    let collector = node_index(node_indices, &bjt.collector);
+    let base = node_index(node_indices, &bjt.base);
+    let emitter = node_index(node_indices, &bjt.emitter);
+    let gm = bjt.saturation_current / bjt.thermal_voltage;
+    let gpi = gm / bjt.forward_beta;
+    match bjt.polarity {
+        BjtPolarity::Npn => {
+            stamp_conductance(matrix, base, emitter, gpi);
+            stamp_transconductance(matrix, collector, emitter, base, emitter, gm);
+        }
+        BjtPolarity::Pnp => {
+            stamp_conductance(matrix, emitter, base, gpi);
+            stamp_transconductance(matrix, emitter, collector, emitter, base, gm);
+        }
+    }
+    Ok(())
+}
+
+fn stamp_ac_bjt_small_signal(
+    bjt: &Bjt,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    validate_bjt(bjt)?;
+    let collector = node_index(node_indices, &bjt.collector);
+    let base = node_index(node_indices, &bjt.base);
+    let emitter = node_index(node_indices, &bjt.emitter);
+    let gm = Complex::new(bjt.saturation_current / bjt.thermal_voltage, 0.0);
+    let gpi = Complex::new(
+        bjt.saturation_current / bjt.thermal_voltage / bjt.forward_beta,
+        0.0,
+    );
+    match bjt.polarity {
+        BjtPolarity::Npn => {
+            stamp_complex_conductance(matrix, base, emitter, gpi);
+            stamp_complex_transconductance(matrix, collector, emitter, base, emitter, gm);
+        }
+        BjtPolarity::Pnp => {
+            stamp_complex_conductance(matrix, emitter, base, gpi);
+            stamp_complex_transconductance(matrix, emitter, collector, emitter, base, gm);
+        }
+    }
+    Ok(())
+}
+
 fn validate_reactive_elements(circuit: &Circuit) -> Result<(), SpiceError> {
     for element in circuit.elements() {
         match element {
@@ -2542,6 +2737,28 @@ fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
     if !diode.thermal_voltage.is_finite() || diode.thermal_voltage <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
+            reason: "thermal voltage must be finite and positive".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
+    if !bjt.saturation_current.is_finite() || bjt.saturation_current <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "saturation current must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.forward_beta.is_finite() || bjt.forward_beta <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward beta must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.thermal_voltage.is_finite() || bjt.thermal_voltage <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
             reason: "thermal voltage must be finite and positive".to_string(),
         });
     }

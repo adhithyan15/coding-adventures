@@ -1,6 +1,6 @@
 use spice_engine::{
-    dc_op, dc_sweep, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, Inductor, Resistor,
-    SinWaveform, SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
+    dc_op, dc_sweep, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element,
+    Inductor, Resistor, SinWaveform, SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -161,6 +161,66 @@ fn dc_diode_solves_forward_biased_operating_point() {
     let out = result.voltage("out").unwrap();
     assert!(out > 0.1, "expected forward-biased output, got {out}");
     assert!(out < 0.7, "expected diode drop below source, got {out}");
+}
+
+#[test]
+fn dc_bjt_solves_npn_emitter_follower_operating_point() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.7,
+    )));
+    circuit.add(Element::Bjt(Bjt::with_model(
+        "Q1",
+        "vcc",
+        "base",
+        "out",
+        BjtPolarity::Npn,
+        1.0e-13,
+        120.0,
+        0.026,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+    let out = result.voltage("out").unwrap();
+    assert!(
+        out > 0.0,
+        "expected emitter current through load, got {out}"
+    );
+    assert!(out < 0.7, "expected emitter below base bias, got {out}");
+}
+
+#[test]
+fn dc_bjt_solves_pnp_pullup_operating_point() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 4.3,
+    )));
+    circuit.add(Element::Bjt(Bjt::with_model(
+        "Q1",
+        "out",
+        "base",
+        "vcc",
+        BjtPolarity::Pnp,
+        1.0e-13,
+        100.0,
+        0.026,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+    let out = result.voltage("out").unwrap();
+    assert!(out > 0.0, "expected pullup current through load, got {out}");
 }
 
 #[test]

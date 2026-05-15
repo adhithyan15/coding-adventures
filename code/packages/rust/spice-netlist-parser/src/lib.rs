@@ -1,8 +1,9 @@
 use std::{collections::HashMap, fmt};
 
 use spice_engine::{
-    Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform, Inductor,
-    PulseWaveform, PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
+    Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
+    Inductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource,
+    Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -437,6 +438,38 @@ fn parse_element(
                 *model.params.get("VT").unwrap_or(&0.02585),
             )))
         }
+        'Q' => {
+            require_fields(fields, 5, "BJT")?;
+            let model = models.get(&fields[4].to_ascii_lowercase()).ok_or_else(|| {
+                NetlistParseError::new(format!("unknown model {:?} for BJT {:?}", fields[4], name))
+            })?;
+            let polarity = match model.kind.as_str() {
+                "NPN" => BjtPolarity::Npn,
+                "PNP" => BjtPolarity::Pnp,
+                _ => {
+                    return Err(NetlistParseError::new(format!(
+                        "model {:?} has kind {:?}, expected \"NPN\" or \"PNP\"",
+                        model.name, model.kind
+                    )));
+                }
+            };
+            let forward_beta = model
+                .params
+                .get("BF")
+                .or_else(|| model.params.get("BETA_F"))
+                .copied()
+                .unwrap_or(100.0);
+            Ok(Element::Bjt(Bjt::with_model(
+                name,
+                &fields[1],
+                &fields[2],
+                &fields[3],
+                polarity,
+                *model.params.get("IS").unwrap_or(&1.0e-14),
+                forward_beta,
+                *model.params.get("VT").unwrap_or(&0.02585),
+            )))
+        }
         'G' => {
             require_fields(fields, 6, "VCCS")?;
             Ok(Element::Vccs(Vccs::new(
@@ -604,6 +637,12 @@ fn map_subckt_fields(
             require_min_fields(fields, 3, "subcircuit element")?;
             mapped[1] = map_subckt_node(&fields[1], instance_name, node_map);
             mapped[2] = map_subckt_node(&fields[2], instance_name, node_map);
+        }
+        'Q' => {
+            require_min_fields(fields, 4, "subcircuit BJT")?;
+            for index in 1..4 {
+                mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
+            }
         }
         'E' | 'G' => {
             require_min_fields(fields, 5, "subcircuit controlled source")?;

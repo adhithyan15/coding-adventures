@@ -1,4 +1,4 @@
-use spice_engine::{dc_op, Element};
+use spice_engine::{dc_op, BjtPolarity, Element};
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, NetlistParseError, OpAnalysis,
     TranAnalysis,
@@ -198,6 +198,64 @@ Rload out 0 1k
     let out = result.voltage("out").unwrap();
     assert!(out > 0.1, "expected forward-biased output, got {out}");
     assert!(out < 0.7, "expected diode drop below source, got {out}");
+}
+
+#[test]
+fn parses_bjt_models_into_operating_point_circuits() {
+    let parsed = parse_netlist(
+        r#"
+.model fast NPN(IS=1e-13 BF=120 VT=26m)
+Vcc vcc 0 DC 5
+Vbase base 0 DC 0.7
+Q1 vcc base out fast
+Rload out 0 1k
+.op
+"#,
+    )
+    .unwrap();
+
+    let model = parsed.models.get("fast").unwrap();
+    assert_eq!(model.name, "fast");
+    assert_eq!(model.kind, "NPN");
+    assert_close(*model.params.get("IS").unwrap(), 1.0e-13);
+    assert_close(*model.params.get("BF").unwrap(), 120.0);
+    assert_close(*model.params.get("VT").unwrap(), 26.0e-3);
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[2] else {
+        panic!("expected BJT");
+    };
+    assert_eq!(bjt.name, "Q1");
+    assert_eq!(bjt.collector, "vcc");
+    assert_eq!(bjt.base, "base");
+    assert_eq!(bjt.emitter, "out");
+    assert_eq!(bjt.polarity, BjtPolarity::Npn);
+    assert_close(bjt.saturation_current, 1.0e-13);
+    assert_close(bjt.forward_beta, 120.0);
+    assert_close(bjt.thermal_voltage, 26.0e-3);
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    let out = result.voltage("out").unwrap();
+    assert!(out > 0.0, "expected emitter follower output, got {out}");
+    assert!(out < 0.7, "expected output below base bias, got {out}");
+}
+
+#[test]
+fn parses_pnp_bjt_model_aliases() {
+    let parsed = parse_netlist(
+        r#"
+.model pullup PNP(IS=2e-14 BETA_F=80 VT=27m)
+Q1 vcc base out pullup
+"#,
+    )
+    .unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_eq!(bjt.polarity, BjtPolarity::Pnp);
+    assert_close(bjt.saturation_current, 2.0e-14);
+    assert_close(bjt.forward_beta, 80.0);
+    assert_close(bjt.thermal_voltage, 27.0e-3);
 }
 
 #[test]
@@ -406,6 +464,28 @@ Xlim in out limiter
 }
 
 #[test]
+fn expands_subcircuit_bjt_nodes_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.model fast NPN(IS=1e-13 BF=120)
+.subckt follower c b e
+Qdrive c b e fast
+.ends follower
+Xbuf vcc in out follower
+"#,
+    )
+    .unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_eq!(bjt.name, "Xbuf.Qdrive");
+    assert_eq!(bjt.collector, "vcc");
+    assert_eq!(bjt.base, "in");
+    assert_eq!(bjt.emitter, "out");
+}
+
+#[test]
 fn scopes_subcircuit_internal_nodes_by_instance() {
     let parsed = parse_netlist(
         r#"
@@ -439,7 +519,7 @@ fn parses_engineering_suffixes() {
 
 #[test]
 fn rejects_unsupported_elements_with_line_numbers() {
-    let err = parse_netlist("\nQ1 c b e model\n").unwrap_err();
+    let err = parse_netlist("\nZ1 c b e model\n").unwrap_err();
 
     assert!(err.to_string().contains("line 2: unsupported element"));
     assert_error_type(err);
@@ -461,6 +541,24 @@ fn rejects_non_diode_models_for_diode_elements() {
     assert!(err
         .to_string()
         .contains("line 2: model \"amp\" has kind \"NPN\", expected \"D\""));
+}
+
+#[test]
+fn rejects_unknown_bjt_models() {
+    let err = parse_netlist("Q1 c b e missing\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 1: unknown model \"missing\" for BJT \"Q1\""));
+}
+
+#[test]
+fn rejects_non_bjt_models_for_bjt_elements() {
+    let err = parse_netlist(".model clamp D(IS=1e-12)\nQ1 c b e clamp\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 2: model \"clamp\" has kind \"D\", expected \"NPN\" or \"PNP\""));
 }
 
 #[test]
