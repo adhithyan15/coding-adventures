@@ -1,5 +1,26 @@
 # Changelog — twig-vm
 
+## [0.16.0] — 2026-05-15
+
+### Changed (LANG62 — TW05-I first self-compilation check)
+
+**`MAX_DISPATCH_DEPTH` bumped from 256 to 4096** (`dispatch.rs`).
+
+The self-hosted Twig compiler's `lex-loop` recurses once per character of
+input.  `span.tw` is ≈ 2426 bytes; with the old limit the full-pipeline
+integration test returned `Run(DepthExceeded)` before finishing the lex
+phase.  4096 gives ample headroom for any realistic `.tw` source file
+(current compiler modules range from ~500 to ~3500 chars after stripping
+comments).
+
+The `deep_recursion_surfaces_depth_exceeded` test now spawns a dedicated
+thread with 128 MiB of stack (via `std::thread::Builder::new().stack_size`).
+With the old 256-frame limit the default 8 MiB test thread was sufficient;
+with 4096 frames, 4096 nested Rust `dispatch` frames are required before the
+guard fires — conservatively up to 40 MiB of host stack.  The extra thread
+keeps the test self-contained and avoids a `SIGABRT` stack overflow on
+macOS/Linux.
+
 ## [0.15.0] — 2026-05-15
 
 ### Added (LANG57 — TW05-D record/union/match runtime smoke tests)
