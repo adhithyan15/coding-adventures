@@ -27,7 +27,9 @@
 - Add AC noise analysis with resistor Johnson-Nyquist source PSDs, adjoint
   output contributions, input-referred PSD, and default log sweeps.
 - Add DC small-signal transfer-function analysis with input/output impedance.
-- Add AC small-signal frequency sweeps for linear RC/RL circuits.
+- Add AC small-signal frequency sweeps for linear RC/RL circuits, explicit AC
+  source phasors, and DC-bias operating-point linearization for nonlinear
+  devices when AC source specs are present.
 - Add backward-Euler transient analysis for linear RC circuits.
 - Add ideal-short DC and backward-Euler transient support for inductors.
 - Add transient source waveforms for independent voltage and current sources:

@@ -1,4 +1,4 @@
-use spice_engine::{dc_op, BjtPolarity, Element, MosfetType};
+use spice_engine::{ac_sweep, dc_op, BjtPolarity, Element, MosfetType};
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, NetlistParseError, OpAnalysis,
     TranAnalysis,
@@ -94,6 +94,40 @@ G1 out 0 in 0 2m
             }),
         ]
     );
+}
+
+#[test]
+fn parses_source_ac_magnitude_phase_separate_from_dc_bias() {
+    let parsed = parse_netlist(
+        r#"
+Vbias in 0 DC 2.5 AC 1 90
+Iprobe out 0 AC 2m
+R1 in out 1k
+R2 out 0 1k
+.ac lin 1 1k 1k
+"#,
+    )
+    .unwrap();
+
+    let Element::VoltageSource(voltage) = &parsed.circuit.elements()[0] else {
+        panic!("expected voltage source");
+    };
+    assert_close(voltage.voltage, 2.5);
+    let voltage_ac = voltage.ac.unwrap();
+    assert_close(voltage_ac.magnitude, 1.0);
+    assert_close(voltage_ac.phase_degrees, 90.0);
+
+    let Element::CurrentSource(current) = &parsed.circuit.elements()[1] else {
+        panic!("expected current source");
+    };
+    assert_close(current.current, 0.0);
+    let current_ac = current.ac.unwrap();
+    assert_close(current_ac.magnitude, 2.0e-3);
+    assert_close(current_ac.phase_degrees, 0.0);
+
+    let points = ac_sweep(&parsed.circuit, 1_000.0, 1_000.0, 1).unwrap();
+    assert_eq!(points.len(), 1);
+    assert!(points[0].voltage("out").unwrap().imag > 0.0);
 }
 
 #[test]

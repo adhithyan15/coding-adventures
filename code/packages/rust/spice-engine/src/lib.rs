@@ -451,6 +451,7 @@ pub struct VoltageSource {
     pub positive: String,
     pub negative: String,
     pub voltage: f64,
+    pub ac: Option<AcSource>,
     pub waveform: Option<Waveform>,
 }
 
@@ -466,6 +467,25 @@ impl VoltageSource {
             positive: positive.into(),
             negative: negative.into(),
             voltage,
+            ac: None,
+            waveform: None,
+        }
+    }
+
+    pub fn with_ac(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        voltage: f64,
+        magnitude: f64,
+        phase_degrees: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            voltage,
+            ac: Some(AcSource::new(magnitude, phase_degrees)),
             waveform: None,
         }
     }
@@ -482,6 +502,7 @@ impl VoltageSource {
             positive: positive.into(),
             negative: negative.into(),
             voltage,
+            ac: None,
             waveform: Some(waveform),
         }
     }
@@ -493,6 +514,7 @@ pub struct CurrentSource {
     pub positive: String,
     pub negative: String,
     pub current: f64,
+    pub ac: Option<AcSource>,
     pub waveform: Option<Waveform>,
 }
 
@@ -508,6 +530,25 @@ impl CurrentSource {
             positive: positive.into(),
             negative: negative.into(),
             current,
+            ac: None,
+            waveform: None,
+        }
+    }
+
+    pub fn with_ac(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        current: f64,
+        magnitude: f64,
+        phase_degrees: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            current,
+            ac: Some(AcSource::new(magnitude, phase_degrees)),
             waveform: None,
         }
     }
@@ -524,7 +565,23 @@ impl CurrentSource {
             positive: positive.into(),
             negative: negative.into(),
             current,
+            ac: None,
             waveform: Some(waveform),
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct AcSource {
+    pub magnitude: f64,
+    pub phase_degrees: f64,
+}
+
+impl AcSource {
+    pub fn new(magnitude: f64, phase_degrees: f64) -> Self {
+        Self {
+            magnitude,
+            phase_degrees,
         }
     }
 }
@@ -1445,6 +1502,12 @@ pub fn noise_ac(
     let voltage_sources = collect_ac_voltage_sources(circuit)?;
     let node_count = node_indices.len();
     let matrix_size = node_count + voltage_sources.len();
+    let uses_explicit_ac_sources = circuit_has_explicit_ac_sources(circuit);
+    let operating_point = if uses_explicit_ac_sources && matrix_size > 0 {
+        solve_linear_circuit(circuit, &[], &[], None)?.vector
+    } else {
+        vec![0.0; matrix_size]
+    };
     let output_index = node_index(&node_indices, output_node);
     let noise_sources = collect_noise_sources(circuit, &node_indices, temperature_kelvin)?;
     let frequencies = if frequencies_hz.is_empty() {
@@ -1470,6 +1533,7 @@ pub fn noise_ac(
             TWO_PI * frequency_hz,
             &node_indices,
             &voltage_sources,
+            &operating_point,
         )?;
         let mut rhs = vec![Complex::zero(); matrix_size];
         rhs[output_index.unwrap()] = Complex::new(1.0, 0.0);
@@ -2068,6 +2132,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
     let node_count = node_indices.len();
     let branch_count = voltage_sources.len();
     let matrix_size = node_count + branch_count;
+    let uses_explicit_ac_sources = circuit_has_explicit_ac_sources(circuit);
 
     if matrix_size == 0 {
         return Ok(AcSolution {
@@ -2076,16 +2141,31 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
         });
     }
 
-    let matrix = build_ac_matrix(circuit, omega, &node_indices, &voltage_sources)?;
+    let operating_point = if uses_explicit_ac_sources {
+        solve_linear_circuit(circuit, &[], &[], None)?.vector
+    } else {
+        vec![0.0; matrix_size]
+    };
+    let matrix = build_ac_matrix(
+        circuit,
+        omega,
+        &node_indices,
+        &voltage_sources,
+        &operating_point,
+    )?;
     let mut rhs = vec![Complex::zero(); matrix_size];
 
     for element in circuit.elements() {
         match element {
-            Element::VoltageSource(source) => {
-                stamp_ac_voltage_source(source, &voltage_sources, node_count, &mut rhs)?
-            }
+            Element::VoltageSource(source) => stamp_ac_voltage_source(
+                source,
+                &voltage_sources,
+                node_count,
+                uses_explicit_ac_sources,
+                &mut rhs,
+            )?,
             Element::CurrentSource(source) => {
-                stamp_ac_current_source(source, &node_indices, &mut rhs)?
+                stamp_ac_current_source(source, &node_indices, uses_explicit_ac_sources, &mut rhs)?
             }
             Element::Resistor(_)
             | Element::Capacitor(_)
@@ -2121,6 +2201,7 @@ fn build_ac_matrix(
     omega: f64,
     node_indices: &HashMap<String, usize>,
     voltage_sources: &BTreeMap<String, usize>,
+    operating_point: &[f64],
 ) -> Result<Vec<Vec<Complex>>, SpiceError> {
     let node_count = node_indices.len();
     let matrix_size = node_count + voltage_sources.len();
@@ -2143,25 +2224,30 @@ fn build_ac_matrix(
                 &mut matrix,
             )?,
             Element::CurrentSource(source) => {
-                if !source.current.is_finite() {
-                    return Err(SpiceError::InvalidElement {
-                        name: source.name.clone(),
-                        reason: "current must be finite".to_string(),
-                    });
-                }
+                validate_ac_current_source(source)?;
             }
             Element::Diode(diode) => {
                 validate_diode(diode)?;
+                let anode = node_index(node_indices, &diode.anode);
+                let cathode = node_index(node_indices, &diode.cathode);
+                let voltage = vector_voltage(operating_point, anode)
+                    - vector_voltage(operating_point, cathode);
+                let exponent = (voltage / diode.thermal_voltage).clamp(-40.0, 40.0);
                 stamp_complex_conductance(
                     &mut matrix,
-                    node_index(node_indices, &diode.anode),
-                    node_index(node_indices, &diode.cathode),
-                    Complex::new(diode.saturation_current / diode.thermal_voltage, 0.0),
+                    anode,
+                    cathode,
+                    Complex::new(
+                        diode.saturation_current / diode.thermal_voltage * exponent.exp(),
+                        0.0,
+                    ),
                 );
             }
-            Element::Bjt(bjt) => stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix)?,
+            Element::Bjt(bjt) => {
+                stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point)?
+            }
             Element::Mosfet(mosfet) => {
-                stamp_ac_mosfet_small_signal(mosfet, node_indices, &mut matrix)?
+                stamp_ac_mosfet_small_signal(mosfet, node_indices, &mut matrix, operating_point)?
             }
             Element::Vccs(source) => stamp_ac_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_ac_vcvs(
@@ -2832,16 +2918,24 @@ fn stamp_ac_bjt_small_signal(
     bjt: &Bjt,
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<Complex>],
+    operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
-    let gm = Complex::new(bjt.saturation_current / bjt.thermal_voltage, 0.0);
-    let gpi = Complex::new(
-        bjt.saturation_current / bjt.thermal_voltage / bjt.forward_beta,
+    let base_voltage = vector_voltage(operating_point, base);
+    let emitter_voltage = vector_voltage(operating_point, emitter);
+    let junction_voltage = match bjt.polarity {
+        BjtPolarity::Npn => base_voltage - emitter_voltage,
+        BjtPolarity::Pnp => emitter_voltage - base_voltage,
+    };
+    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let gm = Complex::new(
+        bjt.saturation_current / bjt.thermal_voltage * exponent.exp(),
         0.0,
     );
+    let gpi = Complex::new(gm.real / bjt.forward_beta, 0.0);
     match bjt.polarity {
         BjtPolarity::Npn => {
             stamp_complex_conductance(matrix, base, emitter, gpi);
@@ -2990,13 +3084,21 @@ fn stamp_ac_mosfet_small_signal(
     mosfet: &Mosfet,
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<Complex>],
+    operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_mosfet(mosfet)?;
     let drain = node_index(node_indices, &mosfet.drain);
     let gate = node_index(node_indices, &mosfet.gate);
     let source = node_index(node_indices, &mosfet.source);
     let body = node_index(node_indices, &mosfet.body);
-    let result = evaluate_mosfet_level1(mosfet, 0.0, 0.0, 0.0);
+    let drain_voltage = vector_voltage(operating_point, drain);
+    let gate_voltage = vector_voltage(operating_point, gate);
+    let source_voltage = vector_voltage(operating_point, source);
+    let body_voltage = vector_voltage(operating_point, body);
+    let vgs = gate_voltage - source_voltage;
+    let vds = drain_voltage - source_voltage;
+    let vbs = body_voltage - source_voltage;
+    let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
     stamp_complex_transconductance(
         matrix,
@@ -3611,17 +3713,26 @@ fn stamp_ac_voltage_source(
     source: &VoltageSource,
     voltage_sources: &BTreeMap<String, usize>,
     node_count: usize,
+    uses_explicit_ac_sources: bool,
     rhs: &mut [Complex],
 ) -> Result<(), SpiceError> {
+    validate_ac_voltage_source(source)?;
+
+    let branch = node_count + voltage_sources[&source.name];
+    rhs[branch] += voltage_source_ac_phasor(source, uses_explicit_ac_sources);
+    Ok(())
+}
+
+fn validate_ac_voltage_source(source: &VoltageSource) -> Result<(), SpiceError> {
     if !source.voltage.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: source.name.clone(),
             reason: "voltage must be finite".to_string(),
         });
     }
-
-    let branch = node_count + voltage_sources[&source.name];
-    rhs[branch] += Complex::new(source.voltage, 0.0);
+    if let Some(ac) = source.ac {
+        validate_ac_source(&source.name, ac)?;
+    }
     Ok(())
 }
 
@@ -3632,12 +3743,7 @@ fn stamp_ac_voltage_source_matrix(
     node_count: usize,
     matrix: &mut [Vec<Complex>],
 ) -> Result<(), SpiceError> {
-    if !source.voltage.is_finite() {
-        return Err(SpiceError::InvalidElement {
-            name: source.name.clone(),
-            reason: "voltage must be finite".to_string(),
-        });
-    }
+    validate_ac_voltage_source(source)?;
 
     let branch = node_count + voltage_sources[&source.name];
     let positive = node_index(node_indices, &source.positive);
@@ -3665,16 +3771,12 @@ fn stamp_complex_branch_matrix(
 fn stamp_ac_current_source(
     source: &CurrentSource,
     node_indices: &HashMap<String, usize>,
+    uses_explicit_ac_sources: bool,
     rhs: &mut [Complex],
 ) -> Result<(), SpiceError> {
-    if !source.current.is_finite() {
-        return Err(SpiceError::InvalidElement {
-            name: source.name.clone(),
-            reason: "current must be finite".to_string(),
-        });
-    }
+    validate_ac_current_source(source)?;
 
-    let current = Complex::new(source.current, 0.0);
+    let current = current_source_ac_phasor(source, uses_explicit_ac_sources);
     if let Some(i) = node_index(node_indices, &source.positive) {
         rhs[i] -= current;
     }
@@ -3682,6 +3784,67 @@ fn stamp_ac_current_source(
         rhs[j] += current;
     }
     Ok(())
+}
+
+fn validate_ac_current_source(source: &CurrentSource) -> Result<(), SpiceError> {
+    if !source.current.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "current must be finite".to_string(),
+        });
+    }
+    if let Some(ac) = source.ac {
+        validate_ac_source(&source.name, ac)?;
+    }
+    Ok(())
+}
+
+fn validate_ac_source(name: &str, source: AcSource) -> Result<(), SpiceError> {
+    if !source.magnitude.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: name.to_string(),
+            reason: "AC magnitude must be finite".to_string(),
+        });
+    }
+    if !source.phase_degrees.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: name.to_string(),
+            reason: "AC phase must be finite".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn voltage_source_ac_phasor(source: &VoltageSource, uses_explicit_ac_sources: bool) -> Complex {
+    match source.ac {
+        Some(ac) => ac_source_phasor(ac),
+        None if uses_explicit_ac_sources => Complex::zero(),
+        None => Complex::new(source.voltage, 0.0),
+    }
+}
+
+fn current_source_ac_phasor(source: &CurrentSource, uses_explicit_ac_sources: bool) -> Complex {
+    match source.ac {
+        Some(ac) => ac_source_phasor(ac),
+        None if uses_explicit_ac_sources => Complex::zero(),
+        None => Complex::new(source.current, 0.0),
+    }
+}
+
+fn ac_source_phasor(source: AcSource) -> Complex {
+    let phase = source.phase_degrees.to_radians();
+    Complex::new(
+        source.magnitude * phase.cos(),
+        source.magnitude * phase.sin(),
+    )
+}
+
+fn circuit_has_explicit_ac_sources(circuit: &Circuit) -> bool {
+    circuit.elements().iter().any(|element| match element {
+        Element::VoltageSource(source) => source.ac.is_some(),
+        Element::CurrentSource(source) => source.ac.is_some(),
+        _ => false,
+    })
 }
 
 fn stamp_ac_vccs(

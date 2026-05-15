@@ -444,24 +444,26 @@ fn parse_element(
         }
         'V' => {
             require_min_fields(fields, 4, "voltage source")?;
-            let (voltage, waveform) = parse_source_value(&fields[3..])?;
-            let source = match waveform {
+            let (voltage, waveform, ac) = parse_source_value(&fields[3..])?;
+            let mut source = match waveform {
                 Some(waveform) => {
                     VoltageSource::with_waveform(name, &fields[1], &fields[2], voltage, waveform)
                 }
                 None => VoltageSource::new(name, &fields[1], &fields[2], voltage),
             };
+            source.ac = ac;
             Ok(Element::VoltageSource(source))
         }
         'I' => {
             require_min_fields(fields, 4, "current source")?;
-            let (current, waveform) = parse_source_value(&fields[3..])?;
-            let source = match waveform {
+            let (current, waveform, ac) = parse_source_value(&fields[3..])?;
+            let mut source = match waveform {
                 Some(waveform) => {
                     CurrentSource::with_waveform(name, &fields[1], &fields[2], current, waveform)
                 }
                 None => CurrentSource::new(name, &fields[1], &fields[2], current),
             };
+            source.ac = ac;
             Ok(Element::CurrentSource(source))
         }
         'D' => {
@@ -776,13 +778,56 @@ fn element_prefix(name: &str) -> Result<char, NetlistParseError> {
         .ok_or_else(|| NetlistParseError::new("element name is empty"))
 }
 
-fn parse_source_value(fields: &[String]) -> Result<(f64, Option<Waveform>), NetlistParseError> {
+fn parse_source_value(
+    fields: &[String],
+) -> Result<(f64, Option<Waveform>, Option<spice_engine::AcSource>), NetlistParseError> {
     if fields.is_empty() {
         return Err(NetlistParseError::new("source is missing a value"));
     }
+    let ac_index = fields
+        .iter()
+        .position(|field| field.eq_ignore_ascii_case("AC"));
+    if let Some(ac_index) = ac_index {
+        let (value_fields, ac_fields_with_marker) = fields.split_at(ac_index);
+        let ac_fields = &ac_fields_with_marker[1..];
+        if ac_fields.is_empty() {
+            return Err(NetlistParseError::new(
+                "AC source form requires a magnitude",
+            ));
+        }
+        if ac_fields.len() > 2 {
+            return Err(NetlistParseError::new(
+                "AC source form accepts magnitude and optional phase",
+            ));
+        }
+        let (value, waveform) = if value_fields.is_empty() {
+            (0.0, None)
+        } else {
+            parse_source_dc_value(value_fields)?
+        };
+        let magnitude = parse_value(&ac_fields[0])?;
+        let phase_degrees = if ac_fields.len() == 2 {
+            parse_value(&ac_fields[1])?
+        } else {
+            0.0
+        };
+        return Ok((
+            value,
+            waveform,
+            Some(spice_engine::AcSource::new(magnitude, phase_degrees)),
+        ));
+    }
+    let (value, waveform) = parse_source_dc_value(fields)?;
+    Ok((value, waveform, None))
+}
+
+fn parse_source_dc_value(fields: &[String]) -> Result<(f64, Option<Waveform>), NetlistParseError> {
     if fields[0].eq_ignore_ascii_case("DC") {
         if fields.len() < 2 {
             return Err(NetlistParseError::new("DC source form requires a value"));
+        }
+        if fields.len() > 2 {
+            return Err(NetlistParseError::new("DC source form accepts one value"));
         }
         return Ok((parse_value(&fields[1])?, None));
     }
