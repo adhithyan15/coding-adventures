@@ -610,7 +610,7 @@ class InsertFromResult:
     """Drain the current result buffer, inserting every row into ``table``.
 
     Used for INSERT INTO … SELECT. After this instruction the result buffer
-    is empty; ``rows_affected`` is set to the number of rows inserted.
+    is empty; ``rows_affected`` is set to the count of inserted rows.
 
     ``columns`` is the explicit target column list. If empty the VM uses
     the result schema's column order as the target column names. This
@@ -619,12 +619,27 @@ class InsertFromResult:
 
     ``on_conflict`` has the same semantics as :class:`InsertRow`.
     ``upsert`` has the same semantics as :class:`InsertRow.upsert`.
+
+    ``returning_columns`` — when non-empty, the instruction additionally
+    builds a RETURNING result set.  Each entry is the name of a column to
+    read back from the inserted ``row_dict`` (which equals the column name
+    for plain ``Column`` RETURNING expressions).  After the loop:
+
+    - ``st.result.columns`` is set to ``returning_columns``
+    - ``st.result.rows`` contains one tuple per successfully inserted row,
+      with ``row_dict.get(col)`` for each column name (``None`` when the
+      name is absent, which covers unsupported complex RETURNING expressions)
+    - ``rows_affected`` is still updated
+
+    This mirrors INSERT … VALUES RETURNING semantics at the codegen level
+    without requiring new VM instructions.
     """
 
     table: str
     columns: tuple[str, ...]  # empty = use result schema
     on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
     upsert: UpsertSpec | None = None  # ON CONFLICT … DO …
+    returning_columns: tuple[str, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
