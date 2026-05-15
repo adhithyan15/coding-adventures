@@ -1,6 +1,6 @@
 use spice_engine::{
-    ac_sweep, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor, Resistor,
-    SpiceError, Vcvs, VoltageSource,
+    ac_sweep, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor,
+    Resistor, SpiceError, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -119,6 +119,34 @@ fn ac_vcvs_applies_controlled_voltage_gain() {
     assert_close(out.real, 4.0);
     assert_close(out.imag, 0.0);
     assert_close(points[0].branch_current("E1").unwrap().real, -4.0e-3);
+}
+
+#[test]
+fn ac_bjt_applies_zero_bias_common_emitter_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "base", "0", 1.0,
+    )));
+    circuit.add(Element::Bjt(Bjt::with_model(
+        "Q1",
+        "out",
+        "base",
+        "0",
+        BjtPolarity::Npn,
+        25.85e-6,
+        100.0,
+        0.02585,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let points = ac_sweep(&circuit, 1_000.0, 1_000.0, 10).unwrap();
+
+    assert_eq!(points.len(), 1);
+    let out = points[0].voltage("out").unwrap();
+    assert_close(out.real, -1.0);
+    assert_close(out.imag, 0.0);
 }
 
 #[test]

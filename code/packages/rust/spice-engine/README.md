@@ -19,10 +19,10 @@ The initial slices implement:
 - Backward-Euler transient analysis for linear RC/RL circuits.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 
-The package supports resistors, capacitors, inductors, diodes, independent
-current sources, independent voltage sources, voltage-controlled current
-sources, optional source waveforms, ground aliases, node voltages, and voltage
-source branch currents.
+The package supports resistors, capacitors, inductors, diodes, BJTs,
+independent current sources, independent voltage sources, voltage-controlled
+current sources, optional source waveforms, ground aliases, node voltages, and
+voltage source branch currents.
 
 ```rust
 use spice_engine::{Circuit, Element, PwlWaveform, Resistor, VoltageSource, Waveform};

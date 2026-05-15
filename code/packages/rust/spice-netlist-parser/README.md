@@ -17,8 +17,9 @@ C1 out 0 1u
 assert_eq!(parsed.tran_cards().len(), 1);
 ```
 
-This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `G`, `E`, `F`, and `H`
-elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
-SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
-`.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, and `.ac`
-analysis cards.
+This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `G`, `E`, `F`, and
+`H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
+parameters, `.model <name> NPN|PNP(...)` BJT cards with `IS`, `BF` /
+`BETA_F`, and `VT` parameters, SPICE engineering suffixes, PWL/PULSE/SIN/EXP
+source forms, comments, `.end`, `.subckt` / `X` instance expansion, and `.op`,
+`.tran`, `.dc`, and `.ac` analysis cards.

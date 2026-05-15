@@ -1,6 +1,6 @@
 use spice_engine::{
-    tf, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor, Resistor, SpiceError,
-    TfResult, Vccs, Vcvs, VoltageSource,
+    tf, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor,
+    Resistor, SpiceError, TfResult, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -112,6 +112,33 @@ fn tf_vcvs_stage_reports_voltage_gain() {
     assert_close(result.gain(), 4.0);
     assert_close(result.output_impedance_ohms, 0.0);
     assert!(result.input_impedance_ohms.is_infinite());
+}
+
+#[test]
+fn tf_bjt_common_emitter_reports_small_signal_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "base", "0", 1.0,
+    )));
+    circuit.add(Element::Bjt(Bjt::with_model(
+        "Q1",
+        "out",
+        "base",
+        "0",
+        BjtPolarity::Npn,
+        25.85e-6,
+        100.0,
+        0.02585,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = tf(&circuit, "out", "Vin").unwrap();
+
+    assert_close(result.gain(), -1.0);
+    assert_close(result.input_impedance_ohms, 100_000.0);
+    assert_close(result.output_impedance_ohms, 1_000.0);
 }
 
 #[test]

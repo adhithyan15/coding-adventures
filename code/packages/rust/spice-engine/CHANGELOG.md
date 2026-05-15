@@ -6,6 +6,9 @@
   sources, and independent current sources.
 - Add Shockley diode elements with Newton-linearized DC operating-point support
   and zero-bias small-signal conductance for AC/transfer analysis.
+- Add BJT elements with NPN/PNP polarity, Newton-linearized DC operating-point
+  support, and zero-bias small-signal transconductance for AC/transfer
+  analysis.
 - Add voltage-controlled current sources (VCCS) for linear transconductance
   stages.
 - Add voltage-controlled voltage sources (VCVS) across DC, AC, transfer
