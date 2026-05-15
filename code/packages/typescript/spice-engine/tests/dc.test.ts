@@ -36,6 +36,8 @@ describe("dcOp", () => {
     expectClose(result.voltage("vin"), 10.0);
     expectClose(result.voltage("mid"), 5.0);
     expectClose(result.voltage("0"), 0.0);
+    expect(result.converged).toBe(true);
+    expect(result.iterations).toBe(1);
   });
 
   it("uses positive-to-negative orientation for current sources", () => {
@@ -189,6 +191,30 @@ describe("dcOp", () => {
 
     expect(result.voltage("out")).toBeGreaterThanOrEqual(0.0);
     expect(result.voltage("out")).toBeLessThan(1.8);
+    expect(result.converged).toBe(true);
+    expect(result.iterations).toBeGreaterThan(0);
+  });
+
+  it("reports unconverged nonlinear operating points when aids are disabled", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+    circuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
+      VT0: 0.45,
+      KP: 200.0e-6,
+      W: 2.0e-6,
+      L: 180.0e-9,
+      LAMBDA: 0.02,
+    }));
+
+    const result = dcOp(circuit, {
+      maxIterations: 1,
+      convergenceAids: false,
+    });
+
+    expect(result.converged).toBe(false);
+    expect(result.iterations).toBe(1);
   });
 
   it("rejects invalid MOSFET model parameters", () => {
@@ -308,6 +334,17 @@ describe("dcOp", () => {
 
     expect(() => dcSweep(circuit, "V1", 0.0, 1.0, -0.1)).toThrowError(
       "sweep step direction",
+    );
+  });
+
+  it("rejects invalid DC operating point options", () => {
+    const circuit = new Circuit();
+
+    expect(() => dcOp(circuit, { maxIterations: 0 })).toThrowError(
+      "maxIterations must be a positive integer",
+    );
+    expect(() => dcOp(circuit, { tolerance: 0.0 })).toThrowError(
+      "tolerance must be finite and positive",
     );
   });
 

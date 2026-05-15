@@ -365,8 +365,16 @@ export interface Ccvs {
 export interface DcResult {
   readonly nodeVoltages: ReadonlyMap<string, number>;
   readonly branchCurrents: ReadonlyMap<string, number>;
+  readonly iterations: number;
+  readonly converged: boolean;
   voltage(node: string): number | undefined;
   branchCurrent(sourceName: string): number | undefined;
+}
+
+export interface DcOpOptions {
+  readonly maxIterations?: number;
+  readonly tolerance?: number;
+  readonly convergenceAids?: boolean;
 }
 
 export interface DcSweepPoint {
@@ -758,9 +766,31 @@ export function complexPhase(value: Complex): number {
   return Math.atan2(value.imag, value.real);
 }
 
-export function dcOp(circuit: Circuit): DcResult {
-  const solution = solveLinearCircuit(circuit, [], [], undefined);
-  return makeDcResult(solution.nodeVoltages, solution.branchCurrents);
+export function dcOp(
+  circuit: Circuit,
+  options: DcOpOptions = {},
+): DcResult {
+  const solveOptions = validatedDcOpOptions(options);
+  const solution = solveDcNewton(circuit, solveOptions);
+  if (solution.converged || !solveOptions.convergenceAids) {
+    return makeDcResult(
+      solution.nodeVoltages,
+      solution.branchCurrents,
+      solution.iterations,
+      solution.converged,
+    );
+  }
+
+  const aided =
+    solveDcWithGminStepping(circuit, solveOptions, solution.vector) ??
+    solveDcWithSourceStepping(circuit, solveOptions);
+  const finalSolution = aided ?? solution;
+  return makeDcResult(
+    finalSolution.nodeVoltages,
+    finalSolution.branchCurrents,
+    finalSolution.iterations,
+    finalSolution.converged,
+  );
 }
 
 export function dcSweep(
@@ -1518,6 +1548,21 @@ interface LinearSolution {
   readonly nodeVoltages: ReadonlyMap<string, number>;
   readonly branchCurrents: ReadonlyMap<string, number>;
   readonly vector: readonly number[];
+  readonly iterations: number;
+  readonly converged: boolean;
+}
+
+interface LinearSolveOptions {
+  readonly maxIterations: number;
+  readonly tolerance: number;
+  readonly initialVector?: readonly number[];
+  readonly returnSingularAsUnconverged?: boolean;
+}
+
+interface ResolvedDcOpOptions {
+  readonly maxIterations: number;
+  readonly tolerance: number;
+  readonly convergenceAids: boolean;
 }
 
 interface AcSolution {
@@ -1541,6 +1586,44 @@ function solveLinearCircuit(
   inductorStates: readonly InductorState[],
   sourceTime: number | undefined,
 ): LinearSolution {
+  return solveLinearCircuitWithOptions(
+    circuit,
+    capacitorStates,
+    inductorStates,
+    sourceTime,
+    {
+      maxIterations: 80,
+      tolerance: 1.0e-9,
+    },
+  );
+}
+
+function solveDcNewton(
+  circuit: Circuit,
+  options: ResolvedDcOpOptions,
+  initialVector?: readonly number[],
+): LinearSolution {
+  return solveLinearCircuitWithOptions(
+    circuit,
+    [],
+    [],
+    undefined,
+    {
+      maxIterations: options.maxIterations,
+      tolerance: options.tolerance,
+      initialVector,
+      returnSingularAsUnconverged: true,
+    },
+  );
+}
+
+function solveLinearCircuitWithOptions(
+  circuit: Circuit,
+  capacitorStates: readonly CapacitorState[],
+  inductorStates: readonly InductorState[],
+  sourceTime: number | undefined,
+  options: LinearSolveOptions,
+): LinearSolution {
   const nodeIndices = collectNodeIndices(circuit);
   const voltageSources = collectVoltageSources(circuit, inductorStates);
   const nodeCount = nodeIndices.size;
@@ -1548,14 +1631,25 @@ function solveLinearCircuit(
   const matrixSize = nodeCount + branchCount;
 
   if (matrixSize === 0) {
-    return { nodeVoltages: new Map(), branchCurrents: new Map(), vector: [] };
+    return {
+      nodeVoltages: new Map(),
+      branchCurrents: new Map(),
+      vector: [],
+      iterations: 0,
+      converged: true,
+    };
   }
 
   const hasNonlinearElement = circuit
     .elements()
     .some((element) => element.kind === "diode" || element.kind === "bjt" || element.kind === "mosfet");
-  let operatingPoint = Array.from({ length: matrixSize }, () => 0.0);
-  let solution = solveLinearCircuitAtOperatingPoint(
+  const returnSingularAsUnconverged =
+    (options.returnSingularAsUnconverged ?? false) && hasNonlinearElement;
+  let operatingPoint =
+    options.initialVector?.length === matrixSize
+      ? [...options.initialVector]
+      : Array.from({ length: matrixSize }, () => 0.0);
+  let solution = solveLinearCircuitAtOperatingPointOrFailure(
     circuit,
     capacitorStates,
     inductorStates,
@@ -1565,18 +1659,55 @@ function solveLinearCircuit(
     nodeCount,
     matrixSize,
     operatingPoint,
+    returnSingularAsUnconverged,
   );
   if (!hasNonlinearElement) {
-    return solution;
+    return { ...solution, iterations: 1, converged: solution.converged };
   }
 
-  for (let iteration = 0; iteration < 80; iteration++) {
+  let iterations = 1;
+  while (iterations < options.maxIterations) {
+    if (!solution.converged) {
+      return { ...solution, iterations, converged: false };
+    }
     const delta = maxVectorDelta(solution.vector, operatingPoint);
     operatingPoint = [...solution.vector];
-    if (delta < 1.0e-9) {
-      return solution;
+    if (delta < options.tolerance) {
+      return { ...solution, iterations, converged: true };
     }
-    solution = solveLinearCircuitAtOperatingPoint(
+    solution = solveLinearCircuitAtOperatingPointOrFailure(
+      circuit,
+      capacitorStates,
+      inductorStates,
+      sourceTime,
+      nodeIndices,
+      voltageSources,
+      nodeCount,
+      matrixSize,
+      operatingPoint,
+      returnSingularAsUnconverged,
+    );
+    iterations += 1;
+  }
+
+  const delta = maxVectorDelta(solution.vector, operatingPoint);
+  return { ...solution, iterations, converged: delta < options.tolerance };
+}
+
+function solveLinearCircuitAtOperatingPointOrFailure(
+  circuit: Circuit,
+  capacitorStates: readonly CapacitorState[],
+  inductorStates: readonly InductorState[],
+  sourceTime: number | undefined,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  matrixSize: number,
+  operatingPoint: readonly number[],
+  returnSingularAsUnconverged: boolean,
+): LinearSolution {
+  try {
+    const solution = solveLinearCircuitAtOperatingPoint(
       circuit,
       capacitorStates,
       inductorStates,
@@ -1587,9 +1718,127 @@ function solveLinearCircuit(
       matrixSize,
       operatingPoint,
     );
+    return { ...solution, iterations: 1, converged: true };
+  } catch (error) {
+    if (
+      returnSingularAsUnconverged &&
+      error instanceof SpiceError &&
+      error.code === "SINGULAR_MATRIX"
+    ) {
+      return linearSolutionFromVector(
+        circuit,
+        inductorStates,
+        nodeIndices,
+        voltageSources,
+        nodeCount,
+        operatingPoint,
+        false,
+      );
+    }
+    throw error;
+  }
+}
+
+function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
+  const maxIterations = options.maxIterations ?? 80;
+  const tolerance = options.tolerance ?? 1.0e-9;
+  if (!Number.isInteger(maxIterations) || maxIterations < 1) {
+    throw invalidElement("dcOp", "maxIterations must be a positive integer");
+  }
+  if (!Number.isFinite(tolerance) || tolerance <= 0.0) {
+    throw invalidElement("dcOp", "tolerance must be finite and positive");
+  }
+  return {
+    maxIterations,
+    tolerance,
+    convergenceAids: options.convergenceAids ?? true,
+  };
+}
+
+function solveDcWithGminStepping(
+  circuit: Circuit,
+  options: ResolvedDcOpOptions,
+  initialVector: readonly number[],
+): LinearSolution | undefined {
+  let warmStart: readonly number[] | undefined = initialVector;
+  let finalSolution: LinearSolution | undefined;
+
+  for (const gmin of dcGminSequence()) {
+    const steppedCircuit =
+      gmin === 0.0 ? circuit : circuitWithGmin(circuit, gmin);
+    const solution = solveDcNewton(steppedCircuit, options, warmStart);
+    if (!solution.converged) {
+      return undefined;
+    }
+    warmStart = solution.vector;
+    finalSolution = solution;
   }
 
-  return solution;
+  return finalSolution;
+}
+
+function solveDcWithSourceStepping(
+  circuit: Circuit,
+  options: ResolvedDcOpOptions,
+): LinearSolution | undefined {
+  let warmStart: readonly number[] | undefined;
+  let finalSolution: LinearSolution | undefined;
+
+  for (let step = 0; step <= 10; step++) {
+    const scale = step / 10.0;
+    const steppedCircuit =
+      scale === 1.0 ? circuit : circuitWithScaledIndependentSources(circuit, scale);
+    const solution = solveDcNewton(steppedCircuit, options, warmStart);
+    if (!solution.converged) {
+      return undefined;
+    }
+    warmStart = solution.vector;
+    finalSolution = solution;
+  }
+
+  return finalSolution;
+}
+
+function dcGminSequence(): number[] {
+  const sequence: number[] = [];
+  for (let exponent = -3; exponent >= -12; exponent--) {
+    sequence.push(10.0 ** exponent);
+  }
+  sequence.push(0.0);
+  return sequence;
+}
+
+function circuitWithGmin(circuit: Circuit, gminSiemens: number): Circuit {
+  const aided = circuitFromElements(circuit.elements());
+  for (const node of collectNodeIndices(circuit).keys()) {
+    aided.add(resistor(`__gmin_${node}`, node, "0", 1.0 / gminSiemens));
+  }
+  return aided;
+}
+
+function circuitWithScaledIndependentSources(
+  circuit: Circuit,
+  scale: number,
+): Circuit {
+  const scaled = new Circuit();
+  for (const element of circuit.elements()) {
+    if (element.kind === "voltage-source") {
+      scaled.add({ ...element, voltage: element.voltage * scale });
+    } else if (element.kind === "current-source") {
+      scaled.add({ ...element, current: element.current * scale });
+    } else {
+      scaled.add(element);
+    }
+  }
+  return scaled;
+}
+
+function circuitFromElements(elements: readonly Element[]): Circuit {
+  const circuit = new Circuit();
+  for (const element of elements) {
+    circuit.add(element);
+  }
+  return circuit;
 }
 
 function solveLinearCircuitAtOperatingPoint(
@@ -1679,6 +1928,26 @@ function solveLinearCircuitAtOperatingPoint(
   }
 
   const solution = solveLinearSystem(matrix, rhs);
+  return linearSolutionFromVector(
+    circuit,
+    inductorStates,
+    nodeIndices,
+    voltageSources,
+    nodeCount,
+    solution,
+    true,
+  );
+}
+
+function linearSolutionFromVector(
+  circuit: Circuit,
+  inductorStates: readonly InductorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  solution: readonly number[],
+  converged: boolean,
+): LinearSolution {
   const nodeVoltages = new Map<string, number>();
   const nodesByIndex = Array.from(nodeIndices.entries()).sort(
     ([, a], [, b]) => a - b,
@@ -1698,7 +1967,13 @@ function solveLinearCircuitAtOperatingPoint(
     branchCurrents,
   );
 
-  return { nodeVoltages, branchCurrents, vector: solution };
+  return {
+    nodeVoltages,
+    branchCurrents,
+    vector: [...solution],
+    iterations: 1,
+    converged,
+  };
 }
 
 function maxVectorDelta(left: readonly number[], right: readonly number[]): number {
@@ -1941,10 +2216,14 @@ function buildAcMatrix(
 function makeDcResult(
   nodeVoltages: ReadonlyMap<string, number>,
   branchCurrents: ReadonlyMap<string, number>,
+  iterations = 1,
+  converged = true,
 ): DcResult {
   return {
     nodeVoltages,
     branchCurrents,
+    iterations,
+    converged,
     voltage(node: string): number | undefined {
       return isGround(node) ? 0.0 : nodeVoltages.get(node);
     },
