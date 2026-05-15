@@ -52,12 +52,19 @@ pub struct AcAnalysis {
     pub stop_hz: f64,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TfAnalysis {
+    pub output_node: String,
+    pub input_source: String,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Analysis {
     Op(OpAnalysis),
     Tran(TranAnalysis),
     Dc(DcAnalysis),
     Ac(AcAnalysis),
+    Tf(TfAnalysis),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -111,6 +118,16 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Ac(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn tf_cards(&self) -> Vec<&TfAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Tf(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -937,11 +954,38 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 stop_hz: parse_value(&fields[4])?,
             }))
         }
+        ".tf" => {
+            require_fields(fields, 3, ".tf")?;
+            Ok(Analysis::Tf(TfAnalysis {
+                output_node: parse_voltage_probe(&fields[1])?,
+                input_source: fields[2].clone(),
+            }))
+        }
         _ => Err(NetlistParseError::new(format!(
             "unsupported directive {:?}",
             fields[0]
         ))),
     }
+}
+
+fn parse_voltage_probe(token: &str) -> Result<String, NetlistParseError> {
+    let lower = token.to_ascii_lowercase();
+    if !lower.starts_with("v(") || !token.ends_with(')') {
+        return Err(NetlistParseError::new(format!(
+            ".tf output must be a voltage probe V(node), got {token:?}"
+        )));
+    }
+    let node = &token[2..token.len() - 1];
+    if node.is_empty()
+        || node.contains('(')
+        || node.contains(')')
+        || node.chars().any(char::is_whitespace)
+    {
+        return Err(NetlistParseError::new(format!(
+            ".tf output must be a voltage probe V(node), got {token:?}"
+        )));
+    }
+    Ok(node.to_string())
 }
 
 fn split_fields(line: &str) -> Result<Vec<String>, NetlistParseError> {

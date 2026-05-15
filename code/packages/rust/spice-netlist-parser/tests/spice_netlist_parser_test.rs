@@ -1,7 +1,7 @@
-use spice_engine::{ac_sweep, dc_op, BjtPolarity, Element, MosfetType};
+use spice_engine::{ac_sweep, dc_op, tf, BjtPolarity, Element, MosfetType};
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, NetlistParseError, OpAnalysis,
-    TranAnalysis,
+    TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -94,6 +94,53 @@ G1 out 0 in 0 2m
             }),
         ]
     );
+}
+
+#[test]
+fn parses_tf_transfer_function_analysis_cards() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+R1 in out 1k
+R2 out 0 1k
+.tf V(out) Vin
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![Analysis::Tf(TfAnalysis {
+            output_node: "out".to_string(),
+            input_source: "Vin".to_string(),
+        })]
+    );
+    assert_eq!(
+        parsed.tf_cards(),
+        vec![&TfAnalysis {
+            output_node: "out".to_string(),
+            input_source: "Vin".to_string(),
+        }]
+    );
+    let card = parsed.tf_cards()[0];
+    let result = tf(&parsed.circuit, &card.output_node, &card.input_source).unwrap();
+    assert_close(result.transfer_ratio, 0.5);
+}
+
+#[test]
+fn rejects_tf_cards_without_voltage_output_probe() {
+    let error = parse_netlist(
+        r#"
+Vin in 0 DC 1
+R1 in out 1k
+.tf out Vin
+"#,
+    )
+    .unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains(".tf output must be a voltage probe"));
 }
 
 #[test]

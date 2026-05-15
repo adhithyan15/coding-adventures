@@ -18,6 +18,7 @@ from spice_engine import (
     VoltageSource,
     ac_sweep,
     dc_op,
+    tf,
 )
 
 from spice_netlist_parser import (
@@ -26,6 +27,7 @@ from spice_netlist_parser import (
     ModelCard,
     NetlistParseError,
     OpAnalysis,
+    TfAnalysis,
     TranAnalysis,
     parse_netlist,
 )
@@ -83,6 +85,34 @@ G1 out 0 in 0 2m
         DcAnalysis(source_name="Vstep", start=0.0, stop=1.0, step=0.5),
         AcAnalysis(mode="dec", points=10, start_hz=1.0e3, stop_hz=1.0e6),
     ]
+
+
+def test_parse_tf_analysis_card_and_run_transfer_function() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 1
+R1 in out 1k
+R2 out 0 1k
+.tf V(out) Vin
+"""
+    )
+
+    assert parsed.analyses == [TfAnalysis(output_node="out", input_source="Vin")]
+    assert parsed.tf_cards() == [TfAnalysis(output_node="out", input_source="Vin")]
+    card = parsed.tf_cards()[0]
+    result = tf(parsed.circuit, output_node=card.output_node, input_source=card.input_source)
+    assert isclose(result.transfer_ratio, 0.5, abs_tol=1e-9)
+
+
+def test_tf_analysis_card_rejects_non_voltage_output_probe() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.tf output must be a voltage probe"):
+        parse_netlist(
+            """
+Vin in 0 DC 1
+R1 in out 1k
+.tf out Vin
+"""
+        )
 
 
 def test_parse_vcvs_into_operating_point_circuit() -> None:

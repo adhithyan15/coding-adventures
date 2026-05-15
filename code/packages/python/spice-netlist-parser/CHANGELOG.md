@@ -5,6 +5,8 @@
 - Parse SPICE independent source `AC <magnitude> [phase]` specifications for
   voltage and current sources, including `DC <value> AC ...` mixed bias/input
   forms.
+- Parse SPICE `.tf V(output_node) input_source` transfer-function analysis
+  cards.
 
 ## 0.1.6
 
