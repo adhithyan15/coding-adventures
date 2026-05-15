@@ -591,6 +591,7 @@ members = [
     "twig-ir-compiler",
     "lang-refined-types",
     "lang-refinement-checker",
+    "lang-refinement-protocol",
     "lang-runtime-core",
     "lispy-runtime",
     "twig-vm",

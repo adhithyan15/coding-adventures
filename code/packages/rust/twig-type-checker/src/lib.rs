@@ -67,6 +67,9 @@
 #![warn(rust_2018_idioms)]
 
 pub mod arity;
+/// LANG54: `TwigRefinementBridge` — implements `lang_refinement_protocol::RefinementBridge`
+/// for Twig's `Expr` AST and `TwigKind` type system.
+pub mod bridge;
 pub mod check;
 pub mod env;
 pub mod errors;
