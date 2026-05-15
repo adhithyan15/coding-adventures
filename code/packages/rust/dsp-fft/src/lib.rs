@@ -43,6 +43,9 @@
 
 #![warn(rust_2018_idioms)]
 
+pub mod radix2;
+pub use radix2::build_fft_graph;
+
 use dsp_complex::ComplexTensor;
 use std::fmt;
 
@@ -132,8 +135,12 @@ pub fn ifft(spectrum: &ComplexTensor) -> Result<ComplexTensor, FftError> {
 
 // ─────────────────────────── Internals ───────────────────────────
 
-#[derive(Copy, Clone, Debug)]
-enum Direction {
+/// FFT direction.  `Forward` is the standard discrete Fourier
+/// transform with `exp(-2πi · k · n / N)` twiddles; `Inverse` uses
+/// the conjugate (`exp(+2πi · ...)`) and divides every output
+/// element by `N` (backward normalization).
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Direction {
     Forward,
     Inverse,
 }
