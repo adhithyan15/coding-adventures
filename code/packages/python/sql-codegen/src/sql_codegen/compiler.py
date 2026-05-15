@@ -1476,14 +1476,27 @@ def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
     # drain it with InsertFromResult. _compile_plan is safe to call
     # recursively here — it shares the same _Ctx (cursor/label counters stay
     # globally unique) and it does NOT emit a Halt.
-    # Note: RETURNING is not supported with INSERT … SELECT in this version.
+    #
+    # RETURNING support: for plain ``Column`` RETURNING expressions the display
+    # name equals the column name, so a single name tuple serves both as the
+    # result schema (``SetResultSchema`` equivalent) and as the per-row column
+    # lookup key inside ``_do_insert_from_result``.  Complex RETURNING
+    # expressions (very rare in practice) will yield ``None`` for those slots
+    # rather than a computed value — the same documented limitation that applies
+    # to INSERT … VALUES RETURNING for nested column references in expressions.
     assert src.query is not None
+    returning_cols: tuple[str, ...] = ()
+    if ins.returning:
+        returning_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(ins.returning)
+        )
     select_instrs, _ = _compile_plan(src.query, ctx)
     select_instrs.append(InsertFromResult(
         table=ins.table,
         columns=tuple(cols),
         on_conflict=ins.on_conflict,
         upsert=upsert_spec,
+        returning_columns=returning_cols,
     ))
     return select_instrs
 

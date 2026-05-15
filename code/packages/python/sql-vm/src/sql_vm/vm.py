@@ -2650,6 +2650,18 @@ def _do_insert_from_result(ins: InsertFromResult, st: _VmState) -> None:
 
     After draining, the result buffer is cleared and ``rows_affected`` is
     set to the count of inserted rows.
+
+    RETURNING support (``ins.returning_columns`` non-empty):
+    - The source rows are snapshotted before ``st.result`` is repurposed.
+    - For each successfully inserted row, the column values are read back
+      from ``row_dict`` by column name and accumulated in a local list.
+    - After all rows are processed, ``st.result.columns`` is set to
+      ``ins.returning_columns`` and ``st.result.rows`` is populated with
+      the accumulated tuples — one per inserted row.
+    - ``rows_affected`` is updated regardless, matching INSERT … VALUES
+      RETURNING behaviour.
+    - Column names that are absent from ``row_dict`` (e.g. unsupported
+      complex RETURNING expressions) contribute ``None`` for that slot.
     """
     if ins.on_conflict is not None and ins.on_conflict not in _VALID_ON_CONFLICT:
         raise InternalError(
@@ -2658,8 +2670,15 @@ def _do_insert_from_result(ins: InsertFromResult, st: _VmState) -> None:
         )
     schema = st.result.columns
     target_cols = ins.columns if ins.columns else schema
+    # Snapshot the source rows before we repurpose st.result for RETURNING
+    # output.  We clear rows now so the RETURNING accumulator can extend
+    # the same list without mixing source and output rows.
+    source_rows = list(st.result.rows)
+    st.result.rows.clear()
+
+    returning_rows: list[tuple] = []
     affected = 0
-    for row in st.result.rows:
+    for row in source_rows:
         row_dict = dict(zip(target_cols, row, strict=False))
         # REPLACE: pre-delete conflicting rows before each insert.
         if ins.on_conflict == "REPLACE":
@@ -2677,8 +2696,17 @@ def _do_insert_from_result(ins: InsertFromResult, st: _VmState) -> None:
         except be.BackendError as e:
             raise _translate_backend_error(e) from e
         affected += 1
-    st.result.rows.clear()
+        # Keep last_inserted_row in sync with each inserted row so that any
+        # subsequent LoadLastInsertedColumn reads are consistent.
+        st.last_inserted_row = row_dict
+        if ins.returning_columns:
+            returning_rows.append(tuple(row_dict.get(col) for col in ins.returning_columns))
+
     st.result.rows_affected = (st.result.rows_affected or 0) + affected
+    if ins.returning_columns:
+        # Replace the (now-empty) result buffer with the RETURNING output.
+        st.result.columns = ins.returning_columns
+        st.result.rows.extend(returning_rows)
 
 
 # --------------------------------------------------------------------------

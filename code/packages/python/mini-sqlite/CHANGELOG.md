@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.33.0] - 2026-05-14
+
+### Added
+
+- **`RETURNING` on `INSERT … SELECT`** — The RETURNING clause is now fully
+  supported when the insert source is a sub-query rather than literal VALUES.
+  Results are oracle-verified against real sqlite3:
+
+  ```sql
+  INSERT INTO log SELECT event, ts FROM events WHERE ts > ? RETURNING event, ts;
+  INSERT OR IGNORE INTO t SELECT * FROM src RETURNING id, v;  -- skipped rows omitted
+  INSERT INTO dst (a, b) SELECT x, y FROM src RETURNING a, b;
+  ```
+
+  One RETURNING row is emitted per successfully inserted row in insertion
+  order.  Rows skipped by ON CONFLICT IGNORE do not appear in RETURNING.
+  `cursor.description` is populated with the RETURNING column names.
+
+  Implementation: `InsertFromResult` (sql-codegen IR) gains a
+  `returning_columns` field; the VM's `_do_insert_from_result` snapshots
+  source rows then repopulates `st.result` with RETURNING output after
+  draining.  No new VM instructions required.
+
+  17 new integration tests across `TestBasicReturning`, `TestDescription`,
+  `TestOrderAndCardinality`, `TestOnConflictReturning`, `TestExplicitColumnList`.
+
 ## [1.32.0] - 2026-05-14
 
 ### Added

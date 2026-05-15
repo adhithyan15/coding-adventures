@@ -175,6 +175,10 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         true
     }
 
+    fn supports_uart(&self) -> bool {
+        true
+    }
+
     fn supports_bootloader_reboot(&self) -> bool {
         true
     }
@@ -214,6 +218,10 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
 
     fn open_spi(&mut self, bus: u8) -> Result<u32, HalError> {
         Ok(0x13_0000 | bus as u32)
+    }
+
+    fn open_uart(&mut self, bus: u8) -> Result<u32, HalError> {
+        Ok(0x14_0000 | bus as u32)
     }
 
     fn transfer_spi(
