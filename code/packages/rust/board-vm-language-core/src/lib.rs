@@ -66,7 +66,8 @@ use board_vm_protocol::{
 use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
     I2cBusInfo as TargetI2cBus, OnboardLed as TargetOnboardLed, SpiBusInfo as TargetSpiBus,
-    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
+    UartBusInfo as TargetUartBus, WirelessInterfaceInfo as TargetWirelessInterface,
+    WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -394,6 +395,7 @@ pub struct LanguageTargetInfo {
     pub digital_pins: Vec<LanguageDigitalPin>,
     pub i2c_buses: Vec<LanguageI2cBus>,
     pub spi_buses: Vec<LanguageSpiBus>,
+    pub uart_buses: Vec<LanguageUartBus>,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
@@ -417,6 +419,17 @@ pub struct LanguageSpiBus {
     pub cipo_pin: u8,
     pub sck_pin: u8,
     pub default_cs_pin: u8,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageUartBus {
+    pub bus: u8,
+    pub name: String,
+    pub tx_pin: u8,
+    pub rx_pin: u8,
+    pub arduino_uart: u8,
+    pub internal: bool,
     pub notes: String,
 }
 
@@ -1095,6 +1108,7 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .collect(),
         i2c_buses: target.i2c_buses.iter().map(language_i2c_bus).collect(),
         spi_buses: target.spi_buses.iter().map(language_spi_bus).collect(),
+        uart_buses: target.uart_buses.iter().map(language_uart_bus).collect(),
         wireless: target
             .wireless
             .iter()
@@ -1146,6 +1160,18 @@ fn language_spi_bus(bus: &TargetSpiBus) -> LanguageSpiBus {
         cipo_pin: bus.cipo_pin,
         sck_pin: bus.sck_pin,
         default_cs_pin: bus.default_cs_pin,
+        notes: bus.notes.to_owned(),
+    }
+}
+
+fn language_uart_bus(bus: &TargetUartBus) -> LanguageUartBus {
+    LanguageUartBus {
+        bus: bus.bus,
+        name: bus.name.to_owned(),
+        tx_pin: bus.tx_pin,
+        rx_pin: bus.rx_pin,
+        arduino_uart: bus.arduino_uart,
+        internal: bus.internal,
         notes: bus.notes.to_owned(),
     }
 }
@@ -3296,6 +3322,19 @@ mod tests {
         assert_eq!(uno.spi_buses[0].cipo_pin, 12);
         assert_eq!(uno.spi_buses[0].sck_pin, 13);
         assert_eq!(uno.spi_buses[0].default_cs_pin, 10);
+        assert_eq!(uno.uart_buses.len(), 3);
+        assert_eq!(uno.uart_buses[0].name, "Serial1");
+        assert_eq!(uno.uart_buses[0].tx_pin, 22);
+        assert_eq!(uno.uart_buses[0].rx_pin, 23);
+        assert_eq!(uno.uart_buses[0].arduino_uart, 1);
+        assert!(!uno.uart_buses[0].internal);
+        assert_eq!(uno.uart_buses[1].name, "Serial2");
+        assert_eq!(uno.uart_buses[1].tx_pin, 1);
+        assert_eq!(uno.uart_buses[1].rx_pin, 0);
+        assert_eq!(uno.uart_buses[2].name, "Serial3");
+        assert_eq!(uno.uart_buses[2].tx_pin, 24);
+        assert_eq!(uno.uart_buses[2].rx_pin, 25);
+        assert!(uno.uart_buses[2].internal);
         assert!(uno.capabilities.contains(&"pwm.write".to_owned()));
         assert!(uno.capabilities.contains(&"adc.read".to_owned()));
         assert!(uno.capabilities.contains(&"dac.write_u12".to_owned()));

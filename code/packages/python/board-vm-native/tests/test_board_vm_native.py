@@ -156,6 +156,35 @@ def test_known_targets_are_exposed_from_rust_registry():
             "notes": "Header SPI bus on D11/COPI, D12/CIPO, and D13/SCK with D10 as the conventional chip select",
         }
     ]
+    assert uno_r4_wifi.uart_buses == [
+        {
+            "bus": 0,
+            "name": "Serial1",
+            "tx_pin": 22,
+            "rx_pin": 23,
+            "arduino_uart": 1,
+            "internal": False,
+            "notes": "UNO R4 WiFi UART on D22/TX and D23/RX",
+        },
+        {
+            "bus": 1,
+            "name": "Serial2",
+            "tx_pin": 1,
+            "rx_pin": 0,
+            "arduino_uart": 2,
+            "internal": False,
+            "notes": "Header UART on D1/TX0 and D0/RX0",
+        },
+        {
+            "bus": 2,
+            "name": "Serial3",
+            "tx_pin": 24,
+            "rx_pin": 25,
+            "arduino_uart": 3,
+            "internal": True,
+            "notes": "UNO R4 WiFi module UART on D24/TX WIFI and D25/RX WIFI",
+        },
+    ]
     assert uno_r4_wifi.digital_pin_count == len(uno_r4_wifi.digital_pins)
     d3 = uno_r4_wifi.digital_pin(3)
     assert d3 is not None

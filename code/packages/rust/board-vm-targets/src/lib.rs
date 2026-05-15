@@ -56,6 +56,17 @@ pub struct SpiBusInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UartBusInfo {
+    pub bus: u8,
+    pub name: &'static str,
+    pub tx_pin: u8,
+    pub rx_pin: u8,
+    pub arduino_uart: u8,
+    pub internal: bool,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DigitalPinInfo {
     pub pin: u8,
     pub label: &'static str,
@@ -109,6 +120,7 @@ pub struct BoardTargetInfo {
     pub digital_pins: &'static [DigitalPinInfo],
     pub i2c_buses: &'static [I2cBusInfo],
     pub spi_buses: &'static [SpiBusInfo],
+    pub uart_buses: &'static [UartBusInfo],
     pub wireless: &'static [WirelessInterfaceInfo],
     pub capabilities: &'static [&'static str],
 }
@@ -272,6 +284,10 @@ pub const UNO_R4_WIFI_I2C_BUSES: [I2cBusInfo; 2] =
     map_uno_r4_i2c_buses(board_vm_uno_r4::UNO_R4_WIFI_I2C_BUSES);
 pub const UNO_R4_SPI_BUSES: [SpiBusInfo; 1] =
     map_uno_r4_spi_buses(board_vm_uno_r4::UNO_R4_SPI_BUSES);
+pub const UNO_R4_MINIMA_UART_BUSES: [UartBusInfo; 1] =
+    map_uno_r4_uart_buses(board_vm_uno_r4::UNO_R4_MINIMA_UART_BUSES);
+pub const UNO_R4_WIFI_UART_BUSES: [UartBusInfo; 3] =
+    map_uno_r4_uart_buses(board_vm_uno_r4::UNO_R4_WIFI_UART_BUSES);
 
 pub const ESP32_DIGITAL_PINS: [DigitalPinInfo; 30] =
     map_esp32_digital_pins(board_vm_esp32::ESP32_DEVKIT_V1_DIGITAL_PINS);
@@ -365,6 +381,35 @@ const fn map_uno_r4_spi_buses<const N: usize>(
     buses
 }
 
+const fn map_uno_r4_uart_buses<const N: usize>(
+    source: [board_vm_uno_r4::UartBusDescriptor; N],
+) -> [UartBusInfo; N] {
+    let mut buses = [UartBusInfo {
+        bus: 0,
+        name: "",
+        tx_pin: 0,
+        rx_pin: 0,
+        arduino_uart: 0,
+        internal: false,
+        notes: "",
+    }; N];
+    let mut index = 0;
+    while index < N {
+        let bus = source[index];
+        buses[index] = UartBusInfo {
+            bus: bus.bus,
+            name: bus.name,
+            tx_pin: bus.tx_pin,
+            rx_pin: bus.rx_pin,
+            arduino_uart: bus.arduino_uart,
+            internal: bus.internal,
+            notes: bus.notes,
+        };
+        index += 1;
+    }
+    buses
+}
+
 const fn map_esp32_digital_pins<const N: usize>(
     source: [board_vm_esp32::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -444,6 +489,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pins: &UNO_R4_DIGITAL_PINS,
         i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
         spi_buses: &UNO_R4_SPI_BUSES,
+        uart_buses: &UNO_R4_MINIMA_UART_BUSES,
         wireless: &[],
         capabilities: &UNO_R4_MINIMA_CAPABILITIES,
     },
@@ -469,6 +515,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pins: &UNO_R4_DIGITAL_PINS,
         i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
         spi_buses: &UNO_R4_SPI_BUSES,
+        uart_buses: &UNO_R4_WIFI_UART_BUSES,
         wireless: &UNO_R4_WIFI_WIRELESS,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
@@ -491,6 +538,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pins: &ESP32_DIGITAL_PINS,
         i2c_buses: &[],
         spi_buses: &[],
+        uart_buses: &[],
         wireless: &ESP32_WIRELESS,
         capabilities: &ESP32_CAPABILITIES,
     },
@@ -516,6 +564,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pins: &PICO_DIGITAL_PINS,
         i2c_buses: &[],
         spi_buses: &[],
+        uart_buses: &[],
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
     },
@@ -541,6 +590,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         digital_pins: &PICO_DIGITAL_PINS,
         i2c_buses: &[],
         spi_buses: &[],
+        uart_buses: &[],
         wireless: &PICO_W_WIRELESS,
         capabilities: &PICO_W_CAPABILITIES,
     },
@@ -630,6 +680,35 @@ mod tests {
         assert_eq!(uno.spi_buses[0].default_cs_pin, 10);
 
         assert!(find_target("esp32-devkit-v1").unwrap().spi_buses.is_empty());
+    }
+
+    #[test]
+    fn registry_exposes_uart_bus_metadata() {
+        let minima = find_target("arduino-uno-r4-minima").unwrap();
+        assert_eq!(minima.uart_buses.len(), 1);
+        assert_eq!(minima.uart_buses[0].name, "Serial1");
+        assert_eq!(minima.uart_buses[0].tx_pin, 1);
+        assert_eq!(minima.uart_buses[0].rx_pin, 0);
+        assert_eq!(minima.uart_buses[0].arduino_uart, 1);
+        assert!(!minima.uart_buses[0].internal);
+
+        let wifi = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(wifi.uart_buses.len(), 3);
+        assert_eq!(wifi.uart_buses[0].name, "Serial1");
+        assert_eq!(wifi.uart_buses[0].tx_pin, 22);
+        assert_eq!(wifi.uart_buses[0].rx_pin, 23);
+        assert_eq!(wifi.uart_buses[1].name, "Serial2");
+        assert_eq!(wifi.uart_buses[1].tx_pin, 1);
+        assert_eq!(wifi.uart_buses[1].rx_pin, 0);
+        assert_eq!(wifi.uart_buses[2].name, "Serial3");
+        assert_eq!(wifi.uart_buses[2].tx_pin, 24);
+        assert_eq!(wifi.uart_buses[2].rx_pin, 25);
+        assert!(wifi.uart_buses[2].internal);
+
+        assert!(find_target("esp32-devkit-v1")
+            .unwrap()
+            .uart_buses
+            .is_empty());
     }
 
     #[test]

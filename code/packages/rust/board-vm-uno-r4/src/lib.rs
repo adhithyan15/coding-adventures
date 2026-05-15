@@ -64,6 +64,7 @@ pub struct TargetDescriptor {
     pub digital_pins: &'static [DigitalPinDescriptor],
     pub i2c_buses: &'static [I2cBusDescriptor],
     pub spi_buses: &'static [SpiBusDescriptor],
+    pub uart_buses: &'static [UartBusDescriptor],
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -95,6 +96,17 @@ pub struct SpiBusDescriptor {
     pub cipo_pin: u8,
     pub sck_pin: u8,
     pub default_cs_pin: u8,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UartBusDescriptor {
+    pub bus: u8,
+    pub name: &'static str,
+    pub tx_pin: u8,
+    pub rx_pin: u8,
+    pub arduino_uart: u8,
+    pub internal: bool,
     pub notes: &'static str,
 }
 
@@ -316,6 +328,53 @@ pub const UNO_R4_HEADER_SPI_BUS: SpiBusDescriptor = SpiBusDescriptor {
 
 pub const UNO_R4_SPI_BUSES: [SpiBusDescriptor; 1] = [UNO_R4_HEADER_SPI_BUS];
 
+pub const UNO_R4_MINIMA_HEADER_UART_BUS: UartBusDescriptor = UartBusDescriptor {
+    bus: 0,
+    name: "Serial1",
+    tx_pin: 1,
+    rx_pin: 0,
+    arduino_uart: 1,
+    internal: false,
+    notes: "Header UART on D1/TX0 and D0/RX0",
+};
+
+pub const UNO_R4_WIFI_D22_D23_UART_BUS: UartBusDescriptor = UartBusDescriptor {
+    bus: 0,
+    name: "Serial1",
+    tx_pin: 22,
+    rx_pin: 23,
+    arduino_uart: 1,
+    internal: false,
+    notes: "UNO R4 WiFi UART on D22/TX and D23/RX",
+};
+
+pub const UNO_R4_WIFI_HEADER_UART_BUS: UartBusDescriptor = UartBusDescriptor {
+    bus: 1,
+    name: "Serial2",
+    tx_pin: 1,
+    rx_pin: 0,
+    arduino_uart: 2,
+    internal: false,
+    notes: "Header UART on D1/TX0 and D0/RX0",
+};
+
+pub const UNO_R4_WIFI_MODULE_UART_BUS: UartBusDescriptor = UartBusDescriptor {
+    bus: 2,
+    name: "Serial3",
+    tx_pin: 24,
+    rx_pin: 25,
+    arduino_uart: 3,
+    internal: true,
+    notes: "UNO R4 WiFi module UART on D24/TX WIFI and D25/RX WIFI",
+};
+
+pub const UNO_R4_MINIMA_UART_BUSES: [UartBusDescriptor; 1] = [UNO_R4_MINIMA_HEADER_UART_BUS];
+pub const UNO_R4_WIFI_UART_BUSES: [UartBusDescriptor; 3] = [
+    UNO_R4_WIFI_D22_D23_UART_BUS,
+    UNO_R4_WIFI_HEADER_UART_BUS,
+    UNO_R4_WIFI_MODULE_UART_BUS,
+];
+
 pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     board_id: "arduino-uno-r4-minima",
     display_name: "Arduino Uno R4 Minima",
@@ -341,6 +400,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
+    uart_buses: &UNO_R4_MINIMA_UART_BUSES,
 };
 
 pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
@@ -369,6 +429,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
+    uart_buses: &UNO_R4_WIFI_UART_BUSES,
 };
 
 pub trait UnoR4Backend {
@@ -1083,6 +1144,24 @@ mod tests {
         assert_eq!(UNO_R4_WIFI.spi_buses[0].cipo_pin, 12);
         assert_eq!(UNO_R4_WIFI.spi_buses[0].sck_pin, 13);
         assert_eq!(UNO_R4_WIFI.spi_buses[0].default_cs_pin, 10);
+    }
+
+    #[test]
+    fn knows_uno_r4_uart_buses() {
+        assert_eq!(UNO_R4_MINIMA.uart_buses, &[UNO_R4_MINIMA_HEADER_UART_BUS]);
+        assert_eq!(UNO_R4_WIFI.uart_buses.len(), 3);
+        assert_eq!(UNO_R4_WIFI.uart_buses[0].name, "Serial1");
+        assert_eq!(UNO_R4_WIFI.uart_buses[0].tx_pin, 22);
+        assert_eq!(UNO_R4_WIFI.uart_buses[0].rx_pin, 23);
+        assert_eq!(UNO_R4_WIFI.uart_buses[0].arduino_uart, 1);
+        assert!(!UNO_R4_WIFI.uart_buses[0].internal);
+        assert_eq!(UNO_R4_WIFI.uart_buses[1].name, "Serial2");
+        assert_eq!(UNO_R4_WIFI.uart_buses[1].tx_pin, 1);
+        assert_eq!(UNO_R4_WIFI.uart_buses[1].rx_pin, 0);
+        assert_eq!(UNO_R4_WIFI.uart_buses[2].name, "Serial3");
+        assert_eq!(UNO_R4_WIFI.uart_buses[2].tx_pin, 24);
+        assert_eq!(UNO_R4_WIFI.uart_buses[2].rx_pin, 25);
+        assert!(UNO_R4_WIFI.uart_buses[2].internal);
     }
 
     #[test]
