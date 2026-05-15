@@ -76,6 +76,13 @@ pub enum IrError {
         from: Shape,
         to: Shape,
     },
+    /// A slice has out-of-bounds parameters: bad axis, zero step,
+    /// `start > end`, or `end > axis_dim`.  `reason` is a short
+    /// human-readable tag.
+    InvalidSlice {
+        op_index: u32,
+        reason: &'static str,
+    },
     /// A matmul received an input with the wrong rank.
     BadMatMulRank {
         op_index: u32,
@@ -505,6 +512,51 @@ impl Graph {
                 }
                 Ok(())
             }
+
+            // ──── slice (V2 shape op) ────
+            Op::Slice {
+                input,
+                axis,
+                start,
+                end,
+                step,
+                output,
+            } => {
+                let inp = self.must_tensor(i, *input)?;
+                if (*axis as usize) >= inp.shape.rank() {
+                    return Err(IrError::InvalidAxis {
+                        op_index: i,
+                        axis: *axis,
+                        rank: inp.shape.rank() as u32,
+                    });
+                }
+                if *step == 0 {
+                    return Err(IrError::InvalidSlice {
+                        op_index: i,
+                        reason: "step must be >= 1",
+                    });
+                }
+                if *start > *end {
+                    return Err(IrError::InvalidSlice {
+                        op_index: i,
+                        reason: "start must be <= end",
+                    });
+                }
+                let axis_dim = inp.shape.dims[*axis as usize];
+                if *end > axis_dim {
+                    return Err(IrError::InvalidSlice {
+                        op_index: i,
+                        reason: "end exceeds axis dim",
+                    });
+                }
+                let span = end - start;
+                let new_dim = span.div_ceil(*step);
+                let mut new_dims = inp.shape.dims.clone();
+                new_dims[*axis as usize] = new_dim;
+                let expected_shape = Shape::from(&new_dims[..]);
+                self.expect_output(i, *output, &inp.dtype, &expected_shape)?;
+                Ok(())
+            }
         }
     }
 
@@ -601,5 +653,6 @@ fn op_name(op: &Op) -> &'static str {
         Op::Where { .. } => "where",
         Op::Cast { .. } => "cast",
         Op::Const { .. } => "const",
+        Op::Slice { .. } => "slice",
     }
 }

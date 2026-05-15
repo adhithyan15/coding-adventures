@@ -3,6 +3,17 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.9.0] — 2026-05-13
+
+### Changed — cost model knows `Op::Slice`
+
+`cost::estimate_flops` now handles the new `Op::Slice` variant
+introduced in `matrix-ir` 0.2.0.  Costed identically to other
+shape ops (Reshape / Transpose / Broadcast) — one op per output
+element, since memory traffic dominates over arithmetic.
+
+No public API change beyond the new arm.
+
 ## [0.8.0] — 2026-05-05
 
 ### Changed — MX05 Phase 3 V5 (matrix-profile crate promotion)

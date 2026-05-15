@@ -242,6 +242,21 @@ fn encode_op(op: &Op, w: &mut Writer<'_>) {
             w.u32(*constant);
             w.u32(output.0);
         }
+        Op::Slice {
+            input,
+            axis,
+            start,
+            end,
+            step,
+            output,
+        } => {
+            w.u32(input.0);
+            w.u32(*axis);
+            w.u32(*start);
+            w.u32(*end);
+            w.u32(*step);
+            w.u32(output.0);
+        }
     }
 }
 
@@ -609,6 +624,14 @@ fn decode_op(r: &mut Reader<'_>) -> Result<Op, IrError> {
         }
         0x1B => Ok(Op::Const {
             constant: r.u32()?,
+            output: TensorId(r.u32()?),
+        }),
+        0x1C => Ok(Op::Slice {
+            input: TensorId(r.u32()?),
+            axis: r.u32()?,
+            start: r.u32()?,
+            end: r.u32()?,
+            step: r.u32()?,
             output: TensorId(r.u32()?),
         }),
         unknown => Err(IrError::WireUnknownTag {

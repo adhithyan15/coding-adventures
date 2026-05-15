@@ -456,6 +456,47 @@ pub fn broadcast_bytes(
     out
 }
 
+// ──────────────────────────── Slice ────────────────────────────
+//
+// MX01 V2 op: take a contiguous-stride slice along one axis.  Output
+// shape matches input on every other axis; the sliced axis has
+// `ceil((end - start) / step)` elements.
+
+/// Slice `input` along `axis` with `start`, `end`, `step`.  Returns
+/// `(out_bytes, out_dims)`.  The validator has already checked the
+/// parameters; this function trusts its inputs.
+pub fn slice_bytes(
+    input: &[u8],
+    in_dims: &[u32],
+    axis: u32,
+    start: u32,
+    end: u32,
+    step: u32,
+    elem_bytes: usize,
+) -> (Vec<u8>, Vec<u32>) {
+    let span = end - start;
+    let new_dim = span.div_ceil(step);
+    let mut out_dims = in_dims.to_vec();
+    out_dims[axis as usize] = new_dim;
+    let n_out = numel(&out_dims);
+    let mut out = vec![0u8; n_out * elem_bytes];
+    let in_strides = row_major_strides(in_dims);
+    let out_strides = row_major_strides(&out_dims);
+    for flat_out in 0..n_out {
+        // Decompose the output linear index into per-axis coords using
+        // the output dims.
+        let out_coords = unravel_with_strides(flat_out, &out_strides, out_dims.len());
+        // Reconstruct the input coords: same on every axis except the
+        // sliced one, where in_coord = start + out_coord * step.
+        let mut in_coords = out_coords.clone();
+        in_coords[axis as usize] = start as usize + out_coords[axis as usize] * step as usize;
+        let flat_in = ravel(&in_coords, &in_strides);
+        out[flat_out * elem_bytes..(flat_out + 1) * elem_bytes]
+            .copy_from_slice(&input[flat_in * elem_bytes..(flat_in + 1) * elem_bytes]);
+    }
+    (out, out_dims)
+}
+
 // ──────────────────────────── Cast ────────────────────────────
 
 pub fn cast(input: &[u8], src: DType, dst: DType, n: usize) -> Vec<u8> {
@@ -584,5 +625,67 @@ mod tests {
         let out = broadcast_bytes(&input, &[1, 3], &[2, 3], 4);
         let r = read_f32_vec(&out, 6);
         assert_eq!(r, vec![1.0, 2.0, 3.0, 1.0, 2.0, 3.0]);
+    }
+
+    // ── Slice tests (MX01 Phase 3a / DSP01 prerequisite) ────────
+
+    #[test]
+    fn slice_axis0_step1_contiguous_range() {
+        // Input [4]: [10, 20, 30, 40] → slice axis 0, 1..3, step 1 → [20, 30].
+        let xs = [10.0f32, 20.0, 30.0, 40.0];
+        let mut input = vec![0u8; 16];
+        write_f32_vec(&mut input, &xs);
+        let (out, dims) = slice_bytes(&input, &[4], 0, 1, 3, 1, 4);
+        assert_eq!(dims, vec![2]);
+        assert_eq!(read_f32_vec(&out, 2), vec![20.0, 30.0]);
+    }
+
+    #[test]
+    fn slice_step2_picks_even_indices() {
+        // The "extract even-indexed elements" pattern that FFT
+        // butterflies need.
+        let xs = [0.0f32, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0];
+        let mut input = vec![0u8; 32];
+        write_f32_vec(&mut input, &xs);
+        let (out, dims) = slice_bytes(&input, &[8], 0, 0, 8, 2, 4);
+        assert_eq!(dims, vec![4]);
+        assert_eq!(read_f32_vec(&out, 4), vec![0.0, 2.0, 4.0, 6.0]);
+    }
+
+    #[test]
+    fn slice_step2_offset_picks_odd_indices() {
+        // Odd-indexed extraction: start=1, end=8, step=2 → [1, 3, 5, 7].
+        let xs = [0.0f32, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0];
+        let mut input = vec![0u8; 32];
+        write_f32_vec(&mut input, &xs);
+        let (out, dims) = slice_bytes(&input, &[8], 0, 1, 8, 2, 4);
+        assert_eq!(dims, vec![4]);
+        assert_eq!(read_f32_vec(&out, 4), vec![1.0, 3.0, 5.0, 7.0]);
+    }
+
+    #[test]
+    fn slice_inner_axis_of_2d_tensor() {
+        // 2x3 tensor; slice axis 1 (inner), pick middle column.
+        // Input:
+        //   [[1, 2, 3],
+        //    [4, 5, 6]]
+        // After slice axis=1, 1..2 → [[2], [4 + 1 = 5]] = [[2], [5]]
+        let xs = [1.0f32, 2.0, 3.0, 4.0, 5.0, 6.0];
+        let mut input = vec![0u8; 24];
+        write_f32_vec(&mut input, &xs);
+        let (out, dims) = slice_bytes(&input, &[2, 3], 1, 1, 2, 1, 4);
+        assert_eq!(dims, vec![2, 1]);
+        assert_eq!(read_f32_vec(&out, 2), vec![2.0, 5.0]);
+    }
+
+    #[test]
+    fn slice_empty_range_yields_empty_axis() {
+        // start == end → zero-width slice on that axis.
+        let xs = [1.0f32, 2.0, 3.0, 4.0];
+        let mut input = vec![0u8; 16];
+        write_f32_vec(&mut input, &xs);
+        let (out, dims) = slice_bytes(&input, &[4], 0, 2, 2, 1, 4);
+        assert_eq!(dims, vec![0]);
+        assert!(out.is_empty());
     }
 }

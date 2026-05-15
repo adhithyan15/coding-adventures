@@ -304,6 +304,31 @@ fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Res
             buffers.write(out_residency.buffer, 0, &out_bytes)?;
             Ok(())
         }
+        Op::Slice {
+            input,
+            axis,
+            start,
+            end,
+            step,
+            output,
+        } => {
+            let in_t = lookup_meta(graph, *input)?;
+            let out_t = lookup_meta(graph, *output)?;
+            let in_buf = lookup_buffer(buffers, graph, in_t.id)?.to_vec();
+            let elem = in_t.dtype.size_bytes();
+            let (out_bytes, _out_dims) = eval::slice_bytes(
+                &in_buf,
+                &in_t.shape.dims,
+                *axis,
+                *start,
+                *end,
+                *step,
+                elem,
+            );
+            let out_residency = lookup_residency(graph, out_t.id)?;
+            buffers.write(out_residency.buffer, 0, &out_bytes)?;
+            Ok(())
+        }
 
         // ──── MatMul ────
         Op::MatMul { a, b, output } => {
