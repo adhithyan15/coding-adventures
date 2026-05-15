@@ -111,6 +111,7 @@ from sql_codegen import (
     ScanAllColumns,
     SetResultSchema,
     SortResult,
+    StripTrailingColumns,
     UnaryOp,
     UpdateAgg,
     UpdateRows,
@@ -587,6 +588,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     # Post-processing -----------------------------------------------------
     if isinstance(ins, SortResult):
         _do_sort(ins, st)
+        return
+    if isinstance(ins, StripTrailingColumns):
+        _do_strip_trailing(ins, st)
         return
     if isinstance(ins, LimitResult):
         _do_limit(ins, st)
@@ -1414,6 +1418,32 @@ def _do_sort(ins: SortResult, st: _VmState) -> None:
         return tuple(out)
 
     st.result.rows.sort(key=key_fn)
+
+
+def _do_strip_trailing(ins: StripTrailingColumns, st: _VmState) -> None:
+    """Remove the last ``ins.count`` columns from every row in the result.
+
+    This is the counterpart to the hidden-sort-key column injection done by
+    the codegen when ``ORDER BY`` references a column not in the SELECT list.
+
+    After ``SortResult`` has run (using those hidden trailing columns), we no
+    longer need them.  Stripping both the column-name tuple and each row's
+    value tuple restores the result to the shape the caller expects.
+
+    Example — ``SELECT name FROM t ORDER BY salary``:
+
+        Before strip  →  columns = ('name', 'salary'),  row = ('Alice', 50000)
+        After  strip  →  columns = ('name',),            row = ('Alice',)
+    """
+    n = ins.count
+    if n <= 0:
+        return
+    ncols = len(st.result.columns)
+    if n >= ncols:
+        # Guard: never strip all columns (would indicate a codegen bug).
+        return
+    st.result.columns = st.result.columns[:-n]
+    st.result.rows = [row[:-n] for row in st.result.rows]
 
 
 class _Rev:

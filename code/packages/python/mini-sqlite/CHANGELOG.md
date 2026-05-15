@@ -1,5 +1,50 @@
 # Changelog
 
+## [1.34.0] - 2026-05-15
+
+### Fixed
+
+- **`ORDER BY` column not in `SELECT` list** — Queries such as
+  `SELECT name FROM employees ORDER BY salary` previously crashed with
+  `InternalError: ValueError: tuple.index(salary): salary not in tuple`.
+
+  The fix is entirely at the codegen layer: `_compile_read` now detects sort
+  keys absent from the `Project`'s output, appends them as hidden trailing
+  `ProjectionItem` entries, inserts a `StripTrailingColumns` instruction
+  immediately after `SortResult`, and prefixes a corrected `SetResultSchema` so
+  the VM's column list matches the extended row width during the sort phase.
+
+  `SELECT *` projections are exempt (all table columns are present at runtime,
+  and column names cannot be determined at compile time).
+
+### Added
+
+- **`WITH [RECURSIVE] cte_name(col, …) AS (…)` column alias list** — The SQL
+  parser now accepts an explicit column-alias list after the CTE name:
+
+  ```sql
+  WITH RECURSIVE cnt(n) AS (
+      SELECT 1
+      UNION ALL
+      SELECT n + 1 FROM cnt WHERE n < 5
+  )
+  SELECT n FROM cnt;
+  ```
+
+  Previously this produced `Parse error at 1:1: Expected program, got 'WITH'`
+  when the column list was present (parser rejected `(n)` after the CTE name).
+
+  Changes:
+  - **Grammar** (`sql.grammar`): `cte_def` extended with optional
+    `[ "(" NAME { "," NAME } ")" ]`.
+  - **Parser** (`_grammar.py`): regenerated from the updated grammar.
+  - **Adapter** (`adapter.py`): two new helpers — `_cte_col_aliases` extracts
+    the column list from the `cte_def` AST node; `_apply_cte_col_aliases`
+    adds `alias=` to the anchor's `SelectItem` objects so the planner derives
+    the declared column names.  Both recursive and non-recursive CTEs benefit.
+
+  Oracle-verified: 17 tests compare results against the real `sqlite3` module.
+
 ## [1.33.0] - 2026-05-14
 
 ### Added

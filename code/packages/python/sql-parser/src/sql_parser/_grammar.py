@@ -109,6 +109,19 @@ PARSER_GRAMMAR = ParserGrammar(
             body=
             Sequence(elements=[
                 RuleReference(name='NAME', is_token=True),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='('),
+                        RuleReference(name='NAME', is_token=True),
+                        Repetition(element=
+                            Sequence(elements=[
+                                Literal(value=','),
+                                RuleReference(name='NAME', is_token=True),
+                            ]),
+                        ),
+                        Literal(value=')'),
+                    ]),
+                ),
                 Literal(value='AS'),
                 Literal(value='('),
                 RuleReference(name='query_stmt', is_token=False),

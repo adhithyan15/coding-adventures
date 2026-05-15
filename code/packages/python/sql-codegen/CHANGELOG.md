@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.26.0] - 2026-05-15
+
+### Added
+
+- **`StripTrailingColumns`** (`ir.py`) — New post-processing IR instruction with
+  a single field `count: int`.  Signals the VM to remove the last `count`
+  columns from the result buffer's column list and from each row's value tuple.
+
+- **Hidden sort-key column injection** (`compiler.py`, `_compile_read`) — When an
+  `ORDER BY` clause references a column not in the SELECT output, the compiler
+  now:
+
+  1. Detects the hidden sort keys by comparing `SortResult` column names against
+     the `Project`'s output names (`_projection_name`).  Skips Wildcard (`SELECT
+     *`) projects — those always include every table column at runtime.
+  2. Appends hidden `ProjectionItem` entries to the `Project` using the original
+     planner `SortKey.expr` (so the correct `LoadColumn` cursor is used, not a
+     fallback to cursor 0).
+  3. Prepends `SetResultSchema(extended_schema)` to the core instructions to keep
+     the VM's `result.columns` in sync with the actual row width during sorting.
+  4. Inserts `StripTrailingColumns(count=n_hidden)` immediately after the
+     `SortResult` in the post-processing list.
+
+  This makes `SELECT name FROM employees ORDER BY salary` work correctly: the
+  result rows contain only `name`, even though `salary` was used to sort them.
+
 ## [1.25.0] - 2026-05-14
 
 ### Added

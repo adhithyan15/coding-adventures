@@ -247,6 +247,8 @@ def _query_stmt(
             if name_tok is None:
                 raise ProgrammingError("cte_def: missing CTE name")
             cte_name = name_tok.value
+            # Extract optional column alias list: WITH RECURSIVE cnt(n, m) AS (...)
+            col_aliases = _cte_col_aliases(cte_node)
             inner_q = _child_node(cte_node, "query_stmt")
 
             if is_recursive and _child_nodes(inner_q, "set_op_clause"):
@@ -254,6 +256,14 @@ def _query_stmt(
                 # Parse anchor with the CTEs accumulated so far.
                 anchor_node = _child_node(inner_q, "select_stmt")
                 anchor_stmt = _select(anchor_node, ctes=active_ctes)
+
+                # Apply column aliases to the anchor's SELECT items so the
+                # planner derives the right output-column names.  For example:
+                #   WITH RECURSIVE cnt(n) AS (SELECT 1 UNION ALL SELECT n+1 ...)
+                # renames the anchor's "1" column to "n", which makes the
+                # recursive step's column reference "n" resolve correctly.
+                if col_aliases:
+                    anchor_stmt = _apply_cte_col_aliases(anchor_stmt, col_aliases)
 
                 # Parse the recursive step WITHOUT this CTE in active_ctes so
                 # the self-reference stays as a plain TableRef.  The planner's
@@ -283,6 +293,9 @@ def _query_stmt(
                     raise ProgrammingError(
                         f"CTE '{cte_name}' body must be a plain SELECT, not a set operation"
                     )
+                # Apply column aliases to the non-recursive CTE's SELECT items.
+                if col_aliases and isinstance(inner_stmt, SelectStmt):
+                    inner_stmt = _apply_cte_col_aliases(inner_stmt, col_aliases)
                 # Make this CTE visible to subsequent CTEs and the main query.
                 active_ctes[cte_name] = inner_stmt
 
@@ -1974,6 +1987,85 @@ def _is_token(x: object, *, type_: str | None = None) -> bool:
 
 def _is_keyword(x: object, kw: str) -> bool:
     return isinstance(x, Token) and _token_type(x) == "KEYWORD" and x.value.upper() == kw.upper()
+
+
+def _cte_col_aliases(cte_node: ASTNode) -> list[str]:
+    """Extract the optional column-alias list from a ``cte_def`` AST node.
+
+    Grammar::
+
+        cte_def = NAME [ "(" NAME { "," NAME } ")" ] "AS" "(" query_stmt ")" ;
+
+    Returns an empty list if no column list was written, or a list of alias
+    strings (in order) if one was.
+
+    Example — ``WITH RECURSIVE cnt(n, m) AS (...)``::
+
+        _cte_col_aliases(cte_node)  →  ['n', 'm']
+
+    The implementation is a tiny state machine that iterates the children of
+    the ``cte_def`` node:
+
+    1. Consume the first NAME token (the CTE name).
+    2. If the next non-trivial child is ``(`` → enter *in_col_list* mode and
+       collect all NAME tokens until the closing ``)``.
+    3. If the next non-trivial child is ``AS`` → no column list, stop.
+    """
+    aliases: list[str] = []
+    state = "cte_name"
+    for c in cte_node.children:
+        if state == "cte_name":
+            if isinstance(c, Token) and _token_type(c) == "NAME":
+                state = "after_name"
+        elif state == "after_name":
+            if isinstance(c, Token) and c.value == "(":
+                state = "in_col_list"
+            elif _is_keyword(c, "AS"):
+                break   # no column list
+        elif state == "in_col_list":
+            if isinstance(c, Token) and _token_type(c) == "NAME":
+                aliases.append(c.value)
+            elif isinstance(c, Token) and c.value == ")":
+                break   # end of column list
+    return aliases
+
+
+def _apply_cte_col_aliases(stmt: SelectStmt, aliases: list[str]) -> SelectStmt:
+    """Apply column aliases declared in a CTE definition to the CTE's SELECT items.
+
+    When a CTE is declared with an explicit column list::
+
+        WITH RECURSIVE cnt(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM cnt WHERE n<5)
+
+    …the anchor query ``SELECT 1`` produces an output column whose default
+    name is ``"1"`` (the literal).  The column alias list ``(n)`` says the
+    output column should be named ``n``.
+
+    This helper adds ``alias=<declared_name>`` to each :class:`SelectItem` in
+    the anchor query's SELECT list, ensuring the planner sees the right
+    column names when it derives the CTE's output schema.
+
+    If ``aliases`` is shorter than ``stmt.items`` the trailing items keep their
+    current aliases (the same behaviour as SQLite).  If ``aliases`` is empty,
+    ``stmt`` is returned unchanged.
+    """
+    if not aliases or not stmt.items:
+        return stmt
+    new_items_list: list[SelectItem] = []
+    for i, item in enumerate(stmt.items):
+        alias = aliases[i] if i < len(aliases) else item.alias
+        new_items_list.append(SelectItem(expr=item.expr, alias=alias))
+    return SelectStmt(
+        items=tuple(new_items_list),
+        from_=stmt.from_,
+        joins=stmt.joins,
+        where=stmt.where,
+        group_by=stmt.group_by,
+        having=stmt.having,
+        order_by=stmt.order_by,
+        limit=stmt.limit,
+        distinct=stmt.distinct,
+    )
 
 
 def _has_keyword_child(node: ASTNode, kw: str) -> bool:
