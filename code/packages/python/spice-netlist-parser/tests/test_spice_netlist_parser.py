@@ -1,6 +1,7 @@
 from math import isclose
 
 import pytest
+from mosfet_models import Level1Model, MosfetType
 from spice_engine import (
     BJT,
     CCCS,
@@ -11,6 +12,7 @@ from spice_engine import (
     CurrentSource,
     Diode,
     Inductor,
+    Mosfet,
     Resistor,
     VoltageSource,
     dc_op,
@@ -214,6 +216,60 @@ Qp col base emit slow
     assert isclose(bjt.Vt, 26.0e-3)
 
 
+def test_parse_mosfet_model_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02)
+Vdd vdd 0 DC 1.8
+Vgate gate 0 DC 1.8
+Rload vdd out 1k
+M1 out gate 0 0 nfast W=2u L=180n
+.op
+"""
+    )
+
+    assert parsed.models["nfast"].name == "nfast"
+    assert parsed.models["nfast"].kind == "NMOS"
+    assert parsed.models["nfast"].params["VT0"] == 0.45
+    assert isclose(parsed.models["nfast"].params["KP"], 200.0e-6)
+    assert parsed.models["nfast"].params["LAMBDA"] == 0.02
+    mosfet = parsed.circuit.elements[3]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.drain == "out"
+    assert mosfet.gate == "gate"
+    assert mosfet.source == "0"
+    assert mosfet.body == "0"
+    assert mosfet.model.type == MosfetType.NMOS
+    assert isinstance(mosfet.model.model, Level1Model)
+    assert mosfet.model.model.params.VT0 == 0.45
+    assert isclose(mosfet.model.model.params.KP, 200.0e-6)
+    assert isclose(mosfet.model.model.params.W, 2.0e-6)
+    assert isclose(mosfet.model.model.params.L, 180.0e-9)
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert 0.0 <= result.node_voltages["out"] < 1.8
+
+
+def test_parse_pmos_mosfet_model() -> None:
+    parsed = parse_netlist(
+        """
+.model pfast PMOS(VTO=0.4 KP=120u NSUB=1.2)
+Mp out gate vdd vdd pfast W=3u L=250n
+"""
+    )
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.type == MosfetType.PMOS
+    assert isinstance(mosfet.model.model, Level1Model)
+    assert mosfet.model.model.params.VT0 == 0.4
+    assert isclose(mosfet.model.model.params.KP, 120.0e-6)
+    assert mosfet.model.model.params.N_SUB == 1.2
+    assert isclose(mosfet.model.model.params.W, 3.0e-6)
+    assert isclose(mosfet.model.model.params.L, 250.0e-9)
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
@@ -395,6 +451,31 @@ Xbuf out in 0 follower
     assert resistor.n_minus == "0"
 
 
+def test_expands_subcircuit_mosfet_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.model nfast NMOS(W=1u L=130n)
+.subckt pulldown in out vss
+Mpull out in inner vss nfast
+Rtail inner vss 10
+.ends pulldown
+Xpd gate drain 0 pulldown
+"""
+    )
+
+    mosfet = parsed.circuit.elements[0]
+    resistor = parsed.circuit.elements[1]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.name == "Xpd.Mpull"
+    assert mosfet.drain == "drain"
+    assert mosfet.gate == "gate"
+    assert mosfet.source == "Xpd.inner"
+    assert mosfet.body == "0"
+    assert isinstance(resistor, Resistor)
+    assert resistor.n_plus == "Xpd.inner"
+    assert resistor.n_minus == "0"
+
+
 def test_subcircuit_internal_nodes_are_instance_scoped() -> None:
     parsed = parse_netlist(
         """
@@ -465,6 +546,38 @@ def test_rejects_bjt_bound_to_non_bjt_model() -> None:
             """
 .model clamp D(IS=1e-15)
 Q1 c b e clamp
+"""
+        )
+
+
+def test_rejects_mosfet_with_unknown_model() -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="line 2: unknown model 'missing' for MOSFET 'M1'",
+    ):
+        parse_netlist(
+            """
+M1 d g s b missing
+"""
+        )
+
+
+def test_rejects_mosfet_bound_to_non_mosfet_model() -> None:
+    with pytest.raises(NetlistParseError, match="line 3: model 'clamp' has kind 'D'"):
+        parse_netlist(
+            """
+.model clamp D(IS=1e-15)
+M1 d g s b clamp
+"""
+        )
+
+
+def test_rejects_mosfet_parameter_without_assignment() -> None:
+    with pytest.raises(NetlistParseError, match="line 3: invalid MOSFET parameter syntax 'W'"):
+        parse_netlist(
+            """
+.model nfast NMOS
+M1 d g s b nfast W
 """
         )
 

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from dataclasses import fields as dataclass_fields
 
+from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
     BJT,
     CCCS,
@@ -17,6 +19,7 @@ from spice_engine import (
     Diode,
     ExpWaveform,
     Inductor,
+    Mosfet,
     PulseWaveform,
     PwlWaveform,
     Resistor,
@@ -278,6 +281,24 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             beta_f=model.params.get("BETA_F", model.params.get("BF", 100.0)),
             Vt=model.params.get("VT", 0.02585),
         )
+    if prefix == "M":
+        _require_min_fields(fields, 6, "MOSFET")
+        model = models.get(fields[5].lower())
+        if model is None:
+            raise NetlistParseError(f"unknown model {fields[5]!r} for MOSFET {name!r}")
+        if model.kind not in {"NMOS", "PMOS"}:
+            raise NetlistParseError(
+                f"model {model.name!r} has kind {model.kind!r}, expected 'NMOS' or 'PMOS'"
+            )
+        instance_params = _parse_element_params(fields[6:], "MOSFET")
+        return Mosfet(
+            name,
+            fields[1],
+            fields[2],
+            fields[3],
+            fields[4],
+            _build_mosfet_model(model, instance_params),
+        )
     if prefix == "G":
         _require_fields(fields, 6, "VCCS")
         return VCCS(name, fields[1], fields[2], fields[3], fields[4], parse_value(fields[5]))
@@ -370,6 +391,10 @@ def _map_subckt_fields(
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
         mapped[3] = _map_subckt_node(fields[3], instance_name, node_map)
+    elif prefix == "M":
+        _require_min_fields(fields, 5, "subcircuit MOSFET")
+        for index in range(1, 5):
+            mapped[index] = _map_subckt_node(fields[index], instance_name, node_map)
     elif prefix in {"E", "G"}:
         _require_min_fields(fields, 5, "subcircuit controlled source")
         for index in range(1, 5):
@@ -528,6 +553,45 @@ def _parse_model_params(params_text: str) -> dict[str, float]:
     if params_text[cursor:].strip(" \t,"):
         raise NetlistParseError(f"invalid .model parameter syntax {params_text!r}")
     return params
+
+
+def _parse_element_params(tokens: list[str], label: str) -> dict[str, float]:
+    params: dict[str, float] = {}
+    for token in tokens:
+        if "=" not in token:
+            raise NetlistParseError(f"invalid {label} parameter syntax {token!r}")
+        name, value = token.split("=", 1)
+        if not name or not value:
+            raise NetlistParseError(f"invalid {label} parameter syntax {token!r}")
+        params[name.upper()] = parse_value(value)
+    return params
+
+
+_LEVEL1_PARAM_ALIASES = {
+    "NSUB": "N_SUB",
+    "N": "N_SUB",
+    "TNOM": "T_NOM",
+    "TOX": "T_OX",
+    "VTO": "VT0",
+}
+
+
+def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> MOSFET:
+    params = {**model.params, **instance_params}
+    defaults = Level1Params()
+    values = {
+        field.name: getattr(defaults, field.name)
+        for field in dataclass_fields(Level1Params)
+        if field.init
+    }
+    for name, value in params.items():
+        param_name = _LEVEL1_PARAM_ALIASES.get(name, name)
+        if param_name in values and not isinstance(values[param_name], bool):
+            values[param_name] = value
+    return MOSFET(
+        type=MosfetType[model.kind],
+        model=Level1Model(Level1Params(**values)),
+    )
 
 
 def _split_fields(line: str) -> list[str]:
