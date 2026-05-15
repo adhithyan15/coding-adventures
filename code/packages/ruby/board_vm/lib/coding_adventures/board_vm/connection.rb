@@ -118,6 +118,10 @@ module CodingAdventures
         Spi.new(self)
       end
 
+      def uart
+        Uart.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -462,6 +466,26 @@ module CodingAdventures
         ensure_uno_r4_wifi!
 
         session.spi_open(
+          program_id: program_id,
+          budget: budget,
+          bus: bus,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def uart_open!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        bus:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.uart_open(
           program_id: program_id,
           budget: budget,
           bus: bus,
@@ -1405,6 +1429,28 @@ module CodingAdventures
           budget: budget,
           cs_pin: cs_pin,
           length: length,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Uart
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def open(
+        bus:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.uart_open!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          bus: bus,
           max_stack: max_stack
         )
       end

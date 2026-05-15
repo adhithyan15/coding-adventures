@@ -12,6 +12,8 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_SPI_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_UART_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
     BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
@@ -396,6 +398,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
         .with_adc()
         .with_dac()
         .with_i2c()
+        .with_uart()
         .with_spi(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
@@ -425,6 +428,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_dac()
         .with_i2c()
         .with_spi()
+        .with_uart()
         .with_led_matrix(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
@@ -459,6 +463,10 @@ pub trait UnoR4Backend {
         false
     }
 
+    fn supports_uart(&self) -> bool {
+        false
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -480,6 +488,10 @@ pub trait UnoR4Backend {
     }
 
     fn open_spi(&mut self, _bus: u8) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn open_uart(&mut self, _bus: u8) -> Result<u32, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -578,6 +590,7 @@ where
         capabilities.dac = self.backend.supports_dac();
         capabilities.i2c = self.backend.supports_i2c();
         capabilities.spi = self.backend.supports_spi();
+        capabilities.uart = self.backend.supports_uart();
         capabilities
     }
 }
@@ -644,6 +657,11 @@ where
     fn spi_open(&mut self, bus: u16) -> Result<u32, HalError> {
         let bus = normalize_spi_bus(self.target, bus)?;
         self.backend.open_spi(bus)
+    }
+
+    fn uart_open(&mut self, bus: u16) -> Result<u32, HalError> {
+        let bus = normalize_uart_bus(self.target, bus)?;
+        self.backend.open_uart(bus)
     }
 
     fn spi_transfer(
@@ -785,6 +803,19 @@ fn normalize_spi_token(target: &TargetDescriptor, token: u32) -> Result<u8, HalE
     normalize_spi_bus(target, bus)
 }
 
+fn normalize_uart_bus(target: &TargetDescriptor, bus: u16) -> Result<u8, HalError> {
+    let bus = u8::try_from(bus).map_err(|_| HalError::InvalidPin)?;
+    if target
+        .uart_buses
+        .iter()
+        .any(|descriptor| descriptor.bus == bus)
+    {
+        Ok(bus)
+    } else {
+        Err(HalError::InvalidPin)
+    }
+}
+
 fn normalize_i2c_address(address: u16) -> Result<(), HalError> {
     if address <= 0x7f {
         Ok(())
@@ -812,6 +843,15 @@ fn uno_r4_device_descriptor_for_capabilities(
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: false,
         capabilities: if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
             && capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -846,6 +886,14 @@ fn uno_r4_device_descriptor_for_capabilities(
             &BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_UART_CAPABILITIES
         } else if capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -934,6 +982,7 @@ mod tests {
         I2cTransfer(u8, u16, Vec<u8>, u8),
         SpiOpen(u8),
         SpiTransfer(u8, u8, Vec<u8>, u8),
+        UartOpen(u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -997,6 +1046,10 @@ mod tests {
             true
         }
 
+        fn supports_uart(&self) -> bool {
+            true
+        }
+
         fn supports_bootloader_reboot(&self) -> bool {
             true
         }
@@ -1024,6 +1077,11 @@ mod tests {
         fn open_spi(&mut self, bus: u8) -> Result<u32, HalError> {
             self.events.push(Event::SpiOpen(bus));
             Ok(0x2_2000 | bus as u32)
+        }
+
+        fn open_uart(&mut self, bus: u8) -> Result<u32, HalError> {
+            self.events.push(Event::UartOpen(bus));
+            Ok(0x3_2000 | bus as u32)
         }
 
         fn transfer_spi(
@@ -1202,7 +1260,7 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES.len()
         );
         assert!(UNO_R4_WIFI
             .capabilities
@@ -1229,6 +1287,9 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_SPI_TRANSFER));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_UART_OPEN));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1262,6 +1323,9 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_SPI_TRANSFER));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_UART_OPEN));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1372,6 +1436,22 @@ mod tests {
 
         assert_eq!(board.spi_open(1), Err(HalError::InvalidPin));
         assert_eq!(board.spi_open(99), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn uart_open_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.uart_open(2).unwrap(), 0x3_2002);
+        assert_eq!(board.backend().events, vec![Event::UartOpen(2)]);
+    }
+
+    #[test]
+    fn uart_open_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.uart_open(1), Err(HalError::InvalidPin));
+        assert_eq!(board.uart_open(99), Err(HalError::InvalidPin));
     }
 
     #[test]

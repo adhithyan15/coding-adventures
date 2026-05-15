@@ -217,6 +217,10 @@ module CodingAdventures
         native_session.spi_open_module(bus, max_stack)
       end
 
+      def uart_open_module(bus:, max_stack: 2)
+        native_session.uart_open_module(bus, max_stack)
+      end
+
       def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
         native_session.spi_transfer_module(
           cs_pin,
@@ -353,6 +357,17 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: spi_open_module(bus: bus, max_stack: max_stack)
+        )
+      end
+
+      def upload_uart_open(
+        program_id: @program_id,
+        bus:,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: uart_open_module(bus: bus, max_stack: max_stack)
         )
       end
 
@@ -832,6 +847,30 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def uart_open(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        bus:,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_uart_open(program_id: program_id, bus: bus, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def spi_transfer(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1229,6 +1268,8 @@ module CodingAdventures
           upload_i2c_open(**i2c_open_command_options(words, command, options, require_budget: false))
         when "upload-spi-open", "upload-spi.open"
           upload_spi_open(**spi_open_command_options(words, command, options, require_budget: false))
+        when "upload-uart-open", "upload-uart.open"
+          upload_uart_open(**uart_open_command_options(words, command, options, require_budget: false))
         when "upload-spi-transfer", "upload-spi.transfer"
           upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-spi-write", "upload-spi.write"
@@ -1285,6 +1326,8 @@ module CodingAdventures
           i2c_open(**i2c_open_command_options(words, command, options))
         when "spi-open", "spi.open"
           spi_open(**spi_open_command_options(words, command, options))
+        when "uart-open", "uart.open"
+          uart_open(**uart_open_command_options(words, command, options))
         when "spi-transfer", "spi.transfer"
           spi_transfer(**spi_transfer_command_options(words, command, options))
         when "spi-write", "spi.write"
@@ -1548,6 +1591,7 @@ module CodingAdventures
       end
 
       alias spi_open_command_options i2c_open_command_options
+      alias uart_open_command_options i2c_open_command_options
 
       def i2c_write_u8_command_options(words, command, options, require_budget: true)
         merged = options.dup

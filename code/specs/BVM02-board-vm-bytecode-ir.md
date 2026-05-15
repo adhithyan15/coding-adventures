@@ -214,6 +214,7 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x28` | `i2c.transfer` | `handle`, `address: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
 | `0x29` | `spi.open` | `bus: u16/u8` | `handle` |
 | `0x2A` | `spi.transfer` | `handle`, `cs_pin: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
+| `0x2B` | `uart.open` | `bus: u16/u8` | `handle` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -242,6 +243,13 @@ buffer, and register-style write-then-read exchanges without repeating SPI bus
 metadata in language frontends. Host SDKs may expose `spi.write` and `spi.read`
 as convenience builders, but those must lower to `spi.transfer` rather than
 claiming separate bytecode capability ids.
+
+### UART
+
+`uart.open` opens a board-advertised hardware UART and returns a persistent bus
+handle. The bus id is resolved from Rust-owned board descriptors, keeping UNO R4
+`Serial1`/`Serial2`/`Serial3` pin layout knowledge out of language frontends.
+Byte write/read operations are separate follow-on VM calls.
 
 ### LED Matrix
 
