@@ -1,5 +1,56 @@
 # Changelog — twig-type-checker
 
+## [0.6.0] — 2026-05-14
+
+### Changed (LANG54 — Generic Refinement Protocol adoption)
+
+- **`src/bridge.rs`** — new module.  Exports `TwigRefinementBridge`, which
+  implements `lang_refinement_protocol::RefinementBridge` for Twig's `Expr`
+  AST and `TwigKind` type system:
+  - `evidence_for` — `IntLit → Concrete`, `VarRef+RefinedInt → Predicated`,
+    everything else → `Unconstrained`.
+  - `narrowing_facts` — delegates to `narrowing::extract_narrowing_facts`
+    (unchanged from LANG53).
+  - `narrow_kind` — delegates to `narrowing::merge_kind_with_predicate`
+    (unchanged from LANG53).
+
+- **`check.rs` `infer_apply`** — the 40-line manual `Checker::check` loop
+  replaced with a single call to `check_call_site_refinements` from
+  `lang-refinement-protocol`.  Behaviour is identical; the loop now lives
+  in the generic crate and is shared with other languages.
+
+- **`check.rs` `infer_if`** — the 35-line manual narrowing block replaced
+  with a call to `compute_if_narrowing` from `lang-refinement-protocol`.
+  Scope push/pop and branch inference are unchanged; only the predicate
+  extraction + kind-narrowing computation is delegated.
+
+- **`arg_to_evidence` helper removed** — this private function has been
+  absorbed into `TwigRefinementBridge::evidence_for`.  No public API change.
+
+- **`Cargo.toml`** — `lang-refinement-checker` dep replaced by
+  `lang-refinement-protocol` (which re-exports `Evidence`, `Checker`,
+  `CheckOutcome`, etc.).  `lang-refined-types` kept for `TwigKind::RefinedInt`.
+
+### Tests added (10)
+
+10 new tests in `bridge::tests` covering `TwigRefinementBridge` specifically:
+`evidence_int_lit_is_concrete`, `evidence_var_ref_with_refined_kind_is_predicated`,
+`evidence_var_ref_with_plain_int_is_unconstrained`, `evidence_bool_lit_is_unconstrained`,
+`narrow_int_produces_refined_int`, `narrow_refined_int_intersects_predicates`,
+`narrow_bool_is_unchanged`, `check_call_site_int_lit_in_range_no_diagnostic`,
+`check_call_site_int_lit_out_of_range_is_diagnostic`,
+`compute_if_narrowing_narrows_variable`.
+
+All 74 LANG53 tests continue to pass (84 total).
+
+### Backward compatibility
+
+No public API changes.  `type_check`, `type_check_source`, `check_program`,
+`TwigKind`, `TypeEnv` are all unchanged.  `TwigRefinementBridge` is new public
+API (additive).
+
+---
+
 ## [0.5.0] — 2026-05-14
 
 ### Added (LANG53 — TW05-C: Refinement Checker Bridge)
