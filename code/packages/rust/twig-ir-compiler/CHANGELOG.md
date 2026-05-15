@@ -1,5 +1,22 @@
 # Changelog — twig-ir-compiler
 
+## [0.11.0] — 2026-05-15
+
+### Fixed (LANG57 — TW05-D prerequisite)
+
+- **`compile_match`: `jmpif` → `jmp_if_false`** — The variant-arm lowering in
+  `compile_match` previously emitted a non-standard three-operand opcode `"jmpif"`
+  (`jmpif cond arm_label skip_label`).  This opcode was never registered in the VM
+  dispatch table, causing every `(match …)` expression to fail at runtime with
+  `UnsupportedOpcode("jmpif")`.
+  
+  Fixed by replacing it with the standard two-operand `jmp_if_false` pattern
+  (identical to `compile_if`): when the tag comparison is false, jump to
+  `skip_label`; when true, fall through to the arm body.  The now-redundant
+  `label arm_label` instruction is also removed.
+
+---
+
 ## [0.10.0] — 2026-05-14
 
 ### Added (LANG56 — Multi-File Module Driver)

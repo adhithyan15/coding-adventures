@@ -1295,27 +1295,27 @@ impl Compiler {
                         "any",
                     ), arm_loc);
 
-                    // jmpif cond → arm_body_label; else fall to next_arm_label
-                    let arm_label = ctx.fresh_label("match_arm");
+                    // jmp_if_false cond → skip_label
+                    //
+                    // If the tag comparison is false (tag ≠ expected variant),
+                    // jump over the arm body to the next arm.  When the condition
+                    // is true the arm body falls through immediately.
+                    //
+                    // This mirrors `compile_if` (same two-operand jmp_if_false
+                    // pattern) and is the correct IIR opcode recognised by the VM.
+                    // The old three-operand `jmpif` was never added to the VM
+                    // dispatch and produced UnsupportedOpcode at runtime (LANG57).
                     let skip_label = ctx.fresh_label("match_skip");
                     ctx.emit(IIRInstr::new(
-                        "jmpif",
+                        "jmp_if_false",
                         None,
                         vec![
                             Operand::Var(cond_reg),
-                            Operand::Var(arm_label.clone()),
                             Operand::Var(skip_label.clone()),
                         ],
                         "void",
                     ), arm_loc);
-
-                    // arm_body_label: bind fields, evaluate body
-                    ctx.emit(IIRInstr::new(
-                        "label",
-                        None,
-                        vec![Operand::Var(arm_label)],
-                        "void",
-                    ), arm_loc);
+                    // arm body follows immediately (fall-through when cond is true)
 
                     // Bind fields: field_i = (car (cdr^(i+1) matched))
                     let mut added_names: Vec<String> = Vec::new();
