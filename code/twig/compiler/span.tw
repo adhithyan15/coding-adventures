@@ -1,0 +1,57 @@
+; # span.tw — Source Location (LANG57 / TW05-D)
+;
+; A `Span` records where a token or AST node lives in the source text.
+; It carries a `source-id` (integer handle identifying which source file),
+; a `start` offset (inclusive, zero-based byte index), and an `end` offset
+; (exclusive).  The invariant `0 ≤ start ≤ end` is checked by `make-span`;
+; a violated invariant returns `nil` instead of a broken record.
+;
+; Example:
+;   (let* ((sp (make-span 0 3 7)))
+;     (span-start sp))   ; → 3
+;
+; The record definition auto-generates:
+;   (Span source-id start end)       ← constructor
+;   (span-source-id sp)              ← accessor
+;   (span-start sp)                  ← accessor
+;   (span-end sp)                    ← accessor
+;   (span? v)                        ← predicate
+
+(module compiler/span
+  (typed lenient)
+  (export Span span? span-source-id span-start span-end make-span dummy-span))
+
+; ── Record definition ────────────────────────────────────────────────────────
+;
+; Records are stored as nested cons cells in the runtime heap.
+; The generated constructor right-folds the fields:
+;   (Span s st e)  ≡  (cons s (cons st (cons e nil)))
+
+(record Span
+  (source-id : int)
+  (start     : int)
+  (end       : int))
+
+; ── Validated constructor ────────────────────────────────────────────────────
+;
+; `make-span` is the public entry point.  It returns `nil` when the caller
+; passes an inverted range (start > end) or a negative start, which would
+; produce a nonsensical span that would silently propagate errors through
+; downstream passes.
+;
+; Valid: (make-span 0 3 7)  → Span record
+; Bad:  (make-span 0 7 3)  → nil
+; Bad:  (make-span 0 -1 5) → nil (negative start)
+
+(define (make-span source-id start end)
+  (if (and (>= start 0) (<= start end))
+    (Span source-id start end)
+    nil))
+
+; ── Sentinel span ────────────────────────────────────────────────────────────
+;
+; A zero-width span at the start of file 0.  Useful as a placeholder for
+; synthetic nodes that have no meaningful source location.
+
+(define (dummy-span)
+  (Span 0 0 0))

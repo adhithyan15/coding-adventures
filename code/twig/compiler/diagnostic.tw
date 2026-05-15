@@ -1,0 +1,61 @@
+; # diagnostic.tw — Compiler Diagnostics (LANG57 / TW05-D)
+;
+; A `Diagnostic` is produced by any compiler pass (lexer, parser, type
+; checker, IR emitter) when it encounters a problem.  It carries a
+; `severity` (error, warning, or informational), a `message` (human-readable
+; string), and a `span` (source location).
+;
+; The design mirrors Rust's `Diagnostic` API and allows multiple diagnostics
+; to accumulate before bailing out — enabling the "report all errors at
+; once" UX rather than "report first error and stop".
+;
+; Example:
+;   (let* ((sp  (make-span 0 10 15))
+;          (d   (Diagnostic (SevError) "unexpected token" sp)))
+;     (SevError? (diagnostic-severity d)))   ; → #t
+
+(module compiler/diagnostic
+  (typed lenient)
+  (export Severity SevError SevWarning SevInfo
+          SevError? SevWarning? SevInfo?
+          Diagnostic diagnostic? diagnostic-severity diagnostic-message
+          diagnostic-span make-error make-warning make-info)
+  (import compiler/span))
+
+; ── Severity union ───────────────────────────────────────────────────────────
+;
+; Three levels mirror the conventional compiler taxonomy:
+;   SevError   — hard failure; compilation cannot produce a valid output
+;   SevWarning — suspicious but not fatal; output is produced with caveats
+;   SevInfo    — purely informational (e.g. unused-variable hints)
+;
+; Tag assignments (0-based):
+;   0 = SevError
+;   1 = SevWarning
+;   2 = SevInfo
+
+(union Severity
+  (SevError)
+  (SevWarning)
+  (SevInfo))
+
+; ── Diagnostic record ────────────────────────────────────────────────────────
+
+(record Diagnostic
+  (severity : any)
+  (message  : any)
+  (span     : any))
+
+; ── Convenience constructors ─────────────────────────────────────────────────
+;
+; These wrap the generated `Diagnostic` constructor with the appropriate
+; severity tag so callers don't have to construct `(SevError)` inline.
+
+(define (make-error message span)
+  (Diagnostic (SevError) message span))
+
+(define (make-warning message span)
+  (Diagnostic (SevWarning) message span))
+
+(define (make-info message span)
+  (Diagnostic (SevInfo) message span))

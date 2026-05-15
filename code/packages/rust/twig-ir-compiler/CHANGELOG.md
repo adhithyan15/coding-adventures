@@ -1,5 +1,26 @@
 # Changelog — twig-ir-compiler
 
+## [0.12.0] — 2026-05-15
+
+### Added (LANG57 — TW05-D string/symbol conversion builtins)
+
+- **`"number->string"`, `"string->symbol"`, `"symbol->string"` added to
+  `BUILTINS`** — these three conversions have been in `lispy-runtime` since
+  LANG47 but were accidentally omitted from the compiler's `BUILTINS`
+  constant.  Without this entry the compiler treated calls like
+  `(number->string 42)` as user-function calls, which then failed with
+  "unbound name" when no top-level define existed.  Adding them makes
+  string↔number↔symbol conversions usable from any Twig source file,
+  including the new `code/twig/compiler/` data model modules.
+
+- **`extern_fns` in `compile_module_tree` now covers record/union generated
+  names** — the `twig-module-driver` Phase 3 pre-pass was extended to
+  collect constructor, predicate, and accessor names from `Form::RecordDef`
+  and `Form::UnionDef`.  This fixes "unbound name" errors when one Twig
+  module calls record/union functions defined in another module.
+
+---
+
 ## [0.11.0] — 2026-05-15
 
 ### Fixed (LANG57 — TW05-D prerequisite)

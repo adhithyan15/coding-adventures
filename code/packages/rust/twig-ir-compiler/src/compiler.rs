@@ -166,6 +166,8 @@ const BUILTINS: &[&str] = &[
     "list", "length", "append", "reverse", "list-ref", "assoc", "list?",
     // LANG52: symbol utilities
     "symbol-append",
+    // LANG57: string ↔ number ↔ symbol conversions (already in lispy-runtime LANG47+)
+    "number->string", "string->symbol", "symbol->string",
     // I/O
     "print",
     // Host I/O (LANG52) — these dispatch via call_builtin to exec_host_call
