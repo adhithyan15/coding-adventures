@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Parse SPICE `.tf V(output_node) input_source` transfer-function analysis
+  cards.
+
 ## 0.1.7
 
 - Add independent-source `AC <magnitude> [phase]` parsing, including combined

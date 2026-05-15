@@ -27,5 +27,5 @@ elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
 `LAMBDA`, `GAMMA`, `PHI`, `W`, `L`, `IS`, `N_SUB` / `NSUB`, and `T_NOM` /
 `TNOM` parameters,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
-`.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, and `.ac`
-analysis cards.
+`.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, `.ac`, and
+`.tf` analysis cards.

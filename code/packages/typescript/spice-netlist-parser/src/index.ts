@@ -59,7 +59,13 @@ export interface AcAnalysis {
   readonly stopHz: number;
 }
 
-export type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis;
+export interface TfAnalysis {
+  readonly kind: "tf";
+  readonly outputNode: string;
+  readonly inputSource: string;
+}
+
+export type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis;
 
 export interface ModelCard {
   readonly name: string;
@@ -89,6 +95,10 @@ export class ParsedNetlist {
 
   acCards(): AcAnalysis[] {
     return this.analyses.filter((analysis): analysis is AcAnalysis => analysis.kind === "ac");
+  }
+
+  tfCards(): TfAnalysis[] {
+    return this.analyses.filter((analysis): analysis is TfAnalysis => analysis.kind === "tf");
   }
 }
 
@@ -763,7 +773,25 @@ function parseDirective(fields: readonly string[]): Analysis {
       stopHz: parseValue(fields[4]),
     };
   }
+  if (directive === ".tf") {
+    requireFields(fields, 3, ".tf");
+    return {
+      kind: "tf",
+      outputNode: parseVoltageProbe(fields[1]),
+      inputSource: fields[2],
+    };
+  }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
+}
+
+function parseVoltageProbe(token: string): string {
+  const match = /^v\(([^()\s]+)\)$/i.exec(token);
+  if (match === null) {
+    throw new NetlistParseError(
+      `.tf output must be a voltage probe V(node), got ${JSON.stringify(token)}`,
+    );
+  }
+  return match[1];
 }
 
 function splitFields(line: string): string[] {

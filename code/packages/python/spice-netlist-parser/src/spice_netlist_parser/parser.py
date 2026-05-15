@@ -67,7 +67,15 @@ class AcAnalysis:
     stop_hz: float
 
 
-type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
+@dataclass(frozen=True, slots=True)
+class TfAnalysis:
+    """A `.tf V(output_node) input_source` transfer-function analysis card."""
+
+    output_node: str
+    input_source: str
+
+
+type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis
 
 
 @dataclass(frozen=True, slots=True)
@@ -120,6 +128,9 @@ class ParsedNetlist:
 
     def ac_cards(self) -> list[AcAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, AcAnalysis)]
+
+    def tf_cards(self) -> list[TfAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, TfAnalysis)]
 
 
 _VALUE_RE = re.compile(
@@ -542,7 +553,17 @@ def _parse_directive(fields: list[str]) -> Analysis:
             start_hz=parse_value(fields[3]),
             stop_hz=parse_value(fields[4]),
         )
+    if directive == ".tf":
+        _require_fields(fields, 3, ".tf")
+        return TfAnalysis(output_node=_parse_voltage_probe(fields[1]), input_source=fields[2])
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_voltage_probe(token: str) -> str:
+    match = re.fullmatch(r"(?i)v\(([^()\s]+)\)", token)
+    if match is None:
+        raise NetlistParseError(f".tf output must be a voltage probe V(node), got {token!r}")
+    return match.group(1)
 
 
 def _parse_model_card(fields: list[str]) -> ModelCard:

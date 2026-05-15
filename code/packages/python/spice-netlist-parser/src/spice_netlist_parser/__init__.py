@@ -7,6 +7,7 @@ from spice_netlist_parser.parser import (
     NetlistParseError,
     OpAnalysis,
     ParsedNetlist,
+    TfAnalysis,
     TranAnalysis,
     parse_netlist,
 )
@@ -21,6 +22,7 @@ __all__ = [
     "NetlistParseError",
     "OpAnalysis",
     "ParsedNetlist",
+    "TfAnalysis",
     "TranAnalysis",
     "__version__",
     "parse",
