@@ -5,267 +5,223 @@
 ;
 ; ## Algorithm
 ;
-; The main function `lex-source` calls `lex-loop`, a tail-recursive helper that
-; keeps three immutable arguments:
+; `lex-source` calls `lex-loop`, a tail-recursive helper that threads:
 ;   - `src`  — the full source string (never mutated)
-;   - `pos`  — the current character index (incremented on each recursive call)
-;   - `len`  — string-length(src), computed once
+;   - `pos`  — the current character index
+;   - `len`  — string-length(src), computed once upfront
 ;   - `acc`  — accumulated tokens in *reverse* order (prepend is O(1))
 ;
 ; At EOF the accumulator is reversed to restore source order.
 ;
 ; ## ASCII dispatch
 ;
-; Twig has no character literal syntax.  The lexer stores ASCII code points
-; as named integer constants and compares against them using `=`.
+; Twig has no character literal syntax, and top-level `(define NAME value)`
+; forms (non-lambda) are not available as globals across module boundaries.
+; Instead, ASCII comparisons use inline literals throughout, with comments
+; identifying each code point:
 ;
-;   (define ASCII-LPAREN 40)   ; character `(`
-;   (= c ASCII-LPAREN)         ; #t when c is `(`
+;   (= c 40)   ; `(` — ASCII 40
+;   (= c 41)   ; `)` — ASCII 41
 ;
-; ## Character categories
+; ## Paren-balance strategy
 ;
-;   Single-char tokens: `(` `)` `'` `.` `:`
-;   Strings:  `"…"` — scan until closing `"`, skip `\"`
-;   Booleans: `#t` or `#f`
-;   Integers: optional leading `-`, then digit run
-;   Identifiers: any non-delimiter sequence
-;   Whitespace (32 9 10 13): skip
-;   Comments (`;` to end-of-line): skip
-;
-; ## Cross-module predicate constraint
-;
-; Token constructors (`TkLParen`, etc.) come from `compiler/token`.  Because
-; `variant_tags` are not propagated across module boundaries by the module
-; driver, the lexer *constructs* tokens using imported constructors but never
-; *matches* on their tags.  Callers use predicates (`TkLParen?`, etc.).
-;
-; ## Example
-;
-;   (lex-source "(+ 42 x)")
-;   ; → (Token TkLParen  "("  sp0)
-;   ;   (Token TkIdentifier "+" sp1)
-;   ;   (Token TkInteger "42" sp2)
-;   ;   (Token TkIdentifier "x" sp3)
-;   ;   (Token TkRParen  ")"  sp4)
-;   ;   (Token TkEOF     ""   sp5)
+; Each character category is handled by a small dedicated helper (lex-c,
+; lex-c-2, ..., lex-c-11) that tests one condition and tails into the next
+; helper.  Each helper is a simple, easy-to-verify `(if cond then else)`.
 
 (module compiler/lexer
   (typed lenient)
   (export lex-source)
   (import compiler/span compiler/token))
 
-; ── ASCII code-point constants ────────────────────────────────────────────────
-;
-; Using named constants avoids magic numbers and makes the dispatch readable.
-
-(define ASCII-LPAREN    40)   ; (
-(define ASCII-RPAREN    41)   ; )
-(define ASCII-QUOTE     39)   ; '
-(define ASCII-DOT       46)   ; .
-(define ASCII-COLON     58)   ; :
-(define ASCII-DQUOTE    34)   ; "
-(define ASCII-SEMICOLON 59)   ; ;
-(define ASCII-HASH      35)   ; #
-(define ASCII-t-lower   116)  ; t
-(define ASCII-f-lower   102)  ; f
-(define ASCII-ZERO      48)   ; 0
-(define ASCII-NINE      57)   ; 9
-(define ASCII-SPACE     32)   ; space
-(define ASCII-NEWLINE   10)   ; \n
-(define ASCII-TAB       9)    ; \t
-(define ASCII-CR        13)   ; \r
-(define ASCII-MINUS     45)   ; -
-(define ASCII-BACKSLASH 92)   ; \
-
-; ── Delimiter predicate ───────────────────────────────────────────────────────
-;
-; An identifier ends at any delimiter: `(`, `)`, `;`, whitespace, or EOF.
-
-(define (is-delimiter? c)
-  (or (= c ASCII-LPAREN)
-      (= c ASCII-RPAREN)
-      (= c ASCII-SEMICOLON)
-      (= c ASCII-SPACE)
-      (= c ASCII-NEWLINE)
-      (= c ASCII-TAB)
-      (= c ASCII-CR)))
-
-; ── Digit predicate ───────────────────────────────────────────────────────────
+; ── Predicate helpers ─────────────────────────────────────────────────────────
 
 (define (is-digit? c)
-  (and (>= c ASCII-ZERO) (<= c ASCII-NINE)))
+  ; ASCII 48 = '0', 57 = '9'
+  (and (>= c 48) (<= c 57)))
+
+(define (is-whitespace? c)
+  ; 32=space 10=\n 9=\t 13=\r
+  (or (= c 32) (= c 10) (= c 9) (= c 13)))
+
+(define (is-delimiter? c)
+  ; Delimiters: ( ) ; and whitespace
+  (or (= c 40) (= c 41) (= c 59) (is-whitespace? c)))
 
 ; ── Span helper ───────────────────────────────────────────────────────────────
-;
-; All tokens in a single-file lexer live in source-id 0.
 
 (define (make-tok-span start end)
   (make-span 0 start end))
 
-; ── Scan helpers — return (cons new-pos lexeme) ───────────────────────────────
+; ── Multi-character scan helpers ──────────────────────────────────────────────
 ;
-; Each scan-* function advances through `src` collecting characters that belong
-; to the current token kind.  They return a cons pair so the caller can extract
-; both the updated position and the resulting substring in one call.
+; Each returns `(cons new-pos lexeme-string)`.
 
-; scan-integer: collect digits starting at `pos`.
-; Returns (cons end-pos lexeme-string).
-; `start` is the index where the lexeme began (may include a leading `-`).
-
+; scan-integer: advance while digits; `start` may include a leading `-`.
 (define (scan-integer src pos len start)
   (if (>= pos len)
       (cons pos (substring src start pos))
-      (let* ((c (char->integer (string-ref src pos))))
-        (if (is-digit? c)
-            (scan-integer src (+ pos 1) len start)
-            (cons pos (substring src start pos))))))
+      (if (is-digit? (char->integer (string-ref src pos)))
+          (scan-integer src (+ pos 1) len start)
+          (cons pos (substring src start pos)))))
 
-; scan-identifier: collect non-delimiter characters.
-; Returns (cons end-pos lexeme-string).
-
+; scan-identifier: advance until a delimiter is reached.
 (define (scan-identifier src pos len start)
   (if (>= pos len)
       (cons pos (substring src start pos))
-      (let* ((c (char->integer (string-ref src pos))))
-        (if (is-delimiter? c)
-            (cons pos (substring src start pos))
-            (scan-identifier src (+ pos 1) len start)))))
+      (if (is-delimiter? (char->integer (string-ref src pos)))
+          (cons pos (substring src start pos))
+          (scan-identifier src (+ pos 1) len start))))
 
-; scan-string: collect characters until the matching closing `"`.
-; Handles the escape sequence `\"` (do not close on escaped quote).
+; scan-string: advance from pos until a closing `"` (skip `\"`).
 ; `start` is the index AFTER the opening `"`.
-; Returns (cons end-pos lexeme-string) where end-pos is AFTER the closing `"`.
-
+; Returns (cons pos-after-closing-quote lexeme).
 (define (scan-string src pos len start)
   (if (>= pos len)
-      ; Unterminated string — return what we have
       (cons pos (substring src start pos))
       (let* ((c (char->integer (string-ref src pos))))
-        (if (= c ASCII-DQUOTE)
-            ; Found closing quote: lexeme is [start, pos), pos+1 skips the `"`
+        ; 34 = `"`, 92 = `\`
+        (if (= c 34)
             (cons (+ pos 1) (substring src start pos))
-            (if (and (= c ASCII-BACKSLASH) (< (+ pos 1) len))
-                ; Escape sequence: skip two characters
+            (if (and (= c 92) (< (+ pos 1) len))
                 (scan-string src (+ pos 2) len start)
                 (scan-string src (+ pos 1) len start))))))
 
-; skip-whitespace: advance past spaces, tabs, newlines, carriage returns.
-
+; skip-whitespace: advance past spaces/tabs/newlines.
 (define (skip-whitespace src pos len)
   (if (>= pos len)
       pos
-      (let* ((c (char->integer (string-ref src pos))))
-        (if (or (= c ASCII-SPACE)
-                (= c ASCII-NEWLINE)
-                (= c ASCII-TAB)
-                (= c ASCII-CR))
-            (skip-whitespace src (+ pos 1) len)
-            pos))))
+      (if (is-whitespace? (char->integer (string-ref src pos)))
+          (skip-whitespace src (+ pos 1) len)
+          pos)))
 
-; skip-comment: advance from `;` to end-of-line (or EOF).
-
+; skip-comment: advance from `;` to end of line (or EOF).
 (define (skip-comment src pos len)
   (if (>= pos len)
       pos
-      (let* ((c (char->integer (string-ref src pos))))
-        (if (= c ASCII-NEWLINE)
-            (+ pos 1)
-            (skip-comment src (+ pos 1) len)))))
+      ; 10 = newline
+      (if (= (char->integer (string-ref src pos)) 10)
+          (+ pos 1)
+          (skip-comment src (+ pos 1) len))))
+
+; ── Emit helper ───────────────────────────────────────────────────────────────
+;
+; Prepend a token to the accumulator and continue the lex loop.
+
+(define (emit src next-pos len acc tok)
+  (lex-loop src next-pos len (cons tok acc)))
 
 ; ── Main lexer loop ───────────────────────────────────────────────────────────
-;
-; `lex-loop` is the central dispatch.  It reads one character, decides what
-; kind of token (or skip) it introduces, and recurs with an updated position
-; and accumulator.
-;
-; Tokens are prepended to `acc` (O(1)); `lex-source` reverses at the end.
 
 (define (lex-loop src pos len acc)
   (if (>= pos len)
-      ; EOF reached — emit sentinel token and reverse accumulator
       (reverse (cons (Token (TkEOF) "" (make-tok-span pos pos)) acc))
       (let* ((c (char->integer (string-ref src pos))))
-        (lex-dispatch src pos len acc c))))
+        (lex-c src pos len acc c))))
 
-; lex-dispatch: a long chain of nested `if` expressions that routes each
-; leading character to the appropriate token construction.
+; ── lex-c through lex-c-11: one function per character category ──────────────
 ;
-; Structure:
-;   single-char tokens first (fast path),
-;   then whitespace / comments (skip),
-;   then multi-char tokens (string, boolean, integer, identifier).
+; Each function tests one condition; if not matched, tails into the next.
+; This keeps paren nesting trivially shallow.
 
-(define (lex-dispatch src pos len acc c)
-  ; ── Single-character tokens ─────────────────────────────────────────────────
-  (if (= c ASCII-LPAREN)
-      (lex-loop src (+ pos 1) len
-                (cons (Token (TkLParen) "(" (make-tok-span pos (+ pos 1))) acc))
-  (if (= c ASCII-RPAREN)
-      (lex-loop src (+ pos 1) len
-                (cons (Token (TkRParen) ")" (make-tok-span pos (+ pos 1))) acc))
-  (if (= c ASCII-QUOTE)
-      (lex-loop src (+ pos 1) len
-                (cons (Token (TkQuote) "'" (make-tok-span pos (+ pos 1))) acc))
-  (if (= c ASCII-DOT)
-      (lex-loop src (+ pos 1) len
-                (cons (Token (TkDot) "." (make-tok-span pos (+ pos 1))) acc))
-  (if (= c ASCII-COLON)
-      (lex-loop src (+ pos 1) len
-                (cons (Token (TkColon) ":" (make-tok-span pos (+ pos 1))) acc))
-  ; ── Whitespace / comments ────────────────────────────────────────────────────
-  (if (or (= c ASCII-SPACE) (= c ASCII-NEWLINE) (= c ASCII-TAB) (= c ASCII-CR))
-      (let* ((next (skip-whitespace src pos len)))
-        (lex-loop src next len acc))
-  (if (= c ASCII-SEMICOLON)
-      (let* ((next (skip-comment src (+ pos 1) len)))
-        (lex-loop src next len acc))
-  ; ── String literal ───────────────────────────────────────────────────────────
-  (if (= c ASCII-DQUOTE)
+; 40 = `(`
+(define (lex-c src pos len acc c)
+  (if (= c 40)
+      (emit src (+ pos 1) len acc
+            (Token (TkLParen) "(" (make-tok-span pos (+ pos 1))))
+      (lex-c-2 src pos len acc c)))
+
+; 41 = `)`
+(define (lex-c-2 src pos len acc c)
+  (if (= c 41)
+      (emit src (+ pos 1) len acc
+            (Token (TkRParen) ")" (make-tok-span pos (+ pos 1))))
+      (lex-c-3 src pos len acc c)))
+
+; 39 = `'`
+(define (lex-c-3 src pos len acc c)
+  (if (= c 39)
+      (emit src (+ pos 1) len acc
+            (Token (TkQuote) "'" (make-tok-span pos (+ pos 1))))
+      (lex-c-4 src pos len acc c)))
+
+; 46 = `.`
+(define (lex-c-4 src pos len acc c)
+  (if (= c 46)
+      (emit src (+ pos 1) len acc
+            (Token (TkDot) "." (make-tok-span pos (+ pos 1))))
+      (lex-c-5 src pos len acc c)))
+
+; 58 = `:`
+(define (lex-c-5 src pos len acc c)
+  (if (= c 58)
+      (emit src (+ pos 1) len acc
+            (Token (TkColon) ":" (make-tok-span pos (+ pos 1))))
+      (lex-c-6 src pos len acc c)))
+
+; whitespace — skip
+(define (lex-c-6 src pos len acc c)
+  (if (is-whitespace? c)
+      (lex-loop src (skip-whitespace src pos len) len acc)
+      (lex-c-7 src pos len acc c)))
+
+; 59 = `;` — comment to end-of-line
+(define (lex-c-7 src pos len acc c)
+  (if (= c 59)
+      (lex-loop src (skip-comment src (+ pos 1) len) len acc)
+      (lex-c-8 src pos len acc c)))
+
+; 34 = `"` — string literal
+(define (lex-c-8 src pos len acc c)
+  (if (= c 34)
       (let* ((result  (scan-string src (+ pos 1) len (+ pos 1)))
              (end-pos (car result))
              (lexeme  (cdr result)))
-        (lex-loop src end-pos len
-                  (cons (Token (TkString) lexeme (make-tok-span pos end-pos)) acc)))
-  ; ── Boolean: #t or #f ────────────────────────────────────────────────────────
-  (if (= c ASCII-HASH)
-      (if (< (+ pos 1) len)
-          (let* ((next-c (char->integer (string-ref src (+ pos 1)))))
-            (lex-loop src (+ pos 2) len
-                      (cons (Token (TkBoolean)
-                                   (if (= next-c ASCII-t-lower) "#t" "#f")
-                                   (make-tok-span pos (+ pos 2)))
-                            acc)))
-          ; Lone `#` at EOF — treat as identifier
-          (lex-loop src (+ pos 1) len
-                    (cons (Token (TkIdentifier) "#" (make-tok-span pos (+ pos 1))) acc)))
-  ; ── Negative integer: `-` followed by digit ──────────────────────────────────
-  (if (and (= c ASCII-MINUS)
+        (emit src end-pos len acc
+              (Token (TkString) lexeme (make-tok-span pos end-pos))))
+      (lex-c-9 src pos len acc c)))
+
+; 35 = `#` — boolean (#t or #f)
+(define (lex-c-9 src pos len acc c)
+  (if (= c 35)
+      ; Peek at next character: 116='t', 102='f'
+      (let* ((next-c (if (< (+ pos 1) len)
+                         (char->integer (string-ref src (+ pos 1)))
+                         0))
+             (lex    (if (= next-c 116) "#t" "#f"))
+             (end    (if (< (+ pos 1) len) (+ pos 2) (+ pos 1))))
+        (emit src end len acc
+              (Token (TkBoolean) lex (make-tok-span pos end))))
+      (lex-c-10 src pos len acc c)))
+
+; 45 = `-` followed by digit — negative integer
+(define (lex-c-10 src pos len acc c)
+  (if (and (= c 45)
            (< (+ pos 1) len)
            (is-digit? (char->integer (string-ref src (+ pos 1)))))
       (let* ((result  (scan-integer src (+ pos 2) len pos))
              (end-pos (car result))
              (lexeme  (cdr result)))
-        (lex-loop src end-pos len
-                  (cons (Token (TkInteger) lexeme (make-tok-span pos end-pos)) acc)))
-  ; ── Positive integer: leading digit ──────────────────────────────────────────
+        (emit src end-pos len acc
+              (Token (TkInteger) lexeme (make-tok-span pos end-pos))))
+      (lex-c-11 src pos len acc c)))
+
+; digit — positive integer
+(define (lex-c-11 src pos len acc c)
   (if (is-digit? c)
       (let* ((result  (scan-integer src (+ pos 1) len pos))
              (end-pos (car result))
              (lexeme  (cdr result)))
-        (lex-loop src end-pos len
-                  (cons (Token (TkInteger) lexeme (make-tok-span pos end-pos)) acc)))
-  ; ── Identifier (catch-all) ───────────────────────────────────────────────────
-  (let* ((result  (scan-identifier src (+ pos 1) len pos))
-         (end-pos (car result))
-         (lexeme  (cdr result)))
-    (lex-loop src end-pos len
-              (cons (Token (TkIdentifier) lexeme (make-tok-span pos end-pos)) acc)))
-  )))))))))))
+        (emit src end-pos len acc
+              (Token (TkInteger) lexeme (make-tok-span pos end-pos))))
+      ; Catch-all: identifier (any non-delimiter sequence).
+      (let* ((result  (scan-identifier src (+ pos 1) len pos))
+             (end-pos (car result))
+             (lexeme  (cdr result)))
+        (emit src end-pos len acc
+              (Token (TkIdentifier) lexeme (make-tok-span pos end-pos))))))
 
-; ── Public API ───────────────────────────────────────────────────────────────
-;
-; `lex-source` is the single exported function.  It wraps `lex-loop` and
-; computes `string-length` once so the inner loop doesn't recompute it.
+; ── Public API ────────────────────────────────────────────────────────────────
 
 (define (lex-source src)
   (lex-loop src 0 (string-length src) (list)))
