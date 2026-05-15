@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.5
+
+- Parse `.model <name> NPN(...)` and `.model <name> PNP(...)` cards into
+  `ModelCard` records.
+- Parse `Q` BJT elements into `spice_engine.BJT` instances using `IS`,
+  `BF`/`BETA_F`, and `VT` model parameters.
+- Remap BJT collector/base/emitter terminals during `.subckt` expansion.
+
 ## 0.1.4
 
 - Parse `.model <name> D(...)` cards into `ModelCard` records.

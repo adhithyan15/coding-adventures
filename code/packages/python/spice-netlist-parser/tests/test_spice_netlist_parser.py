@@ -2,6 +2,7 @@ from math import isclose
 
 import pytest
 from spice_engine import (
+    BJT,
     CCCS,
     CCVS,
     VCCS,
@@ -167,6 +168,52 @@ Rload out 0 1k
     assert 0.1 < result.node_voltages["out"] < 0.7
 
 
+def test_parse_bjt_model_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(IS=1e-14 BF=120 VT=25m)
+Vcc vcc 0 DC 5
+Vb base 0 DC 0.7
+Rc vcc col 100
+Q1 col base 0 fast
+.op
+"""
+    )
+
+    assert parsed.models == {
+        "fast": ModelCard("fast", "NPN", {"IS": 1.0e-14, "BF": 120.0, "VT": 25.0e-3})
+    }
+    bjt = parsed.circuit.elements[3]
+    assert isinstance(bjt, BJT)
+    assert bjt.collector == "col"
+    assert bjt.base == "base"
+    assert bjt.emitter == "0"
+    assert bjt.polarity == "NPN"
+    assert bjt.Is == 1.0e-14
+    assert bjt.beta_f == 120.0
+    assert bjt.Vt == 25.0e-3
+
+    result = dc_op(parsed.circuit)
+    assert result.converged
+    assert 0.0 < result.node_voltages["col"] < 5.0
+
+
+def test_parse_pnp_bjt_model_aliases_beta_f() -> None:
+    parsed = parse_netlist(
+        """
+.model slow PNP(IS=2e-14 BETA_F=80 VT=26m)
+Qp col base emit slow
+"""
+    )
+
+    bjt = parsed.circuit.elements[0]
+    assert isinstance(bjt, BJT)
+    assert bjt.polarity == "PNP"
+    assert bjt.Is == 2.0e-14
+    assert bjt.beta_f == 80.0
+    assert isclose(bjt.Vt, 26.0e-3)
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
@@ -323,6 +370,31 @@ Xlim in out limiter
     assert diode.Is == 1.0e-12
 
 
+def test_expands_subcircuit_bjt_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.model npn NPN(BF=50)
+.subckt follower c b e
+Qbuf c b inner npn
+Re inner e 100
+.ends follower
+Xbuf out in 0 follower
+"""
+    )
+
+    bjt = parsed.circuit.elements[0]
+    resistor = parsed.circuit.elements[1]
+    assert isinstance(bjt, BJT)
+    assert bjt.name == "Xbuf.Qbuf"
+    assert bjt.collector == "out"
+    assert bjt.base == "in"
+    assert bjt.emitter == "Xbuf.inner"
+    assert bjt.beta_f == 50.0
+    assert isinstance(resistor, Resistor)
+    assert resistor.n_plus == "Xbuf.inner"
+    assert resistor.n_minus == "0"
+
+
 def test_subcircuit_internal_nodes_are_instance_scoped() -> None:
     parsed = parse_netlist(
         """
@@ -351,10 +423,10 @@ def test_engineering_suffixes() -> None:
 
 
 def test_rejects_unsupported_element_with_line_number() -> None:
-    with pytest.raises(NetlistParseError, match="line 2: unsupported element 'Q1'"):
+    with pytest.raises(NetlistParseError, match="line 2: unsupported element 'Z1'"):
         parse_netlist(
             """
-Q1 c b e model
+Z1 c b e model
 """
         )
 
@@ -374,6 +446,25 @@ def test_rejects_diode_bound_to_non_diode_model() -> None:
             """
 .model amp NPN(IS=1e-15)
 D1 a 0 amp
+"""
+        )
+
+
+def test_rejects_bjt_with_unknown_model() -> None:
+    with pytest.raises(NetlistParseError, match="line 2: unknown model 'missing' for BJT 'Q1'"):
+        parse_netlist(
+            """
+Q1 c b e missing
+"""
+        )
+
+
+def test_rejects_bjt_bound_to_non_bjt_model() -> None:
+    with pytest.raises(NetlistParseError, match="line 3: model 'clamp' has kind 'D'"):
+        parse_netlist(
+            """
+.model clamp D(IS=1e-15)
+Q1 c b e clamp
 """
         )
 

@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass, field
 
 from spice_engine import (
+    BJT,
     CCCS,
     CCVS,
     VCCS,
@@ -258,6 +259,25 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Is=model.params.get("IS", 1e-15),
             Vt=model.params.get("VT", 0.02585),
         )
+    if prefix == "Q":
+        _require_fields(fields, 5, "BJT")
+        model = models.get(fields[4].lower())
+        if model is None:
+            raise NetlistParseError(f"unknown model {fields[4]!r} for BJT {name!r}")
+        if model.kind not in {"NPN", "PNP"}:
+            raise NetlistParseError(
+                f"model {model.name!r} has kind {model.kind!r}, expected 'NPN' or 'PNP'"
+            )
+        return BJT(
+            name,
+            fields[1],
+            fields[2],
+            fields[3],
+            polarity=model.kind,
+            Is=model.params.get("IS", 1e-14),
+            beta_f=model.params.get("BETA_F", model.params.get("BF", 100.0)),
+            Vt=model.params.get("VT", 0.02585),
+        )
     if prefix == "G":
         _require_fields(fields, 6, "VCCS")
         return VCCS(name, fields[1], fields[2], fields[3], fields[4], parse_value(fields[5]))
@@ -345,6 +365,11 @@ def _map_subckt_fields(
         _require_min_fields(fields, 3, "subcircuit element")
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
+    elif prefix == "Q":
+        _require_min_fields(fields, 4, "subcircuit BJT")
+        mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
+        mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
+        mapped[3] = _map_subckt_node(fields[3], instance_name, node_map)
     elif prefix in {"E", "G"}:
         _require_min_fields(fields, 5, "subcircuit controlled source")
         for index in range(1, 5):
