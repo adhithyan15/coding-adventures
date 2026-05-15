@@ -1,4 +1,4 @@
-use spice_engine::{dc_op, BjtPolarity, Element};
+use spice_engine::{dc_op, BjtPolarity, Element, MosfetType};
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, NetlistParseError, OpAnalysis,
     TranAnalysis,
@@ -259,6 +259,70 @@ Q1 vcc base out pullup
 }
 
 #[test]
+fn parses_mosfet_models_into_operating_point_circuits() {
+    let parsed = parse_netlist(
+        r#"
+.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n NSUB=1.5 TNOM=300)
+Vdd vdd 0 DC 5
+Vgate gate 0 DC 2.5
+M1 vdd gate out 0 nch W=4u L=200n
+Rload out 0 1k
+.op
+"#,
+    )
+    .unwrap();
+
+    let model = parsed.models.get("nch").unwrap();
+    assert_eq!(model.name, "nch");
+    assert_eq!(model.kind, "NMOS");
+    assert_close(*model.params.get("VTO").unwrap(), 0.45);
+    assert_close(*model.params.get("KP").unwrap(), 250.0e-6);
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[2] else {
+        panic!("expected MOSFET");
+    };
+    assert_eq!(mosfet.name, "M1");
+    assert_eq!(mosfet.drain, "vdd");
+    assert_eq!(mosfet.gate, "gate");
+    assert_eq!(mosfet.source, "out");
+    assert_eq!(mosfet.body, "0");
+    assert_eq!(mosfet.mosfet_type, MosfetType::Nmos);
+    assert_close(mosfet.params.vt0, 0.45);
+    assert_close(mosfet.params.kp, 250.0e-6);
+    assert_close(mosfet.params.lambda, 0.02);
+    assert_close(mosfet.params.gamma, 0.3);
+    assert_close(mosfet.params.phi, 0.8);
+    assert_close(mosfet.params.w, 4.0e-6);
+    assert_close(mosfet.params.l, 200.0e-9);
+    assert_close(mosfet.params.n_sub, 1.5);
+    assert_close(mosfet.params.t_nom, 300.0);
+
+    let result = dc_op(&parsed.circuit).unwrap();
+    let out = result.voltage("out").unwrap();
+    assert!(out > 0.0, "expected source follower output, got {out}");
+    assert!(out < 2.5, "expected source below gate bias, got {out}");
+}
+
+#[test]
+fn parses_pmos_mosfet_model_cards() {
+    let parsed = parse_netlist(
+        r#"
+.model pch PMOS(VT0=-0.5 KP=90u W=3u L=180n)
+Mpull out gate vdd vdd pch
+"#,
+    )
+    .unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_eq!(mosfet.mosfet_type, MosfetType::Pmos);
+    assert_close(mosfet.params.vt0, -0.5);
+    assert_close(mosfet.params.kp, 90.0e-6);
+    assert_close(mosfet.params.w, 3.0e-6);
+}
+
+#[test]
 fn parses_pwl_and_sin_source_waveforms() {
     let parsed = parse_netlist(
         r#"
@@ -486,6 +550,30 @@ Xbuf vcc in out follower
 }
 
 #[test]
+fn expands_subcircuit_mosfet_nodes_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.model nch NMOS(KP=220u)
+.subckt source_follower d g s b
+Mdrive d g s b nch W=2u
+.ends source_follower
+Xbuf vdd in out 0 source_follower
+"#,
+    )
+    .unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_eq!(mosfet.name, "Xbuf.Mdrive");
+    assert_eq!(mosfet.drain, "vdd");
+    assert_eq!(mosfet.gate, "in");
+    assert_eq!(mosfet.source, "out");
+    assert_eq!(mosfet.body, "0");
+    assert_close(mosfet.params.w, 2.0e-6);
+}
+
+#[test]
 fn scopes_subcircuit_internal_nodes_by_instance() {
     let parsed = parse_netlist(
         r#"
@@ -559,6 +647,33 @@ fn rejects_non_bjt_models_for_bjt_elements() {
     assert!(err
         .to_string()
         .contains("line 2: model \"clamp\" has kind \"D\", expected \"NPN\" or \"PNP\""));
+}
+
+#[test]
+fn rejects_unknown_mosfet_models() {
+    let err = parse_netlist("M1 d g s b missing\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 1: unknown model \"missing\" for MOSFET \"M1\""));
+}
+
+#[test]
+fn rejects_non_mosfet_models_for_mosfet_elements() {
+    let err = parse_netlist(".model clamp D(IS=1e-12)\nM1 d g s b clamp\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 2: model \"clamp\" has kind \"D\", expected \"NMOS\" or \"PMOS\""));
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_parameters() {
+    let err = parse_netlist(".model nch NMOS(KP=220u)\nM1 d g s b nch W\n").unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("line 2: invalid MOSFET parameter syntax \"W\""));
 }
 
 #[test]

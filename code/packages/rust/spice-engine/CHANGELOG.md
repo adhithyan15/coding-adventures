@@ -9,6 +9,9 @@
 - Add BJT elements with NPN/PNP polarity, Newton-linearized DC operating-point
   support, and zero-bias small-signal transconductance for AC/transfer
   analysis.
+- Add Level-1 NMOS/PMOS MOSFET elements with body-effect parameters,
+  Newton-linearized DC operating-point support, and zero-bias small-signal
+  conductance/transconductance for AC/transfer analysis.
 - Add voltage-controlled current sources (VCCS) for linear transconductance
   stages.
 - Add voltage-controlled voltage sources (VCVS) across DC, AC, transfer

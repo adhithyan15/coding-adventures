@@ -1,6 +1,7 @@
 use spice_engine::{
     dc_op, dc_sweep, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element,
-    Inductor, Resistor, SinWaveform, SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
+    Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError, Vccs,
+    Vcvs, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -221,6 +222,68 @@ fn dc_bjt_solves_pnp_pullup_operating_point() {
     let result = dc_op(&circuit).unwrap();
     let out = result.voltage("out").unwrap();
     assert!(out > 0.0, "expected pullup current through load, got {out}");
+}
+
+#[test]
+fn dc_mosfet_solves_nmos_source_follower_operating_point() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 2.5,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "vdd",
+        "gate",
+        "out",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 250.0e-6,
+            w: 4.0e-6,
+            l: 200.0e-9,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+    let out = result.voltage("out").unwrap();
+    assert!(out > 0.0, "expected source follower output, got {out}");
+    assert!(out < 2.5, "expected source below gate bias, got {out}");
+}
+
+#[test]
+fn dc_mosfet_rejects_invalid_level1_params() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "Mbad",
+        "vdd",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 0.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let err = dc_op(&circuit).unwrap_err();
+    assert_eq!(
+        err,
+        SpiceError::InvalidElement {
+            name: "Mbad".to_string(),
+            reason: "MOSFET KP must be positive".to_string(),
+        }
+    );
 }
 
 #[test]

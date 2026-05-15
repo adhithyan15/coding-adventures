@@ -342,6 +342,7 @@ pub enum Element {
     CurrentSource(CurrentSource),
     Diode(Diode),
     Bjt(Bjt),
+    Mosfet(Mosfet),
     Vccs(Vccs),
     Vcvs(Vcvs),
     Cccs(Cccs),
@@ -619,6 +620,94 @@ impl Bjt {
             saturation_current,
             forward_beta,
             thermal_voltage,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum MosfetType {
+    Nmos,
+    Pmos,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct MosfetLevel1Params {
+    pub vt0: f64,
+    pub kp: f64,
+    pub lambda: f64,
+    pub gamma: f64,
+    pub phi: f64,
+    pub w: f64,
+    pub l: f64,
+    pub saturation_current: f64,
+    pub n_sub: f64,
+    pub t_nom: f64,
+}
+
+impl Default for MosfetLevel1Params {
+    fn default() -> Self {
+        Self {
+            vt0: 0.42,
+            kp: 220.0e-6,
+            lambda: 0.05,
+            gamma: 0.27,
+            phi: 0.84,
+            w: 1.0e-6,
+            l: 130.0e-9,
+            saturation_current: 1.0e-15,
+            n_sub: 1.4,
+            t_nom: 300.15,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Mosfet {
+    pub name: String,
+    pub drain: String,
+    pub gate: String,
+    pub source: String,
+    pub body: String,
+    pub mosfet_type: MosfetType,
+    pub params: MosfetLevel1Params,
+}
+
+impl Mosfet {
+    pub fn new(
+        name: impl Into<String>,
+        drain: impl Into<String>,
+        gate: impl Into<String>,
+        source: impl Into<String>,
+        body: impl Into<String>,
+    ) -> Self {
+        Self::with_model(
+            name,
+            drain,
+            gate,
+            source,
+            body,
+            MosfetType::Nmos,
+            MosfetLevel1Params::default(),
+        )
+    }
+
+    pub fn with_model(
+        name: impl Into<String>,
+        drain: impl Into<String>,
+        gate: impl Into<String>,
+        source: impl Into<String>,
+        body: impl Into<String>,
+        mosfet_type: MosfetType,
+        params: MosfetLevel1Params,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            drain: drain.into(),
+            gate: gate.into(),
+            source: source.into(),
+            body: body.into(),
+            mosfet_type,
+            params,
         }
     }
 }
@@ -1576,6 +1665,7 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
             "saturation_current".to_string(),
             bjt.saturation_current,
         )),
+        Element::Mosfet(mosfet) => Some((mosfet.name.clone(), "kp".to_string(), mosfet.params.kp)),
         Element::Vccs(source) => Some((
             source.name.clone(),
             "transconductance_siemens".to_string(),
@@ -1603,6 +1693,7 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::CurrentSource(source) => source.current += delta,
         Element::Diode(diode) => diode.saturation_current += delta,
         Element::Bjt(bjt) => bjt.saturation_current += delta,
+        Element::Mosfet(mosfet) => mosfet.params.kp += delta,
         Element::Vccs(source) => source.transconductance_siemens += delta,
         Element::Vcvs(source) => source.gain += delta,
         Element::Cccs(source) => source.gain += delta,
@@ -1698,6 +1789,11 @@ fn randomized_element(
             varied.saturation_current =
                 randomized_value(varied.saturation_current, tolerance, distribution, rng);
             Element::Bjt(varied)
+        }
+        Element::Mosfet(mosfet) => {
+            let mut varied = mosfet.clone();
+            varied.params.kp = randomized_value(varied.params.kp, tolerance, distribution, rng);
+            Element::Mosfet(varied)
         }
         Element::Vccs(source) => {
             let mut varied = source.clone();
@@ -1811,10 +1907,12 @@ fn solve_linear_circuit(
         });
     }
 
-    let has_nonlinear = circuit
-        .elements()
-        .iter()
-        .any(|element| matches!(element, Element::Diode(_) | Element::Bjt(_)));
+    let has_nonlinear = circuit.elements().iter().any(|element| {
+        matches!(
+            element,
+            Element::Diode(_) | Element::Bjt(_) | Element::Mosfet(_)
+        )
+    });
     let mut operating_point = vec![0.0; matrix_size];
     let mut solution = solve_linear_circuit_at_operating_point(
         circuit,
@@ -1904,6 +2002,9 @@ fn solve_linear_circuit_at_operating_point(
             Element::Bjt(bjt) => {
                 stamp_bjt(bjt, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
+            Element::Mosfet(mosfet) => {
+                stamp_mosfet(mosfet, node_indices, &mut matrix, &mut rhs, operating_point)?
+            }
             Element::Vccs(source) => stamp_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_vcvs(
                 source,
@@ -1985,6 +2086,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             | Element::Inductor(_)
             | Element::Diode(_)
             | Element::Bjt(_)
+            | Element::Mosfet(_)
             | Element::Vccs(_)
             | Element::Vcvs(_)
             | Element::Cccs(_)
@@ -2052,6 +2154,9 @@ fn build_ac_matrix(
                 );
             }
             Element::Bjt(bjt) => stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix)?,
+            Element::Mosfet(mosfet) => {
+                stamp_ac_mosfet_small_signal(mosfet, node_indices, &mut matrix)?
+            }
             Element::Vccs(source) => stamp_ac_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_ac_vcvs(
                 source,
@@ -2129,6 +2234,9 @@ fn build_small_signal_matrix(
                 );
             }
             Element::Bjt(bjt) => stamp_bjt_small_signal(bjt, node_indices, &mut matrix)?,
+            Element::Mosfet(mosfet) => {
+                stamp_mosfet_small_signal(mosfet, node_indices, &mut matrix)?
+            }
             Element::Vccs(source) => {
                 stamp_vccs(source, node_indices, &mut matrix)?;
             }
@@ -2217,6 +2325,12 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &bjt.collector);
                 insert_node(&mut names, &bjt.base);
                 insert_node(&mut names, &bjt.emitter);
+            }
+            Element::Mosfet(mosfet) => {
+                insert_node(&mut names, &mosfet.drain);
+                insert_node(&mut names, &mosfet.gate);
+                insert_node(&mut names, &mosfet.source);
+                insert_node(&mut names, &mosfet.body);
             }
             Element::Vccs(source) => {
                 insert_node(&mut names, &source.positive);
@@ -2328,6 +2442,9 @@ fn find_input_source<'a>(
             }
             Element::Bjt(bjt) if bjt.name == input_source => {
                 return Err(input_source_type_error(input_source, "BJT"));
+            }
+            Element::Mosfet(mosfet) if mosfet.name == input_source => {
+                return Err(input_source_type_error(input_source, "MOSFET"));
             }
             Element::Vccs(source) if source.name == input_source => {
                 return Err(input_source_type_error(input_source, "VCCS"));
@@ -2716,6 +2833,160 @@ fn stamp_ac_bjt_small_signal(
     Ok(())
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+struct MosfetDcResult {
+    drain_current: f64,
+    gm: f64,
+    gds: f64,
+    gmb: f64,
+}
+
+fn stamp_mosfet(
+    mosfet: &Mosfet,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_mosfet(mosfet)?;
+    let drain = node_index(node_indices, &mosfet.drain);
+    let gate = node_index(node_indices, &mosfet.gate);
+    let source = node_index(node_indices, &mosfet.source);
+    let body = node_index(node_indices, &mosfet.body);
+    let drain_voltage = vector_voltage(operating_point, drain);
+    let gate_voltage = vector_voltage(operating_point, gate);
+    let source_voltage = vector_voltage(operating_point, source);
+    let body_voltage = vector_voltage(operating_point, body);
+    let vgs = gate_voltage - source_voltage;
+    let vds = drain_voltage - source_voltage;
+    let vbs = body_voltage - source_voltage;
+    let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
+    let equivalent_current =
+        result.drain_current - result.gm * vgs - result.gds * vds - result.gmb * vbs;
+
+    stamp_conductance(matrix, drain, source, result.gds);
+    stamp_transconductance(matrix, drain, source, gate, source, result.gm);
+    stamp_transconductance(matrix, drain, source, body, source, result.gmb);
+    stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    Ok(())
+}
+
+fn evaluate_mosfet_level1(mosfet: &Mosfet, vgs: f64, vds: f64, vbs: f64) -> MosfetDcResult {
+    match mosfet.mosfet_type {
+        MosfetType::Pmos => {
+            let result = evaluate_nmos_level1(&mosfet.params, -vgs, -vds, -vbs);
+            MosfetDcResult {
+                drain_current: -result.drain_current,
+                gm: result.gm,
+                gds: result.gds,
+                gmb: result.gmb,
+            }
+        }
+        MosfetType::Nmos => evaluate_nmos_level1(&mosfet.params, vgs, vds, vbs),
+    }
+}
+
+fn evaluate_nmos_level1(
+    params: &MosfetLevel1Params,
+    vgs: f64,
+    vds: f64,
+    vbs: f64,
+) -> MosfetDcResult {
+    let beta = params.kp * (params.w / params.l);
+    let threshold = if params.phi - vbs >= 0.0 {
+        params.vt0 + params.gamma * ((params.phi - vbs).sqrt() - params.phi.sqrt())
+    } else {
+        params.vt0
+    };
+    let overdrive = vgs - threshold;
+    if overdrive <= 0.0 {
+        return MosfetDcResult {
+            drain_current: 0.0,
+            gm: 0.0,
+            gds: 0.0,
+            gmb: 0.0,
+        };
+    }
+
+    let body_factor = if params.phi - vbs > 0.0 {
+        params.gamma / (2.0 * (params.phi - vbs).sqrt())
+    } else {
+        0.0
+    };
+    if vds < overdrive {
+        let channel = overdrive * vds - 0.5 * vds * vds;
+        let modulation = 1.0 + params.lambda * vds;
+        let gm = beta * vds * modulation;
+        return MosfetDcResult {
+            drain_current: beta * channel * modulation,
+            gm,
+            gds: beta * (overdrive - vds) * modulation + beta * channel * params.lambda,
+            gmb: gm * body_factor,
+        };
+    }
+
+    let drain_current = 0.5 * beta * overdrive * overdrive * (1.0 + params.lambda * vds);
+    let gm = beta * overdrive * (1.0 + params.lambda * vds);
+    MosfetDcResult {
+        drain_current,
+        gm,
+        gds: 0.5 * beta * overdrive * overdrive * params.lambda,
+        gmb: gm * body_factor,
+    }
+}
+
+fn vector_voltage(vector: &[f64], index: Option<usize>) -> f64 {
+    index.map_or(0.0, |index| vector[index])
+}
+
+fn stamp_mosfet_small_signal(
+    mosfet: &Mosfet,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+) -> Result<(), SpiceError> {
+    validate_mosfet(mosfet)?;
+    let drain = node_index(node_indices, &mosfet.drain);
+    let gate = node_index(node_indices, &mosfet.gate);
+    let source = node_index(node_indices, &mosfet.source);
+    let body = node_index(node_indices, &mosfet.body);
+    let result = evaluate_mosfet_level1(mosfet, 0.0, 0.0, 0.0);
+    stamp_conductance(matrix, drain, source, result.gds);
+    stamp_transconductance(matrix, drain, source, gate, source, result.gm);
+    stamp_transconductance(matrix, drain, source, body, source, result.gmb);
+    Ok(())
+}
+
+fn stamp_ac_mosfet_small_signal(
+    mosfet: &Mosfet,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    validate_mosfet(mosfet)?;
+    let drain = node_index(node_indices, &mosfet.drain);
+    let gate = node_index(node_indices, &mosfet.gate);
+    let source = node_index(node_indices, &mosfet.source);
+    let body = node_index(node_indices, &mosfet.body);
+    let result = evaluate_mosfet_level1(mosfet, 0.0, 0.0, 0.0);
+    stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
+    stamp_complex_transconductance(
+        matrix,
+        drain,
+        source,
+        gate,
+        source,
+        Complex::new(result.gm, 0.0),
+    );
+    stamp_complex_transconductance(
+        matrix,
+        drain,
+        source,
+        body,
+        source,
+        Complex::new(result.gmb, 0.0),
+    );
+    Ok(())
+}
+
 fn validate_reactive_elements(circuit: &Circuit) -> Result<(), SpiceError> {
     for element in circuit.elements() {
         match element {
@@ -2760,6 +3031,54 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "thermal voltage must be finite and positive".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
+    let params = mosfet.params;
+    for (name, value) in [
+        ("VT0", params.vt0),
+        ("KP", params.kp),
+        ("LAMBDA", params.lambda),
+        ("GAMMA", params.gamma),
+        ("PHI", params.phi),
+        ("W", params.w),
+        ("L", params.l),
+        ("IS", params.saturation_current),
+        ("N_SUB", params.n_sub),
+        ("T_NOM", params.t_nom),
+    ] {
+        if !value.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: mosfet.name.clone(),
+                reason: format!("MOSFET {name} must be finite"),
+            });
+        }
+    }
+    if params.kp <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET KP must be positive".to_string(),
+        });
+    }
+    if params.w <= 0.0 || params.l <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET W and L must be positive".to_string(),
+        });
+    }
+    if params.phi <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET PHI must be positive".to_string(),
+        });
+    }
+    if params.saturation_current <= 0.0 || params.n_sub <= 0.0 || params.t_nom <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET IS, N_SUB, and T_NOM must be positive".to_string(),
         });
     }
     Ok(())
