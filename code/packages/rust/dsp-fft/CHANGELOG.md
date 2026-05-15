@@ -1,5 +1,74 @@
 # Changelog — dsp-fft
 
+## 0.3.0 — 2026-05-13
+
+### Added — DSP01 Phase 3b.iii (end-to-end FFT execution via the matrix execution layer)
+
+The matrix-ir-lowered FFT now **actually runs** end-to-end through
+`matrix-runtime` + `matrix-cpu`.  Closes the DSP01 → MX01 loop:
+build the graph → plan it → dispatch it → download the spectrum.
+
+#### New public API
+
+- `pub fn build_fft_graph_with_input(signal: &[f32], direction: Direction) -> Result<(Graph, TensorId), FftError>`
+  — variant of `build_fft_graph` that embeds the input as a `Const`
+  in the graph.  Matches `image-gpu-core::run_graph_with_constant_inputs`'
+  pattern: graph has no runtime inputs, only the output is
+  downloaded.  Returns the output `TensorId` so callers know which
+  buffer to read.
+- `pub fn fft_via_runtime(signal: &[f32], direction: Direction) -> Result<Vec<f32>, FftError>`
+  — end-to-end helper.  Builds the graph, plans it through
+  `Runtime::new(matrix_cpu::profile())`, dispatches it on a fresh
+  `CpuExecutor`, downloads the output buffer, and returns the
+  interleaved `[re, im, ..., re, im]` spectrum as a `Vec<f32>`.
+
+When Metal / CUDA claim Slice + Concat in their `supported_ops`
+bitsets, the same call lifts to GPU automatically with no
+dsp-fft change required — that's the whole point of building on
+top of MX.
+
+#### New end-to-end tests
+
+5 new unit tests in `radix2::tests`:
+
+- `fft_via_runtime_matches_scalar_n2` — closed-form 2-point FFT.
+- `fft_via_runtime_matches_scalar_n4` — 4-point with mixed input.
+- `fft_via_runtime_matches_scalar_n8` — 8-point with linear ramp.
+- `fft_via_runtime_matches_scalar_n16` — 16-point with sinusoidal
+  input.  Exercises every stage of the log2(16) = 4-stage butterfly.
+- `inverse_fft_via_runtime_round_trips` — `ifft(fft(x)) ≈ x` for an
+  8-point real signal, where the forward FFT goes through the
+  matrix-ir graph and the inverse FFT goes through the scalar
+  reference.  Verifies the forward path's correctness end-to-end.
+
+All compare against the scalar oracle (`fft_scalar` / `ifft_scalar`)
+within `1e-4` relative tolerance per the DSP01 spec's contract.
+
+#### Dependencies
+
+Promoted from dev-dependencies to regular dependencies (so the
+public `fft_via_runtime` can call them):
+
+- `matrix-cpu`
+- `matrix-runtime`
+- `compute-ir`
+- `executor-protocol`
+
+The public `fft` and `ifft` functions still call the scalar
+reference — a follow-up PR will swap them to use `fft_via_runtime`
+once we have a story for batched inputs and `complex: true`.
+
+### What this phase does NOT include
+
+- Swapping public `fft` / `ifft` to use `fft_via_runtime`.  The
+  current API takes a `complex: bool` parameter, and the
+  matrix-ir-lowered path is real-only.  A follow-up phase will
+  either add a complex-input graph variant or rework the API.
+- Performance benchmarking.  Functional correctness is the bar
+  for Phase 3b.iii; perf is Phase 5.
+- Batched FFT (`[B, N]` input).  Phase 3b.ii / 3b.iii are
+  single-channel only.
+
 ## 0.2.0 — 2026-05-13
 
 ### Added — DSP01 Phase 3b.ii (matrix-ir-lowered FFT graph builder)
