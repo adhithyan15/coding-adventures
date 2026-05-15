@@ -149,10 +149,14 @@ use crate::operand::operand_to_value;
 ///
 /// At PR 4 each Twig call uses the host Rust stack frame, so this
 /// indirectly caps stack usage.  The cap is generous enough for
-/// `(fact 200)` to succeed but small enough that adversarial
-/// input can't crash the process — modern host stacks tolerate
-/// roughly 10⁴ frames before SIGSEGV.
-pub const MAX_DISPATCH_DEPTH: usize = 256;
+/// `(fact 200)` to succeed and for the self-hosted compiler pipeline
+/// to lex real `.tw` source files (lexer.tw recurses once per input
+/// character; `span.tw` is ≈ 2426 chars).  Modern host stacks
+/// tolerate roughly 10⁴ frames before SIGSEGV, so 4096 is safe.
+///
+/// **History**: bumped 256 → 4096 in LANG62 (TW05-I) to unblock the
+/// first self-compilation check.
+pub const MAX_DISPATCH_DEPTH: usize = 4096;
 
 /// Maximum number of instructions any single dispatcher invocation
 /// will execute before refusing.  Catches infinite loops in
@@ -3084,20 +3088,35 @@ mod tests {
 
     #[test]
     fn deep_recursion_surfaces_depth_exceeded() {
-        // Self-recursion that never terminates — should hit the
-        // depth cap rather than blowing the host stack.  We don't
-        // assert the exact depth (the limit is generous), only
-        // that we get the right error variant.
-        let src = "
-            (define (loop n) (loop (+ n 1)))
-            (loop 0)
-        ";
-        let err = run_source(src).unwrap_err();
-        // Depth or instruction limit — both are acceptable
-        // termination signals for this infinite-recursion test.
+        // Self-recursion that never terminates — should hit the depth cap
+        // rather than blowing the host stack.  We don't assert the exact
+        // depth (the limit is intentionally generous for the self-hosted
+        // compiler's lex-loop), only that we get the right error variant.
+        //
+        // With MAX_DISPATCH_DEPTH = 4096, infinite recursion needs 4097
+        // nested Rust `dispatch` frames before the guard fires.  The default
+        // test-thread stack (8 MiB on macOS/Linux) is too small for that, so
+        // we spawn a dedicated thread with 128 MiB of stack.  Each dispatch
+        // frame is conservatively ≤ 10 KiB, so 4 096 frames ≤ 40 MiB —
+        // well within the 128 MiB budget.
+        let result = std::thread::Builder::new()
+            .stack_size(128 * 1024 * 1024) // 128 MiB
+            .spawn(|| {
+                let src = "
+                    (define (loop n) (loop (+ n 1)))
+                    (loop 0)
+                ";
+                run_source(src).unwrap_err()
+            })
+            .expect("thread spawn failed")
+            .join()
+            .expect("thread panicked");
+
+        // Depth or instruction limit — both are acceptable termination
+        // signals for an infinite-recursion test.
         assert!(
-            matches!(err, RunError::DepthExceeded | RunError::InstructionLimitExceeded),
-            "expected DepthExceeded or InstructionLimitExceeded, got {err:?}",
+            matches!(result, RunError::DepthExceeded | RunError::InstructionLimitExceeded),
+            "expected DepthExceeded or InstructionLimitExceeded, got {result:?}",
         );
     }
 

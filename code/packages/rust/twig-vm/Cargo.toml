@@ -1,8 +1,8 @@
 [package]
 name = "twig-vm"
-version = "0.15.0"
+version = "0.16.0"
 edition = "2021"
-description = "LANG47 + LANG52 + LANG55 + LANG56 + LANG57 — string heap objects, builtins, host I/O, higher-order list ops, multi-file entry points, record/union/match runtime smoke tests"
+description = "LANG47 + LANG52 + LANG55 + LANG56 + LANG57 + LANG62 — string heap objects, builtins, host I/O, higher-order list ops, multi-file entry points, record/union/match runtime smoke tests; MAX_DISPATCH_DEPTH 256→4096 for self-hosted compiler pipeline"
 
 [dependencies]
 twig-ir-compiler   = { path = "../twig-ir-compiler" }

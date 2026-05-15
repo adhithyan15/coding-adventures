@@ -614,6 +614,33 @@ fn canonicalize_best_effort(path: &Path) -> PathBuf {
 // Tests
 // ---------------------------------------------------------------------------
 
+// ── Large-stack helper for integration tests ─────────────────────────────────
+//
+// The self-hosted Twig lex-loop recurses once per character and the call chain
+// is lex-loop → lex-c-N → emit → lex-loop.  Each token adds ~15 Rust
+// `dispatch` frames; for a ~365-char source (~58 tokens) this reaches ~870
+// frames.  In debug mode each frame can be 8-12 KiB, pushing total stack
+// usage above the default 8 MiB test-thread limit.
+//
+// `run_in_large_stack` spawns a 64 MiB thread to run the VM.  All integration
+// tests that run the TW05-I main.tw (which lexes the 365-char stripped span.tw
+// source) use this helper.
+
+#[cfg(test)]
+fn run_in_large_stack(root: std::path::PathBuf, dir: std::path::PathBuf, tag: &'static str)
+    -> twig_vm::LispyValue
+{
+    std::thread::Builder::new()
+        .stack_size(64 * 1024 * 1024) // 64 MiB
+        .spawn(move || {
+            twig_vm::run_module_tree(&root, &[dir.as_path()])
+                .unwrap_or_else(|e| panic!("{tag}: {e}"))
+        })
+        .expect("thread spawn failed")
+        .join()
+        .expect("thread panicked")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1062,10 +1089,10 @@ mod tw05d_tests {
         }
 
         let root = dir.join("compiler").join("main.tw");
-        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
-            .expect("full compiler data-model tree should compile and run");
+        // main.tw is now TW05-I and runs lex on ~365 chars → large stack needed.
+        let v = super::run_in_large_stack(root, dir, "full_module_tree_smoke_test");
         assert_eq!(v.as_int(), Some(2),
-            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
+            "(main) should return 2 — emit-program of stripped span.tw (LANG62 TW05-I)");
     }
 }
 
@@ -1294,14 +1321,14 @@ mod tw05e_tests {
         let src = twig_compiler_src();
         let dir = tempdir("full_e2e");
         copy_all_tw_modules(&src, &dir);
-        // Copy the actual main.tw (updated to TW05-H)
+        // Copy the actual main.tw (updated to TW05-I).
         copy_tw(&src, &dir, "main");
 
         let root = dir.join("compiler").join("main.tw");
-        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
-            .expect("full_lex_parse_roundtrip: compile+run");
+        // main.tw is TW05-I: lexes ~365-char source → large stack needed.
+        let v = super::run_in_large_stack(root, dir, "full_lex_parse_roundtrip");
         assert_eq!(v.as_int(), Some(2),
-            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
+            "(main) should return 2 — emit-program of stripped span.tw (LANG62 TW05-I)");
     }
 }
 
@@ -1562,14 +1589,14 @@ mod tw05f_tests {
         let src = twig_compiler_src();
         let dir = tempdir("full_tw05f");
         copy_all_tw_modules(&src, &dir);
-        // Copy the actual main.tw (updated to TW05-H)
+        // Copy the actual main.tw (updated to TW05-I).
         copy_tw(&src, &dir, "main");
 
         let root = dir.join("compiler").join("main.tw");
-        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
-            .expect("full_lex_parse_emit_roundtrip: compile+run");
+        // main.tw is TW05-I: lexes ~365-char source → large stack needed.
+        let v = super::run_in_large_stack(root, dir, "full_lex_parse_emit_roundtrip");
         assert_eq!(v.as_int(), Some(2),
-            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
+            "(main) should return 2 — emit-program of stripped span.tw (LANG62 TW05-I)");
     }
 }
 
@@ -1823,13 +1850,14 @@ mod tw05g_tests {
         let src = twig_compiler_src();
         let dir = tempdir("full_tw05g");
         copy_all_tw_modules(&src, &dir);
+        // Copy the actual main.tw (updated to TW05-I).
         copy_tw(&src, &dir, "main");
 
         let root = dir.join("compiler").join("main.tw");
-        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
-            .expect("full_lex_parse_emit_defexpr: compile+run");
+        // main.tw is TW05-I: lexes ~365-char source → large stack needed.
+        let v = super::run_in_large_stack(root, dir, "full_lex_parse_emit_defexpr");
         assert_eq!(v.as_int(), Some(2),
-            "(main) should return 2 — emit-program of first+second (LANG61 TW05-H)");
+            "(main) should return 2 — emit-program of stripped span.tw (LANG62 TW05-I)");
     }
 }
 
@@ -2047,23 +2075,297 @@ mod tw05h_tests {
 
     #[test]
     fn full_lex_parse_emit_program() {
-        // Compile all 9 modules + main.tw (TW05-H).
-        // main.tw runs:
-        //   lex "(define (first) 1)(define (second) 2)"
-        //   → parse → emit-program → (length funcs) = 2.
-        // No-param functions with IntLit bodies are used to keep the peak
-        // VM call-stack depth within the 256-frame limit (the 11-gate chain
-        // plus lex-loop depth for a 57-char source with CallExpr bodies would
-        // exceed it; 38-char source with IntLit bodies stays well under).
+        // Compile all 9 modules + main.tw.
+        // main.tw is now TW05-I (LANG62) and runs the full lex → parse →
+        // emit-program pipeline on the ~365-char stripped span.tw source,
+        // returning (length funcs) = 2.  The old TW05-H note about 38-char
+        // source and the 256-frame limit is superseded by the MAX_DISPATCH_DEPTH
+        // bump to 4096 in LANG62, which makes the full span.tw self-compilation
+        // check possible; a large stack thread is required (see run_in_large_stack).
         let src = twig_compiler_src();
         let dir = tempdir("full_tw05h");
         copy_all_tw_modules(&src, &dir);
         copy_tw(&src, &dir, "main");
 
         let root = dir.join("compiler").join("main.tw");
-        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
-            .expect("full_lex_parse_emit_program: compile+run");
+        // main.tw is TW05-I: lexes ~365-char source → large stack needed.
+        let v = super::run_in_large_stack(root, dir, "full_lex_parse_emit_program");
         assert_eq!(v.as_int(), Some(2),
-            "(main) should return 2 — emit-program of first+second");
+            "(main) should return 2 — emit-program of stripped span.tw (LANG62 TW05-I)");
+    }
+}
+
+// ── TW05-I: First Self-Compilation Check ─────────────────────────────────────
+//
+// These tests exercise the full lex → parse → emit-program pipeline on real
+// compiler source (`span.tw`), verifying that:
+//   - The lexer handles comment-skipping, colon tokens, and whitespace on real code
+//   - The parser's fallback `parse-call` path handles `module` and `record` forms
+//   - `emit-program` skips non-DefExpr top-level forms
+//   - Exactly 2 function definitions are emitted: `make-span` and `dummy-span`
+//
+// `MAX_DISPATCH_DEPTH` was bumped 256 → 4096 in `twig-vm` (LANG62) to allow
+// the lex-loop to recurse through the ~365-char stripped source without hitting
+// the old limit.  Without that bump every test in this module would return
+// `Run(DepthExceeded)`.
+
+#[cfg(test)]
+mod tw05i_tests {
+    use std::fs;
+    use std::path::{Path, PathBuf};
+
+    // ── Stripped span.tw source ───────────────────────────────────────────────
+    //
+    // Comments removed, all whitespace collapsed to single spaces (~365 chars).
+    // When parsed, produces 4 top-level forms:
+    //   CallExpr("module" ...)       → skipped by emit-program (not DefExpr)
+    //   CallExpr("record" ...)       → skipped by emit-program (not DefExpr)
+    //   DefExpr("make-span" Lambda)  → emitted  (12 instructions)
+    //   DefExpr("dummy-span" Lambda) → emitted  (4  instructions)
+    //
+    // Note on colons: `(source-id : int)` yields a TkColon token.  The parser
+    // has no dedicated gate for TkColon; it falls through to the gate-7 fallback
+    // and becomes NilLit (consuming the token).  The surrounding CallExpr is
+    // still parsed successfully.
+    const STRIPPED_SPAN_SRC: &str = concat!(
+        "(module compiler/span (typed lenient) ",
+        "(export Span span? span-source-id span-start span-end make-span dummy-span)) ",
+        "(record Span (source-id : int) (start : int) (end : int)) ",
+        "(define (make-span source-id start end) ",
+        "  (if (and (>= start 0) (<= start end)) ",
+        "      (Span source-id start end) nil)) ",
+        "(define (dummy-span) (Span 0 0 0))",
+    );
+
+    fn twig_compiler_src() -> PathBuf {
+        let manifest = env!("CARGO_MANIFEST_DIR");
+        PathBuf::from(manifest)
+            .join("../../../twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    fn tempdir(tag: &str) -> PathBuf {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .subsec_nanos();
+        let d = std::env::temp_dir()
+            .join(format!("twig_tw05i_test_{tag}_{}_{}",
+                          std::process::id(), nonce));
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler").join(format!("{name}.tw"));
+        fs::create_dir_all(dest.parent().unwrap()).unwrap();
+        fs::copy(&src, &dest)
+            .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
+    }
+
+    fn write_test_main(dest_dir: &Path, imports: &[&str], body: &str) -> PathBuf {
+        let import_clause: String = imports
+            .iter()
+            .map(|i| format!("          (import {i})"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let src = format!(
+            "(module compiler/main\n  (typed lenient)\n  (export main)\n{import_clause})\n\n(define (main) {body})\n"
+        );
+        let path = dest_dir.join("compiler").join("main.tw");
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, &src).unwrap();
+        path
+    }
+
+    fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
+                      "lexer", "parser", "emit"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    /// Imports needed for the full lex → parse → emit-program pipeline.
+    const FULL_IMPORTS: &[&str] = &[
+        "compiler/span", "compiler/token", "compiler/ast",
+        "compiler/iir-types", "compiler/iir-builder",
+        "compiler/lexer", "compiler/parser", "compiler/emit",
+    ];
+
+    // All run_module_tree calls use `super::run_in_large_stack` — see its
+    // documentation at the top of the test section for the stack budget analysis.
+
+    // ── Test 1: Stripped span source → 2 emitted functions ───────────────────
+
+    #[test]
+    fn self_compile_stripped_span_fn_count() {
+        // The stripped span.tw source has 4 top-level forms:
+        //   (module ...)      → CallExpr, skipped by emit-program
+        //   (record Span ...) → CallExpr, skipped by emit-program
+        //   (define (make-span ...))  → DefExpr(LambdaExpr), emitted
+        //   (define (dummy-span))     → DefExpr(LambdaExpr), emitted
+        // So emit-program returns a list of exactly 2 entries.
+        let src = twig_compiler_src();
+        let dir = tempdir("sc_fn_count");
+        copy_all_tw_modules(&src, &dir);
+
+        let body = format!(
+            r#"(length (emit-program (parse-program (lex-source "{STRIPPED_SPAN_SRC}"))))"#
+        );
+        let root = write_test_main(&dir, FULL_IMPORTS, &body);
+
+        let v = super::run_in_large_stack(root, dir, "self_compile_stripped_span_fn_count");
+        assert_eq!(v.as_int(), Some(2),
+            "emit-program of stripped span.tw should produce 2 entries");
+    }
+
+    // ── Test 2: Function names are correct and in order ───────────────────────
+
+    #[test]
+    fn self_compile_stripped_span_fn_names() {
+        // emit-program returns:
+        //   [(cons "make-span" instrs), (cons "dummy-span" instrs)]
+        // Verify the first entry's name (car of car) is "make-span".
+        let src = twig_compiler_src();
+        let dir = tempdir("sc_fn_names");
+        copy_all_tw_modules(&src, &dir);
+
+        let body = format!(
+            r#"(let* ((funcs (emit-program (parse-program (lex-source "{STRIPPED_SPAN_SRC}")))))
+                 (if (string=? (car (car funcs)) "make-span") 1 0))"#
+        );
+        let root = write_test_main(&dir, FULL_IMPORTS, &body);
+
+        let v = super::run_in_large_stack(root, dir, "self_compile_stripped_span_fn_names");
+        assert_eq!(v.as_int(), Some(1),
+            "first emitted function should be make-span");
+    }
+
+    // ── Test 3: dummy-span emits exactly 4 instructions ──────────────────────
+
+    #[test]
+    fn self_compile_dummy_span_instr_count() {
+        // dummy-span body: (Span 0 0 0)
+        //   const r0 0                   ; IntLit 0
+        //   const r1 0                   ; IntLit 0
+        //   const r2 0                   ; IntLit 0
+        //   call_builtin r3 Span r0 r1 r2
+        // Total: 4 instructions.
+        //
+        // dummy-span is the second entry: (car (cdr funcs)).
+        // Its instruction list is the cdr of that cons pair.
+        let src = twig_compiler_src();
+        let dir = tempdir("sc_dummy_instr");
+        copy_all_tw_modules(&src, &dir);
+
+        let body = format!(
+            r#"(let* ((funcs (emit-program (parse-program (lex-source "{STRIPPED_SPAN_SRC}"))))
+                      (dummy (car (cdr funcs))))
+                 (length (cdr dummy)))"#
+        );
+        let root = write_test_main(&dir, FULL_IMPORTS, &body);
+
+        let v = super::run_in_large_stack(root, dir, "self_compile_dummy_span_instr_count");
+        assert_eq!(v.as_int(), Some(4),
+            "dummy-span body should emit 4 instructions");
+    }
+
+    // ── Test 4: make-span emits exactly 12 instructions ──────────────────────
+
+    #[test]
+    fn self_compile_make_span_instr_count() {
+        // make-span body: (if (and (>= start 0) (<= start end)) (Span ...) nil)
+        //   const r3 0                       ; 0 for >= check        (1)
+        //   call_builtin r4 >= r1 r3         ; (>= start 0)          (2)
+        //   call_builtin r5 <= r1 r2         ; (<= start end)        (3)
+        //   call_builtin r6 and r4 r5        ; (and ...)             (4)
+        //   jmp_if_false r6 L0               ; branch to else        (5)
+        //   call_builtin r8 Span r0 r1 r2    ; (Span source-id ...)  (6)
+        //   call_builtin r7 _move r8         ; move then-result      (7)
+        //   jmp L1                           ; skip else             (8)
+        //   label L0                         ; else branch label     (9)
+        //   call_builtin r9 make_nil         ; nil                   (10)
+        //   call_builtin r7 _move r9         ; move else-result      (11)
+        //   label L1                         ; end label             (12)
+        // Total: 12 instructions.
+        //
+        // make-span is the first entry: (car funcs).
+        // Params r0=source-id, r1=start, r2=end pre-allocated; no instr emitted.
+        let src = twig_compiler_src();
+        let dir = tempdir("sc_make_instr");
+        copy_all_tw_modules(&src, &dir);
+
+        let body = format!(
+            r#"(let* ((funcs   (emit-program (parse-program (lex-source "{STRIPPED_SPAN_SRC}"))))
+                      (make-fn (car funcs)))
+                 (length (cdr make-fn)))"#
+        );
+        let root = write_test_main(&dir, FULL_IMPORTS, &body);
+
+        let v = super::run_in_large_stack(root, dir, "self_compile_make_span_instr_count");
+        assert_eq!(v.as_int(), Some(12),
+            "make-span body should emit 12 instructions");
+    }
+
+    // ── Test 5: Actual span.tw file → 2 emitted functions ────────────────────
+
+    #[test]
+    fn self_compile_real_span_tw() {
+        // Read the actual span.tw file at runtime and pass its full content
+        // (comments, newlines, etc.) through the Twig pipeline.
+        // The Twig lexer must skip `;`-to-EOL comment lines and handle real
+        // newlines (whitespace).  The result should be identical to the stripped
+        // source: 4 top-level forms, 2 emitted by emit-program.
+        let src = twig_compiler_src();
+        let real_span = fs::read_to_string(src.join("span.tw"))
+            .expect("span.tw must exist in twig/compiler/");
+
+        // Escape the raw file content for safe embedding in a Twig string literal.
+        //   real `\` → `\\`   (none in span.tw, but defensive)
+        //   real `"` → `\"`   (none in span.tw, but defensive)
+        //   real newline → `\n`  (Twig string escape → real newline at runtime)
+        let twig_escaped = real_span
+            .replace('\\', "\\\\")
+            .replace('"',  "\\\"")
+            .replace('\n', "\\n");
+
+        let dir = tempdir("sc_real_span");
+        copy_all_tw_modules(&src, &dir);
+
+        let body = format!(
+            r#"(length (emit-program (parse-program (lex-source "{twig_escaped}"))))"#
+        );
+        let root = write_test_main(&dir, FULL_IMPORTS, &body);
+
+        let v = super::run_in_large_stack(root, dir, "self_compile_real_span_tw");
+        assert_eq!(v.as_int(), Some(2),
+            "emit-program of real span.tw content should produce 2 entries");
+    }
+
+    // ── Test 6: Full pipeline — main.tw (TW05-I) returns 2 ──────────────────
+
+    #[test]
+    fn full_lex_parse_emit_self_compile() {
+        // Compile all 9 compiler modules + main.tw (TW05-I version).
+        // main.tw feeds the comment-stripped span.tw source (built with
+        // string-append) through the full lex → parse → emit-program pipeline
+        // and returns (length funcs) = 2.
+        //
+        // This test requires MAX_DISPATCH_DEPTH = 4096 (bumped from 256 in
+        // LANG62): the lex-loop recurses once per character, and the ~365-char
+        // stripped source needs ~870 nested Rust dispatch frames (see the
+        // with_large_stack comment above for the frame budget analysis).
+        let src = twig_compiler_src();
+        let dir = tempdir("full_tw05i");
+        copy_all_tw_modules(&src, &dir);
+        copy_tw(&src, &dir, "main");
+
+        let root = dir.join("compiler").join("main.tw");
+        let v = super::run_in_large_stack(root, dir, "full_lex_parse_emit_self_compile");
+        assert_eq!(v.as_int(), Some(2),
+            "(main) should return 2 — emit-program of stripped span.tw → make-span + dummy-span");
     }
 }
