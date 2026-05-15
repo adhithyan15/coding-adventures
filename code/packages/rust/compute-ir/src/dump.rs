@@ -206,6 +206,7 @@ fn op_name(op: &matrix_ir::Op) -> &'static str {
         Op::Where { .. } => "where",
         Op::Cast { .. } => "cast",
         Op::Const { .. } => "const",
+        Op::Slice { .. } => "slice",
     }
 }
 

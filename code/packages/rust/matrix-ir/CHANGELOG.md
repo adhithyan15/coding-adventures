@@ -3,6 +3,67 @@
 All notable changes to `matrix-ir` are documented here.  The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-05-13
+
+### Added — `Op::Slice` (V2 op, wire tag 0x1C)
+
+First post-V1 op.  Takes a contiguous-stride slice along one axis:
+
+```rust
+Op::Slice {
+    input: TensorId,
+    axis: u32,
+    start: u32,
+    end: u32,
+    step: u32,
+    output: TensorId,
+}
+```
+
+Output shape matches input on every axis except `axis`, where the
+new dim is `ceil((end - start) / step)`.  Equivalent to numpy
+`x[..., start:end:step, ...]` with the slice placed on `axis`.
+
+Constraints (enforced by the validator):
+
+- `axis < input.shape.rank()`.
+- `step >= 1`.
+- `start <= end <= input.shape.dims[axis]`.
+
+### Why
+
+DSP01 Phase 3 (matrix-ir-lowered FFT) needs an axis-aligned slice
+to extract even / odd halves of a complex tensor at each butterfly
+stage.  Adding `Slice` to the IR is much cleaner than mask-and-
+reduce tricks via `Where` / `Mul` / `ReduceSum`, and matches what
+every mature tensor IR (XLA, TVM, ONNX) provides.
+
+### Backwards compatibility
+
+- Wire format: 0x1C was reserved for V2 ops per the original spec.
+  Decoders that ignore unknown tags still ignore graphs with
+  Slice; decoders that error on unknown tags will need a v0.2
+  bump too.
+- Op::wire_tag(), Op::output(), Op::inputs() all gained `Slice`
+  arms.  Exhaustive `match` on `Op` in downstream crates needs
+  one new arm.
+
+### New error variant
+
+- `IrError::InvalidSlice { op_index, reason: &'static str }` — for
+  bad axis / zero step / start > end / end > axis_dim.
+
+### Builder
+
+- `GraphBuilder::slice(input, axis, start, end, step) -> Tensor` —
+  same shape-inference rules as the validator.
+
+### Tests
+
+The existing `wire_tags_are_unique` test was updated from 27 → 28
+variants.  New per-arm tests cover the validator and builder
+helpers transitively via the round-trip wire-format test.
+
 ## [0.1.0] — 2026-05-04
 
 Initial release.  Implements spec MX01 V1.

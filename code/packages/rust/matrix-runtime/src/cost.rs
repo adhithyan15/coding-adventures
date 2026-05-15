@@ -53,7 +53,9 @@ pub fn estimate_flops(op: &Op, output_shape: Option<&Shape>, input_shape: Option
         Op::ReduceSum { .. } | Op::ReduceMax { .. } | Op::ReduceMean { .. } => in_numel,
         // Shape ops: memory traffic, not flops, but we count one op
         // per output element so the planner sees a non-zero cost.
-        Op::Reshape { .. } | Op::Transpose { .. } | Op::Broadcast { .. } => out_numel,
+        Op::Reshape { .. } | Op::Transpose { .. } | Op::Broadcast { .. } | Op::Slice { .. } => {
+            out_numel
+        }
         // MatMul: caller must supply both input shapes via `input_shape`.
         Op::MatMul { .. } => {
             // Without per-input shape access at this level, fall back

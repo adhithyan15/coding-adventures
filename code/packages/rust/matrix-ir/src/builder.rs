@@ -365,6 +365,63 @@ impl GraphBuilder {
         out
     }
 
+    /// **V2 op.**  Slice `input` along `axis` with `start`, `end`,
+    /// `step`.  Output shape matches `input` on every other axis;
+    /// the `axis` dim becomes `ceil((end - start) / step)`.
+    ///
+    /// Panics if:
+    /// - `axis >= input.shape.rank()`.
+    /// - `step == 0`.
+    /// - `start > end`.
+    /// - `end > input.shape.dims[axis]`.
+    ///
+    /// Equivalent to numpy `x[..., start:end:step, ...]` with the
+    /// slice placed on axis `axis`.
+    pub fn slice(
+        &mut self,
+        input: &Tensor,
+        axis: u32,
+        start: u32,
+        end: u32,
+        step: u32,
+    ) -> Tensor {
+        assert!(
+            (axis as usize) < input.shape.rank(),
+            "slice: axis {} out of bounds for rank {}",
+            axis,
+            input.shape.rank()
+        );
+        assert!(step >= 1, "slice: step must be >= 1, got {}", step);
+        assert!(
+            start <= end,
+            "slice: start ({}) must be <= end ({})",
+            start,
+            end
+        );
+        let axis_dim = input.shape.dims[axis as usize];
+        assert!(
+            end <= axis_dim,
+            "slice: end ({}) > axis dim ({}) on axis {}",
+            end,
+            axis_dim,
+            axis
+        );
+        let span = end - start;
+        let new_dim = span.div_ceil(step);
+        let mut new_dims = input.shape.dims.clone();
+        new_dims[axis as usize] = new_dim;
+        let out = self.alloc(input.dtype, Shape::from(&new_dims[..]));
+        self.ops.push(Op::Slice {
+            input: input.id,
+            axis,
+            start,
+            end,
+            step,
+            output: out.id,
+        });
+        out
+    }
+
     // ──────────── linear algebra ────────────
 
     /// 2D matrix multiply.  `a: [m,k]` × `b: [k,n]` → `[m,n]`.
