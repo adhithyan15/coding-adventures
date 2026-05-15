@@ -47,6 +47,8 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "spi.open"
         assert_includes uno_r4_wifi["capabilities"], "spi.transfer"
         assert_includes uno_r4_wifi["capabilities"], "uart.open"
+        assert_includes uno_r4_wifi["capabilities"], "uart.write"
+        assert_includes uno_r4_wifi["capabilities"], "uart.read"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
@@ -1357,6 +1359,36 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_uart_write_and_read_dispatch_native_byte_io_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        open_result = nil
+        write_result = nil
+        read_result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          open_result = board.uart.open(bus: 0, program_id: 10, budget: 24)
+          write_result = board.uart.write(byte: 0xa5, program_id: 11, budget: 24)
+          read_result = board.uart.read(program_id: 12, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 14, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal open_result.frames + write_result.frames + read_result.frames, transport.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          open_result.results.map(&:command)
+        assert_equal [:program_begin, :program_chunk, :program_end, :run],
+          write_result.results.map(&:command)
+        assert_equal [:program_begin, :program_chunk, :program_end, :run],
+          read_result.results.map(&:command)
+      end
+
       def test_spi_transfer_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -2009,6 +2041,36 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_uart_write_and_read
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          open = board.session.run_command("uart-open 0 24", program_id: 8)
+          write = board.session.run_command("uart-write 0xa5 24", program_id: 9)
+          read = board.session.run_command("uart-read 24", program_id: 10)
+          upload_write = board.session.run_command("upload-uart.write 0xa5", program_id: 11)
+          upload_read = board.session.run_command("upload-uart.read", program_id: 12)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            open.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            read.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_read.results.map(&:command)
+          assert_equal open.frames + write.frames + read.frames + upload_write.frames + upload_read.frames,
+            transport.frames
+        end
+      end
+
       def test_session_run_command_accepts_repl_style_spi_transfer
         transport = FakeWriteTransport.new
 
@@ -2322,6 +2384,14 @@ module CodingAdventures
         uart_module_bytes = session.uart_open_module(0, 2)
         assert_instance_of String, uart_module_bytes
         assert_operator uart_module_bytes.bytesize, :>, 0
+
+        uart_write_module_bytes = session.uart_write_module(0xa5, 3)
+        assert_instance_of String, uart_write_module_bytes
+        assert_operator uart_write_module_bytes.bytesize, :>, 0
+
+        uart_read_module_bytes = session.uart_read_module(2)
+        assert_instance_of String, uart_read_module_bytes
+        assert_operator uart_read_module_bytes.bytesize, :>, 0
 
         spi_transfer_module_bytes = session.spi_transfer_module(10, "\x9F".b, 3, 5)
         assert_instance_of String, spi_transfer_module_bytes

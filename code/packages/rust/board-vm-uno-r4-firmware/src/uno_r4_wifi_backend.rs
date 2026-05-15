@@ -1,5 +1,7 @@
 use arduino_uno_r4_hal::Delay;
 use board_vm_runtime::{ByteBuffer, GpioMode, HalError, Level};
+#[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
+use board_vm_uart::BlockingUart;
 use board_vm_uno_r4::UnoR4Backend;
 use embedded_hal::delay::DelayNs;
 
@@ -99,6 +101,7 @@ impl UnoR4Backend for UnoR4WifiLedBackend {
 #[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
 pub struct UnoR4WifiPwmBackend {
     inner: UnoR4WifiLedBackend,
+    uart: Option<board_vm_uno_r4_uart::UnoR4WifiSerialUart>,
 }
 
 #[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
@@ -106,6 +109,7 @@ impl UnoR4WifiPwmBackend {
     pub fn new() -> Self {
         Self {
             inner: UnoR4WifiLedBackend::new(),
+            uart: None,
         }
     }
 
@@ -123,6 +127,22 @@ impl UnoR4WifiPwmBackend {
 
     pub fn refresh_led_matrix_once(&mut self) {
         self.inner.refresh_led_matrix_once();
+    }
+
+    fn uart(
+        &mut self,
+        bus: u8,
+    ) -> Result<&mut board_vm_uno_r4_uart::UnoR4WifiSerialUart, HalError> {
+        if bus != 0 {
+            return Err(HalError::UnsupportedMode);
+        }
+        if self.uart.is_none() {
+            self.uart = Some(
+                board_vm_uno_r4_uart::UnoR4WifiSerialUart::new()
+                    .map_err(|_| HalError::UnsupportedMode)?,
+            );
+        }
+        self.uart.as_mut().ok_or(HalError::BoardFault)
     }
 }
 
@@ -221,7 +241,20 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
     }
 
     fn open_uart(&mut self, bus: u8) -> Result<u32, HalError> {
+        self.uart(bus)?;
         Ok(0x14_0000 | bus as u32)
+    }
+
+    fn write_uart(&mut self, bus: u8, byte: u8) -> Result<(), HalError> {
+        let uart = self.uart(bus)?;
+        uart.write_byte(byte).map_err(|_| HalError::BoardFault)?;
+        uart.flush().map_err(|_| HalError::BoardFault)
+    }
+
+    fn read_uart(&mut self, bus: u8) -> Result<u8, HalError> {
+        self.uart(bus)?
+            .read_byte()
+            .map_err(|_| HalError::BoardFault)
     }
 
     fn transfer_spi(

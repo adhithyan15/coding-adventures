@@ -3,7 +3,7 @@ use board_vm_ir::{
     CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN,
     CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, FLAG_PROGRAM_MAY_RUN_FOREVER,
+    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, FLAG_PROGRAM_MAY_RUN_FOREVER,
     FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
@@ -64,6 +64,10 @@ pub const SPI_WRITE_MAX_MODULE_LEN: usize = SPI_TRANSFER_MAX_MODULE_LEN;
 pub const SPI_READ_MODULE_LEN: usize = 8 + 1 + SPI_TRANSFER_CODE_LEN + 1;
 pub const UART_OPEN_CODE_LEN: usize = 6;
 pub const UART_OPEN_MODULE_LEN: usize = 16;
+pub const UART_WRITE_CODE_LEN: usize = 5;
+pub const UART_WRITE_MODULE_LEN: usize = 15;
+pub const UART_READ_CODE_LEN: usize = 4;
+pub const UART_READ_MODULE_LEN: usize = 14;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -219,6 +223,17 @@ pub struct UartOpenProgram {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UartWriteProgram {
+    pub byte: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UartReadProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct I2cWriteU8Program {
     pub address: u16,
     pub byte: u8,
@@ -290,6 +305,24 @@ impl SpiOpenProgram {
 impl UartOpenProgram {
     pub const fn new(bus: u8) -> Self {
         Self { bus, max_stack: 2 }
+    }
+}
+
+impl UartWriteProgram {
+    pub const fn new(byte: u8) -> Self {
+        Self { byte, max_stack: 3 }
+    }
+}
+
+impl UartReadProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for UartReadProgram {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -1435,6 +1468,88 @@ pub fn write_uart_open_module(
     Ok(offset)
 }
 
+pub fn write_uart_write_code(
+    program: UartWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < UART_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.byte)?;
+    write_call_u8(out, &mut offset, CAP_UART_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_uart_write_module(
+    program: UartWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < UART_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; UART_WRITE_CODE_LEN];
+    let code_len = write_uart_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_uart(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_uart_read_code(_program: UartReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < UART_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_UART_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_uart_read_module(
+    program: UartReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < UART_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; UART_READ_CODE_LEN];
+    let code_len = write_uart_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_uart(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn spi_transfer_module_len(write_len: usize) -> Result<usize, HostError> {
     if write_len > MAX_BYTE_BUFFER_LEN {
         return Err(HostError::ProgramTooLarge);
@@ -1968,7 +2083,7 @@ mod tests {
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
         CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8,
         CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE,
-        CAP_SPI_OPEN,
+        CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -2030,6 +2145,12 @@ mod tests {
     const UART_OPEN_BUS0_MODULE_HEX: [u8; UART_OPEN_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x2B, 0x20, 0x50,
         0x00,
+    ];
+    const UART_WRITE_A5_MODULE_HEX: [u8; UART_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x05, 0x20, 0x12, 0xA5, 0x40, 0x2C, 0x00,
+    ];
+    const UART_READ_MODULE_HEX: [u8; UART_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x2D, 0x50, 0x00,
     ];
     const SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX: [u8; 24] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x05, 0x00, 0x0D, 0x20, 0x13, 0x0A, 0x00, 0x16, 0x00,
@@ -2284,6 +2405,29 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_UART_OPEN]);
+    }
+
+    #[test]
+    fn builds_uart_byte_io_modules() {
+        let mut write = [0u8; UART_WRITE_MODULE_LEN];
+        let write_len = write_uart_write_module(UartWriteProgram::new(0xa5), &mut write).unwrap();
+        assert_eq!(write_len, UART_WRITE_MODULE_LEN);
+        assert_eq!(write, UART_WRITE_A5_MODULE_HEX);
+        let parsed = parse_module(&write).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_uart(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_WRITE]);
+
+        let mut read = [0u8; UART_READ_MODULE_LEN];
+        let read_len = write_uart_read_module(UartReadProgram::new(), &mut read).unwrap();
+        assert_eq!(read_len, UART_READ_MODULE_LEN);
+        assert_eq!(read, UART_READ_MODULE_HEX);
+        let parsed = parse_module(&read).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_uart(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_READ]);
     }
 
     #[test]

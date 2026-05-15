@@ -495,6 +495,14 @@ pub trait UnoR4Backend {
         Err(HalError::UnsupportedMode)
     }
 
+    fn write_uart(&mut self, _bus: u8, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn read_uart(&mut self, _bus: u8) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn transfer_spi(
         &mut self,
         _bus: u8,
@@ -664,6 +672,16 @@ where
         self.backend.open_uart(bus)
     }
 
+    fn uart_write(&mut self, token: u32, byte: u8) -> Result<(), HalError> {
+        let bus = normalize_uart_token(self.target, token)?;
+        self.backend.write_uart(bus, byte)
+    }
+
+    fn uart_read(&mut self, token: u32) -> Result<u8, HalError> {
+        let bus = normalize_uart_token(self.target, token)?;
+        self.backend.read_uart(bus)
+    }
+
     fn spi_transfer(
         &mut self,
         token: u32,
@@ -814,6 +832,11 @@ fn normalize_uart_bus(target: &TargetDescriptor, bus: u16) -> Result<u8, HalErro
     } else {
         Err(HalError::InvalidPin)
     }
+}
+
+fn normalize_uart_token(target: &TargetDescriptor, token: u32) -> Result<u8, HalError> {
+    let bus = u16::try_from(token & 0xff).map_err(|_| HalError::InvalidPin)?;
+    normalize_uart_bus(target, bus)
 }
 
 fn normalize_i2c_address(address: u16) -> Result<(), HalError> {
@@ -983,6 +1006,8 @@ mod tests {
         SpiOpen(u8),
         SpiTransfer(u8, u8, Vec<u8>, u8),
         UartOpen(u8),
+        UartWrite(u8, u8),
+        UartRead(u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1082,6 +1107,16 @@ mod tests {
         fn open_uart(&mut self, bus: u8) -> Result<u32, HalError> {
             self.events.push(Event::UartOpen(bus));
             Ok(0x3_2000 | bus as u32)
+        }
+
+        fn write_uart(&mut self, bus: u8, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::UartWrite(bus, byte));
+            Ok(())
+        }
+
+        fn read_uart(&mut self, bus: u8) -> Result<u8, HalError> {
+            self.events.push(Event::UartRead(bus));
+            Ok(0x5a)
         }
 
         fn transfer_spi(
@@ -1290,6 +1325,12 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_UART_OPEN));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_UART_WRITE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_UART_READ));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1326,6 +1367,12 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_UART_OPEN));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_UART_WRITE));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_UART_READ));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1452,6 +1499,39 @@ mod tests {
 
         assert_eq!(board.uart_open(1), Err(HalError::InvalidPin));
         assert_eq!(board.uart_open(99), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn uart_write_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.uart_write(0x3_2002, 0xa5).unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::UartWrite(2, 0xa5)]);
+    }
+
+    #[test]
+    fn uart_write_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.uart_write(0x3_2001, 0xa5), Err(HalError::InvalidPin));
+        assert_eq!(board.uart_write(0x3_2099, 0xa5), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn uart_read_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.uart_read(0x3_2002).unwrap(), 0x5a);
+        assert_eq!(board.backend().events, vec![Event::UartRead(2)]);
+    }
+
+    #[test]
+    fn uart_read_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.uart_read(0x3_2001), Err(HalError::InvalidPin));
+        assert_eq!(board.uart_read(0x3_2099), Err(HalError::InvalidPin));
     }
 
     #[test]

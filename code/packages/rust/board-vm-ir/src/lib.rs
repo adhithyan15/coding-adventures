@@ -29,6 +29,8 @@ pub const CAP_I2C_TRANSFER: u16 = 0x28;
 pub const CAP_SPI_OPEN: u16 = 0x29;
 pub const CAP_SPI_TRANSFER: u16 = 0x2A;
 pub const CAP_UART_OPEN: u16 = 0x2B;
+pub const CAP_UART_WRITE: u16 = 0x2C;
+pub const CAP_UART_READ: u16 = 0x2D;
 pub const CAP_LED_MATRIX_FRAME: u16 = 0x30;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
@@ -49,6 +51,8 @@ const CAP_I2C_TRANSFER_U8: u8 = CAP_I2C_TRANSFER as u8;
 const CAP_SPI_OPEN_U8: u8 = CAP_SPI_OPEN as u8;
 const CAP_SPI_TRANSFER_U8: u8 = CAP_SPI_TRANSFER as u8;
 const CAP_UART_OPEN_U8: u8 = CAP_UART_OPEN as u8;
+const CAP_UART_WRITE_U8: u8 = CAP_UART_WRITE as u8;
+const CAP_UART_READ_U8: u8 = CAP_UART_READ as u8;
 const CAP_LED_MATRIX_FRAME_U8: u8 = CAP_LED_MATRIX_FRAME as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -203,7 +207,7 @@ impl CapabilitySet {
             CAP_I2C_OPEN | CAP_I2C_WRITE_U8 | CAP_I2C_READ_U8 | CAP_I2C_WRITE | CAP_I2C_READ
             | CAP_I2C_TRANSFER => self.i2c,
             CAP_SPI_OPEN | CAP_SPI_TRANSFER => self.spi,
-            CAP_UART_OPEN => self.uart,
+            CAP_UART_OPEN | CAP_UART_WRITE | CAP_UART_READ => self.uart,
             CAP_LED_MATRIX_FRAME => self.led_matrix,
             _ => false,
         }
@@ -478,6 +482,8 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_SPI_OPEN_U8) | Op::CallU16(CAP_SPI_OPEN) => (1, 1),
         Op::CallU8(CAP_SPI_TRANSFER_U8) | Op::CallU16(CAP_SPI_TRANSFER) => (4, 1),
         Op::CallU8(CAP_UART_OPEN_U8) | Op::CallU16(CAP_UART_OPEN) => (1, 1),
+        Op::CallU8(CAP_UART_WRITE_U8) | Op::CallU16(CAP_UART_WRITE) => (2, 0),
+        Op::CallU8(CAP_UART_READ_U8) | Op::CallU16(CAP_UART_READ) => (1, 1),
         Op::CallU8(CAP_LED_MATRIX_FRAME_U8) | Op::CallU16(CAP_LED_MATRIX_FRAME) => (3, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
@@ -849,6 +855,36 @@ mod tests {
     }
 
     #[test]
+    fn validates_uart_write_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 3,
+            code: &[0x20, 0x12, 0xa5, 0x40, CAP_UART_WRITE as u8],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_uart(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_WRITE]);
+    }
+
+    #[test]
+    fn validates_uart_read_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 2,
+            code: &[0x20, 0x40, CAP_UART_READ as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_uart(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_READ]);
+    }
+
+    #[test]
     fn validates_spi_transfer_capability() {
         let module = Module {
             flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
@@ -964,6 +1000,36 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 2),
             Err(ValidateError::UnsupportedCapability(CAP_UART_OPEN))
+        );
+    }
+
+    #[test]
+    fn rejects_uart_write_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 3,
+            code: &[0x20, 0x12, 0xa5, 0x40, CAP_UART_WRITE as u8],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 3),
+            Err(ValidateError::UnsupportedCapability(CAP_UART_WRITE))
+        );
+    }
+
+    #[test]
+    fn rejects_uart_read_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 2,
+            code: &[0x20, 0x40, CAP_UART_READ as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 2),
+            Err(ValidateError::UnsupportedCapability(CAP_UART_READ))
         );
     }
 

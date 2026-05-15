@@ -4,7 +4,8 @@ use board_vm_ir::{
     parse_module, validate, CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN,
     CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER,
     CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN,
-    CAP_SPI_TRANSFER, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
+    CAP_SPI_TRANSFER, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
+    CAP_UART_WRITE,
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -141,6 +142,18 @@ const UART_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor
     version: 1,
     flags: CAP_FLAG_BYTECODE_CALLABLE,
     name: "uart.open",
+};
+const UART_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_UART_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "uart.write",
+};
+const UART_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_UART_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "uart.read",
 };
 const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
     id: CAP_LED_MATRIX_FRAME,
@@ -677,7 +690,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_SPI_CAPABILITIES: [CapabilityDescri
 
 pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_UART_CAPABILITIES: [CapabilityDescriptor<
     'static,
->; 19] = [
+>; 21] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -696,6 +709,8 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_UART_CAPABILITIES: [CapabilityD
     SPI_OPEN_DESCRIPTOR,
     SPI_TRANSFER_DESCRIPTOR,
     UART_OPEN_DESCRIPTOR,
+    UART_WRITE_DESCRIPTOR,
+    UART_READ_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];
 
@@ -799,7 +814,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES: [Capab
 ];
 
 pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES:
-    [CapabilityDescriptor<'static>; 20] = [
+    [CapabilityDescriptor<'static>; 22] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -818,6 +833,8 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES:
     SPI_OPEN_DESCRIPTOR,
     SPI_TRANSFER_DESCRIPTOR,
     UART_OPEN_DESCRIPTOR,
+    UART_WRITE_DESCRIPTOR,
+    UART_READ_DESCRIPTOR,
     LED_MATRIX_FRAME_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
 ];

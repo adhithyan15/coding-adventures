@@ -496,6 +496,36 @@ module CodingAdventures
         )
       end
 
+      def uart_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        byte:,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.uart_write(
+          program_id: program_id,
+          budget: budget,
+          byte: byte,
+          max_stack: max_stack
+        )
+      end
+
+      def uart_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.uart_read(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack
+        )
+      end
+
       def spi_transfer!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -1360,6 +1390,7 @@ module CodingAdventures
           max_stack: max_stack
         )
       end
+
     end
 
     class Spi
@@ -1432,6 +1463,7 @@ module CodingAdventures
           max_stack: max_stack
         )
       end
+
     end
 
     class Uart
@@ -1451,6 +1483,32 @@ module CodingAdventures
           budget: budget,
           host_nonce: host_nonce,
           bus: bus,
+          max_stack: max_stack
+        )
+      end
+
+      def write(
+        byte:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 3
+      )
+        @connection.uart_write!(
+          program_id: program_id,
+          budget: budget,
+          byte: byte,
+          max_stack: max_stack
+        )
+      end
+
+      def read(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 2
+      )
+        @connection.uart_read!(
+          program_id: program_id,
+          budget: budget,
           max_stack: max_stack
         )
       end
