@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/forme-orchestrator",
+  "version": "0.1.0",
+  "description": "Forme orchestrator runtime: DAG construction, sequential topological execution, error handling, cancellation, dispose lifecycle (FM03 §3-4, §9-10).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-errors": "file:../forme-errors",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "@coding-adventures/forme-pipeline-config": "file:../forme-pipeline-config",
+    "@coding-adventures/forme-cache": "file:../forme-cache",
+    "@coding-adventures/forme-identity": "file:../forme-identity",
+    "@coding-adventures/forme-capability": "file:../forme-capability"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
