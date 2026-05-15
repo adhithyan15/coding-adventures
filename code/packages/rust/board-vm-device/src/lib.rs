@@ -1,8 +1,10 @@
 #![no_std]
 
 use board_vm_ir::{
-    parse_module, validate, CAP_ADC_READ, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
-    CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    parse_module, validate, CAP_ADC_READ, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN,
+    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER,
+    CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN,
+    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -31,6 +33,115 @@ pub const ERROR_BAD_CRC: u16 = 0x0005;
 pub const ERROR_INVALID_PROGRAM: u16 = 0x0200;
 pub const ERROR_INVALID_BYTECODE: u16 = 0x0201;
 pub const ERROR_BOARD_FAULT: u16 = 0x0400;
+
+const GPIO_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_OPEN,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.open",
+};
+const GPIO_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.write",
+};
+const GPIO_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.read",
+};
+const GPIO_CLOSE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_GPIO_CLOSE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "gpio.close",
+};
+const TIME_SLEEP_MS_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_TIME_SLEEP_MS,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "time.sleep_ms",
+};
+const TIME_NOW_MS_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_TIME_NOW_MS,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "time.now_ms",
+};
+const PWM_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_PWM_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "pwm.write",
+};
+const ADC_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_ADC_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "adc.read",
+};
+const DAC_WRITE_U12_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_DAC_WRITE_U12,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "dac.write_u12",
+};
+const I2C_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_OPEN,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.open",
+};
+const I2C_WRITE_U8_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_WRITE_U8,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.write_u8",
+};
+const I2C_READ_U8_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_READ_U8,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.read_u8",
+};
+const I2C_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.write",
+};
+const I2C_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.read",
+};
+const I2C_TRANSFER_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_I2C_TRANSFER,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "i2c.transfer",
+};
+const SPI_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_SPI_OPEN,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "spi.open",
+};
+const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_LED_MATRIX_FRAME,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "led_matrix.frame",
+};
+const PROGRAM_RAM_EXEC_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_PROGRAM_RAM_EXEC,
+    version: 1,
+    flags: CAP_FLAG_PROTOCOL_FEATURE,
+    name: "program.ram_exec",
+};
 
 pub const BLINK_MVP_CAPABILITIES: [CapabilityDescriptor<'static>; 7] = [
     CapabilityDescriptor {
@@ -464,6 +575,191 @@ pub const BLINK_MVP_WITH_PWM_ADC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescrip
     },
 ];
 
+pub const BLINK_MVP_WITH_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 8] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_ADC_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_AND_DAC_CAPABILITIES: [CapabilityDescriptor<'static>; 10] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_I2C_CAPABILITIES: [CapabilityDescriptor<'static>; 16] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
+    I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
+    I2C_READ_DESCRIPTOR,
+    I2C_TRANSFER_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_SPI_CAPABILITIES: [CapabilityDescriptor<'static>; 17] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
+    I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
+    I2C_READ_DESCRIPTOR,
+    I2C_TRANSFER_DESCRIPTOR,
+    SPI_OPEN_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 10] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_ADC_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 10] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>;
+    11] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<
+    'static,
+>; 17] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
+    I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
+    I2C_READ_DESCRIPTOR,
+    I2C_TRANSFER_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<
+    'static,
+>; 18] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
+    I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
+    I2C_READ_DESCRIPTOR,
+    I2C_TRANSFER_DESCRIPTOR,
+    SPI_OPEN_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+];
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DeviceError {
     Protocol(ProtocolError),
@@ -593,6 +889,7 @@ pub struct BoardVmDevice<
     program_id: u16,
     upload: UploadState,
     background: Option<BackgroundRun>,
+    bootloader_reboot_requested: bool,
 }
 
 impl<'a, H, const MAX_PROGRAM_BYTES: usize, const MAX_STACK: usize, const MAX_HANDLES: usize>
@@ -609,6 +906,7 @@ where
             program_id: 0,
             upload: UploadState::default(),
             background: None,
+            bootloader_reboot_requested: false,
         }
     }
 
@@ -646,6 +944,12 @@ where
 
     pub fn is_background_running(&self) -> bool {
         self.background.is_some()
+    }
+
+    pub fn take_bootloader_reboot_requested(&mut self) -> bool {
+        let requested = self.bootloader_reboot_requested;
+        self.bootloader_reboot_requested = false;
+        requested
     }
 
     pub fn poll_background(
@@ -709,6 +1013,9 @@ where
             MessageType::PROGRAM_END => self.handle_program_end(request, payload_out, frame_out),
             MessageType::RUN => self.handle_run(request, payload_out, frame_out),
             MessageType::STOP => self.handle_stop(request, payload_out, frame_out),
+            MessageType::BOOTLOADER_REBOOT => {
+                self.handle_bootloader_reboot(request, payload_out, frame_out)
+            }
             _ => Err(BoardFault::UnsupportedMessage),
         }
     }
@@ -909,6 +1216,29 @@ where
             MessageType::RUN_REPORT,
             request.request_id,
             &payload_out[..payload_len],
+            frame_out,
+        )
+    }
+
+    fn handle_bootloader_reboot(
+        &mut self,
+        request: Frame<'_>,
+        _payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<usize, BoardFault> {
+        if !request.payload.is_empty() {
+            return Err(BoardFault::InvalidFrame);
+        }
+        if !self.runtime.hal().supports_bootloader_reboot() {
+            return Err(BoardFault::UnsupportedMessage);
+        }
+        self.background = None;
+        self.runtime.reset_vm();
+        self.bootloader_reboot_requested = true;
+        write_response(
+            MessageType::BOOTLOADER_REBOOT,
+            request.request_id,
+            &[],
             frame_out,
         )
     }
@@ -1345,7 +1675,7 @@ fn write_run_report_response(
         payload_out,
     )?;
     if return_count == 1 {
-        let value = protocol_value_from_runtime(report.return_value);
+        let value = protocol_value_from_runtime(&report.return_value);
         payload_len += encode_value(&value, &mut payload_out[payload_len..])?;
     }
     write_response(
@@ -1364,17 +1694,18 @@ fn runtime_return_count(status: ProtocolRunStatus, value: RuntimeValue) -> u32 {
     }
 }
 
-fn protocol_value_from_runtime(value: RuntimeValue) -> ProtocolValue<'static> {
+fn protocol_value_from_runtime(value: &RuntimeValue) -> ProtocolValue<'_> {
     match value {
         RuntimeValue::Unit => ProtocolValue::Unit,
-        RuntimeValue::Bool(value) => ProtocolValue::Bool(value),
-        RuntimeValue::U8(value) => ProtocolValue::U8(value),
-        RuntimeValue::U16(value) => ProtocolValue::U16(value),
-        RuntimeValue::U32(value) => ProtocolValue::U32(value),
-        RuntimeValue::I16(value) => ProtocolValue::I16(value),
+        RuntimeValue::Bool(value) => ProtocolValue::Bool(*value),
+        RuntimeValue::U8(value) => ProtocolValue::U8(*value),
+        RuntimeValue::U16(value) => ProtocolValue::U16(*value),
+        RuntimeValue::U32(value) => ProtocolValue::U32(*value),
+        RuntimeValue::I16(value) => ProtocolValue::I16(*value),
         RuntimeValue::Handle(value) => {
             ProtocolValue::Handle(u16::from(value.index) | (u16::from(value.generation) << 8))
         }
+        RuntimeValue::Bytes(value) => ProtocolValue::Bytes(value.as_slice()),
     }
 }
 
@@ -1397,8 +1728,8 @@ fn crc32_ieee(bytes: &[u8]) -> u32 {
 mod tests {
     use super::*;
     use board_vm_host::{
-        write_blink_module, write_time_now_module, BlinkProgram, HostSession, TimeNowProgram,
-        DEFAULT_PROGRAM_ID,
+        write_blink_module, write_module, write_time_now_module, BlinkProgram, HostSession,
+        ModuleSpec, TimeNowProgram, DEFAULT_PROGRAM_ID,
     };
     use board_vm_ir::CapabilitySet;
     use board_vm_protocol::{
@@ -1412,6 +1743,7 @@ mod tests {
         GpioOpen { pin: u16, mode: GpioMode },
         GpioWrite { token: u32, level: Level },
         SleepMs(u16),
+        BootloaderReboot,
     }
 
     struct FakeHal {
@@ -1420,6 +1752,7 @@ mod tests {
         events: [Option<Event>; 128],
         event_len: usize,
         capabilities: CapabilitySet,
+        supports_bootloader_reboot: bool,
     }
 
     impl FakeHal {
@@ -1430,7 +1763,13 @@ mod tests {
                 events: [None; 128],
                 event_len: 0,
                 capabilities,
+                supports_bootloader_reboot: false,
             }
+        }
+
+        fn with_bootloader_reboot(mut self) -> Self {
+            self.supports_bootloader_reboot = true;
+            self
         }
 
         fn push_event(&mut self, event: Event) {
@@ -1478,6 +1817,19 @@ mod tests {
 
         fn now_ms(&self) -> u32 {
             self.now_ms
+        }
+
+        fn supports_bootloader_reboot(&self) -> bool {
+            self.supports_bootloader_reboot
+        }
+
+        fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+            if self.supports_bootloader_reboot {
+                self.push_event(Event::BootloaderReboot);
+                Ok(())
+            } else {
+                Err(HalError::UnsupportedMode)
+            }
         }
     }
 
@@ -1725,6 +2077,58 @@ mod tests {
     }
 
     #[test]
+    fn bootloader_reboot_request_is_acked_before_runtime_reset() {
+        let mut device = BoardVmDevice::new(
+            DeviceDescriptor::blink_mvp("test-board", 0xB04D_1001),
+            FakeHal::new(CapabilitySet::blink_mvp()).with_bootloader_reboot(),
+        );
+        let mut session = HostSession::new();
+        let mut request = [0u8; 64];
+        let mut device_payload = [0u8; 64];
+        let mut response = [0u8; 96];
+
+        let reboot = session.bootloader_reboot_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..reboot.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+
+        assert_eq!(frame.flags, FLAG_IS_RESPONSE);
+        assert_eq!(frame.message_type, MessageType::BOOTLOADER_REBOOT);
+        assert_eq!(frame.request_id, reboot.request_id);
+        assert!(frame.payload.is_empty());
+        assert!(device.take_bootloader_reboot_requested());
+        assert!(!device.take_bootloader_reboot_requested());
+    }
+
+    #[test]
+    fn bootloader_reboot_request_reports_unsupported_when_hal_cannot_reset() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let mut request = [0u8; 64];
+        let mut device_payload = [0u8; 64];
+        let mut response = [0u8; 96];
+
+        let reboot = session.bootloader_reboot_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..reboot.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let error = decode_error_payload(frame.payload).unwrap();
+
+        assert_eq!(frame.message_type, MessageType::ERROR);
+        assert_eq!(error.code, ERROR_UNSUPPORTED_MESSAGE);
+        assert_eq!(error.message, "unsupported message");
+        assert!(!device.take_bootloader_reboot_requested());
+    }
+
+    #[test]
     fn uploads_runs_and_stops_program_against_generic_hal() {
         let mut device = new_device();
         let mut session = HostSession::new();
@@ -1919,6 +2323,78 @@ mod tests {
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_count, 1);
         assert_eq!(decoder.read_value().unwrap(), Value::U32(0));
+        decoder.finish().unwrap();
+    }
+
+    #[test]
+    fn run_report_encodes_bytes_return_value() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let code = [0x16, 0x00, 0x00, 0x03, 0x50];
+        let const_pool = [0xCA, 0xFE, 0x42];
+        let mut module = [0u8; 32];
+        let module_len = write_module(
+            ModuleSpec::new(0, 1, &code).const_pool(&const_pool),
+            &mut module,
+        )
+        .unwrap();
+        let module = &module[..module_len];
+        let mut host_payload = [0u8; 128];
+        let mut request = [0u8; 192];
+        let mut device_payload = [0u8; 256];
+        let mut response = [0u8; 320];
+
+        let begin = session
+            .program_begin_frame(DEFAULT_PROGRAM_ID, module, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..begin.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let chunk = session
+            .program_chunk_frame(
+                DEFAULT_PROGRAM_ID,
+                0,
+                module,
+                &mut host_payload,
+                &mut request,
+            )
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..chunk.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let end = session
+            .program_end_frame(DEFAULT_PROGRAM_ID, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..end.len],
+            &mut device_payload,
+            &mut response,
+        );
+
+        let run = session
+            .run_background_frame(DEFAULT_PROGRAM_ID, 10, &mut host_payload, &mut request)
+            .unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..run.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let (report, mut decoder) = decode_run_report_header(frame.payload).unwrap();
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_count, 1);
+        assert_eq!(
+            decoder.read_value().unwrap(),
+            Value::Bytes(&[0xCA, 0xFE, 0x42])
+        );
         decoder.finish().unwrap();
     }
 

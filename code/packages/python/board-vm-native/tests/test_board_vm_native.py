@@ -133,6 +133,7 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "transport.wifi" in uno_r4_wifi.capabilities
     assert "transport.bluetooth_le" in uno_r4_wifi.capabilities
     assert "pwm.write" in uno_r4_wifi.capabilities
+    assert "spi.open" in uno_r4_wifi.capabilities
     assert uno_r4_wifi.wireless_transports == ["wifi", "bluetooth_le"]
     assert uno_r4_wifi.supports_wifi is True
     assert uno_r4_wifi.supports_bluetooth is True
@@ -141,6 +142,19 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert uno_r4_wifi.ota_transports == ["wifi"]
     assert uno_r4_wifi.supports_command_transport("serial") is True
     assert uno_r4_wifi.led_matrix == {"rows": 8, "columns": 12}
+    assert uno_r4_wifi.i2c_buses[0]["name"] == "Wire"
+    assert uno_r4_wifi.i2c_buses[1]["name"] == "Wire1"
+    assert uno_r4_wifi.spi_buses == [
+        {
+            "bus": 0,
+            "name": "SPI",
+            "copi_pin": 11,
+            "cipo_pin": 12,
+            "sck_pin": 13,
+            "default_cs_pin": 10,
+            "notes": "Header SPI bus on D11/COPI, D12/CIPO, and D13/SCK with D10 as the conventional chip select",
+        }
+    ]
     assert uno_r4_wifi.digital_pin_count == len(uno_r4_wifi.digital_pins)
     d3 = uno_r4_wifi.digital_pin(3)
     assert d3 is not None

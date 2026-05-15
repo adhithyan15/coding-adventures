@@ -3,23 +3,30 @@ use std::ptr;
 use std::slice;
 
 use board_vm_host::{
-    AdcReadProgram, BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram,
-    GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram, GpioWriteProgram,
-    LedMatrixFrameProgram, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
-    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
-    TIME_SLEEP_MS_MODULE_LEN,
+    AdcReadProgram, BlinkProgram, DacWriteU12Program, GpioHandleCloseProgram,
+    GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram,
+    GpioWriteProgram, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
+    I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, PwmWriteProgram, SpiOpenProgram,
+    TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    DAC_WRITE_U12_MODULE_LEN,
+    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
+    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
+    I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_TRANSFER_MAX_MODULE_LEN,
+    I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
     bluetooth_endpoint_candidates_from_devices, bluetooth_transact_wire_frame, board_family_name,
     build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
     build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
-    build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
+    build_dac_write_u12_module, build_gpio_read_module, build_gpio_write_module,
+    build_hello_wire_frame, build_i2c_open_module, build_i2c_read_module, build_i2c_read_u8_module,
+    build_i2c_transfer_module, build_i2c_write_module, build_i2c_write_u8_module,
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
     build_program_end_wire_frame, build_pwm_write_module, build_adc_read_module, build_raw_module,
-    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    build_run_background_wire_frame, build_run_wire_frame, build_spi_open_module,
+    build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
@@ -34,8 +41,9 @@ use board_vm_language_core::{
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
-    LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed,
-    LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
+    LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageI2cBus,
+    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus, LanguageTargetInfo,
+    LanguageValue, LanguageWirelessInterface,
 };
 use ruby_bridge::VALUE;
 
@@ -240,6 +248,124 @@ extern "C" fn session_adc_read_module(
 
     let module = build_adc_read_module_value(pin, max_stack)
         .unwrap_or_else(|error| raise_core_error("adc_read_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_dac_write_u12_module(
+    _self_val: VALUE,
+    pin_val: VALUE,
+    sample_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let pin = rb_u8(pin_val, "pin");
+    let sample = rb_u16(sample_val, "sample");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_dac_write_u12_module_value(pin, sample, max_stack)
+        .unwrap_or_else(|error| raise_core_error("dac_write_u12_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_open_module(
+    _self_val: VALUE,
+    bus_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let bus = rb_u8(bus_val, "bus");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_open_module_value(bus, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_open_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_spi_open_module(
+    _self_val: VALUE,
+    bus_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let bus = rb_u8(bus_val, "bus");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_spi_open_module_value(bus, max_stack)
+        .unwrap_or_else(|error| raise_core_error("spi_open_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_write_u8_module(
+    _self_val: VALUE,
+    address_val: VALUE,
+    byte_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let address = rb_u16(address_val, "address");
+    let byte = rb_u8(byte_val, "byte");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_write_u8_module_value(address, byte, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_write_u8_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_write_module(
+    _self_val: VALUE,
+    address_val: VALUE,
+    bytes_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let address = rb_u16(address_val, "address");
+    let bytes = ruby_bridge::bytes_from_rb(bytes_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("bytes must be a Ruby binary String"));
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_write_module_value(address, &bytes, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_write_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_read_u8_module(
+    _self_val: VALUE,
+    address_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let address = rb_u16(address_val, "address");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_read_u8_module_value(address, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_read_u8_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_read_module(
+    _self_val: VALUE,
+    address_val: VALUE,
+    len_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let address = rb_u16(address_val, "address");
+    let len = rb_u8(len_val, "len");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_read_module_value(address, len, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_read_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_i2c_transfer_module(
+    _self_val: VALUE,
+    address_val: VALUE,
+    write_bytes_val: VALUE,
+    read_len_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let address = rb_u16(address_val, "address");
+    let write_bytes = ruby_bridge::bytes_from_rb(write_bytes_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("write_bytes must be a Ruby binary String"));
+    let read_len = rb_u8(read_len_val, "read_len");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_i2c_transfer_module_value(address, &write_bytes, read_len, max_stack)
+        .unwrap_or_else(|error| raise_core_error("i2c_transfer_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -780,6 +906,8 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
         "digital_pins",
         language_digital_pins_to_rb(&target.digital_pins),
     );
+    hash_set(hash, "i2c_buses", language_i2c_buses_to_rb(&target.i2c_buses));
+    hash_set(hash, "spi_buses", language_spi_buses_to_rb(&target.spi_buses));
     hash_set(hash, "wireless", language_wireless_to_rb(&target.wireless));
     hash_set(
         hash,
@@ -832,6 +960,11 @@ fn language_digital_pins_to_rb(pins: &[LanguageDigitalPin]) -> VALUE {
         );
         hash_set(
             hash,
+            "supports_dac",
+            ruby_bridge::bool_to_rb(pin.supports_dac),
+        );
+        hash_set(
+            hash,
             "supports_touch",
             ruby_bridge::bool_to_rb(pin.supports_touch),
         );
@@ -856,6 +989,37 @@ fn language_led_matrix_to_rb(matrix: Option<board_vm_language_core::LanguageLedM
     hash_set(hash, "rows", rb_usize(matrix.rows as usize));
     hash_set(hash, "columns", rb_usize(matrix.columns as usize));
     hash
+}
+
+fn language_i2c_buses_to_rb(buses: &[LanguageI2cBus]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for bus in buses {
+        let hash = ruby_bridge::hash_new();
+        hash_set(hash, "bus", rb_usize(bus.bus));
+        hash_set(hash, "name", ruby_bridge::str_to_rb(&bus.name));
+        hash_set(hash, "sda_pin", rb_usize(bus.sda_pin));
+        hash_set(hash, "scl_pin", rb_usize(bus.scl_pin));
+        hash_set(hash, "qwiic", ruby_bridge::bool_to_rb(bus.qwiic));
+        hash_set(hash, "notes", ruby_bridge::str_to_rb(&bus.notes));
+        ruby_bridge::array_push(array, hash);
+    }
+    array
+}
+
+fn language_spi_buses_to_rb(buses: &[LanguageSpiBus]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for bus in buses {
+        let hash = ruby_bridge::hash_new();
+        hash_set(hash, "bus", rb_usize(bus.bus));
+        hash_set(hash, "name", ruby_bridge::str_to_rb(&bus.name));
+        hash_set(hash, "copi_pin", rb_usize(bus.copi_pin));
+        hash_set(hash, "cipo_pin", rb_usize(bus.cipo_pin));
+        hash_set(hash, "sck_pin", rb_usize(bus.sck_pin));
+        hash_set(hash, "default_cs_pin", rb_usize(bus.default_cs_pin));
+        hash_set(hash, "notes", ruby_bridge::str_to_rb(&bus.notes));
+        ruby_bridge::array_push(array, hash);
+    }
+    array
 }
 
 fn language_wireless_to_rb(interfaces: &[LanguageWirelessInterface]) -> VALUE {
@@ -1410,6 +1574,115 @@ fn build_adc_read_module_value(pin: u8, max_stack: u8) -> Result<Vec<u8>, Langua
     Ok(module)
 }
 
+fn build_dac_write_u12_module_value(
+    pin: u8,
+    sample: u16,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; DAC_WRITE_U12_MODULE_LEN];
+    let len = build_dac_write_u12_module(
+        DacWriteU12Program {
+            pin,
+            sample,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_i2c_open_module_value(bus: u8, max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_OPEN_MODULE_LEN];
+    let len = build_i2c_open_module(I2cOpenProgram { bus, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_spi_open_module_value(bus: u8, max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; SPI_OPEN_MODULE_LEN];
+    let len = build_spi_open_module(SpiOpenProgram { bus, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_i2c_write_u8_module_value(
+    address: u16,
+    byte: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_WRITE_U8_MODULE_LEN];
+    let len = build_i2c_write_u8_module(
+        I2cWriteU8Program {
+            address,
+            byte,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_i2c_write_module_value(
+    address: u16,
+    bytes: &[u8],
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_WRITE_MAX_MODULE_LEN];
+    let len = build_i2c_write_module(
+        I2cWriteProgram {
+            address,
+            bytes,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_i2c_read_u8_module_value(
+    address: u16,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_READ_U8_MODULE_LEN];
+    let len = build_i2c_read_u8_module(I2cReadU8Program { address, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_i2c_read_module_value(
+    address: u16,
+    len: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_READ_MODULE_LEN];
+    let len = build_i2c_read_module(I2cReadProgram { address, len, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_i2c_transfer_module_value(
+    address: u16,
+    write_bytes: &[u8],
+    read_len: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; I2C_TRANSFER_MAX_MODULE_LEN];
+    let len = build_i2c_transfer_module(
+        I2cTransferProgram {
+            address,
+            write_bytes,
+            read_len,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_raw_module_value(
     flags: u8,
     max_stack: u8,
@@ -1718,6 +1991,54 @@ pub extern "C" fn Init_board_vm_native() {
         "adc_read_module",
         session_adc_read_module as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "dac_write_u12_module",
+        session_dac_write_u12_module as *const c_void,
+        3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_open_module",
+        session_i2c_open_module as *const c_void,
+        2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "spi_open_module",
+        session_spi_open_module as *const c_void,
+        2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_write_u8_module",
+        session_i2c_write_u8_module as *const c_void,
+        3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_write_module",
+        session_i2c_write_module as *const c_void,
+        3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_read_u8_module",
+        session_i2c_read_u8_module as *const c_void,
+        2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_read_module",
+        session_i2c_read_module as *const c_void,
+        3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "i2c_transfer_module",
+        session_i2c_transfer_module as *const c_void,
+        4,
     );
     ruby_bridge::define_method_raw(
         session_class,

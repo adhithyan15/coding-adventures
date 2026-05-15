@@ -301,7 +301,9 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     # IMAGINARY_UNIT so the VM finds the pre-bound symbol.
     "%i": IMAGINARY_UNIT,
     "realpart": RE,
+    "re": RE,         # short alias for realpart
     "imagpart": IM,
+    "im": IM,         # short alias for imagpart
     "conjugate": CONJUGATE,
     # cabs(z) = complex modulus; Abs dispatches to complex handler when z
     # contains ImaginaryUnit, so both names route to the same IR head.

@@ -1,6 +1,6 @@
 [package]
 name = "twig-aot"
-version = "0.1.8"
+version = "0.3.0"
 edition = "2021"
 description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source."
 
@@ -9,10 +9,13 @@ twig-ir-compiler     = { path = "../twig-ir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 aot-core              = { path = "../aot-core" }
 aarch64-backend       = { path = "../aarch64-backend" }
+x86_64-backend        = { path = "../x86_64-backend" }
+x86_64-encoder        = { path = "../x86_64-encoder" }
 jit-core              = { path = "../jit-core" }
 code-packager         = { path = "../code-packager" }
 cli-builder           = { path = "../cli-builder" }
 iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
+iir-refinement-pass   = { path = "../iir-refinement-pass" }
 tempfile             = "3"
 
 [[bin]]

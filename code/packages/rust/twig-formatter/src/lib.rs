@@ -102,8 +102,8 @@ use format_doc::{
     LayoutOptions,
 };
 use twig_parser::{
-    parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program,
-    SymLit, TwigParseError, VarRef,
+    parse, Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, LetStar, NilLit,
+    Program, StrLit, SymLit, TwigParseError, TypeAnnotation, TypeExpr, VarRef,
 };
 
 // ---------------------------------------------------------------------------
@@ -246,6 +246,38 @@ pub fn form_to_doc_pub(form: &Form) -> Doc {
 }
 
 // ---------------------------------------------------------------------------
+// TW05-A / LANG48 — type expression formatters
+// ---------------------------------------------------------------------------
+
+/// Format a [`TypeExpr`] back to its s-expression surface form.
+fn type_expr_to_doc(expr: &TypeExpr) -> Doc {
+    match expr {
+        TypeExpr::Name(n) => text(n.clone()),
+        TypeExpr::Int(i) => text(i.to_string()),
+        TypeExpr::List(parts) => {
+            let inner: Vec<Doc> = parts.iter().map(type_expr_to_doc).collect();
+            let sep: Vec<Doc> = inner.into_iter().flat_map(|d| [text(" "), d]).collect();
+            concat([text("("), concat(sep.into_iter().skip(1).collect::<Vec<_>>()), text(")")])
+        }
+    }
+}
+
+/// Format a [`TypeAnnotation`] back to its surface form.
+fn type_annotation_to_doc(ann: &TypeAnnotation) -> Doc {
+    match ann {
+        TypeAnnotation::UnrefinedInt => text("int"),
+        TypeAnnotation::Any => text("any"),
+        TypeAnnotation::UnrefinedBool => text("bool"),
+        TypeAnnotation::RangeInt { lo, hi } => text(format!("(Int {lo} {hi})")),
+        TypeAnnotation::MembershipInt { values } => {
+            let vals: Vec<String> = values.iter().map(|v| v.to_string()).collect();
+            text(format!("(Member int ({}))", vals.join(" ")))
+        }
+        TypeAnnotation::Opaque(te) => type_expr_to_doc(te),
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Form / Expr → Doc compilers
 // ---------------------------------------------------------------------------
 
@@ -253,6 +285,51 @@ fn form_to_doc(form: &Form) -> Doc {
     match form {
         Form::Define(d) => define_to_doc(d),
         Form::Expr(e) => expr_to_doc(e),
+        // TW05-A / LANG48 — typed-syntax top-level declarations.
+        // Formatted as their s-expression surface syntax.
+        Form::TypeAlias(ta) => {
+            let ann = type_expr_to_doc(&ta.expr);
+            group(concat([
+                text("(type "),
+                text(ta.name.clone()),
+                indent(concat([line(), ann]), 1),
+                text(")"),
+            ]))
+        }
+        Form::RecordDef(r) => {
+            let fields: Vec<Doc> = r.fields.iter().map(|f| {
+                let ann = type_annotation_to_doc(&f.type_annotation);
+                group(concat([
+                    text("("),
+                    text(f.name.clone()),
+                    text(" : "),
+                    ann,
+                    text(")"),
+                ]))
+            }).collect();
+            let body = if fields.is_empty() {
+                nil()
+            } else {
+                indent(concat(fields.into_iter().flat_map(|f| [line(), f]).collect::<Vec<_>>()), 2)
+            };
+            group(concat([text("(record "), text(r.name.clone()), body, text(")")]))
+        }
+        Form::UnionDef(u) => {
+            let variants: Vec<Doc> = u.variants.iter().map(|v| {
+                let fields: Vec<Doc> = v.fields.iter().map(|f| {
+                    let ann = type_annotation_to_doc(&f.type_annotation);
+                    group(concat([text("("), text(f.name.clone()), text(" : "), ann, text(")")]))
+                }).collect();
+                let inner = if fields.is_empty() {
+                    nil()
+                } else {
+                    concat(fields.into_iter().flat_map(|f| [text(" "), f]).collect::<Vec<_>>())
+                };
+                concat([text("("), text(v.name.clone()), inner, text(")")])
+            }).collect();
+            let body = concat(variants.into_iter().flat_map(|v| [line(), v]).collect::<Vec<_>>());
+            group(concat([text("(union "), text(u.name.clone()), indent(body, 2), text(")")]))
+        }
     }
 }
 
@@ -278,12 +355,51 @@ fn expr_to_doc(expr: &Expr) -> Doc {
         Expr::BoolLit(BoolLit { value, .. }) => text(if *value { "#t" } else { "#f" }),
         Expr::NilLit(NilLit { .. }) => text("nil"),
         Expr::SymLit(SymLit { name, .. }) => text(format!("'{name}")),
+        Expr::StrLit(StrLit { value, .. }) => {
+            // Re-escape backslashes and double-quotes so the output
+            // round-trips through the parser unchanged.
+            text(format!("\"{}\"", value.replace('\\', "\\\\").replace('"', "\\\"")))
+        }
         Expr::VarRef(VarRef { name, .. }) => text(name.clone()),
         Expr::If(i) => if_to_doc(i),
         Expr::Let(l) => let_to_doc(l),
+        // LANG52 — let* with sequential bindings; same layout as let
+        // but opens with `(let* ` to preserve the sequential semantics.
+        Expr::LetStar(l) => let_star_to_doc(l),
         Expr::Begin(b) => begin_to_doc(b),
         Expr::Lambda(l) => lambda_to_doc(l),
         Expr::Apply(a) => apply_to_doc(a),
+        // TW05-A / LANG48 — match expression.
+        // Formatted as: (match scrutinee
+        //   (pat body…)
+        //   …)
+        Expr::Match(m) => {
+            use twig_parser::{MatchArm, MatchPat};
+            let scrutinee = expr_to_doc(&m.scrutinee);
+            let arms: Vec<Doc> = m.arms.iter().map(|arm: &MatchArm| {
+                let pat_doc = match &arm.pat {
+                    MatchPat::Variant { name, bindings } => {
+                        if bindings.is_empty() {
+                            text(format!("({name})"))
+                        } else {
+                            text(format!("({name} {})", bindings.join(" ")))
+                        }
+                    }
+                    MatchPat::Binding(n) => text(n.clone()),
+                    MatchPat::Wildcard => text("_"),
+                };
+                let body_docs: Vec<Doc> = arm.body.iter().map(expr_to_doc).collect();
+                let body = concat(body_docs.into_iter().flat_map(|d| [line(), d]).collect::<Vec<_>>());
+                group(concat([text("("), pat_doc, indent(body, 1), text(")")]))
+            }).collect();
+            let arms_doc = concat(arms.into_iter().flat_map(|a| [line(), a]).collect::<Vec<_>>());
+            group(concat([
+                text("(match "),
+                scrutinee,
+                indent(arms_doc, 2),
+                text(")"),
+            ]))
+        }
     }
 }
 
@@ -344,6 +460,39 @@ fn let_to_doc(l: &Let) -> Doc {
     }
     group(concat([
         text("(let "),
+        bindings_doc,
+        indent(concat(body_parts), 1),
+        text(")"),
+    ]))
+}
+
+/// Format `(let* ((x e1) (y e2)) body)` — layout identical to `let_to_doc`
+/// but uses `"(let* "` so sequential binding semantics are preserved.
+fn let_star_to_doc(l: &LetStar) -> Doc {
+    let bindings_doc = if l.bindings.is_empty() {
+        text("()")
+    } else {
+        let mut binding_parts: Vec<Doc> = Vec::with_capacity(l.bindings.len() * 2 - 1);
+        for (i, (name, expr)) in l.bindings.iter().enumerate() {
+            if i > 0 {
+                binding_parts.push(line());
+            }
+            binding_parts.push(group(concat([
+                text("("),
+                text(name.clone()),
+                indent(concat([line(), expr_to_doc(expr)]), 1),
+                text(")"),
+            ])));
+        }
+        concat([text("("), group(concat(binding_parts)), text(")")])
+    };
+    let mut body_parts: Vec<Doc> = Vec::with_capacity(l.body.len() * 2);
+    for e in &l.body {
+        body_parts.push(line());
+        body_parts.push(expr_to_doc(e));
+    }
+    group(concat([
+        text("(let* "),
         bindings_doc,
         indent(concat(body_parts), 1),
         text(")"),
@@ -473,7 +622,10 @@ mod tests {
     }
 
     fn strip_positions(p: &Program) -> Program {
-        Program { forms: p.forms.iter().map(strip_form).collect() }
+        Program {
+            forms: p.forms.iter().map(strip_form).collect(),
+            module_info: p.module_info.clone(),
+        }
     }
     fn strip_form(f: &Form) -> Form {
         match f {
@@ -485,14 +637,32 @@ mod tests {
                 column: 0,
             }),
             Form::Expr(e) => Form::Expr(strip_expr(e)),
+            // TW05-A forms carry no source positions to strip; clone as-is.
+            Form::TypeAlias(ta) => Form::TypeAlias(twig_parser::TypeAlias {
+                line: 0,
+                column: 0,
+                ..ta.clone()
+            }),
+            Form::RecordDef(r) => Form::RecordDef(twig_parser::RecordDef {
+                line: 0,
+                column: 0,
+                ..r.clone()
+            }),
+            Form::UnionDef(u) => Form::UnionDef(twig_parser::UnionDef {
+                line: 0,
+                column: 0,
+                ..u.clone()
+            }),
         }
     }
     fn strip_expr(e: &Expr) -> Expr {
+        use twig_parser::{Match, MatchArm};
         match e {
             Expr::IntLit(n) => Expr::IntLit(IntLit { value: n.value, line: 0, column: 0 }),
             Expr::BoolLit(b) => Expr::BoolLit(BoolLit { value: b.value, line: 0, column: 0 }),
             Expr::NilLit(_) => Expr::NilLit(NilLit { line: 0, column: 0 }),
             Expr::SymLit(s) => Expr::SymLit(SymLit { name: s.name.clone(), line: 0, column: 0 }),
+            Expr::StrLit(s) => Expr::StrLit(StrLit { value: s.value.clone(), line: 0, column: 0 }),
             Expr::VarRef(v) => Expr::VarRef(VarRef { name: v.name.clone(), line: 0, column: 0 }),
             Expr::If(i) => Expr::If(If {
                 cond: Box::new(strip_expr(&i.cond)),
@@ -502,6 +672,12 @@ mod tests {
                 column: 0,
             }),
             Expr::Let(l) => Expr::Let(Let {
+                bindings: l.bindings.iter().map(|(n, e)| (n.clone(), strip_expr(e))).collect(),
+                body: l.body.iter().map(strip_expr).collect(),
+                line: 0,
+                column: 0,
+            }),
+            Expr::LetStar(l) => Expr::LetStar(LetStar {
                 bindings: l.bindings.iter().map(|(n, e)| (n.clone(), strip_expr(e))).collect(),
                 body: l.body.iter().map(strip_expr).collect(),
                 line: 0,
@@ -523,6 +699,15 @@ mod tests {
             Expr::Apply(a) => Expr::Apply(Apply {
                 fn_expr: Box::new(strip_expr(&a.fn_expr)),
                 args: a.args.iter().map(strip_expr).collect(),
+                line: 0,
+                column: 0,
+            }),
+            Expr::Match(m) => Expr::Match(Match {
+                scrutinee: Box::new(strip_expr(&m.scrutinee)),
+                arms: m.arms.iter().map(|arm: &MatchArm| MatchArm {
+                    pat: arm.pat.clone(),
+                    body: arm.body.iter().map(strip_expr).collect(),
+                }).collect(),
                 line: 0,
                 column: 0,
             }),

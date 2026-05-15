@@ -1,6 +1,7 @@
 use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use capability_os_sandbox::{current_kernel_sandbox_support, OsFamily};
 use os_job_core::BackendKind;
 use weather_agent_e2e::{
     run_umbrella_today_agent, RecommendationKind, UmbrellaAgentConfig, WeatherFetchSourceKind,
@@ -35,6 +36,50 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.weather_fetch.https_requests, 0);
     assert_eq!(run.weather_fetch.tls_handshakes, 0);
     assert_eq!(run.weather_fetch.http_statuses, vec![200]);
+    assert!(!run.weather_fetch.http_domain_policy_enforced);
+    assert!(run.weather_fetch.declared_http_domains.is_empty());
+
+    assert_eq!(run.sandbox_plan.package, "rust/weather-agent-e2e");
+    assert_eq!(run.sandbox_plan.plan_count, 6);
+    assert_eq!(run.sandbox_plan.total_rules, 18);
+    assert_eq!(run.sandbox_plan.current_os, OsFamily::current());
+    assert_eq!(run.sandbox_plan.current_os_rules, 3);
+    assert!(run.sandbox_plan.direct_rules >= 8);
+    assert!(run.sandbox_plan.brokered_rules >= 4);
+    assert!(run.sandbox_plan.native_rules >= 12);
+    assert_eq!(
+        run.sandbox_plan
+            .summary_for_os(OsFamily::Linux)
+            .expect("linux plan should be present")
+            .total_rules,
+        3
+    );
+    assert_eq!(
+        run.sandbox_plan
+            .summary_for_os(OsFamily::Portable)
+            .expect("portable plan should be present")
+            .host_broker_rules,
+        3
+    );
+
+    let kernel_support = current_kernel_sandbox_support();
+    assert_eq!(run.kernel_sandbox.os, OsFamily::current());
+    assert_eq!(run.kernel_sandbox.available, kernel_support.available);
+    if kernel_support.available {
+        assert!(run.kernel_sandbox.enforced);
+        assert!(run.kernel_sandbox.allowed_write_succeeded);
+        assert!(run.kernel_sandbox.denied_write_blocked);
+        assert!(run.kernel_sandbox.network_outbound_enforced);
+        assert!(run.kernel_sandbox.network_denied_outbound_blocked);
+        assert!(run
+            .kernel_sandbox
+            .denied_network_target
+            .starts_with("localhost:"));
+        assert!(!run.kernel_sandbox.weather_https_allowed);
+        assert!(!run.kernel_sandbox.host_exact_kernel_enforced);
+        assert!(run.kernel_sandbox.stderr_contains_operation_not_permitted);
+        assert!(!run.kernel_sandbox.denied_path.exists());
+    }
 
     assert_eq!(run.supervisor.child_count, 3);
     assert_eq!(run.supervisor.stopped_children, 3);
@@ -127,11 +172,22 @@ fn umbrella_today_agent_fetches_live_weather_over_tls() {
     assert_eq!(run.weather_fetch.tls_handshakes, 2);
     assert_eq!(run.weather_fetch.http_statuses, vec![200, 200]);
     assert_eq!(run.weather_fetch.endpoint_count, 2);
+    assert!(run.weather_fetch.http_domain_policy_enforced);
+    assert_eq!(
+        run.weather_fetch.declared_http_domains,
+        vec!["api.weather.gov".to_string()]
+    );
     assert!(run
         .weather_fetch
         .forecast_endpoint
         .starts_with("https://api.weather.gov/"));
     assert!(run.output_text.contains("location=Seattle"));
     assert!(run.output_text.contains("decision="));
+    if current_kernel_sandbox_support().available {
+        assert!(run.kernel_sandbox.network_outbound_enforced);
+        assert!(run.kernel_sandbox.network_denied_outbound_blocked);
+        assert!(run.kernel_sandbox.weather_https_allowed);
+        assert!(!run.kernel_sandbox.host_exact_kernel_enforced);
+    }
     assert!(output_path.exists());
 }

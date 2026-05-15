@@ -54,6 +54,15 @@ def laplace_handler(vm: VM, expr: IRApply) -> IRNode:
     if not isinstance(t, IRSymbol) or not isinstance(s, IRSymbol):
         return expr
     result = laplace_transform(f, t, s)
+    # Guard: if laplace_transform fell through and returned the unevaluated
+    # Laplace(f, t, s) form, return it directly.  Passing it back through
+    # vm.eval() would re-enter this handler and cause infinite recursion.
+    if (
+        isinstance(result, IRApply)
+        and isinstance(result.head, IRSymbol)
+        and result.head.name == "Laplace"
+    ):
+        return result
     return vm.eval(result)
 
 

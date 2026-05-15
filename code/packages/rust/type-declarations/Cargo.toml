@@ -1,0 +1,5 @@
+[package]
+name        = "type-declarations"
+version     = "0.1.0"
+edition     = "2021"
+description = "Language-agnostic type declaration format — analogous to TypeScript's .d.ts files.  Emitted by any parser as a side output alongside its language-specific AST.  The grammar-type-checker uses these declarations to drive type inference and produce AnnotatedNode trees that feed AOT/JIT compilation."

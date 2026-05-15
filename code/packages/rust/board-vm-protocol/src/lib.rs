@@ -93,6 +93,7 @@ impl MessageType {
     pub const ERROR: Self = Self(0x13);
     pub const PING: Self = Self(0x14);
     pub const PONG: Self = Self(0x15);
+    pub const BOOTLOADER_REBOOT: Self = Self(0x16);
 
     pub const fn is_vendor_extension(self) -> bool {
         self.0 >= 0x80
@@ -1210,6 +1211,12 @@ mod tests {
         let mut decoded_raw = [0u8; 32];
         let decoded = decode_stream_frame(&wire[..wire_len], &mut decoded_raw).unwrap();
         assert_eq!(decoded, frame);
+    }
+
+    #[test]
+    fn reserves_bootloader_reboot_protocol_message() {
+        assert_eq!(MessageType::BOOTLOADER_REBOOT.0, 0x16);
+        assert!(!MessageType::BOOTLOADER_REBOOT.is_vendor_extension());
     }
 
     #[test]

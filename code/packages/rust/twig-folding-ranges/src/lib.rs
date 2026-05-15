@@ -66,7 +66,7 @@
 use std::fmt;
 
 use twig_parser::{
-    parse, Apply, Begin, Expr, Form, If, Lambda, Let, Program, TwigParseError,
+    parse, Apply, Begin, Expr, Form, If, Lambda, Let, LetStar, Program, TwigParseError,
 };
 
 // ---------------------------------------------------------------------------
@@ -155,12 +155,16 @@ fn emit_form(out: &mut Vec<FoldingRange>, form: &Form) {
             push_if_multiline(out, u32_of(e.pos().0), max_line_in_expr(e));
             descend_expr(out, e);
         }
+        // LANG48 — type/record/union declarations.  Individual fields and
+        // variants don't carry per-token positions in the AST yet, so we
+        // cannot derive an accurate end-line.  Skip folding for v1.
+        Form::TypeAlias(_) | Form::RecordDef(_) | Form::UnionDef(_) => {}
     }
 }
 
 fn descend_expr(out: &mut Vec<FoldingRange>, expr: &Expr) {
     match expr {
-        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) | Expr::VarRef(_) => {}
+        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) | Expr::StrLit(_) | Expr::VarRef(_) => {}
         Expr::If(If { cond, then_branch, else_branch, line, .. }) => {
             let start = u32_of(*line);
             let end = max_line_in_expr(cond)
@@ -172,6 +176,18 @@ fn descend_expr(out: &mut Vec<FoldingRange>, expr: &Expr) {
             descend_expr(out, else_branch);
         }
         Expr::Let(Let { bindings, body, line, .. }) => {
+            let start = u32_of(*line);
+            let end = max_line_in_bindings(bindings).max(max_line_in_exprs(body));
+            push_if_multiline(out, start, end);
+            for (_n, e) in bindings {
+                descend_expr(out, e);
+            }
+            for e in body {
+                descend_expr(out, e);
+            }
+        }
+        // LANG52 — let* with sequential bindings; fold identical to let.
+        Expr::LetStar(LetStar { bindings, body, line, .. }) => {
             let start = u32_of(*line);
             let end = max_line_in_bindings(bindings).max(max_line_in_exprs(body));
             push_if_multiline(out, start, end);
@@ -207,6 +223,27 @@ fn descend_expr(out: &mut Vec<FoldingRange>, expr: &Expr) {
                 descend_expr(out, a);
             }
         }
+        // LANG48 — match expression.  Fold the whole `(match …)` form if it
+        // spans multiple lines; recurse into the scrutinee and each arm body.
+        Expr::Match(m) => {
+            let start = u32_of(m.line);
+            let scrutinee_max = max_line_in_expr(&m.scrutinee);
+            let arms_max = m
+                .arms
+                .iter()
+                .flat_map(|a| &a.body)
+                .map(max_line_in_expr)
+                .max()
+                .unwrap_or(0);
+            let end = scrutinee_max.max(arms_max);
+            push_if_multiline(out, start, end);
+            descend_expr(out, &m.scrutinee);
+            for arm in &m.arms {
+                for e in &arm.body {
+                    descend_expr(out, e);
+                }
+            }
+        }
     }
 }
 
@@ -220,6 +257,7 @@ fn max_line_in_expr(expr: &Expr) -> u32 {
         Expr::BoolLit(b) => u32_of(b.line),
         Expr::NilLit(n) => u32_of(n.line),
         Expr::SymLit(s) => u32_of(s.line),
+        Expr::StrLit(s) => u32_of(s.line),
         Expr::VarRef(v) => u32_of(v.line),
         Expr::If(If { cond, then_branch, else_branch, line, .. }) => u32_of(*line)
             .max(max_line_in_expr(cond))
@@ -228,11 +266,26 @@ fn max_line_in_expr(expr: &Expr) -> u32 {
         Expr::Let(Let { bindings, body, line, .. }) => u32_of(*line)
             .max(max_line_in_bindings(bindings))
             .max(max_line_in_exprs(body)),
+        // LANG52 — let* max-line identical to let.
+        Expr::LetStar(LetStar { bindings, body, line, .. }) => u32_of(*line)
+            .max(max_line_in_bindings(bindings))
+            .max(max_line_in_exprs(body)),
         Expr::Begin(Begin { exprs, line, .. }) => u32_of(*line).max(max_line_in_exprs(exprs)),
         Expr::Lambda(Lambda { body, line, .. }) => u32_of(*line).max(max_line_in_exprs(body)),
         Expr::Apply(Apply { fn_expr, args, line, .. }) => u32_of(*line)
             .max(max_line_in_expr(fn_expr))
             .max(max_line_in_exprs(args)),
+        // LANG48 — match expression: max of self, scrutinee, and all arm bodies.
+        Expr::Match(m) => {
+            let arms_max = m
+                .arms
+                .iter()
+                .flat_map(|a| &a.body)
+                .map(max_line_in_expr)
+                .max()
+                .unwrap_or(0);
+            u32_of(m.line).max(max_line_in_expr(&m.scrutinee)).max(arms_max)
+        }
     }
 }
 

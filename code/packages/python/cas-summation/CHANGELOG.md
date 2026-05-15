@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.1 — 2026-05-14
+
+**Bug fix: geometric series now recognises `1/base^k` (division form) in addition to `base^k`.**
+
+`_try_geometric` in `summation.py` previously only recognised `Pow(r, k)` as a geometric
+base.  The MACSYMA input `sum(1/2^k, k, 0, inf)` compiles to `Sum(Div(1, Pow(2, k)), …)`,
+which was not matched.
+
+Extended the recogniser to also handle `Div(coeff, Pow(base, k))` by mapping it to
+`coeff · (1/base)^k` and delegating to the existing infinite geometric series logic.
+Result: `sum(1/2^k, k, 0, inf)` → `2`, `sum(1/3^k, k, 0, inf)` → `3/2`.
+
 ## 0.1.0 — 2026-05-04
 
 **Initial release — Phase 25 symbolic summation.**

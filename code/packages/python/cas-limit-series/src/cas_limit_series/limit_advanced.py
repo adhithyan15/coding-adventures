@@ -672,7 +672,13 @@ def limit_advanced(
     # at x=0), we fall through to L'Hôpital / rewrite.
     subst_result = subst(point, var, expr)
     if eval_fn is not None:
-        subst_result = eval_fn(subst_result)
+        try:
+            subst_result = eval_fn(subst_result)
+        except (ZeroDivisionError, ArithmeticError):
+            # The VM detected an arithmetic singularity (e.g. sin(0)/0
+            # collapsed to 0/0).  Treat this as an indeterminate 0/0 form
+            # and delegate to L'Hôpital / rewrite immediately.
+            return _handle_form(expr, var, point, direction, diff_fn, eval_fn, _depth)
     exact_val = _num_eval(subst_result)
 
     if not math.isnan(exact_val):

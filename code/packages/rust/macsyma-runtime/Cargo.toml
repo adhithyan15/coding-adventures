@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-macsyma-runtime"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "MACSYMA runtime session facade over the Rust symbolic VM"
 license = "MIT"

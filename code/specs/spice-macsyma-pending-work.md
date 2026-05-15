@@ -1,8 +1,11 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-13. Branch point: spice-engine v0.10.0 (PR #2901),
-> macsyma-runtime after the MACSYMA help-system merge (PR #3065).
+> Last updated: 2026-05-14. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
+> merged), Rust 0.2.0 releases (PR #3171 ✅ merged), Python EllipticE/Pi —
+> `symbolic-vm` 0.54.0 (PR #3173 ✅ merged), TypeScript EllipticE/Pi —
+> `symbolic-vm` 0.3.0 (PR #3179 ✅ merged), Rust EllipticE/Pi —
+> `symbolic-vm` 0.3.0 (PR #3178 ✅ merged).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -58,6 +61,7 @@ files.
 | Version | PR | What shipped |
 |---|---|---|
 | v0.1.0 | #1353 | MNA core, DC operating point (Newton-Raphson), forward-Euler transient, `Diode`, `Mosfet` |
+| v0.10.0 | #2901 ✅ | All four SPICE controlled sources: `VCVS` (E), `VCCS` (G), `CCCS` (F), `CCVS` (H). Correct MNA stamps (DC + AC). `TfResult.gain`. Fixed CCCS stamp sign. |
 | v0.2.0 | #2339 | Trapezoidal + Backward Euler integration, LTE-based adaptive timestep |
 | v0.3.0 | #2342 | `BJT` element (Ebers-Moll, NPN/PNP) |
 | v0.4.0 | #2344 | AC small-signal frequency sweep (`.AC`) |
@@ -77,9 +81,7 @@ files.
 
 ### What is in flight
 
-| Version | PR | Status | What it adds |
-|---|---|---|---|
-| **v0.10.0** | **#2901** | Open — all CI green, pending merge | All four SPICE controlled sources: `VCVS` (E-element), `VCCS` (G-element), `CCCS` (F-element), `CCVS` (H-element). Correct MNA stamps for all four (DC + AC). `TfResult.gain` convenience property. Fix to CCCS stamp sign convention (was reversed; now matches SPICE F-element convention where positive current exits `n_plus`). 287 tests, 85% coverage. |
+_Nothing currently in flight._
 
 ---
 
@@ -117,20 +119,54 @@ Items are listed in priority order within each group.
 
 ## MACSYMA Pipeline
 
-### What is on `main` (MACSYMA pipeline after PR #3065)
+### What is on `main` (MACSYMA pipeline after PR #3141)
 
 Every item below is wired end-to-end: surface syntax → compile → VM → correct result.
 
-#### Core infrastructure
+#### Core infrastructure (Python)
 
 | Package | Version | What it provides |
 |---|---|---|
 | `symbolic-ir` | latest | `IRSymbol`, `IRInteger`, `IRRational`, `IRFloat`, `IRString`, `IRApply` node types |
-| `symbolic-vm` | latest | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+), numeric folding, 100+ handlers |
+| `symbolic-vm` | 0.54.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi), numeric folding, 100+ handlers |
 | `macsyma-lexer` | 0.1.0 | Grammar-driven tokenizer |
 | `macsyma-parser` | 0.1.0 | Grammar-driven parser |
 | `macsyma-compiler` | 0.9.0 | AST → IR; 60+ MACSYMA identifier mappings in name table |
 | `macsyma-runtime` | 1.25.0 | History (`%`, `%i1`, `%o1`, …), `;`/`$` terminators, `kill`, `ev`, `MacsymaBackend` |
+
+#### TypeScript port version releases (PR #3170 ✅ merged)
+
+The TypeScript port was at v0.1.0 with all implemented features in an "Unreleased"
+CHANGELOG section. PR #3170 cut proper 0.2.0 releases.
+
+| Package | Version | Notes |
+|---|---|---|
+| `typescript/symbolic-vm` | 0.2.0 | EllipticF/K, multivariate Factor footholds, D derivative handler, reciprocal hyperbolic |
+| `typescript/macsyma-runtime` | 0.2.0 | Elliptic pipeline, multivariate factor, `?` help, assume/declare, ev display2d, list/solve wiring |
+
+#### TypeScript EllipticE/Pi integration recognition (PR #3179 ✅ merged)
+
+| Package | Version | Notes |
+|---|---|---|
+| `typescript/symbolic-vm` | 0.3.0 | EllipticE (complete + incomplete), EllipticPi (complete) pattern recognition |
+
+#### Rust port version releases (PR #3171 ✅ merged)
+
+The Rust port was at v0.1.x with all implemented features in an "Unreleased"
+CHANGELOG section. PR #3171 cut proper 0.2.0 releases and created the missing
+`cas-ode` CHANGELOG.
+
+| Package | Version | Notes |
+|---|---|---|
+| `rust/symbolic-vm` | 0.2.0 | Same feature set as TypeScript 0.2.0 |
+| `rust/macsyma-runtime` | 0.2.0 | Same feature set as TypeScript 0.2.0 |
+| `rust/cas-ode` | 0.1.0 | CHANGELOG.md created — documents all 9 ODE types (Phase 18–20) |
+
+#### Rust EllipticE/Pi integration recognition (PR #3178 ✅ merged)
+
+| Package | Version | Notes |
+|---|---|---|
+| `rust/symbolic-vm` | 0.3.0 | EllipticE (complete + incomplete), EllipticPi (complete) pattern recognition |
 
 #### CAS substrate packages — all fully wired
 
@@ -208,28 +244,35 @@ unless a parity audit finds a smaller drift between the three language ports.
 
 #### Factoring gaps
 
-`cas-factor` is **univariate only**. Multivariate factoring over Z is not
-implemented. `cas-multivariate` has Gröbner bases but not a factoring front-end.
+The `Factor` handler now covers several structural multivariate patterns via
+`symbolic-vm` footholds landed in PRs #3073–#3120:
 
-Example that currently returns unevaluated:
-```
-factor(x^2*y - y)       → should give y*(x-1)*(x+1)
-factor(x^2 + 2*x*y + y^2) → should give (x+y)^2
-```
+| Pattern | Example | Status |
+|---|---|---|
+| Common symbolic factor | `factor(x^2*y - y)` → `y*(x-1)*(x+1)` | ✅ #3073 |
+| Bivariate perfect square | `factor(x^2 + 2*x*y + y^2)` → `(x+y)^2` | ✅ #3083 |
+| Bivariate difference of squares | `factor(x^2 - y^2)` → `(x-y)*(x+1)` | ✅ #3090 |
+| Bivariate cubic identities | `factor(x^3 - y^3)`, `factor(x^3 + y^3)` | ✅ #3098 |
+| Four-term bilinear grouping | `factor(x*y + x*z + y + z)` → `(x+1)*(y+z)` | ✅ #3106 |
+| Perfect cube expansion | `factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3)` → `(x+y)^3` | ✅ #3116 |
+| Integer content + common factor | `factor(2*x*y + 2*x*z)` → `2*x*(y+z)` | ✅ #3120 |
 
-Design: add a `factor_multivariate` function to `cas-factor` (or a new
-`cas-multivariate-factor` package) using the square-free decomposition +
-variable-by-variable Hensel lifting approach. Wire as an extended case in the
-existing `factor_handler`.
+**Still open:** General multivariate factoring via Hensel lifting (e.g.
+`factor(x^2 + x*y - 2*y^2)` → `(x+2y)*(x-y)` when no common factor exists).
+The footholds above all work by recognising known algebraic identities; a
+general-case algorithm needs variable-by-variable Kronecker/Cantor-Zassenhaus.
+This is the main remaining factoring gap.
 
 #### Integration gaps
 
-The Risch integration suite is ~85% complete. Known remaining gaps:
+The Risch integration suite is ~90% complete. Known remaining gaps:
 
 | Case | Example | Status |
 |---|---|---|
-| Elliptic integrals | `∫ 1/√(1-k²sin²θ) dθ` | Non-elementary; should return unevaluated with a recognised `EllipticK(k)` form |
-| `∫ f(x)·g(x)` where neither factor integrates alone | General product rule fallback missing; currently only specific matched patterns work |
+| Elliptic integrals — first-kind foothold | `∫ 1/√(1-k²sin²θ) dθ` | ✅ #3141: returns `EllipticF(θ,k)`; definite 0…π/2 returns `EllipticK(k)` |
+| Elliptic integrals — second kind | `∫ √(1-k²sin²θ) dθ`, `∫₀^(π/2) √(1-k²sin²θ) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
+| Elliptic integrals — third kind | `∫₀^(π/2) 1/((1+n·sin²θ)·√(1-k²sin²θ)) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
+| `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features
 

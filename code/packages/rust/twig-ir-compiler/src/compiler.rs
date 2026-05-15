@@ -64,7 +64,7 @@
 //! the old convention: `global_set`, `global_get`, `make_symbol`.  See the
 //! LANG32 spec for details on the `global_load`/`global_store` lowering pass.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use interpreter_ir::{
     function::{FunctionTypeStatus, IIRFunction},
@@ -75,8 +75,11 @@ use interpreter_ir::{
 use lang_refined_types::{Kind, Predicate, RefinedType};
 
 use twig_parser::{
-    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
-    TypeAnnotation, VarRef,
+    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+    Match, MatchPat, NilLit, Program,
+    RecordDef, StrLit, SymLit, TypeAnnotation, UnionDef, VarRef,
 };
 
 use crate::errors::TwigCompileError;
@@ -118,6 +121,10 @@ fn type_annotation_to_refined_type(ann: &TypeAnnotation) -> RefinedType {
             Kind::Int,
             Predicate::Membership { values: values.clone() },
         ),
+        // TW05-A / LANG48: Opaque annotations (non-LANG23 TW05 type expressions)
+        // are erased to `any` in TW05-A.  The TW05-B type checker will interpret
+        // them; for now they're treated as unconstrained.
+        TypeAnnotation::Opaque(_) => RefinedType::unrefined(Kind::Any),
     }
 }
 
@@ -142,14 +149,26 @@ pub const MAX_COMPILE_DEPTH: usize = 256;
 // ---------------------------------------------------------------------------
 
 const BUILTINS: &[&str] = &[
-    // Arithmetic / comparison
+    // Arithmetic / comparison (TW00 core)
     "+", "-", "*", "/", "=", "<", ">",
+    // LANG52: extended comparisons and arithmetic
+    "<=", ">=", "modulo", "remainder", "quotient",
     // Cons cells
     "cons", "car", "cdr",
-    // Predicates
+    // Predicates (TW00 core)
     "null?", "pair?", "number?", "symbol?",
+    // LANG52: boolean and type predicates
+    "not", "boolean?",
+    // LANG52: structural equality
+    "equal?",
+    // LANG52: list stdlib
+    "list", "length", "append", "reverse", "list-ref", "assoc", "list?",
+    // LANG52: symbol utilities
+    "symbol-append",
     // I/O
     "print",
+    // Host I/O (LANG52) — these dispatch via call_builtin to exec_host_call
+    "host/write_string", "host/read_line", "host/read_file",
 ];
 
 fn is_builtin(name: &str) -> bool {
@@ -239,6 +258,13 @@ pub struct Compiler {
     /// Counter for synthesising lambda names (`__lambda_0`,
     /// `__lambda_1`, …).
     lambda_counter: usize,
+    /// TW05-A / LANG48: integer tag for each union variant constructor.
+    ///
+    /// Populated during the pre-pass when `Form::UnionDef` forms are
+    /// encountered.  Consulted when lowering `Expr::Match` arms — a
+    /// pattern whose name is in this map is a variant pattern;
+    /// otherwise it is a bare-name binding.
+    variant_tags: HashMap<String, usize>,
 }
 
 impl Compiler {
@@ -248,6 +274,7 @@ impl Compiler {
             value_globals: HashSet::new(),
             functions: Vec::new(),
             lambda_counter: 0,
+            variant_tags: HashMap::new(),
         }
     }
 
@@ -257,17 +284,53 @@ impl Compiler {
 
     /// Compile a [`Program`] into an [`IIRModule`].  Consumes `self`.
     pub fn compile(mut self, program: &Program, module_name: &str) -> Result<IIRModule, TwigCompileError> {
-        // ── Pre-pass: classify top-level defines ─────────────────────
-        // Free-variable analysis at lambda sites needs to know which
-        // names are globals (and therefore *not* free) before we walk
-        // any bodies, so we do this in one pre-pass.
+        // ── Pre-pass: classify top-level defines + register typed forms ────
+        //
+        // Free-variable analysis at lambda sites needs to know which names are
+        // globals (and therefore *not* free) before we walk any bodies, so we
+        // do this in one pre-pass.
+        //
+        // TW05-A / LANG48 additions:
+        // - `Form::RecordDef` generates constructor + accessors — all registered
+        //   as `fn_globals` so direct calls reach the fast `call` path.
+        // - `Form::UnionDef` generates constructors + predicates + accessors *and*
+        //   populates `self.variant_tags` so `match` lowering can look up tags.
         for form in &program.forms {
-            if let Form::Define(def) = form {
-                if matches!(def.expr, Expr::Lambda(_)) {
-                    self.fn_globals.insert(def.name.clone());
-                } else {
-                    self.value_globals.insert(def.name.clone());
+            match form {
+                Form::Define(def) => {
+                    if matches!(def.expr, Expr::Lambda(_)) {
+                        self.fn_globals.insert(def.name.clone());
+                    } else {
+                        self.value_globals.insert(def.name.clone());
+                    }
                 }
+                Form::RecordDef(rec) => {
+                    // Constructor name (same as type name, e.g. "Span").
+                    self.fn_globals.insert(rec.name.clone());
+                    // Accessor names: <lower(RecordName)>-<field-name>.
+                    let prefix = rec.name.to_lowercase();
+                    for f in &rec.fields {
+                        self.fn_globals.insert(format!("{prefix}-{}", f.name));
+                    }
+                    // Type predicate: <lower(RecordName)>?
+                    self.fn_globals.insert(format!("{prefix}?"));
+                }
+                Form::UnionDef(union) => {
+                    for (idx, variant) in union.variants.iter().enumerate() {
+                        // Constructor name (same as variant name, e.g. "IntLit").
+                        self.fn_globals.insert(variant.name.clone());
+                        // Predicate: <VariantName>?
+                        self.fn_globals.insert(format!("{}?", variant.name));
+                        // Accessor names: <lower(VariantName)>-<field-name>.
+                        let vprefix = variant.name.to_lowercase();
+                        for f in &variant.fields {
+                            self.fn_globals.insert(format!("{vprefix}-{}", f.name));
+                        }
+                        // Register the integer tag for match-arm lowering.
+                        self.variant_tags.insert(variant.name.clone(), idx);
+                    }
+                }
+                _ => {}
             }
         }
 
@@ -305,6 +368,23 @@ impl Compiler {
                 }
                 Form::Expr(e) => {
                     last_main_value = Some(self.compile_expr(e, &mut main_ctx)?);
+                }
+
+                // ── TW05-A / LANG48 typed-syntax forms ────────────────
+                //
+                // `type_alias`: compile-time only; no IIR emitted.
+                Form::TypeAlias(_) => {}
+
+                // `record_def`: erased to constructor + accessor IIR fns.
+                Form::RecordDef(rec) => {
+                    let rec = rec.clone();
+                    self.emit_record_def(&rec)?;
+                }
+
+                // `union_def`: erased to integer-tagged constructors + predicates + accessors.
+                Form::UnionDef(union) => {
+                    let union = union.clone();
+                    self.emit_union_def(&union)?;
                 }
             }
         }
@@ -592,6 +672,29 @@ impl Compiler {
                 Ok(v)
             }
 
+            // LANG51: double-quoted string literal — `"hello"`.
+            //
+            // Lower to a single `const(Operand::Str(value))` instruction with
+            // type_hint `"str"`.  The VM's `exec_const` (twig-vm/src/dispatch.rs)
+            // already handles `Operand::Str` by calling `alloc_string` and
+            // wrapping the result as a heap `LispyValue` — no VM changes needed.
+            //
+            // We use `Operand::Str` (the LANG32-canonical compile-time string form)
+            // rather than the older `string_arg` helper that emits `Operand::Var`
+            // because that helper was designed for internal builtin-call scaffolding,
+            // not for user-visible string data.  `Operand::Str` is cleaner and
+            // propagates the `"str"` type_hint automatically through LANG50 inference.
+            Expr::StrLit(StrLit { value, .. }) => {
+                let v = ctx.fresh_var("s");
+                ctx.emit(IIRInstr::new(
+                    "const",
+                    Some(v.clone()),
+                    vec![Operand::Str(value.clone())],
+                    "str",
+                ), loc);
+                Ok(v)
+            }
+
             Expr::VarRef(v) => self.compile_var_ref(v, ctx),
 
             Expr::If(i) => self.compile_if(i, ctx),
@@ -607,9 +710,15 @@ impl Compiler {
 
             Expr::Let(l) => self.compile_let(l, ctx),
 
+            // LANG52: sequential let* — compile via compile_let_star.
+            Expr::LetStar(l) => self.compile_let_star(l, ctx),
+
             Expr::Lambda(l) => self.compile_anonymous_lambda(l, ctx),
 
             Expr::Apply(a) => self.compile_apply(a, ctx),
+
+            // TW05-A / LANG48: match expression — lowered to if/let chain.
+            Expr::Match(m) => self.compile_match(m, ctx),
         }
     }
 
@@ -772,8 +881,194 @@ impl Compiler {
         Ok(last)
     }
 
+    /// LANG52: compile `(let* ((x e1) (y e2) ...) body+)`.
+    ///
+    /// Unlike `compile_let`, each binding's RHS is compiled AFTER the previous
+    /// binding is added to locals — so each name is in scope for all subsequent
+    /// RHSs.  This is Scheme `let*` semantics.
+    ///
+    /// ```text
+    /// ; (let* ((a 1) (b (+ a 1))) b)
+    /// const  %n0  = 1              ; compile a=1 in outer scope
+    /// _move  a    ← %n0           ; bind 'a' into locals (now in scope)
+    /// call_builtin +, a, 1 → %n1  ; compile b=(+ a 1) — 'a' is visible
+    /// _move  b    ← %n1           ; bind 'b' into locals
+    /// ret    b
+    /// ```
+    fn compile_let_star(&mut self, expr: &LetStar, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(expr.line, expr.column);
+        let mut added: Vec<String> = Vec::new();
+
+        for (name, rhs) in &expr.bindings {
+            // Compile the RHS in the current scope (which already includes
+            // all prior let* bindings).
+            let v = self.compile_expr(rhs, ctx)?;
+
+            // Bind the name into locals BEFORE compiling the next binding.
+            if ctx.locals.insert(name.clone()) {
+                added.push(name.clone());
+            }
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(name.clone()),
+                vec![Operand::Var("_move".into()), Operand::Var(v)],
+                "any",
+            ), loc);
+        }
+
+        // Compile body — parser-enforced at least one expression.
+        let mut last: Option<String> = None;
+        for e in &expr.body {
+            last = Some(self.compile_expr(e, ctx)?);
+        }
+        let last = last.expect("parser rejects empty let* body");
+
+        // Remove bindings so they don't leak into enclosing scope peers.
+        for n in added {
+            ctx.locals.remove(&n);
+        }
+        Ok(last)
+    }
+
+    // ── LANG52: and / or compile-time special forms ───────────────────────────
+
+    /// Compile `(and args…)` with short-circuit semantics.
+    ///
+    /// Expansion rules (PEG-style, applied left-to-right):
+    ///   `(and)`         → emit `const #t`, return the register
+    ///   `(and e)`       → compile e, return its register
+    ///   `(and e1 e2 …)` → compile e1; if truthy, evaluate `(and e2 …)`; else `#f`
+    ///
+    /// The result register holds the value of the last evaluated sub-expression,
+    /// or `#f` if any sub-expression was falsy.  This matches Scheme semantics.
+    ///
+    /// IIR pattern (mirrors `compile_if`):
+    ///   `jmp_if_false cond, else_label`
+    ///   then-path: compile rest, _move into dest, jmp end
+    ///   else-path: label else_label; const #f, _move into dest
+    ///   label end_label
+    fn compile_and(&mut self, args: &[Expr], ctx: &mut FnCtx, loc: SourceLoc) -> Result<String, TwigCompileError> {
+        match args {
+            [] => {
+                // (and) → #t
+                let v = ctx.fresh_var("and");
+                ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(true)], "any"), loc);
+                Ok(v)
+            }
+            [e] => {
+                // (and e) → e
+                self.compile_expr(e, ctx)
+            }
+            [first, rest @ ..] => {
+                // (and e1 e2 …) → if e1 then (and e2 …) else #f
+                let cond = self.compile_expr(first, ctx)?;
+                let dest = ctx.fresh_var("and");
+                let else_label = ctx.fresh_label("and_else");
+                let end_label  = ctx.fresh_label("and_end");
+
+                // jmp_if_false cond → else_label
+                ctx.emit(IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(cond), Operand::Var(else_label.clone())],
+                    "void"), loc);
+
+                // Then path: compile rest, copy to dest, jump to end.
+                let then_val = self.compile_and(rest, ctx, loc)?;
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(then_val)], "any"), loc);
+                ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
+
+                // Else path: dest ← #f
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(else_label)], "void"), loc);
+                let false_tmp = ctx.fresh_var("f");
+                ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()), vec![Operand::Bool(false)], "any"), loc);
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(false_tmp)], "any"), loc);
+
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
+                Ok(dest)
+            }
+        }
+    }
+
+    /// Compile `(or args…)` with short-circuit semantics.
+    ///
+    /// Expansion rules:
+    ///   `(or)`          → emit `const #f`, return the register
+    ///   `(or e)`        → compile e, return its register
+    ///   `(or e1 e2 …)`  → evaluate e1; if truthy return it, else `(or e2 …)`
+    ///
+    /// The result register holds the first truthy value, or the value of the
+    /// last sub-expression if all were falsy.  This matches Scheme semantics.
+    fn compile_or(&mut self, args: &[Expr], ctx: &mut FnCtx, loc: SourceLoc) -> Result<String, TwigCompileError> {
+        match args {
+            [] => {
+                // (or) → #f
+                let v = ctx.fresh_var("or");
+                ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(false)], "any"), loc);
+                Ok(v)
+            }
+            [e] => {
+                // (or e) → e
+                self.compile_expr(e, ctx)
+            }
+            [first, rest @ ..] => {
+                // (or e1 e2 …): if e1 is truthy return e1, else (or e2 …)
+                let cond = self.compile_expr(first, ctx)?;
+                let dest = ctx.fresh_var("or");
+                let falsy_label = ctx.fresh_label("or_falsy");
+                let end_label   = ctx.fresh_label("or_end");
+
+                // jmp_if_false cond → falsy_label (i.e. if cond is FALSE, skip)
+                ctx.emit(IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(cond.clone()), Operand::Var(falsy_label.clone())],
+                    "void"), loc);
+
+                // Truthy path: dest ← cond, jump to end.
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(cond)], "any"), loc);
+                ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
+
+                // Falsy path: evaluate rest.
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(falsy_label)], "void"), loc);
+                let rest_val = self.compile_or(rest, ctx, loc)?;
+                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("_move".into()), Operand::Var(rest_val)], "any"), loc);
+
+                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
+                Ok(dest)
+            }
+        }
+    }
+
     fn compile_apply(&mut self, expr: &Apply, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
+        // ── LANG52: `and` / `or` short-circuit special forms ─────────────────
+        //
+        // `and` and `or` require short-circuit evaluation — the second argument
+        // must NOT be evaluated when the first is sufficient.  We intercept them
+        // at the apply site and lower them inline to `if` chains.  They do NOT
+        // appear in BUILTINS and never reach the runtime.
+        //
+        // | Expression      | Expansion                         |
+        // |-----------------|-----------------------------------|
+        // | (and)           | #t                                |
+        // | (and e)         | e                                 |
+        // | (and e1 e2 …)   | (if e1 (and e2 …) #f)            |
+        // | (or)            | #f                                |
+        // | (or e)          | e                                 |
+        // | (or e1 e2 …)    | emit cond-reg; if cond-reg return |
+        //
+        // The expansions are done recursively by re-entering compile_apply
+        // so the depth counter naturally bounds them.
+        if let Expr::VarRef(v) = expr.fn_expr.as_ref() {
+            if v.name == "and" {
+                return self.compile_and(&expr.args, ctx, loc);
+            }
+            if v.name == "or" {
+                return self.compile_or(&expr.args, ctx, loc);
+            }
+        }
+
         // Direct call: fn is a VarRef whose name is a top-level
         // function or a builtin.  We materialise this decision at
         // compile time so the hot path stays a single `call`.
@@ -830,6 +1125,611 @@ impl Compiler {
             "any",
         ), loc);
         Ok(dest)
+    }
+
+    // ------------------------------------------------------------------
+    // TW05-A / LANG48 — match lowering
+    // ------------------------------------------------------------------
+
+    /// Lower a `(match scrutinee arm+)` expression to an if/let chain.
+    ///
+    /// Evaluation strategy:
+    /// 1. Evaluate the scrutinee exactly once into `#matched_N`.
+    /// 2. For each arm in order:
+    ///    - **Variant arm** `(VarName b1 … bn) body+`:
+    ///      Emit an `if` that tests `(= (car #matched_N) tag)`.
+    ///      On true: bind fields via `(car (cdr …))` chains and evaluate body.
+    ///    - **Binding arm** `name body+`:
+    ///      Emit a `let`-style binding of `#matched_N` to `name`, evaluate body.
+    ///    - **Wildcard arm** `_ body+`:
+    ///      Evaluate body directly with no extra binding.
+    /// 3. Fallthrough (no arm matched) → `nil`.
+    ///
+    /// Arms are chained in the else-branch of each if.  The innermost else
+    /// produces a `make_nil` call so behaviour is deterministic when no arm
+    /// matches (forward-compatible with exhaustiveness checking in TW05-B).
+    fn compile_match(&mut self, m: &Match, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(m.line, m.column);
+
+        // Evaluate the scrutinee once.
+        let scrutinee_reg = self.compile_expr(&m.scrutinee, ctx)?;
+        // Bind to a fresh stable register so arms can reference it freely.
+        let matched = ctx.fresh_var("matched");
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(matched.clone()),
+            vec![Operand::Var("_move".into()), Operand::Var(scrutinee_reg)],
+            "any",
+        ), loc);
+
+        // Result register — each arm writes its value here.
+        let result = ctx.fresh_var("match_result");
+        // Initialise to nil (fallthrough value).
+        let nil_init = ctx.fresh_var("nil");
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(nil_init.clone()),
+            vec![Operand::Var("make_nil".into())],
+            "any",
+        ), loc);
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(result.clone()),
+            vec![Operand::Var("_move".into()), Operand::Var(nil_init)],
+            "any",
+        ), loc);
+
+        // Generate labels for the chain.
+        // We build: if (test0) { arm0 } else { if (test1) { arm1 } else { … } }
+        // via explicit label/jmp/jmpif instructions.
+        let end_label = ctx.fresh_label("match_end");
+
+        for arm in &m.arms {
+            let arm_loc = if arm.body.is_empty() { loc } else {
+                let p = arm.body[0].pos();
+                SourceLoc::new(p.0, p.1)
+            };
+            match &arm.pat {
+                MatchPat::Variant { name, bindings } => {
+                    // Look up the integer tag.  Unknown names are treated as
+                    // binding patterns (forward-compatible with future types).
+                    let tag = match self.variant_tags.get(name) {
+                        Some(&t) => t,
+                        None => {
+                            // Unknown constructor — treat as bare binding.
+                            let arm_result = self.compile_match_binding_arm(
+                                &matched, name, &arm.body, ctx, arm_loc)?;
+                            ctx.emit(IIRInstr::new(
+                                "call_builtin",
+                                Some(result.clone()),
+                                vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
+                                "any",
+                            ), arm_loc);
+                            ctx.emit(IIRInstr::new(
+                                "jmp",
+                                None,
+                                vec![Operand::Var(end_label.clone())],
+                                "void",
+                            ), arm_loc);
+                            continue;
+                        }
+                    };
+
+                    // Emit: tag_reg = (car matched)
+                    let tag_reg = ctx.fresh_var("tag");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(tag_reg.clone()),
+                        vec![Operand::Var("car".into()), Operand::Var(matched.clone())],
+                        "any",
+                    ), arm_loc);
+
+                    // Emit: tag_int = integer constant for this variant
+                    let tag_int_reg = ctx.fresh_var("tag_val");
+                    ctx.emit(IIRInstr::new(
+                        "const",
+                        Some(tag_int_reg.clone()),
+                        vec![Operand::Int(tag as i64)],
+                        "any",
+                    ), arm_loc);
+
+                    // Emit: cond = (= tag_reg tag_int)
+                    let cond_reg = ctx.fresh_var("tag_eq");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(cond_reg.clone()),
+                        vec![
+                            Operand::Var("=".into()),
+                            Operand::Var(tag_reg),
+                            Operand::Var(tag_int_reg),
+                        ],
+                        "any",
+                    ), arm_loc);
+
+                    // jmpif cond → arm_body_label; else fall to next_arm_label
+                    let arm_label = ctx.fresh_label("match_arm");
+                    let skip_label = ctx.fresh_label("match_skip");
+                    ctx.emit(IIRInstr::new(
+                        "jmpif",
+                        None,
+                        vec![
+                            Operand::Var(cond_reg),
+                            Operand::Var(arm_label.clone()),
+                            Operand::Var(skip_label.clone()),
+                        ],
+                        "void",
+                    ), arm_loc);
+
+                    // arm_body_label: bind fields, evaluate body
+                    ctx.emit(IIRInstr::new(
+                        "label",
+                        None,
+                        vec![Operand::Var(arm_label)],
+                        "void",
+                    ), arm_loc);
+
+                    // Bind fields: field_i = (car (cdr^(i+1) matched))
+                    let mut added_names: Vec<String> = Vec::new();
+                    let mut cur_cdr = matched.clone();
+                    for binding in bindings {
+                        // Advance one cdr step
+                        let next_cdr = ctx.fresh_var("cdr");
+                        ctx.emit(IIRInstr::new(
+                            "call_builtin",
+                            Some(next_cdr.clone()),
+                            vec![Operand::Var("cdr".into()), Operand::Var(cur_cdr.clone())],
+                            "any",
+                        ), arm_loc);
+                        cur_cdr = next_cdr;
+
+                        // Extract field: car of the cdr chain
+                        let field_reg = ctx.fresh_var("field");
+                        ctx.emit(IIRInstr::new(
+                            "call_builtin",
+                            Some(field_reg.clone()),
+                            vec![Operand::Var("car".into()), Operand::Var(cur_cdr.clone())],
+                            "any",
+                        ), arm_loc);
+
+                        // Bind field to name in ctx.locals
+                        if ctx.locals.insert(binding.clone()) {
+                            added_names.push(binding.clone());
+                        }
+                        ctx.emit(IIRInstr::new(
+                            "call_builtin",
+                            Some(binding.clone()),
+                            vec![Operand::Var("_move".into()), Operand::Var(field_reg)],
+                            "any",
+                        ), arm_loc);
+                    }
+
+                    // Evaluate body
+                    let mut body_result: Option<String> = None;
+                    for e in &arm.body {
+                        body_result = Some(self.compile_expr(e, ctx)?);
+                    }
+                    let body_v = body_result.expect("arm body non-empty (parser-enforced)");
+
+                    // Copy to result register
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(result.clone()),
+                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
+                        "any",
+                    ), arm_loc);
+
+                    // Unbind field names
+                    for n in added_names {
+                        ctx.locals.remove(&n);
+                    }
+
+                    // jmp to end
+                    ctx.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(end_label.clone())],
+                        "void",
+                    ), arm_loc);
+
+                    // skip_label: next arm or fallthrough
+                    ctx.emit(IIRInstr::new(
+                        "label",
+                        None,
+                        vec![Operand::Var(skip_label)],
+                        "void",
+                    ), arm_loc);
+                }
+
+                MatchPat::Binding(name) => {
+                    let arm_result = self.compile_match_binding_arm(
+                        &matched, name, &arm.body, ctx, arm_loc)?;
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(result.clone()),
+                        vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
+                        "any",
+                    ), arm_loc);
+                    // Binding arm always matches → jump to end immediately.
+                    ctx.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(end_label.clone())],
+                        "void",
+                    ), arm_loc);
+                }
+
+                MatchPat::Wildcard => {
+                    // No binding; evaluate body directly.
+                    let mut body_result: Option<String> = None;
+                    for e in &arm.body {
+                        body_result = Some(self.compile_expr(e, ctx)?);
+                    }
+                    let body_v = body_result.expect("arm body non-empty");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(result.clone()),
+                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
+                        "any",
+                    ), arm_loc);
+                    // Wildcard always matches → jump to end.
+                    ctx.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(end_label.clone())],
+                        "void",
+                    ), arm_loc);
+                }
+            }
+        }
+
+        // end_label: all paths converge here.
+        ctx.emit(IIRInstr::new(
+            "label",
+            None,
+            vec![Operand::Var(end_label)],
+            "void",
+        ), loc);
+
+        Ok(result)
+    }
+
+    /// Helper: bind `matched_reg` to `name` in locals, evaluate `body`,
+    /// then remove the binding.  Returns the body's result register.
+    fn compile_match_binding_arm(
+        &mut self,
+        matched_reg: &str,
+        name: &str,
+        body: &[twig_parser::Expr],
+        ctx: &mut FnCtx,
+        loc: SourceLoc,
+    ) -> Result<String, TwigCompileError> {
+        let was_new = ctx.locals.insert(name.to_string());
+        ctx.emit(IIRInstr::new(
+            "call_builtin",
+            Some(name.to_string()),
+            vec![Operand::Var("_move".into()), Operand::Var(matched_reg.to_string())],
+            "any",
+        ), loc);
+        let mut last: Option<String> = None;
+        for e in body {
+            last = Some(self.compile_expr(e, ctx)?);
+        }
+        let last = last.expect("arm body non-empty (parser-enforced)");
+        if was_new {
+            ctx.locals.remove(name);
+        }
+        Ok(last)
+    }
+
+    // ------------------------------------------------------------------
+    // TW05-A / LANG48 — record and union erasure
+    // ------------------------------------------------------------------
+
+    /// Erase a `(record Name field*)` declaration into IIR functions:
+    ///
+    /// - Constructor `Name(f0, f1, …, fn)` → `cons` chain ending in `nil`
+    /// - Accessor `<lower(Name)>-<field>(r)` → `car` of the right `cdr` chain
+    /// - Predicate `<lower(Name)>?(v)` → `(pair? v)`
+    fn emit_record_def(&mut self, rec: &RecordDef) -> Result<(), TwigCompileError> {
+        let loc = SourceLoc::SYNTHETIC;
+        let prefix = rec.name.to_lowercase();
+
+        // ── Constructor: Name(f0, f1, …, fn) ──────────────────────────
+        // Builds (cons f0 (cons f1 (… (cons fn nil) …))).
+        {
+            let mut ctx = FnCtx::new();
+            let params: Vec<String> = rec.fields.iter().map(|f| f.name.clone()).collect();
+            for p in &params {
+                ctx.locals.insert(p.clone());
+            }
+
+            // Start from the nil end and fold right.
+            let nil_r = ctx.fresh_var("nil");
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(nil_r.clone()),
+                vec![Operand::Var("make_nil".into())],
+                "any",
+            ), loc);
+
+            let mut tail = nil_r;
+            for field_name in params.iter().rev() {
+                let cell = ctx.fresh_var("cell");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(cell.clone()),
+                    vec![
+                        Operand::Var("cons".into()),
+                        Operand::Var(field_name.clone()),
+                        Operand::Var(tail),
+                    ],
+                    "any",
+                ), loc);
+                tail = cell;
+            }
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(tail)], "any"), loc);
+
+            self.functions.push(IIRFunction {
+                name: rec.name.clone(),
+                params: params.iter().map(|p| (p.clone(), "any".to_string())).collect(),
+                return_type: "any".into(),
+                register_count: count_registers(&ctx.instrs),
+                instructions: ctx.instrs,
+                type_status: FunctionTypeStatus::Untyped,
+                call_count: 0,
+                feedback_slots: HashMap::new(),
+                source_map: ctx.source_map,
+                param_refinements: Vec::new(),
+                return_refinement: None,
+            });
+        }
+
+        // ── Accessors: <prefix>-<field>(r) → car(cdr^i(r)) ───────────
+        for (i, field) in rec.fields.iter().enumerate() {
+            let mut ctx = FnCtx::new();
+            ctx.locals.insert("r".to_string());
+
+            // Build the cdr chain: apply `cdr` i times.
+            let mut cur = "r".to_string();
+            for _ in 0..i {
+                let next = ctx.fresh_var("cdr");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(next.clone()),
+                    vec![Operand::Var("cdr".into()), Operand::Var(cur)],
+                    "any",
+                ), loc);
+                cur = next;
+            }
+            // Then take car.
+            let field_val = ctx.fresh_var("fv");
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(field_val.clone()),
+                vec![Operand::Var("car".into()), Operand::Var(cur)],
+                "any",
+            ), loc);
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(field_val)], "any"), loc);
+
+            self.functions.push(IIRFunction {
+                name: format!("{prefix}-{}", field.name),
+                params: vec![("r".to_string(), "any".to_string())],
+                return_type: "any".into(),
+                register_count: count_registers(&ctx.instrs),
+                instructions: ctx.instrs,
+                type_status: FunctionTypeStatus::Untyped,
+                call_count: 0,
+                feedback_slots: HashMap::new(),
+                source_map: ctx.source_map,
+                param_refinements: Vec::new(),
+                return_refinement: None,
+            });
+        }
+
+        // ── Predicate: <prefix>?(v) → (pair? v) ───────────────────────
+        {
+            let mut ctx = FnCtx::new();
+            ctx.locals.insert("v".to_string());
+            let pred = ctx.fresh_var("pred");
+            ctx.emit(IIRInstr::new(
+                "call_builtin",
+                Some(pred.clone()),
+                vec![Operand::Var("pair?".into()), Operand::Var("v".to_string())],
+                "any",
+            ), loc);
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(pred)], "any"), loc);
+
+            self.functions.push(IIRFunction {
+                name: format!("{prefix}?"),
+                params: vec![("v".to_string(), "any".to_string())],
+                return_type: "any".into(),
+                register_count: count_registers(&ctx.instrs),
+                instructions: ctx.instrs,
+                type_status: FunctionTypeStatus::Untyped,
+                call_count: 0,
+                feedback_slots: HashMap::new(),
+                source_map: ctx.source_map,
+                param_refinements: Vec::new(),
+                return_refinement: None,
+            });
+        }
+        Ok(())
+    }
+
+    /// Erase a `(union Name variant*)` declaration into IIR functions.
+    ///
+    /// Each variant at zero-based index `i` produces:
+    /// - Constructor `VarName(f0, …, fn)` → `(cons i (cons f0 (… (cons fn nil) …)))`
+    /// - Predicate `VarName?(v)` → `(= (car v) i)`
+    /// - Accessor `<lower(VarName)>-<field>(v)` → `car(cdr^(k+1) v)` (k = field index)
+    fn emit_union_def(&mut self, union: &UnionDef) -> Result<(), TwigCompileError> {
+        let loc = SourceLoc::SYNTHETIC;
+
+        for (tag, variant) in union.variants.iter().enumerate() {
+            let vprefix = variant.name.to_lowercase();
+
+            // ── Constructor: VarName(f0, …, fn) ───────────────────────
+            // → (cons tag (cons f0 (cons f1 (… (cons fn nil) …))))
+            {
+                let mut ctx = FnCtx::new();
+                let params: Vec<String> = variant.fields.iter().map(|f| f.name.clone()).collect();
+                for p in &params {
+                    ctx.locals.insert(p.clone());
+                }
+
+                // Start from nil, fold right over fields.
+                let nil_r = ctx.fresh_var("nil");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(nil_r.clone()),
+                    vec![Operand::Var("make_nil".into())],
+                    "any",
+                ), loc);
+
+                let mut tail = nil_r;
+                for field_name in params.iter().rev() {
+                    let cell = ctx.fresh_var("cell");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(cell.clone()),
+                        vec![
+                            Operand::Var("cons".into()),
+                            Operand::Var(field_name.clone()),
+                            Operand::Var(tail),
+                        ],
+                        "any",
+                    ), loc);
+                    tail = cell;
+                }
+
+                // Prepend the integer tag.
+                let tag_reg = ctx.fresh_var("tag");
+                ctx.emit(IIRInstr::new(
+                    "const",
+                    Some(tag_reg.clone()),
+                    vec![Operand::Int(tag as i64)],
+                    "any",
+                ), loc);
+                let head = ctx.fresh_var("head");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(head.clone()),
+                    vec![
+                        Operand::Var("cons".into()),
+                        Operand::Var(tag_reg),
+                        Operand::Var(tail),
+                    ],
+                    "any",
+                ), loc);
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(head)], "any"), loc);
+
+                self.functions.push(IIRFunction {
+                    name: variant.name.clone(),
+                    params: params.iter().map(|p| (p.clone(), "any".to_string())).collect(),
+                    return_type: "any".into(),
+                    register_count: count_registers(&ctx.instrs),
+                    instructions: ctx.instrs,
+                    type_status: FunctionTypeStatus::Untyped,
+                    call_count: 0,
+                    feedback_slots: HashMap::new(),
+                    source_map: ctx.source_map,
+                    param_refinements: Vec::new(),
+                    return_refinement: None,
+                });
+            }
+
+            // ── Predicate: VarName?(v) → (= (car v) tag) ──────────────
+            {
+                let mut ctx = FnCtx::new();
+                ctx.locals.insert("v".to_string());
+
+                let car_v = ctx.fresh_var("hd");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(car_v.clone()),
+                    vec![Operand::Var("car".into()), Operand::Var("v".to_string())],
+                    "any",
+                ), loc);
+
+                let tag_reg = ctx.fresh_var("tag");
+                ctx.emit(IIRInstr::new(
+                    "const",
+                    Some(tag_reg.clone()),
+                    vec![Operand::Int(tag as i64)],
+                    "any",
+                ), loc);
+
+                let result = ctx.fresh_var("pred");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(result.clone()),
+                    vec![
+                        Operand::Var("=".into()),
+                        Operand::Var(car_v),
+                        Operand::Var(tag_reg),
+                    ],
+                    "any",
+                ), loc);
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(result)], "any"), loc);
+
+                self.functions.push(IIRFunction {
+                    name: format!("{}?", variant.name),
+                    params: vec![("v".to_string(), "any".to_string())],
+                    return_type: "any".into(),
+                    register_count: count_registers(&ctx.instrs),
+                    instructions: ctx.instrs,
+                    type_status: FunctionTypeStatus::Untyped,
+                    call_count: 0,
+                    feedback_slots: HashMap::new(),
+                    source_map: ctx.source_map,
+                    param_refinements: Vec::new(),
+                    return_refinement: None,
+                });
+            }
+
+            // ── Accessors: <vprefix>-<field>(v) → car(cdr^(k+1) v) ────
+            // Field k is at position k+1 (after the tag at cdr^0/car).
+            for (k, field) in variant.fields.iter().enumerate() {
+                let mut ctx = FnCtx::new();
+                ctx.locals.insert("v".to_string());
+
+                // cdr^(k+1) v: skip the tag (1 cdr) then k more for field index.
+                let mut cur = "v".to_string();
+                for _ in 0..=(k) {
+                    let next = ctx.fresh_var("cdr");
+                    ctx.emit(IIRInstr::new(
+                        "call_builtin",
+                        Some(next.clone()),
+                        vec![Operand::Var("cdr".into()), Operand::Var(cur)],
+                        "any",
+                    ), loc);
+                    cur = next;
+                }
+                let fval = ctx.fresh_var("fv");
+                ctx.emit(IIRInstr::new(
+                    "call_builtin",
+                    Some(fval.clone()),
+                    vec![Operand::Var("car".into()), Operand::Var(cur)],
+                    "any",
+                ), loc);
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(fval)], "any"), loc);
+
+                self.functions.push(IIRFunction {
+                    name: format!("{vprefix}-{}", field.name),
+                    params: vec![("v".to_string(), "any".to_string())],
+                    return_type: "any".into(),
+                    register_count: count_registers(&ctx.instrs),
+                    instructions: ctx.instrs,
+                    type_status: FunctionTypeStatus::Untyped,
+                    call_count: 0,
+                    feedback_slots: HashMap::new(),
+                    source_map: ctx.source_map,
+                    param_refinements: Vec::new(),
+                    return_refinement: None,
+                });
+            }
+        }
+        Ok(())
     }
 
     // ------------------------------------------------------------------

@@ -65,10 +65,10 @@ use logic_core::{atom, Term};
 // Caps and defaults
 // ---------------------------------------------------------------------------
 
-/// Default per-parent retry budget. PR-2 doesn't gate on retry yet,
-/// so this is a starting point informed by ADJ24 (where 3 attempts
-/// caught roughly half of post-prompt failures on the small-model
-/// bench). PR-6 will revisit.
+/// Default per-parent retry budget when a uniform budget is used.
+/// Kept for back-compat / single-knob bench configurations; the
+/// orchestrator's real retry policy is now per-level (see
+/// [`PerLevelRetryBudget`]).
 pub const DEFAULT_MAX_RETRIES_PER_PARENT: usize = 3;
 
 /// Hard cap on per-level dispatched LLM calls. Prevents runaway
@@ -76,11 +76,6 @@ pub const DEFAULT_MAX_RETRIES_PER_PARENT: usize = 3;
 /// thousands of bogus children, each of which would trigger another
 /// LLM call.
 pub const PER_LEVEL_DISPATCH_CAP: usize = 1_024;
-
-/// Hard cap on parsed source-span count per LLM response. A
-/// well-behaved response carries one span per node; this exists to
-/// blunt an adversarial response that emits millions of spans.
-const MAX_SPANS_PER_NODE: usize = 64;
 
 /// Hard cap on term-tree depth during JSON parsing. Bounds recursive
 /// term walks so a deeply nested LLM response cannot stack-overflow
@@ -94,6 +89,70 @@ const MAX_TERM_ARGS: usize = 256;
 // Public surface
 // ---------------------------------------------------------------------------
 
+/// Per-level retry budget. Each decomposition layer owns its own
+/// budget — the careful-decomposition fan-out at deeper levels
+/// (Phrase → Claim, Fact → TypedComponent) means they need MORE
+/// retries than the shallow levels do, not fewer.
+///
+/// Rationale: when a model produces a granular decomposition (e.g.,
+/// gemma4 splitting `"1 carry-on bag, lithium battery, 200 Wh."`
+/// into three phrases instead of one), the framework now has THREE
+/// downstream Phrase parents to verify instead of one. Each of
+/// those produces its own Fact→TypedComponent boundary. A single
+/// shared retry budget across all parents at all levels gets
+/// exhausted long before the careful decomposition's deeper tile
+/// boundaries close. Per-level budgets fix that — Doc→Sentence can
+/// keep its small budget (one parent, low fan-out) while
+/// Fact→TypedComponent gets a generous budget (many parents at
+/// that depth, strict tiling).
+///
+/// Per `feedback_per_level_retry_budget`. The defaults grow with
+/// depth.
+#[derive(Debug, Clone, Copy)]
+pub struct PerLevelRetryBudget {
+    pub document_to_sentence: usize,
+    pub sentence_to_phrase: usize,
+    pub phrase_to_claim: usize,
+    pub fact_to_typed_component: usize,
+}
+
+impl Default for PerLevelRetryBudget {
+    /// Defaults grow with depth (3 / 4 / 5 / 8) since deeper levels
+    /// see more parents and stricter tiling, per ADJ28 bench data.
+    fn default() -> Self {
+        Self {
+            document_to_sentence: 3,
+            sentence_to_phrase: 4,
+            phrase_to_claim: 5,
+            fact_to_typed_component: 8,
+        }
+    }
+}
+
+impl PerLevelRetryBudget {
+    /// Build a budget with the same cap at every level. Useful for
+    /// bench A/B comparisons and for callers that want a single
+    /// configuration knob.
+    pub fn uniform(n: usize) -> Self {
+        Self {
+            document_to_sentence: n,
+            sentence_to_phrase: n,
+            phrase_to_claim: n,
+            fact_to_typed_component: n,
+        }
+    }
+
+    /// Look up the budget for a specific level.
+    pub fn at(self, level: DecompLevel) -> usize {
+        match level {
+            DecompLevel::DocumentToSentence => self.document_to_sentence,
+            DecompLevel::SentenceToPhrase => self.sentence_to_phrase,
+            DecompLevel::PhraseToClaim => self.phrase_to_claim,
+            DecompLevel::FactToTypedComponent => self.fact_to_typed_component,
+        }
+    }
+}
+
 /// What the caller hands the orchestrator.
 #[derive(Debug, Clone)]
 pub struct HierarchicalDecomposeRequest {
@@ -106,9 +165,11 @@ pub struct HierarchicalDecomposeRequest {
     /// bytes; it only forwards them to the LLM at each level and
     /// uses `len()` for the Document span.
     pub source_text: String,
-    /// Per-parent retry budget at every level. Default
-    /// [`DEFAULT_MAX_RETRIES_PER_PARENT`].
-    pub max_retries_per_parent: usize,
+    /// Per-LEVEL retry budget. Each decomposition layer owns its
+    /// own cap. Default budgets grow with depth (3 / 4 / 5 / 8)
+    /// since deeper levels see more parents from any careful
+    /// decomposition upstream.
+    pub max_retries_per_parent: PerLevelRetryBudget,
 }
 
 /// Successful outcome of [`decompose_hierarchical`].
@@ -253,6 +314,7 @@ pub fn decompose_hierarchical(
                 &mut ir,
                 &parent_node,
                 outcome.corrected_children,
+                &req.source_text,
                 level,
                 &mut id_state,
             )?;
@@ -269,9 +331,10 @@ pub fn decompose_hierarchical(
         normalized_text: req.source_text.clone(),
     };
     let mut budget: HashMap<NodeId, usize> = HashMap::new();
-    // `max_retries_per_parent = 0` is honoured literally — no retries.
-    // Cap at 64 so a runaway misconfiguration cannot blow LLM budgets.
-    let max_retries = req.max_retries_per_parent.min(64);
+    // Per-level retry caps, looked up from `req.max_retries_per_parent`.
+    // Each level's cap is clamped to 64 so a runaway misconfiguration
+    // cannot blow LLM budgets.
+    let retry_budget = req.max_retries_per_parent;
     loop {
         let gaps = match check_hierarchical_coverage(&doc_for_coverage, &ir) {
             HierarchicalCoverageResult::Pass => break,
@@ -286,8 +349,13 @@ pub fn decompose_hierarchical(
             if matches!(gap.kind, HierarchicalGapKind::FlattenedAtom { .. }) {
                 continue;
             }
+            // ADJ29: per-LEVEL retry cap. Each layer owns its budget;
+            // careful decomposition (which fans out at deeper levels)
+            // gets adequate headroom there without spending the
+            // shallow-level budget.
+            let level_cap = retry_budget.at(gap.level).min(64);
             let used = budget.entry(gap.parent_node_id.clone()).or_insert(0);
-            if *used >= max_retries {
+            if *used >= level_cap {
                 continue;
             }
             *used += 1;
@@ -297,7 +365,8 @@ pub fn decompose_hierarchical(
             };
             let prior_children =
                 snapshot_children_as_json(&ir, &gap.parent_node_id, &req.source_text);
-            let gap_description = render_gap_description(gap);
+            let gap_description =
+                render_gap_description(gap, &parent_node, &req.source_text);
             let outcome = dispatch_level_call(
                 &parent_node,
                 &req.source_text,
@@ -319,6 +388,7 @@ pub fn decompose_hierarchical(
                 &mut ir,
                 &parent_node,
                 outcome.corrected_children,
+                &req.source_text,
                 gap.level,
                 &mut id_state,
             )?;
@@ -550,6 +620,7 @@ fn splice_children(
     ir: &mut IRDocument,
     parent: &IRNode,
     children_json: serde_json::Value,
+    full_source: &str,
     level: DecompLevel,
     id_state: &mut IdState,
 ) -> Result<(), HierarchicalDecomposeError> {
@@ -568,20 +639,79 @@ fn splice_children(
         }
     };
     let allowed = allowed_kinds_for_level(level);
-    let parent_span = parent.source_spans.first().cloned();
+    let parent_start_in_doc = parent
+        .source_spans
+        .first()
+        .map(|s| s.start)
+        .unwrap_or(0);
+    let parent_end_in_doc = parent
+        .source_spans
+        .first()
+        .map(|s| s.end)
+        .unwrap_or(full_source.len());
+    let parent_bytes = if parent_start_in_doc < parent_end_in_doc
+        && parent_end_in_doc <= full_source.len()
+    {
+        &full_source[parent_start_in_doc..parent_end_in_doc]
+    } else {
+        ""
+    };
     let id_prefix = match level {
         DecompLevel::DocumentToSentence => "S",
         DecompLevel::SentenceToPhrase => "P",
         DecompLevel::PhraseToClaim => "C",
         DecompLevel::FactToTypedComponent => "T",
     };
+    // ADJ27 content-matching: the LLM emits `text` for each child;
+    // the framework matches each text left-to-right against the
+    // parent's bytes to derive absolute spans. The cursor advances
+    // past each match, so duplicate substrings in the parent are
+    // distinguished by occurrence order, and out-of-order claims
+    // are surfaced as content-not-found (which the coverage check
+    // then renders as an uncovered-range gap).
+    let mut cursor: usize = 0;
     let mut accepted_children: Vec<(NodeId, NodeKind)> = Vec::new();
     for raw in nodes_raw.into_iter().take(PER_LEVEL_DISPATCH_CAP) {
-        let Some(node) =
-            parse_child_node(&raw, &ir.document_id, parent_span.as_ref(), allowed, id_state, id_prefix)
+        let Some((mut node, claimed_text)) =
+            parse_child_node(&raw, allowed, id_state, id_prefix)
         else {
             continue;
         };
+        let needle = claimed_text.unwrap_or_default();
+        if needle.is_empty() {
+            // Synthesized Entity / synthesized object — accept
+            // with empty spans. The coverage check handles the
+            // exemption.
+            if node.kind == NodeKind::Entity {
+                accepted_children.push((node.id.clone(), node.kind));
+                ir.nodes.push(node);
+            }
+            continue;
+        }
+        let search_in = if cursor <= parent_bytes.len() {
+            &parent_bytes[cursor..]
+        } else {
+            ""
+        };
+        let Some(rel_match) = search_in.find(needle.as_str()) else {
+            // Content not found in remaining parent text. Skip
+            // this child — the coverage check will later surface
+            // the bytes left uncovered.
+            continue;
+        };
+        let abs_start_in_parent = cursor + rel_match;
+        let abs_end_in_parent = abs_start_in_parent + needle.len();
+        if abs_end_in_parent > parent_bytes.len() {
+            continue;
+        }
+        let abs_start_in_doc = parent_start_in_doc + abs_start_in_parent;
+        let abs_end_in_doc = parent_start_in_doc + abs_end_in_parent;
+        node.source_spans = vec![Span::new(
+            ir.document_id.clone(),
+            abs_start_in_doc,
+            abs_end_in_doc,
+        )];
+        cursor = abs_end_in_parent;
         accepted_children.push((node.id.clone(), node.kind));
         ir.nodes.push(node);
     }
@@ -613,17 +743,13 @@ fn snapshot_children_as_json(
     full_source: &str,
 ) -> serde_json::Value {
     let mut nodes: Vec<serde_json::Value> = Vec::new();
-    let parent_node = match find_node(ir, parent_id) {
-        Some(n) => n,
-        None => {
-            return serde_json::json!({ "nodes": nodes });
-        }
-    };
-    let parent_start = parent_node
-        .source_spans
-        .first()
-        .map(|s| s.start)
-        .unwrap_or(0);
+    if find_node(ir, parent_id).is_none() {
+        return serde_json::json!({ "nodes": nodes });
+    }
+    // ADJ27: snapshot uses the same content-shaped contract as the
+    // primitive. Each child's `text` is the literal substring of
+    // the document its spans cover. The model never sees byte
+    // ranges in the snapshot — only the strings it claimed.
     for edge in &ir.edges {
         if edge.relation != EdgeRelation::Contains || edge.source != *parent_id {
             continue;
@@ -631,61 +757,131 @@ fn snapshot_children_as_json(
         let Some(child) = find_node(ir, &edge.target) else {
             continue;
         };
-        let span_relative: Vec<serde_json::Value> = child
+        let text_for_child = child
             .source_spans
-            .iter()
-            .map(|s| {
-                serde_json::json!({
-                    "start": s.start.saturating_sub(parent_start),
-                    "end": s.end.saturating_sub(parent_start),
-                })
+            .first()
+            .and_then(|s| {
+                let start = s.start.min(full_source.len());
+                let end = s.end.min(full_source.len());
+                if start < end {
+                    Some(full_source[start..end].to_string())
+                } else {
+                    None
+                }
             })
-            .collect();
+            .unwrap_or_default();
         nodes.push(serde_json::json!({
             "id": child.id.0,
             "kind": format!("{:?}", child.kind),
             "term": term_to_json(&child.term),
             "polarity": polarity_to_str(child.polarity),
             "modality": modality_to_str(child.modality),
-            "source_spans": span_relative,
+            "text": text_for_child,
         }));
     }
-    let _ = full_source;
     serde_json::json!({ "nodes": nodes })
 }
 
-fn render_gap_description(gap: &HierarchicalGap) -> String {
+/// Render a gap into a content-shaped description for the retry
+/// prompt. ADJ27: instead of speaking in byte ranges (which the
+/// model is bad at), the framework extracts the LITERAL missing
+/// substrings from the source and shows them to the model. The
+/// model sees text it forgot to account for, not arithmetic to do.
+fn render_gap_description(
+    gap: &HierarchicalGap,
+    parent_node: &IRNode,
+    full_source: &str,
+) -> String {
+    let parent_start = parent_node
+        .source_spans
+        .first()
+        .map(|s| s.start)
+        .unwrap_or(0);
+    let parent_end = parent_node
+        .source_spans
+        .first()
+        .map(|s| s.end)
+        .unwrap_or(full_source.len());
+    let parent_text = if parent_start < parent_end && parent_end <= full_source.len() {
+        &full_source[parent_start..parent_end]
+    } else {
+        ""
+    };
     match &gap.kind {
-        HierarchicalGapKind::UncoveredBytes { ranges } => format!(
-            "the following byte range(s) of the parent were not covered by any child: {ranges:?}"
-        ),
-        HierarchicalGapKind::Overlap { ranges, participants } => format!(
-            "two or more children overlapped on byte range(s) {ranges:?} (participants: {ids:?})",
-            ids = participants.iter().map(|n| &n.0).collect::<Vec<_>>()
-        ),
-        HierarchicalGapKind::EmptyChildSpan { child_id } => format!(
-            "child {} was emitted with an empty span; every child must cover \
-             at least one byte (synthesized Entity is the only exception)",
-            child_id.0
-        ),
-        HierarchicalGapKind::ChildSpansEscape { child_id, outside } => format!(
-            "child {} produced a span outside the parent's bounds: {outside:?}",
-            child_id.0
-        ),
-        HierarchicalGapKind::NoChildrenAtLevel => {
-            "the parent has no children — the decomposition must produce at least one"
-                .to_string()
+        HierarchicalGapKind::UncoveredBytes { ranges } => {
+            // Translate document-absolute ranges into the literal
+            // missing substrings of the parent text.
+            let missing_strs: Vec<String> = ranges
+                .iter()
+                .filter_map(|(s, e)| {
+                    let s = (*s).min(full_source.len());
+                    let e = (*e).min(full_source.len());
+                    if s < e {
+                        Some(format!("\"{}\"", &full_source[s..e]))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            format!(
+                "Your previous attempt covered some of the parent text but not all of it. \
+                 The parent text is exactly:\n  \"{parent_text}\"\n\n\
+                 You missed the following piece(s): {}.\n\n\
+                 Please redo the decomposition over the ENTIRE parent text. Every \
+                 character — including the missed piece(s) above — must appear in \
+                 exactly one child's `text` field. Do not skip any characters.",
+                missing_strs.join(", "),
+            )
         }
+        HierarchicalGapKind::Overlap { ranges, .. } => {
+            let overlap_strs: Vec<String> = ranges
+                .iter()
+                .filter_map(|(s, e)| {
+                    let s = (*s).min(full_source.len());
+                    let e = (*e).min(full_source.len());
+                    if s < e {
+                        Some(format!("\"{}\"", &full_source[s..e]))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            format!(
+                "Two or more of your children claimed the same piece(s) of the parent \
+                 text: {}. Each character of the parent must appear in EXACTLY ONE \
+                 child's `text` field. Redo the decomposition without overlapping \
+                 claims.",
+                overlap_strs.join(", "),
+            )
+        }
+        HierarchicalGapKind::EmptyChildSpan { child_id } => format!(
+            "Child {} had no `text`; every child must claim a non-empty substring \
+             of the parent.",
+            child_id.0
+        ),
+        HierarchicalGapKind::ChildSpansEscape { child_id, .. } => format!(
+            "Child {}'s `text` did not match any substring of the parent. Make sure \
+             every child's `text` is a LITERAL substring of the parent, character \
+             for character.",
+            child_id.0
+        ),
+        HierarchicalGapKind::NoChildrenAtLevel => format!(
+            "The parent text is:\n  \"{parent_text}\"\n\n\
+             You produced no children. Please decompose the parent text into one \
+             or more children whose `text` fields together cover every character.",
+        ),
         HierarchicalGapKind::WrongChildKindForLevel {
             child_id,
             child_kind,
         } => format!(
-            "child {} has kind {:?}, which is not allowed at this decomposition level",
-            child_id.0, child_kind
+            "Child {} had kind {:?}, which is not allowed at this level. See the \
+             system prompt for the allowed kinds.",
+            child_id.0, child_kind,
         ),
         HierarchicalGapKind::FlattenedAtom { atom, reason, .. } => format!(
-            "the atom \"{atom}\" smuggles source content into a name ({reason:?}); \
-             surface the underlying values as typed components instead"
+            "The atom \"{atom}\" smuggles source content into its name ({reason:?}). \
+             Surface the underlying values as separate components (Quantity for \
+             numbers, Entity for nouns) instead of flattening them into one atom."
         ),
     }
 }
@@ -694,16 +890,92 @@ fn render_gap_description(gap: &HierarchicalGap) -> String {
 // JSON-to-IR parsing
 // ---------------------------------------------------------------------------
 
+/// Parse one LLM-emitted child node. Returns the IR node (with
+/// EMPTY `source_spans` — those are computed by `splice_children`
+/// via content-matching against the parent text) and the literal
+/// `text` field the model emitted, if any.
+///
+/// ADJ27: the contract is content-based, not byte-offset-based.
+/// The LLM emits the exact substring it is claiming for each child;
+/// `splice_children` matches that substring left-to-right against
+/// the parent's bytes to derive document-absolute spans. The model
+/// never does byte arithmetic.
+///
+/// Legacy `source_spans` arrays are NOT read — older LLM responses
+/// emitting byte offsets are not accepted; the orchestrator returns
+/// an empty span list and the coverage check surfaces the gap.
+/// Metadata key for the model's `discard_justification` field.
+/// ADJ28: when the model marks a chunk Discarded, it must include a
+/// sentence explaining WHY discarding loses no information. The
+/// orchestrator stores that sentence in the node's metadata under
+/// this reserved key so the audit trail can replay the model's
+/// reasoning verbatim.
+pub const DISCARD_JUSTIFICATION_METADATA_KEY: &str = "adj.discard_justification";
+
+/// Read the kind from an LLM-emitted JSON node, supporting two
+/// schemas (ADJ28):
+///
+/// 1. **Legacy single-`kind` string field** (levels 1 & 2 — Sentence
+///    and Phrase prompts kept this since they only have 2 options
+///    each). Maps directly via [`parse_kind`].
+/// 2. **New per-kind `is_X` boolean schema** (levels 3 & 4 — Claim
+///    with 4 options, TypedComponent with 7). The model emits a
+///    boolean per allowed kind; the orchestrator requires exactly
+///    one to be `true`. This decomposes multi-way picking into
+///    sequential yes/no decisions, which small models handle
+///    better than direct N-way classification.
+///
+/// Returns `None` if neither schema yields a valid kind (zero or
+/// multiple `true` booleans count as invalid), letting the caller
+/// skip the child and surface the gap via the coverage check.
+fn extract_kind(obj: &serde_json::Map<String, serde_json::Value>) -> Option<NodeKind> {
+    if let Some(kind_str) = obj.get("kind").and_then(|v| v.as_str()) {
+        if let Some(k) = parse_kind(kind_str) {
+            return Some(k);
+        }
+    }
+    // ADJ28 boolean schema. Pairs map each `is_X` field to the
+    // NodeKind it represents. Covers every kind that levels 3 and
+    // 4 emit; levels 1 and 2 would also work via this path if the
+    // model decides to switch.
+    let pairs: &[(&str, NodeKind)] = &[
+        ("is_fact", NodeKind::Fact),
+        ("is_uncertainty", NodeKind::Uncertainty),
+        ("is_question", NodeKind::Question),
+        ("is_discarded", NodeKind::Discarded),
+        ("is_sentence", NodeKind::Sentence),
+        ("is_phrase", NodeKind::Phrase),
+        ("is_quantity", NodeKind::Quantity),
+        ("is_polarity", NodeKind::Polarity),
+        ("is_entity", NodeKind::Entity),
+        ("is_predicate", NodeKind::Predicate),
+        ("is_comparator", NodeKind::Comparator),
+        ("is_timeref", NodeKind::TimeRef),
+        ("is_modifier", NodeKind::Modifier),
+    ];
+    let mut hits: Vec<NodeKind> = Vec::new();
+    for (key, kind) in pairs {
+        if obj.get(*key).and_then(|v| v.as_bool()) == Some(true) {
+            hits.push(*kind);
+        }
+    }
+    // Exactly-one-true contract. Zero hits or multiple hits both
+    // indicate the model didn't commit; reject so the caller can
+    // surface the gap.
+    match hits.len() {
+        1 => Some(hits[0]),
+        _ => None,
+    }
+}
+
 fn parse_child_node(
     v: &serde_json::Value,
-    doc_id: &DocumentId,
-    parent_span: Option<&Span>,
     allowed_kinds: &[NodeKind],
     id_state: &mut IdState,
     id_prefix: &str,
-) -> Option<IRNode> {
+) -> Option<(IRNode, Option<String>)> {
     let obj = v.as_object()?;
-    let kind = parse_kind(obj.get("kind").and_then(|v| v.as_str())?)?;
+    let kind = extract_kind(obj)?;
     if !allowed_kinds.contains(&kind) {
         return None;
     }
@@ -725,29 +997,65 @@ fn parse_child_node(
         .and_then(|v| v.as_str())
         .map(parse_modality)
         .unwrap_or(Modality::Present);
-    let source_spans = parse_spans(obj.get("source_spans"), doc_id, parent_span);
+    // ADJ27: read the LLM-supplied `text` substring. The caller
+    // (`splice_children`) matches this against the parent text to
+    // compute spans. We don't do that here so this function stays
+    // a pure parse step.
+    let claimed_text = obj
+        .get("text")
+        .and_then(|t| t.as_str())
+        .map(|s| s.to_string());
+    // ADJ28: read `discard_reason` and `discard_justification` for
+    // Discarded nodes. Default reason is `NonDomainContent` for
+    // back-compat with the previous schema; the justification (if
+    // any) lands in metadata so the audit trail keeps the model's
+    // own rationale.
     let discard_reason = if kind == NodeKind::Discarded {
-        Some(adjudication_ir::DiscardReason::NonDomainContent)
+        Some(parse_discard_reason(
+            obj.get("discard_reason").and_then(|v| v.as_str()),
+        ))
     } else {
         None
     };
+    let discard_justification = obj
+        .get("discard_justification")
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_string());
     let mut node = IRNode {
         id,
         kind,
         term,
         polarity,
         modality,
-        source_spans,
+        source_spans: vec![],
         confidence: 1.0,
         discard_reason,
         metadata: HashMap::new(),
     };
+    if let Some(justification) = discard_justification {
+        node.metadata
+            .insert(DISCARD_JUSTIFICATION_METADATA_KEY.to_string(), justification);
+    }
     // ADJ25 PR-5: assign a CorrelationId to every parsed child. The
     // ID derives from the (assigned) NodeId so the correlation tree
     // mirrors the Contains-edge hierarchy.
     let corr = correlation_id_for_node(&node.id);
     set_node_correlation_id(&mut node, corr);
-    Some(node)
+    Some((node, claimed_text))
+}
+
+fn parse_discard_reason(s: Option<&str>) -> adjudication_ir::DiscardReason {
+    use adjudication_ir::DiscardReason::*;
+    match s.unwrap_or("") {
+        "Pleasantry" => Pleasantry,
+        "DocumentMetadata" => DocumentMetadata,
+        "NonDomainContent" => NonDomainContent,
+        "Restatement" => Restatement,
+        "Unparseable" => Unparseable,
+        "AdministrativeOnly" => AdministrativeOnly,
+        "ExplicitlyOutOfScope" => ExplicitlyOutOfScope,
+        _ => NonDomainContent,
+    }
 }
 
 fn parse_term(v: &serde_json::Value, depth: usize) -> Option<Term> {
@@ -823,55 +1131,6 @@ fn parse_modality(s: &str) -> Modality {
         "Inherit" => Modality::Inherit,
         _ => Modality::Present,
     }
-}
-
-fn parse_spans(
-    v: Option<&serde_json::Value>,
-    doc_id: &DocumentId,
-    parent_span: Option<&Span>,
-) -> Vec<Span> {
-    let Some(arr) = v.and_then(|v| v.as_array()) else {
-        return vec![];
-    };
-    let mut out: Vec<Span> = Vec::new();
-    let bounded = if arr.len() > MAX_SPANS_PER_NODE {
-        &arr[..MAX_SPANS_PER_NODE]
-    } else {
-        arr.as_slice()
-    };
-    let parent_start = parent_span.map(|s| s.start).unwrap_or(0);
-    let parent_end = parent_span
-        .map(|s| s.end)
-        .unwrap_or(usize::MAX);
-    for s in bounded {
-        let obj = match s.as_object() {
-            Some(o) => o,
-            None => continue,
-        };
-        let Some(start_v) = obj.get("start").and_then(|x| x.as_u64()) else {
-            continue;
-        };
-        let Some(end_v) = obj.get("end").and_then(|x| x.as_u64()) else {
-            continue;
-        };
-        let start = start_v as usize;
-        let end = end_v as usize;
-        if start >= end {
-            continue;
-        }
-        // The LLM is asked to report spans relative to the parent's
-        // text (offset 0 = parent's first byte). Translate to
-        // document-absolute by adding the parent's start. Clamp to
-        // the parent's range so a misbehaving response cannot
-        // produce a span that extends past the parent.
-        let abs_start = parent_start.saturating_add(start).min(parent_end);
-        let abs_end = parent_start.saturating_add(end).min(parent_end);
-        if abs_start >= abs_end {
-            continue;
-        }
-        out.push(Span::new(doc_id.clone(), abs_start, abs_end));
-    }
-    out
 }
 
 // ---------------------------------------------------------------------------
@@ -993,12 +1252,20 @@ mod tests {
         || "2026-05-13T00:00:00Z".to_string()
     }
 
+    /// Build a JSON child node in the ADJ27 content-shaped contract:
+    /// the LLM emits the literal substring it claims for the child,
+    /// and the framework computes spans by matching that text
+    /// against the parent text. The `_start`/`_end` arguments are
+    /// retained for test-call-site readability (so each test cell
+    /// can document what byte range it expects to land at) but the
+    /// orchestrator never reads them.
     fn child_node(
         id: &str,
         kind: &str,
-        start: usize,
-        end: usize,
+        _start: usize,
+        _end: usize,
         atom_name: &str,
+        text: &str,
     ) -> serde_json::Value {
         serde_json::json!({
             "id": id,
@@ -1006,7 +1273,7 @@ mod tests {
             "term": { "atom": atom_name },
             "polarity": "Affirmed",
             "modality": "Present",
-            "source_spans": [{ "start": start, "end": end }]
+            "text": text,
         })
     }
 
@@ -1026,15 +1293,15 @@ mod tests {
         //   Phrase → Claim: 1 Fact covering [0, 7) (relative)
         //   Fact → TypedComponent: 1 Entity covering [0, 7) (relative)
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
-            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
-            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
-            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches", "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches", "matches")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "matches".into(),
-            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         // Document + Sentence + Phrase + Fact + Entity = 5 nodes.
@@ -1052,42 +1319,83 @@ mod tests {
     }
 
     #[test]
-    fn adj25_parse_spans_translates_to_document_absolute() {
-        // Unit-level test for the parent-relative → document-absolute
-        // span translation. The LLM emits spans relative to the
-        // parent's text; the orchestrator translates to absolute
-        // offsets by adding the parent's `span.start`.
-        let doc_id = DocumentId::new("doc1");
-        let parent_span = Span::new(doc_id.clone(), 4, 10); // doc [4..10)
-        let llm_emitted_spans = serde_json::json!([
-            { "start": 0, "end": 3 },
-            { "start": 3, "end": 6 }
+    fn adj27_text_matching_derives_document_absolute_spans() {
+        // ADJ27: the LLM emits `text` per child; the orchestrator
+        // matches each text left-to-right against the parent's
+        // bytes and derives absolute spans. End-to-end test through
+        // the orchestrator: source "ABCDEFGHIJ" with a Sentence
+        // covering "ABCDEFGHIJ", then a Phrase covering "ABC", a
+        // Phrase covering "DEFGHIJ" — and the framework places
+        // them at doc [0..3) and doc [3..10).
+        let gateway = gateway_with(vec![
+            // Doc → Sentence: one Sentence covering the full doc
+            one_node_response(child_node(
+                "Sa", "Sentence", 0, 10, "sent", "ABCDEFGHIJ",
+            )),
+            // Sentence → Phrase: two phrases tiling the sentence
+            serde_json::json!({
+                "document_id": "doc1",
+                "nodes": [
+                    child_node("Pa", "Phrase", 0, 3, "p1", "ABC"),
+                    child_node("Pb", "Phrase", 3, 10, "p2", "DEFGHIJ"),
+                ]
+            }),
+            // Phrase Pa → Claim
+            one_node_response(child_node("Fa", "Fact", 0, 3, "fa", "ABC")),
+            // Phrase Pb → Claim
+            one_node_response(child_node("Fb", "Fact", 0, 7, "fb", "DEFGHIJ")),
+            // Fact Fa → TypedComponent
+            one_node_response(child_node("Ea", "Entity", 0, 3, "ea", "ABC")),
+            // Fact Fb → TypedComponent
+            one_node_response(child_node("Eb", "Entity", 0, 7, "eb", "DEFGHIJ")),
         ]);
-        let parsed =
-            parse_spans(Some(&llm_emitted_spans), &doc_id, Some(&parent_span));
-        assert_eq!(parsed.len(), 2);
-        // Relative 0..3 → absolute 4..7
-        assert_eq!(parsed[0].start, 4);
-        assert_eq!(parsed[0].end, 7);
-        // Relative 3..6 → absolute 7..10
-        assert_eq!(parsed[1].start, 7);
-        assert_eq!(parsed[1].end, 10);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "ABCDEFGHIJ".into(),
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
+        };
+        let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
+        // Phrase Pa should land at doc [0..3); Phrase Pb at doc [3..10).
+        let phrases: Vec<_> = out
+            .ir_document
+            .nodes
+            .iter()
+            .filter(|n| n.kind == NodeKind::Phrase)
+            .collect();
+        assert_eq!(phrases.len(), 2);
+        assert_eq!(phrases[0].source_spans[0].start, 0);
+        assert_eq!(phrases[0].source_spans[0].end, 3);
+        assert_eq!(phrases[1].source_spans[0].start, 3);
+        assert_eq!(phrases[1].source_spans[0].end, 10);
     }
 
     #[test]
-    fn adj25_parse_spans_clamps_past_parent_end() {
-        // A misbehaving response that emits a relative span
-        // extending past the parent's end is clamped to the parent's
-        // bounds. (The coverage check will still catch the resulting
-        // gap, but at least the orchestrator doesn't pollute the IR
-        // with spans escaping the parent.)
-        let doc_id = DocumentId::new("doc1");
-        let parent_span = Span::new(doc_id.clone(), 0, 5);
-        let too_far = serde_json::json!([{ "start": 0, "end": 100 }]);
-        let parsed = parse_spans(Some(&too_far), &doc_id, Some(&parent_span));
-        assert_eq!(parsed.len(), 1);
-        assert_eq!(parsed[0].start, 0);
-        assert_eq!(parsed[0].end, 5); // clamped
+    fn adj27_text_not_in_parent_is_skipped() {
+        // LLM emits text that doesn't appear in the parent at all —
+        // the framework skips the child (no spans assigned). The
+        // coverage check then surfaces the bytes as uncovered.
+        let gateway = gateway_with(vec![
+            one_node_response(child_node(
+                "Sa", "Sentence", 0, 5, "sent", "ZZZZZZZ", // not in "hello"
+            )),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "hello".into(),
+            max_retries_per_parent: PerLevelRetryBudget::uniform(0),
+        };
+        let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
+        // Document has no children (the fabricated text was rejected);
+        // coverage check surfaces NoChildrenAtLevel.
+        match err {
+            HierarchicalDecomposeError::CoverageUnresolved { gaps } => {
+                assert!(gaps.iter().any(|g| matches!(
+                    g.kind,
+                    HierarchicalGapKind::NoChildrenAtLevel
+                )));
+            }
+            other => panic!("expected CoverageUnresolved, got {other:?}"),
+        }
     }
 
     #[test]
@@ -1098,7 +1406,7 @@ mod tests {
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "x".into(),
-            max_retries_per_parent: 1,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(1),
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         match err {
@@ -1116,12 +1424,12 @@ mod tests {
         // filter, leaving the Document with no children — then
         // the coverage check will report no_children_at_level.
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Px", "Phrase", 0, 5, "phr")),
+            one_node_response(child_node("Px", "Phrase", 0, 5, "phr", "hello")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "hello".into(),
-            max_retries_per_parent: 0, // no retries — fail fast
+            max_retries_per_parent: PerLevelRetryBudget::uniform(0), // no retries — fail fast
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         match err {
@@ -1143,23 +1451,23 @@ mod tests {
         // covering only [0..3). With max_retries_per_parent=1, the
         // retry budget is exhausted on the second pass.
         let gateway = gateway_with(vec![
-            one_node_response(child_node("S1", "Sentence", 0, 3, "s")),
+            one_node_response(child_node("S1", "Sentence", 0, 3, "s", "hel")),
             // Phrase / Claim / TypedComp for the 0..3 sub-tree
             // so the inner levels can complete cleanly.
-            one_node_response(child_node("P1", "Phrase", 0, 3, "p")),
-            one_node_response(child_node("F1", "Fact", 0, 3, "f")),
-            one_node_response(child_node("E1", "Entity", 0, 3, "e")),
+            one_node_response(child_node("P1", "Phrase", 0, 3, "p", "hel")),
+            one_node_response(child_node("F1", "Fact", 0, 3, "f", "hel")),
+            one_node_response(child_node("E1", "Entity", 0, 3, "e", "hel")),
             // Retry on Document — still only [0..3).
-            one_node_response(child_node("S2", "Sentence", 0, 3, "s")),
+            one_node_response(child_node("S2", "Sentence", 0, 3, "s", "hel")),
             // Inner levels for the replacement sub-tree.
-            one_node_response(child_node("P2", "Phrase", 0, 3, "p")),
-            one_node_response(child_node("F2", "Fact", 0, 3, "f")),
-            one_node_response(child_node("E2", "Entity", 0, 3, "e")),
+            one_node_response(child_node("P2", "Phrase", 0, 3, "p", "hel")),
+            one_node_response(child_node("F2", "Fact", 0, 3, "f", "hel")),
+            one_node_response(child_node("E2", "Entity", 0, 3, "e", "hel")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "hello".into(),
-            max_retries_per_parent: 1,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(1),
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         assert!(matches!(
@@ -1205,15 +1513,15 @@ mod tests {
         // and assert `check_correlation_completeness` passes on the
         // result.
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
-            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
-            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
-            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches", "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches", "matches")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "matches".into(),
-            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         let completeness =
@@ -1248,15 +1556,15 @@ mod tests {
     #[test]
     fn adj25_orchestrator_emits_correlation_ids_on_contains_edges() {
         let gateway = gateway_with(vec![
-            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent")),
-            one_node_response(child_node("Px", "Phrase", 0, 7, "phr")),
-            one_node_response(child_node("Fx", "Fact", 0, 7, "matches")),
-            one_node_response(child_node("Ex", "Entity", 0, 7, "matches")),
+            one_node_response(child_node("Sx", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("Px", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("Fx", "Fact", 0, 7, "matches", "matches")),
+            one_node_response(child_node("Ex", "Entity", 0, 7, "matches", "matches")),
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "matches".into(),
-            max_retries_per_parent: DEFAULT_MAX_RETRIES_PER_PARENT,
+            max_retries_per_parent: PerLevelRetryBudget::uniform(DEFAULT_MAX_RETRIES_PER_PARENT),
         };
         let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
         for edge in &out.ir_document.edges {
@@ -1271,5 +1579,204 @@ mod tests {
             );
             assert!(corr.unwrap().0.starts_with("corr.e."));
         }
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ28 — boolean kind schema + discard_justification
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn adj28_boolean_kind_schema_derives_kind() {
+        // The new Claim-level schema uses is_fact/is_uncertainty/
+        // is_question/is_discarded booleans. Exactly one is true.
+        let gateway = gateway_with(vec![
+            one_node_response(child_node("S1", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("P1", "Phrase", 0, 7, "phr", "matches")),
+            // Claim level: emit via boolean schema instead of `kind`.
+            serde_json::json!({
+                "document_id": "doc1",
+                "nodes": [{
+                    "id": "F1",
+                    "is_fact": true,
+                    "is_uncertainty": false,
+                    "is_question": false,
+                    "is_discarded": false,
+                    "term": {"atom": "matches"},
+                    "polarity": "Affirmed",
+                    "modality": "Present",
+                    "text": "matches",
+                }]
+            }),
+            one_node_response(child_node("E1", "Entity", 0, 7, "matches", "matches")),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "matches".into(),
+            max_retries_per_parent: PerLevelRetryBudget::uniform(0),
+        };
+        let out = decompose_hierarchical(&req, &gateway, clock()).unwrap();
+        // The Claim-level child should be parsed as a Fact, deriving
+        // its kind from the boolean schema.
+        let fact = out
+            .ir_document
+            .nodes
+            .iter()
+            .find(|n| n.kind == NodeKind::Fact)
+            .expect("expected a Fact-kind node from boolean schema");
+        assert_eq!(fact.id.0, "F1");
+    }
+
+    #[test]
+    fn adj28_zero_or_multiple_true_booleans_rejected() {
+        // Levels 3 and 4 use the boolean schema; if zero or multiple
+        // is_X booleans are true, the orchestrator must reject the
+        // child (and the coverage check surfaces the missing bytes).
+        let mut id_state = IdState::new();
+        // No booleans true → not a kind. Returns None.
+        let raw = serde_json::json!({
+            "id": "X1",
+            "is_fact": false,
+            "is_uncertainty": false,
+            "is_question": false,
+            "is_discarded": false,
+            "term": {"atom": "x"},
+            "text": "x",
+        });
+        let allowed = &[NodeKind::Fact, NodeKind::Discarded][..];
+        assert!(parse_child_node(&raw, allowed, &mut id_state, "C").is_none());
+        // Two booleans true → also rejected.
+        let raw2 = serde_json::json!({
+            "id": "X2",
+            "is_fact": true,
+            "is_uncertainty": true,
+            "is_question": false,
+            "is_discarded": false,
+            "term": {"atom": "x"},
+            "text": "x",
+        });
+        assert!(parse_child_node(&raw2, allowed, &mut id_state, "C").is_none());
+    }
+
+    #[test]
+    fn adj28_discard_justification_lands_in_metadata() {
+        // When the model marks a chunk Discarded with a
+        // discard_justification, the orchestrator stores that
+        // justification in the node's metadata under the
+        // DISCARD_JUSTIFICATION_METADATA_KEY.
+        let mut id_state = IdState::new();
+        let raw = serde_json::json!({
+            "id": "D1",
+            "kind": "Discarded",
+            "discard_reason": "Pleasantry",
+            "discard_justification":
+                "The string `please` is a politeness marker that adds no claim content.",
+            "term": {"atom": "x"},
+            "polarity": "Affirmed",
+            "modality": "Present",
+            "text": "please",
+        });
+        let allowed = &[NodeKind::Fact, NodeKind::Discarded][..];
+        let (node, _text) =
+            parse_child_node(&raw, allowed, &mut id_state, "C").expect("parsed");
+        assert_eq!(node.kind, NodeKind::Discarded);
+        let stored = node.metadata.get(DISCARD_JUSTIFICATION_METADATA_KEY);
+        assert_eq!(
+            stored.map(|s| s.as_str()),
+            Some("The string `please` is a politeness marker that adds no claim content.")
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ29 — per-level retry budgets
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn adj29_per_level_budget_at_returns_layer_specific_cap() {
+        let b = PerLevelRetryBudget {
+            document_to_sentence: 3,
+            sentence_to_phrase: 4,
+            phrase_to_claim: 5,
+            fact_to_typed_component: 8,
+        };
+        assert_eq!(b.at(DecompLevel::DocumentToSentence), 3);
+        assert_eq!(b.at(DecompLevel::SentenceToPhrase), 4);
+        assert_eq!(b.at(DecompLevel::PhraseToClaim), 5);
+        assert_eq!(b.at(DecompLevel::FactToTypedComponent), 8);
+    }
+
+    #[test]
+    fn adj29_per_level_budget_default_grows_with_depth() {
+        let d = PerLevelRetryBudget::default();
+        assert!(d.document_to_sentence < d.sentence_to_phrase);
+        assert!(d.sentence_to_phrase < d.phrase_to_claim);
+        assert!(d.phrase_to_claim < d.fact_to_typed_component);
+        assert_eq!(d.document_to_sentence, 3);
+        assert_eq!(d.fact_to_typed_component, 8);
+    }
+
+    #[test]
+    fn adj29_per_level_budget_uniform_applies_same_cap() {
+        let b = PerLevelRetryBudget::uniform(7);
+        for level in [
+            DecompLevel::DocumentToSentence,
+            DecompLevel::SentenceToPhrase,
+            DecompLevel::PhraseToClaim,
+            DecompLevel::FactToTypedComponent,
+        ] {
+            assert_eq!(b.at(level), 7);
+        }
+    }
+
+    #[test]
+    fn adj29_zero_budget_at_one_level_aborts_only_there() {
+        // Set Fact→TypedComponent budget to 0; shallow levels keep
+        // generous budgets. A non-matching text at level 4 should
+        // immediately fail without consuming retries (because the
+        // budget is 0), while levels 1-3 still complete cleanly.
+        let gateway = gateway_with(vec![
+            one_node_response(child_node("S1", "Sentence", 0, 7, "sent", "matches")),
+            one_node_response(child_node("P1", "Phrase", 0, 7, "phr", "matches")),
+            one_node_response(child_node("F1", "Fact", 0, 7, "matches", "matches")),
+            // Bogus text — would normally trigger a retry, but the
+            // level-4 budget is 0, so the orchestrator gives up.
+            one_node_response(child_node("E1", "Entity", 0, 7, "x", "DOES_NOT_MATCH")),
+        ]);
+        let req = HierarchicalDecomposeRequest {
+            document_id: "doc1".into(),
+            source_text: "matches".into(),
+            max_retries_per_parent: PerLevelRetryBudget {
+                document_to_sentence: 8,
+                sentence_to_phrase: 8,
+                phrase_to_claim: 8,
+                fact_to_typed_component: 0,
+            },
+        };
+        let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
+        assert!(matches!(
+            err,
+            HierarchicalDecomposeError::CoverageUnresolved { .. }
+        ));
+    }
+
+    #[test]
+    fn adj28_discard_reason_string_parsed_into_enum() {
+        // Each documented discard_reason string maps to the right
+        // DiscardReason variant. Unknown strings fall back to
+        // NonDomainContent rather than panicking.
+        use adjudication_ir::DiscardReason::*;
+        for (s, expected) in [
+            ("Pleasantry", Pleasantry),
+            ("DocumentMetadata", DocumentMetadata),
+            ("NonDomainContent", NonDomainContent),
+            ("Restatement", Restatement),
+            ("Unparseable", Unparseable),
+            ("AdministrativeOnly", AdministrativeOnly),
+            ("ExplicitlyOutOfScope", ExplicitlyOutOfScope),
+            ("not-a-real-reason", NonDomainContent),
+            ("", NonDomainContent),
+        ] {
+            assert_eq!(parse_discard_reason(Some(s)), expected);
+        }
+        assert_eq!(parse_discard_reason(None), NonDomainContent);
     }
 }

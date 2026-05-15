@@ -1077,13 +1077,25 @@ def test_taylor_non_integer_order_returns_unevaluated() -> None:
     assert result.head == _sym("Taylor")  # type: ignore[union-attr]
 
 
-def test_taylor_transcendental_returns_unevaluated() -> None:
-    """Taylor(Sin(x), x, 0, 3) — transcendental body → PolynomialError → unevaluated."""
+def test_taylor_transcendental_evaluates_via_derivatives() -> None:
+    """Taylor(Sin(x), x, 0, 3) — transcendental body → x - (1/6)*x^3.
+
+    The full ``symbolic_vm.cas_handlers.taylor_handler`` falls back to
+    successive symbolic differentiation when the polynomial route raises
+    ``PolynomialError``.  The result is the degree-3 Taylor polynomial for
+    sin(x) around x=0: x - x³/6.
+    """
     vm = _vm()
     sin_x = IRApply(IRSymbol("Sin"), (_sym("x"),))
     result = vm.eval(_apply("Taylor", sin_x, _sym("x"), _int(0), _int(3)))
+    # Result must be an Add (not the unevaluated Taylor head)
     assert isinstance(result, IRApply)
-    assert result.head == _sym("Taylor")  # type: ignore[union-attr]
+    assert result.head != _sym("Taylor"), (
+        "Taylor(sin(x),x,0,3) should evaluate via derivative fallback, not stay unevaluated"
+    )
+    # The leading term must be x (x^1 coefficient = 1)
+    result_str = repr(result)
+    assert "x" in result_str, f"Expected x term in Taylor expansion, got {result_str}"
 
 
 # ---------------------------------------------------------------------------

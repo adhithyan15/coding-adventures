@@ -421,6 +421,19 @@ struct NvrtcLib {
     nvrtc_destroy_program:  FnNvrtcDestroyProgram,
 }
 
+// `dynlib::DynLib` carries an opaque `*mut c_void` library handle that the
+// dynamic linker (`dlopen`/`LoadLibrary`) returned.  Sharing or transferring
+// that handle between threads is safe — POSIX `dlsym` and Windows
+// `GetProcAddress` are explicitly thread-safe.  Function pointers are
+// already `Send + Sync` so the rest of the struct propagates trivially.
+// Adding Send + Sync lets `Arc<CudaLib>` / `Arc<NvrtcLib>` cross thread
+// boundaries, which `matrix-cuda`'s `Mutex<State>` needs to compile when
+// it holds a `Kernels` (Phase 5).
+unsafe impl Send for CudaLib {}
+unsafe impl Sync for CudaLib {}
+unsafe impl Send for NvrtcLib {}
+unsafe impl Sync for NvrtcLib {}
+
 impl NvrtcLib {
     fn load() -> Option<Self> {
         #[cfg(unix)]
@@ -763,6 +776,17 @@ impl Drop for CudaBuffer {
     }
 }
 
+// `CudaBuffer` carries a `CUdeviceptr` (a `u64`-typed device pointer) and an
+// `Arc<CudaLib>`.  The pointer is an opaque driver handle that the docs say is
+// safe to transfer between threads (the bound entity is the CUDA *context*, not
+// individual allocations).  Adding `Send` lets callers move buffers into a
+// `Mutex<...>` — required by `matrix-cuda`'s `Mutex<State>` pattern.
+//
+// `Sync` is deliberately NOT impl'd: concurrent calls to `upload` / `download`
+// against the same `CudaBuffer` from multiple threads have undefined ordering
+// in the driver API.  Callers must serialise (which `Mutex<BufferStore>` does).
+unsafe impl Send for CudaBuffer {}
+
 impl CudaBuffer {
     pub fn len(&self) -> usize {
         self.len
@@ -821,7 +845,13 @@ impl Drop for CudaModuleInner {
 
 // CUmodule is an opaque driver handle; CUDA docs say it is safe to transfer
 // between threads (the context, not the module, is the thread-bound entity).
+// Adding Sync alongside Send lets `Arc<CudaModuleInner>` itself be Send +
+// Sync, which in turn lets `CudaModule` and `CudaFunction` (both wrap
+// `Arc<CudaModuleInner>`) move freely across thread boundaries.  Callers
+// must still serialise launches against a given module — Sync here means
+// "transferring shared refs is OK," not "concurrent driver calls are OK."
 unsafe impl Send for CudaModuleInner {}
+unsafe impl Sync for CudaModuleInner {}
 
 /// A loaded CUDA module (compiled PTX).
 ///
@@ -875,7 +905,10 @@ pub struct CudaFunction {
 }
 
 // CUfunction is an opaque driver handle; safe to transfer between threads.
+// Sync added alongside Send so `Arc<CudaFunction>` works in callers that
+// share function handles across threads (read-only after compile).
 unsafe impl Send for CudaFunction {}
+unsafe impl Sync for CudaFunction {}
 
 // --------------------------------------------------------------------------
 // Tests

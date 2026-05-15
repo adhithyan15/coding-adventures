@@ -20,7 +20,10 @@
 
 use std::collections::HashSet;
 
-use twig_parser::{Apply, Begin, Expr, If, Lambda, Let};
+use twig_parser::{Apply, Begin, Expr, If, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+};
 
 /// Maximum AST depth the walker will descend before bailing out.
 ///
@@ -73,7 +76,8 @@ fn walk(
         // ------------------------------------------------------------------
         // Atoms with no embedded names
         // ------------------------------------------------------------------
-        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) => {}
+        // LANG51: StrLit is also a leaf — no variable names to capture.
+        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) | Expr::StrLit(_) => {}
 
         // ------------------------------------------------------------------
         // Variable reference — the only place a name actually becomes "free"
@@ -124,6 +128,26 @@ fn walk(
             }
         }
 
+        // LANG52: let* — each RHS is in scope of all prior bindings, so we
+        // bind incrementally as we walk.
+        Expr::LetStar(LetStar { bindings, body, .. }) => {
+            let mut added: Vec<String> = Vec::new();
+            for (n, rhs) in bindings {
+                // The RHS is walked BEFORE the name is bound — same as the
+                // compiler: each binding sees all *prior* names, but not itself.
+                walk(rhs, bound, globals, found, seen, depth);
+                if bound.insert(n.clone()) {
+                    added.push(n.clone());
+                }
+            }
+            for e in body {
+                walk(e, bound, globals, found, seen, depth);
+            }
+            for n in added {
+                bound.remove(&n);
+            }
+        }
+
         // ------------------------------------------------------------------
         // Inner lambda — params are bound for its body
         // ------------------------------------------------------------------
@@ -149,6 +173,35 @@ fn walk(
             walk(fn_expr, bound, globals, found, seen, depth);
             for a in args {
                 walk(a, bound, globals, found, seen, depth);
+            }
+        }
+
+        // TW05-A / LANG48 — match expression free-variable analysis.
+        //
+        // The scrutinee is evaluated in the outer scope.  Each arm's
+        // body is evaluated with the arm's bindings added to `bound`.
+        Expr::Match(m) => {
+            walk(&m.scrutinee, bound, globals, found, seen, depth);
+            for arm in &m.arms {
+                // Determine names bound by this arm's pattern.
+                let arm_bindings: Vec<String> = match &arm.pat {
+                    twig_parser::MatchPat::Variant { bindings, .. } => bindings.clone(),
+                    twig_parser::MatchPat::Binding(n) => vec![n.clone()],
+                    twig_parser::MatchPat::Wildcard => vec![],
+                };
+                // Add arm bindings to the bound set for the body.
+                let mut added: Vec<String> = Vec::new();
+                for n in &arm_bindings {
+                    if bound.insert(n.clone()) {
+                        added.push(n.clone());
+                    }
+                }
+                for e in &arm.body {
+                    walk(e, bound, globals, found, seen, depth);
+                }
+                for n in added {
+                    bound.remove(&n);
+                }
             }
         }
     }

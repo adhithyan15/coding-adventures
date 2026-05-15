@@ -4,6 +4,7 @@ use std::error::Error;
 use std::fmt;
 use std::fs;
 use std::io::{Read, Write};
+use std::net::TcpListener;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -16,6 +17,10 @@ use artifact_store::{
 use capability_cage::{
     secure_file, Action as CageAction, Capability as CageCapability, CapabilityFlavor,
     CapabilityTrust, Category as CageCategory, Manifest,
+};
+use capability_os_sandbox::{
+    current_kernel_sandbox_support, plan_all_supported, plan_for_current_os,
+    run_with_kernel_sandbox, OsFamily, SandboxPlan, SandboxPlanSummary,
 };
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
@@ -39,6 +44,7 @@ use http_core::BodyKind;
 use memory_store::{
     MemoryClass, MemoryInventorySummary, MemoryListOptions, MemoryRecord, MemoryStore,
 };
+use operation_primitives::{OperationError, OperationHttpClientError, OperationHttpRequest};
 use os_job_core::{
     BackendKind, ConcurrencyPolicy, DateTimeParts, JobAction, JobSpec, JobTrigger, OutputPolicy,
     RetryPolicy,
@@ -54,6 +60,10 @@ use skill_store::{
 use storage_core::{InMemoryStorageBackend, StorageError};
 use tls_platform::TlsConfig;
 
+mod generated_operations;
+
+use generated_operations::GeneratedOperationHttpClient;
+
 const AGENT_ID: &str = "umbrella_today_agent";
 const SESSION_ID: &str = "umbrella_today_session";
 const JOB_ID: &str = "umbrella_today_job";
@@ -61,6 +71,7 @@ const USER_ID: &str = "seattle_user";
 const FETCH_TOOL_ID: &str = "weather.fetch_current";
 const CLASSIFY_TOOL_ID: &str = "weather.classify_umbrella";
 const WRITE_TOOL_ID: &str = "file.write_text";
+const WEATHER_API_DOMAIN: &str = "api.weather.gov";
 
 pub type UmbrellaResult<T> = Result<T, UmbrellaAgentError>;
 
@@ -135,6 +146,18 @@ impl From<capability_cage::InvalidCombination> for UmbrellaAgentError {
 
 impl From<capability_cage::ManifestError> for UmbrellaAgentError {
     fn from(value: capability_cage::ManifestError) -> Self {
+        Self::new(value.to_string())
+    }
+}
+
+impl From<OperationError> for UmbrellaAgentError {
+    fn from(value: OperationError) -> Self {
+        Self::new(value.to_string())
+    }
+}
+
+impl From<OperationHttpClientError> for UmbrellaAgentError {
+    fn from(value: OperationHttpClientError) -> Self {
         Self::new(value.to_string())
     }
 }
@@ -218,6 +241,8 @@ pub struct WeatherFetchSummary {
     pub http_statuses: Vec<u16>,
     pub endpoint_count: usize,
     pub forecast_endpoint: String,
+    pub http_domain_policy_enforced: bool,
+    pub declared_http_domains: Vec<String>,
 }
 
 impl WeatherFetchSummary {
@@ -229,10 +254,16 @@ impl WeatherFetchSummary {
             http_statuses: vec![snapshot.http_status],
             endpoint_count: 1,
             forecast_endpoint: snapshot.endpoint_url.clone(),
+            http_domain_policy_enforced: false,
+            declared_http_domains: Vec::new(),
         }
     }
 
-    fn live(points_status: u16, forecast: &WeatherSnapshot) -> Self {
+    fn live(
+        points_status: u16,
+        forecast: &WeatherSnapshot,
+        http_client: &GeneratedOperationHttpClient,
+    ) -> Self {
         Self {
             source_kind: WeatherFetchSourceKind::LiveHttps,
             https_requests: 2,
@@ -240,6 +271,8 @@ impl WeatherFetchSummary {
             http_statuses: vec![points_status, forecast.http_status],
             endpoint_count: 2,
             forecast_endpoint: forecast.endpoint_url.clone(),
+            http_domain_policy_enforced: true,
+            declared_http_domains: http_client.declared_domains().to_vec(),
         }
     }
 }
@@ -450,6 +483,8 @@ pub struct UmbrellaAgentRun {
     pub output_path: PathBuf,
     pub output_text: String,
     pub weather_fetch: WeatherFetchSummary,
+    pub sandbox_plan: UmbrellaSandboxPlanSummary,
+    pub kernel_sandbox: UmbrellaKernelSandboxSummary,
     pub supervisor: UmbrellaSupervisorSummary,
     pub tool_journal_health: ToolExecutionJournalHealthSummary,
     pub context_inventory: ContextStoreInventorySummary,
@@ -463,10 +498,97 @@ pub struct UmbrellaAgentRun {
     pub actor_channel_messages: usize,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UmbrellaSandboxPlanSummary {
+    pub package: String,
+    pub plan_count: usize,
+    pub current_os: OsFamily,
+    pub current_os_rules: usize,
+    pub total_rules: usize,
+    pub direct_rules: usize,
+    pub brokered_rules: usize,
+    pub launch_time_rules: usize,
+    pub advisory_rules: usize,
+    pub native_rules: usize,
+    pub host_broker_rules: usize,
+    pub os_summaries: Vec<SandboxPlanSummary>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UmbrellaKernelSandboxSummary {
+    pub os: OsFamily,
+    pub primitive: String,
+    pub available: bool,
+    pub enforced: bool,
+    pub allowed_write_succeeded: bool,
+    pub denied_write_blocked: bool,
+    pub network_outbound_enforced: bool,
+    pub network_denied_outbound_blocked: bool,
+    pub weather_https_allowed: bool,
+    pub host_exact_kernel_enforced: bool,
+    pub denied_path: PathBuf,
+    pub denied_network_target: String,
+    pub status_code: Option<i32>,
+    pub stderr_contains_operation_not_permitted: bool,
+    pub reason: String,
+}
+
+impl UmbrellaSandboxPlanSummary {
+    fn from_summaries(os_summaries: Vec<SandboxPlanSummary>, current_os: OsFamily) -> Self {
+        let package = os_summaries
+            .first()
+            .map(|summary| summary.package.clone())
+            .unwrap_or_default();
+        let current_os_rules = os_summaries
+            .iter()
+            .find(|summary| summary.os == current_os)
+            .map(|summary| summary.total_rules)
+            .unwrap_or_default();
+        Self {
+            package,
+            plan_count: os_summaries.len(),
+            current_os,
+            current_os_rules,
+            total_rules: os_summaries.iter().map(|summary| summary.total_rules).sum(),
+            direct_rules: os_summaries
+                .iter()
+                .map(|summary| summary.direct_rules)
+                .sum(),
+            brokered_rules: os_summaries
+                .iter()
+                .map(|summary| summary.brokered_rules)
+                .sum(),
+            launch_time_rules: os_summaries
+                .iter()
+                .map(|summary| summary.launch_time_rules)
+                .sum(),
+            advisory_rules: os_summaries
+                .iter()
+                .map(|summary| summary.advisory_rules)
+                .sum(),
+            native_rules: os_summaries
+                .iter()
+                .map(|summary| summary.native_rules)
+                .sum(),
+            host_broker_rules: os_summaries
+                .iter()
+                .map(|summary| summary.host_broker_rules)
+                .sum(),
+            os_summaries,
+        }
+    }
+
+    pub fn summary_for_os(&self, os: OsFamily) -> Option<&SandboxPlanSummary> {
+        self.os_summaries.iter().find(|summary| summary.os == os)
+    }
+}
+
 pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<UmbrellaAgentRun> {
     let pipeline = Arc::new(UmbrellaPipeline::new(config.clone())?);
     pipeline.bootstrap_substrate()?;
 
+    let sandbox_plan = plan_agent_sandbox(&config)?;
+    let kernel_sandbox = probe_agent_kernel_sandbox(&config)?;
     let (job_plan_backend, job_plan_file_count) = plan_agent_job(&config)?;
     let job_executor_status = run_executor_tick(&config)?;
 
@@ -518,6 +640,8 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         output_path: config.output_path,
         output_text,
         weather_fetch,
+        sandbox_plan,
+        kernel_sandbox,
         supervisor: supervisor_summary(&system, &actor_stats, supervisor_events),
         tool_journal_health,
         context_inventory,
@@ -550,12 +674,15 @@ struct UmbrellaPipeline {
 impl UmbrellaPipeline {
     fn new(config: UmbrellaAgentConfig) -> UmbrellaResult<Self> {
         let mut tool_runtime = InMemoryToolRuntime::new();
+        let http_client = generated_operations::generated_http_client()?;
         register_weather_fetch_tool(
             &mut tool_runtime,
             config.weather_source.clone(),
             config.fetched_at_ms,
             config.fetched_at_iso.clone(),
-        )?;
+            http_client,
+        )
+        .map_err(UmbrellaAgentError::from)?;
         register_weather_classifier_tool(&mut tool_runtime)?;
         register_file_writer_tool(&mut tool_runtime, writer_manifest(&config.output_path)?)?;
 
@@ -676,7 +803,10 @@ impl UmbrellaPipeline {
         let snapshot = WeatherSnapshot::from_json(&output).map_err(tool_error_to_agent)?;
         let fetch_summary = match &self.config.weather_source {
             WeatherSource::Fixture(_) => WeatherFetchSummary::fixture(&snapshot),
-            WeatherSource::LiveNws { .. } => WeatherFetchSummary::live(200, &snapshot),
+            WeatherSource::LiveNws { .. } => {
+                let http_client = generated_operations::generated_http_client()?;
+                WeatherFetchSummary::live(200, &snapshot, &http_client)
+            }
         };
         *self.snapshot.lock().expect("snapshot mutex poisoned") = Some(snapshot.clone());
         *self
@@ -1050,6 +1180,7 @@ fn register_weather_fetch_tool(
     source: WeatherSource,
     fetched_at_ms: u64,
     fetched_at_iso: String,
+    http_client: GeneratedOperationHttpClient,
 ) -> Result<(), ToolApiError> {
     runtime.register_handler(
         tool_definition(
@@ -1071,14 +1202,19 @@ fn register_weather_fetch_tool(
         ),
         move |arguments, _context| {
             let location = field_string(&arguments, "location")?;
-            let payload =
-                fetch_weather_from_source(&source, location, fetched_at_ms, &fetched_at_iso)
-                    .map_err(|error| {
-                        ToolCallError::new(
-                            ToolErrorKind::ToolExecutionError,
-                            format!("failed to fetch weather snapshot: {error}"),
-                        )
-                    })?;
+            let payload = fetch_weather_from_source(
+                &source,
+                location,
+                fetched_at_ms,
+                &fetched_at_iso,
+                &http_client,
+            )
+            .map_err(|error| {
+                ToolCallError::new(
+                    ToolErrorKind::ToolExecutionError,
+                    format!("failed to fetch weather snapshot: {error}"),
+                )
+            })?;
             let snapshot = payload.snapshot;
             let source_name = match payload.summary.source_kind {
                 WeatherFetchSourceKind::Fixture => "fixture",
@@ -1091,6 +1227,10 @@ fn register_weather_fetch_tool(
                     ("endpoint_url", string(&snapshot.endpoint_url)),
                     ("https_requests", int(payload.summary.https_requests as i64)),
                     ("tls_handshakes", int(payload.summary.tls_handshakes as i64)),
+                    (
+                        "http_domain_policy_enforced",
+                        JsonValue::Bool(payload.summary.http_domain_policy_enforced),
+                    ),
                 ]),
             ))
         },
@@ -1102,6 +1242,7 @@ fn fetch_weather_from_source(
     location: String,
     fetched_at_ms: u64,
     fetched_at_iso: &str,
+    http_client: &GeneratedOperationHttpClient,
 ) -> UmbrellaResult<WeatherFetchPayload> {
     match source {
         WeatherSource::Fixture(snapshot) if snapshot.location == location => {
@@ -1120,9 +1261,13 @@ fn fetch_weather_from_source(
                 snapshot,
             })
         }
-        WeatherSource::LiveNws { user_agent } => {
-            fetch_live_nws_weather(location, fetched_at_ms, fetched_at_iso, user_agent)
-        }
+        WeatherSource::LiveNws { user_agent } => fetch_live_nws_weather(
+            location,
+            fetched_at_ms,
+            fetched_at_iso,
+            user_agent,
+            http_client,
+        ),
     }
 }
 
@@ -1131,9 +1276,10 @@ fn fetch_live_nws_weather(
     fetched_at_ms: u64,
     fetched_at_iso: &str,
     user_agent: &str,
+    http_client: &GeneratedOperationHttpClient,
 ) -> UmbrellaResult<WeatherFetchPayload> {
-    let points_path = "/points/47.6062,-122.3321";
-    let points = https_get_api_weather(points_path, user_agent)?;
+    let points_url = format!("https://{WEATHER_API_DOMAIN}/points/47.6062,-122.3321");
+    let points = https_get_declared_weather_url(&points_url, user_agent, http_client)?;
     if points.status != 200 {
         return Err(UmbrellaAgentError::new(format!(
             "Weather.gov points request returned HTTP {}",
@@ -1144,8 +1290,7 @@ fn fetch_live_nws_weather(
     let points_json = coding_adventures_json_value::parse(&points.body)
         .map_err(|error| UmbrellaAgentError::new(format!("points JSON parse failed: {error}")))?;
     let forecast_url = extract_forecast_url(&points_json)?;
-    let forecast_path = api_weather_path_from_url(&forecast_url)?;
-    let forecast = https_get_api_weather(&forecast_path, user_agent)?;
+    let forecast = https_get_declared_weather_url(&forecast_url, user_agent, http_client)?;
     if forecast.status != 200 {
         return Err(UmbrellaAgentError::new(format!(
             "Weather.gov forecast request returned HTTP {}",
@@ -1164,17 +1309,33 @@ fn fetch_live_nws_weather(
         &forecast.body,
         &forecast_json,
     )?;
-    let summary = WeatherFetchSummary::live(points.status, &snapshot);
+    let summary = WeatherFetchSummary::live(points.status, &snapshot, http_client);
     Ok(WeatherFetchPayload { snapshot, summary })
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 struct HttpFetchResponse {
     status: u16,
     body: String,
 }
 
-fn https_get_api_weather(path: &str, user_agent: &str) -> UmbrellaResult<HttpFetchResponse> {
+fn https_get_declared_weather_url(
+    url: &str,
+    user_agent: &str,
+    http_client: &GeneratedOperationHttpClient,
+) -> UmbrellaResult<HttpFetchResponse> {
+    http_client
+        .get_with_transport(url, HttpFetchResponse::default(), |request_target| {
+            https_get_preflighted_weather_url(request_target, user_agent)
+        })
+        .into_result()
+        .map_err(UmbrellaAgentError::from)
+}
+
+fn https_get_preflighted_weather_url(
+    request_target: OperationHttpRequest,
+    user_agent: &str,
+) -> UmbrellaResult<HttpFetchResponse> {
     let mut tls_config = TlsConfig::https_default();
     tls_config.connect_timeout = Duration::from_secs(10);
     tls_config.handshake_timeout = Duration::from_secs(10);
@@ -1183,10 +1344,12 @@ fn https_get_api_weather(path: &str, user_agent: &str) -> UmbrellaResult<HttpFet
 
     let connector = tls_platform::default_connector();
     let mut stream = connector
-        .connect("api.weather.gov", 443, &tls_config)
+        .connect(request_target.host(), request_target.port(), &tls_config)
         .map_err(|error| UmbrellaAgentError::new(format!("TLS connect failed: {error}")))?;
     let request = format!(
-        "GET {path} HTTP/1.1\r\nHost: api.weather.gov\r\nUser-Agent: {user_agent}\r\nAccept: application/geo+json, application/json\r\nAccept-Encoding: identity\r\nConnection: close\r\n\r\n"
+        "GET {} HTTP/1.1\r\nHost: {}\r\nUser-Agent: {user_agent}\r\nAccept: application/geo+json, application/json\r\nAccept-Encoding: identity\r\nConnection: close\r\n\r\n",
+        request_target.path_and_query(),
+        request_target.host()
     );
     stream.write_all(request.as_bytes())?;
     stream.flush()?;
@@ -1257,21 +1420,6 @@ fn extract_forecast_url(points_json: &JsonValue) -> UmbrellaResult<String> {
         "forecast",
     )?)
     .map(str::to_string)
-}
-
-fn api_weather_path_from_url(url: &str) -> UmbrellaResult<String> {
-    let prefix = "https://api.weather.gov";
-    let path = url.strip_prefix(prefix).ok_or_else(|| {
-        UmbrellaAgentError::new(format!(
-            "forecast URL must stay on api.weather.gov, got {url}"
-        ))
-    })?;
-    if !path.starts_with('/') {
-        return Err(UmbrellaAgentError::new(format!(
-            "forecast URL did not include an absolute path: {url}"
-        )));
-    }
-    Ok(path.to_string())
 }
 
 fn snapshot_from_nws_forecast(
@@ -1510,6 +1658,243 @@ fn recommendation_schema() -> JsonSchema {
         ],
         allow_unknown_fields: false,
     }
+}
+
+fn plan_agent_sandbox(config: &UmbrellaAgentConfig) -> UmbrellaResult<UmbrellaSandboxPlanSummary> {
+    let manifest_json = umbrella_agent_required_capabilities_json(&config.output_path);
+    let plans = plan_all_supported(&manifest_json).map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to lower Weather Agent sandbox plan: {error}"
+        ))
+    })?;
+    let summaries = plans.into_iter().map(|plan| plan.summary()).collect();
+    Ok(UmbrellaSandboxPlanSummary::from_summaries(
+        summaries,
+        OsFamily::current(),
+    ))
+}
+
+fn probe_agent_kernel_sandbox(
+    config: &UmbrellaAgentConfig,
+) -> UmbrellaResult<UmbrellaKernelSandboxSummary> {
+    let support = current_kernel_sandbox_support();
+    let denied_path = kernel_denied_probe_path(&config.output_path);
+    let denied_network_target = "localhost:<ephemeral-undeclared-port>".to_string();
+    if !support.available {
+        return Ok(UmbrellaKernelSandboxSummary {
+            os: support.os,
+            primitive: support.primitive,
+            available: false,
+            enforced: false,
+            allowed_write_succeeded: false,
+            denied_write_blocked: false,
+            network_outbound_enforced: false,
+            network_denied_outbound_blocked: false,
+            weather_https_allowed: false,
+            host_exact_kernel_enforced: false,
+            denied_path,
+            denied_network_target,
+            status_code: None,
+            stderr_contains_operation_not_permitted: false,
+            reason: support.reason,
+        });
+    }
+
+    if let Some(parent) = config.output_path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    if denied_path.exists() {
+        fs::remove_file(&denied_path)?;
+    }
+
+    let manifest_json = umbrella_agent_required_capabilities_json(&config.output_path);
+    let plan = plan_for_current_os(&manifest_json).map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to lower Weather Agent kernel sandbox plan: {error}"
+        ))
+    })?;
+    let allowed_arg = canonical_kernel_probe_path(&config.output_path)?;
+    let denied_arg = canonical_kernel_probe_path(&denied_path)?;
+    let output = run_with_kernel_sandbox(
+        &plan,
+        "/bin/sh",
+        [
+            "-c",
+            "printf 'kernel sandbox allowed' > \"$1\"; printf 'kernel sandbox denied' > \"$2\"",
+            "sh",
+            &allowed_arg,
+            &denied_arg,
+        ],
+    )
+    .map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to launch Weather Agent kernel sandbox probe: {error}"
+        ))
+    })?;
+
+    let allowed_write_succeeded = fs::read_to_string(&config.output_path)
+        .map(|contents| contents == "kernel sandbox allowed")
+        .unwrap_or(false);
+    let denied_write_blocked = !denied_path.exists();
+    let network_denied = probe_denied_kernel_network_target(&plan)?;
+    let weather_https_allowed = probe_weather_https_kernel_target(config, &plan)?;
+    let stderr_contains_operation_not_permitted = output.stderr.contains("Operation not permitted");
+    let enforced = allowed_write_succeeded
+        && denied_write_blocked
+        && network_denied.blocked
+        && stderr_contains_operation_not_permitted
+        && !output.success();
+
+    if !enforced {
+        return Err(UmbrellaAgentError::new(format!(
+            "Weather Agent kernel sandbox probe did not enforce the manifest: status={:?} stderr={}",
+            output.status_code, output.stderr
+        )));
+    }
+
+    Ok(UmbrellaKernelSandboxSummary {
+        os: output.os,
+        primitive: output.primitive,
+        available: true,
+        enforced,
+        allowed_write_succeeded,
+        denied_write_blocked,
+        network_outbound_enforced: network_denied.blocked,
+        network_denied_outbound_blocked: network_denied.blocked,
+        weather_https_allowed,
+        host_exact_kernel_enforced: false,
+        denied_path,
+        denied_network_target: network_denied.target,
+        status_code: output.status_code,
+        stderr_contains_operation_not_permitted,
+        reason: "kernel denied undeclared filesystem writes and undeclared outbound TCP ports; macOS Seatbelt constrains Weather.gov to TCP 443 while TLS/application checks retain host identity".to_string(),
+    })
+}
+
+struct NetworkProbeSummary {
+    target: String,
+    blocked: bool,
+}
+
+fn probe_denied_kernel_network_target(plan: &SandboxPlan) -> UmbrellaResult<NetworkProbeSummary> {
+    let listener = TcpListener::bind("127.0.0.1:0")?;
+    let port = listener.local_addr()?.port().to_string();
+    let output =
+        run_with_kernel_sandbox(plan, "/usr/bin/nc", ["-z", "-G", "1", "localhost", &port])
+            .map_err(|error| {
+                UmbrellaAgentError::new(format!(
+                    "failed to launch Weather Agent kernel network deny probe: {error}"
+                ))
+            })?;
+
+    Ok(NetworkProbeSummary {
+        target: format!("localhost:{port}"),
+        blocked: !output.success(),
+    })
+}
+
+fn probe_weather_https_kernel_target(
+    config: &UmbrellaAgentConfig,
+    plan: &SandboxPlan,
+) -> UmbrellaResult<bool> {
+    if !matches!(config.weather_source, WeatherSource::LiveNws { .. }) {
+        return Ok(false);
+    }
+
+    let output = run_with_kernel_sandbox(
+        plan,
+        "/usr/bin/curl",
+        ["-I", "--max-time", "8", "https://api.weather.gov"],
+    )
+    .map_err(|error| {
+        UmbrellaAgentError::new(format!(
+            "failed to launch Weather Agent kernel Weather.gov allow probe: {error}"
+        ))
+    })?;
+    Ok(output.success())
+}
+
+fn kernel_denied_probe_path(output_path: &Path) -> PathBuf {
+    let file_name = output_path
+        .file_name()
+        .map(|name| name.to_string_lossy().to_string())
+        .unwrap_or_else(|| "umbrella-today.txt".to_string());
+    output_path.with_file_name(format!("{file_name}.undeclared"))
+}
+
+fn canonical_kernel_probe_path(path: &Path) -> UmbrellaResult<String> {
+    let absolute = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()?.join(path)
+    };
+    if let Ok(canonical) = fs::canonicalize(&absolute) {
+        return Ok(canonical.to_string_lossy().to_string());
+    }
+
+    let parent = absolute.parent().ok_or_else(|| {
+        UmbrellaAgentError::new(format!(
+            "kernel sandbox probe path has no parent: {}",
+            absolute.display()
+        ))
+    })?;
+    let file_name = absolute.file_name().ok_or_else(|| {
+        UmbrellaAgentError::new(format!(
+            "kernel sandbox probe path has no final component: {}",
+            absolute.display()
+        ))
+    })?;
+    Ok(fs::canonicalize(parent)?
+        .join(file_name)
+        .to_string_lossy()
+        .to_string())
+}
+
+fn umbrella_agent_required_capabilities_json(output_path: &Path) -> String {
+    let output_path = json_escape(&output_path.to_string_lossy());
+    format!(
+        r#"{{
+  "version": 1,
+  "package": "rust/weather-agent-e2e",
+  "capabilities": [
+    {{
+      "category": "net",
+      "action": "dns",
+      "target": "api.weather.gov",
+      "justification": "Resolve Weather.gov for the live umbrella-today weather fetch."
+    }},
+    {{
+      "category": "net",
+      "action": "connect",
+      "target": "api.weather.gov:443",
+      "justification": "Fetch Weather.gov points and forecast resources over TLS."
+    }},
+    {{
+      "category": "fs",
+      "action": "write",
+      "target": "{output_path}",
+      "justification": "Write the umbrella-today decision text file."
+    }}
+  ],
+  "justification": "Weather Agent E2E fetches Seattle weather and writes the umbrella decision."
+}}"#
+    )
+}
+
+fn json_escape(input: &str) -> String {
+    let mut escaped = String::new();
+    for ch in input.chars() {
+        match ch {
+            '"' => escaped.push_str("\\\""),
+            '\\' => escaped.push_str("\\\\"),
+            '\n' => escaped.push_str("\\n"),
+            '\r' => escaped.push_str("\\r"),
+            '\t' => escaped.push_str("\\t"),
+            ch if ch.is_control() => escaped.push_str(&format!("\\u{:04x}", ch as u32)),
+            ch => escaped.push(ch),
+        }
+    }
+    escaped
 }
 
 fn plan_agent_job(config: &UmbrellaAgentConfig) -> UmbrellaResult<(BackendKind, usize)> {
@@ -1791,5 +2176,75 @@ mod tests {
         assert!(recommendation
             .log_line()
             .contains("Bring an umbrella today"));
+    }
+
+    #[test]
+    fn generated_operation_source_matches_required_capabilities_compiler() {
+        let generated = required_capabilities_compiler::compile_required_capabilities_json(
+            include_str!("../required_capabilities.json"),
+        )
+        .unwrap();
+
+        assert_eq!(
+            generated.rust_source.trim_end(),
+            include_str!("generated_operations.rs").trim_end()
+        );
+    }
+
+    #[test]
+    fn generated_operation_http_client_allows_only_required_capability_domains() {
+        let client = generated_operations::generated_http_client().unwrap();
+
+        let request = client
+            .preflight_get("https://api.weather.gov/gridpoints/SEW/124,67/forecast")
+            .unwrap();
+        assert_eq!(request.host(), "api.weather.gov");
+        assert_eq!(request.authority(), "api.weather.gov:443");
+        assert_eq!(request.path_and_query(), "/gridpoints/SEW/124,67/forecast");
+        assert_eq!(client.declared_domains(), &["api.weather.gov".to_string()]);
+
+        let mut transport_called = false;
+        let outcome = client.get_with_transport(
+            "https://example.com/gridpoints/SEW/124,67/forecast",
+            HttpFetchResponse::default(),
+            |_request| -> UmbrellaResult<HttpFetchResponse> {
+                transport_called = true;
+                Ok(HttpFetchResponse {
+                    status: 200,
+                    body: "should not run".to_string(),
+                })
+            },
+        );
+
+        assert!(!transport_called);
+        let error = outcome.error.expect("undeclared domain should fail");
+        assert!(error.message.contains("net:dns:example.com"));
+        assert!(error.message.contains("required_capabilities.json"));
+    }
+
+    #[test]
+    fn required_capabilities_compiler_rejects_wildcard_http_capabilities() {
+        let json = r#"{
+          "version": 1,
+          "package": "rust/weather-agent-e2e",
+          "capabilities": [
+            {
+              "category": "net",
+              "action": "dns",
+              "target": "*",
+              "justification": "too broad"
+            },
+            {
+              "category": "net",
+              "action": "connect",
+              "target": "*:443",
+              "justification": "too broad"
+            }
+          ]
+        }"#;
+
+        let error =
+            required_capabilities_compiler::compile_required_capabilities_json(json).unwrap_err();
+        assert!(error.to_string().contains("exact"));
     }
 }

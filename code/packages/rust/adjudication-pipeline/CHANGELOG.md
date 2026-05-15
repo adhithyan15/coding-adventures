@@ -2,6 +2,180 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-05-14 — ADJ29: per-level retry budgets
+
+### Changed (breaking — caller construction)
+
+`HierarchicalDecomposeRequest::max_retries_per_parent` changed type
+from `usize` (single global cap) to `PerLevelRetryBudget` (per-level
+caps). The orchestrator's retry loop now looks up the cap by the
+gap's level via `retry_budget.at(gap.level)`.
+
+### Why
+
+ADJ28's bench showed bigger models producing finer-grained
+decompositions — `gemma4` splits `"1 carry-on bag, lithium battery,
+200 Wh."` into THREE phrases, which is the correct linguistic
+reading. But that fine decomposition fans out at every level: 3
+phrases → 3 Phrase→Claim calls → 3 Fact→TypedComponent calls. A
+single global retry budget gets exhausted before the careful
+decomposition's deeper tile boundaries close.
+
+The fix is per-level budgets. Doc→Sentence rarely fails (low
+fan-out, simple choice); Fact→TypedComponent has the most fan-out
+and strictest tiling. Defaults grow with depth:
+
+  document_to_sentence:       3
+  sentence_to_phrase:         4
+  phrase_to_claim:            5
+  fact_to_typed_component:    8
+
+### New public surface
+
+- `PerLevelRetryBudget { document_to_sentence, sentence_to_phrase,
+  phrase_to_claim, fact_to_typed_component }` with `Default` impl
+  (3/4/5/8), `uniform(n: usize)` constructor for back-compat tests,
+  and `at(level)` lookup helper.
+- Re-exported from `adjudication_pipeline::` top-level alongside the
+  other hierarchical types.
+
+### Bench binary
+
+`adj_pr6_bench` now supports two retry-budget modes:
+
+- **Uniform** (back-compat): `ADJ_PR6_MAX_RETRIES=N` sets all four
+  levels to N. Matches the previous bench-knob shape.
+- **Per-level**: when `ADJ_PR6_MAX_RETRIES` is unset, the defaults
+  (3/4/5/8) apply, with individual overrides via
+  `ADJ_PR6_MAX_RETRIES_DOC_SENT`,
+  `ADJ_PR6_MAX_RETRIES_SENT_PHRASE`,
+  `ADJ_PR6_MAX_RETRIES_PHRASE_CLAIM`, and
+  `ADJ_PR6_MAX_RETRIES_FACT_TYPED`.
+
+### Tests
+
+4 new `adj29_*` test cases:
+
+- `adj29_per_level_budget_at_returns_layer_specific_cap` — `at`
+  lookup over a manually-constructed budget.
+- `adj29_per_level_budget_default_grows_with_depth` — regression
+  guard for the depth-monotonic defaults.
+- `adj29_per_level_budget_uniform_applies_same_cap` — `uniform(n)`
+  ergonomics.
+- `adj29_zero_budget_at_one_level_aborts_only_there` — end-to-end
+  through the orchestrator with a 0-budget at level 4 and generous
+  shallow budgets; verifies the level-4 abort path doesn't consume
+  shallow retries.
+
+Total hierarchical-module tests: 13 → 17. Pipeline lib tests: 51 → 55.
+
+### Notes
+
+- Version: 0.13.0 → 0.14.0 (breaking type change on the request struct).
+- Per `feedback_per_level_retry_budget`: don't add prompt-level
+  examples discouraging fine decomposition. The right linguistic
+  reading should be rewarded; the framework adjusts to support it.
+
+## [0.13.0] - 2026-05-14 — ADJ28: orchestrator reads boolean kind schema + discard_justification
+
+### Changed
+
+`parse_child_node` now extracts the node's `kind` from two
+supported shapes:
+
+1. **Legacy single-`kind` string field** (levels 1 & 2 keep this).
+2. **ADJ28 per-kind `is_X` boolean schema** (levels 3 & 4). The
+   new helper `extract_kind` walks the boolean field set,
+   collects every `is_X: true`, and accepts the node only when
+   exactly one boolean is true. Zero true or multiple true →
+   node rejected.
+
+Discard nodes additionally have:
+
+- `discard_reason` parsed via the new helper `parse_discard_reason`
+  into the `adjudication_ir::DiscardReason` enum (unknown strings
+  fall back to `NonDomainContent`).
+- `discard_justification` (free-form string) stored on the node's
+  `metadata` map under the reserved key
+  `DISCARD_JUSTIFICATION_METADATA_KEY = "adj.discard_justification"`.
+  Lets the audit trail keep the model's own rationale for
+  discarding.
+
+### Tests
+
+4 new test cases:
+
+- `adj28_boolean_kind_schema_derives_kind` — end-to-end through
+  the orchestrator: a Claim node emitted via `is_fact: true` flows
+  through `parse_child_node` and lands in the IR as a Fact.
+- `adj28_zero_or_multiple_true_booleans_rejected` — both
+  failure paths (no true booleans, multiple true booleans) cause
+  the parser to skip the child.
+- `adj28_discard_justification_lands_in_metadata` — when the
+  LLM emits a `discard_justification`, the orchestrator copies it
+  into `node.metadata` under the reserved key.
+- `adj28_discard_reason_string_parsed_into_enum` — round-trip
+  every documented reason string + unknown / empty fallbacks.
+
+Total `adjudication-pipeline` hierarchical-module tests: 9 → 13,
+all passing. Workspace pipeline tests: 47 → 51.
+
+### Notes
+
+- Version: 0.12.0 → 0.13.0 (additive parsing change).
+
+## [0.12.0] - 2026-05-13 — orchestrator: content-shaped span derivation
+
+### Changed
+
+The hierarchical orchestrator now derives child `source_spans` by
+matching LLM-emitted `text` fields against the parent text — the
+model never computes byte offsets. Per
+`feedback_no_byte_arithmetic_for_llm`.
+
+Specifically:
+
+- `parse_child_node` reads each child's `text` field instead of
+  `source_spans` and returns `(IRNode, Option<String>)` so the
+  caller can do the content-matching.
+- `splice_children` walks LLM-emitted children left-to-right against
+  the parent text with a cursor. The leftmost match at-or-after the
+  cursor anchors the child's absolute spans; the cursor advances
+  past the match. Content fabrications (text not found in the
+  remaining parent) are skipped — the coverage check surfaces the
+  resulting gap.
+- `snapshot_children_as_json` (the prior-attempt rendering for
+  retries) emits `text` fields instead of `source_spans`, so the
+  model never sees its own byte offsets fed back.
+- `render_gap_description` extracts the LITERAL missing substrings
+  from the source and shows them to the model. Byte ranges are
+  banished from the retry prompt.
+- The dead `parse_spans` function and the `MAX_SPANS_PER_NODE`
+  constant were removed.
+
+### Tests
+
+Two prior parse_spans unit tests were replaced with content-shaped
+tests: `adj27_text_matching_derives_document_absolute_spans` (clean
+3-byte + 7-byte tiling with absolute-span verification) and
+`adj27_text_not_in_parent_is_skipped` (fabrication handling). Total
+hierarchical-module tests: 9, all passing. Workspace pipeline lib
+tests: 47/47.
+
+### Smoke benchmark
+
+Gemma4 against `"1 carry-on bag, matches."` cell wallclock dropped
+from 505s (ADJ27 byte-shaped contract) to 176s with the new content
+matching. Coverage still doesn't close fully — the model emits some
+text that doesn't match parent bytes verbatim — but more children
+are accepted into the IR per parent than before, and retries now
+ride on top of literal missing substrings rather than byte
+arithmetic.
+
+### Notes
+
+- Version: 0.11.0 → 0.12.0.
+
 ## [0.11.0] - 2026-05-13 — ADJ25 PR-6: foundation bench harness
 
 ### Added

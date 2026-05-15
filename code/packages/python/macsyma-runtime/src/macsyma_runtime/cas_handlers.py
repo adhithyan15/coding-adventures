@@ -37,7 +37,12 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from cas_laplace import build_laplace_handler_table as _build_laplace_handlers
-from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
+from cas_limit_series import PolynomialError, limit_advanced, limit_direct, taylor_polynomial
+from symbolic_vm.derivative import _diff as _symbolic_diff
+from symbolic_vm.cas_handlers import (
+    expand_handler as _expand_handler_full,
+    taylor_handler as _taylor_handler_full,
+)
 from cas_list_operations import (
     LIST,
     ListOperationError,
@@ -128,28 +133,14 @@ def simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
     return simplify(expr.args[0])
 
 
-def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
+def expand_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Expand(expr)`` — fully distribute products and powers.
 
-    Uses the polynomial bridge to expand ``(x+1)*(x+2)`` → ``x^2+3x+2``
-    and ``(x+1)^2`` → ``x^2+2x+1``.  Requires a single-variable polynomial
-    expression; falls back to structural :func:`canonical` otherwise.
+    Delegates to the full :func:`symbolic_vm.cas_handlers.expand_handler`
+    which handles both single-variable (via the polynomial bridge) and
+    multi-variable polynomials (via recursive symbolic distribution).
     """
-    if len(expr.args) != 1:
-        return expr
-    inner = expr.args[0]
-    # Try real polynomial expansion via the bridge (single-variable only).
-    x = _find_variable(inner)
-    if x is not None:
-        result = to_rational(inner, x)
-        if result is not None:
-            num, den = result
-            # Only expand pure polynomials (rational functions stay symbolic).
-            if den == (Fraction(1),):
-                return from_polynomial(num, x)
-    # Fallback: structural canonicalization for zero-variable or
-    # multi-variable expressions.
-    return canonical(inner)
+    return _expand_handler_full(vm, expr)
 
 
 # ---------------------------------------------------------------------------
@@ -597,34 +588,68 @@ def inverse_handler(_vm: VM, expr: IRApply) -> IRNode:
 
 
 def limit_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Limit(body, var, point)`` — direct-substitution limit.
+    """``Limit(body, var, point[, dir])`` — full limit evaluation.
 
-    The substituted result is simplified and re-evaluated so that
-    ``Limit(x^2, x, 3)`` collapses to ``9`` rather than ``Add(9, 0)``.
+    Uses :func:`cas_limit_series.limit_advanced` with L'Hôpital's rule and
+    support for all standard indeterminate forms (0/0, ∞/∞, 0·∞, 1^∞, 0^0,
+    ∞^0).
+
+    Call forms:
+      ``Limit(expr, var, point)``          — two-sided limit
+      ``Limit(expr, var, point, plus)``    — right-sided limit
+      ``Limit(expr, var, point, minus)``   — left-sided limit
+
+    Falls through to the unevaluated node if the limit cannot be determined.
     """
-    if len(expr.args) != 3:
+    n = len(expr.args)
+    if n not in (3, 4):
         return expr
-    body, var, point = expr.args
+    body, var, point = expr.args[:3]
     if not isinstance(var, IRSymbol):
         return expr
-    result = limit_direct(body, var, point)
-    simplified = simplify(vm.eval(result))
-    return simplified
 
+    # Parse optional direction argument.
+    direction: str | None = None
+    if n == 4:
+        dir_arg = expr.args[3]
+        if isinstance(dir_arg, IRSymbol) and dir_arg.name in ("plus", "minus"):
+            direction = dir_arg.name
 
-def taylor_handler(_vm: VM, expr: IRApply) -> IRNode:
-    """``Taylor(body, var, point, order)`` — polynomial Taylor expansion."""
-    if len(expr.args) != 4:
-        return expr
-    body, var, point, order_ir = expr.args
-    if not isinstance(var, IRSymbol):
-        return expr
-    if not isinstance(order_ir, IRInteger):
-        return expr
+    # Inject symbolic differentiation and VM evaluator.
+    def _diff_fn(e: IRNode, v: IRSymbol) -> IRNode:
+        return vm.eval(_symbolic_diff(e, v))
+
+    def _eval_fn(e: IRNode) -> IRNode:
+        # The VM may raise ZeroDivisionError for symbolic 0/0 during exact
+        # substitution inside limit_advanced.  Propagate it so the caller
+        # (limit_advanced) can detect it and route to L'Hôpital.
+        return vm.eval(e)
+
     try:
-        return taylor_polynomial(body, var, point, order_ir.value)
-    except PolynomialError:
+        result = limit_advanced(
+            body,
+            var,
+            point,
+            direction,
+            diff_fn=_diff_fn,
+            eval_fn=_eval_fn,
+        )
+    except (ZeroDivisionError, ArithmeticError):
+        # Genuine division by zero outside the L'Hôpital path — return
+        # unevaluated so the user sees the original Limit expression.
         return expr
+    return vm.eval(simplify(result))
+
+
+def taylor_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Taylor(body, var, point, order)`` — Taylor expansion.
+
+    Delegates to the full :func:`symbolic_vm.cas_handlers.taylor_handler`
+    which tries the fast polynomial route first (``taylor_polynomial``) and
+    falls back to successive symbolic differentiation for transcendental
+    functions like ``sin``, ``exp``, ``cos``, etc.
+    """
+    return _taylor_handler_full(vm, expr)
 
 
 # ---------------------------------------------------------------------------

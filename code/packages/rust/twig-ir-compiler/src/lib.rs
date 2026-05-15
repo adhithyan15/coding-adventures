@@ -81,8 +81,14 @@ pub use compiler::Compiler;
 pub use errors::TwigCompileError;
 pub use free_vars::free_vars;
 
-use interpreter_ir::IIRModule;
-use twig_parser::{parse, Program};
+use interpreter_ir::{
+    function::FunctionTypeStatus,
+    source_loc::SourceLoc,
+    IIRModule,
+};
+use std::collections::HashMap;
+use twig_parser::{parse, Program, TypedMode};
+use type_declarations::AnnotatedNode;
 
 /// Compile a parsed [`Program`] into an [`IIRModule`].
 ///
@@ -100,6 +106,47 @@ pub fn compile_program(
     program: &Program,
     module_name: &str,
 ) -> Result<IIRModule, TwigCompileError> {
+    // ── Optional TW05-B type-check pre-pass (LANG49) ──────────────────────
+    //
+    // Runs only when the module declares `(typed lenient)` or `(typed strict)`.
+    // `(typed off)` and programs with no `(module …)` declaration are untouched —
+    // `check_program` returns immediately in those cases.
+    //
+    // Lenient mode: errors are printed as warnings but compilation continues.
+    // Strict mode:  any type error blocks compilation and returns Err.
+    if let Some(mode) = program
+        .module_info
+        .as_ref()
+        .and_then(|mi| mi.typed_mode.as_ref())
+    {
+        let tc_result = twig_type_checker::check_program(program, None);
+        match mode {
+            TypedMode::Strict if !tc_result.ok => {
+                // Invariant: ok == false in Strict mode ↔ errors is non-empty.
+                // Using expect here enforces the invariant at this integration
+                // boundary.  A panic here means a bug in the type checker, not
+                // in user input — fail loudly rather than silently.
+                let d = tc_result.errors.first().expect(
+                    "type-checker invariant violated: ok==false but errors is empty",
+                );
+                return Err(TwigCompileError {
+                    message: format!("type error: {}", d.message),
+                    line: d.line,
+                    column: d.column,
+                });
+            }
+            TypedMode::Lenient => {
+                for d in &tc_result.errors {
+                    eprintln!(
+                        "twig type warning ({}:{}): {}",
+                        d.line, d.column, d.message
+                    );
+                }
+            }
+            _ => {}
+        }
+    }
+
     Compiler::new().compile(program, module_name)
 }
 
@@ -120,6 +167,185 @@ pub fn compile_program(
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, TwigCompileError> {
     let program = parse(source)?;
     compile_program(&program, module_name)
+}
+
+// ---------------------------------------------------------------------------
+// LANG50: compile_typed_source — annotation-aware IIR emission
+// ---------------------------------------------------------------------------
+
+/// Compile a Twig source string with full type annotation propagation.
+///
+/// Runs the LANG50 `grammar-type-checker` pass first to build an
+/// [`AnnotatedNode`] tree, then compiles the program and post-processes the
+/// resulting IIR to propagate concrete `type_hint` values (`"i64"`, `"bool"`,
+/// `"str"`, `"closure"`) wherever the checker could infer a concrete kind.
+///
+/// ## Type propagation pipeline
+///
+/// ```text
+/// source
+///   ├─ parse_to_ast  → GrammarASTNode
+///   ├─ parse + emit_type_declarations → TypeDeclarations
+///   └─ grammar_type_checker::check → AnnotatedNode tree
+///                          │
+///               build_hint_map: (line, col) → iir_hint
+///                          │
+///          compile_source → IIRModule
+///                          │
+///             apply_hints: instructions.type_hint updated
+///                          │
+///            set_function_type_status: FullyTyped / PartiallyTyped / Untyped
+/// ```
+///
+/// ## Mode enforcement
+///
+/// | `(typed …)` clause | Behaviour                                     |
+/// |--------------------|-----------------------------------------------|
+/// | absent / `off`     | Annotate; never emit errors                   |
+/// | `lenient`          | Annotate; warnings printed; compilation ok    |
+/// | `strict`           | Annotate; first error → `Err(TwigCompileError)` |
+///
+/// # Errors
+///
+/// Returns `Err` on parse failure or strict-mode type errors.
+///
+/// # Example
+///
+/// ```
+/// use twig_ir_compiler::compile_typed_source;
+///
+/// let m = compile_typed_source("42", "test").unwrap();
+/// let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+/// // The integer literal 42 → type_hint "i64" on the const instruction.
+/// let hint = main.instructions.iter()
+///     .find(|i| i.op == "const")
+///     .map(|i| i.type_hint.as_str());
+/// assert_eq!(hint, Some("i64"));
+/// ```
+pub fn compile_typed_source(source: &str, module_name: &str) -> Result<IIRModule, TwigCompileError> {
+    // ── 1. Type-check via grammar-type-checker (LANG50). ──────────────────
+    let tc = twig_type_checker::type_check_source(source)
+        .map_err(|e| TwigCompileError { message: e.to_string(), line: 0, column: 0 })?;
+
+    // ── 2. Enforce typed-mode. ────────────────────────────────────────────
+    // The `TypeCheckResult::ok` flag encodes strict-mode failures; check it.
+    if !tc.ok {
+        // ok==false ↔ strict mode + at least one error.
+        let d = tc.errors.first().expect(
+            "type-checker invariant violated: ok==false but errors is empty",
+        );
+        return Err(TwigCompileError {
+            message: format!("type error: {}", d.message),
+            line: d.line,
+            column: d.column,
+        });
+    }
+    // Lenient mode: print warnings but continue.
+    for d in &tc.errors {
+        eprintln!("twig type warning ({}:{}): {}", d.line, d.column, d.message);
+    }
+
+    // ── 3. Compile to IIR (base pass — all hints still "any"). ────────────
+    let mut module = compile_source(source, module_name)?;
+
+    // ── 4. Build (line, col) → iir_hint lookup from the AnnotatedNode tree. ─
+    let hint_map = build_hint_map(&tc.typed_ast);
+
+    // ── 5. Post-process: replace "any" type_hints with concrete kinds. ────
+    for func in &mut module.functions {
+        apply_hints(func, &hint_map);
+        set_function_type_status(func);
+    }
+
+    Ok(module)
+}
+
+// ---------------------------------------------------------------------------
+// Annotation post-processing helpers
+// ---------------------------------------------------------------------------
+
+/// Walk an [`AnnotatedNode`] tree and build a map from source position
+/// `(line, col)` to IIR `type_hint` string.
+///
+/// Only positions with **concrete** hints (`"i64"`, `"bool"`, `"str"`,
+/// `"closure"`) are stored — `"any"` hints are not inserted because the
+/// default is already `"any"`.
+fn build_hint_map(root: &AnnotatedNode) -> HashMap<(u32, u32), &'static str> {
+    let mut map = HashMap::new();
+    collect_hints(root, &mut map);
+    map
+}
+
+fn collect_hints<'a>(
+    node: &'a AnnotatedNode,
+    map: &mut HashMap<(u32, u32), &'static str>,
+) {
+    use type_declarations::AnnotatedChild;
+
+    let hint = node.iir_hint();
+    if hint != "any" {
+        // Use start position as the lookup key.
+        if let (Some(line), Some(col)) = (node.start_line, node.start_column) {
+            map.insert((line as u32, col as u32), hint);
+        }
+    }
+
+    for child in &node.children {
+        if let AnnotatedChild::Node(child_node) = child {
+            collect_hints(child_node, map);
+        }
+    }
+}
+
+/// Replace `"any"` `type_hint`s on instructions where the hint map has a
+/// concrete hint at the instruction's source position.
+fn apply_hints(
+    func: &mut interpreter_ir::function::IIRFunction,
+    hint_map: &HashMap<(u32, u32), &'static str>,
+) {
+    for (instr, loc) in func.instructions.iter_mut().zip(func.source_map.iter()) {
+        if instr.type_hint == "any" && loc != &SourceLoc::SYNTHETIC {
+            if let Some(&hint) = hint_map.get(&(loc.line, loc.column)) {
+                instr.type_hint = hint.to_owned();
+            }
+        }
+    }
+}
+
+/// Set [`FunctionTypeStatus`] on a function based on how many of its
+/// instructions carry a concrete `type_hint` (non-`"any"`, non-`"void"`).
+///
+/// | Condition                        | Status            |
+/// |----------------------------------|-------------------|
+/// | All concrete (threshold = 0%)    | `FullyTyped`      |
+/// | Mixed (1%–99%)                   | `PartiallyTyped`  |
+/// | All `"any"` / `"void"` (100%)    | `Untyped`         |
+///
+/// Instructions with `"void"` type_hint (like `label` or `br`) are
+/// excluded from the count entirely — they are structural, not typed.
+fn set_function_type_status(func: &mut interpreter_ir::function::IIRFunction) {
+    let typed_instrs: Vec<_> = func
+        .instructions
+        .iter()
+        .filter(|i| i.type_hint != "void")
+        .collect();
+
+    if typed_instrs.is_empty() {
+        return; // no value-producing instructions — leave status unchanged
+    }
+
+    let concrete_count = typed_instrs
+        .iter()
+        .filter(|i| i.type_hint != "any")
+        .count();
+
+    func.type_status = if concrete_count == typed_instrs.len() {
+        FunctionTypeStatus::FullyTyped
+    } else if concrete_count > 0 {
+        FunctionTypeStatus::PartiallyTyped
+    } else {
+        FunctionTypeStatus::Untyped
+    };
 }
 
 // ---------------------------------------------------------------------------
@@ -800,6 +1026,240 @@ mod tests {
                     f.name,
                 );
             }
+        }
+    }
+
+    // ── LANG50: compile_typed_source tests ───────────────────────────────
+
+    fn typed_module(src: &str) -> IIRModule {
+        compile_typed_source(src, "test")
+            .unwrap_or_else(|e| panic!("compile_typed_source failed: {e}"))
+    }
+
+    fn all_hints(module: &IIRModule) -> Vec<String> {
+        module
+            .functions
+            .iter()
+            .flat_map(|f| f.instructions.iter().map(|i| i.type_hint.clone()))
+            .collect()
+    }
+
+    #[test]
+    fn typed_source_int_literal_hint() {
+        // A bare integer literal: the `const` instruction should get "i64".
+        let m = typed_module("42");
+        let hints = all_hints(&m);
+        assert!(
+            hints.iter().any(|h| h == "i64"),
+            "expected at least one 'i64' hint, got: {hints:?}"
+        );
+    }
+
+    #[test]
+    fn typed_source_bool_literal_hint() {
+        // A boolean literal: the `const` instruction should get "bool".
+        let m = typed_module("#t");
+        let hints = all_hints(&m);
+        assert!(
+            hints.iter().any(|h| h == "bool"),
+            "expected at least one 'bool' hint, got: {hints:?}"
+        );
+    }
+
+    #[test]
+    fn typed_source_nil_literal_hint() {
+        // `nil` maps to KindDecl::Nil → iir_hint "any".
+        // This test documents the current behaviour (Nil → "any").
+        let m = typed_module("nil");
+        // Should compile without errors.
+        assert!(!m.functions.is_empty());
+    }
+
+    #[test]
+    fn typed_source_untyped_fallback() {
+        // A function call to a builtin — the call result has type Any → hint "any".
+        // Off mode (no module declaration) so no type errors are emitted.
+        // The `+` builtin is known to the compiler, so compilation succeeds.
+        let m = typed_module("(+ 1 2)");
+        // The call to `+` has type Any (call return type unknown statically).
+        let hints = all_hints(&m);
+        // At minimum there should be no panic.
+        assert!(!m.functions.is_empty());
+        // The `+` call instruction itself should be "any" (return type unknown).
+        // But the literal args (1, 2) get "i64" hints — so the mix is expected.
+        let _ = hints; // documented: mix of "i64" (args) and "any" (call result)
+    }
+
+    #[test]
+    fn typed_source_function_status_fully_typed() {
+        // A function that takes a typed define — verifying FunctionTypeStatus
+        // is updated when all instructions have concrete hints.
+        //
+        // `(define x : int 42)` — the `42` literal gets "i64".
+        // The main function emits a `const` + `global_set` + `ret`.
+        // `const` gets "i64", `global_set` stays "any" (it's a side-effect op).
+        // So main is PartiallyTyped (not FullyTyped — not all concrete).
+        //
+        // A bare `42` just has `const` + `ret` in main.  `const` → "i64",
+        // `ret` → "any".  PartiallyTyped.  FullyTyped requires ALL non-void
+        // instructions to be concrete.
+        let m = typed_module("42");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        // At minimum, the type_status should not be Untyped (we got a concrete hint).
+        assert_ne!(
+            main.type_status,
+            FunctionTypeStatus::Untyped,
+            "main should be at least PartiallyTyped when a literal was inferred"
+        );
+    }
+
+    #[test]
+    fn typed_source_strict_mode_type_error_returns_err() {
+        // Strict mode + arity mismatch → compile_typed_source returns Err.
+        let src = "(module m (typed strict)) (define (f x) x) (f 1 2)";
+        let result = compile_typed_source(src, "test");
+        assert!(result.is_err(), "expected Err on strict type error");
+        let err = result.unwrap_err();
+        assert!(err.message.contains("arity") || err.message.contains("type error"));
+    }
+
+    #[test]
+    fn typed_source_off_mode_no_errors() {
+        // No module declaration → Off mode → no strict errors.
+        let src = "(+ undefined_var 1)";
+        let result = compile_typed_source(src, "test");
+        // Compilation may fail for other reasons (unbound var in compiler).
+        // The point is: type errors are NOT the reason it fails.
+        // If compile_source succeeds, typed should too.
+        let baseline = compile_source(src, "test");
+        assert_eq!(result.is_ok(), baseline.is_ok());
+    }
+
+    // =========================================================================
+    // LANG51: String literal tests
+    // =========================================================================
+    //
+    // String literals ("hello") are the highest-priority self-hosting blocker:
+    // without them, compiler keywords like "define" can only be built at runtime
+    // from char codes.  These tests verify the full front-end → IIR path.
+
+    /// A bare string literal compiles to a single `const(Operand::Str(...))` in main.
+    #[test]
+    fn string_literal_basic() {
+        let instrs = main_instrs("\"hello\"");
+        // Expected: const(Str("hello")), ret
+        assert_eq!(instrs.len(), 2, "expected const + ret, got {instrs:?}");
+        assert_eq!(instrs[0].op, "const");
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "hello"),
+            other => panic!("expected Operand::Str(\"hello\"), got {other:?}"),
+        }
+    }
+
+    /// An empty string literal is valid and produces `const(Str(""))`.
+    #[test]
+    fn string_literal_empty() {
+        let instrs = main_instrs("\"\"");
+        assert_eq!(instrs[0].op, "const");
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, ""),
+            other => panic!("expected Operand::Str(\"\"), got {other:?}"),
+        }
+    }
+
+    /// `\"` inside a string literal is decoded to a literal double-quote character.
+    #[test]
+    fn string_literal_escaped_quote() {
+        let instrs = main_instrs(r#""say \"hi\"""#);
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "say \"hi\""),
+            other => panic!("expected escaped-quote string, got {other:?}"),
+        }
+    }
+
+    /// `\n` in a string literal is decoded to a real newline character (0x0a).
+    #[test]
+    fn string_literal_newline_escape() {
+        let instrs = main_instrs(r#""\n""#);
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => {
+                assert_eq!(s.len(), 1);
+                assert_eq!(s.as_bytes()[0], b'\n');
+            }
+            other => panic!("expected Operand::Str(\"\\n\"), got {other:?}"),
+        }
+    }
+
+    /// `\t` → tab, `\r` → CR, `\\` → backslash.
+    #[test]
+    fn string_literal_all_basic_escapes() {
+        let instrs = main_instrs(r#""\t\r\\""#);
+        match &instrs[0].srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "\t\r\\"),
+            other => panic!("expected tab+CR+backslash, got {other:?}"),
+        }
+    }
+
+    /// The `const` instruction for a string literal carries `type_hint = "str"`.
+    /// This is what LANG50 inference uses to propagate the str kind.
+    #[test]
+    fn string_literal_type_hint_is_str() {
+        let instrs = main_instrs("\"hello\"");
+        assert_eq!(instrs[0].op, "const");
+        assert_eq!(
+            instrs[0].type_hint.as_str(),
+            "str",
+            "string literal const must carry type_hint = \"str\""
+        );
+    }
+
+    /// A string literal used as an argument to a builtin call compiles cleanly.
+    /// This covers the most common self-hosting usage: `(print "define")`.
+    #[test]
+    fn string_literal_as_argument() {
+        // (define (greet s) s)  then  (greet "world")
+        // We just want compilation to succeed and produce a call instruction.
+        let m = module("(define (greet s) s) (greet \"world\")");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        // main should contain a call to greet
+        let has_call_greet = main
+            .instructions
+            .iter()
+            .any(|i| i.op == "call" && i.srcs.iter().any(|s| matches!(s, Operand::Var(v) if v == "greet")));
+        assert!(has_call_greet, "expected call to greet in main");
+    }
+
+    /// `compile_typed_source` on a string literal returns Ok and the main
+    /// function is at least PartiallyTyped (the `const` instruction has
+    /// type_hint "str" which is a concrete type).
+    #[test]
+    fn string_literal_compile_typed_source() {
+        let m = compile_typed_source("\"hello\"", "test")
+            .expect("typed compile of string literal should succeed");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        assert_ne!(
+            main.type_status,
+            FunctionTypeStatus::Untyped,
+            "string literal should yield at least PartiallyTyped"
+        );
+    }
+
+    /// A string literal inside a lambda body compiles without error.
+    /// Tests that StrLit is handled in closure free-variable analysis (it has no
+    /// free variables, just like IntLit).
+    #[test]
+    fn string_literal_in_lambda() {
+        let m = module("(lambda () \"captured\")");
+        // Should compile to a __lambda_0 function + main that creates the closure.
+        let lambda_fn = m.functions.iter().find(|f| f.name.starts_with("__lambda"));
+        assert!(lambda_fn.is_some(), "lambda function should be emitted");
+        let lambda_instrs = &lambda_fn.unwrap().instructions;
+        // Lambda body: const(Str("captured")) + ret
+        let const_instr = lambda_instrs.iter().find(|i| i.op == "const");
+        assert!(const_instr.is_some(), "lambda body should have a const instr");
+        match &const_instr.unwrap().srcs[0] {
+            Operand::Str(s) => assert_eq!(s, "captured"),
+            other => panic!("expected Str(\"captured\") in lambda, got {other:?}"),
         }
     }
 }

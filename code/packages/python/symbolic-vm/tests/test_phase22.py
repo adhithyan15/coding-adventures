@@ -166,13 +166,14 @@ class TestApply1Handler:
             IRApply(POW, (IRApply(COS, (x,)), IRInteger(2))),
         ))
         vm.eval(IRApply(IRSymbol("Defrule"), (IRSymbol("pyth"), lhs, IRInteger(1))))
-        # apply1(pyth, sin(t)^2 + cos(t)^2) → 1
+        # apply1(sin(t)^2 + cos(t)^2, pyth) → 1
+        # MACSYMA surface: apply1(target, rule_name)
         t = IRSymbol("t")
         target = IRApply(ADD, (
             IRApply(POW, (IRApply(SIN, (t,)), IRInteger(2))),
             IRApply(POW, (IRApply(COS, (t,)), IRInteger(2))),
         ))
-        result = vm.eval(IRApply(IRSymbol("Apply1"), (IRSymbol("pyth"), target)))
+        result = vm.eval(IRApply(IRSymbol("Apply1"), (target, IRSymbol("pyth"))))
         assert result == IRInteger(1)
 
     def test_apply1_no_match_returns_target(self) -> None:
@@ -186,14 +187,14 @@ class TestApply1Handler:
         # cos(t) doesn't match sin(x) — no match
         t = IRSymbol("t")
         target = IRApply(COS, (t,))
-        result = vm.eval(IRApply(IRSymbol("Apply1"), (IRSymbol("sinzero"), target)))
+        result = vm.eval(IRApply(IRSymbol("Apply1"), (target, IRSymbol("sinzero"))))
         assert result == target
 
     def test_apply1_unknown_rule_returns_target(self) -> None:
         vm = _make_vm()
         t = IRSymbol("t")
         target = IRApply(SIN, (t,))
-        result = vm.eval(IRApply(IRSymbol("Apply1"), (IRSymbol("nosuchrule"), target)))
+        result = vm.eval(IRApply(IRSymbol("Apply1"), (target, IRSymbol("nosuchrule"))))
         assert result == target
 
     def test_apply1_root_only_not_recursive(self) -> None:
@@ -215,7 +216,7 @@ class TestApply1Handler:
             IRApply(POW, (IRApply(COS, (t,)), IRInteger(2))),
         ))
         outer = IRApply(ADD, (IRInteger(2), inner))
-        result = vm.eval(IRApply(IRSymbol("Apply1"), (IRSymbol("pyth"), outer)))
+        result = vm.eval(IRApply(IRSymbol("Apply1"), (outer, IRSymbol("pyth"))))
         # Root doesn't match → target returned unchanged
         assert isinstance(result, IRApply)
         assert result.head == ADD
@@ -226,9 +227,10 @@ class TestApply1Handler:
         assert isinstance(result, IRApply)
 
     def test_apply1_malformed_non_symbol_name(self) -> None:
+        # Second arg (rule name) is not a symbol — handler returns expr unchanged.
         vm = _make_vm()
         result = vm.eval(IRApply(IRSymbol("Apply1"), (
-            IRInteger(1), IRSymbol("x"),
+            IRSymbol("x"), IRInteger(1),
         )))
         assert isinstance(result, IRApply)
 
@@ -257,7 +259,7 @@ class TestApply2Handler:
             IRApply(POW, (IRApply(COS, (t,)), IRInteger(2))),
         ))
         outer = IRApply(ADD, (IRInteger(3), inner))
-        result = vm.eval(IRApply(IRSymbol("Apply2"), (IRSymbol("pyth"), outer)))
+        result = vm.eval(IRApply(IRSymbol("Apply2"), (outer, IRSymbol("pyth"))))
         # inner fires → 1, then 3+1 = 4
         assert result == IRInteger(4)
 
@@ -271,13 +273,13 @@ class TestApply2Handler:
             IRInteger(0),
         )))
         target = IRApply(COS, (IRSymbol("u"),))
-        result = vm.eval(IRApply(IRSymbol("Apply2"), (IRSymbol("sinzero"), target)))
+        result = vm.eval(IRApply(IRSymbol("Apply2"), (target, IRSymbol("sinzero"))))
         assert result == target
 
     def test_apply2_unknown_rule_returns_target(self) -> None:
         vm = _make_vm()
         target = IRApply(SIN, (IRSymbol("z"),))
-        result = vm.eval(IRApply(IRSymbol("Apply2"), (IRSymbol("ghost"), target)))
+        result = vm.eval(IRApply(IRSymbol("Apply2"), (target, IRSymbol("ghost"))))
         assert result == target
 
     def test_apply2_malformed_wrong_arity(self) -> None:
@@ -299,7 +301,7 @@ class TestApply2Handler:
         )))
         # 5^0 should fire
         target = IRApply(POW, (IRInteger(5), IRInteger(0)))
-        result = vm.eval(IRApply(IRSymbol("Apply2"), (IRSymbol("powzero"), target)))
+        result = vm.eval(IRApply(IRSymbol("Apply2"), (target, IRSymbol("powzero"))))
         assert result == IRInteger(1)
 
 

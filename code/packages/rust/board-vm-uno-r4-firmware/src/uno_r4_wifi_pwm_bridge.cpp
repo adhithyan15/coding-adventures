@@ -4,6 +4,7 @@
 #include <new>
 
 #include "Arduino.h"
+#include "Wire.h"
 #include "hal_data.h"
 #include "pwm.h"
 #include "pinmux.inc"
@@ -13,15 +14,27 @@ namespace {
 
 constexpr uint8_t kPwmPins[] = {3, 5, 6, 9, 10, 11};
 constexpr uint8_t kAdcPins[] = {14, 15, 16, 17, 18, 19};
+constexpr uint8_t kDacPin = 14;
+constexpr uint16_t kDacU12Max = 0x0FFFu;
 constexpr size_t kOperatorNewHeapBytes = 2048;
 constexpr uint32_t kAdcRawMax = (1u << BSP_FEATURE_ADC_MAX_RESOLUTION_BITS) - 1u;
 constexpr uint32_t kAdcNormalizedMax = 65535u;
 constexpr uint32_t kAdcScanPollLimit = 100000u;
+constexpr uint16_t kI2cMax7BitAddress = 0x7Fu;
 
 struct PwmSlot {
   uint8_t pin;
   alignas(PwmOut) uint8_t storage[sizeof(PwmOut)];
   PwmOut *pwm;
+  bool started;
+};
+
+struct I2cSlot {
+  uint8_t bus;
+  uint8_t scl_pin;
+  uint8_t sda_pin;
+  alignas(TwoWire) uint8_t storage[sizeof(TwoWire)];
+  TwoWire *wire;
   bool started;
 };
 
@@ -35,16 +48,33 @@ PwmSlot g_pwm_slots[] = {
   {10, {}, nullptr, false},
   {11, {}, nullptr, false},
 };
+I2cSlot g_i2c_slots[] = {
+  {0, WIRE_SCL_PIN, WIRE_SDA_PIN, {}, nullptr, false},
+  {1, WIRE1_SCL_PIN, WIRE1_SDA_PIN, {}, nullptr, false},
+};
 bool g_pwm_channels_reserved = false;
 adc_instance_ctrl_t g_board_vm_adc_ctrl = {};
 adc_extended_cfg_t g_board_vm_adc_extend = {};
 adc_cfg_t g_board_vm_adc_cfg = {};
 adc_channel_cfg_t g_board_vm_adc_channel_cfg = {};
 bool g_board_vm_adc_initialized = false;
+dac_instance_ctrl_t g_board_vm_dac_ctrl = {};
+dac_extended_cfg_t g_board_vm_dac_extend = {};
+dac_cfg_t g_board_vm_dac_cfg = {};
+bool g_board_vm_dac_opened = false;
 
 PwmSlot *find_slot(uint8_t pin) {
   for (auto &slot : g_pwm_slots) {
     if (slot.pin == pin) {
+      return &slot;
+    }
+  }
+  return nullptr;
+}
+
+I2cSlot *find_i2c_slot(uint8_t bus) {
+  for (auto &slot : g_i2c_slots) {
+    if (slot.bus == bus) {
       return &slot;
     }
   }
@@ -93,12 +123,21 @@ PwmOut *slot_pwm(PwmSlot &slot) {
   return slot.pwm;
 }
 
+TwoWire *slot_wire(I2cSlot &slot) {
+  if (slot.wire == nullptr) {
+    slot.wire = new (slot.storage) TwoWire(slot.scl_pin, slot.sda_pin);
+  }
+  return slot.wire;
+}
+
 bool pin_cfg_matches(uint16_t cfg, PinCfgReq_t req) {
   switch (req) {
     case PIN_CFG_REQ_PWM:
       return IS_PIN_PWM(cfg);
     case PIN_CFG_REQ_ADC:
       return IS_PIN_ANALOG(cfg);
+    case PIN_CFG_REQ_DAC:
+      return IS_PIN_DAC(cfg);
     default:
       return false;
   }
@@ -171,6 +210,17 @@ uint16_t normalize_adc_sample(uint16_t raw) {
   return static_cast<uint16_t>(scaled);
 }
 
+void initialize_dac_config(uint8_t channel) {
+  g_board_vm_dac_extend.enable_charge_pump = false;
+  g_board_vm_dac_extend.output_amplifier_enabled = false;
+  g_board_vm_dac_extend.internal_output_enabled = false;
+  g_board_vm_dac_extend.data_format = DAC_DATA_FORMAT_FLUSH_RIGHT;
+
+  g_board_vm_dac_cfg.channel = channel;
+  g_board_vm_dac_cfg.ad_da_synchronized = false;
+  g_board_vm_dac_cfg.p_extend = &g_board_vm_dac_extend;
+}
+
 }  // namespace
 
 void *operator new(size_t size) {
@@ -188,6 +238,12 @@ void operator delete[](void *) noexcept {}
 void operator delete(void *, size_t) noexcept {}
 
 void operator delete[](void *, size_t) noexcept {}
+
+// Wire.cpp uses micros() only as a transaction timeout clock in this firmware.
+unsigned long micros() {
+  static unsigned long ticks = 0;
+  return ++ticks;
+}
 
 extern "C" const PinMuxCfg_t g_pin_cfg[] = {
   {BSP_IO_PORT_03_PIN_01, P301}, /* (0) D0 */
@@ -335,5 +391,205 @@ extern "C" bool board_vm_uno_r4_adc_read(uint8_t pin, uint16_t *sample) {
   }
 
   *sample = normalize_adc_sample(raw);
+  return true;
+}
+
+extern "C" bool board_vm_uno_r4_dac_write_u12(uint8_t pin, uint16_t sample) {
+  if (pin != kDacPin || sample > kDacU12Max) {
+    return false;
+  }
+
+  auto cfg = getPinCfgs(pin, PIN_CFG_REQ_DAC);
+  if (cfg[0] == 0 || GET_CHANNEL(cfg[0]) >= DAC12_HOWMANY) {
+    return false;
+  }
+  uint8_t channel = GET_CHANNEL(cfg[0]);
+
+  fsp_err_t pin_status = R_IOPORT_PinCfg(
+      nullptr,
+      g_pin_cfg[pin].pin,
+      static_cast<uint32_t>(IOPORT_CFG_ANALOG_ENABLE | IOPORT_CFG_PERIPHERAL_PIN |
+                            IOPORT_PERIPHERAL_CAC_AD));
+  if (pin_status != FSP_SUCCESS) {
+    return false;
+  }
+
+  if (!g_board_vm_dac_opened) {
+    initialize_dac_config(channel);
+    if (R_DAC_Open(&g_board_vm_dac_ctrl, &g_board_vm_dac_cfg) != FSP_SUCCESS) {
+      return false;
+    }
+    if (R_DAC_Write(&g_board_vm_dac_ctrl, sample) != FSP_SUCCESS) {
+      return false;
+    }
+    if (R_DAC_Start(&g_board_vm_dac_ctrl) != FSP_SUCCESS) {
+      return false;
+    }
+    g_board_vm_dac_opened = true;
+    return true;
+  }
+
+  return R_DAC_Write(&g_board_vm_dac_ctrl, sample) == FSP_SUCCESS;
+}
+
+extern "C" bool board_vm_uno_r4_i2c_write_u8(uint8_t bus, uint16_t address, uint8_t byte) {
+  if (address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  wire->beginTransmission(address);
+  if (wire->write(byte) != 1) {
+    return false;
+  }
+  return wire->endTransmission() == END_TX_OK;
+}
+
+extern "C" bool board_vm_uno_r4_i2c_write(uint8_t bus, uint16_t address, const uint8_t *bytes, size_t len) {
+  if ((bytes == nullptr && len != 0) || address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  wire->beginTransmission(address);
+  if (len != 0 && wire->write(bytes, len) != len) {
+    return false;
+  }
+  return wire->endTransmission() == END_TX_OK;
+}
+
+extern "C" bool board_vm_uno_r4_i2c_read_u8(uint8_t bus, uint16_t address, uint8_t *byte) {
+  if (byte == nullptr || address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  if (wire->requestFrom(static_cast<uint8_t>(address), static_cast<size_t>(1)) != 1) {
+    return false;
+  }
+
+  int value = wire->read();
+  if (value < 0) {
+    return false;
+  }
+
+  *byte = static_cast<uint8_t>(value);
+  return true;
+}
+
+extern "C" bool board_vm_uno_r4_i2c_read(uint8_t bus, uint16_t address, uint8_t *bytes, size_t len, size_t *read_len) {
+  if ((bytes == nullptr && len != 0) || read_len == nullptr || address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  if (len == 0) {
+    *read_len = 0;
+    return true;
+  }
+
+  if (wire->requestFrom(static_cast<uint8_t>(address), len) != len) {
+    return false;
+  }
+
+  for (size_t index = 0; index < len; ++index) {
+    int value = wire->read();
+    if (value < 0) {
+      return false;
+    }
+    bytes[index] = static_cast<uint8_t>(value);
+  }
+
+  *read_len = len;
+  return true;
+}
+
+extern "C" bool board_vm_uno_r4_i2c_transfer(uint8_t bus, uint16_t address, const uint8_t *write_bytes,
+                                             size_t write_len, uint8_t *read_bytes, size_t read_len,
+                                             size_t *actual_read_len) {
+  if ((write_bytes == nullptr && write_len != 0) || (read_bytes == nullptr && read_len != 0) ||
+      actual_read_len == nullptr || address > kI2cMax7BitAddress) {
+    return false;
+  }
+
+  I2cSlot *slot = find_i2c_slot(bus);
+  if (slot == nullptr) {
+    return false;
+  }
+
+  TwoWire *wire = slot_wire(*slot);
+  if (!slot->started) {
+    wire->begin();
+    slot->started = true;
+  }
+
+  if (write_len != 0) {
+    wire->beginTransmission(address);
+    if (wire->write(write_bytes, write_len) != write_len) {
+      return false;
+    }
+    if (wire->endTransmission(read_len == 0) != END_TX_OK) {
+      return false;
+    }
+  }
+
+  if (read_len == 0) {
+    *actual_read_len = 0;
+    return true;
+  }
+
+  if (wire->requestFrom(static_cast<uint8_t>(address), read_len) != read_len) {
+    return false;
+  }
+
+  for (size_t index = 0; index < read_len; ++index) {
+    int value = wire->read();
+    if (value < 0) {
+      return false;
+    }
+    read_bytes[index] = static_cast<uint8_t>(value);
+  }
+
+  *actual_read_len = read_len;
   return true;
 }

@@ -64,6 +64,7 @@
 
 pub mod ast_extract;
 pub mod ast_nodes;
+pub mod type_decls;
 
 use std::fmt;
 use std::sync::OnceLock;
@@ -101,9 +102,24 @@ fn twig_parser_grammar() -> &'static ParserGrammar {
 pub use ast_extract::{
     check_membership_int_count, extract_program, MAX_AST_DEPTH, MAX_MEMBERSHIP_INT_VALUES,
 };
+pub use type_decls::emit_type_declarations;
 pub use ast_nodes::{
-    Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
+    // ── Atoms ─────────────────────────────────────────────────────────────
+    Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let,
+    // LANG52: sequential let* bindings
+    LetStar,
+    NilLit, Program,
+    // LANG51: string literal AST node
+    StrLit, SymLit,
     TypeAnnotation, VarRef,
+    // ── LANG48 / TW05-A — type expressions ────────────────────────────────
+    TypeExpr,
+    // ── LANG48 / TW05-A — module metadata ────────────────────────────────
+    ModuleInfo, TypedMode,
+    // ── LANG48 / TW05-A — new top-level declarations ─────────────────────
+    RecordDef, RecordField, TypeAlias, UnionDef, UnionVariant,
+    // ── LANG48 / TW05-A — match expression ───────────────────────────────
+    Match, MatchArm, MatchPat,
 };
 
 // ---------------------------------------------------------------------------
@@ -299,6 +315,9 @@ mod tests {
         match p.forms.into_iter().next().expect("at least one form") {
             Form::Expr(e) => e,
             Form::Define(_) => panic!("expected an expression form, got define"),
+            Form::TypeAlias(_) => panic!("expected an expression form, got type alias"),
+            Form::RecordDef(_) => panic!("expected an expression form, got record def"),
+            Form::UnionDef(_) => panic!("expected an expression form, got union def"),
         }
     }
 
@@ -546,6 +565,334 @@ mod tests {
         assert!(matches!(&p.forms[0], Form::Define(_)));
         assert!(matches!(&p.forms[1], Form::Define(_)));
         assert!(matches!(&p.forms[2], Form::Expr(_)));
+    }
+
+    // ---- LANG48 / TW05-A ----
+
+    // -- (module …) parsing --
+
+    #[test]
+    fn module_form_no_clauses() {
+        let p = parse("(module mylib)").unwrap();
+        assert!(p.forms.is_empty(), "module form should not appear as a Form");
+        let mi = p.module_info.expect("module_info should be Some");
+        assert_eq!(mi.name, "mylib");
+        assert_eq!(mi.typed_mode, None);
+        assert!(mi.exports.is_empty());
+        assert!(mi.imports.is_empty());
+    }
+
+    #[test]
+    fn module_form_with_typed_strict() {
+        let p = parse("(module compiler/lexer (typed strict))").unwrap();
+        let mi = p.module_info.unwrap();
+        assert_eq!(mi.name, "compiler/lexer");
+        assert_eq!(mi.typed_mode, Some(TypedMode::Strict));
+    }
+
+    #[test]
+    fn module_form_with_typed_lenient() {
+        let p = parse("(module foo (typed lenient))").unwrap();
+        let mi = p.module_info.unwrap();
+        assert_eq!(mi.typed_mode, Some(TypedMode::Lenient));
+    }
+
+    #[test]
+    fn module_form_with_typed_off() {
+        let p = parse("(module foo (typed off))").unwrap();
+        let mi = p.module_info.unwrap();
+        assert_eq!(mi.typed_mode, Some(TypedMode::Off));
+    }
+
+    #[test]
+    fn module_form_with_export_import() {
+        let p = parse("(module stdlib/io (export read write) (import stdlib/base))").unwrap();
+        let mi = p.module_info.unwrap();
+        assert_eq!(mi.name, "stdlib/io");
+        assert_eq!(mi.exports, vec!["read".to_string(), "write".to_string()]);
+        assert_eq!(mi.imports, vec!["stdlib/base".to_string()]);
+    }
+
+    #[test]
+    fn module_form_full_clauses() {
+        let src = r#"
+          (module compiler/lexer
+            (typed strict)
+            (export lex)
+            (import compiler/token compiler/span))
+          (define x 1)
+        "#;
+        let p = parse(src).unwrap();
+        assert_eq!(p.forms.len(), 1);
+        let mi = p.module_info.unwrap();
+        assert_eq!(mi.name, "compiler/lexer");
+        assert_eq!(mi.typed_mode, Some(TypedMode::Strict));
+        assert_eq!(mi.exports, vec!["lex".to_string()]);
+        assert_eq!(mi.imports, vec!["compiler/token".to_string(), "compiler/span".to_string()]);
+    }
+
+    #[test]
+    fn program_without_module_has_no_module_info() {
+        let p = parse("(define x 42)").unwrap();
+        assert!(p.module_info.is_none());
+    }
+
+    // -- (type …) alias --
+
+    #[test]
+    fn type_alias_bare_name() {
+        let p = parse("(type Nat int)").unwrap();
+        assert_eq!(p.forms.len(), 1);
+        match &p.forms[0] {
+            Form::TypeAlias(ta) => {
+                assert_eq!(ta.name, "Nat");
+                assert_eq!(ta.expr, TypeExpr::Name("int".to_string()));
+            }
+            other => panic!("expected TypeAlias, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn type_alias_range() {
+        let p = parse("(type Byte (Int 0 256))").unwrap();
+        match &p.forms[0] {
+            Form::TypeAlias(ta) => {
+                assert_eq!(ta.name, "Byte");
+                // (Int 0 256) → List([Name("Int"), Int(0), Int(256)])
+                assert_eq!(
+                    ta.expr,
+                    TypeExpr::List(vec![
+                        TypeExpr::Name("Int".to_string()),
+                        TypeExpr::Int(0),
+                        TypeExpr::Int(256),
+                    ])
+                );
+            }
+            other => panic!("expected TypeAlias, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn type_alias_dependent_fn_type() {
+        // (type Index (fn (len) (Int 0 len)))
+        let p = parse("(type Index (fn (len) (Int 0 len)))").unwrap();
+        match &p.forms[0] {
+            Form::TypeAlias(ta) => {
+                assert_eq!(ta.name, "Index");
+                // Verify the outer List has 3 children: fn, (len), (Int 0 len)
+                match &ta.expr {
+                    TypeExpr::List(parts) => {
+                        assert_eq!(parts.len(), 3);
+                        assert_eq!(parts[0], TypeExpr::Name("fn".to_string()));
+                    }
+                    other => panic!("expected List, got {other:?}"),
+                }
+            }
+            other => panic!("expected TypeAlias, got {other:?}"),
+        }
+    }
+
+    // -- (record …) --
+
+    #[test]
+    fn record_def_simple() {
+        let p = parse("(record Span (start : Nat) (end : Nat))").unwrap();
+        assert_eq!(p.forms.len(), 1);
+        match &p.forms[0] {
+            Form::RecordDef(r) => {
+                assert_eq!(r.name, "Span");
+                assert_eq!(r.fields.len(), 2);
+                assert_eq!(r.fields[0].name, "start");
+                assert_eq!(r.fields[1].name, "end");
+            }
+            other => panic!("expected RecordDef, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn record_def_with_opaque_type() {
+        let p = parse("(record Token (kind : TokenKind) (span : Span))").unwrap();
+        match &p.forms[0] {
+            Form::RecordDef(r) => {
+                assert_eq!(r.fields[0].name, "kind");
+                // TokenKind is not a LANG23 type → Opaque(Name("TokenKind"))
+                assert!(
+                    matches!(
+                        &r.fields[0].type_annotation,
+                        TypeAnnotation::Opaque(TypeExpr::Name(n)) if n == "TokenKind"
+                    ),
+                    "expected Opaque(Name(\"TokenKind\")), got {:?}",
+                    r.fields[0].type_annotation
+                );
+            }
+            other => panic!("expected RecordDef, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn record_def_zero_fields() {
+        // A record with no fields is grammatically valid.
+        let p = parse("(record Unit)").unwrap();
+        match &p.forms[0] {
+            Form::RecordDef(r) => {
+                assert_eq!(r.name, "Unit");
+                assert!(r.fields.is_empty());
+            }
+            other => panic!("expected RecordDef, got {other:?}"),
+        }
+    }
+
+    // -- (union …) --
+
+    #[test]
+    fn union_def_two_variants() {
+        let p = parse("(union Expr (IntLit (value : int)) (NameRef (name : any)))").unwrap();
+        assert_eq!(p.forms.len(), 1);
+        match &p.forms[0] {
+            Form::UnionDef(u) => {
+                assert_eq!(u.name, "Expr");
+                assert_eq!(u.variants.len(), 2);
+                assert_eq!(u.variants[0].name, "IntLit");
+                assert_eq!(u.variants[0].fields.len(), 1);
+                assert_eq!(u.variants[0].fields[0].name, "value");
+                assert_eq!(u.variants[1].name, "NameRef");
+            }
+            other => panic!("expected UnionDef, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn union_def_unit_variant() {
+        // Variants without fields are valid.
+        let p = parse("(union Bool (True) (False))").unwrap();
+        match &p.forms[0] {
+            Form::UnionDef(u) => {
+                assert_eq!(u.variants.len(), 2);
+                assert!(u.variants[0].fields.is_empty());
+                assert!(u.variants[1].fields.is_empty());
+            }
+            other => panic!("expected UnionDef, got {other:?}"),
+        }
+    }
+
+    // -- (match …) --
+
+    #[test]
+    fn match_variant_arm() {
+        let e = first_expr("(match x ((IntLit v s) v))");
+        match e {
+            Expr::Match(m) => {
+                assert!(matches!(*m.scrutinee, Expr::VarRef(_)));
+                assert_eq!(m.arms.len(), 1);
+                match &m.arms[0].pat {
+                    MatchPat::Variant { name, bindings } => {
+                        assert_eq!(name, "IntLit");
+                        assert_eq!(bindings, &["v".to_string(), "s".to_string()]);
+                    }
+                    other => panic!("expected Variant, got {other:?}"),
+                }
+                assert_eq!(m.arms[0].body.len(), 1);
+            }
+            other => panic!("expected Match, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn match_wildcard_arm() {
+        let e = first_expr("(match x (_ 42))");
+        match e {
+            Expr::Match(m) => {
+                assert_eq!(m.arms.len(), 1);
+                assert!(matches!(m.arms[0].pat, MatchPat::Wildcard));
+            }
+            other => panic!("expected Match, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn match_binding_arm() {
+        let e = first_expr("(match x (y y))");
+        match e {
+            Expr::Match(m) => {
+                assert_eq!(m.arms.len(), 1);
+                assert!(
+                    matches!(&m.arms[0].pat, MatchPat::Binding(n) if n == "y"),
+                    "expected Binding(\"y\"), got {:?}",
+                    m.arms[0].pat
+                );
+            }
+            other => panic!("expected Match, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn match_multi_arm() {
+        let e = first_expr("(match expr ((IntLit v s) v) ((NameRef n s) n) (_ nil))");
+        match e {
+            Expr::Match(m) => {
+                assert_eq!(m.arms.len(), 3);
+                assert!(matches!(m.arms[0].pat, MatchPat::Variant { .. }));
+                assert!(matches!(m.arms[1].pat, MatchPat::Variant { .. }));
+                assert!(matches!(m.arms[2].pat, MatchPat::Wildcard));
+            }
+            other => panic!("expected Match, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn match_multi_body_arm() {
+        // An arm body can contain multiple expressions; only the last is the value.
+        let e = first_expr("(match x ((A v) (begin 1 2) v))");
+        match e {
+            Expr::Match(m) => {
+                assert_eq!(m.arms[0].body.len(), 2);
+            }
+            other => panic!("expected Match, got {other:?}"),
+        }
+    }
+
+    // -- type_annotation round-trips --
+
+    #[test]
+    fn type_annotation_bare_int_kind() {
+        // `int` as a LANG23 bare kind → UnrefinedInt
+        let p = parse("(define x : int 42)").unwrap();
+        match &p.forms[0] {
+            Form::Define(d) => {
+                assert_eq!(d.type_annotation, Some(TypeAnnotation::UnrefinedInt));
+            }
+            other => panic!("expected Define, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn type_annotation_range_int() {
+        let p = parse("(define x : (Int 0 128) 42)").unwrap();
+        match &p.forms[0] {
+            Form::Define(d) => {
+                assert_eq!(
+                    d.type_annotation,
+                    Some(TypeAnnotation::RangeInt { lo: 0, hi: 128 })
+                );
+            }
+            other => panic!("expected Define, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn type_annotation_opaque_parametric() {
+        // (Index source-len) is not LANG23 → Opaque
+        let p = parse("(define x : (Index source-len) 0)").unwrap();
+        match &p.forms[0] {
+            Form::Define(d) => {
+                assert!(
+                    matches!(&d.type_annotation, Some(TypeAnnotation::Opaque(_))),
+                    "expected Opaque, got {:?}",
+                    d.type_annotation
+                );
+            }
+            other => panic!("expected Define, got {other:?}"),
+        }
     }
 
     // ---- Position tracking ----

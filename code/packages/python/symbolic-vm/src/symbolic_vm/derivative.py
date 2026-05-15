@@ -61,14 +61,30 @@ def differentiate() -> Handler:
     """Return the ``D`` handler for the symbolic backend."""
 
     def handler(vm, expr: IRApply) -> IRNode:
-        if len(expr.args) != 2:
-            raise TypeError(f"D expects 2 arguments, got {len(expr.args)}")
-        f, x = expr.args
+        # Accept both  D(f, x)  and  D(f, x, n)  for the n-th derivative.
+        if len(expr.args) not in (2, 3):
+            raise TypeError(f"D expects 2 or 3 arguments, got {len(expr.args)}")
+        f, x = expr.args[0], expr.args[1]
         if not isinstance(x, IRSymbol):
             # Differentiation with respect to something other than a
             # plain symbol is not supported. Leave the expression.
             return expr
-        return vm.eval(_diff(f, x))
+        n = 1
+        if len(expr.args) == 3:
+            order = expr.args[2]
+            if not isinstance(order, IRInteger):
+                # Symbolic order — leave unevaluated.
+                return expr
+            n = order.value
+            if n < 0:
+                return expr  # Negative order not supported.
+            if n == 0:
+                return vm.eval(f)  # 0th derivative = identity.
+        # Apply differentiation n times.
+        result = f
+        for _ in range(n):
+            result = vm.eval(_diff(result, x))
+        return result
 
     return handler
 

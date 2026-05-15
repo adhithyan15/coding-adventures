@@ -25,12 +25,12 @@ Source snapshot:
 | Built-in LED | D13 | implemented through GPIO | GPIO metadata should identify `onboard_led_pin = 13` |
 | Millisecond time | runtime clock/sleep | implemented | `time.sleep_ms`, `time.now_ms` |
 | RAM program execution | protocol upload/run path | implemented | `program.ram_exec` |
-| LED matrix | 12x8 matrix, 96 pixels, UNO R4 WiFi only | implemented by this tranche | `led_matrix.frame` |
-| PWM output | D3, D5, D6, D9, D10, D11 in the Arduino variant init path | pending | `pwm.open`, `pwm.set_duty_u16`, `pwm.close` |
-| Analog input | A0-A5 | pending | `adc.open`, `adc.read_u16`, `adc.close` |
-| DAC output | A0, one 12-bit DAC channel | pending | `dac.write_u12` or `analog.write` |
-| I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | pending | `i2c.open`, `i2c.write`, `i2c.read`, `i2c.transfer` |
-| SPI master | MOSI D11, MISO D12, SCK D13, CS D10 | pending | `spi.open`, `spi.transfer`, `spi.close` |
+| LED matrix | 12x8 matrix, 96 pixels, UNO R4 WiFi only | implemented | `led_matrix.frame` |
+| PWM output | D3, D5, D6, D9, D10, D11 in the Arduino variant init path | implemented as direct write | `pwm.write` |
+| Analog input | A0-A5 | implemented as direct read | `adc.read` |
+| DAC output | A0, one 12-bit DAC channel | implemented as direct write | `dac.write_u12` |
+| I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata, handle open, single-byte write/read, byte-buffer write/read, and write-read transfer implemented | `i2c.open`, `i2c.write_u8`, `i2c.read_u8`, `i2c.write`, `i2c.read`, `i2c.transfer` |
+| SPI master | COPI D11, CIPO D12, SCK D13, conventional CS D10 | bus metadata and handle open implemented | `spi.open`; transfer/read/write capabilities follow |
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | partially transport-only | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | pending | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | pending | `rtc.now`, `rtc.set`, alarms/events later |
@@ -61,12 +61,20 @@ reject conflicting handles.
 
 1. Keep `gpio.*`, `time.*`, `program.ram_exec`, transports, and
    `led_matrix.frame` as the proven vertical slice.
-2. Add descriptor metadata for header pins, hidden pins, onboard LED, LED
-   matrix dimensions, PWM-capable pins, analog-capable pins, and bus pin groups.
-3. Implement PWM and ADC next because they extend the existing handle model
-   without requiring multi-device bus transactions.
-4. Implement I2C and SPI as bus handles with explicit transfer boundaries.
-5. Add DAC, UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
+2. Descriptor metadata for header pins, onboard LED, LED matrix dimensions,
+   PWM-capable pins, and analog-capable pins is present; keep deepening it with
+   hidden pins, reserved pins, and bus pin groups.
+3. `pwm.write`, `adc.read`, and `dac.write_u12` are the first direct
+   analog-adjacent VM operations. Add handle-oriented variants only when a
+   later streaming or event tranche needs persistent resource ownership.
+4. Implement I2C and SPI as bus handles with explicit transfer boundaries;
+   `i2c.open` establishes the first I2C handle tranche, while `i2c.write_u8`
+   and `i2c.read_u8` prove the Rust-owned transfer path through Arduino
+   `Wire`/`Wire1`. `i2c.write`, `i2c.read`, and `i2c.transfer` cover the
+   bounded byte-buffer transfer path. `spi.open` establishes the SPI handle
+   tranche over Rust-owned UNO R4 bus metadata; SPI transfer commands should
+   layer on that handle.
+5. Add UART, CAN, RTC, watchdog, EEPROM/store, and WiFi/network
    capabilities in separate tranches with conformance tests.
 
 Every tranche should include the same layers: spec entry, IR capability id,

@@ -47,14 +47,36 @@ program = [ module_form ] { form } ;
 # at-most-one-export-clause, etc.) live in ``twig.ast_extract``
 # rather than the grammar so error messages can carry context.
 module_form    = LPAREN "module" NAME { module_clause } RPAREN ;
-module_clause  = export_clause | import_clause ;
+module_clause  = export_clause | import_clause | typed_clause ;
 export_clause  = LPAREN "export" { NAME } RPAREN ;
 import_clause  = LPAREN "import" { NAME } RPAREN ;
+# TW05-A / LANG48 — typed mode declaration inside a module form.
+# NAME here is one of: strict, lenient, off.
+# The extractor validates the value; the grammar accepts any NAME so
+# unknown future modes parse without a grammar update.
+typed_clause   = LPAREN "typed" NAME RPAREN ;
 
 # A form is either a top-level (define ...) or any expression.
 # Top-level expressions accumulate into the synthesised ``main``
 # function whose value is the value of the final expression.
-form = define | expr ;
+#
+# TW05-A / LANG48 — new top-level declarations come before ``expr``
+# so their leading keywords are not consumed by the apply rule.
+form = define | type_alias | record_def | union_def | expr ;
+
+# (type Name type_annotation) — compile-time type alias.
+# Erased in TW05-A; used by the type checker in TW05-B.
+type_alias = LPAREN "type" NAME type_annotation RPAREN ;
+
+# (record Name (field : Type) ...) — named product type.
+# Lowers to a constructor + positional accessors in TW05-A.
+record_def   = LPAREN "record" NAME { record_field } RPAREN ;
+record_field = LPAREN NAME COLON type_annotation RPAREN ;
+
+# (union Name (Variant (field : Type) ...) ...) — tagged sum type.
+# Lowers to integer-tagged constructors in TW05-A.
+union_def     = LPAREN "union" NAME { union_variant } RPAREN ;
+union_variant = LPAREN NAME { record_field } RPAREN ;
 
 # (define name expr)                                        — value binding
 # (define name : type_annotation expr)                       — annotated value binding
@@ -87,17 +109,29 @@ name_or_signature = NAME [ COLON type_annotation ]
 # `(NAME : type_annotation)` pair (LANG23-annotated).
 typed_param = LPAREN NAME COLON type_annotation RPAREN | NAME ;
 
-# type_annotation covers the LANG23 v1 predicate vocabulary:
-#   NAME                              — unrefined kind: ``int``, ``any``, ``bool``, etc.
-#   (Int lo hi)                       — Range: (Int lo hi) ≡ lo ≤ x < hi (exclusive upper)
-#   (Member int (v0 v1 ...))          — Membership: value must be one of the listed integers
+# type_annotation — general recursive type expression (LANG48 / TW05-A).
 #
-# ``Name`` matches any NAME token; ``INTEGER`` matches the existing signed-integer
-# literal token.  The grammar-parser tries alternatives left-to-right; the two-integer
-# form must come before the bare-name fallback to prevent premature commitment.
-type_annotation = LPAREN NAME LPAREN { INTEGER } RPAREN RPAREN
-                | LPAREN NAME INTEGER INTEGER RPAREN
-                | NAME ;
+# The former LANG23 grammar accepted only three narrowly-shaped forms.
+# TW05-A replaces it with a fully general s-expression grammar that
+# accepts any combination of names, integers, and balanced parens.
+# This covers all the TW05 annotation vocabulary:
+#
+#   NAME                        — bare kind: ``int``, ``any``, ``bool``,
+#                                 ``Nat``, ``String``, ``TokenKind``, ``_``, …
+#   INTEGER                     — integer literal bound: ``0``, ``128``, …
+#   LPAREN type_annotation* RPAREN
+#                               — parenthesised type form:
+#                                 (Int 0 128), (List Expr), (Index source-len),
+#                                 (fn (n) (Int 0 n)), (where Int (and …)), …
+#
+# The extractor still recognises the LANG23 subset (Int, Member) and
+# converts them to TypeAnnotation::RangeInt / MembershipInt.  Everything
+# else is stored as TypeAnnotation::Opaque(TypeExpr) for TW05-B.
+#
+# Termination: a parenthesised type_annotation is bounded by its own
+# RPAREN, so the `{ type_annotation }` repetition stops cleanly when
+# the parser sees the outer closing RPAREN.
+type_annotation = LPAREN { type_annotation } RPAREN | NAME | INTEGER ;
 
 # An expression is one of:
 #   - an atom (literal or bare name reference)
@@ -105,7 +139,7 @@ type_annotation = LPAREN NAME LPAREN { INTEGER } RPAREN RPAREN
 #   - a parenthesised compound form
 expr = atom | quoted | compound ;
 
-atom = INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;
+atom = STRING | INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;
 
 quoted = QUOTE NAME ;
 
@@ -114,9 +148,11 @@ quoted = QUOTE NAME ;
 # form is wrapped in its own non-terminal for clarity.
 compound = if_form
          | let_form
+         | let_star_form
          | begin_form
          | lambda_form
          | quote_form
+         | match_form
          | apply ;
 
 if_form     = LPAREN "if"     expr expr expr RPAREN ;
@@ -125,6 +161,15 @@ if_form     = LPAREN "if"     expr expr expr RPAREN ;
 # Bindings are mutually independent (Scheme ``let``, not ``let*``).
 let_form    = LPAREN "let" LPAREN { binding } RPAREN expr { expr } RPAREN ;
 binding     = LPAREN NAME expr RPAREN ;
+
+# (let* ((x e1) (y e2) ...) body+)                                 — LANG52
+# Sequential bindings: each RHS is evaluated in a scope that includes all
+# prior bindings.  ``(let* ((a 1) (b (+ a 1))) b)`` → 2.
+# ``let*`` is listed AFTER ``let`` so that the ``(`` dispatch reaches ``let``
+# before ``let*``; in practice both start with LPAREN ``"let"``/``"let*"``
+# and PEG commit as soon as the keyword token differs, so order only matters
+# for the documented PEG preference rule.
+let_star_form = LPAREN "let*" LPAREN { binding } RPAREN expr { expr } RPAREN ;
 
 # (begin e1 e2 ...) — sequencing, returns the value of the last expr.
 begin_form  = LPAREN "begin" expr { expr } RPAREN ;
@@ -135,6 +180,22 @@ lambda_form = LPAREN "lambda" LPAREN { NAME } RPAREN expr { expr } RPAREN ;
 
 # (quote name) — alternative to '-prefix syntax for symbol literals.
 quote_form  = LPAREN "quote" NAME RPAREN ;
+
+# (match expr arm+) — pattern matching (TW05-A / LANG48).
+#
+# Arms appear in order; the first arm whose pattern matches wins.
+# Each arm is LPAREN match_pat expr { expr } RPAREN, where:
+#
+#   match_pat = LPAREN NAME { NAME } RPAREN   — variant pattern: (VariantName field1 …)
+#             | NAME                          — wildcard or binding: _ or varname
+#
+# The extractor distinguishes wildcard (NAME == "_") from binding
+# (any other NAME) at the AST level.  The compiler looks up the NAME
+# in its variant-tag table to determine whether it is a variant
+# constructor or a bare binding.
+match_form  = LPAREN "match" expr { match_arm } RPAREN ;
+match_arm   = LPAREN match_pat expr { expr } RPAREN ;
+match_pat   = LPAREN NAME { NAME } RPAREN | NAME ;
 
 # Generic application: (fn arg0 arg1 ...).  The function position
 # can itself be any expression (so higher-order calls like

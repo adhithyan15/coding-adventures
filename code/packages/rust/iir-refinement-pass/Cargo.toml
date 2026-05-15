@@ -1,0 +1,10 @@
+[package]
+name = "iir-refinement-pass"
+version = "0.1.0"
+edition = "2021"
+description = "LANG42 — pre-codegen pass that discharges refinement proof obligations against the IIR before machine-code emission."
+
+[dependencies]
+interpreter-ir         = { path = "../interpreter-ir" }
+lang-refined-types     = { path = "../lang-refined-types" }
+lang-refinement-checker = { path = "../lang-refinement-checker" }

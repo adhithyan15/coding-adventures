@@ -35,17 +35,23 @@ use board_vm_esp_rom::{
     DEFAULT_TIMEOUT_MS as ESP_DEFAULT_TIMEOUT_MS,
 };
 use board_vm_host::{
-    write_adc_read_module, write_blink_module, write_gpio_handle_close_module,
-    write_gpio_handle_read_module, write_gpio_handle_write_module, write_gpio_open_module,
-    write_gpio_read_module, write_gpio_write_module, write_led_matrix_frame_module, write_module,
-    write_pwm_write_module, write_time_now_module, write_time_sleep_ms_module, AdcReadProgram,
-    BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
-    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession,
-    LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
-    DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
-    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    i2c_transfer_module_len, i2c_write_module_len, write_adc_read_module, write_blink_module,
+    write_dac_write_u12_module, write_gpio_handle_close_module, write_gpio_handle_read_module,
+    write_gpio_handle_write_module, write_gpio_open_module, write_gpio_read_module,
+    write_gpio_write_module, write_i2c_open_module, write_i2c_read_module,
+    write_i2c_read_u8_module, write_i2c_transfer_module, write_i2c_write_module,
+    write_i2c_write_u8_module, write_led_matrix_frame_module, write_module, write_pwm_write_module,
+    write_spi_open_module, write_time_now_module, write_time_sleep_ms_module, AdcReadProgram,
+    BlinkProgram, DacWriteU12Program, GpioHandleCloseProgram, GpioHandleReadProgram,
+    GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError,
+    HostSession, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
+    I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram,
+    SpiOpenProgram, TimeNowProgram, TimeSleepMsProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
+    GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
+    I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN,
+    LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, TIME_NOW_MODULE_LEN,
     TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
@@ -57,8 +63,8 @@ use board_vm_protocol::{
 };
 use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
-    OnboardLed as TargetOnboardLed, WirelessInterfaceInfo as TargetWirelessInterface,
-    WirelessTransport as TargetWirelessTransport,
+    I2cBusInfo as TargetI2cBus, OnboardLed as TargetOnboardLed, SpiBusInfo as TargetSpiBus,
+    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -384,9 +390,32 @@ pub struct LanguageTargetInfo {
     pub led_matrix: Option<LanguageLedMatrix>,
     pub digital_pin_count: usize,
     pub digital_pins: Vec<LanguageDigitalPin>,
+    pub i2c_buses: Vec<LanguageI2cBus>,
+    pub spi_buses: Vec<LanguageSpiBus>,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageI2cBus {
+    pub bus: u8,
+    pub name: String,
+    pub sda_pin: u8,
+    pub scl_pin: u8,
+    pub qwiic: bool,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageSpiBus {
+    pub bus: u8,
+    pub name: String,
+    pub copi_pin: u8,
+    pub cipo_pin: u8,
+    pub sck_pin: u8,
+    pub default_cs_pin: u8,
+    pub notes: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -399,6 +428,7 @@ pub struct LanguageDigitalPin {
     pub supports_pulldown: bool,
     pub supports_adc: bool,
     pub supports_pwm: bool,
+    pub supports_dac: bool,
     pub supports_touch: bool,
     pub supports_interrupt: bool,
     pub boot_strap: bool,
@@ -1061,6 +1091,8 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .iter()
             .map(language_digital_pin)
             .collect(),
+        i2c_buses: target.i2c_buses.iter().map(language_i2c_bus).collect(),
+        spi_buses: target.spi_buses.iter().map(language_spi_bus).collect(),
         wireless: target
             .wireless
             .iter()
@@ -1085,10 +1117,34 @@ fn language_digital_pin(pin: &TargetDigitalPin) -> LanguageDigitalPin {
         supports_pulldown: pin.supports_pulldown,
         supports_adc: pin.supports_adc,
         supports_pwm: pin.supports_pwm,
+        supports_dac: pin.supports_dac,
         supports_touch: pin.supports_touch,
         supports_interrupt: pin.supports_interrupt,
         boot_strap: pin.boot_strap,
         notes: pin.notes.to_owned(),
+    }
+}
+
+fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
+    LanguageI2cBus {
+        bus: bus.bus,
+        name: bus.name.to_owned(),
+        sda_pin: bus.sda_pin,
+        scl_pin: bus.scl_pin,
+        qwiic: bus.qwiic,
+        notes: bus.notes.to_owned(),
+    }
+}
+
+fn language_spi_bus(bus: &TargetSpiBus) -> LanguageSpiBus {
+    LanguageSpiBus {
+        bus: bus.bus,
+        name: bus.name.to_owned(),
+        copi_pin: bus.copi_pin,
+        cipo_pin: bus.cipo_pin,
+        sck_pin: bus.sck_pin,
+        default_cs_pin: bus.default_cs_pin,
+        notes: bus.notes.to_owned(),
     }
 }
 
@@ -1593,6 +1649,62 @@ pub fn build_adc_read_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_adc_read_module(program, out)?)
+}
+
+pub fn build_dac_write_u12_module(
+    program: DacWriteU12Program,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_dac_write_u12_module(program, out)?)
+}
+
+pub fn build_i2c_open_module(
+    program: I2cOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_open_module(program, out)?)
+}
+
+pub fn build_spi_open_module(
+    program: SpiOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_spi_open_module(program, out)?)
+}
+
+pub fn build_i2c_write_u8_module(
+    program: I2cWriteU8Program,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_write_u8_module(program, out)?)
+}
+
+pub fn build_i2c_write_module(
+    program: I2cWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_write_module(program, out)?)
+}
+
+pub fn build_i2c_read_u8_module(
+    program: I2cReadU8Program,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_read_u8_module(program, out)?)
+}
+
+pub fn build_i2c_read_module(
+    program: I2cReadProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_read_module(program, out)?)
+}
+
+pub fn build_i2c_transfer_module(
+    program: I2cTransferProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_i2c_transfer_module(program, out)?)
 }
 
 pub fn build_raw_module(
@@ -2277,6 +2389,188 @@ pub unsafe extern "C" fn board_vm_language_adc_read_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_dac_write_u12_module(
+    pin: u8,
+    sample: u16,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_dac_write_u12_module(
+            DacWriteU12Program {
+                pin,
+                sample,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_open_module(
+    bus: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_open_module(I2cOpenProgram { bus, max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_spi_open_module(
+    bus: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_spi_open_module(SpiOpenProgram { bus, max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_write_u8_module(
+    address: u16,
+    byte: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_write_u8_module(
+            I2cWriteU8Program {
+                address,
+                byte,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_write_module(
+    address: u16,
+    bytes: *const u8,
+    bytes_len: u64,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let bytes = unsafe { in_slice(bytes, bytes_len, "bytes") }?;
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_write_module(
+            I2cWriteProgram {
+                address,
+                bytes,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_read_u8_module(
+    address: u16,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_read_u8_module(I2cReadU8Program { address, max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_read_module(
+    address: u16,
+    len: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_read_module(
+            I2cReadProgram {
+                address,
+                len,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_i2c_transfer_module(
+    address: u16,
+    write_bytes: *const u8,
+    write_bytes_len: u64,
+    read_len: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let write_bytes = unsafe { in_slice(write_bytes, write_bytes_len, "write_bytes") }?;
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_i2c_transfer_module(
+            I2cTransferProgram {
+                address,
+                write_bytes,
+                read_len,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_raw_module(
     flags: u8,
     max_stack: u8,
@@ -2592,6 +2886,52 @@ pub extern "C" fn board_vm_language_adc_read_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_dac_write_u12_module_len() -> u64 {
+    DAC_WRITE_U12_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_i2c_open_module_len() -> u64 {
+    I2C_OPEN_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_spi_open_module_len() -> u64 {
+    SPI_OPEN_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_i2c_write_u8_module_len() -> u64 {
+    I2C_WRITE_U8_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_i2c_write_module_len(byte_len: u64) -> u64 {
+    let Ok(byte_len) = usize::try_from(byte_len) else {
+        return 0;
+    };
+    i2c_write_module_len(byte_len).unwrap_or(0) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_i2c_read_u8_module_len() -> u64 {
+    I2C_READ_U8_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_i2c_read_module_len() -> u64 {
+    I2C_READ_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_i2c_transfer_module_len(write_len: u64) -> u64 {
+    let Ok(write_len) = usize::try_from(write_len) else {
+        return 0;
+    };
+    i2c_transfer_module_len(write_len).unwrap_or(0) as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_led_matrix_frame_module_len() -> u64 {
     LED_MATRIX_FRAME_MODULE_LEN as u64
 }
@@ -2818,8 +3158,29 @@ mod tests {
         let uno_a0 = uno.digital_pins.iter().find(|pin| pin.pin == 14).unwrap();
         assert_eq!(uno_a0.label, "A0/D14");
         assert!(uno_a0.supports_adc);
+        assert!(uno_a0.supports_dac);
+        assert_eq!(uno.i2c_buses.len(), 2);
+        assert_eq!(uno.i2c_buses[0].name, "Wire");
+        assert_eq!(uno.i2c_buses[0].sda_pin, 18);
+        assert_eq!(uno.i2c_buses[0].scl_pin, 19);
+        assert_eq!(uno.i2c_buses[1].name, "Wire1");
+        assert!(uno.i2c_buses[1].qwiic);
+        assert_eq!(uno.spi_buses.len(), 1);
+        assert_eq!(uno.spi_buses[0].name, "SPI");
+        assert_eq!(uno.spi_buses[0].copi_pin, 11);
+        assert_eq!(uno.spi_buses[0].cipo_pin, 12);
+        assert_eq!(uno.spi_buses[0].sck_pin, 13);
+        assert_eq!(uno.spi_buses[0].default_cs_pin, 10);
         assert!(uno.capabilities.contains(&"pwm.write".to_owned()));
         assert!(uno.capabilities.contains(&"adc.read".to_owned()));
+        assert!(uno.capabilities.contains(&"dac.write_u12".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.open".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.write_u8".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.read_u8".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.write".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.read".to_owned()));
+        assert!(uno.capabilities.contains(&"i2c.transfer".to_owned()));
+        assert!(uno.capabilities.contains(&"spi.open".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -3612,6 +3973,130 @@ mod tests {
         assert_eq!(adc_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(adc_status.len, ADC_READ_MODULE_LEN as u64);
 
+        let mut dac_module = [0u8; DAC_WRITE_U12_MODULE_LEN];
+        let dac_status = unsafe {
+            board_vm_language_dac_write_u12_module(
+                14,
+                0x0800,
+                2,
+                dac_module.as_mut_ptr(),
+                dac_module.len() as u64,
+            )
+        };
+        assert_eq!(dac_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(dac_status.len, DAC_WRITE_U12_MODULE_LEN as u64);
+
+        let mut i2c_module = [0u8; I2C_OPEN_MODULE_LEN];
+        let i2c_status = unsafe {
+            board_vm_language_i2c_open_module(
+                0,
+                2,
+                i2c_module.as_mut_ptr(),
+                i2c_module.len() as u64,
+            )
+        };
+        assert_eq!(i2c_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(i2c_status.len, I2C_OPEN_MODULE_LEN as u64);
+
+        let mut spi_module = [0u8; SPI_OPEN_MODULE_LEN];
+        let spi_status = unsafe {
+            board_vm_language_spi_open_module(
+                0,
+                2,
+                spi_module.as_mut_ptr(),
+                spi_module.len() as u64,
+            )
+        };
+        assert_eq!(spi_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(spi_status.len, SPI_OPEN_MODULE_LEN as u64);
+
+        let mut i2c_write_module = [0u8; I2C_WRITE_U8_MODULE_LEN];
+        let i2c_write_status = unsafe {
+            board_vm_language_i2c_write_u8_module(
+                0x3c,
+                0xa5,
+                4,
+                i2c_write_module.as_mut_ptr(),
+                i2c_write_module.len() as u64,
+            )
+        };
+        assert_eq!(i2c_write_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(i2c_write_status.len, I2C_WRITE_U8_MODULE_LEN as u64);
+
+        let i2c_payload = [0xde, 0xad, 0xbe];
+        let mut i2c_write_bytes_module = [0u8; board_vm_host::I2C_WRITE_MAX_MODULE_LEN];
+        let i2c_write_bytes_status = unsafe {
+            board_vm_language_i2c_write_module(
+                0x3c,
+                i2c_payload.as_ptr(),
+                i2c_payload.len() as u64,
+                4,
+                i2c_write_bytes_module.as_mut_ptr(),
+                i2c_write_bytes_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            i2c_write_bytes_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            i2c_write_bytes_status.len,
+            board_vm_language_i2c_write_module_len(i2c_payload.len() as u64)
+        );
+
+        let mut i2c_read_module = [0u8; I2C_READ_U8_MODULE_LEN];
+        let i2c_read_status = unsafe {
+            board_vm_language_i2c_read_u8_module(
+                0x3c,
+                3,
+                i2c_read_module.as_mut_ptr(),
+                i2c_read_module.len() as u64,
+            )
+        };
+        assert_eq!(i2c_read_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(i2c_read_status.len, I2C_READ_U8_MODULE_LEN as u64);
+
+        let mut i2c_read_bytes_module = [0u8; I2C_READ_MODULE_LEN];
+        let i2c_read_bytes_status = unsafe {
+            board_vm_language_i2c_read_module(
+                0x3c,
+                3,
+                4,
+                i2c_read_bytes_module.as_mut_ptr(),
+                i2c_read_bytes_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            i2c_read_bytes_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            i2c_read_bytes_status.len,
+            board_vm_language_i2c_read_module_len()
+        );
+
+        let i2c_transfer_payload = [0x00, 0x10];
+        let mut i2c_transfer_module = [0u8; board_vm_host::I2C_TRANSFER_MAX_MODULE_LEN];
+        let i2c_transfer_status = unsafe {
+            board_vm_language_i2c_transfer_module(
+                0x3c,
+                i2c_transfer_payload.as_ptr(),
+                i2c_transfer_payload.len() as u64,
+                3,
+                5,
+                i2c_transfer_module.as_mut_ptr(),
+                i2c_transfer_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            i2c_transfer_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            i2c_transfer_status.len,
+            board_vm_language_i2c_transfer_module_len(i2c_transfer_payload.len() as u64)
+        );
+
         let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];
         let gpio_read_status = unsafe {
             board_vm_language_gpio_read_module(
@@ -3828,7 +4313,7 @@ mod tests {
 
     #[test]
     fn rust_core_builds_raw_module_from_code_and_const_pool() {
-        let code = [0x00];
+        let code = [0x16, 0x00, 0x00, 0x02, 0x50];
         let const_pool = [0xAA, 0x55];
         let expected_len = raw_module_len(code.len() as u64, const_pool.len() as u64).unwrap();
         let mut module = vec![0u8; expected_len];
@@ -3838,7 +4323,10 @@ mod tests {
         assert_eq!(len, expected_len);
         assert_eq!(
             module,
-            [0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x02, 0xAA, 0x55,]
+            [
+                0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x16, 0x00, 0x00, 0x02, 0x50,
+                0x02, 0xAA, 0x55,
+            ]
         );
     }
 
@@ -3964,6 +4452,28 @@ mod tests {
                 assert_eq!(report.returns, vec![LanguageValue::U32(1234)]);
             }
             other => panic!("unexpected run response body: {other:?}"),
+        }
+
+        let run = RunReportHeader {
+            program_id: 8,
+            status: RunStatus::Halted,
+            instructions_executed: 43,
+            elapsed_ms: 9,
+            stack_depth: 0,
+            open_handles: 0,
+            return_count: 1,
+        };
+        let mut payload_len =
+            board_vm_protocol::encode_run_report_header(&run, &mut payload).unwrap();
+        payload_len +=
+            encode_value(&Value::Bytes(&[0xCA, 0xFE]), &mut payload[payload_len..]).unwrap();
+        let decoded = decode_response_fixture(MessageType::RUN_REPORT, 14, &payload[..payload_len]);
+        match decoded.body {
+            DecodedLanguageResponseBody::RunReport(report) => {
+                assert_eq!(report.program_id, 8);
+                assert_eq!(report.returns, vec![LanguageValue::Bytes(vec![0xCA, 0xFE])]);
+            }
+            other => panic!("unexpected bytes run response body: {other:?}"),
         }
     }
 

@@ -1,12 +1,16 @@
 [package]
 name = "twig-ir-compiler"
-version = "0.3.0"
+version = "0.8.0"
 edition = "2021"
-description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler"
+description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler.  LANG52: let*, and/or special forms, expanded builtin set."
 
 [dependencies]
-twig-parser       = { path = "../twig-parser" }
-twig-lexer        = { path = "../twig-lexer" }
-interpreter-ir    = { path = "../interpreter-ir" }
+twig-parser        = { path = "../twig-parser" }
+twig-lexer         = { path = "../twig-lexer" }
+interpreter-ir     = { path = "../interpreter-ir" }
 # LANG23 PR 23-E: convert parsed TypeAnnotation → RefinedType for IIR annotation fields.
 lang-refined-types = { path = "../lang-refined-types" }
+# LANG49 TW05-B: optional type-check pre-pass for (typed lenient|strict) modules.
+twig-type-checker  = { path = "../twig-type-checker" }
+# LANG50: AnnotatedNode type for post-processing type_hint fields.
+type-declarations  = { path = "../type-declarations" }

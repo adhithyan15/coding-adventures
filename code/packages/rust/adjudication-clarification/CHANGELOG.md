@@ -2,7 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.7.0] - 2026-05-13 — retry_decompose_level routes through decompose_level
+## [0.7.0] - 2026-05-13 — retry_decompose_level routes through decompose_level (content-shaped)
+
+### Contract change: retry prompt shows missing text, not byte ranges
+
+`build_hierarchical_correction_prompt` no longer asks the model to
+reason about byte offsets. Gap descriptions from the orchestrator
+are already content-shaped (literal missing substrings); the retry
+prompt embeds them verbatim and asks the model to "redo the
+decomposition" with a `text` field per child. Per
+`feedback_no_byte_arithmetic_for_llm`.
+
+Otherwise, the v0.7.0 entry below applies.
+
+
 
 ### Changed
 

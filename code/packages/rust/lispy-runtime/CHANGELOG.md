@@ -1,5 +1,100 @@
 # Changelog — lispy-runtime
 
+## [0.4.0] — 2026-05-14
+
+### Added — LANG52 stdlib completeness for self-hosting
+
+#### Extended comparisons
+
+- **`le` (`<=`)** — integer less-than-or-equal.
+- **`ge` (`>=`)** — integer greater-than-or-equal.
+
+#### Extended integer arithmetic
+
+- **`quotient`** — truncating integer division (Scheme `quotient`; sign matches sign of the
+  mathematical quotient, truncating toward zero).
+- **`remainder`** — remainder after `quotient`; sign matches the *dividend* (same as Rust/C `%`).
+- **`modulo`** — Scheme-style floor-division remainder; sign matches the *divisor*.
+  For example: `(modulo -13 4)` → 3, `(modulo 13 -4)` → -3.
+
+#### Logic
+
+- **`not`** — logical negation.  Returns `#t` iff the argument is `#f` or `nil`; `#f` otherwise.
+  Notably `(not 0)` → `#f` — zero is truthy in Scheme.
+- **`boolean?`** — type predicate; `#t` for `#t` and `#f`, `#f` for everything else.
+- **`equal?`** — structural equality across all value kinds:
+  - Immediates (int, bool, nil, symbol): bitwise comparison.
+  - Cons cells: recursive structural comparison on car/cdr.
+  - Strings: byte-for-byte comparison.
+  - Closures: identity (`eq?` semantics for opaque values).
+
+#### List operations
+
+- **`list`** — build a proper list from positional arguments.  `(list)` → `nil`.
+- **`list?`** — proper-list predicate (nil-terminated check; iterative, no stack overflow).
+- **`length`** — number of elements in a proper list; errors on improper/dotted lists.
+- **`append`** — concatenate two proper lists; `lst1` elements are freshly consed onto `lst2`.
+- **`reverse`** — return `lst` with elements in reverse order.
+- **`list-ref`** — `(list-ref lst i)` — 0-indexed element access; out-of-bounds error.
+- **`assoc`** — `(assoc key alist)` — find the first pair in `alist` whose `car` is `equal?`
+  to `key`; returns the pair, or `#f` if not found.
+
+#### Symbol operations
+
+- **`symbol-append`** — `(symbol-append sym1 sym2)` — intern the concatenation of both
+  symbols' names as a new symbol.  Useful for macro-generated identifiers.
+
+### Implementation notes
+
+- **`values_equal` helper** — private function in `builtins.rs` that implements the same
+  structural equality as `LispyBinding::equal` in `binding.rs`, without creating a circular
+  dependency (binding imports builtins; builtins cannot import binding).
+- All list operations use **iterative loops** (not recursion) to avoid stack overflow on long
+  lists.  The `unsafe` blocks are bounded by the same invariant as the existing cons/car/cdr
+  builtins: values enter through the BuiltinRegistry, so heap tags reflect real allocations.
+
+## [0.3.0] — 2026-05-14
+
+### Added — LANG47 string heap objects and builtins
+
+- **`heap::LangString`** — new `#[repr(C)]` heap object type
+  (`CLASS_STRING = 3`).  Stores an immutable UTF-8 byte sequence as a
+  `Box<[u8]>` fat pointer.  Layout is 32 bytes (same as `ConsCell`),
+  8-byte aligned.
+
+- **`heap::CLASS_STRING`** — class id constant `3` (alongside
+  `CLASS_CONS = 1` and `CLASS_CLOSURE = 2`).
+
+- **`heap::alloc_string(bytes: &[u8]) -> LispyValue`** — allocate a
+  `LangString` from a byte slice; returns a heap-tagged `LispyValue`.
+
+- **`heap::is_string(v: LispyValue) -> bool`** — `unsafe` predicate;
+  reads the `class_or_kind` from the heap header.
+
+- **`heap::string_bytes(v: LispyValue) -> Option<&'static [u8]>`** —
+  `unsafe` accessor; returns the string's UTF-8 bytes.
+
+- **`LispyClass::String`** — new variant in the `LispyClass` enum.
+  `class_of` now returns `Some(LispyClass::String)` for heap strings.
+
+- **`LispyBinding::equal`** now byte-compares two `LangString` values
+  (structural equality via the `LangBinding` trait).
+
+- **`LispyBinding::trace_object`** handles `CLASS_STRING` (strings
+  have no interior `LispyValue` references).
+
+- **22 string builtins** registered in `resolve_builtin`:
+  `string?`, `string-length`, `string-ref`, `substring`,
+  `string-append`, `make-string`, `string=?`, `string<?`, `string>?`,
+  `number->string`, `string->number`, `string->symbol`, `symbol->string`,
+  `char-alphabetic?`, `char-numeric?`, `char-whitespace?`,
+  `char-upper-case?`, `char-lower-case?`, `char->integer`,
+  `integer->char`, `char-upcase`, `char-downcase`.
+
+- **30 new unit tests** covering all of the above.
+
+---
+
 ## [0.2.0] — 2026-04-29
 
 ### Added — supporting LANG20 PR 5 (twig-vm closures / globals / symbols)

@@ -2,6 +2,7 @@
 
 pub const MODULE_MAGIC: [u8; 4] = *b"BVM1";
 pub const MODULE_VERSION: u8 = 1;
+pub const MAX_BYTE_BUFFER_LEN: usize = 32;
 
 pub const FLAG_PROGRAM_MAY_RUN_FOREVER: u8 = 0b0000_0001;
 pub const FLAG_PROGRAM_USES_EVENTS: u8 = 0b0000_0010;
@@ -18,6 +19,14 @@ pub const CAP_TIME_SLEEP_MS: u16 = 0x10;
 pub const CAP_TIME_NOW_MS: u16 = 0x11;
 pub const CAP_PWM_WRITE: u16 = 0x20;
 pub const CAP_ADC_READ: u16 = 0x21;
+pub const CAP_DAC_WRITE_U12: u16 = 0x22;
+pub const CAP_I2C_OPEN: u16 = 0x23;
+pub const CAP_I2C_WRITE_U8: u16 = 0x24;
+pub const CAP_I2C_READ_U8: u16 = 0x25;
+pub const CAP_I2C_WRITE: u16 = 0x26;
+pub const CAP_I2C_READ: u16 = 0x27;
+pub const CAP_I2C_TRANSFER: u16 = 0x28;
+pub const CAP_SPI_OPEN: u16 = 0x29;
 pub const CAP_LED_MATRIX_FRAME: u16 = 0x30;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
@@ -28,6 +37,14 @@ const CAP_TIME_SLEEP_MS_U8: u8 = CAP_TIME_SLEEP_MS as u8;
 const CAP_TIME_NOW_MS_U8: u8 = CAP_TIME_NOW_MS as u8;
 const CAP_PWM_WRITE_U8: u8 = CAP_PWM_WRITE as u8;
 const CAP_ADC_READ_U8: u8 = CAP_ADC_READ as u8;
+const CAP_DAC_WRITE_U12_U8: u8 = CAP_DAC_WRITE_U12 as u8;
+const CAP_I2C_OPEN_U8: u8 = CAP_I2C_OPEN as u8;
+const CAP_I2C_WRITE_U8_U8: u8 = CAP_I2C_WRITE_U8 as u8;
+const CAP_I2C_READ_U8_U8: u8 = CAP_I2C_READ_U8 as u8;
+const CAP_I2C_WRITE_CAP_U8: u8 = CAP_I2C_WRITE as u8;
+const CAP_I2C_READ_CAP_U8: u8 = CAP_I2C_READ as u8;
+const CAP_I2C_TRANSFER_U8: u8 = CAP_I2C_TRANSFER as u8;
+const CAP_SPI_OPEN_U8: u8 = CAP_SPI_OPEN as u8;
 const CAP_LED_MATRIX_FRAME_U8: u8 = CAP_LED_MATRIX_FRAME as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -40,6 +57,7 @@ pub enum Op {
     PushU16(u16),
     PushU32(u32),
     PushI16(i16),
+    PushBytes { offset: u16, len: u8 },
     Dup,
     Drop,
     Swap,
@@ -79,6 +97,8 @@ pub enum ValidateError {
     StackOverflow(usize),
     JumpTargetOutOfBounds(usize),
     JumpTargetNotBoundary(usize),
+    ConstPoolOutOfBounds(usize),
+    ByteBufferTooLarge(usize),
     UnsupportedCapability(u16),
 }
 
@@ -102,6 +122,9 @@ pub struct CapabilitySet {
     pub time: bool,
     pub pwm: bool,
     pub adc: bool,
+    pub dac: bool,
+    pub i2c: bool,
+    pub spi: bool,
     pub led_matrix: bool,
 }
 
@@ -112,6 +135,9 @@ impl CapabilitySet {
             time: false,
             pwm: false,
             adc: false,
+            dac: false,
+            i2c: false,
+            spi: false,
             led_matrix: false,
         }
     }
@@ -122,6 +148,9 @@ impl CapabilitySet {
             time: true,
             pwm: false,
             adc: false,
+            dac: false,
+            i2c: false,
+            spi: false,
             led_matrix: false,
         }
     }
@@ -132,6 +161,18 @@ impl CapabilitySet {
 
     pub const fn with_adc(self) -> Self {
         Self { adc: true, ..self }
+    }
+
+    pub const fn with_dac(self) -> Self {
+        Self { dac: true, ..self }
+    }
+
+    pub const fn with_i2c(self) -> Self {
+        Self { i2c: true, ..self }
+    }
+
+    pub const fn with_spi(self) -> Self {
+        Self { spi: true, ..self }
     }
 
     pub const fn with_led_matrix(self) -> Self {
@@ -147,6 +188,10 @@ impl CapabilitySet {
             CAP_TIME_SLEEP_MS | CAP_TIME_NOW_MS => self.time,
             CAP_PWM_WRITE => self.pwm,
             CAP_ADC_READ => self.adc,
+            CAP_DAC_WRITE_U12 => self.dac,
+            CAP_I2C_OPEN | CAP_I2C_WRITE_U8 | CAP_I2C_READ_U8 | CAP_I2C_WRITE | CAP_I2C_READ
+            | CAP_I2C_TRANSFER => self.i2c,
+            CAP_SPI_OPEN => self.spi,
             CAP_LED_MATRIX_FRAME => self.led_matrix,
             _ => false,
         }
@@ -165,6 +210,13 @@ pub fn decode_next(code: &[u8], ip: usize) -> Result<(Op, usize), DecodeError> {
         0x13 => Ok((Op::PushU16(read_u16(code, next)?), next + 2)),
         0x14 => Ok((Op::PushU32(read_u32(code, next)?), next + 4)),
         0x15 => Ok((Op::PushI16(read_u16(code, next)? as i16), next + 2)),
+        0x16 => Ok((
+            Op::PushBytes {
+                offset: read_u16(code, next)?,
+                len: read_u8(code, next + 2)?,
+            },
+            next + 3,
+        )),
         0x20 => Ok((Op::Dup, next)),
         0x21 => Ok((Op::Drop, next)),
         0x22 => Ok((Op::Swap, next)),
@@ -252,6 +304,7 @@ pub fn validate(
         let (op, next_ip) = decode_next(module.code, ip).map_err(ValidateError::Decode)?;
         validate_stack_effect(op, instruction_start, &mut depth, module.max_stack)?;
         validate_capability(op, board_caps)?;
+        validate_const_pool_access(module.const_pool, op, instruction_start)?;
         validate_jump_target(module.code, op, next_ip)?;
         ip = next_ip;
     }
@@ -301,6 +354,27 @@ fn validate_capability(op: Op, board_caps: CapabilitySet) -> Result<(), Validate
     } else {
         Err(ValidateError::UnsupportedCapability(capability_id))
     }
+}
+
+fn validate_const_pool_access(
+    const_pool: &[u8],
+    op: Op,
+    instruction_start: usize,
+) -> Result<(), ValidateError> {
+    let Op::PushBytes { offset, len } = op else {
+        return Ok(());
+    };
+    if len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(ValidateError::ByteBufferTooLarge(instruction_start));
+    }
+    let offset = offset as usize;
+    let end = offset
+        .checked_add(len as usize)
+        .ok_or(ValidateError::ConstPoolOutOfBounds(instruction_start))?;
+    if end > const_pool.len() {
+        return Err(ValidateError::ConstPoolOutOfBounds(instruction_start));
+    }
+    Ok(())
 }
 
 pub fn called_capability(op: Op) -> Option<u16> {
@@ -367,7 +441,8 @@ fn stack_effect(op: Op) -> (i16, i16) {
         | Op::PushU8(_)
         | Op::PushU16(_)
         | Op::PushU32(_)
-        | Op::PushI16(_) => (0, 1),
+        | Op::PushI16(_)
+        | Op::PushBytes { .. } => (0, 1),
         Op::Dup => (1, 2),
         Op::Drop => (1, 0),
         Op::Swap => (2, 2),
@@ -381,6 +456,14 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_TIME_NOW_MS_U8) | Op::CallU16(CAP_TIME_NOW_MS) => (0, 1),
         Op::CallU8(CAP_PWM_WRITE_U8) | Op::CallU16(CAP_PWM_WRITE) => (2, 0),
         Op::CallU8(CAP_ADC_READ_U8) | Op::CallU16(CAP_ADC_READ) => (1, 1),
+        Op::CallU8(CAP_DAC_WRITE_U12_U8) | Op::CallU16(CAP_DAC_WRITE_U12) => (2, 0),
+        Op::CallU8(CAP_I2C_OPEN_U8) | Op::CallU16(CAP_I2C_OPEN) => (1, 1),
+        Op::CallU8(CAP_I2C_WRITE_U8_U8) | Op::CallU16(CAP_I2C_WRITE_U8) => (3, 0),
+        Op::CallU8(CAP_I2C_READ_U8_U8) | Op::CallU16(CAP_I2C_READ_U8) => (2, 1),
+        Op::CallU8(CAP_I2C_WRITE_CAP_U8) | Op::CallU16(CAP_I2C_WRITE) => (3, 0),
+        Op::CallU8(CAP_I2C_READ_CAP_U8) | Op::CallU16(CAP_I2C_READ) => (3, 1),
+        Op::CallU8(CAP_I2C_TRANSFER_U8) | Op::CallU16(CAP_I2C_TRANSFER) => (4, 1),
+        Op::CallU8(CAP_SPI_OPEN_U8) | Op::CallU16(CAP_SPI_OPEN) => (1, 1),
         Op::CallU8(CAP_LED_MATRIX_FRAME_U8) | Op::CallU16(CAP_LED_MATRIX_FRAME) => (3, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
@@ -443,6 +526,19 @@ mod tests {
     }
 
     #[test]
+    fn decodes_push_bytes() {
+        let (op, next) = decode_next(&[0x16, 0x34, 0x12, 0x03], 0).unwrap();
+        assert_eq!(
+            op,
+            Op::PushBytes {
+                offset: 0x1234,
+                len: 3
+            }
+        );
+        assert_eq!(next, 4);
+    }
+
+    #[test]
     fn parses_blink_module() {
         let module_bytes = [
             0x42, 0x56, 0x4d, 0x31, 0x01, 0x01, 0x04, 0x00, 0x1a, 0x12, 0x0d, 0x12, 0x01, 0x40,
@@ -465,6 +561,49 @@ mod tests {
             const_pool: &[],
         };
         validate(&module, CapabilitySet::blink_mvp(), 8).unwrap();
+    }
+
+    #[test]
+    fn validates_push_bytes_const_pool_slice() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x01, 0x00, 0x02, 0x50],
+            const_pool: &[0xAA, 0xBE, 0xEF],
+        };
+
+        validate(&module, CapabilitySet::empty(), 8).unwrap();
+    }
+
+    #[test]
+    fn rejects_push_bytes_const_pool_out_of_bounds() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x02, 0x00, 0x02],
+            const_pool: &[0xAA],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::empty(), 8),
+            Err(ValidateError::ConstPoolOutOfBounds(0))
+        );
+    }
+
+    #[test]
+    fn rejects_push_bytes_larger_than_vm_buffer() {
+        let const_pool = [0u8; MAX_BYTE_BUFFER_LEN + 1];
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x00, 0x00, (MAX_BYTE_BUFFER_LEN + 1) as u8],
+            const_pool: &const_pool,
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::empty(), 8),
+            Err(ValidateError::ByteBufferTooLarge(0))
+        );
     }
 
     #[test]
@@ -566,6 +705,121 @@ mod tests {
     }
 
     #[test]
+    fn validates_dac_write_u12_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 14, 0x13, 0x00, 0x08, 0x40, CAP_DAC_WRITE_U12 as u8],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_dac(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_DAC_WRITE_U12]);
+    }
+
+    #[test]
+    fn validates_i2c_open_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 0, 0x40, CAP_I2C_OPEN as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_i2c(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_OPEN]);
+    }
+
+    #[test]
+    fn validates_i2c_write_u8_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 4,
+            code: &[0x20, 0x12, 0x3c, 0x12, 0xa5, 0x40, CAP_I2C_WRITE_U8 as u8],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_WRITE_U8]);
+    }
+
+    #[test]
+    fn validates_i2c_read_u8_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 3,
+            code: &[0x20, 0x12, 0x3c, 0x40, CAP_I2C_READ_U8 as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_READ_U8]);
+    }
+
+    #[test]
+    fn validates_i2c_write_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 4,
+            code: &[
+                0x20,
+                0x12,
+                0x3c,
+                0x16,
+                0x00,
+                0x00,
+                0x03,
+                0x40,
+                CAP_I2C_WRITE as u8,
+            ],
+            const_pool: &[0xde, 0xad, 0xbe],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_WRITE]);
+    }
+
+    #[test]
+    fn validates_i2c_read_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 4,
+            code: &[0x20, 0x12, 0x3c, 0x12, 0x03, 0x40, CAP_I2C_READ as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_READ]);
+    }
+
+    #[test]
+    fn validates_spi_open_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 0, 0x40, CAP_SPI_OPEN as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_spi(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_OPEN]);
+    }
+
+    #[test]
     fn rejects_pwm_write_without_capability() {
         let module = Module {
             flags: 0,
@@ -592,6 +846,149 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 1),
             Err(ValidateError::UnsupportedCapability(CAP_ADC_READ))
+        );
+    }
+
+    #[test]
+    fn rejects_dac_write_u12_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 14, 0x13, 0x00, 0x08, 0x40, CAP_DAC_WRITE_U12 as u8],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 2),
+            Err(ValidateError::UnsupportedCapability(CAP_DAC_WRITE_U12))
+        );
+    }
+
+    #[test]
+    fn rejects_i2c_open_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 0, 0x40, CAP_I2C_OPEN as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 2),
+            Err(ValidateError::UnsupportedCapability(CAP_I2C_OPEN))
+        );
+    }
+
+    #[test]
+    fn rejects_spi_open_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[0x12, 0, 0x40, CAP_SPI_OPEN as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 2),
+            Err(ValidateError::UnsupportedCapability(CAP_SPI_OPEN))
+        );
+    }
+
+    #[test]
+    fn rejects_i2c_write_u8_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 4,
+            code: &[0x20, 0x12, 0x3c, 0x12, 0xa5, 0x40, CAP_I2C_WRITE_U8 as u8],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 4),
+            Err(ValidateError::UnsupportedCapability(CAP_I2C_WRITE_U8))
+        );
+    }
+
+    #[test]
+    fn rejects_i2c_read_u8_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 3,
+            code: &[0x20, 0x12, 0x3c, 0x40, CAP_I2C_READ_U8 as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 4),
+            Err(ValidateError::UnsupportedCapability(CAP_I2C_READ_U8))
+        );
+    }
+
+    #[test]
+    fn rejects_i2c_write_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 4,
+            code: &[
+                0x20,
+                0x12,
+                0x3c,
+                0x16,
+                0x00,
+                0x00,
+                0x03,
+                0x40,
+                CAP_I2C_WRITE as u8,
+            ],
+            const_pool: &[0xde, 0xad, 0xbe],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 4),
+            Err(ValidateError::UnsupportedCapability(CAP_I2C_WRITE))
+        );
+    }
+
+    #[test]
+    fn rejects_i2c_read_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 4,
+            code: &[0x20, 0x12, 0x3c, 0x12, 0x03, 0x40, CAP_I2C_READ as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 4),
+            Err(ValidateError::UnsupportedCapability(CAP_I2C_READ))
+        );
+    }
+
+    #[test]
+    fn rejects_i2c_transfer_without_capability() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 5,
+            code: &[
+                0x20,
+                0x12,
+                0x3c,
+                0x16,
+                0x00,
+                0x00,
+                0x02,
+                0x12,
+                0x03,
+                0x40,
+                CAP_I2C_TRANSFER as u8,
+                0x50,
+            ],
+            const_pool: &[0x00, 0x10],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 5),
+            Err(ValidateError::UnsupportedCapability(CAP_I2C_TRANSFER))
         );
     }
 

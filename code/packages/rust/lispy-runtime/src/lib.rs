@@ -100,8 +100,9 @@ pub mod value;
 // Public re-exports — keep the headline surface easy to discover.
 pub use binding::{LispyBinding, LispyClass, LispyICEntry};
 pub use heap::{
-    alloc_builtin_closure, alloc_closure, alloc_cons, as_closure, car, cdr, is_closure, is_cons,
-    Closure, ConsCell, CLASS_CLOSURE, CLASS_CONS, CLOSURE_FLAG_BUILTIN,
+    alloc_builtin_closure, alloc_closure, alloc_cons, alloc_string, as_closure, car, cdr,
+    is_closure, is_cons, is_string, string_bytes,
+    Closure, ConsCell, LangString, CLASS_CLOSURE, CLASS_CONS, CLASS_STRING, CLOSURE_FLAG_BUILTIN,
 };
 pub use intern::{intern, name_of};
 pub use value::{LispyValue, TAG_BITS, TAG_FALSE, TAG_HEAP, TAG_INT, TAG_NIL, TAG_SYMBOL, TAG_TRUE};

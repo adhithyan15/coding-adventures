@@ -53,7 +53,7 @@ use adjudication_coverage::{
 use adjudication_ir::check_correlation_completeness;
 use adjudication_pipeline::{
     decompose_hierarchical, HierarchicalDecomposeError, HierarchicalDecomposeRequest,
-    DEFAULT_MAX_RETRIES_PER_PARENT,
+    PerLevelRetryBudget, DEFAULT_MAX_RETRIES_PER_PARENT,
 };
 use llm_primitives::{GatewayConfig, Role};
 use llm_provider_ollama::OllamaClient;
@@ -82,10 +82,36 @@ fn main() {
         .ok()
         .and_then(|s| s.parse().ok())
         .unwrap_or(300);
-    let max_retries: usize = std::env::var("ADJ_PR6_MAX_RETRIES")
-        .ok()
-        .and_then(|s| s.parse().ok())
-        .unwrap_or(DEFAULT_MAX_RETRIES_PER_PARENT);
+    // ADJ29: per-level retry budgets. The harness keeps a single
+    // `ADJ_PR6_MAX_RETRIES` env knob for uniform budgets (back-compat
+    // with prior bench runs) AND adds four per-level overrides
+    // (`ADJ_PR6_MAX_RETRIES_<LEVEL>`) so a careful-decomposition bench
+    // can give deeper levels more headroom. When the per-level
+    // overrides are unset, the default budgets (3/4/5/8) apply.
+    fn lookup(var: &str, default: usize) -> usize {
+        std::env::var(var).ok().and_then(|s| s.parse().ok()).unwrap_or(default)
+    }
+    let max_retries = if std::env::var("ADJ_PR6_MAX_RETRIES").is_ok() {
+        // Uniform mode: every level gets the same cap from the
+        // single legacy env knob.
+        PerLevelRetryBudget::uniform(lookup(
+            "ADJ_PR6_MAX_RETRIES",
+            DEFAULT_MAX_RETRIES_PER_PARENT,
+        ))
+    } else {
+        // Per-level mode: take defaults (3/4/5/8) unless individual
+        // overrides are set.
+        let d = PerLevelRetryBudget::default();
+        PerLevelRetryBudget {
+            document_to_sentence: lookup("ADJ_PR6_MAX_RETRIES_DOC_SENT", d.document_to_sentence),
+            sentence_to_phrase: lookup("ADJ_PR6_MAX_RETRIES_SENT_PHRASE", d.sentence_to_phrase),
+            phrase_to_claim: lookup("ADJ_PR6_MAX_RETRIES_PHRASE_CLAIM", d.phrase_to_claim),
+            fact_to_typed_component: lookup(
+                "ADJ_PR6_MAX_RETRIES_FACT_TYPED",
+                d.fact_to_typed_component,
+            ),
+        }
+    };
     let document_id = std::env::var("ADJ_PR6_DOCUMENT_ID")
         .unwrap_or_else(|_| "doc-bench".to_string());
 

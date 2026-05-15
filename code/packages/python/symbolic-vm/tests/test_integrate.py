@@ -38,10 +38,45 @@ def vm() -> VM:
 
 X = IRSymbol("x")
 Y = IRSymbol("y")
+K = IRSymbol("k")
+THETA = IRSymbol("theta")
 
 
 def _integrate(f):
     return IRApply(INTEGRATE, (f, X))
+
+
+def _elliptic_integrand() -> IRApply:
+    return IRApply(
+        DIV,
+        (
+            IRInteger(1),
+            IRApply(
+                SQRT,
+                (
+                    IRApply(
+                        SUB,
+                        (
+                            IRInteger(1),
+                            IRApply(
+                                MUL,
+                                (
+                                    IRApply(POW, (K, IRInteger(2))),
+                                    IRApply(
+                                        POW,
+                                        (
+                                            IRApply(SIN, (THETA,)),
+                                            IRInteger(2),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -125,6 +160,30 @@ def test_integrate_exponential_constant_base(vm: VM) -> None:
         ),
     )
     assert vm.eval(expr) == expected
+
+
+def test_integrate_elliptic_first_kind_returns_named_form(vm: VM) -> None:
+    expr = IRApply(INTEGRATE, (_elliptic_integrand(), THETA))
+
+    assert vm.eval(expr) == IRApply(
+        IRSymbol("EllipticF"), (THETA, K)
+    )
+
+
+def test_definite_integrate_elliptic_first_kind_returns_complete_form(
+    vm: VM,
+) -> None:
+    expr = IRApply(
+        INTEGRATE,
+        (
+            _elliptic_integrand(),
+            THETA,
+            IRInteger(0),
+            IRApply(DIV, (IRSymbol("%pi"), IRInteger(2))),
+        ),
+    )
+
+    assert vm.eval(expr) == IRApply(IRSymbol("EllipticK"), (K,))
 
 
 # ---------------------------------------------------------------------------

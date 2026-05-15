@@ -64,6 +64,20 @@ BOOL_TRUE  = "#t"
 BOOL_FALSE = "#f"
 
 # ---------------------------------------------------------------------------
+# String literals (LANG51)
+#
+# Double-quoted UTF-8 strings.  The regex matches a ``"`` delimiter,
+# zero or more non-quote non-backslash characters (``[^"\\]``) or
+# escape sequences (``\\.``), and a closing ``"``.  This handles the
+# common escapes ``\\``, ``\"``, ``\n``, ``\t``, ``\r`` — the parser's
+# AST extractor decodes them into the actual byte values.
+#
+# STRING must appear before INTEGER and NAME so the lexer commits to
+# the string-literal rule on a leading ``"`` before trying other patterns.
+# ---------------------------------------------------------------------------
+STRING     = /"([^"\\]|\\.)*"/
+
+# ---------------------------------------------------------------------------
 # Numeric literals
 #
 # Twig V1 has only signed integers.  The leading ``-?`` handles
@@ -115,6 +129,23 @@ keywords:
   module
   export
   import
+  # TW05-A / LANG48 — typed syntax keywords.  These names become reserved
+  # in typed Twig modules.  None were valid identifiers in earlier Twig code.
+  # (typed strict/lenient/off) — module typing mode declaration
+  typed
+  # (type Name type_expr) — type alias declaration
+  type
+  # (record Name (field : T) ...) — record type declaration
+  record
+  # (union Name (Variant ...) ...) — tagged union declaration
+  union
+  # (match expr arm ...) — pattern matching expression
+  match
+  # LANG52 — sequential let bindings.  ``let*`` is promoted to a keyword
+  # so the grammar's ``"let*"`` literal match wins over the NAME pattern.
+  # (The ``*`` character is legal inside a Twig identifier — see the NAME
+  # regex — so ``let*`` would otherwise lex as a plain NAME token.)
+  let*
 
 # ---------------------------------------------------------------------------
 # Skip patterns — consumed silently, never reach the parser

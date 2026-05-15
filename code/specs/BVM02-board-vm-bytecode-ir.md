@@ -65,7 +65,10 @@ bit 2: program_requests_persistent_handles
 bits 3..7: reserved
 ```
 
-The first MVP can set `const_len = 0` and use inline immediates only.
+The constant pool stores immutable byte data used by byte-buffer immediates.
+`PUSH_BYTES` copies a checked slice from `const_pool` into a bounded VM stack
+value. The v1 portable byte-buffer maximum is 32 bytes; validators must reject
+out-of-bounds slices and larger byte buffers before execution.
 
 ## Execution Model
 
@@ -103,8 +106,10 @@ The VM value set is deliberately small:
 | `u32` | 4 bytes | counters, timestamps |
 | `i16` | 2 bytes | signed sensor values |
 | `handle` | 2 bytes | resources opened by capabilities |
+| `bytes` | 0..32 bytes | bus transfer payloads, binary results |
 
-The MVP should implement `unit`, `bool`, `u8`, `u16`, and `handle`.
+The current MVP implements the listed scalar values, `handle`, and bounded
+`bytes`.
 
 ## Core Opcodes
 
@@ -118,6 +123,7 @@ The MVP should implement `unit`, `bool`, `u8`, `u16`, and `handle`.
 | `0x13` | `PUSH_U16` | `u16_le` | `-> u16` |
 | `0x14` | `PUSH_U32` | `u32_le` | `-> u32` |
 | `0x15` | `PUSH_I16` | `i16_le` | `-> i16` |
+| `0x16` | `PUSH_BYTES` | `offset: u16_le, len: u8` | `-> bytes` |
 | `0x20` | `DUP` | none | `a -> a a` |
 | `0x21` | `DROP` | none | `a ->` |
 | `0x22` | `SWAP` | none | `a b -> b a` |
@@ -170,9 +176,64 @@ SDKs can grow without renumbering.
 
 | ID | Name | Args | Returns |
 |---:|---|---|---|
-| `0x20` | `pwm.open` | `pin: u16/u8`, `frequency_hz: u16` | `handle` |
-| `0x21` | `pwm.set_duty_u16` | `handle`, `duty: u16` | `unit` |
-| `0x22` | `pwm.close` | `handle` | `unit` |
+| `0x20` | `pwm.write` | `pin: u16/u8`, `duty: u16` | `unit` |
+
+`pwm.write` is the v1 direct-control operation used by the host SDKs and UNO R4
+runtime. It intentionally avoids allocating a persistent PWM handle. A later
+streaming/motor-control tranche can add handle-oriented PWM operations if it
+needs frequency selection, ramping, or lifetime-managed timer ownership.
+
+### ADC
+
+| ID | Name | Args | Returns |
+|---:|---|---|---|
+| `0x21` | `adc.read` | `pin: u16/u8` | `u16` |
+
+`adc.read` returns a normalized 16-bit sample. Board adapters choose the
+underlying hardware resolution and scale into the portable result range.
+
+### DAC
+
+| ID | Name | Args | Returns |
+|---:|---|---|---|
+| `0x22` | `dac.write_u12` | `pin: u16/u8`, `sample: u16` | `unit` |
+
+`dac.write_u12` writes a 12-bit sample to a board DAC pin advertised by target
+metadata. The operation is intentionally direct and stateless, mirroring
+`pwm.write`; boards without a physical DAC do not advertise it.
+
+### I2C
+
+| ID | Name | Args | Returns |
+|---:|---|---|---|
+| `0x23` | `i2c.open` | `bus: u16/u8` | `handle` |
+| `0x24` | `i2c.write_u8` | `handle`, `address: u16/u8`, `byte: u8` | `unit` |
+| `0x25` | `i2c.read_u8` | `handle`, `address: u16/u8` | `u8` |
+| `0x26` | `i2c.write` | `handle`, `address: u16/u8`, `bytes` | `unit` |
+| `0x27` | `i2c.read` | `handle`, `address: u16/u8`, `length: u8` | `bytes` |
+| `0x28` | `i2c.transfer` | `handle`, `address: u16/u8`, `write_bytes: bytes`, `read_length: u8` | `bytes` |
+| `0x29` | `spi.open` | `bus: u16/u8` | `handle` |
+
+`i2c.open` opens a board-advertised I2C controller and returns a persistent bus
+handle. The handle is the lifetime anchor for transfer operations, keeping bus
+identity and pin ownership out of language frontends.
+
+`i2c.write_u8` writes a single byte to a 7-bit device address on an already
+opened bus handle. `i2c.read_u8` reads one byte from that same 7-bit address and
+returns it as a scalar `u8`. These are the first concrete I2C transfer
+primitives. `i2c.write` writes a bounded VM byte buffer to the device address
+using the same handle model. `i2c.read` reads a bounded byte buffer of up to the
+VM byte-buffer limit from the same handle/address pair. `i2c.transfer` performs
+a bounded write-then-read transaction, preserving the bus handle and returning
+the bounded read bytes.
+
+### SPI
+
+`spi.open` opens a board-advertised SPI controller and returns a persistent bus
+handle. Target metadata owns the controller name and header pins such as COPI,
+CIPO, SCK, and the conventional chip-select pin; language frontends pass only
+the bus id. Follow-on SPI transfer capabilities should use the returned handle
+instead of repeating pin or bus metadata in each command.
 
 ### LED Matrix
 
@@ -258,6 +319,7 @@ pub enum Op {
     PushU16(u16),
     PushU32(u32),
     PushI16(i16),
+    PushBytes { offset: u16, len: u8 },
     Dup,
     Drop,
     Swap,
@@ -287,6 +349,7 @@ pub fn validate(module: &Module, caps: &CapabilitySet) -> Result<(), ValidateErr
 - Reject truncated immediates.
 - Reject jumps into the middle of an instruction.
 - Reject unknown opcodes.
+- Reject out-of-bounds and oversized constant-pool byte slices.
 - Validate stack effects for straight-line programs.
 - Validate stack effects across conditional branches.
 - Execute blink bytecode on a fake board and assert ordered GPIO operations.

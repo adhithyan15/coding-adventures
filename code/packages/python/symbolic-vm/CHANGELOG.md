@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+## 0.55.0 — 2026-05-14
+
+**Phase 26 — MACSYMA stress-test parity fixes: differentiation order, pattern matching,
+multivariate expansion, and elliptic integral float-modulus recognition.**
+
+### Bug fixes
+
+- **`D(f, x, n)` three-argument differentiation** (`derivative.py`): The `D` handler now
+  accepts a third integer argument `n` and applies `_diff` n times in a loop.  Previously
+  only `D(f, x)` was accepted; `D(f, x, 2)` raised `TypeError`.
+
+- **`apply1` / `apply2` argument order** (`cas_handlers.py`): MACSYMA convention is
+  `apply1(target, rule_name)` (target first, rule second).  The handlers had the arguments
+  reversed, so `defrule(r1, …); apply1(expr, r1)` silently returned the expression
+  unapplied.  Fixed by swapping `name_node, raw_target = expr.args` to
+  `raw_target, name_node = expr.args` in both handlers.
+
+- **Multivariate polynomial expansion** (`cas_handlers.py`): The `expand_handler` now
+  includes a `_sym_expand` fallback that recursively distributes `Mul` over `Add`/`Sub`
+  and uses binary-exponentiation for integer powers.  This makes
+  `expand((a+b)^2)` → `a^2 + 2ab + b^2` and `expand((a+b)^3)` work correctly
+  for multivariate inputs where the polynomial bridge previously returned the input unchanged.
+
+- **EllipticK/E/Pi float-modulus recognition** (`integrate.py`): `_modulus_from_squared_factor`
+  now handles pre-evaluated numeric literals (`IRFloat`, `IRInteger`, `IRRational`) as `k²`
+  by computing `k = sqrt(k²)` numerically.  Previously `0.5^2` evaluated to `IRFloat(0.25)`
+  before the integrate handler ran, causing the EllipticK/E/Pi pattern recogniser to miss it.
+  Now `integrate(1/sqrt(1-0.5^2*sin(theta)^2), theta, 0, %pi/2)` → `EllipticK(0.5)`,
+  and similarly for EllipticE and EllipticPi.
+
+- Recognised the first elliptic integration foothold: `Integrate` now returns
+  `EllipticF(theta, k)` for `1/sqrt(1-k^2*sin(theta)^2)` and `EllipticK(k)`
+  for the corresponding definite integral from `0` to `%pi/2`.
 - Extended the common multivariate factoring foothold to extract shared
   integer content as well as symbolic powers, so expressions like
   `2*x*y + 2*x*z` now factor to `2*x*(y+z)`.
@@ -23,6 +56,44 @@
   expressions with a common symbolic factor, such as `x^2*y - y`, now extract
   that common factor and then reuse the existing univariate integer factorizer
   on the residual.
+
+## 0.54.0 — 2026-05-14
+
+**Phase 25 — Elliptic integrals of the second and third kind.**
+
+Extended the integration engine with two new special-function fallbacks that
+complement the first-kind handlers (EllipticF/EllipticK) added in the previous
+release.
+
+### New functions
+
+- `_elliptic_second_kind_radicand(f, x)` — extracts the modulus *k* from the
+  second-kind integrand `sqrt(1 - k²·sin²(x))`.
+- `_try_complete_elliptic_e(f, x, lower, upper)` — recognises the complete
+  second-kind integral `∫₀^(π/2) sqrt(1-k²·sin²θ) dθ` → `EllipticE(k)`.
+- `_try_incomplete_elliptic_e(f, x)` — recognises the indefinite form
+  `∫ sqrt(1-k²·sin²θ) dθ` → `EllipticE(θ, k)`.
+- `_extract_characteristic_n(bracket, x)` — extracts the characteristic
+  parameter *n* from a `(1 + n·sin²(x))` factor.
+- `_elliptic_third_kind_params(f, x)` — extracts `(n, k)` from the third-kind
+  integrand `1/((1+n·sin²x)·sqrt(1-k²·sin²x))`.
+- `_try_complete_elliptic_pi(f, x, lower, upper)` — recognises the complete
+  third-kind integral `∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²·sin²θ)) dθ`
+  → `EllipticPi(n, k)`.
+
+### Integration points
+
+- Definite handler: EllipticE(k) and EllipticPi(n,k) are tried immediately
+  after EllipticK(k), before computing any antiderivative.
+- Indefinite handler: EllipticE(θ,k) is tried after EllipticF(θ,k) in the
+  special-function fallback chain.
+
+### Not implemented
+
+- Incomplete EllipticPi(φ,n,k) — the general 3-argument form with variable
+  upper limit. Returns unevaluated `Integrate(...)`.
+- Second and third-kind elliptic integrals in non-canonical forms (e.g., with
+  additional constant factors or shifted sine arguments). Returns unevaluated.
 
 ## 0.53.0 — 2026-05-05
 

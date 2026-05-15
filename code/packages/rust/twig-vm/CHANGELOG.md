@@ -1,5 +1,64 @@
 # Changelog — twig-vm
 
+## [0.12.0] — 2026-05-14
+
+### Added (LANG52 — Host I/O stdlib)
+
+Three new `host/<capability>` arms in `exec_host_call` bridge Twig programs to OS-level I/O:
+
+#### `host/write_string` (IIR: `call_builtin "host/write_string" <string_reg>`)
+
+Write the UTF-8 bytes of a `LangString` heap value to stdout.  The argument must be a string
+value (class tag `CLASS_STRING = 3`).  This is the idiomatic way for Twig programs to print
+string data; `host/write_byte` remains available for byte-level I/O.
+
+#### `host/read_line` (IIR: `call_builtin "host/read_line" → dest`)
+
+Read one line from stdin (using `BufRead::read_line`).  The trailing `\n` (and `\r\n` on
+Windows) is stripped before the content is allocated as a heap string and stored in `dest`.
+Returns an empty heap string on EOF.
+
+#### `host/read_file` (IIR: `call_builtin "host/read_file" <path_reg> → dest`)
+
+Read the entire contents of the file at the path given by the string argument.  The contents
+are returned as a heap string.  OS errors propagate as `RunError::HostIo`.
+
+#### `host_arg_string` helper
+
+New private helper function mirroring `host_arg_int` for string arguments.  Extracts the
+`&'static [u8]` byte slice from a `LangString` heap object at a given argument position in
+an IIR instruction.  Returns `RunError::HostArgType` on type mismatch.
+
+## [0.11.0] — 2026-05-14
+
+### Added (LANG47 — String Heap Objects and Builtins)
+
+#### `const Operand::Str` now produces a `LangString` heap value
+
+Previously, `const dest = Operand::Str("text")` interned the text as a symbol
+(the PR 5 string-as-symbol stand-in).  After LANG47, it calls
+`lispy_runtime::heap::alloc_string` and stores a real heap string.  This enables
+all the new string builtins to operate on constants produced by the compiler.
+
+The `Operand::Var` arm in `exec_const` is unchanged — it still interns as a symbol,
+which is the correct behaviour for the `string_arg` helper used by `global_set`,
+`global_get`, and `make_symbol`.
+
+#### `lispy_class_str` extended with `"string"` class
+
+The profiler and IC table now track string-type values separately from cons
+cells and closures.  `LispyClass::String` maps to the `"string"` class name.
+
+#### 18 new dispatch tests
+
+Hand-built `IIRModule` tests for every new string operation:
+`string?`, `string-length`, `string-ref`, `substring`, `string-append`,
+`string=?`, `number->string`, `string->number`, `string->symbol`,
+`symbol->string`, `char-alphabetic?`, `char-whitespace?`, `char-upcase`,
+plus `const Operand::Str` producing a heap string.
+
+---
+
 ## [0.10.0] — 2026-05-12
 
 ### Added (LANG34 — First-Class Closure Dispatch)

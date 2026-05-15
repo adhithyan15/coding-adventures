@@ -1038,11 +1038,20 @@ function nodeKey(node: IRNode): string {
 
 function integrate(): Handler {
   return (vm, expr) => {
-    if (expr.args.length !== 2) {
-      throw new ArityError(`Integrate expects 2 arguments, got ${expr.args.length}`);
+    if (expr.args.length !== 2 && expr.args.length !== 4) {
+      throw new ArityError(`Integrate expects 2 or 4 arguments, got ${expr.args.length}`);
     }
     const [f, x] = expr.args;
     if (x.kind !== "symbol") {
+      return expr;
+    }
+    if (expr.args.length === 4) {
+      const resultK = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
+      if (resultK !== undefined) return vm.eval(resultK);
+      const resultE = completeEllipticSecondKind(f, x, expr.args[2], expr.args[3]);
+      if (resultE !== undefined) return vm.eval(resultE);
+      const resultPi = completeEllipticThirdKind(f, x, expr.args[2], expr.args[3]);
+      if (resultPi !== undefined) return vm.eval(resultPi);
       return expr;
     }
     const result = integrateIndefinite(f, x);
@@ -1059,6 +1068,14 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   }
   if (equals(f, x)) {
     return app(MUL, [rational(1, 2), app(POW, [x, int(2)])]);
+  }
+  const elliptic = incompleteEllipticFirstKind(f, x);
+  if (elliptic !== undefined) {
+    return elliptic;
+  }
+  const ellipticE = incompleteEllipticSecondKind(f, x);
+  if (ellipticE !== undefined) {
+    return ellipticE;
   }
   if (f.kind !== "apply") {
     return undefined;
@@ -1127,6 +1144,219 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   }
 
   return undefined;
+}
+
+function completeEllipticFirstKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {
+  if (!isZero(lower) || !isPiOverTwo(upper)) {
+    return undefined;
+  }
+  const modulus = ellipticFirstKindModulus(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticK"), [modulus]);
+}
+
+function incompleteEllipticFirstKind(f: IRNode, x: IRNode): IRNode | undefined {
+  const modulus = ellipticFirstKindModulus(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticF"), [x, modulus]);
+}
+
+function ellipticFirstKindModulus(f: IRNode, x: IRNode): IRNode | undefined {
+  let radicand: IRNode | undefined;
+  if (f.kind === "apply" && equals(f.head, DIV)) {
+    const [numerator, denominator] = binaryArgs(f);
+    if (isOne(numerator) && denominator.kind === "apply" && equals(denominator.head, SQRT)) {
+      [radicand] = unaryArgs(denominator);
+    }
+  } else if (f.kind === "apply" && equals(f.head, POW)) {
+    const [base, exponent] = binaryArgs(f);
+    const n = exactRational(exponent);
+    if (n?.numer === -1n && n.denom === 2n) {
+      radicand = base;
+    }
+  }
+  if (radicand?.kind !== "apply" || !equals(radicand.head, SUB)) {
+    return undefined;
+  }
+
+  const [constant, product] = binaryArgs(radicand);
+  if (!isOne(constant) || product.kind !== "apply" || !equals(product.head, MUL)) {
+    return undefined;
+  }
+  const [left, right] = binaryArgs(product);
+  return modulusFromSquaredFactor(left, right, x) ?? modulusFromSquaredFactor(right, left, x);
+}
+
+/**
+ * Compute the integer square root of a non-negative BigInt.
+ *
+ * Returns the root only when ``n`` is a perfect square; returns ``undefined``
+ * otherwise.  The implementation uses a floating-point seed followed by two
+ * Newton correction steps, which is exact for all BigInts whose magnitude fits
+ * in a 64-bit double (i.e. n < 2^53) and safe for the small integers that
+ * appear in CAS modulus expressions.
+ */
+function bigIntIsqrt(n: bigint): bigint | undefined {
+  if (n < 0n) return undefined;
+  if (n === 0n) return 0n;
+  let x = BigInt(Math.round(Math.sqrt(Number(n))));
+  // Clamp down if floating-point over-shot
+  while (x > 0n && x * x > n) x--;
+  // Clamp up if floating-point under-shot
+  while ((x + 1n) * (x + 1n) <= n) x++;
+  return x * x === n ? x : undefined;
+}
+
+/**
+ * Extract the elliptic modulus ``k`` from a product factor ``modulusSquare *
+ * sineSquare`` inside a ``1 - k²·sin²(x)`` radicand.
+ *
+ * Handles two cases:
+ *
+ * 1. **Symbolic form** ``Pow(k, 2)`` — returns the base ``k``.
+ * 2. **Pre-evaluated numeric literal** — the compiler may fold ``(1/2)^2``
+ *    to ``IRRational(1/4)`` or ``0.5^2`` to ``IRFloat(0.25)`` before the
+ *    integration handler runs.  In those cases we compute ``sqrt(k²)``
+ *    analytically and return the simplified numeric node:
+ *    - ``IRFloat(v)``     → ``IRFloat(Math.sqrt(v))``
+ *    - ``IRRational(p/q)`` where both ``p`` and ``q`` are perfect squares
+ *                         → ``IRRational(√p / √q)``
+ *    - ``IRInteger(n)``   where ``n`` is a perfect square → ``IRInteger(√n)``
+ *    - Non-perfect-square rationals/integers → ``Sqrt(k²)`` (unevaluated)
+ */
+function modulusFromSquaredFactor(modulusSquare: IRNode, sineSquare: IRNode, x: IRNode): IRNode | undefined {
+  // Validate sineSquare = Pow(Sin(x), 2) first.
+  if (sineSquare.kind !== "apply" || !equals(sineSquare.head, POW)) {
+    return undefined;
+  }
+  const [sine, sineExponent] = binaryArgs(sineSquare);
+  if (!equals(sineExponent, int(2)) || sine.kind !== "apply" || !equals(sine.head, SIN)) {
+    return undefined;
+  }
+  const [inner] = unaryArgs(sine);
+  if (!equals(inner, x)) {
+    return undefined;
+  }
+
+  // Case 1: Pow(k, 2) — the symbolic form; return the base k directly.
+  if (modulusSquare.kind === "apply" && equals(modulusSquare.head, POW)) {
+    const [modulus, modulusExponent] = binaryArgs(modulusSquare);
+    return equals(modulusExponent, int(2)) ? modulus : undefined;
+  }
+
+  // Case 2: Pre-evaluated numeric literal k² → return √(k²) = k.
+  // This handles inputs like (1/2)^2 which the compiler folds to IRRational(1,4)
+  // or 0.5^2 which folds to IRFloat(0.25) before the integration handler runs.
+  if (modulusSquare.kind === "float") {
+    const val = modulusSquare.value;
+    if (val < 0) return undefined;
+    return numberNode(Math.sqrt(val));
+  }
+  if (modulusSquare.kind === "integer") {
+    const val = modulusSquare.value;
+    if (val < 0n) return undefined;
+    const root = bigIntIsqrt(val);
+    if (root !== undefined) return int(root);
+    // Non-perfect-square integer: leave as Sqrt(k²)
+    return app(SQRT, [modulusSquare]);
+  }
+  if (modulusSquare.kind === "rational") {
+    const { numer, denom } = modulusSquare;
+    if (numer < 0n) return undefined;
+    const rootNum = bigIntIsqrt(numer);
+    const rootDen = bigIntIsqrt(denom);
+    if (rootNum !== undefined && rootDen !== undefined) {
+      return rational(rootNum, rootDen);
+    }
+    // Non-perfect-square rational: leave as Sqrt(k²)
+    return app(SQRT, [modulusSquare]);
+  }
+
+  return undefined;
+}
+
+function isPiOverTwo(node: IRNode): boolean {
+  if (node.kind === "float") {
+    return Math.abs(node.value - Math.PI / 2) < 1e-12;
+  }
+  if (node.kind !== "apply" || !equals(node.head, DIV)) {
+    return false;
+  }
+  const [numerator, denominator] = binaryArgs(node);
+  return numerator.kind === "symbol" && numerator.name === "%pi" && equals(denominator, int(2));
+}
+
+/** Return k when f = Sqrt(1 - k² sin²(x)), else undefined. */
+function ellipticSecondKindRadicand(f: IRNode, x: IRNode): IRNode | undefined {
+  if (f.kind !== "apply" || !equals(f.head, SQRT)) return undefined;
+  const [radicand] = unaryArgs(f);
+  if (radicand.kind !== "apply" || !equals(radicand.head, SUB)) return undefined;
+  const [constant, product] = binaryArgs(radicand);
+  if (!isOne(constant) || product.kind !== "apply" || !equals(product.head, MUL)) return undefined;
+  const [left, right] = binaryArgs(product);
+  return modulusFromSquaredFactor(left, right, x) ?? modulusFromSquaredFactor(right, left, x);
+}
+
+/** ∫₀^(π/2) sqrt(1-k²sin²θ)dθ → EllipticE(k) */
+function completeEllipticSecondKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {
+  if (!isZero(lower) || !isPiOverTwo(upper)) return undefined;
+  const modulus = ellipticSecondKindRadicand(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticE"), [modulus]);
+}
+
+/** ∫ sqrt(1-k²sin²θ)dθ → EllipticE(θ, k) */
+function incompleteEllipticSecondKind(f: IRNode, x: IRNode): IRNode | undefined {
+  const modulus = ellipticSecondKindRadicand(f, x);
+  return modulus === undefined ? undefined : app(sym("EllipticE"), [x, modulus]);
+}
+
+/** Return n when bracket = Add(1, Mul(n, Pow(Sin(x), 2))), else undefined. */
+function extractCharacteristicN(bracket: IRNode, x: IRNode): IRNode | undefined {
+  if (bracket.kind !== "apply" || !equals(bracket.head, ADD)) return undefined;
+  const [a, b] = binaryArgs(bracket);
+  for (const [onePart, prodPart] of [[a, b], [b, a]] as [IRNode, IRNode][]) {
+    if (!isOne(onePart)) continue;
+    if (prodPart.kind !== "apply" || !equals(prodPart.head, MUL)) continue;
+    const [p1, p2] = binaryArgs(prodPart);
+    for (const [nCandidate, sinSq] of [[p1, p2], [p2, p1]] as [IRNode, IRNode][]) {
+      if (sinSq.kind !== "apply" || !equals(sinSq.head, POW)) continue;
+      const [sine, sineExp] = binaryArgs(sinSq);
+      if (!equals(sineExp, int(2))) continue;
+      if (sine.kind !== "apply" || !equals(sine.head, SIN)) continue;
+      const [inner] = unaryArgs(sine);
+      if (!equals(inner, x)) continue;
+      if (!dependsOn(nCandidate, x)) return nCandidate;
+    }
+  }
+  return undefined;
+}
+
+/** Return {n, k} when f = 1/((1+n·sin²x)·sqrt(1-k²sin²x)), else undefined. */
+function ellipticThirdKindParams(f: IRNode, x: IRNode): { n: IRNode; k: IRNode } | undefined {
+  if (f.kind !== "apply" || !equals(f.head, DIV)) return undefined;
+  const [numerator, denominator] = binaryArgs(f);
+  if (!isOne(numerator)) return undefined;
+  if (denominator.kind !== "apply" || !equals(denominator.head, MUL)) return undefined;
+  const [a, b] = binaryArgs(denominator);
+  for (const [bracket, sqrtTerm] of [[a, b], [b, a]] as [IRNode, IRNode][]) {
+    if (sqrtTerm.kind !== "apply" || !equals(sqrtTerm.head, SQRT)) continue;
+    const [radicand] = unaryArgs(sqrtTerm);
+    if (radicand.kind !== "apply" || !equals(radicand.head, SUB)) continue;
+    const [constant, product] = binaryArgs(radicand);
+    if (!isOne(constant) || product.kind !== "apply" || !equals(product.head, MUL)) continue;
+    const [left, right] = binaryArgs(product);
+    const k = modulusFromSquaredFactor(left, right, x) ?? modulusFromSquaredFactor(right, left, x);
+    if (k === undefined) continue;
+    const n = extractCharacteristicN(bracket, x);
+    if (n === undefined) continue;
+    return { n, k };
+  }
+  return undefined;
+}
+
+/** ∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²sin²θ))dθ → EllipticPi(n, k) */
+function completeEllipticThirdKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {
+  if (!isZero(lower) || !isPiOverTwo(upper)) return undefined;
+  const params = ellipticThirdKindParams(f, x);
+  return params === undefined ? undefined : app(sym("EllipticPi"), [params.n, params.k]);
 }
 
 function differentiate(): Handler {

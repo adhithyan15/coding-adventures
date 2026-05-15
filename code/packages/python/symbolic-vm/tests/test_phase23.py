@@ -822,6 +822,6 @@ class TestPhase23_Regressions:
         # Apply the rule to erf(x) — should fire and return 42
         target = IRApply(ERF, (X,))
         result = vm.eval(
-            IRApply(IRSymbol("Apply1"), (IRSymbol("my_rule"), target))
+            IRApply(IRSymbol("Apply1"), (target, IRSymbol("my_rule")))
         )
         assert result == IRInteger(42)

@@ -4,7 +4,11 @@
 //! Do not edit by hand.
 
 #[allow(unused_imports)]
-use state_machine::{EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition, TransitionDefinition};
+use state_machine::{
+    EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind,
+    MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition,
+    TokenDefinition, TransitionDefinition,
+};
 
 pub fn html1_lexer_definition() -> StateMachineDefinition {
     let mut definition = StateMachineDefinition::new("html1-lexer", MachineKind::Transducer);
@@ -77,9 +81,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
     definition.tokens = vec![
         TokenDefinition {
             name: "Text".to_string(),
-            fields: vec![
-                "data".to_string(),
-            ],
+            fields: vec!["data".to_string()],
         },
         TokenDefinition {
             name: "StartTag".to_string(),
@@ -91,15 +93,11 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         TokenDefinition {
             name: "EndTag".to_string(),
-            fields: vec![
-                "name".to_string(),
-            ],
+            fields: vec!["name".to_string()],
         },
         TokenDefinition {
             name: "Comment".to_string(),
-            fields: vec![
-                "data".to_string(),
-            ],
+            fields: vec!["data".to_string()],
         },
         TokenDefinition {
             name: "Doctype".to_string(),
@@ -2282,6 +2280,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(eof-in-script-html-comment-like-text)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -2357,6 +2356,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(eof-in-script-html-comment-like-text)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -2447,6 +2447,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(eof-in-script-html-comment-like-text)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -2684,6 +2685,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(eof-in-script-html-comment-like-text)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -2761,6 +2763,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(eof-in-script-html-comment-like-text)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -2816,7 +2819,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Literal(">".to_string())),
             to: vec![
-                "script_data_double_escaped".to_string(),
+                "script_data".to_string(),
             ],
             guard: None,
             stack_pop: None,
@@ -2853,6 +2856,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error(eof-in-script-html-comment-like-text)".to_string(),
                 "flush_text".to_string(),
                 "emit(EOF)".to_string(),
             ],

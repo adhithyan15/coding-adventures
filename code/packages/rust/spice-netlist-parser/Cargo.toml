@@ -1,0 +1,8 @@
+[package]
+name = "spice-netlist-parser"
+version = "0.1.3"
+edition = "2021"
+description = "SPICE3 netlist parser that builds coding-adventures SPICE engine circuits"
+
+[dependencies]
+spice-engine = { path = "../spice-engine" }

@@ -38,7 +38,7 @@ use lang_runtime_core::{
 };
 
 use crate::builtins;
-use crate::heap::{self, CLASS_CLOSURE, CLASS_CONS};
+use crate::heap::{self, CLASS_CLOSURE, CLASS_CONS, CLASS_STRING};
 use crate::value::LispyValue;
 
 // ---------------------------------------------------------------------------
@@ -65,6 +65,8 @@ pub enum LispyClass {
     Cons,
     /// A heap-allocated closure.
     Closure,
+    /// A heap-allocated UTF-8 string (LANG47).
+    String,
 }
 
 impl LispyClass {
@@ -79,6 +81,7 @@ impl LispyClass {
             LispyClass::Symbol => 13,
             LispyClass::Cons => CLASS_CONS,
             LispyClass::Closure => CLASS_CLOSURE,
+            LispyClass::String => CLASS_STRING,
         })
     }
 }
@@ -150,6 +153,7 @@ impl LangBinding for LispyBinding {
         if value.is_symbol() { return Some(LispyClass::Symbol); }
         if unsafe { heap::is_cons(value) } { return Some(LispyClass::Cons); }
         if unsafe { heap::is_closure(value) } { return Some(LispyClass::Closure); }
+        if unsafe { heap::is_string(value) } { return Some(LispyClass::String); }
         None
     }
 
@@ -173,6 +177,15 @@ impl LangBinding for LispyBinding {
             unsafe {
                 return Self::equal(heap::car(a).unwrap(), heap::car(b).unwrap())
                     && Self::equal(heap::cdr(a).unwrap(), heap::cdr(b).unwrap());
+            }
+        }
+        // String equality: byte-for-byte comparison (LANG47).
+        // SAFETY: is_string checks the heap tag + class id.
+        if unsafe { heap::is_string(a) && heap::is_string(b) } {
+            unsafe {
+                let a_bytes = heap::string_bytes(a).unwrap_or(&[]);
+                let b_bytes = heap::string_bytes(b).unwrap_or(&[]);
+                return a_bytes == b_bytes;
             }
         }
         false
@@ -216,6 +229,12 @@ impl LangBinding for LispyBinding {
                 for cap in unsafe { (*clos).captures.iter() } {
                     visitor.visit_value(cap.bits());
                 }
+            }
+            CLASS_STRING => {
+                // LangString contains only a Box<[u8]> — no
+                // LispyValue references inside.  The GC does not
+                // need to trace through strings.
+                let _ = obj_header; // suppress dead-read warning
             }
             _ => {
                 // Unknown class — defensively do nothing rather
@@ -331,6 +350,51 @@ impl LangBinding for LispyBinding {
             "make_symbol" => Some(builtins::make_symbol),
             "make_closure" => Some(builtins::make_closure),
             "make_builtin_closure" => Some(builtins::make_builtin_closure),
+            // ── String builtins (LANG47) ────────────────────────────────
+            "string?"         => Some(builtins::string_p),
+            "string-length"   => Some(builtins::string_length),
+            "string-ref"      => Some(builtins::string_ref),
+            "substring"       => Some(builtins::substring),
+            "string-append"   => Some(builtins::string_append),
+            "make-string"     => Some(builtins::make_string),
+            "string=?"        => Some(builtins::string_eq_p),
+            "string<?"        => Some(builtins::string_lt_p),
+            "string>?"        => Some(builtins::string_gt_p),
+            "number->string"  => Some(builtins::number_to_string),
+            "string->number"  => Some(builtins::string_to_number),
+            "string->symbol"  => Some(builtins::string_to_symbol),
+            "symbol->string"  => Some(builtins::symbol_to_string),
+            // Character predicates / converters (LANG47)
+            "char-alphabetic?" => Some(builtins::char_alphabetic_p),
+            "char-numeric?"    => Some(builtins::char_numeric_p),
+            "char-whitespace?" => Some(builtins::char_whitespace_p),
+            "char-upper-case?" => Some(builtins::char_upper_case_p),
+            "char-lower-case?" => Some(builtins::char_lower_case_p),
+            "char->integer"    => Some(builtins::char_to_integer),
+            "integer->char"    => Some(builtins::integer_to_char),
+            "char-upcase"      => Some(builtins::char_upcase),
+            "char-downcase"    => Some(builtins::char_downcase),
+            // ── Extended comparisons (LANG52) ───────────────────────────
+            "<="  => Some(builtins::le),
+            ">="  => Some(builtins::ge),
+            // ── Extended arithmetic (LANG52) ────────────────────────────
+            "quotient"   => Some(builtins::quotient),
+            "remainder"  => Some(builtins::remainder),
+            "modulo"     => Some(builtins::modulo),
+            // ── Logic (LANG52) ──────────────────────────────────────────
+            "not"      => Some(builtins::not),
+            "boolean?" => Some(builtins::boolean_p),
+            "equal?"   => Some(builtins::equal_p),
+            // ── List operations (LANG52) ────────────────────────────────
+            "list"       => Some(builtins::list),
+            "list?"      => Some(builtins::list_p),
+            "length"     => Some(builtins::length),
+            "append"     => Some(builtins::append),
+            "reverse"    => Some(builtins::reverse),
+            "list-ref"   => Some(builtins::list_ref),
+            "assoc"      => Some(builtins::assoc),
+            // ── Symbol operations (LANG52) ──────────────────────────────
+            "symbol-append" => Some(builtins::symbol_append),
             _ => None,
         }
     }

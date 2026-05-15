@@ -215,6 +215,14 @@ class BoardTarget:
     def digital_pins(self) -> list[dict[str, Any]]:
         return [dict(item) for item in self.raw.get("digital_pins", [])]
 
+    @property
+    def i2c_buses(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("i2c_buses", [])]
+
+    @property
+    def spi_buses(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("spi_buses", [])]
+
     def digital_pin(self, pin: int) -> dict[str, Any] | None:
         for item in self.digital_pins:
             if int(item["pin"]) == int(pin):

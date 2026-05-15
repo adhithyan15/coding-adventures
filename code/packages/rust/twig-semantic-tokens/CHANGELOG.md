@@ -1,5 +1,32 @@
 # Changelog — twig-semantic-tokens
 
+## [0.2.0] — 2026-05-14
+
+### Added (LANG48 — TW05-A semantic token coverage)
+
+Extends the semantic-token walker to cover the three new top-level `Form`
+variants and the `Expr::Match` expression introduced by LANG48.
+
+#### New `Form` arms in `emit_form`
+
+- `Form::TypeAlias(t)` — emits `Keyword("type")` at `(column + 1)` and
+  `Parameter` for the alias name at `(column + 6)`.
+- `Form::RecordDef(r)` — emits `Keyword("record")` at `(column + 1)` and
+  `Parameter` for the record name at `(column + 8)`.
+- `Form::UnionDef(u)` — emits `Keyword("union")` at `(column + 1)` and
+  `Parameter` for the union name at `(column + 7)`.
+- Field and variant names are skipped in v1 — they don't carry per-token
+  positions in the AST yet; a follow-up can thread them once `twig-parser`
+  exposes them.
+
+#### New `Expr::Match` arm in `emit_expr`
+
+- `Expr::Match(m)` — emits `Keyword("match")` at `(column + 1)`, then
+  walks the scrutinee and each arm body recursively.  Pattern binding
+  names are skipped for the same reason as field names above.
+
+---
+
 ## [0.1.1] — 2026-05-04
 
 ### Fixed (LANG23 PR 23-E compatibility)

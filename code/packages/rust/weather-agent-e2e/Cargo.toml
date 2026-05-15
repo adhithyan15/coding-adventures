@@ -8,6 +8,7 @@ license = "MIT"
 [dependencies]
 actor = { path = "../actor" }
 artifact-store = { path = "../artifact-store" }
+capability-os-sandbox = { path = "../capability-os-sandbox" }
 capability-cage = { path = "../capability-cage" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding-adventures-json-value = { path = "../json-value" }
@@ -17,9 +18,13 @@ generic-job-runtime = { path = "../generic-job-runtime" }
 http-core = { path = "../http-core" }
 http1 = { path = "../http1" }
 memory-store = { path = "../memory-store" }
+operation-primitives = { path = "../operation-primitives" }
 os-job-core = { path = "../os-job-core" }
 os-job-runtime = { path = "../os-job-runtime" }
 read-write-separation = { path = "../read-write-separation" }
 skill-store = { path = "../skill-store" }
 storage-core = { path = "../storage-core" }
 tls-platform = { path = "../tls-platform" }
+
+[dev-dependencies]
+required-capabilities-compiler = { path = "../required-capabilities-compiler" }

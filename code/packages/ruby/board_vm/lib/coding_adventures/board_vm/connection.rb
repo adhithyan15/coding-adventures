@@ -106,6 +106,18 @@ module CodingAdventures
         Adc.new(self)
       end
 
+      def dac
+        Dac.new(self)
+      end
+
+      def i2c
+        I2c.new(self)
+      end
+
+      def spi
+        Spi.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -270,6 +282,28 @@ module CodingAdventures
         )
       end
 
+      def dac_write_u12!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin:,
+        sample:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.dac_write_u12(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
+          sample: sample,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
       def gpio_open!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -395,6 +429,136 @@ module CodingAdventures
           handshake: true,
           query_caps: true,
           host_nonce: host_nonce
+        )
+      end
+
+      def i2c_open!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        bus:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_open(
+          program_id: program_id,
+          budget: budget,
+          bus: bus,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def spi_open!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        bus:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.spi_open(
+          program_id: program_id,
+          budget: budget,
+          bus: bus,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def i2c_write_u8!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        byte:,
+        max_stack: 4
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_write_u8(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          byte: byte,
+          max_stack: max_stack
+        )
+      end
+
+      def i2c_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        bytes:,
+        max_stack: 4
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_write(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          bytes: bytes,
+          max_stack: max_stack
+        )
+      end
+
+      def i2c_read_u8!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_read_u8(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          max_stack: max_stack
+        )
+      end
+
+      def i2c_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        length:,
+        max_stack: 4
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_read(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          length: length,
+          max_stack: max_stack
+        )
+      end
+
+      def i2c_transfer!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        address:,
+        write_bytes:,
+        read_length:,
+        max_stack: 5
+      )
+        ensure_uno_r4_wifi!
+
+        session.i2c_transfer(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          write_bytes: write_bytes,
+          read_length: read_length,
+          max_stack: max_stack
         )
       end
 
@@ -974,6 +1138,167 @@ module CodingAdventures
           budget: budget,
           host_nonce: host_nonce,
           pin: pin,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Dac
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def write_u12(
+        pin:,
+        sample:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.dac_write_u12!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          sample: sample,
+          max_stack: max_stack
+        )
+      end
+      alias write write_u12
+
+      def off(pin:, **options)
+        write_u12(pin: pin, sample: 0, **options)
+      end
+
+      def midpoint(pin:, **options)
+        write_u12(pin: pin, sample: 0x0800, **options)
+      end
+
+      def full(pin:, **options)
+        write_u12(pin: pin, sample: 0x0FFF, **options)
+      end
+    end
+
+    class I2c
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def open(
+        bus:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.i2c_open!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          bus: bus,
+          max_stack: max_stack
+        )
+      end
+
+      def write_u8(
+        address:,
+        byte:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 4
+      )
+        @connection.i2c_write_u8!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          byte: byte,
+          max_stack: max_stack
+        )
+      end
+
+      def write(
+        address:,
+        bytes:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 4
+      )
+        @connection.i2c_write!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          bytes: bytes,
+          max_stack: max_stack
+        )
+      end
+
+      def read_u8(
+        address:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 3
+      )
+        @connection.i2c_read_u8!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          max_stack: max_stack
+        )
+      end
+
+      def read(
+        address:,
+        length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 4
+      )
+        @connection.i2c_read!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          length: length,
+          max_stack: max_stack
+        )
+      end
+
+      def transfer(
+        address:,
+        write_bytes:,
+        read_length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 5
+      )
+        @connection.i2c_transfer!(
+          program_id: program_id,
+          budget: budget,
+          address: address,
+          write_bytes: write_bytes,
+          read_length: read_length,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Spi
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def open(
+        bus:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.spi_open!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          bus: bus,
           max_stack: max_stack
         )
       end

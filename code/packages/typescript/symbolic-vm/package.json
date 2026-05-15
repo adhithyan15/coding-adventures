@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/symbolic-vm",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "description": "Pure TypeScript symbolic expression evaluator with strict and symbolic backends",
   "type": "module",
   "main": "src/index.ts",

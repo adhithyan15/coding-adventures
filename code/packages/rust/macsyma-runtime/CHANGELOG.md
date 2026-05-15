@@ -2,8 +2,14 @@
 
 ## Unreleased
 
+## [0.2.0] — 2026-05-14
+
 ### Added
 
+- Added Rust MACSYMA parity for elliptic first-kind integration, so
+  `integrate(1/sqrt(1-k^2*sin(theta)^2), theta)` returns
+  `EllipticF(theta, k)` and the `[0, %pi/2]` definite form returns
+  `EllipticK(k)`.
 - Delegated Rust MACSYMA `factor` evaluation to the shared `symbolic-vm`
   canonical handler, including coverage for common multivariate factors.
 - Added Rust MACSYMA parity for multivariate integer content extraction, so

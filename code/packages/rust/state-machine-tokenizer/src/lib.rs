@@ -866,7 +866,7 @@ impl Tokenizer {
                         .map_err(TokenizerError::Machine)?;
                 }
                 "emit_current_token" => self.emit_current_token(action)?,
-                "emit_rcdata_end_tag_or_text" => self.emit_rcdata_end_tag_or_text(action)?,
+                "emit_rcdata_end_tag_or_text" => self.emit_rcdata_end_tag_or_text(action, state)?,
                 "emit_rcdata_end_tag_with_trailing_solidus_or_text" => {
                     self.emit_rcdata_end_tag_with_trailing_solidus_or_text(action, position, state)?
                 }
@@ -1211,7 +1211,7 @@ impl Tokenizer {
         Ok(())
     }
 
-    fn emit_rcdata_end_tag_or_text(&mut self, action: &str) -> Result<()> {
+    fn emit_rcdata_end_tag_or_text(&mut self, action: &str, state: &str) -> Result<()> {
         let candidate = match self.current_token.as_ref() {
             Some(CurrentToken::EndTag { name }) => name.clone(),
             Some(other) => {
@@ -1231,12 +1231,14 @@ impl Tokenizer {
         if self.last_start_tag.as_deref() == Some(candidate.as_str()) {
             self.flush_text();
             self.emit_current_token("emit_current_token")?;
+            self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;
             self.current_attribute = None;
             self.text_buffer.push_str("</");
             self.text_buffer.push_str(&self.temporary_buffer);
             self.text_buffer.push('>');
+            self.switch_to_script_data_after_bogus_escaped_end_tag_close(state)?;
         }
         self.temporary_buffer.clear();
         Ok(())
@@ -1272,12 +1274,14 @@ impl Tokenizer {
             });
             self.flush_text();
             self.emit_current_token("emit_current_token")?;
+            self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;
             self.current_attribute = None;
             self.text_buffer.push_str("</");
             self.text_buffer.push_str(&self.temporary_buffer);
             self.text_buffer.push_str("/>");
+            self.switch_to_script_data_after_bogus_escaped_end_tag_close(state)?;
         }
         self.temporary_buffer.clear();
         Ok(())
@@ -1313,12 +1317,14 @@ impl Tokenizer {
             });
             self.flush_text();
             self.emit_current_token("emit_current_token")?;
+            self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;
             self.current_attribute = None;
             self.text_buffer.push_str("</");
             self.text_buffer.push_str(&self.temporary_buffer);
             self.text_buffer.push('>');
+            self.switch_to_script_data_after_bogus_escaped_end_tag_close(state)?;
         }
         self.temporary_buffer.clear();
         Ok(())
@@ -1354,14 +1360,40 @@ impl Tokenizer {
             });
             self.flush_text();
             self.emit_current_token("emit_current_token")?;
+            self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;
             self.current_attribute = None;
             self.text_buffer.push_str("</");
             self.text_buffer.push_str(&self.temporary_buffer);
             self.text_buffer.push('>');
+            self.switch_to_script_data_after_bogus_escaped_end_tag_close(state)?;
         }
         self.temporary_buffer.clear();
+        Ok(())
+    }
+
+    fn switch_to_script_data_after_bogus_escaped_end_tag_close(
+        &mut self,
+        state: &str,
+    ) -> Result<()> {
+        if state.starts_with("script_data_escaped")
+            && self.temporary_buffer.ends_with("--")
+            && self.machine.has_state("script_data")
+        {
+            self.machine
+                .set_current_state("script_data".to_string())
+                .map_err(TokenizerError::Machine)?;
+        }
+        Ok(())
+    }
+
+    fn switch_to_data_state_after_matching_end_tag(&mut self) -> Result<()> {
+        if self.machine.has_state("data") {
+            self.machine
+                .set_current_state("data".to_string())
+                .map_err(TokenizerError::Machine)?;
+        }
         Ok(())
     }
 

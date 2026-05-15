@@ -1,5 +1,161 @@
 # Changelog — twig-ir-compiler
 
+## [0.8.0] — 2026-05-14
+
+### Added (LANG52 — stdlib completeness + LANG51 string literals)
+
+#### LANG51: string literal lowering
+
+- **`Expr::StrLit` → `const(Operand::Str(value)) : "str"`** — string literals compile to a
+  `const` instruction with `Operand::Str` payload and `type_hint = "str"`.  The VM's
+  `exec_const` handler (introduced in LANG47) materialises this as a `LangString` heap object.
+- `Expr::StrLit` added to the leaf-atom arm of `free_vars.rs` (never a free variable).
+
+#### LANG52: `let*` sequential bindings
+
+- **`Expr::LetStar` → `compile_let_star`** — sequential bindings: each RHS is compiled in a
+  scope extended by all prior names.  Each binding gets a fresh register allocated via
+  `_move`; the body is compiled after all bindings are live.
+- **`free_vars.rs` Expr::LetStar walk** — incremental bound-set extension mirrors the
+  compiler's sequential scoping exactly (each name bound before the next RHS).
+
+#### LANG52: `and` / `or` special forms (short-circuit)
+
+- **`(and e₁ e₂ …)`** — intercepted in `compile_apply` before the builtin-resolution path.
+  Lowered to: evaluate `e₁`, branch on `jmp_if_false`, evaluate tail with
+  recursive `compile_and`, merge into shared result register via `_move`.
+  `(and)` → `#t`; `(and e)` → `e`.
+- **`(or e₁ e₂ …)`** — similar pattern.  `(or)` → `#f`; `(or e)` → `e`.
+- Neither `and` nor `or` is in the `BUILTINS` constant — they never reach the
+  `resolve_builtin` path.
+
+#### LANG52: expanded BUILTINS constant
+
+Added to the `BUILTINS: &[&str]` array (used for higher-order closure wrapping):
+`<=`, `>=`, `modulo`, `remainder`, `quotient`, `not`, `boolean?`, `equal?`,
+`list`, `list?`, `length`, `append`, `reverse`, `list-ref`, `assoc`,
+`symbol-append`, `host/write_string`, `host/read_line`, `host/read_file`.
+
+## [0.7.0] — 2026-05-14 (LANG51 — string literal lowering, included here)
+
+*Note: 0.7.0 was the planned standalone LANG51 release; changes are rolled into 0.8.0
+above since LANG52 depends on LANG51 and both land together.*
+
+## [0.6.0] — 2026-05-14
+
+### Added (LANG50 — Annotation-aware IIR emission)
+
+- `compile_typed_source(source, module_name) -> Result<IIRModule, TwigCompileError>`
+  — new compilation entry point that runs the LANG50 grammar-type-checker pass
+  first and post-processes the resulting IIR to propagate concrete `type_hint`
+  values (`"i64"`, `"bool"`, `"str"`, `"closure"`) on instructions whose source
+  positions map to concretely-typed `AnnotatedNode`s.
+- `build_hint_map` — traverses the `AnnotatedNode` tree to build a
+  `HashMap<(line, col), &'static str>` of concrete hints.
+- `apply_hints` — post-processes an `IIRFunction`'s instructions using the
+  hint map and the function's `source_map` for position correlation.
+- `set_function_type_status` — sets `IIRFunction::type_status` to
+  `FullyTyped` / `PartiallyTyped` / `Untyped` based on the fraction of
+  non-void instructions carrying a concrete type hint.
+- 7 new unit tests in `tests` module:
+  `typed_source_int_literal_hint`, `typed_source_bool_literal_hint`,
+  `typed_source_nil_literal_hint`, `typed_source_untyped_fallback`,
+  `typed_source_function_status_fully_typed`,
+  `typed_source_strict_mode_type_error_returns_err`,
+  `typed_source_off_mode_no_errors`.
+
+### Dependencies added
+
+- `type-declarations = { path = "../type-declarations" }`
+
+### Backward compatibility
+
+- `compile_source` and `compile_program` are **unchanged**.
+- `FunctionTypeStatus` set by `set_function_type_status` only affects
+  functions compiled via `compile_typed_source`; the existing path still
+  emits `Untyped` everywhere.
+
+---
+
+## [0.5.0] — 2026-05-14
+
+### Added (LANG49 — TW05-B type-check pre-pass)
+
+Wires the new `twig-type-checker` crate as an optional pre-pass in
+`compile_program`.
+
+#### Behaviour
+
+- `TypedMode::Strict`: if `check_program` returns `ok: false`, the first
+  `TypeErrorDiagnostic` is wrapped in a `TwigCompileError` and returned
+  as `Err` before any IIR is emitted.
+- `TypedMode::Lenient`: type errors are printed as warnings to `stderr`
+  (prefix `twig type warning (line:col): …`), then compilation proceeds.
+- `TypedMode::Off` / no `module_info`: pre-pass skipped entirely —
+  zero performance overhead for dynamic Twig programs.
+
+#### Dependency added
+
+- `twig-type-checker = { path = "../twig-type-checker" }` — the new
+  TW05-B base type checker crate.
+
+---
+
+## [0.4.0] — 2026-05-14
+
+### Added (LANG48 — TW05-A annotation erasure)
+
+Implements the TW05-A bootstrap stage: typed Twig source compiles to
+dynamic IIR by erasing all type annotations.  No type checker yet (that's
+TW05-B/C); the compiler accepts typed programs and lowers them faithfully.
+
+#### New `Compiler` field
+
+- `variant_tags: HashMap<String, usize>` — populated during the pre-pass
+  from every `Form::UnionDef`; consulted when lowering `Expr::Match` arms
+  to determine variant integer tags for dispatch.
+
+#### New form lowering
+
+- `Form::TypeAlias` — erased (no-op, type aliases are compile-time only).
+- `Form::RecordDef` — lowered via `emit_record_def`:
+  - Constructor function `Name(f0, f1, …)` using a right-fold `cons` chain.
+  - Positional accessor `name-field-i(r)` using `car` of `cdr^i`.
+  - Type predicate `name?(v)` using `pair?`.
+- `Form::UnionDef` — lowered via `emit_union_def`:
+  - Per-variant constructor `Variant(f0, …)` — prepends the zero-based
+    integer tag via `cons`.
+  - Per-variant predicate `Variant?(v)` — checks `(= (car v) tag)`.
+  - Per-variant field accessor `variant-field-k(v)` using `car` of
+    `cdr^(k+1)` (skip the tag slot).
+
+#### New expression lowering
+
+- `Expr::Match` — lowered via `compile_match` to a `jmpif`/`label`/`jmp`
+  chain:
+  - Scrutinee evaluated once into a fresh register.
+  - `Variant` arm: test `(= (car scrutinee) tag)`, bind fields via
+    `car`/`cdr` chains, evaluate body.
+  - `Binding` arm: bind scrutinee to name, evaluate body.
+  - `Wildcard` arm: evaluate body directly.
+  - After all arms: fall through to `nil`.
+
+#### Annotation erasure extension
+
+- `TypeAnnotation::Opaque(_)` → `TypeAnnotation::Any` in the annotation
+  map.  Any type expression that isn't a LANG23 shape is silently erased
+  to the `Any` (untyped) refinement, preserving backward compat.
+
+### Tests
+
+- Regression tests confirm `alloc_closure` / `call_closure` emission is
+  unchanged by LANG48 changes.
+- New compiler tests for record def erasure (constructor + accessor +
+  predicate IIR shapes), union def erasure (tagged variants), and match
+  expression lowering (variant/binding/wildcard dispatch chains).
+
+---
+
 ## [0.3.0] — 2026-05-12
 
 ### Changed (LANG34 — Emit alloc_closure / call_closure)

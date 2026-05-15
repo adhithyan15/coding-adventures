@@ -1,0 +1,803 @@
+{
+  "harness_version": "adj25-pr6-v1",
+  "endpoint": "http://127.0.0.1:11434",
+  "binary": "code/packages/rust/target/release/adj_pr6_bench",
+  "models": [
+    "gemma4:latest",
+    "llama3.1:8b",
+    "qwen2.5:3b",
+    "qwen2.5:1.5b",
+    "qwen2.5:0.5b"
+  ],
+  "declarations": [
+    "matches",
+    "large-lithium",
+    "large-toothpaste",
+    "pocket-knife",
+    "wine-bottle",
+    "small-lithium",
+    "small-perfume",
+    "lighter-disposable"
+  ],
+  "cells": [
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 498.0299921249971,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 497.773098958
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 227.47354445792735,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 227.469592709
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 14.485934208147228,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 14.482596042
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 39.26982158282772,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 39.265991709
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 13.664707542164251,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 13.661729166
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 200 Wh.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 395.1055209999904,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(8 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (8 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, lithium battery, 200 Wh.",
+        "wallclock_secs": 395.102021041
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 200 Wh.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 388.35997562482953,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(14 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (14 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, lithium battery, 200 Wh.",
+        "wallclock_secs": 388.355356125
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 200 Wh.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 119.60096204187721,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(11 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (11 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, lithium battery, 200 Wh.",
+        "wallclock_secs": 119.59731275
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 200 Wh.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 65.9840477090329,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(6 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (6 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, lithium battery, 200 Wh.",
+        "wallclock_secs": 65.980924542
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 200 Wh.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 49.1703287078999,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(5 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (5 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, lithium battery, 200 Wh.",
+        "wallclock_secs": 49.166839541
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-toothpaste",
+      "declaration_text": "1 carry-on bag, 4 oz toothpaste.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 569.9504395830445,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 4 oz toothpaste.",
+        "wallclock_secs": 569.946983
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-toothpaste",
+      "declaration_text": "1 carry-on bag, 4 oz toothpaste.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 292.4261227501556,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(13 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (13 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, 4 oz toothpaste.",
+        "wallclock_secs": 292.422314167
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-toothpaste",
+      "declaration_text": "1 carry-on bag, 4 oz toothpaste.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 38.054965832969174,
+      "raw_output": {
+        "error": {
+          "kind": "unparseable_at_FactToTypedComponent",
+          "message": "hierarchical-decompose unparseable response at FactToTypedComponent for parent \"F1\""
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, 4 oz toothpaste.",
+        "wallclock_secs": 38.051528125
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-toothpaste",
+      "declaration_text": "1 carry-on bag, 4 oz toothpaste.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 49.01521308417432,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(6 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (6 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, 4 oz toothpaste.",
+        "wallclock_secs": 49.012142209
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "large-toothpaste",
+      "declaration_text": "1 carry-on bag, 4 oz toothpaste.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 15.671759790973738,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(2 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (2 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, 4 oz toothpaste.",
+        "wallclock_secs": 15.668755417
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "pocket-knife",
+      "declaration_text": "1 carry-on bag, 4 inch pocket knife.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 423.0470517501235,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(5 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (5 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 4 inch pocket knife.",
+        "wallclock_secs": 423.037285916
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "pocket-knife",
+      "declaration_text": "1 carry-on bag, 4 inch pocket knife.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 502.2600394161418,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(15 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (15 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, 4 inch pocket knife.",
+        "wallclock_secs": 502.255570125
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "pocket-knife",
+      "declaration_text": "1 carry-on bag, 4 inch pocket knife.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 189.92239941679873,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(8 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (8 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, 4 inch pocket knife.",
+        "wallclock_secs": 189.918476209
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "pocket-knife",
+      "declaration_text": "1 carry-on bag, 4 inch pocket knife.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 61.48597125010565,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(3 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (3 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, 4 inch pocket knife.",
+        "wallclock_secs": 61.482254916
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "pocket-knife",
+      "declaration_text": "1 carry-on bag, 4 inch pocket knife.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 25.121656415984035,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(3 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (3 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, 4 inch pocket knife.",
+        "wallclock_secs": 25.118134042
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "wine-bottle",
+      "declaration_text": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 679.787168999901,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(8 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (8 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+        "wallclock_secs": 679.783652
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "wine-bottle",
+      "declaration_text": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 327.63535854103975,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(15 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (15 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+        "wallclock_secs": 327.631657041
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "wine-bottle",
+      "declaration_text": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 161.4133077089209,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+        "wallclock_secs": 161.41004
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "wine-bottle",
+      "declaration_text": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 68.8999222079292,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+        "wallclock_secs": 68.896809584
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "wine-bottle",
+      "declaration_text": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 46.93315254105255,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(6 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (6 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, 1 bottle of wine, 750 ml.",
+        "wallclock_secs": 46.929854208
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 50 Wh.",
+      "expected_verdict": "COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 443.732521292055,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(8 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (8 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, lithium battery, 50 Wh.",
+        "wallclock_secs": 443.728794666
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 50 Wh.",
+      "expected_verdict": "COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 344.2948131659068,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(10 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (10 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, lithium battery, 50 Wh.",
+        "wallclock_secs": 344.29004
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 50 Wh.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 130.58871595887467,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(10 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (10 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, lithium battery, 50 Wh.",
+        "wallclock_secs": 130.584295458
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 50 Wh.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 73.00230462499894,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(4 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (4 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, lithium battery, 50 Wh.",
+        "wallclock_secs": 72.998815417
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-lithium",
+      "declaration_text": "1 carry-on bag, lithium battery, 50 Wh.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 46.57969475002028,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(6 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (6 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, lithium battery, 50 Wh.",
+        "wallclock_secs": 46.576177
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-perfume",
+      "declaration_text": "1 carry-on bag, 3 oz perfume.",
+      "expected_verdict": "COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 354.98171558394097,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, 3 oz perfume.",
+        "wallclock_secs": 354.978595583
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-perfume",
+      "declaration_text": "1 carry-on bag, 3 oz perfume.",
+      "expected_verdict": "COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 286.7017673330847,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(9 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (9 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, 3 oz perfume.",
+        "wallclock_secs": 286.698291792
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-perfume",
+      "declaration_text": "1 carry-on bag, 3 oz perfume.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 106.43307837494649,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(4 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (4 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, 3 oz perfume.",
+        "wallclock_secs": 106.429391666
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-perfume",
+      "declaration_text": "1 carry-on bag, 3 oz perfume.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 25.479856208898127,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(2 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (2 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, 3 oz perfume.",
+        "wallclock_secs": 25.476852292
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "small-perfume",
+      "declaration_text": "1 carry-on bag, 3 oz perfume.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 15.645223083905876,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(2 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (2 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, 3 oz perfume.",
+        "wallclock_secs": 15.642240583
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "gemma4:latest",
+      "wallclock_secs": 358.1354445409961,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(7 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (7 gap(s))"
+        },
+        "model": "gemma4:latest",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 358.131976792
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "llama3.1:8b",
+      "wallclock_secs": 266.2453634159174,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(8 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (8 gap(s))"
+        },
+        "model": "llama3.1:8b",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 266.241443209
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 117.51274816691875,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(4 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (4 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 117.509501916
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 10.848266249988228,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 10.845041542
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 17.06963699986227,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(3 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (3 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 17.066551875
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    }
+  ],
+  "summary": {
+    "totals": {
+      "cells_run": 40,
+      "ir_produced": 0,
+      "fully_passing": 0,
+      "correlation_complete": 0,
+      "correlation_total": 0
+    },
+    "by_model": {
+      "gemma4:latest": {
+        "cells": 8,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 3722.7698548750486
+      },
+      "llama3.1:8b": {
+        "cells": 8,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 2635.396984705003
+      },
+      "qwen2.5:3b": {
+        "cells": 8,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 878.0121117094532
+      },
+      "qwen2.5:1.5b": {
+        "cells": 8,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 393.98540291795507
+      },
+      "qwen2.5:0.5b": {
+        "cells": 8,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 229.8561598318629
+      }
+    },
+    "by_level": {
+      "DocumentToSentence": {
+        "passed": 0,
+        "total": 0
+      },
+      "SentenceToPhrase": {
+        "passed": 0,
+        "total": 0
+      },
+      "PhraseToClaim": {
+        "passed": 0,
+        "total": 0
+      },
+      "FactToTypedComponent": {
+        "passed": 0,
+        "total": 0
+      }
+    }
+  }
+}

@@ -1,10 +1,59 @@
 #![no_std]
 
 use board_vm_ir::{
-    decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_GPIO_CLOSE, CAP_GPIO_OPEN,
-    CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS,
+    decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
+    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ,
+    CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME,
+    CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, MAX_BYTE_BUFFER_LEN,
 };
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ByteBuffer {
+    len: u8,
+    bytes: [u8; MAX_BYTE_BUFFER_LEN],
+}
+
+impl ByteBuffer {
+    pub const fn empty() -> Self {
+        Self {
+            len: 0,
+            bytes: [0; MAX_BYTE_BUFFER_LEN],
+        }
+    }
+
+    pub fn from_slice(value: &[u8]) -> Result<Self, ByteBufferError> {
+        if value.len() > MAX_BYTE_BUFFER_LEN {
+            return Err(ByteBufferError);
+        }
+        let mut bytes = [0; MAX_BYTE_BUFFER_LEN];
+        bytes[..value.len()].copy_from_slice(value);
+        Ok(Self {
+            len: value.len() as u8,
+            bytes,
+        })
+    }
+
+    pub const fn len(&self) -> usize {
+        self.len as usize
+    }
+
+    pub const fn is_empty(&self) -> bool {
+        self.len == 0
+    }
+
+    pub fn as_slice(&self) -> &[u8] {
+        &self.bytes[..self.len()]
+    }
+}
+
+impl Default for ByteBuffer {
+    fn default() -> Self {
+        Self::empty()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ByteBufferError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Value {
@@ -15,6 +64,7 @@ pub enum Value {
     U32(u32),
     I16(i16),
     Handle(Handle),
+    Bytes(ByteBuffer),
 }
 
 impl Default for Value {
@@ -70,7 +120,53 @@ pub trait BoardHal {
         Err(HalError::UnsupportedMode)
     }
 
+    fn dac_write_u12(&mut self, _pin: u16, _sample: u16) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_open(&mut self, _bus: u16) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_write_u8(&mut self, _token: u32, _address: u16, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_write(&mut self, _token: u32, _address: u16, _bytes: &[u8]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_read_u8(&mut self, _token: u32, _address: u16) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_read(&mut self, _token: u32, _address: u16, _len: u8) -> Result<ByteBuffer, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn i2c_transfer(
+        &mut self,
+        _token: u32,
+        _address: u16,
+        _write_bytes: &[u8],
+        _read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn spi_open(&mut self, _bus: u16) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn supports_bootloader_reboot(&self) -> bool {
+        false
+    }
+
+    fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 }
@@ -133,12 +229,15 @@ pub enum RuntimeErrorKind {
     InvalidPin,
     UnsupportedMode,
     BoardFault,
+    ByteBufferTooLarge,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum HandleKind {
     Empty,
     Gpio,
+    I2c,
+    Spi,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -214,7 +313,12 @@ where
             kind: RuntimeErrorKind::ValidationFailed,
         })?;
         let mut cursor = RunCursor::new();
-        self.run_code_slice(module.code, &mut cursor, instruction_budget)
+        self.run_code_slice_with_const_pool(
+            module.code,
+            module.const_pool,
+            &mut cursor,
+            instruction_budget,
+        )
     }
 
     pub fn run_code(
@@ -236,12 +340,27 @@ where
             ip: 0,
             kind: RuntimeErrorKind::ValidationFailed,
         })?;
-        self.run_code_slice(module.code, cursor, instruction_budget)
+        self.run_code_slice_with_const_pool(
+            module.code,
+            module.const_pool,
+            cursor,
+            instruction_budget,
+        )
     }
 
     pub fn run_code_slice(
         &mut self,
         code: &[u8],
+        cursor: &mut RunCursor,
+        instruction_budget: u32,
+    ) -> Result<RunReport, RuntimeError> {
+        self.run_code_slice_with_const_pool(code, &[], cursor, instruction_budget)
+    }
+
+    fn run_code_slice_with_const_pool(
+        &mut self,
+        code: &[u8],
+        const_pool: &[u8],
         cursor: &mut RunCursor,
         instruction_budget: u32,
     ) -> Result<RunReport, RuntimeError> {
@@ -279,6 +398,24 @@ where
                 Op::PushU16(value) => self.push(Value::U16(value), instruction_ip)?,
                 Op::PushU32(value) => self.push(Value::U32(value), instruction_ip)?,
                 Op::PushI16(value) => self.push(Value::I16(value), instruction_ip)?,
+                Op::PushBytes { offset, len } => {
+                    let start = offset as usize;
+                    let end = start.checked_add(len as usize).ok_or(RuntimeError {
+                        ip: instruction_ip,
+                        kind: RuntimeErrorKind::InvalidBytecode,
+                    })?;
+                    let Some(bytes) = const_pool.get(start..end) else {
+                        return Err(RuntimeError {
+                            ip: instruction_ip,
+                            kind: RuntimeErrorKind::InvalidBytecode,
+                        });
+                    };
+                    let buffer = ByteBuffer::from_slice(bytes).map_err(|_| RuntimeError {
+                        ip: instruction_ip,
+                        kind: RuntimeErrorKind::ByteBufferTooLarge,
+                    })?;
+                    self.push(Value::Bytes(buffer), instruction_ip)?;
+                }
                 Op::Dup => {
                     let value = self.peek(instruction_ip)?;
                     self.push(value, instruction_ip)?;
@@ -417,6 +554,112 @@ where
                 })?;
                 self.push(Value::U16(sample), ip)
             }
+            CAP_DAC_WRITE_U12 => {
+                let sample = self.pop_u16(ip)?;
+                let pin = self.pop_u16(ip)?;
+                self.hal
+                    .dac_write_u12(pin, sample)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_I2C_OPEN => {
+                let bus = self.pop_u16(ip)?;
+                let token = self.hal.i2c_open(bus).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })?;
+                let handle = self.alloc_handle(HandleKind::I2c, token, ip)?;
+                self.push(Value::Handle(handle), ip)
+            }
+            CAP_I2C_WRITE_U8 => {
+                let byte = self.pop_u8(ip)?;
+                let address = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::I2c, ip)?;
+                self.hal
+                    .i2c_write_u8(token, address, byte)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_I2C_WRITE => {
+                let bytes = self.pop_bytes(ip)?;
+                let address = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::I2c, ip)?;
+                self.hal
+                    .i2c_write(token, address, bytes.as_slice())
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_I2C_READ_U8 => {
+                let address = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::I2c, ip)?;
+                let byte = self
+                    .hal
+                    .i2c_read_u8(token, address)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::U8(byte), ip)
+            }
+            CAP_I2C_READ => {
+                let len = self.pop_u8(ip)?;
+                if len as usize > MAX_BYTE_BUFFER_LEN {
+                    return Err(RuntimeError {
+                        ip,
+                        kind: RuntimeErrorKind::ByteBufferTooLarge,
+                    });
+                }
+                let address = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::I2c, ip)?;
+                let bytes = self
+                    .hal
+                    .i2c_read(token, address, len)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::Bytes(bytes), ip)
+            }
+            CAP_I2C_TRANSFER => {
+                let read_len = self.pop_u8(ip)?;
+                if read_len as usize > MAX_BYTE_BUFFER_LEN {
+                    return Err(RuntimeError {
+                        ip,
+                        kind: RuntimeErrorKind::ByteBufferTooLarge,
+                    });
+                }
+                let write_bytes = self.pop_bytes(ip)?;
+                let address = self.pop_u16(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::I2c, ip)?;
+                let bytes = self
+                    .hal
+                    .i2c_transfer(token, address, write_bytes.as_slice(), read_len)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::Bytes(bytes), ip)
+            }
+            CAP_SPI_OPEN => {
+                let bus = self.pop_u16(ip)?;
+                let token = self.hal.spi_open(bus).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })?;
+                let handle = self.alloc_handle(HandleKind::Spi, token, ip)?;
+                self.push(Value::Handle(handle), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -502,11 +745,31 @@ where
         }
     }
 
+    fn pop_u8(&mut self, ip: usize) -> Result<u8, RuntimeError> {
+        match self.pop(ip)? {
+            Value::U8(value) => Ok(value),
+            _ => Err(RuntimeError {
+                ip,
+                kind: RuntimeErrorKind::TypeMismatch,
+            }),
+        }
+    }
+
     fn pop_u32(&mut self, ip: usize) -> Result<u32, RuntimeError> {
         match self.pop(ip)? {
             Value::U8(value) => Ok(value as u32),
             Value::U16(value) => Ok(value as u32),
             Value::U32(value) => Ok(value),
+            _ => Err(RuntimeError {
+                ip,
+                kind: RuntimeErrorKind::TypeMismatch,
+            }),
+        }
+    }
+
+    fn pop_bytes(&mut self, ip: usize) -> Result<ByteBuffer, RuntimeError> {
+        match self.pop(ip)? {
+            Value::Bytes(value) => Ok(value),
             _ => Err(RuntimeError {
                 ip,
                 kind: RuntimeErrorKind::TypeMismatch,
@@ -649,6 +912,14 @@ mod tests {
         Sleep(u16),
         PwmWrite(u16, u16),
         AdcRead(u16),
+        DacWriteU12(u16, u16),
+        I2cOpen(u16),
+        I2cWriteU8(u32, u16, u8),
+        I2cWrite(u32, u16, ByteBuffer),
+        I2cReadU8(u32, u16),
+        I2cRead(u32, u16, u8),
+        I2cTransfer(u32, u16, ByteBuffer, u8),
+        SpiOpen(u16),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -671,6 +942,9 @@ mod tests {
             CapabilitySet::blink_mvp()
                 .with_pwm()
                 .with_adc()
+                .with_dac()
+                .with_i2c()
+                .with_spi()
                 .with_led_matrix()
         }
 
@@ -710,6 +984,63 @@ mod tests {
         fn adc_read(&mut self, pin: u16) -> Result<u16, HalError> {
             self.events.push(Event::AdcRead(pin));
             Ok(0x03ff)
+        }
+
+        fn dac_write_u12(&mut self, pin: u16, sample: u16) -> Result<(), HalError> {
+            self.events.push(Event::DacWriteU12(pin, sample));
+            Ok(())
+        }
+
+        fn i2c_open(&mut self, bus: u16) -> Result<u32, HalError> {
+            self.events.push(Event::I2cOpen(bus));
+            Ok(0x1_2000 | bus as u32)
+        }
+
+        fn i2c_write_u8(&mut self, token: u32, address: u16, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::I2cWriteU8(token, address, byte));
+            Ok(())
+        }
+
+        fn i2c_write(&mut self, token: u32, address: u16, bytes: &[u8]) -> Result<(), HalError> {
+            self.events.push(Event::I2cWrite(
+                token,
+                address,
+                ByteBuffer::from_slice(bytes).unwrap(),
+            ));
+            Ok(())
+        }
+
+        fn i2c_read_u8(&mut self, token: u32, address: u16) -> Result<u8, HalError> {
+            self.events.push(Event::I2cReadU8(token, address));
+            Ok(0x5a)
+        }
+
+        fn i2c_read(&mut self, token: u32, address: u16, len: u8) -> Result<ByteBuffer, HalError> {
+            self.events.push(Event::I2cRead(token, address, len));
+            ByteBuffer::from_slice(&[0xca, 0xfe, 0x42][..len as usize])
+                .map_err(|_| HalError::UnsupportedMode)
+        }
+
+        fn i2c_transfer(
+            &mut self,
+            token: u32,
+            address: u16,
+            write_bytes: &[u8],
+            read_len: u8,
+        ) -> Result<ByteBuffer, HalError> {
+            self.events.push(Event::I2cTransfer(
+                token,
+                address,
+                ByteBuffer::from_slice(write_bytes).unwrap(),
+                read_len,
+            ));
+            ByteBuffer::from_slice(&[0x11, 0x22, 0x33][..read_len as usize])
+                .map_err(|_| HalError::UnsupportedMode)
+        }
+
+        fn spi_open(&mut self, bus: u16) -> Result<u32, HalError> {
+            self.events.push(Event::SpiOpen(bus));
+            Ok(0x2_2000 | bus as u32)
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -779,6 +1110,27 @@ mod tests {
     }
 
     #[test]
+    fn push_bytes_returns_const_pool_slice() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x16, 0x01, 0x00, 0x03, 0x50],
+            const_pool: &[0x00, 0xCA, 0xFE, 0x42],
+        };
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+
+        let report = runtime.run_module(&module, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        let expected = ByteBuffer::from_slice(&[0xCA, 0xFE, 0x42]).unwrap();
+        assert_eq!(report.return_value, Value::Bytes(expected));
+        match report.return_value {
+            Value::Bytes(bytes) => assert_eq!(bytes.as_slice(), &[0xCA, 0xFE, 0x42]),
+            other => panic!("unexpected return value: {other:?}"),
+        }
+    }
+
+    #[test]
     fn led_matrix_frame_dispatches_three_words() {
         let mut runtime: Runtime<FakeHal, 4, 1> = Runtime::new(FakeHal::new());
         let code = [
@@ -835,5 +1187,205 @@ mod tests {
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_value, Value::U16(0x03ff));
         assert_eq!(runtime.hal().events, vec![Event::AdcRead(14)]);
+    }
+
+    #[test]
+    fn dac_write_u12_dispatches_pin_and_sample() {
+        let mut runtime: Runtime<FakeHal, 4, 1> = Runtime::new(FakeHal::new());
+        let code = [
+            0x12,
+            14,
+            0x13,
+            0x00,
+            0x08,
+            0x40,
+            CAP_DAC_WRITE_U12 as u8,
+            0x00,
+        ];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(runtime.hal().events, vec![Event::DacWriteU12(14, 0x0800)]);
+    }
+
+    #[test]
+    fn i2c_open_dispatches_bus_and_returns_handle() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let code = [0x12, 0, 0x40, CAP_I2C_OPEN as u8, 0x50];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            report.return_value,
+            Value::Handle(Handle {
+                index: 0,
+                generation: 1
+            })
+        );
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(runtime.hal().events, vec![Event::I2cOpen(0)]);
+    }
+
+    #[test]
+    fn spi_open_dispatches_bus_and_returns_handle() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let code = [0x12, 0, 0x40, CAP_SPI_OPEN as u8, 0x50];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            report.return_value,
+            Value::Handle(Handle {
+                index: 0,
+                generation: 1
+            })
+        );
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(runtime.hal().events, vec![Event::SpiOpen(0)]);
+    }
+
+    #[test]
+    fn i2c_write_u8_dispatches_handle_address_and_byte() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 1, 0x40, CAP_I2C_OPEN as u8, 0x20, 0x50];
+        let write = [0x20, 0x12, 0x3c, 0x12, 0xa5, 0x40, CAP_I2C_WRITE_U8 as u8];
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_code(&write, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::I2cOpen(1), Event::I2cWriteU8(0x1_2001, 0x3c, 0xa5)]
+        );
+    }
+
+    #[test]
+    fn i2c_read_u8_dispatches_handle_address_and_returns_byte() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 1, 0x40, CAP_I2C_OPEN as u8, 0x20, 0x50];
+        let read = [0x20, 0x12, 0x3c, 0x40, CAP_I2C_READ_U8 as u8, 0x50];
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_code(&read, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::U8(0x5a));
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::I2cOpen(1), Event::I2cReadU8(0x1_2001, 0x3c)]
+        );
+    }
+
+    #[test]
+    fn i2c_write_dispatches_handle_address_and_bytes() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 1, 0x40, CAP_I2C_OPEN as u8, 0x20, 0x50];
+        let write = Module {
+            flags: board_vm_ir::FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 4,
+            code: &[
+                0x20,
+                0x12,
+                0x3c,
+                0x16,
+                0x00,
+                0x00,
+                0x03,
+                0x40,
+                CAP_I2C_WRITE as u8,
+            ],
+            const_pool: &[0xde, 0xad, 0xbe],
+        };
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_module(&write, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::I2cOpen(1),
+                Event::I2cWrite(
+                    0x1_2001,
+                    0x3c,
+                    ByteBuffer::from_slice(&[0xde, 0xad, 0xbe]).unwrap()
+                )
+            ]
+        );
+    }
+
+    #[test]
+    fn i2c_read_dispatches_handle_address_and_returns_bytes() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 1, 0x40, CAP_I2C_OPEN as u8, 0x20, 0x50];
+        let read = [0x20, 0x12, 0x3c, 0x12, 0x03, 0x40, CAP_I2C_READ as u8, 0x50];
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_code(&read, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            report.return_value,
+            Value::Bytes(ByteBuffer::from_slice(&[0xca, 0xfe, 0x42]).unwrap())
+        );
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::I2cOpen(1), Event::I2cRead(0x1_2001, 0x3c, 3)]
+        );
+    }
+
+    #[test]
+    fn i2c_transfer_dispatches_handle_address_write_bytes_and_returns_bytes() {
+        let mut runtime: Runtime<FakeHal, 5, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 1, 0x40, CAP_I2C_OPEN as u8, 0x20, 0x50];
+        let transfer = Module {
+            flags: board_vm_ir::FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 5,
+            code: &[
+                0x20,
+                0x12,
+                0x3c,
+                0x16,
+                0x00,
+                0x00,
+                0x02,
+                0x12,
+                0x03,
+                0x40,
+                CAP_I2C_TRANSFER as u8,
+                0x50,
+            ],
+            const_pool: &[0x00, 0x10],
+        };
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_module(&transfer, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            report.return_value,
+            Value::Bytes(ByteBuffer::from_slice(&[0x11, 0x22, 0x33]).unwrap())
+        );
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::I2cOpen(1),
+                Event::I2cTransfer(
+                    0x1_2001,
+                    0x3c,
+                    ByteBuffer::from_slice(&[0x00, 0x10]).unwrap(),
+                    3
+                )
+            ]
+        );
     }
 }

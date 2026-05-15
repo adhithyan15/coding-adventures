@@ -537,6 +537,178 @@ describe("symbolic-vm", () => {
     );
   });
 
+  it("recognizes elliptic first-kind integrals", () => {
+    const vm = new VM(new SymbolicBackend());
+    const theta = sym("theta");
+    const k = sym("k");
+    const integrand = app(DIV, [
+      int(1),
+      app(SQRT, [
+        app(SUB, [
+          int(1),
+          app(MUL, [
+            app(POW, [k, int(2)]),
+            app(POW, [app(SIN, [theta]), int(2)]),
+          ]),
+        ]),
+      ]),
+    ]);
+
+    expect(vm.eval(app(INTEGRATE, [integrand, theta]))).toEqual(app(sym("EllipticF"), [theta, k]));
+    expect(vm.eval(app(INTEGRATE, [integrand, theta, int(0), app(DIV, [sym("%pi"), int(2)])]))).toEqual(
+      app(sym("EllipticK"), [k]),
+    );
+  });
+
+  it("recognizes complete and incomplete elliptic second-kind integrals", () => {
+    // EllipticE — integrand is Sqrt(1 - k²·sin²(θ)) (NOT 1/Sqrt like EllipticF).
+    //
+    // Complete form:  ∫₀^(π/2) sqrt(1-k²sin²θ) dθ  → EllipticE(k)
+    // Incomplete form: ∫ sqrt(1-k²sin²θ) dθ        → EllipticE(θ, k)
+    const vm = new VM(new SymbolicBackend());
+    const theta = sym("theta");
+    const k = sym("k");
+    const piOver2 = app(DIV, [sym("%pi"), int(2)]);
+
+    // ── symbolic modulus ──────────────────────────────────────────────────────
+    const eIntegrand = app(SQRT, [
+      app(SUB, [
+        int(1),
+        app(MUL, [
+          app(POW, [k, int(2)]),
+          app(POW, [app(SIN, [theta]), int(2)]),
+        ]),
+      ]),
+    ]);
+
+    // Complete EllipticE: ∫₀^(π/2) sqrt(1-k²sin²θ) dθ → EllipticE(k)
+    expect(vm.eval(app(INTEGRATE, [eIntegrand, theta, int(0), piOver2]))).toEqual(
+      app(sym("EllipticE"), [k]),
+    );
+    // Incomplete EllipticE: ∫ sqrt(1-k²sin²θ) dθ → EllipticE(θ, k)
+    expect(vm.eval(app(INTEGRATE, [eIntegrand, theta]))).toEqual(
+      app(sym("EllipticE"), [theta, k]),
+    );
+
+    // ── pre-evaluated numeric modulus: (1/2)^2 = IRRational(1,4) ─────────────
+    // The compiler folds (1/2)^2 to rational(1,4); we must recover k = 1/2.
+    const eIntegrandNumeric = app(SQRT, [
+      app(SUB, [
+        int(1),
+        app(MUL, [
+          rational(1, 4),  // (1/2)^2 pre-evaluated
+          app(POW, [app(SIN, [theta]), int(2)]),
+        ]),
+      ]),
+    ]);
+
+    // Complete with numeric k²=1/4 → EllipticE(1/2)
+    expect(vm.eval(app(INTEGRATE, [eIntegrandNumeric, theta, int(0), piOver2]))).toEqual(
+      app(sym("EllipticE"), [rational(1, 2)]),
+    );
+    // Incomplete with numeric k²=1/4 → EllipticE(θ, 1/2)
+    expect(vm.eval(app(INTEGRATE, [eIntegrandNumeric, theta]))).toEqual(
+      app(sym("EllipticE"), [theta, rational(1, 2)]),
+    );
+
+    // ── pre-evaluated float modulus: 0.5^2 = IRFloat(0.25) ───────────────────
+    const eIntegrandFloat = app(SQRT, [
+      app(SUB, [
+        int(1),
+        app(MUL, [
+          numberNode(0.25),  // 0.5^2 pre-evaluated
+          app(POW, [app(SIN, [theta]), int(2)]),
+        ]),
+      ]),
+    ]);
+
+    // Complete with float k²=0.25 → EllipticE(0.5)
+    expect(vm.eval(app(INTEGRATE, [eIntegrandFloat, theta, int(0), piOver2]))).toEqual(
+      app(sym("EllipticE"), [numberNode(0.5)]),
+    );
+  });
+
+  it("recognizes complete elliptic third-kind integrals (EllipticPi)", () => {
+    // EllipticPi — integrand is 1/((1+n·sin²θ)·sqrt(1-k²sin²θ)).
+    //
+    // Complete form: ∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²sin²θ)) dθ → EllipticPi(n, k)
+    const vm = new VM(new SymbolicBackend());
+    const theta = sym("theta");
+    const k = sym("k");
+    const n = sym("n");
+    const piOver2 = app(DIV, [sym("%pi"), int(2)]);
+
+    // ── symbolic n and k ──────────────────────────────────────────────────────
+    const piIntegrand = app(DIV, [
+      int(1),
+      app(MUL, [
+        app(ADD, [int(1), app(MUL, [n, app(POW, [app(SIN, [theta]), int(2)])])]),
+        app(SQRT, [
+          app(SUB, [
+            int(1),
+            app(MUL, [
+              app(POW, [k, int(2)]),
+              app(POW, [app(SIN, [theta]), int(2)]),
+            ]),
+          ]),
+        ]),
+      ]),
+    ]);
+
+    expect(vm.eval(app(INTEGRATE, [piIntegrand, theta, int(0), piOver2]))).toEqual(
+      app(sym("EllipticPi"), [n, k]),
+    );
+
+    // ── numeric k² = rational(1,4) ────────────────────────────────────────────
+    const piIntegrandNumericK = app(DIV, [
+      int(1),
+      app(MUL, [
+        app(ADD, [int(1), app(MUL, [int(2), app(POW, [app(SIN, [theta]), int(2)])])]),
+        app(SQRT, [
+          app(SUB, [
+            int(1),
+            app(MUL, [
+              rational(1, 4),  // (1/2)^2 pre-evaluated
+              app(POW, [app(SIN, [theta]), int(2)]),
+            ]),
+          ]),
+        ]),
+      ]),
+    ]);
+
+    // EllipticPi(2, 1/2)
+    expect(vm.eval(app(INTEGRATE, [piIntegrandNumericK, theta, int(0), piOver2]))).toEqual(
+      app(sym("EllipticPi"), [int(2), rational(1, 2)]),
+    );
+  });
+
+  it("regression: EllipticK and EllipticF still work after adding EllipticE and EllipticPi", () => {
+    // Guard that the second-kind and third-kind recognisers do not shadow the
+    // first-kind recognisers accidentally.
+    const vm = new VM(new SymbolicBackend());
+    const theta = sym("theta");
+    const k = sym("k");
+    const piOver2 = app(DIV, [sym("%pi"), int(2)]);
+    const kIntegrand = app(DIV, [
+      int(1),
+      app(SQRT, [
+        app(SUB, [
+          int(1),
+          app(MUL, [
+            app(POW, [k, int(2)]),
+            app(POW, [app(SIN, [theta]), int(2)]),
+          ]),
+        ]),
+      ]),
+    ]);
+    expect(vm.eval(app(INTEGRATE, [kIntegrand, theta, int(0), piOver2]))).toEqual(
+      app(sym("EllipticK"), [k]),
+    );
+    expect(vm.eval(app(INTEGRATE, [kIntegrand, theta]))).toEqual(
+      app(sym("EllipticF"), [theta, k]),
+    );
+  });
+
   it("leaves unknown dependent integrals unevaluated", () => {
     const vm = new VM(new SymbolicBackend());
     const expr = app(INTEGRATE, [app(sym("F"), [sym("x")]), sym("x")]);

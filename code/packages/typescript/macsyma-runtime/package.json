@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/macsyma-runtime",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Pure TypeScript MACSYMA runtime session over the symbolic VM",
   "type": "module",
   "main": "src/index.ts",

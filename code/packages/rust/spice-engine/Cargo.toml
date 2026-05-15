@@ -1,0 +1,7 @@
+[package]
+name = "spice-engine"
+version = "0.1.0"
+edition = "2021"
+description = "SPICE-style circuit analysis primitives and solvers"
+
+[dependencies]

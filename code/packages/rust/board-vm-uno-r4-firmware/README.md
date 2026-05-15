@@ -220,12 +220,14 @@ Silicon this keeps the upload path on Arduino's patched BOSSA build; install
 Rosetta if that packaged uploader is x86-only. Override `--rustc`, `--arm-gcc`,
 `--arm-gxx`, `--arm-ar`, `--arm-compat-root`, `--objcopy`, `--arduino-cli`,
 `--bossac-path`, `--target-dir`, `--baud`, or `--timeout-ms` for local tooling
-differences. Before upload, the helper now performs the Arduino-compatible
-1200-baud bootloader touch on the requested port and polls for the bootloader
-port before invoking Arduino CLI. Pass `--no-bootloader-touch` when the board is
-already in bootloader mode, or tune
+differences. Before upload, the helper performs the Arduino-compatible
+1200-baud bootloader touch on the requested port and waits for the UNO R4 WiFi
+bootloader USB identity before invoking Arduino CLI. It no longer treats an
+unchanged runtime port as flashable after a failed touch; if the bootloader PID
+does not appear, retry with a manual double-tap or tune
 `--bootloader-touch-timeout-ms`, `--bootloader-touch-settle-ms`, and
-`--bootloader-port-wait-ms` for local USB timing.
+`--bootloader-port-wait-ms` for local USB timing. Pass `--no-bootloader-touch`
+only when the board is already in bootloader mode.
 
 After flashing any Board VM server image manually, run the host smoke test
 against the adapter serial port:

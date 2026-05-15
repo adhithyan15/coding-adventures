@@ -1,5 +1,127 @@
 # Changelog — `twig-aot`
 
+## 0.3.0 — 2026-05-14 (LANG46 phase 2 — multi-target driver)
+
+**End-to-end Twig source → native binary on Linux x86-64 and Windows
+x86-64.** This is the final piece of the x86-64 port — after this
+release, the same Twig programs that compile on macOS ARM64 compile
+and run on Linux x86-64 and Windows x86-64 hosts.
+
+### New entry points
+
+- `compile_module_linux_x86_64_object(module)` / `compile_linux_x86_64_object(source, name)`
+  — emit an ELF64 `ET_REL` object file via `x86_64-backend` (System V
+  AMD64 ABI) + `code-packager::pack_elf64_object_x86_64`.
+- `compile_module_windows_x86_64_object(module)` / `compile_windows_x86_64_object(source, name)`
+  — emit a PE/COFF `IMAGE_FILE_MACHINE_AMD64` object file via
+  `x86_64-backend` (Microsoft x64 ABI) +
+  `code-packager::pack_pe_object_x86_64`.
+- `compile_file_linux_x86_64(src, out)` (`#[cfg(target_os = "linux")]`)
+  — full pipeline: source → IR → x86_64 bytes → ELF object → `cc` →
+  runnable ELF executable.
+- `compile_file_windows_x86_64(src, out)` (`#[cfg(target_os = "windows")]`)
+  — full pipeline: source → IR → x86_64 bytes → PE/COFF object →
+  linker probe (`link.exe` → `lld-link.exe` → `gcc.exe`) → runnable
+  `.exe`.
+
+### Windows linker probe
+
+The Windows path detects an actual MSVC `link.exe` by parsing the
+banner ("Microsoft" + "Linker") rather than just checking program
+spawnability — git-bash hosts ship a POSIX `link(1)` utility with the
+same name on `PATH`, which would otherwise be (incorrectly) chosen.
+
+### End-to-end smoke tests
+
+- `tests/linux_x86_64_smoke.rs` (`#[cfg(target_os = "linux")]`):
+  compiles small typed Twig programs (`42`, `(+ 30 12)`, `(* 6 7)`,
+  branches), links via `cc`, runs the resulting ELF executable,
+  asserts the exit code matches `main`'s return value.
+- `tests/windows_x86_64_smoke.rs` (`#[cfg(target_os = "windows")]`):
+  same suite via `link.exe` and a `.exe` output.  Each test
+  gracefully skips when no real Windows linker is detected on
+  `PATH` (e.g. MSVC dev env not activated).
+- `tests/macos_arm64_smoke.rs` (existing): unchanged and still
+  passes; verifies the macOS path didn't regress.
+
+Each smoke test runs only on its respective CI runner; the suite
+covers Linux + macOS + Windows end-to-end without cross-compilation.
+
+## 0.2.0 — 2026-05-14 (LANG46 phase 1 — per-host runtime archives)
+
+**Extend `build.rs` to produce per-host runtime archives plus stubs for
+non-host targets.**
+
+Sets up the runtime-archive layer that phase 10's multi-target driver
+will consume.  After this release, `twig-aot` compiled on any of the
+three V1-supported hosts exports three env vars
+(`TWIG_RUNTIME_ARCHIVE_MACOS_ARM64`,
+`TWIG_RUNTIME_ARCHIVE_LINUX_X86_64`,
+`TWIG_RUNTIME_ARCHIVE_WINDOWS_X86_64`), each pointing at either the
+real archive (for the build host's target) or a 1-byte stub (for
+other targets).
+
+The phase 10 driver uses these env vars with `include_bytes!` to bake
+all three runtime archives into the `twig-aot` binary; at AOT compile
+time, it picks the right one based on `--target` and refuses to emit
+for a target whose archive is a stub with a clear "no runtime archive
+for X on this host" error.
+
+### Host-targets-host policy
+
+V1 supports only host-targets-host AOT.  Each CI runner builds for
+its own host and verifies its respective smoke test.  Cross-OS
+compilation is deferred — adding it requires bundling cross
+toolchains with `twig-aot` or detecting them on the host.
+
+### Backwards compatibility
+
+The existing `TWIG_RUNTIME_ARCHIVE` env var is preserved as an alias
+for the host's archive (or a legacy stub on unsupported hosts), so
+the existing `compile_file_macos_arm64` entry point continues to
+work without changes.
+
+## 0.1.9 — 2026-05-13 (LANG42)
+
+**Wire the refinement obligation checker into the AOT pipeline.**
+
+LANG23 built a complete refinement-type infrastructure (solver, checker, type
+annotations on `IIRFunction`), but the IIR never reached the checker —
+annotations silently did nothing.  LANG42 fixes this by adding a pre-codegen
+pass that runs immediately after `twig-ir-compiler` emits the `IIRModule`,
+before any lowering, and discharges every proof obligation through the existing
+`lang-refinement-checker` API.
+
+### New dependency
+
+- **`iir-refinement-pass = { path = "../iir-refinement-pass" }`** — new crate
+  that implements `check_module(module, mode) -> Vec<RefinementError>`.
+
+### New `AotError` variant
+
+- **`AotError::RefinementViolations(Vec<iir_refinement_pass::RefinementError>)`** —
+  returned when one or more proof obligations are `ProvenUnsafe` (Lenient mode)
+  or `ProvenUnsafe | Unknown` (Strict mode).
+
+### Changed
+
+- **`compile_module_macos_arm64_object`** now calls `check_refinements` before
+  `compile_module_to_text`.  In `Lenient` mode (default) only `ProvenUnsafe`
+  outcomes abort compilation.
+
+- **`compile_module_macos_arm64_object_with_mode`** — new public function
+  accepting an explicit `RefinementMode`.  The old function delegates to it
+  with `Lenient`.
+
+### Tests added
+
+- `refinement_violation_becomes_aot_error` — a literal that violates a
+  `(Int 0 128)` annotation returns `Err(AotError::RefinementViolations)`.
+- `safe_annotated_program_compiles_ok` — a literal within range compiles
+  normally.
+
+---
+
 ## 0.1.8 — 2026-05-13 (LANG41)
 
 **Replace macOS-specific `emit_print_helper` injection with a portable C

@@ -1,5 +1,5 @@
 use arduino_uno_r4_hal::Delay;
-use board_vm_runtime::{GpioMode, HalError, Level};
+use board_vm_runtime::{ByteBuffer, GpioMode, HalError, Level};
 use board_vm_uno_r4::UnoR4Backend;
 use embedded_hal::delay::DelayNs;
 
@@ -163,6 +163,22 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
         true
     }
 
+    fn supports_dac(&self) -> bool {
+        true
+    }
+
+    fn supports_i2c(&self) -> bool {
+        true
+    }
+
+    fn supports_spi(&self) -> bool {
+        true
+    }
+
+    fn supports_bootloader_reboot(&self) -> bool {
+        true
+    }
+
     fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
         self.inner.led_matrix_frame(frame)
     }
@@ -183,6 +199,97 @@ impl UnoR4Backend for UnoR4WifiPwmBackend {
             Err(HalError::UnsupportedMode)
         }
     }
+
+    fn write_dac_u12(&mut self, pin: u8, sample: u16) -> Result<(), HalError> {
+        if unsafe { board_io_ffi::board_vm_uno_r4_dac_write_u12(pin, sample) } {
+            Ok(())
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
+    fn open_i2c(&mut self, bus: u8) -> Result<u32, HalError> {
+        Ok(0x12_0000 | bus as u32)
+    }
+
+    fn open_spi(&mut self, bus: u8) -> Result<u32, HalError> {
+        Ok(0x13_0000 | bus as u32)
+    }
+
+    fn write_i2c_u8(&mut self, bus: u8, address: u16, byte: u8) -> Result<(), HalError> {
+        if unsafe { board_io_ffi::board_vm_uno_r4_i2c_write_u8(bus, address, byte) } {
+            Ok(())
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
+    fn write_i2c(&mut self, bus: u8, address: u16, bytes: &[u8]) -> Result<(), HalError> {
+        if unsafe {
+            board_io_ffi::board_vm_uno_r4_i2c_write(bus, address, bytes.as_ptr(), bytes.len())
+        } {
+            Ok(())
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
+    fn read_i2c_u8(&mut self, bus: u8, address: u16) -> Result<u8, HalError> {
+        let mut byte = 0;
+        if unsafe { board_io_ffi::board_vm_uno_r4_i2c_read_u8(bus, address, &mut byte) } {
+            Ok(byte)
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
+    fn read_i2c(&mut self, bus: u8, address: u16, len: u8) -> Result<ByteBuffer, HalError> {
+        let mut bytes = [0u8; board_vm_ir::MAX_BYTE_BUFFER_LEN];
+        let mut read_len = 0;
+        if unsafe {
+            board_io_ffi::board_vm_uno_r4_i2c_read(
+                bus,
+                address,
+                bytes.as_mut_ptr(),
+                len as usize,
+                &mut read_len,
+            )
+        } {
+            ByteBuffer::from_slice(&bytes[..read_len]).map_err(|_| HalError::UnsupportedMode)
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
+    fn transfer_i2c(
+        &mut self,
+        bus: u8,
+        address: u16,
+        write_bytes: &[u8],
+        read_len: u8,
+    ) -> Result<ByteBuffer, HalError> {
+        let mut bytes = [0u8; board_vm_ir::MAX_BYTE_BUFFER_LEN];
+        let mut actual_read_len = 0;
+        if unsafe {
+            board_io_ffi::board_vm_uno_r4_i2c_transfer(
+                bus,
+                address,
+                write_bytes.as_ptr(),
+                write_bytes.len(),
+                bytes.as_mut_ptr(),
+                read_len as usize,
+                &mut actual_read_len,
+            )
+        } {
+            ByteBuffer::from_slice(&bytes[..actual_read_len]).map_err(|_| HalError::UnsupportedMode)
+        } else {
+            Err(HalError::UnsupportedMode)
+        }
+    }
+
+    fn reboot_to_bootloader(&mut self) -> Result<(), HalError> {
+        board_vm_uno_r4_usb_cdc::reboot_to_bootloader()
+    }
 }
 
 #[cfg(all(target_arch = "arm", board_vm_uno_r4_arduino_usb_link))]
@@ -190,5 +297,30 @@ mod board_io_ffi {
     unsafe extern "C" {
         pub fn board_vm_uno_r4_pwm_write(pin: u8, duty: u16) -> bool;
         pub fn board_vm_uno_r4_adc_read(pin: u8, sample: *mut u16) -> bool;
+        pub fn board_vm_uno_r4_dac_write_u12(pin: u8, sample: u16) -> bool;
+        pub fn board_vm_uno_r4_i2c_write_u8(bus: u8, address: u16, byte: u8) -> bool;
+        pub fn board_vm_uno_r4_i2c_write(
+            bus: u8,
+            address: u16,
+            bytes: *const u8,
+            len: usize,
+        ) -> bool;
+        pub fn board_vm_uno_r4_i2c_read_u8(bus: u8, address: u16, byte: *mut u8) -> bool;
+        pub fn board_vm_uno_r4_i2c_read(
+            bus: u8,
+            address: u16,
+            bytes: *mut u8,
+            len: usize,
+            read_len: *mut usize,
+        ) -> bool;
+        pub fn board_vm_uno_r4_i2c_transfer(
+            bus: u8,
+            address: u16,
+            write_bytes: *const u8,
+            write_len: usize,
+            read_bytes: *mut u8,
+            read_len: usize,
+            actual_read_len: *mut usize,
+        ) -> bool;
     }
 }

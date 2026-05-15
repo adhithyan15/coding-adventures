@@ -57,6 +57,7 @@ from symbolic_ir import (
     ADD,
     DIV,
     MUL,
+    NEG,
     POW,
     IRApply,
     IRInteger,
@@ -236,6 +237,12 @@ def _match_exp(
     """Match ``f = exp(a*t)`` or ``f = exp(t)`` (when a=1).
 
     Returns ``{"a": a_node}`` where a_node is an IR node for the coefficient.
+
+    Handles all of:
+    - ``exp(t)``        → a = 1
+    - ``exp(a*t)``      → a = a
+    - ``exp(-t)``       → a = -1   (Neg(t) in the IR)
+    - ``exp(-a*t)``     → a = -a   (Neg(Mul(a, t)) in the IR)
     """
     if not (
         isinstance(f, IRApply)
@@ -245,9 +252,10 @@ def _match_exp(
     ):
         return None
     arg = f.args[0]
-    # Verify the arg was indeed a*t form (linear in t)
+    # exp(t) — bare variable
     if isinstance(arg, IRSymbol) and arg.name == t_sym.name:
         return {"a": IRInteger(1)}
+    # exp(a*t) — constant times variable
     if (
         isinstance(arg, IRApply)
         and isinstance(arg.head, IRSymbol)
@@ -259,6 +267,30 @@ def _match_exp(
             return {"a": aa}
         if isinstance(aa, IRSymbol) and aa.name == t_sym.name and _is_const(bb, t_sym):
             return {"a": bb}
+    # exp(-t)  or  exp(-(a*t))  — Neg wrapping t or Mul(a, t)
+    # These arise when the parser represents -t as Neg(t) rather than Mul(-1, t).
+    if (
+        isinstance(arg, IRApply)
+        and isinstance(arg.head, IRSymbol)
+        and arg.head.name == "Neg"
+        and len(arg.args) == 1
+    ):
+        inner = arg.args[0]
+        # exp(-t): inner = t
+        if isinstance(inner, IRSymbol) and inner.name == t_sym.name:
+            return {"a": IRInteger(-1)}
+        # exp(-(a*t)): inner = Mul(a, t) or Mul(t, a)
+        if (
+            isinstance(inner, IRApply)
+            and isinstance(inner.head, IRSymbol)
+            and inner.head.name == "Mul"
+            and len(inner.args) == 2
+        ):
+            aa, bb = inner.args
+            if isinstance(bb, IRSymbol) and bb.name == t_sym.name and _is_const(aa, t_sym):
+                return {"a": IRApply(NEG, (aa,))}
+            if isinstance(aa, IRSymbol) and aa.name == t_sym.name and _is_const(bb, t_sym):
+                return {"a": IRApply(NEG, (bb,))}
     return None
 
 
