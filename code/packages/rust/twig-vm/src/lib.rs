@@ -483,3 +483,96 @@ mod tests {
         assert!(e.source().is_some(), "should expose underlying error");
     }
 }
+
+// ---------------------------------------------------------------------------
+// LANG57 / TW05-D — smoke tests for record, union, and match at runtime.
+//
+// These tests confirm that:
+//   1. `(record …)` constructor and accessor IIR functions execute correctly.
+//   2. `(union …)` variant constructors, predicates, and match dispatch work.
+//   3. The `compile_match` jmpif→jmp_if_false fix is effective.
+// ---------------------------------------------------------------------------
+#[cfg(test)]
+mod tw05d_smoke {
+    use super::*;
+
+    fn run(src: &str) -> LispyValue {
+        TwigVM::new().run(src).expect("tw05d smoke test should succeed")
+    }
+
+    // ── Records ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn record_construction_and_first_accessor() {
+        // (record Point (x : int) (y : int)) generates Point constructor and
+        // point-x / point-y accessors.  point-x extracts the first field.
+        let v = run("(record Point (x : int) (y : int)) (point-x (Point 3 4))");
+        assert_eq!(v.as_int(), Some(3), "point-x should return 3");
+    }
+
+    #[test]
+    fn record_second_field_accessor() {
+        // point-y extracts the second field via cdr+car.
+        let v = run("(record Point (x : int) (y : int)) (point-y (Point 3 4))");
+        assert_eq!(v.as_int(), Some(4), "point-y should return 4");
+    }
+
+    // ── Unions and match ─────────────────────────────────────────────────────
+
+    #[test]
+    fn union_match_first_variant() {
+        // match on Circle — should extract the radius field.
+        let src = "
+            (union Shape (Circle (r : int)) (Rect (w : int) (h : int)))
+            (match (Circle 5)
+              ((Circle r) r)
+              (_ 0))
+        ";
+        assert_eq!(run(src).as_int(), Some(5));
+    }
+
+    #[test]
+    fn union_match_second_variant() {
+        // match on Rect — Circle arm should be skipped, Rect arm selected.
+        let src = "
+            (union Shape (Circle (r : int)) (Rect (w : int) (h : int)))
+            (match (Rect 3 4)
+              ((Circle r) 0)
+              ((Rect w h) w))
+        ";
+        assert_eq!(run(src).as_int(), Some(3));
+    }
+
+    #[test]
+    fn union_match_wildcard_arm() {
+        // Wildcard arm `_` must match any variant not caught by earlier arms.
+        let src = "
+            (union Color (Red) (Green) (Blue))
+            (match (Green) (_ 99))
+        ";
+        assert_eq!(run(src).as_int(), Some(99));
+    }
+
+    #[test]
+    fn union_predicate_true_for_matching_variant() {
+        // VarName? predicate returns #t when the value's tag matches.
+        let src = "(union T (A) (B)) (A? (A))";
+        assert!(run(src).is_truthy(), "A? (A) should be truthy");
+    }
+
+    #[test]
+    fn union_predicate_false_for_other_variant() {
+        // VarName? predicate returns #f when the value's tag does not match.
+        let src = "(union T (A) (B)) (A? (B))";
+        assert!(!run(src).is_truthy(), "A? (B) should be falsy");
+    }
+
+    // ── Match arm patterns ───────────────────────────────────────────────────
+
+    #[test]
+    fn match_bare_binding_arm() {
+        // A bare-name binding arm binds the matched value to the name.
+        let src = "(match 42 (n n))";
+        assert_eq!(run(src).as_int(), Some(42));
+    }
+}

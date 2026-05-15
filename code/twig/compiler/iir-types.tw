@@ -1,0 +1,81 @@
+; # iir-types.tw — Interpreter IR Types (LANG57 / TW05-D)
+;
+; The Interpreter IR (IIR) is the compiler's output format — a flat
+; three-address-code representation that the VM dispatches directly.
+; This module defines the Twig-side data model for IIR instructions and
+; type hints.
+;
+; ## TypeHint — what the instruction produces
+;
+; IIR instructions carry a `type_hint` describing the type of the result.
+; This is used by the LANG50 annotation-propagation pass and by downstream
+; optimisers.  The variants mirror the `"i64"`, `"bool"`, `"str"`, `"any"`,
+; and `"void"` strings used in the Rust VM.
+;
+;   TInt     — instruction produces an integer (i64 at runtime)
+;   TBool    — instruction produces a boolean
+;   TStr     — instruction produces a heap string
+;   TClosure — instruction produces a closure handle
+;   TAny     — type unknown at compile time
+;   TVoid    — instruction has no meaningful result (control-flow ops)
+;
+; ## IirInstr — one three-address instruction
+;
+; Each instruction has:
+;   `op`        — operation name string, e.g. "const", "add", "jmp_if_false"
+;   `dest`      — destination register name (string), or nil for void ops
+;   `srcs`      — list of source operands (each a string or int constant)
+;   `type-hint` — a TypeHint union value
+;   `span`      — source location where this instruction was generated
+;
+; ## Naming note: record accessor prefix
+;
+; The Twig compiler lowercases the record name to form the accessor prefix:
+;   `IirInstr` → prefix `iirinstr`
+; So the generated accessors are:
+;   `iirinstr-op`, `iirinstr-dest`, `iirinstr-srcs`,
+;   `iirinstr-type-hint`, `iirinstr-span`
+; NOT `iir-instr-*`.  The predicate is `iirinstr?`.
+;
+; Example: the instruction `%r0 = add %r1, %r2 : i64` becomes
+;   (IirInstr "add" "r0" (list "r1" "r2") (TInt) sp)
+; and to extract its op: `(iirinstr-op instr)`
+
+(module compiler/iir-types
+  (typed lenient)
+  (export TypeHint TInt TBool TStr TClosure TAny TVoid
+          TInt? TBool? TStr? TClosure? TAny? TVoid?
+          IirInstr iirinstr? iirinstr-op iirinstr-dest
+          iirinstr-srcs iirinstr-type-hint iirinstr-span)
+  (import compiler/span))
+
+; ── TypeHint union ───────────────────────────────────────────────────────────
+;
+; Tag assignments (0-based):
+;   0 = TInt
+;   1 = TBool
+;   2 = TStr
+;   3 = TClosure
+;   4 = TAny
+;   5 = TVoid
+
+(union TypeHint
+  (TInt)
+  (TBool)
+  (TStr)
+  (TClosure)
+  (TAny)
+  (TVoid))
+
+; ── IirInstr record ──────────────────────────────────────────────────────────
+;
+; Generated accessor prefix: `iirinstr` (lowercase of "IirInstr").
+; All fields typed `any` so the type checker doesn't need to know about
+; nested TypeHint / Span records at this stage.
+
+(record IirInstr
+  (op        : any)
+  (dest      : any)
+  (srcs      : any)
+  (type-hint : any)
+  (span      : any))

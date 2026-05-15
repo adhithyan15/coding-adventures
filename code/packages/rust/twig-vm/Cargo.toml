@@ -1,8 +1,8 @@
 [package]
 name = "twig-vm"
-version = "0.14.0"
+version = "0.15.0"
 edition = "2021"
-description = "LANG47 + LANG52 + LANG55 + LANG56 — string heap objects (LangString), string/char builtins, host I/O, higher-order list ops, and multi-file module driver entry points (run_file, run_module_tree)"
+description = "LANG47 + LANG52 + LANG55 + LANG56 + LANG57 — string heap objects, builtins, host I/O, higher-order list ops, multi-file entry points, record/union/match runtime smoke tests"
 
 [dependencies]
 twig-ir-compiler   = { path = "../twig-ir-compiler" }

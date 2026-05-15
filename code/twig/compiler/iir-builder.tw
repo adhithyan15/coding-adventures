@@ -1,0 +1,148 @@
+; # iir-builder.tw — IIR Builder API (LANG57 / TW05-D)
+;
+; `IirBuilder` is a functional accumulator for IIR instructions.  Each
+; builder operation returns an *updated* builder (functional update, not
+; mutation) so the compiler can thread state through a fold.
+;
+; ## Why functional?
+;
+; Twig has no mutable state.  Instead of `builder.push(instr)` we write:
+;   `(append-instr b instr)  ; returns new builder with instr prepended`
+;
+; Instructions are accumulated in *reverse* order (head prepend, O(1));
+; the `finalise-builder` function reverses the list before returning.
+;
+; ## Naming note: record accessor prefix
+;
+; The Twig compiler lowercases the record name to form the accessor prefix:
+;   `IirBuilder` → prefix `iirbuilder`
+; So the generated accessors are:
+;   `iirbuilder-name`, `iirbuilder-instrs`,
+;   `iirbuilder-reg-count`, `iirbuilder-label-count`
+; NOT `iir-builder-*`.  The predicate is `iirbuilder?`.
+;
+; ## No setters — use with-field copy functions
+;
+; The generated `record` form creates constructor + accessors + predicate
+; only — no setters.  "Updating" a field means constructing a new record
+; with all other fields copied.  The three `iirbuilder-with-*` helpers
+; below implement this pattern.
+;
+; ## Multi-return via cons pairs
+;
+; Twig does not support `(values ...)`.  Functions that need to return
+; both an updated builder and a derived value use the cons-pair idiom:
+;   `(cons updated-builder (cons result nil))`
+; Callers extract with:
+;   `(car pair)` for the builder, `(car (cdr pair))` for the result.
+;
+; ## Example session
+;
+;   (let* ((b0  (new-builder 'my-fn))
+;          (p1  (alloc-slot b0))
+;          (b1  (car p1))
+;          (r0  (car (cdr p1)))
+;          (b2  (append-instr b1 (IirInstr "const" r0 (list 42) (TInt) (dummy-span))))
+;          (ins (finalise-builder b2)))
+;     (length ins))   ; → 1
+
+(module compiler/iir-builder
+  (typed lenient)
+  (export IirBuilder iirbuilder? iirbuilder-name iirbuilder-instrs
+          iirbuilder-reg-count iirbuilder-label-count
+          new-builder alloc-slot alloc-label append-instr finalise-builder)
+  (import compiler/iir-types compiler/span))
+
+; ── IirBuilder record ────────────────────────────────────────────────────────
+;
+; Fields:
+;   `name`        — function name this builder is compiling (symbol)
+;   `instrs`      — accumulated instructions in *reverse* order (list)
+;   `reg-count`   — next fresh register index
+;   `label-count` — next fresh label index
+;
+; Generated accessor prefix: `iirbuilder` (lowercase of "IirBuilder").
+; Accessors: `iirbuilder-name`, `iirbuilder-instrs`,
+;            `iirbuilder-reg-count`, `iirbuilder-label-count`.
+
+(record IirBuilder
+  (name        : any)
+  (instrs      : any)
+  (reg-count   : int)
+  (label-count : int))
+
+; ── with-field copy helpers ───────────────────────────────────────────────────
+;
+; Each function constructs a new IirBuilder identical to `b` except for
+; one updated field.  This is the Twig idiomatic substitute for setters.
+;
+; Note: all accessor calls use the generated prefix `iirbuilder-`.
+
+(define (iirbuilder-with-instrs b new-instrs)
+  (IirBuilder (iirbuilder-name b) new-instrs
+              (iirbuilder-reg-count b) (iirbuilder-label-count b)))
+
+(define (iirbuilder-with-reg-count b n)
+  (IirBuilder (iirbuilder-name b) (iirbuilder-instrs b)
+              n (iirbuilder-label-count b)))
+
+(define (iirbuilder-with-label-count b n)
+  (IirBuilder (iirbuilder-name b) (iirbuilder-instrs b)
+              (iirbuilder-reg-count b) n))
+
+; ── new-builder ───────────────────────────────────────────────────────────────
+;
+; Create an empty builder for a function named `fn-name`.
+
+(define (new-builder fn-name)
+  (IirBuilder fn-name nil 0 0))
+
+; ── alloc-slot ────────────────────────────────────────────────────────────────
+;
+; Allocate a fresh virtual register.  Returns `(cons b2 (cons slot nil))`
+; where `b2` is the updated builder and `slot` is the register name symbol.
+;
+; Register names follow the Rust IIR convention: `%r0`, `%r1`, etc.
+; In the Twig representation we store them as symbols `r0`, `r1`, …
+;
+;   (let* ((p    (alloc-slot b))
+;          (b2   (car p))
+;          (slot (car (cdr p))))
+;     …)
+
+(define (alloc-slot b)
+  (let* ((idx  (iirbuilder-reg-count b))
+         (slot (symbol-append 'r (string->symbol (number->string idx))))
+         (b2   (iirbuilder-with-reg-count b (+ idx 1))))
+    (cons b2 (cons slot nil))))
+
+; ── alloc-label ───────────────────────────────────────────────────────────────
+;
+; Allocate a fresh label identifier (an integer).  Returns
+; `(cons b2 (cons label-id nil))`.
+;
+;   (let* ((p   (alloc-label b))
+;          (b2  (car p))
+;          (lbl (car (cdr p))))
+;     …)
+
+(define (alloc-label b)
+  (let* ((id (iirbuilder-label-count b))
+         (b2 (iirbuilder-with-label-count b (+ id 1))))
+    (cons b2 (cons id nil))))
+
+; ── append-instr ──────────────────────────────────────────────────────────────
+;
+; Prepend `instr` to the instruction list (O(1)).  `finalise-builder`
+; reverses the list before it is used.
+
+(define (append-instr b instr)
+  (iirbuilder-with-instrs b (cons instr (iirbuilder-instrs b))))
+
+; ── finalise-builder ──────────────────────────────────────────────────────────
+;
+; Return the accumulated instruction list in source order (reversed from
+; the internal cons-prepend order).
+
+(define (finalise-builder b)
+  (reverse (iirbuilder-instrs b)))

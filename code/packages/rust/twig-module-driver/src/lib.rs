@@ -459,19 +459,72 @@ pub fn compile_module_tree(
     // (e.g. `(double 21)` in main.tw when `double` is defined in lib.tw),
     // we pre-register every function name from every module as an "extern".
     //
-    // Only top-level `(define (fn …) …)` forms contribute to `fn_globals`.
-    // Value defines, record/union constructors, etc. are handled by the
-    // compiler's own pre-pass.
+    // We collect names from three sources:
+    //
+    // 1. `(define (fn …) …)` — user-defined lambda functions.
+    //
+    // 2. `(record Name (f0 : T) …)` — the compiler auto-generates:
+    //      • constructor `Name(f0, …)`
+    //      • accessors   `<lowercase(Name)>-<fi>` for each field i
+    //      • predicate   `<lowercase(Name)>?`
+    //
+    // 3. `(union Name (V0 (g0 : T) …) …)` — per-variant:
+    //      • constructor `V0(g0, …)`
+    //      • predicate   `V0?`
+    //      • accessors   `<lowercase(V0)>-<gj>` for each field j
+    //
+    // Without pre-registering these names, calling e.g. `(span-start sp)`
+    // from an importing module fails with "unbound name" during compilation.
     let mut all_fn_names: Vec<String> = Vec::new();
+
     for (_, program, _) in &discovered {
         for form in &program.forms {
-            if let Form::Define(def) = form {
-                if matches!(def.expr, Expr::Lambda(_)) {
-                    all_fn_names.push(def.name.clone());
+            match form {
+                // ── (define (fn …) …) ──────────────────────────────────
+                Form::Define(def) => {
+                    if matches!(def.expr, Expr::Lambda(_)) {
+                        all_fn_names.push(def.name.clone());
+                    }
                 }
+                // ── (record Name (f0 : T) …) ───────────────────────────
+                Form::RecordDef(rec) => {
+                    let prefix = rec.name.to_lowercase();
+                    // Constructor: exact record name (CamelCase).
+                    all_fn_names.push(rec.name.clone());
+                    // Predicate: <lowercase(name)>?
+                    all_fn_names.push(format!("{prefix}?"));
+                    // Accessors: <lowercase(name)>-<field>
+                    for field in &rec.fields {
+                        all_fn_names.push(format!("{prefix}-{}", field.name));
+                    }
+                }
+                // ── (union Name (V0 …) …) ──────────────────────────────
+                //
+                // Naming rules (must mirror `emit_union_def` in twig-ir-compiler):
+                //   • Constructor: exact variant name (e.g. `TkInteger`)
+                //   • Predicate:   variant name + "?" (exact case, e.g. `TkInteger?`)
+                //   • Accessors:   lowercase(variant) + "-" + field  (e.g. `tkinteger-value`)
+                //
+                // Note: union predicates keep their original case (`TkInteger?`)
+                // whereas record predicates are fully lowercased (`span?`).
+                Form::UnionDef(union) => {
+                    for variant in &union.variants {
+                        let vprefix = variant.name.to_lowercase();
+                        // Constructor: exact variant name (CamelCase).
+                        all_fn_names.push(variant.name.clone());
+                        // Predicate: <variant.name>? (original case — mirrors the compiler).
+                        all_fn_names.push(format!("{}?", variant.name));
+                        // Accessors: <lowercase(variant)>-<field>
+                        for field in &variant.fields {
+                            all_fn_names.push(format!("{vprefix}-{}", field.name));
+                        }
+                    }
+                }
+                _ => {}
             }
         }
     }
+
     let extern_refs: Vec<&str> = all_fn_names.iter().map(|s| s.as_str()).collect();
 
     // ── Phase 4: Compile each module with all extern names pre-registered ─────
@@ -803,5 +856,209 @@ mod tests {
         let m = compile_module_tree(&root, &[]).unwrap();
         assert_eq!(m.entry_point.as_deref(), Some("main"),
             "linked module should have entry_point = main");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TW05-D integration tests — compiler data model in typed Twig (LANG57)
+// ---------------------------------------------------------------------------
+//
+// These tests exercise the real `.tw` source files under
+// `code/twig/compiler/`.  Each test:
+//   1. Copies the required `.tw` files from the source tree to a temp dir
+//      under `<tempdir>/compiler/`.
+//   2. Writes a small test-entry `.tw` file (or reuses `main.tw`) to
+//      `<tempdir>/compiler/main.tw`.
+//   3. Calls `twig_vm::run_module_tree` with search root `<tempdir>`.
+//
+// The source files live at a path derived from `CARGO_MANIFEST_DIR` so the
+// tests are hermetic regardless of the working directory at test time.
+
+#[cfg(test)]
+mod tw05d_tests {
+    use std::fs;
+    use std::path::{Path, PathBuf};
+
+    // ── Helpers ─────────────────────────────────────────────────────────────
+
+    /// Return the path to the `code/twig/compiler/` source directory.
+    /// Derived from CARGO_MANIFEST_DIR so it's crate-relative, not CWD-relative.
+    fn twig_compiler_src() -> PathBuf {
+        // CARGO_MANIFEST_DIR is <repo>/code/packages/rust/twig-module-driver
+        // so ../../../twig/compiler reaches code/twig/compiler/
+        let manifest = env!("CARGO_MANIFEST_DIR");
+        Path::new(manifest)
+            .join("../../../twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    /// Create a fresh temp directory for one test (tag prevents collisions).
+    fn tempdir(tag: &str) -> PathBuf {
+        let d = std::env::temp_dir().join(format!("twig_tw05d_test_{tag}"));
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    /// Copy `<twig_src>/<name>.tw` → `<tempdir>/compiler/<name>.tw`.
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler").join(format!("{name}.tw"));
+        fs::create_dir_all(dest.parent().unwrap()).unwrap();
+        fs::copy(&src, &dest)
+            .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
+    }
+
+    /// Write an ad-hoc test entry file to `<dest_dir>/compiler/main.tw`.
+    fn write_test_main(dest_dir: &Path, imports: &[&str], body: &str) -> PathBuf {
+        let import_clause: String = imports
+            .iter()
+            .map(|i| format!("          (import {i})"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let src = format!(
+            "(module compiler/main\n  (typed lenient)\n  (export main)\n{import_clause})\n\n(define (main) {body})\n"
+        );
+        let path = dest_dir.join("compiler").join("main.tw");
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, &src).unwrap();
+        path
+    }
+
+    // ── Test 1: make-span valid invariant ────────────────────────────────────
+
+    #[test]
+    fn span_make_span_valid_invariant() {
+        // (make-span 0 3 7) should return a non-nil Span; we extract span-start
+        // which should equal 3 to confirm a real record was constructed.
+        let src = twig_compiler_src();
+        let dir = tempdir("span_valid");
+        copy_tw(&src, &dir, "span");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span"],
+            "(span-start (make-span 0 3 7))",
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("span make-span valid should compile and run");
+        assert_eq!(v.as_int(), Some(3), "span-start of make-span(0,3,7) should be 3");
+    }
+
+    // ── Test 2: make-span bad invariant → nil ────────────────────────────────
+
+    #[test]
+    fn span_make_span_bad_invariant_returns_nil() {
+        // (make-span 0 7 3) — start > end — should return nil.
+        let src = twig_compiler_src();
+        let dir = tempdir("span_bad");
+        copy_tw(&src, &dir, "span");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span"],
+            "(if (make-span 0 7 3) 1 0)",
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("span make-span bad invariant should compile and run");
+        assert_eq!(v.as_int(), Some(0), "make-span(0,7,3) should be falsy (nil); expected 0");
+    }
+
+    // ── Test 3: TkInteger? predicate ─────────────────────────────────────────
+
+    #[test]
+    fn token_tkinteger_predicate() {
+        // (TkInteger? (TkInteger)) should return a truthy value.
+        // Tests that the union variant predicate is generated correctly.
+        let src = twig_compiler_src();
+        let dir = tempdir("token_pred");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "token");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/token"],
+            "(if (TkInteger? (TkInteger)) 1 0)",
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("token TkInteger? predicate should compile and run");
+        assert_eq!(v.as_int(), Some(1), "TkInteger? (TkInteger) should be truthy");
+    }
+
+    // ── Test 4: AST IntLit accessor extracts value ──────────────────────────
+
+    #[test]
+    fn ast_intlit_accessor_extracts_value() {
+        // (IntLit 99 nil) constructs a union value; (intlit-value ...) extracts
+        // field 0 (value).  Uses the generated accessor for a cross-module union.
+        //
+        // Note: cross-module (match ...) on variant patterns requires variant_tags
+        // to be propagated across modules (a LANG58 improvement).  We use the
+        // generated accessor (`intlit-value`) instead, which is a plain cross-module
+        // function call and works with LANG57's extern_fns pre-registration.
+        let src = twig_compiler_src();
+        let dir = tempdir("ast_accessor");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "ast");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/ast"],
+            "(intlit-value (IntLit 99 nil))",
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("ast IntLit accessor should compile and run");
+        assert_eq!(v.as_int(), Some(99), "intlit-value of (IntLit 99 nil) should be 99");
+    }
+
+    // ── Test 5: IirBuilder alloc-slot increments reg-count ──────────────────
+
+    #[test]
+    fn iir_builder_alloc_slot_increments_reg_count() {
+        // new-builder creates a builder with reg-count 0;
+        // alloc-slot returns an updated builder with reg-count 1.
+        let src = twig_compiler_src();
+        let dir = tempdir("iirbuilder_slot");
+        copy_tw(&src, &dir, "span");
+        copy_tw(&src, &dir, "iir-types");
+        copy_tw(&src, &dir, "iir-builder");
+
+        let root = write_test_main(
+            &dir,
+            &["compiler/span", "compiler/iir-types", "compiler/iir-builder"],
+            // `iirbuilder-reg-count` — generated prefix is `iirbuilder` (lowercase of IirBuilder)
+            "(let* ((b0 (new-builder 'fn1)) \
+                    (p  (alloc-slot b0)) \
+                    (b1 (car p))) \
+               (iirbuilder-reg-count b1))",
+        );
+
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("iir-builder alloc-slot should compile and run");
+        assert_eq!(v.as_int(), Some(1), "alloc-slot should increment reg-count to 1");
+    }
+
+    // ── Test 6: Full module tree smoke test ──────────────────────────────────
+
+    #[test]
+    fn full_module_tree_smoke_test() {
+        // Compile all 7 .tw files (the actual source files from code/twig/compiler/)
+        // and run (main).  Expected result: 1 (one register slot allocated).
+        let src = twig_compiler_src();
+        let dir = tempdir("full_tree");
+
+        for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder", "main"] {
+            copy_tw(&src, &dir, name);
+        }
+
+        let root = dir.join("compiler").join("main.tw");
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .expect("full compiler data-model tree should compile and run");
+        assert_eq!(v.as_int(), Some(1),
+            "(main) should return 1 — one register slot was allocated by alloc-slot");
     }
 }

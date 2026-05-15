@@ -1,5 +1,43 @@
 # Changelog — twig-ir-compiler
 
+## [0.12.0] — 2026-05-15
+
+### Added (LANG57 — TW05-D string/symbol conversion builtins)
+
+- **`"number->string"`, `"string->symbol"`, `"symbol->string"` added to
+  `BUILTINS`** — these three conversions have been in `lispy-runtime` since
+  LANG47 but were accidentally omitted from the compiler's `BUILTINS`
+  constant.  Without this entry the compiler treated calls like
+  `(number->string 42)` as user-function calls, which then failed with
+  "unbound name" when no top-level define existed.  Adding them makes
+  string↔number↔symbol conversions usable from any Twig source file,
+  including the new `code/twig/compiler/` data model modules.
+
+- **`extern_fns` in `compile_module_tree` now covers record/union generated
+  names** — the `twig-module-driver` Phase 3 pre-pass was extended to
+  collect constructor, predicate, and accessor names from `Form::RecordDef`
+  and `Form::UnionDef`.  This fixes "unbound name" errors when one Twig
+  module calls record/union functions defined in another module.
+
+---
+
+## [0.11.0] — 2026-05-15
+
+### Fixed (LANG57 — TW05-D prerequisite)
+
+- **`compile_match`: `jmpif` → `jmp_if_false`** — The variant-arm lowering in
+  `compile_match` previously emitted a non-standard three-operand opcode `"jmpif"`
+  (`jmpif cond arm_label skip_label`).  This opcode was never registered in the VM
+  dispatch table, causing every `(match …)` expression to fail at runtime with
+  `UnsupportedOpcode("jmpif")`.
+  
+  Fixed by replacing it with the standard two-operand `jmp_if_false` pattern
+  (identical to `compile_if`): when the tag comparison is false, jump to
+  `skip_label`; when true, fall through to the arm body.  The now-redundant
+  `label arm_label` instruction is also removed.
+
+---
+
 ## [0.10.0] — 2026-05-14
 
 ### Added (LANG56 — Multi-File Module Driver)

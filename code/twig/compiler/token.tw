@@ -1,0 +1,64 @@
+; # token.tw — Token Kinds and Token Records (LANG57 / TW05-D)
+;
+; A `Token` is the smallest unit produced by the lexer.  Each token carries
+; a `kind` (one of the `TokenKind` union variants), a `lexeme` (the raw
+; substring from the source, stored as a string), and a `span` (source
+; location as a `Span` record from compiler/span).
+;
+; Example:
+;   (let* ((sp  (make-span 0 0 2))
+;          (tok (Token (TkInteger) "42" sp)))
+;     (TkInteger? (token-kind tok)))   ; → #t
+;
+; The union `TokenKind` covers all surface syntax categories.  Variants with
+; no fields are encoded as `(cons tag nil)` in the heap; the generated
+; predicates check the `car` (the integer tag).
+
+(module compiler/token
+  (typed lenient)
+  (export TokenKind TkLParen TkRParen TkInteger TkIdentifier
+          TkBoolean TkString TkDot TkQuote TkEOF
+          TkLParen? TkRParen? TkInteger? TkIdentifier?
+          TkBoolean? TkString? TkDot? TkQuote? TkEOF?
+          Token token? token-kind token-lexeme token-span)
+  (import compiler/span))
+
+; ── Token-kind union ─────────────────────────────────────────────────────────
+;
+; Tag assignments (auto-assigned 0-based by the compiler):
+;   0 = TkLParen      — `(`
+;   1 = TkRParen      — `)`
+;   2 = TkInteger     — digit sequence, e.g. `42`
+;   3 = TkIdentifier  — symbol / operator name, e.g. `define`, `+`
+;   4 = TkBoolean     — `#t` or `#f`
+;   5 = TkString      — double-quoted string literal, e.g. `"hello"`
+;   6 = TkDot         — `.` (used in dotted pairs)
+;   7 = TkQuote       — `'` (shorthand for `(quote ...)`)
+;   8 = TkEOF         — sentinel end-of-input token
+
+(union TokenKind
+  (TkLParen)
+  (TkRParen)
+  (TkInteger)
+  (TkIdentifier)
+  (TkBoolean)
+  (TkString)
+  (TkDot)
+  (TkQuote)
+  (TkEOF))
+
+; ── Token record ─────────────────────────────────────────────────────────────
+;
+; `kind`   — a `TokenKind` union value
+; `lexeme` — the raw source text for this token (string)
+; `span`   — source location (Span record)
+;
+; Note: `kind` and `span` are typed `any` here because the Twig type checker
+; does not yet support opaque user-defined record/union types as annotation
+; targets.  They are treated as `any` at the type-checker level; the runtime
+; fully enforces the representation via the heap.
+
+(record Token
+  (kind   : any)
+  (lexeme : any)
+  (span   : any))

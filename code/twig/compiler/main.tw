@@ -1,0 +1,72 @@
+; # main.tw — Root Module + Smoke-Test Entry Point (LANG57 / TW05-D)
+;
+; This is the root module of the self-hosted compiler data model.  It
+; imports all six sub-modules and exposes a `(main)` function that
+; exercises the full module graph in a single call:
+;
+;   1. Create a `Span` via the validated constructor
+;   2. Wrap it in a `Token`
+;   3. Create an `IirBuilder`, allocate one slot from it
+;   4. Return the new `reg-count` — should be 1
+;
+; The `(main)` return value of `1` is the integration test assertion:
+; if the module graph compiles and links correctly, and the builder
+; correctly increments its register counter, the result is 1.
+;
+; ## Naming conventions for generated accessors
+;
+; The Twig compiler lowercases record names to form accessor prefixes:
+;   `Span`       → `span-*`        (span-start, span-end, ...)
+;   `Token`      → `token-*`       (token-kind, token-lexeme, token-span)
+;   `Diagnostic` → `diagnostic-*`  (diagnostic-severity, ...)
+;   `IirInstr`   → `iirinstr-*`    (iirinstr-op, iirinstr-dest, ...)
+;   `IirBuilder` → `iirbuilder-*`  (iirbuilder-name, iirbuilder-reg-count, ...)
+;
+; Downstream passes will expand `main.tw` to include the full lexer,
+; parser, type checker, and IIR emitter once each phase is ported to
+; Twig (TW05-E through TW05-G).
+
+(module compiler/main
+  (typed lenient)
+  (export main)
+  (import compiler/span
+          compiler/token
+          compiler/diagnostic
+          compiler/ast
+          compiler/iir-types
+          compiler/iir-builder))
+
+; ── Entry point ──────────────────────────────────────────────────────────────
+;
+; `(main)` stitches the six data-model modules together into a tiny
+; end-to-end smoke test that confirms all imports resolve, all constructors
+; work, and the builder's counter logic is correct.
+;
+; Returns: 1  (one register slot was allocated)
+
+(define (main)
+  ; Create a source span: file 0, bytes [3, 7)
+  (let* ((sp   (make-span 0 3 7))
+
+         ; Verify span construction succeeded — span-start should be 3.
+         ; (not used in the return value, just exercises the accessor)
+         (_sp-start (span-start sp))
+
+         ; Wrap it in a Token: kind = TkInteger, lexeme = "42"
+         (tok  (Token (TkInteger) "42" sp))
+
+         ; Verify token construction — token-kind should be TkInteger.
+         ; (uses the record accessor `token-kind`)
+         (_tok-kind (token-kind tok))
+
+         ; Create a fresh IIR builder for a function named 'entry-fn
+         (b0   (new-builder 'entry-fn))
+
+         ; Allocate one register slot.
+         ; alloc-slot returns (cons updated-builder (cons slot-name nil))
+         (pair (alloc-slot b0))
+         (b1   (car pair)))
+
+    ; The builder's reg-count should now be 1.
+    ; Uses generated accessor: iirbuilder-reg-count (not iir-builder-reg-count).
+    (iirbuilder-reg-count b1)))
