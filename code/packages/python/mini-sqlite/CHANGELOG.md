@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.32.0] - 2026-05-14
+
+### Added
+
+- **`FILTER (WHERE …)` on aggregate functions** — SQLite/SQL:2003 per-aggregate
+  row predicates are now fully supported end-to-end across the pipeline:
+
+  ```sql
+  SELECT COUNT(*) FILTER (WHERE active = 1) FROM emp;
+  SELECT dept, SUM(salary) FILTER (WHERE active = 1) FROM emp GROUP BY dept;
+  SELECT
+      COUNT(*) FILTER (WHERE dept = 'eng'),
+      COUNT(*) FILTER (WHERE dept = 'sales')
+  FROM emp;
+  ```
+
+  Supported on all aggregate functions: `COUNT(*)`, `COUNT(col)`, `SUM`, `AVG`,
+  `MIN`, `MAX`, `GROUP_CONCAT`, `JSON_GROUP_ARRAY`, `JSON_GROUP_OBJECT`.
+  Rows where the `FILTER` predicate is `FALSE` or `NULL` are silently skipped
+  (matching SQLite semantics).  Multiple aggregates with different filter
+  predicates in the same `SELECT` are independently accumulated.  Works with
+  `GROUP BY`, outer `WHERE`, and `HAVING` clauses simultaneously.
+
+  Implementation spans four packages:
+  - `sql-parser 0.18.0`: new `filter_clause` grammar rule
+  - `sql-planner 0.29.0`: `filter_expr` field on `AggregateExpr`/`AggregateItem`
+  - `sql-codegen 1.24.0`: conditional `JumpIfFalse` skip block in update loop
+  - `mini-sqlite/adapter.py`: extracts and converts the `filter_clause` AST node
+
 ## [1.31.0] - 2026-05-14
 
 ### Added

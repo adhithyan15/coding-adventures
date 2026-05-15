@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.24.0] - 2026-05-14
+
+### Added
+
+- **`FILTER (WHERE …)` codegen** (`compiler.py`, `_compile_aggregate`) — When an
+  `AggregateItem` has a non-`None` `filter_expr`, the compiler now emits a
+  conditional skip block immediately before the argument push:
+
+      ; for each aggregate slot:
+      <compile filter_expr>          ; evaluate FILTER predicate
+      JumpIfFalse filter_skip_<n>    ; skip if False or NULL
+      <push arg(s)>                  ; push value (and key for JSON_GROUP_OBJECT)
+      UpdateAgg slot=<n>             ; accumulate
+      Label filter_skip_<n>          ; target on skip path
+
+  The operand stack is balanced on both paths — the argument is pushed only
+  when the filter passes, so no extra pop is needed on the skip path.  No new
+  VM instructions are required; `JumpIfFalse` already existed.
+
 ## [1.23.0] - 2026-05-14
 
 ### Added

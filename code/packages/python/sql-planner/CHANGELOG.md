@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.29.0] - 2026-05-14
+
+### Added
+
+- **`AggregateExpr.filter_expr`** (`expr.py`) — New optional `Expr | None` field
+  (default `None`) on `AggregateExpr` that carries the predicate from a
+  `FILTER (WHERE …)` clause.  When non-`None`, rows for which the predicate
+  evaluates to `False` or `NULL` are skipped before the accumulator is updated.
+- **`AggregateItem.filter_expr`** (`plan.py`) — Matching field on the
+  `AggregateItem` plan node so that the codegen compiler can emit conditional
+  skip logic per aggregate.
+- **`filter_expr` resolution in `_resolve_expr`** (`planner.py`) — Column-name
+  resolution (scope look-up, outer-scope promotion) is applied to the filter
+  expression at the same point as the aggregate argument.
+- **`filter_expr` in deduplication key** (`_collect_aggregates`, `planner.py`) —
+  Two aggregates that differ only in their filter expression are now treated as
+  distinct plan nodes, each with an independent accumulator slot.
+
 ## [0.28.0] - 2026-05-14
 
 ### Added

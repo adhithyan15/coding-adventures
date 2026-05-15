@@ -1504,6 +1504,19 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             if isinstance(c, ASTNode) and c.rule_name == "expr":
                 args.append(FuncArg(value=_expr(c, state)))
 
+    # Optional FILTER (WHERE expr) clause — applies only to aggregate functions.
+    # The grammar rule is:  filter_clause = "FILTER" "(" "WHERE" expr ")"
+    # We extract the expr child of the filter_clause child of this node.
+    filter_node = _maybe_child(node, "filter_clause")
+    filter_expr_val = None
+    if filter_node is not None:
+        filter_expr_child = next(
+            (c for c in filter_node.children if isinstance(c, ASTNode) and c.rule_name == "expr"),
+            None,
+        )
+        if filter_expr_child is not None:
+            filter_expr_val = _expr(filter_expr_child, state)
+
     # Aggregate functions fold into AggregateExpr; everything else stays generic.
     upper = name.upper()
     agg_map = {
@@ -1529,7 +1542,10 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             return FunctionCall(name=name.lower(), args=tuple(args))
         if len(args) != 1:
             raise ProgrammingError(f"{upper}: expected 1 argument, got {len(args)}")
-        return AggregateExpr(func=agg_map[upper], arg=args[0], distinct=distinct)
+        return AggregateExpr(
+            func=agg_map[upper], arg=args[0], distinct=distinct,
+            filter_expr=filter_expr_val,
+        )
 
     if upper == "GROUP_CONCAT":
         # GROUP_CONCAT(col)          — SQLite default separator ','
@@ -1557,6 +1573,7 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             func=AggFunc.GROUP_CONCAT,
             arg=args[0],
             separator=separator,
+            filter_expr=filter_expr_val,
         )
 
     if upper == "JSON_GROUP_OBJECT":
@@ -1574,6 +1591,7 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             func=AggFunc.JSON_GROUP_OBJECT,
             arg=args[1],       # value expression → the main arg
             key_arg=args[0],   # key expression → stored separately
+            filter_expr=filter_expr_val,
         )
 
     return FunctionCall(name=name, args=tuple(args))
