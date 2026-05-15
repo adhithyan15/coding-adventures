@@ -1,4 +1,4 @@
-; # ast.tw — Abstract Syntax Tree Nodes (LANG57 / TW05-D)
+; # ast.tw — Abstract Syntax Tree Nodes (LANG57 / TW05-D, updated LANG60 / TW05-G)
 ;
 ; The `Expr` union covers every expression form that the Twig parser can
 ; produce.  It mirrors the Rust `twig-parser` `Expr` enum, translated into
@@ -9,34 +9,35 @@
 ;
 ; ## Variant overview
 ;
-;   IntLit   (value : int)  (span : any)         integer literal, e.g. `42`
-;   BoolLit  (value : any)  (span : any)         #t or #f
-;   StrLit   (value : any)  (span : any)         "hello"
-;   SymLit   (value : any)  (span : any)         'foo
-;   NilLit   (span : any)                        nil
-;   VarRef   (name  : any)  (span : any)         bare identifier reference
-;   IfExpr   (cond : any) (then-br : any)
-;            (else-br : any) (span : any)        (if c t e)
-;   LetExpr  (bindings : any) (body : any)
-;            (span : any)                        (let ((x e) ...) body)
-;   DefExpr  (name : any) (expr : any)
-;            (span : any)                        (define name expr)
-;   CallExpr (fn-expr : any) (args : any)
-;            (span : any)                        (fn arg ...)
-;   BeginExpr (exprs : any) (span : any)         (begin e1 e2 ...)
+;   IntLit    (value : int)  (span : any)         integer literal, e.g. `42`
+;   BoolLit   (value : any)  (span : any)         #t or #f
+;   StrLit    (value : any)  (span : any)         "hello"
+;   SymLit    (value : any)  (span : any)         'foo
+;   NilLit    (span : any)                        nil
+;   VarRef    (name  : any)  (span : any)         bare identifier reference
+;   IfExpr    (cond : any) (then-br : any)
+;             (else-br : any) (span : any)        (if c t e)
+;   LetExpr   (bindings : any) (body : any)
+;             (span : any)                        (let ((x e) ...) body)
+;   DefExpr   (name : any) (expr : any)
+;             (span : any)                        (define name expr)
+;   CallExpr  (fn-expr : any) (args : any)
+;             (span : any)                        (fn arg ...)
+;   BeginExpr (exprs : any) (span : any)          (begin e1 e2 ...)
+;   LambdaExpr (params : any) (body : any)
+;              (span : any)                       (lambda (p ...) body)
+;                                                 added in TW05-G (LANG60)
 ;
-; Note: `value`, `name`, `span`, `cond`, `then-br`, `else-br`, `bindings`,
-; `body`, `fn-expr`, `args`, and `exprs` are all typed `any` because the
-; Twig type checker does not yet resolve nested record/union types.  The
-; runtime heap enforces the correct structure.
+; Note: all field types are `any` because the Twig type checker does not yet
+; resolve nested record/union types.  The runtime heap enforces structure.
 
 (module compiler/ast
   (typed lenient)
   (export Expr
           IntLit BoolLit StrLit SymLit NilLit VarRef
-          IfExpr LetExpr DefExpr CallExpr BeginExpr
+          IfExpr LetExpr DefExpr CallExpr BeginExpr LambdaExpr
           IntLit? BoolLit? StrLit? SymLit? NilLit? VarRef?
-          IfExpr? LetExpr? DefExpr? CallExpr? BeginExpr?
+          IfExpr? LetExpr? DefExpr? CallExpr? BeginExpr? LambdaExpr?
           intlit-value intlit-span
           boollit-value boollit-span
           strlit-value strlit-span
@@ -47,7 +48,8 @@
           letexpr-bindings letexpr-body letexpr-span
           defexpr-name defexpr-expr defexpr-span
           callexpr-fn-expr callexpr-args callexpr-span
-          beginexpr-exprs beginexpr-span)
+          beginexpr-exprs beginexpr-span
+          lambdaexpr-params lambdaexpr-body lambdaexpr-span)
   (import compiler/span))
 
 ; ── AST node union ───────────────────────────────────────────────────────────
@@ -68,16 +70,18 @@
 ;   8 = DefExpr
 ;   9 = CallExpr
 ;  10 = BeginExpr
+;  11 = LambdaExpr  ← added in TW05-G (LANG60)
 
 (union Expr
-  (IntLit    (value   : int) (span : any))
-  (BoolLit   (value   : any) (span : any))
-  (StrLit    (value   : any) (span : any))
-  (SymLit    (value   : any) (span : any))
-  (NilLit    (span    : any))
-  (VarRef    (name    : any) (span : any))
-  (IfExpr    (cond    : any) (then-br : any) (else-br : any) (span : any))
-  (LetExpr   (bindings : any) (body : any) (span : any))
-  (DefExpr   (name    : any) (expr : any) (span : any))
-  (CallExpr  (fn-expr : any) (args : any) (span : any))
-  (BeginExpr (exprs   : any) (span : any)))
+  (IntLit     (value   : int) (span : any))
+  (BoolLit    (value   : any) (span : any))
+  (StrLit     (value   : any) (span : any))
+  (SymLit     (value   : any) (span : any))
+  (NilLit     (span    : any))
+  (VarRef     (name    : any) (span : any))
+  (IfExpr     (cond    : any) (then-br : any) (else-br : any) (span : any))
+  (LetExpr    (bindings : any) (body : any) (span : any))
+  (DefExpr    (name    : any) (expr : any) (span : any))
+  (CallExpr   (fn-expr : any) (args : any) (span : any))
+  (BeginExpr  (exprs   : any) (span : any))
+  (LambdaExpr (params  : any) (body : any) (span : any)))

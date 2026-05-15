@@ -1,5 +1,47 @@
 # Changelog — twig-module-driver
 
+## [0.5.0] — 2026-05-15
+
+### Added (LANG60 — TW05-G lambda expressions + function definitions)
+
+New `#[cfg(test)] mod tw05g_tests` with 6 tests exercising the updated
+`compiler/ast.tw`, `compiler/parser.tw`, `compiler/emit.tw`, and `main.tw`
+that together implement lambda expressions and the `(define (name args) body)`
+function-definition shorthand.
+
+#### AST changes (`ast.tw`)
+`LambdaExpr (params : any) (body : any) (span : any)` added as tag 11.
+Exports `LambdaExpr`, `LambdaExpr?`, `lambdaexpr-params`, `lambdaexpr-body`,
+`lambdaexpr-span`.
+
+#### Parser changes (`parser.tw`)
+- New gate `parse-list-6` dispatches on `"lambda"` keyword.
+- `parse-define` now dispatches: `TkLParen` first token → `parse-define-fn`
+  (function shorthand); otherwise → `parse-define-simple` (original path).
+- New helpers: `parse-define-fn`, `parse-define-simple`, `parse-lambda`,
+  `parse-param-list`.
+- `(define (name params) body)` parses to
+  `DefExpr name (LambdaExpr params body sp)`.
+
+#### Emitter changes (`emit.tw`)
+- Gate 9 (new): `DefExpr?` → `emit-defexpr`.
+- Gate 10 (new): `LambdaExpr?` → `emit-lambdaexpr`.
+- Gate 11 (was 9): `CallExpr?` / fallback.
+- New functions: `emit-defexpr`, `emit-lambdaexpr`, `emit-lambda-params`.
+
+#### `main.tw` updated to TW05-G smoke test
+Lexes and emits `"(define (answer) 42)"` through the full pipeline; still
+returns 42.
+
+| Test | Verifies |
+|------|----------|
+| `parser_lambda_expr` | `(parse-program "(lambda (x) x)")` → `LambdaExpr?` = 1 |
+| `parser_define_fn_form` | `(define (f x) x)` → `defexpr-expr` is a `LambdaExpr` |
+| `emit_lambda_no_params` | emit `(LambdaExpr [] (IntLit 99))` → 1 instruction |
+| `emit_lambda_with_param` | emit `(LambdaExpr ["x"] (+ x 1))` → 2 instructions |
+| `emit_defexpr_answer_42` | emit `(DefExpr "answer" (LambdaExpr [] (IntLit 42)))` → 1 instruction |
+| `full_lex_parse_emit_defexpr` | All 9 modules + main.tw → `(main) = 42` |
+
 ## [0.4.0] — 2026-05-15
 
 ### Added (LANG59 — TW05-F self-hosted IIR emitter integration tests)

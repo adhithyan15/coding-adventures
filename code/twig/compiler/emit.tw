@@ -144,9 +144,25 @@
       (emit-letexpr expr b env)
       (emit-expr-9 expr b env)))
 
-; Gate 9: CallExpr — emit arguments, emit call_builtin.
-; Fallback for any unrecognised form: emit nil.
+; Gate 9: DefExpr — delegate to emit-defexpr (added in TW05-G / LANG60).
+; For a simple `(define name expr)` the body is emitted directly.
+; For `(define (fn params) body)` the body is a LambdaExpr, handled by gate 10.
 (define (emit-expr-9 expr b env)
+  (if (DefExpr? expr)
+      (emit-defexpr expr b env)
+      (emit-expr-10 expr b env)))
+
+; Gate 10: LambdaExpr — allocate param slots, extend env, emit body.
+; Added in TW05-G (LANG60).
+(define (emit-expr-10 expr b env)
+  (if (LambdaExpr? expr)
+      (emit-lambdaexpr expr b env)
+      (emit-expr-11 expr b env)))
+
+; Gate 11: CallExpr — emit arguments, emit call_builtin.
+; Fallback for any unrecognised form: emit nil.
+; (Was gate 9 in TW05-F; renumbered in TW05-G to make room for gates 9 and 10.)
+(define (emit-expr-11 expr b env)
   (if (CallExpr? expr)
       (emit-callexpr expr b env)
       (emit-nillit b)))
@@ -381,3 +397,67 @@
              (b2     (car result))
              (reg    (cdr result)))
         (emit-args (cdr args) b2 env (cons reg acc)))))
+
+; ── emit-defexpr ─────────────────────────────────────────────────────────────
+;
+; (DefExpr name expr span)
+;
+; Two sub-cases:
+;   • `expr` is a LambdaExpr   → delegate to emit-lambdaexpr
+;     (handles `(define (fn params) body)` shorthand from the parser)
+;   • `expr` is anything else  → emit the body directly
+;     (handles `(define name value)` simple binding)
+;
+; Returns (cons updated-builder result-register) from whichever delegate is
+; called.  The result register holds the value of the body expression.
+
+(define (emit-defexpr expr b env)
+  (let* ((body (defexpr-expr expr)))
+    (if (LambdaExpr? body)
+        (emit-lambdaexpr body b env)
+        (emit-expr body b env))))
+
+; ── emit-lambdaexpr ───────────────────────────────────────────────────────────
+;
+; (LambdaExpr params body span)
+;
+; params  — a list of parameter-name strings, e.g. `(list "x" "y")`
+; body    — a single Expr representing the function body
+;
+; Behaviour:
+;   1. Allocate one register per parameter via `alloc-slot`.
+;   2. Bind each parameter name to its register in the environment.
+;   3. Emit the body expression with the extended environment.
+;   4. Return (cons updated-builder body-result-register).
+;
+; Why no "load param" instructions?
+;   The VM's calling convention pre-populates the parameter registers before
+;   control reaches the function body.  The emitter only needs to assign
+;   names to the right slots so that VarRef lookups resolve correctly.
+;
+; Instruction count:
+;   Same as emitting the body alone — no extra instructions for params.
+;   Example: `(lambda () 42)` → 1 instruction (const 42).
+;   Example: `(lambda (x) (+ x 1))` → 2 instructions (const 1, call_builtin +).
+
+(define (emit-lambdaexpr expr b env)
+  (let* ((params (lambdaexpr-params expr))
+         (body   (lambdaexpr-body expr))
+         (env-b  (emit-lambda-params params b env))
+         (b2     (car env-b))
+         (env2   (cdr env-b)))
+    (emit-expr body b2 env2)))
+
+; emit-lambda-params: allocate a register for each parameter name and
+; build an extended environment.  Tail-recursive over the params list.
+; Returns (cons updated-builder extended-env).
+
+(define (emit-lambda-params params b env)
+  (if (null? params)
+      (cons b env)
+      (let* ((name  (car params))
+             (p     (alloc-slot b))
+             (b2    (car p))
+             (reg   (car (cdr p)))
+             (env2  (env-extend env name reg)))
+        (emit-lambda-params (cdr params) b2 env2))))
