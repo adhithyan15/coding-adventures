@@ -18,8 +18,8 @@ netlist.circuit.elements
 netlist.analyses
 ```
 
-This parser slice supports `R`, `C`, `L`, `V`, `I`, `D`, `G`, `E`, `F`, and
-`H` elements, `.model` cards for Shockley diode parameters (`IS`, `VT`), SPICE
-engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
-`.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, and `.ac`
-analysis cards.
+This parser slice supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `G`, `E`, `F`,
+and `H` elements, `.model` cards for Shockley diode parameters (`IS`, `VT`) and
+BJT parameters (`NPN`/`PNP`, `IS`, `BF`/`BETA_F`, `VT`), SPICE engineering
+suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`, `.subckt` / `X`
+instance expansion, and `.op`, `.tran`, `.dc`, and `.ac` analysis cards.
