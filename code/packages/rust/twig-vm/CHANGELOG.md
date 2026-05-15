@@ -1,5 +1,73 @@
 # Changelog — twig-vm
 
+## [0.13.0] — 2026-05-14
+
+### Added (LANG55 — Higher-Order List Operations)
+
+Four higher-order list operations are now available as VM-level special-cased
+builtins.  They are intercepted in `exec_call_builtin` before the normal
+`resolve_builtin` path — the same pattern as `apply_closure` and `global_set` —
+because calling a user-supplied closure requires recursing into `dispatch`.
+
+#### `(map fn lst)`
+
+Apply `fn` to every element of `lst` (a proper list), collect results into a new
+proper list in the same order.  `(map fn nil)` returns `nil`.
+
+IIR convention: `call_builtin "map" fn_reg list_reg`.
+
+#### `(filter pred lst)`
+
+Keep elements of `lst` for which `pred` returns a truthy value (`#t` or anything
+except `#f` / `nil`).  Order is preserved.  `(filter pred nil)` returns `nil`.
+
+IIR convention: `call_builtin "filter" pred_reg list_reg`.
+
+#### `(fold-left fn init lst)`
+
+Left fold: each step `acc = (fn acc elem)`.  Processes elements left-to-right.
+`(fold-left fn init nil)` returns `init`.
+
+IIR convention: `call_builtin "fold-left" fn_reg init_reg list_reg`.
+
+#### `(fold-right fn init lst)`
+
+Right fold: each step `acc = (fn elem acc)`.  Processes elements right-to-left
+by collecting the list into a `Vec` and iterating in reverse.
+`(fold-right fn init nil)` returns `init`.
+
+IIR convention: `call_builtin "fold-right" fn_reg init_reg list_reg`.
+
+### New internal helpers
+
+- **`invoke_closure_value`** — extracted from `exec_call_closure` / `exec_apply_closure`.
+  Calls a heap closure value (`LispyValue`) directly with a `Vec<LispyValue>`,
+  without constructing a synthetic `IIRInstr`.  Handles both user-function closures
+  (prepends captures, recurses into `dispatch`) and builtin closures (dispatches via
+  `resolve_builtin`).
+- **`collect_list`** — walks a proper `LispyValue` list into a `Vec<LispyValue>`.
+  Returns `RunError::HostArgType` for improper lists.
+- **`build_list`** — builds a proper `LispyValue` list from a `Vec<LispyValue>` via
+  `alloc_cons`.
+- **`hof_fn_and_list`** / **`hof_fn_init_and_list`** — argument extractors for the
+  2-arg and 3-arg HOF shapes respectively.
+
+### Closure contract
+
+The `fn` / `pred` argument to all four operations must be a heap closure.  Builtin
+closures (e.g. wrapping `+`, `cons`, `car`) are fully supported via the builtin-closure
+path in `invoke_closure_value`.  Passing a non-closure raises `RunError::NotCallable`.
+
+### Tests added (14)
+
+`map_squares_list`, `map_empty_list`, `map_with_lambda`,
+`filter_keeps_odds`, `filter_empty_input`, `filter_all_drop`,
+`fold_left_sum`, `fold_left_empty`, `fold_left_string_build`,
+`fold_right_cons_identity`, `fold_right_sum`, `fold_right_ordering`,
+`map_then_fold`, `filter_then_map`.
+
+---
+
 ## [0.12.0] — 2026-05-14
 
 ### Added (LANG52 — Host I/O stdlib)

@@ -169,6 +169,9 @@ const BUILTINS: &[&str] = &[
     "print",
     // Host I/O (LANG52) — these dispatch via call_builtin to exec_host_call
     "host/write_string", "host/read_line", "host/read_file",
+    // LANG55: higher-order list operations — dispatch via special-cased
+    // exec_hof_* handlers in twig-vm that can recurse into `dispatch`.
+    "map", "filter", "fold-left", "fold-right",
 ];
 
 fn is_builtin(name: &str) -> bool {
