@@ -96,6 +96,8 @@ members = [
     "diagram-layout-graph",
     "diagram-to-paint",
     "directed-graph",
+    "dsp-complex",
+    "dsp-fft",
     "dot-lexer",
     "dot-parser",
     "mermaid-lexer",
