@@ -206,6 +206,29 @@ pub const MAX_IC_SLOTS_PER_FUNCTION: u32 = 1 << 16;
 /// security review.
 pub const MAX_IC_FUNCTIONS: usize = 1 << 16;
 
+/// Maximum number of elements `collect_list` (LANG55) will materialise
+/// from a single cons-cell chain in one call.
+///
+/// ## Security rationale (found by LANG55 security review)
+///
+/// `collect_list` walks a runtime cons chain without access to the IIR
+/// instruction budget.  Without a cap, a single `(map fn huge-list)`
+/// instruction costs **one** budget tick but allocates O(N) `Vec` storage
+/// (for the element buffer), O(N) more storage for the result buffer, and
+/// O(N) `Box::leak`'d cons cells via `build_list` — all permanent because
+/// there is no GC yet.  An adversary who can supply a hand-built IIR
+/// module (or who can construct a large list at runtime) could OOM the
+/// process in a single budget tick.
+///
+/// Capping at `MAX_INSTRUCTIONS_PER_RUN` aligns the per-call work bound
+/// with the existing budget ceiling: iterating the maximum list costs
+/// exactly `MAX_INSTRUCTIONS_PER_RUN` budget ticks (one per element, via
+/// the `budget.tick()` call in `collect_list`), so a single HOF call on a
+/// maximum-length list costs the entire budget.  Real programs never
+/// approach this limit — compiler passes operate on thousands of tokens,
+/// not millions.
+pub const MAX_HOF_LIST_ELEMENTS: usize = MAX_INSTRUCTIONS_PER_RUN as usize;
+
 // ---------------------------------------------------------------------------
 // RunError
 // ---------------------------------------------------------------------------
@@ -2241,16 +2264,46 @@ fn invoke_closure_value(
 /// Returns `Err(RunError::HostArgType)` if a tail is neither nil nor a cons
 /// cell (improper list / wrong type).
 ///
+/// Returns `Err(RunError::InstructionLimitExceeded)` if the list length
+/// exceeds [`MAX_HOF_LIST_ELEMENTS`].  Each element also ticks `budget`
+/// once, so iterating a list of length N charges N budget ticks.  This
+/// ensures that a single `call_builtin "map"` instruction cannot traverse
+/// more elements than the total `MAX_INSTRUCTIONS_PER_RUN` budget allows,
+/// preventing DoS via unbounded memory allocation.
+///
+/// # Security
+///
+/// Without a cap, a single HOF instruction on a very large list costs only
+/// **one** budget tick (the `call_builtin` itself) while performing O(N)
+/// allocations — a multiplier attack.  See `MAX_HOF_LIST_ELEMENTS` for the
+/// detailed rationale.
+///
 /// # Safety
 ///
 /// Caller guarantees the value lives for the duration of this call (true
 /// for all VM-managed `LispyValue`s because allocations are `Box::leak`'d).
-fn collect_list(fn_name: &str, mut cursor: LispyValue) -> Result<Vec<LispyValue>, RunError> {
+fn collect_list(
+    fn_name: &str,
+    mut cursor: LispyValue,
+    budget: &mut ExecutionBudget,
+) -> Result<Vec<LispyValue>, RunError> {
     let mut out = Vec::new();
     loop {
         if cursor.is_nil() {
             return Ok(out);
         }
+        // DoS guard: cap list length so one HOF instruction cannot
+        // allocate O(N) memory for an unbounded N.  `MAX_HOF_LIST_ELEMENTS`
+        // matches `MAX_INSTRUCTIONS_PER_RUN` so iterating the maximum list
+        // costs the whole budget.  Found by LANG55 security review.
+        if out.len() >= MAX_HOF_LIST_ELEMENTS {
+            return Err(RunError::InstructionLimitExceeded);
+        }
+        // Charge one budget tick per element traversed.  This accounts for
+        // the work that `dispatch` would normally charge per-instruction but
+        // cannot here because list traversal happens outside the dispatch loop.
+        budget.tick()?;
+
         // SAFETY: see `invoke_closure_value` safety note — all heap-tagged
         // values in the dispatcher came from `lispy_runtime` allocators.
         let (head, tail) = unsafe {
@@ -2356,7 +2409,7 @@ fn exec_hof_map(
     debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<(), RunError> {
     let (fn_val, list_val) = hof_fn_and_list("map", instr, frame)?;
-    let elements = collect_list("map", list_val)?;
+    let elements = collect_list("map", list_val, budget)?;
 
     // Apply fn to each element, collecting results.
     let mut results = Vec::with_capacity(elements.len());
@@ -2396,7 +2449,7 @@ fn exec_hof_filter(
     debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<(), RunError> {
     let (fn_val, list_val) = hof_fn_and_list("filter", instr, frame)?;
-    let elements = collect_list("filter", list_val)?;
+    let elements = collect_list("filter", list_val, budget)?;
 
     // Keep elements for which pred returns truthy.
     let mut kept = Vec::with_capacity(elements.len());
@@ -2436,7 +2489,7 @@ fn exec_hof_fold_left(
     debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<(), RunError> {
     let (fn_val, init_val, list_val) = hof_fn_init_and_list("fold-left", instr, frame)?;
-    let elements = collect_list("fold-left", list_val)?;
+    let elements = collect_list("fold-left", list_val, budget)?;
 
     let mut acc = init_val;
     for elem in elements {
@@ -2475,7 +2528,7 @@ fn exec_hof_fold_right(
     debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<(), RunError> {
     let (fn_val, init_val, list_val) = hof_fn_init_and_list("fold-right", instr, frame)?;
-    let elements = collect_list("fold-right", list_val)?;
+    let elements = collect_list("fold-right", list_val, budget)?;
 
     // Process elements from right to left.
     let mut acc = init_val;
