@@ -70,9 +70,12 @@ pub mod debug_server;
 pub mod dispatch;
 pub mod operand;
 
+use std::path::Path;
+
 use interpreter_ir::IIRModule;
 use lispy_runtime::LispyBinding;
 use twig_ir_compiler::compile_source as compile_twig;
+use twig_module_driver::{compile_module_tree, ModuleDriverError};
 
 pub use dispatch::{
     run, run_with_globals, run_with_profile, run_with_state, Globals, ICTable, ProfileTable,
@@ -246,6 +249,100 @@ impl std::error::Error for TwigRunError {
             TwigRunError::Run(e) => Some(e),
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+// LANG56: multi-file convenience entry points
+// ---------------------------------------------------------------------------
+
+/// Error type for the multi-file [`run_file`] / [`run_module_tree`] entry
+/// points.
+///
+/// Wraps the two failure modes: the module-driver step (resolve + compile +
+/// link) and the execution step (VM dispatch).
+#[derive(Debug)]
+pub enum TwigFileError {
+    /// The module-driver step failed (I/O, parse, compile, unresolved import,
+    /// circular import, or linker error).
+    ModuleDriver(ModuleDriverError),
+    /// The linked module ran but the VM trapped.
+    Run(RunError),
+}
+
+impl std::fmt::Display for TwigFileError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TwigFileError::ModuleDriver(e) => write!(f, "module driver error: {e}"),
+            TwigFileError::Run(e) => write!(f, "run error: {e}"),
+        }
+    }
+}
+
+impl std::error::Error for TwigFileError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            TwigFileError::ModuleDriver(e) => Some(e),
+            TwigFileError::Run(e) => Some(e),
+        }
+    }
+}
+
+/// Compile and run a single `.tw` file (LANG56).
+///
+/// Imports are resolved relative to the file's directory; no additional
+/// search roots are used.  This is the simplest way to run a multi-file
+/// Twig program where all imports live next to the root file.
+///
+/// # Example
+///
+/// ```rust,no_run
+/// use twig_vm::run_file;
+/// use std::path::Path;
+///
+/// let result = run_file(Path::new("main.tw")).unwrap();
+/// ```
+///
+/// # Errors
+///
+/// Returns [`TwigFileError::ModuleDriver`] if any file fails to resolve,
+/// parse, compile, or link; [`TwigFileError::Run`] if execution traps.
+pub fn run_file(path: &Path) -> Result<LispyValue, TwigFileError> {
+    run_module_tree(path, &[])
+}
+
+/// Compile and run a multi-file Twig program with explicit search roots
+/// (LANG56).
+///
+/// `root` is the entry-point `.tw` file.  `search_roots` is an ordered
+/// list of extra directories that are searched when resolving
+/// `(import module/name)` declarations.  The directory containing `root`
+/// is always tried first, regardless of `search_roots`.
+///
+/// # Example
+///
+/// ```rust,no_run
+/// use twig_vm::run_module_tree;
+/// use std::path::Path;
+///
+/// let stdlib_dir = Path::new("/usr/local/share/twig/stdlib");
+/// let result = run_module_tree(
+///     Path::new("compiler/main.tw"),
+///     &[stdlib_dir],
+/// ).unwrap();
+/// ```
+///
+/// # Errors
+///
+/// Returns [`TwigFileError::ModuleDriver`] if any step of the
+/// resolve-compile-link pipeline fails; [`TwigFileError::Run`] if the
+/// linked module's `main` function traps at runtime.
+pub fn run_module_tree(
+    root: &Path,
+    search_roots: &[&Path],
+) -> Result<LispyValue, TwigFileError> {
+    let module = compile_module_tree(root, search_roots)
+        .map_err(TwigFileError::ModuleDriver)?;
+    run(&module).map_err(TwigFileError::Run)
 }
 
 // ---------------------------------------------------------------------------

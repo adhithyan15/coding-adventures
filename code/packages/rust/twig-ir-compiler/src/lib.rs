@@ -150,6 +150,74 @@ pub fn compile_program(
     Compiler::new().compile(program, module_name)
 }
 
+/// Compile a [`Program`] that may call functions defined in other modules.
+///
+/// This is the LANG56 entry point used by `twig-module-driver`.  Before
+/// the compiler's own pre-pass runs, `extern_fns` is pre-registered in
+/// `fn_globals` so that cross-module calls compile to `call` instructions
+/// rather than failing with "unbound name".  The actual function bodies are
+/// provided by the other modules; `iir_linker::link` resolves the call
+/// targets at link time.
+///
+/// The type-check pre-pass (LANG49) is applied identically to
+/// [`compile_program`].
+///
+/// # Example
+///
+/// ```
+/// use twig_ir_compiler::{compile_program_with_externs};
+/// use twig_parser::parse;
+///
+/// let program = parse("(define (sq x) (* x x)) (sq 5)").unwrap();
+/// // "helper" is defined in another module; pre-register it so the compiler
+/// // accepts `(helper 42)` in this module.
+/// let m = compile_program_with_externs(&program, "my_mod", &["helper"]).unwrap();
+/// assert!(m.get_function("sq").is_some());
+/// ```
+pub fn compile_program_with_externs(
+    program: &Program,
+    module_name: &str,
+    extern_fns: &[&str],
+) -> Result<IIRModule, TwigCompileError> {
+    // Apply the same LANG49 type-check pre-pass as `compile_program`.
+    if let Some(mode) = program
+        .module_info
+        .as_ref()
+        .and_then(|mi| mi.typed_mode.as_ref())
+    {
+        let tc_result = twig_type_checker::check_program(program, None);
+        match mode {
+            TypedMode::Strict if !tc_result.ok => {
+                // Use ok_or_else rather than expect so that a downstream bug in
+                // the type-checker (ok==false with empty errors) returns a
+                // graceful Err rather than panicking in a library context.
+                let d = tc_result.errors.first().ok_or_else(|| TwigCompileError {
+                    message: "type-checker invariant violated: ok==false but errors is empty"
+                        .to_string(),
+                    line: 0,
+                    column: 0,
+                })?;
+                return Err(TwigCompileError {
+                    message: format!("type error: {}", d.message),
+                    line: d.line,
+                    column: d.column,
+                });
+            }
+            TypedMode::Lenient => {
+                for d in &tc_result.errors {
+                    eprintln!(
+                        "twig type warning ({}:{}): {}",
+                        d.line, d.column, d.message
+                    );
+                }
+            }
+            _ => {}
+        }
+    }
+
+    Compiler::new().with_extern_fns(extern_fns).compile(program, module_name)
+}
+
 /// Lex, parse, and compile a Twig source string in one call.
 ///
 /// This is the most ergonomic entry point — most callers never need

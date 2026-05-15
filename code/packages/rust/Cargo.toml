@@ -589,6 +589,7 @@ members = [
     "twig-hover",
     "twig-type-checker",
     "twig-ir-compiler",
+    "twig-module-driver",
     "lang-refined-types",
     "lang-refinement-checker",
     "lang-refinement-protocol",

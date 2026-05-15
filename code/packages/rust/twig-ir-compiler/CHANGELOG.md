@@ -1,5 +1,27 @@
 # Changelog — twig-ir-compiler
 
+## [0.10.0] — 2026-05-14
+
+### Added (LANG56 — Multi-File Module Driver)
+
+- **`Compiler::with_extern_fns(&[&str]) -> Self`** — builder method that pre-registers
+  extern function names in `fn_globals` before the compiler's own pre-pass runs.  Allows
+  cross-module calls (`(double 21)` calling `double` from another `.tw` file) to compile
+  to `call` instructions rather than failing with "unbound name".  The linker resolves the
+  actual call targets.
+
+- **`compile_program_with_externs(program, module_name, extern_fns)`** — public entry point
+  for the module driver.  Equivalent to `compile_program` but pre-populates `fn_globals`
+  with `extern_fns` before compiling.  Applies the same LANG49 type-check pre-pass as
+  `compile_program`.
+
+- **IIRExport population from `module_info`** — when a program carries a
+  `(module name (export f1 f2 ...))` clause, the compiler now populates `IIRModule.exports`
+  from `info.exports`, filtered to names that were actually compiled as top-level functions.
+  Previously `exports` was always `vec![]`.
+
+---
+
 ## [0.9.0] — 2026-05-14
 
 ### Added (LANG55 — Higher-Order List Operations)

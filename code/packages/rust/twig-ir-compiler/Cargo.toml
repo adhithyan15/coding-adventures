@@ -1,8 +1,8 @@
 [package]
 name = "twig-ir-compiler"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
-description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler.  LANG52: let*, and/or special forms, expanded builtin set.  LANG55: map/filter/fold-left/fold-right added to BUILTINS."
+description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler.  LANG52: let*, and/or special forms, expanded builtin set.  LANG55: HOF builtins.  LANG56: populate IIRExport from module_info."
 
 [dependencies]
 twig-parser        = { path = "../twig-parser" }

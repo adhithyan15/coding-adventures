@@ -1,5 +1,24 @@
 # Changelog — twig-vm
 
+## [0.14.0] — 2026-05-14
+
+### Added (LANG56 — Multi-File Module Driver entry points)
+
+- **`run_file(path: &Path) -> Result<LispyValue, TwigFileError>`** — compile and run
+  a single `.tw` file.  Imports are resolved relative to the file's directory.  Thin
+  wrapper over `run_module_tree(path, &[])`.
+
+- **`run_module_tree(root: &Path, search_roots: &[&Path]) -> Result<LispyValue, TwigFileError>`** — compile and run a multi-file Twig program.  Delegates resolution,
+  compilation, and linking to `twig_module_driver::compile_module_tree`, then runs the
+  linked module via `dispatch::run`.
+
+- **`TwigFileError` enum** — error type wrapping `ModuleDriver(ModuleDriverError)` and
+  `Run(RunError)` for the two phases of a file-based run.
+
+- **`twig-module-driver` dependency** added.
+
+---
+
 ## [0.13.0] — 2026-05-14
 
 ### Added (LANG55 — Higher-Order List Operations)
