@@ -1,4 +1,4 @@
-; # emit.tw — Self-Hosted Twig IIR Emitter (LANG59 / TW05-F)
+; # emit.tw — Self-Hosted Twig IIR Emitter (LANG59 / TW05-F, extended LANG61 / TW05-H)
 ;
 ; The emitter walks an `Expr` AST (from `compiler/ast`) and produces a list of
 ; `IirInstr` records (from `compiler/iir-types`) via the `IirBuilder` API
@@ -46,7 +46,7 @@
 
 (module compiler/emit
   (typed lenient)
-  (export emit-expr env-empty env-lookup env-extend)
+  (export emit-expr emit-program env-empty env-lookup env-extend)
   (import compiler/span
           compiler/ast
           compiler/iir-types
@@ -108,11 +108,16 @@
       (emit-boollit expr b)
       (emit-expr-3 expr b env)))
 
-; Gate 3: StrLit — emit a const str instruction.
+; Gate 3: StrLit or SymLit — emit a const string/symbol instruction.
+; StrLit and SymLit both carry a string value; they differ only in type-hint.
+; SymLit (symbol literal, e.g. 'foo) was previously falling through to nil —
+; now handled here (TW05-H / LANG61).
 (define (emit-expr-3 expr b env)
   (if (StrLit? expr)
       (emit-strlit expr b)
-      (emit-expr-4 expr b env)))
+      (if (SymLit? expr)
+          (emit-symlit expr b)
+          (emit-expr-4 expr b env))))
 
 ; Gate 4: NilLit — emit a call_builtin make_nil instruction.
 (define (emit-expr-4 expr b env)
@@ -208,6 +213,25 @@
          (val   (strlit-value expr))
          (sp    (emit-span))
          (instr (IirInstr "const" dest (list val) (TStr) sp))
+         (b3    (append-instr b2 instr)))
+    (cons b3 dest)))
+
+; ── emit-symlit ───────────────────────────────────────────────────────────────
+;
+; (SymLit value span) → %rN = const value : TAny
+;
+; Symbol literals (e.g. `'foo`, stored as the string "foo") are emitted as
+; const instructions.  TAny is used since the runtime represents symbols as
+; interned strings and the type system does not yet distinguish them.
+; Added in TW05-H (LANG61) — previously SymLit fell through to emit-nillit.
+
+(define (emit-symlit expr b)
+  (let* ((p     (alloc-slot b))
+         (b2    (car p))
+         (dest  (car (cdr p)))
+         (val   (symlit-value expr))
+         (sp    (emit-span))
+         (instr (IirInstr "const" dest (list val) (TAny) sp))
          (b3    (append-instr b2 instr)))
     (cons b3 dest)))
 
@@ -461,3 +485,76 @@
              (reg   (car (cdr p)))
              (env2  (env-extend env name reg)))
         (emit-lambda-params (cdr params) b2 env2))))
+
+; ── emit-program ─────────────────────────────────────────────────────────────
+;
+; (TW05-H / LANG61)
+;
+; emit-program: compile a list of top-level Expr nodes into a list of
+; (fn-name . instruction-list) pairs — one entry per function definition.
+;
+; forms — list of Expr nodes as returned by parse-program
+; Returns: list of (cons fn-name finalized-instruction-list)
+;
+; Only `DefExpr` nodes whose body is a `LambdaExpr` are emitted (i.e.
+; the function-definition shorthand `(define (name params) body)`).
+; All other top-level forms (bare expressions, simple value bindings) are
+; silently skipped — they will be addressed in TW05-I.
+;
+; ## Design
+;
+; Each function definition creates a FRESH IirBuilder (via `new-builder`),
+; so functions do not share registers.  This mirrors how the Rust compiler
+; allocates one frame per function.
+;
+; ## Example
+;
+;   (emit-program (parse-program (lex-source
+;     "(define (double x) (* x 2)) (define (triple x) (* x 3))")))
+;   → ((cons "double" (list instr1 instr2))
+;      (cons "triple" (list instr1 instr2)))
+;
+; (length result) → 2
+
+(define (emit-program forms)
+  (emit-program-loop forms (list)))
+
+; emit-program-loop: tail-recursive accumulator over the forms list.
+; Returns (cons fn-name instrs) pairs accumulated in source order (reversed
+; during accumulation, then reversed back at the end).
+
+(define (emit-program-loop forms acc)
+  (if (null? forms)
+      (reverse acc)
+      (let* ((form   (car forms))
+             (result (emit-top-level-form form)))
+        (if (null? result)
+            ; Not a function definition — skip and continue
+            (emit-program-loop (cdr forms) acc)
+            ; Function definition — prepend to accumulator
+            (emit-program-loop (cdr forms) (cons result acc))))))
+
+; emit-top-level-form: emit a single top-level Expr node.
+;
+; Handles: DefExpr whose body is a LambdaExpr.
+; Skips:   everything else (returns nil).
+;
+; For a function definition `(define (name params) body)`:
+;   1. Create a fresh builder named after the function
+;   2. Emit the lambda body into the fresh builder
+;   3. Finalise the builder
+;   4. Return (cons fn-name finalized-instruction-list)
+
+(define (emit-top-level-form form)
+  (if (DefExpr? form)
+      (let* ((name (defexpr-name form))
+             (body (defexpr-expr form)))
+        (if (LambdaExpr? body)
+            (let* ((b0     (new-builder name))
+                   (env    (env-empty))
+                   (result (emit-lambdaexpr body b0 env))
+                   (b-fin  (car result))
+                   (instrs (finalise-builder b-fin)))
+              (cons name instrs))
+            nil))
+      nil))
