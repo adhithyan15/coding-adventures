@@ -3,6 +3,7 @@ import {
   Circuit,
   SinWaveform,
   SpiceError,
+  bjt,
   cccs,
   ccvs,
   currentSource,
@@ -155,6 +156,29 @@ describe("dcOp", () => {
 
     expect(result.voltage("out")).toBeGreaterThan(0.1);
     expect(result.voltage("out")).toBeLessThan(0.7);
+  });
+
+  it("solves an NPN BJT operating point", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+    circuit.add(voltageSource("Vb", "base", "0", 0.7));
+    circuit.add(resistor("Rc", "vcc", "collector", 100.0));
+    circuit.add(bjt("Q1", "collector", "base", "0", "NPN", 1.0e-14, 120.0, 0.02585));
+
+    const result = dcOp(circuit);
+
+    expect(result.voltage("collector")).toBeGreaterThan(0.0);
+    expect(result.voltage("collector")).toBeLessThan(5.0);
+  });
+
+  it("rejects invalid BJT model parameters", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+    circuit.add(voltageSource("Vb", "base", "0", 0.7));
+    circuit.add(resistor("Rc", "vcc", "collector", 100.0));
+    circuit.add(bjt("Qbad", "collector", "base", "0", "NPN", 1.0e-14, 0.0, 0.02585));
+
+    expect(() => dcOp(circuit)).toThrowError("forward beta must be finite and positive");
   });
 
   it("rejects missing CCCS control sources", () => {
