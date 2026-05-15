@@ -1,4 +1,4 @@
-//! Type environment and scope management for TW05-B.
+//! Type environment and scope management for TW05-B + TW05-C.
 //!
 //! ## Two structures, two responsibilities
 //!
@@ -18,7 +18,9 @@
 //!   lazy resolution — see `kinds::type_expr_to_kind`).
 //! - `records` — every `(record Name …)` definition's field names.
 //! - `unions` — every `(union Name …)` definition's variant names.
-//!
+//! - `fn_param_refinements` — per-function parameter `RefinedType`s (TW05-C).
+//!   Index `i` is `None` when the i-th parameter carries no refinement
+//!   predicate.  Populated by `classify_define` in Pass 1.
 //! ### `ScopeStack` — the local binding stack
 //!
 //! `ScopeStack` tracks bindings introduced by `lambda` parameters, `let`
@@ -45,6 +47,7 @@
 
 use std::collections::HashMap;
 
+use lang_refined_types::RefinedType;
 use twig_parser::TypeExpr;
 
 use crate::kinds::TwigKind;
@@ -55,7 +58,7 @@ use crate::kinds::TwigKind;
 
 /// Global declaration table built during Pass 1 and read during Pass 2.
 ///
-/// All five maps use the declared name as the key (exactly as it appears in
+/// All maps use the declared name as the key (exactly as it appears in
 /// source: `"Span"`, `"Expr"`, `"x"`, etc.).
 #[derive(Debug, Clone, Default)]
 pub struct TypeEnv {
@@ -89,6 +92,20 @@ pub struct TypeEnv {
     /// Used by exhaustiveness checking: the variant list is the "complete set"
     /// against which covered patterns are compared.
     pub unions: HashMap<String, Vec<String>>,
+
+    /// Per-function refined parameter types (TW05-C).
+    ///
+    /// `fn_param_refinements["f"]` is a `Vec<Option<RefinedType>>` where
+    /// index `i` is:
+    /// - `Some(rt)` when parameter `i` of `f` carries a refinement predicate
+    ///   (e.g., `(Int 0 128)` or `(Member int 1 2 5)`).
+    /// - `None` when parameter `i` has no refinement annotation.
+    ///
+    /// Functions with no refined parameters are *not* stored here at all —
+    /// callers check `fn_param_refinements.get(fn_name)` before iterating.
+    ///
+    /// Populated by `register_fn_refinements` during Pass 1.
+    pub fn_param_refinements: HashMap<String, Vec<Option<RefinedType>>>,
 }
 
 impl TypeEnv {
@@ -157,6 +174,27 @@ impl TypeEnv {
     /// Look up a name in `globals`.  Returns `None` if not found.
     pub fn lookup_global(&self, name: &str) -> Option<&TwigKind> {
         self.globals.get(name)
+    }
+
+    /// Register per-parameter refined types for a top-level function (TW05-C).
+    ///
+    /// Called by `classify_define` in Pass 1 when a `Lambda` has at least one
+    /// parameter with a refinement annotation (`RangeInt` or `MembershipInt`).
+    ///
+    /// The `refinements` slice has one entry per parameter — `None` for
+    /// parameters that carry no refinement predicate.
+    ///
+    /// This method is a no-op (does not store anything) when every entry is
+    /// `None`, since there's nothing for the call-site checker to verify.
+    pub fn register_fn_refinements(
+        &mut self,
+        fn_name: String,
+        refinements: Vec<Option<RefinedType>>,
+    ) {
+        // Only store the entry when at least one parameter has a refinement.
+        if refinements.iter().any(|r| r.is_some()) {
+            self.fn_param_refinements.insert(fn_name, refinements);
+        }
     }
 }
 

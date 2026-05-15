@@ -43,6 +43,7 @@
 //! threaded through each recursive call.  `errors` is a mutable `Vec`
 //! that any sub-call can append to.
 
+use lang_refinement_checker::{Checker, CheckOutcome, Evidence};
 use twig_parser::{
     Apply, Begin, Define, Expr, Form, If, Lambda, Let,
     // LANG52: sequential let* bindings
@@ -54,7 +55,8 @@ use type_checker_protocol::TypeErrorDiagnostic;
 use crate::arity::check_arity;
 use crate::env::{ScopeStack, TypeEnv};
 use crate::exhaustiveness::check_exhaustiveness;
-use crate::kinds::{type_annotation_to_kind, TwigKind};
+use crate::kinds::{annotation_to_refined_type, type_annotation_to_kind, TwigKind};
+use crate::narrowing::{extract_narrowing_facts, merge_kind_with_predicate};
 
 // ---------------------------------------------------------------------------
 // Pass 1 — declaration collection
@@ -96,13 +98,30 @@ pub fn collect_forms(program: &Program, env: &mut TypeEnv, _mode: &TypedMode) {
 ///
 /// Priority:
 /// 1. If `def.expr` is a `Lambda` → `Function { arity: params.len() }`.
+///    Also registers per-parameter `RefinedType`s in `fn_param_refinements`
+///    for any annotated parameters (TW05-C).
 /// 2. If `def.type_annotation` is `Some(ann)` → use the annotation.
 /// 3. Otherwise → `Any` (no static info available yet).
 fn classify_define(def: &Define, env: &mut TypeEnv) {
     let kind = match &def.expr {
-        Expr::Lambda(lam) => TwigKind::Function {
-            arity: lam.params.len(),
-        },
+        Expr::Lambda(lam) => {
+            // TW05-C: build the per-parameter refinement vec and store it.
+            // `param_annotations[i]` is `Some(ann)` when the i-th parameter
+            // carries a type annotation; `None` (or absent) otherwise.
+            let refinements: Vec<Option<lang_refined_types::RefinedType>> = (0..lam.params.len())
+                .map(|i| {
+                    lam.param_annotations
+                        .get(i)
+                        .and_then(|opt_ann| opt_ann.as_ref())
+                        .and_then(|ann| annotation_to_refined_type(ann))
+                })
+                .collect();
+            env.register_fn_refinements(def.name.clone(), refinements);
+
+            TwigKind::Function {
+                arity: lam.params.len(),
+            }
+        }
         _ => match &def.type_annotation {
             Some(ann) => type_annotation_to_kind(ann, env),
             None => TwigKind::Any,
@@ -288,9 +307,24 @@ fn infer_lambda(
 /// If the function position resolves to `Function { arity }`, the actual
 /// argument count is compared and an arity error is emitted on mismatch.
 ///
-/// The return kind is always `Any` in TW05-B — we don't track return types in
-/// the kind system yet.  TW05-C (refinement checker) will use the declared
-/// `return_annotation` to narrow this.
+/// ## TW05-C: call-site refinement checking
+///
+/// When the callee is a named function with registered parameter refinements
+/// (`env.fn_param_refinements`), we run a per-binding proof obligation for
+/// each argument that corresponds to an annotated parameter:
+///
+/// | Argument kind | Evidence | Outcome |
+/// |---------------|----------|---------|
+/// | `IntLit(n)` | `Concrete(n)` | checked exactly |
+/// | `VarRef → RefinedInt(p)` in scope | `Predicated([p])` | checked under assumption `p` |
+/// | `VarRef → Int` or `Any` | `Unconstrained` | always `Unknown` |
+/// | anything else | `Unconstrained` | always `Unknown` |
+///
+/// `Unknown` in lenient mode → silent.  In strict mode → error.
+/// `ProvenUnsafe(cx)` → error in all modes.
+///
+/// The return kind is always `Any` — return-type annotation checking is
+/// handled by `iir-refinement-pass` (LANG42) at the IIR level.
 fn infer_apply(
     app: &Apply,
     env: &TypeEnv,
@@ -307,18 +341,98 @@ fn infer_apply(
         _ => None,
     };
 
-    // Infer all argument expressions.
-    for arg in &app.args {
-        infer_expr(arg, env, scope, mode, errors);
-    }
+    // Infer all argument expressions (collect their kinds for refinement checking).
+    let arg_kinds: Vec<TwigKind> = app.args
+        .iter()
+        .map(|arg| infer_expr(arg, env, scope, mode, errors))
+        .collect();
 
     // Arity check: only fires when the function kind has a known arity.
     if let TwigKind::Function { arity: expected } = fn_kind {
         check_arity(fn_name, expected, app.args.len(), app.line, app.column, errors);
     }
 
+    // TW05-C: call-site refinement checking.
+    // Only runs when the callee is a VarRef and has registered refinements.
+    if let Some(callee_name) = fn_name {
+        if let Some(param_refinements) = env.fn_param_refinements.get(callee_name) {
+            let mut checker = Checker::new();
+            for (i, (arg, maybe_rt)) in app.args.iter().zip(param_refinements.iter()).enumerate() {
+                let Some(rt) = maybe_rt else { continue };
+
+                // Build evidence for this argument.
+                let evidence = arg_to_evidence(arg, &arg_kinds.get(i).cloned(), scope);
+
+                match checker.check(rt, &evidence) {
+                    CheckOutcome::ProvenUnsafe(cx) => {
+                        errors.push(TypeErrorDiagnostic {
+                            message: format!(
+                                "refinement error: argument {} to `{}` violates annotation: {}",
+                                i, callee_name, cx.description
+                            ),
+                            line: app.line,
+                            column: app.column,
+                        });
+                    }
+                    CheckOutcome::Unknown(_) if *mode == TypedMode::Strict => {
+                        errors.push(TypeErrorDiagnostic {
+                            message: format!(
+                                "refinement error: argument {} to `{}` cannot be proven to satisfy annotation (strict mode)",
+                                i, callee_name
+                            ),
+                            line: app.line,
+                            column: app.column,
+                        });
+                    }
+                    // ProvenSafe → silent; Unknown + Lenient → silent.
+                    _ => {}
+                }
+            }
+        }
+    }
+
     // Return kind unknown without a return-type annotation.
     TwigKind::Any
+}
+
+/// Classify a call-site argument as `Evidence` for the refinement checker.
+///
+/// The `inferred_kind` (already computed by `infer_expr` above) lets us reuse
+/// the scope lookup result without a second traversal.
+///
+/// ## Rules
+///
+/// | Argument | Kind in scope | Evidence |
+/// |----------|---------------|---------|
+/// | `IntLit(n)` | — | `Concrete(n)` |
+/// | `VarRef(x)` | `RefinedInt(p)` | `Predicated([p])` |
+/// | `VarRef(x)` | `Int` or `Any` | `Unconstrained` |
+/// | anything else | — | `Unconstrained` |
+fn arg_to_evidence(
+    arg: &Expr,
+    inferred_kind: &Option<TwigKind>,
+    scope: &ScopeStack,
+) -> Evidence {
+    match arg {
+        Expr::IntLit(lit) => Evidence::Concrete(lit.value as i128),
+        Expr::VarRef(v) => {
+            // Use the already-inferred kind (from scope or globals) rather
+            // than re-looking up — avoids a second borrow of scope.
+            let kind = inferred_kind
+                .as_ref()
+                .or_else(|| scope.lookup(&v.name));
+            match kind {
+                Some(TwigKind::RefinedInt(pred)) => {
+                    // The variable has a known refinement predicate.
+                    Evidence::Predicated(vec![pred.clone()])
+                }
+                // Int (unrefined) or Any: the solver knows nothing.
+                _ => Evidence::Unconstrained,
+            }
+        }
+        // Complex expressions (lambda, apply, let, …): no static evidence.
+        _ => Evidence::Unconstrained,
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -328,8 +442,28 @@ fn infer_apply(
 /// Infer an `if` expression `(if cond then else)`.
 ///
 /// Both branches are inferred.  If they agree on a kind, that kind is
-/// returned.  Otherwise `Any` is returned (the checker doesn't yet narrow
-/// `Any` to a union).
+/// returned.  Otherwise `TwigKind::unify` widens them (see `kinds::unify`).
+///
+/// ## TW05-C: flow-sensitive narrowing
+///
+/// We call `extract_narrowing_facts(cond)` to extract per-variable predicates
+/// implied by the guard.  These are applied to the variable's current kind via
+/// `merge_kind_with_predicate`:
+///
+/// - **True branch**: bind the narrowing predicates in a fresh scope frame.
+/// - **False branch**: bind the *negated* predicates.
+///
+/// This uses the existing `push_frame` / `pop_frame` / `bind` mechanism of
+/// `ScopeStack` — no structural changes to `ScopeStack` are required.
+///
+/// ### Example
+///
+/// ```scheme
+/// (define (f n)
+///   (if (< n 128)
+///     (ascii-info n)   ;; true branch: n narrowed to RefinedInt(n < 128)
+///     0))              ;; false branch: n narrowed to RefinedInt(NOT(n < 128))
+/// ```
 ///
 /// The condition is also inferred (to collect errors in it) but its kind
 /// is not checked — Twig uses dynamic truthiness, not a static bool
@@ -341,9 +475,44 @@ fn infer_if(
     mode: &TypedMode,
     errors: &mut Vec<TypeErrorDiagnostic>,
 ) -> TwigKind {
+    // Always infer the condition for error collection.
     infer_expr(&if_expr.cond, env, scope, mode, errors);
+
+    // Extract narrowing facts from the guard (TW05-C).
+    let facts = extract_narrowing_facts(&if_expr.cond);
+
+    // ── True branch ──────────────────────────────────────────────────────────
+    // Push a fresh scope frame and bind narrowing predicates.
+    scope.push_frame();
+    for (var, pred) in &facts {
+        // Only narrow if the variable is currently in scope (local or global).
+        // We check local scope first; globals are not narrowed into scope frames
+        // here (they're module-level and never have refined kinds from guards).
+        if let Some(base_kind) = scope.lookup(var).cloned().or_else(|| {
+            env.lookup_global(var).cloned()
+        }) {
+            let narrowed = merge_kind_with_predicate(&base_kind, pred.clone());
+            scope.bind(var, narrowed);
+        }
+    }
     let then_kind = infer_expr(&if_expr.then_branch, env, scope, mode, errors);
+    scope.pop_frame();
+
+    // ── False branch ─────────────────────────────────────────────────────────
+    // Push a fresh scope frame and bind *negated* predicates.
+    scope.push_frame();
+    for (var, pred) in &facts {
+        if let Some(base_kind) = scope.lookup(var).cloned().or_else(|| {
+            env.lookup_global(var).cloned()
+        }) {
+            let negated = lang_refined_types::Predicate::not(pred.clone());
+            let narrowed = merge_kind_with_predicate(&base_kind, negated);
+            scope.bind(var, narrowed);
+        }
+    }
     let else_kind = infer_expr(&if_expr.else_branch, env, scope, mode, errors);
+    scope.pop_frame();
+
     TwigKind::unify(then_kind, else_kind)
 }
 

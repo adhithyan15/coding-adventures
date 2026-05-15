@@ -1,12 +1,14 @@
 [package]
 name        = "twig-type-checker"
-version     = "0.4.0"
+version     = "0.5.0"
 edition     = "2021"
-description = "Base static type checker for Twig (TW05-B / LANG50 / LANG52).  Exposes two paths: type_check_source (GrammarASTNode + grammar-type-checker) for AOT/JIT annotation, and check_program (typed Program) for backward compatibility."
+description = "Static type checker for Twig (TW05-B + TW05-C / LANG50 + LANG52 + LANG53).  Exposes two paths: type_check_source (GrammarASTNode + grammar-type-checker) for AOT/JIT annotation, and check_program (typed Program) for backward compatibility.  TW05-C adds RefinedInt narrowing and call-site refinement checking."
 
 [dependencies]
-twig-parser           = { path = "../twig-parser" }
-type-checker-protocol = { path = "../type-checker-protocol" }
-grammar-type-checker  = { path = "../grammar-type-checker" }
-type-declarations     = { path = "../type-declarations" }
-parser                = { path = "../parser" }
+twig-parser              = { path = "../twig-parser" }
+type-checker-protocol    = { path = "../type-checker-protocol" }
+grammar-type-checker     = { path = "../grammar-type-checker" }
+type-declarations        = { path = "../type-declarations" }
+parser                   = { path = "../parser" }
+lang-refined-types       = { path = "../lang-refined-types" }
+lang-refinement-checker  = { path = "../lang-refinement-checker" }
