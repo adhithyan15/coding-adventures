@@ -2,6 +2,32 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.9.0] — 2026-05-13
+
+### Added — `Op::Concat` execution
+
+Implements the new MX01 V2 `Op::Concat` op (wire tag 0x1D) added in
+`matrix-ir` 0.3.0.
+
+- `eval::concat_bytes(inputs, axis, elem_bytes) -> (Vec<u8>,
+  Vec<u32>)` — pure scalar reference.  Walks the output index
+  space, picks the right input per output element by checking
+  the axis-coordinate against running input offsets.
+- `dispatch::exec_compute` gains an arm for `Op::Concat` that
+  gathers each input's bytes + dims then calls `concat_bytes`.
+- `profile().supported_ops` widened from `0x1FFF_FFFF` (Slice
+  added) to `0x3FFF_FFFF` (Concat adds bit 29).
+
+### Tests
+
+5 new unit tests in `eval::tests`:
+- `concat_two_1d_tensors_axis0`
+- `concat_three_1d_tensors_axis0` (variadic)
+- `concat_2d_axis0_stacks_rows`
+- `concat_2d_axis1_interleaves_columns`
+- `concat_then_slice_round_trips_pairs` — the FFT even/odd
+  reassembly pattern (concat halves → slice them back), end-to-end
+
 ## [0.8.0] — 2026-05-13
 
 ### Added — `Op::Slice` execution

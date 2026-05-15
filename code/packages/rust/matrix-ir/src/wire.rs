@@ -257,6 +257,18 @@ fn encode_op(op: &Op, w: &mut Writer<'_>) {
             w.u32(*step);
             w.u32(output.0);
         }
+        Op::Concat {
+            inputs,
+            axis,
+            output,
+        } => {
+            w.uv64(inputs.len() as u64);
+            for inp in inputs {
+                w.u32(inp.0);
+            }
+            w.u32(*axis);
+            w.u32(output.0);
+        }
     }
 }
 
@@ -634,6 +646,24 @@ fn decode_op(r: &mut Reader<'_>) -> Result<Op, IrError> {
             step: r.u32()?,
             output: TensorId(r.u32()?),
         }),
+        0x1D => {
+            let n_inputs = r.uv64()?;
+            // Each input id is 4 bytes; cap allocation against the
+            // remaining buffer size so a malicious header can't
+            // amplify a small input into a giant Vec.
+            let cap = bounded_capacity(n_inputs, 4, r.remaining());
+            let mut inputs = Vec::with_capacity(cap);
+            for _ in 0..n_inputs {
+                inputs.push(TensorId(r.u32()?));
+            }
+            let axis = r.u32()?;
+            let output = TensorId(r.u32()?);
+            Ok(Op::Concat {
+                inputs,
+                axis,
+                output,
+            })
+        }
         unknown => Err(IrError::WireUnknownTag {
             what: "op",
             tag: unknown as u64,

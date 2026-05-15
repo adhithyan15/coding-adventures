@@ -1,5 +1,16 @@
 # Changelog — matrix-metal
 
+## 0.11.2 — 2026-05-13
+
+### Compatibility update — `Op::Concat` keep-up
+
+`matrix-ir` 0.3.0 added `Op::Concat` (wire tag 0x1D).  matrix-metal
+does **not** claim Concat in its `supported_ops` bitset, so the
+planner routes Concat ops to CPU — but the local `op_kind_name`
+helper gained an arm so the exhaustive match still compiles.
+
+Same pattern as the 0.11.1 keep-up for Op::Slice.
+
 ## 0.11.1 — 2026-05-13
 
 ### Compatibility update — `Op::Slice` keep-up
