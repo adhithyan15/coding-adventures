@@ -1,0 +1,279 @@
+; # parser.tw — Self-Hosted Twig Parser (LANG58 / TW05-E)
+;
+; The parser converts a flat list of `Token` records (from `compiler/lexer`)
+; into a list of `Expr` AST nodes (from `compiler/ast`).
+;
+; ## Design: recursive descent with cons-pair results
+;
+; Every parse function returns `(cons rest-tokens parsed-value)`.  The caller
+; extracts the two components with `(car result)` and `(cdr result)`.
+;
+;   (let* ((result (parse-expr tokens))
+;          (rest   (car result))
+;          (expr   (cdr result)))
+;     …)
+;
+; This avoids `(values ...)`, which is not supported in Twig.
+;
+; ## Predicate dispatch instead of match
+;
+; `TokenKind` union variants are imported from `compiler/token`.  The module
+; driver does not propagate variant_tags across module boundaries, so
+; `(match (token-kind tok) ((TkInteger) …))` would fail at runtime.
+;
+; Instead, every dispatch uses the generated predicate functions:
+;   `TkInteger?`, `TkBoolean?`, `TkLParen?`, etc.
+;
+; ## Grammar handled
+;
+;   program  := expr* EOF
+;   expr     := atom | list | quote-shorthand
+;   atom     := INTEGER | BOOLEAN | STRING | IDENTIFIER
+;   list     := '(' form* ')'
+;   form     := 'define' | 'if' | 'begin' | 'let' | 'let*' | call
+;   call     := expr expr*
+;
+; Special list forms produce dedicated AST nodes:
+;   (define name expr)     → DefExpr
+;   (if cond then else)    → IfExpr
+;   (begin e ...)          → BeginExpr
+;   (let ((v e) ...) body) → LetExpr
+;   (let* ...)             → LetExpr  (same node, different keyword)
+;   (fn arg ...)           → CallExpr
+;
+; ## Example
+;
+;   (parse-program (lex-source "(+ 1 2)"))
+;   ; → ((CallExpr (VarRef "+") ((IntLit 1) (IntLit 2)) sp))
+;
+; Note: `parse-expr` and `parse-list` are mutually recursive.  Twig supports
+; this because all functions in a module are hoisted to the top level.
+
+(module compiler/parser
+  (typed lenient)
+  (export parse-program parse-expr)
+  (import compiler/span compiler/token compiler/ast))
+
+; ── Span helpers ─────────────────────────────────────────────────────────────
+
+(define (dummy-parse-span)
+  (make-span 0 0 0))
+
+; ── Parse one expression ──────────────────────────────────────────────────────
+;
+; Returns (cons rest-tokens expr).
+;
+; Dispatch on the head token's kind via predicates (not match).
+
+(define (parse-expr tokens)
+  (let* ((tok  (car tokens))
+         (kind (token-kind tok))
+         (sp   (token-span tok))
+         (lex  (token-lexeme tok)))
+    ; ── Integer literal ──────────────────────────────────────────────────────
+    (if (TkInteger? kind)
+        (cons (cdr tokens)
+              (IntLit (string->number lex) sp))
+    ; ── Boolean literal ──────────────────────────────────────────────────────
+    (if (TkBoolean? kind)
+        (cons (cdr tokens)
+              (BoolLit (string=? lex "#t") sp))
+    ; ── String literal ───────────────────────────────────────────────────────
+    (if (TkString? kind)
+        (cons (cdr tokens)
+              (StrLit lex sp))
+    ; ── nil identifier ───────────────────────────────────────────────────────
+    (if (and (TkIdentifier? kind) (string=? lex "nil"))
+        (cons (cdr tokens)
+              (NilLit sp))
+    ; ── Identifier → VarRef ──────────────────────────────────────────────────
+    (if (TkIdentifier? kind)
+        (cons (cdr tokens)
+              (VarRef lex sp))
+    ; ── Left-paren → list form ───────────────────────────────────────────────
+    (if (TkLParen? kind)
+        ; consume the `(` and hand off to parse-list
+        (parse-list (cdr tokens) sp)
+    ; ── Quote shorthand: 'expr → (quote expr) ────────────────────────────────
+    (if (TkQuote? kind)
+        (let* ((inner-result (parse-expr (cdr tokens)))
+               (rest-after   (car inner-result))
+               (inner-expr   (cdr inner-result)))
+          (cons rest-after
+                (CallExpr (VarRef "quote" sp) (list inner-expr) sp)))
+    ; ── Fallback: unrecognised token → NilLit (error recovery) ───────────────
+    (cons (cdr tokens) (NilLit sp))
+    ))))))))
+
+; ── Parse a list form: (form …) ──────────────────────────────────────────────
+;
+; Called immediately after consuming `(`.
+; `open-sp` is the span of the opening parenthesis.
+;
+; Dispatches on the first element to distinguish special forms from calls.
+; Returns (cons rest-tokens expr).
+
+(define (parse-list tokens open-sp)
+  ; Peek at the first token to check for special forms
+  (let* ((head-tok  (car tokens))
+         (head-kind (token-kind head-tok))
+         (head-lex  (token-lexeme head-tok)))
+    ; ── Empty list () → NilLit ───────────────────────────────────────────────
+    (if (TkRParen? head-kind)
+        (cons (cdr tokens) (NilLit open-sp))
+    ; ── Special forms dispatched by keyword string ────────────────────────────
+    (if (and (TkIdentifier? head-kind) (string=? head-lex "define"))
+        (parse-define (cdr tokens) open-sp)
+    (if (and (TkIdentifier? head-kind) (string=? head-lex "if"))
+        (parse-if (cdr tokens) open-sp)
+    (if (and (TkIdentifier? head-kind) (string=? head-lex "begin"))
+        (parse-begin (cdr tokens) open-sp)
+    (if (or (and (TkIdentifier? head-kind) (string=? head-lex "let"))
+            (and (TkIdentifier? head-kind) (string=? head-lex "let*")))
+        (parse-let (cdr tokens) open-sp)
+    ; ── General call: (fn arg ...) ───────────────────────────────────────────
+    (parse-call tokens open-sp)
+    )))))))
+
+; ── Parse `(define name expr)` ────────────────────────────────────────────────
+;
+; tokens: the token stream AFTER consuming `define`
+; Returns (cons rest-tokens DefExpr).
+
+(define (parse-define tokens open-sp)
+  ; name token
+  (let* ((name-tok (car tokens))
+         (name-lex (token-lexeme name-tok))
+         (after-name (cdr tokens))
+         ; body expression
+         (body-result (parse-expr after-name))
+         (after-body  (car body-result))
+         (body-expr   (cdr body-result))
+         ; consume closing `)`
+         (after-rparen (cdr after-body)))
+    (cons after-rparen
+          (DefExpr name-lex body-expr open-sp))))
+
+; ── Parse `(if cond then else)` ───────────────────────────────────────────────
+
+(define (parse-if tokens open-sp)
+  (let* ((cond-result (parse-expr tokens))
+         (after-cond  (car cond-result))
+         (cond-expr   (cdr cond-result))
+         (then-result (parse-expr after-cond))
+         (after-then  (car then-result))
+         (then-expr   (cdr then-result))
+         (else-result (parse-expr after-then))
+         (after-else  (car else-result))
+         (else-expr   (cdr else-result))
+         ; consume closing `)`
+         (after-rparen (cdr after-else)))
+    (cons after-rparen
+          (IfExpr cond-expr then-expr else-expr open-sp))))
+
+; ── Parse `(begin e ...)` ─────────────────────────────────────────────────────
+
+(define (parse-begin tokens open-sp)
+  (let* ((result  (parse-until-rparen tokens (list)))
+         (rest    (car result))
+         (exprs   (cdr result)))
+    (cons rest (BeginExpr exprs open-sp))))
+
+; ── Parse `(let ((v e) ...) body)` ───────────────────────────────────────────
+;
+; The bindings are stored as a list of cons pairs: ((v1 . e1) (v2 . e2) …).
+; Both `let` and `let*` produce `LetExpr`; the caller's keyword tells them apart.
+
+(define (parse-let tokens open-sp)
+  ; consume `(` starting the bindings list
+  (let* ((after-lparen (cdr tokens))
+         ; parse bindings until `)`
+         (bindings-result (parse-bindings after-lparen (list)))
+         (after-bindings  (car bindings-result))
+         (bindings        (cdr bindings-result))
+         ; parse body expression
+         (body-result  (parse-expr after-bindings))
+         (after-body   (car body-result))
+         (body-expr    (cdr body-result))
+         ; consume closing `)`
+         (after-rparen (cdr after-body)))
+    (cons after-rparen
+          (LetExpr bindings body-expr open-sp))))
+
+; parse-bindings: collect `(name expr)` pairs until `)`.
+; Returns (cons rest-tokens reversed-then-fixed-list-of-pairs).
+
+(define (parse-bindings tokens acc)
+  (let* ((tok  (car tokens))
+         (kind (token-kind tok)))
+    (if (TkRParen? kind)
+        ; Done with bindings
+        (cons (cdr tokens) (reverse acc))
+        ; Parse one `(name expr)` binding
+        (let* (; consume `(`
+               (after-lparen (cdr tokens))
+               ; name token
+               (name-tok  (car after-lparen))
+               (name-lex  (token-lexeme name-tok))
+               (after-name (cdr after-lparen))
+               ; value expression
+               (val-result (parse-expr after-name))
+               (after-val  (car val-result))
+               (val-expr   (cdr val-result))
+               ; consume `)`
+               (after-rparen (cdr after-val))
+               ; Store binding as (cons name-string val-expr)
+               (binding (cons name-lex val-expr)))
+          (parse-bindings after-rparen (cons binding acc))))))
+
+; ── Parse a general function call: (fn arg ...) ───────────────────────────────
+;
+; tokens points at the function expression (not yet consumed).
+
+(define (parse-call tokens open-sp)
+  (let* (;  parse the function expression
+         (fn-result (parse-expr tokens))
+         (after-fn  (car fn-result))
+         (fn-expr   (cdr fn-result))
+         ; parse all arguments until `)`
+         (args-result (parse-until-rparen after-fn (list)))
+         (after-args  (car args-result))
+         (args        (cdr args-result)))
+    (cons after-args
+          (CallExpr fn-expr args open-sp))))
+
+; ── Collect expressions until `)` ─────────────────────────────────────────────
+;
+; Returns (cons rest-after-rparen list-of-exprs).
+; The `)` itself is consumed.
+
+(define (parse-until-rparen tokens acc)
+  (let* ((tok  (car tokens))
+         (kind (token-kind tok)))
+    (if (or (TkRParen? kind) (TkEOF? kind))
+        ; Stop — consume `)` if present
+        (cons (if (TkRParen? kind) (cdr tokens) tokens)
+              (reverse acc))
+        ; Parse one more expression and recurse
+        (let* ((result (parse-expr tokens))
+               (rest   (car result))
+               (expr   (cdr result)))
+          (parse-until-rparen rest (cons expr acc))))))
+
+; ── Top-level program parser ──────────────────────────────────────────────────
+;
+; `parse-program` reads all top-level expressions until `TkEOF`.
+; Returns a list of `Expr` nodes in source order.
+
+(define (parse-program-loop tokens acc)
+  (let* ((tok  (car tokens))
+         (kind (token-kind tok)))
+    (if (TkEOF? kind)
+        (reverse acc)
+        (let* ((result (parse-expr tokens))
+               (rest   (car result))
+               (expr   (cdr result)))
+          (parse-program-loop rest (cons expr acc))))))
+
+(define (parse-program tokens)
+  (parse-program-loop tokens (list)))

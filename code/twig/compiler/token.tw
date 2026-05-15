@@ -1,4 +1,4 @@
-; # token.tw — Token Kinds and Token Records (LANG57 / TW05-D)
+; # token.tw — Token Kinds and Token Records (LANG58 / TW05-E)
 ;
 ; A `Token` is the smallest unit produced by the lexer.  Each token carries
 ; a `kind` (one of the `TokenKind` union variants), a `lexeme` (the raw
@@ -13,13 +13,16 @@
 ; The union `TokenKind` covers all surface syntax categories.  Variants with
 ; no fields are encoded as `(cons tag nil)` in the heap; the generated
 ; predicates check the `car` (the integer tag).
+;
+; LANG58 adds `TkColon` (tag 8) for `:` used in type annotations `(x : int)`.
+; TkEOF shifts from tag 8 to tag 9.
 
 (module compiler/token
   (typed lenient)
   (export TokenKind TkLParen TkRParen TkInteger TkIdentifier
-          TkBoolean TkString TkDot TkQuote TkEOF
+          TkBoolean TkString TkDot TkQuote TkColon TkEOF
           TkLParen? TkRParen? TkInteger? TkIdentifier?
-          TkBoolean? TkString? TkDot? TkQuote? TkEOF?
+          TkBoolean? TkString? TkDot? TkQuote? TkColon? TkEOF?
           Token token? token-kind token-lexeme token-span)
   (import compiler/span))
 
@@ -34,7 +37,8 @@
 ;   5 = TkString      — double-quoted string literal, e.g. `"hello"`
 ;   6 = TkDot         — `.` (used in dotted pairs)
 ;   7 = TkQuote       — `'` (shorthand for `(quote ...)`)
-;   8 = TkEOF         — sentinel end-of-input token
+;   8 = TkColon       — `:` (type annotation separator)
+;   9 = TkEOF         — sentinel end-of-input token
 
 (union TokenKind
   (TkLParen)
@@ -45,6 +49,7 @@
   (TkString)
   (TkDot)
   (TkQuote)
+  (TkColon)
   (TkEOF))
 
 ; ── Token record ─────────────────────────────────────────────────────────────

@@ -1,17 +1,17 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG57 / TW05-D)
+; # main.tw — Root Module + Smoke-Test Entry Point (LANG58 / TW05-E)
 ;
-; This is the root module of the self-hosted compiler data model.  It
-; imports all six sub-modules and exposes a `(main)` function that
-; exercises the full module graph in a single call:
+; This is the root module of the self-hosted compiler.  It imports all eight
+; sub-modules (six data-model modules from TW05-D plus lexer and parser from
+; TW05-E) and exposes a `(main)` function that exercises the full pipeline:
 ;
-;   1. Create a `Span` via the validated constructor
-;   2. Wrap it in a `Token`
-;   3. Create an `IirBuilder`, allocate one slot from it
-;   4. Return the new `reg-count` — should be 1
+;   1. Lex the string `"42"` → list of tokens
+;   2. Parse the token list → list of AST nodes
+;   3. Extract the integer value from the first node (an IntLit)
+;   4. Return 42
 ;
-; The `(main)` return value of `1` is the integration test assertion:
-; if the module graph compiles and links correctly, and the builder
-; correctly increments its register counter, the result is 1.
+; The `(main)` return value of `42` is the integration test assertion:
+; if the entire module graph compiles and links correctly, and the lexer +
+; parser correctly round-trip a single integer literal, the result is 42.
 ;
 ; ## Naming conventions for generated accessors
 ;
@@ -22,9 +22,14 @@
 ;   `IirInstr`   → `iirinstr-*`    (iirinstr-op, iirinstr-dest, ...)
 ;   `IirBuilder` → `iirbuilder-*`  (iirbuilder-name, iirbuilder-reg-count, ...)
 ;
-; Downstream passes will expand `main.tw` to include the full lexer,
-; parser, type checker, and IIR emitter once each phase is ported to
-; Twig (TW05-E through TW05-G).
+; ## Cross-module predicate constraint
+;
+; Union variant tags are NOT propagated by the module driver.  Never use
+; `(match ...)` on a union value that was constructed in an imported module.
+; Use the predicate functions instead: `(IntLit? node)`, `(TkInteger? kind)`.
+;
+; Downstream passes will expand main.tw to include the IIR emitter, resolver,
+; and self-compilation driver once each phase is ported (TW05-F through TW05-G).
 
 (module compiler/main
   (typed lenient)
@@ -34,39 +39,30 @@
           compiler/diagnostic
           compiler/ast
           compiler/iir-types
-          compiler/iir-builder))
+          compiler/iir-builder
+          compiler/lexer
+          compiler/parser))
 
 ; ── Entry point ──────────────────────────────────────────────────────────────
 ;
-; `(main)` stitches the six data-model modules together into a tiny
-; end-to-end smoke test that confirms all imports resolve, all constructors
-; work, and the builder's counter logic is correct.
+; `(main)` is the end-to-end smoke test: lex "42", parse it, extract 42.
 ;
-; Returns: 1  (one register slot was allocated)
+; Returns: 42  (the integer literal value round-tripped through lex + parse)
 
 (define (main)
-  ; Create a source span: file 0, bytes [3, 7)
-  (let* ((sp   (make-span 0 3 7))
+  ; Step 1: lex the string "42"
+  ; lex-source returns a list: (Token TkInteger "42" sp) (Token TkEOF "" sp)
+  (let* ((tokens (lex-source "42"))
 
-         ; Verify span construction succeeded — span-start should be 3.
-         ; (not used in the return value, just exercises the accessor)
-         (_sp-start (span-start sp))
+         ; Step 2: parse the token list
+         ; parse-program returns a list of top-level Expr nodes.
+         ; For "42", the list has one element: (IntLit 42 sp).
+         (exprs  (parse-program tokens))
 
-         ; Wrap it in a Token: kind = TkInteger, lexeme = "42"
-         (tok  (Token (TkInteger) "42" sp))
+         ; Step 3: extract the first (and only) expression
+         (first  (car exprs)))
 
-         ; Verify token construction — token-kind should be TkInteger.
-         ; (uses the record accessor `token-kind`)
-         (_tok-kind (token-kind tok))
-
-         ; Create a fresh IIR builder for a function named 'entry-fn
-         (b0   (new-builder 'entry-fn))
-
-         ; Allocate one register slot.
-         ; alloc-slot returns (cons updated-builder (cons slot-name nil))
-         (pair (alloc-slot b0))
-         (b1   (car pair)))
-
-    ; The builder's reg-count should now be 1.
-    ; Uses generated accessor: iirbuilder-reg-count (not iir-builder-reg-count).
-    (iirbuilder-reg-count b1)))
+    ; Step 4: read its integer value via the generated accessor.
+    ; `intlit-value` is the accessor for the `value` field of IntLit.
+    ; The field was declared `(value : int)` so this returns an integer.
+    (intlit-value first)))   ; → 42
