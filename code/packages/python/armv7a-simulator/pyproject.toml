@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-armv7a-simulator"
+version = "0.1.0"
+description = "ARMv7-A / Thumb-2 (2004) behavioral simulator — Layer 07x"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-simulator-protocol",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/armv7a_simulator"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=armv7a_simulator --cov-report=term-missing --cov-fail-under=80"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501", "E701", "E702"]
