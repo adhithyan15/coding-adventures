@@ -52,7 +52,14 @@ select_item       = expr [ "AS" NAME ] ;
 table_ref         = "(" query_stmt ")" "AS" NAME | table_name [ "AS" NAME | NAME ] ;
 table_name        = NAME [ "." NAME ] ;
 
-join_clause       = [ join_type ] "JOIN" table_ref [ "ON" expr | "USING" "(" NAME { "," NAME } ")" ] ;
+# join_clause covers two forms:
+#   1. Explicit JOIN:  [ join_type ] "JOIN" table_ref [ "ON" expr | "USING" (...) ]
+#   2. Comma join:     "," table_ref
+# The comma form is an implicit CROSS JOIN — semantically equivalent to
+# CROSS JOIN with no ON condition.  Both forms produce a join_clause node
+# so the adapter can handle them uniformly.
+join_clause       = ( [ join_type ] "JOIN" table_ref [ "ON" expr | "USING" "(" NAME { "," NAME } ")" ] )
+                  | ( "," table_ref ) ;
 join_type         = "CROSS" | "INNER" | "NATURAL"
                   | ( "LEFT" [ "OUTER" ] )
                   | ( "RIGHT" [ "OUTER" ] ) | ( "FULL" [ "OUTER" ] ) ;
@@ -128,7 +135,11 @@ returning_clause  = "RETURNING" expr { "," expr } ;
 
 create_table_stmt = "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] NAME
                     "(" col_def { "," col_def } ")" ;
-col_def           = NAME NAME { col_constraint } ;
+col_def           = NAME col_type { col_constraint } ;
+# col_type accepts simple names (INTEGER, TEXT) and parameterised types
+# (VARCHAR(8), DECIMAL(10,2)) — the length/precision arguments are parsed
+# but ignored; the engine uses SQLite's type-affinity rules internally.
+col_type          = NAME [ "(" NUMBER { "," NUMBER } ")" ] ;
 col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
                   | "UNIQUE" | ( "DEFAULT" primary )
                   | ( "CHECK" "(" expr ")" )
@@ -148,7 +159,11 @@ alter_table_stmt  = "ALTER" "TABLE" NAME "ADD" [ "COLUMN" ] col_def ;
 # The UNIQUE flag is stored but not enforced in v2 (reserved for v3).
 
 create_index_stmt = "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
-                    "ON" NAME "(" NAME { "," NAME } ")" ;
+                    "ON" NAME "(" index_col { "," index_col } ")" ;
+# index_col: a column name with an optional sort direction (ASC or DESC).
+# The direction hint is accepted for SQLite compatibility but ignored by the
+# backend (B-tree indexes are bidirectional at query time).
+index_col         = NAME [ "ASC" | "DESC" ] ;
 
 drop_index_stmt   = "DROP" "INDEX" [ "IF" "EXISTS" ] NAME ;
 
@@ -197,8 +212,8 @@ not_expr          = "NOT" not_expr | comparison ;
 comparison        = additive [ cmp_op additive
                   | "BETWEEN" additive "AND" additive
                   | "NOT" "BETWEEN" additive "AND" additive
-                  | "IN" "(" in_expr ")"
-                  | "NOT" "IN" "(" in_expr ")"
+                  | "IN" "(" [ in_expr ] ")"
+                  | "NOT" "IN" "(" [ in_expr ] ")"
                   | "LIKE" additive
                   | "NOT" "LIKE" additive
                   | "GLOB" additive

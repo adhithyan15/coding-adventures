@@ -508,6 +508,24 @@ def _join_clause(
     ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> JoinClause:
+    # join_clause has two forms (grammar):
+    #   1. Explicit: [ join_type ] "JOIN" table_ref [ "ON" expr | "USING" (...) ]
+    #   2. Comma:    "," table_ref  — implicit CROSS JOIN, no ON/USING condition.
+    #
+    # Detect the comma form by checking for a direct "," token child without a
+    # "JOIN" keyword sibling.  When the comma form is present we immediately
+    # return a CROSS JoinClause with no condition.
+    has_join_kw = _has_keyword_child(node, "JOIN")
+    if not has_join_kw:
+        # Comma join — check for a "," token to be sure.
+        is_comma_join = any(
+            isinstance(c, Token) and c.value == ","
+            for c in node.children
+        )
+        if is_comma_join:
+            right = _table_ref(_child_node(node, "table_ref"), ctes=ctes, view_defs=view_defs)
+            return JoinClause(kind=JoinKind.CROSS, right=right, on=None)
+
     # join_clause = [ join_type ] "JOIN" table_ref
     #               [ "ON" expr | "USING" "(" NAME { "," NAME } ")" ]
     #
@@ -921,10 +939,32 @@ def _create_table(node: ASTNode) -> CreateTableStmt:
 
 
 def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> BackendColumnDef:
-    # col_def = NAME NAME { col_constraint }
-    names = [c for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME"]
-    col_name = names[0].value
-    type_name = names[1].value.upper() if len(names) > 1 else "TEXT"
+    # col_def = NAME col_type { col_constraint }
+    # col_type = NAME [ "(" NUMBER { "," NUMBER } ")" ]
+    #
+    # The column name is the first direct NAME child of col_def.  The type name
+    # lives inside the col_type child node.  We ignore any length/precision
+    # parameters inside col_type — e.g. VARCHAR(8) is treated as VARCHAR — and
+    # apply SQLite's type-affinity rules to map the type to the backend's
+    # internal representation.
+    col_name_token = next(
+        (c for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME"), None
+    )
+    col_name = col_name_token.value if col_name_token else ""
+
+    # Try the new col_type child node first, then fall back to the legacy
+    # two-NAME layout for any grammars that haven't been regenerated yet.
+    col_type_node = _maybe_child(node, "col_type")
+    if col_type_node is not None:
+        type_token = next(
+            (c for c in col_type_node.children if isinstance(c, Token) and _token_type(c) == "NAME"),
+            None,
+        )
+        type_name = type_token.value.upper() if type_token else "TEXT"
+    else:
+        # Legacy: second NAME directly under col_def.
+        names = [c for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME"]
+        type_name = names[1].value.upper() if len(names) > 1 else "TEXT"
 
     not_null = False
     primary_key = False
@@ -1010,28 +1050,45 @@ def _create_index(node: ASTNode) -> CreateIndexStmt:
 
         create_index_stmt =
             "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
-            "ON" NAME "(" NAME { "," NAME } ")" ;
+            "ON" NAME "(" index_col { "," index_col } ")" ;
+        index_col = NAME [ "ASC" | "DESC" ] ;
 
-    NAME tokens appear in order:  index_name, table_name, col1, col2, ...
-    All KEYWORD tokens are filtered out before collecting NAMEs.
+    index_name and table_name are direct NAME tokens on the statement node.
+    Column names are extracted from ``index_col`` child nodes; ASC/DESC hints
+    are accepted for SQLite compatibility but ignored by the backend.
     """
     unique = _has_keyword_child(node, "UNIQUE")
     if_not_exists = _has_keyword_sequence(node, ("IF", "NOT", "EXISTS"))
 
-    # Collect NAME tokens, skipping keywords like INDEX, ON, IF, NOT, EXISTS.
-    names = [
+    # Direct NAME tokens on the statement are: index_name and table_name.
+    # (Column names are inside index_col child nodes since the grammar change.)
+    direct_names = [
         c.value
         for c in node.children
         if isinstance(c, Token) and _token_type(c) == "NAME"
     ]
-    if len(names) < 3:
+    if len(direct_names) < 2:
         raise ProgrammingError(
-            "create_index_stmt: expected index_name, table_name, and at least one column"
+            "create_index_stmt: expected index_name and table_name"
         )
 
-    index_name = names[0]
-    table_name = names[1]
-    columns = tuple(names[2:])
+    index_name = direct_names[0]
+    table_name = direct_names[1]
+
+    # Column names come from index_col child nodes (new grammar).
+    # Fall back to direct NAME tokens beyond position 2 for any grammar
+    # that hasn't been regenerated yet.
+    index_col_nodes = _child_nodes(node, "index_col")
+    if index_col_nodes:
+        columns: tuple[str, ...] = tuple(
+            next(
+                (c.value for c in ic.children if isinstance(c, Token) and _token_type(c) == "NAME"),
+                "",
+            )
+            for ic in index_col_nodes
+        )
+    else:
+        columns = tuple(direct_names[2:])
 
     return CreateIndexStmt(
         name=index_name,
@@ -1310,22 +1367,26 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     # IN / NOT IN.
     if _has_keyword_child(node, "IN"):
         negated = _has_keyword_child(node, "NOT")
-        # New grammar wraps the list in an in_expr node (= query_stmt | value_list).
+        # The grammar wraps the list in an optional in_expr node.
+        # When in_expr is absent the parentheses are empty — `IN ()` — which
+        # SQLite defines as always-false (IN) / always-true (NOT IN).
         in_expr_node = _maybe_child(node, "in_expr")
-        if in_expr_node is not None:
-            q = _maybe_child(in_expr_node, "query_stmt")
-            if q is not None:
-                # Subquery form: expr IN (SELECT ...)
-                inner_stmt = _query_stmt(q)
-                if not isinstance(inner_stmt, SelectStmt):
-                    raise ProgrammingError("IN subquery must be a plain SELECT statement")
-                if negated:
-                    return NotInSubquery(operand=left, query=inner_stmt)
-                return InSubquery(operand=left, query=inner_stmt)
-            vl = _child_node(in_expr_node, "value_list")
-        else:
-            # Old grammar fallback: value_list directly under comparison.
-            vl = _child_node(node, "value_list")
+        if in_expr_node is None:
+            # Empty IN list: `x IN ()` is always FALSE, `x NOT IN ()` always TRUE.
+            # Model as In/NotIn with an empty values tuple.
+            if negated:
+                return NotIn(operand=left, values=())
+            return In(operand=left, values=())
+        q = _maybe_child(in_expr_node, "query_stmt")
+        if q is not None:
+            # Subquery form: expr IN (SELECT ...)
+            inner_stmt = _query_stmt(q)
+            if not isinstance(inner_stmt, SelectStmt):
+                raise ProgrammingError("IN subquery must be a plain SELECT statement")
+            if negated:
+                return NotInSubquery(operand=left, query=inner_stmt)
+            return InSubquery(operand=left, query=inner_stmt)
+        vl = _child_node(in_expr_node, "value_list")
         values = tuple(
             _expr(c, state) for c in vl.children if isinstance(c, ASTNode) and c.rule_name == "expr"
         )

@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.30.0] - 2026-05-15
+
+### Added
+
+- **`SortKey.positional_index`** (`plan.py`) — New optional `int | None` field
+  (default `None`) on `SortKey`.  When set to a 0-based integer it means "sort
+  by the output column at this position" — used for `ORDER BY N` positional
+  references and `ORDER BY alias` where the alias resolves to a computed
+  expression.  The codegen uses this to emit `SortKey.column_idx` in the IR,
+  enabling index-based column lookup instead of name-based lookup in the VM.
+
+### Fixed
+
+- **`ORDER BY N` positional sort** (`planner.py`) — `ORDER BY 1`, `ORDER BY 2`,
+  etc. now correctly set `positional_index` on the resolved `SortKey`.  Without
+  this, all computed-expression columns share the display name `"?"` and
+  `ORDER BY 2` would silently sort by column 0 (the first `"?"` column).
+
+- **`ORDER BY alias_name` for computed expressions** (`planner.py`) — Queries
+  such as `SELECT a+b*2 AS v4 FROM t ORDER BY v4` previously crashed with
+  `InternalError: ValueError: tuple.index(x): x not in tuple` because alias
+  substitution replaced `v4` with the underlying `BinaryExpr`, whose display
+  name is `"?"`.
+
+  The fix: when the ORDER BY expression is a bare `Column(table=None, col=name)`
+  that matches a SELECT-list alias, `_resolve_order_key` treats it identically
+  to a positional reference — it looks up the 0-based index of the aliased
+  SELECT item and records that as `positional_index`.  At runtime the VM uses
+  index-based lookup (`row[idx]`) which is both correct and avoids the name
+  collision for computed columns.
+
+  SQL precedence: a bare name in `ORDER BY` matches a SELECT-list alias before
+  a table column (SQLite-compatible behaviour).
+
 ## [0.29.0] - 2026-05-14
 
 ### Added

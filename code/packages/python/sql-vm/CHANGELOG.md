@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.25.0 — 2026-05-15
+
+### Fixed
+
+- **`pop_n(0)` stack corruption** (`vm.py`) — `pop_n(n)` with `n=0` previously
+  deleted the entire stack because Python's `list[-0:]` equals `list[0:]` (the
+  whole list) and `del self.stack[-0:]` empties it.  Added `if n == 0: return []`
+  guard before the slice operation.
+
+- **`IN ()` empty list** (`vm.py`) — `x IN ()` always returns `FALSE` per SQL
+  semantics (there are no possible matches when the right-hand set is empty).
+  The old handler would return `NULL` when the operand was NULL, or crash on
+  `pop_n(0)`.  The fix adds an early `if ins.n == 0: st.push(False); return`
+  before the NULL operand check.
+
+- **`_do_sort` with `column_idx`** (`vm.py`) — The sort key dispatch now checks
+  `k.column_idx is not None` before falling back to `columns.index(k.column)`.
+  This supports the `ORDER BY N` positional sort keys emitted by the codegen
+  (where `column_idx` is the 0-based SELECT-list position), avoiding the
+  `ValueError: tuple.index("?")` that occurred when multiple computed columns
+  shared the fallback display name `"?"`.
+
 ## 1.24.0 — 2026-05-15
 
 ### Added

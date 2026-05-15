@@ -216,11 +216,20 @@ class Having:
 
 @dataclass(frozen=True, slots=True)
 class SortKey:
-    """One key in an ORDER BY clause."""
+    """One key in an ORDER BY clause.
+
+    ``positional_index``: when the ORDER BY expression was a positional
+    integer literal (``ORDER BY 1``, ``ORDER BY 2``, etc.), this field
+    is set to the corresponding 0-based output-column index.  The codegen
+    uses it to generate a position-based ``SortKey`` so the VM can look
+    up the column by index instead of by name — important when multiple
+    computed columns share the fallback display name ``"?"``.
+    """
 
     expr: Expr
     descending: bool = False
     nulls_first: bool | None = None  # None = backend default
+    positional_index: int | None = None  # 0-based; set when ORDER BY N
 
 
 @dataclass(frozen=True, slots=True)

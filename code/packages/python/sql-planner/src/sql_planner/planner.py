@@ -269,19 +269,99 @@ def _plan_select(
     if having_raw is not None and select_aliases:
         having_raw = _substitute_aliases(having_raw, select_aliases)
     having = _resolve(having_raw, scope, schema, outer_scope) if having_raw is not None else None
-    order_by = tuple(
-        P.SortKey(
-            expr=_resolve(
-                _substitute_aliases(k.expr, select_aliases) if select_aliases else k.expr,
-                scope,
-                schema,
-                outer_scope,
-            ),
+
+    def _resolve_order_key(k: "AstSortKey") -> "P.SortKey":
+        """Resolve an ORDER BY sort key to a planner ``SortKey``.
+
+        SQL (and SQLite) allow ORDER BY to reference output columns in two
+        special ways beyond the ordinary expression path:
+
+        1. **Positional** — ``ORDER BY 1`` means "sort by the first SELECT
+           item". When the expression is an integer ``Literal``, we substitute
+           the actual expression from the corresponding position in the SELECT
+           list AND record the 0-based positional index so the codegen / VM
+           can use index-based column lookup instead of name-based lookup.
+           This is critical when multiple computed SELECT items share the
+           fallback display name ``"?"`` — name-based lookup would always
+           resolve to the first ``"?"`` column, giving wrong ORDER BY results.
+
+        2. **Alias** — ``ORDER BY alias_name`` where ``alias_name`` matches a
+           SELECT-list alias.  Rather than substituting the underlying
+           expression (which loses the alias and produces a ``"?"`` sort
+           column for computed expressions), we record the 0-based position of
+           the aliased SELECT item and use index-based lookup — identical to
+           the positional-ordinal path above.  This correctly handles:
+
+           - ``SELECT a+b AS v4 … ORDER BY v4``  (computed expression alias)
+           - ``SELECT a AS myname … ORDER BY myname``  (column alias)
+           - ``SELECT b AS a, a AS b … ORDER BY a``  (alias shadowing column)
+
+           SQLite (and the SQL standard) prescribe that ORDER BY first tries
+           output-column aliases before table columns, so a bare name that
+           matches a SELECT alias must resolve to the aliased SELECT item even
+           if a same-named table column exists.
+
+        If the ordinal is out of range we fall through and let the normal
+        resolver handle it (it will likely raise a more helpful error).
+        """
+        k_expr = k.expr
+        positional_index: int | None = None
+
+        if isinstance(k_expr, Literal) and isinstance(k_expr.value, int):
+            ordinal = k_expr.value
+            if 1 <= ordinal <= len(resolved_items):
+                # Substitute the Nth SELECT-list expression (1-based) and
+                # record the 0-based column index for the codegen.
+                k_expr = resolved_items[ordinal - 1].expr
+                positional_index = ordinal - 1
+        elif (
+            isinstance(k_expr, Column)
+            and k_expr.table is None
+            and select_aliases
+            and k_expr.col in select_aliases
+        ):
+            # ORDER BY bare_name where bare_name matches a SELECT-list alias.
+            #
+            # Find the 0-based position of the matching SELECT item so the VM
+            # uses index-based lookup (row[idx]) rather than name-based lookup
+            # (columns.index(name)).  The name-based path fails when the alias
+            # refers to a computed expression whose display name is ``"?"``
+            # because ``"?"`` is not present in the output column tuple.
+            #
+            # Using positional_index is safe: the output column at that
+            # position carries the alias-named value whether it was computed
+            # (BinaryExpr, FunctionCall, …) or a plain column reference.
+            alias_name = k_expr.col
+            alias_idx = next(
+                (i for i, it in enumerate(resolved_items) if it.alias == alias_name),
+                None,
+            )
+            if alias_idx is not None:
+                k_expr = resolved_items[alias_idx].expr
+                positional_index = alias_idx
+            else:
+                # select_aliases has the name but resolved_items doesn't —
+                # shouldn't happen if _derive_alias() is consistent.  Fall
+                # back to the ordinary substitution + resolution path.
+                k_expr = _substitute_aliases(k_expr, select_aliases)
+                k_expr = _resolve(k_expr, scope, schema, outer_scope)
+        else:
+            # Ordinary column reference (table-qualified or not in aliases) or
+            # a complex expression — apply alias substitution first so that
+            # ORDER BY can reference SELECT-list aliases that appear *inside*
+            # a larger expression (e.g. ``ORDER BY v4 + 1``), then resolve.
+            if select_aliases:
+                k_expr = _substitute_aliases(k_expr, select_aliases)
+            k_expr = _resolve(k_expr, scope, schema, outer_scope)
+
+        return P.SortKey(
+            expr=k_expr,
             descending=k.descending,
             nulls_first=k.nulls_first,
+            positional_index=positional_index,
         )
-        for k in stmt.order_by
-    )
+
+    order_by = tuple(_resolve_order_key(k) for k in stmt.order_by)
 
     has_agg_in_select = any(contains_aggregate(i.expr) for i in resolved_items)
     has_agg_in_having = having is not None and contains_aggregate(having)

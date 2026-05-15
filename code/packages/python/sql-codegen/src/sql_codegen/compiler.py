@@ -541,10 +541,13 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
 
         for ir_sk, plan_sk in zip(ir_sort_keys, planner_sort_keys or (), strict=False):
             col = ir_sk.column
+            # Skip positional sort keys (ORDER BY N): they use column_idx for
+            # direct index lookup and always refer to visible output columns —
+            # no hidden-column injection needed or possible.
             # Skip "?" (un-named expression sort keys) — can't inject by name.
             # Skip columns already in the SELECT output — no injection needed.
             # Skip duplicates (same hidden column in multiple ORDER BY terms).
-            if col == "?" or col in output_names or col in seen:
+            if ir_sk.column_idx is not None or col == "?" or col in output_names or col in seen:
                 continue
             if isinstance(plan_sk, PlanSortKey):
                 hidden_col_names.append(col)
@@ -1767,11 +1770,26 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
     ``ORDER BY`` clause references an aggregate expression (e.g. ``ORDER BY
     SUM(val)``), this map lets us resolve the sort column name correctly instead
     of falling back to ``"?"`` and causing a ``ValueError`` in the VM.
+
+    **Positional sort keys** (``ORDER BY 1``, ``ORDER BY 2``, …) are handled
+    specially.  When the planner records a non-None ``positional_index`` on
+    the sort key, we emit an IR ``SortKey`` with ``column_idx`` set to that
+    index so the VM uses position-based column lookup.  This is essential when
+    multiple computed columns share the display name ``"?"`` — name-based
+    ``columns.index("?")`` would always resolve to column 0, making
+    ``ORDER BY 2`` sort by the first column instead of the second.
     """
     from sql_planner.expr import AggregateExpr as PlanAggExpr
     from sql_planner.plan import SortKey as PlanSortKey
 
     assert isinstance(k, PlanSortKey)
+    direction = Direction.DESC if k.descending else Direction.ASC
+    nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
+
+    # Positional sort key (ORDER BY N): use column_idx for direct index lookup.
+    if k.positional_index is not None:
+        return SortKey(column="", column_idx=k.positional_index, direction=direction, nulls=nulls)
+
     col: str
     if isinstance(k.expr, PlanAggExpr) and agg_alias_map is not None:
         # Resolve the aggregate expression to the column name that the
@@ -1780,8 +1798,6 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
         col = agg_alias_map.get(agg_key) or k.expr.func.value.lower()
     else:
         col = _column_display_name(k.expr) or "?"
-    direction = Direction.DESC if k.descending else Direction.ASC
-    nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
     return SortKey(column=col, direction=direction, nulls=nulls)
 
 
