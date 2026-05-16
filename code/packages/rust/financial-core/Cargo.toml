@@ -1,0 +1,11 @@
+[package]
+name = "financial-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust financial core — Excel/Lotus/R financial functions (TVM, depreciation, bond pricing, treasury, interest)"
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }
+datetime-core = { path = "../datetime-core" }
+wall-clock = { path = "../wall-clock", default-features = false }
