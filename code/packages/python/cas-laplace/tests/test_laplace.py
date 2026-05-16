@@ -733,3 +733,280 @@ class TestLaplaceEdgeCases:
         result = laplace_transform(f, T, S)
         assert isinstance(result, IRApply)
         assert result.head.name == "Div"
+
+
+# ===========================================================================
+# New gap-closure tests: t^n·trig (forward) and extended ILT
+# ===========================================================================
+
+
+class TestLaplaceTnTrig:
+    """L{t^n·sin(ωt)} and L{t^n·cos(ωt)} for n = 2, 3."""
+
+    def test_t2_sin_t(self):
+        # L{t^2·sin(t)} = 2·1·(3s²−1)/(s²+1)³ = 2(3s²−1)/(s²+1)³
+        f = IRApply(MUL, (IRApply(POW, (T, IRInteger(2))), IRApply(SIN, (T,))))
+        result = laplace_transform(f, T, S)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Div"
+        # denominator is (s²+1)^3
+        denom = result.args[1]
+        assert isinstance(denom, IRApply) and denom.head.name == "Pow"
+        assert isinstance(denom.args[1], IRInteger) and denom.args[1].value == 3
+
+    def test_t2_sin_2t(self):
+        # L{t²·sin(2t)} = 2·2·(3s²−4)/(s²+4)³ = 4(3s²−4)/(s²+4)³
+        inner = IRApply(MUL, (IRInteger(2), T))
+        f = IRApply(MUL, (IRApply(POW, (T, IRInteger(2))), IRApply(SIN, (inner,))))
+        result = laplace_transform(f, T, S)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Div"
+
+    def test_t2_cos_t(self):
+        # L{t²·cos(t)} = 2s(s²−3)/(s²+1)³
+        f = IRApply(MUL, (IRApply(POW, (T, IRInteger(2))), IRApply(COS, (T,))))
+        result = laplace_transform(f, T, S)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Div"
+        denom = result.args[1]
+        assert isinstance(denom, IRApply) and denom.head.name == "Pow"
+        assert isinstance(denom.args[1], IRInteger) and denom.args[1].value == 3
+
+    def test_t2_cos_3t(self):
+        # L{t²·cos(3t)} = 2s(s²−27)/(s²+9)³
+        inner = IRApply(MUL, (IRInteger(3), T))
+        f = IRApply(MUL, (IRApply(POW, (T, IRInteger(2))), IRApply(COS, (inner,))))
+        result = laplace_transform(f, T, S)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Div"
+
+    def test_t3_sin_t(self):
+        # L{t³·sin(t)} = 24s(s²−1)/(s²+1)⁴
+        f = IRApply(MUL, (IRApply(POW, (T, IRInteger(3))), IRApply(SIN, (T,))))
+        result = laplace_transform(f, T, S)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Div"
+        denom = result.args[1]
+        assert isinstance(denom, IRApply) and denom.head.name == "Pow"
+        assert isinstance(denom.args[1], IRInteger) and denom.args[1].value == 4
+
+    def test_t3_cos_t(self):
+        # L{t³·cos(t)} = 6(s⁴−6s²+1)/(s²+1)⁴
+        f = IRApply(MUL, (IRApply(POW, (T, IRInteger(3))), IRApply(COS, (T,))))
+        result = laplace_transform(f, T, S)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Div"
+        denom = result.args[1]
+        assert isinstance(denom, IRApply) and denom.head.name == "Pow"
+        assert isinstance(denom.args[1], IRInteger) and denom.args[1].value == 4
+
+    def test_t2_sin_reversed_order(self):
+        # sin(t) * t^2 — sin first, power second
+        f = IRApply(MUL, (IRApply(SIN, (T,)), IRApply(POW, (T, IRInteger(2)))))
+        result = laplace_transform(f, T, S)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Div"
+
+    def test_t4_sin_falls_through(self):
+        # L{t⁴·sin(t)} — not in table for n≥4, falls through to unevaluated
+        from cas_laplace.heads import LAPLACE
+        f = IRApply(MUL, (IRApply(POW, (T, IRInteger(4))), IRApply(SIN, (T,))))
+        result = laplace_transform(f, T, S)
+        # Should fall through (since tn_sin builder returns None for n>=4)
+        # The table will miss it, returning Laplace(f, t, s)
+        assert isinstance(result, IRApply)
+
+
+class TestILTComplexPoles:
+    """ILT for irreducible quadratic denominators (complex conjugate poles)."""
+
+    def test_ilt_1_over_s2_plus_2s_plus_2(self):
+        # L^{-1}{1/(s²+2s+2)} = exp(-t)·sin(t)
+        # Denominator: s²+2s+2 = (s+1)²+1  →  α=1, β=1
+        den = IRApply(
+            ADD,
+            (
+                IRApply(ADD, (IRApply(POW, (S, IRInteger(2))), IRApply(MUL, (IRInteger(2), S)))),
+                IRInteger(2),
+            ),
+        )
+        F = IRApply(DIV, (IRInteger(1), den))
+        result = inverse_laplace(F, S, T)
+        # Result should be Mul(Exp(-t), Sin(t))
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Mul"
+        # One factor is Exp, other is Sin
+        heads = {result.args[0].head.name, result.args[1].head.name}
+        assert "Exp" in heads
+        assert "Sin" in heads
+
+    def test_ilt_s_over_s2_plus_2s_plus_2(self):
+        # L^{-1}{s/(s²+2s+2)} = exp(-t)·cos(t) + something
+        den = IRApply(
+            ADD,
+            (
+                IRApply(ADD, (IRApply(POW, (S, IRInteger(2))), IRApply(MUL, (IRInteger(2), S)))),
+                IRInteger(2),
+            ),
+        )
+        F = IRApply(DIV, (S, den))
+        result = inverse_laplace(F, S, T)
+        # Result should be a sum involving exp(-t)*cos(t) and exp(-t)*sin(t)
+        assert isinstance(result, IRApply)
+        # Should not be unevaluated ILT
+        from cas_laplace.heads import ILT
+        assert result.head.name != "ILT"
+
+    def test_ilt_1_over_s2_plus_4(self):
+        # L^{-1}{1/(s²+4)} = (1/2)·sin(2t)
+        # This is already handled by direct pattern but should also work via
+        # partial fractions when expressed differently
+        den = IRApply(ADD, (IRApply(POW, (S, IRInteger(2))), IRInteger(4)))
+        F = IRApply(DIV, (IRInteger(1), den))
+        result = inverse_laplace(F, S, T)
+        assert isinstance(result, IRApply)
+        # Should be sin_scaled form from direct pattern: (1/2)*sin(2t)
+        from cas_laplace.heads import ILT
+        assert result.head.name != "ILT"
+
+    def test_ilt_mixed_rational_and_quad(self):
+        # L^{-1}{1/(s·(s²+1))} = UnitStep(t) − cos(t)
+        den = IRApply(MUL, (S, IRApply(ADD, (IRApply(POW, (S, IRInteger(2))), IRInteger(1)))))
+        F = IRApply(DIV, (IRInteger(1), den))
+        result = inverse_laplace(F, S, T)
+        # Should be a sum of two terms
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Add"
+
+
+class TestILTRepeatedPoles:
+    """ILT for repeated rational poles."""
+
+    def test_ilt_1_over_s_squared(self):
+        # L^{-1}{1/s²} = t
+        F = IRApply(DIV, (IRInteger(1), IRApply(POW, (S, IRInteger(2)))))
+        result = inverse_laplace(F, S, T)
+        assert result == T  # t (bare symbol)
+
+    def test_ilt_1_over_s_minus_2_squared(self):
+        # L^{-1}{1/(s-2)²} = t·exp(2t)
+        F = IRApply(
+            DIV,
+            (
+                IRInteger(1),
+                IRApply(POW, (IRApply(SUB, (S, IRInteger(2))), IRInteger(2))),
+            ),
+        )
+        result = inverse_laplace(F, S, T)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Mul"
+        heads = {result.args[0].head.name if isinstance(result.args[0], IRApply) else "sym",
+                 result.args[1].head.name if isinstance(result.args[1], IRApply) else "sym"}
+        assert "Exp" in heads
+
+    def test_ilt_repeated_pole_at_neg1(self):
+        # L^{-1}{1/(s+1)²} = t·exp(-t)
+        F = IRApply(
+            DIV,
+            (
+                IRInteger(1),
+                IRApply(POW, (IRApply(ADD, (S, IRInteger(1))), IRInteger(2))),
+            ),
+        )
+        result = inverse_laplace(F, S, T)
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Mul"
+        # One factor should be t, the other exp(-t)
+        factor_heads = set()
+        for arg in result.args:
+            if isinstance(arg, IRApply):
+                factor_heads.add(arg.head.name)
+            elif isinstance(arg, IRSymbol):
+                factor_heads.add("Symbol")
+        assert "Exp" in factor_heads
+
+    def test_ilt_improper_fraction_constant_quotient(self):
+        # L^{-1}{(s²+3s+3)/(s²+3s+2)}
+        # = L^{-1}{1 + 1/(s²+3s+2)} = DiracDelta(t) + partial_fracs
+        # s²+3s+2 = (s+1)(s+2), roots -1, -2
+        # 1/((s+1)(s+2)) = 1/(s+1) - 1/(s+2) → exp(-t) - exp(-2t)
+        from symbolic_ir import IRRational as _IRR
+        # (s²+3s+3) in poly form ascending: (3, 3, 1)
+        # We can't build this as a simple IR literal easily — use Add forms
+        # Numerator: s² + 3s + 3
+        num_ir = IRApply(
+            ADD,
+            (
+                IRApply(ADD, (IRApply(POW, (S, IRInteger(2))), IRApply(MUL, (IRInteger(3), S)))),
+                IRInteger(3),
+            ),
+        )
+        # Denominator: s² + 3s + 2 = (s+1)(s+2)
+        den_ir = IRApply(MUL, (IRApply(ADD, (S, IRInteger(1))), IRApply(ADD, (S, IRInteger(2)))))
+        F = IRApply(DIV, (num_ir, den_ir))
+        result = inverse_laplace(F, S, T)
+        assert isinstance(result, IRApply)
+        # Should include DiracDelta from the constant-1 polynomial part
+        from cas_laplace.heads import DIRAC_DELTA
+        # Flatten result to find all node types
+        def _find_heads(node: IRNode, found: set) -> None:
+            if isinstance(node, IRApply):
+                found.add(node.head.name)
+                for a in node.args:
+                    _find_heads(a, found)
+        all_heads: set = set()
+        _find_heads(result, all_heads)
+        assert "DiracDelta" in all_heads
+
+
+class TestILTPolynomialHelpers:
+    """Unit tests for the polynomial helper functions."""
+
+    def test_poly_shift_constant(self):
+        from fractions import Fraction
+        from cas_laplace.inverse_table import _poly_shift
+        # Shifting a constant is a no-op
+        p = (Fraction(5),)
+        assert _poly_shift(p, Fraction(3)) == p
+
+    def test_poly_shift_linear(self):
+        from fractions import Fraction
+        from cas_laplace.inverse_table import _poly_shift
+        # (s + 2) shifted by r=1 → ((1+2) + 1·s) = (3 + s)
+        p = (Fraction(2), Fraction(1))  # 2 + s
+        shifted = _poly_shift(p, Fraction(1))
+        # Expected: 2 + (s+1) = 3 + s → (3, 1)
+        from fractions import Fraction
+        assert shifted == (Fraction(3), Fraction(1))
+
+    def test_poly_shift_quadratic_around_root(self):
+        from fractions import Fraction
+        from cas_laplace.inverse_table import _poly_shift, _poly_evaluate
+        # (s-2)^2 = s²−4s+4.  Shifted by r=2: t^2 → (0, 0, 1)
+        p = (Fraction(4), Fraction(-4), Fraction(1))  # 4 - 4s + s²
+        shifted = _poly_shift(p, Fraction(2))
+        # p(t+2) = (t+2-2)^2 = t^2 → (0, 0, 1)
+        from cas_laplace.inverse_table import _poly_normalize
+        assert _poly_normalize(shifted) == (Fraction(0), Fraction(0), Fraction(1))
+
+    def test_power_series_coeffs_simple(self):
+        from fractions import Fraction
+        from cas_laplace.inverse_table import _power_series_coeffs
+        # 1/1 → [1, 0, 0] (Taylor coefficients of constant 1)
+        g = _power_series_coeffs((Fraction(1),), (Fraction(1),), 3)
+        assert g == [Fraction(1), Fraction(0), Fraction(0)]
+
+    def test_power_series_coeffs_linear(self):
+        from fractions import Fraction
+        from cas_laplace.inverse_table import _power_series_coeffs
+        # (1 + t) / 1 → Taylor coefficients [1, 1]
+        g = _power_series_coeffs((Fraction(1), Fraction(1)), (Fraction(1),), 2)
+        assert g == [Fraction(1), Fraction(1)]
+
+    def test_is_zero_poly(self):
+        from fractions import Fraction
+        from cas_laplace.inverse_table import _is_zero_poly
+        assert _is_zero_poly((Fraction(0),))
+        assert _is_zero_poly((Fraction(0), Fraction(0)))
+        assert not _is_zero_poly((Fraction(1),))
+        assert not _is_zero_poly((Fraction(0), Fraction(1)))
