@@ -47,7 +47,14 @@
 
 #![warn(rust_2018_idioms)]
 
+pub mod kernels;
+pub mod sep;
 pub mod two_d;
+pub use kernels::{
+    box_blur_kernel, gaussian_blur_kernel, laplacian_kernel, sharpen_kernel,
+    sobel_x_kernel, sobel_y_kernel,
+};
+pub use sep::sep_conv2d;
 pub use two_d::conv2d;
 
 use std::fmt;
