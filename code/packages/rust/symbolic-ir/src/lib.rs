@@ -382,6 +382,20 @@ pub const ASSIGN: &str = "Assign";
 pub const DEFINE: &str = "Define";
 pub const RULE: &str = "Rule";
 
+// Named ODE solution function heads (Phase 27)
+// Legendre ODE: (1-x²)y'' - 2xy' + n(n+1)y = 0
+pub const LEGENDRE_P: &str = "LegendreP";   // Legendre polynomial of the first kind P_n(x)
+pub const LEGENDRE_Q: &str = "LegendreQ";   // Legendre function of the second kind Q_n(x)
+// Bessel ODE: x²y'' + xy' + (x²-ν²)y = 0
+pub const BESSEL_J: &str = "BesselJ";       // Bessel function of the first kind J_ν(x)
+pub const BESSEL_Y: &str = "BesselY";       // Bessel function of the second kind Y_ν(x)
+// Hermite ODE: y'' - 2xy' + 2ny = 0
+pub const HERMITE_H: &str = "HermiteH";     // Hermite polynomial H_n(x)
+pub const HERMITE_H2: &str = "HermiteH2";   // Second independent solution (parabolic cylinder)
+// Chebyshev ODE: (1-x²)y'' - xy' + n²y = 0
+pub const CHEBYSHEV_T: &str = "ChebyshevT"; // Chebyshev polynomial of the first kind T_n(x)
+pub const CHEBYSHEV_U: &str = "ChebyshevU"; // Chebyshev polynomial of the second kind U_n(x)
+
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
