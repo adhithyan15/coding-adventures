@@ -638,7 +638,6 @@ def smulh_64(a_bits: list[int], b_bits: list[int]) -> list[int]:
     from logic_gates import AND
     if AND(a_sign, 1):
         # Subtract b from hi: hi = hi + NOT(b) + 1 = hi - b
-        not_b, _, _ = sub_64bit(hi, b_bits)
         hi, _, _ = add_64bit(hi, [NOT(bb) for bb in b_bits], 1)
 
     if AND(b_sign, 1):
