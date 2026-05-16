@@ -115,11 +115,67 @@ fn main() -> ExitCode {
         Err(e) => { eprintln!("twig-aot: {e}"); return ExitCode::from(2); }
     };
 
-    let result = dispatch(target, &input, &output);
-    match result {
+    let emit_object = result.flags.get("emit_object")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
+
+    let outcome = if emit_object {
+        emit_object_dispatch(target, &input, &output)
+    } else {
+        dispatch(target, &input, &output)
+    };
+    match outcome {
         Ok(())   => ExitCode::SUCCESS,
         Err(msg) => { eprintln!("twig-aot: {msg}"); ExitCode::from(1) }
     }
+}
+
+/// `--emit-object` path: writes the relocatable object file + runtime
+/// archive to disk without invoking a linker.  Works from any host
+/// regardless of `target` because object emission doesn't need the
+/// target's toolchain; only linking does.
+fn emit_object_dispatch(target: Target, input: &Path, output: &Path) -> Result<(), String> {
+    use twig_aot::EmitObjectTarget;
+    let emit_target = match target {
+        Target::MacosArm64    => EmitObjectTarget::MacosArm64,
+        Target::LinuxX86_64   => EmitObjectTarget::LinuxX86_64,
+        Target::WindowsX86_64 => EmitObjectTarget::WindowsX86_64,
+    };
+    let emitted = twig_aot::emit_object_to_disk(input, output, emit_target)
+        .map_err(|e| format!("{e}"))?;
+
+    // Tell the user what landed and how to link it on the target host.
+    eprintln!("twig-aot: emitted object: {}", emitted.object_path.display());
+    match emitted.runtime_archive_path {
+        Some(p) => {
+            eprintln!("twig-aot: emitted runtime archive: {}", p.display());
+            eprintln!("twig-aot: link on the target host with:");
+            match emit_target {
+                EmitObjectTarget::LinuxX86_64 => {
+                    eprintln!("  cc -o <exe> {} {} -lc -lm",
+                        emitted.object_path.display(), p.display());
+                }
+                EmitObjectTarget::WindowsX86_64 => {
+                    eprintln!("  link.exe /OUT:<exe>.exe /ENTRY:main /SUBSYSTEM:CONSOLE \\");
+                    eprintln!("           {} {} libcmt.lib legacy_stdio_definitions.lib",
+                        emitted.object_path.display(), p.display());
+                }
+                EmitObjectTarget::MacosArm64 => {
+                    eprintln!("  ld -arch arm64 -platform_version macos 15.0 15.0 -e _main \\");
+                    eprintln!("     -lSystem -o <exe> {} {}",
+                        emitted.object_path.display(), p.display());
+                }
+            }
+        }
+        None => {
+            eprintln!("twig-aot: NOTE: runtime archive for {emit_target:?} \
+                       was not built on this host (1-byte stub).  Build \
+                       twig-aot on a {emit_target:?} host or rebuild the \
+                       runtime from `twig-aot/runtime/twig_runtime.c` on \
+                       the target machine.");
+        }
+    }
+    Ok(())
 }
 
 /// Route to the right `compile_file_*` entry point for `target`.
