@@ -1,11 +1,16 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-14. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
+> Last updated: 2026-05-16. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
 > merged), Rust 0.2.0 releases (PR #3171 ✅ merged), Python EllipticE/Pi —
-> `symbolic-vm` 0.54.0 (PR #3173 ✅ merged), TypeScript EllipticE/Pi —
+> `symbolic-vm` 0.55.0 (PR #3173 ✅ merged), TypeScript EllipticE/Pi —
 > `symbolic-vm` 0.3.0 (PR #3179 ✅ merged), Rust EllipticE/Pi —
-> `symbolic-vm` 0.3.0 (PR #3178 ✅ merged).
+> `symbolic-vm` 0.3.0 (PR #3178 ✅ merged), Python `macsyma-runtime` 1.26.0,
+> `spice-engine` 0.13.0 (inductor IC, AcSource phasors, waveforms already implemented),
+> `rust/macsyma-runtime` 0.3.0 (EllipticE/Pi pipeline tests),
+> Phase 21 named variable-coefficient ODEs Python (PR #3360 ✅ merged),
+> Phase 21 TypeScript + Rust ports (PR #3369 ✅ merged),
+> version housekeeping chore (PR #3354 ✅ merged).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -62,6 +67,9 @@ files.
 |---|---|---|
 | v0.1.0 | #1353 | MNA core, DC operating point (Newton-Raphson), forward-Euler transient, `Diode`, `Mosfet` |
 | v0.10.0 | #2901 ✅ | All four SPICE controlled sources: `VCVS` (E), `VCCS` (G), `CCCS` (F), `CCVS` (H). Correct MNA stamps (DC + AC). `TfResult.gain`. Fixed CCCS stamp sign. |
+| v0.11.0 | — | Time-varying source waveforms: `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`; waveform evaluation at each transient timestep |
+| v0.12.0 | — | DC convergence aids: Gmin stepping + source stepping fallback chain; `_dc_newton` / `_x_from_result` helpers |
+| v0.13.0 | — | Inductor `initial_current` for transient seeding; explicit AC source phasors (`AcSource`) on `VoltageSource`/`CurrentSource` |
 | v0.2.0 | #2339 | Trapezoidal + Backward Euler integration, LTE-based adaptive timestep |
 | v0.3.0 | #2342 | `BJT` element (Ebers-Moll, NPN/PNP) |
 | v0.4.0 | #2344 | AC small-signal frequency sweep (`.AC`) |
@@ -77,6 +85,13 @@ files.
 **Analyses on main:** `dc_op`, `transient`, `ac_sweep`, `tf`, `dc_sweep`,
 `sens_dc`, `mc_dc`, `noise_ac`
 
+**Waveforms on main:** `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`
+
+**Netlist parser on main:** `spice-netlist-parser` 0.2.0 — parses R, C, L, V,
+I, M (MOSFET), D, Q (BJT), E/G/F/H (controlled sources), `.subckt` / X instances,
+`.tran`, `.dc`, `.ac`, `.op`, `.tf`, `.sens`, `.mc`, `.noise`, `.model` cards;
+IC parameters for C/L; AC phasor specs for V/I sources.
+
 ---
 
 ### What is in flight
@@ -91,11 +106,7 @@ Items are listed in priority order within each group.
 
 #### Group 1 — High value, well-scoped
 
-| Feature | Why it matters | Design notes |
-|---|---|---|
-| **Time-varying source waveforms** | Every realistic transient simulation — step response, oscillator startup, filter characterisation — needs non-static sources. Currently `VoltageSource` and `CurrentSource` are DC-constant only. | Add a `waveform` field (optional) to `VoltageSource` / `CurrentSource` accepting a callable `(t: float) -> float` or one of `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`. The transient engine already calls `_stamp_vsource` at each timestep; it just needs to pass the current `t`. SPICE spec in `spice-engine.md` section "Source Waveforms" (conformance target: PWL, PULSE, SIN, EXP). |
-| **SPICE3 netlist parser** | Lets you run existing `.cir` / `.sp` files directly. Huge usability leap — you can grab any NGSPICE example and feed it in. | New package `spice-netlist-parser`. Grammar-driven (reuse `grammar-tools`). Conformance matrix in `spice-engine.md`: R, C, L, V, I, M (MOSFET), D, Q (BJT), E/G/F/H (controlled sources), X (subcircuit), `.tran`, `.dc`, `.ac`, `.op`, `.include`, `.subckt`, `.model`, `.param`. Returns a `Circuit` object identical to what you'd build in Python. |
-| **Convergence aids** | Necessary for power electronics, startup transients, and any circuit with strongly coupled nonlinear devices (e.g. bandgap references). Newton-Raphson alone fails on these. | Three strategies described in `spice-engine.md`: (1) **Gmin stepping** — add small conductance across every node to ground, gradually reduce to zero. (2) **Source stepping** — scale all independent source voltages from 0 to full value. (3) **Pseudo-transient continuation** — add capacitors to ground and integrate to DC. Try in order; each is a fallback. |
+All Group 1 items have shipped. See "What is on main" above.
 
 #### Group 2 — Medium value
 
@@ -128,11 +139,11 @@ Every item below is wired end-to-end: surface syntax → compile → VM → corr
 | Package | Version | What it provides |
 |---|---|---|
 | `symbolic-ir` | latest | `IRSymbol`, `IRInteger`, `IRRational`, `IRFloat`, `IRString`, `IRApply` node types |
-| `symbolic-vm` | 0.54.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi), numeric folding, 100+ handlers |
+| `symbolic-vm` | 0.56.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi, Phase 26 log-power IBP), numeric folding, 100+ handlers |
 | `macsyma-lexer` | 0.1.0 | Grammar-driven tokenizer |
 | `macsyma-parser` | 0.1.0 | Grammar-driven parser |
 | `macsyma-compiler` | 0.9.0 | AST → IR; 60+ MACSYMA identifier mappings in name table |
-| `macsyma-runtime` | 1.25.0 | History (`%`, `%i1`, `%o1`, …), `;`/`$` terminators, `kill`, `ev`, `MacsymaBackend` |
+| `macsyma-runtime` | 1.26.0 | History (`%`, `%i1`, `%o1`, …), `;`/`$` terminators, `kill`, `ev`, `MacsymaBackend` |
 
 #### TypeScript port version releases (PR #3170 ✅ merged)
 
@@ -168,6 +179,37 @@ CHANGELOG section. PR #3171 cut proper 0.2.0 releases and created the missing
 |---|---|---|
 | `rust/symbolic-vm` | 0.3.0 | EllipticE (complete + incomplete), EllipticPi (complete) pattern recognition |
 
+#### Phase 21 — named variable-coefficient ODE recognition (all three languages)
+
+Python `cas-ode` 0.6.0 (PR #3360 ✅ merged), TypeScript `cas-ode` 0.2.0 and
+Rust `cas-ode` 0.2.0 (PR #3369 ✅ merged). Also in PR #3360: `symbolic-ir`
+0.14.0 (Python) and `spice-netlist-parser` 0.2.0.
+
+`ode2` now numerically identifies four classical families of
+variable-coefficient second-order ODEs and returns closed-form solutions in
+terms of named special functions.  Uses test-point evaluation (x ∈ {0.3, 0.6,
+−0.25, 0.85}) to match coefficient patterns without symbolic manipulation.
+
+| ODE family | Standard form | Returned solution |
+|---|---|---|
+| **Legendre** | `(1−x²)y''−2xy'+n(n+1)y=0` | `EllipticF(n,x)` with `LegendreP(n,x)` and `LegendreQ(n,x)` |
+| **Bessel** | `x²y''+xy'+(x²−ν²)y=0` | `BesselJ(ν,x)` and `BesselY(ν,x)` |
+| **Hermite** | `y''−2xy'+2ny=0` | `HermiteH(n,x)` and `HermiteH2(n,x)` |
+| **Chebyshev** | `(1−x²)y''−xy'+n²y=0` | `ChebyshevT(n,x)` and `ChebyshevU(n,x)` |
+
+Dispatch order: Chebyshev → Legendre → Bessel → Hermite (Chebyshev must come
+before Legendre since both have leading coefficient P ≈ 1−x²; the Q coefficient
+distinguishes them: −x for Chebyshev, −2x for Legendre).
+
+Eight new head symbols added to `symbolic-ir` in all three languages:
+`LEGENDRE_P`, `LEGENDRE_Q`, `BESSEL_J`, `BESSEL_Y`, `HERMITE_H`,
+`HERMITE_H2`, `CHEBYSHEV_T`, `CHEBYSHEV_U`.
+
+| Package | Python | TypeScript | Rust |
+|---|---|---|---|
+| `symbolic-ir` | 0.14.0 (8 new Phase 27 heads) | 0.2.0 (8 new Phase 27 heads) | 0.2.0 (8 new Phase 27 heads) |
+| `cas-ode` | 0.6.0 | 0.2.0 | 0.2.0 |
+
 #### CAS substrate packages — all fully wired
 
 | Package | Version | MACSYMA names |
@@ -179,7 +221,7 @@ CHANGELOG section. PR #3171 cut proper 0.2.0 releases and created the missing
 | `cas-list-operations` | 0.1.0 | `length`, `first`, `rest`, `last`, `append`, `reverse`, `range`, `map`, `apply`, `select`, `sort`, `part`, `flatten`, `join`, `makelist` |
 | `cas-matrix` | 0.3.0 | Basic: `matrix`, `transpose`, `determinant`, `invert`. Advanced: `dot`, `mattrace`, `matrix_size`, `ident`, `zeromatrix`, `rank`, `rowreduce`, `eigenvalues`, `eigenvectors`, `charpoly`, `nullspace`, `columnspace`, `rowspace`, `norm`, `lu` |
 | `cas-limit-series` | 0.2.0 | `limit` (direct substitution + L'Hôpital), `taylor` |
-| `cas-ode` | latest | `ode2` — first-order linear, separable, Bernoulli, exact, homogeneous-type, 2nd-order constant-coefficient homogeneous/non-homogeneous, Euler-Cauchy, and variation-of-parameters fallback |
+| `cas-ode` | Python 0.6.0, TS/Rust 0.2.0 | `ode2` — first-order linear, separable, Bernoulli, exact, homogeneous-type, 2nd-order constant-coefficient homogeneous/non-homogeneous, Euler-Cauchy, variation-of-parameters fallback, and Phase 21 named variable-coefficient ODEs (Legendre, Bessel, Hermite, Chebyshev) |
 | `cas-laplace` | latest | `laplace`, `ilt` (inverse Laplace), `dirac_delta`, `unit_step` |
 | `cas-trig` | 0.1.0 | `trigsimp`, `trigexpand`, `trigreduce` |
 | `cas-complex` | 0.1.0 | `re`, `im`, `conjugate`, `cabs`, `carg`, `rectform`, `polarform`; `%i` pre-bound; `%i²→-1` fires automatically |
@@ -227,20 +269,30 @@ syntax errors, and `?` / `? topic` help are all present.
 
 #### ODE status and remaining gap
 
-Phase 18/20 ODE coverage has landed across the Python, TypeScript, and Rust
-`cas-ode` packages. `ode2` now covers the previously listed textbook classes
-except for variable-coefficient second-order power-series/Frobenius solving.
+Phase 18/20 ODE coverage (PR #3049–#3062) and Phase 21 named variable-coefficient
+ODE recognition (PR #3360, PR #3369) have all landed across the Python,
+TypeScript, and Rust `cas-ode` packages.
 
 | ODE type | Identifying form | Algorithm |
 |---|---|---|
-| **Bernoulli** | `y' + P(x)·y = Q(x)·yⁿ` | Implemented with `v = y^(1−n)` reduction |
-| **Exact** | `M(x,y) dx + N(x,y) dy = 0`, `∂M/∂y = ∂N/∂x` | Implemented with implicit potential construction |
-| **Homogeneous type** | `y' = f(y/x)` | Implemented with `v = y/x` reduction |
-| **2nd-order non-homogeneous, constant coefficients** | `a·y'' + b·y' + c·y = g(x)` | Implemented with undetermined coefficients and variation of parameters |
-| **Variable-coefficient 2nd-order** | `P(x)·y'' + Q(x)·y' + R(x)·y = 0` | Still open: power series / Frobenius method |
+| **First-order linear** | `P(x)·y' + Q(x) = 0` | ✅ Integrating factor `μ = e^(∫P dx)` |
+| **Separable** | `g(y)·y' = h(x)` | ✅ Integrate both sides |
+| **Bernoulli** | `y' + P(x)·y = Q(x)·yⁿ` | ✅ `v = y^(1−n)` reduction |
+| **Exact** | `M(x,y) dx + N(x,y) dy = 0`, `∂M/∂y = ∂N/∂x` | ✅ Implicit potential construction |
+| **Homogeneous type** | `y' = f(y/x)` | ✅ `v = y/x` reduction |
+| **2nd-order const-coeff homogeneous** | `a·y'' + b·y' + c·y = 0` | ✅ Characteristic equation; real/repeated/complex roots |
+| **2nd-order const-coeff non-homogeneous** | `a·y'' + b·y' + c·y = g(x)` | ✅ Undetermined coefficients (EPT family) |
+| **Euler-Cauchy** | `ax²y'' + bxy' + cy = 0` | ✅ Characteristic equation on `x^r` |
+| **Variation of parameters** | `a·y'' + b·y' + c·y = f(x)`, any `f` | ✅ Wronskian-based VoP fallback |
+| **Legendre** | `(1−x²)y''−2xy'+n(n+1)y=0` | ✅ Phase 21 numerical pattern matching → `LegendreP/Q(n,x)` |
+| **Bessel** | `x²y''+xy'+(x²−ν²)y=0` | ✅ Phase 21 numerical pattern matching → `BesselJ/Y(ν,x)` |
+| **Hermite** | `y''−2xy'+2ny=0` | ✅ Phase 21 numerical pattern matching → `HermiteH/H2(n,x)` |
+| **Chebyshev** | `(1−x²)y''−xy'+n²y=0` | ✅ Phase 21 numerical pattern matching → `ChebyshevT/U(n,x)` |
+| **Variable-coefficient (Frobenius)** | `P(x)·y'' + Q(x)·y' + R(x)·y = 0` | Still open: power series / Frobenius method |
 
-Next ODE work should focus only on the variable-coefficient/Frobenius case
-unless a parity audit finds a smaller drift between the three language ports.
+Next ODE work should focus only on the Frobenius power-series case (irregular
+singular points and series solutions around regular singular points) unless a
+parity audit finds a smaller gap.
 
 #### Factoring gaps
 
@@ -272,6 +324,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Elliptic integrals — first-kind foothold | `∫ 1/√(1-k²sin²θ) dθ` | ✅ #3141: returns `EllipticF(θ,k)`; definite 0…π/2 returns `EllipticK(k)` |
 | Elliptic integrals — second kind | `∫ √(1-k²sin²θ) dθ`, `∫₀^(π/2) √(1-k²sin²θ) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
 | Elliptic integrals — third kind | `∫₀^(π/2) 1/((1+n·sin²θ)·√(1-k²sin²θ)) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
+| `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0 |
 | `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features

@@ -492,3 +492,66 @@ PRODUCT = IRSymbol("Product")
 # Numeric evaluation: Newton iteration on  w_{n+1} = w_n − (w_n·e^w_n − c)/(e^w_n·(w_n+1))
 FREE_INTEGER = IRSymbol("FreeInteger")
 LAMBERT_W = IRSymbol("LambertW")
+
+# ---------------------------------------------------------------------------
+# Phase 27 — Named ODE solution functions
+# ---------------------------------------------------------------------------
+#
+# These symbols name the standard special-function solutions that arise from
+# classic variable-coefficient second-order ODEs.  They are *symbolic* —
+# the CAS produces them as unevaluated function calls when it recognises a
+# named ODE family.  Numeric evaluation handlers are a separate concern.
+#
+# LegendreP(n, x) / LegendreQ(n, x)
+# ----------------------------------
+#   First and second solutions of the Legendre ODE:
+#     (1 − x²)·y'' − 2x·y' + n(n+1)·y = 0
+#   LegendreP(n, x) is the Legendre polynomial of degree n (first kind).
+#   LegendreQ(n, x) is the Legendre function of the second kind.
+#   The general solution is  y = %c1·LegendreP(n, x) + %c2·LegendreQ(n, x).
+#
+#   MACSYMA surface name: legendre_p(n, x) / legendre_q(n, x)
+#
+LEGENDRE_P = IRSymbol("LegendreP")
+LEGENDRE_Q = IRSymbol("LegendreQ")
+
+# BesselJ(ν, x) / BesselY(ν, x)
+# --------------------------------
+#   First and second solutions of the Bessel ODE:
+#     x²·y'' + x·y' + (x² − ν²)·y = 0
+#   BesselJ(ν, x) is the Bessel function of the first kind of order ν.
+#   BesselY(ν, x) is the Bessel function of the second kind (Neumann function).
+#   The general solution is  y = %c1·BesselJ(ν, x) + %c2·BesselY(ν, x).
+#
+#   MACSYMA surface names: bessel_j(ν, x) / bessel_y(ν, x)
+#
+BESSEL_J = IRSymbol("BesselJ")
+BESSEL_Y = IRSymbol("BesselY")
+
+# HermiteH(n, x) / HermiteH2(n, x)
+# -----------------------------------
+#   Solutions of the Hermite ODE:
+#     y'' − 2x·y' + 2n·y = 0
+#   HermiteH(n, x) is the Hermite polynomial Hₙ(x) for non-negative integer n.
+#   HermiteH2(n, x) denotes the second independent solution (parabolic cylinder
+#   function), used when n is not a non-negative integer.
+#   For integer n ≥ 0 the general solution is:
+#     y = %c1·HermiteH(n, x) + %c2·HermiteH2(n, x)
+#
+#   MACSYMA surface name: hermite(n, x)
+#
+HERMITE_H = IRSymbol("HermiteH")
+HERMITE_H2 = IRSymbol("HermiteH2")
+
+# ChebyshevT(n, x) / ChebyshevU(n, x)
+# --------------------------------------
+#   First and second solutions of the Chebyshev ODE:
+#     (1 − x²)·y'' − x·y' + n²·y = 0
+#   ChebyshevT(n, x) is the Chebyshev polynomial of the first kind Tₙ(x).
+#   ChebyshevU(n, x) is the Chebyshev polynomial of the second kind Uₙ(x).
+#   The general solution is  y = %c1·ChebyshevT(n, x) + %c2·ChebyshevU(n, x).
+#
+#   MACSYMA surface names: chebyshev_t(n, x) / chebyshev_u(n, x)
+#
+CHEBYSHEV_T = IRSymbol("ChebyshevT")
+CHEBYSHEV_U = IRSymbol("ChebyshevU")

@@ -1,0 +1,9 @@
+[package]
+name = "math-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust mathematics core — Excel/Lotus/R math functions for any spreadsheet or numerical frontend."
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }

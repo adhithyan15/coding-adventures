@@ -1,12 +1,20 @@
 import { describe, expect, it } from "vitest";
 import {
   ADD,
+  BESSEL_J,
+  BESSEL_Y,
+  CHEBYSHEV_T,
+  CHEBYSHEV_U,
   COS,
   D,
   DIV,
   EQUAL,
   EXP,
+  HERMITE_H,
+  HERMITE_H2,
   INTEGRATE,
+  LEGENDRE_P,
+  LEGENDRE_Q,
   LOG,
   MUL,
   POW,
@@ -16,6 +24,7 @@ import {
   equals,
   headName,
   int,
+  rational,
   sym,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
@@ -184,5 +193,196 @@ describe("second-order ODEs", () => {
     expect(display(rhs)).toContain("%c1");
     expect(display(rhs)).toContain("%c2");
     expect(hasHead(rhs, POW.name)).toBe(true);
+  });
+});
+
+// ============================================================================
+// Phase 21 — Variable-coefficient named ODE recognition
+// ============================================================================
+
+/**
+ * Build the Legendre ODE expression (zero form) for order n:
+ *   (1 − x²)·y'' − 2x·y' + n(n+1)·y = 0
+ */
+function legendreOdeExpr(n: number): IRNode {
+  const xSq = app(POW, [x, int(2)]);
+  const oneMinusXSq = app(SUB, [int(1), xSq]);
+  const lambda = n * (n + 1);
+  return app(ADD, [
+    app(MUL, [oneMinusXSq, ypp]),
+    app(ADD, [
+      app(MUL, [int(-2), app(MUL, [x, yp])]),
+      app(MUL, [int(lambda), y]),
+    ]),
+  ]);
+}
+
+/**
+ * Build the Bessel ODE expression (zero form) for order ν given as an IR node:
+ *   x²·y'' + x·y' + (x² − ν²)·y = 0
+ */
+function besselOdeExpr(nuIr: IRNode, nuSqIr: IRNode): IRNode {
+  const xSq = app(POW, [x, int(2)]);
+  return app(ADD, [
+    app(MUL, [xSq, ypp]),
+    app(ADD, [
+      app(MUL, [x, yp]),
+      app(MUL, [app(SUB, [xSq, nuSqIr]), y]),
+    ]),
+  ]);
+}
+
+/**
+ * Build the Hermite ODE expression (zero form) for order n:
+ *   y'' − 2x·y' + 2n·y = 0
+ */
+function hermiteOdeExpr(n: number): IRNode {
+  return app(ADD, [
+    ypp,
+    app(ADD, [
+      app(MUL, [int(-2), app(MUL, [x, yp])]),
+      app(MUL, [int(2 * n), y]),
+    ]),
+  ]);
+}
+
+/**
+ * Build the Chebyshev ODE expression (zero form) for order n:
+ *   (1 − x²)·y'' − x·y' + n²·y = 0
+ */
+function chebyshevOdeExpr(n: number): IRNode {
+  const xSq = app(POW, [x, int(2)]);
+  const oneMinusXSq = app(SUB, [int(1), xSq]);
+  return app(ADD, [
+    app(MUL, [oneMinusXSq, ypp]),
+    app(ADD, [
+      app(MUL, [int(-1), app(MUL, [x, yp])]),
+      app(MUL, [int(n * n), y]),
+    ]),
+  ]);
+}
+
+describe("Phase 21 — named variable-coefficient ODEs", () => {
+  it("recognises Legendre ODE n=2 and returns LegendreP/Q solution", () => {
+    const result = solveOde(legendreOdeExpr(2), y, x);
+    expect(result).not.toBeNull();
+    const rhs = rhsOfEqual(result!);
+    // Solution: %c1·LegendreP(2,x) + %c2·LegendreQ(2,x)
+    const expected = app(ADD, [
+      app(MUL, [C1, app(LEGENDRE_P, [int(2), x])]),
+      app(MUL, [C2, app(LEGENDRE_Q, [int(2), x])]),
+    ]);
+    expectEqual(rhs, expected);
+  });
+
+  it("recognises Legendre ODE n=3 and encodes n=3 in the solution", () => {
+    const result = solveOde(legendreOdeExpr(3), y, x);
+    expect(result).not.toBeNull();
+    expect(display(result!)).toContain("LegendreP");
+    expect(display(result!)).toContain("LegendreQ");
+    // The integer 3 must appear as the order parameter
+    expect(display(result!)).toContain('"3"');
+  });
+
+  it("recognises Bessel ODE ν=1 (integer order) and returns BesselJ/Y solution", () => {
+    // x²y'' + xy' + (x²−1)y = 0
+    const result = solveOde(besselOdeExpr(int(1), int(1)), y, x);
+    expect(result).not.toBeNull();
+    const rhs = rhsOfEqual(result!);
+    const expected = app(ADD, [
+      app(MUL, [C1, app(BESSEL_J, [int(1), x])]),
+      app(MUL, [C2, app(BESSEL_Y, [int(1), x])]),
+    ]);
+    expectEqual(rhs, expected);
+  });
+
+  it("recognises Bessel ODE ν=2 (integer order)", () => {
+    // x²y'' + xy' + (x²−4)y = 0
+    const result = solveOde(besselOdeExpr(int(2), int(4)), y, x);
+    expect(result).not.toBeNull();
+    expect(display(result!)).toContain("BesselJ");
+    expect(display(result!)).toContain("BesselY");
+    expect(display(result!)).toContain('"2"');
+  });
+
+  it("recognises Bessel ODE ν=1/2 (half-integer order)", () => {
+    // x²y'' + xy' + (x²−1/4)y = 0  →  ν = 1/2
+    const result = solveOde(besselOdeExpr(rational(1, 2), rational(1, 4)), y, x);
+    expect(result).not.toBeNull();
+    expect(display(result!)).toContain("BesselJ");
+    expect(display(result!)).toContain("BesselY");
+  });
+
+  it("recognises Hermite ODE n=3 and returns HermiteH/H2 solution", () => {
+    const result = solveOde(hermiteOdeExpr(3), y, x);
+    expect(result).not.toBeNull();
+    const rhs = rhsOfEqual(result!);
+    const expected = app(ADD, [
+      app(MUL, [C1, app(HERMITE_H, [int(3), x])]),
+      app(MUL, [C2, app(HERMITE_H2, [int(3), x])]),
+    ]);
+    expectEqual(rhs, expected);
+  });
+
+  it("recognises Hermite ODE n=0 (trivial: y'' = 0)", () => {
+    // y'' + 0·y' + 0·y = 0 should match Hermite with n=0
+    const result = solveOde(hermiteOdeExpr(0), y, x);
+    expect(result).not.toBeNull();
+    expect(display(result!)).toContain("HermiteH");
+  });
+
+  it("recognises Chebyshev ODE n=2 and returns ChebyshevT/U solution", () => {
+    const result = solveOde(chebyshevOdeExpr(2), y, x);
+    expect(result).not.toBeNull();
+    const rhs = rhsOfEqual(result!);
+    const expected = app(ADD, [
+      app(MUL, [C1, app(CHEBYSHEV_T, [int(2), x])]),
+      app(MUL, [C2, app(CHEBYSHEV_U, [int(2), x])]),
+    ]);
+    expectEqual(rhs, expected);
+  });
+
+  it("recognises Chebyshev ODE n=3", () => {
+    const result = solveOde(chebyshevOdeExpr(3), y, x);
+    expect(result).not.toBeNull();
+    expect(display(result!)).toContain("ChebyshevT");
+    expect(display(result!)).toContain("ChebyshevU");
+    expect(display(result!)).toContain('"3"');
+  });
+
+  it("distinguishes Chebyshev (Q≈-x) from Legendre (Q≈-2x)", () => {
+    const legendreResult = solveOde(legendreOdeExpr(2), y, x);
+    const chebyshevResult = solveOde(chebyshevOdeExpr(2), y, x);
+    // Legendre should NOT produce Chebyshev output and vice versa
+    expect(display(legendreResult!)).toContain("LegendreP");
+    expect(display(legendreResult!)).not.toContain("ChebyshevT");
+    expect(display(chebyshevResult!)).toContain("ChebyshevT");
+    expect(display(chebyshevResult!)).not.toContain("LegendreP");
+  });
+
+  it("does not misidentify generic 2nd-order ODEs as named families", () => {
+    // y'' + x³·y' + y = 0 — P=1 constant, Q=x³ not ±x or ±2x, R=1
+    // (would match Hermite P check since P=1, but Q check fails since x³ ≠ -2x)
+    const xCubed = app(POW, [x, int(3)]);
+    const expr = app(ADD, [ypp, app(ADD, [app(MUL, [xCubed, yp]), y])]);
+    const result = solveOde(expr, y, x);
+    if (result !== null) {
+      // If any solver catches it, it must not be a named-ODE family result
+      expect(display(result)).not.toContain("LegendreP");
+      expect(display(result)).not.toContain("BesselJ");
+      expect(display(result)).not.toContain("HermiteH");
+      expect(display(result)).not.toContain("ChebyshevT");
+    }
+  });
+
+  it("regression: Euler-Cauchy still works after Phase 21 dispatch", () => {
+    // x²y'' − 2y = 0 should still be caught by tryEulerCauchy BEFORE tryVarCoeffNamedOde
+    const equation = app(SUB, [app(MUL, [app(POW, [x, int(2)]), ypp]), app(MUL, [int(2), y])]);
+    const result = solveOde(equation, y, x);
+    expect(result).not.toBeNull();
+    // Euler-Cauchy with roots r² + (0-1)r - 2 = 0: r²-r-2=0 → (r-2)(r+1)=0 → r=2,-1
+    expect(display(result!)).toContain("Pow");
+    expect(display(result!)).not.toContain("LegendreP");
+    expect(display(result!)).not.toContain("BesselJ");
   });
 });

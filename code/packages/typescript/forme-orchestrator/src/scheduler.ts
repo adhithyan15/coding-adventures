@@ -18,9 +18,12 @@
  *     rebuild (FM03 §6) lands when the orchestrator gains revision
  *     tracking per instance.
  *
- *   - **No reproducible-build mode.**  Stages get systemClock, not
- *     frozenClock.  Reproducible-build mode (FM03 §8) lands as a
- *     `RunOptions` flag.
+ *   - **Reproducible-build mode is wired through.**  When
+ *     `settings.reproducibleBuild = true`, every StageContext receives
+ *     a frozenClock pinned at `REPRO_BUILD_FROZEN_TIMESTAMP_MS` (0
+ *     in v0; FM03 §8 max-input-mtime derivation pending source-stage
+ *     revision tracking).  Iteration-order sorting and the
+ *     deterministic-random `ctx.random` API remain deferred to v1.
  *
  * What v0 *does* implement:
  *
@@ -45,6 +48,7 @@ import {
   deniedNetworkApi,
   deniedShellApi,
   deniedStorageApi,
+  frozenClock,
   inMemoryCache,
   inMemoryEventBus,
   noOpTelemetryEmitter,
@@ -52,6 +56,7 @@ import {
 } from "@coding-adventures/forme-stage";
 import type {
   CancellationToken,
+  Clock,
   Logger,
   StageContext,
   StageInitContext,
@@ -86,7 +91,39 @@ export interface SchedulerOptions {
   readonly logger: Logger;
   readonly cancellation: CancellationToken;
   readonly bestEffort: boolean;
+  /**
+   * When true, every StageContext receives a `frozenClock` whose wall
+   * time is fixed for the duration of the run.  Combined with the
+   * existing determinism in stage I/O (no module-level state, no
+   * ambient I/O, identity-by-content), this lets two runs of the same
+   * pipeline against the same inputs produce byte-identical outputs
+   * (FM03 §8).
+   *
+   * v0 of reproducible mode pins time only.  Iteration-order sorting
+   * (FM03 §8 item 2) lives in source stages; randomness gating (item
+   * 4) requires a deterministic `ctx.random` which is itself FM01
+   * future work.  Telemetry suppression (item 5) is handled by the
+   * orchestrator-wide `telemetry` option, not here.
+   *
+   * Default: false.
+   */
+  readonly reproducibleBuild?: boolean;
 }
+
+/**
+ * Fixed wall-clock timestamp emitted by the reproducible-build clock.
+ *
+ * Per FM03 §8: "the fixed value is the input pipeline's max input
+ * mtime, falling back to 0 if no inputs have timestamps."  v0 always
+ * uses the fallback (0) because the orchestrator doesn't yet thread
+ * input mtimes from sources to here.  When source-fs's revision
+ * tracking lands, this constant becomes an input-derived value; the
+ * `frozenClock` factory is unchanged.
+ *
+ * 0 = midnight UTC on 1970-01-01.  Exposed so tests can assert on
+ * the exact value the orchestrator's frozen clock returns.
+ */
+export const REPRO_BUILD_FROZEN_TIMESTAMP_MS = 0;
 
 export interface SchedulerResult {
   readonly outcome: RunOutcome;
@@ -115,13 +152,17 @@ export async function executeDag(
   const errors: RunError[] = [];
   const outputs = new Map<string, unknown>();
 
+  // Choose a clock factory once for the whole run.  Reproducible-build
+  // mode hands every stage a frozenClock; otherwise systemClock.
+  const newClock = clockFactory(options);
+
   // Init pass: call init() on every stage that has one.  If any init
   // throws, we abort before any run() is called and surface the failure.
   for (const id of dag.topoOrder) {
     const inst = dag.instances.get(id)!;
     states.set(id, makeState(inst));
     if (typeof inst.stage.init !== "function") continue;
-    const initCtx: StageInitContext = makeInitContext(inst, options);
+    const initCtx: StageInitContext = makeInitContext(inst, options, newClock);
     try {
       await inst.stage.init(inst.config, initCtx);
       states.get(id)!.initialized = true;
@@ -162,7 +203,7 @@ export async function executeDag(
       // Sources have no input; non-sources read from their producer's
       // output (which we previously stored in `outputs`).
       const inputs = collectInputs(inst, states);
-      const ctx: StageContext = makeRunContext(inst, options);
+      const ctx: StageContext = makeRunContext(inst, options, newClock);
 
       if (inst.stage.consumes.name === "Stream" || inst.stage.consumes.name === "Void"
           || isSingleProducer(inst, dag, states)) {
@@ -337,14 +378,37 @@ function makeAsyncIterableFromArray<T>(arr: readonly T[]): AsyncIterable<T> {
   };
 }
 
+/**
+ * Pick the clock factory based on reproducible-build mode.  Lazy-
+ * builds a single frozen clock per scheduler invocation so every
+ * stage in the run sees the same monotonic baseline.  The monotonic
+ * source is per-context (so two parallel calls inside one stage
+ * still measure relative elapsed time correctly), but the wall
+ * clock is shared.
+ */
+function clockFactory(options: SchedulerOptions): () => Clock {
+  if (!options.reproducibleBuild) {
+    return systemClock;
+  }
+  return () =>
+    frozenClock({
+      timestamp: REPRO_BUILD_FROZEN_TIMESTAMP_MS,
+      // Monotonic still advances per-call so any stage measuring
+      // its own elapsed time gets non-zero values.  The reproducible
+      // contract is on the wall clock, not the monotonic one.
+      monotonicTickMs: 1,
+    });
+}
+
 function makeRunContext(
   inst: ResolvedInstance,
   options: SchedulerOptions,
+  newClock: () => Clock,
 ): StageContext {
   return {
     logger: options.logger.child({ stage: inst.stage.name, instance: inst.id }),
     cancellation: options.cancellation,
-    time: systemClock(),
+    time: newClock(),
     cache: inMemoryCache(),
     telemetry: noOpTelemetryEmitter(),
     storage: deniedStorageApi(),
@@ -359,12 +423,13 @@ function makeRunContext(
 function makeInitContext(
   inst: ResolvedInstance,
   options: SchedulerOptions,
+  newClock: () => Clock,
 ): StageInitContext {
   // StageInitContext omits `cancellation` and `cache`, adds `config`.
   return {
     config: inst.config as JsonValue,
     logger: options.logger.child({ stage: inst.stage.name, instance: inst.id, phase: "init" }),
-    time: systemClock(),
+    time: newClock(),
     telemetry: noOpTelemetryEmitter(),
     storage: deniedStorageApi(),
     network: deniedNetworkApi(),
@@ -380,13 +445,17 @@ async function disposeAll(
   states: Map<string, RunState>,
   options: SchedulerOptions,
 ): Promise<void> {
+  // dispose() should see the same frozen clock as init() / run() did
+  // when the run is reproducible — otherwise a dispose hook that
+  // logs a timestamp would re-introduce non-determinism.
+  const newClock = clockFactory(options);
   for (const id of dag.topoOrder) {
     const state = states.get(id)!;
     if (!state.initialized) continue;
     const inst = dag.instances.get(id)!;
     if (typeof inst.stage.dispose !== "function") continue;
     try {
-      const disposeCtx = makeInitContext(inst, options);
+      const disposeCtx = makeInitContext(inst, options, newClock);
       await inst.stage.dispose(disposeCtx);
     } catch (err) {
       // Per FM03 §3.2 Dispose: failures are logged warnings, never escalated.

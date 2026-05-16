@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-orchestrator",
-  "version": "0.1.0",
-  "description": "Forme orchestrator runtime: DAG construction, sequential topological execution, error handling, cancellation, dispose lifecycle (FM03 §3-4, §9-10).",
+  "version": "0.2.0",
+  "description": "Forme orchestrator runtime: DAG construction, sequential topological execution, error handling, cancellation, dispose lifecycle, reproducible-build mode (FM03 §3-4, §8, §9-10).",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

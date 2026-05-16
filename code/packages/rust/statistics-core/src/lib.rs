@@ -1,11 +1,24 @@
 //! Statistics Core
 //!
-//! Phase 1 implementation for `code/specs/statistics-core.md`: descriptive
-//! statistics, counting, and rank/order helpers over `r-vector::Double`.
+//! Phase 1 (shipped): descriptive statistics, counting, and rank/order
+//! helpers over `r-vector::Double`.
+//!
+//! Phase 2A (this commit): special mathematical functions (gamma, beta,
+//! choose, erf, incomplete gamma / beta, digamma, trigamma), MT19937
+//! random-number generator, and the Normal distribution (`dnorm`,
+//! `pnorm`, `qnorm`, `rnorm`) backed by a shared `ContinuousDistribution`
+//! trait.
+//!
+//! Phase 2B (queued): the remaining 11 priority distributions (Uniform,
+//! Exponential, Gamma, Beta, ChiSq, StudentT, F, Binomial, Poisson,
+//! Cauchy, LogNormal), per the spec's distribution catalog.
 
 pub mod counting;
 pub mod descriptive;
 pub mod rank;
+pub mod special;
+pub mod rng;
+pub mod distributions;
 
 pub use numeric_tower::Number;
 pub use r_vector::{is_na_real, na_real, Character, Double, Vector};

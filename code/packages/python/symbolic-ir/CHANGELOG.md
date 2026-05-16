@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.14.0 — 2026-05-16
+
+**Add 8 named-ODE solution function head symbols — Phase 27.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+Legendre ODE solutions (`(1-x²)y'' - 2xy' + n(n+1)y = 0`):
+- `LEGENDRE_P = IRSymbol("LegendreP")` — Legendre polynomial of the first kind P_n(x)
+- `LEGENDRE_Q = IRSymbol("LegendreQ")` — Legendre function of the second kind Q_n(x)
+
+Bessel ODE solutions (`x²y'' + xy' + (x²-ν²)y = 0`):
+- `BESSEL_J = IRSymbol("BesselJ")` — Bessel function of the first kind J_ν(x)
+- `BESSEL_Y = IRSymbol("BesselY")` — Bessel function of the second kind Y_ν(x) (Neumann)
+
+Hermite ODE solutions (`y'' - 2xy' + 2ny = 0`):
+- `HERMITE_H = IRSymbol("HermiteH")` — Hermite polynomial H_n(x) for integer n ≥ 0
+- `HERMITE_H2 = IRSymbol("HermiteH2")` — second independent solution (parabolic cylinder function)
+
+Chebyshev ODE solutions (`(1-x²)y'' - xy' + n²y = 0`):
+- `CHEBYSHEV_T = IRSymbol("ChebyshevT")` — Chebyshev polynomial of the first kind T_n(x)
+- `CHEBYSHEV_U = IRSymbol("ChebyshevU")` — Chebyshev polynomial of the second kind U_n(x)
+
+---
+
 ## 0.13.0 — 2026-05-05
 
 **Add 2 transcendental-solving head symbols — Phase 26.**

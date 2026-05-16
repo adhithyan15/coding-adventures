@@ -68,9 +68,12 @@ describe("walkFiles", () => {
     await writeFile(join(root, "posts", "2026", "deep.md"), "x");
     const files = await collect(walkFiles(root, ".md"));
     expect(files.length).toBe(3);
-    expect(files.some(f => f.endsWith("/top.md"))).toBe(true);
-    expect(files.some(f => f.endsWith("/hello.md"))).toBe(true);
-    expect(files.some(f => f.endsWith("/deep.md"))).toBe(true);
+    // walkFiles uses `path.join` which returns native separators
+    // (`\` on Windows).  Normalise to POSIX for stable assertions.
+    const posix = files.map(f => f.split(/[/\\]/).join("/"));
+    expect(posix.some(f => f.endsWith("/top.md"))).toBe(true);
+    expect(posix.some(f => f.endsWith("/hello.md"))).toBe(true);
+    expect(posix.some(f => f.endsWith("/deep.md"))).toBe(true);
   });
 
   it("filters by extension", async () => {
