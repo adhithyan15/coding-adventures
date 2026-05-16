@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.58.0 — 2026-05-16
+
+**Phase 28 integration — general IBP for `∫ P(x)·log(Q(x)) dx` and
+`∫ P(x)·atan(Q(x)) dx` with non-linear polynomial Q(x).**
+
+The existing Phase 3 and Phase 11 handlers only fire when Q(x) is a linear
+polynomial (ax+b).  Phase 28 generalises both via IBP:
+
+    ∫ P(x)·log(Q(x)) dx  =  R(x)·log(Q(x))  −  ∫ R(x)·Q′(x)/Q(x) dx
+    ∫ P(x)·atan(Q(x)) dx  =  R(x)·atan(Q(x))  −  ∫ R(x)·Q′(x)/(1+Q(x)²) dx
+
+where R(x) = ∫P(x) dx (polynomial antiderivative).  The residual in each case
+is a rational function delegated to the existing Hermite + Rothstein–Trager +
+arctan machinery (Phase 2c–2f, 9, 10).
+
+Example closed forms now produced:
+
+    ∫ log(x²+1) dx      = x·log(x²+1) − 2x + 2·atan(x)
+    ∫ x·log(x²+1) dx    = (x²+1)/2·log(x²+1) − x²/2
+    ∫ x²·log(x²+1) dx   = x³/3·log(x²+1) − 2x³/9 + 2x/3 − (2/3)·atan(x)
+    ∫ x·atan(x²) dx      = x²/2·atan(x²) − (1/4)·log(1+x⁴)
+
+### Added
+
+- **`_try_log_poly_product(transcendental, poly_candidate, x)`** — Phase 28
+  log handler.  Requires `transcendental = Log(Q)` with Q a non-linear
+  polynomial in x, and `poly_candidate` a polynomial.  Skips linear Q
+  (Phase 3 handles it).  Returns `None` if the rational residual cannot be
+  closed.
+
+- **`_try_atan_poly_product(transcendental, poly_candidate, x)`** — Phase 28
+  arctan handler.  Requires `transcendental = Atan(Q)` with Q non-linear
+  polynomial.  Skips linear Q (Phase 11 handles it).  The rational residual
+  has denominator `1+Q(x)²`; returns `None` when the rational route fails
+  (e.g. when `1+Q⁴` does not factor over Q).
+
+- Imported **`poly_deriv`** alias from the `polynomial` package to compute
+  polynomial derivatives in the IBP reduction.
+
 ## 0.57.0 — 2026-05-16
 
 **Phase 27 integration — trig-of-log: `∫ sin(log x) dx`, `∫ cos(log x) dx`,
