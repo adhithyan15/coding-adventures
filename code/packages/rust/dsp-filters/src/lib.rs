@@ -42,15 +42,20 @@
 //!   Landed as 0.1.0.
 //! - **Phase 3** — `fir_fft` (FFT-based overlap-add).  Deferred;
 //!   direct convolution is enough for the V1 user-facing API.
-//! - **Phase 4 (this release)** — [`iir`] (direct-form-II
-//!   Transposed).  Matches `scipy.signal.lfilter(b, a, x)`.
-//! - **Phase 5** — filter design helpers (Butterworth, Chebyshev,
-//!   windowed-sinc).  Pending.
+//! - **Phase 4** — [`iir`] (direct-form-II Transposed).  Matches
+//!   `scipy.signal.lfilter(b, a, x)`.  Landed as 0.2.0.
+//! - **Phase 5 (this release)** — filter design helpers:
+//!   [`design_low_pass`] / [`design_high_pass`] (windowed-sinc
+//!   FIR with Rectangular / Hamming / Hann / Blackman windows)
+//!   and [`butterworth_lowpass`] (1st / 2nd order via bilinear
+//!   transform).
 //! - **Phase 6** — matrix-ir-lowered `fir_via_runtime`.  Pending.
 
 #![warn(rust_2018_idioms)]
 
+pub mod design;
 pub mod iir;
+pub use design::{butterworth_lowpass, design_high_pass, design_low_pass, WindowType};
 pub use iir::iir;
 
 use std::fmt;
