@@ -4,6 +4,9 @@
 
 ### Added
 
+- **Inductor initial current** — `Inductor` now accepts an `initial_current`
+  value that seeds transient analysis companion models.
+
 - **Explicit AC source phasors** — `VoltageSource` and `CurrentSource` now
   accept an optional `AcSource(magnitude, phase_degrees=0.0)` value.  AC
   analysis uses those phasors independently from the DC bias value, and zeros

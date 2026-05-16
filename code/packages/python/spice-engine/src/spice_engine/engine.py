@@ -1570,6 +1570,13 @@ def transient(
                 n_minus=el.n_minus,
                 resistance=r_init,
             ))
+            if el.initial_current != 0.0:
+                init_circuit.add(CurrentSource(
+                    name=f"_L_{el.name}_I0",
+                    n_plus=el.n_plus,
+                    n_minus=el.n_minus,
+                    current=el.initial_current,
+                ))
     op = dc_op(init_circuit, max_iterations=max_iterations, tol=tol)
     if not op.converged:
         return TransientResult(points=[], converged=False, method=method)
@@ -1588,7 +1595,7 @@ def transient(
         for el in circuit.elements if isinstance(el, Capacitor)
     }
     ind_currents: dict[str, float] = {
-        el.name: 0.0
+        el.name: el.initial_current
         for el in circuit.elements if isinstance(el, Inductor)
     }
     ind_voltages: dict[str, float] = {

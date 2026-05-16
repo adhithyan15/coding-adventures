@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Parse capacitor `IC=<voltage>` initial-voltage parameters.
+- Parse inductor `IC=<current>` initial-current parameters.
 - Parse SPICE `.tf V(output_node) input_source` transfer-function analysis
   cards.
 - Parse SPICE `.sens V(output_node)` DC sensitivity analysis cards.

@@ -51,7 +51,7 @@ Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)
 I1 out 0 1m
 Rload in out 2.2k
 Cload out 0 10p IC=2.5
-L1 out 0 1u
+L1 out 0 1u IC=3m
 G1 out 0 in 0 2m
 .tran 1n 20n
 .dc Vstep 0 1 0.5
@@ -79,6 +79,10 @@ G1 out 0 in 0 2m
         panic!("expected capacitor");
     };
     assert_close(capacitor.initial_voltage, 2.5);
+    let Element::Inductor(inductor) = &parsed.circuit.elements()[4] else {
+        panic!("expected inductor");
+    };
+    assert_close(inductor.initial_current, 3.0e-3);
 
     assert_eq!(
         parsed.analyses,
@@ -110,6 +114,13 @@ fn rejects_unsupported_capacitor_element_params() {
     assert!(error
         .to_string()
         .contains("unsupported capacitor parameter"));
+}
+
+#[test]
+fn rejects_unsupported_inductor_element_params() {
+    let error = parse_netlist("L1 in 0 1u FOO=1").unwrap_err();
+
+    assert!(error.to_string().contains("unsupported inductor parameter"));
 }
 
 #[test]
