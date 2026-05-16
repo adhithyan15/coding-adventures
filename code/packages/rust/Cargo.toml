@@ -636,4 +636,5 @@ members = [
     "semantic-ir-to-typescript",
     "semantic-ir-to-rust",
     "semantic-ir-to-python",
+    "semantic-ir-to-go",
 ]
