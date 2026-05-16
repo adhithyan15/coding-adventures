@@ -1,5 +1,32 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.4.0] — 2026-05-16
+
+### Added — Phase 26: log-power integration via IBP reduction
+
+- `is_log_of_x(node, x)` — guard helper: returns `true` when `node` is
+  `Log(x)` for bare integration variable `x`.
+- `to_polynomial_coeffs(expr, x)` — extracts polynomial coefficients from an
+  IR expression; returns `Vec<(degree, coeff_node)>` or `None`.
+  Handles constants, `x`, `x^k`, `c·f`, `f·c`, ADD, SUB, NEG.
+- `poly_log_power_term(k, n, x)` — closed form of `∫ x^k · log(x)^n dx` for
+  k ≥ 0, n ≥ 1, via the IBP reduction formula:
+  `G_{k,m}(x) = x^(k+1)/(k+1) · log(x)^m  −  m/(k+1) · G_{k,m-1}(x)`.
+- `try_log_power_product(transcendental, poly, x)` — handles
+  `∫ Q(x) · log(x)^n dx` for integer n ≥ 2 by term-by-term application
+  of `poly_log_power_term`.
+- Standalone `∫ log(x)^n dx` (n ≥ 2) via new `(POW, [base, exp])` match arm.
+
+### Added — Phase 27: trig-of-log integration via u = log(x) substitution
+
+- `trig_log_integral(trig_head, k, x)` — closed form of `∫ x^k · trig(log(x)) dx`:
+  - `∫ xᵏ sin(log x) dx = x^(k+1)·((k+1)sin(log x)−cos(log x))/((k+1)²+1)`
+  - `∫ xᵏ cos(log x) dx = x^(k+1)·((k+1)cos(log x)+sin(log x))/((k+1)²+1)`
+- `try_trig_log_product(transcendental, poly, x)` — handles
+  `∫ Q(x)·sin(log(x)) dx` and `∫ Q(x)·cos(log(x)) dx`.
+- Standalone `∫ sin(log(x)) dx` and `∫ cos(log(x)) dx` via new
+  `(SIN|COS, [inner]) if is_log_of_x(inner, x)` match arms.
+
 ## [0.3.0] — 2026-05-14
 
 ### Added

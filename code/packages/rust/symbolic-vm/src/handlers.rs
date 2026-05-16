@@ -1116,6 +1116,22 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
                 apply_node(POW, vec![inner.clone(), IRNode::Rational(3, 2)]),
             ],
         ),
+        // Phase 26: ∫ log(x)^n dx for integer n ≥ 2 (standalone, no poly factor).
+        (POW, [base, exponent]) if is_log_of_x(base, x) => {
+            match to_numeric(exponent) {
+                Some(Numeric::Int(n)) if n >= 2 => poly_log_power_term(0, n as usize, x),
+                _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
+            }
+        }
+        // Phase 27: ∫ sin(log(x)) dx and ∫ cos(log(x)) dx (k=0 direct forms).
+        (SIN, [inner]) if is_log_of_x(inner, x) => trig_log_integral(SIN, 0, x),
+        (COS, [inner]) if is_log_of_x(inner, x) => trig_log_integral(COS, 0, x),
+        // Phase 26+27: Q(x) · log(x)^n or Q(x) · trig(log(x)) — both factors depend on x.
+        (MUL, [a, b]) => try_log_power_product(a, b, x)
+            .or_else(|| try_log_power_product(b, a, x))
+            .or_else(|| try_trig_log_product(a, b, x))
+            .or_else(|| try_trig_log_product(b, a, x))
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
     }
 }
@@ -1370,6 +1386,328 @@ fn complete_elliptic_third_kind(
     }
     elliptic_third_kind_params(f, x)
         .map(|(n, k)| apply_node("EllipticPi", vec![n, k]))
+}
+
+// ---------------------------------------------------------------------------
+// Phase 26 — log-power integration via IBP reduction
+// ---------------------------------------------------------------------------
+
+/// Returns ``true`` when ``node`` is ``Log(x)`` — i.e., the log of the bare
+/// integration variable.  Used as a guard in the integrate match arms.
+fn is_log_of_x(node: &IRNode, x: &str) -> bool {
+    if let IRNode::Apply(a) = node {
+        a.head == IRNode::Symbol(LOG.to_string())
+            && a.args.len() == 1
+            && a.args[0] == IRNode::Symbol(x.to_string())
+    } else {
+        false
+    }
+}
+
+/// Extract polynomial coefficients from an IR expression in variable ``x``.
+///
+/// Returns ``Some(Vec<(degree, coefficient)>)`` sorted by ascending degree,
+/// or ``None`` if ``expr`` is not a polynomial in ``x`` over the rationals.
+///
+/// Handles:
+/// - constants free of x (degree 0)
+/// - x itself (degree 1, coefficient 1)
+/// - x^k for non-negative integer k
+/// - c · f or f · c where c is free of x — scalar-multiply inner poly
+/// - ADD and SUB of two polynomials — merge coefficient lists
+/// - NEG of a polynomial — negate all coefficients
+fn to_polynomial_coeffs(expr: &IRNode, x: &str) -> Option<Vec<(usize, IRNode)>> {
+    if !depends_on(expr, x) {
+        return Some(vec![(0, expr.clone())]);
+    }
+    if expr == &IRNode::Symbol(x.to_string()) {
+        return Some(vec![(1, IRNode::Integer(1))]);
+    }
+    let IRNode::Apply(apply) = expr else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    match (head.as_str(), apply.args.as_slice()) {
+        (POW, [base, exponent]) if base == &IRNode::Symbol(x.to_string()) => {
+            if let Some(Numeric::Int(k)) = to_numeric(exponent) {
+                if k >= 0 {
+                    return Some(vec![(k as usize, IRNode::Integer(1))]);
+                }
+            }
+            None
+        }
+        (MUL, [a, b]) if !depends_on(a, x) => {
+            let mut poly = to_polynomial_coeffs(b, x)?;
+            for (_, coef) in &mut poly {
+                if to_numeric(a).is_some_and(Numeric::is_one) {
+                    // no-op: coef stays the same
+                } else {
+                    *coef = apply_node(MUL, vec![a.clone(), coef.clone()]);
+                }
+            }
+            Some(poly)
+        }
+        (MUL, [a, b]) if !depends_on(b, x) => {
+            let mut poly = to_polynomial_coeffs(a, x)?;
+            for (_, coef) in &mut poly {
+                if to_numeric(b).is_some_and(Numeric::is_one) {
+                    // no-op
+                } else {
+                    *coef = apply_node(MUL, vec![b.clone(), coef.clone()]);
+                }
+            }
+            Some(poly)
+        }
+        (ADD, [a, b]) => {
+            let mut poly_a = to_polynomial_coeffs(a, x)?;
+            let poly_b = to_polynomial_coeffs(b, x)?;
+            for (kb, vb) in poly_b {
+                if let Some(entry) = poly_a.iter_mut().find(|(ka, _)| *ka == kb) {
+                    entry.1 = apply_node(ADD, vec![entry.1.clone(), vb]);
+                } else {
+                    poly_a.push((kb, vb));
+                }
+            }
+            poly_a.sort_by_key(|(k, _)| *k);
+            Some(poly_a)
+        }
+        (SUB, [a, b]) => {
+            let mut poly_a = to_polynomial_coeffs(a, x)?;
+            let poly_b = to_polynomial_coeffs(b, x)?;
+            for (kb, vb) in poly_b {
+                if let Some(entry) = poly_a.iter_mut().find(|(ka, _)| *ka == kb) {
+                    entry.1 = apply_node(SUB, vec![entry.1.clone(), vb]);
+                } else {
+                    poly_a.push((kb, apply_node(NEG, vec![vb])));
+                }
+            }
+            poly_a.sort_by_key(|(k, _)| *k);
+            Some(poly_a)
+        }
+        (NEG, [inner]) => {
+            let poly = to_polynomial_coeffs(inner, x)?;
+            Some(
+                poly.into_iter()
+                    .map(|(k, v)| (k, apply_node(NEG, vec![v])))
+                    .collect(),
+            )
+        }
+        _ => None,
+    }
+}
+
+/// Phase 26: closed form of ``∫ x^k · log(x)^n dx``.
+///
+/// Uses the IBP reduction formula (u = log(x)^n, dv = x^k dx):
+///
+///   G_{k,0}(x) = x^(k+1)/(k+1)
+///   G_{k,m}(x) = x^(k+1)/(k+1) · log(x)^m  −  m/(k+1) · G_{k,m-1}(x)
+///
+/// For k = 0, the base case simplifies to ``G_{0,0}(x) = x``.
+fn poly_log_power_term(k: usize, n: usize, x: &str) -> IRNode {
+    let kp1 = k + 1;
+    let x_sym = IRNode::Symbol(x.to_string());
+    let kp1_frac = make_rat(1, kp1 as i64);
+    let log_node = apply_node(LOG, vec![x_sym.clone()]);
+
+    // Base: G_{k,0}
+    let mut acc: IRNode = if kp1 == 1 {
+        x_sym.clone()
+    } else {
+        apply_node(
+            MUL,
+            vec![
+                from_numeric(kp1_frac),
+                apply_node(POW, vec![x_sym.clone(), IRNode::Integer(kp1 as i64)]),
+            ],
+        )
+    };
+
+    for m in 1..=n {
+        let log_pow: IRNode = if m == 1 {
+            log_node.clone()
+        } else {
+            apply_node(POW, vec![log_node.clone(), IRNode::Integer(m as i64)])
+        };
+        let first: IRNode = if kp1 == 1 {
+            apply_node(MUL, vec![x_sym.clone(), log_pow])
+        } else {
+            apply_node(
+                MUL,
+                vec![
+                    from_numeric(kp1_frac),
+                    apply_node(
+                        MUL,
+                        vec![
+                            apply_node(POW, vec![x_sym.clone(), IRNode::Integer(kp1 as i64)]),
+                            log_pow,
+                        ],
+                    ),
+                ],
+            )
+        };
+        let n_coef = from_numeric(make_rat(m as i64, kp1 as i64));
+        acc = apply_node(SUB, vec![first, apply_node(MUL, vec![n_coef, acc])]);
+    }
+    acc
+}
+
+/// Phase 26: ``∫ Q(x) · log(x)^n dx`` for integer n ≥ 2 via term-by-term IBP.
+///
+/// ``transcendental`` must be ``Pow(Log(x), n)`` with integer n ≥ 2.
+/// ``poly_candidate`` must be a polynomial in x.
+fn try_log_power_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if head.as_str() != POW || apply.args.len() != 2 {
+        return None;
+    }
+    let log_node = &apply.args[0];
+    let exp_node = &apply.args[1];
+    if !is_log_of_x(log_node, x) {
+        return None;
+    }
+    let n = match to_numeric(exp_node)? {
+        Numeric::Int(n) if n >= 2 => n as usize,
+        _ => return None,
+    };
+
+    let poly = to_polynomial_coeffs(poly_candidate, x)?;
+    if poly.is_empty() {
+        return None;
+    }
+
+    let pieces: Vec<IRNode> = poly
+        .into_iter()
+        .filter_map(|(k, coef)| {
+            if to_numeric(&coef).is_some_and(Numeric::is_zero) {
+                return None;
+            }
+            let term = poly_log_power_term(k, n, x);
+            if to_numeric(&coef).is_some_and(Numeric::is_one) {
+                Some(term)
+            } else {
+                Some(apply_node(MUL, vec![coef, term]))
+            }
+        })
+        .collect();
+
+    if pieces.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        pieces
+            .into_iter()
+            .reduce(|acc, p| apply_node(ADD, vec![acc, p]))
+            .unwrap(),
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Phase 27 — trig(log(x)) integration via u = log(x) substitution
+// ---------------------------------------------------------------------------
+//
+// The substitution u = log(x) converts:
+//   ∫ xᵏ sin(log x) dx = ∫ e^((k+1)u) sin(u) du
+//                       = x^(k+1) · ((k+1)sin(log x) − cos(log x)) / ((k+1)² + 1)
+//
+//   ∫ xᵏ cos(log x) dx = x^(k+1) · ((k+1)cos(log x) + sin(log x)) / ((k+1)² + 1)
+
+/// Phase 27: closed form of ``∫ x^k · trig(log(x)) dx``.
+///
+/// ``trig_head`` is ``SIN`` or ``COS``; ``k`` is the integer power of x.
+fn trig_log_integral(trig_head: &str, k: usize, x: &str) -> IRNode {
+    let kp1 = k + 1;
+    let denom = (kp1 * kp1 + 1) as i64;
+    let log_x = apply_node(LOG, vec![IRNode::Symbol(x.to_string())]);
+    let sin_log_x = apply_node(SIN, vec![log_x.clone()]);
+    let cos_log_x = apply_node(COS, vec![log_x.clone()]);
+    let x_pow: IRNode = if kp1 == 1 {
+        IRNode::Symbol(x.to_string())
+    } else {
+        apply_node(
+            POW,
+            vec![IRNode::Symbol(x.to_string()), IRNode::Integer(kp1 as i64)],
+        )
+    };
+    let kp1_ir = IRNode::Integer(kp1 as i64);
+    let denom_ir = IRNode::Integer(denom);
+    let numerator: IRNode = if trig_head == SIN {
+        apply_node(
+            SUB,
+            vec![apply_node(MUL, vec![kp1_ir, sin_log_x]), cos_log_x],
+        )
+    } else {
+        apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![kp1_ir, cos_log_x]), sin_log_x],
+        )
+    };
+    apply_node(DIV, vec![apply_node(MUL, vec![x_pow, numerator]), denom_ir])
+}
+
+/// Phase 27: ``∫ Q(x) · sin(log(x)) dx`` or ``∫ Q(x) · cos(log(x)) dx``.
+///
+/// ``transcendental`` must be ``Sin(Log(x))`` or ``Cos(Log(x))``.
+/// ``poly_candidate`` must be a polynomial in x.
+fn try_trig_log_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    let trig_head = head.as_str();
+    if trig_head != SIN && trig_head != COS {
+        return None;
+    }
+    if apply.args.len() != 1 || !is_log_of_x(&apply.args[0], x) {
+        return None;
+    }
+
+    let poly = to_polynomial_coeffs(poly_candidate, x)?;
+    if poly.is_empty() {
+        return None;
+    }
+
+    let pieces: Vec<IRNode> = poly
+        .into_iter()
+        .filter_map(|(k, coef)| {
+            if to_numeric(&coef).is_some_and(Numeric::is_zero) {
+                return None;
+            }
+            let term = trig_log_integral(trig_head, k, x);
+            if to_numeric(&coef).is_some_and(Numeric::is_one) {
+                Some(term)
+            } else {
+                Some(apply_node(MUL, vec![coef, term]))
+            }
+        })
+        .collect();
+
+    if pieces.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        pieces
+            .into_iter()
+            .reduce(|acc, p| apply_node(ADD, vec![acc, p]))
+            .unwrap(),
+    )
 }
 
 fn integrate_power_of_x(exponent: &IRNode, x: &str) -> IRNode {
