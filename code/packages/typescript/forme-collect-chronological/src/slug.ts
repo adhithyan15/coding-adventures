@@ -45,7 +45,13 @@ export function slugify(sourcePath: string): string {
   s = s.replace(/[\s_]+/g, "-");
   s = s.replace(/[^a-z0-9-]+/g, "");
   s = s.replace(/-+/g, "-");
-  s = s.replace(/^-+|-+$/g, "");
+  // Trim leading/trailing dashes via two anchored single-direction
+  // replacements rather than `/^-+|-+$/g` — CodeQL flags the
+  // alternation as a polynomial-regex risk on library input even
+  // though both branches are linear.  Two separate anchored regexes
+  // are unambiguously O(n) and silence the analyzer cleanly.
+  s = s.replace(/^-+/, "");
+  s = s.replace(/-+$/, "");
 
   // Empty result (e.g. input was "@@@.md") falls back to "untitled" so
   // route templating never produces "/blog/.html".
