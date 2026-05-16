@@ -633,4 +633,5 @@ members = [
     "iir-to-jvm-class-file",
     "semantic-ir",
     "twig-to-semantic-ir",
+    "semantic-ir-to-typescript",
 ]
