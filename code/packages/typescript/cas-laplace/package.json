@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/cas-laplace",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pure TypeScript table-driven Laplace and inverse Laplace transforms over symbolic IR",
   "type": "module",
   "main": "src/index.ts",

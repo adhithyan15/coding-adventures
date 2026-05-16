@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.2.0 — 2026-05-16
+
+**Extended ILT engine: complex conjugate poles, repeated poles, improper fractions.
+Extended forward table: t^n·sin(ωt) and t^n·cos(ωt) for n = 2, 3.**
+
+### `inverse_table.py` — extended partial-fraction engine
+
+`_ilt_via_partial_fractions` was previously limited to proper fractions whose
+denominators factored completely over the rationals into distinct simple poles.
+Three new capabilities were added:
+
+1. **Improper fractions** — polynomial long division extracts the quotient `P(s)`.
+   A constant quotient contributes a `DiracDelta(t)` term; higher-degree quotients
+   return unevaluated (δ-derivatives are rare in practice).
+
+2. **Repeated rational poles** — instead of the derivative formula that fails when
+   `Q'(r) = 0`, the engine now uses a formal power-series expansion around the
+   pole: shift `s → r + t`, divide out `t^m`, and read off the first `m` Taylor
+   coefficients of the reduced function.  These become the `A_m, …, A_1`
+   coefficients for the `A_k/(s−r)^k` terms.  All arithmetic is exact Fraction.
+
+3. **Irreducible quadratic factor** — after extracting all rational-root factors,
+   a remaining degree-2 denominator with `b²−4c < 0` is handled by completing
+   the square `(s+α)²+β²` and matching each partial-fraction term against
+   `A*(s+α)/((s+α)²+β²)` and `β/((s+α)²+β²)`, yielding `exp(−αt)·cos(βt)`
+   and `exp(−αt)·sin(βt)` respectively.  When `β` is irrational, a symbolic
+   `Sqrt(β²)` node is built so the output remains exact.
+
+New helper functions: `_is_zero_poly`, `_poly_shift`, `_power_series_coeffs`,
+`_compute_repeated_residues`, `_ilt_poly_term`, `_ilt_irreducible_quad`.
+
+Examples now evaluating:
+- `ilt(1/(s^2+2*s+2), s, t)` → `exp(-t)*sin(t)`
+- `ilt(s/(s^2+2*s+2), s, t)` → `exp(-t)*(cos(t) - sin(t))`
+- `ilt(1/(s-2)^2, s, t)` → `t*exp(2*t)`
+- `ilt(1/(s*(s^2+1)), s, t)` → `UnitStep(t) - cos(t)`
+
+### `table.py` — t^n·trig forward transforms for n = 2, 3
+
+Added `_match_tn_sin` / `_tf_tn_sin` and `_match_tn_cos` / `_tf_tn_cos` to the
+forward transform table for `t^n·sin(ωt)` and `t^n·cos(ωt)` with n ≥ 2.
+
+Closed-form formulas (derived from L{sin/cos} by repeated differentiation):
+
+| f(t)             | F(s) = L{f}(s)                      |
+|------------------|-------------------------------------|
+| t²·sin(ωt)       | 2ω(3s²−ω²) / (s²+ω²)³              |
+| t²·cos(ωt)       | 2s(s²−3ω²) / (s²+ω²)³              |
+| t³·sin(ωt)       | 24ωs(s²−ω²) / (s²+ω²)⁴             |
+| t³·cos(ωt)       | 6(s⁴−6s²ω²+ω⁴) / (s²+ω²)⁴         |
+
+For n ≥ 4 the pattern matches but the builder returns `None`, falling through
+to unevaluated `Laplace(f, t, s)`.
+
 ## 0.1.1 — 2026-05-14
 
 **Bug fixes: infinite recursion guard in `laplace_handler` and `exp(-t)` pattern recognition.**

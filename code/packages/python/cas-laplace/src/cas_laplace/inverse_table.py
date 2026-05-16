@@ -10,44 +10,47 @@ The inverse Laplace transform (ILT) recovers f(t) from F(s) by:
 
 Inverse table
 -------------
-| F(s)                     | f(t) = L⁻¹{F}(s)          |
-|--------------------------|----------------------------|
-| 1/s                      | UnitStep(t)                |
-| 1/(s-a)                  | exp(a·t)                   |
-| 1/(s-a)^n  (n ≥ 2)       | t^{n-1}·exp(a·t) / (n-1)! |
-| ω/(s²+ω²)                | sin(ω·t)                   |
-| s/(s²+ω²)                | cos(ω·t)                   |
-| ω/((s-a)²+ω²)            | exp(a·t)·sin(ω·t)          |
-| (s-a)/((s-a)²+ω²)        | exp(a·t)·cos(ω·t)          |
-| a/(s²-a²)                | sinh(a·t)                  |
-| s/(s²-a²)                | cosh(a·t)                  |
+| F(s)                       | f(t) = L⁻¹{F}(s)              |
+|----------------------------|--------------------------------|
+| 1/s                        | UnitStep(t)                    |
+| 1/(s-a)                    | exp(a·t)                       |
+| 1/(s-a)^n  (n ≥ 2)         | t^{n-1}·exp(a·t) / (n-1)!     |
+| ω/(s²+ω²)                  | sin(ω·t)                       |
+| s/(s²+ω²)                  | cos(ω·t)                       |
+| ω/((s-a)²+ω²)              | exp(a·t)·sin(ω·t)              |
+| (s-a)/((s-a)²+ω²)          | exp(a·t)·cos(ω·t)              |
+| a/(s²-a²)                  | sinh(a·t)                      |
+| s/(s²-a²)                  | cosh(a·t)                      |
+| c  (constant)              | c·δ(t)   [polynomial part]    |
 
 Partial-fraction decomposition
 -------------------------------
-For a proper rational function P(s)/Q(s) with distinct rational poles
-r_1, ..., r_n, the residue formula gives:
+For a rational function P(s)/Q(s) the engine performs:
 
-    A_i = P(r_i) / Q'(r_i)
+1. **Polynomial long division** (improper fractions): if deg P ≥ deg Q,
+   extract the polynomial quotient.  A degree-0 quotient contributes a
+   DiracDelta(t) term; higher-degree terms are left symbolic.
 
-where Q'(s) is the derivative of Q(s). This is implemented using Python's
-``fractions.Fraction`` for exact rational arithmetic.
+2. **Rational root extraction**: uses the rational root theorem to find
+   all rational roots r_i of Q(s) with their multiplicities m_i.
 
-For the special case of a denominator that contains a simple pole at s=0
-(contributing a UnitStep term) plus other poles, the decomposition is
-applied uniformly.
+3. **Residue computation for repeated rational poles**: uses a formal
+   power-series expansion (shift to s=r, divide out the t^m factor,
+   compute m Taylor coefficients) to find A_{m}, …, A_1 for each
+   multiplicity-m pole without requiring symbolic differentiation.
 
-Limitations (Phase 1)
----------------------
-This implementation handles:
-- Proper fractions (deg P < deg Q)
-- Denominators with all distinct rational roots (simple poles only)
-- The special irreducible quadratic s²+ω² → sin/cos pairs
-- The s·/(s²+ω²) → cos form
+4. **Irreducible quadratic factor**: after extracting all rational-root
+   factors, if the remaining denominator is a degree-2 polynomial with
+   negative discriminant b²-4c < 0 (complex conjugate poles), it is
+   decomposed by completing the square:
 
-It does NOT yet handle:
-- Repeated complex poles
-- Higher-order irreducible quadratics
-- Improper fractions (partial polynomial part)
+       (As+B) / ((s+α)²+β²)  →
+         A·exp(-αt)·cos(βt)  +  (B-Aα)/β · exp(-αt)·sin(βt)
+
+   When β is not a perfect rational square, a symbolic ``Sqrt`` node is
+   built so the answer is still exact.
+
+All exact arithmetic uses Python's ``fractions.Fraction``.
 """
 
 from __future__ import annotations
@@ -60,11 +63,15 @@ from symbolic_ir import (
     ADD,
     COS,
     COSH,
+    DIV,
     EXP,
     MUL,
+    NEG,
     POW,
     SIN,
     SINH,
+    SQRT,
+    SUB,
     IRApply,
     IRInteger,
     IRNode,
@@ -72,7 +79,7 @@ from symbolic_ir import (
     IRSymbol,
 )
 
-from cas_laplace.heads import UNIT_STEP
+from cas_laplace.heads import DIRAC_DELTA, UNIT_STEP
 
 # ---------------------------------------------------------------------------
 # Polynomial arithmetic over Fraction (rational coefficients)
@@ -282,7 +289,6 @@ def _ilt_simple_pole(
     if A == 1:
         return exp_term
     if A == -1:
-        from symbolic_ir import NEG
         return IRApply(NEG, (exp_term,))
     return IRApply(MUL, (_frac_to_ir(A), exp_term))
 
@@ -610,6 +616,256 @@ def _isqrt_exact(n: int) -> int | None:
 
 
 # ---------------------------------------------------------------------------
+# Extended partial-fraction helpers
+# ---------------------------------------------------------------------------
+
+
+def _is_zero_poly(p: Poly) -> bool:
+    """Return True if p is the zero polynomial (after normalization)."""
+    n = _poly_normalize(p)
+    return len(n) == 1 and n[0] == Fraction(0)
+
+
+def _poly_shift(p: Poly, r: Fraction) -> Poly:
+    """Compute p(s + r) as a polynomial in s.
+
+    Substitutes s → s + r using the binomial expansion.  The result is
+    a polynomial whose k-th coefficient is the coefficient of (s+r)^k
+    in p(s+r).
+
+    Examples::
+
+        p = (c_0, c_1, c_2)  represents  c_0 + c_1·s + c_2·s²
+        _poly_shift(p, 1)  →  p(s+1) = c_0 + c_1(s+1) + c_2(s+1)²
+    """
+    result: Poly = _ZERO_POLY
+    for i, coeff in enumerate(p):
+        if coeff == 0:
+            continue
+        if i == 0:
+            term: Poly = (coeff,)
+        else:
+            # (s + r)^i in ascending-coefficient order
+            s_plus_r: Poly = (r, Fraction(1))
+            term = _poly_scale(_poly_pow(s_plus_r, i), coeff)
+        result = _poly_add(result, term)
+    return _poly_normalize(result)
+
+
+def _power_series_coeffs(num: Poly, den: Poly, terms: int) -> list[Fraction]:
+    """First ``terms`` coefficients of the formal power series N(t)/D(t).
+
+    Requires ``den[0] != 0`` (D(0) ≠ 0).  Uses the recurrence::
+
+        g_0 = N[0] / D[0]
+        g_k = (N[k] - Σ_{j=0}^{k-1} D[k-j] · g_j) / D[0]
+
+    This is the standard long-division algorithm for formal power series
+    over a field.  All arithmetic uses exact ``Fraction`` values.
+    """
+    q0 = den[0]
+    # Caller guarantees q0 != 0
+    g: list[Fraction] = []
+    for k in range(terms):
+        nk = num[k] if k < len(num) else Fraction(0)
+        subtract = sum(
+            (den[k - j] if (k - j) < len(den) else Fraction(0)) * g[j]
+            for j in range(k)
+        )
+        g.append((nk - subtract) / q0)
+    return g
+
+
+def _compute_repeated_residues(
+    num: Poly,
+    den: Poly,
+    r: Fraction,
+    m: int,
+) -> list[Fraction] | None:
+    """Compute Laurent coefficients [A_m, A_{m-1}, …, A_1] for a repeated pole.
+
+    For F(s) = N(s)/D(s) with D having a zero of order exactly ``m`` at
+    ``r``, the partial-fraction expansion near s=r is::
+
+        F(s) = A_m/(s-r)^m + A_{m-1}/(s-r)^{m-1} + … + A_1/(s-r) + …
+
+    Algorithm:
+
+    1. Shift: let t = s − r and compute N_t(t) = N(r+t), D_t(t) = D(r+t).
+    2. Since r has multiplicity m in D, D_t = t^m · Q_other(t) where
+       Q_other(0) ≠ 0.  The first m coefficients of D_t must be zero.
+    3. H(t) = N_t(t) / Q_other(t) is analytic at t=0.  Its first m
+       Taylor coefficients are [A_m, A_{m-1}, …, A_1] in that order.
+    4. Compute via ``_power_series_coeffs``.
+
+    Returns ``None`` if the claimed multiplicity is incorrect.
+    """
+    N_t = _poly_shift(num, r)
+    D_t = _poly_shift(den, r)
+
+    # Verify the first m coefficients of D_t are zero
+    for i in range(m):
+        val = D_t[i] if i < len(D_t) else Fraction(0)
+        if val != 0:
+            return None  # multiplicity claim is wrong
+
+    # Q_other: drop the leading m zero coefficients of D_t
+    if len(D_t) <= m:
+        return None  # degenerate (denominator is exactly t^m)
+    Q_other = tuple(D_t[m:])
+    if Q_other[0] == 0:
+        return None  # higher multiplicity than claimed
+
+    return _power_series_coeffs(N_t, Q_other, m)
+
+
+def _ilt_poly_term(
+    coeff: Fraction, degree: int, t_sym: IRSymbol
+) -> IRNode | None:
+    """L⁻¹{coeff · sⁿ}.
+
+    The inverse Laplace transform of sⁿ is the n-th distributional
+    derivative of the Dirac delta, δ^{(n)}(t).  We only handle:
+
+    - degree 0: L⁻¹{coeff} = coeff · δ(t)
+
+    For degree ≥ 1 we return ``None`` (the caller will propagate it as
+    unevaluated), since δ-derivatives are rarely needed in practice.
+    """
+    if degree == 0:
+        delta = IRApply(DIRAC_DELTA, (t_sym,))
+        if coeff == 1:
+            return delta
+        return IRApply(MUL, (_frac_to_ir(coeff), delta))
+    # δ^{(n)}(t) for n ≥ 1 not supported yet
+    return None
+
+
+def _ilt_irreducible_quad(
+    lin_num: Poly,
+    quad_den: Poly,
+    t_sym: IRSymbol,
+) -> list[IRNode] | None:
+    """Invert (A·s + B) / (s² + b·s + c)  with discriminant b²−4c < 0.
+
+    Completes the square: s² + b·s + c = (s + α)² + β²
+    where α = b/2 and β = √(c − α²).
+
+    Decomposition::
+
+        (A·s + B) / ((s+α)²+β²)
+        = A·(s+α)/((s+α)²+β²)  +  (B−A·α)/β · β/((s+α)²+β²)
+
+    Inverse transform::
+
+        A·exp(−αt)·cos(βt)  +  (B−Aα)/β · exp(−αt)·sin(βt)
+
+    When β is an irrational rational (non-perfect-square numerator/denominator),
+    a ``Sqrt(β²)`` IR node is used so the output is still exact.
+
+    Returns a list of IR term nodes (may be empty if all coefficients are
+    zero), or ``None`` if the quadratic is not irreducible.
+    """
+    if _poly_degree(quad_den) != 2:
+        return None
+
+    # Make the denominator monic: divide numerator and denominator by the
+    # leading coefficient so we have s² + b·s + c form.
+    leading = quad_den[2]
+    if leading == 0:
+        return None
+    if leading != 1:
+        quad_den = _poly_scale(quad_den, Fraction(1) / leading)
+        lin_num = _poly_scale(lin_num, Fraction(1) / leading)
+
+    c: Fraction = quad_den[0]
+    b: Fraction = quad_den[1]
+    # quad_den[2] == 1 after normalisation
+
+    # Discriminant check: b² − 4c < 0 (complex conjugate poles)
+    disc = b * b - 4 * c
+    if disc >= 0:
+        return None  # Real roots — not an irreducible quadratic
+
+    # Extract A, B from linear numerator (A*s + B, ascending order B, A)
+    B: Fraction = lin_num[0] if len(lin_num) > 0 else Fraction(0)
+    A: Fraction = lin_num[1] if len(lin_num) > 1 else Fraction(0)
+
+    # Complete the square: α = b/2, β² = c − α²
+    alpha: Fraction = b / 2
+    beta_sq: Fraction = c - alpha * alpha
+
+    if beta_sq <= 0:
+        return None
+
+    # Try exact rational β first; fall back to Sqrt IR node
+    beta_rat = _rational_sqrt(beta_sq)
+    beta_ir: IRNode
+    if beta_rat is not None:
+        beta_ir = _frac_to_ir(beta_rat)
+        beta_frac: Fraction | None = beta_rat
+    else:
+        # β is irrational — use Sqrt(β²) as an IR node
+        beta_ir = IRApply(SQRT, (_frac_to_ir(beta_sq),))
+        beta_frac = None  # signals we cannot do Fraction arithmetic for beta
+
+    # neg_alpha for the exponent: exp(−α·t) = exp(neg_alpha · t)
+    neg_alpha: Fraction = -alpha
+
+    def _make_exp_trig(coeff_ir: IRNode, is_cos: bool) -> IRNode:
+        """Build coeff · exp(−α·t) · trig(β·t)."""
+        # trig argument: β · t
+        if beta_rat == 1:
+            trig_arg: IRNode = t_sym
+        else:
+            trig_arg = IRApply(MUL, (beta_ir, t_sym))
+
+        trig_fn = COS if is_cos else SIN
+        trig_term = IRApply(trig_fn, (trig_arg,))
+
+        # exp factor: exp(−α·t)  [omitted when α = 0]
+        if alpha == 0:
+            oscillator: IRNode = trig_term
+        else:
+            exp_arg: IRNode
+            if neg_alpha == 1:
+                exp_arg = t_sym
+            elif neg_alpha == -1:
+                exp_arg = IRApply(NEG, (t_sym,))
+            else:
+                exp_arg = IRApply(MUL, (_frac_to_ir(neg_alpha), t_sym))
+            oscillator = IRApply(MUL, (IRApply(EXP, (exp_arg,)), trig_term))
+
+        # Scale by coefficient
+        if isinstance(coeff_ir, IRInteger) and coeff_ir.value == 1:
+            return oscillator
+        if isinstance(coeff_ir, IRInteger) and coeff_ir.value == 0:
+            raise ValueError("zero coeff should be filtered before calling")
+        return IRApply(MUL, (coeff_ir, oscillator))
+
+    terms: list[IRNode] = []
+
+    # Term 1: A · exp(−α·t) · cos(β·t)
+    if A != 0:
+        terms.append(_make_exp_trig(_frac_to_ir(A), is_cos=True))
+
+    # Term 2: (B − A·α) / β · exp(−α·t) · sin(β·t)
+    # Coefficient is (B − A·α) / β
+    baa: Fraction = B - A * alpha  # B − A·α (exact Fraction)
+    if baa != 0:
+        if beta_frac is not None:
+            # Exact rational: divide baa / beta
+            coeff2 = baa / beta_frac
+            coeff2_ir: IRNode = _frac_to_ir(coeff2)
+        else:
+            # Irrational β: build Div(baa, Sqrt(beta_sq))
+            coeff2_ir = IRApply(DIV, (_frac_to_ir(baa), beta_ir))
+        terms.append(_make_exp_trig(coeff2_ir, is_cos=False))
+
+    return terms
+
+
+# ---------------------------------------------------------------------------
 # Main inverse transform routine
 # ---------------------------------------------------------------------------
 
@@ -891,78 +1147,169 @@ def _poly_scale(p: Poly, c: Fraction) -> Poly:
 
 
 # ---------------------------------------------------------------------------
-# Partial-fraction decomposition
+# Partial-fraction decomposition (extended)
 # ---------------------------------------------------------------------------
-
-
-def _partial_fractions_simple_poles(
-    num: Poly, den: Poly, roots: list[Fraction]
-) -> list[tuple[Fraction, Fraction, int]] | None:
-    """Compute partial-fraction residues for a proper rational function.
-
-    All poles must be simple (distinct roots). Returns a list of
-    (A_i, r_i, 1) tuples meaning A_i / (s - r_i).
-
-    Uses the residue formula:  A_i = P(r_i) / Q'(r_i).
-    """
-    den_deriv = _poly_deriv(den)
-    terms: list[tuple[Fraction, Fraction, int]] = []
-    for r in roots:
-        p_at_r = _poly_evaluate(num, r)
-        qd_at_r = _poly_evaluate(den_deriv, r)
-        if qd_at_r == 0:
-            return None  # repeated root
-        A = p_at_r / qd_at_r
-        terms.append((A, r, 1))
-    return terms
 
 
 def _ilt_via_partial_fractions(
     F_ir: IRNode, s_sym: IRSymbol, t_sym: IRSymbol
 ) -> IRNode | None:
-    """Attempt ILT via partial-fraction decomposition.
+    """Attempt ILT via partial-fraction decomposition (full engine).
 
-    Returns the sum of inverse transforms, or None if decomposition fails.
+    Handles:
+
+    - **Improper fractions**: polynomial long division extracts the
+      polynomial part; each constant term yields a DiracDelta(t).
+    - **Repeated rational poles**: Laurent expansion via formal power
+      series (no symbolic differentiation needed).
+    - **Irreducible quadratic factors**: complex-conjugate poles produce
+      exp(−αt)·sin/cos(βt) pairs via completing the square.
+
+    Returns the IR for f(t), or ``None`` if decomposition fails.
     """
     rational = _ir_to_rational(F_ir, s_sym)
     if rational is None:
         return None
 
-    num, den = rational
-    num = _poly_normalize(num)
-    den = _poly_normalize(den)
+    num, den = _poly_normalize(rational[0]), _poly_normalize(rational[1])
 
-    # Must be a proper fraction
+    # ── Step 1: Handle improper fractions via polynomial long division ─────────
+    # If deg(N) ≥ deg(D), extract a polynomial quotient P(s).
+    # L⁻¹{P(s)} = P[0]·δ(t) + P[1]·δ'(t) + …  (we handle P[0] only).
+    poly_part: Poly = _ZERO_POLY
     if _poly_degree(num) >= _poly_degree(den):
-        return None
+        poly_part, num = _poly_divmod(num, den)
+        poly_part = _poly_normalize(poly_part)
+        num = _poly_normalize(num)
 
-    # Find all rational roots of the denominator
+    # ── Step 2: Find all rational roots of denominator (with multiplicity) ─────
     roots = _extract_all_rational_roots(den)
 
-    # Roots must account for ALL factors (i.e., we need exactly deg(den) roots)
-    if len(roots) != _poly_degree(den):
-        return None  # Irreducible factors remain
+    # Build Q_rat = Π(s − r_i)^{m_i} from the rational roots
+    Q_rat: Poly = _ONE_POLY
+    for r in roots:
+        Q_rat = _poly_mul(Q_rat, (-r, Fraction(1)))
+    Q_rat = _poly_normalize(Q_rat)
 
-    # Compute residues
-    terms = _partial_fractions_simple_poles(num, den, roots)
-    if terms is None:
-        return None
+    # Irreducible factor: Q_irred = D / Q_rat
+    Q_irred, rem = _poly_divmod(den, Q_rat)
+    Q_irred = _poly_normalize(Q_irred)
 
-    # Build inverse transform for each term
+    if not _is_zero_poly(rem):
+        return None  # Division was not exact (should not happen)
+
+    irred_deg = _poly_degree(Q_irred)
+
+    if irred_deg > 2:
+        return None  # Cannot handle irreducible cubic or higher factors yet
+
+    # ── Step 3: Collect IR terms ───────────────────────────────────────────────
     ir_terms: list[IRNode] = []
-    for A, r, mult in terms:
-        if mult == 1:
+
+    # Polynomial part → DiracDelta terms
+    for deg, coeff in enumerate(poly_part):
+        if coeff == 0:
+            continue
+        pterm = _ilt_poly_term(coeff, deg, t_sym)
+        if pterm is None:
+            return None  # DiracDelta derivative not supported
+        ir_terms.append(pterm)
+
+    # ── Step 4: Rational poles ─────────────────────────────────────────────────
+    # Group roots by value and count multiplicity
+    distinct_roots: dict[Fraction, int] = {}
+    for r in roots:
+        distinct_roots[r] = distinct_roots.get(r, 0) + 1
+
+    # Store residues for reuse in the quadratic-numerator step below
+    # residues_map[r] = list of [A_m, A_{m-1}, …, A_1] for root r
+    residues_map: dict[Fraction, list[Fraction]] = {}
+
+    for r, m in distinct_roots.items():
+        linear_pow_m: Poly = _poly_pow((-r, Fraction(1)), m)
+        Q_rat_no_rm, _ = _poly_divmod(Q_rat, linear_pow_m)
+        Q_rat_no_rm = _poly_normalize(Q_rat_no_rm)
+        # Q_other = (Q_rat / (s−r)^m) · Q_irred — the non-(s−r) part of D
+        Q_other = _poly_normalize(_poly_mul(Q_rat_no_rm, Q_irred))
+
+        if m == 1:
+            q_other_r = _poly_evaluate(Q_other, r)
+            if q_other_r == 0:
+                return None  # Degenerate (should not happen with correct roots)
+            A = _poly_evaluate(num, r) / q_other_r
+            residues_map[r] = [A]
             ir_terms.append(_ilt_simple_pole(A, r, t_sym))
         else:
-            ir_terms.append(_ilt_repeated_pole(A, r, mult, t_sym))
+            residues = _compute_repeated_residues(num, den, r, m)
+            if residues is None:
+                return None
+            residues_map[r] = residues
+            for k, A in enumerate(residues):
+                if A == 0:
+                    continue
+                pole_order = m - k  # m, m−1, …, 1
+                if pole_order == 1:
+                    ir_terms.append(_ilt_simple_pole(A, r, t_sym))
+                else:
+                    ir_terms.append(_ilt_repeated_pole(A, r, pole_order, t_sym))
 
+    # ── Step 5: Irreducible quadratic factor ───────────────────────────────────
+    if irred_deg == 2:
+        # Find the linear numerator (A·s + B) for the term (A·s+B)/Q_irred.
+        #
+        # The partial-fraction identity (multiplied out by D = Q_rat·Q_irred)
+        # is:
+        #
+        #   N(s) = [rational pole contributions] + (A·s+B)·Q_rat(s)
+        #
+        # "Rational pole contribution" of root r with multiplicity m at pole
+        # order k is:  A_{m−k+1} · D(s)/(s−r)^k
+        #            = A_{m−k+1} · Q_irred(s) · Q_rat(s)/(s−r)^k
+        #
+        # Summing all rational contributions in polynomial form:
+        #   rat_poly = Q_irred · Σ_{r,k} A_k · (Q_rat/(s−r)^k)
+        #
+        # Then:
+        #   (A·s+B) = [N − rat_poly] / Q_rat         (exact polynomial division)
+
+        rat_poly: Poly = _ZERO_POLY
+        for r, m in distinct_roots.items():
+            residues = residues_map[r]
+            for k_idx, A in enumerate(residues):
+                if A == 0:
+                    continue
+                pole_order = m - k_idx          # order of this partial-fraction term
+                linear_pow_k: Poly = _poly_pow((-r, Fraction(1)), pole_order)
+                Q_rat_div_k, _ = _poly_divmod(Q_rat, linear_pow_k)
+                Q_rat_div_k = _poly_normalize(Q_rat_div_k)
+                contrib = _poly_scale(
+                    _poly_mul(Q_irred, Q_rat_div_k), A
+                )
+                rat_poly = _poly_add(rat_poly, contrib)
+
+        # irred_times_qrat = N − rat_poly  should be exactly divisible by Q_rat
+        irred_times_qrat = _poly_normalize(
+            _poly_add(num, _poly_neg(rat_poly))
+        )
+        lin_num, rem2 = _poly_divmod(irred_times_qrat, Q_rat)
+        lin_num = _poly_normalize(lin_num)
+
+        if not _is_zero_poly(rem2):
+            return None  # Numerator computation failed (rounding / structure)
+
+        # Invert (A·s + B) / Q_irred(s)
+        irred_terms = _ilt_irreducible_quad(lin_num, Q_irred, t_sym)
+        if irred_terms is None:
+            return None
+        ir_terms.extend(irred_terms)
+
+    # ── Step 6: Assemble result ────────────────────────────────────────────────
     if not ir_terms:
         return IRInteger(0)
     if len(ir_terms) == 1:
         return ir_terms[0]
 
-    # Sum all terms
-    result = ir_terms[0]
+    result: IRNode = ir_terms[0]
     for term in ir_terms[1:]:
         result = IRApply(ADD, (result, term))
     return result

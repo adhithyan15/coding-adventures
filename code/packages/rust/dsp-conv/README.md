@@ -1,19 +1,20 @@
 # dsp-conv
 
-Scalar reference 1-D and 2-D convolution for the DSP layer.
+Scalar reference 1-D and 2-D convolution + image filter
+design helpers for the DSP layer.
 
-As of **0.2.0 (DSP04 Phase 3)** this crate ships:
+As of **0.3.0 (DSP04 Phase 4+5)** this crate ships:
 
 - **1-D** (`conv1d`) — same-size signal convolution.
-- **2-D** (`conv2d`) — same-size image convolution on
-  row-major `[H, W]` real `f32` buffers.
+- **2-D** (`conv2d`) — direct 2-D convolution on `[H, W]`.
+- **2-D separable** (`sep_conv2d`) — row-then-column fast
+  path, `O(H·W·(KH+KW))` instead of `O(H·W·KH·KW)`.
+- **Image filter design** — Gaussian blur, box blur,
+  Sobel x/y, Laplacian, sharpen.  The canonical OpenCV /
+  scipy.ndimage primitives.
 
-Complements `dsp-filters::fir` (which produces the full
-`N + K - 1` linear-convolution output) by providing the
-**same-size** output that image processing and filter chains
-usually want, plus explicit control over the boundary
-extension at the edges (`Zero` / `Replicate` / `Reflect` /
-`Wrap`).
+All four boundary modes (`Zero`, `Replicate`, `Reflect`,
+`Wrap`) are supported throughout.
 
 ```rust
 use dsp_conv::{conv1d, BoundaryMode};
@@ -80,9 +81,8 @@ pub enum ConvError {
 | ------ | ---------------------------------------------------- | ------ |
 | 0      | Spec (`code/specs/DSP04-convolution.md`)             | landed |
 | 1+2    | Crate skeleton + scalar `conv1d` with 4 boundary modes | landed (0.1.0) |
-| **3**  | **Scalar `conv2d` for row-major `[H, W]` images**    | **this PR (0.2.0)** |
-| 4      | `sep_conv2d` for separable kernels                   | pending |
-| 5      | Image filter design helpers (Gaussian / Sobel / box / Laplacian / sharpen) | pending |
+| 3      | Scalar `conv2d` for row-major `[H, W]` images        | landed (0.2.0) |
+| **4+5** | **`sep_conv2d` + image filter design helpers (Gaussian / Sobel / etc)** | **this PR (0.3.0)** |
 | 6      | Matrix-ir-lowered `conv1d` / `conv2d`                | pending |
 
 ## 2-D conv example (Phase 3)
