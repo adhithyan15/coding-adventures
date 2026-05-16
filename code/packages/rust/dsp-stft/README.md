@@ -1,7 +1,13 @@
 # dsp-stft
 
-**DSP05 Phase 1+2** — scalar reference Short-Time Fourier
-Transform (STFT) for the DSP layer.
+Scalar reference Short-Time Fourier Transform (STFT) for the
+DSP layer.  As of **0.2.0 (DSP05 Phase 3+4)** the crate ships
+the full analysis/synthesis loop plus magnitude/log helpers:
+
+- **`stft`** — forward (sliding-window FFT).
+- **`istft`** — inverse via overlap-add reconstruction (COLA).
+- **`spectrogram`** — `|STFT|²` (magnitude squared).
+- **`log_spectrogram`** — `log(|STFT|² + ε)`.
 
 The STFT is the workhorse primitive for time-frequency
 analysis of audio, speech, and music.  Plain DFT collapses a
