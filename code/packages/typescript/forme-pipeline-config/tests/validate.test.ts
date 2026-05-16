@@ -434,6 +434,76 @@ describe("validateConfig — outputs & multiple terminals", () => {
 
 // ─── Multi-error aggregation ──────────────────────────────────────────────
 
+describe("validateConfig — JSON Schema validation of stage configs", () => {
+  function schemaStage() {
+    return makeStage("schema-stage", Kinds.Void, Kinds.DeployArtifact, {
+      configSchema: {
+        type: "object",
+        required: ["glob"],
+        properties: {
+          glob: { type: "string" },
+          root: { type: "string" },
+        },
+      },
+    });
+  }
+
+  it("accepts a config that satisfies the schema", () => {
+    expect(() => validateConfig(config([{
+      stage: schemaStage(),
+      config: { glob: "**/*.md", root: "/abs" },
+    }]))).not.toThrow();
+  });
+
+  it("rejects a config missing a required property", () => {
+    try {
+      validateConfig(config([{
+        stage: schemaStage(),
+        config: { root: "/abs" },
+      }]));
+      expect.fail("should have thrown");
+    } catch (e) {
+      const err = e as ConfigError;
+      const v = err.errors.filter(x => x.code === CONFIG_ERROR_CODES.CONFIG_SCHEMA_VIOLATION);
+      expect(v.length).toBeGreaterThan(0);
+      expect(v[0]!.path).toMatch(/stages\[0\]\.config/);
+      expect(v[0]!.message).toMatch(/required.*missing/);
+    }
+  });
+
+  it("rejects a config with wrong-typed property", () => {
+    try {
+      validateConfig(config([{
+        stage: schemaStage(),
+        config: { glob: 42 },
+      }]));
+      expect.fail("should have thrown");
+    } catch (e) {
+      const err = e as ConfigError;
+      const v = err.errors.filter(x => x.code === CONFIG_ERROR_CODES.CONFIG_SCHEMA_VIOLATION);
+      expect(v.length).toBeGreaterThan(0);
+      expect(v[0]!.message).toMatch(/expected type string/);
+    }
+  });
+
+  it("still surfaces CONFIG_REQUIRED when configSchema is non-null but no config", () => {
+    try {
+      validateConfig(config([{ stage: schemaStage() }]));
+      expect.fail("should have thrown");
+    } catch (e) {
+      const err = e as ConfigError;
+      expect(err.errors.some(x => x.code === CONFIG_ERROR_CODES.CONFIG_REQUIRED)).toBe(true);
+    }
+  });
+
+  it("doesn't validate against schema when configSchema is null", () => {
+    expect(() => validateConfig(config([{
+      stage: makeStage("no-schema", Kinds.Void, Kinds.DeployArtifact, { configSchema: null }),
+      config: { anything: "goes" },
+    }]))).not.toThrow();
+  });
+});
+
 describe("validateConfig — collects all errors in one pass", () => {
   it("multiple distinct violations all surface together", () => {
     try {

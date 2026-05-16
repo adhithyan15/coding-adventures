@@ -20,6 +20,7 @@ export { buildPipeline } from "./build-pipeline.js";
 export { runOnce } from "./run.js";
 export { buildDag } from "./dag.js";
 export { areKindsCompatible } from "./typecheck.js";
+export { REPRO_BUILD_FROZEN_TIMESTAMP_MS } from "./scheduler.js";
 
 export type {
   Orchestrator,
