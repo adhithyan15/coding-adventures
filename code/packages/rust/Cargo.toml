@@ -99,6 +99,7 @@ members = [
     "dsp-complex",
     "dsp-dct",
     "dsp-fft",
+    "dsp-filters",
     "dot-lexer",
     "dot-parser",
     "mermaid-lexer",
