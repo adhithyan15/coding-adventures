@@ -1,5 +1,105 @@
 # Changelog — dsp-fft
 
+## 0.7.0 — 2026-05-15
+
+### Added — DSP01 Phase 4c (matrix-ir-lowered Bluestein)
+
+The Bluestein chirp-z algorithm now has a matrix-ir-lowered
+implementation alongside the scalar one.  Non-power-of-two FFTs
+can now run end-to-end on the matrix execution layer, exactly
+like power-of-two FFTs have since Phase 3b.iii.  When
+`matrix-metal` / `matrix-cuda` claim Slice + Concat in their
+`supported_ops` bitsets, *every* `N ≥ 2` lifts onto GPU
+automatically — that's the whole point.
+
+#### New public API
+
+- `pub fn build_bluestein_graph_with_input(signal: &[f32], direction: Direction) -> Result<(Graph, TensorId), FftError>`
+  — emits a `matrix_ir::Graph` that computes Bluestein for any
+  `N ≥ 2`.  Signal embedded as `Const`; chirps + bilateral `b'`
+  precomputed in Rust and embedded as `Const`s too.  Output is
+  `[N, 2]` interleaved complex.
+- `pub fn bluestein_via_runtime(signal: &[f32], direction: Direction) -> Result<Vec<f32>, FftError>`
+  — end-to-end helper.  Builds the graph, plans through
+  `matrix-runtime`, dispatches on `matrix-cpu`, downloads the
+  spectrum.
+
+Both re-exported at the crate root.
+
+#### Graph structure
+
+For a length-`N` input the graph is:
+
+1. Signal as `Const` `[N, 2]` (interleaved complex; real-only
+   callers wrap with zero-imag before calling).
+2. Pre-chirp `Const` `[N, 2]` — `exp(sign · iπ · k² / N)`.
+3. Bilateral `b'` `Const` `[M, 2]` where `M = next_pow2(2N - 1)`.
+4. Complex-multiply signal × pre-chirp = `a`.
+5. Zero-pad `a` from `[N, 2]` to `[M, 2]` via `Concat` with
+   zeros.
+6. **Length-`M` FFT** of `a_padded` → `A`.  Composed in-place
+   via the new `radix2::add_radix2_fft_to_builder` helper.
+7. **Length-`M` FFT** of `b'` → `B`.  Same helper, same builder.
+8. Elementwise complex-multiply `A × B` = `C`.
+9. **Length-`M` inverse FFT** of `C` → `c`.  The radix-2 inverse
+   already divides by `M`, which is what the linear-convolution
+   identity wants.
+10. `Slice` first `N` rows of `c`.
+11. Complex-multiply by post-chirp (reuses the pre-chirp Const).
+12. For inverse direction, multiply by `1/N` (the backward
+    normalisation factor; the intermediate `1/M` from step 9 is
+    already applied).
+
+Three full length-`M` FFT subgraphs are spliced into a single
+graph through the new `add_radix2_fft_to_builder(builder,
+input_tensor, n, direction)` helper.  No `unsafe`, no FFI.
+
+#### Refactor — `radix2.rs`
+
+The radix-2 FFT graph code is now factored as:
+
+- `wrap_real_as_complex(builder, real_tensor, n) -> Tensor` —
+  reshape `[N]` to `[N, 1]` and concat a zero imaginary lane.
+- `add_radix2_fft_to_builder(builder, complex_tensor, n, direction) -> Result<Tensor, _>`
+  — appends bit-reverse + butterfly stages + optional `1/N`
+  scaling to an existing builder.
+
+`build_fft_graph` and `build_fft_graph_with_input` are now thin
+wrappers around these two helpers.  No behavior change — all
+prior tests still pass.
+
+`add_radix2_fft_to_builder` is `pub(crate)` so the `bluestein`
+module can splice three FFTs into its convolution graph without
+copy-pasting butterfly code.
+
+#### New unit tests (8)
+
+- `matrix_ir_bluestein_rejects_n1` — N = 1 degenerate case.
+- `matrix_ir_bluestein_rejects_odd_buffer` — error path.
+- `graph_validates_for_small_non_pow2_sizes` — builds + validates
+  the graph for N ∈ {2, 3, 5, 6, 7, 8, 12} in both directions
+  and checks the output shape is `[N, 2]`.
+- `bluestein_via_runtime_matches_scalar_n3_forward`
+- `bluestein_via_runtime_matches_scalar_n5_forward`
+- `bluestein_via_runtime_matches_scalar_n7_forward` — prime N.
+- `bluestein_via_runtime_matches_scalar_n6_inverse` — exercises
+  the chirp-sign flip and outer `1/N` scaling.
+- `bluestein_via_runtime_round_trip_n5` — `inv(fwd(x)) ≈ x`
+  end-to-end through the matrix-ir graph.
+
+All 71 unit tests pass.
+
+### What this phase does NOT include
+
+- Wiring the public `fft` / `ifft` to use `bluestein_via_runtime`
+  for non-pow2 inputs.  The matrix-ir Bluestein graph is more
+  expensive than the scalar one when running on CPU (three full
+  length-`M` FFTs of length up to `4N`), so leaving the scalar
+  path as the default until GPU backends actually claim Slice +
+  Concat is the right call.  A follow-up phase will add a
+  routing knob.
+- Phase 5: MX05 specialised emitters (folded twiddles).
+
 ## 0.6.0 — 2026-05-15
 
 ### Added — DSP01 Phase 4b (rfft / irfft, half-spectrum API for real inputs)
