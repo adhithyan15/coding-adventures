@@ -513,12 +513,19 @@ fn parse_element(
             )))
         }
         'L' => {
-            require_fields(fields, 4, "inductor")?;
-            Ok(Element::Inductor(Inductor::new(
+            require_min_fields(fields, 4, "inductor")?;
+            let params = parse_element_params(&fields[4..], "inductor")?;
+            if let Some(param_name) = params.keys().find(|name| name.as_str() != "IC") {
+                return Err(NetlistParseError::new(format!(
+                    "unsupported inductor parameter {param_name:?}"
+                )));
+            }
+            Ok(Element::Inductor(Inductor::with_initial_current(
                 name,
                 &fields[1],
                 &fields[2],
                 parse_value(&fields[3])?,
+                *params.get("IC").unwrap_or(&0.0),
             )))
         }
         'V' => {

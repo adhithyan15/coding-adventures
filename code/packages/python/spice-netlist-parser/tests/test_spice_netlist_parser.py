@@ -72,7 +72,7 @@ Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)
 I1 out 0 1m
 Rload in out 2.2k
 Cload out 0 10p IC=2.5
-L1 out 0 1u
+L1 out 0 1u IC=3m
 G1 out 0 in 0 2m
 .tran 1n 20n
 .dc Vstep 0 1 0.5
@@ -86,6 +86,7 @@ G1 out 0 in 0 2m
     assert isinstance(parsed.circuit.elements[3], Capacitor)
     assert parsed.circuit.elements[3].initial_voltage == 2.5
     assert isinstance(parsed.circuit.elements[4], Inductor)
+    assert parsed.circuit.elements[4].initial_current == 3.0e-3
     assert isinstance(parsed.circuit.elements[5], VCCS)
     assert parsed.analyses == [
         TranAnalysis(t_step=1.0e-9, t_stop=20.0e-9),
@@ -97,6 +98,11 @@ G1 out 0 in 0 2m
 def test_capacitor_rejects_unsupported_element_params() -> None:
     with pytest.raises(NetlistParseError, match="unsupported capacitor parameter"):
         parse_netlist("C1 in 0 1u FOO=1")
+
+
+def test_inductor_rejects_unsupported_element_params() -> None:
+    with pytest.raises(NetlistParseError, match="unsupported inductor parameter"):
+        parse_netlist("L1 in 0 1u FOO=1")
 
 
 def test_parse_tf_analysis_card_and_run_transfer_function() -> None:

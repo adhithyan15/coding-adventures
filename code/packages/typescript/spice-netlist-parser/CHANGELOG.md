@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Parse capacitor `IC=<voltage>` initial-voltage parameters.
+- Parse inductor `IC=<current>` initial-current parameters.
 - Parse independent-source `AC <magnitude> [phase]` specs, including combined
   `DC <bias> AC <magnitude> [phase]` forms, and pass the AC phasor through to
   TypeScript SPICE engine AC analysis while preserving DC bias.

@@ -13,7 +13,7 @@ import {
   currentSourceWithWaveform,
   diode,
   dcOp,
-  inductor,
+  inductorWithInitialCurrent,
   mosfet,
   resistor,
   vccs,
@@ -420,8 +420,22 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
     );
   }
   if (prefix === "L") {
-    requireFields(fields, 4, "inductor");
-    return inductor(name, fields[1], fields[2], parseValue(fields[3]));
+    requireMinFields(fields, 4, "inductor");
+    const params = parseElementParams(fields.slice(4), "inductor");
+    for (const paramName of params.keys()) {
+      if (paramName !== "IC") {
+        throw new NetlistParseError(
+          `unsupported inductor parameter ${JSON.stringify(paramName)}`,
+        );
+      }
+    }
+    return inductorWithInitialCurrent(
+      name,
+      fields[1],
+      fields[2],
+      parseValue(fields[3]),
+      params.get("IC") ?? 0.0,
+    );
   }
   if (prefix === "V") {
     requireMinFields(fields, 4, "voltage source");

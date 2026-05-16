@@ -313,8 +313,20 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             initial_voltage=params.get("IC", 0.0),
         )
     if prefix == "L":
-        _require_fields(fields, 4, "inductor")
-        return Inductor(name, fields[1], fields[2], parse_value(fields[3]))
+        _require_min_fields(fields, 4, "inductor")
+        params = _parse_element_params(fields[4:], "inductor")
+        unsupported = set(params) - {"IC"}
+        if unsupported:
+            raise NetlistParseError(
+                f"unsupported inductor parameter {sorted(unsupported)[0]!r}"
+            )
+        return Inductor(
+            name,
+            fields[1],
+            fields[2],
+            parse_value(fields[3]),
+            initial_current=params.get("IC", 0.0),
+        )
     if prefix == "V":
         _require_min_fields(fields, 4, "voltage source")
         source = _parse_source_value(fields[3:])

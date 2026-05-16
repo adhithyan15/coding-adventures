@@ -35,7 +35,7 @@ Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)
 I1 out 0 1m
 Rload in out 2.2k
 Cload out 0 10p IC=2.5
-L1 out 0 1u
+L1 out 0 1u IC=3m
 G1 out 0 in 0 2m
 .tran 1n 20n
 .dc Vstep 0 1 0.5
@@ -53,6 +53,7 @@ G1 out 0 in 0 2m
     ]);
     expect(elements[0]).toMatchObject({ kind: "voltage-source", waveform: expect.any(Object) });
     expect(elements[3]).toMatchObject({ kind: "capacitor", initialVoltage: 2.5 });
+    expect(elements[4]).toMatchObject({ kind: "inductor", initialCurrent: 3.0e-3 });
     expect(parsed.analyses).toEqual([
       { kind: "tran", timeStep: 1.0e-9, stopTime: 20.0e-9 },
       { kind: "dc", sourceName: "Vstep", start: 0.0, stop: 1.0, step: 0.5 },
@@ -63,6 +64,12 @@ G1 out 0 in 0 2m
   it("rejects unsupported capacitor element parameters", () => {
     expect(() => parseNetlist("C1 in 0 1u FOO=1")).toThrow(
       /unsupported capacitor parameter/,
+    );
+  });
+
+  it("rejects unsupported inductor element parameters", () => {
+    expect(() => parseNetlist("L1 in 0 1u FOO=1")).toThrow(
+      /unsupported inductor parameter/,
     );
   });
 

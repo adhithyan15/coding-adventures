@@ -31,7 +31,7 @@ print(result.converged)            # True
 |-------|-------|-------------|
 | `Resistor` | R | Ohmic resistor |
 | `Capacitor` | C | Linear capacitor (with optional initial voltage) |
-| `Inductor` | L | Linear inductor |
+| `Inductor` | L | Linear inductor (with optional initial current) |
 | `VoltageSource` | V | Independent voltage source |
 | `CurrentSource` | I | Independent current source |
 | `Diode` | D | Shockley diode model |

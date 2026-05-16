@@ -275,6 +275,7 @@ class Inductor:
     n_plus: str
     n_minus: str
     inductance: float  # henries
+    initial_current: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)

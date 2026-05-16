@@ -492,6 +492,19 @@ def test_transient_inductor_starts_at_zero_current():
     assert v0 >= 0.0
 
 
+def test_transient_inductor_respects_initial_current():
+    c = Circuit()
+    c.add(Resistor("R1", "out", "0", 1000.0))
+    c.add(Inductor("L1", "out", "0", 1.0, initial_current=1.0e-3))
+
+    result = transient(c, t_stop=2.0e-3, t_step=1.0e-3, method="euler")
+
+    assert result.converged
+    assert isclose(result.points[0].node_voltages["out"], -0.5, abs_tol=1e-9)
+    assert isclose(result.points[1].node_voltages["out"], -0.5, abs_tol=1e-9)
+    assert isclose(result.points[2].node_voltages["out"], -0.25, abs_tol=1e-9)
+
+
 # ---- Transient: TransientResult metadata ----
 
 
