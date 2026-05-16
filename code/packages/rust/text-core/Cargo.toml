@@ -1,0 +1,9 @@
+[package]
+name = "text-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust text manipulation core — Excel/Lotus/R string functions for any spreadsheet or text-processing frontend."
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }
