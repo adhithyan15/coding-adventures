@@ -7,6 +7,7 @@
   TypeScript SPICE engine AC analysis while preserving DC bias.
 - Parse SPICE `.tf V(output_node) input_source` transfer-function analysis
   cards.
+- Parse SPICE `.sens V(output_node)` DC sensitivity analysis cards.
 
 ## 0.1.6
 

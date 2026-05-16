@@ -1,7 +1,7 @@
-use spice_engine::{ac_sweep, dc_op, tf, BjtPolarity, Element, MosfetType};
+use spice_engine::{ac_sweep, dc_op, sens_dc, tf, BjtPolarity, Element, MosfetType};
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, NetlistParseError, OpAnalysis,
-    TfAnalysis, TranAnalysis,
+    SensAnalysis, TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -141,6 +141,52 @@ R1 in out 1k
     assert!(error
         .to_string()
         .contains(".tf output must be a voltage probe"));
+}
+
+#[test]
+fn parses_sens_dc_sensitivity_analysis_cards() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.sens V(out)
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![Analysis::Sens(SensAnalysis {
+            output_node: "out".to_string(),
+        })]
+    );
+    assert_eq!(
+        parsed.sens_cards(),
+        vec![&SensAnalysis {
+            output_node: "out".to_string(),
+        }]
+    );
+    let card = parsed.sens_cards()[0];
+    let result = sens_dc(&parsed.circuit, &card.output_node).unwrap();
+    assert_close(result.nominal_voltage, 0.5);
+    assert!(result.entry("Vin", "voltage").is_some());
+}
+
+#[test]
+fn rejects_sens_cards_without_voltage_output_probe() {
+    let error = parse_netlist(
+        r#"
+Vin in 0 DC 1
+R1 in out 1k
+.sens out
+"#,
+    )
+    .unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains(".sens output must be a voltage probe"));
 }
 
 #[test]

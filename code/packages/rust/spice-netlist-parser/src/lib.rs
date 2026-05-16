@@ -58,6 +58,11 @@ pub struct TfAnalysis {
     pub input_source: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SensAnalysis {
+    pub output_node: String,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Analysis {
     Op(OpAnalysis),
@@ -65,6 +70,7 @@ pub enum Analysis {
     Dc(DcAnalysis),
     Ac(AcAnalysis),
     Tf(TfAnalysis),
+    Sens(SensAnalysis),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -128,6 +134,16 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Tf(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn sens_cards(&self) -> Vec<&SensAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Sens(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -957,8 +973,14 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
         ".tf" => {
             require_fields(fields, 3, ".tf")?;
             Ok(Analysis::Tf(TfAnalysis {
-                output_node: parse_voltage_probe(&fields[1])?,
+                output_node: parse_voltage_probe(&fields[1], ".tf")?,
                 input_source: fields[2].clone(),
+            }))
+        }
+        ".sens" => {
+            require_fields(fields, 2, ".sens")?;
+            Ok(Analysis::Sens(SensAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".sens")?,
             }))
         }
         _ => Err(NetlistParseError::new(format!(
@@ -968,11 +990,11 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
     }
 }
 
-fn parse_voltage_probe(token: &str) -> Result<String, NetlistParseError> {
+fn parse_voltage_probe(token: &str, directive: &str) -> Result<String, NetlistParseError> {
     let lower = token.to_ascii_lowercase();
     if !lower.starts_with("v(") || !token.ends_with(')') {
         return Err(NetlistParseError::new(format!(
-            ".tf output must be a voltage probe V(node), got {token:?}"
+            "{directive} output must be a voltage probe V(node), got {token:?}"
         )));
     }
     let node = &token[2..token.len() - 1];
@@ -982,7 +1004,7 @@ fn parse_voltage_probe(token: &str) -> Result<String, NetlistParseError> {
         || node.chars().any(char::is_whitespace)
     {
         return Err(NetlistParseError::new(format!(
-            ".tf output must be a voltage probe V(node), got {token:?}"
+            "{directive} output must be a voltage probe V(node), got {token:?}"
         )));
     }
     Ok(node.to_string())

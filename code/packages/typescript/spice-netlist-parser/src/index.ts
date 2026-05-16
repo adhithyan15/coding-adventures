@@ -65,7 +65,18 @@ export interface TfAnalysis {
   readonly inputSource: string;
 }
 
-export type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis;
+export interface SensAnalysis {
+  readonly kind: "sens";
+  readonly outputNode: string;
+}
+
+export type Analysis =
+  | OpAnalysis
+  | TranAnalysis
+  | DcAnalysis
+  | AcAnalysis
+  | TfAnalysis
+  | SensAnalysis;
 
 export interface ModelCard {
   readonly name: string;
@@ -99,6 +110,10 @@ export class ParsedNetlist {
 
   tfCards(): TfAnalysis[] {
     return this.analyses.filter((analysis): analysis is TfAnalysis => analysis.kind === "tf");
+  }
+
+  sensCards(): SensAnalysis[] {
+    return this.analyses.filter((analysis): analysis is SensAnalysis => analysis.kind === "sens");
   }
 }
 
@@ -777,18 +792,25 @@ function parseDirective(fields: readonly string[]): Analysis {
     requireFields(fields, 3, ".tf");
     return {
       kind: "tf",
-      outputNode: parseVoltageProbe(fields[1]),
+      outputNode: parseVoltageProbe(fields[1], ".tf"),
       inputSource: fields[2],
+    };
+  }
+  if (directive === ".sens") {
+    requireFields(fields, 2, ".sens");
+    return {
+      kind: "sens",
+      outputNode: parseVoltageProbe(fields[1], ".sens"),
     };
   }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
 }
 
-function parseVoltageProbe(token: string): string {
+function parseVoltageProbe(token: string, directive: string): string {
   const match = /^v\(([^()\s]+)\)$/i.exec(token);
   if (match === null) {
     throw new NetlistParseError(
-      `.tf output must be a voltage probe V(node), got ${JSON.stringify(token)}`,
+      `${directive} output must be a voltage probe V(node), got ${JSON.stringify(token)}`,
     );
   }
   return match[1];

@@ -28,4 +28,4 @@ elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
 `TNOM` parameters,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
 `.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, `.ac`, and
-`.tf` analysis cards.
+`.tf` and `.sens` analysis cards.
