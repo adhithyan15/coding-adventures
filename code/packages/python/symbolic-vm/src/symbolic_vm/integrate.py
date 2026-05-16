@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–24).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–27).
 
 The handler tries two routes, in order:
 
@@ -916,6 +916,12 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_log_power_product(a, b, x) or _try_log_power_product(b, a, x)
         if result is not None:
             return result
+        # Phase 27: polynomial × sin(log(x)) or cos(log(x)) — closed form via
+        # the substitution u = log(x) which converts the integral to the
+        # standard exp×trig form ∫ e^((k+1)u) · trig(u) du.
+        result = _try_trig_log_product(a, b, x) or _try_trig_log_product(b, a, x)
+        if result is not None:
+            return result
         # Phase 14a: exp(linear) × sinh/cosh(linear) — double-IBP closed form.
         result = _try_exp_hyp(a, b, x) or _try_exp_hyp(b, a, x)
         if result is not None:
@@ -1066,6 +1072,20 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                     IRApply(POW, (x, IRRational(3, 2))),
                 ),
             )
+
+    # --- Phase 27: trig(log(x)) — single-factor case (k = 0) -----------------
+    # ∫ sin(log(x)) dx = x/2 · (sin(log(x)) − cos(log(x)))
+    # ∫ cos(log(x)) dx = x/2 · (sin(log(x)) + cos(log(x)))
+    # Derived from u = log(x): ∫ sin(u)·eᵘ du = eᵘ(sin(u)−cos(u))/2.
+    if len(f.args) == 1 and head in {SIN, COS}:
+        _inner = f.args[0]
+        if (
+            isinstance(_inner, IRApply)
+            and _inner.head == LOG
+            and len(_inner.args) == 1
+            and _inner.args[0] == x
+        ):
+            return _trig_log_integral(head, 0, x)
 
     # --- Phase 3a/3b/3c + Phase 5a + Phase 9 bonus: elementary fn of linear arg ---
     # Generalises the Phase 1 rules above to any a·x + b argument.
@@ -1496,6 +1516,142 @@ def _try_log_power_product(
 
     if not pieces:
         return x  # zero polynomial — shouldn't normally be reached
+
+    result: IRNode = pieces[0]
+    for piece in pieces[1:]:
+        result = IRApply(ADD, (result, piece))
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Phase 27 — trig(log(x)) integration
+# ---------------------------------------------------------------------------
+#
+# **Mathematical foundation.**  For k ≥ 0, the substitution u = log(x)
+# (so x = eᵘ, dx = eᵘ du) converts:
+#
+#     ∫ xᵏ · sin(log(x)) dx  =  ∫ eᵏᵘ · sin(u) · eᵘ du
+#                              =  ∫ e^((k+1)u) · sin(u) du
+#
+# The standard exp×trig formula (Phase 4c) gives:
+#     ∫ e^(αu) sin(u) du = e^(αu) (α sin(u) − cos(u)) / (α² + 1)
+#
+# Setting α = k+1 and back-substituting u = log(x):
+#     ∫ xᵏ sin(log(x)) dx = x^(k+1) · ((k+1) sin(log(x)) − cos(log(x))) / ((k+1)² + 1)
+#
+# Analogously for cosine:
+#     ∫ xᵏ cos(log(x)) dx = x^(k+1) · ((k+1) cos(log(x)) + sin(log(x))) / ((k+1)² + 1)
+#
+# **Verification (k = 0).**
+#   d/dx [ x/2 · (sin(log x) − cos(log x)) ]
+#     = 1/2 (sin(log x) − cos(log x)) + x/2 · (cos(log x)/x + sin(log x)/x)
+#     = 1/2 sin(log x) − 1/2 cos(log x) + 1/2 cos(log x) + 1/2 sin(log x)
+#     = sin(log x)  ✓
+
+
+def _trig_log_integral(trig_head: IRSymbol, k: int, x: IRSymbol) -> IRNode:
+    """Phase 27: closed form of ``∫ x^k · trig(log(x)) dx``.
+
+    Parameters
+    ----------
+    trig_head : IRSymbol
+        Must be ``SIN`` or ``COS``.
+    k : int
+        Non-negative integer power of *x*.
+    x : IRSymbol
+        Integration variable.
+
+    Returns
+    -------
+    IRNode
+        The antiderivative:
+
+        * **sin case**: ``x^(k+1) · ((k+1)·sin(log x) − cos(log x)) / ((k+1)²+1)``
+        * **cos case**: ``x^(k+1) · ((k+1)·cos(log x) + sin(log x)) / ((k+1)²+1)``
+    """
+    kp1 = k + 1                    # k + 1 appears repeatedly
+    denom = kp1 * kp1 + 1          # (k+1)^2 + 1  — always a positive integer
+
+    log_x = IRApply(LOG, (x,))
+    sin_log_x = IRApply(SIN, (log_x,))
+    cos_log_x = IRApply(COS, (log_x,))
+
+    # x^(k+1): x itself for k=0, otherwise POW node.
+    x_pow: IRNode = x if kp1 == 1 else IRApply(POW, (x, IRInteger(kp1)))
+    kp1_ir: IRNode = IRInteger(kp1)
+    denom_ir: IRNode = IRInteger(denom)
+
+    if trig_head == SIN:
+        # Numerator: (k+1)·sin(log x) − cos(log x)
+        numerator = IRApply(SUB, (IRApply(MUL, (kp1_ir, sin_log_x)), cos_log_x))
+    else:
+        # Numerator: (k+1)·cos(log x) + sin(log x)
+        numerator = IRApply(ADD, (IRApply(MUL, (kp1_ir, cos_log_x)), sin_log_x))
+
+    # x^(k+1) · numerator / denom
+    return IRApply(DIV, (IRApply(MUL, (x_pow, numerator)), denom_ir))
+
+
+def _try_trig_log_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 27: ``∫ Q(x) · trig(log(x)) dx`` — term-by-term IBP via substitution.
+
+    Matches when ``transcendental`` is ``Sin(Log(x))`` or ``Cos(Log(x))``
+    (with bare ``x``, not a shifted argument) and ``poly_candidate`` is a
+    polynomial of *x*.
+
+    Each monomial ``cᵢ · xⁱ`` in *Q* contributes
+    ``cᵢ · _trig_log_integral(trig_head, i, x)`` to the result.
+
+    Only ``log(x)`` (not ``log(ax+b)``) is supported here; the general
+    shifted case requires a substitution that changes the integration
+    variable and is left as future work.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    trig_head = transcendental.head
+    if trig_head not in {SIN, COS}:
+        return None
+    if len(transcendental.args) != 1:
+        return None
+    trig_arg = transcendental.args[0]
+    # Require the argument of sin/cos to be exactly Log(x).
+    if not (
+        isinstance(trig_arg, IRApply)
+        and trig_arg.head == LOG
+        and len(trig_arg.args) == 1
+        and trig_arg.args[0] == x
+    ):
+        return None
+
+    # poly_candidate must be a proper polynomial (denominator = 1).
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational function, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+
+    # Sum up the antiderivative for each monomial cᵢ · xⁱ.
+    pieces: list[IRNode] = []
+    for i, coef in enumerate(poly):
+        if coef == Fraction(0):
+            continue
+        term = _trig_log_integral(trig_head, i, x)
+        if coef == Fraction(1):
+            pieces.append(term)
+        elif coef == Fraction(-1):
+            pieces.append(IRApply(NEG, (term,)))
+        else:
+            pieces.append(IRApply(MUL, (_frac_ir(coef), term)))
+
+    if not pieces:
+        return ZERO  # zero polynomial — edge case
 
     result: IRNode = pieces[0]
     for piece in pieces[1:]:

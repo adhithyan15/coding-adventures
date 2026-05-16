@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.57.0 — 2026-05-16
+
+**Phase 27 integration — trig-of-log: `∫ sin(log x) dx`, `∫ cos(log x) dx`,
+and `∫ Q(x)·sin/cos(log x) dx`.**
+
+The substitution u = log(x) converts `∫ x^k · trig(log x) dx` into the
+standard exp×trig form `∫ e^((k+1)u) · trig(u) du` (Phase 4c), yielding:
+
+    ∫ sin(log x) dx = x/2 · (sin(log x) − cos(log x))
+    ∫ cos(log x) dx = x/2 · (sin(log x) + cos(log x))
+
+    ∫ x^k sin(log x) dx = x^(k+1) · ((k+1)·sin(log x) − cos(log x)) / ((k+1)²+1)
+    ∫ x^k cos(log x) dx = x^(k+1) · ((k+1)·cos(log x) + sin(log x)) / ((k+1)²+1)
+
+### Added
+
+- **`_trig_log_integral(trig_head, k, x)`** — closed-form kernel for
+  `∫ x^k · sin/cos(log x) dx` for integer k ≥ 0.  The denominator
+  `(k+1)²+1` is always a positive integer; no division by zero possible.
+
+- **`_try_trig_log_product(transcendental, poly_candidate, x)`** — matches
+  when `transcendental` is `Sin(Log(x))` or `Cos(Log(x))` (bare `x` only;
+  shifted log arguments deferred) and `poly_candidate` is a polynomial of x.
+  Sums `_trig_log_integral` over each monomial.
+
+- **Phase 27 pure-form hook** — recognises `Sin(Log(x))` / `Cos(Log(x))`
+  in the single-function branch of `_integrate`, triggering
+  `_trig_log_integral(head, 0, x)` before the Phase 3 linear-argument scan.
+
+- **Phase 27 MUL hook** — inserted in the MUL product handler directly
+  after Phase 26, trying both orderings of the two factors.
+
+- **13 new tests** in `tests/test_phase27_trig_log.py`:
+  - Pure sin(log(x)) and cos(log(x)): closed-form check + numerical (≤1e-5).
+  - x·sin/cos(log(x)): closed-form check + numerical.
+  - x²·sin/cos(log(x)): numerical (≤1e-4).
+  - (x²+2x+1)·sin(log(x)): structural closed-form check.
+  - Regression: `∫ sin(x) dx = −cos(x)` and `∫ cos(x) dx = sin(x)` still correct.
+
 ## 0.56.0 — 2026-05-16
 
 **Phase 26 integration — log-power IBP reduction: `∫ log(ax+b)^n dx` and
