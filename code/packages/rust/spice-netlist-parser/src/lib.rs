@@ -64,6 +64,15 @@ pub struct SensAnalysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct McAnalysis {
+    pub output_node: String,
+    pub n_trials: usize,
+    pub tolerance: f64,
+    pub distribution: String,
+    pub seed: Option<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum Analysis {
     Op(OpAnalysis),
     Tran(TranAnalysis),
@@ -71,6 +80,7 @@ pub enum Analysis {
     Ac(AcAnalysis),
     Tf(TfAnalysis),
     Sens(SensAnalysis),
+    Mc(McAnalysis),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -144,6 +154,16 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Sens(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn mc_cards(&self) -> Vec<&McAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Mc(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -983,6 +1003,35 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 output_node: parse_voltage_probe(&fields[1], ".sens")?,
             }))
         }
+        ".mc" => {
+            require_min_fields(fields, 3, ".mc")?;
+            require_max_fields(fields, 6, ".mc")?;
+            let distribution = fields
+                .get(4)
+                .map(|field| field.to_ascii_lowercase())
+                .unwrap_or_else(|| "gaussian".to_string());
+            if distribution != "gaussian" && distribution != "uniform" {
+                return Err(NetlistParseError::new(format!(
+                    ".mc distribution must be \"gaussian\" or \"uniform\", got {:?}",
+                    fields[4]
+                )));
+            }
+            Ok(Analysis::Mc(McAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".mc")?,
+                n_trials: parse_value(&fields[2])? as usize,
+                tolerance: if fields.len() >= 4 {
+                    parse_value(&fields[3])?
+                } else {
+                    0.05
+                },
+                distribution,
+                seed: if fields.len() >= 6 {
+                    Some(parse_value(&fields[5])? as u64)
+                } else {
+                    None
+                },
+            }))
+        }
         _ => Err(NetlistParseError::new(format!(
             "unsupported directive {:?}",
             fields[0]
@@ -1085,6 +1134,20 @@ fn require_min_fields(
     if fields.len() < count {
         return Err(NetlistParseError::new(format!(
             "{label} expects at least {count} fields, got {}",
+            fields.len()
+        )));
+    }
+    Ok(())
+}
+
+fn require_max_fields(
+    fields: &[String],
+    count: usize,
+    label: &str,
+) -> Result<(), NetlistParseError> {
+    if fields.len() > count {
+        return Err(NetlistParseError::new(format!(
+            "{label} expects at most {count} fields, got {}",
             fields.len()
         )));
     }

@@ -18,6 +18,7 @@ from spice_engine import (
     VoltageSource,
     ac_sweep,
     dc_op,
+    mc_dc,
     sens_dc,
     tf,
 )
@@ -25,6 +26,7 @@ from spice_engine import (
 from spice_netlist_parser import (
     AcAnalysis,
     DcAnalysis,
+    McAnalysis,
     ModelCard,
     NetlistParseError,
     OpAnalysis,
@@ -146,6 +148,51 @@ def test_sens_analysis_card_rejects_non_voltage_output_probe() -> None:
 Vin in 0 DC 1
 R1 in out 1k
 .sens out
+"""
+        )
+
+
+def test_parse_mc_analysis_card_and_run_monte_carlo() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.mc V(out) 6 0 uniform 7
+"""
+    )
+
+    assert parsed.analyses == [
+        McAnalysis(
+            output_node="out",
+            n_trials=6,
+            tolerance=0.0,
+            distribution="uniform",
+            seed=7,
+        )
+    ]
+    assert parsed.mc_cards() == parsed.analyses
+    card = parsed.mc_cards()[0]
+    result = mc_dc(
+        parsed.circuit,
+        card.output_node,
+        n_trials=card.n_trials,
+        tolerance=card.tolerance,
+        distribution=card.distribution,
+        seed=card.seed,
+    )
+    assert result.n_trials == 6
+    assert isclose(result.mean, 0.5, abs_tol=1e-9)
+    assert isclose(result.std_dev, 0.0, abs_tol=1e-12)
+
+
+def test_mc_analysis_card_rejects_non_voltage_output_probe() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.mc output must be a voltage probe"):
+        parse_netlist(
+            """
+Vin in 0 DC 1
+R1 in out 1k
+.mc out 10
 """
         )
 
