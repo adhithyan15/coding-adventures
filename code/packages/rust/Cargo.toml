@@ -202,6 +202,7 @@ members = [
     "markov-chain",
     "note-frequency",
     "numeric-tower",
+    "math-core",
     "matrix",
     "neural-network",
     "neural-graph-vm",
