@@ -15,16 +15,19 @@
 //! - **Phase 3b.iii** — `fft_via_runtime` plans + dispatches that
 //!   graph through `matrix-runtime` + `matrix-cpu`, downloading the
 //!   spectrum.
-//! - **Phase 3b.iv (this release)** — the public [`fft`] entry
-//!   point routes real-valued power-of-two inputs through
-//!   `fft_via_runtime` instead of the scalar reference.  Complex
-//!   inputs (`complex = true`) and the public [`ifft`] still go
-//!   through the scalar code — the matrix-ir graph builder is
-//!   real-only for now.  The scalar reference stays available as
-//!   [`fft_scalar`] / [`ifft_scalar`] for callers that want it
-//!   directly (it's also the test oracle).
-//! - **Phase 4** — Bluestein for arbitrary lengths, plus
-//!   `rfft` / `irfft`.
+//! - **Phase 3b.iv** — the public [`fft`] entry point routes
+//!   real-valued power-of-two inputs through `fft_via_runtime`
+//!   instead of the scalar reference.
+//! - **Phase 4a (this release)** — scalar Bluestein
+//!   ([`bluestein_scalar`]) handles arbitrary (non-power-of-two)
+//!   lengths.  The public [`fft`] / [`ifft`] now accept any
+//!   `N ≥ 1`; non-pow2 inputs fall through to Bluestein.
+//!   Complex-input transforms also delegate to Bluestein for
+//!   non-pow2 `N`.
+//! - **Phase 4b** — `rfft` / `irfft` (real-input half-spectrum
+//!   API exploiting conjugate symmetry).
+//! - **Phase 4c** — Matrix-ir-lowered Bluestein so non-pow2
+//!   FFTs also lift onto the matrix execution layer.
 //! - **Phase 5** — MX05 specialised emitters (folded twiddles for
 //!   canonical sizes 8…1024).
 //!
@@ -53,7 +56,9 @@
 
 #![warn(rust_2018_idioms)]
 
+pub mod bluestein;
 pub mod radix2;
+pub use bluestein::bluestein_scalar;
 pub use radix2::{build_fft_graph, build_fft_graph_with_input, fft_via_runtime};
 
 use dsp_complex::ComplexTensor;
@@ -107,53 +112,71 @@ pub fn ifft_scalar(spectrum: &[f32]) -> Result<Vec<f32>, FftError> {
 /// Compute the forward 1-D FFT of a real-valued or already-complex
 /// `signal`.
 ///
-/// - If `signal` has length `N` (real input), it's routed through
-///   the matrix-ir-lowered FFT graph via
-///   [`fft_via_runtime`](crate::radix2::fft_via_runtime) — i.e.
-///   the FFT actually runs on the matrix execution layer.  When
-///   `matrix-metal` / `matrix-cuda` claim `Slice` + `Concat` in
-///   their `supported_ops` bitsets, the call lifts to GPU
-///   automatically with no `dsp-fft` change required.
+/// - If `signal` has length `N` (real input):
+///   - **Power-of-two `N ≥ 2`** routes through the matrix-ir-lowered
+///     FFT graph via
+///     [`fft_via_runtime`](crate::radix2::fft_via_runtime) — the
+///     FFT actually runs on the matrix execution layer.  When
+///     `matrix-metal` / `matrix-cuda` claim `Slice` + `Concat` in
+///     their `supported_ops` bitsets, the call lifts to GPU
+///     automatically with no `dsp-fft` change required.
+///   - **Non-power-of-two `N`** (new in Phase 4a) falls back to the
+///     scalar Bluestein algorithm
+///     ([`bluestein_scalar`](crate::bluestein::bluestein_scalar)).
+///     Still CPU-only; Phase 4c will lower it to matrix-ir.
+///   - **`N = 1`** is the identity, handled by the scalar path.
 /// - If `signal` has length `2N` (interleaved complex), pass
-///   `complex: true`.  Complex-input transforms still go through
-///   the scalar reference ([`fft_scalar`]) because the matrix-ir
-///   graph builder is real-only in Phase 3b.iv; a future phase
-///   will add a complex-input graph variant.
+///   `complex: true`.  Power-of-two `N` uses [`fft_scalar`];
+///   non-pow2 `N` (also new in Phase 4a) uses Bluestein.
 ///
 /// Returns a `ComplexTensor` of `N` complex elements.
 ///
-/// **Phase 3b.iv**: real-input path uses the matrix-ir-lowered
-/// graph end-to-end; complex-input path still calls the scalar
-/// oracle.
+/// **Phase 4a**: the public API now accepts arbitrary `N ≥ 1`.
+/// Previously non-power-of-two lengths returned
+/// `FftError::NotPowerOfTwo`.
 pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
     let interleaved = if complex {
-        // Complex input: matrix-ir graph builder doesn't support
-        // complex inputs yet (the `build_fft_graph` real→complex
-        // step always Concats a zero imaginary lane), so fall back
-        // to the scalar oracle.  Length validation flows through
-        // `fft_scalar`.
-        fft_scalar(signal)?
+        // Complex input: route by N parity to either the radix-2
+        // scalar oracle (power-of-two) or Bluestein (anything else).
+        // Both share the interleaved `[re, im]` buffer convention so
+        // we can dispatch with no buffer rewrap.
+        if signal.len() % 2 != 0 {
+            return Err(FftError::InvalidInput(format!(
+                "interleaved complex buffer must have even length; got {}",
+                signal.len()
+            )));
+        }
+        let n = signal.len() / 2;
+        if n.is_power_of_two() && n >= 1 {
+            fft_scalar(signal)?
+        } else {
+            bluestein_scalar(signal, Direction::Forward)?
+        }
     } else if signal.len() < 2 {
-        // The matrix-ir graph builder requires N ≥ 2 (a single
-        // element has no butterfly stages and the Reshape +
-        // Concat plumbing assumes at least one stage).  Fall back
-        // to the scalar oracle so the public API still accepts
-        // the degenerate N = 1 case the way Phase 2 did, and
-        // preserves the exact `FftError` shape Phase 2 produced
-        // for empty input.
+        // Degenerate N < 2 case (empty or single real sample).
+        // The matrix-ir graph builder requires N ≥ 2; fall back to
+        // the scalar oracle so the public API behavior is unchanged
+        // for these edge cases — empty still returns `InvalidInput`,
+        // single-element passes through as the identity.
         let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
         for &x in signal {
             interleaved_real.push(x);
             interleaved_real.push(0.0);
         }
         fft_scalar(&interleaved_real)?
-    } else {
-        // Real input, N ≥ 2: run the matrix-ir-lowered FFT graph
-        // end-to-end through `matrix-runtime` + `matrix-cpu`.
-        // Length validation flows through `fft_via_runtime`
-        // (`build_fft_graph_with_input` rejects non-power-of-two
-        // inputs the same way the scalar path does).
+    } else if signal.len().is_power_of_two() {
+        // Real input, N ≥ 2 power-of-two: matrix-ir-lowered path.
         fft_via_runtime(signal, Direction::Forward)?
+    } else {
+        // Real input, non-power-of-two N: wrap as interleaved
+        // complex with im = 0 then call Bluestein.  No matrix-ir
+        // path yet (Phase 4c).
+        let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
+        for &x in signal {
+            interleaved_real.push(x);
+            interleaved_real.push(0.0);
+        }
+        bluestein_scalar(&interleaved_real, Direction::Forward)?
     };
     Ok(ComplexTensor::from_interleaved(interleaved).expect("fft output has even length"))
 }
@@ -163,13 +186,20 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
 /// output is a complex `ComplexTensor` whose `real()` part is the
 /// recovered signal when the input was real-valued.
 ///
-/// **Phase 3b.iv**: still forwards to [`ifft_scalar`].  The
-/// matrix-ir graph builder's input is `[N]` real and its output
-/// is `[N, 2]` complex; an inverse from `[N, 2]` complex doesn't
-/// fit the same graph and is deferred to a follow-up.  Output
-/// matches the scalar oracle exactly.
+/// Power-of-two `N` runs through [`ifft_scalar`] (still the scalar
+/// oracle — the matrix-ir graph builder for inverse-from-complex
+/// is a future phase); non-power-of-two `N` (new in Phase 4a) runs
+/// through the scalar Bluestein algorithm with
+/// `Direction::Inverse`, applying the same `1/N` backward
+/// normalization.
 pub fn ifft(spectrum: &ComplexTensor) -> Result<ComplexTensor, FftError> {
-    let result = ifft_scalar(spectrum.as_interleaved())?;
+    let interleaved = spectrum.as_interleaved();
+    let n = spectrum.len();
+    let result = if n.is_power_of_two() && n >= 1 {
+        ifft_scalar(interleaved)?
+    } else {
+        bluestein_scalar(interleaved, Direction::Inverse)?
+    };
     Ok(ComplexTensor::from_interleaved(result).expect("ifft output has even length"))
 }
 
@@ -577,12 +607,78 @@ mod tests {
         assert_eq!(via_public.as_interleaved(), via_scalar.as_slice());
     }
 
+    // ── Phase 4a: public API now accepts arbitrary N ≥ 1 via
+    //    Bluestein on the non-power-of-two path.  These tests
+    //    pin that behavior — what used to return
+    //    `FftError::NotPowerOfTwo` now returns a correct spectrum.
+
     #[test]
-    fn public_fft_real_rejects_non_power_of_two() {
-        // Length validation flows through the matrix-ir graph's
-        // `NotPowerOfTwo` check (in `build_fft_graph_with_input`).
+    fn public_fft_real_non_pow2_routes_through_bluestein() {
+        // N = 3: the smallest non-trivial non-pow2.  Previously
+        // this returned NotPowerOfTwo(3); now Bluestein computes
+        // the actual DFT.  Compare against the naive O(N²) DFT.
         let real = vec![1.0f32, 2.0, 3.0];
-        let err = fft(&real, false).unwrap_err();
-        assert_eq!(err, FftError::NotPowerOfTwo(3));
+        let spectrum = fft(&real, false).unwrap();
+        assert_eq!(spectrum.len(), 3);
+        // Compare against naive_dft via the bluestein test
+        // module's reference — we duplicate it here inline.
+        let n = 3;
+        let mut interleaved = vec![0.0f32; 2 * n];
+        for (i, &x) in real.iter().enumerate() {
+            interleaved[2 * i] = x;
+        }
+        for k in 0..n {
+            let mut sr = 0.0f32;
+            let mut si = 0.0f32;
+            for nn in 0..n {
+                let theta =
+                    -2.0 * PI * (k as f32) * (nn as f32) / (n as f32);
+                let (wi, wr) = theta.sin_cos();
+                sr += wr * interleaved[2 * nn] - wi * interleaved[2 * nn + 1];
+                si += wr * interleaved[2 * nn + 1] + wi * interleaved[2 * nn];
+            }
+            let got_re = spectrum.as_interleaved()[2 * k];
+            let got_im = spectrum.as_interleaved()[2 * k + 1];
+            assert!(
+                approx_eq(got_re, sr, 1e-4),
+                "bin {} re: got {}, expected {}",
+                k,
+                got_re,
+                sr
+            );
+            assert!(
+                approx_eq(got_im, si, 1e-4),
+                "bin {} im: got {}, expected {}",
+                k,
+                got_im,
+                si
+            );
+        }
+    }
+
+    #[test]
+    fn public_ifft_round_trip_non_pow2_n5() {
+        // Round-trip through the public API for N = 5 (non-pow2).
+        // Forward goes through Bluestein (since 5 isn't a power
+        // of two), inverse also goes through Bluestein.
+        let real = vec![1.0f32, 2.0, 3.0, 4.0, 5.0];
+        let spectrum = fft(&real, false).unwrap();
+        assert_eq!(spectrum.len(), 5);
+        let recovered = ifft(&spectrum).unwrap();
+        let rec_real = recovered.real();
+        assert_close(&real, &rec_real, 1e-4);
+    }
+
+    #[test]
+    fn public_fft_complex_non_pow2_routes_through_bluestein() {
+        // Complex-input, N = 3 (non-pow2).  Previously returned
+        // NotPowerOfTwo(3) via fft_scalar; now goes through
+        // Bluestein.  We verify by round-trip — the cleanest
+        // check that doesn't require importing the naive DFT.
+        let interleaved = vec![1.0f32, 0.5, 2.0, -0.5, 3.0, 0.25];
+        let spectrum = fft(&interleaved, true).unwrap();
+        assert_eq!(spectrum.len(), 3);
+        let recovered = ifft(&spectrum).unwrap();
+        assert_close(recovered.as_interleaved(), &interleaved, 1e-4);
     }
 }
