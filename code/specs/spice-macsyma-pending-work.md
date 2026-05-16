@@ -139,7 +139,7 @@ Every item below is wired end-to-end: surface syntax → compile → VM → corr
 | Package | Version | What it provides |
 |---|---|---|
 | `symbolic-ir` | latest | `IRSymbol`, `IRInteger`, `IRRational`, `IRFloat`, `IRString`, `IRApply` node types |
-| `symbolic-vm` | 0.55.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi), numeric folding, 100+ handlers |
+| `symbolic-vm` | 0.56.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi, Phase 26 log-power IBP), numeric folding, 100+ handlers |
 | `macsyma-lexer` | 0.1.0 | Grammar-driven tokenizer |
 | `macsyma-parser` | 0.1.0 | Grammar-driven parser |
 | `macsyma-compiler` | 0.9.0 | AST → IR; 60+ MACSYMA identifier mappings in name table |
@@ -324,6 +324,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Elliptic integrals — first-kind foothold | `∫ 1/√(1-k²sin²θ) dθ` | ✅ #3141: returns `EllipticF(θ,k)`; definite 0…π/2 returns `EllipticK(k)` |
 | Elliptic integrals — second kind | `∫ √(1-k²sin²θ) dθ`, `∫₀^(π/2) √(1-k²sin²θ) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
 | Elliptic integrals — third kind | `∫₀^(π/2) 1/((1+n·sin²θ)·√(1-k²sin²θ)) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
+| `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0 |
 | `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features
