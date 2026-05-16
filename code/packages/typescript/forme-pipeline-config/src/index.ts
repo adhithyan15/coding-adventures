@@ -42,5 +42,8 @@ export type { ConfigErrorEntry, ConfigErrorCode } from "./errors.js";
 export { validateConfig } from "./validate.js";
 export type { ResolvedPipelineConfig } from "./validate.js";
 
+export { validateAgainstSchema } from "./json-schema.js";
+export type { SchemaViolation, SchemaValidationResult } from "./json-schema.js";
+
 export { loadTsConfig } from "./load.js";
 export type { LoadTsConfigOptions } from "./load.js";

@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.4.0] — 2026-05-16
+
+### Added — Phase 26: log-power integration via IBP reduction
+
+- `polyLogPowerTerm(k, n, x)` — closed form of `∫ xᵏ · log(x)^n dx` for
+  integer k ≥ 0, n ≥ 1, using the IBP reduction formula:
+  `G_{k,m}(x) = x^(k+1)/(k+1) · log(x)^m − m/(k+1) · G_{k,m-1}(x)`.
+- `tryLogPowerProduct(transcendental, poly, x)` — handles `∫ Q(x) · log(x)^n dx`
+  for integer n ≥ 2 by decomposing Q(x) into monomials and applying
+  `polyLogPowerTerm` term-by-term.
+- `toPolynomialCoeffs(expr, x)` — utility that extracts a `Map<degree, coeff>`
+  polynomial coefficient map from an IR expression; handles constants, `x`,
+  `x^k`, `c·f`, `f·c`, ADD, SUB, NEG.
+- Integration of standalone `log(x)^n` (n ≥ 2) via `polyLogPowerTerm(0, n, x)`.
+
+### Added — Phase 27: trig-of-log integration via u = log(x) substitution
+
+- `trigLogIntegral(trigHead, k, x)` — closed form of `∫ xᵏ · trig(log(x)) dx`
+  via the identity `∫ e^((k+1)u) trig(u) du` (with u = log x):
+  - `∫ xᵏ sin(log x) dx = x^(k+1)·((k+1)sin(log x)−cos(log x))/((k+1)²+1)`
+  - `∫ xᵏ cos(log x) dx = x^(k+1)·((k+1)cos(log x)+sin(log x))/((k+1)²+1)`
+- `tryTrigLogProduct(transcendental, poly, x)` — handles `∫ Q(x)·sin(log(x)) dx`
+  and `∫ Q(x)·cos(log(x)) dx` by decomposing Q(x) and applying `trigLogIntegral`
+  term-by-term.
+- Integration of standalone `sin(log(x))` and `cos(log(x))` (k = 0 case):
+  - `∫ sin(log x) dx = x/2·(sin(log x)−cos(log x))`
+  - `∫ cos(log x) dx = x/2·(sin(log x)+cos(log x))`
+
 ## [0.3.1] — 2026-05-14
 
 **Bug fix: elliptic modulus extraction now handles pre-evaluated numeric `k²`.**

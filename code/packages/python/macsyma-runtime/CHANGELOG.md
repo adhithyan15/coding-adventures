@@ -1,7 +1,5 @@
 # Changelog
 
-## Unreleased
-
 ## 1.26.0 — 2026-05-14
 
 **MACSYMA stress-test parity: limit L'Hôpital, multivariate expand, Taylor for transcendentals,
