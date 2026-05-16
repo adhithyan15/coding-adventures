@@ -138,8 +138,11 @@ export function assertManifestSigned(
   }
   const ok = verifyManifest(manifest, entryFileBytes);
   if (!ok) {
+    // Distinct from SIGNATURE_FIELD_MISSING (block absent) so UI /
+    // logging can tell the routine "unsigned plugin" case apart
+    // from the active-attack "signature was tampered" case.
     throw new ManifestError({
-      code: "SIGNATURE_FIELD_MISSING",
+      code: "SIGNATURE_INVALID",
       message: "signature does not verify against the manifest + entry bytes",
       path: "signature.signature",
     });

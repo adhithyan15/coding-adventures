@@ -329,3 +329,100 @@ describe("validateManifest — rejections (one per FM02 §3.3 rule)", () => {
     expect(RESERVED_KIND_NAMES.has("Bogus")).toBe(false);
   });
 });
+
+describe("validateManifest — security checks", () => {
+  it("rejects FIRST_PARTY_ONLY in capabilities.optional too", () => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      capabilities: {
+        required: [],
+        optional: [{ realm: "system", scope: "shell", reason: "later maybe" }],
+      },
+    };
+    expect(() => validateManifest(m)).toThrowError(/CAPABILITY_FIRST_PARTY_ONLY/);
+  });
+
+  it("FIRST_PARTY_ONLY check considers only (realm, scope), ignoring detail", () => {
+    // `system:shell:anything` is still system:shell — detail does not
+    // grant the plugin license to bypass the gate.  (Detail value
+    // must itself be a valid capability segment — no whitespace.)
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      capabilities: {
+        required: [
+          { realm: "system", scope: "shell", detail: "subcommand", reason: "x" },
+        ],
+        optional: [],
+      },
+    };
+    expect(() => validateManifest(m)).toThrowError(/CAPABILITY_FIRST_PARTY_ONLY/);
+  });
+
+  it("rejects runtime.entry containing NUL byte", () => {
+    const v = valid();
+    const m: Manifest = { ...v, runtime: { kind: "node", entry: "./e\x00.js" } };
+    expect(() => validateManifest(m)).toThrowError(/control characters/);
+  });
+
+  it("rejects runtime.entry with path traversal", () => {
+    const v = valid();
+    const m: Manifest = { ...v, runtime: { kind: "node", entry: "../escape.js" } };
+    expect(() => validateManifest(m)).toThrowError(/traversal/);
+  });
+
+  it("rejects runtime.entry that is absolute POSIX", () => {
+    const v = valid();
+    const m: Manifest = { ...v, runtime: { kind: "node", entry: "/abs/path" } };
+    expect(() => validateManifest(m)).toThrowError(/absolute/);
+  });
+
+  it("rejects runtime.entry that is absolute Windows", () => {
+    const v = valid();
+    const m: Manifest = { ...v, runtime: { kind: "node", entry: "C:\\Windows\\System32\\evil.js" } };
+    expect(() => validateManifest(m)).toThrowError(/absolute/);
+  });
+
+  it("rejects binary runtime.platforms[*] with traversal", () => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      runtime: {
+        kind: "binary",
+        entry: "./fallback",
+        platforms: { "linux-x86_64": "../../etc/passwd" },
+      },
+    };
+    expect(() => validateManifest(m)).toThrowError(/traversal/);
+  });
+
+  it("rejects stage.configSchema with traversal", () => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      contributes: {
+        stages: [{
+          id: "s",
+          consumes: "ContentSource",
+          produces: "ContentNode",
+          configSchema: "../../secret.json",
+        }],
+        kinds: [],
+      },
+    };
+    expect(() => validateManifest(m)).toThrowError(/traversal/);
+  });
+
+  it("rejects kind.schema with NUL byte", () => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      contributes: {
+        stages: [],
+        kinds: [{ name: "ext:k", version: "1.0", schema: "./s\x00.json" }],
+      },
+    };
+    expect(() => validateManifest(m)).toThrowError(/control characters/);
+  });
+});

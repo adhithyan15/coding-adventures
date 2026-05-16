@@ -55,6 +55,7 @@ export const MANIFEST_ERROR_CODES = Object.freeze([
   "RESOURCE_VALUE_INVALID",
   "SIGNATURE_ALGORITHM_INVALID",
   "SIGNATURE_FIELD_MISSING",
+  "SIGNATURE_INVALID",
   "REQUIRED_FIELD_MISSING",
   "FIELD_TYPE_MISMATCH",
   // ─── Templating ───────────────────────────────────────────────────

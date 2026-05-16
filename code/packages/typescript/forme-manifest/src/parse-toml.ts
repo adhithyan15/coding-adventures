@@ -87,12 +87,43 @@ type TomlValue =
   | readonly TomlValue[]
   | { readonly [key: string]: TomlValue };
 
+/**
+ * Keys that, if used as TOML bare keys, would let an attacker walk
+ * a `target[seg]` bracket access into `Object.prototype` (or
+ * `Function.prototype`, etc.) and write to it.  We reject them
+ * outright at the segment-parse layer — every internal table is
+ * also a null-prototype object via `Object.create(null)`, but the
+ * denylist is the cheap belt to the suspenders.
+ *
+ * Security: without this, a hostile manifest containing
+ *
+ *     [__proto__]
+ *     polluted = "yes"
+ *
+ * would resolve `target["__proto__"]` to `Object.prototype` and then
+ * write `Object.prototype.polluted = "yes"`, polluting the host
+ * process's global prototype.  This is exactly the prototype-
+ * pollution attack class — caught in the FM02 §3 security review.
+ */
+const FORBIDDEN_KEY_SEGMENTS = new Set([
+  "__proto__",
+  "constructor",
+  "prototype",
+]);
+
+/** Construct a fresh table with NO prototype chain.  Defence in
+ *  depth against prototype pollution if the segment denylist is
+ *  ever bypassed by future relaxations of the parser. */
+function emptyTable(): Record<string, unknown> {
+  return Object.create(null) as Record<string, unknown>;
+}
+
 class TomlParser {
   private readonly src: string;
   private pos = 0;
   private line = 1;
   private col = 1;
-  private root: Record<string, unknown> = {};
+  private root: Record<string, unknown> = emptyTable();
   /** Currently active table for `key = value` assignments. */
   private current: Record<string, unknown> = this.root;
   /** Path leading to `current`, for diagnostics. */
@@ -190,7 +221,7 @@ class TomlParser {
       this.fail("TOML_DUPLICATE_KEY",
         `cannot redeclare key "${joined}" as array of tables; already has a scalar/table value`);
     }
-    const tbl: Record<string, unknown> = {};
+    const tbl: Record<string, unknown> = emptyTable();
     (arr as unknown[]).push(tbl);
     this.current = tbl;
     this.currentPath = path;
@@ -212,7 +243,7 @@ class TomlParser {
       const seg = keyPath[i]!;
       const next = target[seg];
       if (next === undefined) {
-        const fresh: Record<string, unknown> = {};
+        const fresh: Record<string, unknown> = emptyTable();
         target[seg] = fresh;
         target = fresh;
       } else if (typeof next === "object" && next !== null && !Array.isArray(next)) {
@@ -262,7 +293,16 @@ class TomlParser {
     if (this.pos === start) {
       this.fail("TOML_MALFORMED", `expected a bare key, got ${JSON.stringify(this.peek() ?? "EOF")}`);
     }
-    return this.src.slice(start, this.pos);
+    const key = this.src.slice(start, this.pos);
+    // Security: reject __proto__, constructor, prototype outright.
+    // Combined with `Object.create(null)` for every internal table,
+    // this defeats prototype-pollution attacks via crafted manifest
+    // keys (see FORBIDDEN_KEY_SEGMENTS comment).
+    if (FORBIDDEN_KEY_SEGMENTS.has(key)) {
+      this.fail("TOML_MALFORMED",
+        `key "${key}" is reserved and cannot appear in a manifest`);
+    }
+    return key;
   }
 
   // ─── Values ───────────────────────────────────────────────────────

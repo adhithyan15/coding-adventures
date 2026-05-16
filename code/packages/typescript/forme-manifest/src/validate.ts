@@ -148,12 +148,55 @@ function validateRuntime(m: Manifest, add: (e: ManifestErrorEntry) => void): voi
       add({ code: "RUNTIME_PLATFORMS_MISSING", path: "runtime.platforms",
         message: 'runtime.kind = "binary" requires a runtime.platforms map ' +
                  'with at least one entry (e.g. linux-x86_64 = "./bin/linux")' });
+    } else {
+      // Validate every per-platform entry as a safe path string.
+      for (const [platform, entryPath] of Object.entries(r.platforms)) {
+        validateSafePath(entryPath, `runtime.platforms.${platform}`, add);
+      }
     }
   } else {
     if (!r.entry) {
       add({ code: "RUNTIME_ENTRY_MISSING", path: "runtime.entry",
         message: "runtime.entry is required for non-binary runtimes" });
+    } else {
+      validateSafePath(r.entry, "runtime.entry", add);
     }
+  }
+}
+
+/**
+ * Reject path strings containing characters that downstream
+ * filesystem APIs handle inconsistently (NUL truncates on some
+ * older POSIX bindings; embedded newlines confuse error-message
+ * splitting) or that indicate path-traversal intent (`..` segment).
+ *
+ * This is a defence-in-depth check — the plugin host will resolve
+ * paths against `pluginDir` and reject escape attempts at that
+ * layer too, but catching obvious traversal attempts at the
+ * manifest layer means a malformed plugin never even gets loaded.
+ */
+function validateSafePath(
+  pathString: string,
+  fieldPath: string,
+  add: (e: ManifestErrorEntry) => void,
+): void {
+  if (typeof pathString !== "string") return;
+  // Control characters (NUL included).
+  if (/[\x00-\x1f]/.test(pathString)) {
+    add({ code: "FIELD_TYPE_MISMATCH", path: fieldPath,
+      message: `${fieldPath} contains control characters (NUL, newline, etc.)` });
+  }
+  // Path traversal: any segment that is exactly `..` after splitting
+  // on both forward and back slashes.  Bare `./` prefix is fine.
+  const segments = pathString.split(/[/\\]/);
+  if (segments.includes("..")) {
+    add({ code: "FIELD_TYPE_MISMATCH", path: fieldPath,
+      message: `${fieldPath} contains a ".." path segment (traversal not allowed)` });
+  }
+  // Absolute paths.  Plugin paths are always plugin-dir-relative.
+  if (pathString.startsWith("/") || /^[A-Za-z]:[/\\]/.test(pathString)) {
+    add({ code: "FIELD_TYPE_MISMATCH", path: fieldPath,
+      message: `${fieldPath} is an absolute path; must be plugin-dir-relative` });
   }
 }
 
@@ -205,18 +248,20 @@ function validateCapabilityEntry(
     }
 
     // FM02 §3.3 rule 8: third-party plugins MUST NOT request
-    // FIRST_PARTY_ONLY capabilities.  The validator enforces this
-    // regardless of trust tier; first-party plugins skip the
-    // validator entirely (they're loaded by direct import, not
-    // through this path).  Strip template variables from the
-    // capability before checking against the kernel's static set.
-    const cleaned = raw.replace(/\$[A-Za-z]+/g, "");
-    if (isFirstPartyOnly(cleaned) && bucket === "required") {
+    // FIRST_PARTY_ONLY capabilities.  We check on the (realm,scope)
+    // PAIR only — `detail` is irrelevant for the FIRST_PARTY_ONLY
+    // gate (e.g. `system:shell:anything` is still `system:shell`).
+    // Applied to BOTH `required` AND `optional` buckets — a plugin
+    // requesting `system:shell` as "optional" could still convince a
+    // confused user to grant it; the spec rule covers any declaration.
+    const realmScope = `${cap.realm}:${cap.scope}`;
+    if (isFirstPartyOnly(realmScope)) {
       add({
         code: "CAPABILITY_FIRST_PARTY_ONLY",
         path,
-        message: `capability "${cleaned}" is reserved for first-party stages; ` +
-                 `third-party plugins cannot require it`,
+        message: `capability "${realmScope}" is reserved for first-party stages; ` +
+                 `third-party plugins cannot declare it (under either ` +
+                 `capabilities.required or capabilities.optional)`,
       });
     }
   }
@@ -274,6 +319,9 @@ function validateStage(
   } else {
     validateKindReference(s.produces, `${path}.produces`, add);
   }
+  if (s.configSchema) {
+    validateSafePath(s.configSchema, `${path}.configSchema`, add);
+  }
 }
 
 function validateKindReference(
@@ -314,6 +362,9 @@ function validateKind(
   if (k.subtypeOf && !RESERVED_KIND_NAMES.has(k.subtypeOf) && !k.subtypeOf.startsWith("ext:")) {
     add({ code: "STAGE_KIND_NAME_INVALID", path: `${path}.subtypeOf`,
       message: `subtypeOf "${k.subtypeOf}" must be a kernel kind or ext:<name>` });
+  }
+  if (k.schema) {
+    validateSafePath(k.schema, `${path}.schema`, add);
   }
 }
 

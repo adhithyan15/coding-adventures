@@ -389,3 +389,67 @@ x.y = 2
 `)).toThrow(/cannot descend|already has/);
   });
 });
+
+describe("parseManifest — security: prototype pollution defences", () => {
+  it("rejects [__proto__] section header", () => {
+    expect(() => parseManifest(`
+[__proto__]
+polluted = "yes"
+`)).toThrowError(/reserved|__proto__/);
+  });
+
+  it("rejects __proto__ as a key", () => {
+    expect(() => parseManifest(`__proto__ = "x"`))
+      .toThrowError(/reserved|__proto__/);
+  });
+
+  it("rejects __proto__.x dotted key", () => {
+    expect(() => parseManifest(`__proto__.polluted = "x"`))
+      .toThrowError(/reserved|__proto__/);
+  });
+
+  it("rejects constructor key", () => {
+    expect(() => parseManifest(`constructor = "x"`))
+      .toThrowError(/reserved|constructor/);
+  });
+
+  it("rejects prototype key", () => {
+    expect(() => parseManifest(`prototype = "x"`))
+      .toThrowError(/reserved|prototype/);
+  });
+
+  it("rejects [[__proto__]] array-of-tables header", () => {
+    expect(() => parseManifest(`
+[[__proto__]]
+x = 1
+`)).toThrowError(/reserved|__proto__/);
+  });
+
+  it("parsing does NOT pollute Object.prototype", () => {
+    // Defence-in-depth check: even if the denylist were bypassed,
+    // every internal table is `Object.create(null)` so pollution
+    // is mechanically impossible.  Use a fresh `{}` for the
+    // observation — if Object.prototype had been polluted, this
+    // would inherit the polluted key.
+    const before = Object.keys(Object.prototype).length;
+    try {
+      parseManifest(`
+manifestVersion = 1
+[plugin]
+name = "@me/x"
+version = "1.0.0"
+apiVersion = 1
+[runtime]
+kind = "node"
+entry = "./e.js"
+[[contributes.stages]]
+id = "s"
+consumes = "ContentSource"
+produces = "ContentNode"
+`);
+    } catch { /* not relevant */ }
+    const after = Object.keys(Object.prototype).length;
+    expect(after).toBe(before);
+    expect(({} as { polluted?: string }).polluted).toBeUndefined();
+  });
+});

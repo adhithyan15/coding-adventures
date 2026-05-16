@@ -158,8 +158,24 @@ describe("assertManifestSigned", () => {
     expect(() => assertManifestSigned(tampered, ENTRY)).toThrowError(/algorithm/);
   });
 
-  it("throws on verification failure", () => {
+  it("throws on verification failure with SIGNATURE_INVALID code", () => {
     const m = withSignedManifest();
-    expect(() => assertManifestSigned(m, new Uint8Array([0]))).toThrow(/does not verify/);
+    try {
+      assertManifestSigned(m, new Uint8Array([0]));
+      expect.fail("should have thrown");
+    } catch (err) {
+      expect(err).toBeInstanceOf(ManifestError);
+      expect((err as ManifestError).code).toBe("SIGNATURE_INVALID");
+      expect((err as ManifestError).message).toMatch(/does not verify/);
+    }
+  });
+
+  it("missing signature uses SIGNATURE_FIELD_MISSING (distinct from SIGNATURE_INVALID)", () => {
+    try {
+      assertManifestSigned(parseManifest(M), ENTRY);
+      expect.fail("should have thrown");
+    } catch (err) {
+      expect((err as ManifestError).code).toBe("SIGNATURE_FIELD_MISSING");
+    }
   });
 });
