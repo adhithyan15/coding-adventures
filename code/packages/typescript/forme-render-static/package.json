@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/forme-render-static",
+  "version": "0.1.0",
+  "description": "Forme render stage: Stream<ContentNode> → Stream<RenderedPage>. Wraps document-ast-to-html with a hard-coded classless HTML5 theme.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "@coding-adventures/gfm-parser": "file:../gfm-parser",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
