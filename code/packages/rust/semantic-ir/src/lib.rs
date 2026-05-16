@@ -42,6 +42,7 @@
 
 pub mod backend;
 pub mod effects;
+pub mod limits;
 pub mod manifest;
 pub mod metadata;
 pub mod nodes;
@@ -60,6 +61,7 @@ pub use backend::{
     Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, BackendRegistry,
 };
 pub use effects::{Effect, EffectSet};
+pub use limits::MAX_IR_DEPTH;
 pub use manifest::{Feature, FeatureManifest};
 pub use metadata::{Metadata, CURRENT_SIR_VERSION};
 pub use nodes::{

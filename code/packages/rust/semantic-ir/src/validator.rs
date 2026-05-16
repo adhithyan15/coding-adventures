@@ -11,6 +11,7 @@
 //! and warnings (which are informational).  Use
 //! [`ValidationResult::is_ok`] to gate further processing.
 
+use crate::limits::MAX_IR_DEPTH;
 use crate::manifest::{Feature, FeatureManifest};
 use crate::nodes::*;
 use crate::span::Span;
@@ -89,6 +90,9 @@ struct ValidatorState<'m> {
     function_names: HashSet<String>,
     /// All global names declared in this module.
     global_names: HashSet<String>,
+    /// `true` once a depth-overflow error has been recorded for
+    /// this module.  Suppresses duplicate spam.
+    depth_overflow_reported: bool,
 }
 
 impl<'m> ValidatorState<'m> {
@@ -99,7 +103,27 @@ impl<'m> ValidatorState<'m> {
             observed: FeatureManifest::new(),
             function_names: HashSet::new(),
             global_names: HashSet::new(),
+            depth_overflow_reported: false,
         }
+    }
+
+    /// Report a depth-overflow error once.  Returns `true` if the
+    /// caller should stop recursing.
+    fn check_depth(&mut self, depth: usize, span: &Span) -> bool {
+        if depth >= MAX_IR_DEPTH {
+            if !self.depth_overflow_reported {
+                self.depth_overflow_reported = true;
+                self.error(
+                    format!(
+                        "expression nesting exceeds MAX_IR_DEPTH ({})",
+                        MAX_IR_DEPTH
+                    ),
+                    span,
+                );
+            }
+            return true;
+        }
+        false
     }
 
     fn run(&mut self) {
@@ -210,10 +234,13 @@ impl<'m> ValidatorState<'m> {
         // Now walk the body checking name resolution.  A small
         // scope stack tracks `let` and `let*` bindings.
         let mut env = LocalEnv::new(&param_names, &capture_names);
-        self.check_block(&f.body, &mut env);
+        self.check_block(&f.body, &mut env, 0);
     }
 
-    fn check_block(&mut self, b: &Block, env: &mut LocalEnv) {
+    fn check_block(&mut self, b: &Block, env: &mut LocalEnv, depth: usize) {
+        if self.check_depth(depth, &b.span) {
+            return;
+        }
         let mark = env.mark();
         // Walk statements in *groups*: a run of consecutive LetBinding
         // statements forms one parallel-let group whose RHS expressions
@@ -234,7 +261,7 @@ impl<'m> ValidatorState<'m> {
                     // names added yet).
                     for k in i..j {
                         if let Stmt::LetBinding { value, sir_type, .. } = &b.stmts[k] {
-                            self.check_expr(value, env);
+                            self.check_expr(value, env, depth + 1);
                             if sir_type.is_some() {
                                 self.observed.add(Feature::OptionalTypeAnnotations);
                             }
@@ -249,7 +276,7 @@ impl<'m> ValidatorState<'m> {
                     i = j;
                 }
                 Stmt::LetStarBinding { name, sir_type, value, .. } => {
-                    self.check_expr(value, env);
+                    self.check_expr(value, env, depth + 1);
                     env.add_local(name.clone());
                     if sir_type.is_some() {
                         self.observed.add(Feature::OptionalTypeAnnotations);
@@ -257,16 +284,19 @@ impl<'m> ValidatorState<'m> {
                     i += 1;
                 }
                 Stmt::ExprStmt { expr, .. } => {
-                    self.check_expr(expr, env);
+                    self.check_expr(expr, env, depth + 1);
                     i += 1;
                 }
             }
         }
-        self.check_expr(&b.value, env);
+        self.check_expr(&b.value, env, depth + 1);
         env.rewind(mark);
     }
 
-    fn check_expr(&mut self, e: &Expr, env: &mut LocalEnv) {
+    fn check_expr(&mut self, e: &Expr, env: &mut LocalEnv, depth: usize) {
+        if self.check_depth(depth, e.span()) {
+            return;
+        }
         match e {
             Expr::IntLit { .. } | Expr::BoolLit { .. } | Expr::NilLit { .. } => {}
             Expr::SymLit { .. } => {
@@ -279,11 +309,11 @@ impl<'m> ValidatorState<'m> {
                 self.check_varref(name, *scope, span, env);
             }
             Expr::If { cond, then_branch, else_branch, .. } => {
-                self.check_expr(cond, env);
-                self.check_block(then_branch, env);
-                self.check_block(else_branch, env);
+                self.check_expr(cond, env, depth + 1);
+                self.check_block(then_branch, env, depth + 1);
+                self.check_block(else_branch, env, depth + 1);
             }
-            Expr::Block(b) => self.check_block(b, env),
+            Expr::Block(b) => self.check_block(b, env, depth + 1),
             Expr::DirectCall { fn_name, args, .. } => {
                 if !self.function_names.contains(fn_name) {
                     self.error(
@@ -292,14 +322,14 @@ impl<'m> ValidatorState<'m> {
                     );
                 }
                 for a in args {
-                    self.check_expr(a, env);
+                    self.check_expr(a, env, depth + 1);
                 }
             }
             Expr::IndirectCall { target, args, .. } => {
                 self.observed.add(Feature::Closures);
-                self.check_expr(target, env);
+                self.check_expr(target, env, depth + 1);
                 for a in args {
-                    self.check_expr(a, env);
+                    self.check_expr(a, env, depth + 1);
                 }
             }
             Expr::BuiltinCall { name, args, .. } => {
@@ -308,7 +338,7 @@ impl<'m> ValidatorState<'m> {
                     _ => {}
                 }
                 for a in args {
-                    self.check_expr(a, env);
+                    self.check_expr(a, env, depth + 1);
                 }
             }
             Expr::MakeClosure { fn_name, captures, span } => {
@@ -320,7 +350,7 @@ impl<'m> ValidatorState<'m> {
                     );
                 }
                 for c in captures {
-                    self.check_expr(&c.value, env);
+                    self.check_expr(&c.value, env, depth + 1);
                 }
             }
             Expr::Intrinsic { targets, args, span, .. } => {
@@ -329,7 +359,7 @@ impl<'m> ValidatorState<'m> {
                     self.error("intrinsic must declare at least one target tag", span);
                 }
                 for a in args {
-                    self.check_expr(a, env);
+                    self.check_expr(a, env, depth + 1);
                 }
             }
         }
@@ -709,6 +739,76 @@ mod tests {
             "expected error from parallel let referencing sibling, got {:?}",
             r.issues
         );
+    }
+
+    #[test]
+    fn depth_overflow_is_reported_not_panicked() {
+        // Validating a pathologically deep tree must produce a
+        // depth-overflow Error, not blow the host stack.  We run on
+        // a dedicated thread with a big stack so the *test
+        // infrastructure* (which has its own recursive Drop and
+        // construction code paths) doesn't overflow before the
+        // validator runs.  The validator itself — the system under
+        // test — is what we're proving safe.
+        let handle = std::thread::Builder::new()
+            .stack_size(32 * 1024 * 1024)
+            .name("depth-overflow-test".into())
+            .spawn(|| {
+                let mut m = empty_module(FeatureManifest::new());
+                let deep = build_deep_if_chain(crate::MAX_IR_DEPTH + 100);
+                m.functions.push(Function {
+                    name: "f".into(),
+                    params: vec![],
+                    return_type: None,
+                    captures: vec![],
+                    body: Block {
+                        stmts: vec![],
+                        value: deep,
+                        span: s(),
+                    },
+                    effects: EffectSet::PURE,
+                    metadata: Metadata::new(),
+                    span: s(),
+                });
+                let r = validate(&m);
+                let ok = r.is_ok();
+                let saw_overflow = r
+                    .errors()
+                    .any(|i| i.message.contains("exceeds MAX_IR_DEPTH"));
+                // Leak the deep module to skip the recursive Drop,
+                // which itself would overflow even this larger
+                // stack on tear-down.
+                Box::leak(Box::new(m));
+                (ok, saw_overflow)
+            })
+            .expect("spawn test thread");
+        let (ok, saw_overflow) = handle.join().expect("thread join");
+        assert!(!ok, "expected validation to fail with depth overflow");
+        assert!(saw_overflow, "expected depth-overflow error to be reported");
+    }
+
+    /// Build a chain of `(if true then <inner> else <nil>)` of the
+    /// given depth, with `(nil)` at the bottom.  Constructed
+    /// iteratively to avoid host-stack issues during build.
+    fn build_deep_if_chain(depth: usize) -> Expr {
+        let mut e = Expr::NilLit { span: s() };
+        for _ in 0..depth {
+            e = Expr::If {
+                cond: Box::new(Expr::BoolLit { value: true, span: s() }),
+                then_branch: Box::new(Block {
+                    stmts: vec![],
+                    value: e,
+                    span: s(),
+                }),
+                else_branch: Box::new(Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                }),
+                span: s(),
+            };
+        }
+        e
     }
 
     #[test]

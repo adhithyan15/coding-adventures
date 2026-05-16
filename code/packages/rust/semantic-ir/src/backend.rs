@@ -11,6 +11,7 @@
 //! `accepts_features()` list; every intrinsic name must be in
 //! `accepts_intrinsics()`.
 
+use crate::limits::MAX_IR_DEPTH;
 use crate::manifest::Feature;
 use crate::nodes::{Expr, Module};
 use crate::span::Span;
@@ -154,35 +155,46 @@ pub trait Backend {
 }
 
 /// Walk the module's tree calling `f` on every `Intrinsic` node.
+///
+/// Depth-bounded by [`crate::MAX_IR_DEPTH`]: walks past that depth
+/// are silently truncated so a malformed module can't blow the
+/// host stack.  The validator is the right place to flag pathologic
+/// nesting; this function's job is just "don't panic".
 fn walk_intrinsics<F>(module: &Module, f: &mut F)
 where
     F: FnMut(&str, &[String], &Span),
 {
     for fn_ in &module.functions {
-        walk_intrinsics_in_expr(&fn_.body.value, f);
+        walk_intrinsics_in_expr(&fn_.body.value, f, 0);
         for s in &fn_.body.stmts {
-            walk_intrinsics_in_stmt(s, f);
+            walk_intrinsics_in_stmt(s, f, 0);
         }
     }
 }
 
-fn walk_intrinsics_in_stmt<F>(s: &crate::nodes::Stmt, f: &mut F)
+fn walk_intrinsics_in_stmt<F>(s: &crate::nodes::Stmt, f: &mut F, depth: usize)
 where
     F: FnMut(&str, &[String], &Span),
 {
+    if depth >= MAX_IR_DEPTH {
+        return;
+    }
     use crate::nodes::Stmt;
     match s {
         Stmt::LetBinding { value, .. } | Stmt::LetStarBinding { value, .. } => {
-            walk_intrinsics_in_expr(value, f);
+            walk_intrinsics_in_expr(value, f, depth + 1);
         }
-        Stmt::ExprStmt { expr, .. } => walk_intrinsics_in_expr(expr, f),
+        Stmt::ExprStmt { expr, .. } => walk_intrinsics_in_expr(expr, f, depth + 1),
     }
 }
 
-fn walk_intrinsics_in_expr<F>(e: &Expr, f: &mut F)
+fn walk_intrinsics_in_expr<F>(e: &Expr, f: &mut F, depth: usize)
 where
     F: FnMut(&str, &[String], &Span),
 {
+    if depth >= MAX_IR_DEPTH {
+        return;
+    }
     match e {
         Expr::IntLit { .. }
         | Expr::BoolLit { .. }
@@ -191,42 +203,42 @@ where
         | Expr::StrLit { .. }
         | Expr::VarRef { .. } => {}
         Expr::If { cond, then_branch, else_branch, .. } => {
-            walk_intrinsics_in_expr(cond, f);
+            walk_intrinsics_in_expr(cond, f, depth + 1);
             for s in &then_branch.stmts {
-                walk_intrinsics_in_stmt(s, f);
+                walk_intrinsics_in_stmt(s, f, depth + 1);
             }
-            walk_intrinsics_in_expr(&then_branch.value, f);
+            walk_intrinsics_in_expr(&then_branch.value, f, depth + 1);
             for s in &else_branch.stmts {
-                walk_intrinsics_in_stmt(s, f);
+                walk_intrinsics_in_stmt(s, f, depth + 1);
             }
-            walk_intrinsics_in_expr(&else_branch.value, f);
+            walk_intrinsics_in_expr(&else_branch.value, f, depth + 1);
         }
         Expr::Block(b) => {
             for s in &b.stmts {
-                walk_intrinsics_in_stmt(s, f);
+                walk_intrinsics_in_stmt(s, f, depth + 1);
             }
-            walk_intrinsics_in_expr(&b.value, f);
+            walk_intrinsics_in_expr(&b.value, f, depth + 1);
         }
         Expr::DirectCall { args, .. } | Expr::BuiltinCall { args, .. } => {
             for a in args {
-                walk_intrinsics_in_expr(a, f);
+                walk_intrinsics_in_expr(a, f, depth + 1);
             }
         }
         Expr::IndirectCall { target, args, .. } => {
-            walk_intrinsics_in_expr(target, f);
+            walk_intrinsics_in_expr(target, f, depth + 1);
             for a in args {
-                walk_intrinsics_in_expr(a, f);
+                walk_intrinsics_in_expr(a, f, depth + 1);
             }
         }
         Expr::MakeClosure { captures, .. } => {
             for c in captures {
-                walk_intrinsics_in_expr(&c.value, f);
+                walk_intrinsics_in_expr(&c.value, f, depth + 1);
             }
         }
         Expr::Intrinsic { targets, name, args, span, .. } => {
             f(name.as_str(), targets, span);
             for a in args {
-                walk_intrinsics_in_expr(a, f);
+                walk_intrinsics_in_expr(a, f, depth + 1);
             }
         }
     }

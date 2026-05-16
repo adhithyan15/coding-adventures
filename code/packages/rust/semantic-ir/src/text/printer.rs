@@ -21,9 +21,15 @@
 use std::fmt::Write;
 
 use crate::effects::EffectSet;
+use crate::limits::MAX_IR_DEPTH;
 use crate::metadata::Metadata;
 use crate::nodes::*;
 use crate::types::SirType;
+
+/// Sentinel inserted into the output when recursion exceeds
+/// `MAX_IR_DEPTH`.  Keeps the printer safe to call on hostile or
+/// pathologically deep modules without panicking.
+const TRUNCATION_MARKER: &str = "(<depth-limit>)";
 
 /// Render a module to canonical SIR text.
 pub fn print_module(m: &Module) -> String {
@@ -117,23 +123,35 @@ fn type_or_any(t: Option<&SirType>) -> String {
 /// start at (the opening `(block` keyword is emitted by the caller's
 /// indentation).
 pub fn print_block(out: &mut String, b: &Block, indent: usize) {
+    print_block_depth(out, b, indent, 0);
+}
+
+fn print_block_depth(out: &mut String, b: &Block, indent: usize, depth: usize) {
+    if depth >= MAX_IR_DEPTH {
+        out.push_str(TRUNCATION_MARKER);
+        return;
+    }
     let pad = " ".repeat(indent);
     let _ = write!(out, "(block");
     if b.stmts.is_empty() {
         out.push(' ');
-        print_expr_inline(out, &b.value);
+        print_expr_inline_depth(out, &b.value, depth + 1);
     } else {
         for s in &b.stmts {
             let _ = write!(out, "\n{}  ", pad);
-            print_stmt(out, s, indent + 2);
+            print_stmt(out, s, indent + 2, depth + 1);
         }
         let _ = write!(out, "\n{}  ", pad);
-        print_expr_inline(out, &b.value);
+        print_expr_inline_depth(out, &b.value, depth + 1);
     }
     out.push(')');
 }
 
-fn print_stmt(out: &mut String, s: &Stmt, indent: usize) {
+fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
+    if depth >= MAX_IR_DEPTH {
+        out.push_str(TRUNCATION_MARKER);
+        return;
+    }
     match s {
         Stmt::LetBinding { name, sir_type, value, .. } => {
             let _ = write!(out, "(let {}", name);
@@ -141,7 +159,7 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, " {}", t);
             }
             out.push(' ');
-            print_expr_inline(out, value);
+            print_expr_inline_depth(out, value, depth + 1);
             out.push(')');
         }
         Stmt::LetStarBinding { name, sir_type, value, .. } => {
@@ -150,12 +168,12 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, " {}", t);
             }
             out.push(' ');
-            print_expr_inline(out, value);
+            print_expr_inline_depth(out, value, depth + 1);
             out.push(')');
         }
         Stmt::ExprStmt { expr, .. } => {
             let _ = write!(out, "(stmt ");
-            print_expr_inline(out, expr);
+            print_expr_inline_depth(out, expr, depth + 1);
             out.push(')');
         }
     }
@@ -168,11 +186,15 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize) {
 /// diagnostics.
 pub fn print_expr(e: &Expr) -> String {
     let mut out = String::new();
-    print_expr_inline(&mut out, e);
+    print_expr_inline_depth(&mut out, e, 0);
     out
 }
 
-fn print_expr_inline(out: &mut String, e: &Expr) {
+fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
+    if depth >= MAX_IR_DEPTH {
+        out.push_str(TRUNCATION_MARKER);
+        return;
+    }
     match e {
         Expr::IntLit { value, .. } => {
             let _ = write!(out, "(int {})", value);
@@ -194,41 +216,41 @@ fn print_expr_inline(out: &mut String, e: &Expr) {
         }
         Expr::If { cond, then_branch, else_branch, .. } => {
             let _ = write!(out, "(if ");
-            print_expr_inline(out, cond);
+            print_expr_inline_depth(out, cond, depth + 1);
             out.push(' ');
-            print_block(out, then_branch, 0);
+            print_block_depth(out, then_branch, 0, depth + 1);
             out.push(' ');
-            print_block(out, else_branch, 0);
+            print_block_depth(out, else_branch, 0, depth + 1);
             out.push(')');
         }
         Expr::Block(b) => {
-            print_block(out, b, 0);
+            print_block_depth(out, b, 0, depth + 1);
         }
         Expr::DirectCall { fn_name, args, effects, .. } => {
             let _ = write!(out, "(direct-call {} ", fn_name);
             print_effects(out, effects);
-            print_args(out, args);
+            print_args(out, args, depth);
             out.push(')');
         }
         Expr::IndirectCall { target, args, effects, .. } => {
             let _ = write!(out, "(indirect-call ");
-            print_expr_inline(out, target);
+            print_expr_inline_depth(out, target, depth + 1);
             out.push(' ');
             print_effects(out, effects);
-            print_args(out, args);
+            print_args(out, args, depth);
             out.push(')');
         }
         Expr::BuiltinCall { name, args, effects, .. } => {
             let _ = write!(out, "(builtin-call {} ", name);
             print_effects(out, effects);
-            print_args(out, args);
+            print_args(out, args, depth);
             out.push(')');
         }
         Expr::MakeClosure { fn_name, captures, .. } => {
             let _ = write!(out, "(make-closure {}", fn_name);
             for c in captures {
                 let _ = write!(out, " ({} ", c.name);
-                print_expr_inline(out, &c.value);
+                print_expr_inline_depth(out, &c.value, depth + 1);
                 out.push(')');
             }
             out.push(')');
@@ -236,7 +258,7 @@ fn print_expr_inline(out: &mut String, e: &Expr) {
         Expr::Intrinsic { targets, name, args, return_type, effects, .. } => {
             let _ = write!(out, "(intrinsic ({}) {} {} ", join_strs(targets), name, return_type);
             print_effects(out, effects);
-            print_args(out, args);
+            print_args(out, args, depth);
             out.push(')');
         }
     }
@@ -246,10 +268,10 @@ fn print_effects(out: &mut String, e: &EffectSet) {
     let _ = write!(out, "(effects {})", e);
 }
 
-fn print_args(out: &mut String, args: &[Expr]) {
+fn print_args(out: &mut String, args: &[Expr], depth: usize) {
     for a in args {
         out.push(' ');
-        print_expr_inline(out, a);
+        print_expr_inline_depth(out, a, depth + 1);
     }
 }
 
