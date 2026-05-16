@@ -1,11 +1,13 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-14. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
+> Last updated: 2026-05-16. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
 > merged), Rust 0.2.0 releases (PR #3171 ✅ merged), Python EllipticE/Pi —
-> `symbolic-vm` 0.54.0 (PR #3173 ✅ merged), TypeScript EllipticE/Pi —
+> `symbolic-vm` 0.55.0 (PR #3173 ✅ merged), TypeScript EllipticE/Pi —
 > `symbolic-vm` 0.3.0 (PR #3179 ✅ merged), Rust EllipticE/Pi —
-> `symbolic-vm` 0.3.0 (PR #3178 ✅ merged).
+> `symbolic-vm` 0.3.0 (PR #3178 ✅ merged), Python `macsyma-runtime` 1.26.0,
+> `spice-engine` 0.13.0 (inductor IC, AcSource phasors, waveforms already implemented),
+> `rust/macsyma-runtime` 0.3.0 (EllipticE/Pi pipeline tests).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -62,6 +64,9 @@ files.
 |---|---|---|
 | v0.1.0 | #1353 | MNA core, DC operating point (Newton-Raphson), forward-Euler transient, `Diode`, `Mosfet` |
 | v0.10.0 | #2901 ✅ | All four SPICE controlled sources: `VCVS` (E), `VCCS` (G), `CCCS` (F), `CCVS` (H). Correct MNA stamps (DC + AC). `TfResult.gain`. Fixed CCCS stamp sign. |
+| v0.11.0 | — | Time-varying source waveforms: `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`; waveform evaluation at each transient timestep |
+| v0.12.0 | — | DC convergence aids: Gmin stepping + source stepping fallback chain; `_dc_newton` / `_x_from_result` helpers |
+| v0.13.0 | — | Inductor `initial_current` for transient seeding; explicit AC source phasors (`AcSource`) on `VoltageSource`/`CurrentSource` |
 | v0.2.0 | #2339 | Trapezoidal + Backward Euler integration, LTE-based adaptive timestep |
 | v0.3.0 | #2342 | `BJT` element (Ebers-Moll, NPN/PNP) |
 | v0.4.0 | #2344 | AC small-signal frequency sweep (`.AC`) |
@@ -76,6 +81,8 @@ files.
 
 **Analyses on main:** `dc_op`, `transient`, `ac_sweep`, `tf`, `dc_sweep`,
 `sens_dc`, `mc_dc`, `noise_ac`
+
+**Waveforms on main:** `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`
 
 ---
 
@@ -93,9 +100,7 @@ Items are listed in priority order within each group.
 
 | Feature | Why it matters | Design notes |
 |---|---|---|
-| **Time-varying source waveforms** | Every realistic transient simulation — step response, oscillator startup, filter characterisation — needs non-static sources. Currently `VoltageSource` and `CurrentSource` are DC-constant only. | Add a `waveform` field (optional) to `VoltageSource` / `CurrentSource` accepting a callable `(t: float) -> float` or one of `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`. The transient engine already calls `_stamp_vsource` at each timestep; it just needs to pass the current `t`. SPICE spec in `spice-engine.md` section "Source Waveforms" (conformance target: PWL, PULSE, SIN, EXP). |
 | **SPICE3 netlist parser** | Lets you run existing `.cir` / `.sp` files directly. Huge usability leap — you can grab any NGSPICE example and feed it in. | New package `spice-netlist-parser`. Grammar-driven (reuse `grammar-tools`). Conformance matrix in `spice-engine.md`: R, C, L, V, I, M (MOSFET), D, Q (BJT), E/G/F/H (controlled sources), X (subcircuit), `.tran`, `.dc`, `.ac`, `.op`, `.include`, `.subckt`, `.model`, `.param`. Returns a `Circuit` object identical to what you'd build in Python. |
-| **Convergence aids** | Necessary for power electronics, startup transients, and any circuit with strongly coupled nonlinear devices (e.g. bandgap references). Newton-Raphson alone fails on these. | Three strategies described in `spice-engine.md`: (1) **Gmin stepping** — add small conductance across every node to ground, gradually reduce to zero. (2) **Source stepping** — scale all independent source voltages from 0 to full value. (3) **Pseudo-transient continuation** — add capacitors to ground and integrate to DC. Try in order; each is a fallback. |
 
 #### Group 2 — Medium value
 
@@ -128,11 +133,11 @@ Every item below is wired end-to-end: surface syntax → compile → VM → corr
 | Package | Version | What it provides |
 |---|---|---|
 | `symbolic-ir` | latest | `IRSymbol`, `IRInteger`, `IRRational`, `IRFloat`, `IRString`, `IRApply` node types |
-| `symbolic-vm` | 0.54.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi), numeric folding, 100+ handlers |
+| `symbolic-vm` | 0.55.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi), numeric folding, 100+ handlers |
 | `macsyma-lexer` | 0.1.0 | Grammar-driven tokenizer |
 | `macsyma-parser` | 0.1.0 | Grammar-driven parser |
 | `macsyma-compiler` | 0.9.0 | AST → IR; 60+ MACSYMA identifier mappings in name table |
-| `macsyma-runtime` | 1.25.0 | History (`%`, `%i1`, `%o1`, …), `;`/`$` terminators, `kill`, `ev`, `MacsymaBackend` |
+| `macsyma-runtime` | 1.26.0 | History (`%`, `%i1`, `%o1`, …), `;`/`$` terminators, `kill`, `ev`, `MacsymaBackend` |
 
 #### TypeScript port version releases (PR #3170 ✅ merged)
 

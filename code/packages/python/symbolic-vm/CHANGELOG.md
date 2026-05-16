@@ -1,7 +1,5 @@
 # Changelog
 
-## Unreleased
-
 ## 0.55.0 — 2026-05-14
 
 **Phase 26 — MACSYMA stress-test parity fixes: differentiation order, pattern matching,

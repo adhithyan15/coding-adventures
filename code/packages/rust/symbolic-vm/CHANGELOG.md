@@ -1,7 +1,5 @@
 # Changelog — symbolic-vm (Rust)
 
-## Unreleased
-
 ## [0.3.0] — 2026-05-14
 
 ### Added
@@ -14,8 +12,6 @@
 - New helper functions: `elliptic_second_kind_radicand`, `complete_elliptic_second_kind`,
   `incomplete_elliptic_second_kind`, `extract_characteristic_n`,
   `elliptic_third_kind_params`, `complete_elliptic_third_kind`
-
-## [0.1.1] — 2026-04-28
 
 ## [0.2.0] — 2026-05-14
 
@@ -52,6 +48,8 @@
 - Numeric and symbolic handlers for reciprocal hyperbolic heads `Coth`,
   `Sech`, and `Csch`, including `sech(0) = 1` and undefined-at-zero checks for
   `coth`/`csch`.
+
+## [0.1.1] — 2026-04-28
 
 ## [0.1.0] — 2026-04-27
 
