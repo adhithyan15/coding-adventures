@@ -10,7 +10,9 @@
 > `rust/macsyma-runtime` 0.3.0 (EllipticE/Pi pipeline tests),
 > Phase 21 named variable-coefficient ODEs Python (PR #3360 ✅ merged),
 > Phase 21 TypeScript + Rust ports (PR #3369 ✅ merged),
-> version housekeeping chore (PR #3354 ✅ merged).
+> version housekeeping chore (PR #3354 ✅ merged),
+> Phase 26 log-power IBP Python (PR #3372 ✅ merged),
+> Phase 27 trig-of-log integration Python `symbolic-vm` 0.57.0 (PR #3373 ✅ merged).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -139,7 +141,7 @@ Every item below is wired end-to-end: surface syntax → compile → VM → corr
 | Package | Version | What it provides |
 |---|---|---|
 | `symbolic-ir` | latest | `IRSymbol`, `IRInteger`, `IRRational`, `IRFloat`, `IRString`, `IRApply` node types |
-| `symbolic-vm` | 0.56.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi, Phase 26 log-power IBP), numeric folding, 100+ handlers |
+| `symbolic-vm` | 0.57.0 | Pluggable VM, `SymbolicBackend`, arithmetic, Risch integration (phases 1–14+, Phase 25 EllipticF/K/E/Pi, Phase 26 log-power IBP, Phase 27 trig-of-log), numeric folding, 100+ handlers |
 | `macsyma-lexer` | 0.1.0 | Grammar-driven tokenizer |
 | `macsyma-parser` | 0.1.0 | Grammar-driven parser |
 | `macsyma-compiler` | 0.9.0 | AST → IR; 60+ MACSYMA identifier mappings in name table |
@@ -178,6 +180,13 @@ CHANGELOG section. PR #3171 cut proper 0.2.0 releases and created the missing
 | Package | Version | Notes |
 |---|---|---|
 | `rust/symbolic-vm` | 0.3.0 | EllipticE (complete + incomplete), EllipticPi (complete) pattern recognition |
+
+#### Phase 26 + Phase 27: log-power IBP and trig-of-log — TypeScript + Rust ports
+
+| Package | Version | Notes |
+|---|---|---|
+| `typescript/symbolic-vm` | 0.4.0 | Phase 26 `∫ Q(x)·log(x)^n dx` + Phase 27 `∫ xᵏ·trig(log(x)) dx` via u=log(x) substitution |
+| `rust/symbolic-vm` | 0.4.0 | Same as TypeScript 0.4.0 |
 
 #### Phase 21 — named variable-coefficient ODE recognition (all three languages)
 
@@ -234,10 +243,10 @@ Eight new head symbols added to `symbolic-ir` in all three languages:
 
 #### VM-level operations (live in `symbolic-vm`, not separate packages)
 
-**Integration** (Risch phases 1–14+): polynomials, rational functions, trig,
+**Integration** (Risch phases 1–27): polynomials, rational functions, trig,
 exp, log, IBP, partial fractions, inverse-trig, hyperbolic powers,
 exp×hyperbolic, sinh/cosh mixed powers, Rothstein-Trager for rational
-functions.
+functions, EllipticF/K/E/Pi, log-power IBP, trig-of-log.
 
 **Calculus:** `diff` (all elementary functions).
 
@@ -324,7 +333,8 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Elliptic integrals — first-kind foothold | `∫ 1/√(1-k²sin²θ) dθ` | ✅ #3141: returns `EllipticF(θ,k)`; definite 0…π/2 returns `EllipticK(k)` |
 | Elliptic integrals — second kind | `∫ √(1-k²sin²θ) dθ`, `∫₀^(π/2) √(1-k²sin²θ) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
 | Elliptic integrals — third kind | `∫₀^(π/2) 1/((1+n·sin²θ)·√(1-k²sin²θ)) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
-| `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0 |
+| `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0; TS + Rust `symbolic-vm` 0.4.0 (same PR as Phase 27) |
+| `∫ sin(log(x)) dx`, `∫ cos(log(x)) dx`, `∫ xᵏ·sin/cos(log(x)) dx` (Phase 27 trig-of-log) | u=log(x) substitution converts to exp×trig form; closed form `x^(k+1)·((k+1)trig(log x)∓cotrig(log x))/((k+1)²+1)` | ✅ Python PR #3373 `symbolic-vm` 0.57.0; TS + Rust `symbolic-vm` 0.4.0 |
 | `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features
