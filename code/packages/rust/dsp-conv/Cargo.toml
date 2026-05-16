@@ -1,0 +1,12 @@
+[package]
+name = "dsp-conv"
+version = "0.1.0"
+edition = "2021"
+description = "DSP04 Phase 1+2: scalar reference same-size 1-D convolution with 4 boundary modes (Zero, Replicate, Reflect, Wrap). Complements dsp-filters::fir (which is full-mode N+K-1 output) by providing the same-size N output image-processing API. Phase 3 adds 2-D conv2d for images; Phase 5 adds Gaussian / Sobel / box / Laplacian / sharpen design helpers."
+license = "MIT"
+
+[dependencies]
+dsp-fft = { path = "../dsp-fft" }
+
+[dev-dependencies]
+dsp-filters = { path = "../dsp-filters" }
