@@ -245,6 +245,7 @@ members = [
     "statistics-core",
     "engineering-core",
     "data-frame",
+    "database-core",
     "spice-engine",
     "spice-netlist-parser",
     "system-board",
