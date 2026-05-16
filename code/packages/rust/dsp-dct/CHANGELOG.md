@@ -1,5 +1,89 @@
 # Changelog — dsp-dct
 
+## 0.2.0 — 2026-05-15
+
+### Added — DSP02 Phase 4 (2-D DCT for image / JPEG workloads)
+
+Adds [`dct_2d`] and [`idct_2d`] on top of the Phase 1+2 1-D
+primitives.  Operates on row-major `[H, W]` real `f32` buffers.
+
+#### New module — `dsp_dct::two_d`
+
+```rust
+pub fn dct_2d(image: &[f32], height: u32, width: u32,
+              dct_type: DctType, norm: DctNorm)
+    -> Result<Vec<f32>, DctError>;
+
+pub fn idct_2d(image: &[f32], height: u32, width: u32,
+               dct_type: DctType, norm: DctNorm)
+    -> Result<Vec<f32>, DctError>;
+```
+
+Re-exported at the crate root so callers can `use
+dsp_dct::{dct_2d, idct_2d}` directly.
+
+#### Algorithm
+
+The 2-D DCT is **separable**: the row-then-column factorisation
+gives the exact 2-D result.
+
+1. **Row pass.**  For each row `r ∈ 0..H`, run the 1-D `dct`
+   (or `idct`) on `image[r * W .. (r + 1) * W]`.  Result fills
+   a `[H, W]` intermediate buffer.
+2. **Column pass.**  For each column `c ∈ 0..W`, gather column
+   `c` from the intermediate, run the 1-D op, scatter back.
+
+Total work `O(H · W · (log H + log W))` for power-of-two
+dimensions; `O(H · W · M log M)` with `M = next_pow2(2 max(H, W) - 1)`
+for non-pow2 (Bluestein).
+
+#### Use cases
+
+- **JPEG**: 8×8 block transform, `dct_2d(block, 8, 8, II,
+  Ortho)`.  Phase 5 will add a specialised 8-point DCT-II
+  (Loeffler) for the hot path.
+- **Perceptual hashes (pHash)**: top-left 8×8 block of the
+  DCT-II of a 32×32 grayscale image.
+- **Image-domain spectral filtering** (Wiener, smoothing).
+
+#### New unit tests — 12
+
+Error paths (4):
+- `rejects_zero_height`, `rejects_zero_width`
+- `rejects_length_mismatch`, `idct_2d_rejects_length_mismatch`
+
+Closed-form (2):
+- `dct_2d_of_dc_block_concentrates_at_origin` — 8×8 DC block →
+  256 at origin, zeros elsewhere (un-normalised).
+- `dct_2d_of_impulse_block_matches_naive` — 8×8 impulse,
+  separable result matches naive O(H²W²) oracle.
+
+Naive cross-check (2):
+- `dct_2d_matches_naive_4x4` (None norm)
+- `dct_2d_matches_naive_8x8_ortho` (Ortho norm)
+
+Round-trips under Ortho (4):
+- `round_trip_2d_ortho_8x8` — JPEG block size.
+- `round_trip_2d_ortho_16x16`
+- `round_trip_2d_ortho_8x16_non_square` — non-square dims.
+- `round_trip_2d_ortho_3x5_non_pow2` — both dims non-pow2,
+  exercises Bluestein along both axes.
+
+All 26 unit tests + 1 doctest pass.
+
+### What this phase does NOT include
+
+- **Phase 3** (matrix-ir-lowered DCT) is intentionally still
+  pending.  The public `dct` already routes its internal FFT
+  through `dsp_fft::fft_scalar` (which dispatches to Bluestein
+  for non-pow2), so the work for Phase 3 is now mainly about
+  emitting the Makhoul shuffle + twiddle as matrix-ir ops
+  rather than scalar code — useful when MX backends mature
+  beyond CPU.
+- **Phase 5** — Loeffler 8-point specialisation.  Constant-
+  factor speedup; deferred until perf matters.
+- **DCT-I / DCT-IV / MDCT / integer DCT.**  Per spec.
+
 ## 0.1.0 — 2026-05-15
 
 ### Added — DSP02 Phase 1 + 2 (crate skeleton + scalar DCT-II / DCT-III)

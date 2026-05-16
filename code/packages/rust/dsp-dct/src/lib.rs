@@ -37,17 +37,21 @@
 //! ## Phase scope
 //!
 //! - **Phase 0** — spec (`code/specs/DSP02-dct.md`).
-//! - **Phase 1+2 (this release)** — crate skeleton + scalar
-//!   DCT-II / DCT-III + tests.
+//! - **Phase 1+2** — crate skeleton + scalar DCT-II / DCT-III
+//!   + tests.  Landed as 0.1.0.
 //! - **Phase 3** — matrix-ir-lowered `dct_via_runtime` so the
 //!   transform actually runs on the matrix execution layer.
 //!   Will also replace the naive Phase 2 DCT-III with the
-//!   FFT-based form.
-//! - **Phase 4** — 2-D `dct_2d` / `idct_2d` for image / JPEG
-//!   workloads.
+//!   FFT-based form.  Pending.
+//! - **Phase 4 (this release)** — 2-D [`dct_2d`] / [`idct_2d`]
+//!   for image / JPEG workloads.  Row-then-column factorisation
+//!   on top of the 1-D primitives.
 //! - **Phase 5** — Loeffler 8-point specialisation.
 
 #![warn(rust_2018_idioms)]
+
+pub mod two_d;
+pub use two_d::{dct_2d, idct_2d};
 
 use dsp_fft::{fft_scalar, FftError};
 use std::f32::consts::PI;
