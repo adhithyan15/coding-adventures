@@ -1,13 +1,19 @@
 # dsp-conv
 
-**DSP04 Phase 1+2** — scalar reference same-size 1-D
-convolution for the DSP layer.
+Scalar reference 1-D and 2-D convolution for the DSP layer.
 
-`dsp-conv` complements `dsp-filters::fir` (which produces the
-full `N + K - 1` linear-convolution output) by providing the
-**same-size** `N`-length output that image processing and
-filter chains usually want, plus explicit control over the
-boundary extension at the edges.
+As of **0.2.0 (DSP04 Phase 3)** this crate ships:
+
+- **1-D** (`conv1d`) — same-size signal convolution.
+- **2-D** (`conv2d`) — same-size image convolution on
+  row-major `[H, W]` real `f32` buffers.
+
+Complements `dsp-filters::fir` (which produces the full
+`N + K - 1` linear-convolution output) by providing the
+**same-size** output that image processing and filter chains
+usually want, plus explicit control over the boundary
+extension at the edges (`Zero` / `Replicate` / `Reflect` /
+`Wrap`).
 
 ```rust
 use dsp_conv::{conv1d, BoundaryMode};
@@ -73,21 +79,39 @@ pub enum ConvError {
 | Phase  | Lands                                                | Status |
 | ------ | ---------------------------------------------------- | ------ |
 | 0      | Spec (`code/specs/DSP04-convolution.md`)             | landed |
-| **1+2** | **Crate skeleton + scalar `conv1d` with 4 boundary modes** | **this PR (0.1.0)** |
-| 3      | Scalar `conv2d` for row-major `[H, W]` images        | pending |
+| 1+2    | Crate skeleton + scalar `conv1d` with 4 boundary modes | landed (0.1.0) |
+| **3**  | **Scalar `conv2d` for row-major `[H, W]` images**    | **this PR (0.2.0)** |
 | 4      | `sep_conv2d` for separable kernels                   | pending |
 | 5      | Image filter design helpers (Gaussian / Sobel / box / Laplacian / sharpen) | pending |
 | 6      | Matrix-ir-lowered `conv1d` / `conv2d`                | pending |
 
+## 2-D conv example (Phase 3)
+
+```rust
+use dsp_conv::{conv2d, BoundaryMode};
+
+// 3×3 box-blur kernel (normalised).
+let kernel = vec![1.0_f32 / 9.0; 9];
+
+// 5×5 row-major image.
+let image: Vec<f32> = (0..25).map(|i| i as f32).collect();
+
+let blurred = conv2d(&image, &kernel, 5, 5, 3, 3, BoundaryMode::Replicate)
+    .unwrap();
+assert_eq!(blurred.len(), 25);
+```
+
 ## Tests
 
-`cargo test -p dsp-conv` exercises:
+`cargo test -p dsp-conv` — 26 unit tests + 1 doctest:
 
-- Error paths: empty signal, empty kernel.
-- Closed-form: identity kernel `[1.0]` is identity; centred
-  delta kernel preserves the signal.
-- Output length contract: `output.len() == signal.len()`.
-- All 4 boundary modes verified with handwritten expected
-  outputs.
-- `conv1d(_, _, Zero)` matches the centre slice of
-  `dsp_filters::fir(_, _)`.
+- 15 from Phase 1+2 (1-D): error paths, identity / centred-delta,
+  output length contract, all 4 boundary modes with handwritten
+  expected outputs, fir cross-check, periodicity / replicate /
+  symmetry / integral invariants.
+- 11 from Phase 3 (2-D, this release): error paths (zero dims,
+  size mismatch, kernel-too-large), 1×1 + 3×3 identity, constant
+  image + box kernel = constant, 3×3 outer-product matches
+  sequential conv1d (separability cross-check), boundary modes
+  produce distinct corner values for a 3×3 image / 3×3 uniform
+  kernel.

@@ -34,15 +34,21 @@
 //! ## Phase scope
 //!
 //! - **Phase 0** — spec (`code/specs/DSP04-convolution.md`).
-//! - **Phase 1+2 (this release)** — crate skeleton + scalar
-//!   `conv1d` with 4 boundary modes.
-//! - **Phase 3** — scalar `conv2d` for `[H, W]` images.
-//! - **Phase 4** — `sep_conv2d` (separable 2-D conv).
+//! - **Phase 1+2** — crate skeleton + scalar `conv1d` with
+//!   4 boundary modes.  Landed as 0.1.0.
+//! - **Phase 3 (this release)** — scalar [`conv2d`] for
+//!   `[H, W]` images.  Row-major, same-size output, boundary
+//!   extension applied independently along each axis.
+//! - **Phase 4** — `sep_conv2d` (separable 2-D conv — much
+//!   faster for blurs / Gaussians where the kernel factors).
 //! - **Phase 5** — image filter design helpers (Gaussian,
 //!   Sobel, box, Laplacian, sharpen).
 //! - **Phase 6** — matrix-ir-lowered `conv1d` / `conv2d`.
 
 #![warn(rust_2018_idioms)]
+
+pub mod two_d;
+pub use two_d::conv2d;
 
 use std::fmt;
 
@@ -120,16 +126,28 @@ pub fn conv1d(
 /// Helper: read `signal` at a possibly-out-of-bounds index,
 /// extending via the chosen `mode`.
 fn sample(signal: &[f32], idx: isize, mode: BoundaryMode) -> f32 {
-    let n = signal.len() as isize;
+    match extend_index(idx, signal.len() as isize, mode) {
+        Some(i) => signal[i],
+        None => 0.0,
+    }
+}
+
+/// **Phase 3 helper.**  Map a possibly-out-of-bounds index `idx`
+/// into a valid source index in `[0, n)` per the boundary `mode`,
+/// or return `None` when the mode is `Zero` and the index falls
+/// outside the support (i.e. the convolution should accumulate
+/// `0` for that tap).
+///
+/// `n` must be `≥ 1`.  This is used by both the 1-D `sample`
+/// here and the 2-D conv2d in the [`crate::two_d`] module, which
+/// applies the extension along each axis independently.
+pub(crate) fn extend_index(idx: isize, n: isize, mode: BoundaryMode) -> Option<usize> {
     if idx >= 0 && idx < n {
-        return signal[idx as usize];
+        return Some(idx as usize);
     }
     match mode {
-        BoundaryMode::Zero => 0.0,
-        BoundaryMode::Replicate => {
-            let clamped = idx.clamp(0, n - 1) as usize;
-            signal[clamped]
-        }
+        BoundaryMode::Zero => None,
+        BoundaryMode::Replicate => Some(idx.clamp(0, n - 1) as usize),
         BoundaryMode::Reflect => {
             // Mirror about both boundaries.  Works for arbitrarily
             // far indices via the "fold into [-N+1, N) twice"
@@ -141,20 +159,19 @@ fn sample(signal: &[f32], idx: isize, mode: BoundaryMode) -> f32 {
             //
             // For N = 1 the period collapses; we special-case it.
             if n == 1 {
-                return signal[0];
+                return Some(0);
             }
             let period = 2 * (n - 1);
             let mut m = idx.rem_euclid(period);
             if m >= n {
                 m = 2 * (n - 1) - m;
             }
-            signal[m as usize]
+            Some(m as usize)
         }
         BoundaryMode::Wrap => {
             // Modular index — `rem_euclid` handles negatives
             // correctly.
-            let m = idx.rem_euclid(n) as usize;
-            signal[m]
+            Some(idx.rem_euclid(n) as usize)
         }
     }
 }
