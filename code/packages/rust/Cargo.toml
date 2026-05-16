@@ -101,6 +101,7 @@ members = [
     "dsp-dct",
     "dsp-fft",
     "dsp-filters",
+    "dsp-stft",
     "dot-lexer",
     "dot-parser",
     "mermaid-lexer",
