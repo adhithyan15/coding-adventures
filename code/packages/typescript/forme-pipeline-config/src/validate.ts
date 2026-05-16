@@ -28,9 +28,11 @@
  */
 
 import { KERNEL_API_VERSION } from "@coding-adventures/forme-types";
+import type { JsonValue } from "@coding-adventures/forme-types";
 import { isStageRef } from "./types.js";
 import { CONFIG_ERROR_CODES, ConfigError } from "./errors.js";
 import type { ConfigErrorEntry } from "./errors.js";
+import { validateAgainstSchema } from "./json-schema.js";
 import type {
   PipelineConfig,
   PipelineSettings,
@@ -196,15 +198,33 @@ function validateStageInstance(
       }
     }
   }
-  // Config presence rule (FM03 §2.4 #3 — full JSON-Schema validation
-  // is the orchestrator's job; we only enforce the presence half here).
-  if (stage.configSchema !== null && spec.config === undefined) {
-    errors.push({
-      path: `${path}.config`,
-      code: CONFIG_ERROR_CODES.CONFIG_REQUIRED,
-      message:
-        `Stage ${JSON.stringify(stage.name)} declares a configSchema but no config was supplied.`,
-    });
+  // Config presence rule (FM03 §2.4 #3) + JSON-Schema validation.
+  // We surface BOTH halves at config-validate time:
+  //   - presence: stage declares a schema → config must be present;
+  //   - shape:    config supplied → must match the schema.
+  // Schema validation is intentionally tolerant of unknown keywords
+  // (draft-07 forward-compat); see `json-schema.ts` for the subset.
+  if (stage.configSchema !== null) {
+    if (spec.config === undefined) {
+      errors.push({
+        path: `${path}.config`,
+        code: CONFIG_ERROR_CODES.CONFIG_REQUIRED,
+        message:
+          `Stage ${JSON.stringify(stage.name)} declares a configSchema but no config was supplied.`,
+      });
+    } else {
+      const result = validateAgainstSchema(spec.config as JsonValue, stage.configSchema);
+      if (!result.ok) {
+        for (const v of result.violations) {
+          errors.push({
+            path: v.path === "$" ? `${path}.config` : `${path}.config.${v.path}`,
+            code: CONFIG_ERROR_CODES.CONFIG_SCHEMA_VIOLATION,
+            message:
+              `Stage ${JSON.stringify(stage.name)} config violates schema: ${v.message}`,
+          });
+        }
+      }
+    }
   }
 }
 
