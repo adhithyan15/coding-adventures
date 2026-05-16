@@ -78,6 +78,13 @@ export const CONFIG_ERROR_CODES = Object.freeze({
   /** A stage demands a config but none was provided. */
   CONFIG_REQUIRED:           "CONFIG_REQUIRED",
   /**
+   * The provided config violates the stage's declared `configSchema`.
+   * Field-level details (which property, what constraint) are in
+   * the entry's `message`.  See `json-schema.ts` for the subset
+   * of draft-07 keywords supported.
+   */
+  CONFIG_SCHEMA_VIOLATION:   "CONFIG_SCHEMA_VIOLATION",
+  /**
    * Multiple terminal stages (no consumer) exist without a matching
    * `OutputSpec` for each (FM03 §3.3 step 5).
    */
