@@ -236,6 +236,7 @@ members = [
     "starlark-vm",
     "state-machine",
     "statistics-core",
+    "engineering-core",
     "data-frame",
     "spice-engine",
     "spice-netlist-parser",
