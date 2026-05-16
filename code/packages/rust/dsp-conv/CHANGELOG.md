@@ -1,5 +1,109 @@
 # Changelog — dsp-conv
 
+## 0.3.0 — 2026-05-16
+
+### Added — DSP04 Phase 4 + 5 (separable conv + image filter design helpers)
+
+The image-filter toolbox lands.  Adds:
+
+- `sep_conv2d` — separable 2-D convolution (row-then-column).
+  Asymptotically faster than `conv2d` when the 2-D kernel
+  factors: `O(H·W·(KH+KW))` vs `O(H·W·KH·KW)`.
+- Image filter design helpers — `gaussian_blur_kernel`,
+  `box_blur_kernel`, `sobel_x_kernel`, `sobel_y_kernel`,
+  `laplacian_kernel`, `sharpen_kernel`.  The canonical
+  OpenCV / scipy.ndimage primitives.
+
+This makes `dsp-conv` a one-stop-shop for the standard image
+preprocessing pipeline: blur, sharpen, edge-detect, denoise.
+
+#### New module — `dsp_conv::sep`
+
+```rust
+pub fn sep_conv2d(
+    image: &[f32],
+    horizontal_kernel: &[f32],
+    vertical_kernel: &[f32],
+    image_height: u32, image_width: u32,
+    mode: BoundaryMode,
+) -> Result<Vec<f32>, ConvError>;
+```
+
+Two passes: `conv1d` along each row with `horizontal_kernel`,
+then `conv1d` along each column with `vertical_kernel`.  Each
+pass uses the same `BoundaryMode` along its corresponding
+axis.
+
+#### New module — `dsp_conv::kernels`
+
+```rust
+pub fn gaussian_blur_kernel(sigma: f32, size: u32) -> Vec<f32>;
+pub fn box_blur_kernel(size: u32) -> Vec<f32>;
+pub fn sobel_x_kernel() -> Vec<f32>;     // 3x3, 9 floats
+pub fn sobel_y_kernel() -> Vec<f32>;     // 3x3
+pub fn laplacian_kernel() -> Vec<f32>;   // 3x3
+pub fn sharpen_kernel(amount: f32) -> Vec<f32>;  // 3x3
+```
+
+- `gaussian_blur_kernel(σ, size)` — 1-D Gaussian normalised to
+  sum=1.  Pass to `sep_conv2d` as both horizontal + vertical
+  for a separable 2-D Gaussian blur.  Requires odd `size > 0`
+  and `σ > 0`.
+- `box_blur_kernel(size)` — 1-D uniform, each tap = 1/size.
+- `sobel_x_kernel()` / `sobel_y_kernel()` — directional 3×3
+  edge detectors.  Sum to 0 (reject DC).  Pass to `conv2d`
+  with `kernel_height = kernel_width = 3`.
+- `laplacian_kernel()` — 4-connected discrete `∇²` (`[0,1,0; 1,-4,1; 0,1,0]`).
+- `sharpen_kernel(amount)` — identity + `amount` × (-Laplacian).
+  Sums to 1 regardless of `amount` (preserves average
+  brightness).  Common values: `amount ∈ [0.5, 2.0]`.
+
+All re-exported at the crate root.
+
+#### New unit tests — 21
+
+`sep` module (6):
+- 4 error paths: zero dims, empty horizontal kernel, empty
+  vertical kernel, image size mismatch.
+- 1 matches conv2d with outer-product kernel for 3×3 under
+  all 4 boundary modes.
+- 1 matches conv2d for a 5×5 Gaussian-like
+  `[1,4,6,4,1]/16 ⊗ [1,4,6,4,1]/16` under Replicate.
+- 1 identity kernels pass image through unchanged.
+- 1 constant image + normalised separable kernel passes
+  through under Replicate.
+
+`kernels` module (15):
+- Gaussian: sums to 1 across σ ∈ {0.5, 1, 2, 3}; symmetric;
+  peak at centre.
+- Box: sums to 1; all taps uniform.
+- Sobel x/y: sum to 0; Sobel-X applied to a vertical edge
+  produces strong horizontal response (≥ 3× the flat-region
+  response).
+- Laplacian: sums to 0; applied to a constant image produces
+  zero (∇² of constant = 0).
+- Sharpen: amount=0 gives identity kernel; sums to 1 across
+  amounts; constant image passes through.
+
+All 47 unit tests + 1 doctest pass (15 conv1d + 11 conv2d +
+6 sep + 15 kernels).
+
+#### Validation conventions
+
+- `gaussian_blur_kernel` and `box_blur_kernel` panic via
+  `assert!` on invalid input (even/zero size, non-positive
+  σ).  Matches `dsp-filters::design` convention.
+- `sep_conv2d` returns `ConvError` for empty kernels, zero
+  dims, size mismatch, or kernel-larger-than-image.
+
+### What this phase does NOT include
+
+- Phase 6: matrix-ir-lowered `conv1d` / `conv2d` via dsp-fft.
+- Strided / dilated convolution.
+- Multi-channel `[B, H, W, C]` images.
+- Kaiser-window / Lanczos / bilateral / non-linear filters
+  (median, morphological).  DSP05+ territory.
+
 ## 0.2.0 — 2026-05-16
 
 ### Added — DSP04 Phase 3 (scalar conv2d for [H, W] images)

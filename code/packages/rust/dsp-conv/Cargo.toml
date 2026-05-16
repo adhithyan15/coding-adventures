@@ -1,8 +1,8 @@
 [package]
 name = "dsp-conv"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "DSP04 Phases 1-3: scalar reference same-size 1-D and 2-D convolution with 4 boundary modes (Zero, Replicate, Reflect, Wrap). conv1d for signal filtering, conv2d for image filtering on row-major [H, W] f32 images. Complements dsp-filters::fir's full-mode output by providing the same-size image-processing API. Phase 4 adds sep_conv2d for separable kernels; Phase 5 adds Gaussian / Sobel / box / Laplacian / sharpen design helpers."
+description = "DSP04 Phases 1-5: scalar reference same-size 1-D and 2-D convolution with 4 boundary modes (Zero, Replicate, Reflect, Wrap). conv1d / conv2d for direct convolution, sep_conv2d for the row-then-column fast path on separable kernels (O(H·W·(KH+KW)) vs O(H·W·KH·KW)). Plus image filter design helpers: Gaussian blur, box blur, Sobel x/y, Laplacian, sharpen — the canonical OpenCV-equivalent primitives. Phase 6 (matrix-ir-lowered) is still pending."
 license = "MIT"
 
 [dependencies]
