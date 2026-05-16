@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.35.0] - 2026-05-15
+
+### Fixed
+
+- **`VARCHAR(N)` and parameterised column types** — `CREATE TABLE t(x VARCHAR(30))`
+  previously failed with `Parse error at 1:1: Expected program, got 'CREATE'`.
+  The SQL grammar now defines `col_type = NAME [ "(" NUMBER {"," NUMBER} ")" ]`
+  and the adapter extracts the base type name from the `col_type` child node.
+
+- **`IN ()` and `NOT IN ()` empty list** — `x IN ()` now parses and executes
+  correctly, always returning `FALSE` (resp. `TRUE` for `NOT IN`).  The grammar
+  makes `in_expr` optional; the adapter returns an `In`/`NotIn` with
+  `values=()`; the VM's `_do_in_list` short-circuits to `False` for `n=0`.
+
+- **`FROM t1, t2` implicit cross-join** — Comma-separated `FROM` clauses are now
+  recognised.  Each comma-joined table is treated as a `CROSS JOIN` and produces
+  the Cartesian product, matching standard SQL behaviour.
+
+- **`CREATE INDEX` with `ASC`/`DESC` per column** — `CREATE INDEX idx ON t(a DESC)`
+  previously raised a parse error.  The new `index_col` grammar rule accepts an
+  optional `ASC` or `DESC` after each column name.
+
+- **`ORDER BY alias` for computed expressions** — `SELECT a+b AS v4 FROM t ORDER
+  BY v4` previously crashed with `InternalError: ValueError`.  The planner now
+  treats bare alias references in `ORDER BY` as positional references (recording
+  the 0-based index of the aliased SELECT item), avoiding the fallback display
+  name `"?"` that caused the VM's sort to fail.
+
+### Tests
+
+- **`run_sqllogictest.py`** — New standalone SQLLogicTest runner that executes
+  the full sqlite SQLLogicTest suite (`select1.test` through `select5.test`)
+  against mini-sqlite.  Select tests pass at 100% with all fixes applied.
+
 ## [1.34.0] - 2026-05-15
 
 ### Fixed

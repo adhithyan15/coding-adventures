@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.27.0] - 2026-05-15
+
+### Added
+
+- **`SortKey.column_idx`** (`ir.py`) — New optional `int | None` field on
+  `SortKey` (default `None`).  When set to a 0-based integer, the VM uses
+  direct index lookup (`row[column_idx]`) rather than name-based lookup
+  (`result.columns.index(column)`).  This is set for both `ORDER BY N`
+  positional references and `ORDER BY alias` where the alias resolves to a
+  computed expression with display name `"?"`.
+
+### Fixed
+
+- **`ORDER BY N` / `ORDER BY alias` sort key** (`compiler.py`) — `_to_sort_key`
+  now emits `SortKey(column='', column_idx=k.positional_index)` when the
+  planner marks a sort key as positional (`k.positional_index is not None`).
+  Previously such sort keys fell through to the `"?"` fallback, causing the VM
+  to raise `ValueError: tuple.index("?")` at runtime.
+
+- **Hidden-column injection** (`compiler.py`, `_compile_read`) — Positional sort
+  keys (`column_idx is not None`) and unnamed computed-expression sort keys
+  (`col == "?"`) are correctly skipped during hidden-column injection, avoiding
+  spurious extra columns.
+
 ## [1.26.0] - 2026-05-15
 
 ### Added

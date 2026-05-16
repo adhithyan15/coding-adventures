@@ -2,6 +2,34 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.20.0] - 2026-05-15
+
+### Changed
+
+- **`col_type` grammar rule** (`sql.grammar`, `_grammar.py`) — Column types in
+  `CREATE TABLE` now support optional length/precision parameters:
+
+      col_type = NAME [ "(" NUMBER { "," NUMBER } ")" ] ;
+
+  This enables `VARCHAR(30)`, `DECIMAL(10, 2)`, `CHAR(8)` and similar
+  parameterised type specifications that are common in real-world SQL schemas.
+  The adapter (`mini_sqlite/adapter.py`) was updated to extract the type name
+  from the new `col_type` child node.
+
+- **`IN ()` empty list** (`sql.grammar`, `_grammar.py`) — The grammar now accepts
+  `IN ()` and `NOT IN ()` with an empty value list.  Previously the parser
+  required at least one value, causing `Parse error` on valid SQL.  The adapter
+  returns an `In`/`NotIn` node with an empty `values=()` tuple.
+
+- **Comma-separated `FROM` clause** (`sql.grammar`, `_grammar.py`) — `FROM t1, t2`
+  implicit cross-join syntax is now accepted.  Each comma-joined table is treated
+  as a `CROSS JOIN` internally.
+
+- **`CREATE INDEX` column list with `ASC`/`DESC`** (`sql.grammar`, `_grammar.py`) —
+  The `CREATE INDEX` column list now accepts optional `ASC` or `DESC` on each
+  column name (`index_col` rule).  Previously only bare column names were
+  accepted, causing a parse error on `CREATE INDEX idx ON t(col DESC)`.
+
 ## [0.19.0] - 2026-05-15
 
 ### Changed

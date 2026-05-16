@@ -443,10 +443,23 @@ class AdvanceGroupKey:
 
 @dataclass(frozen=True, slots=True)
 class SortKey:
-    """One sort key: column name + direction + NULL ordering."""
+    """One sort key: column name + direction + NULL ordering.
+
+    Two addressing modes are supported:
+
+    * **Name-based** (``column_idx is None``): the VM looks up the column by
+      name using ``result.columns.index(column)``.  This is the normal mode
+      for named columns (``SELECT name FROM t ORDER BY name``).
+
+    * **Position-based** (``column_idx`` is a 0-based integer): the VM uses
+      the column at that index directly, without name lookup.  This is used
+      for ``ORDER BY N`` positional references where the column may be a
+      computed expression with no name (e.g. ``CASE … END``).
+    """
     column: str
     direction: Direction = Direction.ASC
     nulls: NullsOrder = NullsOrder.LAST
+    column_idx: int | None = None  # 0-based; set for positional ORDER BY N
 
 
 @dataclass(frozen=True, slots=True)

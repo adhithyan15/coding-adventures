@@ -125,6 +125,9 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                     expr=_fold_expr(k.expr),
                     descending=k.descending,
                     nulls_first=k.nulls_first,
+                    # Preserve positional_index so ORDER BY N and ORDER BY alias
+                    # continue to use index-based column lookup after folding.
+                    positional_index=k.positional_index,
                 )
                 for k in keys
             )

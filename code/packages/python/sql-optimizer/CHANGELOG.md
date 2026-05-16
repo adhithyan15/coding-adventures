@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.11.0] - 2026-05-15
+
+### Fixed
+
+- **`positional_index` preservation in `Sort` folding** (`constant_folding.py`) —
+  When `_fold_plan` rewrites a `Sort` node, it now copies `k.positional_index`
+  from each input `SortKey` to the corresponding output `SortKey`.  Previously
+  the field was silently dropped (defaulted to `None`), causing `ORDER BY N`
+  and `ORDER BY alias` queries to regress to name-based lookup after constant
+  folding, producing `ValueError: tuple.index("?")` at runtime.
+
 ## [0.10.0] - 2026-05-13
 
 ### Fixed

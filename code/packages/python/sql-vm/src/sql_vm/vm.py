@@ -347,7 +347,14 @@ class _VmState:
         return self.stack.pop()
 
     def pop_n(self, n: int) -> list[SqlValue]:
-        """Pop n values; return them in push order (oldest first)."""
+        """Pop n values; return them in push order (oldest first).
+
+        Python gotcha: ``list[-0:]`` is the same as ``list[0:]`` because
+        ``-0 == 0``.  We guard against the n=0 case explicitly so that an
+        empty-IN-list (`x IN ()`) doesn't accidentally drain the entire stack.
+        """
+        if n == 0:
+            return []
         if len(self.stack) < n:
             raise StackUnderflow()
         result = self.stack[-n:]
@@ -822,8 +829,17 @@ def _do_between(st: _VmState) -> None:
 
 
 def _do_in_list(ins: InList, st: _VmState) -> None:
+    # SQL standard (and SQLite): "When the right operand is an empty set, the
+    # result of IN is false and the result of NOT IN is true, regardless of the
+    # left operand and even if the left operand is NULL."
+    #
+    # We therefore handle the n=0 case before inspecting the operand at all:
+    # pop the operand and immediately push False.
     values = st.pop_n(ins.n)
     value = st.pop()
+    if ins.n == 0:
+        st.push(False)
+        return
     if value is None:
         st.push(None)
         return
@@ -1401,7 +1417,12 @@ def _do_sort(ins: SortResult, st: _VmState) -> None:
         # Direction. Python's default tuple comparison does the rest.
         out: list[object] = []
         for k in ins.keys:
-            idx = columns.index(k.column)
+            # Positional sort keys (from ORDER BY N) carry a 0-based index so
+            # the VM can skip the name lookup entirely.  This is important when
+            # multiple computed columns share the fallback name ``"?"`` —
+            # index() would always return the FIRST ``"?"`` column, giving
+            # wrong results for ORDER BY 2, 3, …
+            idx = k.column_idx if k.column_idx is not None else columns.index(k.column)
             v = row[idx]
             is_null = v is None
             # NULLs first/last encoded as 0 / 2 around non-null = 1.
