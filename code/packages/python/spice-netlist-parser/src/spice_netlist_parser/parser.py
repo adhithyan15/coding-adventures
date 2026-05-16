@@ -93,6 +93,16 @@ class McAnalysis:
     seed: int | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class NoiseAnalysis:
+    """A `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]` card."""
+
+    output_node: str
+    input_source: str
+    freqs: tuple[float, ...] = ()
+    temperature: float = 300.0
+
+
 type Analysis = (
     OpAnalysis
     | TranAnalysis
@@ -101,6 +111,7 @@ type Analysis = (
     | TfAnalysis
     | SensAnalysis
     | McAnalysis
+    | NoiseAnalysis
 )
 
 
@@ -163,6 +174,9 @@ class ParsedNetlist:
 
     def mc_cards(self) -> list[McAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, McAnalysis)]
+
+    def noise_cards(self) -> list[NoiseAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, NoiseAnalysis)]
 
 
 _VALUE_RE = re.compile(
@@ -608,6 +622,32 @@ def _parse_directive(fields: list[str]) -> Analysis:
             tolerance=parse_value(fields[3]) if len(fields) >= 4 else 0.05,
             distribution=distribution,
             seed=int(parse_value(fields[5])) if len(fields) >= 6 else None,
+        )
+    if directive == ".noise":
+        _require_min_fields(fields, 3, ".noise")
+        freqs: list[float] = []
+        temperature = 300.0
+        tail_index = 3
+        while tail_index < len(fields):
+            token = fields[tail_index]
+            lower_token = token.lower()
+            if lower_token == "temp":
+                if tail_index + 1 >= len(fields):
+                    raise NetlistParseError(".noise temp requires a temperature value")
+                temperature = parse_value(fields[tail_index + 1])
+                tail_index += 2
+                continue
+            if lower_token.startswith("temp="):
+                temperature = parse_value(token.split("=", 1)[1])
+                tail_index += 1
+                continue
+            freqs.append(parse_value(token))
+            tail_index += 1
+        return NoiseAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".noise"),
+            input_source=fields[2],
+            freqs=tuple(freqs),
+            temperature=temperature,
         )
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
 
