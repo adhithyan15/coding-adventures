@@ -1,5 +1,47 @@
 # Changelog — `twig-aot`
 
+## 0.4.0 — 2026-05-16 (`--target` CLI flag)
+
+**Expose the LANG46 multi-target driver to end users via a `--target`
+CLI flag on the `twig-aot` binary.**
+
+Previously the CLI only invoked `compile_file_macos_arm64`; the
+Linux/Windows entry points existed but were unreachable from the
+command line.  This release adds a `--target` flag and host-aware
+dispatch:
+
+```
+twig-aot foo.twig                      # auto-picks the host target
+twig-aot foo.twig --target=linux-x86_64
+twig-aot foo.twig --target=windows-x86_64
+twig-aot foo.twig --target=macos-arm64
+```
+
+Accepted values (and full target-triple aliases):
+| Short | Triple |
+|---|---|
+| `auto` (default) | (build host) |
+| `macos-arm64` | `aarch64-apple-darwin` |
+| `linux-x86_64` | `x86_64-unknown-linux-gnu` |
+| `windows-x86_64` | `x86_64-pc-windows-msvc` |
+
+Cross-OS dispatch (e.g. `--target=linux-x86_64` on a Windows host)
+errors out cleanly:
+
+```
+$ twig-aot --target=linux-x86_64 foo.twig    # on Windows
+twig-aot: --target=linux-x86_64 requires a Linux x86-64 host in V1
+         (cross-OS compilation is a separate follow-up)
+```
+
+Unknown targets produce an enumerated error:
+
+```
+$ twig-aot --target=bogus foo.twig
+twig-aot: unknown target "bogus"; expected one of: auto, macos-arm64,
+         linux-x86_64, windows-x86_64
+```
+
 ## 0.3.1 — 2026-05-16 (multi-function x86_64 cross-fn patching)
 
 **Patch cross-function `call` sites in place during the x86_64
