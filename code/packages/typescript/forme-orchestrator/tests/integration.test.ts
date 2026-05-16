@@ -356,6 +356,83 @@ describe("buildDag — direct API", () => {
   });
 });
 
+describe("buildDag — stream-iteration typecheck promotion", () => {
+  // When a per-item stage sits between a stream source and a stream
+  // sink, the orchestrator iterates the stream and invokes the per-
+  // item stage once per yielded value.  The per-item stage's
+  // declared `produces` is a single value, but its effective output
+  // downstream is Stream<that value> — because the orchestrator
+  // collects N invocations into a stream.  The DAG builder must
+  // agree with that runtime semantics or it rejects the wire.
+
+  it("Stream<X> → (X→Y per-item) → Stream<Y> builds without error", () => {
+    const source = tinySource(["a", "b"]);
+    // per-item: ContentSource → ContentNode
+    const parse = defineStage({
+      name: "@test/parse",
+      version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "per-item ContentSource → ContentNode",
+      consumes: Kinds.ContentSource,
+      produces: Kinds.ContentNode,
+      capabilities: [], configSchema: null,
+      async run() { return {} as never; },
+    });
+    // stream-stream: Stream<ContentNode> → Stream<RenderedPage>
+    const render = defineStage({
+      name: "@test/render",
+      version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "Stream<ContentNode> → Stream<RenderedPage>",
+      consumes: streamOf(Kinds.ContentNode),
+      produces: streamOf(Kinds.RenderedPage),
+      capabilities: [], configSchema: null,
+      // eslint-disable-next-line require-yield
+      async *run() { /* no-op for typecheck */ },
+    });
+    const config = makeConfig([
+      { stage: source }, { stage: parse }, { stage: render },
+    ]);
+    const resolved = validateConfig(config);
+    // Before the fix: this throws "no earlier instance produces a
+    // compatible kind" because parse declares produces=ContentNode
+    // and render consumes Stream<ContentNode>.  After: parse's
+    // effective output is Stream<ContentNode> because it's wired
+    // from a stream, so the typecheck accepts.
+    expect(() => buildDag(resolved)).not.toThrow();
+    const dag = buildDag(resolved);
+    expect(dag.topoOrder).toEqual(["@test/source", "@test/parse", "@test/render"]);
+    expect(dag.instances.get("@test/render")!.producer).toBe("@test/parse");
+  });
+
+  it("a stream-stream stage's effective output is its declared Stream produces (no double-wrap)", () => {
+    // sourceA -> streamStage(Stream<X> -> Stream<Y>) -> sink(Stream<Y>)
+    const source = tinySource(["x"]);
+    const streamStage = defineStage({
+      name: "@test/stream-stage",
+      version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "stream → stream pass-through",
+      consumes: streamOf(Kinds.ContentSource),
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [], configSchema: null,
+      // eslint-disable-next-line require-yield
+      async *run() { /* no-op */ },
+    });
+    const streamSink = defineStage({
+      name: "@test/stream-sink",
+      version: "0.1.0", apiVersion: KERNEL_API_VERSION,
+      description: "consumes Stream<X>, emits artifact",
+      consumes: streamOf(Kinds.ContentSource),
+      produces: Kinds.DeployArtifact,
+      capabilities: [], configSchema: null,
+      async run() { return null as never; },
+    });
+    const config = makeConfig([
+      { stage: source }, { stage: streamStage }, { stage: streamSink },
+    ]);
+    const resolved = validateConfig(config);
+    expect(() => buildDag(resolved)).not.toThrow();
+  });
+});
+
 describe("runOnce direct (without the orchestrator wrapper)", () => {
   it("returns a result with elapsedMs and buildId", async () => {
     const source = tinySource(["a"]);
