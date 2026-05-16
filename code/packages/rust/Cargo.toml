@@ -97,6 +97,7 @@ members = [
     "diagram-to-paint",
     "directed-graph",
     "dsp-complex",
+    "dsp-dct",
     "dsp-fft",
     "dot-lexer",
     "dot-parser",
