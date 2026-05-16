@@ -1,5 +1,90 @@
 # Changelog — dsp-fft
 
+## 0.4.0 — 2026-05-15
+
+### Changed — DSP01 Phase 3b.iv (public `fft()` real-input path runs on the matrix execution layer)
+
+The public `fft(signal, complex = false)` entry point now routes
+real-valued, power-of-two inputs through `fft_via_runtime` —
+i.e. the FFT actually runs end-to-end through `matrix-runtime` +
+`matrix-cpu`.  When `matrix-metal` / `matrix-cuda` claim Slice +
+Concat in their `supported_ops` bitsets, the same call lifts to
+GPU automatically with no `dsp-fft` change required.  That's the
+whole point of building on top of MX.
+
+What stays scalar for now:
+
+- `fft(signal, complex = true)` — the matrix-ir graph builder
+  always Concats a zero imaginary lane (i.e. it's real-input
+  only), so complex inputs continue to call `fft_scalar`.  A
+  follow-up phase will add a complex-input graph variant.
+- `ifft(spectrum: &ComplexTensor)` — the matrix-ir FFT graph's
+  input is `[N]` real and its output is `[N, 2]` complex; an
+  inverse from `[N, 2]` complex doesn't fit the same graph and
+  is deferred.
+
+`fft_scalar` and `ifft_scalar` remain available as the canonical
+oracle.
+
+#### Behavior
+
+- `fft(&real, false)` for power-of-two `N ≥ 2` is byte-for-byte
+  equivalent to the Phase 2 scalar path within `1e-4` relative
+  tolerance (matches the Phase 3b.iii contract).
+- `N = 1` still works — the public API falls back to the scalar
+  path for the degenerate single-element case so the API surface
+  is unchanged from Phase 2.
+- `fft(&[], false)` and `fft(&[1.0, 2.0, 3.0], false)` still
+  return errors; the exact `FftError` variant is preserved
+  (`InvalidInput` for empty, `NotPowerOfTwo(3)` for non-pow2).
+
+#### New public re-exports
+
+- `pub use radix2::build_fft_graph_with_input;`
+- `pub use radix2::fft_via_runtime;`
+
+Previously these were only reachable via `dsp_fft::radix2::*`.
+They're now first-class items at the crate root so callers
+don't have to dip into the submodule.
+
+#### New unit tests
+
+6 new tests in `tests`:
+
+- `public_fft_real_matches_scalar_via_runtime_n8` — real ramp,
+  routed through the matrix-runtime path, matches `fft_scalar`
+  to 1e-4.
+- `public_fft_real_matches_scalar_via_runtime_n16_sinusoid` —
+  pure cosine, every butterfly stage exercised.
+- `public_fft_real_impulse_via_runtime` — closed-form impulse
+  check, all bins = 1.0 within 1e-5.
+- `public_round_trip_real_through_runtime_and_scalar_ifft` —
+  `ifft(fft(x)) ≈ x` for an 8-point real signal, where the
+  forward goes through the matrix-ir graph and the inverse
+  through the scalar reference.  Verifies the forward path's
+  correctness end-to-end against the public API.
+- `public_fft_complex_input_still_goes_through_scalar` —
+  contract test: `fft(&interleaved, true)` returns *exactly*
+  what `fft_scalar(&interleaved)` returns (bit-identical, not
+  approximate), pinning the Phase 2 behavior for complex
+  inputs.
+- `public_fft_real_rejects_non_power_of_two` — error path:
+  length validation still returns `FftError::NotPowerOfTwo`.
+
+All 28 unit tests pass (17 from earlier phases + 6 new + 5
+Phase 3b.iii e2e + … net 6 added at the public-API layer).
+
+### What this phase does NOT include
+
+- Complex-input `fft(&interleaved, true)` on the matrix-runtime
+  path.  Needs a new graph builder that takes `[N, 2]` complex
+  input instead of building one out of `[N]` real + Concat.
+- `ifft` on the matrix-runtime path.  Same reason — the
+  current `build_fft_graph(_, Direction::Inverse)` only works
+  when the input is `[N]` real.
+- Performance benchmarking.  Functional parity is the bar
+  for Phase 3b.iv; perf is Phase 5.
+
 ## 0.3.0 — 2026-05-13
 
 ### Added — DSP01 Phase 3b.iii (end-to-end FFT execution via the matrix execution layer)
