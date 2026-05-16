@@ -1,0 +1,137 @@
+# ================================================================
+# Deploy Coding Adventures Blog to GitHub Pages
+# ================================================================
+#
+# Builds the Forme pipeline (5 stages, FM00 §5 demo) and deploys the
+# generated dist/coding-adventures/blog/ tree to the gh-pages branch
+# under coding-adventures/blog/, preserving other content on Pages.
+#
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into coding-adventures/blog/
+# on that branch, so the site is available at:
+#   https://adhithyan15.github.io/coding-adventures/blog/<slug>.html
+#
+# Pipeline shape (see code/sites/blog/forme.config.ts):
+#   forme-source-fs          Stream<ContentSource>
+#   forme-parse-markdown     ContentSource → ContentNode
+#   forme-render-static      Stream<ContentNode> → Stream<RenderedPage>
+#   forme-emit-fs            Stream<RenderedPage> → DeployArtifact
+#
+# Dependency install order (leaf → root):
+#   document-ast            — no local deps
+#   document-ast-to-html    — depends on document-ast
+#   directed-graph          — no local deps
+#   state-machine           — depends on directed-graph
+#   gfm-parser              — depends on document-ast, document-ast-to-html,
+#                             directed-graph, state-machine
+#   blake2b                 — no local deps
+#   forme-types             — depends on document-ast
+#   forme-errors            — no local deps
+#   forme-capability        — no local deps
+#   forme-stage             — depends on forme-types, forme-errors,
+#                             forme-capability
+#   forme-identity          — depends on forme-types, blake2b
+#   forme-pipeline-config   — depends on forme-types, forme-stage,
+#                             forme-capability
+#   forme-cache             — depends on forme-types, forme-identity,
+#                             forme-errors
+#   forme-orchestrator      — depends on forme-types, forme-stage,
+#                             forme-pipeline-config, forme-cache,
+#                             forme-identity, forme-errors,
+#                             forme-capability
+#   forme-source-fs         — depends on forme-types, forme-stage,
+#                             forme-identity
+#   forme-parse-markdown    — depends on forme-types, forme-stage,
+#                             forme-identity, gfm-parser, document-ast
+#   forme-render-static     — depends on forme-types, forme-stage,
+#                             document-ast-to-html, document-ast
+#   forme-emit-fs           — depends on forme-types, forme-stage,
+#                             forme-identity
+
+name: Deploy Coding Adventures Blog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/sites/blog/**"
+      - "code/packages/typescript/forme-types/**"
+      - "code/packages/typescript/forme-errors/**"
+      - "code/packages/typescript/forme-capability/**"
+      - "code/packages/typescript/forme-stage/**"
+      - "code/packages/typescript/forme-identity/**"
+      - "code/packages/typescript/forme-pipeline-config/**"
+      - "code/packages/typescript/forme-cache/**"
+      - "code/packages/typescript/forme-orchestrator/**"
+      - "code/packages/typescript/forme-source-fs/**"
+      - "code/packages/typescript/forme-parse-markdown/**"
+      - "code/packages/typescript/forme-render-static/**"
+      - "code/packages/typescript/forme-emit-fs/**"
+      - "code/packages/typescript/document-ast/**"
+      - "code/packages/typescript/document-ast-to-html/**"
+      - "code/packages/typescript/gfm-parser/**"
+      - "code/packages/typescript/directed-graph/**"
+      - "code/packages/typescript/state-machine/**"
+      - "code/packages/typescript/blake2b/**"
+      - ".github/workflows/deploy-blog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (packages, leaf → root)
+        run: |
+          cd code/packages/typescript/document-ast && npm install
+          cd ../document-ast-to-html && npm install
+          cd ../directed-graph && npm install
+          cd ../state-machine && npm install
+          cd ../gfm-parser && npm install
+          cd ../blake2b && npm install
+          cd ../forme-types && npm install
+          cd ../forme-errors && npm install
+          cd ../forme-capability && npm install
+          cd ../forme-stage && npm install
+          cd ../forme-identity && npm install
+          cd ../forme-pipeline-config && npm install
+          cd ../forme-cache && npm install
+          cd ../forme-orchestrator && npm install
+          cd ../forme-source-fs && npm install
+          cd ../forme-parse-markdown && npm install
+          cd ../forme-render-static && npm install
+          cd ../forme-emit-fs && npm install
+
+      - name: Install dependencies (site)
+        run: |
+          cd code/sites/blog
+          npm install
+
+      - name: Build blog (run Forme pipeline)
+        run: |
+          cd code/sites/blog
+          npm run build
+
+      - name: Verify expected output exists
+        run: |
+          test -d code/sites/blog/dist/coding-adventures/blog
+          ls code/sites/blog/dist/coding-adventures/blog
+          test -n "$(ls code/sites/blog/dist/coding-adventures/blog/*.html 2>/dev/null)"
+
+      - name: Deploy to GitHub Pages (coding-adventures/blog/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/sites/blog/dist/coding-adventures/blog
+          destination_dir: coding-adventures/blog
+          keep_files: true
