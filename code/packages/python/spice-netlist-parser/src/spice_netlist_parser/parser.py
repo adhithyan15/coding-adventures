@@ -298,8 +298,20 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         _require_fields(fields, 4, "resistor")
         return Resistor(name, fields[1], fields[2], parse_value(fields[3]))
     if prefix == "C":
-        _require_fields(fields, 4, "capacitor")
-        return Capacitor(name, fields[1], fields[2], parse_value(fields[3]))
+        _require_min_fields(fields, 4, "capacitor")
+        params = _parse_element_params(fields[4:], "capacitor")
+        unsupported = set(params) - {"IC"}
+        if unsupported:
+            raise NetlistParseError(
+                f"unsupported capacitor parameter {sorted(unsupported)[0]!r}"
+            )
+        return Capacitor(
+            name,
+            fields[1],
+            fields[2],
+            parse_value(fields[3]),
+            initial_voltage=params.get("IC", 0.0),
+        )
     if prefix == "L":
         _require_fields(fields, 4, "inductor")
         return Inductor(name, fields[1], fields[2], parse_value(fields[3]))

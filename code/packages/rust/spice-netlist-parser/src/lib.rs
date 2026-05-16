@@ -497,12 +497,19 @@ fn parse_element(
             )))
         }
         'C' => {
-            require_fields(fields, 4, "capacitor")?;
-            Ok(Element::Capacitor(Capacitor::new(
+            require_min_fields(fields, 4, "capacitor")?;
+            let params = parse_element_params(&fields[4..], "capacitor")?;
+            if let Some(param_name) = params.keys().find(|name| name.as_str() != "IC") {
+                return Err(NetlistParseError::new(format!(
+                    "unsupported capacitor parameter {param_name:?}"
+                )));
+            }
+            Ok(Element::Capacitor(Capacitor::with_initial_voltage(
                 name,
                 &fields[1],
                 &fields[2],
                 parse_value(&fields[3])?,
+                *params.get("IC").unwrap_or(&0.0),
             )))
         }
         'L' => {

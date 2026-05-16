@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Parse capacitor `IC=<voltage>` initial-voltage parameters.
 - Parse SPICE independent source `AC <magnitude> [phase]` specifications for
   voltage and current sources, including `DC <value> AC ...` mixed bias/input
   forms.

@@ -5,7 +5,7 @@ import {
   PwlWaveform,
   SinWaveform,
   bjt,
-  capacitor,
+  capacitorWithInitialVoltage,
   cccs,
   ccvs,
   currentSource,
@@ -402,8 +402,22 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
     return resistor(name, fields[1], fields[2], parseValue(fields[3]));
   }
   if (prefix === "C") {
-    requireFields(fields, 4, "capacitor");
-    return capacitor(name, fields[1], fields[2], parseValue(fields[3]));
+    requireMinFields(fields, 4, "capacitor");
+    const params = parseElementParams(fields.slice(4), "capacitor");
+    for (const paramName of params.keys()) {
+      if (paramName !== "IC") {
+        throw new NetlistParseError(
+          `unsupported capacitor parameter ${JSON.stringify(paramName)}`,
+        );
+      }
+    }
+    return capacitorWithInitialVoltage(
+      name,
+      fields[1],
+      fields[2],
+      parseValue(fields[3]),
+      params.get("IC") ?? 0.0,
+    );
   }
   if (prefix === "L") {
     requireFields(fields, 4, "inductor");
