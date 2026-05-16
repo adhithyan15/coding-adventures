@@ -25,7 +25,7 @@ elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
 `BF` / `BETA_F`, and `VT` parameters, `.model <name> NMOS(...)` /
 `.model <name> PMOS(...)` MOSFET cards with Level-1 `VT0` / `VTO`, `KP`,
 `LAMBDA`, `GAMMA`, `PHI`, `W`, `L`, `IS`, `N_SUB` / `NSUB`, and `T_NOM` /
-`TNOM` parameters,
+`TNOM` parameters, capacitor `IC=<voltage>` initial conditions,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
 `.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, `.ac`, and
 `.tf`, `.sens`, `.mc`, and `.noise` analysis cards.

@@ -71,7 +71,7 @@ def test_parse_reactive_elements_and_analysis_cards() -> None:
 Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)
 I1 out 0 1m
 Rload in out 2.2k
-Cload out 0 10p
+Cload out 0 10p IC=2.5
 L1 out 0 1u
 G1 out 0 in 0 2m
 .tran 1n 20n
@@ -84,6 +84,7 @@ G1 out 0 in 0 2m
     assert parsed.circuit.elements[0].waveform is not None
     assert isinstance(parsed.circuit.elements[1], CurrentSource)
     assert isinstance(parsed.circuit.elements[3], Capacitor)
+    assert parsed.circuit.elements[3].initial_voltage == 2.5
     assert isinstance(parsed.circuit.elements[4], Inductor)
     assert isinstance(parsed.circuit.elements[5], VCCS)
     assert parsed.analyses == [
@@ -91,6 +92,11 @@ G1 out 0 in 0 2m
         DcAnalysis(source_name="Vstep", start=0.0, stop=1.0, step=0.5),
         AcAnalysis(mode="dec", points=10, start_hz=1.0e3, stop_hz=1.0e6),
     ]
+
+
+def test_capacitor_rejects_unsupported_element_params() -> None:
+    with pytest.raises(NetlistParseError, match="unsupported capacitor parameter"):
+        parse_netlist("C1 in 0 1u FOO=1")
 
 
 def test_parse_tf_analysis_card_and_run_transfer_function() -> None:

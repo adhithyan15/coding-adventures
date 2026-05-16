@@ -50,7 +50,7 @@ fn parses_reactive_elements_vccs_source_waveforms_and_analysis_cards() {
 Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)
 I1 out 0 1m
 Rload in out 2.2k
-Cload out 0 10p
+Cload out 0 10p IC=2.5
 L1 out 0 1u
 G1 out 0 in 0 2m
 .tran 1n 20n
@@ -75,6 +75,10 @@ G1 out 0 in 0 2m
         panic!("expected voltage source");
     };
     assert!(voltage.waveform.is_some());
+    let Element::Capacitor(capacitor) = &parsed.circuit.elements()[3] else {
+        panic!("expected capacitor");
+    };
+    assert_close(capacitor.initial_voltage, 2.5);
 
     assert_eq!(
         parsed.analyses,
@@ -97,6 +101,15 @@ G1 out 0 in 0 2m
             }),
         ]
     );
+}
+
+#[test]
+fn rejects_unsupported_capacitor_element_params() {
+    let error = parse_netlist("C1 in 0 1u FOO=1").unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains("unsupported capacitor parameter"));
 }
 
 #[test]
