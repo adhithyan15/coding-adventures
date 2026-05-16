@@ -1,5 +1,28 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.1.1 — 2026-05-15
+
+### Fixed
+
+- **DAG typecheck now agrees with the scheduler on stream-iteration
+  promotion.**  When a per-item stage (consumes X, produces Y) sits
+  between a stream source (Stream<X>) and a stream sink
+  (Stream<Y>), the scheduler iterates the source and invokes the
+  per-item stage N times — yielding N Y values that downstream
+  consumers see as Stream<Y>.  The DAG builder used to reject the
+  wire before scheduling ever ran (it compared the per-item stage's
+  declared `produces: Y` against the consumer's `consumes:
+  Stream<Y>` and failed).  `buildDag` now tracks an `effectiveProduces`
+  per instance — when an instance's input is a stream and its declared
+  consumes/produces are single values, its effective downstream output
+  is promoted to `Stream<produces>`.  Two new integration tests pin
+  the behaviour (Stream → per-item → Stream builds; pure stream-stream
+  chains aren't double-wrapped).
+
+  This was discovered while wiring the blog site (FM00 §5 demo): the
+  natural shape — source-fs (Stream) → parse-markdown (per-item) →
+  render-static (Stream) → emit-fs (Stream) — couldn't be built.
+
 ## 0.1.0 — 2026-05-15
 
 Initial release.  FM03 §3-4, §9-10 — the runtime that takes a

@@ -77,9 +77,23 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
   // Second pass: resolve producers by walking earlier instances and
   // finding the most-recent compatible kind.  Track which producers
   // are consumed so we can identify sinks.
+  //
+  // The compatibility check uses each prior instance's *effective*
+  // produces kind — which can differ from its declared produces when
+  // the orchestrator iterates a stream input on its behalf.  Example:
+  //   sourceFs               produces Stream<ContentSource>
+  //   parseMarkdown          consumes ContentSource, declares produces ContentNode
+  //   renderStatic           consumes Stream<ContentNode>
+  // The scheduler iterates sourceFs's stream and invokes parseMarkdown
+  // once per ContentSource, yielding a Stream<ContentNode> downstream
+  // (forme-orchestrator/scheduler.ts marks state.isStreamOutput=true in
+  // that branch).  The DAG builder must agree, or it rejects the wire
+  // before scheduling ever runs.  `effectiveProduces` captures that
+  // promotion so the typecheck and the runtime stay in sync.
   const consumedAsProducer = new Set<string>();
   const ids = resolved.resolvedIds;
   const updated: ResolvedInstance[] = [];
+  const effectiveProduces = new Map<string, KindDescriptor>();
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i]!;
     const inst = instances.get(id)!;
@@ -87,17 +101,22 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
 
     // Sources: consumes: Void (or void).
     if (consumes.name === "Void") {
+      effectiveProduces.set(id, inst.stage.produces);
       sources.push(id);
       updated.push(inst);
       continue;
     }
 
-    // Walk earlier instances in declaration order from most-recent backwards.
+    // Walk earlier instances in declaration order from most-recent
+    // backwards.  Compare against each prior's effective produces.
     let producerId: string | null = null;
+    let producerEffective: KindDescriptor | null = null;
     for (let j = i - 1; j >= 0; j--) {
       const prior = instances.get(ids[j]!)!;
-      if (areKindsCompatible(prior.stage.produces, consumes)) {
+      const priorEffective = effectiveProduces.get(prior.id) ?? prior.stage.produces;
+      if (areKindsCompatible(priorEffective, consumes)) {
         producerId = prior.id;
+        producerEffective = priorEffective;
         break;
       }
     }
@@ -113,6 +132,29 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
     }
     consumedAsProducer.add(producerId);
     updated.push({ ...inst, producer: producerId });
+
+    // Compute this instance's effective produces, considering the
+    // stream-iteration promotion described above.
+    //
+    //   producerEffective = Stream<X>  AND  consumes = X           ⇒
+    //     orchestrator invokes inst per-yielded-X.  Each invocation
+    //     produces stage.produces.  Downstream sees Stream<stage.produces>.
+    //
+    //   producerEffective = Stream<stage.produces>                 ⇒ keep as-is.
+    //
+    //   producerEffective is Stream<X> and consumes is Stream<X>   ⇒ keep declared produces
+    //     (instance is itself a stream-stream stage).
+    //
+    //   Otherwise                                                  ⇒ keep declared produces.
+    const declared = inst.stage.produces;
+    const isPerItemIteration =
+      producerEffective.name === "Stream" &&
+      consumes.name !== "Stream" &&
+      declared.name !== "Stream";
+    const promoted: KindDescriptor = isPerItemIteration
+      ? { name: "Stream", version: declared.version, inner: declared }
+      : declared;
+    effectiveProduces.set(id, promoted);
   }
 
   // Replace map with updated instances (now carrying producer info).
