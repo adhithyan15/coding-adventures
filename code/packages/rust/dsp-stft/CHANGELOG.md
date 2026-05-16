@@ -1,5 +1,92 @@
 # Changelog — dsp-stft
 
+## 0.3.0 — 2026-05-16
+
+### Added — DSP05 Phase 5 (mel filterbank + mel-spectrogram + MFCC)
+
+The canonical speech / audio feature pipeline.  Composes
+`spectrogram` (Phase 4) with `dsp-dct` to produce mel-spectrograms
+and Mel-Frequency Cepstral Coefficients — the foundation of every
+classical ASR system and most modern audio ML feature extractors.
+
+#### Public API
+
+```rust
+pub fn mel_filterbank(n_mels: u32, n_fft: u32, sample_rate: f32)
+    -> Vec<f32>;
+    // returns flattened [n_mels, n_fft / 2 + 1] row-major.
+
+pub fn mel_spectrogram(signal, n_fft, hop_length, n_mels,
+                       sample_rate, window)
+    -> Result<Vec<f32>, StftError>;
+    // returns flattened [num_frames, n_mels] row-major.
+
+pub fn mfcc(signal, n_fft, hop_length, n_mels, n_mfcc,
+            sample_rate, window)
+    -> Result<Vec<f32>, StftError>;
+    // returns flattened [num_frames, n_mfcc] row-major.
+```
+
+All three re-exported at the crate root.
+
+#### Algorithm
+
+- **Mel scale (HTK convention):**
+  ```
+  mel(f)    = 2595 · log10(1 + f / 700)
+  mel⁻¹(m) = 700  · (10^(m/2595) − 1)
+  ```
+- **Filterbank** — `n_mels + 2` equally-spaced anchor points on
+  the mel axis between `fmin = 0` and `fmax = sample_rate / 2`
+  (Nyquist), converted back to Hz then to fractional FFT bin
+  indices.  Each triangle `m` has vertices
+  `(left[m], center[m], right[m])` = `(hz_pts[m], hz_pts[m+1],
+  hz_pts[m+2])` — rising slope `(k - left)/(center - left)` on
+  the left, falling slope `(right - k)/(right - center)` on
+  the right, zero outside.  Each row is renormalised to sum to
+  1.0 so mel pooling is a weighted *average* of power bins.
+- **Mel spectrogram** — matrix product
+  `mel_filterbank @ |STFT|²` per frame.
+- **MFCC** — `DCT-II_ortho(log(mel_spectrogram + ε))[:, :n_mfcc]`
+  with `ε = 1e-10`.  Uses `dsp_dct::dct(_, DctType::II,
+  DctNorm::Ortho)`.
+
+#### New crate dependency
+
+`dsp-dct = { path = "../dsp-dct" }` — for the final DCT-II step
+of MFCC.
+
+#### New unit tests — 15
+
+`mel` module:
+- 5 filterbank tests: shape, non-negativity, rows sum to 1.0,
+  zero-n_mels returns empty, zero-n_fft returns empty.
+- 5 mel-spectrogram tests: output shape, non-negativity,
+  zero-signal → all-zero, rejects `n_mels = 0`, rejects
+  `sample_rate ≤ 0`, propagates STFT errors (signal too short).
+- 4 MFCC tests: output shape, rejects `n_mfcc = 0`, rejects
+  `n_mfcc > n_mels`, finite for zero signal (log(ε) + DCT).
+
+All 40 unit tests + 1 doctest pass (11 stft + 8 inverse +
+6 spectrogram + 15 mel).
+
+### What this phase does NOT include
+
+- Phase 6: matrix-ir-lowered stft.
+- Centred-padding mode.
+- Streaming / real-time API.
+- Delta / delta-delta MFCC features.
+- Per-band liftering.
+
+### Spec note
+
+The Phase 5 spec listed `mel_filterbank(n_mels, n_fft,
+sample_rate)` with no `fmin / fmax` parameters; the
+implementation matches the spec exactly and uses
+`fmin = 0`, `fmax = sample_rate / 2` internally.  A future
+phase can introduce explicit `fmin / fmax` overloads
+(librosa-style) without breaking this signature.
+
 ## 0.2.0 — 2026-05-16
 
 ### Added — DSP05 Phase 3 + 4 (ISTFT + spectrogram helpers)
