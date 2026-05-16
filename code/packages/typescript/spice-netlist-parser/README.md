@@ -28,5 +28,5 @@ elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
 `TNOM` parameters, capacitor `IC=<voltage>` and inductor `IC=<current>`
 initial conditions,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
-`.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, `.ac`, and
-`.tf`, `.sens`, `.mc`, and `.noise` analysis cards.
+`.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`,
+`.sens`, `.mc`, `.noise`, and `.options` analysis cards.

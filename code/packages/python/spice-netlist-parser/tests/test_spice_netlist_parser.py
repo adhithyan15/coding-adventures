@@ -32,6 +32,7 @@ from spice_netlist_parser import (
     NetlistParseError,
     NoiseAnalysis,
     OpAnalysis,
+    OptionsAnalysis,
     SensAnalysis,
     TfAnalysis,
     TranAnalysis,
@@ -93,6 +94,32 @@ G1 out 0 in 0 2m
         DcAnalysis(source_name="Vstep", start=0.0, stop=1.0, step=0.5),
         AcAnalysis(mode="dec", points=10, start_hz=1.0e3, stop_hz=1.0e6),
     ]
+
+
+def test_parse_options_analysis_card() -> None:
+    parsed = parse_netlist(
+        """
+.options reltol=1m abstol=1n gmin=1p method=trap noopiter
+"""
+    )
+
+    assert parsed.analyses == [
+        OptionsAnalysis(
+            {
+                "reltol": 1.0e-3,
+                "abstol": 1.0e-9,
+                "gmin": 1.0e-12,
+                "method": "trap",
+                "noopiter": True,
+            }
+        )
+    ]
+    assert parsed.options_cards() == parsed.analyses
+
+
+def test_options_card_rejects_empty_values() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.options 'gmin' requires a value"):
+        parse_netlist(".options gmin=")
 
 
 def test_capacitor_rejects_unsupported_element_params() -> None:
