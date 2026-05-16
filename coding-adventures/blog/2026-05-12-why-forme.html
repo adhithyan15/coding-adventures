@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why Forme?</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  color: #1f2328;
+  background: #ffffff;
+  line-height: 1.6;
+  margin: 0;
+  padding: 2rem 1rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+main {
+  width: 100%;
+  max-width: 38rem;
+}
+header, footer {
+  width: 100%;
+  max-width: 38rem;
+  color: #57606a;
+  font-size: 0.9rem;
+}
+header { margin-bottom: 2rem; }
+footer { margin-top: 4rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
+header a, footer a { color: inherit; }
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  margin: 2rem 0 1rem;
+  font-weight: 600;
+}
+h1 { font-size: 2rem; margin-top: 0; }
+h2 { font-size: 1.5rem; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1rem; }
+p { margin: 0 0 1rem; }
+a { color: #0969da; text-decoration: underline; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+strong { font-weight: 600; }
+em { font-style: italic; }
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
+  font-size: 0.9em;
+  padding: 0.15em 0.35em;
+  background: #f6f8fa;
+  border-radius: 4px;
+}
+pre {
+  background: #f6f8fa;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+blockquote {
+  margin: 1rem 0;
+  padding: 0.25rem 1rem;
+  color: #57606a;
+  border-left: 4px solid #d0d7de;
+}
+ul, ol { padding-left: 1.5rem; margin: 0 0 1rem; }
+li { margin: 0.25rem 0; }
+hr { border: 0; border-top: 1px solid #d0d7de; margin: 2rem 0; }
+img { max-width: 100%; height: auto; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #d0d7de; padding: 0.4rem 0.7rem; text-align: left; }
+th { background: #f6f8fa; }
+</style>
+</head>
+<body>
+<header><a href="/">Coding Adventures</a></header>
+<main>
+<h1>Why Forme?</h1>
+<p>Every static-site generator I've used has the same shape: a couple of
+opinions about layouts, a templating language, a thousand plugins,
+and at some point the realisation that the moment you want to do
+something the framework didn't anticipate, you have to fork it.</p>
+<p><strong>Forme</strong> is the opposite bet: keep the substrate tiny and typed, push
+all the policy out into composable stages.</p>
+<h2>The substrate</h2>
+<p>There are exactly five things in the FM01 kernel:</p>
+<ul>
+<li><code>KindDescriptor</code> — what flows on a wire (ContentSource, ContentNode,
+RenderedPage, …)</li>
+<li><code>Stage&lt;In, Out&gt;</code> — a unit that consumes one Kind and produces
+another</li>
+<li><code>StageContext</code> — the bundle of capabilities a stage receives
+(logger, clock, storage, network, …)</li>
+<li>Capability strings (<code>storage:read</code>, <code>filesystem:write</code>, …) gating
+the dangerous APIs</li>
+<li>A typed DAG runtime that wires stages together using the declared
+Kinds</li>
+</ul>
+<p>That's it. No layouts, no templates, no special &quot;this is a blog&quot;
+shape. The blog is just one configuration of one of many possible
+pipelines.</p>
+<h2>What you get</h2>
+<ul>
+<li>A blog post is <code>Markdown → ContentSource → ContentNode → RenderedPage → DeployArtifact</code>. Five stages, each tiny enough to fit
+on a page.</li>
+<li>An RSS feed is a different terminal <code>Stage&lt;Stream&lt;ContentNode&gt;, Feed&gt;</code> reading the same parsed nodes — no parser fork required.</li>
+<li>A printed PDF (when FM07 lands) is yet another terminal stage
+consuming the same <code>ContentNode</code>s and emitting a <code>PrintForme</code>.</li>
+<li>A search index is a sibling collector that the orchestrator runs in
+parallel with the renderer.</li>
+</ul>
+<p>The point of building the substrate first is that every one of those
+features stops being a fork-the-framework conversation and starts
+being a write-a-stage conversation.</p>
+<h2>Where we are</h2>
+<p>This blog is the <strong>v0 end-to-end demo</strong>: prove the substrate, ship a
+real artifact, then layer the more interesting capabilities
+(asset extraction, search index, RSS feed, an actual CSS theme) as
+follow-up PRs that don't touch the parser or the writer.</p>
+<p>Tomorrow's post will walk through the kernel piece by piece.</p>
+</main>
+</body>
+</html>

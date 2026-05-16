@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Capability-typed stages</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  color: #1f2328;
+  background: #ffffff;
+  line-height: 1.6;
+  margin: 0;
+  padding: 2rem 1rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+main {
+  width: 100%;
+  max-width: 38rem;
+}
+header, footer {
+  width: 100%;
+  max-width: 38rem;
+  color: #57606a;
+  font-size: 0.9rem;
+}
+header { margin-bottom: 2rem; }
+footer { margin-top: 4rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
+header a, footer a { color: inherit; }
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  margin: 2rem 0 1rem;
+  font-weight: 600;
+}
+h1 { font-size: 2rem; margin-top: 0; }
+h2 { font-size: 1.5rem; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1rem; }
+p { margin: 0 0 1rem; }
+a { color: #0969da; text-decoration: underline; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+strong { font-weight: 600; }
+em { font-style: italic; }
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
+  font-size: 0.9em;
+  padding: 0.15em 0.35em;
+  background: #f6f8fa;
+  border-radius: 4px;
+}
+pre {
+  background: #f6f8fa;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+blockquote {
+  margin: 1rem 0;
+  padding: 0.25rem 1rem;
+  color: #57606a;
+  border-left: 4px solid #d0d7de;
+}
+ul, ol { padding-left: 1.5rem; margin: 0 0 1rem; }
+li { margin: 0.25rem 0; }
+hr { border: 0; border-top: 1px solid #d0d7de; margin: 2rem 0; }
+img { max-width: 100%; height: auto; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #d0d7de; padding: 0.4rem 0.7rem; text-align: left; }
+th { background: #f6f8fa; }
+</style>
+</head>
+<body>
+<header><a href="/">Coding Adventures</a></header>
+<main>
+<h1>Capability-typed stages</h1>
+<p>The most opinionated thing in the FM01 kernel isn't the type system —
+it's the <em>capability system</em>. Every stage declares an array of strings
+like <code>&quot;storage:read&quot;</code>, <code>&quot;network:fetch:api.github.com&quot;</code>, or
+<code>&quot;filesystem:write&quot;</code> describing the dangerous things it intends to do.
+The orchestrator then hands the stage a <code>StageContext</code> whose dangerous
+APIs are wired to <strong>denied wrappers</strong> unless the matching capability
+was declared.</p>
+<pre><code class="language-ts">import { defineStage } from &quot;@coding-adventures/forme-stage&quot;;
+
+export default defineStage({
+  name: &quot;@example/fetch-recent-prs&quot;,
+  // ...
+  capabilities: [&quot;network:fetch:api.github.com&quot;],
+  async run(input, config, ctx) {
+    // ctx.network.fetch is the REAL fetch, scoped to api.github.com
+    // ctx.filesystem.writeFile throws CapabilityError — we didn't ask
+    // ctx.shell.exec       throws CapabilityError — we didn't ask
+  },
+});
+</code></pre>
+<h2>Why this matters</h2>
+<p>Three properties fall out:</p>
+<ol>
+<li><strong>Auditability.</strong> Every package in the registry has a machine-
+readable manifest (<code>required_capabilities.json</code>) listing what it
+wants. A reviewer sees <code>[&quot;shell:*&quot;, &quot;network:*&quot;]</code> and asks the
+obvious question.</li>
+<li><strong>Plug-in safety.</strong> When the FM02 plugin host loads a third-party
+stage, it can refuse to grant capabilities the user didn't
+pre-approve. No more &quot;this innocuous Markdown plugin is now
+exfiltrating your env vars.&quot;</li>
+<li><strong>Reproducibility.</strong> If a stage didn't declare <code>network:*</code>, it
+<em>cannot</em> hit the network. Your build is reproducible because the
+universe of side effects is bounded by the manifest.</li>
+</ol>
+<h2>The pragmatic exception</h2>
+<p>Source and sink stages have a chicken-and-egg problem: <code>ctx.storage</code>
+is supposed to be the orchestrator-provided <code>StorageApi</code>, but for
+<code>forme-source-fs</code> to read disk, <em>something</em> has to be the
+implementation. v0 resolves it by letting filesystem-adapter stages
+declare the capability <em>and</em> bypass <code>ctx.filesystem</code> with direct
+<code>node:fs/promises</code> calls — documented explicitly in each adapter's
+README + <code>required_capabilities.json</code> + module header.</p>
+<p>It's a real divergence and it's a real choice. The alternative —
+bootstrapping a <code>FilesystemApi</code> implementation in the orchestrator
+just to wire it back into source-fs — is more bureaucracy than it's
+worth at v0 scale.</p>
+<h2>What's next</h2>
+<p>A future post will walk through the capability <em>parser</em> and <em>matcher</em>
+— how <code>network:fetch:*.github.com</code> matches <code>network:fetch:api.github.com</code>
+without the substring-trap that bites every naive matcher
+implementation.</p>
+</main>
+</body>
+</html>
