@@ -248,6 +248,7 @@ members = [
     "trie",
     "trig",
     "wall-clock",
+    "datetime-core",
     "wave",
     "virtual-memory",
     "tree",

@@ -1,0 +1,10 @@
+[package]
+name = "datetime-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust date/time core — Excel/Lotus/R datetime functions for any spreadsheet or statistical frontend"
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }
+wall-clock = { path = "../wall-clock", default-features = false }
