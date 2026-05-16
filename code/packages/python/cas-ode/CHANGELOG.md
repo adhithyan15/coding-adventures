@@ -2,6 +2,124 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] — 2026-05-16
+
+### Added
+
+- **Named variable-coefficient 2nd-order ODE recognition** — Phase 21
+  - Recognises four classical ODE families whose solutions are named
+    special functions.  Pattern matching is *numerical*: coefficients
+    are evaluated at four interior test points `(0.3, 0.6, −0.25, 0.85)`
+    and compared to the expected algebraic form.  This handles any
+    syntactically equivalent tree the MACSYMA compiler might generate
+    for the same equation without requiring structural tree normalisation.
+
+  - **Legendre ODE** (`_try_legendre_ode`)
+    `(1−x²)y'' − 2x·y' + n(n+1)·y = 0` → `Equal(y, %c1·LegendreP(n,x) + %c2·LegendreQ(n,x))`
+    - P≈1−x² and Q≈−2x checked numerically; R extracted as constant n(n+1).
+    - `_legendre_n_from_lambda(lam)` finds non-negative integer n with n(n+1)=λ
+      using the quadratic formula and a round-trip integer check.
+
+  - **Bessel ODE** (`_try_bessel_ode`)
+    `x²y'' + x·y' + (x²−ν²)·y = 0` → `Equal(y, %c1·BesselJ(ν,x) + %c2·BesselY(ν,x))`
+    - P≈x² and Q≈x checked numerically.
+    - ν extracted from R(x) = x²−ν² via `_nu_from_r_minus_xsq` which evaluates
+      R at x=1 and x=2, verifies R(2)−R(1)≈3 (confirms x²-offset structure),
+      then finds the positive rational ν=p/q (denominator ≤ 20) by trial.
+    - Integer ν represented as `IRInteger`; fractional ν as `IRRational`.
+      Half-integer orders ν = n+1/2 (spherical Bessel functions) fully supported.
+
+  - **Hermite ODE** (`_try_hermite_ode`)
+    `y'' − 2x·y' + 2n·y = 0` → `Equal(y, %c1·HermiteH(n,x) + %c2·HermiteH2(n,x))`
+    - P must be exactly 1 (constant leading coefficient); Q≈−2x.
+    - R is constant = 2n; n must be a non-negative integer (reject non-even R).
+
+  - **Chebyshev ODE** (`_try_chebyshev_ode`)
+    `(1−x²)y'' − x·y' + n²·y = 0` → `Equal(y, %c1·ChebyshevT(n,x) + %c2·ChebyshevU(n,x))`
+    - P≈1−x² and Q≈−x checked numerically; R = n² requires perfect-square check.
+    - **Tried before Legendre** in the dispatcher because both have P≈1−x² but
+      differ on Q (−x vs −2x). Priority ordering prevents misclassification.
+
+  - **Phase 21 dispatcher** (`_try_var_coeff_named_ode`)
+    - Tries Chebyshev → Legendre → Bessel → Hermite in order and returns the
+      first match, or `None` if none of the families match.
+    - Inserted in `solve_ode` after Euler-Cauchy (step 5 — see Changed).
+
+- **New helper functions** (Section 3b):
+  - `_split_out_factor(term, target) → IRNode | None` — extracts K from
+    K·target in a nested Mul tree.  Handles `Neg(...)` wrappers, three-level
+    nesting, and the identity case term == target (returns `IRInteger(1)`).
+  - `_collect_var2_coeffs(expr, y, x) → (P, Q, R) | None` — generalises
+    `_collect_second_order_coeffs` to allow polynomial/rational coefficient
+    functions P(x), Q(x), R(x).  Flattens the Add tree and uses
+    `_split_out_factor` to attribute each term to y'', y', or y.
+  - `_eval_ir_at_x(node, x, xv) → float | None` — numerically evaluates an
+    x-only IR expression at a scalar point using the existing `_eval_at_xy`
+    helper with a dummy y symbol.
+  - `_coeff_matches_func(node, x, expected, tol=1e-9) → bool` — checks whether
+    `node` agrees with `expected(xv)` at all four canonical test points.
+  - `_extract_const_val(node, x) → float | None` — returns the numeric value
+    of a constant-w.r.t.-x node (None if it contains x).
+  - `_legendre_n_from_lambda(lam) → int | None` — quadratic-formula root
+    finder for n(n+1) = lam.
+  - `_nu_from_r_minus_xsq(R_node, x) → (p, q) | None` — rational-ν extractor
+    for Bessel R(x) = x²−ν² (denominator search up to 20).
+  - `_build_named_solution(sym1, sym2, param_ir, y, x) → IRNode` — builds
+    `Equal(y, %c1·sym1(param,x) + %c2·sym2(param,x))`.
+
+### Changed
+
+- `solve_ode` dispatcher — Phase 21 step added after Euler-Cauchy:
+  1. `_try_second_order_nonhom` (undetermined coefficients, Phase 18)
+  2. `_try_vop` (variation of parameters, Phase 20)
+  3. `_collect_second_order_coeffs` / `solve_second_order_const_coeff`
+  4. `_try_euler_cauchy` (Phase 19)
+  5. **`_try_var_coeff_named_ode`** ← new (Phase 21)
+  6. `_try_bernoulli`
+  7. `_collect_linear_first_order` / `solve_linear_first_order`
+  8. `_try_separable`
+  9. `_try_homogeneous_type`
+  10. `_try_exact`
+
+- Module docstring updated: "nine" → "thirteen" ODE classes; Phase 21 entries
+  (Legendre, Bessel, Hermite, Chebyshev) added to the class enumeration and
+  the literate reading guide (entries 26–38 added).
+- `pyproject.toml` description updated to include named variable-coefficient
+  ODEs.
+- `symbolic-ir` dependency bumped to `>=0.14.0` (required for `LEGENDRE_P`,
+  `LEGENDRE_Q`, `BESSEL_J`, `BESSEL_Y`, `HERMITE_H`, `HERMITE_H2`,
+  `CHEBYSHEV_T`, `CHEBYSHEV_U` head symbols).
+
+### Tests
+
+- **95 new tests** in `tests/test_phase21.py` across eight new classes:
+  - `TestSplitOutFactor` — 11 tests: identity, direct left/right, nested,
+    Neg wrappers, unrelated terms, different-target None.
+  - `TestCollectVar2Coeffs` — 6 tests: Legendre n=2, Bessel ν=1, Hermite n=3
+    coefficient checks; no-y'' None; free-constant None; missing-Q defaults-0.
+  - `TestLegendreNFromLambda` — 10 tests: n=0..4 round-trips; non-triangular
+    λ=5, λ=7; negative λ; slightly-off float; float precision near n=3.
+  - `TestNuFromRMinusXSq` — 8 tests: ν=0,1,2,3,1/2,3/2; non-x²-minus-const
+    input; negative ν².
+  - `TestTryLegendreOde` — 9 tests: n=0..3 recognised; λ=5 rejected; wrong-Q
+    rejected; Bessel/Hermite/const-coeff fall through.
+  - `TestTryBesselOde` — 10 tests: ν=0,1,2,1/2,3/2 recognised; C1/C2
+    present; Legendre/Hermite/const-coeff fall through; R=x²+1 rejects.
+  - `TestTryHermiteOde` — 10 tests: n=0..3 recognised; non-integer R; negative
+    R; Legendre/Bessel fall through; P≠1 rejects.
+  - `TestTryChebyshevOde` — 9 tests: n=0..3 recognised; non-square R; not
+    confused with Legendre; Bessel/Hermite fall through.
+  - `TestVarCoeffNamedOdeDispatcher` — 7 tests: dispatches all four families;
+    Chebyshev-before-Legendre priority verified; unrelated and 1st-order None.
+  - `TestPhase21EndToEnd` — 9 tests: solve_ode and VM-level dispatch for each
+    family; rational ν parameter; Equal(y,...) structure; C1/C2 present.
+  - `TestPhase21Regressions` — 6 tests: const-coeff real/complex roots;
+    no cross-contamination with named ODEs; Euler-Cauchy; first-order linear;
+    unrecognised variable-coeff stays unevaluated.
+- Combined coverage: **86.86%** (332 tests total).
+
+---
+
 ## [0.5.0] — 2026-05-08
 
 ### Added
