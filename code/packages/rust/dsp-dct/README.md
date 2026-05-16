@@ -1,15 +1,15 @@
 # dsp-dct
 
-**DSP02 Phase 1+2** — scalar reference DCT-II / DCT-III for
-the DSP layer.
+Scalar reference Discrete Cosine Transform for the DSP layer.
 
-The Discrete Cosine Transform (DCT) is the spectral primitive
-behind JPEG, MP3, MFCCs, pHash, and `scipy.fft.dct` /
-`scipy.fft.idct`.  V1 ships the two most-used variants:
+The DCT is the spectral primitive behind JPEG, MP3, MFCCs, pHash,
+and `scipy.fft.dct` / `scipy.fft.idct`.  As of **0.2.0 (DSP02
+Phase 4)** this crate ships:
 
-- **DCT-II** — the canonical "forward" DCT (`scipy.fft.dct(type=2)`).
-- **DCT-III** — the inverse of DCT-II under the `Ortho`
-  normalisation (`scipy.fft.idct(type=3)`).
+- **1-D DCT-II** (`scipy.fft.dct(type=2)`) — the canonical "forward" DCT.
+- **1-D DCT-III** (`scipy.fft.idct(type=3)`) — inverse under `Ortho`.
+- **2-D `dct_2d` / `idct_2d`** — for image / JPEG workloads
+  (any `(H, W)` ≥ `(1, 1)`).
 
 Both `None` (un-normalised) and `Ortho` (orthonormal, mutual
 inverse) normalisation conventions are supported, matching
@@ -88,19 +88,34 @@ versa.  Phase 4 will add `dct_2d` / `idct_2d` for image work
 | Phase  | Lands                                                | Status |
 | ------ | ---------------------------------------------------- | ------ |
 | 0      | Spec (`code/specs/DSP02-dct.md`)                     | landed |
-| **1+2** | **Crate skeleton + scalar DCT-II/III + tests**      | **this PR (0.1.0)** |
+| 1+2    | Crate skeleton + scalar DCT-II/III + tests           | landed (0.1.0) |
 | 3      | Matrix-ir-lowered DCT-II/III via `dsp-fft::fft_via_runtime` | pending |
-| 4      | 2-D `dct_2d` / `idct_2d` for image / JPEG workloads  | pending |
+| **4**  | **2-D `dct_2d` / `idct_2d` for image / JPEG workloads** | **this PR (0.2.0)** |
 | 5      | Loeffler-style specialised 8-point DCT-II emitter    | pending |
+
+## 2-D DCT (Phase 4)
+
+```rust
+use dsp_dct::{dct_2d, idct_2d, DctType, DctNorm};
+
+// 8×8 JPEG-style block.
+let block: Vec<f32> = (0..64).map(|i| (i as f32) * 0.1).collect();
+let coeffs = dct_2d(&block, 8, 8, DctType::II, DctNorm::Ortho).unwrap();
+let recovered = idct_2d(&coeffs, 8, 8, DctType::III, DctNorm::Ortho).unwrap();
+// `recovered` matches `block` within 1e-3.
+```
+
+The 2-D DCT is **separable** — applying the 1-D DCT to each
+row, then to each column, gives the exact 2-D result.  Works
+for any `(H, W) ≥ (1, 1)`; both axes can be non-power-of-two
+(Bluestein along each).
 
 ## Tests
 
-`cargo test -p dsp-dct` exercises:
+`cargo test -p dsp-dct` — 26 unit tests + 1 doctest:
 
-- Error paths: empty input.
-- Closed-form DCT-II: impulse → cosine sequence; DC → single bin.
-- Cross-check against a naive O(N²) DCT-II oracle for N ∈ {2, 3, 4, 5, 8, 16}.
-- Round-trip `idct(dct(x, II, Ortho), III, Ortho) ≈ x` for
-  N ∈ {1, 2, 8, 16, 31, 64}.
-- Round-trip with `None` norm + manual `2/N` rescale.
-- DC and impulse sanity at non-pow2 N.
+- 14 from Phase 1+2 (1-D): error paths, closed-form, naive
+  cross-check, Ortho / None round-trips.
+- 12 from Phase 4 (2-D, this release): error paths, 8×8 DC /
+  impulse closed-form, naive cross-check at 4×4 and 8×8,
+  Ortho round-trips at 8×8 / 16×16 / 8×16 / 3×5.

@@ -1,8 +1,8 @@
 [package]
 name = "dsp-dct"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "DSP02 Phase 1+2: scalar reference DCT-II / DCT-III for the DSP layer. DCT-II uses the Makhoul reduction (pre-shuffle + length-N FFT + twiddle + real-part) via dsp-fft; DCT-III is the naive O(N²) inverse for Phase 2 and will be FFT-lowered in Phase 3. Both `None` and `Ortho` normalization conventions, matching scipy.fft.dct. f32, 1-D, any N ≥ 1."
+description = "DSP02 Phases 1-2 + 4: scalar reference DCT-II / DCT-III for the DSP layer (1-D + 2-D). 1-D DCT-II uses the Makhoul reduction (pre-shuffle + length-N FFT + twiddle + real-part) via dsp-fft; DCT-III is naive O(N²). 2-D dct_2d / idct_2d use the row-then-column factorisation for image / JPEG workloads. Both `None` and `Ortho` normalization conventions, matching scipy.fft.dct. f32, any N ≥ 1, any (H, W) ≥ (1, 1)."
 license = "MIT"
 
 [dependencies]
