@@ -957,7 +957,11 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
     col_type_node = _maybe_child(node, "col_type")
     if col_type_node is not None:
         type_token = next(
-            (c for c in col_type_node.children if isinstance(c, Token) and _token_type(c) == "NAME"),
+            (
+                c
+                for c in col_type_node.children
+                if isinstance(c, Token) and _token_type(c) == "NAME"
+            ),
             None,
         )
         type_name = type_token.value.upper() if type_token else "TEXT"
