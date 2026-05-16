@@ -20,7 +20,7 @@ from sql_planner import (
 )
 from sql_planner.plan import Limit, SortKey
 
-from sql_vm import execute, set_event_listener, QueryEvent
+from sql_vm import QueryEvent, execute, set_event_listener
 from sql_vm.errors import TableNotFound
 
 
@@ -220,9 +220,9 @@ def test_sort_positional_column_idx(employees: InMemoryBackend) -> None:
     IR.  We construct the IR ``SortKey`` directly to test the VM independently
     of the planner.
     """
-    from sql_codegen.ir import SortKey as IrSortKey, Direction, NullsOrder, SortResult
     from sql_codegen import compile as do_compile
-    from sql_planner import BinaryOp, BinaryExpr
+    from sql_codegen.ir import SortResult
+    from sql_planner import BinaryExpr, BinaryOp
 
     # Build a plan that projects two computed columns: salary*2 and name.
     # We then sort by the second column (name) using column_idx=1 directly.

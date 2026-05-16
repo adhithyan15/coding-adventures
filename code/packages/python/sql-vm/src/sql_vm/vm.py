@@ -1422,10 +1422,7 @@ def _do_sort(ins: SortResult, st: _VmState) -> None:
             # multiple computed columns share the fallback name ``"?"`` —
             # index() would always return the FIRST ``"?"`` column, giving
             # wrong results for ORDER BY 2, 3, …
-            if k.column_idx is not None:
-                idx = k.column_idx
-            else:
-                idx = columns.index(k.column)
+            idx = k.column_idx if k.column_idx is not None else columns.index(k.column)
             v = row[idx]
             is_null = v is None
             # NULLs first/last encoded as 0 / 2 around non-null = 1.
