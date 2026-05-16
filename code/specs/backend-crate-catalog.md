@@ -13,11 +13,14 @@ but do not state directly:
    Linux. No platform-specific code, no global state, no file I/O,
    no hidden clocks, no `unsafe` outside narrowly-scoped FFI shims.
 2. **The FFI surface.** Rust is the canonical home of unsafe and
-   OS-touching code in this repo. Every backend crate exposes a
-   `cbindgen`-generated C ABI so any host language ecosystem — .NET
-   for XAML, C++ for Qt, Swift for Metal, Kotlin for Compose, JS for
-   Web Components, Python for notebooks — can call it through its
-   native FFI bridge.
+   OS-touching code in this repo. Every host language ecosystem
+   gets a zero-dependency in-repo bridge crate (per `DS01-ffi-bridges.md`)
+   that wraps that runtime's C API in safe Rust. Native-extension
+   crates pair a domain core (e.g. `statistics-core`) with a bridge
+   (e.g. `python-bridge`) to ship a callable module to the host.
+   We use *no* external FFI frameworks — no PyO3, Magnus, napi-rs,
+   cbindgen, UniFFI, wasm-bindgen, jni-rs, swift-bridge, or cxx.
+   The bridges are 300-1200 lines of explicit, greppable code each.
 3. **The catalog.** Roughly 35 crates, split across substrate,
    function domains, cell features, engine, advanced features,
    workbook state, and I/O. With status, dependencies, priority for
@@ -50,16 +53,26 @@ anywhere.
                     │ all host runtimes call into:
    ┌────────────────▼────────────────────────────────────────────┐
    │   Rust backend crates (THIS CATALOG)                        │
-   │   Native Rust API + cbindgen-generated C ABI                │
-   │   + optional WASM, JNI, swift-bridge, cxx, P/Invoke shims   │
+   │   Pure Rust cores  +  zero-dep in-repo bridge crates         │
+   │   (python-bridge, ruby-bridge, node-bridge, lua-bridge,      │
+   │    perl-bridge, objc-bridge, erl-nif-bridge — existing       │
+   │    plus wasm-bridge, jvm-bridge, dotnet-bridge, cpp-bridge,  │
+   │    c-bridge — to be built)                                   │
+   │   +  <domain>-<language>-native extension crates per         │
+   │      DS01-ffi-bridges.md pattern                             │
    └─────────────────────────────────────────────────────────────┘
 ```
 
 **Defined by:** this spec.
 
-**Implemented across:** ~35 Rust crates under `code/packages/rust/`
-plus a handful of `*-ffi` shim crates that produce C headers and
-language-specific bindings.
+**Implemented across:** ~35 backend Rust crates under
+`code/packages/rust/` plus the repo's in-repo bridge crates
+(`python-bridge`, `ruby-bridge`, `node-bridge`, `lua-bridge`,
+`perl-bridge`, `objc-bridge`, `erl-nif-bridge`, plus `wasm-bridge`,
+`jvm-bridge`, `dotnet-bridge`, `cpp-bridge`, `c-bridge` to be built)
+plus per-(domain, language) native-extension crates that glue
+domains to bridges. See `DS01-ffi-bridges.md` for the bridge
+architecture.
 
 **Used by:** every spreadsheet UI, every notebook environment, every
 batch tool, every language-bridge wrapper in the repo.
@@ -92,9 +105,13 @@ checked in CI on every PR that touches a backend crate.
 5. **No hidden clocks.** Functions that read time (`NOW()`,
    `TODAY()`) take a `&dyn Clock` parameter. Tests inject a fixed
    clock. Production wires a real clock at the binary boundary.
-6. **No `unsafe`** outside `*-ffi` and `*-os-shim` crates. The
+6. **No `unsafe`** outside bridge crates and `*-os-shim` crates. The
    substrate crates, function-domain crates, engine, and feature
-   crates use only safe Rust. Catalog includes a compliance check.
+   crates use only safe Rust. Native-extension crates may carry small
+   amounts of `unsafe` where they hand a Rust pointer to a foreign
+   runtime, but the unsafety is concentrated at the entry-point
+   surface, not inside the algorithm. Catalog includes a compliance
+   check.
 7. **No `panic!`** in hot paths. Bounds errors return `Result`;
    logic-bug invariants use `debug_assert!`. Catalog includes a
    `forbid(panic_in_result_fn)` lint via Clippy.
@@ -115,10 +132,12 @@ CI job on every PR. It:
 - Greps every `src/` for `cfg(target_os`, `cfg(unix)`, `cfg(windows)`,
   `std::time::SystemTime`, `std::fs`, `std::process`,
   `lazy_static!`, `static mut`; matches in catalog crates fail
-- Counts `unsafe` blocks per crate; allowed only in crates ending in
-  `-ffi` or `-os-shim`
-- Runs the cbindgen header generator and asserts the output is
-  well-formed C and that all public symbols are exported
+- Counts `unsafe` blocks per crate; allowed only in bridge crates,
+  `*-os-shim` crates, and the entry-point modules of
+  `*-<language>-native` extension crates
+- Builds every native-extension crate as `cdylib` and asserts the
+  output loads in the target runtime (smoke test per language: import
+  the module, instantiate the type, call one function)
 
 ---
 
@@ -126,116 +145,122 @@ CI job on every PR. It:
 
 Rust is the canonical home of OS-touching and unsafe code. Every
 backend crate exposes its functionality to non-Rust consumers
-through a stable C ABI generated by `cbindgen`. Each language
-ecosystem provides its own bridge to that C ABI.
+through **the repo's own zero-dependency bridge crates**, per
+`DS01-ffi-bridges.md`. We do not use PyO3, Magnus, napi-rs, cbindgen,
+UniFFI, wasm-bindgen, jni-rs, swift-bridge, cxx, or any other
+external FFI framework as a load-bearing dependency. Each bridge is a
+hand-written ~300-1200 line crate with zero third-party dependencies
+that wraps a host runtime's C API in safe Rust functions.
 
-### Two crates per domain
+### Three-crate pattern per (domain, host language)
 
-For each domain (statistics, financial, math, lookup, text, datetime,
-spreadsheet, …):
+For each pairing of a Layer 1 backend crate with a host language
+ecosystem:
 
 ```
-<domain>-core        — Rust-idiomatic library; native Rust API
-<domain>-ffi         — Thin wrapper exposing a stable C ABI:
-                       extern "C" fn xx_create() -> *mut XxHandle;
-                       extern "C" fn xx_call(h: *mut XxHandle, …) -> i32;
-                       extern "C" fn xx_destroy(h: *mut XxHandle);
-                       + a generated <domain>.h header
+<domain>-core              — pure Rust library; no FFI knowledge
+                             (e.g. statistics-core, spreadsheet-core)
+
+<language>-bridge          — zero-dep wrapper around the host runtime's C API
+                             (e.g. python-bridge, ruby-bridge)
+                             Shared across every <domain>-<language>-native
+                             extension; written once per host language.
+
+<domain>-<language>-native — the bridge between the two:
+                             - imports <domain>-core for the algorithms
+                             - imports <language>-bridge for the FFI calls
+                             - exports the language-runtime entry points
+                               (#[no_mangle] pub extern "C" fn PyInit_*, etc.)
+                             - marshals between Rust types and runtime types
+                             (e.g. statistics-core-python-native)
 ```
 
-The `*-ffi` crate is built as `cdylib` and `staticlib` alongside
-`rlib`. `cbindgen` runs during `cargo build` (via `build.rs`) and
-emits `<domain>.h` next to the compiled library. Downstream language
-bindings consume the header.
+This matches DS01's example with `directed-graph-python-native`. The
+native-extension crate is the *only* place the bridge and the core
+meet; the core never imports any bridge crate, never knows about
+foreign object types, and tests as pure-Rust.
+
+### Why not external FFI tools
+
+Per DS01: external frameworks (PyO3, Magnus, napi-rs, etc.) add
+15,000–50,000 LOC of macro-generated trait dispatch, hide the actual
+C API behind generated code, require host-language development
+headers at build time, pull in heavy build-time dependency trees
+(`proc-macro2`, `syn`, `bindgen`, `clang-sys`), and fail in
+cross-toolchain scenarios (Ruby-on-MinGW with Rust-on-MSVC). The
+repo's bridges have **zero Rust dependencies** beyond `core` and
+`std`, declare the host C API's `extern "C"` signatures themselves,
+compile on any platform with just a Rust toolchain, and produce
+shallow stack traces that show your code calling `Py_INCREF`, not 14
+layers of macro-generated dispatch.
+
+The bridges also commit to the host runtimes' **stable C ABIs**:
+
+- Python's Limited API (PEP 384, stable since Python 3.2 / 2011)
+- Ruby's C extension API (unchanged since Ruby 1.8 / 2003)
+- Node.js's N-API (designed for ABI stability across Node versions)
+- Erlang's NIF API (stable across OTP versions)
+- Lua's C API (stable since Lua 5.1)
+- Perl's XS API
+- Objective-C runtime + Metal + CoreGraphics + CoreText
 
 ### Type translation at the boundary
 
-| Rust type            | FFI representation                                  |
-|----------------------|------------------------------------------------------|
-| `i64`, `f64`, `u32`, … | matching C primitives                              |
-| `String`              | `*const u8` (UTF-8) + `usize` length (caller frees) |
-| `&[T]` (numeric)      | `*const T` + `usize` length                          |
-| `Vec<T>` (return)     | output buffer: `*mut T` + `usize` capacity + `*mut usize` returned-length |
-| `Result<T, E>`        | i32 error code; `T` written through out-pointer    |
-| `Option<T>` (numeric) | sentinel value (NA bit pattern) carries Optionality |
-| `&str` (input)        | `*const u8` + `usize` length                         |
-| Opaque resource       | `*mut OpaqueHandle` (struct forward-declared in C) |
-| Closure / `dyn Fn`    | function pointer + `void *user_data`                 |
+### Type translation at the boundary
+
+Each bridge crate exposes explicit, named marshaling functions
+(`str_from_py`, `int_from_py`, `list_from_py`, etc. — see DS01 §Python
+Bridge for the canonical example). The native-extension crate calls
+these explicitly; there is no `FromPyObject`-style trait magic. The
+common types each bridge handles:
+
+| Conceptual type       | Bridge representation                              |
+|-----------------------|----------------------------------------------------|
+| `i64`, `f64`, `u32`, …| Direct primitive marshal: `int_from_py(obj) -> i64`, etc. |
+| `String` ↔ str        | `str_from_py(obj) -> &str` (borrows), `str_to_py(s) -> *mut PyObject` (new ref) |
+| `&[T]` numeric        | `list_from_py(obj, convert_fn) -> Vec<T>`           |
+| `Vec<T>` return       | `list_to_py(slice, convert_fn) -> *mut PyObject`   |
+| `Result<T, E>`        | Convert error variant to bridge's `raise_*` then return language-runtime null/nil/undefined |
+| `Option<T>` (numeric) | NA bit pattern carries Optionality (Layer 0 convention) |
+| Opaque resource       | `wrap<T>(type_obj, value)` / `unwrap<T>(obj)` — Rust struct boxed inside a host-runtime object |
+| Closure / callback    | Function pointer + opaque-handle user data         |
 
 Rust-only types (`Vec`, `Box`, `HashMap`, `Rc`, etc.) **never appear
-in `*-ffi` public signatures**. They are constructed inside the FFI
-function body, used for the work, and dropped before return.
+in `extern "C"` entry-point signatures**. They are constructed inside
+the native-extension function body, used for the work, and dropped
+before return.
 
-### Error model across FFI
+### Error model across native extensions
 
-A single error-code convention applies to every `*-ffi` crate:
+Each Layer 1/3 core's error enum (`StatsError`, `MathError`, …) maps
+to host-runtime exceptions/errors via the bridge:
 
-```c
-typedef enum {
-    XX_OK              = 0,
-    XX_EMPTY_INPUT     = 1,
-    XX_DOMAIN_ERROR    = 2,
-    XX_SHAPE_MISMATCH  = 3,
-    XX_SINGULAR        = 4,
-    XX_NO_CONVERGENCE  = 5,
-    XX_BAD_PARAMETER   = 6,
-    XX_OVERFLOW        = 7,
-    XX_OUT_OF_MEMORY   = 8,
-    XX_INVALID_HANDLE  = 9,
-    XX_NULL_POINTER    = 10,
-    XX_BUFFER_TOO_SMALL = 11,
-} xx_status_t;
-```
+| Source                 | Translation in native-extension                  |
+|------------------------|--------------------------------------------------|
+| `StatsError::DomainError`  | `python_bridge::error::raise_value_error(...)` |
+| `StatsError::EmptyInput`   | `python_bridge::error::raise_value_error(...)` |
+| `StatsError::Singular`     | `python_bridge::error::raise_arithmetic_error(...)` |
+| Spreadsheet `#NUM!`        | Translates to host language's numeric-error type |
+| Spreadsheet `#REF!`        | `LookupError`-equivalent in host                |
 
-Detailed messages are opt-in:
-
-```c
-extern void xx_last_error_message(char *buf, size_t buf_len, size_t *out_len);
-```
-
-A thread-local last-error buffer in the FFI crate holds the most
-recent message; consumers fetch it after a non-zero status. (This is
-the *only* thread-local mutable state allowed in the catalog — and
-it lives in `*-ffi`, not core.)
+Translation is mechanical (a `match` arm per error variant). The
+native-extension crate owns the table; the bridge owns the
+`raise_*` machinery.
 
 ### Memory ownership
 
-Every allocation has a paired free. The convention is to expose
-`xx_alloc(...)`, `xx_free(ptr)`, and document who owns what at every
-function. Callers from C# or C++ wrap these in RAII.
+Every bridge documents new-reference vs. borrowed-reference at every
+function. The native-extension crate must:
 
-For zero-copy paths (passing a `*const f64` slice into a stats
-function), the caller retains ownership and Rust merely borrows for
-the duration of the call.
+- `incref` when returning a borrowed reference to the host
+- `decref` exactly once when releasing a new reference it owns
+- Box-and-leak Rust data when storing in a host object; reconstruct
+  the Box and drop in the host object's `dealloc`/`finalize`/`__del__`
+  callback
 
-### Per-language bridges
-
-The catalog commits to producing the C header. Language bridges are
-optional and additive:
-
-| Bridge crate                       | What it provides                              |
-|------------------------------------|------------------------------------------------|
-| `<domain>-ffi`                     | C header + `cdylib`/`staticlib` (canonical)   |
-| `<domain>-wasm`                    | `wasm-bindgen` exports for browser/Node       |
-| `<domain>-jni`                     | JNI bindings for Compose / Java               |
-| `<domain>-swift`                   | `swift-bridge` (or hand-rolled) for SwiftUI / Metal |
-| `<domain>-cxx`                     | `cxx` crate bindings for Qt                   |
-| `<domain>-pinvoke`                 | C# P/Invoke notes (no Rust crate — host wraps C header) |
-| `<domain>-py`                      | PyO3 bindings for Python notebooks            |
-| `<domain>-rb`                      | Magnus or rb-sys for Ruby                     |
-| `<domain>-node`                    | N-API for Node.js                             |
-
-The C header is the **floor**. Every other bridge is a convenience,
-shipped only when a consumer needs it. We do not pre-emptively build
-all of these.
-
-### cbindgen vs. UniFFI
-
-UniFFI is convenient for Kotlin/Swift/Python but does not target
-.NET/C++/C and has Mozilla's release cadence. We commit to
-**cbindgen as the floor** because it produces plain C headers that
-every ecosystem can consume. UniFFI may be added as an optional
-convenience on top.
+This is manual but visible. Refcount bugs surface as leaks (forgot
+`decref`) or use-after-free (`decref` too early) — both diagnosable
+from a shallow stack trace, unlike framework-mediated refcount bugs.
 
 ---
 
@@ -408,19 +433,66 @@ required for Lotus 1-2-3 parity, **E** = required for Excel parity
 | `parquet-io` | ⬜ | + | data-frame | Apache Parquet for big-data interchange |
 | `arrow-io` | ⬜ | + | data-frame | Apache Arrow IPC |
 
-### Layer 7 — FFI Shims
+### Layer 7 — Bridges and Native Extensions
 
-| Crate | Status | Priority | Depends on | Scope |
-|-------|--------|----------|------------|-------|
-| `<domain>-ffi` (one per backend crate) | ⬜ | as crate it wraps | the core crate it wraps + cbindgen | C ABI exposure; produces `.h` |
-| `spreadsheet-ffi` (umbrella) | ⬜ | V | spreadsheet-core + all function domains + all I/O | Single C ABI for "I want a full spreadsheet engine"; bundles registrations |
-| `<domain>-wasm` | ⬜ | E (web frontend) | the core + wasm-bindgen | Browser/Node bindings |
-| `<domain>-jni` | ⬜ | + | core + jni-rs | Compose / Java |
-| `<domain>-swift` | ⬜ | + | core + swift-bridge | SwiftUI / Metal |
-| `<domain>-cxx` | ⬜ | + | core + cxx | Qt / generic C++ |
-| `<domain>-py` | ⬜ | + | core + pyo3 | Python notebooks |
-| `<domain>-rb` | ⬜ | + | core + magnus | Ruby tooling |
-| `<domain>-node` | ⬜ | + | core + napi-rs | Node.js |
+Two sub-layers: **bridge crates** (one per host-language ecosystem,
+shared across every domain) and **native-extension crates** (one per
+domain × language, the glue that imports both).
+
+**Bridge crates** — already in the repo follow DS01's zero-dependency
+pattern. The ones we have plus the ones we need:
+
+| Bridge crate | Status | LOC | Wraps | Used for Mosaic backend? |
+|--------------|--------|-----|-------|--------------------------|
+| `python-bridge` | ✅ | 569 | CPython C API (Limited API, PEP 384) | No — Python notebooks, scripting |
+| `ruby-bridge` | ✅ | 577 | Ruby C extension API | No — Ruby tooling |
+| `node-bridge` | ✅ | 1175 | Node.js N-API | No — Node tooling (but adjacent to browser) |
+| `lua-bridge` | ✅ | 548 | Lua 5.1+ C API | No — embedded Lua scripting |
+| `perl-bridge` | ✅ | 633 | Perl XS API | No — Perl tooling |
+| `objc-bridge` | ✅ | 1085 | Objective-C runtime, **Metal**, CoreGraphics, CoreText | **Yes — Mosaic Metal/SwiftUI backend** |
+| `erl-nif-bridge` | ✅ | 1030 | Erlang NIF API | No — BEAM tooling |
+| `wasm-bridge` | ⬜ | est. ~600 | wasm32-unknown-unknown extern "C" + JS-side glue conventions | **Yes — Mosaic Web Components / React backends** |
+| `jvm-bridge` | ⬜ | est. ~800 | JNI (libjvm `JNI_*` functions); Kotlin's `@JvmStatic` ABI | **Yes — Mosaic Compose backend** |
+| `dotnet-bridge` | ⬜ | est. ~700 | .NET P/Invoke conventions (C ABI surface that `[DllImport]` consumes) | **Yes — Mosaic XAML / WPF / WinUI / MAUI** |
+| `cpp-bridge` | ⬜ | est. ~600 | C++ ABI surface (extern "C" + name-mangling-aware headers for class methods) | **Yes — Mosaic Qt backend** |
+| `c-bridge` | ⬜ | est. ~400 | Plain C ABI floor — extern "C" + manually-emitted header (no cbindgen) | **Yes — Mosaic Win32 backend; floor for all others** |
+
+The `c-bridge` is the *floor* — it's a hand-emitted `.h` file with
+`extern "C"` declarations matching each native-extension crate's
+entry points. Every higher bridge (`dotnet-`, `cpp-`, `jvm-`,
+`wasm-`) imports it. No cbindgen; we own the header, line by line,
+in the spirit of DS01's "explicit and greppable" principle.
+
+**Native-extension crates** — one per (domain, host language).
+Imports its domain core + its language bridge, exports the runtime
+entry points. Lives at `code/packages/rust/<domain>-<language>-native/`.
+
+| Naming | Imports | Exports |
+|--------|---------|---------|
+| `statistics-core-python-native` | `statistics-core` + `python-bridge` | `PyInit_statistics_core` |
+| `statistics-core-ruby-native` | `statistics-core` + `ruby-bridge` | `Init_statistics_core` |
+| `statistics-core-node-native` | `statistics-core` + `node-bridge` | `napi_register_module_v1` |
+| `statistics-core-wasm-native` | `statistics-core` + `wasm-bridge` | `extern "C"` exports per function |
+| `statistics-core-objc-native` | `statistics-core` + `objc-bridge` | `extern "C"` Swift-callable surface |
+| `statistics-core-jvm-native` | `statistics-core` + `jvm-bridge` | `Java_*_*` JNI entry points |
+| `statistics-core-dotnet-native` | `statistics-core` + `dotnet-bridge` | `extern "C"` P/Invoke surface |
+| `statistics-core-cpp-native` | `statistics-core` + `cpp-bridge` | `extern "C"` + C++ header alongside |
+| `spreadsheet-core-<lang>-native` | `spreadsheet-core` + Layer 1 cores + bridge | as above for each language |
+
+Pattern repeats per (domain, language). The catalog does **not**
+preemptively build all `n_domains × n_languages` crates. Each one
+ships when a real consumer asks for it. Day one: the **wasm-native**
+crates of `spreadsheet-core` and `statistics-core` so the Mosaic
+Web-Components backend can call the Rust engine from a browser.
+
+### Crate-count update
+
+Bridges: 7 ✅ + 5 ⬜ = 12 total when complete.
+
+Native extensions: domain × language matrix; ~12 domains × ~12
+languages = up to 144 possible, but only the cells with real
+consumers get built. Realistic near-term: ~20 native-extension
+crates across the first wave of frontends.
 
 ### Layer 8 — Frontends
 
@@ -485,14 +557,27 @@ Impl PR L: statistics-core Phase 2 (distributions + special functions)
 
 All seven can land in any order. None blocks any other.
 
-### Wave 3 — Frontends and I/O
+### Wave 3 — Frontends, I/O, and the first bridges
 
 ```
-Impl PR M: visicalc-modern shell (Mosaic UI; headless tests first)
-Impl PR N: csv-io                (proves the I/O pattern; smallest format)
-Impl PR O: spreadsheet-ffi       (the C ABI for everything that's shipped; smoke-tests cbindgen)
-Impl PR P: xlsx-io               (the big one; reuses every prior crate)
+Impl PR M: visicalc-modern shell             (Mosaic UI; headless tests first)
+Impl PR N: csv-io                            (proves the I/O pattern)
+Impl PR O: wasm-bridge                       (zero-dep wrapper around wasm32 extern "C" surface
+                                              + JS glue conventions; needed before any browser
+                                              demo of visicalc-modern can ship)
+Impl PR P: spreadsheet-core-wasm-native      (first native-extension; proves the
+                                              core + bridge + native-extension pattern)
+Impl PR Q: statistics-core-wasm-native       (same pattern, second domain)
+Impl PR R: xlsx-io                           (the big one; reuses every prior crate)
 ```
+
+The wasm-bridge has priority over other missing bridges because
+Mosaic's Web Components backend is the lowest-friction way to demo
+visicalc-modern (no installer, no native compile per platform). The
+Metal track depends on objc-bridge which already exists; the Compose
+/ XAML / Qt / Win32 tracks depend on their bridges (jvm-bridge,
+dotnet-bridge, cpp-bridge, c-bridge) and are deferred to Wave 5 or
+beyond as those frontend targets prioritize.
 
 ### Wave 4 — Advanced features and Phase 2+ of engine
 
@@ -542,9 +627,11 @@ argument in their Rust API.
 ### Naming
 
 - Function-domain crate: `<domain>-core` (e.g. `statistics-core`)
-- FFI shim: `<domain>-ffi`
+- Bridge crate (one per host language ecosystem): `<language>-bridge`
+  (e.g. `python-bridge`, `wasm-bridge`)
+- Native-extension crate (one per domain × language): `<domain>-<language>-native`
+  (e.g. `statistics-core-python-native`, `spreadsheet-core-wasm-native`)
 - I/O: `<format>-io` (e.g. `xlsx-io`, not `io-xlsx`)
-- The "umbrella" FFI: `spreadsheet-ffi`
 - Frontend program (not crate): lives in `code/programs/rust/`, not `code/packages/rust/`
 
 ### Function naming inside crates
@@ -643,9 +730,17 @@ Every crate ships with:
 - `code/specs/excel-formula-grammar.md` — the formula language
 - `code/specs/UI00-mosaic.md` — the UI compiler whose backends this
   catalog interoperates with
-- `cbindgen` (https://github.com/mozilla/cbindgen) — C header
-  generator
-- `wasm-bindgen`, `jni-rs`, `swift-bridge`, `cxx`, `pyo3`,
-  `napi-rs`, `magnus` — language bridges referenced
+- `code/specs/DS01-ffi-bridges.md` — the bridge architecture this
+  catalog builds on; defines the zero-dep, no-macros, no-codegen,
+  ~300-1200 LOC pattern that every bridge crate follows
+- The repo's existing bridge crates as exemplars:
+  `python-bridge` (569 LOC), `ruby-bridge` (577), `node-bridge`
+  (1175), `lua-bridge` (548), `perl-bridge` (633), `objc-bridge`
+  (1085, wraps Metal + CoreGraphics + CoreText), `erl-nif-bridge`
+  (1030). All zero third-party Rust dependencies.
 - The repo's existing `cas-*` Rust crates as exemplars of the
   small-Cargo-toml, leaf-to-root pattern this catalog continues
+- *Not* used: PyO3, Magnus, napi-rs, cbindgen, UniFFI, wasm-bindgen,
+  jni-rs, swift-bridge, cxx — these external frameworks are
+  deliberately avoided per DS01 rationale (debuggability, comprehension,
+  dependency weight, build portability, ABI stability)
