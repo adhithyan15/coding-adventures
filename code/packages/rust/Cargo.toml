@@ -179,6 +179,7 @@ members = [
     "macsyma-wasm",
     "logic-gates",
     "logic-core",
+    "lookup-core",
     "logic-engine",
     "adjudication-ir",
     "llm-cache",
