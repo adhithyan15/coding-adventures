@@ -631,4 +631,5 @@ members = [
     "capability-cage",
     "capability-os-sandbox",
     "iir-to-jvm-class-file",
+    "semantic-ir",
 ]
