@@ -1,5 +1,83 @@
 # Changelog — `twig-aot`
 
+## 0.5.0 — 2026-05-16 (`--emit-object` for cross-OS workflows)
+
+**Cross-OS object emission via a new `--emit-object` flag.**
+
+The third follow-up from PR #3203.  The `.o` / `.obj` object format
+is fully portable — only the *link step* is bound to the target
+host's toolchain.  This release exposes that asymmetry: produce the
+object file on any host, then copy it to a target machine and link
+it there.
+
+```
+# On Windows: produce a Linux ELF .o
+twig-aot foo.twig --target=linux-x86_64 --emit-object -o out/foo
+
+# Output:
+# twig-aot: emitted object: out/foo.o
+# twig-aot: NOTE: runtime archive for LinuxX86_64 was not built on
+#           this host (1-byte stub).  Build twig-aot on a
+#           LinuxX86_64 host or rebuild the runtime from
+#           `twig-aot/runtime/twig_runtime.c` on the target machine.
+```
+
+When the runtime archive *is* available for the target (i.e. the
+twig-aot binary was built on a matching host), `--emit-object` also
+writes the archive alongside and prints the exact link command:
+
+```
+# On Windows: produce a Windows .obj + .lib (host == target)
+twig-aot foo.twig --target=windows-x86_64 --emit-object -o out/bar
+
+# Output:
+# twig-aot: emitted object: out/bar.obj
+# twig-aot: emitted runtime archive: out/bar_runtime.lib
+# twig-aot: link on the target host with:
+#   link.exe /OUT:<exe>.exe /ENTRY:main /SUBSYSTEM:CONSOLE \
+#            out/bar.obj out/bar_runtime.lib libcmt.lib legacy_stdio_definitions.lib
+```
+
+### New API
+
+- **`EmitObjectTarget`** enum — `MacosArm64`, `LinuxX86_64`,
+  `WindowsX86_64`.  Selects which object format and runtime archive
+  the helper produces.
+- **`EmittedObject`** struct — `{ object_path, runtime_archive_path,
+  target }` returned from `emit_object_to_disk`.  Callers (e.g. the
+  CLI) print human-readable paths.
+- **`emit_object_to_disk(src, out_base, target) -> EmittedObject`**
+  — writes the relocatable object and (if available on this build
+  host) the runtime archive next to it.  Works from any (host,
+  target) combination because object emission doesn't need the
+  target's toolchain.
+
+### CLI changes
+
+- New `-c` / `--emit-object` boolean flag.  When set, the binary
+  writes the object + (optional) runtime archive instead of
+  invoking the system linker.  Combines with `--target` so the
+  user can write a Linux `.o` on a Windows host (or vice versa).
+
+### Tests
+
+- `emit_object_to_disk_writes_linux_o`: verifies the `.o` extension
+  and ELF magic.
+- `emit_object_to_disk_writes_windows_obj`: verifies the `.obj`
+  extension and `IMAGE_FILE_MACHINE_AMD64` (0x8664) at byte 0.
+- `emit_object_runtime_path_is_none_when_archive_is_stub`: iterates
+  the three targets and asserts at least one yields a real archive
+  (the host) and at least one yields a stub.
+
+### Out of scope (deferred to V2)
+
+Full cross-OS *linking* — taking a Linux ELF source on a Windows
+host all the way to a runnable `<exe>` without copying — would need
+either a bundled `clang+lld` + sysroot toolchain, or a `zig cc`
+dependency.  Both are substantial.  `--emit-object` covers the
+common case (build farm produces objects, target machine links)
+without that complexity.
+
 ## 0.4.0 — 2026-05-16 (`--target` CLI flag)
 
 **Expose the LANG46 multi-target driver to end users via a `--target`

@@ -15,8 +15,15 @@
       "id": "target",
       "short": "t",
       "long": "target",
-      "description": "Target platform: auto (default, picks the host), macos-arm64, linux-x86_64, or windows-x86_64. Cross-OS compilation requires a host that can provide the target's linker; on V1 hosts the runtime archive must also have been built for the target at twig-aot crate build time.",
+      "description": "Target platform: auto (default, picks the host), macos-arm64, linux-x86_64, or windows-x86_64.",
       "type": "string"
+    },
+    {
+      "id": "emit_object",
+      "short": "c",
+      "long": "emit-object",
+      "description": "Emit the object file (.o on Linux/macOS, .obj on Windows) and runtime archive instead of producing a runnable executable. Works from any host regardless of --target — the object format is fully portable; only the link step is host/target-bound. Use this for cross-OS workflows: produce the .o on any host, copy it to the target machine, and link there with `cc -o exe foo.o runtime.a -lc` (Linux) or `link.exe /OUT:exe.exe foo.obj runtime.lib libcmt.lib legacy_stdio_definitions.lib` (Windows).",
+      "type": "boolean"
     }
   ],
   "arguments": [

@@ -797,6 +797,148 @@ pub fn compile_windows_x86_64_object(source: &str, module_name: &str) -> Result<
 }
 
 // ---------------------------------------------------------------------------
+// Cross-OS object emission (works from any host — no linking step)
+// ---------------------------------------------------------------------------
+
+/// Logical target the `emit_object_to_disk` helper writes for.
+///
+/// `MacosArm64` is included for completeness; the macOS pipeline goes
+/// through `aarch64-backend` + `macho_object` rather than the x86_64
+/// path, but we still expose object emission so all three targets have
+/// a consistent --emit-object surface.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EmitObjectTarget {
+    /// macOS ARM64 (`.o` Mach-O object — same as `compile_module_macos_arm64_object`).
+    MacosArm64,
+    /// Linux x86-64 (`.o` ELF64 object — works on any host).
+    LinuxX86_64,
+    /// Windows x86-64 (`.obj` PE/COFF object — works on any host).
+    WindowsX86_64,
+}
+
+impl EmitObjectTarget {
+    fn object_extension(self) -> &'static str {
+        match self {
+            EmitObjectTarget::MacosArm64    => "o",
+            EmitObjectTarget::LinuxX86_64   => "o",
+            EmitObjectTarget::WindowsX86_64 => "obj",
+        }
+    }
+    fn runtime_extension(self) -> &'static str {
+        match self {
+            EmitObjectTarget::MacosArm64    => "a",
+            EmitObjectTarget::LinuxX86_64   => "a",
+            EmitObjectTarget::WindowsX86_64 => "lib",
+        }
+    }
+    fn runtime_bytes(self) -> &'static [u8] {
+        match self {
+            EmitObjectTarget::MacosArm64    => RUNTIME_ARCHIVE,
+            EmitObjectTarget::LinuxX86_64   => RUNTIME_LINUX_X86_64,
+            EmitObjectTarget::WindowsX86_64 => RUNTIME_WINDOWS_X86_64,
+        }
+    }
+}
+
+/// Outputs produced by `emit_object_to_disk`.
+///
+/// `runtime_archive_path` is `None` when the target's runtime archive
+/// is a stub on this build host (i.e. the host couldn't build it at
+/// `twig-aot` crate compile time).  In that case the caller must
+/// provide their own runtime when linking; the message printed by the
+/// CLI says exactly that.
+#[derive(Debug, Clone)]
+pub struct EmittedObject {
+    /// Where the object file was written.
+    pub object_path: PathBuf,
+    /// Where the runtime archive was written, if available on this host.
+    pub runtime_archive_path: Option<PathBuf>,
+    /// The target this object was produced for.
+    pub target: EmitObjectTarget,
+}
+
+/// Emit a Twig program as a relocatable object file (`.o` / `.obj`) on
+/// disk, plus the matching runtime archive if available on this build
+/// host.  Works for any (host, target) combination — the only host-
+/// dependent piece is whether the runtime archive was built at
+/// `twig-aot` crate compile time.
+///
+/// The caller writes a separate link command (`cc`, `link.exe`, etc.)
+/// against the resulting files on a machine that can host the target.
+///
+/// `out_base` is the path *without* an extension — `.o`/`.obj` and
+/// `_runtime.a`/`_runtime.lib` are appended.  E.g. passing
+/// `out_base = "build/foo"` for a Linux target writes:
+/// - `build/foo.o`         (the object file)
+/// - `build/foo_runtime.a` (the runtime archive, if available)
+pub fn emit_object_to_disk(
+    src: &Path,
+    out_base: &Path,
+    target: EmitObjectTarget,
+) -> Result<EmittedObject, AotError> {
+    use std::io::Write as _;
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
+
+    // Produce the object bytes (no linking).
+    let object_bytes = match target {
+        EmitObjectTarget::MacosArm64    => compile_macos_arm64_object(&source, stem)?,
+        EmitObjectTarget::LinuxX86_64   => compile_linux_x86_64_object(&source, stem)?,
+        EmitObjectTarget::WindowsX86_64 => compile_windows_x86_64_object(&source, stem)?,
+    };
+
+    let object_path = with_extension(out_base, target.object_extension());
+    if let Some(parent) = object_path.parent() {
+        if !parent.as_os_str().is_empty() {
+            std::fs::create_dir_all(parent)?;
+        }
+    }
+    let mut f = std::fs::File::create(&object_path)?;
+    f.write_all(&object_bytes)?;
+    drop(f);
+
+    // Write the runtime archive when this host produced a real one at
+    // build time.  Stub archives (one byte) are skipped — the caller
+    // gets a clear message via the CLI.
+    let rt_bytes = target.runtime_bytes();
+    let runtime_archive_path = if rt_bytes.len() > 4 {
+        let rt_path = {
+            let mut p = out_base.to_path_buf();
+            let name = p.file_name()
+                .and_then(|s| s.to_str())
+                .unwrap_or("twig")
+                .to_owned();
+            p.set_file_name(format!("{name}_runtime.{}", target.runtime_extension()));
+            p
+        };
+        let mut f = std::fs::File::create(&rt_path)?;
+        f.write_all(rt_bytes)?;
+        Some(rt_path)
+    } else {
+        None
+    };
+
+    Ok(EmittedObject {
+        object_path,
+        runtime_archive_path,
+        target,
+    })
+}
+
+/// Helper: produce `<base>.<ext>` regardless of whether `base` already
+/// has an extension.  (`Path::with_extension` *replaces* the extension,
+/// which surprises a user who passes `out_base = "foo.exe"`.)
+fn with_extension(base: &Path, ext: &str) -> PathBuf {
+    let mut p = base.to_path_buf();
+    let new_name = match p.file_name().and_then(|s| s.to_str()) {
+        Some(name) => format!("{name}.{ext}"),
+        None       => format!("twig.{ext}"),
+    };
+    p.set_file_name(new_name);
+    p
+}
+
+// ---------------------------------------------------------------------------
 // End-to-end pipelines: Twig source → object → system linker → executable
 // ---------------------------------------------------------------------------
 
@@ -1810,5 +1952,75 @@ mod tests {
             .filter(|r| r.symbol == "__twig_print_i64").collect();
         assert_eq!(plt.len(), 1,
             "expected one external reloc for __twig_print_i64, got {ext:?}");
+    }
+
+    // ---- --emit-object cross-OS object emission ----
+
+    #[test]
+    fn emit_object_to_disk_writes_linux_o() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let src = dir.path().join("hello.twig");
+        std::fs::write(&src, "42").unwrap();
+        let base = dir.path().join("out");
+
+        let emitted = emit_object_to_disk(&src, &base, EmitObjectTarget::LinuxX86_64)
+            .expect("emit ok");
+
+        assert!(emitted.object_path.exists());
+        assert_eq!(
+            emitted.object_path.extension().and_then(|s| s.to_str()),
+            Some("o"),
+            "Linux objects use .o extension",
+        );
+
+        // ELF magic at byte 0.
+        let bytes = std::fs::read(&emitted.object_path).unwrap();
+        assert_eq!(&bytes[0..4], &[0x7F, b'E', b'L', b'F']);
+    }
+
+    #[test]
+    fn emit_object_to_disk_writes_windows_obj() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let src = dir.path().join("hello.twig");
+        std::fs::write(&src, "42").unwrap();
+        let base = dir.path().join("out");
+
+        let emitted = emit_object_to_disk(&src, &base, EmitObjectTarget::WindowsX86_64)
+            .expect("emit ok");
+
+        assert!(emitted.object_path.exists());
+        assert_eq!(
+            emitted.object_path.extension().and_then(|s| s.to_str()),
+            Some("obj"),
+            "Windows objects use .obj extension",
+        );
+
+        // IMAGE_FILE_MACHINE_AMD64 (0x8664) LE at byte 0.
+        let bytes = std::fs::read(&emitted.object_path).unwrap();
+        assert_eq!(&bytes[0..2], &[0x64, 0x86]);
+    }
+
+    #[test]
+    fn emit_object_runtime_path_is_none_when_archive_is_stub() {
+        // Iterate the three targets.  Each host produces a real runtime
+        // archive for its own target and stubs for the others; emit_object
+        // should write a real `_runtime.*` file only when the bytes are
+        // a real archive (>4 bytes).  Verify both branches are exercised.
+        let dir = tempfile::tempdir().expect("tempdir");
+        let src = dir.path().join("hello.twig");
+        std::fs::write(&src, "42").unwrap();
+
+        let mut had_real = false;
+        let mut had_stub = false;
+        for tgt in [EmitObjectTarget::MacosArm64,
+                    EmitObjectTarget::LinuxX86_64,
+                    EmitObjectTarget::WindowsX86_64] {
+            let base = dir.path().join(format!("out_{tgt:?}"));
+            let e = emit_object_to_disk(&src, &base, tgt).expect("emit ok");
+            if e.runtime_archive_path.is_some() { had_real = true; }
+            else { had_stub = true; }
+        }
+        assert!(had_real, "at least one target must have a real runtime archive on the host");
+        assert!(had_stub, "at least one target should be a stub on this host");
     }
 }
