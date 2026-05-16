@@ -1,0 +1,20 @@
+cd ../../packages/typescript/document-ast && npm install --silent
+cd ../../packages/typescript/document-ast-to-html && npm install --silent
+cd ../../packages/typescript/directed-graph && npm install --silent
+cd ../../packages/typescript/state-machine && npm install --silent
+cd ../../packages/typescript/gfm-parser && npm install --silent
+cd ../../packages/typescript/blake2b && npm install --silent
+cd ../../packages/typescript/forme-types && npm install --silent
+cd ../../packages/typescript/forme-errors && npm install --silent
+cd ../../packages/typescript/forme-capability && npm install --silent
+cd ../../packages/typescript/forme-stage && npm install --silent
+cd ../../packages/typescript/forme-identity && npm install --silent
+cd ../../packages/typescript/forme-pipeline-config && npm install --silent
+cd ../../packages/typescript/forme-cache && npm install --silent
+cd ../../packages/typescript/forme-orchestrator && npm install --silent
+cd ../../packages/typescript/forme-source-fs && npm install --silent
+cd ../../packages/typescript/forme-parse-markdown && npm install --silent
+cd ../../packages/typescript/forme-collect-chronological && npm install --silent
+cd ../../packages/typescript/forme-render-static && npm install --silent
+cd ../../packages/typescript/forme-emit-fs && npm install --silent
+npm install --silent && npx tsx build.ts && test -d dist/coding-adventures/blog && ls dist/coding-adventures/blog
