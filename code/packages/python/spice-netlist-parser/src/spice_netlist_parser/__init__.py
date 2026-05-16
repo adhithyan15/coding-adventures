@@ -3,6 +3,7 @@
 from spice_netlist_parser.parser import (
     AcAnalysis,
     DcAnalysis,
+    McAnalysis,
     ModelCard,
     NetlistParseError,
     OpAnalysis,
@@ -19,6 +20,7 @@ __version__ = "0.1.6"
 __all__ = [
     "AcAnalysis",
     "DcAnalysis",
+    "McAnalysis",
     "ModelCard",
     "NetlistParseError",
     "OpAnalysis",

@@ -82,7 +82,26 @@ class SensAnalysis:
     output_node: str
 
 
-type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis | SensAnalysis
+@dataclass(frozen=True, slots=True)
+class McAnalysis:
+    """A `.mc V(output_node) n_trials [tolerance] [distribution] [seed]` card."""
+
+    output_node: str
+    n_trials: int
+    tolerance: float = 0.05
+    distribution: str = "gaussian"
+    seed: int | None = None
+
+
+type Analysis = (
+    OpAnalysis
+    | TranAnalysis
+    | DcAnalysis
+    | AcAnalysis
+    | TfAnalysis
+    | SensAnalysis
+    | McAnalysis
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -141,6 +160,9 @@ class ParsedNetlist:
 
     def sens_cards(self) -> list[SensAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, SensAnalysis)]
+
+    def mc_cards(self) -> list[McAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, McAnalysis)]
 
 
 _VALUE_RE = re.compile(
@@ -572,6 +594,21 @@ def _parse_directive(fields: list[str]) -> Analysis:
     if directive == ".sens":
         _require_fields(fields, 2, ".sens")
         return SensAnalysis(output_node=_parse_voltage_probe(fields[1], ".sens"))
+    if directive == ".mc":
+        _require_min_fields(fields, 3, ".mc")
+        _require_max_fields(fields, 6, ".mc")
+        distribution = fields[4].lower() if len(fields) >= 5 else "gaussian"
+        if distribution not in ("gaussian", "uniform"):
+            raise NetlistParseError(
+                f".mc distribution must be 'gaussian' or 'uniform', got {fields[4]!r}"
+            )
+        return McAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".mc"),
+            n_trials=int(parse_value(fields[2])),
+            tolerance=parse_value(fields[3]) if len(fields) >= 4 else 0.05,
+            distribution=distribution,
+            seed=int(parse_value(fields[5])) if len(fields) >= 6 else None,
+        )
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
 
 
@@ -695,6 +732,11 @@ def _require_fields(fields: list[str], count: int, label: str) -> None:
 def _require_min_fields(fields: list[str], count: int, label: str) -> None:
     if len(fields) < count:
         raise NetlistParseError(f"{label} expects at least {count} fields, got {len(fields)}")
+
+
+def _require_max_fields(fields: list[str], count: int, label: str) -> None:
+    if len(fields) > count:
+        raise NetlistParseError(f"{label} expects at most {count} fields, got {len(fields)}")
 
 
 def _pad(values: list[float], count: int, default: float) -> list[float]:

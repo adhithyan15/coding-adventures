@@ -1,4 +1,4 @@
-import { acSweep, dcOp, sensDc, tf } from "@coding-adventures/spice-engine";
+import { acSweep, dcOp, mcDc, sensDc, tf } from "@coding-adventures/spice-engine";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -141,6 +141,46 @@ R1 in out 1k
 .sens out
 `),
     ).toThrow(/\.sens output must be a voltage probe/);
+  });
+
+  it("parses .mc Monte Carlo DC analysis cards", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.mc V(out) 6 0 uniform 7
+`);
+
+    expect(parsed.analyses).toEqual([
+      {
+        kind: "mc",
+        outputNode: "out",
+        nTrials: 6,
+        tolerance: 0.0,
+        distribution: "uniform",
+        seed: 7,
+      },
+    ]);
+    expect(parsed.mcCards()).toEqual(parsed.analyses);
+    const [card] = parsed.mcCards();
+    const result = mcDc(parsed.circuit, card.outputNode, card.nTrials, {
+      tolerance: card.tolerance,
+      distribution: card.distribution,
+      seed: card.seed,
+    });
+    expect(result.nTrials).toBe(6);
+    expect(result.mean).toBeCloseTo(0.5, 9);
+    expect(result.stdDev).toBeCloseTo(0.0, 12);
+  });
+
+  it("rejects .mc cards without a voltage output probe", () => {
+    expect(() =>
+      parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+.mc out 10
+`),
+    ).toThrow(/\.mc output must be a voltage probe/);
   });
 
   it("parses VCVS elements into operating-point circuits", () => {

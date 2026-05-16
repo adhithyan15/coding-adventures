@@ -70,13 +70,23 @@ export interface SensAnalysis {
   readonly outputNode: string;
 }
 
+export interface McAnalysis {
+  readonly kind: "mc";
+  readonly outputNode: string;
+  readonly nTrials: number;
+  readonly tolerance: number;
+  readonly distribution: "gaussian" | "uniform";
+  readonly seed?: number;
+}
+
 export type Analysis =
   | OpAnalysis
   | TranAnalysis
   | DcAnalysis
   | AcAnalysis
   | TfAnalysis
-  | SensAnalysis;
+  | SensAnalysis
+  | McAnalysis;
 
 export interface ModelCard {
   readonly name: string;
@@ -114,6 +124,10 @@ export class ParsedNetlist {
 
   sensCards(): SensAnalysis[] {
     return this.analyses.filter((analysis): analysis is SensAnalysis => analysis.kind === "sens");
+  }
+
+  mcCards(): McAnalysis[] {
+    return this.analyses.filter((analysis): analysis is McAnalysis => analysis.kind === "mc");
   }
 }
 
@@ -803,6 +817,24 @@ function parseDirective(fields: readonly string[]): Analysis {
       outputNode: parseVoltageProbe(fields[1], ".sens"),
     };
   }
+  if (directive === ".mc") {
+    requireMinFields(fields, 3, ".mc");
+    requireMaxFields(fields, 6, ".mc");
+    const distribution = fields.length >= 5 ? fields[4].toLowerCase() : "gaussian";
+    if (distribution !== "gaussian" && distribution !== "uniform") {
+      throw new NetlistParseError(
+        `.mc distribution must be "gaussian" or "uniform", got ${JSON.stringify(fields[4])}`,
+      );
+    }
+    return {
+      kind: "mc",
+      outputNode: parseVoltageProbe(fields[1], ".mc"),
+      nTrials: Math.trunc(parseValue(fields[2])),
+      tolerance: fields.length >= 4 ? parseValue(fields[3]) : 0.05,
+      distribution,
+      seed: fields.length >= 6 ? Math.trunc(parseValue(fields[5])) : undefined,
+    };
+  }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
 }
 
@@ -867,6 +899,12 @@ function requireMinFields(fields: readonly string[], count: number, label: strin
     throw new NetlistParseError(
       `${label} expects at least ${count} fields, got ${fields.length}`,
     );
+  }
+}
+
+function requireMaxFields(fields: readonly string[], count: number, label: string): void {
+  if (fields.length > count) {
+    throw new NetlistParseError(`${label} expects at most ${count} fields, got ${fields.length}`);
   }
 }
 
