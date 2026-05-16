@@ -4,21 +4,18 @@ Pure-Rust FFT / IFFT for the DSP layer on interleaved `[re, im]`
 f32 buffers — same layout as
 [`dsp-complex::ComplexTensor`](../dsp-complex/README.md).
 
-As of **0.5.0 (DSP01 Phase 4a)** the public `fft()` / `ifft()`
-accepts **arbitrary `N ≥ 1`**:
+As of **0.6.0 (DSP01 Phase 4b)** the crate offers the full
+NumPy-style FFT surface:
 
-- Power-of-two real inputs run end-to-end on the matrix execution
-  layer (`matrix-runtime` + `matrix-cpu`, GPU once Metal / CUDA
-  claim Slice + Concat) via the radix-2 graph.
-- Non-power-of-two lengths fall back to a scalar Bluestein
-  (chirp z-transform) implementation — every length works with
-  one code path.
-- Complex-input transforms (`complex = true`) stay on the scalar
-  oracle for now (radix-2 for pow2, Bluestein for non-pow2).
-
-The scalar radix-2 reference (`fft_scalar` / `ifft_scalar`) stays
-available as the test oracle.  Bluestein is exposed as
-`bluestein_scalar` for callers that want it directly.
+- `fft` / `ifft` accept **arbitrary `N ≥ 1`** (radix-2 for
+  power-of-two, scalar Bluestein for everything else).
+- Power-of-two real inputs run end-to-end on the matrix
+  execution layer (`matrix-runtime` + `matrix-cpu`, GPU once
+  Metal / CUDA claim Slice + Concat) via the radix-2 graph.
+- `rfft` / `irfft` (new in 0.6.0) exploit conjugate symmetry of
+  real-input spectra to return only `⌊N / 2⌋ + 1` bins.
+- `fft_scalar` / `ifft_scalar` (radix-2, pow2-only) and
+  `bluestein_scalar` remain available as the canonical oracles.
 
 ```rust
 use dsp_fft::{fft, ifft};
@@ -66,8 +63,8 @@ pseudorandom round-trip up to `N = 1024`.
 | 3b.ii  | matrix-ir-lowered FFT graph builder                   | landed (0.2.0) |
 | 3b.iii | End-to-end execution via `matrix-runtime` + `matrix-cpu` | landed (0.3.0) |
 | 3b.iv  | Public `fft()` real-input path routes through `fft_via_runtime` | landed (0.4.0) |
-| **4a** | **Scalar Bluestein for arbitrary lengths**          | **this PR (0.5.0)** |
-| 4b     | `rfft` / `irfft` (half-spectrum API)                 | pending |
+| 4a     | Scalar Bluestein for arbitrary lengths               | landed (0.5.0) |
+| **4b** | **`rfft` / `irfft` (half-spectrum API)**             | **this PR (0.6.0)** |
 | 4c     | Matrix-ir-lowered Bluestein                          | pending |
 | 5      | MX05 specialised emitters (folded twiddles)          | pending |
 
@@ -152,17 +149,15 @@ let spectrum = bluestein_scalar(&signal, Direction::Forward).unwrap();
 
 ## Tests
 
-`cargo test -p dsp-fft` — 45 unit tests:
+`cargo test -p dsp-fft` — 63 unit tests:
 
 - 12 from Phase 2 — error paths, closed-form known vectors, scalar radix-2 round-trips.
 - 5 from Phase 3b.ii — graph build / validation.
 - 5 from Phase 3b.iii — `fft_via_runtime` matches scalar for N ∈ {2, 4, 8, 16}.
-- 6 from Phase 3b.iv — public API routes through the runtime,
-  complex-input contract preserved bit-for-bit against scalar.
-- 15 from Phase 4a (this release) — Bluestein: error paths,
-  N = 1 identity, radix-2 sanity check at N = 8, naive-DFT
-  cross-checks at N ∈ {3, 5, 6, 7, 12}, round-trips at
-  N = 3, 7, and every N ∈ 1..=32, plus closed-form impulse /
-  DC known vectors at non-pow2 sizes.
-- 2 new at the public-API layer — `fft` / `ifft` routing
-  through Bluestein for non-pow2 real and complex inputs.
+- 8 from Phase 3b.iv — public API routes through the runtime.
+- 15 from Phase 4a — Bluestein: error paths, naive-DFT
+  cross-checks, round-trip sweep 1..=32.
+- 18 from Phase 4b (this release) — `rfft` / `irfft`: error
+  paths, closed-form impulse / DC / single-bin at N = 8, 16,
+  round-trip at N ∈ {1, 8, 16, 64, 3, 7, 12} plus a 1..=20
+  sweep, and 3 public-API tests.

@@ -1,5 +1,102 @@
 # Changelog — dsp-fft
 
+## 0.6.0 — 2026-05-15
+
+### Added — DSP01 Phase 4b (rfft / irfft, half-spectrum API for real inputs)
+
+Adds the `rfft` / `irfft` pair to the public API.  These exploit
+conjugate symmetry of real-input spectra (`X[N - k] = conj(X[k])`)
+to return only the first `⌊N / 2⌋ + 1` complex bins, saving ~2×
+memory over `fft` + slice.
+
+#### New module: `dsp_fft::rfft`
+
+```rust
+pub fn rfft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError>;
+pub fn irfft_scalar(
+    half_spectrum: &[f32],
+    output_length: u32,
+) -> Result<Vec<f32>, FftError>;
+
+pub fn rfft(signal: &[f32]) -> Result<ComplexTensor, FftError>;
+pub fn irfft(
+    half_spectrum: &ComplexTensor,
+    output_length: u32,
+) -> Result<Vec<f32>, FftError>;
+```
+
+Re-exported at the crate root as `dsp_fft::{rfft, irfft,
+rfft_scalar, irfft_scalar}`.
+
+#### Algorithm
+
+`rfft`:
+
+1. Wrap the real signal as interleaved complex with `im = 0`.
+2. Run the existing complex `fft` (radix-2 for power-of-two
+   `N`, Bluestein for everything else).
+3. Slice off the first `⌊N / 2⌋ + 1` bins.
+
+`irfft`:
+
+1. Reconstruct the full length-`N` spectrum using
+   `X[N - k] = conj(X[k])` for `k in 1..(N + 1) / 2`.  For even
+   `N`, bin `N / 2` (Nyquist) is taken straight from the
+   half-spectrum; for odd `N` there's no Nyquist and the
+   reflection loop hits every non-DC bin.
+2. Run the existing complex `ifft`.
+3. Return only the real lane.
+
+Both directions work for **any `N ≥ 1`** — power-of-two via
+radix-2, non-pow2 via Bluestein.  `output_length` is required on
+`irfft` because `⌊N / 2⌋ + 1` doesn't uniquely determine `N`
+(matches `numpy.fft.irfft(a, n)`).
+
+#### Why no "half-length packing trick" yet?
+
+The classic optimisation packs even/odd real samples into `N/2`
+complex elements, FFTs at half the length, and unpacks via
+twiddle multiplication — saves ~2× wall-clock but doesn't change
+asymptotic complexity.  Our V1 implementation just calls the
+existing `fft` / `ifft` (which already handle any `N`), then
+slices / mirrors.  Phase 5 will add the packing optimisation
+where perf actually matters.
+
+#### New unit tests (18)
+
+Error paths:
+- `rfft_rejects_empty_signal`
+- `irfft_rejects_zero_output_length`
+- `irfft_rejects_odd_buffer_length`
+- `irfft_rejects_mismatched_bin_count`
+
+Closed-form known vectors:
+- `rfft_of_impulse_is_all_ones_n8`
+- `rfft_of_dc_is_single_bin_n8`
+- `rfft_of_pure_cosine_concentrates_one_bin_n16`
+
+Round-trips (`irfft(rfft(x)) ≈ x` within 1e-4):
+- N = 1, 8, 16, 64 (power of two)
+- N = 3, 7, 12 (non-power of two — exercises Bluestein in both
+  directions inside `rfft`/`irfft`)
+- Stress sweep for every `N ∈ 1..=20`
+
+Public API:
+- `public_rfft_returns_complex_tensor`
+- `public_irfft_round_trips_via_complex_tensor`
+- `public_rfft_irfft_round_trip_non_pow2`
+
+All 63 unit tests pass.
+
+### What this phase does NOT include
+
+- **Phase 4c**: matrix-ir-lowered Bluestein so non-pow2 FFTs
+  also lift onto the matrix execution layer.  `rfft` / `irfft`
+  internally still call `fft_scalar` / `bluestein_scalar` /
+  `ifft_scalar` — all CPU-only.
+- **Phase 5**: the half-length packing optimisation for `rfft`.
+  Constant-factor speedup; not on the correctness path.
+
 ## 0.5.0 — 2026-05-15
 
 ### Added — DSP01 Phase 4a (scalar Bluestein for arbitrary lengths)
