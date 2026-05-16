@@ -78,17 +78,18 @@ impl Backend for RustBackend {
     }
 
     fn compile(&self, module: &Module) -> Result<Artifact, BackendError> {
-        // 1. Validate.
+        // 1. Validate.  Collapse the "not ok" branch to a direct
+        //    `if let Some(e) = ...` so a non-ok result with no
+        //    error-severity issue (in theory: warnings only, though
+        //    today `is_ok()` already maps that case to true) cannot
+        //    silently bypass the guard.
         let r = semantic_ir::validate(module);
-        if !r.is_ok() {
-            let first = r.errors().next().cloned();
-            if let Some(e) = first {
-                return Err(BackendError {
-                    kind: BackendErrorKind::InvalidModule,
-                    message: format!("module failed validation: {}", e.message),
-                    span: e.span,
-                });
-            }
+        if let Some(e) = r.errors().next().cloned() {
+            return Err(BackendError {
+                kind: BackendErrorKind::InvalidModule,
+                message: format!("module failed validation: {}", e.message),
+                span: e.span,
+            });
         }
 
         // 2. Capability checks.
