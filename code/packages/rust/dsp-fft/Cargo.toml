@@ -1,8 +1,8 @@
 [package]
 name = "dsp-fft"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "DSP01 Phases 2-4a: pure-Rust scalar reference + matrix-ir-lowered radix-2 Cooley-Tukey FFT + scalar Bluestein for arbitrary lengths. Power-of-2 real inputs run end-to-end on matrix-runtime + matrix-cpu; non-power-of-2 lengths use a scalar Bluestein fallback. Operates on interleaved [re, im] f32 buffers. rfft/irfft (Phase 4b) and matrix-ir-lowered Bluestein (Phase 4c) are still pending."
+description = "DSP01 Phases 2-4b: pure-Rust scalar reference + matrix-ir-lowered radix-2 Cooley-Tukey FFT + scalar Bluestein for arbitrary lengths + rfft/irfft half-spectrum API for real inputs. Power-of-2 real inputs run end-to-end on matrix-runtime + matrix-cpu; non-power-of-2 lengths use a scalar Bluestein fallback. Operates on interleaved [re, im] f32 buffers. Matrix-ir-lowered Bluestein (Phase 4c) is still pending."
 license = "MIT"
 
 [dependencies]

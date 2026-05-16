@@ -18,14 +18,13 @@
 //! - **Phase 3b.iv** — the public [`fft`] entry point routes
 //!   real-valued power-of-two inputs through `fft_via_runtime`
 //!   instead of the scalar reference.
-//! - **Phase 4a (this release)** — scalar Bluestein
-//!   ([`bluestein_scalar`]) handles arbitrary (non-power-of-two)
-//!   lengths.  The public [`fft`] / [`ifft`] now accept any
-//!   `N ≥ 1`; non-pow2 inputs fall through to Bluestein.
-//!   Complex-input transforms also delegate to Bluestein for
-//!   non-pow2 `N`.
-//! - **Phase 4b** — `rfft` / `irfft` (real-input half-spectrum
-//!   API exploiting conjugate symmetry).
+//! - **Phase 4a** — scalar Bluestein ([`bluestein_scalar`])
+//!   handles arbitrary (non-power-of-two) lengths.  The public
+//!   [`fft`] / [`ifft`] now accept any `N ≥ 1`.
+//! - **Phase 4b (this release)** — [`rfft`] / [`irfft`]
+//!   half-spectrum API for real inputs.  Returns only the first
+//!   `⌊N / 2⌋ + 1` complex bins (the rest are determined by
+//!   conjugate symmetry).  Works for any `N ≥ 1`.
 //! - **Phase 4c** — Matrix-ir-lowered Bluestein so non-pow2
 //!   FFTs also lift onto the matrix execution layer.
 //! - **Phase 5** — MX05 specialised emitters (folded twiddles for
@@ -58,8 +57,10 @@
 
 pub mod bluestein;
 pub mod radix2;
+pub mod rfft;
 pub use bluestein::bluestein_scalar;
 pub use radix2::{build_fft_graph, build_fft_graph_with_input, fft_via_runtime};
+pub use rfft::{irfft, irfft_scalar, rfft, rfft_scalar};
 
 use dsp_complex::ComplexTensor;
 use std::fmt;
