@@ -118,14 +118,25 @@ implement arithmetic and logic at the circuit level.
 | ✅ | 07e2 | ARM1 | 1985 | ~12,000 gates; barrel shifter; 32-bit ALU |
 | ✅ | 07f2 | Intel 8008 | 1972 | ~300 gates; 8-bit ALU; predecessor to 8080 |
 | ✅ | 07i2 | Intel 8080 | 1974 | ~104 ALU gates; 8 full adder stages |
-| **✅** | **07k2** | **Zilog Z80** | **1976** | **~200 ALU gates + alternate bank ← current** |
+| ✅ | 07k2 | Zilog Z80 | 1976 | ~200 ALU gates + alternate register bank |
+| ✅ | 07j2 | MOS 6502 | 1975 | Visual6502 transistor map; ~3,510 transistors |
+| ✅ | 07m2 | Intel 8086 | 1978 | First x86 gate-level; 16-bit ALU; BIU/EU split |
+
+### Completed gate-level simulators (continued)
+
+| Step | Layer | Processor | Year | Notes |
+|------|-------|-----------|------|-------|
+| ✅ | 07n2 | Motorola 68000 | 1979 | 32-bit ALU; MOVEM; ABCD/SBCD/NBCD; supervisor mode |
+| ✅ | 07p2 | Intel 8051 | 1980 | Harvard arch; bit-addressable RAM; MUL/DIV via gate loops |
+| ✅ | 07q2 | MIPS R2000 | 1985 | 32-bit RISC; HI/LO multiply via shift-and-add; 32-reg file |
+| ✅ | 07s2 | DEC Alpha AXP 21064 | 1992 | First 64-bit gate-level; MULQ/UMULH via 64-iter shift-and-add |
+| ✅ | 07u2 | PowerPC 601 | 1992 | 32-bit RISC; CR/LR/CTR; 32-GPR; 32-iter mul/div; AIM alliance |
+| ✅ | 07v2 | AArch64 (ARMv8-A) | 2011 | 64-bit ARM; 31-reg file; NZCV flags; 64-iter mul/div gate loops |
 
 ### Upcoming gate-level simulators
 
 | Step | Layer | Processor | Year | Why it matters |
 |------|-------|-----------|------|----------------|
-| ⬜ | 07j2 | MOS 6502 | 1975 | Visual6502 transistor map; ~3,510 transistors |
-| ⬜ | 07m2 | Intel 8086 | 1978 | First x86 gate-level; 14-bit ALU; BIU/EU split |
 
 ---
 
@@ -279,4 +290,4 @@ the last session left off.  When resuming:
 
 ---
 
-*Last updated: 2026-05-15 — 07a-07z complete; gate-level series at 07k2 (Z80), next: 07j2 (6502) and 07m2 (8086)*
+*Last updated: 2026-05-16 — 07a-07z complete; gate-level series at 07u2 (PowerPC 601), next: 07v2 (AArch64 ARMv8-A)*
