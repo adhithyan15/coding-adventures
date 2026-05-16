@@ -1,0 +1,29 @@
+{
+  "name": "coding-adventures-forme-hello-world",
+  "version": "0.1.0",
+  "description": "End-to-end demo program for the Forme authoring pipeline. Reads a Markdown post, runs it through source-fs → parse-markdown → render-static → emit-fs via the FM03 orchestrator, and writes static HTML.",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/cli.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["forme", "demo", "blog", "pipeline", "static-site"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "tsx": "^4.7.0",
+    "@coding-adventures/forme-types": "file:../../../packages/typescript/forme-types",
+    "@coding-adventures/forme-stage": "file:../../../packages/typescript/forme-stage",
+    "@coding-adventures/forme-pipeline-config": "file:../../../packages/typescript/forme-pipeline-config",
+    "@coding-adventures/forme-orchestrator": "file:../../../packages/typescript/forme-orchestrator",
+    "@coding-adventures/forme-source-fs": "file:../../../packages/typescript/forme-source-fs",
+    "@coding-adventures/forme-parse-markdown": "file:../../../packages/typescript/forme-parse-markdown",
+    "@coding-adventures/forme-render-static": "file:../../../packages/typescript/forme-render-static",
+    "@coding-adventures/forme-emit-fs": "file:../../../packages/typescript/forme-emit-fs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}
