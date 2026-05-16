@@ -1,18 +1,28 @@
 //! # `dsp-fft` — FFT / IFFT for the DSP layer
 //!
-//! **DSP01 Phase 2.**  Pure-Rust radix-2 Cooley-Tukey scalar
-//! reference implementations of the FFT and inverse FFT.  Operates
-//! on interleaved `[re, im, re, im, …]` `f32` buffers — same layout
+//! Pure-Rust radix-2 Cooley-Tukey FFT / inverse FFT.  Operates on
+//! interleaved `[re, im, re, im, …]` `f32` buffers — same layout
 //! as `dsp-complex::ComplexTensor`.
 //!
 //! ## Phase scope
 //!
-//! - **Phase 2 (this release)** — scalar reference only.  The
-//!   public [`fft`] / [`ifft`] entry points are thin wrappers that
-//!   forward to the scalar code.  No matrix-ir lowering yet.
-//! - **Phase 3** — replaces the bodies with `matrix-ir::Graph`
-//!   builders that emit Const (twiddle) + Mul + Sub + Add stages.
-//!   The scalar reference stays as the test oracle.
+//! - **Phase 2** — scalar reference (`fft_scalar` / `ifft_scalar`).
+//!   Stays as the test oracle for every later phase.
+//! - **Phase 3a / 3b.i** — Slice + Concat ops landed in
+//!   `matrix-ir`.
+//! - **Phase 3b.ii** — `build_fft_graph` emits a `matrix_ir::Graph`
+//!   that computes the radix-2 FFT entirely in generic tensor ops.
+//! - **Phase 3b.iii** — `fft_via_runtime` plans + dispatches that
+//!   graph through `matrix-runtime` + `matrix-cpu`, downloading the
+//!   spectrum.
+//! - **Phase 3b.iv (this release)** — the public [`fft`] entry
+//!   point routes real-valued power-of-two inputs through
+//!   `fft_via_runtime` instead of the scalar reference.  Complex
+//!   inputs (`complex = true`) and the public [`ifft`] still go
+//!   through the scalar code — the matrix-ir graph builder is
+//!   real-only for now.  The scalar reference stays available as
+//!   [`fft_scalar`] / [`ifft_scalar`] for callers that want it
+//!   directly (it's also the test oracle).
 //! - **Phase 4** — Bluestein for arbitrary lengths, plus
 //!   `rfft` / `irfft`.
 //! - **Phase 5** — MX05 specialised emitters (folded twiddles for
@@ -44,7 +54,7 @@
 #![warn(rust_2018_idioms)]
 
 pub mod radix2;
-pub use radix2::build_fft_graph;
+pub use radix2::{build_fft_graph, build_fft_graph_with_input, fft_via_runtime};
 
 use dsp_complex::ComplexTensor;
 use std::fmt;
@@ -97,28 +107,55 @@ pub fn ifft_scalar(spectrum: &[f32]) -> Result<Vec<f32>, FftError> {
 /// Compute the forward 1-D FFT of a real-valued or already-complex
 /// `signal`.
 ///
-/// - If `signal` has length `N` (real input), it's wrapped as
-///   complex with `im = 0` before transform.
-/// - If `signal` has length `2N` (interleaved complex), it's used
-///   directly.  Pass `complex: true` to disambiguate.
+/// - If `signal` has length `N` (real input), it's routed through
+///   the matrix-ir-lowered FFT graph via
+///   [`fft_via_runtime`](crate::radix2::fft_via_runtime) — i.e.
+///   the FFT actually runs on the matrix execution layer.  When
+///   `matrix-metal` / `matrix-cuda` claim `Slice` + `Concat` in
+///   their `supported_ops` bitsets, the call lifts to GPU
+///   automatically with no `dsp-fft` change required.
+/// - If `signal` has length `2N` (interleaved complex), pass
+///   `complex: true`.  Complex-input transforms still go through
+///   the scalar reference ([`fft_scalar`]) because the matrix-ir
+///   graph builder is real-only in Phase 3b.iv; a future phase
+///   will add a complex-input graph variant.
 ///
 /// Returns a `ComplexTensor` of `N` complex elements.
 ///
-/// **Phase 2**: forwards to [`fft_scalar`].  Phase 3 will replace
-/// the body with a matrix-ir graph build.
+/// **Phase 3b.iv**: real-input path uses the matrix-ir-lowered
+/// graph end-to-end; complex-input path still calls the scalar
+/// oracle.
 pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
     let interleaved = if complex {
-        signal.to_vec()
-    } else {
-        let mut buf = Vec::with_capacity(signal.len() * 2);
+        // Complex input: matrix-ir graph builder doesn't support
+        // complex inputs yet (the `build_fft_graph` real→complex
+        // step always Concats a zero imaginary lane), so fall back
+        // to the scalar oracle.  Length validation flows through
+        // `fft_scalar`.
+        fft_scalar(signal)?
+    } else if signal.len() < 2 {
+        // The matrix-ir graph builder requires N ≥ 2 (a single
+        // element has no butterfly stages and the Reshape +
+        // Concat plumbing assumes at least one stage).  Fall back
+        // to the scalar oracle so the public API still accepts
+        // the degenerate N = 1 case the way Phase 2 did, and
+        // preserves the exact `FftError` shape Phase 2 produced
+        // for empty input.
+        let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
         for &x in signal {
-            buf.push(x);
-            buf.push(0.0);
+            interleaved_real.push(x);
+            interleaved_real.push(0.0);
         }
-        buf
+        fft_scalar(&interleaved_real)?
+    } else {
+        // Real input, N ≥ 2: run the matrix-ir-lowered FFT graph
+        // end-to-end through `matrix-runtime` + `matrix-cpu`.
+        // Length validation flows through `fft_via_runtime`
+        // (`build_fft_graph_with_input` rejects non-power-of-two
+        // inputs the same way the scalar path does).
+        fft_via_runtime(signal, Direction::Forward)?
     };
-    let result = fft_scalar(&interleaved)?;
-    Ok(ComplexTensor::from_interleaved(result).expect("fft output has even length"))
+    Ok(ComplexTensor::from_interleaved(interleaved).expect("fft output has even length"))
 }
 
 /// Compute the inverse 1-D FFT.  Input is the interleaved spectrum
@@ -126,8 +163,11 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
 /// output is a complex `ComplexTensor` whose `real()` part is the
 /// recovered signal when the input was real-valued.
 ///
-/// **Phase 2**: forwards to [`ifft_scalar`].  Phase 3 will replace
-/// the body with a matrix-ir graph build.
+/// **Phase 3b.iv**: still forwards to [`ifft_scalar`].  The
+/// matrix-ir graph builder's input is `[N]` real and its output
+/// is `[N, 2]` complex; an inverse from `[N, 2]` complex doesn't
+/// fit the same graph and is deferred to a follow-up.  Output
+/// matches the scalar oracle exactly.
 pub fn ifft(spectrum: &ComplexTensor) -> Result<ComplexTensor, FftError> {
     let result = ifft_scalar(spectrum.as_interleaved())?;
     Ok(ComplexTensor::from_interleaved(result).expect("ifft output has even length"))
@@ -455,5 +495,94 @@ mod tests {
         // DC bin should be (1+3, 2+4) = (4, 6).
         assert!(approx_eq(spectrum.as_interleaved()[0], 4.0, 1e-5));
         assert!(approx_eq(spectrum.as_interleaved()[1], 6.0, 1e-5));
+    }
+
+    // ── Phase 3b.iv: public real-input fft goes through the
+    //    matrix-ir graph end-to-end via `fft_via_runtime`.  These
+    //    tests verify the routing produces the same answers as the
+    //    scalar oracle (which is what the previous Phase 2 wrapper
+    //    was forwarding to).  Tolerance is 1e-4 to match the
+    //    Phase 3b.iii contract for the matrix-runtime path.
+
+    #[test]
+    fn public_fft_real_matches_scalar_via_runtime_n8() {
+        let real: Vec<f32> = (0..8).map(|i| (i as f32) * 0.5 - 1.5).collect();
+        // New routing.
+        let via_runtime = fft(&real, false).unwrap();
+        // Scalar oracle: wrap as interleaved and call fft_scalar.
+        let mut interleaved = Vec::with_capacity(real.len() * 2);
+        for &x in &real {
+            interleaved.push(x);
+            interleaved.push(0.0);
+        }
+        let scalar = fft_scalar(&interleaved).unwrap();
+        assert_close(via_runtime.as_interleaved(), &scalar, 1e-4);
+    }
+
+    #[test]
+    fn public_fft_real_matches_scalar_via_runtime_n16_sinusoid() {
+        // Pure sinusoid — exercises every butterfly stage's twiddle
+        // arithmetic, not just the trivial diagonal of the impulse.
+        let n: usize = 16;
+        let real: Vec<f32> = (0..n)
+            .map(|i| (2.0 * PI * 3.0 * (i as f32) / (n as f32)).cos())
+            .collect();
+        let via_runtime = fft(&real, false).unwrap();
+        let mut interleaved = Vec::with_capacity(real.len() * 2);
+        for &x in &real {
+            interleaved.push(x);
+            interleaved.push(0.0);
+        }
+        let scalar = fft_scalar(&interleaved).unwrap();
+        assert_close(via_runtime.as_interleaved(), &scalar, 1e-4);
+    }
+
+    #[test]
+    fn public_fft_real_impulse_via_runtime() {
+        // Closed-form: fft(impulse) = all ones.  This is the
+        // canonical "the runtime path actually computes the right
+        // thing" smoke test.
+        let real = vec![1.0f32, 0.0, 0.0, 0.0];
+        let spectrum = fft(&real, false).unwrap();
+        assert_eq!(spectrum.len(), 4);
+        for k in 0..4 {
+            let re = spectrum.as_interleaved()[2 * k];
+            let im = spectrum.as_interleaved()[2 * k + 1];
+            assert!(approx_eq(re, 1.0, 1e-5), "bin {} real = {}", k, re);
+            assert!(approx_eq(im, 0.0, 1e-5), "bin {} imag = {}", k, im);
+        }
+    }
+
+    #[test]
+    fn public_round_trip_real_through_runtime_and_scalar_ifft() {
+        // Forward FFT through the matrix-ir runtime path, inverse
+        // through the scalar reference.  This is the only round
+        // trip we can express today since `ifft` is still scalar
+        // (the matrix-ir graph is real-input only).
+        let real = vec![1.0f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
+        let spectrum = fft(&real, false).unwrap();
+        let recovered = ifft(&spectrum).unwrap();
+        let rec_real = recovered.real();
+        assert_close(&real, &rec_real, 1e-4);
+    }
+
+    #[test]
+    fn public_fft_complex_input_still_goes_through_scalar() {
+        // The complex-input path is not yet supported by the
+        // matrix-ir graph builder, so it must continue to match
+        // the Phase 2 scalar oracle exactly (not 1e-4, exactly).
+        let interleaved = vec![1.0f32, 2.0, 3.0, 4.0];
+        let via_public = fft(&interleaved, true).unwrap();
+        let via_scalar = fft_scalar(&interleaved).unwrap();
+        assert_eq!(via_public.as_interleaved(), via_scalar.as_slice());
+    }
+
+    #[test]
+    fn public_fft_real_rejects_non_power_of_two() {
+        // Length validation flows through the matrix-ir graph's
+        // `NotPowerOfTwo` check (in `build_fft_graph_with_input`).
+        let real = vec![1.0f32, 2.0, 3.0];
+        let err = fft(&real, false).unwrap_err();
+        assert_eq!(err, FftError::NotPowerOfTwo(3));
     }
 }
