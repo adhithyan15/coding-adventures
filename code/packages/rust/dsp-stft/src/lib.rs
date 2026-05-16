@@ -38,6 +38,11 @@
 
 #![warn(rust_2018_idioms)]
 
+pub mod inverse;
+pub mod spectrogram;
+pub use inverse::istft;
+pub use spectrogram::{log_spectrogram, spectrogram};
+
 use dsp_fft::{rfft_scalar, FftError};
 pub use dsp_filters::WindowType;
 use std::f32::consts::PI;
