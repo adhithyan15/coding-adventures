@@ -39,9 +39,11 @@
 #![warn(rust_2018_idioms)]
 
 pub mod inverse;
+pub mod matrix;
 pub mod mel;
 pub mod spectrogram;
 pub use inverse::istft;
+pub use matrix::{build_stft_graph, stft_via_runtime};
 pub use mel::{mel_filterbank, mel_spectrogram, mfcc};
 pub use spectrogram::{log_spectrogram, spectrogram};
 
@@ -127,6 +129,22 @@ pub fn stft(
     }
     debug_assert_eq!(out.len(), out_len);
     Ok(out)
+}
+
+/// Same as [`build_window`] but emits the result as the
+/// little-endian byte buffer that `matrix_ir::GraphBuilder::constant`
+/// expects.  Used by the Phase 6 [`crate::matrix`] module to bake
+/// the analysis window into the STFT graph as a `Const`.
+pub(crate) fn build_window_bytes(
+    window: WindowType,
+    n_fft: usize,
+) -> Vec<u8> {
+    let w = build_window(window, n_fft);
+    let mut bytes = Vec::with_capacity(n_fft * 4);
+    for v in w {
+        bytes.extend_from_slice(&v.to_le_bytes());
+    }
+    bytes
 }
 
 /// Build an analysis window of length `n_fft` per the

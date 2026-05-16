@@ -1,14 +1,19 @@
 [package]
 name = "dsp-stft"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "DSP05 Phases 1-5: scalar reference STFT (forward + ISTFT), magnitude / log spectrograms, mel filterbank, mel-spectrogram, and MFCC (Mel-Frequency Cepstral Coefficients) for the DSP layer. Sliding-window FFT for time-frequency analysis with perceptual mel projection and cepstral compression — the canonical speech / audio feature pipeline. Strict-mode framing in V1; matrix-ir lowered STFT (Phase 6) still pending."
+description = "DSP05 Phases 1-6: scalar + matrix-IR-lowered STFT for the DSP layer. Forward + ISTFT, magnitude/log spectrograms, mel filterbank, mel-spectrogram, MFCC, and a matrix-IR-lowered build_stft_graph / stft_via_runtime that runs the whole sliding-window FFT through the matrix execution layer (lifts onto GPU automatically once Metal/CUDA claim Slice + Concat + Mul + Reshape). The canonical speech / audio feature pipeline plus a graph-native execution path."
 license = "MIT"
 
 [dependencies]
-dsp-fft     = { path = "../dsp-fft" }
-dsp-filters = { path = "../dsp-filters" }
-dsp-complex = { path = "../dsp-complex" }
-dsp-dct     = { path = "../dsp-dct" }
+dsp-fft           = { path = "../dsp-fft" }
+dsp-filters       = { path = "../dsp-filters" }
+dsp-complex       = { path = "../dsp-complex" }
+dsp-dct           = { path = "../dsp-dct" }
+matrix-ir         = { path = "../matrix-ir" }
+matrix-cpu        = { path = "../matrix-cpu" }
+matrix-runtime    = { path = "../matrix-runtime" }
+compute-ir        = { path = "../compute-ir" }
+executor-protocol = { path = "../executor-protocol" }
 
 [dev-dependencies]
