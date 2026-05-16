@@ -1,13 +1,14 @@
 [package]
 name = "dsp-stft"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "DSP05 Phases 1-4: scalar reference STFT (forward), ISTFT (overlap-add reconstruction, COLA-aware), magnitude spectrogram, and log spectrogram for the DSP layer. Sliding-window FFT for time-frequency analysis with optional reconstruction. Strict-mode framing in V1; mel/MFCC helpers (Phase 5) and matrix-ir lowered STFT (Phase 6) still pending."
+description = "DSP05 Phases 1-5: scalar reference STFT (forward + ISTFT), magnitude / log spectrograms, mel filterbank, mel-spectrogram, and MFCC (Mel-Frequency Cepstral Coefficients) for the DSP layer. Sliding-window FFT for time-frequency analysis with perceptual mel projection and cepstral compression — the canonical speech / audio feature pipeline. Strict-mode framing in V1; matrix-ir lowered STFT (Phase 6) still pending."
 license = "MIT"
 
 [dependencies]
 dsp-fft     = { path = "../dsp-fft" }
 dsp-filters = { path = "../dsp-filters" }
 dsp-complex = { path = "../dsp-complex" }
+dsp-dct     = { path = "../dsp-dct" }
 
 [dev-dependencies]

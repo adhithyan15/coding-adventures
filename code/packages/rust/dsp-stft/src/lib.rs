@@ -39,8 +39,10 @@
 #![warn(rust_2018_idioms)]
 
 pub mod inverse;
+pub mod mel;
 pub mod spectrogram;
 pub use inverse::istft;
+pub use mel::{mel_filterbank, mel_spectrogram, mfcc};
 pub use spectrogram::{log_spectrogram, spectrogram};
 
 use dsp_fft::{rfft_scalar, FftError};
