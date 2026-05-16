@@ -632,4 +632,5 @@ members = [
     "capability-os-sandbox",
     "iir-to-jvm-class-file",
     "semantic-ir",
+    "twig-to-semantic-ir",
 ]
