@@ -525,6 +525,7 @@ members = [
     "window-win32",
     "window-c",
     "tcp-runtime",
+    "text-core",
     "text-interfaces",
     "text-native",
     "text-native-coretext",
