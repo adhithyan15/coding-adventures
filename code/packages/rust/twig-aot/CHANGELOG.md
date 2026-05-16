@@ -1,5 +1,45 @@
 # Changelog — `twig-aot`
 
+## 0.3.1 — 2026-05-16 (multi-function x86_64 cross-fn patching)
+
+**Patch cross-function `call` sites in place during the x86_64
+two-pass compile.**
+
+Previous v0.3.0 release noted that multi-function programs were
+deferred — every `call` instruction surfaced as a `PltRel32`
+external relocation, which only resolved correctly when the callee
+was a runtime helper (e.g. `__twig_print_i64`).  Cross-module call
+sites resolved fine because the system linker still found the
+symbol via the function's exported symbol-table entry, but the
+extra reloc overhead and the dependency on every internal function
+having a global symbol were both incidental.
+
+`compile_module_x86_64_to_text` now mirrors `aarch64-backend`'s
+Pass 2 strategy:
+
+- After concatenating per-function bytes via `aot_core::link::link`,
+  walk every per-function reloc.
+- If the reloc names another function in the same module
+  (`offsets.contains_key`) AND is a `PltRel32` (CALL rel32),
+  resolve in place: write `callee_off - patch_offset - 4` into the
+  disp32 slot.  The reloc is consumed; the linker never sees it.
+- Everything else (runtime helpers, possibly-external globals)
+  passes through to the packager unchanged.
+
+This unblocks real Twig programs (mutual-recursion, helpers, etc.)
+on both Linux and Windows hosts.
+
+### Tests
+
+- `x86_64_cross_function_call_patched_in_place` — compiles a
+  two-function module (`main` calls `helper`), verifies the CALL
+  site's disp32 was patched to the correct PC-relative offset, and
+  confirms no external reloc for `helper` is emitted.
+- `x86_64_external_call_remains_in_relocs` — verifies that calls
+  to runtime helpers like `__twig_print_i64` still surface as
+  external relocs even when multi-function patching is otherwise
+  active.
+
 ## 0.3.0 — 2026-05-14 (LANG46 phase 2 — multi-target driver)
 
 **End-to-end Twig source → native binary on Linux x86-64 and Windows

@@ -628,27 +628,36 @@ fn sdk_lib_path() -> PathBuf {
 use x86_64_backend::{compile_function_with_globals as x86_64_compile_with_globals, X86_64Abi};
 
 /// Per-function compile for x86-64, then concatenate function bytes into a
-/// single `.text` and lift each function's relocations into linked-text byte
-/// offsets.
+/// single `.text`, **patch cross-function call sites in place**, and surface
+/// only the truly-external relocations for the system linker.
 ///
-/// Cross-function calls *within the same module* end up as `PltRel32`
-/// relocation records targeting another function in the module.  The linker
-/// resolves those because every module function ends up as a symbol in the
-/// emitted object (via the AOT runtime helper for `main` — multi-function
-/// programs that need cross-function symbols are deferred to a follow-up).
+/// Mirrors `compile_module_to_text_raw`'s two-pass strategy from the
+/// AArch64 path.  Returns `(linked_text, fn_offsets, entry_byte_offset,
+/// external_relocs)`.
 ///
-/// Returns `(linked_text, fn_offsets, entry_byte_offset, relocs)`.
+/// Pass strategy:
 ///
-/// `entry_byte_offset` is the position of `main` in the linked text; the
-/// caller passes it to `pack_*_object_x86_64`.
+/// 1. Compile each function independently with `x86_64-backend`.  Every
+///    cross-function `call` instruction emits a `CALL rel32` placeholder
+///    (`E8 00 00 00 00`) and records an `ExternalReloc { kind: PltRel32,
+///    symbol: <callee name>, patch_offset: <disp32 byte offset within fn> }`.
+/// 2. Concatenate function bytes via `aot_core::link::link`, recording each
+///    function's byte offset in the linked text.
+/// 3. Walk every recorded reloc.  Lift its `patch_offset` to the
+///    linked-text offset (function base + per-fn offset).  If the symbol
+///    names another function in this module (`offsets.contains_key`),
+///    patch the disp32 slot directly: `disp32 = callee_byte_offset -
+///    patch_offset - 4`.  The reloc is consumed; the linker never sees it.
+/// 4. Anything left (e.g. `__twig_print_i64`) is a true external; emit it
+///    as an `X86RelocRecord` so the packager turns it into a `R_X86_64_PLT32`
+///    / `IMAGE_REL_AMD64_REL32` record.
 ///
-/// Pass strategy: this V1 driver performs **no in-place patching** of
-/// cross-function call sites; all calls become `PltRel32` external
-/// relocations.  For single-function programs (the smoke-test target),
-/// that yields the correct linker output trivially.  Multi-function
-/// programs that emit cross-function `call` records currently rely on
-/// each function appearing as a global symbol in the emitted object —
-/// a refinement deferred to a follow-up alongside multi-fn smoke tests.
+/// The PC-relative formula is the same one the linker would apply:
+/// the encoder writes zero into the disp32 slot, then we set it to
+/// `target_offset - patch_offset - 4` (the `-4` is the addend stored in
+/// the reloc, and equals the byte distance from the disp32 slot to the
+/// end of the instruction — `E8` opcode is 1 byte + 4-byte disp32, so
+/// the instruction ends 4 bytes after the disp32 slot start).
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
     abi: X86_64Abi,
@@ -676,22 +685,63 @@ fn compile_module_x86_64_to_text(
     let plain: Vec<(String, Vec<u8>)> = fn_results.iter()
         .map(|(name, bytes, _)| (name.clone(), bytes.clone()))
         .collect();
-    let (linked, offsets) = link(&plain);
+    let (mut linked, offsets) = link(&plain);
 
     let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
     let entry_off = entry_point_offset(&offsets, Some(entry));
 
-    // Pass 2: lift per-function reloc offsets into linked-text offsets.
-    //
-    // Reloc patch_offsets from each function are local to that function's
-    // byte stream; add the function's start offset in the linked text so
-    // the packager records the correct file-relative addresses.
-    let mut all_relocs: Vec<X86RelocRecord> = Vec::new();
+    // Pass 2: lift per-function reloc offsets into linked-text offsets, and
+    // patch cross-function calls in place.  Keep only truly-external relocs
+    // (e.g. `__twig_print_i64`) for the packager.
+    let mut external_relocs: Vec<X86RelocRecord> = Vec::new();
     for (fn_name, _bytes, fn_relocs) in &fn_results {
-        let base = *offsets.get(fn_name.as_str()).unwrap_or(&0) as u32;
+        let base = *offsets.get(fn_name.as_str())
+            .ok_or_else(|| AotError::Linker {
+                status: None,
+                stderr: format!(
+                    "twig-aot: internal error: function '{fn_name}' missing from \
+                     link offsets during x86_64 reloc lift",
+                ),
+            })?;
         for r in fn_relocs {
-            all_relocs.push(X86RelocRecord {
-                patch_offset: base + r.patch_offset as u32,
+            let patch_offset_linked = base + r.patch_offset;
+
+            // Is this a call into a function defined in the SAME module?
+            // Only `PltRel32` relocs (CALL rel32) qualify for in-place
+            // patching; `PcRel32`/`GotPcRel32` are RIP-relative loads/stores
+            // that target globals or external data, never internal function
+            // bodies, so they always pass through to the packager.
+            let internal_call = matches!(r.kind, x86_64_encoder::ExternalRelocKind::PltRel32)
+                && offsets.contains_key(r.symbol.as_str());
+
+            if internal_call {
+                let callee_off = *offsets.get(r.symbol.as_str()).unwrap();
+                // PC-relative displacement from the *end* of the
+                // instruction.  patch_offset names the disp32 slot's
+                // first byte; the end of the instruction is 4 bytes
+                // after that.
+                let disp: i64 = (callee_off as i64) - (patch_offset_linked as i64) - 4;
+                if !(i32::MIN as i64..=i32::MAX as i64).contains(&disp) {
+                    return Err(AotError::Linker {
+                        status: None,
+                        stderr: format!(
+                            "twig-aot: cross-function call displacement {disp} \
+                             from '{fn_name}' to '{}' exceeds 32-bit range",
+                            r.symbol),
+                    });
+                }
+                let bytes = (disp as i32).to_le_bytes();
+                linked[patch_offset_linked    ] = bytes[0];
+                linked[patch_offset_linked + 1] = bytes[1];
+                linked[patch_offset_linked + 2] = bytes[2];
+                linked[patch_offset_linked + 3] = bytes[3];
+                // Reloc resolved in place; don't forward to packager.
+                continue;
+            }
+
+            // External reloc — packager records it for the system linker.
+            external_relocs.push(X86RelocRecord {
+                patch_offset: patch_offset_linked as u32,
                 symbol: r.symbol.clone(),
                 kind: match r.kind {
                     x86_64_encoder::ExternalRelocKind::PltRel32   => X86RelocKind::PltRel32,
@@ -703,7 +753,7 @@ fn compile_module_x86_64_to_text(
         }
     }
 
-    Ok((linked, offsets, entry_off, all_relocs))
+    Ok((linked, offsets, entry_off, external_relocs))
 }
 
 /// Compile an `IIRModule` to a Linux x86-64 ELF object file (`*.o`).
@@ -1642,5 +1692,123 @@ mod tests {
             "safe annotated program should compile; got: {:?}",
             result.err(),
         );
+    }
+
+    // ---- Multi-function cross-function patching (x86_64) ----
+
+    /// Compile a two-function module where `main` calls `helper`, then
+    /// inspect the resulting linked text to verify:
+    ///
+    /// 1. The CALL site contains a non-zero rel32 displacement (NOT the
+    ///    encoder's `00 00 00 00` placeholder).
+    /// 2. The displacement points at `helper`'s byte offset in the
+    ///    linked text.
+    /// 3. No external relocation for `helper` is emitted to the packager
+    ///    (it was resolved in place).
+    /// 4. External relocs for runtime helpers (e.g. `__twig_print_i64`)
+    ///    DO still pass through to the packager.
+    #[test]
+    fn x86_64_cross_function_call_patched_in_place() {
+        use interpreter_ir::instr::{IIRInstr, Operand};
+
+        // Module: helper() returns 7; main() returns helper().
+        // Plain (non-recursive) so the test isn't sensitive to inlining
+        // or constant-folding passes.
+        let helper = interpreter_ir::function::IIRFunction::new(
+            "helper", vec![], "u64",
+            vec![
+                IIRInstr::new("const", Some("v0".into()),
+                              vec![Operand::Int(7)], "u64"),
+                IIRInstr::new("ret", None,
+                              vec![Operand::Var("v0".into())], "u64"),
+            ],
+        );
+        let main = interpreter_ir::function::IIRFunction::new(
+            "main", vec![], "u64",
+            vec![
+                IIRInstr::new("call", Some("r".into()),
+                              vec![Operand::Var("helper".into())], "u64"),
+                IIRInstr::new("ret", None,
+                              vec![Operand::Var("r".into())], "u64"),
+            ],
+        );
+        let mut module = IIRModule::new("twofn", "twig");
+        module.add_or_replace(helper);
+        module.add_or_replace(main);
+        module.entry_point = Some("main".into());
+
+        let (linked, offsets, _entry_off, ext) =
+            compile_module_x86_64_to_text(&module, X86_64Abi::SysV).unwrap();
+
+        // helper symbol resolved internally → no external reloc for it.
+        assert!(
+            !ext.iter().any(|r| r.symbol == "helper"),
+            "internal call to 'helper' should be patched in place, not exported"
+        );
+
+        // Find the CALL site in main: opcode 0xE8 followed by 4 disp bytes.
+        // After patching, those 4 bytes should NOT all be zero.
+        let main_off = *offsets.get("main").unwrap();
+        let helper_off = *offsets.get("helper").unwrap();
+        // The call lives somewhere in main's body; we search for the 0xE8
+        // opcode within main's range.
+        let main_end = main_off + linked.len(); // upper bound; main is the last fn here
+        let mut call_site = None;
+        for i in main_off..(main_end.saturating_sub(5)).min(linked.len() - 5) {
+            if linked[i] == 0xE8 {
+                // Check the next 4 bytes aren't all zero (we want a patched call).
+                if linked[i+1..i+5] != [0, 0, 0, 0] {
+                    call_site = Some(i);
+                    break;
+                }
+            }
+        }
+        let call_site = call_site.expect("expected a patched CALL rel32 in main's body");
+
+        // disp32 starts at call_site+1; verify it equals helper - (call_site+1) - 4.
+        let actual_disp = i32::from_le_bytes([
+            linked[call_site + 1], linked[call_site + 2],
+            linked[call_site + 3], linked[call_site + 4],
+        ]);
+        let expected_disp = (helper_off as i64) - (call_site as i64 + 1) - 4;
+        assert_eq!(actual_disp as i64, expected_disp,
+            "CALL disp32 should target 'helper' (off={helper_off}); \
+             site_disp_slot={}, expected disp={expected_disp}, got={actual_disp}",
+             call_site + 1);
+    }
+
+    /// Confirm that calls to a NON-module symbol (e.g. `__twig_print_i64`)
+    /// remain as external relocs, even when multi-function patching is
+    /// otherwise active.
+    #[test]
+    fn x86_64_external_call_remains_in_relocs() {
+        use interpreter_ir::instr::{IIRInstr, Operand};
+
+        // main() { io_out 42 ; return 0 }
+        let main = interpreter_ir::function::IIRFunction::new(
+            "main", vec![], "u64",
+            vec![
+                IIRInstr::new("const", Some("v".into()),
+                              vec![Operand::Int(42)], "u64"),
+                IIRInstr::new("io_out", None,
+                              vec![Operand::Var("v".into())], "void"),
+                IIRInstr::new("const", Some("z".into()),
+                              vec![Operand::Int(0)], "u64"),
+                IIRInstr::new("ret", None,
+                              vec![Operand::Var("z".into())], "u64"),
+            ],
+        );
+        let mut module = IIRModule::new("ioonly", "twig");
+        module.add_or_replace(main);
+        module.entry_point = Some("main".into());
+
+        let (_linked, _offsets, _entry_off, ext) =
+            compile_module_x86_64_to_text(&module, X86_64Abi::SysV).unwrap();
+
+        // Exactly one external reloc, naming the runtime helper.
+        let plt: Vec<_> = ext.iter()
+            .filter(|r| r.symbol == "__twig_print_i64").collect();
+        assert_eq!(plt.len(), 1,
+            "expected one external reloc for __twig_print_i64, got {ext:?}");
     }
 }
