@@ -41,7 +41,14 @@ export function slugify(sourcePath: string): string {
   return s.length > 0 ? s : "untitled";
 }
 
-/** Substitute `{slug}` in a template string. */
+/**
+ * Substitute `{slug}` in a template string.
+ *
+ * Uses a function replacement (not a string replacement) so `$&`,
+ * `$1`, `$<name>`, etc. in `slug` are treated as literal characters
+ * rather than regex back-references.  Without this, frontmatter
+ * `slug: "$&"` would inject the whole match into the route.
+ */
 export function formatRoute(template: string, slug: string): string {
-  return template.replace(/\{slug\}/g, slug);
+  return template.replace(/\{slug\}/g, () => slug);
 }
