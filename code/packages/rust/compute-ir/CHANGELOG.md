@@ -3,6 +3,41 @@
 All notable changes to `compute-ir` are documented here.  The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] — 2026-05-13
+
+### Added — wire-format support for `Op::Concat`
+
+`matrix-ir` 0.3.0 added `Op::Concat` (wire tag 0x1D).  compute-ir's
+encoder / decoder + `dump::op_name` helper now know about it.
+
+Wire layout:
+
+```
+tag (0x1D) | n_inputs: uv64 | input_id: u32 × n_inputs |
+axis: u32  | output: u32
+```
+
+Decoder uses `bounded_capacity` to cap the input-id Vec
+preallocation against the remaining buffer, same defense-in-depth
+as the reduction-axes decoders.
+
+## [0.2.0] — 2026-05-13
+
+### Added — wire-format support for `Op::Slice`
+
+`matrix-ir` 0.2.0 added a new `Op::Slice` variant (wire tag 0x1C).
+compute-ir's encoder / decoder + `dump::op_name` helper now know
+about it.
+
+Layout in the wire format:
+
+```text
+tag (0x1C) | input: u32 | axis: u32 | start: u32 | end: u32 |
+step: u32  | output: u32
+```
+
+Total: 1 + 24 = 25 bytes per Slice op.  Round-trips bit-exactly.
+
 ## [0.1.0] — 2026-05-04
 
 Initial release.  Implements spec MX02 V1.

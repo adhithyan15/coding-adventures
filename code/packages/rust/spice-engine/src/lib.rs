@@ -887,6 +887,25 @@ impl Ccvs {
 pub struct DcResult {
     pub node_voltages: BTreeMap<String, f64>,
     pub branch_currents: BTreeMap<String, f64>,
+    pub iterations: usize,
+    pub converged: bool,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct DcOpOptions {
+    pub max_iterations: usize,
+    pub tolerance: f64,
+    pub convergence_aids: bool,
+}
+
+impl Default for DcOpOptions {
+    fn default() -> Self {
+        Self {
+            max_iterations: 80,
+            tolerance: 1.0e-9,
+            convergence_aids: true,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1188,12 +1207,134 @@ impl fmt::Display for SpiceError {
 impl std::error::Error for SpiceError {}
 
 pub fn dc_op(circuit: &Circuit) -> Result<DcResult, SpiceError> {
-    let linear_solution = solve_linear_circuit(circuit, &[], &[], None)?;
+    dc_op_with_options(circuit, DcOpOptions::default())
+}
 
-    Ok(DcResult {
-        node_voltages: linear_solution.node_voltages,
-        branch_currents: linear_solution.branch_currents,
-    })
+pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcResult, SpiceError> {
+    validate_dc_op_options(options)?;
+    let solution = solve_dc_newton(circuit, options, None)?;
+    if solution.converged || !options.convergence_aids {
+        return Ok(dc_result_from_linear_solution(solution));
+    }
+
+    let final_solution =
+        if let Some(aided) = solve_dc_with_gmin_stepping(circuit, options, &solution.vector)? {
+            aided
+        } else if let Some(aided) = solve_dc_with_source_stepping(circuit, options)? {
+            aided
+        } else {
+            solution
+        };
+    Ok(dc_result_from_linear_solution(final_solution))
+}
+
+fn dc_result_from_linear_solution(solution: LinearSolution) -> DcResult {
+    DcResult {
+        node_voltages: solution.node_voltages,
+        branch_currents: solution.branch_currents,
+        iterations: solution.iterations,
+        converged: solution.converged,
+    }
+}
+
+fn validate_dc_op_options(options: DcOpOptions) -> Result<(), SpiceError> {
+    if options.max_iterations == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_op".to_string(),
+            reason: "max_iterations must be positive".to_string(),
+        });
+    }
+    if !options.tolerance.is_finite() || options.tolerance <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_op".to_string(),
+            reason: "tolerance must be finite and positive".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn solve_dc_with_gmin_stepping(
+    circuit: &Circuit,
+    options: DcOpOptions,
+    initial_vector: &[f64],
+) -> Result<Option<LinearSolution>, SpiceError> {
+    let mut warm_start = initial_vector.to_vec();
+    let mut final_solution = None;
+
+    for gmin in dc_gmin_sequence() {
+        let stepped_circuit = if gmin == 0.0 {
+            circuit.clone()
+        } else {
+            circuit_with_gmin(circuit, gmin)
+        };
+        let solution = solve_dc_newton(&stepped_circuit, options, Some(&warm_start))?;
+        if !solution.converged {
+            return Ok(None);
+        }
+        warm_start = solution.vector.clone();
+        final_solution = Some(solution);
+    }
+
+    Ok(final_solution)
+}
+
+fn solve_dc_with_source_stepping(
+    circuit: &Circuit,
+    options: DcOpOptions,
+) -> Result<Option<LinearSolution>, SpiceError> {
+    let mut warm_start: Option<Vec<f64>> = None;
+    let mut final_solution = None;
+
+    for step in 0..=10 {
+        let scale = step as f64 / 10.0;
+        let stepped_circuit = if scale == 1.0 {
+            circuit.clone()
+        } else {
+            circuit_with_scaled_independent_sources(circuit, scale)
+        };
+        let solution = solve_dc_newton(&stepped_circuit, options, warm_start.as_deref())?;
+        if !solution.converged {
+            return Ok(None);
+        }
+        warm_start = Some(solution.vector.clone());
+        final_solution = Some(solution);
+    }
+
+    Ok(final_solution)
+}
+
+fn dc_gmin_sequence() -> Vec<f64> {
+    let mut sequence: Vec<f64> = (-12..=-3)
+        .rev()
+        .map(|exponent| 10.0_f64.powi(exponent))
+        .collect();
+    sequence.push(0.0);
+    sequence
+}
+
+fn circuit_with_gmin(circuit: &Circuit, gmin_siemens: f64) -> Circuit {
+    let mut aided = circuit.clone();
+    for node in collect_node_indices(circuit).keys() {
+        aided.add(Element::Resistor(Resistor::new(
+            format!("__gmin_{node}"),
+            node.clone(),
+            "0",
+            1.0 / gmin_siemens,
+        )));
+    }
+    aided
+}
+
+fn circuit_with_scaled_independent_sources(circuit: &Circuit, scale: f64) -> Circuit {
+    let mut scaled = circuit.clone();
+    for element in &mut scaled.elements {
+        match element {
+            Element::VoltageSource(source) => source.voltage *= scale,
+            Element::CurrentSource(source) => source.current *= scale,
+            _ => {}
+        }
+    }
+    scaled
 }
 
 pub fn dc_sweep(
@@ -1934,6 +2075,16 @@ struct LinearSolution {
     node_voltages: BTreeMap<String, f64>,
     branch_currents: BTreeMap<String, f64>,
     vector: Vec<f64>,
+    iterations: usize,
+    converged: bool,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+struct LinearSolveOptions<'a> {
+    max_iterations: usize,
+    tolerance: f64,
+    initial_vector: Option<&'a [f64]>,
+    return_singular_as_unconverged: bool,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1963,6 +2114,46 @@ fn solve_linear_circuit(
     inductor_states: &[InductorState],
     source_time: Option<f64>,
 ) -> Result<LinearSolution, SpiceError> {
+    solve_linear_circuit_with_options(
+        circuit,
+        capacitor_states,
+        inductor_states,
+        source_time,
+        LinearSolveOptions {
+            max_iterations: 80,
+            tolerance: 1.0e-9,
+            initial_vector: None,
+            return_singular_as_unconverged: false,
+        },
+    )
+}
+
+fn solve_dc_newton(
+    circuit: &Circuit,
+    options: DcOpOptions,
+    initial_vector: Option<&[f64]>,
+) -> Result<LinearSolution, SpiceError> {
+    solve_linear_circuit_with_options(
+        circuit,
+        &[],
+        &[],
+        None,
+        LinearSolveOptions {
+            max_iterations: options.max_iterations,
+            tolerance: options.tolerance,
+            initial_vector,
+            return_singular_as_unconverged: true,
+        },
+    )
+}
+
+fn solve_linear_circuit_with_options(
+    circuit: &Circuit,
+    capacitor_states: &[CapacitorState],
+    inductor_states: &[InductorState],
+    source_time: Option<f64>,
+    options: LinearSolveOptions<'_>,
+) -> Result<LinearSolution, SpiceError> {
     let node_indices = collect_node_indices(circuit);
     let voltage_sources = collect_voltage_sources(circuit, inductor_states)?;
     let node_count = node_indices.len();
@@ -1974,6 +2165,8 @@ fn solve_linear_circuit(
             node_voltages: BTreeMap::new(),
             branch_currents: BTreeMap::new(),
             vector: Vec::new(),
+            iterations: 0,
+            converged: true,
         });
     }
 
@@ -1983,8 +2176,12 @@ fn solve_linear_circuit(
             Element::Diode(_) | Element::Bjt(_) | Element::Mosfet(_)
         )
     });
-    let mut operating_point = vec![0.0; matrix_size];
-    let mut solution = solve_linear_circuit_at_operating_point(
+    let return_singular_as_unconverged = options.return_singular_as_unconverged && has_nonlinear;
+    let mut operating_point = match options.initial_vector {
+        Some(vector) if vector.len() == matrix_size => vector.to_vec(),
+        _ => vec![0.0; matrix_size],
+    };
+    let mut solution = solve_linear_circuit_at_operating_point_or_failure(
         circuit,
         capacitor_states,
         inductor_states,
@@ -1994,18 +2191,35 @@ fn solve_linear_circuit(
         node_count,
         matrix_size,
         &operating_point,
+        return_singular_as_unconverged,
     )?;
     if !has_nonlinear {
-        return Ok(solution);
+        return Ok(LinearSolution {
+            iterations: 1,
+            converged: solution.converged,
+            ..solution
+        });
     }
 
-    for _ in 0..80 {
+    let mut iterations = 1;
+    while iterations < options.max_iterations {
+        if !solution.converged {
+            return Ok(LinearSolution {
+                iterations,
+                converged: false,
+                ..solution
+            });
+        }
         let delta = max_vector_delta(&solution.vector, &operating_point);
         operating_point = solution.vector.clone();
-        if delta < 1.0e-9 {
-            return Ok(solution);
+        if delta < options.tolerance {
+            return Ok(LinearSolution {
+                iterations,
+                converged: true,
+                ..solution
+            });
         }
-        solution = solve_linear_circuit_at_operating_point(
+        solution = solve_linear_circuit_at_operating_point_or_failure(
             circuit,
             capacitor_states,
             inductor_states,
@@ -2015,10 +2229,60 @@ fn solve_linear_circuit(
             node_count,
             matrix_size,
             &operating_point,
+            return_singular_as_unconverged,
         )?;
+        iterations += 1;
     }
 
-    Ok(solution)
+    let delta = max_vector_delta(&solution.vector, &operating_point);
+    Ok(LinearSolution {
+        iterations,
+        converged: delta < options.tolerance,
+        ..solution
+    })
+}
+
+fn solve_linear_circuit_at_operating_point_or_failure(
+    circuit: &Circuit,
+    capacitor_states: &[CapacitorState],
+    inductor_states: &[InductorState],
+    source_time: Option<f64>,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix_size: usize,
+    operating_point: &[f64],
+    return_singular_as_unconverged: bool,
+) -> Result<LinearSolution, SpiceError> {
+    match solve_linear_circuit_at_operating_point(
+        circuit,
+        capacitor_states,
+        inductor_states,
+        source_time,
+        node_indices,
+        voltage_sources,
+        node_count,
+        matrix_size,
+        operating_point,
+    ) {
+        Ok(solution) => Ok(LinearSolution {
+            iterations: 1,
+            converged: true,
+            ..solution
+        }),
+        Err(SpiceError::SingularMatrix) if return_singular_as_unconverged => {
+            Ok(linear_solution_from_vector(
+                circuit,
+                inductor_states,
+                node_indices,
+                voltage_sources,
+                node_count,
+                operating_point,
+                false,
+            ))
+        }
+        Err(error) => Err(error),
+    }
 }
 
 fn solve_linear_circuit_at_operating_point(
@@ -2097,7 +2361,27 @@ fn solve_linear_circuit_at_operating_point(
     }
 
     let solution = solve_linear_system(matrix, rhs)?;
-    let node_voltages = node_voltages_from_solution(node_indices, &solution);
+    Ok(linear_solution_from_vector(
+        circuit,
+        inductor_states,
+        node_indices,
+        voltage_sources,
+        node_count,
+        &solution,
+        true,
+    ))
+}
+
+fn linear_solution_from_vector(
+    circuit: &Circuit,
+    inductor_states: &[InductorState],
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    solution: &[f64],
+    converged: bool,
+) -> LinearSolution {
+    let node_voltages = node_voltages_from_solution(node_indices, solution);
     let mut branch_currents = BTreeMap::new();
     for (source_name, branch_index) in voltage_sources {
         branch_currents.insert(
@@ -2112,11 +2396,13 @@ fn solve_linear_circuit_at_operating_point(
         &mut branch_currents,
     );
 
-    Ok(LinearSolution {
+    LinearSolution {
         node_voltages,
         branch_currents,
-        vector: solution,
-    })
+        vector: solution.to_vec(),
+        iterations: 1,
+        converged,
+    }
 }
 
 fn max_vector_delta(left: &[f64], right: &[f64]) -> f64 {

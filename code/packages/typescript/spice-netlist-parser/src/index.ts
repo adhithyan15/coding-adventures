@@ -5,19 +5,21 @@ import {
   PwlWaveform,
   SinWaveform,
   bjt,
-  capacitor,
+  capacitorWithInitialVoltage,
   cccs,
   ccvs,
   currentSource,
+  currentSourceWithAc,
   currentSourceWithWaveform,
   diode,
   dcOp,
-  inductor,
+  inductorWithInitialCurrent,
   mosfet,
   resistor,
   vccs,
   vcvs,
   voltageSource,
+  voltageSourceWithAc,
   voltageSourceWithWaveform,
   type Element,
   type MosfetLevel1Params,
@@ -57,7 +59,43 @@ export interface AcAnalysis {
   readonly stopHz: number;
 }
 
-export type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis;
+export interface TfAnalysis {
+  readonly kind: "tf";
+  readonly outputNode: string;
+  readonly inputSource: string;
+}
+
+export interface SensAnalysis {
+  readonly kind: "sens";
+  readonly outputNode: string;
+}
+
+export interface McAnalysis {
+  readonly kind: "mc";
+  readonly outputNode: string;
+  readonly nTrials: number;
+  readonly tolerance: number;
+  readonly distribution: "gaussian" | "uniform";
+  readonly seed?: number;
+}
+
+export interface NoiseAnalysis {
+  readonly kind: "noise";
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly frequenciesHz: readonly number[];
+  readonly temperature: number;
+}
+
+export type Analysis =
+  | OpAnalysis
+  | TranAnalysis
+  | DcAnalysis
+  | AcAnalysis
+  | TfAnalysis
+  | SensAnalysis
+  | McAnalysis
+  | NoiseAnalysis;
 
 export interface ModelCard {
   readonly name: string;
@@ -88,6 +126,24 @@ export class ParsedNetlist {
   acCards(): AcAnalysis[] {
     return this.analyses.filter((analysis): analysis is AcAnalysis => analysis.kind === "ac");
   }
+
+  tfCards(): TfAnalysis[] {
+    return this.analyses.filter((analysis): analysis is TfAnalysis => analysis.kind === "tf");
+  }
+
+  sensCards(): SensAnalysis[] {
+    return this.analyses.filter((analysis): analysis is SensAnalysis => analysis.kind === "sens");
+  }
+
+  mcCards(): McAnalysis[] {
+    return this.analyses.filter((analysis): analysis is McAnalysis => analysis.kind === "mc");
+  }
+
+  noiseCards(): NoiseAnalysis[] {
+    return this.analyses.filter(
+      (analysis): analysis is NoiseAnalysis => analysis.kind === "noise",
+    );
+  }
 }
 
 interface Statement {
@@ -100,6 +156,15 @@ interface SubcktDefinition {
   readonly pins: string[];
   readonly body: Statement[];
   readonly lineNumber: number;
+}
+
+interface SourceSpec {
+  readonly dcValue: number;
+  readonly waveform?: Waveform;
+  readonly ac?: {
+    readonly magnitude: number;
+    readonly phaseDegrees: number;
+  };
 }
 
 const VALUE_RE = /^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)([a-zA-Z]*)\s*$/;
@@ -337,26 +402,86 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
     return resistor(name, fields[1], fields[2], parseValue(fields[3]));
   }
   if (prefix === "C") {
-    requireFields(fields, 4, "capacitor");
-    return capacitor(name, fields[1], fields[2], parseValue(fields[3]));
+    requireMinFields(fields, 4, "capacitor");
+    const params = parseElementParams(fields.slice(4), "capacitor");
+    for (const paramName of params.keys()) {
+      if (paramName !== "IC") {
+        throw new NetlistParseError(
+          `unsupported capacitor parameter ${JSON.stringify(paramName)}`,
+        );
+      }
+    }
+    return capacitorWithInitialVoltage(
+      name,
+      fields[1],
+      fields[2],
+      parseValue(fields[3]),
+      params.get("IC") ?? 0.0,
+    );
   }
   if (prefix === "L") {
-    requireFields(fields, 4, "inductor");
-    return inductor(name, fields[1], fields[2], parseValue(fields[3]));
+    requireMinFields(fields, 4, "inductor");
+    const params = parseElementParams(fields.slice(4), "inductor");
+    for (const paramName of params.keys()) {
+      if (paramName !== "IC") {
+        throw new NetlistParseError(
+          `unsupported inductor parameter ${JSON.stringify(paramName)}`,
+        );
+      }
+    }
+    return inductorWithInitialCurrent(
+      name,
+      fields[1],
+      fields[2],
+      parseValue(fields[3]),
+      params.get("IC") ?? 0.0,
+    );
   }
   if (prefix === "V") {
     requireMinFields(fields, 4, "voltage source");
-    const [voltage, waveform] = parseSourceValue(fields.slice(3));
-    return waveform === undefined
-      ? voltageSource(name, fields[1], fields[2], voltage)
-      : voltageSourceWithWaveform(name, fields[1], fields[2], voltage, waveform);
+    const source = parseSourceValue(fields.slice(3));
+    if (source.waveform !== undefined) {
+      return voltageSourceWithWaveform(
+        name,
+        fields[1],
+        fields[2],
+        source.dcValue,
+        source.waveform,
+      );
+    }
+    return source.ac === undefined
+      ? voltageSource(name, fields[1], fields[2], source.dcValue)
+      : voltageSourceWithAc(
+          name,
+          fields[1],
+          fields[2],
+          source.dcValue,
+          source.ac.magnitude,
+          source.ac.phaseDegrees,
+        );
   }
   if (prefix === "I") {
     requireMinFields(fields, 4, "current source");
-    const [current, waveform] = parseSourceValue(fields.slice(3));
-    return waveform === undefined
-      ? currentSource(name, fields[1], fields[2], current)
-      : currentSourceWithWaveform(name, fields[1], fields[2], current, waveform);
+    const source = parseSourceValue(fields.slice(3));
+    if (source.waveform !== undefined) {
+      return currentSourceWithWaveform(
+        name,
+        fields[1],
+        fields[2],
+        source.dcValue,
+        source.waveform,
+      );
+    }
+    return source.ac === undefined
+      ? currentSource(name, fields[1], fields[2], source.dcValue)
+      : currentSourceWithAc(
+          name,
+          fields[1],
+          fields[2],
+          source.dcValue,
+          source.ac.magnitude,
+          source.ac.phaseDegrees,
+        );
   }
   if (prefix === "D") {
     requireFields(fields, 4, "diode");
@@ -577,7 +702,7 @@ function elementPrefix(name: string): string {
   return localName[0].toUpperCase();
 }
 
-function parseSourceValue(fields: readonly string[]): readonly [number, Waveform | undefined] {
+function parseSourceValue(fields: readonly string[]): SourceSpec {
   if (fields.length === 0) {
     throw new NetlistParseError("source is missing a value");
   }
@@ -585,17 +710,52 @@ function parseSourceValue(fields: readonly string[]): readonly [number, Waveform
     if (fields.length < 2) {
       throw new NetlistParseError("DC source form requires a value");
     }
-    return [parseValue(fields[1]), undefined];
+    return {
+      dcValue: parseValue(fields[1]),
+      ac: parseSourceAc(fields.slice(2)),
+    };
+  }
+  if (fields[0].toUpperCase() === "AC") {
+    return {
+      dcValue: 0.0,
+      ac: parseSourceAc(fields),
+    };
   }
   if (fields.length === 1 && fields[0].includes("(")) {
     const waveform = parseWaveform(fields[0]);
-    return [waveform.valueAt(0.0), waveform];
+    return { dcValue: waveform.valueAt(0.0), waveform };
   }
   if (/^(PWL|SIN|PULSE|EXP)\(/i.test(fields[0])) {
     const waveform = parseWaveform(fields.join(" "));
-    return [waveform.valueAt(0.0), waveform];
+    return { dcValue: waveform.valueAt(0.0), waveform };
   }
-  return [parseValue(fields[0]), undefined];
+  return {
+    dcValue: parseValue(fields[0]),
+    ac: parseSourceAc(fields.slice(1)),
+  };
+}
+
+function parseSourceAc(
+  fields: readonly string[],
+): { readonly magnitude: number; readonly phaseDegrees: number } | undefined {
+  if (fields.length === 0) {
+    return undefined;
+  }
+  if (fields[0].toUpperCase() !== "AC") {
+    throw new NetlistParseError(
+      `unsupported source suffix ${JSON.stringify(fields.join(" "))}`,
+    );
+  }
+  if (fields.length < 2) {
+    throw new NetlistParseError("AC source form requires a magnitude");
+  }
+  if (fields.length > 3) {
+    throw new NetlistParseError("AC source form accepts magnitude and optional phase");
+  }
+  return {
+    magnitude: parseValue(fields[1]),
+    phaseDegrees: fields.length >= 3 ? parseValue(fields[2]) : 0.0,
+  };
 }
 
 function parseWaveform(token: string): Waveform {
@@ -685,7 +845,80 @@ function parseDirective(fields: readonly string[]): Analysis {
       stopHz: parseValue(fields[4]),
     };
   }
+  if (directive === ".tf") {
+    requireFields(fields, 3, ".tf");
+    return {
+      kind: "tf",
+      outputNode: parseVoltageProbe(fields[1], ".tf"),
+      inputSource: fields[2],
+    };
+  }
+  if (directive === ".sens") {
+    requireFields(fields, 2, ".sens");
+    return {
+      kind: "sens",
+      outputNode: parseVoltageProbe(fields[1], ".sens"),
+    };
+  }
+  if (directive === ".mc") {
+    requireMinFields(fields, 3, ".mc");
+    requireMaxFields(fields, 6, ".mc");
+    const distribution = fields.length >= 5 ? fields[4].toLowerCase() : "gaussian";
+    if (distribution !== "gaussian" && distribution !== "uniform") {
+      throw new NetlistParseError(
+        `.mc distribution must be "gaussian" or "uniform", got ${JSON.stringify(fields[4])}`,
+      );
+    }
+    return {
+      kind: "mc",
+      outputNode: parseVoltageProbe(fields[1], ".mc"),
+      nTrials: Math.trunc(parseValue(fields[2])),
+      tolerance: fields.length >= 4 ? parseValue(fields[3]) : 0.05,
+      distribution,
+      seed: fields.length >= 6 ? Math.trunc(parseValue(fields[5])) : undefined,
+    };
+  }
+  if (directive === ".noise") {
+    requireMinFields(fields, 3, ".noise");
+    const frequenciesHz: number[] = [];
+    let temperature = 300.0;
+    let tailIndex = 3;
+    while (tailIndex < fields.length) {
+      const token = fields[tailIndex];
+      const lowerToken = token.toLowerCase();
+      if (lowerToken === "temp") {
+        if (tailIndex + 1 >= fields.length) {
+          throw new NetlistParseError(".noise temp requires a temperature value");
+        }
+        temperature = parseValue(fields[tailIndex + 1]);
+        tailIndex += 2;
+      } else if (lowerToken.startsWith("temp=")) {
+        temperature = parseValue(token.split("=", 2)[1]);
+        tailIndex += 1;
+      } else {
+        frequenciesHz.push(parseValue(token));
+        tailIndex += 1;
+      }
+    }
+    return {
+      kind: "noise",
+      outputNode: parseVoltageProbe(fields[1], ".noise"),
+      inputSource: fields[2],
+      frequenciesHz,
+      temperature,
+    };
+  }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
+}
+
+function parseVoltageProbe(token: string, directive: string): string {
+  const match = /^v\(([^()\s]+)\)$/i.exec(token);
+  if (match === null) {
+    throw new NetlistParseError(
+      `${directive} output must be a voltage probe V(node), got ${JSON.stringify(token)}`,
+    );
+  }
+  return match[1];
 }
 
 function splitFields(line: string): string[] {
@@ -739,6 +972,12 @@ function requireMinFields(fields: readonly string[], count: number, label: strin
     throw new NetlistParseError(
       `${label} expects at least ${count} fields, got ${fields.length}`,
     );
+  }
+}
+
+function requireMaxFields(fields: readonly string[], count: number, label: string): void {
+  if (fields.length > count) {
+    throw new NetlistParseError(`${label} expects at most ${count} fields, got ${fields.length}`);
   }
 }
 

@@ -304,6 +304,60 @@ fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Res
             buffers.write(out_residency.buffer, 0, &out_bytes)?;
             Ok(())
         }
+        Op::Slice {
+            input,
+            axis,
+            start,
+            end,
+            step,
+            output,
+        } => {
+            let in_t = lookup_meta(graph, *input)?;
+            let out_t = lookup_meta(graph, *output)?;
+            let in_buf = lookup_buffer(buffers, graph, in_t.id)?.to_vec();
+            let elem = in_t.dtype.size_bytes();
+            let (out_bytes, _out_dims) = eval::slice_bytes(
+                &in_buf,
+                &in_t.shape.dims,
+                *axis,
+                *start,
+                *end,
+                *step,
+                elem,
+            );
+            let out_residency = lookup_residency(graph, out_t.id)?;
+            buffers.write(out_residency.buffer, 0, &out_bytes)?;
+            Ok(())
+        }
+        Op::Concat {
+            inputs,
+            axis,
+            output,
+        } => {
+            let out_t = lookup_meta(graph, *output)?;
+            let elem = out_t.dtype.size_bytes();
+            // Gather each input's bytes + dims.  Materialise the Vec<u8>
+            // and Vec<u32> dim copies up front so the borrow chain in
+            // `concat_bytes` stays simple.
+            let metas: Vec<Meta> = inputs
+                .iter()
+                .map(|id| lookup_meta(graph, *id))
+                .collect::<Result<_, _>>()?;
+            let buf_vecs: Vec<Vec<u8>> = metas
+                .iter()
+                .map(|m| lookup_buffer(buffers, graph, m.id).map(|s| s.to_vec()))
+                .collect::<Result<_, _>>()?;
+            let dim_vecs: Vec<Vec<u32>> = metas.iter().map(|m| m.shape.dims.clone()).collect();
+            let inputs_view: Vec<(&[u8], &[u32])> = buf_vecs
+                .iter()
+                .zip(dim_vecs.iter())
+                .map(|(b, d)| (b.as_slice(), d.as_slice()))
+                .collect();
+            let (out_bytes, _out_dims) = eval::concat_bytes(&inputs_view, *axis, elem);
+            let out_residency = lookup_residency(graph, out_t.id)?;
+            buffers.write(out_residency.buffer, 0, &out_bytes)?;
+            Ok(())
+        }
 
         // ──── MatMul ────
         Op::MatMul { a, b, output } => {

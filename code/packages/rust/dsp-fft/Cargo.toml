@@ -1,11 +1,16 @@
 [package]
 name = "dsp-fft"
-version = "0.1.0"
+version = "0.7.0"
 edition = "2021"
-description = "DSP01 Phase 2: scalar reference FFT/IFFT for the DSP layer. Pure-Rust radix-2 Cooley-Tukey on interleaved [re, im] f32 buffers. The reference these scalar implementations provide is the oracle Phase 3 (matrix-ir lowering) tests against."
+description = "DSP01 Phases 2-4c: pure-Rust scalar reference + matrix-ir-lowered radix-2 Cooley-Tukey FFT + scalar AND matrix-ir-lowered Bluestein for arbitrary lengths + rfft/irfft. Both power-of-2 AND non-power-of-2 FFTs can now run end-to-end on the matrix execution layer via build_bluestein_graph_with_input / bluestein_via_runtime. The scalar oracles (fft_scalar, ifft_scalar, bluestein_scalar) remain as the test oracle and as the public-API fallback. Operates on interleaved [re, im] f32 buffers."
 license = "MIT"
 
 [dependencies]
-dsp-complex = { path = "../dsp-complex" }
+dsp-complex       = { path = "../dsp-complex" }
+matrix-ir         = { path = "../matrix-ir" }
+matrix-cpu        = { path = "../matrix-cpu" }
+matrix-runtime    = { path = "../matrix-runtime" }
+compute-ir        = { path = "../compute-ir" }
+executor-protocol = { path = "../executor-protocol" }
 
 [dev-dependencies]

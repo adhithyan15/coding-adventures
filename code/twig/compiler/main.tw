@@ -1,28 +1,42 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG60 / TW05-G)
+; # main.tw — Root Module + Smoke-Test Entry Point (LANG62 / TW05-I)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
-; TW05-E, and the IIR emitter from TW05-F/G) and exposes a `(main)` function
-; that exercises the full pipeline including lambda + function-definition
-; support added in TW05-G.
+; TW05-E, and the IIR emitter from TW05-F/G/H) and exposes a `(main)` function
+; that exercises the full pipeline on real compiler source.
 ;
-; ## TW05-G pipeline (updated from TW05-F)
+; ## TW05-I pipeline (updated from TW05-H)
 ;
-;   lex "(define (answer) 42)"
-;     → [TkLParen, TkIdentifier "define", TkLParen,
-;        TkIdentifier "answer", TkRParen, TkInteger "42", TkRParen, TkEOF]
+; TW05-I is the first self-compilation check: the pipeline now runs on a
+; comment-stripped version of `span.tw` — the first of the compiler's own
+; modules.  This tests lexer comment-skipping, parser fallback paths for
+; `module` and `record` forms, and emitter skip-logic for non-definition
+; top-level forms.
+;
+;   src = "(module compiler/span ...) (record Span ...) (define (make-span ...)) (define (dummy-span ...))"
+;
+;   lex → ~50 tokens (whitespace and comments stripped)
 ;
 ;   parse
-;     → [DefExpr "answer" (LambdaExpr [] (IntLit 42 sp) sp) sp]
+;     → [CallExpr "module" ...,       ; skipped by emit-program
+;        CallExpr "record" ...,       ; skipped by emit-program
+;        DefExpr "make-span" LambdaExpr,
+;        DefExpr "dummy-span" LambdaExpr]
 ;
-;   emit DefExpr
-;     → LambdaExpr? (defexpr-expr def) = #t
-;     → emit-lambdaexpr: no params to allocate, emit body IntLit 42
-;     → [IirInstr "const" r0 (list 42) (TInt) sp]
+;   emit-program
+;     → [(cons "make-span"  [12 instrs]),
+;        (cons "dummy-span" [4 instrs])]
 ;
-;   (car (iirinstr-srcs (car instrs))) = 42
+;   (length result) = 2
 ;
-; The `(main)` return value of `42` is the integration test assertion.
+; The `(main)` return value of `2` is unchanged from TW05-H.
+;
+; ## VM call-depth note
+;
+; `twig-vm`'s `MAX_DISPATCH_DEPTH` was bumped from 256 to 4096 in LANG62.
+; The lex-loop recurses once per character; the stripped span.tw source is
+; ~365 chars, requiring ~365 recursive frames during lexing.  The old 256
+; limit would have caused `Run(DepthExceeded)` here.
 ;
 ; ## Naming conventions for generated accessors
 ;
@@ -54,45 +68,48 @@
 
 ; ── Entry point ──────────────────────────────────────────────────────────────
 ;
-; `(main)` is the TW05-G end-to-end smoke test:
-;   lex "(define (answer) 42)" → parse → emit function definition → 42
+; `(main)` is the TW05-I end-to-end self-compilation smoke test:
+;   lex + parse stripped span.tw → emit-program → count results → 2
 ;
-; The source "(define (answer) 42)" parses to:
-;   DefExpr "answer" (LambdaExpr [] (IntLit 42 sp) sp) sp
-;
-; emit-expr on this DefExpr calls emit-defexpr, which detects a LambdaExpr
-; body and delegates to emit-lambdaexpr.  emit-lambdaexpr allocates no
-; parameter slots (answer takes no args) and emits the body: IntLit 42.
-; Result: one IirInstr "const" r0 (list 42) (TInt) sp.
-;
-; Extracting (car (iirinstr-srcs (car instrs))) gives back 42.
-;
-; Returns: 42
+; Returns: 2  (number of function definitions in span.tw: make-span + dummy-span)
 
 (define (main)
-  ; TW05-G pipeline: lex → parse → emit function definition → 42
-  (let* ((tokens  (lex-source "(define (answer) 42)"))
+  ; TW05-I pipeline: lex → parse → emit-program → count functions → 2
+  ;
+  ; Source: comment-stripped span.tw (≈ 365 chars).
+  ; Non-definition top-level forms (module declaration, record definition)
+  ; are parsed as CallExpr nodes and silently skipped by emit-program.
+  ; Only DefExpr(LambdaExpr) nodes are emitted:
+  ;   make-span  → 12 instructions (if + and + >= + <=)
+  ;   dummy-span → 4 instructions  (Span constructor with 3 const args)
+  ; `string-append` is a 2-arity builtin; chain calls to concatenate 7 pieces.
+  (let* ((src
+    (string-append
+      "(module compiler/span (typed lenient) "
+      (string-append
+        "(export Span span? span-source-id span-start span-end make-span dummy-span)) "
+        (string-append
+          "(record Span (source-id : int) (start : int) (end : int)) "
+          (string-append
+            "(define (make-span source-id start end) "
+            (string-append
+              "  (if (and (>= start 0) (<= start end)) "
+              (string-append
+                "      (Span source-id start end) nil)) "
+                "(define (dummy-span) (Span 0 0 0))")))))))
+         (tokens (lex-source src))
 
-         ; parse-program returns a list of top-level Expr nodes.
-         ; For "(define (answer) 42)", the list has one element:
-         ;   DefExpr "answer" (LambdaExpr [] (IntLit 42 sp) sp) sp
-         (exprs   (parse-program tokens))
+         ; parse-program returns 4 top-level forms:
+         ;   CallExpr "module" ...       → skipped by emit-program
+         ;   CallExpr "record" ...       → skipped by emit-program
+         ;   DefExpr "make-span" LambdaExpr  → emitted
+         ;   DefExpr "dummy-span" LambdaExpr → emitted
+         (forms  (parse-program tokens))
 
-         ; emit-expr returns (cons updated-builder result-register).
-         ; For a DefExpr with LambdaExpr body, it calls emit-lambdaexpr
-         ; which emits the body (IntLit 42 → const instruction).
-         (expr    (car exprs))
-         (b0      (new-builder "answer"))
-         (env     (env-empty))
-         (result  (emit-expr expr b0 env))
-         (b-final (car result))
+         ; emit-program produces (fn-name . instruction-list) pairs:
+         ;   [(cons "make-span" [...12 instrs...]),
+         ;    (cons "dummy-span" [...4 instrs...])]
+         (funcs  (emit-program forms)))
 
-         ; finalise-builder reverses the accumulated instruction list.
-         ; For (define (answer) 42) this is:
-         ;   [(IirInstr "const" r0 (list 42) (TInt) sp)]
-         (instrs  (finalise-builder b-final))
-         (instr   (car instrs)))
-
-    ; The `srcs` field of a const instruction holds the operand value.
-    ; `(car (iirinstr-srcs instr))` retrieves the integer 42.
-    (car (iirinstr-srcs instr))))   ; → 42
+    ; Count of emitted function definitions.
+    (length funcs)))   ; → 2

@@ -1,5 +1,87 @@
 # Changelog — `twig-aot`
 
+## 0.4.0 — 2026-05-16 (`--target` CLI flag)
+
+**Expose the LANG46 multi-target driver to end users via a `--target`
+CLI flag on the `twig-aot` binary.**
+
+Previously the CLI only invoked `compile_file_macos_arm64`; the
+Linux/Windows entry points existed but were unreachable from the
+command line.  This release adds a `--target` flag and host-aware
+dispatch:
+
+```
+twig-aot foo.twig                      # auto-picks the host target
+twig-aot foo.twig --target=linux-x86_64
+twig-aot foo.twig --target=windows-x86_64
+twig-aot foo.twig --target=macos-arm64
+```
+
+Accepted values (and full target-triple aliases):
+| Short | Triple |
+|---|---|
+| `auto` (default) | (build host) |
+| `macos-arm64` | `aarch64-apple-darwin` |
+| `linux-x86_64` | `x86_64-unknown-linux-gnu` |
+| `windows-x86_64` | `x86_64-pc-windows-msvc` |
+
+Cross-OS dispatch (e.g. `--target=linux-x86_64` on a Windows host)
+errors out cleanly:
+
+```
+$ twig-aot --target=linux-x86_64 foo.twig    # on Windows
+twig-aot: --target=linux-x86_64 requires a Linux x86-64 host in V1
+         (cross-OS compilation is a separate follow-up)
+```
+
+Unknown targets produce an enumerated error:
+
+```
+$ twig-aot --target=bogus foo.twig
+twig-aot: unknown target "bogus"; expected one of: auto, macos-arm64,
+         linux-x86_64, windows-x86_64
+```
+
+## 0.3.1 — 2026-05-16 (multi-function x86_64 cross-fn patching)
+
+**Patch cross-function `call` sites in place during the x86_64
+two-pass compile.**
+
+Previous v0.3.0 release noted that multi-function programs were
+deferred — every `call` instruction surfaced as a `PltRel32`
+external relocation, which only resolved correctly when the callee
+was a runtime helper (e.g. `__twig_print_i64`).  Cross-module call
+sites resolved fine because the system linker still found the
+symbol via the function's exported symbol-table entry, but the
+extra reloc overhead and the dependency on every internal function
+having a global symbol were both incidental.
+
+`compile_module_x86_64_to_text` now mirrors `aarch64-backend`'s
+Pass 2 strategy:
+
+- After concatenating per-function bytes via `aot_core::link::link`,
+  walk every per-function reloc.
+- If the reloc names another function in the same module
+  (`offsets.contains_key`) AND is a `PltRel32` (CALL rel32),
+  resolve in place: write `callee_off - patch_offset - 4` into the
+  disp32 slot.  The reloc is consumed; the linker never sees it.
+- Everything else (runtime helpers, possibly-external globals)
+  passes through to the packager unchanged.
+
+This unblocks real Twig programs (mutual-recursion, helpers, etc.)
+on both Linux and Windows hosts.
+
+### Tests
+
+- `x86_64_cross_function_call_patched_in_place` — compiles a
+  two-function module (`main` calls `helper`), verifies the CALL
+  site's disp32 was patched to the correct PC-relative offset, and
+  confirms no external reloc for `helper` is emitted.
+- `x86_64_external_call_remains_in_relocs` — verifies that calls
+  to runtime helpers like `__twig_print_i64` still surface as
+  external relocs even when multi-function patching is otherwise
+  active.
+
 ## 0.3.0 — 2026-05-14 (LANG46 phase 2 — multi-target driver)
 
 **End-to-end Twig source → native binary on Linux x86-64 and Windows

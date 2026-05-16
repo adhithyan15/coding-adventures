@@ -52,12 +52,44 @@ pub struct AcAnalysis {
     pub stop_hz: f64,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TfAnalysis {
+    pub output_node: String,
+    pub input_source: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SensAnalysis {
+    pub output_node: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct McAnalysis {
+    pub output_node: String,
+    pub n_trials: usize,
+    pub tolerance: f64,
+    pub distribution: String,
+    pub seed: Option<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct NoiseAnalysis {
+    pub output_node: String,
+    pub input_source: String,
+    pub frequencies_hz: Vec<f64>,
+    pub temperature: f64,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Analysis {
     Op(OpAnalysis),
     Tran(TranAnalysis),
     Dc(DcAnalysis),
     Ac(AcAnalysis),
+    Tf(TfAnalysis),
+    Sens(SensAnalysis),
+    Mc(McAnalysis),
+    Noise(NoiseAnalysis),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -111,6 +143,46 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Ac(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn tf_cards(&self) -> Vec<&TfAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Tf(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn sens_cards(&self) -> Vec<&SensAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Sens(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn mc_cards(&self) -> Vec<&McAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Mc(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn noise_cards(&self) -> Vec<&NoiseAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Noise(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -425,21 +497,35 @@ fn parse_element(
             )))
         }
         'C' => {
-            require_fields(fields, 4, "capacitor")?;
-            Ok(Element::Capacitor(Capacitor::new(
+            require_min_fields(fields, 4, "capacitor")?;
+            let params = parse_element_params(&fields[4..], "capacitor")?;
+            if let Some(param_name) = params.keys().find(|name| name.as_str() != "IC") {
+                return Err(NetlistParseError::new(format!(
+                    "unsupported capacitor parameter {param_name:?}"
+                )));
+            }
+            Ok(Element::Capacitor(Capacitor::with_initial_voltage(
                 name,
                 &fields[1],
                 &fields[2],
                 parse_value(&fields[3])?,
+                *params.get("IC").unwrap_or(&0.0),
             )))
         }
         'L' => {
-            require_fields(fields, 4, "inductor")?;
-            Ok(Element::Inductor(Inductor::new(
+            require_min_fields(fields, 4, "inductor")?;
+            let params = parse_element_params(&fields[4..], "inductor")?;
+            if let Some(param_name) = params.keys().find(|name| name.as_str() != "IC") {
+                return Err(NetlistParseError::new(format!(
+                    "unsupported inductor parameter {param_name:?}"
+                )));
+            }
+            Ok(Element::Inductor(Inductor::with_initial_current(
                 name,
                 &fields[1],
                 &fields[2],
                 parse_value(&fields[3])?,
+                *params.get("IC").unwrap_or(&0.0),
             )))
         }
         'V' => {
@@ -937,11 +1023,104 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 stop_hz: parse_value(&fields[4])?,
             }))
         }
+        ".tf" => {
+            require_fields(fields, 3, ".tf")?;
+            Ok(Analysis::Tf(TfAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".tf")?,
+                input_source: fields[2].clone(),
+            }))
+        }
+        ".sens" => {
+            require_fields(fields, 2, ".sens")?;
+            Ok(Analysis::Sens(SensAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".sens")?,
+            }))
+        }
+        ".mc" => {
+            require_min_fields(fields, 3, ".mc")?;
+            require_max_fields(fields, 6, ".mc")?;
+            let distribution = fields
+                .get(4)
+                .map(|field| field.to_ascii_lowercase())
+                .unwrap_or_else(|| "gaussian".to_string());
+            if distribution != "gaussian" && distribution != "uniform" {
+                return Err(NetlistParseError::new(format!(
+                    ".mc distribution must be \"gaussian\" or \"uniform\", got {:?}",
+                    fields[4]
+                )));
+            }
+            Ok(Analysis::Mc(McAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".mc")?,
+                n_trials: parse_value(&fields[2])? as usize,
+                tolerance: if fields.len() >= 4 {
+                    parse_value(&fields[3])?
+                } else {
+                    0.05
+                },
+                distribution,
+                seed: if fields.len() >= 6 {
+                    Some(parse_value(&fields[5])? as u64)
+                } else {
+                    None
+                },
+            }))
+        }
+        ".noise" => {
+            require_min_fields(fields, 3, ".noise")?;
+            let mut frequencies_hz = Vec::new();
+            let mut temperature = 300.0;
+            let mut tail_index = 3;
+            while tail_index < fields.len() {
+                let token = &fields[tail_index];
+                let lower_token = token.to_ascii_lowercase();
+                if lower_token == "temp" {
+                    if tail_index + 1 >= fields.len() {
+                        return Err(NetlistParseError::new(
+                            ".noise temp requires a temperature value",
+                        ));
+                    }
+                    temperature = parse_value(&fields[tail_index + 1])?;
+                    tail_index += 2;
+                } else if let Some(value) = lower_token.strip_prefix("temp=") {
+                    temperature = parse_value(value)?;
+                    tail_index += 1;
+                } else {
+                    frequencies_hz.push(parse_value(token)?);
+                    tail_index += 1;
+                }
+            }
+            Ok(Analysis::Noise(NoiseAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".noise")?,
+                input_source: fields[2].clone(),
+                frequencies_hz,
+                temperature,
+            }))
+        }
         _ => Err(NetlistParseError::new(format!(
             "unsupported directive {:?}",
             fields[0]
         ))),
     }
+}
+
+fn parse_voltage_probe(token: &str, directive: &str) -> Result<String, NetlistParseError> {
+    let lower = token.to_ascii_lowercase();
+    if !lower.starts_with("v(") || !token.ends_with(')') {
+        return Err(NetlistParseError::new(format!(
+            "{directive} output must be a voltage probe V(node), got {token:?}"
+        )));
+    }
+    let node = &token[2..token.len() - 1];
+    if node.is_empty()
+        || node.contains('(')
+        || node.contains(')')
+        || node.chars().any(char::is_whitespace)
+    {
+        return Err(NetlistParseError::new(format!(
+            "{directive} output must be a voltage probe V(node), got {token:?}"
+        )));
+    }
+    Ok(node.to_string())
 }
 
 fn split_fields(line: &str) -> Result<Vec<String>, NetlistParseError> {
@@ -1019,6 +1198,20 @@ fn require_min_fields(
     if fields.len() < count {
         return Err(NetlistParseError::new(format!(
             "{label} expects at least {count} fields, got {}",
+            fields.len()
+        )));
+    }
+    Ok(())
+}
+
+fn require_max_fields(
+    fields: &[String],
+    count: usize,
+    label: &str,
+) -> Result<(), NetlistParseError> {
+    if fields.len() > count {
+        return Err(NetlistParseError::new(format!(
+            "{label} expects at most {count} fields, got {}",
             fields.len()
         )));
     }

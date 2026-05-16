@@ -1,14 +1,21 @@
 {
   "cli_builder_spec_version": "1.0",
   "name": "twig-aot",
-  "description": "Compile a Twig source file to a native ARM64 Mach-O executable.",
-  "version": "0.1.0",
+  "description": "Compile a Twig source file to a native executable on Linux x86-64, Windows x86-64, or macOS ARM64.",
+  "version": "0.4.0",
   "flags": [
     {
       "id": "output",
       "short": "o",
       "long": "output",
       "description": "Output path for the executable (default: input file with no extension).",
+      "type": "string"
+    },
+    {
+      "id": "target",
+      "short": "t",
+      "long": "target",
+      "description": "Target platform: auto (default, picks the host), macos-arm64, linux-x86_64, or windows-x86_64. Cross-OS compilation requires a host that can provide the target's linker; on V1 hosts the runtime archive must also have been built for the target at twig-aot crate build time.",
       "type": "string"
     }
   ],

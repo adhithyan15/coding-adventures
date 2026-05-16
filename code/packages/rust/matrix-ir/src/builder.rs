@@ -365,6 +365,123 @@ impl GraphBuilder {
         out
     }
 
+    /// **V2 op.**  Slice `input` along `axis` with `start`, `end`,
+    /// `step`.  Output shape matches `input` on every other axis;
+    /// the `axis` dim becomes `ceil((end - start) / step)`.
+    ///
+    /// Panics if:
+    /// - `axis >= input.shape.rank()`.
+    /// - `step == 0`.
+    /// - `start > end`.
+    /// - `end > input.shape.dims[axis]`.
+    ///
+    /// Equivalent to numpy `x[..., start:end:step, ...]` with the
+    /// slice placed on axis `axis`.
+    pub fn slice(
+        &mut self,
+        input: &Tensor,
+        axis: u32,
+        start: u32,
+        end: u32,
+        step: u32,
+    ) -> Tensor {
+        assert!(
+            (axis as usize) < input.shape.rank(),
+            "slice: axis {} out of bounds for rank {}",
+            axis,
+            input.shape.rank()
+        );
+        assert!(step >= 1, "slice: step must be >= 1, got {}", step);
+        assert!(
+            start <= end,
+            "slice: start ({}) must be <= end ({})",
+            start,
+            end
+        );
+        let axis_dim = input.shape.dims[axis as usize];
+        assert!(
+            end <= axis_dim,
+            "slice: end ({}) > axis dim ({}) on axis {}",
+            end,
+            axis_dim,
+            axis
+        );
+        let span = end - start;
+        let new_dim = span.div_ceil(step);
+        let mut new_dims = input.shape.dims.clone();
+        new_dims[axis as usize] = new_dim;
+        let out = self.alloc(input.dtype, Shape::from(&new_dims[..]));
+        self.ops.push(Op::Slice {
+            input: input.id,
+            axis,
+            start,
+            end,
+            step,
+            output: out.id,
+        });
+        out
+    }
+
+    /// **V2 op.**  Concatenate two or more tensors along `axis`.
+    ///
+    /// All inputs must share dtype and shape on every axis except
+    /// `axis`.  Output dim on `axis` is the sum of input dims on
+    /// `axis`.
+    ///
+    /// Panics if:
+    /// - `inputs` is empty.
+    /// - `axis >= input.shape.rank()` for any input.
+    /// - inputs disagree on dtype, rank, or any non-axis dim.
+    pub fn concat(&mut self, inputs: &[&Tensor], axis: u32) -> Tensor {
+        assert!(!inputs.is_empty(), "concat: at least one input required");
+        let first = inputs[0];
+        let rank = first.shape.rank();
+        assert!(
+            (axis as usize) < rank,
+            "concat: axis {} out of bounds for rank {}",
+            axis,
+            rank
+        );
+        let mut axis_total: u32 = first.shape.dims[axis as usize];
+        for (i, t) in inputs.iter().enumerate().skip(1) {
+            assert_eq!(
+                t.dtype, first.dtype,
+                "concat: input {} dtype {:?} differs from input 0 dtype {:?}",
+                i, t.dtype, first.dtype
+            );
+            assert_eq!(
+                t.shape.rank(),
+                rank,
+                "concat: input {} rank {} differs from input 0 rank {}",
+                i,
+                t.shape.rank(),
+                rank
+            );
+            for (ai, (a, b)) in t.shape.dims.iter().zip(first.shape.dims.iter()).enumerate() {
+                if ai as u32 == axis {
+                    continue;
+                }
+                assert_eq!(
+                    a, b,
+                    "concat: input {} dim {} = {} != input 0 dim {} = {}",
+                    i, ai, a, ai, b
+                );
+            }
+            axis_total = axis_total
+                .checked_add(t.shape.dims[axis as usize])
+                .expect("concat: axis dim overflows u32");
+        }
+        let mut new_dims = first.shape.dims.clone();
+        new_dims[axis as usize] = axis_total;
+        let out = self.alloc(first.dtype, Shape::from(&new_dims[..]));
+        self.ops.push(Op::Concat {
+            inputs: inputs.iter().map(|t| t.id).collect(),
+            axis,
+            output: out.id,
+        });
+        out
+    }
+
     // ──────────── linear algebra ────────────
 
     /// 2D matrix multiply.  `a: [m,k]` × `b: [k,n]` → `[m,n]`.

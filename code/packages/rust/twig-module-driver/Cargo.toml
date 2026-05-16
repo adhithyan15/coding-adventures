@@ -1,8 +1,8 @@
 [package]
 name        = "twig-module-driver"
-version     = "0.5.0"
+version     = "0.7.0"
 edition     = "2021"
-description = "LANG56-LANG60 — multi-file module resolver for Twig.  Resolves (import …) declarations recursively, compiles and links all modules into a single IIRModule ready for twig-vm.  LANG57 adds TW05-D data-model tests; LANG58 adds TW05-E lexer+parser tests; LANG59 adds TW05-F IIR emitter tests; LANG60 adds TW05-G lambda+DefExpr tests."
+description = "LANG56-LANG62 — multi-file module resolver for Twig.  Resolves (import …) declarations recursively, compiles and links all modules into a single IIRModule ready for twig-vm.  LANG57 adds TW05-D data-model tests; LANG58 adds TW05-E lexer+parser tests; LANG59 adds TW05-F IIR emitter tests; LANG60 adds TW05-G lambda+DefExpr tests; LANG61 adds TW05-H program emitter tests; LANG62 adds TW05-I first self-compilation check."
 
 [dependencies]
 twig-parser       = { path = "../twig-parser" }

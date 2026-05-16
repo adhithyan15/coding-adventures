@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- Parse capacitor `IC=<voltage>` initial-voltage parameters.
+- Parse inductor `IC=<current>` initial-current parameters.
+- Parse independent-source `AC <magnitude> [phase]` specs, including combined
+  `DC <bias> AC <magnitude> [phase]` forms, and pass the AC phasor through to
+  TypeScript SPICE engine AC analysis while preserving DC bias.
+- Parse SPICE `.tf V(output_node) input_source` transfer-function analysis
+  cards.
+- Parse SPICE `.sens V(output_node)` DC sensitivity analysis cards.
+- Parse SPICE `.mc V(output_node) n_trials [tolerance] [distribution] [seed]`
+  Monte Carlo DC analysis cards.
+- Parse SPICE `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]`
+  AC noise analysis cards.
+
 ## 0.1.6
 
 - Add SPICE `M` MOSFET element parsing via `.model <name> NMOS(...)` and

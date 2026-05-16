@@ -20,14 +20,14 @@ use crate::tensor::{DType, Shape, TensorId};
 /// - **Elementwise unary** (7): Neg, Abs, Sqrt, Exp, Log, Tanh, Recip
 /// - **Elementwise binary** (7): Add, Sub, Mul, Div, Max, Min, Pow
 /// - **Reductions** (3): ReduceSum, ReduceMax, ReduceMean
-/// - **Shape** (3): Reshape, Transpose, Broadcast
+/// - **Shape** (5): Reshape, Transpose, Broadcast, **Slice** (V2), **Concat** (V2)
 /// - **Linear algebra** (1): MatMul
 /// - **Comparison** (3): Equal, Less, Greater
 /// - **Selection** (1): Where
 /// - **Conversion** (1): Cast
 /// - **Constants** (1): Const
 ///
-/// Total: 27 ops.  See spec MX01 §"V1 op set" for the contract on each.
+/// Total: 29 ops.  See spec MX01 §"V1 op set" for the contract on each.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum Op {
     // ──────────── elementwise unary ────────────
@@ -109,6 +109,48 @@ pub enum Op {
         target_shape: Shape,
         output: TensorId,
     },
+    /// **V2 op (MX01 extension).**  Take a contiguous-stride slice along
+    /// one axis of the input tensor.
+    ///
+    /// Output shape matches the input on every axis except `axis`,
+    /// where the new size is `ceil((end - start) / step)`.
+    /// Equivalent to numpy `x[..., start:end:step, ...]` (with the
+    /// slice placed on axis `axis`).
+    ///
+    /// Constraints (enforced by the validator):
+    /// - `axis < input.shape.rank()`.
+    /// - `step >= 1`.
+    /// - `start <= end <= input.shape.dims[axis]`.
+    ///
+    /// Dtype unchanged.  This op exists for the DSP layer (DSP01 FFT
+    /// even/odd splits) and similar workloads that need to extract a
+    /// regular axis-aligned subregion without scattering through
+    /// `Gather`-style indirection.
+    Slice {
+        input: TensorId,
+        axis: u32,
+        start: u32,
+        end: u32,
+        step: u32,
+        output: TensorId,
+    },
+    /// **V2 op (MX01 extension).**  Concatenate two or more input
+    /// tensors along the given `axis`.  All inputs must share dtype
+    /// and shape on every axis **except** `axis`; the output's dim
+    /// on `axis` is the sum of input dims on `axis`.
+    ///
+    /// At least one input is required.  V1 of this op accepts an
+    /// arbitrary number of inputs; specific executors may cap that
+    /// number for kernel-launch reasons.
+    ///
+    /// Equivalent to numpy `np.concatenate([a, b, …], axis=axis)`.
+    /// Exists to round-trip the slice / concat dance that FFT
+    /// butterflies and many other DSP / CV transforms perform.
+    Concat {
+        inputs: Vec<TensorId>,
+        axis: u32,
+        output: TensorId,
+    },
 
     // ──────────── linear algebra ────────────
     /// 2D matrix multiplication.  `a` is `[m, k]`, `b` is `[k, n]`,
@@ -185,6 +227,8 @@ impl Op {
             Op::Where { .. } => 0x19,
             Op::Cast { .. } => 0x1A,
             Op::Const { .. } => 0x1B,
+            Op::Slice { .. } => 0x1C,
+            Op::Concat { .. } => 0x1D,
         }
     }
 
@@ -218,6 +262,8 @@ impl Op {
             Op::Where { output, .. } => output,
             Op::Cast { output, .. } => output,
             Op::Const { output, .. } => output,
+            Op::Slice { output, .. } => output,
+            Op::Concat { output, .. } => output,
         }
     }
 
@@ -253,6 +299,7 @@ impl Op {
             | Op::Reshape { input, .. }
             | Op::Transpose { input, .. }
             | Op::Broadcast { input, .. }
+            | Op::Slice { input, .. }
             | Op::Cast { input, .. } => vec![*input],
 
             Op::MatMul { a, b, .. } => vec![*a, *b],
@@ -263,6 +310,8 @@ impl Op {
                 false_value,
                 ..
             } => vec![*predicate, *true_value, *false_value],
+
+            Op::Concat { inputs, .. } => inputs.clone(),
 
             Op::Const { .. } => Vec::new(),
         }
@@ -317,8 +366,8 @@ mod tests {
             "duplicate wire tag in Op enum: {:?}",
             tags
         );
-        // 27 variants in V1.
-        assert_eq!(len_before, 27);
+        // 29 variants: V1 (27) + Slice (0x1C) + Concat (0x1D).
+        assert_eq!(len_before, 29);
     }
 
     #[test]
@@ -451,6 +500,19 @@ mod tests {
             Op::Const {
                 constant: 0,
                 output: t(0),
+            },
+            Op::Slice {
+                input: t(0),
+                axis: 0,
+                start: 0,
+                end: 4,
+                step: 1,
+                output: t(1),
+            },
+            Op::Concat {
+                inputs: vec![t(0), t(1)],
+                axis: 0,
+                output: t(2),
             },
         ]
     }

@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/forme-source-fs",
+  "version": "0.1.0",
+  "description": "Forme source stage: walks a filesystem directory and emits a Stream<ContentSource> per matching file (FM00 §5.1).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "@coding-adventures/forme-identity": "file:../forme-identity"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

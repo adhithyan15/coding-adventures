@@ -85,6 +85,7 @@ from spice_engine import (
     VCVS,
     AcPoint,
     AcResult,
+    AcSource,
     Capacitor,
     Circuit,
     CurrentSource,
@@ -489,6 +490,19 @@ def test_transient_inductor_starts_at_zero_current():
     # Node voltage should start near 0 (inductor blocks initial current)
     # and then begin to decline as current builds.
     assert v0 >= 0.0
+
+
+def test_transient_inductor_respects_initial_current():
+    c = Circuit()
+    c.add(Resistor("R1", "out", "0", 1000.0))
+    c.add(Inductor("L1", "out", "0", 1.0, initial_current=1.0e-3))
+
+    result = transient(c, t_stop=2.0e-3, t_step=1.0e-3, method="euler")
+
+    assert result.converged
+    assert isclose(result.points[0].node_voltages["out"], -0.5, abs_tol=1e-9)
+    assert isclose(result.points[1].node_voltages["out"], -0.5, abs_tol=1e-9)
+    assert isclose(result.points[2].node_voltages["out"], -0.25, abs_tol=1e-9)
 
 
 # ---- Transient: TransientResult metadata ----
@@ -1048,6 +1062,39 @@ def test_ac_source_node_equals_source_voltage():
         assert isclose(abs(pt.node_voltages["vin"]), 2.5, abs_tol=1e-6), (
             f"f={pt.freq:.1f} Hz: V_in={pt.node_voltages['vin']}"
         )
+
+
+def test_ac_explicit_voltage_source_phasor_separate_from_dc_bias():
+    """An explicit AC source phasor is independent from the DC bias value."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0, ac=AcSource(2.0, 90.0)))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = ac_sweep(c, f_start=1000.0, f_stop=1000.0, n_points=1)
+    pt = result.points[0]
+
+    assert isclose(pt.node_voltages["in"].real, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["in"].imag, 2.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["out"].real, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["out"].imag, 1.0, abs_tol=1e-12)
+
+
+def test_ac_unspecified_sources_zero_when_any_explicit_ac_source_exists():
+    """DC bias sources become zero small-signal sources with explicit AC input."""
+    c = Circuit()
+    c.add(VoltageSource("Vbias", "bias", "0", 5.0))
+    c.add(CurrentSource("Iac", "0", "out", 0.0, ac=AcSource(1.0e-3, 90.0)))
+    c.add(Resistor("Rbias", "bias", "out", 1000.0))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+
+    result = ac_sweep(c, f_start=1000.0, f_stop=1000.0, n_points=1)
+    pt = result.points[0]
+
+    assert isclose(pt.node_voltages["bias"].real, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["bias"].imag, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["out"].real, 0.0, abs_tol=1e-12)
+    assert isclose(pt.node_voltages["out"].imag, 0.5, abs_tol=1e-12)
 
 
 def test_ac_unequal_resistive_divider():

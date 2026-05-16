@@ -48,6 +48,11 @@ export type Waveform =
   | PulseWaveform
   | ExpWaveform;
 
+export interface AcSource {
+  readonly magnitude: number;
+  readonly phaseDegrees: number;
+}
+
 export class PwlWaveform {
   constructor(readonly points: readonly (readonly [number, number])[]) {}
 
@@ -262,6 +267,7 @@ export interface VoltageSource {
   readonly positive: string;
   readonly negative: string;
   readonly voltage: number;
+  readonly ac?: AcSource;
   readonly waveform?: Waveform;
 }
 
@@ -271,6 +277,7 @@ export interface CurrentSource {
   readonly positive: string;
   readonly negative: string;
   readonly current: number;
+  readonly ac?: AcSource;
   readonly waveform?: Waveform;
 }
 
@@ -566,6 +573,28 @@ export function voltageSource(
   return { kind: "voltage-source", name, positive, negative, voltage };
 }
 
+export function acSource(magnitude: number, phaseDegrees = 0.0): AcSource {
+  return { magnitude, phaseDegrees };
+}
+
+export function voltageSourceWithAc(
+  name: string,
+  positive: string,
+  negative: string,
+  voltage: number,
+  magnitude: number,
+  phaseDegrees = 0.0,
+): VoltageSource {
+  return {
+    kind: "voltage-source",
+    name,
+    positive,
+    negative,
+    voltage,
+    ac: acSource(magnitude, phaseDegrees),
+  };
+}
+
 export function voltageSourceWithWaveform(
   name: string,
   positive: string,
@@ -590,6 +619,24 @@ export function currentSource(
   current: number,
 ): CurrentSource {
   return { kind: "current-source", name, positive, negative, current };
+}
+
+export function currentSourceWithAc(
+  name: string,
+  positive: string,
+  negative: string,
+  current: number,
+  magnitude: number,
+  phaseDegrees = 0.0,
+): CurrentSource {
+  return {
+    kind: "current-source",
+    name,
+    positive,
+    negative,
+    current,
+    ac: acSource(magnitude, phaseDegrees),
+  };
 }
 
 export function currentSourceWithWaveform(
@@ -2077,6 +2124,7 @@ function buildSmallSignalMatrix(
 function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
   const nodeIndices = collectNodeIndices(circuit);
   const voltageSources = collectAcVoltageSources(circuit);
+  const explicitAcSources = usesExplicitAcSources(circuit);
   const nodeCount = nodeIndices.size;
   const branchCount = voltageSources.size;
   const matrixSize = nodeCount + branchCount;
@@ -2095,11 +2143,12 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
           element,
           voltageSources,
           nodeCount,
+          explicitAcSources,
           rhs,
         );
         break;
       case "current-source":
-        stampAcCurrentSource(element, nodeIndices, rhs);
+        stampAcCurrentSource(element, nodeIndices, explicitAcSources, rhs);
         break;
       case "resistor":
       case "capacitor":
@@ -2461,6 +2510,14 @@ function collectAcVoltageSources(circuit: Circuit): Map<string, number> {
     }
   }
   return sources;
+}
+
+function usesExplicitAcSources(circuit: Circuit): boolean {
+  return circuit.elements().some(
+    (element) =>
+      (element.kind === "voltage-source" || element.kind === "current-source") &&
+      element.ac !== undefined,
+  );
 }
 
 function findInputSource(circuit: Circuit, inputSource: string): InputSource {
@@ -3438,6 +3495,7 @@ function stampAcVoltageSourceRhs(
   element: VoltageSource,
   voltageSources: ReadonlyMap<string, number>,
   nodeCount: number,
+  explicitAcSources: boolean,
   rhs: Complex[],
 ): void {
   if (!Number.isFinite(element.voltage)) {
@@ -3449,9 +3507,10 @@ function stampAcVoltageSourceRhs(
     throw invalidElement(element.name, "voltage source was not indexed");
   }
 
+  const phasor = voltageSourceAcPhasor(element, explicitAcSources);
   rhs[nodeCount + sourceIndex] = complexAdd(
     rhs[nodeCount + sourceIndex],
-    complex(element.voltage, 0.0),
+    phasor,
   );
 }
 
@@ -3497,13 +3556,14 @@ function stampComplexBranchMatrix(
 function stampAcCurrentSource(
   element: CurrentSource,
   nodeIndices: ReadonlyMap<string, number>,
+  explicitAcSources: boolean,
   rhs: Complex[],
 ): void {
   if (!Number.isFinite(element.current)) {
     throw invalidElement(element.name, "current must be finite");
   }
 
-  const current = complex(element.current, 0.0);
+  const current = currentSourceAcPhasor(element, explicitAcSources);
   const positive = nodeIndex(nodeIndices, element.positive);
   const negative = nodeIndex(nodeIndices, element.negative);
   if (positive !== undefined) {
@@ -3511,6 +3571,43 @@ function stampAcCurrentSource(
   }
   if (negative !== undefined) {
     rhs[negative] = complexAdd(rhs[negative], current);
+  }
+}
+
+function voltageSourceAcPhasor(
+  element: VoltageSource,
+  explicitAcSources: boolean,
+): Complex {
+  return sourceAcPhasor(element.name, element.ac, element.voltage, explicitAcSources);
+}
+
+function currentSourceAcPhasor(
+  element: CurrentSource,
+  explicitAcSources: boolean,
+): Complex {
+  return sourceAcPhasor(element.name, element.ac, element.current, explicitAcSources);
+}
+
+function sourceAcPhasor(
+  elementName: string,
+  ac: AcSource | undefined,
+  legacyValue: number,
+  explicitAcSources: boolean,
+): Complex {
+  if (ac === undefined) {
+    return explicitAcSources ? complex(0.0, 0.0) : complex(legacyValue, 0.0);
+  }
+  validateAcSource(elementName, ac);
+  const phaseRadians = (ac.phaseDegrees * Math.PI) / 180.0;
+  return complex(
+    ac.magnitude * Math.cos(phaseRadians),
+    ac.magnitude * Math.sin(phaseRadians),
+  );
+}
+
+function validateAcSource(elementName: string, ac: AcSource): void {
+  if (!Number.isFinite(ac.magnitude) || !Number.isFinite(ac.phaseDegrees)) {
+    throw invalidElement(elementName, "AC magnitude and phase must be finite");
   }
 }
 

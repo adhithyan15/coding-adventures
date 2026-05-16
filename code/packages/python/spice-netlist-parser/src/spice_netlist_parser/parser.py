@@ -8,6 +8,7 @@ from dataclasses import fields as dataclass_fields
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
+    AcSource,
     BJT,
     CCCS,
     CCVS,
@@ -66,7 +67,52 @@ class AcAnalysis:
     stop_hz: float
 
 
-type Analysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
+@dataclass(frozen=True, slots=True)
+class TfAnalysis:
+    """A `.tf V(output_node) input_source` transfer-function analysis card."""
+
+    output_node: str
+    input_source: str
+
+
+@dataclass(frozen=True, slots=True)
+class SensAnalysis:
+    """A `.sens V(output_node)` DC sensitivity analysis card."""
+
+    output_node: str
+
+
+@dataclass(frozen=True, slots=True)
+class McAnalysis:
+    """A `.mc V(output_node) n_trials [tolerance] [distribution] [seed]` card."""
+
+    output_node: str
+    n_trials: int
+    tolerance: float = 0.05
+    distribution: str = "gaussian"
+    seed: int | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class NoiseAnalysis:
+    """A `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]` card."""
+
+    output_node: str
+    input_source: str
+    freqs: tuple[float, ...] = ()
+    temperature: float = 300.0
+
+
+type Analysis = (
+    OpAnalysis
+    | TranAnalysis
+    | DcAnalysis
+    | AcAnalysis
+    | TfAnalysis
+    | SensAnalysis
+    | McAnalysis
+    | NoiseAnalysis
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -76,6 +122,13 @@ class ModelCard:
     name: str
     kind: str
     params: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class _SourceSpec:
+    dc_value: float
+    waveform: Waveform | None = None
+    ac: AcSource | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,6 +165,18 @@ class ParsedNetlist:
 
     def ac_cards(self) -> list[AcAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, AcAnalysis)]
+
+    def tf_cards(self) -> list[TfAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, TfAnalysis)]
+
+    def sens_cards(self) -> list[SensAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, SensAnalysis)]
+
+    def mc_cards(self) -> list[McAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, McAnalysis)]
+
+    def noise_cards(self) -> list[NoiseAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, NoiseAnalysis)]
 
 
 _VALUE_RE = re.compile(
@@ -233,19 +298,47 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         _require_fields(fields, 4, "resistor")
         return Resistor(name, fields[1], fields[2], parse_value(fields[3]))
     if prefix == "C":
-        _require_fields(fields, 4, "capacitor")
-        return Capacitor(name, fields[1], fields[2], parse_value(fields[3]))
+        _require_min_fields(fields, 4, "capacitor")
+        params = _parse_element_params(fields[4:], "capacitor")
+        unsupported = set(params) - {"IC"}
+        if unsupported:
+            raise NetlistParseError(
+                f"unsupported capacitor parameter {sorted(unsupported)[0]!r}"
+            )
+        return Capacitor(
+            name,
+            fields[1],
+            fields[2],
+            parse_value(fields[3]),
+            initial_voltage=params.get("IC", 0.0),
+        )
     if prefix == "L":
-        _require_fields(fields, 4, "inductor")
-        return Inductor(name, fields[1], fields[2], parse_value(fields[3]))
+        _require_min_fields(fields, 4, "inductor")
+        params = _parse_element_params(fields[4:], "inductor")
+        unsupported = set(params) - {"IC"}
+        if unsupported:
+            raise NetlistParseError(
+                f"unsupported inductor parameter {sorted(unsupported)[0]!r}"
+            )
+        return Inductor(
+            name,
+            fields[1],
+            fields[2],
+            parse_value(fields[3]),
+            initial_current=params.get("IC", 0.0),
+        )
     if prefix == "V":
         _require_min_fields(fields, 4, "voltage source")
-        voltage, waveform = _parse_source_value(fields[3:])
-        return VoltageSource(name, fields[1], fields[2], voltage, waveform)
+        source = _parse_source_value(fields[3:])
+        return VoltageSource(
+            name, fields[1], fields[2], source.dc_value, source.waveform, source.ac
+        )
     if prefix == "I":
         _require_min_fields(fields, 4, "current source")
-        current, waveform = _parse_source_value(fields[3:])
-        return CurrentSource(name, fields[1], fields[2], current, waveform)
+        source = _parse_source_value(fields[3:])
+        return CurrentSource(
+            name, fields[1], fields[2], source.dc_value, source.waveform, source.ac
+        )
     if prefix == "D":
         _require_fields(fields, 4, "diode")
         model = models.get(fields[3].lower())
@@ -432,21 +525,35 @@ def _element_prefix(name: str) -> str:
     return local_name[0].upper()
 
 
-def _parse_source_value(fields: list[str]) -> tuple[float, Waveform | None]:
+def _parse_source_value(fields: list[str]) -> _SourceSpec:
     if not fields:
         raise NetlistParseError("source is missing a value")
     if fields[0].upper() == "DC":
         if len(fields) < 2:
             raise NetlistParseError("DC source form requires a value")
-        return parse_value(fields[1]), None
+        return _SourceSpec(parse_value(fields[1]), ac=_parse_ac_suffix(fields[2:]))
+    if fields[0].upper() == "AC":
+        return _SourceSpec(0.0, ac=_parse_ac_suffix(fields))
     if len(fields) == 1 and "(" in fields[0]:
         waveform = _parse_waveform(fields[0])
-        return waveform(0.0), waveform
+        return _SourceSpec(waveform(0.0), waveform)
     if fields[0].upper().startswith(("PWL(", "SIN(", "PULSE(", "EXP(")):
         joined = " ".join(fields)
         waveform = _parse_waveform(joined)
-        return waveform(0.0), waveform
-    return parse_value(fields[0]), None
+        return _SourceSpec(waveform(0.0), waveform)
+    return _SourceSpec(parse_value(fields[0]), ac=_parse_ac_suffix(fields[1:]))
+
+
+def _parse_ac_suffix(fields: list[str]) -> AcSource | None:
+    if not fields:
+        return None
+    if fields[0].upper() != "AC":
+        raise NetlistParseError(f"unsupported source suffix {fields[0]!r}")
+    if len(fields) not in {2, 3}:
+        raise NetlistParseError("AC source form requires magnitude and optional phase")
+    magnitude = parse_value(fields[1])
+    phase = parse_value(fields[2]) if len(fields) == 3 else 0.0
+    return AcSource(magnitude=magnitude, phase_degrees=phase)
 
 
 def _parse_waveform(token: str) -> Waveform:
@@ -516,7 +623,66 @@ def _parse_directive(fields: list[str]) -> Analysis:
             start_hz=parse_value(fields[3]),
             stop_hz=parse_value(fields[4]),
         )
+    if directive == ".tf":
+        _require_fields(fields, 3, ".tf")
+        return TfAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".tf"),
+            input_source=fields[2],
+        )
+    if directive == ".sens":
+        _require_fields(fields, 2, ".sens")
+        return SensAnalysis(output_node=_parse_voltage_probe(fields[1], ".sens"))
+    if directive == ".mc":
+        _require_min_fields(fields, 3, ".mc")
+        _require_max_fields(fields, 6, ".mc")
+        distribution = fields[4].lower() if len(fields) >= 5 else "gaussian"
+        if distribution not in ("gaussian", "uniform"):
+            raise NetlistParseError(
+                f".mc distribution must be 'gaussian' or 'uniform', got {fields[4]!r}"
+            )
+        return McAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".mc"),
+            n_trials=int(parse_value(fields[2])),
+            tolerance=parse_value(fields[3]) if len(fields) >= 4 else 0.05,
+            distribution=distribution,
+            seed=int(parse_value(fields[5])) if len(fields) >= 6 else None,
+        )
+    if directive == ".noise":
+        _require_min_fields(fields, 3, ".noise")
+        freqs: list[float] = []
+        temperature = 300.0
+        tail_index = 3
+        while tail_index < len(fields):
+            token = fields[tail_index]
+            lower_token = token.lower()
+            if lower_token == "temp":
+                if tail_index + 1 >= len(fields):
+                    raise NetlistParseError(".noise temp requires a temperature value")
+                temperature = parse_value(fields[tail_index + 1])
+                tail_index += 2
+                continue
+            if lower_token.startswith("temp="):
+                temperature = parse_value(token.split("=", 1)[1])
+                tail_index += 1
+                continue
+            freqs.append(parse_value(token))
+            tail_index += 1
+        return NoiseAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".noise"),
+            input_source=fields[2],
+            freqs=tuple(freqs),
+            temperature=temperature,
+        )
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_voltage_probe(token: str, directive: str) -> str:
+    match = re.fullmatch(r"(?i)v\(([^()\s]+)\)", token)
+    if match is None:
+        raise NetlistParseError(
+            f"{directive} output must be a voltage probe V(node), got {token!r}"
+        )
+    return match.group(1)
 
 
 def _parse_model_card(fields: list[str]) -> ModelCard:
@@ -630,6 +796,11 @@ def _require_fields(fields: list[str], count: int, label: str) -> None:
 def _require_min_fields(fields: list[str], count: int, label: str) -> None:
     if len(fields) < count:
         raise NetlistParseError(f"{label} expects at least {count} fields, got {len(fields)}")
+
+
+def _require_max_fields(fields: list[str], count: int, label: str) -> None:
+    if len(fields) > count:
+        raise NetlistParseError(f"{label} expects at most {count} fields, got {len(fields)}")
 
 
 def _pad(values: list[float], count: int, default: float) -> list[float]:

@@ -1,4 +1,4 @@
-import { dcOp } from "@coding-adventures/spice-engine";
+import { acSweep, dcOp, mcDc, noiseAc, sensDc, tf } from "@coding-adventures/spice-engine";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -34,8 +34,8 @@ R2 mid 0 1k
 Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)
 I1 out 0 1m
 Rload in out 2.2k
-Cload out 0 10p
-L1 out 0 1u
+Cload out 0 10p IC=2.5
+L1 out 0 1u IC=3m
 G1 out 0 in 0 2m
 .tran 1n 20n
 .dc Vstep 0 1 0.5
@@ -52,11 +52,191 @@ G1 out 0 in 0 2m
       "vccs",
     ]);
     expect(elements[0]).toMatchObject({ kind: "voltage-source", waveform: expect.any(Object) });
+    expect(elements[3]).toMatchObject({ kind: "capacitor", initialVoltage: 2.5 });
+    expect(elements[4]).toMatchObject({ kind: "inductor", initialCurrent: 3.0e-3 });
     expect(parsed.analyses).toEqual([
       { kind: "tran", timeStep: 1.0e-9, stopTime: 20.0e-9 },
       { kind: "dc", sourceName: "Vstep", start: 0.0, stop: 1.0, step: 0.5 },
       { kind: "ac", mode: "dec", points: 10, startHz: 1.0e3, stopHz: 1.0e6 },
     ]);
+  });
+
+  it("rejects unsupported capacitor element parameters", () => {
+    expect(() => parseNetlist("C1 in 0 1u FOO=1")).toThrow(
+      /unsupported capacitor parameter/,
+    );
+  });
+
+  it("rejects unsupported inductor element parameters", () => {
+    expect(() => parseNetlist("L1 in 0 1u FOO=1")).toThrow(
+      /unsupported inductor parameter/,
+    );
+  });
+
+  it("parses independent-source AC specs separately from DC bias", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 10 AC 2 90
+Vbias bias 0 5
+R1 in out 1k
+R2 out 0 1k
+.ac dec 10 1k 1k
+`);
+
+    const vin = parsed.circuit.elements()[0];
+    expect(vin).toMatchObject({
+      kind: "voltage-source",
+      voltage: 10.0,
+      ac: { magnitude: 2.0, phaseDegrees: 90.0 },
+    });
+    const bias = parsed.circuit.elements()[1];
+    expect(bias).toMatchObject({ kind: "voltage-source", voltage: 5.0 });
+
+    const points = acSweep(parsed.circuit, 1_000.0, 1_000.0, 10);
+    const out = points[0].voltage("out");
+    const biasVoltage = points[0].voltage("bias");
+    expect(out).not.toBeUndefined();
+    expect(biasVoltage).not.toBeUndefined();
+    expect(out!.real).toBeCloseTo(0.0, 9);
+    expect(out!.imag).toBeCloseTo(1.0, 9);
+    expect(biasVoltage!.real).toBeCloseTo(0.0, 9);
+    expect(biasVoltage!.imag).toBeCloseTo(0.0, 9);
+  });
+
+  it("parses .tf transfer-function analysis cards", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+R2 out 0 1k
+.tf V(out) Vin
+`);
+
+    expect(parsed.analyses).toEqual([
+      { kind: "tf", outputNode: "out", inputSource: "Vin" },
+    ]);
+    expect(parsed.tfCards()).toEqual([
+      { kind: "tf", outputNode: "out", inputSource: "Vin" },
+    ]);
+    const [card] = parsed.tfCards();
+    const result = tf(parsed.circuit, card.outputNode, card.inputSource);
+    expect(result.transferRatio).toBeCloseTo(0.5, 9);
+  });
+
+  it("rejects .tf cards without a voltage output probe", () => {
+    expect(() =>
+      parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+.tf out Vin
+`),
+    ).toThrow(/\.tf output must be a voltage probe/);
+  });
+
+  it("parses .sens DC sensitivity analysis cards", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.sens V(out)
+`);
+
+    expect(parsed.analyses).toEqual([{ kind: "sens", outputNode: "out" }]);
+    expect(parsed.sensCards()).toEqual([{ kind: "sens", outputNode: "out" }]);
+    const [card] = parsed.sensCards();
+    const result = sensDc(parsed.circuit, card.outputNode);
+    expect(result.nominalVoltage).toBeCloseTo(0.5, 9);
+    expect(result.entry("Vin", "voltage")).not.toBeUndefined();
+  });
+
+  it("rejects .sens cards without a voltage output probe", () => {
+    expect(() =>
+      parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+.sens out
+`),
+    ).toThrow(/\.sens output must be a voltage probe/);
+  });
+
+  it("parses .mc Monte Carlo DC analysis cards", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.mc V(out) 6 0 uniform 7
+`);
+
+    expect(parsed.analyses).toEqual([
+      {
+        kind: "mc",
+        outputNode: "out",
+        nTrials: 6,
+        tolerance: 0.0,
+        distribution: "uniform",
+        seed: 7,
+      },
+    ]);
+    expect(parsed.mcCards()).toEqual(parsed.analyses);
+    const [card] = parsed.mcCards();
+    const result = mcDc(parsed.circuit, card.outputNode, card.nTrials, {
+      tolerance: card.tolerance,
+      distribution: card.distribution,
+      seed: card.seed,
+    });
+    expect(result.nTrials).toBe(6);
+    expect(result.mean).toBeCloseTo(0.5, 9);
+    expect(result.stdDev).toBeCloseTo(0.0, 12);
+  });
+
+  it("rejects .mc cards without a voltage output probe", () => {
+    expect(() =>
+      parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+.mc out 10
+`),
+    ).toThrow(/\.mc output must be a voltage probe/);
+  });
+
+  it("parses .noise AC noise analysis cards", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k temp=300
+`);
+
+    expect(parsed.analyses).toEqual([
+      {
+        kind: "noise",
+        outputNode: "out",
+        inputSource: "Vin",
+        frequenciesHz: [1000.0],
+        temperature: 300.0,
+      },
+    ]);
+    expect(parsed.noiseCards()).toEqual(parsed.analyses);
+    const [card] = parsed.noiseCards();
+    const result = noiseAc(
+      parsed.circuit,
+      card.outputNode,
+      card.inputSource,
+      card.frequenciesHz,
+      card.temperature,
+    );
+    expect(result.outputNode).toBe("out");
+    expect(result.inputSource).toBe("Vin");
+    expect(result.points).toHaveLength(1);
+    expect(result.points[0].outputPsd).toBeGreaterThan(0.0);
+  });
+
+  it("rejects .noise cards without a voltage output probe", () => {
+    expect(() =>
+      parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+.noise out Vin 1k
+`),
+    ).toThrow(/\.noise output must be a voltage probe/);
   });
 
   it("parses VCVS elements into operating-point circuits", () => {

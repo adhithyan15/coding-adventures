@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- Parse capacitor `IC=<voltage>` initial-voltage parameters.
+- Parse inductor `IC=<current>` initial-current parameters.
+- Parse SPICE independent source `AC <magnitude> [phase]` specifications for
+  voltage and current sources, including `DC <value> AC ...` mixed bias/input
+  forms.
+- Parse SPICE `.tf V(output_node) input_source` transfer-function analysis
+  cards.
+- Parse SPICE `.sens V(output_node)` DC sensitivity analysis cards.
+- Parse SPICE `.mc V(output_node) n_trials [tolerance] [distribution] [seed]`
+  Monte Carlo DC analysis cards.
+- Parse SPICE `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]`
+  AC noise analysis cards.
+
 ## 0.1.6
 
 - Parse `.model <name> NMOS(...)` and `.model <name> PMOS(...)` cards into

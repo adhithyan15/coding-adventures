@@ -1,5 +1,30 @@
 # Changelog — matrix-metal
 
+## 0.11.2 — 2026-05-13
+
+### Compatibility update — `Op::Concat` keep-up
+
+`matrix-ir` 0.3.0 added `Op::Concat` (wire tag 0x1D).  matrix-metal
+does **not** claim Concat in its `supported_ops` bitset, so the
+planner routes Concat ops to CPU — but the local `op_kind_name`
+helper gained an arm so the exhaustive match still compiles.
+
+Same pattern as the 0.11.1 keep-up for Op::Slice.
+
+## 0.11.1 — 2026-05-13
+
+### Compatibility update — `Op::Slice` keep-up
+
+`matrix-ir` 0.2.0 added `Op::Slice` (wire tag 0x1C).  matrix-metal
+does **not** claim Slice in its `supported_ops` bitset, so the
+planner routes Slice ops to CPU — but the local `op_kind_name`
+helper used in error messages gained an arm so the exhaustive
+match still compiles.
+
+Real Slice support on Metal will come when a workload actually
+benefits from it (likely after DSP01 Phase 5 specialisation lands
+and FFT pipelines pull image-domain ops onto the GPU).
+
 ## 0.11.0 — 2026-05-14
 
 ### Added — MX05 Phase 5 (kernel eviction)
