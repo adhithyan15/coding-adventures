@@ -1,5 +1,101 @@
 # Changelog — dsp-fft
 
+## 0.5.0 — 2026-05-15
+
+### Added — DSP01 Phase 4a (scalar Bluestein for arbitrary lengths)
+
+The public `fft` / `ifft` API now accepts **arbitrary `N ≥ 1`**.
+Previously, non-power-of-two lengths returned
+`FftError::NotPowerOfTwo`; now they fall back to a scalar
+Bluestein (chirp z-transform) implementation that handles every
+length with one code path.
+
+#### New module: `dsp_fft::bluestein`
+
+```rust
+pub fn bluestein_scalar(
+    signal: &[f32],
+    direction: Direction,
+) -> Result<Vec<f32>, FftError>;
+```
+
+Operates on the same interleaved `[re, im]` `f32` convention
+as `fft_scalar`.  Algorithm:
+
+1. Pick `M = next_pow2(2N - 1)` — the smallest power of two
+   that fits a linear convolution of two length-`N` sequences.
+2. Build the pre-chirp `a[n] = x[n] · exp(-iπ · n² / N)`,
+   zero-padded to length `M`.
+3. Build the bilateral anti-chirp `b[n] = exp(+iπ · n² / N)`
+   wrapped onto `[0, M)`.
+4. Convolve via three length-`M` FFTs: `c = IFFT(FFT(a) · FFT(b))`.
+5. Multiply by the post-chirp: `X[k] = exp(-iπ · k² / N) · c[k]`.
+
+The chirp uses `k² mod 2N` reduction inside the floating-point
+exponent so very large `N` doesn't bleed precision.  Inverse
+direction flips the chirp sign and applies the `1/N` backward
+normalization.
+
+`bluestein_scalar` is exposed at the crate root as
+`dsp_fft::bluestein_scalar` for callers that want to bypass
+`fft` / `ifft`.
+
+#### Public API integration
+
+| Input shape                     | `complex` | N parity        | Path                |
+| ------------------------------- | --------- | --------------- | ------------------- |
+| `[N]` real, `N ≥ 2` pow2        | `false`   | pow2            | matrix-ir → runtime |
+| `[N]` real, `N ≥ 2` non-pow2    | `false`   | non-pow2 (new)  | scalar Bluestein    |
+| `[N]` real, `N = 1`             | `false`   | degenerate      | scalar (identity)   |
+| `[2N]` interleaved, `N` pow2    | `true`    | pow2            | scalar radix-2      |
+| `[2N]` interleaved, `N` non-pow2 | `true`    | non-pow2 (new) | scalar Bluestein    |
+| `ifft` on `[N, 2]`, `N` pow2    | —         | pow2            | scalar radix-2      |
+| `ifft` on `[N, 2]`, `N` non-pow2 | —         | non-pow2 (new) | scalar Bluestein    |
+
+#### New unit tests
+
+**`bluestein` module — 15 tests:**
+
+- Error paths: odd-length buffer, empty buffer.
+- N = 1 identity (forward + inverse).
+- Sanity vs radix-2 at N = 8 (cross-check the chirp).
+- vs naive O(N²) DFT for N ∈ {3, 5, 6, 7, 12}.
+- Round-trip for N ∈ {3, 7} + a stress test sweeping every
+  N ∈ 1..=32.
+- Closed-form impulse at N = 5, DC at N = 7.
+
+**`lib` public API — 3 new tests:**
+
+- `public_fft_real_non_pow2_routes_through_bluestein` —
+  verifies N = 3 against an inline naive DFT.
+- `public_ifft_round_trip_non_pow2_n5` — `ifft(fft(x)) ≈ x` for
+  N = 5 (where both directions go through Bluestein).
+- `public_fft_complex_non_pow2_routes_through_bluestein` —
+  complex-input round-trip at N = 3.
+
+All 45 unit tests pass.
+
+#### Behavior changes
+
+- `fft(&[1.0, 2.0, 3.0], false)` previously returned
+  `Err(FftError::NotPowerOfTwo(3))`; now returns the correct
+  3-point DFT.
+- `fft_scalar` and `ifft_scalar` retain their power-of-two-only
+  behavior — they're the radix-2 oracle and stay that way.
+  Use `bluestein_scalar` or the public `fft` / `ifft` for
+  arbitrary lengths.
+
+### What this phase does NOT include
+
+- **Phase 4b**: `rfft` / `irfft`.  Real-input half-spectrum APIs
+  that exploit conjugate symmetry to return only `N/2 + 1` bins.
+- **Phase 4c**: matrix-ir-lowered Bluestein.  The convolution
+  inside `bluestein_scalar` currently calls `fft_scalar` /
+  `ifft_scalar` directly; lifting it onto the matrix execution
+  layer is its own (significant) chunk of work.
+- Performance benchmarking.  Bluestein has ~3× the constant
+  factor of an in-place radix-2; perf is Phase 5.
+
 ## 0.4.0 — 2026-05-15
 
 ### Changed — DSP01 Phase 3b.iv (public `fft()` real-input path runs on the matrix execution layer)
