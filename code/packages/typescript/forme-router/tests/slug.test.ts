@@ -106,4 +106,26 @@ describe("formatRoute", () => {
   it("handles empty slug", () => {
     expect(formatRoute("/blog/{slug}.html", "")).toBe("/blog/.html");
   });
+
+  // ─── Security regression tests ────────────────────────────────────
+
+  it("treats $& in slug as a literal (NOT regex back-reference)", () => {
+    // Before the fix, `template.replace(/\{slug\}/g, slug)` honoured
+    // `$&` as "the whole match" — slug = "$&" expanded to "{slug}",
+    // producing /blog/{slug}.html instead of /blog/$&.html.
+    expect(formatRoute("/blog/{slug}.html", "$&")).toBe("/blog/$&.html");
+  });
+
+  it("treats $1 in slug as a literal", () => {
+    expect(formatRoute("/blog/{slug}.html", "$1")).toBe("/blog/$1.html");
+  });
+
+  it("treats $$ in slug as a literal", () => {
+    // String-replacement: $$ → $.  Function-replacement: literal $$.
+    expect(formatRoute("/blog/{slug}.html", "$$")).toBe("/blog/$$.html");
+  });
+
+  it("treats $<name> in slug as a literal", () => {
+    expect(formatRoute("/blog/{slug}.html", "$<x>")).toBe("/blog/$<x>.html");
+  });
 });

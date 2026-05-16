@@ -74,7 +74,20 @@ export function slugify(sourcePath: string): string {
  * an error (someone may be templating future syntax) but they're
  * also not silently dropped.  A future stricter mode could reject
  * them.
+ *
+ * **Security note.**  We pass a *function* replacement
+ * (`() => slug`), not a string replacement (`slug`).  When the
+ * second argument to `String.prototype.replace` is a string, JS
+ * honours `$&`, `$$`, `` $` ``, `$'`, `$1`-`$9`, and `$<name>`
+ * sequences inside it.  A user-supplied slug containing those —
+ * e.g. `slug: "$&"` in frontmatter — would inject regex
+ * back-reference syntax into the output route.  The function
+ * form is immune; `slug` is used verbatim regardless of `$`
+ * content.  The same fix should land in the legacy duplicates
+ * in `forme-collect-chronological/src/slug.ts` and
+ * `forme-render-static/src/slug.ts` — done in the same commit
+ * that introduced this file.
  */
 export function formatRoute(template: string, slug: string): string {
-  return template.replace(/\{slug\}/g, slug);
+  return template.replace(/\{slug\}/g, () => slug);
 }
