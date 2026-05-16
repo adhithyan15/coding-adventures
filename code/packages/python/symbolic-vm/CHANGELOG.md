@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.56.0 — 2026-05-16
+
+**Phase 26 integration — log-power IBP reduction: `∫ log(ax+b)^n dx` and
+`∫ Q(x)·log(x)^n dx` for n ≥ 2.**
+
+### Added
+
+- **`_log_power_integral(log_arg, n, x)`** — computes `∫ log(ax+b)^n dx` for
+  any rational-linear `ax+b` (a ≠ 0) and positive integer `n ≥ 1` using the
+  iterated IBP reduction formula:
+
+      F_n(x) = (ax+b)/a · log(ax+b)^n  −  n · F_{n-1}(x)
+
+  with base case `F_0(x) = x`.  Wired into the `POW` branch of `_integrate`
+  for `POW(LOG(linear), n)` with integer `n ≥ 2` (n = 1 already handled by
+  the elementary-function table).  Example closed forms:
+
+      ∫ log(x)^2 dx = x·log(x)^2 − 2x·log(x) + 2x
+      ∫ log(x)^3 dx = x·log(x)^3 − 3x·log(x)^2 + 6x·log(x) − 6x
+      ∫ log(2x+1)^2 dx = (2x+1)/2·log(2x+1)^2 − (2x+1)/2·log(2x+1) + x + …
+
+- **`_poly_log_power_term(k, n, x)`** — closed form of `∫ x^k · log(x)^n dx`
+  (log argument must be the bare variable `x`; k ≠ −1) built by the
+  term-level reduction:
+
+      G_{k,n}(x) = x^(k+1)/(k+1) · log(x)^n  −  n/(k+1) · G_{k,n-1}(x)
+
+  with `G_{k,0}(x) = x^(k+1)/(k+1)`.  Used by `_try_log_power_product`.
+
+- **`_try_log_power_product(transcendental, poly_candidate, x)`** — handles
+  the `MUL` head pattern `Q(x) · POW(LOG(x), n)` for polynomial `Q` over Q
+  and integer `n ≥ 2`.  Applies linearity `∫ Q(x)·log(x)^n dx = Σ cᵢ ∫ xⁱ
+  log(x)^n dx` and delegates each monomial term to `_poly_log_power_term`.
+  Wired into the `MUL` dispatcher after `_try_atanh_product` (Phase 14c).
+  Examples:
+
+      ∫ x·log(x)^2 dx = x^2/2·log(x)^2 − x^2/2·log(x) + x^2/4
+      ∫ x^2·log(x)^2 dx = x^3/3·log(x)^2 − 2x^3/9·log(x) + 2x^3/27
+
+### Tests
+
+- `tests/test_phase26_log_power.py` — 12 new tests:
+  - Closed-form checks for `log(x)^2`, `log(x)^3`, `log(x)^4`,
+    `x·log(x)^2`, `x^2·log(x)^2`, `log(2x+1)^2` (structural — no
+    `Integrate` head in result, `LOG` head present).
+  - Numerical correctness: antiderivative difference `F(b) − F(a)` compared
+    with trapezoidal quadrature for each of the above (< 1×10⁻⁴ tolerance).
+  - Regression: `∫ log(x) dx` still returns `x·log(x) − x` via the existing
+    Phase 3 elementary-function path (Phase 26 only fires for n ≥ 2).
+
 ## 0.55.0 — 2026-05-14
 
 **Phase 26 — MACSYMA stress-test parity fixes: differentiation order, pattern matching,

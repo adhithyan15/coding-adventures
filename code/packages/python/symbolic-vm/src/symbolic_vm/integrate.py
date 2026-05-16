@@ -911,6 +911,11 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_atanh_product(a, b, x) or _try_atanh_product(b, a, x)
         if result is not None:
             return result
+        # Phase 26: polynomial × log(x)^n via IBP reduction (n ≥ 2).
+        # n = 1 is already handled by _try_log_product (Phase 3).
+        result = _try_log_power_product(a, b, x) or _try_log_power_product(b, a, x)
+        if result is not None:
+            return result
         # Phase 14a: exp(linear) × sinh/cosh(linear) — double-IBP closed form.
         result = _try_exp_hyp(a, b, x) or _try_exp_hyp(b, a, x)
         if result is not None:
@@ -1021,6 +1026,18 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 new_exp = IRApply(ADD, (exponent, ONE))
                 denom = IRApply(MUL, (new_exp, a_ir))
                 return IRApply(DIV, (IRApply(POW, (arg_ir, new_exp)), denom))
+        # Phase 26: ∫ log(linear)^n dx for n ≥ 2 — IBP reduction formula.
+        # n = 1 is handled by the elementary-functions branch above.
+        if (
+            isinstance(base, IRApply)
+            and base.head == LOG
+            and len(base.args) == 1
+            and isinstance(exponent, IRInteger)
+            and exponent.value >= 2
+        ):
+            result = _log_power_integral(base.args[0], exponent.value, x)
+            if result is not None:
+                return result
         return None
 
     # --- Elementary functions at x  (Phase 1: argument must be bare x)
@@ -1306,6 +1323,184 @@ def _try_log_product(
     if not poly:
         return None
     return log_poly_integral(poly, a_frac, b_frac, x)
+
+
+# ---------------------------------------------------------------------------
+# Phase 26 — log-power integration via IBP reduction
+# ---------------------------------------------------------------------------
+
+
+def _log_power_integral(
+    log_arg: IRNode,
+    n: int,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 26: ``∫ log(ax+b)^n dx`` via iterated IBP reduction, or ``None``.
+
+    The reduction formula is derived by IBP with ``u = log(ax+b)^n`` and
+    ``dv = dx`` (so ``v = x``, ``du = n·a/(ax+b)·log(ax+b)^(n-1) dx``):
+
+        ∫ log(ax+b)^n dx  =  (ax+b)/a · log(ax+b)^n  −  n · ∫ log(ax+b)^(n-1) dx
+
+    Iterating from the base case ``∫ 1 dx = x`` yields:
+
+    .. code-block::
+
+        F_0(x) = x
+        F_k(x) = (ax+b)/a · log(ax+b)^k  −  k · F_{k-1}(x)
+
+    For ``a=1, b=0`` (log of bare ``x``):
+
+    .. code-block::
+
+        F_1(x) = x·log x − x
+        F_2(x) = x·log²x − 2x·log x + 2x
+        F_3(x) = x·log³x − 3x·log²x + 6x·log x − 6x
+
+    ``log_arg`` must be linear (a·x + b with a ≠ 0); ``n`` must be ≥ 1.
+    """
+    lin = _try_linear(log_arg, x)
+    if lin is None:
+        return None
+    a_frac, _b_frac = lin
+    if a_frac == Fraction(0):
+        return None  # constant argument — not a function of x
+
+    a_ir = _frac_ir(a_frac)
+    log_node = IRApply(LOG, (log_arg,))
+
+    # Build iteratively: F_0 = x, F_k = (ax+b)/a · log(ax+b)^k − k · F_{k-1}.
+    acc: IRNode = x  # F_0
+    for k in range(1, n + 1):
+        log_pow: IRNode = (
+            log_node if k == 1 else IRApply(POW, (log_node, IRInteger(k)))
+        )
+        coeff = IRApply(DIV, (log_arg, a_ir))   # (ax+b)/a
+        first = IRApply(MUL, (coeff, log_pow))
+        second = IRApply(MUL, (IRInteger(k), acc))
+        acc = IRApply(SUB, (first, second))
+
+    return acc
+
+
+def _poly_log_power_term(k: int, n: int, x: IRSymbol) -> IRNode:
+    """Phase 26: closed form of ``∫ x^k · log(x)^n dx`` for n ≥ 0, k ≠ −1.
+
+    The argument of log must be the bare integration variable ``x``; use
+    ``_log_power_integral`` when log's argument is a general linear term.
+
+    Reduction formula (IBP with ``u = log(x)^n``, ``dv = x^k dx``):
+
+        ∫ x^k · log(x)^n dx  =  x^(k+1)/(k+1) · log(x)^n
+                                 − n/(k+1) · ∫ x^k · log(x)^(n-1) dx
+
+    Iterating from the base case ``∫ x^k dx = x^(k+1)/(k+1)``:
+
+    .. code-block::
+
+        G_{k,0}(x) = x^(k+1)/(k+1)
+        G_{k,m}(x) = x^(k+1)/(k+1) · log(x)^m  −  m/(k+1) · G_{k,m-1}(x)
+
+    Example (k=1, n=2): ``x^2/2·log²x − x^2/2·log x + x^2/4``.
+    """
+    kp1 = k + 1
+    kp1_frac = Fraction(1, kp1)  # 1/(k+1)
+
+    # Base: G_{k,0} = x^(k+1)/(k+1).
+    if kp1 == 1:  # k = 0
+        acc: IRNode = x  # ∫ 1 dx = x
+    else:
+        acc = IRApply(MUL, (_frac_ir(kp1_frac), IRApply(POW, (x, IRInteger(kp1)))))
+
+    log_node = IRApply(LOG, (x,))
+    for m in range(1, n + 1):
+        log_pow: IRNode = (
+            log_node if m == 1 else IRApply(POW, (log_node, IRInteger(m)))
+        )
+        if kp1 == 1:
+            # k = 0: x · log(x)^m
+            first: IRNode = IRApply(MUL, (x, log_pow))
+        else:
+            # x^(k+1)/(k+1) · log(x)^m
+            x_pow = IRApply(POW, (x, IRInteger(kp1)))
+            first = IRApply(
+                MUL, (_frac_ir(kp1_frac), IRApply(MUL, (x_pow, log_pow)))
+            )
+        n_coef = _frac_ir(Fraction(m, kp1))   # m/(k+1)
+        second = IRApply(MUL, (n_coef, acc))
+        acc = IRApply(SUB, (first, second))
+
+    return acc
+
+
+def _try_log_power_product(
+    transcendental: IRNode,
+    poly_candidate: IRNode,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 26: ``∫ Q(x) · log(x)^n dx`` via IBP, for integer n ≥ 2.
+
+    ``transcendental`` must be ``Pow(Log(x), n)`` with ``n`` an integer ≥ 2
+    and the log argument exactly the bare symbol ``x``.  ``poly_candidate``
+    must be a polynomial in ``x`` over Q (denominator = 1 after
+    ``to_rational``).  Returns ``None`` on any mismatch.
+
+    ``n = 1`` is handled by ``_try_log_product`` (Phase 3); this function
+    only fires for higher powers, avoiding double coverage.
+
+    The formula is applied term-by-term using linearity:
+
+        ∫ Q(x) · log(x)^n dx  =  Σ_i  c_i · ∫ x^i · log(x)^n dx
+
+    with each ``∫ x^i · log(x)^n dx`` delegated to ``_poly_log_power_term``.
+    """
+    # Must be POW(LOG(x), n) with integer n ≥ 2.
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != POW or len(transcendental.args) != 2:
+        return None
+    log_node, exp_node = transcendental.args
+    if not isinstance(log_node, IRApply) or log_node.head != LOG:
+        return None
+    if len(log_node.args) != 1 or log_node.args[0] != x:
+        return None  # only log(x), not log(ax+b)
+    if not isinstance(exp_node, IRInteger) or exp_node.value < 2:
+        return None
+    n = exp_node.value
+
+    # poly_candidate must be a polynomial in x.
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational denominator — not a polynomial
+    poly_c = _norm(num)
+    poly = tuple(Fraction(c) for c in poly_c)
+    if not poly:
+        return None
+
+    # Apply linearity: Σ c_i · ∫ x^i · log(x)^n dx.
+    pieces: list[IRNode] = []
+    for i, coef in enumerate(poly):
+        if coef == Fraction(0):
+            continue
+        term = _poly_log_power_term(i, n, x)
+        if coef == Fraction(1):
+            pieces.append(term)
+        elif coef == Fraction(-1):
+            pieces.append(IRApply(NEG, (term,)))
+        else:
+            pieces.append(IRApply(MUL, (_frac_ir(coef), term)))
+
+    if not pieces:
+        return x  # zero polynomial — shouldn't normally be reached
+
+    result: IRNode = pieces[0]
+    for piece in pieces[1:]:
+        result = IRApply(ADD, (result, piece))
+    return result
 
 
 def _try_atan_product(
