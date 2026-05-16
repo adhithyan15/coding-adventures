@@ -1,4 +1,4 @@
-import { acSweep, dcOp, mcDc, sensDc, tf } from "@coding-adventures/spice-engine";
+import { acSweep, dcOp, mcDc, noiseAc, sensDc, tf } from "@coding-adventures/spice-engine";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -181,6 +181,48 @@ R1 in out 1k
 .mc out 10
 `),
     ).toThrow(/\.mc output must be a voltage probe/);
+  });
+
+  it("parses .noise AC noise analysis cards", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k temp=300
+`);
+
+    expect(parsed.analyses).toEqual([
+      {
+        kind: "noise",
+        outputNode: "out",
+        inputSource: "Vin",
+        frequenciesHz: [1000.0],
+        temperature: 300.0,
+      },
+    ]);
+    expect(parsed.noiseCards()).toEqual(parsed.analyses);
+    const [card] = parsed.noiseCards();
+    const result = noiseAc(
+      parsed.circuit,
+      card.outputNode,
+      card.inputSource,
+      card.frequenciesHz,
+      card.temperature,
+    );
+    expect(result.outputNode).toBe("out");
+    expect(result.inputSource).toBe("Vin");
+    expect(result.points).toHaveLength(1);
+    expect(result.points[0].outputPsd).toBeGreaterThan(0.0);
+  });
+
+  it("rejects .noise cards without a voltage output probe", () => {
+    expect(() =>
+      parseNetlist(`
+Vin in 0 DC 1
+R1 in out 1k
+.noise out Vin 1k
+`),
+    ).toThrow(/\.noise output must be a voltage probe/);
   });
 
   it("parses VCVS elements into operating-point circuits", () => {

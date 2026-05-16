@@ -73,6 +73,14 @@ pub struct McAnalysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct NoiseAnalysis {
+    pub output_node: String,
+    pub input_source: String,
+    pub frequencies_hz: Vec<f64>,
+    pub temperature: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum Analysis {
     Op(OpAnalysis),
     Tran(TranAnalysis),
@@ -81,6 +89,7 @@ pub enum Analysis {
     Tf(TfAnalysis),
     Sens(SensAnalysis),
     Mc(McAnalysis),
+    Noise(NoiseAnalysis),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -164,6 +173,16 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Mc(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn noise_cards(&self) -> Vec<&NoiseAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Noise(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -1030,6 +1049,37 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 } else {
                     None
                 },
+            }))
+        }
+        ".noise" => {
+            require_min_fields(fields, 3, ".noise")?;
+            let mut frequencies_hz = Vec::new();
+            let mut temperature = 300.0;
+            let mut tail_index = 3;
+            while tail_index < fields.len() {
+                let token = &fields[tail_index];
+                let lower_token = token.to_ascii_lowercase();
+                if lower_token == "temp" {
+                    if tail_index + 1 >= fields.len() {
+                        return Err(NetlistParseError::new(
+                            ".noise temp requires a temperature value",
+                        ));
+                    }
+                    temperature = parse_value(&fields[tail_index + 1])?;
+                    tail_index += 2;
+                } else if let Some(value) = lower_token.strip_prefix("temp=") {
+                    temperature = parse_value(value)?;
+                    tail_index += 1;
+                } else {
+                    frequencies_hz.push(parse_value(token)?);
+                    tail_index += 1;
+                }
+            }
+            Ok(Analysis::Noise(NoiseAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".noise")?,
+                input_source: fields[2].clone(),
+                frequencies_hz,
+                temperature,
             }))
         }
         _ => Err(NetlistParseError::new(format!(

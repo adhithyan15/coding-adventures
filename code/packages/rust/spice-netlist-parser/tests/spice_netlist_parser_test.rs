@@ -1,10 +1,10 @@
 use spice_engine::{
-    ac_sweep, dc_op, mc_dc, sens_dc, tf, BjtPolarity, Element, McDistribution, McOptions,
+    ac_sweep, dc_op, mc_dc, noise_ac, sens_dc, tf, BjtPolarity, Element, McDistribution, McOptions,
     MosfetType,
 };
 use spice_netlist_parser::{
-    parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, NetlistParseError, OpAnalysis,
-    McAnalysis, SensAnalysis, TfAnalysis, TranAnalysis,
+    parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, McAnalysis, NetlistParseError,
+    NoiseAnalysis, OpAnalysis, SensAnalysis, TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -214,10 +214,13 @@ Rbot out 0 1k
             seed: Some(7),
         })]
     );
-    assert_eq!(parsed.mc_cards(), vec![match &parsed.analyses[0] {
-        Analysis::Mc(card) => card,
-        _ => panic!("expected mc card"),
-    }]);
+    assert_eq!(
+        parsed.mc_cards(),
+        vec![match &parsed.analyses[0] {
+            Analysis::Mc(card) => card,
+            _ => panic!("expected mc card"),
+        }]
+    );
     let card = parsed.mc_cards()[0];
     let distribution = match card.distribution.as_str() {
         "gaussian" => McDistribution::Gaussian,
@@ -254,6 +257,65 @@ R1 in out 1k
     assert!(error
         .to_string()
         .contains(".mc output must be a voltage probe"));
+}
+
+#[test]
+fn parses_noise_ac_analysis_cards() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k temp=300
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![Analysis::Noise(NoiseAnalysis {
+            output_node: "out".to_string(),
+            input_source: "Vin".to_string(),
+            frequencies_hz: vec![1000.0],
+            temperature: 300.0,
+        })]
+    );
+    assert_eq!(
+        parsed.noise_cards(),
+        vec![match &parsed.analyses[0] {
+            Analysis::Noise(card) => card,
+            _ => panic!("expected noise card"),
+        }]
+    );
+    let card = parsed.noise_cards()[0];
+    let result = noise_ac(
+        &parsed.circuit,
+        &card.output_node,
+        &card.input_source,
+        &card.frequencies_hz,
+        card.temperature,
+    )
+    .unwrap();
+    assert_eq!(result.output_node, "out");
+    assert_eq!(result.input_source, "Vin");
+    assert_eq!(result.points.len(), 1);
+    assert!(result.points[0].output_psd > 0.0);
+}
+
+#[test]
+fn rejects_noise_cards_without_voltage_output_probe() {
+    let error = parse_netlist(
+        r#"
+Vin in 0 DC 1
+R1 in out 1k
+.noise out Vin 1k
+"#,
+    )
+    .unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains(".noise output must be a voltage probe"));
 }
 
 #[test]

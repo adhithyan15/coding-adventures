@@ -7,6 +7,8 @@
 - Parse SPICE `.sens V(output_node)` DC sensitivity analysis cards.
 - Parse SPICE `.mc V(output_node) n_trials [tolerance] [distribution] [seed]`
   Monte Carlo DC analysis cards.
+- Parse SPICE `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]`
+  AC noise analysis cards.
 
 ## 0.1.7
 

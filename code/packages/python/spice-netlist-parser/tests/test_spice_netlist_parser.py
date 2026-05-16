@@ -19,6 +19,7 @@ from spice_engine import (
     ac_sweep,
     dc_op,
     mc_dc,
+    noise_ac,
     sens_dc,
     tf,
 )
@@ -29,6 +30,7 @@ from spice_netlist_parser import (
     McAnalysis,
     ModelCard,
     NetlistParseError,
+    NoiseAnalysis,
     OpAnalysis,
     SensAnalysis,
     TfAnalysis,
@@ -193,6 +195,50 @@ def test_mc_analysis_card_rejects_non_voltage_output_probe() -> None:
 Vin in 0 DC 1
 R1 in out 1k
 .mc out 10
+"""
+        )
+
+
+def test_parse_noise_analysis_card_and_run_noise_ac() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k temp=300
+"""
+    )
+
+    assert parsed.analyses == [
+        NoiseAnalysis(
+            output_node="out",
+            input_source="Vin",
+            freqs=(1000.0,),
+            temperature=300.0,
+        )
+    ]
+    assert parsed.noise_cards() == parsed.analyses
+    card = parsed.noise_cards()[0]
+    result = noise_ac(
+        parsed.circuit,
+        card.output_node,
+        card.input_source,
+        freqs=list(card.freqs),
+        temperature=card.temperature,
+    )
+    assert result.output_node == "out"
+    assert result.input_source == "Vin"
+    assert len(result.points) == 1
+    assert result.points[0].output_psd > 0.0
+
+
+def test_noise_analysis_card_rejects_non_voltage_output_probe() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.noise output must be a voltage probe"):
+        parse_netlist(
+            """
+Vin in 0 DC 1
+R1 in out 1k
+.noise out Vin 1k
 """
         )
 

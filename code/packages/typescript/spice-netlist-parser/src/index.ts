@@ -79,6 +79,14 @@ export interface McAnalysis {
   readonly seed?: number;
 }
 
+export interface NoiseAnalysis {
+  readonly kind: "noise";
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly frequenciesHz: readonly number[];
+  readonly temperature: number;
+}
+
 export type Analysis =
   | OpAnalysis
   | TranAnalysis
@@ -86,7 +94,8 @@ export type Analysis =
   | AcAnalysis
   | TfAnalysis
   | SensAnalysis
-  | McAnalysis;
+  | McAnalysis
+  | NoiseAnalysis;
 
 export interface ModelCard {
   readonly name: string;
@@ -128,6 +137,12 @@ export class ParsedNetlist {
 
   mcCards(): McAnalysis[] {
     return this.analyses.filter((analysis): analysis is McAnalysis => analysis.kind === "mc");
+  }
+
+  noiseCards(): NoiseAnalysis[] {
+    return this.analyses.filter(
+      (analysis): analysis is NoiseAnalysis => analysis.kind === "noise",
+    );
   }
 }
 
@@ -833,6 +848,36 @@ function parseDirective(fields: readonly string[]): Analysis {
       tolerance: fields.length >= 4 ? parseValue(fields[3]) : 0.05,
       distribution,
       seed: fields.length >= 6 ? Math.trunc(parseValue(fields[5])) : undefined,
+    };
+  }
+  if (directive === ".noise") {
+    requireMinFields(fields, 3, ".noise");
+    const frequenciesHz: number[] = [];
+    let temperature = 300.0;
+    let tailIndex = 3;
+    while (tailIndex < fields.length) {
+      const token = fields[tailIndex];
+      const lowerToken = token.toLowerCase();
+      if (lowerToken === "temp") {
+        if (tailIndex + 1 >= fields.length) {
+          throw new NetlistParseError(".noise temp requires a temperature value");
+        }
+        temperature = parseValue(fields[tailIndex + 1]);
+        tailIndex += 2;
+      } else if (lowerToken.startsWith("temp=")) {
+        temperature = parseValue(token.split("=", 2)[1]);
+        tailIndex += 1;
+      } else {
+        frequenciesHz.push(parseValue(token));
+        tailIndex += 1;
+      }
+    }
+    return {
+      kind: "noise",
+      outputNode: parseVoltageProbe(fields[1], ".noise"),
+      inputSource: fields[2],
+      frequenciesHz,
+      temperature,
     };
   }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
