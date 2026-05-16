@@ -1,5 +1,77 @@
 # Changelog — dsp-stft
 
+## 0.2.0 — 2026-05-16
+
+### Added — DSP05 Phase 3 + 4 (ISTFT + spectrogram helpers)
+
+Closes the analysis/synthesis loop and adds the magnitude /
+log helpers that downstream audio code actually wants.
+
+#### Public API
+
+```rust
+pub fn istft(spectrogram, n_fft, hop_length, window, output_length)
+    -> Result<Vec<f32>, StftError>;
+
+pub fn spectrogram(signal, n_fft, hop_length, window)
+    -> Result<Vec<f32>, StftError>;
+
+pub fn log_spectrogram(signal, n_fft, hop_length, window)
+    -> Result<Vec<f32>, StftError>;
+```
+
+All re-exported at the crate root.
+
+#### Algorithm — `istft` (overlap-add)
+
+For each frame `m`, irfft the spectrum to length-`n_fft` time
+domain, multiply by the synthesis window, add into the output
+buffer at position `m · hop_length`.  Also accumulate the
+sum-of-squared-windows at each position.  Divide the output
+by that running norm (skipping samples where the norm is
+near-zero).
+
+Under COLA-satisfying window/hop choices (Hann at
+`hop = n_fft / 2` is canonical), `istft(stft(x))` recovers
+`x` within `1e-3` relative tolerance in the central region
+(edges are subject to the usual transient boundary effects).
+
+#### `spectrogram` / `log_spectrogram`
+
+- `spectrogram(signal, ...)` — returns `|STFT|²` flattened
+  `[num_frames, n_fft/2 + 1]`.  Half the size of the complex
+  spectrogram (one magnitude lane instead of two `[re, im]`
+  lanes).  Non-negative by construction.
+- `log_spectrogram(signal, ...)` — `log(|STFT|² + ε)` with
+  `ε = 1e-10`.  Always finite (no `-∞` at silent bins).  The
+  canonical input feature for plotting and ML pipelines.
+
+#### New unit tests — 14
+
+`inverse` module (8):
+- 5 error paths: empty spectrogram, n_fft=0, hop=0,
+  output_length=0, misaligned spectrogram length.
+- COLA round-trip recovers a signal within 1e-3 (Hann/hop=n_fft/2).
+- Output length matches request.
+- Constant signal round-trips to the same constant in central region.
+
+`spectrogram` module (6):
+- spectrogram non-negative.
+- length matches `num_frames × bins`.
+- zero signal → all-zero spectrogram.
+- log_spectrogram finite everywhere.
+- log_spectrogram of zero signal ≈ log(ε) ≈ -23.0259.
+- log_spectrogram length matches spectrogram length.
+
+All 25 unit tests + 1 doctest pass (11 stft + 8 inverse + 6 spectrogram).
+
+### What this phase does NOT include
+
+- Phase 5: mel filterbank + mel_spectrogram + MFCC.
+- Phase 6: matrix-ir-lowered stft.
+- Centred-padding mode.
+- Streaming / real-time API.
+
 ## 0.1.0 — 2026-05-16
 
 ### Added — DSP05 Phase 1 + 2 (crate skeleton + scalar STFT forward)
