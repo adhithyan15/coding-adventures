@@ -243,7 +243,11 @@ members = [
     "starlark-vm",
     "state-machine",
     "statistics-core",
+<<<<<<< HEAD
     "engineering-core",
+=======
+    "spreadsheet-core",
+>>>>>>> 5b6f7b4d9 (feat(spreadsheet-core): Phase 1 — headless engine)
     "data-frame",
     "spice-engine",
     "spice-netlist-parser",
