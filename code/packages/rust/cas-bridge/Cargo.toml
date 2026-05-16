@@ -10,3 +10,8 @@ symbolic-vm = { path = "../symbolic-vm" }
 numeric-tower = { path = "../numeric-tower" }
 r-vector = { path = "../r-vector" }
 statistics-core = { path = "../statistics-core" }
+math-core = { path = "../math-core" }
+text-core = { path = "../text-core" }
+datetime-core = { path = "../datetime-core" }
+financial-core = { path = "../financial-core" }
+wall-clock = { path = "../wall-clock", default-features = false }

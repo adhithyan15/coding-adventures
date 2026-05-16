@@ -61,7 +61,9 @@
 pub mod convert;
 pub mod registry;
 pub mod statistics_handlers;
+pub mod math_handlers;
 
+pub use math_handlers::register_math_handlers;
 pub use registry::{HandlerRegistry, register_statistics_handlers};
 
 // Re-export the IR types so downstream crates only pull in `cas-bridge`.
