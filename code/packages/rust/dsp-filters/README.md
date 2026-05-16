@@ -1,25 +1,29 @@
 # dsp-filters
 
-Scalar reference FIR + IIR filters for the DSP layer.
+Scalar reference FIR + IIR filters for the DSP layer, plus
+filter design helpers.
 
-As of **0.2.0 (DSP03 Phase 4)** this crate ships the two
-workhorse 1-D filter primitives:
+As of **0.3.0 (DSP03 Phase 5)** this crate ships:
 
 - **FIR** (`fir(signal, kernel)`) via direct linear convolution.
 - **IIR** (`iir(signal, b, a)`) via direct-form-II Transposed
   — matches `scipy.signal.lfilter(b, a, x)` exactly.
+- **Design helpers** (`design_low_pass`, `design_high_pass`,
+  `butterworth_lowpass`) — windowed-sinc FIR and Butterworth
+  IIR.
 
 ```rust
-use dsp_filters::{fir, iir};
+use dsp_filters::{fir, iir, design_low_pass, butterworth_lowpass, WindowType};
 
-let signal = vec![1.0_f32, 2.0, 3.0, 4.0, 5.0];
+let signal: Vec<f32> = (0..200).map(|i| ((i as f32) * 0.1).sin()).collect();
 
-// FIR: 3-tap low-pass kernel.
-let kernel = vec![0.25_f32, 0.5, 0.25];
-let smoothed = fir(&signal, &kernel).unwrap();
+// 33-tap windowed-sinc low-pass with Hamming window, cutoff at 0.2·Nyquist.
+let kernel = design_low_pass(0.2, 33, WindowType::Hamming);
+let smoothed_fir = fir(&signal, &kernel).unwrap();
 
-// IIR: single-pole low-pass.  y[n] = x[n] + 0.9 · y[n-1].
-let filtered = iir(&signal, &[1.0], &[1.0, -0.9]).unwrap();
+// 2nd-order Butterworth low-pass, cutoff at 0.1·Nyquist.
+let (b, a) = butterworth_lowpass(2, 0.1);
+let smoothed_iir = iir(&signal, &b, &a).unwrap();
 ```
 
 ## Algorithm
@@ -61,8 +65,8 @@ pub enum FilterError {
 | 0      | Spec (`code/specs/DSP03-filters.md`)                 | landed |
 | 1+2    | Crate skeleton + scalar FIR direct convolution       | landed (0.1.0) |
 | 3      | FIR via FFT (overlap-add) using `dsp-fft`            | deferred |
-| **4**  | **Scalar IIR direct-form-II Transposed**             | **this PR (0.2.0)** |
-| 5      | Butterworth / Chebyshev / windowed-sinc design helpers | pending |
+| 4      | Scalar IIR direct-form-II Transposed                 | landed (0.2.0) |
+| **5**  | **Windowed-sinc + Butterworth design helpers**       | **this PR (0.3.0)** |
 | 6      | Matrix-ir-lowered FIR                                | pending |
 
 ## IIR algorithm (Phase 4)
