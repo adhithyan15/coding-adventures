@@ -42,10 +42,14 @@ Standard transforms implemented
 | t^n·exp(a·t)          | n! / (s-a)^(n+1)       |
 | sinh(a·t)             | a / (s² - a²)          |
 | cosh(a·t)             | s / (s² - a²)          |
-| t·sin(ω·t)            | 2ωs / (s² + ω²)²       |
-| t·cos(ω·t)            | (s² - ω²) / (s² + ω²)² |
-| DiracDelta(t)         | 1                      |
-| UnitStep(t)           | 1/s                    |
+| t·sin(ω·t)            | 2ωs / (s² + ω²)²                        |
+| t·cos(ω·t)            | (s² - ω²) / (s² + ω²)²                  |
+| t²·sin(ω·t)           | 2ω(3s² − ω²) / (s² + ω²)³               |
+| t²·cos(ω·t)           | 2s(s² − 3ω²) / (s² + ω²)³               |
+| t³·sin(ω·t)           | 24ωs(s² − ω²) / (s² + ω²)⁴              |
+| t³·cos(ω·t)           | 6(s⁴ − 6s²ω² + ω⁴) / (s² + ω²)⁴        |
+| DiracDelta(t)         | 1                                        |
+| UnitStep(t)           | 1/s                                      |
 """
 
 from __future__ import annotations
@@ -617,6 +621,67 @@ def _match_t_cos(
     return None
 
 
+def _match_tn_sin(
+    f: IRNode, t_sym: IRSymbol
+) -> dict[str, Any] | None:
+    """Match ``f = t^n * sin(ω*t)`` for integer n ≥ 2 (either Mul order).
+
+    Returns ``{"n": n, "omega": omega_node}``.
+
+    Transform: L{t^n·sin(ωt)} derived by differentiating L{sin(ωt)} n
+    times with respect to −s:
+
+        L{t^n·sin(ωt)} = (−1)^n · dⁿ/dsⁿ [ω/(s²+ω²)]
+
+    Closed-form results for n = 2 and n = 3 are implemented in
+    ``_tf_tn_sin``; for n ≥ 4 the pattern matches but the transform
+    builder returns ``None`` (falls through to unevaluated).
+    """
+    if not (
+        isinstance(f, IRApply)
+        and isinstance(f.head, IRSymbol)
+        and f.head.name == "Mul"
+        and len(f.args) == 2
+    ):
+        return None
+    left, right = f.args
+    for pow_node, sin_node in [(left, right), (right, left)]:
+        pow_match = _match_power_of_t(pow_node, t_sym)
+        if pow_match is not None and pow_match.get("n", 0) >= 2:
+            s = _match_sin(sin_node, t_sym)
+            if s is not None:
+                return {"n": pow_match["n"], "omega": s["omega"]}
+    return None
+
+
+def _match_tn_cos(
+    f: IRNode, t_sym: IRSymbol
+) -> dict[str, Any] | None:
+    """Match ``f = t^n * cos(ω*t)`` for integer n ≥ 2 (either Mul order).
+
+    Returns ``{"n": n, "omega": omega_node}``.
+
+    Transform: L{t^n·cos(ωt)} derived by differentiating L{cos(ωt)} n
+    times with respect to −s.  Closed-form results for n = 2 and n = 3
+    are implemented in ``_tf_tn_cos``.
+    """
+    if not (
+        isinstance(f, IRApply)
+        and isinstance(f.head, IRSymbol)
+        and f.head.name == "Mul"
+        and len(f.args) == 2
+    ):
+        return None
+    left, right = f.args
+    for pow_node, cos_node in [(left, right), (right, left)]:
+        pow_match = _match_power_of_t(pow_node, t_sym)
+        if pow_match is not None and pow_match.get("n", 0) >= 2:
+            c = _match_cos(cos_node, t_sym)
+            if c is not None:
+                return {"n": pow_match["n"], "omega": c["omega"]}
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Transform builders (take extracted params, return F(s) IR)
 # ---------------------------------------------------------------------------
@@ -796,6 +861,115 @@ def _tf_t_cos(params: dict[str, Any], s: IRSymbol) -> IRNode:
     return _make_div(num, denom)
 
 
+def _tf_tn_sin(params: dict[str, Any], s: IRSymbol) -> IRNode | None:
+    """L{t^n·sin(ωt)} for n = 2, 3.
+
+    Closed forms derived from L{sin(ωt)} = ω/(s²+ω²) via repeated
+    differentiation with respect to −s:
+
+    n = 2:  L{t²·sin(ωt)} = 2ω(3s² − ω²) / (s² + ω²)³
+
+        Derivation: F(s) = ω/(s²+ω²).  F''(s) = (6ωs² − 2ω³)/(s²+ω²)³
+        and L{t²·sin(ωt)} = F''(s) (second derivative of F).
+
+    n = 3:  L{t³·sin(ωt)} = 24ωs(s² − ω²) / (s² + ω²)⁴
+
+        Derivation: L{t³f} = −F'''(s); computing F''' gives the result.
+
+    Returns ``None`` for n ≥ 4 (left unevaluated for now).
+    """
+    from symbolic_ir import SUB  # noqa: PLC0415
+
+    n: int = params["n"]
+    omega = params["omega"]
+    s2 = _make_pow(s, 2)
+    w2 = _make_pow(omega, 2)
+    s2_plus_w2 = _make_add(s2, w2)
+
+    if n == 2:
+        # 2ω(3s² − ω²) / (s²+ω²)³
+        num = _make_mul(
+            _make_mul(IRInteger(2), omega),
+            IRApply(SUB, (_make_mul(IRInteger(3), s2), w2)),
+        )
+        denom = _make_pow(s2_plus_w2, 3)
+        return _make_div(num, denom)
+
+    if n == 3:
+        # 24ωs(s² − ω²) / (s²+ω²)⁴
+        num = _make_mul(
+            _make_mul(IRInteger(24), omega),
+            _make_mul(s, IRApply(SUB, (s2, w2))),
+        )
+        denom = _make_pow(s2_plus_w2, 4)
+        return _make_div(num, denom)
+
+    return None  # n ≥ 4: fall through to unevaluated
+
+
+def _tf_tn_cos(params: dict[str, Any], s: IRSymbol) -> IRNode | None:
+    """L{t^n·cos(ωt)} for n = 2, 3.
+
+    Closed forms derived from L{cos(ωt)} = s/(s²+ω²) via repeated
+    differentiation with respect to −s:
+
+    n = 2:  L{t²·cos(ωt)} = 2s(s² − 3ω²) / (s² + ω²)³
+
+        Derivation: G(s) = s/(s²+ω²).  G''(s) = 2s(s²−3ω²)/(s²+ω²)³.
+
+    n = 3:  L{t³·cos(ωt)} = 6(s⁴ − 6s²ω² + ω⁴) / (s² + ω²)⁴
+
+        Derivation: L{t³f} = −G'''(s); computing G''' gives the result.
+
+    Returns ``None`` for n ≥ 4 (left unevaluated for now).
+    """
+    from symbolic_ir import SUB  # noqa: PLC0415
+
+    n: int = params["n"]
+    omega = params["omega"]
+    s2 = _make_pow(s, 2)
+    w2 = _make_pow(omega, 2)
+    s2_plus_w2 = _make_add(s2, w2)
+
+    if n == 2:
+        # 2s(s² − 3ω²) / (s²+ω²)³
+        num = _make_mul(
+            _make_mul(IRInteger(2), s),
+            IRApply(SUB, (s2, _make_mul(IRInteger(3), w2))),
+        )
+        denom = _make_pow(s2_plus_w2, 3)
+        return _make_div(num, denom)
+
+    if n == 3:
+        # 6(s⁴ − 6s²ω² + ω⁴) / (s²+ω²)⁴
+        s4 = _make_pow(s, 4)
+        w4 = _make_pow(omega, 4)
+        num = _make_mul(
+            IRInteger(6),
+            IRApply(
+                SUB,
+                (
+                    IRApply(SUB, (s4, _make_mul(IRInteger(6), _make_mul(s2, w2)))),
+                    _make_mul(IRInteger(-1), w4),  # + ω⁴  (SUB negates, so −(−ω⁴))
+                ),
+            ),
+        )
+        # s⁴ − 6s²ω² + ω⁴ = (s⁴ − 6s²ω²) − (−ω⁴) ... cleaner as Add
+        from symbolic_ir import ADD as _ADD  # noqa: PLC0415
+        inner = IRApply(
+            _ADD,
+            (
+                IRApply(SUB, (s4, _make_mul(IRInteger(6), _make_mul(s2, w2)))),
+                w4,
+            ),
+        )
+        num = _make_mul(IRInteger(6), inner)
+        denom = _make_pow(s2_plus_w2, 4)
+        return _make_div(num, denom)
+
+    return None  # n ≥ 4: fall through to unevaluated
+
+
 # ---------------------------------------------------------------------------
 # The transform table: ordered from most specific to least specific.
 #
@@ -816,6 +990,9 @@ TRANSFORM_TABLE: list[
     (_match_exp_cos, _tf_exp_cos),
     (_match_tn_exp, _tf_tn_exp),   # t^n * exp(at), n>=2 — must precede t*exp
     (_match_t_exp, _tf_t_exp),     # t * exp(at)
+    # t^n * trig: n>=2 must precede t*trig so t²*sin matches before t*sin strips t
+    (_match_tn_sin, _tf_tn_sin),   # t^n * sin(wt), n>=2
+    (_match_tn_cos, _tf_tn_cos),   # t^n * cos(wt), n>=2
     (_match_t_sin, _tf_t_sin),     # t * sin(wt)
     (_match_t_cos, _tf_t_cos),     # t * cos(wt)
     # --- Elementary transforms ---
