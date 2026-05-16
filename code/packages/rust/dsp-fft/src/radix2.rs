@@ -75,17 +75,57 @@ pub fn build_fft_graph(n: u32, direction: Direction) -> Result<Graph, FftError> 
     if n < 2 || !n.is_power_of_two() {
         return Err(FftError::NotPowerOfTwo(n as usize));
     }
-    let log_n = n.trailing_zeros() as usize;
     let mut b = GraphBuilder::new();
 
     // ── Step 1: real → complex.  [N] → [N, 1] → [N, 2] (concat with zeros).
     let input = b.input(DType::F32, Shape::from(&[n]));
-    let zeros_bytes = vec![0u8; (n as usize) * 4];
-    let zeros = b.constant(DType::F32, Shape::from(&[n, 1]), zeros_bytes);
-    let input_2d = b.reshape(&input, Shape::from(&[n, 1]));
-    let mut x = b.concat(&[&input_2d, &zeros], 1);
+    let x = wrap_real_as_complex(&mut b, &input, n);
 
-    // ── Step 2: bit-reversal permutation.
+    // ── Steps 2-4: bit-reverse + butterflies + optional /N scaling.
+    let spectrum = add_radix2_fft_to_builder(&mut b, x, n, direction)?;
+
+    b.output(&spectrum);
+    b.build()
+        .map_err(|e| FftError::InvalidInput(format!("graph build/validate: {:?}", e)))
+}
+
+/// **Phase 4c helper.**  Wrap a `[N]` real-valued tensor as a
+/// `[N, 2]` complex tensor with zero imaginary lane.  Used by
+/// both `build_fft_graph` (where the input arrives as a declared
+/// graph input) and `build_fft_graph_with_input` (where the
+/// input is a `Const`), as well as by `build_bluestein_graph`
+/// which wraps its own `Const`-embedded signal the same way.
+fn wrap_real_as_complex(b: &mut GraphBuilder, real_1d: &Tensor, n: u32) -> Tensor {
+    let zeros = b.constant(DType::F32, Shape::from(&[n, 1]), vec![0u8; n as usize * 4]);
+    let real_2d = b.reshape(real_1d, Shape::from(&[n, 1]));
+    b.concat(&[&real_2d, &zeros], 1)
+}
+
+/// **Phase 4c helper.**  Append the radix-2 Cooley-Tukey FFT
+/// (or inverse, per `direction`) to an existing `GraphBuilder`.
+/// Takes an `[N, 2]` complex tensor (interleaved `[re, im]`) and
+/// returns the corresponding `[N, 2]` spectrum tensor.
+///
+/// `n` must be `≥ 2` and a power of two — same contract as the
+/// public `build_fft_graph` builder; that builder is now a thin
+/// wrapper around `wrap_real_as_complex` + this helper.
+///
+/// Exposed at module scope (but `pub(crate)`) so the Bluestein
+/// graph builder in `crate::bluestein` can splice three length-`M`
+/// FFTs into a single composite graph without copy-pasting the
+/// butterfly code.
+pub(crate) fn add_radix2_fft_to_builder(
+    b: &mut GraphBuilder,
+    mut x: Tensor,
+    n: u32,
+    direction: Direction,
+) -> Result<Tensor, FftError> {
+    if n < 2 || !n.is_power_of_two() {
+        return Err(FftError::NotPowerOfTwo(n as usize));
+    }
+    let log_n = n.trailing_zeros() as usize;
+
+    // ── Bit-reversal permutation.
     //
     // For N=2 this is the identity, so we skip.  For larger N we
     // generate `N` width-1 slices and one Concat.  This produces a
@@ -102,7 +142,7 @@ pub fn build_fft_graph(n: u32, direction: Direction) -> Result<Graph, FftError> 
         x = b.concat(&refs, 0);
     }
 
-    // ── Step 3: butterfly stages.
+    // ── Butterfly stages.
     let sign: f32 = match direction {
         Direction::Forward => -1.0,
         Direction::Inverse => 1.0,
@@ -170,9 +210,7 @@ pub fn build_fft_graph(n: u32, direction: Direction) -> Result<Graph, FftError> 
         x = b.mul(&x, &scale_b);
     }
 
-    b.output(&x);
-    b.build()
-        .map_err(|e| FftError::InvalidInput(format!("graph build/validate: {:?}", e)))
+    Ok(x)
 }
 
 /// Like [`build_fft_graph`] but embeds `signal` as a `Const` in the
@@ -191,7 +229,6 @@ pub fn build_fft_graph_with_input(
     if n < 2 || !n.is_power_of_two() {
         return Err(FftError::NotPowerOfTwo(signal.len()));
     }
-    let log_n = n.trailing_zeros() as usize;
     let mut b = GraphBuilder::new();
 
     // ── Step 1: real → complex with the signal baked in as a Const.
@@ -200,81 +237,13 @@ pub fn build_fft_graph_with_input(
         input_bytes.extend_from_slice(&x.to_le_bytes());
     }
     let signal_const = b.constant(DType::F32, Shape::from(&[n]), input_bytes);
-    let zeros = b.constant(DType::F32, Shape::from(&[n, 1]), vec![0u8; n as usize * 4]);
-    let input_2d = b.reshape(&signal_const, Shape::from(&[n, 1]));
-    let mut x = b.concat(&[&input_2d, &zeros], 1);
+    let x_complex = wrap_real_as_complex(&mut b, &signal_const, n);
 
-    // ── Step 2: bit-reversal permutation.
-    if n > 2 {
-        let mut slices: Vec<Tensor> = Vec::with_capacity(n as usize);
-        for i in 0..n {
-            let bri = bit_reverse(i as usize, log_n) as u32;
-            let s = b.slice(&x, 0, bri, bri + 1, 1);
-            slices.push(s);
-        }
-        let refs: Vec<&Tensor> = slices.iter().collect();
-        x = b.concat(&refs, 0);
-    }
+    // ── Steps 2-4: bit-reverse + butterflies + optional /N scaling.
+    let spectrum = add_radix2_fft_to_builder(&mut b, x_complex, n, direction)?;
 
-    // ── Step 3: butterfly stages.
-    let sign: f32 = match direction {
-        Direction::Forward => -1.0,
-        Direction::Inverse => 1.0,
-    };
-    let mut full: u32 = 2;
-    while full <= n {
-        let half = full / 2;
-        let n_groups = n / full;
-
-        x = b.reshape(&x, Shape::from(&[n_groups, full, 2]));
-        let even = b.slice(&x, 1, 0, half, 1);
-        let odd = b.slice(&x, 1, half, full, 1);
-
-        let mut tw_bytes = Vec::with_capacity((half as usize) * 8);
-        for j in 0..half {
-            let theta = sign * 2.0 * std::f32::consts::PI * (j as f32) / (full as f32);
-            tw_bytes.extend_from_slice(&theta.cos().to_le_bytes());
-            tw_bytes.extend_from_slice(&theta.sin().to_le_bytes());
-        }
-        let tw = b.constant(DType::F32, Shape::from(&[half, 2]), tw_bytes);
-        let tw_3d = b.reshape(&tw, Shape::from(&[1, half, 2]));
-        let tw_b = b.broadcast(&tw_3d, Shape::from(&[n_groups, half, 2]));
-
-        let odd_re = b.slice(&odd, 2, 0, 1, 1);
-        let odd_im = b.slice(&odd, 2, 1, 2, 1);
-        let tw_re = b.slice(&tw_b, 2, 0, 1, 1);
-        let tw_im = b.slice(&tw_b, 2, 1, 2, 1);
-
-        let ac = b.mul(&odd_re, &tw_re);
-        let bd = b.mul(&odd_im, &tw_im);
-        let ad = b.mul(&odd_re, &tw_im);
-        let bc = b.mul(&odd_im, &tw_re);
-
-        let tw_odd_re = b.sub(&ac, &bd);
-        let tw_odd_im = b.add(&ad, &bc);
-        let tw_odd = b.concat(&[&tw_odd_re, &tw_odd_im], 2);
-
-        let next_first = b.add(&even, &tw_odd);
-        let next_second = b.sub(&even, &tw_odd);
-        x = b.concat(&[&next_first, &next_second], 1);
-        x = b.reshape(&x, Shape::from(&[n, 2]));
-
-        full *= 2;
-    }
-
-    if direction == Direction::Inverse {
-        let inv_n = 1.0_f32 / (n as f32);
-        let scale = b.constant(
-            DType::F32,
-            Shape::from(&[1, 1]),
-            inv_n.to_le_bytes().to_vec(),
-        );
-        let scale_b = b.broadcast(&scale, Shape::from(&[n, 2]));
-        x = b.mul(&x, &scale_b);
-    }
-
-    let out_id = x.id;
-    b.output(&x);
+    let out_id = spectrum.id;
+    b.output(&spectrum);
     let graph = b
         .build()
         .map_err(|e| FftError::InvalidInput(format!("graph build/validate: {:?}", e)))?;
@@ -282,8 +251,8 @@ pub fn build_fft_graph_with_input(
 }
 
 /// Reverse the bottom `bits` bits of `x`.  Used by the bit-reversal
-/// permutation step of build_fft_graph.
-fn bit_reverse(mut x: usize, bits: usize) -> usize {
+/// permutation step of `add_radix2_fft_to_builder`.
+pub(crate) fn bit_reverse(mut x: usize, bits: usize) -> usize {
     let mut r = 0usize;
     for _ in 0..bits {
         r = (r << 1) | (x & 1);

@@ -81,19 +81,21 @@
 //!   matters past `N ≈ 1M` in `f32`; below that, the round-trip
 //!   stays within `1e-4` like the radix-2 path.
 //!
-//! ## What this module does NOT do (Phase 4a)
+//! ## What this module did NOT include in Phase 4a
 //!
-//! - Matrix-ir lowering.  The convolution uses `fft_scalar` /
-//!   `ifft_scalar` internally so it runs on CPU only.  Phase 4c
-//!   will replace those calls with [`crate::radix2::fft_via_runtime`]
-//!   (or a `bluestein_via_runtime` wrapper) so the whole thing
-//!   lifts onto the matrix execution layer.
-//! - `rfft` / `irfft` half-spectrum APIs.  Phase 4b.
+//! - ~Matrix-ir lowering~ — Phase 4c (this release) adds
+//!   [`build_bluestein_graph`] and [`bluestein_via_runtime`] so
+//!   the whole convolution lifts onto the matrix execution
+//!   layer.  The scalar `bluestein_scalar` stays as the oracle.
+//! - `rfft` / `irfft` half-spectrum APIs.  Phase 4b (already
+//!   shipped in 0.6.0).
 //! - Real-input optimisation.  Bluestein on a real signal still
 //!   does the full complex convolution; the half-spectrum win
 //!   comes from `rfft`.
 
+use crate::radix2::add_radix2_fft_to_builder;
 use crate::{fft_scalar, ifft_scalar, Direction, FftError};
+use matrix_ir::{DType, Graph, GraphBuilder, Shape, Tensor, TensorId};
 
 /// Forward / inverse FFT via Bluestein's algorithm.  Accepts any
 /// `N ≥ 1`, including non-power-of-two lengths.  Operates on
@@ -279,6 +281,278 @@ fn build_chirp(n: usize, sign: f32) -> Vec<f32> {
         let (im, re) = theta.sin_cos();
         out.push(re);
         out.push(im);
+    }
+    out
+}
+
+/// **DSP01 Phase 4c.**  Build a `matrix_ir::Graph` that computes
+/// the Bluestein FFT of a length-`N` signal (interleaved
+/// `[re, im]` complex, length `2N` `f32`).  The signal is
+/// embedded as a `Const` — no runtime inputs are declared — and
+/// the returned `TensorId` identifies the output buffer to
+/// download.
+///
+/// This is the matrix-ir analogue of [`bluestein_scalar`].  The
+/// chirp Consts and the bilateral `b'` Const are precomputed in
+/// Rust at graph-build time; the three length-`M` FFTs run as
+/// composed radix-2 subgraphs (via
+/// [`crate::radix2::add_radix2_fft_to_builder`]).  When
+/// `matrix-metal` / `matrix-cuda` claim Slice + Concat in their
+/// `supported_ops` bitsets, the whole graph lifts onto the GPU
+/// — exactly what Phase 4c was meant to unlock.
+///
+/// Output shape is `[N, 2]` interleaved complex.
+///
+/// Returns `Err` if `signal` has odd length, is empty, or
+/// represents a single complex element (`N = 1` is degenerate;
+/// callers should route it through the scalar path).
+pub fn build_bluestein_graph_with_input(
+    signal: &[f32],
+    direction: Direction,
+) -> Result<(Graph, TensorId), FftError> {
+    if signal.len() % 2 != 0 {
+        return Err(FftError::InvalidInput(format!(
+            "interleaved buffer must have even length; got {}",
+            signal.len()
+        )));
+    }
+    let n_usize = signal.len() / 2;
+    if n_usize < 2 {
+        // N = 0 or 1 are degenerate.  N = 0 has no Const to
+        // embed; N = 1 has no FFT structure to lower (M = 1
+        // would underflow `add_radix2_fft_to_builder`'s N ≥ 2
+        // contract).  Callers should handle these via the
+        // scalar path.
+        return Err(FftError::InvalidInput(format!(
+            "matrix-ir Bluestein requires N ≥ 2; got N = {}",
+            n_usize
+        )));
+    }
+    let n = n_usize as u32;
+
+    // ── Step 0: pick the convolution length M = next_pow2(2N - 1).
+    let conv_len = 2 * n_usize - 1;
+    let m_usize = conv_len.next_power_of_two();
+    let m = m_usize as u32;
+
+    // ── Precompute chirp + bilateral-chirp values in Rust.
+    let sign: f32 = match direction {
+        Direction::Forward => -1.0,
+        Direction::Inverse => 1.0,
+    };
+    let chirp = build_chirp(n_usize, sign);
+    //   `b_full[k]` = conj(chirp[k]) for k ∈ 0..N,
+    //   `b_full[M-k]` = conj(chirp[k]) for k ∈ 1..N,
+    //   zeros otherwise (the linear-convolution zero pad).
+    let mut b_full = vec![0.0f32; 2 * m_usize];
+    for k in 0..n_usize {
+        b_full[2 * k]     =  chirp[2 * k];
+        b_full[2 * k + 1] = -chirp[2 * k + 1];
+    }
+    for k in 1..n_usize {
+        let idx = m_usize - k;
+        b_full[2 * idx]     =  chirp[2 * k];
+        b_full[2 * idx + 1] = -chirp[2 * k + 1];
+    }
+
+    // Pack chirp / b_full into little-endian byte buffers for Consts.
+    let chirp_bytes = floats_to_le_bytes(&chirp);
+    let b_full_bytes = floats_to_le_bytes(&b_full);
+
+    let mut bb = GraphBuilder::new();
+
+    // ── Step 1: embed the signal as a `Const` shaped `[N, 2]`.
+    //   The input arrives interleaved, so this is a direct
+    //   reinterpret — no Concat/Reshape needed unlike the radix-2
+    //   real-only path.
+    let signal_bytes = floats_to_le_bytes(signal);
+    let signal_const = bb.constant(DType::F32, Shape::from(&[n, 2]), signal_bytes);
+    let chirp_const = bb.constant(DType::F32, Shape::from(&[n, 2]), chirp_bytes);
+    let b_full_const = bb.constant(DType::F32, Shape::from(&[m, 2]), b_full_bytes);
+
+    // ── Step 2: a = signal · chirp  (elementwise complex multiply).
+    let a_n2 = complex_multiply_n2(&mut bb, &signal_const, &chirp_const, n);
+
+    // ── Step 3: pad a from [N, 2] to [M, 2] with zeros.
+    let zeros_pad = bb.constant(
+        DType::F32,
+        Shape::from(&[m - n, 2]),
+        vec![0u8; (m - n) as usize * 8],
+    );
+    let a_padded = bb.concat(&[&a_n2, &zeros_pad], 0);
+
+    // ── Step 4: A = FFT(a_padded).
+    let cap_a = add_radix2_fft_to_builder(&mut bb, a_padded, m, Direction::Forward)?;
+
+    // ── Step 5: B = FFT(b_full_const).
+    let cap_b =
+        add_radix2_fft_to_builder(&mut bb, b_full_const, m, Direction::Forward)?;
+
+    // ── Step 6: C = A · B  (elementwise complex multiply on [M, 2]).
+    let cap_c = complex_multiply_n2(&mut bb, &cap_a, &cap_b, m);
+
+    // ── Step 7: c = IFFT(C).  The radix-2 inverse divides by M.
+    let c_m = add_radix2_fft_to_builder(&mut bb, cap_c, m, Direction::Inverse)?;
+
+    // ── Step 8: take the first N samples of c.
+    let c_n = bb.slice(&c_m, 0, 0, n, 1);
+
+    // ── Step 9: x = c_n · chirp  (post-chirp; reuses the same Const).
+    let mut x_n2 = complex_multiply_n2(&mut bb, &c_n, &chirp_const, n);
+
+    // ── Step 10 (inverse direction only): scale by 1/N.
+    //   The intermediate IFFT already divided by M, so this gives
+    //   the final backward-normalised inverse.
+    if direction == Direction::Inverse {
+        let inv_n = 1.0_f32 / (n as f32);
+        let scale = bb.constant(
+            DType::F32,
+            Shape::from(&[1, 1]),
+            inv_n.to_le_bytes().to_vec(),
+        );
+        let scale_b = bb.broadcast(&scale, Shape::from(&[n, 2]));
+        x_n2 = bb.mul(&x_n2, &scale_b);
+    }
+
+    let out_id = x_n2.id;
+    bb.output(&x_n2);
+    let graph = bb
+        .build()
+        .map_err(|e| FftError::InvalidInput(format!("graph build/validate: {:?}", e)))?;
+    Ok((graph, out_id))
+}
+
+/// **DSP01 Phase 4c.**  End-to-end execution of the matrix-ir
+/// lowered Bluestein FFT.  Builds the graph via
+/// [`build_bluestein_graph_with_input`], plans it through
+/// `matrix-runtime`, dispatches on a fresh `matrix-cpu`
+/// executor, downloads the spectrum, and returns it as an
+/// interleaved `[re, im, …, re, im]` `Vec<f32>` of length `2N`.
+///
+/// Same output convention and `direction` semantics as
+/// [`bluestein_scalar`].  This is the canonical "Bluestein
+/// actually runs on the matrix execution layer" entry point;
+/// once Metal / CUDA claim Slice + Concat the call lifts to GPU
+/// with no `dsp-fft` change.
+pub fn bluestein_via_runtime(
+    signal: &[f32],
+    direction: Direction,
+) -> Result<Vec<f32>, FftError> {
+    use compute_ir::ComputeGraph;
+    use executor_protocol::{ExecutorRequest, ExecutorResponse};
+    use matrix_cpu::CpuExecutor;
+    use matrix_runtime::Runtime;
+
+    let (graph, output_id) = build_bluestein_graph_with_input(signal, direction)?;
+    let n = signal.len() / 2;
+    let output_byte_count = n * 2 * 4;
+
+    let runtime = Runtime::new(matrix_cpu::profile());
+    let placed: ComputeGraph = runtime
+        .plan(&graph)
+        .map_err(|e| FftError::InvalidInput(format!("plan: {:?}", e)))?;
+
+    // Find the output residency the same way `fft_via_runtime` does.
+    let output_residency = placed
+        .outputs
+        .iter()
+        .find(|t| t.id == output_id)
+        .map(|t| t.residency)
+        .or_else(|| placed.tensors.get(output_id.0 as usize).map(|t| t.residency))
+        .ok_or_else(|| {
+            FftError::InvalidInput(format!(
+                "output tensor {} not in placed graph",
+                output_id.0
+            ))
+        })?;
+
+    let executor = CpuExecutor::new();
+
+    match executor.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: placed,
+    }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        ExecutorResponse::Error { code, message, .. } => {
+            return Err(FftError::InvalidInput(format!(
+                "dispatch error 0x{:04X}: {}",
+                code.0, message
+            )));
+        }
+        other => {
+            return Err(FftError::InvalidInput(format!(
+                "unexpected response to Dispatch: {:?}",
+                other
+            )));
+        }
+    }
+
+    let download = executor.handle(ExecutorRequest::DownloadBuffer {
+        buffer: output_residency.buffer,
+        offset: 0,
+        len: output_byte_count as u64,
+    });
+    let bytes = match download {
+        ExecutorResponse::BufferData { data, .. } => data,
+        ExecutorResponse::Error { code, message, .. } => {
+            return Err(FftError::InvalidInput(format!(
+                "download error 0x{:04X}: {}",
+                code.0, message
+            )));
+        }
+        other => {
+            return Err(FftError::InvalidInput(format!(
+                "unexpected response to DownloadBuffer: {:?}",
+                other
+            )));
+        }
+    };
+
+    let mut out: Vec<f32> = Vec::with_capacity(bytes.len() / 4);
+    for chunk in bytes.chunks_exact(4) {
+        let arr: [u8; 4] = chunk.try_into().unwrap();
+        out.push(f32::from_le_bytes(arr));
+    }
+    Ok(out)
+}
+
+/// Helper: elementwise complex multiply on two `[N, 2]` tensors.
+/// `(ar + i ai)(br + i bi) = (ar br - ai bi) + i (ar bi + ai br)`.
+/// Returns a `[N, 2]` tensor.
+///
+/// The `_n` parameter (number of rows) is currently unused inside
+/// the body — matrix-ir's Mul / Slice / Concat infer the shape
+/// from the operand metadata — but it's kept in the signature to
+/// document the caller's contract and to keep the call site
+/// self-explanatory at the use point.
+fn complex_multiply_n2(
+    b: &mut GraphBuilder,
+    lhs: &Tensor,
+    rhs: &Tensor,
+    _n: u32,
+) -> Tensor {
+    let lhs_re = b.slice(lhs, 1, 0, 1, 1);
+    let lhs_im = b.slice(lhs, 1, 1, 2, 1);
+    let rhs_re = b.slice(rhs, 1, 0, 1, 1);
+    let rhs_im = b.slice(rhs, 1, 1, 2, 1);
+
+    let ac = b.mul(&lhs_re, &rhs_re);
+    let bd = b.mul(&lhs_im, &rhs_im);
+    let ad = b.mul(&lhs_re, &rhs_im);
+    let bc = b.mul(&lhs_im, &rhs_re);
+
+    let out_re = b.sub(&ac, &bd);
+    let out_im = b.add(&ad, &bc);
+    b.concat(&[&out_re, &out_im], 1)
+}
+
+/// Helper: pack a slice of `f32`s into little-endian bytes for a
+/// `Const` tensor.  Used by `build_bluestein_graph_with_input`
+/// to construct chirp / signal Consts.
+fn floats_to_le_bytes(floats: &[f32]) -> Vec<u8> {
+    let mut out = Vec::with_capacity(floats.len() * 4);
+    for &x in floats {
+        out.extend_from_slice(&x.to_le_bytes());
     }
     out
 }
@@ -521,6 +795,112 @@ mod tests {
             );
         }
     }
+
+    // ── Phase 4c: matrix-ir-lowered Bluestein ──────────────────
+
+    #[test]
+    fn matrix_ir_bluestein_rejects_n1() {
+        // N = 1 is degenerate; the matrix-ir builder requires N ≥ 2.
+        let signal = vec![3.5f32, -1.25];
+        let err =
+            build_bluestein_graph_with_input(&signal, Direction::Forward).unwrap_err();
+        assert!(matches!(err, FftError::InvalidInput(_)));
+    }
+
+    #[test]
+    fn matrix_ir_bluestein_rejects_odd_buffer() {
+        let err = build_bluestein_graph_with_input(&[1.0, 2.0, 3.0], Direction::Forward)
+            .unwrap_err();
+        assert!(matches!(err, FftError::InvalidInput(_)));
+    }
+
+    #[test]
+    fn graph_validates_for_small_non_pow2_sizes() {
+        // The graph builder should produce a well-formed graph
+        // for the canonical "non-pow2" sizes our scalar tests
+        // cover.
+        for &n in &[2usize, 3, 5, 6, 7, 8, 12] {
+            let signal: Vec<f32> = (0..n).flat_map(|i| [(i as f32) * 0.5, 0.0]).collect();
+            for &dir in &[Direction::Forward, Direction::Inverse] {
+                let (graph, _id) =
+                    build_bluestein_graph_with_input(&signal, dir).unwrap_or_else(
+                        |e| panic!("graph build failed for N={}, dir={:?}: {:?}", n, dir, e),
+                    );
+                // `build` already validates internally, so reaching
+                // here means the graph passed validate().  The
+                // assertion is implicit; we also check the output
+                // shape is the expected [N, 2].
+                let out_id = *graph
+                    .outputs
+                    .first()
+                    .expect("graph has at least one output");
+                let out_tensor = &graph.tensors[out_id.0 as usize];
+                assert_eq!(
+                    out_tensor.shape.dims,
+                    vec![n as u32, 2],
+                    "wrong output shape for N={}, dir={:?}",
+                    n,
+                    dir
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn bluestein_via_runtime_matches_scalar_n3_forward() {
+        let signal = vec![1.0f32, 0.0, 2.0, 0.0, 3.0, 0.0];
+        let via_runtime = bluestein_via_runtime(&signal, Direction::Forward).unwrap();
+        let via_scalar = bluestein_scalar(&signal, Direction::Forward).unwrap();
+        assert_close(&via_runtime, &via_scalar, 1e-4);
+    }
+
+    #[test]
+    fn bluestein_via_runtime_matches_scalar_n5_forward() {
+        let signal: Vec<f32> = (0..5)
+            .flat_map(|i| [(i as f32) - 2.0, (i as f32) * 0.5])
+            .collect();
+        let via_runtime = bluestein_via_runtime(&signal, Direction::Forward).unwrap();
+        let via_scalar = bluestein_scalar(&signal, Direction::Forward).unwrap();
+        assert_close(&via_runtime, &via_scalar, 1e-4);
+    }
+
+    #[test]
+    fn bluestein_via_runtime_matches_scalar_n7_forward() {
+        // N = 7 prime — Bluestein's whole reason to exist.
+        let signal: Vec<f32> = (0..7)
+            .flat_map(|i| [(i as f32).sin(), ((i as f32) * 0.3).cos()])
+            .collect();
+        let via_runtime = bluestein_via_runtime(&signal, Direction::Forward).unwrap();
+        let via_scalar = bluestein_scalar(&signal, Direction::Forward).unwrap();
+        assert_close(&via_runtime, &via_scalar, 1e-4);
+    }
+
+    #[test]
+    fn bluestein_via_runtime_matches_scalar_n6_inverse() {
+        // Inverse direction exercises the chirp-sign flip and the
+        // outer 1/N scaling in the matrix-ir graph.
+        let signal: Vec<f32> = (0..6)
+            .flat_map(|i| [((i as f32) * 0.4).cos(), 0.0f32])
+            .collect();
+        let via_runtime = bluestein_via_runtime(&signal, Direction::Inverse).unwrap();
+        let via_scalar = bluestein_scalar(&signal, Direction::Inverse).unwrap();
+        assert_close(&via_runtime, &via_scalar, 1e-4);
+    }
+
+    #[test]
+    fn bluestein_via_runtime_round_trip_n5() {
+        // Round-trip: forward then inverse through the runtime,
+        // and expect to recover the input.  Tests both directions
+        // of the matrix-ir graph in sequence.
+        let original: Vec<f32> = (0..5)
+            .flat_map(|i| [(i as f32), (i as f32) * 0.5])
+            .collect();
+        let spectrum = bluestein_via_runtime(&original, Direction::Forward).unwrap();
+        let recovered = bluestein_via_runtime(&spectrum, Direction::Inverse).unwrap();
+        assert_close(&original, &recovered, 1e-4);
+    }
+
+    // ── original closed-form tests (Phase 4a) continue below ──
 
     #[test]
     fn forward_dc_n7_is_single_bin() {

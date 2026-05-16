@@ -21,12 +21,14 @@
 //! - **Phase 4a** — scalar Bluestein ([`bluestein_scalar`])
 //!   handles arbitrary (non-power-of-two) lengths.  The public
 //!   [`fft`] / [`ifft`] now accept any `N ≥ 1`.
-//! - **Phase 4b (this release)** — [`rfft`] / [`irfft`]
-//!   half-spectrum API for real inputs.  Returns only the first
-//!   `⌊N / 2⌋ + 1` complex bins (the rest are determined by
-//!   conjugate symmetry).  Works for any `N ≥ 1`.
-//! - **Phase 4c** — Matrix-ir-lowered Bluestein so non-pow2
-//!   FFTs also lift onto the matrix execution layer.
+//! - **Phase 4b** — [`rfft`] / [`irfft`] half-spectrum API for
+//!   real inputs (returns `⌊N / 2⌋ + 1` complex bins via
+//!   conjugate symmetry).
+//! - **Phase 4c (this release)** — matrix-ir-lowered Bluestein
+//!   ([`build_bluestein_graph_with_input`] /
+//!   [`bluestein_via_runtime`]).  Non-pow2 FFTs now lift onto
+//!   the matrix execution layer end-to-end, exactly like pow2
+//!   FFTs have since Phase 3b.iii.
 //! - **Phase 5** — MX05 specialised emitters (folded twiddles for
 //!   canonical sizes 8…1024).
 //!
@@ -58,7 +60,9 @@
 pub mod bluestein;
 pub mod radix2;
 pub mod rfft;
-pub use bluestein::bluestein_scalar;
+pub use bluestein::{
+    bluestein_scalar, bluestein_via_runtime, build_bluestein_graph_with_input,
+};
 pub use radix2::{build_fft_graph, build_fft_graph_with_input, fft_via_runtime};
 pub use rfft::{irfft, irfft_scalar, rfft, rfft_scalar};
 
