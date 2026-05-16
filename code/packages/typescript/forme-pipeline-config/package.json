@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-pipeline-config",
-  "version": "0.1.0",
-  "description": "Forme orchestrator: PipelineConfig types, validator, and TS-form config loader (FM03 §2).",
+  "version": "0.2.0",
+  "description": "Forme orchestrator: PipelineConfig types, validator (now with JSON Schema validation of stage configs), and TS-form config loader (FM03 §2).",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

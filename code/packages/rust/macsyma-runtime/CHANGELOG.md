@@ -1,6 +1,21 @@
 # Changelog
 
-## Unreleased
+## [0.3.0] — 2026-05-16
+
+**EllipticE (2nd kind) and EllipticPi (3rd kind) integration pipeline tests.**
+
+Added pipeline-level tests verifying that the complete and incomplete elliptic
+integrals of the second and third kind round-trip correctly through the
+macsyma-runtime dispatcher:
+
+- `recognizes_elliptic_second_kind_integrals_through_runtime` — incomplete
+  EllipticE: `∫ √(1−k²sin²θ) dθ` → `EllipticE(θ, k)`
+- `recognizes_complete_elliptic_second_kind_integrals_through_runtime` —
+  complete EllipticE: `∫₀^(π/2) √(1−k²sin²θ) dθ` → `EllipticE(k)`
+- `recognizes_complete_elliptic_third_kind_integrals_through_runtime` —
+  complete EllipticPi: `∫₀^(π/2) 1/((1+n·sin²θ)√(1−k²sin²θ)) dθ` → `EllipticPi(n, k)`
+- `elliptic_first_kind_regression_still_works` — regression guard confirming
+  EllipticK recognition is unaffected
 
 ## [0.2.0] — 2026-05-14
 

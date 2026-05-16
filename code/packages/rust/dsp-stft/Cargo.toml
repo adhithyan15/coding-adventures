@@ -1,0 +1,13 @@
+[package]
+name = "dsp-stft"
+version = "0.1.0"
+edition = "2021"
+description = "DSP05 Phase 1+2: scalar reference Short-Time Fourier Transform (STFT) for the DSP layer. Sliding-window FFT for time-frequency analysis. Output is row-major [num_frames, n_fft/2+1, 2] interleaved complex. Strict-mode framing (no centred padding) in V1. Reuses dsp-fft for the per-frame FFT and dsp-filters::WindowType for the analysis window."
+license = "MIT"
+
+[dependencies]
+dsp-fft     = { path = "../dsp-fft" }
+dsp-filters = { path = "../dsp-filters" }
+dsp-complex = { path = "../dsp-complex" }
+
+[dev-dependencies]

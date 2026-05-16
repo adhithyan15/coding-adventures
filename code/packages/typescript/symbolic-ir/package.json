@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/symbolic-ir",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pure TypeScript symbolic expression IR for CAS frontends and backends",
   "type": "module",
   "main": "src/index.ts",

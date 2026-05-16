@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/cas-ode",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pure TypeScript symbolic ODE solver over symbolic IR",
   "type": "module",
   "main": "src/index.ts",

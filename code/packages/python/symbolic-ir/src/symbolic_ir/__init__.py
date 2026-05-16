@@ -121,6 +121,14 @@ from symbolic_ir.nodes import (
     UNIT_STEP,
     WHILE,
     D,
+    BESSEL_J,
+    BESSEL_Y,
+    CHEBYSHEV_T,
+    CHEBYSHEV_U,
+    HERMITE_H,
+    HERMITE_H2,
+    LEGENDRE_P,
+    LEGENDRE_Q,
     IRApply,
     IRFloat,
     IRInteger,
@@ -241,4 +249,13 @@ __all__ = [
     # Transcendental solving (Phase 26)
     "FREE_INTEGER",
     "LAMBERT_W",
+    # Named ODE solution functions (Phase 27)
+    "LEGENDRE_P",
+    "LEGENDRE_Q",
+    "BESSEL_J",
+    "BESSEL_Y",
+    "HERMITE_H",
+    "HERMITE_H2",
+    "CHEBYSHEV_T",
+    "CHEBYSHEV_U",
 ]

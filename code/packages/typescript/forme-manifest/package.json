@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/forme-manifest",
+  "version": "0.1.0",
+  "description": "Forme plugin manifest: plugin.toml parser, validator, canonical encoder, BLAKE2b hash, Ed25519 sign/verify, $variable templating (FM02 §3, §14.1).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-capability": "file:../forme-capability",
+    "@coding-adventures/blake2b": "file:../blake2b",
+    "@coding-adventures/ed25519": "file:../ed25519"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

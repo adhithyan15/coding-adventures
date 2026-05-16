@@ -1,0 +1,9 @@
+[package]
+name = "array-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust dynamic-array helpers — Excel 365 array functions for any spreadsheet frontend."
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }

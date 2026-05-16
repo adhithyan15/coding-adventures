@@ -69,5 +69,11 @@ export function slugify(sourcePath: string): string {
  * formatRoute("/blog/{slug}.html", "hello") === "/blog/hello.html";
  */
 export function formatRoute(template: string, slug: string): string {
-  return template.replace(/\{slug\}/g, slug);
+  // Function replacement (not string replacement): `String.prototype.
+  // replace` honours `$&`, `$1`, `$<name>`, etc. in a string second
+  // argument.  A user-supplied frontmatter slug containing those
+  // sequences would inject regex back-references into the route.
+  // The function form is immune — `slug` is used verbatim regardless
+  // of `$` content.
+  return template.replace(/\{slug\}/g, () => slug);
 }

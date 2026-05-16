@@ -51,6 +51,10 @@ export async function runOnce(
     cancellation,
     bestEffort,
     logger,
+    // Honour the pipeline's reproducible-build setting (FM03 §8).
+    // The scheduler swaps systemClock for frozenClock at every
+    // StageContext construction site when this is true.
+    reproducibleBuild: pipeline.config.settings.reproducibleBuild,
   });
 
   // Map sink-keyed outputs to OutputSpec names when present.

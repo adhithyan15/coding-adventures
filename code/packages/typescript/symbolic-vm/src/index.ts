@@ -1107,6 +1107,14 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
       const ia = integrateIndefinite(a, x);
       return ia === undefined ? undefined : app(MUL, [b, ia]);
     }
+    // Phase 26: Q(x) · log(x)^n for integer n ≥ 2
+    const lp26 =
+      tryLogPowerProduct(a, b, x) ?? tryLogPowerProduct(b, a, x);
+    if (lp26 !== undefined) return lp26;
+    // Phase 27: Q(x) · sin(log(x)) or Q(x) · cos(log(x))
+    const tl27 =
+      tryTrigLogProduct(a, b, x) ?? tryTrigLogProduct(b, a, x);
+    if (tl27 !== undefined) return tl27;
     return undefined;
   }
   if (equals(f.head, DIV)) {
@@ -1129,6 +1137,18 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     if (!dependsOn(base, x) && equals(exponent, x)) {
       return app(DIV, [f, app(LOG, [base])]);
     }
+    // Phase 26: ∫ log(x)^n dx for integer n ≥ 2 (standalone, no poly factor).
+    if (
+      base.kind === "apply" &&
+      equals(base.head, LOG) &&
+      base.args.length === 1 &&
+      equals(base.args[0], x)
+    ) {
+      const n26 = exactRational(exponent);
+      if (n26 !== undefined && n26.denom === 1n && n26.numer >= 2n) {
+        return polyLogPowerTerm(0, Number(n26.numer), x);
+      }
+    }
     return undefined;
   }
 
@@ -1141,6 +1161,18 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     if (equals(f.head, SQRT)) {
       return app(MUL, [rational(2, 3), app(POW, [x, rational(3, 2)])]);
     }
+  }
+
+  // Phase 27: ∫ sin(log(x)) dx and ∫ cos(log(x)) dx (k=0 single-factor form).
+  if (
+    inner !== undefined &&
+    inner.kind === "apply" &&
+    equals(inner.head, LOG) &&
+    inner.args.length === 1 &&
+    equals(inner.args[0], x)
+  ) {
+    if (equals(f.head, SIN)) return trigLogIntegral(SIN, 0, x);
+    if (equals(f.head, COS)) return trigLogIntegral(COS, 0, x);
   }
 
   return undefined;
@@ -1357,6 +1389,274 @@ function completeEllipticThirdKind(f: IRNode, x: IRNode, lower: IRNode, upper: I
   if (!isZero(lower) || !isPiOverTwo(upper)) return undefined;
   const params = ellipticThirdKindParams(f, x);
   return params === undefined ? undefined : app(sym("EllipticPi"), [params.n, params.k]);
+}
+
+// ---------------------------------------------------------------------------
+// Phase 26 — log-power integration via IBP reduction
+// ---------------------------------------------------------------------------
+
+/**
+ * Build the polynomial coefficient map for ``expr`` as a polynomial in ``x``.
+ *
+ * Returns a ``Map<degree, coefficient>`` where coefficients are unevaluated
+ * ``IRNode`` constant expressions, or ``undefined`` if ``expr`` is not a
+ * polynomial in ``x``.  Handles:
+ *
+ * - constants free of x (degree 0)
+ * - x itself (degree 1)
+ * - x^k for non-negative integer k
+ * - c·f and f·c where c is free of x — scalar-multiply the inner poly
+ * - ADD and SUB of two polynomials — merge coefficient maps
+ * - NEG of a polynomial — negate all coefficients
+ */
+function toPolynomialCoeffs(
+  expr: IRNode,
+  x: IRNode,
+): Map<number, IRNode> | undefined {
+  if (!dependsOn(expr, x)) {
+    return new Map([[0, expr]]);
+  }
+  if (equals(expr, x)) {
+    return new Map([[1, int(1)]]);
+  }
+  if (expr.kind !== "apply") return undefined;
+
+  if (equals(expr.head, POW)) {
+    const [base, exponent] = binaryArgs(expr);
+    if (equals(base, x)) {
+      const n = exactRational(exponent);
+      if (n !== undefined && n.denom === 1n && n.numer >= 0n) {
+        return new Map([[Number(n.numer), int(1)]]);
+      }
+    }
+    return undefined;
+  }
+
+  if (equals(expr.head, MUL)) {
+    const [a, b] = binaryArgs(expr);
+    if (!dependsOn(a, x)) {
+      const polyB = toPolynomialCoeffs(b, x);
+      if (polyB === undefined) return undefined;
+      const result = new Map<number, IRNode>();
+      for (const [k, v] of polyB) {
+        result.set(k, isOne(a) ? v : app(MUL, [a, v]));
+      }
+      return result;
+    }
+    if (!dependsOn(b, x)) {
+      const polyA = toPolynomialCoeffs(a, x);
+      if (polyA === undefined) return undefined;
+      const result = new Map<number, IRNode>();
+      for (const [k, v] of polyA) {
+        result.set(k, isOne(b) ? v : app(MUL, [b, v]));
+      }
+      return result;
+    }
+    return undefined;
+  }
+
+  if (equals(expr.head, ADD)) {
+    const [a, b] = binaryArgs(expr);
+    const polyA = toPolynomialCoeffs(a, x);
+    const polyB = toPolynomialCoeffs(b, x);
+    if (polyA === undefined || polyB === undefined) return undefined;
+    const result = new Map<number, IRNode>(polyA);
+    for (const [k, v] of polyB) {
+      const existing = result.get(k);
+      result.set(k, existing !== undefined ? app(ADD, [existing, v]) : v);
+    }
+    return result;
+  }
+
+  if (equals(expr.head, SUB)) {
+    const [a, b] = binaryArgs(expr);
+    const polyA = toPolynomialCoeffs(a, x);
+    const polyB = toPolynomialCoeffs(b, x);
+    if (polyA === undefined || polyB === undefined) return undefined;
+    const result = new Map<number, IRNode>(polyA);
+    for (const [k, v] of polyB) {
+      const existing = result.get(k);
+      result.set(k, existing !== undefined ? app(SUB, [existing, v]) : app(NEG, [v]));
+    }
+    return result;
+  }
+
+  if (equals(expr.head, NEG)) {
+    const [inner] = unaryArgs(expr);
+    const polyInner = toPolynomialCoeffs(inner, x);
+    if (polyInner === undefined) return undefined;
+    const result = new Map<number, IRNode>();
+    for (const [k, v] of polyInner) {
+      result.set(k, app(NEG, [v]));
+    }
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Phase 26: closed form of ``∫ x^k · log(x)^n dx`` for any k ≥ 0, n ≥ 1.
+ *
+ * Reduction formula (IBP with u = log(x)^n, dv = x^k dx):
+ *
+ *     ∫ x^k · log(x)^n dx  =  x^(k+1)/(k+1) · log(x)^n
+ *                              − n/(k+1) · ∫ x^k · log(x)^(n-1) dx
+ *
+ * Iterating from the base case G_{k,0}(x) = x^(k+1)/(k+1):
+ *
+ *     G_{k,0}(x) = x^(k+1)/(k+1)
+ *     G_{k,m}(x) = x^(k+1)/(k+1) · log(x)^m  −  m/(k+1) · G_{k,m-1}(x)
+ *
+ * For k = 0, G_{0,0}(x) = x and the first factor simplifies accordingly.
+ */
+function polyLogPowerTerm(k: number, n: number, x: IRNode): IRNode {
+  const kp1 = k + 1;
+  const kp1Frac: Numeric = makeRat(1n, BigInt(kp1));
+
+  // Base: G_{k,0} = x (when k=0) or x^(k+1)/(k+1) (otherwise).
+  let acc: IRNode =
+    kp1 === 1
+      ? x
+      : app(MUL, [fromNumeric(kp1Frac), app(POW, [x, int(kp1)])]);
+
+  const logNode = app(LOG, [x]);
+  for (let m = 1; m <= n; m++) {
+    const logPow: IRNode = m === 1 ? logNode : app(POW, [logNode, int(m)]);
+    // first = x^(k+1)/(k+1) · log(x)^m
+    const first: IRNode =
+      kp1 === 1
+        ? app(MUL, [x, logPow])
+        : app(MUL, [
+            fromNumeric(kp1Frac),
+            app(MUL, [app(POW, [x, int(kp1)]), logPow]),
+          ]);
+    const nCoef = fromNumeric(makeRat(BigInt(m), BigInt(kp1))); // m/(k+1)
+    acc = app(SUB, [first, app(MUL, [nCoef, acc])]);
+  }
+  return acc;
+}
+
+/**
+ * Phase 26: ``∫ Q(x) · log(x)^n dx`` via term-by-term IBP, for integer n ≥ 2.
+ *
+ * ``transcendental`` must be ``Pow(Log(x), n)`` with integer n ≥ 2.
+ * (n = 1 is covered by the existing Phase 3 log-product handler.)
+ * ``polyCandidate`` must be a polynomial in x over Q.
+ *
+ * Applies linearity: Σᵢ cᵢ · ∫ xⁱ · log(x)^n dx, each term via
+ * ``polyLogPowerTerm``.
+ */
+function tryLogPowerProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, POW) || transcendental.args.length !== 2)
+    return undefined;
+  const [logNode, expNode] = binaryArgs(transcendental);
+  if (logNode.kind !== "apply" || !equals(logNode.head, LOG)) return undefined;
+  if (logNode.args.length !== 1 || !equals(logNode.args[0], x)) return undefined;
+  const expVal = exactRational(expNode);
+  if (expVal === undefined || expVal.denom !== 1n || expVal.numer < 2n)
+    return undefined;
+  const n = Number(expVal.numer);
+
+  const poly = toPolynomialCoeffs(polyCandidate, x);
+  if (poly === undefined || poly.size === 0) return undefined;
+
+  const pieces: IRNode[] = [];
+  for (const [k, coef] of poly) {
+    if (isZero(coef)) continue;
+    const term = polyLogPowerTerm(k, n, x);
+    pieces.push(isOne(coef) ? term : app(MUL, [coef, term]));
+  }
+  if (pieces.length === 0) return int(0);
+  return pieces.reduce((acc, p) => app(ADD, [acc, p]));
+}
+
+// ---------------------------------------------------------------------------
+// Phase 27 — trig(log(x)) integration via u = log(x) substitution
+// ---------------------------------------------------------------------------
+//
+// The substitution u = log(x) (so x = eᵘ, dx = eᵘ du) converts:
+//
+//   ∫ xᵏ sin(log x) dx = ∫ e^((k+1)u) sin(u) du
+//
+// The standard exp×trig formula gives:
+//   ∫ e^(αu) sin(u) du = e^(αu) (α sin(u) − cos(u)) / (α² + 1)
+//
+// Setting α = k+1 and back-substituting u = log(x):
+//
+//   ∫ xᵏ sin(log x) dx = x^(k+1) · ((k+1)sin(log x) − cos(log x)) / ((k+1)² + 1)
+//   ∫ xᵏ cos(log x) dx = x^(k+1) · ((k+1)cos(log x) + sin(log x)) / ((k+1)² + 1)
+//
+// The k=0 forms are:
+//   ∫ sin(log x) dx = x/2 · (sin(log x) − cos(log x))
+//   ∫ cos(log x) dx = x/2 · (sin(log x) + cos(log x))
+
+/**
+ * Phase 27: closed form of ``∫ x^k · trig(log(x)) dx``.
+ *
+ * ``trigHead`` is the symbol node for ``SIN`` or ``COS``; ``k`` is the
+ * integer power of x (k=0 means the integrand is just trig(log(x))).
+ *
+ *   ∫ xᵏ sin(log x) dx = x^(k+1) · ((k+1)·sin(log x) − cos(log x)) / ((k+1)² + 1)
+ *   ∫ xᵏ cos(log x) dx = x^(k+1) · ((k+1)·cos(log x) + sin(log x)) / ((k+1)² + 1)
+ */
+function trigLogIntegral(trigHead: IRNode, k: number, x: IRNode): IRNode {
+  const kp1 = k + 1;
+  const denom = kp1 * kp1 + 1;
+  const logX = app(LOG, [x]);
+  const sinLogX = app(SIN, [logX]);
+  const cosLogX = app(COS, [logX]);
+  const xPow: IRNode = kp1 === 1 ? x : app(POW, [x, int(kp1)]);
+  const kp1Ir = int(kp1);
+  const denomIr = int(denom);
+  const numerator: IRNode = equals(trigHead, SIN)
+    ? app(SUB, [app(MUL, [kp1Ir, sinLogX]), cosLogX])
+    : app(ADD, [app(MUL, [kp1Ir, cosLogX]), sinLogX]);
+  return app(DIV, [app(MUL, [xPow, numerator]), denomIr]);
+}
+
+/**
+ * Phase 27: ``∫ Q(x) · sin(log(x)) dx`` or ``∫ Q(x) · cos(log(x)) dx``.
+ *
+ * ``transcendental`` must be ``Sin(Log(x))`` or ``Cos(Log(x))``.
+ * ``polyCandidate`` must be a polynomial in x.
+ * Applies linearity: Σᵢ cᵢ · ∫ xⁱ · trig(log(x)) dx via ``trigLogIntegral``.
+ */
+function tryTrigLogProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, SIN) && !equals(transcendental.head, COS))
+    return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const trigArg = transcendental.args[0];
+  if (
+    trigArg.kind !== "apply" ||
+    !equals(trigArg.head, LOG) ||
+    trigArg.args.length !== 1 ||
+    !equals(trigArg.args[0], x)
+  )
+    return undefined;
+
+  const poly = toPolynomialCoeffs(polyCandidate, x);
+  if (poly === undefined || poly.size === 0) return undefined;
+
+  const trigHead = transcendental.head;
+  const pieces: IRNode[] = [];
+  for (const [k, coef] of poly) {
+    if (isZero(coef)) continue;
+    const term = trigLogIntegral(trigHead, k, x);
+    pieces.push(isOne(coef) ? term : app(MUL, [coef, term]));
+  }
+  if (pieces.length === 0) return int(0);
+  return pieces.reduce((acc, p) => app(ADD, [acc, p]));
 }
 
 function differentiate(): Handler {

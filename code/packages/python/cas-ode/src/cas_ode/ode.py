@@ -1,8 +1,8 @@
 """Symbolic ODE solver — the heart of cas-ode.
 
-This module provides pure-Python functions that recognise and solve nine
-classes of ordinary differential equations whose solutions can always be
-written in closed form:
+This module provides pure-Python functions that recognise and solve thirteen
+classes of ordinary differential equations whose solutions can be written in
+closed form or in terms of named special functions:
 
 1. **First-order linear**: ``dy/dx + P(x)·y = Q(x)``
 2. **Separable**: ``dy/dx = f(x)·g(y)`` (including the degenerate cases
@@ -31,6 +31,21 @@ written in closed form:
    discriminant case (distinct real, repeated, complex roots); the VM then
    integrates them.  Falls back gracefully (returns ``None``) when the
    integrals are not computable.
+
+10. **Legendre ODE** (Phase 21): ``(1−x²)·y'' − 2x·y' + n(n+1)·y = 0`` →
+    ``%c1·LegendreP(n,x) + %c2·LegendreQ(n,x)``  (n non-negative integer).
+11. **Bessel ODE** (Phase 21): ``x²·y'' + x·y' + (x²−ν²)·y = 0`` →
+    ``%c1·BesselJ(ν,x) + %c2·BesselY(ν,x)``  (ν rational, denominator ≤ 20).
+12. **Hermite ODE** (Phase 21): ``y'' − 2x·y' + 2n·y = 0`` →
+    ``%c1·HermiteH(n,x) + %c2·HermiteH2(n,x)``  (n non-negative integer).
+13. **Chebyshev ODE** (Phase 21): ``(1−x²)·y'' − x·y' + n²·y = 0`` →
+    ``%c1·ChebyshevT(n,x) + %c2·ChebyshevU(n,x)``  (n non-negative integer).
+
+The named-ODE solvers (10–13) use *numerical pattern matching* — the variable
+coefficients ``P(x)``, ``Q(x)``, ``R(x)`` are evaluated at a few test points
+and compared to the expected functions.  This is correct when the coefficients
+are analytic near the test points, but it means the solver may fail for
+expressions that are structurally unusual.
 
 Every public function takes IR nodes as input and returns IR nodes as
 output.  No floats are used for exact computation; rational arithmetic
@@ -83,7 +98,19 @@ Read the functions in this order:
     root case (distinct real, repeated, complex)
 24. :func:`_try_vop` — Phase 20 entry point; integrates and assembles the
     general solution ``y = y_h + y_p``
-25. :func:`solve_ode` — the top-level dispatcher
+25. :func:`_split_out_factor`      — extract K from K·target in a Mul tree (Phase 21)
+26. :func:`_collect_var2_coeffs`   — extract (P, Q, R) from variable-coeff 2nd-order ODE
+27. :func:`_eval_ir_at_x`          — numerically evaluate x-only IR at a point
+28. :func:`_coeff_matches_func`    — check if IR node ≈ expected_func(x) at test points
+29. :func:`_extract_const_val`     — get float value if IR node is x-independent
+30. :func:`_legendre_n_from_lambda`— find non-neg integer n with n(n+1) = λ
+31. :func:`_nu_from_r_minus_xsq`   — extract ν from R(x) − x² = −ν² (Bessel)
+32. :func:`_try_legendre_ode`      — Phase 21: Legendre ODE → LegendreP/Q
+33. :func:`_try_bessel_ode`        — Phase 21: Bessel ODE → BesselJ/Y
+34. :func:`_try_hermite_ode`       — Phase 21: Hermite ODE → HermiteH/H2
+35. :func:`_try_chebyshev_ode`     — Phase 21: Chebyshev ODE → ChebyshevT/U
+36. :func:`_try_var_coeff_named_ode` — dispatcher for named-ODE families
+37. :func:`solve_ode` — the top-level dispatcher
 """
 
 from __future__ import annotations
@@ -94,11 +121,19 @@ from typing import TYPE_CHECKING
 
 from symbolic_ir import (
     ADD,
+    BESSEL_J,
+    BESSEL_Y,
+    CHEBYSHEV_T,
+    CHEBYSHEV_U,
     COS,
     DIV,
     EQUAL,
     EXP,
+    HERMITE_H,
+    HERMITE_H2,
     INTEGRATE,
+    LEGENDRE_P,
+    LEGENDRE_Q,
     LOG,
     MUL,
     NEG,
@@ -864,6 +899,535 @@ def _try_euler_cauchy(
         return None
     a, b, c = coeffs
     return solve_euler_cauchy(a, b, c, y, x)
+
+
+# ---------------------------------------------------------------------------
+# Section 3b — Phase 21: Variable-coefficient 2nd-order named ODE recognition
+# ---------------------------------------------------------------------------
+#
+# This section implements pattern recognition for classic named families of
+# variable-coefficient second-order ODEs.  Each family has the form:
+#
+#     P(x)·y'' + Q(x)·y' + R(x)·y = 0
+#
+# where P, Q, R are polynomials in x.  When we recognise such an ODE as
+# belonging to a named family, we return the solution in terms of the
+# canonical named special functions for that family.
+#
+# Reading guide
+# -------------
+# 27. :func:`_split_out_factor`      — extract K from K·target in a Mul tree
+# 28. :func:`_collect_var2_coeffs`   — extract (P, Q, R) from variable-coeff 2nd-order ODE
+# 29. :func:`_eval_ir_at_x`          — numerically evaluate x-only IR at a point
+# 30. :func:`_coeff_matches_func`    — check if IR node ≈ expected_func(x) at test points
+# 31. :func:`_extract_const_val`     — get float value if IR node is x-independent
+# 32. :func:`_legendre_n_from_lambda`— find non-neg integer n with n(n+1) = λ
+# 33. :func:`_nu_from_r_minus_xsq`   — extract ν from R(x) - x² = -ν² (Bessel)
+# 34. :func:`_try_legendre_ode`      — recognise Legendre ODE → LegendreP/Q
+# 35. :func:`_try_bessel_ode`        — recognise Bessel ODE → BesselJ/Y
+# 36. :func:`_try_hermite_ode`       — recognise Hermite ODE → HermiteH/H2
+# 37. :func:`_try_chebyshev_ode`     — recognise Chebyshev ODE → ChebyshevT/U
+# 38. :func:`_try_var_coeff_named_ode` — dispatcher for all named-ODE families
+
+
+def _split_out_factor(term: IRNode, target: IRNode) -> IRNode | None:
+    """Return the coefficient K such that ``term = K * target``, or ``None``.
+
+    Handles nested ``Mul`` trees, ``Neg`` wrappers, and the degenerate
+    case ``term == target`` (coefficient = 1).
+
+    Examples::
+
+        _split_out_factor(Mul(Sub(1, Pow(x,2)), y''), y'')
+            → Sub(1, Pow(x,2))           # (1-x²)·y'' → coeff = (1-x²)
+
+        _split_out_factor(Mul(x, y'), y')
+            → x                          # x·y' → coeff = x
+
+        _split_out_factor(Neg(Mul(2, Mul(x, y'))), y')
+            → Neg(Mul(2, x))             # -2x·y' → coeff = -2x
+
+        _split_out_factor(y'', y')
+            → None                       # y'' ≠ y'
+    """
+    if term == target:
+        return _ONE
+    if not isinstance(term, IRApply):
+        return None
+    if term.head == NEG:
+        # Neg(inner) = -inner — try inner and negate the coefficient
+        inner_k = _split_out_factor(term.args[0], target)
+        if inner_k is not None:
+            return _neg(inner_k)
+        return None
+    if term.head == MUL:
+        a, b = term.args
+        # Directly: b is the target
+        if b == target:
+            return a
+        # Directly: a is the target
+        if a == target:
+            return b
+        # Recursively try the right sub-tree as coefficient × (something × target)
+        coeff_b = _split_out_factor(b, target)
+        if coeff_b is not None:
+            # term = a · (coeff_b · target) = (a · coeff_b) · target
+            return _mul(a, coeff_b)
+        # Recursively try the left sub-tree
+        coeff_a = _split_out_factor(a, target)
+        if coeff_a is not None:
+            # term = (coeff_a · target) · b = (coeff_a · b) · target
+            return _mul(coeff_a, b)
+    return None
+
+
+def _collect_var2_coeffs(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> tuple[IRNode, IRNode, IRNode] | None:
+    """Extract ``(P, Q, R)`` from ``P(x)·y'' + Q(x)·y' + R(x)·y = 0``.
+
+    Unlike :func:`_collect_second_order_coeffs`, the coefficients here may
+    be arbitrary IR expressions in ``x`` (polynomials, products, etc.).  They
+    must *not* contain ``y``, ``y'``, or ``y''``.
+
+    Returns ``(P, Q, R)`` IR nodes, or ``None`` if any term of ``expr`` does
+    not fit the pattern.  Note that the leading coefficient ``P`` must be
+    present (at least one term with ``y''``); ``Q`` and ``R`` default to ``0``
+    if their terms are absent.
+
+    Algorithm
+    ---------
+    1. Flatten ``expr`` into a sum of terms with :func:`_flatten_add`.
+    2. For each term, attempt to extract the coefficient of ``y''``, then
+       ``y'``, then ``y`` via :func:`_split_out_factor`.
+    3. Reject if a term contains none of ``y'', y', y`` (e.g. a free x-only
+       constant that the ODE solver cannot account for).
+    4. Aggregate each coefficient list and return their sum.
+    """
+    y_prime = IRApply(D, (y, x))
+    y_double = IRApply(D, (y_prime, x))
+
+    terms = _flatten_add(expr)
+
+    p_parts: list[IRNode] = []
+    q_parts: list[IRNode] = []
+    r_parts: list[IRNode] = []
+
+    for term in terms:
+        # Highest priority: term involves y'' (second derivative)
+        coeff_ypp = _split_out_factor(term, y_double)
+        if coeff_ypp is not None:
+            p_parts.append(coeff_ypp)
+            continue
+        # Next: term involves y' (first derivative)
+        coeff_yp = _split_out_factor(term, y_prime)
+        if coeff_yp is not None:
+            q_parts.append(coeff_yp)
+            continue
+        # Last: term involves y itself
+        coeff_y = _split_out_factor(term, y)
+        if coeff_y is not None:
+            r_parts.append(coeff_y)
+            continue
+        # Term contains no y-dependent factor — this ODE is not purely 2nd-order
+        return None
+
+    if not p_parts:
+        # No y'' term found — not a 2nd-order ODE in standard form
+        return None
+
+    def _sum_parts(parts: list[IRNode]) -> IRNode:
+        result = parts[0]
+        for p in parts[1:]:
+            result = _add(result, p)
+        return result
+
+    P_node = _sum_parts(p_parts)
+    Q_node = _sum_parts(q_parts) if q_parts else _ZERO
+    R_node = _sum_parts(r_parts) if r_parts else _ZERO
+    return (P_node, Q_node, R_node)
+
+
+# Canonical test x-values for coefficient matching.  These are chosen to
+# avoid singularities (|x| ≠ 1 for Legendre, x ≠ 0 for Bessel, etc.) while
+# probing a representative range.
+_VAR2_TEST_X: tuple[float, ...] = (0.3, 0.6, -0.25, 0.85)
+_VAR2_DUMMY_Y = IRSymbol("__var2_dummy_y__")
+
+
+def _eval_ir_at_x(node: IRNode, x: IRSymbol, xv: float) -> float | None:
+    """Numerically evaluate ``node`` at ``x = xv``, returning ``None`` on error.
+
+    Uses :func:`_eval_at_xy` with a dummy y-symbol so that x-only
+    expressions (polynomial coefficients) evaluate cleanly.
+    """
+    try:
+        return _eval_at_xy(node, x, _VAR2_DUMMY_Y, xv, 0.0)
+    except (ValueError, ZeroDivisionError, OverflowError, TypeError):
+        return None
+
+
+def _coeff_matches_func(
+    node: IRNode,
+    x: IRSymbol,
+    expected: object,  # Callable[[float], float]
+    tol: float = 1e-9,
+) -> bool:
+    """Return ``True`` iff ``node`` numerically agrees with ``expected(xv)``
+    at all of the canonical test points :data:`_VAR2_TEST_X`.
+
+    Falls through to ``False`` if numerical evaluation fails or any test
+    point differs by more than ``tol``.
+    """
+    for xv in _VAR2_TEST_X:
+        actual = _eval_ir_at_x(node, x, xv)
+        if actual is None:
+            return False
+        try:
+            want = expected(xv)  # type: ignore[operator]
+        except (ZeroDivisionError, ValueError):
+            return False
+        if abs(actual - want) > tol:
+            return False
+    return True
+
+
+def _extract_const_val(node: IRNode, x: IRSymbol) -> float | None:
+    """Return the float value of ``node`` if it is constant w.r.t. ``x``.
+
+    Returns ``None`` if ``node`` contains ``x`` or if numerical evaluation
+    fails for any reason.
+    """
+    if not _is_const_wrt(node, x):
+        return None
+    val = _eval_ir_at_x(node, x, 0.0)
+    return val
+
+
+def _legendre_n_from_lambda(lam: float) -> int | None:
+    """Return the non-negative integer ``n`` such that ``n(n+1) == lam``.
+
+    Uses the quadratic formula: ``n = (−1 + √(1 + 4λ)) / 2``.
+    Returns ``None`` if no such integer exists.
+
+    Examples::
+
+        _legendre_n_from_lambda(0)   → 0   (n=0: 0·1=0)
+        _legendre_n_from_lambda(2)   → 1   (n=1: 1·2=2)
+        _legendre_n_from_lambda(6)   → 2   (n=2: 2·3=6)
+        _legendre_n_from_lambda(12)  → 3   (n=3: 3·4=12)
+        _legendre_n_from_lambda(5)   → None
+    """
+    disc = 1.0 + 4.0 * lam
+    if disc < -1e-12:
+        return None
+    sqrt_disc = math.sqrt(max(disc, 0.0))
+    n_float = (-1.0 + sqrt_disc) / 2.0
+    n = round(n_float)
+    if n < 0:
+        return None
+    if abs(n_float - n) > 1e-7:
+        return None
+    # Verify exactly: n(n+1) should equal lam
+    if abs(n * (n + 1) - lam) > 1e-7:
+        return None
+    return n
+
+
+def _nu_from_r_minus_xsq(
+    R_node: IRNode,
+    x: IRSymbol,
+) -> tuple[int, int] | None:
+    """Extract ν as a rational ``(p, q)`` from ``R(x) = x² − ν²``.
+
+    Strategy: ``R(x) − x²`` must be constant (= −ν²).  Evaluate at a
+    non-zero test point to get ``−ν²``, then determine the positive rational
+    ν = p/q (with q ≤ 20) by trial.
+
+    Returns ``(p, q)`` such that ``ν = p/q`` in lowest terms, or ``None``
+    if ν is not a recognisable rational.
+
+    Examples::
+
+        # R(x) = x² − 4  →  ν = 2, returns (2, 1)
+        # R(x) = x² − 1/4 →  ν = 1/2, returns (1, 2)
+        # R(x) = x² − 9/4 →  ν = 3/2, returns (3, 2)
+    """
+    # R_minus_xsq_at(xv) should return -ν²  (independent of xv)
+    r_at_1 = _eval_ir_at_x(R_node, x, 1.0)
+    r_at_2 = _eval_ir_at_x(R_node, x, 2.0)
+    if r_at_1 is None or r_at_2 is None:
+        return None
+    # R(1) = 1 - ν²,  R(2) = 4 - ν²
+    # Consistency check: R(2) - R(1) should equal 3
+    if abs((r_at_2 - r_at_1) - 3.0) > 1e-8:
+        return None
+    # ν² = 1 - R(1)
+    nu_sq = 1.0 - r_at_1
+    if nu_sq < -1e-12:
+        return None
+    nu_sq = max(nu_sq, 0.0)
+    # Find rational ν = p/q with small denominator
+    from math import gcd as _gcd
+    for q in range(1, 21):
+        # (p/q)² = nu_sq  →  p² = nu_sq * q²
+        p_sq = nu_sq * q * q
+        p = round(math.sqrt(p_sq))
+        if abs(p * p - p_sq) < 1e-6 and p >= 0:
+            g = _gcd(p, q)
+            return (p // g, q // g)
+    return None
+
+
+def _build_named_solution(
+    sym1: IRSymbol,
+    sym2: IRSymbol,
+    param_ir: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode:
+    """Build ``Equal(y, %c1·sym1(param, x) + %c2·sym2(param, x))``."""
+    sol1 = _mul(C1, IRApply(sym1, (param_ir, x)))
+    sol2 = _mul(C2, IRApply(sym2, (param_ir, x)))
+    return IRApply(EQUAL, (y, _add(sol1, sol2)))
+
+
+def _try_legendre_ode(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Recognise and solve the Legendre ODE.
+
+    Standard form (all terms on the left, equal to zero):
+
+        ``(1 − x²)·y'' − 2x·y' + n(n+1)·y = 0``
+
+    Pattern checks (all numerical):
+
+    1. The y''-coefficient ``P(x)`` must equal ``1 − x²`` at four test
+       points: ``P(xv) ≈ 1 − xv²``.
+    2. The y'-coefficient ``Q(x)`` must equal ``−2x``:
+       ``Q(xv) ≈ −2·xv``.
+    3. The y-coefficient ``R`` must be constant and equal to ``n(n+1)``
+       for some non-negative integer ``n``.
+
+    On success, returns::
+
+        Equal(y, %c1·LegendreP(n, x) + %c2·LegendreQ(n, x))
+
+    The Legendre polynomial ``LegendreP(n, x)`` is the standard P_n(x)
+    (Rodrigues formula); ``LegendreQ(n, x)`` is the second solution Q_n(x)
+    (logarithmically singular at x = ±1).
+    """
+    coeffs = _collect_var2_coeffs(expr, y, x)
+    if coeffs is None:
+        return None
+    P_node, Q_node, R_node = coeffs
+
+    # Check P ≈ 1 - x²
+    if not _coeff_matches_func(P_node, x, lambda xv: 1.0 - xv * xv):
+        return None
+    # Check Q ≈ -2x
+    if not _coeff_matches_func(Q_node, x, lambda xv: -2.0 * xv):
+        return None
+    # R must be constant = n(n+1)
+    lam = _extract_const_val(R_node, x)
+    if lam is None:
+        return None
+    n = _legendre_n_from_lambda(lam)
+    if n is None:
+        return None
+
+    n_ir = IRInteger(n)
+    return _build_named_solution(LEGENDRE_P, LEGENDRE_Q, n_ir, y, x)
+
+
+def _try_bessel_ode(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Recognise and solve the Bessel ODE.
+
+    Standard form (all terms on the left, equal to zero):
+
+        ``x²·y'' + x·y' + (x² − ν²)·y = 0``
+
+    Pattern checks (numerical):
+
+    1. P(x) ≈ x²  at test points.
+    2. Q(x) ≈ x   at test points.
+    3. R(x) − x² is constant and equals −ν² for some non-negative rational ν.
+       Equivalently, R(x₁) − R(x₂) = x₁² − x₂² at any two points.
+
+    The order parameter ν is extracted as a rational p/q (denominator ≤ 20).
+
+    On success, returns::
+
+        Equal(y, %c1·BesselJ(ν, x) + %c2·BesselY(ν, x))
+
+    ``BesselJ(ν, x)`` is the Bessel function of the first kind; ``BesselY``
+    is the Bessel function (Neumann function) of the second kind.  For
+    integer n, J_n and Y_n are linearly independent.  For half-integer
+    orders (ν = n + 1/2), they reduce to spherical Bessel functions.
+    """
+    coeffs = _collect_var2_coeffs(expr, y, x)
+    if coeffs is None:
+        return None
+    P_node, Q_node, R_node = coeffs
+
+    # Check P ≈ x²
+    if not _coeff_matches_func(P_node, x, lambda xv: xv * xv):
+        return None
+    # Check Q ≈ x
+    if not _coeff_matches_func(Q_node, x, lambda xv: xv):
+        return None
+    # Extract ν from R(x) = x² - ν²
+    nu_pq = _nu_from_r_minus_xsq(R_node, x)
+    if nu_pq is None:
+        return None
+    p, q = nu_pq
+    nu_ir: IRNode = IRInteger(p) if q == 1 else IRRational(p, q)
+    return _build_named_solution(BESSEL_J, BESSEL_Y, nu_ir, y, x)
+
+
+def _try_hermite_ode(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Recognise and solve the Hermite ODE.
+
+    Standard form (all terms on the left, equal to zero):
+
+        ``y'' − 2x·y' + 2n·y = 0``
+
+    Pattern checks (numerical):
+
+    1. P(x) is constant = 1.
+    2. Q(x) ≈ −2x  at test points.
+    3. R is constant and equals 2n for some non-negative integer n.
+
+    On success, returns::
+
+        Equal(y, %c1·HermiteH(n, x) + %c2·HermiteH2(n, x))
+
+    ``HermiteH(n, x)`` is the physicist's Hermite polynomial H_n(x)
+    for non-negative integer n.  These arise in quantum harmonic oscillator
+    eigenfunctions.  ``HermiteH2(n, x)`` is the second linearly independent
+    solution (a parabolic cylinder function); it diverges as |x| → ∞.
+    """
+    coeffs = _collect_var2_coeffs(expr, y, x)
+    if coeffs is None:
+        return None
+    P_node, Q_node, R_node = coeffs
+
+    # Check P ≡ 1 (leading coefficient must be constant = 1)
+    p_val = _extract_const_val(P_node, x)
+    if p_val is None or abs(p_val - 1.0) > 1e-9:
+        return None
+    # Check Q ≈ -2x
+    if not _coeff_matches_func(Q_node, x, lambda xv: -2.0 * xv):
+        return None
+    # R must be constant = 2n, n non-negative integer
+    r_val = _extract_const_val(R_node, x)
+    if r_val is None:
+        return None
+    if r_val < -1e-12:
+        return None  # 2n must be non-negative
+    n_float = r_val / 2.0
+    n = round(n_float)
+    if n < 0 or abs(n_float - n) > 1e-9:
+        return None  # n must be a non-negative integer
+    n_ir = IRInteger(n)
+    return _build_named_solution(HERMITE_H, HERMITE_H2, n_ir, y, x)
+
+
+def _try_chebyshev_ode(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Recognise and solve the Chebyshev ODE.
+
+    Standard form (all terms on the left, equal to zero):
+
+        ``(1 − x²)·y'' − x·y' + n²·y = 0``
+
+    Pattern checks (numerical):
+
+    1. P(x) ≈ 1 − x²  at test points.
+    2. Q(x) ≈ −x      at test points.
+    3. R is constant and equals n² for some non-negative integer n.
+
+    On success, returns::
+
+        Equal(y, %c1·ChebyshevT(n, x) + %c2·ChebyshevU(n, x))
+
+    ``ChebyshevT(n, x)`` is the Chebyshev polynomial of the first kind T_n(x);
+    ``ChebyshevU(n, x)`` is the second kind U_n(x).  The T_n polynomials are
+    orthogonal on [−1, 1] with weight 1/√(1−x²) and satisfy
+    T_n(cos θ) = cos(n·θ).
+    """
+    coeffs = _collect_var2_coeffs(expr, y, x)
+    if coeffs is None:
+        return None
+    P_node, Q_node, R_node = coeffs
+
+    # Check P ≈ 1 - x²
+    if not _coeff_matches_func(P_node, x, lambda xv: 1.0 - xv * xv):
+        return None
+    # Check Q ≈ -x
+    if not _coeff_matches_func(Q_node, x, lambda xv: -xv):
+        return None
+    # R must be constant = n²
+    r_val = _extract_const_val(R_node, x)
+    if r_val is None or r_val < -1e-12:
+        return None
+    n_float = math.sqrt(max(r_val, 0.0))
+    n = round(n_float)
+    if n < 0 or abs(n_float - n) > 1e-7 or abs(n * n - r_val) > 1e-7:
+        return None  # n must be a non-negative integer with n² = r_val
+    n_ir = IRInteger(n)
+    return _build_named_solution(CHEBYSHEV_T, CHEBYSHEV_U, n_ir, y, x)
+
+
+def _try_var_coeff_named_ode(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 21 dispatcher — try all named variable-coefficient ODE families.
+
+    Attempts to match ``expr = 0`` against each of the four recognised
+    named-ODE families in priority order:
+
+    1. **Chebyshev** — checked before Legendre because both have
+       ``P ≈ 1 − x²`` but Chebyshev has ``Q ≈ −x`` while Legendre
+       has ``Q ≈ −2x``.
+    2. **Legendre** — ``(1−x²)y'' − 2xy' + n(n+1)y = 0``.
+    3. **Bessel** — ``x²y'' + xy' + (x²−ν²)y = 0``.
+    4. **Hermite** — ``y'' − 2xy' + 2ny = 0``.
+
+    Returns ``Equal(y, solution)`` for the first match, ``None`` if none
+    of the families match.
+    """
+    result = _try_chebyshev_ode(expr, y, x)
+    if result is not None:
+        return result
+    result = _try_legendre_ode(expr, y, x)
+    if result is not None:
+        return result
+    result = _try_bessel_ode(expr, y, x)
+    if result is not None:
+        return result
+    result = _try_hermite_ode(expr, y, x)
+    if result is not None:
+        return result
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -2881,6 +3445,16 @@ def solve_ode(
     euler = _try_euler_cauchy(expr, y, x)
     if euler is not None:
         return euler
+
+    # ---- Phase 21: Named variable-coefficient 2nd-order ODEs ---------------
+    # Recognise Legendre, Bessel, Hermite, and Chebyshev ODEs.  These are
+    # tried *after* Euler-Cauchy because their coefficient patterns are more
+    # general (polynomial coefficients) and would not match constant-coeff
+    # or Euler-Cauchy forms anyway.  Runs before Bernoulli because it handles
+    # purely second-order equations.
+    named = _try_var_coeff_named_ode(expr, y, x)
+    if named is not None:
+        return named
 
     # ---- Phase 18: Bernoulli ------------------------------------------------
     bern = _try_bernoulli(expr, y, x, vm)

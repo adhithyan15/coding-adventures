@@ -95,20 +95,17 @@ impl Backend for TypeScriptBackend {
 
     fn compile(&self, module: &Module) -> Result<Artifact, BackendError> {
         // 1. Validate at the SIR boundary.  Lowering assumes the
-        //    module is structurally well-formed; failing fast here
-        //    saves cycles and gives the caller clean errors.
+        //    module is structurally well-formed.  Collapse the
+        //    "not ok" branch to a direct `if let Some(e) = ...` so
+        //    that a non-ok result lacking error-severity issues
+        //    (warnings-only) cannot silently bypass the guard.
         let r = semantic_ir::validate(module);
-        if !r.is_ok() {
-            // Promote the first error to a BackendError; downstream
-            // tooling can re-run the validator for the full list.
-            let first = r.errors().next().cloned();
-            if let Some(e) = first {
-                return Err(BackendError {
-                    kind: BackendErrorKind::InvalidModule,
-                    message: format!("module failed validation: {}", e.message),
-                    span: e.span,
-                });
-            }
+        if let Some(e) = r.errors().next().cloned() {
+            return Err(BackendError {
+                kind: BackendErrorKind::InvalidModule,
+                message: format!("module failed validation: {}", e.message),
+                span: e.span,
+            });
         }
 
         // 2. Capability check: features + intrinsics.
