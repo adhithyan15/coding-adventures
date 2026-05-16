@@ -641,4 +641,6 @@ members = [
     "semantic-ir",
     "twig-to-semantic-ir",
     "semantic-ir-to-typescript",
+    "semantic-ir-to-rust",
+    "semantic-ir-to-python",
 ]
