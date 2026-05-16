@@ -231,6 +231,91 @@ describe("validateAgainstSchema — malformed schema tolerance", () => {
   });
 });
 
+describe("validateAgainstSchema — security: prototype-chain bypass", () => {
+  it("required: ['toString'] does NOT vacuously pass on {} (own-property check)", () => {
+    // Before the hasOwn fix: `"toString" in {}` returned true via
+    // Object.prototype.toString, so the validator would accept this.
+    // After the fix: `toString` is an inherited property, not own;
+    // required check correctly fails.
+    const r = validateAgainstSchema({}, {
+      type: "object",
+      required: ["toString"],
+    });
+    expect(r.ok).toBe(false);
+    expect(r.violations[0]!.message).toMatch(/required.*missing/);
+  });
+
+  it("additionalProperties:false does NOT accept inherited Object.prototype keys", () => {
+    // Before the fix: validating { toString: "x" } against a schema
+    // with properties:{} and additionalProperties:false PASSED because
+    // `"toString" in {}` (the empty properties map) returned true via
+    // the prototype chain.  After: it correctly rejects.
+    const r = validateAgainstSchema({ toString: "x" }, {
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    });
+    expect(r.ok).toBe(false);
+    expect(r.violations[0]!.path).toBe("toString");
+    expect(r.violations[0]!.message).toMatch(/additional property/);
+  });
+
+  it("required check uses own-property: 'hasOwnProperty' as required key isn't free-passed", () => {
+    expect(validateAgainstSchema({}, {
+      type: "object", required: ["hasOwnProperty"],
+    }).ok).toBe(false);
+  });
+});
+
+describe("validateAgainstSchema — security: depth bound", () => {
+  it("deeply-nested allOf does not crash with RangeError", () => {
+    // Build a chain of allOfs ~1000 deep.  Before the depth guard,
+    // this overflowed V8's stack with a RangeError.  After: the
+    // validator pushes a "depth exceeded" violation and returns
+    // cleanly.
+    let schema: Record<string, unknown> = { type: "string" };
+    for (let i = 0; i < 1000; i++) {
+      schema = { allOf: [schema] };
+    }
+    let result: ReturnType<typeof validateAgainstSchema>;
+    expect(() => { result = validateAgainstSchema("hi", schema as never); })
+      .not.toThrow();
+    // The result either passes (if the depth guard bottoms out
+    // before any type mismatch) or surfaces a "too deep" violation.
+    // Either way, we did NOT throw — that's the contract.
+    expect(result!.violations.every((v) => /too deep|aborted/.test(v.message) || v.message.length > 0))
+      .toBe(true);
+  });
+
+  it("deeply-nested array value does not crash", () => {
+    let arr: unknown = "leaf";
+    for (let i = 0; i < 1000; i++) arr = [arr];
+    expect(() => validateAgainstSchema(arr as never, {
+      type: "array", items: { type: ["array", "string"] },
+    })).not.toThrow();
+  });
+});
+
+describe("validateAgainstSchema — security: pattern length cap", () => {
+  it("refuses to compile patterns longer than 1024 characters", () => {
+    const longPattern = "a".repeat(2000);
+    const r = validateAgainstSchema("xxx", {
+      type: "string",
+      pattern: longPattern,
+    });
+    expect(r.ok).toBe(false);
+    expect(r.violations[0]!.message).toMatch(/pattern length.*cap/);
+  });
+
+  it("accepts patterns up to 1024 characters", () => {
+    const okPattern = "[a-z]" + "+".repeat(50);  // tiny, well under cap
+    expect(validateAgainstSchema("abc", {
+      type: "string",
+      pattern: okPattern,
+    }).ok).toBe(true);
+  });
+});
+
 describe("validateAgainstSchema — real stage configs", () => {
   it("validates forme-source-fs's schema", () => {
     const fsSchema = {

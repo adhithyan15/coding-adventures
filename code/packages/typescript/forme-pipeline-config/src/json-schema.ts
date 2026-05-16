@@ -79,12 +79,39 @@ export interface SchemaValidationResult {
 }
 
 /**
+ * Maximum recursion depth for `walk` and `deepEqual`.  Prevents
+ * stack-overflow DoS via deeply-nested schemas / values.
+ *
+ * 256 levels is well beyond any sane schema; pipelines that
+ * legitimately need deeper nesting can split into composed
+ * sub-schemas using `$ref` (not supported in v0) or restructure.
+ *
+ * On exceedance we push a synthetic violation and stop — preserving
+ * the validator's "never throws" contract.
+ */
+export const MAX_WALK_DEPTH = 256;
+
+/**
+ * Maximum length of a `pattern` regex string before we refuse to
+ * compile it.  Defence against catastrophic-backtracking and large-
+ * pattern DoS in the dev-server live-editing scenario where schemas
+ * may flow in from less-trusted sources (e.g. a user typing schema
+ * into the editor).  1 KiB is generous for any real schema.
+ */
+export const MAX_PATTERN_LENGTH = 1024;
+
+/**
  * Validate a value against a JSON Schema (draft-07 subset).
  *
  * Never throws on malformed schema input — instead, treats malformed
  * keywords as "no constraint" and skips them.  This is intentional:
  * an upstream typo in a stage's schema shouldn't crash the validator;
  * the result just reports fewer violations than it would have.
+ *
+ * Never throws on adversarial input either: depth-bounded
+ * (`MAX_WALK_DEPTH`), pattern-size-bounded (`MAX_PATTERN_LENGTH`),
+ * and uses own-property checks throughout to prevent prototype-
+ * chain bypass.
  *
  * Returns `{ ok: true, violations: [] }` on success.
  *
@@ -96,7 +123,7 @@ export function validateAgainstSchema(
   schema: JsonSchema,
 ): SchemaValidationResult {
   const violations: SchemaViolation[] = [];
-  walk(value, asObject(schema), "", violations);
+  walk(value, asObject(schema), "", violations, 0);
   return { ok: violations.length === 0, violations };
 }
 
@@ -107,21 +134,30 @@ function walk(
   schema: Record<string, JsonValue> | null,
   path: string,
   out: SchemaViolation[],
+  depth: number,
 ): void {
   if (schema === null) return;
+  if (depth > MAX_WALK_DEPTH) {
+    out.push({
+      path: path || "$",
+      message: `validation aborted at depth ${MAX_WALK_DEPTH} (schema or value nesting too deep)`,
+    });
+    return;
+  }
 
   // Composition keywords short-circuit individual constraint checks.
   if (Array.isArray(schema["allOf"])) {
     for (const sub of schema["allOf"] as readonly JsonValue[]) {
-      walk(value, asObject(sub), path, out);
+      walk(value, asObject(sub), path, out, depth + 1);
     }
   }
   if (Array.isArray(schema["anyOf"])) {
     const subs = schema["anyOf"] as readonly JsonValue[];
     let anyOk = false;
     for (const sub of subs) {
-      const r = validateAgainstSchema(value, sub as JsonSchema);
-      if (r.ok) { anyOk = true; break; }
+      const inner: SchemaViolation[] = [];
+      walk(value, asObject(sub as JsonSchema), path, inner, depth + 1);
+      if (inner.length === 0) { anyOk = true; break; }
     }
     if (!anyOk && subs.length > 0) {
       out.push({ path: path || "$",
@@ -132,8 +168,9 @@ function walk(
     const subs = schema["oneOf"] as readonly JsonValue[];
     let matchCount = 0;
     for (const sub of subs) {
-      const r = validateAgainstSchema(value, sub as JsonSchema);
-      if (r.ok) matchCount++;
+      const inner: SchemaViolation[] = [];
+      walk(value, asObject(sub as JsonSchema), path, inner, depth + 1);
+      if (inner.length === 0) matchCount++;
     }
     if (matchCount !== 1 && subs.length > 0) {
       out.push({ path: path || "$",
@@ -149,7 +186,7 @@ function walk(
     checkEnum(value, schema["enum"] as readonly JsonValue[], path, out);
   }
   if (schema["const"] !== undefined) {
-    if (!deepEqual(value as JsonValue, schema["const"] as JsonValue)) {
+    if (!deepEqual(value as JsonValue, schema["const"] as JsonValue, 0)) {
       out.push({ path: path || "$",
         message: `value does not equal const ${JSON.stringify(schema["const"])}` });
     }
@@ -165,9 +202,9 @@ function walk(
       break;
   }
   if (Array.isArray(value)) {
-    checkArray(value, schema, path, out);
+    checkArray(value, schema, path, out, depth);
   } else if (value !== null && typeof value === "object") {
-    checkObject(value as Record<string, JsonValue>, schema, path, out);
+    checkObject(value as Record<string, JsonValue>, schema, path, out, depth);
   }
 }
 
@@ -213,7 +250,7 @@ function checkEnum(
 ): void {
   if (value === undefined) return;
   for (const candidate of allowed) {
-    if (deepEqual(value, candidate)) return;
+    if (deepEqual(value, candidate, 0)) return;
   }
   out.push({ path: path || "$",
     message: `value ${JSON.stringify(value)} is not one of the allowed enum members` });
@@ -239,11 +276,21 @@ function checkString(
   }
   const pat = schema["pattern"];
   if (typeof pat === "string") {
-    let re: RegExp | null = null;
-    try { re = new RegExp(pat); } catch { /* malformed; skip */ }
-    if (re && !re.test(value)) {
+    // Refuse to compile patterns longer than MAX_PATTERN_LENGTH —
+    // protects against catastrophic-backtracking DoS in dev-server
+    // live-edit scenarios where schemas flow from less-trusted
+    // sources.  Stage authors writing their own configSchemas
+    // shouldn't ever bump this limit in practice.
+    if (pat.length > MAX_PATTERN_LENGTH) {
       out.push({ path: path || "$",
-        message: `string does not match pattern ${JSON.stringify(pat)}` });
+        message: `pattern length ${pat.length} exceeds the validator's ${MAX_PATTERN_LENGTH}-char cap` });
+    } else {
+      let re: RegExp | null = null;
+      try { re = new RegExp(pat); } catch { /* malformed; skip */ }
+      if (re && !re.test(value)) {
+        out.push({ path: path || "$",
+          message: `string does not match pattern ${JSON.stringify(pat)}` });
+      }
     }
   }
 }
@@ -275,6 +322,7 @@ function checkArray(
   schema: Record<string, JsonValue>,
   path: string,
   out: SchemaViolation[],
+  depth: number,
 ): void {
   const minItems = schema["minItems"];
   if (typeof minItems === "number" && value.length < minItems) {
@@ -291,7 +339,7 @@ function checkArray(
     const itemSchema = asObject(items as JsonSchema);
     if (itemSchema) {
       for (let i = 0; i < value.length; i++) {
-        walk(value[i]!, itemSchema, `${path}[${i}]`, out);
+        walk(value[i]!, itemSchema, `${path}[${i}]`, out, depth + 1);
       }
     }
   }
@@ -299,16 +347,37 @@ function checkArray(
 
 // ─── Object ─────────────────────────────────────────────────────────
 
+/**
+ * Own-property membership test.  Used everywhere we'd otherwise
+ * write `key in obj` — `in` walks the prototype chain, which
+ * means a schema with `required: ["toString"]` would pass
+ * vacuously against any object (since `Object.prototype.toString`
+ * exists for everything), and a `properties: {}` with
+ * `additionalProperties: false` would silently accept
+ * `{ toString: "x" }` (because `"toString" in {}` is true).
+ *
+ * Caught in the FM02 §3 security review and the matching review of
+ * this validator.  Defence-in-depth — combined with the
+ * `__proto__`/`constructor`/`prototype` exclusion in `deepEqual`,
+ * this gives the validator end-to-end prototype-pollution
+ * resistance even when validating against attacker-supplied
+ * schemas (the dev-server live-edit scenario).
+ */
+function hasOwn(obj: Record<string, JsonValue>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
 function checkObject(
   value: Record<string, JsonValue>,
   schema: Record<string, JsonValue>,
   path: string,
   out: SchemaViolation[],
+  depth: number,
 ): void {
   const required = schema["required"];
   if (Array.isArray(required)) {
     for (const key of required) {
-      if (typeof key === "string" && !(key in value)) {
+      if (typeof key === "string" && !hasOwn(value, key)) {
         out.push({ path: path ? `${path}.${key}` : key,
           message: "required property is missing" });
       }
@@ -323,9 +392,9 @@ function checkObject(
   // Validate every declared property against its sub-schema.
   if (properties) {
     for (const [key, subSchema] of Object.entries(properties)) {
-      if (key in value) {
+      if (hasOwn(value, key)) {
         const sub = asObject(subSchema as JsonSchema);
-        if (sub) walk(value[key]!, sub, path ? `${path}.${key}` : key, out);
+        if (sub) walk(value[key]!, sub, path ? `${path}.${key}` : key, out, depth + 1);
       }
     }
   }
@@ -333,7 +402,7 @@ function checkObject(
   // Catch unknown properties when additionalProperties === false.
   if (schema["additionalProperties"] === false && properties) {
     for (const key of Object.keys(value)) {
-      if (!(key in properties)) {
+      if (!hasOwn(properties, key)) {
         out.push({ path: path ? `${path}.${key}` : key,
           message: "additional property is not allowed (additionalProperties: false)" });
       }
@@ -351,18 +420,21 @@ function asObject(s: JsonSchema | undefined): Record<string, JsonValue> | null {
 }
 
 /**
- * Structural equality for JsonValue, with prototype-pollution
- * defensiveness: we use a denylist on object keys so neither side
- * can accidentally read `__proto__` and have prototype-chain
- * inheritance leak into the comparison.
+ * Structural equality for JsonValue.  Defences:
+ *   - Skips `__proto__`/`constructor`/`prototype` keys outright.
+ *   - Uses `hasOwnProperty.call` for the cross-side membership
+ *     test so prototype-chain inheritance doesn't leak in.
+ *   - Bounded recursion (`MAX_WALK_DEPTH`) — returns `false` on
+ *     overflow rather than throwing.
  */
-function deepEqual(a: JsonValue, b: JsonValue): boolean {
+function deepEqual(a: JsonValue, b: JsonValue, depth: number): boolean {
+  if (depth > MAX_WALK_DEPTH) return false;
   if (a === b) return true;
   if (a === null || b === null) return false;
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
     for (let i = 0; i < a.length; i++) {
-      if (!deepEqual(a[i]!, b[i]!)) return false;
+      if (!deepEqual(a[i]!, b[i]!, depth + 1)) return false;
     }
     return true;
   }
@@ -373,10 +445,9 @@ function deepEqual(a: JsonValue, b: JsonValue): boolean {
     const bkeys = Object.keys(bo);
     if (akeys.length !== bkeys.length) return false;
     for (const k of akeys) {
-      // Defence: ignore prototype keys outright (matches FM02 §3 defence pattern).
       if (k === "__proto__" || k === "constructor" || k === "prototype") continue;
       if (!Object.prototype.hasOwnProperty.call(bo, k)) return false;
-      if (!deepEqual(ao[k]!, bo[k]!)) return false;
+      if (!deepEqual(ao[k]!, bo[k]!, depth + 1)) return false;
     }
     return true;
   }
