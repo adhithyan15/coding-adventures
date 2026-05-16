@@ -247,6 +247,7 @@ members = [
     "transistors",
     "trie",
     "trig",
+    "wall-clock",
     "wave",
     "virtual-memory",
     "tree",
