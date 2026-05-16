@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-05-16
 
 - Parse capacitor `IC=<voltage>` initial-voltage parameters.
 - Parse inductor `IC=<current>` initial-current parameters.

@@ -1,10 +1,14 @@
 # Changelog — symbolic-ir (Rust)
 
-## Unreleased
+## [0.2.0] — 2026-05-16
 
 ### Added
 
 - First-class reciprocal hyperbolic head constants: `COTH`, `SECH`, and `CSCH`.
+- Eight Phase 27 named ODE solution function head constants: `LEGENDRE_P`,
+  `LEGENDRE_Q`, `BESSEL_J`, `BESSEL_Y`, `HERMITE_H`, `HERMITE_H2`,
+  `CHEBYSHEV_T`, and `CHEBYSHEV_U`, covering the four classical
+  variable-coefficient ODE families (Legendre, Bessel, Hermite, Chebyshev).
 
 ## [0.1.0] — 2026-04-27
 

@@ -1,5 +1,51 @@
 # Changelog — @coding-adventures/forme-pipeline-config
 
+## 0.2.0 — 2026-05-16
+
+### Added — JSON Schema validation of stage configs (FM03 §2.4 #3)
+
+When a stage declares a non-null `configSchema`, `validateConfig`
+now validates the supplied `config` against that schema and surfaces
+violations as `CONFIG_SCHEMA_VIOLATION` errors with field-level
+paths. Previously the v0.1.0 validator only enforced the *presence*
+half of the rule (`CONFIG_REQUIRED`) and deferred shape validation
+to "the orchestrator" — but the orchestrator was deferring back
+here, so in practice no validation happened. This closes that hole.
+
+### Public API
+
+- `validateAgainstSchema(value, schema)` → `SchemaValidationResult`
+  exported. A pure, no-dependency draft-07 subset validator usable
+  outside `validateConfig` (e.g. for live editing in the dev server).
+- `SchemaViolation`, `SchemaValidationResult` types exported.
+- `CONFIG_ERROR_CODES.CONFIG_SCHEMA_VIOLATION` added.
+
+### JSON Schema subset
+
+Supported keywords (a draft-07 subset focused on stage configs):
+`type`, `enum`, `const`, `required`, `properties`,
+`additionalProperties: false`, `items`, `minLength`/`maxLength`,
+`minItems`/`maxItems`, `minimum`/`maximum`, `pattern`, `oneOf`/
+`anyOf`/`allOf`. Unknown keywords are silently ignored
+(draft-07 forward-compat). `$ref`, `format`, `if`/`then`/`else`,
+`propertyNames`, `not` are deliberately NOT supported — out of
+scope for stage configs.
+
+### Security
+
+`deepEqual` (used by `enum`/`const`) skips `__proto__` /
+`constructor` / `prototype` keys, defence-in-depth against
+prototype-pollution attempts via crafted schemas.
+
+### Tests
+
+32 new tests in `tests/json-schema.test.ts` covering every
+supported keyword and rejection mode. 5 new integration tests in
+`tests/validate.test.ts` confirming the schema check fires
+through `validateConfig` and surfaces with field-level paths.
+
+Total: 105 tests pass (up from 68).
+
 ## 0.1.0 — 2026-05-15
 
 Initial release. First package of the FM03 orchestrator stack — the

@@ -721,4 +721,217 @@ describe("symbolic-vm", () => {
     expect(vm.eval(expr)).toEqual(expr);
     expect(() => vm.eval(app(INTEGRATE, [sym("x")]))).toThrow(ArityError);
   });
+
+  // Recursively check whether any sub-node has the given head symbol name.
+  function containsHeadName(node: ReturnType<typeof sym>, name: string): boolean {
+    const n = node as unknown as { kind: string; name?: string; head?: unknown; args?: unknown[] };
+    if (n.kind === "apply") {
+      const h = n.head as { name?: string } | null;
+      if (h?.name === name) return true;
+      return (n.args ?? []).some((a) => containsHeadName(a as ReturnType<typeof sym>, name));
+    }
+    return false;
+  }
+
+  // Phase 26 — log-power IBP reduction
+  // ∫ log(x)^2 dx = x·log²x − 2x·log x + 2x
+  it("Phase 26: ∫ log(x)^2 dx returns a closed form", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(LOG, [x]), int(2)]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    // Must not contain INTEGRATE as its head
+    expect(result).not.toMatchObject({ head: INTEGRATE });
+    // Must contain LOG (antiderivative involves log(x))
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+  });
+
+  it("Phase 26: ∫ x·log(x)^2 dx numerical correctness", () => {
+    // Closed form: x²/4·log²x − x²/4·log x + x²/8
+    // ∫₁^2 x·log(x)^2 dx
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(POW, [app(LOG, [x]), int(2)])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    function evalIR(node: ReturnType<typeof sym>, xVal: number): number {
+      const n = node as unknown as { kind: string; value?: number | bigint; numer?: bigint; denom?: bigint; head?: unknown; args?: unknown[] };
+      if (n.kind === "integer") return Number(n.value);
+      if (n.kind === "rational") return Number(n.numer!) / Number(n.denom!);
+      if (n.kind === "float") return n.value as number;
+      if (n.kind === "symbol") return xVal;
+      const h = (n.head as { name?: string })?.name ?? "";
+      const args = n.args as typeof node[];
+      if (h === "Add") return evalIR(args[0], xVal) + evalIR(args[1], xVal);
+      if (h === "Sub") return evalIR(args[0], xVal) - evalIR(args[1], xVal);
+      if (h === "Mul") return evalIR(args[0], xVal) * evalIR(args[1], xVal);
+      if (h === "Div") return evalIR(args[0], xVal) / evalIR(args[1], xVal);
+      if (h === "Neg") return -evalIR(args[0], xVal);
+      if (h === "Pow") return Math.pow(evalIR(args[0], xVal), evalIR(args[1], xVal));
+      if (h === "Log") return Math.log(evalIR(args[0], xVal));
+      if (h === "Sin") return Math.sin(evalIR(args[0], xVal));
+      if (h === "Cos") return Math.cos(evalIR(args[0], xVal));
+      throw new Error(`unsupported head: ${h}`);
+    }
+
+    function trapezoid(fn: (t: number) => number, a: number, b: number, n = 10000): number {
+      const h = (b - a) / n;
+      let total = 0.5 * (fn(a) + fn(b));
+      for (let i = 1; i < n; i++) total += fn(a + i * h);
+      return total * h;
+    }
+
+    const antiderivDiff = evalIR(result as unknown as ReturnType<typeof sym>, 2) -
+                          evalIR(result as unknown as ReturnType<typeof sym>, 1);
+    const numerical = trapezoid(t => t * Math.log(t) ** 2, 1, 2);
+    expect(Math.abs(antiderivDiff - numerical)).toBeLessThan(1e-5);
+  });
+
+  // Phase 27 — trig-of-log integration
+  it("Phase 27: ∫ sin(log(x)) dx returns a closed form with SIN and COS", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(SIN, [app(LOG, [x])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(result).not.toMatchObject({ head: INTEGRATE });
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Sin")).toBe(true);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Cos")).toBe(true);
+  });
+
+  it("Phase 27: ∫ sin(log(x)) dx numerical correctness", () => {
+    // ∫₁^3 sin(log x) dx
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(SIN, [app(LOG, [x])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    function evalIR(node: ReturnType<typeof sym>, xVal: number): number {
+      const n = node as unknown as { kind: string; value?: number | bigint; numer?: bigint; denom?: bigint; head?: unknown; args?: unknown[] };
+      if (n.kind === "integer") return Number(n.value);
+      if (n.kind === "rational") return Number(n.numer!) / Number(n.denom!);
+      if (n.kind === "float") return n.value as number;
+      if (n.kind === "symbol") return xVal;
+      const h = (n.head as { name?: string })?.name ?? "";
+      const args = n.args as typeof node[];
+      if (h === "Add") return evalIR(args[0], xVal) + evalIR(args[1], xVal);
+      if (h === "Sub") return evalIR(args[0], xVal) - evalIR(args[1], xVal);
+      if (h === "Mul") return evalIR(args[0], xVal) * evalIR(args[1], xVal);
+      if (h === "Div") return evalIR(args[0], xVal) / evalIR(args[1], xVal);
+      if (h === "Neg") return -evalIR(args[0], xVal);
+      if (h === "Pow") return Math.pow(evalIR(args[0], xVal), evalIR(args[1], xVal));
+      if (h === "Log") return Math.log(evalIR(args[0], xVal));
+      if (h === "Sin") return Math.sin(evalIR(args[0], xVal));
+      if (h === "Cos") return Math.cos(evalIR(args[0], xVal));
+      throw new Error(`unsupported head: ${h}`);
+    }
+
+    function trapezoid(fn: (t: number) => number, a: number, b: number, n = 10000): number {
+      const h = (b - a) / n;
+      let total = 0.5 * (fn(a) + fn(b));
+      for (let i = 1; i < n; i++) total += fn(a + i * h);
+      return total * h;
+    }
+
+    const antiderivDiff = evalIR(result as unknown as ReturnType<typeof sym>, 3) -
+                          evalIR(result as unknown as ReturnType<typeof sym>, 1);
+    const numerical = trapezoid(t => Math.sin(Math.log(t)), 1, 3);
+    expect(Math.abs(antiderivDiff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 27: ∫ cos(log(x)) dx numerical correctness", () => {
+    // ∫₁^3 cos(log x) dx
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(COS, [app(LOG, [x])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    function evalIR(node: ReturnType<typeof sym>, xVal: number): number {
+      const n = node as unknown as { kind: string; value?: number | bigint; numer?: bigint; denom?: bigint; head?: unknown; args?: unknown[] };
+      if (n.kind === "integer") return Number(n.value);
+      if (n.kind === "rational") return Number(n.numer!) / Number(n.denom!);
+      if (n.kind === "float") return n.value as number;
+      if (n.kind === "symbol") return xVal;
+      const h = (n.head as { name?: string })?.name ?? "";
+      const args = n.args as typeof node[];
+      if (h === "Add") return evalIR(args[0], xVal) + evalIR(args[1], xVal);
+      if (h === "Sub") return evalIR(args[0], xVal) - evalIR(args[1], xVal);
+      if (h === "Mul") return evalIR(args[0], xVal) * evalIR(args[1], xVal);
+      if (h === "Div") return evalIR(args[0], xVal) / evalIR(args[1], xVal);
+      if (h === "Neg") return -evalIR(args[0], xVal);
+      if (h === "Pow") return Math.pow(evalIR(args[0], xVal), evalIR(args[1], xVal));
+      if (h === "Log") return Math.log(evalIR(args[0], xVal));
+      if (h === "Sin") return Math.sin(evalIR(args[0], xVal));
+      if (h === "Cos") return Math.cos(evalIR(args[0], xVal));
+      throw new Error(`unsupported head: ${h}`);
+    }
+
+    function trapezoid(fn: (t: number) => number, a: number, b: number, n = 10000): number {
+      const h = (b - a) / n;
+      let total = 0.5 * (fn(a) + fn(b));
+      for (let i = 1; i < n; i++) total += fn(a + i * h);
+      return total * h;
+    }
+
+    const antiderivDiff = evalIR(result as unknown as ReturnType<typeof sym>, 3) -
+                          evalIR(result as unknown as ReturnType<typeof sym>, 1);
+    const numerical = trapezoid(t => Math.cos(Math.log(t)), 1, 3);
+    expect(Math.abs(antiderivDiff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 27: ∫ x·sin(log(x)) dx numerical correctness", () => {
+    // ∫₁^2 x·sin(log x) dx
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(SIN, [app(LOG, [x])])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(result).not.toMatchObject({ head: INTEGRATE });
+
+    function evalIR(node: ReturnType<typeof sym>, xVal: number): number {
+      const n = node as unknown as { kind: string; value?: number | bigint; numer?: bigint; denom?: bigint; head?: unknown; args?: unknown[] };
+      if (n.kind === "integer") return Number(n.value);
+      if (n.kind === "rational") return Number(n.numer!) / Number(n.denom!);
+      if (n.kind === "float") return n.value as number;
+      if (n.kind === "symbol") return xVal;
+      const h = (n.head as { name?: string })?.name ?? "";
+      const args = n.args as typeof node[];
+      if (h === "Add") return evalIR(args[0], xVal) + evalIR(args[1], xVal);
+      if (h === "Sub") return evalIR(args[0], xVal) - evalIR(args[1], xVal);
+      if (h === "Mul") return evalIR(args[0], xVal) * evalIR(args[1], xVal);
+      if (h === "Div") return evalIR(args[0], xVal) / evalIR(args[1], xVal);
+      if (h === "Neg") return -evalIR(args[0], xVal);
+      if (h === "Pow") return Math.pow(evalIR(args[0], xVal), evalIR(args[1], xVal));
+      if (h === "Log") return Math.log(evalIR(args[0], xVal));
+      if (h === "Sin") return Math.sin(evalIR(args[0], xVal));
+      if (h === "Cos") return Math.cos(evalIR(args[0], xVal));
+      throw new Error(`unsupported head: ${h}`);
+    }
+
+    function trapezoid(fn: (t: number) => number, a: number, b: number, n = 10000): number {
+      const h = (b - a) / n;
+      let total = 0.5 * (fn(a) + fn(b));
+      for (let i = 1; i < n; i++) total += fn(a + i * h);
+      return total * h;
+    }
+
+    const antiderivDiff = evalIR(result as unknown as ReturnType<typeof sym>, 2) -
+                          evalIR(result as unknown as ReturnType<typeof sym>, 1);
+    const numerical = trapezoid(t => t * Math.sin(Math.log(t)), 1, 2);
+    expect(Math.abs(antiderivDiff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 27: regression — ∫ sin(x) dx still works", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(SIN, [x]), x]));
+    // Should be -cos(x)
+    expect(result).toEqual(app(NEG, [app(COS, [x])]));
+  });
+
+  it("Phase 27: regression — ∫ cos(x) dx still works", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(COS, [x]), x]));
+    // Should be sin(x)
+    expect(result).toEqual(app(SIN, [x]));
+  });
 });

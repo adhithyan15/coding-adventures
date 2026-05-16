@@ -1373,6 +1373,160 @@ fn integrate_unknown_dependent_form_stays_unevaluated() {
 }
 
 // ---------------------------------------------------------------------------
+// Phase 26 — log-power integration via IBP reduction
+// ---------------------------------------------------------------------------
+
+/// Numerically evaluate a simple IR tree by substituting ``x = xval``.
+fn eval_at(node: &symbolic_ir::IRNode, xval: f64) -> f64 {
+    match node {
+        symbolic_ir::IRNode::Integer(n) => *n as f64,
+        symbolic_ir::IRNode::Rational(n, d) => *n as f64 / *d as f64,
+        symbolic_ir::IRNode::Float(f) => *f,
+        symbolic_ir::IRNode::Symbol(s) if s == "x" => xval,
+        symbolic_ir::IRNode::Apply(a) => {
+            let h = match &a.head {
+                symbolic_ir::IRNode::Symbol(s) => s.as_str(),
+                _ => panic!("eval_at: non-symbol head"),
+            };
+            let args = &a.args;
+            match (h, args.as_slice()) {
+                ("Add", [l, r]) => eval_at(l, xval) + eval_at(r, xval),
+                ("Sub", [l, r]) => eval_at(l, xval) - eval_at(r, xval),
+                ("Mul", [l, r]) => eval_at(l, xval) * eval_at(r, xval),
+                ("Div", [l, r]) => eval_at(l, xval) / eval_at(r, xval),
+                ("Neg", [v]) => -eval_at(v, xval),
+                ("Pow", [b, e]) => eval_at(b, xval).powf(eval_at(e, xval)),
+                ("Log", [v]) => eval_at(v, xval).ln(),
+                ("Sin", [v]) => eval_at(v, xval).sin(),
+                ("Cos", [v]) => eval_at(v, xval).cos(),
+                _ => panic!("eval_at: unsupported head {h}"),
+            }
+        }
+        _ => panic!("eval_at: unsupported node"),
+    }
+}
+
+fn trapezoid(f: impl Fn(f64) -> f64, a: f64, b: f64, n: usize) -> f64 {
+    let h = (b - a) / n as f64;
+    let mut total = 0.5 * (f(a) + f(b));
+    for i in 1..n {
+        total += f(a + i as f64 * h);
+    }
+    total * h
+}
+
+fn contains_head(node: &symbolic_ir::IRNode, name: &str) -> bool {
+    match node {
+        symbolic_ir::IRNode::Apply(a) => {
+            if let symbolic_ir::IRNode::Symbol(h) = &a.head {
+                if h == name {
+                    return true;
+                }
+            }
+            a.args.iter().any(|arg| contains_head(arg, name))
+        }
+        _ => false,
+    }
+}
+
+#[test]
+fn phase26_log_power_2_is_closed() {
+    // ∫ log(x)^2 dx must return a closed form containing Log.
+    let result = integrate(apply(sym(POW), vec![apply(sym(LOG), vec![sym("x")]), int(2)]));
+    let original = apply(
+        sym(INTEGRATE),
+        vec![
+            apply(sym(POW), vec![apply(sym(LOG), vec![sym("x")]), int(2)]),
+            sym("x"),
+        ],
+    );
+    assert_ne!(result, original, "expected closed form, got unevaluated Integrate");
+    assert!(contains_head(&result, "Log"), "expected Log in result");
+}
+
+#[test]
+fn phase26_x_log2_x_numeric() {
+    // ∫₁^2 x · log(x)^2 dx  vs trapezoidal ground truth.
+    let integrand = apply(
+        sym(MUL),
+        vec![
+            sym("x"),
+            apply(sym(POW), vec![apply(sym(LOG), vec![sym("x")]), int(2)]),
+        ],
+    );
+    let antideriv = integrate(integrand);
+    let diff = eval_at(&antideriv, 2.0) - eval_at(&antideriv, 1.0);
+    let numerical = trapezoid(|t| t * t.ln().powi(2), 1.0, 2.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+// ---------------------------------------------------------------------------
+// Phase 27 — trig-of-log integration via u = log(x) substitution
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase27_sin_log_x_is_closed() {
+    // ∫ sin(log(x)) dx must return a closed form with SIN and COS.
+    let integrand = apply(sym(SIN), vec![apply(sym(LOG), vec![sym("x")])]);
+    let result = integrate(integrand.clone());
+    let original = apply(sym(INTEGRATE), vec![integrand, sym("x")]);
+    assert_ne!(result, original, "expected closed form");
+    assert!(contains_head(&result, "Sin"), "expected Sin in result");
+    assert!(contains_head(&result, "Cos"), "expected Cos in result");
+}
+
+#[test]
+fn phase27_sin_log_x_numeric() {
+    // ∫₁^3 sin(log(x)) dx  vs trapezoidal.
+    let integrand = apply(sym(SIN), vec![apply(sym(LOG), vec![sym("x")])]);
+    let antideriv = integrate(integrand);
+    let diff = eval_at(&antideriv, 3.0) - eval_at(&antideriv, 1.0);
+    let numerical = trapezoid(|t| t.ln().sin(), 1.0, 3.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+#[test]
+fn phase27_cos_log_x_numeric() {
+    // ∫₁^3 cos(log(x)) dx  vs trapezoidal.
+    let integrand = apply(sym(COS), vec![apply(sym(LOG), vec![sym("x")])]);
+    let antideriv = integrate(integrand);
+    let diff = eval_at(&antideriv, 3.0) - eval_at(&antideriv, 1.0);
+    let numerical = trapezoid(|t| t.ln().cos(), 1.0, 3.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+#[test]
+fn phase27_x_sin_log_x_numeric() {
+    // ∫₁^2 x · sin(log(x)) dx  vs trapezoidal.
+    let integrand = apply(
+        sym(MUL),
+        vec![sym("x"), apply(sym(SIN), vec![apply(sym(LOG), vec![sym("x")])])],
+    );
+    let antideriv = integrate(integrand);
+    let diff = eval_at(&antideriv, 2.0) - eval_at(&antideriv, 1.0);
+    let numerical = trapezoid(|t| t * t.ln().sin(), 1.0, 2.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+#[test]
+fn phase27_regression_sin_x_unchanged() {
+    // ∫ sin(x) dx = -cos(x) — must not be broken by Phase 27.
+    assert_eq!(
+        integrate(apply(sym(SIN), vec![sym("x")])),
+        apply(sym(NEG), vec![apply(sym(COS), vec![sym("x")])])
+    );
+}
+
+#[test]
+fn phase27_regression_cos_x_unchanged() {
+    // ∫ cos(x) dx = sin(x).
+    assert_eq!(
+        integrate(apply(sym(COS), vec![sym("x")])),
+        apply(sym(SIN), vec![sym("x")])
+    );
+}
+
+// ---------------------------------------------------------------------------
 // Logic
 // ---------------------------------------------------------------------------
 

@@ -266,3 +266,17 @@ export const ASSUME = sym("Assume");
 export const FORGET = sym("Forget");
 export const IS = sym("Is");
 export const SIGN = sym("Sign");
+
+// Named ODE solution function heads (Phase 27)
+// Legendre ODE: (1-x²)y'' - 2xy' + n(n+1)y = 0
+export const LEGENDRE_P = sym("LegendreP");  // Legendre polynomial of the first kind P_n(x)
+export const LEGENDRE_Q = sym("LegendreQ");  // Legendre function of the second kind Q_n(x)
+// Bessel ODE: x²y'' + xy' + (x²-ν²)y = 0
+export const BESSEL_J = sym("BesselJ");      // Bessel function of the first kind J_ν(x)
+export const BESSEL_Y = sym("BesselY");      // Bessel function of the second kind Y_ν(x)
+// Hermite ODE: y'' - 2xy' + 2ny = 0
+export const HERMITE_H = sym("HermiteH");    // Hermite polynomial H_n(x)
+export const HERMITE_H2 = sym("HermiteH2");  // Second independent solution (parabolic cylinder)
+// Chebyshev ODE: (1-x²)y'' - xy' + n²y = 0
+export const CHEBYSHEV_T = sym("ChebyshevT"); // Chebyshev polynomial of the first kind T_n(x)
+export const CHEBYSHEV_U = sym("ChebyshevU"); // Chebyshev polynomial of the second kind U_n(x)
