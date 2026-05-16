@@ -1,8 +1,8 @@
 [package]
 name = "dsp-filters"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "DSP03 Phase 1+2: scalar reference FIR (finite impulse response) filter via direct linear convolution. Returns the full N + K - 1 output. Phase 3 will add FFT-based overlap-add via dsp-fft for long kernels; Phase 4 adds IIR (direct-form-II Transposed); Phase 5 adds Butterworth / Chebyshev / windowed-sinc design helpers."
+description = "DSP03 Phases 1-2 + 4: scalar reference FIR (direct convolution) + IIR (direct-form-II Transposed) filters. IIR matches scipy.signal.lfilter(b, a, x) exactly. Phase 3 (FIR via FFT overlap-add) is deferred; Phase 5 adds Butterworth / Chebyshev / windowed-sinc design helpers; Phase 6 lowers FIR onto the matrix execution layer."
 license = "MIT"
 
 [dependencies]

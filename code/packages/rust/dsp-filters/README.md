@@ -1,20 +1,25 @@
 # dsp-filters
 
-**DSP03 Phase 1+2** — scalar reference FIR (finite impulse
-response) filter for the DSP layer.
+Scalar reference FIR + IIR filters for the DSP layer.
 
-FIR filters are the workhorse of DSP: image blurring,
-sharpening, edge detection, audio EQ pre-shaping, sensor
-smoothing — all of these reduce to convolution against a
-small real-valued kernel.
+As of **0.2.0 (DSP03 Phase 4)** this crate ships the two
+workhorse 1-D filter primitives:
+
+- **FIR** (`fir(signal, kernel)`) via direct linear convolution.
+- **IIR** (`iir(signal, b, a)`) via direct-form-II Transposed
+  — matches `scipy.signal.lfilter(b, a, x)` exactly.
 
 ```rust
-use dsp_filters::fir;
+use dsp_filters::{fir, iir};
 
 let signal = vec![1.0_f32, 2.0, 3.0, 4.0, 5.0];
-let kernel = vec![0.25_f32, 0.5, 0.25];   // 3-tap low-pass
+
+// FIR: 3-tap low-pass kernel.
+let kernel = vec![0.25_f32, 0.5, 0.25];
 let smoothed = fir(&signal, &kernel).unwrap();
-// smoothed.len() == 5 + 3 - 1 == 7  (full linear convolution)
+
+// IIR: single-pole low-pass.  y[n] = x[n] + 0.9 · y[n-1].
+let filtered = iir(&signal, &[1.0], &[1.0, -0.9]).unwrap();
 ```
 
 ## Algorithm
@@ -54,18 +59,38 @@ pub enum FilterError {
 | Phase  | Lands                                                | Status |
 | ------ | ---------------------------------------------------- | ------ |
 | 0      | Spec (`code/specs/DSP03-filters.md`)                 | landed |
-| **1+2** | **Crate skeleton + scalar FIR direct convolution** | **this PR (0.1.0)** |
-| 3      | FIR via FFT (overlap-add) using `dsp-fft`            | pending |
-| 4      | Scalar IIR direct-form-II Transposed                 | pending |
+| 1+2    | Crate skeleton + scalar FIR direct convolution       | landed (0.1.0) |
+| 3      | FIR via FFT (overlap-add) using `dsp-fft`            | deferred |
+| **4**  | **Scalar IIR direct-form-II Transposed**             | **this PR (0.2.0)** |
 | 5      | Butterworth / Chebyshev / windowed-sinc design helpers | pending |
 | 6      | Matrix-ir-lowered FIR                                | pending |
 
+## IIR algorithm (Phase 4)
+
+Direct-Form-II Transposed: one state vector `z` of length
+`order = max(len(b), len(a)) - 1`, initialised to zero.  Per
+sample `x`:
+
+```text
+    y = (b[0] · x + z[0]) / a[0]
+    for k in 0..order-1:  z[k] = b[k+1] · x - a[k+1] · y + z[k+1]
+    z[order-1] = b[order] · x - a[order] · y
+```
+
+The implementation pre-scales `b` and `a` by `1/a[0]` so the
+inner loop avoids a divide per sample.
+
+Phase 5 will produce stable `(b, a)` pairs via Butterworth /
+Chebyshev / windowed-sinc design helpers.
+
 ## Tests
 
-`cargo test -p dsp-filters` exercises:
+`cargo test -p dsp-filters` — 25 unit tests + 1 doctest:
 
-- Error paths: empty signal, empty kernel.
-- Closed-form: identity kernel `[1.0]`, delay-by-1 kernel
-  `[0.0, 1.0, 0.0]`, uniform K-tap moving average.
-- Naive O(N·K) cross-check for several `(N, K)` combinations.
-- Length contract: `output.len() == signal.len() + kernel.len() - 1`.
+- 10 from Phase 1+2 (FIR): error paths, identity / delay / box /
+  uniform kernels, length contract, naive O(N·K) cross-check.
+- 15 from Phase 4 (IIR, this release): error paths (empty, a[0] = 0/NaN/∞),
+  identity, pure gain, `a[0]` normalisation, single-pole low-pass
+  step response, geometric impulse response, two-pole DC gain
+  verification, FIR cross-check (`a = [1.0]`), output length
+  contract.

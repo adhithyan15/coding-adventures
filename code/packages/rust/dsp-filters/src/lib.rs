@@ -38,14 +38,20 @@
 //! ## Phase scope
 //!
 //! - **Phase 0** — spec (`code/specs/DSP03-filters.md`).
-//! - **Phase 1+2 (this release)** — crate skeleton + scalar
-//!   FIR + tests.
-//! - **Phase 3** — `fir_fft` (FFT-based overlap-add).
-//! - **Phase 4** — `iir` (direct-form-II Transposed).
-//! - **Phase 5** — filter design helpers.
-//! - **Phase 6** — matrix-ir-lowered `fir_via_runtime`.
+//! - **Phase 1+2** — crate skeleton + scalar FIR + tests.
+//!   Landed as 0.1.0.
+//! - **Phase 3** — `fir_fft` (FFT-based overlap-add).  Deferred;
+//!   direct convolution is enough for the V1 user-facing API.
+//! - **Phase 4 (this release)** — [`iir`] (direct-form-II
+//!   Transposed).  Matches `scipy.signal.lfilter(b, a, x)`.
+//! - **Phase 5** — filter design helpers (Butterworth, Chebyshev,
+//!   windowed-sinc).  Pending.
+//! - **Phase 6** — matrix-ir-lowered `fir_via_runtime`.  Pending.
 
 #![warn(rust_2018_idioms)]
+
+pub mod iir;
+pub use iir::iir;
 
 use std::fmt;
 
