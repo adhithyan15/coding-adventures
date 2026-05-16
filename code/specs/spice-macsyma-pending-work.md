@@ -87,6 +87,11 @@ files.
 
 **Waveforms on main:** `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`
 
+**Netlist parser on main:** `spice-netlist-parser` 0.2.0 — parses R, C, L, V,
+I, M (MOSFET), D, Q (BJT), E/G/F/H (controlled sources), `.subckt` / X instances,
+`.tran`, `.dc`, `.ac`, `.op`, `.tf`, `.sens`, `.mc`, `.noise`, `.model` cards;
+IC parameters for C/L; AC phasor specs for V/I sources.
+
 ---
 
 ### What is in flight
@@ -101,9 +106,7 @@ Items are listed in priority order within each group.
 
 #### Group 1 — High value, well-scoped
 
-| Feature | Why it matters | Design notes |
-|---|---|---|
-| **SPICE3 netlist parser** | Lets you run existing `.cir` / `.sp` files directly. Huge usability leap — you can grab any NGSPICE example and feed it in. | New package `spice-netlist-parser`. Grammar-driven (reuse `grammar-tools`). Conformance matrix in `spice-engine.md`: R, C, L, V, I, M (MOSFET), D, Q (BJT), E/G/F/H (controlled sources), X (subcircuit), `.tran`, `.dc`, `.ac`, `.op`, `.include`, `.subckt`, `.model`, `.param`. Returns a `Circuit` object identical to what you'd build in Python. |
+All Group 1 items have shipped. See "What is on main" above.
 
 #### Group 2 — Medium value
 
