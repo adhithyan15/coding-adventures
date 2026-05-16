@@ -1,11 +1,19 @@
 import {
   ADD,
+  BESSEL_J,
+  BESSEL_Y,
+  CHEBYSHEV_T,
+  CHEBYSHEV_U,
   COS,
   D,
   DIV,
   EQUAL,
   EXP,
+  HERMITE_H,
+  HERMITE_H2,
   INTEGRATE,
+  LEGENDRE_P,
+  LEGENDRE_Q,
   LOG,
   MUL,
   NEG,
@@ -148,6 +156,9 @@ export function solveOde(equation: IRNode, y: IRNode, x: IRNode, options: SolveO
 
   const euler = tryEulerCauchy(expr, y, x);
   if (euler !== null) return euler;
+
+  const named = tryVarCoeffNamedOde(expr, y, x);
+  if (named !== null) return named;
 
   const bernoulli = tryBernoulli(expr, y, x, ops);
   if (bernoulli !== null) return bernoulli;
@@ -1123,4 +1134,384 @@ function gcd(a: bigint, b: bigint): bigint {
 
 function abs(value: bigint): bigint {
   return value < 0n ? -value : value;
+}
+
+// ============================================================================
+// Phase 21 — Variable-coefficient named ODE recognition
+//
+// Recognises four classical second-order ODEs with variable polynomial
+// coefficients by *numerical pattern matching*: the IR coefficient expressions
+// P(x), Q(x), R(x) are evaluated at four canonical test points and compared
+// against the expected analytic functions.  This is exact for polynomial
+// coefficients (all that the ODE families use) and is robust enough for the
+// handful of cases we care about.
+//
+// Reading order:
+//   evalAtXy          — recursive numeric evaluator for IR trees
+//   evalIrAtX         — thin wrapper: evaluate x-only expressions
+//   coeffMatchesFunc  — check IR node ≈ expected function at test points
+//   extractConstVal   — extract float if node is constant w.r.t. x
+//   splitOutFactor    — extract coefficient K from K·target in Mul/Neg tree
+//   collectVar2Coeffs — extract (P, Q, R) from variable-coeff 2nd-order ODE
+//   legendreNFromLambda — find n with n(n+1) = λ
+//   nuFromRMinusXSq   — extract ν from R(x) = x² − ν² (Bessel)
+//   buildNamedSolution — build Equal(y, %c1·F(n,x) + %c2·G(n,x))
+//   tryLegendreOde, tryBesselOde, tryHermiteOde, tryChebyshevOde
+//   tryVarCoeffNamedOde — Phase 21 dispatcher (called from solveOde)
+// ============================================================================
+
+// Four test x-values chosen to avoid singularities (|x| ≠ 1 for Legendre,
+// x ≠ 0 for Bessel) while probing a representative range.
+const VAR2_TEST_X = [0.3, 0.6, -0.25, 0.85] as const;
+
+// Dummy y-symbol used when evaluating x-only coefficient expressions.
+const DUMMY_Y_SYM = sym("__var2_dummy_y__");
+
+/**
+ * Recursively evaluate an IR node at concrete floating-point values of x and y.
+ *
+ * Supports Integer, Rational, Float, and the basic arithmetic/elementary
+ * function heads (Add, Sub, Mul, Div, Neg, Pow, Exp, Log, Sin, Cos).
+ * Throws a RangeError for unrecognised symbols or unsupported heads so that
+ * the caller can catch and return null.
+ */
+function evalAtXy(node: IRNode, xSym: IRNode, ySym: IRNode, xVal: number, yVal: number): number {
+  if (node.kind === "integer") return Number(node.value);
+  if (node.kind === "rational") return Number(node.numer) / Number(node.denom);
+  if (node.kind === "float") return node.value;
+  if (node.kind === "symbol") {
+    if (xSym.kind === "symbol" && node.name === xSym.name) return xVal;
+    if (ySym.kind === "symbol" && node.name === ySym.name) return yVal;
+    throw new RangeError(`Unknown symbol: ${node.name}`);
+  }
+  if (node.kind !== "apply") throw new RangeError("Unsupported node");
+  const name = headName(node.head);
+  const ev = (n: IRNode): number => evalAtXy(n, xSym, ySym, xVal, yVal);
+  // n-ary Add and Mul (TypeScript IR uses multi-arg forms after simplification)
+  if (name === ADD.name) return node.args.reduce((acc, arg) => acc + ev(arg), 0);
+  if (name === MUL.name) return node.args.reduce((acc, arg) => acc * ev(arg), 1);
+  if (name === SUB.name && node.args.length === 2) return ev(node.args[0]) - ev(node.args[1]);
+  if (name === DIV.name && node.args.length === 2) {
+    const dv = ev(node.args[1]);
+    if (dv === 0) throw new RangeError("Division by zero");
+    return ev(node.args[0]) / dv;
+  }
+  if (name === NEG.name && node.args.length === 1) return -ev(node.args[0]);
+  if (name === POW.name && node.args.length === 2) return ev(node.args[0]) ** ev(node.args[1]);
+  if (name === EXP.name && node.args.length === 1) return Math.exp(ev(node.args[0]));
+  if (name === LOG.name && node.args.length === 1) return Math.log(Math.abs(ev(node.args[0])));
+  if (name === SIN.name && node.args.length === 1) return Math.sin(ev(node.args[0]));
+  if (name === COS.name && node.args.length === 1) return Math.cos(ev(node.args[0]));
+  throw new RangeError(`Unsupported head: ${name}`);
+}
+
+/**
+ * Evaluate an x-only IR expression at xv.  Returns null on any error
+ * (unknown symbol, division by zero, unsupported head).
+ */
+function evalIrAtX(node: IRNode, x: IRNode, xv: number): number | null {
+  try {
+    return evalAtXy(node, x, DUMMY_Y_SYM, xv, 0);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Return true iff `node` numerically agrees with `expected(xv)` at every
+ * canonical test point.  Falls through to false on evaluation failures.
+ */
+function coeffMatchesFunc(
+  node: IRNode,
+  x: IRNode,
+  expected: (xv: number) => number,
+  tol = 1e-9,
+): boolean {
+  for (const xv of VAR2_TEST_X) {
+    const actual = evalIrAtX(node, x, xv);
+    if (actual === null) return false;
+    let want: number;
+    try {
+      want = expected(xv);
+    } catch {
+      return false;
+    }
+    if (Math.abs(actual - want) > tol) return false;
+  }
+  return true;
+}
+
+/**
+ * Return the float value of `node` if it is constant w.r.t. `x`.
+ * Returns null if `node` contains `x` or if evaluation fails.
+ */
+function extractConstVal(node: IRNode, x: IRNode): number | null {
+  if (!isConstWrt(node, x)) return null;
+  return evalIrAtX(node, x, 0);
+}
+
+/**
+ * Return the coefficient K such that term = K * target, or null.
+ *
+ * Handles nested Mul trees, Neg wrappers, and the degenerate case
+ * term === target (coefficient = 1).  Works on both binary and n-ary Mul.
+ *
+ * Examples:
+ *   splitOutFactor(Mul(Sub(1,Pow(x,2)), ypp), ypp)  → Sub(1,Pow(x,2))
+ *   splitOutFactor(Neg(Mul(2, Mul(x, yp))), yp)     → Neg(Mul(2, x))
+ *   splitOutFactor(ypp, yp)                          → null  (ypp ≠ yp)
+ */
+function splitOutFactor(term: IRNode, target: IRNode): IRNode | null {
+  if (equals(term, target)) return ONE;
+  if (term.kind !== "apply") return null;
+  const name = headName(term.head);
+  // Neg wrapper: negate the coefficient
+  if (name === NEG.name && term.args.length === 1) {
+    const inner = splitOutFactor(term.args[0], target);
+    return inner !== null ? neg(inner) : null;
+  }
+  if (name === MUL.name) {
+    const args = term.args;
+    // Direct match: one of the factors IS the target
+    for (let i = 0; i < args.length; i++) {
+      if (equals(args[i], target)) {
+        const rest = args.filter((_, j) => j !== i) as IRNode[];
+        if (rest.length === 0) return ONE;
+        if (rest.length === 1) return rest[0];
+        return app(MUL, rest);
+      }
+    }
+    // For binary Mul, recurse into sub-trees to handle nested Mul chains
+    if (args.length === 2) {
+      const coeffB = splitOutFactor(args[1], target);
+      if (coeffB !== null) return mul(args[0], coeffB);
+      const coeffA = splitOutFactor(args[0], target);
+      if (coeffA !== null) return mul(coeffA, args[1]);
+    }
+  }
+  return null;
+}
+
+/**
+ * Extract (P, Q, R) from a variable-coefficient 2nd-order ODE:
+ *   P(x)·y'' + Q(x)·y' + R(x)·y = 0
+ *
+ * Unlike collectSecondOrderCoeffs, P/Q/R may be arbitrary IR expressions
+ * in x (not just rationals).  Returns null if any term does not fit the
+ * pattern or if no y'' term is present.
+ */
+function collectVar2Coeffs(
+  expr: IRNode,
+  y: IRNode,
+  x: IRNode,
+): { p: IRNode; q: IRNode; r: IRNode } | null {
+  const yPrime = deriv(y, x);
+  const yDouble = deriv(yPrime, x);
+  const pParts: IRNode[] = [];
+  const qParts: IRNode[] = [];
+  const rParts: IRNode[] = [];
+
+  for (const term of flattenAdd(expr)) {
+    const cp = splitOutFactor(term, yDouble);
+    if (cp !== null) { pParts.push(cp); continue; }
+    const cq = splitOutFactor(term, yPrime);
+    if (cq !== null) { qParts.push(cq); continue; }
+    const cr = splitOutFactor(term, y);
+    if (cr !== null) { rParts.push(cr); continue; }
+    return null;  // unrecognised term
+  }
+
+  if (pParts.length === 0) return null;  // no y'' term found
+  return {
+    p: pParts.length === 1 ? pParts[0] : sum(pParts),
+    q: qParts.length === 0 ? ZERO : qParts.length === 1 ? qParts[0] : sum(qParts),
+    r: rParts.length === 0 ? ZERO : rParts.length === 1 ? rParts[0] : sum(rParts),
+  };
+}
+
+/**
+ * Return the non-negative integer n such that n(n+1) = λ, or null.
+ *
+ * Uses the quadratic formula: n = (−1 + √(1+4λ)) / 2.
+ *
+ * Examples:
+ *   legendreNFromLambda(0)   → 0   (0·1 = 0)
+ *   legendreNFromLambda(6)   → 2   (2·3 = 6)
+ *   legendreNFromLambda(5)   → null
+ */
+function legendreNFromLambda(lam: number): number | null {
+  const disc = 1 + 4 * lam;
+  if (disc < -1e-12) return null;
+  const sqrtDisc = Math.sqrt(Math.max(disc, 0));
+  const nFloat = (-1 + sqrtDisc) / 2;
+  const n = Math.round(nFloat);
+  if (n < 0) return null;
+  if (Math.abs(nFloat - n) > 1e-7) return null;
+  if (Math.abs(n * (n + 1) - lam) > 1e-7) return null;
+  return n;
+}
+
+/**
+ * Extract ν as a rational [p, q] from R(x) = x² − ν².
+ *
+ * Strategy: R(x) − x² must be constant (= −ν²).  Evaluate R at two points to
+ * verify the quadratic shape, then determine ν = p/q (denominator ≤ 20) by
+ * trial.  Returns [p, q] in lowest terms, or null.
+ *
+ * Examples:
+ *   R(x) = x² − 4     → ν = 2,   returns [2, 1]
+ *   R(x) = x² − 1/4   → ν = 1/2, returns [1, 2]
+ *   R(x) = x² − 9/4   → ν = 3/2, returns [3, 2]
+ */
+function nuFromRMinusXSq(rNode: IRNode, x: IRNode): [number, number] | null {
+  const r1 = evalIrAtX(rNode, x, 1.0);
+  const r2 = evalIrAtX(rNode, x, 2.0);
+  if (r1 === null || r2 === null) return null;
+  // R(2) − R(1) should equal 4 − 1 = 3 for R(x) = x² + const
+  if (Math.abs((r2 - r1) - 3) > 1e-8) return null;
+  // ν² = x² − R(x) evaluated at x=1: ν² = 1 − R(1)
+  const nuSq = 1 - r1;
+  if (nuSq < -1e-12) return null;
+  const nuSqPos = Math.max(nuSq, 0);
+  // Trial-search for rational ν = p/q with denominator ≤ 20
+  for (let q = 1; q <= 20; q++) {
+    const pSq = nuSqPos * q * q;
+    const p = Math.round(Math.sqrt(pSq));
+    if (p >= 0 && Math.abs(p * p - pSq) < 1e-6) {
+      const g = Number(gcd(BigInt(p), BigInt(q)));
+      return [p / g, q / g];
+    }
+  }
+  return null;
+}
+
+/**
+ * Build Equal(y, %c1·head1(param, x) + %c2·head2(param, x)).
+ *
+ * Used by all four named-ODE solvers to assemble the general solution.
+ */
+function buildNamedSolution(h1: IRNode, h2: IRNode, paramIr: IRNode, y: IRNode, x: IRNode): IRNode {
+  const sol1 = mul(C1, app(h1, [paramIr, x]));
+  const sol2 = mul(C2, app(h2, [paramIr, x]));
+  return app(EQUAL, [y, add(sol1, sol2)]);
+}
+
+// ---------------------------------------------------------------------------
+// The four named-ODE recognisers
+// ---------------------------------------------------------------------------
+
+/**
+ * Recognise the Legendre ODE: (1−x²)·y'' − 2x·y' + n(n+1)·y = 0.
+ *
+ * Checks:
+ *   1. P(x) ≈ 1 − x²  at four test points.
+ *   2. Q(x) ≈ −2x     at four test points.
+ *   3. R is constant = n(n+1) for some non-negative integer n.
+ *
+ * Returns: Equal(y, %c1·LegendreP(n,x) + %c2·LegendreQ(n,x))
+ */
+function tryLegendreOde(expr: IRNode, y: IRNode, x: IRNode): IRNode | null {
+  const coeffs = collectVar2Coeffs(expr, y, x);
+  if (coeffs === null) return null;
+  const { p, q, r } = coeffs;
+  if (!coeffMatchesFunc(p, x, (xv) => 1 - xv * xv)) return null;
+  if (!coeffMatchesFunc(q, x, (xv) => -2 * xv)) return null;
+  const lam = extractConstVal(r, x);
+  if (lam === null) return null;
+  const n = legendreNFromLambda(lam);
+  if (n === null) return null;
+  return buildNamedSolution(LEGENDRE_P, LEGENDRE_Q, int(n), y, x);
+}
+
+/**
+ * Recognise the Bessel ODE: x²·y'' + x·y' + (x²−ν²)·y = 0.
+ *
+ * Checks:
+ *   1. P(x) ≈ x²   at four test points.
+ *   2. Q(x) ≈ x    at four test points.
+ *   3. R(x) = x² − ν² for some non-negative rational ν (denominator ≤ 20).
+ *
+ * Returns: Equal(y, %c1·BesselJ(ν,x) + %c2·BesselY(ν,x))
+ */
+function tryBesselOde(expr: IRNode, y: IRNode, x: IRNode): IRNode | null {
+  const coeffs = collectVar2Coeffs(expr, y, x);
+  if (coeffs === null) return null;
+  const { p, q, r } = coeffs;
+  if (!coeffMatchesFunc(p, x, (xv) => xv * xv)) return null;
+  if (!coeffMatchesFunc(q, x, (xv) => xv)) return null;
+  const nuPq = nuFromRMinusXSq(r, x);
+  if (nuPq === null) return null;
+  const [np, nq] = nuPq;
+  const nuIr: IRNode = nq === 1 ? int(np) : rational(np, nq);
+  return buildNamedSolution(BESSEL_J, BESSEL_Y, nuIr, y, x);
+}
+
+/**
+ * Recognise the Hermite ODE: y'' − 2x·y' + 2n·y = 0.
+ *
+ * Checks:
+ *   1. P ≡ 1 (constant).
+ *   2. Q(x) ≈ −2x   at four test points.
+ *   3. R is constant = 2n for some non-negative integer n.
+ *
+ * Returns: Equal(y, %c1·HermiteH(n,x) + %c2·HermiteH2(n,x))
+ */
+function tryHermiteOde(expr: IRNode, y: IRNode, x: IRNode): IRNode | null {
+  const coeffs = collectVar2Coeffs(expr, y, x);
+  if (coeffs === null) return null;
+  const { p, q, r } = coeffs;
+  const pVal = extractConstVal(p, x);
+  if (pVal === null || Math.abs(pVal - 1) > 1e-9) return null;
+  if (!coeffMatchesFunc(q, x, (xv) => -2 * xv)) return null;
+  const rVal = extractConstVal(r, x);
+  if (rVal === null || rVal < -1e-12) return null;
+  const nFloat = rVal / 2;
+  const n = Math.round(nFloat);
+  if (n < 0 || Math.abs(nFloat - n) > 1e-9) return null;
+  return buildNamedSolution(HERMITE_H, HERMITE_H2, int(n), y, x);
+}
+
+/**
+ * Recognise the Chebyshev ODE: (1−x²)·y'' − x·y' + n²·y = 0.
+ *
+ * Checks:
+ *   1. P(x) ≈ 1 − x²  at four test points.
+ *   2. Q(x) ≈ −x       at four test points.
+ *   3. R is constant = n² for some non-negative integer n.
+ *
+ * Checked before Legendre because both have P ≈ 1−x²; Chebyshev is
+ * distinguished by Q ≈ −x while Legendre has Q ≈ −2x.
+ *
+ * Returns: Equal(y, %c1·ChebyshevT(n,x) + %c2·ChebyshevU(n,x))
+ */
+function tryChebyshevOde(expr: IRNode, y: IRNode, x: IRNode): IRNode | null {
+  const coeffs = collectVar2Coeffs(expr, y, x);
+  if (coeffs === null) return null;
+  const { p, q, r } = coeffs;
+  if (!coeffMatchesFunc(p, x, (xv) => 1 - xv * xv)) return null;
+  if (!coeffMatchesFunc(q, x, (xv) => -xv)) return null;
+  const rVal = extractConstVal(r, x);
+  if (rVal === null || rVal < -1e-12) return null;
+  const nFloat = Math.sqrt(Math.max(rVal, 0));
+  const n = Math.round(nFloat);
+  if (n < 0 || Math.abs(nFloat - n) > 1e-7 || Math.abs(n * n - rVal) > 1e-7) return null;
+  return buildNamedSolution(CHEBYSHEV_T, CHEBYSHEV_U, int(n), y, x);
+}
+
+/**
+ * Phase 21 dispatcher — try all four named variable-coefficient ODE families.
+ *
+ * Priority order:
+ *   1. Chebyshev — before Legendre (both have P ≈ 1−x²; Q distinguishes them)
+ *   2. Legendre  — (1−x²)y'' − 2xy' + n(n+1)y = 0
+ *   3. Bessel    — x²y'' + xy' + (x²−ν²)y = 0
+ *   4. Hermite   — y'' − 2xy' + 2ny = 0
+ *
+ * Called from solveOde after tryEulerCauchy.
+ */
+function tryVarCoeffNamedOde(expr: IRNode, y: IRNode, x: IRNode): IRNode | null {
+  return tryChebyshevOde(expr, y, x)
+    ?? tryLegendreOde(expr, y, x)
+    ?? tryBesselOde(expr, y, x)
+    ?? tryHermiteOde(expr, y, x);
 }

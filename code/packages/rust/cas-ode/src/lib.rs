@@ -10,7 +10,8 @@ use std::collections::BTreeMap;
 use std::ops::{Add as AddOp, Div as DivOp, Mul as MulOp, Neg as NegOp, Sub as SubOp};
 
 use symbolic_ir::{
-    apply, int, rat, sym, IRNode, ADD, COS, D, DIV, EQUAL, EXP, INTEGRATE, LOG, MUL, NEG, POW, SIN,
+    apply, int, rat, sym, IRNode, ADD, BESSEL_J, BESSEL_Y, CHEBYSHEV_T, CHEBYSHEV_U, COS, D, DIV,
+    EQUAL, EXP, HERMITE_H, HERMITE_H2, INTEGRATE, LEGENDRE_P, LEGENDRE_Q, LOG, MUL, NEG, POW, SIN,
     SUB,
 };
 
@@ -1311,6 +1312,384 @@ fn vop_integrand_pair(
     }
 }
 
+// ============================================================================
+// Phase 21 — Variable-coefficient named ODE recognition
+//
+// Recognises four classical second-order ODEs with variable polynomial
+// coefficients by *numerical pattern matching*: the IR coefficient expressions
+// P(x), Q(x), R(x) are evaluated at four canonical test points and compared
+// against the expected analytic functions.
+//
+// Reading order:
+//   eval_ir_at_xy       — recursive numeric evaluator for IR trees
+//   eval_ir_at_x        — wrapper: evaluate x-only expressions
+//   coeff_matches_func  — check IR node ≈ expected function at test points
+//   extract_const_val   — extract float if node is constant w.r.t. x
+//   split_out_factor    — extract coefficient K from K·target in Mul/Neg tree
+//   collect_var2_coeffs — extract (P, Q, R) from variable-coeff 2nd-order ODE
+//   legendre_n_from_lambda — find n with n(n+1) = λ
+//   nu_from_r_minus_xsq   — extract ν from R(x) = x² − ν² (Bessel)
+//   build_named_solution   — build Equal(y, c1·F(n,x) + c2·G(n,x))
+//   try_legendre_ode, try_bessel_ode, try_hermite_ode, try_chebyshev_ode
+//   try_var_coeff_named_ode — Phase 21 dispatcher (called from solve_ode)
+// ============================================================================
+
+/// Canonical test x-values for coefficient matching.
+/// Chosen to avoid singularities (|x| ≠ 1 for Legendre, x ≠ 0 for Bessel)
+/// while probing a representative range.
+const VAR2_TEST_X: [f64; 4] = [0.3, 0.6, -0.25, 0.85];
+
+/// Recursively evaluate an IR node at concrete floating-point values of x and y.
+///
+/// Supports Integer, Rational, Float, and basic arithmetic/elementary-function
+/// heads (Add, Sub, Mul, Div, Neg, Pow, Exp, Log, Sin, Cos).
+/// Returns `None` for unrecognised symbols or unsupported heads.
+fn eval_ir_at_xy(
+    node: &IRNode,
+    x_sym: &IRNode,
+    y_sym: &IRNode,
+    x_val: f64,
+    y_val: f64,
+) -> Option<f64> {
+    // Check symbol identity first (before the match so it works for any variant)
+    if node == x_sym {
+        return Some(x_val);
+    }
+    if node == y_sym {
+        return Some(y_val);
+    }
+    match node {
+        IRNode::Integer(n) => Some(*n as f64),
+        IRNode::Rational(n, d) => Some(*n as f64 / *d as f64),
+        IRNode::Float(v) => Some(*v),
+        IRNode::Symbol(_) => None, // unknown symbol
+        IRNode::Apply(app) => {
+            if app.head == sym(ADD) {
+                app.args
+                    .iter()
+                    .try_fold(0.0_f64, |acc, a| {
+                        Some(acc + eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val)?)
+                    })
+            } else if let Some((a, b)) = binary_args(node, SUB) {
+                Some(
+                    eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val)?
+                        - eval_ir_at_xy(b, x_sym, y_sym, x_val, y_val)?,
+                )
+            } else if app.head == sym(MUL) {
+                app.args
+                    .iter()
+                    .try_fold(1.0_f64, |acc, a| {
+                        Some(acc * eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val)?)
+                    })
+            } else if let Some((a, b)) = binary_args(node, DIV) {
+                let dv = eval_ir_at_xy(b, x_sym, y_sym, x_val, y_val)?;
+                if dv == 0.0 {
+                    return None;
+                }
+                Some(eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val)? / dv)
+            } else if let Some(inner) = unary_arg(node, NEG) {
+                eval_ir_at_xy(inner, x_sym, y_sym, x_val, y_val).map(|v| -v)
+            } else if let Some((a, b)) = binary_args(node, POW) {
+                Some(
+                    eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val)?
+                        .powf(eval_ir_at_xy(b, x_sym, y_sym, x_val, y_val)?),
+                )
+            } else if let Some(a) = unary_arg(node, EXP) {
+                eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val).map(|v| v.exp())
+            } else if let Some(a) = unary_arg(node, LOG) {
+                eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val).map(|v| v.abs().ln())
+            } else if let Some(a) = unary_arg(node, SIN) {
+                eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val).map(|v| v.sin())
+            } else if let Some(a) = unary_arg(node, COS) {
+                eval_ir_at_xy(a, x_sym, y_sym, x_val, y_val).map(|v| v.cos())
+            } else {
+                None
+            }
+        }
+        _ => None,
+    }
+}
+
+/// Evaluate an x-only IR expression at `xv`.
+/// Returns `None` if evaluation fails (unknown symbol, unsupported head, etc.).
+fn eval_ir_at_x(node: &IRNode, x_sym: &IRNode, xv: f64) -> Option<f64> {
+    let dummy_y = sym("__var2_dummy_y__");
+    eval_ir_at_xy(node, x_sym, &dummy_y, xv, 0.0)
+}
+
+/// Return true iff `node` numerically agrees with `expected(xv)` at every
+/// canonical test point (tolerance `tol`).  Returns false on eval failures.
+fn coeff_matches_func(
+    node: &IRNode,
+    x: &IRNode,
+    expected: impl Fn(f64) -> f64,
+    tol: f64,
+) -> bool {
+    for &xv in &VAR2_TEST_X {
+        let actual = match eval_ir_at_x(node, x, xv) {
+            Some(v) => v,
+            None => return false,
+        };
+        if (actual - expected(xv)).abs() > tol {
+            return false;
+        }
+    }
+    true
+}
+
+/// Return the float value of `node` if it is constant w.r.t. `x`.
+/// Returns `None` if `node` contains `x` or if evaluation fails.
+fn extract_const_val(node: &IRNode, x: &IRNode) -> Option<f64> {
+    if !is_const_wrt(node, x) {
+        return None;
+    }
+    eval_ir_at_x(node, x, 0.0)
+}
+
+/// Return the coefficient K such that `term = K * target`, or `None`.
+///
+/// Handles nested Mul trees, Neg wrappers, and the degenerate case
+/// `term == target` (coefficient = 1).  Rust Mul is always binary.
+///
+/// Examples:
+///   split_out_factor(Mul(Sub(1,Pow(x,2)), ypp), ypp) → Sub(1,Pow(x,2))
+///   split_out_factor(Neg(Mul(2x, yp)), yp)           → Neg(Mul(2, x))
+fn split_out_factor(term: &IRNode, target: &IRNode) -> Option<IRNode> {
+    if term == target {
+        return Some(one());
+    }
+    // Neg wrapper: negate the coefficient
+    if let Some(inner) = unary_arg(term, NEG) {
+        return split_out_factor(inner, target).map(neg);
+    }
+    // Binary Mul: check direct match and recursive match
+    if let Some((a, b)) = binary_args(term, MUL) {
+        if b == target {
+            return Some(a.clone());
+        }
+        if a == target {
+            return Some(b.clone());
+        }
+        // Recursive descent into right sub-tree
+        if let Some(coeff_b) = split_out_factor(b, target) {
+            return Some(mul(a.clone(), coeff_b));
+        }
+        // Recursive descent into left sub-tree
+        if let Some(coeff_a) = split_out_factor(a, target) {
+            return Some(mul(coeff_a, b.clone()));
+        }
+    }
+    None
+}
+
+/// Extract (P, Q, R) from a variable-coefficient 2nd-order ODE:
+///   P(x)·y'' + Q(x)·y' + R(x)·y = 0
+///
+/// Unlike `collect_second_order_coeffs`, P/Q/R may be arbitrary IR
+/// expressions in x.  Returns `None` if any term does not fit the pattern
+/// or if no y'' term is present.
+fn collect_var2_coeffs(
+    expr: &IRNode,
+    y: &IRNode,
+    x: &IRNode,
+) -> Option<(IRNode, IRNode, IRNode)> {
+    let yp = y_prime(y, x);
+    let yd = y_double(y, x);
+    let mut p_parts: Vec<IRNode> = Vec::new();
+    let mut q_parts: Vec<IRNode> = Vec::new();
+    let mut r_parts: Vec<IRNode> = Vec::new();
+
+    for term in flatten_add(expr) {
+        if let Some(cp) = split_out_factor(&term, &yd) {
+            p_parts.push(cp);
+        } else if let Some(cq) = split_out_factor(&term, &yp) {
+            q_parts.push(cq);
+        } else if let Some(cr) = split_out_factor(&term, y) {
+            r_parts.push(cr);
+        } else {
+            return None; // unrecognised term
+        }
+    }
+
+    if p_parts.is_empty() {
+        return None; // no y'' term found
+    }
+
+    let sum_parts = |parts: Vec<IRNode>| -> IRNode {
+        parts.into_iter().fold(zero(), add)
+    };
+
+    let p = sum_parts(p_parts);
+    let q = if q_parts.is_empty() { zero() } else { sum_parts(q_parts) };
+    let r = if r_parts.is_empty() { zero() } else { sum_parts(r_parts) };
+    Some((p, q, r))
+}
+
+/// Return the non-negative integer n such that n(n+1) = λ, or `None`.
+///
+/// Uses the quadratic formula: n = (−1 + √(1+4λ)) / 2.
+fn legendre_n_from_lambda(lam: f64) -> Option<i64> {
+    let disc = 1.0 + 4.0 * lam;
+    if disc < -1e-12 {
+        return None;
+    }
+    let sqrt_disc = disc.max(0.0).sqrt();
+    let n_float = (-1.0 + sqrt_disc) / 2.0;
+    let n = n_float.round() as i64;
+    if n < 0 {
+        return None;
+    }
+    if (n_float - n as f64).abs() > 1e-7 {
+        return None;
+    }
+    if ((n * (n + 1)) as f64 - lam).abs() > 1e-7 {
+        return None;
+    }
+    Some(n)
+}
+
+/// Extract ν as a rational (p, q) from R(x) = x² − ν².
+///
+/// Evaluates R at 1 and 2 to verify the quadratic shape (R(2)−R(1)=3),
+/// then determines ν = p/q (denominator ≤ 20) by trial.
+/// Returns (p, q) in lowest terms, or `None`.
+fn nu_from_r_minus_xsq(r_node: &IRNode, x: &IRNode) -> Option<(i64, i64)> {
+    let r1 = eval_ir_at_x(r_node, x, 1.0)?;
+    let r2 = eval_ir_at_x(r_node, x, 2.0)?;
+    // Consistency: R(2) − R(1) should equal 4 − 1 = 3
+    if ((r2 - r1) - 3.0).abs() > 1e-8 {
+        return None;
+    }
+    // ν² = 1 − R(1)
+    let nu_sq_raw = 1.0 - r1;
+    if nu_sq_raw < -1e-12 {
+        return None;
+    }
+    let nu_sq = nu_sq_raw.max(0.0);
+    for q in 1i64..=20 {
+        let p_sq = nu_sq * (q * q) as f64;
+        let p = p_sq.sqrt().round() as i64;
+        if p >= 0 && ((p * p) as f64 - p_sq).abs() < 1e-6 {
+            let g = gcd(p.unsigned_abs(), q.unsigned_abs()) as i64;
+            return Some((p / g, q / g));
+        }
+    }
+    None
+}
+
+/// Build `Equal(y, %c1·head1(param, x) + %c2·head2(param, x))`.
+fn build_named_solution(
+    head1: &str,
+    head2: &str,
+    param_ir: IRNode,
+    y: &IRNode,
+    x: &IRNode,
+) -> IRNode {
+    let sol1 = mul(c1(), apply(sym(head1), vec![param_ir.clone(), x.clone()]));
+    let sol2 = mul(c2(), apply(sym(head2), vec![param_ir, x.clone()]));
+    equal(y.clone(), add(sol1, sol2))
+}
+
+// ---------------------------------------------------------------------------
+// The four named-ODE recognisers
+// ---------------------------------------------------------------------------
+
+/// Recognise the Legendre ODE: (1−x²)·y'' − 2x·y' + n(n+1)·y = 0.
+///
+/// Checks: P≈1−x², Q≈−2x, R constant = n(n+1) for non-negative integer n.
+/// Returns: Equal(y, %c1·LegendreP(n,x) + %c2·LegendreQ(n,x))
+fn try_legendre_ode(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
+    let (p, q, r) = collect_var2_coeffs(expr, y, x)?;
+    if !coeff_matches_func(&p, x, |xv| 1.0 - xv * xv, 1e-9) {
+        return None;
+    }
+    if !coeff_matches_func(&q, x, |xv| -2.0 * xv, 1e-9) {
+        return None;
+    }
+    let lam = extract_const_val(&r, x)?;
+    let n = legendre_n_from_lambda(lam)?;
+    Some(build_named_solution(LEGENDRE_P, LEGENDRE_Q, int(n), y, x))
+}
+
+/// Recognise the Bessel ODE: x²·y'' + x·y' + (x²−ν²)·y = 0.
+///
+/// Checks: P≈x², Q≈x, R(x) = x² − ν² for rational ν (denominator ≤ 20).
+/// Returns: Equal(y, %c1·BesselJ(ν,x) + %c2·BesselY(ν,x))
+fn try_bessel_ode(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
+    let (p, q, r) = collect_var2_coeffs(expr, y, x)?;
+    if !coeff_matches_func(&p, x, |xv| xv * xv, 1e-9) {
+        return None;
+    }
+    if !coeff_matches_func(&q, x, |xv| xv, 1e-9) {
+        return None;
+    }
+    let (np, nq) = nu_from_r_minus_xsq(&r, x)?;
+    let nu_ir = if nq == 1 { int(np) } else { rat(np, nq) };
+    Some(build_named_solution(BESSEL_J, BESSEL_Y, nu_ir, y, x))
+}
+
+/// Recognise the Hermite ODE: y'' − 2x·y' + 2n·y = 0.
+///
+/// Checks: P≡1, Q≈−2x, R constant = 2n for non-negative integer n.
+/// Returns: Equal(y, %c1·HermiteH(n,x) + %c2·HermiteH2(n,x))
+fn try_hermite_ode(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
+    let (p, q, r) = collect_var2_coeffs(expr, y, x)?;
+    let p_val = extract_const_val(&p, x)?;
+    if (p_val - 1.0).abs() > 1e-9 {
+        return None;
+    }
+    if !coeff_matches_func(&q, x, |xv| -2.0 * xv, 1e-9) {
+        return None;
+    }
+    let r_val = extract_const_val(&r, x)?;
+    if r_val < -1e-12 {
+        return None;
+    }
+    let n_float = r_val / 2.0;
+    let n = n_float.round() as i64;
+    if n < 0 || (n_float - n as f64).abs() > 1e-9 {
+        return None;
+    }
+    Some(build_named_solution(HERMITE_H, HERMITE_H2, int(n), y, x))
+}
+
+/// Recognise the Chebyshev ODE: (1−x²)·y'' − x·y' + n²·y = 0.
+///
+/// Checks: P≈1−x², Q≈−x, R constant = n² for non-negative integer n.
+/// Checked before Legendre (both have P≈1−x²; Chebyshev has Q≈−x not −2x).
+/// Returns: Equal(y, %c1·ChebyshevT(n,x) + %c2·ChebyshevU(n,x))
+fn try_chebyshev_ode(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
+    let (p, q, r) = collect_var2_coeffs(expr, y, x)?;
+    if !coeff_matches_func(&p, x, |xv| 1.0 - xv * xv, 1e-9) {
+        return None;
+    }
+    if !coeff_matches_func(&q, x, |xv| -xv, 1e-9) {
+        return None;
+    }
+    let r_val = extract_const_val(&r, x)?;
+    if r_val < -1e-12 {
+        return None;
+    }
+    let n_float = r_val.max(0.0).sqrt();
+    let n = n_float.round() as i64;
+    if n < 0 || (n_float - n as f64).abs() > 1e-7 || ((n * n) as f64 - r_val).abs() > 1e-7 {
+        return None;
+    }
+    Some(build_named_solution(CHEBYSHEV_T, CHEBYSHEV_U, int(n), y, x))
+}
+
+/// Phase 21 dispatcher — try all four named variable-coefficient ODE families.
+///
+/// Priority order: Chebyshev → Legendre → Bessel → Hermite.
+/// (Chebyshev before Legendre because both have P≈1−x²; Q distinguishes them.)
+/// Called from `solve_ode` after `collect_euler_cauchy_coeffs`.
+fn try_var_coeff_named_ode(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
+    try_chebyshev_ode(expr, y, x)
+        .or_else(|| try_legendre_ode(expr, y, x))
+        .or_else(|| try_bessel_ode(expr, y, x))
+        .or_else(|| try_hermite_ode(expr, y, x))
+}
+
 fn try_vop(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
     let (a, b, ccoef, f) = collect_second_order_nonhom(expr, y, x)?;
     let (u1p, u2p, y1, y2) = vop_integrand_pair(a, b, ccoef, f, x)?;
@@ -1339,6 +1718,9 @@ pub fn solve_ode(expr: IRNode, y: IRNode, x: IRNode) -> Option<IRNode> {
     }
     if let Some((a, b, ccoef)) = collect_euler_cauchy_coeffs(&expr, &y, &x) {
         return Some(solve_euler_cauchy_frac(a, b, ccoef, &y, &x));
+    }
+    if let Some(result) = try_var_coeff_named_ode(&expr, &y, &x) {
+        return Some(result);
     }
     if let Some(result) = try_bernoulli(&expr, &y, &x) {
         return Some(result);
@@ -1590,5 +1972,185 @@ mod tests {
 
         let unsupported = apply(sym(ODE2), vec![apply(sym("Mystery"), vec![x()]), y(), x()]);
         assert_eq!(ode2_handler(&unsupported), unsupported);
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 21 — Variable-coefficient named ODE helpers and recognisers
+    // -----------------------------------------------------------------------
+
+    /// Build the Legendre ODE zero-form for order n:
+    ///   (1 − x²)·y'' − 2x·y' + n(n+1)·y = 0
+    fn legendre_expr(n: i64) -> IRNode {
+        let lam = n * (n + 1);
+        let x_sq = pow(x(), int(2));
+        let one_minus_x_sq = sub(one(), x_sq);
+        add(
+            mul(one_minus_x_sq, yd()),
+            add(neg(mul(int(2), mul(x(), yp()))), mul(int(lam), y())),
+        )
+    }
+
+    /// Build the Bessel ODE zero-form for order ν = nu_n/nu_d:
+    ///   x²·y'' + x·y' + (x² − ν²)·y = 0
+    fn bessel_expr(nu_n: i64, nu_d: i64) -> IRNode {
+        let x_sq = pow(x(), int(2));
+        let nu_sq_ir = if nu_d == 1 {
+            int(nu_n * nu_n)
+        } else {
+            rat(nu_n * nu_n, nu_d * nu_d)
+        };
+        add(
+            mul(x_sq.clone(), yd()),
+            add(mul(x(), yp()), mul(sub(x_sq, nu_sq_ir), y())),
+        )
+    }
+
+    /// Build the Hermite ODE zero-form for order n:
+    ///   y'' − 2x·y' + 2n·y = 0
+    fn hermite_expr(n: i64) -> IRNode {
+        add(yd(), add(neg(mul(int(2), mul(x(), yp()))), mul(int(2 * n), y())))
+    }
+
+    /// Build the Chebyshev ODE zero-form for order n:
+    ///   (1 − x²)·y'' − x·y' + n²·y = 0
+    fn chebyshev_expr(n: i64) -> IRNode {
+        let x_sq = pow(x(), int(2));
+        let one_minus_x_sq = sub(one(), x_sq);
+        add(
+            mul(one_minus_x_sq, yd()),
+            add(neg(mul(x(), yp())), mul(int(n * n), y())),
+        )
+    }
+
+    /// Extract the RHS of `Equal(y, rhs)` from a solve_ode result.
+    fn rhs_of_equal(node: &IRNode) -> IRNode {
+        let IRNode::Apply(app) = node else {
+            panic!("expected Apply");
+        };
+        assert_eq!(app.head, sym(EQUAL));
+        app.args[1].clone()
+    }
+
+    #[test]
+    fn phase21_legendre_n2_returns_legendrep_q_solution() {
+        let result = solve_ode(legendre_expr(2), y(), x()).unwrap();
+        let rhs = rhs_of_equal(&result);
+        // Equal(y, Add(Mul(%c1, LegendreP(2, x)), Mul(%c2, LegendreQ(2, x))))
+        let expected = add(
+            mul(c1(), apply(sym(LEGENDRE_P), vec![int(2), x()])),
+            mul(c2(), apply(sym(LEGENDRE_Q), vec![int(2), x()])),
+        );
+        assert_eq!(rhs, expected);
+    }
+
+    #[test]
+    fn phase21_legendre_n3_encodes_order_3() {
+        let result = solve_ode(legendre_expr(3), y(), x()).unwrap();
+        let s = format!("{result}");
+        assert!(s.contains("LegendreP"), "expected LegendreP in {s}");
+        assert!(s.contains("LegendreQ"), "expected LegendreQ in {s}");
+        assert!(s.contains("3"), "expected order 3 in {s}");
+        assert!(s.contains("%c1") && s.contains("%c2"));
+    }
+
+    #[test]
+    fn phase21_bessel_nu1_integer_order() {
+        // x²y'' + xy' + (x²−1)y = 0  →  ν = 1
+        let result = solve_ode(bessel_expr(1, 1), y(), x()).unwrap();
+        let rhs = rhs_of_equal(&result);
+        let expected = add(
+            mul(c1(), apply(sym(BESSEL_J), vec![int(1), x()])),
+            mul(c2(), apply(sym(BESSEL_Y), vec![int(1), x()])),
+        );
+        assert_eq!(rhs, expected);
+    }
+
+    #[test]
+    fn phase21_bessel_nu2_integer_order() {
+        // x²y'' + xy' + (x²−4)y = 0  →  ν = 2
+        let result = solve_ode(bessel_expr(2, 1), y(), x()).unwrap();
+        let s = format!("{result}");
+        assert!(s.contains("BesselJ"), "expected BesselJ in {s}");
+        assert!(s.contains("BesselY"), "expected BesselY in {s}");
+        assert!(s.contains("2"));
+    }
+
+    #[test]
+    fn phase21_bessel_nu_half_integer() {
+        // x²y'' + xy' + (x²−1/4)y = 0  →  ν = 1/2
+        let result = solve_ode(bessel_expr(1, 2), y(), x()).unwrap();
+        let s = format!("{result}");
+        assert!(s.contains("BesselJ"), "expected BesselJ in {s}");
+        assert!(s.contains("BesselY"), "expected BesselY in {s}");
+    }
+
+    #[test]
+    fn phase21_hermite_n3_returns_hermiteh_h2_solution() {
+        let result = solve_ode(hermite_expr(3), y(), x()).unwrap();
+        let rhs = rhs_of_equal(&result);
+        let expected = add(
+            mul(c1(), apply(sym(HERMITE_H), vec![int(3), x()])),
+            mul(c2(), apply(sym(HERMITE_H2), vec![int(3), x()])),
+        );
+        assert_eq!(rhs, expected);
+    }
+
+    #[test]
+    fn phase21_hermite_n0_trivial() {
+        // y'' + 0·y' + 0·y = 0 (hermite n=0 has 2n=0)
+        let result = solve_ode(hermite_expr(0), y(), x()).unwrap();
+        let s = format!("{result}");
+        assert!(s.contains("HermiteH"), "expected HermiteH in {s}");
+    }
+
+    #[test]
+    fn phase21_chebyshev_n2_returns_chebyshevt_u_solution() {
+        let result = solve_ode(chebyshev_expr(2), y(), x()).unwrap();
+        let rhs = rhs_of_equal(&result);
+        let expected = add(
+            mul(c1(), apply(sym(CHEBYSHEV_T), vec![int(2), x()])),
+            mul(c2(), apply(sym(CHEBYSHEV_U), vec![int(2), x()])),
+        );
+        assert_eq!(rhs, expected);
+    }
+
+    #[test]
+    fn phase21_chebyshev_n3_encodes_order_3() {
+        let result = solve_ode(chebyshev_expr(3), y(), x()).unwrap();
+        let s = format!("{result}");
+        assert!(s.contains("ChebyshevT"), "expected ChebyshevT in {s}");
+        assert!(s.contains("ChebyshevU"), "expected ChebyshevU in {s}");
+        assert!(s.contains("3"));
+    }
+
+    #[test]
+    fn phase21_chebyshev_distinguished_from_legendre() {
+        // Chebyshev and Legendre both have P ≈ 1−x²; Q distinguishes them.
+        let legendre_result = solve_ode(legendre_expr(2), y(), x()).unwrap();
+        let chebyshev_result = solve_ode(chebyshev_expr(2), y(), x()).unwrap();
+        let ls = format!("{legendre_result}");
+        let cs = format!("{chebyshev_result}");
+        assert!(
+            ls.contains("LegendreP") && !ls.contains("ChebyshevT"),
+            "Legendre result should contain LegendreP not ChebyshevT: {ls}"
+        );
+        assert!(
+            cs.contains("ChebyshevT") && !cs.contains("LegendreP"),
+            "Chebyshev result should contain ChebyshevT not LegendreP: {cs}"
+        );
+    }
+
+    #[test]
+    fn phase21_regression_euler_cauchy_still_works() {
+        // x²y'' − 2y = 0 should be caught by tryEulerCauchy BEFORE Phase 21
+        let expr = sub(mul(pow(x(), int(2)), yd()), mul(int(2), y()));
+        let result = solve_ode(expr, y(), x()).unwrap();
+        let s = format!("{result}");
+        // Euler-Cauchy: r²-r-2=0 → r=2,-1 → %c1·x² + %c2·x^(-1)
+        assert!(s.contains("Pow"), "expected Pow in Euler-Cauchy solution: {s}");
+        assert!(
+            !s.contains("LegendreP") && !s.contains("BesselJ"),
+            "Euler-Cauchy result must not contain named-ODE heads: {s}"
+        );
     }
 }
