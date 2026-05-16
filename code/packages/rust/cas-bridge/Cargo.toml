@@ -1,0 +1,12 @@
+[package]
+name = "cas-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Bridge from Layer-1 statistics/math/financial cores to the symbolic-vm IR — registers core functions as handlers so the same engine that evaluates symbolic expressions also evaluates spreadsheet formulas"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }
+statistics-core = { path = "../statistics-core" }
