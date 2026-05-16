@@ -1,0 +1,11 @@
+[package]
+name = "dsp-filters"
+version = "0.1.0"
+edition = "2021"
+description = "DSP03 Phase 1+2: scalar reference FIR (finite impulse response) filter via direct linear convolution. Returns the full N + K - 1 output. Phase 3 will add FFT-based overlap-add via dsp-fft for long kernels; Phase 4 adds IIR (direct-form-II Transposed); Phase 5 adds Butterworth / Chebyshev / windowed-sinc design helpers."
+license = "MIT"
+
+[dependencies]
+dsp-fft = { path = "../dsp-fft" }
+
+[dev-dependencies]
