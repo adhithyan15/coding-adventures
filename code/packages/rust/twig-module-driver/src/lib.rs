@@ -3462,10 +3462,15 @@ mod tw05n_tests {
     }
 
     fn twig_escape_path(p: &std::path::Path) -> String {
+        // Escape all characters that could confuse the Twig string lexer.
+        // `\r` and `\t` are legal in filesystem paths on some platforms and
+        // must be escaped to avoid producing malformed Twig source.
         p.to_str().unwrap()
             .replace('\\', "\\\\")
             .replace('"',  "\\\"")
             .replace('\n', "\\n")
+            .replace('\r', "\\r")
+            .replace('\t', "\\t")
     }
 
     fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
