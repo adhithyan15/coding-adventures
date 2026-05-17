@@ -230,6 +230,18 @@ Today the package carries two suites:
 - `html-skeleton.json` for narrow bootstrap regression coverage
 - `html1.json` for the current Mosaic-era compatibility floor
 
+The checked-in `whatwg-entities.json` fixture is generated from the HTML
+Standard's `entities.json` table and is exercised directly by Rust tests across
+data, attribute, and RCDATA tokenizer contexts. Regenerate or check it with:
+
+```bash
+curl -L https://html.spec.whatwg.org/entities.json -o /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json --check
+```
+
 There is also an `upstream-html5lib-smoke.test` file that mirrors the raw
 html5lib tokenizer JSON shape in a small supported subset. The Rust test
 harness now targets a checked-in generated `html5lib-smoke.json` corpus, which

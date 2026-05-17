@@ -41,6 +41,9 @@ documented in this file.
 - html5lib-style smoke fixture coverage for seeded character-reference
   continuations returning to both data and RCDATA, including missing-semicolon
   and absence-of-digits diagnostics.
+- A generated WHATWG `entities.json` fixture and Rust conformance test that
+  exercises every named character reference in data, attribute, and RCDATA
+  contexts, including semicolonless legacy and ambiguous-ampersand behavior.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

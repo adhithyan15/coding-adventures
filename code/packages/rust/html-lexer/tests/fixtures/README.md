@@ -48,12 +48,28 @@ binary while production code continues to link only static Rust source.
 
 - `html-skeleton.json`: narrow bootstrap regression cases
 - `html1.json`: Mosaic-era compatibility-floor cases for the current default wrapper
+- `whatwg-entities.json`: generated HTML Standard named character reference
+  table used by Rust tests to exercise every entry in data, attribute, and
+  RCDATA contexts
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
   exercise the normalization path toward broader upstream corpora
 - `normalize_html5lib_fixtures.py`: importer that lowers supported raw
   html5lib-style tokenizer cases into Venture's portable fixture schema
+- `generate_whatwg_entities_fixture.py`: importer that lowers the HTML
+  Standard's `entities.json` table into the checked-in `whatwg-entities.json`
+  fixture
+
+Regenerate or verify the WHATWG entity fixture with:
+
+```bash
+curl -L https://html.spec.whatwg.org/entities.json -o /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json --check
+```
 
 ## Conformance Audit
 
