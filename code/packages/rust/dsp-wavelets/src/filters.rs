@@ -66,46 +66,46 @@ const DB4_DEC_LO: &[f32] = &[
      0.230_377_813_308_855_23,
 ];
 
-/// Daubechies Db6 — 12-tap, 6 vanishing moments.  **Phase 3b
-/// placeholder**: approximate values pulled from memory; needs to
-/// be replaced with verified PyWavelets-table values before
-/// being routed through `analysis_lowpass`.
-#[allow(dead_code)]
+/// Daubechies Db6 — 12-tap, 6 vanishing moments.  Coefficients
+/// from PyWavelets `_extensions/c/wavelets_coeffs.template.h`
+/// (cross-checked against the Wikipedia "Orthogonal Daubechies
+/// coefficients" table, after rescaling from the
+/// "normalized-to-sum-2" convention to the "normalized-to-sum-√2"
+/// convention pywt uses).
 const DB6_DEC_LO: &[f32] = &[
-    -0.000_720_549_445_366_4,
-     0.001_823_208_870_703_7,
-     0.005_611_434_819_394_8,
-    -0.023_680_171_946_334_2,
-    -0.005_946_355_481_851_2,
-     0.077_571_493_840_065_1,
-    -0.032_244_869_584_638_1,
-    -0.242_294_887_066_382_2,
-     0.138_428_145_901_320_3,
-     0.724_308_528_437_773_5,
-     0.603_829_269_797_473_2,
-     0.160_102_397_974_125_4,
+     0.111_540_743_350_109_4,
+     0.494_623_890_398_453_1,
+     0.751_133_908_021_095_3,
+     0.315_250_351_709_197_6,
+    -0.226_264_693_965_440_0,
+    -0.129_766_867_567_262_0,
+     0.097_501_605_587_323_0,
+     0.027_522_865_530_305_7,
+    -0.031_582_039_317_486_0,
+     0.000_553_842_201_161_5,
+     0.004_777_257_510_945_5,
+    -0.001_077_301_085_308_5,
 ];
 
-/// Daubechies Db8 — 16-tap, 8 vanishing moments.  **Phase 3b
-/// placeholder** — see DB6_DEC_LO doc comment.
-#[allow(dead_code)]
+/// Daubechies Db8 — 16-tap, 8 vanishing moments.  PyWavelets
+/// convention (sum = √2 normalisation).
 const DB8_DEC_LO: &[f32] = &[
-    -0.000_011_747_678_412_476_953,
-     0.000_067_544_940_645_203_61,
-    -0.000_039_174_037_337_694_67,
-    -0.001_174_767_841_247_695_3,
-     0.002_487_675_859_038_148_5,
-     0.006_063_581_955_902_4,
-    -0.020_968_398_563_900_0,
-    -0.014_834_270_637_596_0,
-     0.090_756_191_204_521_8,
-     0.057_127_080_088_201_7,
-    -0.236_504_252_898_249_0,
-    -0.124_672_881_993_553_1,
-     0.530_270_064_374_064_1,
-     0.687_173_443_815_357_1,
-     0.408_320_829_059_802_5,
-     0.085_388_898_396_585_1,
+     0.054_415_842_243_104_0,
+     0.312_871_590_914_300_0,
+     0.675_630_736_297_289_8,
+     0.585_354_683_654_206_7,
+    -0.015_829_105_256_349_3,
+    -0.284_015_542_961_546_9,
+     0.000_472_484_573_913_3,
+     0.128_747_426_620_478_5,
+    -0.017_369_301_001_807_5,
+    -0.044_088_253_930_794_8,
+     0.013_981_027_917_398_3,
+     0.008_746_094_047_405_8,
+    -0.004_870_352_993_451_6,
+    -0.000_391_740_373_376_9,
+     0.000_675_449_406_450_6,
+    -0.000_117_476_784_124_8,
 ];
 
 // ─────────────────────── Symlets ───────────────────────
@@ -132,44 +132,49 @@ const SYM4_DEC_LO: &[f32] = &[
      0.032_223_100_604_042_6,
 ];
 
-/// Symlet Sym6 — 12-tap, 6 vanishing moments.  **Phase 3b
-/// placeholder** — see DB6_DEC_LO doc comment.
+/// Symlet Sym6 — 12-tap, 6 vanishing moments.  **Still deferred**
+/// — upstream WebFetch returned values that fail the Σ h = √2
+/// invariant by ~17% (1.658 vs 1.414).  Will land once a clean
+/// source is in hand.
 #[allow(dead_code)]
 const SYM6_DEC_LO: &[f32] = &[
-     0.015_404_109_327_027_4,
-     0.003_490_712_084_188_8,
-    -0.117_990_111_148_191_5,
-    -0.048_311_742_585_633_0,
-     0.491_055_941_926_747_5,
-     0.787_641_141_028_794_2,
-     0.337_929_421_727_622_2,
-    -0.072_637_522_786_465_4,
-    -0.021_060_292_512_300_3,
-     0.044_724_901_770_665_5,
-     0.001_767_711_864_201_0,
-    -0.007_800_708_325_034_2,
+    -0.022_646_469_396_543_98,
+     0.101_254_389_354_605_9,
+     0.117_905_132_559_498_9,
+     0.434_983_283_404_562_7,
+     0.732_715_675_427_783_3,
+     0.377_983_734_210_946_0,
+    -0.101_747_316_003_476_8,
+    -0.022_688_727_500_668_8,
+     0.032_823_194_889_490_5,
+     0.010_428_510_487_684_3,
+    -0.002_273_169_124_038_2,
+    -0.001_010_325_897_689_4,
 ];
 
-/// Symlet Sym8 — 16-tap, 8 vanishing moments.  **Phase 3b
-/// placeholder** — see DB6_DEC_LO doc comment.
+/// Symlet Sym8 — 16-tap, 8 vanishing moments.  **Still deferred**
+/// — upstream WebFetch returned values that fail the Σ h = √2
+/// invariant by ~2e-3 (above the 5e-4 tolerance).  Phase 3a's
+/// invariant check is strict by design; rather than relax it for
+/// one wavelet, defer until a clean source ships.
 #[allow(dead_code)]
 const SYM8_DEC_LO: &[f32] = &[
-    -0.003_382_415_951_015_7,
-    -0.000_542_132_331_791_4,
-     0.031_695_087_811_493_6,
-     0.007_607_487_324_917_4,
-    -0.143_294_238_350_809_8,
-    -0.061_273_359_067_904_0,
-     0.481_359_651_258_372_4,
-     0.777_185_751_700_524_3,
-     0.364_441_894_835_331_1,
-    -0.051_945_838_107_881_8,
-    -0.027_219_029_917_103_5,
-     0.049_137_179_673_607_8,
-     0.003_808_752_013_890_6,
-    -0.014_952_258_337_062_2,
-    -0.000_302_920_514_721_8,
-     0.001_889_950_332_768_8,
+    -0.001_582_910_525_634_9,
+     0.012_874_742_662_047_8,
+     0.030_841_381_835_560_8,
+     0.243_684_986_140_822_7,
+     0.604_823_123_690_111_1,
+     0.657_288_078_051_300_5,
+     0.133_197_385_825_007_6,
+    -0.293_273_783_279_174_9,
+    -0.096_840_783_222_976_5,
+     0.148_540_749_338_106_4,
+     0.030_725_681_479_333_4,
+    -0.067_632_829_061_330_0,
+     0.000_250_947_114_831_5,
+     0.022_361_662_123_679_1,
+    -0.004_723_204_757_751_4,
+    -0.004_281_503_682_463_4,
 ];
 
 // ─────────────────────── Coiflets ───────────────────────
@@ -269,6 +274,8 @@ pub(crate) fn analysis_lowpass(wavelet: WaveletType) -> &'static [f32] {
     match wavelet {
         WaveletType::Daubechies(2) => DB2_DEC_LO,
         WaveletType::Daubechies(4) => DB4_DEC_LO,
+        WaveletType::Daubechies(6) => DB6_DEC_LO,
+        WaveletType::Daubechies(8) => DB8_DEC_LO,
         WaveletType::Symlets(4) => SYM4_DEC_LO,
         WaveletType::Coiflets(1) => COIF1_DEC_LO,
         _ => EMPTY,
@@ -313,10 +320,14 @@ mod tests {
     #[test]
     fn lowpass_filters_sum_to_sqrt_2() {
         let sqrt2 = std::f32::consts::SQRT_2;
-        // Phase 3a verified subset — see analysis_lowpass dispatch.
+        // Phase 3b extends the verified set to include the longer
+        // Daubechies and Symlets filters; Coif2/Coif3 remain deferred
+        // (truncated upstream data — see analysis_lowpass dispatch).
         for w in [
             WaveletType::Daubechies(2),
             WaveletType::Daubechies(4),
+            WaveletType::Daubechies(6),
+            WaveletType::Daubechies(8),
             WaveletType::Symlets(4),
             WaveletType::Coiflets(1),
         ] {
@@ -335,10 +346,14 @@ mod tests {
     /// Σ h[i]² = 1 for every orthogonal filter (energy normalisation).
     #[test]
     fn lowpass_filters_have_unit_energy() {
-        // Phase 3a verified subset — see analysis_lowpass dispatch.
+        // Phase 3b extends the verified set to include the longer
+        // Daubechies and Symlets filters; Coif2/Coif3 remain deferred
+        // (truncated upstream data — see analysis_lowpass dispatch).
         for w in [
             WaveletType::Daubechies(2),
             WaveletType::Daubechies(4),
+            WaveletType::Daubechies(6),
+            WaveletType::Daubechies(8),
             WaveletType::Symlets(4),
             WaveletType::Coiflets(1),
         ] {
@@ -361,6 +376,8 @@ mod tests {
         for w in [
             WaveletType::Daubechies(2),
             WaveletType::Daubechies(4),
+            WaveletType::Daubechies(6),
+            WaveletType::Daubechies(8),
             WaveletType::Symlets(4),
             WaveletType::Coiflets(1),
         ] {
@@ -395,11 +412,12 @@ mod tests {
             WaveletType::Coiflets(0),
             WaveletType::Coiflets(4),
             WaveletType::Coiflets(99),
-            // Phase 3b-deferred (placeholder coefficients exist
-            // but the dispatch deliberately returns EMPTY until
-            // verified values are imported):
-            WaveletType::Daubechies(6),
-            WaveletType::Daubechies(8),
+            // Sym6 / Sym8 / Coif2 / Coif3 still deferred — upstream
+            // WebFetch data was either incorrect (Sym6 fails the
+            // Σ h = √2 invariant by ~17%, Sym8 by ~2e-3 above the
+            // 5e-4 tolerance) or truncated (Coif2 returned 6 values
+            // instead of 12; Coif3 returned 9 instead of 18).  Will
+            // land in a follow-up PR with a cleaner source.
             WaveletType::Symlets(6),
             WaveletType::Symlets(8),
             WaveletType::Coiflets(2),

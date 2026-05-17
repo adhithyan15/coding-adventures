@@ -1,10 +1,11 @@
 # dsp-wavelets
 
 Scalar reference wavelet transforms for the DSP layer.  As of
-**0.2.0 (DSP06 Phase 3a)** the crate ships **Haar + Daubechies
-(Db2, Db4) + Symlets (Sym4) + Coiflets (Coif1)** — all four
-orthogonal wavelet families wired through a generic Mallat
-pyramid filter bank that works for any orthogonal wavelet:
+**0.3.0 (DSP06 Phase 3b partial)** the crate ships **Haar +
+Daubechies (Db2, Db4, Db6, Db8) + Symlets (Sym4) + Coiflets
+(Coif1)** — the four orthogonal wavelet families wired through
+a generic Mallat pyramid filter bank that works for any
+orthogonal wavelet:
 
 - **`dwt_1d`** — forward 1-D DWT via Mallat pyramid.
 - **`idwt_1d`** — inverse 1-D DWT (synthesis filter bank).
@@ -131,8 +132,8 @@ pub enum WaveletError {
 | ------ | ---------------------------------------------------- | ------ |
 | 0      | Spec (`code/specs/DSP06-wavelets.md`)                | landed |
 | 1+2    | Crate skeleton + scalar Haar DWT / IDWT             | landed (0.1.0) |
-| **3a** | **Db2, Db4, Sym4, Coif1 (verified-coefficient subset)** | **this PR (0.2.0)** |
-| 3b     | Db6, Db8, Sym6, Sym8, Coif2, Coif3 (PyWavelets-imported) | pending |
+| 3a     | Db2, Db4, Sym4, Coif1 (verified-coefficient subset) | landed (0.2.0) |
+| **3b** | **Db6, Db8 (PyWavelets-imported); Sym6/Sym8/Coif2/Coif3 still deferred** | **this PR (0.3.0)** |
 | 4      | 2-D DWT + JPEG 2000 biorthogonal wavelets           | pending |
 | 5      | CWT (Morlet, MexicanHat) via FFT                     | pending |
 | 6      | Matrix-IR-lowered `dwt_1d` / `dwt_2d`                | pending |

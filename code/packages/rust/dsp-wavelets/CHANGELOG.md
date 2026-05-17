@@ -1,5 +1,74 @@
 # Changelog — dsp-wavelets
 
+## 0.3.0 — 2026-05-17
+
+### Added — DSP06 Phase 3b (partial — Db6 and Db8)
+
+Two more Daubechies wavelets land:
+
+- **Db6** (12 taps, 6 vanishing moments) — the canonical
+  "longer-than-toy" orthogonal wavelet.  6 vanishing moments
+  perfectly suppress polynomial signals up to degree 5 (on
+  non-Periodic boundaries — see Phase 4 for Symmetric).
+- **Db8** (16 taps, 8 vanishing moments) — the standard
+  high-order Daubechies, common in audio compression and
+  scientific signal denoising.
+
+Both pass the orthogonal-wavelet invariants (`Σ h = √2` within
+`5e-4`, `Σ h² = 1` within `5e-4`) and round-trip through
+`idwt_1d(dwt_1d(x))` within `1e-3` under Periodic boundary on
+128-sample sinusoid test signals.
+
+#### Source of coefficients
+
+Imported from PyWavelets'
+`_extensions/c/wavelets_coeffs.template.h` table via WebFetch,
+cross-checked against the Wikipedia "Orthogonal Daubechies
+coefficients" table (after rescaling from the "normalized to
+sum 2" convention Wikipedia uses to the "normalized to sum √2"
+convention pywt / this crate use).
+
+#### Why Sym6, Sym8, Coif2, Coif3 are still deferred
+
+The same WebFetch returned data for these wavelets but the values
+did NOT pass the strict orthogonal-wavelet invariants at f32
+precision:
+
+- **Sym6** — `Σ h = 1.658` (should be `√2 ≈ 1.414`), 17% off.
+  Source data was likely from a different normalisation
+  convention or has a copy-paste error.
+- **Sym8** — `Σ h = 1.416` vs `1.4142`, error `2e-3` above the
+  `5e-4` tolerance.  Close but not close enough — likely
+  truncation in the source rather than a wrong filter.
+- **Coif2** — source returned 6 values instead of 12 (the
+  scaling-function half; the wavelet-function half was missing).
+- **Coif3** — source returned 9 values instead of 18 (same
+  truncation pattern).
+
+Phase 3a's strict invariant tests catch all four cases.  Rather
+than relax the tolerance (which would hide the issue), the
+deferred variants stay behind `WaveletError::InvalidParam` until
+a clean source ships — likely a build.rs that calls Python
+PyWavelets directly to dump verified values into a vendored CSV.
+
+#### Public API change
+
+None.  Identical surface to 0.2.0.  Only the `analysis_lowpass`
+dispatch in `src/filters.rs` adds two new arms.
+
+#### New tests — 2
+
+- `db6_round_trip_periodic` — 128-sample sinusoid, 2 levels,
+  Periodic, central region within `1e-3`.
+- `db8_round_trip_periodic` — same setup, Db8.
+
+Plus the existing `Σ h = √2`, `Σ h² = 1`, and `Σ g = 0`
+invariant loops in `src/filters.rs` were extended to include
+the new variants.
+
+All 28 unit tests + 1 doctest pass (26 from Phases 1+2+3a +
+2 new Db6/Db8 round-trips).
+
 ## 0.2.0 — 2026-05-17
 
 ### Added — DSP06 Phase 3a (Daubechies / Symlets / Coiflets — verified subset)
