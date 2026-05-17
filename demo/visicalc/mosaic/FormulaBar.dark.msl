@@ -1,0 +1,42 @@
+// FormulaBar.dark.msl — dark theme for the formula bar (UI26 §4.3).
+//
+// NOTE: Mosstyle's `style_value` is a single token (token ref, hash
+// colour, dimension, number, string, or keyword). CSS shorthand like
+// `border: 1px solid #3f3f46` is not accepted — properties are split
+// into their long-form components.
+
+style FormulaBar {
+  part bar {
+    background:          #252526 ;
+    padding:             4px ;
+    border-bottom-width: 1px ;
+    border-bottom-style: solid ;
+    border-bottom-color: #3f3f46 ;
+  }
+
+  part address-label {
+    font-family:  monospace ;
+    font-size:    12px ;
+    color:        #9d9d9d ;
+    background:   #2d2d30 ;
+    min-width:    48px ;
+    padding:      4px ;
+    text-align:   right ;
+    margin-right: 8px ;
+  }
+
+  part formula-field {
+    font-family:         monospace ;
+    font-size:           13px ;
+    flex:                1 ;
+    border-style:        none ;
+    border-bottom-width: 1px ;
+    border-bottom-style: solid ;
+    border-bottom-color: #3f3f46 ;
+    background:          transparent ;
+    color:               #cccccc ;
+    padding:             4px ;
+    outline:             none ;
+    width:               100% ;
+  }
+}
