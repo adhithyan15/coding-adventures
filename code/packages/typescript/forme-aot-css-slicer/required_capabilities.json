@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-aot-css-slicer",
+  "capabilities": ["hash"],
+  "justification": "Uses node:crypto.createHash('sha256') to compute (a) content-addressed fingerprints of each per-page CSS artefact (cache keys for FM06 incremental rebuilds) and (b) deterministic page-id → scope-selector slugs via the default scopePrefix function.  No I/O, no network, no shell."
+}
