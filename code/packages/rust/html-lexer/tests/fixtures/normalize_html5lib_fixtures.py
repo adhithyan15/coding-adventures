@@ -578,12 +578,6 @@ def normalize_diagnostic_set(diagnostics: list[str], test: dict[str, Any]) -> li
             for diagnostic in diagnostics
             if diagnostic != "unexpected-null-character"
         ]
-    if (
-        "end-tag-with-attributes" in diagnostics
-        and "unexpected-whitespace-after-end-tag-name" not in diagnostics
-        and re.search(r"</[A-Za-z0-9]+[\t\n\f\r ]", test["input"])
-    ):
-        diagnostics.insert(0, "unexpected-whitespace-after-end-tag-name")
     if "end-tag-with-attributes" in diagnostics:
         diagnostics = [diagnostic for diagnostic in diagnostics if diagnostic != "duplicate-attribute"]
     last_start_tag = test.get("lastStartTag")
@@ -606,14 +600,6 @@ def normalize_comment_data(data: str, test: dict[str, Any]) -> str:
     if test["input"].lower().startswith("<!doc") and data.startswith("doc"):
         data = "DOC" + data[3:]
     has_eof_in_comment = any(error["code"] == "eof-in-comment" for error in test.get("errors", []))
-    if (
-        has_eof_in_comment
-        and test["input"].endswith("-")
-        and not test["input"].endswith("<!--")
-        and (not test["input"].endswith("--") or test["input"] == "<!---")
-        and not data.endswith("-")
-    ):
-        data += "-"
     if has_eof_in_comment and test["input"].endswith("--!") and data == "":
         data = "--!"
     return data

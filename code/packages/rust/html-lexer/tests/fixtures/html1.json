@@ -1650,7 +1650,6 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-whitespace-after-end-tag-name",
         "end-tag-with-attributes",
         "eof-in-end-tag-name-state"
       ]

@@ -7,7 +7,7 @@ DOM tree from `dom-core`. DOM is the primary browser-facing output because it
 preserves element names, attributes, comments, doctypes, and text exactly enough
 for later CSS, layout, scripting, and Paint VM work.
 
-This first slice intentionally starts small:
+The current parser surface includes:
 
 - text, comments, doctypes, start tags, end tags, attributes
 - a stack of open elements
@@ -59,9 +59,26 @@ This first slice intentionally starts small:
 - body-fragment parsing that returns DOM nodes without the implied
   `html/head/body` shell while preserving lexer/parser diagnostics
 
-Future batches can layer the full WHATWG HTML tree-construction insertion modes
-onto the same DOM target. A separate adapter can project DOM into
-`document-ast` for existing native document rendering.
+The checked-in html5lib tree-construction smoke corpus now covers every case in
+the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
+by source signature. A separate adapter can project DOM into `document-ast` for
+existing native document rendering.
+
+## Conformance Audit
+
+The tree-construction fixture lives in
+`tests/fixtures/html5lib-tree-construction-smoke.dat`, and the shared
+html5lib tokenizer corpus lives under `../html-lexer/tests/fixtures`. To verify
+that the checked-in fixtures still cover an upstream html5lib-tests checkout:
+
+```bash
+HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
+  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
+```
+
+The audit fails if an upstream tree-construction case is missing, if an
+upstream tokenizer case is missing from the raw mirrored tokenizer corpus, or
+if the normalized tokenizer corpus records skipped cases.
 
 ## Usage
 

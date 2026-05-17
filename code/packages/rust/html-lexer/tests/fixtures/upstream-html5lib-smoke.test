@@ -4479,11 +4479,6 @@
       "output": [],
       "errors": [
         {
-          "code": "unexpected-whitespace-after-end-tag-name",
-          "line": 1,
-          "col": 10
-        },
-        {
           "code": "end-tag-with-attributes",
           "line": 1,
           "col": 11
@@ -5919,14 +5914,9 @@
       ],
       "errors": [
         {
-          "code": "unexpected-whitespace-after-end-tag-name",
-          "line": 1,
-          "col": 7
-        },
-        {
           "code": "end-tag-with-attributes",
           "line": 1,
-          "col": 12
+          "col": 13
         }
       ]
     },
@@ -8663,7 +8653,7 @@
       "output": [
         [
           "Comment",
-          " -"
+          " "
         ]
       ],
       "errors": [

@@ -12191,7 +12191,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-comment)".to_string(),
-                "append_comment(-)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -12433,7 +12432,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-comment)".to_string(),
-                "append_comment(-)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -12518,7 +12516,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-comment)".to_string(),
-                "append_comment(-)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -15859,9 +15856,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "parse_error(unexpected-whitespace-after-end-tag-name)".to_string(),
-            ],
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -15874,9 +15869,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "parse_error(unexpected-whitespace-after-end-tag-name)".to_string(),
-            ],
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -15889,9 +15882,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "parse_error(unexpected-whitespace-after-end-tag-name)".to_string(),
-            ],
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -15904,9 +15895,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "parse_error(unexpected-whitespace-after-end-tag-name)".to_string(),
-            ],
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {
@@ -15919,9 +15908,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "parse_error(unexpected-whitespace-after-end-tag-name)".to_string(),
-            ],
+            actions: Vec::new(),
             consume: true,
         },
         TransitionDefinition {

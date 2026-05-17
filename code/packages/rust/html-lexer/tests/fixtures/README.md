@@ -55,6 +55,22 @@ binary while production code continues to link only static Rust source.
 - `normalize_html5lib_fixtures.py`: importer that lowers supported raw
   html5lib-style tokenizer cases into Venture's portable fixture schema
 
+## Conformance Audit
+
+The parser package owns a shared html5lib source-coverage audit that checks the
+tree-construction fixture, this raw tokenizer mirror, and the generated
+normalized tokenizer corpus together:
+
+```bash
+HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
+  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
+```
+
+The command exits nonzero if any upstream tokenizer case is missing from
+`upstream-html5lib-smoke.test`, if any upstream tree-construction case is
+missing from the parser fixture, or if `html5lib-smoke.json` still records
+skipped runtime gaps.
+
 ## WPT Path
 
 The next layer normalizes WHATWG/WPT or html5lib-style tokenizer coverage into
