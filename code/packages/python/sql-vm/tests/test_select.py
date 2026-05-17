@@ -94,7 +94,8 @@ def test_sort_asc_desc(employees: InMemoryBackend) -> None:
     assert [r[0] for r in result.rows] == ["Eve", "Dave", "Carol", "Bob", "Alice"]
 
 
-def test_sort_nulls_last(employees: InMemoryBackend) -> None:
+def test_sort_nulls_first_asc(employees: InMemoryBackend) -> None:
+    """ASC sort places NULLs FIRST by SQLite-compatible default."""
     employees.insert(
         "employees",
         {"id": 6, "name": None, "dept": "x", "salary": 1, "active": True},
@@ -104,7 +105,25 @@ def test_sort_nulls_last(employees: InMemoryBackend) -> None:
             input=Scan(table="employees", alias="e"),
             items=(ProjectionItem(expr=Column("e", "name"), alias="name"),),
         ),
-        keys=(SortKey(expr=Column("e", "name")),),  # ASC default → NULLs last
+        keys=(SortKey(expr=Column("e", "name")),),  # ASC default → NULLs first (SQLite)
+    )
+    result = execute(compile(plan), employees)
+    first = result.rows[0][0]
+    assert first is None
+
+
+def test_sort_nulls_last_explicit(employees: InMemoryBackend) -> None:
+    """Explicit NULLS LAST in ASC still puts NULLs at the end (overrides default)."""
+    employees.insert(
+        "employees",
+        {"id": 6, "name": None, "dept": "x", "salary": 1, "active": True},
+    )
+    plan = Sort(
+        input=Project(
+            input=Scan(table="employees", alias="e"),
+            items=(ProjectionItem(expr=Column("e", "name"), alias="name"),),
+        ),
+        keys=(SortKey(expr=Column("e", "name"), nulls_first=False),),  # explicit NULLS LAST
     )
     result = execute(compile(plan), employees)
     last = result.rows[-1][0]
@@ -191,7 +210,11 @@ def test_sort_null_null_desc(employees: InMemoryBackend) -> None:
 
 
 def test_sort_nulls_both_none_asc(employees: InMemoryBackend) -> None:
-    """Two NULL rows in ASC sort exercise _NoneLast.__lt__(None, None) paths."""
+    """Two NULL rows in ASC sort exercise the comparator's None-vs-None path.
+
+    With SQLite-compatible defaults NULLs go FIRST in ASC; both NULL rows
+    should land at the beginning of the result.
+    """
     employees.insert("employees", {"id": 6, "name": None, "dept": "x", "salary": 1, "active": True})
     employees.insert("employees", {"id": 7, "name": None, "dept": "y", "salary": 2, "active": True})
     plan = Sort(
@@ -199,13 +222,13 @@ def test_sort_nulls_both_none_asc(employees: InMemoryBackend) -> None:
             input=Scan(table="employees", alias="e"),
             items=(ProjectionItem(expr=Column("e", "name"), alias="name"),),
         ),
-        keys=(SortKey(expr=Column("e", "name")),),  # ASC, NULLs last
+        keys=(SortKey(expr=Column("e", "name")),),  # ASC default → NULLs first
     )
     result = execute(compile(plan), employees)
     names = [r[0] for r in result.rows]
-    # The two NULLs should appear at the end.
-    assert names[-1] is None
-    assert names[-2] is None
+    # The two NULLs should appear at the beginning.
+    assert names[0] is None
+    assert names[1] is None
 
 
 def test_sort_positional_column_idx(employees: InMemoryBackend) -> None:

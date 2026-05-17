@@ -195,21 +195,17 @@ def test_order_by_star_visible_column():
 
 
 def test_order_by_null_handling_hidden():
-    """NULL rows in hidden sort column must not crash; NULLs sort last (our semantics).
+    """NULL rows in hidden sort column sort first for ASC (SQLite-compatible).
 
-    Note: SQLite places NULLs *first* for ASC ORDER BY (treating NULL as smaller
-    than any other value), whereas this VM places NULLs *last*.  This is a known
-    pre-existing behavioural difference in the plain ORDER BY path as well.  We
-    verify here that the hidden-column injection does not crash and applies the
-    VM's own NULL ordering rule consistently.
+    SQLite treats NULL as smaller than any non-NULL value.  Therefore an ASC
+    ORDER BY puts NULL rows at the top of the result.  We oracle-compare
+    against the real sqlite3 module to lock the behaviour in.
     """
-    mini, _ = _setup(
+    mini, ref = _setup(
         "CREATE TABLE t (x INTEGER, y INTEGER)",
         [(None, 1), (2, 2), (1, 3)],
     )
-    rows = mini.execute("SELECT y FROM t ORDER BY x").fetchall()
-    # Our VM puts NULLs last: x=1→y=3, x=2→y=2, x=NULL→y=1
-    assert rows == [(3,), (2,), (1,)], f"unexpected: {rows}"
+    _check(mini, ref, "SELECT y FROM t ORDER BY x")
 
 
 def test_order_by_hidden_column_single_row():

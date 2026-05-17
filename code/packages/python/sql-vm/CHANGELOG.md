@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.26.0 — 2026-05-17
+
+### Fixed
+
+- **NULL ordering bug in `_do_sort`** — the DESC branch of the sort comparator
+  negated the NULL-placement rank (`-rank`), which inadvertently coupled NULL
+  position to sort direction.  As a result `ORDER BY x DESC` with `NULLS LAST`
+  put NULLs at the *start* of the result, not the end.
+
+  NULL placement is now independent of direction: the rank (0/1/2 for
+  FIRST/non-null/LAST) is kept positive in both ASC and DESC branches.  Only
+  the value comparison is inverted (via the existing `_Rev` wrapper) for DESC.
+
+  Truth table after the fix:
+
+  | direction | nulls   | output                              |
+  |-----------|---------|-------------------------------------|
+  | ASC       | FIRST   | NULLs first, non-null ascending     |
+  | ASC       | LAST    | non-null ascending, NULLs last      |
+  | DESC      | FIRST   | NULLs first, non-null descending    |
+  | DESC      | LAST    | non-null descending, NULLs last     |
+
+  Combined with sql-codegen 1.28.0 (which now resolves the default to FIRST
+  for ASC and LAST for DESC), this makes mini-sqlite byte-compatible with the
+  real `sqlite3` module for NULL ordering.
+
 ## 1.25.0 — 2026-05-15
 
 ### Fixed
