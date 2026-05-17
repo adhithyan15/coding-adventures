@@ -58,6 +58,9 @@ binary while production code continues to link only static Rust source.
 - `whatwg-input-stream.json`: generated HTML Standard input-stream
   preprocessing cases used by Rust tests to exercise CRLF and bare-CR
   normalization across tokenizer contexts and chunk boundaries
+- `whatwg-chunk-boundaries.json`: generated HTML tokenizer streaming cases
+  used by Rust tests to prove tokens, diagnostics, and positions stay stable
+  across every character chunk split point
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -73,6 +76,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_input_stream_fixture.py`: importer that generates finite
   CRLF/bare-CR preprocessing cases for the checked-in
   `whatwg-input-stream.json` fixture
+- `generate_whatwg_chunk_boundaries_fixture.py`: importer that generates
+  streaming chunk-boundary invariance cases for the checked-in
+  `whatwg-chunk-boundaries.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -97,6 +103,14 @@ Regenerate or verify the WHATWG input-stream preprocessing fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_input_stream_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_input_stream_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG chunk-boundary fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_chunk_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_chunk_boundaries_fixture.py \
   --check
 ```
 
@@ -236,6 +250,9 @@ currently supports:
   RAWTEXT, script data, PLAINTEXT, CDATA, seeded comment continuations, seeded
   DOCTYPE continuations, all chunk split points, and diagnostic line/column
   positions
+- generated chunk-boundary invariance coverage across data, Unicode text, tags,
+  attributes, comments, doctypes, named/numeric character references, RCDATA,
+  RAWTEXT, script data, PLAINTEXT, CDATA, and seeded continuation states
 - EOF recovery for unfinished ordinary start and end tags, ensuring partial
   tokens are dropped before the parser sees them
 - EOF recovery for unfinished attribute character references, including named
