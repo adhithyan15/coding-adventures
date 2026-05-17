@@ -61,9 +61,12 @@
 //! the event union and the dispatch prop — because those are what host code
 //! sees and binds against. The function body is intentionally minimal:
 //!
-//! - **No `connects` wiring yet.** The function body renders the JSX tree
-//!   structurally but does not yet attach `onClick`/`onChange` handlers that
-//!   call `dispatch(...)`. That wiring is a follow-up PR.
+//! - ~~No `connects` wiring yet.~~ As of the connects-wiring PR, every
+//!   moslayout prop whose value is an `EmitRef` produces a JSX event handler
+//!   attribute that fires the matching dispatch variant (void emits only).
+//!   Payload-carrying emits still produce a void dispatch; mapping a JSX
+//!   event payload to the emit's parameters needs grammar work that is
+//!   tracked separately.
 //! - **No `Grid` primitive rendering yet.** The dedicated table-rendering
 //!   logic that the legacy `ReactRenderer` has for `Grid` (see UI20 §5) is
 //!   significant. Rather than copy it, this PR emits a placeholder `<div>`
@@ -341,7 +344,9 @@ fn emit_function(
 /// | Input        | (deferred — UI25 implementation PR)                     |
 ///
 /// Slot references in props (e.g. `value: @formula`) are not yet wired to
-/// JSX attributes. The first pass renders structure only.
+/// JSX attributes. The first pass renders structure only — except for
+/// **emit references** (per UI24), which are wired via [`build_emit_handlers`]
+/// to JSX event handlers that fire `dispatch(...)`.
 fn emit_jsx_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -350,10 +355,15 @@ fn emit_jsx_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmi
     // (e.g., `</div>`) or empty for self-closing, `self_close` indicates
     // whether the tag emits as `<tag />`.
     let JsxTag {
-        open,
+        mut open,
         close,
         self_close,
     } = primitive_to_jsx_tag(&node.tag)?;
+
+    // Append connects-wiring event handlers (UI24): for every prop on this
+    // node whose value is an `EmitRef`, emit a JSX event handler attribute
+    // that dispatches the corresponding event union variant.
+    open.push_str(&build_emit_handlers(node)?);
 
     if self_close {
         return Ok(format!("{pad}{open} />\n"));
@@ -374,6 +384,58 @@ fn emit_jsx_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmi
         out.push_str(&emit_jsx_tree(child, indent + 2)?);
     }
     out.push_str(&format!("{pad}{close}\n"));
+    Ok(out)
+}
+
+/// Build the JSX event-handler attributes for a node.
+///
+/// Walks the node's props and, for each prop whose value is an
+/// `EmitRef(emit_name)`, produces an attribute of the form:
+///
+/// ```tsx
+///  onClick={() => dispatch({ type: "click" })}
+/// ```
+///
+/// The attribute name is the prop name verbatim (the convention is that
+/// moslayout authors name the prop `onClick` / `onDoubleClick` / etc., which
+/// happens to be the JSX event-handler attribute name). The `type` literal
+/// is derived from the emit name with the same UI24 §5 rule used for the
+/// union variants: strip a leading `on`, camelCase the rest.
+///
+/// Only **void** emits are wired in this first cut. Payload-carrying emits
+/// require the moslayout `connects` syntax to declare how a JSX event's
+/// payload maps to the emit's parameters, which is grammar work tracked
+/// separately. For now, payload-carrying emit refs still produce a void
+/// dispatch (no payload fields), which is wrong for the host but at least
+/// fires the right event type — and the union shape still tells the
+/// TypeScript compiler that fields are missing, so the host sees a clear
+/// type error rather than a silent miscompilation.
+fn build_emit_handlers(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    for prop in &node.props {
+        let LayoutPropValue::EmitRef(emit_name) = &prop.value else {
+            continue;
+        };
+
+        // The JSX attribute name is the prop name verbatim. Validate it is a
+        // safe identifier so we cannot smuggle hostile characters into the
+        // generated JSX.
+        let attr_name = &prop.name;
+        if !is_safe_js_identifier(attr_name) {
+            return Err(PipelineEmitError::UnsafeSlotName(attr_name.clone()));
+        }
+
+        // The `type` literal: strip the `on` prefix and camelCase the rest.
+        // Reuse the exact same helper as the union-variant emitter so the
+        // strings line up byte for byte across the file.
+        let lowered = strip_on_prefix(emit_name);
+        let type_field = to_camel_case_first_lower(&lowered);
+        validate_emit_name(&type_field)?;
+
+        out.push_str(&format!(
+            " {attr_name}={{() => dispatch({{ type: \"{type_field}\" }})}}"
+        ));
+    }
     Ok(out)
 }
 
@@ -999,6 +1061,162 @@ mod tests {
         let err = from_pipeline(&m, &l, &empty_style("X"))
             .expect_err("unknown primitive must error");
         assert!(matches!(err, PipelineEmitError::UnknownPrimitive(_)));
+    }
+
+    // -----------------------------------------------------------------
+    // Connects wiring (EmitRef -> JSX event handlers)
+    // -----------------------------------------------------------------
+
+    /// Helper: a node with a single `onClick: emit: onClick` prop.
+    fn node_with_emit_ref(tag: &str, attr: &str, emit: &str) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: attr.to_string(),
+                value: LayoutPropValue::EmitRef(emit.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn emit_ref_prop_lowers_to_dispatch_handler() {
+        let m = component("Button", vec![], vec![emit("onClick", vec![])]);
+        let l = LayoutDef {
+            component_name: "Button".to_string(),
+            root: node_with_emit_ref("Box", "onClick", "onClick"),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("Button")).unwrap();
+        assert!(
+            result
+                .output
+                .contains("onClick={() => dispatch({ type: \"click\" })}"),
+            "expected dispatch handler, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn emit_ref_prop_strips_on_prefix_in_type_literal() {
+        let m = component("X", vec![], vec![emit("onNavigate", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: node_with_emit_ref("Box", "onClick", "onNavigate"),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // Attribute name comes from the prop name verbatim;
+        // type literal comes from the emit name with `on` stripped.
+        assert!(
+            result.output.contains(
+                "onClick={() => dispatch({ type: \"navigate\" })}"
+            ),
+            "got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn multiple_emit_refs_each_get_their_own_handler() {
+        let m = component(
+            "Tile",
+            vec![],
+            vec![
+                emit("onClick", vec![]),
+                emit("onDoubleClick", vec![]),
+            ],
+        );
+        let l = LayoutDef {
+            component_name: "Tile".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "onClick".to_string(),
+                        value: LayoutPropValue::EmitRef("onClick".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onDoubleClick".to_string(),
+                        value: LayoutPropValue::EmitRef("onDoubleClick".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("Tile")).unwrap();
+        assert!(result
+            .output
+            .contains("onClick={() => dispatch({ type: \"click\" })}"));
+        assert!(result.output.contains(
+            "onDoubleClick={() => dispatch({ type: \"doubleClick\" })}"
+        ));
+    }
+
+    #[test]
+    fn slot_ref_props_do_not_produce_event_handlers() {
+        let m = component(
+            "Label",
+            vec![slot("text", SlotType::Text, true)],
+            vec![],
+        );
+        // A `content: slot: text` prop on a Text node — NOT an emit.
+        let l = LayoutDef {
+            component_name: "Label".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("text".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("Label")).unwrap();
+        // Must NOT contain any dispatch call — slot refs are not events.
+        assert!(!result.output.contains("dispatch({"),
+            "slot refs must not produce event handlers, got:\n{}",
+            result.output);
+    }
+
+    #[test]
+    fn emit_ref_with_reserved_lowered_name_errors() {
+        let m = component("X", vec![], vec![emit("onDispatch", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: node_with_emit_ref("Box", "onClick", "onDispatch"),
+        };
+        // Note: the event-union emitter rejects this first (during the
+        // union build phase) — but the connects-wiring path also defends
+        // against it via validate_emit_name.
+        let err = from_pipeline(&m, &l, &empty_style("X")).expect_err("reserved must error");
+        assert!(matches!(err, PipelineEmitError::ReservedEmitName(_)));
+    }
+
+    #[test]
+    fn emit_ref_handler_appears_inside_opening_tag() {
+        let m = component("X", vec![], vec![emit("onClick", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: node_with_emit_ref("Row", "onClick", "onClick"),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // The handler must appear BEFORE the closing `>` of the opening tag.
+        let handler_pos = result
+            .output
+            .find("onClick={() => dispatch({ type: \"click\" })}")
+            .expect("handler present");
+        let opening_close_pos = result.output[handler_pos..]
+            .find('>')
+            .map(|i| i + handler_pos)
+            .expect("opening tag closes");
+        let closing_div_pos = result
+            .output
+            .find("</div>")
+            .expect("close tag present");
+        assert!(handler_pos < opening_close_pos);
+        assert!(opening_close_pos < closing_div_pos);
     }
 
     // -----------------------------------------------------------------
