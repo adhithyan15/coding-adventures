@@ -71,8 +71,13 @@
 //!   logic that the legacy `ReactRenderer` has for `Grid` (see UI20 §5) is
 //!   significant. Rather than copy it, this PR emits a placeholder `<div>`
 //!   for `Grid` and tracks the real implementation as a follow-up.
-//! - **No `Input` primitive yet.** UI25 specifies it; the implementation
-//!   lands with UI25's implementation PR.
+//! - ~~No `Input` primitive yet.~~ As of the Input-primitive PR, the
+//!   `Input` moslayout tag lowers to `<input type="text" />` (or
+//!   `<textarea />` when `multiline: true`) with `value`, `readOnly`,
+//!   and `maxLength` attributes bound from slot refs / numbers, plus an
+//!   `onChange` handler that carries `e.target.value` as the dispatch
+//!   payload and an `onKeyDown` handler that fires `onCommit` on Enter
+//!   and `onCancel` on Escape.
 //! - **No style inlining yet.** The mosstyle `StyleDef` is accepted but not
 //!   yet inlined into the JSX `style={{...}}` objects.
 //!
@@ -363,6 +368,18 @@ fn emit_jsx_tree(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    // The `Input` primitive (UI25) has its own lowering rules — multiline
+    // toggles between `<input>` and `<textarea>`; slot refs become `value` /
+    // `readOnly` props; numeric props become `maxLength`; and the
+    // onChange/onCommit/onCancel emits each get a different JSX handler
+    // (onChange wraps `e.target.value` as the payload; onCommit + onCancel
+    // are merged into one `onKeyDown` handler keyed on Enter/Escape).
+    // The general flow below can't express any of that, so Input gets its
+    // own dedicated emitter and we return early.
+    if node.tag == "Input" {
+        return emit_input_jsx(node, indent, part_styles);
+    }
+
     // Decompose the primitive into its element name, built-in style (e.g.
     // flexbox for Row/Column), close tag, and self-closing flag.
     let JsxTag {
@@ -415,6 +432,185 @@ fn emit_jsx_tree(
     }
     out.push_str(&format!("{pad}{close}\n"));
     Ok(out)
+}
+
+// =====================================================================
+// Input primitive (UI25)
+// =====================================================================
+
+/// Lower a moslayout `Input` node to an `<input>` or `<textarea>` JSX line.
+///
+/// ## Property handling
+///
+/// | Moslayout prop           | JSX attribute                                            |
+/// |---|---|
+/// | `multiline: true`        | switches element to `<textarea />`                       |
+/// | `value: slot: x`         | `value={x}` (camelCased)                                 |
+/// | `read-only: slot: x`     | `readOnly={x}` (camelCased)                              |
+/// | `read-only: true`/`false`| `readOnly={true}` / `readOnly={false}`                   |
+/// | `max-length: 100`        | `maxLength={100}`                                        |
+/// | `onChange: emit: onX`    | `onChange={e => dispatch({type: "x", value: e.target.value})}` |
+/// | `onCommit: emit: onX`    | `onKeyDown` handler with an `e.key === "Enter"` branch   |
+/// | `onCancel: emit: onX`    | `onKeyDown` handler with an `e.key === "Escape"` branch  |
+///
+/// `onCommit` and `onCancel` are merged into a *single* `onKeyDown`
+/// handler — that keeps the generated JSX small and matches the
+/// UI25 §10 React generated-output example.
+///
+/// ## Known limitations (tracked separately)
+///
+/// - **placeholder** — moslayout's grammar does not yet support string
+///   literals as prop values, so `placeholder: "Enter formula"` cannot be
+///   expressed at the source level. The lowering omits the `placeholder`
+///   attr entirely. A follow-up grammar PR will add literal-string props,
+///   at which point we can wire `placeholder` through.
+/// - **payload-mapped emits** — only `onChange` gets a `value` payload here
+///   (it's the canonical Input case). A general `connects: onX(p: text) -> emit onY(p: p)`
+///   syntax in moslayout would let other emits carry payloads; that is
+///   tracked as a separate grammar change.
+fn emit_input_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    let tag_name = if multiline { "textarea" } else { "input" };
+
+    let mut attrs = String::new();
+
+    // `<input type="text">`. `<textarea>` does not take a `type` attr.
+    if !multiline {
+        attrs.push_str(" type=\"text\"");
+    }
+
+    // Style attr (per the same part-name lookup the rest of the tree uses).
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // value={slotName}
+    if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" value={{{camel}}}"));
+    }
+
+    // readOnly={slotName} OR readOnly={true|false} when given as a keyword.
+    if let Some(slot) = find_slot_ref_prop(node, "read-only") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" readOnly={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "read-only") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" readOnly={{{kw}}}"));
+        }
+    }
+
+    // maxLength={N}
+    if let Some(n) = find_number_prop(node, "max-length") {
+        // Numbers in moslayout are parsed as f64; if it round-trips to an
+        // integer, emit without a decimal point (`maxLength={100}`, not
+        // `maxLength={100.0}`).
+        let s = if n.fract() == 0.0 {
+            format!("{}", n as i64)
+        } else {
+            format!("{n}")
+        };
+        attrs.push_str(&format!(" maxLength={{{s}}}"));
+    }
+
+    // onChange={e => dispatch({ type: "...", value: e.target.value })}
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onChange={{e => dispatch({{ type: \"{type_field}\", value: e.target.value }})}}"
+        ));
+    }
+
+    // onCommit + onCancel are merged into a single onKeyDown handler.
+    let commit_emit = find_emit_ref_prop(node, "onCommit");
+    let cancel_emit = find_emit_ref_prop(node, "onCancel");
+    if commit_emit.is_some() || cancel_emit.is_some() {
+        let mut h = String::from(" onKeyDown={e => {");
+        if let Some(emit) = commit_emit {
+            let t = to_camel_case_first_lower(&strip_on_prefix(emit));
+            validate_emit_name(&t)?;
+            h.push_str(&format!(
+                " if (e.key === \"Enter\") dispatch({{ type: \"{t}\" }});"
+            ));
+        }
+        if let Some(emit) = cancel_emit {
+            let t = to_camel_case_first_lower(&strip_on_prefix(emit));
+            validate_emit_name(&t)?;
+            h.push_str(&format!(
+                " if (e.key === \"Escape\") dispatch({{ type: \"{t}\" }});"
+            ));
+        }
+        h.push_str(" }}");
+        attrs.push_str(&h);
+    }
+
+    Ok(format!("{pad}<{tag_name}{attrs} />\n"))
+}
+
+/// Find a prop on `node` whose value is a `SlotRef`. Returns the slot's
+/// kebab-case name, or `None` if no such prop exists.
+fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::SlotRef(s) = &p.value {
+                return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is an `EmitRef`. Returns the emit's
+/// camelCased name (e.g. `onClick`), or `None`.
+fn find_emit_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::EmitRef(s) = &p.value {
+                return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is a `Keyword`. Returns the keyword
+/// string (e.g. `"true"`, `"row"`), or `None`.
+fn find_keyword_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Keyword(k) = &p.value {
+                return Some(k.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is a `Number`. Returns the f64, or
+/// `None`.
+fn find_number_prop(node: &LayoutNode, prop_name: &str) -> Option<f64> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Number(n) = &p.value {
+                return Some(*n);
+            }
+        }
+        None
+    })
 }
 
 /// Build the JSX event-handler attributes for a node.
@@ -525,8 +721,11 @@ fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
         // The host can see at a glance that this node needs a real renderer
         // in a follow-up PR.
         "Grid" => ("<div", "", " data-mosaic-todo=\"grid\"", "</div>", false),
-        // UI25's Input primitive — deferred until its implementation PR.
-        "Input" => ("<div", "", " data-mosaic-todo=\"input\"", "</div>", false),
+        // UI25's `Input` primitive is handled separately in
+        // [`emit_input_jsx`] — `emit_jsx_tree` short-circuits before
+        // reaching this match arm. Keeping the arm absent makes any
+        // accidental fall-through fail loudly via `UnknownPrimitive`,
+        // which is better than silently rendering wrong JSX.
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     };
     Ok(JsxTag {
@@ -1505,6 +1704,222 @@ mod tests {
             .expect("close tag present");
         assert!(handler_pos < opening_close_pos);
         assert!(opening_close_pos < closing_div_pos);
+    }
+
+    // -----------------------------------------------------------------
+    // Input primitive (UI25)
+    // -----------------------------------------------------------------
+
+    /// Helper: build an Input node with the given prop list.
+    fn input_node(props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "Input".to_string(),
+            part_name: None,
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    /// Helper: a one-component layout def rooted at an Input.
+    fn input_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: input_node(props),
+        }
+    }
+
+    #[test]
+    fn bare_input_lowers_to_input_type_text() {
+        let m = component("X", vec![], vec![]);
+        let l = input_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("<input type=\"text\" />"),
+            "expected bare <input type=\"text\" />, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn input_multiline_lowers_to_textarea() {
+        let m = component("X", vec![], vec![]);
+        let l = input_layout(vec![LayoutProp {
+            name: "multiline".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("<textarea />"),
+            "expected <textarea />, got:\n{}",
+            result.output
+        );
+        // textarea must NOT carry a type="text" attribute.
+        assert!(!result.output.contains("type=\"text\""));
+    }
+
+    #[test]
+    fn input_value_slot_ref_binds_to_value_attr() {
+        let m = component(
+            "X",
+            vec![slot("formula-text", SlotType::Text, true)],
+            vec![],
+        );
+        let l = input_layout(vec![LayoutProp {
+            name: "value".to_string(),
+            value: LayoutPropValue::SlotRef("formula-text".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("value={formulaText}"),
+            "expected value={{formulaText}}, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn input_readonly_slot_ref_binds_to_readonly_attr() {
+        let m = component(
+            "X",
+            vec![slot("is-locked", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = input_layout(vec![LayoutProp {
+            name: "read-only".to_string(),
+            value: LayoutPropValue::SlotRef("is-locked".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("readOnly={isLocked}"),
+            "expected readOnly={{isLocked}}, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn input_readonly_keyword_true_binds_literal() {
+        let m = component("X", vec![], vec![]);
+        let l = input_layout(vec![LayoutProp {
+            name: "read-only".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("readOnly={true}"),
+            "expected literal readOnly={{true}}, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn input_max_length_number_binds_to_max_length_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = input_layout(vec![LayoutProp {
+            name: "max-length".to_string(),
+            value: LayoutPropValue::Number(100.0),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // Integer-valued numbers come out without a decimal point.
+        assert!(
+            result.output.contains("maxLength={100}"),
+            "expected maxLength={{100}}, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn input_on_change_carries_target_value_payload() {
+        let m = component("X", vec![], vec![emit("onChange", vec![])]);
+        let l = input_layout(vec![LayoutProp {
+            name: "onChange".to_string(),
+            value: LayoutPropValue::EmitRef("onChange".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains(
+                "onChange={e => dispatch({ type: \"change\", value: e.target.value })}"
+            ),
+            "expected onChange handler with e.target.value payload, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn input_on_commit_and_on_cancel_merge_into_one_keydown_handler() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onCommit", vec![]), emit("onCancel", vec![])],
+        );
+        let l = input_layout(vec![
+            LayoutProp {
+                name: "onCommit".to_string(),
+                value: LayoutPropValue::EmitRef("onCommit".to_string()),
+            },
+            LayoutProp {
+                name: "onCancel".to_string(),
+                value: LayoutPropValue::EmitRef("onCancel".to_string()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        // Single onKeyDown attribute with both branches inside.
+        assert!(out.contains("onKeyDown={e => {"));
+        assert!(out.contains("if (e.key === \"Enter\") dispatch({ type: \"commit\" });"));
+        assert!(out.contains("if (e.key === \"Escape\") dispatch({ type: \"cancel\" });"));
+        // Confirm we did NOT emit two separate handlers.
+        assert_eq!(out.matches("onKeyDown=").count(), 1,
+            "expected exactly one onKeyDown attr, got:\n{}", out);
+    }
+
+    #[test]
+    fn input_inside_row_renders_inside_flex_div() {
+        let m = component(
+            "X",
+            vec![slot("text", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![input_node(vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::SlotRef("text".to_string()),
+                }])],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        let row_pos = out.find("flexDirection: \"row\"").expect("row present");
+        let input_pos = out.find("<input").expect("input present");
+        let close_div = out.find("</div>").expect("row closes");
+        assert!(row_pos < input_pos, "input must appear after row opening tag");
+        assert!(input_pos < close_div, "input must appear before row closing tag");
+    }
+
+    #[test]
+    fn input_part_style_is_inlined_on_element() {
+        let m = component("X", vec![], vec![]);
+        let s = style_with_part("X", "field", &[("background", "#222"), ("color", "#fff")]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Input".to_string(),
+                part_name: Some("field".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            result
+                .output
+                .contains("style={{ background: \"#222\", color: \"#fff\" }}"),
+            "expected part style inlined on input, got:\n{}",
+            result.output
+        );
     }
 
     // -----------------------------------------------------------------

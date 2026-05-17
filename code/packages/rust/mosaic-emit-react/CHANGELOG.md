@@ -4,6 +4,40 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — Input primitive (pipeline path, UI25)
+
+- The moslayout `Input` primitive now lowers to a real `<input type="text" />`
+  (or `<textarea />` when `multiline: true`), replacing the previous
+  placeholder `<div data-mosaic-todo="input">`.
+- Bound attributes: `value={...}` from slot refs, `readOnly={...}` from
+  either slot refs or `true`/`false` keyword literals, `maxLength={N}`
+  from numeric props.
+- `onChange` emit refs are special-cased to carry `e.target.value` as the
+  dispatch payload — i.e.
+  `onChange={e => dispatch({ type: "change", value: e.target.value })}`.
+- `onCommit` and `onCancel` emit refs are merged into a single
+  `onKeyDown` handler keyed on Enter / Escape, matching the
+  UI25 §10 React generated-output example.
+- 10 new tests: bare Input, multiline → textarea, value slot binding,
+  readOnly slot binding, readOnly literal `true` binding, maxLength
+  numeric binding, onChange payload, merged onKeyDown handler, Input
+  nested inside Row, part style inlined on Input element.
+- End-to-end smoke test: a 3-file `Bar` component (value + readOnly +
+  onChange + onCommit + onCancel) compiles to a complete TSX file with
+  the correct attributes, payload-carrying onChange handler, and merged
+  onKeyDown handler. Verified.
+
+### Known limitations (deferred to follow-up PRs)
+
+- `placeholder: "..."` is not yet supported because moslayout's grammar
+  does not yet accept string literals as prop values. Once grammar adds
+  string props, the Input emitter will pick up `placeholder` for free.
+- Payload-carrying emits other than `onChange` still produce void
+  dispatches via the general connects-wiring path; a generic
+  `connects: onX(p: text) -> emit onY(p: p)` form in moslayout will
+  generalise the special-case.
+
+
 ### Added — connects wiring (pipeline path)
 
 - Every moslayout prop whose value is an `EmitRef(emit_name)` now produces a
