@@ -1007,3 +1007,148 @@ mod tests {
         let _ = r; // Success: no panic.
     }
 }
+
+// ---------------------------------------------------------------------------
+// TW05-O integration tests — builtin prelude registration (LANG69)
+// ---------------------------------------------------------------------------
+//
+// TW05-O adds `TypeEnv::register_builtins()`, called from `TypeEnv::new()`,
+// which pre-populates `globals` with every Twig runtime builtin as
+// `TwigKind::Any`.  This eliminates "unresolved variable" warnings/errors
+// for builtins in both lenient and strict mode.
+//
+// The tests below verify:
+// 1. Arithmetic and comparison builtins resolve without errors in strict mode.
+// 2. List operations (`null?`, `car`, `cdr`, `cons`, `list`) resolve.
+// 3. String operations (`string-length`) resolve.
+// 4. `and` and `or` (special forms, not in BUILTINS const) resolve.
+// 5. Host I/O builtins (`host/read_file`) resolve.
+// 6. Higher-order ops (`map`, `filter`) resolve.
+// 7. Explicit `(define ...)` stubs can still shadow pre-registered builtins.
+// 8. `span.tw` content (the smallest compiler module) passes in strict mode.
+
+#[cfg(test)]
+mod tw05o_tests {
+    use super::*;
+
+    // Helper: parse and strict-check without a module declaration wrapper.
+    fn strict(src: &str) -> TypeCheckResult<TypedProgram> {
+        let program = parse(src).unwrap_or_else(|e| panic!("parse failed: {e}"));
+        check_program(&program, Some(TypedMode::Strict))
+    }
+
+    // ── Test 1: arithmetic builtins resolve ────────────────────────────────
+
+    #[test]
+    fn builtin_arithmetic_resolves() {
+        // (+ 1 2) is a call to the pre-registered `+` builtin.
+        // In strict mode, an unresolved callee would produce an error.
+        let r = strict("(define x (+ 1 2))");
+        assert!(r.ok,
+            "arithmetic builtins should resolve in strict mode; errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected errors: {:?}", r.errors);
+
+        // Also verify comparison operators.
+        let r2 = strict("(define y (< 1 2)) (define z (>= 3 3)) (define w (<= 0 1))");
+        assert!(r2.ok,
+            "comparison builtins should resolve; errors: {:?}", r2.errors);
+    }
+
+    // ── Test 2: list builtins resolve ──────────────────────────────────────
+
+    #[test]
+    fn builtin_list_ops_resolve() {
+        // null?, car, cdr, cons, list, length — all list-manipulation builtins.
+        let src = "(define a (null? nil)) \
+                   (define b (cons 1 nil)) \
+                   (define c (car (list 1 2))) \
+                   (define d (length (list 1)))";
+        let r = strict(src);
+        assert!(r.ok,
+            "list builtins should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 3: string builtins resolve ───────────────────────────────────
+
+    #[test]
+    fn builtin_string_ops_resolve() {
+        // string-length, string-append, string=?
+        let src = "(define a (string-length \"hello\")) \
+                   (define b (string-append \"x\" \"y\")) \
+                   (define c (string=? \"a\" \"a\"))";
+        let r = strict(src);
+        assert!(r.ok,
+            "string builtins should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 4: and / or resolve ───────────────────────────────────────────
+
+    #[test]
+    fn builtin_and_or_resolve() {
+        // `and` and `or` are special-cased in the IR compiler but are parsed
+        // as regular Apply nodes — they must be pre-registered too.
+        let src = "(define a (and #t #f)) (define b (or #f #t))";
+        let r = strict(src);
+        assert!(r.ok,
+            "`and`/`or` should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 5: host I/O builtins resolve ─────────────────────────────────
+
+    #[test]
+    fn builtin_host_io_resolves() {
+        // host/read_file is a host builtin dispatched by the VM.
+        let src = "(define contents (host/read_file \"/dev/null\"))";
+        let r = strict(src);
+        assert!(r.ok,
+            "host/read_file should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 6: higher-order ops resolve ──────────────────────────────────
+
+    #[test]
+    fn builtin_hof_resolves() {
+        // map and filter are higher-order builtins registered in LANG55.
+        let src = "(define a (map nil nil)) (define b (filter nil nil))";
+        let r = strict(src);
+        assert!(r.ok,
+            "map/filter should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 7: stub shadows pre-registered builtin ────────────────────────
+
+    #[test]
+    fn builtin_does_not_block_stub_shadow() {
+        // An explicit (define (+ a b) ...) should shadow the pre-registered `+`
+        // without causing errors — Pass 1 overwrites the pre-registered Any.
+        let src = "(define (+ a b) 0) (define result (+ 1 2))";
+        let r = strict(src);
+        assert!(r.ok,
+            "stub define should shadow pre-registered builtin; errors: {:?}", r.errors);
+    }
+
+    // ── Test 8: span.tw content compiles in strict mode ──────────────────
+
+    #[test]
+    fn span_tw_strict_mode_compiles() {
+        // Minimal reproduction of span.tw in strict mode.
+        // Uses: record Span, and, >=, <= (builtins), Span constructor (record).
+        // No imports needed — all dependencies are within this snippet.
+        let src = "\
+            (module compiler/span (typed strict) \
+              (export Span make-span dummy-span)) \
+            (record Span (source-id : int) (start : int) (end : int)) \
+            (define (make-span source-id start end) \
+              (if (and (>= start 0) (<= start end)) \
+                (Span source-id start end) \
+                nil)) \
+            (define (dummy-span) (Span 0 0 0))";
+        let r = strict(src);
+        assert!(r.ok,
+            "span.tw content should pass strict mode after builtin registration; \
+             errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in span.tw strict check: {:?}", r.errors);
+    }
+}
