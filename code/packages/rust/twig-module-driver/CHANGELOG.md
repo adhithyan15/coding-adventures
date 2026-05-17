@@ -1,5 +1,46 @@
 # Changelog — twig-module-driver
 
+## [0.10.0] — 2026-05-17
+
+### Added (LANG65 — TW05-K extended self-compilation via parser.tw + emit.tw)
+
+Extended `self-compile-all` in `code/twig/compiler/main.tw` from four files
+(TW05-J, 38 total) to six files (TW05-K, 102 total) by adding `parser.tw`
+(29 functions) and `emit.tw` (35 functions).
+
+New `run_in_xlarge_stack` helper (3 GiB thread stack) for tests that lex files
+larger than 8593 chars.  `emit.tw` at 22 697 chars requires ~1.33 GiB debug-
+mode stack (22 697 frames × 60 KiB/frame); 3 GiB gives ≥ 2× headroom.
+
+New `#[cfg(test)] mod tw05k_tests` with 5 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_all_returns_102` | `self-compile-all` on all 6 files → 102 functions |
+| `self_compile_parser_from_disk` | Real `parser.tw` (19 708 chars) via `host/read_file` → 29 functions |
+| `self_compile_emit_from_disk` | Real `emit.tw` (22 697 chars) via `host/read_file` → 35 functions |
+| `self_compile_tw05j_modules_regression` | Original 4 TW05-J files still → 38 (independent of self-compile-all) |
+| `existing_main_still_returns_2_after_tw05k` | TW05-I regression: `(main)` still → 2 |
+
+### Changed
+
+`tw05j_tests::self_compile_all_returns_38` renamed to
+`self_compile_all_returns_102` and updated to expect 102 (TW05-K total).
+Stack upgraded from `run_in_large_stack` (768 MiB) to `run_in_xlarge_stack`
+(3 GiB) since the extended `self-compile-all` now lexes `emit.tw`.
+
+#### Updated function count table
+
+| File | Size | Functions |
+|------|------|-----------|
+| `span.tw` | 2 426 | 2 |
+| `diagnostic.tw` | 2 446 | 3 |
+| `iir-builder.tw` | 6 278 | 8 |
+| `lexer.tw` | 8 593 | 25 |
+| `parser.tw` | 19 708 | 29 ← TW05-K |
+| `emit.tw` | 22 697 | 35 ← TW05-K |
+| **Total** | | **102** |
+
 ## [0.9.0] — 2026-05-17
 
 ### Added (LANG64 — TW05-J multi-module self-compilation via host/read_file)
