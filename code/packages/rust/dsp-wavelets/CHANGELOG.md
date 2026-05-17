@@ -1,0 +1,167 @@
+# Changelog — dsp-wavelets
+
+## 0.1.0 — 2026-05-16
+
+### Added — DSP06 Phase 1+2 (crate skeleton + scalar Haar DWT)
+
+First release.  The Haar discrete wavelet transform — the simplest
+member of the wavelet family and the canonical worked example for
+the Mallat pyramid algorithm.  This phase establishes the crate
+skeleton and the public API surface; Phases 3+ extend it with more
+wavelet families, 2-D, CWT, and matrix-IR lowering without
+breaking the API.
+
+#### Public API
+
+```rust
+pub use WaveletType;       // Haar / Daubechies(N) / Symlets(N) / Coiflets(N) /
+                            // Biorthogonal{vm_d, vm_r} / Morlet / MexicanHat
+pub use WaveletBoundary;   // Zero / Replicate / Reflect / Symmetric / Periodic
+pub use WaveletError;      // EmptySignal / InvalidParam / SignalTooShort /
+                            // InvalidCoefficients / Fft
+pub use Band;              // Approximation / Detail
+
+pub fn dwt_1d(signal: &[f32], wavelet: WaveletType, levels: u32,
+              boundary: WaveletBoundary)
+    -> Result<Vec<f32>, WaveletError>;
+
+pub fn idwt_1d(coeffs: &[f32], wavelet: WaveletType, levels: u32,
+               boundary: WaveletBoundary, output_length: u32)
+    -> Result<Vec<f32>, WaveletError>;
+
+pub fn split_levels(coeffs_len: usize, signal_len: usize, levels: u32)
+    -> Result<Vec<usize>, WaveletError>;
+
+pub fn slice_level<'a>(coeffs: &'a [f32], signal_len: usize,
+                       levels: u32, target_level: u32, band: Band)
+    -> Result<&'a [f32], WaveletError>;
+```
+
+The full enum surface (every `WaveletType`, every `WaveletBoundary`)
+is declared even though only `Haar` (and only `Symmetric` / `Periodic`
+boundaries) are actually implemented in this phase — unimplemented
+variants return `WaveletError::InvalidParam("unsupported ...
+(Phase ...)")`.  Pinning the enum surface up front means later phases
+can fill in the implementations without changing the public type
+signature or risking enum-variant additions that break callers.
+
+#### Algorithm
+
+Standard Mallat pyramid for the Haar wavelet:
+
+- Analysis filter pair `h = [1/√2, 1/√2]` (lowpass, local average)
+  and `g = [1/√2, −1/√2]` (highpass, local difference).
+- One level: filter with `h` → downsample by 2 → `cA`; filter with
+  `g` → downsample by 2 → `cD`.
+- `J` levels: recursively apply to `cA`.
+- Output layout `[cA_J | cD_J | cD_{J-1} | ... | cD_1]`, flattened
+  row-major.  Total length matches `signal.len()` exactly (Mallat
+  is sample-count-preserving for Haar with even-length boundaries;
+  odd lengths get a ⌈/2⌉ split per level, still adding to
+  `signal.len()`).
+
+Inverse:
+
+- Upsample each band by 2 (insert zeros between samples).
+- Filter `cA_{j+1}` with synthesis lowpass + `cD_{j+1}` with
+  synthesis highpass.  Haar is its own synthesis, so the same
+  `(h, g)` pair is reversed.
+- Sum the two results → `cA_j`.  Repeat until `cA_0` = the original
+  signal.
+
+#### Boundary modes (Phase 1+2)
+
+- **Symmetric** — mirror across the boundary repeating the edge
+  sample (`...c, b, a | a, b, c...` → `...c, b, a | a, b, c...`).
+  The default for most wavelet workflows because it avoids the
+  artificial edge content that `Zero` injects.  Implemented.
+- **Periodic** — circular wrap.  Mathematically exact for
+  FFT-paired operations and the canonical mode for testing
+  perfect-reconstruction round-trips.  Implemented.
+- **Zero / Replicate / Reflect** — declared in the enum, return
+  `InvalidParam("unsupported boundary (Phase ...)")` for now.
+  Will land in a later phase once a consumer asks for them.
+
+#### Helpers
+
+- `split_levels(coeffs_len, signal_len, levels)` — returns the
+  per-band offsets in the flattened coefficient vector so callers
+  can slice out `cA_J`, `cD_J`, ..., `cD_1` without computing
+  offsets by hand.
+- `slice_level(coeffs, signal_len, levels, target_level, band)` —
+  returns a `&[f32]` slice for the requested level and band
+  (Approximation or Detail).  `target_level = 0` is the original
+  signal level (only valid for IDWT inputs); `target_level = 1..J`
+  are detail levels; `target_level = J` is the only valid
+  approximation level.
+
+#### Defensive caps (from security review)
+
+Two HIGH findings + one MEDIUM, all rooted in unbounded `u32`
+parameters reaching internal shifts and allocations:
+
+- **`MAX_LEVELS = 31`** at every public entry point (`dwt_1d`,
+  `idwt_1d`, `split_levels`, `slice_level`).  Without this cap,
+  `levels ≥ 33` triggered `1u32 << (levels - 1)` shift overflow
+  (panic in debug / wrap to 0 in release, silently bypassing the
+  size guard), and `Vec::with_capacity(levels as usize)` with
+  `levels = u32::MAX` was a ~96 GB capacity request → OOM abort.
+- **`MAX_SAMPLES = 1 << 30`** on `signal.len()`, `output_length`,
+  and `coeffs.len()`.  Caps the largest allocation
+  `vec![0.0; target_len]` in the synthesis path at 4 GB of f32 —
+  well above any realistic audio / signal workload, well below
+  the OOM cliff.
+- `filter_length_for` defensive arm changed from `usize::MAX / 2`
+  sentinel to `unreachable!()` to make the
+  "always-gated-by-check_supported_wavelet" contract explicit.
+
+Two new tests pin the rejections in place
+(`rejects_levels_above_max`, `rejects_output_length_above_max`).
+
+#### Unit tests — 16
+
+Error paths (7):
+- `rejects_empty_signal`
+- `rejects_zero_levels`
+- `rejects_signal_too_short_for_levels`
+- `rejects_unsupported_wavelet`
+- `rejects_unsupported_boundary`
+- `rejects_levels_above_max`        ← from security review
+- `rejects_output_length_above_max` ← from security review
+
+Output contract (2):
+- `output_length_matches_signal_length_periodic` (powers of 2)
+- `output_length_matches_signal_length_symmetric` (odd lengths)
+
+Closed-form / known vectors (3):
+- `haar_dwt_matches_hand_worked_reference` — `[1, 2, 3, 4]` under
+  Haar with `levels=1, Periodic` matches scipy/pywt reference output.
+- `dwt_of_constant_signal_has_zero_detail` — every detail
+  coefficient ≤ `1e-6` for a flat signal at every level.
+- `dwt_of_dirac_delta_concentrates_at_one_coefficient` — single
+  non-zero approximation coefficient at the coarsest level.
+
+Perfect reconstruction (4):
+- `idwt_of_dwt_recovers_signal_periodic_powers_of_2` — N ∈ {4, 8, 16, 32}, J ∈ {1, 2, 3}.
+- `idwt_of_dwt_recovers_signal_symmetric_powers_of_2` — same.
+- `idwt_of_dwt_recovers_signal_periodic_odd_length` — N = 17.
+- `idwt_of_dwt_recovers_signal_symmetric_odd_length` — N = 17.
+
+All 17 unit tests + 1 doctest pass.
+
+#### Dependencies
+
+None (no FFI, no `unsafe`, no external crates).  Phase 5 will pull
+in `dsp-fft` (CWT via FFT-based convolution) and `dsp-complex`
+(Morlet complex output); Phase 6 will pull in the `matrix-*` set
+(same as `dsp-stft` Phase 6).
+
+#### What this phase does NOT include
+
+- Phase 3: Daubechies, Symlets, Coiflets filter coefficients.
+- Phase 4: 2-D DWT + JPEG 2000 biorthogonal wavelets (5/3, 9/7).
+- Phase 5: CWT (Morlet, MexicanHat) via FFT.
+- Phase 6: matrix-IR-lowered `dwt_1d` / `dwt_2d`.
+- `Zero`, `Replicate`, `Reflect` boundary modes.
+- Wavelet packets, lifting scheme, SWT, ridgelets/curvelets/shearlets.
+- Streaming / real-time.
