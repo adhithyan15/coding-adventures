@@ -67,10 +67,13 @@
 //!   Payload-carrying emits still produce a void dispatch; mapping a JSX
 //!   event payload to the emit's parameters needs grammar work that is
 //!   tracked separately.
-//! - **No `Grid` primitive rendering yet.** The dedicated table-rendering
-//!   logic that the legacy `ReactRenderer` has for `Grid` (see UI20 §5) is
-//!   significant. Rather than copy it, this PR emits a placeholder `<div>`
-//!   for `Grid` and tracks the real implementation as a follow-up.
+//! - ~~No `Grid` primitive rendering yet.~~ As of the Grid-render PR, the
+//!   `Grid` moslayout tag lowers to a full `<table>` with `<thead>` /
+//!   `<tbody>` and `.map(...)` callbacks for header cells and row cells.
+//!   Per-cell selection / editing highlights are emitted when the
+//!   `selected-row` / `selected-col` / `edit-row` / `edit-col` slot refs
+//!   are bound, and per-cell `onClick` dispatches the `onNavigate` event
+//!   with `{ row, col }` payload.
 //! - ~~No `Input` primitive yet.~~ As of the Input-primitive PR, the
 //!   `Input` moslayout tag lowers to `<input type="text" />` (or
 //!   `<textarea />` when `multiline: true`) with `value`, `readOnly`,
@@ -380,6 +383,14 @@ fn emit_jsx_tree(
         return emit_input_jsx(node, indent, part_styles);
     }
 
+    // The `Grid` primitive (UI26 §6.2) has a fixed `<table><thead>...<tbody>{rows.map(...)}</tbody></table>`
+    // structure with a header `.map()` over the `headers` slot and a nested
+    // `.map()` over the `rows` slot. The general primitive flow can't express
+    // that JSX shape, so Grid gets its own dedicated emitter.
+    if node.tag == "Grid" {
+        return emit_grid_jsx(node, indent, part_styles);
+    }
+
     // Decompose the primitive into its element name, built-in style (e.g.
     // flexbox for Row/Column), close tag, and self-closing flag.
     let JsxTag {
@@ -561,6 +572,216 @@ fn emit_input_jsx(
     Ok(format!("{pad}<{tag_name}{attrs} />\n"))
 }
 
+// =====================================================================
+// Grid primitive (UI26 §6.2)
+// =====================================================================
+
+/// Lower a moslayout `Grid` node to a `<table>` JSX block.
+///
+/// ## Generated shape
+///
+/// ```tsx
+/// <table style={{...part style...}}>
+///   <thead>
+///     <tr>{headers.map((h, c) => <th key={c}>{h}</th>)}</tr>
+///   </thead>
+///   <tbody>
+///     {rows.map((row, r) => (
+///       <tr key={r}>
+///         {row.map((cell, c) => (
+///           <td key={c}
+///               style={{...selected/editing highlight...}}
+///               onClick={() => dispatch({ type: "navigate", row: r, col: c })}>
+///             {cell}
+///           </td>
+///         ))}
+///       </tr>
+///     ))}
+///   </tbody>
+/// </table>
+/// ```
+///
+/// ## Slot-ref props read from the layout node
+///
+/// | Prop name      | Required | Effect                                                      |
+/// |---|---|---|
+/// | `headers`      | yes      | slot ref for the `Array<string>` header labels              |
+/// | `rows`         | yes      | slot ref for the `Array<Array<string>>` cell display values |
+/// | `selected-row` | no       | slot ref for the currently-selected row index               |
+/// | `selected-col` | no       | slot ref for the currently-selected column index            |
+/// | `edit-row`     | no       | slot ref for the row being edited (-1 if none)              |
+/// | `edit-col`     | no       | slot ref for the column being edited (-1 if none)           |
+///
+/// ## Emit-ref props read from the layout node
+///
+/// | Prop name    | Effect                                                              |
+/// |---|---|
+/// | `onNavigate` | per-cell `onClick={() => dispatch({ type: "navigate", row, col })}` |
+///
+/// ## What is NOT in this first cut
+///
+/// - No column-width binding — `<th>` and `<td>` widths are flex-default.
+///   Once moslayout supports per-column width arrays, the emitter can use
+///   them.
+/// - No editing inline `<input>` — the host is expected to render an
+///   external editor (e.g. via FormulaBar) and push state back via the
+///   `edit-*` slots; this matches UI26 §7.5.
+/// - No `viewport-offset` virtualisation — the emitter renders all rows
+///   provided in the `rows` slot. The host is expected to pass only the
+///   visible-viewport slice; row-windowing is a host concern, not a
+///   component concern.
+fn emit_grid_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 2);
+    let pad4 = " ".repeat(indent + 4);
+    let pad6 = " ".repeat(indent + 6);
+    let pad8 = " ".repeat(indent + 8);
+
+    // Required slot-ref props.
+    let headers_slot = find_slot_ref_prop(node, "headers").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'headers'".to_string())
+    })?;
+    let rows_slot = find_slot_ref_prop(node, "rows").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'rows'".to_string())
+    })?;
+
+    let headers_var = to_camel_case_first_lower(headers_slot);
+    let rows_var = to_camel_case_first_lower(rows_slot);
+    validate_slot_or_field_name(&headers_var).map_err(PipelineEmitError::UnsafeSlotName)?;
+    validate_slot_or_field_name(&rows_var).map_err(PipelineEmitError::UnsafeSlotName)?;
+
+    // Optional state slot refs — render selection / editing highlights when present.
+    let selected_row_var = find_slot_ref_prop(node, "selected-row")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let selected_col_var = find_slot_ref_prop(node, "selected-col")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let edit_row_var = find_slot_ref_prop(node, "edit-row")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let edit_col_var = find_slot_ref_prop(node, "edit-col")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    for v in [&selected_row_var, &selected_col_var, &edit_row_var, &edit_col_var]
+        .iter()
+        .copied()
+        .flatten()
+    {
+        validate_slot_or_field_name(v).map_err(|n| PipelineEmitError::UnsafeSlotName(n))?;
+    }
+
+    // Optional onNavigate wiring.
+    let navigate_type_field = match find_emit_ref_prop(node, "onNavigate") {
+        Some(emit_name) => {
+            let t = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&t)?;
+            Some(t)
+        }
+        None => None,
+    };
+
+    // Table-level part style.
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    let table_style_attr = if part_style_str.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {part_style_str} }}}}")
+    };
+
+    // Build the per-cell `style={{...}}` expression. If any of the
+    // selected/edit slot refs are present, emit a small CSS-in-JS spread
+    // that picks the highlight color at render time.
+    let cell_style_expr = build_grid_cell_style_expr(
+        selected_row_var.as_deref(),
+        selected_col_var.as_deref(),
+        edit_row_var.as_deref(),
+        edit_col_var.as_deref(),
+    );
+
+    // Build the per-cell `onClick` attribute (only if onNavigate is wired).
+    let cell_onclick_attr = match navigate_type_field.as_deref() {
+        Some(t) => format!(
+            " onClick={{() => dispatch({{ type: \"{t}\", row: r, col: c }})}}"
+        ),
+        None => String::new(),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}<table{table_style_attr}>").unwrap();
+    writeln!(out, "{pad2}<thead>").unwrap();
+    writeln!(
+        out,
+        "{pad4}<tr>{{{headers_var}.map((h, c) => <th key={{c}}>{{h}}</th>)}}</tr>"
+    )
+    .unwrap();
+    writeln!(out, "{pad2}</thead>").unwrap();
+    writeln!(out, "{pad2}<tbody>").unwrap();
+    writeln!(out, "{pad4}{{{rows_var}.map((row, r) => (").unwrap();
+    writeln!(out, "{pad6}<tr key={{r}}>").unwrap();
+    writeln!(out, "{pad8}{{row.map((cell, c) => (").unwrap();
+    writeln!(
+        out,
+        "{pad8}  <td key={{c}}{cell_style_expr}{cell_onclick_attr}>{{cell}}</td>"
+    )
+    .unwrap();
+    writeln!(out, "{pad8}))}}").unwrap();
+    writeln!(out, "{pad6}</tr>").unwrap();
+    writeln!(out, "{pad4}))}}").unwrap();
+    writeln!(out, "{pad2}</tbody>").unwrap();
+    writeln!(out, "{pad}</table>").unwrap();
+    Ok(out)
+}
+
+/// Build the `style={{...}}` JSX attribute expression for a Grid cell.
+///
+/// If neither selected-* nor edit-* slot refs are bound, returns an empty
+/// string (no style attribute). Otherwise returns a `style={{ ...spread }}`
+/// expression that picks `background` and `outline` based on whether the
+/// cell coordinates `(r, c)` match either state.
+///
+/// The exact colours (`#264f78` for selection, `#1f4f3f` for editing)
+/// mirror the visicalc-tokens.msl values from UI26 §4.1 and are intentional
+/// defaults: a real production component would inline the design-token
+/// values from mosstyle. That's a follow-up.
+fn build_grid_cell_style_expr(
+    selected_row: Option<&str>,
+    selected_col: Option<&str>,
+    edit_row: Option<&str>,
+    edit_col: Option<&str>,
+) -> String {
+    let has_selected = selected_row.is_some() && selected_col.is_some();
+    let has_editing = edit_row.is_some() && edit_col.is_some();
+
+    if !has_selected && !has_editing {
+        return String::new();
+    }
+
+    let mut parts: Vec<String> = Vec::new();
+
+    if let (Some(sr), Some(sc)) = (selected_row, selected_col) {
+        // Selection highlight: `(r === sr && c === sc) ? selectedStyles : {}`.
+        parts.push(format!(
+            "...(r === {sr} && c === {sc} ? {{ background: \"#264f78\", color: \"#ffffff\", outline: \"1px solid #007acc\" }} : {{}})"
+        ));
+    }
+    if let (Some(er), Some(ec)) = (edit_row, edit_col) {
+        parts.push(format!(
+            "...(r === {er} && c === {ec} ? {{ background: \"#1f4f3f\", outline: \"1px solid #007acc\" }} : {{}})"
+        ));
+    }
+
+    format!(" style={{{{ {} }}}}", parts.join(", "))
+}
+
 /// Find a prop on `node` whose value is a `SlotRef`. Returns the slot's
 /// kebab-case name, or `None` if no such prop exists.
 fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
@@ -720,7 +941,9 @@ fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
         // Deferred — emit a placeholder so the file still compiles end-to-end.
         // The host can see at a glance that this node needs a real renderer
         // in a follow-up PR.
-        "Grid" => ("<div", "", " data-mosaic-todo=\"grid\"", "</div>", false),
+        // UI26's `Grid` primitive is handled separately in
+        // [`emit_grid_jsx`] — `emit_jsx_tree` short-circuits before
+        // reaching this match arm.
         // UI25's `Input` primitive is handled separately in
         // [`emit_input_jsx`] — `emit_jsx_tree` short-circuits before
         // reaching this match arm. Keeping the arm absent makes any
@@ -1920,6 +2143,262 @@ mod tests {
             "expected part style inlined on input, got:\n{}",
             result.output
         );
+    }
+
+    // -----------------------------------------------------------------
+    // Grid primitive (UI26)
+    // -----------------------------------------------------------------
+
+    /// Helper: a Grid layout with the listed slot/emit refs as props.
+    fn grid_layout(component: &str, props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    fn slot_ref_prop(name: &str, slot_name: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::SlotRef(slot_name.to_string()),
+        }
+    }
+
+    fn emit_ref_prop(name: &str, emit_name: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::EmitRef(emit_name.to_string()),
+        }
+    }
+
+    #[test]
+    fn bare_grid_renders_a_table_with_required_props() {
+        // Grid needs at least `headers` and `rows` slot refs.
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+
+        // Structural: must produce a `<table>` with thead and tbody.
+        assert!(out.contains("<table>"), "expected <table>, got:\n{out}");
+        assert!(out.contains("<thead>"), "expected <thead>");
+        assert!(out.contains("<tbody>"), "expected <tbody>");
+        assert!(out.contains("</table>"), "expected </table>");
+    }
+
+    #[test]
+    fn grid_headers_prop_produces_map_over_th_cells() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        // Headers slot is camelCased and consumed by .map(h, c) -> <th>.
+        assert!(result.output.contains(
+            "{colLabels.map((h, c) => <th key={c}>{h}</th>)}"
+        ), "expected headers .map(), got:\n{}", result.output);
+    }
+
+    #[test]
+    fn grid_rows_prop_produces_nested_map_over_tr_and_td() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        // Outer map over rows with (row, r) destructuring.
+        assert!(out.contains("{dataRows.map((row, r) => ("),
+            "expected outer .map(rows), got:\n{out}");
+        // Inner map over each row with (cell, c) destructuring.
+        assert!(out.contains("row.map((cell, c) => ("),
+            "expected inner .map(row), got:\n{out}");
+        assert!(out.contains("<td key={c}"));
+        assert!(out.contains("{cell}</td>"));
+    }
+
+    #[test]
+    fn grid_on_navigate_wires_per_cell_onclick_dispatch() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![emit(
+                "onNavigate",
+                vec![
+                    EmitParam { name: "row".to_string(), r#type: EmitPayloadType::Number },
+                    EmitParam { name: "col".to_string(), r#type: EmitPayloadType::Number },
+                ],
+            )],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+                emit_ref_prop("onNavigate", "onNavigate"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        assert!(result.output.contains(
+            "onClick={() => dispatch({ type: \"navigate\", row: r, col: c })}"
+        ), "expected per-cell onClick dispatch, got:\n{}", result.output);
+    }
+
+    #[test]
+    fn grid_selected_slot_refs_inline_a_highlight_style_per_cell() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("sel-row", SlotType::Number, true),
+                slot("sel-col", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+                slot_ref_prop("selected-row", "sel-row"),
+                slot_ref_prop("selected-col", "sel-col"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        // The cell style expression must reference the selected slot vars.
+        assert!(result
+            .output
+            .contains("r === selRow && c === selCol"),
+            "expected selection conditional, got:\n{}",
+            result.output);
+        // And include the selected-highlight background.
+        assert!(result.output.contains("background: \"#264f78\""));
+    }
+
+    #[test]
+    fn grid_edit_slot_refs_inline_an_editing_style_per_cell() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("ed-row", SlotType::Number, true),
+                slot("ed-col", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+                slot_ref_prop("edit-row", "ed-row"),
+                slot_ref_prop("edit-col", "ed-col"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        assert!(result.output.contains("r === edRow && c === edCol"),
+            "expected editing conditional, got:\n{}", result.output);
+        assert!(result.output.contains("background: \"#1f4f3f\""));
+    }
+
+    #[test]
+    fn grid_part_style_appears_on_table_element() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let s = style_with_part(
+            "G",
+            "spreadsheet",
+            &[("font-family", "monospace"), ("border-collapse", "collapse")],
+        );
+        let l = LayoutDef {
+            component_name: "G".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: Some("spreadsheet".to_string()),
+                props: vec![
+                    slot_ref_prop("headers", "col-labels"),
+                    slot_ref_prop("rows", "data-rows"),
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            result.output.contains(
+                "<table style={{ fontFamily: \"monospace\", borderCollapse: \"collapse\" }}>"
+            ),
+            "expected styled <table>, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn grid_missing_headers_prop_errors() {
+        let m = component("G", vec![], vec![]);
+        let l = grid_layout("G", vec![slot_ref_prop("rows", "r")]);
+        let err = from_pipeline(&m, &l, &empty_style("G"))
+            .expect_err("missing headers must error");
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)));
+    }
+
+    #[test]
+    fn grid_missing_rows_prop_errors() {
+        let m = component("G", vec![], vec![]);
+        let l = grid_layout("G", vec![slot_ref_prop("headers", "h")]);
+        let err = from_pipeline(&m, &l, &empty_style("G"))
+            .expect_err("missing rows must error");
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)));
     }
 
     // -----------------------------------------------------------------
