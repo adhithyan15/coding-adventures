@@ -16,4 +16,7 @@ mosaic-emit-webcomponent = { path = "../mosaic-emit-webcomponent" }
 mosaic-emit-html = { path = "../mosaic-emit-html" }
 mosaic-emit-react = { path = "../mosaic-emit-react" }
 mosaic-emit-paint = { path = "../mosaic-emit-paint" }
+mosmodel-compiler = { path = "../mosmodel-compiler" }
+moslayout-compiler = { path = "../moslayout-compiler" }
+mosstyle-compiler = { path = "../mosstyle-compiler" }
 serde_json = "1"
