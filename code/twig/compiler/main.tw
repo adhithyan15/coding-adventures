@@ -1,5 +1,5 @@
 ; # main.tw — Root Module + Smoke-Test Entry Point
-;             (LANG62/TW05-I + LANG64/TW05-J + LANG65/TW05-K + LANG66/TW05-L)
+;             (LANG62/TW05-I + LANG64/TW05-J + LANG65/TW05-K + LANG66/TW05-L + LANG67/TW05-M)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
@@ -8,13 +8,13 @@
 ;   `(main)` — TW05-I: exercises the full pipeline on a stripped in-memory
 ;              version of span.tw (returns 2, unchanged from TW05-H).
 ;
-;   `(self-compile-all dir)` — TW05-L: reads SEVEN real `.tw` files from
-;              disk via `host/read_file`, compiles each through the full
+;   `(self-compile-all dir)` — TW05-M: reads ALL ELEVEN real `.tw` files
+;              from disk via `host/read_file`, compiles each through the full
 ;              lex → parse → emit-program pipeline, and returns the sum
 ;              of emitted function counts
-;              (2 + 3 + 8 + 25 + 29 + 35 + 69 = 171).
-;              Extended in TW05-L (LANG66) from the six-file
-;              TW05-K (LANG65) set (which returned 102).
+;              (2 + 0 + 3 + 0 + 0 + 8 + 25 + 69 + 29 + 35 + 2 = 173).
+;              Extended in TW05-M (LANG67) from the seven-file
+;              TW05-L (LANG66) set (which returned 171).
 ;
 ; ## TW05-I pipeline (LANG62)
 ;
@@ -167,54 +167,53 @@
 
 ; ── self-compile-all ──────────────────────────────────────────────────────────
 ;
-; TW05-L milestone (extended from TW05-K): read seven compiler source files
-; from `dir` via `host/read_file`, compile each through the self-hosted
+; TW05-M milestone (extended from TW05-L): read ALL ELEVEN compiler source
+; files from `dir` via `host/read_file`, compile each through the self-hosted
 ; lex → parse → emit-program pipeline, and return the sum of emitted function
 ; counts.
 ;
 ; `dir` must be the absolute path to the directory containing the compiler
 ; `.tw` files (no trailing slash).
 ;
-; ## Files compiled and expected counts (TW05-L / LANG66)
+; ## Files compiled and expected counts (TW05-M / LANG67)
 ;
 ;   span.tw           2  defines  (make-span, dummy-span)
+;   token.tw          0  defines  union/record-only module ← TW05-M
 ;   diagnostic.tw     3  defines  (make-error, make-warning, make-info)
+;   ast.tw            0  defines  union-only module ← TW05-M
+;   iir-types.tw      0  defines  union/record-only module ← TW05-M
 ;   iir-builder.tw    8  defines  (new-builder, alloc-slot, …)
 ;   lexer.tw         25  defines  (lex-digit?, …, lex-source)
-;   parser.tw        29  defines  (parse-expr, …, parse-program)        ← TW05-K
-;   emit.tw          35  defines  (emit-const, …, emit-program)         ← TW05-K
 ;   cst-parser.tw    69  defines  (cst-match-TkLParen, …, cst-parse-program) ← TW05-L
+;   parser.tw        29  defines  (parse-expr, …, parse-program)
+;   emit.tw          35  defines  (emit-const, …, emit-program)
+;   main.tw           2  defines  (main, self-compile-all) ← TW05-M
 ;                   ───
-;                   171  total
+;                   173  total
 ;
-; TW05-K (LANG65) compiled only the first six modules (102 total).
-; TW05-J (LANG64) compiled only the first four modules (38 total).
+; TW05-L (LANG66) compiled seven modules (171 total).
+; TW05-K (LANG65) compiled six modules (102 total).
 ;
-; ## Why host/read_file is safe here
+; ## Why union/record modules contribute 0 functions
 ;
-; The Twig VM exposes `host/read_file` as a host call that reads the file
-; at the given path and returns its contents as a heap string.  The lexer
-; processes the full file content including comments (comments are consumed
-; by `lex-skip-comment` and do not produce tokens).
+; `emit-program` only emits `DefExpr(LambdaExpr)` top-level forms — i.e.,
+; `(define (fn params) body)` shorthand.  Union and record declarations
+; (`(union ...)`, `(record ...)`, `(module ...)`) are parsed as `CallExpr`
+; nodes; `emit-top-level-form` returns `nil` for those → skipped.
 ;
-; ## MAX_DISPATCH_DEPTH and stack requirement
+; ## Why main.tw contributes 2 functions
 ;
-; `lex-loop` recurses once per source character.  The largest file compiled
-; here is `cst-parser.tw` at 29 122 chars, requiring up to 29 122 dispatch
-; frames.  `MAX_DISPATCH_DEPTH = 65536` (set in LANG64) provides ample
-; headroom.
+; main.tw has two `(define (fn params) body)` forms: `main` and
+; `self-compile-all`.  When compiling main.tw through the pipeline, the
+; body of `self-compile-all` is emitted as IIR call instructions; the
+; embedded `host/read_file` calls are NOT executed — they are just compiled.
 ;
-; In debug builds, frame sizes are ~60 KiB →
-;   29 122 × 60 KiB ≈ 1.75 GiB.
-; Integration tests therefore use `run_in_xlarge_stack` (3 GiB thread),
-; giving ~1.7× headroom.
+; ## Stack and VM limits
 ;
-; ## Instruction budget
-;
-; Total source chars:
-;   2 426 + 2 446 + 6 278 + 8 593 + 19 708 + 22 697 + 29 122 = 91 270.
-; Lex: ~30 instrs/char × 91 270 ≈ 2.74 M.  Parse + emit ≈ 0.70 M.
-; Total ≈ 3.44 M << MAX_INSTRUCTIONS_PER_RUN = 8 M.
+; Largest file is still `cst-parser.tw` at 29 122 chars; all limits set in
+; LANG66 (MAX_DISPATCH_DEPTH 131 072, MAX_INSTRUCTIONS_PER_RUN 2²⁵) remain
+; adequate.  Additional instruction cost: 21 371 chars × 90 ≈ 1.92 M;
+; new grand total ≈ 10.1 M << 32 M.
 
 (define (self-compile-all dir)
   ; Read each source file from disk and compile through the pipeline.
@@ -223,31 +222,46 @@
   ;
   ; Files are compiled sequentially; peak stack depth = max single file depth
   ; (cst-parser.tw at 29 122 chars), not the sum of all files.
-  (let* ((span-src    (host/read_file (string-append dir "/span.tw")))
-         (diag-src    (host/read_file (string-append dir "/diagnostic.tw")))
-         (builder-src (host/read_file (string-append dir "/iir-builder.tw")))
-         (lexer-src   (host/read_file (string-append dir "/lexer.tw")))
-         (parser-src  (host/read_file (string-append dir "/parser.tw")))
-         (emit-src    (host/read_file (string-append dir "/emit.tw")))
-         (cst-src     (host/read_file (string-append dir "/cst-parser.tw")))
+  (let* ((span-src     (host/read_file (string-append dir "/span.tw")))
+         (token-src    (host/read_file (string-append dir "/token.tw")))
+         (diag-src     (host/read_file (string-append dir "/diagnostic.tw")))
+         (ast-src      (host/read_file (string-append dir "/ast.tw")))
+         (iirtypes-src (host/read_file (string-append dir "/iir-types.tw")))
+         (builder-src  (host/read_file (string-append dir "/iir-builder.tw")))
+         (lexer-src    (host/read_file (string-append dir "/lexer.tw")))
+         (cst-src      (host/read_file (string-append dir "/cst-parser.tw")))
+         (parser-src   (host/read_file (string-append dir "/parser.tw")))
+         (emit-src     (host/read_file (string-append dir "/emit.tw")))
+         (main-src     (host/read_file (string-append dir "/main.tw")))
 
          ; Compile each module: lex → parse → emit-program.
          ; emit-program returns a list of (fn-name . instrs) pairs —
          ; only DefExpr(LambdaExpr) top-level forms are emitted.
          ; Record/union/module declarations are parsed as CallExpr and skipped.
-         (span-fns    (emit-program (parse-program (lex-source span-src))))
-         (diag-fns    (emit-program (parse-program (lex-source diag-src))))
-         (builder-fns (emit-program (parse-program (lex-source builder-src))))
-         (lexer-fns   (emit-program (parse-program (lex-source lexer-src))))
-         (parser-fns  (emit-program (parse-program (lex-source parser-src))))
-         (emit-fns    (emit-program (parse-program (lex-source emit-src))))
-         (cst-fns     (emit-program (parse-program (lex-source cst-src)))))
+         ; token.tw, ast.tw, iir-types.tw → 0 each (union/record only).
+         ; main.tw → 2 (main + self-compile-all).
+         (span-fns     (emit-program (parse-program (lex-source span-src))))
+         (token-fns    (emit-program (parse-program (lex-source token-src))))
+         (diag-fns     (emit-program (parse-program (lex-source diag-src))))
+         (ast-fns      (emit-program (parse-program (lex-source ast-src))))
+         (iirtypes-fns (emit-program (parse-program (lex-source iirtypes-src))))
+         (builder-fns  (emit-program (parse-program (lex-source builder-src))))
+         (lexer-fns    (emit-program (parse-program (lex-source lexer-src))))
+         (cst-fns      (emit-program (parse-program (lex-source cst-src))))
+         (parser-fns   (emit-program (parse-program (lex-source parser-src))))
+         (emit-fns     (emit-program (parse-program (lex-source emit-src))))
+         (main-fns     (emit-program (parse-program (lex-source main-src)))))
 
-    ; Sum the function counts: 2 + 3 + 8 + 25 + 29 + 35 + 69 = 171.
+    ; Sum the function counts:
+    ;   2 + 0 + 3 + 0 + 0 + 8 + 25 + 69 + 29 + 35 + 2 = 173.
     (+ (length span-fns)
-       (+ (length diag-fns)
-          (+ (length builder-fns)
-             (+ (length lexer-fns)
-                (+ (length parser-fns)
-                   (+ (length emit-fns)
-                      (length cst-fns)))))))))
+       (+ (length token-fns)
+          (+ (length diag-fns)
+             (+ (length ast-fns)
+                (+ (length iirtypes-fns)
+                   (+ (length builder-fns)
+                      (+ (length lexer-fns)
+                         (+ (length cst-fns)
+                            (+ (length parser-fns)
+                               (+ (length emit-fns)
+                                  (length main-fns)))))))))))))
