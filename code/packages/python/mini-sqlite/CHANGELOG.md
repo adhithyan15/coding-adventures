@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.37.0] - 2026-05-17
+
+### Fixed
+
+- **SQLite-compatible NULL ordering** (`sql-codegen 1.28.0`, `sql-vm 1.26.0`) —
+  `ORDER BY x` previously placed NULL rows at the end of the result; SQLite
+  places them at the start (treating NULL as smaller than any non-NULL value).
+  `ORDER BY x DESC` now correctly puts NULLs at the *end* (previously, due to
+  a separate VM bug, they ended up at the start).
+
+  10 new oracle tests in `test_tier3_null_ordering.py` lock the byte-for-byte
+  match against the real `sqlite3` module across ASC, DESC, multi-key sorts,
+  TEXT columns, and LIMIT interactions.
+
 ## [1.36.0] - 2026-05-16
 
 ### Added

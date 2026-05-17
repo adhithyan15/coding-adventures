@@ -1784,7 +1784,18 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
 
     assert isinstance(k, PlanSortKey)
     direction = Direction.DESC if k.descending else Direction.ASC
-    nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
+    # SQLite-compatible NULL ordering:
+    #   • Explicit  NULLS FIRST / NULLS LAST  → honour the request.
+    #   • Default (nulls_first is None)        → NULLs are treated as smaller
+    #     than any non-NULL value.  Therefore an ASC sort puts NULLs FIRST,
+    #     and a DESC sort puts NULLs LAST.  This matches SQLite's behaviour
+    #     and the SQL:2003 default of NULLS LAST for DESC, NULLS FIRST for ASC.
+    if k.nulls_first is True:
+        nulls = NullsOrder.FIRST
+    elif k.nulls_first is False:
+        nulls = NullsOrder.LAST
+    else:
+        nulls = NullsOrder.LAST if k.descending else NullsOrder.FIRST
 
     # Positional sort key (ORDER BY N): use column_idx for direct index lookup.
     if k.positional_index is not None:

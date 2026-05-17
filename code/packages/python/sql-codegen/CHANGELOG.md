@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.28.0] - 2026-05-17
+
+### Fixed
+
+- **SQLite-compatible NULL ordering in ORDER BY** — the codegen's
+  `_compile_sort_key` previously defaulted every sort key to `NullsOrder.LAST`,
+  regardless of direction.  SQLite (and the SQL:2003 default) treats NULL as
+  smaller than every non-NULL value, so an ASC sort puts NULLs *first* and a
+  DESC sort puts them *last*.  The new logic:
+
+  | `nulls_first` | direction | resolved `NullsOrder` |
+  |---------------|-----------|------------------------|
+  | `True`        | any       | `FIRST`               |
+  | `False`       | any       | `LAST`                |
+  | `None`        | ASC       | `FIRST` ← new default |
+  | `None`        | DESC      | `LAST`  ← new default |
+
+  This matches the real `sqlite3` module byte-for-byte and removes a known
+  divergence that was previously documented as "this VM places NULLs last".
+
 ## [1.27.0] - 2026-05-15
 
 ### Added
