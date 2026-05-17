@@ -2465,6 +2465,19 @@ mod tw05j_tests {
         }
     }
 
+    /// Escape a filesystem path for embedding inside a Twig string literal.
+    ///
+    /// Three characters need escaping:
+    ///   `\`  → `\\`  (Windows path separators; must be first to avoid double-escaping)
+    ///   `"`  → `\"`  (would break out of the string literal — the MEDIUM security finding)
+    ///   `\n` → `\n`  (newlines are legal in POSIX paths; Twig lexer stops at newline)
+    fn twig_escape_path(p: &Path) -> String {
+        p.to_str().unwrap()
+            .replace('\\', "\\\\")
+            .replace('"',  "\\\"")
+            .replace('\n', "\\n")
+    }
+
     // ── Test 1: self-compile-all returns 38 ──────────────────────────────────
 
     #[test]
@@ -2475,7 +2488,7 @@ mod tw05j_tests {
         let dir = make_tempdir("all38");
         copy_all_tw_modules(&src, &dir);
 
-        let src_str = src.to_str().unwrap().replace('\\', "\\\\");
+        let src_str = twig_escape_path(&src);
         let main_test_src = format!(
             "(module compiler/main-test \
               (typed lenient) \
@@ -2502,7 +2515,7 @@ mod tw05j_tests {
         copy_all_tw_modules(&src, &dir);
 
         let span_path = src.join("span.tw");
-        let span_path_str = span_path.to_str().unwrap().replace('\\', "\\\\");
+        let span_path_str = twig_escape_path(&span_path);
         let main_test_src = format!(
             "(module compiler/main-test \
               (typed lenient) \
@@ -2528,7 +2541,7 @@ mod tw05j_tests {
         let dir = make_tempdir("diag_disk");
         copy_all_tw_modules(&src, &dir);
 
-        let path_str = src.join("diagnostic.tw").to_str().unwrap().replace('\\', "\\\\");
+        let path_str = twig_escape_path(&src.join("diagnostic.tw"));
         let main_test_src = format!(
             "(module compiler/main-test \
               (typed lenient) \
@@ -2554,7 +2567,7 @@ mod tw05j_tests {
         let dir = make_tempdir("builder_disk");
         copy_all_tw_modules(&src, &dir);
 
-        let path_str = src.join("iir-builder.tw").to_str().unwrap().replace('\\', "\\\\");
+        let path_str = twig_escape_path(&src.join("iir-builder.tw"));
         let main_test_src = format!(
             "(module compiler/main-test \
               (typed lenient) \
@@ -2583,7 +2596,7 @@ mod tw05j_tests {
         let dir = make_tempdir("lexer_disk");
         copy_all_tw_modules(&src, &dir);
 
-        let path_str = src.join("lexer.tw").to_str().unwrap().replace('\\', "\\\\");
+        let path_str = twig_escape_path(&src.join("lexer.tw"));
         let main_test_src = format!(
             "(module compiler/main-test \
               (typed lenient) \
