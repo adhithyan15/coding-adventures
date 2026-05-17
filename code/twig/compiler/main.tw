@@ -1,11 +1,18 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG62 / TW05-I)
+; # main.tw — Root Module + Smoke-Test Entry Point (LANG62 / TW05-I + LANG64 / TW05-J)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
-; TW05-E, and the IIR emitter from TW05-F/G/H) and exposes a `(main)` function
-; that exercises the full pipeline on real compiler source.
+; TW05-E, and the IIR emitter from TW05-F/G/H) and exposes:
 ;
-; ## TW05-I pipeline (updated from TW05-H)
+;   `(main)` — TW05-I: exercises the full pipeline on a stripped in-memory
+;              version of span.tw (returns 2, unchanged from TW05-H).
+;
+;   `(self-compile-all dir)` — TW05-J: reads four real `.tw` files from
+;              disk via `host/read_file`, compiles each through the full
+;              lex → parse → emit-program pipeline, and returns the sum
+;              of emitted function counts (2 + 3 + 8 + 25 = 38).
+;
+; ## TW05-I pipeline (LANG62)
 ;
 ; TW05-I is the first self-compilation check: the pipeline now runs on a
 ; comment-stripped version of `span.tw` — the first of the compiler's own
@@ -31,12 +38,28 @@
 ;
 ; The `(main)` return value of `2` is unchanged from TW05-H.
 ;
+; ## TW05-J multi-module self-compilation (LANG64)
+;
+; TW05-J widens the self-compilation test to read actual `.tw` files from
+; disk via `host/read_file`.  `self-compile-all` compiles four modules:
+;
+;   span.tw          → 2 functions  (make-span, dummy-span)
+;   diagnostic.tw    → 3 functions  (make-error, make-warning, make-info)
+;   iir-builder.tw   → 8 functions  (new-builder, alloc-slot, …)
+;   lexer.tw         → 25 functions (lex-digit?, …, lex-source)
+;                     ────────────
+;                     38 total
+;
+; `MAX_DISPATCH_DEPTH` was bumped from 4096 to 65536 in twig-vm 0.17.0
+; (LANG64) to allow lexing files larger than 4096 chars.  The largest file
+; in the set (lexer.tw at 8593 chars) requires up to 8593 recursive frames
+; during the lex phase.
+;
 ; ## VM call-depth note
 ;
-; `twig-vm`'s `MAX_DISPATCH_DEPTH` was bumped from 256 to 4096 in LANG62.
-; The lex-loop recurses once per character; the stripped span.tw source is
-; ~365 chars, requiring ~365 recursive frames during lexing.  The old 256
-; limit would have caused `Run(DepthExceeded)` here.
+; `twig-vm`'s `MAX_DISPATCH_DEPTH` history:
+;   - bumped 256 → 4096 in LANG62 (TW05-I): stripped span.tw ≈ 365 chars
+;   - bumped 4096 → 65536 in LANG64 (TW05-J): lexer.tw ≈ 8593 chars
 ;
 ; ## Naming conventions for generated accessors
 ;
@@ -55,7 +78,7 @@
 
 (module compiler/main
   (typed lenient)
-  (export main)
+  (export main self-compile-all)
   (import compiler/span
           compiler/token
           compiler/diagnostic
@@ -113,3 +136,59 @@
 
     ; Count of emitted function definitions.
     (length funcs)))   ; → 2
+
+; ── self-compile-all ──────────────────────────────────────────────────────────
+;
+; TW05-J milestone: read four compiler source files from `dir` via
+; `host/read_file`, compile each through the self-hosted lex → parse →
+; emit-program pipeline, and return the sum of emitted function counts.
+;
+; `dir` must be the absolute path to the directory containing the
+; compiler `.tw` files (no trailing slash).
+;
+; ## Files compiled and expected counts
+;
+;   span.tw          2  defines (make-span, dummy-span)
+;   diagnostic.tw    3  defines (make-error, make-warning, make-info)
+;   iir-builder.tw   8  defines (new-builder, alloc-slot, …)
+;   lexer.tw        25  defines (lex-digit?, lex-whitespace?, …, lex-source)
+;                  ───
+;                   38  total
+;
+; ## Why host/read_file is safe here
+;
+; The Twig VM exposes `host/read_file` as a host call that reads the file
+; at the given path and returns its contents as a heap string.  The lexer
+; processes the full file content including comments (comments are consumed
+; by `lex-skip-comment` and do not produce tokens).
+;
+; ## MAX_DISPATCH_DEPTH requirement
+;
+; `lex-loop` recurses once per source character.  The largest file compiled
+; here (lexer.tw at 8593 chars) therefore requires up to 8593 dispatch frames.
+; `MAX_DISPATCH_DEPTH` was bumped to 65536 in twig-vm 0.17.0 (LANG64) to
+; accommodate this.
+
+(define (self-compile-all dir)
+  ; Read each source file from disk and compile through the pipeline.
+  ; `host/read_file` returns the full file content including comments;
+  ; `lex-source` handles them transparently.
+  (let* ((span-src    (host/read_file (string-append dir "/span.tw")))
+         (diag-src    (host/read_file (string-append dir "/diagnostic.tw")))
+         (builder-src (host/read_file (string-append dir "/iir-builder.tw")))
+         (lexer-src   (host/read_file (string-append dir "/lexer.tw")))
+
+         ; Compile each module: lex → parse → emit-program.
+         ; emit-program returns a list of (fn-name . instrs) pairs —
+         ; only DefExpr(LambdaExpr) top-level forms are emitted.
+         ; Record/union/module declarations are parsed as CallExpr and skipped.
+         (span-fns    (emit-program (parse-program (lex-source span-src))))
+         (diag-fns    (emit-program (parse-program (lex-source diag-src))))
+         (builder-fns (emit-program (parse-program (lex-source builder-src))))
+         (lexer-fns   (emit-program (parse-program (lex-source lexer-src)))))
+
+    ; Sum the function counts: 2 + 3 + 8 + 25 = 38.
+    (+ (length span-fns)
+       (+ (length diag-fns)
+          (+ (length builder-fns)
+             (length lexer-fns))))))
