@@ -3353,14 +3353,38 @@ class BSourceExpressionParser {
 
 function bSourceExprNodes(expression: string): string[] {
   const nodes: string[] = [];
-  const pattern = /V\s*\(([^)]*)\)/g;
-  for (const match of expression.matchAll(pattern)) {
-    for (const node of match[1].split(",")) {
+  let index = 0;
+  while (index < expression.length) {
+    if (expression[index] !== "V") {
+      index += 1;
+      continue;
+    }
+
+    let cursor = index + 1;
+    while (/\s/.test(expression[cursor] ?? "")) {
+      cursor += 1;
+    }
+    if (expression[cursor] !== "(") {
+      index += 1;
+      continue;
+    }
+
+    const argsStart = cursor + 1;
+    let argsEnd = argsStart;
+    while (argsEnd < expression.length && expression[argsEnd] !== ")") {
+      argsEnd += 1;
+    }
+    if (argsEnd >= expression.length) {
+      break;
+    }
+
+    for (const node of expression.slice(argsStart, argsEnd).split(",")) {
       const trimmed = node.trim();
       if (trimmed !== "" && !isGround(trimmed)) {
         nodes.push(trimmed);
       }
     }
+    index = argsEnd + 1;
   }
   return nodes;
 }
