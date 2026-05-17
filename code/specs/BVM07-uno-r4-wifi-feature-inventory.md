@@ -32,7 +32,7 @@ Source snapshot:
 | I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata, handle open, single-byte write/read, byte-buffer write/read, and write-read transfer implemented | `i2c.open`, `i2c.write_u8`, `i2c.read_u8`, `i2c.write`, `i2c.read`, `i2c.transfer` |
 | SPI master | COPI D11, CIPO D12, SCK D13, conventional CS D10 | bus metadata, handle open, bounded write-then-read transfer, and transfer-backed read/write SDK commands implemented | `spi.open`, `spi.transfer`; SDK `spi.write`/`spi.read` lower to transfer |
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | descriptor metadata, handle open, and single-byte write/read implemented | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
-| CAN | CAN0 TX D10, RX D13 | pending | `can.open`, `can.write`, `can.read` |
+| CAN | CAN0 TX D10, RX D13 | descriptor metadata implemented; bytecode capability pending | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | pending | `rtc.now`, `rtc.set`, alarms/events later |
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | pending | `program.store` and possibly `kv.store` |
 | Watchdog | Renesas WDT library | pending | `watchdog.configure`, `watchdog.kick` |
@@ -80,9 +80,11 @@ reject conflicting handles.
    capabilities in separate tranches with conformance tests. UART now has
    descriptor metadata for Minima `Serial1` and WiFi `Serial1`/`Serial2`/
    `Serial3`, while `uart.open`, `uart.write`, and `uart.read` establish the
-   first UART handle and byte I/O tranche. The next independent tranche can move
-   on to CAN, RTC, watchdog, EEPROM/store, or WiFi/network metadata and
-   capability slices.
+   first UART handle and byte I/O tranche. CAN now has descriptor metadata for
+   UNO R4 `CAN0` on D10/TX and D13/RX while `can.open`, `can.write`, and
+   `can.read` remain the next CAN capability tranche. The next independent
+   tranche can move on to CAN byte I/O, RTC, watchdog, EEPROM/store, or
+   WiFi/network metadata and capability slices.
 
 Every tranche should include the same layers: spec entry, IR capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,
