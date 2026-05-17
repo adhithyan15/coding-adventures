@@ -1,0 +1,18 @@
+// FormulaBar.mil — interface for the formula bar at the top of the app.
+//
+// Per UI26 §2.2. The host pushes the live edit content when editing,
+// or the raw value of the selected cell otherwise.
+
+component FormulaBar {
+  slot cell-address : text ;
+  slot formula      : text ;
+  slot read-only    : bool ;
+
+  // The onFormulaChange emit carries the new text value as its payload —
+  // the pipeline emitter's Input special-case maps `e.target.value` to
+  // this `value` field at lower time.
+  emit onFormulaChange ( value : text ) ;
+
+  emit onCommit ;
+  emit onCancel ;
+}
