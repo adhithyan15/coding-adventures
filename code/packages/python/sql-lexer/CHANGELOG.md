@@ -2,6 +2,29 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.15.0] - 2026-05-16
+
+### Added
+
+- **`QUOTED_ID_DQ` token** (`sql.tokens`, `_grammar.py`) — double-quoted
+  identifiers `"name"` are now lexed and aliased to `NAME`, matching SQLite's
+  ANSI SQL behaviour.  The pattern `"([^"]|"")*"` handles embedded
+  double-quote escaping (`""` → one `"` inside the identifier).
+
+- **Double-quote stripping in `tokenize_sql`** — the post-processing loop in
+  `tokenize_sql` strips the surrounding `"` characters from `QUOTED_ID_DQ`
+  tokens and un-escapes any `""` sequences, so callers receive a clean string
+  value: `"my col"` → `NAME('my col')`.
+
+### Fixed
+
+- **`sql.tokens` keyword list cleanup** — `TEMP` and `TEMPORARY` were
+  erroneously added to the keyword section in a prior revision; they have been
+  removed.  These words are not reserved in our grammar because `temp` is a
+  common table name in SQLite compatibility scripts.  The `CREATE TEMP TABLE`
+  normalisation now happens at the engine layer (mini-sqlite) rather than in
+  the lexer.
+
 ## [0.14.0] - 2026-05-04
 
 ### Added
