@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Programmatic subcircuits** — `SubcircuitDefinition` plus `XInstance`
+  let callers define reusable cells and expand each instance into namespaced
+  primitive elements before simulation.
+
 ## [0.13.0] — 2026-05-16
 
 ### Added

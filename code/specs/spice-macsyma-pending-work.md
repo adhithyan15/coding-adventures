@@ -72,6 +72,7 @@ files.
 | v0.11.0 | — | Time-varying source waveforms: `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`; waveform evaluation at each transient timestep |
 | v0.12.0 | — | DC convergence aids: Gmin stepping + source stepping fallback chain; `_dc_newton` / `_x_from_result` helpers |
 | v0.13.0 | — | Inductor `initial_current` for transient seeding; explicit AC source phasors (`AcSource`) on `VoltageSource`/`CurrentSource` |
+| v0.14.0 | #3384 ✅ | Behavioral B sources across Python, TypeScript, and Rust: DC behavioral current/voltage expressions over constants and `V(node)` / `V(node1,node2)` references. |
 | v0.2.0 | #2339 | Trapezoidal + Backward Euler integration, LTE-based adaptive timestep |
 | v0.3.0 | #2342 | `BJT` element (Ebers-Moll, NPN/PNP) |
 | v0.4.0 | #2344 | AC small-signal frequency sweep (`.AC`) |
@@ -82,7 +83,7 @@ files.
 | v0.9.0 | #2370 | Noise analysis (`.NOISE`) — Johnson-Nyquist + shot noise, adjoint method |
 
 **Elements on main:** `Resistor`, `Capacitor`, `Inductor`, `VoltageSource`,
-`CurrentSource`, `Diode`, `Mosfet`, `BJT`
+`CurrentSource`, `BSource`, `Diode`, `Mosfet`, `BJT`
 
 **Analyses on main:** `dc_op`, `transient`, `ac_sweep`, `tf`, `dc_sweep`,
 `sens_dc`, `mc_dc`, `noise_ac`
@@ -98,9 +99,9 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- Behavioral modeling (B-element) across Python, TypeScript, and Rust SPICE
-  engines: DC behavioral current/voltage sources with arithmetic expressions
-  over constants and `V(node)` / `V(node1,node2)` references.
+- Sub-circuit support across Python, TypeScript, and Rust SPICE engines:
+  programmatic `SubcircuitDefinition` / `XInstance` expansion into namespaced
+  primitive elements before simulation.
 
 ---
 

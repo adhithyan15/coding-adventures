@@ -70,16 +70,145 @@ from spice_engine.elements import (
     Inductor,
     Mosfet,
     Resistor,
+    SubcircuitDefinition,
     VoltageSource,
+    XInstance,
 )
 
 
 @dataclass
 class Circuit:
     elements: list[Element] = field(default_factory=list)
+    subcircuits: dict[str, SubcircuitDefinition] = field(default_factory=dict)
 
-    def add(self, element: Element) -> None:
+    def __post_init__(self) -> None:
+        initial_elements = self.elements
+        self.elements = []
+        for element in initial_elements:
+            self.add(element)
+
+    def add(self, element: Element | XInstance) -> None:
+        if isinstance(element, XInstance):
+            self.instantiate(element)
+            return
         self.elements.append(element)
+
+    def define_subcircuit(self, definition: SubcircuitDefinition) -> None:
+        key = definition.name.lower()
+        if key in self.subcircuits:
+            raise ValueError(f"duplicate subcircuit definition {definition.name!r}")
+        self.subcircuits[key] = definition
+
+    def instantiate(self, instance: XInstance) -> None:
+        self.elements.extend(_expand_xinstance(instance, self.subcircuits, ()))
+
+
+def _expand_xinstance(
+    instance: XInstance,
+    subcircuits: dict[str, SubcircuitDefinition],
+    stack: tuple[str, ...],
+) -> list[Element]:
+    definition = subcircuits.get(instance.subckt.lower())
+    if definition is None:
+        raise ValueError(f"unknown subcircuit {instance.subckt!r}")
+    definition_key = definition.name.lower()
+    if definition_key in stack:
+        cycle = " -> ".join((*stack, definition_key))
+        raise ValueError(f"recursive subcircuit expansion is not supported: {cycle}")
+    if len(instance.nodes) != len(definition.pins):
+        raise ValueError(
+            f"subcircuit {definition.name!r} expects {len(definition.pins)} pins, "
+            f"got {len(instance.nodes)}"
+        )
+
+    node_map = {pin: node for pin, node in zip(definition.pins, instance.nodes, strict=True)}
+    node_map.update(
+        {pin.lower(): node for pin, node in zip(definition.pins, instance.nodes, strict=True)}
+    )
+    expanded: list[Element] = []
+    next_stack = (*stack, definition_key)
+    for element in definition.elements:
+        if isinstance(element, XInstance):
+            nested_nodes = tuple(_map_subckt_node(node, instance.name, node_map) for node in element.nodes)
+            expanded.extend(
+                _expand_xinstance(
+                    XInstance(f"{instance.name}.{element.name}", nested_nodes, element.subckt, element.parameters),
+                    subcircuits,
+                    next_stack,
+                )
+            )
+        else:
+            expanded.append(_clone_subckt_element(element, instance.name, node_map))
+    return expanded
+
+
+def _map_subckt_node(node: str, instance_name: str, node_map: dict[str, str]) -> str:
+    if node.lower() in {"0", "gnd"}:
+        return node
+    if node in node_map:
+        return node_map[node]
+    if node.lower() in node_map:
+        return node_map[node.lower()]
+    return f"{instance_name}.{node}"
+
+
+def _map_subckt_source_ref(source_name: str, instance_name: str) -> str:
+    if "." in source_name:
+        return source_name
+    return f"{instance_name}.{source_name}"
+
+
+def _map_bsource_expr_nodes(expr: str | None, instance_name: str, node_map: dict[str, str]) -> str | None:
+    if expr is None:
+        return None
+    result: list[str] = []
+    index = 0
+    while index < len(expr):
+        if expr[index] == "V" and index + 1 < len(expr) and expr[index + 1] == "(":
+            close = expr.find(")", index + 2)
+            if close != -1:
+                args = expr[index + 2 : close].split(",")
+                if 1 <= len(args) <= 2:
+                    mapped_args = [
+                        _map_subckt_node(arg.strip(), instance_name, node_map) for arg in args
+                    ]
+                    result.append(f"V({','.join(mapped_args)})")
+                    index = close + 1
+                    continue
+        result.append(expr[index])
+        index += 1
+    return "".join(result)
+
+
+def _clone_subckt_element(element: object, instance_name: str, node_map: dict[str, str]) -> Element:
+    name = f"{instance_name}.{getattr(element, 'name')}"
+    if isinstance(element, Resistor):
+        return Resistor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.resistance)
+    if isinstance(element, Capacitor):
+        return Capacitor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.capacitance, element.initial_voltage)
+    if isinstance(element, Inductor):
+        return Inductor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.inductance, element.initial_current)
+    if isinstance(element, VoltageSource):
+        return VoltageSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.voltage, element.waveform, element.ac)
+    if isinstance(element, CurrentSource):
+        return CurrentSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.current, element.waveform, element.ac)
+    if isinstance(element, BSource):
+        return BSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_bsource_expr_nodes(element.voltage_expr, instance_name, node_map), _map_bsource_expr_nodes(element.current_expr, instance_name, node_map))
+    if isinstance(element, Diode):
+        return Diode(name, _map_subckt_node(element.anode, instance_name, node_map), _map_subckt_node(element.cathode, instance_name, node_map), element.Is, element.Vt)
+    if isinstance(element, Mosfet):
+        return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
+    if isinstance(element, BJT):
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt)
+    if isinstance(element, VCVS):
+        return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
+    if isinstance(element, VCCS):
+        return VCCS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gm)
+    if isinstance(element, CCCS):
+        return CCCS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_source_ref(element.ctrl_source, instance_name), element.beta)
+    if isinstance(element, CCVS):
+        return CCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_source_ref(element.ctrl_source, instance_name), element.transresistance)
+    raise TypeError(f"unsupported subcircuit element {type(element).__name__}")
 
 
 @dataclass

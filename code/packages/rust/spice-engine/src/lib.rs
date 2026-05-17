@@ -8,12 +8,14 @@ const BOLTZMANN: f64 = 1.380_649e-23;
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
     elements: Vec<Element>,
+    subcircuits: HashMap<String, SubcircuitDefinition>,
 }
 
 impl Circuit {
     pub fn new() -> Self {
         Self {
             elements: Vec::new(),
+            subcircuits: HashMap::new(),
         }
     }
 
@@ -24,11 +26,311 @@ impl Circuit {
     pub fn elements(&self) -> &[Element] {
         &self.elements
     }
+
+    pub fn define_subcircuit(&mut self, definition: SubcircuitDefinition) -> Result<(), String> {
+        let key = definition.name.to_ascii_lowercase();
+        if self.subcircuits.contains_key(&key) {
+            return Err(format!(
+                "duplicate subcircuit definition {:?}",
+                definition.name
+            ));
+        }
+        self.subcircuits.insert(key, definition);
+        Ok(())
+    }
+
+    pub fn instantiate(&mut self, instance: XInstance) -> Result<(), String> {
+        let elements = expand_xinstance(&instance, &self.subcircuits, &[])?;
+        self.elements.extend(elements);
+        Ok(())
+    }
 }
 
 impl Default for Circuit {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SubcircuitDefinition {
+    pub name: String,
+    pub pins: Vec<String>,
+    pub elements: Vec<SubcircuitElement>,
+    pub parameters: HashMap<String, f64>,
+}
+
+impl SubcircuitDefinition {
+    pub fn new(
+        name: impl Into<String>,
+        pins: impl Into<Vec<String>>,
+        elements: impl Into<Vec<SubcircuitElement>>,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            pins: pins.into(),
+            elements: elements.into(),
+            parameters: HashMap::new(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum SubcircuitElement {
+    Element(Element),
+    XInstance(XInstance),
+}
+
+impl From<Element> for SubcircuitElement {
+    fn from(element: Element) -> Self {
+        Self::Element(element)
+    }
+}
+
+impl From<XInstance> for SubcircuitElement {
+    fn from(instance: XInstance) -> Self {
+        Self::XInstance(instance)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct XInstance {
+    pub name: String,
+    pub nodes: Vec<String>,
+    pub subckt: String,
+    pub parameters: HashMap<String, f64>,
+}
+
+impl XInstance {
+    pub fn new(
+        name: impl Into<String>,
+        nodes: impl Into<Vec<String>>,
+        subckt: impl Into<String>,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            nodes: nodes.into(),
+            subckt: subckt.into(),
+            parameters: HashMap::new(),
+        }
+    }
+}
+
+fn expand_xinstance(
+    instance: &XInstance,
+    subcircuits: &HashMap<String, SubcircuitDefinition>,
+    stack: &[String],
+) -> Result<Vec<Element>, String> {
+    let definition = subcircuits
+        .get(&instance.subckt.to_ascii_lowercase())
+        .ok_or_else(|| format!("unknown subcircuit {:?}", instance.subckt))?;
+    let definition_key = definition.name.to_ascii_lowercase();
+    if stack.contains(&definition_key) {
+        let mut cycle = stack.to_vec();
+        cycle.push(definition_key);
+        return Err(format!(
+            "recursive subcircuit expansion is not supported: {}",
+            cycle.join(" -> ")
+        ));
+    }
+    if instance.nodes.len() != definition.pins.len() {
+        return Err(format!(
+            "subcircuit {:?} expects {} pins, got {}",
+            definition.name,
+            definition.pins.len(),
+            instance.nodes.len()
+        ));
+    }
+
+    let mut node_map = HashMap::new();
+    for (pin, node) in definition.pins.iter().zip(instance.nodes.iter()) {
+        node_map.insert(pin.clone(), node.clone());
+        node_map.insert(pin.to_ascii_lowercase(), node.clone());
+    }
+    let mut expanded = Vec::new();
+    let mut next_stack = stack.to_vec();
+    next_stack.push(definition.name.to_ascii_lowercase());
+    for element in &definition.elements {
+        match element {
+            SubcircuitElement::Element(element) => {
+                expanded.push(clone_subckt_element(element, &instance.name, &node_map));
+            }
+            SubcircuitElement::XInstance(nested) => {
+                let mut nested_instance = nested.clone();
+                nested_instance.name = format!("{}.{}", instance.name, nested.name);
+                nested_instance.nodes = nested
+                    .nodes
+                    .iter()
+                    .map(|node| map_subckt_node(node, &instance.name, &node_map))
+                    .collect();
+                expanded.extend(expand_xinstance(
+                    &nested_instance,
+                    subcircuits,
+                    &next_stack,
+                )?);
+            }
+        }
+    }
+    Ok(expanded)
+}
+
+fn map_subckt_node(node: &str, instance_name: &str, node_map: &HashMap<String, String>) -> String {
+    if node.eq_ignore_ascii_case("0") || node.eq_ignore_ascii_case("gnd") {
+        return node.to_string();
+    }
+    node_map
+        .get(node)
+        .or_else(|| node_map.get(&node.to_ascii_lowercase()))
+        .cloned()
+        .unwrap_or_else(|| format!("{instance_name}.{node}"))
+}
+
+fn map_subckt_source_ref(source_name: &str, instance_name: &str) -> String {
+    if source_name.contains('.') {
+        source_name.to_string()
+    } else {
+        format!("{instance_name}.{source_name}")
+    }
+}
+
+fn map_bsource_expr_nodes(
+    expr: &Option<String>,
+    instance_name: &str,
+    node_map: &HashMap<String, String>,
+) -> Option<String> {
+    let expr = expr.as_ref()?;
+    let mut result = String::new();
+    let mut index = 0;
+    while index < expr.len() {
+        let rest = &expr[index..];
+        if rest.starts_with("V(") {
+            if let Some(close_offset) = rest.find(')') {
+                let args: Vec<String> = rest[2..close_offset]
+                    .split(',')
+                    .map(|arg| map_subckt_node(arg.trim(), instance_name, node_map))
+                    .collect();
+                if (1..=2).contains(&args.len()) {
+                    result.push_str(&format!("V({})", args.join(",")));
+                    index += close_offset + 1;
+                    continue;
+                }
+            }
+        }
+        if let Some(ch) = rest.chars().next() {
+            result.push(ch);
+            index += ch.len_utf8();
+        } else {
+            break;
+        }
+    }
+    Some(result)
+}
+
+fn clone_subckt_element(
+    element: &Element,
+    instance_name: &str,
+    node_map: &HashMap<String, String>,
+) -> Element {
+    match element {
+        Element::Resistor(element) => Element::Resistor(Resistor::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.n1, instance_name, node_map),
+            map_subckt_node(&element.n2, instance_name, node_map),
+            element.resistance_ohms,
+        )),
+        Element::Capacitor(element) => Element::Capacitor(Capacitor::with_initial_voltage(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.n1, instance_name, node_map),
+            map_subckt_node(&element.n2, instance_name, node_map),
+            element.capacitance_farads,
+            element.initial_voltage,
+        )),
+        Element::Inductor(element) => Element::Inductor(Inductor::with_initial_current(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.n1, instance_name, node_map),
+            map_subckt_node(&element.n2, instance_name, node_map),
+            element.inductance_henrys,
+            element.initial_current,
+        )),
+        Element::VoltageSource(element) => Element::VoltageSource(VoltageSource {
+            name: format!("{instance_name}.{}", element.name),
+            positive: map_subckt_node(&element.positive, instance_name, node_map),
+            negative: map_subckt_node(&element.negative, instance_name, node_map),
+            voltage: element.voltage,
+            ac: element.ac,
+            waveform: element.waveform.clone(),
+        }),
+        Element::CurrentSource(element) => Element::CurrentSource(CurrentSource {
+            name: format!("{instance_name}.{}", element.name),
+            positive: map_subckt_node(&element.positive, instance_name, node_map),
+            negative: map_subckt_node(&element.negative, instance_name, node_map),
+            current: element.current,
+            ac: element.ac,
+            waveform: element.waveform.clone(),
+        }),
+        Element::BSource(element) => Element::BSource(BSource {
+            name: format!("{instance_name}.{}", element.name),
+            positive: map_subckt_node(&element.positive, instance_name, node_map),
+            negative: map_subckt_node(&element.negative, instance_name, node_map),
+            voltage_expr: map_bsource_expr_nodes(&element.voltage_expr, instance_name, node_map),
+            current_expr: map_bsource_expr_nodes(&element.current_expr, instance_name, node_map),
+        }),
+        Element::Diode(element) => Element::Diode(Diode::with_model(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.anode, instance_name, node_map),
+            map_subckt_node(&element.cathode, instance_name, node_map),
+            element.saturation_current,
+            element.thermal_voltage,
+        )),
+        Element::Bjt(element) => Element::Bjt(Bjt::with_model(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.collector, instance_name, node_map),
+            map_subckt_node(&element.base, instance_name, node_map),
+            map_subckt_node(&element.emitter, instance_name, node_map),
+            element.polarity,
+            element.saturation_current,
+            element.forward_beta,
+            element.thermal_voltage,
+        )),
+        Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.drain, instance_name, node_map),
+            map_subckt_node(&element.gate, instance_name, node_map),
+            map_subckt_node(&element.source, instance_name, node_map),
+            map_subckt_node(&element.body, instance_name, node_map),
+            element.mosfet_type,
+            element.params,
+        )),
+        Element::Vccs(element) => Element::Vccs(Vccs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_node(&element.control_positive, instance_name, node_map),
+            map_subckt_node(&element.control_negative, instance_name, node_map),
+            element.transconductance_siemens,
+        )),
+        Element::Vcvs(element) => Element::Vcvs(Vcvs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_node(&element.control_positive, instance_name, node_map),
+            map_subckt_node(&element.control_negative, instance_name, node_map),
+            element.gain,
+        )),
+        Element::Cccs(element) => Element::Cccs(Cccs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_source_ref(&element.control_source, instance_name),
+            element.gain,
+        )),
+        Element::Ccvs(element) => Element::Ccvs(Ccvs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_source_ref(&element.control_source, instance_name),
+            element.transresistance_ohms,
+        )),
     }
 }
 
