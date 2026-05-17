@@ -19,6 +19,17 @@
  * single-terminal heuristic stays happy — it'll come back in once
  * an index-page renderer can consume the Collection.  See the
  * forme-render-static README for the v0.2 roadmap.
+ *
+ * Note on the route template: `/blog/{slug}.html` does NOT include the
+ * `/coding-adventures/` repo-name prefix that the live URL has.  That
+ * prefix is a GitHub-Pages-project-page deployment detail — every
+ * project page lives under https://<user>.github.io/<repo>/ — not a
+ * routing concern.  Baking it into the route would make the build
+ * non-portable (rename the repo, switch to a user/org page, point a
+ * custom domain at it → all the routes would need rewriting).  The
+ * deploy workflow publishes dist/blog/ to gh-pages:blog/, and Pages
+ * exposes it as <user>.github.io/<repo>/blog/<slug>.html — composition
+ * lives at the deploy boundary, not in the content.
  */
 
 import sourceFs       from "@coding-adventures/forme-source-fs";
@@ -51,7 +62,7 @@ const config: PipelineConfig = {
       stage: renderStatic,
       config: {
         siteTitle: "Coding Adventures",
-        routeTemplate: "/coding-adventures/blog/{slug}.html",
+        routeTemplate: "/blog/{slug}.html",
       },
     },
     {

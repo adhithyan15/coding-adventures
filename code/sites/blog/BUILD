@@ -17,4 +17,4 @@ cd ../../packages/typescript/forme-parse-markdown && npm install --silent
 cd ../../packages/typescript/forme-collect-chronological && npm install --silent
 cd ../../packages/typescript/forme-render-static && npm install --silent
 cd ../../packages/typescript/forme-emit-fs && npm install --silent
-npm install --silent && npx tsx build.ts && test -d dist/coding-adventures/blog && ls dist/coding-adventures/blog
+npm install --silent && npx tsx build.ts && test -d dist/blog && ls dist/blog

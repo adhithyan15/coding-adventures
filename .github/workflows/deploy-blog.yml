@@ -3,13 +3,17 @@
 # ================================================================
 #
 # Builds the Forme pipeline (5 stages, FM00 §5 demo) and deploys the
-# generated dist/coding-adventures/blog/ tree to the gh-pages branch
-# under coding-adventures/blog/, preserving other content on Pages.
+# generated dist/blog/ tree to the gh-pages branch under blog/,
+# preserving other content on Pages.
 #
 # Pages is configured to serve from the gh-pages branch (legacy mode).
-# The peaceiris action pushes built assets into coding-adventures/blog/
-# on that branch, so the site is available at:
-#   https://adhithyan15.github.io/coding-adventures/blog/<slug>.html
+# Project-page repos like this one are served at
+# https://<user>.github.io/<repo>/, so the `coding-adventures/` segment
+# of the live URL comes from the *repo name* (project-page prefix), not
+# from the publish destination.  Files at gh-pages/blog/foo.html land at
+#   https://adhithyan15.github.io/coding-adventures/blog/foo.html
+# — getting the prefix from a directory on gh-pages too would
+# double-prefix and produce 404s.
 #
 # Pipeline shape (see code/sites/blog/forme.config.ts):
 #   forme-source-fs          Stream<ContentSource>
@@ -124,14 +128,14 @@ jobs:
 
       - name: Verify expected output exists
         run: |
-          test -d code/sites/blog/dist/coding-adventures/blog
-          ls code/sites/blog/dist/coding-adventures/blog
-          test -n "$(ls code/sites/blog/dist/coding-adventures/blog/*.html 2>/dev/null)"
+          test -d code/sites/blog/dist/blog
+          ls code/sites/blog/dist/blog
+          test -n "$(ls code/sites/blog/dist/blog/*.html 2>/dev/null)"
 
-      - name: Deploy to GitHub Pages (coding-adventures/blog/ subdirectory)
+      - name: Deploy to GitHub Pages (blog/ on gh-pages, served at <user>.github.io/<repo>/blog/)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: code/sites/blog/dist/coding-adventures/blog
-          destination_dir: coding-adventures/blog
+          publish_dir: code/sites/blog/dist/blog
+          destination_dir: blog
           keep_files: true
