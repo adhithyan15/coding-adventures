@@ -147,17 +147,55 @@ fn run(result: cli_builder::types::ParseResult) {
         process::exit(1);
     }
 
-    // Required positional: SOURCE
-    let source_path = args
-        .get("source")
-        .and_then(|v| v.as_str())
-        .unwrap_or_else(|| {
-            eprintln!("mosaic-compile: SOURCE file is required");
-            process::exit(1);
-        });
+    // ---- Mode detection: legacy (.mosaic) vs. three-file pipeline -----------
+    //
+    // The CLI supports two mutually exclusive modes:
+    //   * Legacy: a single positional SOURCE file (a `.mosaic` document).
+    //   * Pipeline (UI23 / UI24): the three flags `--interface`, `--layout`,
+    //     `--style` pointing at `.mil`, `.mll`, `.msl` files respectively.
+    //
+    // We detect the mode here. If both are present we reject the invocation;
+    // if neither is present we reject as well. This keeps the user honest about
+    // intent and produces a clearer error than "SOURCE file is required" when
+    // they meant to use the pipeline flags.
+
+    let interface_path = flags.get("interface").and_then(|v| v.as_str());
+    let layout_path = flags.get("layout").and_then(|v| v.as_str());
+    let style_path = flags.get("style").and_then(|v| v.as_str());
+    let source_path = args.get("source").and_then(|v| v.as_str());
+    let output_path = flags.get("output").and_then(|v| v.as_str());
+
+    let pipeline_any =
+        interface_path.is_some() || layout_path.is_some() || style_path.is_some();
+
+    if pipeline_any && source_path.is_some() {
+        eprintln!(
+            "mosaic-compile: cannot mix SOURCE (legacy mode) with \
+             --interface/--layout/--style (pipeline mode); use one or the other"
+        );
+        process::exit(1);
+    }
+
+    if pipeline_any {
+        // Pipeline mode — all three flags are required together.
+        let interface = require_pipeline_flag("interface", interface_path);
+        let layout = require_pipeline_flag("layout", layout_path);
+        let style = require_pipeline_flag("style", style_path);
+        run_pipeline(backend, interface, layout, style, output_path);
+        return;
+    }
+
+    // ---- Legacy mode -------------------------------------------------------
+    let source_path = source_path.unwrap_or_else(|| {
+        eprintln!(
+            "mosaic-compile: provide either a SOURCE file (legacy single-file \
+             mode) or all of --interface, --layout, --style (three-file \
+             pipeline mode); see --help"
+        );
+        process::exit(1);
+    });
 
     // Optional flags
-    let output_path = flags.get("output").and_then(|v| v.as_str());
     let fixtures_path = flags.get("fixtures").and_then(|v| v.as_str());
     let css_path = flags.get("css").and_then(|v| v.as_str());
 
@@ -271,6 +309,107 @@ fn run(result: cli_builder::types::ParseResult) {
             process::exit(1);
         }
     }
+}
+
+// ===========================================================================
+// Three-file pipeline (UI23 / UI24)
+// ===========================================================================
+
+/// Enforce that a pipeline flag is present; bail with a clear error otherwise.
+///
+/// The other two flags' presence is checked here too so the user gets one
+/// message rather than three serial complaints.
+fn require_pipeline_flag<'a>(name: &str, value: Option<&'a str>) -> &'a str {
+    value.unwrap_or_else(|| {
+        eprintln!(
+            "mosaic-compile: --{name} is required in pipeline mode (with --interface --layout --style)"
+        );
+        process::exit(1);
+    })
+}
+
+/// Run the three-file pipeline path: compile `.mil`, `.mll`, `.msl` to a
+/// single output file using the new pipeline-aware backend emitter.
+///
+/// Currently only `--backend react` is wired here; the other backends will
+/// follow when they gain their own pipeline entry points. The legacy
+/// `--backend X SOURCE.mosaic` path continues to work unchanged for any of
+/// the four backends.
+fn run_pipeline(
+    backend: &str,
+    interface_path: &str,
+    layout_path: &str,
+    style_path: &str,
+    output_path: Option<&str>,
+) {
+    if backend != "react" {
+        eprintln!(
+            "mosaic-compile: pipeline mode (--interface/--layout/--style) \
+             currently supports only --backend react (got '{backend}'). \
+             Use legacy SOURCE mode for other backends."
+        );
+        process::exit(1);
+    }
+
+    // -- 1. Compile the mosmodel interface ----------------------------------
+    //
+    // The mosmodel compiler emits a JSON descriptor that the moslayout
+    // compiler uses to validate slot/emit references.
+    let interface_src = read_file_or_die(interface_path);
+    let mosmodel_out = mosmodel_compiler::compile(&interface_src).unwrap_or_else(|errs| {
+        eprintln!("mosaic-compile: mosmodel error(s) in {interface_path}:");
+        for e in errs {
+            eprintln!("  {e:?}");
+        }
+        process::exit(1);
+    });
+
+    // -- 2. Compile the moslayout file --------------------------------------
+    //
+    // We pass the descriptor JSON so the moslayout compiler can check that
+    // every `@slot` and `emit onX` reference resolves correctly.
+    let layout_src = read_file_or_die(layout_path);
+    let layout_out =
+        moslayout_compiler::compile(&layout_src, Some(&mosmodel_out.descriptor_json))
+            .unwrap_or_else(|errs| {
+                eprintln!("mosaic-compile: moslayout error(s) in {layout_path}:");
+                for e in errs {
+                    eprintln!("  {e:?}");
+                }
+                process::exit(1);
+            });
+
+    // -- 3. Compile the mosstyle file ---------------------------------------
+    //
+    // The part map JSON from moslayout tells mosstyle which part names are
+    // legal targets for style blocks.
+    let style_src = read_file_or_die(style_path);
+    let style_out = mosstyle_compiler::compile(&style_src, Some(&layout_out.part_map_json))
+        .unwrap_or_else(|errs| {
+            eprintln!("mosaic-compile: mosstyle error(s) in {style_path}:");
+            for e in errs {
+                eprintln!("  {e:?}");
+            }
+            process::exit(1);
+        });
+
+    // -- 4. Lower the triple to a React TSX file ----------------------------
+    let result = mosaic_emit_react::pipeline::from_pipeline(
+        &mosmodel_out.component,
+        &layout_out.def,
+        &style_out.def,
+    )
+    .unwrap_or_else(|e| {
+        eprintln!("mosaic-compile: react pipeline emit error: {e}");
+        process::exit(1);
+    });
+
+    // -- 5. Write the output ------------------------------------------------
+    let out = output_path
+        .map(str::to_string)
+        .unwrap_or_else(|| format!("{}.tsx", result.component_name));
+    write_file_or_die(&out, &result.output);
+    eprintln!("Written: {out}");
 }
 
 // ===========================================================================

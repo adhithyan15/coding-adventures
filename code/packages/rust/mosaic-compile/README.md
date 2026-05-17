@@ -51,21 +51,33 @@ cargo build -p mosaic-compile
 
 ## Usage
 
+The CLI has two modes — pick one:
+
 ```text
-mosaic-compile --backend <BACKEND> [OPTIONS] <SOURCE>
+Legacy single-file mode (.mosaic):
+    mosaic-compile --backend <BACKEND> [OPTIONS] <SOURCE>
+
+Three-file pipeline mode (.mil + .mll + .msl, UI23/UI24):
+    mosaic-compile --backend react --interface <I.mil> --layout <L.mll> --style <S.msl> [-o <OUT>]
 
 ARGUMENTS:
-    SOURCE    Path to the .mosaic source file
+    SOURCE                   Path to the .mosaic source file (legacy mode only)
 
 FLAGS:
     -b, --backend <name>     webcomponent | html | react | paint  [required]
     -o, --output <path>      Output file path
-                             Default: <ComponentName>.js / .html / .jsx / .png
+                             Default: <ComponentName>.js / .html / .jsx / .png / .tsx
     -f, --fixtures <path>    JSON fixture file for slot values (html only)
     -c, --css <path>         CSS file to inline (html only)
+        --interface <path>   .mil mosmodel interface file (pipeline mode)
+        --layout <path>      .mll moslayout file (pipeline mode)
+        --style <path>       .msl mosstyle file (pipeline mode)
     -h, --help               Show help
     -V, --version            Print version
 ```
+
+Pipeline mode currently supports `--backend react` only; the other backends
+continue to use legacy mode and will gain pipeline support in follow-up work.
 
 ## Examples
 
