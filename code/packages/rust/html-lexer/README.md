@@ -242,6 +242,17 @@ python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fi
   /tmp/entities.json --check
 ```
 
+The checked-in `whatwg-numeric-references.json` fixture exercises the finite
+edge classes of the HTML numeric character reference algorithm: null, controls,
+Windows-1252 control remaps, surrogates, noncharacters, scalar boundaries, and
+outside-range values. Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
+```
+
 There is also an `upstream-html5lib-smoke.test` file that mirrors the raw
 html5lib tokenizer JSON shape in a small supported subset. The Rust test
 harness now targets a checked-in generated `html5lib-smoke.json` corpus, which

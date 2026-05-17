@@ -51,6 +51,10 @@ binary while production code continues to link only static Rust source.
 - `whatwg-entities.json`: generated HTML Standard named character reference
   table used by Rust tests to exercise every entry in data, attribute, and
   RCDATA contexts
+- `whatwg-numeric-references.json`: generated HTML Standard numeric character
+  reference edge table used by Rust tests to exercise decimal, hexadecimal,
+  semicolon, and missing-semicolon forms across data, attribute, and RCDATA
+  contexts
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -60,6 +64,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_entities_fixture.py`: importer that lowers the HTML
   Standard's `entities.json` table into the checked-in `whatwg-entities.json`
   fixture
+- `generate_whatwg_numeric_references_fixture.py`: importer that generates the
+  finite numeric character reference edge table for the checked-in
+  `whatwg-numeric-references.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -69,6 +76,14 @@ python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fi
   /tmp/entities.json
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
   /tmp/entities.json --check
+```
+
+Regenerate or verify the WHATWG numeric-reference fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
 ```
 
 ## Conformance Audit
