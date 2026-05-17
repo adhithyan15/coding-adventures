@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.36.0] - 2026-05-16
+
+### Added
+
+- **`CREATE TEMP TABLE` / `CREATE TEMPORARY TABLE` support** — SQLite scripts
+  commonly create temporary tables with the `TEMP` or `TEMPORARY` modifier.
+  The engine now normalises `CREATE TEMP(ORARY)? TABLE` to `CREATE TABLE`
+  and `CREATE TEMP(ORARY)? VIEW` to `CREATE VIEW` with a single regex
+  substitution before the parser sees the SQL, so the grammar stays clean and
+  `temp` remains a valid table/column name everywhere else.  Tested with
+  17 new tests covering lower-case, mixed-case, `IF NOT EXISTS`, DROP, and
+  the no-conflict property (table named `temp`, `DELETE FROM temp`, etc.).
+
+- **Double-quoted identifier support** (`sql-lexer 0.15.0`) — `"colname"` and
+  `"my column"` are now lexed as `NAME` tokens with the quotes stripped,
+  matching SQLite's ANSI SQL identifier quoting.  Embedded `""` escape
+  sequences are un-escaped correctly: `"it""s"` → `NAME("it's")`.
+
 ## [1.35.0] - 2026-05-15
 
 ### Fixed

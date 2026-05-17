@@ -51,6 +51,13 @@ TOKEN_GRAMMAR = TokenGrammar(
             alias='NAME',
         ),
         TokenDefinition(
+            name='QUOTED_ID_DQ',
+            pattern='"([^"]|"")*"',
+            is_regex=True,
+            line_number=28,
+            alias='NAME',
+        ),
+        TokenDefinition(
             name='LESS_EQUALS',
             pattern='<=',
             is_regex=False,
