@@ -1,5 +1,47 @@
 # Changelog — twig-module-driver
 
+## [0.9.0] — 2026-05-17
+
+### Added (LANG64 — TW05-J multi-module self-compilation via host/read_file)
+
+New `#[cfg(test)] mod tw05j_tests` with 6 integration tests that exercise
+the full lex → parse → `emit-program` pipeline on four real compiler source
+files read from disk via `host/read_file`.
+
+#### New function in `code/twig/compiler/main.tw`
+
+`(self-compile-all dir)` — reads four `.tw` files from `dir`, compiles each
+through the pipeline, and returns the sum of emitted function counts.
+
+#### Tests added
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_all_returns_38` | `self-compile-all` on all 4 files → 38 total functions (2+3+8+25) |
+| `self_compile_span_from_disk` | Real `span.tw` via `host/read_file` → 2 functions |
+| `self_compile_diagnostic_from_disk` | Real `diagnostic.tw` via `host/read_file` → 3 functions |
+| `self_compile_iir_builder_from_disk` | Real `iir-builder.tw` (6278 chars) via `host/read_file` → 8 functions |
+| `self_compile_lexer_from_disk` | Real `lexer.tw` (8593 chars) via `host/read_file` → 25 functions |
+| `existing_main_still_returns_2` | TW05-I regression: `(main)` still returns 2 after `MAX_DISPATCH_DEPTH` bump |
+
+#### Expected function counts
+
+| File | Size | Functions | Names |
+|---|---|---|---|
+| `span.tw` | 2426 chars | 2 | `make-span`, `dummy-span` |
+| `diagnostic.tw` | 2446 chars | 3 | `make-error`, `make-warning`, `make-info` |
+| `iir-builder.tw` | 6278 chars | 8 | `iirbuilder-with-instrs`, `iirbuilder-with-reg-count`, `iirbuilder-with-label-count`, `new-builder`, `alloc-slot`, `alloc-label`, `append-instr`, `finalise-builder` |
+| `lexer.tw` | 8593 chars | 25 | `lex-digit?`, `lex-whitespace?`, …, `lex-source` |
+| **Total** | | **38** | |
+
+#### Why this required MAX_DISPATCH_DEPTH 4096 → 65536
+
+`lex-loop` recurses once per source character.  `iir-builder.tw` (6278 chars)
+and `lexer.tw` (8593 chars) both exceed the old 4096 limit.  twig-vm was
+bumped to 0.17.0 in the same release with the new 65536 constant.
+
+---
+
 ## [0.8.0] — 2026-05-16
 
 ### Changed (LANG63 — grammar-driven Twig lexer and CST parser)

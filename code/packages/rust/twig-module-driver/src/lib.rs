@@ -622,16 +622,32 @@ fn canonicalize_best_effort(path: &Path) -> PathBuf {
 // frames.  In debug mode each frame can be 8-12 KiB, pushing total stack
 // usage above the default 8 MiB test-thread limit.
 //
-// `run_in_large_stack` spawns a 64 MiB thread to run the VM.  All integration
-// tests that run the TW05-I main.tw (which lexes the 365-char stripped span.tw
-// source) use this helper.
+// `run_in_large_stack` spawns a dedicated thread to run the VM.  The stack
+// size must accommodate the deepest recursive call the test will exercise.
+//
+// ## Stack budget (LANG64 / TW05-J)
+//
+// `lex-loop` recurses once per source character.  The largest file compiled
+// by TW05-J is `lexer.tw` at 8593 chars, requiring up to 8593 nested Rust
+// `dispatch` frames.  In debug builds, frame sizes are significantly larger
+// than in release builds (extra locals for bounds checks, debug info, etc.).
+// Empirically, debug-mode dispatch frames can reach 30–60 KiB.  At 60 KiB
+// per frame × 8593 frames ≈ 500 MiB.
+//
+// We allocate 768 MiB to give headroom over the worst-case estimate.
+// The `self-compile-all` test also chains four lex runs; they run
+// sequentially (not concurrently), so their peak stack depth is the single
+// largest file (lexer.tw), not the sum.
+//
+// Previous value: 64 MiB (sufficient for TW05-I's 365-char stripped source).
+// Bumped in LANG64 to support TW05-J's 8593-char lexer.tw.
 
 #[cfg(test)]
 fn run_in_large_stack(root: std::path::PathBuf, dir: std::path::PathBuf, tag: &'static str)
     -> twig_vm::LispyValue
 {
     std::thread::Builder::new()
-        .stack_size(64 * 1024 * 1024) // 64 MiB
+        .stack_size(768 * 1024 * 1024) // 768 MiB — see budget note above
         .spawn(move || {
             twig_vm::run_module_tree(&root, &[dir.as_path()])
                 .unwrap_or_else(|e| panic!("{tag}: {e}"))
@@ -2369,5 +2385,248 @@ mod tw05i_tests {
         let v = super::run_in_large_stack(root, dir, "full_lex_parse_emit_self_compile");
         assert_eq!(v.as_int(), Some(2),
             "(main) should return 2 — emit-program of stripped span.tw → make-span + dummy-span");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// tw05j_tests — TW05-J: multi-module self-compilation via host/read_file
+// ---------------------------------------------------------------------------
+//
+// TW05-J widens the self-compilation test from LANG62 (TW05-I).  Instead of
+// embedding a stripped source string in Twig code, the new `self-compile-all`
+// function in main.tw reads real `.tw` files from disk via `host/read_file`
+// and compiles each through the full lex → parse → emit-program pipeline.
+//
+// ## Files compiled and expected function counts
+//
+//   span.tw          2  defines  (make-span, dummy-span)
+//   diagnostic.tw    3  defines  (make-error, make-warning, make-info)
+//   iir-builder.tw   8  defines  (new-builder, alloc-slot, …)
+//   lexer.tw        25  defines  (lex-digit?, …, lex-source)
+//                  ────
+//                   38  total
+//
+// ## MAX_DISPATCH_DEPTH requirement
+//
+// `lex-loop` recurses once per source character.  lexer.tw is 8593 chars,
+// requiring up to 8593 dispatch frames.  twig-vm 0.17.0 (LANG64) bumped
+// MAX_DISPATCH_DEPTH from 4096 to 65536 to accommodate this.
+//
+// All tests use `crate::run_in_large_stack` (64 MiB thread stack) to avoid
+// host stack overflow during deep recursion.
+
+#[cfg(test)]
+mod tw05j_tests {
+    use std::fs;
+    use std::path::Path;
+
+    /// Path to the compiler source directory (code/twig/compiler/).
+    fn compiler_src_dir() -> std::path::PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent().unwrap()  // rust/
+            .parent().unwrap()  // packages/
+            .parent().unwrap()  // code/
+            .join("twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    fn make_tempdir(tag: &str) -> std::path::PathBuf {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .subsec_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "twig_tw05j_{tag}_{}_{}", std::process::id(), nonce
+        ));
+        // Use create_dir (not create_dir_all) so the call fails atomically if
+        // the path already exists.  create_dir_all silently succeeds on an
+        // existing directory, which would allow a symlink-substitution attack
+        // between the name-generation step and the actual creation.
+        std::fs::create_dir(&dir).unwrap_or_else(|e| {
+            panic!("make_tempdir: could not create {}: {e}", dir.display())
+        });
+        dir
+    }
+
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src  = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler");
+        fs::create_dir_all(&dest).unwrap();
+        fs::copy(&src, dest.join(format!("{name}.tw")))
+            .unwrap_or_else(|e| panic!("copy {name}.tw: {e}"));
+    }
+
+    fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span","token","diagnostic","ast","iir-types",
+                      "iir-builder","lexer","cst-parser","parser","emit","main"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    /// Escape a filesystem path for embedding inside a Twig string literal.
+    ///
+    /// Three characters need escaping:
+    ///   `\`  → `\\`  (Windows path separators; must be first to avoid double-escaping)
+    ///   `"`  → `\"`  (would break out of the string literal — the MEDIUM security finding)
+    ///   `\n` → `\n`  (newlines are legal in POSIX paths; Twig lexer stops at newline)
+    fn twig_escape_path(p: &Path) -> String {
+        p.to_str().unwrap()
+            .replace('\\', "\\\\")
+            .replace('"',  "\\\"")
+            .replace('\n', "\\n")
+    }
+
+    // ── Test 1: self-compile-all returns 38 ──────────────────────────────────
+
+    #[test]
+    fn self_compile_all_returns_38() {
+        // Compile all modules, write a main-test.tw that calls (self-compile-all),
+        // and verify the total function count is 38 (2+3+8+25).
+        let src = compiler_src_dir();
+        let dir = make_tempdir("all38");
+        copy_all_tw_modules(&src, &dir);
+
+        let src_str = twig_escape_path(&src);
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/main)) \
+             (define (main) (self-compile-all \"{src_str}\"))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "self_compile_all_returns_38");
+        assert_eq!(v.to_string(), "38",
+            "expected 38 functions (2+3+8+25); got {v}");
+    }
+
+    // ── Test 2: span.tw from disk → 2 functions ──────────────────────────────
+
+    #[test]
+    fn self_compile_span_from_disk() {
+        // Verify that lexing + parsing + emitting the FULL span.tw (with comments)
+        // correctly identifies 2 function definitions.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("span_disk");
+        copy_all_tw_modules(&src, &dir);
+
+        let span_path = src.join("span.tw");
+        let span_path_str = twig_escape_path(&span_path);
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (length (emit-program (parse-program (lex-source \
+                 (host/read_file \"{span_path_str}\"))))))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "self_compile_span_from_disk");
+        assert_eq!(v.to_string(), "2",
+            "expected 2 functions from span.tw; got {v}");
+    }
+
+    // ── Test 3: diagnostic.tw from disk → 3 functions ────────────────────────
+
+    #[test]
+    fn self_compile_diagnostic_from_disk() {
+        let src = compiler_src_dir();
+        let dir = make_tempdir("diag_disk");
+        copy_all_tw_modules(&src, &dir);
+
+        let path_str = twig_escape_path(&src.join("diagnostic.tw"));
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (length (emit-program (parse-program (lex-source \
+                 (host/read_file \"{path_str}\"))))))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "self_compile_diagnostic_from_disk");
+        assert_eq!(v.to_string(), "3",
+            "expected 3 functions from diagnostic.tw; got {v}");
+    }
+
+    // ── Test 4: iir-builder.tw from disk → 8 functions ───────────────────────
+
+    #[test]
+    fn self_compile_iir_builder_from_disk() {
+        let src = compiler_src_dir();
+        let dir = make_tempdir("builder_disk");
+        copy_all_tw_modules(&src, &dir);
+
+        let path_str = twig_escape_path(&src.join("iir-builder.tw"));
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (length (emit-program (parse-program (lex-source \
+                 (host/read_file \"{path_str}\"))))))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "self_compile_iir_builder_from_disk");
+        assert_eq!(v.to_string(), "8",
+            "expected 8 functions from iir-builder.tw; got {v}");
+    }
+
+    // ── Test 5: lexer.tw from disk → 25 functions ────────────────────────────
+
+    #[test]
+    fn self_compile_lexer_from_disk() {
+        // lexer.tw has 25 function definitions and is 8593 chars —
+        // this is the largest file in the self-compile-all set.
+        // It requires MAX_DISPATCH_DEPTH ≥ 8593 (bumped to 65536 in LANG64).
+        let src = compiler_src_dir();
+        let dir = make_tempdir("lexer_disk");
+        copy_all_tw_modules(&src, &dir);
+
+        let path_str = twig_escape_path(&src.join("lexer.tw"));
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (length (emit-program (parse-program (lex-source \
+                 (host/read_file \"{path_str}\"))))))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "self_compile_lexer_from_disk");
+        assert_eq!(v.to_string(), "25",
+            "expected 25 functions from lexer.tw; got {v}");
+    }
+
+    // ── Test 6: TW05-I regression — (main) still returns 2 ──────────────────
+
+    #[test]
+    fn existing_main_still_returns_2() {
+        // Regression: the original (main) (TW05-I pipeline on stripped span.tw)
+        // still returns 2 after the MAX_DISPATCH_DEPTH bump.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("regression_main");
+        copy_all_tw_modules(&src, &dir);
+        let root = dir.join("compiler").join("main.tw");
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "existing_main_still_returns_2");
+        assert_eq!(v.to_string(), "2",
+            "TW05-I regression: expected (main) = 2; got {v}");
     }
 }
