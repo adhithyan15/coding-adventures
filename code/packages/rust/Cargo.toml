@@ -363,6 +363,7 @@ members = [
     "mosaic-emit-paint",
     "mosaic-emit-react",
     "mosaic-emit-webcomponent",
+    "mosaic-formula-engine",
     "mosaic-lexer",
     "mosaic-parser",
     "mosaic-vm",

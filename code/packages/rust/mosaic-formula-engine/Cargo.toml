@@ -1,0 +1,7 @@
+[package]
+name = "mosaic-formula-engine"
+version = "0.1.0"
+edition = "2021"
+description = "VisiCalc-style formula evaluator for spreadsheet cells — standalone, no UI deps"
+
+[dependencies]
