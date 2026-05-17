@@ -229,6 +229,18 @@ module CodingAdventures
         native_session.uart_read_module(max_stack)
       end
 
+      def can_open_module(bus:, max_stack: 2)
+        native_session.can_open_module(bus, max_stack)
+      end
+
+      def can_write_module(byte:, max_stack: 3)
+        native_session.can_write_module(byte_value(byte), max_stack)
+      end
+
+      def can_read_module(max_stack: 2)
+        native_session.can_read_module(max_stack)
+      end
+
       def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
         native_session.spi_transfer_module(
           cs_pin,
@@ -394,6 +406,35 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: uart_read_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_can_open(
+        program_id: @program_id,
+        bus:,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: can_open_module(bus: bus, max_stack: max_stack)
+        )
+      end
+
+      def upload_can_write(
+        program_id: @program_id,
+        byte:,
+        max_stack: 3
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: can_write_module(byte: byte, max_stack: max_stack)
+        )
+      end
+
+      def upload_can_read(program_id: @program_id, max_stack: 2)
+        upload(
+          program_id: program_id,
+          module_bytes: can_read_module(max_stack: max_stack)
         )
       end
 
@@ -939,6 +980,72 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def can_open(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        bus:,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_can_open(program_id: program_id, bus: bus, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def can_write(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        byte:,
+        max_stack: 3
+      )
+        results = upload_can_write(
+          program_id: program_id,
+          byte: byte,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def can_read(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 2
+      )
+        results = upload_can_read(
+          program_id: program_id,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def spi_transfer(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1342,6 +1449,12 @@ module CodingAdventures
           upload_uart_write(**uart_write_command_options(words, command, options, require_budget: false))
         when "upload-uart-read", "upload-uart.read"
           upload_uart_read(**uart_read_command_options(words, command, options, require_budget: false))
+        when "upload-can-open", "upload-can.open"
+          upload_can_open(**can_open_command_options(words, command, options, require_budget: false))
+        when "upload-can-write", "upload-can.write"
+          upload_can_write(**can_write_command_options(words, command, options, require_budget: false))
+        when "upload-can-read", "upload-can.read"
+          upload_can_read(**can_read_command_options(words, command, options, require_budget: false))
         when "upload-spi-transfer", "upload-spi.transfer"
           upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-spi-write", "upload-spi.write"
@@ -1404,6 +1517,12 @@ module CodingAdventures
           uart_write(**uart_write_command_options(words, command, options))
         when "uart-read", "uart.read"
           uart_read(**uart_read_command_options(words, command, options))
+        when "can-open", "can.open"
+          can_open(**can_open_command_options(words, command, options))
+        when "can-write", "can.write"
+          can_write(**can_write_command_options(words, command, options))
+        when "can-read", "can.read"
+          can_read(**can_read_command_options(words, command, options))
         when "spi-transfer", "spi.transfer"
           spi_transfer(**spi_transfer_command_options(words, command, options))
         when "spi-write", "spi.write"
@@ -1668,6 +1787,7 @@ module CodingAdventures
 
       alias spi_open_command_options i2c_open_command_options
       alias uart_open_command_options i2c_open_command_options
+      alias can_open_command_options i2c_open_command_options
 
       def uart_write_command_options(words, command, options, require_budget: true)
         merged = options.dup
@@ -1693,6 +1813,9 @@ module CodingAdventures
         ensure_no_extra_arguments!(words, command)
         merged
       end
+
+      alias can_write_command_options uart_write_command_options
+      alias can_read_command_options uart_read_command_options
 
       def i2c_write_u8_command_options(words, command, options, require_budget: true)
         merged = options.dup
