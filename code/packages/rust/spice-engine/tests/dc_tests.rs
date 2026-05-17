@@ -1,7 +1,8 @@
 use spice_engine::{
     dc_op, dc_op_with_options, dc_sweep, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
     CurrentSource, DcOpOptions, Diode, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType,
-    Resistor, SinWaveform, SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
+    Resistor, SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs,
+    VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -29,6 +30,48 @@ fn dc_voltage_divider_solves_midpoint_voltage() {
     assert_close(result.voltage("0").unwrap(), 0.0);
     assert!(result.converged);
     assert_eq!(result.iterations, 1);
+}
+
+#[test]
+fn dc_subcircuit_instance_expands_resistor_divider() {
+    let mut circuit = Circuit::new();
+    circuit
+        .define_subcircuit(SubcircuitDefinition::new(
+            "atten2",
+            vec!["in".to_string(), "out".to_string()],
+            vec![
+                SubcircuitElement::from(Element::Resistor(Resistor::new(
+                    "Rtop", "in", "out", 1_000.0,
+                ))),
+                SubcircuitElement::from(Element::Resistor(Resistor::new(
+                    "Rbot", "out", "0", 1_000.0,
+                ))),
+            ],
+        ))
+        .unwrap();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 10.0,
+    )));
+    circuit
+        .instantiate(XInstance::new(
+            "X1",
+            vec!["vin".to_string(), "vout".to_string()],
+            "atten2",
+        ))
+        .unwrap();
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("vout").unwrap(), 5.0);
+    let names: Vec<&str> = circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::Resistor(resistor) => Some(resistor.name.as_str()),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(names, vec!["X1.Rtop", "X1.Rbot"]);
 }
 
 #[test]

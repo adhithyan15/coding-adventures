@@ -106,8 +106,10 @@ from spice_engine import (
     SensEntry,
     SensResult,
     SinWaveform,
+    SubcircuitDefinition,
     TfResult,
     VoltageSource,
+    XInstance,
     ac_sweep,
     dc_op,
     dc_sweep,
@@ -218,6 +220,30 @@ def test_behavioral_voltage_source_tracks_differential_voltage():
     assert r.converged
     assert isclose(r.node_voltages["out"], 7.0, abs_tol=1e-6)
     assert "I(B1)" in r.branch_currents
+
+
+def test_subcircuit_instance_expands_resistor_divider_at_build_time():
+    cell = SubcircuitDefinition(
+        "atten2",
+        ("in", "out"),
+        (
+            Resistor("Rtop", "in", "out", 1000.0),
+            Resistor("Rbot", "out", "0", 1000.0),
+        ),
+    )
+    c = Circuit()
+    c.define_subcircuit(cell)
+    c.add(VoltageSource("V1", "vin", "0", voltage=10.0))
+    c.add(XInstance("X1", ("vin", "vout"), "atten2"))
+
+    r = dc_op(c)
+
+    assert r.converged
+    assert isclose(r.node_voltages["vout"], 5.0, abs_tol=1e-9)
+    assert [element.name for element in c.elements if isinstance(element, Resistor)] == [
+        "X1.Rtop",
+        "X1.Rbot",
+    ]
 
 
 def test_branch_current_in_voltage_source():

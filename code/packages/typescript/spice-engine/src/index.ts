@@ -291,6 +291,23 @@ export interface BSource {
   readonly currentExpr?: string;
 }
 
+export type SubcircuitElement = Element | XInstance;
+
+export interface SubcircuitDefinition {
+  readonly name: string;
+  readonly pins: readonly string[];
+  readonly elements: readonly SubcircuitElement[];
+  readonly parameters?: Readonly<Record<string, number>>;
+}
+
+export interface XInstance {
+  readonly kind: "x-instance";
+  readonly name: string;
+  readonly nodes: readonly string[];
+  readonly subckt: string;
+  readonly parameters?: Readonly<Record<string, number>>;
+}
+
 export interface Diode {
   readonly kind: "diode";
   readonly name: string;
@@ -503,13 +520,173 @@ export class SpiceError extends Error {
 
 export class Circuit {
   private readonly _elements: Element[] = [];
+  private readonly _subcircuits = new Map<string, SubcircuitDefinition>();
 
-  add(element: Element): void {
+  add(element: Element | XInstance): void {
+    if (element.kind === "x-instance") {
+      this.instantiate(element);
+      return;
+    }
     this._elements.push(element);
   }
 
   elements(): readonly Element[] {
     return this._elements;
+  }
+
+  defineSubcircuit(definition: SubcircuitDefinition): void {
+    const key = definition.name.toLowerCase();
+    if (this._subcircuits.has(key)) {
+      throw new SpiceError(
+        `duplicate subcircuit definition ${JSON.stringify(definition.name)}`,
+        "INVALID_ELEMENT",
+        definition.name,
+      );
+    }
+    this._subcircuits.set(key, definition);
+  }
+
+  instantiate(instance: XInstance): void {
+    this._elements.push(...expandXInstance(instance, this._subcircuits, []));
+  }
+}
+
+function expandXInstance(
+  instance: XInstance,
+  subcircuits: ReadonlyMap<string, SubcircuitDefinition>,
+  stack: readonly string[],
+): Element[] {
+  const definition = subcircuits.get(instance.subckt.toLowerCase());
+  if (definition === undefined) {
+    throw new SpiceError(
+      `unknown subcircuit ${JSON.stringify(instance.subckt)}`,
+      "INVALID_ELEMENT",
+      instance.name,
+    );
+  }
+  const definitionKey = definition.name.toLowerCase();
+  if (stack.includes(definitionKey)) {
+    throw new SpiceError(
+      `recursive subcircuit expansion is not supported: ${[...stack, definitionKey].join(" -> ")}`,
+      "INVALID_ELEMENT",
+      instance.name,
+    );
+  }
+  if (instance.nodes.length !== definition.pins.length) {
+    throw new SpiceError(
+      `subcircuit ${JSON.stringify(definition.name)} expects ${definition.pins.length} pins, got ${instance.nodes.length}`,
+      "INVALID_ELEMENT",
+      instance.name,
+    );
+  }
+
+  const nodeMap = new Map<string, string>();
+  for (let index = 0; index < definition.pins.length; index++) {
+    nodeMap.set(definition.pins[index], instance.nodes[index]);
+    nodeMap.set(definition.pins[index].toLowerCase(), instance.nodes[index]);
+  }
+  const expanded: Element[] = [];
+  const nextStack = [...stack, definitionKey];
+  for (const element of definition.elements) {
+    if (element.kind === "x-instance") {
+      expanded.push(
+        ...expandXInstance(
+          {
+            ...element,
+            name: `${instance.name}.${element.name}`,
+            nodes: element.nodes.map((node) =>
+              mapSubcktNode(node, instance.name, nodeMap),
+            ),
+          },
+          subcircuits,
+          nextStack,
+        ),
+      );
+    } else {
+      expanded.push(cloneSubcktElement(element, instance.name, nodeMap));
+    }
+  }
+  return expanded;
+}
+
+function mapSubcktNode(
+  node: string,
+  instanceName: string,
+  nodeMap: ReadonlyMap<string, string>,
+): string {
+  if (node.toLowerCase() === "0" || node.toLowerCase() === "gnd") {
+    return node;
+  }
+  return nodeMap.get(node) ?? nodeMap.get(node.toLowerCase()) ?? `${instanceName}.${node}`;
+}
+
+function mapSubcktSourceRef(sourceName: string, instanceName: string): string {
+  return sourceName.includes(".") ? sourceName : `${instanceName}.${sourceName}`;
+}
+
+function mapBSourceExprNodes(
+  expr: string | undefined,
+  instanceName: string,
+  nodeMap: ReadonlyMap<string, string>,
+): string | undefined {
+  if (expr === undefined) {
+    return undefined;
+  }
+  let result = "";
+  let index = 0;
+  while (index < expr.length) {
+    if (expr[index] === "V" && expr[index + 1] === "(") {
+      const close = expr.indexOf(")", index + 2);
+      if (close !== -1) {
+        const args = expr.slice(index + 2, close).split(",");
+        if (args.length >= 1 && args.length <= 2) {
+          result += `V(${args
+            .map((arg) => mapSubcktNode(arg.trim(), instanceName, nodeMap))
+            .join(",")})`;
+          index = close + 1;
+          continue;
+        }
+      }
+    }
+    result += expr[index];
+    index++;
+  }
+  return result;
+}
+
+function cloneSubcktElement(
+  element: Element,
+  instanceName: string,
+  nodeMap: ReadonlyMap<string, string>,
+): Element {
+  const name = `${instanceName}.${element.name}`;
+  switch (element.kind) {
+    case "resistor":
+      return resistor(name, mapSubcktNode(element.n1, instanceName, nodeMap), mapSubcktNode(element.n2, instanceName, nodeMap), element.resistanceOhms);
+    case "capacitor":
+      return capacitorWithInitialVoltage(name, mapSubcktNode(element.n1, instanceName, nodeMap), mapSubcktNode(element.n2, instanceName, nodeMap), element.capacitanceFarads, element.initialVoltage);
+    case "inductor":
+      return inductorWithInitialCurrent(name, mapSubcktNode(element.n1, instanceName, nodeMap), mapSubcktNode(element.n2, instanceName, nodeMap), element.inductanceHenrys, element.initialCurrent);
+    case "voltage-source":
+      return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
+    case "current-source":
+      return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
+    case "b-source":
+      return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap), voltageExpr: mapBSourceExprNodes(element.voltageExpr, instanceName, nodeMap), currentExpr: mapBSourceExprNodes(element.currentExpr, instanceName, nodeMap) };
+    case "diode":
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage);
+    case "bjt":
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage);
+    case "mosfet":
+      return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
+    case "vccs":
+      return vccs(name, mapSubcktNode(element.positive, instanceName, nodeMap), mapSubcktNode(element.negative, instanceName, nodeMap), mapSubcktNode(element.controlPositive, instanceName, nodeMap), mapSubcktNode(element.controlNegative, instanceName, nodeMap), element.transconductanceSiemens);
+    case "vcvs":
+      return vcvs(name, mapSubcktNode(element.positive, instanceName, nodeMap), mapSubcktNode(element.negative, instanceName, nodeMap), mapSubcktNode(element.controlPositive, instanceName, nodeMap), mapSubcktNode(element.controlNegative, instanceName, nodeMap), element.gain);
+    case "cccs":
+      return cccs(name, mapSubcktNode(element.positive, instanceName, nodeMap), mapSubcktNode(element.negative, instanceName, nodeMap), mapSubcktSourceRef(element.controlSource, instanceName), element.gain);
+    case "ccvs":
+      return ccvs(name, mapSubcktNode(element.positive, instanceName, nodeMap), mapSubcktNode(element.negative, instanceName, nodeMap), mapSubcktSourceRef(element.controlSource, instanceName), element.transresistanceOhms);
   }
 }
 
@@ -682,6 +859,24 @@ export function bSourceVoltage(
   voltageExpr: string,
 ): BSource {
   return { kind: "b-source", name, positive, negative, voltageExpr };
+}
+
+export function subcircuitDefinition(
+  name: string,
+  pins: readonly string[],
+  elements: readonly SubcircuitElement[],
+  parameters?: Readonly<Record<string, number>>,
+): SubcircuitDefinition {
+  return { name, pins, elements, parameters };
+}
+
+export function xInstance(
+  name: string,
+  nodes: readonly string[],
+  subckt: string,
+  parameters?: Readonly<Record<string, number>>,
+): XInstance {
+  return { kind: "x-instance", name, nodes, subckt, parameters };
 }
 
 export function diode(

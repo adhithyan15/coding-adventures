@@ -350,6 +350,30 @@ class BSource:
 
 
 @dataclass(frozen=True, slots=True)
+class SubcircuitDefinition:
+    """Reusable hierarchical circuit cell.
+
+    ``pins`` names the external nodes used by ``elements``. Internal nodes are
+    renamed when an instance is expanded so multiple instances do not collide.
+    """
+
+    name: str
+    pins: tuple[str, ...]
+    elements: tuple[object, ...]
+    parameters: dict[str, float] | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class XInstance:
+    """Subcircuit instance (SPICE ``X`` element)."""
+
+    name: str
+    nodes: tuple[str, ...]
+    subckt: str
+    parameters: dict[str, float] | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class Diode:
     """Simple diode using Shockley equation."""
 
@@ -678,6 +702,7 @@ Element = (
     | VoltageSource
     | CurrentSource
     | BSource
+    | XInstance
     | Diode
     | Mosfet
     | BJT

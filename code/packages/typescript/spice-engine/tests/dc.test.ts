@@ -15,10 +15,12 @@ import {
   inductor,
   mosfet,
   resistor,
+  subcircuitDefinition,
   vccs,
   vcvs,
   voltageSource,
   voltageSourceWithWaveform,
+  xInstance,
 } from "../src/index.js";
 
 function expectClose(actual: number | undefined, expected: number): void {
@@ -40,6 +42,28 @@ describe("dcOp", () => {
     expectClose(result.voltage("0"), 0.0);
     expect(result.converged).toBe(true);
     expect(result.iterations).toBe(1);
+  });
+
+  it("expands subcircuit instances into namespaced primitive elements", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("atten2", ["in", "out"], [
+        resistor("Rtop", "in", "out", 1_000.0),
+        resistor("Rbot", "out", "0", 1_000.0),
+      ]),
+    );
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(xInstance("X1", ["vin", "vout"], "atten2"));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("vout"), 5.0);
+    expect(
+      circuit
+        .elements()
+        .filter((element) => element.kind === "resistor")
+        .map((element) => element.name),
+    ).toEqual(["X1.Rtop", "X1.Rbot"]);
   });
 
   it("uses positive-to-negative orientation for current sources", () => {
