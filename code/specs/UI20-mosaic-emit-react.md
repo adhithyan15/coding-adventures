@@ -1,8 +1,9 @@
 # UI20 — mosaic-emit-react: React JSX Backend
 
-**Status:** Implemented (retroactive spec)  
+**Status:** Implemented (retroactive spec) — emit handling superseded by UI24  
 **Layer:** UI  
-**Depends on:** UI01 (mosaic-vm), UI00 (mosaic-analyzer)
+**Depends on:** UI01 (mosaic-vm), UI00 (mosaic-analyzer)  
+**Superseded by (emit section):** [UI24 — Mosaic emit→dispatch](UI24-mosaic-emit-dispatch.md)
 
 ---
 
@@ -339,11 +340,17 @@ when Mosaic source contains unusual string literals.
 **Language:** Rust  
 **Public API:**
 
+> **Note:** The `begin_component` signature changed in UI24 — it now also
+> receives `emits: &[MosaicEmit]`. The generated interface now uses a Flux
+> dispatch prop instead of per-emit callback props. See
+> [UI24](UI24-mosaic-emit-dispatch.md) for the full specification.
+
 ```rust
 pub struct ReactRenderer { … }
 
 impl MosaicRenderer for ReactRenderer {
-    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot]);
+    // UI24: emits parameter added
+    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot], emits: &[MosaicEmit]);
     fn begin_node(&mut self, tag: &str, is_primitive: bool, props: &[(String, ResolvedValue)]);
     fn end_node(&mut self, tag: &str);
     fn end_component(&mut self);
