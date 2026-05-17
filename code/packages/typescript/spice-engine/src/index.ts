@@ -8,6 +8,7 @@ export type Element =
   | Inductor
   | VoltageSource
   | CurrentSource
+  | BSource
   | Diode
   | Bjt
   | Mosfet
@@ -279,6 +280,15 @@ export interface CurrentSource {
   readonly current: number;
   readonly ac?: AcSource;
   readonly waveform?: Waveform;
+}
+
+export interface BSource {
+  readonly kind: "b-source";
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly voltageExpr?: string;
+  readonly currentExpr?: string;
 }
 
 export interface Diode {
@@ -654,6 +664,24 @@ export function currentSourceWithWaveform(
     current,
     waveform,
   };
+}
+
+export function bSourceCurrent(
+  name: string,
+  positive: string,
+  negative: string,
+  currentExpr: string,
+): BSource {
+  return { kind: "b-source", name, positive, negative, currentExpr };
+}
+
+export function bSourceVoltage(
+  name: string,
+  positive: string,
+  negative: string,
+  voltageExpr: string,
+): BSource {
+  return { kind: "b-source", name, positive, negative, voltageExpr };
 }
 
 export function diode(
@@ -1555,6 +1583,8 @@ function randomizedElement(
           rng,
         ),
       };
+    case "b-source":
+      return element;
     case "capacitor":
     case "inductor":
       return element;
@@ -1689,7 +1719,13 @@ function solveLinearCircuitWithOptions(
 
   const hasNonlinearElement = circuit
     .elements()
-    .some((element) => element.kind === "diode" || element.kind === "bjt" || element.kind === "mosfet");
+    .some(
+      (element) =>
+        element.kind === "diode" ||
+        element.kind === "bjt" ||
+        element.kind === "mosfet" ||
+        element.kind === "b-source",
+    );
   const returnSingularAsUnconverged =
     (options.returnSingularAsUnconverged ?? false) && hasNonlinearElement;
   let operatingPoint =
@@ -1937,6 +1973,17 @@ function solveLinearCircuitAtOperatingPoint(
         break;
       case "current-source":
         stampCurrentSource(element, nodeIndices, rhs, sourceTime);
+        break;
+      case "b-source":
+        stampBSource(
+          element,
+          nodeIndices,
+          voltageSources,
+          nodeCount,
+          matrix,
+          rhs,
+          operatingPoint,
+        );
         break;
       case "diode":
         stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
@@ -2429,6 +2476,15 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         insertNode(names, element.positive);
         insertNode(names, element.negative);
         break;
+      case "b-source":
+        insertNode(names, element.positive);
+        insertNode(names, element.negative);
+        for (const node of bSourceExprNodes(
+          element.voltageExpr ?? element.currentExpr ?? "",
+        )) {
+          insertNode(names, node);
+        }
+        break;
       case "diode":
         insertNode(names, element.anode);
         insertNode(names, element.cathode);
@@ -2483,7 +2539,8 @@ function collectVoltageSources(
     if (
       element.kind === "voltage-source" ||
       element.kind === "vcvs" ||
-      element.kind === "ccvs"
+      element.kind === "ccvs" ||
+      (element.kind === "b-source" && element.voltageExpr !== undefined)
     ) {
       insertBranchName(sources, element.name, "duplicate voltage source name");
     } else if (element.kind === "inductor") {
@@ -2504,7 +2561,8 @@ function collectAcVoltageSources(circuit: Circuit): Map<string, number> {
     if (
       element.kind === "voltage-source" ||
       element.kind === "vcvs" ||
-      element.kind === "ccvs"
+      element.kind === "ccvs" ||
+      (element.kind === "b-source" && element.voltageExpr !== undefined)
     ) {
       insertBranchName(sources, element.name, "duplicate voltage source name");
     }
@@ -2538,7 +2596,8 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "vccs" ||
         element.kind === "vcvs" ||
         element.kind === "cccs" ||
-        element.kind === "ccvs") &&
+        element.kind === "ccvs" ||
+        element.kind === "b-source") &&
       element.name === inputSource
     ) {
       throw invalidElement(
@@ -3144,6 +3203,235 @@ function voltageAt(
   return isGround(node) ? 0.0 : nodeVoltages.get(node) ?? 0.0;
 }
 
+class BSourceExpressionParser {
+  private position = 0;
+
+  constructor(
+    private readonly expression: string,
+    private readonly resolver: (node: string) => number,
+  ) {}
+
+  parse(): number {
+    const value = this.parseExpression();
+    this.skipWhitespace();
+    if (this.position !== this.expression.length) {
+      throw new Error("unexpected expression input");
+    }
+    return value;
+  }
+
+  private parseExpression(): number {
+    let value = this.parseTerm();
+    while (true) {
+      this.skipWhitespace();
+      if (this.consume("+")) {
+        value += this.parseTerm();
+      } else if (this.consume("-")) {
+        value -= this.parseTerm();
+      } else {
+        return value;
+      }
+    }
+  }
+
+  private parseTerm(): number {
+    let value = this.parseFactor();
+    while (true) {
+      this.skipWhitespace();
+      if (this.consume("*")) {
+        value *= this.parseFactor();
+      } else if (this.consume("/")) {
+        value /= this.parseFactor();
+      } else {
+        return value;
+      }
+    }
+  }
+
+  private parseFactor(): number {
+    this.skipWhitespace();
+    if (this.consume("+")) {
+      return this.parseFactor();
+    }
+    if (this.consume("-")) {
+      return -this.parseFactor();
+    }
+    if (this.consume("(")) {
+      const value = this.parseExpression();
+      this.expect(")");
+      return value;
+    }
+    if (this.peekIdentifier("V")) {
+      this.position += 1;
+      this.expect("(");
+      const first = this.parseNodeName();
+      this.skipWhitespace();
+      if (this.consume(",")) {
+        const second = this.parseNodeName();
+        this.expect(")");
+        return this.resolver(first) - this.resolver(second);
+      }
+      this.expect(")");
+      return this.resolver(first);
+    }
+    return this.parseNumber();
+  }
+
+  private parseNumber(): number {
+    this.skipWhitespace();
+    const start = this.position;
+    if (this.expression[this.position] === ".") {
+      this.position += 1;
+    }
+    while (/[0-9]/.test(this.expression[this.position] ?? "")) {
+      this.position += 1;
+    }
+    if (this.expression[this.position] === ".") {
+      this.position += 1;
+      while (/[0-9]/.test(this.expression[this.position] ?? "")) {
+        this.position += 1;
+      }
+    }
+    if (/[eE]/.test(this.expression[this.position] ?? "")) {
+      this.position += 1;
+      if (/[+-]/.test(this.expression[this.position] ?? "")) {
+        this.position += 1;
+      }
+      while (/[0-9]/.test(this.expression[this.position] ?? "")) {
+        this.position += 1;
+      }
+    }
+    if (this.position === start) {
+      throw new Error("expected number");
+    }
+    const value = Number(this.expression.slice(start, this.position));
+    if (!Number.isFinite(value)) {
+      throw new Error("number must be finite");
+    }
+    return value;
+  }
+
+  private parseNodeName(): string {
+    this.skipWhitespace();
+    const start = this.position;
+    while (/[A-Za-z0-9_.$:-]/.test(this.expression[this.position] ?? "")) {
+      this.position += 1;
+    }
+    if (this.position === start) {
+      throw new Error("expected node name");
+    }
+    this.skipWhitespace();
+    return this.expression.slice(start, this.position);
+  }
+
+  private consume(token: string): boolean {
+    this.skipWhitespace();
+    if (this.expression.startsWith(token, this.position)) {
+      this.position += token.length;
+      return true;
+    }
+    return false;
+  }
+
+  private expect(token: string): void {
+    if (!this.consume(token)) {
+      throw new Error(`expected ${token}`);
+    }
+  }
+
+  private peekIdentifier(name: string): boolean {
+    this.skipWhitespace();
+    return this.expression.startsWith(name, this.position);
+  }
+
+  private skipWhitespace(): void {
+    while (/\s/.test(this.expression[this.position] ?? "")) {
+      this.position += 1;
+    }
+  }
+}
+
+function bSourceExprNodes(expression: string): string[] {
+  const nodes: string[] = [];
+  let index = 0;
+  while (index < expression.length) {
+    if (expression[index] !== "V") {
+      index += 1;
+      continue;
+    }
+
+    let cursor = index + 1;
+    while (/\s/.test(expression[cursor] ?? "")) {
+      cursor += 1;
+    }
+    if (expression[cursor] !== "(") {
+      index += 1;
+      continue;
+    }
+
+    const argsStart = cursor + 1;
+    let argsEnd = argsStart;
+    while (argsEnd < expression.length && expression[argsEnd] !== ")") {
+      argsEnd += 1;
+    }
+    if (argsEnd >= expression.length) {
+      break;
+    }
+
+    for (const node of expression.slice(argsStart, argsEnd).split(",")) {
+      const trimmed = node.trim();
+      if (trimmed !== "" && !isGround(trimmed)) {
+        nodes.push(trimmed);
+      }
+    }
+    index = argsEnd + 1;
+  }
+  return nodes;
+}
+
+function evalBSourceExpression(
+  expression: string,
+  nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
+): number {
+  const parser = new BSourceExpressionParser(expression, (node) => {
+    const index = nodeIndex(nodeIndices, node);
+    return index === undefined ? 0.0 : operatingPoint[index];
+  });
+  const value = parser.parse();
+  if (!Number.isFinite(value)) {
+    throw new Error("expression produced a non-finite value");
+  }
+  return value;
+}
+
+function bSourceLinearization(
+  expression: string,
+  nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
+): { derivatives: Map<string, number>; offset: number } {
+  const value = evalBSourceExpression(expression, nodeIndices, operatingPoint);
+  const derivatives = new Map<string, number>();
+  for (const [node, index] of nodeIndices) {
+    const h = Math.max(1.0e-6, Math.abs(operatingPoint[index]) * 1.0e-6);
+    const plus = [...operatingPoint];
+    const minus = [...operatingPoint];
+    plus[index] += h;
+    minus[index] -= h;
+    derivatives.set(
+      node,
+      (evalBSourceExpression(expression, nodeIndices, plus) -
+        evalBSourceExpression(expression, nodeIndices, minus)) /
+        (2.0 * h),
+    );
+  }
+  let linearPart = 0.0;
+  for (const [node, derivative] of derivatives) {
+    linearPart += derivative * operatingPoint[nodeIndices.get(node)!];
+  }
+  return { derivatives, offset: value - linearPart };
+}
+
 function stampVoltageSource(
   element: VoltageSource,
   nodeIndices: ReadonlyMap<string, number>,
@@ -3205,6 +3493,74 @@ function stampCurrentSource(
   }
   if (negative !== undefined) {
     rhs[negative] += current;
+  }
+}
+
+function stampBSource(
+  element: BSource,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+  nodeCount: number,
+  matrix: number[][],
+  rhs: number[],
+  operatingPoint: readonly number[],
+): void {
+  const hasVoltage = element.voltageExpr !== undefined;
+  const hasCurrent = element.currentExpr !== undefined;
+  if (hasVoltage === hasCurrent) {
+    throw invalidElement(
+      element.name,
+      "B-source must define exactly one voltageExpr or currentExpr",
+    );
+  }
+
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  try {
+    if (element.currentExpr !== undefined) {
+      const { derivatives, offset } = bSourceLinearization(
+        element.currentExpr,
+        nodeIndices,
+        operatingPoint,
+      );
+      if (positive !== undefined) {
+        for (const [node, derivative] of derivatives) {
+          matrix[positive][nodeIndices.get(node)!] += derivative;
+        }
+        rhs[positive] -= offset;
+      }
+      if (negative !== undefined) {
+        for (const [node, derivative] of derivatives) {
+          matrix[negative][nodeIndices.get(node)!] -= derivative;
+        }
+        rhs[negative] += offset;
+      }
+      return;
+    }
+
+    const sourceIndex = voltageSources.get(element.name);
+    if (sourceIndex === undefined || element.voltageExpr === undefined) {
+      throw invalidElement(element.name, "voltage B-source was not indexed");
+    }
+    const branch = nodeCount + sourceIndex;
+    const { derivatives, offset } = bSourceLinearization(
+      element.voltageExpr,
+      nodeIndices,
+      operatingPoint,
+    );
+    stampBranchMatrix(matrix, branch, positive, negative);
+    for (const [node, derivative] of derivatives) {
+      matrix[branch][nodeIndices.get(node)!] -= derivative;
+    }
+    rhs[branch] += offset;
+  } catch (error) {
+    if (error instanceof SpiceError) {
+      throw error;
+    }
+    throw invalidElement(
+      element.name,
+      error instanceof Error ? error.message : "invalid behavioral expression",
+    );
   }
 }
 

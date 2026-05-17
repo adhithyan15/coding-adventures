@@ -47,14 +47,17 @@ For transient: two integration methods are supported:
 
 from __future__ import annotations
 
+import ast
 import cmath
 import math
 import random
+import re
 import statistics
 from dataclasses import dataclass, field
 
 from spice_engine.elements import (
     AcSource,
+    BSource,
     BJT,
     CCCS,
     CCVS,
@@ -303,6 +306,12 @@ def _element_nodes(el: Element) -> list[str]:
     """All nodes touched by an element."""
     if isinstance(el, (Resistor, Capacitor, Inductor, VoltageSource, CurrentSource)):
         return [el.n_plus, el.n_minus]
+    if isinstance(el, BSource):
+        nodes = [el.n_plus, el.n_minus]
+        expr = el.voltage_expr if el.voltage_expr is not None else el.current_expr
+        if expr is not None:
+            nodes.extend(_bsource_expr_nodes(expr))
+        return nodes
     if isinstance(el, Diode):
         return [el.anode, el.cathode]
     if isinstance(el, Mosfet):
@@ -325,7 +334,7 @@ def _voltage_sources(circuit: Circuit) -> list[VoltageSource]:
 
 def _branch_sources(
     circuit: Circuit,
-) -> list[VoltageSource | VCVS | CCVS]:
+) -> list[VoltageSource | VCVS | CCVS | BSource]:
     """Elements that require a branch unknown (current variable) in MNA.
 
     All three element types introduce a KVL constraint row and a corresponding
@@ -351,10 +360,13 @@ def _branch_sources(
     vcvs_list: list[VoltageSource | VCVS | CCVS] = [
         el for el in circuit.elements if isinstance(el, VCVS)
     ]
-    ccvs_list: list[VoltageSource | VCVS | CCVS] = [
+    ccvs_list: list[VoltageSource | VCVS | CCVS | BSource] = [
         el for el in circuit.elements if isinstance(el, CCVS)
     ]
-    return vsrcs + vcvs_list + ccvs_list
+    bsources: list[VoltageSource | VCVS | CCVS | BSource] = [
+        el for el in circuit.elements if isinstance(el, BSource) and el.voltage_expr is not None
+    ]
+    return vsrcs + vcvs_list + ccvs_list + bsources
 
 
 def _is_ground(name: str) -> bool:
@@ -698,7 +710,7 @@ def _stamp_dc(
     b: list[float],
     x: list[float],
     node_to_idx: dict[str, int],
-    branch_srcs: list[VoltageSource | VCVS | CCVS],
+    branch_srcs: list[VoltageSource | VCVS | CCVS | BSource],
 ) -> None:
     """Stamp one element's MNA contribution at the current operating point."""
     n_nodes = len(node_to_idx)
@@ -712,6 +724,8 @@ def _stamp_dc(
             b[node_to_idx[el.n_plus]] -= el.current
         if not _is_ground(el.n_minus):
             b[node_to_idx[el.n_minus]] += el.current
+    elif isinstance(el, BSource):
+        _stamp_bsource(G, b, x, node_to_idx, branch_srcs, el)
     elif isinstance(el, Diode):
         _stamp_diode(G, b, x, node_to_idx, el)
     elif isinstance(el, Mosfet):
@@ -786,15 +800,155 @@ def _stamp_vsrc(
     b[branch_idx] = el.voltage
 
 
+def _bsource_expr_nodes(expr: str) -> list[str]:
+    nodes: list[str] = []
+    for match in re.finditer(r"V\s*\(([^)]*)\)", expr):
+        args = [arg.strip() for arg in match.group(1).split(",")]
+        if len(args) not in (1, 2):
+            raise ValueError("V() expects one or two node arguments")
+        for node_name in args:
+            if node_name and not _is_ground(node_name):
+                nodes.append(node_name)
+    return nodes
+
+
+def _normalize_bsource_expr(expr: str) -> str:
+    def replace(match: re.Match[str]) -> str:
+        args = [arg.strip() for arg in match.group(1).split(",")]
+        if len(args) not in (1, 2):
+            raise ValueError("V() expects one or two node arguments")
+        return "V(" + ", ".join(repr(arg) for arg in args) + ")"
+
+    return re.sub(r"V\s*\(([^)]*)\)", replace, expr)
+
+
+def _ast_call_name(node: ast.Call) -> str | None:
+    return node.func.id if isinstance(node.func, ast.Name) else None
+
+
+def _ast_node_name(node: ast.AST) -> str:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Constant) and isinstance(node.value, (str, int)):
+        return str(node.value)
+    raise ValueError("V() node references must be bare node names or 0")
+
+
+def _bsource_voltage(name: str, node_to_idx: dict[str, int], x: list[float]) -> float:
+    return 0.0 if _is_ground(name) else x[node_to_idx[name]]
+
+
+def _eval_bsource_expr(expr: str, node_to_idx: dict[str, int], x: list[float]) -> float:
+    normalized_expr = _normalize_bsource_expr(expr)
+    tree = ast.parse(normalized_expr, mode="eval")
+
+    def eval_node(node: ast.AST) -> float:
+        if isinstance(node, ast.Expression):
+            return eval_node(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return float(node.value)
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+            value = eval_node(node.operand)
+            return value if isinstance(node.op, ast.UAdd) else -value
+        if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Add, ast.Sub, ast.Mult, ast.Div)):
+            left = eval_node(node.left)
+            right = eval_node(node.right)
+            if isinstance(node.op, ast.Add):
+                return left + right
+            if isinstance(node.op, ast.Sub):
+                return left - right
+            if isinstance(node.op, ast.Mult):
+                return left * right
+            return left / right
+        if isinstance(node, ast.Call) and _ast_call_name(node) == "V":
+            if len(node.args) == 1:
+                return _bsource_voltage(_ast_node_name(node.args[0]), node_to_idx, x)
+            if len(node.args) == 2:
+                return (
+                    _bsource_voltage(_ast_node_name(node.args[0]), node_to_idx, x)
+                    - _bsource_voltage(_ast_node_name(node.args[1]), node_to_idx, x)
+                )
+        raise ValueError(f"unsupported behavioral source expression in '{expr}'")
+
+    value = eval_node(tree)
+    if not math.isfinite(value):
+        raise ValueError(f"behavioral source expression produced non-finite value: {expr}")
+    return value
+
+
+def _bsource_linearization(
+    expr: str,
+    node_to_idx: dict[str, int],
+    x: list[float],
+) -> tuple[float, dict[str, float], float]:
+    value = _eval_bsource_expr(expr, node_to_idx, x)
+    derivatives: dict[str, float] = {}
+    for node, idx in node_to_idx.items():
+        h = max(1e-6, abs(x[idx]) * 1e-6)
+        xp = list(x)
+        xm = list(x)
+        xp[idx] += h
+        xm[idx] -= h
+        derivatives[node] = (
+            _eval_bsource_expr(expr, node_to_idx, xp)
+            - _eval_bsource_expr(expr, node_to_idx, xm)
+        ) / (2.0 * h)
+    offset = value - sum(derivatives[node] * x[idx] for node, idx in node_to_idx.items())
+    return value, derivatives, offset
+
+
+def _stamp_bsource(
+    G: list[list[float]],
+    b: list[float],
+    x: list[float],
+    node_to_idx: dict[str, int],
+    branch_srcs: list[VoltageSource | VCVS | CCVS | BSource],
+    el: BSource,
+) -> None:
+    has_voltage = el.voltage_expr is not None
+    has_current = el.current_expr is not None
+    if has_voltage == has_current:
+        raise ValueError(f"BSource '{el.name}' must define exactly one voltage_expr or current_expr.")
+
+    if el.current_expr is not None:
+        _, derivatives, offset = _bsource_linearization(el.current_expr, node_to_idx, x)
+        if not _is_ground(el.n_plus):
+            row = node_to_idx[el.n_plus]
+            for node, derivative in derivatives.items():
+                G[row][node_to_idx[node]] += derivative
+            b[row] -= offset
+        if not _is_ground(el.n_minus):
+            row = node_to_idx[el.n_minus]
+            for node, derivative in derivatives.items():
+                G[row][node_to_idx[node]] -= derivative
+            b[row] += offset
+        return
+
+    assert el.voltage_expr is not None
+    _, derivatives, offset = _bsource_linearization(el.voltage_expr, node_to_idx, x)
+    branch_idx = len(node_to_idx) + branch_srcs.index(el)
+    if not _is_ground(el.n_plus):
+        p = node_to_idx[el.n_plus]
+        G[p][branch_idx] += 1.0
+        G[branch_idx][p] += 1.0
+    if not _is_ground(el.n_minus):
+        q = node_to_idx[el.n_minus]
+        G[q][branch_idx] -= 1.0
+        G[branch_idx][q] -= 1.0
+    for node, derivative in derivatives.items():
+        G[branch_idx][node_to_idx[node]] -= derivative
+    b[branch_idx] += offset
+
+
 # ---------------------------------------------------------------------------
 # Controlled-source MNA stamps
 # ---------------------------------------------------------------------------
 
 
 def _find_branch_source(
-    branch_srcs: list[VoltageSource | VCVS | CCVS],
+    branch_srcs: list[VoltageSource | VCVS | CCVS | BSource],
     name: str,
-) -> VoltageSource | VCVS | CCVS | None:
+) -> VoltageSource | VCVS | CCVS | BSource | None:
     """Return the branch-source element with the given name, or None."""
     for el in branch_srcs:
         if el.name == name:

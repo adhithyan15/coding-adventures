@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add behavioral B sources for DC current and voltage expressions over
+  constants and `V(node)` / `V(node1,node2)` node-voltage references.
 - Add DC operating-point convergence metadata and configurable Newton controls,
   with nonlinear Gmin/source stepping fallback aids for difficult bias points.
 

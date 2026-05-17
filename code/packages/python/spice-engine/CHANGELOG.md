@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Behavioral B sources** — `BSource` adds DC behavioral current and voltage
+  sources with arithmetic expressions over constants and node-voltage
+  references `V(node)` / `V(node1,node2)`.
+
 - **Inductor initial current** — `Inductor` now accepts an `initial_current`
   value that seeds transient analysis companion models.
 
