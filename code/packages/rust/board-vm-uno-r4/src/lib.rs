@@ -68,6 +68,7 @@ pub struct TargetDescriptor {
     pub spi_buses: &'static [SpiBusDescriptor],
     pub uart_buses: &'static [UartBusDescriptor],
     pub can_buses: &'static [CanBusDescriptor],
+    pub rtc: Option<RtcDescriptor>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -120,6 +121,14 @@ pub struct CanBusDescriptor {
     pub tx_pin: u8,
     pub rx_pin: u8,
     pub controller: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RtcDescriptor {
+    pub instance: u8,
+    pub name: &'static str,
+    pub peripheral: &'static str,
     pub notes: &'static str,
 }
 
@@ -399,6 +408,13 @@ pub const UNO_R4_CAN_BUS: CanBusDescriptor = CanBusDescriptor {
 
 pub const UNO_R4_CAN_BUSES: [CanBusDescriptor; 1] = [UNO_R4_CAN_BUS];
 
+pub const UNO_R4_RTC: RtcDescriptor = RtcDescriptor {
+    instance: 0,
+    name: "RTC",
+    peripheral: "RA4M1 RTC",
+    notes: "Single real-time clock instance exposed by the UNO R4 core",
+};
+
 pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     board_id: "arduino-uno-r4-minima",
     display_name: "Arduino Uno R4 Minima",
@@ -427,6 +443,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_MINIMA_UART_BUSES,
     can_buses: &UNO_R4_CAN_BUSES,
+    rtc: Some(UNO_R4_RTC),
 };
 
 pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
@@ -458,6 +475,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_WIFI_UART_BUSES,
     can_buses: &UNO_R4_CAN_BUSES,
+    rtc: Some(UNO_R4_RTC),
 };
 
 pub trait UnoR4Backend {
@@ -1293,6 +1311,18 @@ mod tests {
         assert_eq!(can.controller, "RA4M1 CAN0");
         assert!(can.notes.contains("SPI"));
         assert!(can.notes.contains("onboard LED"));
+    }
+
+    #[test]
+    fn knows_uno_r4_rtc() {
+        assert_eq!(UNO_R4_MINIMA.rtc, Some(UNO_R4_RTC));
+        assert_eq!(UNO_R4_WIFI.rtc, Some(UNO_R4_RTC));
+
+        let rtc = UNO_R4_WIFI.rtc.unwrap();
+        assert_eq!(rtc.instance, 0);
+        assert_eq!(rtc.name, "RTC");
+        assert_eq!(rtc.peripheral, "RA4M1 RTC");
+        assert!(rtc.notes.contains("real-time clock"));
     }
 
     #[test]
