@@ -80,13 +80,14 @@
 //! the interface contract (event union + dispatch prop) end-to-end and
 //! exercises it from `mosaic-compile --pipeline` in PR #2 of this sequence.
 
+use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
-use mosstyle_compiler::StyleDef;
+use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
 // Public API
@@ -184,9 +185,7 @@ pub fn from_pipeline(
     }
     // The style IR's name is allowed to differ when the style targets a
     // specific layout variant (UI23 §4) — there is no constraint to enforce
-    // here yet, so we accept it and reference it via `_` to silence the
-    // unused-variable warning.
-    let _ = style;
+    // here yet.
 
     let name = &interface.component;
     let mut out = String::new();
@@ -204,8 +203,12 @@ pub fn from_pipeline(
     out.push_str(&emit_props_interface(name, &interface.slots)?);
     writeln!(out).unwrap();
 
-    // 5. Function declaration (UI24 §3.3).
-    out.push_str(&emit_function(name, &interface.slots, &layout.root)?);
+    // 5. Precompute the per-part inline style strings from the mosstyle IR
+    //    so the JSX walker can look up the right styles in O(1) per node.
+    let part_styles = build_part_style_map(style);
+
+    // 6. Function declaration (UI24 §3.3).
+    out.push_str(&emit_function(name, &interface.slots, &layout.root, &part_styles)?);
 
     // 6. Reference the unused `React` import via a comment block so that the
     // simplest emitted file (e.g., a zero-emit zero-primitive component)
@@ -301,6 +304,7 @@ fn emit_function(
     component: &str,
     slots: &[SlotDecl],
     layout_root: &LayoutNode,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     writeln!(out, "export function {component}({{").unwrap();
@@ -310,7 +314,7 @@ fn emit_function(
     writeln!(out, "  dispatch,").unwrap();
     writeln!(out, "}}: {component}Props) {{").unwrap();
     writeln!(out, "  return (").unwrap();
-    out.push_str(&emit_jsx_tree(layout_root, 4)?);
+    out.push_str(&emit_jsx_tree(layout_root, 4, part_styles)?);
     writeln!(out, "  );").unwrap();
     writeln!(out, "}}").unwrap();
     // Suppress unused-variable warnings the compiler would emit for slots
@@ -343,22 +347,48 @@ fn emit_function(
 /// | Grid         | (deferred) — emits a placeholder comment for now        |
 /// | Input        | (deferred — UI25 implementation PR)                     |
 ///
-/// Slot references in props (e.g. `value: @formula`) are not yet wired to
 /// JSX attributes. The first pass renders structure only — except for
 /// **emit references** (per UI24), which are wired via [`build_emit_handlers`]
 /// to JSX event handlers that fire `dispatch(...)`.
-fn emit_jsx_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+///
+/// **Style inlining**: when a node has `part_name: Some(name)`, the styles
+/// declared for that part in the `.msl` source are looked up in
+/// `part_styles` and merged with any primitive-built-in style (e.g. the
+/// `display: "flex"` that `Row` always carries) into a single
+/// `style={{ ... }}` JSX attribute that appears before any event handlers.
+fn emit_jsx_tree(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // Look up the JSX shape for this primitive. `open` is the opening tag
-    // string (without the trailing `>`), `close` is the matching close tag
-    // (e.g., `</div>`) or empty for self-closing, `self_close` indicates
-    // whether the tag emits as `<tag />`.
+    // Decompose the primitive into its element name, built-in style (e.g.
+    // flexbox for Row/Column), close tag, and self-closing flag.
     let JsxTag {
-        mut open,
+        tag_name,
+        builtin_style,
         close,
         self_close,
+        extra_attrs,
     } = primitive_to_jsx_tag(&node.tag)?;
+
+    // Look up the author-declared part style (if any) and merge it with the
+    // built-in style. The built-in style appears first so that the author's
+    // declarations can override the defaults — last property wins in a JSX
+    // style object, mirroring CSS specificity semantics.
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    let merged_style = merge_styles(&builtin_style, part_style_str);
+    let style_attr = if merged_style.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {merged_style} }}}}")
+    };
+    let mut open = format!("{tag_name}{extra_attrs}{style_attr}");
 
     // Append connects-wiring event handlers (UI24): for every prop on this
     // node whose value is an `EmitRef`, emit a JSX event handler attribute
@@ -381,7 +411,7 @@ fn emit_jsx_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmi
     // Container with children — emit opening tag, recurse, emit closing tag.
     let mut out = format!("{pad}{open}>\n");
     for child in &node.children {
-        out.push_str(&emit_jsx_tree(child, indent + 2)?);
+        out.push_str(&emit_jsx_tree(child, indent + 2, part_styles)?);
     }
     out.push_str(&format!("{pad}{close}\n"));
     Ok(out)
@@ -440,10 +470,21 @@ fn build_emit_handlers(node: &LayoutNode) -> Result<String, PipelineEmitError> {
 }
 
 /// The pieces needed to format a JSX element of a given primitive.
+///
+/// Split out so that author-declared part styles (from mosstyle) can be
+/// merged with the primitive's built-in style before the opening tag is
+/// formed.
 struct JsxTag {
-    /// The opening tag string without the trailing `>`, e.g.
-    /// `<div style={{display:"flex",flexDirection:"row"}}`.
-    open: String,
+    /// The bare element prefix without attributes, e.g. `<div` or `<span`.
+    tag_name: String,
+    /// The built-in inline-style fragment for this primitive (CSS-in-JS
+    /// form). Empty for primitives that have no default styles (`Box`,
+    /// `Text`, `Image`). Example: `display: "flex", flexDirection: "row"`.
+    builtin_style: String,
+    /// Extra non-style attributes the primitive wants on every element,
+    /// e.g. `className="icon"` for `Icon` or `data-mosaic-todo="grid"` for
+    /// the Grid placeholder. Starts with a leading space when non-empty.
+    extra_attrs: String,
     /// The closing tag, e.g. `</div>`, or empty for self-closing tags.
     close: String,
     /// `true` for `<tag />` self-closing tags.
@@ -451,62 +492,128 @@ struct JsxTag {
 }
 
 fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
-    let (open, close, self_close) = match tag {
-        "Box" => ("<div".to_string(), "</div>".to_string(), false),
+    let (tag_name, builtin_style, extra_attrs, close, self_close) = match tag {
+        "Box" => ("<div", "", "", "</div>", false),
         "Row" => (
-            "<div style={{ display: \"flex\", flexDirection: \"row\" }}".to_string(),
-            "</div>".to_string(),
+            "<div",
+            "display: \"flex\", flexDirection: \"row\"",
+            "",
+            "</div>",
             false,
         ),
         "Column" => (
-            "<div style={{ display: \"flex\", flexDirection: \"column\" }}".to_string(),
-            "</div>".to_string(),
+            "<div",
+            "display: \"flex\", flexDirection: \"column\"",
+            "",
+            "</div>",
             false,
         ),
-        "Text" => ("<span".to_string(), "</span>".to_string(), false),
-        "Image" => ("<img".to_string(), String::new(), true),
-        "Spacer" => (
-            "<div style={{ flex: 1 }}".to_string(),
-            "</div>".to_string(),
-            false,
-        ),
-        "Scroll" => (
-            "<div style={{ overflow: \"auto\" }}".to_string(),
-            "</div>".to_string(),
-            false,
-        ),
-        "Divider" => ("<hr".to_string(), String::new(), true),
+        "Text" => ("<span", "", "", "</span>", false),
+        "Image" => ("<img", "", "", "", true),
+        "Spacer" => ("<div", "flex: 1", "", "</div>", false),
+        "Scroll" => ("<div", "overflow: \"auto\"", "", "</div>", false),
+        "Divider" => ("<hr", "", "", "", true),
         "Stack" => (
-            "<div style={{ position: \"relative\" }}".to_string(),
-            "</div>".to_string(),
+            "<div",
+            "position: \"relative\"",
+            "",
+            "</div>",
             false,
         ),
-        "Icon" => (
-            "<span className=\"icon\"".to_string(),
-            "</span>".to_string(),
-            false,
-        ),
+        "Icon" => ("<span", "", " className=\"icon\"", "</span>", false),
         // Deferred — emit a placeholder so the file still compiles end-to-end.
         // The host can see at a glance that this node needs a real renderer
         // in a follow-up PR.
-        "Grid" => (
-            "<div data-mosaic-todo=\"grid\"".to_string(),
-            "</div>".to_string(),
-            false,
-        ),
+        "Grid" => ("<div", "", " data-mosaic-todo=\"grid\"", "</div>", false),
         // UI25's Input primitive — deferred until its implementation PR.
-        "Input" => (
-            "<div data-mosaic-todo=\"input\"".to_string(),
-            "</div>".to_string(),
-            false,
-        ),
+        "Input" => ("<div", "", " data-mosaic-todo=\"input\"", "</div>", false),
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     };
     Ok(JsxTag {
-        open,
-        close,
+        tag_name: tag_name.to_string(),
+        builtin_style: builtin_style.to_string(),
+        extra_attrs: extra_attrs.to_string(),
+        close: close.to_string(),
         self_close,
     })
+}
+
+// =====================================================================
+// Style inlining (mosstyle StyleDef -> JSX style={{...}})
+// =====================================================================
+
+/// Build a `part_name -> inline-style-string` lookup table from a mosstyle
+/// `StyleDef`.
+///
+/// The returned map is consumed by [`emit_jsx_tree`] to attach styles to
+/// JSX elements via their `part_name`. The inline style string is a
+/// CSS-in-JS fragment ready to drop inside a `style={{ ... }}` literal —
+/// e.g. `backgroundColor: "#1e1e1e", color: "#cccccc"`.
+///
+/// ### What this function does NOT yet do
+///
+/// - **State blocks** (`state hover { ... }`, `state focused { ... }`)
+///   are ignored. They need either CSS-class plumbing or a runtime
+///   pseudo-class observer; both are out of scope for this first cut.
+///   TODO: emit a `:hover` selector via a small inline `<style>` element,
+///   or hand the resolved CSS off to mosstyle's `emit_css` and surface it
+///   as a sibling artifact.
+/// - **CSS shorthand / shorthand expansion** — e.g. `border: 1px solid #ccc`
+///   passes through verbatim, which works in React inline styles for most
+///   shorthands but not all. We don't validate or expand.
+fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
+    let mut out = HashMap::with_capacity(style.parts.len());
+    for part in &style.parts {
+        let fragment = build_inline_style_fragment(&part.base);
+        if !fragment.is_empty() {
+            out.insert(part.name.clone(), fragment);
+        }
+        // `part.states` ignored for now — see fn doc above.
+    }
+    out
+}
+
+/// Convert a slice of [`StyleProp`] values into a comma-separated
+/// `key: "value"` fragment suitable for inlining in a JSX style object.
+///
+/// kebab-case CSS property names are camelCased (`background-color` →
+/// `backgroundColor`). Values are wrapped in double quotes verbatim — we
+/// don't try to coerce numeric values to unquoted numbers because mosstyle
+/// preserves units (`12px`, not `12`) and the quoted form is always valid
+/// React-inline-style syntax.
+fn build_inline_style_fragment(props: &[StyleProp]) -> String {
+    let mut parts: Vec<String> = Vec::with_capacity(props.len());
+    for p in props {
+        let key = css_property_to_camel(&p.name);
+        // Escape any embedded double quotes in the value to keep the JSX
+        // string literal well-formed. Real mosstyle values shouldn't
+        // contain `"` but defensive coding here costs essentially nothing.
+        let escaped = p.value.replace('\\', "\\\\").replace('"', "\\\"");
+        parts.push(format!("{key}: \"{escaped}\""));
+    }
+    parts.join(", ")
+}
+
+/// Convert a kebab-case CSS property name to its camelCase JS form.
+///
+/// Vendor-prefix corner-cases (e.g. `-webkit-transform` → `WebkitTransform`)
+/// are left to a future iteration; today mosstyle does not surface vendor
+/// prefixes.
+fn css_property_to_camel(name: &str) -> String {
+    to_camel_case_first_lower(name)
+}
+
+/// Concatenate two inline-style fragments, comma-separated, dropping empty
+/// inputs. The first argument is the primitive's built-in style; the second
+/// is the author-declared part style. The author wins on collisions because
+/// React style objects use last-property-wins semantics.
+fn merge_styles(builtin: &str, author: &str) -> String {
+    match (builtin.is_empty(), author.is_empty()) {
+        (true, true) => String::new(),
+        (false, true) => builtin.to_string(),
+        (true, false) => author.to_string(),
+        (false, false) => format!("{builtin}, {author}"),
+    }
 }
 
 /// If a node looks like a `Text { content: @slot; }` leaf, return the JSX
@@ -1096,6 +1203,187 @@ mod tests {
             result.output
         );
     }
+
+    // -----------------------------------------------------------------
+    // Style inlining (mosstyle StyleDef -> JSX style={{...}})
+    // -----------------------------------------------------------------
+
+    use mosstyle_compiler::{PartStyle, StateStyle};
+
+    /// Helper: build a StyleDef with a single part containing the listed
+    /// base properties.
+    fn style_with_part(component: &str, part: &str, props: &[(&str, &str)]) -> StyleDef {
+        StyleDef {
+            component_name: component.to_string(),
+            parts: vec![PartStyle {
+                name: part.to_string(),
+                base: props
+                    .iter()
+                    .map(|(k, v)| StyleProp { name: k.to_string(), value: v.to_string() })
+                    .collect(),
+                states: Vec::new(),
+            }],
+        }
+    }
+
+    /// Helper: a Box layout root with an optional part name.
+    fn box_root(part_name: Option<&str>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: part_name.map(String::from),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        }
+    }
+
+    #[test]
+    fn part_style_single_prop_appears_in_jsx() {
+        let m = component("X", vec![], vec![]);
+        let s = style_with_part("X", "panel", &[("background", "#1e1e1e")]);
+        let l = box_root(Some("panel"));
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            result.output.contains("style={{ background: \"#1e1e1e\" }}"),
+            "expected inline style, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn part_style_multiple_props_comma_separated() {
+        let m = component("X", vec![], vec![]);
+        let s = style_with_part(
+            "X",
+            "panel",
+            &[("background", "#1e1e1e"), ("color", "#cccccc"), ("padding", "8px")],
+        );
+        let l = box_root(Some("panel"));
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(result.output.contains(
+            "style={{ background: \"#1e1e1e\", color: \"#cccccc\", padding: \"8px\" }}"
+        ), "got:\n{}", result.output);
+    }
+
+    #[test]
+    fn kebab_css_property_is_camel_cased_in_jsx() {
+        let m = component("X", vec![], vec![]);
+        let s = style_with_part(
+            "X",
+            "panel",
+            &[("background-color", "#1e1e1e"), ("font-size", "13px")],
+        );
+        let l = box_root(Some("panel"));
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(result.output.contains("backgroundColor: \"#1e1e1e\""),
+            "got:\n{}", result.output);
+        assert!(result.output.contains("fontSize: \"13px\""),
+            "got:\n{}", result.output);
+    }
+
+    #[test]
+    fn node_without_part_name_has_no_style_attr() {
+        let m = component("X", vec![], vec![]);
+        // StyleDef has a part for "panel" but the node has no part_name.
+        let s = style_with_part("X", "panel", &[("background", "#fff")]);
+        let l = box_root(None);
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        // The Box should still render <div></div> with no style attr.
+        assert!(result.output.contains("<div></div>"),
+            "expected bare div, got:\n{}", result.output);
+    }
+
+    #[test]
+    fn part_name_not_in_style_def_is_silently_ignored() {
+        let m = component("X", vec![], vec![]);
+        // Style has "panel" but layout asks for "header".
+        let s = style_with_part("X", "panel", &[("background", "#fff")]);
+        let l = box_root(Some("header"));
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(result.output.contains("<div></div>"),
+            "missing part name must not produce a style attr, got:\n{}", result.output);
+    }
+
+    #[test]
+    fn builtin_style_and_part_style_are_merged() {
+        // Row carries a built-in `display: "flex", flexDirection: "row"`.
+        // A part style for the same node should be appended after.
+        let m = component("X", vec![], vec![]);
+        let s = style_with_part("X", "bar", &[("background", "#222")]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("bar".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        // Built-in style appears first; author style appears after.
+        let expected = "style={{ display: \"flex\", flexDirection: \"row\", background: \"#222\" }}";
+        assert!(result.output.contains(expected),
+            "expected merged style, got:\n{}", result.output);
+    }
+
+    #[test]
+    fn state_blocks_are_ignored_in_first_cut() {
+        // A part with a `:hover` state block. The base style should still
+        // be emitted; the state block is silently dropped (with a TODO in
+        // the implementation).
+        let m = component("X", vec![], vec![]);
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "btn".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#222".to_string(),
+                }],
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#444".to_string(),
+                    }],
+                }],
+            }],
+        };
+        let l = box_root(Some("btn"));
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        // Base style is present.
+        assert!(result.output.contains("background: \"#222\""));
+        // Hover override is NOT present — needs separate plumbing.
+        assert!(!result.output.contains("#444"),
+            "state blocks must not leak into the inline style, got:\n{}", result.output);
+    }
+
+    #[test]
+    fn double_quotes_in_style_values_are_escaped() {
+        let m = component("X", vec![], vec![]);
+        // A font-family with an embedded quoted name — the embedded `"`
+        // must be escaped so the JSX literal stays well-formed.
+        let s = style_with_part(
+            "X",
+            "panel",
+            &[("font-family", "\"SF Mono\", monospace")],
+        );
+        let l = box_root(Some("panel"));
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            result
+                .output
+                .contains("fontFamily: \"\\\"SF Mono\\\", monospace\""),
+            "expected escaped quotes, got:\n{}",
+            result.output
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Connects wiring — additional tests
+    // -----------------------------------------------------------------
 
     #[test]
     fn emit_ref_prop_strips_on_prefix_in_type_literal() {
