@@ -68,6 +68,7 @@ pub struct TargetDescriptor {
     pub spi_buses: &'static [SpiBusDescriptor],
     pub uart_buses: &'static [UartBusDescriptor],
     pub can_buses: &'static [CanBusDescriptor],
+    pub storage_regions: &'static [StorageRegionDescriptor],
     pub rtc: Option<RtcDescriptor>,
     pub watchdog: Option<WatchdogDescriptor>,
 }
@@ -138,6 +139,15 @@ pub struct WatchdogDescriptor {
     pub instance: u8,
     pub name: &'static str,
     pub peripheral: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StorageRegionDescriptor {
+    pub region: u8,
+    pub name: &'static str,
+    pub kind: &'static str,
+    pub bytes: u32,
     pub notes: &'static str,
 }
 
@@ -431,6 +441,16 @@ pub const UNO_R4_WATCHDOG: WatchdogDescriptor = WatchdogDescriptor {
     notes: "Renesas watchdog timer exposed through the UNO R4 core WDT library",
 };
 
+pub const UNO_R4_EEPROM_STORAGE: StorageRegionDescriptor = StorageRegionDescriptor {
+    region: 0,
+    name: "EEPROM emulation",
+    kind: "data flash",
+    bytes: UNO_R4_DATA_FLASH_BYTES,
+    notes: "Flash-backed EEPROM storage area exposed by the UNO R4 core; program.store and kv.store are not enabled yet",
+};
+
+pub const UNO_R4_STORAGE_REGIONS: [StorageRegionDescriptor; 1] = [UNO_R4_EEPROM_STORAGE];
+
 pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     board_id: "arduino-uno-r4-minima",
     display_name: "Arduino Uno R4 Minima",
@@ -459,6 +479,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_MINIMA_UART_BUSES,
     can_buses: &UNO_R4_CAN_BUSES,
+    storage_regions: &UNO_R4_STORAGE_REGIONS,
     rtc: Some(UNO_R4_RTC),
     watchdog: Some(UNO_R4_WATCHDOG),
 };
@@ -492,6 +513,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_WIFI_UART_BUSES,
     can_buses: &UNO_R4_CAN_BUSES,
+    storage_regions: &UNO_R4_STORAGE_REGIONS,
     rtc: Some(UNO_R4_RTC),
     watchdog: Some(UNO_R4_WATCHDOG),
 };
@@ -1353,6 +1375,20 @@ mod tests {
         assert_eq!(watchdog.name, "WDT");
         assert_eq!(watchdog.peripheral, "RA4M1 WDT");
         assert!(watchdog.notes.contains("watchdog timer"));
+    }
+
+    #[test]
+    fn knows_uno_r4_storage_regions() {
+        assert_eq!(UNO_R4_MINIMA.storage_regions, &UNO_R4_STORAGE_REGIONS);
+        assert_eq!(UNO_R4_WIFI.storage_regions, &UNO_R4_STORAGE_REGIONS);
+
+        let storage = UNO_R4_WIFI.storage_regions[0];
+        assert_eq!(storage.region, 0);
+        assert_eq!(storage.name, "EEPROM emulation");
+        assert_eq!(storage.kind, "data flash");
+        assert_eq!(storage.bytes, UNO_R4_DATA_FLASH_BYTES);
+        assert!(storage.notes.contains("program.store"));
+        assert!(storage.notes.contains("not enabled"));
     }
 
     #[test]

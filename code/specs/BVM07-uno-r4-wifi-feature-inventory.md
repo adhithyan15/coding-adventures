@@ -34,7 +34,7 @@ Source snapshot:
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | descriptor metadata, handle open, and single-byte write/read implemented | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | descriptor metadata implemented; bytecode capability pending | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | descriptor metadata implemented; bytecode capability pending | `rtc.now`, `rtc.set`, alarms/events later |
-| EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | pending | `program.store` and possibly `kv.store` |
+| EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata implemented; bytecode capability pending | `program.store` and possibly `kv.store` |
 | Watchdog | Renesas WDT library | descriptor metadata implemented; bytecode capability pending | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
 | WiFi | WiFiS3 library through onboard network module | pending | network/transport capabilities, not direct Ruby bypass |
@@ -86,10 +86,12 @@ reject conflicting handles.
    metadata for the single UNO R4 `RA4M1 RTC` instance while `rtc.now` and
    `rtc.set` remain a later capability tranche. Watchdog now has descriptor
    metadata for the UNO R4 `RA4M1 WDT` instance while `watchdog.configure` and
-   `watchdog.kick` remain a later capability tranche. The next independent
-   tranche can move on to CAN byte I/O, RTC bytecode operations, watchdog
-   bytecode operations, EEPROM/store, or WiFi/network metadata and capability
-   slices.
+   `watchdog.kick` remain a later capability tranche. EEPROM/store now has
+   descriptor metadata for the 8 KiB flash-backed EEPROM/data-flash area while
+   `program.store` and `kv.store` remain later capability tranches. The next
+   independent tranche can move on to CAN byte I/O, RTC bytecode operations,
+   watchdog bytecode operations, EEPROM/store bytecode operations, or
+   WiFi/network metadata and capability slices.
 
 Every tranche should include the same layers: spec entry, IR capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,
