@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — connects wiring (pipeline path)
+
+- Every moslayout prop whose value is an `EmitRef(emit_name)` now produces a
+  JSX event handler attribute on the enclosing element that fires the
+  matching dispatch variant. Example: a `Box (onClick: emit: onClick)`
+  layout node now lowers to
+  `<div onClick={() => dispatch({ type: "click" })}>...</div>`.
+- 6 new tests covering: emit-ref → handler, `on`-prefix stripping on the
+  type literal, multiple emit refs on one node, slot refs do NOT produce
+  handlers, reserved emit name rejection, handler placement inside the
+  opening tag.
+- End-to-end smoke test: a minimal `Btn.mil` / `Btn.mll` / `Btn.msl`
+  produces TSX that dispatches `{ type: "click" }` on click. Verified.
+
 ### Added
 
 - `pipeline::from_pipeline(&MosmodelComponent, &LayoutDef, &StyleDef)` —
