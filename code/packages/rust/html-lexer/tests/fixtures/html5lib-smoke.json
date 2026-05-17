@@ -2019,7 +2019,6 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-whitespace-after-end-tag-name",
         "end-tag-with-attributes",
         "eof-in-end-tag-name-state"
       ]
@@ -3045,7 +3044,6 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-whitespace-after-end-tag-name",
         "end-tag-with-attributes"
       ]
     },
@@ -4862,7 +4860,7 @@
       "description": "<!-- -",
       "input": "<!-- -",
       "tokens": [
-        "Comment(data= -)",
+        "Comment(data= )",
         "EOF"
       ],
       "diagnostics": [
@@ -5583,7 +5581,7 @@
       "description": "<!---",
       "input": "<!---",
       "tokens": [
-        "Comment(data=-)",
+        "Comment(data=)",
         "EOF"
       ],
       "diagnostics": [
@@ -5813,7 +5811,7 @@
       "description": "<!---- -",
       "input": "<!---- -",
       "tokens": [
-        "Comment(data=-- -)",
+        "Comment(data=-- )",
         "EOF"
       ],
       "diagnostics": [
@@ -5951,7 +5949,7 @@
       "description": "<!----!a-",
       "input": "<!----!a-",
       "tokens": [
-        "Comment(data=--!a-)",
+        "Comment(data=--!a)",
         "EOF"
       ],
       "diagnostics": [
@@ -5985,7 +5983,7 @@
       "description": "<!----!-",
       "input": "<!----!-",
       "tokens": [
-        "Comment(data=--!-)",
+        "Comment(data=--!)",
         "EOF"
       ],
       "diagnostics": [
@@ -23233,7 +23231,6 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-whitespace-after-end-tag-name",
         "end-tag-with-attributes"
       ]
     },
@@ -23246,7 +23243,6 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-whitespace-after-end-tag-name",
         "end-tag-with-attributes"
       ]
     },
