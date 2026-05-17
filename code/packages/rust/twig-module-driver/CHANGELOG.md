@@ -1,5 +1,80 @@
 # Changelog — twig-module-driver
 
+## [0.13.0] — 2026-05-17
+
+### Added (LANG68 — TW05-N fixed-point self-compilation)
+
+Added IIR opcode-summary serialisation and fixed-point check to
+`code/twig/compiler/main.tw`.
+
+#### New functions in `main.tw` (6 helpers, main.tw: 2 → 8 functions)
+
+| Function | Description |
+|----------|-------------|
+| `instr-op-tag` | Extract opcode string from one `IirInstr` record |
+| `instr-list-ops` | Join opcodes of an instruction list with `"\|"` |
+| `fn-pair-ops-str` | Serialise `(fn-name . instr-list)` → `"fn-name N op1\|...\|opN"` |
+| `fn-list-ops-str` | Newline-join `fn-pair-ops-str` results for all functions |
+| `self-compile-all-summary` | Compile all 11 files, return full opcode-structure string |
+| `fixed-point-check` | Compile `span.tw` twice, return `#t` if summaries match |
+
+#### Updated function counts
+
+`main.tw` now contributes **8 functions** (was 2 in TW05-M), changing the
+`self-compile-all` total from 173 to **179**.
+
+Full table:
+
+| Module | LANG67 | LANG68 | Delta |
+|--------|--------|--------|-------|
+| `span.tw` | 2 | 2 | — |
+| `token.tw` | 0 | 0 | — |
+| `diagnostic.tw` | 3 | 3 | — |
+| `ast.tw` | 0 | 0 | — |
+| `iir-types.tw` | 0 | 0 | — |
+| `iir-builder.tw` | 8 | 8 | — |
+| `lexer.tw` | 25 | 25 | — |
+| `cst-parser.tw` | 69 | 69 | — |
+| `parser.tw` | 29 | 29 | — |
+| `emit.tw` | 35 | 35 | — |
+| `main.tw` | **2** | **8** | +6 |
+| **Total** | **173** | **179** | **+6** |
+
+#### Fixed-point semantics
+
+`fixed-point-check` calls `lex-source → parse-program → emit-program` twice
+on `span.tw` and compares the two opcode-summary strings.  Since Twig is
+purely functional, this always returns `#t`; the purpose is to make the
+determinism invariant **explicit and testable**.
+
+#### No VM constant changes needed
+
+Largest file is still `cst-parser.tw` at 29 122 chars.  New helpers in
+`main.tw` add ~360 instructions; grand total still well below
+`MAX_INSTRUCTIONS_PER_RUN` (2²⁵ = 32 M).
+
+New `#[cfg(test)] mod tw05n_tests` with 7 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `main_tw_contributes_8_functions_after_tw05n` | `main.tw` → 8 functions (2 + 6 new) |
+| `self_compile_all_returns_179_after_tw05n` | `self-compile-all` → 179 total functions |
+| `fixed_point_check_returns_true` | `(fixed-point-check dir)` → `#t` |
+| `summary_contains_make_span_12_instrs` | opcode summary has `"make-span 12 "` |
+| `summary_contains_dummy_span_4_instrs` | opcode summary has `"dummy-span 4 "` |
+| `summary_is_non_empty_and_substantial` | summary > 1000 chars |
+| `tw05l_seven_file_regression_still_171` | TW05-L 7-file sum (independent) → 171 |
+
+### Changed
+
+- `tw05m_tests::self_compile_main_tw_returns_2` renamed to
+  `self_compile_main_tw_returns_8` and updated to expect `8`.
+- `tw05m_tests::self_compile_all_returns_173` updated to expect `179`.
+  (The test remains in `tw05m_tests`; the count changed because `main.tw`
+  gained 6 new functions in TW05-N.)
+
+---
+
 ## [0.12.0] — 2026-05-17
 
 ### Added (LANG67 — TW05-M all-module self-compilation)
