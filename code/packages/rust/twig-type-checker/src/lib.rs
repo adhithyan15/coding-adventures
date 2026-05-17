@@ -85,6 +85,7 @@ pub use profile::TwigLanguageProfile;
 
 // Re-export the AnnotatedNode type so callers don't need to depend on
 // type-declarations directly just to get the typed_ast out.
+pub use type_checker_protocol::TypeErrorDiagnostic;
 pub use type_declarations::AnnotatedNode;
 
 use twig_parser::{emit_type_declarations, parse, parse_to_ast, Program, TypedMode};

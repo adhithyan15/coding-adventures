@@ -132,6 +132,19 @@ pub enum ModuleDriverError {
         /// Number of modules discovered before the limit was hit.
         count: usize,
     },
+
+    /// A module has `(typed strict)` and the type checker found one or more
+    /// type errors.
+    ///
+    /// Only emitted for modules whose `module_info.typed_mode` resolves to
+    /// `TypedMode::Strict`.  Lenient-mode and untyped modules are checked
+    /// but never fail compilation.
+    TypeErrors {
+        /// Path of the module that failed type checking.
+        path: PathBuf,
+        /// The type errors detected by `twig-type-checker`.
+        errors: Vec<twig_type_checker::TypeErrorDiagnostic>,
+    },
 }
 
 impl fmt::Display for ModuleDriverError {
@@ -163,6 +176,14 @@ impl fmt::Display for ModuleDriverError {
                 write!(
                     f,
                     "import graph too large: {count} modules exceeds the limit of {MAX_MODULES}"
+                )
+            }
+            ModuleDriverError::TypeErrors { path, errors } => {
+                write!(
+                    f,
+                    "type error(s) in {:?}: {} error(s)",
+                    path,
+                    errors.len()
                 )
             }
         }
@@ -527,18 +548,157 @@ pub fn compile_module_tree(
 
     let extern_refs: Vec<&str> = all_fn_names.iter().map(|s| s.as_str()).collect();
 
+    // ── Phase 3.5: Type-check each module in dependency order ────────────────
+    //
+    // TW05-Q (LANG72): run `twig-type-checker` on every module before IR
+    // compilation.  Modules with `(typed strict)` and type errors abort
+    // compilation with `ModuleDriverError::TypeErrors`.
+    //
+    // ## Why topological order?
+    //
+    // The type checker propagates exported names from dependency modules into
+    // the environment of their importers.  To build those exports we must have
+    // already type-checked (and cached the `TypeEnv` of) every dependency.
+    // Kahn's algorithm on the import-graph adjacency map gives us a valid
+    // processing order in O(V + E).
+    //
+    // ## Algorithm
+    //
+    // Let `in_degree[path]` = number of direct imports module `path` has.
+    // Modules with `in_degree = 0` have no imports and are pure leaves; they
+    // go into the initial queue.  When a module is popped and processed, every
+    // module that imports it has its `in_degree` decremented; once a module
+    // reaches `in_degree = 0` all its dependencies have been processed, so it
+    // is enqueued.
+    let module_extra_globals = {
+        use std::collections::HashMap as HMap;
+        use twig_parser::TypedMode;
+        use twig_type_checker::{check_program_with_globals, extract_module_exports};
+
+        // Build:
+        //   in_degree[p]   = adjacency[p].len()   (# of imports)
+        //   imported_by[d] = [p1, p2, …]          (who imports dependency d)
+        let mut in_degree: HMap<PathBuf, usize> = HMap::new();
+        let mut imported_by: HMap<PathBuf, Vec<PathBuf>> = HMap::new();
+
+        for (path, _, _) in &discovered {
+            let deg = adjacency.get(path).map(|v| v.len()).unwrap_or(0);
+            in_degree.insert(path.clone(), deg);
+        }
+        for (importer, deps) in &adjacency {
+            for (_, dep_path) in deps {
+                imported_by
+                    .entry(dep_path.clone())
+                    .or_default()
+                    .push(importer.clone());
+            }
+        }
+
+        // Build a path → (Program, name) lookup so we can call the checker
+        // without iterating `discovered` each time.
+        let prog_map: HMap<PathBuf, (&Program, &str)> = discovered
+            .iter()
+            .map(|(p, prog, name)| (p.clone(), (prog, name.as_str())))
+            .collect();
+
+        // Seed queue with zero-in-degree nodes (no dependencies).
+        let mut kahn_queue: VecDeque<PathBuf> = VecDeque::new();
+        for (path, &deg) in &in_degree {
+            if deg == 0 {
+                kahn_queue.push_back(path.clone());
+            }
+        }
+
+        // Cache: path → (Program, TypeEnv) for export extraction.
+        let mut env_cache: HMap<PathBuf, (Program, twig_type_checker::TypeEnv)> = HMap::new();
+
+        // Also store the per-module extra_globals so Phase 4 can pass them to
+        // `compile_program_with_externs_and_globals`, avoiding a duplicate
+        // "unresolved variable" error from the IR compiler's internal type-check
+        // (which does not have access to cross-module names otherwise).
+        //
+        // Key: canonical module path.
+        // Value: the exact same extra_globals map used in Phase 3.5 for this module.
+        let mut module_extra_globals: HMap<PathBuf, HMap<String, twig_type_checker::TwigKind>> =
+            HMap::new();
+
+        while let Some(path) = kahn_queue.pop_front() {
+            let (program, _name) = prog_map[&path];
+
+            // Build extra_globals from all direct dependencies.
+            let mut extra_globals: HMap<String, twig_type_checker::TwigKind> = HMap::new();
+            if let Some(deps) = adjacency.get(&path) {
+                for (_, dep_path) in deps {
+                    if let Some((dep_prog, dep_env)) = env_cache.get(dep_path) {
+                        let exports = extract_module_exports(dep_prog, dep_env);
+                        extra_globals.extend(exports);
+                    }
+                }
+            }
+
+            // Run the type checker with propagated globals.
+            let result = check_program_with_globals(program, None, &extra_globals);
+
+            // Strict modules with type errors abort compilation.
+            let is_strict = program
+                .module_info
+                .as_ref()
+                .and_then(|mi| mi.typed_mode.as_ref())
+                .map(|m| matches!(m, TypedMode::Strict))
+                .unwrap_or(false);
+
+            if is_strict && !result.ok {
+                return Err(ModuleDriverError::TypeErrors {
+                    path: path.clone(),
+                    errors: result.errors,
+                });
+            }
+
+            // Cache env for importers and the per-module globals for Phase 4.
+            env_cache.insert(path.clone(), (program.clone(), result.typed_ast.env));
+            module_extra_globals.insert(path.clone(), extra_globals);
+
+            // Reduce in_degree for every module that imports this one.
+            if let Some(importers) = imported_by.get(&path) {
+                for importer in importers {
+                    if let Some(deg) = in_degree.get_mut(importer) {
+                        *deg -= 1;
+                        if *deg == 0 {
+                            kahn_queue.push_back(importer.clone());
+                        }
+                    }
+                }
+            }
+        }
+
+        // Expose `module_extra_globals` to Phase 4 (outside the inner block).
+        module_extra_globals
+    };
+
     // ── Phase 4: Compile each module with all extern names pre-registered ─────
+    //
+    // Uses `compile_program_with_externs_and_globals` (LANG72) so that the IR
+    // compiler's internal type-check pre-pass runs with the same cross-module
+    // globals that Phase 3.5 used.  Without the globals, a strict module that
+    // calls `(lex-source …)` from an imported module would fail the IR
+    // compiler's internal type check with "unresolved variable `lex-source`".
+    let empty_globals: std::collections::HashMap<String, twig_type_checker::TwigKind> =
+        std::collections::HashMap::new();
     let mut modules: Vec<IIRModule> = Vec::new();
 
     for (path, program, module_name) in &discovered {
-        // Use `compile_program_with_externs` so that calls to functions defined
-        // in other modules emit `call` instructions instead of "unbound name".
+        let globals_for_path = module_extra_globals.get(path).unwrap_or(&empty_globals);
         let mut iir_mod =
-            twig_ir_compiler::compile_program_with_externs(program, module_name, &extern_refs)
-                .map_err(|e| ModuleDriverError::Compile {
-                    path: path.clone(),
-                    error: e,
-                })?;
+            twig_ir_compiler::compile_program_with_externs_and_globals(
+                program,
+                module_name,
+                &extern_refs,
+                globals_for_path,
+            )
+            .map_err(|e| ModuleDriverError::Compile {
+                path: path.clone(),
+                error: e,
+            })?;
 
         // Only the root module keeps `entry_point = Some("main")`.
         // Library modules have their entry_point cleared so the linker knows
@@ -3738,5 +3898,210 @@ mod tw05n_tests {
         let v = crate::run_in_xlarge_stack(root, dir.clone(), "tw05n_l_regression");
         assert_eq!(v.to_string(), "171",
             "TW05-L regression: expected 171 from 7 original modules; got {v}");
+    }
+}
+
+// ── TW05-Q tests (LANG72) ────────────────────────────────────────────────────
+//
+// Verify that Phase 3.5 (type-check pass) correctly:
+//   - passes clean strict-mode programs
+//   - fails strict-mode programs with undefined variable references
+//   - passes lenient-mode programs with undefined variable references
+//   - carries the correct file path in TypeErrors
+
+#[cfg(test)]
+mod tw05q_tests {
+    use std::fs;
+    use std::path::Path;
+
+    // ── helpers ──────────────────────────────────────────────────────────────
+
+    fn make_tempdir(tag: &str) -> std::path::PathBuf {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .subsec_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "twig_tw05q_{tag}_{}_{}", std::process::id(), nonce
+        ));
+        fs::create_dir(&dir).unwrap_or_else(|e| {
+            panic!("make_tempdir: could not create {}: {e}", dir.display())
+        });
+        dir
+    }
+
+    fn compiler_src_dir() -> std::path::PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent().unwrap()  // rust/
+            .parent().unwrap()  // packages/
+            .parent().unwrap()  // code/
+            .join("twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src  = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler");
+        fs::create_dir_all(&dest).unwrap();
+        fs::copy(&src, dest.join(format!("{name}.tw")))
+            .unwrap_or_else(|e| panic!("copy {name}.tw: {e}"));
+    }
+
+    fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span", "token", "diagnostic", "ast", "iir-types",
+                      "iir-builder", "lexer", "cst-parser", "parser", "emit", "main"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    // ── test 1 ───────────────────────────────────────────────────────────────
+    //
+    // A single-module program with `(typed strict)` that only uses names it
+    // defines itself.  The type checker should pass.
+
+    #[test]
+    fn strict_single_module_clean_passes() {
+        let dir = make_tempdir("clean");
+        let main_src = r#"
+(module tw05q/clean
+  (typed strict)
+  (export result))
+
+(define (double x) (+ x x))
+(define result (double 21))
+"#;
+        let root = dir.join("main.tw");
+        fs::write(&root, main_src).unwrap();
+        let result = crate::compile_module_tree(&root, &[]);
+        assert!(
+            result.is_ok(),
+            "Clean strict module should compile; got: {:?}",
+            result
+        );
+    }
+
+    // ── test 2 ───────────────────────────────────────────────────────────────
+    //
+    // A `(typed strict)` module that calls an undefined function.
+    // Phase 3.5 should return `ModuleDriverError::TypeErrors`.
+
+    #[test]
+    fn strict_module_bad_varref_fails_type_check() {
+        let dir = make_tempdir("strict_bad");
+        let main_src = r#"
+(module tw05q/strict-bad
+  (typed strict)
+  (export result))
+
+(define result (undefined-function 42))
+"#;
+        let root = dir.join("main.tw");
+        fs::write(&root, main_src).unwrap();
+        let result = crate::compile_module_tree(&root, &[]);
+        match result {
+            Err(crate::ModuleDriverError::TypeErrors { path, errors }) => {
+                assert!(!errors.is_empty(), "should have at least one type error");
+                assert_eq!(
+                    path.canonicalize().unwrap(),
+                    root.canonicalize().unwrap(),
+                    "error path should match the module path"
+                );
+            }
+            Ok(_) => panic!("expected TypeErrors but compilation succeeded"),
+            Err(e) => panic!("expected TypeErrors but got: {e}"),
+        }
+    }
+
+    // ── test 3 ───────────────────────────────────────────────────────────────
+    //
+    // The same undefined-function call in `(typed lenient)` mode.
+    // Lenient mode never fails compilation — the type checker runs but
+    // `ok` is always `true` in lenient mode.
+
+    #[test]
+    fn lenient_module_bad_varref_compiles() {
+        let dir = make_tempdir("lenient_bad");
+        let main_src = r#"
+(module tw05q/lenient-bad
+  (typed lenient)
+  (export result))
+
+(define result (undefined-function 42))
+"#;
+        let root = dir.join("main.tw");
+        fs::write(&root, main_src).unwrap();
+        // Lenient mode: the IR compiler still sees an unresolved name, which
+        // is a compile error at the IIR level.  We therefore accept both a
+        // successful compile (if the IR compiler treats unknowns as externs)
+        // and a non-TypeErrors failure.  The key invariant is that Phase 3.5
+        // never returns TypeErrors for a lenient module.
+        let result = crate::compile_module_tree(&root, &[]);
+        match result {
+            Err(crate::ModuleDriverError::TypeErrors { .. }) => {
+                panic!("lenient module must never return TypeErrors from Phase 3.5");
+            }
+            _ => {} // Ok(_) or any other Err variant is acceptable
+        }
+    }
+
+    // ── test 4 ───────────────────────────────────────────────────────────────
+    //
+    // Cross-module import: `lib.tw` exports `add-one`; `main.tw` imports it
+    // and calls it.  Both modules are `(typed strict)`.  The type checker
+    // should propagate `add-one` as a known `Function { arity: 1 }` from
+    // lib into main, so no TypeErrors are reported.
+
+    #[test]
+    fn cross_module_import_propagation_passes_type_check() {
+        let dir = make_tempdir("cross");
+        fs::create_dir_all(dir.join("mylib")).unwrap();
+
+        let lib_src = r#"
+(module mylib/lib
+  (typed strict)
+  (export add-one))
+
+(define (add-one x) (+ x 1))
+"#;
+        let main_src = r#"
+(module mylib/main
+  (typed strict)
+  (export result)
+  (import mylib/lib))
+
+(define result (add-one 41))
+"#;
+        fs::write(dir.join("mylib").join("lib.tw"), lib_src).unwrap();
+        let root = dir.join("main.tw");
+        fs::write(&root, main_src).unwrap();
+
+        let result = crate::compile_module_tree(&root, &[dir.as_path()]);
+        assert!(
+            result.is_ok(),
+            "Cross-module import propagation should pass type check; got: {:?}",
+            result
+        );
+    }
+
+    // ── test 5 ───────────────────────────────────────────────────────────────
+    //
+    // Compile the full 11-module compiler tree (`code/twig/compiler/`).
+    // All modules are `(typed strict)` and should pass Phase 3.5.
+
+    #[test]
+    fn compiler_tree_all_11_modules_type_check_clean() {
+        let twig_src = compiler_src_dir();
+        let dir = make_tempdir("compiler_tree");
+        copy_all_tw_modules(&twig_src, &dir);
+
+        let root = dir.join("compiler").join("main.tw");
+        let result = crate::compile_module_tree(&root, &[dir.as_path()]);
+        assert!(
+            result.is_ok(),
+            "All 11 strict compiler modules should pass Phase 3.5 type check; got: {:?}",
+            result
+        );
     }
 }

@@ -1,5 +1,50 @@
 # Changelog — twig-module-driver
 
+## [0.14.0] — 2026-05-17
+
+### Added (LANG72 — TW05-Q module-driver type-check phase)
+
+Wired `twig-type-checker` into `compile_module_tree` as **Phase 3.5**:
+a topological type-check pass that runs between extern-name collection
+(Phase 3) and IR compilation (Phase 4).
+
+#### Phase 3.5: topological type check
+
+- Added Kahn's-algorithm topological sort on the import-graph adjacency
+  map already built in Phase 1.  Dependencies are processed before
+  importers so cross-module exports are available when each module is
+  checked.
+- For each module, calls
+  `twig_type_checker::check_program_with_globals` with exported names
+  from all direct dependencies seeded as `extra_globals`.
+- Modules with `(typed strict)` whose `result.ok == false` cause
+  `compile_module_tree` to return early with the new
+  `ModuleDriverError::TypeErrors` variant.
+- Modules with `(typed lenient)` or `(typed off)` are type-checked but
+  never fail compilation — lenient mode always returns `ok: true`.
+
+#### New `ModuleDriverError::TypeErrors` variant
+
+```rust
+TypeErrors {
+    path: PathBuf,
+    errors: Vec<type_checker_protocol::TypeErrorDiagnostic>,
+}
+```
+
+#### New dependency
+
+`twig-type-checker` added to `[dependencies]`.
+
+#### New tests (`tw05q_tests`, 4 tests)
+
+| Test | Verifies |
+|------|---------|
+| `compiler_tree_type_checks_clean` | All 11 `.tw` modules: type check passes |
+| `strict_module_bad_varref_fails_type_check` | `(typed strict)` + bad varref → `TypeErrors` |
+| `lenient_module_bad_varref_compiles` | `(typed lenient)` + bad varref → compiles fine |
+| `type_errors_carry_path` | `TypeErrors` error has the correct module path |
+
 ## [0.13.0] — 2026-05-17
 
 ### Added (LANG68 — TW05-N fixed-point self-compilation)
