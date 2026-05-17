@@ -1,5 +1,82 @@
 # Changelog — twig-type-checker
 
+## [0.8.0] — 2026-05-17
+
+### Added (LANG70 — TW05-P Part 1: Generated Symbol Registration)
+
+- **`TypeEnv::register_record` extended** — in addition to registering the
+  record constructor (`TwigKind::Record(name)`), now also registers:
+  - `{to_lowercase(name)}?` → `TwigKind::Any`  (record predicate)
+  - `{to_lowercase(name)}-{field}` → `TwigKind::Any`  (field accessors, one
+    per declared field)
+
+  Example for `(record IirBuilder (name : any) (instrs : any) (reg-count : int) …)`:
+  - `iirbuilder?`, `iirbuilder-name`, `iirbuilder-instrs`, `iirbuilder-reg-count`,
+    `iirbuilder-label-count`
+
+  These naming conventions match `twig-ir-compiler` exactly (lines 343-348 of
+  `compiler.rs`): `prefix = RecordName.to_lowercase()`.
+
+- **`TypeEnv::register_union` extended** — in addition to registering variant
+  constructors (`TwigKind::Function { arity }`), now also registers:
+  - `{VariantName}?` → `TwigKind::Any`  (variant predicate, **original case**,
+    NOT lowercased — mirrors IR compiler line 355)
+  - `{to_lowercase(VariantName)}-{field}` → `TwigKind::Any`  (variant field
+    accessors, lowercased prefix — mirrors IR compiler lines 357-359)
+
+  Example for `(union Expr (IntLit (value : int) (span : any)) …)`:
+  - `IntLit?`, `intlit-value`, `intlit-span`
+
+  The asymmetry between record predicates (lowercased) and union variant
+  predicates (original case) is intentional — it mirrors the IR compiler's
+  own asymmetry.
+
+### Why `TwigKind::Any` for all generated symbols
+
+- The type checker does not verify accessor return types or enforce field-count
+  arity on generated functions; that is done by the IR compiler.
+- `Any` suppresses "unresolved variable" errors without introducing false
+  arity mismatches for generated accessor calls.
+
+### Tests added (6 — `mod tw05p1_tests`)
+
+| Test | What it verifies |
+|------|-----------------|
+| `record_predicate_resolves_in_strict` | `(record Point …) (define (f r) (point? r))` → ok |
+| `record_accessor_resolves_in_strict` | `(record Point …) (define (f r) (point-x r))` → ok |
+| `union_variant_predicate_resolves_in_strict` | `(union Color …) (define (f v) (Red? v))` → ok |
+| `union_variant_field_accessor_resolves_in_strict` | `(union Shape (Circle (radius : int))) …` → ok |
+| `diagnostic_tw_strict_mode_compiles` | Full `diagnostic.tw` snippet in strict mode → ok |
+| `iir_builder_tw_strict_mode_compiles` | Key `iir-builder.tw` functions in strict mode → ok |
+
+All 92 prior tests continue to pass (98 total).
+
+### Compiler modules converted to `(typed strict)`
+
+With generated symbols now registered, 5 additional compiler modules can run
+in strict mode:
+
+| Module | Reason safe after LANG70 |
+|--------|--------------------------|
+| `token.tw` | 0 `define` forms — trivially safe |
+| `ast.tw` | 0 `define` forms — trivially safe |
+| `iir-types.tw` | 0 `define` forms — trivially safe |
+| `diagnostic.tw` | Only calls own constructors (`Diagnostic`, `SevError`, …) |
+| `iir-builder.tw` | Calls own accessors (`iirbuilder-name`, …) — safe after this change |
+
+Combined with `span.tw` (LANG69), **6 of 11** compiler modules now use
+`(typed strict)`.  The remaining 5 modules (`lexer.tw`, `cst-parser.tw`,
+`parser.tw`, `emit.tw`, `main.tw`) call names from imported modules; converting
+them requires TW05-P Part 2 (LANG71, multi-module import propagation).
+
+### Backward compatibility
+
+No public API changes.  All registered names are additive; no existing lookups
+change.  The `TypeEnv`, `ScopeStack`, `TwigKind`, `type_check`, `check_program`,
+and `type_check_source` interfaces are unchanged.
+
+---
+
 ## [0.7.0] — 2026-05-17
 
 ### Added (LANG69 — TW05-O: Builtin Prelude + span.tw Strict Mode)
