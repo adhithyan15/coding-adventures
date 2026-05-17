@@ -192,6 +192,19 @@ def test_two_resistors_in_series():
     assert isclose(r.node_voltages["b"], 8.0, abs_tol=1e-6)
 
 
+def test_large_resistor_ladder_uses_sparse_real_solver_path():
+    c = Circuit()
+    c.add(VoltageSource("V1", "n0", "0", voltage=10.0))
+    for index in range(34):
+        c.add(Resistor(f"R{index}", f"n{index}", f"n{index + 1}", 1000.0))
+    c.add(Resistor("R34", "n34", "0", 1000.0))
+
+    r = dc_op(c)
+
+    assert r.converged
+    assert isclose(r.node_voltages["n34"], 10.0 / 35.0, abs_tol=1e-9)
+
+
 def test_current_source_into_resistor():
     """I = 1mA into R = 1k -> V = 1V."""
     c = Circuit()

@@ -33,6 +33,28 @@ fn dc_voltage_divider_solves_midpoint_voltage() {
 }
 
 #[test]
+fn dc_large_resistor_ladder_uses_sparse_real_solver_path() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "n0", "0", 10.0,
+    )));
+    for index in 0..34 {
+        circuit.add(Element::Resistor(Resistor::new(
+            format!("R{index}"),
+            format!("n{index}"),
+            format!("n{}", index + 1),
+            1_000.0,
+        )));
+    }
+    circuit.add(Element::Resistor(Resistor::new("R34", "n34", "0", 1_000.0)));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert!(result.converged);
+    assert_close(result.voltage("n34").unwrap(), 10.0 / 35.0);
+}
+
+#[test]
 fn dc_subcircuit_instance_expands_resistor_divider() {
     let mut circuit = Circuit::new();
     circuit
