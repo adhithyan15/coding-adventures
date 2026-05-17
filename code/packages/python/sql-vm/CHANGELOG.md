@@ -18,6 +18,38 @@
   yields a NULL result via three-valued logic; a non-single-character
   escape raises `TypeMismatch`.
 
+## 1.27.0 — 2026-05-17
+
+### Fixed
+
+Four scalar-function divergences with the real `sqlite3` module:
+
+- **`time()` accepts time-only strings** (`scalar_functions.py`) — `_parse_timevalue`
+  was rejecting bare `HH:MM`, `HH:MM:SS`, and `HH:MM:SS.sss` strings, returning
+  NULL.  SQLite anchors such inputs to year 2000-01-01 and accepts them as
+  valid time values.  Added a regex match for time-only strings.
+
+- **`weekday N` modifier** (`scalar_functions.py`) — `_apply_modifier` now
+  recognises `weekday N` (0=Sunday, …, 6=Saturday) and advances the date to
+  the next occurrence of that weekday.  Same-day matches leave the date
+  unchanged.
+
+- **`log(x)` is base-10 logarithm** (`scalar_functions.py`) — Mini-sqlite
+  previously aliased `log` to `ln`, returning the *natural* logarithm.
+  SQLite's `log()` is base-10; `ln()` is the natural log.  Split into two
+  registrations.  `log(B, x)` (2-arg form) still computes log base B.
+
+- **`hex(N)` uses decimal-string bytes** (`scalar_functions.py`) — SQLite's
+  HEX() function operates on the SQL value's *string representation*, not its
+  binary form.  `hex(123)` returns `"313233"` (the ASCII bytes of `"123"`),
+  not the big-endian 8-byte encoding.
+
+### Changed
+
+- Test `test_log_natural` renamed to `test_log_base_10`; new
+  `test_ln_natural` covers the natural-log case.
+- Test `test_hex_integer` updated to expect the decimal-string-bytes form.
+
 ## 1.26.0 — 2026-05-17
 
 ### Fixed

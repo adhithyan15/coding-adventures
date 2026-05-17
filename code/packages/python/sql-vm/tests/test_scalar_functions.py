@@ -392,13 +392,15 @@ class TestMathFunctions:
         assert fn("pow", 0, 5) == pytest.approx(0.0)
 
     # LOG / LN ----------------------------------------------------------
-    def test_log_natural(self) -> None:
-        result = fn("log", math.e)
-        assert result == pytest.approx(1.0)
+    def test_log_base_10(self) -> None:
+        # SQLite: LOG(x) is base-10 logarithm.  LOG(100) → 2.0
+        result = fn("log", 100)
+        assert result == pytest.approx(2.0)
 
-    def test_ln_alias(self) -> None:
-        result = fn("ln", 1)
-        assert result == pytest.approx(0.0)
+    def test_ln_natural(self) -> None:
+        # SQLite: LN(x) is the natural logarithm.  LN(e) → 1.0
+        result = fn("ln", math.e)
+        assert result == pytest.approx(1.0)
 
     def test_log_base_2(self) -> None:
         # LOG(B, x) → log base B of x
@@ -606,10 +608,10 @@ class TestHexBlob:
         assert fn("hex", None) == ""
 
     def test_hex_integer(self) -> None:
+        # SQLite: HEX(N) operates on the decimal string representation of N.
+        # HEX(255) → HEX("255") → ASCII bytes 0x32 0x35 0x35 → "323535"
         result = fn("hex", 255)
-        # big-endian 8-byte encoding of 255 = 0x00000000000000FF
-        assert isinstance(result, str)
-        assert result.endswith("FF")
+        assert result == "323535"
 
     def test_unhex_basic(self) -> None:
         assert fn("unhex", "DEADBEEF") == b"\xde\xad\xbe\xef"
