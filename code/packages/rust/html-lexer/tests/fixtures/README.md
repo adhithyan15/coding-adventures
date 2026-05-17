@@ -55,6 +55,9 @@ binary while production code continues to link only static Rust source.
   reference edge table used by Rust tests to exercise decimal, hexadecimal,
   semicolon, and missing-semicolon forms across data, attribute, and RCDATA
   contexts
+- `whatwg-input-stream.json`: generated HTML Standard input-stream
+  preprocessing cases used by Rust tests to exercise CRLF and bare-CR
+  normalization across tokenizer contexts and chunk boundaries
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -67,6 +70,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_numeric_references_fixture.py`: importer that generates the
   finite numeric character reference edge table for the checked-in
   `whatwg-numeric-references.json` fixture
+- `generate_whatwg_input_stream_fixture.py`: importer that generates finite
+  CRLF/bare-CR preprocessing cases for the checked-in
+  `whatwg-input-stream.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -83,6 +89,14 @@ Regenerate or verify the WHATWG numeric-reference fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG input-stream preprocessing fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_input_stream_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_input_stream_fixture.py \
   --check
 ```
 
@@ -217,6 +231,11 @@ currently supports:
 - form-feed handling as an HTML ASCII-whitespace delimiter for script double
   escape and semicolonless legacy named character references
 - CRLF and bare-CR input-stream newline preprocessing before tokenization
+- generated CRLF and bare-CR input-stream preprocessing coverage across data,
+  markup, attributes, comments, doctypes, character references, RCDATA,
+  RAWTEXT, script data, PLAINTEXT, CDATA, seeded comment continuations, seeded
+  DOCTYPE continuations, all chunk split points, and diagnostic line/column
+  positions
 - EOF recovery for unfinished ordinary start and end tags, ensuring partial
   tokens are dropped before the parser sees them
 - EOF recovery for unfinished attribute character references, including named
