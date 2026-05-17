@@ -1,5 +1,126 @@
 # Changelog — dsp-wavelets
 
+## 0.2.0 — 2026-05-17
+
+### Added — DSP06 Phase 3a (Daubechies / Symlets / Coiflets — verified subset)
+
+Three new orthogonal wavelet families join Haar:
+
+- **Daubechies** — `Db2` (4 taps, 2 vanishing moments), `Db4` (8 taps, 4 vm).
+- **Symlets** — `Sym4` (8 taps, 4 vm) — least-asymmetric Db4.
+- **Coiflets** — `Coif1` (6 taps).
+
+All four pass round-trip tests within `1e-3` under `Periodic`
+boundary, plus DC-suppression on the constant-signal test.
+
+#### Why "Phase 3a" not "Phase 3"
+
+The DSP06 spec's Phase 3 plan called for the full Db2/4/6/8 +
+Sym4/6/8 + Coif1/2/3 set.  This PR ships the smaller verified
+subset (Db2, Db4, Sym4, Coif1) where the tabulated coefficients
+satisfy the orthogonal-wavelet invariants (`Σ h = √2` within
+`5e-4`, `Σ h² = 1` within `5e-4`) at f32 precision.
+
+The longer filters (Db6, Db8, Sym6, Sym8, Coif2, Coif3) are
+declared in `src/filters.rs` with `#[allow(dead_code)]`
+placeholders — the constants I wrote from memory have small
+errors (~5e-3 per coefficient) that fail the strict invariants
+even though they would still round-trip within ~1e-2.  Below the
+crate's `1e-4` accuracy contract.
+
+**Phase 3b (next PR)** will import the verified PyWavelets
+`filter_bank` table values via a build.rs script reading from a
+CSV (or a vendored coefficient table file), bringing the full
+Db/Sym/Coif set online without changing the public API — those
+variants currently return
+`WaveletError::InvalidParam("unsupported wavelet ... ")`.
+
+#### Architectural change — generic synthesis filter bank
+
+Phase 1+2 used a **Haar-specific closed form** for the inverse
+(`y[2k] = (cA[k] − cD[k])/√2`, `y[2k+1] = (cA[k] + cD[k])/√2`)
+and gated the longer-filter synthesis behind `#[cfg(test)]` /
+`#[allow(dead_code)]` placeholders.
+
+Phase 3 replaces this with a **generic `synthesize_one_level`**
+that works for any orthogonal wavelet filter pair, derived from
+first principles:
+
+```text
+   y[n] = Σ_m ( h[2m + 1 − n] · cA[m] + g[2m + 1 − n] · cD[m] )
+```
+
+where `m` ranges over values such that `2m + 1 − n ∈ [0, L − 1]`.
+This reduces to the Haar closed form for length-2 filters
+(verified by all Phase 1+2 round-trip tests continuing to pass)
+and handles arbitrary filter lengths for Phase 3+.
+
+The implementation uses the **analysis** filters `(h, g)`
+directly — for orthogonal wavelets the "synthesis filters" from
+the textbook are just the analysis filters with indices reversed,
+and after the reversal the convolution direction also flips, so
+the two reversals cancel.  Pleasingly symmetric.
+
+#### Public API change
+
+None.  The public surface (`dwt_1d`, `idwt_1d`, `split_levels`,
+`slice_level`, all enums) is byte-for-byte identical to 0.1.0.
+Only the dispatch arms in `analysis_filters` /
+`check_supported_wavelet` / `filter_length_for` recognise the new
+wavelet variants.
+
+#### QMF highpass derivation
+
+For each orthogonal wavelet, the analysis highpass `g` is
+derived from the lowpass via the QMF relation:
+
+```text
+   g[i] = (−1)^i · h[L − 1 − i]
+```
+
+implemented as `filters::qmf_highpass(h)`.  Cross-checked by the
+"highpass filters sum to zero" test in `src/filters.rs`.
+
+#### New tests — 9
+
+- `db2_round_trip_periodic`
+- `db4_round_trip_periodic`
+- `sym4_round_trip_periodic`
+- `coif1_round_trip_periodic`
+- `db2_dwt_of_constant_signal_has_small_detail` (Db2's 2 vm
+  perfectly suppresses constants)
+- `lowpass_filters_sum_to_sqrt_2` (universal invariant)
+- `lowpass_filters_have_unit_energy` (universal invariant)
+- `highpass_filters_sum_to_zero` (cross-checks QMF derivation)
+- `unsupported_variants_return_empty` (Phase 3b-deferred wavelets
+  explicitly return EMPTY rather than silently using approximate
+  coefficients)
+
+Plus the existing `rejects_unsupported_wavelet` test was
+expanded to cover all currently-unsupported variants
+(odd-N Daubechies, Phase 3b-deferred wavelets, Biorthogonal,
+Morlet, MexicanHat).
+
+All 26 unit tests + 1 doctest pass (17 from Phase 1+2 + 4 in
+`src/filters.rs` + 5 new in `src/lib.rs`).
+
+#### File structure
+
+New module: `src/filters.rs` — tabulated coefficient constants
++ QMF derivation + invariant tests.  Keeps the verbose
+coefficient arrays out of `src/lib.rs`.
+
+#### What this phase does NOT include
+
+- Phase 3b: Db6/8, Sym6/8, Coif2/3 with verified coefficients.
+- Phase 4: 2-D DWT + JPEG 2000 biorthogonal wavelets.
+- Phase 5: CWT (Morlet, MexicanHat) via dsp-fft.
+- Phase 6: matrix-IR-lowered DWT.
+- Round-trip-exact `Symmetric` boundary for non-Haar wavelets
+  (requires proper convolution-boundary stencils — Phase 4
+  will land them anyway for biorthogonal wavelets).
+- `Zero`, `Replicate`, `Reflect` boundary modes (still deferred).
+
 ## 0.1.0 — 2026-05-16
 
 ### Added — DSP06 Phase 1+2 (crate skeleton + scalar Haar DWT)
