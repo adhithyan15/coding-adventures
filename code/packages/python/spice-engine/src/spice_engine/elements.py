@@ -330,6 +330,26 @@ class CurrentSource:
 
 
 @dataclass(frozen=True, slots=True)
+class BSource:
+    """Behavioral source (SPICE ``B`` element).
+
+    Exactly one expression must be supplied. ``current_expr`` models a current
+    flowing from ``n_plus`` to ``n_minus``. ``voltage_expr`` models the voltage
+    constraint ``V(n_plus, n_minus)`` and introduces a branch unknown, like an
+    ideal voltage source.
+
+    Expressions support numeric constants, ``+``, ``-``, ``*``, ``/``,
+    parentheses, and node-voltage references ``V(node)`` or ``V(node1,node2)``.
+    """
+
+    name: str
+    n_plus: str
+    n_minus: str
+    voltage_expr: str | None = None
+    current_expr: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class Diode:
     """Simple diode using Shockley equation."""
 
@@ -657,6 +677,7 @@ Element = (
     | Inductor
     | VoltageSource
     | CurrentSource
+    | BSource
     | Diode
     | Mosfet
     | BJT

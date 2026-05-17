@@ -3,6 +3,8 @@ import {
   Circuit,
   SinWaveform,
   SpiceError,
+  bSourceCurrent,
+  bSourceVoltage,
   bjt,
   cccs,
   ccvs,
@@ -48,6 +50,31 @@ describe("dcOp", () => {
     const result = dcOp(circuit);
 
     expectClose(result.voltage("n1"), 1.0);
+  });
+
+  it("stamps behavioral current sources from node-voltage expressions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 2.0));
+    circuit.add(bSourceCurrent("B1", "0", "out", "0.002 * V(in)"));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expect(result.converged).toBe(true);
+    expectClose(result.voltage("out"), 4.0);
+  });
+
+  it("stamps behavioral voltage sources from differential expressions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 3.0));
+    circuit.add(bSourceVoltage("B1", "out", "0", "2.0 * V(in, 0) + 1.0"));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expect(result.converged).toBe(true);
+    expectClose(result.voltage("out"), 7.0);
+    expectClose(result.branchCurrent("B1"), -7.0e-3);
   });
 
   it("reports voltage source branch current", () => {

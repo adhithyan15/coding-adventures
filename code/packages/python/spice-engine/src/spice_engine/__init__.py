@@ -2,6 +2,7 @@
 
 from spice_engine.elements import (
     AcSource,
+    BSource,
     BJT,
     CCCS,
     CCVS,
@@ -54,6 +55,7 @@ __all__ = [
     "AcPoint",
     "AcResult",
     "AcSource",
+    "BSource",
     "BJT",
     "CCCS",
     "CCVS",

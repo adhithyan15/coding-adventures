@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add behavioral B sources for DC current and voltage expressions over
+  constants and `V(node)` / `V(node1,node2)` node-voltage references.
 - Add independent-source AC phasors with separate DC bias for AC analysis.
   Voltage and current sources can now carry an explicit AC magnitude and
   phase; once any explicit AC source is present, other independent sources are
