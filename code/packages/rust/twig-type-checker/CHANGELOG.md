@@ -1,5 +1,67 @@
 # Changelog — twig-type-checker
 
+## [0.7.0] — 2026-05-17
+
+### Added (LANG69 — TW05-O: Builtin Prelude + span.tw Strict Mode)
+
+- **`TypeEnv::new()` now pre-registers all Twig runtime builtins** as
+  `TwigKind::Any` so that calls to builtins no longer produce "unresolved
+  variable" warnings in lenient mode or fatal errors in strict mode.
+
+  Registered names include all 43 names from `twig-ir-compiler`'s `BUILTINS`
+  const:
+  - Arithmetic / comparison: `+`, `-`, `*`, `/`, `=`, `<`, `>`, `<=`, `>=`,
+    `modulo`, `remainder`, `quotient`
+  - Cons cells: `cons`, `car`, `cdr`
+  - Predicates: `null?`, `pair?`, `number?`, `symbol?`, `not`, `boolean?`,
+    `equal?`, `list?`
+  - List stdlib: `list`, `length`, `append`, `reverse`, `list-ref`, `assoc`
+  - Symbol utilities: `symbol-append`
+  - Conversions: `number->string`, `string->symbol`, `symbol->string`
+  - String / char ops: `string-length`, `string-ref`, `substring`,
+    `string-append`, `string->number`, `string=?`, `string<?`, `string>?`,
+    `char->integer`, `integer->char`, `char-alphabetic?`, `char-numeric?`,
+    `char-whitespace?`
+  - I/O: `print`, `host/write_string`, `host/read_line`, `host/read_file`
+  - Higher-order: `map`, `filter`, `fold-left`, `fold-right`
+
+  Additionally, **`and` and `or`** are pre-registered.  These two forms are
+  special-cased in the IR compiler's `compile_apply` (not in `BUILTINS`),
+  but the type checker sees them as plain `Apply` nodes.  Without this
+  registration they produced "unresolved variable `and`" errors.
+
+  `TwigKind::Any` is used rather than `Function { arity }` because several
+  builtins are variadic (`list`, `string-append`); `Any` suppresses arity
+  checks without introducing false positives.  Explicit `(define ...)` stubs
+  in test prelude code shadow the pre-registered entries exactly as before.
+
+- **New private method `TypeEnv::register_builtins`** — called from
+  `TypeEnv::new()`; isolated so the list is easy to extend without changing
+  the constructor signature.
+
+### Tests added (8 — `mod tw05o_tests`)
+
+| Test | What it verifies |
+|------|-----------------|
+| `builtin_arithmetic_resolves` | `(+ 1 2)`, `(< 1 2)`, `(>= 3 3)` in strict mode → `ok: true` |
+| `builtin_list_ops_resolve` | `null?`, `cons`, `car`, `list`, `length` → ok |
+| `builtin_string_ops_resolve` | `string-length`, `string-append`, `string=?` → ok |
+| `builtin_and_or_resolve` | `(and #t #f)`, `(or #f #t)` → ok |
+| `builtin_host_io_resolves` | `(host/read_file "x")` → ok |
+| `builtin_hof_resolves` | `(map nil nil)`, `(filter nil nil)` → ok |
+| `builtin_does_not_block_stub_shadow` | `(define (+ a b) 0)` shadows pre-registered `+`; call ok |
+| `span_tw_strict_mode_compiles` | Full `span.tw` snippet in strict mode → `ok: true`, no errors |
+
+All 84 prior tests continue to pass (92 total).
+
+### No backward-compatibility impact
+
+`TypeEnv`, `ScopeStack`, `TwigKind`, `type_check`, `check_program`, and
+`type_check_source` are all unchanged.  Pre-registered builtins are shadowed
+by any explicit `define` in user code, just like before.
+
+---
+
 ## [0.6.0] — 2026-05-14
 
 ### Changed (LANG54 — Generic Refinement Protocol adoption)
