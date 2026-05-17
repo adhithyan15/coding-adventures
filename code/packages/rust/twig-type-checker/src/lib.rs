@@ -1152,3 +1152,170 @@ mod tw05o_tests {
             "unexpected type errors in span.tw strict check: {:?}", r.errors);
     }
 }
+
+// ---------------------------------------------------------------------------
+// TW05-P Part 1 tests — generated symbol registration (LANG70)
+// ---------------------------------------------------------------------------
+//
+// LANG70 extends `register_record` and `register_union` to also register
+// the symbols the IR compiler generates for each record/union declaration:
+//
+//   Record `Foo` with field `x`:
+//     - `foo?`   → the record predicate
+//     - `foo-x`  → the field accessor
+//
+//   Union variant `Bar` with field `y`:
+//     - `Bar?`   → the variant predicate   (original case, NOT lowercased)
+//     - `bar-y`  → the field accessor      (lowercased prefix)
+//
+// These tests verify that strict-mode modules which call their own generated
+// symbols no longer produce "unresolved variable" errors.
+
+#[cfg(test)]
+mod tw05p1_tests {
+    use super::*;
+
+    // Helper: strict-check an inline source snippet.
+    fn strict(src: &str) -> TypeCheckResult<TypedProgram> {
+        let program = parse(src).unwrap_or_else(|e| panic!("parse failed: {e}"));
+        check_program(&program, Some(TypedMode::Strict))
+    }
+
+    // ── Test 1: record predicate resolves ─────────────────────────────────
+    //
+    // `(record Point (x : int) (y : int))` generates `point?`.
+    // A strict-mode function calling `(point? v)` must not produce
+    // "unresolved variable `point?`".
+
+    #[test]
+    fn record_predicate_resolves_in_strict() {
+        let src = "(record Point (x : int) (y : int)) \
+                   (define (is-point? v) (point? v))";
+        let r = strict(src);
+        assert!(r.ok,
+            "record predicate `point?` should resolve in strict mode; \
+             errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected errors: {:?}", r.errors);
+    }
+
+    // ── Test 2: record field accessor resolves ────────────────────────────
+    //
+    // `(record Point (x : int) (y : int))` generates `point-x` and `point-y`.
+    // Strict-mode calls to those accessors must resolve.
+
+    #[test]
+    fn record_accessor_resolves_in_strict() {
+        let src = "(record Point (x : int) (y : int)) \
+                   (define (get-x p) (point-x p)) \
+                   (define (get-y p) (point-y p))";
+        let r = strict(src);
+        assert!(r.ok,
+            "record accessors `point-x`/`point-y` should resolve; \
+             errors: {:?}", r.errors);
+    }
+
+    // ── Test 3: union variant predicate resolves ──────────────────────────
+    //
+    // `(union Color (Red) (Green))` generates `Red?` and `Green?`.
+    // Note: variant predicates keep the ORIGINAL case (`Red?`, not `red?`).
+
+    #[test]
+    fn union_variant_predicate_resolves_in_strict() {
+        let src = "(union Color (Red) (Green) (Blue)) \
+                   (define (is-red? c) (Red? c)) \
+                   (define (is-green? c) (Green? c))";
+        let r = strict(src);
+        assert!(r.ok,
+            "union variant predicates `Red?`/`Green?` should resolve; \
+             errors: {:?}", r.errors);
+    }
+
+    // ── Test 4: union variant field accessor resolves ──────────────────────
+    //
+    // `(union Shape (Circle (radius : int)) (Rect (w : int) (h : int)))` generates:
+    //   `circle-radius`, `rect-w`, `rect-h`  (lowercased variant name prefix)
+
+    #[test]
+    fn union_variant_field_accessor_resolves_in_strict() {
+        let src = "(union Shape \
+                     (Circle (radius : int)) \
+                     (Rect (w : int) (h : int))) \
+                   (define (get-radius s) (circle-radius s)) \
+                   (define (get-width s) (rect-w s))";
+        let r = strict(src);
+        assert!(r.ok,
+            "union variant field accessors `circle-radius`/`rect-w` should resolve; \
+             errors: {:?}", r.errors);
+    }
+
+    // ── Test 5: diagnostic.tw content compiles in strict mode ─────────────
+    //
+    // diagnostic.tw has 3 define forms that call own union constructors only.
+    // No accessor calls.  Should pass trivially.
+
+    #[test]
+    fn diagnostic_tw_strict_mode_compiles() {
+        let src = "\
+            (module compiler/diagnostic (typed strict) \
+              (export Severity SevError SevWarning SevInfo \
+                      SevError? SevWarning? SevInfo? \
+                      Diagnostic diagnostic? diagnostic-severity \
+                      diagnostic-message diagnostic-span \
+                      make-error make-warning make-info)) \
+            (union Severity (SevError) (SevWarning) (SevInfo)) \
+            (record Diagnostic (severity : any) (message : any) (span : any)) \
+            (define (make-error message span) \
+              (Diagnostic (SevError) message span)) \
+            (define (make-warning message span) \
+              (Diagnostic (SevWarning) message span)) \
+            (define (make-info message span) \
+              (Diagnostic (SevInfo) message span))";
+        let r = strict(src);
+        assert!(r.ok,
+            "diagnostic.tw content should pass strict mode; \
+             errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected type errors: {:?}", r.errors);
+    }
+
+    // ── Test 6: iir-builder.tw content compiles in strict mode ────────────
+    //
+    // iir-builder.tw has 8 define forms that call own IirBuilder accessors
+    // (`iirbuilder-name`, `iirbuilder-reg-count`, etc.) and builtins.
+    // This confirms that accessor registration enables strict mode for
+    // a module that uses its own record's generated accessors.
+
+    #[test]
+    fn iir_builder_tw_strict_mode_compiles() {
+        // Minimal reproduction: IirBuilder record + 3 representative functions.
+        // Uses own accessors (iirbuilder-name, iirbuilder-instrs, etc.) and
+        // builtins (cons, reverse).
+        let src = "\
+            (module compiler/iir-builder (typed strict) \
+              (export IirBuilder iirbuilder? \
+                      iirbuilder-name iirbuilder-instrs \
+                      iirbuilder-reg-count iirbuilder-label-count \
+                      new-builder append-instr finalise-builder)) \
+            (record IirBuilder \
+              (name        : any) \
+              (instrs      : any) \
+              (reg-count   : int) \
+              (label-count : int)) \
+            (define (iirbuilder-with-instrs b new-instrs) \
+              (IirBuilder (iirbuilder-name b) new-instrs \
+                          (iirbuilder-reg-count b) (iirbuilder-label-count b))) \
+            (define (new-builder fn-name) \
+              (IirBuilder fn-name nil 0 0)) \
+            (define (append-instr b instr) \
+              (iirbuilder-with-instrs b (cons instr (iirbuilder-instrs b)))) \
+            (define (finalise-builder b) \
+              (reverse (iirbuilder-instrs b)))";
+        let r = strict(src);
+        assert!(r.ok,
+            "iir-builder.tw content should pass strict mode after accessor \
+             registration; errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in iir-builder strict check: {:?}", r.errors);
+    }
+}

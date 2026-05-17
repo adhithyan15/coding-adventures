@@ -42,7 +42,7 @@
 ; and to extract its op: `(iirinstr-op instr)`
 
 (module compiler/iir-types
-  (typed lenient)
+  (typed strict)
   (export TypeHint TInt TBool TStr TClosure TAny TVoid
           TInt? TBool? TStr? TClosure? TAny? TVoid?
           IirInstr iirinstr? iirinstr-op iirinstr-dest

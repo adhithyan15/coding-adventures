@@ -1,8 +1,8 @@
 [package]
 name        = "twig-type-checker"
-version     = "0.7.0"
+version     = "0.8.0"
 edition     = "2021"
-description = "Static type checker for Twig (TW05-B + TW05-C / LANG50 + LANG52 + LANG53 + LANG54 + LANG69).  Exposes two paths: type_check_source (GrammarASTNode + grammar-type-checker) for AOT/JIT annotation, and check_program (typed Program) for backward compatibility.  TW05-C adds RefinedInt narrowing and call-site refinement checking.  LANG54 refactors the refinement integration to use lang-refinement-protocol.  LANG69 pre-registers all Twig runtime builtins in TypeEnv::new()."
+description = "Static type checker for Twig (TW05-B + TW05-C / LANG50–LANG54 + LANG69 + LANG70).  LANG69 pre-registers all Twig runtime builtins in TypeEnv::new().  LANG70 (TW05-P Part 1) registers generated record/union symbols (predicates, field accessors) enabling strict mode for modules that call their own generated symbols."
 
 [dependencies]
 twig-parser               = { path = "../twig-parser" }
