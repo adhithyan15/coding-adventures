@@ -1,5 +1,33 @@
 # Changelog — twig-module-driver
 
+## [0.8.0] — 2026-05-16
+
+### Changed (LANG63 — grammar-driven Twig lexer and CST parser)
+
+`"cst-parser"` added to every `copy_all_tw_modules` helper and every explicit
+module copy list in `src/lib.rs`.
+
+`compiler/parser` now imports `compiler/cst-parser` (the newly generated CST
+parser module).  Without `"cst-parser"` in the copy lists the module driver
+cannot resolve that import and all tests that exercise the parser (i.e. every
+test that calls `parse-program` or `parse-expr` through the pipeline) would
+fail with an `UnresolvedImport` error.
+
+Affected test modules and copy sites:
+
+| Test module         | Updated copy-lists / explicit copies                      |
+|---------------------|----------------------------------------------------------|
+| `tw05e_tests`       | `copy_all_tw_modules` (9-module list, now includes `"cst-parser"`) |
+| `tw05f_tests`       | `copy_all_tw_modules`                                     |
+| `tw05g_tests`       | `copy_all_tw_modules`                                     |
+| `tw05h_tests`       | `copy_all_tw_modules`                                     |
+| `tw05i_tests`       | `copy_all_tw_modules` + two explicit `copy_tw(…, "cst-parser")` calls |
+
+No new tests were added in this release; the change is purely infrastructural
+to support the new `compiler/cst-parser` module introduced in LANG63.
+
+---
+
 ## [0.7.0] — 2026-05-15
 
 ### Added (LANG62 — TW05-I first self-compilation check)
