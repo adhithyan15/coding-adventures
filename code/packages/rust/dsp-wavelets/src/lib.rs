@@ -986,10 +986,12 @@ mod tests {
         // N values for any family) must still return InvalidParam.
         for w in [
             WaveletType::Daubechies(3),   // odd N — never supported
-            WaveletType::Daubechies(6),   // Phase 3b deferred
             WaveletType::Daubechies(99),
-            WaveletType::Symlets(6),      // Phase 3b deferred
-            WaveletType::Coiflets(2),     // Phase 3b deferred
+            WaveletType::Symlets(6),      // still deferred (bad upstream data)
+            WaveletType::Symlets(8),      // still deferred (slight upstream truncation)
+            WaveletType::Symlets(99),
+            WaveletType::Coiflets(2),     // Coif2/3 still deferred
+            WaveletType::Coiflets(99),
             WaveletType::Biorthogonal { vm_decomp: 5, vm_recon: 3 },
             WaveletType::Morlet,
             WaveletType::MexicanHat,
@@ -1377,6 +1379,32 @@ mod tests {
         let signal: Vec<f32> = (0..64).map(|i| ((i as f32) * 0.09).cos()).collect();
         round_trip_check(&signal, WaveletType::Coiflets(1), 2, WaveletBoundary::Periodic, 1e-3);
     }
+
+    // ── Phase 3b: longer Daubechies (Db6, Db8) round-trips ─────
+
+    #[test]
+    fn db6_round_trip_periodic() {
+        // Db6 has 12 taps — needs a longer signal to have a sensible
+        // central region after the edge-effect skip.
+        let signal: Vec<f32> = (0..128).map(|i| ((i as f32) * 0.04).sin()).collect();
+        round_trip_check(&signal, WaveletType::Daubechies(6), 2, WaveletBoundary::Periodic, 1e-3);
+    }
+
+    #[test]
+    fn db8_round_trip_periodic() {
+        // Db8 has 16 taps — same reasoning as Db6.
+        let signal: Vec<f32> = (0..128).map(|i| ((i as f32) * 0.03).cos()).collect();
+        round_trip_check(&signal, WaveletType::Daubechies(8), 2, WaveletBoundary::Periodic, 1e-3);
+    }
+
+    // Note: a "Db6 suppresses quadratics" test along the lines of
+    // Phase 3a's `db2_dwt_of_constant_signal_has_small_detail` does
+    // NOT work under Periodic boundary — wrapping a quadratic
+    // creates a giant step at i=N that contaminates every detail
+    // band.  The vanishing-moments property holds for signals that
+    // are *truly* polynomial across the boundary (which Periodic
+    // never is for non-constant polynomials).  Phase 4's Symmetric/
+    // Reflect boundary will let us write that test correctly.
 
     // Note: Symmetric boundary round-trips with non-Haar wavelets
     // do not satisfy orthogonality exactly even in the central

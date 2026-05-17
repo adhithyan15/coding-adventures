@@ -1,8 +1,8 @@
 [package]
 name = "dsp-wavelets"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "DSP06 Phases 1-3a: scalar reference Haar + Daubechies (Db2/Db4) + Symlets (Sym4) + Coiflets (Coif1) discrete wavelet transforms (DWT) + inverse, via a generic Mallat pyramid filter bank that works for any orthogonal wavelet. The wavelet sibling of dsp-fft / dsp-stft — adaptive multi-resolution time-frequency analysis. Phase 3a verified-coefficient subset only; Phase 3b extends to Db6/Db8/Sym6/Sym8/Coif2/Coif3 from PyWavelets-imported tables. 2-D DWT pending Phase 4, CWT pending Phase 5, matrix-IR lowering pending Phase 6."
+description = "DSP06 Phases 1-3b (partial): scalar reference Haar + Daubechies (Db2/Db4/Db6/Db8) + Symlets (Sym4) + Coiflets (Coif1) discrete wavelet transforms (DWT) + inverse, via a generic Mallat pyramid filter bank that works for any orthogonal wavelet. The wavelet sibling of dsp-fft / dsp-stft — adaptive multi-resolution time-frequency analysis. Phase 3b adds Db6 and Db8 (12-tap and 16-tap Daubechies) from verified PyWavelets-table values; Sym6/Sym8/Coif2/Coif3 still deferred pending a clean upstream source. 2-D DWT pending Phase 4, CWT pending Phase 5, matrix-IR lowering pending Phase 6."
 license = "MIT"
 
 [dependencies]
