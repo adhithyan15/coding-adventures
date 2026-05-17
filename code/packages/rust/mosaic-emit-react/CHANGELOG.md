@@ -18,6 +18,27 @@ All notable changes to this package will be documented in this file.
 - End-to-end smoke test: a minimal `Btn.mil` / `Btn.mll` / `Btn.msl`
   produces TSX that dispatches `{ type: "click" }` on click. Verified.
 
+### Added — style inlining (pipeline path)
+
+- The mosstyle `StyleDef` is now consumed: every layout node whose
+  `part_name` matches a `part` block in the `.msl` source receives an
+  inline `style={{ ... }}` JSX attribute with the resolved properties.
+- kebab-case CSS property names are camelCased for React inline styles
+  (`background-color` → `backgroundColor`, `font-size` → `fontSize`).
+- Built-in primitive styles (e.g. `Row`'s `display: "flex"`) and
+  author-declared part styles are merged into one `style={{ ... }}`
+  attribute; author properties appear after built-ins so they win
+  collisions (last-property-wins, mirroring CSS specificity).
+- Embedded double quotes in style values are escaped to keep the JSX
+  string literal well-formed.
+- 8 new tests: single prop, multi prop, kebab→camel conversion, missing
+  part name (no style), part name absent from style def (no style),
+  built-in + author merge, `state` blocks silently ignored (TODO marked
+  in the implementation for a future hover/focus PR), quote escaping.
+- End-to-end smoke: a 3-file `Panel` component compiles to TSX with
+  `<div style={{ display: "flex", flexDirection: "row", backgroundColor:
+  "#1e1e1e", padding: "8px" }}>...</div>`. Verified.
+
 ### Added
 
 - `pipeline::from_pipeline(&MosmodelComponent, &LayoutDef, &StyleDef)` —
