@@ -69,6 +69,7 @@ pub struct TargetDescriptor {
     pub uart_buses: &'static [UartBusDescriptor],
     pub can_buses: &'static [CanBusDescriptor],
     pub rtc: Option<RtcDescriptor>,
+    pub watchdog: Option<WatchdogDescriptor>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -126,6 +127,14 @@ pub struct CanBusDescriptor {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct RtcDescriptor {
+    pub instance: u8,
+    pub name: &'static str,
+    pub peripheral: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogDescriptor {
     pub instance: u8,
     pub name: &'static str,
     pub peripheral: &'static str,
@@ -415,6 +424,13 @@ pub const UNO_R4_RTC: RtcDescriptor = RtcDescriptor {
     notes: "Single real-time clock instance exposed by the UNO R4 core",
 };
 
+pub const UNO_R4_WATCHDOG: WatchdogDescriptor = WatchdogDescriptor {
+    instance: 0,
+    name: "WDT",
+    peripheral: "RA4M1 WDT",
+    notes: "Renesas watchdog timer exposed through the UNO R4 core WDT library",
+};
+
 pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     board_id: "arduino-uno-r4-minima",
     display_name: "Arduino Uno R4 Minima",
@@ -444,6 +460,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     uart_buses: &UNO_R4_MINIMA_UART_BUSES,
     can_buses: &UNO_R4_CAN_BUSES,
     rtc: Some(UNO_R4_RTC),
+    watchdog: Some(UNO_R4_WATCHDOG),
 };
 
 pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
@@ -476,6 +493,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     uart_buses: &UNO_R4_WIFI_UART_BUSES,
     can_buses: &UNO_R4_CAN_BUSES,
     rtc: Some(UNO_R4_RTC),
+    watchdog: Some(UNO_R4_WATCHDOG),
 };
 
 pub trait UnoR4Backend {
@@ -1323,6 +1341,18 @@ mod tests {
         assert_eq!(rtc.name, "RTC");
         assert_eq!(rtc.peripheral, "RA4M1 RTC");
         assert!(rtc.notes.contains("real-time clock"));
+    }
+
+    #[test]
+    fn knows_uno_r4_watchdog() {
+        assert_eq!(UNO_R4_MINIMA.watchdog, Some(UNO_R4_WATCHDOG));
+        assert_eq!(UNO_R4_WIFI.watchdog, Some(UNO_R4_WATCHDOG));
+
+        let watchdog = UNO_R4_WIFI.watchdog.unwrap();
+        assert_eq!(watchdog.instance, 0);
+        assert_eq!(watchdog.name, "WDT");
+        assert_eq!(watchdog.peripheral, "RA4M1 WDT");
+        assert!(watchdog.notes.contains("watchdog timer"));
     }
 
     #[test]

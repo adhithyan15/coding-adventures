@@ -35,7 +35,7 @@ Source snapshot:
 | CAN | CAN0 TX D10, RX D13 | descriptor metadata implemented; bytecode capability pending | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | descriptor metadata implemented; bytecode capability pending | `rtc.now`, `rtc.set`, alarms/events later |
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | pending | `program.store` and possibly `kv.store` |
-| Watchdog | Renesas WDT library | pending | `watchdog.configure`, `watchdog.kick` |
+| Watchdog | Renesas WDT library | descriptor metadata implemented; bytecode capability pending | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
 | WiFi | WiFiS3 library through onboard network module | pending | network/transport capabilities, not direct Ruby bypass |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
@@ -84,9 +84,12 @@ reject conflicting handles.
    UNO R4 `CAN0` on D10/TX and D13/RX while `can.open`, `can.write`, and
    `can.read` remain the next CAN capability tranche. RTC now has descriptor
    metadata for the single UNO R4 `RA4M1 RTC` instance while `rtc.now` and
-   `rtc.set` remain a later capability tranche. The next independent tranche
-   can move on to CAN byte I/O, RTC bytecode operations, watchdog,
-   EEPROM/store, or WiFi/network metadata and capability slices.
+   `rtc.set` remain a later capability tranche. Watchdog now has descriptor
+   metadata for the UNO R4 `RA4M1 WDT` instance while `watchdog.configure` and
+   `watchdog.kick` remain a later capability tranche. The next independent
+   tranche can move on to CAN byte I/O, RTC bytecode operations, watchdog
+   bytecode operations, EEPROM/store, or WiFi/network metadata and capability
+   slices.
 
 Every tranche should include the same layers: spec entry, IR capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,
