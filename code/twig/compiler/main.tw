@@ -116,7 +116,7 @@
 ; Use the predicate functions instead: `(IntLit? node)`, `(TkInteger? kind)`.
 
 (module compiler/main
-  (typed lenient)
+  (typed strict)
   (export main self-compile-all
           instr-op-tag instr-list-ops fn-pair-ops-str fn-list-ops-str
           self-compile-all-summary fixed-point-check)

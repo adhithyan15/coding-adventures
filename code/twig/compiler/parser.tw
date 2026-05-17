@@ -43,7 +43,7 @@
 ;   (parse-program tokens) → list of Expr nodes
 
 (module compiler/parser
-  (typed lenient)
+  (typed strict)
   (export parse-program parse-expr)
   (import compiler/cst-parser
           compiler/token
