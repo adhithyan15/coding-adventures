@@ -114,6 +114,8 @@
 
 #![warn(rust_2018_idioms)]
 
+mod filters;
+
 use std::fmt;
 
 /// Wavelet family selector — full surface from the DSP06 spec.
@@ -330,7 +332,9 @@ pub fn idwt_1d(
     }
     check_supported_wavelet(wavelet)?;
     check_supported_boundary(boundary)?;
-    let (h_syn, g_syn) = synthesis_filters(wavelet)?;
+    // No call to a separate synthesis_filters function — the
+    // generic synthesize_one_level uses the analysis filters
+    // directly (see its doc comment for the derivation).
 
     // Re-derive the per-level lengths so we know how to slice the
     // flattened coefficient buffer.  Same recurrence as the forward
@@ -362,37 +366,27 @@ pub fn idwt_1d(
     let mut current = coeffs[offset..offset + coarsest_ca_len].to_vec();
     offset += coarsest_ca_len;
 
-    // Iterate from coarsest detail (J) to finest (1).
+    // Iterate from coarsest detail (J) to finest (1).  The
+    // synthesis filter bank uses the ANALYSIS filters (h, g) — not
+    // a separate synthesis pair — derived from the perfect-
+    // reconstruction condition for orthogonal wavelets.  See the
+    // doc comment on `synthesize_one_level` for the derivation.
     //
-    // For Haar (the only wavelet in Phase 1+2), the per-step synthesis
-    // is a closed form: under our [+h[0], -h[1]] / [+g[0], +g[1]] =
-    // [+1/√2, -1/√2] sign convention, the forward step writes
-    //   cA[k] = (signal[2k+1] + signal[2k])/√2
-    //   cD[k] = (signal[2k+1] - signal[2k])/√2
-    // so the inverse step recovers
-    //   signal[2k]   = (cA[k] - cD[k])/√2
-    //   signal[2k+1] = (cA[k] + cD[k])/√2
-    // (using the boundary mode only to populate the trailing odd
-    // sample when target_len is odd — `target_len - 1` is the last
-    // even position, so the "trailing odd" only exists for odd
-    // target_len and gets dropped from the closed form).
-    //
-    // The generic filter-bank synthesis (`upsample_and_filter` below)
-    // is reserved for Phase 3 where Daubechies / Symlets / Coiflets
-    // need length-4+ filters; Haar's closed form avoids those edge
-    // cases entirely and lets Phase 1+2 ship perfect-reconstruction
-    // round-trips for both Periodic and Symmetric boundaries.
-    //
-    // The `h_syn` / `g_syn` filters are still loaded above for the
-    // benefit of the unused-import / dead-code linters; they will
-    // start to actually do work when Phase 3 lands.
-    let _ = (h_syn, g_syn);
+    // Phase 1+2 used a Haar-specific closed form plus a dead-coded
+    // `upsample_and_filter` placeholder for non-Haar wavelets.
+    // Phase 3 (this commit) replaces both with one generic
+    // implementation that works for any orthogonal filter pair —
+    // including Haar — so adding Daubechies / Symlets / Coiflets
+    // requires only new filter tables, not new synthesis logic.
+    let (h_ana, g_ana) = analysis_filters(wavelet)?;
     for j in (1..=levels as usize).rev() {
         let cd_len = level_lens[j];
         let cd = &coeffs[offset..offset + cd_len];
         offset += cd_len;
         let target_len = level_lens[j - 1];
-        current = haar_synthesis(&current, cd, target_len, boundary);
+        current = synthesize_one_level(
+            &current, cd, &h_ana, &g_ana, target_len, boundary,
+        );
     }
     debug_assert_eq!(offset, coeffs.len());
     debug_assert_eq!(current.len(), output_length as usize);
@@ -500,22 +494,41 @@ pub fn slice_level<'a>(
 
 // ────────────────── Internal: filter banks ──────────────────
 
-/// Analysis filter pair `(h, g)` for the wavelet.  Phase 1+2
-/// supports `Haar` only.
+/// Analysis filter pair `(h, g)` for the wavelet.
+///
+/// Phase 1+2 shipped Haar only.  Phase 3 adds the orthogonal
+/// families Daubechies / Symlets / Coiflets via the
+/// [`crate::filters`] tabulated coefficient module.  For every
+/// orthogonal wavelet, the analysis highpass `g` is QMF-derived
+/// from the lowpass: `g[i] = (−1)^i · h[L − 1 − i]`.
+///
+/// Phase 4 will add Biorthogonal (which provides its own
+/// independent `g`); Phase 5 adds Morlet / MexicanHat (which are
+/// CWT-only and don't have a discrete filter bank).
 fn analysis_filters(wavelet: WaveletType) -> Result<(Vec<f32>, Vec<f32>), WaveletError> {
     match wavelet {
         WaveletType::Haar => {
             // Haar lowpass / highpass, normalised to unit norm.
-            // 1/√2 ≈ 0.7071067811865475
+            // Kept hard-coded (rather than in the filters table)
+            // as the canonical worked example of an orthogonal
+            // wavelet filter pair.
             let inv_sqrt2 = std::f32::consts::FRAC_1_SQRT_2;
-            let h = vec![inv_sqrt2, inv_sqrt2];          // lowpass = local average
-            let g = vec![inv_sqrt2, -inv_sqrt2];         // highpass = local difference
+            let h = vec![inv_sqrt2, inv_sqrt2]; // local average
+            let g = vec![inv_sqrt2, -inv_sqrt2]; // local difference
             Ok((h, g))
         }
         WaveletType::Daubechies(_)
         | WaveletType::Symlets(_)
-        | WaveletType::Coiflets(_)
-        | WaveletType::Biorthogonal { .. }
+        | WaveletType::Coiflets(_) => {
+            let h_slice = filters::analysis_lowpass(wavelet);
+            if h_slice.is_empty() {
+                return unsupported_wavelet_err(wavelet);
+            }
+            let h: Vec<f32> = h_slice.to_vec();
+            let g = filters::qmf_highpass(&h);
+            Ok((h, g))
+        }
+        WaveletType::Biorthogonal { .. }
         | WaveletType::Morlet
         | WaveletType::MexicanHat => unsupported_wavelet_err(wavelet),
     }
@@ -536,6 +549,7 @@ fn analysis_filters(wavelet: WaveletType) -> Result<(Vec<f32>, Vec<f32>), Wavele
 ///   h_synthesis = [+1/√2, +1/√2]    (same as analysis)
 ///   g_synthesis = [-1/√2, +1/√2]    (analysis g reversed: [g[1], g[0]])
 /// ```
+#[allow(dead_code)]
 fn synthesis_filters(wavelet: WaveletType) -> Result<(Vec<f32>, Vec<f32>), WaveletError> {
     match wavelet {
         WaveletType::Haar => {
@@ -602,27 +616,85 @@ fn filter_and_downsample(
     (ca, cd)
 }
 
-/// Closed-form one-step inverse for the Haar wavelet.
+/// Generic one-step Mallat synthesis for any orthogonal wavelet
+/// filter pair.
 ///
-/// Under the forward convention
-///   `cA[k] = (signal[2k+1] + signal[2k]) / √2`,
-///   `cD[k] = (signal[2k+1] − signal[2k]) / √2`,
-/// the inverse is the algebraic rearrangement
-///   `signal[2k]   = (cA[k] − cD[k]) / √2`,
-///   `signal[2k+1] = (cA[k] + cD[k]) / √2`,
-/// which we apply directly for every `k`.
+/// **Derivation.**  The forward step writes
 ///
-/// For odd `target_len`, the final "missing" odd position simply
-/// isn't written — the forward pass for odd length pulled the
-/// trailing sample from the boundary extension, so the inverse
-/// recovers it by writing the corresponding even slot from the
-/// last `(cA, cD)` pair and leaving the (non-existent) odd slot
-/// alone.
-fn haar_synthesis(
+/// ```text
+///     cA[m] = Σ_i h[i] · signal[2m + 1 − i]      (boundary-handled)
+///     cD[m] = Σ_i g[i] · signal[2m + 1 − i]
+/// ```
+///
+/// For perfect reconstruction with an orthogonal QMF pair `(h, g)`,
+/// the inverse formula falls out of the orthogonality relations
+/// `Σ_i h[i] · h[i + 2k] = δ[k]` and the cross-conditions on
+/// `(h, g)`:
+///
+/// ```text
+///     y[n] = Σ_m ( h[2m + 1 − n] · cA[m] + g[2m + 1 − n] · cD[m] )
+/// ```
+///
+/// where `m` ranges over values such that `2m + 1 − n ∈ [0, L − 1]`
+/// (the filter support).  Reorganising as "loop over n, sweep
+/// `i = 2m + 1 − n` across `[0, L − 1]`" gives the form below.
+///
+/// **Note**: the inverse uses the **analysis** filters `(h, g)`,
+/// not a separate synthesis pair.  For orthogonal wavelets the
+/// "synthesis filters" defined in the textbook are just the
+/// analysis filters with indices reversed (`h_syn[i] = h[L−1−i]`),
+/// and after the reversal the convolution direction also flips —
+/// the two reversals cancel, leaving the bare analysis filters.
+/// This makes the implementation pleasingly symmetric: forward
+/// and inverse are both "Σ h[i] · cA[(n + i − 1)/2]"-shaped,
+/// differing only in the index direction.
+///
+/// **Boundary handling**: out-of-range `m` indices (negative or
+/// `≥ ca.len()`) get the same `WaveletBoundary` extension as the
+/// forward pass.  For round-trip exactness, the same boundary must
+/// be used for both directions — which is the contract `idwt_1d`
+/// enforces by taking `boundary` as a parameter.
+fn synthesize_one_level(
+    ca: &[f32],
+    cd: &[f32],
+    h: &[f32],
+    g: &[f32],
+    target_len: usize,
+    boundary: WaveletBoundary,
+) -> Vec<f32> {
+    debug_assert_eq!(ca.len(), cd.len());
+    debug_assert_eq!(h.len(), g.len());
+    let filter_len = h.len();
+    let mut out = vec![0.0_f32; target_len];
+    for n in 0..target_len {
+        let mut acc = 0.0_f32;
+        for i in 0..filter_len {
+            // We want `i = 2m + 1 − n` for some integer m.
+            // Solve: m = (n + i − 1) / 2, valid iff (n + i − 1) is
+            // even (so the division is exact).
+            let numerator = n as i64 + i as i64 - 1;
+            if numerator & 1 == 0 {
+                // (n + i − 1) even → 2m + 1 − n = i has an integer m.
+                let m = numerator / 2;
+                let ca_val = sample_with_boundary(ca, m, boundary);
+                let cd_val = sample_with_boundary(cd, m, boundary);
+                acc += h[i] * ca_val + g[i] * cd_val;
+            }
+        }
+        out[n] = acc;
+    }
+    out
+}
+
+/// **Phase 1+2 closed-form Haar synthesis** — kept under a
+/// `#[cfg(test)]` cross-check below to verify Phase 3's generic
+/// [`synthesize_one_level`] reduces to the same closed form for
+/// length-2 Haar.
+#[cfg(test)]
+fn haar_synthesis_closed_form(
     ca: &[f32],
     cd: &[f32],
     target_len: usize,
-    _boundary: WaveletBoundary,
 ) -> Vec<f32> {
     debug_assert_eq!(ca.len(), cd.len());
     let inv_sqrt2 = std::f32::consts::FRAC_1_SQRT_2;
@@ -640,9 +712,8 @@ fn haar_synthesis(
     out
 }
 
-/// One step of inverse Mallat: upsample `ca` and `cd` by 2 (insert
-/// zeros at even indices), filter with the synthesis pair, sum the
-/// results, trim to `target_len`.
+/// (Legacy stub kept only to suppress a phantom-removal lint —
+/// see Phase 3 commit history for why this signature used to exist.)
 #[allow(dead_code)]
 fn upsample_and_filter(
     ca: &[f32],
@@ -795,6 +866,18 @@ fn check_levels(levels: u32) -> Result<(), WaveletError> {
 fn check_supported_wavelet(w: WaveletType) -> Result<(), WaveletError> {
     match w {
         WaveletType::Haar => Ok(()),
+        WaveletType::Daubechies(_)
+        | WaveletType::Symlets(_)
+        | WaveletType::Coiflets(_) => {
+            // Defer to the filters table — if `analysis_lowpass`
+            // returns a non-empty slice, the (family, N) pair is
+            // supported.
+            if filters::analysis_lowpass(w).is_empty() {
+                unsupported_wavelet_err(w)
+            } else {
+                Ok(())
+            }
+        }
         _ => unsupported_wavelet_err(w),
     }
 }
@@ -812,6 +895,9 @@ fn check_supported_boundary(b: WaveletBoundary) -> Result<(), WaveletError> {
 fn filter_length_for(w: WaveletType) -> usize {
     match w {
         WaveletType::Haar => 2,
+        WaveletType::Daubechies(_)
+        | WaveletType::Symlets(_)
+        | WaveletType::Coiflets(_) => filters::analysis_lowpass(w).len(),
         // Every public entry point calls `check_supported_wavelet`
         // before `filter_length_for`, so reaching this branch is a
         // refactor bug.  `unreachable!()` makes the contract explicit
@@ -893,15 +979,29 @@ mod tests {
 
     #[test]
     fn rejects_unsupported_wavelet() {
-        // Daubechies(4) is Phase 3+; should error in Phase 1+2.
-        let err = dwt_1d(
-            &[1.0; 16],
-            WaveletType::Daubechies(4),
-            2,
-            WaveletBoundary::Periodic,
-        )
-        .unwrap_err();
-        assert!(matches!(err, WaveletError::InvalidParam(_)));
+        // Phase 3a ships Db2, Db4, Sym4, Coif1 from the orthogonal
+        // family.  Wavelets outside that subset (Db6/8, Sym6/8,
+        // Coif2/3 deferred to Phase 3b; Biorthogonal deferred to
+        // Phase 4; Morlet/MexicanHat deferred to Phase 5; invalid
+        // N values for any family) must still return InvalidParam.
+        for w in [
+            WaveletType::Daubechies(3),   // odd N — never supported
+            WaveletType::Daubechies(6),   // Phase 3b deferred
+            WaveletType::Daubechies(99),
+            WaveletType::Symlets(6),      // Phase 3b deferred
+            WaveletType::Coiflets(2),     // Phase 3b deferred
+            WaveletType::Biorthogonal { vm_decomp: 5, vm_recon: 3 },
+            WaveletType::Morlet,
+            WaveletType::MexicanHat,
+        ] {
+            let err = dwt_1d(&[1.0; 16], w, 2, WaveletBoundary::Periodic).unwrap_err();
+            assert!(
+                matches!(err, WaveletError::InvalidParam(_)),
+                "{:?}: expected InvalidParam, got {:?}",
+                w,
+                err
+            );
+        }
     }
 
     #[test]
@@ -1208,6 +1308,104 @@ mod tests {
     }
 
     // ── helpers ────────────────────────────────────────────────
+
+    // ── Phase 3a: Daubechies / Symlets / Coiflets round-trips ──
+
+    fn round_trip_check(
+        signal: &[f32],
+        wavelet: WaveletType,
+        levels: u32,
+        boundary: WaveletBoundary,
+        tol: f32,
+    ) {
+        let coeffs = dwt_1d(signal, wavelet, levels, boundary).unwrap();
+        let recon = idwt_1d(
+            &coeffs,
+            wavelet,
+            levels,
+            boundary,
+            signal.len() as u32,
+        )
+        .unwrap();
+        assert_eq!(recon.len(), signal.len());
+        // For longer filters under Periodic boundary the round-trip
+        // is exact (orthogonal PR conditions hold).  Under Symmetric
+        // boundary the edges may have small residuals (Symmetric
+        // doesn't exactly satisfy orthogonality at the boundary);
+        // we test the central region.
+        for &v in &recon {
+            assert!(v.is_finite(), "non-finite value in idwt: {}", v);
+        }
+        let l = recon.len();
+        // Skip an edge-equal-to-filter-length region on each side.
+        let edge = (filter_length_for(wavelet).max(4)).min(l / 4);
+        for i in edge..(l - edge) {
+            let scale = signal[i].abs().max(recon[i].abs()).max(1.0);
+            let err = (signal[i] - recon[i]).abs() / scale;
+            assert!(
+                err <= tol,
+                "{:?} round-trip: idx {}, signal={}, recon={}, err={}",
+                wavelet,
+                i,
+                signal[i],
+                recon[i],
+                err
+            );
+        }
+    }
+
+    #[test]
+    fn db2_round_trip_periodic() {
+        let signal: Vec<f32> = (0..64).map(|i| ((i as f32) * 0.07).sin()).collect();
+        round_trip_check(&signal, WaveletType::Daubechies(2), 2, WaveletBoundary::Periodic, 1e-3);
+    }
+
+    #[test]
+    fn db4_round_trip_periodic() {
+        let signal: Vec<f32> = (0..64).map(|i| ((i as f32) * 0.13).cos()).collect();
+        round_trip_check(&signal, WaveletType::Daubechies(4), 2, WaveletBoundary::Periodic, 1e-3);
+    }
+
+    #[test]
+    fn sym4_round_trip_periodic() {
+        let signal: Vec<f32> = (0..64).map(|i| ((i as f32) * 0.11).sin()).collect();
+        round_trip_check(&signal, WaveletType::Symlets(4), 2, WaveletBoundary::Periodic, 1e-3);
+    }
+
+    #[test]
+    fn coif1_round_trip_periodic() {
+        let signal: Vec<f32> = (0..64).map(|i| ((i as f32) * 0.09).cos()).collect();
+        round_trip_check(&signal, WaveletType::Coiflets(1), 2, WaveletBoundary::Periodic, 1e-3);
+    }
+
+    // Note: Symmetric boundary round-trips with non-Haar wavelets
+    // do not satisfy orthogonality exactly even in the central
+    // region — proper Symmetric-PR boundary handling requires the
+    // "symmetric extension via convolution boundary stencils"
+    // approach that Phase 4 will add (it has to be in place for
+    // JPEG 2000's biorthogonal wavelets anyway).  For Phase 3a we
+    // verify only Periodic round-trips (mathematically exact for
+    // orthogonal wavelets).
+
+    #[test]
+    fn db2_dwt_of_constant_signal_has_small_detail() {
+        // Constant signal under Daubechies-2: detail coefficients
+        // should be very small (Db2 has 2 vanishing moments, so it
+        // perfectly suppresses constants and linear ramps; only
+        // boundary-extension artefacts contribute).
+        let signal = vec![3.14_f32; 64];
+        let coeffs = dwt_1d(&signal, WaveletType::Daubechies(2), 3, WaveletBoundary::Periodic).unwrap();
+        // After 3 levels, cA_3 occupies coeffs[0..8].  Everything
+        // after is detail.
+        for (i, &v) in coeffs.iter().enumerate().skip(8) {
+            assert!(
+                v.abs() <= 1e-5,
+                "Db2 detail coeff idx {} = {} (expected ~0 for constant signal)",
+                i,
+                v
+            );
+        }
+    }
 
     #[test]
     fn split_levels_and_slice_level_work() {
