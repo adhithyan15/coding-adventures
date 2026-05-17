@@ -1,4 +1,5 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG62 / TW05-I + LANG64 / TW05-J)
+; # main.tw — Root Module + Smoke-Test Entry Point
+;             (LANG62/TW05-I + LANG64/TW05-J + LANG65/TW05-K)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
@@ -7,10 +8,12 @@
 ;   `(main)` — TW05-I: exercises the full pipeline on a stripped in-memory
 ;              version of span.tw (returns 2, unchanged from TW05-H).
 ;
-;   `(self-compile-all dir)` — TW05-J: reads four real `.tw` files from
+;   `(self-compile-all dir)` — TW05-K: reads SIX real `.tw` files from
 ;              disk via `host/read_file`, compiles each through the full
 ;              lex → parse → emit-program pipeline, and returns the sum
-;              of emitted function counts (2 + 3 + 8 + 25 = 38).
+;              of emitted function counts (2 + 3 + 8 + 25 + 29 + 35 = 102).
+;              Extended in TW05-K (LANG65) from the original four-file
+;              TW05-J (LANG64) set (which returned 38).
 ;
 ; ## TW05-I pipeline (LANG62)
 ;
@@ -38,22 +41,33 @@
 ;
 ; The `(main)` return value of `2` is unchanged from TW05-H.
 ;
-; ## TW05-J multi-module self-compilation (LANG64)
+; ## TW05-J multi-module self-compilation (LANG64) — original 4-file set
 ;
-; TW05-J widens the self-compilation test to read actual `.tw` files from
-; disk via `host/read_file`.  `self-compile-all` compiles four modules:
+; TW05-J introduced `self-compile-all` reading four data-structure modules:
 ;
 ;   span.tw          → 2 functions  (make-span, dummy-span)
 ;   diagnostic.tw    → 3 functions  (make-error, make-warning, make-info)
 ;   iir-builder.tw   → 8 functions  (new-builder, alloc-slot, …)
 ;   lexer.tw         → 25 functions (lex-digit?, …, lex-source)
 ;                     ────────────
-;                     38 total
+;                     38 subtotal
 ;
 ; `MAX_DISPATCH_DEPTH` was bumped from 4096 to 65536 in twig-vm 0.17.0
-; (LANG64) to allow lexing files larger than 4096 chars.  The largest file
-; in the set (lexer.tw at 8593 chars) requires up to 8593 recursive frames
-; during the lex phase.
+; (LANG64) to allow lexing files up to 65536 chars.
+;
+; ## TW05-K extended self-compilation (LANG65) — 6-file set
+;
+; TW05-K adds the two main compilation modules to `self-compile-all`:
+;
+;   parser.tw        → 29 functions (parse-expr, …, parse-program)
+;   emit.tw          → 35 functions (emit-const, …, emit-program)
+;                     ────────────
+;                     64 new + 38 original = 102 total
+;
+; `parser.tw` is 19 708 chars; `emit.tw` is 22 697 chars.  Both are well
+; within the 65 536 frame ceiling.  Integration tests use a 3 GiB stack
+; thread (`run_in_xlarge_stack`) to accommodate the ~1.3 GiB worst-case
+; debug-mode stack depth for emit.tw (22 697 × 60 KiB ≈ 1.33 GiB).
 ;
 ; ## VM call-depth note
 ;
@@ -139,21 +153,26 @@
 
 ; ── self-compile-all ──────────────────────────────────────────────────────────
 ;
-; TW05-J milestone: read four compiler source files from `dir` via
-; `host/read_file`, compile each through the self-hosted lex → parse →
-; emit-program pipeline, and return the sum of emitted function counts.
+; TW05-K milestone (extended from TW05-J): read six compiler source files from
+; `dir` via `host/read_file`, compile each through the self-hosted
+; lex → parse → emit-program pipeline, and return the sum of emitted function
+; counts.
 ;
-; `dir` must be the absolute path to the directory containing the
-; compiler `.tw` files (no trailing slash).
+; `dir` must be the absolute path to the directory containing the compiler
+; `.tw` files (no trailing slash).
 ;
-; ## Files compiled and expected counts
+; ## Files compiled and expected counts (TW05-K / LANG65)
 ;
-;   span.tw          2  defines (make-span, dummy-span)
-;   diagnostic.tw    3  defines (make-error, make-warning, make-info)
-;   iir-builder.tw   8  defines (new-builder, alloc-slot, …)
-;   lexer.tw        25  defines (lex-digit?, lex-whitespace?, …, lex-source)
-;                  ───
-;                   38  total
+;   span.tw           2  defines  (make-span, dummy-span)
+;   diagnostic.tw     3  defines  (make-error, make-warning, make-info)
+;   iir-builder.tw    8  defines  (new-builder, alloc-slot, …)
+;   lexer.tw         25  defines  (lex-digit?, …, lex-source)
+;   parser.tw        29  defines  (parse-expr, …, parse-program)        ← TW05-K
+;   emit.tw          35  defines  (emit-const, …, emit-program)         ← TW05-K
+;                   ───
+;                   102  total
+;
+; TW05-J (LANG64) compiled only the first four modules (38 total).
 ;
 ; ## Why host/read_file is safe here
 ;
@@ -162,21 +181,34 @@
 ; processes the full file content including comments (comments are consumed
 ; by `lex-skip-comment` and do not produce tokens).
 ;
-; ## MAX_DISPATCH_DEPTH requirement
+; ## MAX_DISPATCH_DEPTH and stack requirement
 ;
 ; `lex-loop` recurses once per source character.  The largest file compiled
-; here (lexer.tw at 8593 chars) therefore requires up to 8593 dispatch frames.
-; `MAX_DISPATCH_DEPTH` was bumped to 65536 in twig-vm 0.17.0 (LANG64) to
-; accommodate this.
+; here is `emit.tw` at 22 697 chars, requiring up to 22 697 dispatch frames.
+; `MAX_DISPATCH_DEPTH = 65536` (set in LANG64) provides ample headroom.
+;
+; In debug builds, frame sizes are ~60 KiB → 22 697 × 60 KiB ≈ 1.33 GiB.
+; Integration tests therefore use `run_in_xlarge_stack` (3 GiB thread).
+;
+; ## Instruction budget
+;
+; Total source chars: 2 426 + 2 446 + 6 278 + 8 593 + 19 708 + 22 697 = 62 148.
+; Lex: ~30 instrs/char × 62 148 ≈ 1.86 M.  Parse + emit ≈ 0.5 M.
+; Total ≈ 2.4 M << MAX_INSTRUCTIONS_PER_RUN = 8 M.
 
 (define (self-compile-all dir)
   ; Read each source file from disk and compile through the pipeline.
   ; `host/read_file` returns the full file content including comments;
   ; `lex-source` handles them transparently.
+  ;
+  ; Files are compiled sequentially; peak stack depth = max single file depth
+  ; (emit.tw at 22 697 chars), not the sum of all files.
   (let* ((span-src    (host/read_file (string-append dir "/span.tw")))
          (diag-src    (host/read_file (string-append dir "/diagnostic.tw")))
          (builder-src (host/read_file (string-append dir "/iir-builder.tw")))
          (lexer-src   (host/read_file (string-append dir "/lexer.tw")))
+         (parser-src  (host/read_file (string-append dir "/parser.tw")))
+         (emit-src    (host/read_file (string-append dir "/emit.tw")))
 
          ; Compile each module: lex → parse → emit-program.
          ; emit-program returns a list of (fn-name . instrs) pairs —
@@ -185,10 +217,14 @@
          (span-fns    (emit-program (parse-program (lex-source span-src))))
          (diag-fns    (emit-program (parse-program (lex-source diag-src))))
          (builder-fns (emit-program (parse-program (lex-source builder-src))))
-         (lexer-fns   (emit-program (parse-program (lex-source lexer-src)))))
+         (lexer-fns   (emit-program (parse-program (lex-source lexer-src))))
+         (parser-fns  (emit-program (parse-program (lex-source parser-src))))
+         (emit-fns    (emit-program (parse-program (lex-source emit-src)))))
 
-    ; Sum the function counts: 2 + 3 + 8 + 25 = 38.
+    ; Sum the function counts: 2 + 3 + 8 + 25 + 29 + 35 = 102.
     (+ (length span-fns)
        (+ (length diag-fns)
           (+ (length builder-fns)
-             (length lexer-fns))))))
+             (+ (length lexer-fns)
+                (+ (length parser-fns)
+                   (length emit-fns))))))))
