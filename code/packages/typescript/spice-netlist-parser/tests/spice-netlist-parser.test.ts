@@ -61,6 +61,29 @@ G1 out 0 in 0 2m
     ]);
   });
 
+  it("parses .options analysis cards", () => {
+    const parsed = parseNetlist(`
+.options reltol=1m abstol=1n gmin=1p method=trap noopiter
+`);
+
+    const card = {
+      kind: "options",
+      values: new Map<string, number | string | boolean>([
+        ["reltol", 1.0e-3],
+        ["abstol", 1.0e-9],
+        ["gmin", 1.0e-12],
+        ["method", "trap"],
+        ["noopiter", true],
+      ]),
+    };
+    expect(parsed.analyses).toEqual([card]);
+    expect(parsed.optionsCards()).toEqual([card]);
+  });
+
+  it("rejects .options cards with empty values", () => {
+    expect(() => parseNetlist(".options gmin=")).toThrow(/\.options "gmin" requires a value/);
+  });
+
   it("rejects unsupported capacitor element parameters", () => {
     expect(() => parseNetlist("C1 in 0 1u FOO=1")).toThrow(
       /unsupported capacitor parameter/,
