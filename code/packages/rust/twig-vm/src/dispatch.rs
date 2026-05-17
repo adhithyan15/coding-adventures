@@ -148,15 +148,32 @@ use crate::operand::operand_to_value;
 /// follow before refusing to recurse further.
 ///
 /// At PR 4 each Twig call uses the host Rust stack frame, so this
-/// indirectly caps stack usage.  The cap is generous enough for
-/// `(fact 200)` to succeed and for the self-hosted compiler pipeline
-/// to lex real `.tw` source files (lexer.tw recurses once per input
-/// character; `span.tw` is ≈ 2426 chars).  Modern host stacks
-/// tolerate roughly 10⁴ frames before SIGSEGV, so 4096 is safe.
+/// indirectly caps stack usage.  The VM returns [`RunError::DepthExceeded`]
+/// *before* recursing at the limit, so no stack overflow occurs at
+/// exactly the boundary.
 ///
-/// **History**: bumped 256 → 4096 in LANG62 (TW05-I) to unblock the
-/// first self-compilation check.
-pub const MAX_DISPATCH_DEPTH: usize = 4096;
+/// ## Realistic recursion depth vs. the ceiling
+///
+/// `lex-loop` recurses once per input character.  The deepest realistic
+/// source file in TW05-J is `lexer.tw` at 8593 chars — requiring up to
+/// 8593 dispatch frames.  In **debug** builds Rust stack frames for the
+/// dispatcher are ~60 KiB each, so 8593 frames ≈ 500 MiB of native stack.
+/// Integration tests therefore spawn a dedicated 768 MiB thread via
+/// `run_in_large_stack`.  In **release** builds frames shrink to ~1–2 KiB,
+/// well within any default stack.
+///
+/// 65536 is a safety ceiling — no well-formed `.tw` source file currently
+/// approaches it.  If a future file exceeds 65536 chars the VM returns
+/// `DepthExceeded`; callers can increase this constant and re-run in a
+/// larger-stack thread.
+///
+/// **History**:
+///   - bumped 256 → 4096 in LANG62 (TW05-I) to unblock the first
+///     self-compilation check (stripped span.tw ≈ 365 chars).
+///   - bumped 4096 → 65536 in LANG64 (TW05-J) to allow lexing
+///     compiler source files up to 65536 chars (iir-builder.tw is
+///     6278 chars, lexer.tw is 8593 chars).
+pub const MAX_DISPATCH_DEPTH: usize = 65536;
 
 /// Maximum number of instructions any single dispatcher invocation
 /// will execute before refusing.  Catches infinite loops in
@@ -164,10 +181,24 @@ pub const MAX_DISPATCH_DEPTH: usize = 4096;
 /// these for well-formed Twig source, but the VM has no way to
 /// know that).
 ///
-/// 2²⁰ ≈ one million instructions per top-level run is plenty for
-/// any sensible Twig program — `(fact 1000)` executes ~10⁴
-/// instructions.
-pub const MAX_INSTRUCTIONS_PER_RUN: u64 = 1 << 20;
+/// ## Budget analysis for LANG64 (TW05-J)
+///
+/// The `self-compile-all` function compiles four real `.tw` files
+/// through the full lex → parse → emit-program pipeline in one run.
+/// `lex-loop` executes roughly 30 IIR instructions per source
+/// character.  The largest file (`lexer.tw`, 8593 chars) uses
+/// ≈ 258 000 lex instructions; parsing and emitting add another
+/// ≈ 100 000.  Across four files the total is ≈ 1.5–2 M instructions.
+///
+/// 2²³ = 8 M instructions provides comfortable headroom above the
+/// measured peak.  Real programs never approach this limit:
+/// `(fact 1000)` uses ~10⁴ instructions; the largest self-hosted
+/// compiler pass uses < 2 M.
+///
+/// **History**: 2²⁰ (1 M) in LANG62, bumped to 2²³ (8 M) in LANG64
+/// (TW05-J) to allow compiling multi-file programs end-to-end in a
+/// single run.
+pub const MAX_INSTRUCTIONS_PER_RUN: u64 = 1 << 23;
 
 /// Maximum register-file size the dispatcher will pre-allocate
 /// for a single frame.
@@ -684,7 +715,7 @@ pub const MAX_PROFILED_FUNCTIONS: usize = 1 << 16;
 /// `MAX_PROFILED_FUNCTIONS × max_instructions_per_function` would
 /// be `2³² ≈ 4 billion` entries in the absolute worst case —
 /// roughly 150 GB of HashMap.  In practice the per-run
-/// instruction budget (`MAX_INSTRUCTIONS_PER_RUN = 2²⁰`) bounds a
+/// instruction budget (`MAX_INSTRUCTIONS_PER_RUN = 2²³`) bounds a
 /// single run's growth, but `ProfileTable` is designed to be
 /// reused across multiple `run_with_profile` calls (the future
 /// per-VM state pattern).  This cap ensures even a long-lived
@@ -3093,14 +3124,15 @@ mod tests {
         // depth (the limit is intentionally generous for the self-hosted
         // compiler's lex-loop), only that we get the right error variant.
         //
-        // With MAX_DISPATCH_DEPTH = 4096, infinite recursion needs 4097
-        // nested Rust `dispatch` frames before the guard fires.  The default
-        // test-thread stack (8 MiB on macOS/Linux) is too small for that, so
-        // we spawn a dedicated thread with 128 MiB of stack.  Each dispatch
-        // frame is conservatively ≤ 10 KiB, so 4 096 frames ≤ 40 MiB —
-        // well within the 128 MiB budget.
+        // With MAX_DISPATCH_DEPTH = 65536 (LANG64), infinite recursion needs
+        // 65537 nested Rust `dispatch` frames before the guard fires.  The
+        // default test-thread stack (8 MiB on macOS/Linux) is too small for
+        // that, so we spawn a dedicated thread with 1 GiB of stack.  Each
+        // dispatch frame is conservatively ≤ 10 KiB, so 65536 frames ≤
+        // 640 MiB — well within the 1 GiB budget.  (In practice frames are
+        // much smaller; the 10 KiB upper bound is a worst-case estimate.)
         let result = std::thread::Builder::new()
-            .stack_size(128 * 1024 * 1024) // 128 MiB
+            .stack_size(1024 * 1024 * 1024) // 1 GiB
             .spawn(|| {
                 let src = "
                     (define (loop n) (loop (+ n 1)))

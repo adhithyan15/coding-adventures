@@ -1,5 +1,30 @@
 # Changelog — twig-vm
 
+## [0.17.0] — 2026-05-17
+
+### Changed (LANG64 — TW05-J multi-module self-compilation via host/read_file)
+
+**`MAX_DISPATCH_DEPTH` bumped from 4096 to 65536** (`dispatch.rs`).
+
+The self-hosted Twig compiler's `lex-loop` recurses once per character of
+input.  TW05-J compiles four real `.tw` files from disk via `host/read_file`:
+
+| File | Size | Required depth |
+|---|---|---|
+| `span.tw` | 2426 chars | ≈ 2426 frames |
+| `diagnostic.tw` | 2446 chars | ≈ 2446 frames |
+| `iir-builder.tw` | 6278 chars | ≈ 6278 frames |
+| `lexer.tw` | 8593 chars | ≈ 8593 frames |
+
+The old 4096-frame limit blocked `iir-builder.tw` (6278 chars) and
+`lexer.tw` (8593 chars) from lexing successfully.  65536 gives ample
+headroom for all current compiler modules while remaining well within the
+64 MiB stack allocated by the integration test thread.
+
+No API changes — this is purely a constants bump.
+
+---
+
 ## [0.16.0] — 2026-05-15
 
 ### Changed (LANG62 — TW05-I first self-compilation check)
