@@ -385,6 +385,122 @@ func compileGrammarCommand(grammarPath, outputPath, pkgName string, force bool) 
 }
 
 // ============================================================================
+// compile-tokens-twig — compile a .tokens file to Twig source code
+// ============================================================================
+
+// compileTokensTwigCommand parses a .tokens file and generates Twig lexer code.
+//
+// The generated Twig file is the compiler/lexer module (lexer.tw) containing
+// a grammar-driven dispatch chain.  If outputPath is non-empty the code is
+// written there; otherwise it is printed to stdout.
+func compileTokensTwigCommand(tokensPath, outputPath string, force bool) int {
+	content, err := os.ReadFile(tokensPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: File not found: %s\n", tokensPath)
+		return 1
+	}
+
+	fmt.Fprintf(os.Stderr, "Compiling %s to Twig ... ", filepath.Base(tokensPath))
+	tokenGrammar, err := grammartools.ParseTokenGrammar(string(content))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "PARSE ERROR")
+		fmt.Fprintf(os.Stderr, "  %s\n", err)
+		return 1
+	}
+
+	if !force {
+		issues := grammartools.ValidateTokenGrammar(tokenGrammar)
+		if n := countErrors(issues); n > 0 {
+			fmt.Fprintf(os.Stderr, "%d error(s)\n", n)
+			printIssues(issues)
+			return 1
+		}
+	}
+
+	code := grammartools.GenerateTwigLexer(tokenGrammar, filepath.Base(tokensPath))
+
+	if outputPath != "" {
+		if err := os.WriteFile(outputPath, []byte(code), 0o644); err != nil {
+			fmt.Fprintf(os.Stderr, "Error writing %s: %v\n", outputPath, err)
+			return 1
+		}
+		fmt.Fprintf(os.Stderr, "OK → %s\n", outputPath)
+	} else {
+		fmt.Fprintln(os.Stderr, "OK")
+		fmt.Print(code)
+	}
+	return 0
+}
+
+// ============================================================================
+// compile-grammar-twig — compile a .grammar file to Twig source code
+// ============================================================================
+
+// compileGrammarTwigCommand parses a .grammar file (and its associated .tokens
+// file) and generates Twig CST parser code.
+//
+// The generated Twig file is the compiler/cst-parser module (cst-parser.tw)
+// containing one function per grammar rule.
+func compileGrammarTwigCommand(grammarPath, tokensPath, outputPath string, force bool) int {
+	grammarContent, err := os.ReadFile(grammarPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: File not found: %s\n", grammarPath)
+		return 1
+	}
+
+	// Load the companion .tokens file for keyword and token-kind info
+	if tokensPath == "" {
+		// Default: same directory, replace .grammar with .tokens
+		base := strings.TrimSuffix(grammarPath, ".grammar")
+		tokensPath = base + ".tokens"
+	}
+	tokensContent, err := os.ReadFile(tokensPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Warning: Could not read %s: %v\n", tokensPath, err)
+		fmt.Fprintln(os.Stderr, "  Proceeding without keyword/token-kind information.")
+		tokensContent = []byte("")
+	}
+
+	fmt.Fprintf(os.Stderr, "Compiling %s to Twig ... ", filepath.Base(grammarPath))
+
+	parserGrammar, err := grammartools.ParseParserGrammar(string(grammarContent))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "PARSE ERROR")
+		fmt.Fprintf(os.Stderr, "  %s\n", err)
+		return 1
+	}
+
+	tokenGrammar, err := grammartools.ParseTokenGrammar(string(tokensContent))
+	if err != nil {
+		// Fallback: empty token grammar
+		tokenGrammar = &grammartools.TokenGrammar{}
+	}
+
+	if !force {
+		issues := grammartools.ValidateParserGrammar(parserGrammar, tokenGrammar.TokenNames())
+		if n := countErrors(issues); n > 0 {
+			fmt.Fprintf(os.Stderr, "%d error(s)\n", n)
+			printIssues(issues)
+			return 1
+		}
+	}
+
+	code := grammartools.GenerateTwigParser(parserGrammar, tokenGrammar, filepath.Base(grammarPath))
+
+	if outputPath != "" {
+		if err := os.WriteFile(outputPath, []byte(code), 0o644); err != nil {
+			fmt.Fprintf(os.Stderr, "Error writing %s: %v\n", outputPath, err)
+			return 1
+		}
+		fmt.Fprintf(os.Stderr, "OK → %s\n", outputPath)
+	} else {
+		fmt.Fprintln(os.Stderr, "OK")
+		fmt.Print(code)
+	}
+	return 0
+}
+
+// ============================================================================
 // dispatch
 // ============================================================================
 
@@ -434,6 +550,28 @@ func dispatch(command string, files []string, outputPath, pkgName string, force 
 			return 2
 		}
 		return compileGrammarCommand(files[0], outputPath, pkgName, force)
+
+	case "compile-tokens-twig":
+		if len(files) != 1 {
+			fmt.Fprintln(os.Stderr, "Error: 'compile-tokens-twig' requires one argument: <tokens>")
+			fmt.Fprintln(os.Stderr)
+			printUsage()
+			return 2
+		}
+		return compileTokensTwigCommand(files[0], outputPath, force)
+
+	case "compile-grammar-twig":
+		if len(files) < 1 || len(files) > 2 {
+			fmt.Fprintln(os.Stderr, "Error: 'compile-grammar-twig' requires one or two arguments: <grammar> [<tokens>]")
+			fmt.Fprintln(os.Stderr)
+			printUsage()
+			return 2
+		}
+		tokensPath := ""
+		if len(files) == 2 {
+			tokensPath = files[1]
+		}
+		return compileGrammarTwigCommand(files[0], tokensPath, outputPath, force)
 
 	default:
 		fmt.Fprintf(os.Stderr, "Error: Unknown command '%s'\n", command)
