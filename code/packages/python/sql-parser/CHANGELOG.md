@@ -2,6 +2,15 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.21.0] - 2026-05-17
+
+### Added
+
+- **`LIKE … ESCAPE 'c'`** (`sql.grammar`, `_grammar.py`) — the `comparison`
+  rule now accepts an optional `"ESCAPE" additive` after `LIKE pattern` and
+  `NOT LIKE pattern`.  When present the third additive is the escape
+  character (must be a single-character string literal).
+
 ## [0.20.0] - 2026-05-15
 
 ### Changed

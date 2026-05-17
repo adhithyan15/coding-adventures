@@ -214,8 +214,8 @@ comparison        = additive [ cmp_op additive
                   | "NOT" "BETWEEN" additive "AND" additive
                   | "IN" "(" [ in_expr ] ")"
                   | "NOT" "IN" "(" [ in_expr ] ")"
-                  | "LIKE" additive
-                  | "NOT" "LIKE" additive
+                  | "LIKE" additive [ "ESCAPE" additive ]
+                  | "NOT" "LIKE" additive [ "ESCAPE" additive ]
                   | "GLOB" additive
                   | "NOT" "GLOB" additive
                   | "IS" "NULL"

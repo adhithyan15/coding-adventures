@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.31.0] - 2026-05-17
+
+### Added
+
+- **`Like.escape` and `NotLike.escape` fields** (`expr.py`) — optional
+  `str | None` field defaulting to `None`.  When set, holds the
+  single-character escape used by the `LIKE … ESCAPE 'c'` clause.  The
+  scope-resolution case in `planner.py` propagates the field through.
+
 ## [0.30.0] - 2026-05-15
 
 ### Added

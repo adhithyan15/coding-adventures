@@ -1401,6 +1401,9 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     # LIKE / NOT LIKE — pattern is typically a string literal, but SQLite also
     # accepts a NULL pattern (which makes the predicate always NULL → no rows
     # match, matching three-valued logic).
+    #
+    # An optional ESCAPE clause supplies a single-character literal that
+    # disables wildcard meaning for the following character in the pattern.
     if _has_keyword_child(node, "LIKE"):
         negated = _has_keyword_child(node, "NOT")
         pat_expr = _additive(additives[1], state)
@@ -1409,9 +1412,20 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             return Literal(value=None)
         if not isinstance(pat_expr, Literal) or not isinstance(pat_expr.value, str):
             raise ProgrammingError("LIKE pattern must be a string literal")
+        # ESCAPE 'c' — third additive is the escape character.  It must be a
+        # single-character string literal; SQLite raises "ESCAPE expression
+        # must be a single character" otherwise.
+        escape_char: str | None = None
+        if _has_keyword_child(node, "ESCAPE") and len(additives) >= 3:
+            esc_expr = _additive(additives[2], state)
+            if not isinstance(esc_expr, Literal) or not isinstance(esc_expr.value, str):
+                raise ProgrammingError("ESCAPE expression must be a string literal")
+            if len(esc_expr.value) != 1:
+                raise ProgrammingError("ESCAPE expression must be a single character")
+            escape_char = esc_expr.value
         if negated:
-            return NotLike(operand=left, pattern=pat_expr.value)
-        return Like(operand=left, pattern=pat_expr.value)
+            return NotLike(operand=left, pattern=pat_expr.value, escape=escape_char)
+        return Like(operand=left, pattern=pat_expr.value, escape=escape_char)
 
     # GLOB / NOT GLOB — case-sensitive pattern match using Unix glob syntax.
     #
@@ -2221,29 +2235,18 @@ def _unquote_string(s: str) -> str:
     token value to the adapter, so ``s`` here is the *body* of the literal — e.g.
     the SQL text ``'O''Brien'`` arrives here as ``O''Brien``.
 
-    Two escape conventions are processed:
-
-    * **Doubled-quote escape** — ANSI SQL standard: the pair ``''`` inside a
-      single-quoted string stands for a single literal quote.  ``O''Brien`` →
-      ``O'Brien``.  This is what real SQLite uses.
-
-    * **Backslash escapes** — MySQL / C-style extension: ``\\'`` → ``'``,
-      ``\\\\`` → ``\\``, etc.  Any ``\\x`` pair is collapsed to ``x``.  The
-      backslash form is checked *before* the lone-character fallback so a
-      ``\\'`` is not mis-split.
-
-    The ``''`` alternative is checked *before* the lone-character fallback so
-    that two consecutive apostrophes are always consumed as a single escaped
-    quote rather than the first being treated as a premature end-of-body marker.
+    SQLite recognises **only one** escape convention inside a single-quoted
+    string: doubled apostrophes.  ``'O''Brien'`` represents ``O'Brien``.
+    Backslashes are *literal* characters — ``'a\\_b'`` is the four-character
+    string ``a\\_b``, not ``a_b``.  This matches the behaviour of the real
+    ``sqlite3`` module and is essential for ``LIKE … ESCAPE '\\'`` to work
+    correctly (the pattern must retain the backslash so the LIKE matcher can
+    see it as an escape character).
     """
-    out = []
+    out: list[str] = []
     i = 0
     while i < len(s):
-        if s[i] == "\\" and i + 1 < len(s):
-            # Backslash escape: \' → ', \\ → \, \n → n (raw character), etc.
-            out.append(s[i + 1])
-            i += 2
-        elif s[i] == "'" and i + 1 < len(s) and s[i + 1] == "'":
+        if s[i] == "'" and i + 1 < len(s) and s[i + 1] == "'":
             # ANSI SQL doubled-quote escape: '' → '
             out.append("'")
             i += 2

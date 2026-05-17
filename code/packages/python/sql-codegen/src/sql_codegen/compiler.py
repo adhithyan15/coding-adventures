@@ -1324,10 +1324,25 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 out.extend(_compile_expr(v, ctx))
             out.extend([InList(n=len(vs)), UnaryOp(op=UnaryOpCode.NOT)])
             return out
-        case AstLike(operand=op_, pattern=pat):
-            return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=False)]
-        case AstNotLike(operand=op_, pattern=pat):
-            return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=True)]
+        case AstLike(operand=op_, pattern=pat, escape=esc):
+            # Push value, then pattern, then (optionally) the escape character.
+            # The VM's Like handler with has_escape=True pops escape, pattern,
+            # value in that order.
+            insns_l: list[Instruction] = _compile_expr(op_, ctx) + [LoadConst(value=pat)]
+            if esc is not None:
+                insns_l.append(LoadConst(value=esc))
+                insns_l.append(Like(negated=False, has_escape=True))
+            else:
+                insns_l.append(Like(negated=False))
+            return insns_l
+        case AstNotLike(operand=op_, pattern=pat, escape=esc):
+            insns_nl: list[Instruction] = _compile_expr(op_, ctx) + [LoadConst(value=pat)]
+            if esc is not None:
+                insns_nl.append(LoadConst(value=esc))
+                insns_nl.append(Like(negated=True, has_escape=True))
+            else:
+                insns_nl.append(Like(negated=True))
+            return insns_nl
         case FunctionCall(name=name, args=args):
             # Compile all positional arguments onto the stack left-to-right,
             # then emit CallScalar(func, n_args). The VM's built-in function

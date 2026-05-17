@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.39.0] - 2026-05-17
+
+### Added
+
+- **`LIKE … ESCAPE 'c'` clause** end-to-end (via `sql-lexer 0.16.0`,
+  `sql-parser 0.21.0`, `sql-planner 0.31.0`, `sql-optimizer 0.12.0`,
+  `sql-codegen 1.29.0`, `sql-vm 1.28.0`).  A new test file
+  `test_tier3_like_escape.py` adds 16 oracle-comparison tests covering
+  underscore/percent escapes, mixed escaped+unescaped wildcards, NOT LIKE
+  with escape, WHERE-clause usage, and edge cases (self-escape, escape
+  with no special chars).
+
+### Changed
+
+- **Adapter `_unquote_string`** (`adapter.py`) — removed backslash-escape
+  processing.  SQLite treats backslashes inside string literals as literal
+  characters; only `''` (doubled apostrophe) is an escape.  This restores
+  byte-for-byte parity with the real `sqlite3` module and is required for
+  `LIKE 'a\\_b' ESCAPE '\\'` to work (the backslash must survive parsing).
+
+- **Binding `_repr_sql`** (`binding.py`) — `repr` of a Python `str` now
+  uses doubled-quote escaping (`'O''Brien'`) instead of backslash
+  escaping (`'O\\'Brien'`).  Updated the `substitute()` string-literal
+  scanner accordingly.
+
 ## [1.37.0] - 2026-05-17
 
 ### Fixed

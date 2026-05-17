@@ -2,6 +2,30 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.16.0] - 2026-05-17
+
+### Changed
+
+- **`ESCAPE` keyword** (`sql.tokens`, `_grammar.py`) — promoted to a reserved
+  SQL keyword so the parser can recognise the `LIKE … ESCAPE 'c'` clause.
+
+- **`STRING_SQ` pattern simplified to SQLite semantics** (`sql.tokens`,
+  `_grammar.py`) — the old pattern allowed backslash escapes (`\\.`), which
+  meant `'a\\_b'` was lexed as the three characters `a_b` after escape
+  processing.  SQLite treats backslashes as **literal characters** inside
+  string literals — only `''` (doubled apostrophe) is an escape.  The new
+  pattern `'(\'\'|[^\'])*\'` matches SQLite exactly.
+
+- **`escape_mode = 'none'`** (`_grammar.py`) — disables the base
+  `GrammarLexer`'s default JSON-style escape processing on STRING tokens.
+  Combined with the new pattern, string literals now arrive at the parser
+  with their content untouched (modulo doubled-quote folding done in the
+  adapter).
+
+These changes are essential for `LIKE 'a\\_b' ESCAPE '\\'` to work: the
+backslash must survive the lexer so the LIKE matcher can see it as an
+escape character.
+
 ## [0.15.0] - 2026-05-16
 
 ### Added

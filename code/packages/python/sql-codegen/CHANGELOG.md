@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.29.0] - 2026-05-17
+
+### Added
+
+- **`Like.has_escape` field** (`ir.py`) — new `bool = False` field.  When
+  `True`, the VM pops an additional stack value (the escape character)
+  before pattern and value.  Three-value protocol: escape, pattern, value.
+
+- **LIKE ESCAPE codegen** (`compiler.py`) — when the planner `Like` /
+  `NotLike` node carries a non-None `escape`, the compiler emits an
+  additional `LoadConst(value=escape_char)` before the `Like` instruction
+  and sets `Like.has_escape = True`.
+
 ## [1.28.0] - 2026-05-17
 
 ### Fixed
