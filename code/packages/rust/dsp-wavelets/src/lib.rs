@@ -115,6 +115,8 @@
 #![warn(rust_2018_idioms)]
 
 mod filters;
+mod two_d;
+pub use two_d::{dwt_2d, idwt_2d};
 
 use std::fmt;
 
@@ -228,7 +230,7 @@ impl std::error::Error for WaveletError {}
 // pyramid depth (signal length `≥ 2^31` is unreachable on practical
 // memory; even at 16-bit-sample / 1-channel / 44.1 kHz, that's >50
 // years of audio).
-const MAX_LEVELS: u32 = 31;
+pub(crate) const MAX_LEVELS: u32 = 31;
 
 // `output_length` is `u32`; an unbounded value flows straight into
 // `vec![0.0; target_len]` in the synthesis path (≈ 16 GB on 64-bit
@@ -236,7 +238,7 @@ const MAX_LEVELS: u32 = 31;
 // samples = 4 GB of f32 — same kind of "well above realistic, well
 // below catastrophic" bound the matrix execution layer already
 // uses internally.
-const MAX_SAMPLES: u32 = 1u32 << 30;
+pub(crate) const MAX_SAMPLES: u32 = 1u32 << 30;
 
 // ────────────────────── Public API ──────────────────────
 
