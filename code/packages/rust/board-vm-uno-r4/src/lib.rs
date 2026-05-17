@@ -67,6 +67,7 @@ pub struct TargetDescriptor {
     pub i2c_buses: &'static [I2cBusDescriptor],
     pub spi_buses: &'static [SpiBusDescriptor],
     pub uart_buses: &'static [UartBusDescriptor],
+    pub can_buses: &'static [CanBusDescriptor],
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -109,6 +110,16 @@ pub struct UartBusDescriptor {
     pub rx_pin: u8,
     pub arduino_uart: u8,
     pub internal: bool,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CanBusDescriptor {
+    pub bus: u8,
+    pub name: &'static str,
+    pub tx_pin: u8,
+    pub rx_pin: u8,
+    pub controller: &'static str,
     pub notes: &'static str,
 }
 
@@ -377,6 +388,17 @@ pub const UNO_R4_WIFI_UART_BUSES: [UartBusDescriptor; 3] = [
     UNO_R4_WIFI_MODULE_UART_BUS,
 ];
 
+pub const UNO_R4_CAN_BUS: CanBusDescriptor = CanBusDescriptor {
+    bus: 0,
+    name: "CAN0",
+    tx_pin: 10,
+    rx_pin: 13,
+    controller: "RA4M1 CAN0",
+    notes: "CAN0 on D10/TX and D13/RX; conflicts with header SPI CS/SCK and onboard LED",
+};
+
+pub const UNO_R4_CAN_BUSES: [CanBusDescriptor; 1] = [UNO_R4_CAN_BUS];
+
 pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     board_id: "arduino-uno-r4-minima",
     display_name: "Arduino Uno R4 Minima",
@@ -404,6 +426,7 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_MINIMA_UART_BUSES,
+    can_buses: &UNO_R4_CAN_BUSES,
 };
 
 pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
@@ -434,6 +457,7 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_WIFI_UART_BUSES,
+    can_buses: &UNO_R4_CAN_BUSES,
 };
 
 pub trait UnoR4Backend {
@@ -1255,6 +1279,20 @@ mod tests {
         assert_eq!(UNO_R4_WIFI.uart_buses[2].tx_pin, 24);
         assert_eq!(UNO_R4_WIFI.uart_buses[2].rx_pin, 25);
         assert!(UNO_R4_WIFI.uart_buses[2].internal);
+    }
+
+    #[test]
+    fn knows_uno_r4_can_buses() {
+        assert_eq!(UNO_R4_MINIMA.can_buses, &[UNO_R4_CAN_BUS]);
+        assert_eq!(UNO_R4_WIFI.can_buses, &[UNO_R4_CAN_BUS]);
+
+        let can = UNO_R4_WIFI.can_buses[0];
+        assert_eq!(can.name, "CAN0");
+        assert_eq!(can.tx_pin, 10);
+        assert_eq!(can.rx_pin, 13);
+        assert_eq!(can.controller, "RA4M1 CAN0");
+        assert!(can.notes.contains("SPI"));
+        assert!(can.notes.contains("onboard LED"));
     }
 
     #[test]
