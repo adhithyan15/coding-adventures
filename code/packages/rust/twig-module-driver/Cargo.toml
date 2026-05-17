@@ -1,8 +1,8 @@
 [package]
 name        = "twig-module-driver"
-version     = "0.11.0"
+version     = "0.12.0"
 edition     = "2021"
-description = "LANG56-LANG66 — multi-file module resolver for Twig.  Resolves (import …) declarations recursively, compiles and links all modules into a single IIRModule ready for twig-vm.  LANG57 adds TW05-D data-model tests; LANG58 adds TW05-E lexer+parser tests; LANG59 adds TW05-F IIR emitter tests; LANG60 adds TW05-G lambda+DefExpr tests; LANG61 adds TW05-H program emitter tests; LANG62 adds TW05-I first self-compilation check; LANG63 adds cst-parser to all test copy lists; LANG64 adds TW05-J multi-module self-compilation via host/read_file; LANG65 adds TW05-K extended self-compilation (parser.tw + emit.tw → 102 total functions); LANG66 adds TW05-L cst-parser self-compilation (cst-parser.tw → 171 total functions)."
+description = "LANG56-LANG67 — multi-file module resolver for Twig.  Resolves (import …) declarations recursively, compiles and links all modules into a single IIRModule ready for twig-vm.  LANG57 adds TW05-D data-model tests; LANG58 adds TW05-E lexer+parser tests; LANG59 adds TW05-F IIR emitter tests; LANG60 adds TW05-G lambda+DefExpr tests; LANG61 adds TW05-H program emitter tests; LANG62 adds TW05-I first self-compilation check; LANG63 adds cst-parser to all test copy lists; LANG64 adds TW05-J multi-module self-compilation via host/read_file; LANG65 adds TW05-K extended self-compilation (parser.tw + emit.tw → 102 total functions); LANG66 adds TW05-L cst-parser self-compilation (cst-parser.tw → 171 total functions); LANG67 adds TW05-M all-module self-compilation (all 11 files → 173 total functions)."
 
 [dependencies]
 twig-parser       = { path = "../twig-parser" }

@@ -1,5 +1,63 @@
 # Changelog — twig-module-driver
 
+## [0.12.0] — 2026-05-17
+
+### Added (LANG67 — TW05-M all-module self-compilation)
+
+Extended `self-compile-all` in `code/twig/compiler/main.tw` from seven files
+(TW05-L, 171 total) to **all eleven** compiler source files (TW05-M, **173 total**)
+by adding `token.tw` (0 fn), `ast.tw` (0 fn), `iir-types.tw` (0 fn), and
+`main.tw` (2 fn).
+
+#### Why union/record modules contribute 0 functions
+
+`emit-program` only counts `DefExpr(LambdaExpr)` top-level forms.  Union and
+record declarations parse as `CallExpr` nodes; `emit-top-level-form` returns
+`nil` for those → skipped by `emit-program-loop`.
+
+#### No VM constant changes needed
+
+Largest file is still `cst-parser.tw` at 29 122 chars.  Additional instruction
+cost: 21 371 chars × 90 ≈ 1.92 M; new grand total ≈ 10.1 M << 32 M.
+
+New `#[cfg(test)] mod tw05m_tests` with 7 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_token_tw_returns_0` | `token.tw` (union/record-only) → 0 functions |
+| `self_compile_ast_tw_returns_0` | `ast.tw` (union-only) → 0 functions |
+| `self_compile_iir_types_tw_returns_0` | `iir-types.tw` (union/record-only) → 0 functions |
+| `self_compile_main_tw_returns_2` | `main.tw` → 2 functions (main, self-compile-all) |
+| `self_compile_all_returns_173` | `self-compile-all` on all 11 files → 173 functions |
+| `self_compile_tw05l_modules_regression` | TW05-L 7-file sum (independent) → 171 |
+| `existing_main_still_returns_2_after_tw05m` | TW05-I regression: `(main)` → 2 |
+
+### Changed
+
+`tw05j_tests::self_compile_all_returns_171`, `tw05k_tests::self_compile_all_returns_171`,
+and `tw05l_tests::self_compile_all_returns_171` all renamed to `self_compile_all_returns_173`
+and updated to expect 173 (the new `self-compile-all` total after TW05-M adds the
+remaining four modules).
+
+#### Updated function count table
+
+| File | Size | Functions |
+|------|------|-----------|
+| `span.tw` | 2 426 | 2 |
+| `token.tw` | 2 782 | 0 ← TW05-M |
+| `diagnostic.tw` | 2 446 | 3 |
+| `ast.tw` | 3 817 | 0 ← TW05-M |
+| `iir-types.tw` | 3 073 | 0 ← TW05-M |
+| `iir-builder.tw` | 6 278 | 8 |
+| `lexer.tw` | 8 593 | 25 |
+| `cst-parser.tw` | 29 122 | 69 |
+| `parser.tw` | 19 708 | 29 |
+| `emit.tw` | 22 697 | 35 |
+| `main.tw` | 11 699 | 2 ← TW05-M |
+| **Total** | 112 641 | **173** |
+
+---
+
 ## [0.11.0] — 2026-05-17
 
 ### Added (LANG66 — TW05-L cst-parser self-compilation)
