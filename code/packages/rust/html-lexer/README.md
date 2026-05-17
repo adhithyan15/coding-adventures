@@ -72,6 +72,9 @@ The conformance suite now generates input-stream preprocessing cases across
 data, tags, attributes, comments, doctypes, character references, RCDATA,
 RAWTEXT, script data, PLAINTEXT, CDATA, and seeded continuation states,
 including chunk splits inside CRLF pairs.
+It also generates streaming chunk-boundary cases for the same tokenizer surface
+area, proving tokens, diagnostics, and diagnostic positions are independent of
+where an embedding splits the input stream.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.

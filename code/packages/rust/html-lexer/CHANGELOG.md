@@ -50,6 +50,10 @@ documented in this file.
 - A generated WHATWG input-stream preprocessing fixture and Rust conformance
   test that exercises CRLF and bare-CR normalization across tokenizer contexts,
   every chunk split point, and diagnostic line/column positions.
+- A generated WHATWG tokenizer chunk-boundary fixture and Rust conformance test
+  that proves tokens, diagnostics, and diagnostic positions are stable across
+  every character split point for representative tokenizer contexts and seeded
+  continuation states.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
