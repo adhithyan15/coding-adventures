@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] - UI24: emit declaration parsing
+
+### Added
+
+- `MosaicEmit` struct: `name: String`, `params: Vec<MosaicEmitParam>`.
+- `MosaicEmitParam` struct: `name: String`, `param_type: MosaicType`.
+- `MosaicComponent.emits: Vec<MosaicEmit>` field — holds all emit declarations
+  found in the component source.
+- `analyze_emit` — parses `emit_decl` AST nodes into `MosaicEmit`.
+- `analyze_emit_param` — parses `emit_param` AST nodes into `MosaicEmitParam`.
+- Emit parsing integrated into `analyze_component` alongside slot parsing.
+
+### Changed
+
+- `MosaicComponent` struct now has an `emits` field (breaking change for any
+  code that constructs `MosaicComponent` directly — add `emits: vec![]`).
+
+### Fixed
+
+- Clippy: `parse_color` now uses `strip_prefix('#')` instead of manual index.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added

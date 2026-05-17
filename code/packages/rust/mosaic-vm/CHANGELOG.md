@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] - UI24: MosaicRenderer trait update
+
+### Changed (breaking)
+
+- `MosaicRenderer::begin_component` now takes `emits: &[MosaicEmit]` as a
+  third argument after `slots`.  All `MosaicRenderer` implementations must be
+  updated to accept the new parameter (can be named `_emits` if unused).
+- `MosaicVM::run` passes `&self.file.component.emits` to `begin_component`.
+
+### Added
+
+- Re-exports `MosaicEmit` from `mosaic_analyzer` through the trait signature.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added

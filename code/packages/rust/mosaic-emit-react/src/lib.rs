@@ -49,7 +49,7 @@
 //! | Icon    | `<span className="icon">` (simplified)              |
 
 use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
-use mosaic_analyzer::{MosaicSlot, MosaicType};
+use mosaic_analyzer::{MosaicEmit, MosaicSlot, MosaicType};
 
 // ===========================================================================
 // Stack frames
@@ -91,6 +91,8 @@ struct NodeFrame {
 pub struct ReactRenderer {
     component_name: String,
     slots: Vec<MosaicSlot>,
+    /// Emit declarations — used to generate the dispatch union type.
+    emits: Vec<MosaicEmit>,
     /// Stack of open node frames.
     stack: Vec<NodeFrame>,
     /// Lines accumulated at the component (root) level.
@@ -103,6 +105,7 @@ impl ReactRenderer {
         Self {
             component_name: String::new(),
             slots: Vec::new(),
+            emits: Vec::new(),
             stack: Vec::new(),
             root_lines: Vec::new(),
         }
@@ -230,7 +233,7 @@ impl ReactRenderer {
                 );
                 (table, true) // self-closing: no child nodes, full JSX inline
             }
-            "Divider" => (format!("<hr />"), true),
+            "Divider" => ("<hr />".to_string(), true),
             "Icon" => {
                 let class_attr = if class.is_empty() {
                     " className=\"icon\"".to_string()
@@ -301,11 +304,97 @@ impl ReactRenderer {
         }
     }
 
-    /// Generate the props interface for the component.
-    fn generate_props_interface(&self) -> String {
-        if self.slots.is_empty() {
-            return format!("interface {}Props {{}}", self.component_name);
+    /// Convert an emit name like `onNavigate` to a TypeScript `type` field
+    /// string like `"navigate"`.
+    ///
+    /// Algorithm:
+    /// 1. Strip the leading `on` prefix (case-insensitive).
+    /// 2. Lower-case the first character of the remainder.
+    ///
+    /// Examples:
+    ///   `onNavigate`   → `"navigate"`
+    ///   `onClick`      → `"click"`
+    ///   `onEditCommit` → `"editCommit"`
+    ///   `onEditCancel` → `"editCancel"`
+    fn emit_name_to_type_field(name: &str) -> String {
+        // Step 1: strip "on" prefix (case-insensitive, but we normalise to
+        // the exact lowercase "on" since emit names always start with "on"
+        // by convention).
+        let stripped = if name.to_lowercase().starts_with("on") && name.len() > 2 {
+            &name[2..]
+        } else {
+            name
+        };
+        // Step 2: lower-case the first character, keep the rest as-is.
+        let mut chars = stripped.chars();
+        match chars.next() {
+            None => String::new(),
+            Some(first) => {
+                let lower_first: String = first.to_lowercase().collect();
+                lower_first + chars.as_str()
+            }
         }
+    }
+
+    /// Generate the discriminated-union `type XEvent = | ...` declaration.
+    ///
+    /// When there are zero emits the union collapses to `never`:
+    ///
+    /// ```ts
+    /// type ButtonEvent = never;
+    /// ```
+    ///
+    /// With emits:
+    ///
+    /// ```ts
+    /// // Discriminated union of all events this component can fire.
+    /// // Use in your host reducer: switch (event.type) { case "navigate": ... }
+    /// type GridEvent =
+    ///   | { type: "navigate"; row: number; col: number }
+    ///   | { type: "editCancel" };
+    /// ```
+    fn generate_event_union(&self) -> String {
+        let type_name = format!("{}Event", self.component_name);
+        if self.emits.is_empty() {
+            return format!("type {type_name} = never;");
+        }
+        let mut lines = Vec::new();
+        lines.push(format!(
+            "// Discriminated union of all events this component can fire.\n\
+             // Use in your host reducer: switch (event.type) {{ case \"{}\": ... }}\n\
+             type {type_name} =",
+            Self::emit_name_to_type_field(&self.emits[0].name),
+        ));
+        for emit in &self.emits {
+            let type_field = Self::emit_name_to_type_field(&emit.name);
+            let mut fields = format!("type: \"{type_field}\"");
+            for param in &emit.params {
+                let camel = to_camel_case(&param.name);
+                let ts_type = mosaic_type_to_ts(&param.param_type);
+                fields.push_str(&format!("; {camel}: {ts_type}"));
+            }
+            lines.push(format!("  | {{ {fields} }}"));
+        }
+        // Replace trailing newline with semicolon on last line.
+        let last = lines.len() - 1;
+        lines[last] = format!("{};", lines[last]);
+        lines.join("\n")
+    }
+
+    /// Generate the props interface for the component.
+    ///
+    /// Includes all slot props followed by the `dispatch` prop.
+    ///
+    /// Example:
+    /// ```ts
+    /// interface GridProps {
+    ///   columnHeaders: string[];
+    ///   totalRows: number;
+    ///   dispatch: (event: GridEvent) => void;
+    /// }
+    /// ```
+    fn generate_props_interface(&self) -> String {
+        let event_type = format!("{}Event", self.component_name);
         let mut lines = Vec::new();
         lines.push(format!("interface {}Props {{", self.component_name));
         for slot in &self.slots {
@@ -314,6 +403,8 @@ impl ReactRenderer {
             let camel = to_camel_case(&slot.name);
             lines.push(format!("  {camel}{optional}: {ts_type};"));
         }
+        // dispatch is always the last entry and always required.
+        lines.push(format!("  dispatch: (event: {event_type}) => void;"));
         lines.push("}".to_string());
         lines.join("\n")
     }
@@ -326,9 +417,10 @@ impl Default for ReactRenderer {
 }
 
 impl MosaicRenderer for ReactRenderer {
-    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot]) {
+    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot], emits: &[MosaicEmit]) {
         self.component_name = name.to_string();
         self.slots = slots.to_vec();
+        self.emits = emits.to_vec();
     }
 
     fn end_component(&mut self) {
@@ -429,27 +521,31 @@ impl MosaicRenderer for ReactRenderer {
     }
 
     fn emit(self) -> EmitResult {
-        // Build params.
-        let params = if self.slots.is_empty() {
-            String::new()
-        } else {
-            let params: Vec<String> = self
+        // Build function parameter list: all slots + dispatch.
+        //
+        // If there are no slots, only dispatch is in the destructuring.
+        // Example: `{ columnHeaders, totalRows, dispatch }: GridProps`
+        let params = {
+            let mut slot_params: Vec<String> = self
                 .slots
                 .iter()
                 .map(|s| to_camel_case(&s.name))
                 .collect();
+            slot_params.push("dispatch".to_string());
             format!(
                 "{{ {} }}: {}Props",
-                params.join(", "),
+                slot_params.join(", "),
                 self.component_name
             )
         };
 
+        // The event union type alias comes before the interface.
+        let event_union = self.generate_event_union();
         let props_iface = self.generate_props_interface();
         let jsx_body = self.root_lines.join("\n");
 
         let output = format!(
-            "// Auto-generated by mosaic-emit-react. Do not edit.\nimport React from \"react\";\n\n{props_iface}\n\nexport function {name}({params}) {{\n  return (\n{body}\n  );\n}}",
+            "// Auto-generated by mosaic-emit-react. Do not edit.\nimport React from \"react\";\n\n{event_union}\n\n{props_iface}\n\nexport function {name}({params}) {{\n  return (\n{body}\n  );\n}}",
             name = self.component_name,
             body = indent_lines(&jsx_body, 4),
         );
@@ -1009,6 +1105,192 @@ mod tests {
             env!("CARGO_PKG_VERSION"),
             "0.1.0",
             "Expected crate version 0.1.0"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Tests 17–25: dispatch union pattern (UI24)
+    // -----------------------------------------------------------------------
+
+    // Test 17: zero-emit component gets type XEvent = never
+    #[test]
+    fn test_zero_emit_component() {
+        let out = emit(r#"component Button { slot label: text; Box { } }"#);
+        assert!(
+            out.contains("type ButtonEvent = never;"),
+            "Expected 'type ButtonEvent = never;' for zero-emit component: {out}"
+        );
+    }
+
+    // Test 18: zero-emit component still gets dispatch prop in interface
+    #[test]
+    fn test_dispatch_prop_always_present() {
+        let out = emit(r#"component Button { slot label: text; Box { } }"#);
+        assert!(
+            out.contains("dispatch: (event: ButtonEvent) => void;"),
+            "Expected 'dispatch: (event: ButtonEvent) => void;' in interface: {out}"
+        );
+    }
+
+    // Test 19: component with emits gets event union type
+    #[test]
+    fn test_event_union_type_emitted() {
+        let out = emit(r#"
+            component Btn {
+                emit onClick ;
+                Box { }
+            }
+        "#);
+        assert!(
+            out.contains("type BtnEvent ="),
+            "Expected 'type BtnEvent =' in output: {out}"
+        );
+        assert!(
+            out.contains("| { type: \"click\" }"),
+            "Expected click variant in union: {out}"
+        );
+    }
+
+    // Test 20: dispatch prop appears in interface
+    #[test]
+    fn test_dispatch_prop_in_interface() {
+        let out = emit(r#"
+            component Nav {
+                emit onNavigate ( row : number , col : number ) ;
+                Box { }
+            }
+        "#);
+        assert!(
+            out.contains("dispatch: (event: NavEvent) => void;"),
+            "Expected dispatch in interface: {out}"
+        );
+    }
+
+    // Test 21: emit name → type field conversion (onNavigate → "navigate")
+    #[test]
+    fn test_emit_type_field_conversion() {
+        let out = emit(r#"
+            component Grid {
+                emit onNavigate ( row : number , col : number ) ;
+                emit onEditCommit ( value : text ) ;
+                emit onEditCancel ;
+                Box { }
+            }
+        "#);
+        assert!(
+            out.contains("type: \"navigate\""),
+            "Expected 'type: \"navigate\"' in union: {out}"
+        );
+        assert!(
+            out.contains("type: \"editCommit\""),
+            "Expected 'type: \"editCommit\"' in union: {out}"
+        );
+        assert!(
+            out.contains("type: \"editCancel\""),
+            "Expected 'type: \"editCancel\"' in union: {out}"
+        );
+    }
+
+    // Test 22: void emit (no params) produces { type: "..." } with no extra fields
+    #[test]
+    fn test_void_emit_variant() {
+        let out = emit(r#"
+            component Btn {
+                emit onEditCancel ;
+                Box { }
+            }
+        "#);
+        assert!(
+            out.contains("| { type: \"editCancel\" }"),
+            "Expected void-emit variant with only type field: {out}"
+        );
+    }
+
+    // Test 23: multi-param emit includes all params in union variant
+    #[test]
+    fn test_multi_param_emit() {
+        let out = emit(r#"
+            component Sel {
+                emit onSelect ( start-row : number , start-col : number ) ;
+                Box { }
+            }
+        "#);
+        assert!(
+            out.contains("startRow: number"),
+            "Expected 'startRow: number' in union variant: {out}"
+        );
+        assert!(
+            out.contains("startCol: number"),
+            "Expected 'startCol: number' in union variant: {out}"
+        );
+    }
+
+    // Test 24: kebab-case param names are converted to camelCase
+    #[test]
+    fn test_param_kebab_to_camel() {
+        let out = emit(r#"
+            component Grid {
+                emit onSelect ( start-row : number , end-col : number ) ;
+                Box { }
+            }
+        "#);
+        assert!(
+            out.contains("startRow: number"),
+            "Expected 'startRow: number' in output: {out}"
+        );
+        assert!(
+            out.contains("endCol: number"),
+            "Expected 'endCol: number' in output: {out}"
+        );
+    }
+
+    // Test 25: event union type appears before the interface in the output
+    #[test]
+    fn test_union_before_interface() {
+        let out = emit(r#"
+            component Grid {
+                emit onClick ;
+                Box { }
+            }
+        "#);
+        let union_pos = out.find("type GridEvent").expect("Missing type GridEvent");
+        let iface_pos = out.find("interface GridProps").expect("Missing interface GridProps");
+        assert!(
+            union_pos < iface_pos,
+            "type GridEvent must appear before interface GridProps"
+        );
+    }
+
+    // Test 26: dispatch is always required (no ? in interface)
+    #[test]
+    fn test_dispatch_required() {
+        let out = emit(r#"component Foo { emit onClick ; Box { } }"#);
+        // Should not have "dispatch?:" — dispatch is always required.
+        assert!(
+            !out.contains("dispatch?:"),
+            "dispatch must not be optional: {out}"
+        );
+        // Must have the required form.
+        assert!(
+            out.contains("dispatch: (event: FooEvent) => void;"),
+            "Expected required dispatch in interface: {out}"
+        );
+    }
+
+    // Test 27: dispatch is included in function destructuring params
+    #[test]
+    fn test_dispatch_in_function_params() {
+        let out = emit(r#"
+            component Card {
+                slot title: text;
+                emit onClick ;
+                Box { }
+            }
+        "#);
+        // The function destructuring must include dispatch.
+        assert!(
+            out.contains("dispatch }"),
+            "Expected dispatch in function params: {out}"
         );
     }
 }

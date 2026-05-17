@@ -67,15 +67,40 @@ pub struct MosaicFile {
     pub imports: Vec<MosaicImport>,
 }
 
-/// A Mosaic component — name, slots, and root visual tree.
+/// A Mosaic component — name, slots, emits, and root visual tree.
 #[derive(Debug, Clone, PartialEq)]
 pub struct MosaicComponent {
     /// PascalCase name, e.g. `ProfileCard`.
     pub name: String,
     /// Typed slot declarations (the component's data inputs).
     pub slots: Vec<MosaicSlot>,
+    /// Emit declarations (the component's event outputs).
+    pub emits: Vec<MosaicEmit>,
     /// Root node of the visual hierarchy.
     pub root: MosaicNode,
+}
+
+/// A typed emit declaration in a `.mosaic` component.
+///
+/// Example: `emit onNavigate ( row : number , col : number ) ;`
+/// → `MosaicEmit { name: "onNavigate", params: [MosaicEmitParam { name: "row", ... }, ...] }`
+#[derive(Debug, Clone, PartialEq)]
+pub struct MosaicEmit {
+    /// camelCase name with `on` prefix, e.g. `onClick`, `onNavigate`.
+    pub name: String,
+    /// Payload parameters. Empty vec = void emit.
+    pub params: Vec<MosaicEmitParam>,
+}
+
+/// A parameter carried by an emit's payload.
+///
+/// Example: `row : number` inside `emit onNavigate ( row : number , col : number )`
+#[derive(Debug, Clone, PartialEq)]
+pub struct MosaicEmitParam {
+    /// kebab-case parameter name, e.g. `row`, `start-col`.
+    pub name: String,
+    /// The parameter type (same vocabulary as slot types).
+    pub param_type: MosaicType,
 }
 
 /// An `import X from "..."` declaration.
@@ -311,7 +336,7 @@ fn analyze_import(node: &GrammarASTNode) -> Result<MosaicImport, AnalyzeError> {
 // ===========================================================================
 
 fn analyze_component(node: &GrammarASTNode) -> Result<MosaicComponent, AnalyzeError> {
-    // component_decl = KEYWORD NAME LBRACE { slot_decl } node_tree RBRACE ;
+    // component_decl = KEYWORD NAME LBRACE { slot_decl } { emit_decl } node_tree RBRACE ;
     let names = direct_token_values(node, "NAME");
     if names.is_empty() {
         return Err(AnalyzeError("component_decl missing name".into()));
@@ -319,12 +344,14 @@ fn analyze_component(node: &GrammarASTNode) -> Result<MosaicComponent, AnalyzeEr
     let name = names[0].clone();
 
     let mut slots = Vec::new();
+    let mut emits = Vec::new();
     let mut tree_node: Option<&GrammarASTNode> = None;
 
     for child in &node.children {
         if let ASTNodeOrToken::Node(n) = child {
             match n.rule_name.as_str() {
                 "slot_decl" => slots.push(analyze_slot(n)?),
+                "emit_decl" => emits.push(analyze_emit(n)?),
                 "node_tree" => tree_node = Some(n),
                 _ => {}
             }
@@ -335,7 +362,7 @@ fn analyze_component(node: &GrammarASTNode) -> Result<MosaicComponent, AnalyzeEr
         tree_node.ok_or_else(|| AnalyzeError(format!("component '{name}' has no node tree")))?;
     let root = analyze_node_tree(tree_node)?;
 
-    Ok(MosaicComponent { name, slots, root })
+    Ok(MosaicComponent { name, slots, emits, root })
 }
 
 // ===========================================================================
@@ -368,6 +395,45 @@ fn analyze_slot(node: &GrammarASTNode) -> Result<MosaicSlot, AnalyzeError> {
         default_value,
         required,
     })
+}
+
+// ===========================================================================
+// Emit analysis
+// ===========================================================================
+
+/// Analyze an `emit_decl` AST node into a `MosaicEmit`.
+///
+/// Grammar: `emit_decl = KEYWORD NAME [ LPAREN emit_param { COMMA emit_param } RPAREN ] SEMICOLON`
+fn analyze_emit(node: &GrammarASTNode) -> Result<MosaicEmit, AnalyzeError> {
+    // The emit name is the first NAME token directly under emit_decl.
+    let name = first_token_value(node, "NAME")
+        .ok_or_else(|| AnalyzeError("emit_decl missing name".into()))?;
+
+    // Collect all emit_param child nodes.
+    let mut params = Vec::new();
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            if n.rule_name == "emit_param" {
+                params.push(analyze_emit_param(n)?);
+            }
+        }
+    }
+
+    Ok(MosaicEmit { name, params })
+}
+
+/// Analyze an `emit_param` AST node into a `MosaicEmitParam`.
+///
+/// Grammar: `emit_param = NAME COLON slot_type`
+fn analyze_emit_param(node: &GrammarASTNode) -> Result<MosaicEmitParam, AnalyzeError> {
+    let name = first_token_value(node, "NAME")
+        .ok_or_else(|| AnalyzeError("emit_param missing name".into()))?;
+
+    let type_node = find_child(node, "slot_type")
+        .ok_or_else(|| AnalyzeError(format!("emit_param '{name}' missing type")))?;
+    let param_type = analyze_slot_type(type_node)?;
+
+    Ok(MosaicEmitParam { name, param_type })
 }
 
 fn analyze_slot_type(node: &GrammarASTNode) -> Result<MosaicType, AnalyzeError> {
@@ -677,7 +743,7 @@ fn parse_dimension(raw: &str) -> Result<MosaicValue, AnalyzeError> {
 ///   - `#rrggbb`  → alpha = 255.
 ///   - `#rrggbbaa`→ all four channels explicit.
 fn parse_color(hex: &str) -> Result<MosaicValue, AnalyzeError> {
-    let h = if hex.starts_with('#') { &hex[1..] } else { hex };
+    let h = hex.strip_prefix('#').unwrap_or(hex);
     match h.len() {
         3 => {
             let r = u8::from_str_radix(&h[0..1].repeat(2), 16)

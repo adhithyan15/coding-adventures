@@ -38,7 +38,7 @@
 //! units — all values are already fully normalized.
 
 use mosaic_analyzer::{
-    MosaicChild, MosaicFile, MosaicNode, MosaicSlot, MosaicType,
+    MosaicChild, MosaicEmit, MosaicFile, MosaicNode, MosaicSlot, MosaicType,
     MosaicValue,
 };
 
@@ -112,8 +112,9 @@ pub struct EmitResult {
 /// 4. `emit` — finalize and return output.
 pub trait MosaicRenderer {
     /// Called once before the root node. `slots` is the component's typed
-    /// slot declarations — backends use these to generate props/attributes.
-    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot]);
+    /// slot declarations and `emits` is the list of emit declarations —
+    /// backends use these to generate props/attributes and event dispatch types.
+    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot], emits: &[MosaicEmit]);
 
     /// Called after all nodes have been visited.
     fn end_component(&mut self);
@@ -220,6 +221,7 @@ impl MosaicVM {
         renderer.begin_component(
             &self.file.component.name,
             &self.file.component.slots,
+            &self.file.component.emits,
         );
 
         self.walk_node(
@@ -406,7 +408,7 @@ mod tests {
     }
 
     impl MosaicRenderer for LogRenderer {
-        fn begin_component(&mut self, name: &str, _slots: &[MosaicSlot]) {
+        fn begin_component(&mut self, name: &str, _slots: &[MosaicSlot], _emits: &[MosaicEmit]) {
             self.component_name = name.to_string();
             self.log.push(format!("begin_component({name})"));
         }
@@ -578,7 +580,7 @@ mod tests {
     }
 
     impl MosaicRenderer for PropCapture {
-        fn begin_component(&mut self, name: &str, _: &[MosaicSlot]) {
+        fn begin_component(&mut self, name: &str, _: &[MosaicSlot], _: &[MosaicEmit]) {
             self.component_name = name.to_string();
         }
         fn end_component(&mut self) {}
@@ -645,6 +647,7 @@ mod tests {
             component: MosaicComponent {
                 name: "X".into(),
                 slots: vec![],
+                emits: vec![],
                 root: MosaicNode {
                     node_type: "Box".into(),
                     is_primitive: true,

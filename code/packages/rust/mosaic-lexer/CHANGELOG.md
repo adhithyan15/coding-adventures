@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] - UI24: emit keyword + LPAREN/RPAREN tokens
+
+### Added
+
+- Added `emit` to the KEYWORD list so `emit` declarations are tokenized as
+  `KEYWORD` rather than `NAME`.
+- Added `LPAREN` (`(`) and `RPAREN` (`)`) token definitions for emit parameter
+  list syntax.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added

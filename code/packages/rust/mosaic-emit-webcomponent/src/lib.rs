@@ -77,7 +77,7 @@
 //! | Grid    | `<table>` with slot-driven thead/tbody     |
 
 use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
-use mosaic_analyzer::{MosaicSlot, MosaicType};
+use mosaic_analyzer::{MosaicEmit, MosaicSlot, MosaicType};
 
 // ===========================================================================
 // HtmlFragment — typed pieces of the template literal body
@@ -505,7 +505,7 @@ impl Default for WebComponentRenderer {
 }
 
 impl MosaicRenderer for WebComponentRenderer {
-    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot]) {
+    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot], _emits: &[MosaicEmit]) {
         self.component_name = name.to_string();
         self.slots = slots.to_vec();
     }

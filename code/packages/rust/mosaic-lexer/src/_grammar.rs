@@ -118,8 +118,22 @@ pub fn token_grammar() -> TokenGrammar {
                 line_number: 85,
                 alias: None,
             },
+            TokenDefinition {
+                name: r#"LPAREN"#.to_string(),
+                pattern: r#"("#.to_string(),
+                is_regex: false,
+                line_number: 86,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"RPAREN"#.to_string(),
+                pattern: r#")"#.to_string(),
+                is_regex: false,
+                line_number: 87,
+                alias: None,
+            },
         ],
-        keywords: vec![r#"component"#.to_string(), r#"slot"#.to_string(), r#"import"#.to_string(), r#"from"#.to_string(), r#"as"#.to_string(), r#"text"#.to_string(), r#"number"#.to_string(), r#"bool"#.to_string(), r#"image"#.to_string(), r#"color"#.to_string(), r#"node"#.to_string(), r#"list"#.to_string(), r#"true"#.to_string(), r#"false"#.to_string(), r#"when"#.to_string(), r#"each"#.to_string()],
+        keywords: vec![r#"component"#.to_string(), r#"slot"#.to_string(), r#"emit"#.to_string(), r#"import"#.to_string(), r#"from"#.to_string(), r#"as"#.to_string(), r#"text"#.to_string(), r#"number"#.to_string(), r#"bool"#.to_string(), r#"image"#.to_string(), r#"color"#.to_string(), r#"node"#.to_string(), r#"list"#.to_string(), r#"true"#.to_string(), r#"false"#.to_string(), r#"when"#.to_string(), r#"each"#.to_string()],
         mode: None,
         skip_definitions: vec![
             TokenDefinition {

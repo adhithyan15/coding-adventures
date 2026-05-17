@@ -40,6 +40,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"slot_decl"#.to_string() }) },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"emit_decl"#.to_string() }) },
                 GrammarElement::RuleReference { name: r#"node_tree"#.to_string() },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
@@ -197,6 +198,33 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
             line_number: 168,
+        },
+        GrammarRule {
+            name: r#"emit_decl"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
+                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"emit_param"#.to_string() },
+                        GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                                GrammarElement::RuleReference { name: r#"emit_param"#.to_string() },
+                            ] }) },
+                        GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+                    ] }) },
+                GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
+            ] },
+            line_number: 180,
+        },
+        GrammarRule {
+            name: r#"emit_param"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
+                GrammarElement::RuleReference { name: r#"slot_type"#.to_string() },
+            ] },
+            line_number: 190,
         },
     ],
         version: 1,

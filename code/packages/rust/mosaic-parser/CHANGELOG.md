@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] - UI24: emit_decl grammar rules
+
+### Changed
+
+- `component_decl` rule updated: after `{ slot_decl }` now includes
+  `{ emit_decl }` before `node_tree`.
+
+### Added
+
+- `emit_decl` grammar rule:
+  `KEYWORD NAME [ LPAREN emit_param { COMMA emit_param } RPAREN ] SEMICOLON`
+- `emit_param` grammar rule: `NAME COLON slot_type`
+
 ## [0.1.0] - 2026-04-04
 
 ### Added
