@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Sparse real solver path** — large DC / real small-signal matrices now route
+  through a sparse-row Gaussian elimination path while small systems keep the
+  dense solver.
+
 - **Programmatic subcircuits** — `SubcircuitDefinition` plus `XInstance`
   let callers define reusable cells and expand each instance into namespaced
   primitive elements before simulation.

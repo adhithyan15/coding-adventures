@@ -103,6 +103,7 @@ members = [
     "dsp-fft",
     "dsp-filters",
     "dsp-stft",
+    "dsp-wavelets",
     "dot-lexer",
     "dot-parser",
     "mermaid-lexer",

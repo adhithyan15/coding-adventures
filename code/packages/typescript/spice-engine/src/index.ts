@@ -1,4 +1,5 @@
 const PIVOT_EPSILON = 1.0e-12;
+const SPARSE_SOLVER_THRESHOLD = 30;
 const TWO_PI = Math.PI * 2.0;
 const BOLTZMANN = 1.380_649e-23;
 
@@ -4424,6 +4425,13 @@ function stampAcMosfetSmallSignal(
 }
 
 function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
+  if (rhs.length >= SPARSE_SOLVER_THRESHOLD) {
+    return solveSparseLinearSystem(matrix, rhs);
+  }
+  return solveDenseLinearSystem(matrix, rhs);
+}
+
+function solveDenseLinearSystem(matrix: number[][], rhs: number[]): number[] {
   const n = rhs.length;
   for (let pivotCol = 0; pivotCol < n; pivotCol++) {
     let pivotRow = pivotCol;
@@ -4470,6 +4478,80 @@ function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
       tailSum += matrix[row][col] * solution[col];
     }
     solution[row] = (rhs[row] - tailSum) / matrix[row][row];
+  }
+  return solution;
+}
+
+function solveSparseLinearSystem(matrix: number[][], rhs: number[]): number[] {
+  const n = rhs.length;
+  const rows = matrix.map((row) => {
+    const entries = new Map<number, number>();
+    row.forEach((value, col) => {
+      if (value !== 0.0) {
+        entries.set(col, value);
+      }
+    });
+    return entries;
+  });
+  const sparseRhs = [...rhs];
+
+  for (let pivotCol = 0; pivotCol < n; pivotCol++) {
+    let pivotRow = pivotCol;
+    let pivotAbs = Math.abs(rows[pivotCol].get(pivotCol) ?? 0.0);
+    for (let row = pivotCol + 1; row < n; row++) {
+      const candidateAbs = Math.abs(rows[row].get(pivotCol) ?? 0.0);
+      if (candidateAbs > pivotAbs) {
+        pivotAbs = candidateAbs;
+        pivotRow = row;
+      }
+    }
+
+    if (pivotAbs < PIVOT_EPSILON) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
+    }
+
+    [rows[pivotCol], rows[pivotRow]] = [rows[pivotRow], rows[pivotCol]];
+    [sparseRhs[pivotCol], sparseRhs[pivotRow]] = [
+      sparseRhs[pivotRow],
+      sparseRhs[pivotCol],
+    ];
+
+    const pivot = rows[pivotCol].get(pivotCol)!;
+    const pivotEntries = [...rows[pivotCol].entries()].filter(
+      ([col]) => col > pivotCol,
+    );
+    for (let row = pivotCol + 1; row < n; row++) {
+      const value = rows[row].get(pivotCol) ?? 0.0;
+      if (value === 0.0) {
+        continue;
+      }
+      const factor = value / pivot;
+      rows[row].delete(pivotCol);
+      for (const [col, pivotValue] of pivotEntries) {
+        const nextValue = (rows[row].get(col) ?? 0.0) - factor * pivotValue;
+        if (Math.abs(nextValue) < PIVOT_EPSILON) {
+          rows[row].delete(col);
+        } else {
+          rows[row].set(col, nextValue);
+        }
+      }
+      sparseRhs[row] -= factor * sparseRhs[pivotCol];
+    }
+  }
+
+  const solution = Array.from({ length: n }, () => 0.0);
+  for (let row = n - 1; row >= 0; row--) {
+    const diagonal = rows[row].get(row) ?? 0.0;
+    if (Math.abs(diagonal) < PIVOT_EPSILON) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
+    }
+    let value = sparseRhs[row];
+    for (const [col, entry] of rows[row].entries()) {
+      if (col > row) {
+        value -= entry * solution[col];
+      }
+    }
+    solution[row] = value / diagonal;
   }
   return solution;
 }

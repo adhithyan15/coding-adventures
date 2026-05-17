@@ -1,0 +1,10 @@
+[package]
+name = "dsp-wavelets"
+version = "0.1.0"
+edition = "2021"
+description = "DSP06 Phase 1+2: scalar reference Haar discrete wavelet transform (DWT) + inverse, with Mallat pyramid algorithm and Symmetric / Periodic boundary modes. The wavelet sibling of dsp-fft / dsp-stft — adaptive multi-resolution time-frequency analysis. Full WaveletType / WaveletBoundary / WaveletError enum surface from the DSP06 spec; Daubechies / Symlets / Coiflets / Biorthogonal / Morlet / MexicanHat pending Phase 3+, 2-D DWT pending Phase 4, CWT pending Phase 5, matrix-IR lowering pending Phase 6."
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]

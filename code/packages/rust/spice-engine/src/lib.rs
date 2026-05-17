@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
+const SPARSE_SOLVER_THRESHOLD: usize = 30;
 const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 const BOLTZMANN: f64 = 1.380_649e-23;
 
@@ -5130,7 +5131,14 @@ fn stamp_complex_transconductance(
     }
 }
 
-fn solve_linear_system(
+fn solve_linear_system(matrix: Vec<Vec<f64>>, rhs: Vec<f64>) -> Result<Vec<f64>, SpiceError> {
+    if rhs.len() >= SPARSE_SOLVER_THRESHOLD {
+        return solve_sparse_linear_system(matrix, rhs);
+    }
+    solve_dense_linear_system(matrix, rhs)
+}
+
+fn solve_dense_linear_system(
     mut matrix: Vec<Vec<f64>>,
     mut rhs: Vec<f64>,
 ) -> Result<Vec<f64>, SpiceError> {
@@ -5173,6 +5181,90 @@ fn solve_linear_system(
             .sum();
         solution[row] = (rhs[row] - tail_sum) / matrix[row][row];
     }
+    Ok(solution)
+}
+
+fn solve_sparse_linear_system(
+    matrix: Vec<Vec<f64>>,
+    rhs: Vec<f64>,
+) -> Result<Vec<f64>, SpiceError> {
+    let n = rhs.len();
+    let mut rows: Vec<HashMap<usize, f64>> = matrix
+        .into_iter()
+        .map(|row| {
+            row.into_iter()
+                .enumerate()
+                .filter_map(|(col, value)| (value != 0.0).then_some((col, value)))
+                .collect()
+        })
+        .collect();
+    let mut rhs = rhs;
+
+    for pivot_col in 0..n {
+        let pivot_row = (pivot_col..n)
+            .max_by(|&a, &b| {
+                rows[a]
+                    .get(&pivot_col)
+                    .copied()
+                    .unwrap_or(0.0)
+                    .abs()
+                    .partial_cmp(&rows[b].get(&pivot_col).copied().unwrap_or(0.0).abs())
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .ok_or(SpiceError::SingularMatrix)?;
+
+        if rows[pivot_row]
+            .get(&pivot_col)
+            .copied()
+            .unwrap_or(0.0)
+            .abs()
+            < PIVOT_EPSILON
+        {
+            return Err(SpiceError::SingularMatrix);
+        }
+
+        rows.swap(pivot_col, pivot_row);
+        rhs.swap(pivot_col, pivot_row);
+
+        let pivot = rows[pivot_col][&pivot_col];
+        let pivot_entries: Vec<(usize, f64)> = rows[pivot_col]
+            .iter()
+            .filter_map(|(&col, &value)| (col > pivot_col).then_some((col, value)))
+            .collect();
+        for row in (pivot_col + 1)..n {
+            let value = rows[row].get(&pivot_col).copied().unwrap_or(0.0);
+            if value == 0.0 {
+                continue;
+            }
+            let factor = value / pivot;
+            rows[row].remove(&pivot_col);
+            for (col, pivot_value) in &pivot_entries {
+                let next_value = rows[row].get(col).copied().unwrap_or(0.0) - factor * pivot_value;
+                if next_value.abs() < PIVOT_EPSILON {
+                    rows[row].remove(col);
+                } else {
+                    rows[row].insert(*col, next_value);
+                }
+            }
+            rhs[row] -= factor * rhs[pivot_col];
+        }
+    }
+
+    let mut solution = vec![0.0; n];
+    for row in (0..n).rev() {
+        let diagonal = rows[row].get(&row).copied().unwrap_or(0.0);
+        if diagonal.abs() < PIVOT_EPSILON {
+            return Err(SpiceError::SingularMatrix);
+        }
+        let mut value = rhs[row];
+        for (&col, &entry) in &rows[row] {
+            if col > row {
+                value -= entry * solution[col];
+            }
+        }
+        solution[row] = value / diagonal;
+    }
+
     Ok(solution)
 }
 

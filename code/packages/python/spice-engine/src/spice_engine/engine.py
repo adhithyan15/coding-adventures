@@ -1434,8 +1434,16 @@ def _stamp_bjt(
 # Linear solver
 # ---------------------------------------------------------------------------
 
+_SPARSE_SOLVER_THRESHOLD = 30
+
 
 def _solve(A: list[list[float]], b: list[float]) -> list[float]:
+    if len(A) >= _SPARSE_SOLVER_THRESHOLD:
+        return _solve_sparse(A, b)
+    return _solve_dense(A, b)
+
+
+def _solve_dense(A: list[list[float]], b: list[float]) -> list[float]:
     """Gaussian elimination with partial pivoting. Returns x s.t. A x = b."""
     n = len(A)
     if n == 0:
@@ -1466,6 +1474,68 @@ def _solve(A: list[list[float]], b: list[float]) -> list[float]:
         for c in range(i + 1, n):
             s -= aug[i][c] * x[c]
         x[i] = s / aug[i][i]
+    return x
+
+
+def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
+    """Sparse-row Gaussian elimination with partial pivoting.
+
+    The MNA matrix is assembled densely today, but each device stamp touches
+    only a few columns. Converting rows to dictionaries keeps the large-circuit
+    solve path from doing work on structural zeros.
+    """
+
+    n = len(A)
+    if n == 0:
+        return []
+    rows = [
+        {col: value for col, value in enumerate(row) if value != 0.0}
+        for row in A
+    ]
+    rhs = list(b)
+
+    for pivot_col in range(n):
+        pivot_row = max(
+            range(pivot_col, n),
+            key=lambda row: abs(rows[row].get(pivot_col, 0.0)),
+        )
+        pivot_abs = abs(rows[pivot_row].get(pivot_col, 0.0))
+        if pivot_abs < 1e-15:
+            raise ZeroDivisionError(f"singular matrix at row {pivot_col}")
+
+        rows[pivot_col], rows[pivot_row] = rows[pivot_row], rows[pivot_col]
+        rhs[pivot_col], rhs[pivot_row] = rhs[pivot_row], rhs[pivot_col]
+
+        pivot_value = rows[pivot_col][pivot_col]
+        pivot_entries = [
+            (col, value)
+            for col, value in rows[pivot_col].items()
+            if col > pivot_col
+        ]
+        for row_index in range(pivot_col + 1, n):
+            value = rows[row_index].get(pivot_col, 0.0)
+            if value == 0.0:
+                continue
+            factor = value / pivot_value
+            rows[row_index].pop(pivot_col, None)
+            for col, pivot_entry in pivot_entries:
+                next_value = rows[row_index].get(col, 0.0) - factor * pivot_entry
+                if abs(next_value) < 1e-15:
+                    rows[row_index].pop(col, None)
+                else:
+                    rows[row_index][col] = next_value
+            rhs[row_index] -= factor * rhs[pivot_col]
+
+    x = [0.0] * n
+    for row_index in range(n - 1, -1, -1):
+        diag = rows[row_index].get(row_index, 0.0)
+        if abs(diag) < 1e-15:
+            raise ZeroDivisionError(f"singular matrix at row {row_index}")
+        total = rhs[row_index]
+        for col, value in rows[row_index].items():
+            if col > row_index:
+                total -= value * x[col]
+        x[row_index] = total / diag
     return x
 
 

@@ -44,6 +44,20 @@ describe("dcOp", () => {
     expect(result.iterations).toBe(1);
   });
 
+  it("solves a large resistor ladder through the sparse real solver path", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "n0", "0", 10.0));
+    for (let index = 0; index < 34; index++) {
+      circuit.add(resistor(`R${index}`, `n${index}`, `n${index + 1}`, 1_000.0));
+    }
+    circuit.add(resistor("R34", "n34", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expect(result.converged).toBe(true);
+    expectClose(result.voltage("n34"), 10.0 / 35.0);
+  });
+
   it("expands subcircuit instances into namespaced primitive elements", () => {
     const circuit = new Circuit();
     circuit.defineSubcircuit(

@@ -99,9 +99,9 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- Sub-circuit support across Python, TypeScript, and Rust SPICE engines:
-  programmatic `SubcircuitDefinition` / `XInstance` expansion into namespaced
-  primitive elements before simulation.
+- Sparse real solver path across Python, TypeScript, and Rust SPICE engines:
+  large DC / real small-signal matrices route through sparse-row Gaussian
+  elimination while small systems keep the dense solver.
 
 ---
 
