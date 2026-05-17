@@ -47,6 +47,9 @@ documented in this file.
 - A generated WHATWG numeric character reference edge fixture and Rust
   conformance test that exercises decimal, hexadecimal, semicolon, and
   missing-semicolon forms across data, attribute, and RCDATA contexts.
+- A generated WHATWG input-stream preprocessing fixture and Rust conformance
+  test that exercises CRLF and bare-CR normalization across tokenizer contexts,
+  every chunk split point, and diagnostic line/column positions.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

@@ -68,6 +68,10 @@ character references.
 The Rust HTML wrapper also enables input-stream newline preprocessing, so CRLF
 pairs and bare carriage returns are tokenized as LF while source offsets still
 advance across the original bytes.
+The conformance suite now generates input-stream preprocessing cases across
+data, tags, attributes, comments, doctypes, character references, RCDATA,
+RAWTEXT, script data, PLAINTEXT, CDATA, and seeded continuation states,
+including chunk splits inside CRLF pairs.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.

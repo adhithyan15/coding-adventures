@@ -1,0 +1,822 @@
+{
+  "cases": [
+    {
+      "description": "data state text with lf",
+      "id": "data-text-lf",
+      "input": "alpha\nbeta",
+      "normalized": "alpha\nbeta"
+    },
+    {
+      "description": "data state text with cr",
+      "id": "data-text-cr",
+      "input": "alpha\rbeta",
+      "normalized": "alpha\nbeta"
+    },
+    {
+      "description": "data state text with crlf",
+      "id": "data-text-crlf",
+      "input": "alpha\r\nbeta",
+      "normalized": "alpha\nbeta"
+    },
+    {
+      "description": "data state text with mixed",
+      "id": "data-text-mixed",
+      "input": "alpha\r\n\r\n\rbeta",
+      "normalized": "alpha\n\n\nbeta"
+    },
+    {
+      "description": "tag name whitespace boundary with lf",
+      "id": "tag-name-boundary-lf",
+      "input": "<p\nclass=x>alpha</p>",
+      "normalized": "<p\nclass=x>alpha</p>"
+    },
+    {
+      "description": "tag name whitespace boundary with cr",
+      "id": "tag-name-boundary-cr",
+      "input": "<p\rclass=x>alpha</p>",
+      "normalized": "<p\nclass=x>alpha</p>"
+    },
+    {
+      "description": "tag name whitespace boundary with crlf",
+      "id": "tag-name-boundary-crlf",
+      "input": "<p\r\nclass=x>alpha</p>",
+      "normalized": "<p\nclass=x>alpha</p>"
+    },
+    {
+      "description": "tag name whitespace boundary with mixed",
+      "id": "tag-name-boundary-mixed",
+      "input": "<p\r\n\r\n\rclass=x>alpha</p>",
+      "normalized": "<p\n\n\nclass=x>alpha</p>"
+    },
+    {
+      "description": "before attribute name state with lf",
+      "id": "before-attribute-name-lf",
+      "input": "<p class=x\ntitle=y>alpha</p>",
+      "normalized": "<p class=x\ntitle=y>alpha</p>"
+    },
+    {
+      "description": "before attribute name state with cr",
+      "id": "before-attribute-name-cr",
+      "input": "<p class=x\rtitle=y>alpha</p>",
+      "normalized": "<p class=x\ntitle=y>alpha</p>"
+    },
+    {
+      "description": "before attribute name state with crlf",
+      "id": "before-attribute-name-crlf",
+      "input": "<p class=x\r\ntitle=y>alpha</p>",
+      "normalized": "<p class=x\ntitle=y>alpha</p>"
+    },
+    {
+      "description": "before attribute name state with mixed",
+      "id": "before-attribute-name-mixed",
+      "input": "<p class=x\r\n\r\n\rtitle=y>alpha</p>",
+      "normalized": "<p class=x\n\n\ntitle=y>alpha</p>"
+    },
+    {
+      "description": "double quoted attribute value with lf",
+      "id": "double-quoted-attribute-lf",
+      "input": "<p title=\"alpha\nbeta\">x</p>",
+      "normalized": "<p title=\"alpha\nbeta\">x</p>"
+    },
+    {
+      "description": "double quoted attribute value with cr",
+      "id": "double-quoted-attribute-cr",
+      "input": "<p title=\"alpha\rbeta\">x</p>",
+      "normalized": "<p title=\"alpha\nbeta\">x</p>"
+    },
+    {
+      "description": "double quoted attribute value with crlf",
+      "id": "double-quoted-attribute-crlf",
+      "input": "<p title=\"alpha\r\nbeta\">x</p>",
+      "normalized": "<p title=\"alpha\nbeta\">x</p>"
+    },
+    {
+      "description": "double quoted attribute value with mixed",
+      "id": "double-quoted-attribute-mixed",
+      "input": "<p title=\"alpha\r\n\r\n\rbeta\">x</p>",
+      "normalized": "<p title=\"alpha\n\n\nbeta\">x</p>"
+    },
+    {
+      "description": "single quoted attribute value with lf",
+      "id": "single-quoted-attribute-lf",
+      "input": "<p title='alpha\nbeta'>x</p>",
+      "normalized": "<p title='alpha\nbeta'>x</p>"
+    },
+    {
+      "description": "single quoted attribute value with cr",
+      "id": "single-quoted-attribute-cr",
+      "input": "<p title='alpha\rbeta'>x</p>",
+      "normalized": "<p title='alpha\nbeta'>x</p>"
+    },
+    {
+      "description": "single quoted attribute value with crlf",
+      "id": "single-quoted-attribute-crlf",
+      "input": "<p title='alpha\r\nbeta'>x</p>",
+      "normalized": "<p title='alpha\nbeta'>x</p>"
+    },
+    {
+      "description": "single quoted attribute value with mixed",
+      "id": "single-quoted-attribute-mixed",
+      "input": "<p title='alpha\r\n\r\n\rbeta'>x</p>",
+      "normalized": "<p title='alpha\n\n\nbeta'>x</p>"
+    },
+    {
+      "description": "unquoted attribute whitespace boundary with lf",
+      "id": "unquoted-attribute-lf",
+      "input": "<p title=alpha\nbeta=gamma>x</p>",
+      "normalized": "<p title=alpha\nbeta=gamma>x</p>"
+    },
+    {
+      "description": "unquoted attribute whitespace boundary with cr",
+      "id": "unquoted-attribute-cr",
+      "input": "<p title=alpha\rbeta=gamma>x</p>",
+      "normalized": "<p title=alpha\nbeta=gamma>x</p>"
+    },
+    {
+      "description": "unquoted attribute whitespace boundary with crlf",
+      "id": "unquoted-attribute-crlf",
+      "input": "<p title=alpha\r\nbeta=gamma>x</p>",
+      "normalized": "<p title=alpha\nbeta=gamma>x</p>"
+    },
+    {
+      "description": "unquoted attribute whitespace boundary with mixed",
+      "id": "unquoted-attribute-mixed",
+      "input": "<p title=alpha\r\n\r\n\rbeta=gamma>x</p>",
+      "normalized": "<p title=alpha\n\n\nbeta=gamma>x</p>"
+    },
+    {
+      "description": "comment data with lf",
+      "id": "comment-data-lf",
+      "input": "<!--alpha\nbeta-->",
+      "normalized": "<!--alpha\nbeta-->"
+    },
+    {
+      "description": "comment data with cr",
+      "id": "comment-data-cr",
+      "input": "<!--alpha\rbeta-->",
+      "normalized": "<!--alpha\nbeta-->"
+    },
+    {
+      "description": "comment data with crlf",
+      "id": "comment-data-crlf",
+      "input": "<!--alpha\r\nbeta-->",
+      "normalized": "<!--alpha\nbeta-->"
+    },
+    {
+      "description": "comment data with mixed",
+      "id": "comment-data-mixed",
+      "input": "<!--alpha\r\n\r\n\rbeta-->",
+      "normalized": "<!--alpha\n\n\nbeta-->"
+    },
+    {
+      "description": "bogus comment data with lf",
+      "id": "bogus-comment-data-lf",
+      "input": "<?alpha\nbeta>",
+      "normalized": "<?alpha\nbeta>"
+    },
+    {
+      "description": "bogus comment data with cr",
+      "id": "bogus-comment-data-cr",
+      "input": "<?alpha\rbeta>",
+      "normalized": "<?alpha\nbeta>"
+    },
+    {
+      "description": "bogus comment data with crlf",
+      "id": "bogus-comment-data-crlf",
+      "input": "<?alpha\r\nbeta>",
+      "normalized": "<?alpha\nbeta>"
+    },
+    {
+      "description": "bogus comment data with mixed",
+      "id": "bogus-comment-data-mixed",
+      "input": "<?alpha\r\n\r\n\rbeta>",
+      "normalized": "<?alpha\n\n\nbeta>"
+    },
+    {
+      "description": "DOCTYPE whitespace before name with lf",
+      "id": "doctype-before-name-lf",
+      "input": "<!DOCTYPE\nhtml>",
+      "normalized": "<!DOCTYPE\nhtml>"
+    },
+    {
+      "description": "DOCTYPE whitespace before name with cr",
+      "id": "doctype-before-name-cr",
+      "input": "<!DOCTYPE\rhtml>",
+      "normalized": "<!DOCTYPE\nhtml>"
+    },
+    {
+      "description": "DOCTYPE whitespace before name with crlf",
+      "id": "doctype-before-name-crlf",
+      "input": "<!DOCTYPE\r\nhtml>",
+      "normalized": "<!DOCTYPE\nhtml>"
+    },
+    {
+      "description": "DOCTYPE whitespace before name with mixed",
+      "id": "doctype-before-name-mixed",
+      "input": "<!DOCTYPE\r\n\r\n\rhtml>",
+      "normalized": "<!DOCTYPE\n\n\nhtml>"
+    },
+    {
+      "description": "DOCTYPE public identifier with lf",
+      "id": "doctype-public-identifier-lf",
+      "input": "<!DOCTYPE html PUBLIC \"alpha\nbeta\" \"system\">",
+      "normalized": "<!DOCTYPE html PUBLIC \"alpha\nbeta\" \"system\">"
+    },
+    {
+      "description": "DOCTYPE public identifier with cr",
+      "id": "doctype-public-identifier-cr",
+      "input": "<!DOCTYPE html PUBLIC \"alpha\rbeta\" \"system\">",
+      "normalized": "<!DOCTYPE html PUBLIC \"alpha\nbeta\" \"system\">"
+    },
+    {
+      "description": "DOCTYPE public identifier with crlf",
+      "id": "doctype-public-identifier-crlf",
+      "input": "<!DOCTYPE html PUBLIC \"alpha\r\nbeta\" \"system\">",
+      "normalized": "<!DOCTYPE html PUBLIC \"alpha\nbeta\" \"system\">"
+    },
+    {
+      "description": "DOCTYPE public identifier with mixed",
+      "id": "doctype-public-identifier-mixed",
+      "input": "<!DOCTYPE html PUBLIC \"alpha\r\n\r\n\rbeta\" \"system\">",
+      "normalized": "<!DOCTYPE html PUBLIC \"alpha\n\n\nbeta\" \"system\">"
+    },
+    {
+      "description": "DOCTYPE system identifier with lf",
+      "id": "doctype-system-identifier-lf",
+      "input": "<!DOCTYPE html SYSTEM \"alpha\nbeta\">",
+      "normalized": "<!DOCTYPE html SYSTEM \"alpha\nbeta\">"
+    },
+    {
+      "description": "DOCTYPE system identifier with cr",
+      "id": "doctype-system-identifier-cr",
+      "input": "<!DOCTYPE html SYSTEM \"alpha\rbeta\">",
+      "normalized": "<!DOCTYPE html SYSTEM \"alpha\nbeta\">"
+    },
+    {
+      "description": "DOCTYPE system identifier with crlf",
+      "id": "doctype-system-identifier-crlf",
+      "input": "<!DOCTYPE html SYSTEM \"alpha\r\nbeta\">",
+      "normalized": "<!DOCTYPE html SYSTEM \"alpha\nbeta\">"
+    },
+    {
+      "description": "DOCTYPE system identifier with mixed",
+      "id": "doctype-system-identifier-mixed",
+      "input": "<!DOCTYPE html SYSTEM \"alpha\r\n\r\n\rbeta\">",
+      "normalized": "<!DOCTYPE html SYSTEM \"alpha\n\n\nbeta\">"
+    },
+    {
+      "description": "named character reference recovery before newline with lf",
+      "id": "named-reference-recovery-lf",
+      "input": "alpha&not\nbeta",
+      "normalized": "alpha&not\nbeta"
+    },
+    {
+      "description": "named character reference recovery before newline with cr",
+      "id": "named-reference-recovery-cr",
+      "input": "alpha&not\rbeta",
+      "normalized": "alpha&not\nbeta"
+    },
+    {
+      "description": "named character reference recovery before newline with crlf",
+      "id": "named-reference-recovery-crlf",
+      "input": "alpha&not\r\nbeta",
+      "normalized": "alpha&not\nbeta"
+    },
+    {
+      "description": "named character reference recovery before newline with mixed",
+      "id": "named-reference-recovery-mixed",
+      "input": "alpha&not\r\n\r\n\rbeta",
+      "normalized": "alpha&not\n\n\nbeta"
+    },
+    {
+      "description": "numeric character reference missing semicolon before newline with lf",
+      "id": "numeric-reference-recovery-lf",
+      "input": "alpha&#65\nbeta",
+      "normalized": "alpha&#65\nbeta"
+    },
+    {
+      "description": "numeric character reference missing semicolon before newline with cr",
+      "id": "numeric-reference-recovery-cr",
+      "input": "alpha&#65\rbeta",
+      "normalized": "alpha&#65\nbeta"
+    },
+    {
+      "description": "numeric character reference missing semicolon before newline with crlf",
+      "id": "numeric-reference-recovery-crlf",
+      "input": "alpha&#65\r\nbeta",
+      "normalized": "alpha&#65\nbeta"
+    },
+    {
+      "description": "numeric character reference missing semicolon before newline with mixed",
+      "id": "numeric-reference-recovery-mixed",
+      "input": "alpha&#65\r\n\r\n\rbeta",
+      "normalized": "alpha&#65\n\n\nbeta"
+    },
+    {
+      "description": "RCDATA text with lf",
+      "id": "rcdata-text-lf",
+      "initial_state": "RCDATA state",
+      "input": "alpha\nbeta</title>",
+      "last_start_tag": "title",
+      "normalized": "alpha\nbeta</title>"
+    },
+    {
+      "description": "RCDATA text with cr",
+      "id": "rcdata-text-cr",
+      "initial_state": "RCDATA state",
+      "input": "alpha\rbeta</title>",
+      "last_start_tag": "title",
+      "normalized": "alpha\nbeta</title>"
+    },
+    {
+      "description": "RCDATA text with crlf",
+      "id": "rcdata-text-crlf",
+      "initial_state": "RCDATA state",
+      "input": "alpha\r\nbeta</title>",
+      "last_start_tag": "title",
+      "normalized": "alpha\nbeta</title>"
+    },
+    {
+      "description": "RCDATA text with mixed",
+      "id": "rcdata-text-mixed",
+      "initial_state": "RCDATA state",
+      "input": "alpha\r\n\r\n\rbeta</title>",
+      "last_start_tag": "title",
+      "normalized": "alpha\n\n\nbeta</title>"
+    },
+    {
+      "description": "RCDATA end tag name recovery with lf",
+      "id": "rcdata-end-tag-name-lf",
+      "initial_state": "RCDATA state",
+      "input": "</tit\nle>",
+      "last_start_tag": "title",
+      "normalized": "</tit\nle>"
+    },
+    {
+      "description": "RCDATA end tag name recovery with cr",
+      "id": "rcdata-end-tag-name-cr",
+      "initial_state": "RCDATA state",
+      "input": "</tit\rle>",
+      "last_start_tag": "title",
+      "normalized": "</tit\nle>"
+    },
+    {
+      "description": "RCDATA end tag name recovery with crlf",
+      "id": "rcdata-end-tag-name-crlf",
+      "initial_state": "RCDATA state",
+      "input": "</tit\r\nle>",
+      "last_start_tag": "title",
+      "normalized": "</tit\nle>"
+    },
+    {
+      "description": "RCDATA end tag name recovery with mixed",
+      "id": "rcdata-end-tag-name-mixed",
+      "initial_state": "RCDATA state",
+      "input": "</tit\r\n\r\n\rle>",
+      "last_start_tag": "title",
+      "normalized": "</tit\n\n\nle>"
+    },
+    {
+      "description": "RAWTEXT text with lf",
+      "id": "rawtext-text-lf",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha\nbeta</style>",
+      "last_start_tag": "style",
+      "normalized": "alpha\nbeta</style>"
+    },
+    {
+      "description": "RAWTEXT text with cr",
+      "id": "rawtext-text-cr",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha\rbeta</style>",
+      "last_start_tag": "style",
+      "normalized": "alpha\nbeta</style>"
+    },
+    {
+      "description": "RAWTEXT text with crlf",
+      "id": "rawtext-text-crlf",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha\r\nbeta</style>",
+      "last_start_tag": "style",
+      "normalized": "alpha\nbeta</style>"
+    },
+    {
+      "description": "RAWTEXT text with mixed",
+      "id": "rawtext-text-mixed",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha\r\n\r\n\rbeta</style>",
+      "last_start_tag": "style",
+      "normalized": "alpha\n\n\nbeta</style>"
+    },
+    {
+      "description": "RAWTEXT end tag name recovery with lf",
+      "id": "rawtext-end-tag-name-lf",
+      "initial_state": "RAWTEXT state",
+      "input": "</sty\nle>",
+      "last_start_tag": "style",
+      "normalized": "</sty\nle>"
+    },
+    {
+      "description": "RAWTEXT end tag name recovery with cr",
+      "id": "rawtext-end-tag-name-cr",
+      "initial_state": "RAWTEXT state",
+      "input": "</sty\rle>",
+      "last_start_tag": "style",
+      "normalized": "</sty\nle>"
+    },
+    {
+      "description": "RAWTEXT end tag name recovery with crlf",
+      "id": "rawtext-end-tag-name-crlf",
+      "initial_state": "RAWTEXT state",
+      "input": "</sty\r\nle>",
+      "last_start_tag": "style",
+      "normalized": "</sty\nle>"
+    },
+    {
+      "description": "RAWTEXT end tag name recovery with mixed",
+      "id": "rawtext-end-tag-name-mixed",
+      "initial_state": "RAWTEXT state",
+      "input": "</sty\r\n\r\n\rle>",
+      "last_start_tag": "style",
+      "normalized": "</sty\n\n\nle>"
+    },
+    {
+      "description": "script data text with lf",
+      "id": "script-data-text-lf",
+      "initial_state": "Script data state",
+      "input": "alpha\nbeta</script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\nbeta</script>"
+    },
+    {
+      "description": "script data text with cr",
+      "id": "script-data-text-cr",
+      "initial_state": "Script data state",
+      "input": "alpha\rbeta</script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\nbeta</script>"
+    },
+    {
+      "description": "script data text with crlf",
+      "id": "script-data-text-crlf",
+      "initial_state": "Script data state",
+      "input": "alpha\r\nbeta</script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\nbeta</script>"
+    },
+    {
+      "description": "script data text with mixed",
+      "id": "script-data-text-mixed",
+      "initial_state": "Script data state",
+      "input": "alpha\r\n\r\n\rbeta</script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\n\n\nbeta</script>"
+    },
+    {
+      "description": "script data escaped text with lf",
+      "id": "script-data-escaped-lf",
+      "initial_state": "Script data escaped state",
+      "input": "alpha\nbeta--></script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\nbeta--></script>"
+    },
+    {
+      "description": "script data escaped text with cr",
+      "id": "script-data-escaped-cr",
+      "initial_state": "Script data escaped state",
+      "input": "alpha\rbeta--></script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\nbeta--></script>"
+    },
+    {
+      "description": "script data escaped text with crlf",
+      "id": "script-data-escaped-crlf",
+      "initial_state": "Script data escaped state",
+      "input": "alpha\r\nbeta--></script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\nbeta--></script>"
+    },
+    {
+      "description": "script data escaped text with mixed",
+      "id": "script-data-escaped-mixed",
+      "initial_state": "Script data escaped state",
+      "input": "alpha\r\n\r\n\rbeta--></script>",
+      "last_start_tag": "script",
+      "normalized": "alpha\n\n\nbeta--></script>"
+    },
+    {
+      "description": "PLAINTEXT text with lf",
+      "id": "plaintext-text-lf",
+      "initial_state": "PLAINTEXT state",
+      "input": "alpha\n<beta>",
+      "normalized": "alpha\n<beta>"
+    },
+    {
+      "description": "PLAINTEXT text with cr",
+      "id": "plaintext-text-cr",
+      "initial_state": "PLAINTEXT state",
+      "input": "alpha\r<beta>",
+      "normalized": "alpha\n<beta>"
+    },
+    {
+      "description": "PLAINTEXT text with crlf",
+      "id": "plaintext-text-crlf",
+      "initial_state": "PLAINTEXT state",
+      "input": "alpha\r\n<beta>",
+      "normalized": "alpha\n<beta>"
+    },
+    {
+      "description": "PLAINTEXT text with mixed",
+      "id": "plaintext-text-mixed",
+      "initial_state": "PLAINTEXT state",
+      "input": "alpha\r\n\r\n\r<beta>",
+      "normalized": "alpha\n\n\n<beta>"
+    },
+    {
+      "description": "CDATA section text with lf",
+      "id": "cdata-section-lf",
+      "initial_state": "CDATA section state",
+      "input": "alpha\nbeta]]>",
+      "normalized": "alpha\nbeta]]>"
+    },
+    {
+      "description": "CDATA section text with cr",
+      "id": "cdata-section-cr",
+      "initial_state": "CDATA section state",
+      "input": "alpha\rbeta]]>",
+      "normalized": "alpha\nbeta]]>"
+    },
+    {
+      "description": "CDATA section text with crlf",
+      "id": "cdata-section-crlf",
+      "initial_state": "CDATA section state",
+      "input": "alpha\r\nbeta]]>",
+      "normalized": "alpha\nbeta]]>"
+    },
+    {
+      "description": "CDATA section text with mixed",
+      "id": "cdata-section-mixed",
+      "initial_state": "CDATA section state",
+      "input": "alpha\r\n\r\n\rbeta]]>",
+      "normalized": "alpha\n\n\nbeta]]>"
+    },
+    {
+      "current_comment": "seed:",
+      "description": "seeded comment continuation with lf",
+      "id": "seeded-comment-state-lf",
+      "initial_state": "Comment state",
+      "input": "alpha\nbeta-->",
+      "normalized": "alpha\nbeta-->"
+    },
+    {
+      "current_comment": "seed:",
+      "description": "seeded comment continuation with cr",
+      "id": "seeded-comment-state-cr",
+      "initial_state": "Comment state",
+      "input": "alpha\rbeta-->",
+      "normalized": "alpha\nbeta-->"
+    },
+    {
+      "current_comment": "seed:",
+      "description": "seeded comment continuation with crlf",
+      "id": "seeded-comment-state-crlf",
+      "initial_state": "Comment state",
+      "input": "alpha\r\nbeta-->",
+      "normalized": "alpha\nbeta-->"
+    },
+    {
+      "current_comment": "seed:",
+      "description": "seeded comment continuation with mixed",
+      "id": "seeded-comment-state-mixed",
+      "initial_state": "Comment state",
+      "input": "alpha\r\n\r\n\rbeta-->",
+      "normalized": "alpha\n\n\nbeta-->"
+    },
+    {
+      "current_doctype": {
+        "force_quirks": false,
+        "name": "html",
+        "public_identifier": "",
+        "system_identifier": null
+      },
+      "description": "seeded DOCTYPE public identifier continuation with lf",
+      "id": "seeded-doctype-public-identifier-lf",
+      "initial_state": "DOCTYPE public identifier double quoted state",
+      "input": "alpha\nbeta\">",
+      "normalized": "alpha\nbeta\">"
+    },
+    {
+      "current_doctype": {
+        "force_quirks": false,
+        "name": "html",
+        "public_identifier": "",
+        "system_identifier": null
+      },
+      "description": "seeded DOCTYPE public identifier continuation with cr",
+      "id": "seeded-doctype-public-identifier-cr",
+      "initial_state": "DOCTYPE public identifier double quoted state",
+      "input": "alpha\rbeta\">",
+      "normalized": "alpha\nbeta\">"
+    },
+    {
+      "current_doctype": {
+        "force_quirks": false,
+        "name": "html",
+        "public_identifier": "",
+        "system_identifier": null
+      },
+      "description": "seeded DOCTYPE public identifier continuation with crlf",
+      "id": "seeded-doctype-public-identifier-crlf",
+      "initial_state": "DOCTYPE public identifier double quoted state",
+      "input": "alpha\r\nbeta\">",
+      "normalized": "alpha\nbeta\">"
+    },
+    {
+      "current_doctype": {
+        "force_quirks": false,
+        "name": "html",
+        "public_identifier": "",
+        "system_identifier": null
+      },
+      "description": "seeded DOCTYPE public identifier continuation with mixed",
+      "id": "seeded-doctype-public-identifier-mixed",
+      "initial_state": "DOCTYPE public identifier double quoted state",
+      "input": "alpha\r\n\r\n\rbeta\">",
+      "normalized": "alpha\n\n\nbeta\">"
+    }
+  ],
+  "description": "CRLF and bare CR preprocessing equivalence cases for HTML tokenization contexts.",
+  "format": "whatwg-html-input-stream-preprocessing/v1",
+  "newline_forms": [
+    {
+      "id": "lf",
+      "normalized": "\n",
+      "source": "\n"
+    },
+    {
+      "id": "cr",
+      "normalized": "\n",
+      "source": "\r"
+    },
+    {
+      "id": "crlf",
+      "normalized": "\n",
+      "source": "\r\n"
+    },
+    {
+      "id": "mixed",
+      "normalized": "\n\n\n",
+      "source": "\r\n\r\n\r"
+    }
+  ],
+  "position_cases": [
+    {
+      "description": "unexpected NULL after preprocessed newline in data with lf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "data-null-after-newline-lf",
+      "initial_state": "Data state",
+      "input": "alpha\n\u0000"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in data with cr",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "data-null-after-newline-cr",
+      "initial_state": "Data state",
+      "input": "alpha\r\u0000"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in data with crlf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "data-null-after-newline-crlf",
+      "initial_state": "Data state",
+      "input": "alpha\r\n\u0000"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in data with mixed",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 4,
+      "id": "data-null-after-newline-mixed",
+      "initial_state": "Data state",
+      "input": "alpha\r\n\r\n\r\u0000"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in attribute value with lf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "attribute-null-after-newline-lf",
+      "initial_state": "Data state",
+      "input": "<p title='alpha\n\u0000'>"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in attribute value with cr",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "attribute-null-after-newline-cr",
+      "initial_state": "Data state",
+      "input": "<p title='alpha\r\u0000'>"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in attribute value with crlf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "attribute-null-after-newline-crlf",
+      "initial_state": "Data state",
+      "input": "<p title='alpha\r\n\u0000'>"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in attribute value with mixed",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 4,
+      "id": "attribute-null-after-newline-mixed",
+      "initial_state": "Data state",
+      "input": "<p title='alpha\r\n\r\n\r\u0000'>"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in comment with lf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "comment-null-after-newline-lf",
+      "initial_state": "Data state",
+      "input": "<!--alpha\n\u0000-->"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in comment with cr",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "comment-null-after-newline-cr",
+      "initial_state": "Data state",
+      "input": "<!--alpha\r\u0000-->"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in comment with crlf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "comment-null-after-newline-crlf",
+      "initial_state": "Data state",
+      "input": "<!--alpha\r\n\u0000-->"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in comment with mixed",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 4,
+      "id": "comment-null-after-newline-mixed",
+      "initial_state": "Data state",
+      "input": "<!--alpha\r\n\r\n\r\u0000-->"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in RCDATA with lf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "rcdata-null-after-newline-lf",
+      "initial_state": "RCDATA state",
+      "input": "alpha\n\u0000</title>",
+      "last_start_tag": "title"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in RCDATA with cr",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "rcdata-null-after-newline-cr",
+      "initial_state": "RCDATA state",
+      "input": "alpha\r\u0000</title>",
+      "last_start_tag": "title"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in RCDATA with crlf",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 2,
+      "id": "rcdata-null-after-newline-crlf",
+      "initial_state": "RCDATA state",
+      "input": "alpha\r\n\u0000</title>",
+      "last_start_tag": "title"
+    },
+    {
+      "description": "unexpected NULL after preprocessed newline in RCDATA with mixed",
+      "diagnostic": "unexpected-null-character",
+      "expected_column": 1,
+      "expected_line": 4,
+      "id": "rcdata-null-after-newline-mixed",
+      "initial_state": "RCDATA state",
+      "input": "alpha\r\n\r\n\r\u0000</title>",
+      "last_start_tag": "title"
+    }
+  ]
+}
