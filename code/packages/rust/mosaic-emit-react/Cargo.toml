@@ -9,6 +9,9 @@ mosaic-vm = { path = "../mosaic-vm" }
 mosaic-analyzer = { path = "../mosaic-analyzer" }
 mosaic-parser = { path = "../mosaic-parser" }
 mosaic-lexer = { path = "../mosaic-lexer" }
+mosmodel-compiler = { path = "../mosmodel-compiler" }
+moslayout-compiler = { path = "../moslayout-compiler" }
+mosstyle-compiler = { path = "../mosstyle-compiler" }
 grammar-tools = { path = "../grammar-tools" }
 lexer = { path = "../lexer" }
 directed-graph = { path = "../directed-graph" }

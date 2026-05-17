@@ -1,5 +1,151 @@
 # Changelog — dsp-wavelets
 
+## 0.4.0 — 2026-05-17
+
+### Added — DSP06 Phase 4a (2-D DWT for orthogonal wavelets)
+
+The canonical image wavelet decomposition lands:
+
+```rust
+pub fn dwt_2d(
+    image: &[f32],
+    n_rows: u32,
+    n_cols: u32,
+    wavelet: WaveletType,
+    levels: u32,
+    boundary: WaveletBoundary,
+) -> Result<Vec<f32>, WaveletError>;
+
+pub fn idwt_2d(...) -> Result<Vec<f32>, WaveletError>;
+```
+
+Both re-exported at the crate root.
+
+#### Algorithm — separable row-then-column
+
+For each level:
+
+1. **Row pass**: 1-D DWT on each row, producing `[L_row | H_row]`
+   (each `n_rows × n_cols/2`).
+2. **Column pass**: 1-D DWT down each column of `L_row` and
+   `H_row` separately, producing the four sub-bands:
+   - **LL** (cA) — both lowpass; recursed for level `j+1`.
+   - **HL** (cH) — row low, column high; vertical detail.
+   - **LH** (cV) — row high, column low; horizontal detail.
+   - **HH** (cD) — both high; diagonal detail.
+
+After `J` levels: `[LL_J | HL_J | LH_J | HH_J | HL_{J-1} | LH_{J-1} | HH_{J-1} | ... | HL_1 | LH_1 | HH_1]`, flat row-major, matching `pywt.wavedec2` flattened.
+
+#### V1 (Phase 4a) scope
+
+- **Orthogonal wavelets only**: Haar, Db2/4/6/8, Sym4, Coif1 (all
+  the verified Phase 3a/3b set).
+- **Periodic boundary only** — where round-trip is mathematically
+  exact for orthogonal wavelets.
+- Square or rectangular images.
+
+#### What's deferred to Phase 4b
+
+- **Biorthogonal wavelets** (JPEG 2000 5/3 reversible + 9/7
+  irreversible).  These have independent analysis and synthesis
+  filter pairs (unlike orthogonal wavelets, where the same QMF
+  pair handles both), so wiring them through requires refactoring
+  `synthesize_one_level` to accept separate `(h_ana, g_ana, h_syn,
+  g_syn)` filter tuples.  Currently returns
+  `WaveletError::InvalidParam`.
+- **Symmetric / Reflect / Replicate / Zero boundary** for 2-D —
+  currently Periodic only.
+
+#### New tests — 9
+
+- 1 shape contract test across multiple `(n_rows, n_cols, levels)` combos
+- 3 round-trip tests (Haar 16×16, Db4 16×16, Haar 32×16 rectangular)
+- 1 DC suppression test (constant image → all detail bands ≤ 1e-6)
+- 4 param-validation tests (empty, dimension mismatch, unsupported
+  wavelet for 2-D, non-Periodic boundary for 2-D)
+
+All 37 unit tests + 1 doctest pass (28 from Phases 1+2+3a+3b + 9
+new in `two_d`).
+
+#### Internal change
+
+`MAX_LEVELS` and `MAX_SAMPLES` are now `pub(crate)` so `two_d.rs`
+can reuse them without re-declaring.
+
+#### File structure
+
+New module: `src/two_d.rs` — separable row/column 2-D DWT +
+inverse + dimension-tracking helpers + 9 tests.
+
+## 0.3.0 — 2026-05-17
+
+### Added — DSP06 Phase 3b (partial — Db6 and Db8)
+
+Two more Daubechies wavelets land:
+
+- **Db6** (12 taps, 6 vanishing moments) — the canonical
+  "longer-than-toy" orthogonal wavelet.  6 vanishing moments
+  perfectly suppress polynomial signals up to degree 5 (on
+  non-Periodic boundaries — see Phase 4 for Symmetric).
+- **Db8** (16 taps, 8 vanishing moments) — the standard
+  high-order Daubechies, common in audio compression and
+  scientific signal denoising.
+
+Both pass the orthogonal-wavelet invariants (`Σ h = √2` within
+`5e-4`, `Σ h² = 1` within `5e-4`) and round-trip through
+`idwt_1d(dwt_1d(x))` within `1e-3` under Periodic boundary on
+128-sample sinusoid test signals.
+
+#### Source of coefficients
+
+Imported from PyWavelets'
+`_extensions/c/wavelets_coeffs.template.h` table via WebFetch,
+cross-checked against the Wikipedia "Orthogonal Daubechies
+coefficients" table (after rescaling from the "normalized to
+sum 2" convention Wikipedia uses to the "normalized to sum √2"
+convention pywt / this crate use).
+
+#### Why Sym6, Sym8, Coif2, Coif3 are still deferred
+
+The same WebFetch returned data for these wavelets but the values
+did NOT pass the strict orthogonal-wavelet invariants at f32
+precision:
+
+- **Sym6** — `Σ h = 1.658` (should be `√2 ≈ 1.414`), 17% off.
+  Source data was likely from a different normalisation
+  convention or has a copy-paste error.
+- **Sym8** — `Σ h = 1.416` vs `1.4142`, error `2e-3` above the
+  `5e-4` tolerance.  Close but not close enough — likely
+  truncation in the source rather than a wrong filter.
+- **Coif2** — source returned 6 values instead of 12 (the
+  scaling-function half; the wavelet-function half was missing).
+- **Coif3** — source returned 9 values instead of 18 (same
+  truncation pattern).
+
+Phase 3a's strict invariant tests catch all four cases.  Rather
+than relax the tolerance (which would hide the issue), the
+deferred variants stay behind `WaveletError::InvalidParam` until
+a clean source ships — likely a build.rs that calls Python
+PyWavelets directly to dump verified values into a vendored CSV.
+
+#### Public API change
+
+None.  Identical surface to 0.2.0.  Only the `analysis_lowpass`
+dispatch in `src/filters.rs` adds two new arms.
+
+#### New tests — 2
+
+- `db6_round_trip_periodic` — 128-sample sinusoid, 2 levels,
+  Periodic, central region within `1e-3`.
+- `db8_round_trip_periodic` — same setup, Db8.
+
+Plus the existing `Σ h = √2`, `Σ h² = 1`, and `Σ g = 0`
+invariant loops in `src/filters.rs` were extended to include
+the new variants.
+
+All 28 unit tests + 1 doctest pass (26 from Phases 1+2+3a +
+2 new Db6/Db8 round-trips).
+
 ## 0.2.0 — 2026-05-17
 
 ### Added — DSP06 Phase 3a (Daubechies / Symlets / Coiflets — verified subset)
