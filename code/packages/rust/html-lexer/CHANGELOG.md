@@ -44,6 +44,9 @@ documented in this file.
 - A generated WHATWG `entities.json` fixture and Rust conformance test that
   exercises every named character reference in data, attribute, and RCDATA
   contexts, including semicolonless legacy and ambiguous-ampersand behavior.
+- A generated WHATWG numeric character reference edge fixture and Rust
+  conformance test that exercises decimal, hexadecimal, semicolon, and
+  missing-semicolon forms across data, attribute, and RCDATA contexts.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
