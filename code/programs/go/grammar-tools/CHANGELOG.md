@@ -1,5 +1,36 @@
 # Changelog — grammar-tools (Go program)
 
+## [2.2.0] - 2026-05-16
+
+### Added (LANG63 — grammar-driven Twig lexer and CST parser)
+
+Two new CLI commands that generate Twig source code from grammar files:
+
+#### `compile-tokens-twig <file.tokens> [-o output.tw]`
+
+Parses a `.tokens` file and generates the full `lexer.tw` module for the
+self-hosted Twig compiler.  The generated file is a grammar-driven dispatch
+chain identical in behaviour to the LANG58 hand-written lexer, but produced
+mechanically so that changes to `twig.tokens` automatically propagate to the
+Twig source.
+
+Delegates to `GenerateTwigLexer` in the `grammar-tools` library package
+(`twig_codegen.go`).
+
+#### `compile-grammar-twig <file.grammar> [<file.tokens>] [-o output.tw]`
+
+Parses a `.grammar` file (and optionally its companion `.tokens` file for
+keyword / token-kind information) and generates the full `cst-parser.tw`
+module — a grammar-driven recursive-descent CST parser.  Each grammar rule
+becomes one Twig function; repetitions, optionals, and alternation sub-arms
+produce additional named helper functions.
+
+Delegates to `GenerateTwigParser` in the `grammar-tools` library package
+(`twig_codegen.go`).
+
+Both commands accept `--force` to skip validation before compilation and write
+to stdout when `-o` is omitted.
+
 ## [2.1.0] - 2026-03-26
 
 ### Added

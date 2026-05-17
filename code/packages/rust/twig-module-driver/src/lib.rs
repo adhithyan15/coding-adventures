@@ -1084,7 +1084,7 @@ mod tw05d_tests {
         let dir = tempdir("full_tree");
 
         for name in &["span", "token", "diagnostic", "ast", "iir-types",
-                      "iir-builder", "lexer", "parser", "emit", "main"] {
+                      "iir-builder", "lexer", "cst-parser", "parser", "emit", "main"] {
             copy_tw(&src, &dir, name);
         }
 
@@ -1157,7 +1157,7 @@ mod tw05e_tests {
     /// Copy all TW05-D, TW05-E, and TW05-F modules to dest_dir.
     fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
         for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
-                      "lexer", "parser", "emit"] {
+                      "lexer", "cst-parser", "parser", "emit"] {
             copy_tw(twig_src, dest_dir, name);
         }
     }
@@ -1267,12 +1267,13 @@ mod tw05e_tests {
         copy_tw(&src, &dir, "token");
         copy_tw(&src, &dir, "ast");
         copy_tw(&src, &dir, "lexer");
+        copy_tw(&src, &dir, "cst-parser");
         copy_tw(&src, &dir, "parser");
 
         let root = write_test_main(
             &dir,
             &["compiler/span", "compiler/token", "compiler/ast",
-              "compiler/lexer", "compiler/parser"],
+              "compiler/lexer", "compiler/cst-parser", "compiler/parser"],
             r#"(intlit-value (car (parse-program (lex-source "99"))))"#,
         );
 
@@ -1294,12 +1295,13 @@ mod tw05e_tests {
         copy_tw(&src, &dir, "token");
         copy_tw(&src, &dir, "ast");
         copy_tw(&src, &dir, "lexer");
+        copy_tw(&src, &dir, "cst-parser");
         copy_tw(&src, &dir, "parser");
 
         let root = write_test_main(
             &dir,
             &["compiler/span", "compiler/token", "compiler/ast",
-              "compiler/lexer", "compiler/parser"],
+              "compiler/lexer", "compiler/cst-parser", "compiler/parser"],
             r#"(length (callexpr-args (car (parse-program (lex-source "(+ 1 2)")))))"#,
         );
 
@@ -1409,7 +1411,7 @@ mod tw05f_tests {
     /// Copy all TW05-D, TW05-E, and TW05-F modules to dest_dir.
     fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
         for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
-                      "lexer", "parser", "emit"] {
+                      "lexer", "cst-parser", "parser", "emit"] {
             copy_tw(twig_src, dest_dir, name);
         }
     }
@@ -1668,14 +1670,14 @@ mod tw05g_tests {
     /// Copy all modules needed by the full pipeline.
     fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
         for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
-                      "lexer", "parser", "emit"] {
+                      "lexer", "cst-parser", "parser", "emit"] {
             copy_tw(twig_src, dest_dir, name);
         }
     }
 
     /// Copy modules needed for parser tests (no emitter).
     fn copy_parser_modules(twig_src: &Path, dest_dir: &Path) {
-        for name in &["span", "token", "ast", "lexer", "parser"] {
+        for name in &["span", "token", "ast", "lexer", "cst-parser", "parser"] {
             copy_tw(twig_src, dest_dir, name);
         }
     }
@@ -1932,7 +1934,7 @@ mod tw05h_tests {
 
     fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
         for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
-                      "lexer", "parser", "emit"] {
+                      "lexer", "cst-parser", "parser", "emit"] {
             copy_tw(twig_src, dest_dir, name);
         }
     }
@@ -2183,7 +2185,7 @@ mod tw05i_tests {
 
     fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
         for name in &["span", "token", "diagnostic", "ast", "iir-types", "iir-builder",
-                      "lexer", "parser", "emit"] {
+                      "lexer", "cst-parser", "parser", "emit"] {
             copy_tw(twig_src, dest_dir, name);
         }
     }
