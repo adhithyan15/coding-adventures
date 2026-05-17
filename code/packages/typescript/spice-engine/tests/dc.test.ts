@@ -3,6 +3,8 @@ import {
   Circuit,
   SinWaveform,
   SpiceError,
+  bSourceCurrent,
+  bSourceVoltage,
   bjt,
   cccs,
   ccvs,
@@ -13,10 +15,12 @@ import {
   inductor,
   mosfet,
   resistor,
+  subcircuitDefinition,
   vccs,
   vcvs,
   voltageSource,
   voltageSourceWithWaveform,
+  xInstance,
 } from "../src/index.js";
 
 function expectClose(actual: number | undefined, expected: number): void {
@@ -40,6 +44,28 @@ describe("dcOp", () => {
     expect(result.iterations).toBe(1);
   });
 
+  it("expands subcircuit instances into namespaced primitive elements", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("atten2", ["in", "out"], [
+        resistor("Rtop", "in", "out", 1_000.0),
+        resistor("Rbot", "out", "0", 1_000.0),
+      ]),
+    );
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(xInstance("X1", ["vin", "vout"], "atten2"));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("vout"), 5.0);
+    expect(
+      circuit
+        .elements()
+        .filter((element) => element.kind === "resistor")
+        .map((element) => element.name),
+    ).toEqual(["X1.Rtop", "X1.Rbot"]);
+  });
+
   it("uses positive-to-negative orientation for current sources", () => {
     const circuit = new Circuit();
     circuit.add(currentSource("I1", "0", "n1", 1.0e-3));
@@ -48,6 +74,31 @@ describe("dcOp", () => {
     const result = dcOp(circuit);
 
     expectClose(result.voltage("n1"), 1.0);
+  });
+
+  it("stamps behavioral current sources from node-voltage expressions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 2.0));
+    circuit.add(bSourceCurrent("B1", "0", "out", "0.002 * V(in)"));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expect(result.converged).toBe(true);
+    expectClose(result.voltage("out"), 4.0);
+  });
+
+  it("stamps behavioral voltage sources from differential expressions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 3.0));
+    circuit.add(bSourceVoltage("B1", "out", "0", "2.0 * V(in, 0) + 1.0"));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = dcOp(circuit);
+
+    expect(result.converged).toBe(true);
+    expectClose(result.voltage("out"), 7.0);
+    expectClose(result.branchCurrent("B1"), -7.0e-3);
   });
 
   it("reports voltage source branch current", () => {

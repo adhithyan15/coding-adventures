@@ -78,6 +78,7 @@ from math import exp, isclose
 import pytest
 
 from spice_engine import (
+    BSource,
     BJT,
     CCCS,
     CCVS,
@@ -105,8 +106,10 @@ from spice_engine import (
     SensEntry,
     SensResult,
     SinWaveform,
+    SubcircuitDefinition,
     TfResult,
     VoltageSource,
+    XInstance,
     ac_sweep,
     dc_op,
     dc_sweep,
@@ -196,6 +199,51 @@ def test_current_source_into_resistor():
     c.add(Resistor("R1", "n1", "0", 1000.0))
     r = dc_op(c)
     assert isclose(r.node_voltages["n1"], 1.0, abs_tol=1e-6)
+
+
+def test_behavioral_current_source_tracks_node_voltage():
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", voltage=2.0))
+    c.add(BSource("B1", "0", "out", current_expr="0.002 * V(in)"))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+    r = dc_op(c)
+    assert r.converged
+    assert isclose(r.node_voltages["out"], 4.0, abs_tol=1e-6)
+
+
+def test_behavioral_voltage_source_tracks_differential_voltage():
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", voltage=3.0))
+    c.add(BSource("B1", "out", "0", voltage_expr="2.0 * V(in, 0) + 1.0"))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+    r = dc_op(c)
+    assert r.converged
+    assert isclose(r.node_voltages["out"], 7.0, abs_tol=1e-6)
+    assert "I(B1)" in r.branch_currents
+
+
+def test_subcircuit_instance_expands_resistor_divider_at_build_time():
+    cell = SubcircuitDefinition(
+        "atten2",
+        ("in", "out"),
+        (
+            Resistor("Rtop", "in", "out", 1000.0),
+            Resistor("Rbot", "out", "0", 1000.0),
+        ),
+    )
+    c = Circuit()
+    c.define_subcircuit(cell)
+    c.add(VoltageSource("V1", "vin", "0", voltage=10.0))
+    c.add(XInstance("X1", ("vin", "vout"), "atten2"))
+
+    r = dc_op(c)
+
+    assert r.converged
+    assert isclose(r.node_voltages["vout"], 5.0, abs_tol=1e-9)
+    assert [element.name for element in c.elements if isinstance(element, Resistor)] == [
+        "X1.Rtop",
+        "X1.Rbot",
+    ]
 
 
 def test_branch_current_in_voltage_source():

@@ -330,6 +330,50 @@ class CurrentSource:
 
 
 @dataclass(frozen=True, slots=True)
+class BSource:
+    """Behavioral source (SPICE ``B`` element).
+
+    Exactly one expression must be supplied. ``current_expr`` models a current
+    flowing from ``n_plus`` to ``n_minus``. ``voltage_expr`` models the voltage
+    constraint ``V(n_plus, n_minus)`` and introduces a branch unknown, like an
+    ideal voltage source.
+
+    Expressions support numeric constants, ``+``, ``-``, ``*``, ``/``,
+    parentheses, and node-voltage references ``V(node)`` or ``V(node1,node2)``.
+    """
+
+    name: str
+    n_plus: str
+    n_minus: str
+    voltage_expr: str | None = None
+    current_expr: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class SubcircuitDefinition:
+    """Reusable hierarchical circuit cell.
+
+    ``pins`` names the external nodes used by ``elements``. Internal nodes are
+    renamed when an instance is expanded so multiple instances do not collide.
+    """
+
+    name: str
+    pins: tuple[str, ...]
+    elements: tuple[object, ...]
+    parameters: dict[str, float] | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class XInstance:
+    """Subcircuit instance (SPICE ``X`` element)."""
+
+    name: str
+    nodes: tuple[str, ...]
+    subckt: str
+    parameters: dict[str, float] | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class Diode:
     """Simple diode using Shockley equation."""
 
@@ -657,6 +701,8 @@ Element = (
     | Inductor
     | VoltageSource
     | CurrentSource
+    | BSource
+    | XInstance
     | Diode
     | Mosfet
     | BJT

@@ -72,6 +72,7 @@ files.
 | v0.11.0 | — | Time-varying source waveforms: `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`; waveform evaluation at each transient timestep |
 | v0.12.0 | — | DC convergence aids: Gmin stepping + source stepping fallback chain; `_dc_newton` / `_x_from_result` helpers |
 | v0.13.0 | — | Inductor `initial_current` for transient seeding; explicit AC source phasors (`AcSource`) on `VoltageSource`/`CurrentSource` |
+| v0.14.0 | #3384 ✅ | Behavioral B sources across Python, TypeScript, and Rust: DC behavioral current/voltage expressions over constants and `V(node)` / `V(node1,node2)` references. |
 | v0.2.0 | #2339 | Trapezoidal + Backward Euler integration, LTE-based adaptive timestep |
 | v0.3.0 | #2342 | `BJT` element (Ebers-Moll, NPN/PNP) |
 | v0.4.0 | #2344 | AC small-signal frequency sweep (`.AC`) |
@@ -82,7 +83,7 @@ files.
 | v0.9.0 | #2370 | Noise analysis (`.NOISE`) — Johnson-Nyquist + shot noise, adjoint method |
 
 **Elements on main:** `Resistor`, `Capacitor`, `Inductor`, `VoltageSource`,
-`CurrentSource`, `Diode`, `Mosfet`, `BJT`
+`CurrentSource`, `BSource`, `Diode`, `Mosfet`, `BJT`
 
 **Analyses on main:** `dc_op`, `transient`, `ac_sweep`, `tf`, `dc_sweep`,
 `sens_dc`, `mc_dc`, `noise_ac`
@@ -98,7 +99,9 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-_Nothing currently in flight._
+- Sub-circuit support across Python, TypeScript, and Rust SPICE engines:
+  programmatic `SubcircuitDefinition` / `XInstance` expansion into namespaced
+  primitive elements before simulation.
 
 ---
 
@@ -115,7 +118,6 @@ All Group 1 items have shipped. See "What is on main" above.
 | Feature | Why it matters | Design notes |
 |---|---|---|
 | **Sub-circuit support (`.subckt` / X-element)** | Essential for hierarchical design — reusing a cell (e.g. an inverter) multiple times with different parameter values. | Add an `XInstance` element class. At circuit build time, expand each X-element by cloning its `.subckt` definition with renamed nodes (prefix with instance name). Parameters propagate via a dict of `{param: value}` substitutions. |
-| **Behavioral modeling (B-element)** | Enables arbitrary nonlinear voltage/current sources defined by algebraic expressions — useful for behavioral models and controlled oscillators. | `BSource` element with `voltage_expr: str` or `current_expr: str`. At stamp time, parse and evaluate the expression numerically; linearise around the operating point for Newton. |
 | **Sparse matrix solver** | Dense LU is O(n³). At ~100 nodes it becomes the bottleneck. SPICE netlists for a small IC cell can have 300+ nodes. | Replace `numpy.linalg.solve` with `scipy.sparse.linalg.splu` (already a dependency). MNA matrices are naturally sparse (each element touches only 2–4 nodes). Keep dense path as fallback for small circuits (< 30 nodes). |
 
 #### Group 3 — Lower priority / longer horizon

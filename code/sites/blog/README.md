@@ -2,9 +2,20 @@
 
 The end-to-end demo of the [Forme](../../specs/fm00-vision.md) universal
 authoring pipeline. Markdown lives in `data/`; HTML lands in
-`dist/coding-adventures/blog/` and is deployed to
+`dist/blog/` and is deployed to
 [adhithyan15.github.io/coding-adventures/blog/](https://adhithyan15.github.io/coding-adventures/blog/)
 by `.github/workflows/deploy-blog.yml`.
+
+### Why the route says `/blog/...` but the URL says `/coding-adventures/blog/...`
+
+This repo is a GitHub Pages **project** page. Project pages are served
+from `https://<user>.github.io/<repo>/`, so the `coding-adventures/`
+segment of the live URL comes from the repo name (project-page prefix),
+not from anything in the build. The route template
+(`/blog/{slug}.html`) and the publish destination (`gh-pages:blog/`)
+both stay clean of that prefix; Pages composes it at the edge. If the
+repo ever gets a custom domain or moves to a user/org page, the route
+template and the destination don't need to change.
 
 ## Pipeline
 
@@ -29,7 +40,7 @@ npm install
 npx tsx build.ts        # or: npm run build
 ```
 
-That runs the full pipeline and writes `dist/coding-adventures/blog/*.html`.
+That runs the full pipeline and writes `dist/blog/*.html`.
 Each file is a self-contained HTML5 document with a classless theme
 inlined in `<style>` — no JS, no external CSS.
 
@@ -49,7 +60,7 @@ site driver runs straight from source.
 - `build.ts` — ~50-line driver: load config → `createOrchestrator`
   → `buildPipeline` → `runOnce` → assert success.
 - `BUILD` — chain-installs the file:dependency graph then runs the
-  pipeline. Verifies `dist/coding-adventures/blog/` is produced.
+  pipeline. Verifies `dist/blog/` is produced.
 - `dist/` — build output (git-ignored).
 
 ## Adding a post
@@ -67,7 +78,7 @@ site driver runs straight from source.
    …body in GFM…
    ```
 2. Re-run `npm run build`.
-3. Open `dist/coding-adventures/blog/<slug>.html`.
+3. Open `dist/blog/<slug>.html`.
 
 The slug is derived from the filename (strip `.md`, lowercase,
 replace whitespace/`_` with `-`). To override, set `slug:` in

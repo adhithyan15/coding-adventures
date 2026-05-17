@@ -8,12 +8,14 @@ const BOLTZMANN: f64 = 1.380_649e-23;
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
     elements: Vec<Element>,
+    subcircuits: HashMap<String, SubcircuitDefinition>,
 }
 
 impl Circuit {
     pub fn new() -> Self {
         Self {
             elements: Vec::new(),
+            subcircuits: HashMap::new(),
         }
     }
 
@@ -24,11 +26,311 @@ impl Circuit {
     pub fn elements(&self) -> &[Element] {
         &self.elements
     }
+
+    pub fn define_subcircuit(&mut self, definition: SubcircuitDefinition) -> Result<(), String> {
+        let key = definition.name.to_ascii_lowercase();
+        if self.subcircuits.contains_key(&key) {
+            return Err(format!(
+                "duplicate subcircuit definition {:?}",
+                definition.name
+            ));
+        }
+        self.subcircuits.insert(key, definition);
+        Ok(())
+    }
+
+    pub fn instantiate(&mut self, instance: XInstance) -> Result<(), String> {
+        let elements = expand_xinstance(&instance, &self.subcircuits, &[])?;
+        self.elements.extend(elements);
+        Ok(())
+    }
 }
 
 impl Default for Circuit {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SubcircuitDefinition {
+    pub name: String,
+    pub pins: Vec<String>,
+    pub elements: Vec<SubcircuitElement>,
+    pub parameters: HashMap<String, f64>,
+}
+
+impl SubcircuitDefinition {
+    pub fn new(
+        name: impl Into<String>,
+        pins: impl Into<Vec<String>>,
+        elements: impl Into<Vec<SubcircuitElement>>,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            pins: pins.into(),
+            elements: elements.into(),
+            parameters: HashMap::new(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum SubcircuitElement {
+    Element(Element),
+    XInstance(XInstance),
+}
+
+impl From<Element> for SubcircuitElement {
+    fn from(element: Element) -> Self {
+        Self::Element(element)
+    }
+}
+
+impl From<XInstance> for SubcircuitElement {
+    fn from(instance: XInstance) -> Self {
+        Self::XInstance(instance)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct XInstance {
+    pub name: String,
+    pub nodes: Vec<String>,
+    pub subckt: String,
+    pub parameters: HashMap<String, f64>,
+}
+
+impl XInstance {
+    pub fn new(
+        name: impl Into<String>,
+        nodes: impl Into<Vec<String>>,
+        subckt: impl Into<String>,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            nodes: nodes.into(),
+            subckt: subckt.into(),
+            parameters: HashMap::new(),
+        }
+    }
+}
+
+fn expand_xinstance(
+    instance: &XInstance,
+    subcircuits: &HashMap<String, SubcircuitDefinition>,
+    stack: &[String],
+) -> Result<Vec<Element>, String> {
+    let definition = subcircuits
+        .get(&instance.subckt.to_ascii_lowercase())
+        .ok_or_else(|| format!("unknown subcircuit {:?}", instance.subckt))?;
+    let definition_key = definition.name.to_ascii_lowercase();
+    if stack.contains(&definition_key) {
+        let mut cycle = stack.to_vec();
+        cycle.push(definition_key);
+        return Err(format!(
+            "recursive subcircuit expansion is not supported: {}",
+            cycle.join(" -> ")
+        ));
+    }
+    if instance.nodes.len() != definition.pins.len() {
+        return Err(format!(
+            "subcircuit {:?} expects {} pins, got {}",
+            definition.name,
+            definition.pins.len(),
+            instance.nodes.len()
+        ));
+    }
+
+    let mut node_map = HashMap::new();
+    for (pin, node) in definition.pins.iter().zip(instance.nodes.iter()) {
+        node_map.insert(pin.clone(), node.clone());
+        node_map.insert(pin.to_ascii_lowercase(), node.clone());
+    }
+    let mut expanded = Vec::new();
+    let mut next_stack = stack.to_vec();
+    next_stack.push(definition.name.to_ascii_lowercase());
+    for element in &definition.elements {
+        match element {
+            SubcircuitElement::Element(element) => {
+                expanded.push(clone_subckt_element(element, &instance.name, &node_map));
+            }
+            SubcircuitElement::XInstance(nested) => {
+                let mut nested_instance = nested.clone();
+                nested_instance.name = format!("{}.{}", instance.name, nested.name);
+                nested_instance.nodes = nested
+                    .nodes
+                    .iter()
+                    .map(|node| map_subckt_node(node, &instance.name, &node_map))
+                    .collect();
+                expanded.extend(expand_xinstance(
+                    &nested_instance,
+                    subcircuits,
+                    &next_stack,
+                )?);
+            }
+        }
+    }
+    Ok(expanded)
+}
+
+fn map_subckt_node(node: &str, instance_name: &str, node_map: &HashMap<String, String>) -> String {
+    if node.eq_ignore_ascii_case("0") || node.eq_ignore_ascii_case("gnd") {
+        return node.to_string();
+    }
+    node_map
+        .get(node)
+        .or_else(|| node_map.get(&node.to_ascii_lowercase()))
+        .cloned()
+        .unwrap_or_else(|| format!("{instance_name}.{node}"))
+}
+
+fn map_subckt_source_ref(source_name: &str, instance_name: &str) -> String {
+    if source_name.contains('.') {
+        source_name.to_string()
+    } else {
+        format!("{instance_name}.{source_name}")
+    }
+}
+
+fn map_bsource_expr_nodes(
+    expr: &Option<String>,
+    instance_name: &str,
+    node_map: &HashMap<String, String>,
+) -> Option<String> {
+    let expr = expr.as_ref()?;
+    let mut result = String::new();
+    let mut index = 0;
+    while index < expr.len() {
+        let rest = &expr[index..];
+        if rest.starts_with("V(") {
+            if let Some(close_offset) = rest.find(')') {
+                let args: Vec<String> = rest[2..close_offset]
+                    .split(',')
+                    .map(|arg| map_subckt_node(arg.trim(), instance_name, node_map))
+                    .collect();
+                if (1..=2).contains(&args.len()) {
+                    result.push_str(&format!("V({})", args.join(",")));
+                    index += close_offset + 1;
+                    continue;
+                }
+            }
+        }
+        if let Some(ch) = rest.chars().next() {
+            result.push(ch);
+            index += ch.len_utf8();
+        } else {
+            break;
+        }
+    }
+    Some(result)
+}
+
+fn clone_subckt_element(
+    element: &Element,
+    instance_name: &str,
+    node_map: &HashMap<String, String>,
+) -> Element {
+    match element {
+        Element::Resistor(element) => Element::Resistor(Resistor::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.n1, instance_name, node_map),
+            map_subckt_node(&element.n2, instance_name, node_map),
+            element.resistance_ohms,
+        )),
+        Element::Capacitor(element) => Element::Capacitor(Capacitor::with_initial_voltage(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.n1, instance_name, node_map),
+            map_subckt_node(&element.n2, instance_name, node_map),
+            element.capacitance_farads,
+            element.initial_voltage,
+        )),
+        Element::Inductor(element) => Element::Inductor(Inductor::with_initial_current(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.n1, instance_name, node_map),
+            map_subckt_node(&element.n2, instance_name, node_map),
+            element.inductance_henrys,
+            element.initial_current,
+        )),
+        Element::VoltageSource(element) => Element::VoltageSource(VoltageSource {
+            name: format!("{instance_name}.{}", element.name),
+            positive: map_subckt_node(&element.positive, instance_name, node_map),
+            negative: map_subckt_node(&element.negative, instance_name, node_map),
+            voltage: element.voltage,
+            ac: element.ac,
+            waveform: element.waveform.clone(),
+        }),
+        Element::CurrentSource(element) => Element::CurrentSource(CurrentSource {
+            name: format!("{instance_name}.{}", element.name),
+            positive: map_subckt_node(&element.positive, instance_name, node_map),
+            negative: map_subckt_node(&element.negative, instance_name, node_map),
+            current: element.current,
+            ac: element.ac,
+            waveform: element.waveform.clone(),
+        }),
+        Element::BSource(element) => Element::BSource(BSource {
+            name: format!("{instance_name}.{}", element.name),
+            positive: map_subckt_node(&element.positive, instance_name, node_map),
+            negative: map_subckt_node(&element.negative, instance_name, node_map),
+            voltage_expr: map_bsource_expr_nodes(&element.voltage_expr, instance_name, node_map),
+            current_expr: map_bsource_expr_nodes(&element.current_expr, instance_name, node_map),
+        }),
+        Element::Diode(element) => Element::Diode(Diode::with_model(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.anode, instance_name, node_map),
+            map_subckt_node(&element.cathode, instance_name, node_map),
+            element.saturation_current,
+            element.thermal_voltage,
+        )),
+        Element::Bjt(element) => Element::Bjt(Bjt::with_model(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.collector, instance_name, node_map),
+            map_subckt_node(&element.base, instance_name, node_map),
+            map_subckt_node(&element.emitter, instance_name, node_map),
+            element.polarity,
+            element.saturation_current,
+            element.forward_beta,
+            element.thermal_voltage,
+        )),
+        Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.drain, instance_name, node_map),
+            map_subckt_node(&element.gate, instance_name, node_map),
+            map_subckt_node(&element.source, instance_name, node_map),
+            map_subckt_node(&element.body, instance_name, node_map),
+            element.mosfet_type,
+            element.params,
+        )),
+        Element::Vccs(element) => Element::Vccs(Vccs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_node(&element.control_positive, instance_name, node_map),
+            map_subckt_node(&element.control_negative, instance_name, node_map),
+            element.transconductance_siemens,
+        )),
+        Element::Vcvs(element) => Element::Vcvs(Vcvs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_node(&element.control_positive, instance_name, node_map),
+            map_subckt_node(&element.control_negative, instance_name, node_map),
+            element.gain,
+        )),
+        Element::Cccs(element) => Element::Cccs(Cccs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_source_ref(&element.control_source, instance_name),
+            element.gain,
+        )),
+        Element::Ccvs(element) => Element::Ccvs(Ccvs::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.positive, instance_name, node_map),
+            map_subckt_node(&element.negative, instance_name, node_map),
+            map_subckt_source_ref(&element.control_source, instance_name),
+            element.transresistance_ohms,
+        )),
     }
 }
 
@@ -340,6 +642,7 @@ pub enum Element {
     Inductor(Inductor),
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
+    BSource(BSource),
     Diode(Diode),
     Bjt(Bjt),
     Mosfet(Mosfet),
@@ -567,6 +870,47 @@ impl CurrentSource {
             current,
             ac: None,
             waveform: Some(waveform),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BSource {
+    pub name: String,
+    pub positive: String,
+    pub negative: String,
+    pub voltage_expr: Option<String>,
+    pub current_expr: Option<String>,
+}
+
+impl BSource {
+    pub fn current(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        current_expr: impl Into<String>,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            voltage_expr: None,
+            current_expr: Some(current_expr.into()),
+        }
+    }
+
+    pub fn voltage(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        voltage_expr: impl Into<String>,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            voltage_expr: Some(voltage_expr.into()),
+            current_expr: None,
         }
     }
 }
@@ -1889,7 +2233,7 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
             "transresistance_ohms".to_string(),
             source.transresistance_ohms,
         )),
-        Element::Capacitor(_) | Element::Inductor(_) => None,
+        Element::BSource(_) | Element::Capacitor(_) | Element::Inductor(_) => None,
     }
 }
 
@@ -1909,7 +2253,7 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::Vcvs(source) => source.gain += delta,
         Element::Cccs(source) => source.gain += delta,
         Element::Ccvs(source) => source.transresistance_ohms += delta,
-        Element::Capacitor(_) | Element::Inductor(_) => {}
+        Element::BSource(_) | Element::Capacitor(_) | Element::Inductor(_) => {}
     }
 }
 
@@ -2032,7 +2376,7 @@ fn randomized_element(
                 randomized_value(varied.transresistance_ohms, tolerance, distribution, rng);
             Element::Ccvs(varied)
         }
-        Element::Capacitor(_) | Element::Inductor(_) => element.clone(),
+        Element::BSource(_) | Element::Capacitor(_) | Element::Inductor(_) => element.clone(),
     }
 }
 
@@ -2173,7 +2517,7 @@ fn solve_linear_circuit_with_options(
     let has_nonlinear = circuit.elements().iter().any(|element| {
         matches!(
             element,
-            Element::Diode(_) | Element::Bjt(_) | Element::Mosfet(_)
+            Element::Diode(_) | Element::Bjt(_) | Element::Mosfet(_) | Element::BSource(_)
         )
     });
     let return_singular_as_unconverged = options.return_singular_as_unconverged && has_nonlinear;
@@ -2330,6 +2674,15 @@ fn solve_linear_circuit_at_operating_point(
             Element::CurrentSource(source) => {
                 stamp_current_source(source, node_indices, source_time, &mut rhs)?
             }
+            Element::BSource(source) => stamp_bsource(
+                source,
+                node_indices,
+                voltage_sources,
+                node_count,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
             Element::Diode(diode) => {
                 stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
@@ -2453,6 +2806,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             Element::CurrentSource(source) => {
                 stamp_ac_current_source(source, &node_indices, uses_explicit_ac_sources, &mut rhs)?
             }
+            Element::BSource(_) => {}
             Element::Resistor(_)
             | Element::Capacitor(_)
             | Element::Inductor(_)
@@ -2512,6 +2866,14 @@ fn build_ac_matrix(
             Element::CurrentSource(source) => {
                 validate_ac_current_source(source)?;
             }
+            Element::BSource(source) => stamp_ac_bsource(
+                source,
+                node_indices,
+                voltage_sources,
+                node_count,
+                &mut matrix,
+                operating_point,
+            )?,
             Element::Diode(diode) => {
                 validate_diode(diode)?;
                 let anode = node_index(node_indices, &diode.anode);
@@ -2603,6 +2965,14 @@ fn build_small_signal_matrix(
                     });
                 }
             }
+            Element::BSource(source) => stamp_bsource_small_signal(
+                source,
+                node_indices,
+                voltage_sources,
+                node_count,
+                &mut matrix,
+                operating_point,
+            )?,
             Element::Diode(diode) => {
                 validate_diode(diode)?;
                 let anode = node_index(node_indices, &diode.anode);
@@ -2703,6 +3073,18 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &source.positive);
                 insert_node(&mut names, &source.negative);
             }
+            Element::BSource(source) => {
+                insert_node(&mut names, &source.positive);
+                insert_node(&mut names, &source.negative);
+                let expr = source
+                    .voltage_expr
+                    .as_deref()
+                    .or(source.current_expr.as_deref())
+                    .unwrap_or("");
+                for node in bsource_expr_nodes(expr) {
+                    insert_node(&mut names, &node);
+                }
+            }
             Element::Diode(diode) => {
                 insert_node(&mut names, &diode.anode);
                 insert_node(&mut names, &diode.cathode);
@@ -2763,6 +3145,9 @@ fn collect_voltage_sources(
             Element::Ccvs(source) => {
                 insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
             }
+            Element::BSource(source) if source.voltage_expr.is_some() => {
+                insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
+            }
             Element::Inductor(inductor) => {
                 if sources.contains_key(&inductor.name) {
                     return Err(SpiceError::InvalidElement {
@@ -2796,6 +3181,9 @@ fn collect_ac_voltage_sources(circuit: &Circuit) -> Result<BTreeMap<String, usiz
             Element::Ccvs(source) => {
                 insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
             }
+            Element::BSource(source) if source.voltage_expr.is_some() => {
+                insert_branch_name(&mut sources, &source.name, "duplicate voltage source name")?;
+            }
             _ => {}
         }
     }
@@ -2813,6 +3201,9 @@ fn find_input_source<'a>(
             }
             Element::CurrentSource(source) if source.name == input_source => {
                 return Ok(InputSource::Current(source));
+            }
+            Element::BSource(source) if source.name == input_source => {
+                return Err(input_source_type_error(input_source, "B-source"));
             }
             Element::Resistor(resistor) if resistor.name == input_source => {
                 return Err(input_source_type_error(input_source, "resistor"));
@@ -3740,6 +4131,424 @@ fn source_current_at(source: &CurrentSource, source_time: Option<f64>) -> Result
     } else {
         Ok(source.current)
     }
+}
+
+struct BSourceExprParser<'a, F: Fn(&str) -> f64> {
+    input: &'a str,
+    position: usize,
+    resolver: F,
+}
+
+impl<'a, F: Fn(&str) -> f64> BSourceExprParser<'a, F> {
+    fn new(input: &'a str, resolver: F) -> Self {
+        Self {
+            input,
+            position: 0,
+            resolver,
+        }
+    }
+
+    fn parse(mut self) -> Result<f64, String> {
+        let value = self.parse_expression()?;
+        self.skip_whitespace();
+        if self.position != self.input.len() {
+            return Err("unexpected expression input".to_string());
+        }
+        Ok(value)
+    }
+
+    fn parse_expression(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_term()?;
+        loop {
+            self.skip_whitespace();
+            if self.consume("+") {
+                value += self.parse_term()?;
+            } else if self.consume("-") {
+                value -= self.parse_term()?;
+            } else {
+                return Ok(value);
+            }
+        }
+    }
+
+    fn parse_term(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_factor()?;
+        loop {
+            self.skip_whitespace();
+            if self.consume("*") {
+                value *= self.parse_factor()?;
+            } else if self.consume("/") {
+                value /= self.parse_factor()?;
+            } else {
+                return Ok(value);
+            }
+        }
+    }
+
+    fn parse_factor(&mut self) -> Result<f64, String> {
+        self.skip_whitespace();
+        if self.consume("+") {
+            return self.parse_factor();
+        }
+        if self.consume("-") {
+            return Ok(-self.parse_factor()?);
+        }
+        if self.consume("(") {
+            let value = self.parse_expression()?;
+            self.expect(")")?;
+            return Ok(value);
+        }
+        if self.peek("V") {
+            self.position += 1;
+            self.expect("(")?;
+            let first = self.parse_node_name()?;
+            self.skip_whitespace();
+            if self.consume(",") {
+                let second = self.parse_node_name()?;
+                self.expect(")")?;
+                return Ok((self.resolver)(&first) - (self.resolver)(&second));
+            }
+            self.expect(")")?;
+            return Ok((self.resolver)(&first));
+        }
+        self.parse_number()
+    }
+
+    fn parse_number(&mut self) -> Result<f64, String> {
+        self.skip_whitespace();
+        let start = self.position;
+        while self
+            .input
+            .as_bytes()
+            .get(self.position)
+            .is_some_and(u8::is_ascii_digit)
+        {
+            self.position += 1;
+        }
+        if self.peek(".") {
+            self.position += 1;
+            while self
+                .input
+                .as_bytes()
+                .get(self.position)
+                .is_some_and(u8::is_ascii_digit)
+            {
+                self.position += 1;
+            }
+        }
+        if self.peek("e") || self.peek("E") {
+            self.position += 1;
+            if self.peek("+") || self.peek("-") {
+                self.position += 1;
+            }
+            while self
+                .input
+                .as_bytes()
+                .get(self.position)
+                .is_some_and(u8::is_ascii_digit)
+            {
+                self.position += 1;
+            }
+        }
+        if self.position == start {
+            return Err("expected number".to_string());
+        }
+        let value = self.input[start..self.position]
+            .parse::<f64>()
+            .map_err(|_| "invalid number".to_string())?;
+        if !value.is_finite() {
+            return Err("number must be finite".to_string());
+        }
+        Ok(value)
+    }
+
+    fn parse_node_name(&mut self) -> Result<String, String> {
+        self.skip_whitespace();
+        let start = self.position;
+        while let Some(ch) = self.input[self.position..].chars().next() {
+            if ch.is_ascii_alphanumeric() || matches!(ch, '_' | '.' | '$' | ':' | '-') {
+                self.position += ch.len_utf8();
+            } else {
+                break;
+            }
+        }
+        if self.position == start {
+            return Err("expected node name".to_string());
+        }
+        self.skip_whitespace();
+        Ok(self.input[start..self.position].to_string())
+    }
+
+    fn consume(&mut self, token: &str) -> bool {
+        self.skip_whitespace();
+        if self.input[self.position..].starts_with(token) {
+            self.position += token.len();
+            true
+        } else {
+            false
+        }
+    }
+
+    fn expect(&mut self, token: &str) -> Result<(), String> {
+        if self.consume(token) {
+            Ok(())
+        } else {
+            Err(format!("expected {token}"))
+        }
+    }
+
+    fn peek(&self, token: &str) -> bool {
+        self.input[self.position..].starts_with(token)
+    }
+
+    fn skip_whitespace(&mut self) {
+        while let Some(ch) = self.input[self.position..].chars().next() {
+            if ch.is_whitespace() {
+                self.position += ch.len_utf8();
+            } else {
+                break;
+            }
+        }
+    }
+}
+
+fn bsource_expr_nodes(expr: &str) -> Vec<String> {
+    let mut nodes = Vec::new();
+    let mut rest = expr;
+    while let Some(start) = rest.find("V(") {
+        rest = &rest[start + 2..];
+        let Some(end) = rest.find(')') else {
+            break;
+        };
+        for node in rest[..end].split(',') {
+            let trimmed = node.trim();
+            if !trimmed.is_empty() && !is_ground(trimmed) {
+                nodes.push(trimmed.to_string());
+            }
+        }
+        rest = &rest[end + 1..];
+    }
+    nodes
+}
+
+fn eval_bsource_expr(
+    expr: &str,
+    node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
+) -> Result<f64, String> {
+    let value = BSourceExprParser::new(expr, |node: &str| {
+        node_index(node_indices, node).map_or(0.0, |index| operating_point[index])
+    })
+    .parse()?;
+    if value.is_finite() {
+        Ok(value)
+    } else {
+        Err("expression produced a non-finite value".to_string())
+    }
+}
+
+fn bsource_linearization(
+    expr: &str,
+    node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
+) -> Result<(BTreeMap<String, f64>, f64), String> {
+    let value = eval_bsource_expr(expr, node_indices, operating_point)?;
+    let mut derivatives = BTreeMap::new();
+    for (node, index) in node_indices {
+        let h = (operating_point[*index].abs() * 1.0e-6).max(1.0e-6);
+        let mut plus = operating_point.to_vec();
+        let mut minus = operating_point.to_vec();
+        plus[*index] += h;
+        minus[*index] -= h;
+        let derivative = (eval_bsource_expr(expr, node_indices, &plus)?
+            - eval_bsource_expr(expr, node_indices, &minus)?)
+            / (2.0 * h);
+        derivatives.insert(node.clone(), derivative);
+    }
+    let linear_part = derivatives
+        .iter()
+        .map(|(node, derivative)| derivative * operating_point[node_indices[node]])
+        .sum::<f64>();
+    Ok((derivatives, value - linear_part))
+}
+
+fn validate_bsource(source: &BSource) -> Result<(), SpiceError> {
+    if source.voltage_expr.is_some() == source.current_expr.is_some() {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "B-source must define exactly one voltage_expr or current_expr".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn stamp_bsource(
+    source: &BSource,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_bsource(source)?;
+    if let Some(expr) = &source.current_expr {
+        let (derivatives, offset) = bsource_linearization(expr, node_indices, operating_point)
+            .map_err(|reason| SpiceError::InvalidElement {
+                name: source.name.clone(),
+                reason,
+            })?;
+        let positive = node_index(node_indices, &source.positive);
+        let negative = node_index(node_indices, &source.negative);
+        if let Some(row) = positive {
+            for (node, derivative) in &derivatives {
+                matrix[row][node_indices[node]] += derivative;
+            }
+            rhs[row] -= offset;
+        }
+        if let Some(row) = negative {
+            for (node, derivative) in &derivatives {
+                matrix[row][node_indices[node]] -= derivative;
+            }
+            rhs[row] += offset;
+        }
+        return Ok(());
+    }
+    let Some(expr) = &source.voltage_expr else {
+        return Ok(());
+    };
+    let Some(source_index) = voltage_sources.get(&source.name) else {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "voltage B-source was not indexed".to_string(),
+        });
+    };
+    let branch = node_count + source_index;
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+    stamp_branch_matrix(matrix, branch, positive, negative);
+    let (derivatives, offset) = bsource_linearization(expr, node_indices, operating_point)
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason,
+        })?;
+    for (node, derivative) in derivatives {
+        matrix[branch][node_indices[&node]] -= derivative;
+    }
+    rhs[branch] += offset;
+    Ok(())
+}
+
+fn stamp_bsource_small_signal(
+    source: &BSource,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<f64>],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_bsource(source)?;
+    if let Some(expr) = &source.current_expr {
+        let (derivatives, _) =
+            bsource_linearization(expr, node_indices, operating_point).map_err(|reason| {
+                SpiceError::InvalidElement {
+                    name: source.name.clone(),
+                    reason,
+                }
+            })?;
+        let positive = node_index(node_indices, &source.positive);
+        let negative = node_index(node_indices, &source.negative);
+        for (node, derivative) in derivatives {
+            let control = Some(node_indices[&node]);
+            stamp_transconductance(matrix, positive, negative, control, None, derivative);
+        }
+        return Ok(());
+    }
+
+    let Some(expr) = &source.voltage_expr else {
+        return Ok(());
+    };
+    let Some(source_index) = voltage_sources.get(&source.name) else {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "voltage B-source was not indexed".to_string(),
+        });
+    };
+    let branch = node_count + source_index;
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+    stamp_branch_matrix(matrix, branch, positive, negative);
+    let (derivatives, offset) = bsource_linearization(expr, node_indices, operating_point)
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason,
+        })?;
+    for (node, derivative) in derivatives {
+        matrix[branch][node_indices[&node]] -= derivative;
+    }
+    // DC callers add this offset to the RHS after this helper returns.
+    let _ = offset;
+    Ok(())
+}
+
+fn stamp_ac_bsource(
+    source: &BSource,
+    node_indices: &HashMap<String, usize>,
+    voltage_sources: &BTreeMap<String, usize>,
+    node_count: usize,
+    matrix: &mut [Vec<Complex>],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_bsource(source)?;
+    if let Some(expr) = &source.current_expr {
+        let (derivatives, _) =
+            bsource_linearization(expr, node_indices, operating_point).map_err(|reason| {
+                SpiceError::InvalidElement {
+                    name: source.name.clone(),
+                    reason,
+                }
+            })?;
+        let positive = node_index(node_indices, &source.positive);
+        let negative = node_index(node_indices, &source.negative);
+        for (node, derivative) in derivatives {
+            let control = Some(node_indices[&node]);
+            stamp_complex_transconductance(
+                matrix,
+                positive,
+                negative,
+                control,
+                None,
+                Complex::new(derivative, 0.0),
+            );
+        }
+        return Ok(());
+    }
+
+    let Some(expr) = &source.voltage_expr else {
+        return Ok(());
+    };
+    let Some(source_index) = voltage_sources.get(&source.name) else {
+        return Err(SpiceError::InvalidElement {
+            name: source.name.clone(),
+            reason: "voltage B-source was not indexed".to_string(),
+        });
+    };
+    let branch = node_count + source_index;
+    let positive = node_index(node_indices, &source.positive);
+    let negative = node_index(node_indices, &source.negative);
+    stamp_complex_branch_matrix(matrix, branch, positive, negative);
+    let (derivatives, _) =
+        bsource_linearization(expr, node_indices, operating_point).map_err(|reason| {
+            SpiceError::InvalidElement {
+                name: source.name.clone(),
+                reason,
+            }
+        })?;
+    for (node, derivative) in derivatives {
+        matrix[branch][node_indices[&node]] =
+            matrix[branch][node_indices[&node]] - Complex::new(derivative, 0.0);
+    }
+    Ok(())
 }
 
 fn stamp_vccs(

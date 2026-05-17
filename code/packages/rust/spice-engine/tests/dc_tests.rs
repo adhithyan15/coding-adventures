@@ -1,7 +1,8 @@
 use spice_engine::{
-    dc_op, dc_op_with_options, dc_sweep, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CurrentSource,
-    DcOpOptions, Diode, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
-    SinWaveform, SpiceError, Vccs, Vcvs, VoltageSource, Waveform,
+    dc_op, dc_op_with_options, dc_sweep, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
+    CurrentSource, DcOpOptions, Diode, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType,
+    Resistor, SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs,
+    VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -32,6 +33,48 @@ fn dc_voltage_divider_solves_midpoint_voltage() {
 }
 
 #[test]
+fn dc_subcircuit_instance_expands_resistor_divider() {
+    let mut circuit = Circuit::new();
+    circuit
+        .define_subcircuit(SubcircuitDefinition::new(
+            "atten2",
+            vec!["in".to_string(), "out".to_string()],
+            vec![
+                SubcircuitElement::from(Element::Resistor(Resistor::new(
+                    "Rtop", "in", "out", 1_000.0,
+                ))),
+                SubcircuitElement::from(Element::Resistor(Resistor::new(
+                    "Rbot", "out", "0", 1_000.0,
+                ))),
+            ],
+        ))
+        .unwrap();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 10.0,
+    )));
+    circuit
+        .instantiate(XInstance::new(
+            "X1",
+            vec!["vin".to_string(), "vout".to_string()],
+            "atten2",
+        ))
+        .unwrap();
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("vout").unwrap(), 5.0);
+    let names: Vec<&str> = circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::Resistor(resistor) => Some(resistor.name.as_str()),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(names, vec!["X1.Rtop", "X1.Rbot"]);
+}
+
+#[test]
 fn dc_current_source_into_resistor_uses_positive_to_negative_orientation() {
     let mut circuit = Circuit::new();
     circuit.add(Element::CurrentSource(CurrentSource::new(
@@ -42,6 +85,51 @@ fn dc_current_source_into_resistor_uses_positive_to_negative_orientation() {
     let result = dc_op(&circuit).unwrap();
 
     assert_close(result.voltage("n1").unwrap(), 1.0);
+}
+
+#[test]
+fn dc_behavioral_current_source_tracks_node_voltage() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 2.0,
+    )));
+    circuit.add(Element::BSource(BSource::current(
+        "B1",
+        "0",
+        "out",
+        "0.002 * V(in)",
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert!(result.converged);
+    assert_close(result.voltage("out").unwrap(), 4.0);
+}
+
+#[test]
+fn dc_behavioral_voltage_source_tracks_differential_voltage() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 3.0,
+    )));
+    circuit.add(Element::BSource(BSource::voltage(
+        "B1",
+        "out",
+        "0",
+        "2.0 * V(in, 0) + 1.0",
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert!(result.converged);
+    assert_close(result.voltage("out").unwrap(), 7.0);
+    assert_close(result.branch_current("B1").unwrap(), -7.0e-3);
 }
 
 #[test]
