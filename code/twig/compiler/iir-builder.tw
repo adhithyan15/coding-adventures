@@ -47,7 +47,7 @@
 ;     (length ins))   ; → 1
 
 (module compiler/iir-builder
-  (typed lenient)
+  (typed strict)
   (export IirBuilder iirbuilder? iirbuilder-name iirbuilder-instrs
           iirbuilder-reg-count iirbuilder-label-count
           new-builder alloc-slot alloc-label append-instr finalise-builder)
