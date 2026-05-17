@@ -4,6 +4,41 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — Grid primitive (pipeline path, UI26 §6.2)
+
+- The moslayout `Grid` primitive now lowers to a full `<table>` with
+  `<thead>`/`<tbody>` and nested `.map(...)` callbacks, replacing the
+  previous placeholder `<div data-mosaic-todo="grid">` element.
+- Required slot refs: `headers` and `rows`. Optional slot refs: `selected-row`,
+  `selected-col`, `edit-row`, `edit-col` — when bound, each cell gets a
+  conditional inline style that paints the selection / editing highlight.
+- Optional emit ref: `onNavigate` — when bound, each `<td>` gets an
+  `onClick={() => dispatch({ type: "...", row: r, col: c })}` handler.
+- Part style attaches to the `<table>` element itself.
+- 9 new tests cover: bare Grid → `<table>`, headers `.map()` for `<th>`,
+  nested rows `.map()` for `<tr>` + `<td>`, onNavigate dispatch wiring,
+  selected-row/col highlight expression, edit-row/col highlight expression,
+  part style on table, missing-headers error, missing-rows error.
+- End-to-end smoke test: a 3-file Grid component with selection slots
+  and onNavigate emit compiles to a `<table>` with header `.map()`,
+  body nested `.map()`, conditional cell selection style, and per-cell
+  dispatch handler. Verified.
+
+### Known limitations (deferred)
+
+- No `column-widths` binding — column widths are flex-default. Tracked
+  for a follow-up once moslayout supports per-column width arrays.
+- No inline `<input>` editor inside cells when `edit-row`/`edit-col`
+  matches — the host is expected to render an external editor (e.g. via
+  FormulaBar) and push state back via the `edit-*` slots, matching
+  UI26 §7.5.
+- No `viewport-offset` virtualisation — the emitter renders all rows
+  passed in the `rows` slot. Row-windowing is the host's responsibility.
+- Highlight colours are hard-coded (`#264f78` selection, `#1f4f3f`
+  editing). A future iteration will inline the design-token values from
+  mosstyle instead.
+
+
 ### Added — Input primitive (pipeline path, UI25)
 
 - The moslayout `Input` primitive now lowers to a real `<input type="text" />`
