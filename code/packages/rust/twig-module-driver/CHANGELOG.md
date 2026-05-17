@@ -1,5 +1,56 @@
 # Changelog — twig-module-driver
 
+## [0.11.0] — 2026-05-17
+
+### Added (LANG66 — TW05-L cst-parser self-compilation)
+
+#### twig-vm 0.18.0 dependency (MAX_DISPATCH_DEPTH + MAX_INSTRUCTIONS_PER_RUN bumped)
+
+`cst-parser.tw` at 29 122 chars requires both constants to be raised:
+- `MAX_DISPATCH_DEPTH`: 65 536 → 131 072 (lex-loop generates ~2.25 frames/char)
+- `MAX_INSTRUCTIONS_PER_RUN`: 2²³ → 2²⁵ (lex-loop executes ~90 instrs/char; 7-file total ≈ 8.2 M)
+
+
+Extended `self-compile-all` in `code/twig/compiler/main.tw` from six files
+(TW05-K, 102 total) to seven files (TW05-L, 171 total) by adding
+`cst-parser.tw` (69 functions, 29 122 chars).
+
+`cst-parser.tw` is the generated CST parser (produced by `grammar-tools`
+from `twig.grammar`) and is the largest file in the compiler corpus.
+Peak debug-mode stack: 29 122 frames × 60 KiB ≈ 1.75 GiB.
+`run_in_xlarge_stack` (3 GiB) provides ~1.7× headroom.
+
+New `#[cfg(test)] mod tw05l_tests` with 4 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_cst_parser_from_disk` | Real `cst-parser.tw` (29 122 chars) via `host/read_file` → 69 functions |
+| `self_compile_all_returns_171` | `self-compile-all` on all 7 files → 171 functions |
+| `self_compile_tw05k_modules_regression` | Original 6 TW05-K files still → 102 (independent of self-compile-all) |
+| `existing_main_still_returns_2_after_tw05l` | TW05-I regression: `(main)` still → 2 |
+
+### Changed
+
+`tw05j_tests::self_compile_all_returns_102` and
+`tw05k_tests::self_compile_all_returns_102` both renamed to
+`self_compile_all_returns_171` and updated to expect 171 (the new
+`self-compile-all` total after TW05-L adds cst-parser.tw).
+
+#### Updated function count table
+
+| File | Size | Functions |
+|------|------|-----------|
+| `span.tw` | 2 426 | 2 |
+| `diagnostic.tw` | 2 446 | 3 |
+| `iir-builder.tw` | 6 278 | 8 |
+| `lexer.tw` | 8 593 | 25 |
+| `parser.tw` | 19 708 | 29 |
+| `emit.tw` | 22 697 | 35 |
+| `cst-parser.tw` | 29 122 | 69 ← TW05-L |
+| **Total** | 91 270 | **171** |
+
+---
+
 ## [0.10.0] — 2026-05-17
 
 ### Added (LANG65 — TW05-K extended self-compilation via parser.tw + emit.tw)
