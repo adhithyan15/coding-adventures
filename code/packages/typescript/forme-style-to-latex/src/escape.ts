@@ -42,41 +42,36 @@
  * Escape LaTeX special characters in a free-form string destined for
  * text-mode output (e.g. inside a `\textbf{...}` body or a comment).
  *
- * **Order matters.**  Naively escaping `\` first would produce
- * `\textbackslash{}` — but the `{` / `}` inside that escape would
- * then get re-escaped on subsequent passes, yielding the broken
- * `\textbackslash\{\}`.  The fix: substitute a unique
- * never-appears-in-input placeholder for each multi-character escape
- * during the pass, then swap the placeholders back at the end.
- *
- * The placeholder strings (`\x00BS`, `\x00CARET`, `\x00TILDE`) start
- * with NUL bytes that `stripControl` has already removed from the
- * input — so they cannot collide with anything the user supplied.
+ * Implementation note: **one single-pass replacement** — not a chain.
+ * A chained-`.replace` approach (escape `\` first, then `%`, then
+ * `&`, …) produces wrong output because the synthetic
+ * `\textbackslash{}` introduced for `\` contains `{` and `}`, which
+ * the later brace-escape passes then re-escape into
+ * `\textbackslash\{\}`.  A single pass over the original string
+ * with a per-character mapping table sidesteps this entirely — and
+ * is the form CodeQL's "incomplete string escaping" rule accepts
+ * without complaint.
  */
-const BACKSLASH_PLACEHOLDER = "\x00BS\x00";
-const CARET_PLACEHOLDER     = "\x00CARET\x00";
-const TILDE_PLACEHOLDER     = "\x00TILDE\x00";
+const LATEX_ESCAPE_MAP: Readonly<Record<string, string>> = Object.freeze({
+  "\\": "\\textbackslash{}",
+  "%":  "\\%",
+  "$":  "\\$",
+  "&":  "\\&",
+  "_":  "\\_",
+  "#":  "\\#",
+  "{":  "\\{",
+  "}":  "\\}",
+  "^":  "\\textasciicircum{}",
+  "~":  "\\textasciitilde{}",
+});
+
+// Class of LaTeX-special characters.  Order inside `[]` doesn't
+// matter for matching; the `]` before the character class form
+// (`[\\%$&_#{}^~]`) is just a single pass.
+const LATEX_SPECIAL_RE = /[\\%$&_#{}^~]/g;
 
 export function escapeLatexText(s: string): string {
-  return stripControl(s)
-    // First pass — replace multi-character escape targets with
-    // placeholders so their literal `{` / `}` don't get
-    // double-escaped on the brace pass below.
-    .replace(/\\/g, BACKSLASH_PLACEHOLDER)
-    .replace(/\^/g, CARET_PLACEHOLDER)
-    .replace(/~/g, TILDE_PLACEHOLDER)
-    // Single-char escapes — safe to do in any order at this point.
-    .replace(/%/g, "\\%")
-    .replace(/\$/g, "\\$")
-    .replace(/&/g, "\\&")
-    .replace(/_/g, "\\_")
-    .replace(/#/g, "\\#")
-    .replace(/\{/g, "\\{")
-    .replace(/\}/g, "\\}")
-    // Swap placeholders back to their LaTeX-correct escapes.
-    .replace(new RegExp(BACKSLASH_PLACEHOLDER, "g"), "\\textbackslash{}")
-    .replace(new RegExp(CARET_PLACEHOLDER, "g"), "\\textasciicircum{}")
-    .replace(new RegExp(TILDE_PLACEHOLDER, "g"), "\\textasciitilde{}");
+  return stripControl(s).replace(LATEX_SPECIAL_RE, (ch) => LATEX_ESCAPE_MAP[ch]!);
 }
 
 /**
