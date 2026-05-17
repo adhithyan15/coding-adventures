@@ -85,6 +85,14 @@ pub struct RtcInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogInfo {
+    pub instance: u8,
+    pub name: &'static str,
+    pub peripheral: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DigitalPinInfo {
     pub pin: u8,
     pub label: &'static str,
@@ -141,6 +149,7 @@ pub struct BoardTargetInfo {
     pub uart_buses: &'static [UartBusInfo],
     pub can_buses: &'static [CanBusInfo],
     pub rtc: Option<RtcInfo>,
+    pub watchdog: Option<WatchdogInfo>,
     pub wireless: &'static [WirelessInterfaceInfo],
     pub capabilities: &'static [&'static str],
 }
@@ -317,6 +326,7 @@ pub const UNO_R4_WIFI_UART_BUSES: [UartBusInfo; 3] =
 pub const UNO_R4_CAN_BUSES: [CanBusInfo; 1] =
     map_uno_r4_can_buses(board_vm_uno_r4::UNO_R4_CAN_BUSES);
 pub const UNO_R4_RTC: RtcInfo = uno_r4_rtc(board_vm_uno_r4::UNO_R4_RTC);
+pub const UNO_R4_WATCHDOG: WatchdogInfo = uno_r4_watchdog(board_vm_uno_r4::UNO_R4_WATCHDOG);
 
 pub const ESP32_DIGITAL_PINS: [DigitalPinInfo; 30] =
     map_esp32_digital_pins(board_vm_esp32::ESP32_DEVKIT_V1_DIGITAL_PINS);
@@ -475,6 +485,15 @@ const fn uno_r4_rtc(rtc: board_vm_uno_r4::RtcDescriptor) -> RtcInfo {
     }
 }
 
+const fn uno_r4_watchdog(watchdog: board_vm_uno_r4::WatchdogDescriptor) -> WatchdogInfo {
+    WatchdogInfo {
+        instance: watchdog.instance,
+        name: watchdog.name,
+        peripheral: watchdog.peripheral,
+        notes: watchdog.notes,
+    }
+}
+
 const fn map_esp32_digital_pins<const N: usize>(
     source: [board_vm_esp32::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -557,6 +576,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         uart_buses: &UNO_R4_MINIMA_UART_BUSES,
         can_buses: &UNO_R4_CAN_BUSES,
         rtc: Some(UNO_R4_RTC),
+        watchdog: Some(UNO_R4_WATCHDOG),
         wireless: &[],
         capabilities: &UNO_R4_MINIMA_CAPABILITIES,
     },
@@ -585,6 +605,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         uart_buses: &UNO_R4_WIFI_UART_BUSES,
         can_buses: &UNO_R4_CAN_BUSES,
         rtc: Some(UNO_R4_RTC),
+        watchdog: Some(UNO_R4_WATCHDOG),
         wireless: &UNO_R4_WIFI_WIRELESS,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
@@ -610,6 +631,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         uart_buses: &[],
         can_buses: &[],
         rtc: None,
+        watchdog: None,
         wireless: &ESP32_WIRELESS,
         capabilities: &ESP32_CAPABILITIES,
     },
@@ -638,6 +660,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         uart_buses: &[],
         can_buses: &[],
         rtc: None,
+        watchdog: None,
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
     },
@@ -666,6 +689,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         uart_buses: &[],
         can_buses: &[],
         rtc: None,
+        watchdog: None,
         wireless: &PICO_W_WIRELESS,
         capabilities: &PICO_W_CAPABILITIES,
     },
@@ -825,6 +849,23 @@ mod tests {
         assert_eq!(find_target("esp32-devkit-v1").unwrap().rtc, None);
         assert_eq!(find_target("raspberry-pi-pico").unwrap().rtc, None);
         assert_eq!(find_target("raspberry-pi-pico-w").unwrap().rtc, None);
+    }
+
+    #[test]
+    fn registry_exposes_watchdog_metadata() {
+        let minima = find_target("arduino-uno-r4-minima").unwrap();
+        assert_eq!(minima.watchdog, Some(UNO_R4_WATCHDOG));
+        assert_eq!(minima.watchdog.unwrap().instance, 0);
+        assert_eq!(minima.watchdog.unwrap().name, "WDT");
+        assert_eq!(minima.watchdog.unwrap().peripheral, "RA4M1 WDT");
+
+        let wifi = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(wifi.watchdog, minima.watchdog);
+        assert!(wifi.watchdog.unwrap().notes.contains("watchdog timer"));
+
+        assert_eq!(find_target("esp32-devkit-v1").unwrap().watchdog, None);
+        assert_eq!(find_target("raspberry-pi-pico").unwrap().watchdog, None);
+        assert_eq!(find_target("raspberry-pi-pico-w").unwrap().watchdog, None);
     }
 
     #[test]
