@@ -162,18 +162,34 @@ use crate::operand::operand_to_value;
 /// `run_in_large_stack`.  In **release** builds frames shrink to ~1–2 KiB,
 /// well within any default stack.
 ///
-/// 65536 is a safety ceiling — no well-formed `.tw` source file currently
-/// approaches it.  If a future file exceeds 65536 chars the VM returns
-/// `DepthExceeded`; callers can increase this constant and re-run in a
-/// larger-stack thread.
+/// 131072 (2^17) is a safety ceiling chosen for TW05-L (LANG66).
+///
+/// The self-hosted `lex-loop` is NOT tail-call optimised by the Twig IIR
+/// compiler.  Each source character consumed by `lex-loop` adds ~2–3
+/// dispatch frames (one for `lex-loop`, one for `cond-dispatch`, and
+/// optionally one for a scanner helper such as `scan-identifier`).
+///
+/// | Milestone | Largest file | Chars | Est. depth | Limit |
+/// |-----------|-------------|-------|-----------|-------|
+/// | LANG64 TW05-J | `lexer.tw` | 8 593 | ~19 K | 65 536 |
+/// | LANG65 TW05-K | `emit.tw`  | 22 697 | ~51 K | 65 536 |
+/// | LANG66 TW05-L | `cst-parser.tw` | 29 122 | ~66 K | **131 072** |
+///
+/// Empirical ratio from TW05-K/TW05-L boundary: 29 122 chars × ~2.25
+/// frames/char ≈ 65 524, which just exceeds the old 65 536 ceiling.
+/// 131 072 gives ~2× headroom over the measured TW05-L peak.
+///
+/// If a future file exceeds this limit the VM returns `DepthExceeded`;
+/// bump this constant and re-run in a larger-stack thread.
 ///
 /// **History**:
 ///   - bumped 256 → 4096 in LANG62 (TW05-I) to unblock the first
 ///     self-compilation check (stripped span.tw ≈ 365 chars).
 ///   - bumped 4096 → 65536 in LANG64 (TW05-J) to allow lexing
-///     compiler source files up to 65536 chars (iir-builder.tw is
-///     6278 chars, lexer.tw is 8593 chars).
-pub const MAX_DISPATCH_DEPTH: usize = 65536;
+///     compiler source files up to 65 536 chars.
+///   - bumped 65536 → 131072 in LANG66 (TW05-L) to allow lexing
+///     `cst-parser.tw` (29 122 chars, ~65 K dispatch depth).
+pub const MAX_DISPATCH_DEPTH: usize = 131072;
 
 /// Maximum number of instructions any single dispatcher invocation
 /// will execute before refusing.  Catches infinite loops in
@@ -181,24 +197,30 @@ pub const MAX_DISPATCH_DEPTH: usize = 65536;
 /// these for well-formed Twig source, but the VM has no way to
 /// know that).
 ///
-/// ## Budget analysis for LANG64 (TW05-J)
+/// ## Budget analysis
 ///
-/// The `self-compile-all` function compiles four real `.tw` files
-/// through the full lex → parse → emit-program pipeline in one run.
-/// `lex-loop` executes roughly 30 IIR instructions per source
-/// character.  The largest file (`lexer.tw`, 8593 chars) uses
-/// ≈ 258 000 lex instructions; parsing and emitting add another
-/// ≈ 100 000.  Across four files the total is ≈ 1.5–2 M instructions.
+/// The `self-compile-all` function compiles seven real `.tw` files
+/// through the full lex → parse → emit-program pipeline in one run
+/// (TW05-L / LANG66).  The self-hosted `lex-loop` executes roughly
+/// **90 IIR instructions per source character** (lex-loop dispatch +
+/// cond-dispatch comparison chain + scanner helpers).
 ///
-/// 2²³ = 8 M instructions provides comfortable headroom above the
-/// measured peak.  Real programs never approach this limit:
-/// `(fact 1000)` uses ~10⁴ instructions; the largest self-hosted
-/// compiler pass uses < 2 M.
+/// | Milestone | Total chars | Est. instrs | Limit |
+/// |-----------|------------|-------------|-------|
+/// | TW05-J (4 files) | 19 743 | ~1.8 M | 8 M ✓ |
+/// | TW05-K (6 files) | 62 148 | ~5.6 M | 8 M ✓ |
+/// | TW05-L (7 files) | 91 270 | ~8.2 M | **8 M** ✗ → **32 M** ✓ |
 ///
-/// **History**: 2²⁰ (1 M) in LANG62, bumped to 2²³ (8 M) in LANG64
-/// (TW05-J) to allow compiling multi-file programs end-to-end in a
-/// single run.
-pub const MAX_INSTRUCTIONS_PER_RUN: u64 = 1 << 23;
+/// 2²⁵ = 32 M instructions provides comfortable headroom above the
+/// measured TW05-L peak (~8.2 M) while still protecting against
+/// infinite loops.
+///
+/// **History**:
+///   - 2²⁰ (1 M) in LANG62
+///   - bumped to 2²³ (8 M) in LANG64 (TW05-J)
+///   - bumped to 2²⁵ (32 M) in LANG66 (TW05-L): 7-file self-compile-all
+///     empirically needs ~8.2 M instructions
+pub const MAX_INSTRUCTIONS_PER_RUN: u64 = 1 << 25;
 
 /// Maximum register-file size the dispatcher will pre-allocate
 /// for a single frame.

@@ -1,5 +1,5 @@
 ; # main.tw — Root Module + Smoke-Test Entry Point
-;             (LANG62/TW05-I + LANG64/TW05-J + LANG65/TW05-K)
+;             (LANG62/TW05-I + LANG64/TW05-J + LANG65/TW05-K + LANG66/TW05-L)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
@@ -8,12 +8,13 @@
 ;   `(main)` — TW05-I: exercises the full pipeline on a stripped in-memory
 ;              version of span.tw (returns 2, unchanged from TW05-H).
 ;
-;   `(self-compile-all dir)` — TW05-K: reads SIX real `.tw` files from
+;   `(self-compile-all dir)` — TW05-L: reads SEVEN real `.tw` files from
 ;              disk via `host/read_file`, compiles each through the full
 ;              lex → parse → emit-program pipeline, and returns the sum
-;              of emitted function counts (2 + 3 + 8 + 25 + 29 + 35 = 102).
-;              Extended in TW05-K (LANG65) from the original four-file
-;              TW05-J (LANG64) set (which returned 38).
+;              of emitted function counts
+;              (2 + 3 + 8 + 25 + 29 + 35 + 69 = 171).
+;              Extended in TW05-L (LANG66) from the six-file
+;              TW05-K (LANG65) set (which returned 102).
 ;
 ; ## TW05-I pipeline (LANG62)
 ;
@@ -68,6 +69,19 @@
 ; within the 65 536 frame ceiling.  Integration tests use a 3 GiB stack
 ; thread (`run_in_xlarge_stack`) to accommodate the ~1.3 GiB worst-case
 ; debug-mode stack depth for emit.tw (22 697 × 60 KiB ≈ 1.33 GiB).
+;
+; ## TW05-L cst-parser self-compilation (LANG66) — 7-file set
+;
+; TW05-L adds the generated CST parser module to `self-compile-all`:
+;
+;   cst-parser.tw    → 69 functions (cst-match-TkLParen, …, cst-parse-program)
+;                     ────────────
+;                     69 new + 102 original = 171 total
+;
+; `cst-parser.tw` is 29 122 chars — the largest file in the compiler corpus.
+; Peak lex-loop depth: up to 29 122 frames.
+; Debug-mode worst case: 29 122 × 60 KiB ≈ 1.75 GiB.
+; `run_in_xlarge_stack` (3 GiB) provides ~1.7× headroom.
 ;
 ; ## VM call-depth note
 ;
@@ -153,15 +167,15 @@
 
 ; ── self-compile-all ──────────────────────────────────────────────────────────
 ;
-; TW05-K milestone (extended from TW05-J): read six compiler source files from
-; `dir` via `host/read_file`, compile each through the self-hosted
+; TW05-L milestone (extended from TW05-K): read seven compiler source files
+; from `dir` via `host/read_file`, compile each through the self-hosted
 ; lex → parse → emit-program pipeline, and return the sum of emitted function
 ; counts.
 ;
 ; `dir` must be the absolute path to the directory containing the compiler
 ; `.tw` files (no trailing slash).
 ;
-; ## Files compiled and expected counts (TW05-K / LANG65)
+; ## Files compiled and expected counts (TW05-L / LANG66)
 ;
 ;   span.tw           2  defines  (make-span, dummy-span)
 ;   diagnostic.tw     3  defines  (make-error, make-warning, make-info)
@@ -169,9 +183,11 @@
 ;   lexer.tw         25  defines  (lex-digit?, …, lex-source)
 ;   parser.tw        29  defines  (parse-expr, …, parse-program)        ← TW05-K
 ;   emit.tw          35  defines  (emit-const, …, emit-program)         ← TW05-K
+;   cst-parser.tw    69  defines  (cst-match-TkLParen, …, cst-parse-program) ← TW05-L
 ;                   ───
-;                   102  total
+;                   171  total
 ;
+; TW05-K (LANG65) compiled only the first six modules (102 total).
 ; TW05-J (LANG64) compiled only the first four modules (38 total).
 ;
 ; ## Why host/read_file is safe here
@@ -184,17 +200,21 @@
 ; ## MAX_DISPATCH_DEPTH and stack requirement
 ;
 ; `lex-loop` recurses once per source character.  The largest file compiled
-; here is `emit.tw` at 22 697 chars, requiring up to 22 697 dispatch frames.
-; `MAX_DISPATCH_DEPTH = 65536` (set in LANG64) provides ample headroom.
+; here is `cst-parser.tw` at 29 122 chars, requiring up to 29 122 dispatch
+; frames.  `MAX_DISPATCH_DEPTH = 65536` (set in LANG64) provides ample
+; headroom.
 ;
-; In debug builds, frame sizes are ~60 KiB → 22 697 × 60 KiB ≈ 1.33 GiB.
-; Integration tests therefore use `run_in_xlarge_stack` (3 GiB thread).
+; In debug builds, frame sizes are ~60 KiB →
+;   29 122 × 60 KiB ≈ 1.75 GiB.
+; Integration tests therefore use `run_in_xlarge_stack` (3 GiB thread),
+; giving ~1.7× headroom.
 ;
 ; ## Instruction budget
 ;
-; Total source chars: 2 426 + 2 446 + 6 278 + 8 593 + 19 708 + 22 697 = 62 148.
-; Lex: ~30 instrs/char × 62 148 ≈ 1.86 M.  Parse + emit ≈ 0.5 M.
-; Total ≈ 2.4 M << MAX_INSTRUCTIONS_PER_RUN = 8 M.
+; Total source chars:
+;   2 426 + 2 446 + 6 278 + 8 593 + 19 708 + 22 697 + 29 122 = 91 270.
+; Lex: ~30 instrs/char × 91 270 ≈ 2.74 M.  Parse + emit ≈ 0.70 M.
+; Total ≈ 3.44 M << MAX_INSTRUCTIONS_PER_RUN = 8 M.
 
 (define (self-compile-all dir)
   ; Read each source file from disk and compile through the pipeline.
@@ -202,13 +222,14 @@
   ; `lex-source` handles them transparently.
   ;
   ; Files are compiled sequentially; peak stack depth = max single file depth
-  ; (emit.tw at 22 697 chars), not the sum of all files.
+  ; (cst-parser.tw at 29 122 chars), not the sum of all files.
   (let* ((span-src    (host/read_file (string-append dir "/span.tw")))
          (diag-src    (host/read_file (string-append dir "/diagnostic.tw")))
          (builder-src (host/read_file (string-append dir "/iir-builder.tw")))
          (lexer-src   (host/read_file (string-append dir "/lexer.tw")))
          (parser-src  (host/read_file (string-append dir "/parser.tw")))
          (emit-src    (host/read_file (string-append dir "/emit.tw")))
+         (cst-src     (host/read_file (string-append dir "/cst-parser.tw")))
 
          ; Compile each module: lex → parse → emit-program.
          ; emit-program returns a list of (fn-name . instrs) pairs —
@@ -219,12 +240,14 @@
          (builder-fns (emit-program (parse-program (lex-source builder-src))))
          (lexer-fns   (emit-program (parse-program (lex-source lexer-src))))
          (parser-fns  (emit-program (parse-program (lex-source parser-src))))
-         (emit-fns    (emit-program (parse-program (lex-source emit-src)))))
+         (emit-fns    (emit-program (parse-program (lex-source emit-src))))
+         (cst-fns     (emit-program (parse-program (lex-source cst-src)))))
 
-    ; Sum the function counts: 2 + 3 + 8 + 25 + 29 + 35 = 102.
+    ; Sum the function counts: 2 + 3 + 8 + 25 + 29 + 35 + 69 = 171.
     (+ (length span-fns)
        (+ (length diag-fns)
           (+ (length builder-fns)
              (+ (length lexer-fns)
                 (+ (length parser-fns)
-                   (length emit-fns))))))))
+                   (+ (length emit-fns)
+                      (length cst-fns)))))))))
