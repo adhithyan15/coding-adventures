@@ -1,5 +1,42 @@
 # Changelog — twig-type-checker
 
+## [0.9.0] — 2026-05-17
+
+### Added (LANG71 — TW05-P Part 2: Multi-Module Import Propagation)
+
+- **`extract_module_exports(program, env) -> HashMap<String, TwigKind>`** —
+  new public function that returns only the names listed in a module's
+  `(export …)` clause, looked up from its already-built `TypeEnv`.  Used to
+  build the seed map for `check_program_with_globals`.
+
+- **`check_program_with_globals(program, mode_override, extra_globals)`** —
+  new public function identical to `check_program` except that `extra_globals`
+  is merged into the `TypeEnv` *before* Pass 1 (`collect_forms`).  Names
+  defined inside the module shadow pre-seeded entries.  Enables callers to
+  propagate exported names from already-checked dependency modules into the
+  type environment of the importing module.
+
+- **`tw05p2_tests`** — 5 new integration tests that load the actual `.tw`
+  sources via `include_str!`, build the import graph bottom-up, and verify
+  strict-mode passes for all five remaining lenient modules:
+  - `lexer_tw_strict_with_imported_globals`
+  - `cst_parser_tw_strict_with_imported_globals`
+  - `parser_tw_strict_with_imported_globals`
+  - `emit_tw_strict_with_imported_globals`
+  - `main_tw_strict_with_imported_globals`
+
+### Changed (LANG71 — TW05-P Part 2: `.tw` module conversions)
+
+- `code/twig/compiler/lexer.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/cst-parser.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/parser.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/emit.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/main.tw` — `(typed lenient)` → `(typed strict)`
+
+All 11 compiler modules now run under `(typed strict)`.
+
+---
+
 ## [0.8.0] — 2026-05-17
 
 ### Added (LANG70 — TW05-P Part 1: Generated Symbol Registration)

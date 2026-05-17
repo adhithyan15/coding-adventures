@@ -5,7 +5,7 @@
 ;   grammar-tools compile-tokens-twig twig.tokens -o lexer.tw
 
 (module compiler/lexer
-  (typed lenient)
+  (typed strict)
   (export lex-source)
   (import compiler/span compiler/token))
 

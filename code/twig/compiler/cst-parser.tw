@@ -11,7 +11,7 @@
 ;   Success:      (cons rest-tokens cst-node)
 
 (module compiler/cst-parser
-  (typed lenient)
+  (typed strict)
   (export cst-parse-program cst-parse-expr)
   (import compiler/token))
 
