@@ -217,6 +217,9 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x2B` | `uart.open` | `bus: u16/u8` | `handle` |
 | `0x2C` | `uart.write` | `handle`, `byte: u8` | `unit` |
 | `0x2D` | `uart.read` | `handle` | `u8` |
+| `0x31` | `can.open` | `bus: u16/u8` | `handle` |
+| `0x32` | `can.write` | `handle`, `byte: u8` | `unit` |
+| `0x33` | `can.read` | `handle` | `u8` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus

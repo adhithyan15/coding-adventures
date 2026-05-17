@@ -1,11 +1,11 @@
 #![no_std]
 
 use board_vm_ir::{
-    decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_DAC_WRITE_U12,
-    CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ,
-    CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME,
-    CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, MAX_BYTE_BUFFER_LEN,
+    decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ,
+    CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
+    CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
+    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -181,6 +181,18 @@ pub trait BoardHal {
         Err(HalError::UnsupportedMode)
     }
 
+    fn can_open(&mut self, _bus: u16) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn can_write(&mut self, _token: u32, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn can_read(&mut self, _token: u32) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -262,6 +274,7 @@ enum HandleKind {
     I2c,
     Spi,
     Uart,
+    Can,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -734,6 +747,33 @@ where
                 })?;
                 self.push(Value::U8(byte), ip)
             }
+            CAP_CAN_OPEN => {
+                let bus = self.pop_u16(ip)?;
+                let token = self.hal.can_open(bus).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })?;
+                let handle = self.alloc_handle(HandleKind::Can, token, ip)?;
+                self.push(Value::Handle(handle), ip)
+            }
+            CAP_CAN_WRITE => {
+                let byte = self.pop_u8(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::Can, ip)?;
+                self.hal.can_write(token, byte).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })
+            }
+            CAP_CAN_READ => {
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::Can, ip)?;
+                let byte = self.hal.can_read(token).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })?;
+                self.push(Value::U8(byte), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -998,6 +1038,9 @@ mod tests {
         UartOpen(u16),
         UartWrite(u32, u8),
         UartRead(u32),
+        CanOpen(u16),
+        CanWrite(u32, u8),
+        CanRead(u32),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -1024,6 +1067,7 @@ mod tests {
                 .with_i2c()
                 .with_spi()
                 .with_uart()
+                .with_can()
                 .with_led_matrix()
         }
 
@@ -1155,6 +1199,21 @@ mod tests {
 
         fn uart_read(&mut self, token: u32) -> Result<u8, HalError> {
             self.events.push(Event::UartRead(token));
+            Ok(0x5a)
+        }
+
+        fn can_open(&mut self, bus: u16) -> Result<u32, HalError> {
+            self.events.push(Event::CanOpen(bus));
+            Ok(0x4_2000 | bus as u32)
+        }
+
+        fn can_write(&mut self, token: u32, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::CanWrite(token, byte));
+            Ok(())
+        }
+
+        fn can_read(&mut self, token: u32) -> Result<u8, HalError> {
+            self.events.push(Event::CanRead(token));
             Ok(0x5a)
         }
 
@@ -1413,6 +1472,60 @@ mod tests {
         assert_eq!(
             runtime.hal().events,
             vec![Event::UartOpen(2), Event::UartRead(0x3_2002)]
+        );
+    }
+
+    #[test]
+    fn can_open_dispatches_bus_and_returns_handle() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let code = [0x12, 0, 0x40, CAP_CAN_OPEN as u8, 0x50];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            report.return_value,
+            Value::Handle(Handle {
+                index: 0,
+                generation: 1
+            })
+        );
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(runtime.hal().events, vec![Event::CanOpen(0)]);
+    }
+
+    #[test]
+    fn can_write_dispatches_handle_and_byte() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 0, 0x40, CAP_CAN_OPEN as u8, 0x20, 0x50];
+        let write = [0x20, 0x12, 0xa5, 0x40, CAP_CAN_WRITE as u8];
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_code(&write, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::CanOpen(0), Event::CanWrite(0x4_2000, 0xa5)]
+        );
+    }
+
+    #[test]
+    fn can_read_dispatches_handle_and_returns_byte() {
+        let mut runtime: Runtime<FakeHal, 4, 2> = Runtime::new(FakeHal::new());
+        let open = [0x12, 0, 0x40, CAP_CAN_OPEN as u8, 0x20, 0x50];
+        let read = [0x20, 0x40, CAP_CAN_READ as u8, 0x50];
+
+        runtime.run_code(&open, 10).unwrap();
+        let report = runtime.run_code(&read, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::U8(0x5a));
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::CanOpen(0), Event::CanRead(0x4_2000)]
         );
     }
 

@@ -1359,6 +1359,28 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_can_open_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.can.open(bus: 0, program_id: 10, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+      end
+
       def test_uart_write_and_read_dispatch_native_byte_io_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -2071,6 +2093,36 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_can_open_write_and_read
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          open = board.session.run_command("can-open 0 24", program_id: 8)
+          write = board.session.run_command("can-write 0xa5 24", program_id: 9)
+          read = board.session.run_command("can-read 24", program_id: 10)
+          upload_write = board.session.run_command("upload-can.write 0xa5", program_id: 11)
+          upload_read = board.session.run_command("upload-can.read", program_id: 12)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            open.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            read.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_read.results.map(&:command)
+          assert_equal open.frames + write.frames + read.frames + upload_write.frames + upload_read.frames,
+            transport.frames
+        end
+      end
+
       def test_session_run_command_accepts_repl_style_spi_transfer
         transport = FakeWriteTransport.new
 
@@ -2392,6 +2444,18 @@ module CodingAdventures
         uart_read_module_bytes = session.uart_read_module(2)
         assert_instance_of String, uart_read_module_bytes
         assert_operator uart_read_module_bytes.bytesize, :>, 0
+
+        can_module_bytes = session.can_open_module(0, 2)
+        assert_instance_of String, can_module_bytes
+        assert_operator can_module_bytes.bytesize, :>, 0
+
+        can_write_module_bytes = session.can_write_module(0xa5, 3)
+        assert_instance_of String, can_write_module_bytes
+        assert_operator can_write_module_bytes.bytesize, :>, 0
+
+        can_read_module_bytes = session.can_read_module(2)
+        assert_instance_of String, can_read_module_bytes
+        assert_operator can_read_module_bytes.bytesize, :>, 0
 
         spi_transfer_module_bytes = session.spi_transfer_module(10, "\x9F".b, 3, 5)
         assert_instance_of String, spi_transfer_module_bytes

@@ -32,7 +32,7 @@ Source snapshot:
 | I2C master | `Wire` on A4/A5, `Wire1` on Qwiic D27/D26 | bus metadata, handle open, single-byte write/read, byte-buffer write/read, and write-read transfer implemented | `i2c.open`, `i2c.write_u8`, `i2c.read_u8`, `i2c.write`, `i2c.read`, `i2c.transfer` |
 | SPI master | COPI D11, CIPO D12, SCK D13, conventional CS D10 | bus metadata, handle open, bounded write-then-read transfer, and transfer-backed read/write SDK commands implemented | `spi.open`, `spi.transfer`; SDK `spi.write`/`spi.read` lower to transfer |
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | descriptor metadata, handle open, and single-byte write/read implemented | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
-| CAN | CAN0 TX D10, RX D13 | descriptor metadata implemented; bytecode capability pending | `can.open`, `can.write`, `can.read` |
+| CAN | CAN0 TX D10, RX D13 | descriptor metadata, handle open, and single-byte write/read implemented | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | descriptor metadata implemented; bytecode capability pending | `rtc.now`, `rtc.set`, alarms/events later |
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata implemented; bytecode capability pending | `program.store` and possibly `kv.store` |
 | Watchdog | Renesas WDT library | descriptor metadata implemented; bytecode capability pending | `watchdog.configure`, `watchdog.kick` |
@@ -81,16 +81,16 @@ reject conflicting handles.
    descriptor metadata for Minima `Serial1` and WiFi `Serial1`/`Serial2`/
    `Serial3`, while `uart.open`, `uart.write`, and `uart.read` establish the
    first UART handle and byte I/O tranche. CAN now has descriptor metadata for
-   UNO R4 `CAN0` on D10/TX and D13/RX while `can.open`, `can.write`, and
-   `can.read` remain the next CAN capability tranche. RTC now has descriptor
-   metadata for the single UNO R4 `RA4M1 RTC` instance while `rtc.now` and
+   UNO R4 `CAN0` on D10/TX and D13/RX, and `can.open`, `can.write`, and
+   `can.read` establish the first CAN handle and byte I/O tranche. RTC now has
+   descriptor metadata for the single UNO R4 `RA4M1 RTC` instance while `rtc.now` and
    `rtc.set` remain a later capability tranche. Watchdog now has descriptor
    metadata for the UNO R4 `RA4M1 WDT` instance while `watchdog.configure` and
    `watchdog.kick` remain a later capability tranche. EEPROM/store now has
    descriptor metadata for the 8 KiB flash-backed EEPROM/data-flash area while
    `program.store` and `kv.store` remain later capability tranches. The next
-   independent tranche can move on to CAN byte I/O, RTC bytecode operations,
-   watchdog bytecode operations, EEPROM/store bytecode operations, or
+   independent tranche can move on to RTC bytecode operations, watchdog
+   bytecode operations, EEPROM/store bytecode operations, or
    WiFi/network metadata and capability slices.
 
 Every tranche should include the same layers: spec entry, IR capability id,

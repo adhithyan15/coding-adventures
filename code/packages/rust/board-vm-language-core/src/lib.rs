@@ -36,22 +36,24 @@ use board_vm_esp_rom::{
 };
 use board_vm_host::{
     i2c_transfer_module_len, i2c_write_module_len, spi_transfer_module_len, spi_write_module_len,
-    write_adc_read_module, write_blink_module, write_dac_write_u12_module,
-    write_gpio_handle_close_module, write_gpio_handle_read_module, write_gpio_handle_write_module,
-    write_gpio_open_module, write_gpio_read_module, write_gpio_write_module, write_i2c_open_module,
-    write_i2c_read_module, write_i2c_read_u8_module, write_i2c_transfer_module,
-    write_i2c_write_module, write_i2c_write_u8_module, write_led_matrix_frame_module, write_module,
-    write_pwm_write_module, write_spi_open_module, write_spi_read_module,
-    write_spi_transfer_module, write_spi_write_module, write_time_now_module,
-    write_time_sleep_ms_module, write_uart_open_module, write_uart_read_module,
-    write_uart_write_module, AdcReadProgram, BlinkProgram, DacWriteU12Program,
+    write_adc_read_module, write_blink_module, write_can_open_module, write_can_read_module,
+    write_can_write_module, write_dac_write_u12_module, write_gpio_handle_close_module,
+    write_gpio_handle_read_module, write_gpio_handle_write_module, write_gpio_open_module,
+    write_gpio_read_module, write_gpio_write_module, write_i2c_open_module, write_i2c_read_module,
+    write_i2c_read_u8_module, write_i2c_transfer_module, write_i2c_write_module,
+    write_i2c_write_u8_module, write_led_matrix_frame_module, write_module, write_pwm_write_module,
+    write_spi_open_module, write_spi_read_module, write_spi_transfer_module,
+    write_spi_write_module, write_time_now_module, write_time_sleep_ms_module,
+    write_uart_open_module, write_uart_read_module, write_uart_write_module, AdcReadProgram,
+    BlinkProgram, CanOpenProgram, CanReadProgram, CanWriteProgram, DacWriteU12Program,
     GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram, GpioOpenProgram,
     GpioReadProgram, GpioWriteProgram, HostError, HostSession, I2cOpenProgram, I2cReadProgram,
     I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
     LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, SpiOpenProgram, SpiReadProgram,
     SpiTransferProgram, SpiWriteProgram, TimeNowProgram, TimeSleepMsProgram, UartOpenProgram,
-    UartReadProgram, UartWriteProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
-    DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    UartReadProgram, UartWriteProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, CAN_OPEN_MODULE_LEN,
+    CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
+    DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
     I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN,
@@ -1724,6 +1726,27 @@ pub fn build_uart_read_module(
     Ok(write_uart_read_module(program, out)?)
 }
 
+pub fn build_can_open_module(
+    program: CanOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_can_open_module(program, out)?)
+}
+
+pub fn build_can_write_module(
+    program: CanWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_can_write_module(program, out)?)
+}
+
+pub fn build_can_read_module(
+    program: CanReadProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_can_read_module(program, out)?)
+}
+
 pub fn build_spi_transfer_module(
     program: SpiTransferProgram<'_>,
     out: &mut [u8],
@@ -2571,6 +2594,56 @@ pub unsafe extern "C" fn board_vm_language_uart_read_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_can_open_module(
+    bus: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_can_open_module(CanOpenProgram { bus, max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_can_write_module(
+    byte: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_can_write_module(CanWriteProgram { byte, max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_can_read_module(
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_can_read_module(CanReadProgram { max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_spi_transfer_module(
     cs_pin: u16,
     write_bytes: *const u8,
@@ -3117,6 +3190,21 @@ pub extern "C" fn board_vm_language_uart_write_module_len() -> u64 {
 #[no_mangle]
 pub extern "C" fn board_vm_language_uart_read_module_len() -> u64 {
     UART_READ_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_can_open_module_len() -> u64 {
+    CAN_OPEN_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_can_write_module_len() -> u64 {
+    CAN_WRITE_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_can_read_module_len() -> u64 {
+    CAN_READ_MODULE_LEN as u64
 }
 
 #[no_mangle]
@@ -4307,6 +4395,44 @@ mod tests {
             uart_read_status.len,
             board_vm_language_uart_read_module_len()
         );
+
+        let mut can_module = [0u8; CAN_OPEN_MODULE_LEN];
+        let can_status = unsafe {
+            board_vm_language_can_open_module(
+                0,
+                2,
+                can_module.as_mut_ptr(),
+                can_module.len() as u64,
+            )
+        };
+        assert_eq!(can_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(can_status.len, CAN_OPEN_MODULE_LEN as u64);
+
+        let mut can_write_module = [0u8; CAN_WRITE_MODULE_LEN];
+        let can_write_status = unsafe {
+            board_vm_language_can_write_module(
+                0xa5,
+                3,
+                can_write_module.as_mut_ptr(),
+                can_write_module.len() as u64,
+            )
+        };
+        assert_eq!(can_write_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(
+            can_write_status.len,
+            board_vm_language_can_write_module_len()
+        );
+
+        let mut can_read_module = [0u8; CAN_READ_MODULE_LEN];
+        let can_read_status = unsafe {
+            board_vm_language_can_read_module(
+                2,
+                can_read_module.as_mut_ptr(),
+                can_read_module.len() as u64,
+            )
+        };
+        assert_eq!(can_read_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(can_read_status.len, board_vm_language_can_read_module_len());
 
         let spi_transfer_payload = [0x9f];
         let mut spi_transfer_module = [0u8; board_vm_host::SPI_TRANSFER_MAX_MODULE_LEN];

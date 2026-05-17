@@ -13,7 +13,9 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_SPI_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_UART_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_CAN_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
     BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
@@ -473,7 +475,8 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
         .with_dac()
         .with_i2c()
         .with_uart()
-        .with_spi(),
+        .with_spi()
+        .with_can(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -507,7 +510,8 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_i2c()
         .with_spi()
         .with_uart()
-        .with_led_matrix(),
+        .with_led_matrix()
+        .with_can(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -549,6 +553,10 @@ pub trait UnoR4Backend {
         false
     }
 
+    fn supports_can(&self) -> bool {
+        false
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -582,6 +590,18 @@ pub trait UnoR4Backend {
     }
 
     fn read_uart(&mut self, _bus: u8) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn open_can(&mut self, _bus: u8) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn write_can(&mut self, _bus: u8, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn read_can(&mut self, _bus: u8) -> Result<u8, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -681,6 +701,7 @@ where
         capabilities.i2c = self.backend.supports_i2c();
         capabilities.spi = self.backend.supports_spi();
         capabilities.uart = self.backend.supports_uart();
+        capabilities.can = self.backend.supports_can();
         capabilities
     }
 }
@@ -762,6 +783,21 @@ where
     fn uart_read(&mut self, token: u32) -> Result<u8, HalError> {
         let bus = normalize_uart_token(self.target, token)?;
         self.backend.read_uart(bus)
+    }
+
+    fn can_open(&mut self, bus: u16) -> Result<u32, HalError> {
+        let bus = normalize_can_bus(self.target, bus)?;
+        self.backend.open_can(bus)
+    }
+
+    fn can_write(&mut self, token: u32, byte: u8) -> Result<(), HalError> {
+        let bus = normalize_can_token(self.target, token)?;
+        self.backend.write_can(bus, byte)
+    }
+
+    fn can_read(&mut self, token: u32) -> Result<u8, HalError> {
+        let bus = normalize_can_token(self.target, token)?;
+        self.backend.read_can(bus)
     }
 
     fn spi_transfer(
@@ -921,6 +957,24 @@ fn normalize_uart_token(target: &TargetDescriptor, token: u32) -> Result<u8, Hal
     normalize_uart_bus(target, bus)
 }
 
+fn normalize_can_bus(target: &TargetDescriptor, bus: u16) -> Result<u8, HalError> {
+    let bus = u8::try_from(bus).map_err(|_| HalError::InvalidPin)?;
+    if target
+        .can_buses
+        .iter()
+        .any(|descriptor| descriptor.bus == bus)
+    {
+        Ok(bus)
+    } else {
+        Err(HalError::InvalidPin)
+    }
+}
+
+fn normalize_can_token(target: &TargetDescriptor, token: u32) -> Result<u8, HalError> {
+    let bus = u16::try_from(token & 0xff).map_err(|_| HalError::InvalidPin)?;
+    normalize_can_bus(target, bus)
+}
+
 fn normalize_i2c_address(address: u16) -> Result<(), HalError> {
     if address <= 0x7f {
         Ok(())
@@ -948,6 +1002,16 @@ fn uno_r4_device_descriptor_for_capabilities(
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: false,
         capabilities: if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
             && capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -991,6 +1055,15 @@ fn uno_r4_device_descriptor_for_capabilities(
             &BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_CAN_CAPABILITIES
         } else if capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -1090,6 +1163,9 @@ mod tests {
         UartOpen(u8),
         UartWrite(u8, u8),
         UartRead(u8),
+        CanOpen(u8),
+        CanWrite(u8, u8),
+        CanRead(u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1157,6 +1233,10 @@ mod tests {
             true
         }
 
+        fn supports_can(&self) -> bool {
+            true
+        }
+
         fn supports_bootloader_reboot(&self) -> bool {
             true
         }
@@ -1198,6 +1278,21 @@ mod tests {
 
         fn read_uart(&mut self, bus: u8) -> Result<u8, HalError> {
             self.events.push(Event::UartRead(bus));
+            Ok(0x5a)
+        }
+
+        fn open_can(&mut self, bus: u8) -> Result<u32, HalError> {
+            self.events.push(Event::CanOpen(bus));
+            Ok(0x4_2000 | bus as u32)
+        }
+
+        fn write_can(&mut self, bus: u8, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::CanWrite(bus, byte));
+            Ok(())
+        }
+
+        fn read_can(&mut self, bus: u8) -> Result<u8, HalError> {
+            self.events.push(Event::CanRead(bus));
             Ok(0x5a)
         }
 
@@ -1429,7 +1524,7 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES.len()
         );
         assert!(UNO_R4_WIFI
             .capabilities
@@ -1465,6 +1560,11 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_UART_READ));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_CAN_OPEN));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_WRITE));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_CAN_READ));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1507,6 +1607,15 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_UART_READ));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_OPEN));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_WRITE));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_READ));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1666,6 +1775,55 @@ mod tests {
 
         assert_eq!(board.uart_read(0x3_2001), Err(HalError::InvalidPin));
         assert_eq!(board.uart_read(0x3_2099), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn can_open_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.can_open(0).unwrap(), 0x4_2000);
+        assert_eq!(board.backend().events, vec![Event::CanOpen(0)]);
+    }
+
+    #[test]
+    fn can_open_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.can_open(1), Err(HalError::InvalidPin));
+        assert_eq!(board.can_open(99), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn can_write_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.can_write(0x4_2000, 0xa5).unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::CanWrite(0, 0xa5)]);
+    }
+
+    #[test]
+    fn can_write_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.can_write(0x4_2001, 0xa5), Err(HalError::InvalidPin));
+        assert_eq!(board.can_write(0x4_2099, 0xa5), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn can_read_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.can_read(0x4_2000).unwrap(), 0x5a);
+        assert_eq!(board.backend().events, vec![Event::CanRead(0)]);
+    }
+
+    #[test]
+    fn can_read_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.can_read(0x4_2001), Err(HalError::InvalidPin));
+        assert_eq!(board.can_read(0x4_2099), Err(HalError::InvalidPin));
     }
 
     #[test]
