@@ -2507,20 +2507,22 @@ mod tw05j_tests {
             .replace('\n', "\\n")
     }
 
-    // ── Test 1: self-compile-all returns 173 (TW05-M updated) ──────────────
+    // ── Test 1: self-compile-all returns 179 (TW05-N updated) ──────────────
     //
     // TW05-M extended self-compile-all from 7 files (171) to 11 files (173)
     // by adding token.tw (0), ast.tw (0), iir-types.tw (0), and main.tw (2).
+    // TW05-N added 6 IIR serialisation helpers to main.tw (2 → 8), making
+    // the grand total 179.
     // Stack: run_in_xlarge_stack (3 GiB); cst-parser.tw remains the largest
     // file at ~1.75 GiB worst-case debug stack.
-    // (Previously expected 171 before TW05-M added the 4 remaining modules.)
 
     #[test]
-    fn self_compile_all_returns_173() {
+    fn self_compile_all_returns_179() {
         // Compile all modules, write a main-test.tw that calls (self-compile-all),
-        // and verify the total function count is 173 (2+0+3+0+0+8+25+69+29+35+2).
+        // and verify the total function count is 179 (2+0+3+0+0+8+25+69+29+35+8).
+        // LANG68/TW05-N updated main.tw from 2 → 8 functions (+6 serialisation helpers).
         let src = compiler_src_dir();
-        let dir = make_tempdir("all173");
+        let dir = make_tempdir("all179");
         copy_all_tw_modules(&src, &dir);
 
         let src_str = twig_escape_path(&src);
@@ -2534,9 +2536,9 @@ mod tw05j_tests {
         let root = dir.join("compiler").join("main-test.tw");
         fs::write(&root, &main_test_src).unwrap();
 
-        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_173");
-        assert_eq!(v.to_string(), "173",
-            "expected 173 functions (2+0+3+0+0+8+25+69+29+35+2); got {v}");
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_179");
+        assert_eq!(v.to_string(), "179",
+            "expected 179 functions (2+0+3+0+0+8+25+69+29+35+8); got {v}");
     }
 
     // ── Test 2: span.tw from disk → 2 functions ──────────────────────────────
@@ -2738,17 +2740,18 @@ mod tw05k_tests {
         }
     }
 
-    // ── Test 1: self-compile-all returns 173 (TW05-M updated) ───────────────
+    // ── Test 1: self-compile-all returns 179 (TW05-N updated) ───────────────
     //
-    // After TW05-M, self-compile-all covers all 11 files → 173 functions.
+    // After TW05-N, main.tw grew from 2 → 8 functions, so the total is 179.
 
     #[test]
-    fn self_compile_all_returns_173() {
-        // Full pipeline across 11 files → 2+0+3+0+0+8+25+69+29+35+2 = 173.
+    fn self_compile_all_returns_179() {
+        // Full pipeline across 11 files → 2+0+3+0+0+8+25+69+29+35+8 = 179.
+        // LANG68/TW05-N added 6 IIR serialisation helpers to main.tw.
         // Uses run_in_xlarge_stack (3 GiB); cst-parser.tw (29 122 chars) is
         // still the largest file, requiring ~1.75 GiB debug-mode stack.
         let src = compiler_src_dir();
-        let dir = make_tempdir("all173");
+        let dir = make_tempdir("all179");
         copy_all_tw_modules(&src, &dir);
 
         let src_str = twig_escape_path(&src);
@@ -2762,9 +2765,9 @@ mod tw05k_tests {
         let root = dir.join("compiler").join("main-test.tw");
         fs::write(&root, &main_test_src).unwrap();
 
-        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_173");
-        assert_eq!(v.to_string(), "173",
-            "expected 173 functions (2+0+3+0+0+8+25+69+29+35+2); got {v}");
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_179");
+        assert_eq!(v.to_string(), "179",
+            "expected 179 functions (2+0+3+0+0+8+25+69+29+35+8); got {v}");
     }
 
     // ── Test 2: parser.tw from disk → 29 functions ───────────────────────────
@@ -2988,14 +2991,17 @@ mod tw05l_tests {
             "expected 69 functions from cst-parser.tw; got {v}");
     }
 
-    // ── Test 2: self-compile-all returns 173 (TW05-M updated) ───────────────
+    // ── Test 2: self-compile-all returns 179 (TW05-N updated) ───────────────
+    //
+    // main.tw grew from 2 → 8 functions in TW05-N; total becomes 179.
 
     #[test]
-    fn self_compile_all_returns_173() {
-        // Full pipeline across 11 files → 2+0+3+0+0+8+25+69+29+35+2 = 173.
+    fn self_compile_all_returns_179() {
+        // Full pipeline across 11 files → 2+0+3+0+0+8+25+69+29+35+8 = 179.
+        // LANG68/TW05-N added 6 IIR serialisation helpers to main.tw.
         // Uses run_in_xlarge_stack (3 GiB); cst-parser.tw remains the largest.
         let src = compiler_src_dir();
-        let dir = make_tempdir("all173");
+        let dir = make_tempdir("all179");
         copy_all_tw_modules(&src, &dir);
 
         let src_str = twig_escape_path(&src);
@@ -3009,9 +3015,9 @@ mod tw05l_tests {
         let root = dir.join("compiler").join("main-test.tw");
         fs::write(&root, &main_test_src).unwrap();
 
-        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_173");
-        assert_eq!(v.to_string(), "173",
-            "expected 173 functions (2+0+3+0+0+8+25+69+29+35+2); got {v}");
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_179");
+        assert_eq!(v.to_string(), "179",
+            "expected 179 functions (2+0+3+0+0+8+25+69+29+35+8); got {v}");
     }
 
     // ── Test 3: TW05-K regression — original 6 files still produce 102 ───────
@@ -3265,7 +3271,11 @@ mod tw05m_tests {
     // just compiled to IIR call instructions — NOT executed.
 
     #[test]
-    fn self_compile_main_tw_returns_2() {
+    fn self_compile_main_tw_returns_8() {
+        // After TW05-N (LANG68), main.tw has 8 top-level (define ...) forms:
+        //   main, self-compile-all (existing from TW05-M)
+        //   + instr-op-tag, instr-list-ops, fn-pair-ops-str, fn-list-ops-str,
+        //     self-compile-all-summary, fixed-point-check (new in TW05-N)
         let src = compiler_src_dir();
         let dir = make_tempdir("main_disk");
         copy_all_tw_modules(&src, &dir);
@@ -3283,21 +3293,23 @@ mod tw05m_tests {
         let root = dir.join("compiler").join("main-test.tw");
         fs::write(&root, &main_test_src).unwrap();
 
-        let v = crate::run_in_large_stack(root, dir.clone(), "self_compile_main_tw_returns_2");
-        assert_eq!(v.to_string(), "2",
-            "expected 2 functions from main.tw (main + self-compile-all); got {v}");
+        let v = crate::run_in_large_stack(root, dir.clone(), "self_compile_main_tw_returns_8");
+        assert_eq!(v.to_string(), "8",
+            "expected 8 functions from main.tw (2 existing + 6 TW05-N helpers); got {v}");
     }
 
-    // ── Test 5: self-compile-all returns 173 ─────────────────────────────────
+    // ── Test 5: self-compile-all returns 179 (TW05-N updated) ────────────────
 
     #[test]
-    fn self_compile_all_returns_173() {
-        // Full pipeline across all 11 files →
-        //   2 + 0 + 3 + 0 + 0 + 8 + 25 + 69 + 29 + 35 + 2 = 173.
+    fn self_compile_all_returns_179() {
+        // After TW05-N (LANG68): full pipeline across all 11 files →
+        //   2 + 0 + 3 + 0 + 0 + 8 + 25 + 69 + 29 + 35 + 8 = 179.
+        // main.tw now contributes 8 functions (was 2 in TW05-M) because
+        // 6 IIR-serialisation helpers were added in TW05-N.
         // Uses run_in_xlarge_stack (3 GiB); cst-parser.tw is still the
         // largest file at ~1.75 GiB debug-mode stack.
         let src = compiler_src_dir();
-        let dir = make_tempdir("all173");
+        let dir = make_tempdir("all179");
         copy_all_tw_modules(&src, &dir);
 
         let src_str = twig_escape_path(&src);
@@ -3311,9 +3323,9 @@ mod tw05m_tests {
         let root = dir.join("compiler").join("main-test.tw");
         fs::write(&root, &main_test_src).unwrap();
 
-        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_173");
-        assert_eq!(v.to_string(), "173",
-            "expected 173 functions (2+0+3+0+0+8+25+69+29+35+2); got {v}");
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "self_compile_all_returns_179");
+        assert_eq!(v.to_string(), "179",
+            "expected 179 functions (2+0+3+0+0+8+25+69+29+35+8); got {v}");
     }
 
     // ── Test 6: TW05-L regression — original 7 files still produce 171 ───────
@@ -3374,7 +3386,9 @@ mod tw05m_tests {
     #[test]
     fn existing_main_still_returns_2_after_tw05m() {
         // The original (main) entry point (TW05-I smoke test, stripped span.tw)
-        // must still return 2 unchanged after the TW05-M extension.
+        // must still return 2 unchanged after the TW05-M and TW05-N extensions.
+        // `(main)` lexes a hard-coded span.tw excerpt and counts emitted functions
+        // → always 2 regardless of how many helpers are added to main.tw.
         let src = compiler_src_dir();
         let dir = make_tempdir("tw05m_regression_main");
         copy_all_tw_modules(&src, &dir);
@@ -3383,5 +3397,346 @@ mod tw05m_tests {
         let v = crate::run_in_large_stack(root, dir.clone(), "existing_main_still_returns_2_after_tw05m");
         assert_eq!(v.to_string(), "2",
             "TW05-I regression: expected (main) = 2; got {v}");
+    }
+}
+
+// ── TW05-N integration tests ───────────────────────────────────────────────────
+//
+// Tests for the fixed-point self-compilation milestone (LANG68 / TW05-N).
+//
+// TW05-N adds IIR opcode-summary serialisation to `main.tw`:
+//   `instr-op-tag`          — extract opcode string from one IirInstr
+//   `instr-list-ops`        — join opcodes with "|"
+//   `fn-pair-ops-str`       — "fn-name N op1|...|opN"
+//   `fn-list-ops-str`       — newline-join fn-pair-ops-str results
+//   `self-compile-all-summary` — full opcode-structure string for all 11 files
+//   `fixed-point-check`     — compile span.tw twice, verify identical summaries
+//
+// ## Updated function counts
+//
+//   main.tw: 2 (TW05-M) → 8 (TW05-N) — +6 serialisation helpers
+//   self-compile-all total: 173 (TW05-M) → 179 (TW05-N)
+//
+// ## Fixed-point semantics
+//
+// `fixed-point-check` calls the pipeline twice on span.tw (the smallest
+// compiler source file) and returns `#t` if both runs produce identical opcode
+// summaries.  Since Twig is purely functional, this always returns `#t`; the
+// purpose is to make the determinism invariant explicit and testable.
+//
+// ## VM limits
+//
+// `self-compile-all-summary` reads all 11 files; cst-parser.tw (29 122 chars)
+// remains the stack bottleneck.  Tests that call it use `run_in_xlarge_stack`.
+// `fixed-point-check` only processes span.tw (~365 chars) twice; it can run
+// on a small stack but we use `run_in_large_stack` for consistency.
+
+#[cfg(test)]
+mod tw05n_tests {
+    use std::fs;
+    use std::path::Path;
+
+    fn compiler_src_dir() -> std::path::PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent().unwrap()  // rust/
+            .parent().unwrap()  // packages/
+            .parent().unwrap()  // code/
+            .join("twig/compiler")
+            .canonicalize()
+            .expect("code/twig/compiler/ must exist")
+    }
+
+    fn make_tempdir(tag: &str) -> std::path::PathBuf {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .subsec_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "twig_tw05n_{tag}_{}_{}", std::process::id(), nonce
+        ));
+        std::fs::create_dir(&dir).unwrap_or_else(|e| {
+            panic!("make_tempdir: could not create {}: {e}", dir.display())
+        });
+        dir
+    }
+
+    fn twig_escape_path(p: &std::path::Path) -> String {
+        // Escape all characters that could confuse the Twig string lexer.
+        // `\r` and `\t` are legal in filesystem paths on some platforms and
+        // must be escaped to avoid producing malformed Twig source.
+        p.to_str().unwrap()
+            .replace('\\', "\\\\")
+            .replace('"',  "\\\"")
+            .replace('\n', "\\n")
+            .replace('\r', "\\r")
+            .replace('\t', "\\t")
+    }
+
+    fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
+        let src  = twig_src.join(format!("{name}.tw"));
+        let dest = dest_dir.join("compiler");
+        fs::create_dir_all(&dest).unwrap();
+        fs::copy(&src, dest.join(format!("{name}.tw")))
+            .unwrap_or_else(|e| panic!("copy {name}.tw: {e}"));
+    }
+
+    fn copy_all_tw_modules(twig_src: &Path, dest_dir: &Path) {
+        for name in &["span","token","diagnostic","ast","iir-types",
+                      "iir-builder","lexer","cst-parser","parser","emit","main"] {
+            copy_tw(twig_src, dest_dir, name);
+        }
+    }
+
+    // ── Test 1: main.tw now contributes 8 functions after TW05-N ─────────────
+
+    #[test]
+    fn main_tw_contributes_8_functions_after_tw05n() {
+        // TW05-N adds 6 helpers to main.tw: instr-op-tag, instr-list-ops,
+        // fn-pair-ops-str, fn-list-ops-str, self-compile-all-summary,
+        // fixed-point-check.  Total: 2 (existing) + 6 (new) = 8.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("tw05n_main8");
+        copy_all_tw_modules(&src, &dir);
+
+        let path_str = twig_escape_path(&src.join("main.tw"));
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (length (emit-program (parse-program (lex-source \
+                 (host/read_file \"{path_str}\"))))))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "main_tw_contributes_8");
+        assert_eq!(v.to_string(), "8",
+            "expected 8 functions from main.tw (2 existing + 6 TW05-N helpers); got {v}");
+    }
+
+    // ── Test 2: self-compile-all now returns 179 ──────────────────────────────
+
+    #[test]
+    fn self_compile_all_returns_179_after_tw05n() {
+        // Full pipeline: 2+0+3+0+0+8+25+69+29+35+8 = 179.
+        // (was 173 in TW05-M; main.tw's count grew from 2 to 8)
+        let src = compiler_src_dir();
+        let dir = make_tempdir("tw05n_all179");
+        copy_all_tw_modules(&src, &dir);
+
+        let src_str = twig_escape_path(&src);
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/main)) \
+             (define (main) (self-compile-all \"{src_str}\"))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "tw05n_all179");
+        assert_eq!(v.to_string(), "179",
+            "expected 179 functions (2+0+3+0+0+8+25+69+29+35+8); got {v}");
+    }
+
+    // ── Test 3: fixed-point-check returns #t ──────────────────────────────────
+
+    #[test]
+    fn fixed_point_check_returns_true() {
+        // Compiles span.tw twice through the self-hosted pipeline and verifies
+        // both runs produce identical opcode summaries.  Returns #t always
+        // (Twig is purely functional); the test makes the invariant explicit.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("tw05n_fpc");
+        copy_all_tw_modules(&src, &dir);
+
+        let src_str = twig_escape_path(&src);
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/main)) \
+             (define (main) (fixed-point-check \"{src_str}\"))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_large_stack(root, dir.clone(), "tw05n_fpc");
+        assert_eq!(v.to_string(), "#t",
+            "fixed-point-check: expected #t (determinism invariant); got {v}");
+    }
+
+    // ── Test 4: make-span emits exactly 12 IIR instructions ──────────────────
+    //
+    // We cannot return a Twig heap string to Rust (LispyValue::Display renders
+    // heap values as "<heap@0x…>", not their content).  Instead we query the
+    // instruction count directly: the first element of emit-program's result
+    // for span.tw is the (make-span . instr-list) pair, so we return
+    // (length (cdr (car ...))) → integer 12.
+
+    #[test]
+    fn summary_contains_make_span_12_instrs() {
+        // span.tw's make-span function emits 12 IIR instructions.
+        // We verify by counting the instruction list length directly.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("tw05n_span12");
+        copy_all_tw_modules(&src, &dir);
+
+        let span_path = twig_escape_path(&src.join("span.tw"));
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (length \
+                 (cdr \
+                   (car \
+                     (emit-program \
+                       (parse-program \
+                         (lex-source \
+                           (host/read_file \"{span_path}\"))))))))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "tw05n_span12");
+        assert_eq!(
+            v.to_string(), "12",
+            "make-span should have 12 instructions; got {}",
+            v.to_string()
+        );
+    }
+
+    // ── Test 5: dummy-span emits exactly 4 IIR instructions ──────────────────
+    //
+    // dummy-span is the second function in span.tw: (Span 0 0 0) compiles to
+    // 3 × const + 1 × call_builtin = 4 instructions.  We return the count
+    // as an integer rather than a heap string.
+
+    #[test]
+    fn summary_contains_dummy_span_4_instrs() {
+        // span.tw's dummy-span function emits 4 IIR instructions:
+        //   const r0 0, const r1 0, const r2 0, call_builtin Span r0 r1 r2.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("tw05n_span4");
+        copy_all_tw_modules(&src, &dir);
+
+        let span_path = twig_escape_path(&src.join("span.tw"));
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (length \
+                 (cdr \
+                   (car \
+                     (cdr \
+                       (emit-program \
+                         (parse-program \
+                           (lex-source \
+                             (host/read_file \"{span_path}\")))))))))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "tw05n_span4");
+        assert_eq!(
+            v.to_string(), "4",
+            "dummy-span should have 4 instructions; got {}",
+            v.to_string()
+        );
+    }
+
+    // ── Test 6: summary is non-empty and substantial ──────────────────────────
+    //
+    // self-compile-all-summary returns a Twig heap string; we use string-length
+    // (returns an integer) and compare with > to get a boolean #t/#f — both
+    // are representable by LispyValue::to_string().
+
+    #[test]
+    fn summary_is_non_empty_and_substantial() {
+        // The full 11-file summary must be a string of at least 1000 chars.
+        // 179 functions × ~20 chars minimum ≈ 3580 chars.
+        // We verify via (> (string-length (self-compile-all-summary dir)) 1000)
+        // which returns a boolean that v.to_string() can render correctly.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("tw05n_nonempty");
+        copy_all_tw_modules(&src, &dir);
+
+        let src_str = twig_escape_path(&src);
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/main)) \
+             (define (main) \
+               (> (string-length (self-compile-all-summary \"{src_str}\")) 1000))"
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "tw05n_nonempty");
+        assert_eq!(
+            v.to_string(), "#t",
+            "summary length should be >1000 chars; result was {}",
+            v.to_string()
+        );
+    }
+
+    // ── Test 7: TW05-L 7-file regression unchanged after TW05-N ─────────────
+
+    #[test]
+    fn tw05l_seven_file_regression_still_171() {
+        // The seven TW05-L modules (span, diagnostic, iir-builder, lexer,
+        // cst-parser, parser, emit) must still produce 171 total functions.
+        // This is independent of the TW05-N changes to main.tw.
+        let src = compiler_src_dir();
+        let dir = make_tempdir("tw05n_l_regr");
+        copy_all_tw_modules(&src, &dir);
+
+        let span_path    = twig_escape_path(&src.join("span.tw"));
+        let diag_path    = twig_escape_path(&src.join("diagnostic.tw"));
+        let builder_path = twig_escape_path(&src.join("iir-builder.tw"));
+        let lexer_path   = twig_escape_path(&src.join("lexer.tw"));
+        let cst_path     = twig_escape_path(&src.join("cst-parser.tw"));
+        let parser_path  = twig_escape_path(&src.join("parser.tw"));
+        let emit_path    = twig_escape_path(&src.join("emit.tw"));
+
+        let file = |path: &str| {
+            format!("(length (emit-program (parse-program (lex-source (host/read_file \"{path}\")))))")
+        };
+        let main_test_src = format!(
+            "(module compiler/main-test \
+              (typed lenient) \
+              (export main) \
+              (import compiler/lexer compiler/parser compiler/emit)) \
+             (define (main) \
+               (+ {span} \
+                  (+ {diag} \
+                     (+ {builder} \
+                        (+ {lexer} \
+                           (+ {cst} \
+                              (+ {parser} \
+                                 {emit})))))))",
+            span    = file(&span_path),
+            diag    = file(&diag_path),
+            builder = file(&builder_path),
+            lexer   = file(&lexer_path),
+            cst     = file(&cst_path),
+            parser  = file(&parser_path),
+            emit    = file(&emit_path),
+        );
+        let root = dir.join("compiler").join("main-test.tw");
+        fs::write(&root, &main_test_src).unwrap();
+
+        let v = crate::run_in_xlarge_stack(root, dir.clone(), "tw05n_l_regression");
+        assert_eq!(v.to_string(), "171",
+            "TW05-L regression: expected 171 from 7 original modules; got {v}");
     }
 }
