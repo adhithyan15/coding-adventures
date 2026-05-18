@@ -81,6 +81,10 @@ continuation states so parser-facing recovery stays pinned at stream end.
 The generated text-mode delimiter suite pins how RCDATA, RAWTEXT, script data,
 escaped script data, and seeded end-tag continuation states distinguish real
 matching end tags from literal apparent end tags.
+The generated text-mode boundary suite drills into parser-seeded RCDATA,
+RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
+continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup
+preservation.
 The generated markup declaration suite pins comment, bogus-comment, DOCTYPE,
 default HTML CDATA-looking bogus-comment recovery, explicit seeded CDATA
 continuation, and seeded declaration continuation behavior.
@@ -325,6 +329,18 @@ continuation states. Regenerate or check it with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_script_escape_boundaries_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_script_escape_boundaries_fixture.py \
+  --check
+```
+
+The checked-in `whatwg-text-mode-boundaries.json` fixture exercises
+parser-seeded RCDATA, RAWTEXT, and PLAINTEXT tokenizer boundaries, including
+less-than and end-tag-open continuation states, seeded end-tag-name delimiters,
+NULL replacement, EOF recovery, character-reference differences, and
+PLAINTEXT literal markup. Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_boundaries_fixture.py \
   --check
 ```
 

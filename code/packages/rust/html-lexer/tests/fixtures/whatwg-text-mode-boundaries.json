@@ -1,0 +1,389 @@
+{
+  "cases": [
+    {
+      "description": "RCDATA state boundary case `rcdata-null-reference-and-delimiter`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "rcdata-null-reference-and-delimiter",
+      "initial_state": "RCDATA state",
+      "input": "a\u0000&amp;</title>tail",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=a�&)",
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state boundary case `rcdata-ambiguous-ampersand-before-delimiter`",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "rcdata-ambiguous-ampersand-before-delimiter",
+      "initial_state": "RCDATA state",
+      "input": "a&notanentity;</title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=a¬anentity;)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA less-than sign state boundary case `rcdata-less-than-end-tag`",
+      "diagnostics": [],
+      "id": "rcdata-less-than-end-tag",
+      "initial_state": "RCDATA less-than sign state",
+      "input": "/title>tail",
+      "last_start_tag": "title",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA less-than sign state boundary case `rcdata-less-than-non-slash`",
+      "diagnostics": [],
+      "id": "rcdata-less-than-non-slash",
+      "initial_state": "RCDATA less-than sign state",
+      "input": "x</title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=<x)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA less-than sign state boundary case `rcdata-less-than-eof`",
+      "diagnostics": [],
+      "id": "rcdata-less-than-eof",
+      "initial_state": "RCDATA less-than sign state",
+      "input": "",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=<)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA end tag open state boundary case `rcdata-end-tag-open-matching`",
+      "diagnostics": [],
+      "id": "rcdata-end-tag-open-matching",
+      "initial_state": "RCDATA end tag open state",
+      "input": "title>tail",
+      "last_start_tag": "title",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA end tag open state boundary case `rcdata-end-tag-open-mismatch`",
+      "diagnostics": [],
+      "id": "rcdata-end-tag-open-mismatch",
+      "initial_state": "RCDATA end tag open state",
+      "input": "style>tail</title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=</style>tail)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA end tag open state boundary case `rcdata-end-tag-open-eof`",
+      "diagnostics": [],
+      "id": "rcdata-end-tag-open-eof",
+      "initial_state": "RCDATA end tag open state",
+      "input": "",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=</)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "title",
+      "description": "RCDATA end tag name state boundary case `rcdata-end-tag-name-delimiter`",
+      "diagnostics": [],
+      "id": "rcdata-end-tag-name-delimiter",
+      "initial_state": "RCDATA end tag name state",
+      "input": ">tail",
+      "last_start_tag": "title",
+      "temporary_buffer": "title",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "title",
+      "description": "RCDATA end tag name state boundary case `rcdata-end-tag-name-attribute-recovery`",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "rcdata-end-tag-name-attribute-recovery",
+      "initial_state": "RCDATA end tag name state",
+      "input": " class=x>tail",
+      "last_start_tag": "title",
+      "temporary_buffer": "title",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "RCDATA end tag name state boundary case `rcdata-end-tag-name-mismatch-eof`",
+      "diagnostics": [],
+      "id": "rcdata-end-tag-name-mismatch-eof",
+      "initial_state": "RCDATA end tag name state",
+      "input": "",
+      "last_start_tag": "title",
+      "temporary_buffer": "style",
+      "tokens": [
+        "Text(data=</style)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state boundary case `rawtext-ampersand-stays-literal-before-delimiter`",
+      "diagnostics": [],
+      "id": "rawtext-ampersand-stays-literal-before-delimiter",
+      "initial_state": "RAWTEXT state",
+      "input": "a&amp;</style>tail",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=a&amp;)",
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state boundary case `rawtext-null-before-delimiter`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "rawtext-null-before-delimiter",
+      "initial_state": "RAWTEXT state",
+      "input": "a\u0000b</style>",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=a�b)",
+        "EndTag(name=style)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT less-than sign state boundary case `rawtext-less-than-end-tag`",
+      "diagnostics": [],
+      "id": "rawtext-less-than-end-tag",
+      "initial_state": "RAWTEXT less-than sign state",
+      "input": "/style>tail",
+      "last_start_tag": "style",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT less-than sign state boundary case `rawtext-less-than-non-slash`",
+      "diagnostics": [],
+      "id": "rawtext-less-than-non-slash",
+      "initial_state": "RAWTEXT less-than sign state",
+      "input": "x</style>",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=<x)",
+        "EndTag(name=style)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT less-than sign state boundary case `rawtext-less-than-eof`",
+      "diagnostics": [],
+      "id": "rawtext-less-than-eof",
+      "initial_state": "RAWTEXT less-than sign state",
+      "input": "",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=<)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT end tag open state boundary case `rawtext-end-tag-open-matching`",
+      "diagnostics": [],
+      "id": "rawtext-end-tag-open-matching",
+      "initial_state": "RAWTEXT end tag open state",
+      "input": "style>tail",
+      "last_start_tag": "style",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT end tag open state boundary case `rawtext-end-tag-open-mismatch`",
+      "diagnostics": [],
+      "id": "rawtext-end-tag-open-mismatch",
+      "initial_state": "RAWTEXT end tag open state",
+      "input": "title>tail</style>",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=</title>tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT end tag open state boundary case `rawtext-end-tag-open-eof`",
+      "diagnostics": [],
+      "id": "rawtext-end-tag-open-eof",
+      "initial_state": "RAWTEXT end tag open state",
+      "input": "",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=</)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "RAWTEXT end tag name state boundary case `rawtext-end-tag-name-delimiter`",
+      "diagnostics": [],
+      "id": "rawtext-end-tag-name-delimiter",
+      "initial_state": "RAWTEXT end tag name state",
+      "input": ">tail",
+      "last_start_tag": "style",
+      "temporary_buffer": "style",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "RAWTEXT end tag name state boundary case `rawtext-end-tag-name-self-closing-recovery`",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "rawtext-end-tag-name-self-closing-recovery",
+      "initial_state": "RAWTEXT end tag name state",
+      "input": "/>tail",
+      "last_start_tag": "style",
+      "temporary_buffer": "style",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "title",
+      "description": "RAWTEXT end tag name state boundary case `rawtext-end-tag-name-mismatch-eof`",
+      "diagnostics": [],
+      "id": "rawtext-end-tag-name-mismatch-eof",
+      "initial_state": "RAWTEXT end tag name state",
+      "input": "",
+      "last_start_tag": "style",
+      "temporary_buffer": "title",
+      "tokens": [
+        "Text(data=</title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PLAINTEXT state boundary case `plaintext-markup-stays-text`",
+      "diagnostics": [],
+      "id": "plaintext-markup-stays-text",
+      "initial_state": "PLAINTEXT state",
+      "input": "<b>x</b></plaintext>",
+      "tokens": [
+        "Text(data=<b>x</b></plaintext>)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PLAINTEXT state boundary case `plaintext-ampersand-stays-literal`",
+      "diagnostics": [],
+      "id": "plaintext-ampersand-stays-literal",
+      "initial_state": "PLAINTEXT state",
+      "input": "Tom &amp; Jerry",
+      "tokens": [
+        "Text(data=Tom &amp; Jerry)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PLAINTEXT state boundary case `plaintext-null-replacement`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "plaintext-null-replacement",
+      "initial_state": "PLAINTEXT state",
+      "input": "a\u0000b",
+      "tokens": [
+        "Text(data=a�b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PLAINTEXT state boundary case `plaintext-less-than-and-slash-at-eof`",
+      "diagnostics": [],
+      "id": "plaintext-less-than-and-slash-at-eof",
+      "initial_state": "PLAINTEXT state",
+      "input": "alpha</",
+      "tokens": [
+        "Text(data=alpha</)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PLAINTEXT state boundary case `plaintext-comment-looking-text`",
+      "diagnostics": [],
+      "id": "plaintext-comment-looking-text",
+      "initial_state": "PLAINTEXT state",
+      "input": "<!--x--><p>y",
+      "tokens": [
+        "Text(data=<!--x--><p>y)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PLAINTEXT state boundary case `plaintext-cdata-looking-text`",
+      "diagnostics": [],
+      "id": "plaintext-cdata-looking-text",
+      "initial_state": "PLAINTEXT state",
+      "input": "<![CDATA[x]]>",
+      "tokens": [
+        "Text(data=<![CDATA[x]]>)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PLAINTEXT state boundary case `plaintext-preserves-crlf-normalized-input`",
+      "diagnostics": [],
+      "id": "plaintext-preserves-crlf-normalized-input",
+      "initial_state": "PLAINTEXT state",
+      "input": "a\r\nb",
+      "tokens": [
+        "Text(data=a\nb)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Parser-seeded RCDATA, RAWTEXT, and PLAINTEXT text-mode boundaries for less-than, end-tag-open, end-tag-name, NULL, EOF, and literal markup recovery.",
+  "format": "whatwg-html-tokenizer-text-mode-boundaries/v1"
+}
