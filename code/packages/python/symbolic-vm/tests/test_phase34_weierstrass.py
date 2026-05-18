@@ -238,11 +238,103 @@ def test_fallthrough_a_less_than_b(vm: VM) -> None:
     )
 
 
-def test_fallthrough_a_equals_b(vm: VM) -> None:
-    """``∫ 1/(1 + sin(x)) dx`` — a² = b²; linear-in-tan form not implemented."""
+def test_phase35_a_equals_b_now_closes(vm: VM) -> None:
+    """``∫ 1/(1 + sin(x)) dx`` — Phase 35 (this release) closes the degenerate
+    ``a² = b²`` case that Phase 34 left unevaluated.
+
+    Closed form: ``-2 / (tan(x/2) + 1)``.
+    """
     integrand = IRApply(DIV, (IRInteger(1), IRApply(ADD, (IRInteger(1), IRApply(SIN, (X,))))))
-    result = vm.eval(_integrate(integrand))
-    assert isinstance(result, IRApply) and result.head == INTEGRATE
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE), (
+        f"Phase 35 should close ∫ 1/(1+sin x) dx; got {phi!r}"
+    )
+    for x_val in (-2.0, -1.0, -0.3, 0.3, 1.0, 2.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 + math.sin(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+# ---------------------------------------------------------------------------
+# Phase 35: degenerate ``a² = b²`` cases — explicit coverage of all four
+# sign combinations.
+# ---------------------------------------------------------------------------
+
+
+def test_phase35_one_minus_sin_closes(vm: VM) -> None:
+    """``∫ 1/(2 − 2·sin x) dx`` — sin, b = −a.  Closed form: ``2/(2·(1−tan(x/2)))``."""
+    integrand = IRApply(
+        DIV,
+        (
+            IRInteger(1),
+            IRApply(SUB, (IRInteger(2), IRApply(MUL, (IRInteger(2), IRApply(SIN, (X,)))))),
+        ),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-2.0, -1.0, -0.3, 0.3, 1.0, 2.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (2.0 - 2.0 * math.sin(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase35_one_plus_cos_closes(vm: VM) -> None:
+    """``∫ 1/(1 + cos x) dx`` — cos, b = a > 0.  Closed form: ``tan(x/2)``."""
+    integrand = IRApply(DIV, (IRInteger(1), IRApply(ADD, (IRInteger(1), IRApply(COS, (X,))))))
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-2.0, -1.0, -0.3, 0.3, 1.0, 2.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 + math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+def test_phase35_one_minus_cos_closes(vm: VM) -> None:
+    """``∫ 1/(1 − cos x) dx`` — cos, b = −a.  Closed form: ``−cot(x/2)``."""
+    integrand = IRApply(
+        DIV,
+        (IRInteger(1), IRApply(SUB, (IRInteger(1), IRApply(COS, (X,))))),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    # Sample away from x = 0, 2π where 1 − cos x = 0.
+    for x_val in (0.5, 1.0, 1.5, 2.0, 2.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 - math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase35_with_numerator_coefficient(vm: VM) -> None:
+    """``∫ 5/(2 + 2·sin x) dx`` — coefficient c=5 scales the closed form."""
+    integrand = IRApply(
+        DIV,
+        (
+            IRInteger(5),
+            IRApply(ADD, (IRInteger(2), IRApply(MUL, (IRInteger(2), IRApply(SIN, (X,)))))),
+        ),
+    )
+    phi = vm.eval(_integrate(integrand))
+    for x_val in (-2.0, -1.0, -0.3, 0.3, 1.0, 2.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 5.0 / (2.0 + 2.0 * math.sin(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase35_rational_coefficients(vm: VM) -> None:
+    """``∫ 1/((3/2) + (3/2)·cos x) dx`` — rational a = b > 0."""
+    integrand = IRApply(
+        DIV,
+        (
+            IRInteger(1),
+            IRApply(ADD, (IRRational(3, 2), IRApply(MUL, (IRRational(3, 2), IRApply(COS, (X,)))))),
+        ),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-2.0, -1.0, -0.3, 0.3, 1.0, 2.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.5 + 1.5 * math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
 
 
 def test_fallthrough_non_bare_argument(vm: VM) -> None:

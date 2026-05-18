@@ -928,6 +928,82 @@ def _parse_a_plus_b_sincos(
     return None
 
 
+def _try_weierstrass_degenerate(
+    c: Fraction,
+    a: Fraction,
+    b: Fraction,
+    trig_head: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 35: degenerate ``a² = b²`` Weierstrass cases.
+
+    Four sign combinations on ``(a, b, trig_head)``:
+
+    +------------+------------+---------+--------------------------------------+
+    | b vs a     | trig       | a sign  | Closed form                          |
+    +============+============+=========+======================================+
+    | b = a > 0  | sin        | any     | -2c / (a · (tan(x/2) + 1))           |
+    | b = -a < 0 | sin        | any     |  2c / (a · (1 − tan(x/2)))           |
+    | b = a > 0  | cos        | any     |  c · tan(x/2) / a   (since 1+cos=2cos²(x/2)) |
+    | b = -a < 0 | cos        | any     | -c / (a · tan(x/2))                  |
+    +------------+------------+---------+--------------------------------------+
+
+    Derivations (all from u = tan(x/2)):
+
+    ``∫ 1/(a + a·sin x) dx``:
+       ``1 + sin x = (1+u)²/(1+u²)``, so the integrand becomes
+       ``2/(a(1+u)²) du`` → ``-2/(a(1+u)) + C``.
+
+    ``∫ 1/(a − a·sin x) dx``:
+       ``1 − sin x = (1−u)²/(1+u²)``, so the integrand becomes
+       ``2/(a(1−u)²) du`` → ``2/(a(1−u)) + C``.
+
+    ``∫ 1/(a + a·cos x) dx``:
+       ``1 + cos x = 2/(1+u²)``, so the integrand becomes
+       ``1/a du`` → ``u/a + C = tan(x/2)/a + C``.
+
+    ``∫ 1/(a − a·cos x) dx``:
+       ``1 − cos x = 2u²/(1+u²)``, so the integrand becomes
+       ``1/(a·u²) du`` → ``-1/(a·u) + C = -cot(x/2)/a + C``.
+
+    Returns ``None`` if neither ``b == a`` nor ``b == -a`` (caller will then
+    leave the integral unevaluated).
+    """
+    if a == 0:
+        # disc = 0 and a = 0 implies b = 0 too — degenerate denominator
+        # ``0 + 0·sin x = 0``; integrating 1/0 is undefined.  Punt.
+        return None
+    tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
+    if trig_head == SIN:
+        if b == a:
+            # ∫ c/(a + a·sin x) dx = -2c / (a · (tan(x/2) + 1))
+            numer = _frac_ir(-2 * c)
+            denom = IRApply(
+                MUL,
+                (_frac_ir(a), IRApply(ADD, (tan_half, ONE))),
+            )
+            return IRApply(DIV, (numer, denom))
+        if b == -a:
+            # ∫ c/(a − a·sin x) dx = 2c / (a · (1 − tan(x/2)))
+            numer = _frac_ir(2 * c)
+            denom = IRApply(
+                MUL,
+                (_frac_ir(a), IRApply(SUB, (ONE, tan_half))),
+            )
+            return IRApply(DIV, (numer, denom))
+        return None
+    # trig_head == COS
+    if b == a:
+        # ∫ c/(a + a·cos x) dx = c · tan(x/2) / a
+        return IRApply(DIV, (IRApply(MUL, (_frac_ir(c), tan_half)), _frac_ir(a)))
+    if b == -a:
+        # ∫ c/(a − a·cos x) dx = -c / (a · tan(x/2))
+        numer = _frac_ir(-c)
+        denom = IRApply(MUL, (_frac_ir(a), tan_half))
+        return IRApply(DIV, (numer, denom))
+    return None
+
+
 def _try_weierstrass_one_over_linear_trig(
     integrand: IRNode, x: IRSymbol
 ) -> IRNode | None:
@@ -954,9 +1030,18 @@ def _try_weierstrass_one_over_linear_trig(
         return None
     a, b, trig_head = parsed
     disc = a * a - b * b
-    if disc <= 0:
-        # a² ≤ b² → log form (a² < b²) or degenerate (a² = b²).
-        # Not implemented in this phase; leave unevaluated.
+    if disc == 0:
+        # Phase 35: degenerate a² = b² cases — closed forms in tan(x/2)
+        # without an outer arctan.  Four sign combinations are handled
+        # below; cases where a + b = 0 (sin/cos coefficient cancel) are
+        # picked up via the `b == -a` / `b == a` checks.
+        degen = _try_weierstrass_degenerate(c, a, b, trig_head, x)
+        if degen is not None:
+            return degen
+        # Defensive: if degenerate matcher can't close it, leave unevaluated.
+        return None
+    if disc < 0:
+        # a² < b² → log form (deferred — sign analysis required).
         return None
     sqrt_disc_ir = _sqrt_fraction_ir(disc)
     tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
