@@ -224,6 +224,8 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x35` | `rtc.set` | `epoch_seconds: u32` | `unit` |
 | `0x36` | `watchdog.configure` | `timeout_ms: u32` | `unit` |
 | `0x37` | `watchdog.kick` | none | `unit` |
+| `0x38` | `storage.write` | `region: u16/u8`, `offset: u16`, `bytes` | `unit` |
+| `0x39` | `storage.read` | `region: u16/u8`, `offset: u16`, `length: u8` | `bytes` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -279,6 +281,16 @@ advertise the corresponding capability.
 budget in milliseconds. `watchdog.kick` refreshes the already-configured
 watchdog. Both operations are direct calls and return `unit`; boards without a
 watchdog backend must not advertise either capability.
+
+### Storage
+
+`storage.write` writes a bounded VM byte buffer to a board-advertised
+nonvolatile storage region at a byte offset. `storage.read` reads a bounded byte
+buffer from the same region/offset namespace and returns the bytes. The region
+number comes from target descriptor metadata, keeping EEPROM/data-flash sizing
+and region identity in Rust-owned board discovery instead of language SDKs.
+Runtime validation must reject unknown regions and out-of-bounds ranges before
+calling the board backend.
 
 ### LED Matrix
 

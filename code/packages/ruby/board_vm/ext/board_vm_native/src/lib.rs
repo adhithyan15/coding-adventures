@@ -8,9 +8,10 @@ use board_vm_host::{
     GpioOpenProgram, GpioReadProgram, GpioWriteProgram, I2cOpenProgram, I2cReadProgram,
     I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
     LedMatrixFrameProgram, PwmWriteProgram, RtcNowProgram, RtcSetProgram, SpiOpenProgram,
-    SpiReadProgram, SpiTransferProgram, SpiWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    UartOpenProgram, UartReadProgram, UartWriteProgram, WatchdogConfigureProgram,
-    WatchdogKickProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, CAN_OPEN_MODULE_LEN,
+    SpiReadProgram, SpiTransferProgram, SpiWriteProgram, StorageReadProgram, StorageWriteProgram,
+    TimeNowProgram, TimeSleepMsProgram, UartOpenProgram, UartReadProgram, UartWriteProgram,
+    WatchdogConfigureProgram, WatchdogKickProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    CAN_OPEN_MODULE_LEN,
     CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
@@ -18,6 +19,7 @@ use board_vm_host::{
     I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
     PWM_WRITE_MODULE_LEN, RTC_NOW_MODULE_LEN, RTC_SET_MODULE_LEN, SPI_OPEN_MODULE_LEN,
     SPI_READ_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN, SPI_WRITE_MAX_MODULE_LEN,
+    STORAGE_READ_MODULE_LEN, STORAGE_WRITE_MAX_MODULE_LEN,
     TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN,
     UART_WRITE_MODULE_LEN, WATCHDOG_CONFIGURE_MODULE_LEN, WATCHDOG_KICK_MODULE_LEN,
 };
@@ -32,13 +34,14 @@ use board_vm_language_core::{
     build_i2c_transfer_module, build_i2c_write_module, build_i2c_write_u8_module,
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
     build_program_end_wire_frame, build_pwm_write_module, build_raw_module, build_rtc_now_module,
-    build_rtc_set_module, build_watchdog_configure_module, build_watchdog_kick_module,
-    build_run_background_wire_frame, build_run_wire_frame, build_spi_open_module,
-    build_spi_read_module, build_spi_transfer_module, build_spi_write_module,
-    build_stop_wire_frame, build_store_program_wire_frame, build_time_now_module,
+    build_rtc_set_module, build_run_background_wire_frame, build_run_wire_frame,
+    build_spi_open_module, build_spi_read_module, build_spi_transfer_module, build_spi_write_module,
+    build_stop_wire_frame, build_storage_read_module, build_storage_write_module,
+    build_store_program_wire_frame, build_time_now_module,
     build_time_sleep_ms_module, build_uart_open_module, build_uart_read_module,
-    build_uart_write_module, capability_board_metadata, capability_bytecode_callable,
-    capability_flag_names, capability_protocol_feature, connection_transport_name,
+    build_uart_write_module, build_watchdog_configure_module, build_watchdog_kick_module,
+    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
+    capability_protocol_feature, connection_transport_name,
     decode_wire_response, detect_target as core_detect_target,
     discover_bluetooth_devices as core_discover_bluetooth_devices,
     discover_devices as core_discover_devices, discover_devices_from_paths,
@@ -408,6 +411,41 @@ extern "C" fn session_watchdog_kick_module(_self_val: VALUE, max_stack_val: VALU
 
     let module = build_watchdog_kick_module_value(max_stack)
         .unwrap_or_else(|error| raise_core_error("watchdog_kick_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_storage_write_module(
+    _self_val: VALUE,
+    region_val: VALUE,
+    offset_val: VALUE,
+    bytes_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let region = rb_u8(region_val, "region");
+    let offset = rb_u16(offset_val, "offset");
+    let bytes = ruby_bridge::bytes_from_rb(bytes_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("bytes must be a Ruby binary String"));
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_storage_write_module_value(region, offset, &bytes, max_stack)
+        .unwrap_or_else(|error| raise_core_error("storage_write_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_storage_read_module(
+    _self_val: VALUE,
+    region_val: VALUE,
+    offset_val: VALUE,
+    len_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let region = rb_u8(region_val, "region");
+    let offset = rb_u16(offset_val, "offset");
+    let len = rb_u8(len_val, "len");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_storage_read_module_value(region, offset, len, max_stack)
+        .unwrap_or_else(|error| raise_core_error("storage_read_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -1883,6 +1921,46 @@ fn build_watchdog_kick_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCo
     Ok(module)
 }
 
+fn build_storage_write_module_value(
+    region: u8,
+    offset: u16,
+    bytes: &[u8],
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; STORAGE_WRITE_MAX_MODULE_LEN];
+    let len = build_storage_write_module(
+        StorageWriteProgram {
+            region,
+            offset,
+            bytes,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_storage_read_module_value(
+    region: u8,
+    offset: u16,
+    len: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; STORAGE_READ_MODULE_LEN];
+    let len = build_storage_read_module(
+        StorageReadProgram {
+            region,
+            offset,
+            len,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_spi_transfer_module_value(
     cs_pin: u16,
     write_bytes: &[u8],
@@ -2402,6 +2480,18 @@ pub extern "C" fn Init_board_vm_native() {
         "watchdog_kick_module",
         session_watchdog_kick_module as *const c_void,
         1,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "storage_write_module",
+        session_storage_write_module as *const c_void,
+        4,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "storage_read_module",
+        session_storage_read_module as *const c_void,
+        4,
     );
     ruby_bridge::define_method_raw(
         session_class,

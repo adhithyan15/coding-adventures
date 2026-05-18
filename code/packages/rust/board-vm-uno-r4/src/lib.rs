@@ -21,6 +21,8 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_WATCHDOG_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_STORAGE_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
@@ -454,7 +456,7 @@ pub const UNO_R4_EEPROM_STORAGE: StorageRegionDescriptor = StorageRegionDescript
     name: "EEPROM emulation",
     kind: "data flash",
     bytes: UNO_R4_DATA_FLASH_BYTES,
-    notes: "Flash-backed EEPROM storage area exposed by the UNO R4 core; program.store and kv.store are not enabled yet",
+    notes: "Flash-backed EEPROM storage area exposed by the UNO R4 core through storage.write and storage.read",
 };
 
 pub const UNO_R4_STORAGE_REGIONS: [StorageRegionDescriptor; 1] = [UNO_R4_EEPROM_STORAGE];
@@ -484,7 +486,8 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
         .with_spi()
         .with_can()
         .with_rtc()
-        .with_watchdog(),
+        .with_watchdog()
+        .with_storage(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -521,7 +524,8 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_led_matrix()
         .with_can()
         .with_rtc()
-        .with_watchdog(),
+        .with_watchdog()
+        .with_storage(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -572,6 +576,10 @@ pub trait UnoR4Backend {
     }
 
     fn supports_watchdog(&self) -> bool {
+        false
+    }
+
+    fn supports_storage(&self) -> bool {
         false
     }
 
@@ -636,6 +644,19 @@ pub trait UnoR4Backend {
     }
 
     fn watchdog_kick(&mut self) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn storage_write(&mut self, _region: u8, _offset: u16, _bytes: &[u8]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn storage_read(
+        &mut self,
+        _region: u8,
+        _offset: u16,
+        _len: u8,
+    ) -> Result<ByteBuffer, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -738,6 +759,7 @@ where
         capabilities.can = self.backend.supports_can();
         capabilities.rtc = self.backend.supports_rtc();
         capabilities.watchdog = self.backend.supports_watchdog();
+        capabilities.storage = self.backend.supports_storage();
         capabilities
     }
 }
@@ -862,6 +884,19 @@ where
             return Err(HalError::UnsupportedMode);
         }
         self.backend.watchdog_kick()
+    }
+
+    fn storage_write(&mut self, region: u16, offset: u16, bytes: &[u8]) -> Result<(), HalError> {
+        if bytes.len() > u8::MAX as usize {
+            return Err(HalError::InvalidPin);
+        }
+        let region = normalize_storage_region(self.target, region, offset, bytes.len() as u8)?;
+        self.backend.storage_write(region, offset, bytes)
+    }
+
+    fn storage_read(&mut self, region: u16, offset: u16, len: u8) -> Result<ByteBuffer, HalError> {
+        let region = normalize_storage_region(self.target, region, offset, len)?;
+        self.backend.storage_read(region, offset, len)
     }
 
     fn spi_transfer(
@@ -1047,6 +1082,32 @@ fn normalize_i2c_address(address: u16) -> Result<(), HalError> {
     }
 }
 
+fn normalize_storage_region(
+    target: &TargetDescriptor,
+    region: u16,
+    offset: u16,
+    len: u8,
+) -> Result<u8, HalError> {
+    if region > u8::MAX as u16 {
+        return Err(HalError::InvalidPin);
+    }
+    let Some(descriptor) = target
+        .storage_regions
+        .iter()
+        .find(|storage| storage.region == region as u8)
+    else {
+        return Err(HalError::InvalidPin);
+    };
+    let end = (offset as u32)
+        .checked_add(len as u32)
+        .ok_or(HalError::InvalidPin)?;
+    if end <= descriptor.bytes {
+        Ok(region as u8)
+    } else {
+        Err(HalError::InvalidPin)
+    }
+}
+
 pub fn uno_r4_device_descriptor(
     target: &'static TargetDescriptor,
     board_nonce: u32,
@@ -1066,6 +1127,19 @@ fn uno_r4_device_descriptor_for_capabilities(
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: false,
         capabilities: if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+            && capabilities.watchdog
+            && capabilities.storage
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
             && capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -1152,6 +1226,18 @@ fn uno_r4_device_descriptor_for_capabilities(
             &BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+            && capabilities.watchdog
+            && capabilities.storage
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_STORAGE_CAPABILITIES
         } else if capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -1297,6 +1383,8 @@ mod tests {
         RtcSet(u32),
         WatchdogConfigure(u32),
         WatchdogKick,
+        StorageWrite(u8, u16, Vec<u8>),
+        StorageRead(u8, u16, u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1373,6 +1461,10 @@ mod tests {
         }
 
         fn supports_watchdog(&self) -> bool {
+            true
+        }
+
+        fn supports_storage(&self) -> bool {
             true
         }
 
@@ -1453,6 +1545,27 @@ mod tests {
         fn watchdog_kick(&mut self) -> Result<(), HalError> {
             self.events.push(Event::WatchdogKick);
             Ok(())
+        }
+
+        fn storage_write(&mut self, region: u8, offset: u16, bytes: &[u8]) -> Result<(), HalError> {
+            self.events
+                .push(Event::StorageWrite(region, offset, bytes.to_vec()));
+            Ok(())
+        }
+
+        fn storage_read(
+            &mut self,
+            region: u8,
+            offset: u16,
+            len: u8,
+        ) -> Result<ByteBuffer, HalError> {
+            self.events.push(Event::StorageRead(region, offset, len));
+            let pattern = [0xde, 0xad, 0xbe, 0xef];
+            let mut bytes = vec![0u8; len as usize];
+            for (index, byte) in bytes.iter_mut().enumerate() {
+                *byte = pattern[index % pattern.len()];
+            }
+            ByteBuffer::from_slice(&bytes).map_err(|_| HalError::UnsupportedMode)
         }
 
         fn transfer_spi(
@@ -1641,8 +1754,8 @@ mod tests {
         assert_eq!(storage.name, "EEPROM emulation");
         assert_eq!(storage.kind, "data flash");
         assert_eq!(storage.bytes, UNO_R4_DATA_FLASH_BYTES);
-        assert!(storage.notes.contains("program.store"));
-        assert!(storage.notes.contains("not enabled"));
+        assert!(storage.notes.contains("storage.write"));
+        assert!(storage.notes.contains("storage.read"));
     }
 
     #[test]
@@ -1683,7 +1796,7 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES
                 .len()
         );
         assert!(UNO_R4_WIFI
@@ -1733,6 +1846,12 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_WATCHDOG_KICK));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_STORAGE_WRITE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_STORAGE_READ));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1796,6 +1915,12 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_WATCHDOG_KICK));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_STORAGE_WRITE));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_STORAGE_READ));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -2045,6 +2170,49 @@ mod tests {
     }
 
     #[test]
+    fn storage_write_runs_through_region_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.storage_write(0, 0x0010, &[0xaa, 0x55]).unwrap();
+
+        assert_eq!(
+            board.backend().events,
+            vec![Event::StorageWrite(0, 0x0010, vec![0xaa, 0x55])]
+        );
+    }
+
+    #[test]
+    fn storage_read_runs_through_region_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        let bytes = board.storage_read(0, 0x0010, 2).unwrap();
+
+        assert_eq!(bytes.as_slice(), &[0xde, 0xad]);
+        assert_eq!(
+            board.backend().events,
+            vec![Event::StorageRead(0, 0x0010, 2)]
+        );
+    }
+
+    #[test]
+    fn storage_access_rejects_unknown_region_or_out_of_bounds_range() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(
+            board.storage_write(1, 0, &[0xaa]),
+            Err(HalError::InvalidPin)
+        );
+        assert_eq!(
+            board.storage_read(0, UNO_R4_DATA_FLASH_BYTES as u16, 1),
+            Err(HalError::InvalidPin)
+        );
+        assert_eq!(
+            board.storage_write(0, 0, &[0xaa; u8::MAX as usize + 1]),
+            Err(HalError::InvalidPin)
+        );
+    }
+
+    #[test]
     fn spi_transfer_runs_through_bus_metadata_and_chip_select_pin() {
         let mut board = UnoR4Board::wifi(FakeBackend::new());
 
@@ -2216,8 +2384,8 @@ mod tests {
         let mut session = HostSession::new();
         let mut host_payload = [0u8; 128];
         let mut request = [0u8; 256];
-        let mut device_payload = [0u8; 512];
-        let mut response = [0u8; 768];
+        let mut device_payload = [0u8; 1024];
+        let mut response = [0u8; 1280];
 
         let hello = session
             .hello_frame("uno-r4-test", 0xCAFE_BABE, &mut host_payload, &mut request)

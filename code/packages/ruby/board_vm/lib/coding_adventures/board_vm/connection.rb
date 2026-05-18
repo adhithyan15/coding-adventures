@@ -134,6 +134,10 @@ module CodingAdventures
         Watchdog.new(self)
       end
 
+      def storage
+        Storage.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -657,6 +661,54 @@ module CodingAdventures
         session.watchdog_kick(
           program_id: program_id,
           budget: budget,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def storage_write!(
+        region:,
+        offset:,
+        bytes:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.storage_write(
+          program_id: program_id,
+          budget: budget,
+          region: region,
+          offset: offset,
+          bytes: bytes,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def storage_read!(
+        region:,
+        offset:,
+        length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.storage_read(
+          program_id: program_id,
+          budget: budget,
+          region: region,
+          offset: offset,
+          length: length,
           max_stack: max_stack,
           handshake: true,
           query_caps: true,
@@ -1767,6 +1819,52 @@ module CodingAdventures
           program_id: program_id,
           budget: budget,
           host_nonce: host_nonce,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Storage
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def write(
+        region:,
+        offset:,
+        bytes:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 3
+      )
+        @connection.storage_write!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          region: region,
+          offset: offset,
+          bytes: bytes,
+          max_stack: max_stack
+        )
+      end
+
+      def read(
+        region:,
+        offset:,
+        length:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 3
+      )
+        @connection.storage_read!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          region: region,
+          offset: offset,
+          length: length,
           max_stack: max_stack
         )
       end

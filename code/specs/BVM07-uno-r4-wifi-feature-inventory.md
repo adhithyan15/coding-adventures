@@ -34,7 +34,7 @@ Source snapshot:
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | descriptor metadata, handle open, and single-byte write/read implemented | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | descriptor metadata, handle open, and single-byte write/read implemented | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | descriptor metadata and direct bytecode operations implemented | `rtc.now`, `rtc.set`, alarms/events later |
-| EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata implemented; bytecode capability pending | `program.store` and possibly `kv.store` |
+| EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
 | WiFi | WiFiS3 library through onboard network module | pending | network/transport capabilities, not direct Ruby bypass |
@@ -89,10 +89,12 @@ reject conflicting handles.
    `watchdog.configure` plus `watchdog.kick` establish the first direct
    watchdog bytecode tranche.
    EEPROM/store now has descriptor metadata for the 8 KiB flash-backed
-   EEPROM/data-flash area while `program.store` and `kv.store` remain later
-   capability tranches. The next independent tranche can move on to
-   EEPROM/store bytecode operations or WiFi/network metadata and capability
-   slices.
+   EEPROM/data-flash area, and `storage.write` plus `storage.read` establish the
+   bounded byte-buffer bytecode tranche for that region. `program.store` and
+   higher-level KV storage remain later capability tranches. The next
+   independent tranche can move on to WiFi/network metadata and capability
+   slices, or deepen persistent program storage over the existing storage
+   substrate.
 
 Every tranche should include the same layers: spec entry, IR capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,

@@ -36,14 +36,15 @@ use board_vm_esp_rom::{
 };
 use board_vm_host::{
     i2c_transfer_module_len, i2c_write_module_len, spi_transfer_module_len, spi_write_module_len,
-    write_adc_read_module, write_blink_module, write_can_open_module, write_can_read_module,
-    write_can_write_module, write_dac_write_u12_module, write_gpio_handle_close_module,
-    write_gpio_handle_read_module, write_gpio_handle_write_module, write_gpio_open_module,
-    write_gpio_read_module, write_gpio_write_module, write_i2c_open_module, write_i2c_read_module,
-    write_i2c_read_u8_module, write_i2c_transfer_module, write_i2c_write_module,
-    write_i2c_write_u8_module, write_led_matrix_frame_module, write_module, write_pwm_write_module,
-    write_rtc_now_module, write_rtc_set_module, write_spi_open_module, write_spi_read_module,
-    write_spi_transfer_module, write_spi_write_module, write_time_now_module,
+    storage_write_module_len, write_adc_read_module, write_blink_module, write_can_open_module,
+    write_can_read_module, write_can_write_module, write_dac_write_u12_module,
+    write_gpio_handle_close_module, write_gpio_handle_read_module, write_gpio_handle_write_module,
+    write_gpio_open_module, write_gpio_read_module, write_gpio_write_module, write_i2c_open_module,
+    write_i2c_read_module, write_i2c_read_u8_module, write_i2c_transfer_module,
+    write_i2c_write_module, write_i2c_write_u8_module, write_led_matrix_frame_module, write_module,
+    write_pwm_write_module, write_rtc_now_module, write_rtc_set_module, write_spi_open_module,
+    write_spi_read_module, write_spi_transfer_module, write_spi_write_module,
+    write_storage_read_module, write_storage_write_module, write_time_now_module,
     write_time_sleep_ms_module, write_uart_open_module, write_uart_read_module,
     write_uart_write_module, write_watchdog_configure_module, write_watchdog_kick_module,
     AdcReadProgram, BlinkProgram, CanOpenProgram, CanReadProgram, CanWriteProgram,
@@ -51,17 +52,17 @@ use board_vm_host::{
     GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, I2cOpenProgram,
     I2cReadProgram, I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
     LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, RtcNowProgram, RtcSetProgram,
-    SpiOpenProgram, SpiReadProgram, SpiTransferProgram, SpiWriteProgram, TimeNowProgram,
-    TimeSleepMsProgram, UartOpenProgram, UartReadProgram, UartWriteProgram,
-    WatchdogConfigureProgram, WatchdogKickProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
-    CAN_OPEN_MODULE_LEN, CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
-    DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    SpiOpenProgram, SpiReadProgram, SpiTransferProgram, SpiWriteProgram, StorageReadProgram,
+    StorageWriteProgram, TimeNowProgram, TimeSleepMsProgram, UartOpenProgram, UartReadProgram,
+    UartWriteProgram, WatchdogConfigureProgram, WatchdogKickProgram, ADC_READ_MODULE_LEN,
+    BLINK_MODULE_LEN, CAN_OPEN_MODULE_LEN, CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN,
+    DAC_WRITE_U12_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
     I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN,
     LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, RTC_NOW_MODULE_LEN, RTC_SET_MODULE_LEN,
-    SPI_OPEN_MODULE_LEN, SPI_READ_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
-    UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN, UART_WRITE_MODULE_LEN,
+    SPI_OPEN_MODULE_LEN, SPI_READ_MODULE_LEN, STORAGE_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN, UART_WRITE_MODULE_LEN,
     WATCHDOG_CONFIGURE_MODULE_LEN, WATCHDOG_KICK_MODULE_LEN,
 };
 use board_vm_protocol::{
@@ -1778,6 +1779,20 @@ pub fn build_watchdog_kick_module(
     Ok(write_watchdog_kick_module(program, out)?)
 }
 
+pub fn build_storage_write_module(
+    program: StorageWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_storage_write_module(program, out)?)
+}
+
+pub fn build_storage_read_module(
+    program: StorageReadProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_storage_read_module(program, out)?)
+}
+
 pub fn build_spi_transfer_module(
     program: SpiTransferProgram<'_>,
     out: &mut [u8],
@@ -2753,6 +2768,62 @@ pub unsafe extern "C" fn board_vm_language_watchdog_kick_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_storage_write_module(
+    region: u8,
+    offset: u16,
+    bytes: *const u8,
+    bytes_len: u64,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let bytes = unsafe { in_slice(bytes, bytes_len, "bytes") }?;
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_storage_write_module(
+            StorageWriteProgram {
+                region,
+                offset,
+                bytes,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_storage_read_module(
+    region: u8,
+    offset: u16,
+    len: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_storage_read_module(
+            StorageReadProgram {
+                region,
+                offset,
+                len,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_spi_transfer_module(
     cs_pin: u16,
     write_bytes: *const u8,
@@ -3337,6 +3408,19 @@ pub extern "C" fn board_vm_language_watchdog_kick_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_storage_write_module_len(byte_len: u64) -> u64 {
+    let Ok(byte_len) = usize::try_from(byte_len) else {
+        return 0;
+    };
+    storage_write_module_len(byte_len).unwrap_or(0) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_storage_read_module_len() -> u64 {
+    STORAGE_READ_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_spi_transfer_module_len(write_len: u64) -> u64 {
     let Ok(write_len) = usize::try_from(write_len) else {
         return 0;
@@ -3659,6 +3743,8 @@ mod tests {
         assert!(uno.capabilities.contains(&"rtc.set".to_owned()));
         assert!(uno.capabilities.contains(&"watchdog.configure".to_owned()));
         assert!(uno.capabilities.contains(&"watchdog.kick".to_owned()));
+        assert!(uno.capabilities.contains(&"storage.write".to_owned()));
+        assert!(uno.capabilities.contains(&"storage.read".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -4623,6 +4709,48 @@ mod tests {
         assert_eq!(
             watchdog_kick_status.len,
             board_vm_language_watchdog_kick_module_len()
+        );
+
+        let storage_payload = [0xaa, 0x55];
+        let mut storage_write_module = [0u8; board_vm_host::STORAGE_WRITE_MAX_MODULE_LEN];
+        let storage_write_status = unsafe {
+            board_vm_language_storage_write_module(
+                0,
+                0x0010,
+                storage_payload.as_ptr(),
+                storage_payload.len() as u64,
+                3,
+                storage_write_module.as_mut_ptr(),
+                storage_write_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            storage_write_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            storage_write_status.len,
+            board_vm_language_storage_write_module_len(storage_payload.len() as u64)
+        );
+
+        let mut storage_read_module = [0u8; STORAGE_READ_MODULE_LEN];
+        let storage_read_status = unsafe {
+            board_vm_language_storage_read_module(
+                0,
+                0x0010,
+                2,
+                3,
+                storage_read_module.as_mut_ptr(),
+                storage_read_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            storage_read_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            storage_read_status.len,
+            board_vm_language_storage_read_module_len()
         );
 
         let spi_transfer_payload = [0x9f];

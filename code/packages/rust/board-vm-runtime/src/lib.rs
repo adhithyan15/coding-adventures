@@ -5,8 +5,8 @@ use board_vm_ir::{
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
-    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE,
-    CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
+    CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
+    CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -207,6 +207,19 @@ pub trait BoardHal {
     }
 
     fn watchdog_kick(&mut self) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn storage_write(&mut self, _region: u16, _offset: u16, _bytes: &[u8]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn storage_read(
+        &mut self,
+        _region: u16,
+        _offset: u16,
+        _len: u8,
+    ) -> Result<ByteBuffer, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -818,6 +831,36 @@ where
                 ip,
                 kind: hal_error_kind(err),
             }),
+            CAP_STORAGE_WRITE => {
+                let bytes = self.pop_bytes(ip)?;
+                let offset = self.pop_u16(ip)?;
+                let region = self.pop_u16(ip)?;
+                self.hal
+                    .storage_write(region, offset, bytes.as_slice())
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_STORAGE_READ => {
+                let len = self.pop_u8(ip)?;
+                if len as usize > MAX_BYTE_BUFFER_LEN {
+                    return Err(RuntimeError {
+                        ip,
+                        kind: RuntimeErrorKind::ByteBufferTooLarge,
+                    });
+                }
+                let offset = self.pop_u16(ip)?;
+                let region = self.pop_u16(ip)?;
+                let bytes =
+                    self.hal
+                        .storage_read(region, offset, len)
+                        .map_err(|err| RuntimeError {
+                            ip,
+                            kind: hal_error_kind(err),
+                        })?;
+                self.push(Value::Bytes(bytes), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -1089,6 +1132,8 @@ mod tests {
         RtcSet(u32),
         WatchdogConfigure(u32),
         WatchdogKick,
+        StorageWrite(u16, u16, ByteBuffer),
+        StorageRead(u16, u16, u8),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -1120,6 +1165,7 @@ mod tests {
                 .with_can()
                 .with_rtc()
                 .with_watchdog()
+                .with_storage()
                 .with_led_matrix()
         }
 
@@ -1288,6 +1334,35 @@ mod tests {
         fn watchdog_kick(&mut self) -> Result<(), HalError> {
             self.events.push(Event::WatchdogKick);
             Ok(())
+        }
+
+        fn storage_write(
+            &mut self,
+            region: u16,
+            offset: u16,
+            bytes: &[u8],
+        ) -> Result<(), HalError> {
+            self.events.push(Event::StorageWrite(
+                region,
+                offset,
+                ByteBuffer::from_slice(bytes).unwrap(),
+            ));
+            Ok(())
+        }
+
+        fn storage_read(
+            &mut self,
+            region: u16,
+            offset: u16,
+            len: u8,
+        ) -> Result<ByteBuffer, HalError> {
+            self.events.push(Event::StorageRead(region, offset, len));
+            let pattern = [0xde, 0xad, 0xbe, 0xef];
+            let mut bytes = vec![0u8; len as usize];
+            for (index, byte) in bytes.iter_mut().enumerate() {
+                *byte = pattern[index % pattern.len()];
+            }
+            ByteBuffer::from_slice(&bytes).map_err(|_| HalError::UnsupportedMode)
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -1656,6 +1731,68 @@ mod tests {
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_value, Value::Unit);
         assert_eq!(runtime.hal().events, vec![Event::WatchdogKick]);
+    }
+
+    #[test]
+    fn storage_write_dispatches_region_offset_and_bytes() {
+        let mut runtime: Runtime<FakeHal, 3, 1> = Runtime::new(FakeHal::new());
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x13,
+                0x10,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x02,
+                0x40,
+                CAP_STORAGE_WRITE as u8,
+            ],
+            const_pool: &[0xaa, 0x55],
+        };
+
+        let report = runtime.run_module(&module, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::Unit);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::StorageWrite(
+                0,
+                0x0010,
+                ByteBuffer::from_slice(&[0xaa, 0x55]).unwrap()
+            )]
+        );
+    }
+
+    #[test]
+    fn storage_read_dispatches_and_returns_bytes() {
+        let mut runtime: Runtime<FakeHal, 3, 1> = Runtime::new(FakeHal::new());
+        let code = [
+            0x12,
+            0x00,
+            0x13,
+            0x10,
+            0x00,
+            0x12,
+            0x02,
+            0x40,
+            CAP_STORAGE_READ as u8,
+            0x50,
+        ];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            report.return_value,
+            Value::Bytes(ByteBuffer::from_slice(&[0xde, 0xad]).unwrap())
+        );
+        assert_eq!(runtime.hal().events, vec![Event::StorageRead(0, 0x0010, 2)]);
     }
 
     #[test]

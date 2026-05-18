@@ -39,6 +39,8 @@ pub const CAP_RTC_NOW: u16 = 0x34;
 pub const CAP_RTC_SET: u16 = 0x35;
 pub const CAP_WATCHDOG_CONFIGURE: u16 = 0x36;
 pub const CAP_WATCHDOG_KICK: u16 = 0x37;
+pub const CAP_STORAGE_WRITE: u16 = 0x38;
+pub const CAP_STORAGE_READ: u16 = 0x39;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -68,6 +70,8 @@ const CAP_RTC_NOW_U8: u8 = CAP_RTC_NOW as u8;
 const CAP_RTC_SET_U8: u8 = CAP_RTC_SET as u8;
 const CAP_WATCHDOG_CONFIGURE_U8: u8 = CAP_WATCHDOG_CONFIGURE as u8;
 const CAP_WATCHDOG_KICK_U8: u8 = CAP_WATCHDOG_KICK as u8;
+const CAP_STORAGE_WRITE_U8: u8 = CAP_STORAGE_WRITE as u8;
+const CAP_STORAGE_READ_U8: u8 = CAP_STORAGE_READ as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -152,6 +156,7 @@ pub struct CapabilitySet {
     pub can: bool,
     pub rtc: bool,
     pub watchdog: bool,
+    pub storage: bool,
 }
 
 impl CapabilitySet {
@@ -169,6 +174,7 @@ impl CapabilitySet {
             can: false,
             rtc: false,
             watchdog: false,
+            storage: false,
         }
     }
 
@@ -186,6 +192,7 @@ impl CapabilitySet {
             can: false,
             rtc: false,
             watchdog: false,
+            storage: false,
         }
     }
 
@@ -235,6 +242,13 @@ impl CapabilitySet {
         }
     }
 
+    pub const fn with_storage(self) -> Self {
+        Self {
+            storage: true,
+            ..self
+        }
+    }
+
     pub const fn supports(self, capability_id: u16) -> bool {
         match capability_id {
             CAP_GPIO_OPEN | CAP_GPIO_WRITE | CAP_GPIO_READ | CAP_GPIO_CLOSE => self.gpio_digital,
@@ -250,6 +264,7 @@ impl CapabilitySet {
             CAP_CAN_OPEN | CAP_CAN_WRITE | CAP_CAN_READ => self.can,
             CAP_RTC_NOW | CAP_RTC_SET => self.rtc,
             CAP_WATCHDOG_CONFIGURE | CAP_WATCHDOG_KICK => self.watchdog,
+            CAP_STORAGE_WRITE | CAP_STORAGE_READ => self.storage,
             _ => false,
         }
     }
@@ -533,6 +548,8 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_RTC_SET_U8) | Op::CallU16(CAP_RTC_SET) => (1, 0),
         Op::CallU8(CAP_WATCHDOG_CONFIGURE_U8) | Op::CallU16(CAP_WATCHDOG_CONFIGURE) => (1, 0),
         Op::CallU8(CAP_WATCHDOG_KICK_U8) | Op::CallU16(CAP_WATCHDOG_KICK) => (0, 0),
+        Op::CallU8(CAP_STORAGE_WRITE_U8) | Op::CallU16(CAP_STORAGE_WRITE) => (3, 0),
+        Op::CallU8(CAP_STORAGE_READ_U8) | Op::CallU16(CAP_STORAGE_READ) => (3, 1),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
     }
@@ -1046,6 +1063,59 @@ mod tests {
     }
 
     #[test]
+    fn validates_storage_write_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x13,
+                0x10,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x02,
+                0x40,
+                CAP_STORAGE_WRITE as u8,
+            ],
+            const_pool: &[0xaa, 0x55],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_storage(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_STORAGE_WRITE]);
+    }
+
+    #[test]
+    fn validates_storage_read_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x13,
+                0x10,
+                0x00,
+                0x12,
+                0x02,
+                0x40,
+                CAP_STORAGE_READ as u8,
+                0x50,
+            ],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_storage(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_STORAGE_READ]);
+    }
+
+    #[test]
     fn validates_spi_transfer_capability() {
         let module = Module {
             flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
@@ -1304,6 +1374,59 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 1),
             Err(ValidateError::UnsupportedCapability(CAP_WATCHDOG_KICK))
+        );
+    }
+
+    #[test]
+    fn rejects_storage_write_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x13,
+                0x10,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x02,
+                0x40,
+                CAP_STORAGE_WRITE as u8,
+            ],
+            const_pool: &[0xaa, 0x55],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 3),
+            Err(ValidateError::UnsupportedCapability(CAP_STORAGE_WRITE))
+        );
+    }
+
+    #[test]
+    fn rejects_storage_read_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x13,
+                0x10,
+                0x00,
+                0x12,
+                0x02,
+                0x40,
+                CAP_STORAGE_READ as u8,
+                0x50,
+            ],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 3),
+            Err(ValidateError::UnsupportedCapability(CAP_STORAGE_READ))
         );
     }
 

@@ -56,6 +56,8 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "rtc.set"
         assert_includes uno_r4_wifi["capabilities"], "watchdog.configure"
         assert_includes uno_r4_wifi["capabilities"], "watchdog.kick"
+        assert_includes uno_r4_wifi["capabilities"], "storage.write"
+        assert_includes uno_r4_wifi["capabilities"], "storage.read"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
@@ -1444,6 +1446,44 @@ module CodingAdventures
           kick_result.results.map(&:command)
       end
 
+      def test_storage_write_and_read_dispatch_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        write_result = nil
+        read_result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          write_result = board.storage.write(
+            region: 0,
+            offset: 0x0010,
+            bytes: "\xAA\x55".b,
+            program_id: 10,
+            budget: 24
+          )
+          read_result = board.storage.read(
+            region: 0,
+            offset: 0x0010,
+            length: 2,
+            program_id: 11,
+            budget: 24
+          )
+        end
+
+        assert_empty runner.calls
+        assert_equal 12, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal write_result.frames + read_result.frames, transport.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          write_result.results.map(&:command)
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          read_result.results.map(&:command)
+      end
+
       def test_uart_write_and_read_dispatch_native_byte_io_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -2243,6 +2283,39 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_storage_write_and_read
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          write = board.session.run_command("storage-write 0 0x0010 0xaa55 24", program_id: 13)
+          read = board.session.run_command("storage-read 0 0x0010 2 24", program_id: 14)
+          upload_write = board.session.run_command(
+            "upload-storage.write 0 0x0010 0xaa55",
+            program_id: 15
+          )
+          upload_read = board.session.run_command(
+            "upload-storage.read 0 0x0010 2",
+            program_id: 16
+          )
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            read.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_read.results.map(&:command)
+          assert_equal write.frames + read.frames + upload_write.frames + upload_read.frames,
+            transport.frames
+        end
+      end
+
       def test_session_run_command_accepts_repl_style_spi_transfer
         transport = FakeWriteTransport.new
 
@@ -2592,6 +2665,14 @@ module CodingAdventures
         watchdog_kick_module_bytes = session.watchdog_kick_module(1)
         assert_instance_of String, watchdog_kick_module_bytes
         assert_operator watchdog_kick_module_bytes.bytesize, :>, 0
+
+        storage_write_module_bytes = session.storage_write_module(0, 0x0010, "\xAA\x55".b, 3)
+        assert_instance_of String, storage_write_module_bytes
+        assert_operator storage_write_module_bytes.bytesize, :>, 0
+
+        storage_read_module_bytes = session.storage_read_module(0, 0x0010, 2, 3)
+        assert_instance_of String, storage_read_module_bytes
+        assert_operator storage_read_module_bytes.bytesize, :>, 0
 
         spi_transfer_module_bytes = session.spi_transfer_module(10, "\x9F".b, 3, 5)
         assert_instance_of String, spi_transfer_module_bytes
