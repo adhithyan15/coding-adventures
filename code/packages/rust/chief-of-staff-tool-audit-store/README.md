@@ -15,6 +15,8 @@ The crate keeps the boundary narrow:
   payload-free read-model rebuilds
 - hosts can flush batches of audit rows and get a payload-free write summary
   with call-id-level storage failures
+- supervisors can read deterministic checkpoint pages to resume audit replay
+  after restarts without reprocessing the whole store
 
 ## Development
 
