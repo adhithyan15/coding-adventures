@@ -63,6 +63,10 @@ documented in this file.
 - A generated WHATWG tokenizer text-mode delimiter fixture and Rust conformance
   test that pins RCDATA, RAWTEXT, script-data, escaped-script, and seeded
   end-tag continuation recovery.
+- A generated WHATWG tokenizer script escape boundary fixture and Rust
+  conformance test that pins escaped and double-escaped script data, escape
+  start/end delimiters, EOF diagnostics, NULL replacement, and seeded
+  continuation recovery.
 - A generated WHATWG tokenizer markup declaration fixture and Rust conformance
   test that pins comment, bogus-comment, CDATA-looking declaration, DOCTYPE,
   and seeded declaration continuation recovery.

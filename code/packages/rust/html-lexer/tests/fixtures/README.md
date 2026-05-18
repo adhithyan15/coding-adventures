@@ -70,6 +70,9 @@ binary while production code continues to link only static Rust source.
 - `whatwg-text-mode-delimiters.json`: generated HTML tokenizer text-mode
   delimiter cases used by Rust tests to pin RCDATA, RAWTEXT, script-data,
   escaped-script, and seeded end-tag continuation recovery
+- `whatwg-script-escape-boundaries.json`: generated HTML tokenizer script
+  escape boundary cases used by Rust tests to pin escaped/double-escaped
+  script data, NULL, EOF, and seeded continuation recovery
 - `whatwg-markup-declarations.json`: generated HTML tokenizer markup
   declaration cases used by Rust tests to pin comment, bogus-comment, CDATA,
   DOCTYPE, and seeded declaration continuation recovery
@@ -114,6 +117,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_text_mode_delimiters_fixture.py`: importer that generates
   text-mode end-tag delimiter cases for the checked-in
   `whatwg-text-mode-delimiters.json` fixture
+- `generate_whatwg_script_escape_boundaries_fixture.py`: importer that
+  generates focused script escape boundary cases for the checked-in
+  `whatwg-script-escape-boundaries.json` fixture
 - `generate_whatwg_markup_declarations_fixture.py`: importer that generates
   markup declaration recovery cases for the checked-in
   `whatwg-markup-declarations.json` fixture
@@ -185,6 +191,14 @@ Regenerate or verify the WHATWG text-mode delimiter fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG script escape boundary fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_script_escape_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_script_escape_boundaries_fixture.py \
   --check
 ```
 
