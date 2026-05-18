@@ -11,7 +11,7 @@
 
 use chief_of_staff_tool_api::{
     query_tool_audit_records, ApprovalState, RequestedBy, ToolAuditRecord, ToolAuditRecordQuery,
-    ToolCallStatus, ToolErrorKind, ToolExecutionTrace, ToolInvocationRequest,
+    ToolAuditSink, ToolCallStatus, ToolErrorKind, ToolExecutionTrace, ToolInvocationRequest,
     ToolResultAuditSummary,
 };
 use coding_adventures_json_serializer::serialize as json_serialize;
@@ -99,6 +99,27 @@ where
             .collect())
     }
 
+    /// Replay queried audit rows into another D18D audit sink.
+    pub fn replay_audits<T>(
+        &self,
+        query: &ToolAuditRecordQuery,
+        sink: &mut T,
+    ) -> Result<ToolAuditReplaySummary, StorageError>
+    where
+        T: ToolAuditSink,
+    {
+        let records = self.query_audits(query)?;
+        let inventory = ToolAuditStoreInventorySummary::from_records(&records);
+        let replayed_records = records.len();
+        for record in records {
+            sink.record_tool_audit(record);
+        }
+        Ok(ToolAuditReplaySummary {
+            replayed_records,
+            inventory,
+        })
+    }
+
     /// Summarize persisted audit rows without exposing payloads.
     pub fn inventory_summary(&self) -> Result<ToolAuditStoreInventorySummary, StorageError> {
         let records = self.list_all_audits()?;
@@ -132,6 +153,111 @@ where
             },
         )?;
         page.records.iter().map(decode_audit_record).collect()
+    }
+}
+
+/// Summary for replaying stored audit rows into a sink.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ToolAuditReplaySummary {
+    /// Number of records replayed into the sink.
+    pub replayed_records: usize,
+    /// Payload-free summary of the replayed records.
+    pub inventory: ToolAuditStoreInventorySummary,
+}
+
+impl ToolAuditReplaySummary {
+    /// Return whether no audit rows were replayed.
+    pub fn is_empty(&self) -> bool {
+        self.replayed_records == 0
+    }
+
+    /// Return whether any replayed row needs follow-up.
+    pub fn requires_follow_up(&self) -> bool {
+        self.inventory.requires_follow_up()
+    }
+}
+
+/// Storage-backed implementation of the D18D [`ToolAuditSink`] interface.
+///
+/// The sink trait is intentionally infallible so runtimes can emit audit rows
+/// without taking a storage dependency. This adapter records storage failures
+/// for the host to inspect after a batch or invocation.
+pub struct StorageToolAuditSink<S> {
+    store: ToolAuditStore<S>,
+    failures: Vec<ToolAuditSinkFailure>,
+}
+
+impl<S> StorageToolAuditSink<S>
+where
+    S: StorageBackend,
+{
+    /// Create a sink backed by a storage backend.
+    pub fn new(backend: S) -> Self {
+        Self::from_store(ToolAuditStore::new(backend))
+    }
+
+    /// Create a sink backed by an existing audit store.
+    pub fn from_store(store: ToolAuditStore<S>) -> Self {
+        Self {
+            store,
+            failures: Vec::new(),
+        }
+    }
+
+    /// Borrow the underlying audit store.
+    pub fn store(&self) -> &ToolAuditStore<S> {
+        &self.store
+    }
+
+    /// Return storage failures captured by the sink.
+    pub fn failures(&self) -> &[ToolAuditSinkFailure] {
+        &self.failures
+    }
+
+    /// Return whether any audit row failed to persist.
+    pub fn has_failures(&self) -> bool {
+        !self.failures.is_empty()
+    }
+
+    /// Remove all captured storage failures and return them to the caller.
+    pub fn drain_failures(&mut self) -> Vec<ToolAuditSinkFailure> {
+        std::mem::take(&mut self.failures)
+    }
+
+    /// Consume the sink and return the underlying audit store.
+    pub fn into_store(self) -> ToolAuditStore<S> {
+        self.store
+    }
+}
+
+impl<S> ToolAuditSink for StorageToolAuditSink<S>
+where
+    S: StorageBackend,
+{
+    fn record_tool_audit(&mut self, record: ToolAuditRecord) {
+        if let Err(error) = self.store.record_audit(record.clone()) {
+            self.failures
+                .push(ToolAuditSinkFailure::new(record.call_id, error));
+        }
+    }
+}
+
+/// One audit row that could not be persisted by [`StorageToolAuditSink`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditSinkFailure {
+    /// Call id for the audit row that failed to persist.
+    pub call_id: String,
+    /// Storage error rendered without exposing payloads.
+    pub message: String,
+}
+
+impl ToolAuditSinkFailure {
+    /// Create a failure summary for one call id and storage error.
+    pub fn new(call_id: impl Into<String>, error: StorageError) -> Self {
+        Self {
+            call_id: call_id.into(),
+            message: error.to_string(),
+        }
     }
 }
 
@@ -489,7 +615,7 @@ fn invalid_json(field: &'static str, message: &'static str) -> StorageError {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chief_of_staff_tool_api::ToolAuditRecordSort;
+    use chief_of_staff_tool_api::{InMemoryToolAuditSink, ToolAuditRecordSort};
     use std::fs;
     use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -620,6 +746,48 @@ mod tests {
         assert_eq!(storage.total_records, 2);
         assert_eq!(storage.records_with_metadata, 2);
         assert_eq!(storage.json_records, 2);
+    }
+
+    #[test]
+    fn replay_audits_into_existing_sink() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        store.record_audit(sample_record("call_1")).unwrap();
+        store.record_audit(failed_record("call_2")).unwrap();
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let summary = store
+            .replay_audits(
+                &ToolAuditRecordQuery::new()
+                    .with_error(true)
+                    .sorted_by(ToolAuditRecordSort::CompletedAtDesc),
+                &mut sink,
+            )
+            .unwrap();
+
+        assert_eq!(summary.replayed_records, 1);
+        assert!(summary.requires_follow_up());
+        assert_eq!(summary.inventory.failed_records, 1);
+        assert_eq!(sink.records(), &[failed_record("call_2")]);
+    }
+
+    #[test]
+    fn storage_sink_records_rows_and_tracks_failures() {
+        let mut sink = StorageToolAuditSink::new(InMemoryStorageBackend::new());
+
+        sink.record_tool_audit(sample_record("call_1"));
+        assert!(!sink.has_failures());
+        assert_eq!(
+            sink.store().fetch_audit("call_1").unwrap(),
+            Some(sample_record("call_1"))
+        );
+
+        sink.record_tool_audit(sample_record("call_1"));
+        assert!(sink.has_failures());
+        let failures = sink.drain_failures();
+        assert_eq!(failures.len(), 1);
+        assert_eq!(failures[0].call_id, "call_1");
+        assert!(failures[0].message.contains("storage conflict"));
+        assert!(sink.failures().is_empty());
     }
 
     #[test]
